@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CinematicService } from '../cinematic.service';
 
 @Component({
   selector: 'app-skill',
@@ -7,9 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SkillComponent implements OnInit {
 
-  constructor() { }
+  constructor(private cinematicService:CinematicService) {}
 
   ngOnInit() {
+    this.cinematicService.setForm("Skills repository");
   }
 
 }

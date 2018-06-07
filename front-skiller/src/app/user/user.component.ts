@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CinematicService } from '../cinematic.service';
+import {Collaborater} from '../collaborater';
 
 @Component({
   selector: 'app-user',
@@ -7,9 +9,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserComponent implements OnInit {
 
-  constructor() { }
+  constructor(private cinematicService:CinematicService) {}
 
   ngOnInit() {
+    this.cinematicService.setForm("Welcome to a new developer !");
   }
 
 }
