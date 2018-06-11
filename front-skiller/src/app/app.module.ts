@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms'; // <-- NgModel lives here
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
@@ -23,7 +24,7 @@ import { SearchUserComponent } from './search-user/search-user.component';
     SearchSkillComponent,
     WelcomeComponent,
     UserComponent,
-    SearchUserComponent,
+    SearchUserComponent
   ],
   imports: [
     BrowserModule,
@@ -31,7 +32,8 @@ import { SearchUserComponent } from './search-user/search-user.component';
     BsDropdownModule.forRoot(),
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
-    NgbModule.forRoot()
+    NgbModule.forRoot(),
+    FormsModule
   ],
   providers: [CinematicService],
   bootstrap: [AppComponent]
