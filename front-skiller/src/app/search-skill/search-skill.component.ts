@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, Output, EventEmitter} from '@angular/core';
+import { CinematicService } from '../cinematic.service';
 
 @Component({
   selector: 'app-search-skill',
@@ -7,9 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SearchSkillComponent implements OnInit {
 
-  constructor() { }
+  constructor(private cinematicService:CinematicService) {}
 
   ngOnInit() {
+    this.cinematicService.setForm("Who knows ?");
   }
 
 }
