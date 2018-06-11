@@ -4,6 +4,7 @@ export class Collaborater {
   lastName: string;
   nickName: string;
   email: string;
+  
   constructor(id: number, firstName: string, lastName: string, nickName: string, email: string) {
     this.id = id;
     this.firstName = firstName;
