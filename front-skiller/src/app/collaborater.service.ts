@@ -16,7 +16,7 @@ const httpOptions = {
 })
 export class CollaboraterService {
 
-  private collaborateresUrl = 'api/collaborater';  // URL to web api 
+  private collaborateresUrl = 'api/collaborater';  // URL to web api
 
   constructor(
     private http: HttpClient) {}

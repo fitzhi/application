@@ -96,17 +96,17 @@
 						address for shipping updates.</div>
 				</div>
 
-				<div class="row">
-					<div class="col-md-5 mb-3">
-						<label for="level">Level</label> <select name="label" id="level"
-							(change)="selectchange($event)" ng-model="collaborater.level"
-							class="custom-select d-block w-100" name="level" required>
+					<div class="mb-3">
+						<label for="level">Level</label> 
+						<select name="label" id="level"
+							(change)="selectLevelChange($event)" ng-model="collaborater.level"
+							class="custom-select d-block w-100" 
+							required>
 							<option value="0" selected="selected">select a level</option>
 							<option *ngFor="let level of levels" [value]="level.code">{{level.title}}</option>
 						</select>
 						<div class="invalid-feedback">Please select a valid level.</div>
 					</div>
-				</div>
 				<hr class="mb-4">
 				<button class="btn btn-primary btn-lg btn-block" type="submit"
 					(click)="save()">Validate</button>
