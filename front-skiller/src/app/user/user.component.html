@@ -2,7 +2,8 @@
 <div class="container">
 	<div class="py-5 text-center">
 		<h2>Developer Form</h2>
-		<p class="lead">Please, fill the personnel informations of this new fellow and skill collaborator.</p>
+		<p class="lead">Please, fill the personnel informations of this
+			new fellow and skill collaborator.</p>
 	</div>
 
 	<div class="row">
@@ -59,15 +60,15 @@
 					<div class="col-md-6 mb-3">
 						<label for="firstName">First name</label> <input type="text"
 							class="form-control" id="firstName" name="firstName"
-							placeholder="" value=""
-							required [(ngModel)]="collaborater.firstName"> 
+							placeholder="" value="" required
+							[(ngModel)]="collaborater.firstName">
 						<div class="invalid-feedback">Valid first name is required.
 						</div>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label for="lastName">Last name</label> <input type="text"
-							class="form-control" id="lastName" name="lastName" placeholder="" value=""
-							required [(ngModel)]="collaborater.lastName">
+							class="form-control" id="lastName" name="lastName" placeholder=""
+							value="" required [(ngModel)]="collaborater.lastName">
 						<div class="invalid-feedback">Valid last name is required.</div>
 					</div>
 				</div>
@@ -78,8 +79,9 @@
 						<div class="input-group-prepend">
 							<span class="input-group-text">@</span>
 						</div>
-						<input type="text" class="form-control" id="nickName" name="nickName"
-							placeholder="nickName" required [(ngModel)]="collaborater.nickName">
+						<input type="text" class="form-control" id="nickName"
+							name="nickName" placeholder="nickName" required
+							[(ngModel)]="collaborater.nickName">
 						<div class="invalid-feedback" style="width: 100%;">Your
 							nickName is required.</div>
 					</div>
@@ -87,31 +89,27 @@
 
 				<div class="mb-3">
 					<label for="email">Email <span class="text-muted">(Optional)</span></label>
-					<input type="email" class="form-control" 
-						id="email" name="email"
-						placeholder="you@example.com"
-						required [(ngModel)]="collaborater.email">
+					<input type="email" class="form-control" id="email" name="email"
+						placeholder="you@example.com" required
+						[(ngModel)]="collaborater.email">
 					<div class="invalid-feedback">Please enter a valid email
 						address for shipping updates.</div>
 				</div>
 
 				<div class="row">
 					<div class="col-md-5 mb-3">
-						<label for="level">Level</label> 
-						<select
-							class="custom-select d-block w-100" id="level" name="level" 
-							required>
-							<option value="">Choose...</option>
-							<option>Ingénieur Concepteur Développeur</option>
-							<option>Expert Technique</option>
-							<option>Chef de Projet Technique</option>
+						<label for="level">Level</label> <select name="label" id="level"
+							(change)="selectchange($event)" ng-model="collaborater.level"
+							class="custom-select d-block w-100" name="level" required>
+							<option value="0" selected="selected">select a level</option>
+							<option *ngFor="let level of levels" [value]="level.code">{{level.title}}</option>
 						</select>
-						<div class="invalid-feedback">Please select a valid level.
-						</div>
+						<div class="invalid-feedback">Please select a valid level.</div>
 					</div>
 				</div>
 				<hr class="mb-4">
-				<button class="btn btn-primary btn-lg btn-block" type="submit" (click)="save()">Validate</button>
+				<button class="btn btn-primary btn-lg btn-block" type="submit"
+					(click)="save()">Validate</button>
 			</form>
 		</div>
 	</div>

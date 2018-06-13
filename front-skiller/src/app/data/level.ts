@@ -1,4 +1,4 @@
-export class InternalLevel {
+export class Level {
   code: string;
   title: string;
 }
