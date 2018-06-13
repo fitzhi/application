@@ -2,8 +2,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, map, tap} from 'rxjs/operators';
 
-import {Collaborater} from './collaborater';
-import {COLLABORATERS} from './mock-collaboraters';
+import {Collaborater} from './data/collaborater';
+import {COLLABORATERS} from './mock/mock-collaboraters';
 
 import {Observable, of} from 'rxjs';
 

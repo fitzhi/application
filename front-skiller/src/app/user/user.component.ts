@@ -1,7 +1,7 @@
 import {AppModule} from '../app.module';
 import {Component, OnInit} from '@angular/core';
 import {CinematicService} from '../cinematic.service';
-import {Collaborater} from '../collaborater';
+import {Collaborater} from '../data/collaborater';
 
 import {Level} from '../data/level';
 
