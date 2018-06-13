@@ -38,12 +38,6 @@ export class UserComponent implements OnInit {
     }
   }
 
-  /**
-   * The selection in the levels SELECT object has been changed
-   */
-  selectLevelChange(args) {
-    this.collaborater.level = args.target.value;
-  }
 }
 
 

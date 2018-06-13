@@ -99,7 +99,7 @@
 					<div class="mb-3">
 						<label for="level">Level</label> 
 						<select name="label" id="level"
-							(change)="selectLevelChange($event)" ng-model="collaborater.level"
+							[(ngModel)]="collaborater.level"
 							class="custom-select d-block w-100" 
 							required>
 							<option value="0" selected="selected">select a level</option>
