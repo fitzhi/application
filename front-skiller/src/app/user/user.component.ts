@@ -4,8 +4,11 @@ import {CinematicService} from '../cinematic.service';
 import {Collaborater} from '../data/collaborater';
 
 import {Level} from '../data/level';
+import {Attribution} from '../data/attribution';
+import {Project} from '../data/project';
 
 import {LIST_OF_LEVELS} from '../data/List_of_levels';
+import {PROJECTS} from '../mock/mock-projects';
 import {Constants} from '../constants';
 
 @Component({
@@ -17,7 +20,7 @@ export class UserComponent implements OnInit {
 
 
   levels: Level[] = LIST_OF_LEVELS;
-
+  projects: Project[] = PROJECTS;
 
   collaborater: Collaborater;
 
@@ -25,7 +28,8 @@ export class UserComponent implements OnInit {
 
   ngOnInit() {
     this.collaborater = new Collaborater(0, 'Frédéric', 'VIDAL', 'altF4', 'frvidal@sqli.com', 'ET 2');
-    this.cinematicService.setForm('Welcome to a new developer !');
+    this.collaborater.projects = [{project_id: 1, from_date: null, to_date: null}, {project_id: 2, from_date: null, to_date: null}];
+    this.cinematicService.setForm('Registering a developer !');
   }
 
   /**
