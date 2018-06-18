@@ -11,7 +11,7 @@ export class SkillComponent implements OnInit {
   constructor(private cinematicService:CinematicService) {}
 
   ngOnInit() {
-    this.cinematicService.setForm("Skills repository");
+    this.cinematicService.setForm('Skills repository', false);
   }
 
 }

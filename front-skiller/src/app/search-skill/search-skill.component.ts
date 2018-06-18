@@ -11,7 +11,7 @@ export class SearchSkillComponent implements OnInit {
   constructor(private cinematicService:CinematicService) {}
 
   ngOnInit() {
-    this.cinematicService.setForm("Who knows ?");
+    this.cinematicService.setForm("Who knows ?", true);
   }
 
 }

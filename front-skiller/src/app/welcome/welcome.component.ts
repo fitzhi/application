@@ -10,11 +10,10 @@ import { AppComponent } from '../app.component';
 })
 export class WelcomeComponent implements OnInit {
 
-  constructor(private cinematicService:CinematicService) { }
+	constructor(private cinematicService:CinematicService) { }
 
-  ngOnInit() {
-  	console.log ("welcome");
-    this.cinematicService.setForm("Who's who !");
-  }
+	ngOnInit() {
+		this.cinematicService.setForm('Who\'s who !', false);
+  	}
 
 }

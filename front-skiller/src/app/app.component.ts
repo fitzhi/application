@@ -8,17 +8,23 @@ import { CinematicService } from './cinematic.service';
 })
 export class AppComponent {
    
-   public form: String;
+	public form: String;
  
-   constructor(private cinematicService:CinematicService) { 
+ 	/**
+ 	* Searching mode ON. The INPUT searching is enabled. 
+ 	*/
+   	is_searching: boolean;
+   
+	constructor(private cinematicService:CinematicService) { 
  
-      this.cinematicService.newFormDisplayEmitted$.subscribe(data => {
-   	     console.log (data);
-         this.form = data;
-      })
+		this.cinematicService.newFormDisplayEmitted$.subscribe(data => {
+			this.form = data;
+			this.is_searching = this.cinematicService.is_searching;
+		})
    }
     
-   ngOnInit() {
-    this.form = "welcome";
-  }
+	ngOnInit() {
+		this.form = "welcome";
+		this.is_searching = true;
+	}
 }

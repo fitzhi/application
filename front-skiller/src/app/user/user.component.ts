@@ -27,9 +27,9 @@ export class UserComponent implements OnInit {
   constructor(private cinematicService: CinematicService) {}
 
   ngOnInit() {
-    this.collaborater = new Collaborater(0, 'Frédéric', 'VIDAL', 'altF4', 'frvidal@sqli.com', 'ET 2');
+    this.collaborater = new Collaborater(0, 'Frédéric', 'VIDAL', 'altF4', 'frvidal@sqli.com', 'ET 2', []);
     this.collaborater.projects = [{project_id: 1, from_date: null, to_date: null}, {project_id: 2, from_date: null, to_date: null}];
-    this.cinematicService.setForm('Registering a developer !');
+    this.cinematicService.setForm('Registering a developer !', false);
   }
 
   /**

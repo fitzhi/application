@@ -3,6 +3,7 @@
  */
 
 import {Collaborater} from '../data/collaborater';
+import {Attribution} from '../data/attribution';
 
 export const COLLABORATERS: Collaborater[] = [
   {
@@ -12,7 +13,7 @@ export const COLLABORATERS: Collaborater[] = [
     nickName: 'altF4',
     email: 'frvidal@sqli.com',
     level: 'ET2',
-    projects: []
+    projects: null
   },
   {
     id: 2,
@@ -21,6 +22,6 @@ export const COLLABORATERS: Collaborater[] = [
     nickName: 'la Mouf',
     email: 'omanfe@sqli.com',
     level: 'ICD3',
-    projects: []
+    projects: null
   }];
 
