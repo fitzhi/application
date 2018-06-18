@@ -6,21 +6,14 @@ import { Subject } from "rxjs/Subject";
 })
 export class CinematicService {
 
-	private emitActualComponentSource = new Subject<string>();
+	private emitActualComponentSource = new Subject<Number>();
 
 	newFormDisplayEmitted$ = this.emitActualComponentSource.asObservable();
 
-	/**
-	 * Form is in searching mode
-	*/
-	is_searching: boolean;
-	
 	constructor() { 
-		this.is_searching = false;
 	}
   
- 	setForm (form: string, is_searching: boolean) {
-    	this.is_searching = is_searching;
+ 	setForm (form: Number) {
     	/**
     	* Fire the event. Has to be at the end of the method.
     	*/
