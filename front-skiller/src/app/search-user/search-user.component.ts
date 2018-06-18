@@ -11,7 +11,7 @@ export class SearchUserComponent implements OnInit {
   constructor(private cinematicService:CinematicService) {}
 
   ngOnInit() {
-    this.cinematicService.setForm("Searching for an hero");
+    this.cinematicService.setForm("Searching for a developer");
   }
 
 }
