@@ -9,10 +9,14 @@ import {Constants} from '../constants';
 })
 export class SearchSkillComponent implements OnInit {
 
-  constructor(private cinematicService:CinematicService) {}
 
-  ngOnInit() {
-    this.cinematicService.setForm(Constants.DEVELOPERS_SEARCH);
-  }
+	constructor(private cinematicService:CinematicService) {}
 
+	ngOnInit() {
+		this.cinematicService.setForm(Constants.DEVELOPERS_SEARCH);
+  	}
+
+	public search(source: string) : void {
+		console.log("searching a skill");
+	}
 }

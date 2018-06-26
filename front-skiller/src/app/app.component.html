@@ -11,33 +11,32 @@
 			<li class="nav-item dropdown" ngbDropdown><a
 				class="nav-link dropdown-toggle" id="dropdownSkills"
 				ngbDropdownToggle>Skills</a>
-				<div class="dropdown-menu" aria-labelledby="dropdownSkills"
+				<ul class="dropdown-menu" aria-labelledby="dropdownSkills"
 					ngbDropdownMenu>
 					<li><a class="dropdown-item" href="/searchSkill">Search</a></li>
 					<li><a class="dropdown-item" href="/skill">New</a></li>
-				</div></li>
+				</ul></li>
 			<li class="nav-item dropdown" ngbDropdown><a
 				class="nav-link dropdown-toggle" id="dropdownUsers"
 				ngbDropdownToggle>Developers</a>
-				<div class="dropdown-menu" aria-labelledby="dropdownUsers"
+				<ul class="dropdown-menu" aria-labelledby="dropdownUsers"
 					ngbDropdownMenu>
 					<li><a class="dropdown-item" href="/searchUser">Search</a></li>
 					<li><a class="dropdown-item" href="/user">New</a></li>
-				</div></li>
-
+				</ul></li>
 		</ul>
 		<form class="form-inline my-2 my-lg-0">
-			<input class="form-control mr-sm-2" type="text" placeholder="Search" 
-				[attr.disabled]="is_searching?null:''"
-				aria-label="Search">
-			<button class="btn btn-outline-success my-2 my-sm-0" 
-				[attr.disabled]="is_searching?null:''" 
+			<input class="form-control mr-sm-2" type="text" placeholder="Search"
+				[attr.disabled]="is_searching?null:''" name="searching_what"
+				[(ngModel)]="searching_what" aria-label="Search">
+			<button class="btn btn-outline-success my-2 my-sm-0"
+				[attr.disabled]="is_searching?null:''" (click)="search()"
 				type="submit">Search</button>
 		</form>
 	</div>
 </nav>
 <div class="panel panel-primary">
-    <div class="panel-body">
-    	<router-outlet></router-outlet>
-    </div>
+	<div class="panel-body">
+		<router-outlet></router-outlet>
+	</div>
 </div>

@@ -15,6 +15,7 @@ export class Collaborater {
    */
   public projects: Attribution[];
 
+/*
   constructor(id: number, firstName: string, lastName: string, nickName: string, email: string,
     level: string, projects: Attribution[]) {
     this.id = id;
@@ -25,4 +26,5 @@ export class Collaborater {
     this.level = level;
     this.projects = projects;
   }
+ */
 }
