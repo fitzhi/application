@@ -17,6 +17,8 @@ import { CinematicService } from './cinematic.service';
 import { UserComponent } from './user/user.component';
 import { SearchUserComponent } from './search-user/search-user.component';
 
+import { DataService } from './data.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,7 +37,7 @@ import { SearchUserComponent } from './search-user/search-user.component';
     NgbModule.forRoot(),
     FormsModule
   ],
-  providers: [CinematicService],
+  providers: [CinematicService, DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { 

@@ -1,12 +1,9 @@
 import { Component } from '@angular/core';
 import { CinematicService } from './cinematic.service';
+import { DataService } from './data.service';
 import {Constants} from './constants';
 
-import {SearchUserComponent} from './search-user/search-user.component'
-import {SearchSkillComponent} from './search-skill/search-skill.component'
-
 @Component({
-  providers:[SearchUserComponent, SearchSkillComponent],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
@@ -16,7 +13,7 @@ export class AppComponent {
    /**
    * Title of the form
    */
-	public formTitle: String;
+	public formTitle: string;
  
    /**
    * Form Id
@@ -31,13 +28,12 @@ export class AppComponent {
  	/**
  	* content of the searching filed. 
  	*/
-   	searching_what: String;
+   	searching_what: string;
    
       
 	constructor(
-		private cinematicService:CinematicService, 
-		private searchUser: SearchUserComponent,
-		private searchSkill: SearchSkillComponent) { 
+		private cinematicService:CinematicService,
+		private dataService:DataService) { 
  
  
 		this.cinematicService.newFormDisplayEmitted$.subscribe(data => {
@@ -79,16 +75,18 @@ export class AppComponent {
 		this.is_searching = true;
 	}
 	
+	/**
+	* Search button has been clicked.
+	*/
 	search() : void {
 		if (Constants.DEBUG) {
 			console.log ("Searching " + this.searching_what );
 		}
 		switch(this.formId) { 
+			case Constants.DEVELOPERS_SEARCH:
+				this.dataService.reloadCollaboraters (this.searching_what);
+				break;
 			case Constants.SKILLS_SEARCH: { 
-	      		break; 
-			} 
-			case Constants.DEVELOPERS_SEARCH: { 
-	    	  	this.searchUser.search(this.searching_what);
 	      		break; 
 			} 
 		} 		
