@@ -22,13 +22,11 @@ export class DataService {
   	
  		this.collaboraters.length = 0;
  
- 		console.log (myCriteria);
- 		console.log (MOCK_COLLABORATERS.filter( 
- 			collab => collab.firstName.indexOf(myCriteria) > -1));
- 		console.log (MOCK_COLLABORATERS);
- 		
  		this.collaboraters.push(...MOCK_COLLABORATERS.filter( 
- 			collab => collab.firstName.indexOf(myCriteria) > -1));
+ 			collab => 
+ 				(collab.firstName.toLowerCase( ).indexOf(myCriteria) > -1) 
+ 			|| 	(collab.lastName.toLowerCase( ).indexOf(myCriteria) > -1) 
+		);
  	}
   
 }
