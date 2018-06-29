@@ -7,26 +7,39 @@ import {MOCK_COLLABORATERS} from './mock/mock-collaboraters';
 })
 export class DataService {
 
-	collaboraters: Collaborater[];
+	private theStaff: Collaborater[];
 
   	constructor() { }
   
-	setDataArrayCollaboraters(collaboraters: Collaborater[]) {
-		this.collaboraters =  collaboraters;
+	setDataArrayCollaboraters(theStaff: Collaborater[]) {
+		this.theStaff =  theStaff;
 	}
+	
+ 	hasDataArrayCollaboratersAlreadySet(): boolean {
+ 		return (this.theStaff != null);
+ 	}
 
 	/**
 	* Reload the collaboraters for the passed criteria.
 	*/
   	reloadCollaboraters (myCriteria: string) {
   	
- 		this.collaboraters.length = 0;
+ 		this.theStaff.length = 0;
  
- 		this.collaboraters.push(...MOCK_COLLABORATERS.filter( 
+ 		this.theStaff.push(...MOCK_COLLABORATERS.filter( 
  			collab => 
  				(collab.firstName.toLowerCase( ).indexOf(myCriteria) > -1) 
  			|| 	(collab.lastName.toLowerCase( ).indexOf(myCriteria) > -1) 
-		);
+		));
+ 	}
+ 	 	
+ 	getCollaborater(id: number): Collaborater {
+ 		return this.theStaff.find (collab => collab.id == id);
+ 	}
+ 	
+ 	getStaff(): Collaborater[] {
+ 		return this.theStaff;
  	}
   
+	  
 }

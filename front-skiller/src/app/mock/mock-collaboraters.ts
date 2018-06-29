@@ -22,7 +22,7 @@ export const MOCK_COLLABORATERS: Collaborater[] = [
     lastName: 'MANFE',
     nickName: 'la Mouf',
     email: 'omanfe@sqli.com',
-    level: 'ICD3',
+    level: 'ICD 3',
     projects: null
   },
   {
@@ -31,7 +31,7 @@ export const MOCK_COLLABORATERS: Collaborater[] = [
     lastName: 'JOURDES',
     nickName: 'Jose',
     email: 'ajourdes@sqli.com',
-    level: 'ICD2',
+    level: 'ICD 2',
     projects: null
   },
   {
@@ -40,7 +40,7 @@ export const MOCK_COLLABORATERS: Collaborater[] = [
     lastName: 'OPOIX',
     nickName: 'Copo',
     email: 'ocopoix@sqli.com',
-    level: 'ET2',
+    level: 'ET 2',
     projects: null
   }
   

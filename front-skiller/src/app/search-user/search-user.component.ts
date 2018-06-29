@@ -18,8 +18,14 @@ export class SearchUserComponent implements OnInit {
   		private dataService:DataService) {}
 
   	ngOnInit() {
-   		this.cinematicService.setForm(Constants.DEVELOPERS_SEARCH);
-   		this.dataService.setDataArrayCollaboraters (this.collaboraters);
+  	
+  		this.cinematicService.setForm(Constants.DEVELOPERS_SEARCH); 		
+  		if (!this.dataService.hasDataArrayCollaboratersAlreadySet()) {
+  			console.log("hasDataArrayCollaboratersAlreadySet is false");
+	   		this.dataService.setDataArrayCollaboraters (this.collaboraters);
+	   	} else {
+	   		this.collaboraters = this.dataService.getStaff();
+	   	}
    	}
 
 }

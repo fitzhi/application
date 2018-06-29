@@ -7,7 +7,11 @@
     </div>
     
     <div *ngFor="let collaborater of collaboraters" class="row" style="font-size: large">
-        <div class="col-4">{{collaborater.firstName}} {{collaborater.lastName}}</div>
+        <div class="col-4">
+        	<a [routerLink]="['/user', collaborater.id]">
+        		{{collaborater.firstName}} {{collaborater.lastName}}
+       		</a>
+		</div>
         <div class="col-2">{{collaborater.level}}</div>
         <div class="col-4">No too much</div>        
     </div>
