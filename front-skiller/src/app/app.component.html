@@ -1,4 +1,5 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+	<button [hidden]=is_searching (click)="goBack()">back</button>
 	<a class="navbar-brand" href="#">{{formTitle}}</a>
 	<button class="navbar-toggler" type="button" data-toggle="collapse"
 		data-target="#navbarsExampleDefault"
@@ -13,16 +14,16 @@
 				ngbDropdownToggle>Skills</a>
 				<ul class="dropdown-menu" aria-labelledby="dropdownSkills"
 					ngbDropdownMenu>
-					<li><a class="dropdown-item" href="/searchSkill">Search</a></li>
-					<li><a class="dropdown-item" href="/skill">New</a></li>
+					<li><a class="dropdown-item" [routerLink]="['/searchSkill']">Search</a></li>
+					<li><a class="dropdown-item" [routerLink]="['/skill']">New</a></li>
 				</ul></li>
 			<li class="nav-item dropdown" ngbDropdown><a
 				class="nav-link dropdown-toggle" id="dropdownUsers"
 				ngbDropdownToggle>Developers</a>
 				<ul class="dropdown-menu" aria-labelledby="dropdownUsers"
 					ngbDropdownMenu>
-					<li><a class="dropdown-item" href="/searchUser">Search</a></li>
-					<li><a class="dropdown-item" href="/user">New</a></li>
+					<li><a class="dropdown-item" [routerLink]="['/searchUser']">Search.</a></li>
+					<li><a class="dropdown-item" [routerLink]="['/user']">New</a></li>
 				</ul></li>
 		</ul>
 		<form class="form-inline my-2 my-lg-0">

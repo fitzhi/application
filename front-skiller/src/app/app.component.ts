@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CinematicService } from './cinematic.service';
 import { DataService } from './data.service';
 import {Constants} from './constants';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-root',
@@ -33,7 +34,8 @@ export class AppComponent {
       
 	constructor(
 		private cinematicService:CinematicService,
-		private dataService:DataService) { 
+		private dataService:DataService,
+		private location:Location) { 
  
  
 		this.cinematicService.newFormDisplayEmitted$.subscribe(data => {
@@ -91,4 +93,9 @@ export class AppComponent {
 			} 
 		} 		
 	}
+	
+	goBack(): void { 
+		this.location.back();
+	}
+	
 }

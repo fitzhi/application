@@ -1,7 +1,6 @@
 import {AppModule} from '../app.module';
 import {Component, OnInit} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Location } from '@angular/common';
 import {Router} from '@angular/router';
 
 import {CinematicService} from '../cinematic.service';
@@ -35,26 +34,33 @@ export class UserComponent implements OnInit {
   	constructor(
   		private cinematicService: CinematicService,
   		private route: ActivatedRoute,
-  		private dataService: DataService,
-  		private location: Location) {}
+  		private dataService: DataService) {}
 
 	ngOnInit() {
-	
-		if (this.sub == null) {
+		this.sub = this.route.params.subscribe(params => {
+			if (params['id'] == null) {
+				console.log ("id is null");		 
+				this.id = null;   
+			} else {
+	       		this.id = + params['id']; // (+) converts string 'id' to a number
+	       	}
+	    });	
+		console.log (this.id);		    
+		if (this.id == null) {
 			// creation mode...
-			this.collaborater = {}
+			this.collaborater = {id:null, firstName:null, lastName:null, nickName:null, email:null, level:null, projects:[]}
 		} else {
-			this.sub = this.route.params.subscribe(params => {
-		       this.id = +params['id']; // (+) converts string 'id' to a number
-		    });	
+//			this.sub = this.route.params.subscribe(params => {
+//		       this.id = +params['id']; // (+) converts string 'id' to a number
+//		    });	
 		    
 	    	this.collaborater = this.dataService.getCollaborater(this.id);
 	    	if (Constants.DEBUG) {
 	      		console.log('Reading the collaborater below');
 	      		console.log(this.collaborater);
 	 		}
-	 		this.cinematicService.setForm(Constants.DEVELOPERS_CRUD);
  		}
+ 		this.cinematicService.setForm(Constants.DEVELOPERS_CRUD);
 	}
 
 	/**
@@ -67,11 +73,6 @@ export class UserComponent implements OnInit {
     	}
   	}
 
-	back(): void {
- 
-//		console.log (this.location);
-		this.location.back();
-	}
 }
 
 

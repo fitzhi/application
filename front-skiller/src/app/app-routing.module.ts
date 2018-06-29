@@ -14,7 +14,7 @@ const routes: Routes = [
   {path: 'searchSkill', component: SearchSkillComponent},
   {path: 'skill', component: SkillComponent},
   {path: 'searchUser', component: SearchUserComponent},
-  {path: 'user/:id', component: UserComponent}  
+  {path: 'user/:id', component: UserComponent},  
   {path: 'user', component: UserComponent}  
 ];
 
