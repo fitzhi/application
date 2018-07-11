@@ -35,7 +35,7 @@ export const MOCK_COLLABORATERS: Collaborater[] = [
     projects: null
   },
   {
-    id: 2,
+    id: 4,
     firstName: 'Christophe',
     lastName: 'OPOIX',
     nickName: 'Copo',
@@ -43,10 +43,5 @@ export const MOCK_COLLABORATERS: Collaborater[] = [
     level: 'ET 2',
     projects: null
   }
-  
-  
-  
-  
-  
   ];
 

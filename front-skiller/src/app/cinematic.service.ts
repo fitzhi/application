@@ -10,14 +10,12 @@ export class CinematicService {
 
 	newFormDisplayEmitted$ = this.emitActualComponentSource.asObservable();
 
-	constructor() { 
-	}
-  
  	setForm (form: Number) {
     	/**
     	* Fire the event. Has to be at the end of the method.
     	*/
     	this.emitActualComponentSource.next(form);
 	}
-	
+
 }
+

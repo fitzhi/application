@@ -39,21 +39,16 @@ export class UserComponent implements OnInit {
 	ngOnInit() {
 		this.sub = this.route.params.subscribe(params => {
 			if (params['id'] == null) {
-				console.log ("id is null");		 
 				this.id = null;   
 			} else {
 	       		this.id = + params['id']; // (+) converts string 'id' to a number
 	       	}
 	    });	
-		console.log (this.id);		    
 		if (this.id == null) {
 			// creation mode...
 			this.collaborater = {id:null, firstName:null, lastName:null, nickName:null, email:null, level:null, projects:[]}
 		} else {
-//			this.sub = this.route.params.subscribe(params => {
-//		       this.id = +params['id']; // (+) converts string 'id' to a number
-//		    });	
-		    
+
 	    	this.collaborater = this.dataService.getCollaborater(this.id);
 	    	if (Constants.DEBUG) {
 	      		console.log('Reading the collaborater below');
