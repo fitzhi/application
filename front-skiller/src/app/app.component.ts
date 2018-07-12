@@ -89,11 +89,11 @@ export class AppComponent {
         }
       }
 
-    })
+    });
   }
 
   ngOnInit() {
-    this.formTitle = "welcome";
+    this.formTitle = 'Welcome';
     this.is_searching = true;
   }
 
