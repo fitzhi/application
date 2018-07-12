@@ -128,4 +128,17 @@ export class AppComponent {
     this.searching_what = null;
     this.router.navigate(['/user'], {});
   }
+
+  nextEntry(): void {
+    if (Constants.DEBUG) {
+      console.log('Entering in the method nextEntry()');
+    }
+  }
+
+  previousEntry(): void {
+    if (Constants.DEBUG) {
+      console.log('Entering in the method previousEntry()');
+    }
+  }
+
 }

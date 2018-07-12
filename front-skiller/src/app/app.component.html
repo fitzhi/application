@@ -5,9 +5,9 @@
 			<img [hidden]=!in_master_detail src="/assets/img/list.png" width="48" height="48"/>
 		</a>
 		
-		<a href="#" class="header_toolbar_master_detail previous round" (click)="goBack()" [hidden]=!in_master_detail >&nbsp;&#8249;&nbsp;</a>
+		<a href="#" (click)="nextEntry()" class="header_toolbar_master_detail previous round" [hidden]=!in_master_detail >&nbsp;&#8249;&nbsp;</a>
 		
-		<a href="#" (click)="goNext()" class="header_toolbar_master_detail next round" [hidden]=!in_master_detail>&nbsp;&#8250;&nbsp;</a>
+		<a href="#" (click)="previousEntry()" class="header_toolbar_master_detail next round" [hidden]=!in_master_detail>&nbsp;&#8250;&nbsp;</a>
 	
 	</div>	
 	<a class="navbar-brand" href="#">{{formTitle}}</a>

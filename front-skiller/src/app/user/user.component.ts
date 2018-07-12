@@ -46,9 +46,8 @@ export class UserComponent implements OnInit {
     });
     if (this.id == null) {
       // creation mode...
-      this.collaborater = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null, projects: []}
+      this.collaborater = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null, projects: []};
     } else {
-
       this.collaborater = this.dataService.getCollaborater(this.id);
       if (Constants.DEBUG) {
         console.log('Reading the collaborater below');

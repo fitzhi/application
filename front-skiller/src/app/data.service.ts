@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Collaborator} from './data/collaborator';
+import {Constants} from './constants';
 import {MOCK_COLLABORATERS} from './mock/mock-collaboraters';
 
 @Injectable({
@@ -7,7 +8,15 @@ import {MOCK_COLLABORATERS} from './mock/mock-collaboraters';
 })
 export class DataService {
 
+  /**
+   * List of collaborators corresponding to the search criteria.
+   */
   private static theStaff: Collaborator[];
+
+  /**
+   * Current collaborator's identifier previewed on the formular.
+   */
+  private static currentId: number;
 
   constructor() {}
 
@@ -50,7 +59,17 @@ export class DataService {
    * Return the collaborator associated with this id.
    */
   getCollaborater(id: number): Collaborator {
-    return DataService.theStaff.find(collab => collab.id === id);
+    let result: Collaborator;
+    result = DataService.theStaff.find(collab => collab.id === id);
+    if (typeof result !== 'undefined') {
+      DataService.currentId = id;
+    } else {
+      DataService.currentId = null;
+    }
+    if (Constants.DEBUG) {
+      console.log('Current identifier ' + DataService.currentId);
+    }
+    return result;
   }
 
   /**
