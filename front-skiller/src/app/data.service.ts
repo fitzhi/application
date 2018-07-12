@@ -31,7 +31,7 @@ export class DataService {
   reloadCollaboraters(myCriteria: string) {
 
     this.cleanUpCollaboraters();
-    
+
     DataService.theStaff.push(...MOCK_COLLABORATERS.filter(
       collab =>
         (collab.firstName.toLowerCase().indexOf(myCriteria) > -1)

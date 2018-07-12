@@ -1,16 +1,15 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-
-	<a hred="" [routerLink]="['/searchUser']">
-		<img [hidden]=!in_master_detail src="/assets/img/list.png" width="32" height="32"/>
-	</a>
-	<a href="" (click)="goBack()">
-		<img [hidden]=!in_master_detail  src="/assets/img/back.gif" width="32" height="32"/>
-	</a>
-	<a href="" (click)="goNext()">
-		<img [hidden]=!in_master_detail src="/assets/img/forward.png" width="32" height="32"/>
-	</a>
-	&nbsp;&nbsp;&nbsp;
+	<div id="header_navigation_master_detail">
+		
+		<a href="" [routerLink]="['/searchUser']" class="header_toolbar_master_detail round" width="48" height="48">
+			<img [hidden]=!in_master_detail src="/assets/img/list.png" width="48" height="48"/>
+		</a>
+		
+		<a href="#" class="header_toolbar_master_detail previous round" (click)="goBack()" [hidden]=!in_master_detail >&nbsp;&#8249;&nbsp;</a>
+		
+		<a href="#" (click)="goNext()" class="header_toolbar_master_detail next round" [hidden]=!in_master_detail>&nbsp;&#8250;&nbsp;</a>
 	
+	</div>	
 	<a class="navbar-brand" href="#">{{formTitle}}</a>
 	<button class="navbar-toggler" type="button" data-toggle="collapse"
 		data-target="#navbarsExampleDefault"
@@ -33,7 +32,7 @@
 				ngbDropdownToggle>Developers</a>
 				<ul class="dropdown-menu" aria-labelledby="dropdownUsers"
 					ngbDropdownMenu>
-					<li><a class="dropdown-item" [routerLink]="['/searchUser']">Search.</a></li>
+					<li><a class="dropdown-item" [routerLink]="['/searchUser']">Search</a></li>
 					<li><a class="dropdown-item" (click)="goNewDeveloper()">New</a></li>
 				</ul></li>
 		</ul>
