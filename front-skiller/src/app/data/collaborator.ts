@@ -2,7 +2,7 @@
 import { Attribution } from './attribution';
 
 
-export class Collaborater {
+export class Collaborator {
   public id: number;
   public firstName: string;
   public lastName: string;

@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, map, tap} from 'rxjs/operators';
 
-import {Collaborater} from './data/collaborater';
+import {Collaborator} from './data/collaborator';
 import {MOCK_COLLABORATERS} from './mock/mock-collaboraters';
 
 import {Observable, of} from 'rxjs';
@@ -14,14 +14,14 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
-export class CollaboraterService {
+export class CollaboratorService {
 
   private collaborateresUrl = 'api/collaborater';  // URL to web api
 
   constructor(
     private http: HttpClient) {}
 
-  getCollaboraters(): Observable<Collaborater[]> {
+  getCollaboraters(): Observable<Collaborator[]> {
     this.log('Fetched collaboraters');
 
     //    return this.http.get<Collaborater[]>(this.collaborateresUrl).pipe(catchError(this.handleError('getCollaboraters', [])));
@@ -29,7 +29,7 @@ export class CollaboraterService {
   }
 
   /** GET collaborater by id. Will 404 if id not found */
-  getCollaborater(id: number): Observable<Collaborater> {
+  getCollaborater(id: number): Observable<Collaborator> {
     return null;
     /*
     const url = `${this.collaborateresUrl}/${id}`;
@@ -66,7 +66,7 @@ export class CollaboraterService {
   }
 
 
-  updateCollaborater(collaborater: Collaborater): Observable<any> {
+  updateCollaborater(collaborater: Collaborator): Observable<any> {
     return this.http.put(this.collaborateresUrl, collaborater, httpOptions).pipe(
       tap(_ => this.log(`updated collaborater id=${collaborater.id}`)),
       catchError(this.handleError<any>('updateCollaborater'))
@@ -74,33 +74,33 @@ export class CollaboraterService {
   }
 
   /** POST: add a new collaborater to the server */
-  addCollaborater(collaborater: Collaborater): Observable<Collaborater> {
-    return this.http.post<Collaborater>(this.collaborateresUrl, collaborater, httpOptions).pipe(
-      tap((collaborater: Collaborater) => this.log(`added collaborater w/ id=${collaborater.id}`)),
-      catchError(this.handleError<Collaborater>('addCollaborater'))
+  addCollaborater(collaborater: Collaborator): Observable<Collaborator> {
+    return this.http.post<Collaborator>(this.collaborateresUrl, collaborater, httpOptions).pipe(
+      tap((collaborater: Collaborator) => this.log(`added collaborater w/ id=${collaborater.id}`)),
+      catchError(this.handleError<Collaborator>('addCollaborater'))
     );
   }
 
   /** DELETE: delete the collaborater from the server */
-  deleteCollaborater(collaborater: Collaborater | number): Observable<Collaborater> {
+  deleteCollaborater(collaborater: Collaborator | number): Observable<Collaborator> {
     const id = typeof collaborater === 'number' ? collaborater : collaborater.id;
     const url = `${this.collaborateresUrl}/${id}`;
 
-    return this.http.delete<Collaborater>(url, httpOptions).pipe(
+    return this.http.delete<Collaborator>(url, httpOptions).pipe(
       tap(_ => this.log(`deleted collaborater id=${id}`)),
-      catchError(this.handleError<Collaborater>('deleteCollaborater'))
+      catchError(this.handleError<Collaborator>('deleteCollaborater'))
     );
   }
 
   /* GET collaboraters whose name contains search term */
-  searchCollaborateres(term: string): Observable<Collaborater[]> {
+  searchCollaborateres(term: string): Observable<Collaborator[]> {
     if (!term.trim()) {
       // if not search term, return empty collaborater array.
       return of([]);
     }
-    return this.http.get<Collaborater[]>(`${this.collaborateresUrl}/?name=${term}`).pipe(
+    return this.http.get<Collaborator[]>(`${this.collaborateresUrl}/?name=${term}`).pipe(
       tap(_ => this.log(`found collaborateres matching "${term}"`)),
-      catchError(this.handleError<Collaborater[]>('searchCollaborateres', []))
+      catchError(this.handleError<Collaborator[]>('searchCollaborateres', []))
     );
   }
 }

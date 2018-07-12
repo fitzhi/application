@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {Collaborater} from './data/collaborater';
+import {Collaborator} from './data/collaborator';
 import {MOCK_COLLABORATERS} from './mock/mock-collaboraters';
 
 @Injectable({
@@ -7,14 +7,14 @@ import {MOCK_COLLABORATERS} from './mock/mock-collaboraters';
 })
 export class DataService {
 
-  private static theStaff: Collaborater[];
+  private static theStaff: Collaborator[];
 
   constructor() {}
 
   /**
    * Register in a static array the list of collaboraters.
    */
-  setDataArrayCollaboraters(theStaff: Collaborater[]) {
+  setDataArrayCollaboraters(theStaff: Collaborator[]) {
     DataService.theStaff = theStaff;
   }
 
@@ -47,16 +47,23 @@ export class DataService {
   }
 
   /**
-   * Return the colloborater associated with this id.
+   * Return the collaborator associated with this id.
    */
-  getCollaborater(id: number): Collaborater {
+  getCollaborater(id: number): Collaborator {
     return DataService.theStaff.find(collab => collab.id ==   id);
   }
 
   /**
-   * Return the list of collaboraters.
+   * Return the collaborator associated with this id.
    */
-  getStaff(): Collaborater[] {
+  nextCollaborater(id: number): Collaborator {
+    return DataService.theStaff.find(collab => collab.id ==   id);
+  }
+
+  /**
+   * Return the list of collaborators.
+   */
+  getStaff(): Collaborator[] {
     return DataService.theStaff;
   }
 

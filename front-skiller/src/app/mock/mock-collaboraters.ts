@@ -2,11 +2,11 @@
  * New typescript file
  */
 
-import {Collaborater} from '../data/collaborater';
+import {Collaborator} from '../data/collaborator';
 import {Attribution} from '../data/attribution';
 
 
-export const MOCK_COLLABORATERS: Collaborater[] = [
+export const MOCK_COLLABORATERS: Collaborator[] = [
   {
     id: 1,
     firstName: 'Frederic',

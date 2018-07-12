@@ -4,7 +4,7 @@ import {ActivatedRoute} from '@angular/router';
 import {Router} from '@angular/router';
 
 import {CinematicService} from '../cinematic.service';
-import {Collaborater} from '../data/collaborater';
+import {Collaborator} from '../data/collaborator';
 
 import {Level} from '../data/level';
 import {Attribution} from '../data/attribution';
@@ -29,7 +29,7 @@ export class UserComponent implements OnInit {
   private levels: Level[] = LIST_OF_LEVELS;
   private projects: Project[] = PROJECTS;
 
-  private collaborater: Collaborater;
+  private collaborater: Collaborator;
 
   constructor(
     private cinematicService: CinematicService,

@@ -2,7 +2,7 @@ import {Component, OnInit, Input} from '@angular/core';
 import {CinematicService} from '../cinematic.service';
 import {DataService} from '../data.service';
 import {Constants} from '../constants';
-import {Collaborater} from '../data/collaborater';
+import {Collaborator} from '../data/collaborator';
 
 @Component({
   selector: 'app-search-user',
@@ -11,7 +11,7 @@ import {Collaborater} from '../data/collaborater';
 })
 export class SearchUserComponent implements OnInit {
 
-  private collaboraters: Collaborater[] = [];
+  private collaboraters: Collaborator[] = [];
 
   constructor(
     private cinematicService: CinematicService,
