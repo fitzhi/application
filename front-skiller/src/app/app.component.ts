@@ -70,6 +70,12 @@ export class AppComponent {
         case Constants.DEVELOPERS_CRUD: {
           this.formTitle = "Registering a new developer...";
           this.in_master_detail = (this.searching_what != null);
+          /*
+           * Cleaning up the list if we are in CREATION mode
+           */
+          if (this.searching_what == null) {
+            
+          }
           this.is_searching = false;
           break;
         }

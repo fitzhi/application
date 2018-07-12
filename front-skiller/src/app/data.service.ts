@@ -30,8 +30,8 @@ export class DataService {
 	*/
   reloadCollaboraters(myCriteria: string) {
 
-    DataService.theStaff.length = 0;
-
+    cleanUpCollaboraters();
+    
     DataService.theStaff.push(...MOCK_COLLABORATERS.filter(
       collab =>
         (collab.firstName.toLowerCase().indexOf(myCriteria) > -1)
@@ -39,10 +39,23 @@ export class DataService {
     ));
   }
 
+  /**
+   * Cleanup the list of collaboraters involved in our service center.
+   */
+  cleanUpCollaboraters () {
+    DataService.theStaff.length = 0;
+  }
+
+  /**
+   * Return the colloborater associated with this id.
+   */
   getCollaborater(id: number): Collaborater {
     return DataService.theStaff.find(collab => collab.id ==   id);
   }
 
+  /**
+   * Return the list of collaboraters.
+   */
   getStaff(): Collaborater[] {
     return DataService.theStaff;
   }
