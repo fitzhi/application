@@ -30,7 +30,7 @@ export class DataService {
 	*/
   reloadCollaboraters(myCriteria: string) {
 
-    cleanUpCollaboraters();
+    this.cleanUpCollaboraters();
     
     DataService.theStaff.push(...MOCK_COLLABORATERS.filter(
       collab =>

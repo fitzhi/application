@@ -1,6 +1,6 @@
 import {AppModule} from '../app.module';
 import {Component, OnInit} from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {Router} from '@angular/router';
 
 import {CinematicService} from '../cinematic.service';
@@ -14,7 +14,7 @@ import {LIST_OF_LEVELS} from '../data/List_of_levels';
 import {PROJECTS} from '../mock/mock-projects';
 import {Constants} from '../constants';
 
-import { DataService } from '../data.service';
+import {DataService} from '../data.service';
 
 @Component({
   selector: 'app-user',
@@ -23,50 +23,50 @@ import { DataService } from '../data.service';
 })
 export class UserComponent implements OnInit {
 
-	private id: number;
-	private sub: any;
-	
-  	private levels: Level[] = LIST_OF_LEVELS;
-  	private projects: Project[] = PROJECTS;
+  private id: number;
+  private sub: any;
 
-  	private collaborater: Collaborater;
+  private levels: Level[] = LIST_OF_LEVELS;
+  private projects: Project[] = PROJECTS;
 
-  	constructor(
-  		private cinematicService: CinematicService,
-  		private route: ActivatedRoute,
-  		private dataService: DataService) {}
+  private collaborater: Collaborater;
 
-	ngOnInit() {
-		this.sub = this.route.params.subscribe(params => {
-			if (params['id'] == null) {
-				this.id = null;   
-			} else {
-	       		this.id = + params['id']; // (+) converts string 'id' to a number
-	       	}
-	    });	
-		if (this.id == null) {
-			// creation mode...
-			this.collaborater = {id:null, firstName:null, lastName:null, nickName:null, email:null, level:null, projects:[]}
-		} else {
+  constructor(
+    private cinematicService: CinematicService,
+    private route: ActivatedRoute,
+    private dataService: DataService) {}
 
-	    	this.collaborater = this.dataService.getCollaborater(this.id);
-	    	if (Constants.DEBUG) {
-	      		console.log('Reading the collaborater below');
-	      		console.log(this.collaborater);
-	 		}
- 		}
- 		this.cinematicService.setForm(Constants.DEVELOPERS_CRUD);
-	}
+  ngOnInit() {
+    this.sub = this.route.params.subscribe(params => {
+      if (params['id'] == null) {
+        this.id = null;
+      } else {
+        this.id = + params['id']; // (+) converts string 'id' to a number
+      }
+    });
+    if (this.id == null) {
+      // creation mode...
+      this.collaborater = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null, projects: []}
+    } else {
 
-	/**
+      this.collaborater = this.dataService.getCollaborater(this.id);
+      if (Constants.DEBUG) {
+        console.log('Reading the collaborater below');
+        console.log(this.collaborater);
+      }
+    }
+    this.cinematicService.setForm(Constants.DEVELOPERS_CRUD);
+  }
+
+  /**
 	* The Validate Button has been activated
 	*/
-  	save(): void {
-    	if (Constants.DEBUG) {
-      		console.log('Saving data for the collaborater below');
-      		console.log(this.collaborater);
-    	}
-  	}
+  save(): void {
+    if (Constants.DEBUG) {
+      console.log('Saving data for the collaborater below');
+      console.log(this.collaborater);
+    }
+  }
 
 }
 
