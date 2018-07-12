@@ -50,14 +50,14 @@ export class DataService {
    * Return the collaborator associated with this id.
    */
   getCollaborater(id: number): Collaborator {
-    return DataService.theStaff.find(collab => collab.id ==   id);
+    return DataService.theStaff.find(collab => collab.id === id);
   }
 
   /**
    * Return the collaborator associated with this id.
    */
   nextCollaborater(id: number): Collaborator {
-    return DataService.theStaff.find(collab => collab.id ==   id);
+    return DataService.theStaff.find(collab => collab.id === id);
   }
 
   /**
