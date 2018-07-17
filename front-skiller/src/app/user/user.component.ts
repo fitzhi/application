@@ -38,22 +38,26 @@ export class UserComponent implements OnInit {
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
+      if (Constants.DEBUG) {
+        console.log('params[\'id\'] ' + params['id']);
+      }
       if (params['id'] == null) {
         this.id = null;
       } else {
         this.id = + params['id']; // (+) converts string 'id' to a number
       }
-    });
-    if (this.id == null) {
-      // creation mode...
-      this.collaborater = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null, projects: []};
-    } else {
-      this.collaborater = this.dataService.getCollaborater(this.id);
-      if (Constants.DEBUG) {
-        console.log('Reading the collaborater below');
-        console.log(this.collaborater);
+
+      if (this.id == null) {
+        // creation mode...
+        this.collaborater = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null, projects: []};
+      } else {
+        this.collaborater = this.dataService.getCollaborator(this.id);
+        if (Constants.DEBUG) {
+          console.log('Reading the collaborater below');
+          console.log(this.collaborater);
+        }
       }
-    }
+    });
     this.cinematicService.setForm(Constants.DEVELOPERS_CRUD);
   }
 

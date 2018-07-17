@@ -11,7 +11,7 @@ import {Collaborator} from '../data/collaborator';
 })
 export class SearchUserComponent implements OnInit {
 
-  private collaboraters: Collaborator[] = [];
+  private collaborators: Collaborator[];
 
   constructor(
     private cinematicService: CinematicService,
@@ -20,12 +20,7 @@ export class SearchUserComponent implements OnInit {
   ngOnInit() {
 
     this.cinematicService.setForm(Constants.DEVELOPERS_SEARCH);
-    if (!this.dataService.hasDataArrayCollaboratersAlreadySet()) {
-      console.log("hasDataArrayCollaboratersAlreadySet is false");
-      this.dataService.setDataArrayCollaboraters(this.collaboraters);
-    } else {
-      this.collaboraters = this.dataService.getStaff();
-    }
+    this.collaborators = this.dataService.getStaff();
   }
 
 }

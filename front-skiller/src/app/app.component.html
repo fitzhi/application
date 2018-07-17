@@ -1,15 +1,14 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
 	<div id="header_navigation_master_detail">
-		
 		<a href="" [routerLink]="['/searchUser']" class="header_toolbar_master_detail round" width="48" height="48">
 			<img [hidden]=!in_master_detail src="/assets/img/list.png" width="48" height="48"/>
 		</a>
 		
-		<a href="#" (click)="nextEntry()" class="header_toolbar_master_detail previous round" [hidden]=!in_master_detail >&nbsp;&#8249;&nbsp;</a>
+		<a href="" [routerLink]="['/user', 3]" class="header_toolbar_master_detail previous round" [hidden]=!in_master_detail >&nbsp;&#8249;&nbsp;</a>
 		
-		<a href="#" (click)="previousEntry()" class="header_toolbar_master_detail next round" [hidden]=!in_master_detail>&nbsp;&#8250;&nbsp;</a>
-	
+		<a href="" [routerLink]="['/user', 2]" class="header_toolbar_master_detail next round" [hidden]=!in_master_detail>&nbsp;&#8250;&nbsp;</a>
 	</div>	
+	
 	<a class="navbar-brand" href="#">{{formTitle}}</a>
 	<button class="navbar-toggler" type="button" data-toggle="collapse"
 		data-target="#navbarsExampleDefault"

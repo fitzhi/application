@@ -6,13 +6,13 @@
         <div class="col-4">Main skills</div>        
     </div>
     
-    <div *ngFor="let collaborater of collaboraters" class="row" style="font-size: large">
+    <div *ngFor="let collaborator of collaborators" class="row" style="font-size: large">
         <div class="col-4">
-        	<a [routerLink]="['/user', collaborater.id]">
-        		{{collaborater.firstName}} {{collaborater.lastName}}
+        	<a [routerLink]="['/user', collaborator.id]">
+        		{{collaborator.firstName}} {{collaborator.lastName}}
        		</a>
 		</div>
-        <div class="col-2">{{collaborater.level}}</div>
+        <div class="col-2">{{collaborator.level}}</div>
         <div class="col-4">No too much</div>        
     </div>
 

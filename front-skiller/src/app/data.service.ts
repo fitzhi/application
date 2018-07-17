@@ -11,61 +11,61 @@ export class DataService {
   /**
    * List of collaborators corresponding to the search criteria.
    */
-  private static theStaff: Collaborator[];
+  private static theStaff: Collaborator[] = [];
 
   /**
    * Current collaborator's identifier previewed on the formular.
    */
   private static currentId: number;
 
-  constructor() {}
-
-  /**
-   * Register in a static array the list of collaboraters.
-   */
-  setDataArrayCollaboraters(theStaff: Collaborator[]) {
-    DataService.theStaff = theStaff;
+  constructor() {
   }
 
   /**
-   * Test if the static array of collaboraters has been set.
-   */
-  hasDataArrayCollaboratersAlreadySet(): boolean {
-    return (DataService.theStaff != null);
-  }
-
-  /**
-	* Reload the collaboraters for the passed criteria.
+	* Reload the collaborators for the passed criteria.
 	*/
-  reloadCollaboraters(myCriteria: string) {
+  reloadCollaborators(myCriteria: string) {
 
-    this.cleanUpCollaboraters();
-
+    this.cleanUpCollaborators();
+    
     DataService.theStaff.push(...MOCK_COLLABORATERS.filter(
       collab =>
         (collab.firstName.toLowerCase().indexOf(myCriteria) > -1)
         || (collab.lastName.toLowerCase().indexOf(myCriteria) > -1)
     ));
+    if (Constants.DEBUG) {
+        console.log('the staff collection is containing now ' + DataService.theStaff.length + ' records');
+    }
   }
 
   /**
-   * Cleanup the list of collaboraters involved in our service center.
+   * Cleanup the list of collaborators involved in our service center.
    */
-  cleanUpCollaboraters () {
+  cleanUpCollaborators () {
+    if (Constants.DEBUG) {
+      if (DataService.theStaff == null) {
+        console.log('INTERNAL ERROR : collection theStaff SHOULD NOT BE NULL, dude !');
+      } else {
+        console.log('Cleaning up the staff collection containing ' + DataService.theStaff.length + ' records');
+      }
+    }
     DataService.theStaff.length = 0;
   }
 
   /**
    * Return the collaborator associated with this id.
    */
-  getCollaborater(id: number): Collaborator {
+  getCollaborator(id: number): Collaborator {
+    
     let result: Collaborator;
-    result = DataService.theStaff.find(collab => collab.id === id);
+    result = MOCK_COLLABORATERS.find(collab => collab.id === id);
+    
     if (typeof result !== 'undefined') {
       DataService.currentId = id;
     } else {
       DataService.currentId = null;
     }
+    
     if (Constants.DEBUG) {
       console.log('Current identifier ' + DataService.currentId);
     }
@@ -75,8 +75,32 @@ export class DataService {
   /**
    * Return the collaborator associated with this id.
    */
-  nextCollaborater(id: number): Collaborator {
-    return DataService.theStaff.find(collab => collab.id === id);
+  currentCollaboratorId(): number {
+    return DataService.currentId;
+  }
+
+  /**
+   * Return the NEXT collaborator's id associated with this id in the staff list.
+   */
+  nextCollaboratorId(): number {
+    const index = DataService.theStaff.findIndex(collab => collab.id === DataService.currentId);
+    if (index < DataService.theStaff.length) {
+      return DataService.theStaff[index + 1].id;
+    } else {
+      return -1;
+    }
+  }
+
+  /**
+   * Return the PREVIOUS collaborator's id associated with this id in the staff list.
+   */
+  previousCollaboratorId(): number {
+    const index = DataService.theStaff.findIndex(collab => collab.id === DataService.currentId);
+    if (index < DataService.theStaff.length + 1) {
+      return DataService.theStaff[index + 1].id;
+    } else {
+      return -1;
+    }
   }
 
   /**

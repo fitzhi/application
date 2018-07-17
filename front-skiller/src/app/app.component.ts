@@ -75,7 +75,6 @@ export class AppComponent {
            */
           if (this.searching_what == null) {
             this.formTitle = 'New developer registration...';
-            dataService.cleanUpCollaboraters();
           } else {
             this.formTitle = 'Developer Update...';
           }
@@ -106,10 +105,10 @@ export class AppComponent {
     }
     switch (this.formId) {
       case Constants.DEVELOPERS_SEARCH:
-        this.dataService.reloadCollaboraters(this.searching_what);
         if (Constants.DEBUG) {
-          console.log('this.dataService.hasDataArrayCollaboratersAlreadySet() ' + this.dataService.hasDataArrayCollaboratersAlreadySet());
+          console.log('Reloading collaborators for search criteria ' + this.searching_what);
         }
+        this.dataService.reloadCollaborators(this.searching_what);
         break;
       case Constants.SKILLS_SEARCH: {
         break;
@@ -131,14 +130,18 @@ export class AppComponent {
 
   nextEntry(): void {
     if (Constants.DEBUG) {
-      console.log('Entering in the method nextEntry()');
+      console.log('Entering in the method nextEntry() for ' + this.dataService.currentCollaboratorId());
     }
+    console.log(this.dataService.nextCollaboratorId());
+      this.router.navigate(['/user'], { queryParams: { id:  this.dataService.nextCollaboratorId() } } );
   }
 
   previousEntry(): void {
     if (Constants.DEBUG) {
       console.log('Entering in the method previousEntry()');
     }
+    console.log(this.dataService.previousCollaboratorId());
+    this.router.navigate(['/user'], { queryParams: { id:  this.dataService.previousCollaboratorId() } } );
   }
 
 }
