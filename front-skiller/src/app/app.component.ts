@@ -137,32 +137,5 @@ export class AppComponent implements OnInit{
     }
     this.searching_what = null;
     this.router.navigate(['/user'], {});
-  }
-
-  /*  
-    nextCollaborator(): void {
-  
-      const next_id = this.dataService.nextCollaboratorId();
-  
-      if (Constants.DEBUG) {
-        console.log('Entering in the method nextCollaborator() for ' + this.dataService.currentCollaboratorId());
-        console.log('Nex collaborator ID :' + next_id);
-      }
-  
-      this.router.navigate(['/user' + next_id]);
-    }
-  
-    previousCollaborator(): void {
-  
-      const previous_id = this.dataService.previousCollaboratorId();
-  
-      if (Constants.DEBUG) {
-        console.log('Entering in the method previsousCollaborator() for ' + this.dataService.currentCollaboratorId());
-        console.log('Previous collaborator ID :' + previous_id);
-      }
-  
-      this.roer.navigate(['/user', previous_id]);
-    }
-  */
-  
+  }  
 }
