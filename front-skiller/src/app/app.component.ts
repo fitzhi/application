@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CinematicService} from './cinematic.service';
 import {DataService} from './data.service';
 import {Constants} from './constants';
@@ -10,7 +10,7 @@ import {Router} from '@angular/router';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
 
   /**
   * Title of the form
@@ -37,6 +37,8 @@ export class AppComponent {
   */
   searching_what: string;
 
+  private nextId: number;
+  private previousId: number;
 
   constructor(
     private cinematicService: CinematicService,
@@ -70,14 +72,7 @@ export class AppComponent {
         case Constants.DEVELOPERS_CRUD: {
           this.in_master_detail = (this.searching_what != null);
           this.is_searching = false;
-          /*
-           * Cleaning up the list if we are in CREATION mode
-           */
-          if (this.searching_what == null) {
-            this.formTitle = 'New developer registration...';
-          } else {
-            this.formTitle = 'Developer Update...';
-          }
+          this.formTitle = 'Developer Update...';
           break;
         }
         case Constants.DEVELOPERS_SEARCH: {
@@ -88,6 +83,22 @@ export class AppComponent {
         }
       }
 
+    });
+
+
+    this.dataService.newCollaboratorDisplayEmitted$.subscribe(data => {
+      if (Constants.DEBUG) {
+        console.log('Receiving data ' + data);
+      }
+      setTimeout(() => {
+        this.previousId = dataService.previousCollaboratorId(data);
+        this.nextId = dataService.nextCollaboratorId(data);
+      }
+      );
+      if (Constants.DEBUG) {
+        console.log('this.previousId ' + this.previousId);
+        console.log('this.nextId ' + this.nextId);
+      }
     });
   }
 
@@ -128,20 +139,30 @@ export class AppComponent {
     this.router.navigate(['/user'], {});
   }
 
-  nextEntry(): void {
-    if (Constants.DEBUG) {
-      console.log('Entering in the method nextEntry() for ' + this.dataService.currentCollaboratorId());
+  /*  
+    nextCollaborator(): void {
+  
+      const next_id = this.dataService.nextCollaboratorId();
+  
+      if (Constants.DEBUG) {
+        console.log('Entering in the method nextCollaborator() for ' + this.dataService.currentCollaboratorId());
+        console.log('Nex collaborator ID :' + next_id);
+      }
+  
+      this.router.navigate(['/user' + next_id]);
     }
-    console.log(this.dataService.nextCollaboratorId());
-      this.router.navigate(['/user'], { queryParams: { id:  this.dataService.nextCollaboratorId() } } );
-  }
-
-  previousEntry(): void {
-    if (Constants.DEBUG) {
-      console.log('Entering in the method previousEntry()');
+  
+    previousCollaborator(): void {
+  
+      const previous_id = this.dataService.previousCollaboratorId();
+  
+      if (Constants.DEBUG) {
+        console.log('Entering in the method previsousCollaborator() for ' + this.dataService.currentCollaboratorId());
+        console.log('Previous collaborator ID :' + previous_id);
+      }
+  
+      this.roer.navigate(['/user', previous_id]);
     }
-    console.log(this.dataService.previousCollaboratorId());
-    this.router.navigate(['/user'], { queryParams: { id:  this.dataService.previousCollaboratorId() } } );
-  }
-
+  */
+  
 }

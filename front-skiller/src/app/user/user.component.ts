@@ -57,8 +57,10 @@ export class UserComponent implements OnInit {
           console.log(this.collaborater);
         }
       }
+
+      this.cinematicService.setForm(Constants.DEVELOPERS_CRUD);
+
     });
-    this.cinematicService.setForm(Constants.DEVELOPERS_CRUD);
   }
 
   /**
