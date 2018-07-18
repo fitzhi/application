@@ -5,9 +5,19 @@
 			<img [hidden]=!in_master_detail src="/assets/img/list.png" width="48" height="48"/>
 		</a>
 		
-		<a href="" [routerLink]="['/user', previousId]" class="header_toolbar_master_detail previous round" [hidden]=!in_master_detail >&nbsp;&#8249;&nbsp;</a>
+		<a href="" [routerLink]="['/user', previousId]" 
+			class="header_toolbar_master_detail previous round" 
+			[class.disabled]="(previousId == undefined)"
+			[hidden]=!in_master_detail >
+			&nbsp;&#8249;&nbsp;
+		</a>
 		
-		<a href="" [routerLink]="['/user', nextId]"  class="header_toolbar_master_detail next round" [hidden]=!in_master_detail>&nbsp;&#8250;&nbsp;</a>
+		<a href="" [routerLink]="['/user', nextId]" 
+			class="header_toolbar_master_detail next round" 
+			[class.disabled]="(nextId == undefined)"
+			[hidden]=!in_master_detail>
+			&nbsp;&#8250;&nbsp;
+		</a>
 	</div>	
 	
 	<a class="navbar-brand" href="#">{{formTitle}}</a>

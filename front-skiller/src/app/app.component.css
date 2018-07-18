@@ -7,9 +7,15 @@ a.header_toolbar_master_detail:hover {
     background-color: #ddd;
 }
 
+a.disabled {
+   pointer-events: none;
+   color: grey;
+   cursor: default;
+}
+
 .previous {
     color: teal;
-    font-size: 32px;
+	font-size: 32px;
     padding-top: 0px;
     padding-bottom: 0px;
    	padding-right: 8px;
