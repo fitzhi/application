@@ -4,8 +4,16 @@ a.header_toolbar_master_detail {
 }
 
 a.header_toolbar_master_detail:hover {
-    background-color: #ddd;
+    background-color: lightGrey;
 }
+
+.inactive {
+}
+
+.activated {
+   background-color: white;
+}
+
 
 a.disabled {
    pointer-events: none;

@@ -40,12 +40,19 @@ export class AppComponent implements OnInit {
   private nextId: number;
   private previousId: number;
 
+  private skill_activated = true;
+  private image_skill_activated = '/assets/img/skill-activated.png';
+  private image_skill_inactive = '/assets/img/skill-inactive.png';
+
+  private dev_activated = true;
+  private image_dev_activated = '/assets/img/developper-activated.png';
+  private image_dev_inactive = '/assets/img/developper-inactive.png';
+
   constructor(
     private cinematicService: CinematicService,
     private dataService: DataService,
     private location: Location,
     private router: Router) {
-
 
     this.cinematicService.newFormDisplayEmitted$.subscribe(data => {
 
@@ -58,7 +65,7 @@ export class AppComponent implements OnInit {
           break;
         }
         case Constants.SKILLS_CRUD: {
-          this.formTitle = 'Register a new skill';
+          this.formTitle = 'Skill';
           this.in_master_detail = false;
           this.is_searching = false;
           break;
@@ -72,7 +79,7 @@ export class AppComponent implements OnInit {
         case Constants.DEVELOPERS_CRUD: {
           this.in_master_detail = (this.searching_what != null);
           this.is_searching = false;
-          this.formTitle = 'Developer Update...';
+          this.formTitle = 'Developper';
           break;
         }
         case Constants.DEVELOPERS_SEARCH: {
@@ -110,6 +117,8 @@ export class AppComponent implements OnInit {
   ngOnInit() {
     this.formTitle = 'Welcome';
     this.is_searching = true;
+    this.dev_activated = false;
+    this.skill_activated = false;
   }
 
   /**
@@ -142,5 +151,15 @@ export class AppComponent implements OnInit {
     }
     this.searching_what = null;
     this.router.navigate(['/user'], {});
+  }
+
+  switchToSkill () {
+    this.skill_activated = true;
+    this.dev_activated = false;
+  }
+
+  switchToDev () {
+    this.dev_activated = true;
+    this.skill_activated = false;
   }
 }
