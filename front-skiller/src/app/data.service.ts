@@ -85,7 +85,11 @@ export class DataService {
    */
   nextCollaboratorId(id: number): number {
     const index = DataService.theStaff.findIndex(collab => collab.id === id);
-    if (index <= DataService.theStaff.length) {
+    if (Constants.DEBUG) {
+      console.log ('Current index : ' + index);
+      console.log ('Staff size : ' + DataService.theStaff.length);
+    }
+    if (index < DataService.theStaff.length - 1) {
       return DataService.theStaff[index + 1].id;
     } else {
       return undefined;
@@ -98,7 +102,7 @@ export class DataService {
   previousCollaboratorId(id: number): number {
     const index = DataService.theStaff.findIndex(collab => collab.id === id);
     if (index > 0) {
-      return DataService.theStaff[index + 1].id;
+      return DataService.theStaff[index - 1].id;
     } else {
       return undefined;
     }

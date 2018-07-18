@@ -10,7 +10,7 @@ import {Router} from '@angular/router';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
 
   /**
   * Title of the form
@@ -90,6 +90,11 @@ export class AppComponent implements OnInit{
       if (Constants.DEBUG) {
         console.log('Receiving data ' + data);
       }
+
+      /*
+       * To avoid the life cycle check error :
+       * "Expression has changed after it was checked"
+       */
       setTimeout(() => {
         this.previousId = dataService.previousCollaboratorId(data);
         this.nextId = dataService.nextCollaboratorId(data);
@@ -137,5 +142,5 @@ export class AppComponent implements OnInit{
     }
     this.searching_what = null;
     this.router.navigate(['/user'], {});
-  }  
+  }
 }
