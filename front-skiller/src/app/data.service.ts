@@ -1,8 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Collaborator} from './data/collaborator';
+import {Skill} from './data/skill';
 import {Constants} from './constants';
-import {MOCK_COLLABORATERS} from './mock/mock-collaboraters';
+import {MOCK_COLLABORATORS} from './mock/mock-collaboraters';
 import {Subject} from 'rxjs';
+
+import {CollaboratorService} from './collaborator.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +18,12 @@ export class DataService {
   private static theStaff: Collaborator[] = [];
 
   /**
+   * List of skills corresponding to the search criteria.
+   */
+  private static theSkill: Skill[] = [];
+
+
+  /**
    * Current collaborator's identifier previewed on the fom.
    */
   private emitActualCollaboratorDisplay = new Subject<number>();
@@ -24,7 +33,10 @@ export class DataService {
    */
   newCollaboratorDisplayEmitted$ = this.emitActualCollaboratorDisplay.asObservable();
 
-  constructor() {
+  /**
+   * Construction.
+   */
+  constructor(private collaboratorService: CollaboratorService) {
   }
 
   /**
@@ -34,7 +46,7 @@ export class DataService {
 
     this.cleanUpCollaborators();
 
-    DataService.theStaff.push(...MOCK_COLLABORATERS.filter(
+    DataService.theStaff.push(...this.collaboratorService.getCollaborators().filter(
       collab =>
         (collab.firstName.toLowerCase().indexOf(myCriteria) > -1)
         || (collab.lastName.toLowerCase().indexOf(myCriteria) > -1)
@@ -64,7 +76,7 @@ export class DataService {
   getCollaborator(id: number): Collaborator {
 
     let result: Collaborator;
-    result = MOCK_COLLABORATERS.find(collab => collab.id === id);
+    result = MOCK_COLLABORATORS.find(collab => collab.id === id);
 
     if (typeof result !== 'undefined') {
       this.emitActualCollaboratorDisplay.next(id);

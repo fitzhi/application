@@ -3,7 +3,9 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, map, tap} from 'rxjs/operators';
 
 import {Collaborator} from './data/collaborator';
-import {MOCK_COLLABORATERS} from './mock/mock-collaboraters';
+import {MOCK_COLLABORATORS} from './mock/mock-collaboraters';
+
+import {Constants} from './constants';
 
 import {Observable, of} from 'rxjs';
 
@@ -21,11 +23,15 @@ export class CollaboratorService {
   constructor(
     private http: HttpClient) {}
 
-  getCollaboraters(): Observable<Collaborator[]> {
-    this.log('Fetched collaboraters');
-
+  /**
+   * Return the global list of collaborators, working for our company.
+   */
+  getCollaborators(): Collaborator[] {
+    if (Constants.DEBUG) {
+      this.log('Fetching the collaborators');
+    }
     //    return this.http.get<Collaborater[]>(this.collaborateresUrl).pipe(catchError(this.handleError('getCollaboraters', [])));
-    return of(MOCK_COLLABORATERS);
+    return MOCK_COLLABORATORS;
   }
 
   /** GET collaborater by id. Will 404 if id not found */

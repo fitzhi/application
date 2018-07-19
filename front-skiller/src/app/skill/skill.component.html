@@ -1,3 +1,25 @@
-<p>
-  skill creation formular
-</p>
+<div class="container">
+	<div class="py-5 text-center">
+		<h2>Skill Form</h2>
+		<p class="lead">Adding a new skill in the repository.</p>
+	</div>
+
+	<div class="row">
+		<div class="col-md-8 order-md-1">
+			<form class="needs-validation" novalidate>
+				<div class="mb-3">
+					<label for="skill">Skill</label> 
+					<input type="text"
+						class="form-control" id="skill" name="skill"
+						placeholder="Skill name" value="" required
+						[(ngModel)]="skill.title">
+					<div class="invalid-feedback">Valid skill title is required.
+					</div>
+				</div>
+				<hr class="mb-4">
+				<button class="btn btn-primary btn-lg btn-block" type="submit"
+					(click)="save()">Validate</button>
+			</form>
+		</div>
+	</div>
+</div>

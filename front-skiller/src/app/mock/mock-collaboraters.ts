@@ -6,7 +6,7 @@ import {Collaborator} from '../data/collaborator';
 import {Attribution} from '../data/attribution';
 
 
-export const MOCK_COLLABORATERS: Collaborator[] = [
+export const MOCK_COLLABORATORS: Collaborator[] = [
   {
     id: 1,
     firstName: 'Frederic',

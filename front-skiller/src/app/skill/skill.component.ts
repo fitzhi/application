@@ -9,7 +9,7 @@ import {Constants} from '../constants';
 })
 export class SkillComponent implements OnInit {
 
-  constructor(private cinematicService:CinematicService) {}
+  constructor(private cinematicService: CinematicService) {}
 
   ngOnInit() {
     this.cinematicService.setForm(Constants.SKILLS_CRUD);

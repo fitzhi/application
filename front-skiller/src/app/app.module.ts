@@ -2,6 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {FormsModule} from '@angular/forms'; // <-- NgModel lives here
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { HttpClientModule } from '@angular/common/http';
 
 import {BsDropdownModule} from 'ngx-bootstrap/dropdown';
 import {TooltipModule} from 'ngx-bootstrap/tooltip';
@@ -18,6 +19,7 @@ import {UserComponent} from './user/user.component';
 import {SearchUserComponent} from './search-user/search-user.component';
 
 import {DataService} from './data.service';
+import {CollaboratorService} from './collaborator.service';
 
 @NgModule({
   declarations: [
@@ -35,11 +37,13 @@ import {DataService} from './data.service';
     TooltipModule.forRoot(),
     ModalModule.forRoot(),
     NgbModule.forRoot(),
-    FormsModule
+    FormsModule,
+    HttpClientModule,
   ],
   providers: [
     DataService,
-    CinematicService
+    CinematicService,
+    CollaboratorService
   ],
   bootstrap: [AppComponent]
 })
