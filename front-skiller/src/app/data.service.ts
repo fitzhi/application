@@ -127,5 +127,10 @@ export class DataService {
     return DataService.theStaff;
   }
 
-
+  /**
+   * Saving a new or an updated collaborator
+   */
+  saveCollaborator (collaborator: Collaborator) {
+    this.collaboratorService.addCollaborator (collaborator);
+  }
 }

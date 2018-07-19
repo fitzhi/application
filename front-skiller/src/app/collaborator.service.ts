@@ -79,10 +79,11 @@ export class CollaboratorService {
     );
   }
 
-  /** POST: add a new collaborater to the server */
-  addCollaborater(collaborater: Collaborator): Observable<Collaborator> {
-    return this.http.post<Collaborator>(this.collaborateresUrl, collaborater, httpOptions).pipe(
-      tap((collaborater: Collaborator) => this.log(`added collaborater w/ id=${collaborater.id}`)),
+  /** POST: add a new collaborator to the server */
+  addCollaborator(newCollaborator: Collaborator): Observable<Collaborator> {
+    return this.http.post<Collaborator>(this.collaborateresUrl, newCollaborator, httpOptions).pipe(
+      tap( (collaborator: Collaborator) =>
+        this.log(`added collaborator w/ id=${collaborator.id}`)),
       catchError(this.handleError<Collaborator>('addCollaborater'))
     );
   }
