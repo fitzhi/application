@@ -23,9 +23,9 @@ export class AppComponent implements OnInit {
   public formId: Number;
 
   /**
-  * Searching mode ON. The INPUT searching is enabled.
+  * Searching mode ON. The INPUT searching block is enabled.
   */
-  is_searching: boolean;
+  is_allowed_to_search: boolean;
 
   /**
   * Master/Detail mode ON. The goBack() and goFoward() buttons are visible
@@ -61,31 +61,31 @@ export class AppComponent implements OnInit {
         case Constants.WELCOME: {
           this.formTitle = 'Who\'s who';
           this.in_master_detail = false;
-          this.is_searching = false;
+          this.is_allowed_to_search = false;
           break;
         }
         case Constants.SKILLS_CRUD: {
           this.formTitle = 'Skill mode';
           this.in_master_detail = false;
-          this.is_searching = false;
+          this.is_allowed_to_search = true;
           break;
         }
         case Constants.SKILLS_SEARCH: {
           this.formTitle = 'Searching';
           this.in_master_detail = false;
-          this.is_searching = true;
+          this.is_allowed_to_search = true;
           break;
         }
         case Constants.DEVELOPPERS_CRUD: {
           this.in_master_detail = (this.searching_what != null);
-          this.is_searching = false;
+          this.is_allowed_to_search = true;
           this.formTitle = 'Developper mode';
           break;
         }
         case Constants.DEVELOPPERS_SEARCH: {
           this.formTitle = 'Searching';
           this.in_master_detail = false;
-          this.is_searching = true;
+          this.is_allowed_to_search = true;
           break;
         }
       }
@@ -116,7 +116,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.formTitle = 'Welcome';
-    this.is_searching = true;
+    this.is_allowed_to_search = true;
     this.dev_activated = false;
     this.skill_activated = false;
   }

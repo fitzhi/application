@@ -48,9 +48,11 @@
 				name="searching_what"
 				[(ngModel)]="searching_what" 
 				aria-label="Search"
+				[attr.disabled]="is_allowed_to_search?null:''"
 				(focus)="focusSearch()">
 			<button class="btn btn-outline-success my-2 my-sm-0"
-				[attr.disabled]="is_searching?null:''" (click)="search()"
+				[attr.disabled]="is_allowed_to_search?null:''" 
+				(click)="search()"
 				type="submit">Search</button>
 		</form>
 	</div>
