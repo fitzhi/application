@@ -58,7 +58,7 @@ export class UserComponent implements OnInit {
         }
       }
 
-      this.cinematicService.setForm(Constants.DEVELOPERS_CRUD);
+      this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
 
     });
   }

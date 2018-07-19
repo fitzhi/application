@@ -65,25 +65,25 @@ export class AppComponent implements OnInit {
           break;
         }
         case Constants.SKILLS_CRUD: {
-          this.formTitle = 'Skill';
+          this.formTitle = 'Skill mode';
           this.in_master_detail = false;
           this.is_searching = false;
           break;
         }
         case Constants.SKILLS_SEARCH: {
-          this.formTitle = 'Searching a skill';
+          this.formTitle = 'Searching';
           this.in_master_detail = false;
           this.is_searching = true;
           break;
         }
-        case Constants.DEVELOPERS_CRUD: {
+        case Constants.DEVELOPPERS_CRUD: {
           this.in_master_detail = (this.searching_what != null);
           this.is_searching = false;
-          this.formTitle = 'Developper';
+          this.formTitle = 'Developper mode';
           break;
         }
-        case Constants.DEVELOPERS_SEARCH: {
-          this.formTitle = 'Looking for a hero...';
+        case Constants.DEVELOPPERS_SEARCH: {
+          this.formTitle = 'Searching';
           this.in_master_detail = false;
           this.is_searching = true;
           break;
@@ -129,7 +129,7 @@ export class AppComponent implements OnInit {
       console.log('Searching ' + this.searching_what);
     }
     switch (this.formId) {
-      case Constants.DEVELOPERS_SEARCH:
+      case Constants.DEVELOPPERS_SEARCH:
         if (Constants.DEBUG) {
           console.log('Reloading collaborators for search criteria ' + this.searching_what);
         }
@@ -161,5 +161,19 @@ export class AppComponent implements OnInit {
   switchToDev () {
     this.dev_activated = true;
     this.skill_activated = false;
+  }
+
+  /**
+   * User has entered into the search INPUT.
+   */
+  focusSearch() {
+    switch (this.formId) {
+        case Constants.SKILLS_CRUD:
+          this.router.navigate(['/searchSkill'], {});
+          break;
+        case Constants.DEVELOPPERS_CRUD:
+          this.router.navigate(['/searchUser'], {});
+          break;
+    }
   }
 }

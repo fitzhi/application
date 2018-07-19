@@ -13,7 +13,7 @@ export class SearchSkillComponent implements OnInit {
 	constructor(private cinematicService:CinematicService) {}
 
 	ngOnInit() {
-		this.cinematicService.setForm(Constants.DEVELOPERS_SEARCH);
+		this.cinematicService.setForm(Constants.DEVELOPPERS_SEARCH);
   	}
 
 	public search(source: string) : void {

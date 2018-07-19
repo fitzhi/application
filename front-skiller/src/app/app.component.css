@@ -1,3 +1,7 @@
+#header_navigation_master_detail {
+    display: flex;
+}
+
 a.header_toolbar_master_detail {
     text-decoration: none;
     display: inline-block;
@@ -43,6 +47,9 @@ a.disabled {
     border-radius: 25%;
 }
 
-#header_navigation_master_detail {
+#formTitle {
     display: flex;
+	width: 170px;
+	color:white;
+	font-size: 1.2em;
 }

@@ -19,7 +19,7 @@ export class SearchUserComponent implements OnInit {
 
   ngOnInit() {
 
-    this.cinematicService.setForm(Constants.DEVELOPERS_SEARCH);
+    this.cinematicService.setForm(Constants.DEVELOPPERS_SEARCH);
     this.collaborators = this.dataService.getStaff();
   }
 

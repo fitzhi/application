@@ -1,68 +1,54 @@
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
-	<div id="header_navigation_master_detail">
-
+	<div id="header_navigation_master_detail" class="p-2">
 		<a href="" [routerLink]="['/searchUser']"
 			class="header_toolbar_master_detail round" width="48" height="48">
 			<img [hidden]=!in_master_detail src="/assets/img/list.png" width="48"
 			height="48" />
-		</a> <a href="" [routerLink]="['/user', previousId]"
+		</a> 
+		<a href="" [routerLink]="['/user', previousId]"
 			class="header_toolbar_master_detail previous round"
 			[class.disabled]="(previousId == undefined)"
-			[hidden]=!in_master_detail> &nbsp;&#8249;&nbsp; </a> <a href=""
+			[hidden]=!in_master_detail> &nbsp;&#8249;&nbsp; </a> 
+		<a href=""
 			[routerLink]="['/user', nextId]"
 			class="header_toolbar_master_detail next round"
 			[class.disabled]="(nextId == undefined)" [hidden]=!in_master_detail>
-			&nbsp;&#8250;&nbsp; </a>
+			&nbsp;&#8250;&nbsp; 
+		</a>
+	</div>
+	
+	<div id="formTitle" class="p-2">
+		{{formTitle}} 
+	</div>
+	
+	<div class="p-2">
+		<a 	[routerLink]="['/skill']"
+			[class]="(skill_activated 
+					? 'activated header_toolbar_master_detail round' 
+					: 'inactive header_toolbar_master_detail round')" 
+			(click)="switchToSkill()"> <img alt="Skill module"
+			[src]="(skill_activated ? image_skill_activated : image_skill_inactive)"
+			width="48" height="48" />
+		</a>
+		&nbsp;
+		<a 	[routerLink]="['/user']"
+			[class]="(dev_activated 
+					? 'activated header_toolbar_master_detail round' 
+					: 'inactive header_toolbar_master_detail round')" 
+			(click)="switchToDev()"> 
+				<img alt=""
+				[src]="(dev_activated ? image_dev_activated : image_dev_inactive)"
+				width="48" height="48" />
+		</a>
 	</div>
 
-	<a class="navbar-brand" href="#">{{formTitle}}</a> 
-	<a 	[routerLink]="['/skill']"
-		[class]="(skill_activated 
-				? 'activated header_toolbar_master_detail round' 
-				: 'inactive header_toolbar_master_detail round')" 
-		(click)="switchToSkill()"> <img alt="Skill module"
-		[src]="(skill_activated ? image_skill_activated : image_skill_inactive)"
-		width="48" height="48" />
-	</a>
-	<a 	[routerLink]="['/user']"
-		[class]="(dev_activated 
-				? 'activated header_toolbar_master_detail round' 
-				: 'inactive header_toolbar_master_detail round')" 
-		(click)="switchToDev()"> 
-			<img alt=""
-			[src]="(dev_activated ? image_dev_activated : image_dev_inactive)"
-			width="48" height="48" />
-	</a>
-
-	<button class="navbar-toggler" type="button" data-toggle="collapse"
-		data-target="#navbarsExampleDefault"
-		aria-controls="navbarsExampleDefault" aria-expanded="false"
-		aria-label="Toggle navigation">
-		<span class="navbar-toggler-icon"></span>
-	</button>
-	<div class="collapse navbar-collapse" id="navbarsExampleDefault">
-		<ul class="navbar-nav mr-auto">
-			<li class="nav-item dropdown" ngbDropdown><a
-				class="nav-link dropdown-toggle" id="dropdownSkills"
-				ngbDropdownToggle>Skills</a>
-				<ul class="dropdown-menu" aria-labelledby="dropdownSkills"
-					ngbDropdownMenu>
-					<li><a class="dropdown-item" [routerLink]="['/searchSkill']">Search</a></li>
-					<li><a class="dropdown-item" [routerLink]="['/skill']">New</a></li>
-				</ul></li>
-			<li class="nav-item dropdown" ngbDropdown><a
-				class="nav-link dropdown-toggle" id="dropdownUsers"
-				ngbDropdownToggle>Developers</a>
-				<ul class="dropdown-menu" aria-labelledby="dropdownUsers"
-					ngbDropdownMenu>
-					<li><a class="dropdown-item" [routerLink]="['/searchUser']">Search</a></li>
-					<li><a class="dropdown-item" (click)="goNewDeveloper()">New</a></li>
-				</ul></li>
-		</ul>
+	<div class="p-2 ml-auto">
 		<form class="form-inline my-2 my-lg-0">
 			<input class="form-control mr-sm-2" type="text" placeholder="Search"
-				[attr.disabled]="is_searching?null:''" name="searching_what"
-				[(ngModel)]="searching_what" aria-label="Search">
+				name="searching_what"
+				[(ngModel)]="searching_what" 
+				aria-label="Search"
+				(focus)="focusSearch()">
 			<button class="btn btn-outline-success my-2 my-sm-0"
 				[attr.disabled]="is_searching?null:''" (click)="search()"
 				type="submit">Search</button>
