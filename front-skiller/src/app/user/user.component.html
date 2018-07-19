@@ -43,14 +43,14 @@
 						<label for="firstName">First name</label> <input type="text"
 							class="form-control" id="firstName" name="firstName"
 							placeholder="" value="" required
-							[(ngModel)]="collaborater.firstName">
+							[(ngModel)]="collaborator.firstName">
 						<div class="invalid-feedback">Valid first name is required.
 						</div>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label for="lastName">Last name</label> <input type="text"
 							class="form-control" id="lastName" name="lastName" placeholder=""
-							value="" required [(ngModel)]="collaborater.lastName">
+							value="" required [(ngModel)]="collaborator.lastName">
 						<div class="invalid-feedback">Valid last name is required.</div>
 					</div>
 				</div>
@@ -63,7 +63,7 @@
 						</div>
 						<input type="text" class="form-control" id="nickName"
 							name="nickName" placeholder="nickName" required
-							[(ngModel)]="collaborater.nickName">
+							[(ngModel)]="collaborator.nickName">
 						<div class="invalid-feedback" style="width: 100%;">Your
 							nickName is required.</div>
 					</div>
@@ -73,7 +73,7 @@
 					<label for="email">Email <span class="text-muted">(Optional)</span></label>
 					<input type="email" class="form-control" id="email" name="email"
 						placeholder="you@example.com" required
-						[(ngModel)]="collaborater.email">
+						[(ngModel)]="collaborator.email">
 					<div class="invalid-feedback">Please enter a valid email
 						address for shipping updates.</div>
 				</div>
@@ -81,7 +81,7 @@
 				<div class="mb-3">
 					<label for="level">Level</label> 
 					<select name="label" id="level"
-						[(ngModel)]="collaborater.level"
+						[(ngModel)]="collaborator.level"
 						class="custom-select d-block w-100" 
 						required>
 						<option value="0" selected="selected">select a level</option>

@@ -29,7 +29,7 @@ export class UserComponent implements OnInit {
   private levels: Level[] = LIST_OF_LEVELS;
   private projects: Project[] = PROJECTS;
 
-  private collaborater: Collaborator;
+  private collaborator: Collaborator;
 
   constructor(
     private cinematicService: CinematicService,
@@ -49,12 +49,12 @@ export class UserComponent implements OnInit {
 
       if (this.id == null) {
         // creation mode...
-        this.collaborater = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null, projects: []};
+        this.collaborator = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null, projects: []};
       } else {
-        this.collaborater = this.dataService.getCollaborator(this.id);
+        this.collaborator = this.dataService.getCollaborator(this.id);
         if (Constants.DEBUG) {
           console.log('Reading the collaborater below');
-          console.log(this.collaborater);
+          console.log(this.collaborator);
         }
       }
 
@@ -69,7 +69,7 @@ export class UserComponent implements OnInit {
   save(): void {
     if (Constants.DEBUG) {
       console.log('Saving data for the collaborater below');
-      console.log(this.collaborater);
+      console.log(this.collaborator);
     }
   }
 
