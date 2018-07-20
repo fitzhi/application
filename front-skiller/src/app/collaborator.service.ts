@@ -6,8 +6,9 @@ import {Collaborator} from './data/collaborator';
 import {MOCK_COLLABORATORS} from './mock/mock-collaboraters';
 
 import {Constants} from './constants';
-
 import {Observable, of} from 'rxjs';
+
+import {InternalService} from './internal-service';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -16,12 +17,14 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
-export class CollaboratorService {
+export class CollaboratorService extends InternalService {
 
   private collaborateresUrl = 'api/collaborater';  // URL to web api
 
   constructor(
-    private http: HttpClient) {}
+    private http: HttpClient) {
+    super();
+  }
 
   /**
    * Return the global list of collaborators, working for our company.
@@ -45,32 +48,6 @@ export class CollaboratorService {
     );
      */
   }
-
-  private log(message: string) {
-    console.log(message);
-  }
-
-
-  /**
- * Handle Http operation that failed.
- * Let the app continue.
- * @param operation - name of the operation that failed
- * @param result - optional value to return as the observable result
- */
-  private handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-
-      // TODO: better job of transforming error for user consumption
-      this.log(`${operation} failed: ${error.message}`);
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-    };
-  }
-
 
   updateCollaborater(collaborater: Collaborator): Observable<any> {
     return this.http.put(this.collaborateresUrl, collaborater, httpOptions).pipe(

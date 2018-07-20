@@ -6,6 +6,7 @@ import {MOCK_COLLABORATORS} from './mock/mock-collaboraters';
 import {Subject} from 'rxjs';
 
 import {CollaboratorService} from './collaborator.service';
+import {SkillService} from './skill.service';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +37,9 @@ export class DataService {
   /**
    * Construction.
    */
-  constructor(private collaboratorService: CollaboratorService) {
+  constructor(
+    private collaboratorService: CollaboratorService,
+    private skillService: SkillService) {
   }
 
   /**
@@ -132,5 +135,12 @@ export class DataService {
    */
   saveCollaborator (collaborator: Collaborator) {
     this.collaboratorService.addCollaborator (collaborator);
+  }
+
+  /**
+   * Saving a new or an updated skill
+   */
+  saveSkill (skill: Skill) {
+    this.skillService.save (skill);
   }
 }
