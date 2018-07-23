@@ -3,5 +3,5 @@
  */
 export class Skill {
   public id: number;
-  public skillTitle: string;
+  public title: string;
 }

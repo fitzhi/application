@@ -6,6 +6,8 @@ import {catchError, map, tap} from 'rxjs/operators';
 import {Observable, of} from 'rxjs';
 import {InternalService} from './internal-service';
 
+import {Constants} from './constants';
+
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
@@ -23,6 +25,9 @@ export class SkillService extends InternalService {
   * Save the skill
   */
   save(skill: Skill) {
+  	if (Constants.DEBUG) {
+  		console.log ('Saving skill for id ' + skill.id);
+  	}
   	if (skill.id == null) {
   		this.add (skill);
   	}

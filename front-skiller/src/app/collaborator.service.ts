@@ -3,7 +3,7 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, map, tap} from 'rxjs/operators';
 
 import {Collaborator} from './data/collaborator';
-import {MOCK_COLLABORATORS} from './mock/mock-collaboraters';
+import {MOCK_COLLABORATORS} from './mock/mock-collaborators';
 
 import {Constants} from './constants';
 import {Observable, of} from 'rxjs';
@@ -19,7 +19,7 @@ const httpOptions = {
 })
 export class CollaboratorService extends InternalService {
 
-  private collaborateresUrl = 'api/collaborater';  // URL to web api
+  private collaboratorUrl = 'api/collaborators';  // URL to web api
 
   constructor(
     private http: HttpClient) {
@@ -27,14 +27,13 @@ export class CollaboratorService extends InternalService {
   }
 
   /**
-   * Return the global list of collaborators, working for our company.
+   * Return the global list of ALL collaborators, working for the company.
    */
-  getCollaborators(): Collaborator[] {
+  get(): Observable<Collaborator[]> {
     if (Constants.DEBUG) {
       this.log('Fetching the collaborators');
     }
-    //    return this.http.get<Collaborater[]>(this.collaborateresUrl).pipe(catchError(this.handleError('getCollaboraters', [])));
-    return MOCK_COLLABORATORS;
+    return this.http.get<Collaborator[]>(this.collaboratorUrl);
   }
 
   /** GET collaborater by id. Will 404 if id not found */
@@ -50,7 +49,7 @@ export class CollaboratorService extends InternalService {
   }
 
   updateCollaborater(collaborater: Collaborator): Observable<any> {
-    return this.http.put(this.collaborateresUrl, collaborater, httpOptions).pipe(
+    return this.http.put(this.collaboratorUrl, collaborater, httpOptions).pipe(
       tap(_ => this.log(`updated collaborater id=${collaborater.id}`)),
       catchError(this.handleError<any>('updateCollaborater'))
     );
@@ -58,7 +57,7 @@ export class CollaboratorService extends InternalService {
 
   /** POST: add a new collaborator to the server */
   addCollaborator(newCollaborator: Collaborator): Observable<Collaborator> {
-    return this.http.post<Collaborator>(this.collaborateresUrl, newCollaborator, httpOptions).pipe(
+    return this.http.post<Collaborator>(this.collaboratorUrl, newCollaborator, httpOptions).pipe(
       tap( (collaborator: Collaborator) =>
         this.log(`added collaborator w/ id=${collaborator.id}`)),
       catchError(this.handleError<Collaborator>('addCollaborater'))
@@ -68,7 +67,7 @@ export class CollaboratorService extends InternalService {
   /** DELETE: delete the collaborater from the server */
   deleteCollaborater(collaborater: Collaborator | number): Observable<Collaborator> {
     const id = typeof collaborater === 'number' ? collaborater : collaborater.id;
-    const url = `${this.collaborateresUrl}/${id}`;
+    const url = `${this.collaboratorUrl}/${id}`;
 
     return this.http.delete<Collaborator>(url, httpOptions).pipe(
       tap(_ => this.log(`deleted collaborater id=${id}`)),
@@ -82,7 +81,7 @@ export class CollaboratorService extends InternalService {
       // if not search term, return empty collaborater array.
       return of([]);
     }
-    return this.http.get<Collaborator[]>(`${this.collaborateresUrl}/?name=${term}`).pipe(
+    return this.http.get<Collaborator[]>(`${this.collaboratorUrl}/?name=${term}`).pipe(
       tap(_ => this.log(`found collaborateres matching "${term}"`)),
       catchError(this.handleError<Collaborator[]>('searchCollaborateres', []))
     );

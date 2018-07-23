@@ -2,8 +2,9 @@ import {Injectable} from '@angular/core';
 import {Collaborator} from './data/collaborator';
 import {Skill} from './data/skill';
 import {Constants} from './constants';
-import {MOCK_COLLABORATORS} from './mock/mock-collaboraters';
-import {Subject} from 'rxjs';
+import {MOCK_COLLABORATORS} from './mock/mock-collaborators';
+import { Subject, Observable, of } from 'rxjs';
+import { catchError, map, tap, filter } from 'rxjs/operators';
 
 import {CollaboratorService} from './collaborator.service';
 import {SkillService} from './skill.service';
@@ -47,13 +48,16 @@ export class DataService {
 	*/
   reloadCollaborators(myCriteria: string) {
 
-    this.cleanUpCollaborators();
+    function testCriteria (collab, index, array) {
+      return      (collab.firstName.toLowerCase().indexOf(myCriteria) > -1)
+            ||    (collab.lastName.toLowerCase().indexOf(myCriteria) > -1);
+    }
 
-    DataService.theStaff.push(...this.collaboratorService.getCollaborators().filter(
-      collab =>
-        (collab.firstName.toLowerCase().indexOf(myCriteria) > -1)
-        || (collab.lastName.toLowerCase().indexOf(myCriteria) > -1)
-    ));
+    this.cleanUpCollaborators();
+    this.collaboratorService.get().
+      subscribe ( (staff: Collaborator[]) =>
+          DataService.theStaff.push(...staff.filter( testCriteria)));
+    
     if (Constants.DEBUG) {
       console.log('the staff collection is containing now ' + DataService.theStaff.length + ' records');
     }
