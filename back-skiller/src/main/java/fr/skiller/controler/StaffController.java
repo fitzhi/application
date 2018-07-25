@@ -16,7 +16,7 @@ import fr.skiller.data.Collaborator;
 
 @RestController
 @RequestMapping("/staff")
-public class StaffControler {
+public class StaffController {
 
 	/**
 	 * Initialization of the Google JSON parser.
