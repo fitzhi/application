@@ -1,23 +1,11 @@
 
 front-skiller/package-lock.json
 
-back-filler/.settings/org.eclipse.jdt.core.prefs
+back-skiller/target
 
-back-filler/.classpath
-
-back-filler/.project
-
-back-filler/.settings/org.eclipse.wst.common.component
-
-back-filler/.settings/org.eclipse.wst.common.project.facet.core.xml
-
-target
 back-skiller/.classpath
 
 back-skiller/.project
 
-back-skiller/.settings/org.eclipse.jdt.core.prefs
+back-skiller/.settings
 
-back-skiller/.settings/org.eclipse.wst.common.component
-
-back-skiller/.settings/org.eclipse.wst.common.project.facet.core.xml
