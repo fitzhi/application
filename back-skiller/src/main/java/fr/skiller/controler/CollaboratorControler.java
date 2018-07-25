@@ -17,7 +17,7 @@ public class CollaboratorControler {
 	@GetMapping("/all")
 	String readAll() {
 		
-		Collaborator[] staff = new Collaborator[3];
+		Collaborator[] staff = new Collaborator[4];
 		staff[0] = new Collaborator(1,
 		    "Frederic",
 		    "VIDAL",

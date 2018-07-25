@@ -11,17 +11,17 @@ import java.util.ArrayList;
  */
 public class Collaborator {
     int id;
-	String firtname; 
+	String firstName; 
 	String lastName;
 	String nickName;
 	String email;
 	String level;
     Project[] projects;
     
-	public Collaborator(int id, String firtname, String lastName, String nickName, String email, String level) {
+	public Collaborator(int id, String firstName, String lastName, String nickName, String email, String level) {
 		super();
 		this.id = id;
-		this.firtname = firtname;
+		this.firstName = firstName;
 		this.lastName = lastName;
 		this.nickName = nickName;
 		this.email = email;
