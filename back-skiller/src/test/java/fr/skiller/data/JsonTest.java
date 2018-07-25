@@ -19,7 +19,7 @@ public class JsonTest extends TestCase {
 	
 	@Test
 	public void testSimple() {
-		Collabotator collab = new Collabotator(1, "firtname", "lastName", "nickName", "email", "level");
+		Collaborator collab = new Collaborator(1, "firtname", "lastName", "nickName", "email", "level");
 		
 		Gson g = new Gson();
 

@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public class Collabotator {
+public class Collaborator {
     int id;
 	String firtname; 
 	String lastName;
@@ -18,7 +18,7 @@ public class Collabotator {
 	String level;
     Project[] projects;
     
-	public Collabotator(int id, String firtname, String lastName, String nickName, String email, String level) {
+	public Collaborator(int id, String firtname, String lastName, String nickName, String email, String level) {
 		super();
 		this.id = id;
 		this.firtname = firtname;
