@@ -45,9 +45,11 @@ import {CollaboratorService} from './collaborator.service';
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
     // Remove it when a real server is ready to receive requests.
+    /* We use now the server on a tomcat :8080
     HttpClientInMemoryWebApiModule.forRoot(
       InMemoryDataService, { dataEncapsulation: false }
     )
+    */
   ],
   providers: [
     DataService,

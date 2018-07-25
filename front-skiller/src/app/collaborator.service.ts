@@ -19,7 +19,7 @@ const httpOptions = {
 })
 export class CollaboratorService extends InternalService {
 
-  private collaboratorUrl = 'api/collaborators';  // URL to web api
+  private collaboratorUrl = 'http://localhost:8080/staff';  // URL to web api
 
   constructor(
     private http: HttpClient) {
@@ -33,7 +33,7 @@ export class CollaboratorService extends InternalService {
     if (Constants.DEBUG) {
       this.log('Fetching the collaborators');
     }
-    return this.http.get<Collaborator[]>(this.collaboratorUrl);
+    return this.http.get<Collaborator[]>(this.collaboratorUrl + '/all');
   }
 
   /** GET collaborater by id. Will 404 if id not found */

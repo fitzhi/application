@@ -57,7 +57,7 @@ export class DataService {
     this.collaboratorService.get().
       subscribe ( (staff: Collaborator[]) =>
           DataService.theStaff.push(...staff.filter( testCriteria)));
-    
+
     if (Constants.DEBUG) {
       console.log('the staff collection is containing now ' + DataService.theStaff.length + ' records');
     }
@@ -83,7 +83,7 @@ export class DataService {
   getCollaborator(id: number): Collaborator {
 
     let result: Collaborator;
-    result = MOCK_COLLABORATORS.find(collab => collab.id === id);
+    result = DataService.theStaff.find(collab => collab.id === id);
 
     if (typeof result !== 'undefined') {
       this.emitActualCollaboratorDisplay.next(id);
