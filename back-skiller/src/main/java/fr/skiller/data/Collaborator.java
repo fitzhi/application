@@ -10,13 +10,13 @@ import java.util.ArrayList;
  *
  */
 public class Collaborator {
-    int id;
-	String firstName; 
-	String lastName;
-	String nickName;
-	String email;
-	String level;
-    Project[] projects;
+    public int id;
+    public String firstName; 
+    public String lastName;
+    public String nickName;
+    public String email;
+    public String level;
+    public Project[] projects;
     
 	public Collaborator(int id, String firstName, String lastName, String nickName, String email, String level) {
 		super();
