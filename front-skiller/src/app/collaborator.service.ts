@@ -29,7 +29,7 @@ export class CollaboratorService extends InternalService {
   /**
    * Return the global list of ALL collaborators, working for the company.
    */
-  get(): Observable<Collaborator[]> {
+  getAll(): Observable<Collaborator[]> {
     if (Constants.DEBUG) {
       this.log('Fetching the collaborators');
     }
@@ -37,15 +37,19 @@ export class CollaboratorService extends InternalService {
   }
 
   /** GET collaborater by id. Will 404 if id not found */
-  getCollaborater(id: number): Observable<Collaborator> {
-    return null;
+  get(id: number): Observable<Collaborator> {
+    const url = this.collaboratorUrl + '/' + id;
+    if (Constants.DEBUG) {
+      console.log('Fetching the collaborator ' + id + ' on the address ' + url);
+    }
+    return this.http.get<Collaborator>(url);
+
     /*
-    const url = `${this.collaborateresUrl}/${id}`;
-    return this.http.get<Collaborater>(url).pipe(
-      tap(_ => this.log(`fetched collaborater id=${id}`)),
-      catchError(this.handleError<Collaborater>(`getCollaborater id=${id}`))
+    .pipe(
+      tap(_ => this.log(`fetched collaborator id=${id}`)),
+      catchError(this.handleError<Collaborator>(`getCollaborater id=${id}`))
     );
-     */
+     */ 
   }
 
   updateCollaborater(collaborater: Collaborator): Observable<any> {

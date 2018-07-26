@@ -6,9 +6,11 @@ package fr.skiller.data;
 import java.util.ArrayList;
 
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
+import ch.qos.logback.classic.Logger;
 import junit.framework.TestCase;
 
 /**
@@ -22,8 +24,7 @@ public class JsonTest extends TestCase {
 		Collaborator collab = new Collaborator(1, "firtname", "lastName", "nickName", "email", "level");
 		
 		Gson g = new Gson();
-
-		System.out.println(g.toJson(collab)); 
+		LoggerFactory.getLogger(JsonTest.class).debug(g.toJson(collab)); 
 	}
 
 }

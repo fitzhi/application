@@ -54,13 +54,15 @@ export class DataService {
     }
 
     this.cleanUpCollaborators();
-    this.collaboratorService.get().
+    this.collaboratorService.getAll().
       subscribe ( (staff: Collaborator[]) =>
-          DataService.theStaff.push(...staff.filter( testCriteria)));
-
-    if (Constants.DEBUG) {
-      console.log('the staff collection is containing now ' + DataService.theStaff.length + ' records');
-    }
+          DataService.theStaff.push(...staff.filter( testCriteria)),
+          error => console.log (error),
+          () => { if (Constants.DEBUG) {
+                      console.log('the staff collection is containing now ' + DataService.theStaff.length + ' records');
+                  }
+                }
+          );
   }
 
   /**
@@ -80,23 +82,48 @@ export class DataService {
   /**
    * Return the collaborator associated with this id.
    */
-  getCollaborator(id: number): Collaborator {
+  getCollaborator(id: number): Observable<Collaborator> {
 
-    let result: Collaborator;
-    result = DataService.theStaff.find(collab => collab.id === id);
+    let foundCollab: Collaborator = null;
+    foundCollab = DataService.theStaff.find(collab => collab.id === id);
 
-    if (typeof result !== 'undefined') {
+    if (typeof foundCollab !== 'undefined') {
       this.emitActualCollaboratorDisplay.next(id);
+      // We create an observable for an element of the cache in order to be consistent with the direct reading.
+      return of(foundCollab);
     } else {
-      this.emitActualCollaboratorDisplay.next(undefined);
-    }
-
-    if (Constants.DEBUG) {
-      console.log('Current identifier ' + id);
-    }
-
-    return result;
+      // The collaborator's id is not, or no more, available in the cache
+      // We try a direct access
+      if (Constants.DEBUG) {
+        console.log('Direct access for : ' + id);
+      }
+      return this.collaboratorService.get(id).pipe(tap(
+        (collab: Collaborator) => {
+           if (Constants.DEBUG) {
+            console.log('Direct access for : ' + id);
+            console.log('Collaborator found : ' + collab.firstName + ' ' + collab.lastName);
+          }
+        }));
+   }
   }
+      /*
+          if (typeof foundCollab !== 'undefined') {
+            this.emitActualCollaboratorDisplay.next(id);
+          } else {
+            this.emitActualCollaboratorDisplay.next(undefined);
+          }
+
+        },
+        error => console.log (error),
+        () => {
+
+                console.log('complete');
+                if (typeof foundCollab !== 'undefined') {
+                  console.log ('No collaborator found for the id ' + id);
+                }
+              }
+      );
+       */
 
 
   /**

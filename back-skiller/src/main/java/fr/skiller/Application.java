@@ -3,23 +3,19 @@
  */
 package fr.skiller;
 
-import java.util.Arrays;
-
-import org.springframework.boot.CommandLineRunner;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Bean;
 
 /**
- * @author Fr&eacute;d&eacute;ric VIDAL
- * Starting class for the application
+ * @author Fr&eacute;d&eacute;ric VIDAL Starting class for the application
  */
 @SpringBootApplication
 public class Application {
 
-		public static void main(String[] args) {
-			SpringApplication.run(Application.class, args);
-		}
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+		LoggerFactory.getLogger("back-skiller").debug("Starting");
+	}
 
-		
 }
