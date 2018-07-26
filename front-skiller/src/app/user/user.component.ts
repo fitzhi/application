@@ -65,28 +65,6 @@ export class UserComponent implements OnInit {
           );
     });
     this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
-          /*
-          .subscribe(
-                collab => {
-                  foundCollab = collab;
-                  if (typeof this.collaborator !== 'undefined') {
-                    this.emitActualCollaboratorDisplay.next(id);
-                  } else {
-                    this.emitActualCollaboratorDisplay.next(undefined);
-                  }
-                },
-                error => console.log (error),
-                () => {
-                        if (typeof foundCollab !== 'undefined') {
-                          console.log ('No collaborator found for the id ' + id);
-                          this.collaborator = foundCollab;
-                        }
-                        if (Constants.DEBUG) {
-                          console.log('Loading comlete');
-                        }
-                      }
-                );
-           */
   }
 
   /**
@@ -97,8 +75,7 @@ export class UserComponent implements OnInit {
       console.log('Saving data for the collaborater below');
       console.log(this.collaborator);
     }
-    this.collaborator.subscribe((collab: Collaborator) => console.log (collab));
-//    this.collaborator.subscribe( (collab: Collaborator) => this.dataService.saveCollaborator (collab));
+    this.dataService.saveCollaborator (this.collaborator);
   }
 
 }
