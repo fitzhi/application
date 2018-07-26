@@ -165,7 +165,7 @@ export class DataService {
    * Saving a new or an updated collaborator
    */
   saveCollaborator (collaborator: Collaborator) {
-    this.collaboratorService.addCollaborator (collaborator);
+    this.collaboratorService.save (collaborator).subscribe();
   }
 
   /**

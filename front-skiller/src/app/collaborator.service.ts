@@ -43,13 +43,6 @@ export class CollaboratorService extends InternalService {
       console.log('Fetching the collaborator ' + id + ' on the address ' + url);
     }
     return this.http.get<Collaborator>(url);
-
-    /*
-    .pipe(
-      tap(_ => this.log(`fetched collaborator id=${id}`)),
-      catchError(this.handleError<Collaborator>(`getCollaborater id=${id}`))
-    );
-     */ 
   }
 
   updateCollaborater(collaborater: Collaborator): Observable<any> {
@@ -59,12 +52,15 @@ export class CollaboratorService extends InternalService {
     );
   }
 
-  /** POST: add a new collaborator to the server */
-  addCollaborator(newCollaborator: Collaborator): Observable<Collaborator> {
-    return this.http.post<Collaborator>(this.collaboratorUrl, newCollaborator, httpOptions).pipe(
-      tap( (collaborator: Collaborator) =>
-        this.log(`added collaborator w/ id=${collaborator.id}`)),
-      catchError(this.handleError<Collaborator>('addCollaborater'))
+  /** POST: update or add a new collaborator to the server */
+  save(collaborator: Collaborator): Observable<Collaborator> {
+    if (Constants.DEBUG) {
+      console.log('Saving the collaborator ' + collaborator.id);
+    }
+    return this.http.post<Collaborator>(this.collaboratorUrl + '/save', collaborator, httpOptions).pipe(
+      tap( (collab: Collaborator) =>
+        this.log('updated collaborator w/ id=${collab.id}')),
+        catchError(this.handleError<Collaborator>('addCollaborater'))
     );
   }
 
@@ -79,7 +75,7 @@ export class CollaboratorService extends InternalService {
     );
   }
 
-  /* GET collaboraters whose name contains search term */
+  /* GET collaborators whose name contains search term */
   searchCollaborateres(term: string): Observable<Collaborator[]> {
     if (!term.trim()) {
       // if not search term, return empty collaborater array.
