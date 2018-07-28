@@ -1,11 +1,21 @@
 package fr.skiller.controler;
 
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity.BodyBuilder;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +48,7 @@ public class StaffController {
 	/**
 	 * @return the staff collection.
 	 */
-	private ArrayList<Collaborator> getStaff() {
+	private List<Collaborator> getStaff() {
 		if (this.staff != null) {
 			return this.staff;
 		}
@@ -96,8 +106,34 @@ public class StaffController {
 	@PostMapping("/save")
 	@CrossOrigin(origins = "http://localhost:4200")
 	ResponseEntity<?> add(@RequestBody Collaborator input) {
-
-		System.out.println(input);
-		return ResponseEntity.noContent().build();
+		
+		final ResponseEntity<Collaborator> responseEntity;
+		final MultiValueMap<String, String> headers = new HttpHeaders();
+		
+		List<Collaborator> staff = getStaff();
+		if (input.id == 0) {
+			input.id = staff.size()+1;
+			getStaff().add(input);
+			headers.add("backend.return_code", "1");
+			responseEntity = new ResponseEntity<Collaborator>(input, headers, HttpStatus.OK);
+		} else {
+			List<Collaborator> updatedStaff = staff.stream().filter(collab -> (collab.id == input.id)).collect(Collectors.toList());
+			if (updatedStaff.size() != 1) {
+				responseEntity = new ResponseEntity<Collaborator>(input, headers, HttpStatus.OK);
+				headers.add("backend.return_code", "O");
+				headers.add("backend.return_message", "There is no collaborator associated to the id " + input.id);
+				responseEntity.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
+			} else {
+				updatedStaff.get(0).firstName = input.firstName;
+				updatedStaff.get(0).lastName = input.lastName;
+				updatedStaff.get(0).nickName = input.nickName;
+				updatedStaff.get(0).email = input.email;
+				updatedStaff.get(0).level = input.level;
+				responseEntity = new ResponseEntity<Collaborator>(input, headers, HttpStatus.OK);
+				headers.add("backend.return_code", "1");
+			}
+		}
+		System.out.println(responseEntity.getBody());
+		return responseEntity;
 	}
 }	

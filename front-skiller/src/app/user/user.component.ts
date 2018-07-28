@@ -75,7 +75,8 @@ export class UserComponent implements OnInit {
       console.log('Saving data for the collaborater below');
       console.log(this.collaborator);
     }
-    this.dataService.saveCollaborator (this.collaborator);
+    this.dataService.saveCollaborator (this.collaborator)
+      .subscribe(staff => this.collaborator = staff);
   }
 
 }

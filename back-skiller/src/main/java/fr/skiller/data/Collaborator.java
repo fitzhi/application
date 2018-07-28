@@ -29,6 +29,7 @@ public class Collaborator {
 		this.level = level;
 		projects = new ArrayList<Project>().toArray(new Project[1]);
 	}
+	
 	public Collaborator() { }
 	
 	@Override
