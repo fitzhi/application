@@ -2,7 +2,8 @@ import {AppModule} from '../app.module';
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Router} from '@angular/router';
-import { Subject, Observable, of } from 'rxjs';
+import {Subject, Observable, of } from 'rxjs';
+import {catchError} from 'rxjs/operators';
 
 import {CinematicService} from '../cinematic.service';
 import {Collaborator} from '../data/collaborator';
@@ -53,7 +54,16 @@ export class UserComponent implements OnInit {
       this.collaborator = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null, projects: []};
       this.dataService.getCollaborator(this.id).subscribe(
         (collab: Collaborator) => this.collaborator = collab,
-        error => console.log(error),
+        error => {
+          if (error.status === 404) {
+            if (Constants.DEBUG) {
+              console.log ('404 : cannot found a collaborator for the id ' + this.id);
+            }
+            this.collaborator = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null, projects: []};
+          } else {
+              console.error (error.message);
+          }
+        },
         () => {
                   if (this.collaborator.id === 0) {
                     console.log ('No collaborator found for the id ' + this.id);
@@ -65,6 +75,27 @@ export class UserComponent implements OnInit {
           );
     });
     this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
+  }
+
+/**
+ * Handle Http operation that failed.
+ * Let the app continue.
+ * @param operation - name of the operation that failed
+ * @param result - optional value to return as the observable result
+ */
+  handleError<T>(operation = 'operation', result?: T) {
+    return (error: any): Observable<T> => {
+
+    // TODO: send the error to remote logging infrastructure
+    console.error(error); // log to console instead
+
+    // TODO: better job of transforming error for user consumption
+    console.log(`${operation} failed: ${error.message}`);
+
+    // Let the app keep running by returning an empty result.
+    return of(result as T);
+
+    };
   }
 
   /**

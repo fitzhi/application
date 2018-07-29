@@ -101,30 +101,15 @@ export class DataService {
         (collab: Collaborator) => {
            if (Constants.DEBUG) {
             console.log('Direct access for : ' + id);
-            console.log('Collaborator found : ' + collab.firstName + ' ' + collab.lastName);
+            if (typeof collab !== 'undefined') {
+              console.log('Collaborator found : ' + collab.firstName + ' ' + collab.lastName);
+            } else {
+              console.log('No staff found for id ' + id);
+            }
           }
         }));
    }
   }
-      /*
-          if (typeof foundCollab !== 'undefined') {
-            this.emitActualCollaboratorDisplay.next(id);
-          } else {
-            this.emitActualCollaboratorDisplay.next(undefined);
-          }
-
-        },
-        error => console.log (error),
-        () => {
-
-                console.log('complete');
-                if (typeof foundCollab !== 'undefined') {
-                  console.log ('No collaborator found for the id ' + id);
-                }
-              }
-      );
-       */
-
 
   /**
    * Return the NEXT collaborator's id associated with this id in the staff list.

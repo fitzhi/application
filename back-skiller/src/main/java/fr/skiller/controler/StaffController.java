@@ -88,13 +88,24 @@ public class StaffController {
 	
 	@RequestMapping(value="/{idParam}", method = RequestMethod.GET)
 	@CrossOrigin(origins = "http://localhost:4200")
-	String read(@PathVariable("idParam") int idParam) {
+	ResponseEntity<Collaborator> read(@PathVariable("idParam") int idParam) {
+
+		final ResponseEntity<Collaborator> responseEntity;
+		final HttpHeaders headers = new HttpHeaders();
+		
 		Optional<Collaborator> searchCollab = getStaff().stream().filter (c -> (c.id == idParam)).findFirst();
-		final String output = g.toJson(searchCollab.get());
-		if (logger.isDebugEnabled()) {
-			logger.debug("read for id " + String.valueOf(idParam) + " returns " + output);
+		if (searchCollab.isPresent()) {
+			responseEntity = new ResponseEntity<Collaborator>(searchCollab.get(), headers, HttpStatus.OK);
+			if (logger.isDebugEnabled()) {
+				logger.debug("read for id " + String.valueOf(idParam) + " returns " + responseEntity.getBody());
+			}
+		} else {
+			responseEntity = new ResponseEntity<Collaborator>(new Collaborator(), headers, HttpStatus.NOT_FOUND);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Cannot find a staff member for id " + String.valueOf(idParam));
+			}
 		}
-		return output;
+		return responseEntity;
 	}
 	
 	@GetMapping("/all")
@@ -105,10 +116,10 @@ public class StaffController {
 
 	@PostMapping("/save")
 	@CrossOrigin(origins = "http://localhost:4200")
-	ResponseEntity<?> add(@RequestBody Collaborator input) {
+	ResponseEntity<Collaborator> add(@RequestBody Collaborator input) {
 		
 		final ResponseEntity<Collaborator> responseEntity;
-		final MultiValueMap<String, String> headers = new HttpHeaders();
+		final HttpHeaders headers = new HttpHeaders();
 		
 		List<Collaborator> staff = getStaff();
 		if (input.id == 0) {
@@ -133,7 +144,9 @@ public class StaffController {
 				headers.add("backend.return_code", "1");
 			}
 		}
-		System.out.println(responseEntity.getBody());
+		if (logger.isDebugEnabled()) {
+			logger.debug("POST command on /staff/save returns the body " + responseEntity.getBody());
+		}
 		return responseEntity;
 	}
 }	
