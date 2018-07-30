@@ -6,6 +6,9 @@ import {Subject, Observable, of } from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
 import {CinematicService} from '../cinematic.service';
+import {DataService} from '../data.service';
+import {MessageService} from '../message.service';
+
 import {Collaborator} from '../data/collaborator';
 
 import {Level} from '../data/level';
@@ -16,7 +19,6 @@ import {LIST_OF_LEVELS} from '../data/List_of_levels';
 import {PROJECTS} from '../mock/mock-projects';
 import {Constants} from '../constants';
 
-import {DataService} from '../data.service';
 
 @Component({
   selector: 'app-user',
@@ -36,7 +38,8 @@ export class UserComponent implements OnInit {
   constructor(
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
-    private dataService: DataService) {}
+    private dataService: DataService,
+    private messageService: MessageService) {}
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
@@ -71,6 +74,7 @@ export class UserComponent implements OnInit {
                   if (Constants.DEBUG) {
                     console.log('Loading comlete for id ' + this.id);
                   }
+                  this.messageService.set('test');
                 }
           );
     });

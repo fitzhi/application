@@ -22,6 +22,7 @@ import {SearchUserComponent} from './search-user/search-user.component';
 
 import {DataService} from './data.service';
 import {CollaboratorService} from './collaborator.service';
+import { MessageComponent } from './message/message.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import {CollaboratorService} from './collaborator.service';
     SearchSkillComponent,
     WelcomeComponent,
     UserComponent,
-    SearchUserComponent
+    SearchUserComponent,
+    MessageComponent
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+<nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
 	<div id="header_navigation_master_detail" class="p-2">
 		<a href="" [routerLink]="['/searchUser']"
 			class="header_toolbar_master_detail round" width="48" height="48">
@@ -57,8 +57,12 @@
 		</form>
 	</div>
 </nav>
+
 <div class="panel panel-primary">
 	<div class="panel-body">
 		<router-outlet></router-outlet>
 	</div>
 </div>
+
+<app-message></app-message>
+
