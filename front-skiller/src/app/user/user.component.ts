@@ -62,6 +62,7 @@ export class UserComponent implements OnInit {
             if (Constants.DEBUG) {
               console.log ('404 : cannot found a collaborator for the id ' + this.id);
             }
+            this.messageService.setError('There is no collaborator for the id ' + this.id);
             this.collaborator = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null, projects: []};
           } else {
               console.error (error.message);
@@ -74,7 +75,7 @@ export class UserComponent implements OnInit {
                   if (Constants.DEBUG) {
                     console.log('Loading comlete for id ' + this.id);
                   }
-                  this.messageService.set('test');
+ //                 setTimeout( () => this.messageService.set(''), 5000);
                 }
           );
     });

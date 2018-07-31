@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {Subject} from "rxjs/Subject";
+import {Message} from "./message";
+import {Constants} from "./constants";
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageService {
 
-	private message: Subject<string> = new Subject<string>();
+	myMessage: Subject<Message> = new Subject<Message>();
  
-  	newMessage$ = this.message.asObservable();
+  	newMessage$ = this.myMessage.asObservable();
 
  	constructor() { 
  	}
@@ -17,7 +19,15 @@ export class MessageService {
  	/*
  	* set a new message
  	*/
- 	public set (msg: string) {
- 		this.message.next(msg);
+ 	public set (gravity: number, message: string) {
+ 		this.myMessage.next(new Message(gravity, message));
+		setTimeout( () => this.myMessage.next(new Message(Constants.MESSAGE_VOID, '')), 5000);
+ 	}
+ 	
+ 	/*
+ 	* set a new ERROR message
+ 	*/
+ 	public setError (message: string) {
+ 		this.set(Constants.MESSAGE_ERROR, message);
  	}
 }
