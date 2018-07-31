@@ -25,6 +25,7 @@ import {CollaboratorService} from './collaborator.service';
 import { MessageComponent } from './message/message.component';
 
 import {ErrorsHandler} from './errors-handler';
+import { ErrorComponent } from './error/error.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import {ErrorsHandler} from './errors-handler';
     WelcomeComponent,
     UserComponent,
     SearchUserComponent,
-    MessageComponent
+    MessageComponent,
+    ErrorComponent
   ],
   imports: [
     BrowserModule,

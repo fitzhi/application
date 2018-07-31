@@ -7,6 +7,7 @@ import {SearchSkillComponent} from './search-skill/search-skill.component';
 import {WelcomeComponent} from './welcome/welcome.component';
 import {UserComponent} from './user/user.component';
 import {SearchUserComponent} from './search-user/search-user.component';
+import {ErrorComponent} from './error/error.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/welcome', pathMatch: 'full'},
@@ -15,7 +16,8 @@ const routes: Routes = [
   {path: 'skill', component: SkillComponent},
   {path: 'searchUser', component: SearchUserComponent},
   {path: 'user/:id', component: UserComponent},
-  {path: 'user', component: UserComponent}
+  {path: 'user', component: UserComponent},
+  {path: 'error', component: ErrorComponent}
 ];
 
 @NgModule({
