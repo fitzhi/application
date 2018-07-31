@@ -33,7 +33,7 @@ import fr.skiller.data.Collaborator;
 @RequestMapping("/staff")
 public class StaffController {
 
-	Logger logger = LoggerFactory.getLogger("back-skiller");
+	Logger logger = LoggerFactory.getLogger("backend-skiller");
 	
 	/**
 	 * Initialization of the Google JSON parser.

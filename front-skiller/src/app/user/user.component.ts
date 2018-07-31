@@ -114,7 +114,7 @@ export class UserComponent implements OnInit {
       .subscribe(
         staff => {
           this.collaborator = staff;
-          this.messageService.info(this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
+          this.messageService.info('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
         });
   }
 
