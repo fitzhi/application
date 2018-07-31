@@ -2,6 +2,6 @@
  * Class of message
  */
 export class Message {
-    constructor(public gravity: number, public message: string) {
+    constructor(public severity: number, public message: string) {
     }
 }

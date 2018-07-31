@@ -27,7 +27,14 @@ export class MessageService {
  	/*
  	* set a new ERROR message
  	*/
- 	public setError (message: string) {
+ 	public error (message: string) {
  		this.set(Constants.MESSAGE_ERROR, message);
+ 	}
+ 	
+ 	/*
+ 	* set a new INFO message
+ 	*/
+ 	public info (message: string) {
+ 		this.set(Constants.MESSAGE_INFO, message);
  	}
 }

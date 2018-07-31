@@ -1,3 +1,5 @@
 <nav class="navbar fixed-bottom navbar-light bg-light" *ngIf="myMessage.length">
-	<div style="text-align:center;width:100%;filter:alpha(opacity=50); opacity:0.5;"><span style="color:red">{{myMessage}}</span></div>
+	<div style="text-align:center;width:100%;">
+		<span [style.color]="isError ? 'tomato' : (isInfo ?  'green' : 'grey')"  >{{myMessage}}</span>
+	</div>
 </nav>

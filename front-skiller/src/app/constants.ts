@@ -19,6 +19,6 @@ export class Constants {
 	*/
   	public static MESSAGE_VOID = 0;
   	public static MESSAGE_ERROR = 1;
-  	public static MESSAGE_INFO = 1;
+  	public static MESSAGE_INFO = 2;
 
 }
