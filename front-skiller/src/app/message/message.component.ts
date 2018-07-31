@@ -36,7 +36,6 @@ export class MessageComponent implements OnInit {
     				this.isInfo = true;
     				break;    				
     		}
-    		console.log(this.isError);
     	});
   	}
 }

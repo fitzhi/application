@@ -54,14 +54,18 @@ export class CollaboratorService extends InternalService {
     if (Constants.DEBUG) {
       console.log('Saving the collaborator ' + collaborator.id);
     }
-    return this.http.post<Collaborator>(this.collaboratorUrl + '/save', collaborator, httpOptions).pipe(
+    return this.http.post<Collaborator>(this.collaboratorUrl + '/save', collaborator, httpOptions);
+
+    /*
+    .pipe(
       tap( (collab: Collaborator) => {
           if (Constants.DEBUG) {
             this.log('updated staff member for id ' + collab.id);
           }
         },
-        catchError(this.handleError<Collaborator>('addCollaborater'))
+        catchError(this.handleError<Collaborator>('save a Staff member'))
     ));
+     */
   }
 
   /**

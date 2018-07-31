@@ -100,6 +100,8 @@ public class StaffController {
 				logger.debug("read for id " + String.valueOf(idParam) + " returns " + responseEntity.getBody());
 			}
 		} else {
+			headers.set("backend.return_code", "O");
+			headers.set("backend.return_message", "There is no collaborator associated to the id " + idParam);
 			responseEntity = new ResponseEntity<Collaborator>(new Collaborator(), headers, HttpStatus.NOT_FOUND);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Cannot find a staff member for id " + String.valueOf(idParam));
@@ -130,9 +132,10 @@ public class StaffController {
 		} else {
 			List<Collaborator> updatedStaff = staff.stream().filter(collab -> (collab.id == input.id)).collect(Collectors.toList());
 			if (updatedStaff.size() != 1) {
-				responseEntity = new ResponseEntity<Collaborator>(input, headers, HttpStatus.OK);
+				responseEntity = new ResponseEntity<Collaborator>(input, headers, HttpStatus.NOT_FOUND);
 				headers.add("backend.return_code", "O");
 				headers.add("backend.return_message", "There is no collaborator associated to the id " + input.id);
+				responseEntity.getHeaders().set("backend.return_message", "There is no collaborator associated to the id " + input.id);
 				responseEntity.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
 			} else {
 				updatedStaff.get(0).firstName = input.firstName;

@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {NgModule, ErrorHandler} from '@angular/core';
 import {FormsModule} from '@angular/forms'; // <-- NgModel lives here
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
@@ -23,6 +23,8 @@ import {SearchUserComponent} from './search-user/search-user.component';
 import {DataService} from './data.service';
 import {CollaboratorService} from './collaborator.service';
 import { MessageComponent } from './message/message.component';
+
+import {ErrorsHandler} from './errors-handler';
 
 @NgModule({
   declarations: [
@@ -56,7 +58,11 @@ import { MessageComponent } from './message/message.component';
   providers: [
     DataService,
     CinematicService,
-    CollaboratorService
+    CollaboratorService,
+    {
+      provide: ErrorHandler,
+      useClass: ErrorsHandler,
+    }
   ],
   bootstrap: [AppComponent]
 })
