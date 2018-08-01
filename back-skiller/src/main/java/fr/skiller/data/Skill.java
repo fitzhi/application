@@ -2,6 +2,16 @@ package fr.skiller.data;
 
 public class Skill {
 
-	public int id;
+	public int id = 0;
+	public String title = "";
+	
+	public Skill() {
+	}
+	
+	public Skill(int id, String title) {
+		super();
+		this.id = id;
+		this.title = title;
+	}
 	
 }

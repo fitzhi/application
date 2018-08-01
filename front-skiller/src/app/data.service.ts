@@ -56,7 +56,7 @@ export class DataService {
     this.cleanUpCollaborators();
     this.collaboratorService.getAll().
       subscribe ( (staff: Collaborator[]) =>
-          DataService.theStaff.push(...staff.filter( testCriteria)),
+          DataService.theStaff.push(...staff.filter(testCriteria)),
           error => console.log (error),
           () => { if (Constants.DEBUG) {
                       console.log('the staff collection is containing now ' + DataService.theStaff.length + ' records');
@@ -166,4 +166,74 @@ export class DataService {
   getSkills(): Skill[] {
     return DataService.theSkills;
   }
+
+  /**
+  * Reload the collaborators for the passed criteria.
+  */
+  reloadSkills(myCriteria: string) {
+
+    function testCriteria (skill, index, array) {
+      return (skill.title.toLowerCase().indexOf(myCriteria) > -1);
+    }
+
+    this.cleanUpSkills();
+    this.skillService.getAll().
+      subscribe ( (skills: Skill[]) =>
+          DataService.theSkills.push(...skills.filter(testCriteria)),
+          // console.log (skills[0].title.toLowerCase().indexOf(myCriteria) ),
+          // DataService.theSkills.push(...skills.filter(testCriteria)),
+          error => console.log (error),
+          () => { if (Constants.DEBUG) {
+                      console.log('the skills collection is containing now ' + DataService.theSkills.length + ' records');
+                  }
+                }
+          );
+  }
+
+  /**
+   * Cleanup the list of skills involved in our service center.
+   */
+  cleanUpSkills() {
+    if (Constants.DEBUG) {
+      if (DataService.theSkills == null) {
+        console.log('INTERNAL ERROR : collection theSkill SHOULD NOT BE NULL, dude !');
+      } else {
+        console.log('Cleaning up the skill collection containing ' + DataService.theSkills.length + ' records');
+      }
+    }
+    DataService.theSkills.length = 0;
+  }
+
+  /**
+   * Return the skill associated with this id.
+   */
+  getSkill(id: number): Observable<Skill> {
+
+    let foundSkill: Skill = null;
+    foundSkill = DataService.theSkills.find(skill => skill.id === id);
+
+    if (typeof foundSkill !== 'undefined') {
+      //TODO this.emitActualCollaboratorDisplay.next(id);
+      // We create an observable for an element of the cache in order to be consistent with the direct reading.
+      return of(foundSkill);
+    } else {
+      // The collaborator's id is not, or no more, available in the cache
+      // We try a direct access
+      if (Constants.DEBUG) {
+        console.log('Direct access for : ' + id);
+      }
+      return this.skillService.get(id).pipe(tap(
+        (skill: Skill) => {
+           if (Constants.DEBUG) {
+            console.log('Direct access for : ' + id);
+            if (typeof skill !== 'undefined') {
+              console.log('Skill found : ' + skill.title);
+            } else {
+              console.log('No skill found for id ' + id);
+            }
+          }
+        }));
+   }
+  }
 }
+

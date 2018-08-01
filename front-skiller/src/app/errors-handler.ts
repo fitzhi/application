@@ -46,10 +46,10 @@ export class ErrorsHandler implements ErrorHandler {
 		}
 		messageService.error(error.status + ' - ' + error.message);
 	} else {
+ 		console.error('ERROR : ', error);
 		router.navigate(['/error'], { queryParams: {error: error} }); 
 	}
 	// Log the error anyway
   	console.error('It happens: ', error);
-}
-
+  }
 }

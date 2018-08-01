@@ -136,6 +136,10 @@ export class AppComponent implements OnInit {
         this.dataService.reloadCollaborators(this.searching_what);
         break;
       case Constants.SKILLS_SEARCH: {
+        if (Constants.DEBUG) {
+          console.log('Reloading skills for search criteria ' + this.searching_what);
+        }
+        this.dataService.reloadSkills(this.searching_what);
         break;
       }
     }

@@ -7,7 +7,7 @@
     </layout>
   </appender>
   
-  <logger name="back-skiller" level="DEBUG"/>
+  <logger name="backend-skiller" level="DEBUG"/>
   
   <root level="info">
     <appender-ref ref="STDOUT" />

@@ -55,28 +55,30 @@ export class UserComponent implements OnInit {
       // Either we are in creation mode, or we load the collaborator from the back-end...
       // We create an empty collaborator until the subscription is complete
       this.collaborator = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null, projects: []};
-      this.dataService.getCollaborator(this.id).subscribe(
-        (collab: Collaborator) => this.collaborator = collab,
-        error => {
-          if (error.status === 404) {
-            if (Constants.DEBUG) {
-              console.log ('404 : cannot found a collaborator for the id ' + this.id);
+      if (this.id != null) {
+        this.dataService.getCollaborator(this.id).subscribe(
+          (collab: Collaborator) => this.collaborator = collab,
+          error => {
+            if (error.status === 404) {
+              if (Constants.DEBUG) {
+                console.log ('404 : cannot found a collaborator for the id ' + this.id);
+              }
+              this.messageService.error('There is no staff member for id ' + this.id);
+              this.collaborator = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null, projects: []};
+            } else {
+                console.error (error.message);
             }
-            this.messageService.error('There is no staff member for id ' + this.id);
-            this.collaborator = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null, projects: []};
-          } else {
-              console.error (error.message);
-          }
-        },
-        () => {
-                  if (this.collaborator.id === 0) {
-                    console.log ('No collaborator found for the id ' + this.id);
+          },
+          () => {
+                    if (this.collaborator.id === 0) {
+                      console.log ('No collaborator found for the id ' + this.id);
+                    }
+                    if (Constants.DEBUG) {
+                      console.log('Loading comlete for id ' + this.id);
+                    }
                   }
-                  if (Constants.DEBUG) {
-                    console.log('Loading comlete for id ' + this.id);
-                  }
-                }
-          );
+            );
+      }
     });
     this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
   }

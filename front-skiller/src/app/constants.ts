@@ -1,18 +1,21 @@
 /**
- * New typescript file
+ * Constants file
  */
 export class Constants {
-  public static DEBUG = true;
 
+	/**
+	* DEBUG Mode for development purpose
+	*/
+	public static DEBUG = true;
 
-  /**
+	/**
 	* Form active
 	*/
-  public static WELCOME = 0;
-  public static SKILLS_SEARCH = 1;
-  public static SKILLS_CRUD = 2;
-  public static DEVELOPPERS_SEARCH = 3;
-  public static DEVELOPPERS_CRUD = 4;
+	public static WELCOME = 0;
+	public static SKILLS_SEARCH = 1;
+	public static SKILLS_CRUD = 2;
+	public static DEVELOPPERS_SEARCH = 3;
+	public static DEVELOPPERS_CRUD = 4;
 
 	/**
 	* Type of errors

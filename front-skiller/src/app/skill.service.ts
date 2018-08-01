@@ -17,9 +17,19 @@ const httpOptions = {
 })
 export class SkillService extends InternalService {
 
-	private skillUrl = 'api/skill';  // URL to web api
+	private skillUrl = 'http://localhost:8080/skill';  // URL to web api
 
 	constructor(private httpClient: HttpClient) { super(); }
+  
+    /**
+   * Return the global list of ALL collaborators, working for the company.
+   */
+  getAll(): Observable<Skill[]> {
+    if (Constants.DEBUG) {
+      this.log('Fetching the skills on URL ' + this.skillUrl + '/all');
+    }
+    return this.httpClient.get<Skill[]>(this.skillUrl + '/all');
+  }
   
   /**
   * Save the skill
@@ -42,5 +52,15 @@ export class SkillService extends InternalService {
     );
   }
 
+  /**
+   * GET the skill associated to this id from the backend skiller. Will throw a 404 if this id is not found.
+   */
+  get(id: number): Observable<Skill> {
+    const url = this.skillUrl + '/' + id;
+    if (Constants.DEBUG) {
+      console.log('Fetching the skill ' + id + ' on the address ' + url);
+    }
+    return this.httpClient.get<Skill>(url);
+  }
 
 }

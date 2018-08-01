@@ -1,22 +1,14 @@
 package fr.skiller.controler;
 
-import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.RequestEntity.BodyBuilder;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,7 +20,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 
-import fr.skiller.data.Collaborator;
 import fr.skiller.data.Skill;
 
 @RestController
@@ -55,6 +46,11 @@ public class SkillController {
 			return this.skill;
 		}
 		this.skill = new HashMap<Integer, Skill>();
+		this.skill.put(1, new Skill(1, "Java"));
+		this.skill.put(2, new Skill(2, "Spring"));
+		this.skill.put(3, new Skill(3, "Spring Framework"));
+		this.skill.put(4, new Skill(4, "Spring Boot"));
+		this.skill.put(5, new Skill(5, "hibernate"));
 		return skill;
 	}
 
@@ -85,7 +81,11 @@ public class SkillController {
 	@GetMapping("/all")
 	@CrossOrigin(origins = "http://localhost:4200")
 	String readAll() {
-		return g.toJson(getSkill());
+		final String resultContent = g.toJson(getSkill().values());
+		if (logger.isDebugEnabled()) {
+			logger.debug("'/skill/all' is returning " + resultContent);
+		}
+		return resultContent;
 	}
 
 	@PostMapping("/save")

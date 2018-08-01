@@ -14,6 +14,7 @@ const routes: Routes = [
   {path: 'welcome', component: WelcomeComponent},
   {path: 'searchSkill', component: SearchSkillComponent},
   {path: 'skill', component: SkillComponent},
+  {path: 'skill/:id', component: SkillComponent},
   {path: 'searchUser', component: SearchUserComponent},
   {path: 'user/:id', component: UserComponent},
   {path: 'user', component: UserComponent},

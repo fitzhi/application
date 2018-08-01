@@ -60,13 +60,14 @@ import { ErrorComponent } from './error/error.component';
   providers: [
     DataService,
     CinematicService,
-    CollaboratorService,
-    {
-      provide: ErrorHandler,
-      useClass: ErrorsHandler,
-    }
+    CollaboratorService
   ],
   bootstrap: [AppComponent]
 })
+/*    {
+      provide: ErrorHandler,
+      useClass: ErrorsHandler,
+    }
+ */
 export class AppModule {
 }

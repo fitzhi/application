@@ -18,7 +18,7 @@ export class SearchSkillComponent implements OnInit {
     private dataService: DataService) {}
 
 	ngOnInit() {
-		this.cinematicService.setForm(Constants.DEVELOPPERS_SEARCH);
+		this.cinematicService.setForm(Constants.SKILLS_SEARCH);
 		this.skills = this.dataService.getSkills();
   	}
 
