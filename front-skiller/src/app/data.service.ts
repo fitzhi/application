@@ -22,7 +22,7 @@ export class DataService {
   /**
    * List of skills corresponding to the search criteria.
    */
-  private static theSkill: Skill[] = [];
+  private static theSkills: Skill[] = [];
 
 
   /**
@@ -140,7 +140,7 @@ export class DataService {
   }
 
   /**
-   * Return the list of collaborators.
+   * Return the list of staff membersÒ.
    */
   getStaff(): Collaborator[] {
     return DataService.theStaff;
@@ -158,5 +158,12 @@ export class DataService {
    */
   saveSkill (skill: Skill) {
     this.skillService.save (skill);
+  }
+
+  /**
+   * Return the list of staff membersÒ.
+   */
+  getSkills(): Skill[] {
+    return DataService.theSkills;
   }
 }
