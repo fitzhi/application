@@ -5,11 +5,11 @@ import {Constants} from '../constants';
 import {Collaborator} from '../data/collaborator';
 
 @Component({
-  selector: 'app-search-user',
-  templateUrl: './search-user.component.html',
-  styleUrls: ['./search-user.component.css']
+  selector: 'app-list-staff',
+  templateUrl: './list-staff.component.html',
+  styleUrls: ['./list-staff.component.css']
 })
-export class SearchUserComponent implements OnInit {
+export class ListStaffComponent implements OnInit {
 
   private collaborators: Collaborator[];
 

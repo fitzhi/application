@@ -18,7 +18,7 @@ import {WelcomeComponent} from './welcome/welcome.component';
 
 import {CinematicService} from './cinematic.service';
 import {UserComponent} from './user/user.component';
-import {SearchUserComponent} from './search-user/search-user.component';
+import {ListStaffComponent} from './list-staff/list-staff.component';
 
 import {DataService} from './data.service';
 import {CollaboratorService} from './collaborator.service';
@@ -34,7 +34,7 @@ import { ErrorComponent } from './error/error.component';
     ListSkillComponent,
     WelcomeComponent,
     UserComponent,
-    SearchUserComponent,
+    ListStaffComponent,
     MessageComponent,
     ErrorComponent
   ],
