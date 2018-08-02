@@ -1,41 +1,74 @@
-<div class="container">
-	<div class="py-5 text-center">
-		<h2>Developer Form</h2>
-		<p class="lead">Please, fill the personnel informations of this
-			new fellow and skill collaborator.</p>
-	</div>
 
-	<div class="row">
-		<div class="col-md-4 order-md-2 mb-4">
-			<h4 class="d-flex justify-content-between align-items-center mb-3">
-				<span class="text-muted">Projects card</span> <span
-					class="badge badge-secondary badge-pill">{{projects.length}}</span>
-			</h4>
-			<ul class="list-group mb-3">
+<div class="py-5 text-center">
+	<h2>Developer Form</h2>
+	<p class="lead">Please, fill the personnel informations of this new
+		fellow and skill collaborator.</p>
+</div>
+
+<div class="container" style="width: 100%;">
+	<div class="d-flex flex-row-reverse">
+		<div class="p-2" style="width: 30%;">
+			<div class="skill_card">
+				<h4 class="d-flex justify-content-between align-items-center mb-3">
+					<span class="text-muted">Skills card</span> <span
+						class="badge badge-secondary badge-pill">{{projects.length}}</span>
+				</h4>
+				<ul class="list-group mb-3">
+
+					<li *ngFor="let skill of experience"
+						class="list-group-item d-flex justify-content-between lh-condensed">
+						<div>
+							<h5 class="my-0">{{skill.title}}</h5>
+						</div>
+						<div>
+							<h5 class="my-0">{{skill.level}}</h5>
+						</div>
+					</li>
+				</ul>
+
+				<form class="card p-2">
+					<div class="input-group">
+						<input type="text" class="form-control" placeholder="Skills">
+						<div class="input-group-append">
+							<button type="submit" class="btn btn-secondary">Add a
+								skill</button>
+						</div>
+					</div>
+				</form>
+			</div>
 			
-				<li *ngFor="let project of projects"
-					class="list-group-item d-flex justify-content-between lh-condensed">
-					<div>
-						<h5 class="my-0">{{project.name}}</h5>
-						from... to...
-					</div> 
-					<div>
-					<img alt="" src="/assets/img/edit.jpeg" width="32" height="32"/>
-					<img alt="" src="/assets/img/delete.png" width="32" height="32"/>
-					</div>
-				</li>
-			</ul>
+			<div class="projects_card">
+				<h4 class="d-flex justify-content-between align-items-center">
+					<span class="text-muted">Projects card</span> <span
+						class="badge badge-secondary badge-pill">{{projects.length}}</span>
+				</h4>
+				<ul class="list-group mb-3">
 
-			<form class="card p-2">
-				<div class="input-group">
-					<input type="text" class="form-control" placeholder="Project name">
-					<div class="input-group-append">
-						<button type="submit" class="btn btn-secondary">Add a project</button>
+					<li *ngFor="let project of projects"
+						class="list-group-item d-flex justify-content-between lh-condensed">
+						<div>
+							<h5 class="my-0">{{project.name}}</h5>
+							from... to...
+						</div>
+						<div>
+							<img alt="" src="/assets/img/edit.jpeg" width="32" height="32" />
+							<img alt="" src="/assets/img/delete.png" width="32" height="32" />
+						</div>
+					</li>
+				</ul>
+
+				<form class="card p-2">
+					<div class="input-group">
+						<input type="text" class="form-control" placeholder="Project name">
+						<div class="input-group-append">
+							<button type="submit" class="btn btn-secondary">Add a
+								project</button>
+						</div>
 					</div>
-				</div>
-			</form>
+				</form>
+			</div>
 		</div>
-		<div class="col-md-8 order-md-1">
+		<div class="p-2" style="width: 70%; margin-right: 40px">
 			<h4 class="mb-3">Personal information</h4>
 			<form class="needs-validation" novalidate>
 				<div class="row">
@@ -79,11 +112,9 @@
 				</div>
 
 				<div class="mb-3">
-					<label for="level">Level</label> 
-					<select name="label" id="level"
+					<label for="level">Level</label> <select name="label" id="level"
 						[(ngModel)]="collaborator.level"
-						class="custom-select d-block w-100" 
-						required>
+						class="custom-select d-block w-100" required>
 						<option value="0" selected="selected">select a level</option>
 						<option *ngFor="let level of levels" [value]="level.code">{{level.title}}</option>
 					</select>

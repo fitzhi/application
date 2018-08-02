@@ -7,3 +7,14 @@ body {
   /* Margin bottom by footer height */
   margin-bottom: 60px;
 }
+
+div.projects_card {
+	margin-top: 30px;
+	padding:10px;
+	background-color: lightGrey;
+}
+
+div.skill_card {
+	padding:10px;
+	background-color: lightGrey;
+}

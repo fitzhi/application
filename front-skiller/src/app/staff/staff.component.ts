@@ -14,9 +14,11 @@ import {Collaborator} from '../data/collaborator';
 import {Level} from '../data/level';
 import {Attribution} from '../data/attribution';
 import {Project} from '../data/project';
+import {Experience} from '../data/experience';
 
 import {LIST_OF_LEVELS} from '../data/List_of_levels';
 import {PROJECTS} from '../mock/mock-projects';
+import {EXPERIENCE} from '../mock/mock-experience';
 import {Constants} from '../constants';
 
 
@@ -32,6 +34,7 @@ export class StaffComponent implements OnInit {
 
   private levels: Level[] = LIST_OF_LEVELS;
   private projects: Project[] = PROJECTS;
+  private experience: Experience[] = EXPERIENCE;
 
   private collaborator: Collaborator;
 
