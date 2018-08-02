@@ -5,7 +5,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {SkillComponent} from './skill/skill.component';
 import {ListSkillComponent} from './list-skill/list-skill.component';
 import {WelcomeComponent} from './welcome/welcome.component';
-import {UserComponent} from './user/user.component';
+import {StaffComponent} from './staff/staff.component';
 import {ListStaffComponent} from './list-staff/list-staff.component';
 import {ErrorComponent} from './error/error.component';
 
@@ -16,8 +16,8 @@ const routes: Routes = [
   {path: 'skill', component: SkillComponent},
   {path: 'skill/:id', component: SkillComponent},
   {path: 'searchUser', component: ListStaffComponent},
-  {path: 'user/:id', component: UserComponent},
-  {path: 'user', component: UserComponent},
+  {path: 'user/:id', component: StaffComponent},
+  {path: 'user', component: StaffComponent},
   {path: 'error', component: ErrorComponent}
 ];
 

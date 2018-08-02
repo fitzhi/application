@@ -17,7 +17,7 @@ import {ListSkillComponent} from './list-skill/list-skill.component';
 import {WelcomeComponent} from './welcome/welcome.component';
 
 import {CinematicService} from './cinematic.service';
-import {UserComponent} from './user/user.component';
+import {StaffComponent} from './staff/staff.component';
 import {ListStaffComponent} from './list-staff/list-staff.component';
 
 import {DataService} from './data.service';
@@ -33,7 +33,7 @@ import { ErrorComponent } from './error/error.component';
     SkillComponent,
     ListSkillComponent,
     WelcomeComponent,
-    UserComponent,
+    StaffComponent,
     ListStaffComponent,
     MessageComponent,
     ErrorComponent

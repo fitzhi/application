@@ -1,6 +1,6 @@
 <div class="container" style="padding: 5px">
     <div class="row bg-light text-dark" style="border-style: solid; border-width: 1px; color: black; border-radius: 10px; font-size: x-large">
-        <div class="col-6">Skill</div>
+        <div class="col-7">Skill</div>
         <div class="col-1 title_stars">*</div>
         <div class="col-1 title_stars">**</div>
         <div class="col-1 title_stars">***</div>
@@ -9,7 +9,7 @@
     </div>
     
     <div *ngFor="let skill of skills" class="row" style="font-size: large">
-        <div class="col-6">
+        <div class="col-7">
         	<a [routerLink]="['/skill', skill.id]">
         		{{skill.title}}
        		</a>

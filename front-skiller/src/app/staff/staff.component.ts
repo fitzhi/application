@@ -21,11 +21,11 @@ import {Constants} from '../constants';
 
 
 @Component({
-  selector: 'app-user',
-  templateUrl: './user.component.html',
-  styleUrls: ['./user.component.css']
+  selector: 'app-staff',
+  templateUrl: './staff.component.html',
+  styleUrls: ['./staff.component.css']
 })
-export class UserComponent implements OnInit {
+export class StaffComponent implements OnInit {
 
   private id: number;
   private sub: any;
