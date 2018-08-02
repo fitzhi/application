@@ -5,11 +5,11 @@ import {Constants} from '../constants';
 import {Skill} from '../data/skill';
 
 @Component({
-  selector: 'app-search-skill',
-  templateUrl: './search-skill.component.html',
-  styleUrls: ['./search-skill.component.css']
+  selector: 'app-list-skill',
+  templateUrl: './list-skill.component.html',
+  styleUrls: ['./list-skill.component.css']
 })
-export class SearchSkillComponent implements OnInit {
+export class ListSkillComponent implements OnInit {
 
   private skills: Skill[];
 

@@ -13,7 +13,7 @@ import {ModalModule} from 'ngx-bootstrap/modal';
 import {AppComponent} from './app.component';
 import {AppRoutingModule} from './app-routing.module';
 import {SkillComponent} from './skill/skill.component';
-import {SearchSkillComponent} from './search-skill/search-skill.component';
+import {ListSkillComponent} from './list-skill/list-skill.component';
 import {WelcomeComponent} from './welcome/welcome.component';
 
 import {CinematicService} from './cinematic.service';
@@ -31,7 +31,7 @@ import { ErrorComponent } from './error/error.component';
   declarations: [
     AppComponent,
     SkillComponent,
-    SearchSkillComponent,
+    ListSkillComponent,
     WelcomeComponent,
     UserComponent,
     SearchUserComponent,
