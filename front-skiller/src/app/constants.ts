@@ -1,3 +1,5 @@
+import {StarsSkillLevelRenderComponent} from './staff/starsSkillLevelRenderComponent';
+
 /**
  * Constants file
  */
@@ -24,4 +26,37 @@ export class Constants {
   	public static MESSAGE_ERROR = 1;
   	public static MESSAGE_INFO = 2;
 
+
+	/**
+	 * Declared settings for the grid dedicated to the skills inside the form STAFF 
+	 */
+	 public static SETTINGS_SKILL_SMARTTABLE = {
+	    columns: {
+	        title: {
+		        title: 'skills',
+		        filter: false,
+		        width: '75%',
+		        type: 'text'
+	        },
+	        level: {
+		        title: 'Level',
+		        filter: false,
+		        width: '25%',
+		        type: 'custom',
+		        renderComponent: StarsSkillLevelRenderComponent
+	        }
+	    },
+	    hideSubHeader: true,
+	    attr: {
+        	class: 'table-bordered skills_table'
+      	},
+	    actions: {
+	        add: false,
+	        edit: false,
+	        delete: false
+	    },
+	    pager: {
+		    perPage: 5
+		}
+	};
 }

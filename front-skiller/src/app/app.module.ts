@@ -27,6 +27,10 @@ import { MessageComponent } from './message/message.component';
 import {ErrorsHandler} from './errors-handler';
 import { ErrorComponent } from './error/error.component';
 
+import { Ng2SmartTableModule } from 'ng2-smart-table';
+
+import { StarsSkillLevelRenderComponent } from './staff/starsSkillLevelRenderComponent';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,8 +40,10 @@ import { ErrorComponent } from './error/error.component';
     StaffComponent,
     ListStaffComponent,
     MessageComponent,
-    ErrorComponent
+    ErrorComponent,
+    StarsSkillLevelRenderComponent
   ],
+  entryComponents: [StarsSkillLevelRenderComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -47,6 +53,7 @@ import { ErrorComponent } from './error/error.component';
     NgbModule.forRoot(),
     FormsModule,
     HttpClientModule,
+    Ng2SmartTableModule
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.

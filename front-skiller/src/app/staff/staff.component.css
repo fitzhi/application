@@ -11,10 +11,35 @@ body {
 div.projects_card {
 	margin-top: 30px;
 	padding:10px;
-	background-color: lightGrey;
+	background-color: gainsboro;
 }
 
 div.skill_card {
-	padding:10px;
-	background-color: lightGrey;
+	padding:1px;
 }
+
+:host /deep/ ng2-smart-table {
+        font-size: 12px;
+}
+
+:host /deep/ ng2-smart-table thead > tr > th  { 
+        background-color: snow;  
+}
+
+:host /deep/ ng2-smart-table-cell  div { 
+        padding: 0px;
+        margin: 0px;
+        font-size: 14px;
+}
+
+
+:host /deep/ ng2-smart-table tr   { 
+        padding: 0px;
+        margin: 0px;
+}
+
+:host /deep/ ng2-smart-table tr td  { 
+        padding: 0px;
+//        font-size: 12px;
+}
+

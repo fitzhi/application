@@ -21,6 +21,8 @@ import {PROJECTS} from '../mock/mock-projects';
 import {EXPERIENCE} from '../mock/mock-experience';
 import {Constants} from '../constants';
 
+import { Ng2SmartTableModule } from 'ng2-smart-table';
+import {StarsSkillLevelRenderComponent} from './starsSkillLevelRenderComponent';
 
 @Component({
   selector: 'app-staff',
@@ -35,6 +37,7 @@ export class StaffComponent implements OnInit {
   private levels: Level[] = LIST_OF_LEVELS;
   private projects: Project[] = PROJECTS;
   private experience: Experience[] = EXPERIENCE;
+  private settings_skills = Constants.SETTINGS_SKILL_SMARTTABLE;
 
   private collaborator: Collaborator;
 
