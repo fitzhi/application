@@ -9,9 +9,8 @@ body {
 }
 
 div.projects_card {
-	margin-top: 30px;
-	padding:10px;
-	background-color: gainsboro;
+	/* margin-top: 30px; */
+	padding:1px;
 }
 
 div.skill_card {
@@ -42,4 +41,9 @@ div.skill_card {
 :host /deep/ ng2-smart-table tr td  { 
         padding: 0px;
 //        font-size: 12px;
+}
+
+img.add_button {
+	width: 10px;
+	height: 10px;
 }

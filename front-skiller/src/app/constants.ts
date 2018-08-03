@@ -64,6 +64,36 @@ export class Constants {
 	 * Declared settings for the grid dedicated to the PROJECTS inside the form STAFF 
 	 */
 	 public static SETTINGS_PROJECTS_SMARTTABLE = {
+	    columns: {
+	        name: {
+		        title: 'Projects',
+		        filter: false,
+		        width: '100%',
+		        type: 'text'
+	        }
+	    },
+	    add: {
+      		addButtonContent: '<img width="20px" height="20px" src="/assets/img/add.jpeg"></img>',
+   		},
+	    delete: {
+      		deleteButtonContent: '<img width="20px" height="20px" src="/assets/img/delete.png"></img>',
+   		},
+	    edit: {
+      		editButtonContent: '<img width="20px" height="20px" src="/assets/img/edit.jpeg"></img>',
+   		},
+	    hideSubHeader: false,
+	    attr: {
+        	class: 'table table-bordered'
+      	},
+	    actions: {
+  			columnTitle: '........',
+ 	        add: true,
+	        edit: true,
+	        delete: true
+	    },
+	    pager: {
+		    perPage: 8
+		}
 	}
 	
 }
