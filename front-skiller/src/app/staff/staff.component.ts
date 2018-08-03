@@ -38,6 +38,7 @@ export class StaffComponent implements OnInit {
   private projects: Project[] = PROJECTS;
   private experience: Experience[] = EXPERIENCE;
   private settings_skills = Constants.SETTINGS_SKILL_SMARTTABLE;
+  private settings_projects = Constants.SETTINGS_PROJECTS_SMARTTABLE;
 
   private collaborator: Collaborator;
 

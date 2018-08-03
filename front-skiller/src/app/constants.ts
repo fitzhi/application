@@ -33,7 +33,7 @@ export class Constants {
 	 public static SETTINGS_SKILL_SMARTTABLE = {
 	    columns: {
 	        title: {
-		        title: 'skills',
+		        title: 'Skills',
 		        filter: false,
 		        width: '75%',
 		        type: 'text'
@@ -56,7 +56,16 @@ export class Constants {
 	        delete: false
 	    },
 	    pager: {
-		    perPage: 5
+		    perPage: 8
 		}
 	};
+
+	/**
+	 * Declared settings for the grid dedicated to the PROJECTS inside the form STAFF 
+	 */
+	 public static SETTINGS_PROJECTS_SMARTTABLE = {
+	}
+	
 }
+
+	

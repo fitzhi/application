@@ -18,12 +18,14 @@ div.skill_card {
 	padding:1px;
 }
 
+
 :host /deep/ ng2-smart-table {
         font-size: 12px;
 }
 
 :host /deep/ ng2-smart-table thead > tr > th  { 
         background-color: snow;  
+        font-size: 18px;
 }
 
 :host /deep/ ng2-smart-table-cell  div { 
@@ -31,7 +33,6 @@ div.skill_card {
         margin: 0px;
         font-size: 14px;
 }
-
 
 :host /deep/ ng2-smart-table tr   { 
         padding: 0px;
@@ -42,4 +43,3 @@ div.skill_card {
         padding: 0px;
 //        font-size: 12px;
 }
-
