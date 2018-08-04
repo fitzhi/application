@@ -127,6 +127,41 @@ export class StaffComponent implements OnInit {
         });
   }
 
+  onSaveConfirm(event) {
+    if (window.confirm('Are you sure you want to save?')) {
+      event.newData['name'] += ' + added in code';
+      event.confirm.resolve(event.newData);
+    } else {
+      event.confirm.reject();
+    }
+  }
+
+  onDeleteConfirmProject(event) {
+    if (window.confirm('Are you sure you want to delete the project ' + event.data.name)) {
+      event.confirm.resolve();
+    } else {
+      event.confirm.reject();
+    }
+  }
+
+  deleteProject(event) {
+    console.log(event.data);
+    /*
+    this.http.delete<any>('/api/v1/delete/'+event.data.id).subscribe(
+        res => {
+          console.log(res);
+          event.confirm.resolve(event.source.data);
+      },
+      (err: HttpErrorResponse) => {
+        if (err.error instanceof Error) {
+          console.log("Client-side error occured.");
+        } else {
+          console.log("Server-side error occured.");
+        }
+      });
+     */
+    event.confirm.resolve(event.source.data);
+  }
 }
 
 

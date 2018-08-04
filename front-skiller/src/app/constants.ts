@@ -79,10 +79,11 @@ export class Constants {
    		},
 	    delete: {
       		deleteButtonContent: '<img width="20px" height="20px" src="/assets/img/delete.jpeg"></img>',
+      		confirmDelete: true,
    		},
 	    edit: {
       		editButtonContent: '<img width="20px" height="20px" src="/assets/img/edit.jpeg"></img>',
-  			cancelButtonContent: '<img width="20px" height="20px" src="/assets/img/cancel.png"></img>'    		
+  			cancelButtonContent: '<img width="20px" height="20px" src="/assets/img/cancel.png"></img>',    		
  			saveButtonContent: '<img width="25px" height="25px" src="/assets/img/update-cloud.jpeg"></img>',
    		},
 	    hideSubHeader: false,

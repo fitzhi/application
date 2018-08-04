@@ -30,7 +30,11 @@
 					<span class="text-muted">Projects card</span> <span
 						class="badge badge-secondary badge-pill">{{projects.length}}</span>
 				</h4>
- 				<ng2-smart-table [settings]="settings_projects" [source]="projects"></ng2-smart-table> 
+ 				<ng2-smart-table 
+ 					[settings]="settings_projects" 
+ 					[source]="projects"
+ 					(deleteConfirm)="onDeleteConfirmProject($event)">
+ 				</ng2-smart-table> 
 <!-- 
 				<ul class="list-group mb-3">
 
