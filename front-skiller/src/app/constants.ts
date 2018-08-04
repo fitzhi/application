@@ -74,19 +74,23 @@ export class Constants {
 	    },
 	    add: {
       		addButtonContent: '<img width="20px" height="20px" src="/assets/img/add.jpeg"></img>',
+  			createButtonContent: '<img width="25px" height="25px" src="/assets/img/update-cloud.jpeg"></img>',
+  			cancelButtonContent: '<img width="20px" height="20px" src="/assets/img/cancel.png"></img>'    		
    		},
 	    delete: {
-      		deleteButtonContent: '<img width="20px" height="20px" src="/assets/img/delete.png"></img>',
+      		deleteButtonContent: '<img width="20px" height="20px" src="/assets/img/delete.jpeg"></img>',
    		},
 	    edit: {
       		editButtonContent: '<img width="20px" height="20px" src="/assets/img/edit.jpeg"></img>',
+  			cancelButtonContent: '<img width="20px" height="20px" src="/assets/img/cancel.png"></img>'    		
+ 			saveButtonContent: '<img width="25px" height="25px" src="/assets/img/update-cloud.jpeg"></img>',
    		},
 	    hideSubHeader: false,
 	    attr: {
         	class: 'table table-bordered'
       	},
 	    actions: {
-  			columnTitle: '........',
+  			columnTitle: '____',
  	        add: true,
 	        edit: true,
 	        delete: true
