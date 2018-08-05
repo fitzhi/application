@@ -46,15 +46,31 @@ export class Constants {
 		        renderComponent: StarsSkillLevelRenderComponent
 	        }
 	    },
-	    hideSubHeader: true,
 	    attr: {
         	class: 'table-bordered skills_table'
       	},
 	    actions: {
-	        add: false,
-	        edit: false,
-	        delete: false
+  			columnTitle: '____',
+ 	        add: true,
+	        edit: true,
+	        delete: true
 	    },
+	    add: {
+      		addButtonContent: '<img width="20px" height="20px" src="/assets/img/add.jpeg"></img>',
+  			createButtonContent: '<img width="25px" height="25px" src="/assets/img/update-cloud.jpeg"></img>',
+  			cancelButtonContent: '<img width="20px" height="20px" src="/assets/img/cancel.png"></img>'    		
+   		},
+	    delete: {
+      		deleteButtonContent: '<img width="20px" height="20px" src="/assets/img/delete.jpeg"></img>',
+      		confirmDelete: true,
+   		},
+	    edit: {
+      		editButtonContent: '<img width="20px" height="20px" src="/assets/img/edit.jpeg"></img>',
+  			cancelButtonContent: '<img width="20px" height="20px" src="/assets/img/cancel.png"></img>',    		
+ 			saveButtonContent: '<img width="25px" height="25px" src="/assets/img/update-cloud.jpeg"></img>',
+   		},
+	    hideSubHeader: false,
+	    noDataMessage: 'No experience registered yet.',
 	    pager: {
 		    perPage: 5
 		}
@@ -96,6 +112,7 @@ export class Constants {
 	        edit: true,
 	        delete: true
 	    },
+	    noDataMessage: 'There is no skill associated yet.',
 	    pager: {
 		    perPage: 5
 		}

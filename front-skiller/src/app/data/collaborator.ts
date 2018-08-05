@@ -1,5 +1,6 @@
 
 import { Attribution } from './attribution';
+import { Experience } from './experience';
 
 
 export class Collaborator {
@@ -9,6 +10,12 @@ export class Collaborator {
   public nickName: string;
   public email: string;
   public level: string;
+
+
+  /**
+   * 
+   */
+  public experience: Experience[];
 
   /**
    * List of projects where the developer is involved.

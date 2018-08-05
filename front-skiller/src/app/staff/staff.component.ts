@@ -36,8 +36,8 @@ export class StaffComponent implements OnInit {
   private sub: any;
 
   private levels: Level[] = LIST_OF_LEVELS;
-  private sourceProjects = new LocalDataSource(PROJECTS);
-  private experience: Experience[] = EXPERIENCE;
+  private sourceProjects = new LocalDataSource([]);
+  private sourceExperience = new LocalDataSource([]);
   private settings_skills = Constants.SETTINGS_SKILL_SMARTTABLE;
   private settings_projects = Constants.SETTINGS_PROJECTS_SMARTTABLE;
 
@@ -64,17 +64,23 @@ export class StaffComponent implements OnInit {
 
       // Either we are in creation mode, or we load the collaborator from the back-end...
       // We create an empty collaborator until the subscription is complete
-      this.collaborator = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null, projects: []};
+      this.collaborator = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null,
+        projects: [], experience: []};
       if (this.id != null) {
         this.dataService.getCollaborator(this.id).subscribe(
-          (collab: Collaborator) => this.collaborator = collab,
+          (collab: Collaborator) => {
+            this.collaborator = collab;
+            this.sourceExperience.load(this.collaborator.experience);
+            this.sourceProjects.load(this.collaborator.projects);
+          },
           error => {
             if (error.status === 404) {
               if (Constants.DEBUG) {
                 console.log ('404 : cannot found a collaborator for the id ' + this.id);
               }
               this.messageService.error('There is no staff member for id ' + this.id);
-              this.collaborator = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null, projects: []};
+              this.collaborator = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null,
+                projects: [], experience: []};
             } else {
                 console.error (error.message);
             }
@@ -90,10 +96,13 @@ export class StaffComponent implements OnInit {
             );
       }
 
-      this.sourceProjects.onRemoved().subscribe(element => console.log('Delete item ' + element));
-      this.sourceProjects.onAdded().subscribe(element => console.log('Add item ' + element));
-      this.sourceProjects.onUpdated().subscribe(element => console.log('Update item ' + element));
-      this.sourceProjects.count();
+      this.sourceProjects.onRemoved().subscribe(element => console.log('Delete project ' + element));
+      this.sourceProjects.onAdded().subscribe(element => console.log('Add project ' + element));
+      this.sourceProjects.onUpdated().subscribe(element => console.log('Update project ' + element));
+
+      this.sourceExperience.onRemoved().subscribe(element => console.log('Delete experience ' + element));
+      this.sourceExperience.onAdded().subscribe(element => console.log('Add experience ' + element));
+      this.sourceExperience.onUpdated().subscribe(element => console.log('Update experience ' + element));
     });
     this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
   }
