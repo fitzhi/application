@@ -22,6 +22,7 @@ import {EXPERIENCE} from '../mock/mock-experience';
 import {Constants} from '../constants';
 
 import { Ng2SmartTableModule } from 'ng2-smart-table';
+import { LocalDataSource } from 'ng2-smart-table';
 import {StarsSkillLevelRenderComponent} from './starsSkillLevelRenderComponent';
 
 @Component({
@@ -35,12 +36,14 @@ export class StaffComponent implements OnInit {
   private sub: any;
 
   private levels: Level[] = LIST_OF_LEVELS;
-  private projects: Project[] = PROJECTS;
+  private sourceProjects = new LocalDataSource(PROJECTS);
   private experience: Experience[] = EXPERIENCE;
   private settings_skills = Constants.SETTINGS_SKILL_SMARTTABLE;
   private settings_projects = Constants.SETTINGS_PROJECTS_SMARTTABLE;
 
   private collaborator: Collaborator;
+
+  private source: LocalDataSource;
 
   constructor(
     private cinematicService: CinematicService,
@@ -86,6 +89,11 @@ export class StaffComponent implements OnInit {
                   }
             );
       }
+
+      this.sourceProjects.onRemoved().subscribe(element => console.log('Delete item ' + element));
+      this.sourceProjects.onAdded().subscribe(element => console.log('Add item ' + element));
+      this.sourceProjects.onUpdated().subscribe(element => console.log('Update item ' + element));
+      this.sourceProjects.count();
     });
     this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
   }
@@ -111,6 +119,19 @@ export class StaffComponent implements OnInit {
     };
   }
 
+  onConfirmRemoveFromProject(event) {
+  if (window.confirm('Are you sure you want to remove '
+      + this.collaborator.firstName + ' '
+      + this.collaborator.lastName
+      + ' from the project '
+      + event.data['name']
+      + '?')) {
+      event.confirm.resolve();
+    } else {
+      event.confirm.reject();
+    }
+  }
+
   /**
 	* The Validate Button has been activated
 	*/
@@ -125,42 +146,6 @@ export class StaffComponent implements OnInit {
           this.collaborator = staff;
           this.messageService.info('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
         });
-  }
-
-  onSaveConfirm(event) {
-    if (window.confirm('Are you sure you want to save?')) {
-      event.newData['name'] += ' + added in code';
-      event.confirm.resolve(event.newData);
-    } else {
-      event.confirm.reject();
-    }
-  }
-
-  onDeleteConfirmProject(event) {
-    if (window.confirm('Are you sure you want to delete the project ' + event.data.name)) {
-      event.confirm.resolve();
-    } else {
-      event.confirm.reject();
-    }
-  }
-
-  deleteProject(event) {
-    console.log(event.data);
-    /*
-    this.http.delete<any>('/api/v1/delete/'+event.data.id).subscribe(
-        res => {
-          console.log(res);
-          event.confirm.resolve(event.source.data);
-      },
-      (err: HttpErrorResponse) => {
-        if (err.error instanceof Error) {
-          console.log("Client-side error occured.");
-        } else {
-          console.log("Server-side error occured.");
-        }
-      });
-     */
-    event.confirm.resolve(event.source.data);
   }
 }
 

@@ -56,7 +56,7 @@ export class Constants {
 	        delete: false
 	    },
 	    pager: {
-		    perPage: 8
+		    perPage: 5
 		}
 	};
 
@@ -97,7 +97,7 @@ export class Constants {
 	        delete: true
 	    },
 	    pager: {
-		    perPage: 8
+		    perPage: 5
 		}
 	}
 	

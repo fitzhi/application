@@ -28,12 +28,12 @@
 			<div class="projects_card">
 				<h4 class="d-flex justify-content-between align-items-center">
 					<span class="text-muted">Projects card</span> <span
-						class="badge badge-secondary badge-pill">{{projects.length}}</span>
+						class="badge badge-secondary badge-pill">{{sourceProjects.count()}}</span>
 				</h4>
  				<ng2-smart-table 
  					[settings]="settings_projects" 
- 					[source]="projects"
- 					(deleteConfirm)="onDeleteConfirmProject($event)">
+ 					[source]="sourceProjects"
+ 					(deleteConfirm)="onConfirmRemoveFromProject($event)">
  				</ng2-smart-table> 
 <!-- 
 				<ul class="list-group mb-3">
