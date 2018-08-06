@@ -128,17 +128,31 @@ export class StaffComponent implements OnInit {
     };
   }
 
-  onConfirmRemoveFromProject(event) {
-  if (window.confirm('Are you sure you want to remove '
-      + this.collaborator.firstName + ' '
-      + this.collaborator.lastName
-      + ' from the project '
-      + event.data['name']
-      + '?')) {
-      event.confirm.resolve();
-    } else {
-      event.confirm.reject();
+  checkStaffMemberExist(): boolean {
+    console.log (this.collaborator.id);
+    if (this.collaborator.id === null) {
+      this.messageService.error('You cannot update a skill, or a project, of an unregistered staff member. '
+      + 'Please saved this new member first !');
+      return false;
     }
+    return true;
+  }
+
+  onConfirmRemoveFromProject(event) {
+    if (!this.checkStaffMemberExist()) {
+        event.confirm.reject();
+        return;
+    }
+    if (window.confirm('Are you sure you want to remove '
+        + this.collaborator.firstName + ' '
+        + this.collaborator.lastName
+        + ' from the project '
+        + event.data['name']
+        + '?')) {
+        event.confirm.resolve();
+      } else {
+        event.confirm.reject();
+      }
   }
 
   /**
