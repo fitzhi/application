@@ -52,20 +52,10 @@ export class CollaboratorService extends InternalService {
    */
   save(collaborator: Collaborator): Observable<Collaborator> {
     if (Constants.DEBUG) {
-      console.log('Saving the collaborator ' + collaborator.id);
+      console.log('Saving the collaborator with id ' + collaborator.id);
     }
     return this.http.post<Collaborator>(this.collaboratorUrl + '/save', collaborator, httpOptions);
 
-    /*
-    .pipe(
-      tap( (collab: Collaborator) => {
-          if (Constants.DEBUG) {
-            this.log('updated staff member for id ' + collab.id);
-          }
-        },
-        catchError(this.handleError<Collaborator>('save a Staff member'))
-    ));
-     */
   }
 
   /**

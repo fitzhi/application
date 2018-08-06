@@ -13,7 +13,13 @@
 					<span class="text-muted">Skills card</span> <span
 						class="badge badge-secondary badge-pill">{{sourceExperience.count()}}</span>
 				</h4>
-				<ng2-smart-table [settings]="settings_skills" [source]="sourceExperience"></ng2-smart-table>
+				<ng2-smart-table 
+					[settings]="settings_skills" 
+					[source]="sourceExperience"
+ 					(createConfirm)="checkStaffMemberExist($event)"
+ 					(editConfirm)="checkStaffMemberExist($event)"
+ 					(deleteConfirm)="onConfirmRemoveSkill($event)">
+					</ng2-smart-table>
 			</div>
 			<br/>
 			<div class="projects_card">
@@ -24,6 +30,8 @@
  				<ng2-smart-table 
  					[settings]="settings_projects" 
  					[source]="sourceProjects"
+ 					(createConfirm)="onConfirmCreateFromProject($event)"
+ 					(editConfirm)="onConfirmEditFromProject($event)"
  					(deleteConfirm)="onConfirmRemoveFromProject($event)">
  				</ng2-smart-table> 
 			</div>

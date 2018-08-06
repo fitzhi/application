@@ -128,18 +128,40 @@ export class StaffComponent implements OnInit {
     };
   }
 
-  checkStaffMemberExist(): boolean {
-    console.log (this.collaborator.id);
+  onConfirmCreateFromProject(event) {
+    if (Constants.DEBUG) {
+      console.log ('onConfirmCreateFromProject for event ' + event.newData.name);
+    }
+    if (this.checkStaffMemberExist(event)) {
+        event.confirm.resolve();
+    } else {
+        event.confirm.reject();
+    }
+  }
+
+  onConfirmEditFromProject(event) {
+    if (Constants.DEBUG) {
+      console.log ('onConfirmEditFromProject for event from ' + event.data.name + ' to ' + event.newData.name);
+    }
+    if (this.checkStaffMemberExist(event)) {
+        event.confirm.resolve();
+    } else {
+        event.confirm.reject();
+    }
+  }
+
+  checkStaffMemberExist(event): boolean {
     if (this.collaborator.id === null) {
       this.messageService.error('You cannot update a skill, or a project, of an unregistered staff member. '
       + 'Please saved this new member first !');
       return false;
+    } else {
+      return true;
     }
-    return true;
   }
 
   onConfirmRemoveFromProject(event) {
-    if (!this.checkStaffMemberExist()) {
+    if (!this.checkStaffMemberExist(event)) {
         event.confirm.reject();
         return;
     }
@@ -148,6 +170,22 @@ export class StaffComponent implements OnInit {
         + this.collaborator.lastName
         + ' from the project '
         + event.data['name']
+        + '?')) {
+        event.confirm.resolve();
+      } else {
+        event.confirm.reject();
+      }
+  }
+
+   onConfirmRemoveSkill(event) {
+    if (!this.checkStaffMemberExist(event)) {
+        event.confirm.reject();
+        return;
+    }
+    if (window.confirm('Are you sure you want to remove the skill '
+        + event.data['name'] + 'for '
+        + this.collaborator.firstName + ' '
+        + this.collaborator.lastName
         + '?')) {
         event.confirm.resolve();
       } else {
