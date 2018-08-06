@@ -43,7 +43,17 @@ export class Constants {
         filter: false,
         width: '25%',
         type: 'custom',
-        renderComponent: StarsSkillLevelRenderComponent
+        renderComponent: StarsSkillLevelRenderComponent,
+        editor: {
+          type: 'list',
+          config: {
+            list: [ { value: '1', title: '*'},
+                    { value: '2', title: '**'},
+                    { value: '3', title: '***'},
+                    { value: '4', title: '****'},
+                    { value: '5', title: '*****'}]
+          },
+        },
       }
     },
     attr: {

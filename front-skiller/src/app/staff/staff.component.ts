@@ -150,6 +150,28 @@ export class StaffComponent implements OnInit {
     }
   }
 
+  onConfirmAddStaffSkill(event) {
+    if (Constants.DEBUG) {
+      console.log ('onConfirmAddStaffSkill for event ' + event.newData.title);
+    }
+    if (this.checkStaffMemberExist(event)) {
+        event.confirm.resolve();
+    } else {
+        event.confirm.reject();
+    }
+  }
+
+  onConfirmEditStaffSkill(event) {
+    if (Constants.DEBUG) {
+      console.log ('onConfirmEditStaffSkill for event from ' + event.data.name + ' to ' + event.newData.name);
+    }
+    if (this.checkStaffMemberExist(event)) {
+        event.confirm.resolve();
+    } else {
+        event.confirm.reject();
+    }
+  }
+
   checkStaffMemberExist(event): boolean {
     if (this.collaborator.id === null) {
       this.messageService.error('You cannot update a skill, or a project, of an unregistered staff member. '

@@ -16,8 +16,8 @@
 				<ng2-smart-table 
 					[settings]="settings_skills" 
 					[source]="sourceExperience"
- 					(createConfirm)="checkStaffMemberExist($event)"
- 					(editConfirm)="checkStaffMemberExist($event)"
+ 					(createConfirm)="onConfirmAddStaffSkill($event)"
+ 					(editConfirm)="onConfirmEditStaffSkill($event)"
  					(deleteConfirm)="onConfirmRemoveSkill($event)">
 					</ng2-smart-table>
 			</div>

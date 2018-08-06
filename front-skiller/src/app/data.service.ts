@@ -49,8 +49,10 @@ export class DataService {
   reloadCollaborators(myCriteria: string) {
 
     function testCriteria (collab, index, array) {
-      return      (collab.firstName.toLowerCase().indexOf(myCriteria) > -1)
-            ||    (collab.lastName.toLowerCase().indexOf(myCriteria) > -1);
+          const firstname = (typeof collab.firstName !== 'undefined') ? collab.firstName : '';
+          const lastname = (typeof collab.firstName !== 'undefined') ? collab.firstName : '';
+          return  (   (firstname.toLowerCase().indexOf(myCriteria) > -1)
+                ||    (lastname.toLowerCase().indexOf(myCriteria) > -1) );
     }
 
     this.cleanUpCollaborators();
