@@ -197,7 +197,7 @@ export class AppComponent implements OnInit {
     this.dev_activated = false;
     this.skill_activated = false;
   }
-  
+
   /**
    * User has entered into the search INPUT.
    */
