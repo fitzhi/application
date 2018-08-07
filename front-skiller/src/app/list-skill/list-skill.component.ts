@@ -1,6 +1,6 @@
 import {Component, OnInit, Output, EventEmitter} from '@angular/core';
-import { CinematicService } from '../cinematic.service';
-import { DataService } from '../data.service';
+import {CinematicService} from '../cinematic.service';
+import {DataService} from '../data.service';
 import {Constants} from '../constants';
 import {Skill} from '../data/skill';
 
@@ -17,12 +17,14 @@ export class ListSkillComponent implements OnInit {
     private cinematicService: CinematicService,
     private dataService: DataService) {}
 
-	ngOnInit() {
-		this.cinematicService.setForm(Constants.SKILLS_SEARCH);
-		this.skills = this.dataService.getSkills();
-  	}
+  ngOnInit() {
+    this.cinematicService.setForm(Constants.SKILLS_SEARCH);
+    this.skills = this.dataService.getSkills();
+  }
 
-	public search(source: string) : void {
-		console.log("searching a skill");
-	}
+  public search(source: string): void {
+    if (Constants.DEBUG) {
+      console.log('Searching a skill');
+    }
+  }
 }

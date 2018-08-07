@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Collaborator} from './data/collaborator';
 import {Skill} from './data/skill';
+import {Project} from './data/project';
 import {Constants} from './constants';
 import {MOCK_COLLABORATORS} from './mock/mock-collaborators';
 import { Subject, Observable, of } from 'rxjs';
@@ -24,6 +25,10 @@ export class DataService {
    */
   private static theSkills: Skill[] = [];
 
+  /**
+   * List of projects corresponding to the search criteria.
+   */
+  private static theProjects: Project[] = [];
 
   /**
    * Current collaborator's identifier previewed on the fom.
@@ -237,5 +242,14 @@ export class DataService {
         }));
    }
   }
+
+   /**
+   * Return the list of projects.
+   */
+  getProjects(): Project[] {
+    return DataService.theProjects;
+  }
+
+
 }
 
