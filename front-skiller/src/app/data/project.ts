@@ -1,4 +1,11 @@
+import {Skill} from './skill';
+
 export class Project {
-  id: number;
-  name: string;
+  public id: number;
+  public name: string;
+  public skills: Skill[];
+
+  constructor() {}
+
 }
+

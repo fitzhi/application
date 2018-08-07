@@ -5,6 +5,7 @@ import {DataService} from '../data.service';
 import {MessageService} from '../message.service';
 import { CinematicService } from '../cinematic.service';
 
+import {Project} from '../data/project';
 import { Constants } from '../constants';
 import { LocalDataSource } from 'ng2-smart-table';
 
@@ -14,6 +15,8 @@ import { LocalDataSource } from 'ng2-smart-table';
   styleUrls: ['./project.component.css']
 })
 export class ProjectComponent implements OnInit {
+
+  private project: Project;
 
   private sourceSkills = new LocalDataSource([]);
   private settings_skills = Constants.SETTINGS_SKILL_SMARTTABLE;
@@ -26,6 +29,16 @@ export class ProjectComponent implements OnInit {
 
   ngOnInit() {
     this.cinematicService.setForm(Constants.PROJECT_CRUD);
+  }
+  
+  /**
+   * Save the skill created or updated.
+   */
+  save() {
+    if (Constants.DEBUG) {
+      console.log('saving the skill ' + this.project.name);
+    }
+    this.dataService.saveProject(this.project);
   }
 
 }

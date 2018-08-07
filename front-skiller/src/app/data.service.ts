@@ -250,6 +250,13 @@ export class DataService {
     return DataService.theProjects;
   }
 
+  /**
+   * Saving a new or an updated skill
+   */
+  saveProject (project: Project) {
+    //TODO this.skillService.save (skill);
+  }
+
 
 }
 
