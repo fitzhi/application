@@ -28,11 +28,10 @@ export class Constants {
   public static MESSAGE_ERROR = 1;
   public static MESSAGE_INFO = 2;
 
-
   /**
-	 * Declared settings for the grid dedicated to the skills inside the form STAFF 
+	 * Declared settings for the grid dedicated to the skills inside the form STAFF.
 	 */
-  public static SETTINGS_SKILL_SMARTTABLE = {
+  public static SETTINGS_EXPERIENCE_SMARTTABLE = {
     columns: {
       title: {
         title: 'Skills',
@@ -85,6 +84,50 @@ export class Constants {
     },
     hideSubHeader: false,
     noDataMessage: 'No experience registered yet.',
+    pager: {
+      perPage: 5
+    }
+  };
+
+  /**
+   * Declared settings for the grid dedicated to the skills inside the form STAFF.
+   */
+  public static SETTINGS_SKILL_SMARTTABLE = {
+    columns: {
+      title: {
+        title: 'Skills',
+        filter: false,
+        width: '75%',
+        type: 'text'
+      }
+    },
+    attr: {
+      class: 'table-bordered skills_table'
+    },
+    actions: {
+      columnTitle: '____',
+      add: true,
+      edit: true,
+      delete: true
+    },
+    add: {
+      addButtonContent: '<img width="20px" height="20px" src="/assets/img/add.jpeg"></img>',
+      createButtonContent: '<img width="25px" height="25px" src="/assets/img/update-cloud.jpeg"></img>',
+      cancelButtonContent: '<img width="20px" height="20px" src="/assets/img/cancel.png"></img>',
+      confirmCreate: true,
+    },
+    delete: {
+      deleteButtonContent: '<img width="20px" height="20px" src="/assets/img/delete.jpeg"></img>',
+      confirmDelete: true,
+    },
+    edit: {
+      editButtonContent: '<img width="20px" height="20px" src="/assets/img/edit.jpeg"></img>',
+      cancelButtonContent: '<img width="20px" height="20px" src="/assets/img/cancel.png"></img>',
+      saveButtonContent: '<img width="25px" height="25px" src="/assets/img/update-cloud.jpeg"></img>',
+      confirmSave: true,
+    },
+    hideSubHeader: false,
+    noDataMessage: 'No skill registered yet.',
     pager: {
       perPage: 5
     }

@@ -6,6 +6,7 @@ import {MessageService} from '../message.service';
 import { CinematicService } from '../cinematic.service';
 
 import { Constants } from '../constants';
+import { LocalDataSource } from 'ng2-smart-table';
 
 @Component({
   selector: 'app-project',
@@ -13,6 +14,9 @@ import { Constants } from '../constants';
   styleUrls: ['./project.component.css']
 })
 export class ProjectComponent implements OnInit {
+
+  private sourceSkills = new LocalDataSource([]);
+  private settings_skills = Constants.SETTINGS_SKILL_SMARTTABLE;
 
   constructor(
     private cinematicService: CinematicService,

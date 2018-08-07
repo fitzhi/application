@@ -38,12 +38,10 @@ export class StaffComponent implements OnInit {
   private levels: Level[] = LIST_OF_LEVELS;
   private sourceProjects = new LocalDataSource([]);
   private sourceExperience = new LocalDataSource([]);
-  private settings_skills = Constants.SETTINGS_SKILL_SMARTTABLE;
+  private settings_experience = Constants.SETTINGS_EXPERIENCE_SMARTTABLE;
   private settings_projects = Constants.SETTINGS_PROJECTS_SMARTTABLE;
 
   private collaborator: Collaborator;
-
-  private source: LocalDataSource;
 
   constructor(
     private cinematicService: CinematicService,
