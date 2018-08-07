@@ -18,6 +18,7 @@ public class Collaborator {
     public String email;
     public String level;
     public Project[] projects;
+    public Skill[] experience;
     
 	public Collaborator(int id, String firstName, String lastName, String nickName, String email, String level) {
 		super();
@@ -28,16 +29,16 @@ public class Collaborator {
 		this.email = email;
 		this.level = level;
 		projects = new ArrayList<Project>().toArray(new Project[1]);
+		experience = new ArrayList<Skill>().toArray(new Skill[1]);
 	}
 	
 	public Collaborator() { }
-	
+
 	@Override
 	public String toString() {
 		return "Collaborator [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", nickName="
-				+ nickName + ", email=" + email + ", level=" + level + ", projects=" + Arrays.toString(projects) + "]";
+				+ nickName + ", email=" + email + ", level=" + level + ", projects=" + Arrays.toString(projects)
+				+ ", experience=" + Arrays.toString(experience) + "]";
 	}
-	
-	
 	
 }

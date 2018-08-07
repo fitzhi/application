@@ -4,6 +4,8 @@ import {RouterModule, Routes} from '@angular/router';
 
 import {SkillComponent} from './skill/skill.component';
 import {ListSkillComponent} from './list-skill/list-skill.component';
+import {ProjectComponent} from './project/project.component';
+import {ListProjectComponent} from './list-project/list-project.component';
 import {WelcomeComponent} from './welcome/welcome.component';
 import {StaffComponent} from './staff/staff.component';
 import {ListStaffComponent} from './list-staff/list-staff.component';
@@ -18,7 +20,10 @@ const routes: Routes = [
   {path: 'searchUser', component: ListStaffComponent},
   {path: 'user/:id', component: StaffComponent},
   {path: 'user', component: StaffComponent},
-  {path: 'error', component: ErrorComponent}
+  {path: 'error', component: ErrorComponent},
+  {path: 'searchProject', component: ListProjectComponent},
+  {path: 'project', component: ProjectComponent},
+  {path: 'project/:id', component: ProjectComponent},
 ];
 
 @NgModule({

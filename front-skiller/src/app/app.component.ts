@@ -48,6 +48,10 @@ export class AppComponent implements OnInit {
   private image_dev_activated = '/assets/img/developper-activated.png';
   private image_dev_inactive = '/assets/img/developper-inactive.png';
 
+  private project_activated = true;
+  private image_project_activated = '/assets/img/project-activated.png';
+  private image_project_inactive = '/assets/img/project-inactive.png';
+
   constructor(
     private cinematicService: CinematicService,
     private dataService: DataService,
@@ -84,6 +88,18 @@ export class AppComponent implements OnInit {
         }
         case Constants.DEVELOPPERS_SEARCH: {
           this.formTitle = 'Searching';
+          this.in_master_detail = false;
+          this.is_allowed_to_search = true;
+          break;
+        }
+        case Constants.PROJECT_CRUD: {
+          this.formTitle = 'Project mode';
+          this.in_master_detail = false;
+          this.is_allowed_to_search = true;
+          break;
+        }
+        case Constants.PROJECT_SEARCH: {
+          this.formTitle = 'Searching project';
           this.in_master_detail = false;
           this.is_allowed_to_search = true;
           break;
@@ -142,6 +158,13 @@ export class AppComponent implements OnInit {
         this.dataService.reloadSkills(this.searching_what);
         break;
       }
+      case Constants.PROJECT_SEARCH: {
+        if (Constants.DEBUG) {
+          console.log('Reloading project for search criteria ' + this.searching_what);
+        }
+        //TODO this.dataService.reloadSkills(this.searching_what);
+        break;
+      }
     }
   }
 
@@ -160,13 +183,21 @@ export class AppComponent implements OnInit {
   switchToSkill () {
     this.skill_activated = true;
     this.dev_activated = false;
+    this.project_activated = false;
   }
 
   switchToDev () {
     this.dev_activated = true;
     this.skill_activated = false;
+    this.project_activated = false;
   }
 
+  switchToProject () {
+    this.project_activated = true;
+    this.dev_activated = false;
+    this.skill_activated = false;
+  }
+  
   /**
    * User has entered into the search INPUT.
    */
@@ -177,6 +208,9 @@ export class AppComponent implements OnInit {
           break;
         case Constants.DEVELOPPERS_CRUD:
           this.router.navigate(['/searchUser'], {});
+          break;
+        case Constants.PROJECT_CRUD:
+          this.router.navigate(['/searchProject'], {});
           break;
     }
   }

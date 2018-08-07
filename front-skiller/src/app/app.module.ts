@@ -30,6 +30,8 @@ import { ErrorComponent } from './error/error.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 import { StarsSkillLevelRenderComponent } from './staff/starsSkillLevelRenderComponent';
+import { ProjectComponent } from './project/project.component';
+import { ListProjectComponent } from './list-project/list-project.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,9 @@ import { StarsSkillLevelRenderComponent } from './staff/starsSkillLevelRenderCom
     ListStaffComponent,
     MessageComponent,
     ErrorComponent,
-    StarsSkillLevelRenderComponent
+    StarsSkillLevelRenderComponent,
+    ProjectComponent,
+    ListProjectComponent
   ],
   entryComponents: [StarsSkillLevelRenderComponent],
   imports: [

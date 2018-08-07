@@ -18,6 +18,8 @@ export class Constants {
   public static SKILLS_CRUD = 2;
   public static DEVELOPPERS_SEARCH = 3;
   public static DEVELOPPERS_CRUD = 4;
+  public static PROJECT_SEARCH = 5;
+  public static PROJECT_CRUD = 6;
 
   /**
 	* Type of errors

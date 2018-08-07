@@ -40,6 +40,16 @@
 				[src]="(dev_activated ? image_dev_activated : image_dev_inactive)"
 				width="48" height="48" />
 		</a>
+		&nbsp;
+		<a 	[routerLink]="['/project']"
+			[class]="(project_activated 
+					? 'activated header_toolbar_master_detail round' 
+					: 'inactive header_toolbar_master_detail round')" 
+			(click)="switchToProject()"> 
+				<img alt=""
+				[src]="(project_activated ? image_project_activated : image_project_inactive)"
+				width="48" height="48" />
+		</a>
 	</div>
 
 	<div class="p-2 ml-auto">
