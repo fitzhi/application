@@ -34,22 +34,16 @@ export class ProjectService extends InternalService {
   /**
   * Save the project.
   */
-  save(project: Project) {
+  save(project: Project): Observable<Project> {
     if (Constants.DEBUG) {
-      console.log('Saving project for id ' + project.id);
+      console.log( (typeof project.id !== 'undefined') ? 'Saving '  : 'Adding' + ' project ' + project.name);
     }
-    if (project.id == null) {
-      this.add(project);
-    }
+    return this.add(project);
   }
 
   /** POST: add a new project to the server */
   add(newProject: Project): Observable<Project> {
-    return this.httpClient.post<Project>(this.projectUrl, newProject, httpOptions).pipe(
-      tap((project: Project) =>
-        this.log(`added project w/ id=${project.id}`)),
-      catchError(this.handleError<Project>('addProject'))
-    );
+    return this.httpClient.post<Project>(this.projectUrl + '/save', newProject, httpOptions);
   }
 
   /**

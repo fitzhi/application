@@ -254,7 +254,8 @@ export class DataService {
   reloadProjects(myCriteria: string) {
 
     function testCriteria(project, index, array) {
-      return (project.name.toLowerCase().indexOf(myCriteria) > -1);
+      return (myCriteria == null) ?
+        true : (project.name.toLowerCase().indexOf(myCriteria.toLowerCase()) > -1);
     }
 
     this.cleanUpProjects();
@@ -295,8 +296,8 @@ export class DataService {
   /**
    * Saving a new or an updated project.
    */
-  saveProject(project: Project) {
-    this.projectService.save (project);
+  saveProject(project: Project): Observable<Project> {
+    return this.projectService.save (project);
   }
 
   /**

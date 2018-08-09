@@ -162,7 +162,7 @@ export class AppComponent implements OnInit {
         if (Constants.DEBUG) {
           console.log('Reloading project for search criteria ' + this.searching_what);
         }
-        //TODO this.dataService.reloadSkills(this.searching_what);
+        this.dataService.reloadProjects(this.searching_what);
         break;
       }
     }

@@ -26,7 +26,7 @@ import fr.skiller.data.Project;
 @RequestMapping("/project")
 public class ProjectController {
 
-	Logger logger = LoggerFactory.getLogger("backend-Projecter");
+	Logger logger = LoggerFactory.getLogger("backend-skiller");
 
 	/**
 	 * Initialization of the Google JSON parser.

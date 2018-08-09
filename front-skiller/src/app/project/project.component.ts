@@ -68,7 +68,10 @@ export class ProjectComponent implements OnInit {
     this.project = new Project();
     if (this.id != null) {
       this.dataService.getProject(this.id).subscribe(
-        (project: Project) => this.project = project,
+        (project: Project) => {
+         this.project = project;
+         this.profileProject.get('projectName').setValue(project.name);
+        },
         error => {
           if (error.status === 404) {
             if (Constants.DEBUG) {
@@ -85,7 +88,7 @@ export class ProjectComponent implements OnInit {
             console.log('No project found for the id ' + this.id);
           }
           if (Constants.DEBUG) {
-            console.log('Loading comlete for id ' + this.id);
+            console.log('Loading complete for id ' + this.id);
           }
         }
       );
@@ -93,22 +96,18 @@ export class ProjectComponent implements OnInit {
   }
 
   /**
-   * Save the skill created or updated.
-   */
-  save() {
-    if (Constants.DEBUG) {
-      console.log('saving the project ' + this.project.name);
-    }
-    this.dataService.saveProject(this.project);
-  }
-
-  /**
    * Submit the change. The project will be created, or updated.
    */
   onSubmit() {
+    this.project.name = this.profileProject.get('projectName').value;
     if (Constants.DEBUG) {
-      console.log('saving the project ' + this.project.name);
+      console.log('saving the project ' + this.project.name + ' with id ' + this.project.id);
     }
-    this.dataService.saveProject(this.project);
+    this.dataService.saveProject(this.project).subscribe(
+        project => {
+          console.log(project);
+          this.project = project;
+          this.messageService.info('Project ' + this.project.name + '  saved !');
+        });
   }
 }

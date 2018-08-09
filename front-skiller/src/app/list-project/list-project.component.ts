@@ -18,13 +18,13 @@ export class ListProjectComponent implements OnInit {
     private dataService: DataService) {}
 
   ngOnInit() {
-    this.cinematicService.setForm(Constants.SKILLS_SEARCH);
+    this.cinematicService.setForm(Constants.PROJECT_SEARCH);
     this.projects = this.dataService.getProjects();
   }
 
   public search(source: string): void {
     if (Constants.DEBUG) {
-      console.log('Searching a skill');
+      console.log('Searching a project');
     }
   }
 }

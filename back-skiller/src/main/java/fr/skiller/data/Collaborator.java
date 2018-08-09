@@ -5,21 +5,22 @@ package fr.skiller.data;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import fr.skiller.data.Skill;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
 public class Collaborator {
-    public int id;
-    public String firstName; 
-    public String lastName;
-    public String nickName;
-    public String email;
-    public String level;
-    public Project[] projects;
-    public Skill[] experience;
-    
+	public int id;
+	public String firstName;
+	public String lastName;
+	public String nickName;
+	public String email;
+	public String level;
+	public Project[] projects;
+	public Skill[] experience;
+
 	public Collaborator(int id, String firstName, String lastName, String nickName, String email, String level) {
 		super();
 		this.id = id;
@@ -31,8 +32,9 @@ public class Collaborator {
 		projects = new ArrayList<Project>().toArray(new Project[1]);
 		experience = new ArrayList<Skill>().toArray(new Skill[1]);
 	}
-	
-	public Collaborator() { }
+
+	public Collaborator() {
+	}
 
 	@Override
 	public String toString() {
@@ -40,5 +42,5 @@ public class Collaborator {
 				+ nickName + ", email=" + email + ", level=" + level + ", projects=" + Arrays.toString(projects)
 				+ ", experience=" + Arrays.toString(experience) + "]";
 	}
-	
+
 }
