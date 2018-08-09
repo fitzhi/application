@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {Constants} from '../constants';
 import {Skill} from '../data/skill';
 import {ActivatedRoute} from '@angular/router';
+import {FormGroup, FormControl} from '@angular/forms';
 
 import {DataService} from '../data.service';
 import {MessageService} from '../message.service';
@@ -20,6 +21,10 @@ export class SkillComponent implements OnInit {
    * Id parameter received if any;
    */
   private id: number;
+
+  private profileSkill = new FormGroup({
+    skillTitle: new FormControl('')
+  });
 
   private sub: any;
 
@@ -45,7 +50,10 @@ export class SkillComponent implements OnInit {
       this.skill = new Skill();
       if (this.id != null) {
         this.dataService.getSkill(this.id).subscribe(
-          (skill: Skill) => this.skill = skill,
+          (skill: Skill) => {
+            this.skill = skill;
+            this.profileSkill.get('skillTitle').setValue(skill.title);
+          },
           error => {
             if (error.status === 404) {
               if (Constants.DEBUG) {
@@ -72,13 +80,18 @@ export class SkillComponent implements OnInit {
   }
 
   /**
-   * Save the skill created or updated.
+   * Submit the change. The project will be created, or updated.
    */
-  save() {
+  onSubmit() {
+    this.skill.title = this.profileSkill.get('skillTitle').value;
     if (Constants.DEBUG) {
-      console.log('saving the skill ' + this.skill.title);
+      console.log('saving the skill ' + this.skill.title + ' with id ' + this.skill.id);
     }
-    this.dataService.saveSkill(this.skill);
+    this.dataService.saveSkill(this.skill).subscribe(
+        skill => {
+          this.skill = skill;
+          this.messageService.info('Skill ' + this.skill.title + '  saved !');
+        });
   }
 
 }

@@ -166,8 +166,8 @@ export class DataService {
   /**
    * Saving a new or an updated skill
    */
-  saveSkill(skill: Skill) {
-    this.skillService.save(skill);
+  saveSkill(skill: Skill): Observable<Skill> {
+    return this.skillService.save(skill);
   }
 
   /**
@@ -183,7 +183,7 @@ export class DataService {
   reloadSkills(myCriteria: string) {
 
     function testCriteria(skill, index, array) {
-      return (skill.title.toLowerCase().indexOf(myCriteria) > -1);
+      return (myCriteria == null) ? true : (skill.title.toLowerCase().indexOf(myCriteria.toLowerCase()) > -1);
     }
 
     this.cleanUpSkills();

@@ -34,22 +34,11 @@ export class SkillService extends InternalService {
   /**
   * Save the skill
   */
-  save(skill: Skill) {
+  save(skill: Skill): Observable<Skill> {
     if (Constants.DEBUG) {
-      console.log('Saving skill for id ' + skill.id);
+      console.log( (typeof skill.id !== 'undefined') ? 'Saving '  : 'Adding' + ' skill ' + skill.title);
     }
-    if (skill.id == null) {
-      this.add(skill);
-    }
-  }
-
-  /** POST: add a new skill to the server */
-  add(newSkill: Skill): Observable<Skill> {
-    return this.httpClient.post<Skill>(this.skillUrl, newSkill, httpOptions).pipe(
-      tap((skill: Skill) =>
-        this.log(`added skill w/ id=${skill.id}`)),
-      catchError(this.handleError<Skill>('addSkill'))
-    );
+    return this.httpClient.post<Skill>(this.skillUrl + '/save', skill, httpOptions);
   }
 
   /**
