@@ -110,6 +110,7 @@ public class SkillController {
 						"There is no skill associated to the id " + input.id);
 				responseEntity.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
 			} else {
+				searchSkill.title = input.title;
 				responseEntity = new ResponseEntity<Skill>(input, headers, HttpStatus.OK);
 				headers.add("backend.return_code", "1");
 			}

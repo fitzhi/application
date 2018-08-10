@@ -107,6 +107,7 @@ public class ProjectController {
 						"There is no Project associated to the id " + input.id);
 				responseEntity.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
 			} else {
+				searchProject.name = input.name;
 				responseEntity = new ResponseEntity<Project>(input, headers, HttpStatus.OK);
 				headers.add("backend.return_code", "1");
 			}
