@@ -86,6 +86,12 @@ export class AppComponent implements OnInit {
           this.formTitle = 'Developper mode';
           break;
         }
+        case Constants.DEVELOPPERS_CRUD_NEW: {
+          this.in_master_detail = false;
+          this.is_allowed_to_search = true;
+          this.formTitle = 'Developper mode';
+          break;
+        }
         case Constants.DEVELOPPERS_SEARCH: {
           this.formTitle = 'Searching';
           this.in_master_detail = false;
@@ -181,18 +187,21 @@ export class AppComponent implements OnInit {
   }
 
   switchToSkill () {
+    this.searching_what = null;
     this.skill_activated = true;
     this.dev_activated = false;
     this.project_activated = false;
   }
 
   switchToDev () {
+    this.searching_what = null;
     this.dev_activated = true;
     this.skill_activated = false;
     this.project_activated = false;
   }
 
   switchToProject () {
+    this.searching_what = null;
     this.project_activated = true;
     this.dev_activated = false;
     this.skill_activated = false;
@@ -207,6 +216,7 @@ export class AppComponent implements OnInit {
           this.router.navigate(['/searchSkill'], {});
           break;
         case Constants.DEVELOPPERS_CRUD:
+        case Constants.DEVELOPPERS_CRUD_NEW:
           this.router.navigate(['/searchUser'], {});
           break;
         case Constants.PROJECT_CRUD:

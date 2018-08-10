@@ -29,8 +29,8 @@ public class Collaborator {
 		this.nickName = nickName;
 		this.email = email;
 		this.level = level;
-		projects = new ArrayList<Project>().toArray(new Project[1]);
-		experience = new ArrayList<Skill>().toArray(new Skill[1]);
+		projects = new ArrayList<Project>().toArray(new Project[0]);
+		experience = new ArrayList<Skill>().toArray(new Skill[0]);
 	}
 
 	public Collaborator() {

@@ -70,6 +70,7 @@ export class StaffComponent implements OnInit {
             this.collaborator = collab;
             this.sourceExperience.load(this.collaborator.experience);
             this.sourceProjects.load(this.collaborator.projects);
+           this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
           },
           error => {
             if (error.status === 404) {
