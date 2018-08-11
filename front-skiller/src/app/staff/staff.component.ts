@@ -15,6 +15,7 @@ import {Level} from '../data/level';
 import {Attribution} from '../data/attribution';
 import {Project} from '../data/project';
 import {Experience} from '../data/experience';
+import {FormGroup, FormControl} from '@angular/forms';
 
 import {LIST_OF_LEVELS} from '../data/List_of_levels';
 import {PROJECTS} from '../mock/mock-projects';
@@ -43,6 +44,14 @@ export class StaffComponent implements OnInit {
 
   private collaborator: Collaborator;
 
+  private profileStaff = new FormGroup({
+    firstName: new FormControl(''),
+    lastName: new FormControl(''),
+    nickName: new FormControl(''),
+    email: new FormControl(''),
+    level: new FormControl('')
+  });
+
   constructor(
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
@@ -67,7 +76,13 @@ export class StaffComponent implements OnInit {
       if (this.id != null) {
         this.dataService.getCollaborator(this.id).subscribe(
           (collab: Collaborator) => {
-            this.collaborator = collab;
+           	this.collaborator = collab;
+	        this.profileStaff.get('firstName').setValue(collab.firstName);
+	        this.profileStaff.get('lastName').setValue(collab.lastName);
+	        this.profileStaff.get('nickName').setValue(collab.nickName);
+	        this.profileStaff.get('email').setValue(collab.email);
+	        this.profileStaff.get('level').setValue(collab.level);
+	        console.log (collab.level);
             this.sourceExperience.load(this.collaborator.experience);
             this.sourceProjects.load(this.collaborator.projects);
            this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
@@ -214,14 +229,40 @@ export class StaffComponent implements OnInit {
       }
   }
 
+
+
   /**
 	* The Validate Button has been activated
 	*/
   save(): void {
+  /*
     if (Constants.DEBUG) {
-      console.log('Saving data for the collaborater below');
+      console.log('Saving data for the collaborator below');
       console.log(this.collaborator);
     }
+    this.dataService.saveCollaborator (this.collaborator)
+      .subscribe(
+        staff => {
+          this.collaborator = staff;
+          this.messageService.info('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
+        });
+  */
+  }
+  
+  /**
+	* The Submit Button has been activated
+	*/
+  onSubmit(): void {
+    if (Constants.DEBUG) {
+      console.log('Saving data for the collaborator below');
+      console.log(this.collaborator);
+    }
+    this.collaborator.firstName = this.profileStaff.get('firstName').value;
+    this.collaborator.lastName = this.profileStaff.get('lastName').value;
+    this.collaborator.nickName = this.profileStaff.get('nickName').value;
+    this.collaborator.email = this.profileStaff.get('email').value;
+    this.collaborator.level = this.profileStaff.get('level').value;
+    
     this.dataService.saveCollaborator (this.collaborator)
       .subscribe(
         staff => {
