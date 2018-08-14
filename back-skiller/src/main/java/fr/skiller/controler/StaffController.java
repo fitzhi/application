@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -27,7 +29,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 
+import fr.skiller.Constants;
+import fr.skiller.bean.ProjectHandler;
 import fr.skiller.data.Collaborator;
+import fr.skiller.data.Project;
 
 @RestController
 @RequestMapping("/staff")
@@ -44,7 +49,11 @@ public class StaffController {
 	 * The staff collection.
 	 */
 	private ArrayList<Collaborator> staff;
-	
+
+	@Autowired
+	@Qualifier(Constants.SPRING_MODE)
+	ProjectHandler projectHandler;
+
 	/**
 	 * @return the staff collection.
 	 */
@@ -153,6 +162,33 @@ public class StaffController {
 		return responseEntity;
 	}
 	
-	
+	@PostMapping("/project/save")
+	@CrossOrigin(origins = "http://localhost:4200")
+	ResponseEntity<Collaborator> add(@RequestBody int idStaff, @RequestBody String projectName) {
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("POST command on /project/staff/save with params id:" + String.valueOf(idStaff) + ",projectName:" + projectName);
+		}
+		final ResponseEntity<Collaborator> responseEntity;
+		final HttpHeaders headers = new HttpHeaders();
+
+		final Collaborator staff = getStaff().get(idStaff);
+		assert (staff != null);
+
+		Optional<Project> result = projectHandler.lookup(projectName);
+		if (result.isPresent()) {
+			staff.projects.add(result.get());
+			responseEntity = new ResponseEntity<Collaborator>(staff, new HttpHeaders(), HttpStatus.OK);
+		} else {
+			headers.set("backend.return_code", "O");
+			headers.set("backend.return_message", "There is no project with the name " + projectName);
+			responseEntity = new ResponseEntity<Collaborator>(staff, headers, HttpStatus.NOT_FOUND);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Cannot find a Project with the name " + projectName);
+			}			
+		}
+		return responseEntity;
+		
+	}	
 	
 }	

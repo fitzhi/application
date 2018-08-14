@@ -105,7 +105,6 @@ export class ProjectComponent implements OnInit {
     }
     this.dataService.saveProject(this.project).subscribe(
         project => {
-          console.log(project);
           this.project = project;
           this.messageService.info('Project ' + this.project.name + '  saved !');
         });

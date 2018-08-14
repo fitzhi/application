@@ -5,6 +5,8 @@ package fr.skiller.data;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
 import fr.skiller.data.Skill;
 
 /**
@@ -18,7 +20,7 @@ public class Collaborator {
 	public String nickName;
 	public String email;
 	public String level;
-	public Project[] projects;
+	public List<Project> projects;
 	public Skill[] experience;
 
 	public Collaborator(int id, String firstName, String lastName, String nickName, String email, String level) {
@@ -29,7 +31,7 @@ public class Collaborator {
 		this.nickName = nickName;
 		this.email = email;
 		this.level = level;
-		projects = new ArrayList<Project>().toArray(new Project[0]);
+		projects = new ArrayList<Project>();
 		experience = new ArrayList<Skill>().toArray(new Skill[0]);
 	}
 
@@ -39,7 +41,7 @@ public class Collaborator {
 	@Override
 	public String toString() {
 		return "Collaborator [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", nickName="
-				+ nickName + ", email=" + email + ", level=" + level + ", projects=" + Arrays.toString(projects)
+				+ nickName + ", email=" + email + ", level=" + level + ", projects=" + Arrays.toString(projects.toArray(new Project[0]))
 				+ ", experience=" + Arrays.toString(experience) + "]";
 	}
 

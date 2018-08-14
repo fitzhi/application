@@ -2,9 +2,12 @@ package fr.skiller.controler;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,6 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 
+import fr.skiller.Constants;
+import fr.skiller.bean.ProjectHandler;
+import fr.skiller.bean.impl.ProjectHandlerImpl;
 import fr.skiller.data.Project;
 
 @RestController
@@ -33,32 +39,39 @@ public class ProjectController {
 	 */
 	Gson g = new Gson();
 
-	/**
-	 * The staff collection.
-	 */
-	private HashMap<Integer, Project> projects;
-
-	/**
-	 * @return the Project collection.
-	 */
-	private Map<Integer, Project> getProjects() {
-		if (this.projects != null) {
-			return this.projects;
+	@Autowired
+	@Qualifier(Constants.SPRING_MODE)
+	ProjectHandler projectHandler;
+	
+	@RequestMapping(value = "/name/{projectName}", method = RequestMethod.GET)
+	@CrossOrigin(origins = "http://localhost:4200")
+	ResponseEntity<Project> read(@PathVariable("projectName") String projectName) {
+		
+		final ResponseEntity<Project> responseEntity;
+		final HttpHeaders headers = new HttpHeaders();
+		
+		Optional<Project> result = projectHandler.lookup(projectName);
+		if (result.isPresent()) {
+			responseEntity = new ResponseEntity<Project>(result.get(), new HttpHeaders(), HttpStatus.OK);
+		} else {
+			headers.set("backend.return_code", "O");
+			headers.set("backend.return_message", "There is no project with the name " + projectName);
+			responseEntity = new ResponseEntity<Project>(new Project(), headers, HttpStatus.NOT_FOUND);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Cannot find a Project with the name " + projectName);
+			}			
 		}
-		this.projects = new HashMap<Integer, Project>();
-		this.projects.put(1, new Project(1, "VEGEO"));
-		this.projects.put(2, new Project(2, "INFOTER"));
-		return projects;
+		return responseEntity;
 	}
-
-	@RequestMapping(value = "/{idParam}", method = RequestMethod.GET)
+	
+	@RequestMapping(value = "/id/{idParam}", method = RequestMethod.GET)
 	@CrossOrigin(origins = "http://localhost:4200")
 	ResponseEntity<Project> read(@PathVariable("idParam") int idParam) {
 
 		final ResponseEntity<Project> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 
-		final Project searchProject = getProjects().get(idParam);
+		final Project searchProject = projectHandler.getProjects().get(idParam);
 		if (searchProject != null) {
 			responseEntity = new ResponseEntity<Project>(searchProject, headers, HttpStatus.OK);
 			if (logger.isDebugEnabled()) {
@@ -66,7 +79,7 @@ public class ProjectController {
 			}
 		} else {
 			headers.set("backend.return_code", "O");
-			headers.set("backend.return_message", "There is no collaborator associated to the id " + idParam);
+			headers.set("backend.return_message", "There is no project associated to the id " + idParam);
 			responseEntity = new ResponseEntity<Project>(new Project(), headers, HttpStatus.NOT_FOUND);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Cannot find a Project for id " + String.valueOf(idParam));
@@ -78,7 +91,7 @@ public class ProjectController {
 	@GetMapping("/all")
 	@CrossOrigin(origins = "http://localhost:4200")
 	String readAll() {
-		final String resultContent = g.toJson(getProjects().values());
+		final String resultContent = g.toJson(projectHandler.getProjects().values());
 		if (logger.isDebugEnabled()) {
 			logger.debug("'/Project/all' is returning " + resultContent);
 		}
@@ -91,7 +104,7 @@ public class ProjectController {
 
 		final ResponseEntity<Project> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
-		Map<Integer, Project> Projects = getProjects();
+		Map<Integer, Project> Projects = projectHandler.getProjects();
 
 		if (input.id == 0) {
 			input.id = Projects.size() + 1;

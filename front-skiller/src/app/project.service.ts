@@ -42,14 +42,24 @@ export class ProjectService extends InternalService {
   }
 
   /**
-   * GET the project associated to this id from the backend projecter. Will throw a 404 if this id is not found.
+   * GET the project associated to this id from the back-end od skiller. Will throw a 404 if this id is not found.
    */
   get(id: number): Observable<Project> {
-    const url = this.projectUrl + '/' + id;
+    const url = this.projectUrl + '/id/' + id;
     if (Constants.DEBUG) {
       console.log('Fetching the project ' + id + ' on the address ' + url);
     }
     return this.httpClient.get<Project>(url);
   }
 
+  /**
+   * GET the project associated to the passed name, if any, from the back-end skiller. Will throw a 404 if this name is not retrieved.
+   */
+  	lookup(projectName: string): Observable<Project> {
+		const url = this.projectUrl + '/name/' + projectName;
+    	if (Constants.DEBUG) {
+      		console.log('Fetching the project name ' + projectName + ' on the address ' + url);
+    	}
+    	return this.httpClient.get<Project>(url);
+  	}
 }

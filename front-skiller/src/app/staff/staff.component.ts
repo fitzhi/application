@@ -82,7 +82,6 @@ export class StaffComponent implements OnInit {
 	        this.profileStaff.get('nickName').setValue(collab.nickName);
 	        this.profileStaff.get('email').setValue(collab.email);
 	        this.profileStaff.get('level').setValue(collab.level);
-	        console.log (collab.level);
             this.sourceExperience.load(this.collaborator.experience);
             this.sourceProjects.load(this.collaborator.projects);
            this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
@@ -111,7 +110,10 @@ export class StaffComponent implements OnInit {
       }
 
       this.sourceProjects.onRemoved().subscribe(element => console.log('Delete project ' + element));
-      this.sourceProjects.onAdded().subscribe(element => console.log('Add project ' + element));
+      this.sourceProjects.onAdded().subscribe(element => 
+		{
+			console.log (element.name);
+		});
       this.sourceProjects.onUpdated().subscribe(element => console.log('Update project ' + element));
 
       this.sourceExperience.onRemoved().subscribe(element => console.log('Delete experience ' + element));
@@ -144,10 +146,10 @@ export class StaffComponent implements OnInit {
 
   onConfirmCreateFromProject(event) {
     if (Constants.DEBUG) {
-      console.log ('onConfirmCreateFromProject for event ' + event.newData.name);
+      console.log ('onConfirmCreateFromProject for event : ' + event.newData.name);
     }
     if (this.checkStaffMemberExist(event)) {
-        event.confirm.resolve();
+		creationEvent.confirm.resolve();
     } else {
         event.confirm.reject();
     }
@@ -228,8 +230,6 @@ export class StaffComponent implements OnInit {
         event.confirm.reject();
       }
   }
-
-
 
   /**
 	* The Validate Button has been activated

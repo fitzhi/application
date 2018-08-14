@@ -301,7 +301,7 @@ export class DataService {
   }
 
   /**
-   * Return the project associated with this id.
+   * Return the project associated with this id in cache first, anf if not found, direct on the server
    */
   getProject(id: number): Observable<Project> {
 
@@ -330,5 +330,11 @@ export class DataService {
     }
   }
 
+  /**
+   * Return a project, if any, for this name
+   */
+  	lookupProject(projectName: string): Observable<Project> {
+  		return this.projectService.lookup(projectName);
+	}
 }
 
