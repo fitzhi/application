@@ -13,10 +13,10 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.data.Project;
 
 /**
- * @author frvidal
+ * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-@Component("mock")
+@Component("mock.Project")
 public class ProjectHandlerImpl implements ProjectHandler {
 	
 	/**

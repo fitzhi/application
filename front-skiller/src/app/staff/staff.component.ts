@@ -8,6 +8,7 @@ import {catchError} from 'rxjs/operators';
 import {CinematicService} from '../cinematic.service';
 import {DataService} from '../data.service';
 import {MessageService} from '../message.service';
+import {CollaboratorService} from '../collaborator.service';
 
 import {Collaborator} from '../data/collaborator';
 
@@ -56,7 +57,8 @@ export class StaffComponent implements OnInit {
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
     private dataService: DataService,
-    private messageService: MessageService) {}
+    private messageService: MessageService,
+    private collaboratorService: CollaboratorService) {}
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
@@ -103,7 +105,7 @@ export class StaffComponent implements OnInit {
                       console.log ('No collaborator found for the id ' + this.id);
                     }
                     if (Constants.DEBUG) {
-                      console.log('Loading comlete for id ' + this.id);
+                      console.log('Loading complete for id ' + this.id);
                     }
                   }
             );
@@ -112,6 +114,8 @@ export class StaffComponent implements OnInit {
       this.sourceProjects.onRemoved().subscribe(element => console.log('Delete project ' + element));
       this.sourceProjects.onAdded().subscribe(element => 
 		{
+			this.collaboratorService.addProject (this.collaborator.id, element.name).subscribe():
+			//TODO
 			console.log (element.name);
 		});
       this.sourceProjects.onUpdated().subscribe(element => console.log('Update project ' + element));
@@ -149,7 +153,7 @@ export class StaffComponent implements OnInit {
       console.log ('onConfirmCreateFromProject for event : ' + event.newData.name);
     }
     if (this.checkStaffMemberExist(event)) {
-		creationEvent.confirm.resolve();
+		event.confirm.resolve();
     } else {
         event.confirm.reject();
     }

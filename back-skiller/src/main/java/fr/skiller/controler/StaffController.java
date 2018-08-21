@@ -2,6 +2,7 @@ package fr.skiller.controler;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -28,9 +29,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import fr.skiller.Constants;
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.Collaborator;
 import fr.skiller.data.Project;
 
@@ -43,57 +46,15 @@ public class StaffController {
 	/**
 	 * Initialization of the Google JSON parser.
 	 */
-	Gson g = new Gson();
-
-	/**
-	 * The staff collection.
-	 */
-	private ArrayList<Collaborator> staff;
+	Gson gson = new GsonBuilder().create();
 
 	@Autowired
-	@Qualifier(Constants.SPRING_MODE)
+	@Qualifier("mock.Project")
 	ProjectHandler projectHandler;
 
-	/**
-	 * @return the staff collection.
-	 */
-	private List<Collaborator> getStaff() {
-		if (this.staff != null) {
-			return this.staff;
-		}
-		this.staff = new ArrayList<Collaborator>();
-		staff.add(new Collaborator(1,
-		    "Frederic",
-		    "VIDAL",
-		    "altF4",
-		    "frvidal@sqli.com",
-		    "ET2"));
-		staff.add(new Collaborator(2,
-		    "Olivier",
-		    "MANFE",
-		    "la Mouf",
-		    "omanfe@sqli.com",
-		    "ICD 3"));
-		staff.add(new Collaborator(3,
-		    "Alexandre",
-		    "JOURDES",
-		    "Jose",
-		    "ajourdes@sqli.com",
-		    "ICD 2"));
-		staff.add(new Collaborator(4,
-			    "Thomas",
-			    "LEVAVASSEUR",
-			    "Grg",
-			    "tlavavasseur@sqli.com",
-			    "ICD 4"));
-		staff.add(new Collaborator(5,
-		    "Christophe",
-		    "OPOIX",
-		    "Copo",
-		    "ocopoix@sqli.com",
-		    "ET 2"));
-		return staff;
-	}
+	@Autowired
+	@Qualifier("mock.Staff")
+	StaffHandler staffHandler;
 	
 	@RequestMapping(value="/{idParam}", method = RequestMethod.GET)
 	@CrossOrigin(origins = "http://localhost:4200")
@@ -102,9 +63,9 @@ public class StaffController {
 		final ResponseEntity<Collaborator> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 		
-		Optional<Collaborator> searchCollab = getStaff().stream().filter (c -> (c.id == idParam)).findFirst();
-		if (searchCollab.isPresent()) {
-			responseEntity = new ResponseEntity<Collaborator>(searchCollab.get(), headers, HttpStatus.OK);
+		Collaborator searchCollab = staffHandler.getStaff().get(idParam);
+		if (searchCollab != null) {
+			responseEntity = new ResponseEntity<Collaborator>(searchCollab, headers, HttpStatus.OK);
 			if (logger.isDebugEnabled()) {
 				logger.debug("read for id " + String.valueOf(idParam) + " returns " + responseEntity.getBody());
 			}
@@ -122,7 +83,7 @@ public class StaffController {
 	@GetMapping("/all")
 	@CrossOrigin(origins = "http://localhost:4200")
 	String readAll() {
-		return g.toJson(getStaff());	
+		return gson.toJson(staffHandler.getStaff().values());	
 	}
 
 	@PostMapping("/save")
@@ -132,26 +93,26 @@ public class StaffController {
 		final ResponseEntity<Collaborator> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 		
-		List<Collaborator> staff = getStaff();
+		Collection<Collaborator> staff = staffHandler.getStaff().values();
 		if (input.id == 0) {
 			input.id = staff.size()+1;
-			getStaff().add(input);
+			staffHandler.getStaff().put(input.id, input);
 			headers.add("backend.return_code", "1");
 			responseEntity = new ResponseEntity<Collaborator>(input, headers, HttpStatus.OK);
 		} else {
-			List<Collaborator> updatedStaff = staff.stream().filter(collab -> (collab.id == input.id)).collect(Collectors.toList());
-			if (updatedStaff.size() != 1) {
+			Collaborator updatedStaff = staffHandler.getStaff().get(input.id);
+			if (updatedStaff == null) {
 				responseEntity = new ResponseEntity<Collaborator>(input, headers, HttpStatus.NOT_FOUND);
 				headers.add("backend.return_code", "O");
 				headers.add("backend.return_message", "There is no collaborator associated to the id " + input.id);
 				responseEntity.getHeaders().set("backend.return_message", "There is no collaborator associated to the id " + input.id);
 				responseEntity.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
 			} else {
-				updatedStaff.get(0).firstName = input.firstName;
-				updatedStaff.get(0).lastName = input.lastName;
-				updatedStaff.get(0).nickName = input.nickName;
-				updatedStaff.get(0).email = input.email;
-				updatedStaff.get(0).level = input.level;
+				updatedStaff.firstName = input.firstName;
+				updatedStaff.lastName = input.lastName;
+				updatedStaff.nickName = input.nickName;
+				updatedStaff.email = input.email;
+				updatedStaff.level = input.level;
 				responseEntity = new ResponseEntity<Collaborator>(input, headers, HttpStatus.OK);
 				headers.add("backend.return_code", "1");
 			}
@@ -162,29 +123,46 @@ public class StaffController {
 		return responseEntity;
 	}
 	
+	/**
+	 * Internal Parameters class
+	 * @author Fr&eacute;d&eacute;ric VIDAL 
+	 */
+	class Param {
+		public int staffId;
+		public String projectName;
+		@Override
+		public String toString() {
+			return "Param [staffId=" + staffId + ", projectName=" + projectName + "]";
+		}			
+	}
+	
 	@PostMapping("/project/save")
 	@CrossOrigin(origins = "http://localhost:4200")
-	ResponseEntity<Collaborator> add(@RequestBody int idStaff, @RequestBody String projectName) {
+	ResponseEntity<Collaborator> add(@RequestBody String param) {
 		
+		Param p = gson.fromJson(param, Param.class);
 		if (logger.isDebugEnabled()) {
-			logger.debug("POST command on /project/staff/save with params id:" + String.valueOf(idStaff) + ",projectName:" + projectName);
+			logger.debug("POST command on /project/staff/save with params id:" + String.valueOf(p.staffId) + ",projectName:" + p.projectName);
 		}
 		final ResponseEntity<Collaborator> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 
-		final Collaborator staff = getStaff().get(idStaff);
+		final Collaborator staff = staffHandler.getStaff().get(p.staffId);
 		assert (staff != null);
 
-		Optional<Project> result = projectHandler.lookup(projectName);
+		Optional<Project> result = projectHandler.lookup(p.projectName);
 		if (result.isPresent()) {
 			staff.projects.add(result.get());
 			responseEntity = new ResponseEntity<Collaborator>(staff, new HttpHeaders(), HttpStatus.OK);
+			if (logger.isDebugEnabled()) {
+				logger.debug("returning  staff " + gson.toJson(staff));
+			}
 		} else {
 			headers.set("backend.return_code", "O");
-			headers.set("backend.return_message", "There is no project with the name " + projectName);
+			headers.set("backend.return_message", "There is no project with the name " + p.projectName);
 			responseEntity = new ResponseEntity<Collaborator>(staff, headers, HttpStatus.NOT_FOUND);
 			if (logger.isDebugEnabled()) {
-				logger.debug("Cannot find a Project with the name " + projectName);
+				logger.debug("Cannot find a Project with the name " + p.projectName);
 			}			
 		}
 		return responseEntity;

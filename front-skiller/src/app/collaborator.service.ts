@@ -70,4 +70,19 @@ export class CollaboratorService extends InternalService {
       catchError(this.handleError<Collaborator>('deleteCollaborater'))
     );
   }
+  
+  /**
+   * POST: Add the contribution of a staff member into a project defined by its name
+   */
+ 	addProject(staffId: number, projectName: string): Observable<Collaborator> {
+    if (Constants.DEBUG) {
+      console.log('Adding the collaborator with id ' + staffId + ' into the project ' + projectName);
+    }
+    const body = { staffId: staffId, projectName: projectName};
+    console.log (body);
+    return this.http.post<Collaborator>(this.collaboratorUrl + '/project/save', body, httpOptions);
+
+  }
+  
+  
 }

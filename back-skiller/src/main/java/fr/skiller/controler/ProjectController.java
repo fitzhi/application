@@ -1,6 +1,5 @@
 package fr.skiller.controler;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -25,7 +24,6 @@ import com.google.gson.Gson;
 
 import fr.skiller.Constants;
 import fr.skiller.bean.ProjectHandler;
-import fr.skiller.bean.impl.ProjectHandlerImpl;
 import fr.skiller.data.Project;
 
 @RestController
@@ -40,7 +38,7 @@ public class ProjectController {
 	Gson g = new Gson();
 
 	@Autowired
-	@Qualifier(Constants.SPRING_MODE)
+	@Qualifier("mock.Project")
 	ProjectHandler projectHandler;
 	
 	@RequestMapping(value = "/name/{projectName}", method = RequestMethod.GET)
