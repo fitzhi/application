@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/back-skiller")
-public class HelloControler {
+public class HelloController {
 
 	
 	@PostMapping

@@ -6,7 +6,7 @@ import java.util.Map;
 import org.springframework.stereotype.Component;
 
 import fr.skiller.bean.StaffHandler;
-import fr.skiller.data.Collaborator;
+import fr.skiller.data.internal.Collaborator;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -33,7 +33,7 @@ public class StaffHandlerImpl implements StaffHandler {
 			    "VIDAL",
 			    "altF4",
 			    "frvidal@sqli.com",
-			    "ET2"));
+			    "ET 2"));
 			staff.put(2, new Collaborator(2,
 			    "Olivier",
 			    "MANFE",

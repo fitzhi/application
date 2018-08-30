@@ -4,6 +4,8 @@ import {ActivatedRoute} from '@angular/router';
 import {Router} from '@angular/router';
 import {Subject, Observable, of } from 'rxjs';
 import {catchError} from 'rxjs/operators';
+import {HttpResponse} from '@angular/common/http';
+
 
 import {CinematicService} from '../cinematic.service';
 import {DataService} from '../data.service';
@@ -16,6 +18,8 @@ import {Level} from '../data/level';
 import {Attribution} from '../data/attribution';
 import {Project} from '../data/project';
 import {Experience} from '../data/experience';
+import {StaffDTO} from '../data/external/staffDTO';
+
 import {FormGroup, FormControl} from '@angular/forms';
 
 import {LIST_OF_LEVELS} from '../data/List_of_levels';
@@ -112,13 +116,25 @@ export class StaffComponent implements OnInit {
       }
 
       this.sourceProjects.onRemoved().subscribe(element => console.log('Delete project ' + element));
-      this.sourceProjects.onAdded().subscribe(element => 
-		{
-			this.collaboratorService.addProject (this.collaborator.id, element.name).subscribe():
-			//TODO
-			console.log (element.name);
+      this.sourceProjects.onAdded().subscribe(element => {
+			this.collaboratorService.addProject (this.collaborator.id, element.name).subscribe(
+				(staffDTO: StaffDTO) => {
+		              if (Constants.DEBUG) {
+		                console.log ('404 : cannot found a collaborator for the id ' + this.id);
+		              }
+		              this.messageService.info(staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName + ' is involved now in project ' + element.name);
+				},
+	          	response_error => {
+		              if (Constants.DEBUG) {
+		                console.log ('Error');
+		                console.log ('Code ' + response_error.error.code);
+		                console.log ('Message ' + response_error.error.message);
+		              }
+	              this.messageService.error(response_error.error.message);
+	            }  
+      		);
 		});
-      this.sourceProjects.onUpdated().subscribe(element => console.log('Update project ' + element));
+		this.sourceProjects.onUpdated().subscribe(element => console.log('Update project ' + element));
 
       this.sourceExperience.onRemoved().subscribe(element => console.log('Delete experience ' + element));
       this.sourceExperience.onAdded().subscribe(element => console.log('Add experience ' + element));

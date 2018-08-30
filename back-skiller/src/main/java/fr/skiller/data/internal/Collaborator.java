@@ -1,13 +1,13 @@
 /**
  * 
  */
-package fr.skiller.data;
+package fr.skiller.data.internal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import fr.skiller.data.Skill;
+import fr.skiller.data.internal.Skill;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

@@ -10,7 +10,7 @@ import java.util.Optional;
 import org.springframework.stereotype.Component;
 
 import fr.skiller.bean.ProjectHandler;
-import fr.skiller.data.Project;
+import fr.skiller.data.internal.Project;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -38,7 +38,7 @@ public class ProjectHandlerImpl implements ProjectHandler {
 	}
 	
 	/**
-	 * 
+	 * Lookup of a project by its name.
 	 */
 	public Optional<Project> lookup(final String projectName) {
 		return getProjects().values().stream()

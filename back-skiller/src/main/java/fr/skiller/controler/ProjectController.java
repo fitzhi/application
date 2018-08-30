@@ -24,7 +24,7 @@ import com.google.gson.Gson;
 
 import fr.skiller.Constants;
 import fr.skiller.bean.ProjectHandler;
-import fr.skiller.data.Project;
+import fr.skiller.data.internal.Project;
 
 @RestController
 @RequestMapping("/project")

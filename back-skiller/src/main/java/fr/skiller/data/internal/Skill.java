@@ -1,4 +1,4 @@
-package fr.skiller.data;
+package fr.skiller.data.internal;
 
 public class Skill {
 

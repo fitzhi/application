@@ -31,11 +31,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import fr.skiller.Constants;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
-import fr.skiller.data.Collaborator;
-import fr.skiller.data.Project;
+import fr.skiller.data.external.StaffDTO;
+import fr.skiller.data.internal.Collaborator;
+import fr.skiller.data.internal.Project;
 
 @RestController
 @RequestMapping("/staff")
@@ -137,14 +137,13 @@ public class StaffController {
 	}
 	
 	@PostMapping("/project/save")
-	@CrossOrigin(origins = "http://localhost:4200")
-	ResponseEntity<Collaborator> add(@RequestBody String param) {
+	ResponseEntity<StaffDTO> add(@RequestBody String param) {
 		
 		Param p = gson.fromJson(param, Param.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug("POST command on /project/staff/save with params id:" + String.valueOf(p.staffId) + ",projectName:" + p.projectName);
 		}
-		final ResponseEntity<Collaborator> responseEntity;
+		final ResponseEntity<StaffDTO> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 
 		final Collaborator staff = staffHandler.getStaff().get(p.staffId);
@@ -153,20 +152,21 @@ public class StaffController {
 		Optional<Project> result = projectHandler.lookup(p.projectName);
 		if (result.isPresent()) {
 			staff.projects.add(result.get());
-			responseEntity = new ResponseEntity<Collaborator>(staff, new HttpHeaders(), HttpStatus.OK);
+			responseEntity = new ResponseEntity<StaffDTO>(new StaffDTO(staff), headers, HttpStatus.OK);
 			if (logger.isDebugEnabled()) {
 				logger.debug("returning  staff " + gson.toJson(staff));
 			}
 		} else {
-			headers.set("backend.return_code", "O");
-			headers.set("backend.return_message", "There is no project with the name " + p.projectName);
-			responseEntity = new ResponseEntity<Collaborator>(staff, headers, HttpStatus.NOT_FOUND);
+			responseEntity = new ResponseEntity<StaffDTO>( 
+					new StaffDTO(staff, 0, "There is no project with the name " + p.projectName),
+					headers, 
+					HttpStatus.BAD_REQUEST);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Cannot find a Project with the name " + p.projectName);
 			}			
 		}
 		return responseEntity;
-		
+		 
 	}	
 	
 }	

@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,7 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 
-import fr.skiller.data.Skill;
+import fr.skiller.bean.ProjectHandler;
+import fr.skiller.bean.SkillHandler;
+import fr.skiller.data.internal.Skill;
 
 @RestController
 @RequestMapping("/skill")
@@ -33,26 +37,9 @@ public class SkillController {
 	 */
 	Gson g = new Gson();
 
-	/**
-	 * The staff collection.
-	 */
-	private HashMap<Integer, Skill> skill;
-
-	/**
-	 * @return the skill collection.
-	 */
-	private Map<Integer, Skill> getSkill() {
-		if (this.skill != null) {
-			return this.skill;
-		}
-		this.skill = new HashMap<Integer, Skill>();
-		this.skill.put(1, new Skill(1, "Java"));
-		this.skill.put(2, new Skill(2, "Spring"));
-		this.skill.put(3, new Skill(3, "Spring Framework"));
-		this.skill.put(4, new Skill(4, "Spring Boot"));
-		this.skill.put(5, new Skill(5, "hibernate"));
-		return skill;
-	}
+	@Autowired
+	@Qualifier("mock.Skill")
+	SkillHandler skillHandler;
 
 	@RequestMapping(value = "/{idParam}", method = RequestMethod.GET)
 	@CrossOrigin(origins = "http://localhost:4200")
@@ -61,7 +48,7 @@ public class SkillController {
 		final ResponseEntity<Skill> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 
-		final Skill searchSkill = getSkill().get(idParam);
+		final Skill searchSkill = skillHandler.getSkills().get(idParam);
 		if (searchSkill != null) {
 			responseEntity = new ResponseEntity<Skill>(searchSkill, headers, HttpStatus.OK);
 			if (logger.isDebugEnabled()) {
@@ -81,7 +68,7 @@ public class SkillController {
 	@GetMapping("/all")
 	@CrossOrigin(origins = "http://localhost:4200")
 	String readAll() {
-		final String resultContent = g.toJson(getSkill().values());
+		final String resultContent = g.toJson(skillHandler.getSkills().values());
 		if (logger.isDebugEnabled()) {
 			logger.debug("'/skill/all' is returning " + resultContent);
 		}
@@ -94,7 +81,7 @@ public class SkillController {
 
 		final ResponseEntity<Skill> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
-		Map<Integer, Skill> skills = getSkill();
+		Map<Integer, Skill> skills = skillHandler.getSkills();
 
 		if (input.id == 0) {
 			input.id = skills.size() + 1;

@@ -1,8 +1,10 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {catchError, map, tap} from 'rxjs/operators';
 
 import {Collaborator} from './data/collaborator';
+import {StaffDTO} from './data/external/staffDTO';
+
 import {MOCK_COLLABORATORS} from './mock/mock-collaborators';
 
 import {Constants} from './constants';
@@ -10,7 +12,9 @@ import {Observable, of} from 'rxjs';
 
 import {InternalService} from './internal-service';
 
-const httpOptions = {
+// headers: new HttpHeaders({'Content-Type': 'application/json'}),
+
+const httpOptions = {  
   headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
 
@@ -74,13 +78,14 @@ export class CollaboratorService extends InternalService {
   /**
    * POST: Add the contribution of a staff member into a project defined by its name
    */
- 	addProject(staffId: number, projectName: string): Observable<Collaborator> {
+ 	addProject(staffId: number, projectName: string): Observable<StaffDTO> {
     if (Constants.DEBUG) {
-      console.log('Adding the collaborator with id ' + staffId + ' into the project ' + projectName);
+      console.log('Adding the collaborator with id : ' + staffId + ' into the project ' + projectName);
     }
-    const body = { staffId: staffId, projectName: projectName};
-    console.log (body);
-    return this.http.post<Collaborator>(this.collaboratorUrl + '/project/save', body, httpOptions);
+    
+    let body = { staffId: staffId, projectName: projectName};
+    
+    return this.http.post<StaffDTO>(this.collaboratorUrl + '/project/save', body, httpOptions);
 
   }
   

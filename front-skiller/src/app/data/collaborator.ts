@@ -1,4 +1,3 @@
-
 import { Attribution } from './attribution';
 import { Experience } from './experience';
 
@@ -10,7 +9,6 @@ export class Collaborator {
   public nickName: string;
   public email: string;
   public level: string;
-
 
   /**
    * 
