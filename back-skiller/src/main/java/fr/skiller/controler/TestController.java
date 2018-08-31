@@ -48,7 +48,6 @@ public class TestController {
 	}
 
 	@GetMapping("/")
-	@CrossOrigin(origins = "http://localhost:4200", exposedHeaders="test")
 	ResponseEntity<Test> test() {
 
 		final ResponseEntity<Test> responseEntity;

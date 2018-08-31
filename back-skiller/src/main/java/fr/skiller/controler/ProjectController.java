@@ -42,7 +42,6 @@ public class ProjectController {
 	ProjectHandler projectHandler;
 	
 	@RequestMapping(value = "/name/{projectName}", method = RequestMethod.GET)
-	@CrossOrigin(origins = "http://localhost:4200")
 	ResponseEntity<Project> read(@PathVariable("projectName") String projectName) {
 		
 		final ResponseEntity<Project> responseEntity;
@@ -63,7 +62,6 @@ public class ProjectController {
 	}
 	
 	@RequestMapping(value = "/id/{idParam}", method = RequestMethod.GET)
-	@CrossOrigin(origins = "http://localhost:4200")
 	ResponseEntity<Project> read(@PathVariable("idParam") int idParam) {
 
 		final ResponseEntity<Project> responseEntity;
@@ -87,7 +85,6 @@ public class ProjectController {
 	}
 
 	@GetMapping("/all")
-	@CrossOrigin(origins = "http://localhost:4200")
 	String readAll() {
 		final String resultContent = g.toJson(projectHandler.getProjects().values());
 		if (logger.isDebugEnabled()) {
@@ -97,7 +94,6 @@ public class ProjectController {
 	}
 
 	@PostMapping("/save")
-	@CrossOrigin(origins = "http://localhost:4200")
 	ResponseEntity<Project> add(@RequestBody Project input) {
 
 		final ResponseEntity<Project> responseEntity;

@@ -34,14 +34,14 @@ public class StaffDTO {
 
 	/**
 	 * @param staff
-	 * @param backend_code
-	 * @param backend_message
+	 * @param code
+	 * @param message
 	 */
-	public StaffDTO(Collaborator staff, int backend_code, String backend_message) {
+	public StaffDTO(Collaborator staff, int code, String message) {
 		super();
 		this.staff = staff;
-		this.code = backend_code;
-		this.message = backend_message;
+		this.code = code;
+		this.message = message;
 	}
 
 }

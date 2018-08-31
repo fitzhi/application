@@ -56,38 +56,57 @@ public class StaffController {
 	@Qualifier("mock.Staff")
 	StaffHandler staffHandler;
 	
-	@RequestMapping(value="/{idParam}", method = RequestMethod.GET)
-	@CrossOrigin(origins = "http://localhost:4200")
-	ResponseEntity<Collaborator> read(@PathVariable("idParam") int idParam) {
+	@GetMapping("/all")
+	String readAll() {
+		return gson.toJson(staffHandler.getStaff().values());	
+	}
+
+	/**
+	 * @param idStaff staff member's identifier
+	 * @return the staff member identified by its id
+	 */
+	@RequestMapping(value="/{idStaff}", method = RequestMethod.GET)
+	ResponseEntity<Collaborator> read(@PathVariable("idStaff") int idStaff) {
 
 		final ResponseEntity<Collaborator> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 		
-		Collaborator searchCollab = staffHandler.getStaff().get(idParam);
+		Collaborator searchCollab = staffHandler.getStaff().get(idStaff);
 		if (searchCollab != null) {
 			responseEntity = new ResponseEntity<Collaborator>(searchCollab, headers, HttpStatus.OK);
 			if (logger.isDebugEnabled()) {
-				logger.debug("read for id " + String.valueOf(idParam) + " returns " + responseEntity.getBody());
+				logger.debug("read for id " + String.valueOf(idStaff) + " returns " + responseEntity.getBody());
 			}
 		} else {
 			headers.set("backend.return_code", "O");
-			headers.set("backend.return_message", "There is no collaborator associated to the id " + idParam);
+			headers.set("backend.return_message", "There is no collaborator associated to the id " + idStaff);
 			responseEntity = new ResponseEntity<Collaborator>(new Collaborator(), headers, HttpStatus.NOT_FOUND);
 			if (logger.isDebugEnabled()) {
-				logger.debug("Cannot find a staff member for id " + String.valueOf(idParam));
+				logger.debug("Cannot find a staff member for id " + String.valueOf(idStaff));
 			}
 		}
 		return responseEntity;
 	}
 	
-	@GetMapping("/all")
-	@CrossOrigin(origins = "http://localhost:4200")
-	String readAll() {
-		return gson.toJson(staffHandler.getStaff().values());	
+	/**
+	 * @param idStaff staff member's identifier
+	 * @return the list of projects where the staff member is involved
+	 */
+	@RequestMapping(value="/projects/{idStaff}", method = RequestMethod.GET)
+	ResponseEntity<List<Project>> readProjects(@PathVariable("idStaff") int idStaff) {
+		
+		System.out.println("here");
+		
+		ResponseEntity<Collaborator> responseEntityStaffMember = read(idStaff);
+		
+		ResponseEntity<List<Project>> response = 
+				new ResponseEntity<List<Project>>(responseEntityStaffMember.getBody().projects, 
+						responseEntityStaffMember.getHeaders(), 
+						responseEntityStaffMember.getStatusCode());
+		return response;
 	}
-
+	
 	@PostMapping("/save")
-	@CrossOrigin(origins = "http://localhost:4200")
 	ResponseEntity<Collaborator> add(@RequestBody Collaborator input) {
 		
 		final ResponseEntity<Collaborator> responseEntity;

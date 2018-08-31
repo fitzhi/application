@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
 import {catchError, map, tap} from 'rxjs/operators';
 
 import {Collaborator} from './data/collaborator';
+import {Project} from './data/project';
 import {StaffDTO} from './data/external/staffDTO';
 
 import {MOCK_COLLABORATORS} from './mock/mock-collaborators';
@@ -70,7 +71,7 @@ export class CollaboratorService extends InternalService {
     const url = `${this.collaboratorUrl}/${id}`;
 
     return this.http.delete<Collaborator>(url, httpOptions).pipe(
-      tap(_ => this.log(`deleted collaborater id=${id}`)),
+      tap(_ => this.log(`deleted collaborator id=${id}`)),
       catchError(this.handleError<Collaborator>('deleteCollaborater'))
     );
   }
@@ -79,15 +80,18 @@ export class CollaboratorService extends InternalService {
    * POST: Add the contribution of a staff member into a project defined by its name
    */
  	addProject(staffId: number, projectName: string): Observable<StaffDTO> {
-    if (Constants.DEBUG) {
-      console.log('Adding the collaborator with id : ' + staffId + ' into the project ' + projectName);
-    }
-    
-    let body = { staffId: staffId, projectName: projectName};
-    
-    return this.http.post<StaffDTO>(this.collaboratorUrl + '/project/save', body, httpOptions);
-
-  }
+	    if (Constants.DEBUG) {
+	      console.log('Adding the collaborator with id : ' + staffId + ' into the project ' + projectName);
+	    }
+	    let body = { staffId: staffId, projectName: projectName};
+	    return this.http.post<StaffDTO>(this.collaboratorUrl + '/project/save', body, httpOptions);
+  	}
   
+  	/**
+  	* Load the projects associated with the staff member identified by this id. 
+  	*/
+ 	loadProjects(idStaff: number): Observable<Project[]> {
+	    return this.http.get<Project[]>(this.collaboratorUrl + '/projects/' + idStaff);
+ 	}
   
 }

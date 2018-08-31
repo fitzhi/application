@@ -18,11 +18,12 @@ export class WelcomeComponent implements OnInit {
 
 	ngOnInit() {
 		this.cinematicService.setForm(Constants.WELCOME);
-		console.log ('Go ?');
+		/*
 		this.collaboratorService.addProject (2, 'TEST').subscribe( 
 			(staffDTO: StaffDTO) => { console.log (staffDTO.staff) }
 			, response => console.log(response.error.message)
 			);
+		*/
   	}
 
 }

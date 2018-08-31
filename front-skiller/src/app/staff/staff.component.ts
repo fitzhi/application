@@ -79,73 +79,84 @@ export class StaffComponent implements OnInit {
       // We create an empty collaborator until the subscription is complete
       this.collaborator = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null,
         projects: [], experience: []};
-      if (this.id != null) {
-        this.dataService.getCollaborator(this.id).subscribe(
-          (collab: Collaborator) => {
-           	this.collaborator = collab;
-	        this.profileStaff.get('firstName').setValue(collab.firstName);
-	        this.profileStaff.get('lastName').setValue(collab.lastName);
-	        this.profileStaff.get('nickName').setValue(collab.nickName);
-	        this.profileStaff.get('email').setValue(collab.email);
-	        this.profileStaff.get('level').setValue(collab.level);
-            this.sourceExperience.load(this.collaborator.experience);
-            this.sourceProjects.load(this.collaborator.projects);
-           this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
-          },
-          error => {
-            if (error.status === 404) {
-              if (Constants.DEBUG) {
-                console.log ('404 : cannot found a collaborator for the id ' + this.id);
-              }
-              this.messageService.error('There is no staff member for id ' + this.id);
-              this.collaborator = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null,
-                projects: [], experience: []};
-            } else {
-                console.error (error.message);
-            }
-          },
-          () => {
-                    if (this.collaborator.id === 0) {
-                      console.log ('No collaborator found for the id ' + this.id);
-                    }
-                    if (Constants.DEBUG) {
-                      console.log('Loading complete for id ' + this.id);
-                    }
-                  }
-            );
-      }
+	      if (this.id != null) {
+	        this.dataService.getCollaborator(this.id).subscribe(
+	          (collab: Collaborator) => {
+	           	this.collaborator = collab;
+		        this.profileStaff.get('firstName').setValue(collab.firstName);
+		        this.profileStaff.get('lastName').setValue(collab.lastName);
+		        this.profileStaff.get('nickName').setValue(collab.nickName);
+		        this.profileStaff.get('email').setValue(collab.email);
+		        this.profileStaff.get('level').setValue(collab.level);
+	            this.sourceExperience.load(this.collaborator.experience);
+	            this.sourceProjects.load(this.collaborator.projects);
+	           	this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
+	          },
+	          error => {
+	            if (error.status === 404) {
+	              if (Constants.DEBUG) {
+	                console.log ('404 : cannot found a collaborator for the id ' + this.id);
+	              }
+	              this.messageService.error('There is no staff member for id ' + this.id);
+	              this.collaborator = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null,
+	                projects: [], experience: []};
+	            } else {
+	                console.error (error.message);
+	            }
+	          },
+	          () => {
+	                    if (this.collaborator.id === 0) {
+	                      console.log ('No collaborator found for the id ' + this.id);
+	                    }
+	                    if (Constants.DEBUG) {
+	                      console.log('Loading complete for id ' + this.id);
+	                    }
+	                  }
+	            );
+	      }
 
-      this.sourceProjects.onRemoved().subscribe(element => console.log('Delete project ' + element));
-      this.sourceProjects.onAdded().subscribe(element => {
-			this.collaboratorService.addProject (this.collaborator.id, element.name).subscribe(
-				(staffDTO: StaffDTO) => {
-		              if (Constants.DEBUG) {
-		                console.log ('404 : cannot found a collaborator for the id ' + this.id);
-		              }
-		              this.messageService.info(staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName + ' is involved now in project ' + element.name);
-				},
-	          	response_error => {
-		              if (Constants.DEBUG) {
-		                console.log ('Error');
-		                console.log ('Code ' + response_error.error.code);
-		                console.log ('Message ' + response_error.error.message);
-		              }
-	              this.messageService.error(response_error.error.message);
-	            }  
-      		);
-		});
-		this.sourceProjects.onUpdated().subscribe(element => console.log('Update project ' + element));
+	      this.sourceProjects.onRemoved().subscribe(element => console.log('Delete project ' + element));
+	      
+	      this.sourceProjects.onAdded().subscribe(element => {
+				this.collaboratorService.addProject (this.collaborator.id, element.name).subscribe(
+					(staffDTO: StaffDTO) => {
+			              this.messageService.info(staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName + ' is involved now in project ' + element.name);
+			              this.reloadProjects(this.collaborator.id);
+					},
+		          	response_error => {
+			              if (Constants.DEBUG) {
+			                console.log ('Error ' + response_error.error.code + ' ' + response_error.error.message);
+			              }
+			              this.reloadProjects(this.collaborator.id);
+			              this.messageService.error(response_error.error.message);
+		            }  
+	      		);
+			});
+			this.sourceProjects.onUpdated().subscribe(element => console.log('Update project ' + element));
+	
+	      	this.sourceExperience.onRemoved().subscribe(element => console.log('Delete experience ' + element));
+	      	this.sourceExperience.onAdded().subscribe(element => console.log('Add experience ' + element));
+	      	this.sourceExperience.onUpdated().subscribe(element => console.log('Update experience ' + element));
+    	});
+    	this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
+  	}
 
-      this.sourceExperience.onRemoved().subscribe(element => console.log('Delete experience ' + element));
-      this.sourceExperience.onAdded().subscribe(element => console.log('Add experience ' + element));
-      this.sourceExperience.onUpdated().subscribe(element => console.log('Update experience ' + element));
-    });
-    this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
-  }
-
+	/**
+	* Refresh the projects content after an update. 
+	*/
+	reloadProjects(idStaff: number): void {
+		if (Constants.DEBUG) {
+			console.log ('Refreshing projects for the staff\'s id ' + idStaff);
+		}
+		this.collaboratorService.loadProjects(idStaff).subscribe(
+			projects => this.sourceProjects.load(projects),
+			error => console.log (error);
+		);
+	}	
+	
 /**
- * Handle Http operation that failed.
- * Let the app continue.
+ * Handle HTTP operation that failed.
+ * Let the APP continue.
  * @param operation - name of the operation that failed
  * @param result - optional value to return as the observable result
  */

@@ -42,7 +42,6 @@ public class SkillController {
 	SkillHandler skillHandler;
 
 	@RequestMapping(value = "/{idParam}", method = RequestMethod.GET)
-	@CrossOrigin(origins = "http://localhost:4200")
 	ResponseEntity<Skill> read(@PathVariable("idParam") int idParam) {
 
 		final ResponseEntity<Skill> responseEntity;
@@ -66,7 +65,6 @@ public class SkillController {
 	}
 
 	@GetMapping("/all")
-	@CrossOrigin(origins = "http://localhost:4200")
 	String readAll() {
 		final String resultContent = g.toJson(skillHandler.getSkills().values());
 		if (logger.isDebugEnabled()) {
@@ -76,7 +74,6 @@ public class SkillController {
 	}
 
 	@PostMapping("/save")
-	@CrossOrigin(origins = "http://localhost:4200")
 	ResponseEntity<Skill> add(@RequestBody Skill input) {
 
 		final ResponseEntity<Skill> responseEntity;
