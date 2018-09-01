@@ -36,7 +36,7 @@ export class ProjectService extends InternalService {
   */
   save(project: Project): Observable<Project> {
     if (Constants.DEBUG) {
-      console.log( (typeof project.id !== 'undefined') ? 'Saving '  : 'Adding' + ' project ' + project.name);
+      console.log((typeof project.id !== 'undefined') ? 'Saving ' : 'Adding' + ' project ' + project.name);
     }
     return this.httpClient.post<Project>(this.projectUrl + '/save', project, httpOptions);
   }
@@ -55,11 +55,11 @@ export class ProjectService extends InternalService {
   /**
    * GET the project associated to the passed name, if any, from the back-end skiller. Will throw a 404 if this name is not retrieved.
    */
-  	lookup(projectName: string): Observable<Project> {
-		const url = this.projectUrl + '/name/' + projectName;
-    	if (Constants.DEBUG) {
-      		console.log('Fetching the project name ' + projectName + ' on the address ' + url);
-    	}
-    	return this.httpClient.get<Project>(url);
-  	}
+  lookup(projectName: string): Observable<Project> {
+    const url = this.projectUrl + '/name/' + projectName;
+    if (Constants.DEBUG) {
+      console.log('Fetching the project name ' + projectName + ' on the address ' + url);
+    }
+    return this.httpClient.get<Project>(url);
+  }
 }

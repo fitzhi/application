@@ -2,7 +2,7 @@ import {AppModule} from '../app.module';
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Router} from '@angular/router';
-import {Subject, Observable, of } from 'rxjs';
+import {Subject, Observable, of} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {HttpResponse} from '@angular/common/http';
 
@@ -11,6 +11,7 @@ import {CinematicService} from '../cinematic.service';
 import {DataService} from '../data.service';
 import {MessageService} from '../message.service';
 import {CollaboratorService} from '../collaborator.service';
+import {ProjectService} from '../project.service';
 
 import {Collaborator} from '../data/collaborator';
 
@@ -27,8 +28,8 @@ import {PROJECTS} from '../mock/mock-projects';
 import {EXPERIENCE} from '../mock/mock-experience';
 import {Constants} from '../constants';
 
-import { Ng2SmartTableModule } from 'ng2-smart-table';
-import { LocalDataSource } from 'ng2-smart-table';
+import {Ng2SmartTableModule} from 'ng2-smart-table';
+import {LocalDataSource} from 'ng2-smart-table';
 import {StarsSkillLevelRenderComponent} from './starsSkillLevelRenderComponent';
 
 @Component({
@@ -62,7 +63,8 @@ export class StaffComponent implements OnInit {
     private route: ActivatedRoute,
     private dataService: DataService,
     private messageService: MessageService,
-    private collaboratorService: CollaboratorService) {}
+    private collaboratorService: CollaboratorService,
+    private projectService: ProjectService) {}
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
@@ -77,152 +79,190 @@ export class StaffComponent implements OnInit {
 
       // Either we are in creation mode, or we load the collaborator from the back-end...
       // We create an empty collaborator until the subscription is complete
-      this.collaborator = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null,
-        projects: [], experience: []};
-	      if (this.id != null) {
-	        this.dataService.getCollaborator(this.id).subscribe(
-	          (collab: Collaborator) => {
-	           	this.collaborator = collab;
-		        this.profileStaff.get('firstName').setValue(collab.firstName);
-		        this.profileStaff.get('lastName').setValue(collab.lastName);
-		        this.profileStaff.get('nickName').setValue(collab.nickName);
-		        this.profileStaff.get('email').setValue(collab.email);
-		        this.profileStaff.get('level').setValue(collab.level);
-	            this.sourceExperience.load(this.collaborator.experience);
-	            this.sourceProjects.load(this.collaborator.projects);
-	           	this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
-	          },
-	          error => {
-	            if (error.status === 404) {
-	              if (Constants.DEBUG) {
-	                console.log ('404 : cannot found a collaborator for the id ' + this.id);
-	              }
-	              this.messageService.error('There is no staff member for id ' + this.id);
-	              this.collaborator = {id: null, firstName: null, lastName: null, nickName: null, email: null, level: null,
-	                projects: [], experience: []};
-	            } else {
-	                console.error (error.message);
-	            }
-	          },
-	          () => {
-	                    if (this.collaborator.id === 0) {
-	                      console.log ('No collaborator found for the id ' + this.id);
-	                    }
-	                    if (Constants.DEBUG) {
-	                      console.log('Loading complete for id ' + this.id);
-	                    }
-	                  }
-	            );
-	      }
+      this.collaborator = {
+        id: null, firstName: null, lastName: null, nickName: null, email: null, level: null,
+        projects: [], experience: []
+      };
+      if (this.id != null) {
+        this.dataService.getCollaborator(this.id).subscribe(
+          (collab: Collaborator) => {
+            this.collaborator = collab;
+            this.profileStaff.get('firstName').setValue(collab.firstName);
+            this.profileStaff.get('lastName').setValue(collab.lastName);
+            this.profileStaff.get('nickName').setValue(collab.nickName);
+            this.profileStaff.get('email').setValue(collab.email);
+            this.profileStaff.get('level').setValue(collab.level);
+            this.sourceExperience.load(this.collaborator.experience);
+            this.sourceProjects.load(this.collaborator.projects);
+            this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
+          },
+          error => {
+            if (error.status === 404) {
+              if (Constants.DEBUG) {
+                console.log('404 : cannot found a collaborator for the id ' + this.id);
+              }
+              this.messageService.error('There is no staff member for id ' + this.id);
+              this.collaborator = {
+                id: null, firstName: null, lastName: null, nickName: null, email: null, level: null,
+                projects: [], experience: []
+              };
+            } else {
+              console.error(error.message);
+            }
+          },
+          () => {
+            if (this.collaborator.id === 0) {
+              console.log('No collaborator found for the id ' + this.id);
+            }
+            if (Constants.DEBUG) {
+              console.log('Loading complete for id ' + this.id);
+            }
+          }
+        );
+      }
 
-	      this.sourceProjects.onRemoved().subscribe(element => console.log('Delete project ' + element));
-	      
-	      this.sourceProjects.onAdded().subscribe(element => {
-				this.collaboratorService.addProject (this.collaborator.id, element.name).subscribe(
-					(staffDTO: StaffDTO) => {
-			              this.messageService.info(staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName + ' is involved now in project ' + element.name);
-			              this.reloadProjects(this.collaborator.id);
-					},
-		          	response_error => {
-			              if (Constants.DEBUG) {
-			                console.log ('Error ' + response_error.error.code + ' ' + response_error.error.message);
-			              }
-			              this.reloadProjects(this.collaborator.id);
-			              this.messageService.error(response_error.error.message);
-		            }  
-	      		);
-			});
-			this.sourceProjects.onUpdated().subscribe(element => console.log('Update project ' + element));
-	
-	      	this.sourceExperience.onRemoved().subscribe(element => console.log('Delete experience ' + element));
-	      	this.sourceExperience.onAdded().subscribe(element => console.log('Add experience ' + element));
-	      	this.sourceExperience.onUpdated().subscribe(element => console.log('Update experience ' + element));
-    	});
-    	this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
-  	}
+      this.sourceProjects.onRemoved().subscribe(element => console.log('Delete project ' + element));
 
-	/**
-	* Refresh the projects content after an update. 
+      /*
+       * Involve the collaborator into a given project.
+       */
+      this.sourceProjects.onAdded().subscribe(element => {
+        this.collaboratorService.addProject(this.collaborator.id, element.name).subscribe(
+          (staffDTO: StaffDTO) => {
+            this.messageService.info(staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName +
+              ' is involved now in project ' + element.name);
+            this.reloadProjects(this.collaborator.id);
+          },
+          response_error => {
+            if (Constants.DEBUG) {
+              console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+            }
+            this.reloadProjects(this.collaborator.id);
+            this.messageService.error(response_error.error.message);
+          }
+        );
+      });
+
+      /*
+       * Update the project for a collaborator.
+       */
+      this.sourceProjects.onUpdated().subscribe();
+
+      this.sourceExperience.onRemoved().subscribe(element => console.log('Delete experience ' + element));
+      this.sourceExperience.onAdded().subscribe(element => console.log('Add experience ' + element));
+      this.sourceExperience.onUpdated().subscribe(element => console.log('Update experience ' + element));
+    });
+    this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
+  }
+
+  /*
+	* Refresh the projects content after an update.
 	*/
-	reloadProjects(idStaff: number): void {
-		if (Constants.DEBUG) {
-			console.log ('Refreshing projects for the staff\'s id ' + idStaff);
-		}
-		this.collaboratorService.loadProjects(idStaff).subscribe(
-			projects => this.sourceProjects.load(projects),
-			error => console.log (error);
-		);
-	}	
-	
-/**
- * Handle HTTP operation that failed.
- * Let the APP continue.
- * @param operation - name of the operation that failed
- * @param result - optional value to return as the observable result
- */
+  reloadProjects(idStaff: number): void {
+    if (Constants.DEBUG) {
+      console.log('Refreshing projects for the staff\'s id ' + idStaff);
+    }
+    this.collaboratorService.loadProjects(idStaff).subscribe(
+      projects => this.sourceProjects.load(projects),
+      error => console.log(error),
+    );
+  }
+
+  /**
+   * Handle HTTP operation that failed.
+   * Let the APP continue.
+   * @param operation - name of the operation that failed
+   * @param result - optional value to return as the observable result
+   */
   handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {
 
-    // TODO: send the error to remote logging infrastructure
-    console.error(error); // log to console instead
+      // TODO: send the error to remote logging infrastructure
+      console.error(error); // log to console instead
 
-    // TODO: better job of transforming error for user consumption
-    console.log(`${operation} failed: ${error.message}`);
+      // TODO: better job of transforming error for user consumption
+      console.log(`${operation} failed: ${error.message}`);
 
-    // Let the app keep running by returning an empty result.
-    return of(result as T);
+      // Let the app keep running by returning an empty result.
+      return of(result as T);
 
     };
   }
 
   onConfirmCreateFromProject(event) {
     if (Constants.DEBUG) {
-      console.log ('onConfirmCreateFromProject for event : ' + event.newData.name);
+      console.log('onConfirmCreateFromProject for event : ' + event.newData.name);
     }
     if (this.checkStaffMemberExist(event)) {
-		event.confirm.resolve();
+      event.confirm.resolve();
     } else {
-        event.confirm.reject();
+      event.confirm.reject();
     }
   }
 
   onConfirmEditFromProject(event) {
     if (Constants.DEBUG) {
-      console.log ('onConfirmEditFromProject for event from ' + event.data.name + ' to ' + event.newData.name);
+      console.log('onConfirmEditFromProject for event from ' + event.data.name + ' to ' + event.newData.name);
     }
     if (this.checkStaffMemberExist(event)) {
-        event.confirm.resolve();
+      this.projectService.lookup(event.newData.name).subscribe(
+
+        project_transfered => {
+          this.collaboratorService.changeProject(this.collaborator.id, event.data.name, event.newData.name).subscribe(
+            (staffDTO: StaffDTO) => {
+              this.messageService.info(staffDTO.staff.firstName + ' ' +
+                staffDTO.staff.lastName + ' is involved now in project ' + event.newData.name);
+              //             this.reloadProjects(this.collaborator.id);
+              event.confirm.resolve();
+            },
+            response_error => {
+              if (Constants.DEBUG) {
+                console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+              }
+              //             this.reloadProjects(this.collaborator.id);
+              event.confirm.reject();
+              this.messageService.error(response_error.error.message);
+            }
+          );
+        },
+        response_error => {
+          if (Constants.DEBUG) {
+            console.error(response_error);
+          }
+          this.messageService.error(response_error.error.message);
+          event.confirm.reject();
+        });
     } else {
-        event.confirm.reject();
+      event.confirm.reject();
     }
   }
 
   onConfirmAddStaffSkill(event) {
     if (Constants.DEBUG) {
-      console.log ('onConfirmAddStaffSkill for event ' + event.newData.title);
+      console.log('onConfirmAddStaffSkill for event ' + event.newData.title);
     }
     if (this.checkStaffMemberExist(event)) {
-        event.confirm.resolve();
+      event.confirm.resolve();
     } else {
-        event.confirm.reject();
+      event.confirm.reject();
     }
   }
 
   onConfirmEditStaffSkill(event) {
     if (Constants.DEBUG) {
-      console.log ('onConfirmEditStaffSkill for event from ' + event.data.name + ' to ' + event.newData.name);
+      console.log('onConfirmEditStaffSkill for event from ' + event.data.name + ' to ' + event.newData.name);
     }
     if (this.checkStaffMemberExist(event)) {
-        event.confirm.resolve();
+      event.confirm.resolve();
     } else {
-        event.confirm.reject();
+      event.confirm.reject();
     }
   }
 
   checkStaffMemberExist(event): boolean {
     if (this.collaborator.id === null) {
       this.messageService.error('You cannot update a skill, or a project, of an unregistered staff member. '
-      + 'Please saved this new member first !');
+        + 'Please saved this new member first !');
       return false;
     } else {
       return true;
@@ -231,58 +271,58 @@ export class StaffComponent implements OnInit {
 
   onConfirmRemoveFromProject(event) {
     if (!this.checkStaffMemberExist(event)) {
-        event.confirm.reject();
-        return;
+      event.confirm.reject();
+      return;
     }
     if (window.confirm('Are you sure you want to remove '
-        + this.collaborator.firstName + ' '
-        + this.collaborator.lastName
-        + ' from the project '
-        + event.data['name']
-        + '?')) {
-        event.confirm.resolve();
-      } else {
-        event.confirm.reject();
-      }
+      + this.collaborator.firstName + ' '
+      + this.collaborator.lastName
+      + ' from the project '
+      + event.data['name']
+      + '?')) {
+      event.confirm.resolve();
+    } else {
+      event.confirm.reject();
+    }
   }
 
-   onConfirmRemoveSkill(event) {
+  onConfirmRemoveSkill(event) {
     if (!this.checkStaffMemberExist(event)) {
-        event.confirm.reject();
-        return;
+      event.confirm.reject();
+      return;
     }
     if (window.confirm('Are you sure you want to remove the skill '
-        + event.data['name'] + 'for '
-        + this.collaborator.firstName + ' '
-        + this.collaborator.lastName
-        + '?')) {
-        event.confirm.resolve();
-      } else {
-        event.confirm.reject();
-      }
+      + event.data['name'] + 'for '
+      + this.collaborator.firstName + ' '
+      + this.collaborator.lastName
+      + '?')) {
+      event.confirm.resolve();
+    } else {
+      event.confirm.reject();
+    }
   }
 
   /**
-	* The Validate Button has been activated
-	*/
-  save(): void {
-  /*
-    if (Constants.DEBUG) {
-      console.log('Saving data for the collaborator below');
-      console.log(this.collaborator);
-    }
-    this.dataService.saveCollaborator (this.collaborator)
-      .subscribe(
-        staff => {
-          this.collaborator = staff;
-          this.messageService.info('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
-        });
+  * The Validate Button has been activated
   */
+  save(): void {
+    /*
+      if (Constants.DEBUG) {
+        console.log('Saving data for the collaborator below');
+        console.log(this.collaborator);
+      }
+      this.dataService.saveCollaborator (this.collaborator)
+        .subscribe(
+          staff => {
+            this.collaborator = staff;
+            this.messageService.info('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
+          });
+    */
   }
-  
+
   /**
-	* The Submit Button has been activated
-	*/
+  * The Submit Button has been activated
+  */
   onSubmit(): void {
     if (Constants.DEBUG) {
       console.log('Saving data for the collaborator below');
@@ -293,13 +333,13 @@ export class StaffComponent implements OnInit {
     this.collaborator.nickName = this.profileStaff.get('nickName').value;
     this.collaborator.email = this.profileStaff.get('email').value;
     this.collaborator.level = this.profileStaff.get('level').value;
-    
-    this.dataService.saveCollaborator (this.collaborator)
+
+    this.dataService.saveCollaborator(this.collaborator)
       .subscribe(
-        staff => {
-          this.collaborator = staff;
-          this.messageService.info('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
-        });
+      staff => {
+        this.collaborator = staff;
+        this.messageService.info('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
+      });
   }
 }
 

@@ -147,11 +147,12 @@ public class StaffController {
 	 * @author Fr&eacute;d&eacute;ric VIDAL 
 	 */
 	class Param {
-		public int staffId;
-		public String projectName;
+		public int idStaff;
+		public String formerProjectName;
+		public String newProjectName;
 		@Override
 		public String toString() {
-			return "Param [staffId=" + staffId + ", projectName=" + projectName + "]";
+			return "Param [staffId=" + idStaff + ", projectName=" + newProjectName + "]";
 		}			
 	}
 	
@@ -160,28 +161,40 @@ public class StaffController {
 		
 		Param p = gson.fromJson(param, Param.class);
 		if (logger.isDebugEnabled()) {
-			logger.debug("POST command on /project/staff/save with params id:" + String.valueOf(p.staffId) + ",projectName:" + p.projectName);
+			logger.debug("POST command on /project/staff/save with params id:" + String.valueOf(p.idStaff) + ",projectName:" + p.newProjectName);
 		}
 		final ResponseEntity<StaffDTO> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 
-		final Collaborator staff = staffHandler.getStaff().get(p.staffId);
+		final Collaborator staff = staffHandler.getStaff().get(p.idStaff);
 		assert (staff != null);
 
-		Optional<Project> result = projectHandler.lookup(p.projectName);
+		Optional<Project> result = projectHandler.lookup(p.newProjectName);
 		if (result.isPresent()) {
 			staff.projects.add(result.get());
 			responseEntity = new ResponseEntity<StaffDTO>(new StaffDTO(staff), headers, HttpStatus.OK);
 			if (logger.isDebugEnabled()) {
 				logger.debug("returning  staff " + gson.toJson(staff));
 			}
+			
+			/**
+			 *  If the user change the name of the project, 
+			 *  1) we create a new entry into the projects list of the staff member
+			 *  2) we remove the former entry of the previous name
+			 */
+			if ( (p.formerProjectName != null) && (p.formerProjectName.length() > 0) ) {
+				Optional<Project> formerProject = projectHandler.lookup(p.formerProjectName);
+				if (result.isPresent()) {
+					staff.projects.remove(formerProject.get());
+				}				
+			}
 		} else {
 			responseEntity = new ResponseEntity<StaffDTO>( 
-					new StaffDTO(staff, 0, "There is no project with the name " + p.projectName),
+					new StaffDTO(staff, 0, "There is no project with the name " + p.newProjectName),
 					headers, 
 					HttpStatus.BAD_REQUEST);
 			if (logger.isDebugEnabled()) {
-				logger.debug("Cannot find a Project with the name " + p.projectName);
+				logger.debug("Cannot find a Project with the name " + p.newProjectName);
 			}			
 		}
 		return responseEntity;

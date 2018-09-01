@@ -13,9 +13,7 @@ import {Observable, of} from 'rxjs';
 
 import {InternalService} from './internal-service';
 
-// headers: new HttpHeaders({'Content-Type': 'application/json'}),
-
-const httpOptions = {  
+const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
 };
 
@@ -75,23 +73,34 @@ export class CollaboratorService extends InternalService {
       catchError(this.handleError<Collaborator>('deleteCollaborater'))
     );
   }
-  
+
   /**
    * POST: Add the contribution of a staff member into a project defined by its name
    */
- 	addProject(staffId: number, projectName: string): Observable<StaffDTO> {
-	    if (Constants.DEBUG) {
-	      console.log('Adding the collaborator with id : ' + staffId + ' into the project ' + projectName);
-	    }
-	    let body = { staffId: staffId, projectName: projectName};
-	    return this.http.post<StaffDTO>(this.collaboratorUrl + '/project/save', body, httpOptions);
-  	}
-  
-  	/**
-  	* Load the projects associated with the staff member identified by this id. 
-  	*/
- 	loadProjects(idStaff: number): Observable<Project[]> {
-	    return this.http.get<Project[]>(this.collaboratorUrl + '/projects/' + idStaff);
- 	}
-  
+  addProject(idStaff: number, projectName: string): Observable<StaffDTO> {
+    if (Constants.DEBUG) {
+      console.log('Adding the collaborator with id : ' + idStaff + ' into the project ' + projectName);
+    }
+    const body = {idStaff: idStaff, newProjectName: projectName};
+    return this.http.post<StaffDTO>(this.collaboratorUrl + '/project/save', body, httpOptions);
+  }
+
+  /**
+   * POST: Change the contribution of a staff member into a project defined by its name.
+   */
+  changeProject(idStaff: number, formerProjectName: string, newProjectName: string): Observable<StaffDTO> {
+    if (Constants.DEBUG) {
+      console.log('Adding the collaborator with id : ' + idStaff + ' into the project ' + newProjectName);
+    }
+    const body = {idStaff: idStaff, newProjectName: newProjectName, formerProjectName: formerProjectName};
+    return this.http.post<StaffDTO>(this.collaboratorUrl + '/project/save', body, httpOptions);
+  }
+
+  /**
+  * Load the projects associated with the staff member identified by this id. 
+  */
+  loadProjects(idStaff: number): Observable<Project[]> {
+    return this.http.get<Project[]>(this.collaboratorUrl + '/projects/' + idStaff);
+  }
+
 }

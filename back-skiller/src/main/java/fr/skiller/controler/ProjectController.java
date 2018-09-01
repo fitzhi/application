@@ -24,6 +24,7 @@ import com.google.gson.Gson;
 
 import fr.skiller.Constants;
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.data.external.ProjectDTO;
 import fr.skiller.data.internal.Project;
 
 @RestController
@@ -42,18 +43,19 @@ public class ProjectController {
 	ProjectHandler projectHandler;
 	
 	@RequestMapping(value = "/name/{projectName}", method = RequestMethod.GET)
-	ResponseEntity<Project> read(@PathVariable("projectName") String projectName) {
+	ResponseEntity<ProjectDTO> read(@PathVariable("projectName") String projectName) {
 		
-		final ResponseEntity<Project> responseEntity;
+		final ResponseEntity<ProjectDTO> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 		
 		Optional<Project> result = projectHandler.lookup(projectName);
 		if (result.isPresent()) {
-			responseEntity = new ResponseEntity<Project>(result.get(), new HttpHeaders(), HttpStatus.OK);
+			responseEntity = new ResponseEntity<ProjectDTO>(new ProjectDTO(result.get()), new HttpHeaders(), HttpStatus.OK);
 		} else {
-			headers.set("backend.return_code", "O");
-			headers.set("backend.return_message", "There is no project with the name " + projectName);
-			responseEntity = new ResponseEntity<Project>(new Project(), headers, HttpStatus.NOT_FOUND);
+			responseEntity = new ResponseEntity<ProjectDTO>(
+					new ProjectDTO(new Project(), 404, "There is no project with the name " + projectName), 
+					headers, 
+					HttpStatus.NOT_FOUND);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Cannot find a Project with the name " + projectName);
 			}			
