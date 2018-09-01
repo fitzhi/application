@@ -10,7 +10,7 @@ import {HttpResponse} from '@angular/common/http';
 import {CinematicService} from '../cinematic.service';
 import {DataService} from '../data.service';
 import {MessageService} from '../message.service';
-import {CollaboratorService} from '../collaborator.service';
+import {StaffService} from '../staff.service';
 import {ProjectService} from '../project.service';
 
 import {Collaborator} from '../data/collaborator';
@@ -63,7 +63,7 @@ export class StaffComponent implements OnInit {
     private route: ActivatedRoute,
     private dataService: DataService,
     private messageService: MessageService,
-    private collaboratorService: CollaboratorService,
+    private collaboratorService: StaffService,
     private projectService: ProjectService) {}
 
   ngOnInit() {

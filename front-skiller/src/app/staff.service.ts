@@ -20,7 +20,7 @@ const httpOptions = {
 @Injectable({
   providedIn: 'root'
 })
-export class CollaboratorService extends InternalService {
+export class StaffService extends InternalService {
 
   private collaboratorUrl = 'http://localhost:8080/staff';  // URL to web api
 

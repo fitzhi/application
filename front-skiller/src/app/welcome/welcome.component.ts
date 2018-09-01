@@ -3,7 +3,7 @@ import { CinematicService } from '../cinematic.service';
 import { AppComponent } from '../app.component';
 import {Constants} from '../constants';
 import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
-import {CollaboratorService} from '../collaborator.service';
+import {StaffService} from '../staff.service';
 import {StaffDTO} from '../data/external/staffDTO';
 
 
@@ -14,7 +14,7 @@ import {StaffDTO} from '../data/external/staffDTO';
 })
 export class WelcomeComponent implements OnInit {
 
-	constructor(private cinematicService:CinematicService, private http: HttpClient, private collaboratorService: CollaboratorService) { }
+	constructor(private cinematicService:CinematicService, private http: HttpClient, private collaboratorService: StaffService) { }
 
 	ngOnInit() {
 		this.cinematicService.setForm(Constants.WELCOME);

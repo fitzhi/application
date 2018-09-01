@@ -7,7 +7,7 @@ import {MOCK_COLLABORATORS} from './mock/mock-collaborators';
 import {Subject, Observable, of} from 'rxjs';
 import {catchError, map, tap, filter} from 'rxjs/operators';
 
-import {CollaboratorService} from './collaborator.service';
+import {StaffService} from './staff.service';
 import {SkillService} from './skill.service';
 import {ProjectService} from './project.service';
 
@@ -45,7 +45,7 @@ export class DataService {
    * Construction.
    */
   constructor(
-    private collaboratorService: CollaboratorService,
+    private collaboratorService: StaffService,
     private skillService: SkillService,
     private projectService: ProjectService) {
   }

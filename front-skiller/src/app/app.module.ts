@@ -22,7 +22,7 @@ import {StaffComponent} from './staff/staff.component';
 import {ListStaffComponent} from './list-staff/list-staff.component';
 
 import {DataService} from './data.service';
-import {CollaboratorService} from './collaborator.service';
+import {StaffService} from './staff.service';
 import { MessageComponent } from './message/message.component';
 
 import {ErrorsHandler} from './errors-handler';
@@ -73,7 +73,7 @@ import { ListProjectComponent } from './list-project/list-project.component';
   providers: [
     DataService,
     CinematicService,
-    CollaboratorService
+    StaffService
   ],
   bootstrap: [AppComponent]
 })
