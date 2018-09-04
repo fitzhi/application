@@ -11,6 +11,12 @@ import fr.skiller.data.internal.Collaborator;
  */
 public interface StaffHandler {
 
+	/**
+	 * <p>Initialize the content of the in-memory staffs.</p>
+	 * <i>This method exists only for testing purpose</i>
+	 */
+	 void init();
+	
 	Map<Integer, Collaborator> getStaff();
 
 }

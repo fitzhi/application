@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -143,11 +144,12 @@ public class StaffController {
 	}
 	
 	/**
-	 * Internal Parameters class
+	 * Internal Parameters class containing all possible parameters necessaries for add/remove a project from a staff member.
 	 * @author Fr&eacute;d&eacute;ric VIDAL 
 	 */
-	class Param {
+	class ParamStaffProject {
 		public int idStaff;
+		public int idProject;		
 		public String formerProjectName;
 		public String newProjectName;
 		@Override
@@ -157,11 +159,11 @@ public class StaffController {
 	}
 	
 	@PostMapping("/project/save")
-	ResponseEntity<StaffDTO> add(@RequestBody String param) {
+	ResponseEntity<StaffDTO> save(@RequestBody String param) {
 		
-		Param p = gson.fromJson(param, Param.class);
+		ParamStaffProject p = gson.fromJson(param, ParamStaffProject.class);
 		if (logger.isDebugEnabled()) {
-			logger.debug("POST command on /project/staff/save with params id:" + String.valueOf(p.idStaff) + ",projectName:" + p.newProjectName);
+			logger.debug("POST command on /staff/project/save with params id:" + String.valueOf(p.idStaff) + ",projectName:" + p.newProjectName);
 		}
 		final ResponseEntity<StaffDTO> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
@@ -171,11 +173,20 @@ public class StaffController {
 
 		Optional<Project> result = projectHandler.lookup(p.newProjectName);
 		if (result.isPresent()) {
-			staff.projects.add(result.get());
-			responseEntity = new ResponseEntity<StaffDTO>(new StaffDTO(staff), headers, HttpStatus.OK);
-			if (logger.isDebugEnabled()) {
-				logger.debug("returning  staff " + gson.toJson(staff));
+			
+			/*
+			 * If the passed project is already present in the staff member's project list,
+			 * we send back a BAD_REQUEST to avoid duplicate entries
+			 */
+			Predicate<Project> predicate = pr -> (pr.id == result.get().id);
+			if (staff.projects.stream().anyMatch(predicate)) {
+				responseEntity = new ResponseEntity<StaffDTO>( 
+				new StaffDTO(staff, 0, "The collaborator " + staff.fullName() + " is already involved in "+  p.newProjectName),
+				headers, 
+				HttpStatus.BAD_REQUEST);
+				return responseEntity;
 			}
+			
 			
 			/**
 			 *  If the user change the name of the project, 
@@ -188,17 +199,56 @@ public class StaffController {
 					staff.projects.remove(formerProject.get());
 				}				
 			}
+
+			staff.projects.add(result.get());
+			responseEntity = new ResponseEntity<StaffDTO>(new StaffDTO(staff), headers, HttpStatus.OK);
+			if (logger.isDebugEnabled()) {
+				logger.debug("returning  staff " + gson.toJson(staff));
+			}
+			
 		} else {
-			responseEntity = new ResponseEntity<StaffDTO>( 
-					new StaffDTO(staff, 0, "There is no project with the name " + p.newProjectName),
-					headers, 
-					HttpStatus.BAD_REQUEST);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Cannot find a Project with the name " + p.newProjectName);
-			}			
+			}
+			return postErrorReturnBodyMessage(404, "There is no project with the name " + p.newProjectName, staff);
 		}
 		return responseEntity;
-		 
 	}	
+
+
+	/**
+	* Revoke the participation of staff member in a project. 
+	*/
+	@PostMapping("/project/del")
+	ResponseEntity<StaffDTO> del(@RequestBody String param) {
+
+		ParamStaffProject p = gson.fromJson(param, ParamStaffProject.class);
+		if (logger.isDebugEnabled()) {
+			logger.debug("POST command on /staff/project/del with params idStaff:" + String.valueOf(p.idStaff) + ",idProject:" + String.valueOf(p.idProject));
+		}
+
+		final Collaborator staff = staffHandler.getStaff().get(p.idStaff);
+		assert (staff != null);
+		if (staff == null) {
+			return postErrorReturnBodyMessage(404, "There is no staff member for id" + p.idStaff);
+		}
+		
+		Optional<Project> oProject = staff.projects.stream().filter(pr -> (pr.id == p.idProject) ).findFirst();
+		if (oProject.isPresent()) {
+			staff.projects.remove(oProject.get());
+		}
+		
+		return new ResponseEntity<StaffDTO>(new StaffDTO(staff), new HttpHeaders(), HttpStatus.OK);
+	}
+
+	ResponseEntity<StaffDTO> postErrorReturnBodyMessage (int code, String message) {
+		return postErrorReturnBodyMessage (code, message, new Collaborator());
+	}
 	
+	ResponseEntity<StaffDTO> postErrorReturnBodyMessage (int code, String message, Collaborator staffMember) {
+		return new ResponseEntity<StaffDTO>( 
+				new StaffDTO(staffMember, code, message),
+				new HttpHeaders(), 
+				HttpStatus.BAD_REQUEST);
+	}
 }	

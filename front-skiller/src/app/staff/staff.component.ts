@@ -127,20 +127,6 @@ export class StaffComponent implements OnInit {
        * Involve the collaborator into a given project.
        */
       this.sourceProjects.onAdded().subscribe(element => {
-        this.collaboratorService.addProject(this.collaborator.id, element.name).subscribe(
-          (staffDTO: StaffDTO) => {
-            this.messageService.info(staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName +
-              ' is involved now in project ' + element.name);
-            this.reloadProjects(this.collaborator.id);
-          },
-          response_error => {
-            if (Constants.DEBUG) {
-              console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
-            }
-            this.reloadProjects(this.collaborator.id);
-            this.messageService.error(response_error.error.message);
-          }
-        );
       });
 
       /*
@@ -194,7 +180,23 @@ export class StaffComponent implements OnInit {
       console.log('onConfirmCreateFromProject for event : ' + event.newData.name);
     }
     if (this.checkStaffMemberExist(event)) {
-      event.confirm.resolve();
+
+      this.collaboratorService.addProject(this.collaborator.id, event.newData.name).subscribe(
+        (staffDTO: StaffDTO) => {
+          this.messageService.info(staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName +
+            ' is involved now in project ' + event.newData.name);
+          this.reloadProjects(this.collaborator.id);
+          event.confirm.resolve();
+        },
+        response_error => {
+          if (Constants.DEBUG) {
+            console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+          }
+          this.reloadProjects(this.collaborator.id);
+          this.messageService.error(response_error.error.message);
+          event.confirm.reject();
+        }
+      );
     } else {
       event.confirm.reject();
     }
@@ -212,14 +214,14 @@ export class StaffComponent implements OnInit {
             (staffDTO: StaffDTO) => {
               this.messageService.info(staffDTO.staff.firstName + ' ' +
                 staffDTO.staff.lastName + ' is involved now in project ' + event.newData.name);
-              //             this.reloadProjects(this.collaborator.id);
+              this.reloadProjects(this.collaborator.id);
               event.confirm.resolve();
             },
             response_error => {
               if (Constants.DEBUG) {
                 console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
               }
-              //             this.reloadProjects(this.collaborator.id);
+              this.reloadProjects(this.collaborator.id);
               event.confirm.reject();
               this.messageService.error(response_error.error.message);
             }
@@ -280,6 +282,28 @@ export class StaffComponent implements OnInit {
       + ' from the project '
       + event.data['name']
       + '?')) {
+      /*
+       * After the addition into a project of a staff member, and before the relaodProject has been completed,
+       * there is a little laps of time without id in the projects list.
+       */
+      if (typeof event.data['id'] !== 'undefined') {
+        this.collaboratorService.removeFromProject(this.collaborator.id, event.data['id']).subscribe(
+            (staffDTO: StaffDTO) => {
+              this.messageService.info(staffDTO.staff.firstName + ' ' +
+                staffDTO.staff.lastName + ' is not more involved in project ' + event.data.name);
+              this.reloadProjects(this.collaborator.id);
+              event.confirm.resolve();
+            },
+            response_error => {
+              if (Constants.DEBUG) {
+                console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+              }
+              this.reloadProjects(this.collaborator.id);
+              event.confirm.reject();
+              this.messageService.error(response_error.error.message);
+            }
+          );
+      }
       event.confirm.resolve();
     } else {
       event.confirm.reject();
@@ -300,24 +324,6 @@ export class StaffComponent implements OnInit {
     } else {
       event.confirm.reject();
     }
-  }
-
-  /**
-  * The Validate Button has been activated
-  */
-  save(): void {
-    /*
-      if (Constants.DEBUG) {
-        console.log('Saving data for the collaborator below');
-        console.log(this.collaborator);
-      }
-      this.dataService.saveCollaborator (this.collaborator)
-        .subscribe(
-          staff => {
-            this.collaborator = staff;
-            this.messageService.info('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
-          });
-    */
   }
 
   /**

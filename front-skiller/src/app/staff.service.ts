@@ -97,6 +97,17 @@ export class StaffService extends InternalService {
   }
 
   /**
+   * POST: Unregister the contribution of a staff member into a project.
+   */
+  removeFromProject(idStaff: number, idProject: number): Observable<StaffDTO> {
+    if (Constants.DEBUG) {
+      console.log('Removing the collaborator with id : ' + idStaff + ' from project with id ' + idProject);
+    }
+    const body = {idStaff: idStaff, idProject: idProject};
+    return this.http.post<StaffDTO>(this.collaboratorUrl + '/project/del', body, httpOptions);
+  }
+  
+  /**
   * Load the projects associated with the staff member identified by this id. 
   */
   loadProjects(idStaff: number): Observable<Project[]> {

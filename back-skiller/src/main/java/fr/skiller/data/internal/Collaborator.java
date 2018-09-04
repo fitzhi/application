@@ -35,6 +35,14 @@ public class Collaborator {
 		experience = new ArrayList<Skill>().toArray(new Skill[0]);
 	}
 
+	
+	/**
+	 * @return the complete name of the staff member in a string format.
+	 */
+	public String fullName() {
+		return (firstName==null?"":firstName) + " " + lastName;
+	}
+	
 	public Collaborator() {
 	}
 

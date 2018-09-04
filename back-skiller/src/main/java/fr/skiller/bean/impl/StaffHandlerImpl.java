@@ -20,6 +20,10 @@ public class StaffHandlerImpl implements StaffHandler {
 	 */
 	private HashMap<Integer, Collaborator> staff;
 
+	public void init() {
+		staff = null;
+	}
+	
 	/**
 	 * @return the Project collection.
 	 */
