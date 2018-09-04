@@ -63,7 +63,7 @@ export class StaffComponent implements OnInit {
     private route: ActivatedRoute,
     private dataService: DataService,
     private messageService: MessageService,
-    private collaboratorService: StaffService,
+    private staffService: StaffService,
     private projectService: ProjectService) {}
 
   ngOnInit() {
@@ -148,7 +148,7 @@ export class StaffComponent implements OnInit {
     if (Constants.DEBUG) {
       console.log('Refreshing projects for the staff\'s id ' + idStaff);
     }
-    this.collaboratorService.loadProjects(idStaff).subscribe(
+    this.staffService.loadProjects(idStaff).subscribe(
       projects => this.sourceProjects.load(projects),
       error => console.log(error),
     );
@@ -181,7 +181,7 @@ export class StaffComponent implements OnInit {
     }
     if (this.checkStaffMemberExist(event)) {
 
-      this.collaboratorService.addProject(this.collaborator.id, event.newData.name).subscribe(
+      this.staffService.addProject(this.collaborator.id, event.newData.name).subscribe(
         (staffDTO: StaffDTO) => {
           this.messageService.info(staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName +
             ' is involved now in project ' + event.newData.name);
@@ -210,7 +210,7 @@ export class StaffComponent implements OnInit {
       this.projectService.lookup(event.newData.name).subscribe(
 
         project_transfered => {
-          this.collaboratorService.changeProject(this.collaborator.id, event.data.name, event.newData.name).subscribe(
+          this.staffService.changeProject(this.collaborator.id, event.data.name, event.newData.name).subscribe(
             (staffDTO: StaffDTO) => {
               this.messageService.info(staffDTO.staff.firstName + ' ' +
                 staffDTO.staff.lastName + ' is involved now in project ' + event.newData.name);
@@ -287,7 +287,7 @@ export class StaffComponent implements OnInit {
        * there is a little laps of time without id in the projects list.
        */
       if (typeof event.data['id'] !== 'undefined') {
-        this.collaboratorService.removeFromProject(this.collaborator.id, event.data['id']).subscribe(
+        this.staffService.removeFromProject(this.collaborator.id, event.data['id']).subscribe(
             (staffDTO: StaffDTO) => {
               this.messageService.info(staffDTO.staff.firstName + ' ' +
                 staffDTO.staff.lastName + ' is not more involved in project ' + event.data.name);
