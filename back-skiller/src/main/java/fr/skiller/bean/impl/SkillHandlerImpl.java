@@ -5,10 +5,12 @@ package fr.skiller.bean.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
 import fr.skiller.bean.SkillHandler;
+import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
 
 /**
@@ -35,6 +37,13 @@ public class SkillHandlerImpl implements SkillHandler {
 		this.skill.put(4, new Skill(4, "Spring Boot"));
 		this.skill.put(5, new Skill(5, "hibernate"));
 		return skill;
+	}
+	
+	@Override
+	public Optional<Skill> lookup(final String skillTitle) {
+		return getSkills().values().stream()
+				.filter( (Skill skill) -> skill.title.equals(skillTitle))
+				.findFirst();
 	}
 
 }

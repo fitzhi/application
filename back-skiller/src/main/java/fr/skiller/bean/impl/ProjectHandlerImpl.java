@@ -37,9 +37,7 @@ public class ProjectHandlerImpl implements ProjectHandler {
 		return projects;
 	}
 	
-	/**
-	 * Lookup of a project by its name.
-	 */
+	@Override
 	public Optional<Project> lookup(final String projectName) {
 		return getProjects().values().stream()
 				.filter( (Project project) -> project.name.equals(projectName))

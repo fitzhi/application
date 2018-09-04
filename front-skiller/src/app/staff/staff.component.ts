@@ -120,23 +120,6 @@ export class StaffComponent implements OnInit {
           }
         );
       }
-
-      this.sourceProjects.onRemoved().subscribe(element => console.log('Delete project ' + element));
-
-      /*
-       * Involve the collaborator into a given project.
-       */
-      this.sourceProjects.onAdded().subscribe(element => {
-      });
-
-      /*
-       * Update the project for a collaborator.
-       */
-      this.sourceProjects.onUpdated().subscribe();
-
-      this.sourceExperience.onRemoved().subscribe(element => console.log('Delete experience ' + element));
-      this.sourceExperience.onAdded().subscribe(element => console.log('Add experience ' + element));
-      this.sourceExperience.onUpdated().subscribe(element => console.log('Update experience ' + element));
     });
     this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
   }
@@ -152,27 +135,6 @@ export class StaffComponent implements OnInit {
       projects => this.sourceProjects.load(projects),
       error => console.log(error),
     );
-  }
-
-  /**
-   * Handle HTTP operation that failed.
-   * Let the APP continue.
-   * @param operation - name of the operation that failed
-   * @param result - optional value to return as the observable result
-   */
-  handleError<T>(operation = 'operation', result?: T) {
-    return (error: any): Observable<T> => {
-
-      // TODO: send the error to remote logging infrastructure
-      console.error(error); // log to console instead
-
-      // TODO: better job of transforming error for user consumption
-      console.log(`${operation} failed: ${error.message}`);
-
-      // Let the app keep running by returning an empty result.
-      return of(result as T);
-
-    };
   }
 
   onConfirmCreateFromProject(event) {
@@ -288,21 +250,21 @@ export class StaffComponent implements OnInit {
        */
       if (typeof event.data['id'] !== 'undefined') {
         this.staffService.removeFromProject(this.collaborator.id, event.data['id']).subscribe(
-            (staffDTO: StaffDTO) => {
-              this.messageService.info(staffDTO.staff.firstName + ' ' +
-                staffDTO.staff.lastName + ' is not more involved in project ' + event.data.name);
-              this.reloadProjects(this.collaborator.id);
-              event.confirm.resolve();
-            },
-            response_error => {
-              if (Constants.DEBUG) {
-                console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
-              }
-              this.reloadProjects(this.collaborator.id);
-              event.confirm.reject();
-              this.messageService.error(response_error.error.message);
+          (staffDTO: StaffDTO) => {
+            this.messageService.info(staffDTO.staff.firstName + ' ' +
+              staffDTO.staff.lastName + ' is not more involved in project ' + event.data.name);
+            this.reloadProjects(this.collaborator.id);
+            event.confirm.resolve();
+          },
+          response_error => {
+            if (Constants.DEBUG) {
+              console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
             }
-          );
+            this.reloadProjects(this.collaborator.id);
+            event.confirm.reject();
+            this.messageService.error(response_error.error.message);
+          }
+        );
       }
       event.confirm.resolve();
     } else {

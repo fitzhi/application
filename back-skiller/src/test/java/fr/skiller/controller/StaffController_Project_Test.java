@@ -33,7 +33,7 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class StaffControllerTest {
+public class StaffController_Project_Test {
 
 	/**
 	 * Initialization of the Google JSON parser.

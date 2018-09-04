@@ -9,6 +9,11 @@ public interface ProjectHandler {
 
 	Map<Integer, Project> getProjects();
 	
+	/**
+	 * Search for a project associated to the passed name. 
+	 * @param projectName 
+	 * @return
+	 */
 	Optional<Project> lookup(final String projectName);
 	
 }
