@@ -2,7 +2,7 @@ package fr.skiller.bean;
 
 import java.util.Map;
 
-import fr.skiller.data.internal.Collaborator;
+import fr.skiller.data.internal.Staff;
 
 /**
  * 
@@ -17,6 +17,6 @@ public interface StaffHandler {
 	 */
 	 void init();
 	
-	Map<Integer, Collaborator> getStaff();
+	Map<Integer, Staff> getStaff();
 
 }

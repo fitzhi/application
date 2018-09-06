@@ -4,16 +4,14 @@
 package fr.skiller.data.internal;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import fr.skiller.data.internal.Skill;
+import java.util.Optional;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public class Collaborator {
+public class Staff {
 	public int id;
 	public String firstName;
 	public String lastName;
@@ -21,9 +19,9 @@ public class Collaborator {
 	public String email;
 	public String level;
 	public List<Project> projects;
-	public List<Skill> experience;
+	public List<Experience> experiences;
 
-	public Collaborator(int id, String firstName, String lastName, String nickName, String email, String level) {
+	public Staff(int id, String firstName, String lastName, String nickName, String email, String level) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -32,7 +30,7 @@ public class Collaborator {
 		this.email = email;
 		this.level = level;
 		projects = new ArrayList<Project>();
-		experience = new ArrayList<Skill>();
+		experiences = new ArrayList<Experience>();
 	}
 
 	
@@ -43,15 +41,28 @@ public class Collaborator {
 		return (firstName==null?"":firstName) + " " + lastName;
 	}
 	
-	public Collaborator() {
+	/**
+	 * Retrieve the experience of the staff member corresponding from its skill.
+	 * @param idSkill skill identifier
+	 * @return the asset or null, if none exists for this skill
+	 */
+	public Experience getExperience(final int idSkill) {
+		Optional<Experience> oAsset = experiences.stream().filter(exp -> (exp.id == idSkill)).findFirst();
+		return (oAsset.isPresent()) ? oAsset.get() : null;
 	}
-
+	
+	
+	/**
+	 * Empty construction.
+	 */
+	public Staff() {
+	}
 
 	@Override
 	public String toString() {
 		return "Collaborator [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", nickName="
 				+ nickName + ", email=" + email + ", level=" + level + ", projects=" + projects + ", experience="
-				+ experience + "]";
+				+ experiences + "]";
 	}
 
 }

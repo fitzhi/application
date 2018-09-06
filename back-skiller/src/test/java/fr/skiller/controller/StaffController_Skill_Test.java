@@ -16,7 +16,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.StaffHandler;
-import fr.skiller.data.internal.Skill;
+import fr.skiller.data.internal.Experience;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -50,20 +50,30 @@ public class StaffController_Skill_Test {
 	@Test
 	public void addAndUpdateASkillForAStaffMember() throws Exception {
 
-		this.mvc.perform(get("/staff/skills/2")).andExpect(status().isOk()).andExpect(content().string("[]"));	
-		String body = "{ idStaff: 2, formerSkillTitle: \"\", newSkillTitle: \"Spring\"}";
+		this.mvc.perform(get("/staff/experiences/2")).andExpect(status().isOk()).andExpect(content().string("[]"));	
+		String body = "{ idStaff: 2, formerSkillTitle: \"\", newSkillTitle: \"Spring\", level: 2}";
 		this.mvc.perform(post("/staff/skill/save").content(body)).andExpect(status().isOk());		
 		
-		List<Skill> skills = new ArrayList<Skill>();
-		skills.add(new Skill(2, "Spring"));
-		this.mvc.perform(get("/staff/skills/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(skills)));
+		List<Experience> assets = new ArrayList<Experience>();
+		assets.add(new Experience(2, "Spring", 2));
+		this.mvc.perform(get("/staff/experiences/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));
 
-		body = "{ idStaff: 2, formerSkillTitle: \"Spring\", newSkillTitle: \"Java\"}";
+		body = "{ idStaff: 2, formerSkillTitle: \"Spring\", newSkillTitle: \"Java\", level: 3}";
 		this.mvc.perform(post("/staff/skill/save").content(body)).andExpect(status().isOk());		
 		
-		skills.clear();
-		skills.add(new Skill (1, "Java"));
-		this.mvc.perform(get("/staff/skills/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(skills)));
+		assets.clear();
+		assets.add(new Experience (1, "Java", 3));
+		this.mvc.perform(get("/staff/experiences/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));
+
+		/*
+		 * We down-grade the level from 3 to 1.
+		 */
+		body = "{ idStaff: 2, formerSkillTitle: \"Spring\", newSkillTitle: \"Java\", level: 1}";
+		this.mvc.perform(post("/staff/skill/save").content(body)).andExpect(status().isOk());		
+
+		assets.clear();
+		assets.add(new Experience (1, "Java", 1));
+		this.mvc.perform(get("/staff/experiences/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));
 
 		staffHandler.init();
 	}
@@ -72,20 +82,20 @@ public class StaffController_Skill_Test {
 	@Test
 	public void addAndRemoveASkillForAStaffMember() throws Exception {
 		
-		this.mvc.perform(get("/staff/skills/2")).andExpect(status().isOk()).andExpect(content().string("[]"));	
-		String body = "{idStaff: 2, formerSkillTitle: \"\", newSkillTitle: \"Spring\"}";
+		this.mvc.perform(get("/staff/experiences/2")).andExpect(status().isOk()).andExpect(content().string("[]"));	
+		String body = "{idStaff: 2, formerSkillTitle: \"\", newSkillTitle: \"Spring\", level: 1}";
 		this.mvc.perform(post("/staff/skill/save").content(body)).andExpect(status().isOk());		
 
 	
-		List<Skill> skills = new ArrayList<Skill>();
-		skills.add(new Skill (2, "Spring"));
-		this.mvc.perform(get("/staff/skills/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(skills)));
+		List<Experience> assets = new ArrayList<Experience>();
+		assets.add(new Experience (2, "Spring", 1));
+		this.mvc.perform(get("/staff/experiences/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));
 		
 		body = "{idStaff: 2, idSkill: 2}";
-		this.mvc.perform(post("/staff/skills/del").content(body)).andExpect(status().isOk());
+		this.mvc.perform(post("/staff/experiences/del").content(body)).andExpect(status().isOk());
 		
-		skills.clear();
-		this.mvc.perform(get("/staff/skills/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(skills)));
+		assets.clear();
+		this.mvc.perform(get("/staff/experiences/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));
 		
 		staffHandler.init();
 		

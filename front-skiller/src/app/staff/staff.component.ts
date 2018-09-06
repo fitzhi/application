@@ -81,7 +81,7 @@ export class StaffComponent implements OnInit {
       // We create an empty collaborator until the subscription is complete
       this.collaborator = {
         id: null, firstName: null, lastName: null, nickName: null, email: null, level: null,
-        projects: [], experience: []
+        projects: [], experiences: []
       };
       if (this.id != null) {
         this.dataService.getCollaborator(this.id).subscribe(
@@ -92,7 +92,7 @@ export class StaffComponent implements OnInit {
             this.profileStaff.get('nickName').setValue(collab.nickName);
             this.profileStaff.get('email').setValue(collab.email);
             this.profileStaff.get('level').setValue(collab.level);
-            this.sourceExperience.load(this.collaborator.experience);
+            this.sourceExperience.load(this.collaborator.experiences);
             this.sourceProjects.load(this.collaborator.projects);
             this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
           },
@@ -104,7 +104,7 @@ export class StaffComponent implements OnInit {
               this.messageService.error('There is no staff member for id ' + this.id);
               this.collaborator = {
                 id: null, firstName: null, lastName: null, nickName: null, email: null, level: null,
-                projects: [], experience: []
+                projects: [], experiences: []
               };
             } else {
               console.error(error.message);
@@ -136,13 +136,24 @@ export class StaffComponent implements OnInit {
       error => console.log(error),
     );
   }
+  /*
+  * Refresh the skills content after an update.
+  */
+  reloadExperiences(idStaff: number): void {
+    if (Constants.DEBUG) {
+      console.log('Refreshing experiences for the staff\'s id ' + idStaff);
+    }
+    this.staffService.loadExperiences(idStaff).subscribe(
+      assets => this.sourceExperience.load(assets),
+      error => console.log(error),
+    );
+  }
 
   onConfirmCreateFromProject(event) {
     if (Constants.DEBUG) {
       console.log('onConfirmCreateFromProject for event : ' + event.newData.name);
     }
     if (this.checkStaffMemberExist(event)) {
-
       this.staffService.addProject(this.collaborator.id, event.newData.name).subscribe(
         (staffDTO: StaffDTO) => {
           this.messageService.info(staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName +
@@ -206,7 +217,22 @@ export class StaffComponent implements OnInit {
       console.log('onConfirmAddStaffSkill for event ' + event.newData.title);
     }
     if (this.checkStaffMemberExist(event)) {
-      event.confirm.resolve();
+      this.staffService.addExperience(this.collaborator.id, event.newData.title, event.newData.level).subscribe(
+        (staffDTO: StaffDTO) => {
+          this.messageService.info(staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName +
+            ' has gained the skill ' + event.newData.title);
+          this.reloadExperiences(this.collaborator.id);
+          event.confirm.resolve();
+        },
+        response_error => {
+          if (Constants.DEBUG) {
+            console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+          }
+          this.reloadExperiences(this.collaborator.id);
+          this.messageService.error(response_error.error.message);
+          event.confirm.reject();
+        }
+      );
     } else {
       event.confirm.reject();
     }

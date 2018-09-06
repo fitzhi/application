@@ -29,7 +29,7 @@ export class Constants {
   public static MESSAGE_INFO = 2;
 
   /**
-	 * Declared settings for the grid dedicated to the skills inside the form STAFF.
+	 * Declared settings for the grid dedicated to the experiences inside the form STAFF.
 	 */
   public static SETTINGS_EXPERIENCE_SMARTTABLE = {
     columns: {

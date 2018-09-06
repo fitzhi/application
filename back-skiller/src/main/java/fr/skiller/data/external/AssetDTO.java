@@ -1,5 +1,6 @@
 package fr.skiller.data.external;
 
+import fr.skiller.data.internal.Experience;
 import fr.skiller.data.internal.Skill;
 
 /**
@@ -16,7 +17,7 @@ import fr.skiller.data.internal.Skill;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public class SkillDTO {
+public class AssetDTO {
 
 	/**
 	 * Back-end code
@@ -27,22 +28,22 @@ public class SkillDTO {
 	 */
 	public String message = "";
 
-	public Skill skill;
+	public Experience asset;
 
 	/**
-	 * @param staff
+	 * @param asset
 	 */
-	public SkillDTO(Skill skill) {
-		this.skill = skill;
+	public AssetDTO(Experience asset) {
+		this.asset = asset;
 	}
 
 	/**
-	 * @param staff
+	 * @param asset
 	 * @param code
 	 * @param message
 	 */
-	public SkillDTO(Skill skill, int code, String message) {
-		this.skill = skill;
+	public AssetDTO(Experience asset, int code, String message) {
+		this.asset = asset;
 		this.code = code;
 		this.message = message;
 	}

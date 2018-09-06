@@ -13,7 +13,7 @@ export class Collaborator {
   /**
    * 
    */
-  public experience: Experience[];
+  public experiences: Experience[];
 
   /**
    * List of projects where the developer is involved.

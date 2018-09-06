@@ -9,6 +9,7 @@ import {StaffDTO} from './data/external/staffDTO';
 import {MOCK_COLLABORATORS} from './mock/mock-collaborators';
 
 import {Constants} from './constants';
+import {Experience} from './data/Experience';
 import {Observable, of} from 'rxjs';
 
 import {InternalService} from './internal-service';
@@ -58,7 +59,6 @@ export class StaffService extends InternalService {
       console.log('Saving the collaborator with id ' + collaborator.id);
     }
     return this.http.post<Collaborator>(this.collaboratorUrl + '/save', collaborator, httpOptions);
-
   }
 
   /**
@@ -106,7 +106,7 @@ export class StaffService extends InternalService {
     const body = {idStaff: idStaff, idProject: idProject};
     return this.http.post<StaffDTO>(this.collaboratorUrl + '/project/del', body, httpOptions);
   }
-  
+
   /**
   * Load the projects associated with the staff member identified by this id. 
   */
@@ -114,4 +114,21 @@ export class StaffService extends InternalService {
     return this.http.get<Project[]>(this.collaboratorUrl + '/projects/' + idStaff);
   }
 
+  /**
+  * Load the experience of the staff member identified by this id.
+  */
+  loadExperiences(idStaff: number): Observable<Experience[]> {
+    return this.http.get<Experience[]>(this.collaboratorUrl + '/experiences/' + idStaff);
+  }
+
+  /**
+   * POST: Add an asset to a staff member defined by its name
+   */
+  addExperience(idStaff: number, skillTitle: string, level: number): Observable<StaffDTO> {
+    if (Constants.DEBUG) {
+      console.log('Adding the skill  ' + skillTitle + ' for the staff member whom id is ' + idStaff);
+    }
+    const body = {idStaff: idStaff, newSkillTitle: skillTitle, level: level};
+    return this.http.post<StaffDTO>(this.collaboratorUrl + '/skill/save', body, httpOptions);
+  }
 }

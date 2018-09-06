@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 
 import ch.qos.logback.classic.Logger;
-import fr.skiller.data.internal.Collaborator;
+import fr.skiller.data.internal.Staff;
 import junit.framework.TestCase;
 
 /**
@@ -22,7 +22,7 @@ public class JsonTest extends TestCase {
 	
 	@Test
 	public void testSimple() {
-		Collaborator collab = new Collaborator(1, "firtname", "lastName", "nickName", "email", "level");
+		Staff collab = new Staff(1, "firtname", "lastName", "nickName", "email", "level");
 		
 		Gson g = new Gson();
 		LoggerFactory.getLogger(JsonTest.class).debug(g.toJson(collab)); 

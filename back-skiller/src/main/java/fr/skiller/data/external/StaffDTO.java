@@ -1,6 +1,6 @@
 package fr.skiller.data.external;
 
-import fr.skiller.data.internal.Collaborator;
+import fr.skiller.data.internal.Staff;
 
 /**
  * <p>This class is used as a Data Transfer Object between the spring boot
@@ -22,12 +22,12 @@ public class StaffDTO {
 	 */
 	public String message = "";
 
-	public Collaborator staff;
+	public Staff staff;
 
 	/**
 	 * @param staff
 	 */
-	public StaffDTO(Collaborator staff) {
+	public StaffDTO(Staff staff) {
 		super();
 		this.staff = staff;
 	}
@@ -37,7 +37,7 @@ public class StaffDTO {
 	 * @param code
 	 * @param message
 	 */
-	public StaffDTO(Collaborator staff, int code, String message) {
+	public StaffDTO(Staff staff, int code, String message) {
 		super();
 		this.staff = staff;
 		this.code = code;

@@ -23,12 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sun.net.httpserver.Headers;
 
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.external.StaffDTO;
-import fr.skiller.data.internal.Collaborator;
+import fr.skiller.data.internal.Experience;
+import fr.skiller.data.internal.Staff;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
 
@@ -65,21 +67,21 @@ public class StaffController {
 	 * @return the staff member identified by its id
 	 */
 	@RequestMapping(value="/{idStaff}", method = RequestMethod.GET)
-	ResponseEntity<Collaborator> read(@PathVariable("idStaff") int idStaff) {
+	ResponseEntity<Staff> read(@PathVariable("idStaff") int idStaff) {
 
-		final ResponseEntity<Collaborator> responseEntity;
+		final ResponseEntity<Staff> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 		
-		Collaborator searchCollab = staffHandler.getStaff().get(idStaff);
+		Staff searchCollab = staffHandler.getStaff().get(idStaff);
 		if (searchCollab != null) {
-			responseEntity = new ResponseEntity<Collaborator>(searchCollab, headers, HttpStatus.OK);
+			responseEntity = new ResponseEntity<Staff>(searchCollab, headers, HttpStatus.OK);
 			if (logger.isDebugEnabled()) {
 				logger.debug("read for id " + String.valueOf(idStaff) + " returns " + responseEntity.getBody());
 			}
 		} else {
 			headers.set("backend.return_code", "O");
 			headers.set("backend.return_message", "There is no collaborator associated to the id " + idStaff);
-			responseEntity = new ResponseEntity<Collaborator>(new Collaborator(), headers, HttpStatus.NOT_FOUND);
+			responseEntity = new ResponseEntity<Staff>(new Staff(), headers, HttpStatus.NOT_FOUND);
 			if (logger.isDebugEnabled()) {
 				logger.debug("Cannot find a staff member for id " + String.valueOf(idStaff));
 			}
@@ -94,7 +96,7 @@ public class StaffController {
 	@RequestMapping(value="/projects/{idStaff}", method = RequestMethod.GET)
 	ResponseEntity<List<Project>> readProjects(@PathVariable("idStaff") int idStaff) {
 		
-		ResponseEntity<Collaborator> responseEntityStaffMember = read(idStaff);
+		ResponseEntity<Staff> responseEntityStaffMember = read(idStaff);
 		
 		ResponseEntity<List<Project>> response = 
 				new ResponseEntity<List<Project>>(responseEntityStaffMember.getBody().projects, 
@@ -105,36 +107,36 @@ public class StaffController {
 	
 	/**
 	 * @param idStaff staff member's identifier
-	 * @return the experience pf a developer as list of skills.
+	 * @return the experience of a developer as list of skills.
 	 */
-	@RequestMapping(value="/skills/{idStaff}", method = RequestMethod.GET)
-	ResponseEntity<List<Skill>> readSkills(@PathVariable("idStaff") int idStaff) {
+	@RequestMapping(value="/experiences/{idStaff}", method = RequestMethod.GET)
+	ResponseEntity<List<Experience>> readExperiences(@PathVariable("idStaff") int idStaff) {
 		
-		ResponseEntity<Collaborator> responseEntityStaffMember = read(idStaff);
+		ResponseEntity<Staff> responseEntityStaffMember = read(idStaff);
 		
-		ResponseEntity<List<Skill>> response = 
-				new ResponseEntity<List<Skill>>(responseEntityStaffMember.getBody().experience, 
+		ResponseEntity<List<Experience>> response = 
+				new ResponseEntity<List<Experience>>(responseEntityStaffMember.getBody().experiences, 
 						responseEntityStaffMember.getHeaders(), 
 						responseEntityStaffMember.getStatusCode());
 		return response;
 	}
 	
 	@PostMapping("/save")
-	ResponseEntity<Collaborator> add(@RequestBody Collaborator input) {
+	ResponseEntity<Staff> add(@RequestBody Staff input) {
 		
-		final ResponseEntity<Collaborator> responseEntity;
+		final ResponseEntity<Staff> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 		
-		Collection<Collaborator> staff = staffHandler.getStaff().values();
+		Collection<Staff> staff = staffHandler.getStaff().values();
 		if (input.id == 0) {
 			input.id = staff.size()+1;
 			staffHandler.getStaff().put(input.id, input);
 			headers.add("backend.return_code", "1");
-			responseEntity = new ResponseEntity<Collaborator>(input, headers, HttpStatus.OK);
+			responseEntity = new ResponseEntity<Staff>(input, headers, HttpStatus.OK);
 		} else {
-			Collaborator updatedStaff = staffHandler.getStaff().get(input.id);
+			Staff updatedStaff = staffHandler.getStaff().get(input.id);
 			if (updatedStaff == null) {
-				responseEntity = new ResponseEntity<Collaborator>(input, headers, HttpStatus.NOT_FOUND);
+				responseEntity = new ResponseEntity<Staff>(input, headers, HttpStatus.NOT_FOUND);
 				headers.add("backend.return_code", "O");
 				headers.add("backend.return_message", "There is no collaborator associated to the id " + input.id);
 				responseEntity.getHeaders().set("backend.return_message", "There is no collaborator associated to the id " + input.id);
@@ -145,7 +147,7 @@ public class StaffController {
 				updatedStaff.nickName = input.nickName;
 				updatedStaff.email = input.email;
 				updatedStaff.level = input.level;
-				responseEntity = new ResponseEntity<Collaborator>(input, headers, HttpStatus.OK);
+				responseEntity = new ResponseEntity<Staff>(input, headers, HttpStatus.OK);
 				headers.add("backend.return_code", "1");
 			}
 		}
@@ -159,15 +161,16 @@ public class StaffController {
 	 * Internal Parameters class containing all possible parameters necessaries for add/remove a skill from a staff member.
 	 * @author Fr&eacute;d&eacute;ric VIDAL 
 	 */
-	class ParamSkillProject {
+	class ParamStaffSkill {
 		public int idStaff;
-		public int idSkill;		
+		public int idSkill;
+		public int level;
 		public String formerSkillTitle;
 		public String newSkillTitle;
 		@Override
 		public String toString() {
-			return "ParamSkillProject [idStaff=" + idStaff + ", idSkill=" + idSkill + ", formerSkillName="
-					+ formerSkillTitle + ", newSkillName=" + newSkillTitle + "]";
+			return "ParamSkillProject [idStaff=" + idStaff + ", idSkill=" + idSkill + ", level=" + level
+					+ ", formerSkillTitle=" + formerSkillTitle + ", newSkillTitle=" + newSkillTitle + "]";
 		}
 	}
 	
@@ -179,44 +182,57 @@ public class StaffController {
 	@PostMapping("/skill/save")
 	ResponseEntity<StaffDTO> saveSkill(@RequestBody String param) {
 		
-		ParamSkillProject p = gson.fromJson(param, ParamSkillProject.class);
+		ParamStaffSkill p = gson.fromJson(param, ParamStaffSkill.class);
 		if (logger.isDebugEnabled()) {
-			logger.debug("POST command on /staff/skill/save with params id:" + String.valueOf(p.idStaff) + ",skillName:" + p.newSkillTitle);
+			logger.debug("POST command on /staff/skill/save with params id:" + String.valueOf(p.idStaff) + ",skillName:" + p.newSkillTitle + ", level " + p.level);
 		}
 		final ResponseEntity<StaffDTO> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 
-		final Collaborator staff = staffHandler.getStaff().get(p.idStaff);
+		final Staff staff = staffHandler.getStaff().get(p.idStaff);
 		assert (staff != null);
 
-		Optional<Skill> result = skillHandler.lookup(p.newSkillTitle);
+		Optional<Skill> result;
+		
+		result = skillHandler.lookup(p.newSkillTitle);
 		if (result.isPresent()) {
-			
-			/*
-			 * If the passed project is already present in the staff member's skill list,
-			 * we send back a BAD_REQUEST to avoid duplicate entries
-			 */
-			Predicate<Project> predicate = pr -> (pr.id == result.get().id);
-			if (staff.projects.stream().anyMatch(predicate)) {
-				return postErrorReturnBodyMessage(HttpStatus.BAD_REQUEST.value(), 
-						"The collaborator " + staff.fullName() + " has already the " + p.newSkillTitle + " in his registered background.", 
-						staff);
-			}
-			
 			
 			/**
 			 *  If the user change the title of the skill, 
 			 *  1) we create a new entry into the projects list of the staff member
-			 *  2) we remove the former entry assigned to the previous title
+			 *  2) we remove the former entry assigned to the previous title.
+			 *  
+			 *  Below, is the code for REMOVE.
 			 */
-			if ( (p.formerSkillTitle != null) && (p.formerSkillTitle.length() > 0) ) {
+			if ( 		(p.formerSkillTitle != null) 
+					&& 	(p.formerSkillTitle.length() > 0) 
+					&& 	(!p.formerSkillTitle.equals(p.newSkillTitle))) {
 				Optional<Skill> formerSkill = skillHandler.lookup(p.formerSkillTitle);
-				if (result.isPresent()) {
-					staff.experience.remove(formerSkill.get());
+				if (formerSkill.isPresent()) {
+					final Experience formerExperienceToRemove = staff.getExperience(formerSkill.get().id);
+					staff.experiences.remove(formerExperienceToRemove);
 				}				
 			}
-
-			staff.experience.add(result.get());
+			
+			/*
+			 * If the passed skill is already present in the staff member's skill list,
+			 * we update the level if necessary, or we send back an warning. No Update made.
+			 */
+			final Experience asset = staff.getExperience(result.get().id);
+			if (asset != null){
+				if (asset.level != p.level) {
+					asset.level = p.level;
+					return new ResponseEntity<StaffDTO>(new StaffDTO(staff), HttpStatus.OK);
+				}
+				return postErrorReturnBodyMessage(HttpStatus.BAD_REQUEST.value(), 
+						"The collaborator " + staff.fullName() + " has already this level ("+ p.level + ") of skill for " + p.newSkillTitle, 
+						staff);
+			}
+			
+			/*
+			 * We create a NEW asset for this staff member.
+			 */
+			staff.experiences.add( new Experience(result.get().id, result.get().title, p.level) );
 			responseEntity = new ResponseEntity<StaffDTO>(new StaffDTO(staff), headers, HttpStatus.OK);
 			if (logger.isDebugEnabled()) {
 				logger.debug("returning  staff " + gson.toJson(staff));
@@ -250,25 +266,25 @@ public class StaffController {
 	}
 
 	/**
-	* Revoke a skill for a staff member. 
+	* Revoke an experience for a staff member. 
 	*/
-	@PostMapping("/skills/del")
+	@PostMapping("/experiences/del")
 	ResponseEntity<StaffDTO> revokeSkill(@RequestBody String param) {
 
-		ParamSkillProject p = gson.fromJson(param, ParamSkillProject.class);
+		ParamStaffSkill p = gson.fromJson(param, ParamStaffSkill.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug("POST command on /staff/skill/del with params idStaff:" + String.valueOf(p.idStaff) + ",idSkill:" + String.valueOf(p.idSkill));
 		}
 
-		final Collaborator staff = staffHandler.getStaff().get(p.idStaff);
+		final Staff staff = staffHandler.getStaff().get(p.idStaff);
 		assert (staff != null);
 		if (staff == null) {
 			return postErrorReturnBodyMessage(404, "There is no staff member for id" + p.idStaff);
 		}
 		
-		Optional<Skill> oSkill = staff.experience.stream().filter(pr -> (pr.id == p.idSkill) ).findFirst();
-		if (oSkill.isPresent()) {
-			staff.experience.remove(oSkill.get());
+		Optional<Experience> oExperience = staff.experiences.stream().filter(exp -> (exp.id == p.idSkill) ).findFirst();
+		if (oExperience.isPresent()) {
+			staff.experiences.remove(oExperience.get());
 		}
 		
 		return new ResponseEntity<StaffDTO>(new StaffDTO(staff), new HttpHeaders(), HttpStatus.OK);
@@ -290,7 +306,7 @@ public class StaffController {
 		final ResponseEntity<StaffDTO> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 
-		final Collaborator staff = staffHandler.getStaff().get(p.idStaff);
+		final Staff staff = staffHandler.getStaff().get(p.idStaff);
 		assert (staff != null);
 
 		Optional<Project> result = projectHandler.lookup(p.newProjectName);
@@ -348,7 +364,7 @@ public class StaffController {
 			logger.debug("POST command on /staff/project/del with params idStaff:" + String.valueOf(p.idStaff) + ",idProject:" + String.valueOf(p.idProject));
 		}
 
-		final Collaborator staff = staffHandler.getStaff().get(p.idStaff);
+		final Staff staff = staffHandler.getStaff().get(p.idStaff);
 		assert (staff != null);
 		if (staff == null) {
 			return postErrorReturnBodyMessage(404, "There is no staff member for id" + p.idStaff);
@@ -363,10 +379,10 @@ public class StaffController {
 	}
 
 	ResponseEntity<StaffDTO> postErrorReturnBodyMessage (int code, String message) {
-		return postErrorReturnBodyMessage (code, message, new Collaborator());
+		return postErrorReturnBodyMessage (code, message, new Staff());
 	}
 	
-	ResponseEntity<StaffDTO> postErrorReturnBodyMessage (int code, String message, Collaborator staffMember) {
+	ResponseEntity<StaffDTO> postErrorReturnBodyMessage (int code, String message, Staff staffMember) {
 		return new ResponseEntity<StaffDTO>( 
 				new StaffDTO(staffMember, code, message),
 				new HttpHeaders(), 

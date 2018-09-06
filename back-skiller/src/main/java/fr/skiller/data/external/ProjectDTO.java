@@ -1,6 +1,6 @@
 package fr.skiller.data.external;
 
-import fr.skiller.data.internal.Collaborator;
+import fr.skiller.data.internal.Staff;
 import fr.skiller.data.internal.Project;
 
 /**
@@ -26,7 +26,7 @@ public class ProjectDTO {
 	public Project project;
 
 	/**
-	 * @param staff
+	 * @param project
 	 */
 	public ProjectDTO(Project project) {
 		super();
@@ -34,7 +34,7 @@ public class ProjectDTO {
 	}
 
 	/**
-	 * @param staff
+	 * @param project
 	 * @param code
 	 * @param message
 	 */
