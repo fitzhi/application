@@ -175,12 +175,12 @@ public class StaffController {
 	}
 	
 	/**
-	 * Adding ou changing the name of a skill assign to a developer.
+	 * Adding or changing the name of an experience assign to a developer.
 	 * @param param the body of the post containing an instance of ParamSkillProject in JSON format
 	 * @return
 	 */
-	@PostMapping("/skill/save")
-	ResponseEntity<StaffDTO> saveSkill(@RequestBody String param) {
+	@PostMapping("/experiences/save")
+	ResponseEntity<StaffDTO> saveExperience(@RequestBody String param) {
 		
 		ParamStaffSkill p = gson.fromJson(param, ParamStaffSkill.class);
 		if (logger.isDebugEnabled()) {

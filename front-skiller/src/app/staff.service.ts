@@ -129,7 +129,7 @@ export class StaffService extends InternalService {
       console.log('Adding the skill  ' + skillTitle + ' for the staff member whom id is ' + idStaff);
     }
     const body = {idStaff: idStaff, newSkillTitle: skillTitle, level: level};
-    return this.http.post<StaffDTO>(this.collaboratorUrl + '/skill/save', body, httpOptions);
+    return this.http.post<StaffDTO>(this.collaboratorUrl + '/experiences/save', body, httpOptions);
   }
 
   /**
@@ -142,4 +142,17 @@ export class StaffService extends InternalService {
     const body = {idStaff: idStaff, idSkill: idSkill};
     return this.http.post<StaffDTO>(this.collaboratorUrl + '/experiences/del', body, httpOptions);
   }
+
+  /**
+   * POST: Change the experience defined by its title, or its level for a developer.
+   */
+  changeExperience(idStaff: number, formerSkillTitle: string, newSkillTitle: string, level: number): Observable<StaffDTO> {
+    if (Constants.DEBUG) {
+      console.log('Change the skill for the collaborator with id : '
+        + idStaff + ' from ' + formerSkillTitle + ' to ' + newSkillTitle);
+    }
+    const body = {idStaff: idStaff, formerSkillTitle: formerSkillTitle, newSkillTitle: newSkillTitle, level: level};
+    return this.http.post<StaffDTO>(this.collaboratorUrl + '/experiences/save', body, httpOptions);
+  }
+
 }

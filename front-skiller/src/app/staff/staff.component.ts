@@ -248,18 +248,18 @@ export class StaffComponent implements OnInit {
       this.skillService.lookup(event.newData.title).subscribe(
 
         project_transfered => {
-          this.staffService.changeProject(this.collaborator.id, event.data.name, event.newData.name).subscribe(
+          this.staffService.changeExperience(this.collaborator.id, event.data.title, event.newData.title, event.newData.level).subscribe(
             (staffDTO: StaffDTO) => {
               this.messageService.info(staffDTO.staff.firstName + ' ' +
-                staffDTO.staff.lastName + ' is involved now in project ' + event.newData.name);
-              this.reloadProjects(this.collaborator.id);
+                staffDTO.staff.lastName + ' has now the experience ' + event.newData.title);
+              this.reloadExperiences(this.collaborator.id);
               event.confirm.resolve();
             },
             response_error => {
               if (Constants.DEBUG) {
                 console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
               }
-              this.reloadProjects(this.collaborator.id);
+              this.reloadExperiences(this.collaborator.id);
               event.confirm.reject();
               this.messageService.error(response_error.error.message);
             }

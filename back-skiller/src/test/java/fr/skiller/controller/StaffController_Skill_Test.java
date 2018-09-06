@@ -52,14 +52,14 @@ public class StaffController_Skill_Test {
 
 		this.mvc.perform(get("/staff/experiences/2")).andExpect(status().isOk()).andExpect(content().string("[]"));	
 		String body = "{ idStaff: 2, formerSkillTitle: \"\", newSkillTitle: \"Spring\", level: 2}";
-		this.mvc.perform(post("/staff/skill/save").content(body)).andExpect(status().isOk());		
+		this.mvc.perform(post("/staff/experiences/save").content(body)).andExpect(status().isOk());		
 		
 		List<Experience> assets = new ArrayList<Experience>();
 		assets.add(new Experience(2, "Spring", 2));
 		this.mvc.perform(get("/staff/experiences/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));
 
 		body = "{ idStaff: 2, formerSkillTitle: \"Spring\", newSkillTitle: \"Java\", level: 3}";
-		this.mvc.perform(post("/staff/skill/save").content(body)).andExpect(status().isOk());		
+		this.mvc.perform(post("/staff/experiences/save").content(body)).andExpect(status().isOk());		
 		
 		assets.clear();
 		assets.add(new Experience (1, "Java", 3));
@@ -69,7 +69,7 @@ public class StaffController_Skill_Test {
 		 * We down-grade the level from 3 to 1.
 		 */
 		body = "{ idStaff: 2, formerSkillTitle: \"Spring\", newSkillTitle: \"Java\", level: 1}";
-		this.mvc.perform(post("/staff/skill/save").content(body)).andExpect(status().isOk());		
+		this.mvc.perform(post("/staff/experiences/save").content(body)).andExpect(status().isOk());		
 
 		assets.clear();
 		assets.add(new Experience (1, "Java", 1));
@@ -84,7 +84,7 @@ public class StaffController_Skill_Test {
 		
 		this.mvc.perform(get("/staff/experiences/2")).andExpect(status().isOk()).andExpect(content().string("[]"));	
 		String body = "{idStaff: 2, formerSkillTitle: \"\", newSkillTitle: \"Spring\", level: 1}";
-		this.mvc.perform(post("/staff/skill/save").content(body)).andExpect(status().isOk());		
+		this.mvc.perform(post("/staff/experiences/save").content(body)).andExpect(status().isOk());		
 
 	
 		List<Experience> assets = new ArrayList<Experience>();

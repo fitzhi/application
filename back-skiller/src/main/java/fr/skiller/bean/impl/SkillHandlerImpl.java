@@ -42,7 +42,7 @@ public class SkillHandlerImpl implements SkillHandler {
 	@Override
 	public Optional<Skill> lookup(final String skillTitle) {
 		return getSkills().values().stream()
-				.filter( (Skill skill) -> skill.title.equals(skillTitle))
+				.filter( (Skill skill) -> skill.title.toUpperCase().equals(skillTitle.toUpperCase()))
 				.findFirst();
 	}
 
