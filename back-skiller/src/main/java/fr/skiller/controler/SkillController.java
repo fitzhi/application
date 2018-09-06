@@ -2,6 +2,7 @@ package fr.skiller.controler;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +25,9 @@ import com.google.gson.Gson;
 
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;
+import fr.skiller.data.external.ProjectDTO;
+import fr.skiller.data.external.SkillDTO;
+import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
 
 @RestController
@@ -41,6 +45,27 @@ public class SkillController {
 	@Qualifier("mock.Skill")
 	SkillHandler skillHandler;
 
+	@RequestMapping(value = "/name/{projectName}", method = RequestMethod.GET)
+	ResponseEntity<SkillDTO> read(@PathVariable("projectName") String skillTitle) {
+		
+		final ResponseEntity<SkillDTO> responseEntity;
+		final HttpHeaders headers = new HttpHeaders();
+		
+		Optional<Skill> result = skillHandler.lookup(skillTitle);
+		if (result.isPresent()) {
+			responseEntity = new ResponseEntity<SkillDTO>(new SkillDTO(result.get()), new HttpHeaders(), HttpStatus.OK);
+		} else {
+			responseEntity = new ResponseEntity<SkillDTO>(
+					new SkillDTO(new Skill(), 404, "There is no skill for the name " + skillTitle), 
+					headers, 
+					HttpStatus.NOT_FOUND);
+			if (logger.isDebugEnabled()) {
+				logger.debug("Cannot find a skill with the name " + skillTitle);
+			}			
+		}
+		return responseEntity;
+	}
+	
 	@RequestMapping(value = "/{idParam}", method = RequestMethod.GET)
 	ResponseEntity<Skill> read(@PathVariable("idParam") int idParam) {
 

@@ -273,7 +273,7 @@ public class StaffController {
 
 		ParamStaffSkill p = gson.fromJson(param, ParamStaffSkill.class);
 		if (logger.isDebugEnabled()) {
-			logger.debug("POST command on /staff/skill/del with params idStaff:" + String.valueOf(p.idStaff) + ",idSkill:" + String.valueOf(p.idSkill));
+			logger.debug("POST command on /staff/experiences/del with params idStaff:" + String.valueOf(p.idStaff) + ",idSkill:" + String.valueOf(p.idSkill));
 		}
 
 		final Staff staff = staffHandler.getStaff().get(p.idStaff);

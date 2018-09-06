@@ -52,4 +52,16 @@ export class SkillService extends InternalService {
     return this.httpClient.get<Skill>(url);
   }
 
+  /**
+   * GET the skill associated to the passed name, if any, from the back-end skiller.
+   * Will throw a 404 if this name is not retrieved.
+   */
+  lookup(skillTitle: string): Observable<Skill> {
+    const url = this.skillUrl + '/name/' + skillTitle;
+    if (Constants.DEBUG) {
+      console.log('Fetching the skill title ' + skillTitle + ' on the address ' + url);
+    }
+    return this.httpClient.get<Skill>(url);
+  }
+
 }

@@ -9,7 +9,7 @@ import {StaffDTO} from './data/external/staffDTO';
 import {MOCK_COLLABORATORS} from './mock/mock-collaborators';
 
 import {Constants} from './constants';
-import {Experience} from './data/Experience';
+import {Experience} from './data/experience';
 import {Observable, of} from 'rxjs';
 
 import {InternalService} from './internal-service';
@@ -130,5 +130,16 @@ export class StaffService extends InternalService {
     }
     const body = {idStaff: idStaff, newSkillTitle: skillTitle, level: level};
     return this.http.post<StaffDTO>(this.collaboratorUrl + '/skill/save', body, httpOptions);
+  }
+
+  /**
+   * POST: Revoke an experience to a a staff member.
+   */
+  revokeExperience(idStaff: number, idSkill: number): Observable<StaffDTO> {
+    if (Constants.DEBUG) {
+      console.log('Revoking the experence ' +  idSkill + ' from the collaborator application');
+    }
+    const body = {idStaff: idStaff, idSkill: idSkill};
+    return this.http.post<StaffDTO>(this.collaboratorUrl + '/experiences/del', body, httpOptions);
   }
 }

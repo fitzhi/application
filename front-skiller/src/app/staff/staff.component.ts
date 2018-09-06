@@ -12,6 +12,7 @@ import {DataService} from '../data.service';
 import {MessageService} from '../message.service';
 import {StaffService} from '../staff.service';
 import {ProjectService} from '../project.service';
+import {SkillService} from '../skill.service';
 
 import {Collaborator} from '../data/collaborator';
 
@@ -64,7 +65,8 @@ export class StaffComponent implements OnInit {
     private dataService: DataService,
     private messageService: MessageService,
     private staffService: StaffService,
-    private projectService: ProjectService) {}
+    private projectService: ProjectService,
+    private skillService: SkillService) {}
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
@@ -240,10 +242,36 @@ export class StaffComponent implements OnInit {
 
   onConfirmEditStaffSkill(event) {
     if (Constants.DEBUG) {
-      console.log('onConfirmEditStaffSkill for event from ' + event.data.name + ' to ' + event.newData.name);
+      console.log('onConfirmEditStaffSkill for event from ' + event.data.title + ' to ' + event.newData.title);
     }
     if (this.checkStaffMemberExist(event)) {
-      event.confirm.resolve();
+      this.skillService.lookup(event.newData.title).subscribe(
+
+        project_transfered => {
+          this.staffService.changeProject(this.collaborator.id, event.data.name, event.newData.name).subscribe(
+            (staffDTO: StaffDTO) => {
+              this.messageService.info(staffDTO.staff.firstName + ' ' +
+                staffDTO.staff.lastName + ' is involved now in project ' + event.newData.name);
+              this.reloadProjects(this.collaborator.id);
+              event.confirm.resolve();
+            },
+            response_error => {
+              if (Constants.DEBUG) {
+                console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+              }
+              this.reloadProjects(this.collaborator.id);
+              event.confirm.reject();
+              this.messageService.error(response_error.error.message);
+            }
+          );
+        },
+        response_error => {
+          if (Constants.DEBUG) {
+            console.error(response_error);
+          }
+          this.messageService.error(response_error.error.message);
+          event.confirm.reject();
+        });
     } else {
       event.confirm.reject();
     }
@@ -292,7 +320,6 @@ export class StaffComponent implements OnInit {
           }
         );
       }
-      event.confirm.resolve();
     } else {
       event.confirm.reject();
     }
@@ -304,11 +331,32 @@ export class StaffComponent implements OnInit {
       return;
     }
     if (window.confirm('Are you sure you want to remove the skill '
-      + event.data['name'] + 'for '
+      + event.data['title'] + ' for '
       + this.collaborator.firstName + ' '
       + this.collaborator.lastName
       + '?')) {
-      event.confirm.resolve();
+      /*
+       * After the addition of an experience to a staff member, and before the reloadExperiences has been completed,
+       * there is a little laps of time without id in the experiences list.
+       */
+      if (typeof event.data['id'] !== 'undefined') {
+        this.staffService.revokeExperience(this.collaborator.id, event.data['id']).subscribe(
+          (staffDTO: StaffDTO) => {
+            this.messageService.info(staffDTO.staff.firstName + ' ' +
+              staffDTO.staff.lastName + ' has no more the skill ' + event.data.title);
+            this.reloadExperiences(this.collaborator.id);
+            event.confirm.resolve();
+          },
+          response_error => {
+            if (Constants.DEBUG) {
+              console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+            }
+            this.reloadExperiences(this.collaborator.id);
+            this.messageService.error(response_error.error.message);
+            event.confirm.reject();
+          }
+        );
+      }
     } else {
       event.confirm.reject();
     }
