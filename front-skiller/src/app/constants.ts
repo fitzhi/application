@@ -43,6 +43,7 @@ export class Constants {
         title: 'Level',
         filter: false,
         width: '25%',
+        defaultValue: 1,
         type: 'custom',
         renderComponent: StarsSkillLevelRenderComponent,
         editor: {
