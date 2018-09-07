@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.skiller.controller;
 
 import org.junit.Test;
@@ -51,9 +48,9 @@ public class StaffController_Project_Test {
 	public void addAndUpdateAProjectForAStaffMember() throws Exception {
 
 		this.mvc.perform(get("/staff/projects/2")).andExpect(status().isOk()).andExpect(content().string("[]"));	
+	
 		String body = "{ idStaff: 2, formerProjectName: \"\", newProjectName: \"VEGEO\"}";
 		this.mvc.perform(post("/staff/project/save").content(body)).andExpect(status().isOk());		
-		
 		List<Project> projects = new ArrayList<Project>();
 		projects.add(new Project (1, "VEGEO"));
 		this.mvc.perform(get("/staff/projects/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(projects)));

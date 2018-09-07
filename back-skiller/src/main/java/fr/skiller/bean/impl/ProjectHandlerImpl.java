@@ -36,12 +36,22 @@ public class ProjectHandlerImpl implements ProjectHandler {
 		this.projects.put(2, new Project(2, "INFOTER"));
 		return projects;
 	}
-	
+
+	@Override
+	public Project get(final int idProject) {
+		return getProjects().get(idProject);
+	}
+
 	@Override
 	public Optional<Project> lookup(final String projectName) {
 		return getProjects().values().stream()
 				.filter( (Project project) -> project.name.equals(projectName))
 				.findFirst();
+	}
+
+	@Override
+	public void init() {
+		this.projects = null;
 	}
 
 }

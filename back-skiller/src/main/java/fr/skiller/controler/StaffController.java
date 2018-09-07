@@ -176,7 +176,8 @@ public class StaffController {
 	
 	/**
 	 * Adding or changing the name of an experience assign to a developer.
-	 * @param param the body of the post containing an instance of ParamSkillProject in JSON format
+	 * @param param the body of the post containing an instance of ParamStaffSkill in JSON format
+	 * @see StaffController.ParamStaffSkill
 	 * @return
 	 */
 	@PostMapping("/experiences/save")
@@ -246,8 +247,6 @@ public class StaffController {
 		}
 		return responseEntity;
 	}	
-	
-	
 	
 	/**
 	 * Internal Parameters class containing all possible parameters necessaries for add/remove a project from a staff member.

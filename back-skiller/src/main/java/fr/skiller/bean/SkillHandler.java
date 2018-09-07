@@ -23,4 +23,5 @@ public interface SkillHandler {
 	 */
 	Optional<Skill> lookup(final String skillName);
 
+
 }
