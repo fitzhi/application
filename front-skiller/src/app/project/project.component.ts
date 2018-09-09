@@ -3,10 +3,13 @@ import {FormGroup, FormControl} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 
 import {DataService} from '../data.service';
+import {ProjectService} from '../project.service';
+import {SkillService} from '../skill.service';
 import {MessageService} from '../message.service';
 import {CinematicService} from '../cinematic.service';
 
 import {Project} from '../data/project';
+import {ProjectDTO} from '../data/external/projectDTO';
 import {Constants} from '../constants';
 import {LocalDataSource} from 'ng2-smart-table';
 
@@ -37,7 +40,9 @@ export class ProjectComponent implements OnInit {
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
     private dataService: DataService,
-    private messageService: MessageService) {}
+    private messageService: MessageService,
+    private projectService: ProjectService,
+    private skillService: SkillService) {}
 
 
   ngOnInit() {
@@ -59,6 +64,45 @@ export class ProjectComponent implements OnInit {
   }
 
   /**
+   * Remove a skill from a project
+   */
+  onConfirmRemoveSkillFromProject(event) {
+    if (!this.checkProjectExist(event)) {
+      event.confirm.reject();
+      return;
+    }
+    if (window.confirm('Are you sure you want to remove the skill '
+      + event.data['title'] + ' from project ' +
+      this.project.name
+      + '?')) {
+      /*
+       * After the addition of a skill into a project, and before the reloadSkills has been completed,
+       * there is a very little delay with a skill without ID into the skills list.
+       */
+      if (typeof event.data['id'] !== 'undefined') {
+        this.projectService.removeSkill(this.project.id, event.data['id']).subscribe(
+          (projectDTO: ProjectDTO) => {
+            this.messageService.info(projectDTO.project.name +
+              ' does not refer anymore to the skill ' + event.data.title);
+            this.reloadSkills(this.project.id);
+            event.confirm.resolve();
+          },
+          response_error => {
+            if (Constants.DEBUG) {
+              console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+            }
+            this.reloadSkills(this.project.id);
+            event.confirm.reject();
+            this.messageService.error(response_error.error.message);
+          }
+        );
+      }
+    } else {
+      event.confirm.reject();
+    }
+  }
+
+/**
  * Loading the project from the back-end.
  */
   loadProject() {
@@ -71,7 +115,8 @@ export class ProjectComponent implements OnInit {
         (project: Project) => {
          this.project = project;
          this.profileProject.get('projectName').setValue(project.name);
-        },
+         this.sourceSkills.load(this.project.skills);
+         },
         error => {
           if (error.status === 404) {
             if (Constants.DEBUG) {
@@ -95,6 +140,95 @@ export class ProjectComponent implements OnInit {
     }
   }
 
+  /**
+   * Test if the project exists, before adding a skill into a project.
+   * A project ID is required.
+   */
+  checkProjectExist(event): boolean {
+    if (this.project.id === null) {
+      this.messageService.error('You cannot add, or update a skill of an unregistered project. '
+        + 'Please saved this new project first !');
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  onConfirmAddSkillToProject(event) {
+    if (Constants.DEBUG) {
+      console.log('onConfirmAddProjectSkill for event ' + event.newData.title);
+    }
+    if (this.checkProjectExist(event)) {
+      this.projectService.addSkill(this.project.id, event.newData.title).subscribe(
+        (projectDTO: ProjectDTO) => {
+          this.messageService.info(projectDTO.project.name +
+            ' has gained the skill ' + event.newData.title);
+          this.reloadSkills(this.project.id);
+          event.confirm.resolve();
+        },
+        response_error => {
+          if (Constants.DEBUG) {
+            console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+          }
+          this.reloadSkills(this.project.id);
+          this.messageService.error(response_error.error.message);
+          event.confirm.reject();
+        }
+      );
+    } else {
+      event.confirm.reject();
+    }
+  }
+
+  onConfirmEditSkillIntoProject(event) {
+    if (Constants.DEBUG) {
+      console.log('onConfirmEditProjectSkill for skill from ' + event.data.title + ' to ' + event.newData.title);
+    }
+    if (this.checkProjectExist(event)) {
+      this.skillService.lookup(event.newData.title).subscribe(
+
+        project_transfered => {
+          this.projectService.changeSkill(this.project.id, event.data.title, event.newData.title).subscribe(
+            (projectDTO: ProjectDTO) => {
+              this.messageService.info(projectDTO.project.name + ' ' +
+                ' has now the skill ' + event.newData.title);
+              this.reloadSkills(this.project.id);
+              event.confirm.resolve();
+            },
+            response_error => {
+              if (Constants.DEBUG) {
+                console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+              }
+              this.reloadSkills(this.project.id);
+              event.confirm.reject();
+              this.messageService.error(response_error.error.message);
+            }
+          );
+        },
+        response_error => {
+          if (Constants.DEBUG) {
+            console.error(response_error);
+          }
+          this.messageService.error(response_error.error.message);
+          event.confirm.reject();
+        });
+    } else {
+      event.confirm.reject();
+    }
+  }
+
+  /*
+  * Refresh the skills of the project.
+  */
+  reloadSkills(idProject: number): void {
+    if (Constants.DEBUG) {
+      console.log('Refreshing skills for the project\'s id ' + idProject);
+    }
+    this.projectService.loadSkills(idProject).subscribe(
+      skills => this.sourceSkills.load(skills),
+      error => console.log(error),
+    );
+  }
   /**
    * Submit the change. The project will be created, or updated.
    */

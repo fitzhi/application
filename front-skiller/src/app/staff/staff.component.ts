@@ -251,7 +251,7 @@ export class StaffComponent implements OnInit {
           this.staffService.changeExperience(this.collaborator.id, event.data.title, event.newData.title, event.newData.level).subscribe(
             (staffDTO: StaffDTO) => {
               this.messageService.info(staffDTO.staff.firstName + ' ' +
-                staffDTO.staff.lastName + ' has now the experience ' + event.newData.title);
+                staffDTO.staff.lastName + ' has now the experience ' + event.newData.titile);
               this.reloadExperiences(this.collaborator.id);
               event.confirm.resolve();
             },
@@ -277,6 +277,10 @@ export class StaffComponent implements OnInit {
     }
   }
 
+  /**
+   * Check if the staff member available in this form is a brand new, unregistered, staff member or an already registered one.
+   * To add or remove skills, projects, the staff object must have an id.
+   */
   checkStaffMemberExist(event): boolean {
     if (this.collaborator.id === null) {
       this.messageService.error('You cannot update a skill, or a project, of an unregistered staff member. '
@@ -299,8 +303,8 @@ export class StaffComponent implements OnInit {
       + event.data['name']
       + '?')) {
       /*
-       * After the addition into a project of a staff member, and before the relaodProject has been completed,
-       * there is a little laps of time without id in the projects list.
+       * After the addition into a project of a staff member, and before the reloadProjects has been completed,
+       * there is a very little delay with a project without ID into the projects list.
        */
       if (typeof event.data['id'] !== 'undefined') {
         this.staffService.removeFromProject(this.collaborator.id, event.data['id']).subscribe(

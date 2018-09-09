@@ -5,5 +5,4 @@ export class StaffDTO {
   public message: string;
   public staff: Collaborator;
 
-
 }

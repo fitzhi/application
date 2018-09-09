@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Project} from './data/project';
+import {ProjectDTO} from './data/external/projectDTO';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, map, tap} from 'rxjs/operators';
 
@@ -7,6 +8,7 @@ import {Observable, of} from 'rxjs';
 import {InternalService} from './internal-service';
 
 import {Constants} from './constants';
+import { Skill } from './data/skill';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -19,7 +21,7 @@ export class ProjectService extends InternalService {
 
   private projectUrl = 'http://localhost:8080/project';  // URL to web api
 
-  constructor(private httpClient: HttpClient) {super();}
+  constructor(private httpClient: HttpClient) { super(); }
 
   /**
  * Return the global list of ALL collaborators, working for the company.
@@ -39,6 +41,46 @@ export class ProjectService extends InternalService {
       console.log((typeof project.id !== 'undefined') ? 'Saving ' : 'Adding' + ' project ' + project.name);
     }
     return this.httpClient.post<Project>(this.projectUrl + '/save', project, httpOptions);
+  }
+
+  /**
+  * Add a skill to a project.
+  */
+  addSkill(idProject: number, skillTitle: string): Observable<ProjectDTO> {
+    if (Constants.DEBUG) {
+      console.log('Adding the skill  ' + skillTitle + ' for the project whom id is ' + idProject);
+    }
+    const body = {idProject: idProject, newSkillTitle: skillTitle};
+    return this.httpClient.post<ProjectDTO>(this.projectUrl + '/skills/save', body, httpOptions);
+  }
+
+  /**
+  * Change the skill inside a project.
+  */
+  changeSkill(idProject: number, formerSkillTitle: string, newSkillTitle: string): Observable<ProjectDTO> {
+    if (Constants.DEBUG) {
+      console.log('Changing the skill  ' + formerSkillTitle + ' to ' + newSkillTitle + ' for the project whom id is ' + idProject);
+    }
+    const body = {idProject: idProject, formerSkillTitle: formerSkillTitle, newSkillTitle: newSkillTitle};
+    return this.httpClient.post<ProjectDTO>(this.projectUrl + '/skills/save', body, httpOptions);
+  }
+
+  /**
+   * POST: Remove a skill from project skills list.
+   */
+  removeSkill(idProject: number, idSkill: number): Observable<ProjectDTO> {
+    if (Constants.DEBUG) {
+      console.log('Remove a the skill with ID ' +  idSkill + ' from the project with ID ' + idProject);
+    }
+    const body = {idProject: idProject, idSkill: idSkill};
+    return this.httpClient.post<ProjectDTO>(this.projectUrl + '/skills/del', body, httpOptions);
+  }
+
+ /**
+  * Load the projects associated with the staff member identified by this id.
+  */
+  loadSkills(idProject: number): Observable<Skill[]> {
+    return this.httpClient.get<Skill[]>(this.projectUrl + '/skills/' + idProject);
   }
 
   /**

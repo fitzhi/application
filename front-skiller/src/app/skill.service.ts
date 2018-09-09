@@ -64,4 +64,5 @@ export class SkillService extends InternalService {
     return this.httpClient.get<Skill>(url);
   }
 
+
 }
