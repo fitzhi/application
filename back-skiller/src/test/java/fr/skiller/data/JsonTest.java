@@ -22,7 +22,7 @@ public class JsonTest extends TestCase {
 	
 	@Test
 	public void testSimple() {
-		Staff collab = new Staff(1, "firtname", "lastName", "nickName", "email", "level");
+		Staff collab = new Staff(1, "firtname", "lastName", "nickName", "login","email", "level");
 		
 		Gson g = new Gson();
 		LoggerFactory.getLogger(JsonTest.class).debug(g.toJson(collab)); 

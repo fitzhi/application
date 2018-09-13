@@ -55,6 +55,7 @@ export class StaffComponent implements OnInit {
     firstName: new FormControl(''),
     lastName: new FormControl(''),
     nickName: new FormControl(''),
+    login: new FormControl(''),
     email: new FormControl(''),
     level: new FormControl('')
   });
@@ -82,7 +83,7 @@ export class StaffComponent implements OnInit {
       // Either we are in creation mode, or we load the collaborator from the back-end...
       // We create an empty collaborator until the subscription is complete
       this.collaborator = {
-        id: null, firstName: null, lastName: null, nickName: null, email: null, level: null,
+        id: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null, active: 1,
         projects: [], experiences: []
       };
       if (this.id != null) {
@@ -92,6 +93,7 @@ export class StaffComponent implements OnInit {
             this.profileStaff.get('firstName').setValue(collab.firstName);
             this.profileStaff.get('lastName').setValue(collab.lastName);
             this.profileStaff.get('nickName').setValue(collab.nickName);
+            this.profileStaff.get('login').setValue(collab.login);
             this.profileStaff.get('email').setValue(collab.email);
             this.profileStaff.get('level').setValue(collab.level);
             this.sourceExperience.load(this.collaborator.experiences);
@@ -105,8 +107,8 @@ export class StaffComponent implements OnInit {
               }
               this.messageService.error('There is no staff member for id ' + this.id);
               this.collaborator = {
-                id: null, firstName: null, lastName: null, nickName: null, email: null, level: null,
-                projects: [], experiences: []
+                id: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
+                active: 1, projects: [], experiences: []
               };
             } else {
               console.error(error.message);
@@ -377,6 +379,7 @@ export class StaffComponent implements OnInit {
     this.collaborator.firstName = this.profileStaff.get('firstName').value;
     this.collaborator.lastName = this.profileStaff.get('lastName').value;
     this.collaborator.nickName = this.profileStaff.get('nickName').value;
+    this.collaborator.login = this.profileStaff.get('login').value;
     this.collaborator.email = this.profileStaff.get('email').value;
     this.collaborator.level = this.profileStaff.get('level').value;
 

@@ -71,7 +71,7 @@ public class CsvTest extends TestCase {
 			int i = 1;
 			while (csvStaffIterator.hasNext()) {
 				CSVStaffMember csvStaffMember = csvStaffIterator.next();
-				Staff staff = new Staff (STAFF.size()+1, csvStaffMember.firstName, csvStaffMember.lastName, csvStaffMember.login,
+				Staff staff = new Staff (STAFF.size()+1, csvStaffMember.firstName, csvStaffMember.lastName, csvStaffMember.login, csvStaffMember.login,
 						csvStaffMember.email, STAFF_LEVELS.get(csvStaffMember.poste));
 				
 				if ((csvStaffMember.skill_java != null) && (SKILLS_LEVELS.containsKey(csvStaffMember.skill_java.trim()))) {

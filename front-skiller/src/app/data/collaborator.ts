@@ -7,11 +7,13 @@ export class Collaborator {
   public firstName: string;
   public lastName: string;
   public nickName: string;
+  public login: string;
   public email: string;
   public level: string;
+  public active: number;
 
   /**
-   * 
+   * The developer XP.
    */
   public experiences: Experience[];
 

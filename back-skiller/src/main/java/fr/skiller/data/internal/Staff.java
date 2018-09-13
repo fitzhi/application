@@ -16,6 +16,7 @@ public class Staff {
 	public String firstName;
 	public String lastName;
 	public String nickName;
+	public String login;
 	public String email;
 	public String level;
 	/**
@@ -26,24 +27,26 @@ public class Staff {
 	public List<Project> projects;
 	public List<Experience> experiences;
 
-	public Staff(int id, String firstName, String lastName, String nickName, String email, String level) {
+	public Staff(int id, final String firstName, final String lastName, final String nickName, final String login, final String email, final String level) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.nickName = nickName;
+		this.login = login;
 		this.email = email;
 		this.level = level;
 		projects = new ArrayList<Project>();
 		experiences = new ArrayList<Experience>();
 	}
 
-	public Staff(int id, String firstName, String lastName, String nickName, String email, String level, int active) {
+	public Staff(int id, final String firstName, final String lastName, final String nickName, final String login, final String email, final String level, final int active) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.nickName = nickName;
+		this.login = login;
 		this.email = email;
 		this.level = level;
 		this.active = active;
@@ -77,9 +80,9 @@ public class Staff {
 
 	@Override
 	public String toString() {
-		return "Collaborator [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", nickName="
-				+ nickName + ", email=" + email + ", level=" + level + ", projects=" + projects + ", experience="
-				+ experiences + "]";
+		return "Staff [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", nickName=" + nickName
+				+ ", login=" + login + ", email=" + email + ", level=" + level + ", active=" + active + ", projects="
+				+ projects + ", experiences=" + experiences + "]";
 	}
 
 }
