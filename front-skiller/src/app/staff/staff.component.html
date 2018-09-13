@@ -51,22 +51,37 @@
 					</div>
 				</div>
 
-						<div class="input-group-prepend">
-							<span class="input-group-text">@</span>
 				<div class="row">
 					<div class="col-md-6 mb-3">
+						<label for="nickName">Nickname</label>
+						<div class="input-group">
+							<div class="input-group-prepend">
+								<span class="input-group-text">@</span>
+							</div>
+							<input type="text" class="form-control" id="nickName"
+								name="nickName"
+								placeholder="Enter the nickname (if any) for this developper"
+								value="" required formControlName="nickName">
 						</div>
-						<input type="text" class="form-control" id="nickName"
+					</div>
+					<div class="col-md-6 mb-3">
+						<label for="login">Last name</label> <input type="text"
+							class="form-control" id="login" name="login"
+							placeholder="enter the network login of this staff member"
+							value="" required formControlName="login">
 					</div>
 				</div>
 
 				<div class="mb-3">
 					<label for="email">Email <span class="text-muted">(Optional)</span></label>
 					<input type="email" class="form-control" id="email" name="email"
+						placeholder="you@example.com" required formControlName="email">
 				</div>
 
 				<div class="mb-3">
 					<label for="level">Level</label> <select name="label" id="level"
+						formControlName="level" class="custom-select d-block w-100"
+						required>
 						<option value="0" selected="selected">select a level</option>
 						<option *ngFor="let level of levels" [value]="level.code">{{level.title}}</option>
 					</select>
