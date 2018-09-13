@@ -36,6 +36,7 @@ public class SkillHandlerImpl implements SkillHandler {
 		this.skill.put(3, new Skill(3, "Spring Framework"));
 		this.skill.put(4, new Skill(4, "Spring Boot"));
 		this.skill.put(5, new Skill(5, "hibernate"));
+		this.skill.put(6, new Skill(5, ".Net"));
 		return skill;
 	}
 	

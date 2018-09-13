@@ -9,3 +9,7 @@ back-skiller/.project
 
 back-skiller/.settings
 
+
+back-skiller/staff.json
+
+back-skiller/src/test/resources/effectifISC.csv

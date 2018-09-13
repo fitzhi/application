@@ -18,6 +18,11 @@ public class Staff {
 	public String nickName;
 	public String email;
 	public String level;
+	/**
+	 * Staff member is still active or remove from the staff list.
+	 */
+	public int active = 0;
+	
 	public List<Project> projects;
 	public List<Experience> experiences;
 
@@ -33,6 +38,18 @@ public class Staff {
 		experiences = new ArrayList<Experience>();
 	}
 
+	public Staff(int id, String firstName, String lastName, String nickName, String email, String level, int active) {
+		super();
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.nickName = nickName;
+		this.email = email;
+		this.level = level;
+		this.active = active;
+		projects = new ArrayList<Project>();
+		experiences = new ArrayList<Experience>();
+	}
 	
 	/**
 	 * @return the complete name of the staff member in a string format.

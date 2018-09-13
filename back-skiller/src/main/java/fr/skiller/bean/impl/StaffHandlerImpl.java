@@ -1,12 +1,24 @@
 package fr.skiller.bean.impl;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Staff;
+import com.google.gson.reflect.TypeToken;
+
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -14,6 +26,11 @@ import fr.skiller.data.internal.Staff;
  */
 @Component("mock.Staff")
 public class StaffHandlerImpl implements StaffHandler {
+
+	/**
+	 * Initialization of the Google JSON parser.
+	 */
+	Gson gson = new GsonBuilder().create();
 
 	/**
 	 * The Project collection.
@@ -31,38 +48,28 @@ public class StaffHandlerImpl implements StaffHandler {
 		if (this.staff != null) {
 			return this.staff;
 		}
+		
+		File resourcesDirectory = new File("src/main/resources");
+		String STAFF_JSON_FILE_PATH = resourcesDirectory.getAbsolutePath() + "/staff.json";
+		
 		this.staff = new HashMap<Integer, Staff>();
-		staff.put(1, new Staff(1,
-			    "Frederic",
-			    "VIDAL",
-			    "altF4",
-			    "frvidal@sqli.com",
-			    "ET 2"));
-			staff.put(2, new Staff(2,
-			    "Olivier",
-			    "MANFE",
-			    "la Mouf",
-			    "omanfe@sqli.com",
-			    "ICD 3"));
-			staff.put(3, new Staff(3,
-			    "Alexandre",
-			    "JOURDES",
-			    "Jose",
-			    "ajourdes@sqli.com",
-			    "ICD 2"));
-			staff.put(4, new Staff(4,
-				    "Thomas",
-				    "LEVAVASSEUR",
-				    "Grg",
-				    "tlavavasseur@sqli.com",
-				    "ICD 4"));
-			staff.put(5, new Staff(5,
-			    "Christophe",
-			    "OPOIX",
-			    "Copo",
-			    "ocopoix@sqli.com",
-			    "ET 2"));
-			return staff;
+		try {
+			StringBuilder sbContent = new StringBuilder();
+			BufferedReader br = new BufferedReader(new FileReader(STAFF_JSON_FILE_PATH));
+			String str;
+			while ( (str = br.readLine()) != null) {
+				sbContent.append(str);
+			}
+			Type listType = new TypeToken<ArrayList<Staff>>(){}.getType();
+			List<Staff> staffsRead = gson.fromJson(sbContent.toString(), listType);
+			for ( Staff staffRead : staffsRead) {
+				this.staff.put(staffRead.id, staffRead);
+			}
+			return this.staff;
+		} catch (final IOException ioe) {
+			ioe.printStackTrace();
+			return this.staff;
+		} 
 	}
 
 }
