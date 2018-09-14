@@ -8,7 +8,7 @@
     
     <div *ngFor="let collaborator of collaborators" class="row" style="font-size: large">
         <div class="col-4">
-        	<a [routerLink]="['/user', collaborator.id]">
+        	<a [routerLink]="['/user', collaborator.idStaff]">
         		{{collaborator.firstName}} {{collaborator.lastName}}
        		</a>
 		</div>

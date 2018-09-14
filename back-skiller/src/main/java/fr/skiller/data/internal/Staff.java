@@ -12,7 +12,7 @@ import java.util.Optional;
  *
  */
 public class Staff {
-	public int id;
+	public int idStaff;
 	public String firstName;
 	public String lastName;
 	public String nickName;
@@ -22,14 +22,14 @@ public class Staff {
 	/**
 	 * Staff member is still active or remove from the staff list.
 	 */
-	public int active = 0;
+	public boolean isActive = true;
 	
 	public List<Project> projects;
 	public List<Experience> experiences;
 
-	public Staff(int id, final String firstName, final String lastName, final String nickName, final String login, final String email, final String level) {
+	public Staff(int idStaff, final String firstName, final String lastName, final String nickName, final String login, final String email, final String level) {
 		super();
-		this.id = id;
+		this.idStaff = idStaff;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.nickName = nickName;
@@ -40,16 +40,16 @@ public class Staff {
 		experiences = new ArrayList<Experience>();
 	}
 
-	public Staff(int id, final String firstName, final String lastName, final String nickName, final String login, final String email, final String level, final int active) {
+	public Staff(int idStaff, final String firstName, final String lastName, final String nickName, final String login, final String email, final String level, final boolean isActive) {
 		super();
-		this.id = id;
+		this.idStaff = idStaff;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.nickName = nickName;
 		this.login = login;
 		this.email = email;
 		this.level = level;
-		this.active = active;
+		this.isActive = isActive;
 		projects = new ArrayList<Project>();
 		experiences = new ArrayList<Experience>();
 	}
@@ -80,8 +80,8 @@ public class Staff {
 
 	@Override
 	public String toString() {
-		return "Staff [id=" + id + ", firstName=" + firstName + ", lastName=" + lastName + ", nickName=" + nickName
-				+ ", login=" + login + ", email=" + email + ", level=" + level + ", active=" + active + ", projects="
+		return "Staff [id=" + idStaff + ", firstName=" + firstName + ", lastName=" + lastName + ", nickName=" + nickName
+				+ ", login=" + login + ", email=" + email + ", level=" + level + ", isActive=" + isActive + ", projects="
 				+ projects + ", experiences=" + experiences + "]";
 	}
 

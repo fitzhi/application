@@ -45,6 +45,7 @@ public class StaffHandlerImpl implements StaffHandler {
 	 * @return the Project collection.
 	 */
 	public Map<Integer, Staff> getStaff() {
+		
 		if (this.staff != null) {
 			return this.staff;
 		}
@@ -63,7 +64,7 @@ public class StaffHandlerImpl implements StaffHandler {
 			Type listType = new TypeToken<ArrayList<Staff>>(){}.getType();
 			List<Staff> staffsRead = gson.fromJson(sbContent.toString(), listType);
 			for ( Staff staffRead : staffsRead) {
-				this.staff.put(staffRead.id, staffRead);
+				this.staff.put(staffRead.idStaff, staffRead);
 			}
 			return this.staff;
 		} catch (final IOException ioe) {

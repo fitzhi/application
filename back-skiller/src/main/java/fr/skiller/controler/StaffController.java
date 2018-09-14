@@ -128,18 +128,18 @@ public class StaffController {
 		final HttpHeaders headers = new HttpHeaders();
 		
 		Collection<Staff> staff = staffHandler.getStaff().values();
-		if (input.id == 0) {
-			input.id = staff.size()+1;
-			staffHandler.getStaff().put(input.id, input);
+		if (input.idStaff == 0) {
+			input.idStaff = staff.size()+1;
+			staffHandler.getStaff().put(input.idStaff, input);
 			headers.add("backend.return_code", "1");
 			responseEntity = new ResponseEntity<Staff>(input, headers, HttpStatus.OK);
 		} else {
-			Staff updatedStaff = staffHandler.getStaff().get(input.id);
+			Staff updatedStaff = staffHandler.getStaff().get(input.idStaff);
 			if (updatedStaff == null) {
 				responseEntity = new ResponseEntity<Staff>(input, headers, HttpStatus.NOT_FOUND);
 				headers.add("backend.return_code", "O");
-				headers.add("backend.return_message", "There is no collaborator associated to the id " + input.id);
-				responseEntity.getHeaders().set("backend.return_message", "There is no collaborator associated to the id " + input.id);
+				headers.add("backend.return_message", "There is no collaborator associated to the id " + input.idStaff);
+				responseEntity.getHeaders().set("backend.return_message", "There is no collaborator associated to the id " + input.idStaff);
 				responseEntity.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
 			} else {
 				updatedStaff.firstName = input.firstName;

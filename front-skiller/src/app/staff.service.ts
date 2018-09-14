@@ -56,7 +56,7 @@ export class StaffService extends InternalService {
    */
   save(collaborator: Collaborator): Observable<Collaborator> {
     if (Constants.DEBUG) {
-      console.log('Saving the collaborator with id ' + collaborator.id);
+      console.log('Saving the collaborator with id ' + collaborator.idStaff);
     }
     return this.http.post<Collaborator>(this.collaboratorUrl + '/save', collaborator, httpOptions);
   }
@@ -65,7 +65,7 @@ export class StaffService extends InternalService {
    * DELETE delete a staff member from the server
    */
   delete(collaborater: Collaborator | number): Observable<Collaborator> {
-    const id = typeof collaborater === 'number' ? collaborater : collaborater.id;
+    const id = typeof collaborater === 'number' ? collaborater : collaborater.idStaff;
     const url = `${this.collaboratorUrl}/${id}`;
 
     return this.http.delete<Collaborator>(url, httpOptions).pipe(

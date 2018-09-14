@@ -95,7 +95,7 @@ export class DataService {
   getCollaborator(id: number): Observable<Collaborator> {
 
     let foundCollab: Collaborator = null;
-    foundCollab = DataService.theStaff.find(collab => collab.id === id);
+    foundCollab = DataService.theStaff.find(collab => collab.idStaff === id);
 
     if (typeof foundCollab !== 'undefined') {
       this.emitActualCollaboratorDisplay.next(id);
@@ -125,13 +125,13 @@ export class DataService {
    * Return the NEXT collaborator's id associated with this id in the staff list.
    */
   nextCollaboratorId(id: number): number {
-    const index = DataService.theStaff.findIndex(collab => collab.id === id);
+    const index = DataService.theStaff.findIndex(collab => collab.idStaff === id);
     if (Constants.DEBUG) {
       console.log('Current index : ' + index);
       console.log('Staff size : ' + DataService.theStaff.length);
     }
     if (index < DataService.theStaff.length - 1) {
-      return DataService.theStaff[index + 1].id;
+      return DataService.theStaff[index + 1].idStaff;
     } else {
       return undefined;
     }
@@ -141,9 +141,9 @@ export class DataService {
    * Return the PREVIOUS collaborator's id associated with this id in the staff list.
    */
   previousCollaboratorId(id: number): number {
-    const index = DataService.theStaff.findIndex(collab => collab.id === id);
+    const index = DataService.theStaff.findIndex(collab => collab.idStaff === id);
     if (index > 0) {
-      return DataService.theStaff[index - 1].id;
+      return DataService.theStaff[index - 1].idStaff;
     } else {
       return undefined;
     }

@@ -57,7 +57,8 @@ export class StaffComponent implements OnInit {
     nickName: new FormControl(''),
     login: new FormControl(''),
     email: new FormControl(''),
-    level: new FormControl('')
+    level: new FormControl(''),
+    active: new FormControl(1)
   });
 
   constructor(
@@ -83,7 +84,7 @@ export class StaffComponent implements OnInit {
       // Either we are in creation mode, or we load the collaborator from the back-end...
       // We create an empty collaborator until the subscription is complete
       this.collaborator = {
-        id: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null, active: 1,
+        idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null, isActive: true,
         projects: [], experiences: []
       };
       if (this.id != null) {
@@ -96,6 +97,7 @@ export class StaffComponent implements OnInit {
             this.profileStaff.get('login').setValue(collab.login);
             this.profileStaff.get('email').setValue(collab.email);
             this.profileStaff.get('level').setValue(collab.level);
+            this.profileStaff.get('active').setValue(collab.isActive);
             this.sourceExperience.load(this.collaborator.experiences);
             this.sourceProjects.load(this.collaborator.projects);
             this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
@@ -107,15 +109,15 @@ export class StaffComponent implements OnInit {
               }
               this.messageService.error('There is no staff member for id ' + this.id);
               this.collaborator = {
-                id: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
-                active: 1, projects: [], experiences: []
+                idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
+                isActive: true, projects: [], experiences: []
               };
             } else {
               console.error(error.message);
             }
           },
           () => {
-            if (this.collaborator.id === 0) {
+            if (this.collaborator.idStaff === 0) {
               console.log('No collaborator found for the id ' + this.id);
             }
             if (Constants.DEBUG) {
@@ -158,18 +160,18 @@ export class StaffComponent implements OnInit {
       console.log('onConfirmCreateFromProject for event : ' + event.newData.name);
     }
     if (this.checkStaffMemberExist(event)) {
-      this.staffService.addProject(this.collaborator.id, event.newData.name).subscribe(
+      this.staffService.addProject(this.collaborator.idStaff, event.newData.name).subscribe(
         (staffDTO: StaffDTO) => {
           this.messageService.info(staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName +
             ' is involved now in project ' + event.newData.name);
-          this.reloadProjects(this.collaborator.id);
+          this.reloadProjects(this.collaborator.idStaff);
           event.confirm.resolve();
         },
         response_error => {
           if (Constants.DEBUG) {
             console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
           }
-          this.reloadProjects(this.collaborator.id);
+          this.reloadProjects(this.collaborator.idStaff);
           this.messageService.error(response_error.error.message);
           event.confirm.reject();
         }
@@ -187,18 +189,18 @@ export class StaffComponent implements OnInit {
       this.projectService.lookup(event.newData.name).subscribe(
 
         project_transfered => {
-          this.staffService.changeProject(this.collaborator.id, event.data.name, event.newData.name).subscribe(
+          this.staffService.changeProject(this.collaborator.idStaff, event.data.name, event.newData.name).subscribe(
             (staffDTO: StaffDTO) => {
               this.messageService.info(staffDTO.staff.firstName + ' ' +
                 staffDTO.staff.lastName + ' is involved now in project ' + event.newData.name);
-              this.reloadProjects(this.collaborator.id);
+              this.reloadProjects(this.collaborator.idStaff);
               event.confirm.resolve();
             },
             response_error => {
               if (Constants.DEBUG) {
                 console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
               }
-              this.reloadProjects(this.collaborator.id);
+              this.reloadProjects(this.collaborator.idStaff);
               event.confirm.reject();
               this.messageService.error(response_error.error.message);
             }
@@ -221,18 +223,18 @@ export class StaffComponent implements OnInit {
       console.log('onConfirmAddStaffSkill for event ' + event.newData.title);
     }
     if (this.checkStaffMemberExist(event)) {
-      this.staffService.addExperience(this.collaborator.id, event.newData.title, event.newData.level).subscribe(
+      this.staffService.addExperience(this.collaborator.idStaff, event.newData.title, event.newData.level).subscribe(
         (staffDTO: StaffDTO) => {
           this.messageService.info(staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName +
             ' has gained the skill ' + event.newData.title);
-          this.reloadExperiences(this.collaborator.id);
+          this.reloadExperiences(this.collaborator.idStaff);
           event.confirm.resolve();
         },
         response_error => {
           if (Constants.DEBUG) {
             console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
           }
-          this.reloadExperiences(this.collaborator.id);
+          this.reloadExperiences(this.collaborator.idStaff);
           this.messageService.error(response_error.error.message);
           event.confirm.reject();
         }
@@ -250,18 +252,18 @@ export class StaffComponent implements OnInit {
       this.skillService.lookup(event.newData.title).subscribe(
 
         project_transfered => {
-          this.staffService.changeExperience(this.collaborator.id, event.data.title, event.newData.title, event.newData.level).subscribe(
+          this.staffService.changeExperience(this.collaborator.idStaff, event.data.title, event.newData.title, event.newData.level).subscribe(
             (staffDTO: StaffDTO) => {
               this.messageService.info(staffDTO.staff.firstName + ' ' +
                 staffDTO.staff.lastName + ' has now the experience ' + event.newData.titile);
-              this.reloadExperiences(this.collaborator.id);
+              this.reloadExperiences(this.collaborator.idStaff);
               event.confirm.resolve();
             },
             response_error => {
               if (Constants.DEBUG) {
                 console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
               }
-              this.reloadExperiences(this.collaborator.id);
+              this.reloadExperiences(this.collaborator.idStaff);
               event.confirm.reject();
               this.messageService.error(response_error.error.message);
             }
@@ -284,7 +286,7 @@ export class StaffComponent implements OnInit {
    * To add or remove skills, projects, the staff object must have an id.
    */
   checkStaffMemberExist(event): boolean {
-    if (this.collaborator.id === null) {
+    if (this.collaborator.idStaff === null) {
       this.messageService.error('You cannot update a skill, or a project, of an unregistered staff member. '
         + 'Please saved this new member first !');
       return false;
@@ -309,18 +311,18 @@ export class StaffComponent implements OnInit {
        * there is a very little delay with a project without ID into the projects list.
        */
       if (typeof event.data['id'] !== 'undefined') {
-        this.staffService.removeFromProject(this.collaborator.id, event.data['id']).subscribe(
+        this.staffService.removeFromProject(this.collaborator.idStaff, event.data['id']).subscribe(
           (staffDTO: StaffDTO) => {
             this.messageService.info(staffDTO.staff.firstName + ' ' +
               staffDTO.staff.lastName + ' is not more involved in project ' + event.data.name);
-            this.reloadProjects(this.collaborator.id);
+            this.reloadProjects(this.collaborator.idStaff);
             event.confirm.resolve();
           },
           response_error => {
             if (Constants.DEBUG) {
               console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
             }
-            this.reloadProjects(this.collaborator.id);
+            this.reloadProjects(this.collaborator.idStaff);
             event.confirm.reject();
             this.messageService.error(response_error.error.message);
           }
@@ -346,18 +348,18 @@ export class StaffComponent implements OnInit {
        * there is a little laps of time without id in the experiences list.
        */
       if (typeof event.data['id'] !== 'undefined') {
-        this.staffService.revokeExperience(this.collaborator.id, event.data['id']).subscribe(
+        this.staffService.revokeExperience(this.collaborator.idStaff, event.data['id']).subscribe(
           (staffDTO: StaffDTO) => {
             this.messageService.info(staffDTO.staff.firstName + ' ' +
               staffDTO.staff.lastName + ' has no more the skill ' + event.data.title);
-            this.reloadExperiences(this.collaborator.id);
+            this.reloadExperiences(this.collaborator.idStaff);
             event.confirm.resolve();
           },
           response_error => {
             if (Constants.DEBUG) {
               console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
             }
-            this.reloadExperiences(this.collaborator.id);
+            this.reloadExperiences(this.collaborator.idStaff);
             this.messageService.error(response_error.error.message);
             event.confirm.reject();
           }
@@ -382,6 +384,8 @@ export class StaffComponent implements OnInit {
     this.collaborator.login = this.profileStaff.get('login').value;
     this.collaborator.email = this.profileStaff.get('email').value;
     this.collaborator.level = this.profileStaff.get('level').value;
+    this.collaborator.isActive = this.profileStaff.get('active').value;
+    console.log(this.profileStaff.get('active').value);
 
     this.dataService.saveCollaborator(this.collaborator)
       .subscribe(

@@ -68,11 +68,11 @@ public class CsvTest extends TestCase {
 
 			Iterator<CSVStaffMember> csvStaffIterator = csvToBean.iterator();
 			csvStaffIterator.next();
-			int i = 1;
 			while (csvStaffIterator.hasNext()) {
 				CSVStaffMember csvStaffMember = csvStaffIterator.next();
 				Staff staff = new Staff (STAFF.size()+1, csvStaffMember.firstName, csvStaffMember.lastName, csvStaffMember.login, csvStaffMember.login,
-						csvStaffMember.email, STAFF_LEVELS.get(csvStaffMember.poste));
+						csvStaffMember.email, STAFF_LEVELS.get(csvStaffMember.poste),
+						(csvStaffMember.actif == null) ? true : false );
 				
 				if ((csvStaffMember.skill_java != null) && (SKILLS_LEVELS.containsKey(csvStaffMember.skill_java.trim()))) {
 					staff.experiences.add(new Experience(1, "Java", SKILLS_LEVELS.get(csvStaffMember.skill_java.trim()) ));
@@ -80,7 +80,9 @@ public class CsvTest extends TestCase {
 				if ((csvStaffMember.skill_dotNet != null) && (SKILLS_LEVELS.containsKey(csvStaffMember.skill_dotNet.trim()))) {
 					staff.experiences.add(new Experience(6, ".Net", SKILLS_LEVELS.get(csvStaffMember.skill_dotNet.trim())));
 				}
-				STAFF.put(staff.id, staff);
+				if (staff.lastName != null) {
+					STAFF.put(staff.idStaff, staff);
+				}
 			}
 			Gson g = new Gson();
 			final BufferedWriter bw = new BufferedWriter(new FileWriter(new File("staff.json")));
