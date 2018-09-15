@@ -41,11 +41,13 @@
 					<div class="col-md-6 mb-3">
 						<label for="firstName">First name</label> <input type="text"
 							class="form-control" id="firstName" name="firstName"
+							[readonly]="!collaborator.isActive"
 							placeholder="" value="" required formControlName="firstName">
 					</div>
 					<div class="col-md-6 mb-3">
 						<label for="lastName">Last name</label> <input type="text"
-							class="form-control" id="lastName" name="lastName"
+							class="form-control" id="lastName" name="lastName" 
+							[readonly]="!collaborator.isActive"
 							placeholder="enter the last name" value="" required
 							formControlName="lastName">
 					</div>
@@ -59,14 +61,16 @@
 								<span class="input-group-text">@</span>
 							</div>
 							<input type="text" class="form-control" id="nickName"
-								name="nickName"
-								placeholder="Enter the nickname (if any) for this developper"
+								name="nickName" 
+								[readonly]="!collaborator.isActive"
+								placeholder="Enter the nickname (if any) for this staff member"
 								value="" required formControlName="nickName">
 						</div>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label for="login">Last name</label> <input type="text"
-							class="form-control" id="login" name="login"
+							class="form-control" id="login" name="login" 
+							[readonly]="!collaborator.isActive"
 							placeholder="enter the network login of this staff member"
 							value="" required formControlName="login">
 					</div>
@@ -75,6 +79,7 @@
 				<div class="mb-3">
 					<label for="email">Email <span class="text-muted">(Optional)</span></label>
 					<input type="email" class="form-control" id="email" name="email"
+						[readonly]="!collaborator.isActive"
 						placeholder="you@example.com" required formControlName="email">
 				</div>
 
@@ -94,8 +99,8 @@
 				</div>
 
 				<hr class="mb-4">
-				<button class="btn btn-primary btn-lg btn-block" type="submit"
-					[disabled]="!profileStaff.valid">Submit</button>
+				<button class="btn btn-primary btn-lg btn-block" type="submit" 
+						[disabled]="!profileStaff.valid && !">Submit</button>
 			</form>
 		</div>
 	</div>

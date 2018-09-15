@@ -395,7 +395,6 @@ export class StaffComponent implements OnInit {
     this.collaborator.email = this.profileStaff.get('email').value;
     this.collaborator.level = this.profileStaff.get('level').value;
     this.collaborator.isActive = this.profileStaff.get('active').value;
-    console.log(this.profileStaff.get('active').value);
 
     this.dataService.saveCollaborator(this.collaborator)
       .subscribe(
