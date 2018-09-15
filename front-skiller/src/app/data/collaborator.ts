@@ -11,6 +11,7 @@ export class Collaborator {
   public email: string;
   public level: string;
   public isActive: boolean;
+  public dateInactive: Date;
 
   /**
    * The developer XP.

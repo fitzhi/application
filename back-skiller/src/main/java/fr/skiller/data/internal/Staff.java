@@ -4,6 +4,7 @@
 package fr.skiller.data.internal;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,6 +24,10 @@ public class Staff {
 	 * Staff member is still active or remove from the staff list.
 	 */
 	public boolean isActive = true;
+	/**
+	 * Date of the exit.
+	 */
+	public Date dateInactive;
 	
 	public List<Project> projects;
 	public List<Experience> experiences;

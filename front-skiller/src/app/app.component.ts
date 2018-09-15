@@ -83,7 +83,7 @@ export class AppComponent implements OnInit {
         case Constants.DEVELOPPERS_CRUD: {
           this.in_master_detail = (this.searching_what != null);
           this.is_allowed_to_search = true;
-          this.formTitle = 'Developper mode';
+          this.formTitle = 'Developer mode';
           break;
         }
         case Constants.DEVELOPPERS_SEARCH: {

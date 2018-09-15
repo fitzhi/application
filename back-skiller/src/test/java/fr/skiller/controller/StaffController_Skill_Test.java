@@ -50,7 +50,6 @@ public class StaffController_Skill_Test {
 	@Autowired
 	private StaffHandler staffHandler;
 	
-	
 	@Test
 	public void addAndUpdateASkillForAStaffMember() throws Exception {
 
@@ -100,19 +99,6 @@ public class StaffController_Skill_Test {
 		
 		assets.clear();
 		this.mvc.perform(get("/staff/experiences/1")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));
-		
-		staffHandler.init();
-		
-	}	
-	
-	@Test
-	public void updateStaff() throws Exception {
-		
-		Staff s = new Staff (2, "John", "Doe", "unknown","fvidal","jdoe@gmail.com", "ICD 1");
-		System.out.println(gson.toJson(s));
-
-		this.mvc.perform(post("/staff/save").content(gson.toJson(s)).contentType(MediaType.APPLICATION_JSON)).andExpect(status().isOk());		
-
 		
 		staffHandler.init();
 		

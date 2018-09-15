@@ -51,6 +51,9 @@ export class StaffComponent implements OnInit {
 
   private collaborator: Collaborator;
 
+  private label_isActive: String;
+  private label_dateInactive: Date;
+
   private profileStaff = new FormGroup({
     firstName: new FormControl(''),
     lastName: new FormControl(''),
@@ -84,7 +87,8 @@ export class StaffComponent implements OnInit {
       // Either we are in creation mode, or we load the collaborator from the back-end...
       // We create an empty collaborator until the subscription is complete
       this.collaborator = {
-        idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null, isActive: true,
+        idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
+        isActive: true, dateInactive: null,
         projects: [], experiences: []
       };
       if (this.id != null) {
@@ -98,6 +102,12 @@ export class StaffComponent implements OnInit {
             this.profileStaff.get('email').setValue(collab.email);
             this.profileStaff.get('level').setValue(collab.level);
             this.profileStaff.get('active').setValue(collab.isActive);
+            if (collab.isActive) {
+              this.label_isActive = 'Is active';
+            } else {
+              this.label_isActive = 'Is inactive since ';
+              this.label_dateInactive = collab.dateInactive;
+            }
             this.sourceExperience.load(this.collaborator.experiences);
             this.sourceProjects.load(this.collaborator.projects);
             this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
@@ -110,7 +120,7 @@ export class StaffComponent implements OnInit {
               this.messageService.error('There is no staff member for id ' + this.id);
               this.collaborator = {
                 idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
-                isActive: true, projects: [], experiences: []
+                isActive: true, dateInactive: null, projects: [], experiences: []
               };
             } else {
               console.error(error.message);

@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.Headers;
 
+import fr.skiller.Global;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
@@ -147,7 +148,11 @@ public class StaffController {
 				updatedStaff.nickName = input.nickName;
 				updatedStaff.email = input.email;
 				updatedStaff.level = input.level;
-				responseEntity = new ResponseEntity<Staff>(input, headers, HttpStatus.OK);
+				updatedStaff.isActive = input.isActive;
+				if (!updatedStaff.isActive) {
+					updatedStaff.dateInactive = Global.now();
+				}
+				responseEntity = new ResponseEntity<Staff>(updatedStaff, headers, HttpStatus.OK);
 				headers.add("backend.return_code", "1");
 			}
 		}

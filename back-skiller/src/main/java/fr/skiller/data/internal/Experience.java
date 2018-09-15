@@ -13,7 +13,17 @@ public class Experience {
 	public String title; 
 	public int level;
 	
+	
 	/**
+	 * Empty constructor.
+	 */
+	public Experience() {
+		super();
+	}
+
+
+	/**
+	 * Constructor with param.
 	 * @param id the id of the skill in an experience
 	 * @param title the title of the skill
 	 * @param level the degree of knowledge obtained by a developer on this skill

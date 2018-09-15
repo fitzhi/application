@@ -16,6 +16,7 @@ export const MOCK_COLLABORATORS: Collaborator[] = [
     email: 'frvidal@sqli.com',
     level: 'ET2',
     isActive: true,
+    dateInactive: null,
     projects: null,
     experiences: null
   },
@@ -28,6 +29,7 @@ export const MOCK_COLLABORATORS: Collaborator[] = [
     email: 'omanfe@sqli.com',
     level: 'ICD 3',
     isActive: true,
+    dateInactive: null,
     projects: null,
     experiences: [{ id: 1, title: 'Java', level: 2} ]
   },
@@ -40,6 +42,7 @@ export const MOCK_COLLABORATORS: Collaborator[] = [
     email: 'ajourdes@sqli.com',
     level: 'ICD 2',
     isActive: true,
+    dateInactive: null,
     projects: null,
     experiences: null
   },
@@ -52,6 +55,7 @@ export const MOCK_COLLABORATORS: Collaborator[] = [
     email: 'ocopoix@sqli.com',
     level: 'ET 2',
     isActive: true,
+    dateInactive: null,
     projects: null,
     experiences: null
   }
