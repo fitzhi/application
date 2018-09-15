@@ -41,13 +41,13 @@
 					<div class="col-md-6 mb-3">
 						<label for="firstName">First name</label> <input type="text"
 							class="form-control" id="firstName" name="firstName"
-							[readonly]="!collaborator.isActive"
-							placeholder="" value="" required formControlName="firstName">
+							[readonly]="isAlreadyDeactived()" placeholder="" value=""
+							required formControlName="firstName">
 					</div>
 					<div class="col-md-6 mb-3">
 						<label for="lastName">Last name</label> <input type="text"
-							class="form-control" id="lastName" name="lastName" 
-							[readonly]="!collaborator.isActive"
+							class="form-control" id="lastName" name="lastName"
+							[readonly]="isAlreadyDeactived()"
 							placeholder="enter the last name" value="" required
 							formControlName="lastName">
 					</div>
@@ -61,16 +61,15 @@
 								<span class="input-group-text">@</span>
 							</div>
 							<input type="text" class="form-control" id="nickName"
-								name="nickName" 
-								[readonly]="!collaborator.isActive"
+								name="nickName" [readonly]="isAlreadyDeactived()"
 								placeholder="Enter the nickname (if any) for this staff member"
 								value="" required formControlName="nickName">
 						</div>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label for="login">Last name</label> <input type="text"
-							class="form-control" id="login" name="login" 
-							[readonly]="!collaborator.isActive"
+							class="form-control" id="login" name="login"
+							[readonly]="isAlreadyDeactived()"
 							placeholder="enter the network login of this staff member"
 							value="" required formControlName="login">
 					</div>
@@ -79,12 +78,12 @@
 				<div class="mb-3">
 					<label for="email">Email <span class="text-muted">(Optional)</span></label>
 					<input type="email" class="form-control" id="email" name="email"
-						[readonly]="!collaborator.isActive"
-						placeholder="you@example.com" required formControlName="email">
+						[readonly]="isAlreadyDeactived()" placeholder="you@example.com"
+						required formControlName="email">
 				</div>
-
 				<div class="mb-3">
-					<label for="level">Level</label> <select name="label" id="level"
+					<label for="level">Level</label> 
+					<select name="label" id="level"
 						formControlName="level" class="custom-select d-block w-100"
 						required>
 						<option value="0" selected="selected">select a level</option>
@@ -94,13 +93,14 @@
 
 				<div class="mb-3">
 					<label class="checkbox-inline"> <input type="checkbox"
-						name="active" formControlName="active"> {{label_isActive}} {{label_dateInactive | date : 'longDate'}}
+						name="active" formControlName="active"> {{label_isActive}}
+						{{label_dateInactive | date : 'longDate'}}
 					</label>
 				</div>
 
 				<hr class="mb-4">
-				<button class="btn btn-primary btn-lg btn-block" type="submit" 
-						[disabled]="!profileStaff.valid && !">Submit</button>
+				<button class="btn btn-primary btn-lg btn-block" type="submit"
+					[disabled]="(!profileStaff.valid)||isAlreadyDeactived()">Submit</button>
 			</form>
 		</div>
 	</div>

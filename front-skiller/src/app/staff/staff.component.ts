@@ -22,7 +22,7 @@ import {Project} from '../data/project';
 import {Experience} from '../data/experience';
 import {StaffDTO} from '../data/external/staffDTO';
 
-import {FormGroup, FormControl} from '@angular/forms';
+import {FormGroup, FormControl, Validators} from '@angular/forms';
 
 import {LIST_OF_LEVELS} from '../data/List_of_levels';
 import {PROJECTS} from '../mock/mock-projects';
@@ -56,11 +56,11 @@ export class StaffComponent implements OnInit {
 
   private profileStaff = new FormGroup({
     firstName: new FormControl(''),
-    lastName: new FormControl(''),
+    lastName: new FormControl('', Validators.required),
     nickName: new FormControl(''),
-    login: new FormControl(''),
-    email: new FormControl(''),
-    level: new FormControl(''),
+    login: new FormControl('', Validators.required),
+    email: new FormControl('', Validators.required),
+    level: new FormControl(),
     active: new FormControl(1)
   });
 
@@ -107,6 +107,9 @@ export class StaffComponent implements OnInit {
             } else {
               this.label_isActive = 'Is inactive since ';
               this.label_dateInactive = collab.dateInactive;
+              // There is no READONLY attribute in the SELECT widget.
+              // We need to disable this field within code and not in HTML like the rest of the form.
+              this.profileStaff.get('level').disable();
             }
             this.sourceExperience.load(this.collaborator.experiences);
             this.sourceProjects.load(this.collaborator.projects);
@@ -262,7 +265,8 @@ export class StaffComponent implements OnInit {
       this.skillService.lookup(event.newData.title).subscribe(
 
         project_transfered => {
-          this.staffService.changeExperience(this.collaborator.idStaff, event.data.title, event.newData.title, event.newData.level).subscribe(
+          this.staffService.changeExperience(this.collaborator.idStaff, event.data.title, event.newData.title,
+            event.newData.level).subscribe(
             (staffDTO: StaffDTO) => {
               this.messageService.info(staffDTO.staff.firstName + ' ' +
                 staffDTO.staff.lastName + ' has now the experience ' + event.newData.titile);
@@ -277,7 +281,7 @@ export class StaffComponent implements OnInit {
               event.confirm.reject();
               this.messageService.error(response_error.error.message);
             }
-          );
+            );
         },
         response_error => {
           if (Constants.DEBUG) {
@@ -378,6 +382,14 @@ export class StaffComponent implements OnInit {
     } else {
       event.confirm.reject();
     }
+  }
+
+  /**
+   * Test if the collaborator has been already deactivated on the database.
+   * You can test this state by testing the dateInactive, filled by the back-end during the deactivation process.
+   */
+  public isAlreadyDeactived(): boolean {
+    return (this.collaborator.dateInactive != null);
   }
 
   /**
