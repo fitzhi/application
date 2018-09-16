@@ -49,11 +49,11 @@ export class Constants {
         editor: {
           type: 'list',
           config: {
-            list: [ { value: '1', title: '*'},
-                    { value: '2', title: '**'},
-                    { value: '3', title: '***'},
-                    { value: '4', title: '****'},
-                    { value: '5', title: '*****'}]
+            list: [{value: '1', title: '*'},
+            {value: '2', title: '**'},
+            {value: '3', title: '***'},
+            {value: '4', title: '****'},
+            {value: '5', title: '*****'}]
           },
         },
       }
@@ -65,7 +65,7 @@ export class Constants {
       columnTitle: '____',
       add: true,
       edit: true,
-      delete: true
+      delete: true,
     },
     add: {
       addButtonContent: '<img width="20px" height="20px" src="/assets/img/add.jpeg"></img>',

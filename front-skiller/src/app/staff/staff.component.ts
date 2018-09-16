@@ -55,11 +55,11 @@ export class StaffComponent implements OnInit {
   private label_dateInactive: Date;
 
   private profileStaff = new FormGroup({
-    firstName: new FormControl(''),
-    lastName: new FormControl('', Validators.required),
+    firstName: new FormControl('', [Validators.maxLength(16)]),
+    lastName: new FormControl('', [Validators.required, Validators.maxLength(16)]),
     nickName: new FormControl(''),
-    login: new FormControl('', Validators.required),
-    email: new FormControl('', Validators.required),
+    login: new FormControl('', [Validators.required, Validators.maxLength(8)]),
+    email: new FormControl('', [Validators.required, Validators.maxLength(32)]),
     level: new FormControl(),
     active: new FormControl(1)
   });
@@ -91,6 +91,7 @@ export class StaffComponent implements OnInit {
         isActive: true, dateInactive: null,
         projects: [], experiences: []
       };
+      this.label_isActive = 'Is active';
       if (this.id != null) {
         this.dataService.getCollaborator(this.id).subscribe(
           (collab: Collaborator) => {
@@ -228,6 +229,17 @@ export class StaffComponent implements OnInit {
         });
     } else {
       event.confirm.reject();
+    }
+  }
+
+  onBeforeAddStaffSkill(event) {
+    if (Constants.DEBUG) {
+      console.log('onBeforeAddStaffSkill for event ' + event.newData.title);
+    }
+    if (this.isAlreadyDeactived()) {
+      event.confirm.reject();
+    } else {
+      event.confirm.confirm();
     }
   }
 
@@ -415,6 +427,27 @@ export class StaffComponent implements OnInit {
         this.messageService.info('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
       });
   }
+
+  get firstName(): any {
+    return this.profileStaff.get('firstName');
+  }
+  
+  get lastName(): any {
+    return this.profileStaff.get('lastName');
+  }
+
+  get login(): any {
+    return this.profileStaff.get('login');
+  }
+
+  get level(): any {
+    return this.profileStaff.get('level');
+  }
+
+  get email(): any {
+    return this.profileStaff.get('email');
+  }
+
 }
 
 

@@ -42,14 +42,21 @@
 						<label for="firstName">First name</label> <input type="text"
 							class="form-control" id="firstName" name="firstName"
 							[readonly]="isAlreadyDeactived()" placeholder="" value=""
-							required formControlName="firstName">
+							formControlName="firstName">
+						<label
+							*ngIf="firstName.invalid" [ngClass]="'alert alert-warning'"
+							style="width: 100%; font-size: 10px;">16 max character for the first name.</label>
 					</div>
 					<div class="col-md-6 mb-3">
 						<label for="lastName">Last name</label> <input type="text"
 							class="form-control" id="lastName" name="lastName"
 							[readonly]="isAlreadyDeactived()"
-							placeholder="enter the last name" value="" required
-							formControlName="lastName">
+							placeholder="enter the last name" value=""
+							formControlName="lastName"> <label
+							*ngIf="lastName.invalid" [ngClass]="'alert alert-warning'"
+							style="width: 100%; font-size: 10px;"> Last name is
+							required with 16 max character.</label>
+
 					</div>
 				</div>
 
@@ -63,15 +70,18 @@
 							<input type="text" class="form-control" id="nickName"
 								name="nickName" [readonly]="isAlreadyDeactived()"
 								placeholder="Enter the nickname (if any) for this staff member"
-								value="" required formControlName="nickName">
+								value="" formControlName="nickName">
 						</div>
 					</div>
 					<div class="col-md-6 mb-3">
-						<label for="login">Last name</label> <input type="text"
+						<label for="login">Login</label> <input type="text"
 							class="form-control" id="login" name="login"
 							[readonly]="isAlreadyDeactived()"
-							placeholder="enter the network login of this staff member"
-							value="" required formControlName="login">
+							placeholder="Enter the connection login of this staff member"
+							value="" formControlName="login"> <label
+							*ngIf="login.invalid" [ngClass]="'alert alert-warning'"
+							style="width: 100%; font-size: 10px;"> login is required
+							with 8 max character.</label>
 					</div>
 				</div>
 
@@ -79,16 +89,18 @@
 					<label for="email">Email <span class="text-muted">(Optional)</span></label>
 					<input type="email" class="form-control" id="email" name="email"
 						[readonly]="isAlreadyDeactived()" placeholder="you@example.com"
-						required formControlName="email">
+						formControlName="email">
+					<label *ngIf="email.invalid" [ngClass]="'alert alert-warning'"
+						style="width: 100%; font-size: 10px;">You must specify an email address for this new staff member.</label>
 				</div>
 				<div class="mb-3">
-					<label for="level">Level</label> 
-					<select name="label" id="level"
-						formControlName="level" class="custom-select d-block w-100"
-						required>
+					<label for="level">Level</label> <select name="label" id="level"
+						formControlName="level" class="custom-select d-block w-100">
 						<option value="0" selected="selected">select a level</option>
 						<option *ngFor="let level of levels" [value]="level.code">{{level.title}}</option>
-					</select>
+					</select> 
+					<label *ngIf="level.invalid" [ngClass]="'alert alert-warning'"
+						style="width: 100%; font-size: 10px;"> You have to select a profile for this staff member.</label>
 				</div>
 
 				<div class="mb-3">
