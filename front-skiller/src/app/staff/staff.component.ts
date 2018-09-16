@@ -57,7 +57,7 @@ export class StaffComponent implements OnInit {
   private profileStaff = new FormGroup({
     firstName: new FormControl('', [Validators.maxLength(16)]),
     lastName: new FormControl('', [Validators.required, Validators.maxLength(16)]),
-    nickName: new FormControl(''),
+    nickName: new FormControl('', [Validators.maxLength(16)]),
     login: new FormControl('', [Validators.required, Validators.maxLength(8)]),
     email: new FormControl('', [Validators.required, Validators.maxLength(32)]),
     level: new FormControl(),
@@ -431,9 +431,13 @@ export class StaffComponent implements OnInit {
   get firstName(): any {
     return this.profileStaff.get('firstName');
   }
-  
+
   get lastName(): any {
     return this.profileStaff.get('lastName');
+  }
+
+  get nickName(): any {
+    return this.profileStaff.get('nickName');
   }
 
   get login(): any {
