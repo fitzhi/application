@@ -3,6 +3,7 @@ import {CinematicService} from '../cinematic.service';
 import {DataService} from '../data.service';
 import {Constants} from '../constants';
 import {Collaborator} from '../data/collaborator';
+import { ListStaffService } from '../list-staff-service/list-staff.service';
 
 @Component({
   selector: 'app-list-staff',
@@ -15,12 +16,12 @@ export class ListStaffComponent implements OnInit {
 
   constructor(
     private cinematicService: CinematicService,
-    private dataService: DataService) {}
+    private listStaffService: ListStaffService) {}
 
   ngOnInit() {
 
     this.cinematicService.setForm(Constants.DEVELOPPERS_SEARCH);
-    this.collaborators = this.dataService.getStaff();
+    this.collaborators = this.listStaffService.getStaff();
   }
 
 }

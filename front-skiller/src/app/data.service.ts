@@ -17,11 +17,6 @@ import {ProjectService} from './project.service';
 export class DataService {
 
   /**
-   * List of collaborators corresponding to the search criteria.
-   */
-  private static theStaff: Collaborator[] = [];
-
-  /**
    * List of skills corresponding to the search criteria.
    */
   private static theSkills: Skill[] = [];
@@ -32,9 +27,9 @@ export class DataService {
   private static theProjects: Project[] = [];
 
   /**
-   * Current collaborator's identifier previewed on the fom.
+   * Current collaborator's identifier previewed on the form.
    */
-  private emitActualCollaboratorDisplay = new Subject<number>();
+  public emitActualCollaboratorDisplay = new Subject<number>();
 
   /**
    * Observable associated with the current collaborator.
@@ -50,111 +45,6 @@ export class DataService {
     private projectService: ProjectService) {
   }
 
-  /**
-	* Reload the collaborators for the passed criteria.
-	*/
-  reloadCollaborators(myCriteria: string) {
-
-    function testCriteria(collab, index, array) {
-      const firstname = (typeof collab.firstName !== 'undefined') ? collab.firstName : '';
-      const lastname = (typeof collab.firstName !== 'undefined') ? collab.firstName : '';
-      return ((firstname.toLowerCase().indexOf(myCriteria) > -1)
-        || (lastname.toLowerCase().indexOf(myCriteria) > -1));
-    }
-
-    this.cleanUpCollaborators();
-    this.collaboratorService.getAll().
-      subscribe((staff: Collaborator[]) =>
-        DataService.theStaff.push(...staff.filter(testCriteria)),
-      error => console.log(error),
-      () => {
-        if (Constants.DEBUG) {
-          console.log('the staff collection is containing now ' + DataService.theStaff.length + ' records');
-        }
-      }
-      );
-  }
-
-  /**
-   * Cleanup the list of collaborators involved in our service center.
-   */
-  cleanUpCollaborators() {
-    if (Constants.DEBUG) {
-      if (DataService.theStaff == null) {
-        console.log('INTERNAL ERROR : collection theStaff SHOULD NOT BE NULL, dude !');
-      } else {
-        console.log('Cleaning up the staff collection containing ' + DataService.theStaff.length + ' records');
-      }
-    }
-    DataService.theStaff.length = 0;
-  }
-
-  /**
-   * Return the collaborator associated with this id.
-   */
-  getCollaborator(id: number): Observable<Collaborator> {
-
-    let foundCollab: Collaborator = null;
-    foundCollab = DataService.theStaff.find(collab => collab.idStaff === id);
-
-    if (typeof foundCollab !== 'undefined') {
-      this.emitActualCollaboratorDisplay.next(id);
-      // We create an observable for an element of the cache in order to be consistent with the direct reading.
-      return of(foundCollab);
-    } else {
-      // The collaborator's id is not, or no more, available in the cache
-      // We try a direct access
-      if (Constants.DEBUG) {
-        console.log('Direct access for : ' + id);
-      }
-      return this.collaboratorService.get(id).pipe(tap(
-        (collab: Collaborator) => {
-          if (Constants.DEBUG) {
-            console.log('Direct access for : ' + id);
-            if (typeof collab !== 'undefined') {
-              console.log('Collaborator found : ' + collab.firstName + ' ' + collab.lastName);
-            } else {
-              console.log('No staff found for id ' + id);
-            }
-          }
-        }));
-    }
-  }
-
-  /**
-   * Return the NEXT collaborator's id associated with this id in the staff list.
-   */
-  nextCollaboratorId(id: number): number {
-    const index = DataService.theStaff.findIndex(collab => collab.idStaff === id);
-    if (Constants.DEBUG) {
-      console.log('Current index : ' + index);
-      console.log('Staff size : ' + DataService.theStaff.length);
-    }
-    if (index < DataService.theStaff.length - 1) {
-      return DataService.theStaff[index + 1].idStaff;
-    } else {
-      return undefined;
-    }
-  }
-
-  /**
-   * Return the PREVIOUS collaborator's id associated with this id in the staff list.
-   */
-  previousCollaboratorId(id: number): number {
-    const index = DataService.theStaff.findIndex(collab => collab.idStaff === id);
-    if (index > 0) {
-      return DataService.theStaff[index - 1].idStaff;
-    } else {
-      return undefined;
-    }
-  }
-
-  /**
-   * Return the list of staff membersÒ.
-   */
-  getStaff(): Collaborator[] {
-    return DataService.theStaff;
-  }
 
   /**
    * Saving a new or an updated collaborator

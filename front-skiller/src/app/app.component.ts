@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {CinematicService} from './cinematic.service';
 import {DataService} from './data.service';
 import {Constants} from './constants';
+import { ListStaffService } from './list-staff-service/list-staff.service';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
 
@@ -55,6 +56,7 @@ export class AppComponent implements OnInit {
   constructor(
     private cinematicService: CinematicService,
     private dataService: DataService,
+    private listStaffService: ListStaffService,
     private location: Location,
     private router: Router) {
 
@@ -119,8 +121,8 @@ export class AppComponent implements OnInit {
        * "Expression has changed after it was checked"
        */
       setTimeout(() => {
-        this.previousId = dataService.previousCollaboratorId(data);
-        this.nextId = dataService.nextCollaboratorId(data);
+        this.previousId = listStaffService.previousCollaboratorId(data);
+        this.nextId = listStaffService.nextCollaboratorId(data);
       }
       );
       if (Constants.DEBUG) {
@@ -150,7 +152,7 @@ export class AppComponent implements OnInit {
         if (Constants.DEBUG) {
           console.log('Reloading collaborators for search criteria ' + this.searching_what);
         }
-        this.dataService.reloadCollaborators(this.searching_what);
+        this.listStaffService.reloadCollaborators(this.searching_what);
         break;
       case Constants.SKILLS_SEARCH: {
         if (Constants.DEBUG) {

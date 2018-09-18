@@ -28,6 +28,7 @@ import {LIST_OF_LEVELS} from '../data/List_of_levels';
 import {PROJECTS} from '../mock/mock-projects';
 import {EXPERIENCE} from '../mock/mock-experience';
 import {Constants} from '../constants';
+import { ListStaffService } from '../list-staff-service/list-staff.service';
 
 import {Ng2SmartTableModule} from 'ng2-smart-table';
 import {LocalDataSource} from 'ng2-smart-table';
@@ -59,7 +60,7 @@ export class StaffComponent implements OnInit {
     firstName: new FormControl('', [Validators.maxLength(16)]),
     lastName: new FormControl('', [Validators.required, Validators.maxLength(16)]),
     nickName: new FormControl('', [Validators.maxLength(16)]),
-    login: new FormControl('', [Validators.required, Validators.maxLength(8)]),
+    login: new FormControl('', [Validators.required, Validators.maxLength(16)]),
     email: new FormControl('', [Validators.required, Validators.maxLength(32)]),
     profile: new FormControl(null, [Validators.required]),
     active: new FormControl(1)
@@ -69,6 +70,7 @@ export class StaffComponent implements OnInit {
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
     private dataService: DataService,
+    private listStaffService: ListStaffService,
     private messageService: MessageService,
     private staffService: StaffService,
     private projectService: ProjectService,
@@ -98,7 +100,7 @@ export class StaffComponent implements OnInit {
       document.querySelector('body').style.cssText = '--actions-button-visible: hidden';
       this.label_isActive = 'Is active';
       if (this.id != null) {
-        this.dataService.getCollaborator(this.id).subscribe(
+        this.listStaffService.getCollaborator(this.id).subscribe(
           (collab: Collaborator) => {
             this.collaborator = collab;
             this.profileStaff.get('firstName').setValue(collab.firstName);
