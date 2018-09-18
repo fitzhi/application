@@ -11,6 +11,7 @@ import {CinematicService} from '../cinematic.service';
 import {Project} from '../data/project';
 import {ProjectDTO} from '../data/external/projectDTO';
 import {Constants} from '../constants';
+import { ListProjectsService } from '../list-projects-service/list-projects.service';
 import {LocalDataSource} from 'ng2-smart-table';
 
 @Component({
@@ -42,6 +43,7 @@ export class ProjectComponent implements OnInit {
     private dataService: DataService,
     private messageService: MessageService,
     private projectService: ProjectService,
+    private listProjectsService: ListProjectsService,
     private skillService: SkillService) {}
 
 
@@ -111,7 +113,7 @@ export class ProjectComponent implements OnInit {
     // Anyway, We create an empty project until the subscription is complete
     this.project = new Project();
     if (this.id != null) {
-      this.dataService.getProject(this.id).subscribe(
+      this.listProjectsService.getProject(this.id).subscribe(
         (project: Project) => {
          this.project = project;
          this.profileProject.get('projectName').setValue(project.name);
@@ -237,7 +239,7 @@ export class ProjectComponent implements OnInit {
     if (Constants.DEBUG) {
       console.log('saving the project ' + this.project.name + ' with id ' + this.project.id);
     }
-    this.dataService.saveProject(this.project).subscribe(
+    this.projectService.save(this.project).subscribe(
         project => {
           this.project = project;
           this.messageService.info('Project ' + this.project.name + '  saved !');

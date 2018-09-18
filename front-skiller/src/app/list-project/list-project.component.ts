@@ -3,6 +3,7 @@ import {CinematicService} from '../cinematic.service';
 import {DataService} from '../data.service';
 import {Constants} from '../constants';
 import {Project} from '../data/project';
+import { ListProjectsService } from '../list-projects-service/list-projects.service';
 
 @Component({
   selector: 'app-list-project',
@@ -15,11 +16,12 @@ export class ListProjectComponent implements OnInit {
 
   constructor(
     private cinematicService: CinematicService,
+    private listProjectsService: ListProjectsService,
     private dataService: DataService) {}
 
   ngOnInit() {
     this.cinematicService.setForm(Constants.PROJECT_SEARCH);
-    this.projects = this.dataService.getProjects();
+    this.projects = this.listProjectsService.getProjects();
   }
 
   public search(source: string): void {

@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {CinematicService} from './cinematic.service';
 import {DataService} from './data.service';
 import {Constants} from './constants';
+import { ListProjectsService } from './list-projects-service/list-projects.service';
 import { ListSkillService } from './list-skill-service/list-skill.service';
 import { ListStaffService } from './list-staff-service/list-staff.service';
 import {Location} from '@angular/common';
@@ -59,6 +60,7 @@ export class AppComponent implements OnInit {
     private dataService: DataService,
     private listStaffService: ListStaffService,
     private listSkillService: ListSkillService,
+    private listProjectsService: ListProjectsService,
     private location: Location,
     private router: Router) {
 
@@ -167,7 +169,7 @@ export class AppComponent implements OnInit {
         if (Constants.DEBUG) {
           console.log('Reloading project for search criteria ' + this.searching_what);
         }
-        this.dataService.reloadProjects(this.searching_what);
+        this.listProjectsService.reloadProjects(this.searching_what);
         break;
       }
     }
