@@ -44,10 +44,9 @@ export class StaffComponent implements OnInit {
   private id: number;
   private sub: any;
 
-  private levels: Level[] = LIST_OF_LEVELS;
+  private profiles: Level[] = LIST_OF_LEVELS;
   private sourceProjects = new LocalDataSource([]);
   private sourceExperience = new LocalDataSource([]);
-  @ViewChild('EXP') tableExperience: Ng2SmartTableComponent;
   private settings_experience = Constants.SETTINGS_EXPERIENCE_SMARTTABLE;
   private settings_projects = Constants.SETTINGS_PROJECTS_SMARTTABLE;
 
@@ -62,7 +61,7 @@ export class StaffComponent implements OnInit {
     nickName: new FormControl('', [Validators.maxLength(16)]),
     login: new FormControl('', [Validators.required, Validators.maxLength(8)]),
     email: new FormControl('', [Validators.required, Validators.maxLength(32)]),
-    level: new FormControl(0, [Validators.required]),
+    profile: new FormControl(null, [Validators.required]),
     active: new FormControl(1)
   });
 
@@ -107,7 +106,7 @@ export class StaffComponent implements OnInit {
             this.profileStaff.get('nickName').setValue(collab.nickName);
             this.profileStaff.get('login').setValue(collab.login);
             this.profileStaff.get('email').setValue(collab.email);
-            this.profileStaff.get('level').setValue(collab.level);
+            this.profileStaff.get('profile').setValue(collab.level);
             this.profileStaff.get('active').setValue(collab.isActive);
             if (collab.isActive) {
               this.label_isActive = 'Is active';
@@ -425,7 +424,7 @@ export class StaffComponent implements OnInit {
     this.collaborator.nickName = this.profileStaff.get('nickName').value;
     this.collaborator.login = this.profileStaff.get('login').value;
     this.collaborator.email = this.profileStaff.get('email').value;
-    this.collaborator.level = this.profileStaff.get('level').value;
+    this.collaborator.level = this.profileStaff.get('profile').value;
     this.collaborator.isActive = this.profileStaff.get('active').value;
 
     this.dataService.saveCollaborator(this.collaborator)
@@ -452,8 +451,8 @@ export class StaffComponent implements OnInit {
     return this.profileStaff.get('login');
   }
 
-  get level(): any {
-    return this.profileStaff.get('level');
+  get profile(): any {
+    return this.profileStaff.get('profile');
   }
 
   get email(): any {
