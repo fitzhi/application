@@ -13,11 +13,12 @@
 					<span class="text-muted">Qualification</span> <span
 						class="badge badge-secondary badge-pill">{{sourceExperience.count()}}</span>
 				</h4>
-				<ng2-smart-table [settings]="settings_experience"
+				<ng2-smart-table #EXP [settings]="settings_experience"
 					[source]="sourceExperience"
 					(createConfirm)="onConfirmAddStaffSkill($event)"
 					(editConfirm)="onConfirmEditStaffSkill($event)"
-					(deleteConfirm)="onConfirmRemoveSkill($event)"> </ng2-smart-table>
+					(deleteConfirm)="onConfirmRemoveSkill($event)"
+					> </ng2-smart-table>
 			</div>
 			<br />
 			<div class="projects_card">
@@ -103,7 +104,7 @@
 						<option value="0" selected="selected">select a level</option>
 						<option *ngFor="let level of levels" [value]="level.code">{{level.title}}</option>
 					</select> <label *ngIf="level.invalid" [ngClass]="'alert alert-warning'"
-						style="width: 100%; font-size: 10px;"> You have to select
+						style="width: 100%; font-size: 10px;"> Please, select
 						a profile for this staff member.</label>
 				</div>
 

@@ -1,15 +1,8 @@
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
+	--actions-button-visible: hidden;
 }
 
 div.projects_card {
-	/* margin-top: 30px; */
 	padding:1px;
 }
 
@@ -18,16 +11,16 @@ div.skill_card {
 }
 
 
-:host /deep/ ng2-smart-table {
+:host >>> ng2-smart-table {
         font-size: 12px;
 }
 
-:host /deep/ ng2-smart-table thead > tr > th  { 
+:host >>> ng2-smart-table thead > tr > th  { 
         background-color: snow;  
         font-size: 18px;
 }
 
-:host /deep/ ng2-smart-table-cell  div { 
+:host >>> ng2-smart-table-cell  div { 
         padding: 0px;
         margin: 0px;
         font-size: 14px;
@@ -38,12 +31,13 @@ div.skill_card {
         margin: 0px;
 }
 
-:host /deep/ ng2-smart-table tr td  { 
+:host >>> ng2-smart-table tr td  { 
         padding: 0px;
-//        font-size: 12px;
 }
 
-img.add_button {
-	width: 10px;
-	height: 10px;
+:host >>> ng2-smart-table img { 
+	width: 20px;
+	height: 20px;
+	visibility:  var(--actions-button-visible);
 }
+

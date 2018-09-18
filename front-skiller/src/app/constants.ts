@@ -28,6 +28,8 @@ export class Constants {
   public static MESSAGE_ERROR = 1;
   public static MESSAGE_INFO = 2;
 
+  public static canAdd = true;
+
   /**
 	 * Declared settings for the grid dedicated to the experiences inside the form STAFF.
 	 */
@@ -63,24 +65,24 @@ export class Constants {
     },
     actions: {
       columnTitle: '____',
-      add: true,
+      add: Constants.canAdd,
       edit: true,
       delete: true,
     },
     add: {
-      addButtonContent: '<img width="20px" height="20px" src="/assets/img/add.jpeg"></img>',
-      createButtonContent: '<img width="25px" height="25px" src="/assets/img/update-cloud.jpeg"></img>',
-      cancelButtonContent: '<img width="20px" height="20px" src="/assets/img/cancel.png"></img>',
+      addButtonContent: '<img src="/assets/img/add.jpeg"></img>',
+      createButtonContent: '<img src="/assets/img/update-cloud.jpeg"></img>',
+      cancelButtonContent: '<img src="/assets/img/cancel.png"></img>',
       confirmCreate: true,
     },
     delete: {
-      deleteButtonContent: '<img width="20px" height="20px" src="/assets/img/delete.jpeg"></img>',
+      deleteButtonContent: '<img src="/assets/img/delete.jpeg"></img>',
       confirmDelete: true,
     },
     edit: {
-      editButtonContent: '<img width="20px" height="20px" src="/assets/img/edit.jpeg"></img>',
-      cancelButtonContent: '<img width="20px" height="20px" src="/assets/img/cancel.png"></img>',
-      saveButtonContent: '<img width="25px" height="25px" src="/assets/img/update-cloud.jpeg"></img>',
+      editButtonContent: '<img src="/assets/img/edit.jpeg"></img>',
+      cancelButtonContent: '<img src="/assets/img/cancel.png"></img>',
+      saveButtonContent: '<img src="/assets/img/update-cloud.jpeg"></img>',
       confirmSave: true,
     },
     hideSubHeader: false,

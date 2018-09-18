@@ -1,5 +1,5 @@
 import {AppModule} from '../app.module';
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {Router} from '@angular/router';
 import {Subject, Observable, of} from 'rxjs';
@@ -32,6 +32,7 @@ import {Constants} from '../constants';
 import {Ng2SmartTableModule} from 'ng2-smart-table';
 import {LocalDataSource} from 'ng2-smart-table';
 import {StarsSkillLevelRenderComponent} from './starsSkillLevelRenderComponent';
+import {Ng2SmartTableComponent} from 'ng2-smart-table/ng2-smart-table.component';
 
 @Component({
   selector: 'app-staff',
@@ -46,6 +47,7 @@ export class StaffComponent implements OnInit {
   private levels: Level[] = LIST_OF_LEVELS;
   private sourceProjects = new LocalDataSource([]);
   private sourceExperience = new LocalDataSource([]);
+  @ViewChild('EXP') tableExperience: Ng2SmartTableComponent;
   private settings_experience = Constants.SETTINGS_EXPERIENCE_SMARTTABLE;
   private settings_projects = Constants.SETTINGS_PROJECTS_SMARTTABLE;
 
@@ -60,7 +62,7 @@ export class StaffComponent implements OnInit {
     nickName: new FormControl('', [Validators.maxLength(16)]),
     login: new FormControl('', [Validators.required, Validators.maxLength(8)]),
     email: new FormControl('', [Validators.required, Validators.maxLength(32)]),
-    level: new FormControl(),
+    level: new FormControl(0, [Validators.required]),
     active: new FormControl(1)
   });
 
@@ -91,6 +93,10 @@ export class StaffComponent implements OnInit {
         isActive: true, dateInactive: null,
         projects: [], experiences: []
       };
+      /*
+       * By default, you cannot add a project/skill for an unregistered developer.
+       */
+      document.querySelector('body').style.cssText = '--actions-button-visible: hidden';
       this.label_isActive = 'Is active';
       if (this.id != null) {
         this.dataService.getCollaborator(this.id).subscribe(
@@ -105,9 +111,11 @@ export class StaffComponent implements OnInit {
             this.profileStaff.get('active').setValue(collab.isActive);
             if (collab.isActive) {
               this.label_isActive = 'Is active';
+              document.querySelector('body').style.cssText = '--actions-button-visible: visible';
             } else {
               this.label_isActive = 'Is inactive since ';
               this.label_dateInactive = collab.dateInactive;
+              document.querySelector('body').style.cssText = '--actions-button-visible: hidden';
               // There is no READONLY attribute in the SELECT widget.
               // We need to disable this field within code and not in HTML like the rest of the form.
               this.profileStaff.get('level').disable();
