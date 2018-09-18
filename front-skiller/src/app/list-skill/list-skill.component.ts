@@ -3,6 +3,7 @@ import {CinematicService} from '../cinematic.service';
 import {DataService} from '../data.service';
 import {Constants} from '../constants';
 import {Skill} from '../data/skill';
+import { ListSkillService } from '../list-skill-service/list-skill.service';
 
 @Component({
   selector: 'app-list-skill',
@@ -15,11 +16,12 @@ export class ListSkillComponent implements OnInit {
 
   constructor(
     private cinematicService: CinematicService,
+    private listSkillService: ListSkillService,
     private dataService: DataService) {}
 
   ngOnInit() {
     this.cinematicService.setForm(Constants.SKILLS_SEARCH);
-    this.skills = this.dataService.getSkills();
+    this.skills = this.listSkillService.getSkills();
   }
 
   public search(source: string): void {

@@ -7,6 +7,8 @@ import {FormGroup, FormControl} from '@angular/forms';
 import {DataService} from '../data.service';
 import {MessageService} from '../message.service';
 import { CinematicService } from '../cinematic.service';
+import { ListSkillService } from '../list-skill-service/list-skill.service';
+import { SkillService } from '../skill.service';
 
 @Component({
   selector: 'app-skill',
@@ -32,6 +34,8 @@ export class SkillComponent implements OnInit {
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
     private dataService: DataService,
+    private skillService: SkillService,
+    private listSkillService: ListSkillService,
     private messageService: MessageService ) {}
 
   ngOnInit() {
@@ -49,7 +53,7 @@ export class SkillComponent implements OnInit {
       // We create an empty collaborator until the subscription is complete
       this.skill = new Skill();
       if (this.id != null) {
-        this.dataService.getSkill(this.id).subscribe(
+        this.listSkillService.getSkill(this.id).subscribe(
           (skill: Skill) => {
             this.skill = skill;
             this.profileSkill.get('skillTitle').setValue(skill.title);
@@ -80,14 +84,14 @@ export class SkillComponent implements OnInit {
   }
 
   /**
-   * Submit the change. The project will be created, or updated.
+   * Submit the change. The SKILL will be created, or updated.
    */
   onSubmit() {
     this.skill.title = this.profileSkill.get('skillTitle').value;
     if (Constants.DEBUG) {
       console.log('saving the skill ' + this.skill.title + ' with id ' + this.skill.id);
     }
-    this.dataService.saveSkill(this.skill).subscribe(
+    this.skillService.save(this.skill).subscribe(
         skill => {
           this.skill = skill;
           this.messageService.info('Skill ' + this.skill.title + '  saved !');
