@@ -1,6 +1,5 @@
 import {Component, OnInit, Input} from '@angular/core';
 import {CinematicService} from '../cinematic.service';
-import {DataService} from '../data.service';
 import {Constants} from '../constants';
 import {Collaborator} from '../data/collaborator';
 import { ListStaffService } from '../list-staff-service/list-staff.service';
@@ -19,7 +18,6 @@ export class ListStaffComponent implements OnInit {
     private listStaffService: ListStaffService) {}
 
   ngOnInit() {
-
     this.cinematicService.setForm(Constants.DEVELOPPERS_SEARCH);
     this.collaborators = this.listStaffService.getStaff();
   }

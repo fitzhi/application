@@ -1,6 +1,5 @@
 import {Component, OnInit, Output, EventEmitter} from '@angular/core';
 import {CinematicService} from '../cinematic.service';
-import {DataService} from '../data.service';
 import {Constants} from '../constants';
 import {Skill} from '../data/skill';
 import { ListSkillService } from '../list-skill-service/list-skill.service';
@@ -16,8 +15,7 @@ export class ListSkillComponent implements OnInit {
 
   constructor(
     private cinematicService: CinematicService,
-    private listSkillService: ListSkillService,
-    private dataService: DataService) {}
+    private listSkillService: ListSkillService) {}
 
   ngOnInit() {
     this.cinematicService.setForm(Constants.SKILLS_SEARCH);

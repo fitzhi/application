@@ -21,7 +21,6 @@ import {CinematicService} from './cinematic.service';
 import {StaffComponent} from './staff/staff.component';
 import {ListStaffComponent} from './list-staff/list-staff.component';
 
-import {DataService} from './data.service';
 import {StaffService} from './staff.service';
 import { MessageComponent } from './message/message.component';
 
@@ -71,7 +70,6 @@ import { ListProjectComponent } from './list-project/list-project.component';
     */
   ],
   providers: [
-    DataService,
     CinematicService,
     StaffService
   ],

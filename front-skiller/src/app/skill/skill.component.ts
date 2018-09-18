@@ -4,7 +4,6 @@ import {Skill} from '../data/skill';
 import {ActivatedRoute} from '@angular/router';
 import {FormGroup, FormControl} from '@angular/forms';
 
-import {DataService} from '../data.service';
 import {MessageService} from '../message.service';
 import { CinematicService } from '../cinematic.service';
 import { ListSkillService } from '../list-skill-service/list-skill.service';
@@ -33,7 +32,6 @@ export class SkillComponent implements OnInit {
   constructor(
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
-    private dataService: DataService,
     private skillService: SkillService,
     private listSkillService: ListSkillService,
     private messageService: MessageService ) {}

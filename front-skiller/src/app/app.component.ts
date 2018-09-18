@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {CinematicService} from './cinematic.service';
-import {DataService} from './data.service';
 import {Constants} from './constants';
 import { ListProjectsService } from './list-projects-service/list-projects.service';
 import { ListSkillService } from './list-skill-service/list-skill.service';
@@ -57,7 +56,6 @@ export class AppComponent implements OnInit {
 
   constructor(
     private cinematicService: CinematicService,
-    private dataService: DataService,
     private listStaffService: ListStaffService,
     private listSkillService: ListSkillService,
     private listProjectsService: ListProjectsService,
@@ -115,7 +113,7 @@ export class AppComponent implements OnInit {
     });
 
 
-    this.dataService.newCollaboratorDisplayEmitted$.subscribe(data => {
+    this.cinematicService.newCollaboratorDisplayEmitted$.subscribe(data => {
       if (Constants.DEBUG) {
         console.log('Receiving data ' + data);
       }

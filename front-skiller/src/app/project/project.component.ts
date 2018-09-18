@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 
-import {DataService} from '../data.service';
 import {ProjectService} from '../project.service';
 import {SkillService} from '../skill.service';
 import {MessageService} from '../message.service';
@@ -40,7 +39,6 @@ export class ProjectComponent implements OnInit {
   constructor(
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
-    private dataService: DataService,
     private messageService: MessageService,
     private projectService: ProjectService,
     private listProjectsService: ListProjectsService,

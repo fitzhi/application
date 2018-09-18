@@ -8,7 +8,6 @@ import {HttpResponse} from '@angular/common/http';
 
 
 import {CinematicService} from '../cinematic.service';
-import {DataService} from '../data.service';
 import {MessageService} from '../message.service';
 import {StaffService} from '../staff.service';
 import {ProjectService} from '../project.service';
@@ -69,7 +68,6 @@ export class StaffComponent implements OnInit {
   constructor(
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
-    private dataService: DataService,
     private listStaffService: ListStaffService,
     private messageService: MessageService,
     private staffService: StaffService,

@@ -1,5 +1,5 @@
+import { CinematicService } from '../cinematic.service';
 import { Constants } from '../constants';
-import { DataService } from '../data.service';
 import { Collaborator } from '../data/collaborator';
 import { StaffService } from '../staff.service';
 import { Injectable } from '@angular/core';
@@ -17,8 +17,9 @@ export class ListStaffService {
    */
   private static theStaff: Collaborator[] = [];
 
-  constructor(private staffService: StaffService,
-              private dataService: DataService) {
+  constructor(
+          private staffService: StaffService,
+          private cinematicService: CinematicService) {
   }
   /**
   * Reload the collaborators for the passed criteria.
@@ -68,7 +69,7 @@ export class ListStaffService {
     foundCollab = ListStaffService.theStaff.find(collab => collab.idStaff === id);
 
     if (typeof foundCollab !== 'undefined') {
-      this.dataService.emitActualCollaboratorDisplay.next(id);
+      this.cinematicService.emitActualCollaboratorDisplay.next(id);
       // We create an observable for an element of the cache in order to be consistent with the direct reading.
       return of(foundCollab);
     } else {

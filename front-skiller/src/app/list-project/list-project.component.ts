@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {CinematicService} from '../cinematic.service';
-import {DataService} from '../data.service';
 import {Constants} from '../constants';
 import {Project} from '../data/project';
 import { ListProjectsService } from '../list-projects-service/list-projects.service';
@@ -16,8 +15,7 @@ export class ListProjectComponent implements OnInit {
 
   constructor(
     private cinematicService: CinematicService,
-    private listProjectsService: ListProjectsService,
-    private dataService: DataService) {}
+    private listProjectsService: ListProjectsService) {}
 
   ngOnInit() {
     this.cinematicService.setForm(Constants.PROJECT_SEARCH);
