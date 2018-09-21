@@ -1,4 +1,6 @@
+import { Constants } from './constants';
 import {Injectable} from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import {Subject} from "rxjs/Subject";
 
 @Injectable({
@@ -9,12 +11,7 @@ export class CinematicService {
   /**
    * Identifier of the select form on stage on the SPA.
    */
-  private emitActualComponentSource = new Subject<Number>();
-
-  /**
-   * Observable listening the select form on stage.
-   */
-  newFormDisplayEmitted$ = this.emitActualComponentSource.asObservable();
+  public actualFormOnStage = new BehaviorSubject<Number>(Constants.WELCOME);
 
   /**
     * Current collaborator's identifier previewed on the form.
@@ -30,7 +27,7 @@ export class CinematicService {
     /**
     * Fire the event. Has to be at the end of the method.
     */
-    this.emitActualComponentSource.next(form);
+    this.actualFormOnStage.next(form);
   }
 
 }

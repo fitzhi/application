@@ -66,7 +66,7 @@ export class AppComponent implements OnInit {
     private location: Location,
     private router: Router) {
 
-    this.cinematicService.newFormDisplayEmitted$.subscribe(data => {
+    this.cinematicService.actualFormOnStage.subscribe(data => {
 
       this.formId = data;
       switch (this.formId) {
