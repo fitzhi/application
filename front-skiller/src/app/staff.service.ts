@@ -107,8 +107,8 @@ export class StaffService extends InternalService {
     return this.http.post<StaffDTO>(this.collaboratorUrl + '/project/del', body, httpOptions);
   }
 
-  /**
-  * Load the projects associated with the staff member identified by this id. 
+ /**
+  * Load the projects associated with the staff member identified by this id.
   */
   loadProjects(idStaff: number): Observable<Project[]> {
     return this.http.get<Project[]>(this.collaboratorUrl + '/projects/' + idStaff);

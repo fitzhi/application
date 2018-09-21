@@ -32,6 +32,7 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { StarsSkillLevelRenderComponent } from './staff/starsSkillLevelRenderComponent';
 import { ProjectComponent } from './project/project.component';
 import { ListProjectComponent } from './list-project/list-project.component';
+import { ReferentialService } from './referential.service';
 
 @NgModule({
   declarations: [
@@ -71,7 +72,8 @@ import { ListProjectComponent } from './list-project/list-project.component';
   ],
   providers: [
     CinematicService,
-    StaffService
+    StaffService,
+    ReferentialService,
   ],
   bootstrap: [AppComponent]
 })

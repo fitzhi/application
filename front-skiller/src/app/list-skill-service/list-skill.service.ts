@@ -36,15 +36,12 @@ export class ListSkillService {
     this.skillService.getAll().
       subscribe((skills: Skill[]) =>
         ListSkillService.theSkills.push(...skills.filter(testCriteria)),
-      // console.log (skills[0].title.toLowerCase().indexOf(myCriteria) ),
-      // DataService.theSkills.push(...skills.filter(testCriteria)),
       error => console.log(error),
       () => {
         if (Constants.DEBUG) {
           console.log('the skills collection is containing now ' + ListSkillService.theSkills.length + ' records');
         }
-      }
-      );
+      });
   }
 
   /**

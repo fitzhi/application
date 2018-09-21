@@ -27,7 +27,9 @@ import {LIST_OF_LEVELS} from '../data/List_of_levels';
 import {PROJECTS} from '../mock/mock-projects';
 import {EXPERIENCE} from '../mock/mock-experience';
 import {Constants} from '../constants';
-import { ListStaffService } from '../list-staff-service/list-staff.service';
+import {Profile} from '../data/profile';
+import {ListStaffService} from '../list-staff-service/list-staff.service';
+import {ReferentialService} from '../referential.service';
 
 import {Ng2SmartTableModule} from 'ng2-smart-table';
 import {LocalDataSource} from 'ng2-smart-table';
@@ -44,7 +46,7 @@ export class StaffComponent implements OnInit {
   private id: number;
   private sub: any;
 
-  private profiles: Level[] = LIST_OF_LEVELS;
+  private profiles: Profile[];
   private sourceProjects = new LocalDataSource([]);
   private sourceExperience = new LocalDataSource([]);
   private settings_experience = Constants.SETTINGS_EXPERIENCE_SMARTTABLE;
@@ -72,6 +74,7 @@ export class StaffComponent implements OnInit {
     private messageService: MessageService,
     private staffService: StaffService,
     private projectService: ProjectService,
+    private referentialService: ReferentialService,
     private skillService: SkillService) {}
 
   ngOnInit() {
@@ -149,6 +152,10 @@ export class StaffComponent implements OnInit {
       }
     });
     this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
+
+    this.referentialService.behaviorSubjectProfiles.subscribe(
+      (profiles: Profile[]) => this.profiles = profiles);
+
   }
 
   /*

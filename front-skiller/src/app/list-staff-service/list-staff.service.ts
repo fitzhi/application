@@ -35,15 +35,13 @@ export class ListStaffService {
 
     this.cleanUpCollaborators();
     this.staffService.getAll().
-      subscribe((staff: Collaborator[]) =>
-        ListStaffService.theStaff.push(...staff.filter(testCriteria)),
+      subscribe((staff: Collaborator[]) => ListStaffService.theStaff.push(...staff.filter(testCriteria)),
       error => console.log(error),
       () => {
         if (Constants.DEBUG) {
-          console.log('the staff collection is containing now ' + ListStaffService.theStaff.length + ' records');
+          console.log('The staff collection is containing now ' + ListStaffService.theStaff.length + ' records');
         }
-      }
-      );
+      });
   }
 
   /**

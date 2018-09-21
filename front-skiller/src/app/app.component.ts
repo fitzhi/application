@@ -1,9 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {CinematicService} from './cinematic.service';
 import {Constants} from './constants';
-import { ListProjectsService } from './list-projects-service/list-projects.service';
-import { ListSkillService } from './list-skill-service/list-skill.service';
-import { ListStaffService } from './list-staff-service/list-staff.service';
+import { Profile } from './data/profile';
+import {ListProjectsService} from './list-projects-service/list-projects.service';
+import {ListSkillService} from './list-skill-service/list-skill.service';
+import {ListStaffService} from './list-staff-service/list-staff.service';
+import {ReferentialService} from './referential.service';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
 
@@ -54,11 +56,13 @@ export class AppComponent implements OnInit {
   private image_project_activated = '/assets/img/project-activated.png';
   private image_project_inactive = '/assets/img/project-inactive.png';
 
+
   constructor(
     private cinematicService: CinematicService,
     private listStaffService: ListStaffService,
     private listSkillService: ListSkillService,
     private listProjectsService: ListProjectsService,
+    private referentialService: ReferentialService,
     private location: Location,
     private router: Router) {
 
@@ -103,19 +107,17 @@ export class AppComponent implements OnInit {
           break;
         }
         case Constants.PROJECT_SEARCH: {
-          this.formTitle = 'Searching project';
+          this.formTitle = 'Searching';
           this.in_master_detail = false;
           this.is_allowed_to_search = true;
           break;
         }
       }
-
     });
-
 
     this.cinematicService.newCollaboratorDisplayEmitted$.subscribe(data => {
       if (Constants.DEBUG) {
-        console.log('Receiving data ' + data);
+        console.log('Receiving new staff member ' + data);
       }
 
       /*
@@ -140,8 +142,12 @@ export class AppComponent implements OnInit {
     this.dev_activated = false;
     this.skill_activated = false;
     this.project_activated = false;
-  }
+    this.referentialService.loadAllReferentials();
 
+   this.referentialService.behaviorSubjectProfiles.subscribe(
+     (profiles: Profile[]) => { if (profiles != null  ) console.log(profiles[1]) } );
+  }
+  
   /**
 	* Search button has been clicked.
 	*/
@@ -185,21 +191,21 @@ export class AppComponent implements OnInit {
     this.router.navigate(['/user'], {});
   }
 
-  switchToSkill () {
+  switchToSkill() {
     this.searching_what = null;
     this.skill_activated = true;
     this.dev_activated = false;
     this.project_activated = false;
   }
 
-  switchToDev () {
+  switchToDev() {
     this.searching_what = null;
     this.dev_activated = true;
     this.skill_activated = false;
     this.project_activated = false;
   }
 
-  switchToProject () {
+  switchToProject() {
     this.searching_what = null;
     this.project_activated = true;
     this.dev_activated = false;
@@ -211,15 +217,15 @@ export class AppComponent implements OnInit {
    */
   focusSearch() {
     switch (this.formId) {
-        case Constants.SKILLS_CRUD:
-          this.router.navigate(['/searchSkill'], {});
-          break;
-        case Constants.DEVELOPPERS_CRUD:
-          this.router.navigate(['/searchUser'], {});
-          break;
-        case Constants.PROJECT_CRUD:
-          this.router.navigate(['/searchProject'], {});
-          break;
+      case Constants.SKILLS_CRUD:
+        this.router.navigate(['/searchSkill'], {});
+        break;
+      case Constants.DEVELOPPERS_CRUD:
+        this.router.navigate(['/searchUser'], {});
+        break;
+      case Constants.PROJECT_CRUD:
+        this.router.navigate(['/searchProject'], {});
+        break;
     }
   }
 }
