@@ -144,10 +144,8 @@ export class AppComponent implements OnInit {
     this.project_activated = false;
     this.referentialService.loadAllReferentials();
 
-   this.referentialService.behaviorSubjectProfiles.subscribe(
-     (profiles: Profile[]) => { if (profiles != null  ) console.log(profiles[1]) } );
   }
-  
+
   /**
 	* Search button has been clicked.
 	*/

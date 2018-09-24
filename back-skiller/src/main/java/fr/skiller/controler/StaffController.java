@@ -2,6 +2,7 @@ package fr.skiller.controler;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -30,6 +31,7 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.external.StaffDTO;
+import fr.skiller.data.internal.CountSkillLevelMap;
 import fr.skiller.data.internal.Experience;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.internal.Project;
@@ -61,6 +63,17 @@ public class StaffController {
 	@GetMapping("/all")
 	String readAll() {
 		return gson.toJson(staffHandler.getStaff().values());	
+	}
+
+	@GetMapping("/countGroupBySkills")
+	String countAll() {
+		final CountSkillLevelMap result = staffHandler.countAllStaff_GroupBy_Skill_Level(true);
+		
+		final String resultContent = gson.toJson(result);
+		if (logger.isDebugEnabled()) {
+			logger.debug("'/countGroupBySkills' is returning " + resultContent);
+		}
+		return resultContent;
 	}
 
 	/**

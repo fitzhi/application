@@ -97,7 +97,7 @@ public class SkillController {
 		}
 		return resultContent;
 	}
-
+	
 	@PostMapping("/save")
 	ResponseEntity<Skill> add(@RequestBody Skill input) {
 

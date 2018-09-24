@@ -13,14 +13,12 @@ public class Experience {
 	public String title; 
 	public int level;
 	
-	
 	/**
 	 * Empty constructor.
 	 */
 	public Experience() {
 		super();
 	}
-
 
 	/**
 	 * Constructor with param.
@@ -34,5 +32,12 @@ public class Experience {
 		this.level = level;
 	}
 	
-	
+	/**
+	 * This is a key pattern executed to create the key of experience used into map of data.
+	 * Theses Maps are used for data exchange with the Angular application.
+	 * @return key : constructed key
+	 */
+	public String key() {
+		return id+"-"+level;
+	}
 }

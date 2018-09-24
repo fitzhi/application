@@ -10,6 +10,19 @@ export class Constants {
 	*/
   public static DEBUG = true;
 
+  public static LEVEL_Expert = 5;
+  public static LEVEL_Experienced = 4;
+  public static LEVEL_Senior = 3;
+  public static LEVEL_Junior = 2;
+  public static LEVEL_Beginner = 1;
+
+  public static LEVELS = [
+    Constants.LEVEL_Expert,
+    Constants.LEVEL_Experienced,
+    Constants.LEVEL_Senior,
+    Constants.LEVEL_Junior,
+    Constants.LEVEL_Beginner];
+
   /**
 	* Form active
 	*/
