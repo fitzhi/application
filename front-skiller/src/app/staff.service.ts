@@ -155,4 +155,14 @@ export class StaffService extends InternalService {
     return this.http.post<StaffDTO>(this.collaboratorUrl + '/experiences/save', body, httpOptions);
   }
 
+  /**
+   * Retrieving the sum of staff members agregate by skill & level (i.e. experience)
+   */
+  countAll_groupBy_experience() {
+    if (Constants.DEBUG) {
+      console.log('countAll_groupBy_experience loading aggegations count from the server');
+    }
+    return this.http.get<Map<String, Number>>(this.collaboratorUrl + '/countGroupByExperiences');
+  }
+
 }

@@ -2,7 +2,7 @@ package fr.skiller.bean;
 
 import java.util.Map;
 
-import fr.skiller.data.internal.CountSkillLevelMap;
+import fr.skiller.data.internal.PeopleCountExperienceMap;
 import fr.skiller.data.internal.Staff;
 
 /**
@@ -22,12 +22,20 @@ public interface StaffHandler {
 	  * @return the staff list.
 	  */
 	Map<Integer, Staff> getStaff();
+
+	/**
+	 * Add a new technical employee inside the company.
+	 * @param isStaff : identified of this new employee
+	 * @param staff : Staff instance representing this employee
+	 * @return the previous staff member associated with this idStaff, or null if there was no mapping for this id. 
+	 */
+	Staff put (final int idStaff, final Staff staff);
 	
 	 /**
 	  * @param active <code>true</code> Only active developers are taking account, <code>false</code> all developers are included. 
 	  * @return the number of developers group by skills registered into a Map.
 	  */
-	CountSkillLevelMap countAllStaff_GroupBy_Skill_Level(boolean active);
+	PeopleCountExperienceMap countAllStaff_GroupBy_Skill_Level(boolean active);
 	
 
 }

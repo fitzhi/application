@@ -45,8 +45,6 @@ export class ListStaffComponent implements OnInit {
     let evaluatedSkill: Experience[];
     for (let level = Constants.LEVEL_Expert; (level >= Constants.LEVEL_Beginner); level--) {
       evaluatedSkill = experiences.filter(expe => (expe.level === level));
-      console.log (evaluatedSkill);
-      console.log (experiences);
       evaluatedSkill.forEach(experience => {mainSkills += experience.title + ', '; });
     }
     return mainSkills;

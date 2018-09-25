@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.StaffHandler;
-import fr.skiller.data.internal.CountSkillLevelMap;
+import fr.skiller.data.internal.PeopleCountExperienceMap;
 import fr.skiller.data.internal.Experience;
 import fr.skiller.data.internal.Staff;
 import com.google.gson.reflect.TypeToken;
@@ -88,7 +88,12 @@ public class StaffHandlerImpl implements StaffHandler {
 	}
 
 	@Override
-	public CountSkillLevelMap countAllStaff_GroupBy_Skill_Level(boolean isActiveOnly) {
+	public Staff put(int idStaff, Staff staff) {
+		return this.getStaff().put(idStaff, staff);
+	}
+
+	@Override
+	public PeopleCountExperienceMap countAllStaff_GroupBy_Skill_Level(boolean isActiveOnly) {
 		
 		/**
 		 * We build the complete list of experiences within the company.
@@ -110,7 +115,7 @@ public class StaffHandlerImpl implements StaffHandler {
 			}
 		}
 		
-		CountSkillLevelMap count = new CountSkillLevelMap();
+		PeopleCountExperienceMap count = new PeopleCountExperienceMap();
 		count.putAll(result);
 		return count;
 	}

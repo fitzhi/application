@@ -6,12 +6,12 @@ package fr.skiller.data.internal;
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class CountSkillLevel{
+public class PeopleCountExperience{
 
 	/**
 	 * The key skill-level, which is constructed as this example : skillId : "n", level : "p" -> key : "n-p"
 	 */
-	final String keySkillLevel;
+	final String keyExperience;
 	
 	/**
 	 * Number of developers having this skill in that level.
@@ -19,12 +19,12 @@ public class CountSkillLevel{
 	final int count;
 	
 	/**
-	 * @param keySkillLevel
+	 * @param keyExperience
 	 * @param count
 	 */
-	public CountSkillLevel(String keySkillLevel, int count) {
+	public PeopleCountExperience(String keyExperience, int count) {
 		super();
-		this.keySkillLevel = keySkillLevel;
+		this.keyExperience = keyExperience;
 		this.count = count;
 	}
 	

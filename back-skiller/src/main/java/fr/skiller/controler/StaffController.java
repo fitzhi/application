@@ -31,7 +31,7 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.external.StaffDTO;
-import fr.skiller.data.internal.CountSkillLevelMap;
+import fr.skiller.data.internal.PeopleCountExperienceMap;
 import fr.skiller.data.internal.Experience;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.internal.Project;
@@ -65,9 +65,9 @@ public class StaffController {
 		return gson.toJson(staffHandler.getStaff().values());	
 	}
 
-	@GetMapping("/countGroupBySkills")
+	@GetMapping("/countGroupByExperiences")
 	String countAll() {
-		final CountSkillLevelMap result = staffHandler.countAllStaff_GroupBy_Skill_Level(true);
+		final PeopleCountExperienceMap result = staffHandler.countAllStaff_GroupBy_Skill_Level(true);
 		
 		final String resultContent = gson.toJson(result);
 		if (logger.isDebugEnabled()) {
@@ -144,7 +144,7 @@ public class StaffController {
 		Collection<Staff> staff = staffHandler.getStaff().values();
 		if (input.idStaff == 0) {
 			input.idStaff = staff.size()+1;
-			staffHandler.getStaff().put(input.idStaff, input);
+			staffHandler.put(input.idStaff, input);
 			headers.add("backend.return_code", "1");
 			responseEntity = new ResponseEntity<Staff>(input, headers, HttpStatus.OK);
 		} else {
