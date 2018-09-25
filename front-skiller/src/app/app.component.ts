@@ -37,9 +37,14 @@ export class AppComponent implements OnInit {
   in_master_detail: boolean;
 
   /**
-  * content of the searching filed.
+  * Searching request typed & displayed in the searching field.
   */
   searching_what: string;
+
+  /**
+  * Filter on active employees if true (by default), or include all the employees in the database
+  */
+  activeOnly = true;
 
   private nextId: number;
   private previousId: number;
@@ -158,7 +163,7 @@ export class AppComponent implements OnInit {
         if (Constants.DEBUG) {
           console.log('Reloading collaborators for search criteria ' + this.searching_what);
         }
-        this.listStaffService.reloadCollaborators(this.searching_what);
+        this.listStaffService.reloadCollaborators(this.searching_what, this.activeOnly);
         break;
       case Constants.SKILLS_SEARCH: {
         if (Constants.DEBUG) {

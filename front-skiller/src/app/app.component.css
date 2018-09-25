@@ -54,3 +54,10 @@ a.disabled {
 	font-size: 1.2em;
 }
 
+.text {
+	color: antiquewhite;
+}
+
+#activeOnly {
+	margin-right: 5px;
+}

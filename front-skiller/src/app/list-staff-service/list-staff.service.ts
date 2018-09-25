@@ -24,13 +24,16 @@ export class ListStaffService {
   /**
   * Reload the collaborators for the passed criteria.
   */
-  reloadCollaborators(myCriteria: string) {
+  reloadCollaborators(myCriteria: string, activeOnly: boolean) {
 
     function testCriteria(collab, index, array) {
       const firstname = (typeof collab.firstName !== 'undefined') ? collab.firstName : '';
       const lastname = (typeof collab.firstName !== 'undefined') ? collab.firstName : '';
-      return ((firstname.toLowerCase().indexOf(myCriteria) > -1)
-        || (lastname.toLowerCase().indexOf(myCriteria) > -1));
+      return (
+          ( (firstname.toLowerCase().indexOf(myCriteria) > -1)
+         || (lastname.toLowerCase().indexOf(myCriteria) > -1) )
+        && (activeOnly ? collab.isActive : true)
+        );
     }
 
     this.cleanUpCollaborators();

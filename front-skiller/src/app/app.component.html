@@ -8,62 +8,60 @@
 		<a href="" [routerLink]="['/user', previousId]"
 			class="header_toolbar_master_detail previous round"
 			[class.disabled]="(previousId == undefined)"
-			[hidden]=!in_master_detail> &nbsp;&#8249;&nbsp; </a> 
-		<a href=""
+			[hidden]=!in_master_detail> &nbsp;&#8249;&nbsp; </a> <a href=""
 			[routerLink]="['/user', nextId]"
 			class="header_toolbar_master_detail next round"
 			[class.disabled]="(nextId == undefined)" [hidden]=!in_master_detail>
 			&nbsp;&#8250;&nbsp; 
 		</a>
 	</div>
-	
-	<div id="formTitle" class="p-2">
-		{{formTitle}} 
-	</div>
-	
-	<div class="p-2">
-		<a 	[routerLink]="['/skill']"
+
+	<div id="formTitle" class="p-2"><span class="text">{{formTitle}}</span></div>
+
+	<div id="buttons">
+		<a [routerLink]="['/skill']"
 			[class]="(skill_activated 
 					? 'activated header_toolbar_master_detail round' 
-					: 'inactive header_toolbar_master_detail round')" 
-			(click)="switchToSkill()"> <img alt="Skill module"
-			[src]="(skill_activated ? image_skill_activated : image_skill_inactive)"
+					: 'inactive header_toolbar_master_detail round')"
+			(click)="switchToSkill()"> 
+			<img alt="Skill module"
+				[src]="(skill_activated ? image_skill_activated : image_skill_inactive)"
+			style="padding-right:5px"
 			width="48" height="48" />
-		</a>
-		&nbsp;
-		<a 	[routerLink]="['/user']"
+		</a> 
+		<a [routerLink]="['/user']"
 			[class]="(dev_activated 
 					? 'activated header_toolbar_master_detail round' 
-					: 'inactive header_toolbar_master_detail round')" 
-			(click)="switchToDev()"> 
-				<img alt=""
-				[src]="(dev_activated ? image_dev_activated : image_dev_inactive)"
-				width="48" height="48" />
-		</a>
-		&nbsp;
-		<a 	[routerLink]="['/project']"
+					: 'inactive header_toolbar_master_detail round')"
+			(click)="switchToDev()"> <img alt=""
+			[src]="(dev_activated ? image_dev_activated : image_dev_inactive)"
+			style="padding-right:5px"
+			width="48" height="48" />
+		</a> 
+		<a [routerLink]="['/project']"
 			[class]="(project_activated 
 					? 'activated header_toolbar_master_detail round' 
-					: 'inactive header_toolbar_master_detail round')" 
+					: 'inactive header_toolbar_master_detail round')"
 			(click)="switchToProject()"> 
-				<img alt=""
-				[src]="(project_activated ? image_project_activated : image_project_inactive)"
-				width="48" height="'48" />
+			<img alt=""
+			[src]="(project_activated ? image_project_activated : image_project_inactive)"
+			width="48" height="'48" />
 		</a>
 	</div>
 
 	<div class="p-2 ml-auto">
 		<form class="form-inline my-2 my-lg-0">
+			<span id="activeOnly" class="text">Active</span> 
+			<input style="margin-right:5px" type="checkbox" name="activeOnly" 
+				[(ngModel)]="activeOnly"/>			
 			<input class="form-control mr-sm-2" type="text" placeholder="Search"
-				name="searching_what"
-				[(ngModel)]="searching_what" 
-				aria-label="Search"
-				[attr.disabled]="is_allowed_to_search?null:''"
-				(focus)="focusSearch()">
+				name="searching_what" [(ngModel)]="searching_what"
+				aria-label="Search" [attr.disabled]="is_allowed_to_search?null:''"
+				(focus)="focusSearch()"
+				/>
 			<button class="btn btn-outline-success my-2 my-sm-0"
-				[attr.disabled]="is_allowed_to_search?null:''" 
-				(click)="search()"
-				type="submit">Search</button>
+				[attr.disabled]="is_allowed_to_search?null:''" (click)="search()"
+				type="submit" style="padding-right:5px">Search</button>
 		</form>
 	</div>
 </nav>
