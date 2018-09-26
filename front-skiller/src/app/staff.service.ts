@@ -23,6 +23,8 @@ const httpOptions = {
 })
 export class StaffService extends InternalService {
 
+  private static peopleCountExperience: Map<string, number> = new Map<string, number>();
+
   private collaboratorUrl = 'http://localhost:8080/staff';  // URL to web api
 
   constructor(
@@ -155,14 +157,37 @@ export class StaffService extends InternalService {
     return this.http.post<StaffDTO>(this.collaboratorUrl + '/experiences/save', body, httpOptions);
   }
 
+  
   /**
-   * Retrieving the sum of staff members agregate by skill & level (i.e. experience)
+   * Get the count of staff members aggregated by skill & level (i.e. experience)
+   * @param activeOnly : Only active employees count into the aggregation.
    */
-  countAll_groupBy_experience() {
+  getPeopleCountExperience(): Map<string, number> {
+    return StaffService.peopleCountExperience;
+  }
+
+  /**
+   * Retrieving the sum of staff members aggregated by skill & level (i.e. experience)
+   * @param activeOnly : Only active employees count into the aggregation.
+   */
+  countAll_groupBy_experience(activeOnly: boolean) {
     if (Constants.DEBUG) {
       console.log('countAll_groupBy_experience loading aggegations count from the server');
     }
-    return this.http.get<Map<String, Number>>(this.collaboratorUrl + '/countGroupByExperiences');
+    this.http.get<any>(this.collaboratorUrl + '/countGroupByExperiences/'
+                        + (activeOnly ? '/active' : '/all') )
+      .subscribe(
+        response  => {
+          StaffService.peopleCountExperience.clear();
+          Object.entries(response)
+            .forEach(entry => StaffService.peopleCountExperience.set(entry[0], entry[1]));
+        },
+        error => console.log (error),
+        () => {
+          if (Constants.DEBUG) {
+            console.log ('peopleCountExperience is completly loaded');
+          }
+        });
   }
 
 }

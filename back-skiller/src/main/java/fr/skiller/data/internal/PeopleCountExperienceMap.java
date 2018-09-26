@@ -8,9 +8,9 @@ import java.util.Map;
  */
 public class PeopleCountExperienceMap {
 
-	public Map<String, Long> peopleCountExperience = new HashMap<String, Long>();
+	public Map<String, Long> data = new HashMap<String, Long>();
 	
 	public void putAll(final Map<String, Long> countsSkillLevel) {
-		peopleCountExperience.putAll(countsSkillLevel);
+		data.putAll(countsSkillLevel);
 	}
 }

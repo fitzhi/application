@@ -65,13 +65,24 @@ public class StaffController {
 		return gson.toJson(staffHandler.getStaff().values());	
 	}
 
-	@GetMapping("/countGroupByExperiences")
-	String countAll() {
-		final PeopleCountExperienceMap result = staffHandler.countAllStaff_GroupBy_Skill_Level(true);
+	@GetMapping("/countGroupByExperiences/active")
+	String countActive() {
+		final PeopleCountExperienceMap peopleCountExperienceMap = staffHandler.countAllStaff_GroupBy_Skill_Level(true);
 		
-		final String resultContent = gson.toJson(result);
+		final String resultContent = gson.toJson(peopleCountExperienceMap.data);
 		if (logger.isDebugEnabled()) {
-			logger.debug("'/countGroupBySkills' is returning " + resultContent);
+			logger.debug("'/countGroupBySkills/active' is returning " + resultContent);
+		}
+		return resultContent;
+	}
+
+	@GetMapping("/countGroupByExperiences/all")
+	String countAll() {
+		final PeopleCountExperienceMap peopleCountExperienceMap = staffHandler.countAllStaff_GroupBy_Skill_Level(false);
+		
+		final String resultContent = gson.toJson(peopleCountExperienceMap.data);
+		if (logger.isDebugEnabled()) {
+			logger.debug("'/countGroupBySkills/all' is returning " + resultContent);
 		}
 		return resultContent;
 	}

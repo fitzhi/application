@@ -6,6 +6,7 @@ import {ListProjectsService} from './list-projects-service/list-projects.service
 import {ListSkillService} from './list-skill-service/list-skill.service';
 import {ListStaffService} from './list-staff-service/list-staff.service';
 import {ReferentialService} from './referential.service';
+import { StaffService } from './staff.service';
 import {Location} from '@angular/common';
 import {Router} from '@angular/router';
 
@@ -69,6 +70,7 @@ export class AppComponent implements OnInit {
     private listProjectsService: ListProjectsService,
     private referentialService: ReferentialService,
     private location: Location,
+    private staffService: StaffService,
     private router: Router) {
 
     this.cinematicService.actualFormOnStage.subscribe(data => {
@@ -170,6 +172,7 @@ export class AppComponent implements OnInit {
           console.log('Reloading skills for search criteria ' + this.searching_what);
         }
         this.listSkillService.reloadSkills(this.searching_what);
+        this.staffService.countAll_groupBy_experience(this.activeOnly);
         break;
       }
       case Constants.PROJECT_SEARCH: {

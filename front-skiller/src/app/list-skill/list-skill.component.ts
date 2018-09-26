@@ -4,6 +4,7 @@ import {Constants} from '../constants';
 import {Skill} from '../data/skill';
 import { ListSkillService } from '../list-skill-service/list-skill.service';
 import { StaffService } from '../staff.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-list-skill',
@@ -14,7 +15,10 @@ export class ListSkillComponent implements OnInit {
 
   private skills: Skill[];
 
-  private peopleCountExperience: object;
+  private peopleCountExperience: Map<string, number> = null;
+
+  private vide = {};
+  public behaviorSubjectCountExperience = new BehaviorSubject(this.vide);
 
   constructor(
     private cinematicService: CinematicService,
@@ -24,13 +28,7 @@ export class ListSkillComponent implements OnInit {
   ngOnInit() {
     this.cinematicService.setForm(Constants.SKILLS_SEARCH);
     this.skills = this.listSkillService.getSkills();
-    this.staffService.countAll_groupBy_experience()
-        .subscribe( response  => this.peopleCountExperience = response);
+    this.peopleCountExperience = this.staffService.getPeopleCountExperience();
   }
 
-  public search(source: string): void {
-    if (Constants.DEBUG) {
-      console.log('Searching a skill');
-    }
-  }
 }

@@ -16,8 +16,9 @@ export class ListSkillService {
   private static theSkills: Skill[] = [];
 
   constructor(private skillService: SkillService) {}
+
   /**
-   * Return the list of staff membersÒ.
+   * Return the list of staff members.
    */
   getSkills(): Skill[] {
     return ListSkillService.theSkills;
@@ -33,9 +34,8 @@ export class ListSkillService {
     }
 
     this.cleanUpSkills();
-    this.skillService.getAll().
-      subscribe((skills: Skill[]) =>
-        ListSkillService.theSkills.push(...skills.filter(testCriteria)),
+    this.skillService.getAll().subscribe(
+      (skills: Skill[]) => ListSkillService.theSkills.push(...skills.filter(testCriteria)),
       error => console.log(error),
       () => {
         if (Constants.DEBUG) {
