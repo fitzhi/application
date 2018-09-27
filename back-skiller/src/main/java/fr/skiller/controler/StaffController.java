@@ -41,7 +41,7 @@ import fr.skiller.data.internal.Skill;
 @RequestMapping("/staff")
 public class StaffController {
 
-	Logger logger = LoggerFactory.getLogger("backend-skiller");
+	Logger logger = LoggerFactory.getLogger(StaffController.class.getCanonicalName());
 	
 	/**
 	 * Initialization of the Google JSON parser.
