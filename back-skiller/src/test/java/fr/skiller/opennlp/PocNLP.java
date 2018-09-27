@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
@@ -24,6 +25,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import fr.skiller.data.GenerateSkillsInJSONTest;
+import fr.skiller.data.internal.Skill;
 import opennlp.tools.tokenize.SimpleTokenizer;
 import opennlp.tools.tokenize.Tokenizer;
 import opennlp.tools.tokenize.TokenizerME;
@@ -37,15 +40,6 @@ public class PocNLP {
 
 	Logger logger = LoggerFactory.getLogger(PocNLP.class.getCanonicalName());
 	
-	private Map<String, String> getSkills() throws IOException {
-		Map<String, String> skills = new HashMap<String, String>();
-		final BufferedReader br = new BufferedReader(
-				new FileReader(new File(resourcesDirectory.getAbsolutePath() + "/opennlp/skills")));
-		br.lines().forEach(line -> skills.put(cleanup(line), line));
-		br.close();
-		return skills;
-	}
-
 	private String getCV_fromTxt() throws IOException {
 		StringBuilder sb = new StringBuilder();
 		String line;
@@ -62,7 +56,9 @@ public class PocNLP {
 		XWPFDocument docx = new XWPFDocument(
 				new FileInputStream(resourcesDirectory.getAbsolutePath() + "/opennlp/in/ET_201709.docx"));
 		XWPFWordExtractor we = new XWPFWordExtractor(docx);
-		return we.getText();
+		String s = we.getText();
+		we.close();
+		return s;
 	}
 	
 	final String car_accepted = "abcdefghijklmnopqrstuvwxyz-+#";
@@ -73,53 +69,52 @@ public class PocNLP {
 		return sb.toString();
 	}
 
+	private Map<String, Long> treat(final String[] token) throws IOException {
+		
+		List<Skill> listSkills = new ArrayList<Skill>();
+		for (String s : token) {
+			String cleanLine = cleanup(s);
+
+			List<Skill> skillsFromFile = GenerateSkillsInJSONTest.getReadSkillsJson();
+			Map<String, Skill> skills = new HashMap<String, Skill>();
+			skillsFromFile.forEach((sk -> skills.put(cleanup(sk.title), sk)));
+			if (skills.containsKey(cleanLine)) {
+				listSkills.add(skills.get(cleanLine));
+			}
+		}
+		
+		Map<String, Long> mapSkills = listSkills.stream().collect(Collectors.groupingBy(exp -> exp.title, Collectors.counting()));
+		Map<String, Long> mapSkillsSorted = new HashMap<String, Long>();
+		
+		mapSkills.keySet().stream().sorted().forEach(key -> mapSkillsSorted.put(key, mapSkills.get(key)));
+		mapSkillsSorted.keySet().forEach(skill -> logger.debug(skill + " " + mapSkills.get(skill)));
+
+		return mapSkillsSorted;
+	}
+
 	/**
 	 * @return 
 	 * @throws IOException
 	 */
-	private List<String> getSkillsfromCVinTXT() throws IOException {
+	private Map<String, Long> getSkillsfromCVinTXT() throws IOException {
 		WhitespaceTokenizer wtk = WhitespaceTokenizer.INSTANCE;
+		logger.debug("getSkillsfromCVinDOCX : ");
 		String[] token = wtk.tokenize(this.getCV_fromTxt());
-		Set<String> set = new HashSet<String>();
-		for (String s : token) {
-			String cleanLine = cleanup(s);
-			Map<String, String> skills = getSkills();
-			if (skills.containsKey(cleanLine)) {
-				set.add(skills.get(cleanLine));
-			}
-		}
-		logger.debug("getSkillsfromCVinDOCX : ");
-		set.stream().forEach(skill -> logger.debug(skill));
-
-		List<String> sortedList = new ArrayList<String>(set);
-		Collections.sort(sortedList);
-		return sortedList;
+		return treat(token);
 	}
-
-	List<String> getSkillsfromCVinDOCX() throws IOException {
+	
+	private Map<String, Long> getSkillsfromCVinDOCX() throws IOException {
 		WhitespaceTokenizer wtk = WhitespaceTokenizer.INSTANCE;
-		String[] token = wtk.tokenize(this.getCV_fromDOCX());
-		Set<String> set = new HashSet<String>();
-		for (String s : token) {
-			String cleanLine = cleanup(s);
-			Map<String, String> skills = getSkills();
-			if (skills.containsKey(cleanLine)) {
-				set.add(skills.get(cleanLine));
-			}
-		}
 		logger.debug("getSkillsfromCVinDOCX : ");
-		set.stream().forEach(skill -> logger.debug(skill));
-		
-		List<String> sortedList = new ArrayList<String>(set);
-		Collections.sort(sortedList);
-		return sortedList;
+		String[] token = wtk.tokenize(this.getCV_fromDOCX());
+		return treat(token);
 	}
 
 	@Test
-	public void simpleTestComplete() throws Exception {
-		List<String> setTXT = this.getSkillsfromCVinTXT();
-		List<String> setDOCX = this.getSkillsfromCVinDOCX();
-		Assert.assertArrayEquals(setTXT.toArray(), setDOCX.toArray());
+	public void testExtractSkillsfromCVs() throws Exception {
+		Map<String, Long> mapTXT = this.getSkillsfromCVinTXT();
+		Map<String, Long> mapDOCX = this.getSkillsfromCVinDOCX();
+		Assert.assertArrayEquals(mapTXT.keySet().toArray(), mapDOCX.keySet().toArray());
 	}
 
 
@@ -127,6 +122,11 @@ public class PocNLP {
 	public void simpleSimpleTokenizer() {
 		SimpleTokenizer wtk = SimpleTokenizer.INSTANCE;
 		String[] token = wtk.tokenize("Hello World. I am ready for you.");
+		if (logger.isDebugEnabled()) {
+			for (String s : token) {
+				logger.debug(s);
+			}
+		}
 	}
 
 	private static File resourcesDirectory = new File("src/test/resources");
@@ -135,8 +135,10 @@ public class PocNLP {
 	public void firstApplicationWithSimpleTokenizer() throws Exception {
 		SimpleTokenizer wtk = SimpleTokenizer.INSTANCE;
 		String[] token = wtk.tokenize(getCV_fromTxt());
-		for (String s : token) {
-			logger.debug(s);
+		if (logger.isDebugEnabled()) {
+			for (String s : token) {
+				logger.debug(s);
+			}
 		}
 	}
 
@@ -147,8 +149,10 @@ public class PocNLP {
 			TokenizerModel model = new TokenizerModel(modelIn);
 			Tokenizer tokenizer = new TokenizerME(model);
 			String tokens[] = tokenizer.tokenize(getCV_fromTxt());
-			for (String s : tokens) {
-				logger.debug(s);
+			if (logger.isDebugEnabled()) {
+				for (String s : tokens) {
+					logger.debug(s);
+				}
 			}
 		}
 

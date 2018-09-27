@@ -3,14 +3,11 @@
  */
 package fr.skiller.data;
 
-import java.util.ArrayList;
-
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
-import ch.qos.logback.classic.Logger;
 import fr.skiller.data.internal.Staff;
 import junit.framework.TestCase;
 

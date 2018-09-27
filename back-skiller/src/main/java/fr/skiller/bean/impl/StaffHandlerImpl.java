@@ -67,8 +67,7 @@ public class StaffHandlerImpl implements StaffHandler {
 			while ((str = br.readLine()) != null) {
 				sbContent.append(str);
 			}
-			Type listType = new TypeToken<ArrayList<Staff>>() {
-			}.getType();
+			Type listType = new TypeToken<ArrayList<Staff>>() {}.getType();
 			List<Staff> staffsRead = gson.fromJson(sbContent.toString(), listType);
 			for (Staff staffRead : staffsRead) {
 				this.staff.put(staffRead.idStaff, staffRead);
