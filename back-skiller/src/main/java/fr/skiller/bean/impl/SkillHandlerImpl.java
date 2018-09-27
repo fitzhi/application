@@ -3,14 +3,23 @@
  */
 package fr.skiller.bean.impl;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.stereotype.Component;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
 import fr.skiller.bean.SkillHandler;
-import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
 
 /**
@@ -23,28 +32,45 @@ public class SkillHandlerImpl implements SkillHandler {
 	/**
 	 * The skills collection.
 	 */
-	private HashMap<Integer, Skill> skill;
+	private HashMap<Integer, Skill> skills;
+
+	/**
+	 * Initialization of the Google JSON parser.
+	 */
+	private static Gson gson = new GsonBuilder().create();
+
+	private static File resourcesDirectory = new File("src/main/resources");
 
 	@Override
 	public Map<Integer, Skill> getSkills() {
-		if (this.skill != null) {
-			return this.skill;
+		if (this.skills != null) {
+			return this.skills;
 		}
-		this.skill = new HashMap<Integer, Skill>();
-		this.skill.put(1, new Skill(1, "Java"));
-		this.skill.put(2, new Skill(2, "Spring"));
-		this.skill.put(3, new Skill(3, "Spring Framework"));
-		this.skill.put(4, new Skill(4, "Spring Boot"));
-		this.skill.put(5, new Skill(5, "hibernate"));
-		this.skill.put(6, new Skill(5, ".Net"));
-		return skill;
+
+		Map<Integer, Skill> mapSkills = new HashMap<Integer, Skill>();
+
+		FileReader fr;
+		try {
+			fr = new FileReader(new File(resourcesDirectory.getAbsolutePath() + "/data/skills.json"));
+			List<Skill> skillsRead = new ArrayList<Skill>();
+			
+			Type listSkillType = new TypeToken<ArrayList<Skill>>() {
+			}.getType();
+			skillsRead = gson.fromJson(fr, listSkillType);
+
+			skillsRead.forEach(skill -> mapSkills.put(skill.id, skill));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return mapSkills;
 	}
-	
+
 	@Override
 	public Optional<Skill> lookup(final String skillTitle) {
 		return getSkills().values().stream()
-				.filter( (Skill skill) -> skill.title.toUpperCase().equals(skillTitle.toUpperCase()))
-				.findFirst();
+				.filter((Skill skill) -> skill.title.toUpperCase().equals(skillTitle.toUpperCase())).findFirst();
 	}
 
 }
