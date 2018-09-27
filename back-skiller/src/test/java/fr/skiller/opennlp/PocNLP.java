@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.logging.log4j.util.SortedArrayStringMap;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.Assert;
@@ -34,9 +33,9 @@ import opennlp.tools.tokenize.WhitespaceTokenizer;
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL Simple test of OPENNLP
  */
-public class SimpleTest {
+public class PocNLP {
 
-	Logger logger = LoggerFactory.getLogger(SimpleTest.class.getCanonicalName());
+	Logger logger = LoggerFactory.getLogger(PocNLP.class.getCanonicalName());
 	
 	private Map<String, String> getSkills() throws IOException {
 		Map<String, String> skills = new HashMap<String, String>();
@@ -66,7 +65,7 @@ public class SimpleTest {
 		return we.getText();
 	}
 	
-	final String car_accepted = "abcdefghijklmnopqrstuvwxyz-+";
+	final String car_accepted = "abcdefghijklmnopqrstuvwxyz-+#";
 
 	public String cleanup(final String s) {
 		StringBuilder sb = new StringBuilder();
@@ -84,7 +83,6 @@ public class SimpleTest {
 		Set<String> set = new HashSet<String>();
 		for (String s : token) {
 			String cleanLine = cleanup(s);
-			System.out.println(cleanLine);
 			Map<String, String> skills = getSkills();
 			if (skills.containsKey(cleanLine)) {
 				set.add(skills.get(cleanLine));

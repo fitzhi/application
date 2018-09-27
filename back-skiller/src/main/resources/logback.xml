@@ -9,7 +9,7 @@
   
   <logger name="backend-skiller" level="DEBUG"/>
   
-  <root level="info">
+  <root level="INFO">
     <appender-ref ref="STDOUT" />
   </root>
   

@@ -12,7 +12,7 @@
   </root>
   
     <logger name="fr.skiller.opennlp" additivity="false">
-        <level value="WARN" />
+        <level value="DEBUG" />
         <appender-ref ref="STDOUT" />
     </logger>
       
