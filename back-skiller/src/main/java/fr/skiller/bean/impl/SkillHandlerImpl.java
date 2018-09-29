@@ -32,7 +32,7 @@ public class SkillHandlerImpl implements SkillHandler {
 	/**
 	 * The skills collection.
 	 */
-	private HashMap<Integer, Skill> skills;
+	private HashMap<Integer, Skill> mapSkills;
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -43,11 +43,11 @@ public class SkillHandlerImpl implements SkillHandler {
 
 	@Override
 	public Map<Integer, Skill> getSkills() {
-		if (this.skills != null) {
-			return this.skills;
+		if (this.mapSkills != null) {
+			return this.mapSkills;
 		}
 
-		Map<Integer, Skill> mapSkills = new HashMap<Integer, Skill>();
+		mapSkills = new HashMap<Integer, Skill>();
 
 		FileReader fr;
 		try {
@@ -63,7 +63,7 @@ public class SkillHandlerImpl implements SkillHandler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
+		System.out.println(mapSkills);
 		return mapSkills;
 	}
 

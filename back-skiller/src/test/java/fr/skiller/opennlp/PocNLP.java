@@ -10,20 +10,21 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.apache.poi.hwpf.HWPFDocument;
 import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
 import fr.skiller.data.GenerateSkillsInJSONTest;
 import fr.skiller.data.internal.Skill;
@@ -52,6 +53,15 @@ public class PocNLP {
 		return sb.toString();
 	}
 
+	private String getCV_fromDOC() throws IOException {
+		FileInputStream in = new FileInputStream(
+				resourcesDirectory.getAbsolutePath() + "/opennlp/in/ET_201709.doc");
+		HWPFDocument doc = new HWPFDocument(in);
+		String content = doc.getDocumentText();
+		doc.close();
+		return content;
+	}
+	
 	private String getCV_fromDOCX() throws IOException {
 		XWPFDocument docx = new XWPFDocument(
 				new FileInputStream(resourcesDirectory.getAbsolutePath() + "/opennlp/in/ET_201709.docx"));
@@ -59,6 +69,18 @@ public class PocNLP {
 		String s = we.getText();
 		we.close();
 		return s;
+	}
+	
+	private String getCV_fromPDF() throws IOException {
+	    PdfReader reader = new PdfReader(
+	    		resourcesDirectory.getAbsolutePath() + "/opennlp/in/ET_201709.pdf");
+	    final StringBuilder sb = new StringBuilder();
+	    for (int pageNumber = 1; pageNumber < reader.getNumberOfPages(); pageNumber++) {
+    		sb.append(PdfTextExtractor.getTextFromPage(reader, pageNumber));
+	    }
+	    System.out.println(sb.toString());
+	    reader.close();
+	    return sb.toString();
 	}
 	
 	final String car_accepted = "abcdefghijklmnopqrstuvwxyz-+#";
@@ -110,11 +132,30 @@ public class PocNLP {
 		return treat(token);
 	}
 
+	private Map<String, Long> getSkillsfromCVinDOC() throws IOException {
+		WhitespaceTokenizer wtk = WhitespaceTokenizer.INSTANCE;
+		logger.debug("getSkillsfromCVinDOC : ");
+		String[] token = wtk.tokenize(this.getCV_fromDOC());
+		return treat(token);
+	}
+	
+	private Map<String, Long> getSkillsfromCVinPDF() throws IOException {
+		WhitespaceTokenizer wtk = WhitespaceTokenizer.INSTANCE;
+		logger.debug("getSkillsfromCVinPDF : ");
+		String[] token = wtk.tokenize(this.getCV_fromPDF());
+		return treat(token);
+	}
+	
 	@Test
 	public void testExtractSkillsfromCVs() throws Exception {
 		Map<String, Long> mapTXT = this.getSkillsfromCVinTXT();
 		Map<String, Long> mapDOCX = this.getSkillsfromCVinDOCX();
+		Map<String, Long> mapDOC = this.getSkillsfromCVinDOC();
+		Map<String, Long> mapPDF = this.getSkillsfromCVinPDF();
 		Assert.assertArrayEquals(mapTXT.keySet().toArray(), mapDOCX.keySet().toArray());
+		Assert.assertArrayEquals(mapTXT.keySet().toArray(), mapDOC.keySet().toArray());
+		// We loosed certainly few skills during the convert into PDF
+		Assert.assertTrue(mapPDF.keySet().toArray().length == 30);
 	}
 
 

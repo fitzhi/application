@@ -20,6 +20,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.bean.SkillHandler;
 import fr.skiller.data.internal.Skill;
 
 /**
@@ -42,7 +43,9 @@ public class ProjectControlerTest {
 	@Autowired
 	private ProjectHandler projectHandler;
 	
-	
+	@Autowired
+	private SkillHandler skillHandler;
+		
 	@Test
 	public void addSkillInsideAProject() throws Exception {
 		this.mvc.perform(get("/project/skills/2")).andExpect(status().isOk()).andExpect(content().string("[]"));	
@@ -53,10 +56,10 @@ public class ProjectControlerTest {
 		skills.add(new Skill (1, "Java"));
 		this.mvc.perform(get("/project/skills/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(skills)));
 	
-		body = "{ idProject: 2, formerSkillTitle: \"Java\", newSkillTitle: \"Spring\"}";
+		body = "{ idProject: 2, formerSkillTitle: \"Java\", newSkillTitle: \""+skillHandler.getSkills().get(2).title+"\"}";
 		this.mvc.perform(post("/project/skills/save").content(body)).andExpect(status().isOk());		
 		skills.clear();
-		skills.add(new Skill (2, "Spring"));
+		skills.add(new Skill (2, skillHandler.getSkills().get(2).title));
 		this.mvc.perform(get("/project/skills/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(skills)));
 
 		body = "{ idProject: 2, idSkill: 2}";
