@@ -6,6 +6,95 @@
 </div>
 
 <div class="container" style="width: 100%;">
+	<div class="p-2" style="width: 70%; margin-right: 40px">
+		<h4 class="mb-3">Personal information</h4>
+		<form class="needs-validation" [formGroup]="profileStaff"
+			(ngSubmit)="onSubmit()">
+			<div class="row">
+				<div class="col-md-6 mb-3">
+					<label for="firstName">First name</label> <input type="text"
+						class="form-control" id="firstName" name="firstName"
+						[readonly]="isAlreadyDeactived()" placeholder="" value=""
+						formControlName="firstName"> <label
+						*ngIf="firstName.invalid" [ngClass]="'alert alert-warning'"
+						style="width: 100%; font-size: 10px;">16 max character for
+						the first name.</label>
+				</div>
+				<div class="col-md-6 mb-3">
+					<label for="lastName">Last name</label> <input type="text"
+						class="form-control" id="lastName" name="lastName"
+						[readonly]="isAlreadyDeactived()"
+						placeholder="enter the last name" value=""
+						formControlName="lastName"> <label
+						*ngIf="lastName.invalid" [ngClass]="'alert alert-warning'"
+						style="width: 100%; font-size: 10px;"> Last name is
+						required with 16 max character.</label>
+
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-6 mb-3">
+					<label for="nickName">Nickname</label>
+					<div class="input-group">
+						<div class="input-group-prepend">
+							<span class="input-group-text">@</span>
+						</div>
+						<input type="text" class="form-control" id="nickName"
+							name="nickName" [readonly]="isAlreadyDeactived()"
+							placeholder="Enter the nickname (if any) for this staff member"
+							value="" formControlName="nickName"> <label
+							*ngIf="nickName.invalid" [ngClass]="'alert alert-warning'"
+							style="width: 100%; font-size: 10px;">12 max character
+							for the Pseudo.</label>
+					</div>
+				</div>
+				<div class="col-md-6 mb-3">
+					<label for="login">Login</label> <input type="text"
+						class="form-control" id="login" name="login"
+						[readonly]="isAlreadyDeactived()"
+						placeholder="Enter the connection login of this staff member"
+						value="" formControlName="login"> <label
+						*ngIf="login.invalid" [ngClass]="'alert alert-warning'"
+						style="width: 100%; font-size: 10px;"> login is required
+						with 16 max character.</label>
+				</div>
+			</div>
+
+			<div class="mb-3">
+				<label for="email">Email <span class="text-muted">(Optional)</span></label>
+				<input type="email" class="form-control" id="email" name="email"
+					[readonly]="isAlreadyDeactived()" placeholder="you@example.com"
+					formControlName="email"> <label *ngIf="email.invalid"
+					[ngClass]="'alert alert-warning'"
+					style="width: 100%; font-size: 10px;">You must specify an
+					email address for this new staff member.</label>
+			</div>
+			<div class="mb-3">
+				<label for="profile">Profile</label> <select name="label"
+					id="profile" formControlName="profile"
+					class="custom-select d-block w-100">
+					<option *ngFor="let level of profiles" [value]="level.code">{{level.title}}</option>
+				</select> <label *ngIf="profile.invalid" [ngClass]="'alert alert-warning'"
+					style="width: 100%; font-size: 10px;"> Please, select a
+					profile for this staff member.</label>
+			</div>
+
+			<div class="mb-3">
+				<label class="checkbox-inline"> <input type="checkbox"
+					name="active" formControlName="active"> {{label_isActive}}
+					{{label_dateInactive | date : 'longDate'}}
+				</label>
+			</div>
+
+			<hr class="mb-4">
+			<button class="btn btn-primary btn-lg btn-block" type="submit"
+				[disabled]="(!profileStaff.valid)||isAlreadyDeactived()">Submit</button>
+		</form>
+	</div>
+</div>
+
+<div class="container" style="width: 100%;">
 	<div class="d-flex flex-row-reverse">
 		<div class="p-2" style="width: 30%;">
 			<div class="skill_card">
@@ -17,8 +106,7 @@
 					[source]="sourceExperience"
 					(createConfirm)="onConfirmAddStaffSkill($event)"
 					(editConfirm)="onConfirmEditStaffSkill($event)"
-					(deleteConfirm)="onConfirmRemoveSkill($event)">
-				</ng2-smart-table>
+					(deleteConfirm)="onConfirmRemoveSkill($event)"> </ng2-smart-table>
 			</div>
 			<br />
 			<div class="projects_card">
@@ -33,91 +121,6 @@
 					(deleteConfirm)="onConfirmRemoveFromProject($event)">
 				</ng2-smart-table>
 			</div>
-		</div>
-		<div class="p-2" style="width: 70%; margin-right: 40px">
-			<h4 class="mb-3">Personal information</h4>
-			<form class="needs-validation" [formGroup]="profileStaff"
-				(ngSubmit)="onSubmit()">
-				<div class="row">
-					<div class="col-md-6 mb-3">
-						<label for="firstName">First name</label> <input type="text"
-							class="form-control" id="firstName" name="firstName"
-							[readonly]="isAlreadyDeactived()" placeholder="" value=""
-							formControlName="firstName"> <label
-							*ngIf="firstName.invalid" [ngClass]="'alert alert-warning'"
-							style="width: 100%; font-size: 10px;">16 max character
-							for the first name.</label>
-					</div>
-					<div class="col-md-6 mb-3">
-						<label for="lastName">Last name</label> <input type="text"
-							class="form-control" id="lastName" name="lastName"
-							[readonly]="isAlreadyDeactived()"
-							placeholder="enter the last name" value=""
-							formControlName="lastName"> <label
-							*ngIf="lastName.invalid" [ngClass]="'alert alert-warning'"
-							style="width: 100%; font-size: 10px;"> Last name is
-							required with 16 max character.</label>
-
-					</div>
-				</div>
-
-				<div class="row">
-					<div class="col-md-6 mb-3">
-						<label for="nickName">Nickname</label>
-						<div class="input-group">
-							<div class="input-group-prepend">
-								<span class="input-group-text">@</span>
-							</div>
-							<input type="text" class="form-control" id="nickName"
-								name="nickName" [readonly]="isAlreadyDeactived()"
-								placeholder="Enter the nickname (if any) for this staff member"
-								value="" formControlName="nickName"> <label
-								*ngIf="nickName.invalid" [ngClass]="'alert alert-warning'"
-								style="width: 100%; font-size: 10px;">12 max character
-								for the Pseudo.</label>
-						</div>
-					</div>
-					<div class="col-md-6 mb-3">
-						<label for="login">Login</label> <input type="text"
-							class="form-control" id="login" name="login"
-							[readonly]="isAlreadyDeactived()"
-							placeholder="Enter the connection login of this staff member"
-							value="" formControlName="login"> <label
-							*ngIf="login.invalid" [ngClass]="'alert alert-warning'"
-							style="width: 100%; font-size: 10px;"> login is required
-							with 16 max character.</label>
-					</div>
-				</div>
-
-				<div class="mb-3">
-					<label for="email">Email <span class="text-muted">(Optional)</span></label>
-					<input type="email" class="form-control" id="email" name="email"
-						[readonly]="isAlreadyDeactived()" placeholder="you@example.com"
-						formControlName="email"> <label *ngIf="email.invalid"
-						[ngClass]="'alert alert-warning'"
-						style="width: 100%; font-size: 10px;">You must specify an
-						email address for this new staff member.</label>
-				</div>
-				<div class="mb-3">
-					<label for="profile">Profile</label> <select name="label" id="profile"
-						formControlName="profile" class="custom-select d-block w-100">
-						<option *ngFor="let level of profiles" [value]="level.code">{{level.title}}</option>
-					</select> <label *ngIf="profile.invalid" [ngClass]="'alert alert-warning'"
-						style="width: 100%; font-size: 10px;"> Please, select
-						a profile for this staff member.</label>
-				</div>
-
-				<div class="mb-3">
-					<label class="checkbox-inline"> <input type="checkbox"
-						name="active" formControlName="active"> {{label_isActive}}
-						{{label_dateInactive | date : 'longDate'}}
-					</label>
-				</div>
-
-				<hr class="mb-4">
-				<button class="btn btn-primary btn-lg btn-block" type="submit"
-					[disabled]="(!profileStaff.valid)||isAlreadyDeactived()">Submit</button>
-			</form>
 		</div>
 	</div>
 </div>

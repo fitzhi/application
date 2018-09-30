@@ -63,7 +63,6 @@ public class SkillHandlerImpl implements SkillHandler {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(mapSkills);
 		return mapSkills;
 	}
 

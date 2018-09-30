@@ -180,14 +180,19 @@ export class StaffService extends InternalService {
         response  => {
           StaffService.peopleCountExperience.clear();
           Object.entries(response)
-            .forEach(entry => StaffService.peopleCountExperience.set(entry[0], entry[1]));
-        },
+            .forEach( entry => {
+              let key, value: string;
+              key = entry[0] as string;
+              value = entry[1] as string;
+              StaffService.peopleCountExperience.set(key, parseInt(value, 0));
+            }); },
         error => console.log (error),
         () => {
           if (Constants.DEBUG) {
             console.log ('peopleCountExperience is completly loaded');
           }
-        });
+        }
+        );
   }
 
 }
