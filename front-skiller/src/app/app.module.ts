@@ -34,6 +34,9 @@ import { ProjectComponent } from './project/project.component';
 import { ListProjectComponent } from './list-project/list-project.component';
 import { ReferentialService } from './referential.service';
 
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MatTabsModule} from '@angular/material/tabs';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -60,6 +63,8 @@ import { ReferentialService } from './referential.service';
     HttpClientModule,
     Ng2SmartTableModule,
     ReactiveFormsModule,
+    BrowserAnimationsModule,
+    MatTabsModule,
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
