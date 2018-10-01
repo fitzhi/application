@@ -36,6 +36,8 @@ import { ReferentialService } from './referential.service';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTabsModule} from '@angular/material/tabs';
+import { StaffTabsComponent } from './staff/staff-tabs/staff-tabs.component';
+import { StaffFormComponent } from './staff/staff-form/staff-form.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +51,9 @@ import {MatTabsModule} from '@angular/material/tabs';
     ErrorComponent,
     StarsSkillLevelRenderComponent,
     ProjectComponent,
-    ListProjectComponent
+    ListProjectComponent,
+    StaffTabsComponent,
+    StaffFormComponent
   ],
   entryComponents: [StarsSkillLevelRenderComponent],
   imports: [

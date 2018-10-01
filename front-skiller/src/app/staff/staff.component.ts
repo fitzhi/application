@@ -30,6 +30,7 @@ import {Constants} from '../constants';
 import {Profile} from '../data/profile';
 import {ListStaffService} from '../list-staff-service/list-staff.service';
 import {ReferentialService} from '../referential.service';
+import { StaffDataExchangeService } from './service/staff-data-exchange.service';
 
 import {Ng2SmartTableModule} from 'ng2-smart-table';
 import {LocalDataSource} from 'ng2-smart-table';
@@ -43,29 +44,18 @@ import {Ng2SmartTableComponent} from 'ng2-smart-table/ng2-smart-table.component'
 })
 export class StaffComponent implements OnInit {
 
-  private id: number;
+  /**
+   * Staff member identifier shared with the child components (staffTabs, StaffForm)
+   */
+  private idStaff: number;
   private sub: any;
 
-  private profiles: Profile[];
   private sourceProjects = new LocalDataSource([]);
   private sourceExperience = new LocalDataSource([]);
   private settings_experience = Constants.SETTINGS_EXPERIENCE_SMARTTABLE;
   private settings_projects = Constants.SETTINGS_PROJECTS_SMARTTABLE;
 
   private collaborator: Collaborator;
-
-  private label_isActive: String;
-  private label_dateInactive: Date;
-
-  private profileStaff = new FormGroup({
-    firstName: new FormControl('', [Validators.maxLength(16)]),
-    lastName: new FormControl('', [Validators.required, Validators.maxLength(16)]),
-    nickName: new FormControl('', [Validators.maxLength(16)]),
-    login: new FormControl('', [Validators.required, Validators.maxLength(16)]),
-    email: new FormControl('', [Validators.required, Validators.maxLength(32)]),
-    profile: new FormControl(null, [Validators.required]),
-    active: new FormControl(1)
-  });
 
   constructor(
     private cinematicService: CinematicService,
@@ -75,7 +65,8 @@ export class StaffComponent implements OnInit {
     private staffService: StaffService,
     private projectService: ProjectService,
     private referentialService: ReferentialService,
-    private skillService: SkillService) {}
+    private skillService: SkillService,
+    private staffDataExchangeService: StaffDataExchangeService) {}
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
@@ -83,9 +74,9 @@ export class StaffComponent implements OnInit {
         console.log('params[\'id\'] ' + params['id']);
       }
       if (params['id'] == null) {
-        this.id = null;
+        this.idStaff = null;
       } else {
-        this.id = + params['id']; // (+) converts string 'id' to a number
+        this.idStaff = + params['id']; // (+) converts string 'id' to a number
       }
 
       // Either we are in creation mode, or we load the collaborator from the back-end...
@@ -99,28 +90,15 @@ export class StaffComponent implements OnInit {
        * By default, you cannot add a project/skill for an unregistered developer.
        */
       document.querySelector('body').style.cssText = '--actions-button-visible: hidden';
-      this.label_isActive = 'Is active';
-      if (this.id != null) {
-        this.listStaffService.getCollaborator(this.id).subscribe(
+      if (this.idStaff != null) {
+        this.listStaffService.getCollaborator(this.idStaff).subscribe(
           (collab: Collaborator) => {
+            this.staffDataExchangeService.changeCollaborator(collab);
             this.collaborator = collab;
-            this.profileStaff.get('firstName').setValue(collab.firstName);
-            this.profileStaff.get('lastName').setValue(collab.lastName);
-            this.profileStaff.get('nickName').setValue(collab.nickName);
-            this.profileStaff.get('login').setValue(collab.login);
-            this.profileStaff.get('email').setValue(collab.email);
-            this.profileStaff.get('profile').setValue(collab.level);
-            this.profileStaff.get('active').setValue(collab.isActive);
             if (collab.isActive) {
-              this.label_isActive = 'Is active';
               document.querySelector('body').style.cssText = '--actions-button-visible: visible';
             } else {
-              this.label_isActive = 'Is inactive since ';
-              this.label_dateInactive = collab.dateInactive;
               document.querySelector('body').style.cssText = '--actions-button-visible: hidden';
-              // There is no READONLY attribute in the SELECT widget.
-              // We need to disable this field within code and not in HTML like the rest of the form.
-              this.profileStaff.get('level').disable();
             }
             this.sourceExperience.load(this.collaborator.experiences);
             this.sourceProjects.load(this.collaborator.projects);
@@ -129,9 +107,9 @@ export class StaffComponent implements OnInit {
           error => {
             if (error.status === 404) {
               if (Constants.DEBUG) {
-                console.log('404 : cannot found a collaborator for the id ' + this.id);
+                console.log('404 : cannot found a collaborator for the id ' + this.idStaff);
               }
-              this.messageService.error('There is no staff member for id ' + this.id);
+              this.messageService.error('There is no staff member for id ' + this.idStaff);
               this.collaborator = {
                 idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
                 isActive: true, dateInactive: null, projects: [], experiences: []
@@ -142,20 +120,16 @@ export class StaffComponent implements OnInit {
           },
           () => {
             if (this.collaborator.idStaff === 0) {
-              console.log('No collaborator found for the id ' + this.id);
+              console.log('No collaborator found for the id ' + this.idStaff);
             }
             if (Constants.DEBUG) {
-              console.log('Loading complete for id ' + this.id);
+              console.log('Loading complete for id ' + this.idStaff);
             }
           }
         );
       }
     });
     this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
-
-    this.referentialService.behaviorSubjectProfiles.subscribe(
-      (profiles: Profile[]) => this.profiles = profiles);
-
   }
 
   /*
@@ -416,54 +390,6 @@ export class StaffComponent implements OnInit {
    */
   public isAlreadyDeactived(): boolean {
     return (this.collaborator.dateInactive != null);
-  }
-
-  /**
-  * The Submit Button has been activated
-  */
-  onSubmit(): void {
-    if (Constants.DEBUG) {
-      console.log('Saving data for the collaborator below');
-      console.log(this.collaborator);
-    }
-    this.collaborator.firstName = this.profileStaff.get('firstName').value;
-    this.collaborator.lastName = this.profileStaff.get('lastName').value;
-    this.collaborator.nickName = this.profileStaff.get('nickName').value;
-    this.collaborator.login = this.profileStaff.get('login').value;
-    this.collaborator.email = this.profileStaff.get('email').value;
-    this.collaborator.level = this.profileStaff.get('profile').value;
-    this.collaborator.isActive = this.profileStaff.get('active').value;
-
-    this.staffService.save(this.collaborator)
-      .subscribe(
-      staff => {
-        this.collaborator = staff;
-        this.messageService.info('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
-      });
-  }
-
-  get firstName(): any {
-    return this.profileStaff.get('firstName');
-  }
-
-  get lastName(): any {
-    return this.profileStaff.get('lastName');
-  }
-
-  get nickName(): any {
-    return this.profileStaff.get('nickName');
-  }
-
-  get login(): any {
-    return this.profileStaff.get('login');
-  }
-
-  get profile(): any {
-    return this.profileStaff.get('profile');
-  }
-
-  get email(): any {
-    return this.profileStaff.get('email');
   }
 
 }
