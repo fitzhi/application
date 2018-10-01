@@ -38,6 +38,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MatTabsModule} from '@angular/material/tabs';
 import { StaffTabsComponent } from './staff/staff-tabs/staff-tabs.component';
 import { StaffFormComponent } from './staff/staff-form/staff-form.component';
+import { StaffProjectsComponent } from './staff/staff-tabs/staff-projects/staff-projects.component';
+import { StaffExperienceComponent } from './staff/staff-tabs/staff-experience/staff-experience.component';
 
 @NgModule({
   declarations: [
@@ -53,7 +55,9 @@ import { StaffFormComponent } from './staff/staff-form/staff-form.component';
     ProjectComponent,
     ListProjectComponent,
     StaffTabsComponent,
-    StaffFormComponent
+    StaffFormComponent,
+    StaffProjectsComponent,
+    StaffExperienceComponent
   ],
   entryComponents: [StarsSkillLevelRenderComponent],
   imports: [

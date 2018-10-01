@@ -7,7 +7,12 @@ import {BehaviorSubject} from 'rxjs';
 })
 export class StaffDataExchangeService {
 
-  private collaboratorSource = new BehaviorSubject(new Collaborator());
+  private collaboratorSource = new BehaviorSubject(
+    {
+      idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
+      isActive: true, dateInactive: null,
+      projects: [], experiences: []
+    });
 
   collaboratorObserver = this.collaboratorSource.asObservable();
 
