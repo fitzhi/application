@@ -52,8 +52,8 @@ export class StaffProjectsComponent implements OnInit {
      * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
      */
     this.staffDataExchangeService.collaboratorObserver
-      .subscribe((collabRead: Collaborator) => {
-        this.collaborator = collabRead;
+      .subscribe((collabRetrieved: Collaborator) => {
+        this.collaborator = collabRetrieved;
         this.sourceProjects.load(this.collaborator.projects);
       });
   }

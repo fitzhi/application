@@ -144,6 +144,7 @@ export class StaffComponent implements OnInit {
       error => console.log(error),
     );
   }
+  
   /*
   * Refresh the skills content after an update.
   */
