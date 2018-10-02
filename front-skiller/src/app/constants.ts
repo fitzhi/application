@@ -77,7 +77,7 @@ export class Constants {
       class: 'table-bordered skills_table'
     },
     actions: {
-      columnTitle: '____',
+      columnTitle: '_____',
       add: Constants.canAdd,
       edit: true,
       delete: true,
@@ -121,7 +121,7 @@ export class Constants {
       class: 'table-bordered skills_table'
     },
     actions: {
-      columnTitle: '____',
+      columnTitle: '_____',
       add: true,
       edit: true,
       delete: true
@@ -182,7 +182,7 @@ export class Constants {
       class: 'table table-bordered'
     },
     actions: {
-      columnTitle: '____',
+      columnTitle: '_____',
       add: true,
       edit: true,
       delete: true

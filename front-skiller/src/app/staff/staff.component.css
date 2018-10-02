@@ -31,8 +31,14 @@ div.skill_card {
         margin: 0px;
 }
 
-:host >>> ng2-smart-table tr td  { 
-        padding: 0px;
+:host >>> ng2-smart-table tr th { 
+        padding: 2px;
+        margin: 0px;
+}
+
+:host >>> ng2-smart-table tr td { 
+        padding: 2px;
+        margin: 0px;
 }
 
 :host >>> ng2-smart-table img { 
@@ -40,4 +46,14 @@ div.skill_card {
 	height: 25px;
 	visibility:  var(--actions-button-visible);
 }
+
+:host >>> ng2-smart-table img:hover {
+	width: 35px;
+	height: 35px;
+    border-radius: 25%;
+    border: 1px solid;
+    border-color: blue;
+	background-color: lightGrey;
+}
+
 
