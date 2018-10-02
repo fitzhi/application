@@ -19,6 +19,11 @@ import {Ng2SmartTableComponent} from 'ng2-smart-table/ng2-smart-table.component'
 })
 export class StaffExperienceComponent implements OnInit {
 
+  /**
+   * Image used by the button for upload the application to retrieve the skills.
+   */
+  private image_upLoadCV = '/assets/img/uploadCV.png';
+
   /*
    * Data store associated with the projects grid
    */
@@ -197,5 +202,8 @@ export class StaffExperienceComponent implements OnInit {
   public isAlreadyDeactived(): boolean {
     return (this.collaborator.dateInactive != null);
   }
-  
+
+  upload() {
+      this.messageService.info('Uploading');
+    }
 }

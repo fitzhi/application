@@ -83,19 +83,19 @@ export class Constants {
       delete: true,
     },
     add: {
-      addButtonContent: '<img src="/assets/img/add.jpeg"></img>',
-      createButtonContent: '<img src="/assets/img/update-cloud.jpeg"></img>',
+      addButtonContent: '<img src="/assets/img/add.png"></img>',
+      createButtonContent: '<img src="/assets/img/save.png"></img>',
       cancelButtonContent: '<img src="/assets/img/cancel.png"></img>',
       confirmCreate: true,
     },
     delete: {
-      deleteButtonContent: '<img src="/assets/img/delete.jpeg"></img>',
+      deleteButtonContent: '<img src="/assets/img/delete.png"></img>',
       confirmDelete: true,
     },
     edit: {
-      editButtonContent: '<img src="/assets/img/edit.jpeg"></img>',
+      editButtonContent: '<img src="/assets/img/edit.png"></img>',
       cancelButtonContent: '<img src="/assets/img/cancel.png"></img>',
-      saveButtonContent: '<img src="/assets/img/update-cloud.jpeg"></img>',
+      saveButtonContent: '<img src="/assets/img/save.png"></img>',
       confirmSave: true,
     },
     hideSubHeader: false,
@@ -127,19 +127,19 @@ export class Constants {
       delete: true
     },
     add: {
-      addButtonContent: '<img width="20px" height="20px" src="/assets/img/add.jpeg"></img>',
-      createButtonContent: '<img width="25px" height="25px" src="/assets/img/update-cloud.jpeg"></img>',
-      cancelButtonContent: '<img width="20px" height="20px" src="/assets/img/cancel.png"></img>',
+      addButtonContent: '<img src="/assets/img/add.png"></img>',
+      createButtonContent: '<img src="/assets/img/save.png"></img>',
+      cancelButtonContent: '<img src="/assets/img/cancel.png"></img>',
       confirmCreate: true,
     },
     delete: {
-      deleteButtonContent: '<img width="20px" height="20px" src="/assets/img/delete.jpeg"></img>',
+      deleteButtonContent: '<img src="/assets/img/delete.png"></img>',
       confirmDelete: true,
     },
     edit: {
-      editButtonContent: '<img width="20px" height="20px" src="/assets/img/edit.jpeg"></img>',
-      cancelButtonContent: '<img width="20px" height="20px" src="/assets/img/cancel.png"></img>',
-      saveButtonContent: '<img width="25px" height="25px" src="/assets/img/update-cloud.jpeg"></img>',
+      editButtonContent: '<img src="/assets/img/edit.png"></img>',
+      cancelButtonContent: '<img src="/assets/img/cancel.png"></img>',
+      saveButtonContent: '<img src="/assets/img/save.png"></img>',
       confirmSave: true,
     },
     hideSubHeader: false,
@@ -162,19 +162,19 @@ export class Constants {
       }
     },
     add: {
-      addButtonContent: '<img width="20px" height="20px" src="/assets/img/add.jpeg"></img>',
-      createButtonContent: '<img width="25px" height="25px" src="/assets/img/update-cloud.jpeg"></img>',
-      cancelButtonContent: '<img width="20px" height="20px" src="/assets/img/cancel.png"></img>',
+      addButtonContent: '<img src="/assets/img/add.png"></img>',
+      createButtonContent: '<img src="/assets/img/save.png"></img>',
+      cancelButtonContent: '<img src="/assets/img/cancel.png"></img>',
       confirmCreate: true,
     },
     delete: {
-      deleteButtonContent: '<img width="20px" height="20px" src="/assets/img/delete.jpeg"></img>',
+      deleteButtonContent: '<img src="/assets/img/delete.png"></img>',
       confirmDelete: true,
     },
     edit: {
-      editButtonContent: '<img width="20px" height="20px" src="/assets/img/edit.jpeg"></img>',
-      cancelButtonContent: '<img width="20px" height="20px" src="/assets/img/cancel.png"></img>',
-      saveButtonContent: '<img width="25px" height="25px" src="/assets/img/update-cloud.jpeg"></img>',
+      editButtonContent: '<img src="/assets/img/edit.png"></img>',
+      cancelButtonContent: '<img src="/assets/img/cancel.png"></img>',
+      saveButtonContent: '<img src="/assets/img/save.png"></img>',
       confirmSave: true,
     },
     hideSubHeader: false,
@@ -189,7 +189,7 @@ export class Constants {
     },
     noDataMessage: 'There is no skill associated yet.',
     pager: {
-      perPage: 5
+      perPage: 10
     }
   };
 }

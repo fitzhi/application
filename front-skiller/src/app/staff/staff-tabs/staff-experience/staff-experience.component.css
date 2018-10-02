@@ -1,0 +1,18 @@
+#image_upLoadCV {
+	width: 30px;
+	height: 30px;
+}
+
+#upLoadCV {
+    display: flex;
+    border-radius: 25%;
+    text-decoration: none;
+    display: inline-block;
+}
+
+#upLoadCV:hover {
+    background-color: lightGrey;
+}
+
+#upLoadCV {
+}

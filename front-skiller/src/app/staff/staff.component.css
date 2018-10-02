@@ -36,8 +36,8 @@ div.skill_card {
 }
 
 :host >>> ng2-smart-table img { 
-	width: 20px;
-	height: 20px;
+	width: 25px;
+	height: 25px;
 	visibility:  var(--actions-button-visible);
 }
 
