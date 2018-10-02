@@ -101,7 +101,7 @@ export class Constants {
     hideSubHeader: false,
     noDataMessage: 'No experience registered yet.',
     pager: {
-      perPage: 5
+      perPage: 10
     }
   };
 
@@ -145,7 +145,7 @@ export class Constants {
     hideSubHeader: false,
     noDataMessage: 'No skill registered yet.',
     pager: {
-      perPage: 5
+      perPage: 10
     }
   };
 
