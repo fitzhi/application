@@ -35,11 +35,12 @@ import { ListProjectComponent } from './list-project/list-project.component';
 import { ReferentialService } from './referential.service';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MatTabsModule} from '@angular/material/tabs';
 import { StaffTabsComponent } from './staff/staff-tabs/staff-tabs.component';
 import { StaffFormComponent } from './staff/staff-form/staff-form.component';
 import { StaffProjectsComponent } from './staff/staff-tabs/staff-projects/staff-projects.component';
 import { StaffExperienceComponent } from './staff/staff-tabs/staff-experience/staff-experience.component';
+import { StaffUploadCvComponent } from './staff/staff-tabs/staff-experience/staff-upload-cv/staff-upload-cv.component';
+import { MatTabsModule, MatDialogModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -57,9 +58,13 @@ import { StaffExperienceComponent } from './staff/staff-tabs/staff-experience/st
     StaffTabsComponent,
     StaffFormComponent,
     StaffProjectsComponent,
-    StaffExperienceComponent
+    StaffExperienceComponent,
+    StaffUploadCvComponent
   ],
-  entryComponents: [StarsSkillLevelRenderComponent],
+  entryComponents: [
+    StarsSkillLevelRenderComponent,
+    StaffUploadCvComponent
+  ],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -73,6 +78,7 @@ import { StaffExperienceComponent } from './staff/staff-tabs/staff-experience/st
     ReactiveFormsModule,
     BrowserAnimationsModule,
     MatTabsModule,
+    MatDialogModule,
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.

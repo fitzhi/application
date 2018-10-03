@@ -10,6 +10,8 @@ import { Component, OnInit } from '@angular/core';
 import {Ng2SmartTableModule} from 'ng2-smart-table';
 import {LocalDataSource} from 'ng2-smart-table';
 import {StarsSkillLevelRenderComponent} from './../../starsSkillLevelRenderComponent';
+import { StaffUploadCvComponent } from './staff-upload-cv/staff-upload-cv.component';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import {Ng2SmartTableComponent} from 'ng2-smart-table/ng2-smart-table.component';
 
 @Component({
@@ -44,6 +46,7 @@ export class StaffExperienceComponent implements OnInit {
     private staffDataExchangeService: StaffDataExchangeService,
     private staffService: StaffService,
     private messageService: MessageService,
+    private dialog: MatDialog,
     private skillService: SkillService) { }
 
   ngOnInit() {
@@ -205,5 +208,8 @@ export class StaffExperienceComponent implements OnInit {
 
   upload() {
       this.messageService.info('Uploading');
-    }
+      let dialogRef = this.dialog.open(StaffUploadCvComponent, {
+        panelClass: 'default-dialog-container-class'
+      });
+  }
 }
