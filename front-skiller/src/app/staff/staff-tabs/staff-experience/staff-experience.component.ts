@@ -1,17 +1,17 @@
-import { Constants } from '../../../constants';
-import { Collaborator } from '../../../data/collaborator';
-import { StaffDTO } from '../../../data/external/staffDTO';
-import { MessageService } from '../../../message.service';
-import { SkillService } from '../../../skill.service';
-import { StaffService } from '../../../staff.service';
-import { StaffDataExchangeService } from '../../service/staff-data-exchange.service';
-import { Component, OnInit } from '@angular/core';
+import {Constants} from '../../../constants';
+import {Collaborator} from '../../../data/collaborator';
+import {StaffDTO} from '../../../data/external/staffDTO';
+import {MessageService} from '../../../message.service';
+import {SkillService} from '../../../skill.service';
+import {StaffService} from '../../../staff.service';
+import {StaffDataExchangeService} from '../../service/staff-data-exchange.service';
+import {Component, OnInit} from '@angular/core';
 
 import {Ng2SmartTableModule} from 'ng2-smart-table';
 import {LocalDataSource} from 'ng2-smart-table';
 import {StarsSkillLevelRenderComponent} from './../../starsSkillLevelRenderComponent';
-import { StaffUploadCvComponent } from './staff-upload-cv/staff-upload-cv.component';
-import { MatDialog, MatDialogRef } from '@angular/material';
+import {StaffUploadCvComponent} from './staff-upload-cv/staff-upload-cv.component';
+import {MatDialog, MatDialogRef} from '@angular/material';
 import {Ng2SmartTableComponent} from 'ng2-smart-table/ng2-smart-table.component';
 
 @Component({
@@ -47,7 +47,7 @@ export class StaffExperienceComponent implements OnInit {
     private staffService: StaffService,
     private messageService: MessageService,
     private dialog: MatDialog,
-    private skillService: SkillService) { }
+    private skillService: SkillService) {}
 
   ngOnInit() {
     /**
@@ -207,9 +207,15 @@ export class StaffExperienceComponent implements OnInit {
   }
 
   upload() {
-      this.messageService.info('Uploading');
-      let dialogRef = this.dialog.open(StaffUploadCvComponent, {
+    this.messageService.info('Uploading');
+    let dialogRef = this.dialog.open(StaffUploadCvComponent,
+      {
         panelClass: 'default-dialog-container-class'
-      });
+
+        ,
+        data: this.collaborator, 
+      }
+    )
+      ;
   }
 }
