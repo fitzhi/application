@@ -40,7 +40,7 @@ import { StaffFormComponent } from './staff/staff-form/staff-form.component';
 import { StaffProjectsComponent } from './staff/staff-tabs/staff-projects/staff-projects.component';
 import { StaffExperienceComponent } from './staff/staff-tabs/staff-experience/staff-experience.component';
 import { StaffUploadCvComponent } from './staff/staff-tabs/staff-experience/staff-upload-cv/staff-upload-cv.component';
-import { MatTabsModule, MatDialogModule } from '@angular/material';
+import { MatTabsModule, MatDialogModule, MatProgressBarModule } from '@angular/material';
 
 @NgModule({
   declarations: [
@@ -79,6 +79,7 @@ import { MatTabsModule, MatDialogModule } from '@angular/material';
     BrowserAnimationsModule,
     MatTabsModule,
     MatDialogModule,
+    MatProgressBarModule,
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-staff-upload-cv',
@@ -9,9 +10,13 @@ export class StaffUploadCvComponent implements OnInit {
 
   applicationFile: string;
 
+  progression = new Subject<number>()
+  progress = this.progression.asObservable();
+
   constructor() { }
 
   ngOnInit() {
+    this.progression.next(30 / 100);
   }
 
 }

@@ -6,7 +6,8 @@ Only format <b>DOC</b>, <b>DOCX</b> and <b>PDF</b> are supported.</p>
 	<label for="file" class="label-file">Select the file to upload...</label>
 	<input id="file" name="file" class="input-file" type="file" [(ngModel)]="applicationFile" />
 	{{applicationFile}}
-	<span></span>
+	<br/>
+	<mat-progress-bar *ngIf="progress" mode="determinate" [value]="progress | async"></mat-progress-bar>
 </form>
 </mat-dialog-content>
 <mat-dialog-actions align="center">
