@@ -31,11 +31,6 @@ public class FileUploadController {
     @Autowired
     StorageService storageService;
 
-	@GetMapping("/pong")
-	ResponseEntity<String> pong() {
-		return new ResponseEntity<String>("pong", new HttpHeaders(), HttpStatus.OK);
-	}
-
 	@GetMapping("/")
     public String listUploadedFiles(Model model) throws IOException {
 
