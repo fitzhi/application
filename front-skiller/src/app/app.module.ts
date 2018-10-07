@@ -41,6 +41,7 @@ import { StaffProjectsComponent } from './staff/staff-tabs/staff-projects/staff-
 import { StaffExperienceComponent } from './staff/staff-tabs/staff-experience/staff-experience.component';
 import { StaffUploadCvComponent } from './staff/staff-tabs/staff-experience/staff-upload-cv/staff-upload-cv.component';
 import { MatTabsModule, MatDialogModule, MatProgressBarModule } from '@angular/material';
+import { MessageBoxComponent } from './message-box/dialog/message-box.component';
 
 @NgModule({
   declarations: [
@@ -59,11 +60,13 @@ import { MatTabsModule, MatDialogModule, MatProgressBarModule } from '@angular/m
     StaffFormComponent,
     StaffProjectsComponent,
     StaffExperienceComponent,
-    StaffUploadCvComponent
+    StaffUploadCvComponent,
+    MessageBoxComponent
   ],
   entryComponents: [
     StarsSkillLevelRenderComponent,
-    StaffUploadCvComponent
+    StaffUploadCvComponent,
+    MessageBoxComponent
   ],
   imports: [
     BrowserModule,

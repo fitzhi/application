@@ -10,6 +10,8 @@ export class Constants {
 	*/
   public static DEBUG = true;
 
+  public static URL_BACKEND = 'http://localhost:8080';
+
   public static LEVEL_Expert = 5;
   public static LEVEL_Experienced = 4;
   public static LEVEL_Senior = 3;
@@ -33,6 +35,14 @@ export class Constants {
   public static DEVELOPPERS_CRUD = 4;
   public static PROJECT_SEARCH = 5;
   public static PROJECT_CRUD = 6;
+
+  /**
+   * Type of file allowed to be uploaded by the back-end for the application file.
+   */
+  public static APPLICATION_FILE_TYPE_ALLOWED = [
+    'application/pdf',
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    'application/msword' ];
 
   /**
 	* Type of errors
@@ -193,5 +203,8 @@ export class Constants {
     }
   };
 }
+
+
+
 
 
