@@ -1,13 +1,9 @@
 package fr.skiller.bean;
 
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.web.bind.annotation.PathVariable;
-
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.Skill;
 
 public interface ProjectHandler {
 

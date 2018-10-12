@@ -2,7 +2,6 @@ package fr.skiller.controler;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -24,8 +23,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.sun.net.httpserver.Headers;
-
 import fr.skiller.Global;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;

@@ -27,6 +27,7 @@ public class ProjectHandlerImpl implements ProjectHandler {
 	/**
 	 * @return the Project collection.
 	 */
+	@Override
 	public Map<Integer, Project> getProjects() {
 		if (this.projects != null) {
 			return this.projects;

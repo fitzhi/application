@@ -1,6 +1,5 @@
 package fr.skiller.data.external;
 
-import fr.skiller.data.internal.Staff;
 import fr.skiller.data.internal.Project;
 
 /**

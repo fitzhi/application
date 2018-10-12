@@ -1,7 +1,6 @@
 package fr.skiller.data.external;
 
 import fr.skiller.data.internal.Experience;
-import fr.skiller.data.internal.Skill;
 
 /**
  * <p>

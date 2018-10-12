@@ -7,10 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.Gson;
-
-import fr.skiller.data.internal.Staff;
-
 @RestController
 @RequestMapping("/ping")
 /**

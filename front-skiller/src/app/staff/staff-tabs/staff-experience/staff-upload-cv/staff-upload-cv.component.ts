@@ -99,6 +99,7 @@ export class StaffUploadCvComponent implements OnInit {
         // pass the percentage into the progress-stream
         this.progression.next(percentDone);
       } else if (event instanceof HttpResponse) {
+        console.log (event);
         // Close the progress-stream if we get an answer form the API
         // The upload is complete
         this.progression.complete();

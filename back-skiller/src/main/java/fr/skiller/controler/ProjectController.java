@@ -22,18 +22,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
-import com.sun.net.httpserver.Headers;
-
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;
-import fr.skiller.controler.StaffController.ParamStaffSkill;
 import fr.skiller.data.external.ProjectDTO;
-import fr.skiller.data.external.SkillDTO;
-import fr.skiller.data.external.StaffDTO;
-import fr.skiller.data.internal.Experience;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
-import fr.skiller.data.internal.Staff;
 
 @RestController
 @RequestMapping("/project")

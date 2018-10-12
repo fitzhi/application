@@ -9,6 +9,9 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,19 +46,21 @@ public class PocNLP {
 	
 	private String getCV_fromTxt() throws IOException {
 		StringBuilder sb = new StringBuilder();
-		String line;
-		BufferedReader br = new BufferedReader(
-				new FileReader(new File(resourcesDirectory.getAbsolutePath() + "/opennlp/in/ET_201709_UTF8.txt")));
-		while ((line = br.readLine()) != null) {
-			sb.append(line);
+		File file = new File(getClass().getResource("/applications_files/ET_201709_UTF8.txt").getFile()); 
+		if (logger.isDebugEnabled()) {
+			logger.debug(identifyFileTypeUsingUrlConnectionGetContentType(file.getAbsolutePath()));
 		}
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		br.lines().forEach(line -> sb.append(line));
 		br.close();
 		return sb.toString();
 	}
 
 	private String getCV_fromDOC() throws IOException {
-		FileInputStream in = new FileInputStream(
-				resourcesDirectory.getAbsolutePath() + "/opennlp/in/ET_201709.doc");
+		if (logger.isDebugEnabled()) {
+			logger.debug(identifyFileTypeUsingUrlConnectionGetContentType(resourcesDirectory.getAbsolutePath() + "/opennlp/in/ET_201709.doc"));
+		}
+		final InputStream in = getClass().getResource("/applications_files/ET_201709.doc").openStream();
 		HWPFDocument doc = new HWPFDocument(in);
 		String content = doc.getDocumentText();
 		doc.close();
@@ -63,8 +68,10 @@ public class PocNLP {
 	}
 	
 	private String getCV_fromDOCX() throws IOException {
-		XWPFDocument docx = new XWPFDocument(
-				new FileInputStream(resourcesDirectory.getAbsolutePath() + "/opennlp/in/ET_201709.docx"));
+		if (logger.isDebugEnabled()) {
+			logger.debug(identifyFileTypeUsingUrlConnectionGetContentType(resourcesDirectory.getAbsolutePath() + "/opennlp/in/ET_201709.docx"));
+		}
+		XWPFDocument docx = new XWPFDocument(getClass().getResource("/applications_files/ET_201709.docx").openStream());
 		XWPFWordExtractor we = new XWPFWordExtractor(docx);
 		String s = we.getText();
 		we.close();
@@ -72,13 +79,15 @@ public class PocNLP {
 	}
 	
 	private String getCV_fromPDF() throws IOException {
-	    PdfReader reader = new PdfReader(
-	    		resourcesDirectory.getAbsolutePath() + "/opennlp/in/ET_201709.pdf");
+		if (logger.isDebugEnabled()) {
+			logger.debug(identifyFileTypeUsingUrlConnectionGetContentType(resourcesDirectory.getAbsolutePath() + "/applications_files/ET_201709.pdf"));
+		}
+		PdfReader reader = new PdfReader(
+	    		getClass().getResource("/applications_files/ET_201709.pdf").openStream());
 	    final StringBuilder sb = new StringBuilder();
 	    for (int pageNumber = 1; pageNumber < reader.getNumberOfPages(); pageNumber++) {
     		sb.append(PdfTextExtractor.getTextFromPage(reader, pageNumber));
 	    }
-	    System.out.println(sb.toString());
 	    reader.close();
 	    return sb.toString();
 	}
@@ -186,7 +195,7 @@ public class PocNLP {
 	@Test
 	public void firstApplicationWithTokenizer() throws Exception {
 		try (InputStream modelIn = new FileInputStream(
-				resourcesDirectory.getAbsolutePath() + "/opennlp/model/en-token.bin")) {
+				resourcesDirectory.getAbsolutePath() + "/opennlp/en-token.bin")) {
 			TokenizerModel model = new TokenizerModel(modelIn);
 			Tokenizer tokenizer = new TokenizerME(model);
 			String tokens[] = tokenizer.tokenize(getCV_fromTxt());
@@ -197,5 +206,53 @@ public class PocNLP {
 			}
 		}
 
+	}
+
+	/**
+	 * Identify file type of file with provided path and name
+	 * using JDK's URLConnection.getContentType().
+	 *
+	 * @param fileName Name of file whose type is desired.
+	 * @return Type of file for which name was provided.
+	 */
+	public String identifyFileTypeUsingUrlConnectionGetContentType(final String fileName)
+	{
+	   String fileType = "Undetermined";
+	   try
+	   {
+	      final URL url = new URL("file://" + fileName);
+	      final URLConnection connection = url.openConnection();
+	      fileType = connection.getContentType();
+	   }
+	   catch (MalformedURLException badUrlEx)
+	   {
+	      System.out.println("ERROR: Bad URL - " + badUrlEx);
+	   }
+	   catch (IOException ioEx)
+	   {
+	      System.out.println("Cannot access URLConnection - " + ioEx);
+	   }
+	   return fileType;
+	}
+	/**
+	 * Identify file type of file with provided path and name
+	 * using JDK's URLConnection.guessContentTypeFromStream(InputStream).
+	 *
+	 * @param fileName Name of file whose type is desired.
+	 * @return Type of file for which name was provided.
+	 */
+	public String identifyFileTypeUsingUrlConnectionGuessContentTypeFromStream(final String fileName)
+	{
+	   String fileType;
+	   try
+	   {
+	      fileType = URLConnection.guessContentTypeFromStream(new FileInputStream(new File(fileName)));
+	   }
+	   catch (IOException ex)
+	   {
+	      System.out.println("ERROR: Unable to process file type for " + fileName + " - " + ex);
+	      fileType = "null";
+	   }
+	   return fileType;
 	}
 }

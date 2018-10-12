@@ -43,6 +43,7 @@ public class StaffHandlerImpl implements StaffHandler {
 	 */
 	private HashMap<Integer, Staff> staff;
 
+	@Override
 	public void init() {
 		staff = null;
 	}
@@ -50,6 +51,7 @@ public class StaffHandlerImpl implements StaffHandler {
 	/**
 	 * @return the Project collection.
 	 */
+	@Override
 	public Map<Integer, Staff> getStaff() {
 
 		if (this.staff != null) {

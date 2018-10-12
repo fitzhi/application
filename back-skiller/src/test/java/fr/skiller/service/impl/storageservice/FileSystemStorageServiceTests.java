@@ -26,7 +26,9 @@ import org.springframework.mock.web.MockMultipartFile;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * @author Dave Syer
+ * <p>Tests of the FileSystemStorageService.</p>
+ * <i>(based on the spring documentation)</i>
+ * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
 public class FileSystemStorageServiceTests {

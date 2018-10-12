@@ -19,10 +19,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import fr.skiller.data.internal.Skill;
-import fr.skiller.data.internal.Staff;
-import fr.skiller.opennlp.PocNLP;
 import junit.framework.TestCase;
 
 public class GenerateSkillsInJSONTest extends TestCase {
