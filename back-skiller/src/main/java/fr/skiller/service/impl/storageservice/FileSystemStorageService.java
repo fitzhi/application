@@ -1,5 +1,9 @@
 package fr.skiller.service.impl.storageservice;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -9,6 +13,11 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.stream.Stream;
 
+import org.apache.poi.hwpf.HWPFDocument;
+import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
@@ -17,12 +26,21 @@ import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.itextpdf.text.pdf.PdfReader;
+import com.itextpdf.text.pdf.parser.PdfTextExtractor;
+
 import fr.skiller.service.StorageService;
 
 @Service
 public class FileSystemStorageService implements StorageService {
 
-    private final Path rootLocation;
+	/**
+	 * Logger defined for this class.
+	 */
+	Logger logger = LoggerFactory.getLogger(FileSystemStorageService.class.getCanonicalName());
+
+	
+	private final Path rootLocation;
 
     @Autowired
     public FileSystemStorageService(StorageProperties properties) {
@@ -43,6 +61,9 @@ public class FileSystemStorageService implements StorageService {
                                 + filename);
             }
             try (InputStream inputStream = file.getInputStream()) {
+            	if (logger.isDebugEnabled()) {
+            		logger.debug("Storing upload file to the location " + this.rootLocation.resolve(filename));
+            	}
                 Files.copy(inputStream, this.rootLocation.resolve(filename),
                     StandardCopyOption.REPLACE_EXISTING);
             }
@@ -103,4 +124,68 @@ public class FileSystemStorageService implements StorageService {
             throw new StorageException("Could not initialize storage", e);
         }
     }
+
+    @Override
+	public String readFileTXT(final String fileName) throws IOException {
+      	if (logger.isDebugEnabled()) {
+    		logger.debug("readFileTXT (" + this.rootLocation.resolve(fileName) + ")");
+    	}
+		StringBuilder sb = new StringBuilder();
+		BufferedReader br = new BufferedReader(new FileReader(new File(fileName)));
+		br.lines().forEach(line -> sb.append(line));
+		br.close();
+    	if (logger.isDebugEnabled()) {
+    		logger.debug("readFileTXT returns " + sb.toString().length() + " characters.");
+    	}
+		return sb.toString();
+	}
+
+    @Override
+	public String readFileDOC(final String fileName) throws IOException {
+    	if (logger.isDebugEnabled()) {
+    		logger.debug("readFileDOC (" + this.rootLocation.resolve(fileName) +")");
+    	}
+		FileInputStream in = new FileInputStream(this.rootLocation.resolve(fileName).toString());
+		HWPFDocument doc = new HWPFDocument(in);
+		String content = doc.getDocumentText();
+		doc.close();
+    	if (logger.isDebugEnabled()) {
+    		logger.debug("readFileDOC returns " + content.length() + " characters.");
+    	}
+		return content;
+	}
+
+    @Override
+	public String readFileDOCX(final String fileName) throws IOException {
+      	if (logger.isDebugEnabled()) {
+    		logger.debug("readFileDOCX (" + this.rootLocation.resolve(fileName) + ")");
+    	}
+		XWPFDocument docx = new XWPFDocument(new FileInputStream(this.rootLocation.resolve(fileName).toString()));
+		XWPFWordExtractor we = new XWPFWordExtractor(docx);
+		String content = we.getText();
+		we.close();
+    	if (logger.isDebugEnabled()) {
+    		logger.debug("readFileDOCX returns " + content.length() + " characters.");
+    	}
+		return content;
+	}
+
+    @Override
+    public String readFilePDF(final String fileName) throws IOException {
+      	if (logger.isDebugEnabled()) {
+    		logger.debug("readFilePDF (" + this.rootLocation.resolve(fileName) +")");
+    	}
+		PdfReader reader = new PdfReader(this.rootLocation.resolve(fileName).toString());
+		final StringBuilder sb = new StringBuilder();
+		for (int pageNumber = 1; pageNumber < reader.getNumberOfPages(); pageNumber++) {
+			sb.append(PdfTextExtractor.getTextFromPage(reader, pageNumber));
+		}
+		reader.close();
+    	if (logger.isDebugEnabled()) {
+    		logger.debug("readFilePDF returns " + sb.toString().length() + " characters.");
+    	}
+		return sb.toString();
+	}
+
 }
+

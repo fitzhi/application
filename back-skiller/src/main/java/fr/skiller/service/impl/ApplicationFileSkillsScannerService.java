@@ -37,7 +37,10 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 	@Autowired
 	SkillHandler skillHandler;
 
-	Logger logger = LoggerFactory.getLogger(ReferentialController.class.getCanonicalName());
+	@Autowired
+	StorageService storageService;
+
+	Logger logger = LoggerFactory.getLogger(ApplicationFileSkillsScannerService.class.getCanonicalName());
 
 	final String car_allowed = "abcdefghijklmnopqrstuvwxyz-+#";
 
@@ -124,37 +127,19 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 	}
 
 	private String readTheCvInFormatTXT(final String fileName) throws IOException {
-		StringBuilder sb = new StringBuilder();
-		BufferedReader br = new BufferedReader(new FileReader(new File(fileName)));
-		br.lines().forEach(line -> sb.append(line));
-		br.close();
-		return sb.toString();
+		return storageService.readFileTXT(fileName);
 	}
 
 	private String readTheCvInFormatDOC(final String fileName) throws IOException {
-		FileInputStream in = new FileInputStream(fileName);
-		HWPFDocument doc = new HWPFDocument(in);
-		String content = doc.getDocumentText();
-		doc.close();
-		return content;
+		return storageService.readFileDOC(fileName);
 	}
 
 	private String readTheCvInFormatDOCX(final String fileName) throws IOException {
-		XWPFDocument docx = new XWPFDocument(new FileInputStream(fileName));
-		XWPFWordExtractor we = new XWPFWordExtractor(docx);
-		String content = we.getText();
-		we.close();
-		return content;
+		return storageService.readFileDOCX(fileName);
 	}
 
-	private String readTheCvInFormatPDF(final String filename) throws IOException {
-		PdfReader reader = new PdfReader(filename);
-		final StringBuilder sb = new StringBuilder();
-		for (int pageNumber = 1; pageNumber < reader.getNumberOfPages(); pageNumber++) {
-			sb.append(PdfTextExtractor.getTextFromPage(reader, pageNumber));
-		}
-		reader.close();
-		return sb.toString();
+	private String readTheCvInFormatPDF(final String fileName) throws IOException {
+		return storageService.readFilePDF(fileName);
 	}
 
 	private String cleanup(final String s) {

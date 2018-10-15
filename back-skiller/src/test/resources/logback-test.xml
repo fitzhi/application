@@ -1,19 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-    <layout class="ch.qos.logback.classic.PatternLayout">
-      <Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
-    </layout>
-  </appender>
-  
-  <root level="ERROR">
-    <appender-ref ref="STDOUT" />
-  </root>
-  
-    <logger name="fr.skiller.opennlp" additivity="false">
-        <level value="INFO" />
-        <appender-ref ref="STDOUT" />
-    </logger>
-      
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n
+			</Pattern>
+		</layout>
+	</appender>
+
+	<root level="ERROR">
+		<appender-ref ref="STDOUT" />
+	</root>
+
+	<logger name="fr.skiller.controller.StaffController" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="fr.skiller.service.impl.storageservice.FileSystemStorageService" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="fr.skiller.service.impl.ApplicationFileSkillsScannerService" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="fr.skiller.bean.impl.SkillHandlerImpl" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+
 </configuration>

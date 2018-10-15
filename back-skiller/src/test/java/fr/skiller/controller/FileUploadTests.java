@@ -41,17 +41,17 @@ public class FileUploadTests {
         given(this.storageService.loadAll())
                 .willReturn(Stream.of(Paths.get("first.txt"), Paths.get("second.txt")));
 
-        this.mvc.perform(get("/")).andExpect(status().isOk())
+        this.mvc.perform(get("/api/upload/")).andExpect(status().isOk())
                 .andExpect(model().attribute("files",
-                        Matchers.contains("http://localhost/files/first.txt",
-                                "http://localhost/files/second.txt")));
+                        Matchers.contains("http://localhost/api/upload/files/first.txt",
+                                "http://localhost/api/upload/files/second.txt")));
     }
 
     @Test
     public void shouldSaveUploadedFile() throws Exception {
         MockMultipartFile multipartFile = new MockMultipartFile("file", "test.txt",
                 "text/plain", "Spring Framework".getBytes());
-        this.mvc.perform(fileUpload("/").file(multipartFile))
+        this.mvc.perform(fileUpload("/api/upload/do").file(multipartFile))
                 .andExpect(status().isFound())
                 .andExpect(header().string("Location", "/"));
 
@@ -64,7 +64,7 @@ public class FileUploadTests {
         given(this.storageService.loadAsResource("test.txt"))
                 .willThrow(StorageFileNotFoundException.class);
 
-        this.mvc.perform(get("/files/test.txt")).andExpect(status().isNotFound());
+        this.mvc.perform(get("/api/upload/files/test.txt")).andExpect(status().isNotFound());
     }
 
 }

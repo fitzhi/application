@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
@@ -21,6 +23,7 @@ import com.google.gson.reflect.TypeToken;
 
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.data.internal.Skill;
+import fr.skiller.service.impl.ApplicationFileSkillsScannerService;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -39,7 +42,16 @@ public class SkillHandlerImpl implements SkillHandler {
 	 */
 	private static Gson gson = new GsonBuilder().create();
 
+	/**
+	 * Resources directory.
+	 */
 	private static File resourcesDirectory = new File("src/main/resources");
+
+	/**
+	 * logger
+	 */
+	Logger logger = LoggerFactory.getLogger(SkillHandlerImpl.class.getCanonicalName());
+
 
 	@Override
 	public Map<Integer, Skill> getSkills() {
@@ -59,6 +71,10 @@ public class SkillHandlerImpl implements SkillHandler {
 			skillsRead = gson.fromJson(fr, listSkillType);
 
 			skillsRead.forEach(skill -> mapSkills.put(skill.id, skill));
+			
+			if (logger.isDebugEnabled()) {
+				logger.debug("Reading " + skillsRead.size() + " skills.");
+			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

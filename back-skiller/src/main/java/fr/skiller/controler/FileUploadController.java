@@ -41,7 +41,7 @@ public class FileUploadController {
         return "uploadForm";
     }
 
-    @GetMapping("/file/{filename:.+}")
+    @GetMapping("/files/{filename:.+}")
     @ResponseBody
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
 
@@ -53,7 +53,6 @@ public class FileUploadController {
     @PostMapping("/do")
     public String handleFileUpload(
     		@RequestParam("file") MultipartFile file,
-    		@RequestParam("type") int fileType,
             RedirectAttributes redirectAttributes) {
 
     	System.out.println("/do");
