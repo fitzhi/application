@@ -1,6 +1,8 @@
 import {Constants} from '../../../../constants';
 import {Collaborator} from '../../../../data/collaborator';
+import { DeclaredExperienceDTO } from '../../../../data/external/declaredExperienceDTO';
 import {MessageBoxService} from '../../../../message-box/service/message-box.service';
+import { StaffDataExchangeService } from '../../../service/staff-data-exchange.service';
 import {HttpClient} from '@angular/common/http';
 import {HttpResponse} from '@angular/common/http';
 import {HttpEventType} from '@angular/common/http';
@@ -33,16 +35,19 @@ export class StaffUploadCvComponent implements OnInit {
   progress = this.progression.asObservable();
 
   constructor(
+    private staffDataExchangeService: StaffDataExchangeService,
     private httpClient: HttpClient,
     private messageBoxService: MessageBoxService,
     @Inject(MAT_DIALOG_DATA) public data: any) {}
 
   ngOnInit() {
-    /*
-    this.uploader.onBeforeUploadItem = function(item) {
-      item.cancel();
-    };
+    /**
+     * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
      */
+    this.staffDataExchangeService.collaboratorObserver
+      .subscribe((collabRetrieved: Collaborator) => {
+        this.collaborator = collabRetrieved;
+      });
   }
 
   submit() {
@@ -57,7 +62,7 @@ export class StaffUploadCvComponent implements OnInit {
 
   checkApplicationFormat(): boolean {
     if (this.applicationFile != null) {
-      if (Constants.APPLICATION_FILE_TYPE_ALLOWED.indexOf(this.applicationFile.type) === -1) {
+      if (!Constants.APPLICATION_FILE_TYPE_ALLOWED.has(this.applicationFile.type)) {
         this.messageBoxService.error('ERROR', 'Only the formats .DOC, .DOCS and .PDF are supported !');
         return false;
       } else {
@@ -82,10 +87,12 @@ export class StaffUploadCvComponent implements OnInit {
     // create a new multipart-form for the file to upload.
     const formData: FormData = new FormData();
     formData.append('file', file, file.name);
+    formData.append('id', <string><any>this.collaborator.idStaff);
+    formData.append('type', <string><any>Constants.APPLICATION_FILE_TYPE_ALLOWED.get(this.applicationFile.type));
 
     // create a HTTP-post request and pass the form
     // tell it to report the upload progress
-    const req = new HttpRequest('POST', Constants.URL_BACKEND + '/api/upload/do', formData, {
+    const req = new HttpRequest('POST', Constants.URL_BACKEND + '/staff/api/uploadCV', formData, {
       reportProgress: true
     });
 
@@ -99,7 +106,12 @@ export class StaffUploadCvComponent implements OnInit {
         // pass the percentage into the progress-stream
         this.progression.next(percentDone);
       } else if (event instanceof HttpResponse) {
-        console.log (event);
+        console.log ('Upload successfull');
+        const response = <DeclaredExperienceDTO> event.body;
+        if (Constants.DEBUG) {
+          console.log ('experiences detected : ');
+          console.log (response.experience);
+        }
         // Close the progress-stream if we get an answer form the API
         // The upload is complete
         this.progression.complete();

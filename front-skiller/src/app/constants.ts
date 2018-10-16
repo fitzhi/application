@@ -38,11 +38,18 @@ export class Constants {
 
   /**
    * Type of file allowed to be uploaded by the back-end for the application file.
+   * These constants declaration are inherited from the back-end project
    */
-  public static APPLICATION_FILE_TYPE_ALLOWED = [
-    'application/pdf',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/msword' ];
+  static FILE_TYPE_PDF = 0;
+  static FILE_TYPE_DOCX = 1;
+  static FILE_TYPE_DOC = 2;
+  static FILE_TYPE_TXT = 3;
+
+  public static APPLICATION_FILE_TYPE_ALLOWED = new Map([
+    ['application/pdf', Constants.FILE_TYPE_PDF ],
+    ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', Constants.FILE_TYPE_DOCX],
+    ['application/msword', Constants.FILE_TYPE_DOC]
+  ]);
 
   /**
 	* Type of errors
