@@ -1,31 +1,25 @@
-/**
- * 
- */
 package fr.skiller.data.internal;
 
 /**
- * One line in the resume.
+ * A Resume
  * @author Fr&eacute;d&eacute;ric VIDAL
+ *
  */
-public class ResumeSkill {
+public class ResumeSkill extends ResumeSkillIdentifier {
+
 	/**
-	 * A skill discovered inside the resume
+	 * Title of the skill discovered inside the resume
 	 */
-	public String skill;
+	public String title;
 	
 	/**
-	 * Number of occurrences of this skill inside the resume.
+	 * @param idSkill the skill identifier
+	 * @param title title of the skill
+	 * @param count number of occurrences of this skill in the resume
 	 */
-	public long occurrence;
-	
-	/**
-	 * @param skill
-	 * @param occurrence
-	 */
-	public ResumeSkill(String skill, long occurrence) {
-		super();
-		this.skill = skill;
-		this.occurrence = occurrence;
+	public ResumeSkill(int idSkill, String title, long count) {
+		super(idSkill, count);
+		this.title = title;
 	}
 
 	/**
@@ -35,5 +29,4 @@ public class ResumeSkill {
 		super();
 	}
 
-	
 }

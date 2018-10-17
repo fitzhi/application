@@ -36,14 +36,14 @@ public class ResumeParserServiceTests {
 	 * base TXT to compare with the other format.
 	 */
 	Resume experience_txt;
-	List<String> reference_txt_skills;
+	List<Integer> reference_txt_skills;
 	
 	@Before
 	public void init() throws IOException {
 		final String file_txt = getClass().getResource("/applications_files/ET_201709_UTF8.txt").getFile();
 		experience_txt = parser.extract(file_txt, StorageService.FILE_TYPE_TXT);
 		reference_txt_skills = experience_txt.data().stream()
-				.map(item -> item.skill).collect(Collectors.toList());
+				.map(item -> item.idSkill).collect(Collectors.toList());
 	}
 	
 	@Test(expected = FileNotFoundException.class)
@@ -55,8 +55,8 @@ public class ResumeParserServiceTests {
 	public void parsingDOC() throws IOException {
 		final String file_doc = getClass().getResource("/applications_files/ET_201709.doc").getFile();
 		Resume experience_doc = parser.extract(file_doc, StorageService.FILE_TYPE_DOC);
-		List<String> reference_doc_skills =experience_doc.data().stream()
-				.map(item -> item.skill).collect(Collectors.toList());
+		List<Integer> reference_doc_skills =experience_doc.data().stream()
+				.map(item -> item.idSkill).collect(Collectors.toList());
 		Assert.assertTrue(reference_doc_skills.containsAll(reference_txt_skills));			
 	}
 
@@ -64,8 +64,8 @@ public class ResumeParserServiceTests {
 	public void parsingDOCX() throws IOException {
 		final String file_docx = getClass().getResource("/applications_files/ET_201709.docx").getFile();
 		Resume experience_docx = parser.extract(file_docx, StorageService.FILE_TYPE_DOCX);
-		List<String> reference_docx_skills =experience_docx.data().stream()
-				.map(item -> item.skill).collect(Collectors.toList());
+		List<Integer> reference_docx_skills =experience_docx.data().stream()
+				.map(item -> item.idSkill).collect(Collectors.toList());
 		Assert.assertTrue(reference_docx_skills.containsAll(reference_txt_skills));			
 	}
 

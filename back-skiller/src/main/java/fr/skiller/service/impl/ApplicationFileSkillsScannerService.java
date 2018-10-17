@@ -64,25 +64,37 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 	}
 
 	private Resume parseTheApplicationFile(final String token[]) {
-		Resume experience = new Resume();
-		List<Skill> listSkills = new ArrayList<Skill>();
+		Resume resume = new Resume();
+		
+		/**
+		 * We retrieved the skills list registered and we create a map based on the "cleaned-up" title  
+		 * in order to process the comparison with the skills extracted from the resume 
+		 */
 		Collection<Skill> skillsDeclared = skillHandler.getSkills().values();
 		Map<String, Skill> skills = new HashMap<String, Skill>();
 		skillsDeclared.forEach((sk -> skills.put(cleanup(sk.title), sk)));
 
+		/**
+		 * We filter the words from the content of the resume, those who match with the current skills collection
+		 */
+		List<Skill> listSkills = new ArrayList<Skill>();
 		for (String s : token) {
 			String cleanLine = cleanup(s);
 			if (skills.containsKey(cleanLine)) {
 				listSkills.add(skills.get(cleanLine));
 			}
 		}
+		
+		/**
+		 * We aggregate the skills, based on the count number of presence in the resume.
+		 * (That might be an indication of their importance) 
+		 */
+		Map<Integer, Long> mapSkills = listSkills.stream()
+				.collect(Collectors.groupingBy(exp -> exp.id, Collectors.counting()));
 
-		Map<String, Long> mapSkills = listSkills.stream()
-				.collect(Collectors.groupingBy(exp -> exp.title, Collectors.counting()));
+		mapSkills.keySet().stream().sorted().forEach(key -> resume.put(key, mapSkills.get(key)));
 
-		mapSkills.keySet().stream().sorted().forEach(key -> experience.put(key, mapSkills.get(key)));
-
-		return experience;
+		return resume;
 	}
 
 	/**

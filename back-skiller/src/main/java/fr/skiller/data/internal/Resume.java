@@ -13,23 +13,23 @@ import java.util.Map;
  */
 public class Resume {
 
-	private List<ResumeSkill> experience = new ArrayList<ResumeSkill>();
+	private List<ResumeSkillIdentifier> experience = new ArrayList<ResumeSkillIdentifier>();
 
 	/**
 	 * @return the data inside the object.
 	 */
-	public List<ResumeSkill> data() {
+	public List<ResumeSkillIdentifier> data() {
 		return experience;
 	}
 
 	/**
 	 * Store an experience detected within the resume.
 	 * 
-	 * @param skill
-	 * @param value
+	 * @param idSkill the skill identifier
+	 * @param value the count number of presence of this skill in the resume
 	 */
-	public void put(String skill, Long value) {
-		experience.add(new ResumeSkill(skill, value));
+	public void put(int idSkill, Long value) {
+		experience.add(new ResumeSkillIdentifier(idSkill, value));
 	}
 
 }

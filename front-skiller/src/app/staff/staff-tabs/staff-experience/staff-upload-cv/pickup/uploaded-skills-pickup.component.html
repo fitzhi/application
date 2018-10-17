@@ -27,13 +27,13 @@
 				<!-- skill title Column -->
 				<ng-container matColumnDef="title">
 				  <th mat-header-cell *matHeaderCellDef> Skill detected</th>
-				  <td mat-cell *matCellDef="let element"> {{element.skill}} </td>
+				  <td mat-cell *matCellDef="let element"> {{element.title}} </td>
 				</ng-container>
 				
 				<!-- Skill number of occurrences found in the resume Column -->
 				<ng-container matColumnDef="occurrences">
 				  <th mat-header-cell *matHeaderCellDef> Occurrences </th>
-				  <td mat-cell *matCellDef="let element"> {{element.occurrence}} </td>
+				  <td mat-cell *matCellDef="let element"> {{element.count}} </td>
 				</ng-container>
 				
 				<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -7,6 +7,7 @@ import java.util.Map;
 
 import fr.skiller.data.internal.Resume;
 import fr.skiller.data.internal.ResumeSkill;
+import fr.skiller.data.internal.ResumeSkillIdentifier;
 
 public class ResumeDTO {
 
@@ -30,19 +31,10 @@ public class ResumeDTO {
 	}
 	
 	/**
-	 * @param experience found in the resume.
-	 */
-	public ResumeDTO(Resume declaredExperience) {
-		this.experience = declaredExperience.data();
-	}
-
-	/**
-	 * @param experience found in the resume.
 	 * @param code error code
 	 * @param message error message
 	 */
-	public ResumeDTO(Resume declaredExperience, int code, String message) {
-		this.experience = declaredExperience.data();
+	public ResumeDTO(int code, String message) {
 		this.code = code;
 		this.message = message;
 	}
