@@ -36,12 +36,14 @@ import { ReferentialService } from './referential.service';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { StaffTabsComponent } from './staff/staff-tabs/staff-tabs.component';
+import { UploadedSkillsPickupComponent } from './staff/staff-tabs/staff-experience/staff-upload-cv/pickup/uploaded-skills-pickup.component';
 import { StaffFormComponent } from './staff/staff-form/staff-form.component';
 import { StaffProjectsComponent } from './staff/staff-tabs/staff-projects/staff-projects.component';
 import { StaffExperienceComponent } from './staff/staff-tabs/staff-experience/staff-experience.component';
 import { StaffUploadCvComponent } from './staff/staff-tabs/staff-experience/staff-upload-cv/staff-upload-cv.component';
-import { MatTabsModule, MatDialogModule, MatProgressBarModule } from '@angular/material';
+import { MatTabsModule, MatDialogModule, MatProgressBarModule, MatPaginatorModule } from '@angular/material';
 import { MessageBoxComponent } from './message-box/dialog/message-box.component';
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -61,12 +63,14 @@ import { MessageBoxComponent } from './message-box/dialog/message-box.component'
     StaffProjectsComponent,
     StaffExperienceComponent,
     StaffUploadCvComponent,
-    MessageBoxComponent
+    MessageBoxComponent,
+    UploadedSkillsPickupComponent
   ],
   entryComponents: [
     StarsSkillLevelRenderComponent,
     StaffUploadCvComponent,
-    MessageBoxComponent
+    MessageBoxComponent,
+    UploadedSkillsPickupComponent
   ],
   imports: [
     BrowserModule,
@@ -83,6 +87,8 @@ import { MessageBoxComponent } from './message-box/dialog/message-box.component'
     MatTabsModule,
     MatDialogModule,
     MatProgressBarModule,
+    MatTableModule,
+    MatPaginatorModule 
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.

@@ -1,15 +1,18 @@
 import {Constants} from '../../../../constants';
 import {Collaborator} from '../../../../data/collaborator';
-import { DeclaredExperienceDTO } from '../../../../data/external/declaredExperienceDTO';
+import {DeclaredExperience} from '../../../../data/declared-experience';
+import {DeclaredExperienceDTO} from '../../../../data/external/declaredExperienceDTO';
 import {MessageBoxService} from '../../../../message-box/service/message-box.service';
-import { StaffDataExchangeService } from '../../../service/staff-data-exchange.service';
+import {StaffDataExchangeService} from '../../../service/staff-data-exchange.service';
+import {UploadedSkillsPickupComponent} from './pickup/uploaded-skills-pickup.component';
 import {HttpClient} from '@angular/common/http';
 import {HttpResponse} from '@angular/common/http';
 import {HttpEventType} from '@angular/common/http';
 import {HttpRequest} from '@angular/common/http';
 import {Component, OnInit, Inject} from '@angular/core';
 import {Subject, Observable} from 'rxjs';
-import {MAT_DIALOG_DATA} from '@angular/material';
+import {MAT_DIALOG_DATA, MatDialogConfig} from '@angular/material';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-staff-upload-cv',
@@ -19,7 +22,7 @@ import {MAT_DIALOG_DATA} from '@angular/material';
 export class StaffUploadCvComponent implements OnInit {
 
   /**
-   * Full path of the selected file.
+   * Full path of the selected resume file.
    */
   applicationFile: File;
 
@@ -29,25 +32,24 @@ export class StaffUploadCvComponent implements OnInit {
   collaborator: Collaborator;
 
   /**
+   * Declared experience retrieved from the resume of this collaborator.
+   */
+  declaredExperience: DeclaredExperience[];
+
+  /**
    * Progression Bar representing the upload speed.
    */
   progression = new Subject<number>();
   progress = this.progression.asObservable();
 
   constructor(
-    private staffDataExchangeService: StaffDataExchangeService,
     private httpClient: HttpClient,
     private messageBoxService: MessageBoxService,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: any) {}
 
   ngOnInit() {
-    /**
-     * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
-     */
-    this.staffDataExchangeService.collaboratorObserver
-      .subscribe((collabRetrieved: Collaborator) => {
-        this.collaborator = collabRetrieved;
-      });
+    this.collaborator = <Collaborator>this.data;
   }
 
   submit() {
@@ -72,12 +74,12 @@ export class StaffUploadCvComponent implements OnInit {
   }
 
   public fileEvent($event) {
-   this.applicationFile = $event.target.files[0];
+    this.applicationFile = $event.target.files[0];
     if (Constants.DEBUG) {
-      console.log ('Testing checkApplicationFormat for ' + this.applicationFile.type);
+      console.log('Testing checkApplicationFormat for ' + this.applicationFile.type);
     }
-   this.checkApplicationFormat();
-}
+    this.checkApplicationFormat();
+  }
 
   upload(file: File) {
 
@@ -106,16 +108,33 @@ export class StaffUploadCvComponent implements OnInit {
         // pass the percentage into the progress-stream
         this.progression.next(percentDone);
       } else if (event instanceof HttpResponse) {
-        console.log ('Upload successfull');
-        const response = <DeclaredExperienceDTO> event.body;
+        const response = <DeclaredExperienceDTO>event.body;
+        this.declaredExperience = response.experience;
         if (Constants.DEBUG) {
-          console.log ('experiences detected : ');
-          console.log (response.experience);
+          console.log(this.declaredExperience.length + ' experiences detected : ');
+          console.log(response.experience);
         }
         // Close the progress-stream if we get an answer form the API
         // The upload is complete
         this.progression.complete();
+        this.pickupSkills();
       }
     });
   }
+
+  pickupSkills() {
+    const dataExchange = {
+      'id': this.collaborator.idStaff,
+      'lastName': this.collaborator.lastName,
+      'firstName': this.collaborator.firstName,
+      'experience': this.declaredExperience
+    }
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.panelClass = 'default-dialog-container-class';
+    dialogConfig.data = dataExchange;
+    const dialogReference = this.dialog.open(UploadedSkillsPickupComponent, dialogConfig);
+  }
+
 }

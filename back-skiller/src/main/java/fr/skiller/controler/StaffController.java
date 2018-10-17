@@ -32,10 +32,10 @@ import fr.skiller.Global;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
-import fr.skiller.data.external.DeclaredExperienceDTO;
+import fr.skiller.data.external.ResumeDTO;
 import fr.skiller.data.external.StaffDTO;
 import fr.skiller.data.internal.PeopleCountExperienceMap;
-import fr.skiller.data.internal.DeclaredExperience;
+import fr.skiller.data.internal.Resume;
 import fr.skiller.data.internal.Experience;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.service.ResumeParserService;
@@ -343,7 +343,7 @@ public class StaffController {
 	}
 
 	@PostMapping("/api/uploadCV")
-	public DeclaredExperienceDTO uploadApplicationFile(
+	public ResumeDTO uploadApplicationFile(
 			@RequestParam("file") MultipartFile file, 
 			@RequestParam("id") int id, 
 			@RequestParam("type") int fileType,
@@ -357,12 +357,12 @@ public class StaffController {
 		storageService.store(file);
 		
 		try {
-			final DeclaredExperience exp = resumeParserService.extract(filename, fileType);
-			return new DeclaredExperienceDTO(exp);
+			final Resume exp = resumeParserService.extract(filename, fileType);
+			return new ResumeDTO(exp);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return new DeclaredExperienceDTO(new DeclaredExperience(), -1, e.getMessage());
+			return new ResumeDTO(new Resume(), -1, e.getMessage());
 		}
 
 	}

@@ -1,11 +1,14 @@
 package fr.skiller.data.external;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import fr.skiller.data.internal.DeclaredExperience;
+import fr.skiller.data.internal.Resume;
+import fr.skiller.data.internal.ResumeSkill;
 
-public class DeclaredExperienceDTO {
+public class ResumeDTO {
 
 	/**
 	 * Back-end code
@@ -18,27 +21,27 @@ public class DeclaredExperienceDTO {
 	public String message = "";
 
 
-	public Map<String, Long> experience = new HashMap<String, Long>();
+	public List<ResumeSkill> experience = new ArrayList<ResumeSkill>();
 
 	/**
 	 * Empty constructor
 	 */
-	public DeclaredExperienceDTO() {
+	public ResumeDTO() {
 	}
 	
 	/**
 	 * @param experience found in the resume.
 	 */
-	public DeclaredExperienceDTO(DeclaredExperience declaredExperience) {
+	public ResumeDTO(Resume declaredExperience) {
 		this.experience = declaredExperience.data();
 	}
 
 	/**
 	 * @param experience found in the resume.
-	 * @param code
-	 * @param message
+	 * @param code error code
+	 * @param message error message
 	 */
-	public DeclaredExperienceDTO(DeclaredExperience declaredExperience, int code, String message) {
+	public ResumeDTO(Resume declaredExperience, int code, String message) {
 		this.experience = declaredExperience.data();
 		this.code = code;
 		this.message = message;

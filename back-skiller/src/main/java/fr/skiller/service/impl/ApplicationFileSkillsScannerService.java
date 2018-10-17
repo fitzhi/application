@@ -25,7 +25,7 @@ import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.controler.ReferentialController;
-import fr.skiller.data.internal.DeclaredExperience;
+import fr.skiller.data.internal.Resume;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.service.ResumeParserService;
 import fr.skiller.service.StorageService;
@@ -45,7 +45,7 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 	final String car_allowed = "abcdefghijklmnopqrstuvwxyz-+#";
 
 	@Override
-	public DeclaredExperience extract(final String fileName, final int fileType) throws IOException {
+	public Resume extract(final String fileName, final int fileType) throws IOException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("extracting skills from " + fileName);
 		}
@@ -63,8 +63,8 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 		}
 	}
 
-	private DeclaredExperience parseTheApplicationFile(final String token[]) {
-		DeclaredExperience experience = new DeclaredExperience();
+	private Resume parseTheApplicationFile(final String token[]) {
+		Resume experience = new Resume();
 		List<Skill> listSkills = new ArrayList<Skill>();
 		Collection<Skill> skillsDeclared = skillHandler.getSkills().values();
 		Map<String, Skill> skills = new HashMap<String, Skill>();
@@ -89,7 +89,7 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 	 * @return
 	 * @throws IOException
 	 */
-	private DeclaredExperience extractSkillsfromCV_inFormatTXT(final String filename) throws IOException {
+	private Resume extractSkillsfromCV_inFormatTXT(final String filename) throws IOException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("extactSkillsfromCV_inFormatTXT for file " + filename);
 		}
@@ -99,7 +99,7 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 		return parseTheApplicationFile(token);
 	}
 
-	private DeclaredExperience extractSkillsfromCV_inFormatDOCX(final String filename) throws IOException {
+	private Resume extractSkillsfromCV_inFormatDOCX(final String filename) throws IOException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("extractSkillsfromCV_inFormatDOCX for file " + filename);
 		}
@@ -108,7 +108,7 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 		return parseTheApplicationFile(token);
 	}
 
-	private DeclaredExperience extractSkillsfromCV_inFormatDOC(final String filename) throws IOException {
+	private Resume extractSkillsfromCV_inFormatDOC(final String filename) throws IOException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("extractSkillsfromCV_inFormatDOC for file " + filename);
 		}
@@ -117,7 +117,7 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 		return parseTheApplicationFile(token);
 	}
 
-	private DeclaredExperience extractSkillsfromCV_inFormatPDF(final String filename) throws IOException {
+	private Resume extractSkillsfromCV_inFormatPDF(final String filename) throws IOException {
 		if (logger.isDebugEnabled()) {
 			logger.debug("extractSkillsfromCV_inFormatPDF for file " + filename);
 		}

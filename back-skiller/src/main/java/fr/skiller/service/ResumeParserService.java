@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import org.springframework.stereotype.Service;
 
-import fr.skiller.data.internal.DeclaredExperience;
+import fr.skiller.data.internal.Resume;
 
 /**
  * This service is in charge of parsing a source of information containing the skills of an employee.
@@ -23,5 +23,5 @@ public interface ResumeParserService {
 	 * @return the skills extracted.
 	 * @throws IOException IO problem occurs when retrieving the application file
 	 */
-	DeclaredExperience extract (final String filename, final int fileType) throws IOException;
+	Resume extract (final String filename, final int fileType) throws IOException;
 }
