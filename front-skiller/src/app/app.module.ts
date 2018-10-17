@@ -41,8 +41,9 @@ import { StaffFormComponent } from './staff/staff-form/staff-form.component';
 import { StaffProjectsComponent } from './staff/staff-tabs/staff-projects/staff-projects.component';
 import { StaffExperienceComponent } from './staff/staff-tabs/staff-experience/staff-experience.component';
 import { StaffUploadCvComponent } from './staff/staff-tabs/staff-experience/staff-upload-cv/staff-upload-cv.component';
-import { MatTabsModule, MatDialogModule, MatProgressBarModule, MatPaginatorModule } from '@angular/material';
+import { MatTabsModule, MatDialogModule, MatProgressBarModule, MatPaginatorModule, MatCheckbox } from '@angular/material';
 import { MessageBoxComponent } from './message-box/dialog/message-box.component';
+import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
@@ -88,7 +89,8 @@ import { MatTableModule } from '@angular/material/table';
     MatDialogModule,
     MatProgressBarModule,
     MatTableModule,
-    MatPaginatorModule 
+    MatPaginatorModule,
+    MatCheckboxModule
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.
