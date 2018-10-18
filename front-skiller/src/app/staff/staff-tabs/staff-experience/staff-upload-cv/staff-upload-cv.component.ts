@@ -124,7 +124,7 @@ export class StaffUploadCvComponent implements OnInit {
 
   pickupSkills() {
     const dataExchange = {
-      'id': this.collaborator.idStaff,
+      'idStaff': this.collaborator.idStaff,
       'lastName': this.collaborator.lastName,
       'firstName': this.collaborator.firstName,
       'experience': this.declaredExperience
@@ -134,7 +134,9 @@ export class StaffUploadCvComponent implements OnInit {
     dialogConfig.autoFocus = true;
     dialogConfig.panelClass = 'default-dialog-container-class';
     dialogConfig.data = dataExchange;
+    dialogConfig.width = '600px';
     const dialogReference = this.dialog.open(UploadedSkillsPickupComponent, dialogConfig);
+    dialogReference.updatePosition({ bottom: '5px' });
   }
-
 }
+

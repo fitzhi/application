@@ -1,10 +1,14 @@
 package fr.skiller.controler;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +43,7 @@ import fr.skiller.data.internal.Resume;
 import fr.skiller.data.internal.ResumeSkill;
 import fr.skiller.data.internal.Experience;
 import fr.skiller.data.internal.Staff;
+import fr.skiller.exception.SkillerException;
 import fr.skiller.service.ResumeParserService;
 import fr.skiller.service.StorageService;
 import fr.skiller.data.internal.Project;
@@ -364,14 +369,45 @@ public class StaffController {
 					new ResumeSkill(item.idSkill, 
 									skillHandler.getSkills().get(item.idSkill).title, 
 									item.count)));
+			/**
+			 * We put the most often repeated keywords at the beginning of the list.
+			 */
+			Collections.sort(resumeDTO.experience);
 			return resumeDTO;
 		} catch (IOException e) {
 			e.printStackTrace();
 			return new ResumeDTO(-1, e.getMessage());
 		}
-
 	}
 
+	class ResumeSkills {
+		int idStaff;
+		ResumeSkill[] skills;
+	}
+	@PostMapping("/api/experiences/resume/save")
+	ResponseEntity<StaffDTO> saveExperiences(@RequestBody String body) {
+
+		ResumeSkills p = gson.fromJson(body, ResumeSkills.class);
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("Adding " + p.skills.length + " skills for the staff ID " + p.idStaff);
+		}
+		if (logger.isTraceEnabled()) {
+			logger.trace("Adding the skills below for the staff ID " + p.idStaff);
+			Arrays.asList(p.skills).stream().forEach(skill -> logger.trace(skill.idSkill + " " + skill.title));
+		}
+		try {
+			Staff staff = staffHandler.addExperiences(p.idStaff, p.skills);
+			return new ResponseEntity<StaffDTO>(new StaffDTO(staff), HttpStatus.OK);
+		} catch (final SkillerException se) {
+			return new ResponseEntity<StaffDTO>(
+					new StaffDTO(new Staff(), se.errorCode, se.errorMessage), 
+					new HttpHeaders(), 
+					HttpStatus.PROCESSING);
+		}
+
+	}	
+	
 	/**
 	 * Adding or changing the name of a project assign to a developer.
 	 * 

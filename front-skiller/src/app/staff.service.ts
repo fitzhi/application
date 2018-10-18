@@ -9,10 +9,12 @@ import {StaffDTO} from './data/external/staffDTO';
 import {MOCK_COLLABORATORS} from './mock/mock-collaborators';
 
 import {Constants} from './constants';
+import { DeclaredExperience } from "./data/declared-experience";
 import {Experience} from './data/experience';
 import {Observable, of} from 'rxjs';
 
 import {InternalService} from './internal-service';
+import { HttpRequest } from "@angular/common/http";
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -134,6 +136,20 @@ export class StaffService extends InternalService {
     return this.http.post<StaffDTO>(this.collaboratorUrl + '/experiences/save', body, httpOptions);
   }
 
+  /**
+   * POST: Add the relevant declared experiences (certainly retrieved from the resume)
+   */
+  addDeclaredExperience(idStaff: number, skills: DeclaredExperience[]): Observable<StaffDTO> {
+    if (Constants.DEBUG) {
+      console.log('Adding ' + skills.length + ' experiences to the staff Id  ' + idStaff);
+    }
+     
+    const body = {idStaff: idStaff, skills: skills};
+    return this.http.post<StaffDTO>(this.collaboratorUrl + '/api/experiences/resume/save', 
+      body, httpOptions);
+       
+  }
+  
   /**
    * POST: Revoke an experience to a a staff member.
    */

@@ -1,8 +1,9 @@
 import { Constants } from '../../../../../constants';
 import { DeclaredExperience } from '../../../../../data/declared-experience';
+import { StaffService } from "../../../../../staff.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import {Component, OnInit, Inject, ViewChild, AfterViewInit} from '@angular/core';
-import { MAT_DIALOG_DATA, MatTableDataSource } from '@angular/material';
+import { MAT_DIALOG_DATA, MatTableDataSource, MatSort } from '@angular/material';
 import { MatPaginator } from "@angular/material/paginator";
 
 @Component({
@@ -15,7 +16,7 @@ export class UploadedSkillsPickupComponent implements AfterViewInit {
   displayedColumns: string[] = ['select', 'title', 'occurrences'];
   
   /**
-   * Datasource associated to the table.
+   * Data source associated to the table.
    */
   private dataSource: MatTableDataSource<DeclaredExperience>;
   
@@ -24,6 +25,7 @@ export class UploadedSkillsPickupComponent implements AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   
   constructor(
+    private staffService: StaffService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
     this.dataSource = new MatTableDataSource<DeclaredExperience>(this.data.experience);
     this.selection = new SelectionModel<DeclaredExperience>(true, []);
@@ -31,7 +33,6 @@ export class UploadedSkillsPickupComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
-    
   }
   
   /** 
@@ -53,6 +54,16 @@ export class UploadedSkillsPickupComponent implements AfterViewInit {
   } 
    
   submit() {
-    console.log ('Submit');
+    if (Constants.DEBUG) {
+      console.log ('Submiting the selected skills.');
+      let ind = 0;
+      do {
+        console.log ('Adding skill ' + this.selection.selected[ind].idSkill + ' ' + this.selection.selected[ind].title);
+        ind++;
+      } while (ind < this.selection.selected.length)
+    }
+    
+    this.staffService.addDeclaredExperience (this.data.idStaff, this.selection.selected)
+      .subscribe(staffDTO => console.log('Ok for ' + staffDTO.staff.idStaff));
   }
 }

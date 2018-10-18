@@ -9,7 +9,7 @@ import fr.skiller.data.internal.Resume;
 import fr.skiller.data.internal.ResumeSkill;
 import fr.skiller.data.internal.ResumeSkillIdentifier;
 
-public class ResumeDTO {
+public class ResumeDTO  {
 
 	/**
 	 * Back-end code
@@ -38,4 +38,5 @@ public class ResumeDTO {
 		this.code = code;
 		this.message = message;
 	}
+
 }

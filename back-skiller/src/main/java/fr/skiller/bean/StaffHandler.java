@@ -3,7 +3,9 @@ package fr.skiller.bean;
 import java.util.Map;
 
 import fr.skiller.data.internal.PeopleCountExperienceMap;
+import fr.skiller.data.internal.ResumeSkill;
 import fr.skiller.data.internal.Staff;
+import fr.skiller.exception.SkillerException;
 
 /**
  * 
@@ -37,5 +39,12 @@ public interface StaffHandler {
 	  */
 	PeopleCountExperienceMap countAllStaff_GroupBy_Skill_Level(boolean active);
 	
-
+	/**
+	 * Add a collection of skills usually extracted from the employe's resume.
+	 * @param idStaff the identifier for this staff member
+	 * @param skills the skills detected
+	 * @return the updated Staff
+	 * @throws SkillerException Thrown if any error occurs during the treatment
+	 */
+	Staff addExperiences (final int idStaff, final ResumeSkill[] skills) throws SkillerException ;
 }

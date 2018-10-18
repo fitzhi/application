@@ -13,6 +13,9 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
@@ -20,8 +23,12 @@ import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.PeopleCountExperienceMap;
+import fr.skiller.data.internal.ResumeSkill;
+import fr.skiller.data.external.StaffDTO;
 import fr.skiller.data.internal.Experience;
 import fr.skiller.data.internal.Staff;
+import fr.skiller.exception.SkillerException;
+
 import com.google.gson.reflect.TypeToken;
 
 /**
@@ -121,4 +128,14 @@ public class StaffHandlerImpl implements StaffHandler {
 		return count;
 	}
 
+	@Override
+	public Staff addExperiences(int idStaff, ResumeSkill[] skills) throws SkillerException {
+		Staff staff = getStaff().get(idStaff);
+		if (staff == null) {
+			throw new SkillerException(-1, "There is no staff for the ID " + idStaff);
+		}
+		return staff;
+	}
+
+	
 }

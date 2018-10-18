@@ -5,8 +5,10 @@ package fr.skiller.data.internal;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public class ResumeSkill extends ResumeSkillIdentifier {
+public class ResumeSkill extends ResumeSkillIdentifier implements Comparable<ResumeSkill> {
 
+	final static int LIMIT_LANGUAGE = 8;
+	
 	/**
 	 * Title of the skill discovered inside the resume
 	 */
@@ -27,6 +29,16 @@ public class ResumeSkill extends ResumeSkillIdentifier {
 	 */
 	public ResumeSkill() {
 		super();
+	}
+
+	@Override
+	public int compareTo(ResumeSkill o) {
+		// The first 7 skills are languages, they are inserted on top of the list.
+		if (o.idSkill <= LIMIT_LANGUAGE) {
+			return 1;
+		} else {
+			return (int) (o.count - this.count);
+		}
 	}
 
 }
