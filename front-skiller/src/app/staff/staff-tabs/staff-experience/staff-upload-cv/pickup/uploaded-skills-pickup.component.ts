@@ -3,7 +3,7 @@ import { DeclaredExperience } from '../../../../../data/declared-experience';
 import { StaffService } from "../../../../../staff.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import {Component, OnInit, Inject, ViewChild, AfterViewInit} from '@angular/core';
-import { MAT_DIALOG_DATA, MatTableDataSource, MatSort } from '@angular/material';
+import { MAT_DIALOG_DATA, MatTableDataSource, MatSort, MatDialogRef } from '@angular/material';
 import { MatPaginator } from "@angular/material/paginator";
 
 @Component({
@@ -26,6 +26,7 @@ export class UploadedSkillsPickupComponent implements AfterViewInit {
   
   constructor(
     private staffService: StaffService,
+    private dialogRef: MatDialogRef<UploadedSkillsPickupComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {
     this.dataSource = new MatTableDataSource<DeclaredExperience>(this.data.experience);
     this.selection = new SelectionModel<DeclaredExperience>(true, []);
@@ -64,6 +65,7 @@ export class UploadedSkillsPickupComponent implements AfterViewInit {
     }
     
     this.staffService.addDeclaredExperience (this.data.idStaff, this.selection.selected)
-      .subscribe(staffDTO => console.log('Ok for ' + staffDTO.staff.idStaff));
+      .subscribe(
+        staffDTO => this.dialogRef.close(1));
   }
 }

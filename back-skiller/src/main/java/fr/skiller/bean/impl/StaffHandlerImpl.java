@@ -6,16 +6,15 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
@@ -24,10 +23,10 @@ import com.google.gson.GsonBuilder;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.PeopleCountExperienceMap;
 import fr.skiller.data.internal.ResumeSkill;
-import fr.skiller.data.external.StaffDTO;
 import fr.skiller.data.internal.Experience;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
+import fr.skiller.service.impl.storageservice.StorageFileNotFoundException;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -38,6 +37,11 @@ import com.google.gson.reflect.TypeToken;
 @Component("mock.Staff")
 public class StaffHandlerImpl implements StaffHandler {
 
+	/**
+	 * First level of experience, and the default value for all new skill. 
+	 */
+	private final static int FIRST_LEVEL = 1;
+	
 	Logger logger = LoggerFactory.getLogger(StaffHandlerImpl.class.getName());
 	
 	/**
@@ -134,6 +138,28 @@ public class StaffHandlerImpl implements StaffHandler {
 		if (staff == null) {
 			throw new SkillerException(-1, "There is no staff for the ID " + idStaff);
 		}
+		if (logger.isDebugEnabled()) {
+			logger.debug("Working with the staff member " 
+					+ (staff.firstName == null ? "" : staff.firstName) 
+					+ "  " + staff.lastName); 
+		}
+		Set<Integer> currentExperience = staff.experiences.stream()
+				.map(exp -> exp.id)
+				.collect(Collectors.toSet());
+		final List<ResumeSkill> listOfSkills = Arrays.asList(skills)
+				.stream()
+				.map(e -> (ResumeSkill) e)
+				.collect(Collectors.toList()); 
+		final List<ResumeSkill> listOfNewSkills = listOfSkills.stream()
+			.filter(entry -> !currentExperience.contains(entry.idSkill)).collect(Collectors.toList());
+		if (logger.isDebugEnabled()) {
+			logger.debug("Adding " + listOfNewSkills.size() + " new skills");
+		}
+		
+		listOfNewSkills.forEach(skill -> 
+			staff.experiences.add(
+					new Experience(skill.idSkill, skill.title, FIRST_LEVEL)));
+		
 		return staff;
 	}
 

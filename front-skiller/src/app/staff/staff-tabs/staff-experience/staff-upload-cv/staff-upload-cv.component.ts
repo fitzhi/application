@@ -12,7 +12,7 @@ import {HttpRequest} from '@angular/common/http';
 import {Component, OnInit, Inject} from '@angular/core';
 import {Subject, Observable} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialogConfig} from '@angular/material';
-import {MatDialog} from '@angular/material/dialog';
+import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-staff-upload-cv',
@@ -46,6 +46,7 @@ export class StaffUploadCvComponent implements OnInit {
     private httpClient: HttpClient,
     private messageBoxService: MessageBoxService,
     private dialog: MatDialog,
+    private dialogRef: MatDialogRef<StaffUploadCvComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) {}
 
   ngOnInit() {
@@ -137,6 +138,14 @@ export class StaffUploadCvComponent implements OnInit {
     dialogConfig.width = '600px';
     const dialogReference = this.dialog.open(UploadedSkillsPickupComponent, dialogConfig);
     dialogReference.updatePosition({ bottom: '5px' });
+    dialogReference.afterClosed()
+      .subscribe(result => {
+       if (result == 1) {
+         this.dialogRef.close(1); 
+      } else {
+        console.log (result);
+         this.dialogRef.close(0); 
+      }});
   }
 }
 
