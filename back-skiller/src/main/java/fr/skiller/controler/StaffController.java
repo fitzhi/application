@@ -326,7 +326,6 @@ public class StaffController {
 	 */
 	@PostMapping("/experiences/del")
 	ResponseEntity<StaffDTO> revokeSkill(@RequestBody String param) {
-
 		ParamStaffSkill p = gson.fromJson(param, ParamStaffSkill.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug("POST command on /staff/experiences/del with params idStaff:" + String.valueOf(p.idStaff)
@@ -348,13 +347,14 @@ public class StaffController {
 	}
 
 	@PostMapping("/api/uploadCV")
-	public ResumeDTO uploadApplicationFile(
+	ResponseEntity<ResumeDTO> uploadApplicationFile(
 			@RequestParam("file") MultipartFile file, 
 			@RequestParam("id") int id, 
-			@RequestParam("type") int fileType,
-			RedirectAttributes redirectAttributes) {
+			@RequestParam("type") int fileType) {
 
+		final HttpHeaders headers = new HttpHeaders();
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("uploading " + filename + " for staff ID " + id + " of type " + fileType);
 		}
@@ -372,10 +372,12 @@ public class StaffController {
 			 * We put the most often repeated keywords at the beginning of the list.
 			 */
 			Collections.sort(resumeDTO.experience);
-			return resumeDTO;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return new ResumeDTO(-1, e.getMessage());
+			return new ResponseEntity<ResumeDTO>(resumeDTO, headers, HttpStatus.OK);
+		} catch (SkillerException e) {
+			return new ResponseEntity<ResumeDTO>(
+					new ResumeDTO(-1, e.getMessage()), 
+					headers, 
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 

@@ -120,7 +120,9 @@ export class StaffUploadCvComponent implements OnInit {
         this.progression.complete();
         this.pickupSkills();
       }
-    });
+    },
+    responseInError => 
+      this.messageBoxService.error("Uploading error !", responseInError.error.message));
   }
 
   pickupSkills() {

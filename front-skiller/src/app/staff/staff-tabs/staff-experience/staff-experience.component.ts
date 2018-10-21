@@ -214,9 +214,6 @@ export class StaffExperienceComponent implements OnInit {
     dialogConfig.data = this.collaborator;
     const dialogReference = this.dialog.open(StaffUploadCvComponent, dialogConfig);
     dialogReference.afterClosed().subscribe(returnCodeMessage => {
-      console.log ('returnCodeMessage');
-      console.log (returnCodeMessage.code);
-      console.log (returnCodeMessage.message);
       if (returnCodeMessage.code === Constants.ERROR) {
         this.messageService.error(returnCodeMessage.message);
       }
