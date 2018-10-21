@@ -155,6 +155,10 @@ public class StaffHandlerImpl implements StaffHandler {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Adding " + listOfNewSkills.size() + " new skills");
 		}
+		if (listOfNewSkills.isEmpty()) {
+			throw new SkillerException(-1, 
+					"There is no new skill to add for " + staff.firstName + " " + staff.lastName +"!");
+		}
 		
 		listOfNewSkills.forEach(skill -> 
 			staff.experiences.add(

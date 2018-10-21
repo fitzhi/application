@@ -140,12 +140,8 @@ export class StaffUploadCvComponent implements OnInit {
     dialogReference.updatePosition({ bottom: '5px' });
     dialogReference.afterClosed()
       .subscribe(result => {
-       if (result == 1) {
-         this.dialogRef.close(1); 
-      } else {
-        console.log (result);
-         this.dialogRef.close(0); 
-      }});
-  }
+          this.dialogRef.close(result); 
+      });
+   }
 }
 

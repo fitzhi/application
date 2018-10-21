@@ -1,11 +1,13 @@
 import { Constants } from '../../../../../constants';
 import { DeclaredExperience } from '../../../../../data/declared-experience';
+import { ReturnCodeMessage } from "../../../../../data/return_code_message";
 import { StaffService } from "../../../../../staff.service";
 import { SelectionModel } from "@angular/cdk/collections";
 import {Component, OnInit, Inject, ViewChild, AfterViewInit} from '@angular/core';
 import { MAT_DIALOG_DATA, MatTableDataSource, MatSort, MatDialogRef } from '@angular/material';
 import { MatPaginator } from "@angular/material/paginator";
-
+import { INTERNAL_SERVER_ERROR, getStatusText } from 'http-status-codes'
+ 
 @Component({
   selector: 'app-uploaded-skills-pickup',
   templateUrl: './uploaded-skills-pickup.component.html',
@@ -66,6 +68,22 @@ export class UploadedSkillsPickupComponent implements AfterViewInit {
     
     this.staffService.addDeclaredExperience (this.data.idStaff, this.selection.selected)
       .subscribe(
-        staffDTO => this.dialogRef.close(1));
+        staffDTO => {
+          let rcm = new ReturnCodeMessage(staffDTO.code, staffDTO.message);
+          this.dialogRef.close(rcm) 
+        },
+        response => {
+            if (response.status === INTERNAL_SERVER_ERROR) {
+              if (Constants.DEBUG) {
+                console.log('500 : Error returned ' + response.error.message);
+              }
+              let rcm = new ReturnCodeMessage(response.error.code, response.error.message);
+              this.dialogRef.close(rcm) 
+            } else {
+              console.error(response.error);
+              let rcm = new ReturnCodeMessage(-1, "Enormous");
+              this.dialogRef.close(rcm); 
+            }
+         });
   }
 }

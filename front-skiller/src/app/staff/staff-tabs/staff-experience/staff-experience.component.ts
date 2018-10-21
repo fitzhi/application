@@ -121,7 +121,7 @@ export class StaffExperienceComponent implements OnInit {
             event.newData.level).subscribe(
             (staffDTO: StaffDTO) => {
               this.messageService.info(staffDTO.staff.firstName + ' ' +
-                staffDTO.staff.lastName + ' has now the experience ' + event.newData.titile);
+                staffDTO.staff.lastName + ' has now the experience ' + event.newData.title);
               this.reloadExperiences(this.collaborator.idStaff);
               event.confirm.resolve();
             },
@@ -213,5 +213,17 @@ export class StaffExperienceComponent implements OnInit {
     dialogConfig.panelClass = 'default-dialog-container-class';
     dialogConfig.data = this.collaborator;
     const dialogReference = this.dialog.open(StaffUploadCvComponent, dialogConfig);
+    dialogReference.afterClosed().subscribe(returnCodeMessage => {
+      console.log ('returnCodeMessage');
+      console.log (returnCodeMessage.code);
+      console.log (returnCodeMessage.message);
+      if (returnCodeMessage.code === Constants.ERROR) {
+        this.messageService.error(returnCodeMessage.message);
+      }
+      if (returnCodeMessage.code === Constants.OK) {
+        this.reloadExperiences(this.collaborator.idStaff);
+        this.messageService.info(returnCodeMessage.message);
+      }
+    })
   }
 }

@@ -51,6 +51,9 @@ export class Constants {
     ['application/msword', Constants.FILE_TYPE_DOC]
   ]);
 
+  public static ERROR = -1;
+  public static OK = 1;
+  
   /**
 	* Type of errors
 	*/
@@ -59,7 +62,7 @@ export class Constants {
   public static MESSAGE_INFO = 2;
 
   public static canAdd = true;
-
+  
   /**
 	 * Declared settings for the grid dedicated to the experiences inside the form STAFF.
 	 */

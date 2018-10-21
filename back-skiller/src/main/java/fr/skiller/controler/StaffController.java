@@ -118,7 +118,8 @@ public class StaffController {
 		if (searchCollab != null) {
 			responseEntity = new ResponseEntity<Staff>(searchCollab, headers, HttpStatus.OK);
 			if (logger.isDebugEnabled()) {
-				logger.debug("read for id " + String.valueOf(idStaff) + " returns " + responseEntity.getBody());
+				Staff staff = responseEntity.getBody();
+				logger.debug("read for id " + String.valueOf(idStaff) + " returns " + staff.firstName + " " + staff.lastName);
 			}
 		} else {
 			headers.set("backend.return_code", "O");
@@ -396,12 +397,14 @@ public class StaffController {
 		}
 		try {
 			Staff staff = staffHandler.addExperiences(p.idStaff, p.skills);
-			return new ResponseEntity<StaffDTO>(new StaffDTO(staff), HttpStatus.OK);
+			return new ResponseEntity<StaffDTO>(new StaffDTO(staff, 1, 
+					staff.firstName + " " + staff.lastName + " has " + staff.experiences.size() + " skills now!"), 
+					HttpStatus.OK);
 		} catch (final SkillerException se) {
 			return new ResponseEntity<StaffDTO>(
 					new StaffDTO(new Staff(), se.errorCode, se.errorMessage), 
 					new HttpHeaders(), 
-					HttpStatus.PROCESSING);
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
 	}	
