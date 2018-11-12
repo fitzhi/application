@@ -47,20 +47,20 @@ export class AppComponent implements OnInit {
   */
   activeOnly = true;
 
-  private nextId: number;
-  private previousId: number;
+  nextId: number;
+  previousId: number;
 
-  private skill_activated = true;
-  private image_skill_activated = '/assets/img/skill-activated.png';
-  private image_skill_inactive = '/assets/img/skill-inactive.png';
+  skill_activated = true;
+  image_skill_activated = '/assets/img/skill-activated.png';
+  image_skill_inactive = '/assets/img/skill-inactive.png';
 
-  private dev_activated = true;
-  private image_dev_activated = '/assets/img/developper-activated.png';
-  private image_dev_inactive = '/assets/img/developper-inactive.png';
+  dev_activated = true;
+  image_dev_activated = '/assets/img/developper-activated.png';
+  image_dev_inactive = '/assets/img/developper-inactive.png';
 
-  private project_activated = true;
-  private image_project_activated = '/assets/img/project-activated.png';
-  private image_project_inactive = '/assets/img/project-inactive.png';
+  project_activated = true;
+  image_project_activated = '/assets/img/project-activated.png';
+  image_project_inactive = '/assets/img/project-inactive.png';
 
 
   constructor(
