@@ -12,6 +12,8 @@ export class Collaborator {
   public level: string;
   public isActive: boolean;
   public dateInactive: Date;
+  public application: string;
+  public typeOfApplication: number;
 
   /**
    * The developer XP.

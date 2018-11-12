@@ -207,6 +207,11 @@ export class StaffExperienceComponent implements OnInit {
   }
 
   upload() {
+    if (this.isAlreadyDeactived()) {
+      this.messageService.error(this.collaborator.firstName + ' ' + this.collaborator.lastName + ' is desactivated!');
+      return false;
+    }
+
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;

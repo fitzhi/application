@@ -29,8 +29,20 @@ public class Staff {
 	 */
 	public Date dateInactive;
 	
+	/**
+	 * application filename & type (Word, PDF...)
+	 */
+	public String application;
+	public int typeOfApplication;
+	
 	public List<Project> projects;
 	public List<Experience> experiences;
+
+	/**
+	 * Empty construction.
+	 */
+	public Staff() {
+	}
 
 	public Staff(int idStaff, final String firstName, final String lastName, final String nickName, final String login, final String email, final String level) {
 		super();
@@ -60,6 +72,16 @@ public class Staff {
 	}
 	
 	/**
+	 * Update the application uploaded and its type. 
+	 * @param application filename uploaded
+	 * @param typeOfApplication type of application
+	 */
+	public void updateApplication (final String application, final int typeOfApplication) {
+		this.application = application;
+		this.typeOfApplication = typeOfApplication;
+	}
+	
+	/**
 	 * @return the complete name of the staff member in a string format.
 	 */
 	public String fullName() {
@@ -76,12 +98,6 @@ public class Staff {
 		return (oAsset.isPresent()) ? oAsset.get() : null;
 	}
 	
-	
-	/**
-	 * Empty construction.
-	 */
-	public Staff() {
-	}
 
 	@Override
 	public String toString() {

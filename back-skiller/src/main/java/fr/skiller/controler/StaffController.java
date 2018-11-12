@@ -360,6 +360,11 @@ public class StaffController {
 		}
 		
 		storageService.store(file);
+
+		final Staff staff = staffHandler.getStaff().get(id);
+		assert (staff != null);
+
+		staff.updateApplication(filename, fileType);
 		
 		try {
 			final Resume exp = resumeParserService.extract(filename, fileType);
