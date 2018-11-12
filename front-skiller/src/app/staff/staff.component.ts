@@ -20,7 +20,7 @@ export class StaffComponent implements OnInit {
   /**
    * Staff member identifier shared with the child components (staffTabs, StaffForm)
    */
-  private idStaff: number;
+  idStaff: number;
   private sub: any;
 
   private collaborator: Collaborator;

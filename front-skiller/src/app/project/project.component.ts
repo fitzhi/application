@@ -27,10 +27,10 @@ export class ProjectComponent implements OnInit {
    */
   private id: number;
 
-  private sourceSkills = new LocalDataSource([]);
-  private settings_skills = Constants.SETTINGS_SKILL_SMARTTABLE;
+  sourceSkills = new LocalDataSource([]);
+  settings_skills = Constants.SETTINGS_SKILL_SMARTTABLE;
 
-  private profileProject = new FormGroup({
+  profileProject = new FormGroup({
     projectName: new FormControl('')
   });
 
@@ -82,8 +82,8 @@ export class ProjectComponent implements OnInit {
       if (typeof event.data['id'] !== 'undefined') {
         this.projectService.removeSkill(this.project.id, event.data['id']).subscribe(
           (projectDTO: ProjectDTO) => {
-            this.messageService.info(projectDTO.project.name +
-              ' does not refer anymore to the skill ' + event.data.title);
+            this.messageService.info('The project ' + projectDTO.project.name +
+              ' does not require anymore the skill ' + event.data.title);
             this.reloadSkills(this.project.id);
             event.confirm.resolve();
           },
@@ -161,8 +161,8 @@ export class ProjectComponent implements OnInit {
     if (this.checkProjectExist(event)) {
       this.projectService.addSkill(this.project.id, event.newData.title).subscribe(
         (projectDTO: ProjectDTO) => {
-          this.messageService.info(projectDTO.project.name +
-            ' has gained the skill ' + event.newData.title);
+          this.messageService.info('The project ' + projectDTO.project.name +
+            ' requires from now the skill ' + event.newData.title);
           this.reloadSkills(this.project.id);
           event.confirm.resolve();
         },

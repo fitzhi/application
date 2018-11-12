@@ -121,8 +121,8 @@ export class StaffUploadCvComponent implements OnInit {
         this.pickupSkills();
       }
     },
-    responseInError => 
-      this.messageBoxService.error("Uploading error !", responseInError.error.message));
+    responseInError =>
+      this.messageBoxService.error('Uploading error !', responseInError.error.message));
   }
 
   pickupSkills() {
@@ -131,7 +131,7 @@ export class StaffUploadCvComponent implements OnInit {
       'lastName': this.collaborator.lastName,
       'firstName': this.collaborator.firstName,
       'experience': this.declaredExperience
-    }
+    };
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
@@ -142,7 +142,7 @@ export class StaffUploadCvComponent implements OnInit {
     dialogReference.updatePosition({ bottom: '5px' });
     dialogReference.afterClosed()
       .subscribe(result => {
-          this.dialogRef.close(result); 
+          this.dialogRef.close(result);
       });
    }
 }

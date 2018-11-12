@@ -22,12 +22,12 @@ export class StaffProjectsComponent implements OnInit {
   /*
    * Data store associated with the projects grid
    */
-  private sourceProjects = new LocalDataSource([]);
+  sourceProjects = new LocalDataSource([]);
 
   /*
    * Settings of the projects grid
    */
-  private settings_projects = Constants.SETTINGS_PROJECTS_SMARTTABLE;
+  settings_projects = Constants.SETTINGS_PROJECTS_SMARTTABLE;
 
   /**
    * Employee retrieve from StaffComponent access.

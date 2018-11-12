@@ -53,7 +53,7 @@ export class Constants {
 
   public static ERROR = -1;
   public static OK = 1;
-  
+
   /**
 	* Type of errors
 	*/
@@ -62,7 +62,7 @@ export class Constants {
   public static MESSAGE_INFO = 2;
 
   public static canAdd = true;
-  
+
   /**
 	 * Declared settings for the grid dedicated to the experiences inside the form STAFF.
 	 */
@@ -97,7 +97,7 @@ export class Constants {
       class: 'table-bordered skills_table'
     },
     actions: {
-      columnTitle: '_____',
+      columnTitle: '_______',
       add: Constants.canAdd,
       edit: true,
       delete: true,
@@ -141,7 +141,7 @@ export class Constants {
       class: 'table-bordered skills_table'
     },
     actions: {
-      columnTitle: '_____',
+      columnTitle: '___________',
       add: true,
       edit: true,
       delete: true
@@ -202,12 +202,12 @@ export class Constants {
       class: 'table table-bordered'
     },
     actions: {
-      columnTitle: '_____',
+      columnTitle: '_______',
       add: true,
       edit: true,
       delete: true
     },
-    noDataMessage: 'There is no skill associated yet.',
+    noDataMessage: 'No Project declaration for now!',
     pager: {
       perPage: 10
     }

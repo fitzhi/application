@@ -24,17 +24,17 @@ export class StaffExperienceComponent implements OnInit {
   /**
    * Image used by the button for upload the application to retrieve the skills.
    */
-  private image_upLoadCV = '/assets/img/uploadCV.png';
+  image_upLoadCV = '/assets/img/uploadCV.png';
 
   /*
    * Data store associated with the projects grid
    */
-  private sourceExperience = new LocalDataSource([]);
+  sourceExperience = new LocalDataSource([]);
 
   /*
    * Settings of the projects grid
    */
-  private settings_experience = Constants.SETTINGS_EXPERIENCE_SMARTTABLE;
+  settings_experience = Constants.SETTINGS_EXPERIENCE_SMARTTABLE;
 
   /**
    * Employee retrieve from StaffComponent access.
@@ -221,6 +221,6 @@ export class StaffExperienceComponent implements OnInit {
         this.reloadExperiences(this.collaborator.idStaff);
         this.messageService.info(returnCodeMessage.message);
       }
-    })
+    });
   }
 }

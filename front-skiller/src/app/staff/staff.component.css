@@ -42,14 +42,14 @@ div.skill_card {
 }
 
 :host >>> ng2-smart-table img { 
-	width: 25px;
-	height: 25px;
+	width: 35px;
+	height: 35px;
 	visibility:  var(--actions-button-visible);
 }
 
 :host >>> ng2-smart-table img:hover {
-	width: 35px;
-	height: 35px;
+/*	width: 35px; */
+/*	height: 35px; */
     border-radius: 25%;
     border: 1px solid;
     border-color: blue;
