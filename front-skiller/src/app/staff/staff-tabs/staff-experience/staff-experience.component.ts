@@ -7,12 +7,9 @@ import {StaffService} from '../../../staff.service';
 import {StaffDataExchangeService} from '../../service/staff-data-exchange.service';
 import {Component, OnInit} from '@angular/core';
 
-import {Ng2SmartTableModule} from 'ng2-smart-table';
 import {LocalDataSource} from 'ng2-smart-table';
-import {StarsSkillLevelRenderComponent} from './../../starsSkillLevelRenderComponent';
 import {StaffUploadCvComponent} from './staff-upload-cv/staff-upload-cv.component';
-import {MatDialog, MatDialogRef, MatDialogConfig} from '@angular/material';
-import {Ng2SmartTableComponent} from 'ng2-smart-table/ng2-smart-table.component';
+import {MatDialog, MatDialogConfig} from '@angular/material';
 
 @Component({
   selector: 'app-staff-experience',
@@ -25,6 +22,11 @@ export class StaffExperienceComponent implements OnInit {
    * Image used by the button for upload the application to retrieve the skills.
    */
   image_upLoadCV = '/assets/img/uploadCV.png';
+
+  /**
+   * Image used by the button for upload the application to retrieve the skills.
+   */
+  image_downloadCV = '/assets/img/word.png';
 
   /*
    * Data store associated with the projects grid
@@ -227,5 +229,11 @@ export class StaffExperienceComponent implements OnInit {
         this.messageService.info(returnCodeMessage.message);
       }
     });
+  }
+
+  /**
+   * Download the application file for this staff member is any.
+   */
+  download() {
   }
 }

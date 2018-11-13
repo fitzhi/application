@@ -14,3 +14,24 @@
     background-color: lightGrey;
 }
 
+#image_downloadCV {
+	width: 50px;
+	height: 50px;
+}
+
+#downloadCV {
+    display: flex;
+    border-radius: 25%;
+    text-decoration: none;
+    display: inline-block;
+}
+
+#downloadCV:hover {
+    background-color: lightGrey;
+}
+
+#headerSkills {
+    display: flex;
+    display: inline-block;
+    padding: 10px;
+}

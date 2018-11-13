@@ -17,6 +17,8 @@ export const MOCK_COLLABORATORS: Collaborator[] = [
     level: 'ET2',
     isActive: true,
     dateInactive: null,
+    application: null,
+    typeOfApplication: null,
     projects: null,
     experiences: null
   },
@@ -30,6 +32,8 @@ export const MOCK_COLLABORATORS: Collaborator[] = [
     level: 'ICD 3',
     isActive: true,
     dateInactive: null,
+    application: null,
+    typeOfApplication: null,
     projects: null,
     experiences: [{ id: 1, title: 'Java', level: 2} ]
   },
@@ -43,6 +47,8 @@ export const MOCK_COLLABORATORS: Collaborator[] = [
     level: 'ICD 2',
     isActive: true,
     dateInactive: null,
+    application: null,
+    typeOfApplication: null,
     projects: null,
     experiences: null
   },
@@ -56,6 +62,8 @@ export const MOCK_COLLABORATORS: Collaborator[] = [
     level: 'ET 2',
     isActive: true,
     dateInactive: null,
+    application: null,
+    typeOfApplication: null,
     projects: null,
     experiences: null
   }

@@ -45,7 +45,7 @@ export class StaffProjectsComponent implements OnInit {
     // We create an empty collaborator until the subscription is complete
     this.collaborator = {
       idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
-      isActive: true, dateInactive: null,
+      isActive: true, dateInactive: null, application: null, typeOfApplication: null,
       projects: [], experiences: []
     };
     /**
