@@ -43,7 +43,7 @@ import { StaffExperienceComponent } from './staff/staff-tabs/staff-experience/st
 import { StaffUploadCvComponent } from './staff/staff-tabs/staff-experience/staff-upload-cv/staff-upload-cv.component';
 import { MatTabsModule, MatDialogModule, MatProgressBarModule, MatPaginatorModule, MatCheckbox, MatSortModule } from '@angular/material';
 import { MessageBoxComponent } from './message-box/dialog/message-box.component';
-import { MatCheckboxModule } from "@angular/material/checkbox";
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 
 @NgModule({

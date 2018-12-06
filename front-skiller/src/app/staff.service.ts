@@ -1,20 +1,19 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders, HttpResponse} from '@angular/common/http';
-import {catchError, map, tap} from 'rxjs/operators';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {catchError, tap} from 'rxjs/operators';
 
 import {Collaborator} from './data/collaborator';
 import {Project} from './data/project';
 import {StaffDTO} from './data/external/staffDTO';
 
-import {MOCK_COLLABORATORS} from './mock/mock-collaborators';
-
 import {Constants} from './constants';
-import { DeclaredExperience } from "./data/declared-experience";
+import { DeclaredExperience } from './data/declared-experience';
 import {Experience} from './data/experience';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 
 import {InternalService} from './internal-service';
-import { HttpRequest } from "@angular/common/http";
+
+import { saveAs } from 'file-saver';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -143,13 +142,10 @@ export class StaffService extends InternalService {
     if (Constants.DEBUG) {
       console.log('Adding ' + skills.length + ' experiences to the staff Id  ' + idStaff);
     }
-     
     const body = {idStaff: idStaff, skills: skills};
-    return this.http.post<StaffDTO>(this.collaboratorUrl + '/api/experiences/resume/save', 
+    return this.http.post<StaffDTO>(this.collaboratorUrl + '/api/experiences/resume/save',
       body, httpOptions);
-       
   }
-  
   /**
    * POST: Revoke an experience to a a staff member.
    */
@@ -173,7 +169,47 @@ export class StaffService extends InternalService {
     return this.http.post<StaffDTO>(this.collaboratorUrl + '/experiences/save', body, httpOptions);
   }
 
-  
+  /**
+   * GET : Download the application file for the passed staff member.
+   */
+  downloadApplication(staff: Collaborator) {
+    if ((staff.application === null) || (staff.application.length === 0)) {
+      return;
+    }
+    if (Constants.DEBUG) {
+      console.log('Download the application file : '
+        + staff.application + ' for ' + staff.firstName + ' ' + staff.lastName);
+    }
+
+    const headers = new HttpHeaders();
+    headers.set ('Accept', 'application/msword');
+
+    this.http.get(this.collaboratorUrl + '/' + staff.idStaff + '/application',
+    { headers: headers, responseType: 'blob' })
+    .subscribe( data =>  {
+      this.saveToFileSystem (data, staff.application);
+    });
+
+/*
+        console.log(res.headers);
+        console.log(res.blob());
+         return new Blob([res.blob()], { type: 'application/octet-stream' });
+         );
+
+         res => {
+      const data = new Blob((res]
+      const downloadLink = document.createElement('a');
+      downloadLink.href = window.URL.createObjectURL(new Blob(binaryData));
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+    });
+    */
+  }
+
+  private saveToFileSystem(data, filename) {
+    const blob = new Blob([data], { type: 'application/octet-stream' });
+    saveAs(blob, filename);
+  }
   /**
    * Get the count of staff members aggregated by skill & level (i.e. experience)
    * @param activeOnly : Only active employees count into the aggregation.

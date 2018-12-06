@@ -1,6 +1,7 @@
 package fr.skiller.controler;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -8,10 +9,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.catalina.webresources.EmptyResource;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,6 +37,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.oracle.jrockit.jfr.ContentType;
+import com.sun.org.apache.bcel.internal.Constants;
+
 import fr.skiller.Global;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;
@@ -386,6 +396,52 @@ public class StaffController {
 		}
 	}
 
+	@RequestMapping(value = "{id}/application", method = RequestMethod.GET)
+	public ResponseEntity<Resource> downloadApplicationFile(
+		    @PathVariable("id") int id, 
+		    HttpServletRequest request) {
+
+		final Staff staff = staffHandler.getStaff().get(id);
+		assert (staff != null);
+
+		if ((staff.application == null) || (staff.application.length() == 0)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("No application file for  " + staff.idStaff);
+			}
+	        return ResponseEntity.notFound().build();
+		}
+		
+		// Load file as Resource
+		Resource resource = storageService.loadAsResource(staff.application);
+
+        // Try to determine file's content type
+		final String contentType;
+		switch (staff.typeOfApplication) {
+		case StorageService.FILE_TYPE_TXT:
+			contentType = "text/html;charset=UTF-8";
+			break;
+		case StorageService.FILE_TYPE_DOC:
+			contentType ="application/msword";
+			break;
+		case StorageService.FILE_TYPE_DOCX:
+			contentType ="application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+			break;
+		case StorageService.FILE_TYPE_PDF:
+			contentType ="application/pdf";
+			break;
+		default:
+			contentType = "application/octet-stream";
+			break;
+		}
+		if (logger.isDebugEnabled()) {
+			logger.debug(staff.application + " " + contentType);
+		}
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(contentType))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+                .body(resource);
+	}
 	class ResumeSkills {
 		int idStaff;
 		ResumeSkill[] skills;

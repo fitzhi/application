@@ -187,5 +187,12 @@ public class FileSystemStorageService implements StorageService {
 		return sb.toString();
 	}
 
+	@Override
+	public long getfileLength(String filename) throws IOException {
+		// TODO Auto-generated method stub
+		return new File(this.rootLocation.resolve(filename).toString()).length();
+	}
+
+    
 }
 

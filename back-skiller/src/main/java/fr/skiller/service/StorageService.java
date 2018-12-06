@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
@@ -74,5 +75,9 @@ public interface StorageService {
 	 */
 	String readFilePDF(final String filename) throws IOException;
    
-
+	/**
+	 * @param fileName the concerned file
+	 * @return the file size as retrieved from the file system
+	 */
+	long getfileLength(final String filename) throws IOException;
 }
