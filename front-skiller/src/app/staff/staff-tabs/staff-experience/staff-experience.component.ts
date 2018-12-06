@@ -44,7 +44,7 @@ export class StaffExperienceComponent implements OnInit {
   /**
    * Employee retrieve from StaffComponent access.
    */
-  private staff: Collaborator;
+  public staff: Collaborator;
 
 
   constructor(

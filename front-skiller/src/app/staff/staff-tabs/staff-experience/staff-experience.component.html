@@ -1,14 +1,15 @@
 <div class="skill_card">
 	<h4 class="d-flex justify-content-between align-items-center mb-3">
 		<div>
-			<a href="#"	id="upLoadCV" (click)="upload()">
+			<a [routerLink]=""	id="upLoadCV" (click)="upload()">
 				<img id="image_upLoadCV" 
 					alt="upload the application" 
 					title="Upload the application file"
 					[src]="image_upLoadCV"/>
 			</a>		
-			<a href="#"	id="downloadCV" (click)="download()" *ngIf="image_downloadCV != null">
-				<img id="image_downloadCV" 
+			<a [routerLink]="" id="downloadCV" (click)="download()" *ngIf="image_downloadCV != null">
+				<img *ngIf="staff.application != null" 
+					id="image_downloadCV" 
 					alt="download the application" 
 					title="Download the application file"
 					[src]="image_downloadCV"/>
