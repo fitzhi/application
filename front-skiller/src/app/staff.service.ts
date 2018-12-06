@@ -187,29 +187,19 @@ export class StaffService extends InternalService {
     this.http.get(this.collaboratorUrl + '/' + staff.idStaff + '/application',
     { headers: headers, responseType: 'blob' })
     .subscribe( data =>  {
-      this.saveToFileSystem (data, staff.application);
+      this.saveToFileSystem (data, staff.application, 'application/octet-stream');
     });
 
-/*
-        console.log(res.headers);
-        console.log(res.blob());
-         return new Blob([res.blob()], { type: 'application/octet-stream' });
-         );
-
-         res => {
-      const data = new Blob((res]
-      const downloadLink = document.createElement('a');
-      downloadLink.href = window.URL.createObjectURL(new Blob(binaryData));
-      document.body.appendChild(downloadLink);
-      downloadLink.click();
-    });
-    */
   }
 
-  private saveToFileSystem(data, filename) {
-    const blob = new Blob([data], { type: 'application/octet-stream' });
+  /**
+   * Save the application file on the the file system.
+   */
+  private saveToFileSystem(data, filename, typeOfFile) {
+    const blob = new Blob([data], { type: typeOfFile });
     saveAs(blob, filename);
   }
+
   /**
    * Get the count of staff members aggregated by skill & level (i.e. experience)
    * @param activeOnly : Only active employees count into the aggregation.
