@@ -3,14 +3,13 @@ import {Collaborator} from '../../../../data/collaborator';
 import {DeclaredExperience} from '../../../../data/declared-experience';
 import {DeclaredExperienceDTO} from '../../../../data/external/declaredExperienceDTO';
 import {MessageBoxService} from '../../../../message-box/service/message-box.service';
-import {StaffDataExchangeService} from '../../../service/staff-data-exchange.service';
 import {UploadedSkillsPickupComponent} from './pickup/uploaded-skills-pickup.component';
 import {HttpClient} from '@angular/common/http';
 import {HttpResponse} from '@angular/common/http';
 import {HttpEventType} from '@angular/common/http';
 import {HttpRequest} from '@angular/common/http';
 import {Component, OnInit, Inject} from '@angular/core';
-import {Subject, Observable} from 'rxjs';
+import {Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialogConfig} from '@angular/material';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 
@@ -115,6 +114,10 @@ export class StaffUploadCvComponent implements OnInit {
           console.log(this.declaredExperience.length + ' experiences detected : ');
           console.log(response.experience);
         }
+
+        this.collaborator.application = file.name.match(/[-_\w]+[.][\w]+$/i)[0];
+        this.collaborator.typeOfApplication = Constants.APPLICATION_FILE_TYPE_ALLOWED.get(this.applicationFile.type);
+
         // Close the progress-stream if we get an answer form the API
         // The upload is complete
         this.progression.complete();
