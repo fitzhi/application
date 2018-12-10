@@ -1,2 +1,2 @@
 # skiller
-Employees skills management
+Skills management
