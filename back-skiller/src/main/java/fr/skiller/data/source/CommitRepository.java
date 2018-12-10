@@ -2,6 +2,11 @@ package fr.skiller.data.source;
 
 import java.util.Date;
 
+/**
+ * Interface in charge of handling the history of commits for a repository.<br/>
+ * <code>BasicCommitRepository</code> based on a GIT repository is the actual implementation.
+ * @author Fr&eacute;d&eacute;ric VIDAL
+ */
 public interface CommitRepository {
 
 	/**
@@ -26,4 +31,10 @@ public interface CommitRepository {
 	 * @return date of last commit, or <code>Null</code> if none exixts.
 	 */
 	Date getLastDateCommit(String sourceCodePath, String author);
+	
+	/**
+	 * Extract the repository in a CSV format.
+	 * @return a String containing the repository.
+	 */
+	String extractCSV();
 }

@@ -16,6 +16,8 @@ public class BasicCommitRepository implements CommitRepository {
 
 	Map<String, CommitsHistory> repo = new HashMap<String, CommitsHistory>();
 	
+	final String LN = System.getProperty("line.separator");
+	
 	@Override
 	public void addCommit(String sourceCodePath, String user, Date dateCommit) {
 		if (repo.containsKey(sourceCodePath)) {
@@ -42,6 +44,20 @@ public class BasicCommitRepository implements CommitRepository {
 			return null;
 		}
 	}
-	
-	
+
+	@Override
+	public String extractCSV() {
+		final StringBuilder sb = new StringBuilder();
+		repo.values().stream().forEach(history -> {
+			history.lastestOperations.stream().forEach(
+					operation -> sb.append(history.sourcePath)
+					.append(";")
+					.append(operation.login)
+					.append(";")
+					.append(operation.dateCommit)
+					.append(LN)
+					);
+		});;
+		return sb.toString();
+	}
 }

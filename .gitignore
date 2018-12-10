@@ -21,3 +21,9 @@ back-skiller/upload-dir/Formulaire.pdf
 back-skiller/upload-dir/ET_201709.doc
 
 back-skiller/src/test/resources/poc_git/properties.json
+
+back-skiller/src/test/resources/poc_git/properties-VEGEO.json
+
+back-skiller/src/test/resources/poc_git/properties-SKILLER.json
+
+back-skiller/git-scan.csv
