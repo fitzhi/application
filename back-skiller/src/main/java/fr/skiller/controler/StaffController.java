@@ -57,6 +57,12 @@ import fr.skiller.service.StorageService;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
 
+/**
+ * Controller in charge of handling the staff member of the organization.
+ * 
+ * @author Fr&eacute;d&eacute;ric VIDAL
+ *
+ */
 @RestController
 @RequestMapping("/staff")
 public class StaffController {

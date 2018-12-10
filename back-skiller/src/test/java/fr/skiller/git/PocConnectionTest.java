@@ -17,7 +17,12 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+import org.eclipse.jgit.api.BlameCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.attributes.Attribute;
+import org.eclipse.jgit.attributes.Attributes;
+import org.eclipse.jgit.blame.BlameResult;
 import org.eclipse.jgit.lib.MutableObjectId;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
@@ -52,6 +57,8 @@ import fr.skiller.opennlp.PocNLP;
  * Testing some simple action with jgit
  */
 public class PocConnectionTest {
+
+	final String LN = System.getProperty("line.separator");
 
 	Logger logger = LoggerFactory.getLogger(PocConnectionTest.class.getCanonicalName());
 	private static File resourcesDirectory = new File("src/test/resources");
@@ -107,13 +114,46 @@ public class PocConnectionTest {
 	}
 	
   	@Test
-	public void testConnectionRepo() throws Exception {
+	public void test() throws Exception {
+  		final Git git = Git.open(new File(prop.path));
+
+		Repository repo = git.getRepository();
+		headId = repo.resolve(Constants.HEAD);
+
+		BlameCommand blameCommand = git.blame();
+		blameCommand.setStartCommit(headId);
+
+		/*
+		File f = new File("");
+		System.out.println(f.getAbsolutePath());
+		f = new File("src/main/java/fr/skiller/controler/StaffController.java");
+		System.out.println(f.getAbsolutePath());
+		System.out.println(f.exists());
+		*/
 		
+		File f = new File("src/main/java/fr/skiller/controler/StaffController.java");
+		System.out.println(f.exists());
+		blameCommand.setFilePath(f.getAbsolutePath());
+		
+	    BlameResult blameResult = blameCommand.call();
+	    
+	    System.out.println(blameResult.getResultContents());
+	    
+	    
+	    blameResult.computeAll();
+	    System.out.println(blameResult.getResultContents());
+		
+  	}
+	public void testConnectionRepo() throws Exception {
   		final Git git = Git.open(new File(prop.path));
 
 		Repository repo = git.getRepository();
 		headId = repo.resolve(Constants.HEAD);
 		
+		repo.getRefDatabase().getRefs().stream().forEach(ref -> {
+			System.out.println (ref.getName());
+		});
+
 		RevWalk revWalk = new RevWalk(repo);
 		RevCommit start = revWalk.parseCommit(headId);
 		revWalk.markStart(start);
@@ -122,25 +162,37 @@ public class PocConnectionTest {
 		list.source(revWalk);
 		list.fillTo(Integer.MAX_VALUE);
 		
-		final File out = new File("git-scan.csv");
+		final File out = new File("git-scan.txt");
 		final BufferedWriter writer = new BufferedWriter(new FileWriter(out));
 		
 		final CommitRepository repositoryOfCommit = new BasicCommitRepository();
 		
 		TreeWalk treeWalk = new TreeWalk(repo);
+		final StringBuilder sb = new StringBuilder();
 		for (RevCommit commit : list) {
+			sb.append(commit.getShortMessage()).append(LN);
 			treeWalk.reset();
 	        treeWalk.addTree(commit.getTree());
 	        treeWalk.setRecursive(true);
-	        while (treeWalk.next()) {
-	        	if ( treeWalk.getOperationType() == OperationType.CHECKIN_OP) {
-	        		repositoryOfCommit.addCommit(treeWalk.getPathString(), commit.getCommitterIdent().getName(), commit.getAuthorIdent().getWhen());
-	        	}
+	        Attributes atrs = treeWalk.getAttributes();
+	        if (atrs != null) {
+		        Collection<Attribute> c = atrs.getAll();
+		        for (Attribute atr : c) {
+		        	System.out.println(atr.getKey() + " " + atr.getValue());
+		        }
 	        }
+	        /**
+	        while (treeWalk.next()) {
+	        	String path = treeWalk.getPathString().replace("back-skiller/src/main/java", "").replace("back-skiller/src/test/java", "");
+	        	sb.append(path).append(LN);
+
+	        	// repositoryOfCommit.addCommit(treeWalk.getPathString(), commit.getCommitterIdent().getName(), commit.getAuthorIdent().getWhen());
+	        }
+	        */
 		}
 		
-		writer.write(repositoryOfCommit.extractCSV());
-		
+//		writer.write(repositoryOfCommit.extractCSV());
+		writer.write(sb.toString());
 		writer.flush();
 		writer.close();
 		

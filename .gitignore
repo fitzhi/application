@@ -27,3 +27,5 @@ back-skiller/src/test/resources/poc_git/properties-VEGEO.json
 back-skiller/src/test/resources/poc_git/properties-SKILLER.json
 
 back-skiller/git-scan.csv
+
+back-skiller/git-scan.txt
