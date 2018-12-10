@@ -1,3 +1,23 @@
-<p>
-  skill creation formular
-</p>
+<div class="container">
+	<div class="row">
+		<div class="col-md-12 text-center w100">
+			<h2>Skill Form</h2>
+			<p class="lead">Adding a new skill in the repository.</p>
+		</div>
+
+		<div class="col-md-8">
+			<form class="needs-validation" [formGroup]="profileSkill"
+				(ngSubmit)="onSubmit()">
+				<div class="mb-3">
+					<label for="skill">Project</label> <input type="text"
+						class="form-control" id="skillName" name="skillName"
+						placeholder="Skill title (Required)" value="" required
+						formControlName="skillTitle" />
+				</div>
+				<hr class="mb-4">
+				<button class="btn btn-primary btn-lg btn-block" type="submit"
+					[disabled]="!profileSkill.valid">Submit</button>
+			</form>
+		</div>
+	</div>
+</div>

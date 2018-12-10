@@ -3,18 +3,27 @@ import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 
 import {SkillComponent} from './skill/skill.component';
-import {SearchSkillComponent} from './search-skill/search-skill.component';
+import {ListSkillComponent} from './list-skill/list-skill.component';
+import {ProjectComponent} from './project/project.component';
+import {ListProjectComponent} from './list-project/list-project.component';
 import {WelcomeComponent} from './welcome/welcome.component';
-import {UserComponent} from './user/user.component';
-import {SearchUserComponent} from './search-user/search-user.component';
+import {StaffComponent} from './staff/staff.component';
+import {ListStaffComponent} from './list-staff/list-staff.component';
+import {ErrorComponent} from './error/error.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/welcome', pathMatch: 'full'},
   {path: 'welcome', component: WelcomeComponent},
-  {path: 'searchSkill', component: SearchSkillComponent},
+  {path: 'searchSkill', component: ListSkillComponent},
   {path: 'skill', component: SkillComponent},
-  {path: 'searchUser', component: SearchUserComponent},
-  {path: 'user', component: UserComponent}  
+  {path: 'skill/:id', component: SkillComponent},
+  {path: 'searchUser', component: ListStaffComponent},
+  {path: 'user/:id', component: StaffComponent},
+  {path: 'user', component: StaffComponent},
+  {path: 'error', component: ErrorComponent},
+  {path: 'searchProject', component: ListProjectComponent},
+  {path: 'project', component: ProjectComponent},
+  {path: 'project/:id', component: ProjectComponent},
 ];
 
 @NgModule({

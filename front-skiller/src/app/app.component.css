@@ -1,0 +1,64 @@
+#header_navigation_master_detail {
+    display: flex;
+}
+
+a.header_toolbar_master_detail {
+    text-decoration: none;
+    display: inline-block;
+}
+
+a.header_toolbar_master_detail:hover {
+    background-color: lightGrey;
+}
+
+.inactive {
+    
+}
+
+.activated {
+   background-color: white;
+}
+
+
+a.disabled {
+   pointer-events: none;
+   color: grey;
+   cursor: default;
+}
+
+.previous {
+    color: teal;
+	font-size: 32px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+   	padding-right: 8px;
+    padding-left: 8px;
+}
+
+.next {
+    color: teal;
+    font-size: 32px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+   	padding-right: 8px;
+    padding-left: 8px;
+}
+
+.round {
+    border-radius: 25%;
+}
+
+#formTitle {
+    display: flex;
+	width: 170px;
+	color:white;
+	font-size: 1.2em;
+}
+
+.text {
+	color: antiquewhite;
+}
+
+#activeOnly {
+	margin-right: 5px;
+}

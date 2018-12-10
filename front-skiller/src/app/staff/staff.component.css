@@ -1,0 +1,59 @@
+body {
+	--actions-button-visible: hidden;
+}
+
+div.projects_card {
+	padding:1px;
+}
+
+div.skill_card {
+	padding:1px;
+}
+
+
+:host >>> ng2-smart-table {
+        font-size: 12px;
+}
+
+:host >>> ng2-smart-table thead > tr > th  { 
+        background-color: snow;  
+        font-size: 18px;
+}
+
+:host >>> ng2-smart-table-cell  div { 
+        padding: 0px;
+        margin: 0px;
+        font-size: 14px;
+}
+
+:host /deep/ ng2-smart-table tr   { 
+        padding: 0px;
+        margin: 0px;
+}
+
+:host >>> ng2-smart-table tr th { 
+        padding: 2px;
+        margin: 0px;
+}
+
+:host >>> ng2-smart-table tr td { 
+        padding: 2px;
+        margin: 0px;
+}
+
+:host >>> ng2-smart-table img { 
+	width: 35px;
+	height: 35px;
+	visibility:  var(--actions-button-visible);
+}
+
+:host >>> ng2-smart-table img:hover {
+/*	width: 35px; */
+/*	height: 35px; */
+    border-radius: 25%;
+    border: 1px solid;
+    border-color: blue;
+	background-color: lightGrey;
+}
+
+

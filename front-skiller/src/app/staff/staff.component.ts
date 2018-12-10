@@ -1,0 +1,98 @@
+import {AppModule} from '../app.module';
+import {Component, OnInit} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
+import {Subject, Observable, of} from 'rxjs';
+import {Collaborator} from '../data/collaborator';
+import {Constants} from '../constants';
+
+import {ListStaffService} from '../list-staff-service/list-staff.service';
+import { StaffDataExchangeService } from './service/staff-data-exchange.service';
+import {CinematicService} from '../cinematic.service';
+import {MessageService} from '../message.service';
+
+@Component({
+  selector: 'app-staff',
+  templateUrl: './staff.component.html',
+  styleUrls: ['./staff.component.css']
+})
+export class StaffComponent implements OnInit {
+
+  /**
+   * Staff member identifier shared with the child components (staffTabs, StaffForm)
+   */
+  idStaff: number;
+  private sub: any;
+
+  private collaborator: Collaborator;
+
+  constructor(
+    private cinematicService: CinematicService,
+    private route: ActivatedRoute,
+    private listStaffService: ListStaffService,
+    private messageService: MessageService,
+    private staffDataExchangeService: StaffDataExchangeService) {}
+
+  ngOnInit() {
+    this.sub = this.route.params.subscribe(params => {
+      if (Constants.DEBUG) {
+        console.log('params[\'id\'] ' + params['id']);
+      }
+      if (params['id'] == null) {
+        this.idStaff = null;
+      } else {
+        this.idStaff = + params['id']; // (+) converts string 'id' to a number
+      }
+
+      // Either we are in creation mode, or we load the collaborator from the back-end...
+      // We create an empty collaborator until the subscription is complete
+      this.collaborator = {
+        idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
+        isActive: true, dateInactive: null, application: null, typeOfApplication: null,
+        projects: [], experiences: []
+      };
+      /*
+       * By default, you cannot add a project/skill for an unregistered developer.
+       */
+      document.querySelector('body').style.cssText = '--actions-button-visible: hidden';
+      if (this.idStaff != null) {
+        this.listStaffService.getCollaborator(this.idStaff).subscribe(
+          (collab: Collaborator) => {
+            this.staffDataExchangeService.changeCollaborator(collab);
+            this.collaborator = collab;
+            if (collab.isActive) {
+              document.querySelector('body').style.cssText = '--actions-button-visible: visible';
+            } else {
+              document.querySelector('body').style.cssText = '--actions-button-visible: hidden';
+            }
+            this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
+          },
+          error => {
+            if (error.status === 404) {
+              if (Constants.DEBUG) {
+                console.log('404 : cannot found a collaborator for the id ' + this.idStaff);
+              }
+              this.messageService.error('There is no staff member for id ' + this.idStaff);
+              this.collaborator = {
+                idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
+                isActive: true, dateInactive: null, application: null, typeOfApplication: null, projects: [], experiences: []
+              };
+            } else {
+              console.error(error.message);
+            }
+          },
+          () => {
+            if (this.collaborator.idStaff === 0) {
+              console.log('No collaborator found for the id ' + this.idStaff);
+            }
+            if (Constants.DEBUG) {
+              console.log('Loading complete for id ' + this.idStaff);
+            }
+          }
+        );
+      }
+    });
+    this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
+  }
+}
+
+

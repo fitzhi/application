@@ -1,0 +1,21 @@
+<form (ngSubmit)="submit()">
+	<h2 mat-dialog-title>Application file selection</h2>
+	<mat-dialog-content>
+	<p>
+		Please, select the application file to upload, for {{data.firstName}}
+		{{data.lastName}}.<br /> Only format <b>DOC</b>, <b>DOCX</b> and <b>PDF</b>
+		are supported.
+	</p>
+	<label for="file" class="label-file">Select the file to
+		upload...</label> 
+	<input id="file" name="file" class="input-file" type="file"
+		(change)="fileEvent($event)" /> 
+	<span *ngIf="applicationFile">{{applicationFile.name}}</span> 
+	<br />
+	<mat-progress-bar *ngIf="progress" mode="determinate"
+		[value]="progress | async"></mat-progress-bar> </mat-dialog-content>
+	<mat-dialog-actions align="center">
+		<button mat-button class="actions" mat-dialog-close>Cancel</button>
+		<button class="actions" type="submit">Ok</button>
+	</mat-dialog-actions>
+</form>
