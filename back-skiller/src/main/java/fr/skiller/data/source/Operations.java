@@ -27,13 +27,14 @@ public class Operations {
 
 	/**
 	 * Add a commit log in the repository
-	 * @param user the user in charge of the commit
+	 * @param author the author in charge of the commit
+	 * @param email the author's email
 	 * @param dateCommit the date of the commit
 	 */
-	void addCommit (final String user, final Date dateCommit) {
-		Operation operation = operations.get(user);
+	void addCommit (final String author, final String email, final Date dateCommit) {
+		Operation operation = operations.get(author);
 		if (operation == null) {
-			operations.put(user, new Operation(user, dateCommit));
+			operations.put(author, new Operation(author, email, dateCommit));
 		} else {
 			if (dateCommit.after(operation.dateCommit)) {
 				operation.dateCommit = dateCommit;

@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {CinematicService} from './cinematic.service';
 import {Constants} from './constants';
-import { Profile } from './data/profile';
 import {ListProjectsService} from './list-projects-service/list-projects.service';
 import {ListSkillService} from './list-skill-service/list-skill.service';
 import {ListStaffService} from './list-staff-service/list-staff.service';

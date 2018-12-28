@@ -13,9 +13,10 @@ public interface CommitRepository {
 	 * add a new commit log into the repository.
 	 * @param sourceCodePath the complete source code path 
 	 * @param author the login of the committer
+	 * @param email the email of the committer
 	 * @param timestamp date of the operation
 	 */
-	void addCommit(String sourceCodePath, String author, Date timestamp);
+	void addCommit(String sourceCodePath, String author, String email, Date timestamp);
 	
 	/**
 	 * Test the presence of a record for the given source code file

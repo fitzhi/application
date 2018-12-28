@@ -10,6 +10,7 @@ import {WelcomeComponent} from './welcome/welcome.component';
 import {StaffComponent} from './staff/staff.component';
 import {ListStaffComponent} from './list-staff/list-staff.component';
 import {ErrorComponent} from './error/error.component';
+import {SunburstTestComponent} from './d3/sunburst-test/sunburst-test.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/welcome', pathMatch: 'full'},
@@ -24,6 +25,7 @@ const routes: Routes = [
   {path: 'searchProject', component: ListProjectComponent},
   {path: 'project', component: ProjectComponent},
   {path: 'project/:id', component: ProjectComponent},
+  {path: 'sunburst-test', component: SunburstTestComponent},
 ];
 
 @NgModule({

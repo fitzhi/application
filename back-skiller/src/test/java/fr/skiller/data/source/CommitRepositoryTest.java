@@ -1,9 +1,6 @@
 package fr.skiller.data.source;
 
 import java.util.Calendar;
-import java.util.Date;
-
-import javax.validation.constraints.AssertTrue;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -27,29 +24,29 @@ public class CommitRepositoryTest {
 	
 	@Test
 	public void testAdd() {
-		commitRepository.addCommit("/test.java", "myUser", calendar.getTime());
+		commitRepository.addCommit("/test.java", "myUser", "myUser@toto.com", calendar.getTime());
 		Assert.assertTrue(commitRepository.containsSourceCode("/test.java"));
 	}
 
 	@Test
 	public void testNoUpdate() {
-		commitRepository.addCommit("/test.java", "myUser", calendar.getTime());
+		commitRepository.addCommit("/test.java", "myUser", "myUser@toto.com", calendar.getTime());
 		Assert.assertTrue(commitRepository.containsSourceCode("/test.java"));
 		// One hour before
 		Calendar calendar2 = ((Calendar) calendar.clone());
 		calendar2.set(Calendar.HOUR_OF_DAY, 11);
-		commitRepository.addCommit("/test.java", "myUser", calendar2.getTime());
+		commitRepository.addCommit("/test.java", "myUser", "myUser@toto.com", calendar2.getTime());
 		Assert.assertEquals(calendar.getTime(), commitRepository.getLastDateCommit("/test.java", "myUser"));
 	}
 	
 	@Test
 	public void testUpdate() {
-		commitRepository.addCommit("/test.java", "myUser", calendar.getTime());
+		commitRepository.addCommit("/test.java", "myUser", "myUser@toto.com", calendar.getTime());
 		Assert.assertTrue(commitRepository.containsSourceCode("/test.java"));
 		// One hour After
 		Calendar calendar2 = ((Calendar) calendar.clone());
 		calendar2.set(Calendar.HOUR_OF_DAY, 13);
-		commitRepository.addCommit("/test.java", "myUser", calendar2.getTime());
+		commitRepository.addCommit("/test.java", "myUser", "myUser@toto.com", calendar2.getTime());
 		Assert.assertTrue(calendar.getTime().before(commitRepository.getLastDateCommit("/test.java", "myUser")));
 	}
 	

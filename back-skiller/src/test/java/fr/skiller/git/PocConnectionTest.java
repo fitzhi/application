@@ -3,37 +3,26 @@
  */
 package fr.skiller.git;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import org.eclipse.jgit.api.BlameCommand;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.attributes.Attribute;
-import org.eclipse.jgit.attributes.Attributes;
-import org.eclipse.jgit.blame.BlameResult;
-import org.eclipse.jgit.lib.MutableObjectId;
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revplot.PlotWalk;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevCommitList;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.TreeWalk;
-import org.eclipse.jgit.treewalk.TreeWalk.OperationType;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -41,16 +30,9 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
-import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.FileMode;
-
-import fr.skiller.data.JsonTest;
-import fr.skiller.data.internal.Skill;
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
-import fr.skiller.opennlp.PocNLP;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -75,12 +57,14 @@ public class PocConnectionTest {
 		String url;
 		String login;
 		String password;
+		String email;
 		String path;
 	}
 	Property prop;
 	Path path;
 	
-	final String fileProperties = resourcesDirectory.getAbsolutePath() + "/poc_git/properties-SKILLER.json";
+	final String fileProperties = resourcesDirectory.getAbsolutePath() + "/poc_git/properties-VEGEO.json";
+	
 	@Before
 	public void before() throws Exception {
 		Gson gson = new GsonBuilder().create();
@@ -113,47 +97,73 @@ public class PocConnectionTest {
 		}
 	}
 	
-  	@Test
-	public void test() throws Exception {
-  		final Git git = Git.open(new File(prop.path));
+  	
+ 	final List<Pattern> patternsInclusionList = new ArrayList<Pattern>();
 
-		Repository repo = git.getRepository();
-		headId = repo.resolve(Constants.HEAD);
+ 	boolean select = false;
+ 	
+ 	/**
+ 	 * Check if the path is an eligible source for the activity dashboard.
+ 	 * @param path
+ 	 * @return True if the path should be included
+ 	 */
+ 	boolean isElligible (final String path) {
+ 		
+ 		select = true;
+ 		
+ 		if (patternsInclusionList.isEmpty()) {
+ 			patternsInclusionList.add(Pattern.compile("(.java$|.js$|.css$|.html$|.ts$)")); 			
+ 			patternsInclusionList.add(Pattern.compile("^(?!.*/app/vendor/).*$")); 			
+ 			patternsInclusionList.add(Pattern.compile("^(?!.*/node_modules/).*$")); 			
+ 		}
+ 		
+ 		patternsInclusionList.stream().forEach(pattern -> {
+ 			Matcher matcher = pattern.matcher(path);
+ 			if (!matcher.find()) {
+ 				select = false;
+ 			}
+ 		});
+ 		
+ 		return select;
+ 	}
+ 
+ 	final List<Pattern> patternsfilteredList = new ArrayList<Pattern>();
 
-		BlameCommand blameCommand = git.blame();
-		blameCommand.setStartCommit(headId);
-
-		/*
-		File f = new File("");
-		System.out.println(f.getAbsolutePath());
-		f = new File("src/main/java/fr/skiller/controler/StaffController.java");
-		System.out.println(f.getAbsolutePath());
-		System.out.println(f.exists());
-		*/
+ 	String filteredPath = "";
+ 	
+ 	/**
+ 	 * 
+ 	 * @param path
+ 	 * @return
+ 	 */
+	public String filterPath (final String path) {
+ 		
+		filteredPath = "";
 		
-		File f = new File("src/main/java/fr/skiller/controler/StaffController.java");
-		System.out.println(f.exists());
-		blameCommand.setFilePath(f.getAbsolutePath());
-		
-	    BlameResult blameResult = blameCommand.call();
-	    
-	    System.out.println(blameResult.getResultContents());
-	    
-	    
-	    blameResult.computeAll();
-	    System.out.println(blameResult.getResultContents());
-		
-  	}
+ 		if (patternsfilteredList.isEmpty()) {
+ 			patternsfilteredList.add(Pattern.compile("/src/main/java/"));
+ 			patternsfilteredList.add(Pattern.compile("/src/test/java/"));
+ 			patternsfilteredList.add(Pattern.compile("/src/main/resources/"));
+ 			patternsfilteredList.add(Pattern.compile("/src/test/resources/"));
+ 		}
+ 		
+ 		patternsfilteredList.stream().forEach(pattern -> {
+ 			Matcher matcher = pattern.matcher(path);
+ 			if (matcher.find() && (filteredPath.length()==0)) {
+ 				filteredPath = path.substring(matcher.end());
+ 			}
+ 		});
+ 		return (filteredPath.length() == 0) ? path : filteredPath;
+ 	}
+ 	
+ 	@Test
 	public void testConnectionRepo() throws Exception {
+ 		
   		final Git git = Git.open(new File(prop.path));
 
 		Repository repo = git.getRepository();
 		headId = repo.resolve(Constants.HEAD);
 		
-		repo.getRefDatabase().getRefs().stream().forEach(ref -> {
-			System.out.println (ref.getName());
-		});
-
 		RevWalk revWalk = new RevWalk(repo);
 		RevCommit start = revWalk.parseCommit(headId);
 		revWalk.markStart(start);
@@ -161,38 +171,44 @@ public class PocConnectionTest {
 		RevCommitList<RevCommit> list = new RevCommitList<RevCommit>();
 		list.source(revWalk);
 		list.fillTo(Integer.MAX_VALUE);
-		
-		final File out = new File("git-scan.txt");
-		final BufferedWriter writer = new BufferedWriter(new FileWriter(out));
-		
+				
 		final CommitRepository repositoryOfCommit = new BasicCommitRepository();
 		
 		TreeWalk treeWalk = new TreeWalk(repo);
 		final StringBuilder sb = new StringBuilder();
 		for (RevCommit commit : list) {
-			sb.append(commit.getShortMessage()).append(LN);
+			System.out.println(commit.getShortMessage());
 			treeWalk.reset();
 	        treeWalk.addTree(commit.getTree());
 	        treeWalk.setRecursive(true);
-	        Attributes atrs = treeWalk.getAttributes();
-	        if (atrs != null) {
-		        Collection<Attribute> c = atrs.getAll();
-		        for (Attribute atr : c) {
-		        	System.out.println(atr.getKey() + " " + atr.getValue());
-		        }
+	        
+	        for (RevCommit parent : commit.getParents()) {
+	        	treeWalk.addTree(parent.getTree());
 	        }
-	        /**
+	        
 	        while (treeWalk.next()) {
-	        	String path = treeWalk.getPathString().replace("back-skiller/src/main/java", "").replace("back-skiller/src/test/java", "");
-	        	sb.append(path).append(LN);
 
-	        	// repositoryOfCommit.addCommit(treeWalk.getPathString(), commit.getCommitterIdent().getName(), commit.getAuthorIdent().getWhen());
+	        	if (isElligible(treeWalk.getPathString())) {
+					int similarParents = 0;
+					for (int i = 1; i < treeWalk.getTreeCount(); i++) {
+						if (treeWalk.getFileMode(i) == treeWalk.getFileMode(0) && treeWalk.getObjectId(0).equals(treeWalk.getObjectId(i)))
+							similarParents++;
+					}
+					if (similarParents == 0) {
+						String str = filterPath(treeWalk.getPathString());
+						repositoryOfCommit.addCommit(
+								str, 
+								commit.getCommitterIdent().getName(),
+								commit.getCommitterIdent().getEmailAddress(),
+								commit.getAuthorIdent().getWhen());
+					}
+	        	}
 	        }
-	        */
 		}
 		
-//		writer.write(repositoryOfCommit.extractCSV());
-		writer.write(sb.toString());
+		final File out = new File("git-scan.csv");
+		final BufferedWriter writer = new BufferedWriter(new FileWriter(out));
+		writer.write(repositoryOfCommit.extractCSV());
 		writer.flush();
 		writer.close();
 		

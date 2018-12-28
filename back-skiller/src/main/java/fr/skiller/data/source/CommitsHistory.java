@@ -38,11 +38,12 @@ public class CommitsHistory {
 
 	/**
 	 * Take in account a new commit in the history.
-	 * @param author the author of the commit
+	 * @param author the login of the committer
+	 * @param email the email of the committer
 	 * @param timestamp the timestamp of this operation
 	 * @return the updated collection
 	 */
-	public List<Operation> handle(final String author, final Date timestamp) {
+	public List<Operation> handle(final String author, final String email, final Date timestamp) {
 		Optional<Operation> opt = lastestOperations.stream().filter(ope -> ope.login.equals(author)).findFirst();
 		if (opt.isPresent()) {
 			if (opt.get().dateCommit.before(timestamp)) {
@@ -50,7 +51,7 @@ public class CommitsHistory {
 			}
 			return lastestOperations;
 		} else {
-			return addOperation (new Operation(author, timestamp));
+			return addOperation (new Operation(author, email, timestamp));
 		}
 	}
 	

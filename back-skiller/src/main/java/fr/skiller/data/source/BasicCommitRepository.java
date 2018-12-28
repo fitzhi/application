@@ -19,13 +19,13 @@ public class BasicCommitRepository implements CommitRepository {
 	final String LN = System.getProperty("line.separator");
 	
 	@Override
-	public void addCommit(String sourceCodePath, String user, Date dateCommit) {
+	public void addCommit(String sourceCodePath, String user, String email, Date dateCommit) {
 		if (repo.containsKey(sourceCodePath)) {
 			final CommitsHistory history = repo.get(sourceCodePath);
-			history.handle(user, dateCommit);
+			history.handle(user, email, dateCommit);
 		} else {
 			CommitsHistory fileLogs = new CommitsHistory(sourceCodePath);
-			fileLogs.addOperation(new Operation(user, dateCommit));
+			fileLogs.addOperation(new Operation(user, email, dateCommit));
 			repo.put(sourceCodePath, fileLogs);
 		}
 	}
@@ -53,6 +53,8 @@ public class BasicCommitRepository implements CommitRepository {
 					operation -> sb.append(history.sourcePath)
 					.append(";")
 					.append(operation.login)
+					.append(";")
+					.append(operation.email)
 					.append(";")
 					.append(operation.dateCommit)
 					.append(LN)
