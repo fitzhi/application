@@ -17,6 +17,11 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
+	<logger name="fr.skiller.source.scanner.git" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
 	<logger name="fr.skiller.controller.StaffController" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />

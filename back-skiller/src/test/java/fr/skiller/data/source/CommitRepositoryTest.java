@@ -52,8 +52,6 @@ public class CommitRepositoryTest {
 	
 	@After
 	public void after() {
-		System.out.println("after");
-		
 	}
 
 }

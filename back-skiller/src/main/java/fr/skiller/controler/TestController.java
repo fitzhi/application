@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 
 import fr.skiller.Global;
-import fr.skiller.data.internal.CodeDir;
+import fr.skiller.data.internal.SunburstData;
 import fr.skiller.data.internal.Test;
 
 @RestController
@@ -90,15 +90,15 @@ public class TestController {
 	}
 
 	@GetMapping("/sunburst-test")
-	ResponseEntity<CodeDir> testSunburst() {
+	ResponseEntity<SunburstData> testSunburst() {
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug("entering testSunburst...");
 		}
-		CodeDir gd = getTestingValue();
+		SunburstData gd = getTestingValue();
 		
 		final MultiValueMap<String, String> headers = new HttpHeaders();
-		final ResponseEntity<CodeDir> responseEntity = new ResponseEntity<CodeDir>(gd, headers, HttpStatus.OK);
+		final ResponseEntity<SunburstData> responseEntity = new ResponseEntity<SunburstData>(gd, headers, HttpStatus.OK);
 		if (logger.isDebugEnabled()) {
 			logger.debug(Global.LN+gd.toString());
 		}
@@ -106,26 +106,26 @@ public class TestController {
 	}
 
 	
-	private CodeDir getTestingValue() {
+	private SunburstData getTestingValue() {
 		
-		CodeDir gRoot = new CodeDir("VEGEO");
+		SunburstData gRoot = new SunburstData("VEGEO");
 //		gRoot.numberOfFiles = 20;
 		gRoot.lastUpdate="The 1st of december";
 		
-		CodeDir g1 = new CodeDir("com");
+		SunburstData g1 = new SunburstData("com");
 //		g1.numberOfFiles = 15;
 		
-		CodeDir g1_bis = new CodeDir("fr");
+		SunburstData g1_bis = new SunburstData("fr");
 		g1_bis.numberOfFiles = 5;
 
 		gRoot.addsubDir(g1);
 		gRoot.addsubDir(g1_bis);
 		
 		
-		CodeDir g2 = new CodeDir("google");
+		SunburstData g2 = new SunburstData("google");
 		g2.numberOfFiles = 5;
 
-		CodeDir g3 = new CodeDir("amazon");
+		SunburstData g3 = new SunburstData("amazon");
 		g3.numberOfFiles = 10;
 
 		g1.addsubDir(g2);

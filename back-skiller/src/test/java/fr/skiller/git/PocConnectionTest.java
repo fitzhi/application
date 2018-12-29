@@ -43,6 +43,7 @@ public class PocConnectionTest {
 	final String LN = System.getProperty("line.separator");
 
 	Logger logger = LoggerFactory.getLogger(PocConnectionTest.class.getCanonicalName());
+	
 	private static File resourcesDirectory = new File("src/test/resources");
 
 	ObjectId headId;

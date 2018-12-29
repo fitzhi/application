@@ -1,6 +1,7 @@
 package fr.skiller.data.source;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Interface in charge of handling the history of commits for a repository.<br/>
@@ -38,4 +39,15 @@ public interface CommitRepository {
 	 * @return a String containing the repository.
 	 */
 	String extractCSV();
+	
+	/**
+	 * @return the size of the collection.
+	 */
+	int size();
+	
+	/**
+	 * @return the complete repository extracted as a Map, indexed by the complete source filename 
+	 * associated with its history of {@link fr.skiller.data.source.CommitHistory CommitHistory}.
+	 */
+	Map<String, CommitHistory> getRepository();
 }

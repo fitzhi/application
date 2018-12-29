@@ -10,9 +10,9 @@ import fr.skiller.Global;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
- * Source Directory with layout information.
+ * Sunburst data build from the History of the Source repository with layout information.
  */
-public class CodeDir {
+public class SunburstData {
 
 	/**
 	 * A source directory and a component within a package.<br/>
@@ -40,12 +40,12 @@ public class CodeDir {
 	/**
 	 * Array containing the sub-directories of the actual directory.
 	 */        
-    public List<CodeDir> children;
+    public List<SunburstData> children;
 
 	/**
 	 * @param directory the name of the directory (such as com, fr...)
 	 */
-	public CodeDir(String directory) {
+	public SunburstData(String directory) {
 		super();
 		this.directory = directory;
 	}
@@ -55,7 +55,7 @@ public class CodeDir {
 	 * @param subDir the directory record
 	 * @return the updated children list.
 	 */
-	public List<CodeDir> addsubDir(final CodeDir subDir) {
+	public List<SunburstData> addsubDir(final SunburstData subDir) {
 		if (children == null) {
 			children = new ArrayList<>();
 		}
@@ -67,7 +67,7 @@ public class CodeDir {
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 		if (children!=null) {
-			for (CodeDir child : children) {
+			for (SunburstData child : children) {
 				sb.append("\t"+child.toString()+Global.LN);
 			}
 		}

@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import fr.skiller.data.internal.CodeDir;
+import fr.skiller.data.internal.SunburstData;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL Test of the JSON generation of the
@@ -46,23 +46,23 @@ public class CodeDirJsonTest  {
 	@Test
 	public void testGenerate() throws IOException {
 
-		CodeDir gRoot = new CodeDir("VEGEO");
+		SunburstData gRoot = new SunburstData("VEGEO");
 		gRoot.numberOfFiles = 20;
 		
-		CodeDir g1 = new CodeDir("com");
+		SunburstData g1 = new SunburstData("com");
 		g1.numberOfFiles = 15;
 		
-		CodeDir g1_bis = new CodeDir("fr");
+		SunburstData g1_bis = new SunburstData("fr");
 		g1_bis.numberOfFiles = 5;
 
 		gRoot.addsubDir(g1);
 		gRoot.addsubDir(g1_bis);
 		
 		
-		CodeDir g2 = new CodeDir("google");
+		SunburstData g2 = new SunburstData("google");
 		g2.numberOfFiles = 5;
 
-		CodeDir g3 = new CodeDir("amazon");
+		SunburstData g3 = new SunburstData("amazon");
 		g3.numberOfFiles = 10;
 
 		g1.addsubDir(g2);

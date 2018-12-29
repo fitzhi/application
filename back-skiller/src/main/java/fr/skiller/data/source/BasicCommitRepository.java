@@ -62,4 +62,10 @@ public class BasicCommitRepository implements CommitRepository {
 		});;
 		return sb.toString();
 	}
+
+	@Override
+	public int size() {
+		return repo.size();
+	}
+	
 }

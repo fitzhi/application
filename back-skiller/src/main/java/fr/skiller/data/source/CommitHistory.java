@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Optional;
 
 /**
+ * History of operations of a source element.
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
-public class CommitsHistory {
+public class CommitHistory {
 	
 	final String sourcePath;
 	
@@ -22,7 +22,7 @@ public class CommitsHistory {
 	 * @param sourcePath
 	 * @param lastestOperations
 	 */
-	public CommitsHistory(String sourcePath) {
+	public CommitHistory(String sourcePath) {
 		this.sourcePath = sourcePath;
 	}
 
@@ -67,7 +67,5 @@ public class CommitsHistory {
 		} else {
 			return null;
 		}
-			
-		
 	}
 }
