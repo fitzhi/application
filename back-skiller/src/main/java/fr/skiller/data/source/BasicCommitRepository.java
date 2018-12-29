@@ -14,17 +14,17 @@ import java.util.Map;
  */
 public class BasicCommitRepository implements CommitRepository {
 
-	Map<String, CommitsHistory> repo = new HashMap<String, CommitsHistory>();
+	Map<String, CommitHistory> repo = new HashMap<String, CommitHistory>();
 	
 	final String LN = System.getProperty("line.separator");
 	
 	@Override
 	public void addCommit(String sourceCodePath, String user, String email, Date dateCommit) {
 		if (repo.containsKey(sourceCodePath)) {
-			final CommitsHistory history = repo.get(sourceCodePath);
+			final CommitHistory history = repo.get(sourceCodePath);
 			history.handle(user, email, dateCommit);
 		} else {
-			CommitsHistory fileLogs = new CommitsHistory(sourceCodePath);
+			CommitHistory fileLogs = new CommitHistory(sourceCodePath);
 			fileLogs.addOperation(new Operation(user, email, dateCommit));
 			repo.put(sourceCodePath, fileLogs);
 		}
@@ -38,7 +38,7 @@ public class BasicCommitRepository implements CommitRepository {
 	@Override
 	public Date getLastDateCommit(String sourceCodePath, String author) {
 		if (repo.containsKey(sourceCodePath)) {
-			final CommitsHistory history = repo.get(sourceCodePath);
+			final CommitHistory history = repo.get(sourceCodePath);
 			return history.getDateCommit(author);
 		} else {
 			return null;
@@ -66,6 +66,11 @@ public class BasicCommitRepository implements CommitRepository {
 	@Override
 	public int size() {
 		return repo.size();
+	}
+
+	@Override
+	public Map<String, CommitHistory> getRepository() {
+		return this.repo;
 	}
 	
 }
