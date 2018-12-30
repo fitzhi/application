@@ -37,10 +37,9 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="fr.skiller.bean.impl.SkillHandlerImpl" additivity="false">
+	<logger name="fr.skiller.data.internal.SunburstDataTest" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
-
 
 </configuration>

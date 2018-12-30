@@ -28,5 +28,19 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
+	<logger name="fr.skiller.service.impl.ApplicationFileSkillsScannerService" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="fr.skiller.data.internal.SunburstDataTest" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="fr.skiller.source.scanner.git" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
 
 </configuration>

@@ -1,7 +1,17 @@
 package fr.skiller.controler;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,10 +23,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
 
 import fr.skiller.Global;
+import fr.skiller.data.JsonTest;
+import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.SunburstData;
 import fr.skiller.data.internal.Test;
+import fr.skiller.data.source.CommitRepository;
+import fr.skiller.data.source.ConnectionSettings;
+import fr.skiller.source.scanner.RepoScanner;
 
 @RestController
 @RequestMapping("/test")
@@ -34,6 +53,14 @@ public class TestController {
 	 */
 	Gson g = new Gson();
 
+	/**
+	 * Source control parser.
+	 */
+	@Autowired
+	@Qualifier("GIT")
+	RepoScanner scanner;
+
+	private static File resourcesDirectory = new File("src/main/resources");
 
 	@GetMapping("/get")
 	ResponseEntity<Test> test() {
@@ -95,7 +122,14 @@ public class TestController {
 		if (logger.isDebugEnabled()) {
 			logger.debug("entering testSunburst...");
 		}
-		SunburstData gd = getTestingValue();
+		
+		SunburstData gd = null;
+		try {
+			gd = getTestingValue();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		final MultiValueMap<String, String> headers = new HttpHeaders();
 		final ResponseEntity<SunburstData> responseEntity = new ResponseEntity<SunburstData>(gd, headers, HttpStatus.OK);
@@ -106,31 +140,66 @@ public class TestController {
 	}
 
 	
-	private SunburstData getTestingValue() {
+	private SunburstData getTestingValue() throws Exception {
 		
-		SunburstData gRoot = new SunburstData("VEGEO");
-//		gRoot.numberOfFiles = 20;
-		gRoot.lastUpdate="The 1st of december";
+		Gson gson = new GsonBuilder().create();
+		File input = new File(resourcesDirectory.getAbsolutePath() + "/root.json");
+		if (input.exists()) {
+			JsonReader reader = gson.newJsonReader(new FileReader(input));
+			Type SunburstDataType = new TypeToken<SunburstData>() {
+			}.getType();
+			SunburstData data = new SunburstData("root");
+			data = gson.fromJson(reader, SunburstDataType);
+			if (logger.isDebugEnabled()) {
+				logger.debug("returning the data from " + input.getAbsolutePath());
+			}
+			return data;
+		}
 		
-		SunburstData g1 = new SunburstData("com");
-//		g1.numberOfFiles = 15;
-		
-		SunburstData g1_bis = new SunburstData("fr");
-		g1_bis.numberOfFiles = 5;
+		Project project = new Project(1, "VEGEO");
+		final String fileProperties = resourcesDirectory.getAbsolutePath() + "/repository-settings/properties-VEGEO.json";
 
-		gRoot.addsubDir(g1);
-		gRoot.addsubDir(g1_bis);
+		ConnectionSettings settings = new ConnectionSettings();
+		final FileReader fr = new FileReader(new File(fileProperties));
+		settings = gson.fromJson(fr, settings.getClass());
+		fr.close();
+		if (logger.isDebugEnabled()) {
+			logger.debug("GIT remote URL " + settings.url);
+		}
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("cloning...");
+		}
+		scanner.clone(project, settings);
+		if (logger.isDebugEnabled()) {
+			logger.debug("...cloned");
+		}
+        
+		if (logger.isDebugEnabled()) {
+			logger.debug("parsing...");
+		}
+		final CommitRepository repo = scanner.parseRepository(project, settings);
+		if (logger.isDebugEnabled()) {
+			logger.debug("...parsed");
+			logger.debug(repo.size() + " records in the repository");
+		}
+        
+		SunburstData data = scanner.aggregateSunburstData(repo);
+		
+		if (logger.isDebugEnabled()) {
+			Gson g = new Gson();
+			String content = g.toJson(data);
+			File output = new File(resourcesDirectory.getAbsolutePath() + "/root.json");
+			logger.debug("Writing result into " + output.getAbsolutePath());
+			BufferedWriter bw = new BufferedWriter(new FileWriter(output));
+			bw.write(content);
+			bw.close();
+			System.out.println(" ");
+			System.out.println(content); 
+			System.out.println(" ");
+		}
 		
 		
-		SunburstData g2 = new SunburstData("google");
-		g2.numberOfFiles = 5;
-
-		SunburstData g3 = new SunburstData("amazon");
-		g3.numberOfFiles = 10;
-
-		g1.addsubDir(g2);
-		g1.addsubDir(g3);
-
-		return gRoot;
+		return data;
 	}
 }

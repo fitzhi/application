@@ -47,7 +47,7 @@ export class SunburstTestComponent implements OnInit {
 
     this.httpClient.get<any>(this.testUrl + '/sunburst-test')
       .subscribe(data => {
-        myChart.data(data).width(500).height(500).label('directory').size('numberOfFiles').color('color')
+        myChart.data(data).width(800).height(800).label('directory').size('numberOfFiles').color('color')
           (document.getElementById('chart'));
 
         myChart.tooltipContent(function (graph) {

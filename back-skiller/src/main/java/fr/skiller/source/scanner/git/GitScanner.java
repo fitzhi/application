@@ -156,7 +156,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 				sb.append(Global.LN)
 					.append ("shortMessage : " + commit.getShortMessage())
 					.append(Global.LN)
-					.append("date : " + new Date(commit.getCommitTime()))
+					.append("date : " + commit.getAuthorIdent().getWhen())
 					.append (Global.LN)
 					.append("authorIdent.name : " + commit.getAuthorIdent().getName())
 					.append (Global.LN).append(Global.LN);

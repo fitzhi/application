@@ -1,5 +1,7 @@
 package fr.skiller.source.scanner;
 
+import java.io.File;
+
 import fr.skiller.data.internal.SunburstData;
 import fr.skiller.data.source.CommitRepository;
 
@@ -15,8 +17,11 @@ public abstract class AbstractScannerDataGenerator {
 	 * @param commitRepo the repository history retrieve from a source control
 	 * @return
 	 */
-	public SunburstData agregateSunburstData(final CommitRepository commitRepo) {
-		return null;
+	public SunburstData aggregateSunburstData(final CommitRepository commitRepo) {
+		SunburstData root = new SunburstData("root");
+		commitRepo.getRepository().keySet().stream().forEach(filename -> root.injectFile(root, filename.split(File.separator)));
+		
+		return root;
 	}
 
 }

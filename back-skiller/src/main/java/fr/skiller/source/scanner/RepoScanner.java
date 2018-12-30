@@ -32,5 +32,10 @@ public interface RepoScanner {
 	 */
 	public CommitRepository parseRepository(Project project, ConnectionSettings settings) throws Exception;
 
-	public SunburstData agregateSunburstData(CommitRepository commitRepo);
+	/**
+	 * Aggregate the repository into the Sunburst data collections
+	 * @param commitRepo repository with its history
+	 * @return the data ready to use for the Sunburst chart.
+	 */
+	public SunburstData aggregateSunburstData(CommitRepository commitRepo);
 }

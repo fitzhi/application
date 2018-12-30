@@ -35,3 +35,5 @@ back-skiller/src/test/resources/poc_git/properties-KAFKA.json
 back-skiller/src/test/resources/gitdir/gitdir.json
 
 back-skiller/src/main/resources/data/properties-VEGEO.json
+
+back-skiller/src/main/resources/repository-settings/properties-VEGEO.json
