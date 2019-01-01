@@ -6,6 +6,7 @@ package fr.skiller.data.internal;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,11 @@ import fr.skiller.data.source.CommitRepository;
 public class SunburstData {
 
 	/**
+	 * The risk on this directory is actually unknown.
+	 */
+	private static int RISK_UNKNOWN = -1;
+			
+	/**
 	 * A source directory and a component within a package.<br/>
 	 * <i>A class like org.junit.runner.RunWith will involve 3 directories : </i>
 	 * <code>org</code>, <code>junit</code>, <code>runner</code>
@@ -30,13 +36,19 @@ public class SunburstData {
     /**
      * Last updating date of source file inside the package/directory 
      */
-    public String lastUpdate;
+    public Date lastUpdate;
     
-	/**
+    /**
+     * Level of risk evaluated.
+     * @see fr.skiller.source.scanner.RepoScanner#evaluateTheRisk 
+     */
+    private int riskLevel = RISK_UNKNOWN;
+    
+ 	/**
 	 * The color of the slice of sunburst representing this directory. <br/>
 	 * By default, this color will be grey.
 	 */    
-    String color ="grey";
+    public String color ="grey";
     
 	/**
 	 * Number of source files contained within this directory and its subsequent sub-directories.
@@ -86,16 +98,18 @@ public class SunburstData {
 	 * Inject a source file in the collection.
 	 * @param current position
 	 * @param dirAndFilename an array containing the remaining sub-directories and the filename of the source element.
+	 * @param date of the latest commit
 	 */
-	public void injectFile(final SunburstData element, final String[] dirAndFilename) {
+	public void injectFile(final SunburstData element, final String[] dirAndFilename, final Date latestCommit) {
 		// We register the filename in the classnames set
 		if (dirAndFilename.length == 1) {
 			element.addClassName(dirAndFilename[0]);
+			element.lastUpdate = latestCommit;
 			return;
 		}
-		// Recurcive call.
+		// Recursive call.
 		injectFile( element.addsubDir(new SunburstData(dirAndFilename[0])), 
-				Arrays.copyOfRange(dirAndFilename, 1, dirAndFilename.length));
+				Arrays.copyOfRange(dirAndFilename, 1, dirAndFilename.length), latestCommit);
 	}
 	
 	@Override
@@ -126,6 +140,28 @@ public class SunburstData {
 		boolean done = this.classNames.add(fileName);
 		this.numberOfFiles = this.classNames.size();
 		return done;
+	}
+
+	/**
+	 * Set the risk level.
+	 * @param riskLevel the passed new risk level
+	 */
+	public void setRiskLevel(final int riskLevel) {
+		this.riskLevel = riskLevel;
+	}
+	
+	/**
+	 * @return riskLevel the current risk level
+	 */
+	public int getRiskLevel() {
+		return this.riskLevel;
+	}
+	
+	/**
+	 * @return {@code true} if the directory has an unknown risk level, {@code false} otherwise
+	 */
+	public boolean hasUnknownRiskLevel() {
+		return (this.riskLevel == RISK_UNKNOWN);
 	}
 	
 }

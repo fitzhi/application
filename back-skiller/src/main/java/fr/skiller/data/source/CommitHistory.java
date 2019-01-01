@@ -8,13 +8,20 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.factory.config.YamlProcessor.MatchStatus;
+
 /**
  * History of operations of a source element.
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public class CommitHistory {
 	
-	final String sourcePath;
+	/**
+	 * complete source path.
+	 */
+	public final String sourcePath;
+	
+	
 	
 	final List<Operation> lastestOperations = new ArrayList<Operation>();
 
@@ -68,4 +75,15 @@ public class CommitHistory {
 			return null;
 		}
 	}
+	
+	/**
+	 * Calculate and return the date for the last modification of this source file.<br/>
+	 * This date is evaluated by parsing the list of operations on this element.
+	 * @return the date of the latest commit
+	 */
+	//TODO Filter this date on the active staff members.
+	public Date evaluateDateLastestCommit() {
+		return lastestOperations.stream().map(operation->operation.dateCommit).max(Date::compareTo).get();
+	}
+	
 }

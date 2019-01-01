@@ -26,7 +26,6 @@ import fr.skiller.data.internal.ResumeSkill;
 import fr.skiller.data.internal.Experience;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
-import fr.skiller.service.impl.storageservice.StorageFileNotFoundException;
 
 import com.google.gson.reflect.TypeToken;
 
@@ -94,6 +93,7 @@ public class StaffHandlerImpl implements StaffHandler {
 				try {
 					br.close();
 				} catch (final Exception e) {
+					logger.error("Incredible : " +e.getMessage());
 				}
 			}
 		}
@@ -167,5 +167,51 @@ public class StaffHandlerImpl implements StaffHandler {
 		return staff;
 	}
 
-	
+	@Override
+	public Staff lookup(String criteria)  {
+
+		System.out.println(criteria);
+		if ((criteria == null) || (criteria.length() == 0)) {
+			return null;
+		}
+		
+		String[] word = criteria.split(" ");
+		
+		List<Staff> ids;
+		switch (word.length) {
+		case 1:
+			// If the criteria contains only one word, we assume that this criteria is the login id
+			ids = getStaff().values().stream()
+				.filter(staff -> word[0].equals(staff.login))
+				.collect(Collectors.toList());
+			break;
+		case 2:
+			// If the criteria contains only 2 words, we assume that this criteria is the first name and the last name
+			ids = getStaff().values().stream()
+			.filter(staff -> word[0].toLowerCase().equals(staff.lastName.toLowerCase()))
+			.filter(staff -> word[1].toLowerCase().equals(staff.firstName.toLowerCase()))
+			.collect(Collectors.toList());
+			break;
+		default:
+			throw new RuntimeException("Not implemented yet for teh criteria " + criteria);
+		}
+
+		if (ids.size() == 1) {
+			return ids.get(0);
+		}
+		if (ids.size() > 1) {
+			logger.warn("Multiple ids for this criteria " + criteria);
+			logger.warn("Ids listed below :");
+			ids.stream().forEach(staff -> logger.warn(staff.idStaff + " " + staff.firstName + " " + staff.lastName));
+			logger.warn("By default, we assumed to return the first one...");
+			return ids.get(0);
+		}
+		
+		// Staff was not found.
+		// has to be the case : (ids.size() == 0)
+		if (logger.isWarnEnabled()) {
+			logger.warn("No staff found under the criteria " + criteria);
+		}
+		return null;
+	}
 }

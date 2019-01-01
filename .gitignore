@@ -37,3 +37,7 @@ back-skiller/src/test/resources/gitdir/gitdir.json
 back-skiller/src/main/resources/data/properties-VEGEO.json
 
 back-skiller/src/main/resources/repository-settings/properties-VEGEO.json
+
+back-skiller/src/main/resources/staff.json
+
+back-skiller/src/main/resources/root.json

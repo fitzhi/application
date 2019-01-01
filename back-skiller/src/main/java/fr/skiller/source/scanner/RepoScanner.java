@@ -38,4 +38,33 @@ public interface RepoScanner {
 	 * @return the data ready to use for the Sunburst chart.
 	 */
 	public SunburstData aggregateSunburstData(CommitRepository commitRepo);
+	
+	/**
+     * Level of risk on all sources of this directory from the staff/level point of view.<br/>
+     * The scale of risks contains 10 levels x+ 1 problem: <br/>
+     * <ul>
+     * 		<li>0 : All commits of all sources have been submitted by developers still active in the staff team.</li>
+     * 		<li> 1 : <b>90% of all commits</b> have been made by active developers in the staff team.<br/>
+     * 				 <b><u>AND</u></b> <b>the last commits</b> have been submitted by them.</li>
+     * 		<li> 2 : <b>80% of all commits</b> have been made by active developers in the staff team. It's a global statistics evaluated on all sources in the directory.<br/>
+     * 				 <b><u>AND</u></b> <b>the last commits</b> have been submitted by them.</li>
+     * 		<li> 3 : <b>80% of all commits</b> have been made by active developers in the staff team. Some source files are not covered at this level</li>
+     * 		<li> 4 : <b>60% of all commits</b> have been made by active developers in the staff team. All sources in the repository are covered.</li>
+     * 		<li> 5 : <b>60% of all commits</b> have been made by active developers in the staff team.</li>
+     * 		<li> 6 : <b>60% of all commits</b> have been made by active developers in the staff team. AND there are source files in the repository without active developer.</li>
+     * 		<li> 7 : <b>33% of all commits</b> have been submitted by active developers in the staff team.</li>
+     * 		<li> 8 : <b>20% or less of all commits</b> have been made by active developers in the staff team.</li>
+     * 		<li> 9 : <b>20%, or less, of all commits</b> have been made by active developers in the staff team.
+     * 				 <b><u>AND</u></b> none of them have submitted the most recent commits on the source files.</li>
+     * 		<li>10 : It's no more a risk. It is a problem. None of the current developers in the company have worked on the source files.</li>
+     * </ul>
+	 * @param sunburstData
+	 */
+	public void evaluateTheRisk(SunburstData sunburstData);
+	
+	/**
+	 * Set the preview settings for each directory in the passed tree.
+	 * @param dataTree the data tree representing the repository directories
+	 */
+	public void setPreviewSettings(SunburstData dataTree);
 }

@@ -42,6 +42,7 @@ public class FileUploadIntegrationTests {
 
 	@Test
 	public void shouldUploadFile() throws Exception {
+		
 		ClassPathResource resource = new ClassPathResource( "/uploadTest/testupload.txt");
 		
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();

@@ -186,6 +186,12 @@ public class TestController {
         
 		SunburstData data = scanner.aggregateSunburstData(repo);
 		
+		// Evaluate the risk for each directory, and sub-directory, in the repository.
+		scanner.evaluateTheRisk(data);
+		
+		// Evaluate the preview display for each sclice of the sunburst chart.  
+		scanner.setPreviewSettings(data);
+		
 		if (logger.isDebugEnabled()) {
 			Gson g = new Gson();
 			String content = g.toJson(data);
