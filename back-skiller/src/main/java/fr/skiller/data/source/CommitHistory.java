@@ -45,30 +45,29 @@ public class CommitHistory {
 
 	/**
 	 * Take in account a new commit in the history.
-	 * @param author the login of the committer
-	 * @param email the email of the committer
+	 * @param idStaff Staff member's identifier
 	 * @param timestamp the timestamp of this operation
 	 * @return the updated collection
 	 */
-	public List<Operation> handle(final String author, final String email, final Date timestamp) {
-		Optional<Operation> opt = lastestOperations.stream().filter(ope -> ope.login.equals(author)).findFirst();
+	public List<Operation> handle(final int idStaff, final Date timestamp) {
+		Optional<Operation> opt = lastestOperations.stream().filter(ope -> ope.idStaff == idStaff).findFirst();
 		if (opt.isPresent()) {
 			if (opt.get().dateCommit.before(timestamp)) {
 				opt.get().dateCommit = timestamp;
 			}
 			return lastestOperations;
 		} else {
-			return addOperation (new Operation(author, email, timestamp));
+			return addOperation (new Operation(idStaff, timestamp));
 		}
 	}
 	
 	/**
 	 * Returns the registered date of commit for an author.
-	 * @param author the given author
+	 * @param idStaff Staff member's identifier
 	 * @return the date of commit, or <code>Null</code> if none exists.
 	 */
-	public Date getDateCommit(final String author) {
-		Optional<Operation> opt = lastestOperations.stream().filter(ope -> ope.login.equals(author)).findFirst();
+	public Date getDateCommit(final int idStaff) {
+		Optional<Operation> opt = lastestOperations.stream().filter(ope -> ope.idStaff == idStaff).findFirst();
 		if (opt.isPresent()) {
 			return opt.get().dateCommit;
 		} else {

@@ -13,11 +13,10 @@ public interface CommitRepository {
 	/**
 	 * add a new commit log into the repository.
 	 * @param sourceCodePath the complete source code path 
-	 * @param author the login of the committer
-	 * @param email the email of the committer
+	 * @param idStaff staff member's identifier
 	 * @param timestamp date of the operation
 	 */
-	void addCommit(String sourceCodePath, String author, String email, Date timestamp);
+	void addCommit(String sourceCodePath, int idStaff, Date timestamp);
 	
 	/**
 	 * Test the presence of a record for the given source code file
@@ -29,10 +28,10 @@ public interface CommitRepository {
 	/**
 	 * Search for the last commit, if any, registered for this author and this code file.
 	 * @param sourceCodePath the code file 
-	 * @param author the author, responsible of the commit
-	 * @return date of last commit, or <code>Null</code> if none exixts.
+	 * @param idStaff commit author, represented by a staff member's identifier
+	 * @return date of last commit, or <code>Null</code> if none exists.
 	 */
-	Date getLastDateCommit(String sourceCodePath, String author);
+	Date getLastDateCommit(String sourceCodePath, int idStaff);
 	
 	/**
 	 * Extract the repository in a CSV format.

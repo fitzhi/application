@@ -170,7 +170,6 @@ public class StaffHandlerImpl implements StaffHandler {
 	@Override
 	public Staff lookup(String criteria)  {
 
-		System.out.println(criteria);
 		if ((criteria == null) || (criteria.length() == 0)) {
 			return null;
 		}

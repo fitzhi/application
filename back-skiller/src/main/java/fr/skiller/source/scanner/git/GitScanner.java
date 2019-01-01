@@ -26,10 +26,12 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
@@ -38,6 +40,8 @@ import fr.skiller.source.scanner.AbstractScannerDataGenerator;
 import fr.skiller.source.scanner.RepoScanner;
 import fr.skiller.Error;
 import fr.skiller.Global;
+import fr.skiller.bean.StaffHandler;
+import static fr.skiller.Global.UNKNOWN;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL GIT implementation of a code Scanner
@@ -67,7 +71,11 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	@Value("${patternsCleanup}")
 	private String patternsCleanup;
 	
-	
+	/**
+	 * Service in charge of handling the staff collection.
+	 */
+	@Autowired
+	StaffHandler staffHandler;
 	
 	/**
 	 * Patterns to take account, OR NOT, a file within the parsing process.<br/>
@@ -179,12 +187,18 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 							similarParents++;
 					}
 					if (similarParents == 0) {
-						String str = cleanupPath(treeWalk.getPathString());
-						repositoryOfCommit.addCommit(
-								str, 
-								commit.getCommitterIdent().getName(),
-								commit.getCommitterIdent().getEmailAddress(),
-								commit.getAuthorIdent().getWhen());
+//TODO A cache has to be implemented there					
+						String sourceCodePath = cleanupPath(treeWalk.getPathString());
+						Staff staff = staffHandler.lookup(commit.getCommitterIdent().getName());
+						if ((staff == null) & logger.isDebugEnabled()) {
+								logger.debug(commit.getCommitterIdent().getName() + " will be considered as unknown." );
+						}
+						if (staff != null) {
+							repositoryOfCommit.addCommit(
+									sourceCodePath, 
+									(staff != null) ? staff.idStaff : UNKNOWN,
+									commit.getAuthorIdent().getWhen());
+						}
 					}
 	        	}
 	        }
@@ -198,7 +212,8 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	}
 
 
- 	boolean select = false;
+	// Not a real class variable member : the variable is declared there in order to be updated within the lambda expression in the method below 
+ 	private boolean select = false;
  	
  	/**
  	 * Check if the path is an eligible source for the activity dashboard.

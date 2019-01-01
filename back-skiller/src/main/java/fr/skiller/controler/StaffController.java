@@ -79,7 +79,6 @@ public class StaffController {
 	ProjectHandler projectHandler;
 
 	@Autowired
-	@Qualifier("mock.Staff")
 	StaffHandler staffHandler;
 
 	@Autowired

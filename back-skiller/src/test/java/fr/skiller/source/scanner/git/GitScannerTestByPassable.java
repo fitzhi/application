@@ -38,15 +38,20 @@ import fr.skiller.source.scanner.RepoScanner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class GitScannerTest {
+public class GitScannerTestByPassable {
 	
-	Logger logger = LoggerFactory.getLogger(GitScannerTest.class.getCanonicalName());
+	Logger logger = LoggerFactory.getLogger(GitScannerTestByPassable.class.getCanonicalName());
 	
 	private static File resourcesDirectory = new File("src/test/resources");
 
 	final String fileProperties = resourcesDirectory.getAbsolutePath() + "/poc_git/properties-VEGEO.json";
 	
 	ConnectionSettings settings = new ConnectionSettings();
+	
+	/**
+	 * Should we bypass the test.
+	 */
+	boolean bypass;
 	
 	/**
 	 * Source control parser.
@@ -57,6 +62,10 @@ public class GitScannerTest {
 
 	@Before
 	public void before() throws Exception {
+		if ("Y".equals(System.getProperty("bypass"))) {
+			bypass = true;
+		}
+		
 		Gson gson = new GsonBuilder().create();
 		final FileReader fr = new FileReader(new File(fileProperties));
 		settings = gson.fromJson(fr, settings.getClass());
@@ -70,6 +79,8 @@ public class GitScannerTest {
 	@Test
 	public void cloneAndParseRepo() throws Exception {
 		
+		if (bypass) return;
+		
 		Project project = new Project(1, "VEGEO");
 		
 		scanner.clone(project, settings);
@@ -81,6 +92,7 @@ public class GitScannerTest {
 	
 	@After
 	public void after() throws IOException {
-		FileUtils.deleteDirectory(new File(settings.localRepository));
+		if (!bypass)
+			FileUtils.deleteDirectory(new File(settings.localRepository));
 	}
 }

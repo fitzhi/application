@@ -33,21 +33,23 @@ import com.google.gson.GsonBuilder;
 
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
+import static fr.skiller.Global.UNKNOWN;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  * Testing some simple action with jgit
  */
-public class PocConnectionTest {
+public class PocConnectionTestByPassable {
 
 	final String LN = System.getProperty("line.separator");
 
-	Logger logger = LoggerFactory.getLogger(PocConnectionTest.class.getCanonicalName());
+	Logger logger = LoggerFactory.getLogger(PocConnectionTestByPassable.class.getCanonicalName());
 	
 	private static File resourcesDirectory = new File("src/test/resources");
 
 	ObjectId headId;
 
+	
 	class Property {
 		/**
 		 * Empty Constructor.
@@ -66,8 +68,15 @@ public class PocConnectionTest {
 	
 	final String fileProperties = resourcesDirectory.getAbsolutePath() + "/poc_git/properties-VEGEO.json";
 	
+	private boolean bypass = false;
+		
 	@Before
 	public void before() throws Exception {
+
+		if ("Y".equals(System.getProperty("bypass"))) {
+			bypass = true;
+		}
+
 		Gson gson = new GsonBuilder().create();
 		final FileReader fr = new FileReader(new File(fileProperties));
 		prop = new Property();
@@ -159,6 +168,8 @@ public class PocConnectionTest {
  	
  	@Test
 	public void testConnectionRepo() throws Exception {
+ 				
+ 		if (bypass) return;
  		
   		final Git git = Git.open(new File(prop.path));
 
@@ -176,9 +187,7 @@ public class PocConnectionTest {
 		final CommitRepository repositoryOfCommit = new BasicCommitRepository();
 		
 		TreeWalk treeWalk = new TreeWalk(repo);
-		final StringBuilder sb = new StringBuilder();
 		for (RevCommit commit : list) {
-			System.out.println(commit.getShortMessage());
 			treeWalk.reset();
 	        treeWalk.addTree(commit.getTree());
 	        treeWalk.setRecursive(true);
@@ -192,15 +201,15 @@ public class PocConnectionTest {
 	        	if (isElligible(treeWalk.getPathString())) {
 					int similarParents = 0;
 					for (int i = 1; i < treeWalk.getTreeCount(); i++) {
-						if (treeWalk.getFileMode(i) == treeWalk.getFileMode(0) && treeWalk.getObjectId(0).equals(treeWalk.getObjectId(i)))
+						if (treeWalk.getFileMode(i) == treeWalk.getFileMode(0) 
+								&& treeWalk.getObjectId(0).equals(treeWalk.getObjectId(i)))
 							similarParents++;
 					}
 					if (similarParents == 0) {
 						String str = filterPath(treeWalk.getPathString());
 						repositoryOfCommit.addCommit(
 								str, 
-								commit.getCommitterIdent().getName(),
-								commit.getCommitterIdent().getEmailAddress(),
+								UNKNOWN,
 								commit.getAuthorIdent().getWhen());
 					}
 	        	}

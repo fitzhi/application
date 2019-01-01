@@ -7,12 +7,7 @@ public class Operation {
 	/**
 	 *identifier of the committer
 	 */
-	final String login;
-	
-	/**
-	 * email of the committer
-	 */
-	final String email;
+	final int idStaff;
 	
 	/**
 	 * last of date for this commit.
@@ -20,14 +15,12 @@ public class Operation {
 	Date dateCommit;
 
 	/**
-	 * @param login author's login
-	 * @param email author's email
+	 * @param int idStaff Staff member identifier
 	 * @param dateCommit date of commit
 	 */
-	public Operation(String login, String email, Date dateCommit) {
+	public Operation(final int idStaff, Date dateCommit) {
 		super();
-		this.login = login;
-		this.email = email;
+		this.idStaff = idStaff;
 		this.dateCommit = dateCommit;
 	}
 

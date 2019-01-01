@@ -6,6 +6,7 @@ package fr.skiller.data.source;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import static fr.skiller.Global.LN;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -16,16 +17,15 @@ public class BasicCommitRepository implements CommitRepository {
 
 	Map<String, CommitHistory> repo = new HashMap<String, CommitHistory>();
 	
-	final String LN = System.getProperty("line.separator");
-	
 	@Override
-	public void addCommit(String sourceCodePath, String user, String email, Date dateCommit) {
+	public void addCommit(final String sourceCodePath, final int idStaff, final Date dateCommit) {
+		
 		if (repo.containsKey(sourceCodePath)) {
 			final CommitHistory history = repo.get(sourceCodePath);
-			history.handle(user, email, dateCommit);
+			history.handle(idStaff, dateCommit);
 		} else {
 			CommitHistory fileLogs = new CommitHistory(sourceCodePath);
-			fileLogs.addOperation(new Operation(user, email, dateCommit));
+			fileLogs.addOperation(new Operation(idStaff, dateCommit));
 			repo.put(sourceCodePath, fileLogs);
 		}
 	}
@@ -36,7 +36,7 @@ public class BasicCommitRepository implements CommitRepository {
 	}
 
 	@Override
-	public Date getLastDateCommit(String sourceCodePath, String author) {
+	public Date getLastDateCommit(final String sourceCodePath, final int author) {
 		if (repo.containsKey(sourceCodePath)) {
 			final CommitHistory history = repo.get(sourceCodePath);
 			return history.getDateCommit(author);
@@ -52,9 +52,7 @@ public class BasicCommitRepository implements CommitRepository {
 			history.lastestOperations.stream().forEach(
 					operation -> sb.append(history.sourcePath)
 					.append(";")
-					.append(operation.login)
-					.append(";")
-					.append(operation.email)
+					.append(operation.idStaff)
 					.append(";")
 					.append(operation.dateCommit)
 					.append(LN)
