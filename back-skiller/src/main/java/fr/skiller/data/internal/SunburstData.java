@@ -14,6 +14,7 @@ import java.util.Set;
 
 import fr.skiller.Global;
 import fr.skiller.data.source.CommitRepository;
+import static fr.skiller.Global.UNKNOWN;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -21,11 +22,6 @@ import fr.skiller.data.source.CommitRepository;
  */
 public class SunburstData {
 
-	/**
-	 * The risk on this directory is actually unknown.
-	 */
-	private static int RISK_UNKNOWN = -1;
-			
 	/**
 	 * A source directory and a component within a package.<br/>
 	 * <i>A class like org.junit.runner.RunWith will involve 3 directories : </i>
@@ -42,7 +38,7 @@ public class SunburstData {
      * Level of risk evaluated.
      * @see fr.skiller.source.scanner.RepoScanner#evaluateTheRisk 
      */
-    private int riskLevel = RISK_UNKNOWN;
+    private int riskLevel = UNKNOWN;
     
  	/**
 	 * The color of the slice of sunburst representing this directory. <br/>
