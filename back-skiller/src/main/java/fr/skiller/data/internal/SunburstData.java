@@ -157,7 +157,7 @@ public class SunburstData {
 	 * @return {@code true} if the directory has an unknown risk level, {@code false} otherwise
 	 */
 	public boolean hasUnknownRiskLevel() {
-		return (this.riskLevel == RISK_UNKNOWN);
+		return (this.riskLevel == UNKNOWN);
 	}
 	
 	/**
