@@ -164,4 +164,10 @@ public class SunburstData {
 		return (this.riskLevel == RISK_UNKNOWN);
 	}
 	
+	/**
+	 * @return the set of classnames present in this directory.
+	 */
+	public Set<String> getClassnames() {
+		return classNames;
+	}
 }

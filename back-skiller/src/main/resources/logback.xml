@@ -12,17 +12,6 @@
 		<appender-ref ref="STDOUT" />
 	</root>
 
-	<logger name="fr.skiller.controler.StaffController" additivity="false">
-		<level value="DEBUG" />
-		<appender-ref ref="STDOUT" />
-	</logger>
-
-	<logger name="fr.skiller.controler.TestController" additivity="false">
-		<level value="DEBUG" />
-		<appender-ref ref="STDOUT" />
-	</logger>
-
-
 	<logger name="fr.skiller.bean.impl.StaffHandlerImpl" additivity="false">
 		<level value="WARN" />
 		<appender-ref ref="STDOUT" />

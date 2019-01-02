@@ -43,7 +43,7 @@ public class StaffHandlerTestingLookup {
 
 	@SuppressWarnings("null")
 	@Test
-	public void lookup2Words() {
+	public void lookupWords_LastFistName() {
 		
 		Staff staff = this.staffHandler.lookup("Lagrange Stéphane");
 		assertThat(staff).isNotNull();
@@ -52,4 +52,14 @@ public class StaffHandlerTestingLookup {
 		assertThat(staff.login.toLowerCase()).isEqualTo("stlagrange");
 	}
 
+	@SuppressWarnings("null")
+	@Test
+	public void lookup2Words_FirstLastName() {
+		
+		Staff staff = this.staffHandler.lookup("Nobilleau Frederic");
+		assertThat(staff).isNotNull();
+		assertThat(staff.firstName.toLowerCase()).isEqualTo("frederic");
+		assertThat(staff.lastName.toLowerCase()).isEqualTo("nobilleau");
+		assertThat(staff.login.toLowerCase()).isEqualTo("fnobilleau");
+	}
 }

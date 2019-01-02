@@ -190,6 +190,13 @@ public class StaffHandlerImpl implements StaffHandler {
 			.filter(staff -> word[0].toLowerCase().equals(staff.lastName.toLowerCase()))
 			.filter(staff -> word[1].toLowerCase().equals(staff.firstName.toLowerCase()))
 			.collect(Collectors.toList());
+			// The criteria may be in the form "firstName lastName" or "lastName firstName"
+			if (ids.size() == 0) {
+				ids = getStaff().values().stream()
+						.filter(staff -> word[0].toLowerCase().equals(staff.firstName.toLowerCase()))
+						.filter(staff -> word[1].toLowerCase().equals(staff.lastName.toLowerCase()))
+						.collect(Collectors.toList());				
+			}
 			break;
 		default:
 			throw new RuntimeException("Not implemented yet for teh criteria " + criteria);

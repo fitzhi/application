@@ -41,8 +41,14 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	}
 
 	public void evaluateTheRisk_v2(final SunburstData sunburstData, final StaffHandler staffHandler) {
-		staffHandler.lookup("");
+		if (sunburstData.hasUnknownRiskLevel()) {
+			sunburstData.setRiskLevel( (int) (Math.random()*1000 % 11)); 
+		}
+		if (sunburstData.children != null) {
+			sunburstData.children.stream().forEach(dir -> evaluateTheRisk_v2(dir, staffHandler));
+		}
 	}
+	
 	
 	@Override
 	public void setPreviewSettings(SunburstData data) {
