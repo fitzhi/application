@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -13,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.jboss.logging.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -20,6 +22,7 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import fr.skiller.Error;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.PeopleCountExperienceMap;
 import fr.skiller.data.internal.ResumeSkill;
@@ -33,7 +36,7 @@ import com.google.gson.reflect.TypeToken;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-@Component("mock.Staff")
+@Component
 public class StaffHandlerImpl implements StaffHandler {
 
 	/**
@@ -219,5 +222,14 @@ public class StaffHandlerImpl implements StaffHandler {
 			logger.warn("No staff found under the criteria " + criteria);
 		}
 		return null;
+	}
+
+	@Override
+	public boolean isActive(int idStaff)  {
+		Staff staff = getStaff().get(idStaff);
+		if (staff == null) {
+			throw new RuntimeException("SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
+		}
+		return staff.isActive;
 	}
 }

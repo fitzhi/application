@@ -3,12 +3,14 @@
  */
 package fr.skiller.data.source;
 
+import static fr.skiller.Global.UNKNOWN;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.config.YamlProcessor.MatchStatus;
+import fr.skiller.bean.StaffHandler;
 
 /**
  * History of operations of a source element.
@@ -21,13 +23,20 @@ public class CommitHistory {
 	 */
 	public final String sourcePath;
 	
+	/**
+	 * Level of risk on this source file. <br/>
+	 * This risk is evaluate by {@link fr.skiller.source.scanner.RepoScanner#evaluateTheRisk(CommitRepository)}
+	 */
+	public int riskLevel;
 	
-	
-	final List<Operation> lastestOperations = new ArrayList<Operation>();
+	/**
+	 * All operations that occur on the source file.
+	 */
+	public final List<Operation> operations = new ArrayList<Operation>();
 
 	/**
 	 * @param sourcePath
-	 * @param lastestOperations
+	 * @param operations
 	 */
 	public CommitHistory(String sourcePath) {
 		this.sourcePath = sourcePath;
@@ -39,26 +48,18 @@ public class CommitHistory {
 	 * @return the updated collection
 	 */
 	public List<Operation> addOperation (final Operation operation) {
-		lastestOperations.add(operation);
-		return lastestOperations;
+		operations.add(operation);
+		return operations;
 	}
 
 	/**
 	 * Take in account a new commit in the history.
 	 * @param idStaff Staff member's identifier
-	 * @param timestamp the timestamp of this operation
+	 * @param timestamp the time-stamp of this operation
 	 * @return the updated collection
 	 */
 	public List<Operation> handle(final int idStaff, final Date timestamp) {
-		Optional<Operation> opt = lastestOperations.stream().filter(ope -> ope.idStaff == idStaff).findFirst();
-		if (opt.isPresent()) {
-			if (opt.get().dateCommit.before(timestamp)) {
-				opt.get().dateCommit = timestamp;
-			}
-			return lastestOperations;
-		} else {
-			return addOperation (new Operation(idStaff, timestamp));
-		}
+		return addOperation (new Operation(idStaff, timestamp));
 	}
 	
 	/**
@@ -67,7 +68,7 @@ public class CommitHistory {
 	 * @return the date of commit, or <code>Null</code> if none exists.
 	 */
 	public Date getDateCommit(final int idStaff) {
-		Optional<Operation> opt = lastestOperations.stream().filter(ope -> ope.idStaff == idStaff).findFirst();
+		Optional<Operation> opt = operations.stream().filter(ope -> ope.idStaff == idStaff).findFirst();
 		if (opt.isPresent()) {
 			return opt.get().dateCommit;
 		} else {
@@ -82,7 +83,72 @@ public class CommitHistory {
 	 */
 	//TODO Filter this date on the active staff members.
 	public Date evaluateDateLastestCommit() {
-		return lastestOperations.stream().map(operation->operation.dateCommit).max(Date::compareTo).get();
+		return operations.stream().map(operation->operation.dateCommit).max(Date::compareTo).get();
+	}
+
+
+	/**
+	 * Count the total number of commits submitted for this file.
+	 * @return the count involved in this file
+	 */
+	public long countCommits() {
+		return operations.size();
 	}
 	
+	/**
+	 * Count the total number of submissions delivered by active developers for this file.
+	 * @param staffHandler handler to get information on staff member, such as active, or inactive.
+	 * @return submission made by active developers 
+	 */
+	public long countCommitsByActiveDevelopers(final StaffHandler staffHandler) {
+		return operations
+				.stream()
+				.filter(ope -> ope.idStaff != UNKNOWN)
+				.mapToInt(ope->ope.idStaff)
+				.filter (idStaff -> staffHandler.isActive(idStaff))
+				.count();
+	}
+	
+	/**
+	 * Count the total number of different developers who have work on this file
+	 * @return developers count involved in this file
+	 */
+	public long countDistinctDevelopers() {
+		return operations
+			.stream()
+			.filter(ope -> ope.idStaff != UNKNOWN)
+			.mapToInt(ope->ope.idStaff)
+			.distinct()
+			.count();
+	}
+	
+	/**
+	 * Count the total number of different <u><b>ACTIVE</b></u> developers who have work on this file
+	 * @param staffHandler handler to request information on staff member, such as active, or inactive.
+	 * @return the count number in a {@code long} format
+	 */
+	public long countDistinctActiveDevelopers(final StaffHandler staffHandler) {
+		return operations
+			.stream()
+			.filter(ope -> ope.idStaff != UNKNOWN)
+			.mapToInt(ope->ope.idStaff)
+			.distinct()
+			.filter (idStaff -> staffHandler.isActive(idStaff))
+			.count();
+	}	
+	
+	/**
+	 * Ultimate contributor having worked on this file.
+	 * @return if staff's identifier of the last contributor
+	 */
+	public int ultimateContributor() {
+		final Optional<Operation> lastOpe = operations.stream()
+		.sorted((ope1, ope2) -> ope2.dateCommit.compareTo(ope1.dateCommit))
+		.findFirst();
+
+		if (!lastOpe.isPresent()) {
+			throw new RuntimeException("SEVERE INTERNAL ERROR : Should not pass here!");
+		}
+		return lastOpe.get().idStaff;
+	}
 }

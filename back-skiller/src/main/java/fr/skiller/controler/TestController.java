@@ -28,9 +28,8 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 
 import fr.skiller.Global;
-import fr.skiller.data.JsonTest;
+import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.SunburstData;
 import fr.skiller.data.internal.Test;
 import fr.skiller.data.source.CommitRepository;
@@ -59,6 +58,12 @@ public class TestController {
 	@Autowired
 	@Qualifier("GIT")
 	RepoScanner scanner;
+
+	/**
+	 * Cache Handler
+	 */
+	@Autowired
+	CacheDataHandler cacheDataHandler;
 
 	private static File resourcesDirectory = new File("src/main/resources");
 
@@ -170,11 +175,13 @@ public class TestController {
 		if (logger.isDebugEnabled()) {
 			logger.debug("cloning...");
 		}
-		scanner.clone(project, settings);
-		if (logger.isDebugEnabled()) {
-			logger.debug("...cloned");
-		}
-        
+		
+		if (!cacheDataHandler.hasCommitRepositoryAvailable(project)) {
+			scanner.clone(project, settings);
+			if (logger.isDebugEnabled()) {
+				logger.debug("...cloned");
+			}
+		}	
 		if (logger.isDebugEnabled()) {
 			logger.debug("parsing...");
 		}
@@ -183,12 +190,21 @@ public class TestController {
 			logger.debug("...parsed");
 			logger.debug(repo.size() + " records in the repository");
 		}
-        
+        		
 		SunburstData data = scanner.aggregateSunburstData(repo);
 		
-		// Evaluate the risk for each directory, and sub-directory, in the repository.
-		scanner.evaluateTheRisk(data);
+		if (logger.isDebugEnabled()) {
+			repo.contributors()
+				.stream()
+				.forEach(idStaff -> System.out.println(idStaff));
+		}
 		
+		// Evaluate the risk for each directory, and sub-directory, in the repository.
+		scanner.evaluateTheRisk(repo, data);
+		
+		// Fill the holes for directory without source files, and therefore without risk level measured.
+		scanner.meanTheRisk(data);
+
 		// Evaluate the preview display for each sclice of the sunburst chart.  
 		scanner.setPreviewSettings(data);
 		

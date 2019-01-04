@@ -8,7 +8,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -32,6 +34,7 @@ import org.springframework.stereotype.Service;
 
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Staff;
+import fr.skiller.data.internal.SunburstData;
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
@@ -40,6 +43,7 @@ import fr.skiller.source.scanner.AbstractScannerDataGenerator;
 import fr.skiller.source.scanner.RepoScanner;
 import fr.skiller.Error;
 import fr.skiller.Global;
+import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.StaffHandler;
 import static fr.skiller.Global.UNKNOWN;
 
@@ -76,6 +80,12 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	 */
 	@Autowired
 	StaffHandler staffHandler;
+
+	/**
+	 * Service in charge of caching the parsed repository.
+	 */
+	@Autowired
+	CacheDataHandler cacheDataHandler;
 	
 	/**
 	 * Patterns to take account, OR NOT, a file within the parsing process.<br/>
@@ -115,6 +125,8 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			patternsInclusionList.stream().forEach(p -> logger.debug(p.pattern()));
 		}
 
+		// We "Spring-way" injected staff manager handle into the super class.
+		super.staffHandler = staffHandler;
 	}
 	
 	@Override
@@ -137,7 +149,15 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 
 	@Override
 	public CommitRepository parseRepository(final Project project, ConnectionSettings settings) throws Exception {
- 		
+ 
+		// Test if this repository is available in cache 
+		if (cacheDataHandler.hasCommitRepositoryAvailable(project)) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Using cache file for project " + project.name);
+			}
+			return cacheDataHandler.getRepository(project);
+		}
+		
 		if (settings.localRepository == null) {
 			throw new SkillerException(Error.CODE_REPO_MUST_BE_ALREADY_CLONED, Error.MESSAGE_REPO_MUST_BE_ALREADY_CLONED);
 		}
@@ -178,6 +198,9 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	        	treeWalk.addTree(parent.getTree());
 	        }
 	        
+	        // Treatment cache containing the mapping between the criteria retrieved from GIT and the associated staff member
+	        Map<String, Staff> cacheCriteriaStaff = new HashMap<String, Staff>();
+	        
 	        while (treeWalk.next()) {
 
 	        	if (isElligible(treeWalk.getPathString())) {
@@ -187,18 +210,24 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 							similarParents++;
 					}
 					if (similarParents == 0) {
-//TODO A cache has to be implemented there					
 						String sourceCodePath = cleanupPath(treeWalk.getPathString());
-						Staff staff = staffHandler.lookup(commit.getCommitterIdent().getName());
-						if ((staff == null) & logger.isDebugEnabled()) {
-								logger.debug(commit.getCommitterIdent().getName() + " will be considered as unknown." );
+						Staff staff = null;
+						String author = commit.getCommitterIdent().getName();
+						
+						if (!cacheCriteriaStaff.containsKey(author)) {
+							staff = staffHandler.lookup(author);
+							if ((staff == null) & logger.isDebugEnabled()) {
+								logger.debug(author + " will be considered as unknown." );
+							}
+							cacheCriteriaStaff.put(author, staff);
+						} else {
+							staff = cacheCriteriaStaff.get(author);
 						}
-						if (staff != null) {
-							repositoryOfCommit.addCommit(
-									sourceCodePath, 
-									(staff != null) ? staff.idStaff : UNKNOWN,
-									commit.getAuthorIdent().getWhen());
-						}
+						
+						repositoryOfCommit.addCommit(
+								sourceCodePath, 
+								(staff != null) ? staff.idStaff : UNKNOWN,
+								commit.getAuthorIdent().getWhen());
 					}
 	        	}
 	        }
@@ -207,6 +236,9 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		treeWalk.close();
 		revWalk.close();
 		git.close();
+		
+		// Saving the repository into the cache
+		cacheDataHandler.saveRepository(project, repositoryOfCommit);
 		
 		return repositoryOfCommit;
 	}
@@ -242,10 +274,10 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
  	 * @return the cleanup file
  	 */
 	private String cleanupPath (final String path) {
- 		
+
 		cleanupPath = "";
-		
- 		patternsCleanupList.stream().forEach(pattern -> {
+ 		
+		patternsCleanupList.stream().forEach(pattern -> {
  			Matcher matcher = pattern.matcher(path);
  			if (matcher.find() && (cleanupPath.length()==0)) {
  				cleanupPath = path.substring(matcher.end());

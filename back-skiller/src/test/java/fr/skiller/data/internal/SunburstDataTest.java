@@ -45,10 +45,10 @@ public class SunburstDataTest {
         assertThat(root.children.get(0).children.get(0).children.get(0).children.size()).isEqualTo(1);
         assertThat(root.children.get(0).children.get(0).children.get(0).children.get(0).children.size()).isEqualTo(1);
         
-        assertThat(root.children.get(0).children.get(0).directory).isEqualTo("skiller");
-        assertThat(root.children.get(0).children.get(0).children.get(0).directory).isEqualTo("test");
-        assertThat(root.children.get(0).children.get(0).children.get(0).children.get(0).directory).isEqualTo("world");
-        assertThat(root.children.get(0).children.get(0).children.get(0).children.get(0).children.get(0).directory).isEqualTo("mbappe");
+        assertThat(root.children.get(0).children.get(0).location).isEqualTo("skiller");
+        assertThat(root.children.get(0).children.get(0).children.get(0).location).isEqualTo("test");
+        assertThat(root.children.get(0).children.get(0).children.get(0).children.get(0).location).isEqualTo("world");
+        assertThat(root.children.get(0).children.get(0).children.get(0).children.get(0).children.get(0).location).isEqualTo("mbappe");
         
 	}
 
@@ -67,10 +67,10 @@ public class SunburstDataTest {
         assertThat(root.children.get(0).children.get(0).children.get(0).children.size()).isEqualTo(1);
         assertThat(root.children.get(0).children.get(0).children.get(0).children.get(0).children.size()).isEqualTo(1);
         
-        assertThat(root.children.get(0).children.get(0).directory).isEqualTo("skiller");
-        assertThat(root.children.get(0).children.get(0).children.get(0).directory).isEqualTo("test");
-        assertThat(root.children.get(0).children.get(0).children.get(0).children.get(0).directory).isEqualTo("world");
-        assertThat(root.children.get(0).children.get(0).children.get(0).children.get(0).children.get(0).directory).isEqualTo("mbappe");        
+        assertThat(root.children.get(0).children.get(0).location).isEqualTo("skiller");
+        assertThat(root.children.get(0).children.get(0).children.get(0).location).isEqualTo("test");
+        assertThat(root.children.get(0).children.get(0).children.get(0).children.get(0).location).isEqualTo("world");
+        assertThat(root.children.get(0).children.get(0).children.get(0).children.get(0).children.get(0).location).isEqualTo("mbappe");        
 	}
 	
 	@Test

@@ -25,7 +25,6 @@ import fr.skiller.data.internal.Staff;
 public class StaffLoadingTest {
 
 	@Autowired
-	@Qualifier("mock.Staff")
 	StaffHandler staffHandler;
 
 	@Test

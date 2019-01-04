@@ -18,7 +18,12 @@
 	</logger>
 
 	<logger name="fr.skiller.source.scanner.git" additivity="false">
-		<level value="WARN" />
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="fr.skiller.source.scanner.AbstractScannerDataGenerator" additivity="false">
+		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
 

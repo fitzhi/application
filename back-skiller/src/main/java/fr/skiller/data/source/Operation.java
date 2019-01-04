@@ -1,5 +1,6 @@
 package fr.skiller.data.source;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Operation {
@@ -7,12 +8,12 @@ public class Operation {
 	/**
 	 *identifier of the committer
 	 */
-	final int idStaff;
+	public final int idStaff;
 	
 	/**
-	 * last of date for this commit.
+	 * last of date for this commit. 
 	 */
-	Date dateCommit;
+	public Date dateCommit;
 
 	/**
 	 * @param int idStaff Staff member identifier

@@ -60,4 +60,10 @@ public interface StaffHandler {
 	 * @return the <i>first</i> staff corresponding to the criteria, or NULL is none's found
 	 */
 	Staff lookup(String criteria);
+	
+	/**
+	 * @param idStaff the passed staff's identifier
+	 * @return {@code true} if this person is still active in the staff<br/> {@code false} otherwise 
+	 */
+	boolean isActive (int idStaff) ;
 }

@@ -68,15 +68,13 @@ public class PocConnectionTestByPassable {
 	
 	final String fileProperties = resourcesDirectory.getAbsolutePath() + "/poc_git/properties-VEGEO.json";
 	
-	private boolean bypass = false;
-		
 	@Before
 	public void before() throws Exception {
-
+/*
 		if ("Y".equals(System.getProperty("bypass"))) {
-			bypass = true;
+			return;
 		}
-
+*/
 		Gson gson = new GsonBuilder().create();
 		final FileReader fr = new FileReader(new File(fileProperties));
 		prop = new Property();
@@ -118,8 +116,6 @@ public class PocConnectionTestByPassable {
  	 * @return True if the path should be included
  	 */
  	boolean isElligible (final String path) {
- 		
- 		select = true;
  		
  		if (patternsInclusionList.isEmpty()) {
  			patternsInclusionList.add(Pattern.compile("(.java$|.js$|.css$|.html$|.ts$)")); 			
@@ -168,9 +164,11 @@ public class PocConnectionTestByPassable {
  	
  	@Test
 	public void testConnectionRepo() throws Exception {
- 				
- 		if (bypass) return;
- 		
+ /*			
+		if ("Y".equals(System.getProperty("bypass"))) {
+			return;
+		}
+ */		
   		final Git git = Git.open(new File(prop.path));
 
 		Repository repo = git.getRepository();

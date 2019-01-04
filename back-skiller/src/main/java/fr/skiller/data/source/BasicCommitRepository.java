@@ -5,7 +5,11 @@ package fr.skiller.data.source;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import static fr.skiller.Global.LN;
 
 /**
@@ -49,7 +53,7 @@ public class BasicCommitRepository implements CommitRepository {
 	public String extractCSV() {
 		final StringBuilder sb = new StringBuilder();
 		repo.values().stream().forEach(history -> {
-			history.lastestOperations.stream().forEach(
+			history.operations.stream().forEach(
 					operation -> sb.append(history.sourcePath)
 					.append(";")
 					.append(operation.idStaff)
@@ -70,5 +74,15 @@ public class BasicCommitRepository implements CommitRepository {
 	public Map<String, CommitHistory> getRepository() {
 		return this.repo;
 	}
+
 	
+	@Override
+	public Set<Integer> contributors() {
+		Set<Integer> contributors = new HashSet<Integer>();
+		this.repo.values().stream().forEach(history -> 
+			history.operations.stream()
+			.map(ope -> ope.idStaff).distinct().forEach(contributors::add));
+		return contributors;
+	}
+
 }

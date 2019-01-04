@@ -2,6 +2,9 @@ package fr.skiller.data.source;
 
 import java.util.Date;
 import java.util.Map;
+import java.util.Set;
+
+import fr.skiller.data.internal.SunburstData;
 
 /**
  * Interface in charge of handling the history of commits for a repository.<br/>
@@ -49,4 +52,9 @@ public interface CommitRepository {
 	 * associated with its history of {@link fr.skiller.data.source.CommitHistory CommitHistory}.
 	 */
 	Map<String, CommitHistory> getRepository();
+	
+	/**
+	 * @return all contributors having worked on this contributor, representing by their staff's identifier
+	 */
+	Set<Integer> contributors();
 }

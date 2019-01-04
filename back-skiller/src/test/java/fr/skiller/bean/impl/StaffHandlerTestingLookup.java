@@ -31,7 +31,6 @@ public class StaffHandlerTestingLookup {
     @Autowired
 	private StaffHandler staffHandler;
 	
-	@SuppressWarnings("null")
 	@Test
 	public void lookupSimpleWord() {
 		
@@ -41,7 +40,6 @@ public class StaffHandlerTestingLookup {
 		assertThat(staff.lastName.toLowerCase()).isEqualTo("lagrange");
 	}
 
-	@SuppressWarnings("null")
 	@Test
 	public void lookupWords_LastFistName() {
 		
@@ -52,7 +50,6 @@ public class StaffHandlerTestingLookup {
 		assertThat(staff.login.toLowerCase()).isEqualTo("stlagrange");
 	}
 
-	@SuppressWarnings("null")
 	@Test
 	public void lookup2Words_FirstLastName() {
 		

@@ -13,7 +13,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import fr.skiller.Global;
-import fr.skiller.data.source.CommitRepository;
 import static fr.skiller.Global.UNKNOWN;
 
 /**
@@ -23,14 +22,14 @@ import static fr.skiller.Global.UNKNOWN;
 public class SunburstData {
 
 	/**
-	 * A source directory and a component within a package.<br/>
-	 * <i>A class like org.junit.runner.RunWith will involve 3 directories : </i>
-	 * <code>org</code>, <code>junit</code>, <code>runner</code>
+	 * A location (directory) inside the tree files of the repository.<br/>
+	 * A class like {@code org.junit.runner.RunWith} involve 3 instances of SunbustData, one for
+	 * <code>org</code>, <code>junit</code> and <code>runner</code>
 	 */
-    public String directory;
+    public String location;
     
     /**
-     * Last updating date of source file inside the package/directory 
+     * Last date of update for the source file inside the package/directory 
      */
     public Date lastUpdate;
     
@@ -62,11 +61,11 @@ public class SunburstData {
     private Set<String> classNames;
     
 	/**
-	 * @param directory the name of the directory (such as com, fr...)
+	 * @param location the name of the directory (such as com, fr...)
 	 */
-	public SunburstData(String directory) {
+	public SunburstData(String location) {
 		super();
-		this.directory = directory;
+		this.location = location;
 	}
    
 	/**
@@ -80,10 +79,10 @@ public class SunburstData {
 			children.add(subDir);
 			return children.get(0);
 		} else {
-			Optional<SunburstData> opt = children.stream().filter(data -> data.directory.equals(subDir.directory)).findAny();
+			Optional<SunburstData> opt = children.stream().filter(data -> data.location.equals(subDir.location)).findAny();
 			if (!opt.isPresent()) {
 				children.add(subDir);		
-				return children.stream().filter(data -> data.directory.equals(subDir.directory)).findAny().get();
+				return children.stream().filter(data -> data.location.equals(subDir.location)).findAny().get();
 			} else {
 				return opt.get();
 			}
@@ -116,7 +115,7 @@ public class SunburstData {
 				sb.append("\t"+child.toString()+Global.LN);
 			}
 		}
-		return "CodeDir [directory=" + directory 
+		return "CodeDir [directory=" + location 
 				+ ", lastUpdate=" + ((lastUpdate == null) ? "null" : lastUpdate) 
 				+ ", color=" + ((color == null) ? "null" : color)
 				+ ", numberOfFiles=" + numberOfFiles
@@ -141,9 +140,11 @@ public class SunburstData {
 	/**
 	 * Set the risk level.
 	 * @param riskLevel the passed new risk level
+	 * @return this instance of {@code SunburstData} for chaining invocations.
 	 */
-	public void setRiskLevel(final int riskLevel) {
+	public SunburstData setRiskLevel(final int riskLevel) {
 		this.riskLevel = riskLevel;
+		return this;
 	}
 	
 	/**

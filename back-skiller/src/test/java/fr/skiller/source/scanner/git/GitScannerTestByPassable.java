@@ -2,8 +2,8 @@
  * 
  */
 package fr.skiller.source.scanner.git;
-
 import static org.assertj.core.api.Assertions.assertThat;
+import static fr.skiller.Global.UNKNOWN;
 
 import java.io.File;
 import java.io.FileReader;
@@ -25,7 +25,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.Staff;
+import fr.skiller.data.internal.SunburstData;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
 import fr.skiller.service.ResumeParserService;
@@ -52,6 +55,9 @@ public class GitScannerTestByPassable {
 	 * Should we bypass the test.
 	 */
 	boolean bypass;
+	
+	@Autowired
+	StaffHandler staffHandler;
 	
 	/**
 	 * Source control parser.
@@ -88,6 +94,24 @@ public class GitScannerTestByPassable {
         
 		final CommitRepository repo = scanner.parseRepository(project, settings);
         assertThat(repo.size()).isGreaterThan(0);
+        
+		SunburstData data = scanner.aggregateSunburstData(repo);
+		
+		if (logger.isDebugEnabled()) {
+			repo.contributors()
+				.stream()
+				.filter(idStaff -> idStaff != UNKNOWN)
+				.forEach(idStaff -> {
+					Staff staff = staffHandler.getStaff().get(idStaff);
+					if (staff == null) {
+						logger.debug("Do not retrieve the staff with the id "+idStaff);
+					}
+					logger.debug(staff.login + " " + staff.isActive);
+				});
+		}
+		// Evaluate the risk for each directory, and sub-directory, in the repository.
+		scanner.evaluateTheRisk(repo, data);
+       
 	}
 	
 	@After
