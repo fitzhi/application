@@ -267,45 +267,16 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 		// Nobody in the company has worked on all files in this directory.
 		sunburstData.setRiskLevel(10);
 	}
+	
+	final String colorOfRisk[] = {
+            "darkGreen","ForestGreen","limeGreen", "Lime", "lightGreen","yellow","orange","darkOrange","lightCoral","crimson","darkRed"
+	};
+	
 	@Override
 	public void setPreviewSettings(SunburstData data) {
 		if (!data.hasUnknownRiskLevel()) {
 			int riskLevel = data.getRiskLevel();
-			switch (riskLevel) {
-			case 0:
-				data.color = "darkGreen";
-				break;
-			case 1:
-				data.color = "ForestGreen";
-				break;
-			case 2:
-				data.color = "limeGreen";
-				break;
-			case 3:
-				data.color = "olive";
-				break;
-			case 4:
-				data.color = "gold";
-				break;
-			case 5:
-				data.color = "yellow";
-				break;
-			case 6:
-				data.color = "orange";
-				break;
-			case 7:
-				data.color = "tomato";
-				break;
-			case 8:
-				data.color = "lightCoral";
-				break;
-			case 9:
-				data.color = "red";
-				break;
-			case 10:
-				data.color = "darkRed";
-				break;
-			}
+			data.color = colorOfRisk[riskLevel];
 		}
 		if (data.children != null) {
 			data.children.stream().forEach(dir -> setPreviewSettings(dir));
