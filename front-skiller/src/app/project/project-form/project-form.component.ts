@@ -2,15 +2,15 @@ import {Component, OnInit} from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 
-import {ProjectService} from '../project.service';
-import {SkillService} from '../skill.service';
-import {MessageService} from '../message.service';
-import {CinematicService} from '../cinematic.service';
+import {ProjectService} from '../../project.service';
+import {SkillService} from '../../skill.service';
+import {MessageService} from '../../message.service';
+import {CinematicService} from '../../cinematic.service';
 
-import {Project} from '../data/project';
-import {ProjectDTO} from '../data/external/projectDTO';
-import {Constants} from '../constants';
-import { ListProjectsService } from '../list-projects-service/list-projects.service';
+import {Project} from '../../data/project';
+import {ProjectDTO} from '../../data/external/projectDTO';
+import {Constants} from '../../constants';
+import { ListProjectsService } from '../../list-projects-service/list-projects.service';
 import {LocalDataSource} from 'ng2-smart-table';
 
 @Component({

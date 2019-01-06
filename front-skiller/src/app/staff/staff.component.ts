@@ -1,7 +1,5 @@
-import {AppModule} from '../app.module';
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {Subject, Observable, of} from 'rxjs';
 import {Collaborator} from '../data/collaborator';
 import {Constants} from '../constants';
 
