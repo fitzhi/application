@@ -10,6 +10,7 @@ import { MessageService } from '../../message.service';
   styleUrls: ['./sunburst-test.component.css']
 })
 export class SunburstTestComponent implements OnInit, AfterViewInit {
+
   constructor(
     private httpClient: HttpClient,
     private messageService: MessageService) { }
@@ -70,7 +71,6 @@ export class SunburstTestComponent implements OnInit, AfterViewInit {
         console.error(error.message);
       }
     });
-
   }
 
 

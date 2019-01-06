@@ -11,7 +11,7 @@ import { ListProjectsService } from '../list-projects-service/list-projects.serv
 })
 export class ListProjectComponent implements OnInit {
 
-  private projects: Project[];
+  public projects: Project[];
 
   constructor(
     private cinematicService: CinematicService,
