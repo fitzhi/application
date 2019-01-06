@@ -47,6 +47,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { SunburstTestComponent } from './d3/sunburst-test/sunburst-test.component';
 import { ProjectComponent } from './project/project.component';
+import { ProjectSunburstComponent } from './project/project-sunburst/project-sunburst.component';
+import { ProjectStaffComponent } from './project/project-staff/project-staff.component';
 
 @NgModule({
   declarations: [
@@ -69,7 +71,9 @@ import { ProjectComponent } from './project/project.component';
     MessageBoxComponent,
     UploadedSkillsPickupComponent,
     SunburstTestComponent,
-    ProjectComponent
+    ProjectComponent,
+    ProjectSunburstComponent,
+    ProjectStaffComponent
   ],
   entryComponents: [
     StarsSkillLevelRenderComponent,
