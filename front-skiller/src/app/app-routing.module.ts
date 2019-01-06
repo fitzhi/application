@@ -1,9 +1,9 @@
 import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 
 import {SkillComponent} from './skill/skill.component';
 import {ListSkillComponent} from './list-skill/list-skill.component';
+import {ProjectComponent} from './project/project.component';
 import {ProjectFormComponent} from './project/project-form/project-form.component';
 import {ListProjectComponent} from './list-project/list-project.component';
 import {WelcomeComponent} from './welcome/welcome.component';
@@ -23,7 +23,7 @@ const routes: Routes = [
   {path: 'user', component: StaffComponent},
   {path: 'error', component: ErrorComponent},
   {path: 'searchProject', component: ListProjectComponent},
-  {path: 'project', component: ProjectFormComponent},
+  {path: 'project', component: ProjectComponent},
   {path: 'project/:id', component: ProjectFormComponent},
   {path: 'sunburst-test', component: SunburstTestComponent},
 ];

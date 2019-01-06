@@ -46,6 +46,7 @@ import { MessageBoxComponent } from './message-box/dialog/message-box.component'
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { SunburstTestComponent } from './d3/sunburst-test/sunburst-test.component';
+import { ProjectComponent } from './project/project.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +68,8 @@ import { SunburstTestComponent } from './d3/sunburst-test/sunburst-test.componen
     StaffUploadCvComponent,
     MessageBoxComponent,
     UploadedSkillsPickupComponent,
-    SunburstTestComponent
+    SunburstTestComponent,
+    ProjectComponent
   ],
   entryComponents: [
     StarsSkillLevelRenderComponent,

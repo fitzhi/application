@@ -14,7 +14,7 @@ import { ListProjectsService } from '../../list-projects-service/list-projects.s
 import {LocalDataSource} from 'ng2-smart-table';
 
 @Component({
-  selector: 'app-project',
+  selector: 'app-project-form',
   templateUrl: './project-form.component.html',
   styleUrls: ['./project-form.component.css']
 })
