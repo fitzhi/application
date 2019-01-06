@@ -1,13 +1,13 @@
 import { Constants } from '../../../../../constants';
 import { DeclaredExperience } from '../../../../../data/declared-experience';
-import { ReturnCodeMessage } from "../../../../../data/return_code_message";
-import { StaffService } from "../../../../../staff.service";
-import { SelectionModel } from "@angular/cdk/collections";
-import {Component, OnInit, Inject, ViewChild, AfterViewInit} from '@angular/core';
+import { ReturnCodeMessage } from '../../../../../data/return_code_message';
+import { StaffService } from '../../../../../staff.service';
+import { SelectionModel } from '@angular/cdk/collections';
+import {Component, Inject, ViewChild, AfterViewInit} from '@angular/core';
 import { MAT_DIALOG_DATA, MatTableDataSource, MatSort, MatDialogRef } from '@angular/material';
-import { MatPaginator } from "@angular/material/paginator";
+import { MatPaginator } from '@angular/material/paginator';
 import { INTERNAL_SERVER_ERROR, getStatusText } from 'http-status-codes'
- 
+
 @Component({
   selector: 'app-uploaded-skills-pickup',
   templateUrl: './uploaded-skills-pickup.component.html',
