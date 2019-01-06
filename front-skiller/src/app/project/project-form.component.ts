@@ -15,10 +15,10 @@ import {LocalDataSource} from 'ng2-smart-table';
 
 @Component({
   selector: 'app-project',
-  templateUrl: './project.component.html',
-  styleUrls: ['./project.component.css']
+  templateUrl: './project-form.component.html',
+  styleUrls: ['./project-form.component.css']
 })
-export class ProjectComponent implements OnInit {
+export class ProjectFormComponent implements OnInit {
 
   private project: Project;
 

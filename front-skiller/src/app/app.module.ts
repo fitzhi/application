@@ -30,7 +30,7 @@ import { ErrorComponent } from './error/error.component';
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 
 import { StarsSkillLevelRenderComponent } from './staff/starsSkillLevelRenderComponent';
-import { ProjectComponent } from './project/project.component';
+import { ProjectFormComponent } from './project/project-form.component';
 import { ListProjectComponent } from './list-project/list-project.component';
 import { ReferentialService } from './referential.service';
 
@@ -58,7 +58,7 @@ import { SunburstTestComponent } from './d3/sunburst-test/sunburst-test.componen
     MessageComponent,
     ErrorComponent,
     StarsSkillLevelRenderComponent,
-    ProjectComponent,
+    ProjectFormComponent,
     ListProjectComponent,
     StaffTabsComponent,
     StaffFormComponent,

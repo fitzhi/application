@@ -4,7 +4,7 @@ import {RouterModule, Routes} from '@angular/router';
 
 import {SkillComponent} from './skill/skill.component';
 import {ListSkillComponent} from './list-skill/list-skill.component';
-import {ProjectComponent} from './project/project.component';
+import {ProjectFormComponent} from './project/project-form.component';
 import {ListProjectComponent} from './list-project/list-project.component';
 import {WelcomeComponent} from './welcome/welcome.component';
 import {StaffComponent} from './staff/staff.component';
@@ -23,8 +23,8 @@ const routes: Routes = [
   {path: 'user', component: StaffComponent},
   {path: 'error', component: ErrorComponent},
   {path: 'searchProject', component: ListProjectComponent},
-  {path: 'project', component: ProjectComponent},
-  {path: 'project/:id', component: ProjectComponent},
+  {path: 'project', component: ProjectFormComponent},
+  {path: 'project/:id', component: ProjectFormComponent},
   {path: 'sunburst-test', component: SunburstTestComponent},
 ];
 
