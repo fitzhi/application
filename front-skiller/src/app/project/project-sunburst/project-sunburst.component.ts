@@ -100,8 +100,17 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
             this.hackSunburstStyle();
             this.charInitilalized = true;
             myChart.tooltipContent(function (graph) {
-              const tooltip = (graph.lastUpdate == null) ? '' : graph.lastUpdate;
-              return tooltip;
+
+              if (graph.lastUpdate != null) {
+                const date = new Date(graph.lastUpdate);
+                const day = date.getDate();
+                const monthIndex = date.getMonth();
+                const year = date.getFullYear();
+                const tooltip = 'last commit ' + day + '/' + monthIndex + '/' + year;
+                return tooltip;
+              } else {
+                return 'No commit here!';
+              }
             });
           });
     }
