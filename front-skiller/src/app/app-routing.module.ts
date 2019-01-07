@@ -5,6 +5,7 @@ import {SkillComponent} from './skill/skill.component';
 import {ListSkillComponent} from './list-skill/list-skill.component';
 import {ProjectComponent} from './project/project.component';
 import {ProjectFormComponent} from './project/project-form/project-form.component';
+import {ProjectSunburstComponent} from './project/project-sunburst/project-sunburst.component';
 import {ListProjectComponent} from './list-project/list-project.component';
 import {WelcomeComponent} from './welcome/welcome.component';
 import {StaffComponent} from './staff/staff.component';
@@ -25,6 +26,7 @@ const routes: Routes = [
   {path: 'searchProject', component: ListProjectComponent},
   {path: 'project', component: ProjectComponent},
   {path: 'project/:id', component: ProjectComponent},
+  {path: 'project/sunburst/:id', component: ProjectSunburstComponent},
   {path: 'sunburst-test', component: SunburstTestComponent},
 ];
 

@@ -1,7 +1,7 @@
 import { Constants } from './constants';
 import {Injectable} from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import {Subject} from "rxjs/Subject";
+import {Subject} from 'rxjs/Subject';
 
 @Injectable({
   providedIn: 'root'
@@ -23,11 +23,23 @@ export class CinematicService {
    */
   newCollaboratorDisplayEmitted$ = this.emitActualCollaboratorDisplay.asObservable();
 
+  /**
+   * This subject containts the tab selected in the projects Tab Group container
+   */
+  public tabProjectActivated = new BehaviorSubject<Number>(Constants.PROJECT_TAB_FORM);
+
   setForm(form: Number) {
     /**
     * Fire the event. Has to be at the end of the method.
     */
     this.actualFormOnStage.next(form);
+  }
+
+  /**
+   * Fire the event that the tab index has changed.
+   */
+  setProjectTab(tab: number) {
+    this.tabProjectActivated.next(tab);
   }
 
 }

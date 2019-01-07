@@ -1,4 +1,4 @@
-import {StarsSkillLevelRenderComponent} from './staff/starsSkillLevelRenderComponent';
+import { StarsSkillLevelRenderComponent } from './staff/starsSkillLevelRenderComponent';
 
 /**
  * Constants file
@@ -36,6 +36,13 @@ export class Constants {
   public static PROJECT_SEARCH = 5;
   public static PROJECT_CRUD = 6;
 
+  /*
+  * Indexes of tab inside the form group Project
+  */
+  public static PROJECT_TAB_FORM = 0;
+  public static PROJECT_TAB_SUNBURST = 1;
+  public static PROJECT_TAB_STAFF = 2;
+
   /**
    * Type of file allowed to be uploaded by the back-end for the application file.
    * These constants declaration are inherited from the back-end project
@@ -46,7 +53,7 @@ export class Constants {
   static FILE_TYPE_TXT = 3;
 
   public static APPLICATION_FILE_TYPE_ALLOWED = new Map([
-    ['application/pdf', Constants.FILE_TYPE_PDF ],
+    ['application/pdf', Constants.FILE_TYPE_PDF],
     ['application/vnd.openxmlformats-officedocument.wordprocessingml.document', Constants.FILE_TYPE_DOCX],
     ['application/msword', Constants.FILE_TYPE_DOC]
   ]);
@@ -84,11 +91,11 @@ export class Constants {
         editor: {
           type: 'list',
           config: {
-            list: [{value: '1', title: '*'},
-            {value: '2', title: '**'},
-            {value: '3', title: '***'},
-            {value: '4', title: '****'},
-            {value: '5', title: '*****'}]
+            list: [{ value: '1', title: '*' },
+            { value: '2', title: '**' },
+            { value: '3', title: '***' },
+            { value: '4', title: '****' },
+            { value: '5', title: '*****' }]
           },
         },
       }

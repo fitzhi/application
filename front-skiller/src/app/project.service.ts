@@ -2,9 +2,8 @@ import {Injectable} from '@angular/core';
 import {Project} from './data/project';
 import {ProjectDTO} from './data/external/projectDTO';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {catchError, map, tap} from 'rxjs/operators';
 
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {InternalService} from './internal-service';
 
 import {Constants} from './constants';
@@ -98,10 +97,21 @@ export class ProjectService extends InternalService {
    * GET the project associated to the passed name, if any, from the back-end skiller. Will throw a 404 if this name is not retrieved.
    */
   lookup(projectName: string): Observable<Project> {
-    const url = this.projectUrl + '/name/' + projectName;
+    const url = this.projectUrl + '/sunburst';
     if (Constants.DEBUG) {
       console.log('Fetching the project name ' + projectName + ' on the address ' + url);
     }
     return this.httpClient.get<Project>(url);
+  }
+
+  /**
+   * Retrieve the Sunburst data, figuring the activity on the source code regarding the passed project.
+   */
+  retrieveSuburstData(idProject: number): Observable<any> {
+    if (Constants.DEBUG) {
+      console.log('Retrieving the Sunburst data for the project ' + idProject);
+    }
+    const body = {idProject: idProject};
+    return this.httpClient.post<any>(this.projectUrl + '/sunburst', body, httpOptions);
   }
 }
