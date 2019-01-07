@@ -20,6 +20,13 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
 
   private charInitilalized = false;
 
+  // this boolean is indicating that the sunburst chart is ready to be viewed.
+  // The waiting div can be hidden, and replaced by the chart.
+  public sunburst_ready = false;
+
+  // Waiting images previewed during the chart generation.
+  public sunburstWaitingImage = '/assets/img/sunburst-waiting-image.png';
+
   constructor(
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
@@ -43,7 +50,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
       if (Constants.DEBUG) {
         console.log('No project identifier passed to this tab. No data available for preview !');
       }
-      this.messageService.error('No project identifier passed to this tab. No data available for preview !');
+      this.messageService.info('No project identifier passed to this form or no data available for preview !');
       return;
     }
 
@@ -65,13 +72,15 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
       return;
     }
 
-   if ((document.getElementById('chart') != null) && (this.idProject != null)) {
+    this.sunburst_ready = false;
+
+    if ((document.getElementById('chart') != null) && (this.idProject != null)) {
 
       const myChart = Sunburst();
 
       this.projectService.retrieveSuburstData(this.idProject)
         .subscribe(response => {
-          myChart.data(response.sunburstData).width(600).height(600).label('location').size('numberOfFiles').color('color')
+          myChart.data(response.sunburstData).width(500).height(500).label('location').size('numberOfFiles').color('color')
             (document.getElementById('chart'));
         },
           response => {
@@ -112,6 +121,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
                 return 'No commit here!';
               }
             });
+            this.sunburst_ready = true;
           });
     }
   }
