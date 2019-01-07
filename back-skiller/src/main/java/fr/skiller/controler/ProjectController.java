@@ -1,5 +1,6 @@
 package fr.skiller.controler;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,8 +26,15 @@ import com.google.gson.Gson;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.data.external.ProjectDTO;
+import fr.skiller.data.external.SunburstDTO;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
+import fr.skiller.data.internal.SunburstData;
+import fr.skiller.source.scanner.RepoScanner;
+
+import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
+import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
+import static fr.skiller.Error.CODE_UNDEFINED;;
 
 @RestController
 @RequestMapping("/project")
@@ -46,7 +54,14 @@ public class ProjectController {
 	@Autowired
 	@Qualifier("mock.Skill")
 	SkillHandler skillHandler;
-		
+	
+	/**
+	 * Source control parser.
+	 */
+	@Autowired
+	@Qualifier("GIT")
+	RepoScanner scanner;
+	
 	@RequestMapping(value = "/name/{projectName}", method = RequestMethod.GET)
 	ResponseEntity<ProjectDTO> read(@PathVariable("projectName") String projectName) {
 		
@@ -263,7 +278,54 @@ public class ProjectController {
 		return new ResponseEntity<ProjectDTO>(new ProjectDTO(project), new HttpHeaders(), HttpStatus.OK);
 	}
 	
+	/**
+	 * Parameter sent to the controller in order to obtain the sunburst data. 
+	 * @author Fr&eacute;d&eacute;ric VIDAL
+	 */
+	class ParamSunburst {
+		/**
+		 * Project identifier.
+		 */
+		int idProject;
+	}
 	
+	/**
+	* Retrieve the activities for a project in an object ready made to be injected into the sunburst chart.
+	*/
+	@PostMapping("/sunburst")
+	ResponseEntity<SunburstDTO> getActivity(@RequestBody String param) {
+
+		ParamSunburst p = g.fromJson(param, ParamSunburst.class);
+		if (logger.isDebugEnabled()) {
+			logger.debug("POST command on /sunburst with params idProject :" + String.valueOf(p.idProject));
+		}
+
+		final Project project = projectHandler.get(p.idProject);
+		assert (project != null);
+		if (project == null) {
+			new ResponseEntity<SunburstDTO>( 
+					new SunburstDTO(
+							new SunburstData(""), 
+							CODE_PROJECT_NOFOUND, 
+							MessageFormat.format(MESSAGE_PROJECT_NOFOUND, p.idProject)),
+					new HttpHeaders(), 
+					HttpStatus.BAD_REQUEST);
+		}
+		
+		try {
+			SunburstData data = scanner.generate(project);
+			return new ResponseEntity<SunburstDTO>(new SunburstDTO(data), new HttpHeaders(), HttpStatus.OK);
+		} catch (final Exception e) {
+			return new ResponseEntity<SunburstDTO>(new SunburstDTO(null, CODE_UNDEFINED, e.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);			
+		}
+	}
+
+	/**
+	 * @param code the error code
+	 * @param message the error message
+	 * @param project the project, if any, concerned by the error, or an empty project if none exist
+	 * @return a response entity
+	 */
 	ResponseEntity<ProjectDTO> postErrorReturnBodyMessage (int code, String message, Project project) {
 		return new ResponseEntity<ProjectDTO>( 
 				new ProjectDTO(project, code, message),

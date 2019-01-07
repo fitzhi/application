@@ -82,7 +82,7 @@ public interface RepoScanner {
 	 * @param repository the repository retrieved and parsed from the source control tool (i.e. GIT, SVN...).
 	 * @param data repository data prepared for the Sunburst chart 
 	 */
-	public void evaluateTheRisk(CommitRepository repository, SunburstData data) ;
+	void evaluateTheRisk(CommitRepository repository, SunburstData data) ;
 
 	/**
 	 * Mean the risk for the children of this location.<br/>
@@ -91,5 +91,15 @@ public interface RepoScanner {
 	 * @param data data previewed location prepared for the sunburst chart 
 	 * @return the calculated level of risk
 	 */
-	public int meanTheRisk(SunburstData location);
+	int meanTheRisk(SunburstData location);
+	
+	/**
+	 * Generate the sunburst data figuring the activities of staff members for the passed project
+	 * @param project the project whose source code files should be parsed in the repository
+	 * @return the sunburst data 
+	 * @throws Exception thrown if any application or network error occurs during the treatment.
+	 */
+	SunburstData generate(Project project) throws Exception;
+	
+	
 }

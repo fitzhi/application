@@ -47,7 +47,49 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
    * After creation treatment.
    */
   ngAfterViewInit() {
-//    this.hackSunburstStyle();
+    this.hackSunburstStyle();
+  }
+
+  /* Replace the cssText for rule matching selectorText with value
+** Changes all matching rules in all style sheets
+*/
+  hackSunburstStyle() {
+    const sheets = document.styleSheets;
+    let sheet, rules, rule;
+    let i, j, k, iLen, jLen, kLen;
+
+    for (i = 0, iLen = sheets.length; i < iLen; i++) {
+      sheet = sheets[i];
+
+      // W3C model
+      if (sheet.cssRules) {
+        rules = sheet.cssRules;
+
+        for (j = 0, jLen = rules.length; j < jLen; j++) {
+          rule = rules[j];
+
+          if (typeof rule.selectorText !== 'undefined') {
+            if (rule.selectorText.indexOf('sunburst-viz text .text-contour') > 0) {
+              rule.style.stroke = 'none';
+            }
+          }
+        }
+
+        // IE model
+      } else if (sheet.rules) {
+        rules = sheet.rules;
+
+        for (k = 0, kLen = rules.length; k < kLen; k++) {
+          rule = rules[k];
+
+          if (typeof rule.selectorText !== 'undefined') {
+            if (rule.selectorText.indexOf('sunburst-viz text .text-contour') > 0) {
+              rule.style.stroke = 'none';
+            }
+          }
+        }
+      }
+    }
   }
 
 }

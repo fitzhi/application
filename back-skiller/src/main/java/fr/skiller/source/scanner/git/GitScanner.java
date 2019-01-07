@@ -4,8 +4,10 @@
 package fr.skiller.source.scanner.git;
 
 import java.io.File;
+import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,6 +33,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import com.google.gson.Gson;
 
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Staff;
@@ -88,11 +92,24 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	CacheDataHandler cacheDataHandler;
 	
 	/**
+	 * Path access to retrieve the properties file for a given project  
+	 * It might be, for example, /src/main/resources/repository-settings/properties-{0}.json where {0} represents the project name.
+	 */
+	@Value("${repositoryPathPatternSettings}")
+	private String repositoryPathPatternSettings;
+	
+	
+	/**
 	 * Patterns to take account, OR NOT, a file within the parsing process.<br/>
 	 * For example, a file with the suffix .java is involved.
 	 */
 	@Value("${patternsInclusion}")
 	private String patternsInclusion;
+	
+	/**
+	 * Initialization of the Google JSON parser.
+	 */
+	Gson gson = new Gson();
 	
 	/**
 	 * GitScanner constructor.
@@ -286,4 +303,51 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
  		return (cleanupPath.length() == 0) ? path : cleanupPath;
  	}
 
+	@Override
+	public SunburstData generate(final Project project) throws Exception {
+		
+		final ConnectionSettings settings = connectionSettings(project);
+
+		if (!cacheDataHandler.hasCommitRepositoryAvailable(project)) {
+			this.clone(project, settings);
+			if (logger.isDebugEnabled()) {
+				logger.debug("The project " + project.name + " has id cloned into a temporay directory");
+			}
+		}	
+
+		// If a cache is detected and available for this project, it will be returned from this method.
+		final CommitRepository repo = this.parseRepository(project, settings);
+		if (logger.isDebugEnabled()) {
+			logger.debug(
+					"The repository has been parsed. It contains "
+					+ repo.size() + " records in the repository");
+		}
+		
+		SunburstData data = this.aggregateSunburstData(repo);
+		
+		// Evaluate the risk for each directory, and sub-directory, in the repository.
+		this.evaluateTheRisk(repo, data);
+		
+		// Fill the holes for directory without source files, and therefore without risk level measured.
+		this.meanTheRisk(data);
+
+		// Evaluate the preview display for each sclice of the sunburst chart.  
+		this.setPreviewSettings(data);
+
+		return data;
+	}
+
+	private ConnectionSettings connectionSettings(Project project) throws Exception {
+
+		final String fileProperties = MessageFormat.format (repositoryPathPatternSettings, project.name);
+
+		ConnectionSettings settings = new ConnectionSettings();
+		final FileReader fr = new FileReader(new File(fileProperties));
+		settings = gson.fromJson(fr, settings.getClass());
+		fr.close();
+		if (logger.isDebugEnabled()) {
+			logger.debug("GIT remote URL " + settings.url);
+		}
+		return settings;
+	}
 }

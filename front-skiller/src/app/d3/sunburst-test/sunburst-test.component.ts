@@ -74,7 +74,7 @@ export class SunburstTestComponent implements OnInit, AfterViewInit {
   }
 
 
-  /* Replace the cssText for rule matching selectorText with value
+/* Replace the cssText for rule matching selectorText with value
 ** Changes all matching rules in all style sheets
 */
   hackSunburstStyle() {

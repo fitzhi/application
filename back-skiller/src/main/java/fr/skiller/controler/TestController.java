@@ -162,6 +162,7 @@ public class TestController {
 		}
 		
 		Project project = new Project(1, "VEGEO");
+
 		final String fileProperties = resourcesDirectory.getAbsolutePath() + "/repository-settings/properties-VEGEO.json";
 
 		ConnectionSettings settings = new ConnectionSettings();
