@@ -44,6 +44,16 @@ public class Staff {
 	public Staff() {
 	}
 
+	/**
+	 * Construction of an <b>ACTIVE</b> staff member.
+	 * @param idStaff staff identifier
+	 * @param firstName first name of this staff member
+	 * @param lastName last name of this staff member
+	 * @param nickName nickName of this staff member
+	 * @param login login of this staff member
+	 * @param email email of this staff member
+	 * @param level the level of this staff member
+	 */
 	public Staff(int idStaff, final String firstName, final String lastName, final String nickName, final String login, final String email, final String level) {
 		super();
 		this.idStaff = idStaff;
@@ -57,6 +67,17 @@ public class Staff {
 		experiences = new ArrayList<Experience>();
 	}
 
+	/**
+	 * Construction of a staff member.
+	 * @param idStaff staff identifier
+	 * @param firstName first name of this staff member
+	 * @param lastName last name of this staff member
+	 * @param nickName nickName of this staff member
+	 * @param login login of this staff member
+	 * @param email email of this staff member
+	 * @param level the level of this staff member
+	 * @param isActive {@code true} if the staff member is active, {@code false} otherwise
+	 */
 	public Staff(int idStaff, final String firstName, final String lastName, final String nickName, final String login, final String email, final String level, final boolean isActive) {
 		super();
 		this.idStaff = idStaff;
