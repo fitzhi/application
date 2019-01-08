@@ -1,8 +1,7 @@
 import {Injectable} from '@angular/core';
-import {Observable, of} from 'rxjs';
-import {Subject} from "rxjs/Subject";
-import {Message} from "./message";
-import {Constants} from "./constants";
+import {Subject} from 'rxjs/Subject';
+import {Message} from './message';
+import {Constants} from './constants';
 
 @Injectable({
   providedIn: 'root'
