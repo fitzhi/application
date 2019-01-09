@@ -44,7 +44,6 @@ public class CommitHistoryTest {
 		staffHandler.getStaff().get(3).isActive = true;
     }
     
-    
     @Test
 	public void countDistinctDevelopers() {
 		Assert.assertEquals(3, ch.countDistinctDevelopers());
@@ -79,7 +78,9 @@ public class CommitHistoryTest {
     	commit.addCommit("other_test.java", 5, new Date());
     	commit.addCommit("other_test.java", 10, new Date());
     	int iStaff[] = {1, 5, 7, 10};
-		Assert.assertArrayEquals(iStaff, commit.contributors().stream().mapToInt(i -> i.intValue()).toArray());
+		Assert.assertArrayEquals(iStaff, 
+				commit.contributors().stream()
+				.mapToInt(contributor -> contributor.idStaff).toArray());
 	}
     
 }

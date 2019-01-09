@@ -1,6 +1,7 @@
 package fr.skiller.data.source;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -54,7 +55,26 @@ public interface CommitRepository {
 	Map<String, CommitHistory> getRepository();
 	
 	/**
-	 * @return all contributors having worked on this contributor, representing by their staff's identifier
+	 * @return all contributors having worked on this repository and their statistics of use
 	 */
-	Set<Integer> contributors();
+	List<Contributor> contributors();
+
+	/**
+	 * @param idStaff developer identifier
+	 * @return the date/time of the last submission for the passed developer 
+	 */
+	Date lastCommit(int idStaff);
+
+	/**
+	 * @param idStaff developer identifier
+	 * @return the number of commits submitted by the passed developer
+	 */
+	int numberOfCommits(int idStaff);
+	
+	/**
+	 * @param idStaff developer identifier
+	 * @return the number of files submitted by the passed developer
+	 */
+	int numberOfFiles(int idStaff);
+	
 }

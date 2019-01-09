@@ -151,4 +151,12 @@ public class CommitHistory {
 		}
 		return lastOpe.get().idStaff;
 	}
+	
+	/**
+	 * @param idStaff the developer identifier
+	 * @return {@code true} if the passed developer has worked on this file, {@code false} otherwise
+	 */
+	public boolean hasWorkedOnThisFile (int idStaff) {
+		return operations.stream().filter(ope -> ope.idStaff == idStaff).findAny().isPresent();
+	}
 }

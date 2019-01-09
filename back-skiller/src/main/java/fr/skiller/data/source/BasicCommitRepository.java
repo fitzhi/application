@@ -3,14 +3,15 @@
  */
 package fr.skiller.data.source;
 
+import static fr.skiller.Global.LN;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.stream.Collectors;
-
-import static fr.skiller.Global.LN;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -75,14 +76,53 @@ public class BasicCommitRepository implements CommitRepository {
 		return this.repo;
 	}
 
+	/**
+	 * Working variable used by method lastCommit
+	 */
+	private Date lastCommit;
 	
 	@Override
-	public Set<Integer> contributors() {
-		Set<Integer> contributors = new HashSet<Integer>();
+	public Date lastCommit (final int idStaff) {
+		lastCommit = new Date(Long.MIN_VALUE);
 		this.repo.values().stream().forEach(history -> 
 			history.operations.stream()
-			.map(ope -> ope.idStaff).distinct().forEach(contributors::add));
+			.filter(ope -> (ope.idStaff == idStaff)).forEach(ope -> {
+				if (ope.dateCommit.after(lastCommit)) {
+					lastCommit = ope.dateCommit;
+				}
+			}));
+		return lastCommit;
+	}
+
+	@Override
+	public int numberOfCommits (final int idStaff) {
+		return (int) this.repo.values().stream().mapToLong( 
+				history -> history.operations.stream().filter(ope -> (ope.idStaff == idStaff)).count()).asDoubleStream().sum();
+	}
+	
+	
+	@Override
+	public int numberOfFiles (final int idStaff) {
+		return (int) this.repo.values()
+				.stream()
+				.filter(history -> history.hasWorkedOnThisFile(idStaff))
+				.count();
+	}
+	
+	@Override
+	public List<Contributor> contributors() {
+		Set<Integer> idContributors = new HashSet<Integer>();
+		this.repo.values().stream().forEach(history -> 
+			history.operations.stream()
+			.map(ope -> ope.idStaff).distinct().forEach(idContributors::add));
+		
+		List<Contributor> contributors = new ArrayList<Contributor>();
+		for (int idStaff : idContributors) {
+			contributors.add (new Contributor(idStaff, lastCommit (idStaff), numberOfCommits(idStaff), numberOfFiles(idStaff)));
+		}
+		
 		return contributors;
 	}
 
+	
 }

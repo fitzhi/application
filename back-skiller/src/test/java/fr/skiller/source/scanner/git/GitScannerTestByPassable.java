@@ -100,7 +100,7 @@ public class GitScannerTestByPassable {
 		if (logger.isDebugEnabled()) {
 			repo.contributors()
 				.stream()
-				.filter(idStaff -> idStaff != UNKNOWN)
+				.filter(contributor -> contributor.idStaff != UNKNOWN)
 				.forEach(idStaff -> {
 					Staff staff = staffHandler.getStaff().get(idStaff);
 					if (staff == null) {
