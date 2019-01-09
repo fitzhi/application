@@ -24,7 +24,7 @@ export class ListStaffComponent implements OnInit {
     private listStaffService: ListStaffService) {}
 
   ngOnInit() {
-    this.cinematicService.setForm(Constants.DEVELOPPERS_SEARCH);
+    this.cinematicService.setForm(Constants.DEVELOPERS_SEARCH);
     this.collaborators = this.listStaffService.getStaff();
 
     this.referentialService.behaviorSubjectProfiles.subscribe(

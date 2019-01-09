@@ -54,8 +54,8 @@ export class AppComponent implements OnInit {
   image_skill_inactive = '/assets/img/skill-inactive.png';
 
   dev_activated = true;
-  image_dev_activated = '/assets/img/developper-activated.png';
-  image_dev_inactive = '/assets/img/developper-inactive.png';
+  image_dev_activated = '/assets/img/developer-activated.png';
+  image_dev_inactive = '/assets/img/developer-inactive.png';
 
   project_activated = true;
   image_project_activated = '/assets/img/project-activated.png';
@@ -94,13 +94,13 @@ export class AppComponent implements OnInit {
           this.is_allowed_to_search = true;
           break;
         }
-        case Constants.DEVELOPPERS_CRUD: {
+        case Constants.DEVELOPERS_CRUD: {
           this.in_master_detail = (this.searching_what != null);
           this.is_allowed_to_search = true;
           this.formTitle = 'Developer mode';
           break;
         }
-        case Constants.DEVELOPPERS_SEARCH: {
+        case Constants.DEVELOPERS_SEARCH: {
           this.formTitle = 'Searching';
           this.in_master_detail = false;
           this.is_allowed_to_search = true;
@@ -160,7 +160,7 @@ export class AppComponent implements OnInit {
       console.log('Searching ' + this.searching_what);
     }
     switch (this.formId) {
-      case Constants.DEVELOPPERS_SEARCH:
+      case Constants.DEVELOPERS_SEARCH:
         if (Constants.DEBUG) {
           console.log('Reloading collaborators for search criteria ' + this.searching_what);
         }
@@ -225,7 +225,7 @@ export class AppComponent implements OnInit {
       case Constants.SKILLS_CRUD:
         this.router.navigate(['/searchSkill'], {});
         break;
-      case Constants.DEVELOPPERS_CRUD:
+      case Constants.DEVELOPERS_CRUD:
         this.router.navigate(['/searchUser'], {});
         break;
       case Constants.PROJECT_CRUD:

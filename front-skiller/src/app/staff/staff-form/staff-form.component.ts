@@ -84,7 +84,7 @@ export class StaffFormComponent implements OnInit {
           // We need to disable this field within the code and not in HTML like the rest of the form.
           this.profileStaff.get('profile').disable();
         }
-        this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
+        this.cinematicService.setForm(Constants.DEVELOPERS_CRUD);
       });
 
     this.referentialService.behaviorSubjectProfiles.subscribe(

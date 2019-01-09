@@ -62,7 +62,7 @@ export class StaffComponent implements OnInit {
             } else {
               document.querySelector('body').style.cssText = '--actions-button-visible: hidden';
             }
-            this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
+            this.cinematicService.setForm(Constants.DEVELOPERS_CRUD);
           },
           error => {
             if (error.status === 404) {
@@ -89,7 +89,7 @@ export class StaffComponent implements OnInit {
         );
       }
     });
-    this.cinematicService.setForm(Constants.DEVELOPPERS_CRUD);
+    this.cinematicService.setForm(Constants.DEVELOPERS_CRUD);
   }
 }
 
