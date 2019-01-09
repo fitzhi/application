@@ -14,7 +14,7 @@ import {ReferentialService} from '../referential.service';
 })
 export class ListStaffComponent implements OnInit {
 
-  private collaborators: Collaborator[];
+  public collaborators: Collaborator[];
 
   private profiles: Profile[];
 
