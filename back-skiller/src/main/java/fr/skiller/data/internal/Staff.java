@@ -36,6 +36,7 @@ public class Staff {
 	public int typeOfApplication;
 	
 	public List<Project> projects;
+	
 	public List<Experience> experiences;
 
 	/**
@@ -117,6 +118,15 @@ public class Staff {
 	public Experience getExperience(final int idSkill) {
 		Optional<Experience> oAsset = experiences.stream().filter(exp -> (exp.id == idSkill)).findFirst();
 		return (oAsset.isPresent()) ? oAsset.get() : null;
+	}
+	
+	/**
+	 * Check if a developer has taken part in a project
+	 * @param idProject the the given project
+	 * @return {@code true} if the developer is involved in the given project, {@code false} or not
+	 */
+	public boolean isInvolvedInProject (final int idProject) {
+		return (projects.stream().filter(project -> project.id == idProject).count()  > 0);
 	}
 	
 

@@ -42,12 +42,14 @@ import fr.skiller.data.internal.SunburstData;
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
+import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.scanner.AbstractScannerDataGenerator;
 import fr.skiller.source.scanner.RepoScanner;
 import fr.skiller.Error;
 import fr.skiller.Global;
 import fr.skiller.bean.CacheDataHandler;
+import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
 import static fr.skiller.Global.UNKNOWN;
 
@@ -315,12 +317,24 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			}
 		}	
 
-		// If a cache is detected and available for this project, it will be returned from this method.
+		// If a cache is detected and available for this project, it will be returned by this method.
 		final CommitRepository repo = this.parseRepository(project, settings);
 		if (logger.isDebugEnabled()) {
 			logger.debug(
 					"The repository has been parsed. It contains "
 					+ repo.size() + " records in the repository");
+		}
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("Taking account of retrieved contributors from the repository into the project list of participants");
+		}
+		List<Contributor> contributors = staffHandler.takeAccount(project, repo);
+		if (logger.isDebugEnabled()) {
+			logger.debug("Contributors retrieved : ");
+			contributors.stream().forEach(contributor -> {
+				String fullname = staffHandler.getFullname(contributor.idStaff);
+				logger.debug(contributor.idStaff + " " + ((fullname != null) ? fullname : "unknown"));
+			});
 		}
 		
 		SunburstData data = this.aggregateSunburstData(repo);
@@ -331,13 +345,19 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		// Fill the holes for directory without source files, and therefore without risk level measured.
 		this.meanTheRisk(data);
 
-		// Evaluate the preview display for each sclice of the sunburst chart.  
+		// Evaluate the preview display for each slice of the sunburst chart.  
 		this.setPreviewSettings(data);
 
 		return data;
 	}
 
-	private ConnectionSettings connectionSettings(Project project) throws Exception {
+	/**
+	 * Load the connection settings for the given project.
+	 * @param project the passed project
+	 * @return the connection settings.
+	 * @throws Exception thrown certainly if an IO exception occurs
+	 */
+	private ConnectionSettings connectionSettings(final Project project) throws Exception {
 
 		final String fileProperties = MessageFormat.format (repositoryPathPatternSettings, project.name);
 

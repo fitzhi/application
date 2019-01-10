@@ -4,8 +4,11 @@ import java.util.List;
 import java.util.Map;
 
 import fr.skiller.data.internal.PeopleCountExperienceMap;
+import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.ResumeSkill;
 import fr.skiller.data.internal.Staff;
+import fr.skiller.data.source.CommitRepository;
+import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 
 /**
@@ -66,4 +69,18 @@ public interface StaffHandler {
 	 * @return {@code true} if this person is still active in the staff<br/> {@code false} otherwise 
 	 */
 	boolean isActive (int idStaff) ;
+	
+	/**
+	 * Take account of the repository of the passed project into the staff involvement 
+	 * @param project passed project
+	 * @return the list of contributors identified, or not, as contributors inside the repository
+	 */
+	List<Contributor> takeAccount(Project project, CommitRepository repository);
+	
+	/**
+	 * @param idStaff the staff identifier
+	 * @return the full name of the staff member found, or {@code null} is none's found
+	 */
+	String getFullname (int idStaff);
+	
 }

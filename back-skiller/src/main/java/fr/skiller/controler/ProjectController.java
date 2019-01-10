@@ -293,7 +293,7 @@ public class ProjectController {
 	* Retrieve the activities for a project in an object ready made to be injected into the sunburst chart.
 	*/
 	@PostMapping("/sunburst")
-	ResponseEntity<SunburstDTO> getActivity(@RequestBody String param) {
+	ResponseEntity<SunburstDTO> generateSunburstData(@RequestBody String param) {
 
 		ParamSunburst p = g.fromJson(param, ParamSunburst.class);
 		if (logger.isDebugEnabled()) {

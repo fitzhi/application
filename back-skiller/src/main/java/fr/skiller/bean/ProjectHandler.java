@@ -1,9 +1,12 @@
 package fr.skiller.bean;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.source.CommitRepository;
+import fr.skiller.data.source.Contributor;
 
 public interface ProjectHandler {
 
@@ -14,7 +17,7 @@ public interface ProjectHandler {
 	 * @param projectName 
 	 * @return
 	 */
-	Optional<Project> lookup(final String projectName);
+	Optional<Project> lookup(String projectName);
 
 	/**
 	 * Retrieve a project. 
@@ -28,5 +31,5 @@ public interface ProjectHandler {
 	 * <i>This method exists only for testing purpose</i>
 	 */
 	 void init();
-	
+
 }

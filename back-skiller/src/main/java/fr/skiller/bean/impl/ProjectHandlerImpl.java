@@ -4,6 +4,7 @@
 package fr.skiller.bean.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.source.CommitRepository;
+import fr.skiller.data.source.Contributor;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -54,5 +57,4 @@ public class ProjectHandlerImpl implements ProjectHandler {
 	public void init() {
 		this.projects = null;
 	}
-
 }
