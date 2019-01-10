@@ -18,18 +18,21 @@ import static fr.skiller.Global.UNKNOWN;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import fr.skiller.Error;
+import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.PeopleCountExperienceMap;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.ResumeSkill;
 import fr.skiller.data.internal.Experience;
 import fr.skiller.data.internal.Staff;
+import fr.skiller.data.internal.Mission;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
@@ -60,6 +63,10 @@ public class StaffHandlerImpl implements StaffHandler {
 	 */
 	private HashMap<Integer, Staff> staff;
 
+	@Autowired
+	ProjectHandler projectHandler;
+	
+	
 	@Override
 	public void init() {
 		staff = null;
@@ -240,8 +247,20 @@ public class StaffHandlerImpl implements StaffHandler {
 				}
 				if (staff.isInvolvedInProject(project.id)) {
 					// Update the statistics of the current developer inside the project
+					Mission missionSelected = staff.missions.stream().filter(mission -> mission.idProject == project.id).findFirst().get();
+					missionSelected.lastCommit = contributor.lastCommit;
+					missionSelected.numberOfCommits = contributor.numberOfCommitsSubmitted;
+					missionSelected.numberOfFiles = contributor.numberOfFiles;
+					missionSelected.name = projectHandler.get(project.id).name;
 				} else {
-					// Inside this developer inside a new project 
+					// Involve this developer inside a new project 
+					Mission mission = new Mission(
+							project.id, 
+							projectHandler.get(project.id).name,
+							contributor.lastCommit, 
+							contributor.numberOfCommitsSubmitted, 
+							contributor.numberOfFiles);
+					staff.addMission(mission);
 				}
 				
 			}			

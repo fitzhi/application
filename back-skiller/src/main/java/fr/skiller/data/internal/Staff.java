@@ -8,8 +8,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import fr.skiller.data.external.StaffMission;
-
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
@@ -37,7 +35,7 @@ public class Staff {
 	public String application;
 	public int typeOfApplication;
 	
-	public List<StaffMission> missions;
+	public List<Mission> missions;
 	
 	public List<Experience> experiences;
 
@@ -66,7 +64,7 @@ public class Staff {
 		this.login = login;
 		this.email = email;
 		this.level = level;
-		missions = new ArrayList<StaffMission>();
+		missions = new ArrayList<Mission>();
 		experiences = new ArrayList<Experience>();
 	}
 
@@ -91,7 +89,7 @@ public class Staff {
 		this.email = email;
 		this.level = level;
 		this.isActive = isActive;
-		missions = new ArrayList<StaffMission>();
+		missions = new ArrayList<Mission>();
 		experiences = new ArrayList<Experience>();
 	}
 	
@@ -131,6 +129,12 @@ public class Staff {
 		return (missions.stream().filter(project -> project.idProject == idProject).count()  > 0);
 	}
 	
+	/**
+	 * Add a new mission for this developer.
+	 */
+	public void addMission(final Mission mission) {
+		missions.add(mission);
+	}
 
 	@Override
 	public String toString() {

@@ -12,17 +12,7 @@
 		<appender-ref ref="STDOUT" />
 	</root>
 
-	<logger name="fr.skiller.bean.impl.StaffHandlerImpl" additivity="false">
-		<level value="WARN" />
-		<appender-ref ref="STDOUT" />
-	</logger>
-
 	<logger name="fr.skiller.source.scanner.git" additivity="false">
-		<level value="DEBUG" />
-		<appender-ref ref="STDOUT" />
-	</logger>
-
-	<logger name="fr.skiller.source.scanner.AbstractScannerDataGenerator" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>

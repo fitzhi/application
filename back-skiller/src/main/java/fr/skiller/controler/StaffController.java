@@ -38,8 +38,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.oracle.jrockit.jfr.ContentType;
-import com.sun.org.apache.bcel.internal.Constants;
 
 import fr.skiller.Global;
 import fr.skiller.bean.ProjectHandler;
@@ -47,13 +45,13 @@ import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.external.ResumeDTO;
 import fr.skiller.data.external.StaffDTO;
-import fr.skiller.data.external.StaffMission;
 import fr.skiller.data.internal.PeopleCountExperienceMap;
 import fr.skiller.data.internal.Resume;
 import fr.skiller.data.internal.ResumeSkill;
 import fr.skiller.data.internal.Experience;
 import fr.skiller.data.internal.Mission;
 import fr.skiller.data.internal.Staff;
+import fr.skiller.data.internal.Mission;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.service.ResumeParserService;
 import fr.skiller.service.StorageService;
@@ -156,7 +154,7 @@ public class StaffController {
 	 * @return the list of projects where the staff member is involved
 	 */
 	@RequestMapping(value = "/projects/{idStaff}", method = RequestMethod.GET)
-	ResponseEntity<List<StaffMission>> readProjects(@PathVariable("idStaff") int idStaff) {
+	ResponseEntity<List<Mission>> readProjects(@PathVariable("idStaff") int idStaff) {
 
 		ResponseEntity<Staff> responseEntityStaffMember = read(idStaff);
 
@@ -166,7 +164,7 @@ public class StaffController {
 				mission.name = projectHandler.get(mission.idProject).name;
 		});
 		
-		ResponseEntity<List<StaffMission>> response = new ResponseEntity<List<StaffMission>>(
+		ResponseEntity<List<Mission>> response = new ResponseEntity<List<Mission>>(
 				responseEntityStaffMember.getBody().missions, responseEntityStaffMember.getHeaders(),
 				responseEntityStaffMember.getStatusCode());
 		return response;
@@ -516,7 +514,7 @@ public class StaffController {
 			 * project list, we send back a BAD_REQUEST to avoid duplicate
 			 * entries
 			 */
-			Predicate<StaffMission> predicate = pr -> (pr.idProject == result.get().id);
+			Predicate<Mission> predicate = pr -> (pr.idProject == result.get().id);
 			if (staff.missions.stream().anyMatch(predicate)) {
 				responseEntity = new ResponseEntity<StaffDTO>(
 						new StaffDTO(staff, 0,
@@ -533,7 +531,7 @@ public class StaffController {
 			if ((p.formerProjectName != null) && (p.formerProjectName.length() > 0)) {
 				Optional<Project> formerProject = projectHandler.lookup(p.formerProjectName);
 				if (result.isPresent()) {
-					Optional<StaffMission> optMission = staff.missions
+					Optional<Mission> optMission = staff.missions
 						.stream()
 						.filter(mission -> mission.idProject == formerProject.get().id)
 						.findFirst();
@@ -543,7 +541,7 @@ public class StaffController {
 				}
 			}
 
-			staff.missions.add(new StaffMission(result.get().id, projectHandler.get(result.get().id).name));
+			staff.missions.add(new Mission(result.get().id, projectHandler.get(result.get().id).name));
 			responseEntity = new ResponseEntity<StaffDTO>(new StaffDTO(staff), headers, HttpStatus.OK);
 			if (logger.isDebugEnabled()) {
 				logger.debug("returning  staff " + gson.toJson(staff));
@@ -576,7 +574,7 @@ public class StaffController {
 			return postErrorReturnBodyMessage(404, "There is no staff member for id" + p.idStaff);
 		}
 
-		Optional<StaffMission> oProject = staff.missions.stream().filter(pr -> (pr.idProject == p.idProject)).findFirst();
+		Optional<Mission> oProject = staff.missions.stream().filter(pr -> (pr.idProject == p.idProject)).findFirst();
 		if (oProject.isPresent()) {
 			staff.missions.remove(oProject.get());
 		}

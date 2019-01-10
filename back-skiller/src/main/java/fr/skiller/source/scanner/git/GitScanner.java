@@ -330,7 +330,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		}
 		List<Contributor> contributors = staffHandler.takeAccount(project, repo);
 		if (logger.isDebugEnabled()) {
-			logger.debug("Contributors retrieved : ");
+			logger.debug(contributors.size() + " contributors retrieved : ");
 			contributors.stream().forEach(contributor -> {
 				String fullname = staffHandler.getFullname(contributor.idStaff);
 				logger.debug(contributor.idStaff + " " + ((fullname != null) ? fullname : "unknown"));

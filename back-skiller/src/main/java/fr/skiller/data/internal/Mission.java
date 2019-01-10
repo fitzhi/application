@@ -16,6 +16,11 @@ public class Mission {
 	 * The project identifier.
 	 */
 	public int idProject;
+
+	/**
+	 * The project name.
+	 */
+	public String name;
 	
 	/**
 	 * Date of the latest commit.
@@ -34,12 +39,14 @@ public class Mission {
 
 	/**
 	 * @param idProject the identifier of the project
+	 * @param name the name of the project
 	 * @param lastCommit the date/time of the last commit
 	 * @param numberOfCommits the number of commits submitted
 	 * @param numberOfFiles the number of files
 	 */
-	public Mission(final int idProject, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
+	public Mission(final int idProject, final String name, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
 		this.idProject = idProject;
+		this.name = name;
 		this.lastCommit = lastCommit;
 		this.numberOfCommits = numberOfCommits;
 		this.numberOfFiles = numberOfFiles;
@@ -47,11 +54,9 @@ public class Mission {
 	
 	/**
 	 * @param idProject the identifier of the project
+	 * @param name the name of the project
 	 */
-	public Mission(int idProject) {
-		this.idProject = idProject;
-		this.lastCommit = null;
-		this.numberOfCommits = 0;
-		this.numberOfFiles = 0;
+	public Mission(final int idProject, final String name) {
+		this(idProject, name, null, 0, 0);
 	}	
 }

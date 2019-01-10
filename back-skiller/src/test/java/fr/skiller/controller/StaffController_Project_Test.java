@@ -53,14 +53,14 @@ public class StaffController_Project_Test {
 		String body = "{ idStaff: 2, formerProjectName: \"\", newProjectName: \"VEGEO\"}";
 		this.mvc.perform(post("/staff/project/save").content(body)).andExpect(status().isOk());		
 		List<Mission> missions = new ArrayList<Mission>();
-		missions.add(new Mission (1));
+		missions.add(new Mission (1, "VEGEO"));
 		this.mvc.perform(get("/staff/projects/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(missions)));
 
 		body = "{ idStaff: 2, formerProjectName: \"VEGEO\", newProjectName: \"INFOTER\"}";
 		this.mvc.perform(post("/staff/project/save").content(body)).andExpect(status().isOk());		
 		
 		missions.clear();
-		missions.add(new Mission (2));
+		missions.add(new Mission (2, "INFOTER"));
 		this.mvc.perform(get("/staff/projects/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(missions)));
 
 		staffHandler.init();
@@ -76,7 +76,7 @@ public class StaffController_Project_Test {
 
 	
 		List<Mission> missions = new ArrayList<Mission>();
-		missions.add(new Mission (1));
+		missions.add(new Mission (1, "VEGEO"));
 		this.mvc.perform(get("/staff/projects/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(missions)));
 		
 		body = "{ idStaff: 2, idProject: 1}";
