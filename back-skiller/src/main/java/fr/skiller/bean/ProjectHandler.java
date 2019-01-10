@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.Contributor;
 
 public interface ProjectHandler {
@@ -32,4 +31,9 @@ public interface ProjectHandler {
 	 */
 	 void init();
 
+	 /**
+	  * @param idProject the project identifier.
+	  * @return the list of contributor for the given project.
+	  */
+	 List<Contributor> contributors(int idProject);
 }

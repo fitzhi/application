@@ -2,6 +2,7 @@ package fr.skiller.controler;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -25,11 +26,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;
+import fr.skiller.bean.StaffHandler;
+import fr.skiller.data.external.ProjectContributorDTO;
 import fr.skiller.data.external.ProjectDTO;
 import fr.skiller.data.external.SunburstDTO;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
+import fr.skiller.data.internal.Staff;
 import fr.skiller.data.internal.SunburstData;
+import fr.skiller.data.source.Contributor;
 import fr.skiller.source.scanner.RepoScanner;
 
 import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
@@ -54,6 +59,9 @@ public class ProjectController {
 	@Autowired
 	@Qualifier("mock.Skill")
 	SkillHandler skillHandler;
+	
+	@Autowired
+	StaffHandler staffHandler;
 	
 	/**
 	 * Source control parser.
@@ -320,6 +328,32 @@ public class ProjectController {
 		}
 	}
 
+	/**
+	 * @param idProject the project identifier
+	 * @return the contributors who have been involved in the project
+	 */
+	@RequestMapping(value="/contributors/{idProject}", method = RequestMethod.GET)
+	ResponseEntity<ProjectContributorDTO> projectContributors(final @PathVariable("idProject") int idProject) {
+
+		final List<Contributor> contributors = projectHandler.contributors(idProject);
+		
+		ProjectContributorDTO projectContributorDTO = new ProjectContributorDTO(idProject);
+		
+		contributors.stream().forEach(contributor -> {
+			final Staff staff = staffHandler.getStaff().get(contributor.idStaff);
+			projectContributorDTO.addContributor(
+							contributor.idStaff, 
+							staff.firstName + " " + staff.lastName,
+							contributor.lastCommit, 
+							contributor.numberOfCommitsSubmitted,
+							contributor.numberOfFiles);
+			
+		});
+		
+		return new ResponseEntity<ProjectContributorDTO>(projectContributorDTO, new HttpHeaders(), HttpStatus.OK);
+
+	}
+	
 	/**
 	 * @param code the error code
 	 * @param message the error message

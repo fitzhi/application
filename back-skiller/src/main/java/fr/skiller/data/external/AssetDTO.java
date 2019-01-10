@@ -19,9 +19,10 @@ import fr.skiller.data.internal.Experience;
 public class AssetDTO {
 
 	/**
-	 * Back-end code
+	 * Back-end code error
 	 */
 	public int code = 0;
+	
 	/**
 	 * Back-end message
 	 */
