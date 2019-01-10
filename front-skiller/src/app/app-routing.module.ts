@@ -12,6 +12,7 @@ import {StaffComponent} from './staff/staff.component';
 import {ListStaffComponent} from './list-staff/list-staff.component';
 import {ErrorComponent} from './error/error.component';
 import {SunburstTestComponent} from './d3/sunburst-test/sunburst-test.component';
+import { ProjectStaffComponent } from './project/project-staff/project-staff.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/welcome', pathMatch: 'full'},
@@ -27,6 +28,7 @@ const routes: Routes = [
   {path: 'project', component: ProjectComponent},
   {path: 'project/:id', component: ProjectComponent},
   {path: 'project/sunburst/:id', component: ProjectSunburstComponent},
+  {path: 'project/contributors/:id', component: ProjectStaffComponent},
   {path: 'sunburst-test', component: SunburstTestComponent},
 ];
 

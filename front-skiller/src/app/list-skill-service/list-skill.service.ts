@@ -67,7 +67,7 @@ export class ListSkillService {
     foundSkill = ListSkillService.theSkills.find(skill => skill.id === id);
 
     if (typeof foundSkill !== 'undefined') {
-      //TODO this.emitActualCollaboratorDisplay.next(id);
+      // TODO this.emitActualCollaboratorDisplay.next(id);
       // We create an observable for an element of the cache in order to be consistent with the direct reading.
       return of(foundSkill);
     } else {

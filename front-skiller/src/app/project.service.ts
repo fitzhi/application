@@ -8,6 +8,7 @@ import {InternalService} from './internal-service';
 
 import {Constants} from './constants';
 import { Skill } from './data/skill';
+import { ContributorsDTO } from './data/external/contributorsDTO';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -115,4 +116,17 @@ export class ProjectService extends InternalService {
     const body = {idProject: idProject};
     return this.httpClient.post<any>(this.projectUrl + '/sunburst', body, httpOptions);
   }
+
+  /**
+   * Retrieve the contributors for a given project
+   * @param idProject project identifier
+   */
+  contributors(idProject: number): Observable<ContributorsDTO> {
+    const url = this.projectUrl + '/contributors/' + idProject;
+    if (Constants.DEBUG) {
+      console.log('Retrieve the contributors for the project identifier ' + idProject);
+    }
+    return this.httpClient.get<ContributorsDTO>(url);
+  }
+
 }

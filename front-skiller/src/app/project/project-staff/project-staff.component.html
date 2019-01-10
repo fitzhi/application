@@ -4,12 +4,7 @@
 
 <ng-container matColumnDef="name">
   <th mat-header-cell *matHeaderCellDef> Name </th>
-  <td mat-cell *matCellDef="let contributor">{{contributor.firstName}} {{contributor.lastName}}</td>
-</ng-container>
-
-<ng-container matColumnDef="login">
-  <th mat-header-cell *matHeaderCellDef> Login </th>
-  <td mat-cell *matCellDef="let contributor">{{contributor.login}}</td>
+  <td mat-cell *matCellDef="let contributor">{{contributor.fullname}}</td>
 </ng-container>
 
 <ng-container matColumnDef="lastCommit">

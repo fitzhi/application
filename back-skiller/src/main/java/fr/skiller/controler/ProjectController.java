@@ -351,7 +351,6 @@ public class ProjectController {
 		});
 		
 		return new ResponseEntity<ProjectContributorDTO>(projectContributorDTO, new HttpHeaders(), HttpStatus.OK);
-
 	}
 	
 	/**

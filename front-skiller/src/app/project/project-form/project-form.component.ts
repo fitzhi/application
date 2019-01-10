@@ -102,9 +102,9 @@ export class ProjectFormComponent implements OnInit {
     }
   }
 
-/**
- * Loading the project from the back-end.
- */
+  /**
+   * Loading the project from the back-end.
+   */
   loadProject() {
     // EITHER we are in creation mode,
     // OR we load the Project from the back-end...
