@@ -2,6 +2,7 @@ package fr.skiller.controler;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -46,10 +47,12 @@ import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.external.ResumeDTO;
 import fr.skiller.data.external.StaffDTO;
+import fr.skiller.data.external.StaffMission;
 import fr.skiller.data.internal.PeopleCountExperienceMap;
 import fr.skiller.data.internal.Resume;
 import fr.skiller.data.internal.ResumeSkill;
 import fr.skiller.data.internal.Experience;
+import fr.skiller.data.internal.Mission;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.service.ResumeParserService;
@@ -134,14 +137,14 @@ public class StaffController {
 			responseEntity = new ResponseEntity<Staff>(searchCollab, headers, HttpStatus.OK);
 			if (logger.isDebugEnabled()) {
 				Staff staff = responseEntity.getBody();
-				logger.debug("read for id " + String.valueOf(idStaff) + " returns " + staff.firstName + " " + staff.lastName);
+				logger.debug("looking for id " + String.valueOf(idStaff) + " in the Staff collection returns " + staff.firstName + " " + staff.lastName);
 			}
 		} else {
 			headers.set("backend.return_code", "O");
 			headers.set("backend.return_message", "There is no collaborator associated to the id " + idStaff);
 			responseEntity = new ResponseEntity<Staff>(new Staff(), headers, HttpStatus.NOT_FOUND);
 			if (logger.isDebugEnabled()) {
-				logger.debug("Cannot find a staff member for id " + String.valueOf(idStaff));
+				logger.debug("Cannot find a staff member for id " + String.valueOf(idStaff) + " in th Staff collection");
 			}
 		}
 		return responseEntity;
@@ -153,12 +156,18 @@ public class StaffController {
 	 * @return the list of projects where the staff member is involved
 	 */
 	@RequestMapping(value = "/projects/{idStaff}", method = RequestMethod.GET)
-	ResponseEntity<List<Project>> readProjects(@PathVariable("idStaff") int idStaff) {
+	ResponseEntity<List<StaffMission>> readProjects(@PathVariable("idStaff") int idStaff) {
 
 		ResponseEntity<Staff> responseEntityStaffMember = read(idStaff);
 
-		ResponseEntity<List<Project>> response = new ResponseEntity<List<Project>>(
-				responseEntityStaffMember.getBody().projects, responseEntityStaffMember.getHeaders(),
+		// Adding the name of project.
+		responseEntityStaffMember.getBody().missions
+			.stream().forEach(mission -> {
+				mission.name = projectHandler.get(mission.idProject).name;
+		});
+		
+		ResponseEntity<List<StaffMission>> response = new ResponseEntity<List<StaffMission>>(
+				responseEntityStaffMember.getBody().missions, responseEntityStaffMember.getHeaders(),
 				responseEntityStaffMember.getStatusCode());
 		return response;
 	}
@@ -478,7 +487,7 @@ public class StaffController {
 	}	
 	
 	/**
-	 * Adding or changing the name of a project assign to a developer.
+	 * Add or change the name of a project assigned to a developer.
 	 * 
 	 * @param param
 	 *            the body of the post containing an instance of
@@ -507,8 +516,8 @@ public class StaffController {
 			 * project list, we send back a BAD_REQUEST to avoid duplicate
 			 * entries
 			 */
-			Predicate<Project> predicate = pr -> (pr.id == result.get().id);
-			if (staff.projects.stream().anyMatch(predicate)) {
+			Predicate<StaffMission> predicate = pr -> (pr.idProject == result.get().id);
+			if (staff.missions.stream().anyMatch(predicate)) {
 				responseEntity = new ResponseEntity<StaffDTO>(
 						new StaffDTO(staff, 0,
 								"The collaborator " + staff.fullName() + " is already involved in " + p.newProjectName),
@@ -524,11 +533,17 @@ public class StaffController {
 			if ((p.formerProjectName != null) && (p.formerProjectName.length() > 0)) {
 				Optional<Project> formerProject = projectHandler.lookup(p.formerProjectName);
 				if (result.isPresent()) {
-					staff.projects.remove(formerProject.get());
+					Optional<StaffMission> optMission = staff.missions
+						.stream()
+						.filter(mission -> mission.idProject == formerProject.get().id)
+						.findFirst();
+					if (optMission.isPresent()) {
+						staff.missions.remove(optMission.get());
+					}
 				}
 			}
 
-			staff.projects.add(result.get());
+			staff.missions.add(new StaffMission(result.get().id, projectHandler.get(result.get().id).name));
 			responseEntity = new ResponseEntity<StaffDTO>(new StaffDTO(staff), headers, HttpStatus.OK);
 			if (logger.isDebugEnabled()) {
 				logger.debug("returning  staff " + gson.toJson(staff));
@@ -561,9 +576,9 @@ public class StaffController {
 			return postErrorReturnBodyMessage(404, "There is no staff member for id" + p.idStaff);
 		}
 
-		Optional<Project> oProject = staff.projects.stream().filter(pr -> (pr.id == p.idProject)).findFirst();
+		Optional<StaffMission> oProject = staff.missions.stream().filter(pr -> (pr.idProject == p.idProject)).findFirst();
 		if (oProject.isPresent()) {
-			staff.projects.remove(oProject.get());
+			staff.missions.remove(oProject.get());
 		}
 
 		return new ResponseEntity<StaffDTO>(new StaffDTO(staff), new HttpHeaders(), HttpStatus.OK);

@@ -8,6 +8,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import fr.skiller.data.external.StaffMission;
+
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
@@ -35,7 +37,7 @@ public class Staff {
 	public String application;
 	public int typeOfApplication;
 	
-	public List<Project> projects;
+	public List<StaffMission> missions;
 	
 	public List<Experience> experiences;
 
@@ -64,7 +66,7 @@ public class Staff {
 		this.login = login;
 		this.email = email;
 		this.level = level;
-		projects = new ArrayList<Project>();
+		missions = new ArrayList<StaffMission>();
 		experiences = new ArrayList<Experience>();
 	}
 
@@ -89,7 +91,7 @@ public class Staff {
 		this.email = email;
 		this.level = level;
 		this.isActive = isActive;
-		projects = new ArrayList<Project>();
+		missions = new ArrayList<StaffMission>();
 		experiences = new ArrayList<Experience>();
 	}
 	
@@ -126,15 +128,15 @@ public class Staff {
 	 * @return {@code true} if the developer is involved in the given project, {@code false} or not
 	 */
 	public boolean isInvolvedInProject (final int idProject) {
-		return (projects.stream().filter(project -> project.id == idProject).count()  > 0);
+		return (missions.stream().filter(project -> project.idProject == idProject).count()  > 0);
 	}
 	
 
 	@Override
 	public String toString() {
 		return "Staff [id=" + idStaff + ", firstName=" + firstName + ", lastName=" + lastName + ", nickName=" + nickName
-				+ ", login=" + login + ", email=" + email + ", level=" + level + ", isActive=" + isActive + ", projects="
-				+ projects + ", experiences=" + experiences + "]";
+				+ ", login=" + login + ", email=" + email + ", level=" + level + ", isActive=" + isActive + ", missions="
+				+ missions + ", experiences=" + experiences + "]";
 	}
 
 }

@@ -3,7 +3,6 @@
  */
 
 import {Collaborator} from '../data/collaborator';
-import {Attribution} from '../data/attribution';
 
 
 export const MOCK_COLLABORATORS: Collaborator[] = [
@@ -19,8 +18,8 @@ export const MOCK_COLLABORATORS: Collaborator[] = [
     dateInactive: null,
     application: null,
     typeOfApplication: null,
-    projects: null,
-    experiences: null
+    missions: [],
+    experiences: []
   },
   {
     idStaff: 2,
@@ -34,7 +33,7 @@ export const MOCK_COLLABORATORS: Collaborator[] = [
     dateInactive: null,
     application: null,
     typeOfApplication: null,
-    projects: null,
+    missions: [],
     experiences: [{ id: 1, title: 'Java', level: 2} ]
   },
   {
@@ -49,8 +48,8 @@ export const MOCK_COLLABORATORS: Collaborator[] = [
     dateInactive: null,
     application: null,
     typeOfApplication: null,
-    projects: null,
-    experiences: null
+    missions: [],
+    experiences: []
   },
   {
     idStaff: 4,
@@ -64,8 +63,8 @@ export const MOCK_COLLABORATORS: Collaborator[] = [
     dateInactive: null,
     application: null,
     typeOfApplication: null,
-    projects: null,
-    experiences: null
+    missions: [],
+    experiences: []
   }
   ];
 

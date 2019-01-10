@@ -21,8 +21,8 @@ export class Collaborator {
   public experiences: Experience[];
 
   /**
-   * List of projects where the developer is involved.
+   * List of missions where the developer has been involved.
    */
-  public projects: Attribution[];
+  public missions: Attribution[];
 
 }

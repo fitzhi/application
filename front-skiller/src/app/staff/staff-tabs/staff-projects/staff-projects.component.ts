@@ -46,15 +46,16 @@ export class StaffProjectsComponent implements OnInit {
     this.collaborator = {
       idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
       isActive: true, dateInactive: null, application: null, typeOfApplication: null,
-      projects: [], experiences: []
+      missions: [], experiences: []
     };
     /**
      * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
      */
     this.staffDataExchangeService.collaboratorObserver
-      .subscribe((collabRetrieved: Collaborator) => {
+      .subscribe( (collabRetrieved: Collaborator) => {
         this.collaborator = collabRetrieved;
-        this.sourceProjects.load(this.collaborator.projects);
+        this.sourceProjects.load(this.collaborator.missions);
+
       });
   }
 
@@ -136,8 +137,8 @@ export class StaffProjectsComponent implements OnInit {
        * After the addition into a project of a staff member, and before the reloadProjects has been completed,
        * there is a very little delay with a project without ID into the projects list.
        */
-      if (typeof event.data['id'] !== 'undefined') {
-        this.staffService.removeFromProject(this.collaborator.idStaff, event.data['id']).subscribe(
+      if (typeof event.data['idProject'] !== 'undefined') {
+        this.staffService.removeFromProject(this.collaborator.idStaff, event.data['idProject']).subscribe(
           (staffDTO: StaffDTO) => {
             this.messageService.info(staffDTO.staff.firstName + ' ' +
               staffDTO.staff.lastName + ' is not more involved in project ' + event.data.name);
@@ -181,7 +182,7 @@ export class StaffProjectsComponent implements OnInit {
       console.log('Refreshing projects for the staff\'s id ' + idStaff);
     }
     this.staffService.loadProjects(idStaff).subscribe(
-      projects => this.sourceProjects.load(projects),
+      missions => this.sourceProjects.load(missions),
       error => console.log(error),
     );
   }

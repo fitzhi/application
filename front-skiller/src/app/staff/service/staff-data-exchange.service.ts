@@ -11,7 +11,7 @@ export class StaffDataExchangeService {
     {
       idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
       isActive: true, dateInactive: null,
-      projects: [], experiences: []
+      missions: [], experiences: []
     });
 
   collaboratorObserver = this.collaboratorSource.asObservable();

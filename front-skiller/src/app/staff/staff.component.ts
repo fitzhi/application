@@ -46,7 +46,7 @@ export class StaffComponent implements OnInit {
       this.collaborator = {
         idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
         isActive: true, dateInactive: null, application: null, typeOfApplication: null,
-        projects: [], experiences: []
+        missions: [], experiences: []
       };
       /*
        * By default, you cannot add a project/skill for an unregistered developer.
@@ -72,7 +72,7 @@ export class StaffComponent implements OnInit {
               this.messageService.error('There is no staff member for id ' + this.idStaff);
               this.collaborator = {
                 idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
-                isActive: true, dateInactive: null, application: null, typeOfApplication: null, projects: [], experiences: []
+                isActive: true, dateInactive: null, application: null, typeOfApplication: null, missions: [], experiences: []
               };
             } else {
               console.error(error.message);

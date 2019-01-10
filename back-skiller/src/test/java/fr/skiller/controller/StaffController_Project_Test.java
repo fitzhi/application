@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.data.internal.Mission;
 import fr.skiller.data.internal.Project;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -51,16 +52,16 @@ public class StaffController_Project_Test {
 	
 		String body = "{ idStaff: 2, formerProjectName: \"\", newProjectName: \"VEGEO\"}";
 		this.mvc.perform(post("/staff/project/save").content(body)).andExpect(status().isOk());		
-		List<Project> projects = new ArrayList<Project>();
-		projects.add(new Project (1, "VEGEO"));
-		this.mvc.perform(get("/staff/projects/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(projects)));
+		List<Mission> missions = new ArrayList<Mission>();
+		missions.add(new Mission (1));
+		this.mvc.perform(get("/staff/projects/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(missions)));
 
 		body = "{ idStaff: 2, formerProjectName: \"VEGEO\", newProjectName: \"INFOTER\"}";
 		this.mvc.perform(post("/staff/project/save").content(body)).andExpect(status().isOk());		
 		
-		projects.clear();
-		projects.add(new Project (2, "INFOTER"));
-		this.mvc.perform(get("/staff/projects/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(projects)));
+		missions.clear();
+		missions.add(new Mission (2));
+		this.mvc.perform(get("/staff/projects/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(missions)));
 
 		staffHandler.init();
 	}
@@ -74,15 +75,15 @@ public class StaffController_Project_Test {
 		this.mvc.perform(post("/staff/project/save").content(body)).andExpect(status().isOk());		
 
 	
-		List<Project> projects = new ArrayList<Project>();
-		projects.add(new Project (1, "VEGEO"));
-		this.mvc.perform(get("/staff/projects/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(projects)));
+		List<Mission> missions = new ArrayList<Mission>();
+		missions.add(new Mission (1));
+		this.mvc.perform(get("/staff/projects/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(missions)));
 		
 		body = "{ idStaff: 2, idProject: 1}";
 		this.mvc.perform(post("/staff/project/del").content(body)).andExpect(status().isOk());
 		
-		projects.clear();
-		this.mvc.perform(get("/staff/projects/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(projects)));
+		missions.clear();
+		this.mvc.perform(get("/staff/projects/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(missions)));
 		
 		staffHandler.init();
 		
