@@ -28,7 +28,7 @@ export class ListStaffService {
 
     function testCriteria(collab, index, array) {
       const firstname = (typeof collab.firstName !== 'undefined') ? collab.firstName : '';
-      const lastname = (typeof collab.firstName !== 'undefined') ? collab.firstName : '';
+      const lastname = (typeof collab.lastName !== 'undefined') ? collab.lastName : '';
       return (
           ( (firstname.toLowerCase().indexOf(myCriteria) > -1)
          || (lastname.toLowerCase().indexOf(myCriteria) > -1) )
