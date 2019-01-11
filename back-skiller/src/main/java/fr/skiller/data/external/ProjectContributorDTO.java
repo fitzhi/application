@@ -20,6 +20,11 @@ class ContributorView {
 	/**
 	 * Date of the latest commit.
 	 */
+	public String firstCommit;
+	
+	/**
+	 * Date of the latest commit.
+	 */
 	public String lastCommit;
 	
 	/**
@@ -35,18 +40,20 @@ class ContributorView {
 	/**
 	 * Date pattern 
 	 */
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm");
+	private SimpleDateFormat sdf = new SimpleDateFormat("mm/dd/yyyy hh:mm");
 	
 	/**
 	 * @param idStaff staff identifier
 	 * @param fullname complete name of the developer <i>(first name + last name)</i>
-	 * @param lastCommit  Date of the latest commit.
+	 * @param firstCommit  Date of the <b>FIRST</b> commit for this developer.
+	 * @param lastCommit  Date of the <b>LATEST</b> commit.
 	 * @param numberOfCommits number of commit submitted by the developer inside the project.
 	 * @param numberOfFiles number of files modifier by the developer inside the project.
 	 */
-	public ContributorView(int idStaff, String fullname, Date lastCommit, int numberOfCommits, int numberOfFiles) {
+	public ContributorView(final int idStaff, final String fullname, final Date firstCommit, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
 		this.idStaff = idStaff;
 		this.fullname = fullname;
+		this.firstCommit = sdf.format(firstCommit);
 		this.lastCommit = sdf.format(lastCommit);
 		this.numberOfCommits = numberOfCommits;
 		this.numberOfFiles = numberOfFiles;
@@ -104,12 +111,13 @@ public class ProjectContributorDTO {
 	/**
 	 * @param idStaff staff identifier
 	 * @param fullname complete name of the developer <i>(first name + last name)</i>
-	 * @param lastCommit  Date of the latest commit.
+	 * @param firstCommit  Date of the <b>FIRST</b> commit for this developer.
+	 * @param lastCommit  Date of the <b>LATEST</b> commit.
 	 * @param numberOfCommits number of commit submitted by the developer inside the project.
 	 * @param numberOfFiles number of files modifier by the developer inside the project.
 	 */
-	public void addContributor(final int idStaff, final String fullname, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
-		contributors.add(new ContributorView(idStaff, fullname, lastCommit, numberOfCommits, numberOfFiles));
+	public void addContributor(final int idStaff, final String fullname, final Date firstCommit, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
+		contributors.add(new ContributorView(idStaff, fullname, firstCommit, lastCommit, numberOfCommits, numberOfFiles));
 	}
 	
 }

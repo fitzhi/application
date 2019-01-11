@@ -4,7 +4,12 @@ export class Contributor {
   public fullname: string;
 
   /**
-   * Date of last commit of this developer
+   * Date of first commit for this developer
+   */
+  public firstCommit: string;
+
+  /**
+   * Date of last commit for this developer
    */
   public lastCommit: string;
 

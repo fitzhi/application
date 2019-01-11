@@ -248,6 +248,7 @@ public class StaffHandlerImpl implements StaffHandler {
 				if (staff.isInvolvedInProject(project.id)) {
 					// Update the statistics of the current developer inside the project
 					Mission missionSelected = staff.missions.stream().filter(mission -> mission.idProject == project.id).findFirst().get();
+					missionSelected.firstCommit = contributor.firstCommit;
 					missionSelected.lastCommit = contributor.lastCommit;
 					missionSelected.numberOfCommits = contributor.numberOfCommitsSubmitted;
 					missionSelected.numberOfFiles = contributor.numberOfFiles;
@@ -257,6 +258,7 @@ public class StaffHandlerImpl implements StaffHandler {
 					Mission mission = new Mission(
 							project.id, 
 							projectHandler.get(project.id).name,
+							contributor.firstCommit, 
 							contributor.lastCommit, 
 							contributor.numberOfCommitsSubmitted, 
 							contributor.numberOfFiles);

@@ -2,6 +2,10 @@ package fr.skiller.data.source;
 
 import java.util.Date;
 
+/**
+ * Class for the contributor inside the repository.
+ * @author Fr&eacute;d&eacute;ric VIDAL
+ */
 public class Contributor {
 
 	/**
@@ -10,10 +14,15 @@ public class Contributor {
 	public int idStaff;
 	
 	/**
-	 * last commit of the developer.
+	 * Developer's first commit
+	 */
+	public Date firstCommit;
+	
+	/**
+	 * Developer's last commit
 	 */
 	public Date lastCommit;
-	
+
 	/**
 	 * Number of commits submitted by this developer
 	 */
@@ -26,17 +35,18 @@ public class Contributor {
 
 	/**
 	 * @param idStaff developer identifier
+	 * @param firstCommit date of first commit
 	 * @param lastCommit date of last commit
 	 * @param numberOfCommitsSubmitted number of commits submitted
 	 * @param numberOfFiles number of files
 	 */
-	public Contributor(int idStaff, Date lastCommit, int numberOfCommitsSubmitted, int numberOfFiles) {
+	public Contributor(int idStaff, Date firstCommit, Date lastCommit, int numberOfCommitsSubmitted, int numberOfFiles) {
 		super();
 		this.idStaff = idStaff;
+		this.firstCommit = firstCommit;
 		this.lastCommit = lastCommit;
 		this.numberOfCommitsSubmitted = numberOfCommitsSubmitted;
 		this.numberOfFiles = numberOfFiles;
 	}
-	
 	
 }

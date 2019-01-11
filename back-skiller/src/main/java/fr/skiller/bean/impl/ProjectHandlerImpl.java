@@ -80,6 +80,7 @@ public class ProjectHandlerImpl implements ProjectHandler {
 				contributors.add(
 						new Contributor(
 								staff.idStaff, 
+								mission.firstCommit, 
 								mission.lastCommit, 
 								mission.numberOfCommits, 
 								mission.numberOfFiles));

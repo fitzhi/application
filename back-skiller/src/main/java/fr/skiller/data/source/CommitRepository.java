@@ -60,11 +60,17 @@ public interface CommitRepository {
 	List<Contributor> contributors();
 
 	/**
-	 * @param idStaff developer identifier
-	 * @return the date/time of the last submission for the passed developer 
+	 * @param idStaff developer's identifier
+	 * @return the date/time of the <b>LAST</b> submission for the passed developer 
 	 */
 	Date lastCommit(int idStaff);
 
+	/**
+	 * @param idStaff developer' identifier
+	 * @return the date/time of the <b>FIRST</b> submission for the passed developer 
+	 */
+	Date firstCommit(int idStaff);
+	
 	/**
 	 * @param idStaff developer identifier
 	 * @return the number of commits submitted by the passed developer

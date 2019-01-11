@@ -11,3 +11,7 @@ table {
     text-align:right;
     padding-right:10px;
 }
+
+.col_date {
+    text-align:center;   
+}

@@ -344,6 +344,7 @@ public class ProjectController {
 			projectContributorDTO.addContributor(
 							contributor.idStaff, 
 							staff.firstName + " " + staff.lastName,
+							contributor.firstCommit, 
 							contributor.lastCommit, 
 							contributor.numberOfCommitsSubmitted,
 							contributor.numberOfFiles);

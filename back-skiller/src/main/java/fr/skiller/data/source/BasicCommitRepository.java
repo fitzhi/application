@@ -95,6 +95,19 @@ public class BasicCommitRepository implements CommitRepository {
 	}
 
 	@Override
+	public Date firstCommit (final int idStaff) {
+		lastCommit = new Date(Long.MAX_VALUE);
+		this.repo.values().stream().forEach(history -> 
+			history.operations.stream()
+			.filter(ope -> (ope.idStaff == idStaff)).forEach(ope -> {
+				if (ope.dateCommit.before(lastCommit)) {
+					lastCommit = ope.dateCommit;
+				}
+			}));
+		return lastCommit;
+	}
+	
+	@Override
 	public int numberOfCommits (final int idStaff) {
 		return (int) this.repo.values().stream().mapToLong( 
 				history -> history.operations.stream().filter(ope -> (ope.idStaff == idStaff)).count()).asDoubleStream().sum();
@@ -118,7 +131,7 @@ public class BasicCommitRepository implements CommitRepository {
 		
 		List<Contributor> contributors = new ArrayList<Contributor>();
 		for (int idStaff : idContributors) {
-			contributors.add (new Contributor(idStaff, lastCommit (idStaff), numberOfCommits(idStaff), numberOfFiles(idStaff)));
+			contributors.add (new Contributor(idStaff, firstCommit (idStaff), lastCommit (idStaff), numberOfCommits(idStaff), numberOfFiles(idStaff)));
 		}
 		
 		return contributors;
