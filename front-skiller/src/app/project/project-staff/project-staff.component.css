@@ -6,3 +6,8 @@ table {
 #divDeveloppers {
     margin: 20px;
 }
+
+.col_numeric {
+    text-align:right;
+    padding-right:10px;
+}

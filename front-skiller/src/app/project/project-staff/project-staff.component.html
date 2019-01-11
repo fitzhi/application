@@ -7,19 +7,24 @@
   <td mat-cell *matCellDef="let contributor">{{contributor.fullname}}</td>
 </ng-container>
 
+<ng-container matColumnDef="firstCommit">
+  <th mat-header-cell *matHeaderCellDef> first commit </th>
+  <td mat-cell *matCellDef="let contributor">"{{contributor.firstCommit}}"</td>
+</ng-container>
+
 <ng-container matColumnDef="lastCommit">
   <th mat-header-cell *matHeaderCellDef> last commit </th>
   <td mat-cell *matCellDef="let contributor">{{contributor.lastCommit}}</td>
 </ng-container>
 
 <ng-container matColumnDef="numberOfCommits">
-  <th mat-header-cell *matHeaderCellDef> Number of commits </th>
-  <td mat-cell *matCellDef="let contributor">{{contributor.numberOfCommits}}</td>
+  <th mat-header-cell class="col_numeric" *matHeaderCellDef>Number of commits</th>
+  <td mat-cell class="col_numeric" *matCellDef="let contributor">{{contributor.numberOfCommits}}</td>
 </ng-container>
 
 <ng-container matColumnDef="numberOfFiles">
-  <th mat-header-cell *matHeaderCellDef> Files submitted </th>
-  <td mat-cell *matCellDef="let contributor">{{contributor.numberOfFiles}}</td>
+  <th mat-header-cell class="col_numeric" *matHeaderCellDef>Number of files</th>
+  <td mat-cell class="col_numeric" *matCellDef="let contributor">{{contributor.numberOfFiles}}</td>
 </ng-container>
 
 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

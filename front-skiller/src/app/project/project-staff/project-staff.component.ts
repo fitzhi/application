@@ -3,15 +3,6 @@ import { ProjectService } from '../../project.service';
 import { Constants } from '../../constants';
 import { MessageService } from '../../message.service';
 import { ActivatedRoute } from '@angular/router';
-import {Contributor} from '../../data/contributor';
-
-/*
-* Data store associated with the project staff team
-*/
-const TESTING_DATA: Contributor[] = [
-  { idStaff: 1, fullname: 'jean Dupont', lastCommit: '15/12/2018 18:00', numberOfCommits: '15', numberOfFiles: '25' },
-  { idStaff: 2, fullname: 'isidore Dupond', lastCommit: '20/12/2018 18:00', numberOfCommits: '200', numberOfFiles: '328' },
-];
 
 @Component({
   selector: 'app-project-staff',
@@ -20,9 +11,9 @@ const TESTING_DATA: Contributor[] = [
 })
 export class ProjectStaffComponent implements OnInit {
 
-  public dataSource = TESTING_DATA;
+  public dataSource;
 
-  public displayedColumns: string[] = ['name', 'lastCommit', 'numberOfCommits', 'numberOfFiles'];
+  public displayedColumns: string[] = ['name', 'firstCommit', 'lastCommit', 'numberOfCommits', 'numberOfFiles'];
 
   public idProject: number;
 

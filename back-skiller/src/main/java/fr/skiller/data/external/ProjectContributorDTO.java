@@ -1,5 +1,6 @@
 package fr.skiller.data.external;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -19,7 +20,7 @@ class ContributorView {
 	/**
 	 * Date of the latest commit.
 	 */
-	public Date lastCommit;
+	public String lastCommit;
 	
 	/**
 	 * @return number of commit submitted by the developer inside the project.
@@ -32,6 +33,11 @@ class ContributorView {
 	public int numberOfFiles;
 	
 	/**
+	 * Date pattern 
+	 */
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd hh:mm");
+	
+	/**
 	 * @param idStaff staff identifier
 	 * @param fullname complete name of the developer <i>(first name + last name)</i>
 	 * @param lastCommit  Date of the latest commit.
@@ -41,7 +47,7 @@ class ContributorView {
 	public ContributorView(int idStaff, String fullname, Date lastCommit, int numberOfCommits, int numberOfFiles) {
 		this.idStaff = idStaff;
 		this.fullname = fullname;
-		this.lastCommit = lastCommit;
+		this.lastCommit = sdf.format(lastCommit);
 		this.numberOfCommits = numberOfCommits;
 		this.numberOfFiles = numberOfFiles;
 	}
