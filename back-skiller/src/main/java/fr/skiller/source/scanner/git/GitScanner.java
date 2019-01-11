@@ -97,9 +97,13 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	 * Path access to retrieve the properties file for a given project  
 	 * It might be, for example, /src/main/resources/repository-settings/properties-{0}.json where {0} represents the project name.
 	 */
-	@Value("${repositoryPathPatternSettings}")
+	@Value("${Sunburst.repositoryPathPatternSettings}")
 	private String repositoryPathPatternSettings;
 	
+	// Should the slices without source be average to the value of their children, or stayed in the void color.
+	@Value("${Sunburst.fillTheHoles}")
+	private boolean fillTheHoles;
+
 	
 	/**
 	 * Patterns to take account, OR NOT, a file within the parsing process.<br/>
@@ -343,8 +347,9 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		this.evaluateTheRisk(repo, data);
 		
 		// Fill the holes for directory without source files, and therefore without risk level measured.
-		this.meanTheRisk(data);
-
+		if (fillTheHoles) {
+			this.meanTheRisk(data);
+		}
 		// Evaluate the preview display for each slice of the sunburst chart.  
 		this.setPreviewSettings(data);
 

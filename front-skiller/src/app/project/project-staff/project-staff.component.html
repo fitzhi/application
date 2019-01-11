@@ -8,22 +8,22 @@
 </ng-container>
 
 <ng-container matColumnDef="firstCommit">
-  <th mat-header-cell class="col_date" *matHeaderCellDef> first commit </th>
+  <th mat-header-cell class="col_date" *matHeaderCellDef> First commit </th>
   <td mat-cell class="col_date" *matCellDef="let contributor">{{contributor.firstCommit}}</td>
 </ng-container>
 
 <ng-container matColumnDef="lastCommit">
-  <th mat-header-cell class="col_date" *matHeaderCellDef> last commit </th>
+  <th mat-header-cell class="col_date" *matHeaderCellDef> Last commit </th>
   <td mat-cell class="col_date" *matCellDef="let contributor">{{contributor.lastCommit}}</td>
 </ng-container>
 
 <ng-container matColumnDef="numberOfCommits">
-  <th mat-header-cell class="col_numeric" *matHeaderCellDef>Commits number</th>
+  <th mat-header-cell class="col_numeric" *matHeaderCellDef>Number of commits</th>
   <td mat-cell class="col_numeric" *matCellDef="let contributor">{{contributor.numberOfCommits}}</td>
 </ng-container>
 
 <ng-container matColumnDef="numberOfFiles">
-  <th mat-header-cell class="col_numeric" *matHeaderCellDef>Files number</th>
+  <th mat-header-cell class="col_numeric" *matHeaderCellDef>Number of files</th>
   <td mat-cell class="col_numeric" *matCellDef="let contributor">{{contributor.numberOfFiles}}</td>
 </ng-container>
 

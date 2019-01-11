@@ -43,7 +43,7 @@ public class SunburstData {
 	 * The color of the slice of sunburst representing this directory. <br/>
 	 * By default, this color will be grey.
 	 */    
-    public String color ="grey";
+    public String color ="whiteSmoke";
     
 	/**
 	 * Number of source files contained within this directory and its subsequent sub-directories.
