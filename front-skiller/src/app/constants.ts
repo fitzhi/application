@@ -40,8 +40,8 @@ export class Constants {
   * Indexes of tab inside the form group Project
   */
   public static PROJECT_TAB_FORM = 0;
-  public static PROJECT_TAB_SUNBURST = 1;
-  public static PROJECT_TAB_STAFF = 2;
+  public static PROJECT_TAB_STAFF = 1;
+  public static PROJECT_TAB_SUNBURST = 2;
 
   /**
    * Type of file allowed to be uploaded by the back-end for the application file.

@@ -17,4 +17,10 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
+	<logger name="fr.skiller.controler.StaffController" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+
 </configuration>
