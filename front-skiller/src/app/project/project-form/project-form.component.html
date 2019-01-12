@@ -14,6 +14,12 @@
 						placeholder="Project name (Required)" value="" required
 						formControlName="projectName" />
 				</div>
+				<div class="mb-3">
+					<label for="urlRepository">Project</label> <input type="text"
+						class="form-control" id="urlRepository" name="urlRepository"
+						placeholder="Repository URL" value="" 
+						formControlName="urlRepository" />
+				</div>
 				<hr class="mb-4">
 				<button class="btn btn-primary btn-lg btn-block" type="submit"
 					[disabled]="!profileProject.valid">Submit</button>

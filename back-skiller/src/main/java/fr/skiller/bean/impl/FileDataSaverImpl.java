@@ -5,14 +5,12 @@ package fr.skiller.bean.impl;
 
 import static fr.skiller.Error.CODE_IO_ERROR;
 import static fr.skiller.Error.MESSAGE_IO_ERROR;
-import static fr.skiller.Global.LN;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.lang.reflect.Type;
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,7 +58,7 @@ public class FileDataSaverImpl implements DataSaver {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Saving " + projects.size() + " projects into file " + filename + ".");
 			final StringBuilder sb = new StringBuilder();
-			projects.values().stream().forEach(project -> sb.append(project.id).append(" ").append(project.name).append(LN));
+			projects.values().stream().forEach(project -> sb.append(project.id).append(" ").append(project.name).append(", "));
 			logger.debug(sb.toString());
 		}
 
@@ -97,7 +95,7 @@ public class FileDataSaverImpl implements DataSaver {
 		if (logger.isDebugEnabled()) {
 			logger.debug("Loading " + projects.size() + " projects into file " + filename + ".");
 			final StringBuilder sb = new StringBuilder();
-			projects.values().stream().forEach(project -> sb.append(project.id).append(" ").append(project.name).append(LN));
+			projects.values().stream().forEach(project -> sb.append(project.id).append(" ").append(project.name).append(", "));
 			logger.debug(sb.toString());
 		}
 		return projects;

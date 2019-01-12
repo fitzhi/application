@@ -12,12 +12,12 @@
 		<appender-ref ref="STDOUT" />
 	</root>
 
-	<logger name="fr.skiller.source.scanner.git" additivity="false">
+	<logger name="fr.skiller.bean" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="fr.skiller.controler.StaffController" additivity="false">
+	<logger name="fr.skiller.controler" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>

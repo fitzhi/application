@@ -31,7 +31,8 @@ export class ProjectFormComponent implements OnInit {
   settings_skills = Constants.SETTINGS_SKILL_SMARTTABLE;
 
   profileProject = new FormGroup({
-    projectName: new FormControl('')
+    projectName: new FormControl(''),
+    urlRepository: new FormControl('')
   });
 
   sub: any;
@@ -115,6 +116,7 @@ export class ProjectFormComponent implements OnInit {
         (project: Project) => {
          this.project = project;
          this.profileProject.get('projectName').setValue(project.name);
+         this.profileProject.get('urlRepository').setValue(project.urlRepository);
          this.sourceSkills.load(this.project.skills);
          },
         error => {
@@ -234,6 +236,7 @@ export class ProjectFormComponent implements OnInit {
    */
   onSubmit() {
     this.project.name = this.profileProject.get('projectName').value;
+    this.project.urlRepository = this.profileProject.get('urlRepository').value;
     if (Constants.DEBUG) {
       console.log('saving the project ' + this.project.name + ' with id ' + this.project.id);
     }
