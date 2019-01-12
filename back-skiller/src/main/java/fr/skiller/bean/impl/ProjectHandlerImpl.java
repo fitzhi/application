@@ -3,7 +3,9 @@
  */
 package fr.skiller.bean.impl;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,9 @@ import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.data.internal.Mission;
+import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
+import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
+
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
@@ -43,6 +48,17 @@ public class ProjectHandlerImpl implements ProjectHandler {
 	 */
 	@Autowired
 	public DataSaver dataSaver;
+	
+	/**
+	 * {@code true} if the projects data have been updated, {@code false} otherwise<br/>
+	 * This boolean is checked by the dataSaver to proceed, or not, the save 
+	 */
+	public Boolean dataUpdated = false;
+
+	/**
+	 * To avoid any conflict between the saving process and any update on the collection.
+	 */
+	public final Object lockDataUpdated = new Object();
 	
 	/**
 	 * @return the Project collection.
@@ -95,4 +111,47 @@ public class ProjectHandlerImpl implements ProjectHandler {
 		});
 		return contributors;
 	}
+
+	@Override
+	public Project addNewProject(Project project) throws SkillerException {
+		synchronized (lockDataUpdated) {
+			Map<Integer, Project> projects = getProjects();
+			project.id = projects.size() + 1;
+			projects.put(project.id, project);
+			this.dataUpdated = true;
+		}
+		return project;
+	}
+
+	@Override
+	public boolean containsProject(int idProject) throws SkillerException {
+		return getProjects().containsKey(idProject);
+	}
+
+	@Override
+	public void saveProject(Project project) throws SkillerException {
+		if (project.id == 0) {
+			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, project.id));
+		}
+		synchronized (lockDataUpdated) {
+			getProjects().put(project.id, project);
+			this.dataUpdated = true;
+		}
+	}
+
+	@Override
+	public Object getLocker() {
+		return lockDataUpdated;
+	}
+
+	@Override
+	public void dataAreSaved() {
+		dataUpdated = false;
+	}
+
+	@Override
+	public boolean isDataUpdated() {
+		return dataUpdated;
+	}
+	
 }

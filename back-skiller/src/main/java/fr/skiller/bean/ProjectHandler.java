@@ -43,4 +43,37 @@ public interface ProjectHandler {
 	  * @return the list of contributor for the given project.
 	  */
 	 List<Contributor> contributors(int idProject);
+	 
+	 /**
+	  * @param project the passed project
+	  * @return the newly created project
+	  */
+	 Project addNewProject(Project project) throws SkillerException;
+	 
+	 /**
+	  * @param idProject the passed project identifier
+	  * @return {@code true} if the project identifier exists, {@code false} otherwise
+	  */
+	 boolean containsProject(int idProject) throws SkillerException;
+
+	 /**
+	  * @param project save a new project
+	  * @return {@code true} if the project identifier exists, {@code false} otherwise
+	  */
+	 void saveProject(Project project) throws SkillerException;
+	 
+	 /**
+	  * @return the locker to avoid any conflict between the saving process and all updates on the projects collection
+	  */
+	 Object getLocker();
+
+	 /**
+	  * @return {@code true} if the collection has been updated, {@code false} otherwise
+	  */
+	 boolean isDataUpdated();
+	 
+	 /**
+	  * Inform the handler that the collection has been saved.
+	  */
+	 void dataAreSaved();
 }

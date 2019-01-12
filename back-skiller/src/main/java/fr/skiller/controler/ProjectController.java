@@ -165,32 +165,33 @@ public class ProjectController {
 		}
 
 	}
-
+	
+	/**
+	 * Add or Update the given project.
+	 * @param project the passed project
+	 * @return the updated or the just new project created
+	 */
 	@PostMapping("/save")
-	ResponseEntity<Project> add(@RequestBody Project input) {
+	ResponseEntity<Project> save(@RequestBody Project project) {
 
 		final ResponseEntity<Project> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 		try {
-			Map<Integer, Project> Projects = projectHandler.getProjects();
+			Map<Integer, Project> projects = projectHandler.getProjects();
 	
-			if (input.id == 0) {
-				input.id = Projects.size() + 1;
-				Projects.put(input.id, input);
+			if (project.id == 0) {
+				project = projectHandler.addNewProject(project);
 				headers.add("backend.return_code", "1");
-				responseEntity = new ResponseEntity<Project>(input, headers, HttpStatus.OK);
+				responseEntity = new ResponseEntity<Project>(project, headers, HttpStatus.OK);
 			} else {
-				final Project searchProject = Projects.get(input.id);
-				if (searchProject == null) {
-					responseEntity = new ResponseEntity<Project>(input, headers, HttpStatus.NOT_FOUND);
+				if (!projectHandler.containsProject(project.id)) {
+					responseEntity = new ResponseEntity<Project>(project, headers, HttpStatus.NOT_FOUND);
 					headers.add("backend.return_code", "O");
 					responseEntity.getHeaders().set("backend.return_message",
-							"There is no Project associated to the id " + input.id);
-					responseEntity.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
+							"There is no Project associated to the id " + project.id);
 				} else {
-					searchProject.name = input.name;
-					searchProject.urlRepository = input.urlRepository;
-					responseEntity = new ResponseEntity<Project>(input, headers, HttpStatus.OK);
+					projectHandler.saveProject(project);
+					responseEntity = new ResponseEntity<Project>(project, headers, HttpStatus.OK);
 					headers.add("backend.return_code", "1");
 				}
 			}

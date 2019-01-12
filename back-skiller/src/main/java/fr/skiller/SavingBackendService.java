@@ -30,10 +30,15 @@ public class SavingBackendService {
 	
 	@Scheduled(fixedRateString="${dataSaver.timeDelay}")
     public void work() {
-		try {
-			dataSaver.save(projectHandler.getProjects());
-		} catch (final SkillerException e) {
-			throw new RuntimeException(e);
+		synchronized (projectHandler.getLocker()) {
+			try {
+				if (projectHandler.isDataUpdated()) {
+					dataSaver.save(projectHandler.getProjects());
+					projectHandler.dataAreSaved();
+				}
+			} catch (final SkillerException e) {
+				throw new RuntimeException(e);
+			}
 		}
     }
 }

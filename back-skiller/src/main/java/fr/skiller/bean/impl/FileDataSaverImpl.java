@@ -16,6 +16,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import fr.skiller.bean.DataSaver;
+import fr.skiller.bean.ProjectHandler;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
 
@@ -50,6 +52,9 @@ public class FileDataSaverImpl implements DataSaver {
 	 */
 	private static Gson gson = new GsonBuilder().create();
 
+	@Autowired
+	ProjectHandler projectHandler;
+	
 	@Override
 	public void save(Map<Integer, Project> projects) throws SkillerException {
 		
