@@ -24,14 +24,14 @@ import fr.skiller.service.impl.storageservice.StorageProperties;
 public class Application {
 
 	public static void main(String[] args) {
-		LoggerFactory.getLogger("back-skiller").info("Starting");
+		LoggerFactory.getLogger("back-end Skiller").info("Starting");
 		SpringApplication.run(Application.class, args);
 	}
 
 	@Bean
     CommandLineRunner init(StorageService storageService) {
         return (args) -> {
-        	LoggerFactory.getLogger("back-skiller").info("StorageService initialization");
+        	LoggerFactory.getLogger("back-end Skiller").info("StorageService initialization");
             storageService.init();
         };
     }

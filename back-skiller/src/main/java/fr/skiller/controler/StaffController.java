@@ -69,7 +69,7 @@ import static fr.skiller.Error.getStackTrace;
 @RequestMapping("/staff")
 public class StaffController {
 
-	Logger logger = LoggerFactory.getLogger(StaffController.class.getCanonicalName());
+	private final Logger logger = LoggerFactory.getLogger(StaffController.class.getCanonicalName());
 
 	/**
 	 * Initialization of the Google JSON parser.

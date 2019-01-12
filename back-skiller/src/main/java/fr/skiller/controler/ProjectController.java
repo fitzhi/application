@@ -46,7 +46,7 @@ import static fr.skiller.Error.getStackTrace;
 @RequestMapping("/project")
 public class ProjectController {
 
-	Logger logger = LoggerFactory.getLogger("backend-skiller");
+	private final Logger logger = LoggerFactory.getLogger(ProjectController.class.getCanonicalName());
 
 	/**
 	 * Initialization of the Google JSON parser.

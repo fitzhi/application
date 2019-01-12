@@ -29,7 +29,7 @@ import fr.skiller.data.internal.Skill;
 @RequestMapping("/skill")
 public class SkillController {
 
-	Logger logger = LoggerFactory.getLogger("backend-skiller");
+	private final Logger logger = LoggerFactory.getLogger(SkillController.class.getCanonicalName());
 
 	/**
 	 * Initialization of the Google JSON parser.
