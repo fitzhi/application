@@ -6,24 +6,31 @@ import java.util.Optional;
 
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.source.Contributor;
+import fr.skiller.exception.SkillerException;
 
 public interface ProjectHandler {
 
-	Map<Integer, Project> getProjects();
+	/**
+	 * @return the complete collection of projects.
+	 * @throws SkillerException thrown most probably if an IO exception occurs
+	 */
+	Map<Integer, Project> getProjects() throws SkillerException;
 	
 	/**
 	 * Search for a project associated to the passed name. 
 	 * @param projectName 
+	 * @throws SkillerException thrown most probably if an IO exception occurs
 	 * @return
 	 */
-	Optional<Project> lookup(String projectName);
+	Optional<Project> lookup(String projectName) throws SkillerException;
 
 	/**
 	 * Retrieve a project. 
 	 * @param idProject project identifier 
 	 * @return a project present in the projects repository or <code>NULL</code> if none exists for this id
+	 * @throws SkillerException thrown most probably if an IO exception occurs
 	 */
-	Project get(final int idProject);
+	Project get(int idProject) throws SkillerException;
 	
 	/**
 	 * <p>Initialize the content of the in-memory memories.</p>

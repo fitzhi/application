@@ -21,14 +21,11 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.Skill;
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
-import fr.skiller.source.scanner.git.GitScanner;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -36,10 +33,11 @@ import fr.skiller.source.scanner.git.GitScanner;
  */
 @Service
 public class CacheDataHandlerImpl implements CacheDataHandler {
+	
  	/**
  	 * The logger for the GitScanner.
  	 */
-	Logger logger = LoggerFactory.getLogger(CacheDataHandlerImpl.class.getCanonicalName());
+	private Logger logger = LoggerFactory.getLogger(CacheDataHandlerImpl.class.getCanonicalName());
 
 	/**
 	 * cache directory for intermediate files representing the repositories.
@@ -62,7 +60,6 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	 * Initialization of the Google JSON parser.
 	 */
 	private static Gson gson = new GsonBuilder().create();
-
 	
 	@Override
 	public boolean hasCommitRepositoryAvailable(Project project) throws IOException {

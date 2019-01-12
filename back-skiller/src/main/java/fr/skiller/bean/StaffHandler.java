@@ -74,8 +74,9 @@ public interface StaffHandler {
 	 * Take account of the repository of the passed project into the staff involvement 
 	 * @param project passed project
 	 * @return the list of contributors identified, or not, as contributors inside the repository
+	 * @throws SkillerException thrown if any problem occurs 
 	 */
-	List<Contributor> takeAccount(Project project, CommitRepository repository);
+	List<Contributor> takeAccount(Project project, CommitRepository repository) throws SkillerException;
 	
 	/**
 	 * @param idStaff the staff identifier

@@ -2,7 +2,6 @@ package fr.skiller.controler;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,11 +34,13 @@ import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.internal.SunburstData;
 import fr.skiller.data.source.Contributor;
+import fr.skiller.exception.SkillerException;
 import fr.skiller.source.scanner.RepoScanner;
 
 import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
 import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
-import static fr.skiller.Error.CODE_UNDEFINED;;
+import static fr.skiller.Error.CODE_UNDEFINED;
+import static fr.skiller.Error.getStackTrace;
 
 @RestController
 @RequestMapping("/project")
@@ -53,7 +54,6 @@ public class ProjectController {
 	private Gson g = new Gson();
 
 	@Autowired
-	@Qualifier("mock.Project")
 	ProjectHandler projectHandler;
 
 	@Autowired
@@ -75,20 +75,27 @@ public class ProjectController {
 		
 		final ResponseEntity<ProjectDTO> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
-		
-		Optional<Project> result = projectHandler.lookup(projectName);
-		if (result.isPresent()) {
-			responseEntity = new ResponseEntity<ProjectDTO>(new ProjectDTO(result.get()), new HttpHeaders(), HttpStatus.OK);
-		} else {
-			responseEntity = new ResponseEntity<ProjectDTO>(
-					new ProjectDTO(new Project(), 404, "There is no project with the name " + projectName), 
+		try {
+			Optional<Project> result = projectHandler.lookup(projectName);
+			if (result.isPresent()) {
+				responseEntity = new ResponseEntity<ProjectDTO>(new ProjectDTO(result.get()), new HttpHeaders(), HttpStatus.OK);
+			} else {
+				responseEntity = new ResponseEntity<ProjectDTO>(
+						new ProjectDTO(new Project(), 404, "There is no project with the name " + projectName), 
+						headers, 
+						HttpStatus.NOT_FOUND);
+				if (logger.isDebugEnabled()) {
+					logger.debug("Cannot find a Project with the name " + projectName);
+				}			
+			}
+			return responseEntity;
+		} catch (final SkillerException e) {
+			logger.error(getStackTrace(e));
+			return new ResponseEntity<ProjectDTO>(
+					new ProjectDTO(new Project(), e.errorCode, e.getMessage()), 
 					headers, 
-					HttpStatus.NOT_FOUND);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Cannot find a Project with the name " + projectName);
-			}			
+					HttpStatus.BAD_REQUEST);
 		}
-		return responseEntity;
 	}
 	
 	@RequestMapping(value = "/id/{idParam}", method = RequestMethod.GET)
@@ -97,21 +104,29 @@ public class ProjectController {
 		final ResponseEntity<Project> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 
-		final Project searchProject = projectHandler.getProjects().get(idParam);
-		if (searchProject != null) {
-			responseEntity = new ResponseEntity<Project>(searchProject, headers, HttpStatus.OK);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Project read for id " + String.valueOf(idParam) + " returns " + responseEntity.getBody());
+		try {
+			final Project searchProject = projectHandler.getProjects().get(idParam);
+			if (searchProject != null) {
+				responseEntity = new ResponseEntity<Project>(searchProject, headers, HttpStatus.OK);
+				if (logger.isDebugEnabled()) {
+					logger.debug("Project read for id " + String.valueOf(idParam) + " returns " + responseEntity.getBody());
+				}
+			} else {
+				headers.set("backend.return_code", "O");
+				headers.set("backend.return_message", "There is no project associated to the id " + idParam);
+				responseEntity = new ResponseEntity<Project>(new Project(), headers, HttpStatus.NOT_FOUND);
+				if (logger.isDebugEnabled()) {
+					logger.debug("Cannot find a Project for id " + String.valueOf(idParam));
+				}
 			}
-		} else {
-			headers.set("backend.return_code", "O");
-			headers.set("backend.return_message", "There is no project associated to the id " + idParam);
-			responseEntity = new ResponseEntity<Project>(new Project(), headers, HttpStatus.NOT_FOUND);
-			if (logger.isDebugEnabled()) {
-				logger.debug("Cannot find a Project for id " + String.valueOf(idParam));
-			}
+			return responseEntity;
+		} catch (final SkillerException e) {
+			logger.error(getStackTrace(e));
+			return new ResponseEntity<Project>(
+					new Project(), 
+					headers, 
+					HttpStatus.BAD_REQUEST);
 		}
-		return responseEntity;
 	}
 
 	/**
@@ -120,21 +135,35 @@ public class ProjectController {
 	 */
 	@RequestMapping(value="/skills/{idProject}", method = RequestMethod.GET)
 	ResponseEntity<List<Skill>> get(final @PathVariable("idProject") int idProject) {
-		final Project project = projectHandler.get(idProject);
-		if (project == null) {
-			return new ResponseEntity<List<Skill>>(new ArrayList<Skill>(), new HttpHeaders(), HttpStatus.OK);			
-		} else {
-			return new ResponseEntity<List<Skill>>(project.skills, new HttpHeaders(), HttpStatus.OK);
+		try {
+			final Project project = projectHandler.get(idProject);
+			if (project == null) {
+				return new ResponseEntity<List<Skill>>(new ArrayList<Skill>(), new HttpHeaders(), HttpStatus.OK);			
+			} else {
+				return new ResponseEntity<List<Skill>>(project.skills, new HttpHeaders(), HttpStatus.OK);
+			}
+		} catch (final SkillerException e) {
+			logger.error(getStackTrace(e));
+			return new ResponseEntity<List<Skill>>(
+					new ArrayList<Skill>(), 
+					new HttpHeaders(), 
+					HttpStatus.BAD_REQUEST);
 		}
 	}
 
 	@GetMapping("/all")
 	String readAll() {
-		final String resultContent = g.toJson(projectHandler.getProjects().values());
-		if (logger.isDebugEnabled()) {
-			logger.debug("'/Project/all' is returning " + resultContent);
+		try {
+			final String resultContent = g.toJson(projectHandler.getProjects().values());
+			if (logger.isDebugEnabled()) {
+				logger.debug("'/Project/all' is returning " + resultContent);
+			}
+			return resultContent;
+		} catch (final SkillerException e) {
+			logger.error(getStackTrace(e));
+			return "";
 		}
-		return resultContent;
+
 	}
 
 	@PostMapping("/save")
@@ -142,31 +171,40 @@ public class ProjectController {
 
 		final ResponseEntity<Project> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
-		Map<Integer, Project> Projects = projectHandler.getProjects();
-
-		if (input.id == 0) {
-			input.id = Projects.size() + 1;
-			Projects.put(input.id, input);
-			headers.add("backend.return_code", "1");
-			responseEntity = new ResponseEntity<Project>(input, headers, HttpStatus.OK);
-		} else {
-			final Project searchProject = Projects.get(input.id);
-			if (searchProject == null) {
-				responseEntity = new ResponseEntity<Project>(input, headers, HttpStatus.NOT_FOUND);
-				headers.add("backend.return_code", "O");
-				responseEntity.getHeaders().set("backend.return_message",
-						"There is no Project associated to the id " + input.id);
-				responseEntity.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
-			} else {
-				searchProject.name = input.name;
-				responseEntity = new ResponseEntity<Project>(input, headers, HttpStatus.OK);
+		try {
+			Map<Integer, Project> Projects = projectHandler.getProjects();
+	
+			if (input.id == 0) {
+				input.id = Projects.size() + 1;
+				Projects.put(input.id, input);
 				headers.add("backend.return_code", "1");
+				responseEntity = new ResponseEntity<Project>(input, headers, HttpStatus.OK);
+			} else {
+				final Project searchProject = Projects.get(input.id);
+				if (searchProject == null) {
+					responseEntity = new ResponseEntity<Project>(input, headers, HttpStatus.NOT_FOUND);
+					headers.add("backend.return_code", "O");
+					responseEntity.getHeaders().set("backend.return_message",
+							"There is no Project associated to the id " + input.id);
+					responseEntity.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
+				} else {
+					searchProject.name = input.name;
+					responseEntity = new ResponseEntity<Project>(input, headers, HttpStatus.OK);
+					headers.add("backend.return_code", "1");
+				}
 			}
+			if (logger.isDebugEnabled()) {
+				logger.debug("POST command on /project/save returns the body " + responseEntity.getBody());
+			}
+			return responseEntity;
+		} catch (final SkillerException e) {
+			logger.error(getStackTrace(e));
+			return new ResponseEntity<Project>(
+					new Project(), 
+					new HttpHeaders(), 
+					HttpStatus.BAD_REQUEST);
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("POST command on /project/save returns the body " + responseEntity.getBody());
-		}
-		return responseEntity;
+
 	}
 	
 	/**
@@ -202,8 +240,14 @@ public class ProjectController {
 					+ ", former skillTitle:" + p.formerSkillTitle);
 		}
 		
-		final Project project = projectHandler.get(p.idProject);
-		assert (project != null);		
+		Project project;
+		try {
+			project = projectHandler.get(p.idProject);
+		} catch (SkillerException e) {
+			logger.error(getStackTrace(e)); 
+			return new ResponseEntity<ProjectDTO> (new ProjectDTO(new Project(), e.errorCode, e.errorMessage), 
+					new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
 		
 		final HttpHeaders headers = new HttpHeaders();
 		
@@ -272,8 +316,14 @@ public class ProjectController {
 			logger.debug("POST command on /staff/skills/del with params idProject:" + String.valueOf(p.idProject) + ",idSkill:" + String.valueOf(p.idSkill));
 		}
 
-		final Project project = projectHandler.get(p.idProject);
-		assert (project != null);
+		Project project;
+		try {
+			project = projectHandler.get(p.idProject);
+		} catch (SkillerException e) {
+			logger.error(getStackTrace(e)); 
+			return new ResponseEntity<ProjectDTO> (new ProjectDTO(new Project(), e.errorCode, e.errorMessage), 
+					new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
 		if (project == null) {
 			return postErrorReturnBodyMessage(404, "There is no project registered for id" + p.idProject, new Project());
 		}
@@ -308,8 +358,14 @@ public class ProjectController {
 			logger.debug("POST command on /sunburst with params idProject :" + String.valueOf(p.idProject));
 		}
 
-		final Project project = projectHandler.get(p.idProject);
-		assert (project != null);
+		Project project;
+		try {
+			project = projectHandler.get(p.idProject);
+		} catch (SkillerException e) {
+			logger.error(getStackTrace(e)); 
+			return new ResponseEntity<SunburstDTO> (new SunburstDTO(null, e.errorCode, e.errorMessage), 
+					new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
 		if (project == null) {
 			new ResponseEntity<SunburstDTO>( 
 					new SunburstDTO(

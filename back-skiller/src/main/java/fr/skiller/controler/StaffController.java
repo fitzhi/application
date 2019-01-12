@@ -57,6 +57,7 @@ import fr.skiller.service.ResumeParserService;
 import fr.skiller.service.StorageService;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
+import static fr.skiller.Error.getStackTrace;
 
 /**
  * Controller in charge of handling the staff member of the organization.
@@ -76,7 +77,6 @@ public class StaffController {
 	Gson gson = new GsonBuilder().create();
 
 	@Autowired
-	@Qualifier("mock.Project")
 	ProjectHandler projectHandler;
 
 	@Autowired
@@ -156,18 +156,25 @@ public class StaffController {
 	@RequestMapping(value = "/projects/{idStaff}", method = RequestMethod.GET)
 	ResponseEntity<List<Mission>> readProjects(@PathVariable("idStaff") int idStaff) {
 
-		ResponseEntity<Staff> responseEntityStaffMember = read(idStaff);
-
-		// Adding the name of project.
-		responseEntityStaffMember.getBody().missions
-			.stream().forEach(mission -> {
-				mission.name = projectHandler.get(mission.idProject).name;
-		});
-		
-		ResponseEntity<List<Mission>> response = new ResponseEntity<List<Mission>>(
-				responseEntityStaffMember.getBody().missions, responseEntityStaffMember.getHeaders(),
-				responseEntityStaffMember.getStatusCode());
-		return response;
+		try {
+			ResponseEntity<Staff> responseEntityStaffMember = read(idStaff);
+	
+			// Adding the name of project.
+			for (Mission mission : responseEntityStaffMember.getBody().missions) {
+					mission.name = projectHandler.get(mission.idProject).name;
+			}
+			
+			ResponseEntity<List<Mission>> response = new ResponseEntity<List<Mission>>(
+					responseEntityStaffMember.getBody().missions, responseEntityStaffMember.getHeaders(),
+					responseEntityStaffMember.getStatusCode());
+			return response;
+			
+		} catch (final SkillerException e) {
+			logger.error(getStackTrace(e));
+			return new ResponseEntity<List<Mission>>(
+					new ArrayList<Mission>(), new HttpHeaders(),
+					HttpStatus.BAD_REQUEST);
+		}
 	}
 
 	/**
@@ -495,65 +502,73 @@ public class StaffController {
 	@PostMapping("/project/save")
 	ResponseEntity<StaffDTO> saveProject(@RequestBody String param) {
 
-		ParamStaffProject p = gson.fromJson(param, ParamStaffProject.class);
-		if (logger.isDebugEnabled()) {
-			logger.debug("POST command on /staff/project/save with params id:" + String.valueOf(p.idStaff)
-					+ ",projectName:" + p.newProjectName);
-		}
-		final ResponseEntity<StaffDTO> responseEntity;
-		final HttpHeaders headers = new HttpHeaders();
-
-		final Staff staff = staffHandler.getStaff().get(p.idStaff);
-		assert (staff != null);
-
-		Optional<Project> result = projectHandler.lookup(p.newProjectName);
-		if (result.isPresent()) {
-
-			/*
-			 * If the passed project is already present in the staff member's
-			 * project list, we send back a BAD_REQUEST to avoid duplicate
-			 * entries
-			 */
-			Predicate<Mission> predicate = pr -> (pr.idProject == result.get().id);
-			if (staff.missions.stream().anyMatch(predicate)) {
-				responseEntity = new ResponseEntity<StaffDTO>(
-						new StaffDTO(staff, 0,
-								"The collaborator " + staff.fullName() + " is already involved in " + p.newProjectName),
-						headers, HttpStatus.BAD_REQUEST);
-				return responseEntity;
+		try {
+			ParamStaffProject p = gson.fromJson(param, ParamStaffProject.class);
+			if (logger.isDebugEnabled()) {
+				logger.debug("POST command on /staff/project/save with params id:" + String.valueOf(p.idStaff)
+						+ ",projectName:" + p.newProjectName);
 			}
-
-			/**
-			 * If the user change the name of the project, 1) we create a new
-			 * entry into the projects list of the staff member 2) we remove the
-			 * former entry of the previous name
-			 */
-			if ((p.formerProjectName != null) && (p.formerProjectName.length() > 0)) {
-				Optional<Project> formerProject = projectHandler.lookup(p.formerProjectName);
-				if (result.isPresent()) {
-					Optional<Mission> optMission = staff.missions
-						.stream()
-						.filter(mission -> mission.idProject == formerProject.get().id)
-						.findFirst();
-					if (optMission.isPresent()) {
-						staff.missions.remove(optMission.get());
+			final ResponseEntity<StaffDTO> responseEntity;
+			final HttpHeaders headers = new HttpHeaders();
+	
+			final Staff staff = staffHandler.getStaff().get(p.idStaff);
+			assert (staff != null);
+	
+			Optional<Project> result = projectHandler.lookup(p.newProjectName);
+			
+			if (result.isPresent()) {
+	
+				/*
+				 * If the passed project is already present in the staff member's
+				 * project list, we send back a BAD_REQUEST to avoid duplicate
+				 * entries
+				 */
+				Predicate<Mission> predicate = pr -> (pr.idProject == result.get().id);
+				if (staff.missions.stream().anyMatch(predicate)) {
+					responseEntity = new ResponseEntity<StaffDTO>(
+							new StaffDTO(staff, 0,
+									"The collaborator " + staff.fullName() + " is already involved in " + p.newProjectName),
+							headers, HttpStatus.BAD_REQUEST);
+					return responseEntity;
+				}
+	
+				/**
+				 * If the user change the name of the project, 1) we create a new
+				 * entry into the projects list of the staff member 2) we remove the
+				 * former entry of the previous name
+				 */
+				if ((p.formerProjectName != null) && (p.formerProjectName.length() > 0)) {
+					Optional<Project> formerProject = projectHandler.lookup(p.formerProjectName);
+					if (result.isPresent()) {
+						Optional<Mission> optMission = staff.missions
+							.stream()
+							.filter(mission -> mission.idProject == formerProject.get().id)
+							.findFirst();
+						if (optMission.isPresent()) {
+							staff.missions.remove(optMission.get());
+						}
 					}
 				}
+	
+				staff.missions.add(new Mission(result.get().id, projectHandler.get(result.get().id).name));
+				responseEntity = new ResponseEntity<StaffDTO>(new StaffDTO(staff), headers, HttpStatus.OK);
+				if (logger.isDebugEnabled()) {
+					logger.debug("returning  staff " + gson.toJson(staff));
+				}
+	
+			} else {
+				if (logger.isDebugEnabled()) {
+					logger.debug("Cannot find a Project with the name " + p.newProjectName);
+				}
+				return postErrorReturnBodyMessage(404, "There is no project with the name " + p.newProjectName, staff);
 			}
-
-			staff.missions.add(new Mission(result.get().id, projectHandler.get(result.get().id).name));
-			responseEntity = new ResponseEntity<StaffDTO>(new StaffDTO(staff), headers, HttpStatus.OK);
-			if (logger.isDebugEnabled()) {
-				logger.debug("returning  staff " + gson.toJson(staff));
-			}
-
-		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Cannot find a Project with the name " + p.newProjectName);
-			}
-			return postErrorReturnBodyMessage(404, "There is no project with the name " + p.newProjectName, staff);
+			return responseEntity;
+		} catch (SkillerException e) {
+			logger.error(getStackTrace(e));
+			return new ResponseEntity<StaffDTO>(
+					new StaffDTO(new Staff(), e.errorCode,e.errorMessage), new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
-		return responseEntity;
+		
 	}
 
 	/**

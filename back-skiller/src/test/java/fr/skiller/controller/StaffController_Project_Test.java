@@ -1,5 +1,6 @@
 package fr.skiller.controller;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -12,6 +13,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Mission;
 import fr.skiller.data.internal.Project;
@@ -44,7 +46,21 @@ public class StaffController_Project_Test {
 	@Autowired
 	private StaffHandler staffHandler;
 	
+	@Autowired
+	private ProjectHandler projectHandler;
 	
+	private static int ID_VEGEO = 10;
+	private static int ID_INFOTER = 11;
+	
+	@Before 
+	public void before() throws Exception {
+		if (!projectHandler.lookup("VEGEO").isPresent()) {
+			projectHandler.getProjects().put(ID_VEGEO, new Project(ID_VEGEO, "VEGEO"));
+		}
+		if (!projectHandler.lookup("INFOTER").isPresent()) {
+			projectHandler.getProjects().put(ID_INFOTER, new Project(ID_INFOTER, "INFOTER"));
+		}
+	}
 	@Test
 	public void addAndUpdateAProjectForAStaffMember() throws Exception {
 
@@ -53,14 +69,14 @@ public class StaffController_Project_Test {
 		String body = "{ idStaff: 2, formerProjectName: \"\", newProjectName: \"VEGEO\"}";
 		this.mvc.perform(post("/staff/project/save").content(body)).andExpect(status().isOk());		
 		List<Mission> missions = new ArrayList<Mission>();
-		missions.add(new Mission (1, "VEGEO"));
+		missions.add(new Mission (ID_VEGEO, "VEGEO"));
 		this.mvc.perform(get("/staff/projects/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(missions)));
 
 		body = "{ idStaff: 2, formerProjectName: \"VEGEO\", newProjectName: \"INFOTER\"}";
 		this.mvc.perform(post("/staff/project/save").content(body)).andExpect(status().isOk());		
 		
 		missions.clear();
-		missions.add(new Mission (2, "INFOTER"));
+		missions.add(new Mission (ID_INFOTER, "INFOTER"));
 		this.mvc.perform(get("/staff/projects/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(missions)));
 
 		staffHandler.init();
@@ -76,10 +92,10 @@ public class StaffController_Project_Test {
 
 	
 		List<Mission> missions = new ArrayList<Mission>();
-		missions.add(new Mission (1, "VEGEO"));
+		missions.add(new Mission (ID_VEGEO, "VEGEO"));
 		this.mvc.perform(get("/staff/projects/2")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(missions)));
 		
-		body = "{ idStaff: 2, idProject: 1}";
+		body = "{ idStaff: 2, idProject: "+ ID_VEGEO +"}";
 		this.mvc.perform(post("/staff/project/del").content(body)).andExpect(status().isOk());
 		
 		missions.clear();

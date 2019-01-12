@@ -7,7 +7,7 @@ public class Project {
 
 	public int id;
 	public String name;
-	public List<Skill> skills;
+	public List<Skill> skills = new ArrayList<Skill>();
 	
 	public Project() { }
 	
@@ -19,7 +19,6 @@ public class Project {
 		super();
 		this.id = id;
 		this.name = name;
-		skills = new ArrayList<Skill>();
 	}
 
 	@Override

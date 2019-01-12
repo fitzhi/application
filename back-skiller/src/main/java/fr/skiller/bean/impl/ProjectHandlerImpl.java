@@ -12,23 +12,25 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.Contributor;
+import fr.skiller.exception.SkillerException;
 import fr.skiller.data.internal.Mission;
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-@Component("mock.Project")
+@Component
 public class ProjectHandlerImpl implements ProjectHandler {
 	
 	/**
 	 * The Project collection.
 	 */
-	private HashMap<Integer, Project> projects;
+	private Map<Integer, Project> projects;
 
 	/**
 	 * The staff Handler.
@@ -37,26 +39,31 @@ public class ProjectHandlerImpl implements ProjectHandler {
 	public StaffHandler staffHandler;
 	
 	/**
+	 * For retrieving data from the persistent repository.
+	 */
+	@Autowired
+	public DataSaver dataSaver;
+	
+	/**
 	 * @return the Project collection.
+	 * @throws SkillerException 
 	 */
 	@Override
-	public Map<Integer, Project> getProjects() {
+	public Map<Integer, Project> getProjects() throws SkillerException {
 		if (this.projects != null) {
 			return this.projects;
 		}
-		this.projects = new HashMap<Integer, Project>();
-		this.projects.put(1, new Project(1, "VEGEO"));
-		this.projects.put(2, new Project(2, "INFOTER"));
+		this.projects = dataSaver.load();
 		return projects;
 	}
 
 	@Override
-	public Project get(final int idProject) {
+	public Project get(final int idProject) throws SkillerException {
 		return getProjects().get(idProject);
 	}
 
 	@Override
-	public Optional<Project> lookup(final String projectName) {
+	public Optional<Project> lookup(final String projectName) throws SkillerException {
 		return getProjects().values().stream()
 				.filter( (Project project) -> project.name.equals(projectName))
 				.findFirst();

@@ -236,7 +236,7 @@ public class StaffHandlerImpl implements StaffHandler {
 	}
 	
 	@Override
-	public List<Contributor> takeAccount(Project project, CommitRepository repository) {
+	public List<Contributor> takeAccount(Project project, CommitRepository repository) throws SkillerException {
 		
 		List<Contributor> contributors = repository.contributors();
 		contributors.stream().forEach(contributor -> {
@@ -252,16 +252,27 @@ public class StaffHandlerImpl implements StaffHandler {
 					missionSelected.lastCommit = contributor.lastCommit;
 					missionSelected.numberOfCommits = contributor.numberOfCommitsSubmitted;
 					missionSelected.numberOfFiles = contributor.numberOfFiles;
-					missionSelected.name = projectHandler.get(project.id).name;
+					try {
+						missionSelected.name = projectHandler.get(project.id).name;
+					} catch (SkillerException e) {
+						// No exception excepted at the point
+						throw new RuntimeException(e);
+					}
 				} else {
 					// Involve this developer inside a new project 
-					Mission mission = new Mission(
-							project.id, 
-							projectHandler.get(project.id).name,
-							contributor.firstCommit, 
-							contributor.lastCommit, 
-							contributor.numberOfCommitsSubmitted, 
-							contributor.numberOfFiles);
+					Mission mission;
+					try {
+						mission = new Mission(
+								project.id, 
+								projectHandler.get(project.id).name,
+								contributor.firstCommit, 
+								contributor.lastCommit, 
+								contributor.numberOfCommitsSubmitted, 
+								contributor.numberOfFiles);
+					} catch (SkillerException e) {
+						// No exception excepted at the point
+						throw new RuntimeException(e);
+					}
 					staff.addMission(mission);
 				}
 				
