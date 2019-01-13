@@ -82,7 +82,7 @@ export class SkillComponent implements OnInit {
   }
 
   /**
-   * Submit the change. The SKILL will be created, or updated.
+   * Submit the change. The SKILL will be created, or updated. succesfully 
    */
   onSubmit() {
     this.skill.title = this.profileSkill.get('skillTitle').value;
@@ -91,9 +91,11 @@ export class SkillComponent implements OnInit {
     }
     this.skillService.save(this.skill).subscribe(
         skill => {
-          this.messageService.info('Skill ' + this.skill.title + '  saved !');
+          this.messageService.info('The skill ' + skill.title + ' has been succesfully saved !');
+          this.skill = new Skill();
           this.id = null;
-        });
+          this.profileSkill.get('skillTitle').setValue(this.skill.title);
+       });
   }
 
 }
