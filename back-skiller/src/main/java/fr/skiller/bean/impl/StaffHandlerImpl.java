@@ -14,6 +14,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static fr.skiller.Error.CODE_STAFF_NOFOUND;
+import static fr.skiller.Error.MESSAGE_STAFF_NOFOUND;
 import static fr.skiller.Global.UNKNOWN;
 
 import org.slf4j.Logger;
@@ -25,6 +27,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import fr.skiller.Error;
+import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.PeopleCountExperienceMap;
@@ -44,7 +47,7 @@ import com.google.gson.reflect.TypeToken;
  *
  */
 @Component
-public class StaffHandlerImpl implements StaffHandler {
+public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements StaffHandler {
 
 	/**
 	 * First level of experience, and the default value for all new skill. 
@@ -61,12 +64,14 @@ public class StaffHandlerImpl implements StaffHandler {
 	/**
 	 * The Project collection.
 	 */
-	private HashMap<Integer, Staff> staff;
+	private Map<Integer, Staff> staff;
 
 	@Autowired
 	ProjectHandler projectHandler;
 	
-	
+	@Autowired
+	DataSaver dataSaver;
+		
 	@Override
 	public void init() {
 		staff = null;
@@ -81,36 +86,14 @@ public class StaffHandlerImpl implements StaffHandler {
 		if (this.staff != null) {
 			return this.staff;
 		}
-
-		File resourcesDirectory = new File("src/main/resources");
-		String STAFF_JSON_FILE_PATH = resourcesDirectory.getAbsolutePath() + "/staff.json";
-		BufferedReader br = null;
-		this.staff = new HashMap<Integer, Staff>();
 		try {
-			StringBuilder sbContent = new StringBuilder();
-			br = new BufferedReader(new FileReader(STAFF_JSON_FILE_PATH));
-			String str;
-			while ((str = br.readLine()) != null) {
-				sbContent.append(str);
-			}
-			Type listType = new TypeToken<ArrayList<Staff>>() {}.getType();
-			List<Staff> staffsRead = gson.fromJson(sbContent.toString(), listType);
-			for (Staff staffRead : staffsRead) {
-				this.staff.put(staffRead.idStaff, staffRead);
-			}
-			return this.staff;
-		} catch (final IOException ioe) {
-			ioe.printStackTrace();
-			return this.staff;
-		} finally {
-			if (br != null) {
-				try {
-					br.close();
-				} catch (final Exception e) {
-					logger.error("Incredible : " +e.getMessage());
-				}
-			}
+			this.staff = dataSaver.loadStaff();
+		} catch (final SkillerException e) {
+			// Without staff, this application is not viable
+			throw new RuntimeException(e);
 		}
+		return staff;
+
 	}
 
 	@Override
@@ -246,17 +229,11 @@ public class StaffHandlerImpl implements StaffHandler {
 					throw new RuntimeException("SEVERE ERROR : No staff member corresponding to the id " + contributor.idStaff);
 				}
 				if (staff.isInvolvedInProject(project.id)) {
-					// Update the statistics of the current developer inside the project
-					Mission missionSelected = staff.missions.stream().filter(mission -> mission.idProject == project.id).findFirst().get();
-					missionSelected.firstCommit = contributor.firstCommit;
-					missionSelected.lastCommit = contributor.lastCommit;
-					missionSelected.numberOfCommits = contributor.numberOfCommitsSubmitted;
-					missionSelected.numberOfFiles = contributor.numberOfFiles;
-					try {
-						missionSelected.name = projectHandler.get(project.id).name;
-					} catch (SkillerException e) {
-						// No exception excepted at the point
-						throw new RuntimeException(e);
+					
+					synchronized (lockDataUpdated) {
+						// Update the statistics of the current developer inside the project
+						staff.updateMission(project.id, contributor);
+						this.dataUpdated = true;
 					}
 				} else {
 					// Involve this developer inside a new project 
@@ -273,7 +250,10 @@ public class StaffHandlerImpl implements StaffHandler {
 						// No exception excepted at the point
 						throw new RuntimeException(e);
 					}
-					staff.addMission(mission);
+					synchronized (lockDataUpdated) {
+						staff.addMission(mission);
+						this.dataUpdated = true;
+					}
 				}
 				
 			}			
@@ -298,4 +278,33 @@ public class StaffHandlerImpl implements StaffHandler {
 		}
 		return ((staff.firstName != null) ? staff.firstName : "") + " " + ((staff.lastName != null) ? staff.lastName : "");
 	}
+
+	@Override
+	public Staff addNewStaffMember(final Staff staff)  {
+		synchronized (lockDataUpdated) {
+			Map<Integer, Staff> company = getStaff();
+			staff.idStaff = company.size() + 1;
+			company.put(staff.idStaff, staff);
+			this.dataUpdated = true;
+		}
+		return staff;
+	}
+
+	@Override
+	public boolean containsStaffMember(final int idStaff) {
+		return getStaff().containsKey(idStaff);
+	}
+
+	@Override
+	public void saveStaffMember(Staff staff) throws SkillerException {
+		if (staff.idStaff == 0) {
+			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, staff.idStaff));
+		}
+		synchronized (lockDataUpdated) {
+			getStaff().put(staff.idStaff, staff);
+			this.dataUpdated = true;
+		}
+		
+	}
+
 }

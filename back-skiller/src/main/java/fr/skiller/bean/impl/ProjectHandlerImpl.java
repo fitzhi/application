@@ -18,7 +18,6 @@ import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.data.internal.Mission;
@@ -30,7 +29,7 @@ import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
  *
  */
 @Component
-public class ProjectHandlerImpl implements ProjectHandler {
+public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implements ProjectHandler {
 	
 	/**
 	 * The Project collection.
@@ -48,18 +47,7 @@ public class ProjectHandlerImpl implements ProjectHandler {
 	 */
 	@Autowired
 	public DataSaver dataSaver;
-	
-	/**
-	 * {@code true} if the projects data have been updated, {@code false} otherwise<br/>
-	 * This boolean is checked by the dataSaver to proceed, or not, the save 
-	 */
-	public Boolean dataUpdated = false;
-
-	/**
-	 * To avoid any conflict between the saving process and any update on the collection.
-	 */
-	public final Object lockDataUpdated = new Object();
-	
+		
 	/**
 	 * @return the Project collection.
 	 * @throws SkillerException 
@@ -69,7 +57,7 @@ public class ProjectHandlerImpl implements ProjectHandler {
 		if (this.projects != null) {
 			return this.projects;
 		}
-		this.projects = dataSaver.load();
+		this.projects = dataSaver.loadProjects();
 		return projects;
 	}
 
@@ -137,21 +125,6 @@ public class ProjectHandlerImpl implements ProjectHandler {
 			getProjects().put(project.id, project);
 			this.dataUpdated = true;
 		}
-	}
-
-	@Override
-	public Object getLocker() {
-		return lockDataUpdated;
-	}
-
-	@Override
-	public void dataAreSaved() {
-		dataUpdated = false;
-	}
-
-	@Override
-	public boolean isDataUpdated() {
-		return dataUpdated;
 	}
 	
 }

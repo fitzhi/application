@@ -43,6 +43,12 @@ public class Mission {
 	public int numberOfFiles;
 
 	/**
+	 * Empty constructor for (de)serialization usage.
+	 */
+	public Mission() {
+	}
+	
+	/**
 	 * @param idProject the identifier of the project
 	 * @param name the name of the project
 	 * @param lastCommit the date/time of the last commit

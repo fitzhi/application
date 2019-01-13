@@ -6,12 +6,16 @@ package fr.skiller.bean.impl;
 import static fr.skiller.Error.CODE_IO_ERROR;
 import static fr.skiller.Error.MESSAGE_IO_ERROR;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -27,6 +31,7 @@ import com.google.gson.reflect.TypeToken;
 import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 
 /**
@@ -55,8 +60,11 @@ public class FileDataSaverImpl implements DataSaver {
 	@Autowired
 	ProjectHandler projectHandler;
 	
+	@Autowired
+	ProjectHandler staffHandler;
+	
 	@Override
-	public void save(Map<Integer, Project> projects) throws SkillerException {
+	public void saveProjects(Map<Integer, Project> projects) throws SkillerException {
 		
 		final String filename = save_dir+"projects.json";
 		
@@ -79,7 +87,7 @@ public class FileDataSaverImpl implements DataSaver {
 	}
 
 	@Override
-	public Map<Integer, Project> load() throws SkillerException {
+	public Map<Integer, Project> loadProjects() throws SkillerException {
 
 		final String filename = save_dir+"projects.json";
 		
@@ -104,5 +112,64 @@ public class FileDataSaverImpl implements DataSaver {
 			logger.debug(sb.toString());
 		}
 		return projects;
+	}
+
+	@Override
+	public void saveStaff(Map<Integer, Staff> company) throws SkillerException {
+
+		final String filename = save_dir+"staff.json";
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("Saving " + company.size() + " staff members into file " + filename + ".");
+			final StringBuilder sb = new StringBuilder();
+			company.values().stream().forEach(staff -> sb.append(staff.idStaff).append(" ").append(staff.lastName).append(", "));
+			logger.debug(sb.toString());
+		}
+
+		FileWriter fw = null;
+		try {
+			fw = new FileWriter(new File(filename));
+			fw.write(gson.toJson(company));
+		} catch (final Exception e) {
+			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+		} finally {
+			if (fw != null) try { fw.close();} catch (final Exception e) { /* Exception muffled */ }
+		}
+	}
+
+	@Override
+	public Map<Integer, Staff> loadStaff() throws SkillerException {
+
+		final String filename = save_dir+"staff.json";
+		
+		Map<Integer, Staff> theStaff = new HashMap<Integer, Staff>();
+		
+		FileReader fr = null;
+		try {
+			fr = new FileReader(new File(filename));
+			Type listStaffType = new TypeToken<HashMap<Integer, Staff>>() {
+			}.getType();
+			theStaff = gson.fromJson(fr, listStaffType);
+		} catch (final Exception e) {
+			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+		} finally {
+			if (fr != null) try { fr.close();} catch (final Exception e) { logger.error("What's the hell  : " +e.getMessage()); }
+		}
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("Loading " + theStaff.size() + " staff members from file " + filename + ".");
+			final StringBuilder sb = new StringBuilder();
+			theStaff.values().stream().forEach(staff -> sb.append(staff.idStaff).append(" ").append(staff.lastName).append(", "));
+			logger.debug(sb.toString());
+		}
+		return theStaff;
+
+		/*
+		Type listType = new TypeToken<ArrayList<Staff>>() {}.getType();
+		List<Staff> staffsRead = gson.fromJson(sbContent.toString(), listType);
+		for (Staff staffRead : staffsRead) {
+			this.staff.put(staffRead.idStaff, staffRead);
+		}
+		*/
 	}
 }

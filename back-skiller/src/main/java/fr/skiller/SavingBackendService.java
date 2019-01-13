@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.bean.StaffHandler;
 import fr.skiller.exception.SkillerException;
 
 /**
@@ -23,6 +24,12 @@ public class SavingBackendService {
 	ProjectHandler projectHandler;
 	
 	/*
+	 * Staff handler 
+	 */
+	@Autowired
+	StaffHandler staffHandler;
+	
+	/*
 	 * Service in charge of saving/loading data
 	 */
 	@Autowired
@@ -30,15 +37,28 @@ public class SavingBackendService {
 	
 	@Scheduled(fixedRateString="${dataSaver.timeDelay}")
     public void work() {
+		
 		synchronized (projectHandler.getLocker()) {
 			try {
 				if (projectHandler.isDataUpdated()) {
-					dataSaver.save(projectHandler.getProjects());
+					dataSaver.saveProjects(projectHandler.getProjects());
 					projectHandler.dataAreSaved();
 				}
 			} catch (final SkillerException e) {
 				throw new RuntimeException(e);
 			}
 		}
+		
+		synchronized (staffHandler.getLocker()) {
+			try {
+				if (staffHandler.isDataUpdated()) {
+					dataSaver.saveStaff(staffHandler.getStaff());
+					staffHandler.dataAreSaved();
+				}
+			} catch (final SkillerException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
     }
 }

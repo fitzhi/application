@@ -8,7 +8,7 @@ import fr.skiller.data.internal.Project;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 
-public interface ProjectHandler {
+public interface ProjectHandler extends DataSaverLifeCycle {
 
 	/**
 	 * @return the complete collection of projects.
@@ -57,23 +57,8 @@ public interface ProjectHandler {
 	 boolean containsProject(int idProject) throws SkillerException;
 
 	 /**
-	  * @param project save a new project
-	  * @return {@code true} if the project identifier exists, {@code false} otherwise
+	  * @param project the new project to save.
 	  */
 	 void saveProject(Project project) throws SkillerException;
 	 
-	 /**
-	  * @return the locker to avoid any conflict between the saving process and all updates on the projects collection
-	  */
-	 Object getLocker();
-
-	 /**
-	  * @return {@code true} if the collection has been updated, {@code false} otherwise
-	  */
-	 boolean isDataUpdated();
-	 
-	 /**
-	  * Inform the handler that the collection has been saved.
-	  */
-	 void dataAreSaved();
 }

@@ -41,10 +41,10 @@ public class FileDataSaverImplTest {
 		projects.put(2, p);
 		p.skills = new ArrayList<Skill>();
 		p.skills.add(new Skill(1, "JAVA"));
-		dataSaver.save(projects);
+		dataSaver.saveProjects(projects);
 		projects.put(3, new Project(3, "TEST 3"));
 		
-		projects = dataSaver.load();
+		projects = dataSaver.loadProjects();
 		Assert.assertEquals(2, projects.size());
 		Assert.assertEquals(1, projects.get(1).id);
 		Assert.assertEquals("TEST 1", projects.get(1).name);

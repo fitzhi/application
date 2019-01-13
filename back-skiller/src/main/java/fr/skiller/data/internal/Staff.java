@@ -8,9 +8,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import fr.skiller.data.source.Contributor;
+
 /**
+ * A staff member in the company (most probably a developer).<br/>
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 public class Staff {
 	public int idStaff;
@@ -35,8 +37,14 @@ public class Staff {
 	public String application;
 	public int typeOfApplication;
 	
+	/**
+	 * The list of missions where the collaborator has been involved.
+	 */
 	public List<Mission> missions;
 	
+	/**
+	 * The collaborator's list of skills.
+	 */
 	public List<Experience> experiences;
 
 	/**
@@ -56,7 +64,6 @@ public class Staff {
 	 * @param level the level of this staff member
 	 */
 	public Staff(int idStaff, final String firstName, final String lastName, final String nickName, final String login, final String email, final String level) {
-		super();
 		this.idStaff = idStaff;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -136,6 +143,19 @@ public class Staff {
 		missions.add(mission);
 	}
 
+	/**
+	 * Update an existing mission based with last statistics loaded from the repository.
+	 * @param idProject project involved in the mission
+	 * @param contributor source contributor updated
+	 */
+	public void updateMission(final int idProject, final Contributor contributor) {
+		Mission missionSelected = missions.stream().filter(mission -> mission.idProject == idProject).findFirst().get();
+		missionSelected.firstCommit = contributor.firstCommit;
+		missionSelected.lastCommit = contributor.lastCommit;
+		missionSelected.numberOfCommits = contributor.numberOfCommitsSubmitted;
+		missionSelected.numberOfFiles = contributor.numberOfFiles;
+	}
+	
 	@Override
 	public String toString() {
 		return "Staff [id=" + idStaff + ", firstName=" + firstName + ", lastName=" + lastName + ", nickName=" + nickName

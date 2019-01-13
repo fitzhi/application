@@ -199,10 +199,8 @@ public class StaffController {
 		final ResponseEntity<Staff> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 
-		Collection<Staff> staff = staffHandler.getStaff().values();
 		if (input.idStaff == 0) {
-			input.idStaff = staff.size() + 1;
-			staffHandler.put(input.idStaff, input);
+			staffHandler.addNewStaffMember(input);
 			headers.add("backend.return_code", "1");
 			responseEntity = new ResponseEntity<Staff>(input, headers, HttpStatus.OK);
 		} else {
@@ -215,16 +213,17 @@ public class StaffController {
 						"There is no collaborator associated to the id " + input.idStaff);
 				responseEntity.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
 			} else {
-				updatedStaff.firstName = input.firstName;
-				updatedStaff.lastName = input.lastName;
-				updatedStaff.nickName = input.nickName;
-				updatedStaff.email = input.email;
-				updatedStaff.level = input.level;
-				updatedStaff.isActive = input.isActive;
-				if (!updatedStaff.isActive) {
-					updatedStaff.dateInactive = Global.now();
+				if ((!input.isActive) && (updatedStaff.isActive)) {
+					input.dateInactive = Global.now();
 				}
-				responseEntity = new ResponseEntity<Staff>(updatedStaff, headers, HttpStatus.OK);
+				try {
+					staffHandler.saveStaffMember(input);
+				} catch (SkillerException e) {
+					return new ResponseEntity<Staff>(
+							new Staff(), new HttpHeaders(),
+							HttpStatus.INTERNAL_SERVER_ERROR);
+				}
+				responseEntity = new ResponseEntity<Staff>(input, headers, HttpStatus.OK);
 				headers.add("backend.return_code", "1");
 			}
 		}
@@ -461,10 +460,12 @@ public class StaffController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
 	}
+	
 	class ResumeSkills {
 		int idStaff;
 		ResumeSkill[] skills;
 	}
+	
 	@PostMapping("/api/experiences/resume/save")
 	ResponseEntity<StaffDTO> saveExperiences(@RequestBody String body) {
 

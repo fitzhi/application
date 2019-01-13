@@ -16,7 +16,7 @@ import fr.skiller.exception.SkillerException;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public interface StaffHandler {
+public interface StaffHandler extends DataSaverLifeCycle {
 
 	/**
 	 * <p>Initialize the content of the in-memory staffs.</p>
@@ -83,5 +83,23 @@ public interface StaffHandler {
 	 * @return the full name of the staff member found, or {@code null} is none's found
 	 */
 	String getFullname (int idStaff);
-	
+
+	 /**
+	  * @param staff the new staff member to add
+	  * @return the newly created staff member
+	  */
+	 Staff addNewStaffMember(Staff staff) ;
+	 
+	 /**
+	  * @param ifStaff the passed staff identifier
+	  * @return {@code true} if a project exists for this project identifier, {@code false} otherwise
+	  */
+	 boolean containsStaffMember(int idStaff);
+
+	 /**
+	  * @param staff the new staff member
+	  * @throws SkillerException exception occurs
+	  */
+	 void saveStaffMember(Staff staff) throws SkillerException;
+
 }

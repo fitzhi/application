@@ -43,3 +43,9 @@ back-skiller/src/main/resources/staff.json
 back-skiller/src/main/resources/root.json
 
 back-skiller/memo-cmd-test-bypassed
+
+back-skiller/src/main/resources/out_dir/staff.json
+
+back-skiller/src/test/resources/out_dir/staff.json
+
+back-skiller/src/test/resources/staff.json
