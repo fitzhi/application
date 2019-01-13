@@ -83,7 +83,6 @@ public class StaffController {
 	StaffHandler staffHandler;
 
 	@Autowired
-	@Qualifier("mock.Skill")
 	SkillHandler skillHandler;
 
 	@Autowired
@@ -180,7 +179,7 @@ public class StaffController {
 	/**
 	 * @param idStaff
 	 *            staff member's identifier
-	 * @return the experience of a developer as list of skills.
+	 * @return the given developer's experience as list of skills.
 	 */
 	@RequestMapping(value = "/experiences/{idStaff}", method = RequestMethod.GET)
 	ResponseEntity<List<Experience>> readExperiences(@PathVariable("idStaff") int idStaff) {

@@ -40,4 +40,10 @@ public class Experience {
 	public String key() {
 		return id+"-"+level;
 	}
+
+	@Override
+	public String toString() {
+		return "Experience [id=" + id + ", title=" + title + ", level=" + level + "]";
+	}
+
 }

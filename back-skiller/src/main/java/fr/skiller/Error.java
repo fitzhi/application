@@ -19,6 +19,9 @@ public class Error {
 	public final static int CODE_IO_ERROR = -1003;
 	public final static String MESSAGE_IO_ERROR = "IO Error with file {0}";
 
+	public final static int CODE_SKILL_NOFOUND = -1004;
+	public final static String MESSAGE_SKILL_NOFOUND = "There is no skill for the identifier {0}";
+	
 	/**
 	 * @param e the exception
 	 * @return the stack trace in {@code String} format

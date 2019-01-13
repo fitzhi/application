@@ -24,6 +24,9 @@ import com.google.gson.Gson;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.data.external.SkillDTO;
 import fr.skiller.data.internal.Skill;
+import fr.skiller.exception.SkillerException;
+
+import static fr.skiller.Error.getStackTrace;
 
 @RestController
 @RequestMapping("/skill")
@@ -37,7 +40,6 @@ public class SkillController {
 	Gson g = new Gson();
 
 	@Autowired
-	@Qualifier("mock.Skill")
 	SkillHandler skillHandler;
 
 	@RequestMapping(value = "/name/{projectName}", method = RequestMethod.GET)
@@ -93,29 +95,37 @@ public class SkillController {
 		return resultContent;
 	}
 	
+	/**
+	 * Either save an existing skill, or create a new one.
+	 * @param skill the skill sent by the front application in JSON format
+	 * @return the (new) skill updated 
+	 */
 	@PostMapping("/save")
-	ResponseEntity<Skill> add(@RequestBody Skill input) {
+	ResponseEntity<Skill> add(@RequestBody Skill skill) {
 
 		final ResponseEntity<Skill> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 		Map<Integer, Skill> skills = skillHandler.getSkills();
 
-		if (input.id == 0) {
-			input.id = skills.size() + 1;
-			skills.put(input.id, input);
+		if (skill.id == 0) {
+			skillHandler.addNewSkill(skill);
 			headers.add("backend.return_code", "1");
-			responseEntity = new ResponseEntity<Skill>(input, headers, HttpStatus.OK);
+			responseEntity = new ResponseEntity<Skill>(skill, headers, HttpStatus.OK);
 		} else {
-			final Skill searchSkill = skills.get(input.id);
-			if (searchSkill == null) {
-				responseEntity = new ResponseEntity<Skill>(input, headers, HttpStatus.NOT_FOUND);
+			if (!skillHandler.containsSkill(skill.id)) {
+				responseEntity = new ResponseEntity<Skill>(skill, headers, HttpStatus.NOT_FOUND);
 				headers.add("backend.return_code", "O");
 				responseEntity.getHeaders().set("backend.return_message",
-						"There is no skill associated to the id " + input.id);
+						"There is no skill associated to the id " + skill.id);
 				responseEntity.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
 			} else {
-				searchSkill.title = input.title;
-				responseEntity = new ResponseEntity<Skill>(input, headers, HttpStatus.OK);
+				try {
+					skillHandler.saveSkill(skill);
+				} catch (SkillerException e) {
+					logger.error(getStackTrace(e));
+					return new ResponseEntity<Skill>(new Skill(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+				}
+				responseEntity = new ResponseEntity<Skill>(skill, headers, HttpStatus.OK);
 				headers.add("backend.return_code", "1");
 			}
 		}

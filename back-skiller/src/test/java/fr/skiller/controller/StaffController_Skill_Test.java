@@ -3,6 +3,7 @@
  */
 package fr.skiller.controller;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -18,6 +19,8 @@ import com.google.gson.GsonBuilder;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Experience;
+import fr.skiller.data.internal.Skill;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -48,6 +51,16 @@ public class StaffController_Skill_Test {
 	
 	@Autowired
 	private SkillHandler skillHandler;
+	
+	@Before
+	public void before() {
+		if (!skillHandler.containsSkill(1)) {
+			skillHandler.addNewSkill(new Skill(1, "JAVA"));
+		}
+		if (!skillHandler.containsSkill(2)) {
+			skillHandler.addNewSkill(new Skill(2, ".NET"));
+		}
+	}
 	
 	@Test
 	public void addAndUpdateASkillForAStaffMember() throws Exception {

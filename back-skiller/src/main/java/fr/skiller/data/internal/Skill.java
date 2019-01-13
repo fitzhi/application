@@ -3,6 +3,7 @@ package fr.skiller.data.internal;
 public class Skill {
 
 	public int id = 0;
+	
 	public String title = "";
 	
 	public Skill() {
@@ -13,5 +14,11 @@ public class Skill {
 		this.id = id;
 		this.title = title;
 	}
+
+	@Override
+	public String toString() {
+		return "Skill [id=" + id + ", title=" + title + "]";
+	}
+
 	
 }

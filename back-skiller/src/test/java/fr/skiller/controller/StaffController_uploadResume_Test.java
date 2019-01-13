@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.data.external.ResumeDTO;
+import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.ResumeSkillIdentifier;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.service.StorageService;
@@ -52,6 +54,22 @@ public class StaffController_uploadResume_Test {
 	
 	@LocalServerPort
 	private int port;
+	
+	@Before 
+	public void before() throws Exception {
+		if (!skillHandler.containsSkill(1)) {
+			skillHandler.addNewSkill(new Skill(1, "Java"));
+		}
+		if (!skillHandler.containsSkill(2)) {
+			skillHandler.addNewSkill(new Skill(2, ".NET"));
+		}
+		if (!skillHandler.containsSkill(3)) {
+			skillHandler.addNewSkill(new Skill(3, "C#"));
+		}
+		if (!skillHandler.containsSkill(4)) {
+			skillHandler.addNewSkill(new Skill(4, "Spring"));
+		}
+	}
 
 	@Test
 	public void shouldUploadFile() throws Exception {
@@ -88,7 +106,9 @@ public class StaffController_uploadResume_Test {
 	}
 	
 	private int getIdSkill (final String title) {
-		Optional<Skill> optSkill = skillHandler.getSkills().values().stream().filter(skill -> title.equals(skill.title)).findFirst();
+		Optional<Skill> optSkill = skillHandler.getSkills()
+				.values().stream()
+				.filter(skill -> title.equals(skill.title)).findFirst();
 		if (optSkill.isPresent()) {
 			return optSkill.get().id;
 		} else {

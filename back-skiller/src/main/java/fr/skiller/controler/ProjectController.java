@@ -57,7 +57,6 @@ public class ProjectController {
 	ProjectHandler projectHandler;
 
 	@Autowired
-	@Qualifier("mock.Skill")
 	SkillHandler skillHandler;
 	
 	@Autowired

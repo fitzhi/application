@@ -1,14 +1,8 @@
 package fr.skiller.bean.impl;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
-import java.lang.reflect.Type;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,8 +34,6 @@ import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 
-import com.google.gson.reflect.TypeToken;
-
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
@@ -53,7 +45,10 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	 * First level of experience, and the default value for all new skill. 
 	 */
 	private final static int FIRST_LEVEL = 1;
-	
+
+	/**
+	 * The logger.
+	 */
 	Logger logger = LoggerFactory.getLogger(StaffHandlerImpl.class.getName());
 	
 	/**
@@ -66,9 +61,15 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	 */
 	private Map<Integer, Staff> staff;
 
+	/**
+	 * Handler for working the project collection.
+	 */
 	@Autowired
 	ProjectHandler projectHandler;
 	
+	/**
+	 * Bean in charge of saving/loading data.
+	 */
 	@Autowired
 	DataSaver dataSaver;
 		
@@ -304,7 +305,6 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			getStaff().put(staff.idStaff, staff);
 			this.dataUpdated = true;
 		}
-		
 	}
 
 }

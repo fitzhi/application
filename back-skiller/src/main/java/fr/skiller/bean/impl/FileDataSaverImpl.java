@@ -31,6 +31,7 @@ import com.google.gson.reflect.TypeToken;
 import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 
@@ -163,13 +164,61 @@ public class FileDataSaverImpl implements DataSaver {
 			logger.debug(sb.toString());
 		}
 		return theStaff;
+	}
 
-		/*
-		Type listType = new TypeToken<ArrayList<Staff>>() {}.getType();
-		List<Staff> staffsRead = gson.fromJson(sbContent.toString(), listType);
-		for (Staff staffRead : staffsRead) {
-			this.staff.put(staffRead.idStaff, staffRead);
+	@Override
+	public void saveSkills(Map<Integer, Skill> skills) throws SkillerException {
+		
+		final String filename = save_dir+"skills.json";
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("Saving " + skills.size() + " skills into file " + filename + ".");
+			final StringBuilder sb = new StringBuilder();
+			skills.values().stream().forEach(skill -> sb.append(skill.id).append(" ").append(skill.title).append(", "));
+			logger.debug(sb.toString());
 		}
-		*/
+
+		FileWriter fw = null;
+		try {
+			fw = new FileWriter(new File(filename));
+			fw.write(gson.toJson(skills));
+		} catch (final Exception e) {
+			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+		} finally {
+			if (fw != null) try { fw.close();} catch (final Exception e) { /* Exception muffled */ }
+		}
+	}
+
+	@Override
+	public Map<Integer, Skill> loadSkills() throws SkillerException {
+
+		final String filename = save_dir+"skills.json";
+		
+		Map<Integer, Skill> skills = new HashMap<Integer, Skill>();
+		
+		FileReader fr = null;
+		try {
+			fr = new FileReader(new File(filename));
+			Type listSkillType = new TypeToken<HashMap<Integer, Skill>>() {
+			}.getType();
+			skills = gson.fromJson(fr, listSkillType);
+			if (skills == null) {
+				// If this.skills is still null, without IOException, it means that the file is empty
+				// The first launch of the application is a use case for scenario
+				skills = new HashMap<Integer, Skill>();
+			}
+		} catch (final Exception e) {
+			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+		} finally {
+			if (fr != null) try { fr.close();} catch (final Exception e) { logger.error("What's the hell  : " +e.getMessage()); }
+		}
+
+		if (logger.isDebugEnabled()) {
+			logger.debug("Loading " + skills.size() + " skills from file " + filename + ".");
+			final StringBuilder sb = new StringBuilder();
+			skills.values().stream().forEach(skill -> sb.append(skill.id).append(" ").append(skill.title).append(", "));
+			logger.debug(sb.toString());
+		}
+		return skills;
 	}
 }

@@ -71,5 +71,12 @@ public class Mission {
 	 */
 	public Mission(final int idProject, final String name) {
 		this(idProject, name, null, null, 0, 0);
+	}
+
+	@Override
+	public String toString() {
+		return "Mission [idProject=" + idProject + ", name=" + name + ", firstCommit=" + firstCommit + ", lastCommit="
+				+ lastCommit + ", numberOfCommits=" + numberOfCommits + ", numberOfFiles=" + numberOfFiles + "]";
 	}	
+
 }

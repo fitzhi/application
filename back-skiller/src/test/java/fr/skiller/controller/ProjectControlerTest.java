@@ -55,6 +55,12 @@ public class ProjectControlerTest {
 		if (!projectHandler.lookup("INFOTER").isPresent()) {
 			projectHandler.getProjects().put(ID_INFOTER, new Project(ID_INFOTER, "INFOTER"));
 		}
+		if (!skillHandler.containsSkill(1)) {
+			skillHandler.addNewSkill(new Skill(1, "Java"));
+		}
+		if (!skillHandler.containsSkill(2)) {
+			skillHandler.addNewSkill(new Skill(2, ".NET"));
+		}
 	}
 	
 	@Test

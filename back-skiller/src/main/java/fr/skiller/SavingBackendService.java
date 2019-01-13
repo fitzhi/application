@@ -8,6 +8,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 
 import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.exception.SkillerException;
 
@@ -28,6 +29,12 @@ public class SavingBackendService {
 	 */
 	@Autowired
 	StaffHandler staffHandler;
+	
+	/*
+	 * Skill handler 
+	 */
+	@Autowired
+	SkillHandler skillHandler;
 	
 	/*
 	 * Service in charge of saving/loading data
@@ -53,6 +60,17 @@ public class SavingBackendService {
 			try {
 				if (staffHandler.isDataUpdated()) {
 					dataSaver.saveStaff(staffHandler.getStaff());
+					staffHandler.dataAreSaved();
+				}
+			} catch (final SkillerException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		
+		synchronized (skillHandler.getLocker()) {
+			try {
+				if (skillHandler.isDataUpdated()) {
+					dataSaver.saveSkills(skillHandler.getSkills());
 					staffHandler.dataAreSaved();
 				}
 			} catch (final SkillerException e) {

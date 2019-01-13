@@ -91,8 +91,8 @@ export class SkillComponent implements OnInit {
     }
     this.skillService.save(this.skill).subscribe(
         skill => {
-          this.skill = skill;
           this.messageService.info('Skill ' + this.skill.title + '  saved !');
+          this.id = null;
         });
   }
 

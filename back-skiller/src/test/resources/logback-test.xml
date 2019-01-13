@@ -12,7 +12,7 @@
 		<appender-ref ref="STDOUT" />
 	</root>
 
-	<logger name="fr.skiller.git" additivity="false">
+	<logger name="fr.skiller.bean.impl.SkillHandlerImpl" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
@@ -22,7 +22,7 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="fr.skiller.controller.StaffController" additivity="false">
+	<logger name="fr.skiller.controller.SkillController" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
