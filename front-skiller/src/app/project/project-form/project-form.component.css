@@ -12,3 +12,7 @@
     border-color: blue;
 	background-color: lightGrey;
 }
+
+.required {
+	font-weight: bold;
+}

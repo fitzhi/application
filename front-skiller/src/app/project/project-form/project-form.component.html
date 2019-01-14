@@ -9,13 +9,13 @@
 			<form class="needs-validation" [formGroup]="profileProject"
 				(ngSubmit)="onSubmit()">
 				<div class="mb-3">
-					<label for="skill">Project</label> <input type="text"
-						class="form-control" id="projectName" name="projectName"
+					<label class="required" for="project">Project</label> <input type="text"
+						class="form-control required" id="projectName" name="projectName"
 						placeholder="Project name (Required)" value="" required
 						formControlName="projectName" />
 				</div>
 				<div class="mb-3">
-					<label for="urlRepository">Project</label> <input type="text"
+					<label for="urlRepository">Repository</label> <input type="text"
 						class="form-control" id="urlRepository" name="urlRepository"
 						placeholder="Repository URL" value="" 
 						formControlName="urlRepository" />

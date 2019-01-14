@@ -71,7 +71,7 @@ public class SavingBackendService {
 			try {
 				if (skillHandler.isDataUpdated()) {
 					dataSaver.saveSkills(skillHandler.getSkills());
-					staffHandler.dataAreSaved();
+					skillHandler.dataAreSaved();
 				}
 			} catch (final SkillerException e) {
 				throw new RuntimeException(e);

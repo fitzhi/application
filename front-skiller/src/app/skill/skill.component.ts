@@ -82,7 +82,7 @@ export class SkillComponent implements OnInit {
   }
 
   /**
-   * Submit the change. The SKILL will be created, or updated. succesfully 
+   * Submit the change. The SKILL will be created, or updated. succesfully.
    */
   onSubmit() {
     this.skill.title = this.profileSkill.get('skillTitle').value;
