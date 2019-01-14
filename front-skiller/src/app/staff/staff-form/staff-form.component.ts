@@ -28,15 +28,15 @@ export class StaffFormComponent implements OnInit {
   /**
    * Label on side of the active check box.
    */
-  private label_isActive: String;
-  private label_dateInactive: Date;
+  label_isActive: String;
+  label_dateInactive: Date;
 
   /**
    * list of profiles used on the SELECT field.
    */
-  private profiles: Profile[];
+  profiles: Profile[];
 
-  private profileStaff = new FormGroup({
+  public profileStaff = new FormGroup({
     firstName: new FormControl('', [Validators.maxLength(16)]),
     lastName: new FormControl('', [Validators.required, Validators.maxLength(16)]),
     nickName: new FormControl('', [Validators.maxLength(16)]),
@@ -49,7 +49,6 @@ export class StaffFormComponent implements OnInit {
   constructor(
     private staffService: StaffService,
     private messageService: MessageService,
-    private listStaffService: ListStaffService,
     private cinematicService: CinematicService,
     private referentialService: ReferentialService,
     private staffDataExchangeService: StaffDataExchangeService) {}

@@ -1,23 +1,28 @@
 <div class="container">
-	<div class="row">
-		<div class="col-md-12 text-center w100">
-			<h2>Skill Form</h2>
-			<p class="lead">Adding a new skill in the repository.</p>
-		</div>
+  <div class="row">
+    <div class="col-md-12 text-center w100">
+      <h2>Skill Form</h2>
+      <p class="lead">Adding a new skill in the repository.</p>
+    </div>
 
-		<div class="col-md-8">
-			<form class="needs-validation" [formGroup]="profileSkill"
-				(ngSubmit)="onSubmit()">
-				<div class="mb-3">
-					<label for="skill">Project</label> <input type="text"
-						class="form-control" id="skillName" name="skillName"
-						placeholder="Skill title (Required)" value="" required
-						formControlName="skillTitle" />
-				</div>
-				<hr class="mb-4">
-				<button class="btn btn-primary btn-lg btn-block" type="submit"
-					[disabled]="!profileSkill.valid">Submit</button>
-			</form>
-		</div>
-	</div>
+    <div class="col-md-8">
+      <form class="needs-validation" [formGroup]="profileSkill" (ngSubmit)="onSubmit()">
+        <div class="mb-3">
+          <label for="skill" class="required">Title</label>
+          <input type="text" class="form-control required" id="title" 
+          name="title" placeholder="Skill title (Required)" 
+          formControlName="title"/>
+          <label *ngIf="title.invalid" 
+          [ngClass]="'alert alert-warning'" style="width: 100%; font-size: 10px;">
+          Title is required.
+          </label>
+
+        </div>
+        <hr class="mb-4">
+        <button class="btn btn-primary btn-lg btn-block" type="submit" [disabled]="!profileSkill.valid">Submit</button>
+      </form>
+    </div>
+  </div>
 </div>
+
+
