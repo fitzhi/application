@@ -22,7 +22,7 @@
     color: darkblue
 }
 
-:host >>> th#name > .mat-sort-header-container  {
+:host >>> th#fullname > .mat-sort-header-container  {
     color: darkblue
 }
 

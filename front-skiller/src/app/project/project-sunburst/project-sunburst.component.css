@@ -1,3 +1,21 @@
 .sunburst-tooltip { 
     z-index: 500;
 }
+
+#sunburstWaitingImage {
+    display: block;
+    width: 256px; height: 256px;
+    margin: calc(((204px * 1.4142) - 204px) / 2);
+    border: 0px solid;
+    animation: example 12s linear 0s infinite;
+    align-content: center;
+}
+
+#sunburstWaitingImage:hover{
+    animation-play-state: paused;
+}
+
+@keyframes example {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}

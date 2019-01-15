@@ -14,7 +14,7 @@ export class ProjectStaffComponent implements OnInit {
 
   public dataSource;
 
-  public displayedColumns: string[] = ['name', 'firstCommit', 'lastCommit', 'numberOfCommits', 'numberOfFiles'];
+  public displayedColumns: string[] = ['fullname', 'firstCommit', 'lastCommit', 'numberOfCommits', 'numberOfFiles'];
 
   public idProject: number;
 
@@ -50,8 +50,13 @@ export class ProjectStaffComponent implements OnInit {
       contributorsDTO => {
         this.dataSource = new MatTableDataSource(contributorsDTO.contributors);
         this.dataSource.sort = this.sort;
-      },
-      error => {
+        this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: string): string => {
+          if (typeof data[sortHeaderId] === 'string') {
+            return data[sortHeaderId].toLocaleLowerCase();
+          }
+          return data[sortHeaderId];
+        };
+      }, error => {
         if (error.status === 404) {
           if (Constants.DEBUG) {
             console.log('404 : cannot find contributors for the id ' + this.idProject);

@@ -16,10 +16,10 @@ export class Contributor {
   /**
    * Number of commits submitted by this developer
    */
-  public numberOfCommits: string;
+  public numberOfCommits: number;
 
   /**
    * Number of files updated by this developer
    */
-  public numberOfFiles: string;
+  public numberOfFiles: number;
 }
