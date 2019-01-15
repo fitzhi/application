@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProjectService } from '../../project.service';
 import { Constants } from '../../constants';
 import { MessageService } from '../../message.service';
 import { ActivatedRoute } from '@angular/router';
+import {MatSort, MatTableDataSource} from '@angular/material';
 
 @Component({
   selector: 'app-project-staff',
@@ -18,6 +19,8 @@ export class ProjectStaffComponent implements OnInit {
   public idProject: number;
 
   public sub: any;
+
+  @ViewChild(MatSort) sort: MatSort;
 
   constructor(
     private projectService: ProjectService,
@@ -45,7 +48,8 @@ export class ProjectStaffComponent implements OnInit {
   loadContributors() {
     this.projectService.contributors(this.idProject).subscribe(
       contributorsDTO => {
-        this.dataSource = contributorsDTO.contributors;
+        this.dataSource = new MatTableDataSource(contributorsDTO.contributors);
+        this.dataSource.sort = this.sort;
       },
       error => {
         if (error.status === 404) {

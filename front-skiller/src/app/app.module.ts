@@ -44,7 +44,7 @@ import { StaffUploadCvComponent } from './staff/staff-tabs/staff-experience/staf
 import { MatTabsModule, MatDialogModule, MatProgressBarModule, MatPaginatorModule, MatCheckbox, MatSortModule } from '@angular/material';
 import { MessageBoxComponent } from './message-box/dialog/message-box.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { SunburstTestComponent } from './d3/sunburst-test/sunburst-test.component';
 import { ProjectComponent } from './project/project.component';
 import { ProjectSunburstComponent } from './project/project-sunburst/project-sunburst.component';
@@ -98,7 +98,10 @@ import { ProjectStaffComponent } from './project/project-staff/project-staff.com
     MatProgressBarModule,
     MatTableModule,
     MatPaginatorModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSortModule
+
+
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.

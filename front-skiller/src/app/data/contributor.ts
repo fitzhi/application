@@ -1,6 +1,6 @@
 
 export class Contributor {
-  public idStaff: number;
+  public id: number;
   public fullname: string;
 
   /**
