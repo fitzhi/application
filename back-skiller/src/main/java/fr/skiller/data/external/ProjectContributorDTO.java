@@ -21,12 +21,12 @@ class ContributorView {
 	/**
 	 * Date of the latest commit.
 	 */
-	public String firstCommit;
+	public Date firstCommit;
 	
 	/**
 	 * Date of the latest commit.
 	 */
-	public String lastCommit;
+	public Date lastCommit;
 	
 	/**
 	 * @return number of commit submitted by the developer inside the project.
@@ -39,11 +39,6 @@ class ContributorView {
 	public int numberOfFiles;
 	
 	/**
-	 * Date pattern 
-	 */
-	private DateFormat df = DateFormat.getDateInstance(SimpleDateFormat.MEDIUM);
-	
-	/**
 	 * @param idStaff staff identifier
 	 * @param fullname complete name of the developer <i>(first name + last name)</i>
 	 * @param firstCommit  Date of the <b>FIRST</b> commit for this developer.
@@ -54,8 +49,8 @@ class ContributorView {
 	public ContributorView(final int idStaff, final String fullname, final Date firstCommit, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
 		this.idStaff = idStaff;
 		this.fullname = fullname;
-		this.firstCommit = df.format(firstCommit);
-		this.lastCommit = df.format(lastCommit);
+		this.firstCommit = firstCommit;
+		this.lastCommit = lastCommit;
 		this.numberOfCommits = numberOfCommits;
 		this.numberOfFiles = numberOfFiles;
 	}

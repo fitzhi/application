@@ -9,12 +9,12 @@
 
     <ng-container id="firstCommit" matColumnDef="firstCommit">
       <th mat-header-cell id="firstCommit" class="col_date" *matHeaderCellDef mat-sort-header> First commit </th>
-      <td mat-cell class="col_date" *matCellDef="let contributor">{{contributor.firstCommit}}</td>
+      <td mat-cell class="col_date" *matCellDef="let contributor">{{contributor.firstCommit | date:'dd/yy/yyyy'}}</td>
     </ng-container>
 
     <ng-container matColumnDef="lastCommit">
       <th mat-header-cell id="lastCommit" class="col_date" *matHeaderCellDef mat-sort-header> Last commit </th>
-      <td mat-cell class="col_date" *matCellDef="let contributor">{{contributor.lastCommit}}</td>
+      <td mat-cell class="col_date" *matCellDef="let contributor">{{contributor.lastCommit | date:'dd/yy/yyyy'}}</td>
     </ng-container>
 
     <ng-container matColumnDef="numberOfCommits">

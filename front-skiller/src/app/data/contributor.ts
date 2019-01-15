@@ -6,12 +6,12 @@ export class Contributor {
   /**
    * Date of first commit for this developer
    */
-  public firstCommit: string;
+  public firstCommit: Date;
 
   /**
    * Date of last commit for this developer
    */
-  public lastCommit: string;
+  public lastCommit: Date;
 
   /**
    * Number of commits submitted by this developer
