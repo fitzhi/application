@@ -31,7 +31,7 @@
 
     <ng-container matColumnDef="numberOfFiles">
       <th mat-header-cell id="numberOfFiles" *matHeaderCellDef mat-sort-header>Number of files</th>
-      <td mat-cell class="col_numeric {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">{{contributor.numberOfFiles}}</td>
+      <td mat-cell class="col_numeric {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">{{contributor.numberOfFiles}}&nbsp;&nbsp;</td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

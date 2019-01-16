@@ -233,4 +233,15 @@ export class AppComponent implements OnInit {
         break;
     }
   }
+
+  public list() {
+    switch (this.formId) {
+      case Constants.DEVELOPERS_CRUD:
+        this.router.navigate(['/searchUser'], {});
+        break;
+      default:
+        console.error('Unattempted formId ' + this.formId);
+        break;
+    }
+   }
 }
