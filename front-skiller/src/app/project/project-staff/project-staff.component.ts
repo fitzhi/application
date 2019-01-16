@@ -72,4 +72,11 @@ export class ProjectStaffComponent implements OnInit {
         }
       });
   }
+
+  /**
+   * Return the CSS class corresponding to the active vs inactive status of a developer.
+   */
+  public class_active_inactive(active: boolean) {
+    return active ? 'contributor_active' : 'contributor_inactive';
+  }
 }

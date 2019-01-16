@@ -2,36 +2,36 @@
 
   <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
 
-     <ng-container matColumnDef="fullname">
+    <ng-container matColumnDef="fullname">
       <th id="fullname" mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-      <td mat-cell *matCellDef="let contributor">{{contributor.fullname}}</td>
+      <td mat-cell class="col_fullname {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">{{contributor.fullname}}</td>
     </ng-container>
 
-     <ng-container matColumnDef="active">
+    <ng-container matColumnDef="active">
       <th id="active" mat-header-cell *matHeaderCellDef mat-sort-header>Active</th>
-        <td mat-cell class="col_image" *matCellDef="let contributor">
-          <img with="15" height="15" src="/assets/img/check-{{contributor.active}}.png" />     
-        </td>
+      <td mat-cell class="col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">
+        <img with="15" height="15" src="/assets/img/check-{{contributor.active}}.png" />
+      </td>
     </ng-container>
 
     <ng-container id="firstCommit" matColumnDef="firstCommit">
       <th mat-header-cell id="firstCommit" class="col_date" *matHeaderCellDef mat-sort-header> First commit </th>
-      <td mat-cell class="col_date" *matCellDef="let contributor">{{contributor.firstCommit | date:'dd/yy/yyyy'}}</td>
+      <td mat-cell class="col_date {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">{{contributor.firstCommit | date:'dd/yy/yyyy'}}</td>
     </ng-container>
 
     <ng-container matColumnDef="lastCommit">
       <th mat-header-cell id="lastCommit" class="col_date" *matHeaderCellDef mat-sort-header> Last commit </th>
-      <td mat-cell class="col_date" *matCellDef="let contributor">{{contributor.lastCommit | date:'dd/yy/yyyy'}}</td>
+      <td mat-cell class="col_date {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">{{contributor.lastCommit | date:'dd/yy/yyyy'}}</td>
     </ng-container>
 
     <ng-container matColumnDef="numberOfCommits">
       <th mat-header-cell id="numberOfCommits" *matHeaderCellDef mat-sort-header>Number of commits</th>
-      <td mat-cell  class="col_numeric" *matCellDef="let contributor">{{contributor.numberOfCommits}}</td>
+      <td mat-cell class="col_numeric {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">{{contributor.numberOfCommits}}</td>
     </ng-container>
 
     <ng-container matColumnDef="numberOfFiles">
       <th mat-header-cell id="numberOfFiles" *matHeaderCellDef mat-sort-header>Number of files</th>
-      <td mat-cell class="col_numeric" *matCellDef="let contributor">{{contributor.numberOfFiles}}</td>
+      <td mat-cell class="col_numeric {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">{{contributor.numberOfFiles}}</td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -40,3 +40,4 @@
   </table>
 
 </div>
+

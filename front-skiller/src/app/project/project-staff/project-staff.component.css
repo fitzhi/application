@@ -29,7 +29,7 @@
 }
 
 :host >>> th#fullname > .mat-sort-header-container  {
-    color: darkblue
+    color: darkblue;
 }
 
 table {
@@ -53,4 +53,16 @@ table {
     text-align:center;   
     margin-top: 15px;
     align-content: center;
+}
+
+.contributor_active {
+    background-color: white;
+}
+
+.contributor_inactive {
+    background-color: whitesmoke;
+}
+
+.col_fullname {
+    padding-left: 10px;
 }
