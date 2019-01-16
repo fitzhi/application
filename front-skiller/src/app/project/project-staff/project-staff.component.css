@@ -4,6 +4,12 @@
     color: darkblue
 }
 
+:host >>> th#active > .mat-sort-header-container  {
+    display: flex;
+    justify-content: center;
+    color: darkblue;
+}
+
 :host >>> th#numberOfFiles > .mat-sort-header-container  {
     display: flex;
     justify-content: flex-end;
@@ -43,3 +49,8 @@ table {
     text-align:center;   
 }
 
+.col_image {
+    text-align:center;   
+    margin-top: 15px;
+    align-content: center;
+}

@@ -19,6 +19,11 @@ class ContributorView {
 	public String fullname;
 	
 	/**
+	 * {@code true} if this staff member is active in the company, {@code false} otherwise
+	 */
+	public boolean active;
+	
+	/**
 	 * Date of the latest commit.
 	 */
 	public Date firstCommit;
@@ -42,13 +47,15 @@ class ContributorView {
 	 * @param idStaff staff identifier
 	 * @param fullname complete name of the developer <i>(first name + last name)</i>
 	 * @param firstCommit  Date of the <b>FIRST</b> commit for this developer.
+	 * @param active {@code true} if this staff member is active in the company, {@code false} otherwise
 	 * @param lastCommit  Date of the <b>LATEST</b> commit.
 	 * @param numberOfCommits number of commit submitted by the developer inside the project.
 	 * @param numberOfFiles number of files modifier by the developer inside the project.
 	 */
-	public ContributorView(final int idStaff, final String fullname, final Date firstCommit, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
+	public ContributorView(final int idStaff, final String fullname, final boolean active, final Date firstCommit, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
 		this.idStaff = idStaff;
 		this.fullname = fullname;
+		this.active = active;
 		this.firstCommit = firstCommit;
 		this.lastCommit = lastCommit;
 		this.numberOfCommits = numberOfCommits;
@@ -107,13 +114,14 @@ public class ProjectContributorDTO {
 	/**
 	 * @param idStaff staff identifier
 	 * @param fullname complete name of the developer <i>(first name + last name)</i>
+	 * @param active <big>{@code true}</big> if this staff member is active in the company, <big>{@code false}</big> otherwise
 	 * @param firstCommit  Date of the <b>FIRST</b> commit for this developer.
 	 * @param lastCommit  Date of the <b>LATEST</b> commit.
 	 * @param numberOfCommits number of commit submitted by the developer inside the project.
 	 * @param numberOfFiles number of files modifier by the developer inside the project.
 	 */
-	public void addContributor(final int idStaff, final String fullname, final Date firstCommit, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
-		contributors.add(new ContributorView(idStaff, fullname, firstCommit, lastCommit, numberOfCommits, numberOfFiles));
+	public void addContributor(final int idStaff, final String fullname, final boolean active, final Date firstCommit, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
+		contributors.add(new ContributorView(idStaff, fullname, active, firstCommit, lastCommit, numberOfCommits, numberOfFiles));
 	}
 	
 }

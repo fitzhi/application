@@ -4,6 +4,11 @@ export class Contributor {
   public fullname: string;
 
   /**
+   * Is this developer still beloging to the company.
+   */
+  public active: boolean;
+
+  /**
    * Date of first commit for this developer
    */
   public firstCommit: Date;

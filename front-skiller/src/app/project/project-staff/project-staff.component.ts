@@ -14,7 +14,7 @@ export class ProjectStaffComponent implements OnInit {
 
   public dataSource;
 
-  public displayedColumns: string[] = ['fullname', 'firstCommit', 'lastCommit', 'numberOfCommits', 'numberOfFiles'];
+  public displayedColumns: string[] = ['fullname', 'active', 'firstCommit', 'lastCommit', 'numberOfCommits', 'numberOfFiles'];
 
   public idProject: number;
 
