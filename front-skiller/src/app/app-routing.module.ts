@@ -27,6 +27,7 @@ const routes: Routes = [
   {path: 'searchProject', component: ListProjectComponent},
   {path: 'project', component: ProjectComponent},
   {path: 'project/:id', component: ProjectComponent},
+  {path: 'project/:id/staff', component: ProjectComponent},
   {path: 'project/sunburst/:id', component: ProjectSunburstComponent},
   {path: 'project/contributors/:id', component: ProjectStaffComponent},
   {path: 'sunburst-test', component: SunburstTestComponent},
