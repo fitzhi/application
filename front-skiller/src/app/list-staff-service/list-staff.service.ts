@@ -70,7 +70,6 @@ export class ListStaffService {
     foundCollab = ListStaffService.theStaff.find(collab => collab.idStaff === id);
 
     if (typeof foundCollab !== 'undefined') {
-      this.cinematicService.emitActualCollaboratorDisplay.next(id);
       // We create an observable for an element of the cache in order to be consistent with the direct reading.
       return of(foundCollab);
     } else {
@@ -79,7 +78,6 @@ export class ListStaffService {
       if (Constants.DEBUG) {
         console.log('Direct access for : ' + id);
       }
-      this.cinematicService.emitActualCollaboratorDisplay.next(id);
       return this.staffService.get(id).pipe(tap(
         (collab: Collaborator) => {
           if (Constants.DEBUG) {
