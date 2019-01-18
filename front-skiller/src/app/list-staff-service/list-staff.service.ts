@@ -4,8 +4,8 @@ import { Collaborator } from '../data/collaborator';
 import { StaffService } from '../staff.service';
 import { Injectable } from '@angular/core';
 
-import {Subject, Observable, of} from 'rxjs';
-import {catchError, map, tap, filter} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -79,12 +79,13 @@ export class ListStaffService {
       if (Constants.DEBUG) {
         console.log('Direct access for : ' + id);
       }
+      this.cinematicService.emitActualCollaboratorDisplay.next(id);
       return this.staffService.get(id).pipe(tap(
         (collab: Collaborator) => {
           if (Constants.DEBUG) {
             console.log('Direct access for : ' + id);
             if (typeof collab !== 'undefined') {
-              console.log('Collaborator found : ' + collab.firstName + ' ' + collab.lastName);
+              console.log('Staff member found : ' + collab.firstName + ' ' + collab.lastName);
             } else {
               console.log('No staff found for id ' + id);
             }

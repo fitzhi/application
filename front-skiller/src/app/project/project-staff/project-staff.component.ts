@@ -2,8 +2,10 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ProjectService } from '../../project.service';
 import { Constants } from '../../constants';
 import { MessageService } from '../../message.service';
-import { ActivatedRoute } from '@angular/router';
+import { CinematicService } from '../../cinematic.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import {MatSort, MatTableDataSource} from '@angular/material';
+import { ProjectStaffService } from '../project-staff-service/project-staff.service';
 
 @Component({
   selector: 'app-project-staff',
@@ -25,7 +27,10 @@ export class ProjectStaffComponent implements OnInit {
   constructor(
     private projectService: ProjectService,
     private route: ActivatedRoute,
-    private messageService: MessageService) { }
+    private messageService: MessageService,
+    private cinematicService: CinematicService,
+    private router: Router,
+    private projectStaffService: ProjectStaffService) { }
 
   ngOnInit() {
 
@@ -40,6 +45,15 @@ export class ProjectStaffComponent implements OnInit {
         this.loadContributors();
       }
     });
+
+    // Either we reach this component with this url '/project/:id' and the selection of the tab Staff
+    // Or we reach this component directly with this url '/project/:id/staff'
+    // We notify the cinematicService with the complete url '/project/:id/staff
+    // in order to be able to jump back directly to this list
+    // when the user will click the list button on the navigation block at the top left corner.
+    const urlProjectStaffList = (this.router.url.indexOf('/staff') === -1) ? this.router.url + '/staff' : this.router.url;
+
+    this.cinematicService.setForm(Constants.PROJECT_TAB_STAFF, urlProjectStaffList);
   }
 
   /**
@@ -50,6 +64,8 @@ export class ProjectStaffComponent implements OnInit {
       contributorsDTO => {
         this.dataSource = new MatTableDataSource(contributorsDTO.contributors);
         this.dataSource.sort = this.sort;
+        this.projectStaffService.contributors = this.dataSource.data;
+        this.dataSource.connect().subscribe(data => this.projectStaffService.contributors = data);
         this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: string): string => {
           if (typeof data[sortHeaderId] === 'string') {
             return data[sortHeaderId].toLocaleLowerCase();

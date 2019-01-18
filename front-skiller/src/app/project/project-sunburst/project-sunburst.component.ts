@@ -56,7 +56,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
 
     this.cinematicService.tabProjectActivated.subscribe (
       index => {
-        if (index === Constants.PROJECT_TAB_SUNBURST) {
+        if (index === Constants.PROJECT_IDX_TAB_SUNBURST) {
           this.loadSunburst ();
         }
       }

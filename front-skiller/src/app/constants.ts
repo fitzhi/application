@@ -12,6 +12,12 @@ export class Constants {
 
   public static URL_BACKEND = 'http://localhost:8080';
 
+  /**
+   * Value for Unknown object;
+   */
+  public static UNKNOWN  = -1;
+
+
   public static LEVEL_Expert = 5;
   public static LEVEL_Experienced = 4;
   public static LEVEL_Senior = 3;
@@ -26,7 +32,7 @@ export class Constants {
     Constants.LEVEL_Beginner];
 
   /**
-	* Form active
+	* Form identifiers active
 	*/
   public static WELCOME = 0;
   public static SKILLS_SEARCH = 1;
@@ -34,14 +40,16 @@ export class Constants {
   public static DEVELOPERS_SEARCH = 3;
   public static DEVELOPERS_CRUD = 4;
   public static PROJECT_SEARCH = 5;
-  public static PROJECT_CRUD = 6;
+  public static PROJECT_TABS_HOST = 6;
+  public static PROJECT_TAB_FORM = 7;
+  public static PROJECT_TAB_STAFF = 8;
 
   /*
   * Indexes of tab inside the form group Project
   */
-  public static PROJECT_TAB_FORM = 0;
-  public static PROJECT_TAB_STAFF = 1;
-  public static PROJECT_TAB_SUNBURST = 2;
+  public static PROJECT_IDX_TAB_FORM = 0;
+  public static PROJECT_IDX_TAB_STAFF = 1;
+  public static PROJECT_IDX_TAB_SUNBURST = 2;
 
   /**
    * Type of file allowed to be uploaded by the back-end for the application file.

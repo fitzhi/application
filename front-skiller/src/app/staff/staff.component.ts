@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Collaborator} from '../data/collaborator';
 import {Constants} from '../constants';
 
@@ -28,7 +28,8 @@ export class StaffComponent implements OnInit {
     private route: ActivatedRoute,
     private listStaffService: ListStaffService,
     private messageService: MessageService,
-    private staffDataExchangeService: StaffDataExchangeService) {}
+    private staffDataExchangeService: StaffDataExchangeService,
+    private router: Router) {}
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
@@ -62,7 +63,8 @@ export class StaffComponent implements OnInit {
             } else {
               document.querySelector('body').style.cssText = '--actions-button-visible: hidden';
             }
-            this.cinematicService.setForm(Constants.DEVELOPERS_CRUD);
+            this.cinematicService.emitActualCollaboratorDisplay.next(this.collaborator.idStaff);
+            this.cinematicService.setForm(Constants.DEVELOPERS_CRUD, this.router.url);
           },
           error => {
             if (error.status === 404) {
@@ -89,7 +91,7 @@ export class StaffComponent implements OnInit {
         );
       }
     });
-    this.cinematicService.setForm(Constants.DEVELOPERS_CRUD);
+    this.cinematicService.setForm(Constants.DEVELOPERS_CRUD, this.router.url);
   }
 }
 

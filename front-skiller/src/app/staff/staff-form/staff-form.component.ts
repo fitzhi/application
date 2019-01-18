@@ -11,6 +11,7 @@ import {StaffDataExchangeService} from '../service/staff-data-exchange.service';
 import {Component, OnInit, Input} from '@angular/core';
 
 import {FormGroup, FormControl, Validators} from '@angular/forms';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -51,7 +52,8 @@ export class StaffFormComponent implements OnInit {
     private messageService: MessageService,
     private cinematicService: CinematicService,
     private referentialService: ReferentialService,
-    private staffDataExchangeService: StaffDataExchangeService) {}
+    private staffDataExchangeService: StaffDataExchangeService,
+    private router: Router) {}
 
   ngOnInit() {
 
@@ -83,11 +85,12 @@ export class StaffFormComponent implements OnInit {
           // We need to disable this field within the code and not in HTML like the rest of the form.
           this.profileStaff.get('profile').disable();
         }
-        this.cinematicService.setForm(Constants.DEVELOPERS_CRUD);
+        this.cinematicService.setForm(Constants.DEVELOPERS_CRUD, this.router.url);
       });
 
     this.referentialService.behaviorSubjectProfiles.subscribe(
       (profiles: Profile[]) => this.profiles = profiles);
+
   }
 
   /**

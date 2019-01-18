@@ -1,6 +1,14 @@
 
 export class Contributor {
-  public id: number;
+
+  /**
+   * Staff's identifier.
+   */
+  public idStaff: number;
+
+  /**
+   * Staff's fullname (first + last)
+   */
   public fullname: string;
 
   /**

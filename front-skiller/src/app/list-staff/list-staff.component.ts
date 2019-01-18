@@ -6,6 +6,7 @@ import {Experience} from '../data/experience';
 import {Profile} from '../data/profile';
 import {ListStaffService} from '../list-staff-service/list-staff.service';
 import {ReferentialService} from '../referential.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-list-staff',
@@ -21,10 +22,11 @@ export class ListStaffComponent implements OnInit {
   constructor(
     private cinematicService: CinematicService,
     private referentialService: ReferentialService,
-    private listStaffService: ListStaffService) {}
+    private listStaffService: ListStaffService,
+    private router: Router) {}
 
   ngOnInit() {
-    this.cinematicService.setForm(Constants.DEVELOPERS_SEARCH);
+    this.cinematicService.setForm(Constants.DEVELOPERS_SEARCH, this.router.url);
     this.collaborators = this.listStaffService.getStaff();
 
     this.referentialService.behaviorSubjectProfiles.subscribe(

@@ -1,46 +1,104 @@
 import { Constants } from './constants';
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import {Subject} from 'rxjs/Subject';
+import { Subject } from 'rxjs/Subject';
 
-@Injectable({
-  providedIn: 'root'
-})
+class Form {
+
+    /**
+     * Active form identifier.
+     */
+    public formIdentifier: Number = -1;
+
+    /**
+     * url activated for this form.
+     */
+    public url: String;
+
+    /**
+     * Constructor
+     */
+    constructor(formIdentifier, url) {
+        this.formIdentifier = formIdentifier;
+        this.url = url;
+    }
+
+    public trace() {
+        if (Constants.DEBUG) {
+            console.log('Form Identifier ' + this.formIdentifier + ' for url ' + this.url);
+        }
+    }
+}
+
 export class CinematicService {
 
-  /**
-   * Identifier of the select form on stage on the SPA.
-   */
-  public actualFormOnStage = new BehaviorSubject<Number>(Constants.WELCOME);
-
-  /**
-    * Current collaborator's identifier previewed on the form.
-    */
-  public emitActualCollaboratorDisplay = new Subject<number>();
-
-  /**
-   * Observable associated with the current collaborator previewed.
-   */
-  newCollaboratorDisplayEmitted$ = this.emitActualCollaboratorDisplay.asObservable();
-
-  /**
-   * This subject containts the tab selected in the projects Tab Group container
-   */
-  public tabProjectActivated = new BehaviorSubject<Number>(Constants.PROJECT_TAB_FORM);
-
-  setForm(form: Number) {
     /**
-    * Fire the event. Has to be at the end of the method.
-    */
-    this.actualFormOnStage.next(form);
-  }
+     * Identifier of the select form on stage on the SPA.
+     */
+    public currentActiveForm = new BehaviorSubject<Form>(new Form(Constants.WELCOME, 'Welcome'));
 
-  /**
-   * Fire the event that the tab index has changed.
-   */
-  setProjectTab(tab: number) {
-    this.tabProjectActivated.next(tab);
-  }
+    /**
+      * Current collaborator's identifier previewed on the form.
+      */
+    public emitActualCollaboratorDisplay = new Subject<number>();
+
+    /**
+     * Observable associated with the current collaborator previewed.
+     */
+    newCollaboratorDisplayEmitted$ = this.emitActualCollaboratorDisplay.asObservable();
+
+    /**
+     * This subject containts the tab selected in the projects Tab Group container
+     */
+    public tabProjectActivated = new BehaviorSubject<Number>(Constants.PROJECT_IDX_TAB_FORM);
+
+
+    /**
+     * Previous form active
+     */
+    public previousForm: Form = new Form(Constants.WELCOME, '/welcome');
+
+    /**
+      * Set the new form identifier.
+      * We memorize the previous active form.
+      * We need to keep that information behind, in order to detect master/detail sequences behind each list/form couples
+      * The navigation toolbar on the top left corner, need to know if we reach the for
+      * either from the natural URL, or the jump link from the list
+     */
+    setForm(formIdentifier: Number, url: String) {
+
+        /**
+         * We do not change the active form.
+         */
+        if (formIdentifier === this.currentActiveForm.getValue().formIdentifier) {
+            return;
+        }
+
+        this.previousForm = this.currentActiveForm.getValue();
+
+        if (Constants.DEBUG) {
+          this.previousForm.trace();
+        }
+
+        /**
+        * Fire the event. Has to be at the end of the method.
+        */
+        this.currentActiveForm.next(new Form(formIdentifier, url));
+    }
+
+    /**
+     * @return The former Form identifier
+     */
+    getFormerFormIdentifier() {
+        return this.previousForm.formIdentifier;
+    }
+
+    /**
+     * Fire the event that the tab index has changed.
+     */
+    setProjectTab(tab: number) {
+        this.tabProjectActivated.next(tab);
+    }
 
 }
 

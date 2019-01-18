@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Constants } from '../constants';
 import { Skill } from '../data/skill';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { MessageService } from '../message.service';
@@ -34,7 +34,8 @@ export class SkillComponent implements OnInit {
     private route: ActivatedRoute,
     private skillService: SkillService,
     private listSkillService: ListSkillService,
-    private messageService: MessageService) { }
+    private messageService: MessageService,
+    private router: Router) { }
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(params => {
@@ -78,7 +79,7 @@ export class SkillComponent implements OnInit {
         );
       }
     });
-    this.cinematicService.setForm(Constants.SKILLS_CRUD);
+    this.cinematicService.setForm(Constants.SKILLS_CRUD, this.router.url);
   }
 
   /**

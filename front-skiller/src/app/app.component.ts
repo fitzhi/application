@@ -1,13 +1,14 @@
-import {Component, OnInit} from '@angular/core';
-import {CinematicService} from './cinematic.service';
-import {Constants} from './constants';
-import {ListProjectsService} from './list-projects-service/list-projects.service';
-import {ListSkillService} from './list-skill-service/list-skill.service';
-import {ListStaffService} from './list-staff-service/list-staff.service';
-import {ReferentialService} from './referential.service';
+import { Component, OnInit } from '@angular/core';
+import { CinematicService } from './cinematic.service';
+import { Constants } from './constants';
+import { ListProjectsService } from './list-projects-service/list-projects.service';
+import { ListSkillService } from './list-skill-service/list-skill.service';
+import { ListStaffService } from './list-staff-service/list-staff.service';
+import { ReferentialService } from './referential.service';
 import { StaffService } from './staff.service';
-import {Location} from '@angular/common';
-import {Router} from '@angular/router';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
+import { ProjectStaffService } from './project/project-staff-service/project-staff.service';
 
 @Component({
   selector: 'app-root',
@@ -46,7 +47,14 @@ export class AppComponent implements OnInit {
   */
   activeOnly = true;
 
+  /**
+   * NEXT element ID, if any, from the underlying collection supplying the master/detail feature.
+   */
   nextId: number;
+
+  /**
+   * PREVIOUS element ID, if any, from the underlying collection supplying the master/detail feature.
+   */
   previousId: number;
 
   skill_activated = true;
@@ -65,6 +73,7 @@ export class AppComponent implements OnInit {
   constructor(
     private cinematicService: CinematicService,
     private listStaffService: ListStaffService,
+    private projectStaffService: ProjectStaffService,
     private listSkillService: ListSkillService,
     private listProjectsService: ListProjectsService,
     private referentialService: ReferentialService,
@@ -72,9 +81,9 @@ export class AppComponent implements OnInit {
     private staffService: StaffService,
     private router: Router) {
 
-    this.cinematicService.actualFormOnStage.subscribe(data => {
+    this.cinematicService.currentActiveForm.subscribe(data => {
 
-      this.formId = data;
+      this.formId = data.formIdentifier;
       switch (this.formId) {
         case Constants.WELCOME: {
           this.formTitle = 'Who\'s who';
@@ -95,7 +104,9 @@ export class AppComponent implements OnInit {
           break;
         }
         case Constants.DEVELOPERS_CRUD: {
-          this.in_master_detail = (this.searching_what != null);
+          this.in_master_detail = (
+            (this.searching_what != null) ||
+            (this.cinematicService.getFormerFormIdentifier() === Constants.PROJECT_TAB_STAFF));
           this.is_allowed_to_search = true;
           this.formTitle = 'Developer mode';
           break;
@@ -106,7 +117,7 @@ export class AppComponent implements OnInit {
           this.is_allowed_to_search = true;
           break;
         }
-        case Constants.PROJECT_CRUD: {
+        case Constants.PROJECT_TAB_FORM: {
           this.formTitle = 'Project mode';
           this.in_master_detail = false;
           this.is_allowed_to_search = true;
@@ -123,7 +134,7 @@ export class AppComponent implements OnInit {
 
     this.cinematicService.newCollaboratorDisplayEmitted$.subscribe(data => {
       if (Constants.DEBUG) {
-        console.log('Receiving new staff member ' + data);
+        console.log('Receiving new staff member with ID ' + data);
       }
 
       /*
@@ -131,10 +142,18 @@ export class AppComponent implements OnInit {
        * "Expression has changed after it was checked"
        */
       setTimeout(() => {
-        this.previousId = listStaffService.previousCollaboratorId(data);
-        this.nextId = listStaffService.nextCollaboratorId(data);
-      }
-      );
+        switch (this.cinematicService.getFormerFormIdentifier()) {
+          case Constants.DEVELOPERS_SEARCH:
+            this.previousId = listStaffService.previousCollaboratorId(data);
+            this.nextId = listStaffService.nextCollaboratorId(data);
+            break;
+          case Constants.PROJECT_TAB_STAFF:
+            console.log('nope');
+            this.previousId = projectStaffService.previousIdStaff(data);
+            this.nextId = projectStaffService.nextIdStaff(data);
+            break;
+        }
+      });
       if (Constants.DEBUG) {
         console.log('this.previousId ' + this.previousId);
         console.log('this.nextId ' + this.nextId);
@@ -190,7 +209,7 @@ export class AppComponent implements OnInit {
 
   goNewDeveloper(): void {
     if (Constants.DEBUG) {
-      console.log('Entering in the method goNewDeveloper()');
+      console.log('Creating a new developer');
     }
     this.searching_what = null;
     this.router.navigate(['/user'], {});
@@ -228,20 +247,32 @@ export class AppComponent implements OnInit {
       case Constants.DEVELOPERS_CRUD:
         this.router.navigate(['/searchUser'], {});
         break;
-      case Constants.PROJECT_CRUD:
+      case Constants.PROJECT_TABS_HOST:
+      case Constants.PROJECT_TAB_STAFF:
+      case Constants.PROJECT_TAB_FORM:
         this.router.navigate(['/searchProject'], {});
         break;
     }
   }
 
   public list() {
+    console.log(this.cinematicService.getFormerFormIdentifier() + ' ' + this.cinematicService.previousForm.url);
     switch (this.formId) {
       case Constants.DEVELOPERS_CRUD:
-        this.router.navigate(['/searchUser'], {});
+        switch (this.cinematicService.getFormerFormIdentifier()) {
+          case Constants.DEVELOPERS_SEARCH:
+            this.router.navigate(['/searchUser'], {});
+            break;
+          case Constants.PROJECT_TAB_STAFF:
+            this.router.navigate([this.cinematicService.previousForm.url], {});
+            break;
+          default:
+            break;
+        }
         break;
       default:
         console.error('Unattempted formId ' + this.formId);
         break;
     }
-   }
+  }
 }

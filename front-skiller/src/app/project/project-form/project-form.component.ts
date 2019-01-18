@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import {ProjectService} from '../../project.service';
 import {SkillService} from '../../skill.service';
@@ -43,7 +43,8 @@ export class ProjectFormComponent implements OnInit {
     private messageService: MessageService,
     private projectService: ProjectService,
     private listProjectsService: ListProjectsService,
-    private skillService: SkillService) {}
+    private skillService: SkillService,
+    private router: Router) {}
 
 
   ngOnInit() {
@@ -61,7 +62,7 @@ export class ProjectFormComponent implements OnInit {
 
     });
 
-    this.cinematicService.setForm(Constants.PROJECT_CRUD);
+    this.cinematicService.setForm(Constants.PROJECT_TAB_FORM, this.router.url);
   }
 
   /**
