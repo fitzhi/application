@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.management.RuntimeErrorException;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Constants;
@@ -97,7 +98,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	 * Path access to retrieve the properties file for a given project  
 	 * It might be, for example, /src/main/resources/repository-settings/properties-{0}.json where {0} represents the project name.
 	 */
-	@Value("${Sunburst.repositoryPathPatternSettings}")
+	@Value("${versionControl.ConnectionSettings}")
 	private String repositoryPathPatternSettings;
 	
 	// Should the slices without source be average to the value of their children, or stayed in the void color.
@@ -364,6 +365,8 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	 */
 	private ConnectionSettings connectionSettings(final Project project) throws Exception {
 
+		//FIXME REWORK
+		throw new RuntimeException("Should be fixed")
 		final String fileProperties = MessageFormat.format (repositoryPathPatternSettings, project.name);
 
 		ConnectionSettings settings = new ConnectionSettings();

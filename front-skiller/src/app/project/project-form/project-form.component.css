@@ -16,3 +16,35 @@
 .required {
 	font-weight: 600;
 }
+
+div.connection_settings {
+	border-width:0,1em;
+ 	border-style:solid;
+	border-color:lightgrey;
+	padding: 1em;
+}
+
+div.buttons_toggle {
+	padding: 1em;
+}
+
+.lab_and_row_repository {
+	padding-top: 0.5em;
+	padding-right: 0.5em;
+	padding-left: 0.5em;
+	padding-bottom: 1em;
+}
+
+.lab_and_row_user_password {
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+	padding-right: 0.5em;
+	padding-left: 1em;
+}
+
+div.expanation_access {
+	font-size: 0.7em;
+	color: grey;
+	margin-left: 6em;
+	margin-bottom: 2em;
+}

@@ -20,22 +20,35 @@ import {LocalDataSource} from 'ng2-smart-table';
 })
 export class ProjectFormComponent implements OnInit {
 
-  private project: Project;
+  public project: Project;
 
   /**
    * id passed by the router.
    */
   private id: number;
 
+  public DIRECT_ACCESS = 1;
+  public REMOTE_FILE_ACCESS = 2;
+
   sourceSkills = new LocalDataSource([]);
   settings_skills = Constants.SETTINGS_SKILL_SMARTTABLE;
 
   profileProject = new FormGroup({
     projectName: new FormControl(''),
-    urlRepository: new FormControl('')
+    connectionSettings: new FormControl(''),
+    urlRepository1: new FormControl(''),
+    urlRepository2: new FormControl(''),
+    username: new FormControl(''),
+    password: new FormControl(''),
+    filename: new FormControl('')
   });
 
   sub: any;
+
+  /**
+  * Member variable linked to the connection settings toggle.
+  */
+  public connection_settings: string;
 
   constructor(
     private cinematicService: CinematicService,
@@ -117,7 +130,13 @@ export class ProjectFormComponent implements OnInit {
         (project: Project) => {
          this.project = project;
          this.profileProject.get('projectName').setValue(project.name);
-         this.profileProject.get('urlRepository').setValue(project.urlRepository);
+         this.connection_settings = String(this.project.connection_settings);
+         this.profileProject.get('connection_settings').setValue(this.connection_settings);
+         this.profileProject.get('urlRepository').setValue(this.project.urlRepository);
+         this.profileProject.get('urlRepository_2').setValue(this.project.urlRepository);
+         this.profileProject.get('username').setValue(this.project.user);
+         this.profileProject.get('password').setValue(this.project.password);
+         this.profileProject.get('filename').setValue(this.project.filename);
          this.sourceSkills.load(this.project.skills);
          },
         error => {
@@ -237,7 +256,20 @@ export class ProjectFormComponent implements OnInit {
    */
   onSubmit() {
     this.project.name = this.profileProject.get('projectName').value;
-    this.project.urlRepository = this.profileProject.get('urlRepository').value;
+    switch (this.project.connection_settings) {
+      case this.DIRECT_ACCESS:
+        this.project.urlRepository = this.profileProject.get('urlRepository1').value;
+        this.project.user = this.profileProject.get('username').value;
+        this.project.password = this.profileProject.get('password').value;
+        this.project.filename = '';
+        break;
+      case this.REMOTE_FILE_ACCESS:
+        this.project.urlRepository = this.profileProject.get('urlRepository2').value;
+        this.project.user = '';
+        this.project.password = '';
+        this.project.filename = this.profileProject.get('filename').value;
+        break;
+    }
     if (Constants.DEBUG) {
       console.log('saving the project ' + this.project.name + ' with id ' + this.project.id);
     }
@@ -247,4 +279,42 @@ export class ProjectFormComponent implements OnInit {
           this.messageService.info('Project ' + this.project.name + '  saved !');
         });
   }
+
+  public onConnectionSettingsChange(val: string) {
+    this.project.connection_settings = +val;
+    switch (this.project.connection_settings) {
+      case this.DIRECT_ACCESS:
+        this.profileProject.get('filename').setValue('');
+        this.profileProject.get('urlRepository1').setValue(this.profileProject.get('urlRepository2').value);
+        break;
+      case this.REMOTE_FILE_ACCESS:
+        this.profileProject.get('username').setValue('');
+        this.profileProject.get('password').setValue('');
+        this.profileProject.get('urlRepository2').setValue(this.profileProject.get('urlRepository1').value);
+        break;
+    }
+  }
+
+  /**
+   * Did the user select the direct access connection settings (user/password).
+   */
+  public directAccess() {
+    // No choice have been made yet. We are the 2 pannels.
+    if (typeof this.project.connection_settings === 'undefined') {
+      return true;
+    }
+    return (this.project.connection_settings === this.DIRECT_ACCESS);
+  }
+
+  /**
+   * Did the user select the undirect access. Indicating a remote file containing the connection settings.
+   */
+  public undirectAccess() {
+    // No choice have been made yet. We are the 2 pannels.
+    if (typeof this.project.connection_settings === 'undefined') {
+      return true;
+    }
+    return (this.project.connection_settings === this.REMOTE_FILE_ACCESS);
+  }
+
 }
