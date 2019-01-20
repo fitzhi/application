@@ -1,1 +1,1 @@
-{"1":{"id":1,"name":"TEST 1","skills":[]},"2":{"id":2,"name":"TEST 2","skills":[{"id":1,"title":"JAVA"}]}}
+{"1":{"id":1,"name":"TEST 1","connection_settings":0,"skills":[]},"2":{"id":2,"name":"TEST 2","connection_settings":0,"skills":[{"id":1,"title":"JAVA"}]}}

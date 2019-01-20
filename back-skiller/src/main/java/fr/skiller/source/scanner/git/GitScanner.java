@@ -50,9 +50,12 @@ import fr.skiller.source.scanner.RepoScanner;
 import fr.skiller.Error;
 import fr.skiller.Global;
 import fr.skiller.bean.CacheDataHandler;
-import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
 import static fr.skiller.Global.UNKNOWN;
+import static fr.skiller.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
+import static fr.skiller.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
+import static fr.skiller.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
+import static fr.skiller.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL GIT implementation of a code Scanner
@@ -96,10 +99,10 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	
 	/**
 	 * Path access to retrieve the properties file for a given project  
-	 * It might be, for example, /src/main/resources/repository-settings/properties-{0}.json where {0} represents the project name.
+	 * By default, this file will be located in {@code /src/main/resources/repository-settings/}
 	 */
 	@Value("${versionControl.ConnectionSettings}")
-	private String repositoryPathPatternSettings;
+	private String pathConnectionSettings;
 	
 	// Should the slices without source be average to the value of their children, or stayed in the void color.
 	@Value("${Sunburst.fillTheHoles}")
@@ -365,17 +368,39 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	 */
 	private ConnectionSettings connectionSettings(final Project project) throws Exception {
 
-		//FIXME REWORK
-		if (true) throw new RuntimeException("Should be fixed soon");
-		final String fileProperties = MessageFormat.format (repositoryPathPatternSettings, project.name);
-
-		ConnectionSettings settings = new ConnectionSettings();
-		final FileReader fr = new FileReader(new File(fileProperties));
-		settings = gson.fromJson(fr, settings.getClass());
-		fr.close();
-		if (logger.isDebugEnabled()) {
-			logger.debug("GIT remote URL " + settings.url);
+		
+		if (project.isDirectAccess()) {
+			ConnectionSettings settings = new ConnectionSettings();
+			settings.url = project.urlRepository;
+			settings.login = project.username;
+			settings.password = project.password;
+			return settings;
 		}
-		return settings;
+		
+		if (project.isIndirectAccess()) {
+			final String fileProperties = pathConnectionSettings + project.filename;
+			File f = new File(fileProperties);
+			if (!f.exists()) {
+				throw new SkillerException(CODE_FILE_CONNECTION_SETTINGS_NOFOUND, 
+						MessageFormat.format(MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND, fileProperties));
+			}
+			
+			ConnectionSettings settings = new ConnectionSettings();
+			final FileReader fr = new FileReader(f);
+			settings = gson.fromJson(fr, settings.getClass());
+			
+			// We accept a global URL declared in the connection file, but its value will be overridden if the project get its own.
+			if (project.urlRepository != null) {
+				settings.url = project.urlRepository;
+			}
+			fr.close();
+			if (logger.isDebugEnabled()) {
+				logger.debug("GIT remote URL " + settings.url + " with user " + settings.login);
+			}
+			return settings;
+		}
+		
+		throw new SkillerException(CODE_UNEXPECTED_VALUE_PARAMETER, "[Project : "+project.name+"] "+
+				MessageFormat.format(MESSAGE_UNEXPECTED_VALUE_PARAMETER, "project.connection_Settings", project.connection_settings));
 	}
 }

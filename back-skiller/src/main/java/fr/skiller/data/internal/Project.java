@@ -50,6 +50,20 @@ public class Project {
 	 */
 	public List<Skill> skills = new ArrayList<Skill>();
 	
+	
+	/**
+	 * Constant representing one the 2 models of connection settings.
+	 * This one if for the direct access : url repository / user / password
+	 */
+	private static int DIRECT_ACCESS = 1;
+	
+	/**
+	 * Constant representing one the 2 models of connection settings.
+	 * This one if for the inderect access : url repository / remote filename with connection parameters.
+	 */
+	private static int REMOTE_FILE_ACCESS = 2;
+	
+	
 	/**
 	 * Empty constructor.
 	 */
@@ -74,6 +88,22 @@ public class Project {
 		this(id, name, null);
 	}
 
+	/**
+	 * @return {@code true} if the project is setup with a direct access to the version control repository 
+	 * <i>(the Project self-contains connection parameters)</i>
+	 */
+	public boolean isDirectAccess() {
+		return (connection_settings == DIRECT_ACCESS);
+	}
+	
+	/**
+	 * @return {@code true} if the project is setup with an indirect access to the version control repository 
+	 * <i>(Application must retrieve the connection parameters on a property file)</i>
+	 */
+	public boolean isIndirectAccess() {
+		return (connection_settings == REMOTE_FILE_ACCESS);
+	}
+	
 	@Override
 	public String toString() {
 		return "Project [id=" + id + ", name=" + name + ", connection_settings=" + connection_settings
