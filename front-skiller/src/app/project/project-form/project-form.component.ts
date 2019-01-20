@@ -35,7 +35,7 @@ export class ProjectFormComponent implements OnInit {
 
   profileProject = new FormGroup({
     projectName: new FormControl(''),
-    connectionSettings: new FormControl(''),
+/*    connectionSettings: new FormControl(''), */
     urlRepository1: new FormControl(''),
     urlRepository2: new FormControl(''),
     username: new FormControl(''),
@@ -131,10 +131,9 @@ export class ProjectFormComponent implements OnInit {
          this.project = project;
          this.profileProject.get('projectName').setValue(project.name);
          this.connection_settings = String(this.project.connection_settings);
-         this.profileProject.get('connection_settings').setValue(this.connection_settings);
-         this.profileProject.get('urlRepository').setValue(this.project.urlRepository);
-         this.profileProject.get('urlRepository_2').setValue(this.project.urlRepository);
-         this.profileProject.get('username').setValue(this.project.user);
+         this.profileProject.get('urlRepository1').setValue(this.project.urlRepository);
+         this.profileProject.get('urlRepository2').setValue(this.project.urlRepository);
+         this.profileProject.get('username').setValue(this.project.username);
          this.profileProject.get('password').setValue(this.project.password);
          this.profileProject.get('filename').setValue(this.project.filename);
          this.sourceSkills.load(this.project.skills);
@@ -259,13 +258,13 @@ export class ProjectFormComponent implements OnInit {
     switch (this.project.connection_settings) {
       case this.DIRECT_ACCESS:
         this.project.urlRepository = this.profileProject.get('urlRepository1').value;
-        this.project.user = this.profileProject.get('username').value;
+        this.project.username = this.profileProject.get('username').value;
         this.project.password = this.profileProject.get('password').value;
         this.project.filename = '';
         break;
       case this.REMOTE_FILE_ACCESS:
         this.project.urlRepository = this.profileProject.get('urlRepository2').value;
-        this.project.user = '';
+        this.project.username = '';
         this.project.password = '';
         this.project.filename = this.profileProject.get('filename').value;
         break;
@@ -300,7 +299,7 @@ export class ProjectFormComponent implements OnInit {
    */
   public directAccess() {
     // No choice have been made yet. We are the 2 pannels.
-    if (typeof this.project.connection_settings === 'undefined') {
+    if ((typeof this.project.connection_settings === 'undefined') || (this.project.connection_settings === 0)) {
       return true;
     }
     return (this.project.connection_settings === this.DIRECT_ACCESS);
@@ -311,7 +310,7 @@ export class ProjectFormComponent implements OnInit {
    */
   public undirectAccess() {
     // No choice have been made yet. We are the 2 pannels.
-    if (typeof this.project.connection_settings === 'undefined') {
+    if ((typeof this.project.connection_settings === 'undefined') || (this.project.connection_settings === 0)) {
       return true;
     }
     return (this.project.connection_settings === this.REMOTE_FILE_ACCESS);

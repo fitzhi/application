@@ -6,7 +6,7 @@ export class Project {
   public name: string;
   public connection_settings: number;
   public urlRepository: string;
-  public user: string;
+  public username: string;
   public password: string;
   public filename: string;
   public skills: Skill[];

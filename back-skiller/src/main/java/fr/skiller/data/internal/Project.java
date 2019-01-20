@@ -20,9 +20,30 @@ public class Project {
 	public String name;
 	
 	/**
+	 * The connection settings model.
+	 * 2 models exist : either the direct (URL/user/pass), or the indirect (URL/remote file)
+	 */
+	public int connection_settings;
+	
+	/**
 	 * The repository URL of the project
 	 */
 	public String urlRepository;
+	
+	/**
+	 * The user name required to access the version control repository.
+	 */
+	public String username;
+
+	/**
+	 * The user name required to access the version control repository.
+	 */
+	public String password;
+	
+	/**
+	 * The filename containing the connection parameters to access the version control system.
+	 */
+	public String filename;
 	
 	/**
 	 * List of skills required for this project.
@@ -55,7 +76,10 @@ public class Project {
 
 	@Override
 	public String toString() {
-		return "Project [id=" + id + ", name=" + name + ", urlRepository=" + urlRepository + ", skills=" + skills + "]";
+		return "Project [id=" + id + ", name=" + name + ", connection_settings=" + connection_settings
+				+ ", urlRepository=" + urlRepository + ", username=" + username + ", password=" + password
+				+ ", filename=" + filename + ", skills=" + skills + "]";
 	}
+
 
 }

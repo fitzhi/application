@@ -366,7 +366,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	private ConnectionSettings connectionSettings(final Project project) throws Exception {
 
 		//FIXME REWORK
-		throw new RuntimeException("Should be fixed")
+		if (true) throw new RuntimeException("Should be fixed soon");
 		final String fileProperties = MessageFormat.format (repositoryPathPatternSettings, project.name);
 
 		ConnectionSettings settings = new ConnectionSettings();
