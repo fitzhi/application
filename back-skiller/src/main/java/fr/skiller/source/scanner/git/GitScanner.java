@@ -296,18 +296,19 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
  	private String cleanupPath = "";
  	
  	/**
- 	 * Extract from the filename path the non relevant directory (such as /src/main/java) 
+ 	 * Extract from the filename path the non relevant directory (such as {@code /src/main/java}) <br/>
+ 	 * <i>(This method is public for testing purpose.)</i>
  	 * @param path the given path
- 	 * @return the cleanup file
+ 	 * @return the cleanup path
  	 */
-	private String cleanupPath (final String path) {
+	public String cleanupPath (final String path) {
 
 		cleanupPath = "";
  		
 		patternsCleanupList.stream().forEach(pattern -> {
  			Matcher matcher = pattern.matcher(path);
  			if (matcher.find() && (cleanupPath.length()==0)) {
- 				cleanupPath = path.substring(matcher.end());
+ 				cleanupPath = path.substring(0, matcher.start()+1) + path.substring(matcher.end());
  			}
  		});
  		return (cleanupPath.length() == 0) ? path : cleanupPath;
