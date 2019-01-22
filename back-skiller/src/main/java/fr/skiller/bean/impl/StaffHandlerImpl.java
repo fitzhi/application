@@ -49,7 +49,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	/**
 	 * The logger.
 	 */
-	Logger logger = LoggerFactory.getLogger(StaffHandlerImpl.class.getName());
+	private Logger logger = LoggerFactory.getLogger(StaffHandlerImpl.class.getName());
 	
 	/**
 	 * Initialization of the Google JSON parser.
@@ -177,12 +177,30 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		List<Staff> ids;
 		switch (word.length) {
 		case 1:
-			// If the criteria contains only one word, we assume that this criteria is the login id
+			
+			// If the criteria contains only one word, we assume FIRST that this criteria is the login id
 			ids = getStaff().values().stream()
 				.filter(staff -> word[0].equals(staff.login))
 				.collect(Collectors.toList());
+			
+			// If the criteria contains only one word which is not a login name, 
+			// we assume that this criteria is the last name
+			if (ids.size() == 0) {
+				ids = getStaff().values().stream()
+						.filter(staff -> word[0].equals(staff.lastName))
+						.collect(Collectors.toList());				
+			}
+			
+			// If the criteria contains only one word which is not a login name, 
+			// we assume that this criteria is the first name
+			if (ids.size() == 0) {
+				ids = getStaff().values().stream()
+						.filter(staff -> word[0].equals(staff.firstName))
+						.collect(Collectors.toList());				
+			}
 			break;
-		case 2:
+/*		case 2:
+			
 			// If the criteria contains only 2 words, we assume that this criteria is the first name and the last name
 			ids = getStaff().values().stream()
 			.filter(staff -> word[0].toLowerCase().equals(staff.lastName.toLowerCase()))
@@ -196,8 +214,20 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 						.collect(Collectors.toList());				
 			}
 			break;
+*/			
 		default:
-			throw new RuntimeException("Not implemented yet for teh criteria " + criteria);
+			// If the criteria contains multiple words, we assume that this criteria is the full name of the contributor
+			// Either with the firstName + " " + lastName, or the lastName + " " + firstName
+			ids = getStaff().values().stream()
+			.filter(staff -> criteria.trim().toLowerCase().equals(staff.fullName().toLowerCase()))
+			.collect(Collectors.toList());
+
+			
+			
+			// If the criteria contains only 2 words, we assume that this criteria is the first name and the last name
+
+//			logger.error ("Not implemented yet for the criteria " + criteria);
+//			return null;
 		}
 
 		if (ids.size() == 1) {
@@ -210,14 +240,13 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			logger.warn("By default, we assumed to return the first one...");
 			return ids.get(0);
 		}
-		
-		// Staff was not found.
-		// has to be the case : (ids.size() == 0)
-		if (logger.isWarnEnabled()) {
-			logger.warn("No staff found under the criteria " + criteria);
-		}
+
+		// ids.size() == 0 at this point.
 		return null;
 	}
+	
+	
+	
 	
 	@Override
 	public List<Contributor> takeAccount(Project project, CommitRepository repository) throws SkillerException {

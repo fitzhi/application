@@ -61,6 +61,7 @@ export class StaffService extends InternalService {
     if (Constants.DEBUG) {
       console.log('Saving the collaborator with id ' + collaborator.idStaff);
     }
+
     return this.http.post<Collaborator>(this.collaboratorUrl + '/save', collaborator, httpOptions);
   }
 

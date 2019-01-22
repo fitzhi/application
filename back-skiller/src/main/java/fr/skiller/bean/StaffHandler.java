@@ -50,14 +50,14 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * @return the updated Staff
 	 * @throws SkillerException Thrown if any error occurs during the treatment
 	 */
-	Staff addExperiences (final int idStaff, final ResumeSkill[] skills) throws SkillerException ;
+	Staff addExperiences (int idStaff, ResumeSkill[] skills) throws SkillerException ;
 	
 	/**
 	 * Lookup for staff members responding to a polymorphous criteria.<br/>
 	 * For this release, 2 scenarios are implemented regarding the content of this criteria : <br/>
 	 * <ul>
-	 * <li>The criteria contains ONE word and therefore, it's corresponding to the connection login.</li> 
-	 * <li>The criteria contains TWO words and therefore, it's corresponding to user first name and last name.</li> 
+	 * <li>The criteria contains ONE word and therefore, it's corresponding either to the connection login, or the last name, or the first name <i>(in that order)</i>.</li> 
+	 * <li>The criteria contains MULTIPLE words and therefore, it's corresponding to user full name (first + last) or (last+first).</li> 
 	 * </ul>
 	 * @param criteria polymorphous criteria
 	 * @return the <i>first</i> staff corresponding to the criteria, or NULL is none's found

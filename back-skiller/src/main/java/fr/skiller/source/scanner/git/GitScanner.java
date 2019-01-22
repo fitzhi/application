@@ -11,8 +11,10 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -203,6 +205,11 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		list.fillTo(Integer.MAX_VALUE);
 				
 		final CommitRepository repositoryOfCommit = new BasicCommitRepository();
+
+        /**
+         * Set of unknown contributors having work on this repository.
+         */
+        Set<String> unknown = new HashSet<String>();
 		
 		TreeWalk treeWalk = new TreeWalk(repo);
 		for (RevCommit commit : list) {
@@ -227,7 +234,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	        
 	        // Treatment cache containing the mapping between the criteria retrieved from GIT and the associated staff member
 	        Map<String, Staff> cacheCriteriaStaff = new HashMap<String, Staff>();
-	        
+	        	        
 	        while (treeWalk.next()) {
 
 	        	if (isElligible(treeWalk.getPathString())) {
@@ -243,8 +250,11 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 						
 						if (!cacheCriteriaStaff.containsKey(author)) {
 							staff = staffHandler.lookup(author);
-							if ((staff == null) & logger.isDebugEnabled()) {
-								logger.debug(author + " will be considered as unknown." );
+							if (staff == null) {
+								if (logger.isDebugEnabled()) {
+									logger.debug("No staff found for the criteria " + author );
+								}
+								unknown.add(author);
 							}
 							cacheCriteriaStaff.put(author, staff);
 						} else {
@@ -264,7 +274,12 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		revWalk.close();
 		git.close();
 		
-		// Saving the repository into the cache
+        // Displaying results...
+        if (logger.isWarnEnabled()) {
+        	unknown.stream().forEach(author -> logger.warn(author));
+        }
+
+        // Saving the repository into the cache
 		cacheDataHandler.saveRepository(project, repositoryOfCommit);
 		
 		return repositoryOfCommit;

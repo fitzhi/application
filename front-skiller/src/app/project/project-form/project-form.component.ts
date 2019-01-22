@@ -35,7 +35,6 @@ export class ProjectFormComponent implements OnInit {
 
   profileProject = new FormGroup({
     projectName: new FormControl(''),
-/*    connectionSettings: new FormControl(''), */
     urlRepository1: new FormControl(''),
     urlRepository2: new FormControl(''),
     username: new FormControl(''),

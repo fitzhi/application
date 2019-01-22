@@ -148,7 +148,6 @@ export class AppComponent implements OnInit {
             this.nextId = listStaffService.nextCollaboratorId(data);
             break;
           case Constants.PROJECT_TAB_STAFF:
-            console.log('nope');
             this.previousId = projectStaffService.previousIdStaff(data);
             this.nextId = projectStaffService.nextIdStaff(data);
             break;

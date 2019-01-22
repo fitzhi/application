@@ -21,8 +21,13 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
   private charInitilalized = false;
 
   // this boolean is indicating that the sunburst chart is ready to be viewed.
-  // The waiting div can be hidden, and replaced by the chart.
   public sunburst_ready = false;
+
+  // this boolean is indicating that the sunburst chart is not possible.
+  public sunburst_impossible = true;
+
+  // this boolean is indicating that the sunburst chart is on fabrication
+  public sunburst_waiting = false;
 
   // Waiting images previewed during the chart generation.
   public sunburstWaitingImage = '/assets/img/sunburst-waiting-image.png';
@@ -51,6 +56,9 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
         console.log('No project identifier passed to this tab. No data available for preview !');
       }
       this.messageService.info('No project identifier passed to this form or no data available for preview !');
+      this.sunburst_ready = false;
+      this.sunburst_waiting = false;
+      this.sunburst_impossible = true;
       return;
     }
 
@@ -72,7 +80,18 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    this.sunburst_ready = false;
+    if (typeof this.idProject === 'undefined') {
+        this.sunburst_impossible = true;
+        this.sunburst_waiting = false;
+        this.sunburst_ready = false;
+        return;
+    } else {
+        this.sunburst_impossible = false;
+        this.sunburst_waiting = true;
+        this.sunburst_ready = false;
+    }
+
+
 
     if ((document.getElementById('chart') != null) && (this.idProject != null)) {
 

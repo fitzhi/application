@@ -114,7 +114,7 @@ public class Staff {
 	 * @return the complete name of the staff member in a string format.
 	 */
 	public String fullName() {
-		return (firstName==null?"":firstName) + " " + lastName;
+		return ((firstName==null?"":firstName) + " " + lastName).trim();
 	}
 	
 	/**

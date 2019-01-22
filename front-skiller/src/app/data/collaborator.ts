@@ -1,4 +1,4 @@
-import { Attribution } from './attribution';
+import { Mission } from './mission';
 import { Experience } from './experience';
 
 
@@ -23,6 +23,6 @@ export class Collaborator {
   /**
    * List of missions where the developer has been involved.
    */
-  public missions: Attribution[];
+  public missions: Mission[];
 
 }
