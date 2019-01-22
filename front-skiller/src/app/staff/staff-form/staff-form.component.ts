@@ -73,14 +73,14 @@ export class StaffFormComponent implements OnInit {
         this.profileStaff.get('active').setValue(this.collaborator.isActive);
         if (this.collaborator.isActive) {
           this.label_isActive = this.collaborator.firstName + ' ' + this.collaborator.lastName
-          + '\'s still belonging to the company. Uncheck this box to inform of his departure.';
+          + '\'s still in activity inside the company. Uncheck this box to inform of his departure.';
           // There is no READONLY attribute in the SELECT widget.
           // We need to enable this field within the code and not in HTML like the rest of the form.
           this.profileStaff.get('profile').enable();
           this.profileStaff.get('external').enable();
         } else {
           this.label_isActive = this.collaborator.firstName + ' ' +
-          this.collaborator.lastName + ' does not belong anymore to the staff since ';
+          this.collaborator.lastName + ' in no more in activity since ';
           this.label_dateInactive = this.collaborator.dateInactive;
           // There is no READONLY attribute in the SELECT widget.
           // We need to disable this field within the code and not in HTML like the rest of the form.

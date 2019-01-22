@@ -10,6 +10,12 @@
     color: darkblue;
 }
 
+:host >>> th#external > .mat-sort-header-container  {
+    display: flex;
+    justify-content: center;
+    color: darkblue;
+}
+
 :host >>> th#numberOfFiles > .mat-sort-header-container  {
     display: flex;
     justify-content: flex-end;

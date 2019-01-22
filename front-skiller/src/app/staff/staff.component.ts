@@ -46,7 +46,7 @@ export class StaffComponent implements OnInit {
       // We create an empty collaborator until the subscription is complete
       this.collaborator = {
         idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
-        isActive: true, dateInactive: null, application: null, typeOfApplication: null,
+        isActive: true, dateInactive: null, application: null, typeOfApplication: null, external: false,
         missions: [], experiences: []
       };
       /*
@@ -74,7 +74,8 @@ export class StaffComponent implements OnInit {
               this.messageService.error('There is no staff member for id ' + this.idStaff);
               this.collaborator = {
                 idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
-                isActive: true, dateInactive: null, application: null, typeOfApplication: null, missions: [], experiences: []
+                isActive: true, dateInactive: null, application: null, typeOfApplication: null, external: false,
+                missions: [], experiences: []
               };
             } else {
               console.error(error.message);

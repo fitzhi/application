@@ -38,6 +38,11 @@ public class Staff {
 	public int typeOfApplication;
 	
 	/**
+	 * {@code true} if this staff member is an external developer, {@code false} otherwise 
+	 */
+	public boolean external = false;
+
+	/**
 	 * The list of missions where the collaborator has been involved.
 	 */
 	public List<Mission> missions;
@@ -85,8 +90,9 @@ public class Staff {
 	 * @param email email of this staff member
 	 * @param level the level of this staff member
 	 * @param isActive {@code true} if the staff member is active, {@code false} otherwise
+	 * @param external {@code true} if the staff member is extern to the company, {@code false} otherwise
 	 */
-	public Staff(int idStaff, final String firstName, final String lastName, final String nickName, final String login, final String email, final String level, final boolean isActive) {
+	public Staff(int idStaff, final String firstName, final String lastName, final String nickName, final String login, final String email, final String level, final boolean isActive, final boolean external) {
 		super();
 		this.idStaff = idStaff;
 		this.firstName = firstName;
@@ -96,6 +102,7 @@ public class Staff {
 		this.email = email;
 		this.level = level;
 		this.isActive = isActive;
+		this.external = external;
 		missions = new ArrayList<Mission>();
 		experiences = new ArrayList<Experience>();
 	}
@@ -155,12 +162,14 @@ public class Staff {
 		missionSelected.numberOfCommits = contributor.numberOfCommitsSubmitted;
 		missionSelected.numberOfFiles = contributor.numberOfFiles;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "Staff [id=" + idStaff + ", firstName=" + firstName + ", lastName=" + lastName + ", nickName=" + nickName
-				+ ", login=" + login + ", email=" + email + ", level=" + level + ", isActive=" + isActive + ", missions="
-				+ missions + ", experiences=" + experiences + "]";
-	}
+		return "Staff [idStaff=" + idStaff + ", firstName=" + firstName + ", lastName=" + lastName + ", nickName="
+				+ nickName + ", login=" + login + ", email=" + email + ", level=" + level + ", isActive=" + isActive
+				+ ", dateInactive=" + dateInactive + ", application=" + application + ", typeOfApplication="
+				+ typeOfApplication + ", external=" + external + ", missions=" + missions + ", experiences="
+				+ experiences + "]";
+	}	
 
 }

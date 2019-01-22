@@ -70,7 +70,7 @@ public class CsvTest extends TestCase {
 				CSVStaffMember csvStaffMember = csvStaffIterator.next();
 				Staff staff = new Staff (STAFF.size()+1, csvStaffMember.firstName, csvStaffMember.lastName, csvStaffMember.login, csvStaffMember.login,
 						csvStaffMember.email, STAFF_LEVELS.get(csvStaffMember.poste),
-						(csvStaffMember.actif == null) ? true : false );
+						(csvStaffMember.actif == null) ? true : false, false );
 				
 				if ((csvStaffMember.skill_java != null) && (SKILLS_LEVELS.containsKey(csvStaffMember.skill_java.trim()))) {
 					staff.experiences.add(new Experience(1, "Java", SKILLS_LEVELS.get(csvStaffMember.skill_java.trim()) ));

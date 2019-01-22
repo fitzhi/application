@@ -18,7 +18,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
    */
   private idProject: number;
 
-  private charInitilalized = false;
+  private chart_is_drawn = false;
 
   // this boolean is indicating that the sunburst chart is ready to be viewed.
   public sunburst_ready = false;
@@ -76,7 +76,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
   loadSunburst() {
 
     // If chart has been already initialized, we do not need to generates it again.
-    if (this.charInitilalized) {
+    if (this.chart_is_drawn) {
       return;
     }
 
@@ -126,7 +126,6 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
           },
           () => {
             this.hackSunburstStyle();
-            this.charInitilalized = true;
             myChart.tooltipContent(function (graph) {
 
               if (graph.lastUpdate != null) {
@@ -141,6 +140,9 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
               }
             });
             this.sunburst_ready = true;
+            this.sunburst_waiting = false;
+            // The chart is drawn. We do have to generate a new one.
+            this.chart_is_drawn = true;
           });
     }
   }

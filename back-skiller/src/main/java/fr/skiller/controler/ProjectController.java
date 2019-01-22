@@ -403,6 +403,7 @@ public class ProjectController {
 							contributor.idStaff, 
 							staff.firstName + " " + staff.lastName,
 							staff.isActive,
+							staff.external,
 							contributor.firstCommit, 
 							contributor.lastCommit, 
 							contributor.numberOfCommitsSubmitted,

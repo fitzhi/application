@@ -12,9 +12,14 @@ export class Contributor {
   public fullname: string;
 
   /**
-   * Is this developer still beloging to the company.
+   * True is this developer's still in activity in the company, False otherwise
    */
   public active: boolean;
+
+  /**
+   * True is this developer belong to the company, False otherwise.
+   */
+  public external: boolean;
 
   /**
    * Date of first commit for this developer

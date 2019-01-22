@@ -18,6 +18,13 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="external">
+      <th id="external" mat-header-cell *matHeaderCellDef mat-sort-header>External</th>
+      <td mat-cell class="col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">
+        <img with="15" height="15" src="/assets/img/check-{{contributor.external}}.png" />
+      </td>
+    </ng-container>
+
     <ng-container id="firstCommit" matColumnDef="firstCommit">
       <th mat-header-cell id="firstCommit" class="col_date" *matHeaderCellDef mat-sort-header> First commit </th>
       <td mat-cell class="col_date {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">{{contributor.firstCommit | date:'dd/yy/yyyy'}}</td>

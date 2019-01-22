@@ -19,9 +19,14 @@ class ContributorView {
 	public String fullname;
 	
 	/**
-	 * {@code true} if this staff member is active in the company, {@code false} otherwise
+	 * {@code true} if this staff member is in activity in the company, {@code false} otherwise
 	 */
 	public boolean active;
+	
+	/**
+	 * {@code true} if this staff member is external from the company, {@code false} otherwise
+	 */
+	public boolean external;
 	
 	/**
 	 * Date of the latest commit.
@@ -47,15 +52,17 @@ class ContributorView {
 	 * @param idStaff staff identifier
 	 * @param fullname complete name of the developer <i>(first name + last name)</i>
 	 * @param firstCommit  Date of the <b>FIRST</b> commit for this developer.
-	 * @param active {@code true} if this staff member is active in the company, {@code false} otherwise
+	 * @param active {@code true} if this staff member is in activity in the staff, {@code false} otherwise
+	 * @param external {@code true} if this staff member belongs to the company, {@code false} otherwise
 	 * @param lastCommit  Date of the <b>LATEST</b> commit.
 	 * @param numberOfCommits number of commit submitted by the developer inside the project.
 	 * @param numberOfFiles number of files modifier by the developer inside the project.
 	 */
-	public ContributorView(final int idStaff, final String fullname, final boolean active, final Date firstCommit, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
+	public ContributorView(final int idStaff, final String fullname, final boolean active, final boolean external, final Date firstCommit, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
 		this.idStaff = idStaff;
 		this.fullname = fullname;
 		this.active = active;
+		this.external = external;
 		this.firstCommit = firstCommit;
 		this.lastCommit = lastCommit;
 		this.numberOfCommits = numberOfCommits;
@@ -114,14 +121,15 @@ public class ProjectContributorDTO {
 	/**
 	 * @param idStaff staff identifier
 	 * @param fullname complete name of the developer <i>(first name + last name)</i>
-	 * @param active <big>{@code true}</big> if this staff member is active in the company, <big>{@code false}</big> otherwise
+	 * @param active {@code true} if this staff member is in activity in the staff, {@code false} otherwise
+	 * @param external {@code true} if this staff member belongs to the company, {@code false} otherwise
 	 * @param firstCommit  Date of the <b>FIRST</b> commit for this developer.
 	 * @param lastCommit  Date of the <b>LATEST</b> commit.
 	 * @param numberOfCommits number of commit submitted by the developer inside the project.
 	 * @param numberOfFiles number of files modifier by the developer inside the project.
 	 */
-	public void addContributor(final int idStaff, final String fullname, final boolean active, final Date firstCommit, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
-		contributors.add(new ContributorView(idStaff, fullname, active, firstCommit, lastCommit, numberOfCommits, numberOfFiles));
+	public void addContributor(final int idStaff, final String fullname, final boolean active, final boolean external, final Date firstCommit, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
+		contributors.add(new ContributorView(idStaff, fullname, active, external, firstCommit, lastCommit, numberOfCommits, numberOfFiles));
 	}
 	
 }
