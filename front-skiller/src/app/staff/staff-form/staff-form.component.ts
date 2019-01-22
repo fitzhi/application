@@ -64,7 +64,6 @@ export class StaffFormComponent implements OnInit {
     this.staffDataExchangeService.collaboratorObserver
       .subscribe((employee: Collaborator) => {
         this.collaborator = employee;
-        this.label_isActive = 'Is active';
         this.profileStaff.get('firstName').setValue(this.collaborator.firstName);
         this.profileStaff.get('lastName').setValue(this.collaborator.lastName);
         this.profileStaff.get('nickName').setValue(this.collaborator.nickName);
@@ -73,13 +72,15 @@ export class StaffFormComponent implements OnInit {
         this.profileStaff.get('profile').setValue(this.collaborator.level);
         this.profileStaff.get('active').setValue(this.collaborator.isActive);
         if (this.collaborator.isActive) {
-          this.label_isActive = 'Is active';
+          this.label_isActive = this.collaborator.firstName + ' ' +this.collaborator.lastName
+          + '\'s still belonging to the company. Uncheck this box to inform of his departure.';
           // There is no READONLY attribute in the SELECT widget.
           // We need to enable this field within the code and not in HTML like the rest of the form.
           this.profileStaff.get('profile').disable();
           this.profileStaff.get('profile').enable();
         } else {
-          this.label_isActive = 'Is inactive since ';
+          this.label_isActive = this.collaborator.firstName + ' ' +
+          this.collaborator.lastName + ' does not belong anymore to the staff since ';
           this.label_dateInactive = this.collaborator.dateInactive;
           // There is no READONLY attribute in the SELECT widget.
           // We need to disable this field within the code and not in HTML like the rest of the form.
