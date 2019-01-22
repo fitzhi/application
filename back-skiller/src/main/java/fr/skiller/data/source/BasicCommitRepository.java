@@ -22,6 +22,11 @@ public class BasicCommitRepository implements CommitRepository {
 
 	Map<String, CommitHistory> repo = new HashMap<String, CommitHistory>();
 	
+	/**
+	 * This set contains the developers/contributors retrieved in the repository but unrecognized during the parsing process.
+	 */
+	Set<String> unknownContributors = new HashSet<String>();
+	
 	@Override
 	public void addCommit(final String sourceCodePath, final int idStaff, final Date dateCommit) {
 		
@@ -135,6 +140,11 @@ public class BasicCommitRepository implements CommitRepository {
 		}
 		
 		return contributors;
+	}
+
+	@Override
+	public Set<String> unknownContributors() {
+		return this.unknownContributors();
 	}
 
 	

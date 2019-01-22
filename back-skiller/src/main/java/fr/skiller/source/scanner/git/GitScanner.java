@@ -209,7 +209,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
         /**
          * Set of unknown contributors having work on this repository.
          */
-        Set<String> unknown = new HashSet<String>();
+        Set<String> unknown = repositoryOfCommit.unknownContributors();
 		
 		TreeWalk treeWalk = new TreeWalk(repo);
 		for (RevCommit commit : list) {

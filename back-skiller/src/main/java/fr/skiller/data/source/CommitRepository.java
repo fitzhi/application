@@ -1,6 +1,7 @@
 package fr.skiller.data.source;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -83,4 +84,15 @@ public interface CommitRepository {
 	 */
 	int numberOfFiles(int idStaff);
 	
+	/**
+	 * @return A set which contains the developers/contributors retrieved in the version control but unrecognized during the parsing process.<br/>
+	 * <p>This set contains : 
+	 * <ul>
+	 * <li>either unknown developers, who must be declared inside the application (staff Form)</li>
+	 * <li>or particular nicknames setup by current developers.</li>
+	 * </ul>
+	 * </p> 
+	 */
+	Set<String> unknownContributors();
+
 }

@@ -199,35 +199,12 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 						.collect(Collectors.toList());				
 			}
 			break;
-/*		case 2:
-			
-			// If the criteria contains only 2 words, we assume that this criteria is the first name and the last name
-			ids = getStaff().values().stream()
-			.filter(staff -> word[0].toLowerCase().equals(staff.lastName.toLowerCase()))
-			.filter(staff -> word[1].toLowerCase().equals(staff.firstName.toLowerCase()))
-			.collect(Collectors.toList());
-			// The criteria may be in the form "firstName lastName" or "lastName firstName"
-			if (ids.size() == 0) {
-				ids = getStaff().values().stream()
-						.filter(staff -> word[0].toLowerCase().equals(staff.firstName.toLowerCase()))
-						.filter(staff -> word[1].toLowerCase().equals(staff.lastName.toLowerCase()))
-						.collect(Collectors.toList());				
-			}
-			break;
-*/			
 		default:
 			// If the criteria contains multiple words, we assume that this criteria is the full name of the contributor
 			// Either with the firstName + " " + lastName, or the lastName + " " + firstName
 			ids = getStaff().values().stream()
 			.filter(staff -> criteria.trim().toLowerCase().equals(staff.fullName().toLowerCase()))
 			.collect(Collectors.toList());
-
-			
-			
-			// If the criteria contains only 2 words, we assume that this criteria is the first name and the last name
-
-//			logger.error ("Not implemented yet for the criteria " + criteria);
-//			return null;
 		}
 
 		if (ids.size() == 1) {
