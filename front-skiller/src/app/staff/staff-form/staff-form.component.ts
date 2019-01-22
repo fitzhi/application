@@ -1,6 +1,5 @@
 import {Constants} from '../../constants';
 import {Collaborator} from '../../data/collaborator';
-import {ListStaffService} from '../../list-staff-service/list-staff.service';
 import {MessageService} from '../../message.service';
 import {StaffService} from '../../staff.service';
 import {CinematicService} from '../../cinematic.service';
@@ -44,7 +43,8 @@ export class StaffFormComponent implements OnInit {
     login: new FormControl('', [Validators.required, Validators.maxLength(16)]),
     email: new FormControl('', [Validators.required, Validators.maxLength(32)]),
     profile: new FormControl(null, [Validators.required]),
-    active: new FormControl(1)
+    active: new FormControl(1),
+    external: new FormControl(0)
   });
 
   constructor(
@@ -72,12 +72,12 @@ export class StaffFormComponent implements OnInit {
         this.profileStaff.get('profile').setValue(this.collaborator.level);
         this.profileStaff.get('active').setValue(this.collaborator.isActive);
         if (this.collaborator.isActive) {
-          this.label_isActive = this.collaborator.firstName + ' ' +this.collaborator.lastName
+          this.label_isActive = this.collaborator.firstName + ' ' + this.collaborator.lastName
           + '\'s still belonging to the company. Uncheck this box to inform of his departure.';
           // There is no READONLY attribute in the SELECT widget.
           // We need to enable this field within the code and not in HTML like the rest of the form.
-          this.profileStaff.get('profile').disable();
           this.profileStaff.get('profile').enable();
+          this.profileStaff.get('external').enable();
         } else {
           this.label_isActive = this.collaborator.firstName + ' ' +
           this.collaborator.lastName + ' does not belong anymore to the staff since ';
@@ -85,7 +85,9 @@ export class StaffFormComponent implements OnInit {
           // There is no READONLY attribute in the SELECT widget.
           // We need to disable this field within the code and not in HTML like the rest of the form.
           this.profileStaff.get('profile').disable();
+          this.profileStaff.get('external').disable();
         }
+        this.profileStaff.get('external').setValue(this.collaborator.external);
         this.cinematicService.setForm(Constants.DEVELOPERS_CRUD, this.router.url);
       });
 
@@ -109,6 +111,7 @@ export class StaffFormComponent implements OnInit {
     this.collaborator.email = this.profileStaff.get('email').value;
     this.collaborator.level = this.profileStaff.get('profile').value;
     this.collaborator.isActive = this.profileStaff.get('active').value;
+    this.collaborator.external = this.profileStaff.get('external').value;
 
     this.staffService.save(this.collaborator)
       .subscribe(
@@ -123,7 +126,7 @@ export class StaffFormComponent implements OnInit {
    * You can test this state by testing the dateInactive, filled by the back-end during the deactivation process.
    */
   public isAlreadyDeactived(): boolean {
-    return (this.collaborator.dateInactive != null);
+    return (!this.collaborator.isActive);
   }
 
   get firstName(): any {
@@ -150,4 +153,7 @@ export class StaffFormComponent implements OnInit {
     return this.profileStaff.get('email');
   }
 
+  get external(): any {
+    return this.profileStaff.get('external');
+  }
 }

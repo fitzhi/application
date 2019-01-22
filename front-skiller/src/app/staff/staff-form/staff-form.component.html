@@ -71,9 +71,16 @@
 	</div>
 
 	<div class="mb-3">
-		<label class="checkbox-inline"> <input type="checkbox"
-			name="active" formControlName="active"> {{label_isActive}}
-			{{label_dateInactive | date : 'longDate'}}
+		<label>
+			<input type="checkbox" id="active" name="active" formControlName="active"/>
+			 {{label_isActive}} {{label_dateInactive | date : 'longDate'}}
+		</label>
+	</div>
+
+	<div class="mb-3">
+		<label> 
+			<input type="checkbox" id="external"  name="external" formControlName="external"/> 
+			External (If this box is checked, this developer does not belong to the company)
 		</label>
 	</div>
 

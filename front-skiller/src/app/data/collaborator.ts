@@ -16,6 +16,12 @@ export class Collaborator {
   public typeOfApplication: number;
 
   /**
+   * Equal to true is this staff member is external to the company.
+   */
+  public external: boolean;
+
+  /**
+  /**
    * The developer XP.
    */
   public experiences: Experience[];
