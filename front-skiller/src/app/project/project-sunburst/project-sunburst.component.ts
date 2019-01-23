@@ -32,6 +32,21 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
   // Waiting images previewed during the chart generation.
   public sunburstWaitingImage = '/assets/img/sunburst-waiting-image.png';
 
+  // No button is selected.
+  private UNSELECTED = -1;
+
+  // Rules of risks panel has to be displayed.
+  private RULES_OF_RISKS = 1;
+
+  // Settings panel has to be displayed.
+  private SETTINGS = 1;
+
+  // Unknown contributors panel has to be displayed.
+  private UNKNOWN = 1;
+
+  // Identifier of the panel selected.
+  private idPanelSelected = -1;
+
   constructor(
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
@@ -201,4 +216,23 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
     }
   }
 
+   /**
+   * Show the panel associated to this id.
+   * @param idPanel : Panel identifier
+   */
+  public show(idPanel: number) {
+    if (this.idPanelSelected === this.UNSELECTED) {
+      this.idPanelSelected = idPanel;
+    } else {
+      this.idPanelSelected = this.UNSELECTED;
+    }
+  }
+
+   /**
+   * The button associated to this panel id is activated.
+   * @param idPanel : Panel identifier
+   */
+    public buttonActivated  (idPanel: number) {
+      return (idPanel  === this.idPanelSelected);
+    }
 }

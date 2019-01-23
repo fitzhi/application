@@ -1,7 +1,35 @@
 <mat-sidenav-container class="component-container" >
 
-    <mat-sidenav mode="side" opened>
-        Test
+    <mat-sidenav mode="side" class="bg-dark" opened>
+
+        <a [routerLink]=""  (click)="show(1)"
+            [class]="(buttonActivated(1) 
+						? 'activated sidenav round' 
+						: 'inactive sidenav round')">		
+            <img id="rules-of-risks" alt="Risks color legend" title=""
+                src="/assets/img/rules-of-risks.png"/>
+		</a> 
+
+        <br/>
+
+        <a [routerLink]=""  (click)="show(2)"
+           [class]="(buttonActivated(2) 
+						? 'activated sidenav round' 
+						: 'inactive sidenav round')">		
+            <img id="settings" alt="Settings" title=""
+                src="/assets/img/settings.png"/>
+		</a> 
+
+        <br/>
+
+        <a [routerLink]=""  (click)="show(3)"
+           [class]="(buttonActivated(3) 
+						? 'activated sidenav round' 
+						: 'inactive sidenav round')">		
+            <img id="unknown" alt="Unknown contributors" title=""
+                src="/assets/img/question-marks.png"/>
+		</a> 
+
     </mat-sidenav>
 
     <mat-sidenav-content>
@@ -10,7 +38,7 @@
             Sunburst impossible !
         </div>
 
-        <div id="chart" [hidden]="!sunburst_ready"></div>
+        <div id="chart" [hidden]="!sunburst_ready" ></div>
 
         <div class="row" [hidden]="!sunburst_waiting">
             <br/><br/>
@@ -23,35 +51,25 @@
             </div>
         </div>
 
+        <div [hidden]="!buttonActivated(1)" class="rules-of-risks">
+            <table>
+                <tr><td bgcolor="darkGreen" style="width:100px" align="center">Risk 0</td></tr>
+                <tr><td bgcolor="ForestGreen" style="width:100px" align="center">Risk 1</td></tr>
+                <tr><td bgcolor="limeGreen" style="width:100px" align="center">Risk 2</td></tr>
+                <tr><td bgcolor="Lime" style="width:100px" align="center">Risk 3</td></tr>
+                <tr><td bgcolor="lightGreen" style="width:100px" align="center">Risk 4</td></tr>
+                <tr><td bgcolor="yellow" style="width:100px" align="center">Risk 5</td></tr>
+                <tr><td bgcolor="orange" style="width:100px" align="center">Risk 6</td></tr>
+                <tr><td bgcolor="darkOrange" style="width:100px" align="center">Risk 7</td></tr>
+                <tr><td bgcolor="lightCoral" style="width:100px" align="center">Risk 8</td></tr>
+                <tr><td bgcolor="crimson" style="width:100px" align="center">Risk 9</td></tr>
+                <tr><td bgcolor="darkRed" style="width:100px" align="center">Risk 10</td></tr>
+            </table>
+        </div>
+
     </mat-sidenav-content>
 
 </mat-sidenav-container>
 
-  <!--  
-    <table height="100%">
-        <tr>
-            <td>
-                <table height="90%">
-                    <tr><td bgcolor="darkGreen" style="width:100px" align="center">Risk 0</td></tr>
-                    <tr><td bgcolor="ForestGreen" style="width:100px" align="center">Risk 1</td></tr>
-                    <tr><td bgcolor="limeGreen" style="width:100px" align="center">Risk 2</td></tr>
-                    <tr><td bgcolor="Lime" style="width:100px" align="center">Risk 3</td></tr>
-                    <tr><td bgcolor="lightGreen" style="width:100px" align="center">Risk 4</td></tr>
-                    <tr><td bgcolor="yellow" style="width:100px" align="center">Risk 5</td></tr>
-                    <tr><td bgcolor="orange" style="width:100px" align="center">Risk 6</td></tr>
-                    <tr><td bgcolor="darkOrange" style="width:100px" align="center">Risk 7</td></tr>
-                    <tr><td bgcolor="lightCoral" style="width:100px" align="center">Risk 8</td></tr>
-                    <tr><td bgcolor="crimson" style="width:100px" align="center">Risk 9</td></tr>
-                    <tr><td bgcolor="darkRed" style="width:100px" align="center">Risk 10</td></tr>
-                </table>
-            </td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>&nbsp;</td>
-            <td>
-            --> 
-       <!--     </td>
-        </tr>
-    </table> -->
 
 

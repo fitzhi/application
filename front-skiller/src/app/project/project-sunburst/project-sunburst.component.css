@@ -29,10 +29,64 @@
 }
 
 mat-sidenav {
-    width: 2em;
+    width: 2.4em;
     background-color: whitesmoke;
 }
 
 mat-sidenav-content {
     background-color: white;
 }
+
+#rules-of-risks  {
+    margin-top: 0.2em;
+    margin-left: 0.1em;
+    width: 1.8em; /*  */
+    height: 1.8em;
+    margin-bottom: 0.5em;
+}
+
+#settings {
+    margin-top: 0.15em;
+    margin-left: 0.1em;
+    width: 1.8em; 
+    height: 1.8em;
+    margin-bottom: 0.5em;
+}
+
+#unknown {
+    margin-top: 0.1em;
+    margin-left: 0.2em;
+    width: 1.8em; 
+    height: 1.8em;
+    margin-bottom: 0.5em;
+}
+
+a.sidenav {
+    text-decoration: none;
+    display: inline-block;
+    width: 2em;
+    height: 2em;
+    margin-top: 0.5em;
+    margin-left: 0.15em;
+}
+
+a.sidenav:hover, .activated {
+    background-color: lightGrey;
+    width: 2em;
+    height: 2em;
+}
+
+.inactive  {
+    background-color: transparent;
+}
+.round {
+    border-radius: 25%;
+}
+
+.rules-of-risks {
+    position: fixed ;
+    top: 10em;
+    left: 2.5em;    
+}
+
+
