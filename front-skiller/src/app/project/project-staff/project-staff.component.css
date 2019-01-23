@@ -31,7 +31,7 @@
 :host >>> th#lastCommit > .mat-sort-header-container  {
     display: flex;
     justify-content: center;
-    color: darkblue
+    color: darkblue 
 }
 
 :host >>> th#fullname > .mat-sort-header-container  {
@@ -47,8 +47,24 @@ table {
     margin: 20px;
 }
 
+.row_any  {
+    height: 2em;
+}
+
+.row_any:hover {
+    height: 2em;
+    border: 1px solid gray; 
+    color: blue;
+    cursor: pointer;
+}
+
+.col_numeric, .col_date, .col_image {
+    height: 2em;
+}
+
 .col_numeric {
     text-align:right;
+    height: 2em;
 }
 
 .col_date {

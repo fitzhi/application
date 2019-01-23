@@ -1,0 +1,20 @@
+:host >>> .component-container {
+  height: inherit;
+}
+
+
+:host >>> .mat-tab-body-wrapper {
+  height: inherit;
+}
+
+:host >>> .mat-tab-group {
+    height: inherit;
+}
+
+:host >>> .mat-header-cell {
+    height: 3em;
+}
+
+.panel-container {
+    height: 100%;
+}

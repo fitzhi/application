@@ -41,7 +41,7 @@ import { StaffFormComponent } from './staff/staff-form/staff-form.component';
 import { StaffProjectsComponent } from './staff/staff-tabs/staff-projects/staff-projects.component';
 import { StaffExperienceComponent } from './staff/staff-tabs/staff-experience/staff-experience.component';
 import { StaffUploadCvComponent } from './staff/staff-tabs/staff-experience/staff-upload-cv/staff-upload-cv.component';
-import {  MatSortModule, MatButtonToggleModule } from '@angular/material';
+import {  MatSortModule, MatButtonToggleModule, MatSidenavModule } from '@angular/material';
 import { MatTabsModule, MatDialogModule, MatProgressBarModule, MatPaginatorModule } from '@angular/material';
 import { MessageBoxComponent } from './message-box/dialog/message-box.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -101,7 +101,8 @@ import { ProjectStaffComponent } from './project/project-staff/project-staff.com
     MatPaginatorModule,
     MatCheckboxModule,
     MatSortModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatSidenavModule,
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.

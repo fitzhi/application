@@ -95,4 +95,8 @@ export class ProjectStaffComponent implements OnInit {
   public class_active_inactive(active: boolean) {
     return active ? 'contributor_active' : 'contributor_inactive';
   }
+
+  public routeStaff(idStaff: number) {
+        this.router.navigate(['/user/' + idStaff], {});
+  }
 }

@@ -19,3 +19,11 @@
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
+
+.component-container {
+  height: 100%;
+}
+
+#chart {
+    margin-left: 10em;
+}

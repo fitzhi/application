@@ -1,78 +1,79 @@
-<nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
-	<div id="header_navigation_master_detail" class="p-2">
-		<a [routerLink]=""  (click)="list()"
-			class="header_toolbar_master_detail round" width="48" height="48">
-			<img [hidden]="!in_master_detail" src="/assets/img/list.png" width="48"
-			height="48" />
-		</a> 
-		<a href="" [routerLink]="['/user', previousId]"
-			class="header_toolbar_master_detail previous round"
-			[class.disabled]="(previousId == undefined)"
-			[hidden]="!in_master_detail"> &nbsp;&#8249;&nbsp;
-		</a> 
-		<a href=""
-			[routerLink]="['/user', nextId]"
-			class="header_toolbar_master_detail next round"
-			[class.disabled]="(nextId == undefined)" [hidden]="!in_master_detail">
-			&nbsp;&#8250;&nbsp; 
-		</a>
+<div class="app-container">
+	<nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
+		<div id="header_navigation_master_detail" class="p-2">
+			<a [routerLink]=""  (click)="list()"
+				class="header_toolbar_master_detail round" width="48" height="48">
+				<img [hidden]="!in_master_detail" src="/assets/img/list.png" width="48"
+				height="48" />
+			</a> 
+			<a href="" [routerLink]="['/user', previousId]"
+				class="header_toolbar_master_detail previous round"
+				[class.disabled]="(previousId == undefined)"
+				[hidden]="!in_master_detail"> &nbsp;&#8249;&nbsp;
+			</a> 
+			<a href=""
+				[routerLink]="['/user', nextId]"
+				class="header_toolbar_master_detail next round"
+				[class.disabled]="(nextId == undefined)" [hidden]="!in_master_detail">
+				&nbsp;&#8250;&nbsp; 
+			</a>
+		</div>
+
+		<div id="formTitle" class="p-2"><span class="text">{{formTitle}}</span></div>
+
+		<div id="buttons">
+			<a [routerLink]="['/skill']"
+				[class]="(skill_activated 
+						? 'activated header_toolbar_master_detail round' 
+						: 'inactive header_toolbar_master_detail round')"
+				(click)="switchToSkill()"> 
+				<img alt="Skill module" title="Enter into the Skills management module"
+					[src]="(skill_activated ? image_skill_activated : image_skill_inactive)"
+				style="padding-right:5px"
+				width="48" height="48" />
+			</a> 
+			<a [routerLink]="['/user']"
+				[class]="(dev_activated 
+						? 'activated header_toolbar_master_detail round' 
+						: 'inactive header_toolbar_master_detail round')"
+				(click)="switchToDev()"> <img alt="Staff" title="Enter into the Staff management module"
+				[src]="(dev_activated ? image_dev_activated : image_dev_inactive)"
+				style="padding-right:5px"
+				width="48" height="48" />
+			</a> 
+			<a [routerLink]="['/project']"
+				[class]="(project_activated 
+						? 'activated header_toolbar_master_detail round' 
+						: 'inactive header_toolbar_master_detail round')"
+				(click)="switchToProject()"> 
+				<img alt="Projects" title="Enter into the Projects management module"
+				[src]="(project_activated ? image_project_activated : image_project_inactive)"
+				width="48" height="'48" />
+			</a>
+		</div>
+
+		<div class="p-2 ml-auto">
+			<form class="form-inline my-2 my-lg-0">
+				<span id="activeOnly" class="text">Active</span> 
+				<input style="margin-right:5px" type="checkbox" name="activeOnly" 
+					[(ngModel)]="activeOnly"/>			
+				<input class="form-control mr-sm-2" type="text" placeholder="Search"
+					name="searching_what" [(ngModel)]="searching_what"
+					aria-label="Search" [attr.disabled]="is_allowed_to_search?null:''"
+					(focus)="focusSearch()"
+					/>
+				<button class="btn btn-outline-success my-2 my-sm-0"
+					[attr.disabled]="is_allowed_to_search?null:''" (click)="search()"
+					type="submit" style="padding-right:5px">Search</button>
+			</form>
+		</div>
+	</nav>
+
+	<div class="panel panel-primary">
+		<div class="panel-body">
+			<router-outlet></router-outlet>
+		</div>
 	</div>
 
-	<div id="formTitle" class="p-2"><span class="text">{{formTitle}}</span></div>
-
-	<div id="buttons">
-		<a [routerLink]="['/skill']"
-			[class]="(skill_activated 
-					? 'activated header_toolbar_master_detail round' 
-					: 'inactive header_toolbar_master_detail round')"
-			(click)="switchToSkill()"> 
-			<img alt="Skill module" title="Enter into the Skills management module"
-				[src]="(skill_activated ? image_skill_activated : image_skill_inactive)"
-			style="padding-right:5px"
-			width="48" height="48" />
-		</a> 
-		<a [routerLink]="['/user']"
-			[class]="(dev_activated 
-					? 'activated header_toolbar_master_detail round' 
-					: 'inactive header_toolbar_master_detail round')"
-			(click)="switchToDev()"> <img alt="Staff" title="Enter into the Staff management module"
-			[src]="(dev_activated ? image_dev_activated : image_dev_inactive)"
-			style="padding-right:5px"
-			width="48" height="48" />
-		</a> 
-		<a [routerLink]="['/project']"
-			[class]="(project_activated 
-					? 'activated header_toolbar_master_detail round' 
-					: 'inactive header_toolbar_master_detail round')"
-			(click)="switchToProject()"> 
-			<img alt="Projects" title="Enter into the Projects management module"
-			[src]="(project_activated ? image_project_activated : image_project_inactive)"
-			width="48" height="'48" />
-		</a>
-	</div>
-
-	<div class="p-2 ml-auto">
-		<form class="form-inline my-2 my-lg-0">
-			<span id="activeOnly" class="text">Active</span> 
-			<input style="margin-right:5px" type="checkbox" name="activeOnly" 
-				[(ngModel)]="activeOnly"/>			
-			<input class="form-control mr-sm-2" type="text" placeholder="Search"
-				name="searching_what" [(ngModel)]="searching_what"
-				aria-label="Search" [attr.disabled]="is_allowed_to_search?null:''"
-				(focus)="focusSearch()"
-				/>
-			<button class="btn btn-outline-success my-2 my-sm-0"
-				[attr.disabled]="is_allowed_to_search?null:''" (click)="search()"
-				type="submit" style="padding-right:5px">Search</button>
-		</form>
-	</div>
-</nav>
-
-<div class="panel panel-primary">
-	<div class="panel-body">
-		<router-outlet></router-outlet>
-	</div>
+	<app-message></app-message>
 </div>
-
-<app-message></app-message>
-

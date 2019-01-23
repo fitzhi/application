@@ -1,7 +1,50 @@
-<div align="center" [hidden]="!sunburst_impossible">
-    Sunburst impossible !
-</div>
-<div align="center" [hidden]="!sunburst_ready">
+<mat-sidenav-container class="component-container" >
+    <mat-sidenav mode="side" opened>
+        Test
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+        <div align="center" [hidden]="!sunburst_impossible">
+            Sunburst impossible !
+        </div>
+
+        <div id="chart" [hidden]="!sunburst_ready"></div>
+
+        <div class="row" [hidden]="!sunburst_waiting">
+            <br/><br/>
+            <div class="col-md-12 text-center w100">
+                <h3>Staff risks chart is on preparation !</h3>
+                <p class="lead">Stay calm !</p>
+                <div align="center">
+                    <img id="sunburstWaitingImage" [src]="sunburstWaitingImage" width="256px" height="256px"/>
+                </div>
+            </div>
+        </div>
+    </mat-sidenav-content>
+
+
+
+</mat-sidenav-container>
+
+<!--
+        <div align="center" [hidden]="!sunburst_impossible">
+            Sunburst impossible !
+        </div>
+
+        <div id="chart" [hidden]="!sunburst_ready"></div>
+
+        <div class="row" [hidden]="!sunburst_waiting">
+            <br/><br/>
+            <div class="col-md-12 text-center w100">
+                <h3>Staff risks chart is on preparation !</h3>
+                <p class="lead">Stay calm !</p>
+                <div align="center">
+                    <img id="sunburstWaitingImage" [src]="sunburstWaitingImage" width="256px" height="256px"/>
+                </div>
+            </div>
+        </div>
+-->
+
   <!--  
     <table height="100%">
         <tr>
@@ -25,20 +68,8 @@
             <td>&nbsp;</td>
             <td>
             --> 
-                <div id="chart"></div>
        <!--     </td>
         </tr>
     </table> -->
-</div>
 
-<div class="row" [hidden]="!sunburst_waiting">
-    <br/><br/>
-    <div class="col-md-12 text-center w100">
-        <h2>Staff risks chart</h2>
-        <p class="lead">The chart is on preparation, please wait !</p>
-        <div align="center">
-            <img id="sunburstWaitingImage" [src]="sunburstWaitingImage" width="256px" height="256px"/>
-        </div>
-    </div>
-</div>
 

@@ -1,3 +1,26 @@
+div.app-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+}
+
+div.panel.panel-primary {
+    height: 100%;
+}
+
+div.panel-body {
+    height: 100%;
+}
+:host >>> .ng-star-inserted {
+    height: inherit;
+}
+
+:host >>> div.mat-tab-labels {
+    height: 3em;
+}
+
 #header_navigation_master_detail {
     display: flex;
 }

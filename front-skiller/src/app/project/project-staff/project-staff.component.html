@@ -4,49 +4,60 @@
 
     <ng-container matColumnDef="fullname">
       <th id="fullname" mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-      <td mat-cell class="col_fullname {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">
-        <a [routerLink]="['/user', contributor.idStaff]">
+      <td mat-cell class="col_fullname {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor" 
+          (click)="routeStaff(contributor.idStaff)">
+  <!--      <a [routerLink]="['/user', ]"> -->
           {{contributor.fullname}}
-        </a>
+  <!--      </a> -->
       </td>
     </ng-container>
 
     <ng-container matColumnDef="active">
       <th id="active" mat-header-cell *matHeaderCellDef mat-sort-header>Active</th>
-      <td mat-cell class="col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">
+      <td mat-cell class="col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
+          (click)="routeStaff(contributor.idStaff)">
         <img with="15" height="15" src="/assets/img/check-{{contributor.active}}.png" />
       </td>
     </ng-container>
 
     <ng-container matColumnDef="external">
       <th id="external" mat-header-cell *matHeaderCellDef mat-sort-header>External</th>
-      <td mat-cell class="col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">
+      <td mat-cell class="col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
+          (click)="routeStaff(contributor.idStaff)">
         <img with="15" height="15" src="/assets/img/check-{{contributor.external}}.png" />
       </td>
     </ng-container>
 
     <ng-container id="firstCommit" matColumnDef="firstCommit">
       <th mat-header-cell id="firstCommit" class="col_date" *matHeaderCellDef mat-sort-header> First commit </th>
-      <td mat-cell class="col_date {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">{{contributor.firstCommit | date:'dd/yy/yyyy'}}</td>
+      <td mat-cell class="col_date {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
+          (click)="routeStaff(contributor.idStaff)">
+        {{contributor.firstCommit | date:'dd/yy/yyyy'}}</td>
     </ng-container>
 
     <ng-container matColumnDef="lastCommit">
       <th mat-header-cell id="lastCommit" class="col_date" *matHeaderCellDef mat-sort-header> Last commit </th>
-      <td mat-cell class="col_date {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">{{contributor.lastCommit | date:'dd/yy/yyyy'}}</td>
+      <td mat-cell class="col_date {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
+          (click)="routeStaff(contributor.idStaff)">
+        {{contributor.lastCommit | date:'dd/yy/yyyy'}}</td>
     </ng-container>
 
     <ng-container matColumnDef="numberOfCommits">
       <th mat-header-cell id="numberOfCommits" *matHeaderCellDef mat-sort-header>Number of commits</th>
-      <td mat-cell class="col_numeric {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">{{contributor.numberOfCommits}}</td>
+      <td mat-cell class="col_numeric {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
+          (click)="routeStaff(contributor.idStaff)">
+        {{contributor.numberOfCommits}}</td>
     </ng-container>
 
     <ng-container matColumnDef="numberOfFiles">
       <th mat-header-cell id="numberOfFiles" *matHeaderCellDef mat-sort-header>Number of files</th>
-      <td mat-cell class="col_numeric {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">{{contributor.numberOfFiles}}&nbsp;&nbsp;</td>
+      <td mat-cell class="col_numeric {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
+          (click)="routeStaff(contributor.idStaff)">
+        {{contributor.numberOfFiles}}&nbsp;&nbsp;</td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row_any"></tr>
 
   </table>
 
