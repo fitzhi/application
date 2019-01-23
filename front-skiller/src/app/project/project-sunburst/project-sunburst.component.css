@@ -27,3 +27,12 @@
 #chart {
     margin-left: 10em;
 }
+
+mat-sidenav {
+    width: 2em;
+    background-color: whitesmoke;
+}
+
+mat-sidenav-content {
+    background-color: white;
+}
