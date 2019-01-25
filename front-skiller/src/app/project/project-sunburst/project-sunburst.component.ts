@@ -1,10 +1,11 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 import Sunburst from 'sunburst-chart';
 import { Constants } from '../../constants';
 import { MessageService } from '../../message.service';
 import { ProjectService } from '../../project.service';
 import { ActivatedRoute } from '@angular/router';
 import {CinematicService} from '../../cinematic.service';
+import { Project } from '../../data/project';
 
 @Component({
   selector: 'app-project-sunburst',
@@ -12,6 +13,16 @@ import {CinematicService} from '../../cinematic.service';
   styleUrls: ['./project-sunburst.component.css']
 })
 export class ProjectSunburstComponent implements OnInit, AfterViewInit {
+
+  /**
+   * The project loaded in the parent component.
+   */
+  @Input('subjProject') subjProject;
+
+ /**
+   * Project loaded on the parent component.
+   */
+  private project: Project;
 
   /**
    * Project id passed by the router.
@@ -66,6 +77,18 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
       }
     });
 
+     this.subjProject.subscribe(project => {
+        this.project = project;
+        if ((typeof this.project.urlRepository === 'undefined') || (this.project.urlRepository.length === 0)) {
+          this.messageService.info('No repository URL avalaible !');
+          this.sunburst_ready = false;
+          this.sunburst_waiting = false;
+          this.sunburst_impossible = true;
+        } else {
+          this.loadSunburst ();
+        }
+     });
+
     if (this.idProject == null) {
       if (Constants.DEBUG) {
         console.log('No project identifier passed to this tab. No data available for preview !');
@@ -76,15 +99,6 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
       this.sunburst_impossible = true;
       return;
     }
-
-    this.cinematicService.tabProjectActivated.subscribe (
-      index => {
-        if (index === Constants.PROJECT_IDX_TAB_SUNBURST) {
-          this.loadSunburst ();
-        }
-      }
-    );
-
   }
 
 

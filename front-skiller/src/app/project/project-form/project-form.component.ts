@@ -1,17 +1,16 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, Input} from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 
 import {ProjectService} from '../../project.service';
-import {SkillService} from '../../skill.service';
 import {MessageService} from '../../message.service';
 import {CinematicService} from '../../cinematic.service';
 
 import {Project} from '../../data/project';
 import {ProjectDTO} from '../../data/external/projectDTO';
 import {Constants} from '../../constants';
-import { ListProjectsService } from '../../list-projects-service/list-projects.service';
 import {LocalDataSource} from 'ng2-smart-table';
+import { SkillService } from '../../skill.service';
 
 @Component({
   selector: 'app-project-form',
@@ -20,12 +19,12 @@ import {LocalDataSource} from 'ng2-smart-table';
 })
 export class ProjectFormComponent implements OnInit {
 
-  public project: Project;
-
   /**
-   * id passed by the router.
+   * The project loaded in the parent component.
    */
-  private id: number;
+  @Input('subjProject') subjProject;
+
+  public project: Project;
 
   public DIRECT_ACCESS = 1;
   public REMOTE_FILE_ACCESS = 2;
@@ -51,27 +50,25 @@ export class ProjectFormComponent implements OnInit {
 
   constructor(
     private cinematicService: CinematicService,
-    private route: ActivatedRoute,
     private messageService: MessageService,
-    private projectService: ProjectService,
-    private listProjectsService: ListProjectsService,
     private skillService: SkillService,
-    private router: Router) {}
+    private projectService: ProjectService,
+    private router: Router) {
 
+    }
 
   ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
-      if (Constants.DEBUG) {
-        console.log('params[\'id\'] ' + params['id']);
-      }
-      if (params['id'] == null) {
-        this.id = null;
-      } else {
-        this.id = + params['id']; // (+) converts string 'id' to a number
-      }
 
-      this.loadProject();
-
+      this.subjProject.subscribe(project => {
+        this.project = project;
+        this.profileProject.get('projectName').setValue(project.name);
+        this.connection_settings = String(this.project.connection_settings);
+        this.profileProject.get('urlRepository1').setValue(this.project.urlRepository);
+        this.profileProject.get('urlRepository2').setValue(this.project.urlRepository);
+        this.profileProject.get('username').setValue(this.project.username);
+        this.profileProject.get('password').setValue(this.project.password);
+        this.profileProject.get('filename').setValue(this.project.filename);
+        this.sourceSkills.load(this.project.skills);
     });
 
     this.cinematicService.setForm(Constants.PROJECT_TAB_FORM, this.router.url);
@@ -113,50 +110,6 @@ export class ProjectFormComponent implements OnInit {
       }
     } else {
       event.confirm.reject();
-    }
-  }
-
-  /**
-   * Loading the project from the back-end.
-   */
-  loadProject() {
-    // EITHER we are in creation mode,
-    // OR we load the Project from the back-end...
-    // Anyway, We create an empty project until the subscription is complete
-    this.project = new Project();
-    if (this.id != null) {
-      this.listProjectsService.getProject(this.id).subscribe(
-        (project: Project) => {
-         this.project = project;
-         this.profileProject.get('projectName').setValue(project.name);
-         this.connection_settings = String(this.project.connection_settings);
-         this.profileProject.get('urlRepository1').setValue(this.project.urlRepository);
-         this.profileProject.get('urlRepository2').setValue(this.project.urlRepository);
-         this.profileProject.get('username').setValue(this.project.username);
-         this.profileProject.get('password').setValue(this.project.password);
-         this.profileProject.get('filename').setValue(this.project.filename);
-         this.sourceSkills.load(this.project.skills);
-         },
-        error => {
-          if (error.status === 404) {
-            if (Constants.DEBUG) {
-              console.log('404 : cannot find a project for the id ' + this.id);
-            }
-            this.messageService.error('There is no project for id ' + this.id);
-            this.project = new Project();
-          } else {
-            console.error(error.message);
-          }
-        },
-        () => {
-          if (this.project.id === 0) {
-            console.log('No project found for the id ' + this.id);
-          }
-          if (Constants.DEBUG) {
-            console.log('Loading complete for id ' + this.id);
-          }
-        }
-      );
     }
   }
 
@@ -297,6 +250,9 @@ export class ProjectFormComponent implements OnInit {
    * Did the user select the direct access connection settings (user/password).
    */
   public directAccess() {
+    if (typeof this.project === 'undefined') {
+      return true;
+    }
     // No choice have been made yet. We are the 2 pannels.
     if ((typeof this.project.connection_settings === 'undefined') || (this.project.connection_settings === 0)) {
       return true;
@@ -308,6 +264,9 @@ export class ProjectFormComponent implements OnInit {
    * Did the user select the undirect access. Indicating a remote file containing the connection settings.
    */
   public undirectAccess() {
+    if (typeof this.project === 'undefined') {
+      return false;
+    }
     // No choice have been made yet. We are the 2 pannels.
     if ((typeof this.project.connection_settings === 'undefined') || (this.project.connection_settings === 0)) {
       return true;
