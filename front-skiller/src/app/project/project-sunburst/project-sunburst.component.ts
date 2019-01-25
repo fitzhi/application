@@ -84,10 +84,16 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
           this.sunburst_ready = false;
           this.sunburst_waiting = false;
           this.sunburst_impossible = true;
-        } else {
-          this.loadSunburst ();
         }
      });
+
+    this.cinematicService.tabProjectActivated.subscribe (
+      index => {
+        if (index === Constants.PROJECT_IDX_TAB_SUNBURST) {
+          this.loadSunburst ();
+        }
+      }
+    );
 
     if (this.idProject == null) {
       if (Constants.DEBUG) {
@@ -104,12 +110,13 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
 
   loadSunburst() {
 
-    // If chart has been already initialized, we do not need to generates it again.
     if (this.chart_is_drawn) {
       return;
     }
 
-    if (typeof this.idProject === 'undefined') {
+    console.log (this.project);
+    if ( (typeof this.project === 'undefined') || (typeof this.project.id === 'undefined')) {
+      console.log('in');
         this.sunburst_impossible = true;
         this.sunburst_waiting = false;
         this.sunburst_ready = false;
@@ -119,8 +126,6 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
         this.sunburst_waiting = true;
         this.sunburst_ready = false;
     }
-
-
 
     if ((document.getElementById('chart') != null) && (this.idProject != null)) {
 

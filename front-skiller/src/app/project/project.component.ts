@@ -67,7 +67,9 @@ export class ProjectComponent implements OnInit, AfterViewInit {
    * After init treatment. We load the project.
    */
   ngAfterViewInit() {
-    setTimeout(() => this.loadProject());
+    setTimeout(() => {
+      this.loadProject();
+    });
   }
 
   /**
