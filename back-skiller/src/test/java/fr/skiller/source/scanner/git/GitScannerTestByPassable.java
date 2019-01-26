@@ -28,7 +28,8 @@ import com.google.gson.GsonBuilder;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Staff;
-import fr.skiller.data.internal.SunburstData;
+import fr.skiller.data.internal.RiskChartData;
+import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
 import fr.skiller.service.ResumeParserService;
@@ -95,7 +96,7 @@ public class GitScannerTestByPassable {
 		final CommitRepository repo = scanner.parseRepository(project, settings);
         assertThat(repo.size()).isGreaterThan(0);
         
-		SunburstData data = scanner.aggregateSunburstData(repo);
+		RiskDashboard data = scanner.aggregateDashboard(repo);
 		
 		if (logger.isDebugEnabled()) {
 			repo.contributors()
@@ -110,7 +111,7 @@ public class GitScannerTestByPassable {
 				});
 		}
 		// Evaluate the risk for each directory, and sub-directory, in the repository.
-		scanner.evaluateTheRisk(repo, data);
+		scanner.evaluateTheRisk(repo, data.riskChartData);
        
 	}
 	

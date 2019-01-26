@@ -9,7 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.skiller.bean.StaffHandler;
-import fr.skiller.data.internal.SunburstData;
+import fr.skiller.data.internal.RiskChartData;
+import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.CommitHistory;
 import fr.skiller.data.source.CommitRepository;
 
@@ -26,26 +27,22 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	protected StaffHandler staffHandler;
 	
 	private Logger logger = LoggerFactory.getLogger(AbstractScannerDataGenerator.class.getCanonicalName());
-	
-	/**
-	 * Generate the collection ready to display on the sunburst chart.
-	 * @param commitRepo the repository history retrieve from a source control
-	 * @return
-	 */
-	public SunburstData aggregateSunburstData(final CommitRepository commitRepo) {
-		SunburstData root = new SunburstData("root");
+
+	@Override
+	public RiskDashboard aggregateDashboard(final CommitRepository commitRepo) {
+		RiskChartData root = new RiskChartData("root");
 		commitRepo.getRepository().values().stream().forEach(
 				commit -> 
 				root.injectFile(root, commit.sourcePath.split(File.separator), commit.evaluateDateLastestCommit()));
 		
-		return root;
+		return new RiskDashboard(root, commitRepo.unknownContributors());
 	}
 
 	/**
 	 * For this first testing version. The risk will be randomly estimated.
 	 * @param all or part of the source directories
 	 */
-	public void evaluateTheRisk(final SunburstData sunburstData) {
+	public void evaluateTheRisk(final RiskChartData sunburstData) {
 		if (sunburstData.hasUnknownRiskLevel()) {
 			sunburstData.setRiskLevel( (int) (Math.random()*1000 % 11)); 
 		}
@@ -104,7 +101,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	}
 	
 	@Override
-	public void evaluateTheRisk(final CommitRepository repository, final SunburstData sunburstData)  {
+	public void evaluateTheRisk(final CommitRepository repository, final RiskChartData sunburstData)  {
 		
 		if (staffHandler == null) {
 			throw new RuntimeException("staffHandler should not be null at this point");
@@ -186,7 +183,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	}
 
 	@Override
-	public int meanTheRisk(final SunburstData location) {
+	public int meanTheRisk(final RiskChartData location) {
 		if ( (location.children == null) || (location.children.size() == 0) ) {
 			return location.getRiskLevel();
 		}
@@ -207,7 +204,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	 * @param hasSourceWithoutContributor This directory has a source file which contains no more active developers.
 	 */
 	private void setRiskLevel(
-			final SunburstData sunburstData, 
+			final RiskChartData sunburstData, 
 			final int percentageOfCommitsMadeByActiveDevelopers,
 			boolean hasLostARecentContributor,
 			boolean hasASourceFileUnder50pct, 
@@ -273,7 +270,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	};
 	
 	@Override
-	public void setPreviewSettings(SunburstData data) {
+	public void setPreviewSettings(RiskChartData data) {
 		if (!data.hasUnknownRiskLevel()) {
 			int riskLevel = data.getRiskLevel();
 			data.color = colorOfRisk[riskLevel];

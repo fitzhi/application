@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import fr.skiller.data.internal.SunburstData;
+import fr.skiller.data.internal.RiskChartData;
 
 /**
  * Interface in charge of handling the history of commits for a repository.<br/>

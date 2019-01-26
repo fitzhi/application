@@ -29,12 +29,12 @@ public class SunburstDataTest {
 
 	@Test
 	public void addOneClass() {
-		final SunburstData root = new SunburstData("root");
-		SunburstData data = root; 
+		final RiskChartData root = new RiskChartData("root");
+		RiskChartData data = root; 
 		String testClassname = "fr/skiller/test/world/mbappe/Number9.java";
 		String s[] = testClassname.split(File.separator);
 		for (int i=0; i<s.length-1; i++) {
-			data = data.addsubDir(new SunburstData(s[i]));
+			data = data.addsubDir(new RiskChartData(s[i]));
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug(root.toString());
@@ -54,7 +54,7 @@ public class SunburstDataTest {
 
 	@Test
 	public void testInjectFileName() {
-		final SunburstData root = new SunburstData("root");
+		final RiskChartData root = new RiskChartData("root");
 		String testClassname = "fr/skiller/test/world/mbappe/Number9.java";
 		root.injectFile(root, testClassname.split(File.separator), new Date());
 
@@ -76,13 +76,13 @@ public class SunburstDataTest {
 	@Test
 	public void addTwoClass() {
 		
-		final SunburstData root = new SunburstData("root");
-		SunburstData data = root; 
+		final RiskChartData root = new RiskChartData("root");
+		RiskChartData data = root; 
 		
 		String testClassname = "fr/skiller/test/world/mbappe/Number9.java";
 		String s1[] = testClassname.split(File.separator);
 		for (int i=0; i<s1.length-1; i++) {
-			data = data.addsubDir(new SunburstData(s1[i]));
+			data = data.addsubDir(new RiskChartData(s1[i]));
 			data.numberOfFiles++;
 		}
 		
@@ -90,7 +90,7 @@ public class SunburstDataTest {
 		testClassname = "fr/skiller/test/world-champion/mbappe/Number9.java";
 		String s2[] = testClassname.split(File.separator);
 		for (int i=0; i<s2.length-1; i++) {
-			data = data.addsubDir(new SunburstData(s2[i]));
+			data = data.addsubDir(new RiskChartData(s2[i]));
 			data.numberOfFiles++;
 		}
 		
@@ -108,7 +108,7 @@ public class SunburstDataTest {
 
 	@Test
 	public void testInjectFileName2Times() {
-		final SunburstData root = new SunburstData("root");
+		final RiskChartData root = new RiskChartData("root");
 		String testClassname = "fr/skiller/test/world/mbappe/Number9.java";
 		root.injectFile(root, testClassname.split(File.separator), new Date());
 		testClassname = "fr/skiller/test/world-champion/mbappe/Number9.java";

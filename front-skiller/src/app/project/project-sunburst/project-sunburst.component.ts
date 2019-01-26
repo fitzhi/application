@@ -243,7 +243,11 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
     if (this.idPanelSelected === this.UNSELECTED) {
       this.idPanelSelected = idPanel;
     } else {
-      this.idPanelSelected = this.UNSELECTED;
+      if (this.idPanelSelected === idPanel) {
+        this.idPanelSelected = this.UNSELECTED;
+      } else {
+        this.idPanelSelected = idPanel;
+      }
     }
   }
 

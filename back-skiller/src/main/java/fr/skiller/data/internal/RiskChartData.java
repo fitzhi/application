@@ -19,7 +19,7 @@ import static fr.skiller.Global.UNKNOWN;
  * @author Fr&eacute;d&eacute;ric VIDAL
  * Sunburst data build from the History of the Source repository with layout information.
  */
-public class SunburstData {
+public class RiskChartData {
 
 	/**
 	 * A location (directory) inside the tree files of the repository.<br/>
@@ -53,7 +53,7 @@ public class SunburstData {
 	/**
 	 * Array containing the sub-directories of the actual directory.
 	 */        
-    public List<SunburstData> children;
+    public List<RiskChartData> children;
 
     /**
      * Classname (or equivalent) located inside this directory.
@@ -63,7 +63,7 @@ public class SunburstData {
 	/**
 	 * @param location the name of the directory (such as com, fr...)
 	 */
-	public SunburstData(String location) {
+	public RiskChartData(String location) {
 		super();
 		this.location = location;
 	}
@@ -73,13 +73,13 @@ public class SunburstData {
 	 * @param subDir the directory record
 	 * @return the item in the list corresponding to the passed subDir <br/><i>(either the newly inserted  item, or the already recorded one)</i>
 	 */
-	public SunburstData addsubDir(final SunburstData subDir) {
+	public RiskChartData addsubDir(final RiskChartData subDir) {
 		if (children == null) {
 			children = new ArrayList<>();
 			children.add(subDir);
 			return children.get(0);
 		} else {
-			Optional<SunburstData> opt = children.stream().filter(data -> data.location.equals(subDir.location)).findAny();
+			Optional<RiskChartData> opt = children.stream().filter(data -> data.location.equals(subDir.location)).findAny();
 			if (!opt.isPresent()) {
 				children.add(subDir);		
 				return children.stream().filter(data -> data.location.equals(subDir.location)).findAny().get();
@@ -95,7 +95,7 @@ public class SunburstData {
 	 * @param dirAndFilename an array containing the remaining sub-directories and the filename of the source element.
 	 * @param date of the latest commit
 	 */
-	public void injectFile(final SunburstData element, final String[] dirAndFilename, final Date latestCommit) {
+	public void injectFile(final RiskChartData element, final String[] dirAndFilename, final Date latestCommit) {
 		// We register the filename in the classnames set
 		if (dirAndFilename.length == 1) {
 			element.addClassName(dirAndFilename[0]);
@@ -103,7 +103,7 @@ public class SunburstData {
 			return;
 		}
 		// Recursive call.
-		injectFile( element.addsubDir(new SunburstData(dirAndFilename[0])), 
+		injectFile( element.addsubDir(new RiskChartData(dirAndFilename[0])), 
 				Arrays.copyOfRange(dirAndFilename, 1, dirAndFilename.length), latestCommit);
 	}
 	
@@ -111,7 +111,7 @@ public class SunburstData {
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
 		if (children!=null) {
-			for (SunburstData child : children) {
+			for (RiskChartData child : children) {
 				sb.append("\t"+child.toString()+Global.LN);
 			}
 		}
@@ -142,7 +142,7 @@ public class SunburstData {
 	 * @param riskLevel the passed new risk level
 	 * @return this instance of {@code SunburstData} for chaining invocations.
 	 */
-	public SunburstData setRiskLevel(final int riskLevel) {
+	public RiskChartData setRiskLevel(final int riskLevel) {
 		this.riskLevel = riskLevel;
 		return this;
 	}

@@ -41,7 +41,7 @@ import { StaffFormComponent } from './staff/staff-form/staff-form.component';
 import { StaffProjectsComponent } from './staff/staff-tabs/staff-projects/staff-projects.component';
 import { StaffExperienceComponent } from './staff/staff-tabs/staff-experience/staff-experience.component';
 import { StaffUploadCvComponent } from './staff/staff-tabs/staff-experience/staff-upload-cv/staff-upload-cv.component';
-import {  MatSortModule, MatButtonToggleModule, MatSidenavModule } from '@angular/material';
+import {  MatSortModule, MatButtonToggleModule, MatSidenavModule, MatCardModule } from '@angular/material';
 import { MatTabsModule, MatDialogModule, MatProgressBarModule, MatPaginatorModule } from '@angular/material';
 import { MessageBoxComponent } from './message-box/dialog/message-box.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -50,6 +50,7 @@ import { SunburstTestComponent } from './d3/sunburst-test/sunburst-test.componen
 import { ProjectComponent } from './project/project.component';
 import { ProjectSunburstComponent } from './project/project-sunburst/project-sunburst.component';
 import { ProjectStaffComponent } from './project/project-staff/project-staff.component';
+import { ProjectUnknownsComponent } from './project/project-sunburst/project-unknowns/project-unknowns.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { ProjectStaffComponent } from './project/project-staff/project-staff.com
     SunburstTestComponent,
     ProjectComponent,
     ProjectSunburstComponent,
-    ProjectStaffComponent
+    ProjectStaffComponent,
+    ProjectUnknownsComponent
   ],
   entryComponents: [
     StarsSkillLevelRenderComponent,
@@ -103,6 +105,7 @@ import { ProjectStaffComponent } from './project/project-staff/project-staff.com
     MatSortModule,
     MatButtonToggleModule,
     MatSidenavModule,
+    MatCardModule,
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.

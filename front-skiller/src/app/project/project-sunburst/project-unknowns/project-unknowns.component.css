@@ -1,0 +1,49 @@
+:host>>>th#unknown>.mat-sort-header-container {
+  display: flex;
+  color: darkblue;
+  font-size: 150%;
+}
+
+#panelUnknowns {
+  background-color: whitesmoke;
+  width: fit-content;
+  margin-left: 5em;
+  padding: 1em;
+}
+
+.image-unknowns {
+  background-image: url('http://localhost:4200/assets/img/question-marks.png');
+  background-size: cover;
+}
+
+mat-card {
+  padding: 0,1em;
+}
+
+mat-card-header {
+  padding: 0,1em;
+}
+
+.tableUnknowns {
+  width: 100%;
+}
+
+mat-card-title {
+  margin: 0.2em;
+}
+
+mat-card-subtitle {
+  margin: 0.2em;
+}
+
+#unknown {
+  height: 3em;
+}
+
+.td-unknown {
+  height: 2em;
+}
+
+p.description {
+    font-size: 80%;
+}

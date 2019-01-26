@@ -32,7 +32,9 @@ import fr.skiller.data.external.SunburstDTO;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Staff;
-import fr.skiller.data.internal.SunburstData;
+import fr.skiller.data.internal.Unknown;
+import fr.skiller.data.internal.RiskChartData;
+import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.scanner.RepoScanner;
@@ -41,6 +43,7 @@ import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
 import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
 import static fr.skiller.Error.CODE_UNDEFINED;
 import static fr.skiller.Error.getStackTrace;
+import static fr.skiller.Global.LN;
 
 @RestController
 @RequestMapping("/project")
@@ -205,7 +208,6 @@ public class ProjectController {
 					new HttpHeaders(), 
 					HttpStatus.BAD_REQUEST);
 		}
-
 	}
 	
 	/**
@@ -370,7 +372,7 @@ public class ProjectController {
 		if (project == null) {
 			new ResponseEntity<SunburstDTO>( 
 					new SunburstDTO(
-							new SunburstData(""), 
+							new RiskChartData(""), 
 							CODE_PROJECT_NOFOUND, 
 							MessageFormat.format(MESSAGE_PROJECT_NOFOUND, p.idProject)),
 					new HttpHeaders(), 
@@ -378,7 +380,22 @@ public class ProjectController {
 		}
 		
 		try {
-			SunburstData data = scanner.generate(project);
+			RiskDashboard data = scanner.generate(project);
+
+			//FIXME TO DELETE
+			data.undefinedContributors.add(new Unknown("TEST"));
+			data.undefinedContributors.add(new Unknown("Jenkins"));
+			data.undefinedContributors.add(new Unknown("Macron"));
+			
+			if (logger.isDebugEnabled()) {
+				if ( (data.undefinedContributors != null) && (data.undefinedContributors.size() > 0) ) {
+					StringBuilder sb = new StringBuilder();
+					sb.append("Unknown contributors detected during the dashboard generation").append(LN);
+					data.undefinedContributors.stream().forEach(ukwn -> sb.append(ukwn).append(LN));
+					logger.debug(sb.toString());
+				}
+			}
+			
 			return new ResponseEntity<SunburstDTO>(new SunburstDTO(data), new HttpHeaders(), HttpStatus.OK);
 		} catch (final Exception e) {
 			logger.error (e.getMessage());

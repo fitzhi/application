@@ -29,7 +29,7 @@ import com.google.gson.GsonBuilder;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Staff;
-import fr.skiller.data.internal.SunburstData;
+import fr.skiller.data.internal.RiskChartData;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
 import fr.skiller.service.ResumeParserService;

@@ -3,7 +3,8 @@
  */
 package fr.skiller.source.scanner;
 
-import fr.skiller.data.internal.SunburstData;
+import fr.skiller.data.internal.RiskChartData;
+import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
@@ -34,17 +35,17 @@ public interface RepoScanner {
 	public CommitRepository parseRepository(Project project, ConnectionSettings settings) throws Exception;
 
 	/**
-	 * Aggregate the repository into the Sunburst data collections
-	 * @param commitRepo repository with its history
-	 * @return the data ready to use for the Sunburst chart.
+	 * Aggregate the history of the repository into the risks dashboard.
+	 * @param commitRepo the parsed repository history retrieved from the version control
+	 * @return the dashboard of the current project.
 	 */
-	public SunburstData aggregateSunburstData(CommitRepository commitRepo);
+	public RiskDashboard aggregateDashboard(CommitRepository commitRepo);
 		
 	/**
 	 * Set the preview settings for each directory in the passed tree.
 	 * @param dataTree the data tree representing the repository directories
 	 */
-	public void setPreviewSettings(SunburstData dataTree);
+	public void setPreviewSettings(RiskChartData dataTree);
 	
 	/**
      * Evaluate the level of risk on all entries in the repository from the staff/level point of view.<br/>
@@ -82,7 +83,7 @@ public interface RepoScanner {
 	 * @param repository the repository retrieved and parsed from the source control tool (i.e. GIT, SVN...).
 	 * @param data repository data prepared for the Sunburst chart 
 	 */
-	void evaluateTheRisk(CommitRepository repository, SunburstData data) ;
+	void evaluateTheRisk(CommitRepository repository, RiskChartData data) ;
 
 	/**
 	 * Mean the risk for the children of this location.<br/>
@@ -91,15 +92,15 @@ public interface RepoScanner {
 	 * @param data data previewed location prepared for the sunburst chart 
 	 * @return the calculated level of risk
 	 */
-	int meanTheRisk(SunburstData location);
+	int meanTheRisk(RiskChartData location);
 	
 	/**
-	 * Generate the sunburst data figuring the activities of staff members for the passed project
+	 * Generate and complete the dashboard generation figuring the activities of staff members for the passed project
 	 * @param project the project whose source code files should be parsed in the repository
-	 * @return the sunburst data 
+	 * @return the project risk dashboard 
 	 * @throws Exception thrown if any application or network error occurs during the treatment.
 	 */
-	SunburstData generate(Project project) throws Exception;
+	RiskDashboard generate(Project project) throws Exception;
 	
 	
 }

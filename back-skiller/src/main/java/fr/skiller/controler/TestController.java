@@ -1,12 +1,6 @@
 package fr.skiller.controler;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,17 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 
-import fr.skiller.Global;
 import fr.skiller.bean.CacheDataHandler;
-import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.SunburstData;
 import fr.skiller.data.internal.Test;
-import fr.skiller.data.source.CommitRepository;
-import fr.skiller.data.source.ConnectionSettings;
 import fr.skiller.source.scanner.RepoScanner;
 
 @RestController
@@ -121,108 +107,4 @@ public class TestController {
 		return responseEntity;
 	}
 
-	@GetMapping("/sunburst-test")
-	ResponseEntity<SunburstData> testSunburst() {
-		
-		if (logger.isDebugEnabled()) {
-			logger.debug("entering testSunburst...");
-		}
-		
-		SunburstData gd = null;
-		try {
-			gd = getTestingValue();
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		final MultiValueMap<String, String> headers = new HttpHeaders();
-		final ResponseEntity<SunburstData> responseEntity = new ResponseEntity<SunburstData>(gd, headers, HttpStatus.OK);
-		if (logger.isDebugEnabled()) {
-			logger.debug(Global.LN+gd.toString());
-		}
-		return responseEntity;
-	}
-
-	
-	private SunburstData getTestingValue() throws Exception {
-		
-		Gson gson = new GsonBuilder().create();
-		File input = new File(resourcesDirectory.getAbsolutePath() + "/root.json");
-		if (input.exists()) {
-			JsonReader reader = gson.newJsonReader(new FileReader(input));
-			Type SunburstDataType = new TypeToken<SunburstData>() {
-			}.getType();
-			SunburstData data = new SunburstData("root");
-			data = gson.fromJson(reader, SunburstDataType);
-			if (logger.isDebugEnabled()) {
-				logger.debug("returning the data from " + input.getAbsolutePath());
-			}
-			return data;
-		}
-		
-		Project project = new Project(1, "VEGEO");
-
-		final String fileProperties = resourcesDirectory.getAbsolutePath() + "/repository-settings/properties-VEGEO.json";
-
-		ConnectionSettings settings = new ConnectionSettings();
-		final FileReader fr = new FileReader(new File(fileProperties));
-		settings = gson.fromJson(fr, settings.getClass());
-		fr.close();
-		if (logger.isDebugEnabled()) {
-			logger.debug("GIT remote URL " + settings.url);
-		}
-		
-		if (logger.isDebugEnabled()) {
-			logger.debug("cloning...");
-		}
-		
-		if (!cacheDataHandler.hasCommitRepositoryAvailable(project)) {
-			scanner.clone(project, settings);
-			if (logger.isDebugEnabled()) {
-				logger.debug("...cloned");
-			}
-		}	
-		if (logger.isDebugEnabled()) {
-			logger.debug("parsing...");
-		}
-		final CommitRepository repo = scanner.parseRepository(project, settings);
-		if (logger.isDebugEnabled()) {
-			logger.debug("...parsed");
-			logger.debug(repo.size() + " records in the repository");
-		}
-        		
-		SunburstData data = scanner.aggregateSunburstData(repo);
-		
-		if (logger.isDebugEnabled()) {
-			repo.contributors()
-				.stream()
-				.forEach(idStaff -> System.out.println(idStaff));
-		}
-		
-		// Evaluate the risk for each directory, and sub-directory, in the repository.
-		scanner.evaluateTheRisk(repo, data);
-		
-		// Fill the holes for directory without source files, and therefore without risk level measured.
-		scanner.meanTheRisk(data);
-
-		// Evaluate the preview display for each sclice of the sunburst chart.  
-		scanner.setPreviewSettings(data);
-		
-		if (logger.isDebugEnabled()) {
-			Gson g = new Gson();
-			String content = g.toJson(data);
-			File output = new File(resourcesDirectory.getAbsolutePath() + "/root.json");
-			logger.debug("Writing result into " + output.getAbsolutePath());
-			BufferedWriter bw = new BufferedWriter(new FileWriter(output));
-			bw.write(content);
-			bw.close();
-			System.out.println(" ");
-			System.out.println(content); 
-			System.out.println(" ");
-		}
-		
-		
-		return data;
-	}
 }

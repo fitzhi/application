@@ -41,7 +41,8 @@ import com.google.gson.Gson;
 
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Staff;
-import fr.skiller.data.internal.SunburstData;
+import fr.skiller.data.internal.RiskChartData;
+import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
@@ -330,7 +331,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
  	}
 
 	@Override
-	public SunburstData generate(final Project project) throws Exception {
+	public RiskDashboard generate(final Project project) throws Exception {
 		
 		final ConnectionSettings settings = connectionSettings(project);
 
@@ -361,17 +362,17 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			});
 		}
 		
-		SunburstData data = this.aggregateSunburstData(repo);
+		RiskDashboard data = this.aggregateDashboard(repo);
 		
 		// Evaluate the risk for each directory, and sub-directory, in the repository.
-		this.evaluateTheRisk(repo, data);
+		this.evaluateTheRisk(repo, data.riskChartData);
 		
 		// Fill the holes for directory without source files, and therefore without risk level measured.
 		if (fillTheHoles) {
-			this.meanTheRisk(data);
+			this.meanTheRisk(data.riskChartData);
 		}
 		// Evaluate the preview display for each slice of the sunburst chart.  
-		this.setPreviewSettings(data);
+		this.setPreviewSettings(data.riskChartData);
 
 		return data;
 	}
