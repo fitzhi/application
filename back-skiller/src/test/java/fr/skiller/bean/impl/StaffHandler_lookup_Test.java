@@ -6,9 +6,15 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import javax.validation.constraints.AssertTrue;
+
 import org.junit.Test;
 
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.data.internal.Staff;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -26,8 +32,15 @@ public class StaffHandler_lookup_Test {
 	private StaffHandler staffHandler;
 
 	@Test
-	public void testLookup() throws Exception {
-
-		System.out.println(staffHandler.lookup("Christian Alonso Chavez Ley"));
+	public void testLookupChristian() throws Exception {
+		assertThat(staffHandler.lookup("Christian Alonso Chavez Ley")).isNotNull();
 	}
+
+	@Test
+	public void testLookupYassine() throws Exception {
+		String fullname = staffHandler.getFullname(200);
+		System.out.println(fullname);
+		assertThat(staffHandler.lookup("Ouaamou Yassine")).isNotNull();
+	}
+
 }

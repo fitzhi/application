@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import fr.skiller.Error;
 import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
@@ -196,6 +197,22 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			if (ids.size() == 0) {
 				ids = getStaff().values().stream()
 						.filter(staff -> word[0].equals(staff.firstName))
+						.collect(Collectors.toList());				
+			}
+			break;
+		case 2:			
+			
+			// If the criteria contains only 2 words, we assume that this criteria is the first name and the last name
+			ids = getStaff().values().stream()
+			.filter(staff -> word[0].toLowerCase().equals(staff.lastName.toLowerCase()))
+			.filter(staff -> word[1].toLowerCase().equals(staff.firstName.toLowerCase()))
+			.collect(Collectors.toList());
+			
+			// The criteria may be in the form "firstName lastName" or "lastName firstName"
+			if (ids.size() == 0) {
+				ids = getStaff().values().stream()
+						.filter(staff -> word[0].toLowerCase().equals(staff.firstName.toLowerCase()))
+						.filter(staff -> word[1].toLowerCase().equals(staff.lastName.toLowerCase()))
 						.collect(Collectors.toList());				
 			}
 			break;
