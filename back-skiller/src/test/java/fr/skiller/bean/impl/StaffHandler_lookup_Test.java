@@ -9,8 +9,11 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.text.Normalizer;
+
 import javax.validation.constraints.AssertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import fr.skiller.bean.StaffHandler;
@@ -31,16 +34,39 @@ public class StaffHandler_lookup_Test {
 	@Autowired
 	private StaffHandler staffHandler;
 
+	@Before
+	public void before() {
+		staffHandler.getStaff().clear();
+		staffHandler.getStaff().put(1000, 
+				new Staff(1000,"Christian Aligato", "Chavez Tugo", "cact" , "cact", "cact@void.com", ""));
+		staffHandler.getStaff().put(1001, 
+				new Staff(1001, "Ouaamou", "Mohammed", "mouaamou" , "mouaamou", "mouaamou@void.com", ""));
+		staffHandler.getStaff().put(1002, 
+				new Staff(1002, "Jérôme", "WithAccent", "jwithaccent" , "jwithaccent", "jwithaccent@void.com", ""));
+		
+	}
+	
 	@Test
 	public void testLookupChristian() throws Exception {
-		assertThat(staffHandler.lookup("Christian Alonso Chavez Ley")).isNotNull();
+		assertThat(staffHandler.lookup("Christian Aligato Chavez Tugo")).isNotNull();
 	}
 
 	@Test
 	public void testLookupYassine() throws Exception {
-		String fullname = staffHandler.getFullname(200);
-		System.out.println(fullname);
-		assertThat(staffHandler.lookup("Ouaamou Yassine")).isNotNull();
+		assertThat(staffHandler.lookup("Ouaamou Mohammed")).isNotNull();
 	}
 
+	@Test
+	public void testLookupJeromeWithAccent() throws Exception {
+		assertThat(Normalizer.normalize("Jérôme WithAccent", Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", ""))
+		.isEqualTo("Jerome WithAccent");
+		assertThat(staffHandler.lookup("Jérôme WithAccent")).isNotNull();
+	}
+	
+	@Test
+	public void testLookupJeromeWithoutAccent() throws Exception {
+		assertThat(Normalizer.normalize("Jérôme WithAccent", Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", ""))
+		.isEqualTo("Jerome WithAccent");
+		assertThat(staffHandler.lookup("Jerome WithAccent")).isNotNull();
+	}
 }

@@ -1,6 +1,7 @@
 package fr.skiller.bean.impl;
 
 import java.text.MessageFormat;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -166,8 +167,48 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		return staff;
 	}
 
+	
+	interface StringTransform {
+		/**
+		 * Transform a string into a new transformed one.
+		 * @param input the input stream
+		 * @return the transformed string
+		 */
+		String process(String input);
+	}
+	
 	@Override
 	public Staff lookup(String criteria)  {
+		
+		// First, we're processing the search with the natural String IN LOWER CASE
+		Staff staff =  lookup(criteria, new StringTransform() {
+			@Override
+			public String process(String input) {
+				return input.toLowerCase();
+			}
+		} );
+		
+		// If no one's found, we re-process the search with NORMALIZED AND LOWER CASE String
+		if (staff == null) {
+			staff =  lookup(criteria, new StringTransform() {
+				@Override
+				public String process(String input) {
+					return Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "");
+				}
+			} );			
+		}
+		
+		return staff;
+	}
+	
+	/**
+	 * Lookup cross the staff collection for a given criteria
+	 * @param criteria the given criteria which might contain one or multiple words
+	 * @param transform an interface of transformation for string to improve the search (such as rendering all string in lower case) 
+	 * @return the staff found or {@code null} if none is found
+	 */
+	
+	private Staff lookup(String criteria, StringTransform transform )  {
 
 		if ((criteria == null) || (criteria.length() == 0)) {
 			return null;
@@ -181,14 +222,14 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			
 			// If the criteria contains only one word, we assume FIRST that this criteria is the login id
 			ids = getStaff().values().stream()
-				.filter(staff -> word[0].equals(staff.login))
+				.filter(staff -> transform.process(word[0]).equals(transform.process(staff.login)))
 				.collect(Collectors.toList());
 			
 			// If the criteria contains only one word which is not a login name, 
 			// we assume that this criteria is the last name
 			if (ids.size() == 0) {
 				ids = getStaff().values().stream()
-						.filter(staff -> word[0].equals(staff.lastName))
+						.filter(staff -> transform.process(word[0]).equals(transform.process(staff.lastName)))
 						.collect(Collectors.toList());				
 			}
 			
@@ -196,7 +237,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			// we assume that this criteria is the first name
 			if (ids.size() == 0) {
 				ids = getStaff().values().stream()
-						.filter(staff -> word[0].equals(staff.firstName))
+						.filter(staff -> transform.process(word[0]).equals(transform.process(staff.firstName)))
 						.collect(Collectors.toList());				
 			}
 			break;
@@ -204,15 +245,15 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			
 			// If the criteria contains only 2 words, we assume that this criteria is the first name and the last name
 			ids = getStaff().values().stream()
-			.filter(staff -> word[0].toLowerCase().equals(staff.lastName.toLowerCase()))
-			.filter(staff -> word[1].toLowerCase().equals(staff.firstName.toLowerCase()))
+			.filter(staff -> transform.process(word[0]).equals(transform.process(staff.lastName)))
+			.filter(staff -> transform.process(word[1]).equals(transform.process(staff.firstName)))
 			.collect(Collectors.toList());
 			
 			// The criteria may be in the form "firstName lastName" or "lastName firstName"
 			if (ids.size() == 0) {
 				ids = getStaff().values().stream()
-						.filter(staff -> word[0].toLowerCase().equals(staff.firstName.toLowerCase()))
-						.filter(staff -> word[1].toLowerCase().equals(staff.lastName.toLowerCase()))
+						.filter(staff -> transform.process(word[0]).equals(transform.process(staff.firstName)))
+						.filter(staff -> transform.process(word[1]).equals(transform.process(staff.lastName)))
 						.collect(Collectors.toList());				
 			}
 			break;
@@ -220,7 +261,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			// If the criteria contains multiple words, we assume that this criteria is the full name of the contributor
 			// Either with the firstName + " " + lastName, or the lastName + " " + firstName
 			ids = getStaff().values().stream()
-			.filter(staff -> criteria.trim().toLowerCase().equals(staff.fullName().toLowerCase()))
+			.filter(staff -> transform.process(criteria.trim()).equals(transform.process(staff.fullName())))
 			.collect(Collectors.toList());
 		}
 
