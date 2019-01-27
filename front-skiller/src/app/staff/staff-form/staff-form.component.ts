@@ -72,8 +72,12 @@ export class StaffFormComponent implements OnInit {
         this.profileStaff.get('profile').setValue(this.collaborator.level);
         this.profileStaff.get('active').setValue(this.collaborator.isActive);
         if (this.collaborator.isActive) {
-          this.label_isActive = this.collaborator.firstName + ' ' + this.collaborator.lastName
-          + ' is still in activity. Uncheck this box to inform of his leave.';
+          if (this.collaborator.idStaff === null) {
+            this.label_isActive = 'will be considered in activity as long as this box is checked ';
+          } else {
+            this.label_isActive = this.collaborator.firstName + ' ' + this.collaborator.lastName
+            + ' is still in activity. Uncheck this box to inform of his leave.';
+          }
           // There is no READONLY attribute in the SELECT widget.
           // We need to enable this field within the code and not in HTML like the rest of the form.
           this.profileStaff.get('profile').enable();
