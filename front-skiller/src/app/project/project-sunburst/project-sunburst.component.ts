@@ -6,6 +6,8 @@ import { ProjectService } from '../../project.service';
 import { ActivatedRoute } from '@angular/router';
 import {CinematicService} from '../../cinematic.service';
 import { Project } from '../../data/project';
+import { Unknown } from '../../data/Unknown';
+import { ProjectUnknownsDataSource } from './project-unknowns/project-unknowns-data-source';
 
 @Component({
   selector: 'app-project-sunburst',
@@ -58,6 +60,11 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
   // Identifier of the panel selected.
   private idPanelSelected = -1;
 
+  public projectName: string;
+
+  // Unregistered contributors.
+  dataSourceUnKnowns = new ProjectUnknownsDataSource();
+
   constructor(
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
@@ -90,6 +97,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
     this.cinematicService.tabProjectActivated.subscribe (
       index => {
         if (index === Constants.PROJECT_IDX_TAB_SUNBURST) {
+          this.projectName = this.project.name;
           this.loadSunburst ();
         }
       }
@@ -114,9 +122,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    console.log (this.project);
     if ( (typeof this.project === 'undefined') || (typeof this.project.id === 'undefined')) {
-      console.log('in');
         this.sunburst_impossible = true;
         this.sunburst_waiting = false;
         this.sunburst_ready = false;
@@ -135,8 +141,10 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
         .subscribe(response => {
           myChart.data(response.sunburstData).width(500).height(500).label('location').size('numberOfFiles').color('color')
             (document.getElementById('chart'));
-        },
-          response => {
+
+          // Send the unregistered contributors to the panel list
+          this.dataSourceUnKnowns.sendUnknowns (response.unknowns);
+        }, response => {
             if (Constants.DEBUG) {
               console.log('Error ' + response.status + ' while retrieving the sunburst data for the project identfier ' + this.idProject);
             }

@@ -2,6 +2,7 @@ package fr.skiller.data.external;
 
 import fr.skiller.data.internal.RiskChartData;
 import fr.skiller.data.internal.RiskDashboard;
+import fr.skiller.data.internal.Unknown;
 
 /**
  * <p>This class is used as a Data Transfer Object between the spring boot
@@ -33,7 +34,7 @@ public class SunburstDTO {
 	/**
 	 * Array of unknown contributors who are unknown in the staff collection.
 	 */
-	public String unknowns[];
+	public Unknown unknowns[];
 	
 	/**
 	 * @param riskDashboard Dashboard data ready to be injected in the sunburst chart.
@@ -41,7 +42,7 @@ public class SunburstDTO {
 	public SunburstDTO(RiskDashboard riskDashboard) {
 		super();
 		this.sunburstData = riskDashboard.riskChartData;
-		riskDashboard.undefinedContributors.stream().toArray(size -> new String[size]);
+		unknowns = riskDashboard.undefinedContributors.stream().toArray(size -> new Unknown[size]);
 	}
 
 	/**

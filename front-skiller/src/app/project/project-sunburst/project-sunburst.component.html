@@ -67,7 +67,11 @@
             </table>
         </div>
         
-        <app-project-unknowns [hidden]="!buttonActivated(3)" class="rules-of-risks"></app-project-unknowns> 
+        <app-project-unknowns 
+            [dataSource]="dataSourceUnKnowns" 
+            [projectName]="projectName"
+            [hidden]="!buttonActivated(3)" 
+            class="rules-of-risks"></app-project-unknowns> 
 
     </mat-sidenav-content>
 

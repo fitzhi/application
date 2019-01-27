@@ -23,6 +23,9 @@ public class UnknownCommiterJSONTest {
 		undefinedContributors.add(new Unknown("C"));
 		undefinedContributors.add(new Unknown("B"));
 		undefinedContributors.add(new Unknown("a"));
-		Assert.assertEquals("[{\"login\":\"B\"},{\"login\":\"A\"},{\"login\":\"C\"},{\"login\":\"a\"}]", gson.toJson(undefinedContributors));
+		Assert.assertTrue( gson.toJson(undefinedContributors).indexOf("{\"login\":\"A\"}") != -1);
+		Assert.assertTrue( gson.toJson(undefinedContributors).indexOf("{\"login\":\"C\"}") != -1);
+		Assert.assertTrue( gson.toJson(undefinedContributors).indexOf("{\"login\":\"B\"}") != -1);
+		Assert.assertTrue( gson.toJson(undefinedContributors).indexOf("{\"login\":\"a\"}") != -1);
 	}
 }

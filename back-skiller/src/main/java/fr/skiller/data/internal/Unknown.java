@@ -10,5 +10,10 @@ public class Unknown {
 	public Unknown(final String login) {
 		this.login = login;
 	}
+
+	@Override
+	public String toString() {
+		return "Unknown [login=" + login + "]";
+	}
 	
 }

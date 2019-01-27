@@ -382,16 +382,11 @@ public class ProjectController {
 		try {
 			RiskDashboard data = scanner.generate(project);
 
-			//FIXME TO DELETE
-			data.undefinedContributors.add(new Unknown("TEST"));
-			data.undefinedContributors.add(new Unknown("Jenkins"));
-			data.undefinedContributors.add(new Unknown("Macron"));
-			
 			if (logger.isDebugEnabled()) {
 				if ( (data.undefinedContributors != null) && (data.undefinedContributors.size() > 0) ) {
 					StringBuilder sb = new StringBuilder();
 					sb.append("Unknown contributors detected during the dashboard generation").append(LN);
-					data.undefinedContributors.stream().forEach(ukwn -> sb.append(ukwn).append(LN));
+					data.undefinedContributors.stream().forEach(ukwn -> sb.append(ukwn.login).append(LN));
 					logger.debug(sb.toString());
 				}
 			}

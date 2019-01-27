@@ -3,7 +3,6 @@ import {CinematicService} from '../cinematic.service';
 import {Constants} from '../constants';
 
 import { Router } from '@angular/router';
-import { Unknown } from '../data/Unknown';
 
 @Component({
   selector: 'app-welcome',
@@ -11,10 +10,6 @@ import { Unknown } from '../data/Unknown';
   styleUrls: ['./welcome.component.css']
 })
 export class WelcomeComponent implements OnInit {
-
-  public unknowns: Unknown[] = [{login: 'Test'}, {login: 'Sonarcube'}];
-
-  public projectName = 'VEGEO';
 
   constructor(
     private cinematicService: CinematicService,

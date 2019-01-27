@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatSort } from '@angular/material';
 import { Unknown } from '../../../data/Unknown';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-project-unknowns',
@@ -19,27 +20,17 @@ export class ProjectUnknownsComponent implements OnInit {
   /**
    * The unknown contributors in the repository.
    */
-  @Input('unknowns') unknowns: Unknown[];
-
-  sortedData: Unknown[];
+  @Input('dataSource') dataSource;
 
   /**
    * Array will be sortable
    */
   @ViewChild(MatSort) sort: MatSort;
 
-  /**
-   * Source of data for the array of unknown commiters.
-   */
-  public dataSource;
-
   constructor() {
   }
 
   ngOnInit() {
-    setTimeout(() => {
-      this.dataSource = new MatTableDataSource(this.unknowns);
-      this.dataSource.sort = this.sort;
-    }, 0);
+    this.dataSource.sort = this.sort;
   }
 }
