@@ -85,7 +85,11 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
     });
 
      this.subjProject.subscribe(project => {
+       if (Constants.DEBUG) {
+         console.log ('Project ' + project.id + ' ' + project.name + ' reveived in sunburst-component');
+       }
         this.project = project;
+        this.projectName = this.project.name;
         if ((typeof this.project.urlRepository === 'undefined') || (this.project.urlRepository.length === 0)) {
           this.messageService.info('No repository URL avalaible !');
           this.sunburst_ready = false;
@@ -97,7 +101,6 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
     this.cinematicService.tabProjectActivated.subscribe (
       index => {
         if (index === Constants.PROJECT_IDX_TAB_SUNBURST) {
-          this.projectName = this.project.name;
           this.loadSunburst ();
         }
       }
