@@ -100,6 +100,13 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 		fw.close();
 	}
 	
+	
+	@Override
+	public boolean removeRepository(final Project project) throws IOException {
+		File repo = new File (getCacheFilename(project));
+		return repo.delete();
+	}
+
 	/**
 	 * @return the cache filename for the passed project
 	 */

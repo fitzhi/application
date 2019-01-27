@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+
+import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
@@ -65,6 +67,9 @@ public class ProjectController {
 	@Autowired
 	StaffHandler staffHandler;
 	
+	@Autowired
+	CacheDataHandler cacheDataHandler;
+
 	/**
 	 * Source control parser.
 	 */
@@ -424,6 +429,30 @@ public class ProjectController {
 		});
 		
 		return new ResponseEntity<ProjectContributorDTO>(projectContributorDTO, new HttpHeaders(), HttpStatus.OK);
+	}
+	
+	/**
+	 * @param idProject the project identifier
+	 * @return the contributors who have been involved in the project
+	 */
+	@RequestMapping(value="/{idProject}/dashboard-cleanup", method = RequestMethod.GET)
+	ResponseEntity<String> cleanupDashboard(final @PathVariable("idProject") int idProject) {
+		if (logger.isDebugEnabled()) {
+			logger.debug ("Removing project with " + idProject);
+		}
+		try {
+			final Project project = projectHandler.get(idProject);
+			String response = cacheDataHandler.removeRepository(project) ? "Done !" : "KO !";
+			return new ResponseEntity<String>( 
+					response,
+					new HttpHeaders(), 
+					HttpStatus.OK);
+		} catch (Exception e) {
+			logger.error(getStackTrace(e)); 
+			return new ResponseEntity<String> (e.getMessage(), 
+					new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+		
 	}
 	
 	/**

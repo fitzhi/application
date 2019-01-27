@@ -35,4 +35,13 @@ public interface CacheDataHandler {
 	 * @throws IOException if an IOException occurs
 	 */
 	void saveRepository (Project project, CommitRepository repository) throws IOException;
+	
+	/**
+	 * Remove the repository on the file system, for this project.<br/>
+	 * @param project the current project
+	 * @return {@code true} if the deletion is successful, {@code false} otherwise
+	 * @throws IOException if an IOException occurs
+	 */
+	boolean removeRepository (Project project) throws IOException;
+	
 }
