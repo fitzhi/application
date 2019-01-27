@@ -202,7 +202,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 	
 	/**
-	 * Lookup cross the staff collection for a given criteria
+	 * Lookup across the staff collection for a given criteria
 	 * @param criteria the given criteria which might contain one or multiple words
 	 * @param transform an interface of transformation for string to improve the search (such as rendering all string in lower case) 
 	 * @return the staff found or {@code null} if none is found
