@@ -184,7 +184,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		Staff staff =  lookup(criteria, new StringTransform() {
 			@Override
 			public String process(String input) {
-				return input.toLowerCase();
+				return (input != null) ? input.toLowerCase() : null;
 			}
 		} );
 		
@@ -193,7 +193,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			staff =  lookup(criteria, new StringTransform() {
 				@Override
 				public String process(String input) {
-					return Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "");
+					return (input != null) ? Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "") : null;
 				}
 			} );			
 		}

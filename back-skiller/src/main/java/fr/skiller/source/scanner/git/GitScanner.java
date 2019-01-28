@@ -172,6 +172,9 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 				.setCredentialsProvider(new UsernamePasswordCredentialsProvider(settings.login, settings.password))
 				.call();
 
+		if (logger.isDebugEnabled()) {
+			logger.debug("clone of repository done !");
+		}
 		// Saving the local repository location
 		settings.localRepository = path.toAbsolutePath().toString();
 		

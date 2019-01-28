@@ -398,6 +398,7 @@ public class ProjectController {
 			
 			return new ResponseEntity<SunburstDTO>(new SunburstDTO(data), new HttpHeaders(), HttpStatus.OK);
 		} catch (final Exception e) {
+			e.printStackTrace();
 			logger.error (e.getMessage());
 			return new ResponseEntity<SunburstDTO>(new SunburstDTO(null, CODE_UNDEFINED, e.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);			
 		}
