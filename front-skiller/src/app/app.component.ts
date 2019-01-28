@@ -98,7 +98,7 @@ export class AppComponent implements OnInit {
           break;
         }
         case Constants.SKILLS_SEARCH: {
-          this.formTitle = 'Searching';
+          this.formTitle = 'Skills Search';
           this.in_master_detail = false;
           this.is_allowed_to_search = true;
           break;
@@ -112,7 +112,7 @@ export class AppComponent implements OnInit {
           break;
         }
         case Constants.DEVELOPERS_SEARCH: {
-          this.formTitle = 'Searching';
+          this.formTitle = 'Developers Search';
           this.in_master_detail = false;
           this.is_allowed_to_search = true;
           break;
@@ -124,7 +124,7 @@ export class AppComponent implements OnInit {
           break;
         }
         case Constants.PROJECT_SEARCH: {
-          this.formTitle = 'Searching';
+          this.formTitle = 'Projects Search';
           this.in_master_detail = false;
           this.is_allowed_to_search = true;
           break;

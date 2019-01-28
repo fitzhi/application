@@ -85,3 +85,7 @@ a.disabled {
 #activeOnly {
 	margin-right: 5px;
 }
+
+#formTitle {
+    font-size: 95%;
+}
