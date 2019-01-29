@@ -48,5 +48,12 @@ public class Contributor {
 		this.numberOfCommitsSubmitted = numberOfCommitsSubmitted;
 		this.numberOfFiles = numberOfFiles;
 	}
+
+	@Override
+	public String toString() {
+		return "Contributor [idStaff=" + idStaff + ", firstCommit=" + firstCommit + ", lastCommit=" + lastCommit
+				+ ", numberOfCommitsSubmitted=" + numberOfCommitsSubmitted + ", numberOfFiles=" + numberOfFiles + "]";
+	}
+
 	
 }

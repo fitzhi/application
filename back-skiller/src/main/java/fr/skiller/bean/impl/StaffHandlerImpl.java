@@ -284,7 +284,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	
 	
 	@Override
-	public List<Contributor> takeAccount(Project project, CommitRepository repository) throws SkillerException {
+	public List<Contributor> involve(Project project, CommitRepository repository) throws SkillerException {
 		
 		List<Contributor> contributors = repository.contributors();
 		contributors.stream().forEach(contributor -> {
@@ -320,7 +320,6 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 						this.dataUpdated = true;
 					}
 				}
-				
 			}			
 		});
 		return contributors;

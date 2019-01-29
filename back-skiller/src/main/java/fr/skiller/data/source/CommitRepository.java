@@ -95,4 +95,10 @@ public interface CommitRepository {
 	 */
 	Set<String> unknownContributors();
 
+	/**
+	 * Set a new contributors set in this repository.
+	 * @param unknowns a set of committers pseudos retrieved in the version control but unrecognized in the staff member.<br/>
+	 */
+	void setUnknownContributors(Set<String> unknowns);
+	
 }

@@ -89,4 +89,10 @@ a.sidenav:hover, .activated {
     left: 2.5em;    
 }
 
-
+.panelUnknows {
+    position: fixed ;
+    top: 5em;
+    left: 2em;  
+    width: 500px;
+    height: 200px;  
+}

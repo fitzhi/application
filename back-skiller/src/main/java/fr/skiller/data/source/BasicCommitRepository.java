@@ -147,5 +147,8 @@ public class BasicCommitRepository implements CommitRepository {
 		return this.unknownContributors;
 	}
 
-	
+	@Override
+	public void setUnknownContributors(Set<String> unknowns) {
+		this.unknownContributors = unknowns;
+	}
 }

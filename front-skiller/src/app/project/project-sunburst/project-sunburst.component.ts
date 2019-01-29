@@ -6,8 +6,9 @@ import { ProjectService } from '../../project.service';
 import { ActivatedRoute } from '@angular/router';
 import {CinematicService} from '../../cinematic.service';
 import { Project } from '../../data/project';
-import { Unknown } from '../../data/Unknown';
-import { ProjectUnknownsDataSource } from './project-unknowns/project-unknowns-data-source';
+import { MatDialogConfig, MatDialog } from '@angular/material';
+import { DialogProjectGhostsComponent } from './dialog-project-ghosts/dialog-project-ghosts.component';
+import { ProjectGhostsDataSource } from './dialog-project-ghosts/project-ghosts-data-source';
 
 @Component({
   selector: 'app-project-sunburst',
@@ -31,6 +32,9 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
    */
   private idProject: number;
 
+  public dataGhosts: ProjectGhostsDataSource;
+
+
   private chart_is_drawn = false;
 
   // this boolean is indicating that the sunburst chart is ready to be viewed.
@@ -52,23 +56,21 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
   private RULES_OF_RISKS = 1;
 
   // Settings panel has to be displayed.
-  private SETTINGS = 1;
+  private SETTINGS = 2;
 
   // Unknown contributors panel has to be displayed.
-  private UNKNOWN = 1;
+  private UNKNOWN = 3;
 
   // Identifier of the panel selected.
   private idPanelSelected = -1;
 
   public projectName: string;
 
-  // Unregistered contributors.
-  dataSourceUnKnowns = new ProjectUnknownsDataSource();
-
   constructor(
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
     private messageService: MessageService,
+    private dialog: MatDialog,
     private projectService: ProjectService) { }
 
   ngOnInit() {
@@ -144,9 +146,11 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
         .subscribe(response => {
           myChart.data(response.sunburstData).width(500).height(500).label('location').size('numberOfFiles').color('color')
             (document.getElementById('chart'));
-
-          // Send the unregistered contributors to the panel list
-          this.dataSourceUnKnowns.sendUnknowns (response.unknowns);
+              if (typeof this.dataGhosts === 'undefined') {
+                this.dataGhosts = new ProjectGhostsDataSource(this.project);
+              }
+              // Send the unregistered contributors to the panel list
+              this.dataGhosts.sendUnknowns (response.unknowns);
         }, response => {
             if (Constants.DEBUG) {
               console.log('Error ' + response.status + ' while retrieving the sunburst data for the project identfier ' + this.idProject);
@@ -248,9 +252,27 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
 
    /**
    * Show the panel associated to this id.
-   * @param idPanel : Panel identifier
+   * @param idPanel Panel identifier
    */
   public show(idPanel: number) {
+    switch (idPanel) {
+      case this.UNKNOWN:
+        const dialogConfig = new MatDialogConfig();
+        dialogConfig.autoFocus = true;
+        dialogConfig.panelClass = 'default-dialog-container-class';
+        if (typeof this.dataGhosts === 'undefined') {
+          this.dataGhosts = new ProjectGhostsDataSource(this.project);
+        }
+        dialogConfig.data = this.dataGhosts;
+        if (typeof this.dataGhosts !== 'undefined') {
+          const dialogReference = this.dialog.open(DialogProjectGhostsComponent, dialogConfig);
+        }
+        break;
+      default:
+        break;
+    }
+  }
+  /*
     if (this.idPanelSelected === this.UNSELECTED) {
       this.idPanelSelected = idPanel;
     } else {
@@ -260,12 +282,12 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
         this.idPanelSelected = idPanel;
       }
     }
-  }
+    */
 
    /**
    * The button associated to this panel id is activated.
-   * @param idPanel : Panel identifier
-   */
+   * @param idPanel panel identifier
+   **/
     public buttonActivated  (idPanel: number) {
       return (idPanel  === this.idPanelSelected);
     }

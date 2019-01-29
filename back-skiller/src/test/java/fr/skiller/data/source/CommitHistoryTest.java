@@ -23,7 +23,6 @@ import fr.skiller.bean.StaffHandler;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@AutoConfigureMockMvc
 public class CommitHistoryTest {
 
     @Autowired

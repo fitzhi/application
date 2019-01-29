@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -181,14 +183,29 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	}
 
 	@Override
-	public CommitRepository parseRepository(final Project project, ConnectionSettings settings) throws Exception {
+	public CommitRepository parseRepository(final Project project, final ConnectionSettings settings) throws Exception {
  
-		// Test if this repository is available in cache 
+		// Test if this repository is available in cache. 
+		// If this repository exists, return it immediately.
 		if (cacheDataHandler.hasCommitRepositoryAvailable(project)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Using cache file for project " + project.name);
 			}
-			return cacheDataHandler.getRepository(project);
+
+			CommitRepository repository = cacheDataHandler.getRepository(project);
+			
+			// Since the last parsing of the repository, some developers might have been declared and are responding now to unknown pseudos.
+			// We cleanup the set.
+			repository.setUnknownContributors(
+						repository
+						.unknownContributors()	
+						.stream()
+						.filter(pseudo -> (this.staffHandler.lookup(pseudo) == null))
+						.collect(Collectors.toSet())
+						);
+			
+			this.staffHandler.lookup("test");
+			return repository;
 		}
 		
 		if (settings.localRepository == null) {
@@ -356,7 +373,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		if (logger.isDebugEnabled()) {
 			logger.debug("Taking account of retrieved contributors from the repository into the project list of participants");
 		}
-		List<Contributor> contributors = staffHandler.takeAccount(project, repo);
+		List<Contributor> contributors = staffHandler.involve(project, repo);
 		if (logger.isDebugEnabled()) {
 			logger.debug(contributors.size() + " contributors retrieved : ");
 			contributors.stream().forEach(contributor -> {

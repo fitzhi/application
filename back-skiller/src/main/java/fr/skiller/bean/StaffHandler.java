@@ -71,12 +71,15 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	boolean isActive (int idStaff) ;
 	
 	/**
-	 * Take account of the repository of the passed project into the staff involvement 
-	 * @param project passed project
+	 * <p>
+	 * Involve the contributors retrieved by their pseudo into the staff team of the project.
+	 * The method update the list of participants of a project, if needed.
+	 * </p>
+	 * @param project the current project
 	 * @return the list of contributors identified, or not, as contributors inside the repository
 	 * @throws SkillerException thrown if any problem occurs 
 	 */
-	List<Contributor> takeAccount(Project project, CommitRepository repository) throws SkillerException;
+	List<Contributor> involve(Project project, CommitRepository repository) throws SkillerException;
 	
 	/**
 	 * @param idStaff the staff identifier

@@ -144,6 +144,7 @@ public class StaffController {
 				logger.debug("Cannot find a staff member for id " + String.valueOf(idStaff) + " in th Staff collection");
 			}
 		}
+		System.out.println("responseEntity " + responseEntity.getBody());
 		return responseEntity;
 	}
 
@@ -158,6 +159,7 @@ public class StaffController {
 		try {
 			ResponseEntity<Staff> responseEntityStaffMember = read(idStaff);
 	
+			
 			// Adding the name of project.
 			for (Mission mission : responseEntityStaffMember.getBody().missions) {
 					mission.name = projectHandler.get(mission.idProject).name;

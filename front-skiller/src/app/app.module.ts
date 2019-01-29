@@ -50,7 +50,7 @@ import { SunburstTestComponent } from './d3/sunburst-test/sunburst-test.componen
 import { ProjectComponent } from './project/project.component';
 import { ProjectSunburstComponent } from './project/project-sunburst/project-sunburst.component';
 import { ProjectStaffComponent } from './project/project-staff/project-staff.component';
-import { ProjectUnknownsComponent } from './project/project-sunburst/project-unknowns/project-unknowns.component';
+import { DialogProjectGhostsComponent } from './project/project-sunburst/dialog-project-ghosts/dialog-project-ghosts.component';
 
 @NgModule({
   declarations: [
@@ -76,13 +76,14 @@ import { ProjectUnknownsComponent } from './project/project-sunburst/project-unk
     ProjectComponent,
     ProjectSunburstComponent,
     ProjectStaffComponent,
-    ProjectUnknownsComponent
+    DialogProjectGhostsComponent
   ],
   entryComponents: [
     StarsSkillLevelRenderComponent,
     StaffUploadCvComponent,
     MessageBoxComponent,
-    UploadedSkillsPickupComponent
+    UploadedSkillsPickupComponent,
+    DialogProjectGhostsComponent
   ],
   imports: [
     BrowserModule,

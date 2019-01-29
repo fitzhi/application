@@ -36,7 +36,6 @@ public class StaffHandler_lookup_Test {
 
 	@Before
 	public void before() {
-		staffHandler.getStaff().clear();
 		staffHandler.getStaff().put(1000, 
 				new Staff(1000,"Christian Aligato", "Chavez Tugo", "cact" , "cact", "cact@void.com", ""));
 		staffHandler.getStaff().put(1001, 

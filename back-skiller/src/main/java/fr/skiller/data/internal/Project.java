@@ -50,6 +50,10 @@ public class Project {
 	 */
 	public List<Skill> skills = new ArrayList<Skill>();
 	
+	/**
+	 * List of committer defined by their pseudos either missing from the staff collection, or technical.
+	 */
+	public List<Ghost> ghosts = new ArrayList<Ghost>();
 	
 	/**
 	 * Constant representing one the 2 models of connection settings.
@@ -103,13 +107,12 @@ public class Project {
 	public boolean isIndirectAccess() {
 		return (connection_settings == REMOTE_FILE_ACCESS);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "Project [id=" + id + ", name=" + name + ", connection_settings=" + connection_settings
-				+ ", urlRepository=" + urlRepository + ", username=" + username + ", password=" + password
-				+ ", filename=" + filename + ", skills=" + skills + "]";
+				+ ", urlRepository=" + urlRepository + ", username=" + username + ", filename=" + filename + ", skills="
+				+ skills + ", ghosts=" + ghosts + "]";
 	}
-
-
+	
 }

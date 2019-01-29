@@ -106,8 +106,9 @@ public class GitScannerTestByPassable {
 					Staff staff = staffHandler.getStaff().get(idStaff);
 					if (staff == null) {
 						logger.debug("Do not retrieve the staff with the id "+idStaff);
+					} else {
+						logger.debug(staff.login + " " + staff.isActive);
 					}
-					logger.debug(staff.login + " " + staff.isActive);
 				});
 		}
 		// Evaluate the risk for each directory, and sub-directory, in the repository.

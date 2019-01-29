@@ -1,0 +1,34 @@
+<form onsubmit="submuit()">
+  <h2 mat-dialog-title>Application file selection</h2>
+  <mat-dialog-content>
+      <p class="description">
+        <br/> The list below contains the list of unregistered contributors for this project.
+        <br/> These login need to be registered in order to completely evaluate the risk.
+      </p>
+
+      <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8 tableGhosts" matSort>
+        <ng-container matColumnDef="pseudo">
+          <th id="pseudo" mat-header-cell *matHeaderCellDef mat-sort-header>Pseudo</th>
+          <td mat-cell class="td-ghost" *matCellDef="let unknown">{{unknown.login}}</td>
+        </ng-container>
+        <ng-container matColumnDef="login">
+          <th id="login" mat-header-cell *matHeaderCellDef mat-sort-header>Related login</th>
+          <td mat-cell *matCellDef="let unknown">
+            <input id="login-{{unknown.login}}" />
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="technical">
+          <th id="technical" mat-header-cell *matHeaderCellDef mat-sort-header>User/Technical</th>
+          <td mat-cell class="td-ghost" *matCellDef="">x</td>
+        </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+        <tr mat-row class="td-ghost" *matRowDef="let row; columns: displayedColumns;" class="row_any"></tr>
+      </table>
+
+    <mat-dialog-actions align="center">
+      <button mat-button class="actions" mat-dialog-close>Cancel</button>
+      <button class="actions" type="submit">Ok</button>
+    </mat-dialog-actions>
+  </mat-dialog-content>
+</form>
+
