@@ -3,11 +3,14 @@ import { Unknown } from '../../../data/Unknown';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { CollectionViewer } from '@angular/cdk/collections';
 import { Project } from '../../../data/project';
+import { Ghost } from '../../../data/Ghost';
 
 export class ProjectGhostsDataSource implements DataSource<Unknown> {
 
-    private unknownsSubject = new BehaviorSubject<Unknown[]>([]);
+    private ghostsSubject = new BehaviorSubject<Ghost[]>([]);
     private loadingSubject = new BehaviorSubject<boolean>(false);
+
+    private ghosts: Ghost[] = [];
 
     public loading$ = this.loadingSubject.asObservable();
 
@@ -24,14 +27,14 @@ export class ProjectGhostsDataSource implements DataSource<Unknown> {
      * Connect this datasource to the list
      */
     connect(collectionViewer: CollectionViewer): Observable<Unknown[]> {
-        return this.unknownsSubject.asObservable();
+        return this.ghostsSubject.asObservable();
     }
 
     /**
      * Disconnect this datasource to the list
      */
     disconnect(collectionViewer: CollectionViewer): void {
-        this.unknownsSubject.complete();
+        this.ghostsSubject.complete();
         this.loadingSubject.complete();
     }
 
@@ -41,6 +44,19 @@ export class ProjectGhostsDataSource implements DataSource<Unknown> {
      */
     sendUnknowns (unknowns: Unknown[]): void {
         this.loadingSubject.next(true);
-        this.unknownsSubject.next(unknowns);
+        const _this = this;
+        unknowns.forEach(function(unknown) {
+            const g = new Ghost();
+            g.pseudo = unknown.login;
+            g.idStaff = -1;
+            g.login = '';
+            g.technical = false;
+            _this.ghosts.push(g);
+        });
+        this.ghostsSubject.next(this.ghosts);
+    }
+
+    getGhosts() {
+        return this.ghosts;
     }
 }

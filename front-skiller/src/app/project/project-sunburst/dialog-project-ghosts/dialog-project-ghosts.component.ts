@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatSort } from '@angular/material';
 import { Project } from '../../../data/project';
 import { Constants } from '../../../constants';
 import { ProjectGhostsDataSource } from './project-ghosts-data-source';
+import { Ghost } from '../../../data/Ghost';
 
 @Component({
   selector: 'app-dialog-project-ghosts',
@@ -14,7 +15,7 @@ export class DialogProjectGhostsComponent implements OnInit {
   /**
    * The undeclared contributors in the repository.
    */
-  public dataSource: ProjectGhostsDataSource;
+  public dataSource: Ghost[];
 
   public displayedColumns: string[] = ['pseudo', 'login', 'technical'];
   /**
@@ -27,13 +28,12 @@ export class DialogProjectGhostsComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: ProjectGhostsDataSource) { }
 
   ngOnInit() {
-    this.dataSource = <ProjectGhostsDataSource>this.data;
+    this.dataSource = this.data.getGhosts();
     if (Constants.DEBUG) {
-      console.log ('Working on project ' + this.dataSource.project);
+      console.log ('Working on project ' + this.data.project);
     }
   }
 
   public submit() {
-
   }
 }

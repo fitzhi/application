@@ -41,7 +41,8 @@ import { StaffFormComponent } from './staff/staff-form/staff-form.component';
 import { StaffProjectsComponent } from './staff/staff-tabs/staff-projects/staff-projects.component';
 import { StaffExperienceComponent } from './staff/staff-tabs/staff-experience/staff-experience.component';
 import { StaffUploadCvComponent } from './staff/staff-tabs/staff-experience/staff-upload-cv/staff-upload-cv.component';
-import {  MatSortModule, MatButtonToggleModule, MatSidenavModule, MatCardModule } from '@angular/material';
+import {  MatSortModule, MatButtonToggleModule, MatSidenavModule, MatCardModule, MatFormFieldModule } from '@angular/material';
+import {  MatInputModule } from '@angular/material';
 import { MatTabsModule, MatDialogModule, MatProgressBarModule, MatPaginatorModule } from '@angular/material';
 import { MessageBoxComponent } from './message-box/dialog/message-box.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -107,6 +108,8 @@ import { DialogProjectGhostsComponent } from './project/project-sunburst/dialog-
     MatButtonToggleModule,
     MatSidenavModule,
     MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
 
     // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
     // and returns simulated server responses.

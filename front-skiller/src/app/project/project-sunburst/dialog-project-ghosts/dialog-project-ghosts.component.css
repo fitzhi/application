@@ -35,6 +35,7 @@ button.actions {
   display: flex;
   color: darkblue;
   height: 2em;  
+  margin-left: 1em;
 }
 
 :host>>>th#technical>.mat-sort-header-container {

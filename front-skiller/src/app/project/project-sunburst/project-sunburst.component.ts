@@ -258,31 +258,22 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
     switch (idPanel) {
       case this.UNKNOWN:
         const dialogConfig = new MatDialogConfig();
+        dialogConfig.disableClose = true;
         dialogConfig.autoFocus = true;
         dialogConfig.panelClass = 'default-dialog-container-class';
-        if (typeof this.dataGhosts === 'undefined') {
-          this.dataGhosts = new ProjectGhostsDataSource(this.project);
-        }
-        dialogConfig.data = this.dataGhosts;
         if (typeof this.dataGhosts !== 'undefined') {
-          const dialogReference = this.dialog.open(DialogProjectGhostsComponent, dialogConfig);
+          dialogConfig.data = this.dataGhosts;
+          if (typeof this.dataGhosts !== 'undefined') {
+            const dialogReference = this.dialog.open(DialogProjectGhostsComponent, dialogConfig);
+          }
+        } else {
+          console.log ('need to be handled');
         }
         break;
       default:
         break;
     }
   }
-  /*
-    if (this.idPanelSelected === this.UNSELECTED) {
-      this.idPanelSelected = idPanel;
-    } else {
-      if (this.idPanelSelected === idPanel) {
-        this.idPanelSelected = this.UNSELECTED;
-      } else {
-        this.idPanelSelected = idPanel;
-      }
-    }
-    */
 
    /**
    * The button associated to this panel id is activated.
