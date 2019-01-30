@@ -1,0 +1,39 @@
+:host >>> th#pseudo > .mat-sort-header-container {
+  display: flex;
+  color: darkblue;
+  height: 2em;  
+}
+
+:host >>> th#login > .mat-sort-header-container {
+  display: flex;
+  color: darkblue;
+  height: 2em;  
+  margin-left: 1em;
+}
+
+:host >>> th#technical > .mat-sort-header-container {
+  display: flex;
+  color: darkblue;
+  height: 2em;
+}
+
+.tableGhosts {
+  width: 100%;
+}
+
+.td-ghost {
+  height: 2em;
+  width: fit-content;
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
+.td-technical {
+  height: 2em;
+  width: fit-content;
+  padding-left: 2em;
+  padding-right: 1em;
+}
+.row_any  {
+    height: 2em;
+}

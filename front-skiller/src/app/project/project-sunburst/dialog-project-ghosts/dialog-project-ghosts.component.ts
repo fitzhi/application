@@ -19,22 +19,12 @@ export class DialogProjectGhostsComponent implements OnInit {
    */
   public dataSource: ProjectGhostsDataSource;
 
-  public displayedColumns: string[] = ['pseudo', 'login', 'technical'];
-
-  /**
-   * Array will be sortable
-   */
-  @ViewChild(MatSort) sort: MatSort;
-
   constructor(
     public dialogRef: MatDialogRef<DialogProjectGhostsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ProjectGhostsDataSource) { }
 
   ngOnInit() {
     this.dataSource = this.data;
-    if (Constants.DEBUG) {
-      console.log ('Working on project ' + this.data.project.name);
-    }
   }
 
   public submit() {

@@ -269,9 +269,9 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
           this.dialogReference = this.dialog.open(DialogProjectGhostsComponent, dialogConfig);
           this.dialogReference.afterClosed()
             .subscribe(result => {
-                console.log ('result : ');
-                console.log (result);
-                this.dataGhosts.ghostsSubject.next(result);
+                if (result !== null) {
+                  this.dataGhosts.ghostsSubject.next(result);
+                }
             });
         } else {
           console.log ('need to be handled');

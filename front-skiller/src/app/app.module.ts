@@ -52,6 +52,7 @@ import { ProjectComponent } from './project/project.component';
 import { ProjectSunburstComponent } from './project/project-sunburst/project-sunburst.component';
 import { ProjectStaffComponent } from './project/project-staff/project-staff.component';
 import { DialogProjectGhostsComponent } from './project/project-sunburst/dialog-project-ghosts/dialog-project-ghosts.component';
+import { ProjectGhostsComponent } from './project/project-sunburst/dialog-project-ghosts/project-ghosts/project-ghosts.component';
 
 @NgModule({
   declarations: [
@@ -78,6 +79,7 @@ import { DialogProjectGhostsComponent } from './project/project-sunburst/dialog-
     ProjectSunburstComponent,
     ProjectStaffComponent,
     DialogProjectGhostsComponent,
+    ProjectGhostsComponent,
   ],
   entryComponents: [
     StarsSkillLevelRenderComponent,
