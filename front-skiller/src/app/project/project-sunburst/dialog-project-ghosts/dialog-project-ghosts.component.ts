@@ -29,11 +29,18 @@ export class DialogProjectGhostsComponent implements OnInit {
 
   ngOnInit() {
     this.dataSource = this.data.getGhosts();
+    /*
+    setTimeout(() => {
+      (<HTMLInputElement>document.getElementById('mat-input-0')).value = this.dataSource[0].login;
+    }, 100);
+    */
     if (Constants.DEBUG) {
       console.log ('Working on project ' + this.data.project);
     }
   }
 
   public submit() {
+//    console.log (this.dataSource[0].login);
+    this.dialogRef.close(this.dataSource);
   }
 }

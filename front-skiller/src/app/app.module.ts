@@ -77,7 +77,7 @@ import { DialogProjectGhostsComponent } from './project/project-sunburst/dialog-
     ProjectComponent,
     ProjectSunburstComponent,
     ProjectStaffComponent,
-    DialogProjectGhostsComponent
+    DialogProjectGhostsComponent,
   ],
   entryComponents: [
     StarsSkillLevelRenderComponent,

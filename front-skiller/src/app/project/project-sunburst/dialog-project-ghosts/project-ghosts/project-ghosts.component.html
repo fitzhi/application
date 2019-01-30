@@ -1,0 +1,26 @@
+<table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8 tableGhosts" matSort>
+  <ng-container matColumnDef="pseudo">
+    <th id="pseudo" mat-header-cell *matHeaderCellDef mat-sort-header>Pseudo</th>
+    <td mat-cell class="td-ghost" *matCellDef="let ghost">{{ghost.pseudo}}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="login">
+    <th id="login" mat-header-cell *matHeaderCellDef mat-sort-header>Related login</th>
+    <td class="td-ghost" mat-cell *matCellDef="let ghost">
+      <mat-form-field>
+        <input matInput name="login" [(ngModel)]="ghost.login" this.dataSource[0].login placeholder="Type an existing login" aria-label="ghost.login">
+      </mat-form-field>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="technical">
+    <th id="technical" mat-header-cell *matHeaderCellDef mat-sort-header>User/Technical</th>
+    <td mat-cell class="td-ghost" *matCellDef="let ghost">
+      <mat-checkbox [checked]="ghost.technical"></mat-checkbox>
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+  <tr mat-row class="td-ghost" *matRowDef="let row; columns: displayedColumns;" class="row_any"></tr>
+</table>
+
