@@ -9,7 +9,7 @@
     <th id="login" mat-header-cell *matHeaderCellDef mat-sort-header>Related login</th>
     <td class="td-ghost" mat-cell *matCellDef="let row; let i = index;">
       <mat-form-field>
-        <input matInput name="login-{{i}}" [(ngModel)]="row.login" placeholder="Type an existing login">
+        <input matInput name="login-{{i}}" [readonly]="row.technical" [(ngModel)]="row.login" placeholder="Type an existing login">
       </mat-form-field>
     </td>
   </ng-container>

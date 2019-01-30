@@ -1,10 +1,16 @@
 <form>
-  <h2 mat-dialog-title>Application file selection</h2>
+  <h2 mat-dialog-title>Unregistered committers</h2>
   <mat-dialog-content>
     <p class="description">
-      <br/> The list below contains the list of unregistered contributors for this project.
-      <br/> These login need to be registered in order to completely evaluate the risk.
+      <br/> The table below list the unregistered contributors of this project.
+      <br/> These commit-pseudo need to be treated in order to fully evaluate the risk.
+      <br/> 3 actions are possible :
     </p>
+    <ul class="description">
+      <li>Create a new staff member with this pseudo</li>
+      <li>Type an existing login, to be linked with this pseudo</li>
+      <li>Tag this pseudo as technical. There is nobody behind.</li>
+    </ul>
     <app-project-ghosts [dataSource]="dataSource"></app-project-ghosts>
     <mat-dialog-actions align="center">
       <button mat-button class="actions" mat-dialog-close>Cancel</button>
@@ -13,5 +19,4 @@
   </mat-dialog-content>
 
 </form>
-
 

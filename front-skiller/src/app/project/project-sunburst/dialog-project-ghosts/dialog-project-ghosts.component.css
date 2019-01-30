@@ -25,6 +25,7 @@ button.actions {
 	border-radius: 4px;	
 }
 
-p.description {
+.description {
     font-size: 80%;
+    margin-bottom: 0.4em;
 }
