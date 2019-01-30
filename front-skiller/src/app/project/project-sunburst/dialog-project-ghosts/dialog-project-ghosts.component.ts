@@ -4,6 +4,8 @@ import { Project } from '../../../data/project';
 import { Constants } from '../../../constants';
 import { ProjectGhostsDataSource } from './project-ghosts-data-source';
 import { Ghost } from '../../../data/Ghost';
+import { BehaviorSubject } from 'rxjs';
+import { DataSource } from '@angular/cdk/table';
 
 @Component({
   selector: 'app-dialog-project-ghosts',
@@ -15,9 +17,10 @@ export class DialogProjectGhostsComponent implements OnInit {
   /**
    * The undeclared contributors in the repository.
    */
-  public dataSource: Ghost[];
+  public dataSource: ProjectGhostsDataSource;
 
   public displayedColumns: string[] = ['pseudo', 'login', 'technical'];
+
   /**
    * Array will be sortable
    */
@@ -28,19 +31,13 @@ export class DialogProjectGhostsComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: ProjectGhostsDataSource) { }
 
   ngOnInit() {
-    this.dataSource = this.data.getGhosts();
-    /*
-    setTimeout(() => {
-      (<HTMLInputElement>document.getElementById('mat-input-0')).value = this.dataSource[0].login;
-    }, 100);
-    */
+    this.dataSource = this.data;
     if (Constants.DEBUG) {
-      console.log ('Working on project ' + this.data.project);
+      console.log ('Working on project ' + this.data.project.name);
     }
   }
 
   public submit() {
-//    console.log (this.dataSource[0].login);
-    this.dialogRef.close(this.dataSource);
+    this.dialogRef.close(this.dataSource.ghostsSubject.getValue());
   }
 }

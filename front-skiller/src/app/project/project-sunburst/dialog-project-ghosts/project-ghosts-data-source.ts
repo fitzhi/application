@@ -5,12 +5,10 @@ import { CollectionViewer } from '@angular/cdk/collections';
 import { Project } from '../../../data/project';
 import { Ghost } from '../../../data/Ghost';
 
-export class ProjectGhostsDataSource implements DataSource<Unknown> {
+export class ProjectGhostsDataSource implements DataSource<Ghost> {
 
     public ghostsSubject = new BehaviorSubject<Ghost[]>([]);
-    private loadingSubject = new BehaviorSubject<boolean>(false);
-
-    private ghosts: Ghost[] = [];
+    public loadingSubject = new BehaviorSubject<boolean>(false);
 
     public loading$ = this.loadingSubject.asObservable();
 
@@ -26,7 +24,7 @@ export class ProjectGhostsDataSource implements DataSource<Unknown> {
     /**
      * Connect this datasource to the list
      */
-    connect(collectionViewer: CollectionViewer): Observable<Unknown[]> {
+    connect(collectionViewer: CollectionViewer): Observable<Ghost[]> {
         return this.ghostsSubject.asObservable();
     }
 
@@ -42,26 +40,18 @@ export class ProjectGhostsDataSource implements DataSource<Unknown> {
      * Send the loaded data from the backend.
      * @param unknowns list of unregistered contributors.
      */
-    sendUnknowns (unknowns: Unknown[]): void {
+    sendUnknowns(unknowns: Unknown[]): void {
         this.loadingSubject.next(true);
-        const _this = this;
-        unknowns.forEach(function(unknown) {
+        const ghosts = [];
+        unknowns.forEach(function (unknown) {
             const g = new Ghost();
             g.pseudo = unknown.login;
             g.idStaff = -1;
-            g.login = 'login';
+            g.login = '';
             g.technical = false;
-            _this.ghosts.push(g);
+            ghosts.push(g);
         });
-        this.ghostsSubject.next(this.ghosts);
-    }
-
-    getGhosts() {
-        return this.ghosts;
-    }
-
-    setGhosts(ghosts: Ghost[]) {
-        this.ghosts = ghosts;
+        this.ghostsSubject.next(ghosts);
     }
 
 }

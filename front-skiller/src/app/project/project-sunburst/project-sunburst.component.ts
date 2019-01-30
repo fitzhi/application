@@ -6,9 +6,10 @@ import { ProjectService } from '../../project.service';
 import { ActivatedRoute } from '@angular/router';
 import {CinematicService} from '../../cinematic.service';
 import { Project } from '../../data/project';
-import { MatDialogConfig, MatDialog } from '@angular/material';
+import { MatDialogConfig, MatDialog, MatDialogRef } from '@angular/material';
 import { DialogProjectGhostsComponent } from './dialog-project-ghosts/dialog-project-ghosts.component';
 import { ProjectGhostsDataSource } from './dialog-project-ghosts/project-ghosts-data-source';
+import { Ghost } from '../../data/Ghost';
 
 @Component({
   selector: 'app-project-sunburst',
@@ -65,6 +66,8 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
   private idPanelSelected = -1;
 
   public projectName: string;
+
+  private dialogReference: MatDialogRef<any, any>;
 
   constructor(
     private cinematicService: CinematicService,
@@ -263,14 +266,13 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
         dialogConfig.panelClass = 'default-dialog-container-class';
         if (typeof this.dataGhosts !== 'undefined') {
           dialogConfig.data = this.dataGhosts;
-          if (typeof this.dataGhosts !== 'undefined') {
-            const dialogReference = this.dialog.open(DialogProjectGhostsComponent, dialogConfig);
-            dialogReference.afterClosed()
-              .subscribe(result => {
-                  console.log (result[0].login);
-                  this.dataGhosts.setGhosts(result);
-              });
-         }
+          this.dialogReference = this.dialog.open(DialogProjectGhostsComponent, dialogConfig);
+          this.dialogReference.afterClosed()
+            .subscribe(result => {
+                console.log ('result : ');
+                console.log (result);
+                this.dataGhosts.ghostsSubject.next(result);
+            });
         } else {
           console.log ('need to be handled');
         }
