@@ -28,6 +28,9 @@ public class Error {
 	public final static int CODE_UNEXPECTED_VALUE_PARAMETER = -1006;
 	public final static String MESSAGE_UNEXPECTED_VALUE_PARAMETER = "The variable {0} has the unexpected value {1}";
 	
+	public final static int CODE_MULTIPLE_LOGIN = -1007;
+	public final static String MESSAGE_MULTIPLE_LOGIN = "Cannot connect the login {0} to a developer. {1} are eligible.";
+	
 	/**
 	 * @param e the exception
 	 * @return the stack trace in {@code String} format

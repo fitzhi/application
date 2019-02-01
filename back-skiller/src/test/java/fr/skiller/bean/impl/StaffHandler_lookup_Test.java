@@ -25,11 +25,7 @@ import fr.skiller.data.internal.Staff;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@AutoConfigureMockMvc
 public class StaffHandler_lookup_Test {
-
-	@Autowired
-	private MockMvc mvc;
 
 	@Autowired
 	private StaffHandler staffHandler;

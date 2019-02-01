@@ -9,18 +9,7 @@ import fr.skiller.data.internal.Resume;
 import fr.skiller.data.internal.ResumeSkill;
 import fr.skiller.data.internal.ResumeSkillIdentifier;
 
-public class ResumeDTO  {
-
-	/**
-	 * Back-end code
-	 */
-	public int code = 0;
-	
-	/**
-	 * Back-end message
-	 */
-	public String message = "";
-
+public class ResumeDTO extends BaseDTO {
 
 	public List<ResumeSkill> experience = new ArrayList<ResumeSkill>();
 

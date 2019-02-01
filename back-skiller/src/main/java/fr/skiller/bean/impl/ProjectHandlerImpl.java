@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,11 +20,17 @@ import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.Pseudo;
+import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
+import fr.skiller.data.external.Action;
+import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Mission;
 import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
 import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
+import static fr.skiller.Error.CODE_MULTIPLE_LOGIN;
+import static fr.skiller.Error.MESSAGE_MULTIPLE_LOGIN;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -104,7 +112,9 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	public Project addNewProject(Project project) throws SkillerException {
 		synchronized (lockDataUpdated) {
 			Map<Integer, Project> projects = getProjects();
-			project.id = projects.size() + 1;
+			if (project.id < 1) {
+				project.id = projects.size() + 1;
+			}
 			projects.put(project.id, project);
 			this.dataUpdated = true;
 		}
@@ -126,5 +136,94 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			this.dataUpdated = true;
 		}
 	}
+
+	@Override
+	public List<Pseudo> saveGhosts(int idProject, List<Pseudo> pseudos) throws SkillerException {
 	
+		Project project = get(idProject);
+		if (project == null) {
+			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+		}
+		
+		List<Ghost> newGhosts = new ArrayList<Ghost>();
+		List<Pseudo> newPseudos = new ArrayList<Pseudo>();
+		
+		for (Pseudo pseudo : pseudos) {
+			
+			// Nothing to do for this pseudo. We'll keep him present in the list. 
+			if ( ((pseudo.login == null) || (pseudo.login.length() == 0)) && !pseudo.technical ) {
+				// In fact, this pseudo was present in the project.ghosts list, we'll remove it
+				if (getGhost(project, pseudo.pseudo) != null) {
+					pseudo.action = Action.D;
+					newPseudos.add(pseudo);
+				}
+				continue;
+			}
+			
+			if ((pseudo.login != null) && (pseudo.login.length() >= 0)) {
+				List<Staff> result = staffHandler.getStaff().values()
+					.stream()
+					.filter(staff -> pseudo.login.equals(staff.login))
+					.collect(Collectors.toList());
+				
+				// Unknown login
+				if (result.isEmpty()) {
+					pseudo.action = Action.N;
+					newPseudos.add(pseudo);
+					continue;
+				}
+				
+				if (result.size() > 1) {
+					throw new SkillerException(CODE_MULTIPLE_LOGIN, 
+							MessageFormat.format(MESSAGE_PROJECT_NOFOUND, pseudo.login, result.size()));
+				}
+				
+				newGhosts.add(new Ghost(pseudo.pseudo, result.get(0).idStaff, false));
+				Ghost gh = getGhost(project, pseudo.pseudo);
+				if (gh == null) {
+					pseudo.action = Action.A;
+				} else {
+					pseudo.action =  (gh.idStaff == result.get(0).idStaff) ? Action.N : Action.U;
+				}
+				pseudo.idStaff = result.get(0).idStaff;
+				pseudo.fullName = staffHandler.getFullname(pseudo.idStaff);
+				newPseudos.add(pseudo);
+			}
+			
+			// login technical and not a developer.
+			if (pseudo.technical) {
+				newGhosts.add(new Ghost(pseudo.pseudo, true));	
+				Ghost gh = getGhost(project, pseudo.pseudo);
+				pseudo.technical = true;
+				pseudo.idStaff = Ghost.NULL;
+				pseudo.fullName = "";
+				if (gh == null) {
+					pseudo.action = Action.A;
+				} else {
+					pseudo.action =  (gh.idStaff > 0) ? Action.U : Action.N;
+				}
+				newPseudos.add(pseudo);						
+			}
+		}
+
+		synchronized (lockDataUpdated) {
+			project.ghosts = newGhosts;
+			this.dataUpdated = true;
+		}
+		
+		return newPseudos;
+	}
+	
+	/**
+	 * Retrieve a ghost in the project, if any.
+	 * @param project the current project
+	 * @param pseudo the searched pseudo
+	 * @param the corresponding ghost entry in the project, if any, with the same pseudo, otherwise, this method will return {@code null}
+	 */
+	private Ghost getGhost(final Project project, final String pseudo) {
+		List<Ghost> actualGhosts = project.ghosts.stream()
+				.filter(g -> g.pseudo.equals(pseudo))
+				.collect(Collectors.toList());
+		return actualGhosts.isEmpty() ? null : actualGhosts.get(0);
+	}
 }

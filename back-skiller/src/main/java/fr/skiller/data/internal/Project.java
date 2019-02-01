@@ -51,7 +51,9 @@ public class Project {
 	public List<Skill> skills = new ArrayList<Skill>();
 	
 	/**
-	 * List of committer defined by their pseudos either missing from the staff collection, or technical.
+	 * List of committer {@link fr.skiller.data.internal.Ghost ghosts} identified.<br/>
+	 * These ghosts are known by their pseudos <br/>
+	 * Either they are missing from the staff collection, or they are technical.
 	 */
 	public List<Ghost> ghosts = new ArrayList<Ghost>();
 	

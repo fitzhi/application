@@ -43,6 +43,7 @@ import fr.skiller.Global;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.data.external.PseudoListDTO;
 import fr.skiller.data.external.ResumeDTO;
 import fr.skiller.data.external.StaffDTO;
 import fr.skiller.data.internal.PeopleCountExperienceMap;
@@ -598,7 +599,7 @@ public class StaffController {
 
 		return new ResponseEntity<StaffDTO>(new StaffDTO(staff), new HttpHeaders(), HttpStatus.OK);
 	}
-
+	
 	ResponseEntity<StaffDTO> postErrorReturnBodyMessage(int code, String message) {
 		return postErrorReturnBodyMessage(code, message, new Staff());
 	}

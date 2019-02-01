@@ -13,18 +13,7 @@ import fr.skiller.data.internal.Unknown;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public class SunburstDTO {
-
-	/**
-	 * Back-end code
-	 */
-	public int code = 0;
-	
-	/**
-	 * Back-end message
-	 */
-	public String message = "";
-
+public class SunburstDTO extends BaseDTO {
 	
 	/**
 	 * Data ready made for the sunburst chart.

@@ -11,16 +11,7 @@ import fr.skiller.data.internal.Skill;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public class SkillDTO {
-
-	/**
-	 * Back-end code
-	 */
-	public int code = 0;
-	/**
-	 * Back-end message
-	 */
-	public String message = "";
+public class SkillDTO extends BaseDTO {
 
 	public Skill skill;
 

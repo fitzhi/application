@@ -61,3 +61,5 @@ back-skiller/src/main/resources/repository-settings/GitLab-SQLI.json
 back-skiller/src/test/java/fr/skiller/controller/StaffController_updateExistingStaffTest.java
 
 back-skiller/src/main/resources/out_dir/projects.json
+
+back-skiller/src/test/java/fr/skiller/stupid/StupidTest.java

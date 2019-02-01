@@ -74,17 +74,7 @@ class ContributorView {
  * Class in charge of transferring the developers involved in a project 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class ProjectContributorDTO {
-
-	/**
-	 * Back-end code error.
-	 */
-	public int code = 0;
-	
-	/**
-	 * Back-end message.
-	 */
-	public String message = "";
+public class ProjectContributorDTO extends BaseDTO {
 
 	/**
 	 * Project identifier.

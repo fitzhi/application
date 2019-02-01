@@ -11,16 +11,7 @@ import fr.skiller.data.internal.Staff;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public class StaffDTO {
-
-	/**
-	 * Back-end code
-	 */
-	public int code = 0;
-	/**
-	 * Back-end message
-	 */
-	public String message = "";
+public class StaffDTO extends BaseDTO {
 
 	public Staff staff;
 

@@ -11,16 +11,7 @@ import fr.skiller.data.internal.Project;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public class ProjectDTO {
-
-	/**
-	 * Back-end code
-	 */
-	public int code = 0;
-	/**
-	 * Back-end message
-	 */
-	public String message = "";
+public class ProjectDTO extends BaseDTO {
 
 	public Project project;
 

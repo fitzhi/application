@@ -16,17 +16,7 @@ import fr.skiller.data.internal.Experience;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public class AssetDTO {
-
-	/**
-	 * Back-end code error
-	 */
-	public int code = 0;
-	
-	/**
-	 * Back-end message
-	 */
-	public String message = "";
+public class AssetDTO extends BaseDTO {
 
 	public Experience asset;
 

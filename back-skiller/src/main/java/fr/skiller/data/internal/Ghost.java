@@ -63,6 +63,37 @@ public class Ghost {
 	@Override
 	public String toString() {
 		return "Ghost [pseudo=" + pseudo + ", idStaff=" + idStaff + ", technical=" + technical + "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + idStaff;
+		result = prime * result + ((pseudo == null) ? 0 : pseudo.hashCode());
+		result = prime * result + (technical ? 1231 : 1237);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Ghost other = (Ghost) obj;
+		if (idStaff != other.idStaff)
+			return false;
+		if (pseudo == null) {
+			if (other.pseudo != null)
+				return false;
+		} else if (!pseudo.equals(other.pseudo))
+			return false;
+		if (technical != other.technical)
+			return false;
+		return true;
 	}	
 	
 }

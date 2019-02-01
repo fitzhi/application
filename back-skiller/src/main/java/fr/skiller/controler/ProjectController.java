@@ -30,6 +30,7 @@ import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.external.ProjectContributorDTO;
 import fr.skiller.data.external.ProjectDTO;
+import fr.skiller.data.external.PseudoListDTO;
 import fr.skiller.data.external.SunburstDTO;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
@@ -453,8 +454,29 @@ public class ProjectController {
 			return new ResponseEntity<String> (e.getMessage(), 
 					new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
-		
 	}
+
+	/**
+	 * Revoke the participation of staff member in a project.
+	 */
+	@PostMapping("/project/ghosts")
+	ResponseEntity<PseudoListDTO> saveGhosts(@RequestBody String param) {
+		
+		PseudoListDTO pseudosDTO = g.fromJson(param, PseudoListDTO.class);
+		if (logger.isDebugEnabled()) {
+			logger.debug("POST command on /project/ghosts for project : " + pseudosDTO.idProject);
+			logger.debug(pseudosDTO.pseudos.size() + " pseudos received");
+		}
+		try {
+			projectHandler.saveGhosts(pseudosDTO.idProject, pseudosDTO.pseudos);
+		} catch (SkillerException e) {
+			logger.error(getStackTrace(e)); 
+			return new ResponseEntity<PseudoListDTO> (new PseudoListDTO(pseudosDTO.idProject, e), 
+					new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+		return null;
+	}
+
 	
 	/**
 	 * @param code the error code
