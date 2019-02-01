@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.Pseudo;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 
@@ -60,5 +62,15 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	  * @param project the new project to save.
 	  */
 	 void saveProject(Project project) throws SkillerException;
+	 
+	 /**
+	  * Take account the list of pseudos identified by the end-user in the ghosts dialog. 
+	  * @param idProject identifier of this current project.
+	  * @param pseudos list of pseudos with their additional information, is any.
+	  * @return the result list of impacted pseudos in the {@link fr.skiller.data.internal.Project#ghosts ghosts list}  of the project 
+	  * @exception if any exception occurs (such as project does not exist)
+	  * {@link fr.skiller.data.internal.Ghost}
+	  */
+	 List<Pseudo> saveGhosts(int idProject, List<Pseudo> pseudos) throws SkillerException;
 	 
 }
