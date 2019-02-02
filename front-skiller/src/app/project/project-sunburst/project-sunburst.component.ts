@@ -9,7 +9,6 @@ import { Project } from '../../data/project';
 import { MatDialogConfig, MatDialog, MatDialogRef } from '@angular/material';
 import { DialogProjectGhostsComponent } from './dialog-project-ghosts/dialog-project-ghosts.component';
 import { ProjectGhostsDataSource } from './dialog-project-ghosts/project-ghosts-data-source';
-import { Ghost } from '../../data/Ghost';
 
 @Component({
   selector: 'app-project-sunburst',
@@ -153,7 +152,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
                 this.dataGhosts = new ProjectGhostsDataSource(this.project);
               }
               // Send the unregistered contributors to the panel list
-              this.dataGhosts.sendUnknowns (response.unknowns);
+              this.dataGhosts.sendUnknowns (response.ghosts);
         }, response => {
             if (Constants.DEBUG) {
               console.log('Error ' + response.status + ' while retrieving the sunburst data for the project identfier ' + this.idProject);

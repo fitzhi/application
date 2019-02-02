@@ -32,20 +32,21 @@ public interface RepoScanner {
 	 * @return the parsed repository 
 	 * @throws Exception thrown if any application or network error occurs.
 	 */
-	public CommitRepository parseRepository(Project project, ConnectionSettings settings) throws Exception;
+	CommitRepository parseRepository(Project project, ConnectionSettings settings) throws Exception;
 
 	/**
 	 * Aggregate the history of the repository into the risks dashboard.
+	 * @param project working project
 	 * @param commitRepo the parsed repository history retrieved from the version control
 	 * @return the dashboard of the current project.
 	 */
-	public RiskDashboard aggregateDashboard(CommitRepository commitRepo);
+	RiskDashboard aggregateDashboard(Project project, CommitRepository commitRepo);
 		
 	/**
 	 * Set the preview settings for each directory in the passed tree.
 	 * @param dataTree the data tree representing the repository directories
 	 */
-	public void setPreviewSettings(RiskChartData dataTree);
+	void setPreviewSettings(RiskChartData dataTree);
 	
 	/**
      * Evaluate the level of risk on all entries in the repository from the staff/level point of view.<br/>

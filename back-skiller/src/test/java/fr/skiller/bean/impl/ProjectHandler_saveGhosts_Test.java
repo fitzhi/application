@@ -13,9 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.util.SystemPropertyUtils;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.external.Action;
@@ -34,7 +32,7 @@ import org.junit.Assert;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ProjectHandler_handlingGosts_Test {
+public class ProjectHandler_saveGhosts_Test {
 
 	@Autowired
 	ProjectHandler projectHandler;
@@ -58,8 +56,6 @@ public class ProjectHandler_handlingGosts_Test {
 		p.ghosts.add(new Ghost("remove me", true));
 		p.ghosts.add( new Ghost("donotneedmore", third.idStaff, false) );
 		projectHandler.addNewProject(p);
-		
-//		p.ghosts.stream().forEach(System.out::println);
 	}
 
 	@Test
@@ -70,7 +66,7 @@ public class ProjectHandler_handlingGosts_Test {
 		
 		PseudoListDTO pseudosDTO = new PseudoListDTO(8121964, pseudos);
 		
-		List<Pseudo> result = projectHandler.saveGhosts(8121964, pseudosDTO.pseudos);
+		List<Pseudo> result = projectHandler.saveGhosts(8121964, pseudosDTO.unknowns);
 
 		List<Pseudo> expectedPseudos = new ArrayList<Pseudo>();
 		expectedPseudos.add(new Pseudo("best_Dev_change"
@@ -97,7 +93,7 @@ public class ProjectHandler_handlingGosts_Test {
 		
 		PseudoListDTO pseudosDTO = new PseudoListDTO(8121964, pseudos);
 		
-		List<Pseudo> result = projectHandler.saveGhosts(8121964, pseudosDTO.pseudos);
+		List<Pseudo> result = projectHandler.saveGhosts(8121964, pseudosDTO.unknowns);
 
 		List<Pseudo> expectedPseudos = new ArrayList<Pseudo>();
 		expectedPseudos.add(new Pseudo("best_Dev_change"

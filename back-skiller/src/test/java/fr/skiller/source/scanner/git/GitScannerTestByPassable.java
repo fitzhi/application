@@ -96,7 +96,7 @@ public class GitScannerTestByPassable {
 		final CommitRepository repo = scanner.parseRepository(project, settings);
         assertThat(repo.size()).isGreaterThan(0);
         
-		RiskDashboard data = scanner.aggregateDashboard(repo);
+		RiskDashboard data = scanner.aggregateDashboard(project, repo);
 		
 		if (logger.isDebugEnabled()) {
 			repo.contributors()

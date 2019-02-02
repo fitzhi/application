@@ -55,6 +55,7 @@ import fr.skiller.source.scanner.RepoScanner;
 import fr.skiller.Error;
 import fr.skiller.Global;
 import fr.skiller.bean.CacheDataHandler;
+import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
 import static fr.skiller.Global.UNKNOWN;
 import static fr.skiller.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
@@ -97,6 +98,12 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	StaffHandler staffHandler;
 
 	/**
+	 * Service in charge of handling the projects.
+	 */
+	@Autowired
+	ProjectHandler projectHandler;
+	
+	/**
 	 * Service in charge of caching the parsed repository.
 	 */
 	@Autowired
@@ -113,7 +120,6 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	@Value("${Sunburst.fillTheHoles}")
 	private boolean fillTheHoles;
 
-	
 	/**
 	 * Patterns to take account, OR NOT, a file within the parsing process.<br/>
 	 * For example, a file with the suffix .java is involved.
@@ -159,6 +165,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 
 		// We "Spring-way" injected staff manager handle into the super class.
 		super.staffHandler = staffHandler;
+		super.projectHandler = projectHandler;
 	}
 	
 	@Override
@@ -204,7 +211,6 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 						.collect(Collectors.toSet())
 						);
 			
-			this.staffHandler.lookup("test");
 			return repository;
 		}
 		
@@ -382,7 +388,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			});
 		}
 		
-		RiskDashboard data = this.aggregateDashboard(repo);
+		RiskDashboard data = this.aggregateDashboard(project, repo);
 		
 		// Evaluate the risk for each directory, and sub-directory, in the repository.
 		this.evaluateTheRisk(repo, data.riskChartData);

@@ -9,6 +9,8 @@ import {InternalService} from './internal-service';
 import {Constants} from './constants';
 import { Skill } from './data/skill';
 import { ContributorsDTO } from './data/external/contributorsDTO';
+import { ProjectGhostsDataSource } from './project/project-sunburst/dialog-project-ghosts/project-ghosts-data-source';
+import { PseudoList } from './data/PseudoList';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -129,4 +131,13 @@ export class ProjectService extends InternalService {
     return this.httpClient.get<ContributorsDTO>(url);
   }
 
+  /**
+   * Save the ghosts list with their connected data;
+   */
+  saveGhosts(pseudoList: PseudoList): Observable<PseudoList> {
+    if (Constants.DEBUG) {
+      console.log('Saving data with for the project ' + pseudoList.idProject);
+    }
+    return this.httpClient.post<any>(this.projectUrl + '/api-ghosts', pseudoList, httpOptions);
+  }
 }

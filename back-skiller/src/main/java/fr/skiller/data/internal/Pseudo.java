@@ -6,8 +6,8 @@ package fr.skiller.data.internal;
 import fr.skiller.data.external.Action;
 
 /**
- * @author Fr&eacute;d&eacute;ric VIDAL
- * This class is exchanged between the back-end and the front-end in the dialog project-ghosts.
+ * @author Fr&eacute;d&eacute;ric VIDAL This class is exchanged between the
+ *         back-end and the front-end in the dialog project-ghosts.
  */
 public class Pseudo {
 
@@ -27,7 +27,7 @@ public class Pseudo {
 	 * Staff full name associated to the {@code pseudo} property.
 	 */
 	public String fullName;
-	
+
 	/**
 	 * Login associated to the {@code pseudo} property.
 	 */
@@ -47,48 +47,102 @@ public class Pseudo {
 	public boolean technical;
 
 	/**
-	 * Type of action executed in {@link fr.skiller.bean.ProjectHandler#saveGhosts(int, Pseudo[])} for this entry
+	 * Type of action executed in
+	 * {@link fr.skiller.bean.ProjectHandler#saveGhosts(int, Pseudo[])} for this
+	 * entry
 	 */
 	public Action action;
 
 	/**
 	 * @param pseudo
+	 *            Pseudo used by a developer to commit changes on a version
+	 *            control.
 	 * @param technical
+	 *            {@code true} is this pseudo is a technical one (therefore the
+	 *            idStaff, fullName will be null), {@code false} if it's a real
+	 *            human being
 	 */
 	public Pseudo(String pseudo, boolean technical) {
-		super();
+		this(pseudo, technical, null);
+	}
+
+	/**
+	 * @param pseudo
+	 *            Pseudo used by a developer to commit changes on a version
+	 *            control.
+	 * @param technical
+	 *            {@code true} is this pseudo is a technical one (therefore the
+	 *            idStaff, fullName will be null), {@code false} if it's a real
+	 *            human being
+	 * @param action
+	 *            type of action executed
+	 */
+	public Pseudo(String pseudo, boolean technical, Action action) {
 		this.pseudo = pseudo;
 		this.technical = technical;
 		this.idStaff = Ghost.NULL;
 		this.login = "";
 		this.fullName = "";
+		this.action = action;
 	}
-	
-	/**
-	 * @param pseudo
-	 * @param login
-	 */
-	public Pseudo(String pseudo, String login) {
-		super();
-		this.pseudo = pseudo;
-		this.idStaff = Ghost.NULL;
-		this.login = login;
-		this.fullName = "";
-		this.technical = false;
-	}
-	
-	/**
-	 * Empty constructor.
-	 */
-	public Pseudo() {}
 
 	/**
 	 * @param pseudo
-	 * @param idStaff
-	 * @param fullName
+	 *            Pseudo used by a developer to commit changes on a version
+	 *            control.
 	 * @param login
+	 *            login associated to this identifier
+	 */
+	public Pseudo(String pseudo, String login) {
+		this(pseudo, Ghost.NULL, "", login, false);
+	}
+
+	/**
+	 * Empty constructor.
+	 */
+	public Pseudo() {
+	}
+
+	/**
+	 * @param pseudo
+	 *            Pseudo used by a developer to commit changes on a version
+	 *            control.
+	 * @param idStaff
+	 *            staff identifier
+	 * @param fullName
+	 *            full name associated to this identifier
+	 * @param login
+	 *            login associated to this identifier
 	 * @param technical
+	 *            {@code true} is this pseudo is a technical one (therefore the
+	 *            idStaff, fullName will be null), {@code false} if it's a real
+	 *            human being
+	 */
+	public Pseudo(String pseudo, int idStaff, String fullName, String login, boolean technical) {
+		super();
+		this.pseudo = pseudo;
+		this.idStaff = idStaff;
+		this.fullName = fullName;
+		this.login = login;
+		this.technical = false;
+	}
+
+	/**
+	 * @param pseudo
+	 *            Pseudo used by a developer to commit changes on a version
+	 *            control.
+	 * @param idStaff
+	 *            staff identifier
+	 * @param fullName
+	 *            full name associated to this identifier
+	 * @param login
+	 *            login associated to this identifier
+	 * @param technical
+	 *            {@code true} is this pseudo is a technical one (therefore the
+	 *            idStaff, fullName will be null), {@code false} if it's a real
+	 *            human being
 	 * @param action
+	 *            type of {@link Action action}
 	 */
 	public Pseudo(String pseudo, int idStaff, String fullName, String login, boolean technical, Action action) {
 		super();
@@ -151,6 +205,5 @@ public class Pseudo {
 			return false;
 		return true;
 	}
-
 
 }

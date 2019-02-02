@@ -214,13 +214,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		return newPseudos;
 	}
 	
-	/**
-	 * Retrieve a ghost in the project, if any.
-	 * @param project the current project
-	 * @param pseudo the searched pseudo
-	 * @param the corresponding ghost entry in the project, if any, with the same pseudo, otherwise, this method will return {@code null}
-	 */
-	private Ghost getGhost(final Project project, final String pseudo) {
+	@Override
+	public Ghost getGhost(final Project project, final String pseudo) {
 		List<Ghost> actualGhosts = project.ghosts.stream()
 				.filter(g -> g.pseudo.equals(pseudo))
 				.collect(Collectors.toList());

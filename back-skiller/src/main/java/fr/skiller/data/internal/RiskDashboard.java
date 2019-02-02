@@ -22,17 +22,17 @@ public class RiskDashboard {
 	/**
 	 * List of unknown contributors.
 	 */
-	public final Set<Unknown> undefinedContributors;
+	public final Set<Pseudo> undefinedContributors;
 
 	/**
+	 * Main constructor of the risk Dashboard
 	 * @param riskChartData data ready to use for the Sunburst chart.
 	 * @param contributors list of unknown contributors.
 	 */
-	public RiskDashboard(final RiskChartData riskChartData, final Set<String> contributors) {
+	public RiskDashboard(final RiskChartData riskChartData, final Set<Pseudo> contributors) {
 		super();
 		this.riskChartData = riskChartData;
-		undefinedContributors = new HashSet<Unknown>();
-		contributors.stream().forEach(contributor -> undefinedContributors.add(new Unknown(contributor)));
+		this.undefinedContributors = contributors;
 	}
 	
 }

@@ -1,5 +1,10 @@
 package fr.skiller.data.external;
 
+/**
+ * Enumeration of actions
+ * @author Fr&eacute;d&eacute;ric VIDAL
+ *
+ */
 public enum Action {
 	  N ("no action done"),
 	  U ("Updating existing ghost"),

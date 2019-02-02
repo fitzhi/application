@@ -22,18 +22,18 @@ public class PseudoListDTO extends BaseDTO {
 	public final int idProject;
 	
 	/**
-	 * The list of pseudos IN and OUT.
+	 * The list of unknown pseudos IN and OUT.
 	 */
-	public final List<Pseudo> pseudos;
+	public final List<Pseudo> unknowns;
 
 	/**
 	 * @param idProject project identifier
-	 * @param pseudos list of "consolidated" pseudos
+	 * @param unknowns list of "consolidated" pseudos
 	 */
-	public PseudoListDTO(final int idProject, final List<Pseudo> pseudos) {
+	public PseudoListDTO(final int idProject, final List<Pseudo> unknowns) {
 		super();
 		this.idProject = idProject;
-		this.pseudos = pseudos;
+		this.unknowns = unknowns;
 	}
 
 	/**
@@ -42,7 +42,7 @@ public class PseudoListDTO extends BaseDTO {
 	 */
 	public PseudoListDTO(final int idProject, SkillerException e) {
 		super(e.errorCode, e.errorMessage);
-		pseudos = new ArrayList<Pseudo>();
+		unknowns = new ArrayList<Pseudo>();
 		this.idProject = idProject;
 	}
 	

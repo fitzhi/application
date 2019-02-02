@@ -1,11 +1,10 @@
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatSort } from '@angular/material';
-import { Project } from '../../../data/project';
-import { Constants } from '../../../constants';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { ProjectGhostsDataSource } from './project-ghosts-data-source';
-import { Ghost } from '../../../data/Ghost';
-import { BehaviorSubject } from 'rxjs';
-import { DataSource } from '@angular/cdk/table';
+import { ProjectService } from '../../../project.service';
+import { PseudoList } from '../../../data/PseudoList';
+import { Constants } from '../../../constants';
+import { MessageService } from '../../../message.service';
 
 @Component({
   selector: 'app-dialog-project-ghosts',
@@ -20,7 +19,9 @@ export class DialogProjectGhostsComponent implements OnInit {
   public dataSource: ProjectGhostsDataSource;
 
   constructor(
-    public dialogRef: MatDialogRef<DialogProjectGhostsComponent>,
+    private dialogRef: MatDialogRef<DialogProjectGhostsComponent>,
+    private projectService: ProjectService,
+    private messageService: MessageService,
     @Inject(MAT_DIALOG_DATA) public data: ProjectGhostsDataSource) { }
 
   ngOnInit() {
@@ -28,6 +29,24 @@ export class DialogProjectGhostsComponent implements OnInit {
   }
 
   public submit() {
+    this.projectService.saveGhosts( new PseudoList(
+        this.dataSource.project.id,
+        this.dataSource.ghostsSubject.getValue()))
+        .subscribe(pseudoList => {
+            if (Constants.DEBUG) {
+              console.group('[Response from /project/api-ghosts] peudoList');
+              console.log('idProject ' + pseudoList.idProject);
+              pseudoList.unknowns.forEach(function (value) { console.log(value); });
+              console.groupEnd();
+            }
+        },
+        responseInError => {
+          if (Constants.DEBUG) {
+            console.log('Error ' + responseInError.error.code + ' ' + responseInError.error.message);
+          }
+          this.messageService.error(responseInError.error.message);
+        });
+
     this.dialogRef.close(this.dataSource.ghostsSubject.getValue());
   }
 }

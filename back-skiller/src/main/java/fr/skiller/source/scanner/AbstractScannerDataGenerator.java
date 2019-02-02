@@ -2,15 +2,23 @@ package fr.skiller.source.scanner;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.data.internal.Ghost;
+import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.Pseudo;
 import fr.skiller.data.internal.RiskChartData;
 import fr.skiller.data.internal.RiskDashboard;
+import fr.skiller.data.internal.Unknown;
 import fr.skiller.data.source.CommitHistory;
 import fr.skiller.data.source.CommitRepository;
 
@@ -24,18 +32,52 @@ import static fr.skiller.Global.LN;
  */
 public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	
+	/**
+	 * Service in charge of handling the staff collection.<br/>
+	 * This bean in filled by the upper concrete service<br/>
+	 * {@link fr.skiller.source.scanner.git.GitScanner#init() GitScanner.init} is the first implementation for Git.
+	 */
 	protected StaffHandler staffHandler;
+
+	/**
+	 * Service in charge of handling the projects.
+	 * This bean in filled by the upper concrete service<br/>
+	 * {@link fr.skiller.source.scanner.git.GitScanner#init() GitScanner.init} is the first implementation for Git.
+	 */
+	protected ProjectHandler projectHandler;
 	
 	private Logger logger = LoggerFactory.getLogger(AbstractScannerDataGenerator.class.getCanonicalName());
 
 	@Override
-	public RiskDashboard aggregateDashboard(final CommitRepository commitRepo) {
+	public RiskDashboard aggregateDashboard(final Project project, final CommitRepository commitRepo) {
 		RiskChartData root = new RiskChartData("root");
 		commitRepo.getRepository().values().stream().forEach(
 				commit -> 
 				root.injectFile(root, commit.sourcePath.split(File.separator), commit.evaluateDateLastestCommit()));
 		
-		return new RiskDashboard(root, commitRepo.unknownContributors());
+		Set<Pseudo> ghosts = new HashSet<Pseudo>();
+		commitRepo.unknownContributors().stream()
+			.forEach(unknown -> {
+				
+				Ghost g = projectHandler.getGhost(project, unknown);
+				if (g == null) {
+					ghosts.add(new Pseudo(unknown, false));
+				} else {
+					if (g.technical) {
+						ghosts.add(new Pseudo(unknown, true));											
+					} else {
+						String fullName = staffHandler.getFullname(g.idStaff);
+						String login = staffHandler.getStaff().get(g.idStaff).login;
+						ghosts.add(new Pseudo(unknown, g.idStaff, fullName, login, g.technical));
+					}
+				}
+			});
+		if (logger.isDebugEnabled()) {
+			StringBuilder sb = new StringBuilder(LN);
+			ghosts.stream().forEach(g -> sb.append(g).append(LN));
+			logger.debug(sb.toString());
+		}
+		return new RiskDashboard(root, ghosts);
 	}
 
 	/**

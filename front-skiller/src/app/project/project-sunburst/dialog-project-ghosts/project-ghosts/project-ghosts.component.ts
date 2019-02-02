@@ -1,7 +1,5 @@
-import { Component, OnInit, Input, EventEmitter, Output, ViewChild } from '@angular/core';
-import { Ghost } from '../../../../data/Ghost';
-import { MatSort, MatTableDataSource } from '@angular/material';
-import { ProjectGhostsDataSource } from '../project-ghosts-data-source';
+import { Component, OnInit, Input, Output, ViewChild } from '@angular/core';
+import { MatSort } from '@angular/material';
 import { Constants } from '../../../../constants';
 
 @Component({

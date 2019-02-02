@@ -33,6 +33,7 @@ import fr.skiller.data.external.ProjectDTO;
 import fr.skiller.data.external.PseudoListDTO;
 import fr.skiller.data.external.SunburstDTO;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.Pseudo;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.internal.Unknown;
@@ -45,6 +46,7 @@ import fr.skiller.source.scanner.RepoScanner;
 import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
 import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
 import static fr.skiller.Error.CODE_UNDEFINED;
+import static fr.skiller.Error.UNKNOWN_PROJECT;
 import static fr.skiller.Error.getStackTrace;
 import static fr.skiller.Global.LN;
 
@@ -372,12 +374,13 @@ public class ProjectController {
 			project = projectHandler.get(p.idProject);
 		} catch (SkillerException e) {
 			logger.error(getStackTrace(e)); 
-			return new ResponseEntity<SunburstDTO> (new SunburstDTO(null, e.errorCode, e.errorMessage), 
+			return new ResponseEntity<SunburstDTO> (new SunburstDTO(UNKNOWN_PROJECT, null, e.errorCode, e.errorMessage), 
 					new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 		if (project == null) {
 			new ResponseEntity<SunburstDTO>( 
 					new SunburstDTO(
+							UNKNOWN_PROJECT, 
 							new RiskChartData(""), 
 							CODE_PROJECT_NOFOUND, 
 							MessageFormat.format(MESSAGE_PROJECT_NOFOUND, p.idProject)),
@@ -392,16 +395,17 @@ public class ProjectController {
 				if ( (data.undefinedContributors != null) && (data.undefinedContributors.size() > 0) ) {
 					StringBuilder sb = new StringBuilder();
 					sb.append("Unknown contributors detected during the dashboard generation").append(LN);
-					data.undefinedContributors.stream().forEach(ukwn -> sb.append(ukwn.login).append(LN));
+					data.undefinedContributors.stream().forEach(ukwn -> sb.append(ukwn.pseudo).append(LN));
 					logger.debug(sb.toString());
 				}
 			}
 			
-			return new ResponseEntity<SunburstDTO>(new SunburstDTO(data), new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<SunburstDTO>(
+					new SunburstDTO(project.id, data), new HttpHeaders(), HttpStatus.OK);
 		} catch (final Exception e) {
 			e.printStackTrace();
 			logger.error (e.getMessage());
-			return new ResponseEntity<SunburstDTO>(new SunburstDTO(null, CODE_UNDEFINED, e.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);			
+			return new ResponseEntity<SunburstDTO>(new SunburstDTO( UNKNOWN_PROJECT,null, CODE_UNDEFINED, e.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);			
 		}
 	}
 
@@ -459,23 +463,27 @@ public class ProjectController {
 	/**
 	 * Revoke the participation of staff member in a project.
 	 */
-	@PostMapping("/project/ghosts")
+	@PostMapping("/api-ghosts")
 	ResponseEntity<PseudoListDTO> saveGhosts(@RequestBody String param) {
 		
 		PseudoListDTO pseudosDTO = g.fromJson(param, PseudoListDTO.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug("POST command on /project/ghosts for project : " + pseudosDTO.idProject);
-			logger.debug(pseudosDTO.pseudos.size() + " pseudos received");
+			logger.debug(pseudosDTO.unknowns.size() + " pseudos received");
 		}
 		try {
-			projectHandler.saveGhosts(pseudosDTO.idProject, pseudosDTO.pseudos);
+			List<Pseudo> pseudos = projectHandler.saveGhosts(pseudosDTO.idProject, pseudosDTO.unknowns);
+			return new ResponseEntity<PseudoListDTO>( 
+					new PseudoListDTO(pseudosDTO.idProject, pseudos),
+					new HttpHeaders(), 
+					HttpStatus.OK);
 		} catch (SkillerException e) {
 			logger.error(getStackTrace(e)); 
 			return new ResponseEntity<PseudoListDTO> (new PseudoListDTO(pseudosDTO.idProject, e), 
 					new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
-		return null;
 	}
+		
 
 	
 	/**
