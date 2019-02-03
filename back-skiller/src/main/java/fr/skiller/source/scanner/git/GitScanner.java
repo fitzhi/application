@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,6 +42,7 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
+import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.internal.RiskChartData;
@@ -277,6 +279,19 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 						
 						if (!cacheCriteriaStaff.containsKey(author)) {
 							staff = staffHandler.lookup(author);
+							// The author contains 1 word
+							// We check if this unknown author has a related developer in the ghosts collection
+							if ( (staff == null) && (author.split(" ").length == 1) ) {
+								Optional<Ghost> oGhost = project.ghosts.stream()
+									.filter(g -> (!g.technical))
+									.filter(g -> 
+										author.toLowerCase().equals(g.pseudo.toLowerCase())
+									).findFirst();
+								if (oGhost.isPresent()) {
+									Ghost selectedGhost =  oGhost.get();
+									staff = staffHandler.getStaff().get(selectedGhost.idStaff);
+								}
+							}
 							if (staff == null) {
 								if (logger.isDebugEnabled()) {
 									logger.debug("No staff found for the criteria " + author );
