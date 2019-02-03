@@ -18,7 +18,7 @@
     <ng-container matColumnDef="technical">
       <th id="technical" mat-header-cell *matHeaderCellDef mat-sort-header>User/Technical</th>
       <td mat-cell class="td-technical" *matCellDef="let row; let i = index;">
-        <mat-checkbox id="technical-{{i}}"  [(ngModel)]="row.technical"></mat-checkbox>
+        <mat-checkbox id="technical-{{i}}"  [(ngModel)]="row.technical" (change)="check(row)"></mat-checkbox>
       </td>
     </ng-container>
 
@@ -40,7 +40,7 @@
     <ng-container matColumnDef="technical">
       <th id="technical" mat-header-cell *matHeaderCellDef mat-sort-header>User/Technical</th>
       <td class="td-ghost" mat-cell *matCellDef="let row; let i = index;">
-        {{row.technical ? 'technical' : ''}}
+        {{checkValue(row.technical)}}
       </td>
     </ng-container>
 

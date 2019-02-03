@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, ViewChild } from '@angular/core';
 import { MatSort } from '@angular/material';
 import { Constants } from '../../../../constants';
+import { Unknown } from '../../../../data/unknown';
 
 @Component({
   selector: 'app-project-ghosts',
@@ -35,4 +36,18 @@ export class ProjectGhostsComponent implements OnInit {
     }
   }
 
+  /**
+   * The check Box for the id "technical" has been checked or unchecked.
+   */
+  check (unknown: Unknown) {
+    if (unknown.technical) {
+      unknown.fullName = '';
+      unknown.login = '';
+      unknown.idStaff = -1;
+    }
+  }
+
+  checkValue (technical: boolean): string {
+    return 'Fred';
+  }
 }

@@ -54,4 +54,12 @@ export class ProjectGhostsDataSource implements DataSource<Unknown> {
         this.ghostsSubject.next(ghosts);
     }
 
+  /**
+   * @param technical value of the check-box "technical"
+   * @returns a string representation of the technical
+   */
+  public checkValue (technical: boolean): string {
+    return ;
+  }
+
 }
