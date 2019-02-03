@@ -48,7 +48,11 @@ export class ProjectGhostsDataSource implements DataSource<Unknown> {
             g.idStaff = unknown.idStaff;
             g.login = unknown.login;
             g.fullName = unknown.fullName;
-            g.technical = false;
+            g.technical = unknown.technical;
+            g.action = unknown.action;
+            if ( (g.action === 'N') && (g.idStaff === -1) && !g.technical) {
+                g.fullName = 'Unrecognized login';
+            }
             ghosts.push(g);
         });
         this.ghostsSubject.next(ghosts);

@@ -13,7 +13,7 @@
     </ul>
     <app-project-ghosts [dataSource]="dataSource" [editable]="true"></app-project-ghosts>
     <mat-dialog-actions align="center">
-      <button mat-button class="actions" mat-dialog-close>Cancel</button>
+      <button mat-button class="actions" [mat-dialog-close]="true">Cancel</button>
       <button class="actions" type="submit" (click)="submit()">Ok</button>
     </mat-dialog-actions>
   </mat-dialog-content>

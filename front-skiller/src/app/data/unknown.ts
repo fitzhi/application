@@ -26,6 +26,11 @@ export class Unknown {
   public technical: boolean;
 
   /**
+   * Type of operation executed on the back-end.
+   */
+  public action: string;
+
+  /**
    * Constructor.
    */
   constructor() {

@@ -47,7 +47,7 @@ export class ProjectGhostsComponent implements OnInit {
     }
   }
 
-  checkValue (technical: boolean): string {
-    return 'Fred';
+  public checkValue(technical: boolean) {
+    return technical ? 'admin user' : '';
   }
 }

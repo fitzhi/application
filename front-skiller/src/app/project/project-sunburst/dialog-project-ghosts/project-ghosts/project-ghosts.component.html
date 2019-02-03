@@ -39,9 +39,7 @@
 
     <ng-container matColumnDef="technical">
       <th id="technical" mat-header-cell *matHeaderCellDef mat-sort-header>User/Technical</th>
-      <td class="td-ghost" mat-cell *matCellDef="let row; let i = index;">
-        {{checkValue(row.technical)}}
-      </td>
+      <td class="td-ghost" mat-cell *matCellDef="let row; let i = index;">{{checkValue(row.technical)}}</td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="enhancedColumns; sticky: true"></tr>

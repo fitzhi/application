@@ -56,14 +56,16 @@ export class DialogProjectGhostsComponent implements OnInit {
             dialogConfig.panelClass = 'default-dialog-container-class';
             dialogConfig.data = this.updatedData;
             this.dialogReference = this.dialog.open(DialogUpdatedProjectGhostsComponent, dialogConfig);
+            this.dialogReference
+                .afterClosed()
+                .subscribe( () => this.dialogRef.close(this.dataSource.ghostsSubject.getValue()));
         },
         responseInError => {
           if (Constants.DEBUG) {
             console.log('Error ' + responseInError.error.code + ' ' + responseInError.error.message);
           }
           this.messageService.error(responseInError.error.message);
+          this.dialogRef.close(this.dataSource.ghostsSubject.getValue());
         });
-
-    this.dialogRef.close(this.dataSource.ghostsSubject.getValue());
-  }
+    }
 }
