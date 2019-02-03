@@ -11,7 +11,7 @@
       <li>Type an existing login, to be linked with this pseudo</li>
       <li>Tag this pseudo as technical. There is nobody behind.</li>
     </ul>
-    <app-project-ghosts [dataSource]="dataSource"></app-project-ghosts>
+    <app-project-ghosts [dataSource]="dataSource" [editable]="true"></app-project-ghosts>
     <mat-dialog-actions align="center">
       <button mat-button class="actions" mat-dialog-close>Cancel</button>
       <button class="actions" type="submit" (click)="submit()">Ok</button>

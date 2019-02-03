@@ -1,10 +1,11 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig, MatDialog } from '@angular/material';
 import { ProjectGhostsDataSource } from './project-ghosts-data-source';
 import { ProjectService } from '../../../project.service';
 import { PseudoList } from '../../../data/PseudoList';
 import { Constants } from '../../../constants';
 import { MessageService } from '../../../message.service';
+import { DialogUpdatedProjectGhostsComponent } from './dialog-updated-project-ghosts/dialog-updated-project-ghosts.component';
 
 @Component({
   selector: 'app-dialog-project-ghosts',
@@ -18,8 +19,14 @@ export class DialogProjectGhostsComponent implements OnInit {
    */
   public dataSource: ProjectGhostsDataSource;
 
+  private updatedData: ProjectGhostsDataSource;
+
+
+  private dialogReference: MatDialogRef<any, any>;
+
   constructor(
     private dialogRef: MatDialogRef<DialogProjectGhostsComponent>,
+    private dialog: MatDialog,
     private projectService: ProjectService,
     private messageService: MessageService,
     @Inject(MAT_DIALOG_DATA) public data: ProjectGhostsDataSource) { }
@@ -39,6 +46,16 @@ export class DialogProjectGhostsComponent implements OnInit {
               pseudoList.unknowns.forEach(function (value) { console.log(value); });
               console.groupEnd();
             }
+            this.updatedData = new ProjectGhostsDataSource(this.dataSource.project);
+            this.updatedData.sendUnknowns(pseudoList.unknowns);
+
+            const dialogConfig = new MatDialogConfig();
+            dialogConfig.disableClose = true;
+            dialogConfig.autoFocus = true;
+            dialogConfig.position = { top: '7em', left: '7em'};
+            dialogConfig.panelClass = 'default-dialog-container-class';
+            dialogConfig.data = this.updatedData;
+            this.dialogReference = this.dialog.open(DialogUpdatedProjectGhostsComponent, dialogConfig);
         },
         responseInError => {
           if (Constants.DEBUG) {

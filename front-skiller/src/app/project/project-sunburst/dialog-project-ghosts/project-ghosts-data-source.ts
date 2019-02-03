@@ -45,8 +45,9 @@ export class ProjectGhostsDataSource implements DataSource<Unknown> {
         unknowns.forEach(function (unknown) {
             const g = new Unknown();
             g.pseudo = unknown.pseudo;
-            g.idStaff = -1;
-            g.login = '';
+            g.idStaff = unknown.idStaff;
+            g.login = unknown.login;
+            g.fullName = unknown.fullName;
             g.technical = false;
             ghosts.push(g);
         });

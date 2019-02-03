@@ -14,7 +14,13 @@ export class ProjectGhostsComponent implements OnInit {
    */
   @Input() dataSource;
 
-  public displayedColumns: string[] = ['pseudo', 'login', 'technical'];
+  /**
+   * Table is editable.
+   */
+  @Input() editable;
+
+  public editableColumns: string[] = ['pseudo', 'login', 'technical'];
+  public enhancedColumns: string[] = ['pseudo', 'login', 'fullName', 'technical'];
 
   /**
    * Array will be sortable

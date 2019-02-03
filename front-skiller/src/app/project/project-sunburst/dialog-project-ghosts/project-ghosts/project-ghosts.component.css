@@ -11,6 +11,13 @@
   margin-left: 1em;
 }
 
+:host >>> th#fullName > .mat-sort-header-container {
+  display: flex;
+  color: darkblue;
+  height: 2em;  
+  margin-left: 1em;
+}
+
 :host >>> th#technical > .mat-sort-header-container {
   display: flex;
   color: darkblue;
@@ -21,19 +28,21 @@
   width: 100%;
 }
 
-.td-ghost {
-  height: 2em;
+.td-ghost .td-technical {
+  height: 1em;
   width: fit-content;
-  padding-left: 1em;
   padding-right: 1em;
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
+
+.td-ghost {
+  padding-left: 1em;
 }
 
 .td-technical {
-  height: 2em;
-  width: fit-content;
   padding-left: 2em;
-  padding-right: 1em;
 }
 .row_any  {
-    height: 2em;
+    height: 1em;
 }
