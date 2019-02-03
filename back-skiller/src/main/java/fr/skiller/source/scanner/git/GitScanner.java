@@ -290,6 +290,9 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 								if (oGhost.isPresent()) {
 									Ghost selectedGhost =  oGhost.get();
 									staff = staffHandler.getStaff().get(selectedGhost.idStaff);
+									// We find a staff entry, but we keep the pseudo in the unknowns list
+									// in order to be able to change the connection in the dedicated dialog box
+									unknown.add(author);
 								}
 							}
 							if (staff == null) {
