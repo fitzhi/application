@@ -9,6 +9,7 @@ import { Project } from '../../data/project';
 import { MatDialogConfig, MatDialog, MatDialogRef } from '@angular/material';
 import { DialogProjectGhostsComponent } from './dialog-project-ghosts/dialog-project-ghosts.component';
 import { ProjectGhostsDataSource } from './dialog-project-ghosts/project-ghosts-data-source';
+import { DialogLegendSunburstComponent } from './dialog-legend-sunburst/dialog-legend-sunburst.component';
 
 @Component({
   selector: 'app-project-sunburst',
@@ -53,7 +54,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
   private UNSELECTED = -1;
 
   // Rules of risks panel has to be displayed.
-  private RULES_OF_RISKS = 1;
+  private LEGEND_SUNBURST = 1;
 
   // Settings panel has to be displayed.
   private SETTINGS = 2;
@@ -66,7 +67,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
 
   public projectName: string;
 
-  private dialogReference: MatDialogRef<any, any>;
+  // private dialogReference: MatDialogRef<any, any>;
 
   constructor(
     private cinematicService: CinematicService,
@@ -259,34 +260,51 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
   public show(idPanel: number) {
     switch (idPanel) {
       case this.UNKNOWN:
-        const dialogConfig = new MatDialogConfig();
-        dialogConfig.disableClose = true;
-        dialogConfig.autoFocus = true;
-        dialogConfig.position = { top: '5em', left: '5em'};
-        dialogConfig.panelClass = 'default-dialog-container-class';
-        if (typeof this.dataGhosts !== 'undefined') {
-          dialogConfig.data = this.dataGhosts;
-          this.dialogReference = this.dialog.open(DialogProjectGhostsComponent, dialogConfig);
-          this.dialogReference.afterClosed()
-            .subscribe(result => {
-                console.log (result);
-                if (result !== null) {
-                  if (typeof result === 'boolean') {
-                    this.dataGhosts.ghostsSubject.next(this.dataGhosts.ghostsSubject.getValue());
-                  } else {
-                    this.dataGhosts.ghostsSubject.next(result);
-                  }
-                }
-            });
-        } else {
-          console.log ('need to be handled');
-        }
+        this.dialogGhosts();
+        break;
+      case this.LEGEND_SUNBURST:
+        this.dialogLegend();
         break;
       default:
         break;
     }
   }
 
+  dialogGhosts() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.position = { top: '5em', left: '5em'};
+    dialogConfig.panelClass = 'default-dialog-container-class';
+    if (typeof this.dataGhosts !== 'undefined') {
+      dialogConfig.data = this.dataGhosts;
+      const dialogReference = this.dialog.open(DialogProjectGhostsComponent, dialogConfig);
+      dialogReference.afterClosed()
+        .subscribe(result => {
+            console.log (result);
+            if (result !== null) {
+              if (typeof result === 'boolean') {
+                this.dataGhosts.ghostsSubject.next(this.dataGhosts.ghostsSubject.getValue());
+              } else {
+                this.dataGhosts.ghostsSubject.next(result);
+              }
+            }
+        });
+    } else {
+      console.log ('need to be handled');
+    }
+  }
+
+  dialogLegend() {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.width = '40em';
+    dialogConfig.height = '28em';
+    dialogConfig.position = { top: '5em', left: '5em'};
+    dialogConfig.panelClass = 'default-dialog-container-class';
+    const dialogReference = this.dialog.open(DialogLegendSunburstComponent, dialogConfig);
+  }
    /**
    * The button associated to this panel id is activated.
    * @param idPanel panel identifier

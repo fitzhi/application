@@ -25,6 +25,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Staff;
@@ -66,6 +67,13 @@ public class GitScannerTestByPassable {
 	@Autowired
 	@Qualifier("GIT")
 	RepoScanner scanner;
+	
+	/**
+	 * Risk evaluation processor
+	 */
+	@Autowired
+	@Qualifier("messOfCriteria")
+	RiskProcessor riskProcessor;
 
 	@Before
 	public void before() throws Exception {
@@ -112,7 +120,7 @@ public class GitScannerTestByPassable {
 				});
 		}
 		// Evaluate the risk for each directory, and sub-directory, in the repository.
-		scanner.evaluateTheRisk(repo, data.riskChartData);
+		riskProcessor.evaluateTheRisk(repo, data.riskChartData);
        
 	}
 	

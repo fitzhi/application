@@ -58,6 +58,7 @@ import fr.skiller.Error;
 import fr.skiller.Global;
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import static fr.skiller.Global.UNKNOWN;
 import static fr.skiller.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
@@ -110,6 +111,12 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	 */
 	@Autowired
 	CacheDataHandler cacheDataHandler;
+	
+	/**
+	 * Service in charge of the evaluation of the risks.
+	 */
+	@Autowired
+	RiskProcessor riskSurveyor;
 	
 	/**
 	 * Path access to retrieve the properties file for a given project  
@@ -247,6 +254,8 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 				sb.append(Global.LN)
 					.append ("shortMessage : " + commit.getShortMessage())
 					.append(Global.LN)
+					.append("id : " + commit.getAuthorIdent().getEmailAddress())
+					.append (Global.LN)
 					.append("date : " + commit.getAuthorIdent().getWhen())
 					.append (Global.LN)
 					.append("authorIdent.name : " + commit.getAuthorIdent().getName())
@@ -409,14 +418,14 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		RiskDashboard data = this.aggregateDashboard(project, repo);
 		
 		// Evaluate the risk for each directory, and sub-directory, in the repository.
-		this.evaluateTheRisk(repo, data.riskChartData);
+		this.riskSurveyor.evaluateTheRisk(repo, data.riskChartData);
 		
 		// Fill the holes for directory without source files, and therefore without risk level measured.
 		if (fillTheHoles) {
-			this.meanTheRisk(data.riskChartData);
+			this.riskSurveyor.meanTheRisk(data.riskChartData);
 		}
 		// Evaluate the preview display for each slice of the sunburst chart.  
-		this.setPreviewSettings(data.riskChartData);
+		this.riskSurveyor.setPreviewSettings(data.riskChartData);
 
 		return data;
 	}

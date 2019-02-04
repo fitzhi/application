@@ -55,6 +55,7 @@ import { DialogProjectGhostsComponent } from './project/project-sunburst/dialog-
 import { ProjectGhostsComponent } from './project/project-sunburst/dialog-project-ghosts/project-ghosts/project-ghosts.component';
 // tslint:disable-next-line:max-line-length
 import { DialogUpdatedProjectGhostsComponent } from './project/project-sunburst/dialog-project-ghosts/dialog-updated-project-ghosts/dialog-updated-project-ghosts.component';
+import { DialogLegendSunburstComponent } from './project/project-sunburst/dialog-legend-sunburst/dialog-legend-sunburst.component';
 
 @NgModule({
   declarations: [
@@ -83,6 +84,7 @@ import { DialogUpdatedProjectGhostsComponent } from './project/project-sunburst/
     DialogProjectGhostsComponent,
     ProjectGhostsComponent,
     DialogUpdatedProjectGhostsComponent,
+    DialogLegendSunburstComponent,
   ],
   entryComponents: [
     StarsSkillLevelRenderComponent,
@@ -90,7 +92,8 @@ import { DialogUpdatedProjectGhostsComponent } from './project/project-sunburst/
     MessageBoxComponent,
     UploadedSkillsPickupComponent,
     DialogProjectGhostsComponent,
-    DialogUpdatedProjectGhostsComponent
+    DialogUpdatedProjectGhostsComponent,
+    DialogLegendSunburstComponent,
   ],
   imports: [
     BrowserModule,

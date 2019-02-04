@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import fr.skiller.bean.RiskProcessor;
 import fr.skiller.data.internal.RiskChartData;
 import fr.skiller.source.scanner.RepoScanner;
 
@@ -24,11 +25,11 @@ import static fr.skiller.Global.UNKNOWN;
 public class GitScannerRiskLevelTest {
 	
 	/**
-	 * Source control parser.
+	 * Risk evaluation processor
 	 */
 	@Autowired
-	@Qualifier("GIT")
-	RepoScanner scanner;
+	@Qualifier("messOfCriteria")
+	RiskProcessor riskSurveyor;
 	
 	@Test
 	public void testFillTheHoles1() {
@@ -44,7 +45,7 @@ public class GitScannerRiskLevelTest {
 		subData.addsubDir(new RiskChartData("ABB").setRiskLevel(5));
 		subData.addsubDir(new RiskChartData("ABC").setRiskLevel(10));
 		
-		scanner.meanTheRisk(subData);
+		riskSurveyor.meanTheRisk(subData);
 		
 		subData = data.children.get(1);
 		Assert.assertEquals("AB", subData.location);
@@ -65,7 +66,7 @@ public class GitScannerRiskLevelTest {
 		subData.addsubDir(new RiskChartData("ABB").setRiskLevel(5));
 		subData.addsubDir(new RiskChartData("ABC").setRiskLevel(10));
 		
-		scanner.meanTheRisk(subData);
+		riskSurveyor.meanTheRisk(subData);
 		
 		subData = data.children.get(1);
 		Assert.assertEquals("AB", subData.location);
