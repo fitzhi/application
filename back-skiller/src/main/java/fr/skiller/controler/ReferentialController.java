@@ -5,8 +5,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
+import com.sun.javafx.charts.Legend;
+
+import fr.skiller.bean.RiskProcessor;
+import fr.skiller.data.internal.RiskLegend;
 
 @RestController
 @RequestMapping("/data")
@@ -26,8 +34,14 @@ public class ReferentialController {
 	/**
 	 * Initialization of the Google JSON parser.
 	 */
-	Gson g = new Gson();
+	final Gson g = new Gson();
 
+	/**
+	 * Bean in charge of the evaluation of risks.
+	 */
+	@Autowired
+	RiskProcessor riskProcessor;
+	
 	@RequestMapping(value = "/{referential}", method = RequestMethod.GET)
 	ResponseEntity<String> read(@PathVariable("referential") String referentialName) {
 
@@ -68,4 +82,13 @@ public class ReferentialController {
 		return responseEntity;
 	}
 
+	/**
+	 * HTTP GET to retrierve the risks legend of the sunburst-chart/
+	 * @return the risks legend for the actual implementation of {@link RiskProcessor}
+	 */
+	@RequestMapping(value = "/riskLegends", method = RequestMethod.GET)
+	ResponseEntity<List<RiskLegend>> riskLegends() {
+		List<RiskLegend> legends = new ArrayList<RiskLegend>(riskProcessor.riskLegends().values());
+		return new ResponseEntity<List<RiskLegend>>(legends, new HttpHeaders(), HttpStatus.OK);
+	}
 }

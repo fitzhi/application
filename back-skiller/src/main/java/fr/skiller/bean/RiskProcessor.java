@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.skiller.data.internal.RiskChartData;
+import fr.skiller.data.internal.RiskLegend;
 import fr.skiller.data.source.CommitRepository;
 
 /**
@@ -16,10 +17,11 @@ import fr.skiller.data.source.CommitRepository;
 public interface RiskProcessor {
 
 	/**
-	 * @return the list of explanations for each level of risk.<br/>
-	 * The key, an integer, contains the risk level, the value, a string, the associated description.
+	 * @return the legend for each level of risk.<br/>
+	 * The key is an integer. It contains the risk level from 0 to 10.<br/>
+	 * The value, a representation for this risk (a level, a color and a description).
 	 */
-	Map<Integer, String> risksExplanation();
+	Map<Integer, RiskLegend> riskLegends();
 	
 	/**
      * Evaluate the level of risk on all entries in the repository from the staff/level point of view.<br/>

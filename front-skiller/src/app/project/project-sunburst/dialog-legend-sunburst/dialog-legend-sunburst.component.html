@@ -1,20 +1,21 @@
-<h2 mat-dialog-title>Legend of the sunburst chart</h2>
+<h1 mat-dialog-title>Legend</h1>
 <mat-dialog-content style="width:100%">
-  <div width="100%">
-      <table>
-          <tr><td bgcolor="darkGreen" align="center">Risk 0</td></tr>
-          <tr><td bgcolor="ForestGreen" align="center">Risk 1</td></tr>
-          <tr><td bgcolor="limeGreen" align="center">Risk 2</td></tr>
-          <tr><td bgcolor="Lime" align="center">Risk 3</td></tr>
-          <tr><td bgcolor="lightGreen" align="center">Risk 4</td></tr>
-          <tr><td bgcolor="yellow" align="center">Risk 5</td></tr>
-          <tr><td bgcolor="orange" align="center">Risk 6</td></tr>
-          <tr><td bgcolor="darkOrange" align="center">Risk 7</td></tr>
-          <tr><td bgcolor="lightCoral" align="center">Risk 8</td></tr>
-          <tr><td bgcolor="crimson" align="center">Risk 9</td></tr>
-          <tr><td bgcolor="darkRed" align="center">Risk 10</td></tr>
-      </table>
-  </div>
+  <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8 tableLegends">
+    <ng-container matColumnDef="color">
+      <th id="color" mat-header-cell *matHeaderCellDef>Color</th>
+      <td mat-cell class="td-color" [style.background-color]="row.color" [style.padding]="0" *matCellDef="let row">
+        level&nbsp;{{row.level}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th id="description" mat-header-cell *matHeaderCellDef>Description</th>
+      <td class="td-description" mat-cell *matCellDef="let row; let i = index;">{{row.description}}</td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="riskColumns; sticky: true"></tr>
+    <tr mat-row class="td-ghost" *matRowDef="let row; columns: riskColumns;"></tr>
+  </table>
   <mat-dialog-actions align="center">
     <button mat-button class="actions" [mat-dialog-close]="true">&nbsp;&nbsp;&nbsp;Ok&nbsp;&nbsp;&nbsp;</button>
   </mat-dialog-actions>

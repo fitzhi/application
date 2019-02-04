@@ -17,12 +17,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fr.skiller.Global;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.RiskChartData;
+import fr.skiller.data.internal.RiskLegend;
 import fr.skiller.data.source.CommitHistory;
 import fr.skiller.data.source.CommitRepository;
-import fr.skiller.source.scanner.git.GitScanner;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -71,42 +72,44 @@ public class RiskProcessorImpl implements RiskProcessor {
 	@Autowired StaffHandler staffHandler;
 
  	/**
- 	 * The logger for the RiskSurveyor.
+ 	 * The logger for the Risk Surveyor.
  	 */
 	Logger logger = LoggerFactory.getLogger(RiskProcessorImpl.class.getCanonicalName());
 
 	@Override
-	public Map<Integer, String> risksExplanation() {
+	public Map<Integer, RiskLegend> riskLegends() {
+	
+		final Map<Integer, RiskLegend> explanations = new HashMap<Integer, RiskLegend>();
 		
-		final Map<Integer, String> explanations = new HashMap<Integer, String>();
-		explanations.put (0, "All commits of all sources have been submitted by developers still active in the staff team.");
-		explanations.put (1,
-				"<b>90% of all commits</b> have been made by active developers in the staff team.<br/>"+
-	      		"<i>NB : It's the calculated mean on all sources in the directory.</i><br/>" +
-	      		"<b><u>AND</u></b> <b>the last commits</b> have been submitted by them.</li><br/>");
-		explanations.put (2, 
-				"80% of all commits</b> have been made by active developers in the staff team.<br/>"+
-				"<i>NB : It's the calculated mean of all sources in the directory.</i><br/>"+
-				"<b><u>AND</u></b> <b>the last commits</b> have been submitted by them.</li><br/>");
-		explanations.put (3,
-				"<b>80% of all commits</b> have been made by active developers in the staff team."+ 
-				"Some of source files are only covered at <b>50%</b></li><br/>");
-		explanations.put (4, 
-				"<b>80% of all commits</b> have been made by active developers in the staff team.<br/><br/>");
-		explanations.put (5, 
-				"<b>60% of all commits</b> have been made by active developers in the staff team.</li><br/><br/>");
-		explanations.put (6,
-				"<b>60% of all commits</b> have been made by active developers in the staff team.<br/>"+
-				"AND there are some file(s)  in this directory, without remaining active developers.<br/><br/>");
-		explanations.put (7, 
-				"<b>33% of all commits</b> have been submitted by active developers in the staff team.</li><br/>");
-		explanations.put (8, 
-				"<b>20%</b> have been made by active developers in the staff team.</li></b><br/>");
-		explanations.put (9, 
-				"<b>10%</b> have been made by active developers in the staff team."+
-				"<b><u>AND</u></b> none of them have submitted the most recent commits on the source files.</li><br/>");
-		explanations.put (10, 
-				"It's no more a risk. It is a problem. None of the current developers in the company have worked on the source files.</li>");
+		explanations.put (0, new RiskLegend( 0, "darkGreen", 
+				"All commits of all sources have been submitted by developers still active in the staff team."));
+		explanations.put (1, new RiskLegend( 1, "ForestGreen",
+				"90% of commits have been made by active developers in the staff team."+
+	      		"NB : It's the calculated mean on all sources in the directory." +
+	      		"AND the last commits have been submitted by them."));
+		explanations.put (2, new RiskLegend( 2, "limeGreen",
+				"80% of all commits have been made by active developers in the staff team."+
+				"NB : It's the calculated mean of all sources in the directory."+
+				"AND the last commits have been submitted by them."));
+		explanations.put (3, new RiskLegend( 3, "lime",
+				"80% of all commits have been made by active developers in the staff team."+ 
+				"Some of source files are only covered at 50%"));
+		explanations.put (4, new RiskLegend( 4, "lightGreen",
+				"80% of all commits have been made by active developers in the staff team."));
+		explanations.put (5, new RiskLegend( 5, "yellow",
+				"60% of all commits have been made by active developers in the staff team."));
+		explanations.put (6, new RiskLegend( 6, "orange",
+				"60% of all commits have been made by active developers in the staff team."+
+				"AND there are some file(s)  in this directory, without remaining active developers."));
+		explanations.put (7, new RiskLegend( 7, "darkOrange",
+				"33% of all commits have been submitted by active developers in the staff team."));
+		explanations.put (8, new RiskLegend( 8, "lightCoral",
+				"20% have been made by active developers in the staff team."));
+		explanations.put (9, new RiskLegend( 9, "crimson",
+				"10% have been made by active developers in the staff team."+
+				"AND none of them have submitted the most recent commits on the source files."));
+		explanations.put (10, new RiskLegend( 10, "darkRed",
+				"It's no more a risk. It is a problem. None of the current developers in the company have worked on the source files."));
 
 		return explanations;
 	}
@@ -296,8 +299,8 @@ public class RiskProcessorImpl implements RiskProcessor {
 		sunburstData.setRiskLevel(10);
 	}
 	
-	final String colorOfRisk[] = {
-            "darkGreen","ForestGreen","limeGreen", "Lime", "lightGreen","yellow","orange","darkOrange","lightCoral","crimson","darkRed"
+	public String colorOfRisk(final int riskLevel) {
+		return this.riskLegends().get(riskLevel).color;
 	};
 	
 	/**
@@ -319,7 +322,7 @@ public class RiskProcessorImpl implements RiskProcessor {
 	public void setPreviewSettings(RiskChartData data) {
 		if (!data.hasUnknownRiskLevel()) {
 			int riskLevel = data.getRiskLevel();
-			data.color = colorOfRisk[riskLevel];
+			data.color = colorOfRisk(riskLevel);
 		}
 		if (data.children != null) {
 			data.children.stream().forEach(dir -> setPreviewSettings(dir));
@@ -338,5 +341,4 @@ public class RiskProcessorImpl implements RiskProcessor {
 		} 
 		return location.getRiskLevel();
 	}
-
 }

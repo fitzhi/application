@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ReferentialService } from '../../../referential.service';
+import { RiskLegend } from '../../../data/RiskLegend';
 
 @Component({
   selector: 'app-dialog-legend-sunburst',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DialogLegendSunburstComponent implements OnInit {
 
-  constructor() { }
+  public riskColumns: string[] = ['color', 'description'];
+
+  public dataSource: RiskLegend[];
+
+  constructor(private referentialService: ReferentialService) { }
 
   ngOnInit() {
+    this.referentialService.subjectLegends.subscribe(legends => this.dataSource = legends);
   }
 
 }
