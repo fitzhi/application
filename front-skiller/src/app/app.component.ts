@@ -69,7 +69,6 @@ export class AppComponent implements OnInit {
   image_project_activated = '/assets/img/project-activated.png';
   image_project_inactive = '/assets/img/project-inactive.png';
 
-
   constructor(
     private cinematicService: CinematicService,
     private listStaffService: ListStaffService,
@@ -144,12 +143,12 @@ export class AppComponent implements OnInit {
       setTimeout(() => {
         switch (this.cinematicService.getFormerFormIdentifier()) {
           case Constants.DEVELOPERS_SEARCH:
-            this.previousId = listStaffService.previousCollaboratorId(data);
-            this.nextId = listStaffService.nextCollaboratorId(data);
+            this.previousId = this.listStaffService.previousCollaboratorId(data);
+            this.nextId = this.listStaffService.nextCollaboratorId(data);
             break;
           case Constants.PROJECT_TAB_STAFF:
-            this.previousId = projectStaffService.previousIdStaff(data);
-            this.nextId = projectStaffService.nextIdStaff(data);
+            this.previousId = this.projectStaffService.previousIdStaff(data);
+            this.nextId = this.projectStaffService.nextIdStaff(data);
             break;
         }
       });
@@ -167,7 +166,6 @@ export class AppComponent implements OnInit {
     this.skill_activated = false;
     this.project_activated = false;
     this.referentialService.loadAllReferentials();
-
   }
 
   /**
@@ -214,21 +212,21 @@ export class AppComponent implements OnInit {
     this.router.navigate(['/user'], {});
   }
 
-  switchToSkill() {
+  public switchToSkill() {
     this.searching_what = null;
     this.skill_activated = true;
     this.dev_activated = false;
     this.project_activated = false;
   }
 
-  switchToDev() {
+  public switchToDev() {
     this.searching_what = null;
     this.dev_activated = true;
     this.skill_activated = false;
     this.project_activated = false;
   }
 
-  switchToProject() {
+  public switchToProject() {
     this.searching_what = null;
     this.project_activated = true;
     this.dev_activated = false;

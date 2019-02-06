@@ -138,7 +138,7 @@ public class ProjectHandler_saveGhosts_Test {
 	@Test
 	public void testPseudoToto_TaggedAs_Technical() throws SkillerException {
 		List<Pseudo> pseudos = new ArrayList<Pseudo>();
-		// The pseudo Toto is tagged as a technical one
+		// The pseudo "Toto" is tagged as a technical one
 		pseudos.add(new Pseudo("toto", true));
 		
 		PseudoListDTO pseudosDTO = new PseudoListDTO(8121964, pseudos);
@@ -146,8 +146,7 @@ public class ProjectHandler_saveGhosts_Test {
 		
 		Assert.assertEquals("Ghost size", projectHandler.getProjects().get(8121964).ghosts.size(), 1);
 		Ghost expected = new Ghost("toto", true);
-		Assert.assertEquals("Solely entry in ghosts ", expected, projectHandler.getProjects().get(8121964).ghosts.get(0));
-		
+		Assert.assertEquals("Unique entry in ghosts ", expected, projectHandler.getProjects().get(8121964).ghosts.get(0));
 	}	
 	
 	@After

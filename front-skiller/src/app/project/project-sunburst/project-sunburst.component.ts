@@ -147,13 +147,15 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
 
       this.projectService.retrieveSuburstData(this.idProject)
         .subscribe(response => {
-          myChart.data(response.sunburstData).width(500).height(500).label('location').size('numberOfFiles').color('color')
-            (document.getElementById('chart'));
+          if (myChart !== null) {
+            myChart.data(response.sunburstData).width(500).height(500).label('location').size('numberOfFiles').color('color')
+              (document.getElementById('chart'));
               if (typeof this.dataGhosts === 'undefined') {
                 this.dataGhosts = new ProjectGhostsDataSource(this.project);
               }
               // Send the unregistered contributors to the panel list
               this.dataGhosts.sendUnknowns (response.ghosts);
+          }
         }, response => {
             if (Constants.DEBUG) {
               console.log('Error ' + response.status + ' while retrieving the sunburst data for the project identfier ' + this.idProject);
