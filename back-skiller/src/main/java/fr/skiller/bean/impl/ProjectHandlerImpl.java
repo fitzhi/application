@@ -160,7 +160,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				continue;
 			}
 			
-			if ((pseudo.login != null) && (pseudo.login.length() >= 0)) {
+			if ((pseudo.login != null) && (pseudo.login.length() > 0)) {
 				List<Staff> result = staffHandler.getStaff().values()
 					.stream()
 					.filter(staff -> pseudo.login.equals(staff.login))

@@ -55,6 +55,7 @@ public class ProjectHandler_saveGhosts_Test {
 		p.ghosts.add(new Ghost("must disappear", second.idStaff, false));
 		p.ghosts.add(new Ghost("remove me", true));
 		p.ghosts.add( new Ghost("donotneedmore", third.idStaff, false) );
+		p.ghosts.add( new Ghost("toto", false) );		
 		projectHandler.addNewProject(p);
 	}
 
@@ -133,6 +134,21 @@ public class ProjectHandler_saveGhosts_Test {
 		
 	
 	}
+	
+	@Test
+	public void testPseudoToto_TaggedAs_Technical() throws SkillerException {
+		List<Pseudo> pseudos = new ArrayList<Pseudo>();
+		// The pseudo Toto is tagged as a technical one
+		pseudos.add(new Pseudo("toto", true));
+		
+		PseudoListDTO pseudosDTO = new PseudoListDTO(8121964, pseudos);
+		projectHandler.saveGhosts(8121964, pseudosDTO.unknowns);
+		
+		Assert.assertEquals("Ghost size", projectHandler.getProjects().get(8121964).ghosts.size(), 1);
+		Ghost expected = new Ghost("toto", true);
+		Assert.assertEquals("Solely entry in ghosts ", expected, projectHandler.getProjects().get(8121964).ghosts.get(0));
+		
+	}	
 	
 	@After
 	public void after() throws Exception {
