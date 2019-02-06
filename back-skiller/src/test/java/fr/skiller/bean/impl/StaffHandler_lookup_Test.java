@@ -13,6 +13,7 @@ import java.text.Normalizer;
 
 import javax.validation.constraints.AssertTrue;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,6 +48,12 @@ public class StaffHandler_lookup_Test {
 	}
 
 	@Test
+	public void testLookupGuerinDeTourvilleGuillaume() throws Exception {
+		assertThat(staffHandler.lookup("Guerin De Tourville Guillaume")).isNotNull();
+	}
+		
+
+	@Test
 	public void testLookupYassine() throws Exception {
 		assertThat(staffHandler.lookup("Ouaamou Mohammed")).isNotNull();
 	}
@@ -63,5 +70,12 @@ public class StaffHandler_lookup_Test {
 		assertThat(Normalizer.normalize("Jérôme WithAccent", Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", ""))
 		.isEqualTo("Jerome WithAccent");
 		assertThat(staffHandler.lookup("Jerome WithAccent")).isNotNull();
+	}
+	
+	@After
+	public void after() {
+		staffHandler.getStaff().remove(1000);
+		staffHandler.getStaff().remove(1001);
+		staffHandler.getStaff().remove(1002);
 	}
 }

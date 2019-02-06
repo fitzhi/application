@@ -216,10 +216,9 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		String[] word = criteria.split(" ");
 		
-		List<Staff> ids;
+		List<Staff> ids = null;
 		switch (word.length) {
 		case 1:
-			
 			// If the criteria contains only one word, we assume FIRST that this criteria is the login id
 			ids = getStaff().values().stream()
 				.filter(staff -> transform.process(word[0]).equals(transform.process(staff.login)))
@@ -242,7 +241,6 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			}
 			break;
 		case 2:			
-			
 			// If the criteria contains only 2 words, we assume that this criteria is the first name and the last name
 			ids = getStaff().values().stream()
 			.filter(staff -> transform.process(word[0]).equals(transform.process(staff.lastName)))
@@ -260,9 +258,36 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		default:
 			// If the criteria contains multiple words, we assume that this criteria is the full name of the contributor
 			// Either with the firstName + " " + lastName, or the lastName + " " + firstName
-			ids = getStaff().values().stream()
-			.filter(staff -> transform.process(criteria.trim()).equals(transform.process(staff.fullName())))
-			.collect(Collectors.toList());
+			// We will rotate words inside the criteria 
+			// in order to test any combinations of criteria ("John William Doe Senior" -> "William Doe Senior John" --> ...)
+			if (logger.isDebugEnabled()) {
+				logger.debug("Rotation of words within the criteria " + criteria + ", and trying a lookup" );
+			}
+			for (int i=0; i<word.length; i++) {
+				
+				List<String> rotatedCriteria = new ArrayList<String>();
+				for (int j=0; j<word.length; j++) {
+					rotatedCriteria.add(word[(j+i)%word.length]);
+				}
+				
+				StringBuilder sb = new StringBuilder();
+				rotatedCriteria.stream().forEach(e -> sb.append(e).append(" "));
+				
+				ids = getStaff().values().stream()
+						.filter(staff -> transform.process(sb.toString().trim()).equals(transform.process(staff.fullName())))
+						.collect(Collectors.toList());
+				
+				if (ids.size() > 0) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("          ---> " + sb.toString() + "OK ! :-)");
+					}
+					break;
+				} else {
+					if (logger.isDebugEnabled()) {
+						logger.debug("          ---> " + sb.toString() + "KO");
+					}					
+				}
+			}
 		}
 
 		if (ids.size() == 1) {

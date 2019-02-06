@@ -189,7 +189,8 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	long agregateCountCommitsByActiveDevelopers(
 			final String dir, 
 			final List<StatActivity> stats) {
-		return stats.stream().filter(entry -> entry.filename.indexOf(dir)==0).mapToLong(entry -> entry.countCommitsByActiveDevelopers).sum();
+		return stats.stream().filter(entry -> entry.filename.indexOf(dir)==0).
+				mapToLong(entry -> entry.countCommitsByActiveDevelopers).sum();
 	}
 
 	/**

@@ -398,6 +398,13 @@ public class ProjectController {
 					data.undefinedContributors.stream().forEach(ukwn -> sb.append(ukwn.pseudo).append(LN));
 					logger.debug(sb.toString());
 				}
+				
+				if ((project.ghosts != null) && (project.ghosts.size()>0)) {
+					StringBuilder sb = new StringBuilder();
+					sb.append("Registered ghosts in the project record :").append(LN);
+					project.ghosts.stream().forEach(g -> sb.append(g.pseudo).append(" : ").append(g.idStaff).append("/").append(g.technical).append(LN));
+					logger.debug(sb.toString());					
+				}
 			}
 			
 			return new ResponseEntity<SunburstDTO>(
