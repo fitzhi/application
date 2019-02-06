@@ -29,7 +29,7 @@ export class ListStaffComponent implements OnInit {
     this.cinematicService.setForm(Constants.DEVELOPERS_SEARCH, this.router.url);
     this.collaborators = this.listStaffService.getStaff();
 
-    this.referentialService.behaviorSubjectProfiles.subscribe(
+    this.referentialService.subjectProfiles.subscribe(
       (profiles: Profile[]) => this.profiles = profiles);
   }
 

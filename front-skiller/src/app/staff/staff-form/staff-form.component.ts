@@ -95,7 +95,7 @@ export class StaffFormComponent implements OnInit {
         this.cinematicService.setForm(Constants.DEVELOPERS_CRUD, this.router.url);
       });
 
-    this.referentialService.behaviorSubjectProfiles.subscribe(
+    this.referentialService.subjectProfiles.subscribe(
       (profiles: Profile[]) => this.profiles = profiles);
 
   }

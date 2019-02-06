@@ -34,7 +34,7 @@ public class RiskChartData {
     public Date lastUpdate;
     
     /**
-     * Level of risk evaluated.
+     * Level of risk evaluated for this location.
      * @see fr.skiller.source.scanner.RepoScanner#evaluateTheRisk 
      */
     private int riskLevel = UNKNOWN;
@@ -77,12 +77,12 @@ public class RiskChartData {
 		if (children == null) {
 			children = new ArrayList<>();
 			children.add(subDir);
-			return children.get(0);
+			return subDir;
 		} else {
 			Optional<RiskChartData> opt = children.stream().filter(data -> data.location.equals(subDir.location)).findAny();
 			if (!opt.isPresent()) {
-				children.add(subDir);		
-				return children.stream().filter(data -> data.location.equals(subDir.location)).findAny().get();
+				children.add(subDir);	
+				return subDir;
 			} else {
 				return opt.get();
 			}

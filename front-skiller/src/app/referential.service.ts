@@ -43,7 +43,15 @@ export class ReferentialService {
     }
 
     this.httpClient.get<Profile[]>(this.HOST + '/data/profiles').subscribe(
-      (profiles: Profile[]) => { this.subjectProfiles.next(profiles); },
+      (profiles: Profile[]) => {
+          if (Constants.DEBUG) {
+            console.group('Staff profiles : ');
+            profiles.forEach(function (profile) {
+              console.log (profile.code + ' ' + profile.title);
+            });
+            console.groupEnd();
+          }
+        this.subjectProfiles.next(profiles); },
       response_error => console.error(response_error.error.message));
 
       this.httpClient.get<RiskLegend[]>(this.HOST + '/data/riskLegends').subscribe(

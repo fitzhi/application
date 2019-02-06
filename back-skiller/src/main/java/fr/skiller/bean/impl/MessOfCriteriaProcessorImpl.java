@@ -30,7 +30,7 @@ import fr.skiller.data.source.CommitRepository;
  *
  */
 @Service("messOfCriteria")
-public class RiskProcessorImpl implements RiskProcessor {
+public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 
 	/**
 	 * Statistic of activity
@@ -74,7 +74,7 @@ public class RiskProcessorImpl implements RiskProcessor {
  	/**
  	 * The logger for the Risk Surveyor.
  	 */
-	Logger logger = LoggerFactory.getLogger(RiskProcessorImpl.class.getCanonicalName());
+	Logger logger = LoggerFactory.getLogger(MessOfCriteriaProcessorImpl.class.getCanonicalName());
 
 	@Override
 	public Map<Integer, RiskLegend> riskLegends() {
@@ -156,7 +156,7 @@ public class RiskProcessorImpl implements RiskProcessor {
 		
 		final List<StatActivity> stats = new ArrayList<StatActivity>();
 		
-		// This directory has no files within it.
+		// This directory contains class within it.
 		if ((sunburstData.getClassnames() != null) && !sunburstData.getClassnames().isEmpty()) {
 			for (String classname : sunburstData.getClassnames()) {
 	

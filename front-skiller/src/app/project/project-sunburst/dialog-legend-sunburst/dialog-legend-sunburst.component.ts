@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ReferentialService } from '../../../referential.service';
-import { RiskLegend } from '../../../data/RiskLegend';
+import { RiskLegend } from '../../../data/riskLegend';
 
 @Component({
   selector: 'app-dialog-legend-sunburst',
