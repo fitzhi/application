@@ -1,5 +1,6 @@
 package fr.skiller.controler;
 
+import java.lang.reflect.InvocationTargetException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +80,18 @@ public class ProjectController {
 	@Autowired
 	@Qualifier("GIT")
 	RepoScanner scanner;
-	
+
+	/**
+	 * Class used as a passed reference to a method in order to change it. The class will be used to setup a response entity.
+	 * @author Fr&eacute;d&eacute;ric VIDAL
+	 * @param <T> the type of cariable top be passed
+	 */
+	class MyReference<T> {
+		T response;
+		public MyReference() {
+		}
+	}
+
 	@RequestMapping(value = "/name/{projectName}", method = RequestMethod.GET)
 	ResponseEntity<ProjectDTO> read(@PathVariable("projectName") String projectName) {
 		
@@ -108,35 +120,25 @@ public class ProjectController {
 		}
 	}
 	
+	/**
+	 * Read and return a project corresponding to the passed identifier
+	 * @param idProject the searched project identifier
+	 * @return the HTTP Response with the retrieved project, or an empty one if the query failed.
+	 */
 	@RequestMapping(value = "/id/{idParam}", method = RequestMethod.GET)
-	ResponseEntity<Project> read(@PathVariable("idParam") int idParam) {
+	ResponseEntity<Project> read(@PathVariable("idParam") int idProject) {
 
-		final ResponseEntity<Project> responseEntity;
-		final HttpHeaders headers = new HttpHeaders();
-
-		try {
-			final Project searchProject = projectHandler.getProjects().get(idParam);
-			if (searchProject != null) {
-				responseEntity = new ResponseEntity<Project>(searchProject, headers, HttpStatus.OK);
-				if (logger.isDebugEnabled()) {
-					logger.debug("Project read for id " + String.valueOf(idParam) + " returns " + responseEntity.getBody());
-				}
-			} else {
-				headers.set("backend.return_code", "O");
-				headers.set("backend.return_message", "There is no project associated to the id " + idParam);
-				responseEntity = new ResponseEntity<Project>(new Project(), headers, HttpStatus.NOT_FOUND);
-				if (logger.isDebugEnabled()) {
-					logger.debug("Cannot find a Project for id " + String.valueOf(idParam));
-				}
-			}
-			return responseEntity;
-		} catch (final SkillerException e) {
-			logger.error(getStackTrace(e));
-			return new ResponseEntity<Project>(
-					new Project(), 
-					headers, 
-					HttpStatus.BAD_REQUEST);
+		MyReference<ResponseEntity<Project>> refResponse = new MyReference<ResponseEntity<Project>>();
+		final Project searchProject = getProject(idProject, new Project(), refResponse);
+		if (refResponse.response != null) {
+			return refResponse.response;
 		}
+		
+		ResponseEntity<Project> response = new ResponseEntity<Project>(searchProject, new HttpHeaders(), HttpStatus.OK);
+		if (logger.isDebugEnabled()) {
+			logger.debug("Project read for id " + String.valueOf(idProject) + " returns " + response.getBody());
+		}
+		return response;
 	}
 
 	/**
@@ -145,22 +147,45 @@ public class ProjectController {
 	 */
 	@RequestMapping(value="/skills/{idProject}", method = RequestMethod.GET)
 	ResponseEntity<List<Skill>> get(final @PathVariable("idProject") int idProject) {
-		try {
-			final Project project = projectHandler.get(idProject);
-			if (project == null) {
-				return new ResponseEntity<List<Skill>>(new ArrayList<Skill>(), new HttpHeaders(), HttpStatus.OK);			
-			} else {
-				return new ResponseEntity<List<Skill>>(project.skills, new HttpHeaders(), HttpStatus.OK);
-			}
-		} catch (final SkillerException e) {
-			logger.error(getStackTrace(e));
-			return new ResponseEntity<List<Skill>>(
-					new ArrayList<Skill>(), 
-					new HttpHeaders(), 
-					HttpStatus.BAD_REQUEST);
-		}
+		
+		MyReference<ResponseEntity<List<Skill>>> refResponse = new MyReference<ResponseEntity<List<Skill>>>();
+
+		final Project project = getProject(idProject, new ArrayList<Skill>(), refResponse);
+		return  (refResponse.response != null) ? refResponse.response : 
+			new ResponseEntity<List<Skill>>(project.skills, new HttpHeaders(), HttpStatus.OK);
 	}
 
+	/**
+	 * Read the project
+	 * @param <T> The class of instance which will be sent within the envelop of the ResponseEntity
+	 * @param idProject project identifier
+	 * @param t the object to be sent back inside the ResponseEntit.
+	 * @param response the response to be returned to the front if the search is unsuccessful.<br/>
+	 * 			<b>This parameter is not final. This method might change its value.</b>
+	 * @return the retrieved project, or {@code null} if none's found.
+	 */
+	<T> Project getProject(final int idProject, final T t, MyReference<ResponseEntity<T>> refResponse) {
+
+		Project project = null;
+		
+		final HttpHeaders headers = new HttpHeaders();
+		headers.set("backend.return_code", "O");
+		headers.set("backend.return_message", "No project found for the identifier " + idProject);
+
+		try {
+			project = projectHandler.get(idProject);
+			if (project == null) {
+				refResponse.response = new ResponseEntity<T>(t, headers, HttpStatus.NOT_FOUND);			
+			} 
+		} catch (final SkillerException e) {
+			logger.error(getStackTrace(e));
+			refResponse.response = new ResponseEntity<T>(t, headers, HttpStatus.BAD_REQUEST);
+		}
+		
+		return project;
+	}
+	
+	
 	@GetMapping("/all")
 	String readAll() {
 		try {
@@ -251,13 +276,10 @@ public class ProjectController {
 					+ ", former skillTitle:" + p.formerSkillTitle);
 		}
 		
-		Project project;
-		try {
-			project = projectHandler.get(p.idProject);
-		} catch (SkillerException e) {
-			logger.error(getStackTrace(e)); 
-			return new ResponseEntity<ProjectDTO> (new ProjectDTO(new Project(), e.errorCode, e.errorMessage), 
-					new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		MyReference<ResponseEntity<ProjectDTO>> refResponse = new MyReference<ResponseEntity<ProjectDTO>>();
+		Project project = getProject(p.idProject, new ProjectDTO(new Project()), refResponse);
+		if (refResponse.response != null) {
+			return refResponse.response;
 		}
 		
 		final HttpHeaders headers = new HttpHeaders();
@@ -312,7 +334,7 @@ public class ProjectController {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Cannot find a skill with the name " + p.newSkillTitle);
 			}
-			return postErrorReturnBodyMessage(404, "There is no skill with the name " + p.newSkillTitle, project);
+			return postErrorReturnBodyMessage(HttpStatus.NOT_FOUND.value(), "There is no skill with the name " + p.newSkillTitle, project);
 		}
 	}	
 	
@@ -327,16 +349,10 @@ public class ProjectController {
 			logger.debug("POST command on /staff/skills/del with params idProject:" + String.valueOf(p.idProject) + ",idSkill:" + String.valueOf(p.idSkill));
 		}
 
-		Project project;
-		try {
-			project = projectHandler.get(p.idProject);
-		} catch (SkillerException e) {
-			logger.error(getStackTrace(e)); 
-			return new ResponseEntity<ProjectDTO> (new ProjectDTO(new Project(), e.errorCode, e.errorMessage), 
-					new HttpHeaders(), HttpStatus.BAD_REQUEST);
-		}
-		if (project == null) {
-			return postErrorReturnBodyMessage(404, "There is no project registered for id" + p.idProject, new Project());
+		MyReference<ResponseEntity<ProjectDTO>> refResponse = new MyReference<ResponseEntity<ProjectDTO>>();
+		Project project = getProject(p.idProject, new ProjectDTO(new Project()), refResponse);
+		if (refResponse.response != null) {
+			return refResponse.response;
 		}
 		
 		Optional<Skill> oSkill = project.skills.stream().filter(exp -> (exp.id == p.idSkill) ).findFirst();
@@ -369,23 +385,10 @@ public class ProjectController {
 			logger.debug("POST command on /sunburst with params idProject :" + String.valueOf(p.idProject));
 		}
 
-		Project project;
-		try {
-			project = projectHandler.get(p.idProject);
-		} catch (SkillerException e) {
-			logger.error(getStackTrace(e)); 
-			return new ResponseEntity<SunburstDTO> (new SunburstDTO(UNKNOWN_PROJECT, null, e.errorCode, e.errorMessage), 
-					new HttpHeaders(), HttpStatus.BAD_REQUEST);
-		}
-		if (project == null) {
-			new ResponseEntity<SunburstDTO>( 
-					new SunburstDTO(
-							UNKNOWN_PROJECT, 
-							new RiskChartData(""), 
-							CODE_PROJECT_NOFOUND, 
-							MessageFormat.format(MESSAGE_PROJECT_NOFOUND, p.idProject)),
-					new HttpHeaders(), 
-					HttpStatus.BAD_REQUEST);
+		MyReference<ResponseEntity<SunburstDTO>> refResponse = new MyReference<ResponseEntity<SunburstDTO>>();
+		Project project = getProject(p.idProject, new SunburstDTO(), refResponse);
+		if (refResponse.response != null) {
+			return refResponse.response;
 		}
 		
 		try {
@@ -453,8 +456,14 @@ public class ProjectController {
 		if (logger.isDebugEnabled()) {
 			logger.debug ("Removing project with " + idProject);
 		}
+
+		MyReference<ResponseEntity<String>> refResponse = new MyReference<ResponseEntity<String>>();
+		Project project = getProject(idProject, new String(), refResponse);
+		if (refResponse.response != null) {
+			return refResponse.response;
+		}
+
 		try {
-			final Project project = projectHandler.get(idProject);
 			String response = cacheDataHandler.removeRepository(project) ? "Done !" : "KO !";
 			return new ResponseEntity<String>( 
 					response,
