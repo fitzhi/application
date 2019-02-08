@@ -307,8 +307,6 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    dialogConfig.width = '50em';
-    dialogConfig.height = '30em';
     dialogConfig.position = { top: '5em', left: '5em'};
     dialogConfig.panelClass = 'default-dialog-container-class';
     const dialogReference = this.dialog.open(DialogLegendSunburstComponent, dialogConfig);
