@@ -49,5 +49,23 @@ public interface RepoScanner {
 	 * @throws Exception thrown if any application or network error occurs during the treatment.
 	 */
 	RiskDashboard generate(Project project) throws Exception;
+
+	/**
+	 * This method is an ASYNCHRONOUS wrapper from the method {@link #generate(Project)}
+	 * <br/>
+	 * Generate and complete the dashboard generation figuring the activities of staff members for the passed project
+	 * @param project the project whose source code files should be parsed in the repository
+	 * @return the project risk dashboard 
+	 * @throws Exception thrown if any application or network error occurs during the treatment.
+	 */
+	RiskDashboard generateAsync(Project project) throws Exception;
 	
+	/**
+	 * Test if risks dashboard have been executed.
+	 * @param project the selected project
+	 * @return 	{@code true} if the intermediate data are available to complete the dashboard, 
+	 * 			{@code false} if the complete operation is required (Therefore, this operation will be asynchronous).  
+	 * @throws Exception
+	 */
+	boolean hasAvailableGeneration(Project project) throws Exception;
 }

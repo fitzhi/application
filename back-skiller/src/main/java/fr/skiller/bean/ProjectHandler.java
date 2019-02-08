@@ -3,6 +3,7 @@ package fr.skiller.bean;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
@@ -107,4 +108,6 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 */
 	Ghost getGhost(Project project, String pseudo);
 
+	void test();
+	
 }

@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -378,7 +381,7 @@ public class ProjectController {
 	* Retrieve the activities for a project in an object ready made to be injected into the sunburst chart.
 	*/
 	@PostMapping("/sunburst")
-	ResponseEntity<SunburstDTO> generateSunburstData(@RequestBody String param) {
+	ResponseEntity<SunburstDTO> retrieveRiskDashboard(@RequestBody String param) {
 
 		ParamSunburst p = g.fromJson(param, ParamSunburst.class);
 		if (logger.isDebugEnabled()) {
@@ -392,33 +395,42 @@ public class ProjectController {
 		}
 		
 		try {
-			RiskDashboard data = scanner.generate(project);
-
-			if (logger.isDebugEnabled()) {
-				if ( (data.undefinedContributors != null) && (data.undefinedContributors.size() > 0) ) {
-					StringBuilder sb = new StringBuilder();
-					sb.append("Unknown contributors detected during the dashboard generation").append(LN);
-					data.undefinedContributors.stream().forEach(ukwn -> sb.append(ukwn.pseudo).append(LN));
-					logger.debug(sb.toString());
+			if (scanner.hasAvailableGeneration(project)) {
+				return generate(project);
+			} else {
+				if (logger.isDebugEnabled()) {
+					logger.debug("The generation will be processed asynchronously !");
 				}
-				
-				if ((project.ghosts != null) && (project.ghosts.size()>0)) {
-					StringBuilder sb = new StringBuilder();
-					sb.append("Registered ghosts in the project record :").append(LN);
-					project.ghosts.stream().forEach(g -> sb.append(g.pseudo).append(" : ").append(g.idStaff).append("/").append(g.technical).append(LN));
-					logger.debug(sb.toString());					
-				}
+				scanner.generateAsync(project);
+				return new ResponseEntity<SunburstDTO> (new SunburstDTO(project.id, null, HttpStatus.CREATED.value(), 
+						"The dashboard generation has been launched. Operation might last a while. Please try later !"), 
+						new HttpHeaders(), 
+						HttpStatus.BAD_REQUEST);
 			}
-			
+		} catch (Exception e) {
+			logger.error(ExceptionUtils.getStackTrace(e));
+			return new ResponseEntity<SunburstDTO> (new SunburstDTO(project.id, null, -1, e.getMessage()), 
+					new HttpHeaders(), 
+					HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	/**
+	 * Generate the dashboard.
+	 * @param project the passed project
+	 * @return the generated risks dashboard.
+	 */
+	private ResponseEntity<SunburstDTO> generate (final Project project) {
+		try {
+			RiskDashboard data = scanner.generate(project);
 			return new ResponseEntity<SunburstDTO>(
 					new SunburstDTO(project.id, data), new HttpHeaders(), HttpStatus.OK);
 		} catch (final Exception e) {
-			e.printStackTrace();
 			logger.error (e.getMessage());
 			return new ResponseEntity<SunburstDTO>(new SunburstDTO( UNKNOWN_PROJECT,null, CODE_UNDEFINED, e.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);			
 		}
 	}
-
+		
 	/**
 	 * @param idProject the project identifier
 	 * @return the contributors who have been involved in the project

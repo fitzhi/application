@@ -1,8 +1,9 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {CinematicService} from '../cinematic.service';
 import {Constants} from '../constants';
 
 import { Router } from '@angular/router';
+import { MessageService } from '../message.service';
 
 @Component({
   selector: 'app-welcome',
@@ -13,6 +14,7 @@ export class WelcomeComponent implements OnInit {
 
   constructor(
     private cinematicService: CinematicService,
+    private messageService: MessageService,
     private router: Router) {}
 
   test: Map<string, number>;
@@ -21,4 +23,8 @@ export class WelcomeComponent implements OnInit {
     this.cinematicService.setForm(Constants.WELCOME, this.router.url);
  }
 
+ click() {
+   console.log ('click...');
+   this.messageService.info('Test de Frederic');
+ }
 }

@@ -10,10 +10,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import fr.skiller.bean.DataSaver;
@@ -220,5 +222,27 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				.filter(g -> g.pseudo.equals(pseudo))
 				.collect(Collectors.toList());
 		return actualGhosts.isEmpty() ? null : actualGhosts.get(0);
+	}
+	
+	@Async
+	public CompletableFuture<String> tempTest() throws Exception {
+		System.out.println("I " + System.currentTimeMillis());
+		Thread.sleep(10000);
+		System.out.println("O " + System.currentTimeMillis());
+		return CompletableFuture.completedFuture("OK");
+	}
+
+	@Override
+	@Async
+	public void test() {
+		System.out.println("Input " + System.currentTimeMillis());
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Output " + System.currentTimeMillis());
+		
 	}
 }

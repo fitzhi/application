@@ -3,8 +3,6 @@ import {NgModule, ErrorHandler} from '@angular/core';
 import {FormsModule} from '@angular/forms'; // <-- NgModel lives here
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
-import { HttpClientInMemoryWebApiModule } from 'angular-in-memory-web-api';
-import { InMemoryDataService } from './net/in-memory-data.service';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import {BsDropdownModule} from 'ngx-bootstrap/dropdown';
@@ -42,7 +40,7 @@ import { StaffProjectsComponent } from './staff/staff-tabs/staff-projects/staff-
 import { StaffExperienceComponent } from './staff/staff-tabs/staff-experience/staff-experience.component';
 import { StaffUploadCvComponent } from './staff/staff-tabs/staff-experience/staff-upload-cv/staff-upload-cv.component';
 import {  MatSortModule, MatButtonToggleModule, MatSidenavModule, MatCardModule, MatFormFieldModule } from '@angular/material';
-import {  MatInputModule } from '@angular/material';
+import {  MatInputModule, MatSnackBarModule } from '@angular/material';
 import { MatTabsModule, MatDialogModule, MatProgressBarModule, MatPaginatorModule } from '@angular/material';
 import { MessageBoxComponent } from './message-box/dialog/message-box.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -119,15 +117,8 @@ import { DialogLegendSunburstComponent } from './project/project-sunburst/dialog
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSnackBarModule,
 
-    // The HttpClientInMemoryWebApiModule module intercepts HTTP requests
-    // and returns simulated server responses.
-    // Remove it when a real server is ready to receive requests.
-    /* We use now the server on a tomcat :8080
-    HttpClientInMemoryWebApiModule.forRoot(
-      InMemoryDataService, { dataEncapsulation: false }
-    )
-    */
   ],
   providers: [
     CinematicService,

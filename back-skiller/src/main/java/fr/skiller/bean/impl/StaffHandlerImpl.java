@@ -64,12 +64,6 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	private Map<Integer, Staff> staff;
 
 	/**
-	 * Handler for working the project collection.
-	 */
-	@Autowired
-	ProjectHandler projectHandler;
-	
-	/**
 	 * Bean in charge of saving/loading data.
 	 */
 	@Autowired
@@ -327,19 +321,13 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 					}
 				} else {
 					// Involve this developer inside a new project 
-					Mission mission;
-					try {
-						mission = new Mission(
+					Mission mission = new Mission(
 								project.id, 
-								projectHandler.get(project.id).name,
+								project.name,
 								contributor.firstCommit, 
 								contributor.lastCommit, 
 								contributor.numberOfCommitsSubmitted, 
 								contributor.numberOfFiles);
-					} catch (SkillerException e) {
-						// No exception excepted at the point
-						throw new RuntimeException(e);
-					}
 					synchronized (lockDataUpdated) {
 						staff.addMission(mission);
 						this.dataUpdated = true;

@@ -6,7 +6,7 @@ import { ProjectService } from '../../project.service';
 import { ActivatedRoute } from '@angular/router';
 import {CinematicService} from '../../cinematic.service';
 import { Project } from '../../data/project';
-import { MatDialogConfig, MatDialog, MatDialogRef } from '@angular/material';
+import { MatDialogConfig, MatDialog } from '@angular/material';
 import { DialogProjectGhostsComponent } from './dialog-project-ghosts/dialog-project-ghosts.component';
 import { ProjectGhostsDataSource } from './dialog-project-ghosts/project-ghosts-data-source';
 import { DialogLegendSunburstComponent } from './dialog-legend-sunburst/dialog-legend-sunburst.component';
@@ -96,7 +96,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
         this.project = project;
         this.projectName = this.project.name;
         if ((typeof this.project.urlRepository === 'undefined') || (this.project.urlRepository.length === 0)) {
-          this.messageService.info('No repository URL avalaible !');
+          setTimeout(() => this.messageService.info('No repository URL avalaible !'));
           this.sunburst_ready = false;
           this.sunburst_waiting = false;
           this.sunburst_impossible = true;
@@ -115,7 +115,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
       if (Constants.DEBUG) {
         console.log('No project identifier passed to this tab. No data available for preview !');
       }
-      this.messageService.info('No project identifier passed to this form or no data available for preview !');
+      setTimeout(() => this.messageService.info('No project identifier passed to this form or no data available for preview !'));
       this.sunburst_ready = false;
       this.sunburst_waiting = false;
       this.sunburst_impossible = true;
@@ -155,28 +155,35 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
               }
               // Send the unregistered contributors to the panel list
               this.dataGhosts.sendUnknowns (response.ghosts);
-          }
+            }
         }, response => {
             if (Constants.DEBUG) {
-              console.log('Error ' + response.status + ' while retrieving the sunburst data for the project identfier ' + this.idProject);
+              console.log('Response returned while retrieving the sunburst data for the project identfier ' + this.idProject);
+              console.log (response);
             }
             switch (response.status) {
-              case 404: {
-                this.messageService.error(
-                  'Resource Not found while retrieving the sunburst data for the project identfier ' + this.idProject);
-              }
-                break;
+              case 404:
+                {
+                  this.messageService.error(
+                    'Resource Not found while retrieving the sunburst data for the project identfier ' + this.idProject);
+                  break;
+                }
               case 400: {
-                // We display the error generated on the server
-                this.messageService.error('ERROR ' + response.error.message);
-                break;
-              }
+                  if (response.error.code === 201 ) {
+                    // The generation is not accessible. The generation is launched asynchronously.
+                    this.messageService.info(response.error.message);
+                  } else {
+                    // We display the error generated on the server
+                    this.messageService.error('ERROR ' + response.error.message);
+                  }
+                  break;
+                }
               default: {
-                // Unattempted error
-                this.messageService.error('ERROR ' + response.message);
-                break;
+                  // Unattempted error
+                  this.messageService.error('ERROR ' + response.message);
+                  break;
+                }
               }
-            }
           },
           () => {
             this.hackSunburstStyle();

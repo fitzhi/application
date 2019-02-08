@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
@@ -61,6 +62,8 @@ import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
+
+import static fr.skiller.Global.LN;
 import static fr.skiller.Global.UNKNOWN;
 import static fr.skiller.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
 import static fr.skiller.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
@@ -386,6 +389,12 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
  	}
 
 	@Override
+	@Async
+	public RiskDashboard generateAsync(final Project project) throws Exception {
+		return generate(project);
+	}
+	
+	@Override
 	public RiskDashboard generate(final Project project) throws Exception {
 		
 		final ConnectionSettings settings = connectionSettings(project);
@@ -428,6 +437,22 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		}
 		// Evaluate the preview display for each slice of the sunburst chart.  
 		this.riskSurveyor.setPreviewSettings(data.riskChartData);
+
+		if (logger.isDebugEnabled()) {
+			if ( (data.undefinedContributors != null) && (data.undefinedContributors.size() > 0) ) {
+				StringBuilder sb = new StringBuilder();
+				sb.append("Unknown contributors detected during the dashboard generation").append(LN);
+				data.undefinedContributors.stream().forEach(ukwn -> sb.append(ukwn.pseudo).append(LN));
+				logger.debug(sb.toString());
+			}
+			
+			if ((project.ghosts != null) && (project.ghosts.size()>0)) {
+				StringBuilder sb = new StringBuilder();
+				sb.append("Registered ghosts in the project record :").append(LN);
+				project.ghosts.stream().forEach(g -> sb.append(g.pseudo).append(" : ").append(g.idStaff).append("/").append(g.technical).append(LN));
+				logger.debug(sb.toString());					
+			}
+		}
 
 		return data;
 	}
@@ -474,5 +499,14 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		
 		throw new SkillerException(CODE_UNEXPECTED_VALUE_PARAMETER, "[Project : "+project.name+"] "+
 				MessageFormat.format(MESSAGE_UNEXPECTED_VALUE_PARAMETER, "project.connection_Settings", project.connection_settings));
+	}
+
+	@Override
+	public boolean hasAvailableGeneration(Project project) throws Exception {
+		boolean result = cacheDataHandler.hasCommitRepositoryAvailable(project);
+		if (logger.isDebugEnabled()) {
+			logger.debug("hasAvailableGeneration("+project.id+")? : " + result);
+		}
+		return result;
 	}
 }
