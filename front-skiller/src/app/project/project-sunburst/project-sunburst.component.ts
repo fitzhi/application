@@ -96,7 +96,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
         this.project = project;
         this.projectName = this.project.name;
         if ((typeof this.project.urlRepository === 'undefined') || (this.project.urlRepository.length === 0)) {
-          setTimeout(() => this.messageService.info('No repository URL avalaible !'));
+          this.messageService.info('No repository URL avalaible !');
           this.sunburst_ready = false;
           this.sunburst_waiting = false;
           this.sunburst_impossible = true;
@@ -115,7 +115,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
       if (Constants.DEBUG) {
         console.log('No project identifier passed to this tab. No data available for preview !');
       }
-      setTimeout(() => this.messageService.info('No project identifier passed to this form or no data available for preview !'));
+      this.messageService.info('No project identifier passed to this form or no data available for preview !');
       this.sunburst_ready = false;
       this.sunburst_waiting = false;
       this.sunburst_impossible = true;
