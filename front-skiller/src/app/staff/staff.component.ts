@@ -5,8 +5,8 @@ import {Constants} from '../constants';
 
 import {ListStaffService} from '../list-staff-service/list-staff.service';
 import { StaffDataExchangeService } from './service/staff-data-exchange.service';
-import {CinematicService} from '../cinematic.service';
-import {MessageService} from '../message.service';
+import {CinematicService} from '../service/cinematic.service';
+import {MessageService} from '../message/message.service';
 
 @Component({
   selector: 'app-staff',

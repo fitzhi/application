@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {CinematicService} from '../cinematic.service';
+import {CinematicService} from '../service/cinematic.service';
 import {Constants} from '../constants';
 
 import { Router } from '@angular/router';
-import { MessageService } from '../message.service';
+import { MessageService } from '../message/message.service';
 
 @Component({
   selector: 'app-welcome',

@@ -1,6 +1,6 @@
 import { Constants } from '../constants';
 import {Project} from '../data/project';
-import { ProjectService } from '../project.service';
+import { ProjectService } from '../service/project.service';
 import {Injectable} from '@angular/core';
 import {Subject, Observable, of} from 'rxjs';
 import {catchError, map, tap, filter} from 'rxjs/operators';

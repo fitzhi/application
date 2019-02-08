@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { CinematicService } from './cinematic.service';
+import { CinematicService } from './service/cinematic.service';
 import { Constants } from './constants';
 import { ListProjectsService } from './list-projects-service/list-projects.service';
 import { ListSkillService } from './list-skill-service/list-skill.service';
 import { ListStaffService } from './list-staff-service/list-staff.service';
-import { ReferentialService } from './referential.service';
-import { StaffService } from './staff.service';
+import { ReferentialService } from './service/referential.service';
+import { StaffService } from './service/staff.service';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProjectStaffService } from './project/project-staff-service/project-staff.service';

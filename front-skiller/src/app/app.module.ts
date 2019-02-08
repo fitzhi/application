@@ -15,11 +15,11 @@ import {SkillComponent} from './skill/skill.component';
 import {ListSkillComponent} from './list-skill/list-skill.component';
 import {WelcomeComponent} from './welcome/welcome.component';
 
-import {CinematicService} from './cinematic.service';
+import {CinematicService} from './service/cinematic.service';
 import {StaffComponent} from './staff/staff.component';
 import {ListStaffComponent} from './list-staff/list-staff.component';
 
-import {StaffService} from './staff.service';
+import {StaffService} from './service/staff.service';
 import { MessageComponent } from './message/message.component';
 
 import {ErrorsHandler} from './errors-handler';
@@ -30,7 +30,7 @@ import { Ng2SmartTableModule } from 'ng2-smart-table';
 import { StarsSkillLevelRenderComponent } from './staff/starsSkillLevelRenderComponent';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
 import { ListProjectComponent } from './list-project/list-project.component';
-import { ReferentialService } from './referential.service';
+import { ReferentialService } from './service/referential.service';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { StaffTabsComponent } from './staff/staff-tabs/staff-tabs.component';

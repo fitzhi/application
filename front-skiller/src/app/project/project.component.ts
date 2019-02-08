@@ -1,12 +1,12 @@
 import { Component, OnInit, AfterViewInit } from '@angular/core';
-import { CinematicService } from '../cinematic.service';
+import { CinematicService } from '../service/cinematic.service';
 import { Constants } from '../constants';
 import { MatTabChangeEvent } from '@angular/material';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { Project } from '../data/project';
 import { ListProjectsService } from '../list-projects-service/list-projects.service';
-import { MessageService } from '../message.service';
+import { MessageService } from '../message/message.service';
 
 @Component({
   selector: 'app-project',

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ReferentialService } from '../../../referential.service';
+import { ReferentialService } from '../../../service/referential.service';
 import { RiskLegend } from '../../../data/riskLegend';
 
 @Component({

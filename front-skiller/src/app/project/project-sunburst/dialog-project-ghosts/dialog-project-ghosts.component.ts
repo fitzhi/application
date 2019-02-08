@@ -1,10 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig, MatDialog } from '@angular/material';
 import { ProjectGhostsDataSource } from './project-ghosts-data-source';
-import { ProjectService } from '../../../project.service';
+import { ProjectService } from '../../../service/project.service';
 import { PseudoList } from '../../../data/PseudoList';
 import { Constants } from '../../../constants';
-import { MessageService } from '../../../message.service';
+import { MessageService } from '../../../message/message.service';
 import { DialogUpdatedProjectGhostsComponent } from './dialog-updated-project-ghosts/dialog-updated-project-ghosts.component';
 
 @Component({

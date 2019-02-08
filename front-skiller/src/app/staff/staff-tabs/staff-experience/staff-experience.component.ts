@@ -1,9 +1,9 @@
 import {Constants} from '../../../constants';
 import {Collaborator} from '../../../data/collaborator';
 import {StaffDTO} from '../../../data/external/staffDTO';
-import {MessageService} from '../../../message.service';
-import {SkillService} from '../../../skill.service';
-import {StaffService} from '../../../staff.service';
+import {MessageService} from '../../../message/message.service';
+import {SkillService} from '../../../service/skill.service';
+import {StaffService} from '../../../service/staff.service';
 import {StaffDataExchangeService} from '../../service/staff-data-exchange.service';
 import {Component, OnInit} from '@angular/core';
 

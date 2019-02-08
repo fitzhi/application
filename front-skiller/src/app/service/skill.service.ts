@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
-import {Skill} from './data/skill';
+import {Skill} from '../data/skill';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, map, tap} from 'rxjs/operators';
 
 import {Observable, of} from 'rxjs';
-import {InternalService} from './internal-service';
+import {InternalService} from '../internal-service';
 
-import {Constants} from './constants';
+import {Constants} from '../constants';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})

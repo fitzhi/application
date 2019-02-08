@@ -1,10 +1,10 @@
 import {Constants} from '../../constants';
 import {Collaborator} from '../../data/collaborator';
-import {MessageService} from '../../message.service';
-import {StaffService} from '../../staff.service';
-import {CinematicService} from '../../cinematic.service';
+import {MessageService} from '../../message/message.service';
+import {StaffService} from '../../service/staff.service';
+import {CinematicService} from '../../service/cinematic.service';
 import {Profile} from '../../data/profile';
-import {ReferentialService} from '../../referential.service';
+import {ReferentialService} from '../../service/referential.service';
 import {StaffDataExchangeService} from '../service/staff-data-exchange.service';
 
 import {Component, OnInit, Input} from '@angular/core';

@@ -1,9 +1,9 @@
 import {Component, OnInit, Output, EventEmitter} from '@angular/core';
-import {CinematicService} from '../cinematic.service';
+import {CinematicService} from '../service/cinematic.service';
 import {Constants} from '../constants';
 import {Skill} from '../data/skill';
 import { ListSkillService } from '../list-skill-service/list-skill.service';
-import { StaffService } from '../staff.service';
+import { StaffService } from '../service/staff.service';
 import { BehaviorSubject } from 'rxjs';
 import { Router } from '@angular/router';
 

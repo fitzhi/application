@@ -1,4 +1,4 @@
-import { Constants } from './constants';
+import { Constants } from '../constants';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Subject } from 'rxjs/Subject';

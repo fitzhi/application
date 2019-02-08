@@ -1,9 +1,9 @@
-import {Constants} from './constants';
+import {Constants} from '../constants';
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {Profile} from './data/profile';
-import {RiskLegend} from './data/riskLegend';
+import {Profile} from '../data/profile';
+import {RiskLegend} from '../data/riskLegend';
 
 @Injectable()
 export class ReferentialService {

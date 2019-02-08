@@ -1,6 +1,6 @@
 import {Constants} from '../constants';
 import {Skill} from '../data/skill';
-import {SkillService} from '../skill.service';
+import {SkillService} from '../service/skill.service';
 import {Injectable} from '@angular/core';
 import {Subject, Observable, of} from 'rxjs';
 import {catchError, map, tap, filter} from 'rxjs/operators';

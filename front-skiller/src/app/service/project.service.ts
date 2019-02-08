@@ -1,16 +1,16 @@
 import {Injectable} from '@angular/core';
-import {Project} from './data/project';
-import {ProjectDTO} from './data/external/projectDTO';
+import {Project} from '../data/project';
+import {ProjectDTO} from '../data/external/projectDTO';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 
 import {Observable} from 'rxjs';
-import {InternalService} from './internal-service';
+import {InternalService} from '../internal-service';
 
-import {Constants} from './constants';
-import { Skill } from './data/skill';
-import { ContributorsDTO } from './data/external/contributorsDTO';
-import { ProjectGhostsDataSource } from './project/project-sunburst/dialog-project-ghosts/project-ghosts-data-source';
-import { PseudoList } from './data/PseudoList';
+import {Constants} from '../constants';
+import { Skill } from '../data/skill';
+import { ContributorsDTO } from '../data/external/contributorsDTO';
+import { ProjectGhostsDataSource } from '../project/project-sunburst/dialog-project-ghosts/project-ghosts-data-source';
+import { PseudoList } from '../data/PseudoList';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})

@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit } from '@angular/core';
 import Sunburst from 'sunburst-chart';
 import { HttpClient } from '@angular/common/http';
 import { Constants } from '../../constants';
-import { MessageService } from '../../message.service';
+import { MessageService } from '../../message/message.service';
 
 @Component({
   selector: 'app-sunburst-test',

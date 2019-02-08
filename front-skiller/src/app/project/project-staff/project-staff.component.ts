@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ProjectService } from '../../project.service';
+import { ProjectService } from '../../service/project.service';
 import { Constants } from '../../constants';
-import { MessageService } from '../../message.service';
-import { CinematicService } from '../../cinematic.service';
+import { MessageService } from '../../message/message.service';
+import { CinematicService } from '../../service/cinematic.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import {MatSort, MatTableDataSource} from '@angular/material';
 import { ProjectStaffService } from '../project-staff-service/project-staff.service';

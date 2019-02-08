@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {CinematicService} from '../cinematic.service';
+import {CinematicService} from '../service/cinematic.service';
 import {Constants} from '../constants';
 import {Project} from '../data/project';
 import { ListProjectsService } from '../list-projects-service/list-projects.service';

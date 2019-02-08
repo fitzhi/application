@@ -2,16 +2,16 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, tap} from 'rxjs/operators';
 
-import {Collaborator} from './data/collaborator';
-import {Project} from './data/project';
-import {StaffDTO} from './data/external/staffDTO';
+import {Collaborator} from '../data/collaborator';
+import {Project} from '../data/project';
+import {StaffDTO} from '../data/external/staffDTO';
 
-import {Constants} from './constants';
-import { DeclaredExperience } from './data/declared-experience';
-import {Experience} from './data/experience';
+import {Constants} from '../constants';
+import { DeclaredExperience } from '../data/declared-experience';
+import {Experience} from '../data/experience';
 import {Observable} from 'rxjs';
 
-import {InternalService} from './internal-service';
+import {InternalService} from '../internal-service';
 
 import { saveAs } from 'file-saver';
 

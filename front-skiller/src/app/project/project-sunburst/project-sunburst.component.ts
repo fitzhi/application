@@ -1,10 +1,10 @@
 import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
 import Sunburst from 'sunburst-chart';
 import { Constants } from '../../constants';
-import { MessageService } from '../../message.service';
-import { ProjectService } from '../../project.service';
+import { MessageService } from '../../message/message.service';
+import { ProjectService } from '../../service/project.service';
 import { ActivatedRoute } from '@angular/router';
-import {CinematicService} from '../../cinematic.service';
+import {CinematicService} from '../../service/cinematic.service';
 import { Project } from '../../data/project';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { DialogProjectGhostsComponent } from './dialog-project-ghosts/dialog-project-ghosts.component';
