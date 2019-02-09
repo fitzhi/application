@@ -10,6 +10,8 @@ import { MatDialogConfig, MatDialog } from '@angular/material';
 import { DialogProjectGhostsComponent } from './dialog-project-ghosts/dialog-project-ghosts.component';
 import { ProjectGhostsDataSource } from './dialog-project-ghosts/project-ghosts-data-source';
 import { DialogLegendSunburstComponent } from './dialog-legend-sunburst/dialog-legend-sunburst.component';
+import { MessageBoxComponent } from '../../message-box/dialog/message-box.component';
+import { MessageBoxService } from '../../message-box/service/message-box.service';
 
 @Component({
   selector: 'app-project-sunburst',
@@ -62,6 +64,9 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
   // Unknown contributors panel has to be displayed.
   private UNKNOWN = 3;
 
+  // Settings panel has to be displayed.
+  private RESET = 4;
+
   // Identifier of the panel selected.
   private idPanelSelected = -1;
 
@@ -73,6 +78,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
     private messageService: MessageService,
+    private messageBoxService: MessageBoxService,
     private dialog: MatDialog,
     private projectService: ProjectService) { }
 
@@ -274,6 +280,9 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
       case this.LEGEND_SUNBURST:
         this.dialogLegend();
         break;
+      case this.RESET:
+        this.reset();
+        break;
       default:
         break;
     }
@@ -311,6 +320,16 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
     dialogConfig.panelClass = 'default-dialog-container-class';
     this.dialog.open(DialogLegendSunburstComponent, dialogConfig);
   }
+
+    reset() {
+      this.messageBoxService.question('Reset dashboard data',
+        'Please confirm the dashboard reinitialization').subscribe(answer => {
+          if (answer) {
+            console.log('Reinit start');
+          }
+        });
+    }
+
    /**
    * The button associated to this panel id is activated.
    * @param idPanel panel identifier
