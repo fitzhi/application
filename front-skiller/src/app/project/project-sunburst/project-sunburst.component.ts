@@ -309,7 +309,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
     dialogConfig.autoFocus = true;
     dialogConfig.position = { top: '5em', left: '5em'};
     dialogConfig.panelClass = 'default-dialog-container-class';
-    const dialogReference = this.dialog.open(DialogLegendSunburstComponent, dialogConfig);
+    this.dialog.open(DialogLegendSunburstComponent, dialogConfig);
   }
    /**
    * The button associated to this panel id is activated.

@@ -30,6 +30,16 @@
                 src="/assets/img/question-marks.png"/>
 		</a> 
 
+        <br/>
+
+        <a [routerLink]=""  (click)="show(4)"
+           [class]="(buttonActivated(4) 
+						? 'activated sidenav round' 
+						: 'inactive sidenav round')">		
+            <img id="reset" alt="Reset the former calculation" title=""
+                src="/assets/img/reset.png"/>
+		</a> 
+
     </mat-sidenav>
 
     <mat-sidenav-content>

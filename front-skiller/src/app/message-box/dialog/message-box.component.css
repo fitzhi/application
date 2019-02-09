@@ -3,7 +3,7 @@
 	background-color: #343a40 !important;
 	text-align: center;
 	width: 100%;
-	font-size: 20px;
+	font-size: 1em;
 	padding-top: 10px;
     padding-bottom: 10px;
     padding-right: 50px;
@@ -12,16 +12,24 @@
 }
 
 .mat-dialog-content {
-	margin: 10px;
+	margin: 5px;
+	padding: 5px;
 }
 
 .mat-dialog-actions {
-	margin-bottom: 0px; 
+	margin-bottom: 3px; 
+	padding: 0px;
+
 }
 
 button.actions {
 	padding: 10px;
 	margin-right: 10px;
 	border-radius: 4px;	
-	width: 100px;
+	width: 60px;
 }
+
+#icon {
+	margin-left: 50px;
+}
+

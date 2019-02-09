@@ -61,6 +61,14 @@ mat-sidenav-content {
     margin-bottom: 0.5em;
 }
 
+#reset {
+    margin-top: 0.1em;
+    margin-left: 0.1em;
+    width: 1.8em; 
+    height: 1.8em;
+    margin-bottom: 0.5em;
+}
+
 a.sidenav {
     text-decoration: none;
     display: inline-block;
