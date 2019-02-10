@@ -32,14 +32,14 @@
       <th mat-header-cell id="firstCommit" class="col_date" *matHeaderCellDef mat-sort-header> First commit </th>
       <td mat-cell class="col_date {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
           (click)="routeStaff(contributor.idStaff)">
-        {{contributor.firstCommit | date:'dd/yy/yyyy'}}</td>
+        {{contributor.firstCommit | date:'mediumDate'}}</td>
     </ng-container>
 
     <ng-container matColumnDef="lastCommit">
       <th mat-header-cell id="lastCommit" class="col_date" *matHeaderCellDef mat-sort-header> Last commit </th>
       <td mat-cell class="col_date {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
           (click)="routeStaff(contributor.idStaff)">
-        {{contributor.lastCommit | date:'dd/yy/yyyy'}}</td>
+        {{contributor.lastCommit | date:'mediumDate'}}</td>
     </ng-container>
 
     <ng-container matColumnDef="numberOfCommits">

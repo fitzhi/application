@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule, ErrorHandler} from '@angular/core';
+import {NgModule, ErrorHandler, LOCALE_ID} from '@angular/core';
 import {FormsModule} from '@angular/forms'; // <-- NgModel lives here
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
@@ -53,6 +53,10 @@ import { ProjectGhostsComponent } from './project/project-sunburst/dialog-projec
 // tslint:disable-next-line:max-line-length
 import { DialogUpdatedProjectGhostsComponent } from './project/project-sunburst/dialog-project-ghosts/dialog-updated-project-ghosts/dialog-updated-project-ghosts.component';
 import { DialogLegendSunburstComponent } from './project/project-sunburst/dialog-legend-sunburst/dialog-legend-sunburst.component';
+import { registerLocaleData } from '@angular/common';
+
+// Remove this line if you want to return to us_US local
+import localeFr from '@angular/common/locales/fr';
 
 @NgModule({
   declarations: [
@@ -122,6 +126,8 @@ import { DialogLegendSunburstComponent } from './project/project-sunburst/dialog
     CinematicService,
     StaffService,
     ReferentialService,
+    // Remove this line or change the useValue property to your regional settings
+    { provide: LOCALE_ID, useValue: 'fr' }
   ],
   bootstrap: [AppComponent]
 })
@@ -131,4 +137,9 @@ import { DialogLegendSunburstComponent } from './project/project-sunburst/dialog
     }
  */
 export class AppModule {
+  constructor() {
+    // Remove this line to return back to the default us property,
+    // or change the useValue property to your regional settings
+    registerLocaleData (localeFr, 'fr');
+  }
 }
