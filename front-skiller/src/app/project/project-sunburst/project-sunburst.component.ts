@@ -56,16 +56,16 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
   private UNSELECTED = -1;
 
   // Rules of risks panel has to be displayed.
-  private LEGEND_SUNBURST = 1;
+  public LEGEND_SUNBURST = 1;
 
   // Settings panel has to be displayed.
-  private SETTINGS = 2;
+  public SETTINGS = 2;
 
   // Unknown contributors panel has to be displayed.
-  private UNKNOWN = 3;
+  public UNKNOWN = 3;
 
-  // Settings panel has to be displayed.
-  private RESET = 4;
+  // After confirmation, we reset the dashboard data.
+  public RESET = 4;
 
   // Identifier of the panel selected.
   private idPanelSelected = -1;
@@ -129,7 +129,9 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
     }
   }
 
-
+  /**
+   * Load the dashboard data in order to produce the sunburst chart.
+   */
   loadSunburst() {
 
     if (this.chart_is_drawn) {
@@ -171,13 +173,13 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
               case 404:
                 {
                   this.messageService.error(
-                    'Resource Not found while retrieving the sunburst data for the project identfier ' + this.idProject);
+                    'Resource not found while retrieving the sunburst data for the project identfier ' + this.idProject);
                   break;
                 }
               case 400: {
                   if (response.error.code === 201 ) {
                     // The generation is not accessible. The generation is launched asynchronously.
-                    this.messageService.info(response.error.message);
+                    this.messageBoxService.exclamation('Operation launched', response.error.message);
                   } else {
                     // We display the error generated on the server
                     this.messageService.error('ERROR ' + response.error.message);
@@ -322,7 +324,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
   }
 
     reset() {
-      this.messageBoxService.question('Reset dashboard data',
+      this.messageBoxService.question('Reset the dashboard',
         'Please confirm the dashboard reinitialization').subscribe(answer => {
           if (answer) {
             this.projectService.resetDashboard(this.idProject).subscribe(response => {

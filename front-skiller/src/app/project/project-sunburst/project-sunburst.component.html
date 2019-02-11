@@ -2,8 +2,8 @@
 
     <mat-sidenav mode="side" class="bg-dark" opened>
 
-        <a [routerLink]=""  (click)="show(1)"
-            [class]="(buttonActivated(1) 
+        <a [routerLink]=""  (click)="show(LEGEND_SUNBURST)"
+            [class]="(buttonActivated(LEGEND_SUNBURST) 
 						? 'activated sidenav round' 
 						: 'inactive sidenav round')">		
             <img id="rules-of-risks" alt="Risks color legend" title=""
@@ -12,8 +12,8 @@
 
         <br/>
 
-        <a [routerLink]=""  (click)="show(2)"
-           [class]="(buttonActivated(2) 
+        <a [routerLink]=""  (click)="show(SETTINGS)"
+           [class]="(buttonActivated(SETTINGS) 
 						? 'activated sidenav round' 
 						: 'inactive sidenav round')">		
             <img id="settings" alt="Settings" title=""
@@ -22,8 +22,8 @@
 
         <br/>
 
-        <a [routerLink]=""  (click)="show(3)"
-           [class]="(buttonActivated(3) 
+        <a [routerLink]=""  (click)="show(UNKNOWN)"
+           [class]="(buttonActivated(UNKNOWN) 
 						? 'activated sidenav round' 
 						: 'inactive sidenav round')">		
             <img id="unknown" alt="Unknown contributors" title=""
@@ -32,8 +32,8 @@
 
         <br/>
 
-        <a [routerLink]=""  (click)="show(4)"
-           [class]="(buttonActivated(4) 
+        <a [routerLink]=""  (click)="show(RESET)"
+           [class]="(buttonActivated(RESET) 
 						? 'activated sidenav round' 
 						: 'inactive sidenav round')">		
             <img id="reset" alt="Reset the former calculation" title=""
