@@ -108,6 +108,4 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 */
 	Ghost getGhost(Project project, String pseudo);
 
-	void test();
-	
 }

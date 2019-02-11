@@ -325,7 +325,13 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
       this.messageBoxService.question('Reset dashboard data',
         'Please confirm the dashboard reinitialization').subscribe(answer => {
           if (answer) {
-            console.log('Reinit start');
+            this.projectService.resetDashboard(this.idProject).subscribe(response => {
+              if (response) {
+                this.messageBoxService.exclamation('Operation complete', 'Dashboard reinitialization is done.');
+              } else {
+                this.messageBoxService.exclamation('Operation failed', 'The request is not necessary : no dashboard available.');
+              }
+            });
           }
         });
     }

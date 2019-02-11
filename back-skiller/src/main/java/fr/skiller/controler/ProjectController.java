@@ -463,8 +463,8 @@ public class ProjectController {
 	 * @param idProject the project identifier
 	 * @return the contributors who have been involved in the project
 	 */
-	@RequestMapping(value="/{idProject}/dashboard-cleanup", method = RequestMethod.GET)
-	ResponseEntity<String> cleanupDashboard(final @PathVariable("idProject") int idProject) {
+	@RequestMapping(value="/resetDashboard/{idProject}", method = RequestMethod.GET)
+	ResponseEntity<String> resetDashboard(final @PathVariable("idProject") int idProject) {
 		if (logger.isDebugEnabled()) {
 			logger.debug ("Removing project with " + idProject);
 		}
@@ -476,7 +476,10 @@ public class ProjectController {
 		}
 
 		try {
-			String response = cacheDataHandler.removeRepository(project) ? "Done !" : "KO !";
+			String response = cacheDataHandler.removeRepository(project) ? "1" : "0";
+			if ("1".equals(response)) {
+				scanner.generateAsync(project);
+			}
 			return new ResponseEntity<String>( 
 					response,
 					new HttpHeaders(), 

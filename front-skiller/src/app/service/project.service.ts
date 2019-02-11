@@ -9,7 +9,6 @@ import {InternalService} from '../internal-service';
 import {Constants} from '../constants';
 import { Skill } from '../data/skill';
 import { ContributorsDTO } from '../data/external/contributorsDTO';
-import { ProjectGhostsDataSource } from '../project/project-sunburst/dialog-project-ghosts/project-ghosts-data-source';
 import { PseudoList } from '../data/PseudoList';
 
 const httpOptions = {
@@ -139,5 +138,16 @@ export class ProjectService extends InternalService {
       console.log('Saving data with for the project ' + pseudoList.idProject);
     }
     return this.httpClient.post<any>(this.projectUrl + '/api-ghosts', pseudoList, httpOptions);
+  }
+
+  /**
+   * Save the ghosts list with their connected data;
+   */
+  resetDashboard(id: number): Observable<string> {
+    const url = this.projectUrl + '/resetDashboard/' + id;
+    if (Constants.DEBUG) {
+      console.log('Reset of the dashboard data on URL ' + url);
+    }
+    return this.httpClient.get<string>(url, httpOptions);
   }
 }
