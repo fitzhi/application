@@ -11,6 +11,7 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -22,6 +23,7 @@ import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
+import fr.skiller.source.scanner.RepoScanner;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -38,7 +40,8 @@ public class GitScannerCleanupUnknownPseudosTest {
 	private CacheDataHandler cacheDataHandler;
 	
 	@Autowired
-	private GitScanner gitScanner;
+	@Qualifier("GIT")
+	private RepoScanner gitScanner;
 
 	@Autowired
 	private StaffHandler staffHandler;
@@ -74,7 +77,6 @@ public class GitScannerCleanupUnknownPseudosTest {
 	@Test
 	public void testCleanup() throws Exception {
 
-		
 		Mockito.when(cacheDataHandler.hasCommitRepositoryAvailable(project)).thenReturn(true);
 		Mockito.when(cacheDataHandler.getRepository(project)).thenReturn(repo);
 

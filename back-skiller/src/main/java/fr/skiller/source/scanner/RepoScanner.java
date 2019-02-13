@@ -68,4 +68,13 @@ public interface RepoScanner {
 	 * @throws Exception
 	 */
 	boolean hasAvailableGeneration(Project project) throws Exception;
+	
+ 	/**
+ 	 * Extract from the filename path the non relevant directory (such as {@code /src/main/java}) <br/>
+ 	 * <i>(This method is public for testing purpose.)</i>
+ 	 * @param path the given path
+ 	 * @return the cleanup path
+ 	 */
+	String cleanupPath (String path);
+
 }

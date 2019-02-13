@@ -4,14 +4,14 @@ import { Constants } from '../../constants';
 import { MessageService } from '../../message/message.service';
 import { ProjectService } from '../../service/project.service';
 import { ActivatedRoute } from '@angular/router';
-import {CinematicService} from '../../service/cinematic.service';
+import { CinematicService } from '../../service/cinematic.service';
 import { Project } from '../../data/project';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { DialogProjectGhostsComponent } from './dialog-project-ghosts/dialog-project-ghosts.component';
 import { ProjectGhostsDataSource } from './dialog-project-ghosts/project-ghosts-data-source';
 import { DialogLegendSunburstComponent } from './dialog-legend-sunburst/dialog-legend-sunburst.component';
-import { MessageBoxComponent } from '../../message-box/dialog/message-box.component';
 import { MessageBoxService } from '../../message-box/service/message-box.service';
+import { DialogFilterComponent } from './dialog-filter/dialog-filter.component';
 
 @Component({
   selector: 'app-project-sunburst',
@@ -25,9 +25,9 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
    */
   @Input('subjProject') subjProject;
 
- /**
-   * Project loaded on the parent component.
-   */
+  /**
+    * Project loaded on the parent component.
+    */
   private project: Project;
 
   /**
@@ -95,24 +95,24 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
       }
     });
 
-     this.subjProject.subscribe(project => {
-       if (Constants.DEBUG) {
-         console.log ('Project ' + project.id + ' ' + project.name + ' reveived in sunburst-component');
-       }
-        this.project = project;
-        this.projectName = this.project.name;
-        if ((typeof this.project.urlRepository === 'undefined') || (this.project.urlRepository.length === 0)) {
-          this.messageService.info('No repository URL avalaible !');
-          this.sunburst_ready = false;
-          this.sunburst_waiting = false;
-          this.sunburst_impossible = true;
-        }
-     });
+    this.subjProject.subscribe(project => {
+      if (Constants.DEBUG) {
+        console.log('Project ' + project.id + ' ' + project.name + ' reveived in sunburst-component');
+      }
+      this.project = project;
+      this.projectName = this.project.name;
+      if ((typeof this.project.urlRepository === 'undefined') || (this.project.urlRepository.length === 0)) {
+        this.messageService.info('No repository URL avalaible !');
+        this.sunburst_ready = false;
+        this.sunburst_waiting = false;
+        this.sunburst_impossible = true;
+      }
+    });
 
-    this.cinematicService.tabProjectActivated.subscribe (
+    this.cinematicService.tabProjectActivated.subscribe(
       index => {
         if (index === Constants.PROJECT_IDX_TAB_SUNBURST) {
-          this.loadSunburst ();
+          this.loadSunburst();
         }
       }
     );
@@ -138,15 +138,15 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
       return;
     }
 
-    if ( (typeof this.project === 'undefined') || (typeof this.project.id === 'undefined')) {
-        this.sunburst_impossible = true;
-        this.sunburst_waiting = false;
-        this.sunburst_ready = false;
-        return;
+    if ((typeof this.project === 'undefined') || (typeof this.project.id === 'undefined')) {
+      this.sunburst_impossible = true;
+      this.sunburst_waiting = false;
+      this.sunburst_ready = false;
+      return;
     } else {
-        this.sunburst_impossible = false;
-        this.sunburst_waiting = true;
-        this.sunburst_ready = false;
+      this.sunburst_impossible = false;
+      this.sunburst_waiting = true;
+      this.sunburst_ready = false;
     }
 
     if ((document.getElementById('chart') != null) && (this.idProject != null)) {
@@ -158,41 +158,46 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
           if (myChart !== null) {
             myChart.data(response.sunburstData).width(500).height(500).label('location').size('numberOfFiles').color('color')
               (document.getElementById('chart'));
-              if (typeof this.dataGhosts === 'undefined') {
-                this.dataGhosts = new ProjectGhostsDataSource(this.project);
-              }
-              // Send the unregistered contributors to the panel list
-              this.dataGhosts.sendUnknowns (response.ghosts);
+            if (typeof this.dataGhosts === 'undefined') {
+              this.dataGhosts = new ProjectGhostsDataSource(this.project);
             }
+            // Send the unregistered contributors to the panel list
+            this.dataGhosts.sendUnknowns(response.ghosts);
+          }
         }, response => {
-            if (Constants.DEBUG) {
-              console.log('Response returned while retrieving the sunburst data for the project identfier ' + this.idProject);
-              console.log (response);
-            }
-            switch (response.status) {
-              case 404:
-                {
-                  this.messageService.error(
-                    'Resource not found while retrieving the sunburst data for the project identfier ' + this.idProject);
+          if (Constants.DEBUG) {
+            console.log('Response returned while retrieving the sunburst data for the project identfier ' + this.idProject);
+          }
+          switch (response.status) {
+            case 404:
+              {
+                this.messageService.error(
+                  'Resource not found while retrieving the sunburst data for the project identfier ' + this.idProject);
+                break;
+              }
+            case 400: {
+              switch (response.error.code) {
+                case 201:
+                  // The generation is not accessible. A dashboard generation is launched asynchronously.
+                  this.messageBoxService.exclamation('Operation launched', response.error.message);
                   break;
-                }
-              case 400: {
-                  if (response.error.code === 201 ) {
-                    // The generation is not accessible. The generation is launched asynchronously.
-                    this.messageBoxService.exclamation('Operation launched', response.error.message);
-                  } else {
+                case -1008:
+                  // Operation already been launched.
+                  this.messageBoxService.exclamation('Operation already launched', response.error.message);
+                  break;
+                default:
                     // We display the error generated on the server
                     this.messageService.error('ERROR ' + response.error.message);
                   }
-                  break;
-                }
-              default: {
-                  // Unattempted error
-                  this.messageService.error('ERROR ' + response.message);
-                  break;
-                }
-              }
-          },
+              break;
+            }
+            default: {
+              // Unattempted error
+              this.messageService.error('ERROR ' + response.message);
+              break;
+            }
+          }
+        },
           () => {
             this.hackSunburstStyle();
             myChart.tooltipContent(function (graph) {
@@ -270,10 +275,10 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
     }
   }
 
-   /**
-   * Show the panel associated to this id.
-   * @param idPanel Panel identifier
-   */
+  /**
+  * Show the panel associated to this id.
+  * @param idPanel Panel identifier
+  */
   public show(idPanel: number) {
     switch (idPanel) {
       case this.UNKNOWN:
@@ -285,6 +290,9 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
       case this.RESET:
         this.reset();
         break;
+      case this.SETTINGS:
+        this.dialogFilter();
+        break;
       default:
         break;
     }
@@ -294,23 +302,23 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    dialogConfig.position = { top: '5em', left: '5em'};
+    dialogConfig.position = { top: '5em', left: '5em' };
     dialogConfig.panelClass = 'default-dialog-container-class';
     if (typeof this.dataGhosts !== 'undefined') {
       dialogConfig.data = this.dataGhosts;
       const dialogReference = this.dialog.open(DialogProjectGhostsComponent, dialogConfig);
       dialogReference.afterClosed()
         .subscribe(result => {
-            if (result !== null) {
-              if (typeof result === 'boolean') {
-                this.dataGhosts.ghostsSubject.next(this.dataGhosts.ghostsSubject.getValue());
-              } else {
-                this.dataGhosts.ghostsSubject.next(result);
-              }
+          if (result !== null) {
+            if (typeof result === 'boolean') {
+              this.dataGhosts.ghostsSubject.next(this.dataGhosts.ghostsSubject.getValue());
+            } else {
+              this.dataGhosts.ghostsSubject.next(result);
             }
+          }
         });
     } else {
-      console.log ('need to be handled');
+      console.log('need to be handled');
     }
   }
 
@@ -318,31 +326,40 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
-    dialogConfig.position = { top: '5em', left: '5em'};
+    dialogConfig.position = { top: '5em', left: '5em' };
     dialogConfig.panelClass = 'default-dialog-container-class';
     this.dialog.open(DialogLegendSunburstComponent, dialogConfig);
   }
 
-    reset() {
-      this.messageBoxService.question('Reset the dashboard',
-        'Please confirm the dashboard reinitialization').subscribe(answer => {
-          if (answer) {
-            this.projectService.resetDashboard(this.idProject).subscribe(response => {
-              if (response) {
-                this.messageBoxService.exclamation('Operation complete', 'Dashboard reinitialization is done.');
-              } else {
-                this.messageBoxService.exclamation('Operation failed', 'The request is not necessary : no dashboard available.');
-              }
-            });
-          }
-        });
-    }
+  reset() {
+    this.messageBoxService.question('Reset the dashboard',
+      'Please confirm the dashboard reinitialization').subscribe(answer => {
+        if (answer) {
+          this.projectService.resetDashboard(this.idProject).subscribe(response => {
+            if (response) {
+              this.messageBoxService.exclamation('Operation complete', 'Dashboard reinitialization is done.');
+            } else {
+              this.messageBoxService.exclamation('Operation failed', 'The request is not necessary : no dashboard available.');
+            }
+          });
+        }
+      });
+  }
 
-   /**
-   * The button associated to this panel id is activated.
-   * @param idPanel panel identifier
-   **/
-    public buttonActivated  (idPanel: number) {
-      return (idPanel  === this.idPanelSelected);
-    }
+  dialogFilter () {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.position = { top: '6em', left: '5em'};
+    dialogConfig.panelClass = 'default-dialog-container-class';
+    this.dialog.open(DialogFilterComponent, dialogConfig);
+  }
+
+  /**
+  * The button associated to this panel id is activated.
+  * @param idPanel panel identifier
+  **/
+  public buttonActivated(idPanel: number) {
+    return (idPanel === this.idPanelSelected);
+  }
 }

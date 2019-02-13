@@ -1,0 +1,36 @@
+.mat-dialog-title {
+	color: antiquewhite;
+	background-color: #343a40 !important;
+	text-align: center;
+	width: 100%;
+	font-size: 20px;
+	padding-top: 20px;
+    padding-bottom: 10px;
+    padding-right: 20px;
+    padding-left: 20px;	
+	margin: 0px;
+}
+
+.mat-dialog-content {
+	margin: 0.5em;
+}
+
+.mat-dialog-actions {
+    margin-bottom: 0px; 
+    align-content: center;
+}
+
+button.actions {
+	padding: 0.5em;
+	margin-right: 1em;
+	border-radius: 4px;	
+}
+
+#startingDate {
+	left: 2em;
+	width: 13em;
+}
+#staffMember {
+	left: 1em;
+	width: 13em;
+}

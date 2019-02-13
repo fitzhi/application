@@ -3,8 +3,9 @@ import {CinematicService} from '../service/cinematic.service';
 import {Constants} from '../constants';
 
 import { Router } from '@angular/router';
-import { MessageService } from '../message/message.service';
 import { MessageBoxService } from '../message-box/service/message-box.service';
+import { MatDialogConfig, MatDialog } from '@angular/material';
+import { DialogFilterComponent } from '../project/project-sunburst/dialog-filter/dialog-filter.component';
 
 @Component({
   selector: 'app-welcome',
@@ -15,6 +16,7 @@ export class WelcomeComponent implements OnInit {
 
   constructor(
     private cinematicService: CinematicService,
+    private dialog: MatDialog,
     private messageBoxService: MessageBoxService,
     private router: Router) {}
 
@@ -34,7 +36,12 @@ export class WelcomeComponent implements OnInit {
  }
 
  click2() {
-   this.messageBoxService.error('Title', 'Test de Frederic');
-   console.log ('Frederic');
+    console.log ('Frederic');
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.disableClose = true;
+    dialogConfig.autoFocus = true;
+    dialogConfig.position = { top: '6em', left: '5em'};
+    dialogConfig.panelClass = 'default-dialog-container-class';
+    this.dialog.open(DialogFilterComponent, dialogConfig);
  }
 }

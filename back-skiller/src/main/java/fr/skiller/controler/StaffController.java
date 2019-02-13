@@ -201,7 +201,11 @@ public class StaffController {
 		final ResponseEntity<Staff> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 
-		if (input.idStaff == 0) {
+		if (logger.isDebugEnabled()) {
+			logger.debug ("Add or Update the staff.id " + input.idStaff);
+			logger.debug ("Content " + input);
+		}
+		if (input.idStaff == -1) {
 			staffHandler.addNewStaffMember(input);
 			headers.add("backend.return_code", "1");
 			responseEntity = new ResponseEntity<Staff>(input, headers, HttpStatus.OK);
@@ -211,9 +215,6 @@ public class StaffController {
 				responseEntity = new ResponseEntity<Staff>(input, headers, HttpStatus.NOT_FOUND);
 				headers.add("backend.return_code", "O");
 				headers.add("backend.return_message", "There is no collaborator associated to the id " + input.idStaff);
-				responseEntity.getHeaders().set("backend.return_message",
-						"There is no collaborator associated to the id " + input.idStaff);
-				responseEntity.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
 			} else {
 				if ((!input.isActive) && (updatedStaff.isActive)) {
 					input.dateInactive = Global.now();

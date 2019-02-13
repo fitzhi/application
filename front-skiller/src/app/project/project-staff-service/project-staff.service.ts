@@ -16,7 +16,6 @@ export class ProjectStaffService {
 
   constructor() { }
 
-
   /**
    * Return the NEXT staff's identifier from the project staff list.
    */

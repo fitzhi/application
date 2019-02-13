@@ -22,7 +22,6 @@ import {ListStaffComponent} from './list-staff/list-staff.component';
 import {StaffService} from './service/staff.service';
 import { MessageComponent } from './message/message.component';
 
-import {ErrorsHandler} from './errors-handler';
 import { ErrorComponent } from './error/error.component';
 
 import { Ng2SmartTableModule } from 'ng2-smart-table';
@@ -39,8 +38,9 @@ import { StaffFormComponent } from './staff/staff-form/staff-form.component';
 import { StaffProjectsComponent } from './staff/staff-tabs/staff-projects/staff-projects.component';
 import { StaffExperienceComponent } from './staff/staff-tabs/staff-experience/staff-experience.component';
 import { StaffUploadCvComponent } from './staff/staff-tabs/staff-experience/staff-upload-cv/staff-upload-cv.component';
+import {MatNativeDateModule} from '@angular/material';
 import {  MatSortModule, MatButtonToggleModule, MatSidenavModule, MatCardModule, MatFormFieldModule } from '@angular/material';
-import {  MatInputModule, MatSnackBarModule } from '@angular/material';
+import {  MatInputModule, MatSnackBarModule, MatSelectModule, MatDatepickerModule } from '@angular/material';
 import { MatTabsModule, MatDialogModule, MatProgressBarModule, MatPaginatorModule } from '@angular/material';
 import { MessageBoxComponent } from './message-box/dialog/message-box.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -57,6 +57,7 @@ import { registerLocaleData } from '@angular/common';
 
 // Remove this line if you want to return to us_US local
 import localeFr from '@angular/common/locales/fr';
+import { DialogFilterComponent } from './project/project-sunburst/dialog-filter/dialog-filter.component';
 
 @NgModule({
   declarations: [
@@ -85,6 +86,7 @@ import localeFr from '@angular/common/locales/fr';
     ProjectGhostsComponent,
     DialogUpdatedProjectGhostsComponent,
     DialogLegendSunburstComponent,
+    DialogFilterComponent,
   ],
   entryComponents: [
     StarsSkillLevelRenderComponent,
@@ -94,6 +96,7 @@ import localeFr from '@angular/common/locales/fr';
     DialogProjectGhostsComponent,
     DialogUpdatedProjectGhostsComponent,
     DialogLegendSunburstComponent,
+    DialogFilterComponent,
   ],
   imports: [
     BrowserModule,
@@ -120,6 +123,9 @@ import localeFr from '@angular/common/locales/fr';
     MatFormFieldModule,
     MatInputModule,
     MatSnackBarModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatSelectModule,
 
   ],
   providers: [

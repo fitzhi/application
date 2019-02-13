@@ -32,6 +32,9 @@ public class Error {
 	public final static int CODE_MULTIPLE_LOGIN = -1007;
 	public final static String MESSAGE_MULTIPLE_LOGIN = "Cannot connect the login {0} to a developer. {1} are eligible.";
 	
+	public final static int CODE_MULTIPLE_TASK = -1008;
+	public final static String MESSAGE_MULTIPLE_TASK = "This asynchronous operation is already launched.";
+	
 	/**
 	 * @param e the exception
 	 * @return the stack trace in {@code String} format

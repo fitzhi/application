@@ -56,11 +56,10 @@ public class GitScannerCleanupPathTest {
 	@Test
 	public void cloneAndParseRepo() throws Exception {
 		
-		GitScanner gitScanner = (GitScanner) scanner;
-		System.out.println(gitScanner.cleanupPath("TOTO/src/main/java/fr/test/MyClass.java"));
+		System.out.println(scanner.cleanupPath("TOTO/src/main/java/fr/test/MyClass.java"));
 		Assert.assertEquals( 
 				"TOTO/fr/test/MyClass.java",
-				gitScanner.cleanupPath("TOTO/src/main/java/fr/test/MyClass.java"));
+				scanner.cleanupPath("TOTO/src/main/java/fr/test/MyClass.java"));
 		
 	}
 	

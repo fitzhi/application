@@ -13,17 +13,17 @@
 	</root>
 
 	<logger name="fr.skiller.source.scanner.git" additivity="false">
-		<level value="DEBUG" />
+		<level value="INFO" />
 		<appender-ref ref="STDOUT" />
 	</logger>
 		
 
 	<logger name="fr.skiller.bean" additivity="false">
-		<level value="DEBUG" />
+		<level value="INFO" />
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="fr.skiller.controler" additivity="false">
+	<logger name="fr.skiller.controler.ProjectController" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>

@@ -58,6 +58,7 @@ import fr.skiller.source.scanner.AbstractScannerDataGenerator;
 import fr.skiller.source.scanner.RepoScanner;
 import fr.skiller.Error;
 import fr.skiller.Global;
+import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.RiskProcessor;
@@ -69,6 +70,7 @@ import static fr.skiller.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
 import static fr.skiller.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
 import static fr.skiller.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
 import static fr.skiller.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
+import static fr.skiller.controler.ProjectController.DASHBOARD_GENERATION;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL GIT implementation of a code Scanner
@@ -89,7 +91,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
  	/**
  	 * The logger for the GitScanner.
  	 */
-	Logger logger = LoggerFactory.getLogger(GitScanner.class.getCanonicalName());
+	final Logger logger = LoggerFactory.getLogger(GitScanner.class.getCanonicalName());
 
 	/**
 	 * These directories will be removed from the full path of class files<br/>
@@ -122,6 +124,12 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	@Autowired()
 	@Qualifier("commitAndDevActive")
 	RiskProcessor riskSurveyor;
+	
+	/**
+	 * Collection of active tasks.
+	 */
+	@Autowired()
+	AsyncTask tasks;
 	
 	/**
 	 * Path access to retrieve the properties file for a given project  
@@ -369,12 +377,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
  
  	private String cleanupPath = "";
  	
- 	/**
- 	 * Extract from the filename path the non relevant directory (such as {@code /src/main/java}) <br/>
- 	 * <i>(This method is public for testing purpose.)</i>
- 	 * @param path the given path
- 	 * @return the cleanup path
- 	 */
+ 	@Override
 	public String cleanupPath (final String path) {
 
 		cleanupPath = "";
@@ -391,7 +394,12 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	@Override
 	@Async
 	public RiskDashboard generateAsync(final Project project) throws Exception {
-		return generate(project);
+		try {
+			tasks.addTask( DASHBOARD_GENERATION, "project", project.id);
+			return generate(project);
+		} finally {
+			tasks.removeTask(DASHBOARD_GENERATION, "project", project.id);
+		}
 	}
 	
 	@Override

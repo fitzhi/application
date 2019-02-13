@@ -59,6 +59,15 @@ public class SunburstDTO extends BaseDTO {
 	}
 
 	/**
+	 * @param idProject project identifier.
+	 * @param code code of processing error
+	 * @param message corresponding message of error
+	 */
+	public SunburstDTO(final int idProject, int code, String message) {
+		this(idProject, null, code, message);
+	}
+	
+	/**
 	 * Empty constructor.
 	 */
 	public SunburstDTO() { 

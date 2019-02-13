@@ -1,12 +1,9 @@
 package fr.skiller.controler;
 
-import java.lang.reflect.InvocationTargetException;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -15,9 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 
+import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;
@@ -53,6 +49,7 @@ import static fr.skiller.Error.CODE_UNDEFINED;
 import static fr.skiller.Error.UNKNOWN_PROJECT;
 import static fr.skiller.Error.getStackTrace;
 import static fr.skiller.Global.LN;
+import static fr.skiller.Error.CODE_MULTIPLE_TASK;
 
 @RestController
 @RequestMapping("/project")
@@ -84,6 +81,17 @@ public class ProjectController {
 	@Qualifier("GIT")
 	RepoScanner scanner;
 
+	/**
+	 * Asynchronous tasks list.
+	 */
+	@Autowired
+	AsyncTask tasks;
+
+	/** 
+	 * Operation.
+	 */
+	public final static String DASHBOARD_GENERATION = "Dashboard generation";
+	
 	/**
 	 * Class used as a passed reference to a method in order to change it. The class will be used to setup a response entity.
 	 * @author Fr&eacute;d&eacute;ric VIDAL
@@ -370,11 +378,19 @@ public class ProjectController {
 	 * Parameter sent to the controller in order to obtain the sunburst data. 
 	 * @author Fr&eacute;d&eacute;ric VIDAL
 	 */
-	class ParamSunburst {
+	public class ParamSunburst {
 		/**
 		 * Project identifier.
 		 */
-		int idProject;
+		public int idProject;
+
+		/**
+		 * ParamSunburst.
+		 */
+		public ParamSunburst() {
+			super();
+		}
+		
 	}
 	
 	/**
@@ -399,6 +415,20 @@ public class ProjectController {
 				return generate(project);
 			} else {
 				if (logger.isDebugEnabled()) {
+					logger.debug ("Tasks present in the collection");
+					logger.debug (tasks.trace());
+				}
+				if (tasks.containsTask(DASHBOARD_GENERATION, "project", project.id)) {
+					if (logger.isDebugEnabled()) {
+						logger.debug("The task has already been launched for the project " + project.name);
+					}
+					return new ResponseEntity<SunburstDTO> (
+							new SunburstDTO(project.id, CODE_MULTIPLE_TASK,
+							"A dashboard generation has already been launched for " + project.name), 
+							new HttpHeaders(), 
+							HttpStatus.BAD_REQUEST);
+				}
+				if (logger.isDebugEnabled()) {
 					logger.debug("The generation will be processed asynchronously !");
 				}
 				scanner.generateAsync(project);
@@ -422,12 +452,15 @@ public class ProjectController {
 	 */
 	private ResponseEntity<SunburstDTO> generate (final Project project) {
 		try {
+			tasks.addTask( DASHBOARD_GENERATION, "project", project.id);
 			RiskDashboard data = scanner.generate(project);
 			return new ResponseEntity<SunburstDTO>(
 					new SunburstDTO(project.id, data), new HttpHeaders(), HttpStatus.OK);
 		} catch (final Exception e) {
 			logger.error (e.getMessage());
 			return new ResponseEntity<SunburstDTO>(new SunburstDTO( UNKNOWN_PROJECT,null, CODE_UNDEFINED, e.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);			
+		} finally {
+			tasks.removeTask(DASHBOARD_GENERATION, "project", project.id);
 		}
 	}
 		
@@ -486,8 +519,7 @@ public class ProjectController {
 					HttpStatus.OK);
 		} catch (Exception e) {
 			logger.error(getStackTrace(e)); 
-			return new ResponseEntity<String> (e.getMessage(), 
-					new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<String> (e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 
