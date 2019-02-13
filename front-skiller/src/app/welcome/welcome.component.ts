@@ -24,24 +24,13 @@ export class WelcomeComponent implements OnInit {
 
   ngOnInit() {
     this.cinematicService.setForm(Constants.WELCOME, this.router.url);
+    this.cinematicService.setProjectTab(1);
+    this.cinematicService.tabProjectActivated.subscribe( ret => {
+      console.log(ret);
+    });
  }
 
- click1() {
-   this.messageBoxService.question('Question', 'Test de Frederic').subscribe(answer => {
-    if (answer) {
-      console.log ('oui');
-    }
-   });
-   console.log ('Frederic');
- }
-
- click2() {
-    console.log ('Frederic');
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    dialogConfig.position = { top: '6em', left: '5em'};
-    dialogConfig.panelClass = 'default-dialog-container-class';
-    this.dialog.open(DialogFilterComponent, dialogConfig);
+ public click() {
+    this.cinematicService.setProjectTab(2);
  }
 }

@@ -420,7 +420,8 @@ public class ProjectController {
 				}
 				if (tasks.containsTask(DASHBOARD_GENERATION, "project", project.id)) {
 					if (logger.isDebugEnabled()) {
-						logger.debug("The task has already been launched for the project " + project.name);
+						logger.debug("The generation has already been called for the project " 
+								+ project.name + ". Please wait !");
 					}
 					return new ResponseEntity<SunburstDTO> (
 							new SunburstDTO(project.id, CODE_MULTIPLE_TASK,
@@ -547,8 +548,6 @@ public class ProjectController {
 		}
 	}
 		
-
-	
 	/**
 	 * @param code the error code
 	 * @param message the error message

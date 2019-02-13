@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, OnDestroy } from '@angular/core';
 import Sunburst from 'sunburst-chart';
 import { Constants } from '../../constants';
 import { MessageService } from '../../message/message.service';
@@ -12,13 +12,14 @@ import { ProjectGhostsDataSource } from './dialog-project-ghosts/project-ghosts-
 import { DialogLegendSunburstComponent } from './dialog-legend-sunburst/dialog-legend-sunburst.component';
 import { MessageBoxService } from '../../message-box/service/message-box.service';
 import { DialogFilterComponent } from './dialog-filter/dialog-filter.component';
+import { BaseComponent } from '../../base/base.component';
 
 @Component({
   selector: 'app-project-sunburst',
   templateUrl: './project-sunburst.component.html',
   styleUrls: ['./project-sunburst.component.css']
 })
-export class ProjectSunburstComponent implements OnInit, AfterViewInit {
+export class ProjectSunburstComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
    * The project loaded in the parent component.
@@ -72,19 +73,21 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
 
   public projectName: string;
 
-  // private dialogReference: MatDialogRef<any, any>;
-
   constructor(
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
     private messageService: MessageService,
     private messageBoxService: MessageBoxService,
     private dialog: MatDialog,
-    private projectService: ProjectService) { }
+    private projectService: ProjectService) {
+      super();
+      const today = new Date();
+      this.dateConstruction =  today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
+  }
 
   ngOnInit() {
 
-    this.route.params.subscribe(params => {
+  this.subscriptions.add(this.route.params.subscribe(params => {
       if (Constants.DEBUG) {
         console.log('params[\'id\'] ' + params['id']);
       }
@@ -93,9 +96,10 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
       } else {
         this.idProject = + params['id']; // (+) converts string 'id' to a number
       }
-    });
+    }));
 
-    this.subjProject.subscribe(project => {
+    this.subscriptions.add(
+      this.subjProject.subscribe(project => {
       if (Constants.DEBUG) {
         console.log('Project ' + project.id + ' ' + project.name + ' reveived in sunburst-component');
       }
@@ -107,11 +111,15 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
         this.sunburst_waiting = false;
         this.sunburst_impossible = true;
       }
-    });
+    }));
 
     this.cinematicService.tabProjectActivated.subscribe(
       index => {
         if (index === Constants.PROJECT_IDX_TAB_SUNBURST) {
+          if (Constants.DEBUG) {
+           const today = new Date();
+           console.log ('Tab selected ' + index + ' @ ' + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds());
+          }
           this.loadSunburst();
         }
       }
@@ -153,6 +161,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
 
       const myChart = Sunburst();
 
+      this.subscriptions.add(
       this.projectService.retrieveSuburstData(this.idProject)
         .subscribe(response => {
           if (myChart !== null) {
@@ -181,7 +190,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
                   // The generation is not accessible. A dashboard generation is launched asynchronously.
                   this.messageBoxService.exclamation('Operation launched', response.error.message);
                   break;
-                case -1008:
+                case -999:
                   // Operation already been launched.
                   this.messageBoxService.exclamation('Operation already launched', response.error.message);
                   break;
@@ -217,7 +226,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
             this.sunburst_waiting = false;
             // The chart is drawn. We do have to generate a new one.
             this.chart_is_drawn = true;
-          });
+          }));
     }
   }
 
@@ -307,6 +316,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
     if (typeof this.dataGhosts !== 'undefined') {
       dialogConfig.data = this.dataGhosts;
       const dialogReference = this.dialog.open(DialogProjectGhostsComponent, dialogConfig);
+      this.subscriptions.add(
       dialogReference.afterClosed()
         .subscribe(result => {
           if (result !== null) {
@@ -316,7 +326,7 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
               this.dataGhosts.ghostsSubject.next(result);
             }
           }
-        });
+        }));
     } else {
       console.log('need to be handled');
     }
@@ -332,18 +342,20 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
   }
 
   reset() {
-    this.messageBoxService.question('Reset the dashboard',
-      'Please confirm the dashboard reinitialization').subscribe(answer => {
-        if (answer) {
-          this.projectService.resetDashboard(this.idProject).subscribe(response => {
-            if (response) {
-              this.messageBoxService.exclamation('Operation complete', 'Dashboard reinitialization is done.');
-            } else {
-              this.messageBoxService.exclamation('Operation failed', 'The request is not necessary : no dashboard available.');
-            }
-          });
-        }
-      });
+    this.subscriptions.add(
+      this.messageBoxService.question('Reset the dashboard',
+        'Please confirm the dashboard reinitialization').subscribe(answer => {
+          if (answer) {
+            this.projectService.resetDashboard(this.idProject).subscribe(response => {
+              if (response) {
+                this.messageBoxService.exclamation('Operation complete', 'Dashboard reinitialization is done.');
+              } else {
+                this.messageBoxService.exclamation('Operation failed', 'The request is not necessary : no dashboard available.');
+              }
+            });
+          }
+        })
+    );
   }
 
   dialogFilter () {
@@ -361,5 +373,9 @@ export class ProjectSunburstComponent implements OnInit, AfterViewInit {
   **/
   public buttonActivated(idPanel: number) {
     return (idPanel === this.idPanelSelected);
+  }
+
+  ngOnDestroy() {
+    super.ngOnDestroy();
   }
 }

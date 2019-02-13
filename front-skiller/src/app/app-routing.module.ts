@@ -4,7 +4,6 @@ import {RouterModule, Routes} from '@angular/router';
 import {SkillComponent} from './skill/skill.component';
 import {ListSkillComponent} from './list-skill/list-skill.component';
 import {ProjectComponent} from './project/project.component';
-import {ProjectFormComponent} from './project/project-form/project-form.component';
 import {ProjectSunburstComponent} from './project/project-sunburst/project-sunburst.component';
 import {ListProjectComponent} from './list-project/list-project.component';
 import {WelcomeComponent} from './welcome/welcome.component';

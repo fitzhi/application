@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { CinematicService } from '../service/cinematic.service';
 import { Constants } from '../constants';
 import { MatTabChangeEvent } from '@angular/material';
@@ -7,13 +7,14 @@ import { Subject } from 'rxjs';
 import { Project } from '../data/project';
 import { ListProjectsService } from '../list-projects-service/list-projects.service';
 import { MessageService } from '../message/message.service';
+import { BaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'app-project',
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.css']
 })
-export class ProjectComponent implements OnInit, AfterViewInit {
+export class ProjectComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
   public subjProject = new Subject<Project>();
 
@@ -35,6 +36,7 @@ export class ProjectComponent implements OnInit, AfterViewInit {
     private messageService: MessageService,
     private listProjectsService: ListProjectsService,
     private router: Router) {
+      super();
   }
 
   /**
@@ -51,7 +53,7 @@ export class ProjectComponent implements OnInit, AfterViewInit {
       }
     }
 
-    this.sub = this.route.params.subscribe(params => {
+    this.subscriptions.add(this.route.params.subscribe(params => {
       if (Constants.DEBUG) {
         console.log('params[\'id\'] ' + params['id']);
       }
@@ -60,7 +62,7 @@ export class ProjectComponent implements OnInit, AfterViewInit {
       } else {
         this.idProject = + params['id']; // (+) converts string 'id' to a number
       }
-    });
+    }));
   }
 
   /**
@@ -77,7 +79,9 @@ export class ProjectComponent implements OnInit, AfterViewInit {
    */
   public onTabChange(tabChangeEvent: MatTabChangeEvent): void {
     if (Constants.DEBUG) {
-      console.log('The index ' + tabChangeEvent.index + ' is selected !');
+      const today = new Date();
+      console.log('The index ' + tabChangeEvent.index + ' is selected @ '
+      + today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds());
     }
     this.cinematicService.setProjectTab(tabChangeEvent.index);
   }
@@ -90,25 +94,31 @@ export class ProjectComponent implements OnInit, AfterViewInit {
     // OR we load the Project from the back-end...
     // Anyway, We create an empty project until the subscription is complete
     if (this.idProject != null) {
-      this.listProjectsService.getProject(this.idProject).subscribe(
-        (project: Project) => {
-          this.subjProject.next(project);
-        },
-        error => {
-          if (error.status === 404) {
-            if (Constants.DEBUG) {
-              console.log('404 : cannot find a project for the id ' + this.idProject);
+      this.subscriptions.add(
+        this.listProjectsService.getProject(this.idProject).subscribe(
+          (project: Project) => {
+            this.subjProject.next(project);
+          },
+          error => {
+            if (error.status === 404) {
+              if (Constants.DEBUG) {
+                console.log('404 : cannot find a project for the id ' + this.idProject);
+              }
+              this.messageService.error('There is no project for id ' + this.idProject);
+            } else {
+              console.error(error.message);
             }
-            this.messageService.error('There is no project for id ' + this.idProject);
-          } else {
-            console.error(error.message);
-          }
-        },
-        () => {
-          if (Constants.DEBUG) {
-            console.log('Loading complete for id ' + this.idProject);
-          }
-        });
+          },
+          () => {
+            if (Constants.DEBUG) {
+              console.log('Loading complete for id ' + this.idProject);
+            }
+          })
+      );
     }
+  }
+
+  public ngOnDestroy() {
+    super.ngOnDestroy();
   }
 }

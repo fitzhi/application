@@ -14,7 +14,7 @@
     <label for="staffMember">Developer filter :&nbsp;</label>
     <mat-form-field id="staffMember" >
       <mat-select placeholder="Choose a staff member">
-        <mat-option *ngFor="" [value]="">
+        <mat-option *ngFor="let contributor of contributors" [value]="contributor.fullname">
         </mat-option>
       </mat-select>
     </mat-form-field>
