@@ -1,4 +1,4 @@
-package fr.skiller.controler;
+package fr.skiller.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

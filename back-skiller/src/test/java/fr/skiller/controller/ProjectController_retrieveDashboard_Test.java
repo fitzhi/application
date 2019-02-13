@@ -24,8 +24,8 @@ import com.google.gson.GsonBuilder;
 import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.ProjectHandler;
-import fr.skiller.controler.ProjectController;
-import fr.skiller.controler.ProjectController.ParamSunburst;
+import fr.skiller.controller.ProjectController;
+import fr.skiller.controller.ProjectController.ParamSunburst;
 import fr.skiller.data.external.SunburstDTO;
 import fr.skiller.data.internal.Project;
 

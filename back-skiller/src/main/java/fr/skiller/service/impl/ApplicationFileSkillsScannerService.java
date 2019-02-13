@@ -24,7 +24,7 @@ import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
 import fr.skiller.bean.SkillHandler;
-import fr.skiller.controler.ReferentialController;
+import fr.skiller.controller.ReferentialController;
 import fr.skiller.data.internal.Resume;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.exception.SkillerException;

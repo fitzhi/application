@@ -1,4 +1,4 @@
-package fr.skiller.controler;
+package fr.skiller.controller;
 
 import java.util.Map;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package fr.skiller.controler;
+package fr.skiller.controller;
 
 import java.io.BufferedReader;
 import java.io.File;

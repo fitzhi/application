@@ -66,11 +66,11 @@ import fr.skiller.bean.StaffHandler;
 
 import static fr.skiller.Global.LN;
 import static fr.skiller.Global.UNKNOWN;
+import static fr.skiller.controller.ProjectController.DASHBOARD_GENERATION;
 import static fr.skiller.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
 import static fr.skiller.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
 import static fr.skiller.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
 import static fr.skiller.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
-import static fr.skiller.controler.ProjectController.DASHBOARD_GENERATION;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL GIT implementation of a code Scanner
