@@ -69,7 +69,8 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
           this.dataSource = new MatTableDataSource(contributorsDTO.contributors);
           this.dataSource.sort = this.sort;
           this.projectStaffService.contributors = this.dataSource.data;
-          this.dataSource.connect().subscribe(data => this.projectStaffService.contributors = data);
+          this.subscriptions.add(
+            this.dataSource.connect().subscribe(data => this.projectStaffService.contributors = data));
           this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: string): string => {
             if (typeof data[sortHeaderId] === 'string') {
               return data[sortHeaderId].toLocaleLowerCase();

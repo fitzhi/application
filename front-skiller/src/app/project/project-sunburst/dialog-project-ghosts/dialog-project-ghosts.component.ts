@@ -60,9 +60,10 @@ export class DialogProjectGhostsComponent extends BaseComponent implements OnIni
               dialogConfig.panelClass = 'default-dialog-container-class';
               dialogConfig.data = this.updatedData;
               this.dialogReference = this.dialog.open(DialogUpdatedProjectGhostsComponent, dialogConfig);
-              this.dialogReference
-                  .afterClosed()
-                  .subscribe( () => this.dialogRef.close(this.dataSource.ghostsSubject.getValue()));
+              this.subscriptions.add(
+                this.dialogReference
+                    .afterClosed()
+                    .subscribe( () => this.dialogRef.close(this.dataSource.ghostsSubject.getValue())));
           },
           responseInError => {
             if (Constants.DEBUG) {

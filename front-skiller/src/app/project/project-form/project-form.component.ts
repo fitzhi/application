@@ -162,34 +162,34 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
       console.log('onConfirmEditProjectSkill for skill from ' + event.data.title + ' to ' + event.newData.title);
     }
     if (this.checkProjectExist(event)) {
-      this.skillService.lookup(event.newData.title).subscribe(
-
-        project_transfered => {
-          this.subscriptions.add(
-            this.projectService.changeSkill(this.project.id, event.data.title, event.newData.title).subscribe(
-              (projectDTO: ProjectDTO) => {
-                this.messageService.info(projectDTO.project.name + ' ' +
-                  ' has now the skill ' + event.newData.title);
-                this.reloadSkills(this.project.id);
-                event.confirm.resolve();
-              },
-              response_error => {
-                if (Constants.DEBUG) {
-                  console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+      this.subscriptions.add(
+        this.skillService.lookup(event.newData.title).subscribe(
+          () => {
+            this.subscriptions.add(
+              this.projectService.changeSkill(this.project.id, event.data.title, event.newData.title).subscribe(
+                (projectDTO: ProjectDTO) => {
+                  this.messageService.info(projectDTO.project.name + ' ' +
+                    ' has now the skill ' + event.newData.title);
+                  this.reloadSkills(this.project.id);
+                  event.confirm.resolve();
+                },
+                response_error => {
+                  if (Constants.DEBUG) {
+                    console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+                  }
+                  this.reloadSkills(this.project.id);
+                  event.confirm.reject();
+                  this.messageService.error(response_error.error.message);
                 }
-                this.reloadSkills(this.project.id);
-                event.confirm.reject();
-                this.messageService.error(response_error.error.message);
-              }
-            ));
-        },
-        response_error => {
-          if (Constants.DEBUG) {
-            console.error(response_error);
-          }
-          this.messageService.error(response_error.error.message);
-          event.confirm.reject();
-        });
+              ));
+          },
+          response_error => {
+            if (Constants.DEBUG) {
+              console.error(response_error);
+            }
+            this.messageService.error(response_error.error.message);
+            event.confirm.reject();
+          }));
     } else {
       event.confirm.reject();
     }

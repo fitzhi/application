@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CinematicService } from './service/cinematic.service';
 import { Constants } from './constants';
 import { ListProjectsService } from './list-projects-service/list-projects.service';
@@ -9,13 +9,14 @@ import { StaffService } from './service/staff.service';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProjectStaffService } from './project/project-staff-service/project-staff.service';
+import { BaseComponent } from './base/base.component';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
   /**
   * Title of the form
@@ -80,83 +81,87 @@ export class AppComponent implements OnInit {
     private staffService: StaffService,
     private router: Router) {
 
-    this.cinematicService.currentActiveForm.subscribe(data => {
+    super();
 
-      this.formId = data.formIdentifier;
-      switch (this.formId) {
-        case Constants.WELCOME: {
-          this.formTitle = 'Who\'s who';
-          this.in_master_detail = false;
-          this.is_allowed_to_search = false;
-          break;
-        }
-        case Constants.SKILLS_CRUD: {
-          this.formTitle = 'Skill mode';
-          this.in_master_detail = false;
-          this.is_allowed_to_search = true;
-          break;
-        }
-        case Constants.SKILLS_SEARCH: {
-          this.formTitle = 'Skills Search';
-          this.in_master_detail = false;
-          this.is_allowed_to_search = true;
-          break;
-        }
-        case Constants.DEVELOPERS_CRUD: {
-          this.in_master_detail = (
-            (this.searching_what != null) ||
-            (this.cinematicService.getFormerFormIdentifier() === Constants.PROJECT_TAB_STAFF));
-          this.is_allowed_to_search = true;
-          this.formTitle = 'Developer mode';
-          break;
-        }
-        case Constants.DEVELOPERS_SEARCH: {
-          this.formTitle = 'Developers Search';
-          this.in_master_detail = false;
-          this.is_allowed_to_search = true;
-          break;
-        }
-        case Constants.PROJECT_TAB_FORM: {
-          this.formTitle = 'Project mode';
-          this.in_master_detail = false;
-          this.is_allowed_to_search = true;
-          break;
-        }
-        case Constants.PROJECT_SEARCH: {
-          this.formTitle = 'Projects Search';
-          this.in_master_detail = false;
-          this.is_allowed_to_search = true;
-          break;
-        }
-      }
-    });
+    this.subscriptions.add(
+      this.cinematicService.currentActiveForm.subscribe(data => {
 
-    this.cinematicService.newCollaboratorDisplayEmitted$.subscribe(data => {
-      if (Constants.DEBUG) {
-        console.log('Receiving new staff member with ID ' + data);
-      }
-
-      /*
-       * To avoid the life cycle check error :
-       * "Expression has changed after it was checked"
-       */
-      setTimeout(() => {
-        switch (this.cinematicService.getFormerFormIdentifier()) {
-          case Constants.DEVELOPERS_SEARCH:
-            this.previousId = this.listStaffService.previousCollaboratorId(data);
-            this.nextId = this.listStaffService.nextCollaboratorId(data);
+        this.formId = data.formIdentifier;
+        switch (this.formId) {
+          case Constants.WELCOME: {
+            this.formTitle = 'Who\'s who';
+            this.in_master_detail = false;
+            this.is_allowed_to_search = false;
             break;
-          case Constants.PROJECT_TAB_STAFF:
-            this.previousId = this.projectStaffService.previousIdStaff(data);
-            this.nextId = this.projectStaffService.nextIdStaff(data);
+          }
+          case Constants.SKILLS_CRUD: {
+            this.formTitle = 'Skill mode';
+            this.in_master_detail = false;
+            this.is_allowed_to_search = true;
             break;
+          }
+          case Constants.SKILLS_SEARCH: {
+            this.formTitle = 'Skills Search';
+            this.in_master_detail = false;
+            this.is_allowed_to_search = true;
+            break;
+          }
+          case Constants.DEVELOPERS_CRUD: {
+            this.in_master_detail = (
+              (this.searching_what != null) ||
+              (this.cinematicService.getFormerFormIdentifier() === Constants.PROJECT_TAB_STAFF));
+            this.is_allowed_to_search = true;
+            this.formTitle = 'Developer mode';
+            break;
+          }
+          case Constants.DEVELOPERS_SEARCH: {
+            this.formTitle = 'Developers Search';
+            this.in_master_detail = false;
+            this.is_allowed_to_search = true;
+            break;
+          }
+          case Constants.PROJECT_TAB_FORM: {
+            this.formTitle = 'Project mode';
+            this.in_master_detail = false;
+            this.is_allowed_to_search = true;
+            break;
+          }
+          case Constants.PROJECT_SEARCH: {
+            this.formTitle = 'Projects Search';
+            this.in_master_detail = false;
+            this.is_allowed_to_search = true;
+            break;
+          }
         }
-      });
-      if (Constants.DEBUG) {
-        console.log('this.previousId ' + this.previousId);
-        console.log('this.nextId ' + this.nextId);
-      }
-    });
+      }));
+
+    this.subscriptions.add(
+      this.cinematicService.newCollaboratorDisplayEmitted$.subscribe(data => {
+        if (Constants.DEBUG) {
+          console.log('Receiving new staff member with ID ' + data);
+        }
+
+        /*
+        * To avoid the life cycle check error :
+        * "Expression has changed after it was checked"
+        */
+        setTimeout(() => {
+          switch (this.cinematicService.getFormerFormIdentifier()) {
+            case Constants.DEVELOPERS_SEARCH:
+              this.previousId = this.listStaffService.previousCollaboratorId(data);
+              this.nextId = this.listStaffService.nextCollaboratorId(data);
+              break;
+            case Constants.PROJECT_TAB_STAFF:
+              this.previousId = this.projectStaffService.previousIdStaff(data);
+              this.nextId = this.projectStaffService.nextIdStaff(data);
+              break;
+          }
+        });
+        if (Constants.DEBUG) {
+          console.log('this.previousId ' + this.previousId);
+          console.log('this.nextId ' + this.nextId);
+        }
+      }));
   }
 
   ngOnInit() {
@@ -272,4 +277,12 @@ export class AppComponent implements OnInit {
         break;
     }
   }
+
+  /**
+   * Unsubscription implemented in the BaseComponent
+   */
+  public ngOnDestroy() {
+    super.ngOnDestroy();
+  }
+
 }

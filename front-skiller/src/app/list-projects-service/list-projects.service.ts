@@ -28,10 +28,10 @@ export class ListProjectsService {
     }
 
     this.cleanUpProjects();
-    this.projectService.getAll().
-      subscribe((projects: Project[]) =>
+    this.projectService.getAll().subscribe(
+      (projects: Project[]) =>
         ListProjectsService.theProjects.push(...projects.filter(testCriteria)),
-      error => console.log(error),
+        error => console.log(error),
       () => {
         if (Constants.DEBUG) {
           console.log('the projects collection is containing now ' + ListProjectsService.theProjects.length + ' records');

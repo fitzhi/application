@@ -118,7 +118,4 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
     }
   }
 
-  public ngOnDestroy() {
-    super.ngOnDestroy();
-  }
 }

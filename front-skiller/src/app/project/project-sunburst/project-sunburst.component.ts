@@ -113,7 +113,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
       }
     }));
 
-    this.cinematicService.tabProjectActivated.subscribe(
+    this.subscriptions.add(
+      this.cinematicService.tabProjectActivated.subscribe(
       index => {
         if (index === Constants.PROJECT_IDX_TAB_SUNBURST) {
           if (Constants.DEBUG) {
@@ -123,7 +124,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
           this.loadSunburst();
         }
       }
-    );
+    ));
 
     if (this.idProject == null) {
       if (Constants.DEBUG) {
@@ -162,71 +163,71 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
       const myChart = Sunburst();
 
       this.subscriptions.add(
-      this.projectService.retrieveSuburstData(this.idProject)
-        .subscribe(response => {
-          if (myChart !== null) {
-            myChart.data(response.sunburstData).width(500).height(500).label('location').size('numberOfFiles').color('color')
-              (document.getElementById('chart'));
-            if (typeof this.dataGhosts === 'undefined') {
-              this.dataGhosts = new ProjectGhostsDataSource(this.project);
+        this.projectService.retrieveSuburstData(this.idProject)
+          .subscribe(response => {
+            if (myChart !== null) {
+              myChart.data(response.sunburstData).width(500).height(500).label('location').size('numberOfFiles').color('color')
+                (document.getElementById('chart'));
+              if (typeof this.dataGhosts === 'undefined') {
+                this.dataGhosts = new ProjectGhostsDataSource(this.project);
+              }
+              // Send the unregistered contributors to the panel list
+              this.dataGhosts.sendUnknowns(response.ghosts);
             }
-            // Send the unregistered contributors to the panel list
-            this.dataGhosts.sendUnknowns(response.ghosts);
-          }
-        }, response => {
-          if (Constants.DEBUG) {
-            console.log('Response returned while retrieving the sunburst data for the project identfier ' + this.idProject);
-          }
-          switch (response.status) {
-            case 404:
-              {
-                this.messageService.error(
-                  'Resource not found while retrieving the sunburst data for the project identfier ' + this.idProject);
+          }, response => {
+            if (Constants.DEBUG) {
+              console.log('Response returned while retrieving the sunburst data for the project identfier ' + this.idProject);
+            }
+            switch (response.status) {
+              case 404:
+                {
+                  this.messageService.error(
+                    'Resource not found while retrieving the sunburst data for the project identfier ' + this.idProject);
+                  break;
+                }
+              case 400: {
+                switch (response.error.code) {
+                  case 201:
+                    // The generation is not accessible. A dashboard generation is launched asynchronously.
+                    this.messageBoxService.exclamation('Operation launched', response.error.message);
+                    break;
+                  case -999:
+                    // Operation already been launched.
+                    this.messageBoxService.exclamation('Operation already launched', response.error.message);
+                    break;
+                  default:
+                      // We display the error generated on the server
+                      this.messageService.error('ERROR ' + response.error.message);
+                    }
                 break;
               }
-            case 400: {
-              switch (response.error.code) {
-                case 201:
-                  // The generation is not accessible. A dashboard generation is launched asynchronously.
-                  this.messageBoxService.exclamation('Operation launched', response.error.message);
-                  break;
-                case -999:
-                  // Operation already been launched.
-                  this.messageBoxService.exclamation('Operation already launched', response.error.message);
-                  break;
-                default:
-                    // We display the error generated on the server
-                    this.messageService.error('ERROR ' + response.error.message);
-                  }
-              break;
-            }
-            default: {
-              // Unattempted error
-              this.messageService.error('ERROR ' + response.message);
-              break;
-            }
-          }
-        },
-          () => {
-            this.hackSunburstStyle();
-            myChart.tooltipContent(function (graph) {
-
-              if (graph.lastUpdate != null) {
-                const date = new Date(graph.lastUpdate);
-                const day = date.getDate();
-                const monthIndex = date.getMonth();
-                const year = date.getFullYear();
-                const tooltip = 'last commit ' + day + '/' + monthIndex + '/' + year;
-                return tooltip;
-              } else {
-                return 'No commit here!';
+              default: {
+                // Unattempted error
+                this.messageService.error('ERROR ' + response.message);
+                break;
               }
-            });
-            this.sunburst_ready = true;
-            this.sunburst_waiting = false;
-            // The chart is drawn. We do have to generate a new one.
-            this.chart_is_drawn = true;
-          }));
+            }
+          },
+            () => {
+              this.hackSunburstStyle();
+              myChart.tooltipContent(function (graph) {
+
+                if (graph.lastUpdate != null) {
+                  const date = new Date(graph.lastUpdate);
+                  const day = date.getDate();
+                  const monthIndex = date.getMonth();
+                  const year = date.getFullYear();
+                  const tooltip = 'last commit ' + day + '/' + monthIndex + '/' + year;
+                  return tooltip;
+                } else {
+                  return 'No commit here!';
+                }
+              });
+              this.sunburst_ready = true;
+              this.sunburst_waiting = false;
+              // The chart is drawn. We do have to generate a new one.
+              this.chart_is_drawn = true;
+            }));
     }
   }
 
@@ -317,18 +318,18 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
       dialogConfig.data = this.dataGhosts;
       const dialogReference = this.dialog.open(DialogProjectGhostsComponent, dialogConfig);
       this.subscriptions.add(
-      dialogReference.afterClosed()
-        .subscribe(result => {
-          if (result !== null) {
-            if (typeof result === 'boolean') {
-              this.dataGhosts.ghostsSubject.next(this.dataGhosts.ghostsSubject.getValue());
-            } else {
-              this.dataGhosts.ghostsSubject.next(result);
+        dialogReference.afterClosed()
+          .subscribe(result => {
+            if (result !== null) {
+              if (typeof result === 'boolean') {
+                this.dataGhosts.ghostsSubject.next(this.dataGhosts.ghostsSubject.getValue());
+              } else {
+                this.dataGhosts.ghostsSubject.next(result);
+              }
             }
-          }
-        }));
-    } else {
-      console.log('need to be handled');
+          }));
+      } else {
+        this.messageService.info('Please wait !');
     }
   }
 

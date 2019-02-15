@@ -141,7 +141,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
     if (this.checkStaffMemberExist(event)) {
       this.subscriptions.add(
         this.skillService.lookup(event.newData.title).subscribe(
-          project_transfered => {
+          () => {
             this.subscriptions.add(
               this.staffService.changeExperience(this.staff.idStaff, event.data.title, event.newData.title,
                 event.newData.level).subscribe(

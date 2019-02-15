@@ -96,8 +96,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
     }
     if (this.checkStaffMemberExist(event)) {
       this.projectService.lookup(event.newData.name).subscribe(
-
-        project_transfered => {
+        () => {
           this.subscriptions.add(
             this.staffService.changeProject(this.collaborator.idStaff, event.data.name, event.newData.name)
             .subscribe(
