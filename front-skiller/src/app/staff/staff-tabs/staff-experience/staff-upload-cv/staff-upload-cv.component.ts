@@ -8,17 +8,18 @@ import {HttpClient} from '@angular/common/http';
 import {HttpResponse} from '@angular/common/http';
 import {HttpEventType} from '@angular/common/http';
 import {HttpRequest} from '@angular/common/http';
-import {Component, OnInit, Inject} from '@angular/core';
+import {Component, OnInit, Inject, OnDestroy} from '@angular/core';
 import {Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialogConfig} from '@angular/material';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
+import { BaseComponent } from '../../../../base/base.component';
 
 @Component({
   selector: 'app-staff-upload-cv',
   templateUrl: './staff-upload-cv.component.html',
   styleUrls: ['./staff-upload-cv.component.css'],
 })
-export class StaffUploadCvComponent implements OnInit {
+export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnDestroy {
 
   /**
    * Full path of the selected resume file.
@@ -46,7 +47,9 @@ export class StaffUploadCvComponent implements OnInit {
     private messageBoxService: MessageBoxService,
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<StaffUploadCvComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) {}
+    @Inject(MAT_DIALOG_DATA) public data: any) {
+      super();
+    }
 
   ngOnInit() {
     this.collaborator = <Collaborator>this.data;
@@ -99,33 +102,34 @@ export class StaffUploadCvComponent implements OnInit {
     });
 
     // send the HTTP-request and subscribe for progress-updates
-    this.httpClient.request(req).subscribe(event => {
-      if (event.type === HttpEventType.UploadProgress) {
+    this.subscriptions.add(
+      this.httpClient.request(req).subscribe(event => {
+        if (event.type === HttpEventType.UploadProgress) {
 
-        // calculate the progress percentage
-        const percentDone = Math.round(100 * event.loaded / event.total);
+          // calculate the progress percentage
+          const percentDone = Math.round(100 * event.loaded / event.total);
 
-        // pass the percentage into the progress-stream
-        this.progression.next(percentDone);
-      } else if (event instanceof HttpResponse) {
-        const response = <DeclaredExperienceDTO>event.body;
-        this.declaredExperience = response.experience;
-        if (Constants.DEBUG) {
-          console.log(this.declaredExperience.length + ' experiences detected : ');
-          console.log(response.experience);
+          // pass the percentage into the progress-stream
+          this.progression.next(percentDone);
+        } else if (event instanceof HttpResponse) {
+          const response = <DeclaredExperienceDTO>event.body;
+          this.declaredExperience = response.experience;
+          if (Constants.DEBUG) {
+            console.log(this.declaredExperience.length + ' experiences detected : ');
+            console.log(response.experience);
+          }
+
+          this.collaborator.application = file.name.match(/[-_\w]+[.][\w]+$/i)[0];
+          this.collaborator.typeOfApplication = Constants.APPLICATION_FILE_TYPE_ALLOWED.get(this.applicationFile.type);
+
+          // Close the progress-stream if we get an answer form the API
+          // The upload is complete
+          this.progression.complete();
+          this.pickupSkills();
         }
-
-        this.collaborator.application = file.name.match(/[-_\w]+[.][\w]+$/i)[0];
-        this.collaborator.typeOfApplication = Constants.APPLICATION_FILE_TYPE_ALLOWED.get(this.applicationFile.type);
-
-        // Close the progress-stream if we get an answer form the API
-        // The upload is complete
-        this.progression.complete();
-        this.pickupSkills();
-      }
-    },
-    responseInError =>
-      this.messageBoxService.error('Uploading error !', responseInError.error.message));
+      },
+      responseInError =>
+        this.messageBoxService.error('Uploading error !', responseInError.error.message)));
   }
 
   pickupSkills() {
@@ -143,10 +147,20 @@ export class StaffUploadCvComponent implements OnInit {
     dialogConfig.width = '600px';
     const dialogReference = this.dialog.open(UploadedSkillsPickupComponent, dialogConfig);
     dialogReference.updatePosition({ bottom: '5px' });
-    dialogReference.afterClosed()
-      .subscribe(result => {
-          this.dialogRef.close(result);
-      });
+    this.subscriptions.add(
+      dialogReference.afterClosed()
+        .subscribe(result => {
+            this.dialogRef.close(result);
+        }));
    }
+
+  /**
+   * Calling the base class to unsubscribe all subscriptions.
+   */
+  ngOnDestroy() {
+    super.ngOnDestroy();
+  }
+
+
 }
 

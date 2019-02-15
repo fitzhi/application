@@ -36,8 +36,7 @@ export class ListProjectsService {
         if (Constants.DEBUG) {
           console.log('the projects collection is containing now ' + ListProjectsService.theProjects.length + ' records');
         }
-      }
-      );
+      });
   }
 
   /**

@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy} from '@angular/core';
 import {CinematicService} from '../service/cinematic.service';
 import {Constants} from '../constants';
 import {Collaborator} from '../data/collaborator';
@@ -7,13 +7,14 @@ import {Profile} from '../data/profile';
 import {ListStaffService} from '../list-staff-service/list-staff.service';
 import {ReferentialService} from '../service/referential.service';
 import { Router } from '@angular/router';
+import { BaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'app-list-staff',
   templateUrl: './list-staff.component.html',
   styleUrls: ['./list-staff.component.css']
 })
-export class ListStaffComponent implements OnInit {
+export class ListStaffComponent extends BaseComponent implements OnInit, OnDestroy {
 
   public collaborators: Collaborator[];
 
@@ -23,14 +24,17 @@ export class ListStaffComponent implements OnInit {
     private cinematicService: CinematicService,
     private referentialService: ReferentialService,
     private listStaffService: ListStaffService,
-    private router: Router) {}
+    private router: Router) {
+      super();
+    }
 
   ngOnInit() {
     this.cinematicService.setForm(Constants.DEVELOPERS_SEARCH, this.router.url);
     this.collaborators = this.listStaffService.getStaff();
 
-    this.referentialService.subjectProfiles.subscribe(
-      (profiles: Profile[]) => this.profiles = profiles);
+    this.subscriptions.add(
+      this.referentialService.subjectProfiles.subscribe(
+        (profiles: Profile[]) => this.profiles = profiles));
   }
 
   levelTitle(code: String): String {
@@ -50,5 +54,9 @@ export class ListStaffComponent implements OnInit {
       evaluatedSkill.forEach(experience => {mainSkills += experience.title + ', '; });
     }
     return mainSkills;
+  }
+
+  ngOnDestroy() {
+    super.ngOnDestroy();
   }
 }

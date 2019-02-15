@@ -375,6 +375,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
     return (idPanel === this.idPanelSelected);
   }
 
+  /**
+   * Calling the base class to unsubscribe all subscriptions.
+   */
   ngOnDestroy() {
     super.ngOnDestroy();
   }

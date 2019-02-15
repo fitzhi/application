@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Constants } from '../constants';
 import { Skill } from '../data/skill';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -8,13 +8,14 @@ import { MessageService } from '../message/message.service';
 import { CinematicService } from '../service/cinematic.service';
 import { ListSkillService } from '../list-skill-service/list-skill.service';
 import { SkillService } from '../service/skill.service';
+import { BaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'app-skill',
   templateUrl: './skill.component.html',
   styleUrls: ['./skill.component.css']
 })
-export class SkillComponent implements OnInit {
+export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 
   private skill: Skill;
 
@@ -35,50 +36,54 @@ export class SkillComponent implements OnInit {
     private skillService: SkillService,
     private listSkillService: ListSkillService,
     private messageService: MessageService,
-    private router: Router) { }
+    private router: Router) {
+      super();
+     }
 
   ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
-      if (Constants.DEBUG) {
-        console.log('params[\'id\'] ' + params['id']);
-      }
-      if (params['id'] == null) {
-        this.id = null;
-      } else {
-        this.id = + params['id']; // (+) converts string 'id' to a number
-      }
+    this.subscriptions.add(
+      this.sub = this.route.params.subscribe(params => {
+        if (Constants.DEBUG) {
+          console.log('params[\'id\'] ' + params['id']);
+        }
+        if (params['id'] == null) {
+          this.id = null;
+        } else {
+          this.id = + params['id']; // (+) converts string 'id' to a number
+        }
 
-      // Either we are in creation mode, or we load the collaborator from the back-end...
-      // We create an empty collaborator until the subscription is complete
-      this.skill = new Skill();
-      if (this.id != null) {
-        this.listSkillService.getSkill(this.id).subscribe(
-          (skill: Skill) => {
-            this.skill = skill;
-            this.profileSkill.get('title').setValue(skill.title);
-          },
-          error => {
-            if (error.status === 404) {
-              if (Constants.DEBUG) {
-                console.log('404 : cannot find a skill for the id ' + this.id);
+        // Either we are in creation mode, or we load the collaborator from the back-end...
+        // We create an empty collaborator until the subscription is complete
+        this.skill = new Skill();
+        if (this.id != null) {
+          this.subscriptions.add(
+            this.listSkillService.getSkill(this.id).subscribe(
+              (skill: Skill) => {
+                this.skill = skill;
+                this.profileSkill.get('title').setValue(skill.title);
+              },
+              error => {
+                if (error.status === 404) {
+                  if (Constants.DEBUG) {
+                    console.log('404 : cannot find a skill for the id ' + this.id);
+                  }
+                  this.messageService.error('There is no skill for id ' + this.id);
+                  this.skill = new Skill();
+                } else {
+                  console.error(error.message);
+                }
+              },
+              () => {
+                if (this.skill.id === 0) {
+                  console.log('No skill found for the id ' + this.id);
+                }
+                if (Constants.DEBUG) {
+                  console.log('Loading comlete for id ' + this.id);
+                }
               }
-              this.messageService.error('There is no skill for id ' + this.id);
-              this.skill = new Skill();
-            } else {
-              console.error(error.message);
-            }
-          },
-          () => {
-            if (this.skill.id === 0) {
-              console.log('No skill found for the id ' + this.id);
-            }
-            if (Constants.DEBUG) {
-              console.log('Loading comlete for id ' + this.id);
-            }
-          }
-        );
-      }
-    });
+            ));
+        }
+      }));
     this.cinematicService.setForm(Constants.SKILLS_CRUD, this.router.url);
   }
 
@@ -90,17 +95,22 @@ export class SkillComponent implements OnInit {
     if (Constants.DEBUG) {
       console.log('saving the skill ' + this.skill.title + ' with id ' + this.skill.id);
     }
-    this.skillService.save(this.skill).subscribe(
-      skill => {
-        this.messageService.info('The skill ' + skill.title + ' has been succesfully saved !');
-        this.skill = new Skill();
-        this.id = null;
-        this.profileSkill.get('title').setValue(this.skill.title);
-      });
+    this.subscriptions.add(
+      this.skillService.save(this.skill).subscribe(
+        skill => {
+          this.messageService.info('The skill ' + skill.title + ' has been succesfully saved !');
+          this.skill = new Skill();
+          this.id = null;
+          this.profileSkill.get('title').setValue(this.skill.title);
+        }));
   }
 
   get title(): any {
     return this.profileSkill.get('title');
+  }
+  
+  ngOnDestroy() {
+    super.ngOnDestroy();
   }
 
 }

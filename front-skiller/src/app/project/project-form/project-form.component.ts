@@ -1,4 +1,4 @@
-import {Component, OnInit, Input} from '@angular/core';
+import {Component, OnInit, Input, OnDestroy} from '@angular/core';
 import {FormGroup, FormControl} from '@angular/forms';
 import {Router} from '@angular/router';
 
@@ -11,13 +11,14 @@ import {Constants} from '../../constants';
 import {LocalDataSource} from 'ng2-smart-table';
 import { SkillService } from '../../service/skill.service';
 import { MessageService } from '../../message/message.service';
+import { BaseComponent } from '../../base/base.component';
 
 @Component({
   selector: 'app-project-form',
   templateUrl: './project-form.component.html',
   styleUrls: ['./project-form.component.css']
 })
-export class ProjectFormComponent implements OnInit {
+export class ProjectFormComponent extends BaseComponent implements OnInit, OnDestroy {
 
   /**
    * The project loaded in the parent component.
@@ -54,11 +55,12 @@ export class ProjectFormComponent implements OnInit {
     private skillService: SkillService,
     private projectService: ProjectService,
     private router: Router) {
-
+      super();
     }
 
   ngOnInit() {
 
+    this.subscriptions.add(
       this.subjProject.subscribe(project => {
         this.project = project;
         this.profileProject.get('projectName').setValue(project.name);
@@ -69,7 +71,7 @@ export class ProjectFormComponent implements OnInit {
         this.profileProject.get('password').setValue(this.project.password);
         this.profileProject.get('filename').setValue(this.project.filename);
         this.sourceSkills.load(this.project.skills);
-    });
+    }));
 
     this.cinematicService.setForm(Constants.PROJECT_TAB_FORM, this.router.url);
   }
@@ -91,22 +93,23 @@ export class ProjectFormComponent implements OnInit {
        * there is a very little delay with a skill without ID into the skills list.
        */
       if (typeof event.data['id'] !== 'undefined') {
-        this.projectService.removeSkill(this.project.id, event.data['id']).subscribe(
-          (projectDTO: ProjectDTO) => {
-            this.messageService.info('The project ' + projectDTO.project.name +
-              ' does not require anymore the skill ' + event.data.title);
-            this.reloadSkills(this.project.id);
-            event.confirm.resolve();
-          },
-          response_error => {
-            if (Constants.DEBUG) {
-              console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+        this.subscriptions.add(
+          this.projectService.removeSkill(this.project.id, event.data['id']).subscribe(
+            (projectDTO: ProjectDTO) => {
+              this.messageService.info('The project ' + projectDTO.project.name +
+                ' does not require anymore the skill ' + event.data.title);
+              this.reloadSkills(this.project.id);
+              event.confirm.resolve();
+            },
+            response_error => {
+              if (Constants.DEBUG) {
+                console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+              }
+              this.reloadSkills(this.project.id);
+              event.confirm.reject();
+              this.messageService.error(response_error.error.message);
             }
-            this.reloadSkills(this.project.id);
-            event.confirm.reject();
-            this.messageService.error(response_error.error.message);
-          }
-        );
+          ));
       }
     } else {
       event.confirm.reject();
@@ -132,22 +135,23 @@ export class ProjectFormComponent implements OnInit {
       console.log('onConfirmAddProjectSkill for event ' + event.newData.title);
     }
     if (this.checkProjectExist(event)) {
-      this.projectService.addSkill(this.project.id, event.newData.title).subscribe(
-        (projectDTO: ProjectDTO) => {
-          this.messageService.info('The project ' + projectDTO.project.name +
-            ' requires from now the skill ' + event.newData.title);
-          this.reloadSkills(this.project.id);
-          event.confirm.resolve();
-        },
-        response_error => {
-          if (Constants.DEBUG) {
-            console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+      this.subscriptions.add(
+        this.projectService.addSkill(this.project.id, event.newData.title).subscribe(
+          (projectDTO: ProjectDTO) => {
+            this.messageService.info('The project ' + projectDTO.project.name +
+              ' requires from now the skill ' + event.newData.title);
+            this.reloadSkills(this.project.id);
+            event.confirm.resolve();
+          },
+          response_error => {
+            if (Constants.DEBUG) {
+              console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+            }
+            this.reloadSkills(this.project.id);
+            this.messageService.error(response_error.error.message);
+            event.confirm.reject();
           }
-          this.reloadSkills(this.project.id);
-          this.messageService.error(response_error.error.message);
-          event.confirm.reject();
-        }
-      );
+        ));
     } else {
       event.confirm.reject();
     }
@@ -161,22 +165,23 @@ export class ProjectFormComponent implements OnInit {
       this.skillService.lookup(event.newData.title).subscribe(
 
         project_transfered => {
-          this.projectService.changeSkill(this.project.id, event.data.title, event.newData.title).subscribe(
-            (projectDTO: ProjectDTO) => {
-              this.messageService.info(projectDTO.project.name + ' ' +
-                ' has now the skill ' + event.newData.title);
-              this.reloadSkills(this.project.id);
-              event.confirm.resolve();
-            },
-            response_error => {
-              if (Constants.DEBUG) {
-                console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+          this.subscriptions.add(
+            this.projectService.changeSkill(this.project.id, event.data.title, event.newData.title).subscribe(
+              (projectDTO: ProjectDTO) => {
+                this.messageService.info(projectDTO.project.name + ' ' +
+                  ' has now the skill ' + event.newData.title);
+                this.reloadSkills(this.project.id);
+                event.confirm.resolve();
+              },
+              response_error => {
+                if (Constants.DEBUG) {
+                  console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+                }
+                this.reloadSkills(this.project.id);
+                event.confirm.reject();
+                this.messageService.error(response_error.error.message);
               }
-              this.reloadSkills(this.project.id);
-              event.confirm.reject();
-              this.messageService.error(response_error.error.message);
-            }
-          );
+            ));
         },
         response_error => {
           if (Constants.DEBUG) {
@@ -197,10 +202,11 @@ export class ProjectFormComponent implements OnInit {
     if (Constants.DEBUG) {
       console.log('Refreshing skills for the project\'s id ' + idProject);
     }
-    this.projectService.loadSkills(idProject).subscribe(
-      skills => this.sourceSkills.load(skills),
-      error => console.log(error),
-    );
+    this.subscriptions.add(
+      this.projectService.loadSkills(idProject).subscribe(
+        skills => this.sourceSkills.load(skills),
+        error => console.log(error),
+      ));
   }
   /**
    * Submit the change. The project will be created, or updated.
@@ -224,11 +230,12 @@ export class ProjectFormComponent implements OnInit {
     if (Constants.DEBUG) {
       console.log('saving the project ' + this.project.name + ' with id ' + this.project.id);
     }
-    this.projectService.save(this.project).subscribe(
-        project => {
-          this.project = project;
-          this.messageService.info('Project ' + this.project.name + '  saved !');
-        });
+    this.subscriptions.add(
+      this.projectService.save(this.project).subscribe(
+          project => {
+            this.project = project;
+            this.messageService.info('Project ' + this.project.name + '  saved !');
+          }));
   }
 
   public onConnectionSettingsChange(val: string) {
@@ -272,6 +279,10 @@ export class ProjectFormComponent implements OnInit {
       return true;
     }
     return (this.project.connection_settings === this.REMOTE_FILE_ACCESS);
+  }
+
+  ngOnDestroy() {
+    super.ngOnDestroy();
   }
 
 }

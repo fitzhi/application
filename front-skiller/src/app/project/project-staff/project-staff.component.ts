@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { ProjectService } from '../../service/project.service';
 import { Constants } from '../../constants';
 import { MessageService } from '../../message/message.service';
@@ -6,13 +6,14 @@ import { CinematicService } from '../../service/cinematic.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import {MatSort, MatTableDataSource} from '@angular/material';
 import { ProjectStaffService } from '../project-staff-service/project-staff.service';
+import { BaseComponent } from '../../base/base.component';
 
 @Component({
   selector: 'app-project-staff',
   templateUrl: './project-staff.component.html',
   styleUrls: ['./project-staff.component.css']
 })
-export class ProjectStaffComponent implements OnInit {
+export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDestroy {
 
   public dataSource;
 
@@ -30,21 +31,23 @@ export class ProjectStaffComponent implements OnInit {
     private messageService: MessageService,
     private cinematicService: CinematicService,
     private router: Router,
-    private projectStaffService: ProjectStaffService) { }
+    private projectStaffService: ProjectStaffService) { 
+      super();
+    }
 
   ngOnInit() {
-
-    this.sub = this.route.params.subscribe(params => {
-      if (Constants.DEBUG) {
-        console.log('params[\'id\'] ' + params['id']);
-      }
-      if (params['id'] == null) {
-        this.idProject = null;
-      } else {
-        this.idProject = + params['id']; // (+) converts string 'id' to a number
-        this.loadContributors();
-      }
-    });
+    this.subscriptions.add(
+      this.sub = this.route.params.subscribe(params => {
+        if (Constants.DEBUG) {
+          console.log('params[\'id\'] ' + params['id']);
+        }
+        if (params['id'] == null) {
+          this.idProject = null;
+        } else {
+          this.idProject = + params['id']; // (+) converts string 'id' to a number
+          this.loadContributors();
+        }
+      }));
 
     // Either we reach this component with this url '/project/:id' and the selection of the tab Staff
     // Or we reach this component directly with this url '/project/:id/staff'
@@ -60,33 +63,34 @@ export class ProjectStaffComponent implements OnInit {
    * Load the contributors for the current project.
    */
   loadContributors() {
-    this.projectService.contributors(this.idProject).subscribe(
-      contributorsDTO => {
-        this.dataSource = new MatTableDataSource(contributorsDTO.contributors);
-        this.dataSource.sort = this.sort;
-        this.projectStaffService.contributors = this.dataSource.data;
-        this.dataSource.connect().subscribe(data => this.projectStaffService.contributors = data);
-        this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: string): string => {
-          if (typeof data[sortHeaderId] === 'string') {
-            return data[sortHeaderId].toLocaleLowerCase();
+    this.subscriptions.add(
+      this.projectService.contributors(this.idProject).subscribe(
+        contributorsDTO => {
+          this.dataSource = new MatTableDataSource(contributorsDTO.contributors);
+          this.dataSource.sort = this.sort;
+          this.projectStaffService.contributors = this.dataSource.data;
+          this.dataSource.connect().subscribe(data => this.projectStaffService.contributors = data);
+          this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: string): string => {
+            if (typeof data[sortHeaderId] === 'string') {
+              return data[sortHeaderId].toLocaleLowerCase();
+            }
+            return data[sortHeaderId];
+          };
+        }, error => {
+          if (error.status === 404) {
+            if (Constants.DEBUG) {
+              console.log('404 : cannot find contributors for the id ' + this.idProject);
+            }
+            this.messageService.error('Cannot retrieve the contributors for the project identifier ' + this.idProject);
+          } else {
+            console.error(error.message);
           }
-          return data[sortHeaderId];
-        };
-      }, error => {
-        if (error.status === 404) {
+        },
+        () => {
           if (Constants.DEBUG) {
-            console.log('404 : cannot find contributors for the id ' + this.idProject);
+            console.log('Loading complete for id ' + this.idProject);
           }
-          this.messageService.error('Cannot retrieve the contributors for the project identifier ' + this.idProject);
-        } else {
-          console.error(error.message);
-        }
-      },
-      () => {
-        if (Constants.DEBUG) {
-          console.log('Loading complete for id ' + this.idProject);
-        }
-      });
+        }));
   }
 
   /**
@@ -99,4 +103,9 @@ export class ProjectStaffComponent implements OnInit {
   public routeStaff(idStaff: number) {
         this.router.navigate(['/user/' + idStaff], {});
   }
+
+  ngOnDestroy() {
+    super.ngOnDestroy();
+  }
+
 }

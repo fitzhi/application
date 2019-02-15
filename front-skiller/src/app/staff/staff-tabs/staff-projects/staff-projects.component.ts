@@ -5,19 +5,20 @@ import { MessageService } from '../../../message/message.service';
 import { ProjectService } from '../../../service/project.service';
 import { StaffService } from '../../../service/staff.service';
 import { StaffDataExchangeService } from '../../service/staff-data-exchange.service';
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 
 import {Ng2SmartTableModule} from 'ng2-smart-table';
 import {StarsSkillLevelRenderComponent} from './../../starsSkillLevelRenderComponent';
 import {Ng2SmartTableComponent} from 'ng2-smart-table/ng2-smart-table.component';
 import { LocalDataSource } from 'ng2-smart-table';
+import { BaseComponent } from '../../../base/base.component';
 
 @Component({
   selector: 'app-staff-projects',
   templateUrl: './staff-projects.component.html',
   styleUrls: ['./staff-projects.component.css']
 })
-export class StaffProjectsComponent implements OnInit {
+export class StaffProjectsComponent extends BaseComponent implements OnInit, OnDestroy {
 
   /*
    * Data store associated with the projects grid
@@ -38,7 +39,9 @@ export class StaffProjectsComponent implements OnInit {
       private messageService: MessageService,
       private staffService: StaffService,
       private projectService: ProjectService,
-      private staffDataExchangeService: StaffDataExchangeService ) { }
+      private staffDataExchangeService: StaffDataExchangeService ) {
+        super();
+      }
 
   ngOnInit() {
     // Either we are in creation mode, or we load the collaborator from the back-end...
@@ -51,12 +54,13 @@ export class StaffProjectsComponent implements OnInit {
     /**
      * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
      */
-    this.staffDataExchangeService.collaboratorObserver
-      .subscribe( (collabRetrieved: Collaborator) => {
-        this.collaborator = collabRetrieved;
-        this.sourceProjects.load(this.collaborator.missions);
+    this.subscriptions.add(
+      this.staffDataExchangeService.collaboratorObserver
+        .subscribe( (collabRetrieved: Collaborator) => {
+          this.collaborator = collabRetrieved;
+          this.sourceProjects.load(this.collaborator.missions);
 
-      });
+        }));
   }
 
   onConfirmCreateFromProject(event) {
@@ -64,22 +68,23 @@ export class StaffProjectsComponent implements OnInit {
       console.log('onConfirmCreateFromProject for event : ' + event.newData.name);
     }
     if (this.checkStaffMemberExist(event)) {
-      this.staffService.addProject(this.collaborator.idStaff, event.newData.name).subscribe(
-        (staffDTO: StaffDTO) => {
-          this.messageService.info(staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName +
-            ' is involved now in project ' + event.newData.name);
-          this.reloadProjects(this.collaborator.idStaff);
-          event.confirm.resolve();
-        },
-        response_error => {
-          if (Constants.DEBUG) {
-            console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+      this.subscriptions.add(
+        this.staffService.addProject(this.collaborator.idStaff, event.newData.name).subscribe(
+          (staffDTO: StaffDTO) => {
+            this.messageService.info(staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName +
+              ' is involved now in project ' + event.newData.name);
+            this.reloadProjects(this.collaborator.idStaff);
+            event.confirm.resolve();
+          },
+          response_error => {
+            if (Constants.DEBUG) {
+              console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+            }
+            this.reloadProjects(this.collaborator.idStaff);
+            this.messageService.error(response_error.error.message);
+            event.confirm.reject();
           }
-          this.reloadProjects(this.collaborator.idStaff);
-          this.messageService.error(response_error.error.message);
-          event.confirm.reject();
-        }
-      );
+        ));
     } else {
       event.confirm.reject();
     }
@@ -93,22 +98,24 @@ export class StaffProjectsComponent implements OnInit {
       this.projectService.lookup(event.newData.name).subscribe(
 
         project_transfered => {
-          this.staffService.changeProject(this.collaborator.idStaff, event.data.name, event.newData.name).subscribe(
-            (staffDTO: StaffDTO) => {
-              this.messageService.info(staffDTO.staff.firstName + ' ' +
-                staffDTO.staff.lastName + ' is involved now in project ' + event.newData.name);
-              this.reloadProjects(this.collaborator.idStaff);
-              event.confirm.resolve();
-            },
-            response_error => {
-              if (Constants.DEBUG) {
-                console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+          this.subscriptions.add(
+            this.staffService.changeProject(this.collaborator.idStaff, event.data.name, event.newData.name)
+            .subscribe(
+              (staffDTO: StaffDTO) => {
+                this.messageService.info(staffDTO.staff.firstName + ' ' +
+                  staffDTO.staff.lastName + ' is involved now in project ' + event.newData.name);
+                this.reloadProjects(this.collaborator.idStaff);
+                event.confirm.resolve();
+              },
+              response_error => {
+                if (Constants.DEBUG) {
+                  console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+                }
+                this.reloadProjects(this.collaborator.idStaff);
+                event.confirm.reject();
+                this.messageService.error(response_error.error.message);
               }
-              this.reloadProjects(this.collaborator.idStaff);
-              event.confirm.reject();
-              this.messageService.error(response_error.error.message);
-            }
-          );
+            ));
         },
         response_error => {
           if (Constants.DEBUG) {
@@ -138,22 +145,23 @@ export class StaffProjectsComponent implements OnInit {
        * there is a very little delay with a project without ID into the projects list.
        */
       if (typeof event.data['idProject'] !== 'undefined') {
-        this.staffService.removeFromProject(this.collaborator.idStaff, event.data['idProject']).subscribe(
-          (staffDTO: StaffDTO) => {
-            this.messageService.info(staffDTO.staff.firstName + ' ' +
-              staffDTO.staff.lastName + ' is not more involved in project ' + event.data.name);
-            this.reloadProjects(this.collaborator.idStaff);
-            event.confirm.resolve();
-          },
-          response_error => {
-            if (Constants.DEBUG) {
-              console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+        this.subscriptions.add(
+          this.staffService.removeFromProject(this.collaborator.idStaff, event.data['idProject']).subscribe(
+            (staffDTO: StaffDTO) => {
+              this.messageService.info(staffDTO.staff.firstName + ' ' +
+                staffDTO.staff.lastName + ' is not more involved in project ' + event.data.name);
+              this.reloadProjects(this.collaborator.idStaff);
+              event.confirm.resolve();
+            },
+            response_error => {
+              if (Constants.DEBUG) {
+                console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+              }
+              this.reloadProjects(this.collaborator.idStaff);
+              event.confirm.reject();
+              this.messageService.error(response_error.error.message);
             }
-            this.reloadProjects(this.collaborator.idStaff);
-            event.confirm.reject();
-            this.messageService.error(response_error.error.message);
-          }
-        );
+          ));
       }
     } else {
       event.confirm.reject();
@@ -174,16 +182,26 @@ export class StaffProjectsComponent implements OnInit {
     }
   }
 
-   /*
+ /*
   * Refresh the projects content after an update.
+  * @param idStaff staff identifier
   */
   reloadProjects(idStaff: number): void {
     if (Constants.DEBUG) {
       console.log('Refreshing projects for the staff\'s id ' + idStaff);
     }
-    this.staffService.loadProjects(idStaff).subscribe(
-      missions => this.sourceProjects.load(missions),
-      error => console.log(error),
-    );
+    this.subscriptions.add(
+      this.staffService.loadProjects(idStaff).subscribe(
+        missions => this.sourceProjects.load(missions),
+        error => console.log(error),
+      ));
   }
+
+  /**
+   * Calling the base class to unsubscribe all subscriptions.
+   */
+  ngOnDestroy() {
+    super.ngOnDestroy();
+  }
+
 }

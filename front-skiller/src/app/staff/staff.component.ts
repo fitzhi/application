@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Collaborator} from '../data/collaborator';
 import {Constants} from '../constants';
@@ -7,19 +7,19 @@ import {ListStaffService} from '../list-staff-service/list-staff.service';
 import { StaffDataExchangeService } from './service/staff-data-exchange.service';
 import {CinematicService} from '../service/cinematic.service';
 import {MessageService} from '../message/message.service';
+import { BaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'app-staff',
   templateUrl: './staff.component.html',
   styleUrls: ['./staff.component.css']
 })
-export class StaffComponent implements OnInit {
+export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
 
   /**
    * Staff member identifier shared with the child components (staffTabs, StaffForm)
    */
   idStaff: number;
-  private sub: any;
 
   private collaborator: Collaborator;
 
@@ -29,10 +29,12 @@ export class StaffComponent implements OnInit {
     private listStaffService: ListStaffService,
     private messageService: MessageService,
     private staffDataExchangeService: StaffDataExchangeService,
-    private router: Router) {}
+    private router: Router) {
+      super();
+    }
 
   ngOnInit() {
-    this.sub = this.route.params.subscribe(params => {
+    this.subscriptions.add( this.route.params.subscribe(params => {
       if (Constants.DEBUG) {
         console.log('params[\'id\'] ' + params['id']);
       }
@@ -91,9 +93,17 @@ export class StaffComponent implements OnInit {
           }
         );
       }
-    });
+    }));
     this.cinematicService.setForm(Constants.DEVELOPERS_CRUD, this.router.url);
   }
+
+  /**
+   * Calling the base class to unsubscribe all subscriptions.
+   */
+  ngOnDestroy() {
+    super.ngOnDestroy();
+  }
+
 }
 
 

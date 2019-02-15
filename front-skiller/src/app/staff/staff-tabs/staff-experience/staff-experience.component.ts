@@ -5,18 +5,19 @@ import {MessageService} from '../../../message/message.service';
 import {SkillService} from '../../../service/skill.service';
 import {StaffService} from '../../../service/staff.service';
 import {StaffDataExchangeService} from '../../service/staff-data-exchange.service';
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 
 import {LocalDataSource} from 'ng2-smart-table';
 import {StaffUploadCvComponent} from './staff-upload-cv/staff-upload-cv.component';
 import {MatDialog, MatDialogConfig} from '@angular/material';
+import { BaseComponent } from '../../../base/base.component';
 
 @Component({
   selector: 'app-staff-experience',
   templateUrl: './staff-experience.component.html',
   styleUrls: ['./staff-experience.component.css']
 })
-export class StaffExperienceComponent implements OnInit {
+export class StaffExperienceComponent extends BaseComponent implements OnInit, OnDestroy {
 
   /**
    * Image used by the button for upload the application to retrieve the skills.
@@ -46,37 +47,40 @@ export class StaffExperienceComponent implements OnInit {
    */
   public staff: Collaborator;
 
-
   constructor(
     private staffDataExchangeService: StaffDataExchangeService,
     private staffService: StaffService,
     private messageService: MessageService,
     private dialog: MatDialog,
-    private skillService: SkillService) {}
+    private skillService: SkillService) {
+      super();
+    }
 
   ngOnInit() {
     /**
      * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
      */
-    this.staffDataExchangeService.collaboratorObserver
-      .subscribe((collabRetrieved: Collaborator) => {
-        this.staff = collabRetrieved;
-        this.sourceExperience.load(this.staff.experiences);
+    this.subscriptions.add(
+      this.staffDataExchangeService.collaboratorObserver
+        .subscribe((collabRetrieved: Collaborator) => {
+          this.staff = collabRetrieved;
+          this.sourceExperience.load(this.staff.experiences);
 
-        switch (this.staff.typeOfApplication) {
-          case Constants.FILE_TYPE_DOC:
-          case Constants.FILE_TYPE_DOCX:
-            {
-              this.image_downloadCV = this.images_dir + this.image_winword;
-              break;
-            }
-          case Constants.FILE_TYPE_PDF:
-            {
-              this.image_downloadCV = this.images_dir + this.image_pdf;
-              break;
-            }
-        }
-      });
+          switch (this.staff.typeOfApplication) {
+            case Constants.FILE_TYPE_DOC:
+            case Constants.FILE_TYPE_DOCX:
+              {
+                this.image_downloadCV = this.images_dir + this.image_winword;
+                break;
+              }
+            case Constants.FILE_TYPE_PDF:
+              {
+                this.image_downloadCV = this.images_dir + this.image_pdf;
+                break;
+              }
+          }
+        })
+      );
   }
 
   /*
@@ -86,10 +90,11 @@ export class StaffExperienceComponent implements OnInit {
     if (Constants.DEBUG) {
       console.log('Refreshing experiences for the staff\'s id ' + idStaff);
     }
-    this.staffService.loadExperiences(idStaff).subscribe(
-      assets => this.sourceExperience.load(assets),
-      error => console.log(error),
-    );
+    this.subscriptions.add(
+      this.staffService.loadExperiences(idStaff).subscribe(
+        assets => this.sourceExperience.load(assets),
+        error => console.log(error),
+      ));
   }
   onBeforeAddStaffSkill(event) {
     if (Constants.DEBUG) {
@@ -107,22 +112,23 @@ export class StaffExperienceComponent implements OnInit {
       console.log('onConfirmAddStaffSkill for event ' + event.newData.title);
     }
     if (this.checkStaffMemberExist(event)) {
-      this.staffService.addExperience(this.staff.idStaff, event.newData.title, event.newData.level).subscribe(
-        (staffDTO: StaffDTO) => {
-          this.messageService.info(staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName +
-            ' has gained the skill ' + event.newData.title);
-          this.reloadExperiences(this.staff.idStaff);
-          event.confirm.resolve();
-        },
-        response_error => {
-          if (Constants.DEBUG) {
-            console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+      this.subscriptions.add(
+        this.staffService.addExperience(this.staff.idStaff, event.newData.title, event.newData.level).subscribe(
+          (staffDTO: StaffDTO) => {
+            this.messageService.info(staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName +
+              ' has gained the skill ' + event.newData.title);
+            this.reloadExperiences(this.staff.idStaff);
+            event.confirm.resolve();
+          },
+          response_error => {
+            if (Constants.DEBUG) {
+              console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+            }
+            this.reloadExperiences(this.staff.idStaff);
+            this.messageService.error(response_error.error.message);
+            event.confirm.reject();
           }
-          this.reloadExperiences(this.staff.idStaff);
-          this.messageService.error(response_error.error.message);
-          event.confirm.reject();
-        }
-      );
+        ));
     } else {
       event.confirm.reject();
     }
@@ -133,37 +139,38 @@ export class StaffExperienceComponent implements OnInit {
       console.log('onConfirmEditStaffSkill for event from ' + event.data.title + ' to ' + event.newData.title);
     }
     if (this.checkStaffMemberExist(event)) {
-      this.skillService.lookup(event.newData.title).subscribe(
-
-        project_transfered => {
-          this.staffService.changeExperience(this.staff.idStaff, event.data.title, event.newData.title,
-            event.newData.level).subscribe(
-            (staffDTO: StaffDTO) => {
-              this.messageService.info(staffDTO.staff.firstName + ' ' +
-                staffDTO.staff.lastName + ' has now the experience ' + event.newData.title);
-              this.reloadExperiences(this.staff.idStaff);
-              event.confirm.resolve();
-            },
-            response_error => {
-              if (Constants.DEBUG) {
-                console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
-              }
-              this.reloadExperiences(this.staff.idStaff);
-              event.confirm.reject();
-              this.messageService.error(response_error.error.message);
+      this.subscriptions.add(
+        this.skillService.lookup(event.newData.title).subscribe(
+          project_transfered => {
+            this.subscriptions.add(
+              this.staffService.changeExperience(this.staff.idStaff, event.data.title, event.newData.title,
+                event.newData.level).subscribe(
+                (staffDTO: StaffDTO) => {
+                  this.messageService.info(staffDTO.staff.firstName + ' ' +
+                    staffDTO.staff.lastName + ' has now the experience ' + event.newData.title);
+                  this.reloadExperiences(this.staff.idStaff);
+                  event.confirm.resolve();
+                },
+                response_error => {
+                  if (Constants.DEBUG) {
+                    console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+                  }
+                  this.reloadExperiences(this.staff.idStaff);
+                  event.confirm.reject();
+                  this.messageService.error(response_error.error.message);
+                }
+                ));
+          },
+          response_error => {
+            if (Constants.DEBUG) {
+              console.error(response_error);
             }
-            );
-        },
-        response_error => {
-          if (Constants.DEBUG) {
-            console.error(response_error);
-          }
-          this.messageService.error(response_error.error.message);
-          event.confirm.reject();
-        });
-    } else {
-      event.confirm.reject();
-    }
+            this.messageService.error(response_error.error.message);
+            event.confirm.reject();
+          }));
+      } else {
+        event.confirm.reject();
+      }
   }
 
   /**
@@ -195,22 +202,23 @@ export class StaffExperienceComponent implements OnInit {
        * there is a little laps of time without id in the experiences list.
        */
       if (typeof event.data['id'] !== 'undefined') {
-        this.staffService.revokeExperience(this.staff.idStaff, event.data['id']).subscribe(
-          (staffDTO: StaffDTO) => {
-            this.messageService.info(staffDTO.staff.firstName + ' ' +
-              staffDTO.staff.lastName + ' has no more the skill ' + event.data.title);
-            this.reloadExperiences(this.staff.idStaff);
-            event.confirm.resolve();
-          },
-          response_error => {
-            if (Constants.DEBUG) {
-              console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+        this.subscriptions.add(
+          this.staffService.revokeExperience(this.staff.idStaff, event.data['id']).subscribe(
+            (staffDTO: StaffDTO) => {
+              this.messageService.info(staffDTO.staff.firstName + ' ' +
+                staffDTO.staff.lastName + ' has no more the skill ' + event.data.title);
+              this.reloadExperiences(this.staff.idStaff);
+              event.confirm.resolve();
+            },
+            response_error => {
+              if (Constants.DEBUG) {
+                console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
+              }
+              this.reloadExperiences(this.staff.idStaff);
+              this.messageService.error(response_error.error.message);
+              event.confirm.reject();
             }
-            this.reloadExperiences(this.staff.idStaff);
-            this.messageService.error(response_error.error.message);
-            event.confirm.reject();
-          }
-        );
+          ));
       }
     } else {
       event.confirm.reject();
@@ -237,15 +245,16 @@ export class StaffExperienceComponent implements OnInit {
     dialogConfig.panelClass = 'default-dialog-container-class';
     dialogConfig.data = this.staff;
     const dialogReference = this.dialog.open(StaffUploadCvComponent, dialogConfig);
-    dialogReference.afterClosed().subscribe(returnCodeMessage => {
-      if (returnCodeMessage.code === Constants.ERROR) {
-        this.messageService.error(returnCodeMessage.message);
-      }
-      if (returnCodeMessage.code === Constants.OK) {
-        this.reloadExperiences(this.staff.idStaff);
-        this.messageService.info(returnCodeMessage.message);
-      }
-    });
+    this.subscriptions.add(
+      dialogReference.afterClosed().subscribe(returnCodeMessage => {
+        if (returnCodeMessage.code === Constants.ERROR) {
+          this.messageService.error(returnCodeMessage.message);
+        }
+        if (returnCodeMessage.code === Constants.OK) {
+          this.reloadExperiences(this.staff.idStaff);
+          this.messageService.info(returnCodeMessage.message);
+        }
+      }));
   }
 
   /**
@@ -261,5 +270,9 @@ export class StaffExperienceComponent implements OnInit {
         + this.staff.lastName);
     }
     this.staffService.downloadApplication(this.staff);
+  }
+
+  ngOnDestroy() {
+    super.ngOnDestroy();
   }
 }
