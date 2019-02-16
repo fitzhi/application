@@ -16,7 +16,6 @@ export class DialogUpdatedProjectGhostsComponent implements OnInit {
   public dataSource: ProjectGhostsDataSource;
 
   constructor(
-//    private dialogRef: MatDialogRef<DialogProjectGhostsComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ProjectGhostsDataSource) { }
 
   ngOnInit() {

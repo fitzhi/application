@@ -1,20 +1,22 @@
-<form>
+<form [formGroup]="filters">
   <h2 mat-dialog-title>Filtering the chart</h2>
   <mat-dialog-content>
 
     <label for="startingDate">Process filter :&nbsp;</label>
-    <mat-form-field id="startingDate">
-      <input matInput [matDatepicker]="picker" placeholder="Choose the starting date" >
+    <mat-form-field id="startingDate" name="startingDate">
+      <input matInput formControlName="startingDate" [matDatepicker]="picker" 
+        placeholder="Choose the starting date">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
     <br/>
-    
-    <label for="staffMember">Developer filter :&nbsp;</label>
-    <mat-form-field id="staffMember" >
-      <mat-select placeholder="Choose a staff member">
-        <mat-option *ngFor="let contributor of contributors" [value]="contributor.fullname">
+
+    <label for="idStaffSelected">Developer filter :&nbsp;</label>
+    <mat-form-field id="idStaffSelected" name="idStaffSelected">
+      <mat-select formControlName="idStaffSelected" placeholder="Choose a staff member">
+        <mat-option *ngFor="let contributor of contributors" [value]="contributor.idStaff">
+          {{contributor.fullname}}
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -25,4 +27,5 @@
     <button class="actions" type="submit" (click)="submit()">Ok</button>
   </mat-dialog-actions>
 </form>
+
 

@@ -50,9 +50,11 @@ import fr.skiller.data.internal.Staff;
 import fr.skiller.data.internal.RiskChartData;
 import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.BasicCommitRepository;
+import fr.skiller.data.source.CommitHistory;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
 import fr.skiller.data.source.Contributor;
+import fr.skiller.data.source.Operation;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.scanner.AbstractScannerDataGenerator;
 import fr.skiller.source.scanner.RepoScanner;
@@ -63,6 +65,7 @@ import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.controller.ProjectController.SettingsGeneration;
 
 import static fr.skiller.Global.LN;
 import static fr.skiller.Global.UNKNOWN;
@@ -393,17 +396,17 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 
 	@Override
 	@Async
-	public RiskDashboard generateAsync(final Project project) throws Exception {
+	public RiskDashboard generateAsync(final Project project, final SettingsGeneration settings) throws Exception {
 		try {
 			tasks.addTask( DASHBOARD_GENERATION, "project", project.id);
-			return generate(project);
+			return generate(project, settings);
 		} finally {
 			tasks.removeTask(DASHBOARD_GENERATION, "project", project.id);
 		}
 	}
 	
 	@Override
-	public RiskDashboard generate(final Project project) throws Exception {
+	public RiskDashboard generate(final Project project, final SettingsGeneration cfgGeneration) throws Exception {
 		
 		final ConnectionSettings settings = connectionSettings(project);
 
@@ -433,6 +436,17 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 				logger.debug(contributor.idStaff + " " + ((fullname != null) ? fullname : "unknown"));
 			});
 		}
+
+		// If the process is filtered on a particular developer
+		if (cfgGeneration.idStaffSelected > 0) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Filtering the dashboard for the developer " 
+						+ staffHandler.getFullname(cfgGeneration.idStaffSelected));
+			}
+			CommitRepository personalRepo = new BasicCommitRepository();
+			personalizeRepo(repo, personalRepo, cfgGeneration.idStaffSelected);
+		}
+		
 		
 		RiskDashboard data = this.aggregateDashboard(project, repo);
 		
@@ -461,10 +475,20 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 				logger.debug(sb.toString());					
 			}
 		}
-
 		return data;
 	}
 
+	@Override
+	public void personalizeRepo(CommitRepository globalRepo, CommitRepository personalRepo, int idStaff) {
+		
+		for (CommitHistory commits : globalRepo.getRepository().values()) {
+			commits.operations.stream()
+				.filter(it -> (it.idStaff == idStaff))
+				.forEach(item -> personalRepo.addCommit(commits.sourcePath, idStaff, item.dateCommit));
+		}
+		
+	}
+	
 	/**
 	 * Load the connection settings for the given project.
 	 * @param project the passed project
@@ -517,4 +541,5 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		}
 		return result;
 	}
+
 }

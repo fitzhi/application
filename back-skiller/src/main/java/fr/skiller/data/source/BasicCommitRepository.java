@@ -14,16 +14,17 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @author Fr&eacute;d&eacute;ric VIDAL
- * repository containing timestamped commits for the given project.
+ * Repository containing time-stamped commits for the given project.
  * <br/><i>This is the first & basic implementation for the Commit repository</i>.
+ * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public class BasicCommitRepository implements CommitRepository {
 
 	Map<String, CommitHistory> repo = new HashMap<String, CommitHistory>();
 	
 	/**
-	 * This set contains the developers/contributors retrieved in the repository but unrecognized during the parsing process.
+	 * This set contains the developers/contributors retrieved in the repository 
+	 * but unrecognized during the parsing process.
 	 */
 	Set<String> unknownContributors = new HashSet<String>();
 	

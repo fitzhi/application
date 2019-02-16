@@ -1,6 +1,8 @@
 package fr.skiller.controller;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -223,8 +225,6 @@ public class ProjectController {
 		final ResponseEntity<Project> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 		try {
-			Map<Integer, Project> projects = projectHandler.getProjects();
-	
 			if (project.id == 0) {
 				project = projectHandler.addNewProject(project);
 				headers.add("backend.return_code", "1");
@@ -378,17 +378,34 @@ public class ProjectController {
 	 * Parameter sent to the controller in order to obtain the sunburst data. 
 	 * @author Fr&eacute;d&eacute;ric VIDAL
 	 */
-	public class ParamSunburst {
+	public class SettingsGeneration {
 		/**
 		 * Project identifier.
 		 */
 		public int idProject;
 
 		/**
+		 * Starting date of investigation.
+		 */
+		public long startingDate;
+		
+		/**
+		 * selected staff identifier.
+		 */
+		public int idStaffSelected;
+		
+		/**
 		 * ParamSunburst.
 		 */
-		public ParamSunburst() {
+		public SettingsGeneration() {
 			super();
+		}
+
+		/**
+		 * @param idProject project identifier
+		 */
+		public SettingsGeneration(final int idProject) {
+			this.idProject = idProject;
 		}
 		
 	}
@@ -399,23 +416,27 @@ public class ProjectController {
 	@PostMapping("/sunburst")
 	ResponseEntity<SunburstDTO> retrieveRiskDashboard(@RequestBody String param) {
 
-		ParamSunburst p = g.fromJson(param, ParamSunburst.class);
+		SettingsGeneration gp = g.fromJson(param, SettingsGeneration.class);
 		if (logger.isDebugEnabled()) {
-			logger.debug("POST command on /sunburst with params idProject :" + String.valueOf(p.idProject));
+			logger.debug( MessageFormat.format(
+				"POST command on /sunburst with params idProject : {0}, starting from {1}, for the staff member ",
+				gp.idProject,
+				(gp.startingDate == 0) ? "EPOC" : new Date(gp.startingDate),
+				gp.idStaffSelected));
 		}
 
 		MyReference<ResponseEntity<SunburstDTO>> refResponse = new MyReference<ResponseEntity<SunburstDTO>>();
-		Project project = getProject(p.idProject, new SunburstDTO(), refResponse);
+		Project project = getProject(gp.idProject, new SunburstDTO(), refResponse);
 		if (refResponse.response != null) {
 			return refResponse.response;
 		}
 		
 		try {
 			if (scanner.hasAvailableGeneration(project)) {
-				return generate(project);
+				return generate(project, gp);
 			} else {
 				if (logger.isDebugEnabled()) {
-					logger.debug ("Tasks present in the collection");
+					logger.debug ("Tasks present in the tasks collection");
 					logger.debug (tasks.trace());
 				}
 				if (tasks.containsTask(DASHBOARD_GENERATION, "project", project.id)) {
@@ -432,7 +453,7 @@ public class ProjectController {
 				if (logger.isDebugEnabled()) {
 					logger.debug("The generation will be processed asynchronously !");
 				}
-				scanner.generateAsync(project);
+				scanner.generateAsync(project, gp);
 				return new ResponseEntity<SunburstDTO> (new SunburstDTO(project.id, null, HttpStatus.CREATED.value(), 
 						"The dashboard generation has been launched. Operation might last a while. Please try later !"), 
 						new HttpHeaders(), 
@@ -449,12 +470,13 @@ public class ProjectController {
 	/**
 	 * Generate the dashboard.
 	 * @param project the passed project
+	 * @param settings parameters sent to the dashboard generation as staring date, filtered staff member.
 	 * @return the generated risks dashboard.
 	 */
-	private ResponseEntity<SunburstDTO> generate (final Project project) {
+	private ResponseEntity<SunburstDTO> generate (final Project project, final SettingsGeneration settings) {
 		try {
 			tasks.addTask( DASHBOARD_GENERATION, "project", project.id);
-			RiskDashboard data = scanner.generate(project);
+			RiskDashboard data = scanner.generate(project, settings);
 			return new ResponseEntity<SunburstDTO>(
 					new SunburstDTO(project.id, data), new HttpHeaders(), HttpStatus.OK);
 		} catch (final Exception e) {
@@ -512,7 +534,7 @@ public class ProjectController {
 		try {
 			String response = cacheDataHandler.removeRepository(project) ? "1" : "0";
 			if ("1".equals(response)) {
-				scanner.generateAsync(project);
+				scanner.generateAsync(project, new SettingsGeneration(project.id));
 			}
 			return new ResponseEntity<String>( 
 					response,

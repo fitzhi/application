@@ -13,6 +13,7 @@ import { DialogLegendSunburstComponent } from './dialog-legend-sunburst/dialog-l
 import { MessageBoxService } from '../../message-box/service/message-box.service';
 import { DialogFilterComponent } from './dialog-filter/dialog-filter.component';
 import { BaseComponent } from '../../base/base.component';
+import { SettingsGeneration } from '../../data/settingsGeneration';
 
 @Component({
   selector: 'app-project-sunburst',
@@ -72,6 +73,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
   private idPanelSelected = -1;
 
   public projectName: string;
+
+  private myChart: Sunburst;
 
   constructor(
     private cinematicService: CinematicService,
@@ -160,69 +163,16 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
     if ((document.getElementById('chart') != null) && (this.idProject != null)) {
 
-      const myChart = Sunburst();
+      this.myChart = Sunburst();
 
       this.subscriptions.add(
-        this.projectService.retrieveSuburstData(this.idProject)
-          .subscribe(response => {
-            if (myChart !== null) {
-              myChart.data(response.sunburstData).width(500).height(500).label('location').size('numberOfFiles').color('color')
-                (document.getElementById('chart'));
-              if (typeof this.dataGhosts === 'undefined') {
-                this.dataGhosts = new ProjectGhostsDataSource(this.project);
-              }
-              // Send the unregistered contributors to the panel list
-              this.dataGhosts.sendUnknowns(response.ghosts);
-            }
-          }, response => {
-            if (Constants.DEBUG) {
-              console.log('Response returned while retrieving the sunburst data for the project identfier ' + this.idProject);
-            }
-            switch (response.status) {
-              case 404:
-                {
-                  this.messageService.error(
-                    'Resource not found while retrieving the sunburst data for the project identfier ' + this.idProject);
-                  break;
-                }
-              case 400: {
-                switch (response.error.code) {
-                  case 201:
-                    // The generation is not accessible. A dashboard generation is launched asynchronously.
-                    this.messageBoxService.exclamation('Operation launched', response.error.message);
-                    break;
-                  case -999:
-                    // Operation already been launched.
-                    this.messageBoxService.exclamation('Operation already launched', response.error.message);
-                    break;
-                  default:
-                      // We display the error generated on the server
-                      this.messageService.error('ERROR ' + response.error.message);
-                    }
-                break;
-              }
-              default: {
-                // Unattempted error
-                this.messageService.error('ERROR ' + response.message);
-                break;
-              }
-            }
-          },
+        this.projectService.loadDashboardData(new SettingsGeneration(this.idProject, 0, 0))
+          .subscribe(
+            response => this.handleSunburstData(response),
+            response => this.handleErrorData(response),
             () => {
               this.hackSunburstStyle();
-              myChart.tooltipContent(function (graph) {
-
-                if (graph.lastUpdate != null) {
-                  const date = new Date(graph.lastUpdate);
-                  const day = date.getDate();
-                  const monthIndex = date.getMonth();
-                  const year = date.getFullYear();
-                  const tooltip = 'last commit ' + day + '/' + monthIndex + '/' + year;
-                  return tooltip;
-                } else {
-                  return 'No commit here!';
-                }
-              });
+              this.tooltipChart();
               this.sunburst_ready = true;
               this.sunburst_waiting = false;
               // The chart is drawn. We do have to generate a new one.
@@ -231,6 +181,67 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
     }
   }
 
+  handleSunburstData(response: any) {
+    if (this.myChart !== null) {
+      this.myChart.data(response.sunburstData).width(500).height(500).label('location').size('numberOfFiles').color('color')
+        (document.getElementById('chart'));
+      if (typeof this.dataGhosts === 'undefined') {
+        this.dataGhosts = new ProjectGhostsDataSource(this.project);
+      }
+      // Send the unregistered contributors to the panel list
+      this.dataGhosts.sendUnknowns(response.ghosts);
+    }
+  }
+
+  handleErrorData(response: any) {
+    if (Constants.DEBUG) {
+      console.log('Response returned while retrieving the sunburst data for the project identfier ' + this.idProject);
+    }
+    switch (response.status) {
+      case 404:
+        {
+          this.messageService.error(
+            'Resource not found while retrieving the sunburst data for the project identfier ' + this.idProject);
+          break;
+        }
+      case 400: {
+        switch (response.error.code) {
+          case 201:
+            // The generation is not accessible. A dashboard generation is launched asynchronously.
+            this.messageBoxService.exclamation('Operation launched', response.error.message);
+            break;
+          case -999:
+            // Operation already been launched.
+            this.messageBoxService.exclamation('Operation already launched', response.error.message);
+            break;
+          default:
+              // We display the error generated on the server
+              this.messageService.error('ERROR ' + response.error.message);
+            }
+        break;
+      }
+      default: {
+        // Unattempted error
+        this.messageService.error('ERROR ' + response.message);
+        break;
+      }
+    }
+  }
+
+  tooltipChart() {
+    this.myChart.tooltipContent(function (graph) {
+      if (graph.lastUpdate != null) {
+        const date = new Date(graph.lastUpdate);
+        const day = date.getDate();
+        const monthIndex = date.getMonth();
+        const year = date.getFullYear();
+        const tooltip = 'last commit ' + day + '/' + monthIndex + '/' + year;
+        return tooltip;
+      } else {
+        return 'No commit here!';
+      }
+    });
+   }
   /**
    * After creation treatment.
    */

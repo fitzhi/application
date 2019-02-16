@@ -31,7 +31,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
     private messageService: MessageService,
     private cinematicService: CinematicService,
     private router: Router,
-    private projectStaffService: ProjectStaffService) { 
+    private projectStaffService: ProjectStaffService) {
       super();
     }
 

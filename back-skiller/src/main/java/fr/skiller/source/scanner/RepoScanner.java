@@ -5,6 +5,7 @@ package fr.skiller.source.scanner;
 
 import fr.skiller.data.internal.RiskChartData;
 import fr.skiller.data.internal.RiskDashboard;
+import fr.skiller.controller.ProjectController.SettingsGeneration;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
@@ -45,20 +46,38 @@ public interface RepoScanner {
 	/**
 	 * Generate and complete the dashboard generation figuring the activities of staff members for the passed project
 	 * @param project the project whose source code files should be parsed in the repository
+	 * @param settings the dashboard generation settings, such as :
+	 * <ul>
+	 * <li>filtered from a starting date,</li>
+	 * <li>or filtered for a staff member.</li>
+	 * </ul>
 	 * @return the project risk dashboard 
 	 * @throws Exception thrown if any application or network error occurs during the treatment.
 	 */
-	RiskDashboard generate(Project project) throws Exception;
+	RiskDashboard generate(Project project, SettingsGeneration settings) throws Exception;
 
 	/**
 	 * This method is an ASYNCHRONOUS wrapper from the method {@link #generate(Project)}
 	 * <br/>
 	 * Generate and complete the dashboard generation figuring the activities of staff members for the passed project
 	 * @param project the project whose source code files should be parsed in the repository
+	 * @param settings the dashboard generation settings, such as :
+	 * <ul>
+	 * <li>filtered from a starting date,</li>
+	 * <li>or filtered for a staff member.</li>
+	 * </ul>
 	 * @return the project risk dashboard 
 	 * @throws Exception thrown if any application or network error occurs during the treatment.
 	 */
-	RiskDashboard generateAsync(Project project) throws Exception;
+	RiskDashboard generateAsync(Project project, SettingsGeneration settings) throws Exception;
+	
+	/**
+	 * Personalize the commit repository on a particular staff member.
+	 * @param globalRepo the global repository containing all the staff team
+	 * @param personalRepo a subset of the repository centralized on a particular developer
+	 * @param idStaff the passed staff identifier on whom the repository must be filtered
+	 */
+	void personalizeRepo(CommitRepository globalRepo, CommitRepository personalRepo,  int idStaff);
 	
 	/**
 	 * Test if risks dashboard have been executed.

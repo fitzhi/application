@@ -10,6 +10,7 @@ import {Constants} from '../constants';
 import { Skill } from '../data/skill';
 import { ContributorsDTO } from '../data/external/contributorsDTO';
 import { PseudoList } from '../data/PseudoList';
+import { SettingsGeneration } from '../data/settingsGeneration';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -110,11 +111,12 @@ export class ProjectService extends InternalService {
   /**
    * Retrieve the Sunburst data, figuring the activity on the source code regarding the passed project.
    */
-  retrieveSuburstData(idProject: number): Observable<any> {
+  loadDashboardData(settings: SettingsGeneration): Observable<any> {
     if (Constants.DEBUG) {
-      console.log('Retrieving the Sunburst data for the project ' + idProject);
+      console.log('Retrieving the Sunburst data for the project ' + settings.idProject);
     }
-    const body = {idProject: idProject};
+    const body = {idProject: settings.idProject, idStaffSelected: settings.idStaffSelected,
+        startingDate: settings.startingDate};
     return this.httpClient.post<any>(this.projectUrl + '/sunburst', body, httpOptions);
   }
 

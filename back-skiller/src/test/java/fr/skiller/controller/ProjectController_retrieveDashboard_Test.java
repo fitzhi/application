@@ -25,7 +25,7 @@ import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.controller.ProjectController;
-import fr.skiller.controller.ProjectController.ParamSunburst;
+import fr.skiller.controller.ProjectController.SettingsGeneration;
 import fr.skiller.data.external.SunburstDTO;
 import fr.skiller.data.internal.Project;
 
@@ -61,7 +61,7 @@ public class ProjectController_retrieveDashboard_Test {
 		Project p = projectHandler.get(1);
 		Assert.assertNotNull(p);
 
-		ParamSunburst param = new ProjectController().new ParamSunburst();
+		SettingsGeneration param = new ProjectController().new SettingsGeneration();
 		param.idProject = 1;
 		
 		Mockito.when(cacheDataHandler.hasCommitRepositoryAvailable(p)).thenReturn(false);
