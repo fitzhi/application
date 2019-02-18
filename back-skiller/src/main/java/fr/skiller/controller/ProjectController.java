@@ -415,7 +415,9 @@ public class ProjectController {
 	*/
 	@PostMapping("/sunburst")
 	ResponseEntity<SunburstDTO> retrieveRiskDashboard(@RequestBody String param) {
-
+		if (logger.isDebugEnabled()) {
+			logger.debug("Reception of the JSON body " + param);
+		}
 		SettingsGeneration gp = g.fromJson(param, SettingsGeneration.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug( MessageFormat.format(

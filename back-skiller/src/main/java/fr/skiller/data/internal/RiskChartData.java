@@ -14,7 +14,7 @@ import java.util.Set;
 
 import fr.skiller.Global;
 import static fr.skiller.Global.UNKNOWN;
-
+import static fr.skiller.Global.LN;
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  * Sunburst data build from the History of the Source repository with layout information.
@@ -167,4 +167,5 @@ public class RiskChartData {
 	public Set<String> getClassnames() {
 		return classNames;
 	}
+	
 }

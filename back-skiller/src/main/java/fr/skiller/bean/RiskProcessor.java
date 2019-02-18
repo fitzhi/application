@@ -6,6 +6,7 @@ package fr.skiller.bean;
 import java.util.List;
 import java.util.Map;
 
+import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import fr.skiller.data.internal.RiskChartData;
 import fr.skiller.data.internal.RiskLegend;
 import fr.skiller.data.source.CommitRepository;
@@ -45,5 +46,6 @@ public interface RiskProcessor {
 	 * @return the calculated level of risk
 	 */
 	int meanTheRisk(RiskChartData location);
+
 	
 }

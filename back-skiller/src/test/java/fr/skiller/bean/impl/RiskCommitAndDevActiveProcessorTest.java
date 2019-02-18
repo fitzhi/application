@@ -31,8 +31,8 @@ import fr.skiller.source.scanner.RepoScanner;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
 /**
- * @author Fr&eacute;d&eacute;ric VIDAL
  * Testing the class {@link RiskCommitAndDevActiveProcessorImpl}
+ * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest

@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, OnDestroy, Inject } from '@angular/core';
 import Sunburst from 'sunburst-chart';
 import { Constants } from '../../constants';
 import { MessageService } from '../../message/message.service';
@@ -14,6 +14,7 @@ import { MessageBoxService } from '../../message-box/service/message-box.service
 import { DialogFilterComponent } from './dialog-filter/dialog-filter.component';
 import { BaseComponent } from '../../base/base.component';
 import { SettingsGeneration } from '../../data/settingsGeneration';
+import { DOCUMENT } from '@angular/common';
 
 @Component({
   selector: 'app-project-sunburst',
@@ -28,19 +29,16 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
   @Input('subjProject') subjProject;
 
   /**
-    * Project loaded on the parent component.
-    */
+  * Project loaded on the parent component.
+  */
   private project: Project;
 
   /**
-   * Project id passed by the router.
+   * Parameters passed to the generation method on the back-end.
    */
-  private idProject: number;
+  private settings = new SettingsGeneration(-1, new Date(0).getTime(), 0);
 
   public dataGhosts: ProjectGhostsDataSource;
-
-
-  private chart_is_drawn = false;
 
   // this boolean is indicating that the sunburst chart is ready to be viewed.
   public sunburst_ready = false;
@@ -53,9 +51,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
   // Waiting images previewed during the chart generation.
   public sunburstWaitingImage = '/assets/img/sunburst-waiting-image.png';
-
-  // No button is selected.
-  private UNSELECTED = -1;
 
   // Rules of risks panel has to be displayed.
   public LEGEND_SUNBURST = 1;
@@ -77,6 +72,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
   private myChart: Sunburst;
 
   constructor(
+    @Inject(DOCUMENT) private document: any,
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
     private messageService: MessageService,
@@ -84,8 +80,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
     private dialog: MatDialog,
     private projectService: ProjectService) {
       super();
-      const today = new Date();
-      this.dateConstruction =  today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds();
   }
 
   ngOnInit() {
@@ -95,9 +89,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
         console.log('params[\'id\'] ' + params['id']);
       }
       if (params['id'] == null) {
-        this.idProject = null;
+        this.settings.idProject = null;
       } else {
-        this.idProject = + params['id']; // (+) converts string 'id' to a number
+        this.settings.idProject = + params['id']; // (+) converts string 'id' to a number
       }
     }));
 
@@ -129,7 +123,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
       }
     ));
 
-    if (this.idProject == null) {
+    if (this.settings.idProject == null) {
       if (Constants.DEBUG) {
         console.log('No project identifier passed to this tab. No data available for preview !');
       }
@@ -146,11 +140,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
    */
   loadSunburst() {
 
-    if (this.chart_is_drawn) {
-      return;
-    }
-
-    if ((typeof this.project === 'undefined') || (typeof this.project.id === 'undefined')) {
+     if ((typeof this.project === 'undefined') || (typeof this.project.id === 'undefined')) {
       this.sunburst_impossible = true;
       this.sunburst_waiting = false;
       this.sunburst_ready = false;
@@ -161,12 +151,14 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
       this.sunburst_ready = false;
     }
 
-    if ((document.getElementById('chart') != null) && (this.idProject != null)) {
+    if ((document.getElementById('chart') != null) && (this.settings.idProject != null)) {
 
-      this.myChart = Sunburst();
+      if (typeof this.myChart === 'undefined') {
+        this.myChart = Sunburst();
+      }
 
       this.subscriptions.add(
-        this.projectService.loadDashboardData(new SettingsGeneration(this.idProject, 0, 0))
+        this.projectService.loadDashboardData(this.settings)
           .subscribe(
             response => this.handleSunburstData(response),
             response => this.handleErrorData(response),
@@ -175,8 +167,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
               this.tooltipChart();
               this.sunburst_ready = true;
               this.sunburst_waiting = false;
-              // The chart is drawn. We do have to generate a new one.
-              this.chart_is_drawn = true;
             }));
     }
   }
@@ -195,13 +185,14 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
   handleErrorData(response: any) {
     if (Constants.DEBUG) {
-      console.log('Response returned while retrieving the sunburst data for the project identfier ' + this.idProject);
+      console.log('Response returned while retrieving the sunburst data for the project identfier ' +
+            this.settings.idProject);
     }
     switch (response.status) {
-      case 404:
-        {
+      case 404: {
           this.messageService.error(
-            'Resource not found while retrieving the sunburst data for the project identfier ' + this.idProject);
+            'Resource not found while retrieving the sunburst data for the project identfier ' +
+              this.settings.idProject);
           break;
         }
       case 400: {
@@ -320,28 +311,29 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
   }
 
   dialogGhosts() {
+    if (typeof this.dataGhosts === 'undefined') {
+      this.messageService.info('Please wait !');
+      return;
+    }
+
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.position = { top: '5em', left: '5em' };
     dialogConfig.panelClass = 'default-dialog-container-class';
-    if (typeof this.dataGhosts !== 'undefined') {
-      dialogConfig.data = this.dataGhosts;
-      const dialogReference = this.dialog.open(DialogProjectGhostsComponent, dialogConfig);
-      this.subscriptions.add(
-        dialogReference.afterClosed()
-          .subscribe(result => {
-            if (result !== null) {
-              if (typeof result === 'boolean') {
-                this.dataGhosts.ghostsSubject.next(this.dataGhosts.ghostsSubject.getValue());
-              } else {
-                this.dataGhosts.ghostsSubject.next(result);
-              }
+    dialogConfig.data = this.dataGhosts;
+    const dialogReference = this.dialog.open(DialogProjectGhostsComponent, dialogConfig);
+    this.subscriptions.add(
+      dialogReference.afterClosed()
+        .subscribe(result => {
+          if (result !== null) {
+            if (typeof result === 'boolean') {
+              this.dataGhosts.ghostsSubject.next(this.dataGhosts.ghostsSubject.getValue());
+            } else {
+              this.dataGhosts.ghostsSubject.next(result);
             }
-          }));
-      } else {
-        this.messageService.info('Please wait !');
-    }
+          }
+        }));
   }
 
   dialogLegend() {
@@ -358,25 +350,47 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
       this.messageBoxService.question('Reset the dashboard',
         'Please confirm the dashboard reinitialization').subscribe(answer => {
           if (answer) {
-            this.projectService.resetDashboard(this.idProject).subscribe(response => {
-              if (response) {
-                this.messageBoxService.exclamation('Operation complete', 'Dashboard reinitialization is done.');
-              } else {
-                this.messageBoxService.exclamation('Operation failed', 'The request is not necessary : no dashboard available.');
-              }
-            });
+            this.subscriptions.add(
+              this.projectService.resetDashboard(this.settings.idProject).subscribe(response => {
+                if (response) {
+                  this.messageBoxService.exclamation('Operation complete',
+                    'Dashboard reinitialization is done.');
+                } else {
+                  this.messageBoxService.exclamation('Operation failed',
+                    'The request is not necessary : no dashboard available.');
+                }
+              }));
           }
         })
     );
   }
 
   dialogFilter () {
+    if (typeof this.dataGhosts === 'undefined') {
+      this.messageService.info('Please wait !');
+      return;
+    }
+
     const dialogConfig = new MatDialogConfig();
     dialogConfig.disableClose = true;
     dialogConfig.autoFocus = true;
     dialogConfig.position = { top: '6em', left: '5em'};
     dialogConfig.panelClass = 'default-dialog-container-class';
-    this.dialog.open(DialogFilterComponent, dialogConfig);
+    const dlg = this.dialog.open(DialogFilterComponent, dialogConfig);
+    this.subscriptions.add(
+      dlg.afterClosed().subscribe( settings => {
+        this.settings.idStaffSelected = (settings.idStaffSelected.length === 0) ? 0 : settings.idStaffSelected;
+        this.settings.startingDate = (settings.startingDate.length === 0) ? 0 : settings.startingDate;
+        this.subscriptions.add(
+          this.projectService.loadDashboardData(this.settings)
+            .subscribe(
+              response => this.myChart.data(response.sunburstData),
+              response => this.handleErrorData(response),
+              () => {
+                this.hackSunburstStyle();
+                this.tooltipChart();
+              }));
+        }));
   }
 
   /**

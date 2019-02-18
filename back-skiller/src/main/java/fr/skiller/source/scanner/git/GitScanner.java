@@ -418,7 +418,8 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		}	
 
 		// If a cache is detected and available for this project, it will be returned by this method.
-		final CommitRepository repo = this.parseRepository(project, settings);
+		// This variable is not final. Might be overridden by the filtering operation (date of staff member filtering)
+		CommitRepository repo = this.parseRepository(project, settings);
 		if (logger.isDebugEnabled()) {
 			logger.debug(
 					"The repository has been parsed. It contains "
@@ -445,18 +446,20 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			}
 			CommitRepository personalRepo = new BasicCommitRepository();
 			personalizeRepo(repo, personalRepo, cfgGeneration.idStaffSelected);
+			repo = personalRepo;
 		}
-		
 		
 		RiskDashboard data = this.aggregateDashboard(project, repo);
 		
 		// Evaluate the risk for each directory, and sub-directory, in the repository.
 		this.riskSurveyor.evaluateTheRisk(repo, data.riskChartData);
 		
-		// Fill the holes for directory without source files, and therefore without risk level measured.
-		if (fillTheHoles) {
+		// Fill the holes for directories without source files, and therefore without risk level measured.
+		// We do not fill the holes if the chart is filtered on a specific developer
+		if ( (fillTheHoles) && (cfgGeneration.idStaffSelected == 0)) {
 			this.riskSurveyor.meanTheRisk(data.riskChartData);
 		}
+		
 		// Evaluate the preview display for each slice of the sunburst chart.  
 		this.riskSurveyor.setPreviewSettings(data.riskChartData);
 

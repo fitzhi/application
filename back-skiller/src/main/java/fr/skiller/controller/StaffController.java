@@ -145,7 +145,6 @@ public class StaffController {
 				logger.debug("Cannot find a staff member for id " + String.valueOf(idStaff) + " in th Staff collection");
 			}
 		}
-		System.out.println("responseEntity " + responseEntity.getBody());
 		return responseEntity;
 	}
 

@@ -6,6 +6,7 @@ package fr.skiller.bean.impl;
 import static fr.skiller.Global.LN;
 import static fr.skiller.Global.UNKNOWN;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.springframework.util.SystemPropertyUtils;
 import fr.skiller.Global;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import fr.skiller.data.internal.RiskChartData;
 import fr.skiller.data.internal.RiskLegend;
 import fr.skiller.data.source.CommitHistory;
@@ -171,31 +173,40 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	}	
 
 	/**
-	 * Count commits submitted from a directory.
-	 * @param dir the directory, and its directories, from where we sum the number of the commits submitted
+	 * Count commits submitted from a directory.<br/>
+	 * <i>This method is public for testing purpose.</i>
+	 * @param dir the directory where we'll sum the number of the commits submitted on each file
 	 * @param stats the list containing a statistic entry for each class file 
 	 * @return the resulting count
 	 */
-	long agregateCountCommits(final String dir, final List<StatActivity> stats) {
-		return stats.stream().filter(entry -> entry.filename.indexOf(dir)==0).mapToLong(entry -> entry.countCommits).sum();
+	public long agregateCountCommits(final String dir, final List<StatActivity> stats) {
+		return stats.stream()
+			.filter(entry -> entry.filename.indexOf(dir)==0)
+			.filter(entry -> ( (entry.filename.length() == dir.length())
+					|| 	(entry.filename.substring(dir.length()+1).indexOf(File.separator)==-1)))
+			.mapToLong(entry -> entry.countCommits).sum();
 	}
 
 	/**
-	 * Count commits submitted from a directory by active developers.
-	 * @param dir the directory, and its directories, from where we sum the number of commits submitted
+	 * Count commits submitted from a directory by active developers.<br/>
+	 * <i>This method is public for testing purpose.</i>
+	 * @param dir the directory where we sum the number of commits submitted within this directory.
 	 * @param stats the list containing a statistic entry for each class file 
 	 * @return the resulting count
 	 */
-	long agregateCountCommitsByActiveDevelopers(
-			final String dir, 
-			final List<StatActivity> stats) {
-		return stats.stream().filter(entry -> entry.filename.indexOf(dir)==0).
-				mapToLong(entry -> entry.countCommitsByActiveDevelopers).sum();
+	public long agregateCountCommitsByActiveDevelopers(String dir, List<StatActivity> stats) {
+		return stats.stream()
+				.filter(entry -> entry.filename.indexOf(dir)==0)
+				.filter(entry -> 
+						( (entry.filename.length() == dir.length())
+					|| 	(entry.filename.substring(dir.length()+1).indexOf(File.separator)==-1))
+				)
+				.mapToLong(entry -> entry.countCommitsByActiveDevelopers).sum();
 	}
 
 	/**
 	 * Evaluate the risk for the active developers.
-	 * @param dir directory containing the passed 
+	 * @param dir directory where the commits have been executed.
 	 * @param data location data (containing the relative location, the risks & colors, and its children)
 	 * @param stats the list containing a statistic entry for each class file 
 	 */
@@ -205,7 +216,8 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 			final List<StatActivity> stats) {
 	
 		long countCommits = agregateCountCommits(dir+data.location, stats);
-		long countCommitsByActiveDevelopers = agregateCountCommitsByActiveDevelopers(dir+data.location, stats);
+		long countCommitsByActiveDevelopers = agregateCountCommitsByActiveDevelopers(
+				dir+data.location, stats);
 		int riskLevel = -1;
 		if (countCommits > 0) {
 			riskLevel = (int) Math.ceil( ((1 -  ((double) countCommitsByActiveDevelopers / (double) countCommits)) * 10));
@@ -227,7 +239,16 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	}
 	
 	/**
+     * <p>
      * Aggregate the commits by class name. <i>This method is recursive!</i>
+     * </p>
+     * <p>
+     * Each entry in the class name contains :
+     * <ul>
+     * <li>the class full name (with its path)</li>
+     * <li>the number of commits executed on that file</li>
+     * <li>the number of commits executed <b>by active developers</b></li>
+     * </ul>
      * @param baseDir the direction to be scanned.
 	 * @param repository the repository retrieved and parsed from the source control tool (i.e. GIT, SVN...).
 	 * @param data repository data prepared to be displayed by the Sunburst chart. At this point, this is a working draft.

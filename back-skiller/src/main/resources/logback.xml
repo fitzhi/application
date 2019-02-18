@@ -13,12 +13,12 @@
 	</root>
 
 	<logger name="fr.skiller.source.scanner.git" additivity="false">
-		<level value="INFO" />
+		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
 		
 
-	<logger name="fr.skiller.bean" additivity="false">
+	<logger name="fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl" additivity="false">
 		<level value="INFO" />
 		<appender-ref ref="STDOUT" />
 	</logger>

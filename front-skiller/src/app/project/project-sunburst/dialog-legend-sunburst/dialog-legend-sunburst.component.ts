@@ -14,7 +14,7 @@ export class DialogLegendSunburstComponent extends BaseComponent implements OnIn
 
   public dataSource: RiskLegend[];
 
-  constructor(private referentialService: ReferentialService) { 
+  constructor(private referentialService: ReferentialService) {
     super();
   }
 

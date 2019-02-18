@@ -341,4 +341,5 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 		} 
 		return location.getRiskLevel();
 	}
+
 }
