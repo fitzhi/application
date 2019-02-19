@@ -438,15 +438,9 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			});
 		}
 
-		// If the process is filtered on a particular developer
-		if (cfgGeneration.idStaffSelected > 0) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Filtering the dashboard for the developer " 
-						+ staffHandler.getFullname(cfgGeneration.idStaffSelected));
-			}
-			CommitRepository personalRepo = new BasicCommitRepository();
-			personalizeRepo(repo, personalRepo, cfgGeneration.idStaffSelected);
-			repo = personalRepo;
+		// Does the process requires a personalization ?
+		if (cfgGeneration.requiresPersonalization()) {
+			repo = personalizeRepo(repo, cfgGeneration);
 		}
 		
 		RiskDashboard data = this.aggregateDashboard(project, repo);
@@ -456,7 +450,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		
 		// Fill the holes for directories without source files, and therefore without risk level measured.
 		// We do not fill the holes if the chart is filtered on a specific developer
-		if ( (fillTheHoles) && (cfgGeneration.idStaffSelected == 0)) {
+		if (fillTheHoles && !cfgGeneration.requiresPersonalization()) {
 			this.riskSurveyor.meanTheRisk(data.riskChartData);
 		}
 		
@@ -482,14 +476,22 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	}
 
 	@Override
-	public void personalizeRepo(CommitRepository globalRepo, CommitRepository personalRepo, int idStaff) {
-		
+	public CommitRepository personalizeRepo(CommitRepository globalRepo, SettingsGeneration settings) {
+		final Date startingDate = new Date(settings.startingDate);
+		if (logger.isDebugEnabled()) {
+			logger.debug(
+				MessageFormat.format(
+					"Filtering the repositiory for id:{0}, and starting date:{1}", 
+					settings.idStaffSelected, startingDate));
+		}
+		CommitRepository personalizedRepo = new BasicCommitRepository(); 
 		for (CommitHistory commits : globalRepo.getRepository().values()) {
 			commits.operations.stream()
-				.filter(it -> (it.idStaff == idStaff))
-				.forEach(item -> personalRepo.addCommit(commits.sourcePath, idStaff, item.dateCommit));
+				.filter(it -> ((it.idStaff == settings.idStaffSelected) || (settings.idStaffSelected == 0)))
+				.filter(it -> (it.dateCommit).after(startingDate))
+				.forEach(item -> personalizedRepo.addCommit(commits.sourcePath, item.idStaff, item.dateCommit));
 		}
-		
+		return personalizedRepo;
 	}
 	
 	/**
@@ -500,7 +502,6 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	 */
 	private ConnectionSettings connectionSettings(final Project project) throws Exception {
 
-		
 		if (project.isDirectAccess()) {
 			ConnectionSettings settings = new ConnectionSettings();
 			settings.url = project.urlRepository;

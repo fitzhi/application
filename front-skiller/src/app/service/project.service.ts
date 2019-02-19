@@ -113,7 +113,8 @@ export class ProjectService extends InternalService {
    */
   loadDashboardData(settings: SettingsGeneration): Observable<any> {
     if (Constants.DEBUG) {
-      console.log('Retrieving the Sunburst data for the project ' + settings.idProject);
+      console.log('Retrieving the Sunburst data for the project '
+      + settings.idProject + ', idStaff ' + settings.idStaffSelected + ' and starting date ' + settings.startingDate);
     }
     const body = {idProject: settings.idProject, idStaffSelected: settings.idStaffSelected,
         startingDate: settings.startingDate};

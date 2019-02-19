@@ -52,7 +52,7 @@ export class DialogFilterComponent implements OnInit {
     if (Constants.DEBUG) {
       console.log('idStaffSelected ' + idStaffSelected + ' / startingDate : ' + startingDate);
     }
-    const settings = new SettingsGeneration(0, startingDate, idStaffSelected);
+    const settings = new SettingsGeneration(0, startingDate.getTime(), idStaffSelected);
     this.dialogRef.close (settings);
   }
 }

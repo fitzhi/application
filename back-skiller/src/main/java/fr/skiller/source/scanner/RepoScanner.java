@@ -74,10 +74,10 @@ public interface RepoScanner {
 	/**
 	 * Personalize the commit repository on a particular staff member.
 	 * @param globalRepo the global repository containing all the staff team
-	 * @param personalRepo a subset of the repository centralized on a particular developer
-	 * @param idStaff the passed staff identifier on whom the repository must be filtered
+	 * @param settings settings for this personnalized repository
+	 * @return a subset of the repository centralized on a particular developer or filtered from a starting date
 	 */
-	void personalizeRepo(CommitRepository globalRepo, CommitRepository personalRepo,  int idStaff);
+	CommitRepository personalizeRepo(CommitRepository globalRepo, SettingsGeneration settings);
 	
 	/**
 	 * Test if risks dashboard have been executed.

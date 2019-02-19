@@ -380,7 +380,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
     this.subscriptions.add(
       dlg.afterClosed().subscribe( settings => {
         this.settings.idStaffSelected = (settings.idStaffSelected.length === 0) ? 0 : settings.idStaffSelected;
-        this.settings.startingDate = (settings.startingDate.length === 0) ? 0 : settings.startingDate;
+        this.settings.startingDate = settings.startingDate;
         this.subscriptions.add(
           this.projectService.loadDashboardData(this.settings)
             .subscribe(
