@@ -86,6 +86,17 @@ public class CommitHistory {
 		return operations.stream().map(operation->operation.dateCommit).max(Date::compareTo).get();
 	}
 
+	/**
+	 * return all staff identifiers involved in the edition of this location
+	 * @return the array of staff identifiers who collaborate on this source file
+	 */
+	public int[] committers() {
+		return operations.stream()
+				.map(operation->operation.idStaff)
+				.distinct()
+				.mapToInt(Number::intValue)
+			    .toArray();
+	}
 
 	/**
 	 * Count the total number of commits submitted for this file.

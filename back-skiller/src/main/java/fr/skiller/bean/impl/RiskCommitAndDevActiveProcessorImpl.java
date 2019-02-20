@@ -25,6 +25,7 @@ import fr.skiller.bean.StaffHandler;
 import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import fr.skiller.data.internal.RiskChartData;
 import fr.skiller.data.internal.RiskLegend;
+import fr.skiller.data.internal.SourceFile;
 import fr.skiller.data.source.CommitHistory;
 import fr.skiller.data.source.CommitRepository;
 
@@ -262,16 +263,16 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 		
 		// This directory contains class within it.
 		if ((sunburstData.getClassnames() != null) && !sunburstData.getClassnames().isEmpty()) {
-			for (String classname : sunburstData.getClassnames()) {
+			for (SourceFile source : sunburstData.getClassnames()) {
 				// We retrieve historic information regarding this class name
 				Optional<String> optKey;
 				optKey = repository.getRepository()
 						.keySet()
 						.stream()
-						.filter(k -> isClassFile(k, classname))
+						.filter(k -> isClassFile(k, source.filename))
 						.findFirst();
 				if (!optKey.isPresent()) {
-					throw new RuntimeException(classname + " not found!");
+					throw new RuntimeException(source.filename + " not found!");
 				}
 				
 				final CommitHistory activity = repository.getRepository().get(optKey.get());
@@ -279,7 +280,7 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 				long countCommits = activity.countCommits();
 				long countCommitsByActiveDevelopers = 	activity.countCommitsByActiveDevelopers(staffHandler);
 
-				String fullClass = baseDir.toString() + sunburstData.location + "/"+classname;
+				String fullClass = baseDir.toString() + sunburstData.location + "/"+source.filename;
 				if (logger.isDebugEnabled()) {
 					logger.debug("Adding stat entry for " + fullClass + " : " + countCommitsByActiveDevelopers + "/" + countCommits);
 					

@@ -7,7 +7,7 @@
     width: 256px; height: 256px;
     margin: calc(((204px * 1.4142) - 204px) / 2);
     border: 0px solid;
-    animation: example 12s linear 0s infinite;
+    animation: rotation 2s linear 0s infinite;
     align-content: center;
 }
 
@@ -15,11 +15,10 @@
     animation-play-state: paused;
 }
 
-@keyframes example {
+@keyframes rotation {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
-
 .component-container {
   height: 100%;
 }
@@ -103,4 +102,17 @@ a.sidenav:hover, .activated {
     left: 2em;  
     width: 500px;
     height: 200px;  
+}
+
+#titleSunburst {
+    position: relative;
+    top: 0.1em;
+    left: 2.6em;
+    font-size: 20px;
+}
+
+#list-contributors {
+    position: relative;
+    top: 0em;
+    float:right;
 }

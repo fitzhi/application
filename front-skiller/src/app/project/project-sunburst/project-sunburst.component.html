@@ -48,13 +48,18 @@
                 <br/><br/><h4>Version control connection settings are unknown !<br>They need to be filled out first.</h4>
         </div>
 
-        <div id="chart" [hidden]="!sunburst_ready" ></div>
+        <div [hidden]="!sunburst_ready" >
+            <app-list-classnames id="list-contributors" [classnames]="classnames"></app-list-classnames>
+            <div id="titleSunburst">
+                {{titleSunburst}}  
+            </div>
+            <div id="chart"></div>
+        </div>
 
         <div class="row" [hidden]="!sunburst_waiting">
-            <br/><br/>
             <div class="col-md-12 text-center w100">
-                <h3>Staff risks chart is on preparation !</h3>
-                <p class="lead">Stay calm !</p>
+                <h3>Chart is on preparation !</h3>
+                <p class="lead">Please wait !</p>
                 <div align="center">
                     <img id="sunburstWaitingImage" [src]="sunburstWaitingImage" width="256px" height="256px"/>
                 </div>

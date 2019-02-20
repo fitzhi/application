@@ -1,0 +1,25 @@
+.mat-header-cell {
+    color: darkblue;
+    justify-content: left;
+    padding-left: 0px;
+}
+
+:host >>> th#filename  > .mat-header-cell  {
+    display: flex;
+    color: red;
+    padding-left: 0px;
+
+}
+
+td.mat-cell, th.mat-header-cell {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+th.mat-header-cell {
+    background-color: whitesmoke;
+}
+
+tr.row_any  {
+    height: 2em;
+}

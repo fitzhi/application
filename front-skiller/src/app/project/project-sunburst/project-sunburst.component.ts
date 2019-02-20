@@ -14,7 +14,9 @@ import { MessageBoxService } from '../../message-box/service/message-box.service
 import { DialogFilterComponent } from './dialog-filter/dialog-filter.component';
 import { BaseComponent } from '../../base/base.component';
 import { SettingsGeneration } from '../../data/settingsGeneration';
-import { DOCUMENT } from '@angular/common';
+import { ProjectStaffService } from '../project-staff-service/project-staff.service';
+import { Filename } from '../../data/filename';
+import { ClassnamesDataSource } from './list-classnames/classnames-data-source';
 
 @Component({
   selector: 'app-project-sunburst',
@@ -69,13 +71,21 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
   public projectName: string;
 
+  public titleSunburst = '';
+
   private myChart: Sunburst;
 
+  /**
+   * List of classnames located in a directory of the repository
+   * Theses classnames are shared with the ListContributors component when the user click on a slice.
+   */
+  public classnames;
+
   constructor(
-    @Inject(DOCUMENT) private document: any,
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
     private messageService: MessageService,
+    private projectStaffService: ProjectStaffService,
     private messageBoxService: MessageBoxService,
     private dialog: MatDialog,
     private projectService: ProjectService) {
@@ -155,6 +165,23 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
       if (typeof this.myChart === 'undefined') {
         this.myChart = Sunburst();
+        this.classnames = new ClassnamesDataSource();
+        this.myChart.onNodeClick(nodeClicked => {
+        if (nodeClicked.classnames !== null) {
+            const filenames = [];
+            if (Constants.DEBUG) { console.group('Filenames : '); }
+            nodeClicked.classnames.forEach(element => {
+              if (Constants.DEBUG) { console.log(element.filename + ' ' + element.lastCommit); }
+              filenames.push(new Filename(element.filename, element.lastCommit));
+            });
+            if (Constants.DEBUG) { console.groupEnd(); }
+            this.classnames.sendClassnames(filenames);
+          } else {
+            this.classnames.sendClassnames([]);
+          }
+          console.log(nodeClicked);
+          this.myChart.focusOnNode(nodeClicked);
+        });
       }
 
       this.subscriptions.add(
@@ -381,6 +408,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
       dlg.afterClosed().subscribe( settings => {
         this.settings.idStaffSelected = (settings.idStaffSelected.length === 0) ? 0 : settings.idStaffSelected;
         this.settings.startingDate = settings.startingDate;
+        this.generateTitleSunburst();
         this.subscriptions.add(
           this.projectService.loadDashboardData(this.settings)
             .subscribe(
@@ -391,6 +419,21 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
                 this.tooltipChart();
               }));
         }));
+  }
+
+  private generateTitleSunburst() {
+    this.titleSunburst = 'Chart';
+    if (this.settings.idStaffSelected > 0) {
+
+      const selectedDeveloper = this.projectStaffService.contributors
+        .find(contributor => contributor.idStaff === this.settings.idStaffSelected)[0];
+
+      this.titleSunburst +=  ' for ' + selectedDeveloper;
+    }
+    if (this.settings.startingDate > 0) {
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+      this.titleSunburst +=  ' filtered from ' + new Date(this.settings.startingDate).toLocaleDateString('en-EN', options);
+    }
   }
 
   /**

@@ -56,9 +56,9 @@ public class RiskChartData {
     public List<RiskChartData> children;
 
     /**
-     * Classname (or equivalent) located inside this directory.
+     * Source file located inside this directory.
      */
-    private Set<String> classNames;
+    private Set<SourceFile> sources;
     
 	/**
 	 * @param location the name of the directory (such as com, fr...)
@@ -93,18 +93,22 @@ public class RiskChartData {
 	 * Inject a source file in the collection.
 	 * @param current position
 	 * @param dirAndFilename an array containing the remaining sub-directories and the filename of the source element.
-	 * @param date of the latest commit
+	 * @param date of the latest commit.
+	 * @param committers Array of staff identifiers who are committed in this source file
 	 */
-	public void injectFile(final RiskChartData element, final String[] dirAndFilename, final Date latestCommit) {
-		// We register the filename in the classnames set
+	public void injectFile(final RiskChartData element, final String[] dirAndFilename, final Date latestCommit, final int[] committers) {
+		// We register the filename in the source files set
 		if (dirAndFilename.length == 1) {
-			element.addClassName(dirAndFilename[0]);
-			element.lastUpdate = latestCommit;
+			element.addSource(dirAndFilename[0], latestCommit, committers);
+			if ((element.lastUpdate == null) || (element.lastUpdate.before(latestCommit)))  {
+				element.lastUpdate = latestCommit;
+			}
 			return;
 		}
 		// Recursive call.
 		injectFile( element.addsubDir(new RiskChartData(dirAndFilename[0])), 
-				Arrays.copyOfRange(dirAndFilename, 1, dirAndFilename.length), latestCommit);
+				Arrays.copyOfRange(dirAndFilename, 1, dirAndFilename.length), 
+				latestCommit, committers);
 	}
 	
 	@Override
@@ -125,16 +129,20 @@ public class RiskChartData {
 	
 	/**
 	 * Add a filename inside the collection, and subsequently, update the number of elements declared in that sub-directory.
-	 * @param fileName the filename
-	 * @return {@code true} if the set did not already contain the specified filename
+	 * @param filename the source filename.
+	 * @param lastCommit The most recent date of commit done on this file.
+	 * @param committers list of committers involved in this source file
 	 */
-	public boolean addClassName(String fileName) {;
-		if (this.classNames == null) {
-			this.classNames = new HashSet<String>();
+	public void addSource(final String filename, final Date lastCommit, final int[] committers) {
+		
+		if (this.sources == null) {
+			this.sources = new HashSet<SourceFile>();
 		}
-		boolean done = this.classNames.add(fileName);
-		this.numberOfFiles = this.classNames.size();
-		return done;
+		if (this.sources.stream().anyMatch(item -> item.filename.equals(filename))) {
+			throw new RuntimeException(filename + " already exists.");
+		}
+		this.sources.add(new SourceFile(filename, lastCommit, committers));
+		this.numberOfFiles = this.sources.size();
 	}
 
 	/**
@@ -164,8 +172,8 @@ public class RiskChartData {
 	/**
 	 * @return the set of classnames present in this directory.
 	 */
-	public Set<String> getClassnames() {
-		return classNames;
+	public Set<SourceFile> getClassnames() {
+		return sources;
 	}
 	
 }

@@ -58,6 +58,7 @@ import { registerLocaleData } from '@angular/common';
 // Remove this line if you want to return to us_US local
 import localeFr from '@angular/common/locales/fr';
 import { DialogFilterComponent } from './project/project-sunburst/dialog-filter/dialog-filter.component';
+import { ListClassnamesComponent } from './project/project-sunburst/list-classnames/list-classnames.component';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { DialogFilterComponent } from './project/project-sunburst/dialog-filter/
     DialogUpdatedProjectGhostsComponent,
     DialogLegendSunburstComponent,
     DialogFilterComponent,
+    ListClassnamesComponent,
   ],
   entryComponents: [
     StarsSkillLevelRenderComponent,

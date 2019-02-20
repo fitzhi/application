@@ -1,15 +1,13 @@
 package fr.skiller.source.scanner;
 
+import static fr.skiller.Global.LN;
+
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
@@ -18,12 +16,7 @@ import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Pseudo;
 import fr.skiller.data.internal.RiskChartData;
 import fr.skiller.data.internal.RiskDashboard;
-import fr.skiller.data.internal.Unknown;
-import fr.skiller.data.source.CommitHistory;
 import fr.skiller.data.source.CommitRepository;
-
-import static fr.skiller.Global.UNKNOWN;
-import static fr.skiller.Global.LN;
 
 /**
  * Abstract class in charge of generating the data collection for the project Sunburst viewer.
@@ -55,7 +48,10 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 		RiskChartData root = new RiskChartData("root");
 		commitRepo.getRepository().values().stream().forEach(
 				commit -> 
-				root.injectFile(root, commit.sourcePath.split(File.separator), commit.evaluateDateLastestCommit()));
+				root.injectFile(root, 
+						commit.sourcePath.split(File.separator), 
+						commit.evaluateDateLastestCommit(),
+						commit.committers()));
 
 		
 		Set<Pseudo> ghosts = new HashSet<Pseudo>();

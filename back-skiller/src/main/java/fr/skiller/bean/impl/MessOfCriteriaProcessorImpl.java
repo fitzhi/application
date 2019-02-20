@@ -22,6 +22,7 @@ import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.RiskChartData;
 import fr.skiller.data.internal.RiskLegend;
+import fr.skiller.data.internal.SourceFile;
 import fr.skiller.data.source.CommitHistory;
 import fr.skiller.data.source.CommitRepository;
 
@@ -158,17 +159,17 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 		
 		// This directory contains class within it.
 		if ((sunburstData.getClassnames() != null) && !sunburstData.getClassnames().isEmpty()) {
-			for (String classname : sunburstData.getClassnames()) {
+			for (SourceFile source : sunburstData.getClassnames()) {
 	
 				// We retrieve historic information regarding this class name
 				Optional<String> optKey;
 				optKey = repository.getRepository()
 						.keySet()
 						.stream()
-						.filter(k -> isClassFile(k, classname))
+						.filter(k -> isClassFile(k, source.filename))
 						.findFirst();
 				if (!optKey.isPresent()) {
-					throw new RuntimeException(classname + " not found!");
+					throw new RuntimeException(source.filename + " not found!");
 				}
 				
 				final CommitHistory activity = repository.getRepository().get(optKey.get());

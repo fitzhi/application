@@ -1,6 +1,7 @@
 <h1 mat-dialog-title>Legend</h1>
 <mat-dialog-content style="width:100%">
   <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8 tableLegends">
+    
     <ng-container matColumnDef="color">
       <th id="color" mat-header-cell *matHeaderCellDef>Color</th>
       <td mat-cell class="td-color" [style.background-color]="row.color" [style.padding]="0" *matCellDef="let row">

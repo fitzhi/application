@@ -56,7 +56,8 @@ public class SunburstDataTest {
 	public void testInjectFileName() {
 		final RiskChartData root = new RiskChartData("root");
 		String testClassname = "fr/skiller/test/world/mbappe/Number9.java";
-		root.injectFile(root, testClassname.split(File.separator), new Date());
+		int[] i = new int[0];
+		root.injectFile(root, testClassname.split(File.separator), new Date(), i);
 
 		if (logger.isDebugEnabled()) {
 			logger.debug(root.toString());
@@ -110,9 +111,10 @@ public class SunburstDataTest {
 	public void testInjectFileName2Times() {
 		final RiskChartData root = new RiskChartData("root");
 		String testClassname = "fr/skiller/test/world/mbappe/Number9.java";
-		root.injectFile(root, testClassname.split(File.separator), new Date());
+		int[] i = new int[0];
+		root.injectFile(root, testClassname.split(File.separator), new Date(), i);
 		testClassname = "fr/skiller/test/world-champion/mbappe/Number9.java";
-		root.injectFile(root, testClassname.split(File.separator), new Date());
+		root.injectFile(root, testClassname.split(File.separator), new Date(), i);
 
 		if (logger.isDebugEnabled()) {
 			logger.debug(root.toString());

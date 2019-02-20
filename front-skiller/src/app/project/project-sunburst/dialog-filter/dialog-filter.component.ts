@@ -47,7 +47,8 @@ export class DialogFilterComponent implements OnInit {
   }
 
   submit() {
-    const startingDate = this.filters.get('startingDate').value;
+    const startingDate = (this.filters.get('startingDate').value === '')
+            ? new Date(0) : this.filters.get('startingDate').value;
     const idStaffSelected = this.filters.get('idStaffSelected').value;
     if (Constants.DEBUG) {
       console.log('idStaffSelected ' + idStaffSelected + ' / startingDate : ' + startingDate);

@@ -409,6 +409,15 @@ public class ProjectController {
 		}
 		
 		/**
+		 * @param idProject project identifier.
+		 * @param idStaffSelected staff identifier selected.
+		 */
+		public SettingsGeneration(final int idProject, final int idStaffSelected) {
+			this.idProject = idProject;
+			this.idStaffSelected = idStaffSelected;
+		}
+		
+		/**
 		 * @return {@code true} if the repository requires personalization, {@code false} otherwise.
 		 */
 		public boolean requiresPersonalization() {
