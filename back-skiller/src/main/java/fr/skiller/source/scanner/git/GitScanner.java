@@ -65,6 +65,7 @@ import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import fr.skiller.controller.ProjectController.SettingsGeneration;
 
 import static fr.skiller.Global.LN;
@@ -413,7 +414,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		if (!cacheDataHandler.hasCommitRepositoryAvailable(project)) {
 			this.clone(project, settings);
 			if (logger.isDebugEnabled()) {
-				logger.debug("The project " + project.name + " has id cloned into a temporay directory");
+				logger.debug("The project " + project.name + " is cloned into a temporay directory");
 			}
 		}	
 
@@ -446,11 +447,12 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		RiskDashboard data = this.aggregateDashboard(project, repo);
 		
 		// Evaluate the risk for each directory, and sub-directory, in the repository.
-		this.riskSurveyor.evaluateTheRisk(repo, data.riskChartData);
+		final List<StatActivity> statsCommit = new ArrayList<StatActivity>();
+		this.riskSurveyor.evaluateTheRisk(repo, data.riskChartData, statsCommit);
 		
 		// Fill the holes for directories without source files, and therefore without risk level measured.
 		// We do not fill the holes if the chart is filtered on a specific developer
-		if (fillTheHoles && !cfgGeneration.requiresPersonalization()) {
+		if (fillTheHoles && cfgGeneration.idStaffSelected==0) {
 			this.riskSurveyor.meanTheRisk(data.riskChartData);
 		}
 		

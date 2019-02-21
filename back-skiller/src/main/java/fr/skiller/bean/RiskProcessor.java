@@ -27,10 +27,11 @@ public interface RiskProcessor {
 	/**
      * Evaluate the level of risk on all entries in the repository from the staff/level point of view.<br/>
      * The scale of risks contains 10 levels x+ 1 problem: <br/>
-	 * @param repository the repository retrieved and parsed from the source control tool (i.e. GIT, SVN...).
-	 * @param data repository data prepared for the Sunburst chart 
+	 * @param repository the repository retrieved and parsed from the source control tool (i.e. GIT, SVN...)..
+	 * @param data repository data prepared for the Sunburst chart.
+	 * @param statsCommit list of statistics of commits.
 	 */
-	void evaluateTheRisk(CommitRepository repository, RiskChartData data) ;
+	void evaluateTheRisk(CommitRepository repository, RiskChartData data, List<StatActivity> statsCommit) ;
 
 	/**
 	 * Set the preview settings for each directory in the passed tree.

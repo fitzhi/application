@@ -8,6 +8,8 @@ import static fr.skiller.Global.UNKNOWN;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
@@ -27,6 +29,7 @@ import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.internal.RiskChartData;
@@ -120,7 +123,8 @@ public class GitScannerTestByPassable {
 				});
 		}
 		// Evaluate the risk for each directory, and sub-directory, in the repository.
-		riskProcessor.evaluateTheRisk(repo, data.riskChartData);
+		final List<StatActivity> stats = new ArrayList<StatActivity>();
+		riskProcessor.evaluateTheRisk(repo, data.riskChartData, stats);
        
 	}
 	

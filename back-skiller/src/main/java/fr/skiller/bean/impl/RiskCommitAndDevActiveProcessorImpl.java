@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.SystemPropertyUtils;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import fr.skiller.Global;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
@@ -165,12 +166,12 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	 */
 	public void evaluateTheRisk(
 			final CommitRepository repository, 
-			final RiskChartData data) {
+			final RiskChartData data,
+			final List<StatActivity> statsCommit) {
 		
-		List<StatActivity> stats = new ArrayList<StatActivity>();
-		agregateCommits(new String(), repository, data, stats);
+		agregateCommits(new String(), repository, data, statsCommit);
 		
-		evaluateActiveDevelopersCoverage("", data, stats);
+		evaluateActiveDevelopersCoverage("", data, statsCommit);
 	}	
 
 	/**
@@ -206,12 +207,13 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	}
 
 	/**
-	 * Evaluate the risk for the active developers.
+	 * Evaluate the risk for the active developers.<br/>
+	 * <i>This method is public for testing purpose.</i>
 	 * @param dir directory where the commits have been executed.
 	 * @param data location data (containing the relative location, the risks & colors, and its children)
 	 * @param stats the list containing a statistic entry for each class file 
 	 */
-	void evaluateActiveDevelopersCoverage(
+	public void evaluateActiveDevelopersCoverage(
 			final String dir,
 			final RiskChartData data, 
 			final List<StatActivity> stats) {
@@ -264,15 +266,23 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 		// This directory contains class within it.
 		if ((sunburstData.getClassnames() != null) && !sunburstData.getClassnames().isEmpty()) {
 			for (SourceFile source : sunburstData.getClassnames()) {
+
+				final String searchedFile = 
+						(baseDir.indexOf("root/") == 0) 
+						?	(baseDir + sunburstData.location + "/" + source.filename).substring("root/".length())
+						: 	(baseDir + sunburstData.location + "/" + source.filename).substring("/".length());
 				// We retrieve historic information regarding this class name
 				Optional<String> optKey;
 				optKey = repository.getRepository()
 						.keySet()
 						.stream()
-						.filter(k -> isClassFile(k, source.filename))
+						.filter(k -> k.equals(searchedFile))
 						.findFirst();
 				if (!optKey.isPresent()) {
-					throw new RuntimeException(source.filename + " not found!");
+					logger.error("Searching " + searchedFile + " in ");
+					repository.getRepository().keySet().stream()
+						.forEach(f -> logger.error (f));
+					throw new RuntimeException(searchedFile + " not found!");
 				}
 				
 				final CommitHistory activity = repository.getRepository().get(optKey.get());
@@ -327,14 +337,24 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 
 	@Override
 	public int meanTheRisk(final RiskChartData location) {
+		System.out.println(location.location + " " + location.getRiskLevel() + " " 
+				+ location.numberOfFiles 
+				+ " " 
+				+ ((location.children == null) ? "Null" : location.children.size()));
 		if ( (location.children == null) || (location.children.size() == 0) ) {
 			return location.getRiskLevel();
 		}
 		int risk = (int) Math.floor(location.children.stream().mapToInt(child -> meanTheRisk(child)).average().getAsDouble());
+		System.out.println("Risk " + risk);
 		if (location.getRiskLevel() == UNKNOWN) {
 			location.setRiskLevel(risk);
-			return risk;
-		} 
+		} else {
+			location.setRiskLevel((int) Math.floor((risk+location.getRiskLevel())/2));
+		}
 		return location.getRiskLevel();
 	}
+	
+	
+	
+	
 }

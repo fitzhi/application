@@ -1,5 +1,6 @@
 package fr.skiller.data.internal;
 
+import java.util.Arrays;
 import java.util.Date;
 
 public class SourceFile {
@@ -29,6 +30,12 @@ public class SourceFile {
 		this.filename = filename;
 		this.lastCommit = lastCommit;
 		this.idStaffs = idStaffs;
+	}
+
+	@Override
+	public String toString() {
+		return "SourceFile [filename=" + filename + ", lastCommit=" + lastCommit + ", idStaffs="
+				+ Arrays.toString(idStaffs) + "]";
 	}
 	
 }

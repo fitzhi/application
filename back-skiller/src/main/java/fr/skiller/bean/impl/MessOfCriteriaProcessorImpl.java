@@ -27,8 +27,11 @@ import fr.skiller.data.source.CommitHistory;
 import fr.skiller.data.source.CommitRepository;
 
 /**
+ * @deprecated
+ * <p>
+ * This class is deprecated, and replaced by {@link RiskCommitAndDevActiveProcessorImpl}
+ * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 @Service("messOfCriteria")
 public class MessOfCriteriaProcessorImpl implements RiskProcessor {
@@ -341,6 +344,12 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 			return risk;
 		} 
 		return location.getRiskLevel();
+	}
+
+	@Override
+	public void evaluateTheRisk(CommitRepository repository, RiskChartData data,
+			List<fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity> statsCommit) {
+		throw new RuntimeException("Should not pass here!");
 	}
 
 }

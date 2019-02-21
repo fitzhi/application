@@ -5,7 +5,7 @@
     <td class="td-filename" mat-cell  *matCellDef="let row">{{row.filename}}</td>
   </ng-container>
 
-  <ng-container matColumnDef="lastCommit">
+  <ng-container matColumnDef="lastCommit" >
     <th id="lastCommit" mat-header-cell *matHeaderCellDef>Last commit</th>
     <td class="td-lastCommit" mat-cell *matCellDef="let row">{{row.lastCommit | date:'mediumDate'}}</td>
   </ng-container>
