@@ -337,15 +337,10 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 
 	@Override
 	public int meanTheRisk(final RiskChartData location) {
-		System.out.println(location.location + " " + location.getRiskLevel() + " " 
-				+ location.numberOfFiles 
-				+ " " 
-				+ ((location.children == null) ? "Null" : location.children.size()));
 		if ( (location.children == null) || (location.children.size() == 0) ) {
 			return location.getRiskLevel();
 		}
 		int risk = (int) Math.floor(location.children.stream().mapToInt(child -> meanTheRisk(child)).average().getAsDouble());
-		System.out.println("Risk " + risk);
 		if (location.getRiskLevel() == UNKNOWN) {
 			location.setRiskLevel(risk);
 		} else {
