@@ -111,8 +111,3 @@ a.sidenav:hover, .activated {
     font-size: 20px;
 }
 
-#list-contributors {
-    position: relative;
-    top: 0em;
-    float:right;
-}

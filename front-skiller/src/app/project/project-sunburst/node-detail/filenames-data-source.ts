@@ -3,7 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { CollectionViewer } from '@angular/cdk/collections';
 import { Filename } from '../../../data/filename';
 
-export class ClassnamesDataSource implements DataSource<Filename> {
+export class FilenamesDataSource implements DataSource<Filename> {
 
     public filenamesSubject = new BehaviorSubject<Filename[]>([]);
     public loadingSubject = new BehaviorSubject<boolean>(false);
@@ -39,5 +39,5 @@ export class ClassnamesDataSource implements DataSource<Filename> {
         this.filenamesSubject.next(filenames);
     }
 
-    constructor() {}
+    public constructor() {}
 }

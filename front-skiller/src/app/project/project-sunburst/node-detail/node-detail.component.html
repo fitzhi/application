@@ -1,0 +1,20 @@
+<div id="node-details">
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Files in {{node}}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-list-filenames id="filenames" [filenames]="filenames"></app-list-filenames>
+    </mat-expansion-panel>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          Committers for {{node}}
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <app-list-contributors id="contributors" [contributors]="contributors"></app-list-contributors>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

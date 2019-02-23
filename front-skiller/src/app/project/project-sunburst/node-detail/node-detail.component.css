@@ -1,0 +1,10 @@
+#node-details {
+    position: relative;
+    top: 0em;
+    float:right;
+    width: fit-content;
+}
+
+:host >>> div.mat-expansion-panel-body  {
+    padding: 0px;
+}

@@ -45,7 +45,7 @@ export class ReferentialService {
     this.httpClient.get<Profile[]>(this.HOST + '/data/profiles').subscribe(
       (profiles: Profile[]) => {
           if (Constants.DEBUG) {
-            console.group('Staff profiles : ');
+            console.groupCollapsed('Staff profiles : ');
             profiles.forEach(function (profile) {
               console.log (profile.code + ' ' + profile.title);
             });
@@ -57,7 +57,7 @@ export class ReferentialService {
       this.httpClient.get<RiskLegend[]>(this.HOST + '/data/riskLegends').subscribe(
       (legends: RiskLegend[]) => {
         if (Constants.DEBUG) {
-          console.group('Risk legends : ');
+          console.groupCollapsed('Risk legends : ');
           legends.forEach(function (legend) {
             console.log (legend.level + ' ' + legend.color + ' ' + legend.description);
           });

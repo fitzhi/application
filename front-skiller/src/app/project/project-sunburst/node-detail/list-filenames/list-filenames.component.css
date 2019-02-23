@@ -6,7 +6,6 @@
 
 :host >>> th#filename  > .mat-header-cell  {
     display: flex;
-    color: red;
     padding-left: 0px;
 
 }
@@ -23,3 +22,10 @@ th.mat-header-cell {
 tr.row_any  {
     height: 2em;
 }
+
+#filenames {
+    position: relative;
+    float:right;
+    width: 100%;
+}
+

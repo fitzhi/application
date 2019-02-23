@@ -16,7 +16,10 @@ import { BaseComponent } from '../../base/base.component';
 import { SettingsGeneration } from '../../data/settingsGeneration';
 import { ProjectStaffService } from '../project-staff-service/project-staff.service';
 import { Filename } from '../../data/filename';
-import { ClassnamesDataSource } from './list-classnames/classnames-data-source';
+import { FilenamesDataSource } from './node-detail/filenames-data-source';
+import { ContributorsDataSource } from './node-detail/contributors-data-source';
+import { BehaviorSubject } from 'rxjs';
+import { Contributor } from '../../data/contributor';
 
 @Component({
   selector: 'app-project-sunburst',
@@ -76,10 +79,18 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
   private myChart: Sunburst;
 
   /**
-   * List of classnames located in a directory of the repository
-   * Theses classnames are shared with the ListContributors component when the user click on a slice.
+   * List of filenames located in a directory of the repository
+   * Theses classnames are shared with the NodeDetail component when the user click on a slice.
    */
-  public classnames;
+  public filenames = new FilenamesDataSource();
+
+  /**
+   * List of contributors.
+   * Theses contributors are shared with the NodeDetail component when the user click on a slice.
+   */
+  public contributors = new ContributorsDataSource();
+
+  public location$ = new BehaviorSubject('');
 
   constructor(
     private cinematicService: CinematicService,
@@ -161,41 +172,68 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
       this.sunburst_ready = false;
     }
 
-    if ((document.getElementById('chart') != null) && (this.settings.idProject != null)) {
+    if (typeof this.myChart === 'undefined') {
+      this.myChart = Sunburst();
+      this.myChart.onNodeClick(nodeClicked => {
+        this.onNodeClick(nodeClicked);
+        this.myChart.focusOnNode(nodeClicked);
+      });
+    }
 
-      if (typeof this.myChart === 'undefined') {
-        this.myChart = Sunburst();
-        this.classnames = new ClassnamesDataSource();
-        this.myChart.onNodeClick(nodeClicked => {
-        if (nodeClicked.classnames !== null) {
-            const filenames = [];
-            if (Constants.DEBUG) { console.group('Filenames : '); }
-            nodeClicked.classnames.forEach(element => {
-              if (Constants.DEBUG) { console.log(element.filename + ' ' + element.lastCommit); }
-              filenames.push(new Filename(element.filename, element.lastCommit));
-            });
-            if (Constants.DEBUG) { console.groupEnd(); }
-            this.classnames.sendClassnames(filenames);
-          } else {
-            this.classnames.sendClassnames([]);
-          }
-          console.log(nodeClicked);
-          this.myChart.focusOnNode(nodeClicked);
+    this.subscriptions.add(
+      this.projectService.loadDashboardData(this.settings)
+        .subscribe(
+          response => this.handleSunburstData(response),
+          response => this.handleErrorData(response),
+          () => {
+            this.hackSunburstStyle();
+            this.tooltipChart();
+            this.sunburst_ready = true;
+            this.sunburst_waiting = false;
+          }));
+  }
+
+  /**
+  * user click on a a node.
+  **/
+  public onNodeClick(nodeClicked: any) {
+    console.log(nodeClicked);
+    this.location$.next(nodeClicked.location);
+    if (nodeClicked.classnames !== null) {
+      if (Constants.DEBUG) {
+        console.groupCollapsed('Filenames : ');
+        nodeClicked.classnames.forEach(element => {
+          console.log(element.filename + ' ' + element.lastCommit);
         });
+        console.groupEnd();
       }
 
-      this.subscriptions.add(
-        this.projectService.loadDashboardData(this.settings)
-          .subscribe(
-            response => this.handleSunburstData(response),
-            response => this.handleErrorData(response),
-            () => {
-              this.hackSunburstStyle();
-              this.tooltipChart();
-              this.sunburst_ready = true;
-              this.sunburst_waiting = false;
-            }));
+      const filenames = [];
+      nodeClicked.classnames.forEach(element => {
+        filenames.push(new Filename(element.filename, element.lastCommit));
+      });
+      this.filenames.sendClassnames(filenames);
+
+      const contributors  = new Set<Contributor>();
+      nodeClicked.classnames.forEach(file => {
+        if (typeof file.idStaffs !== 'undefined') {
+          file.idStaffs.forEach(element => {
+            contributors.add(this.findContributor(element));
+          });
+        }
+      });
+      this.contributors.sendContributors(Array.from(contributors));
+
+    } else {
+      this.filenames.sendClassnames([]);
+      this.contributors.sendContributors([]);
     }
+  }
+
+  findContributor(idStaff: number): Contributor {
+      const foundContributor = this.projectStaffService.contributors
+        .find(contributor => contributor.idStaff === idStaff);
+      return foundContributor;
   }
 
   handleSunburstData(response: any) {

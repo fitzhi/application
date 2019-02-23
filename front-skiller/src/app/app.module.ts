@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule, ErrorHandler, LOCALE_ID} from '@angular/core';
+import {NgModule, LOCALE_ID} from '@angular/core';
 import {FormsModule} from '@angular/forms'; // <-- NgModel lives here
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
@@ -38,7 +38,7 @@ import { StaffFormComponent } from './staff/staff-form/staff-form.component';
 import { StaffProjectsComponent } from './staff/staff-tabs/staff-projects/staff-projects.component';
 import { StaffExperienceComponent } from './staff/staff-tabs/staff-experience/staff-experience.component';
 import { StaffUploadCvComponent } from './staff/staff-tabs/staff-experience/staff-upload-cv/staff-upload-cv.component';
-import {MatNativeDateModule} from '@angular/material';
+import { MatNativeDateModule, MatAccordion, MatExpansionModule } from '@angular/material';
 import {  MatSortModule, MatButtonToggleModule, MatSidenavModule, MatCardModule, MatFormFieldModule } from '@angular/material';
 import {  MatInputModule, MatSnackBarModule, MatSelectModule, MatDatepickerModule } from '@angular/material';
 import { MatTabsModule, MatDialogModule, MatProgressBarModule, MatPaginatorModule } from '@angular/material';
@@ -58,7 +58,9 @@ import { registerLocaleData } from '@angular/common';
 // Remove this line if you want to return to us_US local
 import localeFr from '@angular/common/locales/fr';
 import { DialogFilterComponent } from './project/project-sunburst/dialog-filter/dialog-filter.component';
-import { ListClassnamesComponent } from './project/project-sunburst/list-classnames/list-classnames.component';
+import { ListFilenamesComponent } from './project/project-sunburst/node-detail/list-filenames/list-filenames.component';
+import { NodeDetailComponent } from './project/project-sunburst/node-detail/node-detail.component';
+import { ListContributorsComponent } from './project/project-sunburst/node-detail/list-contributors/list-contributors.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +90,9 @@ import { ListClassnamesComponent } from './project/project-sunburst/list-classna
     DialogUpdatedProjectGhostsComponent,
     DialogLegendSunburstComponent,
     DialogFilterComponent,
-    ListClassnamesComponent,
+    ListFilenamesComponent,
+    NodeDetailComponent,
+    ListContributorsComponent,
   ],
   entryComponents: [
     StarsSkillLevelRenderComponent,
@@ -128,6 +132,7 @@ import { ListClassnamesComponent } from './project/project-sunburst/list-classna
     MatDatepickerModule,
     MatNativeDateModule,
     MatSelectModule,
+    MatExpansionModule,
 
   ],
   providers: [
