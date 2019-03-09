@@ -3,13 +3,14 @@ import { CinematicService } from './service/cinematic.service';
 import { Constants } from './constants';
 import { ListProjectsService } from './list-projects-service/list-projects.service';
 import { ListSkillService } from './list-skill-service/list-skill.service';
-import { ListStaffService } from './list-staff-service/list-staff.service';
+import { StaffListService } from './staff-list-service/staff-list.service';
 import { ReferentialService } from './service/referential.service';
 import { StaffService } from './service/staff.service';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProjectStaffService } from './project/project-staff-service/project-staff.service';
 import { BaseComponent } from './base/base.component';
+import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.service';
 
 @Component({
   selector: 'app-root',
@@ -72,7 +73,8 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
   constructor(
     private cinematicService: CinematicService,
-    private listStaffService: ListStaffService,
+    private listStaffService: StaffListService,
+    private tabsStaffListService: TabsStaffListService,
     private projectStaffService: ProjectStaffService,
     private listSkillService: ListSkillService,
     private listProjectsService: ListProjectsService,
@@ -180,7 +182,16 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     if (Constants.DEBUG) {
       console.log('Searching ' + this.searching_what);
     }
+
     switch (this.formId) {
+      case Constants.TABS_STAFF_LIST:
+        if (Constants.DEBUG) {
+          console.log('Searching staff members for the search criteria ' + this.searching_what);
+        }
+        if (this.searching_what !== null) {
+          this.tabsStaffListService.addTabResult(this.searching_what, this.activeOnly);
+        }
+        break;
       case Constants.DEVELOPERS_SEARCH:
         if (Constants.DEBUG) {
           console.log('Reloading collaborators for search criteria ' + this.searching_what);

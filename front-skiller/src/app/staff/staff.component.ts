@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Collaborator} from '../data/collaborator';
 import {Constants} from '../constants';
 
-import {ListStaffService} from '../list-staff-service/list-staff.service';
+import {StaffListService} from '../staff-list-service/staff-list.service';
 import { StaffDataExchangeService } from './service/staff-data-exchange.service';
 import {CinematicService} from '../service/cinematic.service';
 import {MessageService} from '../message/message.service';
@@ -26,7 +26,7 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
   constructor(
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
-    private listStaffService: ListStaffService,
+    private staffListService: StaffListService,
     private messageService: MessageService,
     private staffDataExchangeService: StaffDataExchangeService,
     private router: Router) {
@@ -56,7 +56,7 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
        */
       document.querySelector('body').style.cssText = '--actions-button-visible: hidden';
       if (this.idStaff != null) {
-        this.listStaffService.getCollaborator(this.idStaff).subscribe(
+        this.staffListService.getCollaborator(this.idStaff).subscribe(
           (collab: Collaborator) => {
             this.staffDataExchangeService.changeCollaborator(collab);
             this.collaborator = collab;

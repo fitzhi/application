@@ -1,11 +1,4 @@
-import {Component, OnInit} from '@angular/core';
-import {CinematicService} from '../service/cinematic.service';
-import {Constants} from '../constants';
-
-import { Router } from '@angular/router';
-import { MessageBoxService } from '../message-box/service/message-box.service';
-import { MatDialogConfig, MatDialog } from '@angular/material';
-import { DialogFilterComponent } from '../project/project-sunburst/dialog-filter/dialog-filter.component';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-welcome',
@@ -14,23 +7,13 @@ import { DialogFilterComponent } from '../project/project-sunburst/dialog-filter
 })
 export class WelcomeComponent implements OnInit {
 
-  constructor(
-    private cinematicService: CinematicService,
-    private dialog: MatDialog,
-    private messageBoxService: MessageBoxService,
-    private router: Router) {}
+  public criteria = 'a';
 
-  test: Map<string, number>;
+  public activeOnly = false;
+
+  constructor() { }
 
   ngOnInit() {
-    this.cinematicService.setForm(Constants.WELCOME, this.router.url);
-    this.cinematicService.setProjectTab(1);
-    this.cinematicService.tabProjectActivated.subscribe( ret => {
-      console.log(ret);
-    });
- }
+  }
 
- public click() {
-    this.cinematicService.setProjectTab(2);
- }
 }

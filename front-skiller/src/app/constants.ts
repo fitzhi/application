@@ -43,6 +43,7 @@ export class Constants {
   public static PROJECT_TABS_HOST = 6;
   public static PROJECT_TAB_FORM = 7;
   public static PROJECT_TAB_STAFF = 8;
+  public static TABS_STAFF_LIST = 9;
 
   /*
   * Indexes of tab inside the form group Project

@@ -376,6 +376,10 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
   }
 
   dialogGhosts() {
+    if (typeof this.project === 'undefined') {
+      this.messageService.info('Nothing to show !');
+      return;
+    }
     if (typeof this.dataGhosts === 'undefined') {
       this.messageService.info('Please wait !');
       return;
@@ -411,6 +415,10 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
   }
 
   reset() {
+    if (typeof this.project === 'undefined') {
+      this.messageService.info('Nothing to reset !');
+      return;
+    }
     this.subscriptions.add(
       this.messageBoxService.question('Reset the dashboard',
         'Please confirm the dashboard reinitialization').subscribe(answer => {
@@ -431,6 +439,11 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
   }
 
   dialogFilter () {
+    if (typeof this.project === 'undefined') {
+      this.messageService.info('Nothing to filter !');
+      return;
+    }
+
     if (typeof this.dataGhosts === 'undefined') {
       this.messageService.info('Please wait !');
       return;

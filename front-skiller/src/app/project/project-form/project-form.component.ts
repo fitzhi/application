@@ -281,6 +281,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
     return (this.project.connection_settings === this.REMOTE_FILE_ACCESS);
   }
 
+   /**
+   * Calling the base class to unsubscribe all subscriptions.
+   */
   ngOnDestroy() {
     super.ngOnDestroy();
   }

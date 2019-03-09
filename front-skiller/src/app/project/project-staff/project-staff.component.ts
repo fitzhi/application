@@ -105,6 +105,9 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
         this.router.navigate(['/user/' + idStaff], {});
   }
 
+  /**
+   * Calling the base class to unsubscribe all subscriptions.
+   */
   ngOnDestroy() {
     super.ngOnDestroy();
   }

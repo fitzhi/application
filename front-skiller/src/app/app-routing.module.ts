@@ -8,9 +8,9 @@ import {ProjectSunburstComponent} from './project/project-sunburst/project-sunbu
 import {ListProjectComponent} from './list-project/list-project.component';
 import {WelcomeComponent} from './welcome/welcome.component';
 import {StaffComponent} from './staff/staff.component';
-import {ListStaffComponent} from './list-staff/list-staff.component';
 import {ErrorComponent} from './error/error.component';
 import { ProjectStaffComponent } from './project/project-staff/project-staff.component';
+import { TabsStaffListComponent } from './tabs-staff-list/tabs-staff-list.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/welcome', pathMatch: 'full'},
@@ -18,7 +18,7 @@ const routes: Routes = [
   {path: 'searchSkill', component: ListSkillComponent},
   {path: 'skill', component: SkillComponent},
   {path: 'skill/:id', component: SkillComponent},
-  {path: 'searchUser', component: ListStaffComponent},
+  {path: 'searchUser', component: TabsStaffListComponent},
   {path: 'user/:id', component: StaffComponent},
   {path: 'user', component: StaffComponent},
   {path: 'error', component: ErrorComponent},

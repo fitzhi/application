@@ -1,6 +1,5 @@
 import { OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Constants } from '../constants';
 
 export class BaseComponent implements OnDestroy {
 
@@ -17,9 +16,6 @@ export class BaseComponent implements OnDestroy {
   }
 
   public ngOnDestroy() {
-    if (Constants.DEBUG) {
-      console.log('[BaseComponent] ngOnDestroy()');
-    }
     this.subscriptions.unsubscribe();
   }
 }

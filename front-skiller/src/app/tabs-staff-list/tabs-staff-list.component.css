@@ -1,0 +1,9 @@
+#remove:hover {
+    background-color: lightGrey;
+}
+
+:host ::ng-deep .mat-tab-header {
+    position: fixed !important;
+    height: 50px;
+    z-index: 1000;
+}

@@ -1,0 +1,59 @@
+:host >>> th#fullname > .mat-sort-header-container  {
+    color: darkblue;
+}
+
+:host >>> th#active > .mat-sort-header-container  {
+    color: darkblue;
+}
+
+:host >>> th#external > .mat-sort-header-container  {
+    color: darkblue;
+}
+
+#staffList {
+  margin-top: 50px;
+  margin-left:5px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  height: 500px;
+  width: 100%;
+  overflow: auto;
+}
+
+table {
+    width: 100%;
+    height: 100%;
+}
+
+.mat-header-cell {
+    height: 4em;
+}
+
+.row_any  {
+    height: 2em;
+}
+
+.row_any:hover {
+    height: 2em;
+    border: 1px solid gray; 
+    color: blue;
+    cursor: pointer;
+}
+
+.col_image {
+    text-align:center;   
+    margin-top: 15px;
+    align-content: center;
+}
+
+.contributor_active {
+    background-color: white;
+}
+
+.contributor_inactive {
+    background-color: whitesmoke;
+}
+
+.col_fullname {
+    padding-left: 10px;
+}

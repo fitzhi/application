@@ -61,6 +61,8 @@ import { DialogFilterComponent } from './project/project-sunburst/dialog-filter/
 import { ListFilenamesComponent } from './project/project-sunburst/node-detail/list-filenames/list-filenames.component';
 import { NodeDetailComponent } from './project/project-sunburst/node-detail/node-detail.component';
 import { ListContributorsComponent } from './project/project-sunburst/node-detail/list-contributors/list-contributors.component';
+import { TabsStaffListComponent } from './tabs-staff-list/tabs-staff-list.component';
+import { StaffListComponent } from './tabs-staff-list/staff-list/staff-list.component';
 
 @NgModule({
   declarations: [
@@ -93,6 +95,8 @@ import { ListContributorsComponent } from './project/project-sunburst/node-detai
     ListFilenamesComponent,
     NodeDetailComponent,
     ListContributorsComponent,
+    TabsStaffListComponent,
+    StaffListComponent,
   ],
   entryComponents: [
     StarsSkillLevelRenderComponent,

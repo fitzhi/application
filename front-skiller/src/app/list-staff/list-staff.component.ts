@@ -4,7 +4,7 @@ import {Constants} from '../constants';
 import {Collaborator} from '../data/collaborator';
 import {Experience} from '../data/experience';
 import {Profile} from '../data/profile';
-import {ListStaffService} from '../list-staff-service/list-staff.service';
+import {StaffListService} from '../staff-list-service/staff-list.service';
 import {ReferentialService} from '../service/referential.service';
 import { Router } from '@angular/router';
 import { BaseComponent } from '../base/base.component';
@@ -23,14 +23,14 @@ export class ListStaffComponent extends BaseComponent implements OnInit, OnDestr
   constructor(
     private cinematicService: CinematicService,
     private referentialService: ReferentialService,
-    private listStaffService: ListStaffService,
+    private staffListService: StaffListService,
     private router: Router) {
       super();
     }
 
   ngOnInit() {
     this.cinematicService.setForm(Constants.DEVELOPERS_SEARCH, this.router.url);
-    this.collaborators = this.listStaffService.getStaff();
+    this.collaborators = this.staffListService.getStaff();
 
     this.subscriptions.add(
       this.referentialService.subjectProfiles.subscribe(
