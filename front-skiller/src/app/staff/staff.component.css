@@ -48,12 +48,9 @@ div.skill_card {
 }
 
 :host >>> ng2-smart-table img:hover {
-/*	width: 35px; */
-/*	height: 35px; */
     border-radius: 25%;
     border: 1px solid;
     border-color: blue;
 	background-color: lightGrey;
 }
-
 

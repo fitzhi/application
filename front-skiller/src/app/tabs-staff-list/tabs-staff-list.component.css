@@ -7,3 +7,9 @@
     height: 50px;
     z-index: 1000;
 }
+
+/* active tab */
+:host ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
+    background-color: lightgrey;
+}
+
