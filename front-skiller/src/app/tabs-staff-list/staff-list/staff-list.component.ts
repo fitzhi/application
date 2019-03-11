@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { TabsStaffListService } from '../service/tabs-staff-list.service';
 import { BaseComponent } from '../../base/base.component';
 import { MatTableDataSource } from '@angular/material';
+import { Constants } from '../../constants';
 
 @Component({
   selector: 'app-staff-list',
@@ -26,6 +27,9 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
     private router: Router) { super(); }
 
   ngOnInit() {
+    if (Constants.DEBUG) {
+      console.log ('Searching staff members for criteria:' + this.criteria + ', activeOnly:' + this.activeOnly);
+    }
     this.subscriptions.add(
       this.tabsStaffListComponent.search(this.criteria, this.activeOnly).subscribe(collaborators => {
           this.dataSource = new MatTableDataSource(collaborators);
@@ -40,7 +44,7 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
   }
 
   public routeStaff(idStaff: number) {
-        this.router.navigate(['/user/' + idStaff], {});
+      this.router.navigate(['/user/' + idStaff], {});
   }
 
   /**

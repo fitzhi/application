@@ -3,9 +3,11 @@
   <mat-tab *ngFor="let tab of tabs; let index = index">
     <ng-template mat-tab-label>
       {{tabs[index]}} &nbsp;
-      <img id="remove" src="/assets/img/delete-sign.png" width="12" height="12" (click)="remove(index)" />
+      <div class="remove">
+        <img src="/assets/img/delete-sign.png" width="12" height="12" (click)="remove(index)" />
+      </div>
     </ng-template>
-    <app-staff-list [criteria]="criteria" [activeOnly]="activeOnly"></app-staff-list>
+    <app-staff-list [criteria]="criteria(index)" [activeOnly]="activeOnly(index)"></app-staff-list>
   </mat-tab>
 </mat-tab-group>
 

@@ -1,5 +1,10 @@
-#remove:hover {
-    background-color: lightGrey;
+.remove {
+    padding: 1px 4px 1px;
+}
+
+.remove:hover {
+    background-color: whitesmoke;
+    border-radius: 50%;
 }
 
 :host ::ng-deep .mat-tab-header {

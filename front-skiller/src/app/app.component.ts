@@ -138,6 +138,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
       }));
 
     this.subscriptions.add(
+
       this.cinematicService.newCollaboratorDisplayEmitted$.subscribe(data => {
         if (Constants.DEBUG) {
           console.log('Receiving new staff member with ID ' + data);
@@ -179,16 +180,13 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 	* Search button has been clicked.
 	*/
   search(): void {
-    if (Constants.DEBUG) {
-      console.log('Searching ' + this.searching_what);
-    }
-
     switch (this.formId) {
       case Constants.TABS_STAFF_LIST:
         if (Constants.DEBUG) {
           console.log('Searching staff members for the search criteria ' + this.searching_what);
         }
-        if (this.searching_what !== null) {
+        console.log (this.searching_what);
+        if ((typeof this.searching_what !== 'undefined') && (this.searching_what.length > 0)) {
           this.tabsStaffListService.addTabResult(this.searching_what, this.activeOnly);
         }
         break;
@@ -269,12 +267,12 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   public list() {
-    console.log(this.cinematicService.getFormerFormIdentifier() + ' ' + this.cinematicService.previousForm.url);
     switch (this.formId) {
       case Constants.DEVELOPERS_CRUD:
         switch (this.cinematicService.getFormerFormIdentifier()) {
-          case Constants.DEVELOPERS_SEARCH:
-            this.router.navigate(['/searchUser'], {});
+          case Constants.TABS_STAFF_LIST:
+          this.location.back();
+//            this.router.navigate(['/searchUser'], {});
             break;
           case Constants.PROJECT_TAB_STAFF:
             this.router.navigate([this.cinematicService.previousForm.url], {});
