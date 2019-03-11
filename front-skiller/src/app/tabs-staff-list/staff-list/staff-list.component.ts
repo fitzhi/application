@@ -44,6 +44,7 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
   }
 
   public routeStaff(idStaff: number) {
+      this.tabsStaffListComponent.inMasterDetail = true;
       this.router.navigate(['/user/' + idStaff], {});
   }
 

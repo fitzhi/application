@@ -23,6 +23,11 @@ export class TabsStaffListService {
     public activeTab = 0;
 
     /**
+     * The tab content is used in master/detail way. The prev and the next button are visible.
+     */
+    public inMasterDetail = false;
+
+    /**
      * New search is made by the developer.
      */
     public search$ = new Subject<StaffListCriteria>();
@@ -30,7 +35,7 @@ export class TabsStaffListService {
     constructor(
         private staffService: StaffService,
         private messageService: MessageService) {
-            
+
         this.search$.subscribe(criterias => {
             if (Constants.DEBUG) {
                 console.log ('Adding criterias ' + criterias.criteria);

@@ -109,9 +109,14 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
             break;
           }
           case Constants.DEVELOPERS_CRUD: {
+            console.log (this.cinematicService.getFormerFormIdentifier());
+            console.log (this.searching_what);
+            /*
             this.in_master_detail = (
-              (this.searching_what != null) ||
+              ((typeof this.searching_what !== 'undefined') && (this.searching_what !== null)) ||
               (this.cinematicService.getFormerFormIdentifier() === Constants.PROJECT_TAB_STAFF));
+            */
+            this.in_master_detail = this.tabsStaffListService.inMasterDetail;
             this.is_allowed_to_search = true;
             this.formTitle = 'Developer mode';
             break;
@@ -185,7 +190,6 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
         if (Constants.DEBUG) {
           console.log('Searching staff members for the search criteria ' + this.searching_what);
         }
-        console.log (this.searching_what);
         if ((typeof this.searching_what !== 'undefined') && (this.searching_what.length > 0)) {
           this.tabsStaffListService.addTabResult(this.searching_what, this.activeOnly);
         }
@@ -234,10 +238,13 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
   }
 
   public switchToDev() {
-    this.searching_what = null;
     this.dev_activated = true;
     this.skill_activated = false;
     this.project_activated = false;
+
+    this.searching_what = null;
+    this.in_master_detail = false;
+    this.tabsStaffListService.inMasterDetail = false;
   }
 
   public switchToProject() {
@@ -271,8 +278,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
       case Constants.DEVELOPERS_CRUD:
         switch (this.cinematicService.getFormerFormIdentifier()) {
           case Constants.TABS_STAFF_LIST:
-          this.location.back();
-//            this.router.navigate(['/searchUser'], {});
+            this.router.navigate(['/searchUser'], {});
             break;
           case Constants.PROJECT_TAB_STAFF:
             this.router.navigate([this.cinematicService.previousForm.url], {});
