@@ -2,11 +2,19 @@
     color: darkblue;
 }
 
-:host >>> th#active > .mat-sort-header-container  {
+:host >>> th#level > .mat-sort-header-container  {
+    color: darkblue;
+}
+
+:host >>> th#isActive > .mat-sort-header-container  {
+    display: flex;
+    justify-content: center;
     color: darkblue;
 }
 
 :host >>> th#external > .mat-sort-header-container  {
+    display: flex;
+    justify-content: center;
     color: darkblue;
 }
 
@@ -53,6 +61,6 @@ table {
     background-color: whitesmoke;
 }
 
-.col_fullname {
-    padding-left: 10px;
+.col_string {
+    padding-left: 3px;
 }

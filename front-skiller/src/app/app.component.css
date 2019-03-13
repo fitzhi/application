@@ -28,6 +28,8 @@ div.panel-body {
 a.header_toolbar_master_detail {
     text-decoration: none;
     display: inline-block;
+    width: 48px;
+    height: 48px;
 }
 
 a.header_toolbar_master_detail:hover {
@@ -88,4 +90,9 @@ a.disabled {
 
 #formTitle {
     font-size: 95%;
+}
+
+#imgViewSelection {
+    width: 48px;
+    height: 48px;
 }

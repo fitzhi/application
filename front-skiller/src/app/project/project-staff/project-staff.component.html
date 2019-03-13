@@ -6,9 +6,7 @@
       <th id="fullname" mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
       <td mat-cell class="col_fullname {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor" 
           (click)="routeStaff(contributor.idStaff)">
-  <!--      <a [routerLink]="['/user', ]"> -->
           {{contributor.fullname}}
-  <!--      </a> -->
       </td>
     </ng-container>
 

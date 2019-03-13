@@ -79,8 +79,13 @@ export class TabsStaffListComponent implements OnInit {
    */
   public select(activeTab: number) {
     this.tabsStaffListComponent.activeTab = activeTab;
+    this.tabsStaffListComponent.activeKey = this.tabKeys[activeTab];
   }
 
+  /**
+   * Remove the tab from the result views container.
+   * @param index of the tab.
+   */
   public remove(index: number) {
     const key = this.tabKeys[index];
     this.tabs.splice(index, 1);

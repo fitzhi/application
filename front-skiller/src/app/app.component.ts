@@ -6,7 +6,6 @@ import { ListSkillService } from './list-skill-service/list-skill.service';
 import { StaffListService } from './staff-list-service/staff-list.service';
 import { ReferentialService } from './service/referential.service';
 import { StaffService } from './service/staff.service';
-import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { ProjectStaffService } from './project/project-staff-service/project-staff.service';
 import { BaseComponent } from './base/base.component';
@@ -79,7 +78,6 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     private listSkillService: ListSkillService,
     private listProjectsService: ListProjectsService,
     private referentialService: ReferentialService,
-    private location: Location,
     private staffService: StaffService,
     private router: Router) {
 
@@ -109,8 +107,6 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
             break;
           }
           case Constants.DEVELOPERS_CRUD: {
-            console.log (this.cinematicService.getFormerFormIdentifier());
-            console.log (this.searching_what);
             /*
             this.in_master_detail = (
               ((typeof this.searching_what !== 'undefined') && (this.searching_what !== null)) ||
@@ -155,9 +151,9 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
         */
         setTimeout(() => {
           switch (this.cinematicService.getFormerFormIdentifier()) {
-            case Constants.DEVELOPERS_SEARCH:
-              this.previousId = this.listStaffService.previousCollaboratorId(data);
-              this.nextId = this.listStaffService.nextCollaboratorId(data);
+            case Constants.TABS_STAFF_LIST:
+              this.previousId = this.tabsStaffListService.previousCollaboratorId(data);
+              this.nextId = this.tabsStaffListService.nextCollaboratorId(data);
               break;
             case Constants.PROJECT_TAB_STAFF:
               this.previousId = this.projectStaffService.previousIdStaff(data);
@@ -218,10 +214,6 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     }
   }
 
-  goBack(): void {
-    this.location.back();
-  }
-
   goNewDeveloper(): void {
     if (Constants.DEBUG) {
       console.log('Creating a new developer');
@@ -243,7 +235,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     this.project_activated = false;
 
     this.searching_what = null;
-    this.in_master_detail = false;
+    this.in_master_detail =   false;
     this.tabsStaffListService.inMasterDetail = false;
   }
 
@@ -291,6 +283,16 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
         console.error('Unattempted formId ' + this.formId);
         break;
     }
+  }
+
+  /**
+   * @returns TRUE if the container is in master/detail way.
+   */
+  public isInMasterDetail(): boolean {
+    if (this.formId === Constants.TABS_STAFF_LIST) {
+      return true;
+    }
+    return !this.in_master_detail;
   }
 
   /**

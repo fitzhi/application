@@ -6,4 +6,5 @@ export class StaffListCriteria {
     this.criteria = criteria;
     this.activeOnly = activeOnly;
   }
+
 }

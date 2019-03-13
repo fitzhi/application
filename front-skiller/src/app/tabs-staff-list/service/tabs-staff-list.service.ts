@@ -23,6 +23,11 @@ export class TabsStaffListService {
     public activeTab = 0;
 
     /**
+     * Key of the active tab.
+     */
+    public activeKey: string;
+
+    /**
      * The tab content is used in master/detail way. The prev and the next button are visible.
      */
     public inMasterDetail = false;
@@ -138,6 +143,56 @@ export class TabsStaffListService {
             console.groupCollapsed ('Remaining tabs');
             this.staffListContext.forEach(criterias => console.log (criterias.criteria));
             console.groupEnd();
+        }
+    }
+
+    /**
+     * @param current identifier
+     * @returns the NEXT collaborator's id associated with this id in the staff list.
+     */
+    nextCollaboratorId(id: number): number {
+
+        const context = this.staffListContext.get(this.activeKey);
+
+        const index = context.staffSelected.findIndex(collab => collab.idStaff === id);
+        if (Constants.DEBUG) {
+            console.log('Current index : ' + index + ' for ' + this.activeKey);
+            console.log('List size : ' + context.staffSelected.length);
+        }
+        if (index < context.staffSelected.length - 1) {
+            return context.staffSelected[index + 1].idStaff;
+        } else {
+            return undefined;
+        }
+    }
+
+    /**
+     * @param current identifier
+     * @returns the PREVIOUS collaborator's id associated with this id in the staff list.
+     */
+    previousCollaboratorId(id: number): number {
+
+        const context = this.staffListContext.get(this.activeKey);
+
+        const index = context.staffSelected.findIndex(collab => collab.idStaff === id);
+        if (index > 0) {
+            return context.staffSelected[index - 1].idStaff;
+        } else {
+            return undefined;
+        }
+    }
+
+    /**
+     * Retrieve the context associated to the key.
+     * @param key searched key
+     * @returns the context associated to this list or null if none exists (which is suspected to be an internal error)
+     */
+    getContext (key: string): StaffListContext  {
+        if (!this.staffListContext.has(key)) {
+            console.error('Cannot retrieve key ' + key);
+            return null;
+        } else {
+            return this.staffListContext.get(key);
         }
     }
 }

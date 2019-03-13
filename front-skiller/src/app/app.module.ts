@@ -16,8 +16,7 @@ import {ListSkillComponent} from './list-skill/list-skill.component';
 import {WelcomeComponent} from './welcome/welcome.component';
 
 import {CinematicService} from './service/cinematic.service';
-import {StaffComponent} from './staff/staff.component';
-import {ListStaffComponent} from './list-staff/list-staff.component';
+import {StaffComponent} from './tabs-staff/staff.component';
 
 import {StaffService} from './service/staff.service';
 import { MessageComponent } from './message/message.component';
@@ -26,18 +25,19 @@ import { ErrorComponent } from './error/error.component';
 
 import { Ng2SmartTableModule } from 'ng2-smart-table';
 
-import { StarsSkillLevelRenderComponent } from './staff/starsSkillLevelRenderComponent';
+import { StarsSkillLevelRenderComponent } from './tabs-staff/starsSkillLevelRenderComponent';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
 import { ListProjectComponent } from './list-project/list-project.component';
 import { ReferentialService } from './service/referential.service';
 
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { StaffTabsComponent } from './staff/staff-tabs/staff-tabs.component';
-import { UploadedSkillsPickupComponent } from './staff/staff-tabs/staff-experience/staff-upload-cv/pickup/uploaded-skills-pickup.component';
-import { StaffFormComponent } from './staff/staff-form/staff-form.component';
-import { StaffProjectsComponent } from './staff/staff-tabs/staff-projects/staff-projects.component';
-import { StaffExperienceComponent } from './staff/staff-tabs/staff-experience/staff-experience.component';
-import { StaffUploadCvComponent } from './staff/staff-tabs/staff-experience/staff-upload-cv/staff-upload-cv.component';
+import { StaffTabsComponent } from './tabs-staff/staff-tabs/staff-tabs.component';
+// tslint:disable-next-line:max-line-length
+import { UploadedSkillsPickupComponent } from './tabs-staff/staff-tabs/staff-experience/staff-upload-cv/pickup/uploaded-skills-pickup.component';
+import { StaffFormComponent } from './tabs-staff/staff-form/staff-form.component';
+import { StaffProjectsComponent } from './tabs-staff/staff-tabs/staff-projects/staff-projects.component';
+import { StaffExperienceComponent } from './tabs-staff/staff-tabs/staff-experience/staff-experience.component';
+import { StaffUploadCvComponent } from './tabs-staff/staff-tabs/staff-experience/staff-upload-cv/staff-upload-cv.component';
 import { MatNativeDateModule, MatAccordion, MatExpansionModule } from '@angular/material';
 import {  MatSortModule, MatButtonToggleModule, MatSidenavModule, MatCardModule, MatFormFieldModule } from '@angular/material';
 import {  MatInputModule, MatSnackBarModule, MatSelectModule, MatDatepickerModule } from '@angular/material';
@@ -71,7 +71,6 @@ import { StaffListComponent } from './tabs-staff-list/staff-list/staff-list.comp
     ListSkillComponent,
     WelcomeComponent,
     StaffComponent,
-    ListStaffComponent,
     MessageComponent,
     ErrorComponent,
     StarsSkillLevelRenderComponent,
