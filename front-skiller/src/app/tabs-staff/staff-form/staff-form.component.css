@@ -2,9 +2,13 @@
 	font-weight: 600;
 }
 
-#staffForm {
+
+#staffDiv {
 	margin-left: 50px;
 	margin-top: 10px;
+}
+
+#staffForm {
 	padding: 20px;
 	max-width: 800px;
 }

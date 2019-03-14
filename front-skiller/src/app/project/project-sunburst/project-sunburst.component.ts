@@ -457,7 +457,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
     const dlg = this.dialog.open(DialogFilterComponent, dialogConfig);
     this.subscriptions.add(
       dlg.afterClosed().subscribe( settings => {
-        this.settings.idStaffSelected = (settings.idStaffSelected.length === 0) ? 0 : settings.idStaffSelected;
+        this.settings.idStaffSelected =
+            ((typeof settings.idStaffSelected === 'undefined') || (settings.idStaffSelected.length === 0))
+            ? 0 : settings.idStaffSelected;
         this.settings.startingDate = settings.startingDate;
         this.generateTitleSunburst();
         this.subscriptions.add(

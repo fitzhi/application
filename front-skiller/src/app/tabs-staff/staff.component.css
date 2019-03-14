@@ -1,16 +1,6 @@
 body {
 	--actions-button-visible: hidden;
 }
-
-div.projects_card {
-	padding:1px;
-}
-
-div.skill_card {
-	padding:1px;
-}
-
-
 :host >>> ng2-smart-table {
         font-size: 12px;
 }

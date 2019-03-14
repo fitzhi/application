@@ -158,13 +158,6 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
     return (!this.collaborator.isActive);
   }
 
-  /**
-   * Calling the base class to unsubscribe all subscriptions.
-   */
-  ngOnDestroy() {
-    super.ngOnDestroy();
-  }
-
   get firstName(): any {
     return this.profileStaff.get('firstName');
   }
@@ -192,4 +185,12 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
   get external(): any {
     return this.profileStaff.get('external');
   }
+
+  /**
+   * Calling the base class to unsubscribe all subscriptions.
+   */
+  ngOnDestroy() {
+    super.ngOnDestroy();
+  }
+
 }

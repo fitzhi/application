@@ -51,6 +51,7 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
         isActive: true, dateInactive: null, application: null, typeOfApplication: null, external: false,
         missions: [], experiences: []
       };
+      this.staffDataExchangeService.changeCollaborator (this.collaborator);
       /*
        * By default, you cannot add a project/skill for an unregistered developer.
        */

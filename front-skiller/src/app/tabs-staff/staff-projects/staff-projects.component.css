@@ -1,0 +1,10 @@
+div.projects_card {
+    padding:10px;
+    /** Top / Right / Left / Bottom 
+    margin: 20px 20px 50px 0px;
+    */
+    margin-left: 50px;
+    margin-top: 20px;
+    max-width: 400px;
+}
+

@@ -44,13 +44,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
       }
 
   ngOnInit() {
-    // Either we are in creation mode, or we load the collaborator from the back-end...
-    // We create an empty collaborator until the subscription is complete
-    this.collaborator = {
-      idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
-      isActive: true, dateInactive: null, application: null, typeOfApplication: null, external: false,
-      missions: [], experiences: []
-    };
+
     /**
      * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
      */

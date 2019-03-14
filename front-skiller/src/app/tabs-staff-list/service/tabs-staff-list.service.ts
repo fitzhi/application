@@ -103,6 +103,25 @@ export class TabsStaffListService {
         }
 
         function testCriteria(collab, index, array) {
+
+            const pos_start_skills = criteria.toLowerCase().indexOf('skill:');
+            if (pos_start_skills > -1) {
+                const work = criteria.toLowerCase().substring (pos_start_skills + 'skill:'.length);
+                let skills: string;
+                if (work.length > 0) {
+                    const pos_end_skills = criteria.toLowerCase().indexOf(';');
+                    // Assuming that until the end of string, we have skills
+                    if (pos_end_skills === -1) {
+                        skills = work;
+                    } else {
+                        skills = work.substring(0, pos_end_skills);
+                    }
+                    if (Constants.DEBUG) {
+                        console.log ('skills candidate ' + skills);
+                    }
+                }
+            }
+
             const firstname = (typeof collab.firstName !== 'undefined') ? collab.firstName : '';
             const lastname = (typeof collab.lastName !== 'undefined') ? collab.lastName : '';
             return (
