@@ -1,17 +1,17 @@
-import { Constants } from '../../../constants';
-import { Collaborator } from '../../../data/collaborator';
-import { StaffDTO } from '../../../data/external/staffDTO';
-import { MessageService } from '../../../message/message.service';
-import { ProjectService } from '../../../service/project.service';
-import { StaffService } from '../../../service/staff.service';
-import { StaffDataExchangeService } from '../../service/staff-data-exchange.service';
+import { Constants } from '../../constants';
+import { Collaborator } from '../../data/collaborator';
+import { StaffDTO } from '../../data/external/staffDTO';
+import { MessageService } from '../../message/message.service';
+import { ProjectService } from '../../service/project.service';
+import { StaffService } from '../../service/staff.service';
+import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 
 import {Ng2SmartTableModule} from 'ng2-smart-table';
-import {StarsSkillLevelRenderComponent} from './../../starsSkillLevelRenderComponent';
+import {StarsSkillLevelRenderComponent} from './../starsSkillLevelRenderComponent';
 import {Ng2SmartTableComponent} from 'ng2-smart-table/ng2-smart-table.component';
 import { LocalDataSource } from 'ng2-smart-table';
-import { BaseComponent } from '../../../base/base.component';
+import { BaseComponent } from '../../base/base.component';
 
 @Component({
   selector: 'app-staff-projects',

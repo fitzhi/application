@@ -1,16 +1,16 @@
-import {Constants} from '../../../constants';
-import {Collaborator} from '../../../data/collaborator';
-import {StaffDTO} from '../../../data/external/staffDTO';
-import {MessageService} from '../../../message/message.service';
-import {SkillService} from '../../../service/skill.service';
-import {StaffService} from '../../../service/staff.service';
-import {StaffDataExchangeService} from '../../service/staff-data-exchange.service';
+import {Constants} from '../../constants';
+import {Collaborator} from '../../data/collaborator';
+import {StaffDTO} from '../../data/external/staffDTO';
+import {MessageService} from '../../message/message.service';
+import {SkillService} from '../../service/skill.service';
+import {StaffService} from '../../service/staff.service';
+import {StaffDataExchangeService} from '../service/staff-data-exchange.service';
 import {Component, OnInit, OnDestroy} from '@angular/core';
 
 import {LocalDataSource} from 'ng2-smart-table';
 import {StaffUploadCvComponent} from './staff-upload-cv/staff-upload-cv.component';
 import {MatDialog, MatDialogConfig} from '@angular/material';
-import { BaseComponent } from '../../../base/base.component';
+import { BaseComponent } from '../../base/base.component';
 
 @Component({
   selector: 'app-staff-experience',

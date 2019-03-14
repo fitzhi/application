@@ -82,9 +82,9 @@ export class TabsStaffListService {
      */
     public search(criteria: string, activeOnly: boolean): Subject<Collaborator[]> {
 
-       const collaborator = [];
+        const collaborator = [];
 
-       const collaborator$ = new Subject<Collaborator[]>();
+        const collaborator$ = new Subject<Collaborator[]>();
 
         const key = this.key(new StaffListCriteria(criteria, activeOnly));
 
@@ -106,31 +106,30 @@ export class TabsStaffListService {
             const firstname = (typeof collab.firstName !== 'undefined') ? collab.firstName : '';
             const lastname = (typeof collab.lastName !== 'undefined') ? collab.lastName : '';
             return (
-                ((firstname.toLowerCase().indexOf(criteria) > -1)
-                    || (lastname.toLowerCase().indexOf(criteria) > -1))
+                ((firstname.toLowerCase().indexOf(criteria.toLocaleLowerCase()) > -1)
+                    || (lastname.toLowerCase().indexOf(criteria.toLowerCase()) > -1))
                 && (activeOnly ? collab.isActive : true)
             );
         }
 
-        this.staffService.getAll().
-            subscribe((staff: Collaborator[]) =>
-                collaborator.push(...staff.filter(testCriteria)),
-                error => console.log(error),
-                () => {
+        this.staffService.getAll().subscribe((staff: Collaborator[]) =>
+            collaborator.push(...staff.filter(testCriteria)),
+            error => console.log(error),
+            () => {
+                if (Constants.DEBUG) {
+                    console.log('The staff collection is containing now ' + collaborator.length + ' records');
+                    console.groupCollapsed('Staff members found : ');
+                    collaborator.forEach(collab => console.log(collab.firstName + ' ' + collab.lastName));
+                    console.groupEnd();
+                }
+                if (this.staffListContext.has(key)) {
                     if (Constants.DEBUG) {
-                        console.log('The staff collection is containing now ' + collaborator.length + ' records');
-                        console.groupCollapsed('Staff members found : ');
-                        collaborator.forEach(collab => console.log(collab.firstName + ' ' + collab.lastName));
-                        console.groupEnd();
+                        console.log('Saving collaborators for key ' + key);
                     }
-                    if (this.staffListContext.has(key)) {
-                        if (Constants.DEBUG) {
-                            console.log('Saving collaborators for key ' + key);
-                        }
-                        this.staffListContext.get(key).store(collaborator);
-                    }
-                    collaborator$.next(collaborator);
-                });
+                    this.staffListContext.get(key).store(collaborator);
+                }
+                collaborator$.next(collaborator);
+            });
         return collaborator$;
     }
 

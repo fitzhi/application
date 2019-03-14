@@ -33,12 +33,12 @@ import { ReferentialService } from './service/referential.service';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { StaffTabsComponent } from './tabs-staff/staff-tabs/staff-tabs.component';
 // tslint:disable-next-line:max-line-length
-import { UploadedSkillsPickupComponent } from './tabs-staff/staff-tabs/staff-experience/staff-upload-cv/pickup/uploaded-skills-pickup.component';
+import { UploadedSkillsPickupComponent } from './tabs-staff/staff-experience/staff-upload-cv/pickup/uploaded-skills-pickup.component';
 import { StaffFormComponent } from './tabs-staff/staff-form/staff-form.component';
-import { StaffProjectsComponent } from './tabs-staff/staff-tabs/staff-projects/staff-projects.component';
-import { StaffExperienceComponent } from './tabs-staff/staff-tabs/staff-experience/staff-experience.component';
-import { StaffUploadCvComponent } from './tabs-staff/staff-tabs/staff-experience/staff-upload-cv/staff-upload-cv.component';
-import { MatNativeDateModule, MatAccordion, MatExpansionModule } from '@angular/material';
+import { StaffProjectsComponent } from './tabs-staff/staff-projects/staff-projects.component';
+import { StaffExperienceComponent } from './tabs-staff/staff-experience/staff-experience.component';
+import { StaffUploadCvComponent } from './tabs-staff/staff-experience/staff-upload-cv/staff-upload-cv.component';
+import { MatNativeDateModule, MatExpansionModule } from '@angular/material';
 import {  MatSortModule, MatButtonToggleModule, MatSidenavModule, MatCardModule, MatFormFieldModule } from '@angular/material';
 import {  MatInputModule, MatSnackBarModule, MatSelectModule, MatDatepickerModule } from '@angular/material';
 import { MatTabsModule, MatDialogModule, MatProgressBarModule, MatPaginatorModule } from '@angular/material';

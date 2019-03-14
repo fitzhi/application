@@ -1,4 +1,4 @@
-import { StarsSkillLevelRenderComponent } from './staff/starsSkillLevelRenderComponent';
+import { StarsSkillLevelRenderComponent } from './tabs-staff/starsSkillLevelRenderComponent';
 
 /**
  * Constants file

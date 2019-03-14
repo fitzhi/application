@@ -1,8 +1,8 @@
-import {Constants} from '../../../../constants';
-import {Collaborator} from '../../../../data/collaborator';
-import {DeclaredExperience} from '../../../../data/declared-experience';
-import {DeclaredExperienceDTO} from '../../../../data/external/declaredExperienceDTO';
-import {MessageBoxService} from '../../../../message-box/service/message-box.service';
+import {Constants} from '../../../constants';
+import {Collaborator} from '../../../data/collaborator';
+import {DeclaredExperience} from '../../../data/declared-experience';
+import {DeclaredExperienceDTO} from '../../../data/external/declaredExperienceDTO';
+import {MessageBoxService} from '../../../message-box/service/message-box.service';
 import {UploadedSkillsPickupComponent} from './pickup/uploaded-skills-pickup.component';
 import {HttpClient} from '@angular/common/http';
 import {HttpResponse} from '@angular/common/http';
@@ -12,7 +12,7 @@ import {Component, OnInit, Inject, OnDestroy} from '@angular/core';
 import {Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialogConfig} from '@angular/material';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
-import { BaseComponent } from '../../../../base/base.component';
+import { BaseComponent } from '../../../base/base.component';
 
 @Component({
   selector: 'app-staff-upload-cv',

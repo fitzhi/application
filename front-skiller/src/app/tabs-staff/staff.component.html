@@ -1,14 +1,17 @@
-<div class="py-2 text-center">
-	<h2>Developer Form</h2>
-</div>
-
-<div class="container" style="width: 100%;">
-	<div class="d-flex flex-row-reverse">
-		<div class="p-2" style="width: 35%">
-			<app-staff-tabs></app-staff-tabs>
-		</div>
-		<div class="p-2" style="width: 65%; margin:40px">
-			<app-staff-form [idStaff]="idStaff"></app-staff-form>
-		</div>
-	</div>
-</div>
+<mat-tab-group>
+  <mat-tab label="Form">
+    <div class="large-box mat-elevation-z4">
+      <app-staff-form [idStaff]="idStaff"></app-staff-form>
+    </div>
+  </mat-tab>
+  <mat-tab label="Projects">
+    <div class="large-box mat-elevation-z4">
+      <app-staff-projects></app-staff-projects>
+    </div>
+  </mat-tab>
+  <mat-tab label="Skills">
+    <div class="large-box mat-elevation-z4">
+      <app-staff-experience></app-staff-experience>
+    </div>
+  </mat-tab>
+</mat-tab-group>

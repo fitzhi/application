@@ -1,7 +1,7 @@
-import { Constants } from '../../../../../constants';
-import { DeclaredExperience } from '../../../../../data/declared-experience';
-import { ReturnCodeMessage } from '../../../../../data/return_code_message';
-import { StaffService } from '../../../../../service/staff.service';
+import { Constants } from '../../../../constants';
+import { DeclaredExperience } from '../../../../data/declared-experience';
+import { ReturnCodeMessage } from '../../../../data/return_code_message';
+import { StaffService } from '../../../../service/staff.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import {Component, Inject, ViewChild, AfterViewInit} from '@angular/core';
 import { MAT_DIALOG_DATA, MatTableDataSource, MatDialogRef } from '@angular/material';

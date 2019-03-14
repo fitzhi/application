@@ -19,7 +19,7 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
   /**
    * Staff member identifier shared with the child components (staffTabs, StaffForm)
    */
-  idStaff: number;
+  public idStaff: number;
 
   private collaborator: Collaborator;
 

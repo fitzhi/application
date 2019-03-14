@@ -7,7 +7,7 @@ import {ProjectComponent} from './project/project.component';
 import {ProjectSunburstComponent} from './project/project-sunburst/project-sunburst.component';
 import {ListProjectComponent} from './list-project/list-project.component';
 import {WelcomeComponent} from './welcome/welcome.component';
-import {StaffComponent} from './staff/staff.component';
+import {StaffComponent} from './tabs-staff/staff.component';
 import {ErrorComponent} from './error/error.component';
 import { ProjectStaffComponent } from './project/project-staff/project-staff.component';
 import { TabsStaffListComponent } from './tabs-staff-list/tabs-staff-list.component';
