@@ -26,7 +26,7 @@ export class DialogFilterComponent implements OnInit {
 
   ngOnInit() {
     if (Constants.DEBUG) {
-      console.group('Contributors list');
+      console.groupCollapsed('Contributors list');
       this.projectStaffService.contributors.forEach(entry => {
         console.log(entry.fullname);
       });
