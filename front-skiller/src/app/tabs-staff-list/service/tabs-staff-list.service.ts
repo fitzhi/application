@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Subject, BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { StaffListCriteria } from './staffListCriteria';
 import { Collaborator } from '../../data/collaborator';
 import { StaffService } from '../../service/staff.service';
 import { Constants } from '../../constants';
 import { StaffListContext } from '../../data/staff-list-context';
 import { MessageService } from '../../message/message.service';
+import { SkillService } from '../../service/skill.service';
+import { Skill } from '../../data/skill';
 
 @Injectable({
     providedIn: 'root'
@@ -39,6 +41,7 @@ export class TabsStaffListService {
 
     constructor(
         private staffService: StaffService,
+        private skillService: SkillService,
         private messageService: MessageService) {
 
         this.search$.subscribe(criterias => {
@@ -81,10 +84,24 @@ export class TabsStaffListService {
      * @param activeOnly active only Yes/No
      */
     public search(criteria: string, activeOnly: boolean): Subject<Collaborator[]> {
+        return this._search(criteria, activeOnly, this.skillService.skills);
+    }
 
+    /**
+     * Searching staff members corresponding to the 2 passed criterias.
+     * @param criteria the criteria
+     * @param activeOnly active only Yes/No
+     * @param allSkills list of ALL skills registered inside the application
+     */
+    public _search(criteria: string, activeOnly: boolean, allSkills: Skill[]): Subject<Collaborator[]> {
         const collaborator = [];
 
         const collaborator$ = new Subject<Collaborator[]>();
+
+        /**
+         * Cache of the skills filter.
+         */
+        const skillsFilter: number[] = [];
 
         const key = this.key(new StaffListCriteria(criteria, activeOnly));
 
@@ -102,37 +119,104 @@ export class TabsStaffListService {
             }
         }
 
-        function testCriteria(collab, index, array) {
-
+        function extractCriteriaSkills(): string {
             const pos_start_skills = criteria.toLowerCase().indexOf('skill:');
             if (pos_start_skills > -1) {
                 const work = criteria.toLowerCase().substring (pos_start_skills + 'skill:'.length);
-                let skills: string;
+                let text_skills: string;
                 if (work.length > 0) {
-                    const pos_end_skills = criteria.toLowerCase().indexOf(';');
+                    const pos_end_skills = work.toLowerCase().indexOf(';');
                     // Assuming that until the end of string, we have skills
                     if (pos_end_skills === -1) {
-                        skills = work;
+                        text_skills = work;
                     } else {
-                        skills = work.substring(0, pos_end_skills);
+                        text_skills = work.substring(0, pos_end_skills);
                     }
-                    if (Constants.DEBUG) {
-                        console.log ('skills candidate ' + skills);
-                    }
+                    return text_skills;
                 }
+            }
+            return '';
+        }
+
+        function reminderCriteria(): string {
+            const pos_start_skills = criteria.toLowerCase().indexOf('skill:');
+            if (pos_start_skills === -1) { return criteria; }
+            const pos_end_skills = criteria.indexOf(';', pos_start_skills);
+            const reminder = (pos_end_skills === -1) ?
+                    criteria.substr(0, pos_start_skills) :
+                    criteria.substr(0, pos_start_skills - 1) + criteria.substr(pos_end_skills + 1);
+            if (Constants.DEBUG) {
+                console.log ('reminderCriteria(' + criteria + ') = ' + reminder);
+            }
+            return reminder;
+        }
+
+        function getSkillsFilter(): number[] {
+
+            // We cache the array of skills id. We don need to parse the criteria for each entry.
+            if (skillsFilter.length > 0) {
+                return skillsFilter;
+            }
+
+            const criteriaSkills = extractCriteriaSkills();
+            if (criteriaSkills.length > 0) {
+                const skills = criteriaSkills.split(',');
+                if (Constants.DEBUG) {
+                    console.groupCollapsed ('Skills candidate ');
+                    skills.forEach(skill => console.log (skill));
+                    console.groupEnd();
+                }
+                skills.forEach(skill => {
+                    allSkills.forEach(sk => {
+                        if (sk.title.toLocaleLowerCase() === skill.toLocaleLowerCase()) {
+                            skillsFilter.push(sk.id);
+                        }
+                    });
+                });
+                if (Constants.DEBUG) {
+                    console.groupCollapsed ('id of skills candidate ');
+                    skillsFilter.forEach(id => console.log (id));
+                    console.groupEnd();
+                }
+            }
+
+            return skillsFilter;
+        }
+
+        function testCriteria(collab: Collaborator): boolean {
+
+            const skills = getSkillsFilter();
+
+            const experiences = collab.experiences.map(exp => exp.id);
+            if (skills.every(id => experiences.includes(id))) {
+                if (Constants.DEBUG) {
+                    console.log (collab.firstName + ' ' + collab.lastName + ' meets the criterias');
+                }
+            } else {
+                // If we do not find each skill in the selected array of skills, we reject this collaborator.
+                return false;
+            }
+
+            const reminder = reminderCriteria().trim().toLowerCase();
+            if (reminder.length === 0) {
+                return (activeOnly ? collab.isActive : true);
             }
 
             const firstname = (typeof collab.firstName !== 'undefined') ? collab.firstName : '';
             const lastname = (typeof collab.lastName !== 'undefined') ? collab.lastName : '';
             return (
-                ((firstname.toLowerCase().indexOf(criteria.toLocaleLowerCase()) > -1)
-                    || (lastname.toLowerCase().indexOf(criteria.toLowerCase()) > -1))
+                ((firstname.toLowerCase().indexOf(reminder) > -1)
+                    || (lastname.toLowerCase().indexOf(reminder) > -1))
                 && (activeOnly ? collab.isActive : true)
             );
         }
 
-        this.staffService.getAll().subscribe((staff: Collaborator[]) =>
-            collaborator.push(...staff.filter(testCriteria)),
+        this.staffService.getAll().subscribe((staffs: Collaborator[]) => {
+            staffs.forEach(staff => {
+                if (testCriteria(staff)) {
+                    collaborator.push(staff);
+                }});
+            },
             error => console.log(error),
             () => {
                 if (Constants.DEBUG) {

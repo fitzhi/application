@@ -7,10 +7,6 @@ import { Component, OnInit } from '@angular/core';
 })
 export class WelcomeComponent implements OnInit {
 
-  public criteria = 'a';
-
-  public activeOnly = false;
-
   constructor() { }
 
   ngOnInit() {

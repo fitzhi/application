@@ -19,16 +19,36 @@ export class SkillService extends InternalService {
 
   private skillUrl = Constants.URL_BACKEND + '/skill';  // URL to web API
 
-  constructor(private httpClient: HttpClient) {super(); }
-
   /**
- * Return the global list of ALL collaborators, working for the company.
- */
-  getAll(): Observable<Skill[]> {
+   * skills
+   */
+  public skills: Skill[] = [];
+
+  constructor(private httpClient: HttpClient) {
+    super();
+    this.loadSkills();
+   }
+
+ /**
+  * load the list of ALL collaborators skills, working for the company.
+  */
+  loadSkills() {
     if (Constants.DEBUG) {
-      this.log('Fetching the skills on URL ' + this.skillUrl + '/all');
+      this.log('Fetching all skills on URL ' + this.skillUrl + '/all');
     }
-    return this.httpClient.get<Skill[]>(this.skillUrl + '/all');
+    const subSkills = this.httpClient.get<Skill[]>(this.skillUrl + '/all').subscribe(
+      skills => {
+        if (Constants.DEBUG) {
+          console.groupCollapsed('Skills registered : ');
+          skills.forEach(function (skill) {
+            console.log (skill.id + ' ' + skill.title);
+          });
+          console.groupEnd();
+        }
+        skills.forEach(skill => this.skills.push(skill));
+      },
+      error => console.log (error),
+      () => setTimeout(subSkills.unsubscribe(), 1000));
   }
 
   /**

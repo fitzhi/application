@@ -9,6 +9,7 @@ import { CinematicService } from '../service/cinematic.service';
 import { ListSkillService } from '../list-skill-service/list-skill.service';
 import { SkillService } from '../service/skill.service';
 import { BaseComponent } from '../base/base.component';
+import { ReferentialService } from '../service/referential.service';
 
 @Component({
   selector: 'app-skill',
@@ -102,13 +103,15 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
           this.skill = new Skill();
           this.id = null;
           this.profileSkill.get('title').setValue(this.skill.title);
-        }));
+        },
+        error => console.error (error),
+        () => this.skillService.loadSkills()));
   }
 
   get title(): any {
     return this.profileSkill.get('title');
   }
-  
+
   ngOnDestroy() {
     super.ngOnDestroy();
   }

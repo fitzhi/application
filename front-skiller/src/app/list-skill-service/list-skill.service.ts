@@ -13,7 +13,7 @@ export class ListSkillService {
   /**
    * List of skills corresponding to the search criteria.
    */
-  private static theSkills: Skill[] = [];
+  private theSkills: Skill[] = [];
 
   constructor(private skillService: SkillService) {}
 
@@ -21,7 +21,7 @@ export class ListSkillService {
    * Return the list of staff members.
    */
   getSkills(): Skill[] {
-    return ListSkillService.theSkills;
+    return this.theSkills;
   }
 
   /**
@@ -34,14 +34,7 @@ export class ListSkillService {
     }
 
     this.cleanUpSkills();
-    this.skillService.getAll().subscribe(
-      (skills: Skill[]) => ListSkillService.theSkills.push(...skills.filter(testCriteria)),
-      error => console.log(error),
-      () => {
-        if (Constants.DEBUG) {
-          console.log('the skills collection is containing now ' + ListSkillService.theSkills.length + ' records');
-        }
-      });
+    this.theSkills.push(...this.skillService.skills.filter(testCriteria));
   }
 
   /**
@@ -49,13 +42,13 @@ export class ListSkillService {
    */
   cleanUpSkills() {
     if (Constants.DEBUG) {
-      if (ListSkillService.theSkills == null) {
+      if (this.theSkills == null) {
         console.log('INTERNAL ERROR : collection theSkill SHOULD NOT BE NULL, dude !');
       } else {
-        console.log('Cleaning up the skill collection containing ' + ListSkillService.theSkills.length + ' records');
+        console.log('Cleaning up the skill collection containing ' + this.theSkills.length + ' records');
       }
     }
-    ListSkillService.theSkills.length = 0;
+    this.theSkills.length = 0;
   }
 
   /**
@@ -64,7 +57,7 @@ export class ListSkillService {
   getSkill(id: number): Observable<Skill> {
 
     let foundSkill: Skill = null;
-    foundSkill = ListSkillService.theSkills.find(skill => skill.id === id);
+    foundSkill = this.theSkills.find(skill => skill.id === id);
 
     if (typeof foundSkill !== 'undefined') {
       // TODO this.emitActualCollaboratorDisplay.next(id);

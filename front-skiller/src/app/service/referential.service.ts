@@ -4,6 +4,7 @@ import {BehaviorSubject} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
 import {Profile} from '../data/profile';
 import {RiskLegend} from '../data/riskLegend';
+import { Skill } from '../data/skill';
 
 @Injectable()
 export class ReferentialService {
@@ -15,20 +16,15 @@ export class ReferentialService {
    */
   public profiles: Profile[] = [];
 
-  /**
-   * Profiles subject.
-   */
-  public subjectProfiles = new BehaviorSubject(this.profiles);
-
   /*
    * Legend of the sunburst chart.
    */
   public legends: RiskLegend[] = [];
 
-  /**
-   * subject pointed to the Profiles.
+  /*
+   * Skills.
    */
-  public subjectLegends = new BehaviorSubject(this.legends);
+  public skills: Skill[] = [];
 
   constructor(private httpClient: HttpClient) {
   }
@@ -41,8 +37,7 @@ export class ReferentialService {
     if (Constants.DEBUG) {
       console.log('Fetching the profiles on URL ' + this.HOST + '/data/profiles');
     }
-
-    this.httpClient.get<Profile[]>(this.HOST + '/data/profiles').subscribe(
+    const subProfiles = this.httpClient.get<Profile[]>(this.HOST + '/data/profiles').subscribe(
       (profiles: Profile[]) => {
           if (Constants.DEBUG) {
             console.groupCollapsed('Staff profiles : ');
@@ -51,10 +46,12 @@ export class ReferentialService {
             });
             console.groupEnd();
           }
-        this.subjectProfiles.next(profiles); },
-      response_error => console.error(response_error.error.message));
+          profiles.forEach(profile => this.profiles.push(profile));
+      },
+      response_error => console.error(response_error.error.message),
+      () => setTimeout(subProfiles.unsubscribe(), 1000));
 
-      this.httpClient.get<RiskLegend[]>(this.HOST + '/data/riskLegends').subscribe(
+      const subLegends = this.httpClient.get<RiskLegend[]>(this.HOST + '/data/riskLegends').subscribe(
       (legends: RiskLegend[]) => {
         if (Constants.DEBUG) {
           console.groupCollapsed('Risk legends : ');
@@ -63,8 +60,10 @@ export class ReferentialService {
           });
           console.groupEnd();
         }
-        this.subjectLegends.next(legends);
+        legends.forEach(legend => this.legends.push(legend));
       },
-      response_error => console.error(response_error.error.message));
+      response_error => console.error(response_error.error.message),
+      () => setTimeout(subLegends.unsubscribe(), 1000));
   }
+
 }

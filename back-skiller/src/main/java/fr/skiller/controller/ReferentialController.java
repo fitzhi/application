@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +39,12 @@ public class ReferentialController {
 	final Gson g = new Gson();
 
 	/**
+	 * Directory where data will be saved.
+	 */
+	@Value("${referential.dir}")
+	private String referential_dir;
+
+	/**
 	 * Bean in charge of the evaluation of risks.
 	 */
 	@Autowired
@@ -52,21 +59,19 @@ public class ReferentialController {
 		}
 
 		String line;
-		final StringBuilder sb = new StringBuilder();
 		ResponseEntity<String> responseEntity;
 		BufferedReader br = null;
 		try {
-			
-			URL url = this.getClass().getResource("/data/" + referentialName + ".json");
-			if (url == null) {
+			final File refFile = new File (referential_dir+referentialName+".json"); 
+			if (logger.isDebugEnabled()) {
+				logger.debug("Trying to load the file " + refFile.getAbsolutePath());
+			}
+			if (!refFile.exists()) {
 				responseEntity = new ResponseEntity<String>("Referential " + referentialName + " does not exist !", new HttpHeaders(), HttpStatus.NOT_FOUND);
 			} else {
-				br = new BufferedReader(new FileReader(
-						new File(url.getPath())));
-				while ((line = br.readLine()) != null) {
-					sb.append(line);
-				}
-			responseEntity = new ResponseEntity<String>(sb.toString(), new HttpHeaders(), HttpStatus.OK);
+				br = new BufferedReader(new FileReader(refFile));
+				StringBuilder response = br.lines().collect(StringBuilder::new, StringBuilder::append, StringBuilder::append);
+				responseEntity = new ResponseEntity<String>(response.toString(), new HttpHeaders(), HttpStatus.OK);
 			}
 		} catch (IOException ioe) {
 			final String errorMessage = "INTERNAL ERROR with file " + referentialName + ".json : " + ioe.getMessage();
@@ -85,7 +90,7 @@ public class ReferentialController {
 	}
 
 	/**
-	 * HTTP GET to retrierve the risks legend of the sunburst-chart/
+	 * HTTP GET to retrieve the risks legend of the sunburst-chart
 	 * @return the risks legend for the actual implementation of {@link RiskProcessor}
 	 */
 	@RequestMapping(value = "/riskLegends", method = RequestMethod.GET)

@@ -45,9 +45,7 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
       console.log ('Searching staff members for criteria:' + this.criteria + ', activeOnly:' + this.activeOnly);
     }
 
-    this.subscriptions.add(
-      this.referentialService.subjectProfiles.subscribe(
-        (profiles: Profile[]) => this.profiles = profiles));
+    this.profiles = this.referentialService.profiles;
 
     this.subscriptions.add(
       this.tabsStaffListComponent.search(this.criteria, this.activeOnly).subscribe(collaborators => {

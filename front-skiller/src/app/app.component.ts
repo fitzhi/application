@@ -174,6 +174,10 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     this.dev_activated = false;
     this.skill_activated = false;
     this.project_activated = false;
+
+    /**
+     * Loading the referentials.
+     */
     this.referentialService.loadAllReferentials();
   }
 
