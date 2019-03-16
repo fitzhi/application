@@ -3,13 +3,14 @@ import { Constants } from '../constants';
 import { CinematicService } from '../service/cinematic.service';
 import { Router } from '@angular/router';
 import { TabsStaffListService } from './service/tabs-staff-list.service';
+import { BaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'app-tabs-staff-list',
   templateUrl: './tabs-staff-list.component.html',
   styleUrls: ['./tabs-staff-list.component.css']
 })
-export class TabsStaffListComponent implements OnInit {
+export class TabsStaffListComponent extends BaseComponent implements OnInit, OnDestroy {
 
   /**
    * Tab keys. Each tab has a key.
@@ -27,17 +28,18 @@ export class TabsStaffListComponent implements OnInit {
   constructor(
     private tabsStaffListComponent: TabsStaffListService,
     private cinematicService: CinematicService,
-    private router: Router) { }
+    private router: Router) { super(); }
 
   ngOnInit() {
     this.cinematicService.setForm(Constants.TABS_STAFF_LIST, this.router.url);
 
-    this.tabsStaffListComponent.search$.subscribe(envelope => {
-      setTimeout(() => {
-        this.tabKeys.push(this.tabsStaffListComponent.key(envelope));
-        this.add(envelope.criteria);
-      }, 0);
-    });
+    this.subscriptions.add(
+      this.tabsStaffListComponent.search$.subscribe(envelope => {
+        setTimeout(() => {
+          this.tabKeys.push(this.tabsStaffListComponent.key(envelope));
+          this.add(envelope.criteria);
+        }, 0);
+      }));
 
     this.reloadHistory();
   }
@@ -93,4 +95,10 @@ export class TabsStaffListComponent implements OnInit {
     this.tabsStaffListComponent.removeHistory(key);
   }
 
+  /**
+   * Calling the base class to unsubscribe all subscriptions.
+   */
+  ngOnDestroy() {
+    super.ngOnDestroy();
+  }
 }

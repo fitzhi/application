@@ -7,7 +7,6 @@ import { Constants } from '../../constants';
 import { StaffListContext } from '../../data/staff-list-context';
 import { MessageService } from '../../message/message.service';
 import { SkillService } from '../../service/skill.service';
-import { Skill } from '../../data/skill';
 
 @Injectable({
     providedIn: 'root'
@@ -83,17 +82,7 @@ export class TabsStaffListService {
      * @param criteria the criteria
      * @param activeOnly active only Yes/No
      */
-    public search(criteria: string, activeOnly: boolean): Subject<Collaborator[]> {
-        return this._search(criteria, activeOnly, this.skillService.skills);
-    }
-
-    /**
-     * Searching staff members corresponding to the 2 passed criterias.
-     * @param criteria the criteria
-     * @param activeOnly active only Yes/No
-     * @param allSkills list of ALL skills registered inside the application
-     */
-    public _search(criteria: string, activeOnly: boolean, allSkills: Skill[]): Subject<Collaborator[]> {
+    public search(criteria: string, activeOnly: boolean, outerThis: TabsStaffListService): Subject<Collaborator[]> {
         const collaborator = [];
 
         const collaborator$ = new Subject<Collaborator[]>();
@@ -102,6 +91,11 @@ export class TabsStaffListService {
          * Cache of the skills filter.
          */
         const skillsFilter: number[] = [];
+
+        /**
+         * List of criterias unretrieved in the skills collection
+         */
+        const criteriasUnknown: string[] = [];
 
         const key = this.key(new StaffListCriteria(criteria, activeOnly));
 
@@ -154,7 +148,7 @@ export class TabsStaffListService {
         function getSkillsFilter(): number[] {
 
             // We cache the array of skills id. We don need to parse the criteria for each entry.
-            if (skillsFilter.length > 0) {
+            if ((skillsFilter.length > 0) || (criteriasUnknown.length > 0)) {
                 return skillsFilter;
             }
 
@@ -166,20 +160,32 @@ export class TabsStaffListService {
                     skills.forEach(skill => console.log (skill));
                     console.groupEnd();
                 }
+                const allSkills = outerThis.skillService.skills;
                 skills.forEach(skill => {
+                    let found = false;
                     allSkills.forEach(sk => {
-                        if (sk.title.toLocaleLowerCase() === skill.toLocaleLowerCase()) {
+                        if (sk.title.toLowerCase() === skill.toLowerCase()) {
                             skillsFilter.push(sk.id);
+                            found = true;
                         }
                     });
+                    if (!found) {
+                        criteriasUnknown.push(skill);
+                    }
                 });
                 if (Constants.DEBUG) {
-                    console.groupCollapsed ('id of skills candidate ');
+                    console.groupCollapsed ('id of skills candidate');
                     skillsFilter.forEach(id => console.log (id));
                     console.groupEnd();
+                    console.groupCollapsed ('Unknown skills');
+                    criteriasUnknown.forEach(s => console.log (s));
+                    console.groupEnd();
+                }
+
+                if (criteriasUnknown.length > 0) {
+                    outerThis.messageService.warning('The skills ' + criteriasUnknown.join(', ') + ' are unknown. They will be ignored.');
                 }
             }
-
             return skillsFilter;
         }
 
@@ -199,7 +205,11 @@ export class TabsStaffListService {
 
             const reminder = reminderCriteria().trim().toLowerCase();
             if (reminder.length === 0) {
-                return (activeOnly ? collab.isActive : true);
+                if ((skills.length === 0) && (criteriasUnknown.length > 0)) {
+                    return false;
+                } else {
+                    return (activeOnly ? collab.isActive : true);
+                }
             }
 
             const firstname = (typeof collab.firstName !== 'undefined') ? collab.firstName : '';
@@ -211,13 +221,14 @@ export class TabsStaffListService {
             );
         }
 
+
         this.staffService.getAll().subscribe((staffs: Collaborator[]) => {
             staffs.forEach(staff => {
                 if (testCriteria(staff)) {
                     collaborator.push(staff);
                 }});
             },
-            error => console.log(error),
+            error => outerThis.messageService.error(error),
             () => {
                 if (Constants.DEBUG) {
                     console.log('The staff collection is containing now ' + collaborator.length + ' records');

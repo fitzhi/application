@@ -48,7 +48,8 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
     this.profiles = this.referentialService.profiles;
 
     this.subscriptions.add(
-      this.tabsStaffListComponent.search(this.criteria, this.activeOnly).subscribe(collaborators => {
+      this.tabsStaffListComponent.search(this.criteria, this.activeOnly, this.tabsStaffListComponent)
+      .subscribe(collaborators => {
           this.dataSource = new MatTableDataSource(collaborators);
           this.dataSource.sortingDataAccessor = (item, property) => {
             switch (property) {

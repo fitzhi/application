@@ -34,6 +34,13 @@ export class MessageService {
   /*
   * display an snack info message.
   */
+  public warning(message: string) {
+    setTimeout(() => this.snackBar.open(message, 'Warning', { duration: 5000 }));
+  }
+
+  /*
+  * display an snack info message.
+  */
   public info(message: string) {
     setTimeout(() => this.snackBar.open(message, 'Info', { duration: 3000 }));
   }
