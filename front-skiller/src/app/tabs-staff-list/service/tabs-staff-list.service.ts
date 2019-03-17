@@ -116,17 +116,12 @@ export class TabsStaffListService {
         function extractCriteriaSkills(): string {
             const pos_start_skills = criteria.toLowerCase().indexOf('skill:');
             if (pos_start_skills > -1) {
-                const work = criteria.toLowerCase().substring (pos_start_skills + 'skill:'.length);
-                let text_skills: string;
-                if (work.length > 0) {
-                    const pos_end_skills = work.toLowerCase().indexOf(';');
-                    // Assuming that until the end of string, we have skills
-                    if (pos_end_skills === -1) {
-                        text_skills = work;
-                    } else {
-                        text_skills = work.substring(0, pos_end_skills);
-                    }
-                    return text_skills;
+                const pos_end_skills = criteria.toLowerCase().indexOf(';', pos_start_skills);
+                // Assuming that until the end of string, we have skills
+                if (pos_end_skills === -1) {
+                    return criteria.toLowerCase().substring(pos_start_skills + 'skill:'.length);
+                } else {
+                    return criteria.toLowerCase().substring(pos_start_skills + 'skill:'.length, pos_end_skills);
                 }
             }
             return '';
