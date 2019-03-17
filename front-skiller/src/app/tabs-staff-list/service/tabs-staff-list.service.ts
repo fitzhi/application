@@ -38,6 +38,7 @@ export class TabsStaffListService {
      */
     public search$ = new Subject<StaffListCriteria>();
 
+
     constructor(
         private staffService: StaffService,
         private skillService: SkillService,
@@ -90,14 +91,35 @@ export class TabsStaffListService {
         /**
          * Cache of the skills filter.
          */
-        const skillsFilter: number[] = [];
+        const skillsFilter: Filter[] = [];
 
         /**
          * List of criterias unretrieved in the skills collection
          */
         const criteriasUnknown: string[] = [];
 
+        const ALL_LEVELS = 0;
+
         const key = this.key(new StaffListCriteria(criteria, activeOnly));
+
+        /**
+         * The reminder has already, or not, be extracted from the criterias string
+         */
+        let reminderIsAlreadyKnown = false;
+
+        /**
+         * Reminder parsed and saved in this property.
+         */
+        let reminderExtracted: string;
+
+      class Filter {
+            id: number;
+            level: number;
+            constructor(id: number, level: number) {
+                this.id = id;
+                this.level = level;
+            }
+        }
 
         if (this.staffListContext.has(key)) {
             const context = this.staffListContext.get(key);
@@ -127,20 +149,33 @@ export class TabsStaffListService {
             return '';
         }
 
+        /**
+         * Extract the filter for skills the the criterias string and return the reminder, which might be empty
+         * @returns the remonder of criterias
+         */
         function reminderCriteria(): string {
+
+            if (reminderIsAlreadyKnown) {
+                return reminderExtracted;
+            }
             const pos_start_skills = criteria.toLowerCase().indexOf('skill:');
             if (pos_start_skills === -1) { return criteria; }
             const pos_end_skills = criteria.indexOf(';', pos_start_skills);
-            const reminder = (pos_end_skills === -1) ?
+            reminderExtracted = (pos_end_skills === -1) ?
                     criteria.substr(0, pos_start_skills) :
                     criteria.substr(0, pos_start_skills - 1) + criteria.substr(pos_end_skills + 1);
             if (Constants.DEBUG) {
-                console.log ('reminderCriteria(' + criteria + ') = ' + reminder);
+                console.log ('reminderCriteria(' + criteria + ') = ' + reminderExtracted);
             }
-            return reminder;
+            reminderIsAlreadyKnown = true;
+            return reminderExtracted;
         }
 
-        function getSkillsFilter(): number[] {
+        /**
+         * Parse the criterias and returns an array of skills filters.
+         * @returns the skills filters
+         */
+        function getSkillsFilter(): Filter[] {
 
             // We cache the array of skills id. We don need to parse the criteria for each entry.
             if ((skillsFilter.length > 0) || (criteriasUnknown.length > 0)) {
@@ -159,9 +194,28 @@ export class TabsStaffListService {
                 skills.forEach(skill => {
                     let found = false;
                     allSkills.forEach(sk => {
-                        if (sk.title.toLowerCase() === skill.toLowerCase()) {
-                            skillsFilter.push(sk.id);
-                            found = true;
+                        const posLevel = skill.indexOf(':');
+                        let level = -1;
+                        let skillTitle = '';
+                        if (posLevel === -1) {
+                            level = ALL_LEVELS;
+                            skillTitle = sk.title.toLowerCase();
+                            if (skill.toLowerCase() === skillTitle) {
+                                skillsFilter.push(new Filter(sk.id, ALL_LEVELS));
+                                found = true;
+                            }
+                        } else {
+                            skillTitle = skill.toLowerCase().substring(0, posLevel);
+                            if (sk.title.toLowerCase() === skillTitle) {
+                                const levelStr = skill.substring(posLevel + 1);
+                                if (!isNaN(Number(levelStr)))  {
+                                    const levelNum = parseInt(levelStr, 10);
+                                    if ((levelNum >= 1) && (levelNum <= 5)) {
+                                        skillsFilter.push(new Filter(sk.id, levelNum));
+                                        found = true;
+                                    }
+                                }
+                            }
                         }
                     });
                     if (!found) {
@@ -178,7 +232,13 @@ export class TabsStaffListService {
                 }
 
                 if (criteriasUnknown.length > 0) {
-                    outerThis.messageService.warning('The skills ' + criteriasUnknown.join(', ') + ' are unknown. They will be ignored.');
+                    if (criteriasUnknown.length === 1) {
+                        outerThis.messageService.warning('The skill ' + criteriasUnknown[0]
+                        + ' is unknown. It will be ignored.');
+                    } else {
+                        outerThis.messageService.warning('The skills ' + criteriasUnknown.join(', ')
+                        + ' are unknown. They will be ignored.');
+                    }
                 }
             }
             return skillsFilter;
@@ -186,21 +246,17 @@ export class TabsStaffListService {
 
         function testCriteria(collab: Collaborator): boolean {
 
-            const skills = getSkillsFilter();
+            const filters = getSkillsFilter();
 
-            const experiences = collab.experiences.map(exp => exp.id);
-            if (skills.every(id => experiences.includes(id))) {
-                if (Constants.DEBUG) {
-                    console.log (collab.firstName + ' ' + collab.lastName + ' meets the criterias');
-                }
-            } else {
+            if (!filters.every(filter => collab.experiences.some (
+                exp => ( (filter.id === exp.id) && ( (filter.level === exp.level) || (filter.level === ALL_LEVELS)))))) {
                 // If we do not find each skill in the selected array of skills, we reject this collaborator.
                 return false;
             }
 
             const reminder = reminderCriteria().trim().toLowerCase();
             if (reminder.length === 0) {
-                if ((skills.length === 0) && (criteriasUnknown.length > 0)) {
+                if ((filters.length === 0) && (criteriasUnknown.length > 0)) {
                     return false;
                 } else {
                     return (activeOnly ? collab.isActive : true);
