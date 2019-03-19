@@ -99,15 +99,9 @@ public class RiskChartData {
 	public void injectFile(final RiskChartData element, final String[] dirAndFilename, final Date latestCommit, final int[] committers) {
 		// We register the filename in the source files set
 		//FIXME Fix here certainly...
-		for (int i<dirAndFilename.l
 		if (dirAndFilename.length == 1) {
 			element.addSource(dirAndFilename[0], latestCommit, committers);
 			if ((element.lastUpdate == null) || (element.lastUpdate.before(latestCommit)))  {
-				if (dirAndFilename[0].indexOf("PosteTechniqueApiService.java") > 0) {
-					System.out.println(dirAndFilename[0]);
-					System.out.println(latestCommit);
-					System.out.println("...");
-				}
 				element.lastUpdate = latestCommit;
 			}
 			return;
