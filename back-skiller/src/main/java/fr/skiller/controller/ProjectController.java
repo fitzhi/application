@@ -421,7 +421,7 @@ public class ProjectController {
 		 * @return {@code true} if the repository requires personalization, {@code false} otherwise.
 		 */
 		public boolean requiresPersonalization() {
-			return (idStaffSelected>0 || startingDate >0);
+			return (idStaffSelected > 0 || startingDate > 0);
 		}
 	}
 	

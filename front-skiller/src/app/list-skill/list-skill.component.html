@@ -1,23 +1,68 @@
-<div class="container" style="padding: 5px">
-    <div class="row bg-light text-dark" style="border-style: solid; border-width: 1px; color: black; border-radius: 10px; font-size: x-large">
-        <div class="col-7">Skill</div>
-        <div class="col-1 title_stars">*</div>
-        <div class="col-1 title_stars">**</div>
-        <div class="col-1 title_stars">***</div>
-        <div class="col-1 title_stars">****</div>
-        <div class="col-1 title_stars">*****</div>
-    </div>
-    
-    <div *ngFor="let skill of skills" class="row" style="font-size: large">
-        <div class="col-7">
-        	<a [routerLink]="['/skill', skill.id]">
-        		{{skill.title}}
-       		</a>
-		</div>
-        <div class="col-1 stars">{{peopleCountExperience.get(skill.id+'-1')}}</div>
-        <div class="col-1 stars">{{peopleCountExperience.get(skill.id+'-2')}}</div>
-        <div class="col-1 stars">{{peopleCountExperience.get(skill.id+'-3')}}</div>
-        <div class="col-1 stars">{{peopleCountExperience.get(skill.id+'-4')}}</div>
-        <div class="col-1 stars">{{peopleCountExperience.get(skill.id+'-5')}}</div>
-    </div>
+<div id="skillsList">
+
+  <table mat-table [dataSource]="dataSource" #table class="mat-elevation-z8" matSort>
+
+    <ng-container matColumnDef="skill">
+      <th id="skill" mat-header-cell *matHeaderCellDef mat-sort-header>
+        Skill
+      </th>
+      <td mat-cell class="col_string" *matCellDef="let skill">
+        <a [routerLink]="['/skill', skill.id]">{{skill.title}}</a>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="level-1">
+      <th class="level" mat-header-cell *matHeaderCellDef mat-sort-header>
+          <img class="star" src="/assets/img/yellowStar.png" /> 
+          <img class="star" src="/assets/img/greyStar.png" *ngFor="let a of fakeArray4" /> 
+      </th>
+      <td mat-cell class="col_number" *matCellDef="let skill">
+        {{peopleCountExperience.get(skill.id+'-1')}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="level-2">
+      <th class="level" mat-header-cell *matHeaderCellDef mat-sort-header>
+          <img class="star" src="/assets/img/yellowStar.png" *ngFor="let a of fakeArray2" /> 
+          <img class="star" src="/assets/img/greyStar.png" *ngFor="let a of fakeArray3" /> 
+      </th>
+      <td mat-cell class="col_number"  *matCellDef="let skill">
+        {{peopleCountExperience.get(skill.id+'-2')}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="level-3">
+      <th class="level" mat-header-cell *matHeaderCellDef mat-sort-header>
+          <img class="star" src="/assets/img/yellowStar.png" *ngFor="let a of fakeArray3" /> 
+          <img class="star" src="/assets/img/greyStar.png" *ngFor="let a of fakeArray2" /> 
+      </th>
+      <td mat-cell class="col_number" *matCellDef="let skill">
+        {{peopleCountExperience.get(skill.id+'-3')}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="level-4">
+      <th class="level" mat-header-cell *matHeaderCellDef mat-sort-header>
+          <img class="star" src="/assets/img/yellowStar.png" *ngFor="let a of fakeArray4" /> 
+          <img class="star" src="/assets/img/greyStar.png" />         
+      </th>
+      <td mat-cell class="col_number" *matCellDef="let skill">
+        {{peopleCountExperience.get(skill.id+'-4')}}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="level-5">
+      <th class="level" mat-header-cell *matHeaderCellDef mat-sort-header>
+          <img class="star" src="/assets/img/yellowStar.png" *ngFor="let a of fakeArray5" /> 
+     </th>
+      <td mat-cell class="col_number"  *matCellDef="let skill">
+        {{peopleCountExperience.get(skill.id+'-5')}}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row_any"></tr>
+
+  </table>
+
 </div>

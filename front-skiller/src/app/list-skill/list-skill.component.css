@@ -1,10 +1,48 @@
-.title_stars {
-	font-weight: bold;	
-	padding: 0 10 0 0px; 
-	text-align:right;
-	
+:host >>> th#skill > .mat-sort-header-container  {
+    color: darkblue;
+    font-size: 22px;
 }
-.stars {
-	text-align: right;
-	padding: 0 10 0 0px; 
+
+:host >>> th.level > .mat-sort-header-container  {
+    justify-content: flex-end;
+}
+
+.star {
+    width: 30px;
+    height: 30px;
+}
+
+#skillsList {
+  margin-top: 5px;
+  margin-left:5px;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  height: 500px;
+  width: 100%;
+  overflow: auto;
+}
+
+table {
+    width: 100%;
+}
+
+.mat-header-cell {
+    height: 4em;
+}
+
+.row_any  {
+    height: 2em;
+}
+
+.col_string, .col_number {
+    font-size: 22px;
+}
+
+.col_number {
+    text-align: right;
+    padding-right: 30px;
+}
+
+td.mat-cell:last-of-type {
+    padding-right: 50px !important;
 }

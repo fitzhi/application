@@ -24,7 +24,6 @@ export class TabsStaffListComponent extends BaseComponent implements OnInit, OnD
 
   selected: number;
 
-
   constructor(
     private tabsStaffListComponent: TabsStaffListService,
     private cinematicService: CinematicService,

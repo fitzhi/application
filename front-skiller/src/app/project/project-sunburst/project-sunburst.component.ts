@@ -197,7 +197,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
   * user click on a a node.
   **/
   public onNodeClick(nodeClicked: any) {
-    console.log(nodeClicked);
     this.location$.next(nodeClicked.location);
     if (nodeClicked.classnames !== null) {
       if (Constants.DEBUG) {
@@ -479,8 +478,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
     if (this.settings.idStaffSelected > 0) {
 
       const selectedDeveloper = this.projectStaffService.contributors
-        .find(contributor => contributor.idStaff === this.settings.idStaffSelected)[0];
-
+        .find(contributor => contributor.idStaff === this.settings.idStaffSelected).fullname;
       this.titleSunburst +=  ' for ' + selectedDeveloper;
     }
     if (this.settings.startingDate > 0) {
