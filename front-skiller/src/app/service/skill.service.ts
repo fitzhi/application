@@ -1,12 +1,11 @@
 import {Injectable} from '@angular/core';
 import {Skill} from '../data/skill';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {catchError, map, tap} from 'rxjs/operators';
-
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {InternalService} from '../internal-service';
 
 import {Constants} from '../constants';
+import { ListCriteria } from '../data/listCriteria';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -22,7 +21,17 @@ export class SkillService extends InternalService {
   /**
    * skills
    */
-  public skills: Skill[] = [];
+  public allSkills: Skill[] = [];
+
+  /**
+   * skills
+   */
+  public filteredSkills: Skill[] = [];
+
+  /**
+   * Context of search
+   */
+  criteria: ListCriteria;
 
   constructor(private httpClient: HttpClient) {
     super();
@@ -45,7 +54,7 @@ export class SkillService extends InternalService {
           });
           console.groupEnd();
         }
-        skills.forEach(skill => this.skills.push(skill));
+        skills.forEach(skill => this.allSkills.push(skill));
       },
       error => console.log (error),
       () => setTimeout(subSkills.unsubscribe(), 1000));
@@ -84,5 +93,18 @@ export class SkillService extends InternalService {
     return this.httpClient.get<Skill>(url);
   }
 
+  /**
+   * @param searchContext Filter the global list on the passed criteria
+   */
+  filter (criteria: ListCriteria) {
+    this.criteria = criteria;
+  }
 
+  /**
+   * Filter and return the skills corresponding to the current criterias.
+   */
+  getFilteredSkills(): Skill[] {
+    this.filteredSkills = Object.assign([], this.allSkills);
+    return this.filteredSkills;
+  }
 }

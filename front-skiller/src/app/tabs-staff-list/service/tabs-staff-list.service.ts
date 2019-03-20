@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
-import { StaffListCriteria } from './staffListCriteria';
 import { Collaborator } from '../../data/collaborator';
 import { StaffService } from '../../service/staff.service';
 import { Constants } from '../../constants';
 import { StaffListContext } from '../../data/staff-list-context';
 import { MessageService } from '../../message/message.service';
 import { SkillService } from '../../service/skill.service';
+import { ListCriteria } from '../../data/listCriteria';
 
 @Injectable({
     providedIn: 'root'
@@ -36,7 +36,7 @@ export class TabsStaffListService {
     /**
      * New search is made by the developer.
      */
-    public search$ = new Subject<StaffListCriteria>();
+    public search$ = new Subject<ListCriteria>();
 
 
     constructor(
@@ -61,7 +61,7 @@ export class TabsStaffListService {
      /**
       * Construct the key of the criterias.
       */
-     key (criterias: StaffListCriteria): string {
+     key (criterias: ListCriteria): string {
         return criterias.criteria + '-' + (criterias.activeOnly ? '1' : '0');
      }
 
@@ -70,7 +70,7 @@ export class TabsStaffListService {
      */
     public addTabResult(criteria: string, activeOnly: boolean) {
 
-        const myCriteria = new StaffListCriteria(criteria, activeOnly);
+        const myCriteria = new ListCriteria(criteria, activeOnly);
         if (this.staffListContext.has(this.key(myCriteria))) {
             this.messageService.info('This criteria is already present!');
             return;
@@ -100,7 +100,7 @@ export class TabsStaffListService {
 
         const ALL_LEVELS = 0;
 
-        const key = this.key(new StaffListCriteria(criteria, activeOnly));
+        const key = this.key(new ListCriteria(criteria, activeOnly));
 
         /**
          * The reminder has already, or not, be extracted from the criterias string
@@ -190,7 +190,7 @@ export class TabsStaffListService {
                     skills.forEach(skill => console.log (skill));
                     console.groupEnd();
                 }
-                const allSkills = outerThis.skillService.skills;
+                const allSkills = outerThis.skillService.allSkills;
                 skills.forEach(skill => {
                     let found = false;
                     allSkills.forEach(sk => {

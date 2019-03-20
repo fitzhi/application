@@ -287,11 +287,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
     this.myChart.tooltipContent(function (graph) {
       if (graph.lastUpdate != null) {
         const date = new Date(graph.lastUpdate);
-        const day = date.getDate();
-        const monthIndex = date.getMonth();
-        const year = date.getFullYear();
-        const tooltip = 'last commit ' + day + '/' + monthIndex + '/' + year;
-        return tooltip;
+        return 'Last commit ' + date.toLocaleDateString();
       } else {
         return 'No commit here!';
       }

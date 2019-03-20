@@ -2,8 +2,8 @@ import {Constants} from '../constants';
 import {Skill} from '../data/skill';
 import {SkillService} from '../service/skill.service';
 import {Injectable} from '@angular/core';
-import {Subject, Observable, of} from 'rxjs';
-import {catchError, map, tap, filter} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +34,7 @@ export class ListSkillService {
     }
 
     this.cleanUpSkills();
-    this.theSkills.push(...this.skillService.skills.filter(testCriteria));
+    this.theSkills.push(...this.skillService.allSkills.filter(testCriteria));
   }
 
   /**

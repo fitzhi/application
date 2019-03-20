@@ -1,4 +1,4 @@
-export class StaffListCriteria {
+export class ListCriteria {
   criteria: string;
   activeOnly: boolean;
 

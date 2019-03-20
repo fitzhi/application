@@ -4,10 +4,10 @@ import { TabsStaffListService } from '../service/tabs-staff-list.service';
 import { BaseComponent } from '../../base/base.component';
 import { MatTableDataSource, MatSort, MatSortable, Sort } from '@angular/material';
 import { Constants } from '../../constants';
-import { StaffListCriteria } from '../service/staffListCriteria';
 import { Profile } from '../../data/profile';
 import { ReferentialService } from '../../service/referential.service';
 import { Experience } from '../../data/experience';
+import { ListCriteria } from '../../data/listCriteria';
 
 @Component({
   selector: 'app-staff-list',
@@ -67,7 +67,7 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
           };
           this.dataSource.sort = this.sort;
       }));
-      const key = this.tabsStaffListComponent.key(new StaffListCriteria(this.criteria, this.activeOnly));
+      const key = this.tabsStaffListComponent.key(new ListCriteria(this.criteria, this.activeOnly));
       const context = this.tabsStaffListComponent.getContext(key);
       if (context.isSorted()) {
         this.sort.sort(context.getSortConfiguration());
@@ -75,7 +75,7 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
   }
 
   sortData (event: Sort) {
-    const key = this.tabsStaffListComponent.key(new StaffListCriteria(this.criteria, this.activeOnly));
+    const key = this.tabsStaffListComponent.key(new ListCriteria(this.criteria, this.activeOnly));
     const context = this.tabsStaffListComponent.getContext(key);
     context.storeSortingContext (event.active, event.direction);
   }

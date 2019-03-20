@@ -1,5 +1,5 @@
 import { Collaborator } from './collaborator';
-import { StaffListCriteria } from '../tabs-staff-list/service/staffListCriteria';
+import { ListCriteria } from './listCriteria';
 import { MatSortable } from '@angular/material';
 import { Constants } from '../constants';
 
@@ -15,7 +15,7 @@ export class StaffListContext {
 
   sortingContext: SortingContext;
 
-  public constructor(criterias: StaffListCriteria) {
+  public constructor(criterias: ListCriteria) {
     this.criteria = criterias.criteria;
     this.activeOnly = criterias.activeOnly;
     this.sortingContext = new SortingContext();

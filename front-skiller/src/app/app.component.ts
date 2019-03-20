@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CinematicService } from './service/cinematic.service';
 import { Constants } from './constants';
 import { ListProjectsService } from './list-projects-service/list-projects.service';
-import { ListSkillService } from './list-skill-service/list-skill.service';
 import { StaffListService } from './staff-list-service/staff-list.service';
 import { ReferentialService } from './service/referential.service';
 import { StaffService } from './service/staff.service';
@@ -10,6 +9,8 @@ import { Router } from '@angular/router';
 import { ProjectStaffService } from './project/project-staff-service/project-staff.service';
 import { BaseComponent } from './base/base.component';
 import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.service';
+import { SkillService } from './service/skill.service';
+import { ListCriteria } from './data/listCriteria';
 
 @Component({
   selector: 'app-root',
@@ -75,7 +76,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     private listStaffService: StaffListService,
     private tabsStaffListService: TabsStaffListService,
     private projectStaffService: ProjectStaffService,
-    private listSkillService: ListSkillService,
+    private skillService: SkillService,
     private listProjectsService: ListProjectsService,
     private referentialService: ReferentialService,
     private staffService: StaffService,
@@ -107,11 +108,6 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
             break;
           }
           case Constants.DEVELOPERS_CRUD: {
-            /*
-            this.in_master_detail = (
-              ((typeof this.searching_what !== 'undefined') && (this.searching_what !== null)) ||
-              (this.cinematicService.getFormerFormIdentifier() === Constants.PROJECT_TAB_STAFF));
-            */
             this.in_master_detail = this.tabsStaffListService.inMasterDetail;
             this.is_allowed_to_search = true;
             this.formTitle = 'Developer mode';
@@ -190,7 +186,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
         if (Constants.DEBUG) {
           console.log('Searching staff members for the search criteria ' + this.searching_what);
         }
-        if ((typeof this.searching_what !== 'undefined') && (this.searching_what.length > 0)) {
+        if ((this.searching_what !== null) && (this.searching_what.length > 0)) {
           this.tabsStaffListService.addTabResult(this.searching_what, this.activeOnly);
         }
         break;
@@ -204,7 +200,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
         if (Constants.DEBUG) {
           console.log('Reloading skills for search criteria ' + this.searching_what);
         }
-        this.listSkillService.reloadSkills(this.searching_what);
+        this.skillService.filter(new ListCriteria(this.searching_what, this.activeOnly));
         this.staffService.countAll_groupBy_experience(this.activeOnly);
         break;
       }

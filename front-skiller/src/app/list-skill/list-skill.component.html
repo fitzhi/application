@@ -17,7 +17,9 @@
           <img class="star" src="/assets/img/greyStar.png" *ngFor="let a of fakeArray4" /> 
       </th>
       <td mat-cell class="col_number" *matCellDef="let skill">
-        {{peopleCountExperience.get(skill.id+'-1')}}
+        <a (click)="listStaff(skill.title, 1)" href="javascript:;">
+          {{peopleCountExperience.get(skill.id+'-1')}}
+        </a>
       </td>
     </ng-container>
 
@@ -27,7 +29,9 @@
           <img class="star" src="/assets/img/greyStar.png" *ngFor="let a of fakeArray3" /> 
       </th>
       <td mat-cell class="col_number"  *matCellDef="let skill">
-        {{peopleCountExperience.get(skill.id+'-2')}}
+        <a (click)="listStaff(skill.title, 2)" href="javascript:;">
+          {{peopleCountExperience.get(skill.id+'-2')}}
+        </a>
       </td>
     </ng-container>
 
@@ -37,7 +41,9 @@
           <img class="star" src="/assets/img/greyStar.png" *ngFor="let a of fakeArray2" /> 
       </th>
       <td mat-cell class="col_number" *matCellDef="let skill">
-        {{peopleCountExperience.get(skill.id+'-3')}}
+        <a (click)="listStaff(skill.title, 2)" href="javascript:;">
+          {{peopleCountExperience.get(skill.id+'-3')}}
+        </a>
       </td>
     </ng-container>
 
@@ -47,7 +53,9 @@
           <img class="star" src="/assets/img/greyStar.png" />         
       </th>
       <td mat-cell class="col_number" *matCellDef="let skill">
-        {{peopleCountExperience.get(skill.id+'-4')}}
+        <a (click)="listStaff(skill.title, 2)" href="javascript:;">
+          {{peopleCountExperience.get(skill.id+'-4')}}
+        </a>
       </td>
     </ng-container>
 
@@ -56,13 +64,13 @@
           <img class="star" src="/assets/img/yellowStar.png" *ngFor="let a of fakeArray5" /> 
      </th>
       <td mat-cell class="col_number"  *matCellDef="let skill">
-        {{peopleCountExperience.get(skill.id+'-5')}}
+        <a (click)="listStaff(skill.title, 2)" href="javascript:;">
+          {{peopleCountExperience.get(skill.id+'-5')}}
+        </a>
       </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row_any"></tr>
-
   </table>
-
 </div>
