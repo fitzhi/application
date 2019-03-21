@@ -2,6 +2,8 @@ package fr.skiller.controller;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ import com.google.gson.Gson;
 import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.bean.ShuffleService;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.external.ProjectContributorDTO;
@@ -76,6 +79,9 @@ public class ProjectController {
 	@Autowired
 	CacheDataHandler cacheDataHandler;
 
+	@Autowired
+	ShuffleService shuffleService;
+	
 	/**
 	 * Source control parser.
 	 */
@@ -202,7 +208,30 @@ public class ProjectController {
 	@GetMapping("/all")
 	String readAll() {
 		try {
-			final String resultContent = g.toJson(projectHandler.getProjects().values());
+			
+			
+			Collection<Project> projects = projectHandler.getProjects().values();
+			
+			// Returning project
+			final Collection<Project> responseProjects;
+			
+			if (shuffleService.isShuffleMode()) {
+				responseProjects = new ArrayList<Project>();
+				if (logger.isInfoEnabled()) {
+					logger.info("The projects collection is beeing shuffled for confidentiality purpose");
+				}
+				projects.stream().forEach(project -> {
+					final Project clone = project.clone();
+					clone.name = shuffleService.shuffle(clone.name);
+					clone.username = shuffleService.shuffle(clone.username);
+					clone.urlRepository = shuffleService.shuffle(clone.name);
+					responseProjects.add(clone);
+				});
+			} else {
+				responseProjects = projects;
+			}
+			
+			final String resultContent = g.toJson(responseProjects);
 			if (logger.isDebugEnabled()) {
 				logger.debug("'/Project/all' is returning " + resultContent);
 			}

@@ -62,6 +62,7 @@ import fr.skiller.Error;
 import fr.skiller.Global;
 import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
+import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
@@ -523,12 +524,17 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			ConnectionSettings settings = new ConnectionSettings();
 			final FileReader fr = new FileReader(f);
 			settings = gson.fromJson(fr, settings.getClass());
+			System.out.println(f.getAbsolutePath());
+			System.out.println(settings);
+			System.out.println(project);
 			
 			// We accept a global URL declared in the connection file, but its value will be overridden if the project get its own.
 			if (project.urlRepository != null) {
 				settings.url = project.urlRepository;
 			}
+			
 			fr.close();
+			
 			if (logger.isDebugEnabled()) {
 				logger.debug("GIT remote URL " + settings.url + " with user " + settings.login);
 			}

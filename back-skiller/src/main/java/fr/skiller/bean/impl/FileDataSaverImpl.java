@@ -14,9 +14,11 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,24 +32,32 @@ import com.google.gson.reflect.TypeToken;
 
 import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.bean.ShuffleService;
+import fr.skiller.data.internal.Mission;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 
 /**
- * Implementaion of DataSaver on the file system.
+ * Implementation of DataSaver on the file system.
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @Service
 public class FileDataSaverImpl implements DataSaver {
 	
 	/**
+	 * Are we in shuffle-mode? In that scenario, the saving process will be unplugged.
+	 */
+	@Autowired
+	ShuffleService shuffleService;
+
+	/**
 	 * Directory where data will be saved.
 	 */
 	@Value("${fileDataSaver.save_dir}")
 	private String save_dir;
-	
+		
  	/**
  	 * The logger for the GitScanner.
  	 */
@@ -67,6 +77,13 @@ public class FileDataSaverImpl implements DataSaver {
 	@Override
 	public void saveProjects(Map<Integer, Project> projects) throws SkillerException {
 		
+		/**
+		 * We do not save the projects in shuffle mode. 
+		 */
+		if (shuffleService.isShuffleMode()) {
+			return;
+		}
+
 		final String filename = save_dir+"projects.json";
 		
 		if (logger.isDebugEnabled()) {
@@ -100,6 +117,8 @@ public class FileDataSaverImpl implements DataSaver {
 			Type listProjectsType = new TypeToken<HashMap<Integer, Project>>() {
 			}.getType();
 			projects = gson.fromJson(fr, listProjectsType);
+			
+			
 		} catch (final Exception e) {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		} finally {
@@ -117,6 +136,13 @@ public class FileDataSaverImpl implements DataSaver {
 
 	@Override
 	public void saveStaff(Map<Integer, Staff> company) throws SkillerException {
+
+		/**
+		 * We do not save the staff set in shuffle mode. 
+		 */
+		if (shuffleService.isShuffleMode()) {
+			return;
+		}
 
 		final String filename = save_dir+"staff.json";
 		
@@ -169,6 +195,13 @@ public class FileDataSaverImpl implements DataSaver {
 	@Override
 	public void saveSkills(Map<Integer, Skill> skills) throws SkillerException {
 		
+		/**
+		 * We do not save the skills in shuffle mode. 
+		 */
+		if (shuffleService.isShuffleMode()) {
+			return;
+		}
+
 		final String filename = save_dir+"skills.json";
 		
 		if (logger.isDebugEnabled()) {
@@ -221,4 +254,5 @@ public class FileDataSaverImpl implements DataSaver {
 		}
 		return skills;
 	}
+	
 }

@@ -1,0 +1,80 @@
+package fr.skiller.bean.impl;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import fr.skiller.bean.ShuffleService;
+
+/**
+ * Main (and unique) implementation of the shuffle service.
+ * @author Fr&eacute;d&eacute;ric VIDAL
+ */
+@Service("shuffleMode")
+public class ShuffleServiceImpl implements ShuffleService {
+
+	/**
+	 * Should part of the data be shuffled ?<br/>
+	 * For example, the last name property is a good candidate to be shuffled.  
+	 * The shuffle mode exists for documentation purpose.
+	 * if this <code>boolean</code> is true, the saving process will be deactivated.
+	 */
+	@Value("${shuffleData}")
+	private boolean shuffleData;
+
+	/**
+	 * Shuffle the input string into a new one
+	 * @param input the input string
+	 * @return the shuffled result
+	 */
+	public String shuffle (final String input) {
+		// Nothing toi shuffle.
+		if ((input == null) || (input.isEmpty())) {
+			return input;
+		}
+		String[] scram = input.split("");
+		List<String> letters = Arrays.asList(scram);
+		Collections.shuffle(letters);
+		
+		return	letters.stream().map(s -> rotateVowel(s))
+				.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+				.toString();
+	}
+	
+	/**
+	 * Scramble the vowels. 
+	 * @param s a string containing which might contain a vowel
+	 * @return a vowel.
+	 */
+	private String rotateVowel(String s) {
+		if ("e".equals(s.toLowerCase())) {
+			return "a";
+		} else  {
+			if ("a".equals(s.toLowerCase())) {
+				return "i";
+			} else  {
+				if ("i".equals(s.toLowerCase())) {
+					return "u";
+				} else {
+					if ("o".equals(s.toLowerCase())) {
+						return "e";
+					} else {
+						if ("u".equals(s.toLowerCase())) {
+							return "o";
+						}						
+					}
+				}
+			}
+		}
+		return s;
+	}
+
+	@Override
+	public boolean isShuffleMode() {
+		return this.shuffleData;
+	}
+	
+}

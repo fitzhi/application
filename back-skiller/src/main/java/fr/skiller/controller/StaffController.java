@@ -41,6 +41,7 @@ import com.google.gson.GsonBuilder;
 
 import fr.skiller.Global;
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.bean.ShuffleService;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.external.PseudoListDTO;
@@ -92,9 +93,29 @@ public class StaffController {
 	@Autowired
     ResumeParserService resumeParserService;
 
+	/**
+	 * Are we in shuffle mode ?
+	 */
+	@Autowired
+	ShuffleService shuffleService;
+
+	
 	@GetMapping("/all")
 	String readAll() {
-		return gson.toJson(staffHandler.getStaff().values());
+		
+		final Collection<Staff> staffTeam = staffHandler.getStaff().values();
+		
+		if (shuffleService.isShuffleMode()) {
+			if (logger.isInfoEnabled()) {
+				logger.info("The projects collection has been shuffled");
+			}
+			staffTeam.stream().forEach(staff -> {
+				staff.firstName = shuffleService.shuffle(staff.firstName);
+				staff.lastName = shuffleService.shuffle(staff.lastName);
+				staff.missions.stream().forEach(mission -> mission.name = shuffleService.shuffle(mission.name));
+			});
+		}
+		return gson.toJson(staffTeam);
 	}
 
 	@GetMapping("/countGroupByExperiences/active")

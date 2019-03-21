@@ -7,7 +7,7 @@ import java.util.List;
  * Project class. 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class Project {
+public class Project implements Cloneable {
 
 	/**
 	 * The project identifier
@@ -116,5 +116,15 @@ public class Project {
 				+ ", urlRepository=" + urlRepository + ", username=" + username + ", filename=" + filename + ", skills="
 				+ skills + ", ghosts=" + ghosts + "]";
 	}
-	
+
+	@Override
+	public Project clone() { 
+		Project clone = null; 
+		try { 
+			clone = (Project) super.clone(); 
+		} catch(CloneNotSupportedException e) { 
+			throw new RuntimeException(e); // won't happen
+		} 
+		return clone; 
+	}
 }

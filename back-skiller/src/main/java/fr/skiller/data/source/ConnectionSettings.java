@@ -34,4 +34,10 @@ public class ConnectionSettings {
 	 */
 	public String localRepository;
 
+	@Override
+	public String toString() {
+		return "ConnectionSettings [url=" + url + ", login=" + login + ", password=" + password + ", localRepository="
+				+ localRepository + "]";
+	}
+
 }

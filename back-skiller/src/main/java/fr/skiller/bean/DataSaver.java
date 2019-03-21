@@ -59,4 +59,5 @@ public interface DataSaver {
 	 * @throws SkillerException thrown if an exception occurs during the saving process
 	 */
 	Map<Integer, Skill> loadSkills() throws SkillerException;
+	
 }
