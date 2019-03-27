@@ -50,8 +50,6 @@ back-skiller/src/test/resources/staff.json
 
 back-skiller/src/main/resources/out_dir/skills.json
 
-back-skiller/src/test/resources/out_dir/skills.json
-
 back-skiller/src/main/resources/repository-settings/skiller-gitlab.json
 
 back-skiller/src/main/resources/repository-settings/GitLab-SQLI.json
