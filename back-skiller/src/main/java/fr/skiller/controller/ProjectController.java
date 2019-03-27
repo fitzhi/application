@@ -523,6 +523,14 @@ public class ProjectController {
 		try {
 			tasks.addTask( DASHBOARD_GENERATION, "project", project.id);
 			RiskDashboard data = scanner.generate(project, settings);
+			if (shuffleService.isShuffleMode()) {
+				if (logger.isInfoEnabled()); {
+					logger.info("Shuffling the sunburst data");
+				}
+				data.undefinedContributors.stream().forEach(pseudo -> {
+					pseudo.fullName = shuffleService.shuffle(pseudo.fullName);
+				});
+			};
 			return new ResponseEntity<SunburstDTO>(
 					new SunburstDTO(project.id, data), new HttpHeaders(), HttpStatus.OK);
 		} catch (final Exception e) {
@@ -548,7 +556,7 @@ public class ProjectController {
 			final Staff staff = staffHandler.getStaff().get(contributor.idStaff);
 			projectContributorDTO.addContributor(
 							contributor.idStaff, 
-							staff.firstName + " " + staff.lastName,
+							shuffleService.isShuffleMode() ? shuffleService.shuffle(staff.firstName + " " + staff.lastName) : (staff.firstName + " " + staff.lastName), 
 							staff.isActive,
 							staff.external,
 							contributor.firstCommit, 

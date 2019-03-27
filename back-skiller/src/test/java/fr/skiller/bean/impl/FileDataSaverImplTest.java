@@ -45,7 +45,7 @@ public class FileDataSaverImplTest {
 		projects.put(3, new Project(3, "TEST 3"));
 		
 		projects = dataSaver.loadProjects();
-		Assert.assertEquals(2, projects.size());
+		Assert.assertEquals(3, projects.size());
 		Assert.assertEquals(1, projects.get(1).id);
 		Assert.assertEquals("TEST 1", projects.get(1).name);
 		Assert.assertEquals(2, projects.get(2).id);

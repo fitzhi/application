@@ -142,7 +142,7 @@ public class RiskCommitAndDevActiveProcessorTest {
 	}
 
 	@Test
-	public void testEvaluateActiveDevelopersCorverage() throws Exception {
+	public void testEvaluateActiveDevelopersCoverage() throws Exception {
 		first.isActive = false;
 		second.isActive = third.isActive = fourth.isActive = fifth.isActive = true;
 

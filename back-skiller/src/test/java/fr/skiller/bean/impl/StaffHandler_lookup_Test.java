@@ -39,6 +39,8 @@ public class StaffHandler_lookup_Test {
 				new Staff(1001, "Ouaamou", "Mohammed", "mouaamou" , "mouaamou", "mouaamou@void.com", ""));
 		staffHandler.getStaff().put(1002, 
 				new Staff(1002, "Jérôme", "WithAccent", "jwithaccent" , "jwithaccent", "jwithaccent@void.com", ""));
+		staffHandler.getStaff().put(1003, 
+				new Staff(1003, "Guillaume", "Guorin De Tourville", "gguorin" , "gguorin", "gguorin@void.com", ""));
 		
 	}
 	
@@ -48,8 +50,8 @@ public class StaffHandler_lookup_Test {
 	}
 
 	@Test
-	public void testLookupGuerinDeTourvilleGuillaume() throws Exception {
-		assertThat(staffHandler.lookup("Guerin De Tourville Guillaume")).isNotNull();
+	public void testLookupGuorinDeTourvilleGuillaume() throws Exception {
+		assertThat(staffHandler.lookup("Guorin De Tourville Guillaume")).isNotNull();
 	}
 		
 
