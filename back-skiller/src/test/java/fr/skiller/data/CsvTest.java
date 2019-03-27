@@ -38,6 +38,11 @@ public class CsvTest extends TestCase {
 	private static final String SAMPLE_CSV_FILE_PATH = resourcesDirectory.getAbsolutePath() + "/effectifISC.csv";
 
 	@Test
+	// May be there will be some enhancements in the test below
+	public void emptyTest() throws Exception {
+		
+	}
+	
 	public void testSimple() throws Exception {
 
 		SKILLS_LEVELS.put("", 1);
