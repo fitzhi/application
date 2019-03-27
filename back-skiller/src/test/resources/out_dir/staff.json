@@ -1,0 +1,67 @@
+{
+    "1": {
+        "idStaff": 1,
+        "firstName": "Frédéric",
+        "lastName": "VIDAL",
+        "nickName": "fvidal",
+        "login": "fvdal",
+        "email": "frederic.vidal.pro@gmail.com",
+        "isActive": false,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [],
+        "experiences": []
+    },
+   "2": {
+        "idStaff": 2,
+        "firstName": "Georges",
+        "lastName": "LUCAS",
+        "nickName": "glucas",
+        "login": "glucas",
+        "email": "glucas@gmail.com",
+        "isActive": false,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [],
+        "experiences": []
+    },
+       "3": {
+        "idStaff": 3,
+        "firstName": "Tintin",
+        "lastName": ", just Tintin",
+        "nickName": "tintin",
+        "login": "tintin",
+        "email": "tintin@gmail.com",
+        "isActive": false,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [],
+        "experiences": []
+    },
+       "4": {
+        "idStaff": 4,
+        "firstName": "Captain",
+        "lastName": "Haddock",
+        "nickName": "haddock",
+        "login": "haddock",
+        "email": "captain_haddock@gmail.com",
+        "isActive": false,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [],
+        "experiences": []
+    },
+       "5": {
+        "idStaff": 5,
+        "firstName": "Captain",
+        "lastName": "America",
+        "nickName": "cap_ame",
+        "login": "cap_ame",
+        "email": "captain_america@gmail.com",
+        "isActive": false,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [],
+        "experiences": []
+    }
+}
