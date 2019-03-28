@@ -35,7 +35,6 @@ public class CsvTest extends TestCase {
 	Map<String, Integer> SKILLS_LEVELS = new HashMap<String, Integer>();
 
 	private static File resourcesDirectory = new File("src/test/resources");
-	private static final String SAMPLE_CSV_FILE_PATH = resourcesDirectory.getAbsolutePath() + "/effectifISC.csv";
 
 	@Test
 	// May be there will be some enhancements in the test below
@@ -44,6 +43,8 @@ public class CsvTest extends TestCase {
 	}
 	
 	public void testSimple() throws Exception {
+
+		final String SAMPLE_CSV_FILE_PATH = resourcesDirectory.getAbsolutePath() + "/effectifISC.csv";
 
 		SKILLS_LEVELS.put("", 1);
 		SKILLS_LEVELS.put("Starting block", 1);
