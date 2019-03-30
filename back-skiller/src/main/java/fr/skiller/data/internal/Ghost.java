@@ -33,6 +33,12 @@ public class Ghost {
 	public boolean technical;
 
 	/**
+	 * Empty constructor for serialization purpose
+	 */
+	public Ghost() {
+	}
+
+	/**
 	 * @param pseudo the committer's pseudo.
 	 * @param idStaff the staff identifier related to this pseudo.
 	 * @param technical technical or human being pseudo, boolean 
