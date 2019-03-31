@@ -8,7 +8,8 @@ public interface DataSaverLifeCycle {
 	 Object getLocker();
 
 	 /**
-	  * @return {@code true} if the collection has been updated, {@code false} otherwise
+	  * @return {@code true} if the collection has been updated, {@code false} otherwise<br/>
+	  * This boolean is checked by the dataSaver bean to proceed, or not, the collection saving. 
 	  */
 	 boolean isDataUpdated();
 

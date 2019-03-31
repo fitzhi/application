@@ -3,16 +3,14 @@
  */
 package fr.skiller.bean.impl;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.nio.file.Paths;
+import java.nio.file.attribute.FileTime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +20,7 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.source.BasicCommitRepository;
@@ -49,12 +48,12 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	 * Number of days : duration of entries in the cache.
 	 */
 	@Value("${cache_duration}")
-	private int cache_duration;
+	private int cacheDuration;
 	
 	/**
 	 * Number of milliseconds per day.
 	 */
-	private final long NUMBER_OF_MS_PER_DAY = 1000*3600*24; 
+	private static final long NUMBER_OF_MS_PER_DAY = 1000l*3600*24; 
 	
 	/**
 	 * Initialization of the Google JSON parser.
@@ -63,11 +62,11 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	
 	@Override
 	public boolean hasCommitRepositoryAvailable(Project project) throws IOException {
-		File savedProject = new File(getCacheFilename(project));
-		if (savedProject.exists()) {
-			long lastModified = savedProject.lastModified();
-			if (new Date().after(new Date(lastModified+cache_duration*NUMBER_OF_MS_PER_DAY))) {
-				savedProject.delete();
+		Path savedProject = Paths.get(getCacheFilename(project));
+		if (savedProject.toFile().exists()) {
+			FileTime lastModified = Files.getLastModifiedTime(savedProject);
+			if ( lastModified.toMillis() + (cacheDuration * NUMBER_OF_MS_PER_DAY) < System.currentTimeMillis() ) {
+				cleanUp(savedProject);
 				return false;
 			} else {
 				return true;
@@ -75,7 +74,18 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 		}
 		return false;
 	}
-
+	/**
+	 * Delete the passed path or throw a runtime exception is the deletion fails.
+	 * @param path the passed path
+	 */
+	private void cleanUp(Path path){
+		try {
+		  Files.delete(path);
+		} catch (final Exception e) {
+			throw new SkillerRuntimeException(e);
+		}
+	}
+	
 	@Override
 	public CommitRepository getRepository(Project project) throws IOException {
 		
@@ -90,21 +100,34 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 					+ repository.size() 
 					+ " entries.");
 		}
+		fr.close();
 		return repository;
 	}
 
 	@Override
 	public void saveRepository(Project project, CommitRepository repository) throws IOException {
-		final FileWriter fw = new FileWriter(new File(getCacheFilename(project)));
-		fw.write(gson.toJson(repository));
-		fw.close();
+
+		//Get the repository path
+		Path path = Paths.get(getCacheFilename(project));
+		 
+		//Use try-with-resource to get auto-closeable buffered writer instance close
+		try (BufferedWriter writer = Files.newBufferedWriter(path))
+		{
+		    writer.write(gson.toJson(repository));
+		}
 	}
 	
 	
 	@Override
 	public boolean removeRepository(final Project project) throws IOException {
-		File repo = new File (getCacheFilename(project));
-		return repo.delete();
+		Path cacheFile = Paths.get(getCacheFilename(project));
+		try {
+			Files.delete(cacheFile);
+			return true;
+		} catch (final Exception e) {
+			logger.error(e.getMessage());
+			return false;
+		}
 	}
 
 	/**

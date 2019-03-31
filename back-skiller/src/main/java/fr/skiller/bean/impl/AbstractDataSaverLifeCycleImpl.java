@@ -8,7 +8,7 @@ public abstract class AbstractDataSaverLifeCycleImpl implements DataSaverLifeCyc
 	 * {@code true} if the data have been updated, {@code false} otherwise<br/>
 	 * This boolean is checked by the dataSaver to proceed, or not, the save 
 	 */
-	public Boolean dataUpdated = false;
+	Boolean dataUpdated = false;
 
 	/**
 	 * To avoid any conflict between the saving process and any update on the collection.

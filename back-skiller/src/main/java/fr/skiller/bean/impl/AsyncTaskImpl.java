@@ -3,8 +3,9 @@ package fr.skiller.bean.impl;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.annotation.Generated;
+
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import fr.skiller.bean.AsyncTask;
@@ -38,8 +39,9 @@ class Task {
 		this.title = title;
 		this.id = id;
 	}
-	
+
 	@Override
+	@Generated ("eclipse")
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -48,8 +50,10 @@ class Task {
 		result = prime * result + ((title == null) ? 0 : title.hashCode());
 		return result;
 	}
-	
+
+
 	@Override
+	@Generated ("eclipse")
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -63,13 +67,17 @@ class Task {
 		if (operation == null) {
 			if (other.operation != null)
 				return false;
-		} else if (!operation.equals(other.operation))
-			return false;
+		} else {
+			if (!operation.equals(other.operation))
+				return false;
+		}
 		if (title == null) {
 			if (other.title != null)
 				return false;
-		} else if (!title.equals(other.title))
-			return false;
+		} else {
+			if (!title.equals(other.title))
+				return false;
+		}
 		return true;
 	}
 
@@ -88,7 +96,7 @@ class Task {
 @Scope("singleton")
 public class AsyncTaskImpl implements AsyncTask {
 
-	private final Set<Task> tasks = new HashSet<Task>();
+	private final Set<Task> tasks = new HashSet<>();
 	
 	@Override
 	public void addTask(String operation, String title, int id) throws SkillerException {

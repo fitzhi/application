@@ -6,19 +6,17 @@ package fr.skiller.bean.impl;
 import static fr.skiller.Error.CODE_IO_ERROR;
 import static fr.skiller.Error.MESSAGE_IO_ERROR;
 
-import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +31,6 @@ import com.google.gson.reflect.TypeToken;
 import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.ShuffleService;
-import fr.skiller.data.internal.Mission;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Staff;
@@ -41,13 +38,15 @@ import fr.skiller.exception.SkillerException;
 
 /**
  * Implementation of DataSaver on the file system.
+ * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @Service
 public class FileDataSaverImpl implements DataSaver {
-	
+
 	/**
-	 * Are we in shuffle-mode? In that scenario, the saving process will be unplugged.
+	 * Are we in shuffle-mode? In that scenario, the saving process will be
+	 * unplugged.
 	 */
 	@Autowired
 	ShuffleService shuffleService;
@@ -56,11 +55,11 @@ public class FileDataSaverImpl implements DataSaver {
 	 * Directory where data will be saved.
 	 */
 	@Value("${fileDataSaver.save_dir}")
-	private String save_dir;
-		
- 	/**
- 	 * The logger for the GitScanner.
- 	 */
+	private String saveDir;
+
+	/**
+	 * The logger for the GitScanner.
+	 */
 	private Logger logger = LoggerFactory.getLogger(FileDataSaverImpl.class.getCanonicalName());
 
 	/**
@@ -70,65 +69,62 @@ public class FileDataSaverImpl implements DataSaver {
 
 	@Autowired
 	ProjectHandler projectHandler;
-	
+
 	@Autowired
 	ProjectHandler staffHandler;
-	
+
 	@Override
 	public void saveProjects(Map<Integer, Project> projects) throws SkillerException {
-		
+
 		/**
-		 * We do not save the projects in shuffle mode. 
+		 * We do not save the projects in shuffle mode.
 		 */
 		if (shuffleService.isShuffleMode()) {
 			return;
 		}
 
-		final String filename = save_dir+"projects.json";
-		
+		final String filename = saveDir + "projects.json";
+
 		if (logger.isDebugEnabled()) {
-			logger.debug("Saving " + projects.size() + " projects into file " + filename + ".");
+			logger.debug(String.format("Saving %d projects into file %s.", projects.size(), filename));
 			final StringBuilder sb = new StringBuilder();
-			projects.values().stream().forEach(project -> sb.append(project.id).append(" ").append(project.name).append(", "));
+			projects.values().stream()
+					.forEach(project -> sb.append(project.id).append(" ").append(project.name).append(", "));
 			logger.debug(sb.toString());
 		}
 
-		FileWriter fw = null;
+		Path path = Paths.get(filename);
+
 		try {
-			fw = new FileWriter(new File(filename));
-			fw.write(gson.toJson(projects));
+			try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+				writer.write(gson.toJson(projects));
+			}
 		} catch (final Exception e) {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
-		} finally {
-			if (fw != null) try { fw.close();} catch (final Exception e) { /* Exception muffled */ }
 		}
+
 	}
 
 	@Override
 	public Map<Integer, Project> loadProjects() throws SkillerException {
 
-		final String filename = save_dir+"projects.json";
-		
-		Map<Integer, Project> projects = new HashMap<Integer, Project>();
-		
-		FileReader fr = null;
-		try {
-			fr = new FileReader(new File(filename));
+		final String filename = saveDir + "projects.json";
+
+		Map<Integer, Project> projects = new HashMap<>();
+
+		try (FileReader fr = new FileReader(new File(filename))) {
 			Type listProjectsType = new TypeToken<HashMap<Integer, Project>>() {
 			}.getType();
 			projects = gson.fromJson(fr, listProjectsType);
-			
-			
 		} catch (final Exception e) {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
-		} finally {
-			if (fr != null) try { fr.close();} catch (final Exception e) { /* Exception muffled */ }
 		}
 
 		if (logger.isDebugEnabled()) {
-			logger.debug("Loading " + projects.size() + " projects into file " + filename + ".");
+			logger.debug(String.format("Loading %d projects into file %s.", projects.size(), filename));
 			final StringBuilder sb = new StringBuilder();
-			projects.values().stream().forEach(project -> sb.append(project.id).append(" ").append(project.name).append(", "));
+			projects.values().stream()
+					.forEach(project -> sb.append(project.id).append(" ").append(project.name).append(", "));
 			logger.debug(sb.toString());
 		}
 		return projects;
@@ -138,55 +134,49 @@ public class FileDataSaverImpl implements DataSaver {
 	public void saveStaff(Map<Integer, Staff> company) throws SkillerException {
 
 		/**
-		 * We do not save the staff set in shuffle mode. 
+		 * We do not save the staff set in shuffle mode.
 		 */
 		if (shuffleService.isShuffleMode()) {
 			return;
 		}
 
-		final String filename = save_dir+"staff.json";
-		
+		final String filename = saveDir + "staff.json";
+
 		if (logger.isDebugEnabled()) {
-			logger.debug("Saving " + company.size() + " staff members into file " + filename + ".");
+			logger.debug(String.format("Saving %d staff members into file %s.", company.size(), filename));
 			final StringBuilder sb = new StringBuilder();
-			company.values().stream().forEach(staff -> sb.append(staff.idStaff).append(" ").append(staff.lastName).append(", "));
+			company.values().stream()
+					.forEach(staff -> sb.append(staff.idStaff).append(" ").append(staff.lastName).append(", "));
 			logger.debug(sb.toString());
 		}
 
-		FileWriter fw = null;
-		try {
-			fw = new FileWriter(new File(filename));
+		try (FileWriter fw = new FileWriter(new File(filename))) {
 			fw.write(gson.toJson(company));
 		} catch (final Exception e) {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
-		} finally {
-			if (fw != null) try { fw.close();} catch (final Exception e) { /* Exception muffled */ }
 		}
 	}
 
 	@Override
 	public Map<Integer, Staff> loadStaff() throws SkillerException {
 
-		final String filename = save_dir+"staff.json";
-		
-		Map<Integer, Staff> theStaff = new HashMap<Integer, Staff>();
-		
-		FileReader fr = null;
-		try {
-			fr = new FileReader(new File(filename));
+		final String filename = saveDir + "staff.json";
+
+		Map<Integer, Staff> theStaff = new HashMap<>();
+
+		try (FileReader fr = new FileReader(new File(filename))) {
 			Type listStaffType = new TypeToken<HashMap<Integer, Staff>>() {
 			}.getType();
 			theStaff = gson.fromJson(fr, listStaffType);
 		} catch (final Exception e) {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
-		} finally {
-			if (fr != null) try { fr.close();} catch (final Exception e) { logger.error("What's the hell  : " +e.getMessage()); }
 		}
 
 		if (logger.isDebugEnabled()) {
-			logger.debug("Loading " + theStaff.size() + " staff members from file " + filename + ".");
+			logger.debug(String.format("Loading %d staff members from file %s.", theStaff.size(), filename));
 			final StringBuilder sb = new StringBuilder();
-			theStaff.values().stream().forEach(staff -> sb.append(staff.idStaff).append(" ").append(staff.lastName).append(", "));
+			theStaff.values().stream()
+					.forEach(staff -> sb.append(staff.idStaff).append(" ").append(staff.lastName).append(", "));
 			logger.debug(sb.toString());
 		}
 		return theStaff;
@@ -194,65 +184,58 @@ public class FileDataSaverImpl implements DataSaver {
 
 	@Override
 	public void saveSkills(Map<Integer, Skill> skills) throws SkillerException {
-		
+
 		/**
-		 * We do not save the skills in shuffle mode. 
+		 * We do not save the skills in shuffle mode.
 		 */
 		if (shuffleService.isShuffleMode()) {
 			return;
 		}
 
-		final String filename = save_dir+"skills.json";
-		
+		final String filename = saveDir + "skills.json";
+
 		if (logger.isDebugEnabled()) {
-			logger.debug("Saving " + skills.size() + " skills into file " + filename + ".");
+			logger.debug(String.format("Saving %d skills into file %s.", skills.size(), filename));
 			final StringBuilder sb = new StringBuilder();
 			skills.values().stream().forEach(skill -> sb.append(skill.id).append(" ").append(skill.title).append(", "));
 			logger.debug(sb.toString());
 		}
 
-		FileWriter fw = null;
-		try {
-			fw = new FileWriter(new File(filename));
+		try (FileWriter fw = new FileWriter(new File(filename))) {
 			fw.write(gson.toJson(skills));
 		} catch (final Exception e) {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
-		} finally {
-			if (fw != null) try { fw.close();} catch (final Exception e) { /* Exception muffled */ }
 		}
 	}
 
 	@Override
 	public Map<Integer, Skill> loadSkills() throws SkillerException {
 
-		final String filename = save_dir+"skills.json";
-		
-		Map<Integer, Skill> skills = new HashMap<Integer, Skill>();
-		
-		FileReader fr = null;
-		try {
-			fr = new FileReader(new File(filename));
+		final String filename = saveDir + "skills.json";
+
+		Map<Integer, Skill> skills = new HashMap<>();
+
+		try (FileReader fr = new FileReader(new File(filename))) {
 			Type listSkillType = new TypeToken<HashMap<Integer, Skill>>() {
 			}.getType();
 			skills = gson.fromJson(fr, listSkillType);
 			if (skills == null) {
-				// If this.skills is still null, without IOException, it means that the file is empty
+				// If this.skills is still null, without IOException, it means that the file is
+				// empty
 				// The first launch of the application is a use case for scenario
-				skills = new HashMap<Integer, Skill>();
+				skills = new HashMap<>();
 			}
 		} catch (final Exception e) {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
-		} finally {
-			if (fr != null) try { fr.close();} catch (final Exception e) { logger.error("What's the hell  : " +e.getMessage()); }
 		}
 
 		if (logger.isDebugEnabled()) {
-			logger.debug("Loading " + skills.size() + " skills from file " + filename + ".");
+			logger.debug(String.format("Loading %d skills from file %s.", skills.size(), filename));
 			final StringBuilder sb = new StringBuilder();
 			skills.values().stream().forEach(skill -> sb.append(skill.id).append(" ").append(skill.title).append(", "));
 			logger.debug(sb.toString());
 		}
 		return skills;
 	}
-	
+
 }

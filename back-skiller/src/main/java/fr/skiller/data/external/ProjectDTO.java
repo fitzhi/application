@@ -5,7 +5,7 @@ import fr.skiller.data.internal.Project;
 /**
  * <p>This class is used as a Data Transfer Object between the spring boot
  * application and the Angular front.</p> 
- * <p><i>FIXME one day : I did not find a way to use HTTP headers for transferring additional information <b>in the POST request</b>. 
+ * <p><i>In the future, one day, when I will be a better developer : I will find a way to use HTTP headers for transferring additional information <b>in the POST request</b>. 
  * So these data are embedded in the data transfer object.</i></p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -13,14 +13,14 @@ import fr.skiller.data.internal.Project;
  */
 public class ProjectDTO extends BaseDTO {
 
-	public Project project;
+	private Project project;
 
 	/**
 	 * @param project
 	 */
 	public ProjectDTO(Project project) {
 		super();
-		this.project = project;
+		this.setProject(project);
 	}
 
 	/**
@@ -30,9 +30,23 @@ public class ProjectDTO extends BaseDTO {
 	 */
 	public ProjectDTO(Project project, int code, String message) {
 		super();
-		this.project = project;
+		this.setProject(project);
 		this.code = code;
 		this.message = message;
+	}
+
+	/**
+	 * @return the project embedded.
+	 */
+	public Project getProject() {
+		return project;
+	}
+
+	/**
+	 * @param project the passed project.
+	 */
+	public void setProject(Project project) {
+		this.project = project;
 	}
 
 }
