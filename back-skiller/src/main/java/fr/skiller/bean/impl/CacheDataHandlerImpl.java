@@ -95,7 +95,7 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 		repository = gson.fromJson(fr, repository.getClass());
 		if (logger.isDebugEnabled()) {
 			logger.debug("repository of project " 
-					+ project.name 
+					+ project.getName() 
 					+ " retrieved from cache. It contains " 
 					+ repository.size() 
 					+ " entries.");
@@ -134,6 +134,6 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	 * @return the cache filename for the passed project
 	 */
 	private String getCacheFilename(final Project project) {
-		return cacheDirRepository+project.id+"-"+project.name+".json";
+		return cacheDirRepository+project.getId()+"-"+project.getName()+".json";
 	}
 }

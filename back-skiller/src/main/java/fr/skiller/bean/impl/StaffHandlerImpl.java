@@ -107,8 +107,8 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		 */
 		List<Experience> completeExperiences = new ArrayList<>();
 		getStaff().values().stream()
-				.filter(staff -> (!isActiveOnly || staff.isActive))
-				.forEach(staff -> completeExperiences.addAll(staff.experiences));
+				.filter(staff -> (!isActiveOnly || staff.isActive()))
+				.forEach(staff -> completeExperiences.addAll(staff.getExperiences()));
 		
 		
 		Map<String, Long> result = completeExperiences.stream()
@@ -135,10 +135,10 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		}
 		if (logger.isDebugEnabled()) {
 			logger.debug("Working with the staff member " 
-					+ (staff.firstName == null ? "" : staff.firstName) 
-					+ "  " + staff.lastName); 
+					+ (staff.getFirstName() == null ? "" : staff.getFirstName()) 
+					+ "  " + staff.getLastName()); 
 		}
-		Set<Integer> currentExperience = staff.experiences.stream()
+		Set<Integer> currentExperience = staff.getExperiences().stream()
 				.map(exp -> exp.id)
 				.collect(Collectors.toSet());
 		final List<ResumeSkill> listOfSkills = Arrays.asList(skills)
@@ -152,11 +152,11 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		}
 		if (listOfNewSkills.isEmpty()) {
 			throw new SkillerException(-1, 
-					"There is no new skill to add for " + staff.firstName + " " + staff.lastName +"!");
+					"There is no new skill to add for " + staff.getFirstName() + " " + staff.getLastName() +"!");
 		}
 		
 		listOfNewSkills.forEach(skill -> 
-			staff.experiences.add(
+			staff.getExperiences().add(
 					new Experience(skill.idSkill, skill.title, FIRST_LEVEL)));
 		
 		return staff;
@@ -207,14 +207,14 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		case 1:
 			// If the criteria contains only one word, we assume FIRST that this criteria is the login id
 			ids = getStaff().values().stream()
-				.filter(staff -> transform.process(word[0]).equals(transform.process(staff.login)))
+				.filter(staff -> transform.process(word[0]).equals(transform.process(staff.getLogin())))
 				.collect(Collectors.toList());
 			
 			// If the criteria contains only one word which is not a login name, 
 			// we assume that this criteria is the last name
 			if (ids.isEmpty()) {
 				ids = getStaff().values().stream()
-						.filter(staff -> transform.process(word[0]).equals(transform.process(staff.lastName)))
+						.filter(staff -> transform.process(word[0]).equals(transform.process(staff.getLastName())))
 						.collect(Collectors.toList());				
 			}
 			
@@ -222,22 +222,22 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			// we assume that this criteria is the first name
 			if (ids.isEmpty()) {
 				ids = getStaff().values().stream()
-						.filter(staff -> transform.process(word[0]).equals(transform.process(staff.firstName)))
+						.filter(staff -> transform.process(word[0]).equals(transform.process(staff.getFirstName())))
 						.collect(Collectors.toList());				
 			}
 			break;
 		case 2:			
 			// If the criteria contains only 2 words, we assume that this criteria is the first name and the last name
 			ids = getStaff().values().stream()
-			.filter(staff -> transform.process(word[0]).equals(transform.process(staff.lastName)))
-			.filter(staff -> transform.process(word[1]).equals(transform.process(staff.firstName)))
+			.filter(staff -> transform.process(word[0]).equals(transform.process(staff.getLastName())))
+			.filter(staff -> transform.process(word[1]).equals(transform.process(staff.getFirstName())))
 			.collect(Collectors.toList());
 			
 			// The criteria may be in the form "firstName lastName" or "lastName firstName"
 			if (ids.isEmpty()) {
 				ids = getStaff().values().stream()
-						.filter(staff -> transform.process(word[0]).equals(transform.process(staff.firstName)))
-						.filter(staff -> transform.process(word[1]).equals(transform.process(staff.lastName)))
+						.filter(staff -> transform.process(word[0]).equals(transform.process(staff.getFirstName())))
+						.filter(staff -> transform.process(word[1]).equals(transform.process(staff.getLastName())))
 						.collect(Collectors.toList());				
 			}
 			break;
@@ -286,7 +286,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			if (logger.isWarnEnabled()) {
 				logger.warn(String.format("Multiple ids for this criteria %s", criteria));
 				logger.warn("Ids listed below :");
-				ids.stream().forEach(staff -> logger.warn(String.format("%d %s %s", staff.idStaff, staff.firstName, staff.lastName)));
+				ids.stream().forEach(staff -> logger.warn(String.format("%d %s %s", staff.getIdStaff(), staff.getFirstName(), staff.getLastName())));
 				logger.warn("By default, we assumed to return the first one...");
 			}
 			return ids.get(0);
@@ -309,18 +309,18 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				if (staff == null) {
 					throw new SkillerRuntimeException("SEVERE ERROR : No staff member corresponding to the id " + contributor.idStaff);
 				}
-				if (staff.isInvolvedInProject(project.id)) {
+				if (staff.isInvolvedInProject(project.getId())) {
 					
 					synchronized (lockDataUpdated) {
 						// Update the statistics of the current developer inside the project
-						staff.updateMission(project.id, contributor);
+						staff.updateMission(project.getId(), contributor);
 						this.dataUpdated = true;
 					}
 				} else {
 					// Involve this developer inside a new project 
 					Mission mission = new Mission(
-								project.id, 
-								project.name,
+								project.getId(), 
+								project.getName(),
 								contributor.firstCommit, 
 								contributor.lastCommit, 
 								contributor.numberOfCommitsSubmitted, 
@@ -341,7 +341,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		if (staff == null) {
 			throw new SkillerRuntimeException("SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
 		}
-		return staff.isActive;
+		return staff.isActive();
 	}
 
 	@Override
@@ -350,15 +350,15 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		if (staff == null) {
 			return null;
 		}
-		return ((staff.firstName != null) ? staff.firstName : "") + " " + ((staff.lastName != null) ? staff.lastName : "");
+		return ((staff.getFirstName() != null) ? staff.getFirstName() : "") + " " + ((staff.getLastName() != null) ? staff.getLastName() : "");
 	}
 
 	@Override
 	public Staff addNewStaffMember(final Staff staff)  {
 		synchronized (lockDataUpdated) {
 			Map<Integer, Staff> company = getStaff();
-			staff.idStaff = company.size() + 1;
-			company.put(staff.idStaff, staff);
+			staff.setIdStaff(company.size() + 1);
+			company.put(staff.getIdStaff(), staff);
 			this.dataUpdated = true;
 		}
 		return staff;
@@ -371,11 +371,11 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 
 	@Override
 	public void saveStaffMember(Staff staff) throws SkillerException {
-		if (staff.idStaff == 0) {
-			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, staff.idStaff));
+		if (staff.getIdStaff() == 0) {
+			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, staff.getIdStaff()));
 		}
 		synchronized (lockDataUpdated) {
-			getStaff().put(staff.idStaff, staff);
+			getStaff().put(staff.getIdStaff(), staff);
 			this.dataUpdated = true;
 		}
 	}

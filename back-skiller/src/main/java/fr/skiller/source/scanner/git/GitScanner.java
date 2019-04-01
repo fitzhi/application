@@ -4,7 +4,9 @@
 package fr.skiller.source.scanner.git;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.MessageFormat;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collector;
@@ -163,15 +166,16 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	 * GitScanner constructor.
 	 */
 	public GitScanner() {
+		// This constructor is an empty one.
 	}
 	
 	@PostConstruct
     public void init() {
 		
-		patternsCleanupList = 
+        patternsCleanupList = 
 				Arrays.asList(patternsCleanup.split(";"))
 				.stream()
-				.map( s -> Pattern.compile(s) )
+				.map( Pattern::compile )
 				.collect( Collectors.toList());
 		
 		if (logger.isDebugEnabled()) {
@@ -182,7 +186,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		patternsInclusionList = 
 				Arrays.asList(patternsInclusion.split(";"))
 				.stream()
-				.map( s -> Pattern.compile(s) )
+				.map(Pattern::compile)
 				.collect( Collectors.toList());
 		
 		if (logger.isDebugEnabled()) {
@@ -191,17 +195,19 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		}
 
 		// We "Spring-way" injected staff manager handle into the super class.
-		super.staffHandler = staffHandler;
-		super.projectHandler = projectHandler;
+		super.parentStaffHandler = staffHandler;
+		super.parentProjectHandler = projectHandler;
 	}
 	
 	@Override
 	public void clone(final Project project, ConnectionSettings settings) throws Exception {
 
 		// Creating a temporary local path where the remote project repository will be cloned.
-		Path path = Files.createTempDirectory("skiller_jgit_" + project.name + "_");
+		Path path = Files.createTempDirectory("skiller_jgit_" +  project.getName() + "_");
 		if (logger.isDebugEnabled()) {
-			logger.debug("Using GIT repository path " + settings.url + " cloned in " + path.toAbsolutePath());
+			logger.debug(String.format(
+					"Using GIT repository path %s cloned in %s", 
+					settings.url, path.toAbsolutePath()));
 		}
 
 		Git.cloneRepository().setDirectory(path.toAbsolutePath().toFile()).setURI(settings.url)
@@ -223,7 +229,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		// If this repository exists, return it immediately.
 		if (cacheDataHandler.hasCommitRepositoryAvailable(project)) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Using cache file for project " + project.name);
+				logger.debug(String.format("Using cache file for project %s", project.getName()));
 			}
 
 			CommitRepository repository = cacheDataHandler.getRepository(project);
@@ -234,7 +240,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 						repository
 						.unknownContributors()	
 						.stream()
-						.filter(pseudo -> (this.staffHandler.lookup(pseudo) == null))
+						.filter(pseudo -> (staffHandler.lookup(pseudo) == null))
 						.collect(Collectors.toSet())
 						);
 			
@@ -245,110 +251,116 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			throw new SkillerException(Error.CODE_REPO_MUST_BE_ALREADY_CLONED, Error.MESSAGE_REPO_MUST_BE_ALREADY_CLONED);
 		}
 		
-  		final Git git = Git.open(new File(settings.localRepository));
-
-		Repository repo = git.getRepository();
-		ObjectId headId = repo.resolve(Constants.HEAD);
+		// Unknown committers
+		final Set<String> unknown;
 		
-		RevWalk revWalk = new RevWalk(repo);
-		RevCommit start = revWalk.parseCommit(headId);
-		revWalk.markStart(start);
+		// Repository 
+		final CommitRepository repositoryOfCommit;
 		
-		RevCommitList<RevCommit> list = new RevCommitList<RevCommit>();
-		list.source(revWalk);
-		list.fillTo(Integer.MAX_VALUE);
-				
-		final CommitRepository repositoryOfCommit = new BasicCommitRepository();
+  		try (Git git = Git.open(new File(settings.localRepository)) ) {
 
-        /**
-         * Set of unknown contributors having work on this repository.
-         */
-        Set<String> unknown = repositoryOfCommit.unknownContributors();
-		
-		TreeWalk treeWalk = new TreeWalk(repo);
-		for (RevCommit commit : list) {
-			if (logger.isDebugEnabled()) {
-				StringBuilder sb = new StringBuilder();
-				sb.append(Global.LN)
-					.append ("shortMessage : " + commit.getShortMessage())
-					.append(Global.LN)
-					.append("id : " + commit.getAuthorIdent().getEmailAddress())
-					.append (Global.LN)
-					.append("date : " + commit.getAuthorIdent().getWhen())
-					.append (Global.LN)
-					.append("authorIdent.name : " + commit.getAuthorIdent().getName())
-					.append (Global.LN).append(Global.LN);
-				logger.debug(sb.toString());
-			}	
-			treeWalk.reset();
-	        treeWalk.addTree(commit.getTree());
-	        treeWalk.setRecursive(true);
-	        
-	        for (RevCommit parent : commit.getParents()) {
-	        	treeWalk.addTree(parent.getTree());
-	        }
-	        
-	        // Treatment cache containing the mapping between the criteria retrieved from GIT and the associated staff member
-	        Map<String, Staff> cacheCriteriaStaff = new HashMap<String, Staff>();
-	        	        
-	        while (treeWalk.next()) {
-
-	        	if (isElligible(treeWalk.getPathString())) {
-					int similarParents = 0;
-					for (int i = 1; i < treeWalk.getTreeCount(); i++) {
-						if (treeWalk.getFileMode(i) == treeWalk.getFileMode(0) && treeWalk.getObjectId(0).equals(treeWalk.getObjectId(i)))
-							similarParents++;
-					}
-					if (similarParents == 0) {
-						String sourceCodePath = cleanupPath(treeWalk.getPathString());
-						Staff staff = null;
-						String author = commit.getCommitterIdent().getName();
-						
-						if (!cacheCriteriaStaff.containsKey(author)) {
-							staff = staffHandler.lookup(author);
-							// The author contains 1 word
-							// We check if this unknown author has a related developer in the ghosts collection
-							if ( (staff == null) && (author.split(" ").length == 1) ) {
-								Optional<Ghost> oGhost = project.ghosts.stream()
-									.filter(g -> (!g.technical))
-									.filter(g -> 
-										author.toLowerCase().equals(g.pseudo.toLowerCase())
-									).findFirst();
-								if (oGhost.isPresent()) {
-									Ghost selectedGhost =  oGhost.get();
-									staff = staffHandler.getStaff().get(selectedGhost.idStaff);
-									// We find a staff entry, but we keep the pseudo in the unknowns list
-									// in order to be able to change the connection in the dedicated dialog box
+			Repository repo = git.getRepository();
+			ObjectId headId = repo.resolve(Constants.HEAD);
+			
+			RevWalk revWalk = new RevWalk(repo);
+			RevCommit start = revWalk.parseCommit(headId);
+			revWalk.markStart(start);
+			
+			RevCommitList<RevCommit> list = new RevCommitList<>();
+			list.source(revWalk);
+			list.fillTo(Integer.MAX_VALUE);
+					
+			repositoryOfCommit = new BasicCommitRepository();
+	
+	        /**
+	         * Set of unknown contributors having work on this repository.
+	         */
+	        unknown = repositoryOfCommit.unknownContributors();
+			
+			TreeWalk treeWalk = new TreeWalk(repo);
+			for (RevCommit commit : list) {
+				if (logger.isDebugEnabled()) {
+					StringBuilder sb = new StringBuilder();
+					sb.append(Global.LN)
+						.append ("shortMessage : " + commit.getShortMessage())
+						.append(Global.LN)
+						.append("id : " + commit.getAuthorIdent().getEmailAddress())
+						.append (Global.LN)
+						.append("date : " + commit.getAuthorIdent().getWhen())
+						.append (Global.LN)
+						.append("authorIdent.name : " + commit.getAuthorIdent().getName())
+						.append (Global.LN).append(Global.LN);
+					logger.debug(sb.toString());
+				}	
+				treeWalk.reset();
+		        treeWalk.addTree(commit.getTree());
+		        treeWalk.setRecursive(true);
+		        
+		        for (RevCommit parent : commit.getParents()) {
+		        	treeWalk.addTree(parent.getTree());
+		        }
+		        
+		        // Treatment cache containing the mapping between the criteria retrieved from GIT and the associated staff member
+		        Map<String, Staff> cacheCriteriaStaff = new HashMap<>();
+		        	        
+		        while (treeWalk.next()) {
+	
+		        	if (isElligible(treeWalk.getPathString())) {
+						int similarParents = 0;
+						for (int i = 1; i < treeWalk.getTreeCount(); i++) {
+							if (treeWalk.getFileMode(i) == treeWalk.getFileMode(0) && treeWalk.getObjectId(0).equals(treeWalk.getObjectId(i)))
+								similarParents++;
+						}
+						if (similarParents == 0) {
+							String sourceCodePath = cleanupPath(treeWalk.getPathString());
+							Staff staff = null;
+							String author = commit.getCommitterIdent().getName();
+							
+							if (!cacheCriteriaStaff.containsKey(author)) {
+								staff = staffHandler.lookup(author);
+								// The author contains 1 word
+								// We check if this unknown author has a related developer in the ghosts collection
+								if ( (staff == null) && (author.split(" ").length == 1) ) {
+									Optional<Ghost> oGhost = project.getGhosts().stream()
+										.filter(g -> (!g.technical))
+										.filter(g -> 
+											author.equalsIgnoreCase(g.pseudo)
+										).findFirst();
+									if (oGhost.isPresent()) {
+										Ghost selectedGhost =  oGhost.get();
+										staff = staffHandler.getStaff().get(selectedGhost.idStaff);
+										// We find a staff entry, but we keep the pseudo in the unknowns list
+										// in order to be able to change the connection in the dedicated dialog box
+										unknown.add(author);
+									}
+								}
+								if (staff == null) {
+									if (logger.isDebugEnabled()) {
+										logger.debug(String.format("No staff found for the criteria %s", author));
+									}
 									unknown.add(author);
 								}
+								cacheCriteriaStaff.put(author, staff);
+							} else {
+								staff = cacheCriteriaStaff.get(author);
 							}
-							if (staff == null) {
-								if (logger.isDebugEnabled()) {
-									logger.debug("No staff found for the criteria " + author );
-								}
-								unknown.add(author);
-							}
-							cacheCriteriaStaff.put(author, staff);
-						} else {
-							staff = cacheCriteriaStaff.get(author);
+							
+							repositoryOfCommit.addCommit(
+									sourceCodePath, 
+									(staff != null) ? staff.getIdStaff() : UNKNOWN,
+									commit.getAuthorIdent().getWhen());
 						}
-						
-						repositoryOfCommit.addCommit(
-								sourceCodePath, 
-								(staff != null) ? staff.idStaff : UNKNOWN,
-								commit.getAuthorIdent().getWhen());
-					}
-	        	}
-	        }
-		}
-		
-		treeWalk.close();
-		revWalk.close();
-		git.close();
+		        	}
+		        }
+			}
+			
+			treeWalk.close();
+			revWalk.close();
+  		}
 		
         // Displaying results...
         if (logger.isWarnEnabled()) {
-        	unknown.stream().forEach(author -> logger.warn(author));
+        	unknown.stream().forEach(logger::warn);
         }
 
         // Saving the repository into the cache
@@ -356,10 +368,6 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		
 		return repositoryOfCommit;
 	}
-
-
-	// Not a real class variable member : the variable is declared there in order to be updated within the lambda expression in the method below 
- 	private boolean select = false;
  	
  	/**
  	 * Check if the path is an eligible source for the activity dashboard.
@@ -368,31 +376,28 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
  	 */
  	boolean isElligible (final String path) {
  		
- 		select = true;
- 		
- 		patternsInclusionList.stream().forEach(pattern -> {
+ 		boolean select = true;
+ 		for (Pattern pattern : patternsInclusionList) {
  			Matcher matcher = pattern.matcher(path);
  			if (!matcher.find()) {
  				select = false;
  			}
- 		});
+ 		}
  		
  		return select;
  	}
  
- 	private String cleanupPath = "";
- 	
  	@Override
 	public String cleanupPath (final String path) {
 
-		cleanupPath = "";
- 		
-		patternsCleanupList.stream().forEach(pattern -> {
+ 		String cleanupPath = "";
+
+ 		for (Pattern pattern : patternsCleanupList) {
  			Matcher matcher = pattern.matcher(path);
  			if (matcher.find() && (cleanupPath.length()==0)) {
  				cleanupPath = path.substring(0, matcher.start()+1) + path.substring(matcher.end());
  			}
- 		});
+ 		}
  		return (cleanupPath.length() == 0) ? path : cleanupPath;
  	}
 
@@ -400,10 +405,10 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	@Async
 	public RiskDashboard generateAsync(final Project project, final SettingsGeneration settings) throws Exception {
 		try {
-			tasks.addTask( DASHBOARD_GENERATION, "project", project.id);
+			tasks.addTask( DASHBOARD_GENERATION, "project", project.getId());
 			return generate(project, settings);
 		} finally {
-			tasks.removeTask(DASHBOARD_GENERATION, "project", project.id);
+			tasks.removeTask(DASHBOARD_GENERATION, "project", project.getId());
 		}
 	}
 	
@@ -415,7 +420,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		if (!cacheDataHandler.hasCommitRepositoryAvailable(project)) {
 			this.clone(project, settings);
 			if (logger.isDebugEnabled()) {
-				logger.debug("The project " + project.name + " is cloned into a temporay directory");
+				logger.debug(String.format("The project %s is cloned into a temporay directory", project.getName()));
 			}
 		}	
 
@@ -433,10 +438,12 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		}
 		List<Contributor> contributors = staffHandler.involve(project, repo);
 		if (logger.isDebugEnabled()) {
-			logger.debug(contributors.size() + " contributors retrieved : ");
+			logger.debug(String.format("%d contributors retrieved : ", contributors.size()));
 			contributors.stream().forEach(contributor -> {
 				String fullname = staffHandler.getFullname(contributor.idStaff);
-				logger.debug(contributor.idStaff + " " + ((fullname != null) ? fullname : "unknown"));
+				logger.debug(String.format(
+						"%d %s", 
+						contributor.idStaff, (fullname != null) ? fullname : "unknown"));
 			});
 		}
 
@@ -448,7 +455,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		RiskDashboard data = this.aggregateDashboard(project, repo);
 		
 		// Evaluate the risk for each directory, and sub-directory, in the repository.
-		final List<StatActivity> statsCommit = new ArrayList<StatActivity>();
+		final List<StatActivity> statsCommit = new ArrayList<>();
 		this.riskSurveyor.evaluateTheRisk(repo, data.riskChartData, statsCommit);
 		
 		// Fill the holes for directories without source files, and therefore without risk level measured.
@@ -461,17 +468,17 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		this.riskSurveyor.setPreviewSettings(data.riskChartData);
 
 		if (logger.isDebugEnabled()) {
-			if ( (data.undefinedContributors != null) && (data.undefinedContributors.size() > 0) ) {
+			if ( (data.undefinedContributors != null) && (!data.undefinedContributors.isEmpty()) ) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("Unknown contributors detected during the dashboard generation").append(LN);
 				data.undefinedContributors.stream().forEach(ukwn -> sb.append(ukwn.pseudo).append(LN));
 				logger.debug(sb.toString());
 			}
 			
-			if ((project.ghosts != null) && (project.ghosts.size()>0)) {
+			if ((project.getGhosts() != null) && (!project.getGhosts().isEmpty())) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("Registered ghosts in the project record :").append(LN);
-				project.ghosts.stream().forEach(g -> sb.append(g.pseudo).append(" : ").append(g.idStaff).append("/").append(g.technical).append(LN));
+				project.getGhosts().stream().forEach(g -> sb.append(g.pseudo).append(" : ").append(g.idStaff).append("/").append(g.technical).append(LN));
 				logger.debug(sb.toString());					
 			}
 		}
@@ -501,20 +508,20 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	 * Load the connection settings for the given project.
 	 * @param project the passed project
 	 * @return the connection settings.
-	 * @throws Exception thrown certainly if an IO exception occurs
+	 * @throws SkillerException thrown certainly if an IO exception occurs
 	 */
-	private ConnectionSettings connectionSettings(final Project project) throws Exception {
+	private ConnectionSettings connectionSettings(final Project project) throws SkillerException {
 
 		if (project.isDirectAccess()) {
 			ConnectionSettings settings = new ConnectionSettings();
-			settings.url = project.urlRepository;
-			settings.login = project.username;
-			settings.password = project.password;
+			settings.url = project.getUrlRepository();
+			settings.login = project.getUsername();
+			settings.password = project.getPassword();
 			return settings;
 		}
 		
 		if (project.isIndirectAccess()) {
-			final String fileProperties = pathConnectionSettings + project.filename;
+			final String fileProperties = pathConnectionSettings + project.getFilename();
 			File f = new File(fileProperties);
 			if (!f.exists()) {
 				throw new SkillerException(CODE_FILE_CONNECTION_SETTINGS_NOFOUND, 
@@ -522,34 +529,35 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			}
 			
 			ConnectionSettings settings = new ConnectionSettings();
-			final FileReader fr = new FileReader(f);
-			settings = gson.fromJson(fr, settings.getClass());
-			System.out.println(f.getAbsolutePath());
-			System.out.println(settings);
-			System.out.println(project);
-			
-			// We accept a global URL declared in the connection file, but its value will be overridden if the project get its own.
-			if (project.urlRepository != null) {
-				settings.url = project.urlRepository;
+			try ( FileReader fr = new FileReader(f )) {
+				settings = gson.fromJson(fr, settings.getClass());
+				
+				// We accept a global URL declared in the connection file, but its value will be overridden if the project get its own.
+				if (project.getUrlRepository() != null) {
+					settings.url = project.getUrlRepository();
+				}
+			} catch (IOException  ioe) {
+				throw new SkillerException(
+						CODE_FILE_CONNECTION_SETTINGS_NOFOUND, 
+						MessageFormat.format(MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND, fileProperties), 
+						ioe);
 			}
 			
-			fr.close();
-			
 			if (logger.isDebugEnabled()) {
-				logger.debug("GIT remote URL " + settings.url + " with user " + settings.login);
+				logger.debug(String.format("GIT remote URL %s with user %s", settings.url, settings.login));
 			}
 			return settings;
 		}
 		
-		throw new SkillerException(CODE_UNEXPECTED_VALUE_PARAMETER, "[Project : "+project.name+"] "+
-				MessageFormat.format(MESSAGE_UNEXPECTED_VALUE_PARAMETER, "project.connection_Settings", project.connection_settings));
+		throw new SkillerException(CODE_UNEXPECTED_VALUE_PARAMETER, "[Project : "+project.getName()+"] "+
+				MessageFormat.format(MESSAGE_UNEXPECTED_VALUE_PARAMETER, "project.connection_Settings", project.getConnection_settings()));
 	}
 
 	@Override
 	public boolean hasAvailableGeneration(Project project) throws Exception {
 		boolean result = cacheDataHandler.hasCommitRepositoryAvailable(project);
 		if (logger.isDebugEnabled()) {
-			logger.debug("hasAvailableGeneration("+project.id+")? : " + result);
+			logger.debug(String.format("hasAvailableGeneration(%d)? : %s", project.getId(), result));
 		}
 		return result;
 	}

@@ -50,30 +50,30 @@ public class ProjectHandler_saveGhosts_Test {
 		
 		Project p = new Project(8121964, "testingGhost");
 		projectHandler.addNewProject(p);
-		p.ghosts.add( new Ghost("best_Dev_change", first.idStaff, false) );
-		p.ghosts.add(new Ghost("Sonar_change", true));
-		p.ghosts.add(new Ghost("must disappear", second.idStaff, false));
-		p.ghosts.add(new Ghost("remove me", true));
-		p.ghosts.add( new Ghost("donotneedmore", third.idStaff, false) );
-		p.ghosts.add( new Ghost("toto", false) );		
+		p.getGhosts().add( new Ghost("best_Dev_change", first.getIdStaff(), false) );
+		p.getGhosts().add(new Ghost("Sonar_change", true));
+		p.getGhosts().add(new Ghost("must disappear", second.getIdStaff(), false));
+		p.getGhosts().add(new Ghost("remove me", true));
+		p.getGhosts().add( new Ghost("donotneedmore", third.getIdStaff(), false) );
+		p.getGhosts().add( new Ghost("toto", false) );		
 		projectHandler.addNewProject(p);
 	}
 
 	@Test
 	public void testOne() throws SkillerException {
-		List<Pseudo> pseudos = new ArrayList<Pseudo>();
+		List<Pseudo> pseudos = new ArrayList<>();
 		// The pseudo best_Dev_change change his login, and therefore his staff member
-		pseudos.add(new Pseudo("best_Dev_change", second.login));
+		pseudos.add(new Pseudo("best_Dev_change", second.getLogin()));
 		
 		PseudoListDTO pseudosDTO = new PseudoListDTO(8121964, pseudos);
 		
 		List<Pseudo> result = projectHandler.saveGhosts(8121964, pseudosDTO.unknowns);
 
-		List<Pseudo> expectedPseudos = new ArrayList<Pseudo>();
+		List<Pseudo> expectedPseudos = new ArrayList<>();
 		expectedPseudos.add(new Pseudo("best_Dev_change"
-				, second.idStaff
-				, staffHandler.getFullname(second.idStaff)
-				, second.login 
+				, second.getIdStaff()
+				, staffHandler.getFullname(second.getIdStaff())
+				, second.getLogin() 
 				, false
 				, Action.U));
 
@@ -82,11 +82,11 @@ public class ProjectHandler_saveGhosts_Test {
 
 	@Test
 	public void test() throws SkillerException {
-		List<Pseudo> pseudos = new ArrayList<Pseudo>();
+		List<Pseudo> pseudos = new ArrayList<>();
 		// The pseudo best_Dev_change change his login, and therefore his staff member
-		pseudos.add(new Pseudo("best_Dev_change", second.login));
+		pseudos.add(new Pseudo("best_Dev_change", second.getLogin()));
 		// The automatic pseudo "Sonar" finally is a human being.
-		pseudos.add(new Pseudo("Sonar_change", first.login));
+		pseudos.add(new Pseudo("Sonar_change", first.getLogin()));
 		// The pseudo "must disappear" does not correspond anymore to the second staff member.
 		pseudos.add(new Pseudo("must disappear", ""));
 		// The pseudo "remove me" is no more a technical committer
@@ -96,17 +96,17 @@ public class ProjectHandler_saveGhosts_Test {
 		
 		List<Pseudo> result = projectHandler.saveGhosts(8121964, pseudosDTO.unknowns);
 
-		List<Pseudo> expectedPseudos = new ArrayList<Pseudo>();
+		List<Pseudo> expectedPseudos = new ArrayList<>();
 		expectedPseudos.add(new Pseudo("best_Dev_change"
-				, second.idStaff
-				, staffHandler.getFullname(second.idStaff)
-				, second.login 
+				, second.getIdStaff()
+				, staffHandler.getFullname(second.getIdStaff())
+				, second.getLogin() 
 				, false
 				, Action.U));
 		expectedPseudos.add(new Pseudo("Sonar_change"
-				, first.idStaff
-				, staffHandler.getFullname(first.idStaff)
-				, first.login 
+				, first.getIdStaff()
+				, staffHandler.getFullname(first.getIdStaff())
+				, first.getLogin() 
 				, false
 				, Action.U));
 		expectedPseudos.add(new Pseudo("must disappear"
@@ -124,29 +124,29 @@ public class ProjectHandler_saveGhosts_Test {
 		
 		Assert.assertArrayEquals("pseudos", expectedPseudos.toArray(), result.toArray());
 
-		Assert.assertEquals("number of ghosts", 2, projectHandler.get(8121964).ghosts.size());
+		Assert.assertEquals("number of ghosts", 2, projectHandler.get(8121964).getGhosts().size());
 		
-		Ghost g = projectHandler.get(8121964).ghosts.get(0);
-		Assert.assertEquals("1st ghost in list", new Ghost("best_Dev_change", second.idStaff, false), g);
+		Ghost g = projectHandler.get(8121964).getGhosts().get(0);
+		Assert.assertEquals("1st ghost in list", new Ghost("best_Dev_change", second.getIdStaff(), false), g);
 		
-		g = projectHandler.get(8121964).ghosts.get(1);
-		Assert.assertEquals("2nd ghost in list", new Ghost("Sonar_change", first.idStaff, false), g);
+		g = projectHandler.get(8121964).getGhosts().get(1);
+		Assert.assertEquals("2nd ghost in list", new Ghost("Sonar_change", first.getIdStaff(), false), g);
 		
 	
 	}
 	
 	@Test
 	public void testPseudoToto_TaggedAs_Technical() throws SkillerException {
-		List<Pseudo> pseudos = new ArrayList<Pseudo>();
+		List<Pseudo> pseudos = new ArrayList<>();
 		// The pseudo "Toto" is tagged as a technical one
 		pseudos.add(new Pseudo("toto", true));
 		
 		PseudoListDTO pseudosDTO = new PseudoListDTO(8121964, pseudos);
 		projectHandler.saveGhosts(8121964, pseudosDTO.unknowns);
 		
-		Assert.assertEquals("Ghost size", projectHandler.getProjects().get(8121964).ghosts.size(), 1);
+		Assert.assertEquals("Ghost size", projectHandler.getProjects().get(8121964).getGhosts().size(), 1);
 		Ghost expected = new Ghost("toto", true);
-		Assert.assertEquals("Unique entry in ghosts ", expected, projectHandler.getProjects().get(8121964).ghosts.get(0));
+		Assert.assertEquals("Unique entry in ghosts ", expected, projectHandler.getProjects().get(8121964).getGhosts().get(0));
 	}	
 	
 	@After

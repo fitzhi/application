@@ -30,14 +30,14 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	 * This bean in filled by the upper concrete service<br/>
 	 * {@link fr.skiller.source.scanner.git.GitScanner#init() GitScanner.init} is the first implementation for Git.
 	 */
-	protected StaffHandler staffHandler;
+	protected StaffHandler parentStaffHandler;
 
 	/**
 	 * Service in charge of handling the projects.
 	 * This bean in filled by the upper concrete service<br/>
 	 * {@link fr.skiller.source.scanner.git.GitScanner#init() GitScanner.init} is the first implementation for Git.
 	 */
-	protected ProjectHandler projectHandler;
+	protected ProjectHandler parentProjectHandler;
 	
 	private Logger logger = LoggerFactory.getLogger(AbstractScannerDataGenerator.class.getCanonicalName());
 
@@ -58,15 +58,15 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 		commitRepo.unknownContributors().stream()
 			.forEach(unknown -> {
 				
-				Ghost g = projectHandler.getGhost(project, unknown);
+				Ghost g = parentProjectHandler.getGhost(project, unknown);
 				if (g == null) {
 					ghosts.add(new Pseudo(unknown, false));
 				} else {
 					if (g.technical) {
 						ghosts.add(new Pseudo(unknown, true));											
 					} else {
-						String fullName = staffHandler.getFullname(g.idStaff);
-						String login = staffHandler.getStaff().get(g.idStaff).login;
+						String fullName = parentStaffHandler.getFullname(g.idStaff);
+						String login = parentStaffHandler.getStaff().get(g.idStaff).getLogin();
 						ghosts.add(new Pseudo(unknown, g.idStaff, fullName, login, g.technical));
 					}
 				}

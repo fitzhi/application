@@ -64,7 +64,7 @@ public class GitScannerCleanupUnknownPseudosTest {
 	
 	@Test
 	public void test() {
-		staffHandler.getStaff().values().stream().forEach(staff -> System.out.println (staff.lastName));
+		staffHandler.getStaff().values().stream().forEach(staff -> System.out.println (staff.getLastName()));
 		Staff staff = staffHandler.lookup("Frédéric VIDAL");
 		logger.debug(staff.toString());
 		Assert.assertNotNull(staffHandler.lookup("Frédéric VIDAL"));	

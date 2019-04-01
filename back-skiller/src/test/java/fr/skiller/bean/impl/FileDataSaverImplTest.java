@@ -35,23 +35,23 @@ public class FileDataSaverImplTest {
 	
 	@Test
 	public void saveProjects() throws SkillerException {
-		Map<Integer, Project> projects = new HashMap<Integer, Project>();
+		Map<Integer, Project> projects = new HashMap<>();
 		projects.put(1, new Project(1, "TEST 1"));
 		Project p = new Project(2, "TEST 2");
 		projects.put(2, p);
-		p.skills = new ArrayList<Skill>();
-		p.skills.add(new Skill(1, "JAVA"));
+		p.setSkills(new ArrayList<Skill>());
+		p.getSkills().add(new Skill(1, "JAVA"));
 		dataSaver.saveProjects(projects);
 		projects.put(3, new Project(3, "TEST 3"));
 		
 		projects = dataSaver.loadProjects();
 		Assert.assertEquals(3, projects.size());
-		Assert.assertEquals(1, projects.get(1).id);
-		Assert.assertEquals("TEST 1", projects.get(1).name);
-		Assert.assertEquals(2, projects.get(2).id);
-		Assert.assertEquals("TEST 2", projects.get(2).name);
-		Assert.assertEquals(1, projects.get(2).skills.size());
-		Assert.assertEquals(1, projects.get(2).skills.get(0).id);
-		Assert.assertEquals("JAVA", projects.get(2).skills.get(0).title);
+		Assert.assertEquals(1, projects.get(1).getId());
+		Assert.assertEquals("TEST 1", projects.get(1).getName());
+		Assert.assertEquals(2, projects.get(2).getId());
+		Assert.assertEquals("TEST 2", projects.get(2).getName());
+		Assert.assertEquals(1, projects.get(2).getSkills().size());
+		Assert.assertEquals(1, projects.get(2).getSkills().get(0).getId());
+		Assert.assertEquals("JAVA", projects.get(2).getSkills().get(0).getTitle());
 	}
 }

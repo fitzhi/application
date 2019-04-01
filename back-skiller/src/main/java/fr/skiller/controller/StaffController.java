@@ -60,6 +60,9 @@ import fr.skiller.service.StorageService;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
 import static fr.skiller.Error.getStackTrace;
+import static fr.skiller.Global.BACKEND_RETURN_CODE;
+import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
+
 
 /**
  * Controller in charge of handling the staff member of the organization.
@@ -101,7 +104,7 @@ public class StaffController {
 
 	
 	@GetMapping("/all")
-	String readAll() {
+	public String readAll() {
 		
 		final Collection<Staff> staffTeam = staffHandler.getStaff().values();
 		
@@ -110,16 +113,16 @@ public class StaffController {
 				logger.info("The projects collection has been shuffled");
 			}
 			staffTeam.stream().forEach(staff -> {
-				staff.firstName = shuffleService.shuffle(staff.firstName);
-				staff.lastName = shuffleService.shuffle(staff.lastName);
-				staff.missions.stream().forEach(mission -> mission.name = shuffleService.shuffle(mission.name));
+				staff.setFirstName(shuffleService.shuffle(staff.getFirstName()));
+				staff.setLastName(shuffleService.shuffle(staff.getLastName()));
+				staff.getMissions().stream().forEach(mission -> mission.name = shuffleService.shuffle(mission.name));
 			});
 		}
 		return gson.toJson(staffTeam);
 	}
 
 	@GetMapping("/countGroupByExperiences/active")
-	String countActive() {
+	public String countActive() {
 		final PeopleCountExperienceMap peopleCountExperienceMap = staffHandler.countAllStaff_GroupBy_Skill_Level(true);
 
 		final String resultContent = gson.toJson(peopleCountExperienceMap.data);
@@ -130,7 +133,7 @@ public class StaffController {
 	}
 
 	@GetMapping("/countGroupByExperiences/all")
-	String countAll() {
+	public String countAll() {
 		final PeopleCountExperienceMap peopleCountExperienceMap = staffHandler.countAllStaff_GroupBy_Skill_Level(false);
 
 		final String resultContent = gson.toJson(peopleCountExperienceMap.data);
@@ -145,25 +148,29 @@ public class StaffController {
 	 *            staff member's identifier
 	 * @return the staff member identified by its id
 	 */
-	@RequestMapping(value = "/{idStaff}", method = RequestMethod.GET)
-	ResponseEntity<Staff> read(@PathVariable("idStaff") int idStaff) {
+	@GetMapping(value = "/{idStaff}")
+	public ResponseEntity<Staff> read(@PathVariable("idStaff") int idStaff) {
 
 		final ResponseEntity<Staff> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 
 		Staff searchCollab = staffHandler.getStaff().get(idStaff);
 		if (searchCollab != null) {
-			responseEntity = new ResponseEntity<Staff>(searchCollab, headers, HttpStatus.OK);
+			responseEntity = new ResponseEntity<>(searchCollab, headers, HttpStatus.OK);
 			if (logger.isDebugEnabled()) {
 				Staff staff = responseEntity.getBody();
-				logger.debug("looking for id " + String.valueOf(idStaff) + " in the Staff collection returns " + staff.firstName + " " + staff.lastName);
+				logger.debug(String.format(
+						"looking for id %d in the Staff collection returns %s %s",
+						idStaff, staff.getFirstName(), staff.getLastName()));
 			}
 		} else {
-			headers.set("backend.return_code", "O");
-			headers.set("backend.return_message", "There is no collaborator associated to the id " + idStaff);
-			responseEntity = new ResponseEntity<Staff>(new Staff(), headers, HttpStatus.NOT_FOUND);
+			headers.set(BACKEND_RETURN_CODE, "O");
+			headers.set(BACKEND_RETURN_MESSAGE, "There is no collaborator associated to the id " + idStaff);
+			responseEntity = new ResponseEntity<>(new Staff(), headers, HttpStatus.NOT_FOUND);
 			if (logger.isDebugEnabled()) {
-				logger.debug("Cannot find a staff member for id " + String.valueOf(idStaff) + " in th Staff collection");
+				logger.debug(String.format(
+						"Cannot find a staff member for id %d in the Staff collection",
+						idStaff));
 			}
 		}
 		return responseEntity;
@@ -174,27 +181,28 @@ public class StaffController {
 	 *            staff member's identifier
 	 * @return the list of projects where the staff member is involved
 	 */
-	@RequestMapping(value = "/projects/{idStaff}", method = RequestMethod.GET)
-	ResponseEntity<List<Mission>> readProjects(@PathVariable("idStaff") int idStaff) {
+	@GetMapping(value = "/projects/{idStaff}")
+	public ResponseEntity<List<Mission>> readProjects(@PathVariable("idStaff") int idStaff) {
 
 		try {
 			ResponseEntity<Staff> responseEntityStaffMember = read(idStaff);
 	
 			
 			// Adding the name of project.
-			for (Mission mission : responseEntityStaffMember.getBody().missions) {
-					mission.name = projectHandler.get(mission.idProject).name;
+			for (Mission mission : responseEntityStaffMember.getBody().getMissions()) {
+					mission.name = projectHandler.get(mission.idProject).getName();
 			}
 			
-			ResponseEntity<List<Mission>> response = new ResponseEntity<List<Mission>>(
-					responseEntityStaffMember.getBody().missions, responseEntityStaffMember.getHeaders(),
+			return new ResponseEntity<>(
+					responseEntityStaffMember.getBody().getMissions(), 
+					responseEntityStaffMember.getHeaders(),
 					responseEntityStaffMember.getStatusCode());
-			return response;
 			
 		} catch (final SkillerException e) {
 			logger.error(getStackTrace(e));
-			return new ResponseEntity<List<Mission>>(
-					new ArrayList<Mission>(), new HttpHeaders(),
+			return new ResponseEntity<>(
+					new ArrayList<Mission>(), 
+					new HttpHeaders(),
 					HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -204,49 +212,49 @@ public class StaffController {
 	 *            staff member's identifier
 	 * @return the given developer's experience as list of skills.
 	 */
-	@RequestMapping(value = "/experiences/{idStaff}", method = RequestMethod.GET)
-	ResponseEntity<List<Experience>> readExperiences(@PathVariable("idStaff") int idStaff) {
+	@GetMapping(value = "/experiences/{idStaff}")
+	public ResponseEntity<List<Experience>> readExperiences(@PathVariable("idStaff") int idStaff) {
 
 		ResponseEntity<Staff> responseEntityStaffMember = read(idStaff);
 
-		ResponseEntity<List<Experience>> response = new ResponseEntity<List<Experience>>(
-				responseEntityStaffMember.getBody().experiences, responseEntityStaffMember.getHeaders(),
+		return new ResponseEntity<>(
+				responseEntityStaffMember.getBody().getExperiences(), 
+				responseEntityStaffMember.getHeaders(),
 				responseEntityStaffMember.getStatusCode());
-		return response;
 	}
 
 	@PostMapping("/save")
-	ResponseEntity<Staff> add(@RequestBody Staff input) {
+	public ResponseEntity<Staff> add(@RequestBody Staff input) {
 
 		final ResponseEntity<Staff> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 
 		if (logger.isDebugEnabled()) {
-			logger.debug ("Add or Update the staff.id " + input.idStaff);
+			logger.debug ("Add or Update the staff.id " + input.getIdStaff());
 			logger.debug ("Content " + input);
 		}
-		if (input.idStaff == -1) {
+		if (input.getIdStaff() == -1) {
 			staffHandler.addNewStaffMember(input);
 			headers.add("backend.return_code", "1");
-			responseEntity = new ResponseEntity<Staff>(input, headers, HttpStatus.OK);
+			responseEntity = new ResponseEntity<>(input, headers, HttpStatus.OK);
 		} else {
-			Staff updatedStaff = staffHandler.getStaff().get(input.idStaff);
+			Staff updatedStaff = staffHandler.getStaff().get(input.getIdStaff());
 			if (updatedStaff == null) {
-				responseEntity = new ResponseEntity<Staff>(input, headers, HttpStatus.NOT_FOUND);
-				headers.add("backend.return_code", "O");
-				headers.add("backend.return_message", "There is no collaborator associated to the id " + input.idStaff);
+				responseEntity = new ResponseEntity<>(input, headers, HttpStatus.NOT_FOUND);
+				headers.add(BACKEND_RETURN_CODE, "O");
+				headers.add(BACKEND_RETURN_MESSAGE, "There is no collaborator associated to the id " + input.getIdStaff());
 			} else {
-				if ((!input.isActive) && (updatedStaff.isActive)) {
-					input.dateInactive = Global.now();
+				if ((!input.isActive()) && (updatedStaff.isActive())) {
+					input.setDateInactive(Global.now());
 				}
 				try {
 					staffHandler.saveStaffMember(input);
 				} catch (SkillerException e) {
-					return new ResponseEntity<Staff>(
+					return new ResponseEntity<>(
 							new Staff(), new HttpHeaders(),
 							HttpStatus.INTERNAL_SERVER_ERROR);
 				}
-				responseEntity = new ResponseEntity<Staff>(input, headers, HttpStatus.OK);
+				responseEntity = new ResponseEntity<>(input, headers, HttpStatus.OK);
 				headers.add("backend.return_code", "1");
 			}
 		}
@@ -315,8 +323,8 @@ public class StaffController {
 					&& (!p.formerSkillTitle.equals(p.newSkillTitle))) {
 				Optional<Skill> formerSkill = skillHandler.lookup(p.formerSkillTitle);
 				if (formerSkill.isPresent()) {
-					final Experience formerExperienceToRemove = staff.getExperience(formerSkill.get().id);
-					staff.experiences.remove(formerExperienceToRemove);
+					final Experience formerExperienceToRemove = staff.getExperience(formerSkill.get().getId());
+					staff.getExperiences().remove(formerExperienceToRemove);
 				}
 			}
 
@@ -325,11 +333,11 @@ public class StaffController {
 			 * skill list, we update the level if necessary, or we send back an
 			 * warning. No Update made.
 			 */
-			final Experience asset = staff.getExperience(result.get().id);
+			final Experience asset = staff.getExperience(result.get().getId());
 			if (asset != null) {
 				if (asset.level != p.level) {
 					asset.level = p.level;
-					return new ResponseEntity<StaffDTO>(new StaffDTO(staff), HttpStatus.OK);
+					return new ResponseEntity<>(new StaffDTO(staff), HttpStatus.OK);
 				}
 				return postErrorReturnBodyMessage(HttpStatus.BAD_REQUEST.value(), "The collaborator " + staff.fullName()
 						+ " has already this level (" + p.level + ") of skill for " + p.newSkillTitle, staff);
@@ -338,8 +346,8 @@ public class StaffController {
 			/*
 			 * We create a NEW asset for this staff member.
 			 */
-			staff.experiences.add(new Experience(result.get().id, result.get().title, p.level));
-			responseEntity = new ResponseEntity<StaffDTO>(new StaffDTO(staff), headers, HttpStatus.OK);
+			staff.getExperiences().add(new Experience(result.get().getId(), result.get().getTitle(), p.level));
+			responseEntity = new ResponseEntity<>(new StaffDTO(staff), headers, HttpStatus.OK);
 			if (logger.isDebugEnabled()) {
 				logger.debug("returning  staff " + gson.toJson(staff));
 			}
@@ -389,9 +397,9 @@ public class StaffController {
 			return postErrorReturnBodyMessage(404, "There is no staff member for id" + p.idStaff);
 		}
 
-		Optional<Experience> oExperience = staff.experiences.stream().filter(exp -> (exp.id == p.idSkill)).findFirst();
+		Optional<Experience> oExperience = staff.getExperiences().stream().filter(exp -> (exp.id == p.idSkill)).findFirst();
 		if (oExperience.isPresent()) {
-			staff.experiences.remove(oExperience.get());
+			staff.getExperiences().remove(oExperience.get());
 		}
 
 		return new ResponseEntity<StaffDTO>(new StaffDTO(staff), new HttpHeaders(), HttpStatus.OK);
@@ -422,15 +430,15 @@ public class StaffController {
 			ResumeDTO resumeDTO = new ResumeDTO();
 			exp.data().forEach(item -> resumeDTO.experience.add(
 					new ResumeSkill(item.idSkill, 
-									skillHandler.getSkills().get(item.idSkill).title, 
+									skillHandler.getSkills().get(item.idSkill).getTitle(), 
 									item.count)));
 			/**
 			 * We put the most often repeated keywords at the beginning of the list.
 			 */
 			Collections.sort(resumeDTO.experience);
-			return new ResponseEntity<ResumeDTO>(resumeDTO, headers, HttpStatus.OK);
+			return new ResponseEntity<>(resumeDTO, headers, HttpStatus.OK);
 		} catch (SkillerException e) {
-			return new ResponseEntity<ResumeDTO>(
+			return new ResponseEntity<>(
 					new ResumeDTO(-1, e.getMessage()), 
 					headers, 
 					HttpStatus.INTERNAL_SERVER_ERROR);
@@ -445,19 +453,19 @@ public class StaffController {
 		final Staff staff = staffHandler.getStaff().get(id);
 		assert (staff != null);
 
-		if ((staff.application == null) || (staff.application.length() == 0)) {
+		if ((staff.getApplication() == null) || (staff.getApplication().length() == 0)) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("No application file for  " + staff.idStaff);
+				logger.debug("No application file for  " + staff.getIdStaff());
 			}
 	        return ResponseEntity.notFound().build();
 		}
 		
 		// Load file as Resource
-		Resource resource = storageService.loadAsResource(staff.application);
+		Resource resource = storageService.loadAsResource(staff.getApplication());
 
         // Try to determine file's content type
 		final String contentType;
-		switch (staff.typeOfApplication) {
+		switch (staff.getTypeOfApplication()) {
 		case StorageService.FILE_TYPE_TXT:
 			contentType = "text/html;charset=UTF-8";
 			break;
@@ -475,7 +483,7 @@ public class StaffController {
 			break;
 		}
 		if (logger.isDebugEnabled()) {
-			logger.debug(staff.application + " " + contentType);
+			logger.debug(staff.getApplication() + " " + contentType);
 		}
 
         return ResponseEntity.ok()
@@ -503,11 +511,11 @@ public class StaffController {
 		}
 		try {
 			Staff staff = staffHandler.addExperiences(p.idStaff, p.skills);
-			return new ResponseEntity<StaffDTO>(new StaffDTO(staff, 1, 
-					staff.firstName + " " + staff.lastName + " has " + staff.experiences.size() + " skills now!"), 
+			return new ResponseEntity<>(new StaffDTO(staff, 1, 
+					staff.getFirstName() + " " + staff.getLastName() + " has " + staff.getExperiences().size() + " skills now!"), 
 					HttpStatus.OK);
 		} catch (final SkillerException se) {
-			return new ResponseEntity<StaffDTO>(
+			return new ResponseEntity<>(
 					new StaffDTO(new Staff(), se.errorCode, se.errorMessage), 
 					new HttpHeaders(), 
 					HttpStatus.INTERNAL_SERVER_ERROR);
@@ -524,7 +532,7 @@ public class StaffController {
 	 * @return
 	 */
 	@PostMapping("/project/save")
-	ResponseEntity<StaffDTO> saveProject(@RequestBody String param) {
+	public ResponseEntity<StaffDTO> saveProject(@RequestBody String param) {
 
 		try {
 			ParamStaffProject p = gson.fromJson(param, ParamStaffProject.class);
@@ -547,9 +555,9 @@ public class StaffController {
 				 * project list, we send back a BAD_REQUEST to avoid duplicate
 				 * entries
 				 */
-				Predicate<Mission> predicate = pr -> (pr.idProject == result.get().id);
-				if (staff.missions.stream().anyMatch(predicate)) {
-					responseEntity = new ResponseEntity<StaffDTO>(
+				Predicate<Mission> predicate = pr -> (pr.idProject == result.get().getId());
+				if (staff.getMissions().stream().anyMatch(predicate)) {
+					responseEntity = new ResponseEntity<>(
 							new StaffDTO(staff, 0,
 									"The collaborator " + staff.fullName() + " is already involved in " + p.newProjectName),
 							headers, HttpStatus.BAD_REQUEST);
@@ -563,33 +571,31 @@ public class StaffController {
 				 */
 				if ((p.formerProjectName != null) && (p.formerProjectName.length() > 0)) {
 					Optional<Project> formerProject = projectHandler.lookup(p.formerProjectName);
-					if (result.isPresent()) {
-						Optional<Mission> optMission = staff.missions
-							.stream()
-							.filter(mission -> mission.idProject == formerProject.get().id)
-							.findFirst();
-						if (optMission.isPresent()) {
-							staff.missions.remove(optMission.get());
-						}
+					Optional<Mission> optMission = staff.getMissions()
+						.stream()
+						.filter(mission -> mission.idProject == formerProject.get().getId())
+						.findFirst();
+					if (optMission.isPresent()) {
+						staff.getMissions().remove(optMission.get());
 					}
 				}
 	
-				staff.missions.add(new Mission(result.get().id, projectHandler.get(result.get().id).name));
-				responseEntity = new ResponseEntity<StaffDTO>(new StaffDTO(staff), headers, HttpStatus.OK);
+				staff.getMissions().add(new Mission(result.get().getId(), projectHandler.get(result.get().getId()).getName()));
+				responseEntity = new ResponseEntity<>(new StaffDTO(staff), headers, HttpStatus.OK);
 				if (logger.isDebugEnabled()) {
-					logger.debug("returning  staff " + gson.toJson(staff));
+					logger.debug(String.format("returning  staff %s", gson.toJson(staff)));
 				}
 	
 			} else {
 				if (logger.isDebugEnabled()) {
-					logger.debug("Cannot find a Project with the name " + p.newProjectName);
+					logger.debug(String.format("Cannot find a Project for the name %s", p.newProjectName));
 				}
 				return postErrorReturnBodyMessage(404, "There is no project with the name " + p.newProjectName, staff);
 			}
 			return responseEntity;
 		} catch (SkillerException e) {
 			logger.error(getStackTrace(e));
-			return new ResponseEntity<StaffDTO>(
+			return new ResponseEntity<>(
 					new StaffDTO(new Staff(), e.errorCode,e.errorMessage), new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 		
@@ -599,26 +605,26 @@ public class StaffController {
 	 * Revoke the participation of staff member in a project.
 	 */
 	@PostMapping("/project/del")
-	ResponseEntity<StaffDTO> revokeProject(@RequestBody String param) {
+	public ResponseEntity<StaffDTO> revokeProject(@RequestBody String param) {
 
 		ParamStaffProject p = gson.fromJson(param, ParamStaffProject.class);
 		if (logger.isDebugEnabled()) {
-			logger.debug("POST command on /staff/project/del with params idStaff:" + String.valueOf(p.idStaff)
-					+ ",idProject:" + String.valueOf(p.idProject));
+			logger.debug(String.format(
+					"POST command on /staff/project/del with params idStaff : %d,idProject : %d", 
+					p.idStaff, p.idProject));
 		}
 
 		final Staff staff = staffHandler.getStaff().get(p.idStaff);
-		assert (staff != null);
 		if (staff == null) {
 			return postErrorReturnBodyMessage(404, "There is no staff member for id" + p.idStaff);
 		}
 
-		Optional<Mission> oProject = staff.missions.stream().filter(pr -> (pr.idProject == p.idProject)).findFirst();
+		Optional<Mission> oProject = staff.getMissions().stream().filter(pr -> (pr.idProject == p.idProject)).findFirst();
 		if (oProject.isPresent()) {
-			staff.missions.remove(oProject.get());
+			staff.getMissions().remove(oProject.get());
 		}
 
-		return new ResponseEntity<StaffDTO>(new StaffDTO(staff), new HttpHeaders(), HttpStatus.OK);
+		return new ResponseEntity<>(new StaffDTO(staff), new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	ResponseEntity<StaffDTO> postErrorReturnBodyMessage(int code, String message) {
@@ -626,7 +632,7 @@ public class StaffController {
 	}
 
 	ResponseEntity<StaffDTO> postErrorReturnBodyMessage(int code, String message, Staff staffMember) {
-		return new ResponseEntity<StaffDTO>(new StaffDTO(staffMember, code, message), new HttpHeaders(),
+		return new ResponseEntity<>(new StaffDTO(staffMember, code, message), new HttpHeaders(),
 				HttpStatus.BAD_REQUEST);
 	}
 }

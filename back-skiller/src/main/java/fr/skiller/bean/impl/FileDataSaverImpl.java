@@ -89,7 +89,7 @@ public class FileDataSaverImpl implements DataSaver {
 			logger.debug(String.format("Saving %d projects into file %s.", projects.size(), filename));
 			final StringBuilder sb = new StringBuilder();
 			projects.values().stream()
-					.forEach(project -> sb.append(project.id).append(" ").append(project.name).append(", "));
+					.forEach(project -> sb.append(project.getId()).append(" ").append(project.getName()).append(", "));
 			logger.debug(sb.toString());
 		}
 
@@ -124,7 +124,7 @@ public class FileDataSaverImpl implements DataSaver {
 			logger.debug(String.format("Loading %d projects into file %s.", projects.size(), filename));
 			final StringBuilder sb = new StringBuilder();
 			projects.values().stream()
-					.forEach(project -> sb.append(project.id).append(" ").append(project.name).append(", "));
+					.forEach(project -> sb.append(project.getId()).append(" ").append(project.getName()).append(", "));
 			logger.debug(sb.toString());
 		}
 		return projects;
@@ -146,7 +146,7 @@ public class FileDataSaverImpl implements DataSaver {
 			logger.debug(String.format("Saving %d staff members into file %s.", company.size(), filename));
 			final StringBuilder sb = new StringBuilder();
 			company.values().stream()
-					.forEach(staff -> sb.append(staff.idStaff).append(" ").append(staff.lastName).append(", "));
+					.forEach(staff -> sb.append(staff.getIdStaff()).append(" ").append(staff.getLastName()).append(", "));
 			logger.debug(sb.toString());
 		}
 
@@ -176,7 +176,7 @@ public class FileDataSaverImpl implements DataSaver {
 			logger.debug(String.format("Loading %d staff members from file %s.", theStaff.size(), filename));
 			final StringBuilder sb = new StringBuilder();
 			theStaff.values().stream()
-					.forEach(staff -> sb.append(staff.idStaff).append(" ").append(staff.lastName).append(", "));
+					.forEach(staff -> sb.append(staff.getIdStaff()).append(" ").append(staff.getLastName()).append(", "));
 			logger.debug(sb.toString());
 		}
 		return theStaff;
@@ -197,7 +197,7 @@ public class FileDataSaverImpl implements DataSaver {
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("Saving %d skills into file %s.", skills.size(), filename));
 			final StringBuilder sb = new StringBuilder();
-			skills.values().stream().forEach(skill -> sb.append(skill.id).append(" ").append(skill.title).append(", "));
+			skills.values().stream().forEach(skill -> sb.append(skill.getId()).append(" ").append(skill.getTitle()).append(", "));
 			logger.debug(sb.toString());
 		}
 
@@ -232,7 +232,7 @@ public class FileDataSaverImpl implements DataSaver {
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("Loading %d skills from file %s.", skills.size(), filename));
 			final StringBuilder sb = new StringBuilder();
-			skills.values().stream().forEach(skill -> sb.append(skill.id).append(" ").append(skill.title).append(", "));
+			skills.values().stream().forEach(skill -> sb.append(skill.getId()).append(" ").append(skill.getTitle()).append(", "));
 			logger.debug(sb.toString());
 		}
 		return skills;

@@ -118,12 +118,12 @@ public class GitScannerTestByPassable {
 					if (staff == null) {
 						logger.debug("Do not retrieve the staff with the id "+idStaff);
 					} else {
-						logger.debug(staff.login + " " + staff.isActive);
+						logger.debug(staff.getLogin() + " " + staff.isActive());
 					}
 				});
 		}
 		// Evaluate the risk for each directory, and sub-directory, in the repository.
-		final List<StatActivity> stats = new ArrayList<StatActivity>();
+		final List<StatActivity> stats = new ArrayList<>();
 		riskProcessor.evaluateTheRisk(repo, data.riskChartData, stats);
        
 	}

@@ -54,7 +54,11 @@ public class RiskCommitAndDevActiveProcessorTest {
 	
 	CommitRepository comRep;
 	
-	Staff first = null, second = null, third = null, fourth = null, fifth = null;
+	Staff first = null;
+	Staff second = null;
+	Staff third = null; 
+	Staff fourth = null;
+	Staff fifth = null;
 	
 	Project prj;
 	
@@ -71,37 +75,42 @@ public class RiskCommitAndDevActiveProcessorTest {
 		prj = new Project(8021964, "testRiskEvaluation");
 		projectHandler.addNewProject(prj);
 
-		comRep.addCommit("fr/one/one/A.java", first.idStaff, new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit("fr/one/one/A.java", first.idStaff, new Timestamp(System.currentTimeMillis()-1000));
-		comRep.addCommit("fr/one/one/A.java", first.idStaff, new Timestamp(System.currentTimeMillis()-2000));
-		comRep.addCommit("fr/one/one/B.java", second.idStaff, new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit("fr/one/one/C.java", third.idStaff, new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit("fr/one/one/A.java", first.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit("fr/one/one/A.java", first.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000));
+		comRep.addCommit("fr/one/one/A.java", first.getIdStaff(), new Timestamp(System.currentTimeMillis()-2000));
+		comRep.addCommit("fr/one/one/B.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit("fr/one/one/C.java", third.getIdStaff(), new Timestamp(System.currentTimeMillis()));
 
-		comRep.addCommit("fr/one/two/D.java", fourth.idStaff, new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit("fr/one/two/E.java", fifth.idStaff, new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit("fr/one/two/D.java", fourth.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit("fr/one/two/E.java", fifth.getIdStaff(), new Timestamp(System.currentTimeMillis()));
 		
-		comRep.addCommit("fr/two/Z.java", second.idStaff, new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit("fr/two/Z.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()));
 		
-		comRep.addCommit("fr/two/one/F.java", first.idStaff, new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit("fr/two/one/F.java", second.idStaff, new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit("fr/two/one/F.java", second.idStaff, new Timestamp(System.currentTimeMillis()-1000));
+		comRep.addCommit("fr/two/one/F.java", first.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit("fr/two/one/F.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit("fr/two/one/F.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000));
 		
-		comRep.addCommit("fr/two/two/G.java", fourth.idStaff, new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit("fr/two/two/G.java", fifth.idStaff, new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit("fr/two/two/G.java", fifth.idStaff, new Timestamp(System.currentTimeMillis()-1000));
-		comRep.addCommit("fr/two/two/G.java", fifth.idStaff, new Timestamp(System.currentTimeMillis()-2000));
+		comRep.addCommit("fr/two/two/G.java", fourth.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit("fr/two/two/G.java", fifth.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit("fr/two/two/G.java", fifth.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000));
+		comRep.addCommit("fr/two/two/G.java", fifth.getIdStaff(), new Timestamp(System.currentTimeMillis()-2000));
 	}
 	
 	@Test
 	public void testAgragreCommitsAllDevActive() throws Exception {
-		first.isActive = second.isActive = third.isActive = fourth.isActive = fifth.isActive = true;
+		first.setActive(true);
+		second.setActive(true);
+		third.setActive(true);
+		fourth.setActive(true);
+		fifth.setActive(true);
+
 		RiskDashboard dash = repoScanner.aggregateDashboard(prj, comRep);
 		
 		RiskCommitAndDevActiveProcessorImpl impl = (RiskCommitAndDevActiveProcessorImpl) riskProcessor;
-		List<StatActivity> stats = new ArrayList<StatActivity>();
+		List<StatActivity> stats = new ArrayList<>();
 		impl.agregateCommits("", comRep, dash.riskChartData, stats);
 
-		List<StatActivity> expected = new ArrayList<StatActivity>();
+		List<StatActivity> expected = new ArrayList<>();
 		expected.add(impl.new StatActivity("root/fr/one/one/A.java", 3, 3));
 		expected.add(impl.new StatActivity("root/fr/one/one/B.java", 1, 1));
 		expected.add(impl.new StatActivity("root/fr/one/one/C.java", 1, 1));
@@ -118,15 +127,18 @@ public class RiskCommitAndDevActiveProcessorTest {
 	
 	@Test
 	public void testAgragreCommitsAllDevActiveExceptTheFirstOne() throws Exception {
-		first.isActive = false;
-		second.isActive = third.isActive = fourth.isActive = fifth.isActive = true;
+		first.setActive(false);
+		second.setActive(true);
+		third.setActive(true);
+		fourth.setActive(true);
+		fifth.setActive(true);
 		RiskDashboard dash = repoScanner.aggregateDashboard(prj, comRep);
 		
 		RiskCommitAndDevActiveProcessorImpl impl = (RiskCommitAndDevActiveProcessorImpl) riskProcessor;
-		List<StatActivity> stats = new ArrayList<StatActivity>();
+		List<StatActivity> stats = new ArrayList<>();
 		impl.agregateCommits("", comRep, dash.riskChartData, stats);
 
-		List<StatActivity> expected = new ArrayList<StatActivity>();
+		List<StatActivity> expected = new ArrayList<>();
 		expected.add(impl.new StatActivity("root/fr/one/one/A.java", 3, 0));
 		expected.add(impl.new StatActivity("root/fr/one/one/B.java", 1, 1));
 		expected.add(impl.new StatActivity("root/fr/one/one/C.java", 1, 1));
@@ -143,13 +155,16 @@ public class RiskCommitAndDevActiveProcessorTest {
 
 	@Test
 	public void testEvaluateActiveDevelopersCoverage() throws Exception {
-		first.isActive = false;
-		second.isActive = third.isActive = fourth.isActive = fifth.isActive = true;
+		first.setActive(false);
+		second.setActive(true);
+		third.setActive(true);
+		fourth.setActive(true);
+		fifth.setActive(true);
 
 		RiskDashboard dash = repoScanner.aggregateDashboard(prj, comRep);
 		
 		RiskCommitAndDevActiveProcessorImpl impl = (RiskCommitAndDevActiveProcessorImpl) riskProcessor;
-		List<StatActivity> stats = new ArrayList<StatActivity>();
+		List<StatActivity> stats = new ArrayList<>();
 		impl.agregateCommits("", comRep, dash.riskChartData, stats);
 		
 		impl.evaluateActiveDevelopersCoverage("", dash.riskChartData, stats);

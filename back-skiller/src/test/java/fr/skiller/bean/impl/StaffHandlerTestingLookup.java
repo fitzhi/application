@@ -28,25 +28,25 @@ public class StaffHandlerTestingLookup {
 	public void lookupSimpleWord() {
 		Staff staff = this.staffHandler.lookup("stlagrange");
 		assertThat(staff).isNotNull();
-		assertThat(staff.firstName.toLowerCase()).isEqualTo("stéphane");
-		assertThat(staff.lastName.toLowerCase()).isEqualTo("lagrange");
+		assertThat(staff.getFirstName().toLowerCase()).isEqualTo("stéphane");
+		assertThat(staff.getLastName().toLowerCase()).isEqualTo("lagrange");
 	}
 
 	@Test
 	public void lookupWords_LastFistName() {
 		Staff staff = this.staffHandler.lookup("Lagrange Stéphane");
 		assertThat(staff).isNotNull();
-		assertThat(staff.firstName.toLowerCase()).isEqualTo("stéphane");
-		assertThat(staff.lastName.toLowerCase()).isEqualTo("lagrange");
-		assertThat(staff.login.toLowerCase()).isEqualTo("stlagrange");
+		assertThat(staff.getFirstName().toLowerCase()).isEqualTo("stéphane");
+		assertThat(staff.getLastName().toLowerCase()).isEqualTo("lagrange");
+		assertThat(staff.getLogin().toLowerCase()).isEqualTo("stlagrange");
 	}
 
 	@Test
 	public void lookup2Words_FirstLastName() {
 		Staff staff = this.staffHandler.lookup("Nobilleau Frederic");
 		assertThat(staff).isNotNull();
-		assertThat(staff.firstName.toLowerCase()).isEqualTo("frederic");
-		assertThat(staff.lastName.toLowerCase()).isEqualTo("nobilleau");
-		assertThat(staff.login.toLowerCase()).isEqualTo("fnobilleau");
+		assertThat(staff.getFirstName().toLowerCase()).isEqualTo("frederic");
+		assertThat(staff.getLastName().toLowerCase()).isEqualTo("nobilleau");
+		assertThat(staff.getLogin().toLowerCase()).isEqualTo("fnobilleau");
 	}
 }

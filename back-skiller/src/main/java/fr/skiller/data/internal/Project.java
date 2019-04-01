@@ -3,6 +3,10 @@ package fr.skiller.data.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Generated;
+
+import fr.skiller.SkillerRuntimeException;
+
 /**
  * Project class. 
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -12,50 +16,50 @@ public class Project implements Cloneable {
 	/**
 	 * The project identifier
 	 */
-	public int id;
+	private int id;
 	
 	/**
 	 * The name of the project
 	 */
-	public String name;
+	private String name;
 	
 	/**
 	 * The connection settings model.
 	 * 2 models exist : either the direct (URL/user/pass), or the indirect (URL/remote file)
 	 */
-	public int connection_settings;
+	private int connection_settings;
 	
 	/**
 	 * The repository URL of the project
 	 */
-	public String urlRepository;
+	private String urlRepository;
 	
 	/**
 	 * The user name required to access the version control repository.
 	 */
-	public String username;
+	private String username;
 
 	/**
 	 * The user name required to access the version control repository.
 	 */
-	public String password;
+	private String password;
 	
 	/**
 	 * The filename containing the connection parameters to access the version control system.
 	 */
-	public String filename;
+	private String filename;
 	
 	/**
 	 * List of skills required for this project.
 	 */
-	public List<Skill> skills = new ArrayList<Skill>();
+	private List<Skill> skills = new ArrayList<>();
 	
 	/**
 	 * List of committer {@link fr.skiller.data.internal.Ghost ghosts} identified.<br/>
 	 * These ghosts are known by their pseudos <br/>
 	 * Either they are missing from the staff collection, or they are technical.
 	 */
-	public List<Ghost> ghosts = new ArrayList<Ghost>();
+	private List<Ghost> ghosts = new ArrayList<>();
 	
 	/**
 	 * Constant representing one the 2 models of connection settings.
@@ -123,8 +127,135 @@ public class Project implements Cloneable {
 		try { 
 			clone = (Project) super.clone(); 
 		} catch(CloneNotSupportedException e) { 
-			throw new RuntimeException(e); // won't happen
+			throw new SkillerRuntimeException(e); // won't happen
 		} 
 		return clone; 
 	}
+
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the connection_settings
+	 */
+	public int getConnection_settings() {
+		return connection_settings;
+	}
+
+	/**
+	 * @param connection_settings the connection_settings to set
+	 */
+	public void setConnection_settings(int connection_settings) {
+		this.connection_settings = connection_settings;
+	}
+
+	/**
+	 * @return the urlRepository
+	 */
+	public String getUrlRepository() {
+		return urlRepository;
+	}
+
+	/**
+	 * @param urlRepository the urlRepository to set
+	 */
+	public void setUrlRepository(String urlRepository) {
+		this.urlRepository = urlRepository;
+	}
+
+	/**
+	 * @return the username
+	 */
+	public String getUsername() {
+		return username;
+	}
+
+	/**
+	 * @param username the username to set
+	 */
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	/**
+	 * @return the password
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * @param password the password to set
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	/**
+	 * @return the filename
+	 */
+	public String getFilename() {
+		return filename;
+	}
+
+	/**
+	 * @param filename the filename to set
+	 */
+	public void setFilename(String filename) {
+		this.filename = filename;
+	}
+
+	/**
+	 * @return the skills
+	 */
+	public List<Skill> getSkills() {
+		return skills;
+	}
+
+	/**
+	 * @param skills the skills to set
+	 */
+	public void setSkills(List<Skill> skills) {
+		this.skills = skills;
+	}
+
+	/**
+	 * @return the ghosts
+	 */
+	public List<Ghost> getGhosts() {
+		return ghosts;
+	}
+
+	/**
+	 * @param ghosts the ghosts to set
+	 */
+	public void setGhosts(List<Ghost> ghosts) {
+		this.ghosts = ghosts;
+	}
+	
 }

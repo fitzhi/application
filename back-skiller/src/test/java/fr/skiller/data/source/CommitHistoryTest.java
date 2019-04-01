@@ -33,14 +33,14 @@ public class CommitHistoryTest {
     @Before
     public void before() {
 		ch = new CommitHistory("test");
-		ch.addOperation(new Operation(1, new GregorianCalendar(2018, 12, 1).getTime()));
-		ch.addOperation(new Operation(1, new GregorianCalendar(2018, 11, 17).getTime()));
-		ch.addOperation(new Operation(2, new GregorianCalendar(2018, 12, 25).getTime()));
-		ch.addOperation(new Operation(3, new GregorianCalendar(2017, 12, 1).getTime()));
+		ch.addOperation(new Operation(1, new GregorianCalendar(2018, 11, 1).getTime()));
+		ch.addOperation(new Operation(1, new GregorianCalendar(2018, 10, 17).getTime()));
+		ch.addOperation(new Operation(2, new GregorianCalendar(2018, 11, 25).getTime()));
+		ch.addOperation(new Operation(3, new GregorianCalendar(2017, 11, 1).getTime()));
 
-		staffHandler.getStaff().get(1).isActive = false;
-		staffHandler.getStaff().get(2).isActive = true;
-		staffHandler.getStaff().get(3).isActive = true;
+		staffHandler.getStaff().get(1).setActive (false);
+		staffHandler.getStaff().get(2).setActive (true);
+		staffHandler.getStaff().get(3).setActive (true);
     }
     
     @Test

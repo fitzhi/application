@@ -74,7 +74,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Override
 	public Optional<Project> lookup(final String projectName) throws SkillerException {
 		return getProjects().values().stream()
-				.filter( (Project project) -> project.name.equals(projectName))
+				.filter( (Project project) -> project.getName().equals(projectName))
 				.findFirst();
 	}
 
@@ -85,17 +85,17 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 	@Override
 	public List<Contributor> contributors(int idProject) {
-		List<Contributor> contributors = new ArrayList<Contributor>();
+		List<Contributor> contributors = new ArrayList<>();
 		staffHandler.getStaff().values().forEach(staff -> {
 			Optional<Mission> optMission  = 
-						staff.missions.stream()
+						staff.getMissions().stream()
 						.filter(mission -> mission.idProject == idProject)
 						.findFirst();
 			if (optMission.isPresent()) {
 				Mission mission = optMission.get();
 				contributors.add(
 						new Contributor(
-								staff.idStaff, 
+								staff.getIdStaff(), 
 								mission.firstCommit, 
 								mission.lastCommit, 
 								mission.numberOfCommits, 
@@ -109,10 +109,10 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	public Project addNewProject(Project project) throws SkillerException {
 		synchronized (lockDataUpdated) {
 			Map<Integer, Project> projects = getProjects();
-			if (project.id < 1) {
-				project.id = projects.size() + 1;
+			if (project.getId() < 1) {
+				project.setId(projects.size() + 1);
 			}
-			projects.put(project.id, project);
+			projects.put(project.getId(), project);
 			this.dataUpdated = true;
 		}
 		return project;
@@ -125,11 +125,11 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 	@Override
 	public void saveProject(Project project) throws SkillerException {
-		if (project.id == 0) {
-			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, project.id));
+		if (project.getId() == 0) {
+			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, project.getId()));
 		}
 		synchronized (lockDataUpdated) {
-			getProjects().put(project.id, project);
+			getProjects().put(project.getId(), project);
 			this.dataUpdated = true;
 		}
 	}
@@ -160,7 +160,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			if ((pseudo.login != null) && (pseudo.login.length() > 0)) {
 				List<Staff> result = staffHandler.getStaff().values()
 					.stream()
-					.filter(staff -> pseudo.login.equals(staff.login))
+					.filter(staff -> pseudo.login.equals(staff.getLogin()))
 					.collect(Collectors.toList());
 				
 				// Unknown login
@@ -175,14 +175,14 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 							MessageFormat.format(MESSAGE_PROJECT_NOFOUND, pseudo.login, result.size()));
 				}
 				
-				newGhosts.add(new Ghost(pseudo.pseudo, result.get(0).idStaff, false));
+				newGhosts.add(new Ghost(pseudo.pseudo, result.get(0).getIdStaff(), false));
 				Ghost gh = getGhost(project, pseudo.pseudo);
 				if (gh == null) {
 					pseudo.action = Action.A;
 				} else {
-					pseudo.action =  (gh.idStaff == result.get(0).idStaff) ? Action.N : Action.U;
+					pseudo.action =  (gh.idStaff == result.get(0).getIdStaff()) ? Action.N : Action.U;
 				}
-				pseudo.idStaff = result.get(0).idStaff;
+				pseudo.idStaff = result.get(0).getIdStaff();
 				pseudo.fullName = staffHandler.getFullname(pseudo.idStaff);
 				newPseudos.add(pseudo);
 			}
@@ -204,7 +204,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		}
 
 		synchronized (lockDataUpdated) {
-			project.ghosts = newGhosts;
+			project.setGhosts(newGhosts);
 			this.dataUpdated = true;
 		}
 		
@@ -213,7 +213,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	
 	@Override
 	public Ghost getGhost(final Project project, final String pseudo) {
-		List<Ghost> actualGhosts = project.ghosts.stream()
+		List<Ghost> actualGhosts = project.getGhosts().stream()
 				.filter(g -> g.pseudo.equals(pseudo))
 				.collect(Collectors.toList());
 		return actualGhosts.isEmpty() ? null : actualGhosts.get(0);

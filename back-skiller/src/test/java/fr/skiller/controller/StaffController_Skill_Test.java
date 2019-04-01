@@ -66,29 +66,29 @@ public class StaffController_Skill_Test {
 	public void addAndUpdateASkillForAStaffMember() throws Exception {
 
 		this.mvc.perform(get("/staff/experiences/1")).andExpect(status().isOk()).andExpect(content().string("[]"));	
-		String body = "{ idStaff: 1, formerSkillTitle: \"\", newSkillTitle: \""+ skillHandler.getSkills().get(2).title  +"\", level: 2}";
+		String body = "{ idStaff: 1, formerSkillTitle: \"\", newSkillTitle: \""+ skillHandler.getSkills().get(2).getTitle()  +"\", level: 2}";
 		this.mvc.perform(post("/staff/experiences/save").content(body)).andExpect(status().isOk());		
 		
 		List<Experience> assets = new ArrayList<Experience>();
 		
-		assets.add(new Experience(2, skillHandler.getSkills().get(2).title, 2));
+		assets.add(new Experience(2, skillHandler.getSkills().get(2).getTitle(), 2));
 		this.mvc.perform(get("/staff/experiences/1")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));
 
-		body = "{ idStaff: 1, formerSkillTitle: \"" + skillHandler.getSkills().get(2).title + "\", newSkillTitle: \"Java\", level: 3}";
+		body = "{ idStaff: 1, formerSkillTitle: \"" + skillHandler.getSkills().get(2).getTitle() + "\", newSkillTitle: \"Java\", level: 3}";
 		this.mvc.perform(post("/staff/experiences/save").content(body)).andExpect(status().isOk());		
 		
 		assets.clear();
-		assets.add(new Experience (1, skillHandler.getSkills().get(1).title, 3));
+		assets.add(new Experience (1, skillHandler.getSkills().get(1).getTitle(), 3));
 		this.mvc.perform(get("/staff/experiences/1")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));
 
 		/*
 		 * We down-grade the level from 3 to 1.
 		 */
-		body = "{ idStaff: 1, formerSkillTitle: \"" + skillHandler.getSkills().get(2).title + "\", newSkillTitle: \"" + skillHandler.getSkills().get(1).title +"\", level: 1}";
+		body = "{ idStaff: 1, formerSkillTitle: \"" + skillHandler.getSkills().get(2).getTitle() + "\", newSkillTitle: \"" + skillHandler.getSkills().get(1).getTitle() +"\", level: 1}";
 		this.mvc.perform(post("/staff/experiences/save").content(body)).andExpect(status().isOk());		
 
 		assets.clear();
-		assets.add(new Experience (1, skillHandler.getSkills().get(1).title, 1));
+		assets.add(new Experience (1, skillHandler.getSkills().get(1).getTitle(), 1));
 		this.mvc.perform(get("/staff/experiences/1")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));
 
 		staffHandler.init();
@@ -99,12 +99,12 @@ public class StaffController_Skill_Test {
 	public void addAndRemoveASkillForAStaffMember() throws Exception {
 		
 		this.mvc.perform(get("/staff/experiences/1")).andExpect(status().isOk()).andExpect(content().string("[]"));	
-		String body = "{idStaff: 1, formerSkillTitle: \"\", newSkillTitle: \""+skillHandler.getSkills().get(2).title+"\", level: 1}";
+		String body = "{idStaff: 1, formerSkillTitle: \"\", newSkillTitle: \""+skillHandler.getSkills().get(2).getTitle()+"\", level: 1}";
 		this.mvc.perform(post("/staff/experiences/save").content(body)).andExpect(status().isOk());		
 
 	
-		List<Experience> assets = new ArrayList<Experience>();
-		assets.add(new Experience (2, skillHandler.getSkills().get(2).title, 1));
+		List<Experience> assets = new ArrayList<>();
+		assets.add(new Experience (2, skillHandler.getSkills().get(2).getTitle(), 1));
 		this.mvc.perform(get("/staff/experiences/1")).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));
 		
 		body = "{idStaff: 1, idSkill: 2}";

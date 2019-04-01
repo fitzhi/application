@@ -67,7 +67,7 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	@Override
 	public Optional<Skill> lookup(final String skillTitle) {
 		return getSkills().values().stream()
-				.filter((Skill skill) -> skill.title.equalsIgnoreCase(skillTitle.toUpperCase())).findFirst();
+				.filter((Skill skill) -> skill.getTitle().equalsIgnoreCase(skillTitle.toUpperCase())).findFirst();
 	}
 
 	@Override
@@ -89,11 +89,11 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 
 	@Override
 	public void saveSkill(final Skill skill) throws SkillerException {
-		if (skill.id == 0) {
-			throw new SkillerException(CODE_SKILL_NOFOUND, MessageFormat.format(MESSAGE_SKILL_NOFOUND, skill.id));
+		if (skill.getId() == 0) {
+			throw new SkillerException(CODE_SKILL_NOFOUND, MessageFormat.format(MESSAGE_SKILL_NOFOUND, skill.getId()));
 		}
 		synchronized (lockDataUpdated) {
-			getSkills().put(skill.id, skill);
+			getSkills().put(skill.getId(), skill);
 			this.dataUpdated = true;
 		}
 	}

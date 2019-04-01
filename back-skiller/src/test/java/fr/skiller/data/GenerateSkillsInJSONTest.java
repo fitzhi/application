@@ -56,12 +56,12 @@ public class GenerateSkillsInJSONTest extends TestCase {
 
 		final FileReader fr = new FileReader(new File(resourcesDirectory.getAbsolutePath() + "/opennlp/skills.json"));
 
-		List<Skill> skills = new ArrayList<Skill>();
+		List<Skill> skills = new ArrayList<>();
 		Type listSkillType = new TypeToken<ArrayList<Skill>>() {
 		}.getType();
 		skills = gson.fromJson(fr, listSkillType);
 
-		skills.stream().forEach(skill -> logger.debug(skill.title));
+		skills.stream().forEach(skill -> logger.debug(skill.getTitle()));
 
 		return skills;
 	}

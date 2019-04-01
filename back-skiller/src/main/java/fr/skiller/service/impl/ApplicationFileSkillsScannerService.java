@@ -80,13 +80,13 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 		 * in order to process the comparison with the skills extracted from the resume 
 		 */
 		Collection<Skill> skillsDeclared = skillHandler.getSkills().values();
-		Map<String, Skill> skills = new HashMap<String, Skill>();
-		skillsDeclared.forEach((sk -> skills.put(cleanup(sk.title), sk)));
+		Map<String, Skill> skills = new HashMap<>();
+		skillsDeclared.forEach((sk -> skills.put(cleanup(sk.getTitle()), sk)));
 
 		/**
 		 * We filter the words from the content of the resume, those who match with the current skills collection
 		 */
-		List<Skill> listSkills = new ArrayList<Skill>();
+		List<Skill> listSkills = new ArrayList<>();
 		for (String s : token) {
 			String cleanLine = cleanup(s);
 			if (skills.containsKey(cleanLine)) {
@@ -102,7 +102,7 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 		 * (That might be an indication of their importance) 
 		 */
 		Map<Integer, Long> mapSkills = listSkills.stream()
-				.collect(Collectors.groupingBy(exp -> exp.id, Collectors.counting()));
+				.collect(Collectors.groupingBy(exp -> exp.getId(), Collectors.counting()));
 
 		mapSkills.keySet().stream().sorted().forEach(key -> resume.put(key, mapSkills.get(key)));
 

@@ -8,6 +8,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.Generated;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import fr.skiller.bean.impl.CacheDataHandlerImpl;
 import fr.skiller.data.source.Contributor;
 
 /**
@@ -15,42 +21,48 @@ import fr.skiller.data.source.Contributor;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public class Staff {
-	public int idStaff;
-	public String firstName;
-	public String lastName;
-	public String nickName;
-	public String login;
-	public String email;
-	public String level;
+	
+ 	/**
+ 	 * The logger for the Staff class.
+ 	 */
+	private Logger logger = LoggerFactory.getLogger(Staff.class.getCanonicalName());	
+	
+	private int idStaff;
+	private String firstName;
+	private String lastName;
+	private String nickName;
+	private String login;
+	private String email;
+	private String level;
 	/**
 	 * Staff member is still active or remove from the staff list.
 	 */
-	public boolean isActive = true;
+	private boolean isActive = true;
 	/**
 	 * Date of the exit.
 	 */
-	public Date dateInactive;
+	private Date dateInactive;
 	
 	/**
 	 * application filename & type (Word, PDF...)
 	 */
-	public String application;
-	public int typeOfApplication;
+	private String application;
+	private int typeOfApplication;
 	
 	/**
 	 * {@code true} if this staff member is an external developer, {@code false} otherwise 
 	 */
-	public boolean external = false;
+	private boolean external = false;
 
 	/**
 	 * The list of missions where the collaborator has been involved.
 	 */
-	public List<Mission> missions;
+	private List<Mission> missions;
 	
 	/**
 	 * The collaborator's list of skills.
 	 */
-	public List<Experience> experiences;
+	private List<Experience> experiences;
 
 	/**
 	 * Empty construction.
@@ -76,8 +88,8 @@ public class Staff {
 		this.login = login;
 		this.email = email;
 		this.level = level;
-		missions = new ArrayList<Mission>();
-		experiences = new ArrayList<Experience>();
+		missions = new ArrayList<>();
+		experiences = new ArrayList<>();
 	}
 
 	/**
@@ -103,8 +115,8 @@ public class Staff {
 		this.level = level;
 		this.isActive = isActive;
 		this.external = external;
-		missions = new ArrayList<Mission>();
-		experiences = new ArrayList<Experience>();
+		missions = new ArrayList<>();
+		experiences = new ArrayList<>();
 	}
 	
 	/**
@@ -156,20 +168,224 @@ public class Staff {
 	 * @param contributor source contributor updated
 	 */
 	public void updateMission(final int idProject, final Contributor contributor) {
-		Mission missionSelected = missions.stream().filter(mission -> mission.idProject == idProject).findFirst().get();
-		missionSelected.firstCommit = contributor.firstCommit;
-		missionSelected.lastCommit = contributor.lastCommit;
-		missionSelected.numberOfCommits = contributor.numberOfCommitsSubmitted;
-		missionSelected.numberOfFiles = contributor.numberOfFiles;
+		Optional<Mission> optMission = missions.stream().filter(mission -> mission.idProject == idProject).findFirst();
+		if (optMission.isPresent()) {
+			Mission missionSelected = optMission.get();
+			missionSelected.firstCommit = contributor.firstCommit;
+			missionSelected.lastCommit = contributor.lastCommit;
+			missionSelected.numberOfCommits = contributor.numberOfCommitsSubmitted;
+			missionSelected.numberOfFiles = contributor.numberOfFiles;
+		} else {
+			if (logger.isErrorEnabled()) {
+				logger.error(String.format("Cannot find a mission for the project id %d", idProject));
+			}
+		}
 	}
 
 	@Override
+	@Generated ("eclipse")
 	public String toString() {
 		return "Staff [idStaff=" + idStaff + ", firstName=" + firstName + ", lastName=" + lastName + ", nickName="
 				+ nickName + ", login=" + login + ", email=" + email + ", level=" + level + ", isActive=" + isActive
 				+ ", dateInactive=" + dateInactive + ", application=" + application + ", typeOfApplication="
 				+ typeOfApplication + ", external=" + external + ", missions=" + missions + ", experiences="
 				+ experiences + "]";
-	}	
+	}
 
+	/**
+	 * @return the idStaff
+	 */
+	public int getIdStaff() {
+		return idStaff;
+	}
+
+	/**
+	 * @param idStaff the idStaff to set
+	 */
+	public void setIdStaff(int idStaff) {
+		this.idStaff = idStaff;
+	}
+
+	/**
+	 * @return the firstName
+	 */
+	public String getFirstName() {
+		return firstName;
+	}
+
+	/**
+	 * @param firstName the firstName to set
+	 */
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	/**
+	 * @return the lastName
+	 */
+	public String getLastName() {
+		return lastName;
+	}
+
+	/**
+	 * @param lastName the lastName to set
+	 */
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	/**
+	 * @return the nickName
+	 */
+	public String getNickName() {
+		return nickName;
+	}
+
+	/**
+	 * @param nickName the nickName to set
+	 */
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+
+	/**
+	 * @return the login
+	 */
+	public String getLogin() {
+		return login;
+	}
+
+	/**
+	 * @param login the login to set
+	 */
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	/**
+	 * @return the email
+	 */
+	public String getEmail() {
+		return email;
+	}
+
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	/**
+	 * @return the level
+	 */
+	public String getLevel() {
+		return level;
+	}
+
+	/**
+	 * @param level the level to set
+	 */
+	public void setLevel(String level) {
+		this.level = level;
+	}
+
+	/**
+	 * @return the isActive
+	 */
+	public boolean isActive() {
+		return isActive;
+	}
+
+	/**
+	 * @param isActive the isActive to set
+	 */
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	/**
+	 * @return the dateInactive
+	 */
+	public Date getDateInactive() {
+		return dateInactive;
+	}
+
+	/**
+	 * @param dateInactive the dateInactive to set
+	 */
+	public void setDateInactive(Date dateInactive) {
+		this.dateInactive = dateInactive;
+	}
+
+	/**
+	 * @return the application
+	 */
+	public String getApplication() {
+		return application;
+	}
+
+	/**
+	 * @param application the application to set
+	 */
+	public void setApplication(String application) {
+		this.application = application;
+	}
+
+	/**
+	 * @return the typeOfApplication
+	 */
+	public int getTypeOfApplication() {
+		return typeOfApplication;
+	}
+
+	/**
+	 * @param typeOfApplication the typeOfApplication to set
+	 */
+	public void setTypeOfApplication(int typeOfApplication) {
+		this.typeOfApplication = typeOfApplication;
+	}
+
+	/**
+	 * @return the external
+	 */
+	public boolean isExternal() {
+		return external;
+	}
+
+	/**
+	 * @param external the external to set
+	 */
+	public void setExternal(boolean external) {
+		this.external = external;
+	}
+
+	/**
+	 * @return the missions
+	 */
+	public List<Mission> getMissions() {
+		return missions;
+	}
+
+	/**
+	 * @param missions the missions to set
+	 */
+	public void setMissions(List<Mission> missions) {
+		this.missions = missions;
+	}
+
+	/**
+	 * @return the experiences
+	 */
+	public List<Experience> getExperiences() {
+		return experiences;
+	}
+
+	/**
+	 * @param experiences the experiences to set
+	 */
+	public void setExperiences(List<Experience> experiences) {
+		this.experiences = experiences;
+	}
+	
 }

@@ -26,6 +26,7 @@ import org.springframework.util.MultiValueMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.data.external.ResumeDTO;
 import fr.skiller.data.internal.Project;
@@ -108,11 +109,11 @@ public class StaffController_uploadResume_Test {
 	private int getIdSkill (final String title) {
 		Optional<Skill> optSkill = skillHandler.getSkills()
 				.values().stream()
-				.filter(skill -> title.equals(skill.title)).findFirst();
+				.filter(skill -> title.equals(skill.getTitle())).findFirst();
 		if (optSkill.isPresent()) {
-			return optSkill.get().id;
+			return optSkill.get().getId();
 		} else {
-			throw new RuntimeException("Should not pass here!");
+			throw new SkillerRuntimeException("Should not pass here!");
 		}
 	}
 }

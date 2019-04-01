@@ -102,20 +102,20 @@ public class PocNLP {
 
 	private Map<String, Long> treat(final String[] token) throws IOException {
 		
-		List<Skill> listSkills = new ArrayList<Skill>();
+		List<Skill> listSkills = new ArrayList<>();
 		for (String s : token) {
 			String cleanLine = cleanup(s);
 
 			List<Skill> skillsFromFile = GenerateSkillsInJSONTest.getReadSkillsJson();
-			Map<String, Skill> skills = new HashMap<String, Skill>();
-			skillsFromFile.forEach((sk -> skills.put(cleanup(sk.title), sk)));
+			Map<String, Skill> skills = new HashMap<>();
+			skillsFromFile.forEach((sk -> skills.put(cleanup(sk.getTitle()), sk)));
 			if (skills.containsKey(cleanLine)) {
 				listSkills.add(skills.get(cleanLine));
 			}
 		}
 		
-		Map<String, Long> mapSkills = listSkills.stream().collect(Collectors.groupingBy(exp -> exp.title, Collectors.counting()));
-		Map<String, Long> mapSkillsSorted = new HashMap<String, Long>();
+		Map<String, Long> mapSkills = listSkills.stream().collect(Collectors.groupingBy(exp -> exp.getTitle(), Collectors.counting()));
+		Map<String, Long> mapSkillsSorted = new HashMap<>();
 		
 		mapSkills.keySet().stream().sorted().forEach(key -> mapSkillsSorted.put(key, mapSkills.get(key)));
 		mapSkillsSorted.keySet().forEach(skill -> logger.debug(skill + " " + mapSkills.get(skill)));

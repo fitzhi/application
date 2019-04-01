@@ -64,19 +64,20 @@ public class RiskCommitAndDevProcessor_meanTheRisk_Test {
 		prj = new Project(8021964, "testRiskEvaluation");
 		projectHandler.addNewProject(prj);
 
-		comRep.addCommit("fr/one/one/A.java", first.idStaff, new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit("fr/one/one/A.java", first.idStaff, new Timestamp(System.currentTimeMillis()-1000));
-		comRep.addCommit("fr/one/one/A.java", first.idStaff, new Timestamp(System.currentTimeMillis()-2000));
-		comRep.addCommit("fr/one/one/B.java", second.idStaff, new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit("fr/one/one/C.java", third.idStaff, new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit("fr/one/one/A.java", first.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit("fr/one/one/A.java", first.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000));
+		comRep.addCommit("fr/one/one/A.java", first.getIdStaff(), new Timestamp(System.currentTimeMillis()-2000));
+		comRep.addCommit("fr/one/one/B.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit("fr/one/one/C.java", third.getIdStaff(), new Timestamp(System.currentTimeMillis()));
 
-		comRep.addCommit("fr/A.java", second.idStaff, new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit("fr/A.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()));
 }
 
 	@Test
 	public void agregateCountCommits() {
-		first.isActive = false;
-		second.isActive = third.isActive = true;
+		first.setActive(false);
+		second.setActive(true);
+		third.setActive(true);
 
 		RiskCommitAndDevActiveProcessorImpl impl = ((RiskCommitAndDevActiveProcessorImpl) riskProcessor);
 

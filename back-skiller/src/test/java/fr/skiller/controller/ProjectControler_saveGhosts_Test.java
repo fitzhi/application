@@ -58,7 +58,9 @@ public class ProjectControler_saveGhosts_Test {
 	private StaffHandler staffHandler;
 		
 	
-	Staff first = null, second = null, third = null;
+	Staff first = null;
+	Staff second = null;
+	Staff third = null;
 	
 	@Before
 	public void before() throws Exception {
@@ -68,31 +70,31 @@ public class ProjectControler_saveGhosts_Test {
 		
 		Project p = new Project(8021964, "testingGhost");
 		projectHandler.addNewProject(p);
-		p.ghosts.add( new Ghost("onePseudo", first.idStaff, false) );
-		p.ghosts.add(new Ghost("twoPseudo", true));
-		p.ghosts.add(new Ghost("thirdPseudo", second.idStaff, false));
-		p.ghosts.add(new Ghost("fourthPseudo", true));
-		p.ghosts.add( new Ghost("fifthPseudo", third.idStaff, false) );
+		p.getGhosts().add( new Ghost("onePseudo", first.getIdStaff(), false) );
+		p.getGhosts().add(new Ghost("twoPseudo", true));
+		p.getGhosts().add(new Ghost("thirdPseudo", second.getIdStaff(), false));
+		p.getGhosts().add(new Ghost("fourthPseudo", true));
+		p.getGhosts().add( new Ghost("fifthPseudo", third.getIdStaff(), false) );
 		projectHandler.addNewProject(p);
 	}
 	
 	@Test
 	public void test() throws Exception {
 		
-		List<Pseudo> pseudos = new ArrayList<Pseudo>();
-		List<Pseudo> expectedPseudos = new ArrayList<Pseudo>();
+		List<Pseudo> pseudos = new ArrayList<>();
+		List<Pseudo> expectedPseudos = new ArrayList<>();
 
 		// We don't change the value
-		pseudos.add(new Pseudo("onePseudo", first.login));
-		expectedPseudos.add(new Pseudo("onePseudo", first.idStaff, first.fullName(), first.login, false, Action.N));
+		pseudos.add(new Pseudo("onePseudo", first.getLogin()));
+		expectedPseudos.add(new Pseudo("onePseudo", first.getIdStaff(), first.fullName(), first.getLogin(), false, Action.N));
 		
 		// We don't change the value
 		pseudos.add(new Pseudo("twoPseudo", true));
 		expectedPseudos.add(new Pseudo("twoPseudo", true, Action.N));
 
 		// We change the staff member from the second to the third
-		pseudos.add(new Pseudo("thirdPseudo", third.login));
-		expectedPseudos.add(new Pseudo("thirdPseudo", third.idStaff, third.fullName(), third.login, false, Action.U));
+		pseudos.add(new Pseudo("thirdPseudo", third.getLogin()));
+		expectedPseudos.add(new Pseudo("thirdPseudo", third.getIdStaff(), third.fullName(), third.getLogin(), false, Action.U));
 		
 		// We reinitiliaze this entry. No login, no automatic
 		pseudos.add(new Pseudo("fourthPseudo", false));

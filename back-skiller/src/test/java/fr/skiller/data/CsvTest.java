@@ -77,13 +77,13 @@ public class CsvTest extends TestCase {
 						(csvStaffMember.actif == null) ? true : false, false );
 				
 				if ((csvStaffMember.skill_java != null) && (SKILLS_LEVELS.containsKey(csvStaffMember.skill_java.trim()))) {
-					staff.experiences.add(new Experience(1, "Java", SKILLS_LEVELS.get(csvStaffMember.skill_java.trim()) ));
+					staff.getExperiences().add(new Experience(1, "Java", SKILLS_LEVELS.get(csvStaffMember.skill_java.trim()) ));
 				}
 				if ((csvStaffMember.skill_dotNet != null) && (SKILLS_LEVELS.containsKey(csvStaffMember.skill_dotNet.trim()))) {
-					staff.experiences.add(new Experience(6, ".Net", SKILLS_LEVELS.get(csvStaffMember.skill_dotNet.trim())));
+					staff.getExperiences().add(new Experience(6, ".Net", SKILLS_LEVELS.get(csvStaffMember.skill_dotNet.trim())));
 				}
-				if (staff.lastName != null) {
-					STAFF.put(staff.idStaff, staff);
+				if (staff.getLastName() != null) {
+					STAFF.put(staff.getIdStaff(), staff);
 				}
 			}
 			Gson g = new Gson();
@@ -92,7 +92,5 @@ public class CsvTest extends TestCase {
 			bw.close();
 		}
 	}
-
-	// LoggerFactory.getLogger(JsonTest.class).debug(g.toJson(collab));
 
 }

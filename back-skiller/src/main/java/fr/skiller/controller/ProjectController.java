@@ -41,19 +41,14 @@ import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Pseudo;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Staff;
-import fr.skiller.data.internal.Unknown;
-import fr.skiller.data.internal.RiskChartData;
 import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.scanner.RepoScanner;
 
-import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
-import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
 import static fr.skiller.Error.CODE_UNDEFINED;
 import static fr.skiller.Error.UNKNOWN_PROJECT;
 import static fr.skiller.Error.getStackTrace;
-import static fr.skiller.Global.LN;
 import static fr.skiller.Error.CODE_MULTIPLE_TASK;
 
 @RestController
@@ -111,8 +106,8 @@ public class ProjectController {
 		}
 	}
 
-	@RequestMapping(value = "/name/{projectName}", method = RequestMethod.GET)
-	ResponseEntity<ProjectDTO> read(@PathVariable("projectName") String projectName) {
+	@GetMapping(path = "/name/{projectName}")
+	public ResponseEntity<ProjectDTO> read(@PathVariable("projectName") String projectName) {
 		
 		final ResponseEntity<ProjectDTO> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
@@ -132,7 +127,7 @@ public class ProjectController {
 			return responseEntity;
 		} catch (final SkillerException e) {
 			logger.error(getStackTrace(e));
-			return new ResponseEntity<ProjectDTO>(
+			return new ResponseEntity<>(
 					new ProjectDTO(new Project(), e.errorCode, e.getMessage()), 
 					headers, 
 					HttpStatus.BAD_REQUEST);
@@ -144,18 +139,20 @@ public class ProjectController {
 	 * @param idProject the searched project identifier
 	 * @return the HTTP Response with the retrieved project, or an empty one if the query failed.
 	 */
-	@RequestMapping(value = "/id/{idParam}", method = RequestMethod.GET)
-	ResponseEntity<Project> read(@PathVariable("idParam") int idProject) {
+	@GetMapping(value = "/id/{idParam}")
+	public ResponseEntity<Project> read(@PathVariable("idParam") int idProject) {
 
-		MyReference<ResponseEntity<Project>> refResponse = new MyReference<ResponseEntity<Project>>();
+		MyReference<ResponseEntity<Project>> refResponse = new MyReference<>();
 		final Project searchProject = getProject(idProject, new Project(), refResponse);
 		if (refResponse.response != null) {
 			return refResponse.response;
 		}
 		
-		ResponseEntity<Project> response = new ResponseEntity<Project>(searchProject, new HttpHeaders(), HttpStatus.OK);
+		ResponseEntity<Project> response = new ResponseEntity<>(searchProject, new HttpHeaders(), HttpStatus.OK);
 		if (logger.isDebugEnabled()) {
-			logger.debug("Project read for id " + String.valueOf(idProject) + " returns " + response.getBody());
+			logger.debug(
+					String.format("Project corresponding to the id %d has returned %s", 
+							idProject, response.getBody()));
 		}
 		return response;
 	}
@@ -164,14 +161,14 @@ public class ProjectController {
 	 * @param idProject the project identifier
 	 * @return the experience of a developer as list of skills.
 	 */
-	@RequestMapping(value="/skills/{idProject}", method = RequestMethod.GET)
-	ResponseEntity<List<Skill>> get(final @PathVariable("idProject") int idProject) {
+	@GetMapping(value="/skills/{idProject}")
+	public ResponseEntity<List<Skill>> get(final @PathVariable("idProject") int idProject) {
 		
-		MyReference<ResponseEntity<List<Skill>>> refResponse = new MyReference<ResponseEntity<List<Skill>>>();
+		MyReference<ResponseEntity<List<Skill>>> refResponse = new MyReference<>();
 
 		final Project project = getProject(idProject, new ArrayList<Skill>(), refResponse);
 		return  (refResponse.response != null) ? refResponse.response : 
-			new ResponseEntity<List<Skill>>(project.skills, new HttpHeaders(), HttpStatus.OK);
+			new ResponseEntity<>(project.getSkills(), new HttpHeaders(), HttpStatus.OK);
 	}
 
 	/**
@@ -216,15 +213,15 @@ public class ProjectController {
 			final Collection<Project> responseProjects;
 			
 			if (shuffleService.isShuffleMode()) {
-				responseProjects = new ArrayList<Project>();
+				responseProjects = new ArrayList<>();
 				if (logger.isInfoEnabled()) {
 					logger.info("The projects collection is beeing shuffled for confidentiality purpose");
 				}
 				projects.stream().forEach(project -> {
 					final Project clone = project.clone();
-					clone.name = shuffleService.shuffle(clone.name);
-					clone.username = shuffleService.shuffle(clone.username);
-					clone.urlRepository = shuffleService.shuffle(clone.name);
+					clone.setName(shuffleService.shuffle(clone.getName()));
+					clone.setUsername(shuffleService.shuffle(clone.getUsername()));
+					clone.setUrlRepository(shuffleService.shuffle(clone.getName()));
 					responseProjects.add(clone);
 				});
 			} else {
@@ -254,19 +251,19 @@ public class ProjectController {
 		final ResponseEntity<Project> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 		try {
-			if (project.id == 0) {
+			if (project.getId() == 0) {
 				project = projectHandler.addNewProject(project);
 				headers.add("backend.return_code", "1");
-				responseEntity = new ResponseEntity<Project>(project, headers, HttpStatus.OK);
+				responseEntity = new ResponseEntity<>(project, headers, HttpStatus.OK);
 			} else {
-				if (!projectHandler.containsProject(project.id)) {
-					responseEntity = new ResponseEntity<Project>(project, headers, HttpStatus.NOT_FOUND);
+				if (!projectHandler.containsProject(project.getId())) {
+					responseEntity = new ResponseEntity<>(project, headers, HttpStatus.NOT_FOUND);
 					headers.add("backend.return_code", "O");
 					responseEntity.getHeaders().set("backend.return_message",
-							"There is no Project associated to the id " + project.id);
+							"There is no Project associated to the id " + project.getId());
 				} else {
 					projectHandler.saveProject(project);
-					responseEntity = new ResponseEntity<Project>(project, headers, HttpStatus.OK);
+					responseEntity = new ResponseEntity<>(project, headers, HttpStatus.OK);
 					headers.add("backend.return_code", "1");
 				}
 			}
@@ -306,17 +303,16 @@ public class ProjectController {
 	 * @return
 	 */
 	@PostMapping("/skills/save")
-	ResponseEntity<ProjectDTO> saveSkill(@RequestBody String param) {
+	public ResponseEntity<ProjectDTO> saveSkill(@RequestBody String param) {
 		
 		ParamProjectSkill p = g.fromJson(param, ParamProjectSkill.class);
 		if (logger.isDebugEnabled()) {
-			logger.debug("POST command on /project/skill/save with params id:" 
-					+ String.valueOf(p.idProject) 
-					+ ", new skillTitle:" + p.newSkillTitle
-					+ ", former skillTitle:" + p.formerSkillTitle);
+			logger.debug(String.format(
+					"POST command on /project/skill/save with params id:%d, new skillTitle:%s, former skillTitle:%s", 
+					p.idProject, p.newSkillTitle, p.formerSkillTitle));
 		}
 		
-		MyReference<ResponseEntity<ProjectDTO>> refResponse = new MyReference<ResponseEntity<ProjectDTO>>();
+		MyReference<ResponseEntity<ProjectDTO>> refResponse = new MyReference<>();
 		Project project = getProject(p.idProject, new ProjectDTO(new Project()), refResponse);
 		if (refResponse.response != null) {
 			return refResponse.response;
@@ -346,11 +342,11 @@ public class ProjectController {
 					&& 	(!p.formerSkillTitle.equals(p.newSkillTitle))) {
 				Optional<Skill> formerSkill = skillHandler.lookup(p.formerSkillTitle);
 				if (formerSkill.isPresent()) {
-					Optional<Skill> oSkill = project.skills.stream().
-							filter(skill -> (skill.id == formerSkill.get().id) ).
+					Optional<Skill> oSkill = project.getSkills().stream().
+							filter(skill -> (skill.getId() == formerSkill.get().getId()) ).
 							findFirst();
 					if (oSkill.isPresent()) {
-						project.skills.remove(oSkill.get());
+						project.getSkills().remove(oSkill.get());
 					}
 				}				
 			}
@@ -359,15 +355,15 @@ public class ProjectController {
 			 * If the passed skill is already present in the skills list for the project, nothing to do.
 			 * otherwise we add this new skill.
 			 */
-			if (project.skills.stream().anyMatch(skill -> (skill.id == result.get().id))) {
+			if (project.getSkills().stream().anyMatch(skill -> (skill.getId() == result.get().getId()))) {
 				return postErrorReturnBodyMessage(HttpStatus.BAD_REQUEST.value(), 
-						"The project " + project.name + " has already the skill " + p.newSkillTitle + " declared within.", project);
+						"The project " + project.getName() + " has already the skill " + p.newSkillTitle + " declared within.", project);
 			} else {
 				if (logger.isDebugEnabled()) {
-					logger.debug("Adding the skill " + result.get().title + " to the project " + project.name);
+					logger.debug("Adding the skill " + result.get().getTitle() + " to the project " + project.getName());
 				}
-				project.skills.add(result.get());
-				return new ResponseEntity<ProjectDTO> (new ProjectDTO(project), headers, HttpStatus.OK);
+				project.getSkills().add(result.get());
+				return new ResponseEntity<> (new ProjectDTO(project), headers, HttpStatus.OK);
 			}
 						
 		} else {
@@ -382,25 +378,27 @@ public class ProjectController {
 	* Unregister a skill within a project.
 	*/
 	@PostMapping("/skills/del")
-	ResponseEntity<ProjectDTO> revokeSkill(@RequestBody String param) {
+	public ResponseEntity<ProjectDTO> revokeSkill(@RequestBody String param) {
 
 		ParamProjectSkill p = g.fromJson(param, ParamProjectSkill.class);
 		if (logger.isDebugEnabled()) {
-			logger.debug("POST command on /staff/skills/del with params idProject:" + String.valueOf(p.idProject) + ",idSkill:" + String.valueOf(p.idSkill));
+			logger.debug(String.format(
+				"POST command on /staff/skills/del with params (idProject: %d, idSkill: %d)",
+				p.idProject, p.idSkill));
 		}
 
-		MyReference<ResponseEntity<ProjectDTO>> refResponse = new MyReference<ResponseEntity<ProjectDTO>>();
+		MyReference<ResponseEntity<ProjectDTO>> refResponse = new MyReference<>();
 		Project project = getProject(p.idProject, new ProjectDTO(new Project()), refResponse);
 		if (refResponse.response != null) {
 			return refResponse.response;
 		}
 		
-		Optional<Skill> oSkill = project.skills.stream().filter(exp -> (exp.id == p.idSkill) ).findFirst();
+		Optional<Skill> oSkill = project.getSkills().stream().filter(exp -> (exp.getId() == p.idSkill) ).findFirst();
 		if (oSkill.isPresent()) {
-			project.skills.remove(oSkill.get());
+			project.getSkills().remove(oSkill.get());
 		}
 		
-		return new ResponseEntity<ProjectDTO>(new ProjectDTO(project), new HttpHeaders(), HttpStatus.OK);
+		return new ResponseEntity<>(new ProjectDTO(project), new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	/**
@@ -465,7 +463,7 @@ public class ProjectController {
 		SettingsGeneration gp = g.fromJson(param, SettingsGeneration.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug( MessageFormat.format(
-				"POST command on /sunburst with params idProject : {0}, starting from {1}, for the staff member ",
+				"POST command on /sunburst with params idProject : {0}, starting from {1}, for the staff member {2}",
 				gp.idProject,
 				(gp.startingDate == 0) ? "EPOC" : new Date(gp.startingDate),
 				gp.idStaffSelected));
@@ -485,14 +483,14 @@ public class ProjectController {
 					logger.debug ("Tasks present in the tasks collection");
 					logger.debug (tasks.trace());
 				}
-				if (tasks.containsTask(DASHBOARD_GENERATION, "project", project.id)) {
+				if (tasks.containsTask(DASHBOARD_GENERATION, "project", project.getId())) {
 					if (logger.isDebugEnabled()) {
 						logger.debug("The generation has already been called for the project " 
-								+ project.name + ". Please wait !");
+								+ project.getName() + ". Please wait !");
 					}
 					return new ResponseEntity<SunburstDTO> (
-							new SunburstDTO(project.id, CODE_MULTIPLE_TASK,
-							"A dashboard generation has already been launched for " + project.name), 
+							new SunburstDTO(project.getId(), CODE_MULTIPLE_TASK,
+							"A dashboard generation has already been launched for " + project.getName()), 
 							new HttpHeaders(), 
 							HttpStatus.BAD_REQUEST);
 				}
@@ -500,14 +498,14 @@ public class ProjectController {
 					logger.debug("The generation will be processed asynchronously !");
 				}
 				scanner.generateAsync(project, gp);
-				return new ResponseEntity<SunburstDTO> (new SunburstDTO(project.id, null, HttpStatus.CREATED.value(), 
+				return new ResponseEntity<> (new SunburstDTO(project.getId(), null, HttpStatus.CREATED.value(), 
 						"The dashboard generation has been launched. Operation might last a while. Please try later !"), 
 						new HttpHeaders(), 
 						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			logger.error(ExceptionUtils.getStackTrace(e));
-			return new ResponseEntity<SunburstDTO> (new SunburstDTO(project.id, null, -1, e.getMessage()), 
+			return new ResponseEntity<> (new SunburstDTO(project.getId(), null, -1, e.getMessage()), 
 					new HttpHeaders(), 
 					HttpStatus.BAD_REQUEST);
 		}
@@ -521,23 +519,23 @@ public class ProjectController {
 	 */
 	private ResponseEntity<SunburstDTO> generate (final Project project, final SettingsGeneration settings) {
 		try {
-			tasks.addTask( DASHBOARD_GENERATION, "project", project.id);
+			tasks.addTask( DASHBOARD_GENERATION, "project", project.getId());
 			RiskDashboard data = scanner.generate(project, settings);
 			if (shuffleService.isShuffleMode()) {
-				if (logger.isInfoEnabled()); {
+				if (logger.isInfoEnabled()) {
 					logger.info("Shuffling the sunburst data");
 				}
 				data.undefinedContributors.stream().forEach(pseudo -> {
 					pseudo.fullName = shuffleService.shuffle(pseudo.fullName);
 				});
 			};
-			return new ResponseEntity<SunburstDTO>(
-					new SunburstDTO(project.id, data), new HttpHeaders(), HttpStatus.OK);
+			return new ResponseEntity<>(
+					new SunburstDTO(project.getId(), data), new HttpHeaders(), HttpStatus.OK);
 		} catch (final Exception e) {
 			logger.error (e.getMessage());
-			return new ResponseEntity<SunburstDTO>(new SunburstDTO( UNKNOWN_PROJECT,null, CODE_UNDEFINED, e.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);			
+			return new ResponseEntity<>(new SunburstDTO( UNKNOWN_PROJECT,null, CODE_UNDEFINED, e.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);			
 		} finally {
-			tasks.removeTask(DASHBOARD_GENERATION, "project", project.id);
+			tasks.removeTask(DASHBOARD_GENERATION, "project", project.getId());
 		}
 	}
 		
@@ -545,8 +543,8 @@ public class ProjectController {
 	 * @param idProject the project identifier
 	 * @return the contributors who have been involved in the project
 	 */
-	@RequestMapping(value="/contributors/{idProject}", method = RequestMethod.GET)
-	ResponseEntity<ProjectContributorDTO> projectContributors(final @PathVariable("idProject") int idProject) {
+	@GetMapping(value="/contributors/{idProject}")
+	public ResponseEntity<ProjectContributorDTO> projectContributors(final @PathVariable("idProject") int idProject) {
 
 		final List<Contributor> contributors = projectHandler.contributors(idProject);
 		
@@ -556,9 +554,9 @@ public class ProjectController {
 			final Staff staff = staffHandler.getStaff().get(contributor.idStaff);
 			projectContributorDTO.addContributor(
 							contributor.idStaff, 
-							shuffleService.isShuffleMode() ? shuffleService.shuffle(staff.firstName + " " + staff.lastName) : (staff.firstName + " " + staff.lastName), 
-							staff.isActive,
-							staff.external,
+							shuffleService.isShuffleMode() ? shuffleService.shuffle(staff.getFirstName() + " " + staff.getLastName()) : (staff.getFirstName() + " " + staff.getLastName()), 
+							staff.isActive(),
+							staff.isExternal(),
 							contributor.firstCommit, 
 							contributor.lastCommit, 
 							contributor.numberOfCommitsSubmitted,
@@ -588,7 +586,7 @@ public class ProjectController {
 		try {
 			String response = cacheDataHandler.removeRepository(project) ? "1" : "0";
 			if ("1".equals(response)) {
-				scanner.generateAsync(project, new SettingsGeneration(project.id));
+				scanner.generateAsync(project, new SettingsGeneration(project.getId()));
 			}
 			return new ResponseEntity<String>( 
 					response,
@@ -604,7 +602,7 @@ public class ProjectController {
 	 * Revoke the participation of staff member in a project.
 	 */
 	@PostMapping("/api-ghosts")
-	ResponseEntity<PseudoListDTO> saveGhosts(@RequestBody String param) {
+	public ResponseEntity<PseudoListDTO> saveGhosts(@RequestBody String param) {
 		
 		PseudoListDTO pseudosDTO = g.fromJson(param, PseudoListDTO.class);
 		if (logger.isDebugEnabled()) {

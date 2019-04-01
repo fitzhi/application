@@ -107,25 +107,25 @@ public class SkillController {
 		final HttpHeaders headers = new HttpHeaders();
 		Map<Integer, Skill> skills = skillHandler.getSkills();
 
-		if (skill.id == 0) {
+		if (skill.getId() == 0) {
 			skillHandler.addNewSkill(skill);
 			headers.add("backend.return_code", "1");
-			responseEntity = new ResponseEntity<Skill>(skill, headers, HttpStatus.OK);
+			responseEntity = new ResponseEntity<>(skill, headers, HttpStatus.OK);
 		} else {
-			if (!skillHandler.containsSkill(skill.id)) {
-				responseEntity = new ResponseEntity<Skill>(skill, headers, HttpStatus.NOT_FOUND);
+			if (!skillHandler.containsSkill(skill.getId())) {
+				responseEntity = new ResponseEntity<>(skill, headers, HttpStatus.NOT_FOUND);
 				headers.add("backend.return_code", "O");
 				responseEntity.getHeaders().set("backend.return_message",
-						"There is no skill associated to the id " + skill.id);
+						"There is no skill associated to the id " + skill.getId());
 				responseEntity.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
 			} else {
 				try {
 					skillHandler.saveSkill(skill);
 				} catch (SkillerException e) {
 					logger.error(getStackTrace(e));
-					return new ResponseEntity<Skill>(new Skill(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+					return new ResponseEntity<>(new Skill(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
 				}
-				responseEntity = new ResponseEntity<Skill>(skill, headers, HttpStatus.OK);
+				responseEntity = new ResponseEntity<>(skill, headers, HttpStatus.OK);
 				headers.add("backend.return_code", "1");
 			}
 		}

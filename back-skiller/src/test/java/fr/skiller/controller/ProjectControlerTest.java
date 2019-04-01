@@ -70,14 +70,14 @@ public class ProjectControlerTest {
 
 		String body = "{ idProject: " + ID_INFOTER + ", formerSkillTitle: \"\", newSkillTitle: \"Java\"}";
 		this.mvc.perform(post("/project/skills/save").content(body)).andExpect(status().isOk());		
-		List<Skill> skills = new ArrayList<Skill>();
+		List<Skill> skills = new ArrayList<>();
 		skills.add(new Skill (1, "Java"));
 		this.mvc.perform(get("/project/skills/"+ID_INFOTER)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(skills)));
 	
-		body = "{ idProject: " + ID_INFOTER + ", formerSkillTitle: \"Java\", newSkillTitle: \""+skillHandler.getSkills().get(2).title+"\"}";
+		body = "{ idProject: " + ID_INFOTER + ", formerSkillTitle: \"Java\", newSkillTitle: \""+skillHandler.getSkills().get(2).getTitle()+"\"}";
 		this.mvc.perform(post("/project/skills/save").content(body)).andExpect(status().isOk());		
 		skills.clear();
-		skills.add(new Skill (2, skillHandler.getSkills().get(2).title));
+		skills.add(new Skill (2, skillHandler.getSkills().get(2).getTitle()));
 		this.mvc.perform(get("/project/skills/"+ID_INFOTER)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(skills)));
 
 		body = "{ idProject: " + ID_INFOTER + ", idSkill: 2}";
