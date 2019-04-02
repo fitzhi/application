@@ -1,7 +1,5 @@
 package fr.skiller.controller;
 
-import java.util.concurrent.CompletableFuture;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -24,8 +22,8 @@ public class PingController {
 	ProjectHandler projectHandler;
 	
 	@GetMapping("")
-	ResponseEntity<String> pong() throws Exception {
-		return new ResponseEntity<String>("pong", new HttpHeaders(), HttpStatus.OK);
+	public ResponseEntity<String> pong()  {
+		return new ResponseEntity<>("pong", new HttpHeaders(), HttpStatus.OK);
 	}
 
 }

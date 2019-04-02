@@ -139,14 +139,14 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 					+ "  " + staff.getLastName()); 
 		}
 		Set<Integer> currentExperience = staff.getExperiences().stream()
-				.map(exp -> exp.id)
+				.map(exp -> exp.getId())
 				.collect(Collectors.toSet());
 		final List<ResumeSkill> listOfSkills = Arrays.asList(skills)
 				.stream()
 				.map(e -> (ResumeSkill) e)
 				.collect(Collectors.toList()); 
 		final List<ResumeSkill> listOfNewSkills = listOfSkills.stream()
-			.filter(entry -> !currentExperience.contains(entry.idSkill)).collect(Collectors.toList());
+			.filter(entry -> !currentExperience.contains(entry.getIdSkill())).collect(Collectors.toList());
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("Adding %d new skills", listOfNewSkills.size()));
 		}
@@ -157,7 +157,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		listOfNewSkills.forEach(skill -> 
 			staff.getExperiences().add(
-					new Experience(skill.idSkill, skill.title, FIRST_LEVEL)));
+					new Experience(skill.getIdSkill(), skill.title, FIRST_LEVEL)));
 		
 		return staff;
 	}
@@ -304,10 +304,10 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		List<Contributor> contributors = repository.contributors();
 		contributors.stream().forEach(contributor -> {
-			if (contributor.idStaff != UNKNOWN) {
-				Staff staff = getStaff().get(contributor.idStaff);
+			if (contributor.getIdStaff() != UNKNOWN) {
+				Staff staff = getStaff().get(contributor.getIdStaff());
 				if (staff == null) {
-					throw new SkillerRuntimeException("SEVERE ERROR : No staff member corresponding to the id " + contributor.idStaff);
+					throw new SkillerRuntimeException("SEVERE ERROR : No staff member corresponding to the id " + contributor.getIdStaff());
 				}
 				if (staff.isInvolvedInProject(project.getId())) {
 					
@@ -321,10 +321,10 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 					Mission mission = new Mission(
 								project.getId(), 
 								project.getName(),
-								contributor.firstCommit, 
-								contributor.lastCommit, 
-								contributor.numberOfCommitsSubmitted, 
-								contributor.numberOfFiles);
+								contributor.getFirstCommit(), 
+								contributor.getLastCommit(), 
+								contributor.getNumberOfCommitsSubmitted(), 
+								contributor.getNumberOfFiles());
 					synchronized (lockDataUpdated) {
 						staff.addMission(mission);
 						this.dataUpdated = true;

@@ -142,7 +142,7 @@ public class Staff {
 	 * @return the asset or null, if none exists for this skill
 	 */
 	public Experience getExperience(final int idSkill) {
-		Optional<Experience> oAsset = experiences.stream().filter(exp -> (exp.id == idSkill)).findFirst();
+		Optional<Experience> oAsset = experiences.stream().filter(exp -> (exp.getId() == idSkill)).findFirst();
 		return (oAsset.isPresent()) ? oAsset.get() : null;
 	}
 	
@@ -152,7 +152,7 @@ public class Staff {
 	 * @return {@code true} if the developer is involved in the given project, {@code false} or not
 	 */
 	public boolean isInvolvedInProject (final int idProject) {
-		return (missions.stream().filter(project -> project.idProject == idProject).count()  > 0);
+		return (missions.stream().filter(project -> project.getIdProject() == idProject).count()  > 0);
 	}
 	
 	/**
@@ -168,13 +168,13 @@ public class Staff {
 	 * @param contributor source contributor updated
 	 */
 	public void updateMission(final int idProject, final Contributor contributor) {
-		Optional<Mission> optMission = missions.stream().filter(mission -> mission.idProject == idProject).findFirst();
+		Optional<Mission> optMission = missions.stream().filter(mission -> mission.getIdProject() == idProject).findFirst();
 		if (optMission.isPresent()) {
 			Mission missionSelected = optMission.get();
-			missionSelected.firstCommit = contributor.firstCommit;
-			missionSelected.lastCommit = contributor.lastCommit;
-			missionSelected.numberOfCommits = contributor.numberOfCommitsSubmitted;
-			missionSelected.numberOfFiles = contributor.numberOfFiles;
+			missionSelected.setFirstCommit(contributor.getFirstCommit());
+			missionSelected.setLastCommit(contributor.getLastCommit());
+			missionSelected.setNumberOfCommits(contributor.getNumberOfCommitsSubmitted());
+			missionSelected.setNumberOfFiles(contributor.getNumberOfFiles());
 		} else {
 			if (logger.isErrorEnabled()) {
 				logger.error(String.format("Cannot find a mission for the project id %d", idProject));

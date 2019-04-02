@@ -5,24 +5,27 @@ package fr.skiller.data.internal;
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL 
  */
-public class Test {
+public class ForTest {
+	
 	public String test;
 	
 	/**
 	 * Empty constructor.
 	 */
-	public Test() { }
+	public ForTest() { }
 	
 	/**
 	 * @param test
 	 */
-	public Test(String test) {
+	public ForTest(String test) {
 		super();
 		this.test = test;
 	}
 
 	@Override
 	public String toString() {
-		return "Test [test=" + test + "]";
+		return "Test [mTest=" + test + "]";
 	}
+
+	
 }

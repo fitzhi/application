@@ -24,7 +24,7 @@ import org.junit.Test;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RiskCommitAndDevProcessor_agregateCountCommits_Test {
+public class RiskCommitAndDevProcessorAgregateCountCommitsTest {
 	
 	@Autowired
 	@Qualifier("commitAndDevActive")
@@ -33,7 +33,7 @@ public class RiskCommitAndDevProcessor_agregateCountCommits_Test {
 	@Test
 	public void agregateCountCommits() {
 		RiskCommitAndDevActiveProcessorImpl impl = ((RiskCommitAndDevActiveProcessorImpl) riskProcessor);
-		List<StatActivity> stats = new ArrayList<StatActivity>();
+		List<StatActivity> stats = new ArrayList<>();
 		stats.add( impl.new StatActivity("fr/test/nope/one.java", 6, 2));
 		stats.add( impl.new StatActivity("fr/test/nope/two.java", 6, 2));
 		stats.add(impl.new StatActivity("fr/test/twice/otro.java", 14, 2));

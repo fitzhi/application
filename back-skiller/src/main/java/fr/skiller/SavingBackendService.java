@@ -52,7 +52,7 @@ public class SavingBackendService {
 					projectHandler.dataAreSaved();
 				}
 			} catch (final SkillerException e) {
-				throw new RuntimeException(e);
+				throw new SkillerRuntimeException(e);
 			}
 		}
 		
@@ -63,7 +63,7 @@ public class SavingBackendService {
 					staffHandler.dataAreSaved();
 				}
 			} catch (final SkillerException e) {
-				throw new RuntimeException(e);
+				throw new SkillerRuntimeException(e);
 			}
 		}
 		
@@ -74,7 +74,7 @@ public class SavingBackendService {
 					skillHandler.dataAreSaved();
 				}
 			} catch (final SkillerException e) {
-				throw new RuntimeException(e);
+				throw new SkillerRuntimeException(e);
 			}
 		}
 

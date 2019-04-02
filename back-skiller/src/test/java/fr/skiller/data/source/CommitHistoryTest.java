@@ -79,7 +79,7 @@ public class CommitHistoryTest {
     	int iStaff[] = {1, 5, 7, 10};
 		Assert.assertArrayEquals(iStaff, 
 				commit.contributors().stream()
-				.mapToInt(contributor -> contributor.idStaff).toArray());
+				.mapToInt(contributor -> contributor.getIdStaff()).toArray());
 	}
     
 }

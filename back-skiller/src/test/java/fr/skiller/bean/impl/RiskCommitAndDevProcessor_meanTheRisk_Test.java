@@ -93,20 +93,20 @@ public class RiskCommitAndDevProcessor_meanTheRisk_Test {
 		impl.evaluateTheRisk(comRep, data, statsCommit);
 		
 		for (StatActivity stat : statsCommit) {
-			System.out.println(stat.filename + " " + stat.countCommits + " " + stat.countCommitsByActiveDevelopers);
+			System.out.println(stat.getFilename() + " " + stat.getCountCommits() + " " + stat.getCountCommitsByActiveDevelopers());
 		}
 		
 		Assert.assertEquals(-1, data.getRiskLevel());
-		Assert.assertEquals(0, data.children.get(0).getRiskLevel());
-		Assert.assertEquals(-1, data.children.get(0).children.get(0).getRiskLevel());
-		Assert.assertEquals(6, data.children.get(0).children.get(0).children.get(0).getRiskLevel());
+		Assert.assertEquals(0, data.getChildren().get(0).getRiskLevel());
+		Assert.assertEquals(-1, data.getChildren().get(0).getChildren().get(0).getRiskLevel());
+		Assert.assertEquals(6, data.getChildren().get(0).getChildren().get(0).getChildren().get(0).getRiskLevel());
 		
 		impl.meanTheRisk(data);
 
 		Assert.assertEquals(3, data.getRiskLevel());
-		Assert.assertEquals(3, data.children.get(0).getRiskLevel());
-		Assert.assertEquals(6, data.children.get(0).children.get(0).getRiskLevel());
-		Assert.assertEquals(6, data.children.get(0).children.get(0).children.get(0).getRiskLevel());
+		Assert.assertEquals(3, data.getChildren().get(0).getRiskLevel());
+		Assert.assertEquals(6, data.getChildren().get(0).getChildren().get(0).getRiskLevel());
+		Assert.assertEquals(6, data.getChildren().get(0).getChildren().get(0).getChildren().get(0).getRiskLevel());
 		
 	}
 

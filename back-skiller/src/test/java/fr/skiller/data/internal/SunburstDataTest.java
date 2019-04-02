@@ -39,16 +39,16 @@ public class SunburstDataTest {
 		if (logger.isDebugEnabled()) {
 			logger.debug(root.toString());
 		}
-        assertThat(root.children.size()).isEqualTo(1);
-        assertThat(root.children.get(0).children.size()).isEqualTo(1);
-        assertThat(root.children.get(0).children.get(0).children.size()).isEqualTo(1);
-        assertThat(root.children.get(0).children.get(0).children.get(0).children.size()).isEqualTo(1);
-        assertThat(root.children.get(0).children.get(0).children.get(0).children.get(0).children.size()).isEqualTo(1);
+        assertThat(root.getChildren().size()).isEqualTo(1);
+        assertThat(root.getChildren().get(0).getChildren().size()).isEqualTo(1);
+        assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().size()).isEqualTo(1);
+        assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().size()).isEqualTo(1);
+        assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().size()).isEqualTo(1);
         
-        assertThat(root.children.get(0).children.get(0).location).isEqualTo("skiller");
-        assertThat(root.children.get(0).children.get(0).children.get(0).location).isEqualTo("test");
-        assertThat(root.children.get(0).children.get(0).children.get(0).children.get(0).location).isEqualTo("world");
-        assertThat(root.children.get(0).children.get(0).children.get(0).children.get(0).children.get(0).location).isEqualTo("mbappe");
+        assertThat(root.getChildren().get(0).getChildren().get(0).getLocation()).isEqualTo("skiller");
+        assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().get(0).getLocation()).isEqualTo("test");
+        assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0).getLocation()).isEqualTo("world");
+        assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0).getLocation()).isEqualTo("mbappe");
         
 	}
 
@@ -62,16 +62,16 @@ public class SunburstDataTest {
 		if (logger.isDebugEnabled()) {
 			logger.debug(root.toString());
 		}
-        assertThat(root.children.size()).isEqualTo(1);
-        assertThat(root.children.get(0).children.size()).isEqualTo(1);
-        assertThat(root.children.get(0).children.get(0).children.size()).isEqualTo(1);
-        assertThat(root.children.get(0).children.get(0).children.get(0).children.size()).isEqualTo(1);
-        assertThat(root.children.get(0).children.get(0).children.get(0).children.get(0).children.size()).isEqualTo(1);
+        assertThat(root.getChildren().size()).isEqualTo(1);
+        assertThat(root.getChildren().get(0).getChildren().size()).isEqualTo(1);
+        assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().size()).isEqualTo(1);
+        assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().size()).isEqualTo(1);
+        assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().size()).isEqualTo(1);
         
-        assertThat(root.children.get(0).children.get(0).location).isEqualTo("skiller");
-        assertThat(root.children.get(0).children.get(0).children.get(0).location).isEqualTo("test");
-        assertThat(root.children.get(0).children.get(0).children.get(0).children.get(0).location).isEqualTo("world");
-        assertThat(root.children.get(0).children.get(0).children.get(0).children.get(0).children.get(0).location).isEqualTo("mbappe");        
+        assertThat(root.getChildren().get(0).getChildren().get(0).getLocation()).isEqualTo("skiller");
+        assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().get(0).getLocation()).isEqualTo("test");
+        assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0).getLocation()).isEqualTo("world");
+        assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0).getLocation()).isEqualTo("mbappe");        
 	}
 	
 	@Test
@@ -84,7 +84,7 @@ public class SunburstDataTest {
 		String s1[] = testClassname.split(File.separator);
 		for (int i=0; i<s1.length-1; i++) {
 			data = data.addsubDir(new RiskChartData(s1[i]));
-			data.numberOfFiles++;
+			data.setNumberOfFiles(data.getNumberOfFiles() + 1);
 		}
 		
 		data = root;
@@ -92,18 +92,18 @@ public class SunburstDataTest {
 		String s2[] = testClassname.split(File.separator);
 		for (int i=0; i<s2.length-1; i++) {
 			data = data.addsubDir(new RiskChartData(s2[i]));
-			data.numberOfFiles++;
+			data.setNumberOfFiles(data.getNumberOfFiles() + 1);
 		}
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(root.toString());
 		}
-        assertThat(root.children.size()).isEqualTo(1);
-        assertThat(root.children.get(0).children.size()).isEqualTo(1);
-        assertThat(root.children.get(0).children.get(0).children.size()).isEqualTo(1);
-        assertThat(root.children.get(0).children.get(0).children.get(0).children.size()).isEqualTo(2);
-        assertThat(root.children.get(0).children.get(0).children.get(0).children.get(0).children.size()).isEqualTo(1);
-        assertThat(root.children.get(0).children.get(0).children.get(0).children.get(1).children.size()).isEqualTo(1);
+        assertThat(root.getChildren().size()).isEqualTo(1);
+        assertThat(root.getChildren().get(0).getChildren().size()).isEqualTo(1);
+        assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().size()).isEqualTo(1);
+        assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().size()).isEqualTo(2);
+        assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().size()).isEqualTo(1);
+        assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(1).getChildren().size()).isEqualTo(1);
         
 	}
 
@@ -120,12 +120,12 @@ public class SunburstDataTest {
 			logger.debug(root.toString());
 		}
 		
-		assertThat(root.children.size()).isEqualTo(1);
-		assertThat(root.children.get(0).children.size()).isEqualTo(1);
-		assertThat(root.children.get(0).children.get(0).children.size()).isEqualTo(1);
-		assertThat(root.children.get(0).children.get(0).children.get(0).children.size()).isEqualTo(2);
-		assertThat(root.children.get(0).children.get(0).children.get(0).children.get(0).children.size()).isEqualTo(1);
-		assertThat(root.children.get(0).children.get(0).children.get(0).children.get(1).children.size()).isEqualTo(1);
+		assertThat(root.getChildren().size()).isEqualTo(1);
+		assertThat(root.getChildren().get(0).getChildren().size()).isEqualTo(1);
+		assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().size()).isEqualTo(1);
+		assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().size()).isEqualTo(2);
+		assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().size()).isEqualTo(1);
+		assertThat(root.getChildren().get(0).getChildren().get(0).getChildren().get(0).getChildren().get(1).getChildren().size()).isEqualTo(1);
 	 }
 
 }

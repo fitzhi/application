@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fr.skiller.Global;
+import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.RiskChartData;
@@ -34,6 +35,7 @@ import fr.skiller.data.source.CommitRepository;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @Service("messOfCriteria")
+@Deprecated
 public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 
 	/**
@@ -45,17 +47,17 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 		/**
 		 * Total number of commits submitted.
 		 */
-		public long countCommits;
+		long countCommits;
 		
 		/**
 		 * Number of commits submitted by active developers.
 		 */
-		public long countCommitsByActiveDevelopers;
+		long countCommitsByActiveDevelopers;
 		
 		/**
 		 * Is the last contributor on this source file still active ? 
 		 */
-		public boolean isLastCommiterStillActive;
+		boolean isLastCommiterStillActive;
 
 		/**
 		 * @param countCommits
@@ -83,7 +85,7 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 	@Override
 	public Map<Integer, RiskLegend> riskLegends() {
 	
-		final Map<Integer, RiskLegend> explanations = new HashMap<Integer, RiskLegend>();
+		final Map<Integer, RiskLegend> explanations = new HashMap<>();
 		
 		explanations.put (0, new RiskLegend( 0, "darkGreen", 
 				"All commits of all sources have been submitted by developers still active in the staff team."));
@@ -96,8 +98,7 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 				"NB : It's the calculated mean of all sources in the directory."+
 				"AND the last commits have been submitted by them."));
 		explanations.put (3, new RiskLegend( 3, "lime",
-				"80% of all commits have been made by active developers in the staff team."+ 
-				"Some of source files are only covered at 50%"));
+				"80% of all commits have been made by active developers in the staff team. Some of source files are only covered at 50%"));
 		explanations.put (4, new RiskLegend( 4, "lightGreen",
 				"80% of all commits have been made by active developers in the staff team."));
 		explanations.put (5, new RiskLegend( 5, "yellow",
@@ -158,7 +159,7 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 			final CommitRepository repository, 
 			final RiskChartData sunburstData) {
 		
-		final List<StatActivity> stats = new ArrayList<StatActivity>();
+		final List<StatActivity> stats = new ArrayList<>();
 		
 		// This directory contains class within it.
 		if ((sunburstData.getClassnames() != null) && !sunburstData.getClassnames().isEmpty()) {
@@ -169,10 +170,10 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 				optKey = repository.getRepository()
 						.keySet()
 						.stream()
-						.filter(k -> isClassFile(k, source.filename))
+						.filter(k -> isClassFile(k, source.getFilename()))
 						.findFirst();
 				if (!optKey.isPresent()) {
-					throw new RuntimeException(source.filename + " not found!");
+					throw new SkillerRuntimeException(source.getFilename() + " not found!");
 				}
 				
 				final CommitHistory activity = repository.getRepository().get(optKey.get());
@@ -181,38 +182,34 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 				long countCommitsByActiveDevelopers = 	activity.countCommitsByActiveDevelopers(staffHandler);
 
 				final int idStaff = activity.ultimateContributor();
-				boolean lastContributorStillPresent = (idStaff != UNKNOWN) ?
-						staffHandler.isActive(idStaff) : false;
+				boolean lastContributorStillPresent = 
+						(idStaff != UNKNOWN) || staffHandler.isActive(idStaff);
 	
 				stats.add(new StatActivity(numberOfCommits, countCommitsByActiveDevelopers, lastContributorStillPresent));			
 			}
 
 			int percentageOfCommitsMadeByActiveDevelopers = (int) Math.floor (
-					stats.stream().mapToLong(stat -> stat.countCommitsByActiveDevelopers).sum() * 100
+					(double) stats.stream().mapToLong(stat -> stat.countCommitsByActiveDevelopers).sum() * 100
 					/ stats.stream().mapToLong(stat -> stat.countCommits).sum() );
 
 			// There is at least one commit, that has been submitted by a developer who quits 
 			boolean hasLostARecentContributor = stats.stream()
-					.filter(stat -> !stat.isLastCommiterStillActive)
-					.findFirst()
-					.isPresent();
+					.anyMatch(stat -> !stat.isLastCommiterStillActive);
 			
 			// Lookup if some source files in this directory are only 55% covered by active developers
 			boolean hasASourceFileUnder50pct = 
 					stats.stream()
 					.mapToLong(stat -> stat.countCommitsByActiveDevelopers*100 / stat.countCommits)
-					.filter(i -> i <= 50)
-					.findAny().isPresent();
+					.anyMatch(i -> i <= 50);
 			
 			boolean hasSourceWithoutContributor = 
 					stats.stream()
 					.mapToLong(stat -> stat.countCommitsByActiveDevelopers)
-					.filter(i -> i == 0)
-					.findAny().isPresent();
+					.anyMatch(i -> i == 0);
 			
 			if (logger.isDebugEnabled()) {
 				final StringBuilder sb = new StringBuilder();
-				sb.append(LN+"dir : " + sunburstData.location + LN)
+				sb.append(LN+"dir : " + sunburstData.getLocation() + LN)
 					.append("percentageOfCommitsMadeByActiveDevelopers : " + percentageOfCommitsMadeByActiveDevelopers + LN)
 					.append("hasLostARecentContributor : " + hasLostARecentContributor + LN)
 					.append("hasASourceFileUnder50pct : " + hasASourceFileUnder50pct + LN)
@@ -227,8 +224,8 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 					hasSourceWithoutContributor);
 		}
 		
-		if (sunburstData.children != null) {
-			sunburstData.children.stream().forEach(data -> evaluateTheRisk(repository, data));
+		if (sunburstData.getChildren() != null) {
+			sunburstData.getChildren().stream().forEach(data -> evaluateTheRisk(repository, data));
 		}
 		
 	}
@@ -304,8 +301,8 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 	}
 	
 	public String colorOfRisk(final int riskLevel) {
-		return this.riskLegends().get(riskLevel).color;
-	};
+		return this.riskLegends().get(riskLevel).getColor();
+	}
 	
 	/**
 	 * Test if the filename contains the class name
@@ -326,19 +323,19 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 	public void setPreviewSettings(RiskChartData data) {
 		if (!data.hasUnknownRiskLevel()) {
 			int riskLevel = data.getRiskLevel();
-			data.color = colorOfRisk(riskLevel);
+			data.setColor(colorOfRisk(riskLevel));
 		}
-		if (data.children != null) {
-			data.children.stream().forEach(dir -> setPreviewSettings(dir));
+		if (data.getChildren() != null) {
+			data.getChildren().stream().forEach(this::setPreviewSettings);
 		}
 	}
 
 	@Override
 	public int meanTheRisk(final RiskChartData location) {
-		if ( (location.children == null) || (location.children.size() == 0) ) {
+		if ( (location.getChildren() == null) || (location.getChildren().isEmpty()) ) {
 			return location.getRiskLevel();
 		}
-		int risk = (int) Math.floor(location.children.stream().mapToInt(child -> meanTheRisk(child)).average().getAsDouble());
+		int risk = (int) Math.floor(location.getChildren().stream().mapToInt(this::meanTheRisk).average().getAsDouble());
 		if (location.getRiskLevel() == UNKNOWN) {
 			location.setRiskLevel(risk);
 			return risk;
@@ -349,7 +346,7 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 	@Override
 	public void evaluateTheRisk(CommitRepository repository, RiskChartData data,
 			List<fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity> statsCommit) {
-		throw new RuntimeException("Should not pass here!");
+		throw new SkillerRuntimeException("Should not pass here!");
 	}
 
 }

@@ -5,7 +5,8 @@ package fr.skiller.data.internal;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public class Profile {
-	public final String code, title;
+	public final String code;
+	public final String title;
 
 	/**
 	 * @param code

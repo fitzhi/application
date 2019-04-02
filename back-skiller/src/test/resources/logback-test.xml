@@ -18,7 +18,7 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="fr.skiller.data" additivity="false">
+	<logger name="fr.skiller.controller" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>

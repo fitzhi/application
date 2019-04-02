@@ -1,7 +1,9 @@
 package fr.skiller.controller;
 
-import java.io.IOException;
-import java.io.InputStream;
+import static fr.skiller.Error.getStackTrace;
+import static fr.skiller.Global.BACKEND_RETURN_CODE;
+import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -11,14 +13,10 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.catalina.webresources.EmptyResource;
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,11 +28,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -44,24 +40,19 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.ShuffleService;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
-import fr.skiller.data.external.PseudoListDTO;
 import fr.skiller.data.external.ResumeDTO;
 import fr.skiller.data.external.StaffDTO;
-import fr.skiller.data.internal.PeopleCountExperienceMap;
-import fr.skiller.data.internal.Resume;
-import fr.skiller.data.internal.ResumeSkill;
 import fr.skiller.data.internal.Experience;
 import fr.skiller.data.internal.Mission;
+import fr.skiller.data.internal.PeopleCountExperienceMap;
+import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.Resume;
+import fr.skiller.data.internal.ResumeSkill;
+import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Staff;
-import fr.skiller.data.internal.Mission;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.service.ResumeParserService;
 import fr.skiller.service.StorageService;
-import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.Skill;
-import static fr.skiller.Error.getStackTrace;
-import static fr.skiller.Global.BACKEND_RETURN_CODE;
-import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
 
 
 /**
@@ -102,6 +93,10 @@ public class StaffController {
 	@Autowired
 	ShuffleService shuffleService;
 
+	/**
+	 * Empty headers used in server response.
+	 */
+	private HttpHeaders headers = new HttpHeaders();
 	
 	@GetMapping("/all")
 	public String readAll() {
@@ -115,7 +110,7 @@ public class StaffController {
 			staffTeam.stream().forEach(staff -> {
 				staff.setFirstName(shuffleService.shuffle(staff.getFirstName()));
 				staff.setLastName(shuffleService.shuffle(staff.getLastName()));
-				staff.getMissions().stream().forEach(mission -> mission.name = shuffleService.shuffle(mission.name));
+				staff.getMissions().stream().forEach(mission -> mission.setName(shuffleService.shuffle(mission.getName())));
 			});
 		}
 		return gson.toJson(staffTeam);
@@ -125,9 +120,9 @@ public class StaffController {
 	public String countActive() {
 		final PeopleCountExperienceMap peopleCountExperienceMap = staffHandler.countAllStaff_GroupBy_Skill_Level(true);
 
-		final String resultContent = gson.toJson(peopleCountExperienceMap.data);
+		final String resultContent = gson.toJson(peopleCountExperienceMap.getData());
 		if (logger.isDebugEnabled()) {
-			logger.debug("'/countGroupBySkills/active' is returning " + resultContent);
+			logger.debug(String.format("'/countGroupBySkills/active' is returning %s", resultContent));
 		}
 		return resultContent;
 	}
@@ -136,9 +131,9 @@ public class StaffController {
 	public String countAll() {
 		final PeopleCountExperienceMap peopleCountExperienceMap = staffHandler.countAllStaff_GroupBy_Skill_Level(false);
 
-		final String resultContent = gson.toJson(peopleCountExperienceMap.data);
+		final String resultContent = gson.toJson(peopleCountExperienceMap.getData());
 		if (logger.isDebugEnabled()) {
-			logger.debug("'/countGroupBySkills/all' is returning " + resultContent);
+			logger.debug(String.format("'/countGroupBySkills/all' is returning %s", resultContent));
 		}
 		return resultContent;
 	}
@@ -152,7 +147,6 @@ public class StaffController {
 	public ResponseEntity<Staff> read(@PathVariable("idStaff") int idStaff) {
 
 		final ResponseEntity<Staff> responseEntity;
-		final HttpHeaders headers = new HttpHeaders();
 
 		Staff searchCollab = staffHandler.getStaff().get(idStaff);
 		if (searchCollab != null) {
@@ -190,7 +184,7 @@ public class StaffController {
 			
 			// Adding the name of project.
 			for (Mission mission : responseEntityStaffMember.getBody().getMissions()) {
-					mission.name = projectHandler.get(mission.idProject).getName();
+					mission.setName(projectHandler.get(mission.getIdProject()).getName());
 			}
 			
 			return new ResponseEntity<>(
@@ -227,11 +221,10 @@ public class StaffController {
 	public ResponseEntity<Staff> add(@RequestBody Staff input) {
 
 		final ResponseEntity<Staff> responseEntity;
-		final HttpHeaders headers = new HttpHeaders();
 
 		if (logger.isDebugEnabled()) {
-			logger.debug ("Add or Update the staff.id " + input.getIdStaff());
-			logger.debug ("Content " + input);
+			logger.debug (String.format("Add or Update the staff.id %d", input.getIdStaff()));
+			logger.debug (String.format("Content %s ", input));
 		}
 		if (input.getIdStaff() == -1) {
 			staffHandler.addNewStaffMember(input);
@@ -259,7 +252,7 @@ public class StaffController {
 			}
 		}
 		if (logger.isDebugEnabled()) {
-			logger.debug("POST command on /staff/save returns the body " + responseEntity.getBody());
+			logger.debug(String.format("POST command on /staff/save returns the body %s", responseEntity.getBody()));
 		}
 		return responseEntity;
 	}
@@ -271,11 +264,11 @@ public class StaffController {
 	 * @author Fr&eacute;d&eacute;ric VIDAL
 	 */
 	class ParamStaffSkill {
-		public int idStaff;
-		public int idSkill;
-		public int level;
-		public String formerSkillTitle;
-		public String newSkillTitle;
+		int idStaff;
+		int idSkill;
+		int level;
+		String formerSkillTitle;
+		String newSkillTitle;
 
 		@Override
 		public String toString() {
@@ -294,15 +287,15 @@ public class StaffController {
 	 * @return
 	 */
 	@PostMapping("/experiences/save")
-	ResponseEntity<StaffDTO> saveExperience(@RequestBody String param) {
+	public ResponseEntity<StaffDTO> saveExperience(@RequestBody String param) {
 
 		ParamStaffSkill p = gson.fromJson(param, ParamStaffSkill.class);
 		if (logger.isDebugEnabled()) {
-			logger.debug("POST command on /staff/skill/save with params id:" + String.valueOf(p.idStaff) + ",skillName:"
-					+ p.newSkillTitle + ", level " + p.level);
+			logger.debug(String.format(
+					"POST command on /staff/skill/save with params id:%d ,skillName:%s, level %s", 
+					p.idStaff, p.newSkillTitle, p.level));
 		}
 		final ResponseEntity<StaffDTO> responseEntity;
-		final HttpHeaders headers = new HttpHeaders();
 
 		final Staff staff = staffHandler.getStaff().get(p.idStaff);
 		assert (staff != null);
@@ -335,8 +328,8 @@ public class StaffController {
 			 */
 			final Experience asset = staff.getExperience(result.get().getId());
 			if (asset != null) {
-				if (asset.level != p.level) {
-					asset.level = p.level;
+				if (asset.getLevel() != p.level) {
+					asset.setLevel(p.level);
 					return new ResponseEntity<>(new StaffDTO(staff), HttpStatus.OK);
 				}
 				return postErrorReturnBodyMessage(HttpStatus.BAD_REQUEST.value(), "The collaborator " + staff.fullName()
@@ -349,12 +342,12 @@ public class StaffController {
 			staff.getExperiences().add(new Experience(result.get().getId(), result.get().getTitle(), p.level));
 			responseEntity = new ResponseEntity<>(new StaffDTO(staff), headers, HttpStatus.OK);
 			if (logger.isDebugEnabled()) {
-				logger.debug("returning  staff " + gson.toJson(staff));
+				logger.debug(String.format("Returning  staff %s", gson.toJson(staff)));
 			}
 
 		} else {
 			if (logger.isDebugEnabled()) {
-				logger.debug("Cannot find a skill with the name " + p.newSkillTitle);
+				logger.debug(String.format("Cannot find a skill with the name %s", p.newSkillTitle));
 			}
 			return postErrorReturnBodyMessage(404, "There is no skill with the name " + p.newSkillTitle, staff);
 		}
@@ -368,10 +361,10 @@ public class StaffController {
 	 * @author Fr&eacute;d&eacute;ric VIDAL
 	 */
 	class ParamStaffProject {
-		public int idStaff;
-		public int idProject;
-		public String formerProjectName;
-		public String newProjectName;
+		int idStaff;
+		int idProject;
+		String formerProjectName;
+		String newProjectName;
 
 		@Override
 		public String toString() {
@@ -384,38 +377,37 @@ public class StaffController {
 	 * Revoke an experience for a staff member.
 	 */
 	@PostMapping("/experiences/del")
-	ResponseEntity<StaffDTO> revokeSkill(@RequestBody String param) {
+	public ResponseEntity<StaffDTO> revokeSkill(@RequestBody String param) {
 		ParamStaffSkill p = gson.fromJson(param, ParamStaffSkill.class);
 		if (logger.isDebugEnabled()) {
-			logger.debug("POST command on /staff/experiences/del with params idStaff:" + String.valueOf(p.idStaff)
-					+ ",idSkill:" + String.valueOf(p.idSkill));
+			logger.debug(String.format(
+					"POST command on /staff/experiences/del with params idStaff:%d, idSkill:%d",
+					p.idStaff, p.idSkill));
 		}
 
 		final Staff staff = staffHandler.getStaff().get(p.idStaff);
-		assert (staff != null);
 		if (staff == null) {
 			return postErrorReturnBodyMessage(404, "There is no staff member for id" + p.idStaff);
 		}
 
-		Optional<Experience> oExperience = staff.getExperiences().stream().filter(exp -> (exp.id == p.idSkill)).findFirst();
+		Optional<Experience> oExperience = staff.getExperiences().stream().filter(exp -> (exp.getId() == p.idSkill)).findFirst();
 		if (oExperience.isPresent()) {
 			staff.getExperiences().remove(oExperience.get());
 		}
 
-		return new ResponseEntity<StaffDTO>(new StaffDTO(staff), new HttpHeaders(), HttpStatus.OK);
+		return new ResponseEntity<>(new StaffDTO(staff), new HttpHeaders(), HttpStatus.OK);
 	}
 
 	@PostMapping("/api/uploadCV")
-	ResponseEntity<ResumeDTO> uploadApplicationFile(
+	public ResponseEntity<ResumeDTO> uploadApplicationFile(
 			@RequestParam("file") MultipartFile file, 
 			@RequestParam("id") int id, 
 			@RequestParam("type") int fileType) {
 
-		final HttpHeaders headers = new HttpHeaders();
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
 
 		if (logger.isDebugEnabled()) {
-			logger.debug("uploading " + filename + " for staff ID " + id + " of type " + fileType);
+			logger.debug(String.format("uploading %s for staff identifer %d of type %s", filename, id, fileType));
 		}
 		
 		storageService.store(file);
@@ -429,9 +421,9 @@ public class StaffController {
 			final Resume exp = resumeParserService.extract(filename, fileType);
 			ResumeDTO resumeDTO = new ResumeDTO();
 			exp.data().forEach(item -> resumeDTO.experience.add(
-					new ResumeSkill(item.idSkill, 
-									skillHandler.getSkills().get(item.idSkill).getTitle(), 
-									item.count)));
+					new ResumeSkill(item.getIdSkill(), 
+									skillHandler.getSkills().get(item.getIdSkill()).getTitle(), 
+									item.getCount())));
 			/**
 			 * We put the most often repeated keywords at the beginning of the list.
 			 */
@@ -445,7 +437,7 @@ public class StaffController {
 		}
 	}
 
-	@RequestMapping(value = "{id}/application", method = RequestMethod.GET)
+	@GetMapping(value = "{id}/application")
 	public ResponseEntity<Resource> downloadApplicationFile(
 		    @PathVariable("id") int id, 
 		    HttpServletRequest request) {
@@ -455,7 +447,7 @@ public class StaffController {
 
 		if ((staff.getApplication() == null) || (staff.getApplication().length() == 0)) {
 			if (logger.isDebugEnabled()) {
-				logger.debug("No application file for  " + staff.getIdStaff());
+				logger.debug(String.format("No application file for %d", staff.getIdStaff()));
 			}
 	        return ResponseEntity.notFound().build();
 		}
@@ -483,7 +475,7 @@ public class StaffController {
 			break;
 		}
 		if (logger.isDebugEnabled()) {
-			logger.debug(staff.getApplication() + " " + contentType);
+			logger.debug(String.format("%s %s", staff.getApplication(), contentType));
 		}
 
         return ResponseEntity.ok()
@@ -498,16 +490,16 @@ public class StaffController {
 	}
 	
 	@PostMapping("/api/experiences/resume/save")
-	ResponseEntity<StaffDTO> saveExperiences(@RequestBody String body) {
+	public ResponseEntity<StaffDTO> saveExperiences(@RequestBody String body) {
 
 		ResumeSkills p = gson.fromJson(body, ResumeSkills.class);
 		
 		if (logger.isDebugEnabled()) {
-			logger.debug("Adding " + p.skills.length + " skills for the staff ID " + p.idStaff);
+			logger.debug(String.format("Adding %d skills for the staff ID %d", p.skills.length, p.idStaff));
 		}
 		if (logger.isTraceEnabled()) {
-			logger.trace("Adding the skills below for the staff ID " + p.idStaff);
-			Arrays.asList(p.skills).stream().forEach(skill -> logger.trace(skill.idSkill + " " + skill.title));
+			logger.trace(String.format("Adding the skills below for the staff identifier %d", p.idStaff));
+			Arrays.asList(p.skills).stream().forEach(skill -> logger.trace(String.format("%s %s", skill.getIdSkill(), skill.title)));
 		}
 		try {
 			Staff staff = staffHandler.addExperiences(p.idStaff, p.skills);
@@ -537,11 +529,11 @@ public class StaffController {
 		try {
 			ParamStaffProject p = gson.fromJson(param, ParamStaffProject.class);
 			if (logger.isDebugEnabled()) {
-				logger.debug("POST command on /staff/project/save with params id:" + String.valueOf(p.idStaff)
-						+ ",projectName:" + p.newProjectName);
+				logger.debug(
+						String.format("POST command on /staff/project/save with params id:%d, projectName:%s", 
+								p.idStaff, p.newProjectName));
 			}
 			final ResponseEntity<StaffDTO> responseEntity;
-			final HttpHeaders headers = new HttpHeaders();
 	
 			final Staff staff = staffHandler.getStaff().get(p.idStaff);
 			assert (staff != null);
@@ -555,7 +547,7 @@ public class StaffController {
 				 * project list, we send back a BAD_REQUEST to avoid duplicate
 				 * entries
 				 */
-				Predicate<Mission> predicate = pr -> (pr.idProject == result.get().getId());
+				Predicate<Mission> predicate = pr -> (pr.getIdProject() == result.get().getId());
 				if (staff.getMissions().stream().anyMatch(predicate)) {
 					responseEntity = new ResponseEntity<>(
 							new StaffDTO(staff, 0,
@@ -573,7 +565,7 @@ public class StaffController {
 					Optional<Project> formerProject = projectHandler.lookup(p.formerProjectName);
 					Optional<Mission> optMission = staff.getMissions()
 						.stream()
-						.filter(mission -> mission.idProject == formerProject.get().getId())
+						.filter(mission -> mission.getIdProject() == formerProject.get().getId())
 						.findFirst();
 					if (optMission.isPresent()) {
 						staff.getMissions().remove(optMission.get());
@@ -619,7 +611,7 @@ public class StaffController {
 			return postErrorReturnBodyMessage(404, "There is no staff member for id" + p.idStaff);
 		}
 
-		Optional<Mission> oProject = staff.getMissions().stream().filter(pr -> (pr.idProject == p.idProject)).findFirst();
+		Optional<Mission> oProject = staff.getMissions().stream().filter(pr -> (pr.getIdProject() == p.idProject)).findFirst();
 		if (oProject.isPresent()) {
 			staff.getMissions().remove(oProject.get());
 		}

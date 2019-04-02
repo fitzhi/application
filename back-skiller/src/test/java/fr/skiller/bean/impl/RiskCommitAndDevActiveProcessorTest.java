@@ -27,6 +27,7 @@ import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
+import fr.skiller.exception.SkillerException;
 import fr.skiller.source.scanner.RepoScanner;
 import static org.junit.Assert.*;
 import static org.hamcrest.CoreMatchers.*;
@@ -38,6 +39,12 @@ import static org.hamcrest.CoreMatchers.*;
 @SpringBootTest
 public class RiskCommitAndDevActiveProcessorTest {
 		
+	private static final String FR_TWO_TWO_G_JAVA = "fr/two/two/G.java";
+
+	private static final String FR_TWO_ONE_F_JAVA = "fr/two/one/F.java";
+
+	private static final String FR_ONE_ONE_A_JAVA = "fr/one/one/A.java";
+
 	@Autowired
 	StaffHandler staffHandler;
 		
@@ -63,7 +70,7 @@ public class RiskCommitAndDevActiveProcessorTest {
 	Project prj;
 	
 	@Before
-	public void before() throws Exception {
+	public void before() throws SkillerException {
 		comRep = new BasicCommitRepository();
 		
 		first = (Staff) staffHandler.getStaff().values().toArray()[0];
@@ -75,9 +82,9 @@ public class RiskCommitAndDevActiveProcessorTest {
 		prj = new Project(8021964, "testRiskEvaluation");
 		projectHandler.addNewProject(prj);
 
-		comRep.addCommit("fr/one/one/A.java", first.getIdStaff(), new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit("fr/one/one/A.java", first.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000));
-		comRep.addCommit("fr/one/one/A.java", first.getIdStaff(), new Timestamp(System.currentTimeMillis()-2000));
+		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000));
+		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()-2000));
 		comRep.addCommit("fr/one/one/B.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()));
 		comRep.addCommit("fr/one/one/C.java", third.getIdStaff(), new Timestamp(System.currentTimeMillis()));
 
@@ -86,18 +93,18 @@ public class RiskCommitAndDevActiveProcessorTest {
 		
 		comRep.addCommit("fr/two/Z.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()));
 		
-		comRep.addCommit("fr/two/one/F.java", first.getIdStaff(), new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit("fr/two/one/F.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit("fr/two/one/F.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000));
+		comRep.addCommit(FR_TWO_ONE_F_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit(FR_TWO_ONE_F_JAVA, second.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit(FR_TWO_ONE_F_JAVA, second.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000));
 		
-		comRep.addCommit("fr/two/two/G.java", fourth.getIdStaff(), new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit("fr/two/two/G.java", fifth.getIdStaff(), new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit("fr/two/two/G.java", fifth.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000));
-		comRep.addCommit("fr/two/two/G.java", fifth.getIdStaff(), new Timestamp(System.currentTimeMillis()-2000));
+		comRep.addCommit(FR_TWO_TWO_G_JAVA, fourth.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit(FR_TWO_TWO_G_JAVA, fifth.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit(FR_TWO_TWO_G_JAVA, fifth.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000));
+		comRep.addCommit(FR_TWO_TWO_G_JAVA, fifth.getIdStaff(), new Timestamp(System.currentTimeMillis()-2000));
 	}
 	
 	@Test
-	public void testAgragreCommitsAllDevActive() throws Exception {
+	public void testAgragreCommitsAllDevActive() {
 		first.setActive(true);
 		second.setActive(true);
 		third.setActive(true);
@@ -120,13 +127,13 @@ public class RiskCommitAndDevActiveProcessorTest {
 		expected.add(impl.new StatActivity("root/fr/two/one/F.java", 3, 3));
 		expected.add(impl.new StatActivity("root/fr/two/two/G.java", 4, 4));
 		
-		Collections.sort(stats, (StatActivity sa1, StatActivity sa2) -> sa1.filename.compareTo(sa2.filename));
-		Collections.sort(expected, (StatActivity sa1, StatActivity sa2) -> sa1.filename.compareTo(sa2.filename));
+		Collections.sort(stats, (StatActivity sa1, StatActivity sa2) -> sa1.getFilename().compareTo(sa2.getFilename()));
+		Collections.sort(expected, (StatActivity sa1, StatActivity sa2) -> sa1.getFilename().compareTo(sa2.getFilename()));
 		assertThat(stats, is(expected));
 	}
 	
 	@Test
-	public void testAgragreCommitsAllDevActiveExceptTheFirstOne() throws Exception {
+	public void testAgragreCommitsAllDevActiveExceptTheFirstOne()  {
 		first.setActive(false);
 		second.setActive(true);
 		third.setActive(true);
@@ -148,13 +155,13 @@ public class RiskCommitAndDevActiveProcessorTest {
 		expected.add(impl.new StatActivity("root/fr/two/one/F.java", 3, 2));
 		expected.add(impl.new StatActivity("root/fr/two/two/G.java", 4, 4));
 		
-		Collections.sort(stats, (StatActivity sa1, StatActivity sa2) -> sa1.filename.compareTo(sa2.filename));
-		Collections.sort(expected, (StatActivity sa1, StatActivity sa2) -> sa1.filename.compareTo(sa2.filename));
+		Collections.sort(stats, (StatActivity sa1, StatActivity sa2) -> sa1.getFilename().compareTo(sa2.getFilename()));
+		Collections.sort(expected, (StatActivity sa1, StatActivity sa2) -> sa1.getFilename().compareTo(sa2.getFilename()));
 		assertThat(stats, is(expected));
 	}
 
 	@Test
-	public void testEvaluateActiveDevelopersCoverage() throws Exception {
+	public void testEvaluateActiveDevelopersCoverage()  {
 		first.setActive(false);
 		second.setActive(true);
 		third.setActive(true);
@@ -171,7 +178,7 @@ public class RiskCommitAndDevActiveProcessorTest {
 	}
 	
 	@After
-	public void after() throws Exception {
+	public void after() throws SkillerException {
 		projectHandler.getProjects().remove(8021964);
 	}
 	

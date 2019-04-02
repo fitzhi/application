@@ -11,27 +11,27 @@ public class Contributor {
 	/**
 	 * Staff member identifier
 	 */
-	public int idStaff;
+	private int idStaff;
 	
 	/**
 	 * Developer's first commit
 	 */
-	public Date firstCommit;
+	private Date firstCommit;
 	
 	/**
 	 * Developer's last commit
 	 */
-	public Date lastCommit;
+	private Date lastCommit;
 
 	/**
 	 * Number of commits submitted by this developer
 	 */
-	public int numberOfCommitsSubmitted;
+	private int numberOfCommitsSubmitted;
 	
 	/**
 	 * Number of files modified
 	 */
-	public int numberOfFiles;
+	private int numberOfFiles;
 
 	/**
 	 * @param idStaff developer identifier
@@ -42,17 +42,87 @@ public class Contributor {
 	 */
 	public Contributor(int idStaff, Date firstCommit, Date lastCommit, int numberOfCommitsSubmitted, int numberOfFiles) {
 		super();
-		this.idStaff = idStaff;
-		this.firstCommit = firstCommit;
-		this.lastCommit = lastCommit;
-		this.numberOfCommitsSubmitted = numberOfCommitsSubmitted;
-		this.numberOfFiles = numberOfFiles;
+		this.setIdStaff(idStaff);
+		this.setFirstCommit(firstCommit);
+		this.setLastCommit(lastCommit);
+		this.setNumberOfCommitsSubmitted(numberOfCommitsSubmitted);
+		this.setNumberOfFiles(numberOfFiles);
 	}
 
 	@Override
 	public String toString() {
-		return "Contributor [idStaff=" + idStaff + ", firstCommit=" + firstCommit + ", lastCommit=" + lastCommit
-				+ ", numberOfCommitsSubmitted=" + numberOfCommitsSubmitted + ", numberOfFiles=" + numberOfFiles + "]";
+		return "Contributor [idStaff=" + getIdStaff() + ", firstCommit=" + getFirstCommit() + ", lastCommit=" + getLastCommit()
+				+ ", numberOfCommitsSubmitted=" + getNumberOfCommitsSubmitted() + ", numberOfFiles=" + getNumberOfFiles() + "]";
+	}
+
+	/**
+	 * @return the staff identifier
+	 */
+	public int getIdStaff() {
+		return idStaff;
+	}
+
+	/**
+	 * @param idStaff the Staff identifier to set
+	 */
+	public void setIdStaff(int idStaff) {
+		this.idStaff = idStaff;
+	}
+
+	/**
+	 * @return the firstCommit
+	 */
+	public Date getFirstCommit() {
+		return firstCommit;
+	}
+
+	/**
+	 * @param firstCommit developer's date of first Commit
+	 */
+	public void setFirstCommit(Date firstCommit) {
+		this.firstCommit = firstCommit;
+	}
+
+	/**
+	 * @return the developer's date of last Commit
+	 */
+	public Date getLastCommit() {
+		return lastCommit;
+	}
+
+	/**
+	 * @param developer's date of last Commit the lastCommit to set
+	 */
+	public void setLastCommit(Date lastCommit) {
+		this.lastCommit = lastCommit;
+	}
+
+	/**
+	 * @return the numberOfCommitsSubmitted
+	 */
+	public int getNumberOfCommitsSubmitted() {
+		return numberOfCommitsSubmitted;
+	}
+
+	/**
+	 * @param numberOfCommitsSubmitted the numberOfCommitsSubmitted to set
+	 */
+	public void setNumberOfCommitsSubmitted(int numberOfCommitsSubmitted) {
+		this.numberOfCommitsSubmitted = numberOfCommitsSubmitted;
+	}
+
+	/**
+	 * @return the number of files
+	 */
+	public int getNumberOfFiles() {
+		return numberOfFiles;
+	}
+
+	/**
+	 * @param numberOfFiles the number Of files to set
+	 */
+	public void setNumberOfFiles(int numberOfFiles) {
+		this.numberOfFiles = numberOfFiles;
 	}
 
 	

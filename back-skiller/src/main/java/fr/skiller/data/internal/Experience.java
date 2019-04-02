@@ -9,9 +9,11 @@ package fr.skiller.data.internal;
  */
 public class Experience {
 
-	public int id;
-	public String title; 
-	public int level;
+	private int id;
+	
+	private String title; 
+	
+	private int level;
 	
 	/**
 	 * Empty constructor.
@@ -21,15 +23,15 @@ public class Experience {
 	}
 
 	/**
-	 * Constructor with param.
+	 * Constructor with parameters.
 	 * @param id the id of the skill in an experience
 	 * @param title the title of the skill
 	 * @param level the degree of knowledge obtained by a developer on this skill
 	 */
 	public Experience(final int id, final String title, final int level) {
-		this.id = id;
-		this.title = title;
-		this.level = level;
+		this.setId(id);
+		this.setTitle(title);
+		this.setLevel(level);
 	}
 	
 	/**
@@ -38,12 +40,54 @@ public class Experience {
 	 * @return key : constructed key
 	 */
 	public String key() {
-		return id+"-"+level;
+		return getId()+"-"+getLevel();
 	}
 
 	@Override
 	public String toString() {
-		return "Experience [id=" + id + ", title=" + title + ", level=" + level + "]";
+		return "Experience [id=" + getId() + ", title=" + getTitle() + ", level=" + getLevel() + "]";
+	}
+
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	/**
+	 * @return the level
+	 */
+	public int getLevel() {
+		return level;
+	}
+
+	/**
+	 * @param level the level to set
+	 */
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 }

@@ -11,42 +11,42 @@ class ContributorView {
 	/**
 	 * the staff identifier.
 	 */
-	public int idStaff;
+	int idStaff;
 	
 	/**
 	 * the full name of this developer <i>(first name + last name)</i>.
 	 */
-	public String fullname;
+	String fullname;
 	
 	/**
 	 * {@code true} if this staff member is in activity in the company, {@code false} otherwise
 	 */
-	public boolean active;
+	boolean active;
 	
 	/**
 	 * {@code true} if this staff member is external from the company, {@code false} otherwise
 	 */
-	public boolean external;
+	boolean external;
 	
 	/**
 	 * Date of the latest commit.
 	 */
-	public Date firstCommit;
+	Date firstCommit;
 	
 	/**
 	 * Date of the latest commit.
 	 */
-	public Date lastCommit;
+	Date lastCommit;
 	
 	/**
 	 * @return number of commit submitted by the developer inside the project.
 	 */
-	public int numberOfCommits;
+	int numberOfCommits;
 	
 	/**
 	 * @return number of files modifier by the developer inside the project.
 	 */
-	public int numberOfFiles;
+	int numberOfFiles;
 	
 	/**
 	 * @param idStaff staff identifier
@@ -58,7 +58,8 @@ class ContributorView {
 	 * @param numberOfCommits number of commit submitted by the developer inside the project.
 	 * @param numberOfFiles number of files modifier by the developer inside the project.
 	 */
-	public ContributorView(final int idStaff, final String fullname, final boolean active, final boolean external, final Date firstCommit, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
+	public ContributorView(final int idStaff, final String fullname, final boolean active, final boolean external, final Date firstCommit, final Date lastCommit, 
+			final int numberOfCommits, final int numberOfFiles) {
 		this.idStaff = idStaff;
 		this.fullname = fullname;
 		this.active = active;
@@ -79,12 +80,12 @@ public class ProjectContributorDTO extends BaseDTO {
 	/**
 	 * Project identifier.
 	 */
-	public int idProject;
+	int idProject;
 	
 	/**
 	 * List of contributors for the project.
 	 */
-	public List<ContributorView> contributors;
+	List<ContributorView> contributors;
 	
 	/**
 	 * @param code code error thrown by the back end.
@@ -105,7 +106,7 @@ public class ProjectContributorDTO extends BaseDTO {
 	 */
 	public ProjectContributorDTO(final int idProject) {
 		this.idProject = idProject;
-		contributors = new ArrayList<ContributorView>();
+		contributors = new ArrayList<>();
 	}
 	
 	/**
@@ -118,7 +119,8 @@ public class ProjectContributorDTO extends BaseDTO {
 	 * @param numberOfCommits number of commit submitted by the developer inside the project.
 	 * @param numberOfFiles number of files modifier by the developer inside the project.
 	 */
-	public void addContributor(final int idStaff, final String fullname, final boolean active, final boolean external, final Date firstCommit, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
+	public void addContributor(final int idStaff, final String fullname, final boolean active, final boolean external, 
+			final Date firstCommit, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
 		contributors.add(new ContributorView(idStaff, fullname, active, external, firstCommit, lastCommit, numberOfCommits, numberOfFiles));
 	}
 	

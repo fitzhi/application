@@ -42,8 +42,9 @@ public class PseudoListDTO extends BaseDTO {
 	 */
 	public PseudoListDTO(final int idProject, SkillerException e) {
 		super(e.errorCode, e.errorMessage);
-		unknowns = new ArrayList<Pseudo>();
+		unknowns = new ArrayList<>();
 		this.idProject = idProject;
 	}
+
 	
 }

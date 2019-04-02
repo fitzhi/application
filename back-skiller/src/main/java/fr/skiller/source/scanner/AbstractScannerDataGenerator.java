@@ -4,6 +4,7 @@ import static fr.skiller.Global.LN;
 
 import java.io.File;
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -24,6 +25,8 @@ import fr.skiller.data.source.CommitRepository;
  *
  */
 public abstract class AbstractScannerDataGenerator implements RepoScanner {
+	
+	Random r = new Random();
 	
 	/**
 	 * Service in charge of handling the staff collection.<br/>
@@ -54,7 +57,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 						commit.committers()));
 
 		
-		Set<Pseudo> ghosts = new HashSet<Pseudo>();
+		Set<Pseudo> ghosts = new HashSet<>();
 		commitRepo.unknownContributors().stream()
 			.forEach(unknown -> {
 				
@@ -62,12 +65,12 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 				if (g == null) {
 					ghosts.add(new Pseudo(unknown, false));
 				} else {
-					if (g.technical) {
+					if (g.isTechnical()) {
 						ghosts.add(new Pseudo(unknown, true));											
 					} else {
-						String fullName = parentStaffHandler.getFullname(g.idStaff);
-						String login = parentStaffHandler.getStaff().get(g.idStaff).getLogin();
-						ghosts.add(new Pseudo(unknown, g.idStaff, fullName, login, g.technical));
+						String fullName = parentStaffHandler.getFullname(g.getIdStaff());
+						String login = parentStaffHandler.getStaff().get(g.getIdStaff()).getLogin();
+						ghosts.add(new Pseudo(unknown, g.getIdStaff(), fullName, login, g.isTechnical()));
 					}
 				}
 			});
@@ -85,10 +88,10 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	 */
 	public void evaluateTheRisk(final RiskChartData sunburstData) {
 		if (sunburstData.hasUnknownRiskLevel()) {
-			sunburstData.setRiskLevel( (int) (Math.random()*1000 % 11)); 
+			sunburstData.setRiskLevel( (int) (r.nextInt() % 11)); 
 		}
-		if (sunburstData.children != null) {
-			sunburstData.children.stream().forEach(dir -> evaluateTheRisk(dir));
+		if (sunburstData.getChildren() != null) {
+			sunburstData.getChildren().stream().forEach(this::evaluateTheRisk);
 		}
 	}
 

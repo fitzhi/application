@@ -44,7 +44,7 @@ public class ResumeParserServiceTests {
 		final String file_txt = getClass().getResource("/applications_files/ET_201709_UTF8.txt").getFile();
 		experience_txt = parser.extract(file_txt, StorageService.FILE_TYPE_TXT);
 		reference_txt_skills = experience_txt.data().stream()
-				.map(item -> item.idSkill).collect(Collectors.toList());
+				.map(item -> item.getIdSkill()).collect(Collectors.toList());
 	}
 	
 	@Test(expected = SkillerException.class)
@@ -57,7 +57,7 @@ public class ResumeParserServiceTests {
 		final String file_doc = getClass().getResource("/applications_files/ET_201709.doc").getFile();
 		Resume experience_doc = parser.extract(file_doc, StorageService.FILE_TYPE_DOC);
 		List<Integer> reference_doc_skills =experience_doc.data().stream()
-				.map(item -> item.idSkill).collect(Collectors.toList());
+				.map(item -> item.getIdSkill()).collect(Collectors.toList());
 		Assert.assertTrue(reference_doc_skills.containsAll(reference_txt_skills));			
 	}
 
@@ -66,7 +66,7 @@ public class ResumeParserServiceTests {
 		final String file_docx = getClass().getResource("/applications_files/ET_201709.docx").getFile();
 		Resume experience_docx = parser.extract(file_docx, StorageService.FILE_TYPE_DOCX);
 		List<Integer> reference_docx_skills =experience_docx.data().stream()
-				.map(item -> item.idSkill).collect(Collectors.toList());
+				.map(item -> item.getIdSkill()).collect(Collectors.toList());
 		Assert.assertTrue(reference_docx_skills.containsAll(reference_txt_skills));			
 	}
 

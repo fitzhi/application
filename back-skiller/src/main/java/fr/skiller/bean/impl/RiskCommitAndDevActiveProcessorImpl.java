@@ -7,23 +7,21 @@ import static fr.skiller.Global.LN;
 import static fr.skiller.Global.UNKNOWN;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.annotation.Generated;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.SystemPropertyUtils;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
-import fr.skiller.Global;
+import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
-import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import fr.skiller.data.internal.RiskChartData;
 import fr.skiller.data.internal.RiskLegend;
 import fr.skiller.data.internal.SourceFile;
@@ -39,25 +37,26 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 
 	/**
 	 * Statistic of activity
+	 * 
 	 * @author Fr&eacute;d&eacute;ric VIDAL
 	 */
 	public class StatActivity {
-		
+
 		/**
 		 * Filename.
 		 */
-		public String filename;
+		private String filename;
 
 		/**
 		 * Total number of the commits submitted.
 		 */
-		public long countCommits;
-		
+		private long countCommits;
+
 		/**
 		 * Number of the commits submitted by active developers.
 		 */
-		public long countCommitsByActiveDevelopers;
-		
+		private long countCommitsByActiveDevelopers;
+
 		/**
 		 * @param fileName
 		 * @param countCommits
@@ -65,23 +64,26 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 		 */
 		StatActivity(final String fileName, final long countCommits, final long countCommitsByActiveDevelopers) {
 			super();
-			this.filename = fileName;
-			this.countCommits = countCommits;
-			this.countCommitsByActiveDevelopers = countCommitsByActiveDevelopers;
+			this.setFilename(fileName);
+			this.setCountCommits(countCommits);
+			this.setCountCommitsByActiveDevelopers(countCommitsByActiveDevelopers);
 		}
 
 		@Override
+		@Generated("eclipse")
 		public int hashCode() {
 			final int prime = 31;
 			int result = 1;
 			result = prime * result + getOuterType().hashCode();
-			result = prime * result + (int) (countCommits ^ (countCommits >>> 32));
-			result = prime * result + (int) (countCommitsByActiveDevelopers ^ (countCommitsByActiveDevelopers >>> 32));
-			result = prime * result + ((filename == null) ? 0 : filename.hashCode());
+			result = prime * result + (int) (getCountCommits() ^ (getCountCommits() >>> 32));
+			result = prime * result
+					+ (int) (getCountCommitsByActiveDevelopers() ^ (getCountCommitsByActiveDevelopers() >>> 32));
+			result = prime * result + ((getFilename() == null) ? 0 : getFilename().hashCode());
 			return result;
 		}
 
 		@Override
+		@Generated("eclipse")
 		public boolean equals(Object obj) {
 			if (this == obj)
 				return true;
@@ -92,14 +94,14 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 			StatActivity other = (StatActivity) obj;
 			if (!getOuterType().equals(other.getOuterType()))
 				return false;
-			if (countCommits != other.countCommits)
+			if (getCountCommits() != other.getCountCommits())
 				return false;
-			if (countCommitsByActiveDevelopers != other.countCommitsByActiveDevelopers)
+			if (getCountCommitsByActiveDevelopers() != other.getCountCommitsByActiveDevelopers())
 				return false;
-			if (filename == null) {
-				if (other.filename != null)
+			if (getFilename() == null) {
+				if (other.getFilename() != null)
 					return false;
-			} else if (!filename.equals(other.filename))
+			} else if (!getFilename().equals(other.getFilename()))
 				return false;
 			return true;
 		}
@@ -110,212 +112,259 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 
 		@Override
 		public String toString() {
-			return "StatActivity [filename=" + filename + ", countCommits=" + countCommits
-					+ ", countCommitsByActiveDevelopers=" + countCommitsByActiveDevelopers + "]";
+			return "StatActivity [filename=" + getFilename() + ", countCommits=" + getCountCommits()
+					+ ", countCommitsByActiveDevelopers=" + getCountCommitsByActiveDevelopers() + "]";
 		}
-		
-		
+
+		/**
+		 * @return the filename
+		 */
+		public String getFilename() {
+			return filename;
+		}
+
+		/**
+		 * @param filename the filename to set
+		 */
+		public void setFilename(String filename) {
+			this.filename = filename;
+		}
+
+		/**
+		 * @return the countCommits<br/>
+		 *         <i>(Total number of the commits submitted)</i>
+		 */
+		public long getCountCommits() {
+			return countCommits;
+		}
+
+		/**
+		 * @param countCommits the countCommits to set
+		 */
+		public void setCountCommits(long countCommits) {
+			this.countCommits = countCommits;
+		}
+
+		/**
+		 * @return the countCommitsByActiveDevelopers<br/>
+		 *         <i>(Number of the commits submitted by active developers)</i>
+		 */
+		public long getCountCommitsByActiveDevelopers() {
+			return countCommitsByActiveDevelopers;
+		}
+
+		/**
+		 * @param countCommitsByActiveDevelopers the countCommitsByActiveDevelopers to
+		 *                                       set
+		 */
+		public void setCountCommitsByActiveDevelopers(long countCommitsByActiveDevelopers) {
+			this.countCommitsByActiveDevelopers = countCommitsByActiveDevelopers;
+		}
+
 	}
 
 	/**
 	 * Bean in charge of handling staff.
 	 */
-	@Autowired StaffHandler staffHandler;
+	@Autowired
+	StaffHandler staffHandler;
 
- 	/**
- 	 * The logger for the Risk Surveyor.
- 	 */
+	/**
+	 * The logger for the Risk Surveyor.
+	 */
 	Logger logger = LoggerFactory.getLogger(RiskCommitAndDevActiveProcessorImpl.class.getCanonicalName());
 
 	@Override
 	public Map<Integer, RiskLegend> riskLegends() {
-	
-		final Map<Integer, RiskLegend> explanations = new HashMap<Integer, RiskLegend>();
-		
-		explanations.put (0, new RiskLegend( 0, "darkGreen", 
+
+		final Map<Integer, RiskLegend> explanations = new HashMap<>();
+
+		explanations.put(0, new RiskLegend(0, "darkGreen",
 				"commits have been submitted by active developers. Perfect level of proficiency on this project"));
-		explanations.put (1, new RiskLegend( 1, "ForestGreen",
+		explanations.put(1, new RiskLegend(1, "ForestGreen",
 				"At least, 90% of the commits have been submitted by active developers."));
-		explanations.put (2, new RiskLegend( 2, "limeGreen",
+		explanations.put(2, new RiskLegend(2, "limeGreen",
 				"At least, 80% of the commits have been submitted by active developers."));
-		explanations.put (3, new RiskLegend( 3, "lime",
-				"At least, 70% of the commits have been submitted by active developers."));
-		explanations.put (4, new RiskLegend( 4, "lightGreen",
+		explanations.put(3,
+				new RiskLegend(3, "lime", "At least, 70% of the commits have been submitted by active developers."));
+		explanations.put(4, new RiskLegend(4, "lightGreen",
 				"At least, 60% of the commits have been submitted by active developers."));
-		explanations.put (5, new RiskLegend( 5, "yellow",
-				"At least, 50% of the commits have been submitted by active developers."));
-		explanations.put (6, new RiskLegend( 6, "orange",
-				"At least, 40% of the commits have been submitted by active developers."));
-		explanations.put (7, new RiskLegend( 7, "darkOrange",
+		explanations.put(5,
+				new RiskLegend(5, "yellow", "At least, 50% of the commits have been submitted by active developers."));
+		explanations.put(6,
+				new RiskLegend(6, "orange", "At least, 40% of the commits have been submitted by active developers."));
+		explanations.put(7, new RiskLegend(7, "darkOrange",
 				"At least, 30% of the commits have been submitted by active developers."));
-		explanations.put (8, new RiskLegend( 8, "lightCoral",
+		explanations.put(8, new RiskLegend(8, "lightCoral",
 				"At least, 20% of the commits have been submitted by active developers."));
-		explanations.put (9, new RiskLegend( 9, "crimson",
-				"At least, 10% of the commits have been submitted by active developers."));
-		explanations.put (10, new RiskLegend( 10, "darkRed",
+		explanations.put(9,
+				new RiskLegend(9, "crimson", "At least, 10% of the commits have been submitted by active developers."));
+		explanations.put(10, new RiskLegend(10, "darkRed",
 				"commits have been proceeded by INACTIVE developers. Everyone is newbie on this project."));
 
 		return explanations;
 	}
 
 	/**
-     * Evaluate the level of risk on all entries in the repository from the staff/level point of view.<br/>
-     * The scale of risks contains 10 levels + 1 problem: <br/>
-	 * @param repository the repository retrieved and parsed from the source control tool (i.e. GIT, SVN...).
-	 * @param data repository data prepared to be displayed by the Sunburst chart 
+	 * Evaluate the level of risk on all entries in the repository from the
+	 * staff/level point of view.<br/>
+	 * The scale of risks contains 10 levels + 1 problem: <br/>
+	 * 
+	 * @param repository the repository retrieved and parsed from the source control
+	 *                   tool (i.e. GIT, SVN...).
+	 * @param data       repository data prepared to be displayed by the Sunburst
+	 *                   chart
 	 */
-	public void evaluateTheRisk(
-			final CommitRepository repository, 
-			final RiskChartData data,
+	public void evaluateTheRisk(final CommitRepository repository, final RiskChartData data,
 			final List<StatActivity> statsCommit) {
-		
-		agregateCommits(new String(), repository, data, statsCommit);
-		
+
+		agregateCommits("", repository, data, statsCommit);
+
 		evaluateActiveDevelopersCoverage("", data, statsCommit);
-	}	
+	}
 
 	/**
 	 * Count commits submitted from a directory.<br/>
 	 * <i>This method is public for testing purpose.</i>
-	 * @param dir the directory where we'll sum the number of the commits submitted on each file
-	 * @param stats the list containing a statistic entry for each class file 
+	 * 
+	 * @param dir   the directory where we'll sum the number of the commits
+	 *              submitted on each file
+	 * @param stats the list containing a statistic entry for each class file
 	 * @return the resulting count
 	 */
 	public long agregateCountCommits(final String dir, final List<StatActivity> stats) {
-		return stats.stream()
-			.filter(entry -> entry.filename.indexOf(dir)==0)
-			.filter(entry -> ( (entry.filename.length() == dir.length())
-					|| 	(entry.filename.substring(dir.length()+1).indexOf(File.separator)==-1)))
-			.mapToLong(entry -> entry.countCommits).sum();
+		return stats.stream().filter(entry -> entry.getFilename().indexOf(dir) == 0)
+				.filter(entry -> ((entry.getFilename().length() == dir.length())
+						|| (entry.getFilename().indexOf(File.separator, dir.length() + 1) == -1)))
+				.mapToLong(StatActivity::getCountCommits).sum();
 	}
 
 	/**
 	 * Count commits submitted from a directory by active developers.<br/>
 	 * <i>This method is public for testing purpose.</i>
-	 * @param dir the directory where we sum the number of commits submitted within this directory.
-	 * @param stats the list containing a statistic entry for each class file 
+	 * 
+	 * @param dir   the directory where we sum the number of commits submitted
+	 *              within this directory.
+	 * @param stats the list containing a statistic entry for each class file
 	 * @return the resulting count
 	 */
 	public long agregateCountCommitsByActiveDevelopers(String dir, List<StatActivity> stats) {
-		return stats.stream()
-				.filter(entry -> entry.filename.indexOf(dir)==0)
-				.filter(entry -> 
-						( (entry.filename.length() == dir.length())
-					|| 	(entry.filename.substring(dir.length()+1).indexOf(File.separator)==-1))
-				)
-				.mapToLong(entry -> entry.countCommitsByActiveDevelopers).sum();
+		return stats.stream().filter(entry -> entry.getFilename().indexOf(dir) == 0)
+				.filter(entry -> ((entry.getFilename().length() == dir.length())
+						|| (entry.getFilename().indexOf(File.separator, dir.length() + 1) == -1)))
+				.mapToLong(StatActivity::getCountCommitsByActiveDevelopers).sum();
 	}
 
 	/**
 	 * Evaluate the risk for the active developers.<br/>
 	 * <i>This method is public for testing purpose.</i>
-	 * @param dir directory where the commits have been executed.
-	 * @param data location data (containing the relative location, the risks & colors, and its children)
-	 * @param stats the list containing a statistic entry for each class file 
+	 * 
+	 * @param dir   directory where the commits have been executed.
+	 * @param data  location data (containing the relative location, the risks &
+	 *              colors, and its children)
+	 * @param stats the list containing a statistic entry for each class file
 	 */
-	public void evaluateActiveDevelopersCoverage(
-			final String dir,
-			final RiskChartData data, 
+	public void evaluateActiveDevelopersCoverage(final String dir, final RiskChartData data,
 			final List<StatActivity> stats) {
-	
-		long countCommits = agregateCountCommits(dir+data.location, stats);
-		long countCommitsByActiveDevelopers = agregateCountCommitsByActiveDevelopers(
-				dir+data.location, stats);
+
+		long countCommits = agregateCountCommits(dir + data.getLocation(), stats);
+		long countCommitsByActiveDevelopers = agregateCountCommitsByActiveDevelopers(dir + data.getLocation(), stats);
 		int riskLevel = -1;
 		if (countCommits > 0) {
-			riskLevel = (int) Math.ceil( ((1 -  ((double) countCommitsByActiveDevelopers / (double) countCommits)) * 10));
-		} 
+			riskLevel = (int) Math.ceil(((1 - ((double) countCommitsByActiveDevelopers / (double) countCommits)) * 10));
+		}
 
-		if (logger.isDebugEnabled()) { 
+		if (logger.isDebugEnabled()) {
 			StringBuilder sb = new StringBuilder(LN);
-			sb.append("Evaluating the risk for " + dir + data.location).append(LN);
+			sb.append("Evaluating the risk for " + dir + data.getLocation()).append(LN);
 			sb.append("countCommits : " + countCommits).append(LN);
 			sb.append("countCommitsByActiveDevelopers : " + countCommitsByActiveDevelopers).append(LN);
 			sb.append("riskLevel evaluated : " + riskLevel).append(LN);
 			logger.debug(sb.toString());
 		}
 		data.setRiskLevel(riskLevel);
-		
-		if (data.children != null) {
-			data.children.stream().forEach(dat -> evaluateActiveDevelopersCoverage(dir + data.location + "/", dat, stats));
+
+		if (data.getChildren() != null) {
+			data.getChildren().stream()
+					.forEach(dat -> evaluateActiveDevelopersCoverage(dir + data.getLocation() + "/", dat, stats));
 		}
 	}
-	
+
 	/**
-     * <p>
-     * Aggregate the commits by class name. <i>This method is recursive!</i>
-     * </p>
-     * <p>
-     * Each entry in the class name contains :
-     * <ul>
-     * <li>the class full name (with its path)</li>
-     * <li>the number of commits executed on that file</li>
-     * <li>the number of commits executed <b>by active developers</b></li>
-     * </ul>
-     * @param baseDir the direction to be scanned.
-	 * @param repository the repository retrieved and parsed from the source control tool (i.e. GIT, SVN...).
-	 * @param data repository data prepared to be displayed by the Sunburst chart. At this point, this is a working draft.
-	 * @param stats the list containing a statistic entry for each class file 
+	 * <p>
+	 * Aggregate the commits by class name. <i>This method is recursive!</i>
+	 * </p>
+	 * <p>
+	 * Each entry in the class name contains :
+	 * <ul>
+	 * <li>the class full name (with its path)</li>
+	 * <li>the number of commits executed on that file</li>
+	 * <li>the number of commits executed <b>by active developers</b></li>
+	 * </ul>
+	 * 
+	 * @param baseDir    the direction to be scanned.
+	 * @param repository the repository retrieved and parsed from the source control
+	 *                   tool (i.e. GIT, SVN...).
+	 * @param data       repository data prepared to be displayed by the Sunburst
+	 *                   chart. At this point, this is a working draft.
+	 * @param stats      the list containing a statistic entry for each class file
 	 */
-	public void agregateCommits(
-			final String baseDir,
-			final CommitRepository repository, 
-			final RiskChartData sunburstData,
-			final List<StatActivity> stats) {
-		
+	public void agregateCommits(final String baseDir, final CommitRepository repository,
+			final RiskChartData sunburstData, final List<StatActivity> stats) {
+
 		// This directory contains class within it.
 		if ((sunburstData.getClassnames() != null) && !sunburstData.getClassnames().isEmpty()) {
 			for (SourceFile source : sunburstData.getClassnames()) {
 
-				final String searchedFile = 
-						(baseDir.indexOf("root/") == 0) 
-						?	(baseDir + sunburstData.location + "/" + source.filename).substring("root/".length())
-						: 	(baseDir + sunburstData.location + "/" + source.filename).substring("/".length());
+				final String searchedFile = (baseDir.indexOf("root/") == 0)
+						? (baseDir + sunburstData.getLocation() + "/" + source.getFilename()).substring("root/".length())
+						: (baseDir + sunburstData.getLocation() + "/" + source.getFilename()).substring("/".length());
 				// We retrieve historic information regarding this class name
 				Optional<String> optKey;
-				optKey = repository.getRepository()
-						.keySet()
-						.stream()
-						.filter(k -> k.equals(searchedFile))
-						.findFirst();
+				optKey = repository.getRepository().keySet().stream().filter(k -> k.equals(searchedFile)).findFirst();
 				if (!optKey.isPresent()) {
-					logger.error("Searching " + searchedFile + " in ");
-					repository.getRepository().keySet().stream()
-						.forEach(f -> logger.error (f));
-					throw new RuntimeException(searchedFile + " not found!");
+					if (logger.isErrorEnabled()) {
+						logger.error(String.format("Searching %s in", searchedFile));
+						repository.getRepository().keySet().stream().forEach(f -> logger.error(f));
+					}
+					throw new SkillerRuntimeException(searchedFile + " not found!");
 				}
-				
-				final CommitHistory activity = repository.getRepository().get(optKey.get());
-				
-				long countCommits = activity.countCommits();
-				long countCommitsByActiveDevelopers = 	activity.countCommitsByActiveDevelopers(staffHandler);
 
-				String fullClass = baseDir.toString() + sunburstData.location + "/"+source.filename;
+				final CommitHistory activity = repository.getRepository().get(optKey.get());
+
+				long countCommits = activity.countCommits();
+				long countCommitsByActiveDevelopers = activity.countCommitsByActiveDevelopers(staffHandler);
+
+				String fullClass = baseDir + sunburstData.getLocation() + "/" + source.getFilename();
 				if (logger.isDebugEnabled()) {
-					logger.debug("Adding stat entry for " + fullClass + " : " + countCommitsByActiveDevelopers + "/" + countCommits);
-					
+					logger.debug(String.format("Adding stat entry for %s : %d / %d", fullClass,
+							countCommitsByActiveDevelopers, countCommits));
+
 				}
-				
-				stats.add(new StatActivity(fullClass, countCommits, countCommitsByActiveDevelopers));			
+
+				stats.add(new StatActivity(fullClass, countCommits, countCommitsByActiveDevelopers));
 			}
-		} 
-		
-		if (sunburstData.children != null) {
-			sunburstData.children.stream().forEach(data -> agregateCommits(baseDir + sunburstData.location + "/", repository, data, stats));
+		}
+
+		if (sunburstData.getChildren() != null) {
+			sunburstData.getChildren().stream()
+					.forEach(data -> agregateCommits(baseDir + sunburstData.getLocation() + "/", repository, data, stats));
 		}
 	}
-	
+
 	public String colorOfRisk(final int riskLevel) {
-		return this.riskLegends().get(riskLevel).color;
-	};
-	
+		return this.riskLegends().get(riskLevel).getColor();
+	}
+
 	/**
 	 * Test if the filename contains the class name
-	 * @param filename the complete file name
+	 * 
+	 * @param filename  the complete file name
 	 * @param classname the searched class name
-	 * @return if {@code true} the file name contains class name, {@code false} otherwise 
+	 * @return if {@code true} the file name contains class name, {@code false}
+	 *         otherwise
 	 */
-	public static boolean isClassFile (final String filename, final String classname) {
+	public static boolean isClassFile(final String filename, final String classname) {
 		int pos = filename.lastIndexOf(classname);
 		if (pos == -1) {
 			return false;
@@ -323,33 +372,30 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 			return classname.equals(filename.substring(pos));
 		}
 	}
-	
+
 	@Override
 	public void setPreviewSettings(RiskChartData data) {
 		if (!data.hasUnknownRiskLevel()) {
 			int riskLevel = data.getRiskLevel();
-			data.color = colorOfRisk(riskLevel);
+			data.setColor(colorOfRisk(riskLevel));
 		}
-		if (data.children != null) {
-			data.children.stream().forEach(dir -> setPreviewSettings(dir));
+		if (data.getChildren() != null) {
+			data.getChildren().stream().forEach(this::setPreviewSettings);
 		}
 	}
 
 	@Override
 	public int meanTheRisk(final RiskChartData location) {
-		if ( (location.children == null) || (location.children.size() == 0) ) {
+		if ((location.getChildren() == null) || (location.getChildren().isEmpty())) {
 			return location.getRiskLevel();
 		}
-		int risk = (int) Math.floor(location.children.stream().mapToInt(child -> meanTheRisk(child)).average().getAsDouble());
+		int risk = (int) Math.floor(location.getChildren().stream().mapToInt(this::meanTheRisk).average().getAsDouble());
 		if (location.getRiskLevel() == UNKNOWN) {
 			location.setRiskLevel(risk);
 		} else {
-			location.setRiskLevel((int) Math.floor((risk+location.getRiskLevel())/2));
+			location.setRiskLevel((int) Math.floor((double) (risk + location.getRiskLevel()) / 2));
 		}
 		return location.getRiskLevel();
 	}
-	
-	
-	
-	
+
 }

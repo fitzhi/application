@@ -87,19 +87,19 @@ public class StaffController_uploadResume_Test {
 		List<ResumeSkillIdentifier> resultList = new ArrayList<ResumeSkillIdentifier>();
 		
 		response.getBody().experience.stream()
-			.filter(item -> getIdSkill("C#") == item.idSkill )
+			.filter(item -> getIdSkill("C#") == item.getIdSkill() )
 			.forEach(resultList::add);
 		assertThat(!resultList.isEmpty());
 		
 		resultList.clear();
 		response.getBody().experience.stream()
-		.filter(item -> getIdSkill("Java") == item.idSkill)
+		.filter(item -> getIdSkill("Java") == item.getIdSkill())
 		.forEach(resultList::add);
 		assertThat(resultList.isEmpty());
 
 		resultList.clear();
 		response.getBody().experience.stream()
-		.filter(item -> getIdSkill("Spring") == item.idSkill)
+		.filter(item -> getIdSkill("Spring") == item.getIdSkill())
 		.forEach(resultList::add);
 		assertThat(!resultList.isEmpty());
 

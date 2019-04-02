@@ -13,7 +13,7 @@ import java.util.Map;
  */
 public class Resume {
 
-	private List<ResumeSkillIdentifier> experience = new ArrayList<ResumeSkillIdentifier>();
+	private List<ResumeSkillIdentifier> experience = new ArrayList<>();
 
 	/**
 	 * @return the data inside the object.

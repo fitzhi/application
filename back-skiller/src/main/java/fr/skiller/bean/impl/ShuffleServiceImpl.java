@@ -31,7 +31,7 @@ public class ShuffleServiceImpl implements ShuffleService {
 	 * @return the shuffled result
 	 */
 	public String shuffle (final String input) {
-		// Nothing toi shuffle.
+		// Nothing to shuffle.
 		if ((input == null) || (input.isEmpty())) {
 			return input;
 		}
@@ -39,7 +39,7 @@ public class ShuffleServiceImpl implements ShuffleService {
 		List<String> letters = Arrays.asList(scram);
 		Collections.shuffle(letters);
 		
-		return	letters.stream().map(s -> rotateVowel(s))
+		return	letters.stream().map(this::rotateVowel)
 				.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
 				.toString();
 	}
@@ -50,26 +50,23 @@ public class ShuffleServiceImpl implements ShuffleService {
 	 * @return a vowel.
 	 */
 	private String rotateVowel(String s) {
-		if ("e".equals(s.toLowerCase())) {
-			return "a";
-		} else  {
-			if ("a".equals(s.toLowerCase())) {
-				return "i";
-			} else  {
-				if ("i".equals(s.toLowerCase())) {
-					return "u";
-				} else {
-					if ("o".equals(s.toLowerCase())) {
-						return "e";
-					} else {
-						if ("u".equals(s.toLowerCase())) {
-							return "o";
-						}						
-					}
-				}
-			}
+		String ret = s;
+		if ("e".equalsIgnoreCase(s)) {
+			ret = "a";
 		}
-		return s;
+		if ("a".equalsIgnoreCase(s)) {
+			ret = "i";
+		} 
+		if ("i".equalsIgnoreCase(s)) {
+			ret = "u";
+		} 
+		if ("o".equalsIgnoreCase(s)) {
+			ret = "e";
+		} 
+		if ("u".equalsIgnoreCase(s)) {
+			ret = "o";
+		}						
+		return ret;
 	}
 
 	@Override

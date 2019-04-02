@@ -13,12 +13,12 @@ public class HelloController {
 
 	
 	@PostMapping
-	ResponseEntity<?> addHello(@RequestBody String input) {
+	public ResponseEntity<String> addHello(@RequestBody String input) {
 		return ResponseEntity.ok("{ hello:\"World\" }");
 	}
 
 	@GetMapping("/helloWorld")
-	String readHello() {
+	public String readHello() {
 		return "{ hello:\"World\" }";
 	}
 

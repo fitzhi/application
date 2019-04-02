@@ -21,13 +21,13 @@ public class GhostDTOTest {
 	@Test
 	public void testSimple() {
 		Pseudo pseudo = new Pseudo();
-		pseudo.idStaff = 1;
-		pseudo.pseudo="test";
-		pseudo.login="loginTest";
-		pseudo.action = Action.A;
+		pseudo.setIdStaff(1);
+		pseudo.setCommitPseudo("test");
+		pseudo.setLogin("loginTest");
+		pseudo.setAction(Action.A);
 		Gson g = new Gson();
 
-		Assert.assertTrue("{\"pseudo\":\"test\",\"idStaff\":1,\"login\":\"loginTest\",\"technical\":false,\"action\":\"A\"}".equals(g.toJson(pseudo)));
+		Assert.assertTrue("{\"commitPseudo\":\"test\",\"idStaff\":1,\"login\":\"loginTest\",\"technical\":false,\"action\":\"A\"}".equals(g.toJson(pseudo)));
 		LoggerFactory.getLogger(GhostDTOTest.class).debug(g.toJson(pseudo)); 
 	}
 

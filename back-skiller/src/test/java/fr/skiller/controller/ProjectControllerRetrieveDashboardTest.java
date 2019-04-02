@@ -36,7 +36,7 @@ import fr.skiller.data.internal.Project;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectController_retrieveDashboard_Test {
+public class ProjectControllerRetrieveDashboardTest {
 
 	/**
 	 * Initialization of the Google JSON parser.

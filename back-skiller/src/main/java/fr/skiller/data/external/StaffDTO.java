@@ -13,14 +13,14 @@ import fr.skiller.data.internal.Staff;
  */
 public class StaffDTO extends BaseDTO {
 
-	public Staff staff;
+	private Staff staff;
 
 	/**
 	 * @param staff
 	 */
 	public StaffDTO(Staff staff) {
 		super();
-		this.staff = staff;
+		this.setStaff(staff);
 	}
 
 	/**
@@ -30,9 +30,23 @@ public class StaffDTO extends BaseDTO {
 	 */
 	public StaffDTO(Staff staff, int code, String message) {
 		super();
-		this.staff = staff;
+		this.setStaff(staff);
 		this.code = code;
 		this.message = message;
+	}
+
+	/**
+	 * @return the staff
+	 */
+	public Staff getStaff() {
+		return staff;
+	}
+
+	/**
+	 * @param staff the staff to set
+	 */
+	public void setStaff(Staff staff) {
+		this.staff = staff;
 	}
 
 }

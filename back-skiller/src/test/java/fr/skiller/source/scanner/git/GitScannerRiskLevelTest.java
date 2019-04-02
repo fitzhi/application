@@ -47,8 +47,8 @@ public class GitScannerRiskLevelTest {
 		
 		riskSurveyor.meanTheRisk(subData);
 		
-		subData = data.children.get(1);
-		Assert.assertEquals("AB", subData.location);
+		subData = data.getChildren().get(1);
+		Assert.assertEquals("AB", subData.getLocation());
 		Assert.assertEquals(5, subData.getRiskLevel());
 	}
 
@@ -68,8 +68,8 @@ public class GitScannerRiskLevelTest {
 		
 		riskSurveyor.meanTheRisk(subData);
 		
-		subData = data.children.get(1);
-		Assert.assertEquals("AB", subData.location);
+		subData = data.getChildren().get(1);
+		Assert.assertEquals("AB", subData.getLocation());
 		Assert.assertEquals(5, subData.getRiskLevel());
 	}
 

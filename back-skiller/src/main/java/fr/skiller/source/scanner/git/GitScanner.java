@@ -207,18 +207,18 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(
 					"Using GIT repository path %s cloned in %s", 
-					settings.url, path.toAbsolutePath()));
+					settings.getUrl(), path.toAbsolutePath()));
 		}
 
-		Git.cloneRepository().setDirectory(path.toAbsolutePath().toFile()).setURI(settings.url)
-				.setCredentialsProvider(new UsernamePasswordCredentialsProvider(settings.login, settings.password))
+		Git.cloneRepository().setDirectory(path.toAbsolutePath().toFile()).setURI(settings.getUrl())
+				.setCredentialsProvider(new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()))
 				.call();
 
 		if (logger.isDebugEnabled()) {
 			logger.debug("clone of repository done !");
 		}
 		// Saving the local repository location
-		settings.localRepository = path.toAbsolutePath().toString();
+		settings.setLocalRepository(path.toAbsolutePath().toString());
 		
 	}
 
@@ -247,7 +247,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			return repository;
 		}
 		
-		if (settings.localRepository == null) {
+		if (settings.getLocalRepository() == null) {
 			throw new SkillerException(Error.CODE_REPO_MUST_BE_ALREADY_CLONED, Error.MESSAGE_REPO_MUST_BE_ALREADY_CLONED);
 		}
 		
@@ -257,7 +257,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		// Repository 
 		final CommitRepository repositoryOfCommit;
 		
-  		try (Git git = Git.open(new File(settings.localRepository)) ) {
+  		try (Git git = Git.open(new File(settings.getLocalRepository())) ) {
 
 			Repository repo = git.getRepository();
 			ObjectId headId = repo.resolve(Constants.HEAD);
@@ -322,13 +322,13 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 								// We check if this unknown author has a related developer in the ghosts collection
 								if ( (staff == null) && (author.split(" ").length == 1) ) {
 									Optional<Ghost> oGhost = project.getGhosts().stream()
-										.filter(g -> (!g.technical))
+										.filter(g -> (!g.isTechnical()))
 										.filter(g -> 
-											author.equalsIgnoreCase(g.pseudo)
+											author.equalsIgnoreCase(g.getPseudo())
 										).findFirst();
 									if (oGhost.isPresent()) {
 										Ghost selectedGhost =  oGhost.get();
-										staff = staffHandler.getStaff().get(selectedGhost.idStaff);
+										staff = staffHandler.getStaff().get(selectedGhost.getIdStaff());
 										// We find a staff entry, but we keep the pseudo in the unknowns list
 										// in order to be able to change the connection in the dedicated dialog box
 										unknown.add(author);
@@ -440,10 +440,10 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("%d contributors retrieved : ", contributors.size()));
 			contributors.stream().forEach(contributor -> {
-				String fullname = staffHandler.getFullname(contributor.idStaff);
+				String fullname = staffHandler.getFullname(contributor.getIdStaff());
 				logger.debug(String.format(
 						"%d %s", 
-						contributor.idStaff, (fullname != null) ? fullname : "unknown"));
+						contributor.getIdStaff(), (fullname != null) ? fullname : "unknown"));
 			});
 		}
 
@@ -460,7 +460,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		
 		// Fill the holes for directories without source files, and therefore without risk level measured.
 		// We do not fill the holes if the chart is filtered on a specific developer
-		if (fillTheHoles && cfgGeneration.idStaffSelected==0) {
+		if (fillTheHoles && cfgGeneration.getIdStaffSelected()==0) {
 			this.riskSurveyor.meanTheRisk(data.riskChartData);
 		}
 		
@@ -471,14 +471,14 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			if ( (data.undefinedContributors != null) && (!data.undefinedContributors.isEmpty()) ) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("Unknown contributors detected during the dashboard generation").append(LN);
-				data.undefinedContributors.stream().forEach(ukwn -> sb.append(ukwn.pseudo).append(LN));
+				data.undefinedContributors.stream().forEach(ukwn -> sb.append(ukwn.getCommitPseudo()).append(LN));
 				logger.debug(sb.toString());
 			}
 			
 			if ((project.getGhosts() != null) && (!project.getGhosts().isEmpty())) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("Registered ghosts in the project record :").append(LN);
-				project.getGhosts().stream().forEach(g -> sb.append(g.pseudo).append(" : ").append(g.idStaff).append("/").append(g.technical).append(LN));
+				project.getGhosts().stream().forEach(g -> sb.append(g.getPseudo()).append(" : ").append(g.getIdStaff()).append("/").append(g.isTechnical()).append(LN));
 				logger.debug(sb.toString());					
 			}
 		}
@@ -487,17 +487,17 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 
 	@Override
 	public CommitRepository personalizeRepo(CommitRepository globalRepo, SettingsGeneration settings) {
-		final Date startingDate = new Date(settings.startingDate);
+		final Date startingDate = new Date(settings.getStartingDate());
 		if (logger.isDebugEnabled()) {
 			logger.debug(
 				MessageFormat.format(
 					"Filtering the repositiory for id:{0}, and starting date:{1}", 
-					settings.idStaffSelected, startingDate));
+					settings.getIdStaffSelected(), startingDate));
 		}
 		CommitRepository personalizedRepo = new BasicCommitRepository(); 
 		for (CommitHistory commits : globalRepo.getRepository().values()) {
 			commits.operations.stream()
-				.filter(it -> ((it.idStaff == settings.idStaffSelected) || (settings.idStaffSelected == 0)))
+				.filter(it -> ((it.idStaff == settings.getIdStaffSelected()) || (settings.getIdStaffSelected() == 0)))
 				.filter(it -> (it.dateCommit).after(startingDate))
 				.forEach(item -> personalizedRepo.addCommit(commits.sourcePath, item.idStaff, item.dateCommit));
 		}
@@ -514,9 +514,9 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 
 		if (project.isDirectAccess()) {
 			ConnectionSettings settings = new ConnectionSettings();
-			settings.url = project.getUrlRepository();
-			settings.login = project.getUsername();
-			settings.password = project.getPassword();
+			settings.setUrl(project.getUrlRepository());
+			settings.setLogin(project.getUsername());
+			settings.setPassword(project.getPassword());
 			return settings;
 		}
 		
@@ -534,7 +534,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 				
 				// We accept a global URL declared in the connection file, but its value will be overridden if the project get its own.
 				if (project.getUrlRepository() != null) {
-					settings.url = project.getUrlRepository();
+					settings.setUrl(project.getUrlRepository());
 				}
 			} catch (IOException  ioe) {
 				throw new SkillerException(
@@ -544,7 +544,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			}
 			
 			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("GIT remote URL %s with user %s", settings.url, settings.login));
+				logger.debug(String.format("GIT remote URL %s with user %s", settings.getUrl(), settings.getLogin()));
 			}
 			return settings;
 		}

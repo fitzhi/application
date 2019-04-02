@@ -11,12 +11,12 @@ public abstract class BaseDTO {
 	/**
 	 * Back-end code error
 	 */
-	public int code = 0;
+	protected int code = 0;
 	
 	/**
 	 * Back-end message
 	 */
-	public String message = "";
+	protected String message = "";
 
 	/**
 	 * @param code error code
@@ -32,6 +32,21 @@ public abstract class BaseDTO {
 	 * Empty constructor.
 	 */
 	public BaseDTO() {
-		
+		// Empty constructor.
 	}
+	
+	/**
+	 * @return the code
+	 */
+	public int getCode() {
+		return code;
+	}
+
+	/**
+	 * @return the message
+	 */
+	public String getMessage() {
+		return message;
+	}
+	
 }

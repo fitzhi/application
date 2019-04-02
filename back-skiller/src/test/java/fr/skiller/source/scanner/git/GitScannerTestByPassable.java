@@ -90,7 +90,7 @@ public class GitScannerTestByPassable {
 		fr.close();
 		
 		if (logger.isDebugEnabled()) {
-			logger.debug("GIT remote URL " + settings.url);
+			logger.debug("GIT remote URL " + settings.getUrl());
 		}
 	}
 
@@ -102,7 +102,7 @@ public class GitScannerTestByPassable {
 		Project project = new Project(1, "VEGEO");
 		
 		scanner.clone(project, settings);
-        assertThat(settings.localRepository).isNotNull();
+        assertThat(settings.getLocalRepository()).isNotNull();
         
 		final CommitRepository repo = scanner.parseRepository(project, settings);
         assertThat(repo.size()).isGreaterThan(0);
@@ -112,7 +112,7 @@ public class GitScannerTestByPassable {
 		if (logger.isDebugEnabled()) {
 			repo.contributors()
 				.stream()
-				.filter(contributor -> contributor.idStaff != UNKNOWN)
+				.filter(contributor -> contributor.getIdStaff() != UNKNOWN)
 				.forEach(idStaff -> {
 					Staff staff = staffHandler.getStaff().get(idStaff);
 					if (staff == null) {
@@ -131,6 +131,6 @@ public class GitScannerTestByPassable {
 	@After
 	public void after() throws IOException {
 		if (!bypass)
-			FileUtils.deleteDirectory(new File(settings.localRepository));
+			FileUtils.deleteDirectory(new File(settings.getLocalRepository()));
 	}
 }

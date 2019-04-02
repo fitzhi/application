@@ -38,17 +38,21 @@ public class TestControllerTest {
 	Gson gson = new GsonBuilder().create();
 
 	@Test
-	public void testVerySimple_post_a_String() throws Exception {
+	public void testVerySimplePostString() throws Exception {
 		String ret = this.mvc.perform(post("/test/post_a_String").content("test")).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();		
 		assert ("test OK".equals(ret));
 	}
 	
 	@Test
-	public void testVerySimple_post_a_Test() throws Exception {
-		String ret = this.mvc.perform(post("/test/post_a_Test").
-				content(gson.toJson( new fr.skiller.data.internal.Test("test@"))).contentType(MediaType.APPLICATION_JSON)).
-				andExpect(status().isOk()).
-				andReturn().getResponse().getContentAsString();	
+	public void testVerySimplePostTest() throws Exception {
+		
+		String ret = this.mvc.perform(post("/test/post_a_Test")
+				.content(gson.toJson( new fr.skiller.data.internal.ForTest("test@")))
+				.contentType(MediaType.APPLICATION_JSON))
+				.andExpect(status().isOk())
+				.andReturn()
+				.getResponse()
+				.getContentAsString();	
 		Assert.assertEquals("{\"test\":\"test@ OK\"}", ret);
 	}
 

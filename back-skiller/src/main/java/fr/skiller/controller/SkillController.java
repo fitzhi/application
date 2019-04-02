@@ -1,12 +1,10 @@
 package fr.skiller.controller;
 
-import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,7 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
@@ -27,6 +24,8 @@ import fr.skiller.data.internal.Skill;
 import fr.skiller.exception.SkillerException;
 
 import static fr.skiller.Error.getStackTrace;
+import static fr.skiller.Global.BACKEND_RETURN_CODE;
+import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
 
 @RestController
 @RequestMapping("/skill")
@@ -42,55 +41,56 @@ public class SkillController {
 	@Autowired
 	SkillHandler skillHandler;
 
-	@RequestMapping(value = "/name/{projectName}", method = RequestMethod.GET)
-	ResponseEntity<SkillDTO> read(@PathVariable("projectName") String skillTitle) {
+	@GetMapping(value = "/name/{projectName}")
+	public ResponseEntity<SkillDTO> read(@PathVariable("projectName") String skillTitle) {
 		
 		final ResponseEntity<SkillDTO> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 		
 		Optional<Skill> result = skillHandler.lookup(skillTitle);
 		if (result.isPresent()) {
-			responseEntity = new ResponseEntity<SkillDTO>(new SkillDTO(result.get()), new HttpHeaders(), HttpStatus.OK);
+			responseEntity = new ResponseEntity<>(new SkillDTO(result.get()), new HttpHeaders(), HttpStatus.OK);
 		} else {
-			responseEntity = new ResponseEntity<SkillDTO>(
+			responseEntity = new ResponseEntity<>(
 					new SkillDTO(new Skill(), 404, "There is no skill for the name " + skillTitle), 
 					headers, 
 					HttpStatus.NOT_FOUND);
 			if (logger.isDebugEnabled()) {
-				logger.debug("Cannot find a skill with the name " + skillTitle);
+				logger.debug(String.format("Cannot find a skill with the name %s", skillTitle));
 			}			
 		}
 		return responseEntity;
 	}
 	
-	@RequestMapping(value = "/{idParam}", method = RequestMethod.GET)
-	ResponseEntity<Skill> read(@PathVariable("idParam") int idParam) {
+	@GetMapping(value = "/{idParam}")
+	public ResponseEntity<Skill> read(@PathVariable("idParam") int idParam) {
 
 		final ResponseEntity<Skill> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
 
 		final Skill searchSkill = skillHandler.getSkills().get(idParam);
 		if (searchSkill != null) {
-			responseEntity = new ResponseEntity<Skill>(searchSkill, headers, HttpStatus.OK);
+			responseEntity = new ResponseEntity<>(searchSkill, headers, HttpStatus.OK);
 			if (logger.isDebugEnabled()) {
-				logger.debug("Skill read for id " + String.valueOf(idParam) + " returns " + responseEntity.getBody());
+				logger.debug(String.format(
+					"Skill read for id %d returns %s", idParam, responseEntity.getBody()));
 			}
 		} else {
-			headers.set("backend.return_code", "O");
-			headers.set("backend.return_message", "There is no collaborator associated to the id " + idParam);
-			responseEntity = new ResponseEntity<Skill>(new Skill(), headers, HttpStatus.NOT_FOUND);
+			headers.set(BACKEND_RETURN_CODE, "O");
+			headers.set(BACKEND_RETURN_MESSAGE, "There is no collaborator associated to the id " + idParam);
+			responseEntity = new ResponseEntity<>(new Skill(), headers, HttpStatus.NOT_FOUND);
 			if (logger.isDebugEnabled()) {
-				logger.debug("Cannot find a skill for id " + String.valueOf(idParam));
+				logger.debug(String.format("Cannot find a skill for id %d", idParam));
 			}
 		}
 		return responseEntity;
 	}
 
 	@GetMapping("/all")
-	String readAll() {
+	public String readAll() {
 		final String resultContent = g.toJson(skillHandler.getSkills().values());
 		if (logger.isDebugEnabled()) {
-			logger.debug("'/skill/all' is returning " + resultContent);
+			logger.debug(String.format("'/skill/all' is returning %s", resultContent));
 		}
 		return resultContent;
 	}
@@ -101,21 +101,20 @@ public class SkillController {
 	 * @return the (new) skill updated 
 	 */
 	@PostMapping("/save")
-	ResponseEntity<Skill> add(@RequestBody Skill skill) {
+	public ResponseEntity<Skill> add(@RequestBody Skill skill) {
 
 		final ResponseEntity<Skill> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
-		Map<Integer, Skill> skills = skillHandler.getSkills();
 
 		if (skill.getId() == 0) {
 			skillHandler.addNewSkill(skill);
-			headers.add("backend.return_code", "1");
+			headers.add(BACKEND_RETURN_CODE, "1");
 			responseEntity = new ResponseEntity<>(skill, headers, HttpStatus.OK);
 		} else {
 			if (!skillHandler.containsSkill(skill.getId())) {
 				responseEntity = new ResponseEntity<>(skill, headers, HttpStatus.NOT_FOUND);
-				headers.add("backend.return_code", "O");
-				responseEntity.getHeaders().set("backend.return_message",
+				headers.add(BACKEND_RETURN_CODE, "O");
+				responseEntity.getHeaders().set(BACKEND_RETURN_MESSAGE,
 						"There is no skill associated to the id " + skill.getId());
 				responseEntity.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
 			} else {
@@ -130,7 +129,7 @@ public class SkillController {
 			}
 		}
 		if (logger.isDebugEnabled()) {
-			logger.debug("POST command on /skill/save returns the body " + responseEntity.getBody());
+			logger.debug(String.format("POST command on /skill/save returns the body %s", responseEntity.getBody()));
 		}
 		return responseEntity;
 	}

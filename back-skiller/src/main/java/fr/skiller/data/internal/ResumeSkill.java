@@ -34,10 +34,10 @@ public class ResumeSkill extends ResumeSkillIdentifier implements Comparable<Res
 	@Override
 	public int compareTo(ResumeSkill o) {
 		// The first 7 skills are languages, they are inserted on top of the list.
-		if (o.idSkill <= LIMIT_LANGUAGE) {
+		if (o.getIdSkill() <= LIMIT_LANGUAGE) {
 			return 1;
 		} else {
-			return (int) (o.count - this.count);
+			return (int) (o.getCount() - this.getCount());
 		}
 	}
 

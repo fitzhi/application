@@ -13,6 +13,8 @@ import java.util.Optional;
 import java.util.Set;
 
 import fr.skiller.Global;
+import fr.skiller.SkillerRuntimeException;
+
 import static fr.skiller.Global.UNKNOWN;
 import static fr.skiller.Global.LN;
 /**
@@ -26,12 +28,12 @@ public class RiskChartData {
 	 * A class like {@code org.junit.runner.RunWith} involve 3 instances of SunbustData, one for
 	 * <code>org</code>, <code>junit</code> and <code>runner</code>
 	 */
-    public String location;
+    private String location;
     
     /**
      * Last date of update for the source file inside the package/directory 
      */
-    public Date lastUpdate;
+    private Date lastUpdate;
     
     /**
      * Level of risk evaluated for this location.
@@ -43,17 +45,17 @@ public class RiskChartData {
 	 * The color of the slice of sunburst representing this directory. <br/>
 	 * By default, this color will be grey.
 	 */    
-    public String color ="whiteSmoke";
+    private String color ="whiteSmoke";
     
 	/**
 	 * Number of source files contained within this directory and its subsequent sub-directories.
 	 */        
-    public int numberOfFiles;
+    private int numberOfFiles;
     
 	/**
 	 * Array containing the sub-directories of the actual directory.
 	 */        
-    public List<RiskChartData> children;
+    private List<RiskChartData> children;
 
     /**
      * Source file located inside this directory.
@@ -65,7 +67,7 @@ public class RiskChartData {
 	 */
 	public RiskChartData(String location) {
 		super();
-		this.location = location;
+		this.setLocation(location);
 	}
    
 	/**
@@ -74,14 +76,14 @@ public class RiskChartData {
 	 * @return the item in the list corresponding to the passed subDir <br/><i>(either the newly inserted  item, or the already recorded one)</i>
 	 */
 	public RiskChartData addsubDir(final RiskChartData subDir) {
-		if (children == null) {
-			children = new ArrayList<>();
-			children.add(subDir);
+		if (getChildren() == null) {
+			setChildren(new ArrayList<>());
+			getChildren().add(subDir);
 			return subDir;
 		} else {
-			Optional<RiskChartData> opt = children.stream().filter(data -> data.location.equals(subDir.location)).findAny();
+			Optional<RiskChartData> opt = getChildren().stream().filter(data -> data.getLocation().equals(subDir.getLocation())).findAny();
 			if (!opt.isPresent()) {
-				children.add(subDir);	
+				getChildren().add(subDir);	
 				return subDir;
 			} else {
 				return opt.get();
@@ -100,8 +102,8 @@ public class RiskChartData {
 		// We register the filename in the source files set
 		if (dirAndFilename.length == 1) {
 			element.addSource(dirAndFilename[0], latestCommit, committers);
-			if ((element.lastUpdate == null) || (element.lastUpdate.before(latestCommit)))  {
-				element.lastUpdate = latestCommit;
+			if ((element.getLastUpdate() == null) || (element.getLastUpdate().before(latestCommit)))  {
+				element.setLastUpdate(latestCommit);
 			}
 			return;
 		}
@@ -114,15 +116,15 @@ public class RiskChartData {
 	@Override
 	public String toString() {
 		final StringBuilder sb = new StringBuilder();
-		if (children!=null) {
-			for (RiskChartData child : children) {
+		if (getChildren()!=null) {
+			for (RiskChartData child : getChildren()) {
 				sb.append("\t"+child.toString()+Global.LN);
 			}
 		}
-		return "CodeDir [directory=" + location 
-				+ ", lastUpdate=" + ((lastUpdate == null) ? "null" : lastUpdate) 
-				+ ", color=" + ((color == null) ? "null" : color)
-				+ ", numberOfFiles=" + numberOfFiles
+		return "CodeDir [directory=" + getLocation() 
+				+ ", lastUpdate=" + ((getLastUpdate() == null) ? "null" : getLastUpdate()) 
+				+ ", color=" + ((getColor() == null) ? "null" : getColor())
+				+ ", numberOfFiles=" + getNumberOfFiles()
 				+ ( (sb.toString().length()>0) ? (Global.LN + sb.toString()) : "")
 				+ "]";
 	}
@@ -136,13 +138,13 @@ public class RiskChartData {
 	public void addSource(final String filename, final Date lastCommit, final int[] committers) {
 		
 		if (this.sources == null) {
-			this.sources = new HashSet<SourceFile>();
+			this.sources = new HashSet<>();
 		}
-		if (this.sources.stream().anyMatch(item -> item.filename.equals(filename))) {
-			throw new RuntimeException(filename + " already exists.");
+		if (this.sources.stream().anyMatch(item -> item.getFilename().equals(filename))) {
+			throw new SkillerRuntimeException(filename + " already exists.");
 		}
 		this.sources.add(new SourceFile(filename, lastCommit, committers));
-		this.numberOfFiles = this.sources.size();
+		this.setNumberOfFiles(this.sources.size());
 	}
 
 	/**
@@ -174,6 +176,83 @@ public class RiskChartData {
 	 */
 	public Set<SourceFile> getClassnames() {
 		return sources;
+	}
+
+	/**
+	 * A location (directory) inside the tree files of the repository.<br/>
+	 * A class like {@code org.junit.runner.RunWith} involve 3 instances of SunbustData, one for
+	 * <code>org</code>, <code>junit</code> and <code>runner</code>
+	 * 
+	 * @return the location
+	 */
+	public String getLocation() {
+		return location;
+	}
+
+	/**
+	 * @param location the location to set
+	 */
+	public void setLocation(String location) {
+		this.location = location;
+	}
+
+	/**
+	 * @return the lastUpdate, last date of update for the source file inside the package/directory 
+	 */
+	public Date getLastUpdate() {
+		return lastUpdate;
+	}
+
+	/**
+	 * @param lastUpdate the lastUpdate to set
+	 */
+	public void setLastUpdate(Date lastUpdate) {
+		this.lastUpdate = lastUpdate;
+	}
+
+	/**
+	 * @return the color of the slice of sunburst representing this directory. <br/>
+	 * By default, this color will be grey.
+	 */
+	public String getColor() {
+		return color;
+	}
+
+	/**
+	 * @param color the color to set
+	 */
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	/**
+	 * @return the numberOfFiles number of source files contained within this directory 
+	 * and its subsequent sub-directories.
+	 */
+	public int getNumberOfFiles() {
+		return numberOfFiles;
+	}
+
+	/**
+	 * @param numberOfFiles the numberOfFiles to set
+	 */
+	public void setNumberOfFiles(int numberOfFiles) {
+		this.numberOfFiles = numberOfFiles;
+	}
+
+	/**
+	 * @return the children, an Array containing the sub-directories of the actual directory.
+	 */
+	public List<RiskChartData> getChildren() {
+		return children;
+	}
+
+	/**
+	 * @param children the children to set.
+	 * <br/>children is an array containing the sub-directories of the actual directory.
+	 */
+	public void setChildren(List<RiskChartData> children) {
+		this.children = children;
 	}
 	
 }

@@ -15,32 +15,32 @@ public class Mission {
 	/**
 	 * The project identifier.
 	 */
-	public int idProject;
+	private int idProject;
 
 	/**
 	 * The project name.
 	 */
-	public String name;
+	private String name;
 	
 	/**
 	 * Date of the first commit.
 	 */
-	public Date firstCommit;
+	private Date firstCommit;
 
 	/**
 	 * Date of the latest commit.
 	 */
-	public Date lastCommit;
+	private Date lastCommit;
 	
 	/**
 	 * @return number of commit submitted by a developer inside the project.
 	 */
-	public int numberOfCommits;
+	private int numberOfCommits;
 	
 	/**
 	 * @return number of files modifier by a developer inside the project.
 	 */
-	public int numberOfFiles;
+	private int numberOfFiles;
 
 	/**
 	 * Empty constructor for (de)serialization usage.
@@ -77,6 +77,90 @@ public class Mission {
 	public String toString() {
 		return "Mission [idProject=" + idProject + ", name=" + name + ", firstCommit=" + firstCommit + ", lastCommit="
 				+ lastCommit + ", numberOfCommits=" + numberOfCommits + ", numberOfFiles=" + numberOfFiles + "]";
+	}
+
+	/**
+	 * @return the idProject
+	 */
+	public int getIdProject() {
+		return idProject;
+	}
+
+	/**
+	 * @param idProject the idProject to set
+	 */
+	public void setIdProject(int idProject) {
+		this.idProject = idProject;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/**
+	 * @return the firstCommit
+	 */
+	public Date getFirstCommit() {
+		return firstCommit;
+	}
+
+	/**
+	 * @param firstCommit the firstCommit to set
+	 */
+	public void setFirstCommit(Date firstCommit) {
+		this.firstCommit = firstCommit;
+	}
+
+	/**
+	 * @return the lastCommit
+	 */
+	public Date getLastCommit() {
+		return lastCommit;
+	}
+
+	/**
+	 * @param lastCommit the lastCommit to set
+	 */
+	public void setLastCommit(Date lastCommit) {
+		this.lastCommit = lastCommit;
+	}
+
+	/**
+	 * @return the numberOfCommits
+	 */
+	public int getNumberOfCommits() {
+		return numberOfCommits;
+	}
+
+	/**
+	 * @param numberOfCommits the numberOfCommits to set
+	 */
+	public void setNumberOfCommits(int numberOfCommits) {
+		this.numberOfCommits = numberOfCommits;
+	}
+
+	/**
+	 * @return the numberOfFiles
+	 */
+	public int getNumberOfFiles() {
+		return numberOfFiles;
+	}
+
+	/**
+	 * @param numberOfFiles the numberOfFiles to set
+	 */
+	public void setNumberOfFiles(int numberOfFiles) {
+		this.numberOfFiles = numberOfFiles;
 	}	
 
 }

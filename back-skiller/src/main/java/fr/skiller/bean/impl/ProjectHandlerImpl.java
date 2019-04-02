@@ -89,17 +89,17 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		staffHandler.getStaff().values().forEach(staff -> {
 			Optional<Mission> optMission  = 
 						staff.getMissions().stream()
-						.filter(mission -> mission.idProject == idProject)
+						.filter(mission -> mission.getIdProject() == idProject)
 						.findFirst();
 			if (optMission.isPresent()) {
 				Mission mission = optMission.get();
 				contributors.add(
 						new Contributor(
 								staff.getIdStaff(), 
-								mission.firstCommit, 
-								mission.lastCommit, 
-								mission.numberOfCommits, 
-								mission.numberOfFiles));
+								mission.getFirstCommit(), 
+								mission.getLastCommit(), 
+								mission.getNumberOfCommits(), 
+								mission.getNumberOfFiles()));
 			}
 		});
 		return contributors;
@@ -148,56 +148,56 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		for (Pseudo pseudo : pseudos) {
 			
 			// Nothing to do for this pseudo. We'll keep him present in the list. 
-			if ( ((pseudo.login == null) || (pseudo.login.length() == 0)) && !pseudo.technical ) {
+			if ( ((pseudo.getLogin() == null) || (pseudo.getLogin().length() == 0)) && !pseudo.isTechnical() ) {
 				// In fact, this pseudo was present in the project.ghosts list, we'll remove it
-				if (getGhost(project, pseudo.pseudo) != null) {
-					pseudo.action = Action.D;
+				if (getGhost(project, pseudo.getCommitPseudo()) != null) {
+					pseudo.setAction(Action.D);
 					newPseudos.add(pseudo);
 				}
 				continue;
 			}
 			
-			if ((pseudo.login != null) && (pseudo.login.length() > 0)) {
+			if ((pseudo.getLogin() != null) && (pseudo.getLogin().length() > 0)) {
 				List<Staff> result = staffHandler.getStaff().values()
 					.stream()
-					.filter(staff -> pseudo.login.equals(staff.getLogin()))
+					.filter(staff -> pseudo.getLogin().equals(staff.getLogin()))
 					.collect(Collectors.toList());
 				
 				// Unknown login
 				if (result.isEmpty()) {
-					pseudo.action = Action.N;
+					pseudo.setAction(Action.N);
 					newPseudos.add(pseudo);
 					continue;
 				}
 				
 				if (result.size() > 1) {
 					throw new SkillerException(CODE_MULTIPLE_LOGIN, 
-							MessageFormat.format(MESSAGE_PROJECT_NOFOUND, pseudo.login, result.size()));
+							MessageFormat.format(MESSAGE_PROJECT_NOFOUND, pseudo.getLogin(), result.size()));
 				}
 				
-				newGhosts.add(new Ghost(pseudo.pseudo, result.get(0).getIdStaff(), false));
-				Ghost gh = getGhost(project, pseudo.pseudo);
+				newGhosts.add(new Ghost(pseudo.getCommitPseudo(), result.get(0).getIdStaff(), false));
+				Ghost gh = getGhost(project, pseudo.getCommitPseudo());
 				if (gh == null) {
-					pseudo.action = Action.A;
+					pseudo.setAction(Action.A);
 				} else {
-					pseudo.action =  (gh.idStaff == result.get(0).getIdStaff()) ? Action.N : Action.U;
+					pseudo.setAction((gh.getIdStaff() == result.get(0).getIdStaff()) ? Action.N : Action.U);
 				}
-				pseudo.idStaff = result.get(0).getIdStaff();
-				pseudo.fullName = staffHandler.getFullname(pseudo.idStaff);
+				pseudo.setIdStaff(result.get(0).getIdStaff());
+				pseudo.setFullName(staffHandler.getFullname(pseudo.getIdStaff()));
 				newPseudos.add(pseudo);
 			}
 			
 			// login technical and not a developer.
-			if (pseudo.technical) {
-				newGhosts.add(new Ghost(pseudo.pseudo, true));	
-				Ghost gh = getGhost(project, pseudo.pseudo);
-				pseudo.technical = true;
-				pseudo.idStaff = Ghost.NULL;
-				pseudo.fullName = "";
+			if (pseudo.isTechnical()) {
+				newGhosts.add(new Ghost(pseudo.getCommitPseudo(), true));	
+				Ghost gh = getGhost(project, pseudo.getCommitPseudo());
+				pseudo.setTechnical(true);
+				pseudo.setIdStaff(Ghost.NULL);
+				pseudo.setFullName("");
 				if (gh == null) {
-					pseudo.action = Action.A;
+					pseudo.setAction(Action.A);
 				} else {
-					pseudo.action =  (gh.idStaff > 0) ? Action.U : Action.N;
+					pseudo.setAction((gh.getIdStaff() > 0) ? Action.U : Action.N);
 				}
 				newPseudos.add(pseudo);						
 			}
@@ -214,7 +214,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Override
 	public Ghost getGhost(final Project project, final String pseudo) {
 		List<Ghost> actualGhosts = project.getGhosts().stream()
-				.filter(g -> g.pseudo.equals(pseudo))
+				.filter(g -> g.getPseudo().equals(pseudo))
 				.collect(Collectors.toList());
 		return actualGhosts.isEmpty() ? null : actualGhosts.get(0);
 	}

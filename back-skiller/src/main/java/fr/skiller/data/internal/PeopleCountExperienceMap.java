@@ -8,13 +8,13 @@ import java.util.Map;
  */
 public class PeopleCountExperienceMap {
 
-	public Map<String, Long> data = new HashMap<String, Long>();
+	private final Map<String, Long> data = new HashMap<>();
 	
 	/**
 	 * @param countsSkillLevel additional map to be stored in the data object
 	 */
 	public void putAll(final Map<String, Long> countsSkillLevel) {
-		data.putAll(countsSkillLevel);
+		getData().putAll(countsSkillLevel);
 	}
 
 	/**
@@ -23,7 +23,14 @@ public class PeopleCountExperienceMap {
 	 * @return the count number for this experience
 	 */
 	public Long get(final String experience) {
-		return data.get(experience);
+		return getData().get(experience);
+	}
+
+	/**
+	 * @return the data
+	 */
+	public Map<String, Long> getData() {
+		return data;
 	}
 
 }

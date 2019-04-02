@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.StaffHandler;
 
 /**
@@ -27,12 +28,12 @@ public class CommitHistory {
 	 * Level of risk on this source file. <br/>
 	 * This risk is evaluate by {@link fr.skiller.source.scanner.RepoScanner#evaluateTheRisk(CommitRepository)}
 	 */
-	public int riskLevel;
+	int riskLevel;
 	
 	/**
 	 * All operations that occur on the source file.
 	 */
-	public final List<Operation> operations = new ArrayList<Operation>();
+	public final List<Operation> operations = new ArrayList<>();
 
 	/**
 	 * @param sourcePath
@@ -83,7 +84,12 @@ public class CommitHistory {
 	 */
 	//TODO Filter this date on the active staff members.
 	public Date evaluateDateLastestCommit() {
-		return operations.stream().map(operation->operation.dateCommit).max(Date::compareTo).get();
+		Optional<Date> optDate = operations.stream().map(operation->operation.dateCommit).max(Date::compareTo);
+		if (optDate.isPresent()) {
+			return optDate.get();
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -116,7 +122,7 @@ public class CommitHistory {
 				.stream()
 				.filter(ope -> ope.idStaff != UNKNOWN)
 				.mapToInt(ope->ope.idStaff)
-				.filter (idStaff -> staffHandler.isActive(idStaff))
+				.filter (staffHandler::isActive)
 				.count();
 	}
 	
@@ -144,7 +150,7 @@ public class CommitHistory {
 			.filter(ope -> ope.idStaff != UNKNOWN)
 			.mapToInt(ope->ope.idStaff)
 			.distinct()
-			.filter (idStaff -> staffHandler.isActive(idStaff))
+			.filter (staffHandler::isActive)
 			.count();
 	}	
 	
@@ -158,7 +164,7 @@ public class CommitHistory {
 		.findFirst();
 
 		if (!lastOpe.isPresent()) {
-			throw new RuntimeException("SEVERE INTERNAL ERROR : Should not pass here!");
+			throw new SkillerRuntimeException("SEVERE INTERNAL ERROR : Should not pass here!");
 		}
 		return lastOpe.get().idStaff;
 	}

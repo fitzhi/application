@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Staff;
+import fr.skiller.exception.SkillerException;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -26,8 +27,12 @@ import fr.skiller.data.internal.Staff;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class StaffHandler_lookup_Test {
+public class StaffHandlerLookupTest {
 
+	private static final String JEROME_SANS_ACCENT = "Jerome WithAccent";
+	
+	private static final String JEROME_WITH_ACCENT = "Jérôme WithAccent";
+	
 	@Autowired
 	private StaffHandler staffHandler;
 
@@ -45,33 +50,33 @@ public class StaffHandler_lookup_Test {
 	}
 	
 	@Test
-	public void testLookupChristian() throws Exception {
+	public void testLookupChristian()  {
 		assertThat(staffHandler.lookup("Christian Aligato Chavez Tugo")).isNotNull();
 	}
 
 	@Test
-	public void testLookupGuorinDeTourvilleGuillaume() throws Exception {
+	public void testLookupGuorinDeTourvilleGuillaume()  {
 		assertThat(staffHandler.lookup("Guorin De Tourville Guillaume")).isNotNull();
 	}
 		
 
 	@Test
-	public void testLookupYassine() throws Exception {
+	public void testLookupYassine() {
 		assertThat(staffHandler.lookup("Ouaamou Mohammed")).isNotNull();
 	}
 
 	@Test
-	public void testLookupJeromeWithAccent() throws Exception {
-		assertThat(Normalizer.normalize("Jérôme WithAccent", Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", ""))
-		.isEqualTo("Jerome WithAccent");
-		assertThat(staffHandler.lookup("Jérôme WithAccent")).isNotNull();
+	public void testLookupJeromeWithAccent()  {
+		assertThat(Normalizer.normalize(JEROME_WITH_ACCENT, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", ""))
+		.isEqualTo(JEROME_SANS_ACCENT);
+		assertThat(staffHandler.lookup(JEROME_WITH_ACCENT)).isNotNull();
 	}
 	
 	@Test
-	public void testLookupJeromeWithoutAccent() throws Exception {
-		assertThat(Normalizer.normalize("Jérôme WithAccent", Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", ""))
-		.isEqualTo("Jerome WithAccent");
-		assertThat(staffHandler.lookup("Jerome WithAccent")).isNotNull();
+	public void testLookupJeromeWithoutAccent()  {
+		assertThat(Normalizer.normalize(JEROME_WITH_ACCENT, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", ""))
+		.isEqualTo(JEROME_SANS_ACCENT);
+		assertThat(staffHandler.lookup(JEROME_SANS_ACCENT)).isNotNull();
 	}
 	
 	@After

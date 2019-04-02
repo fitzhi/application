@@ -21,17 +21,17 @@ public class SunburstDTO extends BaseDTO {
 	/**
 	 * Project identifier.
 	 */
-	public int idProject;
+	private int idProject;
 	
 	/**
 	 * Data ready made for the sunburst chart.
 	 */
-	public RiskChartData sunburstData;
+	private RiskChartData sunburstData;
 
 	/**
 	 * Array of unknown contributors who are unknown in the staff collection.
 	 */
-	public Set<Pseudo> ghosts;
+	private Set<Pseudo> ghosts;
 	
 	/**
 	 * @param idProject project identifier.
@@ -39,9 +39,9 @@ public class SunburstDTO extends BaseDTO {
 	 */
 	public SunburstDTO(final int idProject, RiskDashboard riskDashboard) {
 		super();
-		this.idProject = idProject;
-		this.sunburstData = riskDashboard.riskChartData;
-		this.ghosts = riskDashboard.undefinedContributors;
+		this.setIdProject(idProject);
+		this.setSunburstData(riskDashboard.riskChartData);
+		this.setGhosts(riskDashboard.undefinedContributors);
 	}
 
 	/**
@@ -52,8 +52,8 @@ public class SunburstDTO extends BaseDTO {
 	 */
 	public SunburstDTO(final int idProject, RiskChartData sunburstData, int code, String message) {
 		super();
-		this.idProject = idProject;
-		this.sunburstData = sunburstData;
+		this.setIdProject(idProject);
+		this.setSunburstData(sunburstData);
 		this.code = code;
 		this.message = message;
 	}
@@ -71,5 +71,47 @@ public class SunburstDTO extends BaseDTO {
 	 * Empty constructor.
 	 */
 	public SunburstDTO() { 
+	}
+
+	/**
+	 * @return the idProject
+	 */
+	public int getIdProject() {
+		return idProject;
+	}
+
+	/**
+	 * @param idProject the idProject to set
+	 */
+	public void setIdProject(int idProject) {
+		this.idProject = idProject;
+	}
+
+	/**
+	 * @return the sunburstData
+	 */
+	public RiskChartData getSunburstData() {
+		return sunburstData;
+	}
+
+	/**
+	 * @param sunburstData the sunburstData to set
+	 */
+	public void setSunburstData(RiskChartData sunburstData) {
+		this.sunburstData = sunburstData;
+	}
+
+	/**
+	 * @return the ghosts
+	 */
+	public Set<Pseudo> getGhosts() {
+		return ghosts;
+	}
+
+	/**
+	 * @param ghosts the ghosts to set
+	 */
+	public void setGhosts(Set<Pseudo> ghosts) {
+		this.ghosts = ghosts;
 	}
 }

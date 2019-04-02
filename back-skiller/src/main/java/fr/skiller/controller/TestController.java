@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.google.gson.Gson;
 
 import fr.skiller.bean.CacheDataHandler;
-import fr.skiller.data.internal.Test;
+import fr.skiller.data.internal.ForTest;
 import fr.skiller.source.scanner.RepoScanner;
 
 @RestController
@@ -54,15 +54,15 @@ public class TestController {
 	private static File resourcesDirectory = new File("src/main/resources");
 
 	@GetMapping("/get")
-	ResponseEntity<Test> test() {
+	public ResponseEntity<ForTest> test() {
 
-		final ResponseEntity<Test> responseEntity;
+		final ResponseEntity<ForTest> responseEntity;
 		final MultiValueMap<String, String> headers = new HttpHeaders();
 		headers.add("test", "test OK MVP");
-		Test t = new Test();
+		ForTest t = new ForTest();
 		t.test = "Ok";
 		
-		responseEntity = new ResponseEntity<Test>(t, headers, HttpStatus.OK);
+		responseEntity = new ResponseEntity<>(t, headers, HttpStatus.OK);
 		if (logger.isDebugEnabled()) {
 			logger.debug(t.toString());
 			logger.debug(headers.toString());
@@ -71,35 +71,35 @@ public class TestController {
 	}
 
 	@PostMapping("/post_a_String")
-	ResponseEntity<String> verySimple_post_a_String(@RequestBody String input) {
+	public ResponseEntity<String> verySimplePostString(@RequestBody String input) {
 
 		if (logger.isDebugEnabled()) {
-			logger.debug("Input " + input);
+			logger.debug(String.format("Input %s", input));
 		}
 		
 		final ResponseEntity<String> responseEntity;
 		final MultiValueMap<String, String> headers = new HttpHeaders();
 		String test = input + " OK";
 		
-		responseEntity = new ResponseEntity<String>(test, headers, HttpStatus.OK);
+		responseEntity = new ResponseEntity<>(test, headers, HttpStatus.OK);
 		if (logger.isDebugEnabled()) {
-			logger.debug(test.toString());
+			logger.debug(responseEntity.toString());
 		}
 		return responseEntity;
 	}
 	
 	@PostMapping("/post_a_Test")
-	ResponseEntity<Test> verySimple_post_a_Test(@RequestBody Test input) {
+	public ResponseEntity<ForTest> verySimplePostTest(@RequestBody ForTest input) {
 
 		if (logger.isDebugEnabled()) {
-			logger.debug("Input.test " + input.test);
+			logger.debug(String.format("Input.test : %s", input.test));
 		}
 		
-		final ResponseEntity<Test> responseEntity;
+		final ResponseEntity<ForTest> responseEntity;
 		final MultiValueMap<String, String> headers = new HttpHeaders();
-		Test test = new Test(input.test + " OK");
+		ForTest test = new ForTest(input.test + " OK");
 		
-		responseEntity = new ResponseEntity<Test>(test, headers, HttpStatus.OK);
+		responseEntity = new ResponseEntity<>(test, headers, HttpStatus.OK);
 		if (logger.isDebugEnabled()) {
 			logger.debug(test.toString());
 			logger.debug(headers.toString());

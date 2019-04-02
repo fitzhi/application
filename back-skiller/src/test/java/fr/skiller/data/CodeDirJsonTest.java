@@ -47,23 +47,23 @@ public class CodeDirJsonTest  {
 	public void testGenerate() throws IOException {
 
 		RiskChartData gRoot = new RiskChartData("VEGEO");
-		gRoot.numberOfFiles = 20;
+		gRoot.setNumberOfFiles(20);
 		
 		RiskChartData g1 = new RiskChartData("com");
-		g1.numberOfFiles = 15;
+		g1.setNumberOfFiles(15);
 		
 		RiskChartData g1_bis = new RiskChartData("fr");
-		g1_bis.numberOfFiles = 5;
+		g1_bis.setNumberOfFiles(5);
 
 		gRoot.addsubDir(g1);
 		gRoot.addsubDir(g1_bis);
 		
 		
 		RiskChartData g2 = new RiskChartData("google");
-		g2.numberOfFiles = 5;
+		g2.setNumberOfFiles(5);
 
 		RiskChartData g3 = new RiskChartData("amazon");
-		g3.numberOfFiles = 10;
+		g3.setNumberOfFiles(10);
 
 		g1.addsubDir(g2);
 		g1.addsubDir(g3);

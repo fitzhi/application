@@ -13,7 +13,7 @@ import fr.skiller.data.internal.Skill;
  */
 public class SkillDTO extends BaseDTO {
 
-	public Skill skill;
+	private Skill skill;
 
 	/**
 	 * @param skill

@@ -15,9 +15,6 @@ public class GlobalConfiguration {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**").allowedOrigins("http://localhost:4200");
-				
-				// Does not work or I cannot use it.
-				// .exposedHeaders("backend.return_code, backend.return_message");
 			}
 		};
 	}
