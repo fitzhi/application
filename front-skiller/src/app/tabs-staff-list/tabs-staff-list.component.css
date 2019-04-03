@@ -7,14 +7,16 @@
     border-radius: 50%;
 }
 
-:host ::ng-deep .mat-tab-header {
+/* Remove for sonar ::ng-deep */
+:host  .mat-tab-header {
     position: fixed !important;
     height: 50px;
     z-index: 1000;
 }
 
 /* active tab */
-:host ::ng-deep .mat-tab-list .mat-tab-labels .mat-tab-label-active {
+/* Remove for sonar ::ng-deep */
+:host .mat-tab-list .mat-tab-labels .mat-tab-label-active {
     background-color: lightgrey;
 }
 

@@ -62,7 +62,9 @@ public class FileSystemStorageService implements StorageService {
             }
             try (InputStream inputStream = file.getInputStream()) {
             	if (logger.isDebugEnabled()) {
-            		logger.debug("Storing upload file to the location " + this.rootLocation.resolve(filename));
+            		logger.debug(String.format(
+            				"Storing upload file to the location %s", 
+            				this.rootLocation.resolve(filename)));
             	}
                 Files.copy(inputStream, this.rootLocation.resolve(filename),
                     StandardCopyOption.REPLACE_EXISTING);
@@ -128,14 +130,14 @@ public class FileSystemStorageService implements StorageService {
     @Override
 	public String readFileTXT(final String fileName) throws IOException {
       	if (logger.isDebugEnabled()) {
-    		logger.debug("readFileTXT (" + this.rootLocation.resolve(fileName) + ")");
+    		logger.debug(String.format("readFileTXT (%s)", this.rootLocation.resolve(fileName)));
     	}
 		StringBuilder sb = new StringBuilder();
 		BufferedReader br = new BufferedReader(new FileReader(new File(fileName)));
-		br.lines().forEach(line -> sb.append(line));
+		br.lines().forEach(sb::append);
 		br.close();
     	if (logger.isDebugEnabled()) {
-    		logger.debug("readFileTXT returns " + sb.toString().length() + " characters.");
+    		logger.debug(String.format("readFileTXT returns %d characters.", sb.toString().length()));
     	}
 		return sb.toString();
 	}
@@ -143,14 +145,14 @@ public class FileSystemStorageService implements StorageService {
     @Override
 	public String readFileDOC(final String fileName) throws IOException {
     	if (logger.isDebugEnabled()) {
-    		logger.debug("readFileDOC (" + this.rootLocation.resolve(fileName) +")");
+    		logger.debug(String.format("readFileDOC (%s)", this.rootLocation.resolve(fileName)));
     	}
 		FileInputStream in = new FileInputStream(this.rootLocation.resolve(fileName).toString());
 		HWPFDocument doc = new HWPFDocument(in);
 		String content = doc.getDocumentText();
 		doc.close();
     	if (logger.isDebugEnabled()) {
-    		logger.debug("readFileDOC returns " + content.length() + " characters.");
+    		logger.debug(String.format("readFileDOC returns %s characters.", content.length()));
     	}
 		return content;
 	}
@@ -158,14 +160,14 @@ public class FileSystemStorageService implements StorageService {
     @Override
 	public String readFileDOCX(final String fileName) throws IOException {
       	if (logger.isDebugEnabled()) {
-    		logger.debug("readFileDOCX (" + this.rootLocation.resolve(fileName) + ")");
+    		logger.debug(String.format("readFileDOCX (%s)", this.rootLocation.resolve(fileName)));
     	}
 		XWPFDocument docx = new XWPFDocument(new FileInputStream(this.rootLocation.resolve(fileName).toString()));
 		XWPFWordExtractor we = new XWPFWordExtractor(docx);
 		String content = we.getText();
 		we.close();
     	if (logger.isDebugEnabled()) {
-    		logger.debug("readFileDOCX returns " + content.length() + " characters.");
+    		logger.debug(String.format("readFileDOCX returns %s characters.", content.length()));
     	}
 		return content;
 	}
@@ -173,7 +175,7 @@ public class FileSystemStorageService implements StorageService {
     @Override
     public String readFilePDF(final String fileName) throws IOException {
       	if (logger.isDebugEnabled()) {
-    		logger.debug("readFilePDF (" + this.rootLocation.resolve(fileName) +")");
+    		logger.debug(String.format("readFilePDF (%s)", this.rootLocation.resolve(fileName)));
     	}
 		PdfReader reader = new PdfReader(this.rootLocation.resolve(fileName).toString());
 		final StringBuilder sb = new StringBuilder();
@@ -182,14 +184,13 @@ public class FileSystemStorageService implements StorageService {
 		}
 		reader.close();
     	if (logger.isDebugEnabled()) {
-    		logger.debug("readFilePDF returns " + sb.toString().length() + " characters.");
+    		logger.debug(String.format("readFilePDF returns %d characters.", sb.toString().length()));
     	}
 		return sb.toString();
 	}
 
 	@Override
 	public long getfileLength(String filename) throws IOException {
-		// TODO Auto-generated method stub
 		return new File(this.rootLocation.resolve(filename).toString()).length();
 	}
 

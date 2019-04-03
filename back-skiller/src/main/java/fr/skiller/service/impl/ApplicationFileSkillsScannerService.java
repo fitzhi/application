@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.data.internal.Resume;
 import fr.skiller.data.internal.Skill;
@@ -32,36 +33,38 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 
 	Logger logger = LoggerFactory.getLogger(ApplicationFileSkillsScannerService.class.getCanonicalName());
 
-	final String carAllowed = "abcdefghijklmnopqrstuvwxyz-+#";
+	private static final String CAR_ALLOWED = "abcdefghijklmnopqrstuvwxyz-+#";
 
 	@Override
 	public Resume extract(final String fileName, final int fileType) throws SkillerException {
 		if (logger.isDebugEnabled()) {
-			logger.debug("extracting skills from " + fileName);
+			logger.debug(String.format("extracting skills from %s", fileName));
 		}
 		try {
 			switch (fileType) {
 			case StorageService.FILE_TYPE_TXT:
-				return extractSkillsfromCV_inFormatTXT(fileName);
+				return extractSkillsfromCVInFormatTXT(fileName);
 			case StorageService.FILE_TYPE_DOC:
-				return extractSkillsfromCV_inFormatDOC(fileName);
+				return extractSkillsfromCVInFormatDOC(fileName);
 			case StorageService.FILE_TYPE_DOCX:
-				return extractSkillsfromCV_inFormatDOCX(fileName);
+				return extractSkillsfromCVInFormatDOCX(fileName);
 			case StorageService.FILE_TYPE_PDF:
-				return extractSkillsfromCV_inFormatPDF(fileName);
+				return extractSkillsfromCVInFormatPDF(fileName);
 			default:
-				throw new RuntimeException("Should not pass here for type " + fileType);
+				throw new SkillerRuntimeException(String.format("Should not pass here for type %s", fileType));
 			}
 		} catch (final IOException ioe) {
-			logger.error("Error for fileName " + fileName);;
-			logger.error(ioe.getLocalizedMessage());
+			if (logger.isErrorEnabled()) {
+				logger.error(String.format("Error for fileName %s", fileName));
+				logger.error(ioe.getLocalizedMessage());
+			}
 			throw new SkillerException(-1, 
 					"IO error occurs when retrieving the skills from the resume."
 					+ "Original error : " + ioe.getLocalizedMessage());
 		}
 	}
 
-	private Resume parseTheApplicationFile(final String token[]) throws SkillerException {
+	private Resume parseTheApplicationFile(final String[] token) throws SkillerException {
 		Resume resume = new Resume();
 		
 		/**
@@ -91,7 +94,7 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 		 * (That might be an indication of their importance) 
 		 */
 		Map<Integer, Long> mapSkills = listSkills.stream()
-				.collect(Collectors.groupingBy(exp -> exp.getId(), Collectors.counting()));
+				.collect(Collectors.groupingBy(Skill::getId, Collectors.counting()));
 
 		mapSkills.keySet().stream().sorted().forEach(key -> resume.put(key, mapSkills.get(key)));
 
@@ -102,9 +105,9 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 	 * @return
 	 * @throws IOException
 	 */
-	private Resume extractSkillsfromCV_inFormatTXT(final String filename) throws IOException, SkillerException {
+	private Resume extractSkillsfromCVInFormatTXT(String filename) throws IOException, SkillerException {
 		if (logger.isDebugEnabled()) {
-			logger.debug("extactSkillsfromCV_inFormatTXT for file " + filename);
+			logger.debug(String.format("extactSkillsfromCV_inFormatTXT for file %s", filename));
 		}
 		WhitespaceTokenizer wtk = WhitespaceTokenizer.INSTANCE;
 		final String content = this.readTheCvInFormatTXT(filename);
@@ -112,27 +115,27 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 		return parseTheApplicationFile(token);
 	}
 
-	private Resume extractSkillsfromCV_inFormatDOCX(final String filename) throws IOException, SkillerException {
+	private Resume extractSkillsfromCVInFormatDOCX(final String filename) throws IOException, SkillerException {
 		if (logger.isDebugEnabled()) {
-			logger.debug("extractSkillsfromCV_inFormatDOCX for file " + filename);
+			logger.debug(String.format("extractSkillsfromCV_inFormatDOCX for file %s", filename));
 		}
 		WhitespaceTokenizer wtk = WhitespaceTokenizer.INSTANCE;
 		String[] token = wtk.tokenize(this.readTheCvInFormatDOCX(filename));
 		return parseTheApplicationFile(token);
 	}
 
-	private Resume extractSkillsfromCV_inFormatDOC(final String filename) throws IOException, SkillerException {
+	private Resume extractSkillsfromCVInFormatDOC(final String filename) throws IOException, SkillerException {
 		if (logger.isDebugEnabled()) {
-			logger.debug("extractSkillsfromCV_inFormatDOC for file " + filename);
+			logger.debug(String.format("extractSkillsfromCV_inFormatDOC for file %s", filename));
 		}
 		WhitespaceTokenizer wtk = WhitespaceTokenizer.INSTANCE;
 		String[] token = wtk.tokenize(this.readTheCvInFormatDOC(filename));
 		return parseTheApplicationFile(token);
 	}
 
-	private Resume extractSkillsfromCV_inFormatPDF(final String filename) throws IOException, SkillerException {
+	private Resume extractSkillsfromCVInFormatPDF(final String filename) throws IOException, SkillerException {
 		if (logger.isDebugEnabled()) {
-			logger.debug("extractSkillsfromCV_inFormatPDF for file " + filename);
+			logger.debug(String.format("extractSkillsfromCV_inFormatPDF for file %s", filename));
 		}
 		WhitespaceTokenizer wtk = WhitespaceTokenizer.INSTANCE;
 		String[] token = wtk.tokenize(this.readTheCvInFormatPDF(filename));
@@ -157,7 +160,7 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 
 	private String cleanup(final String s) {
 		StringBuilder sb = new StringBuilder();
-		s.toLowerCase().chars().filter(car -> (carAllowed.indexOf(car) != -1)).forEach(car -> sb.append((char) car));
+		s.toLowerCase().chars().filter(car -> (CAR_ALLOWED.indexOf(car) != -1)).forEach(car -> sb.append((char) car));
 		return sb.toString();
 	}
 

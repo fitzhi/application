@@ -20,13 +20,13 @@ import java.util.Set;
  */
 public class BasicCommitRepository implements CommitRepository {
 
-	Map<String, CommitHistory> repo = new HashMap<String, CommitHistory>();
+	Map<String, CommitHistory> repo = new HashMap<>();
 	
 	/**
 	 * This set contains the developers/contributors retrieved in the repository 
 	 * but unrecognized during the parsing process.
 	 */
-	Set<String> unknownContributors = new HashSet<String>();
+	Set<String> unknownContributors = new HashSet<>();
 	
 	@Override
 	public void addCommit(final String sourceCodePath, final int idStaff, final Date dateCommit) {
@@ -130,12 +130,12 @@ public class BasicCommitRepository implements CommitRepository {
 	
 	@Override
 	public List<Contributor> contributors() {
-		Set<Integer> idContributors = new HashSet<Integer>();
+		Set<Integer> idContributors = new HashSet<>();
 		this.repo.values().stream().forEach(history -> 
 			history.operations.stream()
 			.map(ope -> ope.idStaff).distinct().forEach(idContributors::add));
 		
-		List<Contributor> contributors = new ArrayList<Contributor>();
+		List<Contributor> contributors = new ArrayList<>();
 		for (int idStaff : idContributors) {
 			contributors.add (new Contributor(idStaff, firstCommit (idStaff), lastCommit (idStaff), numberOfCommits(idStaff), numberOfFiles(idStaff)));
 		}

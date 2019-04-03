@@ -63,3 +63,4 @@ back-skiller/src/test/java/fr/skiller/stupid/StupidTest.java
 back-skiller/upload-dir/FredericVidalFR.pdf
 
 front-skiller/target/sonar
+back-skiller/src/main/doc/TIGF-567_Import_flux_tetra-program.adoc

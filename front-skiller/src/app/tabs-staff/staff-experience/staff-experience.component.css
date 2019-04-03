@@ -11,8 +11,9 @@ div.skill_card {
 	height: 45px;
 }
 
+
 #upLoadCV {
-    display: flex;
+/* remove for Sonar    display: flex; */
     border-radius: 25%;
     text-decoration: none;
     display: inline-block;
@@ -28,7 +29,7 @@ div.skill_card {
 }
 
 #downloadCV {
-    display: flex;
+/*    display: flex; */
     border-radius: 25%;
     text-decoration: none;
     display: inline-block;
@@ -39,7 +40,7 @@ div.skill_card {
 }
 
 #headerSkills {
-    display: flex;
+/*    display: flex; */
     display: inline-block;
     padding: 10px;
 }

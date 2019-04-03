@@ -4,7 +4,7 @@
     <ng-template mat-tab-label>
       {{tabs[index]}} &nbsp;
       <div class="remove">
-        <img src="/assets/img/delete-sign.png" width="12" height="12" (click)="remove(index)" />
+        <img src="/assets/img/delete-sign.png" alt="delete sign" width="12" height="12" (click)="remove(index)" />
       </div>
     </ng-template>
     <app-staff-list [criteria]="criteria(index)" [activeOnly]="activeOnly(index)"></app-staff-list>
