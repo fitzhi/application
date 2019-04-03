@@ -36,8 +36,8 @@ public class Operations {
 		if (operation == null) {
 			operations.put(author, new Operation(author, dateCommit));
 		} else {
-			if (dateCommit.after(operation.dateCommit)) {
-				operation.dateCommit = dateCommit;
+			if (dateCommit.after(operation.getDateCommit())) {
+				operation.setDateCommit(dateCommit);
 			}
 		}
 	}

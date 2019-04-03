@@ -18,7 +18,7 @@ import fr.skiller.data.internal.Experience;
  */
 public class AssetDTO extends BaseDTO {
 
-	public Experience asset;
+	public final Experience asset;
 
 	/**
 	 * @param asset

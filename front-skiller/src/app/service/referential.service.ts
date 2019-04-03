@@ -49,7 +49,7 @@ export class ReferentialService {
           profiles.forEach(profile => this.profiles.push(profile));
       },
       response_error => console.error(response_error.error.message),
-      () => setTimeout(subProfiles.unsubscribe(), 1000));
+      () => setTimeout(() => {subProfiles.unsubscribe(); }, 1000));
 
       const subLegends = this.httpClient.get<RiskLegend[]>(this.HOST + '/data/riskLegends').subscribe(
       (legends: RiskLegend[]) => {
@@ -63,7 +63,7 @@ export class ReferentialService {
         legends.forEach(legend => this.legends.push(legend));
       },
       response_error => console.error(response_error.error.message),
-      () => setTimeout(subLegends.unsubscribe(), 1000));
+      () => setTimeout(() => {subLegends.unsubscribe(); }, 1000));
   }
 
 }

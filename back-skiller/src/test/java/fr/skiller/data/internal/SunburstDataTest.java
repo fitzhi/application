@@ -8,13 +8,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.util.Date;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import fr.skiller.data.source.CommitRepository;
-import fr.skiller.source.scanner.git.GitScanner;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

@@ -2,8 +2,8 @@
  * 
  */
 package fr.skiller.source.scanner.git;
-import static org.assertj.core.api.Assertions.assertThat;
 import static fr.skiller.Global.UNKNOWN;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.io.FileReader;
@@ -31,12 +31,10 @@ import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.Staff;
-import fr.skiller.data.internal.RiskChartData;
 import fr.skiller.data.internal.RiskDashboard;
+import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
-import fr.skiller.service.ResumeParserService;
 import fr.skiller.source.scanner.RepoScanner;
 
 /**

@@ -29,7 +29,6 @@ import com.google.gson.GsonBuilder;
 import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.data.external.ResumeDTO;
-import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.ResumeSkillIdentifier;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.service.StorageService;

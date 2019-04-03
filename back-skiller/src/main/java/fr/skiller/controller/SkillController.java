@@ -1,5 +1,9 @@
 package fr.skiller.controller;
 
+import static fr.skiller.Error.getStackTrace;
+import static fr.skiller.Global.BACKEND_RETURN_CODE;
+import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
+
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -22,10 +26,6 @@ import fr.skiller.bean.SkillHandler;
 import fr.skiller.data.external.SkillDTO;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.exception.SkillerException;
-
-import static fr.skiller.Error.getStackTrace;
-import static fr.skiller.Global.BACKEND_RETURN_CODE;
-import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
 
 @RestController
 @RequestMapping("/skill")

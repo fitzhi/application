@@ -3,14 +3,13 @@
  */
 package fr.skiller.data.external;
 
+import org.junit.Assert;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
 import fr.skiller.data.internal.Pseudo;
-import org.junit.Assert;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

@@ -1,5 +1,9 @@
 package fr.skiller.bean.impl;
 
+import static fr.skiller.Error.CODE_STAFF_NOFOUND;
+import static fr.skiller.Error.MESSAGE_STAFF_NOFOUND;
+import static fr.skiller.Global.UNKNOWN;
+
 import java.text.MessageFormat;
 import java.text.Normalizer;
 import java.util.ArrayList;
@@ -9,10 +13,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static fr.skiller.Error.CODE_STAFF_NOFOUND;
-import static fr.skiller.Error.MESSAGE_STAFF_NOFOUND;
-import static fr.skiller.Global.UNKNOWN;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,18 +21,16 @@ import org.springframework.stereotype.Component;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import fr.skiller.Error;
 import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.DataSaver;
-import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.data.internal.Experience;
+import fr.skiller.data.internal.Mission;
 import fr.skiller.data.internal.PeopleCountExperienceMap;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.ResumeSkill;
-import fr.skiller.data.internal.Experience;
 import fr.skiller.data.internal.Staff;
-import fr.skiller.data.internal.Mission;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
@@ -157,7 +155,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		listOfNewSkills.forEach(skill -> 
 			staff.getExperiences().add(
-					new Experience(skill.getIdSkill(), skill.title, FIRST_LEVEL)));
+					new Experience(skill.getIdSkill(), skill.getTitle(), FIRST_LEVEL)));
 		
 		return staff;
 	}

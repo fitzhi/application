@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,8 +24,6 @@ import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Pseudo;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
-
-import org.junit.Assert;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

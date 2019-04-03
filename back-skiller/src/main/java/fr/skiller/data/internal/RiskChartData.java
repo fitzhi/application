@@ -3,7 +3,8 @@
  */
 package fr.skiller.data.internal;
 
-import java.io.File;
+import static fr.skiller.Global.UNKNOWN;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -14,9 +15,6 @@ import java.util.Set;
 
 import fr.skiller.Global;
 import fr.skiller.SkillerRuntimeException;
-
-import static fr.skiller.Global.UNKNOWN;
-import static fr.skiller.Global.LN;
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  * Sunburst data build from the History of the Source repository with layout information.

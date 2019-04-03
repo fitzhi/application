@@ -14,7 +14,7 @@
       <th id="active" mat-header-cell *matHeaderCellDef mat-sort-header>Active</th>
       <td mat-cell class="col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
           (click)="routeStaff(contributor.idStaff)">
-        <img with="15" height="15" src="/assets/img/check-{{contributor.active}}.png" />
+        <img alt="active status" with="15" height="15" src="/assets/img/check-{{contributor.active}}.png" />
       </td>
     </ng-container>
 
@@ -22,7 +22,7 @@
       <th id="external" mat-header-cell *matHeaderCellDef mat-sort-header>External</th>
       <td mat-cell class="col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
           (click)="routeStaff(contributor.idStaff)">
-        <img with="15" height="15" src="/assets/img/check-{{contributor.external}}.png" />
+        <img alt="external status" with="15" height="15" src="/assets/img/check-{{contributor.external}}.png" />
       </td>
     </ng-container>
 

@@ -6,10 +6,7 @@ package fr.skiller.bean.impl;
 import java.io.IOException;
 import java.util.Date;
 
-import javax.validation.constraints.AssertTrue;
-
 import org.junit.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

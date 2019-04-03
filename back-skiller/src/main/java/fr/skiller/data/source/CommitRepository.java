@@ -1,12 +1,9 @@
 package fr.skiller.data.source;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import fr.skiller.data.internal.RiskChartData;
 
 /**
  * Interface in charge of handling the history of commits for a repository.<br/>

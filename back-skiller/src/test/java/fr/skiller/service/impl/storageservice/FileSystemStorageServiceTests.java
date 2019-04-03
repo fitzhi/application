@@ -15,15 +15,14 @@
  */
 package fr.skiller.service.impl.storageservice;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import java.util.Random;
 
 import org.junit.Before;
 import org.junit.Test;
-
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * <p>Tests of the FileSystemStorageService.</p>

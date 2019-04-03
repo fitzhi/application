@@ -3,13 +3,11 @@
  */
 package fr.skiller.source.scanner;
 
-import fr.skiller.data.internal.RiskChartData;
-import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.controller.ProjectController.SettingsGeneration;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
-import fr.skiller.exception.SkillerException;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

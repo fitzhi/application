@@ -57,7 +57,7 @@ export class SkillService extends InternalService {
         skills.forEach(skill => this.allSkills.push(skill));
       },
       error => console.log (error),
-      () => setTimeout(subSkills.unsubscribe(), 1000));
+      () => setTimeout(() => {subSkills.unsubscribe(); }, 1000));
   }
 
   /**

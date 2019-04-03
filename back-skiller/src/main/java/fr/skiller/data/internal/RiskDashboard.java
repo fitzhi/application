@@ -3,10 +3,7 @@
  */
 package fr.skiller.data.internal;
 
-import java.util.HashSet;
 import java.util.Set;
-
-import javax.print.DocFlavor.STRING;
 
 
 /**

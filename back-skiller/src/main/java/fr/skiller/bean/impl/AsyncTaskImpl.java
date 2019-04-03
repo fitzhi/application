@@ -1,5 +1,9 @@
 package fr.skiller.bean.impl;
 
+import static fr.skiller.Error.CODE_MULTIPLE_TASK;
+import static fr.skiller.Error.MESSAGE_MULTIPLE_TASK;
+import static fr.skiller.Global.LN;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -10,9 +14,6 @@ import org.springframework.stereotype.Service;
 
 import fr.skiller.bean.AsyncTask;
 import fr.skiller.exception.SkillerException;
-import static fr.skiller.Error.CODE_MULTIPLE_TASK;
-import static fr.skiller.Error.MESSAGE_MULTIPLE_TASK;
-import static fr.skiller.Global.LN;
 
 class Task {
 	/**

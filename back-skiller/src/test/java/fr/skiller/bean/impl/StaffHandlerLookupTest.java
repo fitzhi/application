@@ -1,25 +1,19 @@
 package fr.skiller.bean.impl;
 
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.text.Normalizer;
 
-import javax.validation.constraints.AssertTrue;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Staff;
-import fr.skiller.exception.SkillerException;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

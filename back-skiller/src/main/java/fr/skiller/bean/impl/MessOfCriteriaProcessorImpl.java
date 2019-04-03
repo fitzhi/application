@@ -17,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import fr.skiller.Global;
 import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;

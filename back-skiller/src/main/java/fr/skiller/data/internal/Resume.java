@@ -1,9 +1,7 @@
 package fr.skiller.data.internal;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Skills extracted from the resume or CV file.

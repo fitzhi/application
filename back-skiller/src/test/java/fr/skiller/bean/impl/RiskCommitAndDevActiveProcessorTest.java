@@ -3,13 +3,15 @@
  */
 package fr.skiller.bean.impl;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,8 +31,6 @@ import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.scanner.RepoScanner;
-import static org.junit.Assert.*;
-import static org.hamcrest.CoreMatchers.*;
 /**
  * Testing the class {@link RiskCommitAndDevActiveProcessorImpl}
  * @author Fr&eacute;d&eacute;ric VIDAL

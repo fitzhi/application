@@ -3,9 +3,12 @@
  */
 package fr.skiller.bean.impl;
 
+import static fr.skiller.Error.CODE_MULTIPLE_LOGIN;
+import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
+import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -17,17 +20,14 @@ import org.springframework.stereotype.Component;
 import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.data.external.Action;
+import fr.skiller.data.internal.Ghost;
+import fr.skiller.data.internal.Mission;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Pseudo;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
-import fr.skiller.data.external.Action;
-import fr.skiller.data.internal.Ghost;
-import fr.skiller.data.internal.Mission;
-import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
-import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
-import static fr.skiller.Error.CODE_MULTIPLE_LOGIN;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

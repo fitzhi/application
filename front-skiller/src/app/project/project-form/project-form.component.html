@@ -26,7 +26,7 @@
 				</div>
 				<div class="connection_settings mb-3" [hidden]="undirectAccess()">
 					Direct settings : <br/>
-					<div class="expanation_access">
+					<div class="explanation_access">
 						You can update the version control url and the couple of user/password required for connection.<br/>
 						Be Aware that all these informations will be updated on the record of this project, and later on the file system. 
 					</div>
@@ -57,8 +57,8 @@
 
 				<div class="connection_settings mb-3" [hidden]="directAccess()"> 
 					Indirect settings : <br/>
-					<div class="expanation_access">
-You can avoid to store the <u>highly critical</u> user/password couple of your version control system on each <b>Project</b> record, by setting the filename of a property file installed on the remote server.<br/>
+					<div class="explanation_access">
+You can avoid to store the <u>highly critical</u> user/password couple of your version control system on each <strong>Project</strong> record, by setting the filename of a property file installed on the remote server.<br/>
 This file has to be installed in the directory customized behind the global setting <code>versionControl.ConnectionSettings</code>.<br/>
 Each of those files must contain 2 properties : <br/>
 - a <code>user</code> property <br/>

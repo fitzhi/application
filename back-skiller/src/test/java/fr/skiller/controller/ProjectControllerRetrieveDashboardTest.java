@@ -1,14 +1,13 @@
 package fr.skiller.controller;
 
-import static fr.skiller.Error.CODE_MULTIPLE_TASK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.mockito.Mockito;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,7 +23,6 @@ import com.google.gson.GsonBuilder;
 import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.ProjectHandler;
-import fr.skiller.controller.ProjectController;
 import fr.skiller.controller.ProjectController.SettingsGeneration;
 import fr.skiller.data.external.SunburstDTO;
 import fr.skiller.data.internal.Project;

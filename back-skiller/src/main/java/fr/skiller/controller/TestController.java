@@ -60,7 +60,7 @@ public class TestController {
 		final MultiValueMap<String, String> headers = new HttpHeaders();
 		headers.add("test", "test OK MVP");
 		ForTest t = new ForTest();
-		t.test = "Ok";
+		t.setTest("Ok");
 		
 		responseEntity = new ResponseEntity<>(t, headers, HttpStatus.OK);
 		if (logger.isDebugEnabled()) {
@@ -92,12 +92,12 @@ public class TestController {
 	public ResponseEntity<ForTest> verySimplePostTest(@RequestBody ForTest input) {
 
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Input.test : %s", input.test));
+			logger.debug(String.format("Input.test : %s", input.getTest()));
 		}
 		
 		final ResponseEntity<ForTest> responseEntity;
 		final MultiValueMap<String, String> headers = new HttpHeaders();
-		ForTest test = new ForTest(input.test + " OK");
+		ForTest test = new ForTest(input.getTest() + " OK");
 		
 		responseEntity = new ResponseEntity<>(test, headers, HttpStatus.OK);
 		if (logger.isDebugEnabled()) {

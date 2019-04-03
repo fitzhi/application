@@ -499,7 +499,7 @@ public class StaffController {
 		}
 		if (logger.isTraceEnabled()) {
 			logger.trace(String.format("Adding the skills below for the staff identifier %d", p.idStaff));
-			Arrays.asList(p.skills).stream().forEach(skill -> logger.trace(String.format("%s %s", skill.getIdSkill(), skill.title)));
+			Arrays.asList(p.skills).stream().forEach(skill -> logger.trace(String.format("%s %s", skill.getIdSkill(), skill.getTitle())));
 		}
 		try {
 			Staff staff = staffHandler.addExperiences(p.idStaff, p.skills);

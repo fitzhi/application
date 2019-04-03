@@ -71,7 +71,7 @@ public class CommitHistory {
 	public Date getDateCommit(final int idStaff) {
 		Optional<Operation> opt = operations.stream().filter(ope -> ope.idStaff == idStaff).findFirst();
 		if (opt.isPresent()) {
-			return opt.get().dateCommit;
+			return opt.get().getDateCommit();
 		} else {
 			return null;
 		}
@@ -84,7 +84,7 @@ public class CommitHistory {
 	 */
 	//TODO Filter this date on the active staff members.
 	public Date evaluateDateLastestCommit() {
-		Optional<Date> optDate = operations.stream().map(operation->operation.dateCommit).max(Date::compareTo);
+		Optional<Date> optDate = operations.stream().map(operation->operation.getDateCommit()).max(Date::compareTo);
 		if (optDate.isPresent()) {
 			return optDate.get();
 		} else {
@@ -160,7 +160,7 @@ public class CommitHistory {
 	 */
 	public int ultimateContributor() {
 		final Optional<Operation> lastOpe = operations.stream()
-		.sorted((ope1, ope2) -> ope2.dateCommit.compareTo(ope1.dateCommit))
+		.sorted((ope1, ope2) -> ope2.getDateCommit().compareTo(ope1.getDateCommit()))
 		.findFirst();
 
 		if (!lastOpe.isPresent()) {

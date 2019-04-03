@@ -7,8 +7,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import fr.skiller.data.source.CommitRepository;
-
 public class CommitRepositoryTest {
 
 	CommitRepository commitRepository;

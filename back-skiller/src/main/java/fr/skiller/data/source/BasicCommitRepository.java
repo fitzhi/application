@@ -65,7 +65,7 @@ public class BasicCommitRepository implements CommitRepository {
 					.append(";")
 					.append(operation.idStaff)
 					.append(";")
-					.append(operation.dateCommit)
+					.append(operation.getDateCommit())
 					.append(LN)
 					);
 		});;
@@ -93,8 +93,8 @@ public class BasicCommitRepository implements CommitRepository {
 		this.repo.values().stream().forEach(history -> 
 			history.operations.stream()
 			.filter(ope -> (ope.idStaff == idStaff)).forEach(ope -> {
-				if (ope.dateCommit.after(lastCommit)) {
-					lastCommit = ope.dateCommit;
+				if (ope.getDateCommit().after(lastCommit)) {
+					lastCommit = ope.getDateCommit();
 				}
 			}));
 		return lastCommit;
@@ -106,8 +106,8 @@ public class BasicCommitRepository implements CommitRepository {
 		this.repo.values().stream().forEach(history -> 
 			history.operations.stream()
 			.filter(ope -> (ope.idStaff == idStaff)).forEach(ope -> {
-				if (ope.dateCommit.before(lastCommit)) {
-					lastCommit = ope.dateCommit;
+				if (ope.getDateCommit().before(lastCommit)) {
+					lastCommit = ope.getDateCommit();
 				}
 			}));
 		return lastCommit;

@@ -3,7 +3,7 @@
 		<div id="header_navigation_master_detail" class="p-2" [hidden]="isInMasterDetail()">
 
 			<a [routerLink]="" (click)="list()" class="header_toolbar_master_detail round">
-				<img id="imgViewSelection" src="/assets/img/list.png" />
+				<img alt="Master/Detail view" id="imgViewSelection" src="/assets/img/list.png" />
 			</a> 
 
 			<a href="" [routerLink]="['/user', previousId]"
@@ -28,7 +28,9 @@
 						? 'activated header_toolbar_master_detail round' 
 						: 'inactive header_toolbar_master_detail round')"
 				(click)="switchToSkill()"> 
-				<img alt="Skill module" title="Enter into the Skills management module"
+                <img alt="Skill module" 
+                    alt="Enter into the Skills management module"
+                    title="Enter into the Skills management module"
 					[src]="(skill_activated ? image_skill_activated : image_skill_inactive)"
 				style="padding-right:5px"
 				width="48" height="48" />
@@ -37,10 +39,13 @@
 				[class]="(dev_activated 
 						? 'activated header_toolbar_master_detail round' 
 						: 'inactive header_toolbar_master_detail round')"
-				(click)="switchToDev()"> <img alt="Staff" title="Enter into the Staff management module"
-				[src]="(dev_activated ? image_dev_activated : image_dev_inactive)"
-				style="padding-right:5px"
-				width="48" height="48" />
+                (click)="switchToDev()"> 
+                <img alt="Staff" 
+                    alt="Enter into the Staff management module" 
+                    title="Enter into the Staff management module"
+                    [src]="(dev_activated ? image_dev_activated : image_dev_inactive)"
+                    style="padding-right:5px"
+                    width="48" height="48" />
 			</a> 
 			<a [routerLink]="['/project']"
 				[class]="(project_activated 

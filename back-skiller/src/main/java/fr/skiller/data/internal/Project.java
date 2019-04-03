@@ -3,8 +3,6 @@ package fr.skiller.data.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Generated;
-
 import fr.skiller.SkillerRuntimeException;
 
 /**

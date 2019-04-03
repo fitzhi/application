@@ -3,6 +3,8 @@
  */
 package fr.skiller.git;
 
+import static fr.skiller.Global.UNKNOWN;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
@@ -33,7 +35,6 @@ import com.google.gson.GsonBuilder;
 
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
-import static fr.skiller.Global.UNKNOWN;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

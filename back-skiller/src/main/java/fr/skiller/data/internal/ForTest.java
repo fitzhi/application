@@ -7,7 +7,7 @@ package fr.skiller.data.internal;
  */
 public class ForTest {
 	
-	public String test;
+	private String test;
 	
 	/**
 	 * Empty constructor.
@@ -19,12 +19,26 @@ public class ForTest {
 	 */
 	public ForTest(String test) {
 		super();
-		this.test = test;
+		this.setTest(test);
 	}
 
 	@Override
 	public String toString() {
-		return "Test [mTest=" + test + "]";
+		return "Test [mTest=" + getTest() + "]";
+	}
+
+	/**
+	 * @return the test
+	 */
+	public String getTest() {
+		return test;
+	}
+
+	/**
+	 * @param test the test to set
+	 */
+	public void setTest(String test) {
+		this.test = test;
 	}
 
 	

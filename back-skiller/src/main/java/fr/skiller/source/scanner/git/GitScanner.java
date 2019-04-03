@@ -3,8 +3,15 @@
  */
 package fr.skiller.source.scanner.git;
 
+import static fr.skiller.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
+import static fr.skiller.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
+import static fr.skiller.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
+import static fr.skiller.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
+import static fr.skiller.Global.LN;
+import static fr.skiller.Global.UNKNOWN;
+import static fr.skiller.controller.ProjectController.DASHBOARD_GENERATION;
+
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,19 +21,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
-import javax.management.RuntimeErrorException;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.Constants;
@@ -47,38 +50,27 @@ import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 
-import fr.skiller.data.internal.Ghost;
-import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.Staff;
-import fr.skiller.data.internal.RiskChartData;
-import fr.skiller.data.internal.RiskDashboard;
-import fr.skiller.data.source.BasicCommitRepository;
-import fr.skiller.data.source.CommitHistory;
-import fr.skiller.data.source.CommitRepository;
-import fr.skiller.data.source.ConnectionSettings;
-import fr.skiller.data.source.Contributor;
-import fr.skiller.data.source.Operation;
-import fr.skiller.exception.SkillerException;
-import fr.skiller.source.scanner.AbstractScannerDataGenerator;
-import fr.skiller.source.scanner.RepoScanner;
 import fr.skiller.Error;
 import fr.skiller.Global;
 import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
-import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import fr.skiller.controller.ProjectController.SettingsGeneration;
-
-import static fr.skiller.Global.LN;
-import static fr.skiller.Global.UNKNOWN;
-import static fr.skiller.controller.ProjectController.DASHBOARD_GENERATION;
-import static fr.skiller.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
-import static fr.skiller.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
-import static fr.skiller.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
-import static fr.skiller.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
+import fr.skiller.data.internal.Ghost;
+import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.RiskDashboard;
+import fr.skiller.data.internal.Staff;
+import fr.skiller.data.source.BasicCommitRepository;
+import fr.skiller.data.source.CommitHistory;
+import fr.skiller.data.source.CommitRepository;
+import fr.skiller.data.source.ConnectionSettings;
+import fr.skiller.data.source.Contributor;
+import fr.skiller.exception.SkillerException;
+import fr.skiller.source.scanner.AbstractScannerDataGenerator;
+import fr.skiller.source.scanner.RepoScanner;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL GIT implementation of a code Scanner
@@ -498,8 +490,8 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		for (CommitHistory commits : globalRepo.getRepository().values()) {
 			commits.operations.stream()
 				.filter(it -> ((it.idStaff == settings.getIdStaffSelected()) || (settings.getIdStaffSelected() == 0)))
-				.filter(it -> (it.dateCommit).after(startingDate))
-				.forEach(item -> personalizedRepo.addCommit(commits.sourcePath, item.idStaff, item.dateCommit));
+				.filter(it -> (it.getDateCommit()).after(startingDate))
+				.forEach(item -> personalizedRepo.addCommit(commits.sourcePath, item.idStaff, item.getDateCommit()));
 		}
 		return personalizedRepo;
 	}

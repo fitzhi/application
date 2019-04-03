@@ -3,10 +3,6 @@
  */
 package fr.skiller.service;
 
-import java.io.IOException;
-
-import org.springframework.stereotype.Service;
-
 import fr.skiller.data.internal.Resume;
 import fr.skiller.exception.SkillerException;
 

@@ -1,5 +1,12 @@
 package fr.skiller.controller;
 
+import static fr.skiller.Error.CODE_MULTIPLE_TASK;
+import static fr.skiller.Error.CODE_UNDEFINED;
+import static fr.skiller.Error.UNKNOWN_PROJECT;
+import static fr.skiller.Error.getStackTrace;
+import static fr.skiller.Global.BACKEND_RETURN_CODE;
+import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -36,19 +43,12 @@ import fr.skiller.data.external.PseudoListDTO;
 import fr.skiller.data.external.SunburstDTO;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Pseudo;
+import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Staff;
-import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.scanner.RepoScanner;
-
-import static fr.skiller.Error.CODE_UNDEFINED;
-import static fr.skiller.Error.UNKNOWN_PROJECT;
-import static fr.skiller.Error.getStackTrace;
-import static fr.skiller.Error.CODE_MULTIPLE_TASK;
-import static fr.skiller.Global.BACKEND_RETURN_CODE;
-import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
 
 @RestController
 @RequestMapping("/project")

@@ -8,13 +8,13 @@
   <ng-container matColumnDef="active">
     <th id="active" mat-header-cell *matHeaderCellDef>Active</th>
     <td mat-cell class="col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">
-      <img with="15" height="15" src="/assets/img/check-{{contributor.active}}.png" />
+      <img alt="active status" with="15" height="15" src="/assets/img/check-{{contributor.active}}.png" />
     </td>
   </ng-container>
 
   <ng-container matColumnDef="external">
     <th id="external" mat-header-cell *matHeaderCellDef>External</th>
-    <td mat-cell class="col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">
+    <td mat-cell alt="external status" class="col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">
       <img with="15" height="15" src="/assets/img/check-{{contributor.external}}.png" />
     </td>
   </ng-container>

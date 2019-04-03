@@ -1,22 +1,11 @@
 package fr.skiller.service;
 
-import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
-import org.springframework.core.io.Resource;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.parser.PdfTextExtractor;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.stream.Stream;
+
+import org.springframework.core.io.Resource;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface StorageService {
 

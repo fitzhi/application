@@ -7,12 +7,12 @@ package fr.skiller.data.internal;
  */
 public class ResumeSkill extends ResumeSkillIdentifier implements Comparable<ResumeSkill> {
 
-	final static int LIMIT_LANGUAGE = 8;
+	static final int LIMIT_LANGUAGE = 8;
 	
 	/**
 	 * Title of the skill discovered inside the resume
 	 */
-	public String title;
+	private String title;
 	
 	/**
 	 * @param idSkill the skill identifier
@@ -21,7 +21,7 @@ public class ResumeSkill extends ResumeSkillIdentifier implements Comparable<Res
 	 */
 	public ResumeSkill(int idSkill, String title, long count) {
 		super(idSkill, count);
-		this.title = title;
+		this.setTitle(title);
 	}
 
 	/**
@@ -39,6 +39,20 @@ public class ResumeSkill extends ResumeSkillIdentifier implements Comparable<Res
 		} else {
 			return (int) (o.getCount() - this.getCount());
 		}
+	}
+
+	/**
+	 * @return the title
+	 */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+	 * @param title the title to set
+	 */
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 }

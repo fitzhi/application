@@ -1,9 +1,5 @@
 package fr.skiller.service.impl;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,19 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.apache.poi.hwpf.HWPFDocument;
-import org.apache.poi.xwpf.extractor.XWPFWordExtractor;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.itextpdf.text.pdf.PdfReader;
-import com.itextpdf.text.pdf.parser.PdfTextExtractor;
-
 import fr.skiller.bean.SkillHandler;
-import fr.skiller.controller.ReferentialController;
 import fr.skiller.data.internal.Resume;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.exception.SkillerException;
@@ -43,7 +32,7 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 
 	Logger logger = LoggerFactory.getLogger(ApplicationFileSkillsScannerService.class.getCanonicalName());
 
-	final String car_allowed = "abcdefghijklmnopqrstuvwxyz-+#";
+	final String carAllowed = "abcdefghijklmnopqrstuvwxyz-+#";
 
 	@Override
 	public Resume extract(final String fileName, final int fileType) throws SkillerException {
@@ -168,7 +157,7 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 
 	private String cleanup(final String s) {
 		StringBuilder sb = new StringBuilder();
-		s.toLowerCase().chars().filter(car -> (car_allowed.indexOf(car) != -1)).forEach(car -> sb.append((char) car));
+		s.toLowerCase().chars().filter(car -> (carAllowed.indexOf(car) != -1)).forEach(car -> sb.append((char) car));
 		return sb.toString();
 	}
 

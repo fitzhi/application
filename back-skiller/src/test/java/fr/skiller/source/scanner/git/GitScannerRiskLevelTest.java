@@ -1,5 +1,7 @@
 package fr.skiller.source.scanner.git;
 
+import static fr.skiller.Global.UNKNOWN;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,9 +13,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.data.internal.RiskChartData;
-import fr.skiller.source.scanner.RepoScanner;
-
-import static fr.skiller.Global.UNKNOWN;
 
 /**
  * Test the level of risk evaluation tool.
