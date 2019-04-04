@@ -3,11 +3,16 @@
  */
 package fr.skiller.source.scanner;
 
+import java.io.IOException;
+
+import org.eclipse.jgit.api.errors.GitAPIException;
+
 import fr.skiller.controller.ProjectController.SettingsGeneration;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
+import fr.skiller.exception.SkillerException;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -19,9 +24,10 @@ public interface RepoScanner {
 	 * Clone the source code repository
 	 * @param project Project whose source code files should be scan in the repository
 	 * @param settings connection settings
-	 * @throws Exception thrown if any application or network error occurs.
+	 * @throws IOException thrown if any application or network error occurs.
+	 * @throws GitAPIException thrown if any application or network error occurs.
 	 */
-	void clone(Project project, ConnectionSettings settings) throws Exception;
+	void clone(Project project, ConnectionSettings settings) throws IOException, GitAPIException;
 
 	/**
 	 * Parse the repository <u>already</u> cloned on the file system.<br/>
@@ -29,9 +35,10 @@ public interface RepoScanner {
 	 * @param project Project whose source code files should be scan in the repository
 	 * @param settings connection settings
 	 * @return the parsed repository 
-	 * @throws Exception thrown if any application or network error occurs.
+	 * @throws IOException thrown if any application or network error occurs.
+	 * @throws SkillerException thrown if any application or network error occurs.
 	 */
-	CommitRepository parseRepository(Project project, ConnectionSettings settings) throws Exception;
+	CommitRepository parseRepository(Project project, ConnectionSettings settings) throws IOException, SkillerException;
 
 	/**
 	 * Aggregate the history of the repository into the risks dashboard.
@@ -50,9 +57,11 @@ public interface RepoScanner {
 	 * <li>or filtered for a staff member.</li>
 	 * </ul>
 	 * @return the project risk dashboard 
-	 * @throws Exception thrown if any application or network error occurs during the treatment.
+	 * @throws IOException thrown if any application or network error occurs during the treatment.
+	 * @throws SkillerException thrown if any application or network error occurs during the treatment.
+	 * @throws GitAPIException thrown if any application or network error occurs during the treatment.
 	 */
-	RiskDashboard generate(Project project, SettingsGeneration settings) throws Exception;
+	RiskDashboard generate(Project project, SettingsGeneration settings) throws IOException, SkillerException, GitAPIException;
 
 	/**
 	 * This method is an ASYNCHRONOUS wrapper from the method {@link #generate(Project)}
@@ -65,9 +74,11 @@ public interface RepoScanner {
 	 * <li>or filtered for a staff member.</li>
 	 * </ul>
 	 * @return the project risk dashboard 
-	 * @throws Exception thrown if any application or network error occurs during the treatment.
+	 * @throws SkillerException thrown if any application or network error occurs during the treatment.
+	 * @throws GitAPIException thrown if any application or network error occurs during the treatment.
+	 * @throws IOException thrown if any application or network error occurs during the treatment.
 	 */
-	RiskDashboard generateAsync(Project project, SettingsGeneration settings) throws Exception;
+	RiskDashboard generateAsync(Project project, SettingsGeneration settings) throws SkillerException, GitAPIException, IOException;
 	
 	/**
 	 * Personalize the commit repository on a particular staff member.
@@ -82,9 +93,9 @@ public interface RepoScanner {
 	 * @param project the selected project
 	 * @return 	{@code true} if the intermediate data are available to complete the dashboard, 
 	 * 			{@code false} if the complete operation is required (Therefore, this operation will be asynchronous).  
-	 * @throws Exception
+	 * @throws IOException
 	 */
-	boolean hasAvailableGeneration(Project project) throws Exception;
+	boolean hasAvailableGeneration(Project project) throws IOException;
 	
  	/**
  	 * Extract from the filename path the non relevant directory (such as {@code /src/main/java}) <br/>

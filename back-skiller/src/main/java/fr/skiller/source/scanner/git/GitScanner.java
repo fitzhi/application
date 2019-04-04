@@ -32,6 +32,9 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.InvalidRemoteException;
+import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
@@ -192,7 +195,8 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	}
 	
 	@Override
-	public void clone(final Project project, ConnectionSettings settings) throws Exception {
+	public void clone(final Project project, ConnectionSettings settings) 
+			throws IOException, GitAPIException {
 
 		// Creating a temporary local path where the remote project repository will be cloned.
 		Path path = Files.createTempDirectory("skiller_jgit_" +  project.getName() + "_");
@@ -215,7 +219,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	}
 
 	@Override
-	public CommitRepository parseRepository(final Project project, final ConnectionSettings settings) throws Exception {
+	public CommitRepository parseRepository(final Project project, final ConnectionSettings settings) throws IOException, SkillerException {
  
 		// Test if this repository is available in cache. 
 		// If this repository exists, return it immediately.
@@ -395,7 +399,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 
 	@Override
 	@Async
-	public RiskDashboard generateAsync(final Project project, final SettingsGeneration settings) throws Exception {
+	public RiskDashboard generateAsync(final Project project, final SettingsGeneration settings) throws SkillerException, GitAPIException, IOException {
 		try {
 			tasks.addTask( DASHBOARD_GENERATION, "project", project.getId());
 			return generate(project, settings);
@@ -405,7 +409,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	}
 	
 	@Override
-	public RiskDashboard generate(final Project project, final SettingsGeneration cfgGeneration) throws Exception {
+	public RiskDashboard generate(final Project project, final SettingsGeneration cfgGeneration) throws IOException, SkillerException, GitAPIException {
 		
 		final ConnectionSettings settings = connectionSettings(project);
 
@@ -542,11 +546,11 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		}
 		
 		throw new SkillerException(CODE_UNEXPECTED_VALUE_PARAMETER, "[Project : "+project.getName()+"] "+
-				MessageFormat.format(MESSAGE_UNEXPECTED_VALUE_PARAMETER, "project.connection_Settings", project.getConnection_settings()));
+				MessageFormat.format(MESSAGE_UNEXPECTED_VALUE_PARAMETER, "project.connection_Settings", project.getConnectionSettings()));
 	}
 
 	@Override
-	public boolean hasAvailableGeneration(Project project) throws Exception {
+	public boolean hasAvailableGeneration(Project project) throws IOException {
 		boolean result = cacheDataHandler.hasCommitRepositoryAvailable(project);
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("hasAvailableGeneration(%d)? : %s", project.getId(), result));

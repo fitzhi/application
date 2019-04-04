@@ -25,7 +25,7 @@ public class Project implements Cloneable {
 	 * The connection settings model.
 	 * 2 models exist : either the direct (URL/user/pass), or the indirect (URL/remote file)
 	 */
-	private int connection_settings;
+	private int connectionSettings;
 	
 	/**
 	 * The repository URL of the project
@@ -63,13 +63,13 @@ public class Project implements Cloneable {
 	 * Constant representing one the 2 models of connection settings.
 	 * This one if for the direct access : url repository / user / password
 	 */
-	private static int DIRECT_ACCESS = 1;
+	private static final int DIRECT_ACCESS = 1;
 	
 	/**
 	 * Constant representing one the 2 models of connection settings.
 	 * This one if for the inderect access : url repository / remote filename with connection parameters.
 	 */
-	private static int REMOTE_FILE_ACCESS = 2;
+	private static final int REMOTE_FILE_ACCESS = 2;
 	
 	
 	/**
@@ -101,7 +101,7 @@ public class Project implements Cloneable {
 	 * <i>(the Project self-contains connection parameters)</i>
 	 */
 	public boolean isDirectAccess() {
-		return (connection_settings == DIRECT_ACCESS);
+		return (connectionSettings == DIRECT_ACCESS);
 	}
 	
 	/**
@@ -109,12 +109,12 @@ public class Project implements Cloneable {
 	 * <i>(Application must retrieve the connection parameters on a property file)</i>
 	 */
 	public boolean isIndirectAccess() {
-		return (connection_settings == REMOTE_FILE_ACCESS);
+		return (connectionSettings == REMOTE_FILE_ACCESS);
 	}
 
 	@Override
 	public String toString() {
-		return "Project [id=" + id + ", name=" + name + ", connection_settings=" + connection_settings
+		return "Project [id=" + id + ", name=" + name + ", connection_settings=" + connectionSettings
 				+ ", urlRepository=" + urlRepository + ", username=" + username + ", filename=" + filename + ", skills="
 				+ skills + ", ghosts=" + ghosts + "]";
 	}
@@ -161,15 +161,15 @@ public class Project implements Cloneable {
 	/**
 	 * @return the connection_settings
 	 */
-	public int getConnection_settings() {
-		return connection_settings;
+	public int getConnectionSettings() {
+		return connectionSettings;
 	}
 
 	/**
-	 * @param connection_settings the connection_settings to set
+	 * @param connectionSettings the connection_settings to set
 	 */
-	public void setConnection_settings(int connection_settings) {
-		this.connection_settings = connection_settings;
+	public void setConnectionSettings(int connectionSettings) {
+		this.connectionSettings = connectionSettings;
 	}
 
 	/**

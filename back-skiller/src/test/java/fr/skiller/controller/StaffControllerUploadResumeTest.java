@@ -5,6 +5,7 @@ package fr.skiller.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -39,7 +40,7 @@ import fr.skiller.service.StorageService;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class StaffController_uploadResume_Test {
+public class StaffControllerUploadResumeTest {
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -56,7 +57,7 @@ public class StaffController_uploadResume_Test {
 	private int port;
 	
 	@Before 
-	public void before() throws Exception {
+	public void before()  {
 		if (!skillHandler.containsSkill(1)) {
 			skillHandler.addNewSkill(new Skill(1, "Java"));
 		}
@@ -69,13 +70,16 @@ public class StaffController_uploadResume_Test {
 		if (!skillHandler.containsSkill(4)) {
 			skillHandler.addNewSkill(new Skill(4, "Spring"));
 		}
+		if (!skillHandler.containsSkill(5)) {
+			skillHandler.addNewSkill(new Skill(5, "Python"));
+		}
 	}
 
 	@Test
-	public void shouldUploadFile() throws Exception {
+	public void shouldUploadFile() throws IOException {
 		ClassPathResource resource = new ClassPathResource( "/applications_files/ET_201709.doc");
 		
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
 		map.add("file", resource);
 		map.add("id", 1);
 		map.add("type", StorageService.FILE_TYPE_DOC);
@@ -83,26 +87,30 @@ public class StaffController_uploadResume_Test {
 				ResumeDTO.class);
 
 		assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
-		List<ResumeSkillIdentifier> resultList = new ArrayList<ResumeSkillIdentifier>();
+		List<ResumeSkillIdentifier> resultList = new ArrayList<>();
 		
 		response.getBody().experience.stream()
 			.filter(item -> getIdSkill("C#") == item.getIdSkill() )
 			.forEach(resultList::add);
-		assertThat(!resultList.isEmpty());
+		assertThat(!resultList.isEmpty()).as("C# is present in the CV").isTrue();
 		
 		resultList.clear();
 		response.getBody().experience.stream()
 		.filter(item -> getIdSkill("Java") == item.getIdSkill())
 		.forEach(resultList::add);
-		assertThat(resultList.isEmpty());
+		assertThat(!resultList.isEmpty()).as("Java is present in the CV").isTrue();
 
 		resultList.clear();
 		response.getBody().experience.stream()
 		.filter(item -> getIdSkill("Spring") == item.getIdSkill())
 		.forEach(resultList::add);
-		assertThat(!resultList.isEmpty());
+		assertThat(!resultList.isEmpty()).as("Spring is present in the CV").isTrue();
 
-		// {C#=2, AngularJS=3, Maven=1, Tomcat=1, Mercurial=1, SVN=1, Dojo=1, JUnit=1, PL-SQL=2, MySql=1, Javascript=4, Spring-WS=1, .Net=1, JSF=1, Oracle=3, ArcGIS=1, Java=2, Hibernate=7, myBatis=1, JBoss=3, Sonar=1, ant=1, Spring=8, Jenkins=1, Play=2, IIS=2, WebLogic=3, jQuery=3, Ansible=1, Flex=1, SQLServer=3, Kubernetes=1}
+		resultList.clear();
+		response.getBody().experience.stream()
+		.filter(item -> getIdSkill("Python") == item.getIdSkill())
+		.forEach(resultList::add);
+		assertThat(resultList.isEmpty()).as("Python is NOT present in the CV").isTrue();
 	}
 	
 	private int getIdSkill (final String title) {
@@ -112,7 +120,7 @@ public class StaffController_uploadResume_Test {
 		if (optSkill.isPresent()) {
 			return optSkill.get().getId();
 		} else {
-			throw new SkillerRuntimeException("Should not pass here!");
+			throw new SkillerRuntimeException("Should not pass here for " + title + " !");
 		}
 	}
 }

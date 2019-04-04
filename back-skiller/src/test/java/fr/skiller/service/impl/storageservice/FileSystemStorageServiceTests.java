@@ -32,38 +32,41 @@ import org.springframework.mock.web.MockMultipartFile;
  */
 public class FileSystemStorageServiceTests {
 
-    private StorageProperties properties = new StorageProperties();
+    private static final String HELLO_WORLD = "Hello World";
+	private static final String FOO_TXT = "foo.txt";
+	private StorageProperties properties = new StorageProperties();
     private FileSystemStorageService service;
 
     @Before
     public void init() {
-        properties.setLocation("target/files/" + Math.abs(new Random().nextLong()));
+    	
+        properties.setLocation("target/files/" + new Random().nextInt());
         service = new FileSystemStorageService(properties);
         service.init();
     }
 
     @Test
     public void loadNonExistent() {
-        assertThat(service.load("foo.txt")).doesNotExist();
+        assertThat(service.load(FOO_TXT)).doesNotExist();
     }
 
     @Test
     public void saveAndLoad() {
-        service.store(new MockMultipartFile("foo", "foo.txt", MediaType.TEXT_PLAIN_VALUE,
-                "Hello World".getBytes()));
-        assertThat(service.load("foo.txt")).exists();
+        service.store(new MockMultipartFile("foo", FOO_TXT, MediaType.TEXT_PLAIN_VALUE,
+                HELLO_WORLD.getBytes()));
+        assertThat(service.load(FOO_TXT)).exists();
     }
 
     @Test(expected = StorageException.class)
     public void saveNotPermitted() {
         service.store(new MockMultipartFile("foo", "../foo.txt",
-                MediaType.TEXT_PLAIN_VALUE, "Hello World".getBytes()));
+                MediaType.TEXT_PLAIN_VALUE, HELLO_WORLD.getBytes()));
     }
 
     @Test
     public void savePermitted() {
         service.store(new MockMultipartFile("foo", "bar/../foo.txt",
-                MediaType.TEXT_PLAIN_VALUE, "Hello World".getBytes()));
+                MediaType.TEXT_PLAIN_VALUE, HELLO_WORLD.getBytes()));
     }
 
 }

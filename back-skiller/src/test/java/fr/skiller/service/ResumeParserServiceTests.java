@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.skiller.data.internal.Resume;
+import fr.skiller.data.internal.ResumeSkillIdentifier;
 import fr.skiller.exception.SkillerException;
 
 /**
@@ -31,15 +32,15 @@ public class ResumeParserServiceTests {
 	/**
 	 * base TXT to compare with the other format.
 	 */
-	Resume experience_txt;
-	List<Integer> reference_txt_skills;
+	Resume experienceTxt;
+	List<Integer> referenceTxtSkills;
 	
 	@Before
 	public void init() throws SkillerException {
 		final String file_txt = getClass().getResource("/applications_files/ET_201709_UTF8.txt").getFile();
-		experience_txt = parser.extract(file_txt, StorageService.FILE_TYPE_TXT);
-		reference_txt_skills = experience_txt.data().stream()
-				.map(item -> item.getIdSkill()).collect(Collectors.toList());
+		experienceTxt = parser.extract(file_txt, StorageService.FILE_TYPE_TXT);
+		referenceTxtSkills = experienceTxt.data().stream()
+				.map(ResumeSkillIdentifier::getIdSkill).collect(Collectors.toList());
 	}
 	
 	@Test(expected = SkillerException.class)
@@ -50,26 +51,26 @@ public class ResumeParserServiceTests {
 	@Test
 	public void parsingDOC() throws SkillerException {
 		final String file_doc = getClass().getResource("/applications_files/ET_201709.doc").getFile();
-		Resume experience_doc = parser.extract(file_doc, StorageService.FILE_TYPE_DOC);
-		List<Integer> reference_doc_skills =experience_doc.data().stream()
-				.map(item -> item.getIdSkill()).collect(Collectors.toList());
-		Assert.assertTrue(reference_doc_skills.containsAll(reference_txt_skills));			
+		Resume experienceDoc = parser.extract(file_doc, StorageService.FILE_TYPE_DOC);
+		List<Integer> referenceDocSkills =experienceDoc.data().stream()
+				.map(ResumeSkillIdentifier::getIdSkill).collect(Collectors.toList());
+		Assert.assertTrue(referenceDocSkills.containsAll(referenceTxtSkills));			
 	}
 
 	@Test
 	public void parsingDOCX() throws SkillerException {
 		final String file_docx = getClass().getResource("/applications_files/ET_201709.docx").getFile();
-		Resume experience_docx = parser.extract(file_docx, StorageService.FILE_TYPE_DOCX);
-		List<Integer> reference_docx_skills =experience_docx.data().stream()
-				.map(item -> item.getIdSkill()).collect(Collectors.toList());
-		Assert.assertTrue(reference_docx_skills.containsAll(reference_txt_skills));			
+		Resume experienceDocx = parser.extract(file_docx, StorageService.FILE_TYPE_DOCX);
+		List<Integer> referenceDocxSkills =experienceDocx.data().stream()
+				.map(ResumeSkillIdentifier::getIdSkill).collect(Collectors.toList());
+		Assert.assertTrue(referenceDocxSkills.containsAll(referenceTxtSkills));			
 	}
 
 	@Test
 	public void parsingPDF() throws SkillerException {
 		final String file_pdf = getClass().getResource("/applications_files/ET_201709.pdf").getFile();
-		Resume experience_pdf = parser.extract(file_pdf, StorageService.FILE_TYPE_PDF);
+		Resume experiencePdf = parser.extract(file_pdf, StorageService.FILE_TYPE_PDF);
 		// We loosed certainly some few skills during the convert into PDF, but the main skills are still present.
-		Assert.assertTrue(experience_pdf.data().toArray().length == 30);
+		Assert.assertTrue(experiencePdf.data().toArray().length == 30);
 	}
 }

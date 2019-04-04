@@ -3,8 +3,11 @@
  */
 package fr.skiller.data.external;
 
+
+
 import org.junit.Assert;
 import org.junit.Test;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
@@ -17,6 +20,8 @@ import fr.skiller.data.internal.Pseudo;
  */
 public class GhostDTOTest {
 
+	Logger logger = LoggerFactory.getLogger(GhostDTOTest.class.getCanonicalName());
+
 	@Test
 	public void testSimple() {
 		Pseudo pseudo = new Pseudo();
@@ -27,7 +32,9 @@ public class GhostDTOTest {
 		Gson g = new Gson();
 
 		Assert.assertTrue("{\"commitPseudo\":\"test\",\"idStaff\":1,\"login\":\"loginTest\",\"technical\":false,\"action\":\"A\"}".equals(g.toJson(pseudo)));
-		LoggerFactory.getLogger(GhostDTOTest.class).debug(g.toJson(pseudo)); 
+		if (logger.isDebugEnabled()) {
+			logger.debug(g.toJson(pseudo)); 
+		}
 	}
 
 }

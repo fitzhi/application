@@ -44,19 +44,19 @@ public class PocNLP {
 
 	Logger logger = LoggerFactory.getLogger(PocNLP.class.getCanonicalName());
 	
-	private String getCV_fromTxt() throws IOException {
+	private String getCVFromTxt() throws IOException {
 		StringBuilder sb = new StringBuilder();
 		File file = new File(getClass().getResource("/applications_files/ET_201709_UTF8.txt").getFile()); 
 		if (logger.isDebugEnabled()) {
 			logger.debug(identifyFileTypeUsingUrlConnectionGetContentType(file.getAbsolutePath()));
 		}
 		BufferedReader br = new BufferedReader(new FileReader(file));
-		br.lines().forEach(line -> sb.append(line));
+		br.lines().forEach(sb::append);
 		br.close();
 		return sb.toString();
 	}
 
-	private String getCV_fromDOC() throws IOException {
+	private String getCVFromDOC() throws IOException {
 		if (logger.isDebugEnabled()) {
 			logger.debug(identifyFileTypeUsingUrlConnectionGetContentType(resourcesDirectory.getAbsolutePath() + "/opennlp/in/ET_201709.doc"));
 		}
@@ -67,7 +67,7 @@ public class PocNLP {
 		return content;
 	}
 	
-	private String getCV_fromDOCX() throws IOException {
+	private String getCVFromDOCX() throws IOException {
 		if (logger.isDebugEnabled()) {
 			logger.debug(identifyFileTypeUsingUrlConnectionGetContentType(resourcesDirectory.getAbsolutePath() + "/opennlp/in/ET_201709.docx"));
 		}
@@ -78,7 +78,7 @@ public class PocNLP {
 		return s;
 	}
 	
-	private String getCV_fromPDF() throws IOException {
+	private String getCVFromPDF() throws IOException {
 		if (logger.isDebugEnabled()) {
 			logger.debug(identifyFileTypeUsingUrlConnectionGetContentType(resourcesDirectory.getAbsolutePath() + "/applications_files/ET_201709.pdf"));
 		}
@@ -92,11 +92,11 @@ public class PocNLP {
 	    return sb.toString();
 	}
 	
-	final String car_accepted = "abcdefghijklmnopqrstuvwxyz-+#";
+	private static final String CAR_ACCEPTED = "abcdefghijklmnopqrstuvwxyz-+#";
 
 	public String cleanup(final String s) {
 		StringBuilder sb = new StringBuilder();
-		s.toLowerCase().chars().filter(car -> (car_accepted.indexOf(car) != -1)).forEach(car -> sb.append((char) car));
+		s.toLowerCase().chars().filter(car -> (CAR_ACCEPTED.indexOf(car) != -1)).forEach(car -> sb.append((char) car));
 		return sb.toString();
 	}
 
@@ -114,11 +114,12 @@ public class PocNLP {
 			}
 		}
 		
-		Map<String, Long> mapSkills = listSkills.stream().collect(Collectors.groupingBy(exp -> exp.getTitle(), Collectors.counting()));
+		Map<String, Long> mapSkills = listSkills.stream().collect(Collectors.groupingBy(Skill::getTitle, Collectors.counting()));
 		Map<String, Long> mapSkillsSorted = new HashMap<>();
 		
 		mapSkills.keySet().stream().sorted().forEach(key -> mapSkillsSorted.put(key, mapSkills.get(key)));
-		mapSkillsSorted.keySet().forEach(skill -> logger.debug(skill + " " + mapSkills.get(skill)));
+		mapSkillsSorted.keySet().forEach(skill -> logger.debug(
+				String.format("%s %s", skill, mapSkills.get(skill))));
 
 		return mapSkillsSorted;
 	}
@@ -130,33 +131,33 @@ public class PocNLP {
 	private Map<String, Long> getSkillsfromCVinTXT() throws IOException {
 		WhitespaceTokenizer wtk = WhitespaceTokenizer.INSTANCE;
 		logger.debug("getSkillsfromCVinDOCX : ");
-		String[] token = wtk.tokenize(this.getCV_fromTxt());
+		String[] token = wtk.tokenize(this.getCVFromTxt());
 		return treat(token);
 	}
 	
 	private Map<String, Long> getSkillsfromCVinDOCX() throws IOException {
 		WhitespaceTokenizer wtk = WhitespaceTokenizer.INSTANCE;
 		logger.debug("getSkillsfromCVinDOCX : ");
-		String[] token = wtk.tokenize(this.getCV_fromDOCX());
+		String[] token = wtk.tokenize(this.getCVFromDOCX());
 		return treat(token);
 	}
 
 	private Map<String, Long> getSkillsfromCVinDOC() throws IOException {
 		WhitespaceTokenizer wtk = WhitespaceTokenizer.INSTANCE;
 		logger.debug("getSkillsfromCVinDOC : ");
-		String[] token = wtk.tokenize(this.getCV_fromDOC());
+		String[] token = wtk.tokenize(this.getCVFromDOC());
 		return treat(token);
 	}
 	
 	private Map<String, Long> getSkillsfromCVinPDF() throws IOException {
 		WhitespaceTokenizer wtk = WhitespaceTokenizer.INSTANCE;
 		logger.debug("getSkillsfromCVinPDF : ");
-		String[] token = wtk.tokenize(this.getCV_fromPDF());
+		String[] token = wtk.tokenize(this.getCVFromPDF());
 		return treat(token);
 	}
 	
 	@Test
-	public void testExtractSkillsfromCVs() throws Exception {
+	public void testExtractSkillsfromCVs() throws IOException {
 		Map<String, Long> mapTXT = this.getSkillsfromCVinTXT();
 		Map<String, Long> mapDOCX = this.getSkillsfromCVinDOCX();
 		Map<String, Long> mapDOC = this.getSkillsfromCVinDOC();
@@ -182,9 +183,9 @@ public class PocNLP {
 	private static File resourcesDirectory = new File("src/test/resources");
 
 	@Test
-	public void firstApplicationWithSimpleTokenizer() throws Exception {
+	public void firstApplicationWithSimpleTokenizer() throws IOException {
 		SimpleTokenizer wtk = SimpleTokenizer.INSTANCE;
-		String[] token = wtk.tokenize(getCV_fromTxt());
+		String[] token = wtk.tokenize(getCVFromTxt());
 		if (logger.isDebugEnabled()) {
 			for (String s : token) {
 				logger.debug(s);
@@ -193,12 +194,12 @@ public class PocNLP {
 	}
 
 	@Test
-	public void firstApplicationWithTokenizer() throws Exception {
+	public void firstApplicationWithTokenizer() throws IOException {
 		try (InputStream modelIn = new FileInputStream(
 				resourcesDirectory.getAbsolutePath() + "/opennlp/en-token.bin")) {
 			TokenizerModel model = new TokenizerModel(modelIn);
 			Tokenizer tokenizer = new TokenizerME(model);
-			String tokens[] = tokenizer.tokenize(getCV_fromTxt());
+			String[] tokens = tokenizer.tokenize(getCVFromTxt());
 			if (logger.isDebugEnabled()) {
 				for (String s : tokens) {
 					logger.debug(s);
@@ -226,11 +227,15 @@ public class PocNLP {
 	   }
 	   catch (MalformedURLException badUrlEx)
 	   {
-	      System.out.println("ERROR: Bad URL - " + badUrlEx);
+		   if (logger.isErrorEnabled()) {
+			   logger.error(String.format("ERROR: Bad URL - %s", badUrlEx), badUrlEx);
+		   }
 	   }
 	   catch (IOException ioEx)
 	   {
-	      System.out.println("Cannot access URLConnection - " + ioEx);
+		   if (logger.isErrorEnabled()) {
+			   logger.error(String.format("Cannot access URLConnection - %s", ioEx.getMessage()), ioEx);
+		   }
 	   }
 	   return fileType;
 	}
@@ -250,7 +255,9 @@ public class PocNLP {
 	   }
 	   catch (IOException ex)
 	   {
-	      System.out.println("ERROR: Unable to process file type for " + fileName + " - " + ex);
+		  if (logger.isErrorEnabled()) {
+	      logger.error(String.format("ERROR: Unable to process file type for %s ", fileName), ex);
+		  }
 	      fileType = "null";
 	   }
 	   return fileType;

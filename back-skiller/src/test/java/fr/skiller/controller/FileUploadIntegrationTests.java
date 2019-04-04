@@ -5,7 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
 
-import java.io.File;
+import java.io.IOException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,8 +29,6 @@ import fr.skiller.service.StorageService;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class FileUploadIntegrationTests {
 
-	private static File resourcesDirectory = new File("src/test/resources");
-
 	@Autowired
 	private TestRestTemplate restTemplate;
 
@@ -41,11 +39,11 @@ public class FileUploadIntegrationTests {
 	private int port;
 
 	@Test
-	public void shouldUploadFile() throws Exception {
+	public void shouldUploadFile() throws IOException {
 		
 		ClassPathResource resource = new ClassPathResource( "/uploadTest/testupload.txt");
 		
-		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
 		map.add("file", resource);
 		ResponseEntity<String> response = this.restTemplate.postForEntity("/api/upload/do", map,
 				String.class);
@@ -57,7 +55,7 @@ public class FileUploadIntegrationTests {
 	}
 
 	@Test
-	public void shouldDownloadFile() throws Exception {
+	public void shouldDownloadFile()  {
 		ClassPathResource resource = new ClassPathResource("/uploadTest/testupload.txt");
 		given(this.storageService.loadAsResource("testupload.txt")).willReturn(resource);
 

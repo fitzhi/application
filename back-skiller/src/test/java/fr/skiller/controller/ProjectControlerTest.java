@@ -24,15 +24,19 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
+import fr.skiller.exception.SkillerException;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ProjectControlerTest {
+
+	private static final String ID_PROJECT = "{ idProject: ";
+
+	private static final String PROJECT_SKILLS = "/project/skills/";
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -48,10 +52,10 @@ public class ProjectControlerTest {
 	@Autowired
 	private SkillHandler skillHandler;
 		
-	private static int ID_INFOTER = 11;
+	private static final int ID_INFOTER = 11;
 	
 	@Before 
-	public void before() throws Exception {
+	public void before() throws SkillerException {
 		if (!projectHandler.lookup("INFOTER").isPresent()) {
 			projectHandler.getProjects().put(ID_INFOTER, new Project(ID_INFOTER, "INFOTER"));
 		}
@@ -66,24 +70,24 @@ public class ProjectControlerTest {
 	@Test
 	public void addSkillInsideAProject() throws Exception {
 		
-		this.mvc.perform(get("/project/skills/"+ID_INFOTER)).andExpect(status().isOk()).andExpect(content().string("[]"));	
+		this.mvc.perform(get(PROJECT_SKILLS+ID_INFOTER)).andExpect(status().isOk()).andExpect(content().string("[]"));	
 
-		String body = "{ idProject: " + ID_INFOTER + ", formerSkillTitle: \"\", newSkillTitle: \"Java\"}";
+		String body = ID_PROJECT + ID_INFOTER + ", formerSkillTitle: \"\", newSkillTitle: \"Java\"}";
 		this.mvc.perform(post("/project/skills/save").content(body)).andExpect(status().isOk());		
 		List<Skill> skills = new ArrayList<>();
 		skills.add(new Skill (1, "Java"));
-		this.mvc.perform(get("/project/skills/"+ID_INFOTER)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(skills)));
+		this.mvc.perform(get(PROJECT_SKILLS+ID_INFOTER)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(skills)));
 	
-		body = "{ idProject: " + ID_INFOTER + ", formerSkillTitle: \"Java\", newSkillTitle: \""+skillHandler.getSkills().get(2).getTitle()+"\"}";
+		body = ID_PROJECT + ID_INFOTER + ", formerSkillTitle: \"Java\", newSkillTitle: \""+skillHandler.getSkills().get(2).getTitle()+"\"}";
 		this.mvc.perform(post("/project/skills/save").content(body)).andExpect(status().isOk());		
 		skills.clear();
 		skills.add(new Skill (2, skillHandler.getSkills().get(2).getTitle()));
-		this.mvc.perform(get("/project/skills/"+ID_INFOTER)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(skills)));
+		this.mvc.perform(get(PROJECT_SKILLS+ID_INFOTER)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(skills)));
 
-		body = "{ idProject: " + ID_INFOTER + ", idSkill: 2}";
+		body = ID_PROJECT + ID_INFOTER + ", idSkill: 2}";
 		this.mvc.perform(post("/project/skills/del").content(body)).andExpect(status().isOk());		
 		skills.clear();
-		this.mvc.perform(get("/project/skills/"+ID_INFOTER)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(skills)));
+		this.mvc.perform(get(PROJECT_SKILLS+ID_INFOTER)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(skills)));
 		projectHandler.init();
 	}
 }

@@ -20,7 +20,7 @@ public class SkillDTO extends BaseDTO {
 	 */
 	public SkillDTO(Skill skill) {
 		super();
-		this.skill = skill;
+		this.setSkill(skill);
 	}
 
 	/**
@@ -30,7 +30,7 @@ public class SkillDTO extends BaseDTO {
 	 */
 	public SkillDTO(Skill skill, int code, String message) {
 		super();
-		this.skill = skill;
+		this.setSkill(skill);
 		this.code = code;
 		this.message = message;
 	}
@@ -39,4 +39,18 @@ public class SkillDTO extends BaseDTO {
 	 * Empty constructor.
 	 */
 	public SkillDTO() { }
+
+	/**
+	 * @return the skill
+	 */
+	private Skill getSkill() {
+		return skill;
+	}
+
+	/**
+	 * @param skill the skill to set
+	 */
+	private void setSkill(Skill skill) {
+		this.skill = skill;
+	}
 }
