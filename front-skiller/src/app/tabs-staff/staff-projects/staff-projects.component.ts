@@ -5,11 +5,8 @@ import { MessageService } from '../../message/message.service';
 import { ProjectService } from '../../service/project.service';
 import { StaffService } from '../../service/staff.service';
 import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
-import {Ng2SmartTableModule} from 'ng2-smart-table';
-import {StarsSkillLevelRenderComponent} from './../starsSkillLevelRenderComponent';
-import {Ng2SmartTableComponent} from 'ng2-smart-table/ng2-smart-table.component';
 import { LocalDataSource } from 'ng2-smart-table';
 import { BaseComponent } from '../../base/base.component';
 
@@ -57,6 +54,32 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
         }));
   }
 
+  /**
+   * Confirm the end-user that the project has been added to this staff member.
+   * @param staff the staff member
+   * @param event the JS cinematic event thrown (of creation or edition)
+   */
+  messageConfirmationInProject(staff: Collaborator, event: any) {
+    this.messageService.info(staff.firstName + ' ' + staff.lastName +
+        ' is involved now in project ' + event.newData.name);
+    this.reloadProjects(this.collaborator.idStaff);
+    event.confirm.resolve();
+  }
+
+  /**
+   * Handle the error returned by the backend.
+   * @param responseInError the back-end response in error
+   * @param event the JS cinematic event thrown (of creation or edition)
+   */
+  handleError(responseInError: any, event: any) {
+    if (Constants.DEBUG) {
+        console.log('Error ' + responseInError.error.code + ' ' + responseInError.error.message);
+    }
+    this.reloadProjects(this.collaborator.idStaff);
+    this.messageService.error(responseInError.error.message);
+    event.confirm.reject();
+  }
+
   onConfirmCreateFromProject(event) {
     if (Constants.DEBUG) {
       console.log('onConfirmCreateFromProject for event : ' + event.newData.name);
@@ -65,18 +88,10 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
       this.subscriptions.add(
         this.staffService.addProject(this.collaborator.idStaff, event.newData.name).subscribe(
           (staffDTO: StaffDTO) => {
-            this.messageService.info(staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName +
-              ' is involved now in project ' + event.newData.name);
-            this.reloadProjects(this.collaborator.idStaff);
-            event.confirm.resolve();
+            this.messageConfirmationInProject(staffDTO.staff, event);
           },
           response_error => {
-            if (Constants.DEBUG) {
-              console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
-            }
-            this.reloadProjects(this.collaborator.idStaff);
-            this.messageService.error(response_error.error.message);
-            event.confirm.reject();
+                this.handleError(response_error, event);
           }
         ));
     } else {
@@ -95,18 +110,11 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
             this.staffService.changeProject(this.collaborator.idStaff, event.data.name, event.newData.name)
             .subscribe(
               (staffDTO: StaffDTO) => {
-                this.messageService.info(staffDTO.staff.firstName + ' ' +
-                  staffDTO.staff.lastName + ' is involved now in project ' + event.newData.name);
-                this.reloadProjects(this.collaborator.idStaff);
-                event.confirm.resolve();
+                this.messageConfirmationInProject(staffDTO.staff, event);
               },
               response_error => {
-                if (Constants.DEBUG) {
-                  console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
-                }
+                this.handleError(response_error, event);
                 this.reloadProjects(this.collaborator.idStaff);
-                event.confirm.reject();
-                this.messageService.error(response_error.error.message);
               }
             ));
         },
@@ -165,7 +173,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
    * Check if the staff member available in this form is a brand new, unregistered, staff member or an already registered one.
    * To add or remove skills, projects, the staff object must have an id.
    */
-  checkStaffMemberExist(event): boolean {
+  checkStaffMemberExist(event: any): boolean {
     if (this.collaborator.idStaff === null) {
       this.messageService.error('You cannot update a skill, or a project, of an unregistered staff member. '
         + 'Please saved this new member first !');

@@ -16,7 +16,7 @@ export class TabsStaffListService {
     /**
      * List of criterias dispplay on the tab staff lists dashboard.
      */
-    public staffListContext: Map<String, StaffListContext> = new Map<String, StaffListContext>();
+    public staffListContext: Map<string, StaffListContext> = new Map<string, StaffListContext>();
 
     /**
      * Index of the active tab.
@@ -195,10 +195,8 @@ export class TabsStaffListService {
                     let found = false;
                     allSkills.forEach(sk => {
                         const posLevel = skill.indexOf(':');
-                        let level = -1;
                         let skillTitle = '';
                         if (posLevel === -1) {
-                            level = ALL_LEVELS;
                             skillTitle = sk.title.toLowerCase();
                             if (skill.toLowerCase() === skillTitle) {
                                 skillsFilter.push(new Filter(sk.id, ALL_LEVELS));

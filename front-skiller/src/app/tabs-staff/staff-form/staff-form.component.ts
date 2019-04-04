@@ -29,7 +29,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
   /**
    * Label on side of the active check box.
    */
-  label_isActive: String;
+  label_isActive: string;
   label_dateInactive: Date;
 
   /**

@@ -44,7 +44,7 @@
 
     <mat-sidenav-content>
 
-        <div align="center" [hidden]="!sunburst_impossible">
+        <div [hidden]="!sunburst_impossible">
                 <br/><br/><h4>Version control connection settings are unknown !<br>They need to be filled out first.</h4>
         </div>
 
@@ -60,7 +60,7 @@
             <div class="col-md-12 text-center w100">
                 <h3>Chart is on preparation !</h3>
                 <p class="lead">Please wait !</p>
-                <div align="center">
+                <div>
                     <img id="sunburstWaitingImage" alt="Waiting image" [src]="sunburstWaitingImage" width="256px" height="256px"/>
                 </div>
             </div>

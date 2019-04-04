@@ -65,7 +65,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
         this.project = project;
         this.profileProject.get('projectName').setValue(project.name);
         this.connection_settings = String(this.project.connection_settings);
-        this.profileProject.get('urlRepository1').setValue(this.project.urlRepository);
+        this.profileProject.get('uSlRepository1').setValue(this.project.urlRepository);
         this.profileProject.get('urlRepository2').setValue(this.project.urlRepository);
         this.profileProject.get('username').setValue(this.project.username);
         this.profileProject.get('password').setValue(this.project.password);

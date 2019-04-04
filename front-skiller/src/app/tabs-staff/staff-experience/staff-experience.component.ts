@@ -107,6 +107,19 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
     }
   }
 
+  /**
+   * Confirm to the end-user that his operation succeeds. The skill is added to the collaborator.
+   * @param staff the staff member concerned
+   * @param skillTitle the title of teh skill added.
+   * @param event the active JS event thrown by the framework.
+   */
+  messageConfirmationSkillAdded(staff: Collaborator, skillTitle: string, event: any) {
+    this.messageService.info(staff.firstName + ' ' + staff.lastName +
+        ' has gained the skill ' + skillTitle);
+    this.reloadExperiences(this.staff.idStaff);
+    event.confirm.resolve();
+  }
+
   onConfirmAddStaffSkill(event) {
     if (Constants.DEBUG) {
       console.log('onConfirmAddStaffSkill for event ' + event.newData.title);
@@ -115,10 +128,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
       this.subscriptions.add(
         this.staffService.addExperience(this.staff.idStaff, event.newData.title, event.newData.level).subscribe(
           (staffDTO: StaffDTO) => {
-            this.messageService.info(staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName +
-              ' has gained the skill ' + event.newData.title);
-            this.reloadExperiences(this.staff.idStaff);
-            event.confirm.resolve();
+              this.messageConfirmationSkillAdded(staffDTO.staff, event.newData.title, event);
           },
           response_error => {
             if (Constants.DEBUG) {
@@ -146,10 +156,8 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
               this.staffService.changeExperience(this.staff.idStaff, event.data.title, event.newData.title,
                 event.newData.level).subscribe(
                 (staffDTO: StaffDTO) => {
-                  this.messageService.info(staffDTO.staff.firstName + ' ' +
-                    staffDTO.staff.lastName + ' has now the experience ' + event.newData.title);
-                  this.reloadExperiences(this.staff.idStaff);
-                  event.confirm.resolve();
+                    this.messageConfirmationSkillAdded(staffDTO.staff, event.newData.title, event);
+                    this.reloadExperiences(this.staff.idStaff);
                 },
                 response_error => {
                   if (Constants.DEBUG) {

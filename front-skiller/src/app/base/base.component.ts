@@ -8,7 +8,7 @@ export class BaseComponent implements OnDestroy {
    */
   subscriptions: Subscription = new Subscription();
 
-  dateConstruction: String;
+  dateConstruction: string;
 
   constructor() {
     const today = new Date();

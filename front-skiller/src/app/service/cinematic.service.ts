@@ -1,5 +1,4 @@
 import { Constants } from '../constants';
-import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 
@@ -8,12 +7,12 @@ class Form {
     /**
      * Active form identifier.
      */
-    public formIdentifier: Number = -1;
+    public formIdentifier = -1;
 
     /**
      * url activated for this form.
      */
-    public url: String;
+    public url: string;
 
     /**
      * Constructor
@@ -50,7 +49,7 @@ export class CinematicService {
     /**
      * This subject containts the tab selected in the projects Tab Group container
      */
-    public tabProjectActivated = new BehaviorSubject<Number>(Constants.PROJECT_IDX_TAB_FORM);
+    public tabProjectActivated = new BehaviorSubject<number>(Constants.PROJECT_IDX_TAB_FORM);
 
 
     /**
@@ -65,7 +64,7 @@ export class CinematicService {
       * The navigation toolbar on the top left corner, need to know if we reach the for
       * either from the natural URL, or the jump link from the list
      */
-    setForm(formIdentifier: Number, url: String) {
+    setForm(formIdentifier: number, url: string) {
 
         /**
          * We do not change the active form.
