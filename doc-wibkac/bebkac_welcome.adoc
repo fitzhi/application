@@ -1,0 +1,30 @@
+
+= WIBKAC 
+
+Who Is Between Keyboard And Chair ? +
+
+Skills matters...
+
+WIBKAC is an open-source skills management project, initially developed for IT service centers. 
+You can alter this scope, but the key features will be not relevant without IT projects.
+
+WIBKAC is declared under the LGPL General Public License (GPL), version 3. +
+So, you are completely free to fork, enhance and update this present application. 
+You are also very much invited to get involved in this project, and contribute to the enhancements of Wibkac.
+
+This first release of Wibkac has been developed with a front-end in Angular and a back-end in Java/Spring. +
+No database is deployed. Data are stored on JSON files located on the file system, with a periodic saving procedure. 
+This light solution has been selected because of the volume of information. If you company has more than 1 millions of employees, this product is not for you.
+
+Wibkac is very tied to the version control software GIT. +
+Some features are very connected to the repository of GIT. We sill dream to implement other releases for SVN, TFS... Contributors are welcome.+
+
+== MAIN FEATURES
+The main features of Wibkac are
+
+- Staff registration
+- Project management
+- Skills management
+
+== INSTALLATION
+ 
