@@ -1,0 +1,52 @@
+
+= WIBKAC 
+
+_Who Is Between Keyboard And Chair ?_ ^S^^k^^i^^l^^l^^s^ ^m^^a^^t^^t^^e^^r^^s^^.^^.^^.^
+
+
+WIBKAC is an open-source skills management project, initially developed for software companies (first use is tested inside an IT service centers). 
+You can alter the scope of WIBKAC, but most key features will be not relevant without IT projects.
+
+WIBKAC is declared under the LGPL General Public License (GPL), version 3. +
+So, you are absolutely free to fork, enhance and update this present application. 
+You are also very welcomed to get involved in the project. We look for contributors to enhance WIBKAC.
+
+This first release of WIBKAC has been developed with a front-end in Angular and a back-end server in Java(TM) / Spring Boot(C). +
+No database is needed. All data are stored on JSON files located on the file system. A periodic saving procedure can be scheduled. 
+No complex administration is needed so. We intend to design the most-easy-to-use-and-deploy application. 
+WIBKAC is a light solution. It has been build so because of the volume of information. 
+If you company has more than 1 millions of employees, this product is not for you.
+
+WIBKAC is also very tied to the version control software GIT(TM). +
+Some of the features are very connected to this repository. 
+We still dream/plan to implement other releases for SVN(TM), Microsoft's TFS... Contributors are welcome.+
+We try to avoid the double entry of information so, as often as possible, the tool will strive to extract information from the repository.
+
+== MAIN FEATURES
+
+.The main features of WIBKAC are
+
+* The Staff management
+
+** You will be able to register every from the staff, and more specifically developers.
+** You will be able to attribute them skills, and a level for each one. 
+(_An evaluation process, involving the collaborators and his pairs, is available._) 
+Skills can be easily retrieved from the applications. 
+** You can involve your collaborators into projects. 
+One again, a list of project proposals will be presented, based on repositories. 
+
+* Project management
+
+** You will be able to register all projects active in the company.
+** Skills required for the project can be registered. Some will be inferred from the source control.
+** The complete list of contributors in projects are previewed in a dedicated list.
+** A risk management dashboard from the point of view of teams and available skills is also available in WIBKAC.
+
+* Skills management
+
+** You will be able to register all skills. A predefined IT list is proposed. 
+** You will be able to follow up the the variation of the global level of developers by technologies. 
+
+== INSTALLATION
+
+ 
