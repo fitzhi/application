@@ -1,0 +1,80 @@
+{
+    "1": {
+        "idStaff": 1,
+        "firstName": "Frédéric",
+        "lastName": "VIDAL",
+        "nickName": "fvidal",
+        "login": "fvidal",
+        "email": "frederic.vidal.pro@gmail.com",
+        "level": "ET 3",
+        "isActive": true,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [],
+        "experiences": [{
+            "id": 4,
+            "title": "Java",
+            "level": 4
+        }, {
+            "id": 21,
+            "title": "Angular TS",
+            "level": 3
+        }, {
+            "id": 8,
+            "title": "Typescript",
+            "level": 3
+        }]
+    },
+    "2": {
+        "idStaff": 2,
+        "firstName": "Georges",
+        "lastName": "LUCAS",
+        "nickName": "glucas",
+        "login": "glucas",
+        "email": "glucas@gmail.com",
+        "isActive": true,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [],
+        "experiences": []
+    },
+    "3": {
+        "idStaff": 3,
+        "firstName": "Tintin",
+        "lastName": ", just Tintin",
+        "nickName": "tintin",
+        "login": "tintin",
+        "email": "tintin@gmail.com",
+        "isActive": true,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [],
+        "experiences": []
+    },
+    "4": {
+        "idStaff": 4,
+        "firstName": "Captain",
+        "lastName": "Haddock",
+        "nickName": "haddock",
+        "login": "haddock",
+        "email": "captain_haddock@gmail.com",
+        "isActive": true,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [],
+        "experiences": []
+    },
+    "5": {
+        "idStaff": 5,
+        "firstName": "Captain",
+        "lastName": "America",
+        "nickName": "capame",
+        "login": "capame",
+        "email": "capame@gmail.com",
+        "isActive": true,
+        "typeOfApplication": 0,
+        "external": false,
+        "missions": [],
+        "experiences": []
+    }
+}

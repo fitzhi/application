@@ -2,11 +2,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
 	http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.skiller</groupId>
-	<artifactId>back-skiller</artifactId>
-	<packaging>war</packaging>
-	<version>1.0-SNAPSHOT</version>
-	<name>Back skiller</name>
+	<groupId>com.wibkac</groupId>
+	<artifactId>wibkac</artifactId>
+	<packaging>jar</packaging>
+	<version>0.1-SNAPSHOT</version>
+	<name>Backend wibkac</name>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<jdk.version>1.8</jdk.version>
@@ -60,10 +60,6 @@
 			<version>${logback.version}</version>
 		</dependency>
 
-		<!-- <dependency> <groupId>org.springframework</groupId> <artifactId>spring-web</artifactId> 
-			<version>${spring.version}</version> </dependency> <dependency> <groupId>org.springframework</groupId> 
-			<artifactId>spring-webmvc</artifactId> <version>${spring.version}</version> 
-			</dependency> -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -84,10 +80,10 @@
 
 		<!-- https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test -->
 		<dependency>
-    		<groupId>org.springframework.boot</groupId>
-    		<artifactId>spring-boot-starter-test</artifactId>
-    		<version>${spring-boot.version}</version>
-    		<scope>test</scope>
+	    		<groupId>org.springframework.boot</groupId>
+    			<artifactId>spring-boot-starter-test</artifactId>
+    			<version>${spring-boot.version}</version>
+    			<scope>test</scope>
 		</dependency>
 
 		<!-- Google gson parser https://mvnrepository.com/artifact/com.google.code.gson/gson -->
@@ -172,7 +168,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>back-skiller</finalName>
+		<finalName>wibkac</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 
@@ -215,6 +211,9 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<executable>false</executable>
+				</configuration>
 				<version>${spring-boot.version}</version>
 				<executions>
 					<execution>

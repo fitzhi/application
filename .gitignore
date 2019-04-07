@@ -1,70 +1,71 @@
 
 front-skiller/package-lock.json
 
-back-skiller/target
+deploy/
 
-back-skiller/.classpath
+back-wibkac/target/
 
-back-skiller/.project
+back-wibkac/.classpath
 
-back-skiller/.settings
+back-wibkac/.project
 
-back-skiller/staff.json
+back-wibkac/.settings
 
-back-skiller/src/test/resources/effectifISC.csv
+back-wibkac/staff.json
 
-back-skiller/upload-dir/Formulaire.pdf
+back-wibkac/src/test/resources/effectifISC.csv
 
-back-skiller/upload-dir/ET_201709.doc
+back-wibkac/upload-dir/Formulaire.pdf
 
-back-skiller/src/test/resources/poc_git/properties.json
+back-wibkac/upload-dir/ET_201709.doc
 
-back-skiller/src/test/resources/poc_git/properties-VEGEO.json
+back-wibkac/src/test/resources/poc_git/properties.json
 
-back-skiller/src/test/resources/poc_git/properties-SKILLER.json
+back-wibkac/src/test/resources/poc_git/properties-VEGEO.json
 
-back-skiller/git-scan.csv
+back-wibkac/src/test/resources/poc_git/properties-SKILLER.json
 
-back-skiller/git-scan.txt
+back-wibkac/git-scan.csv
 
-back-skiller/src/test/resources/poc_git/properties-KAFKA.json
+back-wibkac/git-scan.txt
 
-back-skiller/src/test/resources/gitdir/gitdir.json
+back-wibkac/src/test/resources/poc_git/properties-KAFKA.json
 
-back-skiller/src/main/resources/data/properties-VEGEO.json
+back-wibkac/src/test/resources/gitdir/gitdir.json
 
-back-skiller/src/main/resources/repository-settings/properties-VEGEO.json
+back-wibkac/src/main/resources/data/properties-VEGEO.json
 
-back-skiller/src/main/resources/staff.json
+back-wibkac/src/main/resources/repository-settings/properties-VEGEO.json
 
-back-skiller/src/main/resources/root.json
+back-wibkac/src/main/resources/staff.json
 
-back-skiller/memo-cmd-test-bypassed
+back-wibkac/src/main/resources/root.json
 
-back-skiller/src/main/resources/out_dir/staff.json
+back-wibkac/memo-cmd-test-bypassed
 
-back-skiller/src/test/resources/staff.json
+back-wibkac/src/main/resources/out_dir/staff.json
 
-back-skiller/src/main/resources/out_dir/skills.json
+back-wibkac/src/test/resources/staff.json
 
-back-skiller/src/main/resources/repository-settings/skiller-gitlab.json
+back-wibkac/src/main/resources/out_dir/skills.json
 
-back-skiller/src/main/resources/repository-settings/GitLab-SQLI.json
+back-wibkac/src/main/resources/repository-settings/skiller-gitlab.json
 
-back-skiller/src/test/java/fr/skiller/controller/
+back-wibkac/src/main/resources/repository-settings/GitLab-SQLI.json
 
-back-skiller/src/main/resources/out_dir/projects.json
+back-wibkac/src/test/java/fr/skiller/controller/
 
-back-skiller/src/test/java/fr/skiller/stupid/StupidTest.java
+back-wibkac/src/main/resources/out_dir/projects.json
 
-back-skiller/upload-dir/FredericVidalFR.pdf
+back-wibkac/src/test/java/fr/skiller/stupid/StupidTest.java
 
-front-skiller/target/sonar
+back-wibkac/upload-dir/FredericVidalFR.pdf
 
-back-skiller/src/main/resources/internal_testing_data
+front-skiller/target/sonar/
+
+back-wibkac/src/main/resources/internal_testing_data
 
 doc-skiller
 
+back-wibkac/TIGF-567_Import_flux_tetra-program.adoc
 
-
-back-skiller/TIGF-567_Import_flux_tetra-program.adoc

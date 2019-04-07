@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,6 +36,7 @@ import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
+import fr.skiller.exception.SkillerException;
 import fr.skiller.source.scanner.RepoScanner;
 
 /**
@@ -77,23 +79,22 @@ public class GitScannerTestByPassable {
 	RiskProcessor riskProcessor;
 
 	@Before
-	public void before() throws Exception {
+	public void before() throws IOException {
 		if ("Y".equals(System.getProperty("bypass"))) {
 			bypass = true;
 		}
-		
 		Gson gson = new GsonBuilder().create();
 		final FileReader fr = new FileReader(new File(fileProperties));
 		settings = gson.fromJson(fr, settings.getClass());
 		fr.close();
 		
 		if (logger.isDebugEnabled()) {
-			logger.debug("GIT remote URL " + settings.getUrl());
+			logger.debug(String.format("GIT remote URL %s", settings.getUrl()));
 		}
 	}
 
 	@Test
-	public void cloneAndParseRepo() throws Exception {
+	public void cloneAndParseRepo() throws IOException, SkillerException, GitAPIException {
 		
 		if (bypass) return;
 		
@@ -111,12 +112,12 @@ public class GitScannerTestByPassable {
 			repo.contributors()
 				.stream()
 				.filter(contributor -> contributor.getIdStaff() != UNKNOWN)
-				.forEach(idStaff -> {
-					Staff staff = staffHandler.getStaff().get(idStaff);
+				.forEach(contributor -> {
+					Staff staff = staffHandler.getStaff().get(contributor.getIdStaff());
 					if (staff == null) {
-						logger.debug("Do not retrieve the staff with the id "+idStaff);
+						logger.debug(String.format("Do not retrieve the staff with the id %d", contributor.getIdStaff()));
 					} else {
-						logger.debug(staff.getLogin() + " " + staff.isActive());
+						logger.debug(String.format("%s %s", staff.getLogin(), staff.isActive()));
 					}
 				});
 		}
