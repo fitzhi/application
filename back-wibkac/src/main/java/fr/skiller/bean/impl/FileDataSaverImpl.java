@@ -18,6 +18,8 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +75,15 @@ public class FileDataSaverImpl implements DataSaver {
 	@Autowired
 	ProjectHandler staffHandler;
 
+	private Path rootLocation;
+
+	@PostConstruct
+	private void init() {
+        this.rootLocation = Paths.get(saveDir);
+	}
+	
+
+	
 	@Override
 	public void saveProjects(Map<Integer, Project> projects) throws SkillerException {
 
@@ -83,7 +94,7 @@ public class FileDataSaverImpl implements DataSaver {
 			return;
 		}
 
-		final String filename = saveDir + "projects.json";
+		final String filename = "projects.json";
 
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("Saving %d projects into file %s.", projects.size(), filename));
@@ -93,7 +104,7 @@ public class FileDataSaverImpl implements DataSaver {
 			logger.debug(sb.toString());
 		}
 
-		Path path = Paths.get(filename);
+		Path path = rootLocation.resolve(filename);
 
 		try {
 			try (BufferedWriter writer = Files.newBufferedWriter(path)) {
@@ -108,11 +119,12 @@ public class FileDataSaverImpl implements DataSaver {
 	@Override
 	public Map<Integer, Project> loadProjects() throws SkillerException {
 
-		final String filename = saveDir + "projects.json";
+		final String filename = "projects.json";
 
 		Map<Integer, Project> projects = new HashMap<>();
 
-		try (FileReader fr = new FileReader(new File(filename))) {
+
+		try (FileReader fr = new FileReader(rootLocation.resolve(filename).toFile())) {
 			Type listProjectsType = new TypeToken<HashMap<Integer, Project>>() {
 			}.getType();
 			projects = gson.fromJson(fr, listProjectsType);
@@ -140,7 +152,7 @@ public class FileDataSaverImpl implements DataSaver {
 			return;
 		}
 
-		final String filename = saveDir + "staff.json";
+		final String filename = "staff.json";
 
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("Saving %d staff members into file %s.", company.size(), filename));
@@ -150,7 +162,7 @@ public class FileDataSaverImpl implements DataSaver {
 			logger.debug(sb.toString());
 		}
 
-		try (FileWriter fw = new FileWriter(new File(filename))) {
+		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
 			fw.write(gson.toJson(company));
 		} catch (final Exception e) {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
@@ -160,11 +172,11 @@ public class FileDataSaverImpl implements DataSaver {
 	@Override
 	public Map<Integer, Staff> loadStaff() throws SkillerException {
 
-		final String filename = saveDir + "staff.json";
+		final String filename = "staff.json";
 
 		Map<Integer, Staff> theStaff = new HashMap<>();
 
-		try (FileReader fr = new FileReader(new File(filename))) {
+		try (FileReader fr = new FileReader(rootLocation.resolve(filename).toFile())) {
 			Type listStaffType = new TypeToken<HashMap<Integer, Staff>>() {
 			}.getType();
 			theStaff = gson.fromJson(fr, listStaffType);
@@ -192,7 +204,7 @@ public class FileDataSaverImpl implements DataSaver {
 			return;
 		}
 
-		final String filename = saveDir + "skills.json";
+		final String filename = "skills.json";
 
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("Saving %d skills into file %s.", skills.size(), filename));
@@ -201,7 +213,7 @@ public class FileDataSaverImpl implements DataSaver {
 			logger.debug(sb.toString());
 		}
 
-		try (FileWriter fw = new FileWriter(new File(filename))) {
+		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
 			fw.write(gson.toJson(skills));
 		} catch (final Exception e) {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
@@ -211,11 +223,11 @@ public class FileDataSaverImpl implements DataSaver {
 	@Override
 	public Map<Integer, Skill> loadSkills() throws SkillerException {
 
-		final String filename = saveDir + "skills.json";
+		final String filename = "skills.json";
 
 		Map<Integer, Skill> skills = new HashMap<>();
 
-		try (FileReader fr = new FileReader(new File(filename))) {
+		try (FileReader fr = new FileReader(rootLocation.resolve(filename).toFile())) {
 			Type listSkillType = new TypeToken<HashMap<Integer, Skill>>() {
 			}.getType();
 			skills = gson.fromJson(fr, listSkillType);

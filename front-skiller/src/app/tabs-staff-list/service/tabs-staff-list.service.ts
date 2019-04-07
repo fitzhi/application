@@ -257,7 +257,7 @@ export class TabsStaffListService {
                 if ((filters.length === 0) && (criteriasUnknown.length > 0)) {
                     return false;
                 } else {
-                    return (activeOnly ? collab.isActive : true);
+                    return (activeOnly ? collab.active : true);
                 }
             }
 
@@ -266,7 +266,7 @@ export class TabsStaffListService {
             return (
                 ((firstname.toLowerCase().indexOf(reminder) > -1)
                     || (lastname.toLowerCase().indexOf(reminder) > -1))
-                && (activeOnly ? collab.isActive : true)
+                && (activeOnly ? collab.active : true)
             );
         }
 

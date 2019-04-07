@@ -48,7 +48,7 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
       // We create an empty collaborator until the subscription is complete
       this.collaborator = {
         idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
-        isActive: true, dateInactive: null, application: null, typeOfApplication: null, external: false,
+        active: true, dateInactive: null, application: null, typeOfApplication: null, external: false,
         missions: [], experiences: []
       };
       this.staffDataExchangeService.changeCollaborator (this.collaborator);
@@ -61,7 +61,7 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
           (collab: Collaborator) => {
             this.staffDataExchangeService.changeCollaborator(collab);
             this.collaborator = collab;
-            if (collab.isActive) {
+            if (collab.active) {
               document.querySelector('body').style.cssText = '--actions-button-visible: visible';
             } else {
               document.querySelector('body').style.cssText = '--actions-button-visible: hidden';
@@ -77,7 +77,7 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
               this.messageService.error('There is no staff member for id ' + this.idStaff);
               this.collaborator = {
                 idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
-                isActive: true, dateInactive: null, application: null, typeOfApplication: null, external: false,
+                active: true, dateInactive: null, application: null, typeOfApplication: null, external: false,
                 missions: [], experiences: []
               };
             } else {
@@ -90,6 +90,7 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
             }
             if (Constants.DEBUG) {
               console.log('Loading complete for id ' + this.idStaff);
+              console.log (this.collaborator);
             }
           }
         );

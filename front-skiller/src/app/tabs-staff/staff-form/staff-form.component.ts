@@ -65,7 +65,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
     }
     if (this.idStaff === null) {
         this.collaborator = { idStaff: -1, firstName: '', lastName: '', nickName: '', login: '', email: '', level: '',
-        dateInactive: null,  application: '', typeOfApplication: null, isActive: true, external: true,
+        dateInactive: null,  application: '', typeOfApplication: null, active: true, external: true,
         experiences: [], missions: [] };
         this.profileStaff.get('firstName').setValue('');
         this.profileStaff.get('lastName').setValue('');
@@ -93,8 +93,8 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
             this.profileStaff.get('login').setValue(this.collaborator.login);
             this.profileStaff.get('email').setValue(this.collaborator.email);
             this.profileStaff.get('profile').setValue(this.collaborator.level);
-            this.profileStaff.get('active').setValue(this.collaborator.isActive);
-            if (this.collaborator.isActive) {
+            this.profileStaff.get('active').setValue(this.collaborator.active);
+            if (this.collaborator.active) {
               if (this.collaborator.idStaff === null) {
                 this.label_isActive = 'will be considered in activity as long as this box is checked ';
               } else {
@@ -119,6 +119,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
         }));
     }
 
+    console.log ('this.collaborator.isActive ' + this.collaborator.active);
     this.profiles = this.referentialService.profiles;
 
   }
@@ -137,7 +138,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
     this.collaborator.login = this.profileStaff.get('login').value;
     this.collaborator.email = this.profileStaff.get('email').value;
     this.collaborator.level = this.profileStaff.get('profile').value;
-    this.collaborator.isActive = this.profileStaff.get('active').value;
+    this.collaborator.active = this.profileStaff.get('active').value;
     this.collaborator.external = this.profileStaff.get('external').value;
 
     this.subscriptions.add(
@@ -153,7 +154,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
    * You can test this state by testing the dateInactive, filled by the back-end during the deactivation process.
    */
   public isAlreadyDeactived(): boolean {
-    return (!this.collaborator.isActive);
+    return (!this.collaborator.active);
   }
 
   get firstName(): any {

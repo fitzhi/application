@@ -138,7 +138,6 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
       this.cinematicService.newCollaboratorDisplayEmitted$.subscribe(data => {
         if (Constants.DEBUG) {
-          console.log('Receiving new staff member with ID ' + data);
         }
 
         /*
@@ -158,8 +157,11 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
           }
         });
         if (Constants.DEBUG) {
-          console.log('this.previousId ' + this.previousId);
-          console.log('this.nextId ' + this.nextId);
+            console.groupCollapsed('Cinematic buttons');
+            console.log('ID active in the form ' + data);
+            console.log('ID for button "Previous" ' + this.previousId);
+            console.log('ID for button "Next" ' + this.nextId);
+            console.groupEnd();
         }
       }));
   }
