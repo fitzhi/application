@@ -22,13 +22,13 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
   /**
    * Image used by the button for upload the application to retrieve the skills.
    */
-  image_upLoadCV = '/assets/img/uploadCV.png';
+  image_upLoadCV = './assets/img/uploadCV.png';
 
   /**
    * Image used by the button for upload the application to retrieve the skills.
    */
   image_downloadCV: string;
-  images_dir = '/assets/img/';
+  images_dir = './assets/img/';
   image_winword = 'word.png';
   image_pdf = 'pdf.png';
 

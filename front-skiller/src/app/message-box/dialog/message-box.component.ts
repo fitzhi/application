@@ -25,7 +25,7 @@ export class MessageBoxComponent implements OnInit {
   ngOnInit() {
     this.ok = this.data.ok;
     this.yes_no = this.data.yes_no;
-    this.image = this.yes_no ? '/assets/img/questionMark.png' : '/assets/img/exclamationMark.jpg';
+    this.image = this.yes_no ? './assets/img/questionMark.png' : './assets/img/exclamationMark.jpg';
   }
 
 }

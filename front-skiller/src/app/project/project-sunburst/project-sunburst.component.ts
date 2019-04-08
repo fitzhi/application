@@ -55,7 +55,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
   public sunburst_waiting = false;
 
   // Waiting images previewed during the chart generation.
-  public sunburstWaitingImage = '/assets/img/sunburst-waiting-image.png';
+  public sunburstWaitingImage = './assets/img/sunburst-waiting-image.png';
 
   // Rules of risks panel has to be displayed.
   public LEGEND_SUNBURST = 1;

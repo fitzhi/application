@@ -120,19 +120,19 @@ export class Constants {
       delete: true,
     },
     add: {
-      addButtonContent: '<img src="/assets/img/add.png"></img>',
-      createButtonContent: '<img src="/assets/img/save.png"></img>',
-      cancelButtonContent: '<img src="/assets/img/cancel.png"></img>',
+      addButtonContent: '<img src="./assets/img/add.png"></img>',
+      createButtonContent: '<img src="./assets/img/save.png"></img>',
+      cancelButtonContent: '<img src="./assets/img/cancel.png"></img>',
       confirmCreate: true,
     },
     delete: {
-      deleteButtonContent: '<img src="/assets/img/delete.png"></img>',
+      deleteButtonContent: '<img src="./assets/img/delete.png"></img>',
       confirmDelete: true,
     },
     edit: {
-      editButtonContent: '<img src="/assets/img/edit.png"></img>',
-      cancelButtonContent: '<img src="/assets/img/cancel.png"></img>',
-      saveButtonContent: '<img src="/assets/img/save.png"></img>',
+      editButtonContent: '<img src="./assets/img/edit.png"></img>',
+      cancelButtonContent: '<img src="./assets/img/cancel.png"></img>',
+      saveButtonContent: '<img src="./assets/img/save.png"></img>',
       confirmSave: true,
     },
     hideSubHeader: false,
@@ -164,19 +164,19 @@ export class Constants {
       delete: true
     },
     add: {
-      addButtonContent: '<img src="/assets/img/add.png"></img>',
-      createButtonContent: '<img src="/assets/img/save.png"></img>',
-      cancelButtonContent: '<img src="/assets/img/cancel.png"></img>',
+      addButtonContent: '<img src="./assets/img/add.png"></img>',
+      createButtonContent: '<img src="./assets/img/save.png"></img>',
+      cancelButtonContent: '<img src="./assets/img/cancel.png"></img>',
       confirmCreate: true,
     },
     delete: {
-      deleteButtonContent: '<img src="/assets/img/delete.png"></img>',
+      deleteButtonContent: '<img src="./assets/img/delete.png"></img>',
       confirmDelete: true,
     },
     edit: {
-      editButtonContent: '<img src="/assets/img/edit.png"></img>',
-      cancelButtonContent: '<img src="/assets/img/cancel.png"></img>',
-      saveButtonContent: '<img src="/assets/img/save.png"></img>',
+      editButtonContent: '<img src="./assets/img/edit.png"></img>',
+      cancelButtonContent: '<img src="./assets/img/cancel.png"></img>',
+      saveButtonContent: '<img src="./assets/img/save.png"></img>',
       confirmSave: true,
     },
     hideSubHeader: false,
@@ -199,19 +199,19 @@ export class Constants {
       }
     },
     add: {
-      addButtonContent: '<img src="/assets/img/add.png"></img>',
-      createButtonContent: '<img src="/assets/img/save.png"></img>',
-      cancelButtonContent: '<img src="/assets/img/cancel.png"></img>',
+      addButtonContent: '<img src="./assets/img/add.png"></img>',
+      createButtonContent: '<img src="./assets/img/save.png"></img>',
+      cancelButtonContent: '<img src="./assets/img/cancel.png"></img>',
       confirmCreate: true,
     },
     delete: {
-      deleteButtonContent: '<img src="/assets/img/delete.png"></img>',
+      deleteButtonContent: '<img src="./assets/img/delete.png"></img>',
       confirmDelete: true,
     },
     edit: {
-      editButtonContent: '<img src="/assets/img/edit.png"></img>',
-      cancelButtonContent: '<img src="/assets/img/cancel.png"></img>',
-      saveButtonContent: '<img src="/assets/img/save.png"></img>',
+      editButtonContent: '<img src="./assets/img/edit.png"></img>',
+      cancelButtonContent: '<img src="./assets/img/cancel.png"></img>',
+      saveButtonContent: '<img src="./assets/img/save.png"></img>',
       confirmSave: true,
     },
     hideSubHeader: false,
@@ -236,11 +236,4 @@ export class Constants {
     public static urlBackend(): string {
       return Constants.URL_BACKEND;
   }
-
-
 }
-
-
-
-
-
