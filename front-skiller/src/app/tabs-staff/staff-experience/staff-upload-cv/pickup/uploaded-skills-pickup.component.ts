@@ -20,7 +20,7 @@ export class UploadedSkillsPickupComponent implements AfterViewInit {
   /**
    * Data source associated to the table.
    */
-  private dataSource: MatTableDataSource<DeclaredExperience>;
+  dataSource: MatTableDataSource<DeclaredExperience>;
 
   private selection: SelectionModel<DeclaredExperience>;
 
