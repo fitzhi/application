@@ -60,16 +60,16 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
   previousId: number;
 
   skill_activated = true;
-  image_skill_activated = '/assets/img/skill-activated.png';
-  image_skill_inactive = '/assets/img/skill-inactive.png';
+  image_skill_activated = './assets/img/skill-activated.png';
+  image_skill_inactive = './assets/img/skill-inactive.png';
 
   dev_activated = true;
-  image_dev_activated = '/assets/img/developer-activated.png';
-  image_dev_inactive = '/assets/img/developer-inactive.png';
+  image_dev_activated = './assets/img/developer-activated.png';
+  image_dev_inactive = './assets/img/developer-inactive.png';
 
   project_activated = true;
-  image_project_activated = '/assets/img/project-activated.png';
-  image_project_inactive = '/assets/img/project-inactive.png';
+  image_project_activated = './assets/img/project-activated.png';
+  image_project_inactive = './assets/img/project-inactive.png';
 
   constructor(
     private cinematicService: CinematicService,
