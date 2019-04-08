@@ -21,7 +21,7 @@ const httpOptions = {
 })
 export class ProjectService extends InternalService {
 
-  private projectUrl = 'http://localhost:8080/project';  // URL to web api
+  private projectUrl = Constants.urlBackend() + '/project';  // URL to web api
 
   constructor(private httpClient: HttpClient) { super(); }
 

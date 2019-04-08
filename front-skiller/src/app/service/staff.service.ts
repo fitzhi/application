@@ -26,7 +26,7 @@ export class StaffService extends InternalService {
 
   private static peopleCountExperience: Map<string, number> = new Map<string, number>();
 
-  private collaboratorUrl = 'http://localhost:8080/staff';  // URL to web api
+  private collaboratorUrl = Constants.urlBackend() + '/staff';  // URL to web api
 
   constructor(
     private http: HttpClient) {

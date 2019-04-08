@@ -10,7 +10,7 @@ export class Constants {
 	*/
   public static DEBUG = true;
 
-  public static URL_BACKEND = 'http://localhost:8080';
+  private static URL_BACKEND = 'http://localhost:8080';
 
   /**
    * Value for Unknown object;
@@ -79,9 +79,10 @@ export class Constants {
 
   public static canAdd = true;
 
+
   /**
 	 * Declared settings for the grid dedicated to the experiences inside the form STAFF.
-	 */
+   */
   public static SETTINGS_EXPERIENCE_SMARTTABLE = {
     columns: {
       title: {
@@ -228,6 +229,15 @@ export class Constants {
       perPage: 10
     }
   };
+
+    /**
+     * return the URL where if backend if Wibkac is deployed.
+     */
+    public static urlBackend(): string {
+      return Constants.URL_BACKEND;
+  }
+
+
 }
 
 

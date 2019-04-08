@@ -36,7 +36,7 @@ public class Staff {
 	/**
 	 * Staff member is still active or remove from the staff list.
 	 */
-	private boolean isActive = true;
+	private boolean active = true;
 	/**
 	 * Date of the exit.
 	 */
@@ -112,7 +112,7 @@ public class Staff {
 		this.login = login;
 		this.email = email;
 		this.level = level;
-		this.isActive = isActive;
+		this.active = isActive;
 		this.external = external;
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
@@ -185,7 +185,7 @@ public class Staff {
 	@Generated ("eclipse")
 	public String toString() {
 		return "Staff [idStaff=" + idStaff + ", firstName=" + firstName + ", lastName=" + lastName + ", nickName="
-				+ nickName + ", login=" + login + ", email=" + email + ", level=" + level + ", isActive=" + isActive
+				+ nickName + ", login=" + login + ", email=" + email + ", level=" + level + ", isActive=" + active
 				+ ", dateInactive=" + dateInactive + ", application=" + application + ", typeOfApplication="
 				+ typeOfApplication + ", external=" + external + ", missions=" + missions + ", experiences="
 				+ experiences + "]";
@@ -293,14 +293,14 @@ public class Staff {
 	 * @return the isActive
 	 */
 	public boolean isActive() {
-		return isActive;
+		return active;
 	}
 
 	/**
 	 * @param isActive the isActive to set
 	 */
 	public void setActive(boolean isActive) {
-		this.isActive = isActive;
+		this.active = isActive;
 	}
 
 	/**

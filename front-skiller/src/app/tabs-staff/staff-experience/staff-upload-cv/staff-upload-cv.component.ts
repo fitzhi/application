@@ -57,7 +57,7 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 
   submit() {
     if (typeof this.applicationFile === 'undefined') {
-      const dialogRef = this.messageBoxService.error('ERROR', 'You must select the application file first !');
+      this.messageBoxService.error('ERROR', 'You must select the application document first !');
     } else {
       if (this.checkApplicationFormat()) {
         this.upload(this.applicationFile);
@@ -97,7 +97,7 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 
     // create a HTTP-post request and pass the form
     // tell it to report the upload progress
-    const req = new HttpRequest('POST', Constants.URL_BACKEND + '/staff/api/uploadCV', formData, {
+    const req = new HttpRequest('POST', Constants.urlBackend() + '/staff/api/uploadCV', formData, {
       reportProgress: true
     });
 

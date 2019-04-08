@@ -9,8 +9,6 @@ import { Skill } from '../data/skill';
 @Injectable()
 export class ReferentialService {
 
-  HOST = 'http://localhost:8080/';
-
   /*
    * List of profiles
    */
@@ -35,9 +33,9 @@ export class ReferentialService {
    */
   public loadAllReferentials(): void {
     if (Constants.DEBUG) {
-      console.log('Fetching the profiles on URL ' + this.HOST + '/data/profiles');
+      console.log('Fetching the profiles on URL ' + Constants.urlBackend() + '/data/profiles');
     }
-    const subProfiles = this.httpClient.get<Profile[]>(this.HOST + '/data/profiles').subscribe(
+    const subProfiles = this.httpClient.get<Profile[]>(Constants.urlBackend() + '/data/profiles').subscribe(
       (profiles: Profile[]) => {
           if (Constants.DEBUG) {
             console.groupCollapsed('Staff profiles : ');
@@ -51,7 +49,7 @@ export class ReferentialService {
       response_error => console.error(response_error.error.message),
       () => setTimeout(() => {subProfiles.unsubscribe(); }, 1000));
 
-      const subLegends = this.httpClient.get<RiskLegend[]>(this.HOST + '/data/riskLegends').subscribe(
+      const subLegends = this.httpClient.get<RiskLegend[]>(Constants.urlBackend() + '/data/riskLegends').subscribe(
       (legends: RiskLegend[]) => {
         if (Constants.DEBUG) {
           console.groupCollapsed('Risk legends : ');

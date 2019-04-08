@@ -16,7 +16,7 @@ const httpOptions = {
 })
 export class SkillService extends InternalService {
 
-  private skillUrl = Constants.URL_BACKEND + '/skill';  // URL to web API
+  private skillUrl = Constants.urlBackend() + '/skill';
 
   /**
    * skills

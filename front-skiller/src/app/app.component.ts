@@ -186,7 +186,9 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     switch (this.formId) {
       case Constants.TABS_STAFF_LIST:
         if (Constants.DEBUG) {
-          console.log('Searching staff members for the search criteria ' + this.searching_what);
+          console.log(
+            'Searching ' + (this.activeOnly ? 'only active ' : 'all ')
+            + 'staff members for the search criteria ' + this.searching_what + '');
         }
         if ((this.searching_what !== null) && (this.searching_what.length > 0)) {
           this.tabsStaffListService.addTabResult(this.searching_what, this.activeOnly);
