@@ -155,7 +155,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		listOfNewSkills.forEach(skill -> 
 			staff.getExperiences().add(
-					new Experience(skill.getIdSkill(), skill.getTitle(), FIRST_LEVEL)));
+					new Experience(skill.getIdSkill(), FIRST_LEVEL)));
 		
 		return staff;
 	}

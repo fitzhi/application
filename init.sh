@@ -1,3 +1,4 @@
+echo ""
 echo "Building back-end Wibkac"
 echo "------------------------"
 echo ""

@@ -59,7 +59,7 @@ public class Staff {
 	private List<Mission> missions;
 	
 	/**
-	 * The collaborator's list of skills.
+	 * The collaborator's list of skills & levels.
 	 */
 	private List<Experience> experiences;
 

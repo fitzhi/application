@@ -64,6 +64,10 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
       this.staffDataExchangeService.collaboratorObserver
         .subscribe((collabRetrieved: Collaborator) => {
           this.staff = collabRetrieved;
+
+          // The title of the skill is not propagated by the server. We filled this property "live" on the desktop
+          this.staff.experiences.forEach(exp => exp.title = this.skillService.title(exp.id));
+
           this.sourceExperience.load(this.staff.experiences);
 
           switch (this.staff.typeOfApplication) {
@@ -83,7 +87,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
       );
   }
 
-  /*
+ /*
   * Refresh the skills content after an update.
   */
   reloadExperiences(idStaff: number): void {
@@ -92,7 +96,13 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
     }
     this.subscriptions.add(
       this.staffService.loadExperiences(idStaff).subscribe(
-        assets => this.sourceExperience.load(assets),
+        experiences => {
+
+            // The title of the skill is not propagated by the server. We filled this property "live" on the desktop
+            experiences.forEach(exp => exp.title = this.skillService.title(exp.id));
+
+            this.sourceExperience.load(experiences);
+        },
         error => console.log(error),
       ));
   }
@@ -110,7 +120,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
   /**
    * Confirm to the end-user that his operation succeeds. The skill is added to the collaborator.
    * @param staff the staff member concerned
-   * @param skillTitle the title of teh skill added.
+   * @param skillTitle the title of the skill added.
    * @param event the active JS event thrown by the framework.
    */
   messageConfirmationSkillAdded(staff: Collaborator, skillTitle: string, event: any) {

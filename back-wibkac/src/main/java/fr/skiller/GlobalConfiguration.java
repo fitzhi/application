@@ -15,8 +15,7 @@ public class GlobalConfiguration {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
 				registry.addMapping("/**")
-				.allowedOrigins("http://localhost:4200")
-				.allowedOrigins("https://frvidal.github.io");
+				.allowedOrigins("http://localhost:4200"," https://frvidal.github.io");
 			}
 		};
 	}

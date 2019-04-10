@@ -339,7 +339,7 @@ public class StaffController {
 			/*
 			 * We create a NEW asset for this staff member.
 			 */
-			staff.getExperiences().add(new Experience(result.get().getId(), result.get().getTitle(), p.level));
+			staff.getExperiences().add(new Experience(result.get().getId(), p.level));
 			responseEntity = new ResponseEntity<>(new StaffDTO(staff), headers, HttpStatus.OK);
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("Returning  staff %s", gson.toJson(staff)));

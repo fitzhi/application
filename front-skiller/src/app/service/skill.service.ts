@@ -71,6 +71,18 @@ export class SkillService extends InternalService {
   }
 
   /**
+   * @returns the title associated to the passed skill identifier
+   */
+  title(idSkill: number) {
+    const found = this.allSkills.find(skill => skill.id === idSkill);
+    if (typeof found === 'undefined') {
+        return 'ERR : no title for id ' + idSkill;
+    } else {
+      return found.title;
+    }
+  }
+
+  /**
    * GET the skill associated to this id from the backend skiller. Will throw a 404 if this id is not found.
    */
   get(id: number): Observable<Skill> {

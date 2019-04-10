@@ -11,8 +11,6 @@ public class Experience {
 
 	private int id;
 	
-	private String title; 
-	
 	private int level;
 	
 	/**
@@ -25,12 +23,10 @@ public class Experience {
 	/**
 	 * Constructor with parameters.
 	 * @param id the id of the skill in an experience
-	 * @param title the title of the skill
 	 * @param level the degree of knowledge obtained by a developer on this skill
 	 */
-	public Experience(final int id, final String title, final int level) {
+	public Experience(final int id, final int level) {
 		this.setId(id);
-		this.setTitle(title);
 		this.setLevel(level);
 	}
 	
@@ -45,7 +41,7 @@ public class Experience {
 
 	@Override
 	public String toString() {
-		return "Experience [id=" + getId() + ", title=" + getTitle() + ", level=" + getLevel() + "]";
+		return "Experience [id=" + getId() + ", level=" + getLevel() + "]";
 	}
 
 	/**
@@ -74,20 +70,6 @@ public class Experience {
 	 */
 	public void setLevel(int level) {
 		this.level = level;
-	}
-
-	/**
-	 * @return the title
-	 */
-	public String getTitle() {
-		return title;
-	}
-
-	/**
-	 * @param title the title to set
-	 */
-	public void setTitle(String title) {
-		this.title = title;
 	}
 
 }

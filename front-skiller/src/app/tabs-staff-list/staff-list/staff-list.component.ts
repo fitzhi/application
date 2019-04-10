@@ -8,6 +8,7 @@ import { Profile } from '../../data/profile';
 import { ReferentialService } from '../../service/referential.service';
 import { Experience } from '../../data/experience';
 import { ListCriteria } from '../../data/listCriteria';
+import { SkillService } from '../../service/skill.service';
 
 @Component({
   selector: 'app-staff-list',
@@ -36,6 +37,7 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
   constructor(
     private tabsStaffListComponent: TabsStaffListService,
     private referentialService: ReferentialService,
+    private skillService: SkillService,
     private router: Router) {
       super();
     }
@@ -110,7 +112,7 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
     let evaluatedSkill: Experience[];
     for (let level = Constants.LEVEL_Expert; (level >= Constants.LEVEL_Beginner); level--) {
       evaluatedSkill = experiences.filter(expe => (expe.level === level));
-      evaluatedSkill.forEach(experience => {mainSkills += experience.title + ', '; });
+      evaluatedSkill.forEach(experience => {mainSkills += this.skillService.title(experience.id) + ', '; });
     }
     return mainSkills;
   }
