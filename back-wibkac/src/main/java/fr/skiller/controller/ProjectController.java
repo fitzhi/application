@@ -323,7 +323,7 @@ public class ProjectController {
 				&& 	(p.newSkillTitle != null)
 				&& 	(p.formerSkillTitle.equals(p.newSkillTitle))) {
 			// Nothing to DO.
-			return new ResponseEntity<ProjectDTO> (new ProjectDTO(project), headers, HttpStatus.OK);
+			return new ResponseEntity<> (new ProjectDTO(project), headers, HttpStatus.OK);
 		}
 		
 		Optional<Skill> result = skillHandler.lookup(p.newSkillTitle);

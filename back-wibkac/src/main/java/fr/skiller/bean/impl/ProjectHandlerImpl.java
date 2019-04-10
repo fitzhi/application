@@ -142,8 +142,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 		
-		List<Ghost> newGhosts = new ArrayList<Ghost>();
-		List<Pseudo> newPseudos = new ArrayList<Pseudo>();
+		List<Ghost> newGhosts = new ArrayList<>();
+		List<Pseudo> newPseudos = new ArrayList<>();
 		
 		for (Pseudo pseudo : pseudos) {
 			

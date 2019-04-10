@@ -25,9 +25,9 @@ import fr.skiller.source.scanner.RepoScanner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class GitScanner_personalizeRepo_Test  {
+public class GitScannerPersonalizeRepoTest  {
 	
-	Logger logger = LoggerFactory.getLogger(GitScanner_personalizeRepo_Test.class.getCanonicalName());
+	Logger logger = LoggerFactory.getLogger(GitScannerPersonalizeRepoTest.class.getCanonicalName());
 	
 	/**
 	 * Source control parser.

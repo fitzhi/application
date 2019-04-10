@@ -13,6 +13,8 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -22,11 +24,13 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
+import fr.skiller.controller.SkillController;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RiskChartData;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
+import fr.skiller.exception.SkillerException;
 
 /**
  * 
@@ -34,8 +38,12 @@ import fr.skiller.data.source.CommitRepository;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RiskCommitAndDevProcessor_meanTheRisk_Test {
+public class RiskCommitAndDevProcessorMeanTheRiskTest {
 	
+	private static final String FR_ONE_ONE_A_JAVA = "fr/one/one/A.java";
+
+	private final Logger logger = LoggerFactory.getLogger(RiskCommitAndDevProcessorMeanTheRiskTest.class.getCanonicalName());
+
 	@Autowired
 	@Qualifier("commitAndDevActive")
 	RiskProcessor riskProcessor;
@@ -48,12 +56,13 @@ public class RiskCommitAndDevProcessor_meanTheRisk_Test {
 
 	CommitRepository comRep;
 	
-	private Staff first = null, second = null, third = null;
+	private Staff first = null;
+	private Staff second = null;
+	private Staff third = null;
 	
-	private Project prj;
 	
 	@Before
-	public void before() throws Exception {
+	public void before() throws SkillerException {
 
 		comRep = new BasicCommitRepository();
 		
@@ -61,12 +70,12 @@ public class RiskCommitAndDevProcessor_meanTheRisk_Test {
 		second = (Staff) staffHandler.getStaff().values().toArray()[1];
 		third = (Staff) staffHandler.getStaff().values().toArray()[2];
 		
-		prj = new Project(8021964, "testRiskEvaluation");
+		Project prj = new Project(8021964, "testRiskEvaluation");
 		projectHandler.addNewProject(prj);
 
-		comRep.addCommit("fr/one/one/A.java", first.getIdStaff(), new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit("fr/one/one/A.java", first.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000));
-		comRep.addCommit("fr/one/one/A.java", first.getIdStaff(), new Timestamp(System.currentTimeMillis()-2000));
+		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000));
+		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()-2000));
 		comRep.addCommit("fr/one/one/B.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()));
 		comRep.addCommit("fr/one/one/C.java", third.getIdStaff(), new Timestamp(System.currentTimeMillis()));
 
@@ -89,11 +98,13 @@ public class RiskCommitAndDevProcessor_meanTheRisk_Test {
 						commit.evaluateDateLastestCommit(),
 						commit.committers()));
 
-		final List<StatActivity> statsCommit = new ArrayList<StatActivity>();
+		final List<StatActivity> statsCommit = new ArrayList<>();
 		impl.evaluateTheRisk(comRep, data, statsCommit);
 		
 		for (StatActivity stat : statsCommit) {
-			System.out.println(stat.getFilename() + " " + stat.getCountCommits() + " " + stat.getCountCommitsByActiveDevelopers());
+			if (logger.isDebugEnabled()) {
+				logger.debug(String.format("%s %d %d", stat.getFilename(), stat.getCountCommits(), stat.getCountCommitsByActiveDevelopers()));
+			}
 		}
 		
 		Assert.assertEquals(-1, data.getRiskLevel());
@@ -111,7 +122,7 @@ public class RiskCommitAndDevProcessor_meanTheRisk_Test {
 	}
 
 	@After
-	public void after() throws Exception {
+	public void after() throws SkillerException {
 		projectHandler.getProjects().remove(8021964);
 	}
 
