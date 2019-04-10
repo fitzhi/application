@@ -64,7 +64,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
       this.subjProject.subscribe(project => {
         this.project = project;
         this.profileProject.get('projectName').setValue(project.name);
-        this.connection_settings = String(this.project.connection_settings);
+        this.connection_settings = String(this.project.connectionSettings);
         this.profileProject.get('urlRepository1').setValue(this.project.urlRepository);
         this.profileProject.get('urlRepository2').setValue(this.project.urlRepository);
         this.profileProject.get('username').setValue(this.project.username);
@@ -213,7 +213,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
    */
   onSubmit() {
     this.project.name = this.profileProject.get('projectName').value;
-    switch (this.project.connection_settings) {
+    switch (this.project.connectionSettings) {
       case this.DIRECT_ACCESS:
         this.project.urlRepository = this.profileProject.get('urlRepository1').value;
         this.project.username = this.profileProject.get('username').value;
@@ -228,7 +228,8 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
         break;
     }
     if (Constants.DEBUG) {
-      console.log('saving the project ' + this.project.name + ' with id ' + this.project.id);
+      console.log('saving the project ');
+      console.log(this.project);
     }
     this.subscriptions.add(
       this.projectService.save(this.project).subscribe(
@@ -239,8 +240,8 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
   }
 
   public onConnectionSettingsChange(val: string) {
-    this.project.connection_settings = +val;
-    switch (this.project.connection_settings) {
+    this.project.connectionSettings = +val;
+    switch (this.project.connectionSettings) {
       case this.DIRECT_ACCESS:
         this.profileProject.get('filename').setValue('');
         this.profileProject.get('urlRepository1').setValue(this.profileProject.get('urlRepository2').value);
@@ -261,10 +262,10 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
       return true;
     }
     // No choice have been made yet. We are the 2 pannels.
-    if ((typeof this.project.connection_settings === 'undefined') || (this.project.connection_settings === 0)) {
+    if ((typeof this.project.connectionSettings === 'undefined') || (this.project.connectionSettings === 0)) {
       return true;
     }
-    return (this.project.connection_settings === this.DIRECT_ACCESS);
+    return (this.project.connectionSettings === this.DIRECT_ACCESS);
   }
 
   /**
@@ -275,10 +276,10 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
       return false;
     }
     // No choice have been made yet. We are the 2 pannels.
-    if ((typeof this.project.connection_settings === 'undefined') || (this.project.connection_settings === 0)) {
+    if ((typeof this.project.connectionSettings === 'undefined') || (this.project.connectionSettings === 0)) {
       return true;
     }
-    return (this.project.connection_settings === this.REMOTE_FILE_ACCESS);
+    return (this.project.connectionSettings === this.REMOTE_FILE_ACCESS);
   }
 
    /**

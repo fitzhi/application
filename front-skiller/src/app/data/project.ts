@@ -4,7 +4,7 @@ export class Project {
 
   public id: number;
   public name: string;
-  public connection_settings: number;
+  public connectionSettings: number;
   public urlRepository: string;
   public username: string;
   public password: string;
