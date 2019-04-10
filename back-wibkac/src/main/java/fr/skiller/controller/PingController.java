@@ -23,7 +23,8 @@ public class PingController {
 	
 	@GetMapping("")
 	public ResponseEntity<String> pong()  {
-		return new ResponseEntity<>("pong", new HttpHeaders(), HttpStatus.OK);
+		return new ResponseEntity<>(
+				"<big>Pong</big><br/><br/><strong>Wibkac 0.1</strong> Welcome, your wibkac back-end is available.", new HttpHeaders(), HttpStatus.OK);
 	}
 
 }
