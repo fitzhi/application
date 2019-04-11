@@ -1,0 +1,59 @@
+.tile {
+    background-color: whitesmoke;
+    justify-content: left;
+    padding: 5px;
+}
+
+.message {
+    margin: 0px;
+    padding: 0px;
+}
+
+#url {
+    margin: 10px;
+}
+
+#backendSetup {
+    background-color: whitesmoke;
+    left: 20px;
+    top:50px;
+}
+
+#submitButton {
+    width: 120px;
+    height: 120px;
+    background-color:whitesmoke;
+    background-size: 100% 100%;
+    border: none;
+    outline: 0;
+}
+
+.urlEdition {
+    background-image: url( "../../../assets/img/save.png" );
+}
+
+.urlEdition:hover  {
+    background-image: url( "../../../assets/img/save-selected.png" );
+}
+
+.urlValid, .urlValid:hover {
+    background-image: url( "../../../assets/img/save-ok.png" );
+}
+
+.urlInvalid, .urlInvalid:hover {
+    background-image: url( "../../../assets/img/save-error.png" );
+}
+
+.validMessage {
+    color: lightgreen;
+    font-size: 18px;
+}
+
+.invalidMessage {
+    color: darkred;
+    font-size: 18px;
+}
+
+
+
+

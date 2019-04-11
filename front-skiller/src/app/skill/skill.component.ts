@@ -112,8 +112,12 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
     return this.profileSkill.get('title');
   }
 
+  /**
+   * Calling the base class to unsubscribe all subscriptions.
+   */
   ngOnDestroy() {
     super.ngOnDestroy();
   }
+
 
 }

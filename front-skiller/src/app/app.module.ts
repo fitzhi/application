@@ -38,10 +38,11 @@ import { StaffFormComponent } from './tabs-staff/staff-form/staff-form.component
 import { StaffProjectsComponent } from './tabs-staff/staff-projects/staff-projects.component';
 import { StaffExperienceComponent } from './tabs-staff/staff-experience/staff-experience.component';
 import { StaffUploadCvComponent } from './tabs-staff/staff-experience/staff-upload-cv/staff-upload-cv.component';
-import { MatNativeDateModule, MatExpansionModule } from '@angular/material';
+import { MatNativeDateModule, MatExpansionModule, MatGridListModule } from '@angular/material';
 import {  MatSortModule, MatButtonToggleModule, MatSidenavModule, MatCardModule, MatFormFieldModule } from '@angular/material';
 import {  MatInputModule, MatSnackBarModule, MatSelectModule, MatDatepickerModule } from '@angular/material';
 import { MatTabsModule, MatDialogModule, MatProgressBarModule, MatPaginatorModule } from '@angular/material';
+import { MatGridList, MatGridTile } from '@angular/material';
 import { MessageBoxComponent } from './message-box/dialog/message-box.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
@@ -63,6 +64,7 @@ import { NodeDetailComponent } from './project/project-sunburst/node-detail/node
 import { ListContributorsComponent } from './project/project-sunburst/node-detail/list-contributors/list-contributors.component';
 import { TabsStaffListComponent } from './tabs-staff-list/tabs-staff-list.component';
 import { StaffListComponent } from './tabs-staff-list/staff-list/staff-list.component';
+import { BackendSetupComponent } from './admin/backend-setup/backend-setup.component';
 
 @NgModule({
   declarations: [
@@ -96,6 +98,7 @@ import { StaffListComponent } from './tabs-staff-list/staff-list/staff-list.comp
     ListContributorsComponent,
     TabsStaffListComponent,
     StaffListComponent,
+    BackendSetupComponent,
   ],
   entryComponents: [
     StarsSkillLevelRenderComponent,
@@ -136,7 +139,7 @@ import { StaffListComponent } from './tabs-staff-list/staff-list/staff-list.comp
     MatNativeDateModule,
     MatSelectModule,
     MatExpansionModule,
-
+    MatGridListModule,
   ],
   providers: [
     CinematicService,

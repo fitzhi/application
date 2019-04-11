@@ -6,11 +6,14 @@ import { StarsSkillLevelRenderComponent } from './tabs-staff/starsSkillLevelRend
 export class Constants {
 
   /**
+   * URL of the back-end server.
+   */
+  private static URL_BACKEND = 'http://localhost:8080';
+
+  /**
 	* DEBUG Mode for development purpose
 	*/
   public static DEBUG = true;
-
-  private static URL_BACKEND = 'http://localhost:8080';
 
   /**
    * Value for Unknown object;
