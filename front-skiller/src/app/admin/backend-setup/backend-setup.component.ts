@@ -3,6 +3,7 @@ import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { BaseComponent } from '../../base/base.component';
 import { HttpClient } from '@angular/common/http';
 import { Constants } from '../../constants';
+import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
 
 @Component({
     selector: 'app-backend-setup',
@@ -29,12 +30,13 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
         url: new FormControl('', [Validators.maxLength(16)])
     });
 
-    private defaultUrl = 'http://localhost:8080';
 
-    constructor(private httpClient: HttpClient) { super(); }
+    constructor(
+        private httpClient: HttpClient,
+        private backendSetupService: BackendSetupService) { super(); }
 
     ngOnInit() {
-        this.backendSetupForm.get('url').setValue(this.defaultUrl);
+        this.backendSetupForm.get('url').setValue(this.backendSetupService.url());
     }
 
     get url(): any {
@@ -55,6 +57,7 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
                     () => {
                         this.currentState = this.BUTTON_VALID_URL;
                         this.messageValidationUrl = 'This URL is valid. Let\'s go ahead !';
+                        this.backendSetupService.saveUrl(urlCandidate);
                     },
                     () => {
                         this.currentState = this.BUTTON_INVALID_URL;

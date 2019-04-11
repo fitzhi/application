@@ -14,6 +14,7 @@ import {Observable} from 'rxjs';
 import {InternalService} from '../internal-service';
 
 import { saveAs } from 'file-saver';
+import { BackendSetupService } from './backend-setup/backend-setup.service';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -26,11 +27,13 @@ export class StaffService extends InternalService {
 
   private static peopleCountExperience: Map<string, number> = new Map<string, number>();
 
-  private collaboratorUrl = Constants.urlBackend() + '/staff';  // URL to web api
+  private collaboratorUrl: string;
 
   constructor(
-    private http: HttpClient) {
+    private http: HttpClient,
+    private backendSetupService: BackendSetupService) {
     super();
+    this.collaboratorUrl = this.backendSetupService.url() + '/staff';
   }
 
   /**

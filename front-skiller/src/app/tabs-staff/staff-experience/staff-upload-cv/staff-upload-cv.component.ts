@@ -13,6 +13,7 @@ import {Subject} from 'rxjs';
 import {MAT_DIALOG_DATA, MatDialogConfig} from '@angular/material';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { BaseComponent } from '../../../base/base.component';
+import { BackendSetupService } from '../../../service/backend-setup/backend-setup.service';
 
 @Component({
   selector: 'app-staff-upload-cv',
@@ -47,6 +48,7 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
     private messageBoxService: MessageBoxService,
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<StaffUploadCvComponent>,
+    private backendSetupService: BackendSetupService,
     @Inject(MAT_DIALOG_DATA) public data: any) {
       super();
     }
@@ -97,7 +99,7 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 
     // create a HTTP-post request and pass the form
     // tell it to report the upload progress
-    const req = new HttpRequest('POST', Constants.urlBackend() + '/staff/api/uploadCV', formData, {
+    const req = new HttpRequest('POST', this.backendSetupService.url() + '/staff/api/uploadCV', formData, {
       reportProgress: true
     });
 

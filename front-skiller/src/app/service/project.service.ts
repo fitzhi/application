@@ -11,6 +11,7 @@ import { Skill } from '../data/skill';
 import { ContributorsDTO } from '../data/external/contributorsDTO';
 import { PseudoList } from '../data/PseudoList';
 import { SettingsGeneration } from '../data/settingsGeneration';
+import { BackendSetupService } from './backend-setup/backend-setup.service';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -21,9 +22,14 @@ const httpOptions = {
 })
 export class ProjectService extends InternalService {
 
-  private projectUrl = Constants.urlBackend() + '/project';  // URL to web api
+  private projectUrl: string;
 
-  constructor(private httpClient: HttpClient) { super(); }
+  constructor(
+    private httpClient: HttpClient,
+    private backendSetupService: BackendSetupService) {
+        super();
+        this.projectUrl = this.backendSetupService.url() + '/project';
+    }
 
   /**
  * Return the global list of ALL collaborators, working for the company.

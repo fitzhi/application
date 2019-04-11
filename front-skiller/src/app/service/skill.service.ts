@@ -6,6 +6,7 @@ import {InternalService} from '../internal-service';
 
 import {Constants} from '../constants';
 import { ListCriteria } from '../data/listCriteria';
+import { BackendSetupService } from './backend-setup/backend-setup.service';
 
 const httpOptions = {
   headers: new HttpHeaders({'Content-Type': 'application/json'})
@@ -16,9 +17,9 @@ const httpOptions = {
 })
 export class SkillService extends InternalService {
 
-  private skillUrl = Constants.urlBackend() + '/skill';
-
-  /**
+  private skillUrl: string;
+  
+  /*
    * skills
    */
   public allSkills: Skill[] = [];
@@ -33,8 +34,9 @@ export class SkillService extends InternalService {
    */
   criteria: ListCriteria;
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private backendSetupService: BackendSetupService) {
     super();
+    this.skillUrl = this.backendSetupService.url() + '/skill';
     this.loadSkills();
    }
 

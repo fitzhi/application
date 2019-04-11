@@ -6,11 +6,6 @@ import { StarsSkillLevelRenderComponent } from './tabs-staff/starsSkillLevelRend
 export class Constants {
 
   /**
-   * URL of the back-end server.
-   */
-  private static URL_BACKEND = 'http://localhost:8080';
-
-  /**
 	* DEBUG Mode for development purpose
 	*/
   public static DEBUG = true;
@@ -233,10 +228,4 @@ export class Constants {
     }
   };
 
-    /**
-     * return the URL where if backend if Wibkac is deployed.
-     */
-    public static urlBackend(): string {
-      return Constants.URL_BACKEND;
-  }
 }
