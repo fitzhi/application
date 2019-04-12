@@ -64,6 +64,7 @@ import { ListContributorsComponent } from './project/project-sunburst/node-detai
 import { TabsStaffListComponent } from './tabs-staff-list/tabs-staff-list.component';
 import { StaffListComponent } from './tabs-staff-list/staff-list/staff-list.component';
 import { BackendSetupComponent } from './admin/backend-setup/backend-setup.component';
+import { ConnectionComponent } from './admin/connection/connection.component';
 
 @NgModule({
   declarations: [
@@ -98,6 +99,7 @@ import { BackendSetupComponent } from './admin/backend-setup/backend-setup.compo
     TabsStaffListComponent,
     StaffListComponent,
     BackendSetupComponent,
+    ConnectionComponent,
   ],
   entryComponents: [
     StarsSkillLevelRenderComponent,

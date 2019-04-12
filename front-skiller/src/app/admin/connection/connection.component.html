@@ -1,0 +1,37 @@
+<div id="connection" class="container">
+    <div class="col-md-6 text-center">
+      <h2>Connection</h2>
+    </div>
+
+    <div class="col-md-6">
+      <form class="needs-validation" [formGroup]="connectionGroup" (ngSubmit)="onSubmit()">
+        
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="username" class="required">Username</label>
+                </div>
+                <div class="col-md-3">
+                <input type="text" class="form-control required" id="user" name="username" placeholder="Enter username (Required)" formControlName="username"
+                    />
+                    <label *ngIf="username.invalid" [ngClass]="'alert alert-warning'" style="width: 100%; font-size: 10px;">
+                        Username is required.
+                    </label>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3">
+                    <label for="password" class="required">Password</label>
+                </div>
+                <div class="col-md-3">
+                    <input type="password" class="form-control required" id="password" name="password" 
+                    placeholder="Enter the password (Required)" formControlName="username"/>
+                    <label *ngIf="password.invalid" [ngClass]="'alert alert-warning'" style="width: 100%; font-size: 10px;">
+                        Password is required.
+                    </label>
+                </div>
+            </div>
+            <hr class="col-md-6"/>
+            <button class="btn btn-primary btn-lg btn-block" type="submit">Submit</button>
+        </form>
+    </div>
+</div>

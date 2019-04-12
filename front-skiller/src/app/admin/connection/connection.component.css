@@ -1,0 +1,18 @@
+#connection {
+    background-color: whitesmoke;
+    padding: 10px;
+    margin: 10px;
+}
+
+.tile {
+    background-color: whitesmoke;
+    justify-content: left;
+    padding: 10px;
+    margin: 10px;
+}
+
+input {
+    font-size: 18px;
+    padding: 10px;
+    margin-right: 10px;
+}

@@ -1,5 +1,5 @@
 
-<form class="needs-validation" [formGroup]="backendSetupForm" (ngSubmit)="onSubmit()">
+<form [formGroup]="backendSetupForm" (ngSubmit)="onSubmit()">
     <div id="backendSetup" class="col-md-8">
         <mat-grid-list cols="5"  rowHeight="40px">
 
@@ -28,9 +28,11 @@
                         (keyup)="urlInEdition()"
                         formControlName="url"/>
             </mat-grid-tile>
+
             <mat-grid-tile [colspan]="5" [rowspan]="1" class="message">
                 <label id="messageValidationUrl" for="url" [ngClass]="classLabel()">{{messageValidationUrl}}</label>
             </mat-grid-tile>
+
         </mat-grid-list>
     </div>
 </form>
