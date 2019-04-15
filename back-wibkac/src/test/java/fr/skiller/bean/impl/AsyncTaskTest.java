@@ -20,30 +20,34 @@ import fr.skiller.exception.SkillerException;
 @SpringBootTest
 public class AsyncTaskTest {
 
+	private static final String PROJECT = "project";
+	
+	private static final String OPERATION_OF_TEST = "operation of test";
+	
 	@Autowired
 	AsyncTask asyncTask;
 
 	@Before
-	public void before() throws Exception {
-		asyncTask.addTask("operation of test", "project", 1);		
+	public void before() throws SkillerException {
+		asyncTask.addTask(OPERATION_OF_TEST, PROJECT, 1);		
 	}
 	
 	@Test
-	public void test2Add() throws Exception {
+	public void test2Add() throws SkillerException {
 		try {
-			asyncTask.addTask("operation of test", "project", 1);
+			asyncTask.addTask(OPERATION_OF_TEST, PROJECT, 1);
 			Assert.fail("addTask should throw a SkillerException");
 		} catch (final SkillerException e) {
 		}
 	}
 	
 	@Test
-	public void testAddAndTest() throws Exception {
-		Assert.assertTrue(asyncTask.containsTask("operation of test", "project", 1));
+	public void testAddAndTest()  {
+		Assert.assertTrue(asyncTask.containsTask(OPERATION_OF_TEST, PROJECT, 1));
 	}
 
 	@After
 	public void after() {
-		asyncTask.removeTask("operation of test", "project", 1);		
+		asyncTask.removeTask(OPERATION_OF_TEST, PROJECT, 1);		
 	}
 }

@@ -10,13 +10,20 @@ import java.util.Random;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.PBEKeySpec;
 
-public class PasswordUtils {
+public abstract class PasswordUtils {
 
 	private static final Random RANDOM = new SecureRandom();
 	private static final String ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 	private static final int ITERATIONS = 10000;
 	private static final int KEY_LENGTH = 256;
 
+	/**
+	 * No instance of PasswordUtils allowed.
+	 */
+	private PasswordUtils() {
+	}
+	
+	
 	/**
 	 * Generate the Salt code
 	 * 

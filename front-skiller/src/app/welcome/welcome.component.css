@@ -3,3 +3,12 @@
     height: 100%;
     background-color: lightgray;
 }
+
+#connection {
+    width: 400px;
+}
+
+#firstConnection {
+    width: 600px;
+    margin-top: 50px;
+}

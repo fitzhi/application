@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import fr.skiller.data.source.Contributor;
+import fr.skiller.service.FileType;
 
 /**
  * A staff member in the company (most probably a developer).<br/>
@@ -123,9 +124,9 @@ public class Staff {
 	 * @param application filename uploaded
 	 * @param typeOfApplication type of application
 	 */
-	public void updateApplication (final String application, final int typeOfApplication) {
+	public void updateApplication (final String application, final FileType typeOfApplication) {
 		this.application = application;
-		this.typeOfApplication = typeOfApplication;
+		this.typeOfApplication = typeOfApplication.getValue();
 	}
 	
 	/**

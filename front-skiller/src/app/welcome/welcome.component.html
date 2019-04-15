@@ -3,6 +3,15 @@
     <app-backend-setup></app-backend-setup>
 </div>
 
-<div [hidden]="firstLaunch">
-    <app-connection></app-connection>
+<div id="firstConnection">
+    <div [hidden]="firstLaunch">
+        <app-connection [alterPassword]="true" [firstConnection]="true"></app-connection>
+    </div>
 </div>
+
+<div id="connection">
+    <div [hidden]="firstLaunch">
+        <app-connection [alterPassword]="false" [firstConnection]="false"></app-connection>
+    </div>
+</div>
+

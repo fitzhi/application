@@ -51,6 +51,7 @@ import fr.skiller.data.internal.ResumeSkill;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
+import fr.skiller.service.FileType;
 import fr.skiller.service.ResumeParserService;
 import fr.skiller.service.StorageService;
 
@@ -402,23 +403,25 @@ public class StaffController {
 	public ResponseEntity<ResumeDTO> uploadApplicationFile(
 			@RequestParam("file") MultipartFile file, 
 			@RequestParam("id") int id, 
-			@RequestParam("type") int fileType) {
+			@RequestParam("type") int type) {
 
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
 
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("uploading %s for staff identifer %d of type %s", filename, id, fileType));
+			logger.debug(String.format("uploading %s for staff identifer %d of type %s", filename, id, type));
 		}
+
+		FileType typeOfApplication = FileType.valueOf(type);
 		
 		storageService.store(file);
 
 		final Staff staff = staffHandler.getStaff().get(id);
 		assert (staff != null);
 
-		staff.updateApplication(filename, fileType);
+		staff.updateApplication(filename, typeOfApplication);
 		
 		try {
-			final Resume exp = resumeParserService.extract(filename, fileType);
+			final Resume exp = resumeParserService.extract(filename, typeOfApplication);
 			ResumeDTO resumeDTO = new ResumeDTO();
 			exp.data().forEach(item -> resumeDTO.experience.add(
 					new ResumeSkill(item.getIdSkill(), 
@@ -457,17 +460,18 @@ public class StaffController {
 
         // Try to determine file's content type
 		final String contentType;
-		switch (staff.getTypeOfApplication()) {
-		case StorageService.FILE_TYPE_TXT:
+		FileType type = FileType.valueOf(staff.getTypeOfApplication());
+		switch (type) {
+		case FILE_TYPE_TXT:
 			contentType = "text/html;charset=UTF-8";
 			break;
-		case StorageService.FILE_TYPE_DOC:
+		case FILE_TYPE_DOC:
 			contentType ="application/msword";
 			break;
-		case StorageService.FILE_TYPE_DOCX:
+		case FILE_TYPE_DOCX:
 			contentType ="application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 			break;
-		case StorageService.FILE_TYPE_PDF:
+		case FILE_TYPE_PDF:
 			contentType ="application/pdf";
 			break;
 		default:

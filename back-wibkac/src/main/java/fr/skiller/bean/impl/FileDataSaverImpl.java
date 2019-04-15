@@ -56,7 +56,7 @@ public class FileDataSaverImpl implements DataSaver {
 	/**
 	 * Directory where data will be saved.
 	 */
-	@Value("${fileDataSaver.save_dir}")
+	@Value("${applicationOutDirectory}")
 	private String saveDir;
 
 	/**

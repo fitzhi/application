@@ -16,9 +16,9 @@ public interface ResumeParserService {
 	/**
 	 * Extract the skills from the resume file.
 	 * @param filename Name of the application file
-	 * @param typeFile Type of file. (3 formats are supported TXT, DOC, DOCX and PDF)
+	 * @param typeOfApplication Type of file. (3 formats are supported TXT, DOC, DOCX and PDF)
 	 * @return the skills extracted.
 	 * @throws SkillerException problem occurs when retrieving the application file
 	 */
-	Resume extract (final String filename, final int fileType) throws SkillerException;
+	Resume extract (final String filename, final FileType typeOfApplication) throws SkillerException;
 }

@@ -18,6 +18,7 @@ import fr.skiller.bean.SkillHandler;
 import fr.skiller.data.internal.Resume;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.exception.SkillerException;
+import fr.skiller.service.FileType;
 import fr.skiller.service.ResumeParserService;
 import fr.skiller.service.StorageService;
 import opennlp.tools.tokenize.WhitespaceTokenizer;
@@ -36,22 +37,22 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 	private static final String CAR_ALLOWED = "abcdefghijklmnopqrstuvwxyz-+#";
 
 	@Override
-	public Resume extract(final String fileName, final int fileType) throws SkillerException {
+	public Resume extract(final String fileName, final FileType typeOfApplication) throws SkillerException {
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("extracting skills from %s", fileName));
 		}
 		try {
-			switch (fileType) {
-			case StorageService.FILE_TYPE_TXT:
+			switch (typeOfApplication) {
+			case FILE_TYPE_TXT:
 				return extractSkillsfromCVInFormatTXT(fileName);
-			case StorageService.FILE_TYPE_DOC:
+			case FILE_TYPE_DOC:
 				return extractSkillsfromCVInFormatDOC(fileName);
-			case StorageService.FILE_TYPE_DOCX:
+			case FILE_TYPE_DOCX:
 				return extractSkillsfromCVInFormatDOCX(fileName);
-			case StorageService.FILE_TYPE_PDF:
+			case FILE_TYPE_PDF:
 				return extractSkillsfromCVInFormatPDF(fileName);
 			default:
-				throw new SkillerRuntimeException(String.format("Should not pass here for type %s", fileType));
+				throw new SkillerRuntimeException(String.format("Should not pass here for type %s", typeOfApplication.toString()));
 			}
 		} catch (final IOException ioe) {
 			if (logger.isErrorEnabled()) {

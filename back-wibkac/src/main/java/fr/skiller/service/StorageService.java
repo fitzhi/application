@@ -7,12 +7,11 @@ import java.util.stream.Stream;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * @author Fr&eacute;d&eacute;ric VIDAL
+ * File system storage service.
+ */
 public interface StorageService {
-
-	final static int FILE_TYPE_PDF = 0;
-	final static int FILE_TYPE_DOCX = 1;
-	final static int FILE_TYPE_DOC = 2;
-	final static int FILE_TYPE_TXT = 3;
 	
 	/**
 	 * Initialize the service.
@@ -25,10 +24,23 @@ public interface StorageService {
      */
     void store(MultipartFile file);
 
+    /**
+     * @return all files located from starting location, in a <code>stream</code> of <code>Path</code>
+     */
     Stream<Path> loadAll();
 
+    /**
+     * Resolve a filename starting from the resolved starting location 
+     * @see fr.skiller.service.impl.storageservice.StorageProperties
+     * @param filename the passed filename
+     * @return the <code>Path</code> corresponding to the passed filename
+     */
     Path load(String filename);
 
+    /**
+     * @param filename the passed filename
+     * @return the resource loaded
+     */
     Resource loadAsResource(String filename);
 
     /**
@@ -41,32 +53,33 @@ public interface StorageService {
 	 * @return the content of the file
 	 * @throws IOException
 	 */
-	String readFileTXT(final String fileName) throws IOException;
+	String readFileTXT(String fileName) throws IOException;
 	
 	/**
 	 * @param fileName the DOC file to be read
 	 * @return the content of the file
 	 * @throws IOException
 	 */
-	String readFileDOC(final String fileName) throws IOException;
+	String readFileDOC(String fileName) throws IOException;
 
 	/**
 	 * @param fileName the DOCX file to be read
 	 * @return the content of the file
 	 * @throws IOException
 	 */
-	String readFileDOCX(final String fileName) throws IOException;
+	String readFileDOCX(String fileName) throws IOException;
 
 	/**
 	 * @param fileName the PDF file to be read
 	 * @return the content of the file
-	 * @throws IOException
+	 * @throws IOException exception occurs when reading the file system
 	 */
-	String readFilePDF(final String filename) throws IOException;
+	String readFilePDF(String filename) throws IOException;
    
 	/**
 	 * @param fileName the concerned file
 	 * @return the file size as retrieved from the file system
+	 * @throws IOException exception occurs when reading the file system
 	 */
-	long getfileLength(final String filename) throws IOException;
+	long getfileLength(String filename) throws IOException;
 }

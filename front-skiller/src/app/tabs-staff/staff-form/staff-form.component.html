@@ -5,19 +5,23 @@
 			(ngSubmit)="onSubmit()">
 			<div class="row">
 				<div class="col-md-6 mb-3">
-					<label for="firstName">First name</label> <input type="text"
+                    <label for="firstName">First name</label> 
+                    <input type="text"
 						class="form-control" id="firstName" name="firstName"
 						[readonly]="isAlreadyDeactived()" placeholder="" value=""
-						formControlName="firstName"/> <label
+                        formControlName="firstName"/> 
+                    <label
 						*ngIf="firstName.invalid" [ngClass]="'alert alert-warning'"
 						style="width: 100%; font-size: 10px;">16 max character for
 						the first name.</label>
 				</div>
 				<div class="col-md-6 mb-3">
-					<label for="lastName" class="required">Last name</label> <input type="text"
+                    <label for="lastName" class="required">Last name</label> 
+                    <input type="text"
 						class="form-control required" id="lastName" name="lastName"
 						[readonly]="isAlreadyDeactived()" placeholder="Enter the last name"
-						value="" formControlName="lastName"> <label
+                        value="" formControlName="lastName"> 
+                    <label
 						*ngIf="lastName.invalid" [ngClass]="'alert alert-warning'"
 						style="width: 100%; font-size: 10px;"> Last name is required
 						with 16 max character.</label>
@@ -35,7 +39,8 @@
 						<input type="text" class="form-control" id="nickName"
 							name="nickName" [readonly]="isAlreadyDeactived()"
 							placeholder="Enter the nickname (if any) for this staff member"
-							value="" formControlName="nickName"> <label
+                            value="" formControlName="nickName"> 
+                        <label
 							*ngIf="nickName.invalid" [ngClass]="'alert alert-warning'"
 							style="width: 100%; font-size: 10px;">12 max character for
 							the Pseudo.</label>
