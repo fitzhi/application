@@ -1,5 +1,5 @@
 .tile {
-    background-color: whitesmoke;
+    background-color: transparent;
     justify-content: left;
     padding: 5px;
 }
@@ -14,15 +14,14 @@
 }
 
 #backendSetup {
-    background-color: whitesmoke;
-    left: 20px;
-    top:50px;
+    background-color: transparent;
+    margin-left: 20px;
 }
 
 #submitButton {
     width: 120px;
     height: 120px;
-    background-color:whitesmoke;
+    background-color: transparent;
     background-size: 100% 100%;
     border: none;
     outline: 0;

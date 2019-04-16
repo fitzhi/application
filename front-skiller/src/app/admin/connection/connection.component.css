@@ -1,11 +1,11 @@
 #connection {
-    background-color: whitesmoke;
-    padding: 10px;
-    margin: 10px;
+    background-color: transparent;
+    margin-top: 20px;
+    margin-left: 20px;
 }
 
 .tile {
-    background-color: whitesmoke;
+    background-color: transparent;
     justify-content: left;
     padding: 10px;
     margin: 10px;
@@ -42,5 +42,29 @@ p.important {
         font-weight: 800;
 }
 
+#okButton, #cancelButton {
+    background-size: contain;
+    background-repeat: no-repeat;    
+    width: 90px;
+    height: 90px;
+    border: none;
+    outline: 0;
+}
+
+#cancelButton {
+    background-image: url( "../../../assets/img/cancel.png" );
+}
+
+#cancelButton:hover  {
+    background-image: url( "../../../assets/img/cancel-activated.png" );
+}
+
+#okButton {
+    background-image: url( "../../../assets/img/ok-activated.png" );
+}
+
+#okButton:hover  {
+    background-image: url( "../../../assets/img/ok-active.png" );
+}
 
 

@@ -1,9 +1,10 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { BaseComponent } from '../../base/base.component';
 import { HttpClient } from '@angular/common/http';
 import { Constants } from '../../constants';
 import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
+import { MatStepper } from '@angular/material';
 
 @Component({
     selector: 'app-backend-setup',
@@ -11,6 +12,17 @@ import { BackendSetupService } from '../../service/backend-setup/backend-setup.s
     styleUrls: ['./backend-setup.component.css']
 })
 export class BackendSetupComponent extends BaseComponent implements OnInit, OnDestroy {
+
+    /**
+     * We'll send to the parent component (startingSetup) the fact that this is the very first connection.
+     */
+    @Output() messengerVeryFirstLocated = new EventEmitter<boolean>();
+
+    /**
+     * The main stepper is passed in order to procede a programmatly step.next().
+     */
+    @Input('stepper')
+    stepper: MatStepper;
 
     /**
      * Button states : Edition, Selected, Ok, Error
@@ -25,6 +37,12 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
     BUTTON_INVALID_URL = 3;
 
     messageValidationUrl = '';
+
+    /**
+     * This boolean is equal to <code>true</code> if we are in the very fist call to Wibkac.
+     * Specific setup forms should be filled to complete this startup procedure.
+     */
+    isVeryFirstConnection = false;
 
     public backendSetupForm = new FormGroup({
         url: new FormControl('', [Validators.maxLength(16)])
@@ -52,14 +70,23 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
             console.log('Testing the URL', urlCandidate);
         }
         this.subscriptions
-            .add(this.httpClient.get<String>(urlCandidate + '/ping', { responseType: 'text' as 'json' })
+            .add(this.httpClient.get<String>(urlCandidate + '/admin/isVeryFirstConnection', { responseType: 'text' as 'json' })
                 .subscribe(
-                    () => {
+                    data => {
+                        this.isVeryFirstConnection = (data === 'true');
+                        if (Constants.DEBUG && this.isVeryFirstConnection) {
+                            console.log ('This is the very first connection into Wibkac');
+                        }
                         this.currentState = this.BUTTON_VALID_URL;
                         this.messageValidationUrl = 'This URL is valid. Let\'s go ahead !';
                         this.backendSetupService.saveUrl(urlCandidate);
+                        this.messengerVeryFirstLocated.emit(true);
+                        this.stepper.next();
                     },
-                    () => {
+                    error => {
+                        if (Constants.DEBUG) {
+                            console.log ('Connection error ', error);
+                        }
                         this.currentState = this.BUTTON_INVALID_URL;
                         this.messageValidationUrl = 'Error ! Either this URL is invalid, or your server is offline';
                     }));

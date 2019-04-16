@@ -38,7 +38,7 @@ import { StaffFormComponent } from './tabs-staff/staff-form/staff-form.component
 import { StaffProjectsComponent } from './tabs-staff/staff-projects/staff-projects.component';
 import { StaffExperienceComponent } from './tabs-staff/staff-experience/staff-experience.component';
 import { StaffUploadCvComponent } from './tabs-staff/staff-experience/staff-upload-cv/staff-upload-cv.component';
-import { MatNativeDateModule, MatExpansionModule, MatGridListModule } from '@angular/material';
+import { MatNativeDateModule, MatExpansionModule, MatGridListModule, MatStepperModule, MatIconModule } from '@angular/material';
 import {  MatSortModule, MatButtonToggleModule, MatSidenavModule, MatCardModule, MatFormFieldModule } from '@angular/material';
 import {  MatInputModule, MatSnackBarModule, MatSelectModule, MatDatepickerModule } from '@angular/material';
 import { MatTabsModule, MatDialogModule, MatProgressBarModule, MatPaginatorModule } from '@angular/material';
@@ -65,6 +65,7 @@ import { TabsStaffListComponent } from './tabs-staff-list/tabs-staff-list.compon
 import { StaffListComponent } from './tabs-staff-list/staff-list/staff-list.component';
 import { BackendSetupComponent } from './admin/backend-setup/backend-setup.component';
 import { ConnectionComponent } from './admin/connection/connection.component';
+import { StartingSetupComponent } from './admin/starting-setup/starting-setup.component';
 
 @NgModule({
   declarations: [
@@ -100,6 +101,7 @@ import { ConnectionComponent } from './admin/connection/connection.component';
     StaffListComponent,
     BackendSetupComponent,
     ConnectionComponent,
+    StartingSetupComponent,
   ],
   entryComponents: [
     StarsSkillLevelRenderComponent,
@@ -141,6 +143,8 @@ import { ConnectionComponent } from './admin/connection/connection.component';
     MatSelectModule,
     MatExpansionModule,
     MatGridListModule,
+    MatStepperModule,
+    MatIconModule,
   ],
   providers: [
     CinematicService,

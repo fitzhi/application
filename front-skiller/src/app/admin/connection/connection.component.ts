@@ -1,6 +1,8 @@
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
+import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { BaseComponent } from '../../base/base.component';
+import { MatStepper } from '@angular/material';
+import { MustMatch } from 'src/app/service/mustmatch';
 
 @Component({
     selector: 'app-connection',
@@ -10,10 +12,16 @@ import { BaseComponent } from '../../base/base.component';
 export class ConnectionComponent extends BaseComponent implements OnInit, OnDestroy {
 
     /**
+     * The main stepper is passed in order to procede a programmatly step.next().
+     */
+    @Input('stepper')
+    stepper: MatStepper;
+
+    /**
      * Is this ever the first connection to this server, assuming that the user has to be "administrator" ?
      */
-    @Input('firstConnection')
-    firstConnection: boolean;
+    @Input('veryFirstConnection')
+    veryFirstConnection: boolean;
 
     /**
      * Are supposed to change the password on this form ? is it simply a connection form ?
@@ -21,25 +29,18 @@ export class ConnectionComponent extends BaseComponent implements OnInit, OnDest
     @Input('alterPassword')
     alterPassword: boolean;
 
-    /**
-     * Title of the submit button, which might be either<br/>
-     * - "Connect" (in the connection form state)<br/>
-     * - "Save" (if we're planning to change the password)
-     */
-    submitTitle = 'Connect';
+    public connectionGroup: FormGroup;
 
-    public connectionGroup = new FormGroup({
-        username: new FormControl('', [Validators.maxLength(8)]),
-        password: new FormControl('', [Validators.maxLength(16)]),
-        confirmPassword: new FormControl('', [Validators.maxLength(16)])
-    });
-
-    constructor() { super(); }
+    constructor(private formBuilder: FormBuilder) { super(); }
 
     ngOnInit() {
-        if (this.firstConnection) {
-            this.submitTitle = 'Save';
-        }
+        this.connectionGroup = this.formBuilder.group({
+            username: new FormControl('', [Validators.required, Validators.maxLength(16)]),
+            password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(16)]),
+            passwordConfirmation: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(16)]),
+        }, {
+            validator: MustMatch('password', 'passwordConfirmation')
+        });
     }
 
     get username(): any {
@@ -50,8 +51,8 @@ export class ConnectionComponent extends BaseComponent implements OnInit, OnDest
         return this.connectionGroup.get('password');
     }
 
-    get confirmPassword(): any {
-        return this.connectionGroup.get('confirmPassword');
+    get passwordConfirmation(): any {
+        return this.connectionGroup.get('passwordConfirmation');
     }
 
     /**
@@ -66,4 +67,5 @@ export class ConnectionComponent extends BaseComponent implements OnInit, OnDest
      */
     onSubmit() {
     }
+
 }

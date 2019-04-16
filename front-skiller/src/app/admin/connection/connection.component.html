@@ -1,9 +1,13 @@
 <div id="connection" class="container">
-    <div class="col-md-12 text-left" *ngIf="firstConnection">
-        <p class="important">This is the very first connection into Wibkac.</p>
-        You need first to setup the admin user.
+    <div class="col-md-12 text-left" *ngIf="veryFirstConnection">
+        <p class="important">This is the very first connection in Wibkac.</p>
+        <p>You need first to setup the admin user.</p>
         This user has a complete access to the application features and is allowed to setup user rights.<br/>
         Other admin users are possible.<br/><br/>
+    </div>
+
+    <div class="col-md-12 text-left" *ngIf="!veryFirstConnection">
+        <p class="important">This is your first connection in Wibkac.</p>
     </div>
 
     <div class="col-md-12">
@@ -19,8 +23,8 @@
                         class="form-control required" 
                         id="user" name="username" 
                         placeholder="Username (Required)" formControlName="username"/>
-                    <label *ngIf="username.invalid" [ngClass]="'alert alert-warning'">
-                        Username is required, and cannot exceed 8 characters max.
+                    <label *ngIf="username.touched && username.invalid" [ngClass]="'alert alert-warning'">
+                        Username is required, and cannot exceed 16 characters max.
                     </label>
                 </div>
             </div>
@@ -34,9 +38,9 @@
                         id="password" name="password" 
                         placeholder="Password (Required)" 
                         formControlName="password"/>
-                    <label *ngIf="password.invalid" 
+                    <label *ngIf="password.touched && password.invalid" 
                         [ngClass]="'alert alert-warning'">
-                        Password is required, and cannot exceed 16 characters max.
+                        Password is required, with 8 chars min, and 16 chars max
                     </label>
                 </div>
             </div>
@@ -47,23 +51,22 @@
                 <div class="col-md-7">
                     <input type="password" 
                         class="form-control required" 
-                        id="confirmPassword" name="confirmPassword" 
+                        id="passwordConfirmation" name="passwordConfirmation" 
                         placeholder="Password (Required)" 
-                        formControlName="confirmPassword"/>
-                    <label *ngIf="confirmPassword.invalid" 
-                        [ngClass]="'alert alert-warning'">
-                        Password is required, and cannot exceed 16 characters max.
+                        formControlName="passwordConfirmation"/>
+                    <label *ngIf="passwordConfirmation.touched && passwordConfirmation.invalid" 
+                        [ngClass]="'alert alert-warning alert-dismissible'">
+                        Confirmation password must be identical to the one above.
                     </label>
                 </div>
             </div>
-            <hr class="col-md-12"/>
             <div class="row">
-                <div class="col-md-5"></div>
-                <div class="col-md-3">
-                    <button class="btn btn-primary btn-lg btn-block" type="cancel">Abort</button>
+                <div class="col-md-8"></div>
+                <div class="col-md-2">
+                    <button id="cancelButton" alt="cancel this operation"></button>
                 </div>
-                <div class="col-md-4">
-                    <button class="btn btn-primary btn-lg btn-block" type="submit">{{submitTitle}}</button>
+                <div class="col-md-2">
+                    <button id="okButton"></button>
                 </div>
             </div>
         </form>

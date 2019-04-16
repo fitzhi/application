@@ -13,9 +13,18 @@ div.panel.panel-primary {
 div.panel-body {
     height: 100%;
 }
+
+/*
+
+TODO A fix is expected there
+
+The libe below has been put in comment for the "starting-setup" component.
+Certainly, it produces a bug elsewhere
+
 :host >>> .ng-star-inserted {
     height: inherit;
 }
+*/
 
 :host >>> div.mat-tab-labels {
     height: 3em;

@@ -1,17 +1,4 @@
-
-<div [hidden]="!firstLaunch">
-    <app-backend-setup></app-backend-setup>
-</div>
-
-<div id="firstConnection">
-    <div [hidden]="firstLaunch">
-        <app-connection [alterPassword]="true" [firstConnection]="true"></app-connection>
-    </div>
-</div>
-
-<div id="connection">
-    <div [hidden]="firstLaunch">
-        <app-connection [alterPassword]="false" [firstConnection]="false"></app-connection>
-    </div>
+<div id="setup" [hidden]="!firstLaunch">
+    <app-starting-setup></app-starting-setup>
 </div>
 

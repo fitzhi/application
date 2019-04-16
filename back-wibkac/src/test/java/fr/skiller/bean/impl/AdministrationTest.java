@@ -3,7 +3,6 @@
  */
 package fr.skiller.bean.impl;
 
-import static org.junit.Assume.assumeFalse;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,20 +13,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.skiller.bean.Administration;
 import fr.skiller.exception.SkillerException;
-import static fr.skiller.Error.CODE_IO_ERROR;
-import static fr.skiller.Error.MESSAGE_IO_ERROR;
 
 import static org.junit.Assume.assumeTrue;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.apache.coyote.http2.ConnectionException;
 import org.assertj.core.util.Files;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Assume;
 /**
  * Test the administration bean.
  * 
