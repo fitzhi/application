@@ -11,7 +11,15 @@ export class StartingSetupComponent implements OnInit {
 
     @ViewChild('stepper') stepper: MatStepper;
 
-    veryFirstConnection = true;
+    /**
+     * Are we in the very first connection ?
+     */
+    veryFirstConnection = false;
+
+    /**
+     * Array representing the fact that each step has been completed.
+     */
+    completed: Array<boolean> = [false, false, false];
 
     constructor() { }
 
@@ -26,5 +34,6 @@ export class StartingSetupComponent implements OnInit {
             console.log ('veryFirstConnecion ?', $event);
         }
         this.veryFirstConnection = $event;
+        this.completed[0] = true;
     }
 }

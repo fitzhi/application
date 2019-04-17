@@ -1,16 +1,16 @@
-<mat-horizontal-stepper [linear]="false" #stepper id="setup">
+<mat-horizontal-stepper [linear]="true" #stepper id="setup">
 
-  <mat-step>
+  <mat-step [completed]="completed[0]">
     <ng-template matStepLabel>Register the server</ng-template>
     <app-backend-setup [stepper]="stepper" (messengerVeryFirstLocated)="setVeryFirstConnection($event)"></app-backend-setup>
   </mat-step>
 
-  <mat-step>
+  <mat-step [completed]="completed[1]">
     <ng-template matStepLabel>Initialize admin user</ng-template>
     <app-connection [stepper]="stepper" [alterPassword]="true" [veryFirstConnection]="veryFirstConnection"></app-connection>
   </mat-step>
 
-  <mat-step>
+  <mat-step [completed]="completed[2]">
     <ng-template matStepLabel>Update this new user</ng-template>
     <app-staff-form></app-staff-form>
   </mat-step>

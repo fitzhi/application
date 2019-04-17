@@ -22,11 +22,6 @@ import fr.skiller.service.FileType;
  */
 public class Staff {
 	
- 	/**
- 	 * The logger for the Staff class.
- 	 */
-	private Logger logger = LoggerFactory.getLogger(Staff.class.getCanonicalName());	
-	
 	private int idStaff;
 	private String firstName;
 	private String lastName;
@@ -34,6 +29,7 @@ public class Staff {
 	private String login;
 	private String email;
 	private String level;
+	private String password;
 	/**
 	 * Staff member is still active or remove from the staff list.
 	 */
@@ -71,6 +67,18 @@ public class Staff {
 	}
 
 	/**
+	 * Creation of a empty staff member just on a his login/password
+	 * @param idStaff the staff identified of the newly created staff member
+	 * @param login the new <u>UNIQUE</u> login
+	 * @param password the associated encrypted password
+	 */
+	public Staff(final int idStaff, String login, String password) {
+		this.idStaff = idStaff;
+		this.login = login;
+		this.password = password;
+	}	
+	
+	/**
 	 * Construction of an <b>ACTIVE</b> staff member.
 	 * @param idStaff staff identifier
 	 * @param firstName first name of this staff member
@@ -80,7 +88,7 @@ public class Staff {
 	 * @param email email of this staff member
 	 * @param level the level of this staff member
 	 */
-	public Staff(int idStaff, final String firstName, final String lastName, final String nickName, final String login, final String email, final String level) {
+	public Staff(final int idStaff, String firstName, String lastName, String nickName, String login, String email, String level) {
 		this.idStaff = idStaff;
 		this.firstName = firstName;
 		this.lastName = lastName;
@@ -102,9 +110,9 @@ public class Staff {
 	 * @param email email of this staff member
 	 * @param level the level of this staff member
 	 * @param isActive {@code true} if the staff member is active, {@code false} otherwise
-	 * @param external {@code true} if the staff member is extern to the company, {@code false} otherwise
+	 * @param external {@code true} if the staff member is external to the company, {@code false} otherwise
 	 */
-	public Staff(int idStaff, final String firstName, final String lastName, final String nickName, final String login, final String email, final String level, final boolean isActive, final boolean external) {
+	public Staff(final int idStaff, String firstName, String lastName, String nickName, String login, String email, String level, final boolean isActive, final boolean external) {
 		super();
 		this.idStaff = idStaff;
 		this.firstName = firstName;
@@ -124,7 +132,7 @@ public class Staff {
 	 * @param application filename uploaded
 	 * @param typeOfApplication type of application
 	 */
-	public void updateApplication (final String application, final FileType typeOfApplication) {
+	public void updateApplication (String application, final FileType typeOfApplication) {
 		this.application = application;
 		this.typeOfApplication = typeOfApplication.getValue();
 	}
@@ -176,6 +184,7 @@ public class Staff {
 			missionSelected.setNumberOfCommits(contributor.getNumberOfCommitsSubmitted());
 			missionSelected.setNumberOfFiles(contributor.getNumberOfFiles());
 		} else {
+			Logger logger = LoggerFactory.getLogger(Staff.class.getCanonicalName());
 			if (logger.isErrorEnabled()) {
 				logger.error(String.format("Cannot find a mission for the project id %d", idProject));
 			}
@@ -388,4 +397,11 @@ public class Staff {
 		this.experiences = experiences;
 	}
 	
+	/**
+	 * set the new password for this staff member.
+	 * @param password the new password
+	 */
+	public void setPassword(String password) {
+		this.password = password;
+	}
 }

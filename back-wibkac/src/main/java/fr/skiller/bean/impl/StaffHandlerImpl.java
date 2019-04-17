@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -376,6 +377,19 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			getStaff().put(staff.getIdStaff(), staff);
 			this.dataUpdated = true;
 		}
+	}
+
+	@Override
+	public Staff lookupLogin(String login) {
+		if (login == null) {
+			return null;
+		}
+		Optional<Staff> oStaff = getStaff()
+				.values()
+				.stream()
+				.filter(e->login.equals(e.getLogin()))
+				.findFirst();
+		return (oStaff.isPresent()) ? oStaff.get() : null;
 	}
 
 }

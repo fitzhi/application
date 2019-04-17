@@ -43,6 +43,14 @@ export class ConnectionComponent extends BaseComponent implements OnInit, OnDest
         });
     }
 
+    /**
+     * Class of the button corresponding to the 3 possible states of the "Ok" button.
+     */
+    classOkButton() {
+        return (this.connectionGroup.invalid) ?
+            'okButtonInvalid' : 'okButtonValid';
+    }
+
     get username(): any {
         return this.connectionGroup.get('username');
     }
@@ -66,6 +74,7 @@ export class ConnectionComponent extends BaseComponent implements OnInit, OnDest
      * Try of connection.
      */
     onSubmit() {
+        console.log('onSubmit');
     }
 
 }

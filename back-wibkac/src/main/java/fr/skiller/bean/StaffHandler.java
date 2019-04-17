@@ -105,4 +105,10 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	  */
 	 void saveStaffMember(Staff staff) throws SkillerException;
 
+	 /**
+	  * Search a staff, if any, who has a login equals to the passed one.
+	  * @param login the searched login
+	  * @return the staff corresponding to the passed login, or <code>null</code> is none exists.
+	  */
+	 Staff lookupLogin(String login);
 }

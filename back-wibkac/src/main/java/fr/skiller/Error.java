@@ -34,7 +34,10 @@ public class Error {
 	
 	public static final int CODE_MULTIPLE_TASK = -1008;
 	public static final String MESSAGE_MULTIPLE_TASK = "This asynchronous operation is already launched.";
-	
+
+	public static final int CODE_LOGIN_ALREADY_EXIST = -1009;
+	public static final String MESSAGE_LOGIN_ALREADY_EXIST = "The login {0} already exists for {1} {2}.";
+
 	private Error() {
 	}
 	

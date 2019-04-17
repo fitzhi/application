@@ -59,12 +59,16 @@ p.important {
     background-image: url( "../../../assets/img/cancel-activated.png" );
 }
 
-#okButton {
-    background-image: url( "../../../assets/img/ok-activated.png" );
+.okButtonInvalid, .okButtonValid:hover {
+    background-image: url( "../../../assets/img/ok.png" );
 }
 
-#okButton:hover  {
+.okButtonValid:hover {
     background-image: url( "../../../assets/img/ok-active.png" );
+}
+
+.okButtonValid  {
+    background-image: url( "../../../assets/img/ok-activated.png" );
 }
 
 

@@ -108,11 +108,11 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Override
 	public Project addNewProject(Project project) throws SkillerException {
 		synchronized (lockDataUpdated) {
-			Map<Integer, Project> projects = getProjects();
+			Map<Integer, Project> theProjects = getProjects();
 			if (project.getId() < 1) {
-				project.setId(projects.size() + 1);
+				project.setId(theProjects.size() + 1);
 			}
-			projects.put(project.getId(), project);
+			theProjects.put(project.getId(), project);
 			this.dataUpdated = true;
 		}
 		return project;

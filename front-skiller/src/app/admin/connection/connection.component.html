@@ -55,7 +55,7 @@
                         placeholder="Password (Required)" 
                         formControlName="passwordConfirmation"/>
                     <label *ngIf="passwordConfirmation.touched && passwordConfirmation.invalid" 
-                        [ngClass]="'alert alert-warning alert-dismissible'">
+                        [ngClass]="'alert alert-warning'">
                         Confirmation password must be identical to the one above.
                     </label>
                 </div>
@@ -66,7 +66,7 @@
                     <button id="cancelButton" alt="cancel this operation"></button>
                 </div>
                 <div class="col-md-2">
-                    <button id="okButton"></button>
+                    <button id="okButton" [ngClass]="classOkButton()" (click)="onSubmit()"></button>
                 </div>
             </div>
         </form>

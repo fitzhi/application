@@ -3,6 +3,7 @@
  */
 package fr.skiller.bean;
 
+import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 
 /**
@@ -26,4 +27,12 @@ public interface Administration {
 	 */
 	void saveVeryFirstConnection() throws SkillerException;
 
+	/**
+	 * Create an <u>empty</u> staff member just with a login and a password.
+	 * @param login the new <u>unique</u> login.
+	 * @param password the associated encrypted password.
+	 * @return the newly created staff member.
+	 * @throws SkillerException if any problem occurs during the creation.
+	 */
+	Staff createNewUser(String login, String password) throws SkillerException;
 }
