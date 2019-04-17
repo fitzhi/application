@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { BaseComponent } from '../../base/base.component';
 import { HttpClient } from '@angular/common/http';
 import { Constants } from '../../constants';
 import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
-import { MatStepper } from '@angular/material';
+import { MessageService } from 'src/app/message/message.service';
 
 @Component({
     selector: 'app-backend-setup',
@@ -19,12 +19,6 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
     @Output() messengerVeryFirstLocated = new EventEmitter<boolean>();
 
     /**
-     * The main stepper is passed in order to procede a programmatly step.next().
-     */
-    @Input('stepper')
-    stepper: MatStepper;
-
-    /**
      * Button states : Edition, Selected, Ok, Error
      */
     currentState = 1;
@@ -35,8 +29,6 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
     BUTTON_IN_EDITION = 1;
     BUTTON_VALID_URL = 2;
     BUTTON_INVALID_URL = 3;
-
-    messageValidationUrl = '';
 
     /**
      * This boolean is equal to <code>true</code> if we are in the very fist call to Wibkac.
@@ -51,6 +43,7 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
 
     constructor(
         private httpClient: HttpClient,
+        private messageService: MessageService,
         private backendSetupService: BackendSetupService) { super(); }
 
     ngOnInit() {
@@ -78,17 +71,16 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
                             console.log ('This is the very first connection into Wibkac');
                         }
                         this.currentState = this.BUTTON_VALID_URL;
-                        this.messageValidationUrl = 'This URL is valid. Let\'s go ahead !';
+                        this.messageService.info('This URL is valid. Let\'s go ahead !');
                         this.backendSetupService.saveUrl(urlCandidate);
                         this.messengerVeryFirstLocated.emit(true);
-                        this.stepper.next();
                     },
                     error => {
                         if (Constants.DEBUG) {
                             console.log ('Connection error ', error);
                         }
                         this.currentState = this.BUTTON_INVALID_URL;
-                        this.messageValidationUrl = 'Error ! Either this URL is invalid, or your server is offline';
+                        this.messageService.error('Error ! Either this URL is invalid, or your server is offline');
                     }));
     }
 
@@ -97,7 +89,6 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
      */
     urlInEdition() {
         this.currentState = this.BUTTON_IN_EDITION;
-        this.messageValidationUrl = '';
     }
 
     /**
@@ -117,22 +108,6 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
                 break;
         }
         return classButton;
-    }
-
-    /**
-     * Class of the label corresponding to the 2 states : Ok : green, Error : red
-     */
-    classLabel() {
-        let classLabel = '';
-        switch (this.currentState) {
-            case this.BUTTON_VALID_URL:
-                classLabel = 'validMessage';
-                break;
-            case this.BUTTON_INVALID_URL:
-                classLabel = 'invalidMessage';
-                break;
-        }
-        return classLabel;
     }
 
     /**

@@ -64,7 +64,7 @@ import { ListContributorsComponent } from './project/project-sunburst/node-detai
 import { TabsStaffListComponent } from './tabs-staff-list/tabs-staff-list.component';
 import { StaffListComponent } from './tabs-staff-list/staff-list/staff-list.component';
 import { BackendSetupComponent } from './admin/backend-setup/backend-setup.component';
-import { ConnectionComponent } from './admin/connection/connection.component';
+import { RegisterUserComponent } from './admin/register-user/register-user.component';
 import { StartingSetupComponent } from './admin/starting-setup/starting-setup.component';
 
 @NgModule({
@@ -100,7 +100,7 @@ import { StartingSetupComponent } from './admin/starting-setup/starting-setup.co
     TabsStaffListComponent,
     StaffListComponent,
     BackendSetupComponent,
-    ConnectionComponent,
+    RegisterUserComponent,
     StartingSetupComponent,
   ],
   entryComponents: [

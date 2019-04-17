@@ -76,6 +76,8 @@ public class Staff {
 		this.idStaff = idStaff;
 		this.login = login;
 		this.password = password;
+		missions = new ArrayList<>();
+		experiences = new ArrayList<>();
 	}	
 	
 	/**

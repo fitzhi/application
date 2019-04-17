@@ -29,7 +29,7 @@ import org.junit.Assert;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class AdministrationTest {
+public class AdministrationVeryFirstConnectionTest {
 
 	@Autowired
 	Administration administration;

@@ -1,0 +1,116 @@
+import { Component, OnInit, OnDestroy, Input, EventEmitter, Output } from '@angular/core';
+import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
+import { BaseComponent } from '../../base/base.component';
+import { MustMatch } from 'src/app/service/mustmatch';
+import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
+import { StaffDTO } from 'src/app/data/external/staffDTO';
+import { Constants } from 'src/app/constants';
+import { HttpClient } from '@angular/common/http';
+import { MessageService } from 'src/app/message/message.service';
+import { StaffDataExchangeService } from 'src/app/tabs-staff/service/staff-data-exchange.service';
+
+@Component({
+    selector: 'app-register-user',
+    templateUrl: './register-user.component.html',
+    styleUrls: ['./register-user.component.css']
+})
+export class RegisterUserComponent extends BaseComponent implements OnInit, OnDestroy {
+
+    /**
+     * We'll send to the parent component (startingSetup) the new user has been created.
+     */
+    @Output() messengerUserRegistered = new EventEmitter<number>();
+
+    /**
+     * Is this ever the first connection to this server, assuming that the user has to be "administrator" ?
+     */
+    @Input('veryFirstConnection')
+    veryFirstConnection: boolean;
+
+    /**
+     * Are supposed to change the password on this form ? is it simply a connection form ?
+     */
+    @Input('alterPassword')
+    alterPassword: boolean;
+
+    public connectionGroup: FormGroup;
+
+    constructor(
+        private formBuilder: FormBuilder,
+        private httpClient: HttpClient,
+        private backendSetupService: BackendSetupService,
+        private staffDataExchangeService: StaffDataExchangeService,
+        private messageService: MessageService) {
+            super();
+    }
+
+    ngOnInit() {
+        this.connectionGroup = this.formBuilder.group({
+            username: new FormControl('', [Validators.required, Validators.maxLength(16)]),
+            password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(16)]),
+            passwordConfirmation: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(16)]),
+        }, {
+            validator: MustMatch('password', 'passwordConfirmation')
+        });
+    }
+
+    /**
+     * Class of the button corresponding to the 3 possible states of the "Ok" button.
+     */
+    classOkButton() {
+        return (this.connectionGroup.invalid) ?
+            'okButton okButtonInvalid' : 'okButton okButtonValid';
+    }
+
+    get username(): any {
+        return this.connectionGroup.get('username');
+    }
+
+    get password(): any {
+        return this.connectionGroup.get('password');
+    }
+
+    get passwordConfirmation(): any {
+        return this.connectionGroup.get('passwordConfirmation');
+    }
+
+    /**
+     * Calling the base class to unsubscribe all subscriptions.
+     */
+    ngOnDestroy() {
+        super.ngOnDestroy();
+    }
+
+    /**
+     * Save the user and password.
+     */
+    onSubmit() {
+        const username: string = this.connectionGroup.get('username').value;
+        const password: string =  this.connectionGroup.get('password').value;
+        if (Constants.DEBUG) {
+            console.log ('Create new user for username/pass', username + '/' + password);
+        }
+        this.subscriptions
+            .add(this.httpClient.get<StaffDTO>(
+                    this.backendSetupService.url() + '/admin/newUser',
+                    { params: { login: username, password: password }})
+            .subscribe(
+                response => {
+                    if (response.code === 0) {
+                        if (Constants.DEBUG) {
+                            console.log ('Empty staff created with id ' + response.staff.idStaff);
+                        }
+                        this.staffDataExchangeService.changeCollaborator (response.staff);
+                        this.messengerUserRegistered.emit(response.staff.idStaff);
+                    } else {
+                        this.messageService.error (response.message);
+                    }
+                },
+                error => {
+                    if (Constants.DEBUG) {
+                        console.log ('Connection error ', error);
+                    }
+                }));
+    }
+
+}

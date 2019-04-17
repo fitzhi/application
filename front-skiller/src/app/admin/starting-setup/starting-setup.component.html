@@ -2,17 +2,17 @@
 
   <mat-step [completed]="completed[0]">
     <ng-template matStepLabel>Register the server</ng-template>
-    <app-backend-setup [stepper]="stepper" (messengerVeryFirstLocated)="setVeryFirstConnection($event)"></app-backend-setup>
+    <app-backend-setup (messengerVeryFirstLocated)="setVeryFirstConnection($event)"></app-backend-setup>
   </mat-step>
 
   <mat-step [completed]="completed[1]">
     <ng-template matStepLabel>Initialize admin user</ng-template>
-    <app-connection [stepper]="stepper" [alterPassword]="true" [veryFirstConnection]="veryFirstConnection"></app-connection>
+    <app-register-user (messengerUserRegistered)="setRegisteredUser($event)" [alterPassword]="true" [veryFirstConnection]="veryFirstConnection"></app-register-user>
   </mat-step>
 
   <mat-step [completed]="completed[2]">
     <ng-template matStepLabel>Update this new user</ng-template>
-    <app-staff-form></app-staff-form>
+    <app-staff-form [idStaff]="idStaff" (messengerStaffUpdated)="setStaffUpdatedForUser($event)"></app-staff-form>
   </mat-step>
 
   <mat-step>
