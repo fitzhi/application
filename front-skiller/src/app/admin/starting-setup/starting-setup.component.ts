@@ -58,9 +58,20 @@ export class StartingSetupComponent implements OnInit {
      * Catch the staff identifier created the registerUserComponent.
      */
     setRegisteredUser($event: number) {
+
         if (Constants.DEBUG) {
             console.log ('idStaff created :', $event);
         }
+
+        // Operation has been cancelled.
+        if ($event === -1) {
+            this.completed[1] = false;
+            setTimeout(() => {
+                this.stepper.previous();
+            }, 0);
+            return;
+        }
+
         this.completed[1] = true;
         this.idStaff = $event;
         setTimeout(() => {

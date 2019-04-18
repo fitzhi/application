@@ -8,6 +8,7 @@ import { Constants } from 'src/app/constants';
 import { HttpClient } from '@angular/common/http';
 import { MessageService } from 'src/app/message/message.service';
 import { StaffDataExchangeService } from 'src/app/tabs-staff/service/staff-data-exchange.service';
+import { MessageBoxService } from 'src/app/message-box/service/message-box.service';
 
 @Component({
     selector: 'app-register-user',
@@ -40,6 +41,7 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
         private httpClient: HttpClient,
         private backendSetupService: BackendSetupService,
         private staffDataExchangeService: StaffDataExchangeService,
+        private messageBoxService: MessageBoxService,
         private messageService: MessageService) {
             super();
     }
@@ -112,5 +114,18 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
                     }
                 }));
     }
-
+    /**
+     * Cancel the installation
+     */
+    onCancel() {
+        this.subscriptions.add(
+            this.messageBoxService.question(
+                'Cancel of operation',
+                'Do you confim the cancellation ?')
+                .subscribe(answer => {
+                    if (answer) {
+                        this.backendSetupService.removeUrl();
+                        this.messengerUserRegistered.emit(-1);
+                      }}));
+    }
 }

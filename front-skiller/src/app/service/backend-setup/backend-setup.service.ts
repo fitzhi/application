@@ -33,4 +33,11 @@ export class BackendSetupService {
         this.currentUrl = url;
         localStorage.setItem('backendUrl', url);
     }
+
+    /**
+     * Remove the URL saved inside the localstorage
+     */
+    public removeUrl() {
+        localStorage.removeItem('backendUrl');
+    }
 }
