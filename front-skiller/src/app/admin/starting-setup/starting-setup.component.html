@@ -17,7 +17,20 @@
 
   <mat-step>
     <ng-template matStepLabel>Done</ng-template>
-    You are now done.
+    <p>
+        The installation is terminated for your desktop.
+        The toolbar above is now accessible.
+    </p>
+    <div class="row">
+        <div class="col-md-8">
+            A suggestion for a good start ? Record your <u>precious</u> skills on the dedicated formula.
+        </div>
+        <div class="col-md-4">
+            <a [routerLink]="['/user', idStaff]">
+               <button id="zoom" class="developer"></button>
+            </a>
+        </div>
+    </div>
   </mat-step>
 </mat-horizontal-stepper>
 

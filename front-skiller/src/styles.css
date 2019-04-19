@@ -55,9 +55,29 @@ button.okButtonInvalid, .okButtonValid:hover {
 }
 
 button.okButtonValid:hover {
-    background-image: url( "./assets/img/ok-active.png" );
+    background-image: url( "./assets/img/ok-valid-hover.png" );
+}
+
+button.okButtonValid:active {
+    background-image: url( "./assets/img/ok-valid-active.png" );
 }
 
 button.okButtonValid  {
-    background-image: url( "./assets/img/ok-activated.png" );
+    background-image: url( "./assets/img/ok-valid.png" );
+}
+
+button.developer {
+    background-image: url( "./assets/img/dev.png");
+    background-position: center; 
+    background-size: contain;
+    border: none;
+    outline: 0;
+}
+
+button.developer:hover {
+    background-image: url( "./assets/img/dev-hover.png");
+}
+
+button.developer:active{
+    background-image: url( "./assets/img/dev-clicked.png");
 }
