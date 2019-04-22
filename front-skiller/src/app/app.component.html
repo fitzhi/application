@@ -34,19 +34,11 @@
 					[src]="(skill_activated ? image_skill_activated : image_skill_inactive)"
 				style="padding-right:5px"
 				width="48" height="48" />
-			</a> 
-			<a [routerLink]="['/user']"
-				[class]="(dev_activated 
-						? 'activated header_toolbar_master_detail round' 
-						: 'inactive header_toolbar_master_detail round')"
-                (click)="switchToDev()"> 
-                <img alt="Staff" 
-                    alt="Enter into the Staff management module" 
-                    title="Enter into the Staff management module"
-                    [src]="(dev_activated ? image_dev_activated : image_dev_inactive)"
-                    style="padding-right:5px"
-                    width="48" height="48" />
-			</a> 
+            </a> 
+            
+            <button class="toolbar developer" [routerLink]="['/user']" (click)="switchToDev()">
+            </button>
+            
 			<a [routerLink]="['/project']"
 				[class]="(project_activated 
 						? 'activated header_toolbar_master_detail round' 

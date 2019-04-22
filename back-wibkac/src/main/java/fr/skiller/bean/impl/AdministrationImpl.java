@@ -19,6 +19,8 @@ import static fr.skiller.Error.CODE_IO_ERROR;
 import static fr.skiller.Error.MESSAGE_IO_ERROR;
 import static fr.skiller.Error.CODE_LOGIN_ALREADY_EXIST;
 import static fr.skiller.Error.MESSAGE_LOGIN_ALREADY_EXIST;
+import static fr.skiller.Error.CODE_UNREGISTERED_LOGIN;
+import static fr.skiller.Error.MESSAGE_UNREGISTERED_LOGIN;
 
 /**
  * Main (and unique) implementation of the administration interface.
@@ -38,6 +40,16 @@ public class AdministrationImpl implements Administration {
 	@Value("${applicationOutDirectory}")
 	private String rootLocation;
 
+	/**
+	 * Does Wibkac allow self registration ?
+	 * <ul>
+	 * <li>Either, everyone can create his own user, by simply connecting to the Wibkac URL</li>
+	 * <li>Or a login must be already registered for the new user in the staff collection.</li>
+	 * </ul>
+	 */
+	@Value("${allowSelfRegistration}")
+	private boolean allowSelfRegistration;
+	
 	/**
 	 * Name of the footprint file, which proves that the very first connection has been realized. 
 	 */
@@ -78,9 +90,24 @@ public class AdministrationImpl implements Administration {
 	@Override
 	public Staff createNewUser(String login, String password) throws SkillerException {
 
+		/**
+		 * The very first created user is the very first administrative user in Wibkac.
+		 * Therefore the self registration is obviously allowed
+		 */
+		if (isVeryFirstConnection()) {
+			return staffHandler.addNewStaffMember(new Staff(-1, login, password));
+		} 
+		
 		Staff staff = staffHandler.lookup(login);
 
-		if (staff != null) {
+		if ( (staff == null) && (!this.allowSelfRegistration) ) {
+			throw new SkillerException(CODE_UNREGISTERED_LOGIN, MESSAGE_UNREGISTERED_LOGIN);
+		}
+		
+		/**
+		 * If we create a NEW user, but an existing user with the same login already exists.
+		 */
+		if ( (staff != null) && !staff.isEmpty()) {
 			throw new SkillerException(CODE_LOGIN_ALREADY_EXIST, 
 					MessageFormat.format(MESSAGE_LOGIN_ALREADY_EXIST, 
 							login, staff.getFirstName(), staff.getLastName()));

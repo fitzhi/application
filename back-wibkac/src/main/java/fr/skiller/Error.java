@@ -38,6 +38,9 @@ public class Error {
 	public static final int CODE_LOGIN_ALREADY_EXIST = -1009;
 	public static final String MESSAGE_LOGIN_ALREADY_EXIST = "The login {0} already exists for {1} {2}.";
 
+	public static final int CODE_UNREGISTERED_LOGIN = -1010;
+	public static final String MESSAGE_UNREGISTERED_LOGIN = "Your login does not exist. Please contact your administrator.";
+	
 	private Error() {
 	}
 	

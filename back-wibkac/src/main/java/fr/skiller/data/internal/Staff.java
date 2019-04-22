@@ -193,6 +193,17 @@ public class Staff {
 		}
 	}
 
+	/**
+	 * @return <code>true</code> if the staff member contains only the user connection properties, i.e. the login/password
+	 */
+	public boolean isEmpty() {
+		return ( 	(this.firstName == null)
+				&& 	(this.lastName == null)
+				&&	(this.nickName == null)
+				&& 	(this.level == null)
+				&& 	(this.email == null) );
+	}
+	
 	@Override
 	@Generated ("eclipse")
 	public String toString() {

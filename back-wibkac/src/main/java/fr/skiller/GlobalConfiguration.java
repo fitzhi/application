@@ -8,8 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import fr.skiller.controller.ProjectController;
-
 @Configuration
 public class GlobalConfiguration {
 
@@ -31,14 +29,11 @@ public class GlobalConfiguration {
 				if (logger.isInfoEnabled()) {
 					logger.info(String.format("Allowed origins to access this server %s", allowedOrigins));
 				}
-				if (logger.isWarnEnabled()) {
-					if ("*".equals(allowedOrigins)) {
-						logger.warn("This server is open for all origins");
-						logger.warn("-----------------------------------");
-					}
+				if (logger.isWarnEnabled() && ("*".equals(allowedOrigins))) {
+					logger.warn("This server is open for all origins");
+					logger.warn("-----------------------------------");
 				}
-				registry.addMapping("/**")
-				.allowedOrigins(allowedOrigins);
+				registry.addMapping("/**").allowedOrigins(allowedOrigins);
 			}
 		};
 	}
