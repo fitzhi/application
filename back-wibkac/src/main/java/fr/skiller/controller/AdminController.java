@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.skiller.bean.Administration;
+import fr.skiller.data.external.BooleanDTO;
 import fr.skiller.data.external.StaffDTO;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
@@ -38,7 +39,24 @@ public class AdminController {
 				new HttpHeaders(), 
 				HttpStatus.OK);
 	}
-
+	
+	@GetMapping("/saveVeryFirstConnection")
+	public ResponseEntity<BooleanDTO> keepVeryFirstConnecion()  {
+		HttpHeaders headers = new HttpHeaders();
+		try {
+			administration.saveVeryFirstConnection();
+			return new ResponseEntity<>(
+					new BooleanDTO(), 
+					headers, 
+					HttpStatus.OK);
+		} catch (final SkillerException ske) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(ske.errorCode));
+			headers.set(BACKEND_RETURN_MESSAGE, ske.errorMessage);
+			return new ResponseEntity<>(new BooleanDTO(ske.errorCode, ske.errorMessage), headers, HttpStatus.OK);
+			
+		}
+	}
+	
 	@GetMapping("/newUser")
 	public ResponseEntity<StaffDTO> createNewUser(
 			@RequestParam("login") String login,
@@ -50,7 +68,7 @@ public class AdminController {
 			headers.add("backend.return_code", "1");
 			return new ResponseEntity<>(new StaffDTO(staff), headers, HttpStatus.OK);
 		} catch (final SkillerException ske) {
-			headers.set(BACKEND_RETURN_CODE, "O");
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(ske.errorCode));
 			headers.set(BACKEND_RETURN_MESSAGE, ske.errorMessage);
 			return new ResponseEntity<>(new StaffDTO(new Staff(), ske.errorCode, ske.errorMessage), headers, HttpStatus.OK);
 		}

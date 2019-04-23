@@ -1,14 +1,19 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatStepper } from '@angular/material';
 import { Constants } from 'src/app/constants';
 import { Collaborator } from 'src/app/data/collaborator';
+import { BaseComponent } from 'src/app/base/base.component';
+import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
+import { BooleanDTO } from 'src/app/data/external/booleanDTO';
+import { HttpClient } from '@angular/common/http';
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
 
 @Component({
     selector: 'app-starting-setup',
     templateUrl: './starting-setup.component.html',
     styleUrls: ['./starting-setup.component.css']
 })
-export class StartingSetupComponent implements OnInit {
+export class StartingSetupComponent extends BaseComponent implements OnInit, OnDestroy {
 
     /**
      * The main stepper is passed in order to procede a programmatly step.next().
@@ -35,7 +40,9 @@ export class StartingSetupComponent implements OnInit {
      */
     staff: Collaborator;
 
-    constructor() { }
+    constructor(
+        private backendSetupService: BackendSetupService,
+        private httpClient: HttpClient) { super(); }
 
     ngOnInit() {
     }
@@ -80,16 +87,47 @@ export class StartingSetupComponent implements OnInit {
     }
 
     /**
-     * Catch the staff identifier created the registerUserComponent.
+     * Catch the complete staff entity, updated by the staff-form.
      */
     setStaffUpdatedForUser($event: Collaborator) {
         if (Constants.DEBUG) {
             console.log ('staff updated for :', $event.lastName);
         }
-        this.completed[2] = true;
-        this.staff = $event;
-        setTimeout(() => {
-            this.stepper.next();
-        }, 0);
+
+        this.subscriptions
+            .add(this.httpClient.get<BooleanDTO>(this.backendSetupService.url() + '/admin/saveVeryFirstConnection')
+                .subscribe(
+                    (data: BooleanDTO) => {
+                        console.log (data);
+                        const veryFirstConnectionIsRegistered = data.result;
+                        if (Constants.DEBUG && veryFirstConnectionIsRegistered) {
+                            console.log ('The very first connection is registered into Wibkac');
+                        }
+                        this.completed[2] = true;
+                        this.staff = $event;
+                        setTimeout(() => {
+                            this.stepper.next();
+                        }, 0);
+                    },
+                    (error: BooleanDTO) => {
+                        if (Constants.DEBUG) {
+                            console.log ('Connection error ', error);
+                        }
+                    }));
     }
+
+
+    selectionChange ($event: StepperSelectionEvent) {
+        console.log ($event);
+        window.scroll(0, 0);
+    }
+
+    /**
+     * Calling the base class to unsubscribe all subscriptions.
+     */
+    ngOnDestroy() {
+        super.ngOnDestroy();
+    }
+
+
 }

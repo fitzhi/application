@@ -15,7 +15,7 @@
     <app-staff-form [idStaff]="idStaff" (messengerStaffUpdated)="setStaffUpdatedForUser($event)"></app-staff-form>
   </mat-step>
 
-  <mat-step>
+  <mat-step >
     <ng-template matStepLabel>Done</ng-template>
     <p>
         The installation is terminated for your desktop.
@@ -23,7 +23,7 @@
     </p>
     <div class="row">
         <div class="col-md-8">
-            A suggestion for a good start ? Record your <u>precious</u> skills on the dedicated formula.
+            A suggestion for a good start ?<br/>Save your skills on the dedicated formula.
         </div>
         <div class="col-md-4">
             <a [routerLink]="['/user', idStaff]">

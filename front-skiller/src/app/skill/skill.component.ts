@@ -9,7 +9,6 @@ import { CinematicService } from '../service/cinematic.service';
 import { ListSkillService } from '../list-skill-service/list-skill.service';
 import { SkillService } from '../service/skill.service';
 import { BaseComponent } from '../base/base.component';
-import { ReferentialService } from '../service/referential.service';
 
 @Component({
   selector: 'app-skill',
@@ -29,8 +28,6 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
    */
   private id: number;
 
-  private sub: any;
-
   constructor(
     private cinematicService: CinematicService,
     private route: ActivatedRoute,
@@ -43,7 +40,7 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscriptions.add(
-      this.sub = this.route.params.subscribe(params => {
+      this.route.params.subscribe(params => {
         if (Constants.DEBUG) {
           console.log('params[\'id\'] ' + params['id']);
         }

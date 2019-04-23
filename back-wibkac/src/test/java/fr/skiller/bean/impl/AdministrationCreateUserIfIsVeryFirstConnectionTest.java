@@ -28,6 +28,10 @@ import fr.skiller.exception.SkillerException;
 @AutoConfigureMockMvc
 public class AdministrationCreateUserIfIsVeryFirstConnectionTest {
 
+	private static final String ANOTHER_PSSWORD = "anotherPassword";
+
+	private static final String MY_PSSWORD = "myPassword";
+
 	private static final String MY_LOGIN = "myLogin";
 
 	@Autowired
@@ -41,7 +45,7 @@ public class AdministrationCreateUserIfIsVeryFirstConnectionTest {
 
 	@Test
 	public void testCreateUser() throws SkillerException {
-		final Staff staff = administration.createNewUser(MY_LOGIN, "myPassword");
+		final Staff staff = administration.createNewUser(MY_LOGIN, MY_PSSWORD);
 		idStaff = staff.getIdStaff();
 		Assert.assertNotNull(
 				"Staff entry has been created", 
@@ -56,6 +60,18 @@ public class AdministrationCreateUserIfIsVeryFirstConnectionTest {
 		Assert.assertNotNull(
 				"Staff entry has been CORRECTLY created", 
 				staff.getMissions());
+	}
+
+	@Test
+	public void testCreateSameUserDifferentPassword() throws SkillerException {
+		final Staff staff = administration.createNewUser(MY_LOGIN, MY_PSSWORD);
+		administration.createNewUser(MY_LOGIN, ANOTHER_PSSWORD);
+		
+		staffHandler.getStaff().get(staff.getIdStaff());
+		
+		Assert.assertTrue(
+				"The password of the staff member must have changed", 
+				staff.isPasswordCorrect(ANOTHER_PSSWORD));
 	}
 
 	@After

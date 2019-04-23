@@ -116,5 +116,4 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
     ngOnDestroy() {
         super.ngOnDestroy();
     }
-
 }

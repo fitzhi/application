@@ -203,6 +203,13 @@ public class Staff {
 				&& 	(this.level == null)
 				&& 	(this.email == null) );
 	}
+
+	/**
+	 * @return <code>true</code> if the passed password is correct.
+	 */
+	public boolean isPasswordCorrect(String password) {
+		return (this.password.equals(password));
+	}
 	
 	@Override
 	@Generated ("eclipse")

@@ -90,15 +90,20 @@ public class AdministrationImpl implements Administration {
 	@Override
 	public Staff createNewUser(String login, String password) throws SkillerException {
 
+		Staff staff = staffHandler.lookup(login);
+		
 		/**
 		 * The very first created user is the very first administrative user in Wibkac.
 		 * Therefore the self registration is obviously allowed
 		 */
 		if (isVeryFirstConnection()) {
-			return staffHandler.addNewStaffMember(new Staff(-1, login, password));
+			if (staff != null) {
+				staff.setPassword(password);
+			} else {
+				return staffHandler.addNewStaffMember(new Staff(-1, login, password));
+			}
 		} 
 		
-		Staff staff = staffHandler.lookup(login);
 
 		if ( (staff == null) && (!this.allowSelfRegistration) ) {
 			throw new SkillerException(CODE_UNREGISTERED_LOGIN, MESSAGE_UNREGISTERED_LOGIN);
