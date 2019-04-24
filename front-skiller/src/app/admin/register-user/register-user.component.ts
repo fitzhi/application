@@ -109,6 +109,8 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
                     }
                 },
                 error => {
+                    // We will restart the setup installation for the beginning
+                    this.backendSetupService.removeUrl();
                     if (Constants.DEBUG) {
                         console.log ('Connection error ', error);
                     }

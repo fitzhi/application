@@ -1,0 +1,42 @@
+div.buttons button, div {
+    margin: 2px;  
+}
+
+button.btn-outline-success {
+    background-color: #28a745;
+    color: white;
+}
+
+/* enable absolute positioning */
+.inner-addon {
+  position: relative;
+}
+
+/* style glyph */
+.inner-addon .glyphicon {
+  position: absolute;
+  padding: 10px;
+  pointer-events: none;
+}
+
+/* align glyph */
+.left-addon .glyphicon  { left:  0px;}
+.right-addon .glyphicon { right: 0px;}
+
+/* add padding  */
+.left-addon input  { padding-left:  35px; }
+.right-addon input { padding-right: 30px; }
+
+button.search {
+    margin-left: 2px;
+    margin-right: 5px;
+}
+
+button.search:active {
+    background-color: #28a745;
+    color: white;
+}
+
+input.search {
+    size: 20;
+}

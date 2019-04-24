@@ -66,6 +66,9 @@ import { StaffListComponent } from './tabs-staff-list/staff-list/staff-list.comp
 import { BackendSetupComponent } from './admin/backend-setup/backend-setup.component';
 import { RegisterUserComponent } from './admin/register-user/register-user.component';
 import { StartingSetupComponent } from './admin/starting-setup/starting-setup.component';
+import { ToolbarComponent } from './toolbar/toolbar.component';
+
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 @NgModule({
   declarations: [
@@ -102,6 +105,7 @@ import { StartingSetupComponent } from './admin/starting-setup/starting-setup.co
     BackendSetupComponent,
     RegisterUserComponent,
     StartingSetupComponent,
+    ToolbarComponent,
   ],
   entryComponents: [
     StarsSkillLevelRenderComponent,
@@ -145,6 +149,7 @@ import { StartingSetupComponent } from './admin/starting-setup/starting-setup.co
     MatGridListModule,
     MatStepperModule,
     MatIconModule,
+    AngularFontAwesomeModule
   ],
   providers: [
     CinematicService,

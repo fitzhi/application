@@ -69,7 +69,6 @@ export class StartingSetupComponent extends BaseComponent implements OnInit, OnD
         if (Constants.DEBUG) {
             console.log ('idStaff created :', $event);
         }
-
         // Operation has been cancelled.
         if ($event === -1) {
             this.completed[1] = false;
@@ -78,7 +77,6 @@ export class StartingSetupComponent extends BaseComponent implements OnInit, OnD
             }, 0);
             return;
         }
-
         this.completed[1] = true;
         this.idStaff = $event;
         setTimeout(() => {
@@ -117,8 +115,10 @@ export class StartingSetupComponent extends BaseComponent implements OnInit, OnD
     }
 
 
-    selectionChange ($event: StepperSelectionEvent) {
-        console.log ($event);
+    /**
+     * @param $event we move from one step in the installation.
+     */
+    selectionChange () {
         window.scroll(0, 0);
     }
 

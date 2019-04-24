@@ -60,16 +60,10 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
   previousId: number;
 
   skill_activated = true;
-  image_skill_activated = './assets/img/skill-activated.png';
-  image_skill_inactive = './assets/img/skill-inactive.png';
 
   dev_activated = true;
-  image_dev_activated = './assets/img/developer-activated.png';
-  image_dev_inactive = './assets/img/developer-inactive.png';
 
   project_activated = true;
-  image_project_activated = './assets/img/project-activated.png';
-  image_project_inactive = './assets/img/project-inactive.png';
 
   constructor(
     private cinematicService: CinematicService,
@@ -96,7 +90,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
             break;
           }
           case Constants.SKILLS_CRUD: {
-            this.formTitle = 'Skill mode';
+            this.formTitle = 'Skill';
             this.in_master_detail = false;
             this.is_allowed_to_search = true;
             break;
@@ -110,17 +104,17 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
           case Constants.DEVELOPERS_CRUD: {
             this.in_master_detail = this.tabsStaffListService.inMasterDetail;
             this.is_allowed_to_search = true;
-            this.formTitle = 'Developer mode';
+            this.formTitle = 'Staff';
             break;
           }
           case Constants.DEVELOPERS_SEARCH: {
-            this.formTitle = 'Developers Search';
+            this.formTitle = 'Staff Search';
             this.in_master_detail = false;
             this.is_allowed_to_search = true;
             break;
           }
           case Constants.PROJECT_TAB_FORM: {
-            this.formTitle = 'Project mode';
+            this.formTitle = 'Project';
             this.in_master_detail = false;
             this.is_allowed_to_search = true;
             break;

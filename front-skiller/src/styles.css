@@ -3,6 +3,8 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css"; 
 @import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 @import 'https://fonts.googleapis.com/icon?family=Material+Icons';
+@import 'https://use.fontawesome.com/releases/v5.8.1/css/all.css';
+@import './buttons.css';
 
 html {
   position: relative;
@@ -31,53 +33,4 @@ html {
 
 .basic-container {
   padding: 30px;
-}
-
-button.okButton, button.cancelButton {
-    background-size: contain;
-    background-repeat: no-repeat;    
-    width: 90px;
-    height: 90px;
-    border: none;
-    outline: 0;
-}
-
-button.cancelButton {
-    background-image: url( "./assets/img/cancel.png" );
-}
-
-button.cancelButton:hover  {
-    background-image: url( "./assets/img/cancel-activated.png" );
-}
-
-button.okButtonInvalid, .okButtonValid:hover {
-    background-image: url( "./assets/img/ok.png" );
-}
-
-button.okButtonValid:hover {
-    background-image: url( "./assets/img/ok-valid-hover.png" );
-}
-
-button.okButtonValid:active {
-    background-image: url( "./assets/img/ok-valid-active.png" );
-}
-
-button.okButtonValid  {
-    background-image: url( "./assets/img/ok-valid.png" );
-}
-
-button.developer {
-    background-image: url( "./assets/img/dev.png");
-    background-position: center; 
-    background-size: contain;
-    border: none;
-    outline: 0;
-}
-
-button.developer:hover {
-    background-image: url( "./assets/img/dev-hover.png");
-}
-
-button.developer:active{
-    background-image: url( "./assets/img/dev-clicked.png");
 }

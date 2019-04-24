@@ -1,0 +1,87 @@
+button.okButton, button.cancelButton {
+    background-size: contain;
+    background-repeat: no-repeat;    
+    width: 90px;
+    height: 90px;
+    border: none;
+    outline: 0;
+}
+
+button.cancelButton {
+    background-image: url( "./assets/img/cancel.png" );
+}
+
+button.cancelButton:hover  {
+    background-image: url( "./assets/img/cancel-activated.png" );
+}
+
+button.okButtonInvalid, .okButtonValid:hover {
+    background-image: url( "./assets/img/ok.png" );
+}
+
+button.okButtonValid:hover {
+    background-image: url( "./assets/img/ok-valid-hover.png" );
+}
+
+button.okButtonValid:active {
+    background-image: url( "./assets/img/ok-valid-active.png" );
+}
+
+button.okButtonValid  {
+    background-image: url( "./assets/img/ok-valid.png" );
+}
+
+button.toolbar {
+    background-position: center; 
+    background-size: contain;
+    background-color: transparent;
+    background-size: 90%;
+    background-repeat: no-repeat;
+    border: none;
+    outline: 0;
+
+    width:50px;
+    height: 50px;
+    margin-top: 5px;
+    border-radius: 25%;
+}
+button.developer {
+    background-image: url( "./assets/img/dev.png");
+}
+
+button.developer:hover {
+    background-image: url( "./assets/img/dev-hover.png");
+}
+
+button.developer:active{
+    background-image: url( "./assets/img/dev-clicked.png");
+    background-color: whitesmoke;
+}
+
+button.project, button.skill, 
+
+button.project {
+    background-image: url( "./assets/img/project.png");
+}
+
+button.project:hover {
+    background-image: url( "./assets/img/project-hover.png");
+}
+
+button.project:active{
+    background-image: url( "./assets/img/project-clicked.png");
+    background-color: whitesmoke;
+}
+
+button.skill {
+    background-image: url( "./assets/img/skill.png");
+}
+
+button.skill:hover {
+    background-image: url( "./assets/img/skill-hover.png");
+}
+
+button.skill:active{
+    background-image: url( "./assets/img/skill-clicked.png");
+    background-color: whitesmoke;
+}

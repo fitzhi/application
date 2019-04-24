@@ -1,4 +1,5 @@
 <div class="app-container">
+    <app-toolbar></app-toolbar>
 	<nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
 		<div id="header_navigation_master_detail" class="p-2" [hidden]="isInMasterDetail()">
 
@@ -23,36 +24,19 @@
 		<div id="formTitle" class="p-2"><span class="text">{{formTitle}}</span></div>
 
 		<div id="buttons">
-			<a [routerLink]="['/skill']"
-				[class]="(skill_activated 
-						? 'activated header_toolbar_master_detail round' 
-						: 'inactive header_toolbar_master_detail round')"
-				(click)="switchToSkill()"> 
-                <img alt="Skill module" 
-                    alt="Enter into the Skills management module"
-                    title="Enter into the Skills management module"
-					[src]="(skill_activated ? image_skill_activated : image_skill_inactive)"
-				style="padding-right:5px"
-				width="48" height="48" />
-            </a> 
-            
+            <button class="toolbar skill" [routerLink]="['/skill']" (click)="switchToSkill()">
+            </button>
+ 
             <button class="toolbar developer" [routerLink]="['/user']" (click)="switchToDev()">
             </button>
             
-			<a [routerLink]="['/project']"
-				[class]="(project_activated 
-						? 'activated header_toolbar_master_detail round' 
-						: 'inactive header_toolbar_master_detail round')"
-				(click)="switchToProject()"> 
-				<img alt="Projects" title="Enter into the Projects management module"
-				[src]="(project_activated ? image_project_activated : image_project_inactive)"
-				width="48" height="'48" />
-			</a>
+            <button class="toolbar project" [routerLink]="['/project']" (click)="switchToProject()">
+            </button>
 		</div>
 
 		<div class="p-2 ml-auto">
 			<form class="form-inline my-2 my-lg-0">
-				<span id="activeOnly" class="text">Active</span> 
+				<span class="text">Active</span> 
 				<input style="margin-right:5px" type="checkbox" name="activeOnly" 
 					[(ngModel)]="activeOnly"/>			
 				<input class="form-control mr-sm-2" type="text" placeholder="Search"
