@@ -1,55 +1,9 @@
 <div class="app-container">
-    <app-toolbar></app-toolbar>
-	<nav class="navbar sticky-top navbar-expand-md navbar-dark bg-dark">
-		<div id="header_navigation_master_detail" class="p-2" [hidden]="isInMasterDetail()">
-
-			<a [routerLink]="" (click)="list()" class="header_toolbar_master_detail round">
-				<img alt="Master/Detail view" id="imgViewSelection" src="./assets/img/list.png" />
-			</a> 
-
-			<a href="" [routerLink]="['/user', previousId]"
-				class="header_toolbar_master_detail previous round"
-				[class.disabled]="(previousId == undefined)">
-				&nbsp;&#8249;&nbsp;
-			</a> 
-
-			<a href=""
-				[routerLink]="['/user', nextId]"
-				class="header_toolbar_master_detail next round"
-				[class.disabled]="(nextId == undefined)">
-				&nbsp;&#8250;&nbsp; 
-			</a>
-		</div>
-
-		<div id="formTitle" class="p-2"><span class="text">{{formTitle}}</span></div>
-
-		<div id="buttons">
-            <button class="toolbar skill" [routerLink]="['/skill']" (click)="switchToSkill()">
-            </button>
- 
-            <button class="toolbar developer" [routerLink]="['/user']" (click)="switchToDev()">
-            </button>
-            
-            <button class="toolbar project" [routerLink]="['/project']" (click)="switchToProject()">
-            </button>
-		</div>
-
-		<div class="p-2 ml-auto">
-			<form class="form-inline my-2 my-lg-0">
-				<span class="text">Active</span> 
-				<input style="margin-right:5px" type="checkbox" name="activeOnly" 
-					[(ngModel)]="activeOnly"/>			
-				<input class="form-control mr-sm-2" type="text" placeholder="Search"
-					name="searching_what" [(ngModel)]="searching_what"
-					aria-label="Search" [attr.disabled]="is_allowed_to_search?null:''"
-					(focus)="focusSearch()"
-					/>
-				<button class="btn btn-outline-success my-2 my-sm-0"
-					[attr.disabled]="is_allowed_to_search?null:''" (click)="search()"
-					type="submit" style="padding-right:5px">Search</button>
-			</form>
-		</div>
-	</nav>
+    <app-toolbar  
+        (messengerFormActive)="onChangeForm($event)"
+        (messengerCriteria)="onRequestQuery($event)"
+        (messengerActiveOnly)="onChangeActiveOnly($event)">
+    </app-toolbar>
 
 	<div class="panel panel-primary">
 		<div class="panel-body">

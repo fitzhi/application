@@ -27,7 +27,7 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 
   @ViewChild(MatSort) sort: MatSort;
 
-  public displayedColumns: string[] = ['firstName lastName', 'level', 'skills', 'isActive', 'external'];
+  public displayedColumns: string[] = ['firstName lastName', 'level', 'skills', 'active', 'external'];
 
   /**
    * Profiles array retrieved from the referential.
@@ -57,8 +57,8 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
             switch (property) {
               case 'firstName lastName':
                 return item.firstName.toLocaleLowerCase() + ' ' + item.lastName.toLocaleLowerCase();
-              case 'isActive':
-                return item.isActive;
+              case 'active':
+                return item.active;
               case 'level':
                 return this.title(item.level);
               case 'skills':

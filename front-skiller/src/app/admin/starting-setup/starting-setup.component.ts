@@ -6,7 +6,6 @@ import { BaseComponent } from 'src/app/base/base.component';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { HttpClient } from '@angular/common/http';
-import { StepperSelectionEvent } from '@angular/cdk/stepper';
 
 @Component({
     selector: 'app-starting-setup',

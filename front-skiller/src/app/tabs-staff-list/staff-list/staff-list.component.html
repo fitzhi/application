@@ -4,14 +4,14 @@
 
     <ng-container matColumnDef="firstName lastName">
       <th id="fullName" mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-      <td mat-cell class="col_string {{class_active_inactive(collaborator.isActive)}}" *matCellDef="let collaborator" (click)="routeStaff(collaborator.idStaff)">
+      <td mat-cell class="col_string {{class_active_inactive(collaborator.active)}}" *matCellDef="let collaborator" (click)="routeStaff(collaborator.idStaff)">
         {{collaborator.firstName}} {{collaborator.lastName}}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="level">
       <th id="level" mat-header-cell *matHeaderCellDef mat-sort-header>Level</th>
-      <td mat-cell class="col_string {{class_active_inactive(collaborator.isActive)}}" 
+      <td mat-cell class="col_string {{class_active_inactive(collaborator.active)}}" 
         *matCellDef="let collaborator" (click)="routeStaff(collaborator.idStaff)">
         {{title(collaborator.level)}}
       </td>
@@ -19,23 +19,23 @@
 
     <ng-container matColumnDef="skills">
       <th id="skills" mat-header-cell *matHeaderCellDef mat-sort-header>Main skills</th>
-      <td mat-cell class="col_string {{class_active_inactive(collaborator.isActive)}}" 
+      <td mat-cell class="col_string {{class_active_inactive(collaborator.active)}}" 
         *matCellDef="let collaborator" (click)="routeStaff(collaborator.idStaff)">
         {{skills(collaborator.experiences)}}
       </td>
     </ng-container>
 
-    <ng-container matColumnDef="isActive">
+    <ng-container matColumnDef="active">
       <th id="isActive" mat-header-cell *matHeaderCellDef mat-sort-header>Active</th>
-      <td mat-cell class="col_image {{class_active_inactive(collaborator.isActive)}}" 
+      <td mat-cell class="col_image {{class_active_inactive(collaborator.active)}}" 
         *matCellDef="let collaborator" (click)="routeStaff(collaborator.idStaff)">
-        <img with="15" height="15" src="/assets/img/check-{{collaborator.active}}.png"alt="active status"  />
+        <img with="15" height="15" src="/assets/img/check-{{collaborator.active}}.png" alt="active status"  />
       </td>
     </ng-container>
 
     <ng-container matColumnDef="external">
       <th id="external" mat-header-cell *matHeaderCellDef mat-sort-header>External</th>
-      <td mat-cell class="col_image {{class_active_inactive(collaborator.isActive)}}" 
+      <td mat-cell class="col_image {{class_active_inactive(collaborator.active)}}" 
         *matCellDef="let collaborator" (click)="routeStaff(collaborator.idStaff)">
         <img with="15" height="15" alt="external status" src="/assets/img/check-{{collaborator.external}}.png" />
       </td>

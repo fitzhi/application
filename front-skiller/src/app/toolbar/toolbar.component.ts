@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Constants } from '../constants';
-import { query } from '@angular/core/src/render3/query';
+import { modelGroupProvider } from '@angular/forms/src/directives/ng_model_group';
 
 @Component({
     selector: 'app-toolbar',
@@ -14,6 +14,17 @@ export class ToolbarComponent implements OnInit {
      */
     @Output() messengerFormActive = new EventEmitter<number>();
 
+    /**
+     * This messenger is used to inform the parent component the search criteria.
+     */
+    @Output() messengerCriteria = new EventEmitter<string>();
+
+    /**
+     * This messenger is used to inform the parent component
+     * that the user prefers to filter on the active data, or not (including therefore the whole history).
+     */
+    @Output() messengerActiveOnly = new EventEmitter<boolean>();
+
     DEVELOPERS_CRUD = Constants.DEVELOPERS_CRUD;
     SKILLS_CRUD = Constants.SKILLS_CRUD;
     PROJECT_TAB_FORM = Constants.PROJECT_TAB_FORM;
@@ -21,7 +32,7 @@ export class ToolbarComponent implements OnInit {
     /**
      * Type of entity currently active.
      */
-    private editedEntity = Constants.DEVELOPERS_CRUD;
+    private editedEntity = 0;
 
 
     /**
@@ -72,6 +83,13 @@ export class ToolbarComponent implements OnInit {
     }
 
     /**
+     * @return true if there is no entity selected by the end-user.
+     * Presumably, we just enter in the application.
+     */
+    nothingActive() {
+        return (this.editedEntity === 0);
+    }
+    /**
      * Master/Detail mode ON. The goBack() and goFoward() buttons are visible
      */
     isInMasterDetail() {
@@ -82,19 +100,42 @@ export class ToolbarComponent implements OnInit {
      * Inform the toolbar that the user has choosed an entity to be edited (Staff, Skill, Project)
      */
     mode (editedEntity: number) {
-        this.editedEntity = editedEntity;
-        this.messengerFormActive.emit(this.editedEntity);
-        if (Constants.DEBUG) {
-            console.log ('Actual mode', this.editedEntity);
+        if (this.editedEntity !== editedEntity) {
+            this.editedEntity = editedEntity;
+            this.criteria = null;
+            this.messengerFormActive.emit(this.editedEntity);
+            if (Constants.DEBUG) {
+                console.log ('Actual mode', this.editedEntity);
+            }
         }
     }
 
     /**
-     * Launch a query based on the criteria.
+     * The user has entered inside the criteria field in order to proceed a search-request.
+     */
+    searching() {
+        switch (this.editedEntity) {
+            case this.DEVELOPERS_CRUD:
+                this.messengerFormActive.emit(Constants.DEVELOPERS_SEARCH);
+                break;
+            case this.PROJECT_TAB_FORM:
+                this.messengerFormActive.emit(Constants.PROJECT_SEARCH);
+                break;
+            case this.SKILLS_CRUD:
+                this.messengerFormActive.emit(Constants.SKILLS_SEARCH);
+                break;
+            default:
+                console.error('Unattempted editedEntity', this.editedEntity);
+                break;
+        }
+    }
+
+    /**
+     * Launch a query based on the requested criteria, if, at least, one caracter is present on the search field.
      */
     query() {
-        if (Constants.DEBUG) {
-            console.log ('Query on criteria', this.criteria);
+        if ((typeof this.criteria !== 'undefined') && (this.criteria !== null)) {
+            this.messengerCriteria.emit(this.criteria);
         }
     }
 
@@ -110,5 +151,6 @@ export class ToolbarComponent implements OnInit {
      */
     switchActiveOnly() {
         this.activeOnly = !this.activeOnly;
+        this.messengerActiveOnly.emit(this.activeOnly);
     }
 }
