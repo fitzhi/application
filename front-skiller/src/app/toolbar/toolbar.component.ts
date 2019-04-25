@@ -1,6 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Constants } from '../constants';
-import { modelGroupProvider } from '@angular/forms/src/directives/ng_model_group';
 
 @Component({
     selector: 'app-toolbar',
@@ -105,7 +104,7 @@ export class ToolbarComponent implements OnInit {
             this.criteria = null;
             this.messengerFormActive.emit(this.editedEntity);
             if (Constants.DEBUG) {
-                console.log ('Actual mode', this.editedEntity);
+                console.log ('Actual mode', Constants.CONTEXT[this.editedEntity]);
             }
         }
     }
@@ -125,7 +124,7 @@ export class ToolbarComponent implements OnInit {
                 this.messengerFormActive.emit(Constants.SKILLS_SEARCH);
                 break;
             default:
-                console.error('Unattempted editedEntity', this.editedEntity);
+                console.error('Unattempted editedEntity', Constants.CONTEXT[this.editedEntity]);
                 break;
         }
     }

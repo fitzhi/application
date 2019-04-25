@@ -18,8 +18,7 @@ export class StaffListService {
     private static theStaff: Collaborator[] = [];
 
     constructor(
-        private staffService: StaffService,
-        private cinematicService: CinematicService) {
+        private staffService: StaffService) {
     }
 
     /**
@@ -27,13 +26,13 @@ export class StaffListService {
      */
     reloadCollaborators(myCriteria: string, activeOnly: boolean) {
 
-        function testCriteria(collab, index, array) {
+        function testCriteria(collab: Collaborator, index, array) {
             const firstname = (typeof collab.firstName !== 'undefined') ? collab.firstName : '';
             const lastname = (typeof collab.lastName !== 'undefined') ? collab.lastName : '';
             return (
                 (       (firstname.toLowerCase().indexOf(myCriteria) > -1)
                     ||  (lastname.toLowerCase().indexOf(myCriteria) > -1))
-                && (activeOnly ? collab.isActive : true)
+                && (activeOnly ? collab.active : true)
             );
         }
 

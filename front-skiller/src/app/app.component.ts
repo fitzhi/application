@@ -157,6 +157,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     search(): void {
         switch (this.formId) {
             case Constants.TABS_STAFF_LIST:
+            case Constants.DEVELOPERS_SEARCH:
                 if (Constants.DEBUG) {
                     console.log(
                         'Searching ' + (this.activeOnly ? 'only active ' : 'all ')
@@ -165,12 +166,6 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
                 if ((this.criteria !== null) && (this.criteria.length > 0)) {
                     this.tabsStaffListService.addTabResult(this.criteria, this.activeOnly);
                 }
-                break;
-            case Constants.DEVELOPERS_SEARCH:
-                if (Constants.DEBUG) {
-                    console.log('Reloading collaborators for search criteria ' + this.criteria);
-                }
-                this.listStaffService.reloadCollaborators(this.criteria, this.activeOnly);
                 break;
             case Constants.SKILLS_SEARCH: {
                 if (Constants.DEBUG) {
@@ -256,8 +251,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     onChangeForm($event: number) {
         this.formId = $event;
         if (Constants.DEBUG) {
-            console.log ('Changing to mode', $event);
-            console.log ('isInSearchingMode() ?', this.isInSearchingMode());
+            console.log ('Changing to mode', Constants.CONTEXT[$event]);
         }
         if (this.isInSearchingMode()) {
             this.focusSearch();
