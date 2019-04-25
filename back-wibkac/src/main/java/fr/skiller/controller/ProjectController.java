@@ -571,6 +571,11 @@ public class ProjectController {
 	public ResponseEntity<ProjectContributorDTO> projectContributors(final @PathVariable("idProject") int idProject) {
 
 		final List<Contributor> contributors = projectHandler.contributors(idProject);
+		if (logger.isDebugEnabled()) {
+			logger.debug(
+					contributors.stream().collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
+					.toString());
+		}
 		
 		ProjectContributorDTO projectContributorDTO = new ProjectContributorDTO(idProject);
 		

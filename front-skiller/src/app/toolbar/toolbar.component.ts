@@ -1,12 +1,16 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Constants } from '../constants';
+import { BaseComponent } from '../base/base.component';
+import { CinematicService } from '../service/cinematic.service';
+import { TabsStaffListService } from '../tabs-staff-list/service/tabs-staff-list.service';
+import { ProjectStaffService } from '../project/project-staff-service/project-staff.service';
 
 @Component({
     selector: 'app-toolbar',
     templateUrl: './toolbar.component.html',
     styleUrls: ['./toolbar.component.css']
 })
-export class ToolbarComponent implements OnInit {
+export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy {
 
     /**
      * We'll send to the parent component (AppComponent) the selected form to be displayed
@@ -46,6 +50,11 @@ export class ToolbarComponent implements OnInit {
     criteria: string;
 
     /**
+    * Master/Detail mode ON. The goBack() and goFoward() buttons are visible
+    */
+    masterDetail: boolean;
+
+    /**
      * Previous identifier to be displayed if the user clicked on the PREV button
      */
     previousId: number;
@@ -55,10 +64,61 @@ export class ToolbarComponent implements OnInit {
      */
     nextId: number;
 
-    constructor() { }
+    constructor(
+        private cinematicService: CinematicService,
+        private projectStaffService: ProjectStaffService,
+        private tabsStaffListService: TabsStaffListService) { super(); }
+
 
     ngOnInit() {
+
+        this.listenOnContext();
+
+        this.listenOnCollaboratorDisplayed();
+   }
+
+    /**
+     * We listen each change of context in the application,
+     * to properly handle the state of the master/detail boolean.
+     */
+    listenOnContext() {
+        this.subscriptions.add(
+        this.cinematicService.currentActiveForm.subscribe(context => {
+            if (context.formIdentifier === Constants.DEVELOPERS_CRUD) {
+                this.masterDetail = this.tabsStaffListService.inMasterDetail;
+            } else {
+                this.masterDetail = false;
+            }
+        }));
+   }
+
+    /**
+     * We listen each change of collaborator displayed,
+     * to handle properly the state of the PREV and NEXT buttons.
+     */
+    listenOnCollaboratorDisplayed() {
+        this.subscriptions.add(
+            this.cinematicService.newCollaboratorDisplayEmitted$.subscribe(id => {
+                switch (this.cinematicService.getFormerFormIdentifier()) {
+                    case Constants.TABS_STAFF_LIST:
+                        this.previousId = this.tabsStaffListService.previousCollaboratorId(id);
+                        this.nextId = this.tabsStaffListService.nextCollaboratorId(id);
+                        break;
+                    case Constants.PROJECT_TAB_STAFF:
+                        this.previousId = this.projectStaffService.previousIdStaff(id);
+                        this.nextId = this.projectStaffService.nextIdStaff(id);
+                        break;
+                }
+                if (Constants.DEBUG) {
+                    console.groupCollapsed('Cinematic buttons');
+                    console.log('ID active in the form ' + id);
+                    console.log('ID for button "Previous" ' + this.previousId);
+                    console.log('ID for button "Next" ' + this.nextId);
+                    console.groupEnd();
+                }
+            }));
     }
+
 
     /**
      * @return true if the STAFF button has been selected by the end-user.
@@ -92,7 +152,7 @@ export class ToolbarComponent implements OnInit {
      * Master/Detail mode ON. The goBack() and goFoward() buttons are visible
      */
     isInMasterDetail() {
-        return false;
+        return this.masterDetail;
     }
 
     /**
@@ -102,6 +162,8 @@ export class ToolbarComponent implements OnInit {
         if (this.editedEntity !== editedEntity) {
             this.editedEntity = editedEntity;
             this.criteria = null;
+            // We have clicked on an 'Entity' button. We disabled the master detail behavior for the staff.
+            this.tabsStaffListService.inMasterDetail = false;
             this.messengerFormActive.emit(this.editedEntity);
             if (Constants.DEBUG) {
                 console.log ('Actual mode', Constants.CONTEXT[this.editedEntity]);
@@ -142,7 +204,7 @@ export class ToolbarComponent implements OnInit {
      * Display the list behind the master/detail preview.
      */
     list() {
-        console.log ('list');
+        this.messengerFormActive.emit(Constants.DEVELOPERS_SEARCH);
     }
 
     /**
@@ -151,5 +213,12 @@ export class ToolbarComponent implements OnInit {
     switchActiveOnly() {
         this.activeOnly = !this.activeOnly;
         this.messengerActiveOnly.emit(this.activeOnly);
+    }
+
+    /**
+     * All subscriptions are closed in the BaseComponent
+     */
+    public ngOnDestroy() {
+        super.ngOnDestroy();
     }
 }

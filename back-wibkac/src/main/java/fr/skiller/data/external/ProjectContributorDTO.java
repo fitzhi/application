@@ -9,42 +9,42 @@ class ContributorView {
 	/**
 	 * the staff identifier.
 	 */
-	int idStaff;
+	private int idStaff;
 	
 	/**
 	 * the full name of this developer <i>(first name + last name)</i>.
 	 */
-	String fullname;
+	private String fullname;
 	
 	/**
 	 * {@code true} if this staff member is in activity in the company, {@code false} otherwise
 	 */
-	boolean active;
+	private boolean active;
 	
 	/**
 	 * {@code true} if this staff member is external from the company, {@code false} otherwise
 	 */
-	boolean external;
+	private boolean external;
 	
 	/**
 	 * Date of the latest commit.
 	 */
-	Date firstCommit;
+	private Date firstCommit;
 	
 	/**
 	 * Date of the latest commit.
 	 */
-	Date lastCommit;
+	private Date lastCommit;
 	
 	/**
 	 * @return number of commit submitted by the developer inside the project.
 	 */
-	int numberOfCommits;
+	private int numberOfCommits;
 	
 	/**
 	 * @return number of files modifier by the developer inside the project.
 	 */
-	int numberOfFiles;
+	private int numberOfFiles;
 	
 	/**
 	 * @param idStaff staff identifier
@@ -67,6 +67,63 @@ class ContributorView {
 		this.numberOfCommits = numberOfCommits;
 		this.numberOfFiles = numberOfFiles;
 	}
+
+	/**
+	 * @return the idStaff
+	 */
+	public int getIdStaff() {
+		return idStaff;
+	}
+
+	/**
+	 * @return the fullname
+	 */
+	public String getFullname() {
+		return fullname;
+	}
+
+	/**
+	 * @return the active
+	 */
+	public boolean isActive() {
+		return active;
+	}
+
+	/**
+	 * @return the external
+	 */
+	public boolean isExternal() {
+		return external;
+	}
+
+	/**
+	 * @return the firstCommit
+	 */
+	public Date getFirstCommit() {
+		return firstCommit;
+	}
+
+	/**
+	 * @return the lastCommit
+	 */
+	public Date getLastCommit() {
+		return lastCommit;
+	}
+
+	/**
+	 * @return the numberOfCommits
+	 */
+	public int getNumberOfCommits() {
+		return numberOfCommits;
+	}
+
+	/**
+	 * @return the numberOfFiles
+	 */
+	public int getNumberOfFiles() {
+		return numberOfFiles;
+	}
+
 }
 
 /**
@@ -78,12 +135,12 @@ public class ProjectContributorDTO extends BaseDTO {
 	/**
 	 * Project identifier.
 	 */
-	int idProject;
+	private int idProject;
 	
 	/**
 	 * List of contributors for the project.
 	 */
-	List<ContributorView> contributors;
+	private List<ContributorView> contributors;
 	
 	/**
 	 * @param code code error thrown by the back end.
@@ -121,5 +178,20 @@ public class ProjectContributorDTO extends BaseDTO {
 			final Date firstCommit, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
 		contributors.add(new ContributorView(idStaff, fullname, active, external, firstCommit, lastCommit, numberOfCommits, numberOfFiles));
 	}
+
+	/**
+	 * @return the idProject
+	 */
+	public int getIdProject() {
+		return idProject;
+	}
+
+	/**
+	 * @return the contributors
+	 */
+	public List<ContributorView> getContributors() {
+		return contributors;
+	}
+
 	
 }

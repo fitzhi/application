@@ -13,7 +13,7 @@
             <button 
                 [routerLink]="['/user', previousId]"
                 class="btn btn-outline-secondary rounded" 
-                [class.disabled]="(previousId == undefined)"
+                [disabled]="(previousId === undefined)"
                 (click)="list()">
                 <i class="fas glyphicon fa-caret-left"></i>
             </button>
@@ -21,7 +21,7 @@
             <button 
                 [routerLink]="['/user', nextId]"
                 class="btn btn-outline-secondary rounded" 
-                [class.disabled]="(nextId == undefined)"
+                [disabled]="(nextId === undefined)"
                 (click)="list()">
                 <i class="fas glyphicon fa-caret-right"></i>
             </button>

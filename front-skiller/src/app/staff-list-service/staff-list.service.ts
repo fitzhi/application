@@ -1,10 +1,9 @@
-import { CinematicService } from '../service/cinematic.service';
 import { Constants } from '../constants';
 import { Collaborator } from '../data/collaborator';
 import { StaffService } from '../service/staff.service';
 import { Injectable } from '@angular/core';
 
-import { Observable, of, BehaviorSubject, Subject } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
 @Injectable({
@@ -19,46 +18,6 @@ export class StaffListService {
 
     constructor(
         private staffService: StaffService) {
-    }
-
-    /**
-     * Reload the collaborators for the passed criteria.
-     */
-    reloadCollaborators(myCriteria: string, activeOnly: boolean) {
-
-        function testCriteria(collab: Collaborator, index, array) {
-            const firstname = (typeof collab.firstName !== 'undefined') ? collab.firstName : '';
-            const lastname = (typeof collab.lastName !== 'undefined') ? collab.lastName : '';
-            return (
-                (       (firstname.toLowerCase().indexOf(myCriteria) > -1)
-                    ||  (lastname.toLowerCase().indexOf(myCriteria) > -1))
-                && (activeOnly ? collab.active : true)
-            );
-        }
-
-        this.cleanUpCollaborators();
-        this.staffService.getAll().
-            subscribe((staff: Collaborator[]) => StaffListService.theStaff.push(...staff.filter(testCriteria)),
-                error => console.log(error),
-                () => {
-                    if (Constants.DEBUG) {
-                        console.log('The staff collection is containing now ' + StaffListService.theStaff.length + ' records');
-                    }
-                });
-    }
-
-    /**
-     * Cleanup the list of collaborators involved in our service center.
-     */
-    cleanUpCollaborators() {
-        if (Constants.DEBUG) {
-            if (StaffListService.theStaff == null) {
-                console.log('INTERNAL ERROR : collection theStaff SHOULD NOT BE NULL, dude !');
-            } else {
-                console.log('Cleaning up the staff collection containing ' + StaffListService.theStaff.length + ' records');
-            }
-        }
-        StaffListService.theStaff.length = 0;
     }
 
     /**
@@ -89,34 +48,6 @@ export class StaffListService {
                         }
                     }
                 }));
-        }
-    }
-
-    /**
-     * Return the NEXT collaborator's id associated with this id in the staff list.
-     */
-    nextCollaboratorId(id: number): number {
-        const index = StaffListService.theStaff.findIndex(collab => collab.idStaff === id);
-        if (Constants.DEBUG) {
-            console.log('Current index : ' + index);
-            console.log('Staff size : ' + StaffListService.theStaff.length);
-        }
-        if (index < StaffListService.theStaff.length - 1) {
-            return StaffListService.theStaff[index + 1].idStaff;
-        } else {
-            return undefined;
-        }
-    }
-
-    /**
-     * Return the PREVIOUS collaborator's id associated with this id in the staff list.
-     */
-    previousCollaboratorId(id: number): number {
-        const index = StaffListService.theStaff.findIndex(collab => collab.idStaff === id);
-        if (index > 0) {
-            return StaffListService.theStaff[index - 1].idStaff;
-        } else {
-            return undefined;
         }
     }
 

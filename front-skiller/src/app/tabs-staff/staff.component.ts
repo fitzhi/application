@@ -89,8 +89,7 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
               console.log('No collaborator found for the id ' + this.idStaff);
             }
             if (Constants.DEBUG) {
-              console.log('Loading complete for id ' + this.idStaff);
-              console.log (this.collaborator);
+              console.log('Loading complete for id ' + this.idStaff, this.collaborator);
             }
           }
         );

@@ -42,9 +42,12 @@ export class Constants {
   public static PROJECT_TAB_FORM = 7;
   public static PROJECT_TAB_STAFF = 8;
   public static TABS_STAFF_LIST = 9;
+  public static BACK_TO_LIST = 10;
+
 
   public static CONTEXT: string[] = ['WELCOME', 'SKILLS_SEARCH', 'SKILLS_CRUD', 'DEVELOPERS_SEARCH',
-  'DEVELOPERS_CRUD', 'PROJECT_SEARCH', 'PROJECT_TABS_HOST', 'PROJECT_TAB_FORM', 'PROJECT_TAB_STAFF', 'TABS_STAFF_LIST'];
+  'DEVELOPERS_CRUD', 'PROJECT_SEARCH', 'PROJECT_TABS_HOST', 'PROJECT_TAB_FORM', 'PROJECT_TAB_STAFF', 'TABS_STAFF_LIST',
+  'BACK_TO_LIST'];
 
   /*
   * Indexes of tab inside the form group Project

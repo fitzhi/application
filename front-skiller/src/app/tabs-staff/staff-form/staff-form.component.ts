@@ -70,7 +70,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
         if (Constants.DEBUG) {
             console.log('Current staff member id ' + this.idStaff);
         }
-        if (this.idStaff === null) {
+        if ((typeof this.idStaff === 'undefined') || (this.idStaff === null)) {
             this.collaborator = {
                 idStaff: -1, firstName: '', lastName: '', nickName: '', login: '', email: '', level: '',
                 dateInactive: null, application: '', typeOfApplication: null, active: true, external: true,
@@ -135,7 +135,6 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
                     }));
         }
 
-        console.log('this.collaborator.isActive ' + this.collaborator.active);
         this.profiles = this.referentialService.profiles;
 
     }

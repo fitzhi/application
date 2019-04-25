@@ -12,12 +12,6 @@
 		<appender-ref ref="STDOUT" />
 	</root>
 
-
-	<logger name="fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl" additivity="false">
-		<level value="DEBUG" />
-		<appender-ref ref="STDOUT" />
-	</logger>
-
 	<logger name="fr.skiller.controller" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
