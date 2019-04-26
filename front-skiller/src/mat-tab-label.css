@@ -1,0 +1,21 @@
+/* Styles for tab labels */
+.mat-tab-label {
+    width: 90px !important;
+    background-color: transparent;
+    padding: 5px;
+    color: black;
+    font-weight: 700;
+}
+
+/* Styles for the active tab label */
+.mat-tab-label.mat-tab-label-active {
+    width: 90px !important;
+    background-color: #28A745;
+    padding: 5px;
+    color: white;
+    font-weight: 700;
+}
+
+.mat-tab-label .mat-tab-label-content {
+    width: 100%;
+}

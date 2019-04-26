@@ -2,13 +2,25 @@
 
   <mat-tab *ngFor="let tab of tabs; let index = index">
     <ng-template mat-tab-label>
-      {{tabs[index]}} &nbsp;
-      <div class="remove">
-        <img src="./assets/img/delete-sign.png" alt="delete sign" width="12" height="12" (click)="remove(index)" />
-      </div>
+        <div class="d-flex justify-content-start myTab" style="width:100%">
+                <div style="min-width:20%"><i class="fas glyphicon fa-user-graduate" ></i></div>
+                <div style="min-width:65%">{{truncate(tabs[index],12)}}</div>
+                <button class="remove" (click)="remove(index)" style="min-width:15%">x</button>
+        </div>
+        <!--
+        <div class="d-flex justify-content-between" style="width:100%">
+            <div class="p-2">
+            </div>
+            <div class="p-6"> </div>
+            <div class="p-2 remove">x</div>
+        </div>
+        -->
     </ng-template>
     <app-staff-list [criteria]="criteria(index)" [activeOnly]="activeOnly(index)"></app-staff-list>
   </mat-tab>
 </mat-tab-group>
 
 
+<!--
+    
+-->

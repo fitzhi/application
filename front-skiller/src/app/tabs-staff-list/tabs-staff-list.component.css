@@ -1,22 +1,9 @@
-.remove {
-    padding: 1px 4px 1px;
+button.remove {
+    background-color: transparent;
+    border: none;
 }
 
-.remove:hover {
+button.remove:hover {
     background-color: whitesmoke;
     border-radius: 50%;
 }
-
-/* Remove for sonar ::ng-deep */
-:host  .mat-tab-header {
-    position: fixed !important;
-    height: 50px;
-    z-index: 1000;
-}
-
-/* active tab */
-/* Remove for sonar ::ng-deep */
-:host .mat-tab-list .mat-tab-labels .mat-tab-label-active {
-    background-color: lightgrey;
-}
-
