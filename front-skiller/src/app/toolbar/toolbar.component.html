@@ -13,16 +13,14 @@
             <button 
                 [routerLink]="['/user', previousId]"
                 class="btn btn-outline-secondary rounded" 
-                [disabled]="(previousId === undefined)"
-                (click)="list()">
+                [disabled]="(previousId === undefined)">
                 <i class="fas glyphicon fa-caret-left"></i>
             </button>
 
             <button 
                 [routerLink]="['/user', nextId]"
                 class="btn btn-outline-secondary rounded" 
-                [disabled]="(nextId === undefined)"
-                (click)="list()">
+                [disabled]="(nextId === undefined)">
                 <i class="fas glyphicon fa-caret-right"></i>
             </button>
 

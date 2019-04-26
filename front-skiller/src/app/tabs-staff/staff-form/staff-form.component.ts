@@ -12,6 +12,7 @@ import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angu
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BaseComponent } from '../../base/base.component';
+import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
 
 
 @Component({
@@ -61,6 +62,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
         private cinematicService: CinematicService,
         private referentialService: ReferentialService,
         private staffDataExchangeService: StaffDataExchangeService,
+        private tabsStaffListService: TabsStaffListService,
         private router: Router) {
         super();
     }
@@ -161,6 +163,11 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
                 staff => {
                     this.collaborator = staff;
                     this.messengerStaffUpdated.emit (staff);
+
+                    /**
+                     * If this staff member exists in pre-existing list of collaborators. We actualize the content.
+                     */
+                    this.tabsStaffListService.actualizeCollaborator(staff);
                     this.messageService.info('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
                 }));
     }

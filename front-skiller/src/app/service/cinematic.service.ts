@@ -17,7 +17,7 @@ class Form {
     /**
      * Constructor
      */
-    constructor(formIdentifier, url) {
+    constructor(formIdentifier: number, url: string) {
         this.formIdentifier = formIdentifier;
         this.url = url;
     }

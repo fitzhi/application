@@ -9,6 +9,7 @@ import { ReferentialService } from '../../service/referential.service';
 import { Experience } from '../../data/experience';
 import { ListCriteria } from '../../data/listCriteria';
 import { SkillService } from '../../service/skill.service';
+import { Collaborator } from 'src/app/data/collaborator';
 
 @Component({
   selector: 'app-staff-list',
@@ -23,7 +24,7 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
   @Input('activeOnly')
   public activeOnly: boolean;
 
-  public dataSource;
+  public dataSource: MatTableDataSource<Collaborator>;
 
   @ViewChild(MatSort) sort: MatSort;
 
@@ -52,19 +53,19 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
     this.subscriptions.add(
       this.tabsStaffListComponent.search(this.criteria, this.activeOnly, this.tabsStaffListComponent)
       .subscribe(collaborators => {
-          this.dataSource = new MatTableDataSource(collaborators);
-          this.dataSource.sortingDataAccessor = (item, property) => {
+          this.dataSource = new MatTableDataSource<Collaborator>(collaborators);
+          this.dataSource.sortingDataAccessor = (item: Collaborator, property: string) => {
             switch (property) {
               case 'firstName lastName':
                 return item.firstName.toLocaleLowerCase() + ' ' + item.lastName.toLocaleLowerCase();
               case 'active':
-                return item.active;
+                return item.active ? 1 : 0;
               case 'level':
                 return this.title(item.level);
               case 'skills':
                 return this.skills(item.experiences);
               case 'external':
-                return item.external;
+                return item.external ? 1 : 0;
             }
           };
           this.dataSource.sort = this.sort;

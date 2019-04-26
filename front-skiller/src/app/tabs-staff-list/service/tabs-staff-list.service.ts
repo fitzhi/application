@@ -16,7 +16,7 @@ export class TabsStaffListService {
     /**
      * List of criterias dispplay on the tab staff lists dashboard.
      */
-    public staffListContext: Map<string, StaffListContext> = new Map<string, StaffListContext>();
+    public staffListContexts: Map<string, StaffListContext> = new Map<string, StaffListContext>();
 
     /**
      * Index of the active tab.
@@ -49,8 +49,8 @@ export class TabsStaffListService {
                 console.log ('Adding criterias ' + criterias.criteria);
             }
 
-            if (!this.staffListContext.has(this.key(criterias))) {
-                this.staffListContext.set (
+            if (!this.staffListContexts.has(this.key(criterias))) {
+                this.staffListContexts.set (
                     this.key(criterias),
                     new StaffListContext(criterias)
                 );
@@ -71,7 +71,7 @@ export class TabsStaffListService {
     public addTabResult(criteria: string, activeOnly: boolean) {
 
         const myCriteria = new ListCriteria(criteria, activeOnly);
-        if (this.staffListContext.has(this.key(myCriteria))) {
+        if (this.staffListContexts.has(this.key(myCriteria))) {
             this.messageService.info('This criteria is already present!');
             return;
         }
@@ -121,8 +121,8 @@ export class TabsStaffListService {
             }
         }
 
-        if (this.staffListContext.has(key)) {
-            const context = this.staffListContext.get(key);
+        if (this.staffListContexts.has(key)) {
+            const context = this.staffListContexts.get(key);
             if (context.staffSelected.length > 0) {
                 if (Constants.DEBUG) {
                     console.log('Using cache for key ' + key + ' ' + context.staffSelected.length + ' records');
@@ -285,11 +285,11 @@ export class TabsStaffListService {
                     collaborator.forEach(collab => console.log(collab.firstName + ' ' + collab.lastName));
                     console.groupEnd();
                 }
-                if (this.staffListContext.has(key)) {
+                if (this.staffListContexts.has(key)) {
                     if (Constants.DEBUG) {
                         console.log('Saving collaborators for key ' + key);
                     }
-                    this.staffListContext.get(key).store(collaborator);
+                    this.staffListContexts.get(key).store(collaborator);
                 }
                 collaborator$.next(collaborator);
             });
@@ -300,10 +300,10 @@ export class TabsStaffListService {
      * Remove from history the search entry corresponding to this key.
      */
     public removeHistory (key: string) {
-        this.staffListContext.delete(key);
+        this.staffListContexts.delete(key);
         if (Constants.DEBUG) {
             console.groupCollapsed ('Remaining tabs');
-            this.staffListContext.forEach(criterias => console.log (criterias.criteria));
+            this.staffListContexts.forEach(criterias => console.log (criterias.criteria));
             console.groupEnd();
         }
     }
@@ -314,7 +314,7 @@ export class TabsStaffListService {
      */
     nextCollaboratorId(id: number): number {
 
-        const context = this.staffListContext.get(this.activeKey);
+        const context = this.staffListContexts.get(this.activeKey);
 
         const index = context.staffSelected.findIndex(collab => collab.idStaff === id);
         if (Constants.DEBUG) {
@@ -334,7 +334,7 @@ export class TabsStaffListService {
      */
     previousCollaboratorId(id: number): number {
 
-        const context = this.staffListContext.get(this.activeKey);
+        const context = this.staffListContexts.get(this.activeKey);
 
         const index = context.staffSelected.findIndex(collab => collab.idStaff === id);
         if (index > 0) {
@@ -345,16 +345,46 @@ export class TabsStaffListService {
     }
 
     /**
+     * Actualize the information of a collaborator.
+     * This method is call (for instance) after any update on the staff form.
+     */
+    public actualizeCollaborator(collaborator: Collaborator) {
+
+        this.staffListContexts.forEach((staffListContext: StaffListContext, tabKey: string) => {
+            staffListContext.staffSelected.forEach(staff => {
+                if (staff.idStaff === collaborator.idStaff) {
+                    if (Constants.DEBUG) {
+                        console.log ('Actualizing the collaborator with '
+                        + collaborator.idStaff + ' inside the list for tab ', tabKey);
+                    }
+                    staff.firstName = collaborator.firstName;
+                    staff.lastName = collaborator.lastName;
+                    staff.level = collaborator.level;
+                    staff.active = collaborator.active;
+                    staff.external = collaborator.external;
+
+                    staff.experiences.length = 0;
+                    collaborator.experiences.forEach(experience => {
+                        staff.experiences.push(experience);
+                    });
+                }
+            });
+        });
+
+    }
+
+
+    /**
      * Retrieve the context associated to the key.
      * @param key searched key
      * @returns the context associated to this list or null if none exists (which is suspected to be an internal error)
      */
     getContext (key: string): StaffListContext  {
-        if (!this.staffListContext.has(key)) {
+        if (!this.staffListContexts.has(key)) {
             console.error('Cannot retrieve key ' + key);
             return null;
         } else {
-            return this.staffListContext.get(key);
+            return this.staffListContexts.get(key);
         }
     }
 }

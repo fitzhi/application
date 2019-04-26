@@ -48,7 +48,7 @@ export class TabsStaffListComponent extends BaseComponent implements OnInit, OnD
    * This method will be called during the ngInit process to retrieve the search context.
    */
   public reloadHistory() {
-    this.tabsStaffListComponent.staffListContext.forEach(criterias => {
+    this.tabsStaffListComponent.staffListContexts.forEach(criterias => {
         this.tabKeys.push(this.tabsStaffListComponent.key(criterias));
         this.add(criterias.criteria);
     });
@@ -59,14 +59,14 @@ export class TabsStaffListComponent extends BaseComponent implements OnInit, OnD
    * Criteria passed to each new tab.
    */
   criteria(index: number) {
-    return this.tabsStaffListComponent.staffListContext.get(this.tabKeys[index]).criteria;
+    return this.tabsStaffListComponent.staffListContexts.get(this.tabKeys[index]).criteria;
   }
 
   /**
    * activeOnly activeOnly filter passed to each new tab.
    */
   activeOnly(index: number) {
-    return this.tabsStaffListComponent.staffListContext.get(this.tabKeys[index]).activeOnly;
+    return this.tabsStaffListComponent.staffListContexts.get(this.tabKeys[index]).activeOnly;
   }
 
   public add(title: string) {
