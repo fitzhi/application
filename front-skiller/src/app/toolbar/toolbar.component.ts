@@ -222,6 +222,15 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
     }
 
     /**
+     * The user has clicked on the "Staff" member
+     */
+    switchToStaff() {
+        this.masterDetail = false;
+        this.mode(Constants.DEVELOPERS_CRUD);
+    }
+
+
+    /**
      * All subscriptions are closed in the BaseComponent
      */
     public ngOnDestroy() {

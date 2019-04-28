@@ -95,10 +95,6 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
         }
     }
 
-    public switchToDev() {
-        this.tabsStaffListService.inMasterDetail = false;
-    }
-
     /**
      * User has entered into the search INPUT.
      */

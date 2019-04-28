@@ -37,7 +37,7 @@
                 class="btn rounded" 
                 [routerLink]="['/user']"
                 [ngClass]="{'btn-outline-success' : isStaffActive(), 'btn-outline-secondary': !isStaffActive()}" 
-                (click)="mode(DEVELOPERS_CRUD)">
+                (click)="switchToStaff()">
                 <i class="fas glyphicon fa-user-graduate"></i> Staff
             </button>
             <button 
