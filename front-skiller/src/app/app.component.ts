@@ -165,7 +165,6 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
             default:
                 return false;
         }
-
     }
 
     /**

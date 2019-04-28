@@ -163,17 +163,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
      */
     mode (editedEntity: number) {
 
-        /**
-         * Specific case : We are proceeding in master/detail mode and the user end-click on the "Staff" Button.
-         * We continue with the same entity, but the leave the master/detail mode.
-         */
-        if (editedEntity === Constants.DEVELOPERS_CRUD) {
-            // We have clicked on an 'Entity' button. We disabled the master detail behavior for the staff.
-            this.masterDetail = false;
-            this.criteria = null;
-        }
-
-        if (this.editedEntity !== editedEntity) {
+         if (this.editedEntity !== editedEntity) {
             this.editedEntity = editedEntity;
             this.criteria = null;
 
