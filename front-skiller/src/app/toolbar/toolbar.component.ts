@@ -91,6 +91,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
                 } else {
                     this.masterDetail = false;
                 }
+                this.mode (context.formIdentifier);
             }));
    }
 
@@ -126,21 +127,21 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
      * @return true if the STAFF button has been selected by the end-user.
      */
     isStaffActive () {
-        return (this.editedEntity === this.DEVELOPERS_CRUD);
+        return ((this.editedEntity === this.DEVELOPERS_CRUD) || (this.editedEntity === Constants.TABS_STAFF_LIST));
     }
 
     /**
      * @return true if the SKILL button has been selected by the end-user.
      */
     isSkillActive () {
-        return (this.editedEntity === this.SKILLS_CRUD);
+        return ((this.editedEntity === this.SKILLS_CRUD) || (this.editedEntity === Constants.SKILLS_SEARCH));
     }
 
     /**
      * @return true if the PROJECT button has been selected by the end-user.
      */
     isProjectActive () {
-        return (this.editedEntity === this.PROJECT_TAB_FORM);
+        return ((this.editedEntity === this.PROJECT_TAB_FORM) || (this.editedEntity === Constants.PROJECT_SEARCH));
     }
 
     /**

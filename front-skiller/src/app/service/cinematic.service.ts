@@ -24,7 +24,7 @@ class Form {
 
     public trace() {
         if (Constants.DEBUG) {
-            console.log('Form Identifier ' + this.formIdentifier + ' for url ' + this.url);
+            console.log('Form Identifier ' + Constants.CONTEXT[this.formIdentifier] + ' for url ' + this.url);
         }
     }
 }

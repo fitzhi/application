@@ -1,6 +1,8 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Constants } from '../../../../constants';
 import { BaseComponent } from '../../../../base/base.component';
+import { Filename } from 'src/app/data/filename';
+import { FilenamesDataSource } from '../filenames-data-source';
 
 @Component({
   selector: 'app-list-filenames',
@@ -12,15 +14,15 @@ export class ListFilenamesComponent extends BaseComponent implements OnInit, OnD
   public tblColumns: string[] = ['filename', 'lastCommit'];
 
   @Input('filenames')
-  public filenames;
+  public filenames: FilenamesDataSource;
 
   constructor() { super(); }
 
   ngOnInit() {
     if (Constants.DEBUG) {
       this.subscriptions.add(
-        this.filenames.filenamesSubject.subscribe(elements => {
-          if (elements !== null) {
+        this.filenames.filenamesSubject.subscribe((elements: Filename[]) => {
+          if ((elements !== null) && (elements.length > 0)) {
             console.groupCollapsed('Filenames');
             elements.forEach(element => console.log  (element.filename));
             console.groupEnd();

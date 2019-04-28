@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Constants } from '../../../../constants';
 import { BaseComponent } from '../../../../base/base.component';
+import { ContributorsDataSource } from '../contributors-data-source';
 
 @Component({
   selector: 'app-list-contributors',
@@ -12,7 +13,7 @@ export class ListContributorsComponent extends BaseComponent implements OnInit, 
   public tblColumns: string[] = ['fullname', 'active', 'external', 'lastCommit'];
 
   @Input('contributors')
-  public contributors;
+  public contributors: ContributorsDataSource;
 
   constructor() { super(); }
 
@@ -20,7 +21,7 @@ export class ListContributorsComponent extends BaseComponent implements OnInit, 
     if (Constants.DEBUG) {
       this.subscriptions.add(
         this.contributors.committersSubject.subscribe(elements => {
-          if (elements !== null) {
+          if ( (elements !== null) && (elements.length > 0)) {
             console.groupCollapsed('Contributors');
             elements.forEach(element => console.log  (element.fullname));
             console.groupEnd();

@@ -7,14 +7,6 @@
                 <div style="min-width:65%">{{truncate(tabs[index],12)}}</div>
                 <button class="remove" (click)="remove(index)" style="min-width:15%">x</button>
         </div>
-        <!--
-        <div class="d-flex justify-content-between" style="width:100%">
-            <div class="p-2">
-            </div>
-            <div class="p-6"> </div>
-            <div class="p-2 remove">x</div>
-        </div>
-        -->
     </ng-template>
     <app-staff-list [criteria]="criteria(index)" [activeOnly]="activeOnly(index)"></app-staff-list>
   </mat-tab>

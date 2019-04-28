@@ -1,3 +1,7 @@
+div.myToolbar {
+    margin:0px;
+}
+
 div.buttons button, div {
     margin: 2px;  
 }

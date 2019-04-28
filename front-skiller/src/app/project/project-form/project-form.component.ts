@@ -61,7 +61,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
   ngOnInit() {
 
     this.subscriptions.add(
-      this.subjProject.subscribe(project => {
+      this.subjProject.subscribe((project: Project) => {
         this.project = project;
         this.profileProject.get('projectName').setValue(project.name);
         this.connection_settings = String(this.project.connectionSettings);
@@ -73,6 +73,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
         this.sourceSkills.load(this.project.skills);
     }));
 
+    this.project = new Project();
     this.cinematicService.setForm(Constants.PROJECT_TAB_FORM, this.router.url);
   }
 

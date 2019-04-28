@@ -21,6 +21,9 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
    */
   public idStaff: number;
 
+    private TAB_FORM = 0;
+    private TAB_ = 1;
+
   private collaborator: Collaborator;
 
   constructor(
@@ -105,6 +108,13 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
     super.ngOnDestroy();
   }
 
+  selectedIndexChange($selectedIndex: number) {
+    switch ($selectedIndex) {
+        case 0:
+            this.cinematicService.setForm (Constants.DEVELOPERS_CRUD, this.router.url);
+            break;
+        }
+  }
 }
 
 

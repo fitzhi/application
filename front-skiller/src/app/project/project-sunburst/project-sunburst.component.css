@@ -1,114 +1,126 @@
-.sunburst-tooltip { 
-    z-index: 500;
+.sunburst-tooltip {
+  z-index: 500;
 }
 
 #sunburstWaitingImage {
-    display: block;
-    width: 256px; height: 256px;
-    margin: calc(((204px * 1.4142) - 204px) / 2);
-    border: 0px solid;
-    animation: rotation 2s linear 0s infinite;
-    align-content: center;
+  display: block;
+  width: 256px;
+  height: 256px;
+  margin: calc(((204px * 1.4142) - 204px) / 2);
+  border: 0px solid;
+  animation: rotation 2s linear 0s infinite;
+  align-content: center;
 }
 
-#sunburstWaitingImage:hover{
-    animation-play-state: paused;
+#sunburstWaitingImage:hover {
+  animation-play-state: paused;
 }
 
 @keyframes rotation {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
+
 .component-container {
   height: 100%;
 }
 
 #chart {
-    margin-left: 10em;
+  margin-left: 10em;
+}
+
+mat-sidenav-container {
+  min-height: 300px;
 }
 
 mat-sidenav {
-    width: 2.4em;
-    background-color: whitesmoke;
+  width: 2.4em;
 }
 
 mat-sidenav-content {
-    background-color: white;
-    margin-left: 50px;
+  margin-left: 50px;
 }
 
-#rules-of-risks  {
-    margin-top: 0.2em;
-    margin-left: 0.1em;
-    width: 1.8em; /*  */
-    height: 1.8em;
-    margin-bottom: 0.5em;
+#rules-of-risks {
+  margin-top: 0.2em;
+  margin-left: 0.1em;
+  width: 1.8em;
+  /*  */
+  height: 1.8em;
+  margin-bottom: 0.5em;
 }
 
 #settings {
-    margin-top: 0.15em;
-    margin-left: 0.1em;
-    width: 1.8em; 
-    height: 1.8em;
-    margin-bottom: 0.5em;
+  margin-top: 0.15em;
+  margin-left: 0.1em;
+  width: 1.8em;
+  height: 1.8em;
+  margin-bottom: 0.5em;
 }
 
 #unknown {
-    margin-top: 0.1em;
-    margin-left: 0.2em;
-    width: 1.8em; 
-    height: 1.8em;
-    margin-bottom: 0.5em;
+  margin-top: 0.1em;
+  margin-left: 0.2em;
+  width: 1.8em;
+  height: 1.8em;
+  margin-bottom: 0.5em;
 }
 
 #reset {
-    margin-top: 0.1em;
-    margin-left: 0.1em;
-    width: 1.8em; 
-    height: 1.8em;
-    margin-bottom: 0.5em;
+  margin-top: 0.1em;
+  margin-left: 0.1em;
+  width: 1.8em;
+  height: 1.8em;
+  margin-bottom: 0.5em;
 }
 
 a.sidenav {
-    text-decoration: none;
-    display: inline-block;
-    width: 2em;
-    height: 2em;
-    margin-top: 0.5em;
-    margin-left: 0.15em;
+  text-decoration: none;
+  display: inline-block;
+  width: 2em;
+  height: 2em;
+  margin-top: 0.5em;
+  margin-left: 0.15em;
 }
 
-a.sidenav:hover, .activated {
-    background-color: lightGrey;
-    width: 2em;
-    height: 2em;
+a.sidenav:hover,
+.activated {
+  background-color: lightGrey;
+  width: 2em;
+  height: 2em;
 }
 
-.inactive  {
-    background-color: transparent;
+.inactive {
+  background-color: transparent;
 }
+
 .round {
-    border-radius: 25%;
+  border-radius: 25%;
 }
 
 .rules-of-risks {
-    position: fixed ;
-    top: 10em;
-    left: 2.5em;    
+  position: fixed;
+  top: 10em;
+  left: 2.5em;
 }
 
 .panelUnknows {
-    position: fixed ;
-    top: 5em;
-    left: 2em;  
-    width: 500px;
-    height: 200px;  
+  position: fixed;
+  top: 5em;
+  left: 2em;
+  width: 500px;
+  height: 200px;
 }
 
 #titleSunburst {
-    position: relative;
-    top: 0.1em;
-    left: 2.6em;
-    font-size: 20px;
+  position: relative;
+  top: 0.1em;
+  left: 2.6em;
+  font-size: 20px;
 }
+
 

@@ -49,14 +49,21 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
         }
       }));
 
-    // Either we reach this component with this url '/project/:id' and the selection of the tab Staff
-    // Or we reach this component directly with this url '/project/:id/staff'
-    // We notify the cinematicService with the complete url '/project/:id/staff
-    // in order to be able to jump back directly to this list
-    // when the user will click the list button on the navigation block at the top left corner.
-    const urlProjectStaffList = (this.router.url.indexOf('/staff') === -1) ? this.router.url + '/staff' : this.router.url;
+        this.subscriptions.add(
+            this.cinematicService.tabProjectActivated.subscribe(
+                index => {
+                    if (index === Constants.PROJECT_IDX_TAB_STAFF) {
+                        // Either we reach this component with this url '/project/:id' and the selection of the tab Staff
+                        // Or we reach this component directly with this url '/project/:id/staff'
+                        // We notify the cinematicService with the complete url '/project/:id/staff
+                        // in order to be able to jump back directly to this list
+                        // when the user will click the list button on the navigation block at the top left corner.
+                        const urlProjectStaffList = (this.router.url.indexOf('/staff') === -1) ?
+                                    this.router.url + '/staff' : this.router.url;
 
-    this.cinematicService.setForm(Constants.PROJECT_TAB_STAFF, urlProjectStaffList);
+                        this.cinematicService.setForm(Constants.PROJECT_TAB_FORM, urlProjectStaffList);
+                    }}));
+
   }
 
   /**

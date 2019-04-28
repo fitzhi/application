@@ -1,6 +1,7 @@
 button.remove {
     background-color: transparent;
     border: none;
+    outline: 0;
 }
 
 button.remove:hover {
