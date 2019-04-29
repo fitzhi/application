@@ -41,6 +41,9 @@ public class Error {
 	public static final int CODE_UNREGISTERED_LOGIN = -1010;
 	public static final String MESSAGE_UNREGISTERED_LOGIN = "Your login does not exist. Please contact your administrator.";
 	
+	public static final int CODE_INVALID_LOGIN_PASSWORD = -1011;
+	public static final String MESSAGE_INVALID_LOGIN_PASSWORD = "Invalid login/password."; //NOSONAR
+
 	private Error() {
 	}
 	

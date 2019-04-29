@@ -16,7 +16,7 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
     /**
      * We'll send to the parent component (startingSetup) the fact that this is the very first connection.
      */
-    @Output() messengerVeryFirstLocated = new EventEmitter<boolean>();
+    @Output() messengerVeryFirstConnection = new EventEmitter<boolean>();
 
     /**
      * Button states : Edition, Selected, Ok, Error
@@ -34,7 +34,7 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
      * This boolean is equal to <code>true</code> if we are in the very fist call to Wibkac.
      * Specific setup forms should be filled to complete this startup procedure.
      */
-    isVeryFirstConnection = false;
+    veryFirstConnection = false;
 
     public backendSetupForm = new FormGroup({
         url: new FormControl('', [Validators.maxLength(16)])
@@ -66,14 +66,14 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
             .add(this.httpClient.get<String>(urlCandidate + '/admin/isVeryFirstConnection', { responseType: 'text' as 'json' })
                 .subscribe(
                     data => {
-                        this.isVeryFirstConnection = (data === 'true');
-                        if (Constants.DEBUG && this.isVeryFirstConnection) {
+                        this.veryFirstConnection = (data === 'true');
+                        if (Constants.DEBUG && this.veryFirstConnection) {
                             console.log ('This is the very first connection into Wibkac');
                         }
                         this.currentState = this.BUTTON_VALID_URL;
                         this.messageService.info('This URL is valid. Let\'s go ahead !');
                         this.backendSetupService.saveUrl(urlCandidate);
-                        this.messengerVeryFirstLocated.emit(true);
+                        this.messengerVeryFirstConnection.emit(this.veryFirstConnection);
                     },
                     error => {
                         if (Constants.DEBUG) {

@@ -24,7 +24,6 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
-import fr.skiller.controller.SkillController;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RiskChartData;
 import fr.skiller.data.internal.Staff;

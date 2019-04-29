@@ -1,0 +1,16 @@
+.container {
+    background-color: transparent;
+    margin-top: 50px;
+    width: 400px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: black;
+}
+
+.container * {
+    padding: 2px;
+}
+
+button.connection-ok, button.connection-cancel {
+    width: 100%;
+}

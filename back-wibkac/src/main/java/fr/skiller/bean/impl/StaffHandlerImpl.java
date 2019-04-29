@@ -99,7 +99,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public PeopleCountExperienceMap countAllStaff_GroupBy_Skill_Level(boolean isActiveOnly) {
+	public PeopleCountExperienceMap countAllStaffGroupBySkillLevel(boolean isActiveOnly) {
 		
 		/**
 		 * We build the complete list of experiences within the company.

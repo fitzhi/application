@@ -35,4 +35,18 @@ public interface Administration {
 	 * @throws SkillerException if any problem occurs during the creation.
 	 */
 	Staff createNewUser(String login, String password) throws SkillerException;
+	
+	/**
+	 * Connect a user into Wibkac.
+	 * @param login the user login
+	 * @param password the user password
+	 * @return the entry in the Staff collection corresponding to this user, or <code>null</code> if an exception occurs.
+	 * @throws SkillerException this exception is thrown during the connection if (at least)
+	 * <ul>
+	 * <li>either the login does not exist.</li>
+	 * <li>or the given password is invalid</li>
+	 * </ul>
+	 */
+	Staff connect (String login, String password) throws SkillerException;
+	
 }

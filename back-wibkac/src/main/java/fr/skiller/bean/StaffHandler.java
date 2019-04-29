@@ -41,7 +41,7 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	  * @param active <code>true</code> Only active developers are taking account, <code>false</code> all developers are included. 
 	  * @return the number of developers group by skills registered into a Map.
 	  */
-	PeopleCountExperienceMap countAllStaff_GroupBy_Skill_Level(boolean active);
+	PeopleCountExperienceMap countAllStaffGroupBySkillLevel(boolean active);
 	
 	/**
 	 * Add a collection of skills usually extracted from the employe's resume.

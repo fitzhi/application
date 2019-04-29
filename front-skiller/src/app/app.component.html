@@ -1,5 +1,6 @@
 <div class="app-container">
     <app-toolbar  
+        [hidden]="!isConnected()"
         (messengerFormActive)="onChangeForm($event)"
         (messengerCriteria)="onRequestQuery($event)"
         (messengerActiveOnly)="onChangeActiveOnly($event)">

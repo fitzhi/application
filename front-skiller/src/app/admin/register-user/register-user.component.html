@@ -1,12 +1,13 @@
 <div id="connection" class="container">
-    <div class="col-md-12 text-left" *ngIf="veryFirstConnection">
+
+    <div class="col-md-12 text-left" [hidden]="!veryFirstConnection">
         <p class="important">This is the very first connection in Wibkac.</p>
         <p>You need first to setup the admin user.</p>
         This user has a complete access to the application features and is allowed to setup user rights.<br/>
         Other admin users are possible.<br/><br/>
     </div>
 
-    <div class="col-md-12 text-left" *ngIf="!veryFirstConnection">
+    <div class="col-md-12 text-left" [hidden]="veryFirstConnection">
         <p class="important">This is your first connection in Wibkac.</p>
     </div>
 
@@ -44,7 +45,7 @@
                     </label>
                 </div>
             </div>
-            <div class="row" *ngIf="alterPassword" >
+            <div class="row">
                 <div class="col-md-5 labelConnection">
                     <label for="confirmPassword" class="required labelConnection">Confirm the password</label>
                 </div>

@@ -42,5 +42,9 @@ p.important {
         font-weight: 800;
 }
 
+.okButton, .cancelButton {
+    height: 96px;
+    width: 96px;
+}
 
 

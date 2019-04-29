@@ -1,51 +1,43 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BackendSetupService } from '../service/backend-setup/backend-setup.service';
-import { BaseComponent } from '../base/base.component';
-import { Constants } from '../constants';
-import { HttpClient } from '@angular/common/http';
-import { MessageService } from '../message/message.service';
+import { ConnectionManagerService } from '../admin/service/connection-manager/connection-manager.service';
 
 @Component({
     selector: 'app-welcome',
     templateUrl: './welcome.component.html',
     styleUrls: ['./welcome.component.css']
 })
-export class WelcomeComponent extends BaseComponent implements OnInit, OnDestroy {
+export class WelcomeComponent implements OnInit {
 
-    veryFirstLaunch = true;
+    /**
+     * Is this the VERY fist launch into WIBKAC ?
+     * We speak about the FIRST user connecting for the FIRST time into Wibkac ?
+     */
+    veryFirstLaunch = false;
+
+    /**
+     * Is this the FIRST launch into WIBKAC ?
+     * This is not the FIRST user, but this is the first time a user is trtying to connect
+     * from this desktop/browser insoide Wibkac.
+     */
+    firstLaunch = false;
 
     constructor(
         private backendSetupService: BackendSetupService,
-        private httpClient: HttpClient,
-        private messageService: MessageService) { super(); }
-
-    ngOnInit() {
-        if (!this.backendSetupService.hasSavedAnUrl()) {
-            this.loadVeryFirstLaunch();
-        }
+        private connectionManagerService: ConnectionManagerService) {
+            this.firstLaunch = !this.backendSetupService.hasSavedAnUrl();
     }
 
-    loadVeryFirstLaunch() {
-        this.subscriptions.add(this.httpClient.get<String>(this.backendSetupService.url() + '/admin/isVeryFirstConnection',
-            { responseType: 'text' as 'json' }).subscribe(
-            (data: string) => {
-                this.veryFirstLaunch = (data === 'true');
-                if (Constants.DEBUG && this.veryFirstLaunch) {
-                    console.log ('This is the very first connection into Wibkac.');
-                }
-            },
-            (error: string) => {
-                if (Constants.DEBUG) {
-                    console.log ('Connection error ', error);
-                }
-                this.messageService.error('Error ! Either this URL is invalid, or your server is offline');
-            }));
-    }
+   ngOnInit() { }
 
     /**
-     * Calling the base class to unsubscribe all subscriptions.
+     * @returns TRUE if the connection is requested.
+     * There are 2 possible reasons for that :
+     * 1) This is the first connection on WibKac
+     * 2) The user is not connected for this session
      */
-    ngOnDestroy() {
-        super.ngOnDestroy();
+    connectionIsNeeded() {
+        return (!this.connectionManagerService.isConnected() && !this.firstLaunch);
     }
+
 }

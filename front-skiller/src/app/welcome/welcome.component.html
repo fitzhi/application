@@ -1,9 +1,8 @@
-<div id="setup" [hidden]="!veryFirstLaunch">
+<div id="setup" *ngIf="firstLaunch">
     <app-starting-setup></app-starting-setup>
 </div>
+<p></p>
+<div id="setup" *ngIf="connectionIsNeeded()">
+    <app-connect-user></app-connect-user>
+</div>
 <p>
-        test <i class="glyphicon glyphicon-user"></i>   
-</p>
-<i class="fas fa-user glyphicon"></i>
-<i class="fas fa-search glyphicon"></i>
-<i class="fas fa-user-graduate glyphicon"></i>

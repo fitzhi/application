@@ -67,8 +67,7 @@ import { BackendSetupComponent } from './admin/backend-setup/backend-setup.compo
 import { RegisterUserComponent } from './admin/register-user/register-user.component';
 import { StartingSetupComponent } from './admin/starting-setup/starting-setup.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
-
-import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { ConnectUserComponent } from './admin/connect-user/connect-user.component';
 
 @NgModule({
   declarations: [
@@ -106,6 +105,7 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
     RegisterUserComponent,
     StartingSetupComponent,
     ToolbarComponent,
+    ConnectUserComponent,
   ],
   entryComponents: [
     StarsSkillLevelRenderComponent,
@@ -148,8 +148,7 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
     MatExpansionModule,
     MatGridListModule,
     MatStepperModule,
-    MatIconModule,
-    AngularFontAwesomeModule
+    MatIconModule
   ],
   providers: [
     CinematicService,

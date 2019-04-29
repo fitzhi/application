@@ -74,5 +74,23 @@ public class AdminController {
 		}
 		
 	}
+
+	@GetMapping("/connect")
+	public ResponseEntity<StaffDTO> connect(
+			@RequestParam("login") String login,
+			@RequestParam("password") String password)  {
+		
+		HttpHeaders headers = new HttpHeaders();
+		try {
+			Staff staff = administration.connect(login, password);
+			headers.add("backend.return_code", "1");
+			return new ResponseEntity<>(new StaffDTO(staff), headers, HttpStatus.OK);
+		} catch (final SkillerException ske) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(ske.errorCode));
+			headers.set(BACKEND_RETURN_MESSAGE, ske.errorMessage);
+			return new ResponseEntity<>(new StaffDTO(new Staff(), ske.errorCode, ske.errorMessage), headers, HttpStatus.OK);
+		}
+		
+	}
 	
 }

@@ -22,7 +22,7 @@ export class StartingSetupComponent extends BaseComponent implements OnInit, OnD
     /**
      * Are we in the very first connection ?
      */
-    veryFirstConnection = false;
+    public veryFirstConnection = false;
 
     /**
      * Array representing the fact that each step has been completed.
@@ -49,7 +49,7 @@ export class StartingSetupComponent extends BaseComponent implements OnInit, OnD
     /**
      * Setup the fact that this is the very first connection.
      */
-    setVeryFirstConnection($event: boolean) {
+    onChangeVeryFirstConnection($event: boolean) {
         if (Constants.DEBUG) {
             console.log ('veryFirstConnecion :', $event);
         }

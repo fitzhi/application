@@ -23,7 +23,7 @@ export class BackendSetupService {
      * A URL has already been saved in the localstorage.
      */
     hasSavedAnUrl() {
-        return (this.currentUrl === null);
+        return (this.currentUrl !== null);
     }
 
     /**

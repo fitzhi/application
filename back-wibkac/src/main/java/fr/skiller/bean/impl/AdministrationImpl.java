@@ -21,6 +21,8 @@ import static fr.skiller.Error.CODE_LOGIN_ALREADY_EXIST;
 import static fr.skiller.Error.MESSAGE_LOGIN_ALREADY_EXIST;
 import static fr.skiller.Error.CODE_UNREGISTERED_LOGIN;
 import static fr.skiller.Error.MESSAGE_UNREGISTERED_LOGIN;
+import static fr.skiller.Error.CODE_INVALID_LOGIN_PASSWORD;
+import static fr.skiller.Error.MESSAGE_INVALID_LOGIN_PASSWORD;
 
 /**
  * Main (and unique) implementation of the administration interface.
@@ -90,7 +92,7 @@ public class AdministrationImpl implements Administration {
 	@Override
 	public Staff createNewUser(String login, String password) throws SkillerException {
 
-		Staff staff = staffHandler.lookup(login);
+		Staff staff = staffHandler.lookupLogin(login);
 		
 		/**
 		 * The very first created user is the very first administrative user in Wibkac.
@@ -121,4 +123,15 @@ public class AdministrationImpl implements Administration {
 		return staffHandler.addNewStaffMember(new Staff(-1, login, password));
 	}
 
+	@Override
+	public Staff connect(String login, String password) throws SkillerException {
+		Staff staff = staffHandler.lookupLogin(login);
+		if ((staff == null) || (!staff.isValidPassword(password))){
+			throw new SkillerException(CODE_INVALID_LOGIN_PASSWORD, MESSAGE_INVALID_LOGIN_PASSWORD);
+		}
+		
+		return staff;
+	}
+
+	
 }

@@ -9,6 +9,7 @@ import { BaseComponent } from './base/base.component';
 import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.service';
 import { SkillService } from './service/skill.service';
 import { ListCriteria } from './data/listCriteria';
+import { ConnectionManagerService } from './admin/service/connection-manager/connection-manager.service';
 
 @Component({
     selector: 'app-root',
@@ -42,8 +43,10 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
      */
     previousId: number;
 
+
     constructor(
         private cinematicService: CinematicService,
+        private connectionManagerService: ConnectionManagerService,
         private tabsStaffListService: TabsStaffListService,
         private skillService: SkillService,
         private listProjectsService: ListProjectsService,
@@ -187,6 +190,14 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
         this.criteria = $event;
         this.search();
     }
+
+    /**
+     * @returns TRUE if the user is connected.
+     */
+    isConnected() {
+        return this.connectionManagerService.isConnected();
+    }
+
 
     /**
      * All subscriptions are closed in the BaseComponent

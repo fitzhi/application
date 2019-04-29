@@ -207,7 +207,7 @@ public class Staff {
 	/**
 	 * @return <code>true</code> if the passed password is correct.
 	 */
-	public boolean isPasswordCorrect(String password) {
+	public boolean isValidPassword(String password) {
 		return (this.password.equals(password));
 	}
 	

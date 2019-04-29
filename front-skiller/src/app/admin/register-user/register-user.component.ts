@@ -26,14 +26,11 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
      * Is this ever the first connection to this server, assuming that the user has to be "administrator" ?
      */
     @Input('veryFirstConnection')
-    veryFirstConnection: boolean;
+    veryFirstConnection = true;
 
     /**
-     * Are supposed to change the password on this form ? is it simply a connection form ?
+     * Group of the components present in the form.
      */
-    @Input('alterPassword')
-    alterPassword: boolean;
-
     public connectionGroup: FormGroup;
 
     constructor(
@@ -87,6 +84,7 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
      * Save the user and password.
      */
     onSubmit() {
+
         const username: string = this.connectionGroup.get('username').value;
         const password: string =  this.connectionGroup.get('password').value;
         if (Constants.DEBUG) {

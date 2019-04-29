@@ -51,19 +51,19 @@ public class StaffHandlerSkillTest {
 		staffHandler.put(10002, s2);
 		staffHandler.put(10003, s3);
 		
-		PeopleCountExperienceMap results = staffHandler.countAllStaff_GroupBy_Skill_Level(true);
+		PeopleCountExperienceMap results = staffHandler.countAllStaffGroupBySkillLevel(true);
 		Assert.assertTrue(results.get(SK_10000_1) == null);
 		Assert.assertTrue(results.get(SK_10000_3) == 2);
 		Assert.assertTrue(results.get(SK_10000_5) == 1);
 		
 		s2.setActive(false);
 
-		results = staffHandler.countAllStaff_GroupBy_Skill_Level(true);
+		results = staffHandler.countAllStaffGroupBySkillLevel(true);
 		Assert.assertTrue(results.get(SK_10000_1) == null);
 		Assert.assertTrue(results.get(SK_10000_3) == 1);
 		Assert.assertTrue(results.get(SK_10000_5) == 1);
 		
-		results = staffHandler.countAllStaff_GroupBy_Skill_Level(false);
+		results = staffHandler.countAllStaffGroupBySkillLevel(false);
 		Assert.assertTrue(results.get(SK_10000_1) == null);
 		Assert.assertTrue(results.get(SK_10000_3) == 2);
 		Assert.assertTrue(results.get(SK_10000_5) == 1);

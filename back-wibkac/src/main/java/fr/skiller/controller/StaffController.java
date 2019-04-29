@@ -119,7 +119,7 @@ public class StaffController {
 
 	@GetMapping("/countGroupByExperiences/active")
 	public String countActive() {
-		final PeopleCountExperienceMap peopleCountExperienceMap = staffHandler.countAllStaff_GroupBy_Skill_Level(true);
+		final PeopleCountExperienceMap peopleCountExperienceMap = staffHandler.countAllStaffGroupBySkillLevel(true);
 
 		final String resultContent = gson.toJson(peopleCountExperienceMap.getData());
 		if (logger.isDebugEnabled()) {
@@ -130,7 +130,7 @@ public class StaffController {
 
 	@GetMapping("/countGroupByExperiences/all")
 	public String countAll() {
-		final PeopleCountExperienceMap peopleCountExperienceMap = staffHandler.countAllStaff_GroupBy_Skill_Level(false);
+		final PeopleCountExperienceMap peopleCountExperienceMap = staffHandler.countAllStaffGroupBySkillLevel(false);
 
 		final String resultContent = gson.toJson(peopleCountExperienceMap.getData());
 		if (logger.isDebugEnabled()) {
