@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { ConnectionManagerService } from '../service/connection-manager/connection-manager.service';
+import { AuthService } from '../service/auth/auth.service';
 
 @Component({
     selector: 'app-connect-user',
@@ -15,7 +15,7 @@ export class ConnectUserComponent implements OnInit {
     public connectionGroup: FormGroup;
 
     constructor(
-        private connectionManagerService: ConnectionManagerService,
+        private authService: AuthService,
         private formBuilder: FormBuilder) {
         this.connectionGroup = this.formBuilder.group({
             username: new FormControl('', [Validators.required, Validators.maxLength(16)]),
@@ -47,7 +47,7 @@ export class ConnectUserComponent implements OnInit {
     onSubmit() {
         const username: string = this.connectionGroup.get('username').value;
         const password: string = this.connectionGroup.get('password').value;
-        this.connectionManagerService.connect(username, password);
+        this.authService.connect(username, password);
     }
 
     get username(): any {

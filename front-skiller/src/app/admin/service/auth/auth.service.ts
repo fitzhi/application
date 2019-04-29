@@ -9,7 +9,7 @@ import { MessageService } from 'src/app/message/message.service';
 @Injectable({
     providedIn: 'root'
 })
-export class ConnectionManagerService extends InternalService {
+export class AuthService extends InternalService {
 
     /**
      * This boolean is TRUE if the user is connected.

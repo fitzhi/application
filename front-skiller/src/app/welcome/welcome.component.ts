@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BackendSetupService } from '../service/backend-setup/backend-setup.service';
-import { ConnectionManagerService } from '../admin/service/connection-manager/connection-manager.service';
+import { AuthService } from '../admin/service/auth/auth.service';
 
 @Component({
     selector: 'app-welcome',
@@ -24,7 +24,7 @@ export class WelcomeComponent implements OnInit {
 
     constructor(
         private backendSetupService: BackendSetupService,
-        private connectionManagerService: ConnectionManagerService) {
+        private authService: AuthService) {
             this.firstLaunch = !this.backendSetupService.hasSavedAnUrl();
     }
 
@@ -37,7 +37,7 @@ export class WelcomeComponent implements OnInit {
      * 2) The user is not connected for this session
      */
     connectionIsNeeded() {
-        return (!this.connectionManagerService.isConnected() && !this.firstLaunch);
+        return (!this.authService.isConnected() && !this.firstLaunch);
     }
 
 }

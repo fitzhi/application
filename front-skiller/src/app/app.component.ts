@@ -9,7 +9,7 @@ import { BaseComponent } from './base/base.component';
 import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.service';
 import { SkillService } from './service/skill.service';
 import { ListCriteria } from './data/listCriteria';
-import { ConnectionManagerService } from './admin/service/connection-manager/connection-manager.service';
+import { AuthService } from './admin/service/auth/auth.service';
 
 @Component({
     selector: 'app-root',
@@ -46,7 +46,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
     constructor(
         private cinematicService: CinematicService,
-        private connectionManagerService: ConnectionManagerService,
+        private authService: AuthService,
         private tabsStaffListService: TabsStaffListService,
         private skillService: SkillService,
         private listProjectsService: ListProjectsService,
@@ -195,7 +195,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
      * @returns TRUE if the user is connected.
      */
     isConnected() {
-        return this.connectionManagerService.isConnected();
+        return this.authService.isConnected();
     }
 
 

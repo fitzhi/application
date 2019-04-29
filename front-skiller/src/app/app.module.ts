@@ -68,6 +68,7 @@ import { RegisterUserComponent } from './admin/register-user/register-user.compo
 import { StartingSetupComponent } from './admin/starting-setup/starting-setup.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { ConnectUserComponent } from './admin/connect-user/connect-user.component';
+import { AuthGuardService } from './auth-guard.service';
 
 @NgModule({
   declarations: [
@@ -148,12 +149,13 @@ import { ConnectUserComponent } from './admin/connect-user/connect-user.componen
     MatExpansionModule,
     MatGridListModule,
     MatStepperModule,
-    MatIconModule
+    MatIconModule,
   ],
   providers: [
     CinematicService,
     StaffService,
     ReferentialService,
+    AuthGuardService,
     // Remove this line or change the useValue property to your regional settings
     { provide: LOCALE_ID, useValue: 'fr' }
   ],

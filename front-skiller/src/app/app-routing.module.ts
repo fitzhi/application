@@ -11,23 +11,24 @@ import {StaffComponent} from './tabs-staff/staff.component';
 import {ErrorComponent} from './error/error.component';
 import { ProjectStaffComponent } from './project/project-staff/project-staff.component';
 import { TabsStaffListComponent } from './tabs-staff-list/tabs-staff-list.component';
+import { AuthGuardService } from './auth-guard.service';
 
 const routes: Routes = [
   {path: '', redirectTo: '/welcome', pathMatch: 'full'},
   {path: 'welcome', component: WelcomeComponent},
-  {path: 'searchSkill', component: ListSkillComponent},
-  {path: 'skill', component: SkillComponent},
-  {path: 'skill/:id', component: SkillComponent},
-  {path: 'searchUser', component: TabsStaffListComponent},
-  {path: 'user/:id', component: StaffComponent},
-  {path: 'user', component: StaffComponent},
-  {path: 'error', component: ErrorComponent},
-  {path: 'searchProject', component: ListProjectComponent},
-  {path: 'project', component: ProjectComponent},
-  {path: 'project/:id', component: ProjectComponent},
-  {path: 'project/:id/staff', component: ProjectComponent},
-  {path: 'project/sunburst/:id', component: ProjectSunburstComponent},
-  {path: 'project/contributors/:id', component: ProjectStaffComponent},
+  {path: 'searchSkill', component: ListSkillComponent, canActivate: [AuthGuardService]},
+  {path: 'skill', component: SkillComponent, canActivate: [AuthGuardService]},
+  {path: 'skill/:id', component: SkillComponent, canActivate: [AuthGuardService]},
+  {path: 'searchUser', component: TabsStaffListComponent, canActivate: [AuthGuardService]},
+  {path: 'user/:id', component: StaffComponent, canActivate: [AuthGuardService]},
+  {path: 'user', component: StaffComponent, canActivate: [AuthGuardService]},
+  {path: 'error', component: ErrorComponent, canActivate: [AuthGuardService]},
+  {path: 'searchProject', component: ListProjectComponent, canActivate: [AuthGuardService]},
+  {path: 'project', component: ProjectComponent, canActivate: [AuthGuardService]},
+  {path: 'project/:id', component: ProjectComponent, canActivate: [AuthGuardService]},
+  {path: 'project/:id/staff', component: ProjectComponent, canActivate: [AuthGuardService]},
+  {path: 'project/sunburst/:id', component: ProjectSunburstComponent, canActivate: [AuthGuardService]},
+  {path: 'project/contributors/:id', component: ProjectStaffComponent, canActivate: [AuthGuardService]},
 ];
 
 @NgModule({
