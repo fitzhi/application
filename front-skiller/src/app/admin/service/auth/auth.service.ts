@@ -5,6 +5,7 @@ import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup
 import { HttpClient } from '@angular/common/http';
 import { StaffDTO } from 'src/app/data/external/staffDTO';
 import { MessageService } from 'src/app/message/message.service';
+import { take } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root'
@@ -28,6 +29,7 @@ export class AuthService extends InternalService {
         this.httpClient.get<StaffDTO>(
             this.backendSetupService.url() + '/admin/connect',
                 { params: { login: username, password: password }})
+                .pipe(take(1))
                 .subscribe(
                     response => {
                         if (response.code === 0) {

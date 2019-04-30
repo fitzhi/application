@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {catchError, tap} from 'rxjs/operators';
+import {catchError, tap, take} from 'rxjs/operators';
 
 import {Collaborator} from '../data/collaborator';
 import {Project} from '../data/project';
