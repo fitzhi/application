@@ -12,9 +12,8 @@ import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 
 /**
- * 
+ * Interface in charge of handling the staff collection.
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 public interface StaffHandler extends DataSaverLifeCycle {
 
@@ -100,15 +99,21 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 boolean containsStaffMember(int idStaff);
 
 	 /**
-	  * @param staff the new staff member
-	  * @throws SkillerException exception occurs
+	  * Control and save the given staff.s
+	  * @param staff the staff member to be updated.
+	  * @throws SkillerException thrown if an exception occurs such as for instance
+	  * <ul>
+	  * <li>This given staff does not yet exist (idStaff=0)</li>
+	  * <li>The same login already in the workforce.</li>
+	  * </ul>
 	  */
 	 void saveStaffMember(Staff staff) throws SkillerException;
 
 	 /**
-	  * Search a staff, if any, who has a login equals to the passed one.
-	  * @param login the searched login
-	  * @return the staff corresponding to the passed login, or <code>null</code> is none exists.
+	  * <p>Search a staff, if any, who has a login equal to the passed one.</p>
+	  * <p>Reminder : <i>The login property is also the connection login for the application. It has to be unique.</i></p>
+	  * @param login the given login
+	  * @return the staff corresponding to the given login, or <code>null</code> is none exists.
 	  */
 	 Staff lookupLogin(String login);
 }

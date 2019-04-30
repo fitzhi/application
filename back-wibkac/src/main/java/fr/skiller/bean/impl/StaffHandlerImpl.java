@@ -1,6 +1,8 @@
 package fr.skiller.bean.impl;
 
+import static fr.skiller.Error.CODE_LOGIN_ALREADY_EXIST;
 import static fr.skiller.Error.CODE_STAFF_NOFOUND;
+import static fr.skiller.Error.MESSAGE_LOGIN_ALREADY_EXIST;
 import static fr.skiller.Error.MESSAGE_STAFF_NOFOUND;
 import static fr.skiller.Global.UNKNOWN;
 
@@ -37,8 +39,8 @@ import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 
 /**
+ * Main implementation of the {@link StaffHandler}.
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 @Component
 public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements StaffHandler {
@@ -138,7 +140,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 					+ "  " + staff.getLastName()); 
 		}
 		Set<Integer> currentExperience = staff.getExperiences().stream()
-				.map(exp -> exp.getId())
+				.map(Experience::getId)
 				.collect(Collectors.toSet());
 		final List<ResumeSkill> listOfSkills = Arrays.asList(skills)
 				.stream()
@@ -295,9 +297,6 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		return null;
 	}
 	
-	
-	
-	
 	@Override
 	public List<Contributor> involve(Project project, CommitRepository repository) throws SkillerException {
 		
@@ -373,6 +372,21 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		if (staff.getIdStaff() == 0) {
 			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, staff.getIdStaff()));
 		}
+		
+		// The login is unique for each Wibkac user
+		Staff emp = lookupLogin(staff.getLogin());
+		if ( (emp != null) && (emp.getIdStaff() != staff.getIdStaff()) && (emp.getLogin().equals(staff.getLogin()))) {
+			if (logger.isDebugEnabled()) {
+				logger.debug(String.format(
+						"the employee %d %s gets the same login %s as %d %s" , 
+						staff.getIdStaff(), staff.fullName(),
+						staff.getLogin(),
+						emp.getIdStaff(), emp.fullName()));
+			}
+			throw new SkillerException(CODE_LOGIN_ALREADY_EXIST, MessageFormat.format(MESSAGE_LOGIN_ALREADY_EXIST, staff.getLogin(), emp.getFirstName(), emp.getLastName()));			
+			
+		}
+		
 		synchronized (lockDataUpdated) {
 			getStaff().put(staff.getIdStaff(), staff);
 			this.dataUpdated = true;

@@ -43,7 +43,7 @@ public class SkillDTO extends BaseDTO {
 	/**
 	 * @return the skill
 	 */
-	private Skill getSkill() {
+	public Skill getSkill() {
 		return skill;
 	}
 

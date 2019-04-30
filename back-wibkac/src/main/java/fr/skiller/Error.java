@@ -36,14 +36,15 @@ public class Error {
 	public static final String MESSAGE_MULTIPLE_TASK = "This asynchronous operation is already launched.";
 
 	public static final int CODE_LOGIN_ALREADY_EXIST = -1009;
-	public static final String MESSAGE_LOGIN_ALREADY_EXIST = "The login {0} already exists for {1} {2}.";
+	public static final String MESSAGE_LOGIN_ALREADY_EXIST = "Login must be unique. And the login {0} already exists for {1} {2}.";
 
 	public static final int CODE_UNREGISTERED_LOGIN = -1010;
 	public static final String MESSAGE_UNREGISTERED_LOGIN = "Your login does not exist. Please contact your administrator.";
 	
 	public static final int CODE_INVALID_LOGIN_PASSWORD = -1011;
 	public static final String MESSAGE_INVALID_LOGIN_PASSWORD = "Invalid login/password."; //NOSONAR
-
+	
+	
 	private Error() {
 	}
 	

@@ -1,5 +1,14 @@
 package fr.skiller.bean.impl;
 
+import static fr.skiller.Error.CODE_INVALID_LOGIN_PASSWORD;
+import static fr.skiller.Error.CODE_IO_ERROR;
+import static fr.skiller.Error.CODE_LOGIN_ALREADY_EXIST;
+import static fr.skiller.Error.CODE_UNREGISTERED_LOGIN;
+import static fr.skiller.Error.MESSAGE_INVALID_LOGIN_PASSWORD;
+import static fr.skiller.Error.MESSAGE_IO_ERROR;
+import static fr.skiller.Error.MESSAGE_LOGIN_ALREADY_EXIST;
+import static fr.skiller.Error.MESSAGE_UNREGISTERED_LOGIN;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -15,14 +24,6 @@ import fr.skiller.bean.Administration;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
-import static fr.skiller.Error.CODE_IO_ERROR;
-import static fr.skiller.Error.MESSAGE_IO_ERROR;
-import static fr.skiller.Error.CODE_LOGIN_ALREADY_EXIST;
-import static fr.skiller.Error.MESSAGE_LOGIN_ALREADY_EXIST;
-import static fr.skiller.Error.CODE_UNREGISTERED_LOGIN;
-import static fr.skiller.Error.MESSAGE_UNREGISTERED_LOGIN;
-import static fr.skiller.Error.CODE_INVALID_LOGIN_PASSWORD;
-import static fr.skiller.Error.MESSAGE_INVALID_LOGIN_PASSWORD;
 
 /**
  * Main (and unique) implementation of the administration interface.

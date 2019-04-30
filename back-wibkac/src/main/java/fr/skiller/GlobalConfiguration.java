@@ -33,7 +33,9 @@ public class GlobalConfiguration {
 					logger.warn("This server is open for all origins");
 					logger.warn("-----------------------------------");
 				}
-				registry.addMapping("/**").allowedOrigins(allowedOrigins);
+				registry.addMapping("/**")
+					.allowedOrigins(allowedOrigins)
+					.exposedHeaders(Global.BACKEND_RETURN_CODE, Global.BACKEND_RETURN_MESSAGE);
 			}
 		};
 	}

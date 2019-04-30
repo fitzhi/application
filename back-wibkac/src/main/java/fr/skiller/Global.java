@@ -9,6 +9,8 @@ public class Global {
 	public static final String  BACKEND_RETURN_CODE = "backend.return_code";
 	public static final String  BACKEND_RETURN_MESSAGE = "backend.return_message";
 	
+	private Global() {}
+	
 	/**
 	 * Value of a key when no record are found.<BR/>
 	 * The default value is equal to -1.

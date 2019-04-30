@@ -28,7 +28,7 @@ import fr.skiller.service.impl.storageservice.StorageProperties;
 public class Application {
 
 	public static void main(String[] args) {
-		LoggerFactory.getLogger("back-end Skiller").info("Starting");
+		LoggerFactory.getLogger("back-end Wibkac").info("Starting");
 		SpringApplication.run(Application.class, args);
 	}
 

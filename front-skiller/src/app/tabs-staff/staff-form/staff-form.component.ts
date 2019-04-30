@@ -13,6 +13,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BaseComponent } from '../../base/base.component';
 import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
+import { take } from 'rxjs/operators';
 
 
 @Component({
@@ -158,18 +159,17 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
         this.collaborator.active = this.profileStaff.get('active').value;
         this.collaborator.external = this.profileStaff.get('external').value;
 
-        this.subscriptions.add(
-            this.staffService.save(this.collaborator).subscribe(
-                staff => {
-                    this.collaborator = staff;
-                    this.messengerStaffUpdated.emit (staff);
+        this.staffService.save(this.collaborator).pipe(take(1)).subscribe(
+            staff => {
+                this.collaborator = staff;
+                this.messengerStaffUpdated.emit (staff);
 
-                    /**
-                     * If this staff member exists in pre-existing list of collaborators. We actualize the content.
-                     */
-                    this.tabsStaffListService.actualizeCollaborator(staff);
-                    this.messageService.info('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
-                }));
+                /**
+                 * If this staff member exists in pre-existing list of collaborators. We actualize the content.
+                 */
+                this.tabsStaffListService.actualizeCollaborator(staff);
+                this.messageService.info('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
+            });
     }
 
     /**

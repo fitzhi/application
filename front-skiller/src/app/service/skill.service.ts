@@ -18,7 +18,7 @@ const httpOptions = {
 export class SkillService extends InternalService {
 
   private skillUrl: string;
-  
+
   /*
    * skills
    */

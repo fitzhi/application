@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule, LOCALE_ID} from '@angular/core';
+import {NgModule, LOCALE_ID, ErrorHandler} from '@angular/core';
 import {FormsModule} from '@angular/forms'; // <-- NgModel lives here
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { HttpClientModule } from '@angular/common/http';
@@ -69,6 +69,7 @@ import { StartingSetupComponent } from './admin/starting-setup/starting-setup.co
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { ConnectUserComponent } from './admin/connect-user/connect-user.component';
 import { AuthGuardService } from './auth-guard.service';
+import { CustomErrorHandler } from './custom-error-handler';
 
 @NgModule({
   declarations: [
@@ -156,6 +157,7 @@ import { AuthGuardService } from './auth-guard.service';
     StaffService,
     ReferentialService,
     AuthGuardService,
+    {provide: ErrorHandler, useClass: CustomErrorHandler},
     // Remove this line or change the useValue property to your regional settings
     { provide: LOCALE_ID, useValue: 'fr' }
   ],

@@ -4,34 +4,27 @@
 package fr.skiller.bean.impl;
 
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import fr.skiller.bean.Administration;
-import fr.skiller.bean.StaffHandler;
-import fr.skiller.data.internal.Staff;
-import fr.skiller.exception.SkillerException;
-
-import static org.junit.Assume.assumeTrue;
-
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import org.assertj.core.util.Files;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import fr.skiller.bean.Administration;
+import fr.skiller.bean.StaffHandler;
+import fr.skiller.exception.SkillerException;
 /**
  * Test the administration bean for the user creation.<br/>
  * <span style="color:red;font-size:16">IF IT IS THE VERY FIRST CONNECTION !</span>

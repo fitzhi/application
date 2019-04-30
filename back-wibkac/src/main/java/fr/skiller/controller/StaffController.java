@@ -94,11 +94,6 @@ public class StaffController {
 	@Autowired
 	ShuffleService shuffleService;
 
-	/**
-	 * Empty headers used in server response.
-	 */
-	private HttpHeaders headers = new HttpHeaders();
-	
 	@GetMapping("/all")
 	public String readAll() {
 		
@@ -149,6 +144,9 @@ public class StaffController {
 
 		final ResponseEntity<Staff> responseEntity;
 
+		
+		HttpHeaders headers = new HttpHeaders();
+		
 		Staff searchCollab = staffHandler.getStaff().get(idStaff);
 		if (searchCollab != null) {
 			responseEntity = new ResponseEntity<>(searchCollab, headers, HttpStatus.OK);
@@ -219,7 +217,7 @@ public class StaffController {
 	}
 
 	@PostMapping("/save")
-	public ResponseEntity<Staff> add(@RequestBody Staff input) {
+	public ResponseEntity<Staff> save(@RequestBody Staff input) {
 
 		final ResponseEntity<Staff> responseEntity;
 
@@ -227,16 +225,19 @@ public class StaffController {
 			logger.debug (String.format("Add or Update the staff.id %d", input.getIdStaff()));
 			logger.debug (String.format("Content %s ", input));
 		}
+		
+		HttpHeaders headers = new HttpHeaders();
+		
 		if (input.getIdStaff() == -1) {
 			staffHandler.addNewStaffMember(input);
-			headers.add("backend.return_code", "1");
+			headers.set("backend.return_code", "1");
 			responseEntity = new ResponseEntity<>(input, headers, HttpStatus.OK);
 		} else {
 			Staff updatedStaff = staffHandler.getStaff().get(input.getIdStaff());
 			if (updatedStaff == null) {
+				headers.set(BACKEND_RETURN_CODE, "1");
+				headers.set(BACKEND_RETURN_MESSAGE, "There is no collaborator associated to the id " + input.getIdStaff());
 				responseEntity = new ResponseEntity<>(input, headers, HttpStatus.NOT_FOUND);
-				headers.add(BACKEND_RETURN_CODE, "O");
-				headers.add(BACKEND_RETURN_MESSAGE, "There is no collaborator associated to the id " + input.getIdStaff());
 			} else {
 				if ((!input.isActive()) && (updatedStaff.isActive())) {
 					input.setDateInactive(Global.now());
@@ -244,12 +245,17 @@ public class StaffController {
 				try {
 					staffHandler.saveStaffMember(input);
 				} catch (SkillerException e) {
+					if (logger.isDebugEnabled()) {
+						logger.debug(String.format("Exception occurs for idStaff %d, message %s", input.getIdStaff(), e.errorMessage));
+					}
+					headers.set(BACKEND_RETURN_CODE, String.valueOf(e.errorCode));
+					headers.set(BACKEND_RETURN_MESSAGE, e.errorMessage);
 					return new ResponseEntity<>(
-							new Staff(), new HttpHeaders(),
+							new Staff(), headers,
 							HttpStatus.INTERNAL_SERVER_ERROR);
 				}
 				responseEntity = new ResponseEntity<>(input, headers, HttpStatus.OK);
-				headers.add("backend.return_code", "1");
+				headers.set(BACKEND_RETURN_CODE, "1");
 			}
 		}
 		if (logger.isDebugEnabled()) {
@@ -290,6 +296,9 @@ public class StaffController {
 	@PostMapping("/experiences/save")
 	public ResponseEntity<StaffDTO> saveExperience(@RequestBody String param) {
 
+		
+		HttpHeaders headers = new HttpHeaders();
+		
 		ParamStaffSkill p = gson.fromJson(param, ParamStaffSkill.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(
@@ -405,6 +414,9 @@ public class StaffController {
 			@RequestParam("id") int id, 
 			@RequestParam("type") int type) {
 
+		
+		HttpHeaders headers = new HttpHeaders();
+		
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
 
 		if (logger.isDebugEnabled()) {
@@ -530,6 +542,9 @@ public class StaffController {
 	@PostMapping("/project/save")
 	public ResponseEntity<StaffDTO> saveProject(@RequestBody String param) {
 
+		
+		HttpHeaders headers = new HttpHeaders();
+		
 		try {
 			ParamStaffProject p = gson.fromJson(param, ParamStaffProject.class);
 			if (logger.isDebugEnabled()) {
