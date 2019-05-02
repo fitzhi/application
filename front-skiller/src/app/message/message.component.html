@@ -1,5 +1,7 @@
-<nav class="navbar fixed-bottom navbar-light bg-light" style="padding:0px;margin:0px;height:40px" *ngIf="myMessage.length">
-	<div style="color:white;text-align:center;width:100%;height:100%;padding-top:8px" [style.background-color]="isError ? 'red' : (isInfo ?  'lightGreen' : 'grey')">
-	{{myMessage}}
-	</div>
+<nav id="navMessage" *ngIf="myMessage.length" class="navbar fixed-bottom" >
+
+    <div id="containerMessage" [class]="classContainerMessage">
+	    {{myMessage}}
+    </div>
+    
 </nav>

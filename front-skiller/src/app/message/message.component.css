@@ -1,0 +1,32 @@
+#navMessage {
+    padding:0px;
+    margin:1px;
+    height:40px
+}
+
+#containerMessage {
+    text-align:center;
+    width:100%;
+    height:100%;
+    padding-top:8px;
+}
+
+.warning {
+    background-color: orange;
+}
+
+.error {
+    background-color: crimson;
+}
+
+.success {
+    background-color: #28a745;
+}
+
+.info {
+    background-color: lightgray;
+}
+
+.void {
+    background-color: transparent;
+}

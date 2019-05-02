@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule, LOCALE_ID, ErrorHandler} from '@angular/core';
 import {FormsModule} from '@angular/forms'; // <-- NgModel lives here
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import {BsDropdownModule} from 'ngx-bootstrap/dropdown';
@@ -69,7 +69,7 @@ import { StartingSetupComponent } from './admin/starting-setup/starting-setup.co
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { ConnectUserComponent } from './admin/connect-user/connect-user.component';
 import { AuthGuardService } from './auth-guard.service';
-import { CustomErrorHandler } from './custom-error-handler';
+import { HttpErrorInterceptor } from './http-error-interceptor';
 
 @NgModule({
   declarations: [
@@ -157,7 +157,13 @@ import { CustomErrorHandler } from './custom-error-handler';
     StaffService,
     ReferentialService,
     AuthGuardService,
-    {provide: ErrorHandler, useClass: CustomErrorHandler},
+    {
+     provide: HTTP_INTERCEPTORS,
+     useClass: HttpErrorInterceptor,
+     multi: true
+   },
+
+   /*   {provide: ErrorHandler, useClass: CustomErrorHandler}, */
     // Remove this line or change the useValue property to your regional settings
     { provide: LOCALE_ID, useValue: 'fr' }
   ],

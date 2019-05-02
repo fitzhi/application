@@ -1,40 +1,52 @@
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import {MessageService} from '../message/message.service';
-import {Message} from '../message/message';
-import {Constants} from '../constants';
+import { MessageService } from '../message/message.service';
+import { Message } from '../message/message';
+import { Constants } from '../constants';
+import { take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-message',
-  templateUrl: './message.component.html',
-  styleUrls: ['./message.component.css']
+    selector: 'app-message',
+    templateUrl: './message.component.html',
+    styleUrls: ['./message.component.css']
 })
 export class MessageComponent implements OnInit {
 
-  myMessage = '';
-  isError = false;
-  isInfo = false;
+    /**
+     * Text of the message.
+     */
+    myMessage = '';
 
-  constructor(
-    private messageService: MessageService) {}
+    /**
+     * Style specicic for the container message
+     */
+    classContainerMessage: string;
 
-  ngOnInit() {
-    this.messageService.newMessage$.subscribe((data: Message) => {
-      this.myMessage = data.message;
-      switch (data.severity) {
-        case Constants.MESSAGE_VOID:
-          this.isError = false;
-          this.isInfo = false;
-          break;
-        case Constants.MESSAGE_ERROR:
-          this.isError = true;
-          this.isInfo = false;
-          break;
-        case Constants.MESSAGE_INFO:
-          this.isError = false;
-          this.isInfo = true;
-          break;
-      }
-    });
-  }
+    constructor(
+        private messageService: MessageService) { }
+
+    ngOnInit() {
+        this.messageService.newMessage$.subscribe((data: Message) => {
+            console.log (data.trace());
+            switch (data.severity) {
+                case Constants.MESSAGE_VOID:
+                    this.classContainerMessage = 'rounded void';
+                    break;
+                case Constants.MESSAGE_ERROR:
+                    this.classContainerMessage = 'rounded error';
+                    break;
+                case Constants.MESSAGE_INFO:
+                    this.classContainerMessage = 'rounded info';
+                    break;
+                case Constants.MESSAGE_WARNING:
+                    this.classContainerMessage = 'rounded warning';
+                    break;
+                case Constants.MESSAGE_SUCCESS:
+                    this.classContainerMessage = 'rounded success';
+                    break;
+
+            }
+            this.myMessage = data.message;
+        });
+    }
 }

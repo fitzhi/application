@@ -13,7 +13,7 @@ export class MessageService {
 
   newMessage$ = this.myMessage.asObservable();
 
-  constructor(private snackBar: MatSnackBar) {
+  constructor() {
   }
 
   /*
@@ -35,13 +35,13 @@ export class MessageService {
   * display an snack info message.
   */
   public warning(message: string) {
-    setTimeout(() => this.snackBar.open(message, 'Warning', { duration: 5000 }));
+    this.set(Constants.MESSAGE_WARNING, message);
   }
 
   /*
   * display an snack info message.
   */
   public info(message: string) {
-    setTimeout(() => this.snackBar.open(message, 'Info', { duration: 3000 }));
+    this.set(Constants.MESSAGE_INFO, message);
   }
 }

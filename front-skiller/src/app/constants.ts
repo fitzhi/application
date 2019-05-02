@@ -80,6 +80,8 @@ export class Constants {
   public static MESSAGE_VOID = 0;
   public static MESSAGE_ERROR = 1;
   public static MESSAGE_INFO = 2;
+  public static MESSAGE_WARNING = 3;
+  public static MESSAGE_SUCCESS = 4;
 
   public static canAdd = true;
 

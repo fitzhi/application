@@ -5,6 +5,7 @@ import {Profile} from '../data/profile';
 import {RiskLegend} from '../data/riskLegend';
 import { Skill } from '../data/skill';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
+import { take } from 'rxjs/operators';
 
 @Injectable()
 export class ReferentialService {
@@ -35,7 +36,9 @@ export class ReferentialService {
     if (Constants.DEBUG) {
       console.log('Fetching the profiles on URL ' + this.backendSetupService.url() + '/data/profiles');
     }
-    const subProfiles = this.httpClient.get<Profile[]>(this.backendSetupService.url() + '/data/profiles').subscribe(
+    this.httpClient.get<Profile[]>(this.backendSetupService.url() + '/data/profiles')
+        .pipe(take(1))
+        .subscribe(
       (profiles: Profile[]) => {
           if (Constants.DEBUG) {
             console.groupCollapsed('Staff profiles : ');
@@ -45,11 +48,11 @@ export class ReferentialService {
             console.groupEnd();
           }
           profiles.forEach(profile => this.profiles.push(profile));
-      },
-      response_error => console.error(response_error.error.message),
-      () => setTimeout(() => {subProfiles.unsubscribe(); }, 1000));
+      });
 
-      const subLegends = this.httpClient.get<RiskLegend[]>(this.backendSetupService.url() + '/data/riskLegends').subscribe(
+      this.httpClient.get<RiskLegend[]>(this.backendSetupService.url() + '/data/riskLegends')
+         .pipe(take(1))
+         .subscribe(
       (legends: RiskLegend[]) => {
         if (Constants.DEBUG) {
           console.groupCollapsed('Risk legends : ');
@@ -59,9 +62,7 @@ export class ReferentialService {
           console.groupEnd();
         }
         legends.forEach(legend => this.legends.push(legend));
-      },
-      response_error => console.error(response_error.error.message),
-      () => setTimeout(() => {subLegends.unsubscribe(); }, 1000));
+      });
   }
 
 }

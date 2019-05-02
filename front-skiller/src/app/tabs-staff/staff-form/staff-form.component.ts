@@ -7,7 +7,7 @@ import { Profile } from '../../data/profile';
 import { ReferentialService } from '../../service/referential.service';
 import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
 
-import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, Output, EventEmitter, Injector } from '@angular/core';
 
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -159,7 +159,9 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
         this.collaborator.active = this.profileStaff.get('active').value;
         this.collaborator.external = this.profileStaff.get('external').value;
 
-        this.staffService.save(this.collaborator).pipe(take(1)).subscribe(
+        this.staffService.save(this.collaborator)
+        .pipe(take(1))
+        .subscribe(
             staff => {
                 this.collaborator = staff;
                 this.messengerStaffUpdated.emit (staff);
