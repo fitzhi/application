@@ -180,7 +180,7 @@ public class FileDataSaverImpl implements DataSaver {
 			}.getType();
 			theStaff = gson.fromJson(fr, listStaffType);
 		} catch (final Exception e) {
-			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, rootLocation.resolve(filename).toFile().getAbsoluteFile()), e);
 		}
 
 		if (logger.isDebugEnabled()) {

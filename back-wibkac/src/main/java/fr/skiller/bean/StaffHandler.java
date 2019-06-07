@@ -2,6 +2,9 @@ package fr.skiller.bean;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import org.springframework.security.core.userdetails.UserDetails;
 
 import fr.skiller.data.internal.PeopleCountExperienceMap;
 import fr.skiller.data.internal.Project;
@@ -110,10 +113,16 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 void saveStaffMember(Staff staff) throws SkillerException;
 
 	 /**
-	  * <p>Search a staff, if any, who has a login equal to the passed one.</p>
-	  * <p>Reminder : <i>The login property is also the connection login for the application. It has to be unique.</i></p>
+	  * <p>Search a staff, if any, who has his login equal to the passed one.</p>
+	  * <p><b>Reminder : </b><i>The login property is also the connection login for the application. It has to be unique.</i></p>
 	  * @param login the given login
-	  * @return the staff corresponding to the given login, or <code>null</code> is none exists.
+	  * @return an optional object containing 
+	  * <ul>
+	  * <li>either the staff corresponding to the given login,</li>
+	  * <li>or <code>null</code> is none exists</li>
+	  * </ul>
 	  */
-	 Staff lookupLogin(String login);
+	 Optional<Staff> findStaffWithLogin(String login);
+
 }
+

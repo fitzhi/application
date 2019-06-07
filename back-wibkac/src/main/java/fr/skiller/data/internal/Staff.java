@@ -4,6 +4,8 @@
 package fr.skiller.data.internal;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -12,15 +14,18 @@ import javax.annotation.Generated;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import fr.skiller.data.source.Contributor;
 import fr.skiller.service.FileType;
 
 /**
  * A staff member in the company (most probably a developer).<br/>
+ * This object represents also the login/pass associated to each collaborator inside the company.
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class Staff {
+public class Staff implements UserDetails {
 	
 	private int idStaff;
 	private String firstName;
@@ -208,7 +213,7 @@ public class Staff {
 	 * @return <code>true</code> if the passed password is correct.
 	 */
 	public boolean isValidPassword(String password) {
-		return (this.password.equals(password));
+		return password.equals(this.password);
 	}
 	
 	@Override
@@ -221,6 +226,7 @@ public class Staff {
 				+ experiences + "]";
 	}
 
+	
 	/**
 	 * @return the idStaff
 	 */
@@ -423,5 +429,40 @@ public class Staff {
 	 */
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return Collections.<GrantedAuthority>emptyList();
+	}
+
+	@Override
+	public String getPassword() {
+		return this.password;
+	}
+
+	@Override
+	public String getUsername() {
+		return this.login;
+	}
+
+	@Override
+	public boolean isAccountNonExpired() {
+		return this.isActive();
+	}
+
+	@Override
+	public boolean isAccountNonLocked() {
+		return this.isActive();
+	}
+
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return this.isActive();
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return this.isActive();
 	}
 }

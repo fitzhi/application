@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,8 +94,8 @@ public class AdministrationImpl implements Administration {
 	@Override
 	public Staff createNewUser(String login, String password) throws SkillerException {
 
-		Staff staff = staffHandler.lookupLogin(login);
-		
+		Optional<Staff> oStaff = staffHandler.findStaffWithLogin(login);
+		final Staff staff = oStaff.isPresent() ? oStaff.get() : null;
 		/**
 		 * The very first created user is the very first administrative user in Wibkac.
 		 * Therefore the self registration is obviously allowed
@@ -106,7 +107,6 @@ public class AdministrationImpl implements Administration {
 				return staffHandler.addNewStaffMember(new Staff(-1, login, password));
 			}
 		} 
-		
 
 		if ( (staff == null) && (!this.allowSelfRegistration) ) {
 			throw new SkillerException(CODE_UNREGISTERED_LOGIN, MESSAGE_UNREGISTERED_LOGIN);
@@ -126,8 +126,11 @@ public class AdministrationImpl implements Administration {
 
 	@Override
 	public Staff connect(String login, String password) throws SkillerException {
-		Staff staff = staffHandler.lookupLogin(login);
-		if ((staff == null) || (!staff.isValidPassword(password))){
+		
+		Staff staff = staffHandler.findStaffWithLogin(login)
+				.orElseThrow(() -> new SkillerException(CODE_INVALID_LOGIN_PASSWORD, MESSAGE_INVALID_LOGIN_PASSWORD));
+		
+		if (!staff.isValidPassword(password)) {
 			throw new SkillerException(CODE_INVALID_LOGIN_PASSWORD, MESSAGE_INVALID_LOGIN_PASSWORD);
 		}
 		

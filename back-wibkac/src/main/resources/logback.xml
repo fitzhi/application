@@ -17,8 +17,8 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 		
-	<logger name="fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl" additivity="false">
-		<level value="INFO" />
+	<logger name="fr.skiller.security" additivity="false">
+		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
 
@@ -26,6 +26,17 @@
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
+    
+	<logger name="fr.skiller.controller" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="org.springframework.security.oauth2" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+        
 
 
 </configuration>

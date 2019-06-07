@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -369,22 +370,22 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 
 	@Override
 	public void saveStaffMember(Staff staff) throws SkillerException {
+
 		if (staff.getIdStaff() == 0) {
 			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, staff.getIdStaff()));
 		}
 		
 		// The login is unique for each Wibkac user
-		Staff emp = lookupLogin(staff.getLogin());
-		if ( (emp != null) && (emp.getIdStaff() != staff.getIdStaff()) && (emp.getLogin().equals(staff.getLogin()))) {
+		Optional<Staff> emp = findStaffWithLogin(staff.getLogin());
+		if ( (emp.isPresent()) && (emp.get().getIdStaff() != staff.getIdStaff()) && (emp.get().getLogin().equals(staff.getLogin()))) {
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format(
 						"the employee %d %s gets the same login %s as %d %s" , 
 						staff.getIdStaff(), staff.fullName(),
 						staff.getLogin(),
-						emp.getIdStaff(), emp.fullName()));
+						emp.get().getIdStaff(), emp.get().fullName()));
 			}
-			throw new SkillerException(CODE_LOGIN_ALREADY_EXIST, MessageFormat.format(MESSAGE_LOGIN_ALREADY_EXIST, staff.getLogin(), emp.getFirstName(), emp.getLastName()));			
-			
+			throw new SkillerException(CODE_LOGIN_ALREADY_EXIST, MessageFormat.format(MESSAGE_LOGIN_ALREADY_EXIST, staff.getLogin(), emp.get().getFirstName(), emp.get().getLastName()));			
 		}
 		
 		synchronized (lockDataUpdated) {
@@ -394,16 +395,13 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public Staff lookupLogin(String login) {
-		if (login == null) {
-			return null;
-		}
-		Optional<Staff> oStaff = getStaff()
+	public Optional<Staff> findStaffWithLogin(String login) {
+		Objects.requireNonNull(login);
+		return getStaff()
 				.values()
 				.stream()
 				.filter(e->login.equals(e.getLogin()))
 				.findFirst();
-		return (oStaff.isPresent()) ? oStaff.get() : null;
 	}
 
 }
