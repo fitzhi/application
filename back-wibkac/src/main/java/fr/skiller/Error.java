@@ -44,7 +44,9 @@ public class Error {
 	public static final int CODE_INVALID_LOGIN_PASSWORD = -1011;
 	public static final String MESSAGE_INVALID_LOGIN_PASSWORD = "Invalid login/password."; //NOSONAR
 	
-	
+	public static final int CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED = -1012;
+	public static final String MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED = "Cannot create 2 times, the first admin user."; 
+		
 	private Error() {
 	}
 	

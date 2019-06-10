@@ -42,7 +42,6 @@ public class AdministrationControllerSaveVeryFisrtConnectionTest {
 	private String rootLocation;
 	
 	@Test
-	@WithMockUser
 	public void saveVeryFirstConnection() throws Exception {
 
 		this.mvc.perform(get("/admin/isVeryFirstConnection"))

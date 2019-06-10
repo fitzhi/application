@@ -5,7 +5,10 @@ package fr.skiller.controller;
 
 import static fr.skiller.Error.CODE_LOGIN_ALREADY_EXIST;
 import static fr.skiller.Error.CODE_UNREGISTERED_LOGIN;
+import static fr.skiller.Error.CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
+
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -26,12 +29,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
-import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.sun.org.apache.bcel.internal.generic.GETSTATIC;
+
+import fr.skiller.bean.Administration;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.data.internal.Staff;
 import fr.skiller.security.TokenLoader;
 
 /**
@@ -44,7 +51,13 @@ import fr.skiller.security.TokenLoader;
 @TestPropertySource(properties = { "allowSelfRegistration=false" }) 
 public class AdministrationControllerCreateNewUserTest {
 
-	private static final String PASSWORD = "password"; //NOSONAR
+	private static final String LOGIN = "login";
+
+	private static final String CST_CODE = "$.code";
+
+	private static final String CST_STAFF_ID_STAFF = "$.staff.idStaff";
+
+	private static final String PASS_WORD = "password"; //NOSONAR
 
 	private static String pass = "passvoid";
 	
@@ -60,6 +73,9 @@ public class AdministrationControllerCreateNewUserTest {
 	@Autowired
 	StaffHandler staffHandler;
 
+	@Autowired
+	public Administration administration;
+
 	Logger logger = LoggerFactory.getLogger(AdministrationControllerCreateNewUserTest.class.getCanonicalName());
 
 	@Before
@@ -71,7 +87,23 @@ public class AdministrationControllerCreateNewUserTest {
 		}
 		
 	}
-		
+	
+	@Test
+	public void creationVeryFirstUserKO() throws Exception {
+		int crewSize = staffHandler.getStaff().size();
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("Crew size %d", crewSize));
+		}
+		this.mvc.perform(get("/admin/veryFirstUser") //NOSONAR
+					.param(LOGIN, "adminForTest") 
+					.param(PASS_WORD, "passForTest"))  
+				.andExpect(status().isOk())
+				.andExpect(jsonPath(CST_STAFF_ID_STAFF, is(0)))
+				.andExpect(jsonPath(CST_CODE, is(CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED)));
+
+	}
+
+
 	@Test
 	public void creationNewUser() throws Exception {
 
@@ -80,26 +112,28 @@ public class AdministrationControllerCreateNewUserTest {
 			logger.debug(String.format("Crew size %d", crewSize));
 		}
 		this.mvc.perform(get("/admin/newUser")
-				.param("login", "user")
-				.param(PASSWORD, pass)
+				.param(LOGIN, "user")
+				.param(PASS_WORD, pass)
 				.header(HttpHeaders.AUTHORIZATION,
 						"Bearer " + TokenLoader.obtainAccessMockToken(mvc)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.staff.idStaff", is(0)))
-				.andExpect(jsonPath("$.code", is(CODE_UNREGISTERED_LOGIN)));
-
+				.andExpect(jsonPath(CST_STAFF_ID_STAFF, is(0)))
+				.andExpect(jsonPath(CST_CODE, is(CODE_UNREGISTERED_LOGIN)));
 	}
 	
 	@Test
 	public void creationFailedForExistingUser() throws Exception {
+		Staff s = new Staff(2, "frvidal", "pass");
+		s.setLastName("VIDAL");
+		this.staffHandler.addNewStaffMember(s);
 		this.mvc.perform(get("/admin/newUser")
-				.param("login", "frvidal")
-				.param(PASSWORD, pass)
+				.param(LOGIN, "frvidal")
+				.param(PASS_WORD, pass)
 				.header(HttpHeaders.AUTHORIZATION,
 						"Bearer " + TokenLoader.obtainAccessMockToken(mvc)))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.staff.idStaff", is(0)))
-				.andExpect(jsonPath("$.code", is(CODE_LOGIN_ALREADY_EXIST)));
+				.andExpect(jsonPath(CST_CODE, is(CODE_LOGIN_ALREADY_EXIST)))
+				.andExpect(jsonPath(CST_STAFF_ID_STAFF, is(0)));
 		
 	}
 

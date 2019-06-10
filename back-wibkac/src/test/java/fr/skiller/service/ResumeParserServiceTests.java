@@ -71,6 +71,6 @@ public class ResumeParserServiceTests {
 		final String file_pdf = getClass().getResource("/applications_files/ET_201709.pdf").getFile();
 		Resume experiencePdf = parser.extract(file_pdf, FileType.FILE_TYPE_PDF);
 		// We loosed certainly some few skills during the convert into PDF, but the main skills are still present.
-		Assert.assertTrue(experiencePdf.data().toArray().length == 30);
+		Assert.assertTrue(experiencePdf.data().toArray().length +  " != 30", experiencePdf.data().toArray().length == 30);
 	}
 }

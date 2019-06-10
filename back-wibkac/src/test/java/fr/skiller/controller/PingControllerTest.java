@@ -53,7 +53,8 @@ public class PingControllerTest {
 						.header(HttpHeaders.AUTHORIZATION,
 						"Bearer " + TokenLoader.obtainAccessMockToken(mockMvc))
 						)
-				.andExpect(content().contentType(MediaType.TEXT_HTML)).andExpect(status().isOk())
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.TEXT_HTML))
 				.andExpect(content().string(CoreMatchers.containsString("Pong")));
 	}
 

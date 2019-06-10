@@ -43,7 +43,6 @@ public class AdministrationControllerIsVeryFisrtConnectionTest {
 	private String rootLocation;
 	
 	@Test
-	@WithMockUser
 	public void isFirstConnection() throws Exception {
 		this.mvc.perform(get("/admin/isVeryFirstConnection"))
 		.andExpect(status().isOk())
@@ -51,7 +50,6 @@ public class AdministrationControllerIsVeryFisrtConnectionTest {
 	}
 
 	@Test
-	@WithMockUser
 	public void isNotFirstConnection() throws Exception {
 		final Path root = Paths.get(rootLocation);
 		final Path firstConnection = root.resolve("connection.txt");

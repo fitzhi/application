@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Constants } from 'src/app/constants';
 
 @Injectable({
     providedIn: 'root'
@@ -8,7 +9,7 @@ export class BackendSetupService {
     /**
      * Default URL for a local directory.
      */
-    private defaultUrl = 'http://localhost:8080';
+    public defaultUrl = 'http://localhost:8080';
 
     /**
      * Current registered URL.
@@ -30,7 +31,7 @@ export class BackendSetupService {
      * @return the back-end URL
      */
     public url() {
-        return (this.currentUrl === null) ? this.defaultUrl : this.currentUrl;
+        return this.currentUrl;
     }
 
     /**

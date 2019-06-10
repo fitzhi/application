@@ -2,6 +2,8 @@ package fr.skiller.controller;
 
 import static fr.skiller.Global.BACKEND_RETURN_CODE;
 import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
+import static fr.skiller.Error.CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
+import static fr.skiller.Error.MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import fr.skiller.bean.Administration;
+import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.external.BooleanDTO;
 import fr.skiller.data.external.StaffDTO;
 import fr.skiller.data.internal.Staff;
@@ -28,6 +31,9 @@ public class AdminController {
 
 	@Autowired
 	private Administration administration;
+
+	@Autowired
+	private StaffHandler staffHandler;
 
 	@GetMapping("/isVeryFirstConnection")
 	public ResponseEntity<Boolean> isVeryFirstConnection()  {
@@ -56,6 +62,26 @@ public class AdminController {
 			
 		}
 	}
+	
+	@GetMapping("/veryFirstUser")
+	public ResponseEntity<StaffDTO> veryFirstUser(
+			@RequestParam("login") String login,
+			@RequestParam("password") String password)  {
+		
+		if (this.staffHandler.getStaff().isEmpty()) {
+			return this.createNewUser(login, password);			
+		} else {
+			HttpHeaders headers = new HttpHeaders();
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED));
+			headers.set(BACKEND_RETURN_MESSAGE, MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED);
+			return new ResponseEntity<>(new 
+						StaffDTO(new Staff(), 
+						CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED, 
+						MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED), 
+					headers, HttpStatus.OK);
+		}
+		
+	}	
 	
 	@GetMapping("/newUser")
 	public ResponseEntity<StaffDTO> createNewUser(

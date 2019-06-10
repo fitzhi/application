@@ -47,7 +47,9 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
         private backendSetupService: BackendSetupService) { super(); }
 
     ngOnInit() {
-        this.backendSetupForm.get('url').setValue(this.backendSetupService.url());
+        this.backendSetupForm.get('url').setValue(
+            this.backendSetupService.hasSavedAnUrl() ?
+            this.backendSetupService.url() : this.backendSetupService.defaultUrl);
     }
 
     get url(): any {

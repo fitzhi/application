@@ -27,7 +27,7 @@ export class MessageComponent implements OnInit {
 
     ngOnInit() {
         this.messageService.newMessage$.subscribe((data: Message) => {
-            console.log (data.trace());
+
             switch (data.severity) {
                 case Constants.MESSAGE_VOID:
                     this.classContainerMessage = 'rounded void';

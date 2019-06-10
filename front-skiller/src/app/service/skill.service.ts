@@ -17,8 +17,6 @@ const httpOptions = {
 })
 export class SkillService extends InternalService {
 
-  private skillUrl: string;
-
   /*
    * skills
    */
@@ -36,18 +34,23 @@ export class SkillService extends InternalService {
 
   constructor(private httpClient: HttpClient, private backendSetupService: BackendSetupService) {
     super();
-    this.skillUrl = this.backendSetupService.url() + '/skill';
-    this.loadSkills();
+    if (Constants.DEBUG && !this.backendSetupService.hasSavedAnUrl()) {
+        console.log ('Skills loading is postponed due to the lack of backend URL.');
+    }
+    if (this.backendSetupService.hasSavedAnUrl()) {
+        this.loadSkills();
+    }
    }
 
  /**
   * load the list of ALL collaborators skills, working for the company.
   */
   loadSkills() {
+
     if (Constants.DEBUG) {
-      this.log('Fetching all skills on URL ' + this.skillUrl + '/all');
+      this.log('Fetching all skills on URL ' + this.backendSetupService.url() + '/skill' + '/all');
     }
-    const subSkills = this.httpClient.get<Skill[]>(this.skillUrl + '/all').subscribe(
+    const subSkills = this.httpClient.get<Skill[]>(this.backendSetupService.url() + '/skill' + '/all').subscribe(
       skills => {
         if (Constants.DEBUG) {
           console.groupCollapsed('Skills registered : ');
@@ -69,7 +72,7 @@ export class SkillService extends InternalService {
     if (Constants.DEBUG) {
       console.log( (typeof skill.id !== 'undefined') ? 'Saving '  : 'Adding' + ' skill ' + skill.title);
     }
-    return this.httpClient.post<Skill>(this.skillUrl + '/save', skill, httpOptions);
+    return this.httpClient.post<Skill>(this.backendSetupService.url() + '/skill' + '/save', skill, httpOptions);
   }
 
   /**
@@ -88,7 +91,7 @@ export class SkillService extends InternalService {
    * GET the skill associated to this id from the backend skiller. Will throw a 404 if this id is not found.
    */
   get(id: number): Observable<Skill> {
-    const url = this.skillUrl + '/' + id;
+    const url = this.backendSetupService.url() + '/skill' + '/' + id;
     if (Constants.DEBUG) {
       console.log('Fetching the skill ' + id + ' on the address ' + url);
     }
@@ -100,7 +103,7 @@ export class SkillService extends InternalService {
    * Will throw a 404 if this name is not retrieved.
    */
   lookup(skillTitle: string): Observable<Skill> {
-    const url = this.skillUrl + '/name/' + skillTitle;
+    const url = this.backendSetupService.url() + '/name/' + skillTitle;
     if (Constants.DEBUG) {
       console.log('Fetching the skill title ' + skillTitle + ' on the address ' + url);
     }

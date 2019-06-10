@@ -103,15 +103,18 @@ public class AdministrationImpl implements Administration {
 		if (isVeryFirstConnection()) {
 			if (staff != null) {
 				staff.setPassword(password);
+				return staff;
 			} else {
 				return staffHandler.addNewStaffMember(new Staff(-1, login, password));
 			}
 		} 
 
+
 		if ( (staff == null) && (!this.allowSelfRegistration) ) {
-			throw new SkillerException(CODE_UNREGISTERED_LOGIN, MESSAGE_UNREGISTERED_LOGIN);
+			throw new SkillerException(CODE_UNREGISTERED_LOGIN, 
+					MESSAGE_UNREGISTERED_LOGIN);
 		}
-		
+
 		/**
 		 * If we create a NEW user, but an existing user with the same login already exists.
 		 */

@@ -24,13 +24,11 @@ export class StaffService {
 
     private static peopleCountExperience: Map<string, number> = new Map<string, number>();
 
-    private collaboratorUrl: string;
-
     constructor(
         private http: HttpClient,
         private backendSetupService: BackendSetupService) {
-        this.collaboratorUrl = this.backendSetupService.url() + '/staff';
     }
+
 
     /**
      * Return the global list of ALL collaborators, working for the company.
@@ -39,14 +37,14 @@ export class StaffService {
         if (Constants.DEBUG) {
             console.log('Fetching the collaborators');
         }
-        return this.http.get<Collaborator[]>(this.collaboratorUrl + '/all');
+        return this.http.get<Collaborator[]>(this.backendSetupService.url() + '/staff' + '/all');
     }
 
     /**
      * GET staff member associated to this id. Will throw a 404 if id not found.
      */
     get(id: number): Observable<Collaborator> {
-        const url = this.collaboratorUrl + '/' + id;
+        const url = this.backendSetupService.url() + '/staff' + '/' + id;
         if (Constants.DEBUG) {
             console.log('Fetching the collaborator ' + id + ' on the address ' + url);
         }
@@ -61,7 +59,7 @@ export class StaffService {
             console.log('Saving the collaborator with id ' + collaborator.idStaff);
         }
 
-        return this.http.post<Collaborator>(this.collaboratorUrl + '/save', collaborator, httpOptions);
+        return this.http.post<Collaborator>(this.backendSetupService.url() + '/staff' + '/save', collaborator, httpOptions);
     }
 
     /**
@@ -69,7 +67,7 @@ export class StaffService {
      */
     delete(collaborater: Collaborator | number): Observable<Collaborator> {
         const id = typeof collaborater === 'number' ? collaborater : collaborater.idStaff;
-        const url = `${this.collaboratorUrl}/${id}`;
+        const url = `${this.backendSetupService.url() + '/staff'}/${id}`;
 
         return this.http.delete<Collaborator>(url, httpOptions);
     }
@@ -82,7 +80,7 @@ export class StaffService {
             console.log('Adding the collaborator with id : ' + idStaff + ' into the project ' + projectName);
         }
         const body = { idStaff: idStaff, newProjectName: projectName };
-        return this.http.post<StaffDTO>(this.collaboratorUrl + '/project/save', body, httpOptions);
+        return this.http.post<StaffDTO>(this.backendSetupService.url() + '/staff' + '/project/save', body, httpOptions);
     }
 
     /**
@@ -93,7 +91,7 @@ export class StaffService {
             console.log('Adding the collaborator with id : ' + idStaff + ' into the project ' + newProjectName);
         }
         const body = { idStaff: idStaff, newProjectName: newProjectName, formerProjectName: formerProjectName };
-        return this.http.post<StaffDTO>(this.collaboratorUrl + '/project/save', body, httpOptions);
+        return this.http.post<StaffDTO>(this.backendSetupService.url() + '/staff' + '/project/save', body, httpOptions);
     }
 
     /**
@@ -104,21 +102,21 @@ export class StaffService {
             console.log('Removing the collaborator with id : ' + idStaff + ' from project with id ' + idProject);
         }
         const body = { idStaff: idStaff, idProject: idProject };
-        return this.http.post<StaffDTO>(this.collaboratorUrl + '/project/del', body, httpOptions);
+        return this.http.post<StaffDTO>(this.backendSetupService.url() + '/staff' + '/project/del', body, httpOptions);
     }
 
     /**
      * Load the projects associated with the staff member identified by this id.
      */
     loadProjects(idStaff: number): Observable<Project[]> {
-        return this.http.get<Project[]>(this.collaboratorUrl + '/projects/' + idStaff);
+        return this.http.get<Project[]>(this.backendSetupService.url() + '/staff' + '/projects/' + idStaff);
     }
 
     /**
     * Load the experience of the staff member identified by this id.
     */
     loadExperiences(idStaff: number): Observable<Experience[]> {
-        return this.http.get<Experience[]>(this.collaboratorUrl + '/experiences/' + idStaff);
+        return this.http.get<Experience[]>(this.backendSetupService.url() + '/staff' + '/experiences/' + idStaff);
     }
 
     /**
@@ -129,7 +127,7 @@ export class StaffService {
             console.log('Adding the skill  ' + skillTitle + ' for the staff member whom id is ' + idStaff);
         }
         const body = { idStaff: idStaff, newSkillTitle: skillTitle, level: level };
-        return this.http.post<StaffDTO>(this.collaboratorUrl + '/experiences/save', body, httpOptions);
+        return this.http.post<StaffDTO>(this.backendSetupService.url() + '/staff' + '/experiences/save', body, httpOptions);
     }
 
     /**
@@ -140,7 +138,7 @@ export class StaffService {
             console.log('Adding ' + skills.length + ' experiences to the staff Id  ' + idStaff);
         }
         const body = { idStaff: idStaff, skills: skills };
-        return this.http.post<StaffDTO>(this.collaboratorUrl + '/api/experiences/resume/save',
+        return this.http.post<StaffDTO>(this.backendSetupService.url() + '/staff' + '/api/experiences/resume/save',
             body, httpOptions);
     }
     /**
@@ -151,7 +149,7 @@ export class StaffService {
             console.log('Revoking the experence ' + idSkill + ' from the collaborator application');
         }
         const body = { idStaff: idStaff, idSkill: idSkill };
-        return this.http.post<StaffDTO>(this.collaboratorUrl + '/experiences/del', body, httpOptions);
+        return this.http.post<StaffDTO>(this.backendSetupService.url() + '/staff' + '/experiences/del', body, httpOptions);
     }
 
     /**
@@ -163,7 +161,7 @@ export class StaffService {
                 + idStaff + ' from ' + formerSkillTitle + ' to ' + newSkillTitle);
         }
         const body = { idStaff: idStaff, formerSkillTitle: formerSkillTitle, newSkillTitle: newSkillTitle, level: level };
-        return this.http.post<StaffDTO>(this.collaboratorUrl + '/experiences/save', body, httpOptions);
+        return this.http.post<StaffDTO>(this.backendSetupService.url() + '/staff' + '/experiences/save', body, httpOptions);
     }
 
     /**
@@ -181,7 +179,7 @@ export class StaffService {
         const headers = new HttpHeaders();
         headers.set('Accept', 'application/msword');
 
-        this.http.get(this.collaboratorUrl + '/' + staff.idStaff + '/application',
+        this.http.get(this.backendSetupService.url() + '/staff'+ '/' + staff.idStaff + '/application',
             { headers: headers, responseType: 'blob' })
             .subscribe(data => {
                 this.saveToFileSystem(data, staff.application, 'application/octet-stream');
@@ -213,7 +211,7 @@ export class StaffService {
         if (Constants.DEBUG) {
             console.log('countAll_groupBy_experience loading aggegations count from the server');
         }
-        this.http.get<any>(this.collaboratorUrl + '/countGroupByExperiences/'
+        this.http.get<any>(this.backendSetupService.url() + '/staff' + '/countGroupByExperiences/'
             + (activeOnly ? '/active' : '/all'))
             .subscribe(
                 response => {

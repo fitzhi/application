@@ -21,10 +21,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		http.
-		anonymous().disable()
-		.requestMatchers().antMatchers("/**")
-		.and().authorizeRequests()
-//		.antMatchers("/admin/isVeryFirstConnection").permitAll()
+		authorizeRequests()
+		.antMatchers("/admin/isVeryFirstConnection", "/admin/saveVeryFirstConnection", "/admin/veryFirstUser").permitAll()
 		.antMatchers("/**").access("hasRole('USER')")
 		.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());	}
 

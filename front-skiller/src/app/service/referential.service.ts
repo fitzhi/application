@@ -34,8 +34,18 @@ export class ReferentialService {
    */
   public loadAllReferentials(): void {
     if (Constants.DEBUG) {
-      console.log('Fetching the profiles on URL ' + this.backendSetupService.url() + '/data/profiles');
+        if (!this.backendSetupService.hasSavedAnUrl()) {
+            console.log('First start of application. Referentials loading is postponed.');
+            return;
+        } else {
+            console.log('Fetching the profiles on URL ' + this.backendSetupService.url() + '/data/profiles');
+        }
     }
+
+    if (!this.backendSetupService.hasSavedAnUrl()) {
+        return;
+    }
+
     this.httpClient.get<Profile[]>(this.backendSetupService.url() + '/data/profiles')
         .pipe(take(1))
         .subscribe(
