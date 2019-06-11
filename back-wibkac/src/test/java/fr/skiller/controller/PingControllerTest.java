@@ -55,18 +55,18 @@ public class PingControllerTest {
 						)
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.TEXT_HTML))
-				.andExpect(content().string(CoreMatchers.containsString("Pong")));
+				.andExpect(content().string(CoreMatchers.containsString("pong")));
 	}
 
 	@Test
 	public void pingPost() throws Exception {
 		this.mockMvc
-				.perform(post("/test/ping")
+				.perform(post("/test/pong")
 						.header(HttpHeaders.AUTHORIZATION,
 						"Bearer " + TokenLoader.obtainAccessMockToken(mockMvc))
 						)
 				.andExpect(content().contentType(MediaType.TEXT_PLAIN)).andExpect(status().isOk())
-				.andExpect(content().string(CoreMatchers.containsString("pong")));
+				.andExpect(content().string(CoreMatchers.containsString("ping")));
 	}
 
 }

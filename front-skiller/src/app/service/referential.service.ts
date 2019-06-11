@@ -33,6 +33,7 @@ export class ReferentialService {
    * This method should be called on the main container (app.component) at startup...
    */
   public loadAllReferentials(): void {
+
     if (Constants.DEBUG) {
         if (!this.backendSetupService.hasSavedAnUrl()) {
             console.log('First start of application. Referentials loading is postponed.');

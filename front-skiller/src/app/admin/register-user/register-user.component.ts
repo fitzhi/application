@@ -92,7 +92,7 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
         }
         this.subscriptions
             .add(this.httpClient.get<StaffDTO>(
-                    this.backendSetupService.url() + '/admin/newUser',
+                    this.backendSetupService.url() + '/admin/veryFirstUser',
                     { params: { login: username, password: password }})
             .subscribe(
                 response => {

@@ -46,7 +46,7 @@ public class LoginTest {
 	    	.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
 	    	.andExpect(status().isOk())
 	    	.andExpect(content().contentType(MediaType.TEXT_HTML))
-	    	.andExpect(content().string(containsString("Pong")));
+	    	.andExpect(content().string(containsString("pong")));
 	    	
 	}
 	

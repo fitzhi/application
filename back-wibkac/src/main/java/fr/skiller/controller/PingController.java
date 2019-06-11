@@ -22,17 +22,17 @@ public class PingController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.TEXT_HTML);
 		return new ResponseEntity<>(
-				"<big>Pong !</big><p>Wibkac 0.1-SNAPSHOT</p><p>Back-end is available.</p>", 
+				"pong", 
 				headers, 
 				HttpStatus.OK);
 	}
 
-	@PostMapping("/ping")
+	@PostMapping("/pong")
 	public ResponseEntity<String> postWelcome()  {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.TEXT_PLAIN);
 		return new ResponseEntity<>(
-				"pong", 
+				"ping", 
 				headers, 
 				HttpStatus.OK);
 	}
