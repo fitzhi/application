@@ -4,8 +4,12 @@ import static fr.skiller.Global.BACKEND_RETURN_CODE;
 import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
 import static fr.skiller.Error.CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
 import static fr.skiller.Error.MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
+import static fr.skiller.Error.CODE_CANNOT_SELF_CREATE_USER;
+import static fr.skiller.Error.MESSAGE_CANNOT_SELF_CREATE_USER;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +39,16 @@ public class AdminController {
 	@Autowired
 	private StaffHandler staffHandler;
 
+	/**
+	 * Does Wibkac allow self registration ?
+	 * <ul>
+	 * <li>Either, everyone can create his own user, by simply connecting to the Wibkac URL</li>
+	 * <li>Or a login must be already registered for the new user in the staff collection.</li>
+	 * </ul>
+	 */
+	@Value("${allowSelfRegistration}")
+	private boolean allowSelfRegistration;
+	
 	@GetMapping("/isVeryFirstConnection")
 	public ResponseEntity<Boolean> isVeryFirstConnection()  {
 		
@@ -63,6 +77,12 @@ public class AdminController {
 		}
 	}
 	
+	/**
+	 * This method is used to create the first admin user.
+	 * @param login the first admin user login
+	 * @param password this first admin user password
+	 * @return the newly created staff entry
+	 */
 	@GetMapping("/veryFirstUser")
 	public ResponseEntity<StaffDTO> veryFirstUser(
 			@RequestParam("login") String login,
@@ -81,6 +101,31 @@ public class AdminController {
 					headers, HttpStatus.OK);
 		}
 		
+	}	
+
+	/**
+	 * This method is used to initiate the first connection while creating the new user.
+	 * @param login the first admin user login
+	 * @param password this first admin user password
+	 * @return the newly created staff entry
+	 */
+	@GetMapping("/register")
+	public ResponseEntity<StaffDTO> autoRegister(
+			@RequestParam("login") String login,
+			@RequestParam("password") String password)  {
+		
+		if (this.allowSelfRegistration) {
+			return this.createNewUser(login, password);			
+		} else {
+			HttpHeaders headers = new HttpHeaders();
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(CODE_CANNOT_SELF_CREATE_USER));
+			headers.set(BACKEND_RETURN_MESSAGE, MESSAGE_CANNOT_SELF_CREATE_USER);
+			return new ResponseEntity<>(new 
+						StaffDTO(new Staff(), 
+						CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED, 
+						MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED), 
+					headers, HttpStatus.FORBIDDEN);
+		}
 	}	
 	
 	@GetMapping("/newUser")

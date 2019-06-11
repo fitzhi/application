@@ -14,7 +14,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Optional;
+
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,57 +42,49 @@ import fr.skiller.exception.SkillerException;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest
 @AutoConfigureMockMvc
-public class AdministrationControllerConnectTest {
+@SpringBootTest(properties="allowSelfRegistration=false")
+public class AdministrationSelfRegisteringDisallowedTest {
 
-	private static final String MY_LOGIN = "bill";
 
-	private static final String MY_PSSWORD = "abc123";
+	private static final String TEST_USER = "test-user";
 
 	@Autowired
 	private MockMvc mvc;
 
 	@Autowired
-	StaffHandler staffHandler;
-
-	@Autowired
 	Administration administration;
 
-	Logger logger = LoggerFactory.getLogger(AdministrationControllerConnectTest.class.getCanonicalName());
+	Logger logger = LoggerFactory.getLogger(AdministrationSelfRegisteringDisallowedTest.class.getCanonicalName());
 
-	int idStaff;
-
-	private static final String GRANT_TYPE = "grant_type";
-	private static final String USER = "username";
-	private static final String PSSWORD = "password";
-	
-	@Before
-	public void before() throws SkillerException {
-		final Staff staff = administration.createNewUser(MY_LOGIN, MY_PSSWORD);
-		this.idStaff = staff.getIdStaff();
-	}
+	@Autowired
+	StaffHandler staffHandler;
 
 	@Test
-	public void accessUnauthorizedWithoutToken() throws Exception {
+	@WithMockUser
+	public void register() throws Exception {
 
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-	    params.add(GRANT_TYPE, PSSWORD);
-	    params.add(USER, MY_LOGIN);
-	    params.add(PSSWORD, MY_PSSWORD); // NOSONAR
-	 
-	    mvc.perform(post("/oauth/token")
-	        .params(params)
-	        .with(httpBasic(TRUSTED_CLIENT_USERNAME, "secret"))
-	        .accept("application/json;charset=UTF-8"))
-	        .andExpect(status().isOk())
-	        .andExpect(content().contentType("application/json;charset=UTF-8"));
+	    params.add("login", TEST_USER);
+	    params.add("password", "test-pass"); // NOSONAR
 
+	    mvc.perform(get("/admin/register")
+	        .params(params)
+	        .accept("application/json;charset=UTF-8"))
+	        .andExpect(status().isForbidden())
+	        .andExpect(content().contentType("application/json;charset=UTF-8"));
+	    
+	    Optional<Staff> oStaff = staffHandler.findStaffWithLogin(TEST_USER);
+	    Assert.assertTrue("The 'test-user' user should not exist", !oStaff.isPresent());
+	    
 	}
 
-	
 	@After
 	public void after() {
-		staffHandler.getStaff().remove(idStaff);
+		Optional<Staff> oStaff = staffHandler.findStaffWithLogin(TEST_USER);
+	    if (oStaff.isPresent()) {
+	    	staffHandler.getStaff().remove(oStaff.get().getIdStaff());
+	    }
 	}
+
 }

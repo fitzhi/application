@@ -123,7 +123,7 @@ public class AdministrationControllerCreateNewUserTest {
 	
 	@Test
 	public void creationFailedForExistingUser() throws Exception {
-		Staff s = new Staff(2, "frvidal", "pass");
+		Staff s = new Staff(777, "frvidal", "pass");
 		s.setLastName("VIDAL");
 		this.staffHandler.addNewStaffMember(s);
 		this.mvc.perform(get("/admin/newUser")
