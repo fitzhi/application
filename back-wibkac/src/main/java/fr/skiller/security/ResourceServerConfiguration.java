@@ -22,7 +22,12 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 	public void configure(HttpSecurity http) throws Exception {
 		http.
 		authorizeRequests()
-		.antMatchers("/admin/isVeryFirstConnection", "/admin/saveVeryFirstConnection", "/admin/veryFirstUser").permitAll()
+		.antMatchers(
+				"/admin/isVeryFirstConnection", 
+				"/admin/saveVeryFirstConnection", 
+				"/admin/veryFirstUser",
+				"/skill/all",
+				"/referential/**").permitAll()
 		.antMatchers("/**").access("hasRole('USER')")
 		.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());	}
 

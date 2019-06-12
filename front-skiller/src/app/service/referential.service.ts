@@ -39,7 +39,7 @@ export class ReferentialService {
             console.log('First start of application. Referentials loading is postponed.');
             return;
         } else {
-            console.log('Fetching the profiles on URL ' + this.backendSetupService.url() + '/data/profiles');
+            console.log('Fetching the profiles on URL ' + this.backendSetupService.url() + '/referential/profiles');
         }
     }
 
@@ -47,7 +47,7 @@ export class ReferentialService {
         return;
     }
 
-    this.httpClient.get<Profile[]>(this.backendSetupService.url() + '/data/profiles')
+    this.httpClient.get<Profile[]>(this.backendSetupService.url() + '/referential/profiles')
         .pipe(take(1))
         .subscribe(
       (profiles: Profile[]) => {
@@ -61,7 +61,7 @@ export class ReferentialService {
           profiles.forEach(profile => this.profiles.push(profile));
       });
 
-      this.httpClient.get<RiskLegend[]>(this.backendSetupService.url() + '/data/riskLegends')
+      this.httpClient.get<RiskLegend[]>(this.backendSetupService.url() + '/referential/riskLegends')
          .pipe(take(1))
          .subscribe(
       (legends: RiskLegend[]) => {

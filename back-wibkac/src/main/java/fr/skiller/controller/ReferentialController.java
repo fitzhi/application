@@ -26,7 +26,7 @@ import fr.skiller.bean.RiskProcessor;
 import fr.skiller.data.internal.RiskLegend;
 
 @RestController
-@RequestMapping("/data")
+@RequestMapping("/referential")
 public class ReferentialController {
 
 	Logger logger = LoggerFactory.getLogger(ReferentialController.class.getCanonicalName());
