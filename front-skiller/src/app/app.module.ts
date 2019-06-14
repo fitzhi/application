@@ -68,8 +68,9 @@ import { RegisterUserComponent } from './admin/register-user/register-user.compo
 import { StartingSetupComponent } from './admin/starting-setup/starting-setup.component';
 import { ToolbarComponent } from './toolbar/toolbar.component';
 import { ConnectUserComponent } from './admin/connect-user/connect-user.component';
-import { AuthGuardService } from './auth-guard.service';
-import { HttpErrorInterceptor } from './http-error-interceptor';
+import { AuthGuardService } from './admin/security/auth-guard.service';
+import { HttpErrorInterceptorService } from './admin/service/http/http-error-interceptor-service';
+import { httpTokenInterceptorService } from './admin/service/http/http-token-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -151,18 +152,22 @@ import { HttpErrorInterceptor } from './http-error-interceptor';
     MatGridListModule,
     MatStepperModule,
     MatIconModule,
-  ],
+    ],
   providers: [
     CinematicService,
     StaffService,
     ReferentialService,
     AuthGuardService,
     {
-     provide: HTTP_INTERCEPTORS,
-     useClass: HttpErrorInterceptor,
-     multi: true
-   },
-
+        provide: HTTP_INTERCEPTORS,
+        useClass: HttpErrorInterceptorService,
+        multi: true
+    },
+    {
+        provide: HTTP_INTERCEPTORS,
+        useClass: httpTokenInterceptorService,
+        multi: true
+    },
    /*   {provide: ErrorHandler, useClass: CustomErrorHandler}, */
     // Remove this line or change the useValue property to your regional settings
     { provide: LOCALE_ID, useValue: 'fr' }

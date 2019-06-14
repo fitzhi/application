@@ -1,12 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-
-import { ConnectionManagerService } from './connection-manager.service';
+import { AuthService } from './auth.service';
 
 describe('ConnectionManagerService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: ConnectionManagerService = TestBed.get(ConnectionManagerService);
+    const service: AuthService = TestBed.get(AuthService);
     expect(service).toBeTruthy();
   });
 });

@@ -19,7 +19,7 @@ export class ConnectUserComponent implements OnInit {
         private formBuilder: FormBuilder) {
         this.connectionGroup = this.formBuilder.group({
             username: new FormControl('', [Validators.required, Validators.maxLength(16)]),
-            password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(16)])
+            password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(16)])
         });
     }
 

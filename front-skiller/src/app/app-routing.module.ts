@@ -11,7 +11,7 @@ import {StaffComponent} from './tabs-staff/staff.component';
 import {ErrorComponent} from './error/error.component';
 import { ProjectStaffComponent } from './project/project-staff/project-staff.component';
 import { TabsStaffListComponent } from './tabs-staff-list/tabs-staff-list.component';
-import { AuthGuardService } from './auth-guard.service';
+import { AuthGuardService } from './admin/security/auth-guard.service';
 
 const routes: Routes = [
   {path: '', redirectTo: '/welcome', pathMatch: 'full'},

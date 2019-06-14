@@ -58,6 +58,9 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit() {
+
+         localStorage.removeItem('access_token');
+         localStorage.removeItem('refresh_token');
         /**
          * Loading the referentials.
          */

@@ -2,11 +2,12 @@ import { retry, catchError } from 'rxjs/operators';
 import { HttpHandler, HttpEvent, HttpErrorResponse, HttpRequest, HttpInterceptor } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { Injectable, Injector } from '@angular/core';
-import { MessageService } from './message/message.service';
-import { Constants } from './constants';
+import { MessageService } from '../../../message/message.service';
+import { Constants } from '../../../constants';
 
 @Injectable({ providedIn: 'root' })
-export class HttpErrorInterceptor implements HttpInterceptor {
+export class HttpErrorInterceptorService implements HttpInterceptor {
+
 
     constructor(private injector: Injector) { }
 
@@ -53,14 +54,20 @@ export class HttpErrorInterceptor implements HttpInterceptor {
                                 }
                                 setTimeout(() => messageService.warning(errorMessage), 0);
                                 return throwError(errorMessage);
+                            case 401:
+                                console.log(error);
+                                break;
                             default:
-                                if (Constants.DEBUG) {
-                                    console.log('Error ' + error.status + ' ' + error.message);
+                                console.log (error);
+                                if (error !== null) {
+                                    if (Constants.DEBUG) {
+                                        console.log('Error ' + error.status + ' ' + error.message);
+                                    }
+                                    errorMessage = error.message + ' (' + error.status + ')';
+                                    setTimeout(() => messageService.error(errorMessage), 0);
                                 }
-                                errorMessage = error.message + ' (' + error.status + ')';
-                                setTimeout(() => messageService.error(errorMessage), 0);
                                 return throwError(errorMessage);
-                        }
+                            }
                 })
             );
     }
