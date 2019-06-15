@@ -4,7 +4,7 @@ import { Constants } from 'src/app/constants';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { MessageService } from 'src/app/message/message.service';
-import { take } from 'rxjs/operators';
+import { take, switchMap } from 'rxjs/operators';
 import { Token } from './token';
 import { Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
@@ -96,11 +96,11 @@ export class AuthService extends InternalService {
          .set('refresh_token', localStorage.getItem('refresh_token'))
          .set('grant_type', 'refresh_token');
 
-         this.httpClient.post<Token>(
+         return this.httpClient.post<Token>(
               this.backendSetupService.url() + '/oauth/token', '', { headers: headers, params: params })
-			  .pipe(take(1))
-              .subscribe(
-                  token => {
+			  .pipe(
+				take(1),
+              	switchMap( token => {
                        if (Constants.DEBUG) {
                            console.groupCollapsed('Identifity retrieved : ');
                            console.log('access_token', token.access_token);
@@ -112,15 +112,11 @@ export class AuthService extends InternalService {
                        access_token = token.access_token;
                        localStorage.setItem('refresh_token', token.refresh_token);
                        localStorage.setItem('access_token', token.access_token);
-                       this.connected = true;
+					   this.connected = true;
 
-                  },
-                  error => {
-                       if (Constants.DEBUG) {
-                           console.error('Connection error ', error);
+					   return of (token.access_token);
                   }
-              });
-              return of(access_token).pipe(delay(200));
+			  ));
      }
 }
 
