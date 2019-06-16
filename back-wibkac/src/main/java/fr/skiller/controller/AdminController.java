@@ -7,7 +7,8 @@ import static fr.skiller.Error.MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
 import static fr.skiller.Error.CODE_CANNOT_SELF_CREATE_USER;
 import static fr.skiller.Error.MESSAGE_CANNOT_SELF_CREATE_USER;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -38,6 +39,8 @@ public class AdminController {
 
 	@Autowired
 	private StaffHandler staffHandler;
+
+	Logger logger = LoggerFactory.getLogger(AdminController.class.getCanonicalName());
 
 	/**
 	 * Does Wibkac allow self registration ?
@@ -88,8 +91,15 @@ public class AdminController {
 			@RequestParam("login") String login,
 			@RequestParam("password") String password)  {
 		
+		if (logger.isDebugEnabled() && !this.staffHandler.getStaff().isEmpty()) {
+				logger.debug ("the staff collection is not empty, see below...");
+				logger.debug("------------------------------------------------");
+				this.staffHandler.getStaff().values().stream().forEach(
+					staff -> logger.debug(staff.toString()));
+		}
+		
 		if (this.staffHandler.getStaff().isEmpty()) {
-			return this.createNewUser(login, password);			
+			return this.internalCreateNewUser(login, password);	
 		} else {
 			HttpHeaders headers = new HttpHeaders();
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED));
@@ -115,7 +125,7 @@ public class AdminController {
 			@RequestParam("password") String password)  {
 		
 		if (this.allowSelfRegistration) {
-			return this.createNewUser(login, password);			
+			return this.internalCreateNewUser(login, password);	
 		} else {
 			HttpHeaders headers = new HttpHeaders();
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(CODE_CANNOT_SELF_CREATE_USER));
@@ -132,7 +142,16 @@ public class AdminController {
 	public ResponseEntity<StaffDTO> createNewUser(
 			@RequestParam("login") String login,
 			@RequestParam("password") String password)  {
+		return internalCreateNewUser(login, password);
+	}
 		
+	/**
+	 * Create a user and return the corresponding staff member.
+	 * @param login the user login
+	 * @param password his password
+	 * @return The staff member created for this user/password
+	 */
+	private ResponseEntity<StaffDTO> internalCreateNewUser (String login, String password) {
 		HttpHeaders headers = new HttpHeaders();
 		try {
 			Staff staff = administration.createNewUser(login, password);
@@ -143,7 +162,6 @@ public class AdminController {
 			headers.set(BACKEND_RETURN_MESSAGE, ske.errorMessage);
 			return new ResponseEntity<>(new StaffDTO(new Staff(), ske.errorCode, ske.errorMessage), headers, HttpStatus.OK);
 		}
-		
 	}
 
 	@GetMapping("/connect")

@@ -96,6 +96,7 @@ public class AdministrationImpl implements Administration {
 
 		Optional<Staff> oStaff = staffHandler.findStaffWithLogin(login);
 		final Staff staff = oStaff.isPresent() ? oStaff.get() : null;
+		
 		/**
 		 * The very first created user is the very first administrative user in Wibkac.
 		 * Therefore the self registration is obviously allowed

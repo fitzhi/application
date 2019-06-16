@@ -1,61 +1,67 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from '../service/auth/auth.service';
 
 @Component({
-    selector: 'app-connect-user',
-    templateUrl: './connect-user.component.html',
-    styleUrls: ['./connect-user.component.css']
+	selector: 'app-connect-user',
+	templateUrl: './connect-user.component.html',
+	styleUrls: ['./connect-user.component.css']
 })
 export class ConnectUserComponent implements OnInit {
 
-    /**
+	/**
+     * We'll send to the parent component (startingSetup) the new user is connected.
+     */
+	@Output() messengerUserConnected = new EventEmitter<boolean>();
+
+	/**
      * Group of the components present in the form.
      */
-    public connectionGroup: FormGroup;
+	public connectionGroup: FormGroup;
 
-    constructor(
-        private authService: AuthService,
-        private formBuilder: FormBuilder) {
-        this.connectionGroup = this.formBuilder.group({
-            username: new FormControl('', [Validators.required, Validators.maxLength(16)]),
-            password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(16)])
-        });
-    }
+	constructor(
+		private authService: AuthService,
+		private formBuilder: FormBuilder) {
+		this.connectionGroup = this.formBuilder.group({
+			username: new FormControl('', [Validators.required, Validators.maxLength(16)]),
+			password: new FormControl('', [Validators.required, Validators.minLength(6), Validators.maxLength(16)])
+		});
+	}
 
-    ngOnInit() {
-    }
+	ngOnInit() {
+	}
 
-    /**
+	/**
      * Class of the button corresponding to the 3 possible states of the "Ok" button.
      */
-    classOkButton() {
-        return (this.connectionGroup.invalid) ?
-            'okButton okButtonInvalid' : 'okButton okButtonValid';
-    }
+	classOkButton() {
+		return (this.connectionGroup.invalid) ?
+			'okButton okButtonInvalid' : 'okButton okButtonValid';
+	}
 
-    /**
+	/**
      * Cancel the installation
      */
-    onCancel() {
-        console.log('onCancel');
-    }
+	onCancel() {
+		console.log('onCancel');
+	}
 
-    /**
+	/**
      * Cancel the installation
      */
-    onSubmit() {
-        const username: string = this.connectionGroup.get('username').value;
-        const password: string = this.connectionGroup.get('password').value;
-        this.authService.connect(username, password);
-    }
+	onSubmit() {
+		const username: string = this.connectionGroup.get('username').value;
+		const password: string = this.connectionGroup.get('password').value;
+		this.authService.connect(username, password)
+			.subscribe(connectionStatus => this.messengerUserConnected.emit(connectionStatus));
+	}
 
-    get username(): any {
-        return this.connectionGroup.get('username');
-    }
+	get username(): any {
+		return this.connectionGroup.get('username');
+	}
 
-    get password(): any {
-        return this.connectionGroup.get('password');
-    }
+	get password(): any {
+		return this.connectionGroup.get('password');
+	}
 
 }
