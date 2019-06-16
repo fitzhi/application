@@ -14,9 +14,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.text.AbstractDocument.Content;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -32,6 +38,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import fr.skiller.bean.Administration;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.data.internal.Staff;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -69,16 +76,20 @@ public class AdministrationControllerVeryFirstUserTest {
 	public Administration administration;
 
 	Logger logger = LoggerFactory.getLogger(AdministrationControllerVeryFirstUserTest.class.getCanonicalName());
+
+	Map<Integer, Staff> staffMem;
+	
+	@Before
+	public void before() {
+		staffMem = new HashMap<>();
+		staffHandler.getStaff().keySet().forEach(
+				key -> staffMem.put(key, staffHandler.getStaff().get(key)));
+		staffHandler.getStaff().clear();
+	}
 	
 	@Test
 	public void creationVeryFirstUserOK() throws Exception {
-		
-		
-		staffHandler.getStaff().clear();
-		if (logger.isDebugEnabled()) {
-			logger.debug("Staff collection is empty");
-		}
-
+				
 		MockHttpServletResponse response = this.mvc.perform(get("/admin/veryFirstUser") //NOSONAR
 					.param(LOGIN, "adminForTest") 
 					.param(PASS_WORD, "passForTest"))  
@@ -88,8 +99,13 @@ public class AdministrationControllerVeryFirstUserTest {
 				.andReturn().getResponse();
 		
 		assertEquals("1", response.getHeader("backend.return_code"));
-		
 
+	}
+
+	@After
+	public void after() {
+		staffMem.keySet().forEach(
+				key -> staffHandler.getStaff().put(key, staffMem.get(key)));
 	}
 
 

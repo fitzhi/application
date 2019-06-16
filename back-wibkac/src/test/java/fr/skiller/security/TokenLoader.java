@@ -47,7 +47,7 @@ public class TokenLoader {
 	}
 
 	public static String obtainAccessMockToken(MockMvc mvc) throws Exception {
-		return obtainAccessToken(mvc, "bill", "abc123");
+		return obtainAccessToken(mvc, "frvidal", "thePassword");
 	}
 
 }
