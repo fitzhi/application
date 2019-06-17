@@ -41,6 +41,11 @@ export class StartingSetupComponent extends BaseComponent implements OnInit, OnD
      */
 	staff: Collaborator;
 
+	/**
+	 * Label of the second step.
+	 */
+	labelUser = 'User';
+
 	constructor(
 		private backendSetupService: BackendSetupService,
 		private referentialService: ReferentialService,
@@ -58,9 +63,11 @@ export class StartingSetupComponent extends BaseComponent implements OnInit, OnD
 		if (Constants.DEBUG) {
 			console.log('veryFirstConnecion :', $event);
 		}
-		this.veryFirstConnection = $event;
+		this.labelUser = (this.veryFirstConnection) ? 'First admin user' : 'First registration';
+
 		this.completed[0] = true;
 		this.referentialService.loadAllReferentials();
+
 		this.skillService.loadSkills();
 		setTimeout(() => {
 			this.stepper.next();

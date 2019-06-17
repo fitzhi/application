@@ -8,7 +8,16 @@
     </div>
 
     <div class="col-md-12 text-left" [hidden]="veryFirstConnection">
-        <p class="important">This is your first connection in Wibkac.</p>
+        <p class="important">
+			It seams like this is your FIRST connection into Wibkac.<br/>
+			&nbsp;&nbsp;&nbsp;&nbsp;<span class="skip">
+				If you are already registered with a user/password, just skip this step and connect into Wibkac.</span>
+			&nbsp;
+			<button class="btn btn-outline-secondary rounded" [routerLink]="['/']">
+				connect
+			</button>
+			<br/>
+		</p>
     </div>
 
     <div class="col-md-12">

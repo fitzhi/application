@@ -11,121 +11,134 @@ import { StaffDataExchangeService } from 'src/app/tabs-staff/service/staff-data-
 import { MessageBoxService } from 'src/app/message-box/service/message-box.service';
 
 @Component({
-    selector: 'app-register-user',
-    templateUrl: './register-user.component.html',
-    styleUrls: ['./register-user.component.css']
+	selector: 'app-register-user',
+	templateUrl: './register-user.component.html',
+	styleUrls: ['./register-user.component.css']
 })
 export class RegisterUserComponent extends BaseComponent implements OnInit, OnDestroy {
 
-    /**
+	/**
      * We'll send to the parent component (startingSetup) the new user has been created.
      */
-    @Output() messengerUserRegistered = new EventEmitter<number>();
+	@Output() messengerUserRegistered = new EventEmitter<number>();
 
-    /**
+	/**
      * Is this ever the first connection to this server, assuming that the user has to be "administrator" ?
      */
-    @Input('veryFirstConnection')
-    veryFirstConnection = true;
+	@Input('veryFirstConnection')
+	veryFirstConnection = true;
 
-    /**
+	/**
      * Group of the components present in the form.
      */
-    public connectionGroup: FormGroup;
+	public connectionGroup: FormGroup;
 
-    constructor(
-        private formBuilder: FormBuilder,
-        private httpClient: HttpClient,
-        private backendSetupService: BackendSetupService,
-        private staffDataExchangeService: StaffDataExchangeService,
-        private messageBoxService: MessageBoxService,
-        private messageService: MessageService) {
-            super();
-    }
+	constructor(
+		private formBuilder: FormBuilder,
+		private httpClient: HttpClient,
+		private backendSetupService: BackendSetupService,
+		private staffDataExchangeService: StaffDataExchangeService,
+		private messageBoxService: MessageBoxService,
+		private messageService: MessageService) {
+		super();
+	}
 
-    ngOnInit() {
-        this.connectionGroup = this.formBuilder.group({
-            username: new FormControl('', [Validators.required, Validators.maxLength(16)]),
-            password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(16)]),
-            passwordConfirmation: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(16)]),
-        }, {
-            validator: MustMatch('password', 'passwordConfirmation')
-        });
-    }
+	ngOnInit() {
+		this.connectionGroup = this.formBuilder.group({
+			username: new FormControl('', [Validators.required, Validators.maxLength(16)]),
+			password: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(16)]),
+			passwordConfirmation: new FormControl('', [Validators.required, Validators.minLength(8), Validators.maxLength(16)]),
+		}, {
+				validator: MustMatch('password', 'passwordConfirmation')
+			});
+	}
 
-    /**
+	/**
      * Class of the button corresponding to the 3 possible states of the "Ok" button.
      */
-    classOkButton() {
-        return (this.connectionGroup.invalid) ?
-            'okButton okButtonInvalid' : 'okButton okButtonValid';
-    }
+	classOkButton() {
+		return (this.connectionGroup.invalid) ?
+			'okButton okButtonInvalid' : 'okButton okButtonValid';
+	}
 
-    get username(): any {
-        return this.connectionGroup.get('username');
-    }
+	get username(): any {
+		return this.connectionGroup.get('username');
+	}
 
-    get password(): any {
-        return this.connectionGroup.get('password');
-    }
+	get password(): any {
+		return this.connectionGroup.get('password');
+	}
 
-    get passwordConfirmation(): any {
-        return this.connectionGroup.get('passwordConfirmation');
-    }
+	get passwordConfirmation(): any {
+		return this.connectionGroup.get('passwordConfirmation');
+	}
 
-    /**
+	/**
      * Calling the base class to unsubscribe all subscriptions.
      */
-    ngOnDestroy() {
-        super.ngOnDestroy();
-    }
+	ngOnDestroy() {
+		super.ngOnDestroy();
+	}
 
-    /**
+	/**
      * Save the user and password.
      */
-    onSubmit() {
+	onSubmit() {
 
-        const username: string = this.connectionGroup.get('username').value;
-        const password: string =  this.connectionGroup.get('password').value;
-        if (Constants.DEBUG) {
-            console.log ('Create new user for username/pass', username + '/' + password);
-        }
-        this.subscriptions
-            .add(this.httpClient.get<StaffDTO>(
-                    this.backendSetupService.url() + '/admin/veryFirstUser',
-                    { params: { login: username, password: password }})
-            .subscribe(
-                response => {
-                    if (response.code === 0) {
-                        if (Constants.DEBUG) {
-                            console.log ('Empty staff created with id ' + response.staff.idStaff);
-                        }
-                        this.staffDataExchangeService.changeCollaborator (response.staff);
-                        this.messengerUserRegistered.emit(response.staff.idStaff);
-                    } else {
-                        this.messageService.error (response.message);
-                    }
-                },
-                error => {
-                    // We will restart the setup installation for the beginning
-                    this.backendSetupService.removeUrl();
-                    if (Constants.DEBUG) {
-                        console.log ('Connection error ', error);
-                    }
-                }));
-    }
-    /**
+		const username: string = this.connectionGroup.get('username').value;
+		const password: string = this.connectionGroup.get('password').value;
+		if (Constants.DEBUG) {
+			console.log( (this.veryFirstConnection ? 'Very first connection' : 'New user connection')
+			+ ' Create new user for username/pass', username + '/' + password);
+		}
+
+		this.subscriptions
+			.add(this.httpClient.get<StaffDTO>(
+				this.backendSetupService.url() + '/admin/' +
+				(this.veryFirstConnection ? 'veryFirstUser' : 'register'),
+				{ params: { login: username, password: password } })
+				.subscribe(
+					response => {
+						if (response.code === 0) {
+							if (Constants.DEBUG) {
+								console.log('Empty staff created with id ' + response.staff.idStaff);
+							}
+							this.staffDataExchangeService.changeCollaborator(response.staff);
+							this.messengerUserRegistered.emit(response.staff.idStaff);
+						} else {
+							this.messageService.error(response.message);
+						}
+					},
+					error => {
+						// We will restart the setup installation for the beginning
+						this.backendSetupService.removeUrl();
+						if (Constants.DEBUG) {
+							console.log('Connection error ', error);
+						}
+					}));
+	}
+
+	/**
      * Cancel the installation
      */
-    onCancel() {
-        this.subscriptions.add(
-            this.messageBoxService.question(
-                'Cancel of operation',
-                'Do you confim the cancellation ?')
-                .subscribe(answer => {
-                    if (answer) {
-                        this.backendSetupService.removeUrl();
-                        this.messengerUserRegistered.emit(-1);
-                      }}));
-    }
+	onCancel() {
+		this.subscriptions.add(
+			this.messageBoxService.question(
+				'Cancel of operation',
+				'Do you confim the cancellation ?')
+				.subscribe(answer => {
+					if (answer) {
+						this.backendSetupService.removeUrl();
+						this.messengerUserRegistered.emit(-1);
+					}
+				}));
+	}
+
+	/**
+	 * Skip the registration of a new user.
+	 */
+	public skip() {
+		// We do know at this point the staff identifier corresponding to this user.
+		this.messengerUserRegistered.emit(0);
+	}
 }

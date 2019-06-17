@@ -6,7 +6,7 @@
   </mat-step>
 
   <mat-step [completed]="completed[1]">
-    <ng-template matStepLabel>Initialize admin user</ng-template>
+    <ng-template matStepLabel>{{labelUser}}</ng-template>
     <app-register-user 
         (messengerUserRegistered)="setRegisteredUser($event)" 
         [veryFirstConnection]="veryFirstConnection"></app-register-user>

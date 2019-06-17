@@ -47,4 +47,6 @@ p.important {
     width: 96px;
 }
 
-
+span.skip {
+	color: darkblue;
+}

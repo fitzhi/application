@@ -26,6 +26,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				"/admin/isVeryFirstConnection", 
 				"/admin/saveVeryFirstConnection", 
 				"/admin/veryFirstUser",
+				"/admin/register",
 				"/skill/all",
 				"/referential/**").permitAll()
 		.antMatchers("/**").access("hasRole('USER')")

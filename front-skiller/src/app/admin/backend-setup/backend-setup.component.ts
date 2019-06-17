@@ -82,7 +82,8 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
 							console.log('Connection error ', error);
 						}
 						this.currentState = this.BUTTON_INVALID_URL;
-						this.messageService.error('Error ! Either this URL is invalid, or your server is offline');
+						setTimeout(() => this.messageService.error(
+							'Error ! Either this URL is invalid, or your server is offline'), 0);
 					}));
 	}
 

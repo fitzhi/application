@@ -33,6 +33,7 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 			|| req.url.includes('/skill/all')
 			|| req.url.includes('/admin/isVeryFirstConnection')
 			|| req.url.includes('/admin/veryFirstUser')
+			|| req.url.includes('/admin/register')
 			|| req.url.includes('/oauth/token')) {
 			return next.handle(req);
 		}
