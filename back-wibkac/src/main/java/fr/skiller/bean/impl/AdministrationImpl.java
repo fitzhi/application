@@ -8,6 +8,8 @@ import static fr.skiller.Error.MESSAGE_INVALID_LOGIN_PASSWORD;
 import static fr.skiller.Error.MESSAGE_IO_ERROR;
 import static fr.skiller.Error.MESSAGE_LOGIN_ALREADY_EXIST;
 import static fr.skiller.Error.MESSAGE_UNREGISTERED_LOGIN;
+import static fr.skiller.Error.CODE_CANNOT_SELF_CREATE_USER;
+import static fr.skiller.Error.MESSAGE_CANNOT_SELF_CREATE_USER;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -98,7 +100,7 @@ public class AdministrationImpl implements Administration {
 		final Staff staff = oStaff.isPresent() ? oStaff.get() : null;
 		
 		/**
-		 * The very first created user is the very first administrative user in Wibkac.
+		 * The very first user created is the very first administrative user in Wibkac.
 		 * Therefore the self registration is obviously allowed
 		 */
 		if (isVeryFirstConnection()) {
@@ -110,24 +112,34 @@ public class AdministrationImpl implements Administration {
 			}
 		} 
 
-
-		if ( (staff == null) && (!this.allowSelfRegistration) ) {
-			throw new SkillerException(CODE_UNREGISTERED_LOGIN, 
-					MESSAGE_UNREGISTERED_LOGIN);
+		if (this.allowSelfRegistration)  {
+			if (staff == null) {
+				return staffHandler.addNewStaffMember(new Staff(-1, login, password));				
+			} else {
+				return updatePassword (staff, password);
+			}
+		} else {
+			if (staff == null) {
+				throw new SkillerException(CODE_CANNOT_SELF_CREATE_USER, 
+						MESSAGE_CANNOT_SELF_CREATE_USER);
+			} else {
+				return updatePassword (staff, password);
+			}
 		}
-
-		/**
-		 * If we create a NEW user, but an existing user with the same login already exists.
-		 */
-		if ( (staff != null) && !staff.isEmpty()) {
-			throw new SkillerException(CODE_LOGIN_ALREADY_EXIST, 
-					MessageFormat.format(MESSAGE_LOGIN_ALREADY_EXIST, 
-							login, staff.getFirstName(), staff.getLastName()));
-		}
-		
-		return staffHandler.addNewStaffMember(new Staff(-1, login, password));
 	}
-
+	
+	private Staff updatePassword (final Staff staff, String password) throws SkillerException {
+		// We cannot override an existing user
+		if (!staff.isEmpty()) {
+			throw new SkillerException(CODE_LOGIN_ALREADY_EXIST, 
+				MessageFormat.format(MESSAGE_LOGIN_ALREADY_EXIST, 
+				staff.getLogin(), staff.getFirstName(), staff.getLastName()));					
+		} else {
+			staff.setPassword(password);
+			return staff;
+		}		
+	}
+	
 	@Override
 	public Staff connect(String login, String password) throws SkillerException {
 		

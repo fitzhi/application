@@ -8,6 +8,7 @@ import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { HttpClient } from '@angular/common/http';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { SkillService } from 'src/app/service/skill.service';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-starting-setup',
@@ -50,6 +51,7 @@ export class StartingSetupComponent extends BaseComponent implements OnInit, OnD
 		private backendSetupService: BackendSetupService,
 		private referentialService: ReferentialService,
 		private skillService: SkillService,
+		private router: Router,
 		private httpClient: HttpClient) { super(); }
 
 	ngOnInit() {
@@ -95,6 +97,18 @@ export class StartingSetupComponent extends BaseComponent implements OnInit, OnD
 		setTimeout(() => {
 			this.stepper.next();
 		}, 0);
+	}
+
+	/**
+	 * Skip the setup process and proceed the connection.
+	 */
+	skipAndConnect($event: number) {
+		if ( Constants.DEBUG) {
+			console.log ('Skip and connect (' + $event + ')');
+		}
+		if ($event) {
+			this.router.navigate(['/login'], {});
+		}
 	}
 
 	/**

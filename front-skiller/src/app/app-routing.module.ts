@@ -13,10 +13,12 @@ import { ProjectStaffComponent } from './project/project-staff/project-staff.com
 import { TabsStaffListComponent } from './tabs-staff-list/tabs-staff-list.component';
 import { AuthGuardService } from './admin/security/auth-guard.service';
 import { StaffFormComponent } from './tabs-staff/staff-form/staff-form.component';
+import { ConnectUserComponent } from './admin/connect-user/connect-user.component';
 
 const routes: Routes = [
 	{ path: '', redirectTo: '/welcome', pathMatch: 'full' },
 	{ path: 'welcome', component: WelcomeComponent },
+	{ path: 'login', component: ConnectUserComponent },
 	{ path: 'searchSkill', component: ListSkillComponent, canActivate: [AuthGuardService] },
 	{ path: 'skill', component: SkillComponent, canActivate: [AuthGuardService] },
 	{ path: 'skill/:id', component: SkillComponent, canActivate: [AuthGuardService] },

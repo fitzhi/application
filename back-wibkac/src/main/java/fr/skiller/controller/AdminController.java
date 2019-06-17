@@ -110,32 +110,20 @@ public class AdminController {
 						MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED), 
 					headers, HttpStatus.OK);
 		}
-		
 	}	
 
 	/**
-	 * This method is used to initiate the first connection while creating the new user.
-	 * @param login the first admin user login
-	 * @param password this first admin user password
+	 * This method creates a new user if the setting <code><b>allowSelfRegistration</b></code> is set 
+	 * to <code>True</code>.
+	 * @param login the user login
+	 * @param password this user password
 	 * @return the newly created staff entry
 	 */
 	@GetMapping("/register")
 	public ResponseEntity<StaffDTO> autoRegister(
 			@RequestParam("login") String login,
 			@RequestParam("password") String password)  {
-		
-		if (this.allowSelfRegistration) {
-			return this.internalCreateNewUser(login, password);	
-		} else {
-			HttpHeaders headers = new HttpHeaders();
-			headers.set(BACKEND_RETURN_CODE, String.valueOf(CODE_CANNOT_SELF_CREATE_USER));
-			headers.set(BACKEND_RETURN_MESSAGE, MESSAGE_CANNOT_SELF_CREATE_USER);
-			return new ResponseEntity<>(new 
-						StaffDTO(new Staff(), 
-						CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED, 
-						MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED), 
-					headers, HttpStatus.FORBIDDEN);
-		}
+		return this.internalCreateNewUser(login, password);	
 	}	
 	
 	@GetMapping("/newUser")

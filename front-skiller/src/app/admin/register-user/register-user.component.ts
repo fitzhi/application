@@ -9,6 +9,7 @@ import { HttpClient } from '@angular/common/http';
 import { MessageService } from 'src/app/message/message.service';
 import { StaffDataExchangeService } from 'src/app/tabs-staff/service/staff-data-exchange.service';
 import { MessageBoxService } from 'src/app/message-box/service/message-box.service';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-register-user',
@@ -23,6 +24,11 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 	@Output() messengerUserRegistered = new EventEmitter<number>();
 
 	/**
+     * We'll send to the parent component (startingSetup) the new user has been created.
+     */
+	@Output() messengerSkipAndConnect = new EventEmitter<boolean>();
+
+	/**
      * Is this ever the first connection to this server, assuming that the user has to be "administrator" ?
      */
 	@Input('veryFirstConnection')
@@ -33,12 +39,14 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
      */
 	public connectionGroup: FormGroup;
 
+
 	constructor(
 		private formBuilder: FormBuilder,
 		private httpClient: HttpClient,
 		private backendSetupService: BackendSetupService,
 		private staffDataExchangeService: StaffDataExchangeService,
 		private messageBoxService: MessageBoxService,
+		private router: Router,
 		private messageService: MessageService) {
 		super();
 	}
@@ -139,6 +147,7 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 	 */
 	public skip() {
 		// We do know at this point the staff identifier corresponding to this user.
-		this.messengerUserRegistered.emit(0);
+		console.log ('skip');
+		this.messengerSkipAndConnect.emit(true);
 	}
 }

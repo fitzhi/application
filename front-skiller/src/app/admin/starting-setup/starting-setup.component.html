@@ -9,12 +9,13 @@
     <ng-template matStepLabel>{{labelUser}}</ng-template>
     <app-register-user 
         (messengerUserRegistered)="setRegisteredUser($event)" 
+        (messengerSkipAndConnect)="skipAndConnect($event)" 
         [veryFirstConnection]="veryFirstConnection"></app-register-user>
   </mat-step>
 
   <mat-step [completed]="completed[2]">
     <ng-template matStepLabel>Connection</ng-template>
-    <app-connect-user (messengerUserConnected)="setConnection($event)"></app-connect-user>
+    <app-connect-user [directLogin]="false" (messengerUserConnected)="setConnection($event)"></app-connect-user>
   </mat-step>
 
   <mat-step [completed]="completed[3]">

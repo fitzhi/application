@@ -47,6 +47,17 @@ p.important {
     width: 96px;
 }
 
-span.skip {
+.skip {
 	color: darkblue;
+}
+
+#btn-connect {
+	width: 100%;
+	height: 100%;
+}
+
+#div-connect {
+	background-color: whitesmoke;
+	border-right: 1px solid #ddd;
+	padding: 5px;
 }

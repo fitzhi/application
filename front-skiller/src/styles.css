@@ -35,3 +35,7 @@ html {
 .basic-container {
   padding: 30px;
 }
+
+span.bold {
+	font-weight: bold;
+}

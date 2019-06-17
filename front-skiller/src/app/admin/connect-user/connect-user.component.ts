@@ -1,6 +1,7 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from '../service/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-connect-user',
@@ -15,12 +16,19 @@ export class ConnectUserComponent implements OnInit {
 	@Output() messengerUserConnected = new EventEmitter<boolean>();
 
 	/**
+	 * Are we entering in this component, just by routing directly into '/login'
+	 */
+	@Input('directLogin')
+	private directLogin = true;
+
+	/**
      * Group of the components present in the form.
      */
 	public connectionGroup: FormGroup;
 
 	constructor(
 		private authService: AuthService,
+		private router: Router,
 		private formBuilder: FormBuilder) {
 		this.connectionGroup = this.formBuilder.group({
 			username: new FormControl('', [Validators.required, Validators.maxLength(16)]),
@@ -53,7 +61,12 @@ export class ConnectUserComponent implements OnInit {
 		const username: string = this.connectionGroup.get('username').value;
 		const password: string = this.connectionGroup.get('password').value;
 		this.authService.connect(username, password)
-			.subscribe(connectionStatus => this.messengerUserConnected.emit(connectionStatus));
+			.subscribe(connectionStatus => {
+					this.messengerUserConnected.emit(connectionStatus);
+					if (this.directLogin) {
+						this.router.navigate(['/welcome'], {});
+					}
+				});
 	}
 
 	get username(): any {

@@ -48,7 +48,7 @@ public class Error {
 	public static final String MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED = "Cannot create 2 times, the first admin user."; 
 		
 	public static final int CODE_CANNOT_SELF_CREATE_USER = -1013;
-	public static final String MESSAGE_CANNOT_SELF_CREATE_USER = "Cannot self create your user. Please contact your administrator"; 
+	public static final String MESSAGE_CANNOT_SELF_CREATE_USER = "You cannot create your own user. Please contact your administrator"; 
 
 	private Error() {
 	}
