@@ -1,4 +1,4 @@
-package fr.skiller.source.scanner;
+package fr.skiller.source.crawler;
 
 import static fr.skiller.Global.LN;
 
@@ -15,7 +15,7 @@ import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Pseudo;
-import fr.skiller.data.internal.RiskChartData;
+import fr.skiller.data.internal.DataChart;
 import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.CommitRepository;
 
@@ -31,24 +31,22 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	/**
 	 * Service in charge of handling the staff collection.<br/>
 	 * This bean in filled by the upper concrete service<br/>
-	 * {@link fr.skiller.source.scanner.git.GitScanner#init() GitScanner.init} is the first implementation for Git.
+	 * {@link fr.skiller.source.crawler.git.GitScanner#init() GitScanner.init} is the first implementation for Git.
 	 */
 	protected StaffHandler parentStaffHandler;
 
 	/**
 	 * Service in charge of handling the projects.
 	 * This bean in filled by the upper concrete service<br/>
-	 * {@link fr.skiller.source.scanner.git.GitScanner#init() GitScanner.init} is the first implementation for Git.
+	 * {@link fr.skiller.source.crawler.git.GitScanner#init() GitScanner.init} is the first implementation for Git.
 	 */
 	protected ProjectHandler parentProjectHandler;
 	
 	private Logger logger = LoggerFactory.getLogger(AbstractScannerDataGenerator.class.getCanonicalName());
-
-	
 	
 	@Override
 	public RiskDashboard aggregateDashboard(final Project project, final CommitRepository commitRepo) {
-		RiskChartData root = new RiskChartData("root");
+		DataChart root = new DataChart("root");
 		commitRepo.getRepository().values().stream().forEach(
 				commit -> 
 				root.injectFile(root, 
@@ -60,7 +58,6 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 		Set<Pseudo> ghosts = new HashSet<>();
 		commitRepo.unknownContributors().stream()
 			.forEach(unknown -> {
-				
 				Ghost g = parentProjectHandler.getGhost(project, unknown);
 				if (g == null) {
 					ghosts.add(new Pseudo(unknown, false));
@@ -86,7 +83,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	 * For this first testing version. The risk will be randomly estimated.
 	 * @param all or part of the source directories
 	 */
-	public void evaluateTheRisk(final RiskChartData sunburstData) {
+	public void evaluateTheRisk(final DataChart sunburstData) {
 		if (sunburstData.hasUnknownRiskLevel()) {
 			sunburstData.setRiskLevel( (int) (r.nextInt() % 11)); 
 		}

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.skiller.source.scanner;
+package fr.skiller.source.crawler;
 
 import java.io.IOException;
 
@@ -9,6 +9,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 
 import fr.skiller.controller.ProjectController.SettingsGeneration;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.DataChart;
 import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
@@ -41,7 +42,11 @@ public interface RepoScanner {
 	CommitRepository parseRepository(Project project, ConnectionSettings settings) throws IOException, SkillerException;
 
 	/**
-	 * Aggregate the history of the repository into the risks dashboard.
+	 * <p>Aggregate the history of the repository into the risks dashboard.</p>
+	 * <p>
+	 * This method transform the commit repository obtained from GIT and represented by a flat map (one record per file),
+	 * into an hierarchical representation with directory and their children (sub-directories / source files). 
+	 * </p>
 	 * @param project working project
 	 * @param commitRepo the parsed repository history retrieved from the version control
 	 * @return the dashboard of the current project.

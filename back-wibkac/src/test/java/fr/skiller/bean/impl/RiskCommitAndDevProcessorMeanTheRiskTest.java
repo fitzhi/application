@@ -25,7 +25,7 @@ import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.RiskChartData;
+import fr.skiller.data.internal.DataChart;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
@@ -89,7 +89,7 @@ public class RiskCommitAndDevProcessorMeanTheRiskTest {
 
 		RiskCommitAndDevActiveProcessorImpl impl = ((RiskCommitAndDevActiveProcessorImpl) riskProcessor);
 
-		RiskChartData data = new RiskChartData("");
+		DataChart data = new DataChart("");
 		comRep.getRepository().values().stream().forEach(
 				commit -> 
 				data.injectFile(data, 

@@ -17,4 +17,10 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
+	<logger name="fr.skiller.bean.impl.DataChartHandlerImpl" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+
 </configuration>

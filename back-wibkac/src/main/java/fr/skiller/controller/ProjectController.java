@@ -48,7 +48,7 @@ import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
-import fr.skiller.source.scanner.RepoScanner;
+import fr.skiller.source.crawler.RepoScanner;
 
 @RestController
 @RequestMapping("/project")

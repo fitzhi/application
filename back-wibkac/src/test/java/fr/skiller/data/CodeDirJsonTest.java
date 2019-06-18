@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import fr.skiller.data.internal.RiskChartData;
+import fr.skiller.data.internal.DataChart;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL Test of the JSON generation of the
@@ -46,27 +46,27 @@ public class CodeDirJsonTest  {
 	@Test
 	public void testGenerate() throws IOException {
 
-		RiskChartData gRoot = new RiskChartData("VEGEO");
+		DataChart gRoot = new DataChart("VEGEO");
 		gRoot.setNumberOfFiles(20);
 		
-		RiskChartData g1 = new RiskChartData("com");
+		DataChart g1 = new DataChart("com");
 		g1.setNumberOfFiles(15);
 		
-		RiskChartData g1_bis = new RiskChartData("fr");
+		DataChart g1_bis = new DataChart("fr");
 		g1_bis.setNumberOfFiles(5);
 
-		gRoot.addsubDir(g1);
-		gRoot.addsubDir(g1_bis);
+		gRoot.addSubDir(g1);
+		gRoot.addSubDir(g1_bis);
 		
 		
-		RiskChartData g2 = new RiskChartData("google");
+		DataChart g2 = new DataChart("google");
 		g2.setNumberOfFiles(5);
 
-		RiskChartData g3 = new RiskChartData("amazon");
+		DataChart g3 = new DataChart("amazon");
 		g3.setNumberOfFiles(10);
 
-		g1.addsubDir(g2);
-		g1.addsubDir(g3);
+		g1.addSubDir(g2);
+		g1.addSubDir(g3);
 
 		String s = gson.toJson(gRoot);
 		if (logger.isDebugEnabled()) {

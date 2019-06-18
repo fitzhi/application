@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
-import fr.skiller.data.internal.RiskChartData;
+import fr.skiller.data.internal.DataChart;
 import fr.skiller.data.internal.RiskLegend;
 import fr.skiller.data.source.CommitRepository;
 
@@ -31,13 +31,13 @@ public interface RiskProcessor {
 	 * @param data repository data prepared for the Sunburst chart.
 	 * @param statsCommit list of statistics of commits.
 	 */
-	void evaluateTheRisk(CommitRepository repository, RiskChartData data, List<StatActivity> statsCommit) ;
+	void evaluateTheRisk(CommitRepository repository, DataChart data, List<StatActivity> statsCommit) ;
 
 	/**
 	 * Set the preview settings for each directory in the passed tree.
 	 * @param dataTree the data tree representing the repository directories
 	 */
-	void setPreviewSettings(RiskChartData dataTree);
+	void setPreviewSettings(DataChart dataTree);
 	
 	/**
 	 * Mean the risk for the children of this location.<br/>
@@ -46,7 +46,7 @@ public interface RiskProcessor {
 	 * @param data data previewed location prepared for the sunburst chart 
 	 * @return the calculated level of risk
 	 */
-	int meanTheRisk(RiskChartData location);
+	int meanTheRisk(DataChart location);
 
 	
 }

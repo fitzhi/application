@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.skiller.bean.RiskProcessor;
-import fr.skiller.data.internal.RiskChartData;
+import fr.skiller.data.internal.DataChart;
 
 /**
  * Test the level of risk evaluation tool.
@@ -32,17 +32,17 @@ public class GitScannerRiskLevelTest {
 	
 	@Test
 	public void testFillTheHoles1() {
-		RiskChartData data = new RiskChartData("A");
+		DataChart data = new DataChart("A");
 		data.setRiskLevel(1);
 		
-		data.addsubDir(new RiskChartData("AA").setRiskLevel(2));
-		RiskChartData subData = new RiskChartData("AB").setRiskLevel(UNKNOWN);
-		data.addsubDir(subData);
-		data.addsubDir(new RiskChartData("AC").setRiskLevel(1));
+		data.addSubDir(new DataChart("AA").setRiskLevel(2));
+		DataChart subData = new DataChart("AB").setRiskLevel(UNKNOWN);
+		data.addSubDir(subData);
+		data.addSubDir(new DataChart("AC").setRiskLevel(1));
 		
-		subData.addsubDir(new RiskChartData("ABA").setRiskLevel(1));
-		subData.addsubDir(new RiskChartData("ABB").setRiskLevel(5));
-		subData.addsubDir(new RiskChartData("ABC").setRiskLevel(10));
+		subData.addSubDir(new DataChart("ABA").setRiskLevel(1));
+		subData.addSubDir(new DataChart("ABB").setRiskLevel(5));
+		subData.addSubDir(new DataChart("ABC").setRiskLevel(10));
 		
 		riskSurveyor.meanTheRisk(subData);
 		
@@ -53,17 +53,17 @@ public class GitScannerRiskLevelTest {
 
 	@Test
 	public void testFillTheHoles2() {
-		RiskChartData data = new RiskChartData("A");
+		DataChart data = new DataChart("A");
 		data.setRiskLevel(1);
 		
-		data.addsubDir(new RiskChartData("AA").setRiskLevel(2));
-		RiskChartData subData = new RiskChartData("AB").setRiskLevel(UNKNOWN);
-		data.addsubDir(subData);
-		data.addsubDir(new RiskChartData("AC").setRiskLevel(1));
+		data.addSubDir(new DataChart("AA").setRiskLevel(2));
+		DataChart subData = new DataChart("AB").setRiskLevel(UNKNOWN);
+		data.addSubDir(subData);
+		data.addSubDir(new DataChart("AC").setRiskLevel(1));
 		
-		subData.addsubDir(new RiskChartData("ABA").setRiskLevel(1));
-		subData.addsubDir(new RiskChartData("ABB").setRiskLevel(5));
-		subData.addsubDir(new RiskChartData("ABC").setRiskLevel(10));
+		subData.addSubDir(new DataChart("ABA").setRiskLevel(1));
+		subData.addSubDir(new DataChart("ABB").setRiskLevel(5));
+		subData.addSubDir(new DataChart("ABC").setRiskLevel(10));
 		
 		riskSurveyor.meanTheRisk(subData);
 		

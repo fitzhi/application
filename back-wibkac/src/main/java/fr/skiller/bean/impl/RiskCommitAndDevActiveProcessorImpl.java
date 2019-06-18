@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
-import fr.skiller.data.internal.RiskChartData;
+import fr.skiller.data.internal.DataChart;
 import fr.skiller.data.internal.RiskLegend;
 import fr.skiller.data.internal.SourceFile;
 import fr.skiller.data.source.CommitHistory;
@@ -215,7 +215,7 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	 * @param data       repository data prepared to be displayed by the Sunburst
 	 *                   chart
 	 */
-	public void evaluateTheRisk(final CommitRepository repository, final RiskChartData data,
+	public void evaluateTheRisk(final CommitRepository repository, final DataChart data,
 			final List<StatActivity> statsCommit) {
 
 		agregateCommits("", repository, data, statsCommit);
@@ -264,7 +264,7 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	 *              colors, and its children)
 	 * @param stats the list containing a statistic entry for each class file
 	 */
-	public void evaluateActiveDevelopersCoverage(final String dir, final RiskChartData data,
+	public void evaluateActiveDevelopersCoverage(final String dir, final DataChart data,
 			final List<StatActivity> stats) {
 
 		long countCommits = agregateCountCommits(dir + data.getLocation(), stats);
@@ -310,7 +310,7 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	 * @param stats      the list containing a statistic entry for each class file
 	 */
 	public void agregateCommits(final String baseDir, final CommitRepository repository,
-			final RiskChartData sunburstData, final List<StatActivity> stats) {
+			final DataChart sunburstData, final List<StatActivity> stats) {
 
 		// This directory contains class within it.
 		if ((sunburstData.getClassnames() != null) && !sunburstData.getClassnames().isEmpty()) {
@@ -374,7 +374,7 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	}
 
 	@Override
-	public void setPreviewSettings(RiskChartData data) {
+	public void setPreviewSettings(DataChart data) {
 		if (!data.hasUnknownRiskLevel()) {
 			int riskLevel = data.getRiskLevel();
 			data.setColor(colorOfRisk(riskLevel));
@@ -385,7 +385,7 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	}
 
 	@Override
-	public int meanTheRisk(final RiskChartData location) {
+	public int meanTheRisk(final DataChart location) {
 		if ((location.getChildren() == null) || (location.getChildren().isEmpty())) {
 			return location.getRiskLevel();
 		}

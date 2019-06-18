@@ -12,9 +12,9 @@ import java.util.Set;
 public class RiskDashboard {
 
 	/**
-	 * Data ready to use for the Sunburst chart.
+	 * Data ready to use for the chart.
 	 */
-	public final RiskChartData riskChartData;	
+	public final DataChart riskChartData;	
 	
 	/**
 	 * List of unknown contributors.
@@ -26,7 +26,7 @@ public class RiskDashboard {
 	 * @param riskChartData data ready to use for the Sunburst chart.
 	 * @param contributors list of unknown contributors.
 	 */
-	public RiskDashboard(final RiskChartData riskChartData, final Set<Pseudo> contributors) {
+	public RiskDashboard(final DataChart riskChartData, final Set<Pseudo> contributors) {
 		super();
 		this.riskChartData = riskChartData;
 		this.undefinedContributors = contributors;

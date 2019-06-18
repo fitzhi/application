@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
-import fr.skiller.data.internal.RiskChartData;
+import fr.skiller.data.internal.DataChart;
 import fr.skiller.data.internal.RiskLegend;
 import fr.skiller.data.internal.SourceFile;
 import fr.skiller.data.source.CommitHistory;
@@ -156,7 +156,7 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 	 */
 	public void evaluateTheRisk(
 			final CommitRepository repository, 
-			final RiskChartData sunburstData) {
+			final DataChart sunburstData) {
 		
 		final List<StatActivity> stats = new ArrayList<>();
 		
@@ -238,7 +238,7 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 	 * @param hasSourceWithoutContributor This directory has a source file which contains no more active developers.
 	 */
 	private void setRiskLevel(
-			final RiskChartData sunburstData, 
+			final DataChart sunburstData, 
 			final int percentageOfCommitsMadeByActiveDevelopers,
 			boolean hasLostARecentContributor,
 			boolean hasASourceFileUnder50pct, 
@@ -319,7 +319,7 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 	}
 	
 	@Override
-	public void setPreviewSettings(RiskChartData data) {
+	public void setPreviewSettings(DataChart data) {
 		if (!data.hasUnknownRiskLevel()) {
 			int riskLevel = data.getRiskLevel();
 			data.setColor(colorOfRisk(riskLevel));
@@ -330,7 +330,7 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 	}
 
 	@Override
-	public int meanTheRisk(final RiskChartData location) {
+	public int meanTheRisk(final DataChart location) {
 		if ( (location.getChildren() == null) || (location.getChildren().isEmpty()) ) {
 			return location.getRiskLevel();
 		}
@@ -343,7 +343,7 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 	}
 
 	@Override
-	public void evaluateTheRisk(CommitRepository repository, RiskChartData data,
+	public void evaluateTheRisk(CommitRepository repository, DataChart data,
 			List<fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity> statsCommit) {
 		throw new SkillerRuntimeException("Should not pass here!");
 	}

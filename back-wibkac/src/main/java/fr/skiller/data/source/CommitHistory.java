@@ -26,7 +26,7 @@ public class CommitHistory {
 	
 	/**
 	 * Level of risk on this source file. <br/>
-	 * This risk is evaluate by {@link fr.skiller.source.scanner.RepoScanner#evaluateTheRisk(CommitRepository)}
+	 * This risk is evaluate by {@link fr.skiller.source.crawler.RepoScanner#evaluateTheRisk(CommitRepository)}
 	 */
 	int riskLevel;
 	

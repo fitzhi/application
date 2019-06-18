@@ -37,7 +37,7 @@ import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
 import fr.skiller.exception.SkillerException;
-import fr.skiller.source.scanner.RepoScanner;
+import fr.skiller.source.crawler.RepoScanner;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

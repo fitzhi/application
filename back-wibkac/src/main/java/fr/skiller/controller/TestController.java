@@ -20,7 +20,7 @@ import com.google.gson.Gson;
 
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.data.internal.ForTest;
-import fr.skiller.source.scanner.RepoScanner;
+import fr.skiller.source.crawler.RepoScanner;
 
 @RestController
 @RequestMapping("/test")

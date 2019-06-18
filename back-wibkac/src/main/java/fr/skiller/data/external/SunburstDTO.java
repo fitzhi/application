@@ -3,7 +3,7 @@ package fr.skiller.data.external;
 import java.util.Set;
 
 import fr.skiller.data.internal.Pseudo;
-import fr.skiller.data.internal.RiskChartData;
+import fr.skiller.data.internal.DataChart;
 import fr.skiller.data.internal.RiskDashboard;
 
 /**
@@ -25,7 +25,7 @@ public class SunburstDTO extends BaseDTO {
 	/**
 	 * Data ready made for the sunburst chart.
 	 */
-	private RiskChartData sunburstData;
+	private DataChart sunburstData;
 
 	/**
 	 * Array of unknown contributors who are unknown in the staff collection.
@@ -49,7 +49,7 @@ public class SunburstDTO extends BaseDTO {
 	 * @param code code of processing error
 	 * @param message corresponding message of error
 	 */
-	public SunburstDTO(final int idProject, RiskChartData sunburstData, int code, String message) {
+	public SunburstDTO(final int idProject, DataChart sunburstData, int code, String message) {
 		super();
 		this.setIdProject(idProject);
 		this.setSunburstData(sunburstData);
@@ -89,14 +89,14 @@ public class SunburstDTO extends BaseDTO {
 	/**
 	 * @return the sunburstData
 	 */
-	public RiskChartData getSunburstData() {
+	public DataChart getSunburstData() {
 		return sunburstData;
 	}
 
 	/**
 	 * @param sunburstData the sunburstData to set
 	 */
-	public void setSunburstData(RiskChartData sunburstData) {
+	public void setSunburstData(DataChart sunburstData) {
 		this.sunburstData = sunburstData;
 	}
 

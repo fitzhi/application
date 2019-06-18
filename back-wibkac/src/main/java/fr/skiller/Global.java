@@ -1,16 +1,21 @@
 package fr.skiller;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Date;
 
 public class Global {
 
 	public static final String LN = System.getProperty("line.separator");
-	
-	public static final String  BACKEND_RETURN_CODE = "backend.return_code";
-	public static final String  BACKEND_RETURN_MESSAGE = "backend.return_message";
-	
-	private Global() {}
-	
+
+	public static final String BACKEND_RETURN_CODE = "backend.return_code";
+	public static final String BACKEND_RETURN_MESSAGE = "backend.return_message";
+
+	private Global() {
+	}
+
 	/**
 	 * Value of a key when no record are found.<BR/>
 	 * The default value is equal to -1.
@@ -19,6 +24,20 @@ public class Global {
 
 	public static Date now() {
 		return new Date();
+	}
+
+	public static Object deepClone(Object object) {
+		try {
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			ObjectOutputStream oos = new ObjectOutputStream(baos);
+			oos.writeObject(object);
+			ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+			ObjectInputStream ois = new ObjectInputStream(bais);
+			return ois.readObject();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

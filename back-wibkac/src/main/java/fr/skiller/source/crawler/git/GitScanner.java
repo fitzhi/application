@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.skiller.source.scanner.git;
+package fr.skiller.source.crawler.git;
 
 import static fr.skiller.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
 import static fr.skiller.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
@@ -60,6 +60,7 @@ import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import fr.skiller.controller.ProjectController.SettingsGeneration;
+import fr.skiller.data.internal.DataChart;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RiskDashboard;
@@ -70,8 +71,8 @@ import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
-import fr.skiller.source.scanner.AbstractScannerDataGenerator;
-import fr.skiller.source.scanner.RepoScanner;
+import fr.skiller.source.crawler.AbstractScannerDataGenerator;
+import fr.skiller.source.crawler.RepoScanner;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL GIT implementation of a code Scanner
@@ -442,6 +443,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		}
 
 		// Does the process requires a personalization ?
+		// e.g. filtering on a staff identifier or starting the history crawl from a starting date
 		if (cfgGeneration.requiresPersonalization()) {
 			repo = personalizeRepo(repo, cfgGeneration);
 		}
@@ -555,5 +557,4 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		}
 		return result;
 	}
-
 }

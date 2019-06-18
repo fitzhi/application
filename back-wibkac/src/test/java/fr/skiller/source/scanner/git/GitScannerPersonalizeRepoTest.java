@@ -18,7 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import fr.skiller.controller.ProjectController;
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
-import fr.skiller.source.scanner.RepoScanner;
+import fr.skiller.source.crawler.RepoScanner;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

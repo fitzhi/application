@@ -15,7 +15,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import fr.skiller.source.scanner.RepoScanner;
+import fr.skiller.source.crawler.RepoScanner;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

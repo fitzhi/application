@@ -30,7 +30,7 @@ import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.exception.SkillerException;
-import fr.skiller.source.scanner.RepoScanner;
+import fr.skiller.source.crawler.RepoScanner;
 /**
  * Testing the class {@link RiskCommitAndDevActiveProcessorImpl}
  * @author Fr&eacute;d&eacute;ric VIDAL
