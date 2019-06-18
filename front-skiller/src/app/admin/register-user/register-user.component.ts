@@ -147,7 +147,6 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 	 */
 	public skip() {
 		// We do know at this point the staff identifier corresponding to this user.
-		console.log ('skip');
 		this.messengerSkipAndConnect.emit(true);
 	}
 }

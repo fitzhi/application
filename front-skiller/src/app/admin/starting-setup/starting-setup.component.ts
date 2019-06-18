@@ -17,7 +17,7 @@ import { take } from 'rxjs/operators';
 	templateUrl: './starting-setup.component.html',
 	styleUrls: ['./starting-setup.component.css']
 })
-export class StartingSetupComponent extends BaseComponent implements OnInit, OnDestroy {
+export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 
 	/**
      * The main stepper is passed in order to procede a programmatly step.next().
@@ -55,10 +55,6 @@ export class StartingSetupComponent extends BaseComponent implements OnInit, OnD
 		private skillService: SkillService,
 		private router: Router,
 		private httpClient: HttpClient) { super(); }
-
-	ngOnInit() {
-		console.log ('init');
-	}
 
 	/**
      * Setup the fact that this is the very first connection.
