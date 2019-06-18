@@ -9,6 +9,8 @@ import { HttpClient } from '@angular/common/http';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { SkillService } from 'src/app/service/skill.service';
 import { Router } from '@angular/router';
+import { Observable, Subject } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-starting-setup',
@@ -25,7 +27,7 @@ export class StartingSetupComponent extends BaseComponent implements OnInit, OnD
 	/**
      * Are we in the very first connection ?
      */
-	public veryFirstConnection = false;
+	public veryFirstConnection = new Subject<boolean>();
 
 	/**
      * Array representing the fact that each step has been completed.
@@ -65,12 +67,15 @@ export class StartingSetupComponent extends BaseComponent implements OnInit, OnD
 		if (Constants.DEBUG) {
 			console.log('veryFirstConnecion :', $event);
 		}
-		this.labelUser = (this.veryFirstConnection) ? 'First admin user' : 'First registration';
+
+		this.veryFirstConnection.next($event);
+
+		this.labelUser = ($event) ? 'First admin user' : 'First registration';
 
 		this.completed[0] = true;
 		this.referentialService.loadAllReferentials();
-
 		this.skillService.loadSkills();
+
 		setTimeout(() => {
 			this.stepper.next();
 		}, 0);

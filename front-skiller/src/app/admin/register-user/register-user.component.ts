@@ -10,6 +10,7 @@ import { MessageService } from 'src/app/message/message.service';
 import { StaffDataExchangeService } from 'src/app/tabs-staff/service/staff-data-exchange.service';
 import { MessageBoxService } from 'src/app/message-box/service/message-box.service';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-register-user',
@@ -31,8 +32,7 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 	/**
      * Is this ever the first connection to this server, assuming that the user has to be "administrator" ?
      */
-	@Input('veryFirstConnection')
-	veryFirstConnection = true;
+	@Input() veryFirstConnection: boolean;
 
 	/**
      * Group of the components present in the form.
