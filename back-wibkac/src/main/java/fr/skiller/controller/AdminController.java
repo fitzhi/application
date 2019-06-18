@@ -1,11 +1,9 @@
 package fr.skiller.controller;
 
-import static fr.skiller.Global.BACKEND_RETURN_CODE;
-import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
 import static fr.skiller.Error.CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
 import static fr.skiller.Error.MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
-import static fr.skiller.Error.CODE_CANNOT_SELF_CREATE_USER;
-import static fr.skiller.Error.MESSAGE_CANNOT_SELF_CREATE_USER;
+import static fr.skiller.Global.BACKEND_RETURN_CODE;
+import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +24,11 @@ import fr.skiller.data.external.StaffDTO;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 
-@RestController
-@RequestMapping("/admin")
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL Controller for Ping purpose
  */
-
+@RestController
+@RequestMapping("/admin")
 public class AdminController {
 
 	@Autowired

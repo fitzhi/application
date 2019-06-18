@@ -71,6 +71,7 @@ import { ConnectUserComponent } from './admin/connect-user/connect-user.componen
 import { AuthGuardService } from './admin/security/auth-guard.service';
 import { HttpErrorInterceptorService } from './admin/service/http/http-error-interceptor-service';
 import { HttpTokenInterceptorService } from './admin/service/http/http-token-interceptor.service';
+import { CiaoComponent } from './ciao/ciao.component';
 
 @NgModule({
 	declarations: [
@@ -109,6 +110,7 @@ import { HttpTokenInterceptorService } from './admin/service/http/http-token-int
 		StartingSetupComponent,
 		ToolbarComponent,
 		ConnectUserComponent,
+		CiaoComponent,
 	],
 	entryComponents: [
 		StarsSkillLevelRenderComponent,

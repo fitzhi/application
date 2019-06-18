@@ -2,6 +2,7 @@ import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { AuthService } from '../service/auth/auth.service';
 import { Router } from '@angular/router';
+import { Constants } from 'src/app/constants';
 
 @Component({
 	selector: 'app-connect-user',
@@ -48,10 +49,13 @@ export class ConnectUserComponent implements OnInit {
 	}
 
 	/**
-     * Cancel the installation
+     * Cancel the installation.
      */
 	onCancel() {
-		console.log('onCancel');
+		if (Constants.DEBUG) {
+			console.log('onCancel');
+		}
+		this.router.navigate(['/ciao']);
 	}
 
 	/**
