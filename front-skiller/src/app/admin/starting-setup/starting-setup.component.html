@@ -1,6 +1,6 @@
 <mat-horizontal-stepper [linear]="true" #stepper id="setup">
 
-  <mat-step [completed]="completed[0]">
+<mat-step [completed]="completed[0]">
     <ng-template matStepLabel>Register the server</ng-template>
     <app-backend-setup (messengerVeryFirstConnection)="onChangeVeryFirstConnection($event)"></app-backend-setup>
   </mat-step>
@@ -30,13 +30,13 @@
         The toolbar above is now accessible.
     </p>
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-8 text-right">
             A suggestion for a good start ?<br/>Save your skills on the dedicated formula.
         </div>
         <div class="col-md-4">
             <a [routerLink]="['/user', idStaff]">
-               <button id="zoom" class="developer">
-				   <i class="fas glyphicon fa-user-graduate"></i>
+               <button id="zoom" class="btn btn-outline-primary rounded btn-developer">
+				   <i id="btn-label" class="fas glyphicon fa-user-graduate"></i>
 			   </button>
             </a>
         </div>
