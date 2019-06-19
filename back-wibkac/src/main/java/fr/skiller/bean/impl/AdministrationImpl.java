@@ -1,15 +1,13 @@
 package fr.skiller.bean.impl;
 
+import static fr.skiller.Error.CODE_CANNOT_SELF_CREATE_USER;
 import static fr.skiller.Error.CODE_INVALID_LOGIN_PASSWORD;
 import static fr.skiller.Error.CODE_IO_ERROR;
 import static fr.skiller.Error.CODE_LOGIN_ALREADY_EXIST;
-import static fr.skiller.Error.CODE_UNREGISTERED_LOGIN;
+import static fr.skiller.Error.MESSAGE_CANNOT_SELF_CREATE_USER;
 import static fr.skiller.Error.MESSAGE_INVALID_LOGIN_PASSWORD;
 import static fr.skiller.Error.MESSAGE_IO_ERROR;
 import static fr.skiller.Error.MESSAGE_LOGIN_ALREADY_EXIST;
-import static fr.skiller.Error.MESSAGE_UNREGISTERED_LOGIN;
-import static fr.skiller.Error.CODE_CANNOT_SELF_CREATE_USER;
-import static fr.skiller.Error.MESSAGE_CANNOT_SELF_CREATE_USER;
 
 import java.io.IOException;
 import java.nio.file.Path;

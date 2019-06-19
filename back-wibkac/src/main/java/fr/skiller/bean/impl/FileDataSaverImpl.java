@@ -38,7 +38,7 @@ import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 
 /**
- * Implementation of DataSaver on the file system.
+ * <p>Implementation of DataSaver on the file system.</p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */

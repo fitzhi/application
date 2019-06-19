@@ -4,6 +4,14 @@
 package fr.skiller.bean.impl;
 
 
+import static org.junit.Assume.assumeTrue;
+
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import org.assertj.core.util.Files;
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,15 +21,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.skiller.bean.Administration;
 import fr.skiller.exception.SkillerException;
-
-import static org.junit.Assume.assumeTrue;
-
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import org.assertj.core.util.Files;
-import org.junit.After;
-import org.junit.Assert;
 /**
  * Test the administration bean.
  * 

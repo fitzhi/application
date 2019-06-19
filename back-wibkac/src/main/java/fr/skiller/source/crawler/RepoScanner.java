@@ -9,7 +9,6 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 
 import fr.skiller.controller.ProjectController.SettingsGeneration;
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.DataChart;
 import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;

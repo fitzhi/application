@@ -3,15 +3,8 @@
  */
 package fr.skiller.controller;
 
-import static fr.skiller.Error.CODE_INVALID_LOGIN_PASSWORD;
-import static fr.skiller.Error.MESSAGE_INVALID_LOGIN_PASSWORD;
-import static fr.skiller.security.AuthorizationServerConfiguration.TRUSTED_CLIENT_USERNAME;
-import static org.hamcrest.Matchers.is;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
@@ -34,14 +27,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import fr.skiller.bean.Administration;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Staff;
-import fr.skiller.exception.SkillerException;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

@@ -22,7 +22,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.skiller.bean.DataChartHandler;
 import fr.skiller.data.internal.DataChart;
-import fr.skiller.source.crawler.AbstractScannerDataGenerator;
 
 /**
  * <p>We test here the class <code>DataChartHandlerImpl</code>.

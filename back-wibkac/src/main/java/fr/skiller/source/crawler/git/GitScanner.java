@@ -61,7 +61,6 @@ import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import fr.skiller.controller.ProjectController.SettingsGeneration;
-import fr.skiller.data.internal.DataChart;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RiskDashboard;
