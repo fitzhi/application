@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fr.skiller.SkillerRuntimeException;
@@ -41,43 +42,34 @@ public class DataChartHandlerImpl implements DataChartHandler {
 	}
 	
 	private void aggregate(DataChart resultingData, DataChart data) {
-		if (data.getChildren() != null) {
-			switch (data.getChildren().size()) {
-				case 0:
-					if (logger.isDebugEnabled()) {
-						logger.debug(String.format(ADDING_S_IN_S, data.getLocation(), resultingData.getLocation()));
+		if ( (data.getChildren() != null) && !(data.getChildren().isEmpty()) ) {
+			if(data.getChildren().size() == 1) {
+				DataChart uniqueChild = data.getChildren().get(0);
+				// This directory has no source file and only ONE sub-directory
+				if (data.getNumberOfFiles() == 0) {
+					// Defensive test.
+					if ((data.getClassnames() != null) && (data.getClassnames().isEmpty())) {
+						throw new SkillerRuntimeException("Should not pass here !");
 					}
-					resultingData.addSubDir(data);
-					break;
-				case 1:
-					DataChart uniqueChild = data.getChildren().get(0);
-					// This directory has no source file and only ONE sub-directory
-					if (data.getNumberOfFiles() == 0) {
-						// Defensive test.
-						if ((data.getClassnames() != null) && (data.getClassnames().isEmpty())) {
-							throw new SkillerRuntimeException("Should not pass here !");
-						}
-						uniqueChild.setLocation(data.getLocation()+"/"+uniqueChild.getLocation());
-						aggregate(resultingData, uniqueChild);
-					} else {		
-						DataChart subDir = extractLevel(data);
-						if (logger.isDebugEnabled()) {
-							logger.debug(String.format(ADDING_S_IN_S, subDir.getLocation(), resultingData.getLocation()));
-						}
-						resultingData.addSubDir(subDir);
-						aggregate(subDir, uniqueChild);						
-					}
-					break;
-				default:
-					DataChart subDir = extractLevel (data);
-					resultingData.addSubDir(subDir);					
+					uniqueChild.setLocation(data.getLocation()+"/"+uniqueChild.getLocation());
+					aggregate(resultingData, uniqueChild);
+				} else {		
+					DataChart subDir = extractLevel(data);
 					if (logger.isDebugEnabled()) {
 						logger.debug(String.format(ADDING_S_IN_S, subDir.getLocation(), resultingData.getLocation()));
 					}
-					for (DataChart child : data.getChildren()) {
-						aggregate (subDir, child);
-					}
-					break;
+					resultingData.addSubDir(subDir);
+					aggregate(subDir, uniqueChild);						
+				}
+			} else {
+				DataChart subDir = extractLevel (data);
+				resultingData.addSubDir(subDir);					
+				if (logger.isDebugEnabled()) {
+					logger.debug(String.format(ADDING_S_IN_S, subDir.getLocation(), resultingData.getLocation()));
+				}
+				for (DataChart child : data.getChildren()) {
+					aggregate (subDir, child);
+				}
 			}
 		} else {
 			if (logger.isDebugEnabled()) {

@@ -55,6 +55,7 @@ import fr.skiller.Error;
 import fr.skiller.Global;
 import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
+import fr.skiller.bean.DataChartHandler;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
@@ -102,6 +103,21 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	@Value("${patternsCleanup}")
 	private String patternsCleanup;
 	
+	/** 
+	 * A tree representing a class like <code>fr.common.my-package.MyClass"</code> might create 3 nodes of <code>RiskChartData</code>.
+	 * <ul>
+	 * <li>one for <code><b>fr</b></code></li>
+	 * <li>one for <code><b>common</b></code></li>
+	 * <li>one for <code><b>my-package</b></code></li>
+	 * </ul>
+	 * <b>BURT</b> Possibly, there is no source files present in <code><b>fr</b></code>. 
+	 * So instead of keeping 2 levels of hierarchy (with an empty one), 
+	 * it would be easier to aggregate the 2 directories into the resulting one : <code>fr.my-package</code>
+	 * </p>
+	 */
+	@Value("${collapseEmptyDirectory}")
+	private boolean collapseEmptyDirectory;
+
 	/**
 	 * Service in charge of handling the staff collection.
 	 */
@@ -151,6 +167,9 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	@Value("${patternsInclusion}")
 	private String patternsInclusion;
 	
+	@Autowired
+	DataChartHandler dataChartHandler;
+
 	/**
 	 * Initialization of the Google JSON parser.
 	 */
@@ -449,6 +468,17 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		}
 		
 		RiskDashboard data = this.aggregateDashboard(project, repo);
+		
+		
+		// We collapse empty directory inside their first sub-directory
+		// the node com & the node google will become one single node com/google
+		if (collapseEmptyDirectory ) {
+			if (logger.isDebugEnabled()) {
+				logger.debug("Aggregating empty directories in the chart");
+			}
+			dataChartHandler.aggregateDataChart(data.riskChartData);
+		}
+
 		
 		// Evaluate the risk for each directory, and sub-directory, in the repository.
 		final List<StatActivity> statsCommit = new ArrayList<>();
