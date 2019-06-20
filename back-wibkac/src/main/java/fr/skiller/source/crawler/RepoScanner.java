@@ -4,8 +4,10 @@
 package fr.skiller.source.crawler;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Repository;
 
 import fr.skiller.controller.ProjectController.SettingsGeneration;
 import fr.skiller.data.internal.Project;
@@ -13,6 +15,7 @@ import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
 import fr.skiller.exception.SkillerException;
+import fr.skiller.source.crawler.git.SCMChange;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -29,6 +32,17 @@ public interface RepoScanner {
 	 */
 	void clone(Project project, ConnectionSettings settings) throws IOException, GitAPIException;
 
+	/**
+	 * <p>Extract all changes from the repository and generate the commits collection.
+	 * <p>
+	 * <b><font color="red">BE CAUTIOUS : This method has an unsatisfying adherence with GIT</font></b>
+	 * </p>
+	 * @param repository the <b><font color="red">GIT</font></b> repository.
+	 * @return a collection with all changed occurred on the passed repository.
+	 * @throws IOException thrown by the crawling operation.
+	 */
+	List<SCMChange> loadChanges(Repository repository) throws IOException;
+	
 	/**
 	 * Parse the repository <u>already</u> cloned on the file system.<br/>
 	 * <b>PREREQUESIT = The repository must have be cloned before</b>

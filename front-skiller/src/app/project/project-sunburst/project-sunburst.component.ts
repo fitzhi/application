@@ -28,17 +28,16 @@ import { Contributor } from '../../data/contributor';
 })
 export class ProjectSunburstComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
-    /**
+	/**
      * The project loaded in the parent component.
      */
 	@Input('subjProject') subjProject;
-
-    /**
+	/**
     * Project loaded on the parent component.
     */
 	private project: Project;
 
-    /**
+	/**
      * Parameters passed to the generation method on the back-end.
      */
 	private settings = new SettingsGeneration(-1, new Date(0).getTime(), 0);
@@ -78,13 +77,13 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	private myChart: Sunburst;
 
-    /**
+	/**
      * List of filenames located in a directory of the repository
      * Theses classnames are shared with the NodeDetail component when the user click on a slice.
      */
 	public filenames = new FilenamesDataSource();
 
-    /**
+	/**
      * List of contributors.
      * Theses contributors are shared with the NodeDetail component when the user click on a slice.
      */
@@ -156,7 +155,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		}
 	}
 
-    /**
+	/**
      * Load the dashboard data in order to produce the sunburst chart.
      */
 	loadSunburst() {
@@ -193,7 +192,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					}));
 	}
 
-    /**
+	/**
     * user click on a a node.
     **/
 	public onNodeClick(nodeClicked: any) {
@@ -293,13 +292,14 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			}
 		});
 	}
-    /**
+
+	/**
      * After creation treatment.
      */
 	ngAfterViewInit() {
 	}
 
-    /*
+	/*
     * Replace the cssText for rule matching selectorText.
     * 2 rules are changes :
     *   1) We remove the white contour around the label inside the slices (stroke:'none')
@@ -347,7 +347,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		}
 	}
 
-    /**
+	/**
     * Show the panel associated to this id.
     * @param idPanel Panel identifier
     */
@@ -483,7 +483,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		}
 	}
 
-    /**
+	/**
     * The button associated to this panel id is activated.
     * @param idPanel panel identifier
     **/
@@ -491,7 +491,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		return (idPanel === this.idPanelSelected);
 	}
 
-    /**
+	/**
      * Calling the base class to unsubscribe all subscriptions.
      */
 	ngOnDestroy() {

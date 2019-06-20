@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.skiller.source.scanner.git;
+package fr.skiller.source.crawler.git;
 
 import org.junit.Assert;
 import org.junit.Before;

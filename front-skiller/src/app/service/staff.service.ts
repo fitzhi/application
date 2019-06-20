@@ -179,7 +179,7 @@ export class StaffService {
         const headers = new HttpHeaders();
         headers.set('Accept', 'application/msword');
 
-        this.http.get(this.backendSetupService.url() + '/staff'+ '/' + staff.idStaff + '/application',
+        this.http.get(this.backendSetupService.url() + '/staff' + '/' + staff.idStaff + '/application',
             { headers: headers, responseType: 'blob' })
             .subscribe(data => {
                 this.saveToFileSystem(data, staff.application, 'application/octet-stream');

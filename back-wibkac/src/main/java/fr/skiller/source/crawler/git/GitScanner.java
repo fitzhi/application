@@ -10,6 +10,8 @@ import static fr.skiller.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
 import static fr.skiller.Global.LN;
 import static fr.skiller.Global.UNKNOWN;
 import static fr.skiller.controller.ProjectController.DASHBOARD_GENERATION;
+import static org.eclipse.jgit.diff.DiffEntry.DEV_NULL;
+
 
 import java.io.File;
 import java.io.FileReader;
@@ -33,11 +35,16 @@ import javax.annotation.PostConstruct;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.RenameDetector;
+import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevCommitList;
+import org.eclipse.jgit.revwalk.RevSort;
+import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.TreeWalk;
@@ -235,6 +242,112 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		
 	}
 
+	List<SCMChange> changes;
+	
+	
+	@Override
+	public List<SCMChange> loadChanges(Repository repository) throws IOException {
+
+		List<SCMChange> gitChanges = new ArrayList<>();
+		
+		RevWalk walk = new RevWalk(repository);
+		ObjectId headId = repository.resolve(Constants.HEAD);
+		RevCommit start = walk.parseCommit(headId);
+		walk.markStart(start);
+		walk.sort(RevSort.REVERSE);
+		
+		RevCommitList<RevCommit> list = new RevCommitList<>();
+		list.source(walk);
+		list.fillTo(Integer.MAX_VALUE);
+		
+		TreeWalk treeWalk = new TreeWalk(repository);
+		for (RevCommit commit : list) {
+
+			log (commit);
+			
+	    	RenameDetector renameDetector = new RenameDetector(repository);
+	    	
+			treeWalk.reset();
+	        treeWalk.addTree(commit.getTree());
+	        treeWalk.setRecursive(true);
+	        
+	        if ((logger.isDebugEnabled()) && (commit.getParentCount() >= 2)) {
+	        	logger.debug( String.format("commit %s with merge ?", commit.getShortMessage()));
+	        }
+	        for (RevCommit parent : commit.getParents()) {
+	        	treeWalk.addTree(parent.getTree());
+	        	processWalkEntry (commit, treeWalk, gitChanges, renameDetector);
+	        }
+		}		
+		treeWalk.close();
+		walk.close();
+		return gitChanges;
+	}
+	
+	/**
+	 * Take into account this tree-walk entry in the change collection.
+	 * @param commit current commit scrutinized
+	 * @param treeWalk the walk node.
+	 * @param changes the change collection
+	 * @param renameDetector a rename detector created for this repository.
+	 * @throws IOException thrown during the crawl
+	 */
+	private void processWalkEntry (RevCommit commit, TreeWalk treeWalk, List<SCMChange> gitChanges, RenameDetector renameDetector) 
+			throws IOException {
+    	if (treeWalk.getTreeCount() == 2) {
+    		renameDetector.addAll(DiffEntry.scan(treeWalk));
+        	List<DiffEntry> files = renameDetector.compute();
+        	
+        	for (DiffEntry de : files) {
+        		switch (de.getChangeType()) {
+        		case RENAME:
+        			//
+        			// WARNING :
+        			// 
+        			// It looks like the old path and the new path, are inverted.
+        			// A nominal call should be "renameFilePath (de.getNewPath(), de.getOldPath()...
+        			//
+        			renameFilePath (de.getOldPath(), de.getNewPath(), gitChanges);
+        			break;
+        		case DELETE:
+        			// The DELETE is treated like an ADD operation.
+        			if (DEV_NULL.equals(de.getNewPath())) {
+               			gitChanges.add(new SCMChange(commit.getId().toString(), de.getOldPath(), commit.getAuthorIdent().getWhen()));
+        			}
+        			break;
+        		case MODIFY:
+        			gitChanges.add(new SCMChange(commit.getId().toString(), de.getNewPath(), commit.getAuthorIdent().getWhen()));
+        			break;
+    			default: 
+    				if (logger.isDebugEnabled()) {
+    					logger.debug ( 
+    						String.format("Unexpected type of change %s %s %s",
+    							de.getChangeType(),
+    							de.getOldPath(),
+    							de.getNewPath()));
+    				}
+    				break;
+        		}
+        	}
+    	}
+		
+	}
+	
+	/**
+	 * <p>
+	 * Take in account the fact that a file has been renamed.<br/>
+	 * All records with the old path will be renamed to the new one.
+	 * </p>
+	 * @param newPath the new file path
+	 * @param oldPath the old file path
+	 * @param gitChanges the changes collection
+	 */
+	private void renameFilePath (String newPath, String oldPath, List<SCMChange> gitChanges) {
+		gitChanges.stream()
+			.filter(change -> oldPath.equals(change.getPath()))
+			.forEach(change -> change.setPath(newPath));
+	}
+	
 	@Override
 	public CommitRepository parseRepository(final Project project, final ConnectionSettings settings) throws IOException, SkillerException {
  
@@ -292,19 +405,9 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			
 			TreeWalk treeWalk = new TreeWalk(repo);
 			for (RevCommit commit : list) {
-				if (logger.isDebugEnabled()) {
-					StringBuilder sb = new StringBuilder();
-					sb.append(Global.LN)
-						.append ("shortMessage : " + commit.getShortMessage())
-						.append(Global.LN)
-						.append("id : " + commit.getAuthorIdent().getEmailAddress())
-						.append (Global.LN)
-						.append("date : " + commit.getAuthorIdent().getWhen())
-						.append (Global.LN)
-						.append("authorIdent.name : " + commit.getAuthorIdent().getName())
-						.append (Global.LN).append(Global.LN);
-					logger.debug(sb.toString());
-				}	
+				
+				log (commit);
+				
 				treeWalk.reset();
 		        treeWalk.addTree(commit.getTree());
 		        treeWalk.setRecursive(true);
@@ -325,7 +428,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 								similarParents++;
 						}
 						if (similarParents == 0) {
-							String sourceCodePath = cleanupPath(treeWalk.getPathString());
+							String sourceCodePath = cleanupPath(treeWalk.getPathString());							
 							Staff staff = null;
 							String author = commit.getCommitterIdent().getName();
 							
@@ -382,6 +485,29 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		return repositoryOfCommit;
 	}
  	
+	/**
+	 * Log a commit record in debug mode.
+	 * @param commit the given commit
+	 */
+	
+	private void log (RevCommit commit) {
+		if (logger.isDebugEnabled()) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(Global.LN)
+				.append ("shortMessage : " + commit.getShortMessage())
+				.append(Global.LN)
+				.append("id : " + commit.getAuthorIdent().getEmailAddress())
+				.append (Global.LN)
+				.append("date : " + commit.getAuthorIdent().getWhen())
+				.append (Global.LN)
+				.append("authorIdent.name : " + commit.getAuthorIdent().getName())
+				.append (Global.LN).append(Global.LN);
+			logger.debug(sb.toString());
+		}	
+		
+	}
+	
+	
  	/**
  	 * Check if the path is an eligible source for the activity dashboard.
  	 * @param path
@@ -586,4 +712,6 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		}
 		return result;
 	}
+	
+	
 }

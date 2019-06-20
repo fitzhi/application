@@ -1,4 +1,4 @@
-package fr.skiller.source.scanner.git;
+package fr.skiller.source.crawler.git;
 
 import static fr.skiller.Global.UNKNOWN;
 

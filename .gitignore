@@ -67,3 +67,11 @@ doc-skiller
 
 back-wibkac/TIGF-567_Import_flux_tetra-program.adoc
 
+
+back-wibkac/src/test/resources/repository-settings/properties-KAFKA.json
+
+back-wibkac/src/test/resources/repository-settings/properties-SKILLER.json
+
+back-wibkac/src/test/resources/repository-settings/properties-VEGEO.json
+
+git_repo_for_test

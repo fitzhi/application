@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.skiller.source.scanner.git;
+package fr.skiller.source.crawler.git;
 import java.io.IOException;
 
 import org.junit.After;

@@ -17,7 +17,7 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 		
-	<logger name="fr.skiller.security" additivity="false">
+	<logger name="fr.skiller.source.crawler.git" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
@@ -27,15 +27,11 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
     
-	<logger name="fr.skiller.controller" additivity="false">
+	<logger name="fr.skiller.bean.impl.FileDataSaverImpl" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="org.springframework.security.oauth2" additivity="false">
-		<level value="DEBUG" />
-		<appender-ref ref="STDOUT" />
-	</logger>
         
 
 

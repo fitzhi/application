@@ -1,7 +1,7 @@
 /**
  * 
  */
-package fr.skiller.source.scanner.git;
+package fr.skiller.source.crawler.git;
 import static fr.skiller.Global.UNKNOWN;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,8 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.google.gson.Gson;
@@ -46,21 +48,16 @@ import fr.skiller.source.crawler.RepoScanner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class GitScannerTestByPassable {
+@TestPropertySource(properties = { "cache_duration=0" }) 
+public class GitScannerTest {
 	
-	Logger logger = LoggerFactory.getLogger(GitScannerTestByPassable.class.getCanonicalName());
-	
-	private static File resourcesDirectory = new File("src/test/resources");
+	Logger logger = LoggerFactory.getLogger(GitScannerTest.class.getCanonicalName());
 
-	final String fileProperties = resourcesDirectory.getAbsolutePath() + "/poc_git/properties-VEGEO.json";
-	
+	@Value("${versionControl.ConnectionSettings}")
+	private String versionControlConnectionSettings;
+
 	ConnectionSettings settings = new ConnectionSettings();
-	
-	/**
-	 * Should we bypass the test.
-	 */
-	boolean bypass;
-	
+		
 	@Autowired
 	StaffHandler staffHandler;
 	
@@ -75,16 +72,22 @@ public class GitScannerTestByPassable {
 	 * Risk evaluation processor
 	 */
 	@Autowired
-	@Qualifier("messOfCriteria")
+	@Qualifier("commitAndDevActive")
 	RiskProcessor riskProcessor;
 
 	@Before
 	public void before() throws IOException {
-		if ("Y".equals(System.getProperty("bypass"))) {
-			bypass = true;
-		}
+
 		Gson gson = new GsonBuilder().create();
-		final FileReader fr = new FileReader(new File(fileProperties));
+		
+		String fileProperties = versionControlConnectionSettings + "/properties-SKILLER.json";		
+		
+		File file = new File(fileProperties);
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("connection settings pathname %s", file.getAbsolutePath()));
+		}
+		
+		final FileReader fr = new FileReader(file);
 		settings = gson.fromJson(fr, settings.getClass());
 		fr.close();
 		
@@ -95,10 +98,8 @@ public class GitScannerTestByPassable {
 
 	@Test
 	public void cloneAndParseRepo() throws IOException, SkillerException, GitAPIException {
-		
-		if (bypass) return;
-		
-		Project project = new Project(1, "VEGEO");
+
+		Project project = new Project(2, "skiller");
 		
 		scanner.clone(project, settings);
         assertThat(settings.getLocalRepository()).isNotNull();
@@ -127,9 +128,4 @@ public class GitScannerTestByPassable {
        
 	}
 	
-	@After
-	public void after() throws IOException {
-		if (!bypass)
-			FileUtils.deleteDirectory(new File(settings.getLocalRepository()));
-	}
 }
