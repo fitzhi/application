@@ -2,6 +2,10 @@ package fr.skiller.data.source;
 
 import java.util.Date;
 
+/**
+ * <p>Operation occured.</p>
+ * @author Fr&eacute;d&eacute;ric VIDAL
+ */
 public class Operation {
 
 	/**

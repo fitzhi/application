@@ -42,6 +42,21 @@ public interface RepoScanner {
 	 * @throws IOException thrown by the crawling operation.
 	 */
 	List<SCMChange> loadChanges(Repository repository) throws IOException;
+
+	/**
+	 * <p>
+	 * Finalize the loading of the changes.<br/>
+	 * Useless entries will be removed.
+	 * </P>
+	 * <p><font color="red">
+	 * Some GIT rename operations might not be detected <i>(when <u>simultaneously</u> the path and the content of the file are changed</i>).<br/>
+	 * We remove useless entries if the file does not exist anymore on file system.
+	 * </font></p>
+	 * @param sourceLocation the directory where the sources are located.
+	 * @param changes the changes collection.
+	 * @throws IOException if any IO exception occurs during the finalization.
+	 */
+	void finalizeListChanges(String sourceLocation, List<SCMChange> changes) throws IOException;
 	
 	/**
 	 * Parse the repository <u>already</u> cloned on the file system.<br/>

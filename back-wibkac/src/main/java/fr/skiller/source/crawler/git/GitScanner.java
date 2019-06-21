@@ -17,12 +17,15 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,6 +33,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
@@ -60,6 +64,7 @@ import com.google.gson.Gson;
 
 import fr.skiller.Error;
 import fr.skiller.Global;
+import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.DataChartHandler;
@@ -80,7 +85,7 @@ import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.AbstractScannerDataGenerator;
 import fr.skiller.source.crawler.RepoScanner;
-
+import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL GIT implementation of a code Scanner
  */
@@ -242,9 +247,6 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		
 	}
 
-	List<SCMChange> changes;
-	
-	
 	@Override
 	public List<SCMChange> loadChanges(Repository repository) throws IOException {
 
@@ -281,7 +283,49 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		}		
 		treeWalk.close();
 		walk.close();
+
 		return gitChanges;
+	}
+	
+	@Override
+	public void finalizeListChanges(String sourceLocation, List<SCMChange> changes)  throws IOException {
+		
+		/*
+		 * For DEBUG purpose we make a redundant test on the list of changes
+		 * Are all files in the repository referenced in the list of change ?
+		 * They should be all present.
+		 */
+		if (logger.isDebugEnabled()) {
+			logger.debug("List of ghost files");
+			List<String> content;
+			try (Stream<Path> stream = Files
+					.find(Paths.get(sourceLocation), 999, (p, bfa) -> bfa.isRegularFile())) { 
+					content = stream
+						.map(Path::toString)
+						.map(s -> s.substring(sourceLocation.length()))
+						.collect(Collectors.toList());
+
+					content.stream()
+						.filter(s -> changes.stream().map(SCMChange::getPath).noneMatch(s::equals))
+						.forEach(logger::debug);
+			} 
+		}
+
+		Iterator<SCMChange> iter = changes.iterator();
+		while(iter.hasNext()){
+		    SCMChange change = iter.next();
+		    // File does not exist anymore on the repository
+		    File f = Paths.get(sourceLocation + change.getPath()).toFile();
+		    if(!f.exists()) {
+		        iter.remove();
+		    } else {
+			    // Hidden files, mainly internal GIT files are removed. 
+			    if (f.isHidden()) {
+			    	iter.remove();
+			    }
+		    }
+		}
+		
 	}
 	
 	/**
@@ -308,6 +352,19 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
         			// A nominal call should be "renameFilePath (de.getNewPath(), de.getOldPath()...
         			//
         			renameFilePath (de.getOldPath(), de.getNewPath(), gitChanges);
+        			break;
+        		case ADD:
+        			// The ADD is treated like a DELETE operation !!!
+           			if (DEV_NULL.equals(de.getOldPath())) {
+           				removeFilePath (de.getNewPath(), gitChanges);
+           			} 
+           			break;
+        		case COPY:
+        			// 
+        			// We assume that the COPY change is connected to MERGE operations
+        			// Therefore the author of the merge is useless for the scope of this application
+        			// This committer did not touch the content of the source
+        			//
         			break;
         		case DELETE:
         			// The DELETE is treated like an ADD operation.
@@ -346,6 +403,22 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		gitChanges.stream()
 			.filter(change -> oldPath.equals(change.getPath()))
 			.forEach(change -> change.setPath(newPath));
+	}
+	/**
+	 * <p>
+	 * Remove a path from the collection of changes.
+	 * </p>
+	 * @param removedPath the path removed from the file system
+	 * @param gitChanges the changes collection
+	 */
+	private void removeFilePath (String removedPath, List<SCMChange> gitChanges) {
+		Iterator<SCMChange> iter = gitChanges.iterator();
+		while(iter.hasNext()){
+		    SCMChange change = iter.next();
+		    if (change.getPath().equals(removedPath)) {
+		        iter.remove();
+		    } 
+		}
 	}
 	
 	@Override
