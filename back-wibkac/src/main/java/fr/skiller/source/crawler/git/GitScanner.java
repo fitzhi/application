@@ -44,6 +44,7 @@ import org.eclipse.jgit.diff.RenameDetector;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevCommitList;
@@ -93,11 +94,25 @@ import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 public class GitScanner extends AbstractScannerDataGenerator implements RepoScanner {
 
 	/**
+	 * These directories will be removed from the full path of class files<br/>
+	 * For example : <code>/src/main/java/java/util/List.java</code> will be treated like <code>java/util/List.java</code>
+	 */
+	@Value("${patternsCleanup}")
+	private String patternsCleanup;
+
+	/**
 	 * Cleanup patterns list.
 	 */
  	private List<Pattern> patternsCleanupList;
 
- 	/**
+	/**
+	 * Patterns to take account, OR NOT, a file within the parsing process.<br/>
+	 * For example, a file with the suffix .java is involved.
+	 */
+	@Value("${patternsInclusion}")
+	private String patternsInclusion;
+
+	/**
  	 * List of file patterns, to be included, or excluded, from the parsing process
  	 */
 	private List<Pattern> patternsInclusionList;
@@ -106,13 +121,6 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
  	 * The logger for the GitScanner.
  	 */
 	final Logger logger = LoggerFactory.getLogger(GitScanner.class.getCanonicalName());
-
-	/**
-	 * These directories will be removed from the full path of class files<br/>
-	 * For example : <code>/src/main/java/java/util/List.java</code> will be treated like <code>java/util/List.java</code>
-	 */
-	@Value("${patternsCleanup}")
-	private String patternsCleanup;
 	
 	/** 
 	 * A tree representing a class like <code>fr.common.my-package.MyClass"</code> might create 3 nodes of <code>RiskChartData</code>.
@@ -171,12 +179,6 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	@Value("${Sunburst.fillTheHoles}")
 	private boolean fillTheHoles;
 
-	/**
-	 * Patterns to take account, OR NOT, a file within the parsing process.<br/>
-	 * For example, a file with the suffix .java is involved.
-	 */
-	@Value("${patternsInclusion}")
-	private String patternsInclusion;
 	
 	@Autowired
 	DataChartHandler dataChartHandler;
@@ -325,7 +327,22 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			    }
 		    }
 		}
-		
+	}
+
+	@Override
+	public void filterEligible(List<SCMChange> changes) {
+		Iterator<SCMChange> iter = changes.iterator();
+		while(iter.hasNext()){
+		    SCMChange change = iter.next();
+		    if (!isElligible(change.getPath())) {
+		    	iter.remove();
+		    }
+		}		
+	}
+	
+	@Override
+	public void cleanupPaths(List<SCMChange> changes) {
+		changes.stream().forEach(change -> change.setPath(cleanupPath(change.getPath())));
 	}
 	
 	/**
@@ -338,6 +355,10 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	 */
 	private void processWalkEntry (RevCommit commit, TreeWalk treeWalk, List<SCMChange> gitChanges, RenameDetector renameDetector) 
 			throws IOException {
+    	if (treeWalk.getTreeCount() == 1) {
+    		System.out.println("treeWalk.getTreeCount()  " + commit.getName());
+    	}
+    	
     	if (treeWalk.getTreeCount() == 2) {
     		renameDetector.addAll(DiffEntry.scan(treeWalk));
         	List<DiffEntry> files = renameDetector.compute();
@@ -369,11 +390,13 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
         		case DELETE:
         			// The DELETE is treated like an ADD operation.
         			if (DEV_NULL.equals(de.getNewPath())) {
-               			gitChanges.add(new SCMChange(commit.getId().toString(), de.getOldPath(), commit.getAuthorIdent().getWhen()));
+            			PersonIdent author = commit.getAuthorIdent();
+               			gitChanges.add(new SCMChange(commit.getId().toString(), de.getOldPath(), author.getWhen(), author.getName(), author.getEmailAddress()));
         			}
         			break;
         		case MODIFY:
-        			gitChanges.add(new SCMChange(commit.getId().toString(), de.getNewPath(), commit.getAuthorIdent().getWhen()));
+        			PersonIdent author = commit.getAuthorIdent();
+        			gitChanges.add(new SCMChange(commit.getId().toString(), de.getNewPath(), author.getWhen(), author.getName(), author.getEmailAddress()));
         			break;
     			default: 
     				if (logger.isDebugEnabled()) {
@@ -565,15 +588,16 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	
 	private void log (RevCommit commit) {
 		if (logger.isDebugEnabled()) {
+			PersonIdent author = commit.getAuthorIdent();
 			StringBuilder sb = new StringBuilder();
 			sb.append(Global.LN)
 				.append ("shortMessage : " + commit.getShortMessage())
 				.append(Global.LN)
-				.append("id : " + commit.getAuthorIdent().getEmailAddress())
+				.append("id : " + author.getEmailAddress())
 				.append (Global.LN)
-				.append("date : " + commit.getAuthorIdent().getWhen())
+				.append("date : " + author.getWhen())
 				.append (Global.LN)
-				.append("authorIdent.name : " + commit.getAuthorIdent().getName())
+				.append("authorIdent.name : " + author.getName())
 				.append (Global.LN).append(Global.LN);
 			logger.debug(sb.toString());
 		}	

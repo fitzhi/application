@@ -31,16 +31,30 @@ public class SCMChange {
 	private Date dateCommit;
 
 	/**
+	 * Date of commit.
+	 */
+	private String authorName;
+
+	/**
+	 * Date of commit.
+	 */
+	private String authorEmail;
+
+	/**
 	 * Constructor.
 	 * @param commitId commit identifier
 	 * @param fullPath full path of the source file (e.g. <code>org/springframework/boot/SpringApplication</code>)
 	 * @param dateCommit Date of the commit 
+	 * @param authorName author's name
+	 * @param authorEmail author's email
 	 */
-	public SCMChange(String commitId, String fullPath, Date dateCommit) {
+	public SCMChange(String commitId, String fullPath, Date dateCommit, String authorName, String authorEmail) {
 		super();
 		this.commitId = commitId;
 		this.path = fullPath;
 		this.dateCommit = dateCommit;
+		this.authorName = authorName;
+		this.authorEmail = authorEmail;
 	}
 
 	/**
@@ -73,7 +87,7 @@ public class SCMChange {
 
 	@Override
 	public String toString() {
-		return "SCMChange [commitId=" + commitId + ", path=" + path + ", dateCommit=" + dateCommit + "]";
+		return "SCMChange [path=" + path + ", commitId=" + path + ", dateCommit=" + dateCommit + "]";
 	}
 
 	

@@ -50,7 +50,7 @@ public class CrawlerTest {
 	private Repository repository;
 
 	@Test
-	public void loadChanges() throws IOException {
+	public void loadChangesForFirstTest() throws IOException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, "first-test"))).readEnvironment().findGitDir()
@@ -61,7 +61,7 @@ public class CrawlerTest {
 		assertTrue(gitChanges.stream().map(SCMChange::getPath).noneMatch("moduleA/test.txt"::equals));
 		assertTrue(gitChanges.stream().map(SCMChange::getPath).anyMatch("moduleB/test.txt"::equals));
 
-		assertTrue(gitChanges.stream().map(SCMChange::getPath).anyMatch("moduleA/creationInA.txt"::equals));
+		assertTrue(gitChanges.stream().map(SCMChange::getPath).noneMatch("moduleA/creationInA.txt"::equals));
 		// This file has been updated and renamed, and therefore not detected as a
 		// rename by the JGIT RenameDetector
 		assertTrue(gitChanges.stream().map(SCMChange::getPath).anyMatch("moduleAchanged/creationInA.txt"::equals));
@@ -69,7 +69,7 @@ public class CrawlerTest {
 	}
 
 	@Test
-	public void finalizeListChanges() throws IOException {
+	public void finalizeListChangesForFirstTest() throws IOException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, "first-test"))).readEnvironment().findGitDir()
@@ -82,10 +82,54 @@ public class CrawlerTest {
 		// This file has been updated and renamed, and therefore not detected as a
 		// rename by the JGIT RenameDetector
 		assertTrue(gitChanges.stream().map(SCMChange::getPath).anyMatch("moduleAchanged/creationInA.txt"::equals));
-
-		gitChanges.stream().map(SCMChange::getPath).forEach(System.out::println);
 	}
 
+	/**
+	 * Test the method filterElibilible
+	 * @throws IOException
+	 */
+	@Test
+	public void testFilterEligible() throws IOException {
+
+		FileRepositoryBuilder builder = new FileRepositoryBuilder();
+		repository = builder.setGitDir(new File(String.format(FILE_GIT, "wibkac"))).readEnvironment().findGitDir()
+				.build();
+
+		List<SCMChange> gitChanges = scanner.loadChanges(repository);
+		scanner.finalizeListChanges(String.format(DIR_GIT, "wibkac"), gitChanges);
+		assertTrue (gitChanges.stream()
+			.map(SCMChange::getPath)
+			.anyMatch("front-skiller/src/assets/img/pdf.png"::equals));
+			
+		scanner.filterEligible(gitChanges);
+
+		assertTrue (gitChanges.stream()
+				.map(SCMChange::getPath)
+				.noneMatch("front-skiller/src/assets/img/pdf.png"::equals));
+		
+//		gitChanges.stream().map(SCMChange::getPath).forEach(System.out::println);
+
+	}
+	
+	/**
+	 * Test the method filterElibilible
+	 * @throws IOException
+	 */
+	@Test
+	public void testCleanupPaths() throws IOException {
+
+		FileRepositoryBuilder builder = new FileRepositoryBuilder();
+		repository = builder.setGitDir(new File(String.format(FILE_GIT, "wibkac"))).readEnvironment().findGitDir()
+				.build();
+
+		List<SCMChange> gitChanges = scanner.loadChanges(repository);
+		scanner.finalizeListChanges(String.format(DIR_GIT, "wibkac"), gitChanges);
+		scanner.filterEligible(gitChanges);
+		scanner.cleanupPaths(gitChanges);
+		gitChanges.stream().map(SCMChange::getPath).forEach(System.out::println);
+
+	}
+	
 	public void testDebug() throws IOException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
@@ -97,7 +141,6 @@ public class CrawlerTest {
 		gitChanges.stream().map(SCMChange::getPath).forEach(System.out::println);
 	}
 	
-	@Test
 	public void testVIP() throws IOException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();

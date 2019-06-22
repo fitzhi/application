@@ -57,6 +57,24 @@ public interface RepoScanner {
 	 * @throws IOException if any IO exception occurs during the finalization.
 	 */
 	void finalizeListChanges(String sourceLocation, List<SCMChange> changes) throws IOException;
+
+	/**
+	 * <p>
+	 * Filter the collection of changes to the eligible pathnames.<br/>
+	 * Theses pathnames must match the patterns declared by the settings <b>patternsCleanup<b> in your <b>application.properties</b> file.
+	 * </p>
+	 * @param changes the changes collection
+	 */
+	public void filterEligible(List<SCMChange> changes);
+
+	/**
+	 * <p>
+	 * Cleanup the pathnames of the changes collection.<br/>
+	 * For example : <code>/src/main/java/java/util/List.java</code> will be treated like <code>java/util/List.java</code>
+	 * </p>
+	 * @param changes the changes collection
+	 */
+	public void cleanupPaths(List<SCMChange> changes);
 	
 	/**
 	 * Parse the repository <u>already</u> cloned on the file system.<br/>
