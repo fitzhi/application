@@ -94,11 +94,12 @@ public class GitScannerTest {
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("GIT remote URL %s", settings.getUrl()));
 		}
+		
 	}
-
 	@Test
 	public void cloneAndParseRepo() throws IOException, SkillerException, GitAPIException {
 
+		
 		Project project = new Project(2, "skiller");
 		
 		scanner.clone(project, settings);

@@ -5,6 +5,7 @@ package fr.skiller.source.crawler;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
@@ -12,6 +13,7 @@ import org.eclipse.jgit.lib.Repository;
 import fr.skiller.controller.ProjectController.SettingsGeneration;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RiskDashboard;
+import fr.skiller.data.internal.Unknown;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
 import fr.skiller.exception.SkillerException;
@@ -74,8 +76,20 @@ public interface RepoScanner {
 	 * </p>
 	 * @param changes the changes collection
 	 */
-	public void cleanupPaths(List<SCMChange> changes);
+	void cleanupPaths(List<SCMChange> changes);
 	
+	/**
+	 * <p>
+	 * Update the collection changes by setting the staff identifier <b>found</b> for every entry.<br/>
+	 * This method lookup in the staff team with the author declared for each commit.<br/>
+	 * A set of unknown contributors is also generated.
+	 * </p>
+	 * @param project the current project
+	 * @param changes the changes collection
+	 * @param unknownContributors the set of ghost, i.e. the unknown contributors
+	 */
+	void updateStaff(Project project, List<SCMChange> changes, Set<String> unknownContributors);
+
 	/**
 	 * Parse the repository <u>already</u> cloned on the file system.<br/>
 	 * <b>PREREQUESIT = The repository must have be cloned before</b>

@@ -41,6 +41,11 @@ public class SCMChange {
 	private String authorEmail;
 
 	/**
+	 * Staff identifier retrieved for this commit.
+	 */
+	private int idStaff = 0;
+	
+	/**
 	 * Constructor.
 	 * @param commitId commit identifier
 	 * @param fullPath full path of the source file (e.g. <code>org/springframework/boot/SpringApplication</code>)
@@ -85,6 +90,41 @@ public class SCMChange {
 		return dateCommit;
 	}
 
+	/**
+	 * @return the authorName
+	 */
+	public String getAuthorName() {
+		return authorName;
+	}
+
+	/**
+	 * @return the authorEmail
+	 */
+	public String getAuthorEmail() {
+		return authorEmail;
+	}
+
+	/**
+	 * @return the Staff identifier
+	 */
+	public int getIdStaff() {
+		return idStaff;
+	}
+
+	/**
+	 * @param idStaff the Staff identifier to set
+	 */
+	public void setIdStaff(int idStaff) {
+		this.idStaff = idStaff;
+	}
+	
+	/**
+	 * @return <code>true</code> if the change is identified (i.e. the staff identifier is known)
+	 */
+	public boolean isIdentified() {
+		return (idStaff > 0);
+	}
+	
 	@Override
 	public String toString() {
 		return "SCMChange [path=" + path + ", commitId=" + path + ", dateCommit=" + dateCommit + "]";
