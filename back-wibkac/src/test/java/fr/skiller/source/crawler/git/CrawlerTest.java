@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
+import javax.activation.DataHandler;
+
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.RenameDetector;
 import org.eclipse.jgit.lib.Constants;
@@ -32,10 +34,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.skiller.bean.DataChartHandler;
+import fr.skiller.bean.DataSaver;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
+import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.RepoScanner;
 
 /**
@@ -54,6 +58,9 @@ public class CrawlerTest {
 	@Qualifier("GIT")
 	RepoScanner scanner;
 
+	@Autowired
+	DataSaver dataSaver;
+	
 	@Autowired
 	DataChartHandler dataChartHandler;
 	
@@ -110,7 +117,8 @@ public class CrawlerTest {
 		assertTrue (gitChanges.stream()
 			.map(SCMChange::getPath)
 			.anyMatch("front-skiller/src/assets/img/pdf.png"::equals));
-			
+
+		
 		scanner.filterEligible(gitChanges);
 
 		assertTrue (gitChanges.stream()
@@ -137,6 +145,22 @@ public class CrawlerTest {
 		scanner.cleanupPaths(gitChanges);
 		gitChanges.stream().map(SCMChange::getPath).forEach(System.out::println);
 
+	}
+	
+	/**
+	 * Test the method dataHandler.saveChanges
+	 * @throws IOException
+	 */
+	@Test
+	public void testSaveChanges() throws IOException, SkillerException {
+
+		FileRepositoryBuilder builder = new FileRepositoryBuilder();
+		repository = builder.setGitDir(new File(String.format(FILE_GIT, "wibkac"))).readEnvironment().findGitDir()
+				.build();
+
+		List<SCMChange> gitChanges = scanner.loadChanges(repository);
+		
+		dataSaver.saveChanges(new Project (777, "test"), gitChanges);
 	}
 	
 	public void testDebug() throws IOException {

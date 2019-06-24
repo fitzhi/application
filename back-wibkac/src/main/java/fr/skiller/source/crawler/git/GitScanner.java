@@ -12,22 +12,18 @@ import static fr.skiller.Global.UNKNOWN;
 import static fr.skiller.controller.ProjectController.DASHBOARD_GENERATION;
 import static org.eclipse.jgit.diff.DiffEntry.DEV_NULL;
 
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -41,7 +37,6 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.RenameDetector;
-import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -49,7 +44,6 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevCommitList;
 import org.eclipse.jgit.revwalk.RevSort;
-import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.TreeWalk;
@@ -65,10 +59,10 @@ import com.google.gson.Gson;
 
 import fr.skiller.Error;
 import fr.skiller.Global;
-import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.DataChartHandler;
+import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
@@ -86,7 +80,6 @@ import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.AbstractScannerDataGenerator;
 import fr.skiller.source.crawler.RepoScanner;
-import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 /**
  * <p>
  * GIT implementation of a source code crawler
@@ -182,10 +175,12 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	@Value("${Sunburst.fillTheHoles}")
 	private boolean fillTheHoles;
 
-	
 	@Autowired
 	DataChartHandler dataChartHandler;
 
+	@Autowired
+	DataSaver dataSaver;
+	
 	/**
 	 * Initialization of the Google JSON parser.
 	 */
@@ -495,11 +490,11 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("loadChanges (%s) returns %d entries", project.getName(), changes.size()));
 			}
+			dataSaver.saveChanges(project, changes);
 			
 			/**
 			 * We finalize & cleanup the content of the collection
 			 */
-			
 			this.finalizeListChanges(
 					settings.getLocalRepository()+"/", 
 					changes);

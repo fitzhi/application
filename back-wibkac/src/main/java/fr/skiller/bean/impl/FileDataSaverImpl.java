@@ -9,12 +9,15 @@ import static fr.skiller.Error.MESSAGE_IO_ERROR;
 import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
@@ -28,6 +31,7 @@ import org.springframework.stereotype.Service;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.opencsv.CSVWriter;
 
 import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
@@ -36,6 +40,7 @@ import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
+import fr.skiller.source.crawler.git.SCMChange;
 
 /**
  * <p>Implementation of DataSaver on the file system.</p>
@@ -220,6 +225,34 @@ public class FileDataSaverImpl implements DataSaver {
 	}
 
 	@Override
+	public void saveChanges(Project project, List<SCMChange> changes) throws SkillerException {
+	
+		final String filename = "saved-changes/" + project.getName() + "-changes.csv";
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("Saving file %s", rootLocation.resolve(filename)));
+		}
+		try (Writer writer = new FileWriter(rootLocation.resolve(filename).toFile())) {
+
+	        try (CSVWriter csvWriter = new CSVWriter(writer,
+	                ';',
+	                CSVWriter.DEFAULT_QUOTE_CHARACTER,
+	                CSVWriter.DEFAULT_ESCAPE_CHARACTER,
+	                CSVWriter.DEFAULT_LINE_END)) {
+		        csvWriter.writeNext(new String[] {"Commit", "Path", "Date", "Author", "Email"});
+		        changes.stream().forEach(change -> csvWriter.writeNext(new String[]{
+		        			change.getCommitId(),
+		        			change.getPath(),
+		        			change.getDateCommit().toString(),
+		        			change.getAuthorName(),
+		        			change.getAuthorEmail()}));
+		        }
+	        } catch (IOException ioe) {
+	        	throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
+	        }
+		}
+	
+	@Override
 	public Map<Integer, Skill> loadSkills() throws SkillerException {
 
 		final String filename = "skills.json";
@@ -248,5 +281,6 @@ public class FileDataSaverImpl implements DataSaver {
 		}
 		return skills;
 	}
+
 
 }
