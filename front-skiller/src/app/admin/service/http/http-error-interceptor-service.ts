@@ -41,10 +41,11 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 							break;
 						// The 404 error can be thrown from the back-end server for good reason,
 						// with its own appropriate message.
+						case 400:
 						case 404:
 						case 500:
 							const return_code = error.headers.get('backend.return_code');
-							if (return_code !== undefined) {
+							if ( (return_code !== null) && (return_code !== undefined) ) {
 								const return_message = error.headers.get('backend.return_message');
 								if (Constants.DEBUG) {
 									console.log('Error ' + error.status
@@ -56,7 +57,11 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 								if (Constants.DEBUG) {
 									console.log('Error ' + error.status + ' ' + error.message);
 								}
-								errorMessage = error.message + ' (' + error.status + ')';
+								if ( (error.error !== null) &&  (error.error !== undefined) ) {
+									errorMessage = error.error.message + ' (' + error.error.code + ')';
+								} else {
+									errorMessage = error.message + ' (' + error.status + ')';
+								}
 							}
 							setTimeout(() => messageService.warning(errorMessage), 0);
 							return throwError(errorMessage);

@@ -84,7 +84,8 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 					// If we don't get a new token, we are in trouble so logout.
 					return this.logoutUser();
 				}),
-				catchError(error => {
+				catchError(() => {
+
 					// If there is an exception calling 'refreshToken', bad news so logout.
 					return this.logoutUser();
 				}),
