@@ -3,11 +3,18 @@
  */
 package fr.skiller.data.internal;
 
+import java.io.Serializable;
+
 /**
  * Knowledge background of a developer, technical expert, any staff member of the company.
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class Experience {
+public class Experience implements Serializable {
+
+	/**
+	 * For serialization purpose.
+	 */
+	private static final long serialVersionUID = -8716755186690093914L;
 
 	private int id;
 	

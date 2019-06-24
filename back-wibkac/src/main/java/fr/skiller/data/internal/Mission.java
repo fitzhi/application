@@ -3,6 +3,7 @@
  */
 package fr.skiller.data.internal;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -10,7 +11,12 @@ import java.util.Date;
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class Mission {
+public class Mission implements Serializable {
+
+	/**
+	 * For serialization purpose.
+	 */
+	private static final long serialVersionUID = 7291243543440703140L;
 
 	/**
 	 * The project identifier.

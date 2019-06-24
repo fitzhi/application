@@ -5,7 +5,6 @@ package fr.skiller.data.internal;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +28,8 @@ import fr.skiller.service.FileType;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public class Staff implements UserDetails {
+
+	private static final String ROLE_USER = "ROLE_USER";
 
 	/**
 	 * serialVersionUID
@@ -75,10 +76,17 @@ public class Staff implements UserDetails {
 	private List<Experience> experiences;
 
 	/**
+	* List of authorities for this user
+	**/
+	private List<GrantedAuthority> authorities = new ArrayList<>();
+	
+	/**
 	 * Empty construction.
 	 */
 	public Staff() {
+    	authorities.add(new SimpleGrantedAuthority(ROLE_USER));
 	}
+
 
 	/**
 	 * Creation of a empty staff member just on a his login/password
@@ -93,6 +101,7 @@ public class Staff implements UserDetails {
 		this.password = password;
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
+    	authorities.add(new SimpleGrantedAuthority(ROLE_USER));
 	}
 
 	/**
@@ -117,6 +126,7 @@ public class Staff implements UserDetails {
 		this.level = level;
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
+    	authorities.add(new SimpleGrantedAuthority(ROLE_USER));
 	}
 
 	/**
@@ -148,6 +158,7 @@ public class Staff implements UserDetails {
 		this.external = external;
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
+    	authorities.add(new SimpleGrantedAuthority(ROLE_USER));
 	}
 
 	/**
@@ -454,8 +465,6 @@ public class Staff implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-       	List<GrantedAuthority> authorities = new ArrayList<>();
-    	authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 		return authorities;
 	}
 
