@@ -21,13 +21,12 @@ public interface DataChartHandler {
 	 * <li>one for <code><b>common</b></code></li>
 	 * <li>one for <code><b>my-package</b></code></li>
 	 * </ul>
-	 * <b>BURT</b> Possibly, there is no source files present in <code><b>fr</b></code>. 
+	 * <b>BUT</b> Possibly, there is no source files present in <code><b>fr</b></code>. 
 	 * So instead of keeping 2 levels of hierarchy (with an empty one), 
 	 * it would be easier to aggregate the 2 directories into the resulting one : <code>fr.my-package</code>
 	 * </p>
 	 * @param dataChart the given data chart
-	 * @return the newly created compacted data chart. <i>(This method returns a new instance)</i>
 	 */
-	DataChart aggregateDataChart(DataChart dataChart);
+	void aggregateDataChart(DataChart dataChart);
 
 }

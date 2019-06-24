@@ -1,6 +1,7 @@
 package fr.skiller.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,10 +26,13 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
 public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
+	ClientDetailsService clientDetailsService;
+	
+	@Autowired
 	private AuthenticationProvider authenticationProvider;
 
-	PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
+	PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();	
+	
 	@Autowired
 	public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
 

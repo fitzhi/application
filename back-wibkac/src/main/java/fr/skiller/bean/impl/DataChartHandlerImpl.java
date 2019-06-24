@@ -26,65 +26,27 @@ public class DataChartHandlerImpl implements DataChartHandler {
 	final Logger logger = LoggerFactory.getLogger(DataChartHandlerImpl.class.getCanonicalName());
 
 	@Override
-	public DataChart aggregateDataChart(DataChart dataChart) {
-		
-		DataChart aggregateData = new DataChart("root");
-		
+	public void aggregateDataChart(DataChart dataChart) {
 		if (dataChart.getChildren() != null) {
-			dataChart.getChildren().stream().forEach(
-				child -> 
-					aggregate(aggregateData, child));
+			dataChart.getChildren().stream().forEach(this::aggregate);
 		}
-		return aggregateData;
 	}
-	
-	private void aggregate(DataChart resultingData, DataChart data) {
+
+	private void aggregate(DataChart data) {
 		if ( (data.getChildren() != null) && !(data.getChildren().isEmpty()) ) {
-			if(data.getChildren().size() == 1) {
+			if (data.getChildren().size() == 1) {
 				DataChart uniqueChild = data.getChildren().get(0);
 				// This directory has no source file and only ONE sub-directory
 				if (data.getNumberOfFiles() == 0) {
-					// Defensive test.
-					if ((data.getClassnames() != null) && (data.getClassnames().isEmpty())) {
-						throw new SkillerRuntimeException("Should not pass here !");
-					}
-					uniqueChild.setLocation(data.getLocation()+"/"+uniqueChild.getLocation());
-					aggregate(resultingData, uniqueChild);
-				} else {		
-					DataChart subDir = extractLevel(data);
-					if (logger.isDebugEnabled()) {
-						logger.debug(String.format(ADDING_S_IN_S, subDir.getLocation(), resultingData.getLocation()));
-					}
-					resultingData.addSubDir(subDir);
-					aggregate(subDir, uniqueChild);						
-				}
-			} else {
-				DataChart subDir = extractLevel (data);
-				resultingData.addSubDir(subDir);					
-				if (logger.isDebugEnabled()) {
-					logger.debug(String.format(ADDING_S_IN_S, subDir.getLocation(), resultingData.getLocation()));
-				}
-				for (DataChart child : data.getChildren()) {
-					aggregate (subDir, child);
+					data.aggregate(uniqueChild);
+					aggregate(data);
+					return;
 				}
 			}
-		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format(ADDING_S_IN_S, data.getLocation(), resultingData.getLocation()));
+			for (DataChart child : data.getChildren()) {
+				aggregate (child);
 			}
-			resultingData.addSubDir(data);
 		}
-	}
-	
-	private DataChart extractLevel (DataChart data) {
-		
-		DataChart subDir = new DataChart(data.getLocation());
-		subDir.setColor(data.getColor());
-		subDir.setRiskLevel(data.getRiskLevel());
-		if (data.getClassnames() != null) {
-			data.getClassnames().forEach(subDir::addSource);
-		}
-		return subDir;
 	}
 	
 }

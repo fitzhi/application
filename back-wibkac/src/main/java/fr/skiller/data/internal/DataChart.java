@@ -117,20 +117,13 @@ public class DataChart implements Serializable {
 				latestCommit, committers);
 	}
 	
-	@Override
-	public String toString() {
-		final StringBuilder sb = new StringBuilder();
+	public void dump(StringBuilder sb, String offset) {
+		sb.append(offset).append(getLocation()).append(Global.LN);
 		if (getChildren()!=null) {
 			for (DataChart child : getChildren()) {
-				sb.append("\t"+child.toString()+Global.LN);
+				child.dump (sb, offset+" ");
 			}
 		}
-		return "CodeDir [directory=" + getLocation() 
-				+ ", lastUpdate=" + ((getLastUpdate() == null) ? "null" : getLastUpdate()) 
-				+ ", color=" + ((getColor() == null) ? "null" : getColor())
-				+ ", numberOfFiles=" + getNumberOfFiles()
-				+ ( (sb.toString().length()>0) ? (Global.LN + sb.toString()) : "")
-				+ "]";
 	}
 	
 	/**
@@ -275,4 +268,17 @@ public class DataChart implements Serializable {
 		this.children = children;
 	}
 	
+	/**
+	 * Aggregate the content of a <code>DataChart</code> instance into this instance.
+	 * @param input the <code>DataChart</code> to be transfered.
+	 */
+	public void aggregate(DataChart input) {
+		this.location = this.location + "/" + input.location;
+		this.color = input.color;
+		this.lastUpdate = input.lastUpdate;
+		this.numberOfFiles = input.numberOfFiles;
+		this.riskLevel = input.riskLevel;
+		this.sources = input.sources;
+		this.children = input.children;
+	}
 }

@@ -4,12 +4,15 @@ import { Observable, throwError } from 'rxjs';
 import { Injectable, Injector } from '@angular/core';
 import { MessageService } from '../../../message/message.service';
 import { Constants } from '../../../constants';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 export class HttpErrorInterceptorService implements HttpInterceptor {
 
 
-	constructor(private injector: Injector) { }
+	constructor(
+		private injector: Injector,
+		private router: Router) { }
 
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		return next.handle(request)
@@ -33,6 +36,9 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 					}
 
 					switch (error.status) {
+						case 0:
+							setTimeout(() => messageService.error("Server is down or unreachable!"), 0);
+							break;
 						// The 404 error can be thrown from the back-end server for good reason,
 						// with its own appropriate message.
 						case 404:
@@ -56,10 +62,13 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 							return throwError(errorMessage);
 						case 401:
 							if (Constants.DEBUG) {
-								console.log(error);
+								console.log(error.error, error.error.error_description);
+							}
+							setTimeout(() => messageService.error(error.error.error_description), 0);
+							if (error.error == 'invalid_token') {	
+								setTimeout(() => this.router.navigate(['/welcome']), 0);
 							}
 							break;
-
 						default:
 							if (Constants.DEBUG) {
 								console.log(error);

@@ -117,8 +117,12 @@ export class ProjectService extends InternalService {
 	 */
 	loadDashboardData(settings: SettingsGeneration): Observable<any> {
 		if (Constants.DEBUG) {
+
 			console.log('Retrieving the Sunburst data for the project '
-				+ settings.idProject + ', idStaff ' + settings.idStaffSelected + ' and starting date ' + settings.startingDate);
+				+ settings.idProject + ', idStaff '
+				+ settings.idStaffSelected
+				+ ' and starting date ' + settings.startingDate
+				+ ' on URL ' + this.backendSetupService.url() + '/project/sunburst');
 		}
 		const body = {
 			idProject: settings.idProject, idStaffSelected: settings.idStaffSelected,

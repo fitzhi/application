@@ -3,11 +3,13 @@
  */
 package fr.skiller.source.crawler.git;
 
+import static fr.skiller.Global.UNKNOWN;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.RenameDetector;
@@ -29,6 +31,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import fr.skiller.bean.DataChartHandler;
+import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.RiskDashboard;
+import fr.skiller.data.source.BasicCommitRepository;
+import fr.skiller.data.source.CommitRepository;
 import fr.skiller.source.crawler.RepoScanner;
 
 /**
@@ -42,11 +49,14 @@ public class CrawlerTest {
 	private static final String DIR_GIT = "../git_repo_for_test/%s/";
 
 	private static final String FILE_GIT = DIR_GIT + ".git";
-
+	
 	@Autowired
 	@Qualifier("GIT")
 	RepoScanner scanner;
 
+	@Autowired
+	DataChartHandler dataChartHandler;
+	
 	private Repository repository;
 
 	@Test
@@ -105,11 +115,10 @@ public class CrawlerTest {
 
 		assertTrue (gitChanges.stream()
 				.map(SCMChange::getPath)
-				.noneMatch("front-skiller/src/assets/img/pdf.png"::equals));
-		
-//		gitChanges.stream().map(SCMChange::getPath).forEach(System.out::println);
+				.noneMatch("front-skiller/src/assets/img/pdf.png"::equals));		
 
 	}
+	
 	
 	/**
 	 * Test the method filterElibilible
@@ -151,6 +160,48 @@ public class CrawlerTest {
 
 		scanner.finalizeListChanges(String.format(DIR_GIT, "VIP-MIDDLEWARE"), gitChanges);
 
+		
+		/**
+		 * We filter the collection on eligible entries (.java; .js...)
+		 */
+		scanner.filterEligible(gitChanges);
+		
+		/**
+		 * We cleanup the pathnames each location (e.g. "src/main/java" is removed) 
+		 */
+		scanner.cleanupPaths(gitChanges);
+		
+		CommitRepository repositoryOfCommit = new BasicCommitRepository();
+		
+        /**
+         * Set of unknown contributors having work on this repository.
+         */
+        Set<String >unknown = repositoryOfCommit.unknownContributors();
+
+        Project p = new Project(7, "VIP");
+        /**
+		 * We update the staff identifier on each change entry.
+		 */
+		scanner.updateStaff(p, gitChanges, unknown);
+
+		gitChanges.stream().forEach(
+				change -> 
+				repositoryOfCommit.addCommit(
+						change.getPath(), 
+						change.isIdentified() ? change.getIdStaff() : UNKNOWN,
+						change.getDateCommit())
+				);
+		
+		gitChanges.stream().map(SCMChange::getPath).forEach(System.out::println);
+
+		RiskDashboard data = scanner.aggregateDashboard(p, repositoryOfCommit);
+
+		dataChartHandler.aggregateDataChart(data.riskChartData);
+		
+		StringBuilder sb = new StringBuilder();
+		data.riskChartData.dump(sb,"");
+		System.out.println(sb);
+	
 	}
 
 	/*

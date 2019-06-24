@@ -27,7 +27,7 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
     
-	<logger name="fr.skiller.bean.impl.FileDataSaverImpl" additivity="false">
+	<logger name="fr.skiller.security" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>

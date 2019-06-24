@@ -2,8 +2,10 @@ package fr.skiller.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -25,8 +27,23 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	private UserApprovalHandler userApprovalHandler;
 
 	@Autowired
+	private UserDetailsService userDetailsService;
+	
+	@Autowired
 	@Qualifier("authenticationManagerBean")
 	private AuthenticationManager authenticationManager;
+
+	/**
+	 * Duration of the access Token
+	 */
+	@Value("${accessTokenDuration}")
+	private int accessTokenDuration;
+
+	/**
+	 * Duration of the access Token
+	 */
+	@Value("${refreshTokenDuration}")
+	private int refreshTokenDuration;
 
 	public static final String TRUSTED_CLIENT_USERNAME = "wibkac-trusted-client";
 	
@@ -39,14 +56,14 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
             .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
             .scopes("read", "write", "trust")
             .secret("secret")
-            .accessTokenValiditySeconds(120).//Access token is only valid for 2 minutes.
-            refreshTokenValiditySeconds(600);//Refresh token is only valid for 10 minutes.
+            .accessTokenValiditySeconds(accessTokenDuration).//Access token is only valid for 2 minutes.
+            refreshTokenValiditySeconds(refreshTokenDuration);//Refresh token is only valid for 10 minutes.
 	}
 
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		endpoints.tokenStore(tokenStore).userApprovalHandler(userApprovalHandler)
-				.authenticationManager(authenticationManager);
+				.authenticationManager(authenticationManager).userDetailsService(userDetailsService);
 	}
 
 	@Override
