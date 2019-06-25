@@ -1,5 +1,6 @@
 package fr.skiller.data.source;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -16,12 +17,12 @@ public class Contributor {
 	/**
 	 * Developer's first commit
 	 */
-	private Date firstCommit;
+	private LocalDate firstCommit;
 	
 	/**
 	 * Developer's last commit
 	 */
-	private Date lastCommit;
+	private LocalDate lastCommit;
 
 	/**
 	 * Number of commits submitted by this developer
@@ -40,7 +41,7 @@ public class Contributor {
 	 * @param numberOfCommitsSubmitted number of commits submitted
 	 * @param numberOfFiles number of files
 	 */
-	public Contributor(int idStaff, Date firstCommit, Date lastCommit, int numberOfCommitsSubmitted, int numberOfFiles) {
+	public Contributor(int idStaff, LocalDate firstCommit, LocalDate lastCommit, int numberOfCommitsSubmitted, int numberOfFiles) {
 		super();
 		this.setIdStaff(idStaff);
 		this.setFirstCommit(firstCommit);
@@ -72,28 +73,28 @@ public class Contributor {
 	/**
 	 * @return the firstCommit
 	 */
-	public Date getFirstCommit() {
+	public LocalDate getFirstCommit() {
 		return firstCommit;
 	}
 
 	/**
 	 * @param firstCommit developer's date of first Commit
 	 */
-	public void setFirstCommit(Date firstCommit) {
+	public void setFirstCommit(LocalDate firstCommit) {
 		this.firstCommit = firstCommit;
 	}
 
 	/**
 	 * @return the developer's date of last Commit
 	 */
-	public Date getLastCommit() {
+	public LocalDate getLastCommit() {
 		return lastCommit;
 	}
 
 	/**
 	 * @param developer's date of last Commit the lastCommit to set
 	 */
-	public void setLastCommit(Date lastCommit) {
+	public void setLastCommit(LocalDate lastCommit) {
 		this.lastCommit = lastCommit;
 	}
 

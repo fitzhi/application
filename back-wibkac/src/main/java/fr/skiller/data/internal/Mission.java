@@ -4,6 +4,7 @@
 package fr.skiller.data.internal;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -19,6 +20,11 @@ public class Mission implements Serializable {
 	private static final long serialVersionUID = 7291243543440703140L;
 
 	/**
+	 * The staff identifier.
+	 */
+	private int idStaff;
+	
+	/**
 	 * The project identifier.
 	 */
 	private int idProject;
@@ -31,12 +37,12 @@ public class Mission implements Serializable {
 	/**
 	 * Date of the first commit.
 	 */
-	private Date firstCommit;
+	private LocalDate firstCommit;
 
 	/**
 	 * Date of the latest commit.
 	 */
-	private Date lastCommit;
+	private LocalDate lastCommit;
 	
 	/**
 	 * @return number of commit submitted by a developer inside the project.
@@ -55,6 +61,7 @@ public class Mission implements Serializable {
 	}
 	
 	/**
+	 * @param idStaff staff identifier
 	 * @param idProject the identifier of the project
 	 * @param name the name of the project
 	 * @param lastCommit the date/time of the last commit
@@ -62,7 +69,8 @@ public class Mission implements Serializable {
 	 * @param numberOfCommits the number of commits submitted
 	 * @param numberOfFiles the number of files
 	 */
-	public Mission(final int idProject, final String name, final Date firstCommit, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
+	public Mission(final int idStaff, final int idProject, final String name, final LocalDate firstCommit, final LocalDate lastCommit, final int numberOfCommits, final int numberOfFiles) {
+		this.idStaff = idStaff;
 		this.idProject = idProject;
 		this.name = name;
 		this.lastCommit = lastCommit;
@@ -75,16 +83,25 @@ public class Mission implements Serializable {
 	 * @param idProject the identifier of the project
 	 * @param name the name of the project
 	 */
-	public Mission(final int idProject, final String name) {
-		this(idProject, name, null, null, 0, 0);
+	public Mission(final int idStaff, final int idProject, final String name) {
+		this(idStaff, idProject, name, null, null, 0, 0);
 	}
+
 
 	@Override
 	public String toString() {
-		return "Mission [idProject=" + idProject + ", name=" + name + ", firstCommit=" + firstCommit + ", lastCommit="
-				+ lastCommit + ", numberOfCommits=" + numberOfCommits + ", numberOfFiles=" + numberOfFiles + "]";
+		return "Mission [idStaff=" + idStaff + ", idProject=" + idProject + ", name=" + name + ", firstCommit="
+				+ firstCommit + ", lastCommit=" + lastCommit + ", numberOfCommits=" + numberOfCommits
+				+ ", numberOfFiles=" + numberOfFiles + "]";
 	}
 
+	/**
+	 * @return the staff identifier
+	 */
+	public int getIdStaff() {
+		return idStaff;
+	}
+	
 	/**
 	 * @return the idProject
 	 */
@@ -116,28 +133,28 @@ public class Mission implements Serializable {
 	/**
 	 * @return the firstCommit
 	 */
-	public Date getFirstCommit() {
+	public LocalDate getFirstCommit() {
 		return firstCommit;
 	}
 
 	/**
 	 * @param firstCommit the firstCommit to set
 	 */
-	public void setFirstCommit(Date firstCommit) {
+	public void setFirstCommit(LocalDate firstCommit) {
 		this.firstCommit = firstCommit;
 	}
 
 	/**
 	 * @return the lastCommit
 	 */
-	public Date getLastCommit() {
+	public LocalDate getLastCommit() {
 		return lastCommit;
 	}
 
 	/**
 	 * @param lastCommit the lastCommit to set
 	 */
-	public void setLastCommit(Date lastCommit) {
+	public void setLastCommit(LocalDate lastCommit) {
 		this.lastCommit = lastCommit;
 	}
 

@@ -6,7 +6,7 @@ package fr.skiller.data.external;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.skiller.data.internal.Pseudo;
+import fr.skiller.data.internal.Committer;
 import fr.skiller.exception.SkillerException;
 
 
@@ -24,13 +24,13 @@ public class PseudoListDTO extends BaseDTO {
 	/**
 	 * The list of unknown pseudos IN and OUT.
 	 */
-	public final List<Pseudo> unknowns;
+	public final List<Committer> unknowns;
 
 	/**
 	 * @param idProject project identifier
 	 * @param unknowns list of "consolidated" pseudos
 	 */
-	public PseudoListDTO(final int idProject, final List<Pseudo> unknowns) {
+	public PseudoListDTO(final int idProject, final List<Committer> unknowns) {
 		super();
 		this.idProject = idProject;
 		this.unknowns = unknowns;

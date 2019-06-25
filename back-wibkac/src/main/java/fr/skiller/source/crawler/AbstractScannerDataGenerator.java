@@ -15,7 +15,7 @@ import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.DataChart;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.Pseudo;
+import fr.skiller.data.internal.Committer;
 import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.CommitRepository;
 
@@ -55,19 +55,19 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 						commit.committers()));
 
 		
-		Set<Pseudo> ghosts = new HashSet<>();
+		Set<Committer> ghosts = new HashSet<>();
 		commitRepo.unknownContributors().stream()
 			.forEach(unknown -> {
 				Ghost g = parentProjectHandler.getGhost(project, unknown);
 				if (g == null) {
-					ghosts.add(new Pseudo(unknown, false));
+					ghosts.add(new Committer(unknown, false));
 				} else {
 					if (g.isTechnical()) {
-						ghosts.add(new Pseudo(unknown, true));											
+						ghosts.add(new Committer(unknown, true));											
 					} else {
 						String fullName = parentStaffHandler.getFullname(g.getIdStaff());
 						String login = parentStaffHandler.getStaff().get(g.getIdStaff()).getLogin();
-						ghosts.add(new Pseudo(unknown, g.getIdStaff(), fullName, login, g.isTechnical()));
+						ghosts.add(new Committer(unknown, g.getIdStaff(), fullName, login, g.isTechnical()));
 					}
 				}
 			});

@@ -79,14 +79,17 @@ public class StaffControllerProjectTest {
 		String body = "{ idStaff: 2, formerProjectName: \"\", newProjectName: \"VEGEO\"}";
 		this.mvc.perform(post(STAFF_PROJECT_SAVE).content(body)).andExpect(status().isOk());		
 		List<Mission> missions = new ArrayList<>();
-		missions.add(new Mission (ID_VEGEO, VEGEO));
-		this.mvc.perform(get(STAFF_PROJECTS_2)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(missions)));
+		missions.add(new Mission (2, ID_VEGEO, VEGEO));
+		this.mvc.perform(get(STAFF_PROJECTS_2))
+				.andExpect(status()
+				.isOk())
+				.andExpect(content().json(gson.toJson(missions)));
 
 		body = "{ idStaff: 2, formerProjectName: \"VEGEO\", newProjectName: \"INFOTER\"}";
 		this.mvc.perform(post(STAFF_PROJECT_SAVE).content(body)).andExpect(status().isOk());		
 		
 		missions.clear();
-		missions.add(new Mission (ID_INFOTER, INFOTER));
+		missions.add(new Mission (2, ID_INFOTER, INFOTER));
 		this.mvc.perform(get(STAFF_PROJECTS_2)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(missions)));
 
 		staffHandler.init();
@@ -103,7 +106,7 @@ public class StaffControllerProjectTest {
 
 	
 		List<Mission> missions = new ArrayList<>();
-		missions.add(new Mission (ID_VEGEO, VEGEO));
+		missions.add(new Mission (2, ID_VEGEO, VEGEO));
 		this.mvc.perform(get(STAFF_PROJECTS_2)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(missions)));
 		
 		body = "{ idStaff: 2, idProject: "+ ID_VEGEO +"}";

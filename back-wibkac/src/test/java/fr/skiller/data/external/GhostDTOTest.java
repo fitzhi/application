@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 
-import fr.skiller.data.internal.Pseudo;
+import fr.skiller.data.internal.Committer;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -24,14 +24,14 @@ public class GhostDTOTest {
 
 	@Test
 	public void testSimple() {
-		Pseudo pseudo = new Pseudo();
+		Committer pseudo = new Committer();
 		pseudo.setIdStaff(1);
-		pseudo.setCommitPseudo("test");
+		pseudo.setPseudo("test");
 		pseudo.setLogin("loginTest");
 		pseudo.setAction(Action.A);
 		Gson g = new Gson();
 
-		Assert.assertTrue("{\"commitPseudo\":\"test\",\"idStaff\":1,\"login\":\"loginTest\",\"technical\":false,\"action\":\"A\"}".equals(g.toJson(pseudo)));
+		Assert.assertTrue("{\"pseudo\":\"test\",\"idStaff\":1,\"login\":\"loginTest\",\"technical\":false,\"action\":\"A\"}".equals(g.toJson(pseudo)));
 		if (logger.isDebugEnabled()) {
 			logger.debug(g.toJson(pseudo)); 
 		}

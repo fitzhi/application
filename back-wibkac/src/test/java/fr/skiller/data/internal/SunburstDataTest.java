@@ -6,6 +6,7 @@ package fr.skiller.data.internal;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.junit.Test;
@@ -53,7 +54,7 @@ public class SunburstDataTest {
 		final DataChart root = new DataChart("root");
 		String testClassname = "fr/skiller/test/world/mbappe/Number9.java";
 		int[] i = new int[0];
-		root.injectFile(root, testClassname.split(File.separator), new Date(), i);
+		root.injectFile(root, testClassname.split(File.separator), LocalDate.now(), i);
 
 		if (logger.isDebugEnabled()) {
 			logger.debug(root.toString());
@@ -108,9 +109,9 @@ public class SunburstDataTest {
 		final DataChart root = new DataChart("root");
 		String testClassname = "fr/skiller/test/world/mbappe/Number9.java";
 		int[] i = new int[0];
-		root.injectFile(root, testClassname.split(File.separator), new Date(), i);
+		root.injectFile(root, testClassname.split(File.separator), LocalDate.now(), i);
 		testClassname = "fr/skiller/test/world-champion/mbappe/Number9.java";
-		root.injectFile(root, testClassname.split(File.separator), new Date(), i);
+		root.injectFile(root, testClassname.split(File.separator), LocalDate.now(), i);
 
 		if (logger.isDebugEnabled()) {
 			logger.debug(root.toString());

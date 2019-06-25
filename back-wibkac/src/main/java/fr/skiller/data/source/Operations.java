@@ -3,6 +3,7 @@
  */
 package fr.skiller.data.source;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,12 +32,12 @@ public class Operations {
 	 * @param email the author's email
 	 * @param dateCommit the date of the commit
 	 */
-	void addCommit (final int author, final Date dateCommit) {
+	void addCommit (final int author, final LocalDate dateCommit) {
 		Operation operation = operations.get(author);
 		if (operation == null) {
 			operations.put(author, new Operation(author, dateCommit));
 		} else {
-			if (dateCommit.after(operation.getDateCommit())) {
+			if (dateCommit.isAfter(operation.getDateCommit())) {
 				operation.setDateCommit(dateCommit);
 			}
 		}

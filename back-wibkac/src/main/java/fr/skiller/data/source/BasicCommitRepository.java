@@ -5,6 +5,8 @@ package fr.skiller.data.source;
 
 import static fr.skiller.Global.LN;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,7 +31,7 @@ public class BasicCommitRepository implements CommitRepository {
 	Set<String> unknownContributors = new HashSet<>();
 	
 	@Override
-	public void addCommit(final String sourceCodePath, final int idStaff, final Date dateCommit) {
+	public void addCommit(final String sourceCodePath, final int idStaff, final LocalDate dateCommit) {
 		
 		if (repo.containsKey(sourceCodePath)) {
 			final CommitHistory history = repo.get(sourceCodePath);
@@ -40,14 +42,19 @@ public class BasicCommitRepository implements CommitRepository {
 			repo.put(sourceCodePath, fileLogs);
 		}
 	}
-
+	
+	@Override
+	public void addCommit(final String sourceCodePath, final int idStaff, final Date dateCommit) {
+		addCommit(sourceCodePath, idStaff, dateCommit.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+	}
+	
 	@Override
 	public boolean containsSourceCode(String sourceCodePath) {
 		return repo.containsKey(sourceCodePath);
 	}
 
 	@Override
-	public Date getLastDateCommit(final String sourceCodePath, final int author) {
+	public LocalDate getLastDateCommit(final String sourceCodePath, final int author) {
 		if (repo.containsKey(sourceCodePath)) {
 			final CommitHistory history = repo.get(sourceCodePath);
 			return history.getDateCommit(author);
@@ -68,7 +75,7 @@ public class BasicCommitRepository implements CommitRepository {
 					.append(operation.getDateCommit())
 					.append(LN)
 					);
-		});;
+		});
 		return sb.toString();
 	}
 
@@ -85,15 +92,15 @@ public class BasicCommitRepository implements CommitRepository {
 	/**
 	 * Working variable used by method lastCommit
 	 */
-	private Date lastCommit;
+	private LocalDate lastCommit;
 	
 	@Override
-	public Date lastCommit (final int idStaff) {
-		lastCommit = new Date(Long.MIN_VALUE);
+	public LocalDate lastCommit (final int idStaff) {
+		lastCommit = LocalDate.MIN; 
 		this.repo.values().stream().forEach(history -> 
 			history.operations.stream()
 			.filter(ope -> (ope.idStaff == idStaff)).forEach(ope -> {
-				if (ope.getDateCommit().after(lastCommit)) {
+				if (ope.getDateCommit().isAfter (lastCommit)) {
 					lastCommit = ope.getDateCommit();
 				}
 			}));
@@ -101,12 +108,12 @@ public class BasicCommitRepository implements CommitRepository {
 	}
 
 	@Override
-	public Date firstCommit (final int idStaff) {
-		lastCommit = new Date(Long.MAX_VALUE);
+	public LocalDate firstCommit (final int idStaff) {
+		lastCommit = LocalDate.MAX; 
 		this.repo.values().stream().forEach(history -> 
 			history.operations.stream()
 			.filter(ope -> (ope.idStaff == idStaff)).forEach(ope -> {
-				if (ope.getDateCommit().before(lastCommit)) {
+				if (ope.getDateCommit().isBefore(lastCommit)) {
 					lastCommit = ope.getDateCommit();
 				}
 			}));
@@ -114,9 +121,14 @@ public class BasicCommitRepository implements CommitRepository {
 	}
 	
 	@Override
-	public int numberOfCommits (final int idStaff) {
-		return (int) this.repo.values().stream().mapToLong( 
-				history -> history.operations.stream().filter(ope -> (ope.idStaff == idStaff)).count()).asDoubleStream().sum();
+	public int numberOfFileCommits (final int idStaff) {
+		return (int) this.repo.values().stream()
+				.mapToLong( 
+					 history -> history.operations.stream()
+					.filter(ope -> (ope.idStaff == idStaff))
+					.count())
+				.asDoubleStream()
+				.sum();
 	}
 	
 	
@@ -128,21 +140,6 @@ public class BasicCommitRepository implements CommitRepository {
 				.count();
 	}
 	
-	@Override
-	public List<Contributor> contributors() {
-		Set<Integer> idContributors = new HashSet<>();
-		this.repo.values().stream().forEach(history -> 
-			history.operations.stream()
-			.map(ope -> ope.idStaff).distinct().forEach(idContributors::add));
-		
-		List<Contributor> contributors = new ArrayList<>();
-		for (int idStaff : idContributors) {
-			contributors.add (new Contributor(idStaff, firstCommit (idStaff), lastCommit (idStaff), numberOfCommits(idStaff), numberOfFiles(idStaff)));
-		}
-		
-		return contributors;
-	}
-
 	@Override
 	public Set<String> unknownContributors() {
 		return this.unknownContributors;

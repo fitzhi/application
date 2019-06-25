@@ -6,64 +6,64 @@ import { Unknown } from '../../../data/unknown';
 
 export class ProjectGhostsDataSource implements DataSource<Unknown> {
 
-    public ghostsSubject = new BehaviorSubject<Unknown[]>([]);
-    public loadingSubject = new BehaviorSubject<boolean>(false);
+	public ghostsSubject = new BehaviorSubject<Unknown[]>([]);
+	public loadingSubject = new BehaviorSubject<boolean>(false);
 
-    public loading$ = this.loadingSubject.asObservable();
+	public loading$ = this.loadingSubject.asObservable();
 
-    public project: Project;
+	public project: Project;
 
-    /**
+	/**
      * @param project current project
      */
-    constructor(project: Project) {
-        this.project = project;
-    }
+	constructor(project: Project) {
+		this.project = project;
+	}
 
-    /**
+	/**
      * Connect this datasource to the list
      */
-    connect(collectionViewer: CollectionViewer): Observable<Unknown[]> {
-        return this.ghostsSubject.asObservable();
-    }
+	connect(_collectionViewer: CollectionViewer): Observable<Unknown[]> {
+		return this.ghostsSubject.asObservable();
+	}
 
-    /**
+	/**
      * Disconnect this datasource to the list
      */
-    disconnect(collectionViewer: CollectionViewer): void {
-        this.ghostsSubject.complete();
-        this.loadingSubject.complete();
-    }
+	disconnect(_collectionViewer: CollectionViewer): void {
+		this.ghostsSubject.complete();
+		this.loadingSubject.complete();
+	}
 
-    /**
+	/**
      * Send the loaded data from the backend.
      * @param unknowns list of unregistered contributors.
      */
-    sendUnknowns(unknowns: Unknown[]): void {
-        this.loadingSubject.next(true);
-        const ghosts = [];
-        unknowns.forEach(function (unknown) {
-            const g = new Unknown();
-            g.pseudo = unknown.pseudo;
-            g.idStaff = unknown.idStaff;
-            g.login = unknown.login;
-            g.fullName = unknown.fullName;
-            g.technical = unknown.technical;
-            g.action = unknown.action;
-            if ( (g.action === 'N') && (g.idStaff === -1) && !g.technical) {
-                g.fullName = 'Unrecognized login';
-            }
-            ghosts.push(g);
-        });
-        this.ghostsSubject.next(ghosts);
-    }
+	sendUnknowns(unknowns: Unknown[]): void {
+		this.loadingSubject.next(true);
+		const ghosts = [];
+		unknowns.forEach(function (unknown) {
+			const g = new Unknown();
+			g.pseudo = unknown.pseudo;
+			g.idStaff = unknown.idStaff;
+			g.login = unknown.login;
+			g.fullName = unknown.fullName;
+			g.technical = unknown.technical;
+			g.action = unknown.action;
+			if ((g.action === 'N') && (g.idStaff === -1) && !g.technical) {
+				g.fullName = 'Unrecognized login';
+			}
+			ghosts.push(g);
+		});
+		this.ghostsSubject.next(ghosts);
+	}
 
-  /**
-   * @param technical value of the check-box "technical"
-   * @returns a string representation of the technical
-   */
-  public checkValue (technical: boolean): string {
-    return ;
-  }
+	/**
+	 * @param technical value of the check-box "technical"
+	 * @returns a string representation of the technical
+	 */
+	public checkValue(_technical: boolean): string {
+		return;
+	}
 
 }

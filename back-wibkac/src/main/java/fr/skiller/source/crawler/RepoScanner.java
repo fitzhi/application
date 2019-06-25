@@ -16,6 +16,7 @@ import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.internal.Unknown;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
+import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.git.SCMChange;
 
@@ -89,6 +90,13 @@ public interface RepoScanner {
 	 * @param unknownContributors the set of ghost, i.e. the unknown contributors
 	 */
 	void updateStaff(Project project, List<SCMChange> changes, Set<String> unknownContributors);
+
+	/**
+	 * Gather the identified contributors with their personal stats.
+	 * @param changes the changes collection
+	 * @return the list of contributors involved in the repository
+	 */
+	List<Contributor> gatherContributors(List<SCMChange> changes);
 
 	/**
 	 * Parse the repository <u>already</u> cloned on the file system.<br/>

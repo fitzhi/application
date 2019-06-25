@@ -18,6 +18,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import fr.skiller.data.source.Contributor;
+import fr.skiller.security.CustomGrantedAuthority;
 import fr.skiller.service.FileType;
 
 /**
@@ -78,13 +79,13 @@ public class Staff implements UserDetails {
 	/**
 	* List of authorities for this user
 	**/
-	private List<GrantedAuthority> authorities = new ArrayList<>();
+	private List<CustomGrantedAuthority> authorities = new ArrayList<>();
 	
 	/**
 	 * Empty construction.
 	 */
 	public Staff() {
-    	authorities.add(new SimpleGrantedAuthority(ROLE_USER));
+    	authorities.add(new CustomGrantedAuthority(ROLE_USER));
 	}
 
 
@@ -101,7 +102,7 @@ public class Staff implements UserDetails {
 		this.password = password;
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
-    	authorities.add(new SimpleGrantedAuthority(ROLE_USER));
+    	authorities.add(new CustomGrantedAuthority(ROLE_USER));
 	}
 
 	/**
@@ -126,7 +127,7 @@ public class Staff implements UserDetails {
 		this.level = level;
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
-    	authorities.add(new SimpleGrantedAuthority(ROLE_USER));
+    	authorities.add(new CustomGrantedAuthority(ROLE_USER));
 	}
 
 	/**
@@ -158,7 +159,7 @@ public class Staff implements UserDetails {
 		this.external = external;
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
-    	authorities.add(new SimpleGrantedAuthority(ROLE_USER));
+    	authorities.add(new CustomGrantedAuthority(ROLE_USER));
 	}
 
 	/**
@@ -216,7 +217,8 @@ public class Staff implements UserDetails {
 	 * @param contributor source contributor updated
 	 */
 	public void updateMission(final int idProject, final Contributor contributor) {
-		Optional<Mission> optMission = missions.stream().filter(mission -> mission.getIdProject() == idProject)
+		Optional<Mission> optMission = missions.stream()
+				.filter(mission -> mission.getIdProject() == idProject)
 				.findFirst();
 		if (optMission.isPresent()) {
 			Mission missionSelected = optMission.get();

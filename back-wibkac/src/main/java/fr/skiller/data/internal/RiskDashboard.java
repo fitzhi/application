@@ -19,14 +19,14 @@ public class RiskDashboard {
 	/**
 	 * List of unknown contributors.
 	 */
-	public final Set<Pseudo> undefinedContributors;
+	public final Set<Committer> undefinedContributors;
 
 	/**
 	 * Main constructor of the risk Dashboard
 	 * @param riskChartData data ready to use for the Sunburst chart.
 	 * @param contributors list of unknown contributors.
 	 */
-	public RiskDashboard(final DataChart riskChartData, final Set<Pseudo> contributors) {
+	public RiskDashboard(final DataChart riskChartData, final Set<Committer> contributors) {
 		super();
 		this.riskChartData = riskChartData;
 		this.undefinedContributors = contributors;

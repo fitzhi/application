@@ -111,7 +111,7 @@ public class GitScannerTest {
 		RiskDashboard data = scanner.aggregateDashboard(project, repo);
 		
 		if (logger.isDebugEnabled()) {
-			repo.contributors()
+			staffHandler.getContributors(2)
 				.stream()
 				.filter(contributor -> contributor.getIdStaff() != UNKNOWN)
 				.forEach(contributor -> {

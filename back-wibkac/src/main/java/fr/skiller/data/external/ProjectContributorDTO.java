@@ -1,5 +1,6 @@
 package fr.skiller.data.external;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,12 +30,12 @@ class ContributorView {
 	/**
 	 * Date of the latest commit.
 	 */
-	private Date firstCommit;
+	private LocalDate firstCommit;
 	
 	/**
 	 * Date of the latest commit.
 	 */
-	private Date lastCommit;
+	private LocalDate lastCommit;
 	
 	/**
 	 * @return number of commit submitted by the developer inside the project.
@@ -56,7 +57,7 @@ class ContributorView {
 	 * @param numberOfCommits number of commit submitted by the developer inside the project.
 	 * @param numberOfFiles number of files modifier by the developer inside the project.
 	 */
-	public ContributorView(final int idStaff, final String fullname, final boolean active, final boolean external, final Date firstCommit, final Date lastCommit, 
+	public ContributorView(final int idStaff, final String fullname, final boolean active, final boolean external, final LocalDate firstCommit, final LocalDate lastCommit, 
 			final int numberOfCommits, final int numberOfFiles) {
 		this.idStaff = idStaff;
 		this.fullname = fullname;
@@ -99,14 +100,14 @@ class ContributorView {
 	/**
 	 * @return the firstCommit
 	 */
-	public Date getFirstCommit() {
+	public LocalDate getFirstCommit() {
 		return firstCommit;
 	}
 
 	/**
 	 * @return the lastCommit
 	 */
-	public Date getLastCommit() {
+	public LocalDate getLastCommit() {
 		return lastCommit;
 	}
 
@@ -175,7 +176,7 @@ public class ProjectContributorDTO extends BaseDTO {
 	 * @param numberOfFiles number of files modifier by the developer inside the project.
 	 */
 	public void addContributor(final int idStaff, final String fullname, final boolean active, final boolean external, 
-			final Date firstCommit, final Date lastCommit, final int numberOfCommits, final int numberOfFiles) {
+			final LocalDate firstCommit, final LocalDate lastCommit, final int numberOfCommits, final int numberOfFiles) {
 		contributors.add(new ContributorView(idStaff, fullname, active, external, firstCommit, lastCommit, numberOfCommits, numberOfFiles));
 	}
 

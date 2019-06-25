@@ -3,6 +3,7 @@
  */
 package fr.skiller.data.source;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -24,7 +25,9 @@ import fr.skiller.bean.StaffHandler;
 @SpringBootTest
 public class CommitHistoryTest {
 
-    @Autowired
+    private static final String TEST_JAVA = "test.java";
+
+	@Autowired
 	private StaffHandler staffHandler;
 
     CommitHistory ch = null;
@@ -32,10 +35,10 @@ public class CommitHistoryTest {
     @Before
     public void before() {
 		ch = new CommitHistory("test");
-		ch.addOperation(new Operation(1, new GregorianCalendar(2018, 11, 1).getTime()));
-		ch.addOperation(new Operation(1, new GregorianCalendar(2018, 10, 17).getTime()));
-		ch.addOperation(new Operation(2, new GregorianCalendar(2018, 11, 25).getTime()));
-		ch.addOperation(new Operation(3, new GregorianCalendar(2017, 11, 1).getTime()));
+		ch.addOperation(new Operation(1, LocalDate.of(2018, 11, 1)));
+		ch.addOperation(new Operation(1, LocalDate.of(2018, 10, 17)));
+		ch.addOperation(new Operation(2, LocalDate.of(2018, 11, 25)));
+		ch.addOperation(new Operation(3, LocalDate.of(2017, 11, 1)));
 
 		staffHandler.getStaff().get(1).setActive (false);
 		staffHandler.getStaff().get(2).setActive (true);
@@ -66,19 +69,5 @@ public class CommitHistoryTest {
 	public void countCommits() {
 		Assert.assertEquals(4, ch.countCommits());
 	}
-    
-    @Test
-	public void collectors() {
-    	CommitRepository commit = new BasicCommitRepository();
-    	commit.addCommit("test.java", 1, new Date());
-    	commit.addCommit("test.java", 7, new Date());
-    	commit.addCommit("test.java", 10, new Date());
-    	commit.addCommit("other_test.java", 5, new Date());
-    	commit.addCommit("other_test.java", 10, new Date());
-    	int iStaff[] = {1, 5, 7, 10};
-		Assert.assertArrayEquals(iStaff, 
-				commit.contributors().stream()
-				.mapToInt(contributor -> contributor.getIdStaff()).toArray());
-	}
-    
+        
 }

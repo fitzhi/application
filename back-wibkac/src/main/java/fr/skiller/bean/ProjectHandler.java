@@ -6,7 +6,7 @@ import java.util.Optional;
 
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.Pseudo;
+import fr.skiller.data.internal.Committer;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 
@@ -92,7 +92,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 *                any exception occurs (such as project does not exist)
 	 *                {@link fr.skiller.data.internal.Ghost}
 	 */
-	List<Pseudo> saveGhosts(int idProject, List<Pseudo> pseudos) throws SkillerException;
+	List<Committer> saveGhosts(int idProject, List<Committer> pseudos) throws SkillerException;
 
 	/**
 	 * Retrieve a ghost in the project, if any.

@@ -10,11 +10,14 @@ import java.text.MessageFormat;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -299,9 +302,8 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 	
 	@Override
-	public List<Contributor> involve(Project project, CommitRepository repository) throws SkillerException {
+	public void involve(Project project, List<Contributor> contributors) throws SkillerException {
 		
-		List<Contributor> contributors = repository.contributors();
 		contributors.stream().forEach(contributor -> {
 			if (contributor.getIdStaff() != UNKNOWN) {
 				Staff staff = getStaff().get(contributor.getIdStaff());
@@ -309,7 +311,6 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 					throw new SkillerRuntimeException("SEVERE ERROR : No staff member corresponding to the id " + contributor.getIdStaff());
 				}
 				if (staff.isInvolvedInProject(project.getId())) {
-					
 					synchronized (lockDataUpdated) {
 						// Update the statistics of the current developer inside the project
 						staff.updateMission(project.getId(), contributor);
@@ -318,6 +319,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				} else {
 					// Involve this developer inside a new project 
 					Mission mission = new Mission(
+								contributor.getIdStaff(),
 								project.getId(), 
 								project.getName(),
 								contributor.getFirstCommit(), 
@@ -331,9 +333,34 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				}
 			}			
 		});
+	}
+
+	@Override
+	public List<Contributor> getContributors(int idProject) {
+		List<Mission> missions = getStaff().values()
+			.stream()
+			.map(Staff::getMissions)
+			.flatMap(Collection::stream)
+			.filter(mission -> mission.getIdProject() == idProject)
+			.collect(Collectors.toList());
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("Contributors retrieved ");
+			missions.stream().forEach(Mission::getIdStaff);
+		}
+		final List<Contributor> contributors = new ArrayList<>();
+		
+		missions.forEach(mission -> contributors.add(
+				new Contributor(
+						mission.getIdStaff(), 
+						mission.getFirstCommit(), 
+						mission.getLastCommit(), 
+						mission.getNumberOfCommits(),
+						mission.getNumberOfFiles())));
+		
 		return contributors;
 	}
-	
+
 	@Override
 	public boolean isActive(int idStaff)  {
 		Staff staff = getStaff().get(idStaff);
@@ -403,5 +430,6 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				.filter(e->login.equals(e.getLogin()))
 				.findFirst();
 	}
+
 
 }

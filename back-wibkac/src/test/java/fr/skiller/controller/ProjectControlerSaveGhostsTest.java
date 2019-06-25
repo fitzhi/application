@@ -28,7 +28,7 @@ import fr.skiller.data.external.Action;
 import fr.skiller.data.external.PseudoListDTO;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.Pseudo;
+import fr.skiller.data.internal.Committer;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 
@@ -88,24 +88,24 @@ public class ProjectControlerSaveGhostsTest {
 	@WithMockUser
 	public void test() throws Exception {
 		
-		List<Pseudo> pseudos = new ArrayList<>();
-		List<Pseudo> expectedPseudos = new ArrayList<>();
+		List<Committer> pseudos = new ArrayList<>();
+		List<Committer> expectedPseudos = new ArrayList<>();
 
 		// We don't change the value
-		pseudos.add(new Pseudo(ONE_PSEUDO, first.getLogin()));
-		expectedPseudos.add(new Pseudo(ONE_PSEUDO, first.getIdStaff(), first.fullName(), first.getLogin(), false, Action.N));
+		pseudos.add(new Committer(ONE_PSEUDO, first.getLogin()));
+		expectedPseudos.add(new Committer(ONE_PSEUDO, first.getIdStaff(), first.fullName(), first.getLogin(), false, Action.N));
 		
 		// We don't change the value
-		pseudos.add(new Pseudo(TWO_PSEUDO, true));
-		expectedPseudos.add(new Pseudo(TWO_PSEUDO, true, Action.N));
+		pseudos.add(new Committer(TWO_PSEUDO, true));
+		expectedPseudos.add(new Committer(TWO_PSEUDO, true, Action.N));
 
 		// We change the staff member from the second to the third
-		pseudos.add(new Pseudo(THIRD_PSEUDO, third.getLogin()));
-		expectedPseudos.add(new Pseudo(THIRD_PSEUDO, third.getIdStaff(), third.fullName(), third.getLogin(), false, Action.U));
+		pseudos.add(new Committer(THIRD_PSEUDO, third.getLogin()));
+		expectedPseudos.add(new Committer(THIRD_PSEUDO, third.getIdStaff(), third.fullName(), third.getLogin(), false, Action.U));
 		
 		// We reinitialize this entry. No login, no automatic
-		pseudos.add(new Pseudo(FOURTH_PSEUDO, false));
-		expectedPseudos.add(new Pseudo(FOURTH_PSEUDO, false, Action.D));
+		pseudos.add(new Committer(FOURTH_PSEUDO, false));
+		expectedPseudos.add(new Committer(FOURTH_PSEUDO, false, Action.D));
 		
 		// the fifthPseudo is supposed to disappear.
 		// fifthPseudo disappear from the resulting list.

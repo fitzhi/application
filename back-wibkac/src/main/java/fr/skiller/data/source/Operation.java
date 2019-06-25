@@ -1,5 +1,6 @@
 package fr.skiller.data.source;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -16,13 +17,13 @@ public class Operation {
 	/**
 	 * last of date for this commit. 
 	 */
-	private Date dateCommit;
+	private LocalDate dateCommit;
 
 	/**
 	 * @param int idStaff Staff member identifier
 	 * @param dateCommit date of commit
 	 */
-	public Operation(final int idStaff, Date dateCommit) {
+	public Operation(final int idStaff, LocalDate dateCommit) {
 		super();
 		this.idStaff = idStaff;
 		this.setDateCommit(dateCommit);
@@ -31,14 +32,14 @@ public class Operation {
 	/**
 	 * @return the dateCommit
 	 */
-	public Date getDateCommit() {
+	public LocalDate getDateCommit() {
 		return dateCommit;
 	}
 
 	/**
 	 * @param dateCommit the dateCommit to set
 	 */
-	public void setDateCommit(Date dateCommit) {
+	public void setDateCommit(LocalDate dateCommit) {
 		this.dateCommit = dateCommit;
 	}
 

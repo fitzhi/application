@@ -3,7 +3,7 @@ package fr.skiller.data.external;
 import java.util.Set;
 
 import fr.skiller.data.internal.DataChart;
-import fr.skiller.data.internal.Pseudo;
+import fr.skiller.data.internal.Committer;
 import fr.skiller.data.internal.RiskDashboard;
 
 /**
@@ -30,7 +30,7 @@ public class SunburstDTO extends BaseDTO {
 	/**
 	 * Array of unknown contributors who are unknown in the staff collection.
 	 */
-	private Set<Pseudo> ghosts;
+	private Set<Committer> ghosts;
 	
 	/**
 	 * @param idProject project identifier.
@@ -103,14 +103,14 @@ public class SunburstDTO extends BaseDTO {
 	/**
 	 * @return the ghosts
 	 */
-	public Set<Pseudo> getGhosts() {
+	public Set<Committer> getGhosts() {
 		return ghosts;
 	}
 
 	/**
 	 * @param ghosts the ghosts to set
 	 */
-	public void setGhosts(Set<Pseudo> ghosts) {
+	public void setGhosts(Set<Committer> ghosts) {
 		this.ghosts = ghosts;
 	}
 }

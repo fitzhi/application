@@ -4,6 +4,7 @@
 package fr.skiller.bean.impl;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.junit.Assert;
@@ -46,8 +47,8 @@ public class CacheDataHandlerImplTest {
 	public void creation() throws IOException {
 		Project project = new Project((int) System.currentTimeMillis(), "TEST_SKILLER");
 		CommitRepository repository = new BasicCommitRepository();
-		repository.addCommit("com/test.java", 1, new Date());
-		repository.addCommit("fr/test/test.java", 1, new Date());
+		repository.addCommit("com/test.java", 1, LocalDate.now());
+		repository.addCommit("fr/test/test.java", 1, LocalDate.now());
 		Assert.assertFalse(cacheDataHandler.hasCommitRepositoryAvailable(project));
 
 		cacheDataHandler.saveRepository(project, repository);

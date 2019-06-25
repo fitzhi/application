@@ -1,6 +1,7 @@
 package fr.skiller.data.internal;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -19,7 +20,7 @@ public class SourceFile implements Serializable {
 	/**
 	 * last date of commit for this filename
 	 */
-	private Date lastCommit;
+	private LocalDate lastCommit;
 	
 	/**
 	 * Array of staff identifiers who are committed to this file. 
@@ -31,7 +32,7 @@ public class SourceFile implements Serializable {
 	 * @param lastCommit Last date of commit for this filename.
 	 * @param idStaffs Array of staff identifiers who are committed to this file.
 	 */
-	public SourceFile(String filename, Date lastCommit, int[] idStaffs) {
+	public SourceFile(String filename, LocalDate lastCommit, int[] idStaffs) {
 		super();
 		this.setFilename(filename);
 		this.setLastCommit(lastCommit);
@@ -61,14 +62,14 @@ public class SourceFile implements Serializable {
 	/**
 	 * @return the date of last Commit for this source file.
 	 */
-	public Date getLastCommit() {
+	public LocalDate getLastCommit() {
 		return lastCommit;
 	}
 
 	/**
 	 * @param the date of the last Commit for this source file.
 	 */
-	public void setLastCommit(Date lastCommit) {
+	public void setLastCommit(LocalDate lastCommit) {
 		this.lastCommit = lastCommit;
 	}
 

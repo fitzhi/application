@@ -42,7 +42,7 @@ import fr.skiller.data.external.ProjectDTO;
 import fr.skiller.data.external.PseudoListDTO;
 import fr.skiller.data.external.SunburstDTO;
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.Pseudo;
+import fr.skiller.data.internal.Committer;
 import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Staff;
@@ -527,7 +527,7 @@ public class ProjectController {
 						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			logger.error(ExceptionUtils.getStackTrace(e));
+			logger.error(getStackTrace(e));
 			return new ResponseEntity<> (new SunburstDTO(project.getId(), null, -1, e.getMessage()), 
 					new HttpHeaders(), 
 					HttpStatus.BAD_REQUEST);
@@ -556,7 +556,7 @@ public class ProjectController {
 			return new ResponseEntity<>(
 					new SunburstDTO(project.getId(), data), new HttpHeaders(), HttpStatus.OK);
 		} catch (final Exception e) {
-			logger.error (e.getMessage());
+			logger.error(getStackTrace(e));
 			return new ResponseEntity<>(new SunburstDTO( UNKNOWN_PROJECT,null, CODE_UNDEFINED, e.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);			
 		} finally {
 			tasks.removeTask(DASHBOARD_GENERATION, PROJECT, project.getId());
@@ -639,7 +639,7 @@ public class ProjectController {
 			logger.debug(String.format("%d pseudos received", pseudosDTO.unknowns.size()));
 		}
 		try {
-			List<Pseudo> pseudos = projectHandler.saveGhosts(pseudosDTO.idProject, pseudosDTO.unknowns);
+			List<Committer> pseudos = projectHandler.saveGhosts(pseudosDTO.idProject, pseudosDTO.unknowns);
 			return new ResponseEntity<>( 
 					new PseudoListDTO(pseudosDTO.idProject, pseudos),
 					new HttpHeaders(), 

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.skiller.data.internal;
 
 import javax.annotation.Generated;
@@ -11,27 +8,27 @@ import fr.skiller.data.external.Action;
  * @author Fr&eacute;d&eacute;ric VIDAL This class is exchanged between the
  *         back-end and the front-end in the dialog project-ghosts.
  */
-public class Pseudo {
+public class Committer {
 
 	/**
 	 * Trace attached to a commit and not linked to a real, registered staff
 	 * member. <br/>
 	 * Nothing forbids Bruce Wayne to use Batman as a commit pseudo
 	 */
-	private String commitPseudo;
+	private String pseudo;
 
 	/**
-	 * Staff id associated to the {@code commitPseudo} property.
+	 * Staff id associated to the {@code pseudo} property.
 	 */
 	private int idStaff;
 
 	/**
-	 * Staff full name associated to the {@code commitPseudo} property.
+	 * Staff full name associated to the {@code pseudo} property.
 	 */
 	private String fullName;
 
 	/**
-	 * Login associated to the {@code commitPseudo} property.
+	 * Login associated to the {@code pseudo} property.
 	 */
 	private String login;
 
@@ -50,7 +47,7 @@ public class Pseudo {
 
 	/**
 	 * Type of action executed in
-	 * {@link fr.skiller.bean.ProjectHandler#saveGhosts(int, Pseudo[])} for this
+	 * {@link fr.skiller.bean.ProjectHandler#saveGhosts(int, Committer[])} for this
 	 * entry
 	 */
 	private Action action;
@@ -64,7 +61,7 @@ public class Pseudo {
 	 *            idStaff, fullName will be null), {@code false} if it's a real
 	 *            human being
 	 */
-	public Pseudo(String pseudo, boolean technical) {
+	public Committer(String pseudo, boolean technical) {
 		this(pseudo, technical, null);
 	}
 
@@ -79,8 +76,8 @@ public class Pseudo {
 	 * @param action
 	 *            type of action executed
 	 */
-	public Pseudo(String pseudo, boolean technical, Action action) {
-		this.setCommitPseudo(pseudo);
+	public Committer(String pseudo, boolean technical, Action action) {
+		this.setPseudo(pseudo);
 		this.setTechnical(technical);
 		this.setIdStaff(Ghost.NULL);
 		this.setLogin("");
@@ -95,14 +92,14 @@ public class Pseudo {
 	 * @param login
 	 *            login associated to this identifier
 	 */
-	public Pseudo(String pseudo, String login) {
+	public Committer(String pseudo, String login) {
 		this(pseudo, Ghost.NULL, "", login, false);
 	}
 
 	/**
 	 * Empty constructor.
 	 */
-	public Pseudo() {
+	public Committer() {
 	}
 
 	/**
@@ -120,9 +117,9 @@ public class Pseudo {
 	 *            idStaff, fullName will be null), {@code false} if it's a real
 	 *            human being
 	 */
-	public Pseudo(String pseudo, int idStaff, String fullName, String login, boolean technical) {
+	public Committer(String pseudo, int idStaff, String fullName, String login, boolean technical) {
 		super();
-		this.setCommitPseudo(pseudo);
+		this.setPseudo(pseudo);
 		this.setIdStaff(idStaff);
 		this.setFullName(fullName);
 		this.setLogin(login);
@@ -146,9 +143,9 @@ public class Pseudo {
 	 * @param action
 	 *            type of {@link Action action}
 	 */
-	public Pseudo(String pseudo, int idStaff, String fullName, String login, boolean technical, Action action) {
+	public Committer(String pseudo, int idStaff, String fullName, String login, boolean technical, Action action) {
 		super();
-		this.setCommitPseudo(pseudo);
+		this.setPseudo(pseudo);
 		this.setIdStaff(idStaff);
 		this.setFullName(fullName);
 		this.setLogin(login);
@@ -158,7 +155,7 @@ public class Pseudo {
 
 	@Override
 	public String toString() {
-		return "Pseudo [pseudo=" + getCommitPseudo() + ", idStaff=" + getIdStaff() + ", fullName=" + getFullName() + ", login=" + getLogin()
+		return "Pseudo [pseudo=" + getPseudo() + ", idStaff=" + getIdStaff() + ", fullName=" + getFullName() + ", login=" + getLogin()
 				+ ", technical=" + isTechnical() + ", action=" + getAction() + "]";
 	}
 
@@ -171,7 +168,7 @@ public class Pseudo {
 		result = prime * result + ((getFullName() == null) ? 0 : getFullName().hashCode());
 		result = prime * result + getIdStaff();
 		result = prime * result + ((getLogin() == null) ? 0 : getLogin().hashCode());
-		result = prime * result + ((getCommitPseudo() == null) ? 0 : getCommitPseudo().hashCode());
+		result = prime * result + ((getPseudo() == null) ? 0 : getPseudo().hashCode());
 		result = prime * result + (isTechnical() ? 1231 : 1237);
 		return result;
 	}
@@ -185,7 +182,7 @@ public class Pseudo {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Pseudo other = (Pseudo) obj;
+		Committer other = (Committer) obj;
 		if (getAction() != other.getAction())
 			return false;
 		if (getFullName() == null) {
@@ -200,10 +197,10 @@ public class Pseudo {
 				return false;
 		} else if (!getLogin().equals(other.getLogin()))
 			return false;
-		if (getCommitPseudo() == null) {
-			if (other.getCommitPseudo() != null)
+		if (getPseudo() == null) {
+			if (other.getPseudo() != null)
 				return false;
-		} else if (!getCommitPseudo().equals(other.getCommitPseudo()))
+		} else if (!getPseudo().equals(other.getPseudo()))
 			return false;
 		if (isTechnical() != other.isTechnical())
 			return false;
@@ -215,15 +212,15 @@ public class Pseudo {
 	 * Trace attached to a commit is not linked to a real, registered staff member.<br/>
 	 * Nothing forbids Bruce Wayne to use Batman as a commit pseudo
 	 */
-	public String getCommitPseudo() {
-		return commitPseudo;
+	public String getPseudo() {
+		return pseudo;
 	}
 
 	/**
 	 * @param pseudo the pseudo to set
 	 */
-	public void setCommitPseudo(String pseudo) {
-		this.commitPseudo = pseudo;
+	public void setPseudo(String pseudo) {
+		this.pseudo = pseudo;
 	}
 
 	/**
@@ -296,7 +293,7 @@ public class Pseudo {
 	/**
 	 * @return the action
 	 * Type of action executed in
-	 * {@link fr.skiller.bean.ProjectHandler#saveGhosts(int, Pseudo[])} for this entry
+	 * {@link fr.skiller.bean.ProjectHandler#saveGhosts(int, Committer[])} for this entry
 	 */
 	public Action getAction() {
 		return action;

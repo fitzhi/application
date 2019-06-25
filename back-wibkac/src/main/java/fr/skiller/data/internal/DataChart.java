@@ -6,6 +6,7 @@ package fr.skiller.data.internal;
 import static fr.skiller.Global.UNKNOWN;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -37,7 +38,7 @@ public class DataChart implements Serializable {
     /**
      * Last date of update for the source file inside the package/directory 
      */
-    private Date lastUpdate;
+    private LocalDate lastUpdate;
     
     /**
      * Level of risk evaluated for this location.
@@ -102,11 +103,11 @@ public class DataChart implements Serializable {
 	 * @param date of the latest commit.
 	 * @param committers Array of staff identifiers who are committed in this source file
 	 */
-	public void injectFile(final DataChart element, final String[] dirAndFilename, final Date latestCommit, final int[] committers) {
+	public void injectFile(final DataChart element, final String[] dirAndFilename, final LocalDate latestCommit, final int[] committers) {
 		// We register the filename in the source files set
 		if (dirAndFilename.length == 1) {
 			element.addSource(dirAndFilename[0], latestCommit, committers);
-			if ((element.getLastUpdate() == null) || (element.getLastUpdate().before(latestCommit)))  {
+			if ((element.getLastUpdate() == null) || (element.getLastUpdate().isBefore(latestCommit)))  {
 				element.setLastUpdate(latestCommit);
 			}
 			return;
@@ -149,7 +150,7 @@ public class DataChart implements Serializable {
 	 * @param lastCommit The most recent date of commit done on this file.
 	 * @param committers list of committers involved in this source file
 	 */
-	public void addSource(final String filename, final Date lastCommit, final int[] committers) {
+	public void addSource(final String filename, final LocalDate lastCommit, final int[] committers) {
 		
 		if (this.sources == null) {
 			this.sources = new HashSet<>();
@@ -212,14 +213,14 @@ public class DataChart implements Serializable {
 	/**
 	 * @return the lastUpdate, last date of update for the source file inside the package/directory 
 	 */
-	public Date getLastUpdate() {
+	public LocalDate getLastUpdate() {
 		return lastUpdate;
 	}
 
 	/**
 	 * @param lastUpdate the lastUpdate to set
 	 */
-	public void setLastUpdate(Date lastUpdate) {
+	public void setLastUpdate(LocalDate lastUpdate) {
 		this.lastUpdate = lastUpdate;
 	}
 

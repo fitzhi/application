@@ -1,5 +1,6 @@
 package fr.skiller.data.source;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,17 @@ public interface CommitRepository {
 	 * @param idStaff staff member's identifier
 	 * @param timestamp date of the operation
 	 */
+	void addCommit(String sourceCodePath, int idStaff, LocalDate timestamp);
+	
+	/**
+	 * <p>
+	 * add a new commit log into the repository.<br/>
+	 * This method calls addCommit with the date only.
+	 * </p>
+	 * @param sourceCodePath the complete source code path 
+	 * @param idStaff staff member's identifier
+	 * @param timestamp date of the operation (without time offset)
+	 */
 	void addCommit(String sourceCodePath, int idStaff, Date timestamp);
 	
 	/**
@@ -33,7 +45,7 @@ public interface CommitRepository {
 	 * @param idStaff commit author, represented by a staff member's identifier
 	 * @return date of last commit, or <code>Null</code> if none exists.
 	 */
-	Date getLastDateCommit(String sourceCodePath, int idStaff);
+	LocalDate getLastDateCommit(String sourceCodePath, int idStaff);
 	
 	/**
 	 * Extract the repository in a CSV format.
@@ -53,27 +65,26 @@ public interface CommitRepository {
 	Map<String, CommitHistory> getRepository();
 	
 	/**
-	 * @return all contributors having worked on this repository and their statistics of use
-	 */
-	List<Contributor> contributors();
-
-	/**
 	 * @param idStaff developer's identifier
 	 * @return the date/time of the <b>LAST</b> submission for the passed developer 
 	 */
-	Date lastCommit(int idStaff);
+	LocalDate lastCommit(int idStaff);
 
 	/**
 	 * @param idStaff developer' identifier
 	 * @return the date/time of the <b>FIRST</b> submission for the passed developer 
 	 */
-	Date firstCommit(int idStaff);
+	LocalDate firstCommit(int idStaff);
 	
 	/**
-	 * @param idStaff developer identifier
-	 * @return the number of commits submitted by the passed developer
+	 * <p>
+	 * This function does not return the number of commits.
+	 * this is this the sum of ( the sum of files per commit ) for all commits  
+	 * </p>
+	 * @param idStaff developer's identifier
+	 * @return the number of unit of commits submitted by the passed developer for each file.
 	 */
-	int numberOfCommits(int idStaff);
+	int numberOfFileCommits(int idStaff);
 	
 	/**
 	 * @param idStaff developer identifier

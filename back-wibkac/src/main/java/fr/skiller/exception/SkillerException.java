@@ -26,6 +26,9 @@ public class SkillerException extends Exception {
 	 */
 	public final String errorMessage;
 	
+	public SkillerException() {
+		this(0,"");
+	}
 	/**
 	 * Initialization of this application specific exception.
 	 * @param errorCode the error code

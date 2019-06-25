@@ -5,7 +5,9 @@ package fr.skiller.data.source;
 
 import static fr.skiller.Global.UNKNOWN;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +46,13 @@ public class CommitHistory {
 	}
 
 	/**
+	 * @return the sourcePath
+	 */
+	public String getSourcePath() {
+		return sourcePath;
+	}
+
+	/**
 	 * Add a new operation inside the collection
 	 * @param operation the new operation to be added
 	 * @return the updated collection
@@ -59,7 +68,7 @@ public class CommitHistory {
 	 * @param timestamp the time-stamp of this operation
 	 * @return the updated collection
 	 */
-	public List<Operation> handle(final int idStaff, final Date timestamp) {
+	public List<Operation> handle(final int idStaff, final LocalDate timestamp) {
 		return addOperation (new Operation(idStaff, timestamp));
 	}
 	
@@ -68,7 +77,7 @@ public class CommitHistory {
 	 * @param idStaff Staff member's identifier
 	 * @return the date of commit, or <code>Null</code> if none exists.
 	 */
-	public Date getDateCommit(final int idStaff) {
+	public LocalDate getDateCommit(final int idStaff) {
 		Optional<Operation> opt = operations.stream().filter(ope -> ope.idStaff == idStaff).findFirst();
 		if (opt.isPresent()) {
 			return opt.get().getDateCommit();
@@ -83,13 +92,11 @@ public class CommitHistory {
 	 * @return the date of the latest commit
 	 */
 	//TODO Filter this date on the active staff members.
-	public Date evaluateDateLastestCommit() {
-		Optional<Date> optDate = operations.stream().map(operation->operation.getDateCommit()).max(Date::compareTo);
-		if (optDate.isPresent()) {
-			return optDate.get();
-		} else {
-			return null;
-		}
+	public LocalDate evaluateDateLastestCommit() {
+		return operations.stream()
+				.map(Operation::getDateCommit)
+				.max( Comparator.comparing( LocalDate::toEpochDay ))
+				.orElse(null);
 	}
 
 	/**
@@ -176,4 +183,5 @@ public class CommitHistory {
 	public boolean hasWorkedOnThisFile (int idStaff) {
 		return operations.stream().filter(ope -> ope.idStaff == idStaff).findAny().isPresent();
 	}
+	
 }

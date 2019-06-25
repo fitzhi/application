@@ -180,16 +180,16 @@ public class StaffController {
 		try {
 			ResponseEntity<Staff> responseEntityStaffMember = read(idStaff);
 	
-			
 			// Adding the name of project.
 			for (Mission mission : responseEntityStaffMember.getBody().getMissions()) {
 					mission.setName(projectHandler.get(mission.getIdProject()).getName());
 			}
 			
-			return new ResponseEntity<>(
+			ResponseEntity re = new ResponseEntity<>(
 					responseEntityStaffMember.getBody().getMissions(), 
 					responseEntityStaffMember.getHeaders(),
 					responseEntityStaffMember.getStatusCode());
+			return re;
 			
 		} catch (final SkillerException e) {
 			logger.error(getStackTrace(e));
@@ -591,7 +591,11 @@ public class StaffController {
 					}
 				}
 	
-				staff.getMissions().add(new Mission(result.get().getId(), projectHandler.get(result.get().getId()).getName()));
+				staff.getMissions().add(
+						new Mission(
+								staff.getIdStaff(), 
+								result.get().getId(), 
+								projectHandler.get(result.get().getId()).getName()));
 				responseEntity = new ResponseEntity<>(new StaffDTO(staff), headers, HttpStatus.OK);
 				if (logger.isDebugEnabled()) {
 					logger.debug(String.format("returning  staff %s", gson.toJson(staff)));

@@ -21,7 +21,7 @@ import fr.skiller.data.external.Action;
 import fr.skiller.data.external.PseudoListDTO;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.Pseudo;
+import fr.skiller.data.internal.Committer;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 
@@ -71,16 +71,16 @@ public class ProjectHandlerSaveGhostsTest {
 
 	@Test
 	public void testOne() throws SkillerException {
-		List<Pseudo> pseudos = new ArrayList<>();
+		List<Committer> pseudos = new ArrayList<>();
 		// The pseudo best_Dev_change change his login, and therefore his staff member
-		pseudos.add(new Pseudo(BEST_DEV_CHANGE, second.getLogin()));
+		pseudos.add(new Committer(BEST_DEV_CHANGE, second.getLogin()));
 		
 		PseudoListDTO pseudosDTO = new PseudoListDTO(8121964, pseudos);
 		
-		List<Pseudo> result = projectHandler.saveGhosts(8121964, pseudosDTO.unknowns);
+		List<Committer> result = projectHandler.saveGhosts(8121964, pseudosDTO.unknowns);
 
-		List<Pseudo> expectedPseudos = new ArrayList<>();
-		expectedPseudos.add(new Pseudo(BEST_DEV_CHANGE
+		List<Committer> expectedPseudos = new ArrayList<>();
+		expectedPseudos.add(new Committer(BEST_DEV_CHANGE
 				, second.getIdStaff()
 				, staffHandler.getFullname(second.getIdStaff())
 				, second.getLogin() 
@@ -92,40 +92,40 @@ public class ProjectHandlerSaveGhostsTest {
 
 	@Test
 	public void test() throws SkillerException {
-		List<Pseudo> pseudos = new ArrayList<>();
+		List<Committer> pseudos = new ArrayList<>();
 		// The pseudo best_Dev_change change his login, and therefore his staff member
-		pseudos.add(new Pseudo(BEST_DEV_CHANGE, second.getLogin()));
+		pseudos.add(new Committer(BEST_DEV_CHANGE, second.getLogin()));
 		// The automatic pseudo "Sonar" finally is a human being.
-		pseudos.add(new Pseudo(SONAR_CHANGE, first.getLogin()));
+		pseudos.add(new Committer(SONAR_CHANGE, first.getLogin()));
 		// The pseudo "must disappear" does not correspond anymore to the second staff member.
-		pseudos.add(new Pseudo(MUST_DISAPPEAR, ""));
+		pseudos.add(new Committer(MUST_DISAPPEAR, ""));
 		// The pseudo "remove me" is no more a technical committer
-		pseudos.add(new Pseudo(REMOVE_ME, false));
+		pseudos.add(new Committer(REMOVE_ME, false));
 		
 		PseudoListDTO pseudosDTO = new PseudoListDTO(8121964, pseudos);
 		
-		List<Pseudo> result = projectHandler.saveGhosts(8121964, pseudosDTO.unknowns);
+		List<Committer> result = projectHandler.saveGhosts(8121964, pseudosDTO.unknowns);
 
-		List<Pseudo> expectedPseudos = new ArrayList<>();
-		expectedPseudos.add(new Pseudo(BEST_DEV_CHANGE
+		List<Committer> expectedPseudos = new ArrayList<>();
+		expectedPseudos.add(new Committer(BEST_DEV_CHANGE
 				, second.getIdStaff()
 				, staffHandler.getFullname(second.getIdStaff())
 				, second.getLogin() 
 				, false
 				, Action.U));
-		expectedPseudos.add(new Pseudo(SONAR_CHANGE
+		expectedPseudos.add(new Committer(SONAR_CHANGE
 				, first.getIdStaff()
 				, staffHandler.getFullname(first.getIdStaff())
 				, first.getLogin() 
 				, false
 				, Action.U));
-		expectedPseudos.add(new Pseudo(MUST_DISAPPEAR
+		expectedPseudos.add(new Committer(MUST_DISAPPEAR
 				, Ghost.NULL
 				, ""
 				, ""
 				, false
 				, Action.D));
-		expectedPseudos.add(new Pseudo(REMOVE_ME
+		expectedPseudos.add(new Committer(REMOVE_ME
 				, Ghost.NULL
 				, ""
 				, ""
@@ -147,9 +147,9 @@ public class ProjectHandlerSaveGhostsTest {
 	
 	@Test
 	public void testPseudoTotoTaggedAsTechnical() throws SkillerException {
-		List<Pseudo> pseudos = new ArrayList<>();
+		List<Committer> pseudos = new ArrayList<>();
 		// The pseudo "Toto" is tagged as a technical one
-		pseudos.add(new Pseudo("toto", true));
+		pseudos.add(new Committer("toto", true));
 		
 		PseudoListDTO pseudosDTO = new PseudoListDTO(8121964, pseudos);
 		projectHandler.saveGhosts(8121964, pseudosDTO.unknowns);

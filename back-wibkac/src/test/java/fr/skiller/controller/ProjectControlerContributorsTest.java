@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -73,7 +74,7 @@ public class ProjectControlerContributorsTest {
 		Staff staff = staffHandler.getStaff().get(ID_STAFF);
 
 		List<Contributor> contributors = new ArrayList<>();
-		contributors.add(new Contributor(ID_STAFF, new Date(), new Date(), 100, 200));
+		contributors.add(new Contributor(ID_STAFF, LocalDate.now(), LocalDate.now(), 100, 200));
 		given(this.projectHandler.contributors(666)).willReturn(contributors);
 
 		MvcResult result = this.mvc.perform(get("/project/contributors/666")).andExpect(status().isOk())

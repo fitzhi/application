@@ -3,6 +3,7 @@
  */
 package fr.skiller.source.crawler.git;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -28,7 +29,7 @@ public class SCMChange {
 	/**
 	 * Date of commit.
 	 */
-	private Date dateCommit;
+	private LocalDate dateCommit;
 
 	/**
 	 * Date of commit.
@@ -53,7 +54,7 @@ public class SCMChange {
 	 * @param authorName author's name
 	 * @param authorEmail author's email
 	 */
-	public SCMChange(String commitId, String fullPath, Date dateCommit, String authorName, String authorEmail) {
+	public SCMChange(String commitId, String fullPath, LocalDate dateCommit, String authorName, String authorEmail) {
 		super();
 		this.commitId = commitId;
 		this.path = fullPath;
@@ -86,7 +87,7 @@ public class SCMChange {
 	/**
 	 * @return the dateCommit
 	 */
-	public Date getDateCommit() {
+	public LocalDate getDateCommit() {
 		return dateCommit;
 	}
 
@@ -97,6 +98,13 @@ public class SCMChange {
 		return authorName;
 	}
 
+	/**
+	 * @return <code>true</code> if the author of the change is not anonymous. Author name is not <code>null</code>.
+	 */
+	public boolean isAuthorIdentified() {
+		return (authorName != null);
+	}
+		
 	/**
 	 * @return the authorEmail
 	 */
@@ -124,11 +132,11 @@ public class SCMChange {
 	public boolean isIdentified() {
 		return (idStaff > 0);
 	}
-	
+
 	@Override
 	public String toString() {
-		return "SCMChange [path=" + path + ", commitId=" + path + ", dateCommit=" + dateCommit + "]";
+		return "SCMChange [commitId=" + commitId + ", path=" + path + ", dateCommit=" + dateCommit + ", authorName="
+				+ authorName + ", authorEmail=" + authorEmail + ", idStaff=" + idStaff + "]";
 	}
-
 	
 }

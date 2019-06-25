@@ -4,8 +4,10 @@
 package fr.skiller.source.crawler.git;
 
 import static fr.skiller.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
+import static fr.skiller.Error.CODE_INVALID_LOGIN_PASSWORD;
 import static fr.skiller.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
 import static fr.skiller.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
+import static fr.skiller.Error.MESSAGE_INVALID_LOGIN_PASSWORD;
 import static fr.skiller.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
 import static fr.skiller.Global.LN;
 import static fr.skiller.Global.UNKNOWN;
@@ -19,9 +21,13 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -59,6 +65,7 @@ import com.google.gson.Gson;
 
 import fr.skiller.Error;
 import fr.skiller.Global;
+import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.DataChartHandler;
@@ -80,6 +87,8 @@ import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.AbstractScannerDataGenerator;
 import fr.skiller.source.crawler.RepoScanner;
+import static fr.skiller.Error.SHOULD_NOT_PASS_HERE;
+
 /**
  * <p>
  * GIT implementation of a source code crawler
@@ -235,8 +244,11 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 					settings.getUrl(), path.toAbsolutePath()));
 		}
 
-		Git.cloneRepository().setDirectory(path.toAbsolutePath().toFile()).setURI(settings.getUrl())
+		Git.cloneRepository()
+				.setDirectory(path.toAbsolutePath().toFile())
+				.setURI(settings.getUrl())
 				.setCredentialsProvider(new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()))
+				.setProgressMonitor(new CustomProgressMonitor())
 				.call();
 
 		if (logger.isDebugEnabled()) {
@@ -392,12 +404,16 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
         			// The DELETE is treated like an ADD operation.
         			if (DEV_NULL.equals(de.getNewPath())) {
             			PersonIdent author = commit.getAuthorIdent();
-               			gitChanges.add(new SCMChange(commit.getId().toString(), de.getOldPath(), author.getWhen(), author.getName(), author.getEmailAddress()));
+               			gitChanges.add(new SCMChange(commit.getId().toString(), de.getOldPath(), 
+               					author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+               					author.getName(), author.getEmailAddress()));
         			}
         			break;
         		case MODIFY:
         			PersonIdent author = commit.getAuthorIdent();
-        			gitChanges.add(new SCMChange(commit.getId().toString(), de.getNewPath(), author.getWhen(), author.getName(), author.getEmailAddress()));
+        			gitChanges.add(new SCMChange(commit.getId().toString(), de.getNewPath(), 
+          						author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+          					    author.getName(), author.getEmailAddress()));
         			break;
     			default: 
     				if (logger.isDebugEnabled()) {
@@ -527,6 +543,29 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			 */
 			this.updateStaff(project, changes, unknown);
 
+			/**
+			 * Retrieve the list of contributors involved in the project.
+			 */
+			List<Contributor> contributors = this.gatherContributors(changes);
+			
+			if (logger.isDebugEnabled()) {
+				logger.debug("Taking account of retrieved contributors from the repository into the project list of participants");
+			}
+			
+			/**
+			 * Update the staff team missions with the contributors.
+			 */
+			staffHandler.involve(project, contributors);
+			if (logger.isDebugEnabled()) {
+				logger.debug(String.format("%d contributors retrieved : ", contributors.size()));
+				contributors.stream().forEach(contributor -> {
+					String fullname = staffHandler.getFullname(contributor.getIdStaff());
+					logger.debug(String.format(
+							"%d %s", 
+							contributor.getIdStaff(), (fullname != null) ? fullname : "unknown"));
+				});
+			}
+			
 	        // Displaying results...
 	        if (logger.isWarnEnabled()) {
 	        	unknown.stream().forEach(logger::warn);
@@ -605,6 +644,52 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
  	}
 
 	@Override
+	public List<Contributor> gatherContributors(List<SCMChange> changes) {
+		Set<Integer> idContributors = new HashSet<>();
+		changes.stream()
+			.map(SCMChange::getIdStaff)
+			.filter(idStaff -> idStaff != 0)
+			.distinct()
+			.forEach(idContributors::add);
+		
+		List<Contributor> contributors = new ArrayList<>();
+		for (int idStaff : idContributors) {
+			
+			// The first commit submitted by this staff member
+			LocalDate firstCommit = changes.stream()
+					.filter(change -> idStaff == change.getIdStaff())
+					.map(SCMChange::getDateCommit)
+					.min( Comparator.comparing( LocalDate::toEpochDay ) )
+					.orElseThrow(() -> new SkillerRuntimeException(SHOULD_NOT_PASS_HERE));
+
+			// The last commit submitted by this staff member
+			LocalDate lastCommit = 
+					changes.stream()
+					.filter(change -> idStaff == change.getIdStaff())
+					.map(SCMChange::getDateCommit)
+					.max( Comparator.comparing( LocalDate::toEpochDay ) )
+					.orElseThrow(() -> new SkillerRuntimeException(SHOULD_NOT_PASS_HERE));
+			
+			long numberOfCommits = changes.stream()
+						.filter(change -> idStaff == change.getIdStaff())
+						.map(SCMChange::getCommitId)
+						.distinct()
+						.count();
+						
+			long numberOfFiles = changes.stream()
+					.filter(change -> idStaff == change.getIdStaff())
+					.map(SCMChange::getPath)
+					.distinct()
+					.count();
+		
+			contributors.add (
+					new Contributor(idStaff, firstCommit , lastCommit, (int) numberOfCommits, (int) numberOfFiles));
+		}
+		
+		return contributors;
+	}
+
+	@Override
 	@Async
 	public RiskDashboard generateAsync(final Project project, final SettingsGeneration settings) throws SkillerException, GitAPIException, IOException {
 		try {
@@ -636,20 +721,6 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 					+ repo.size() + " records in the repository");
 		}
 		
-		if (logger.isDebugEnabled()) {
-			logger.debug("Taking account of retrieved contributors from the repository into the project list of participants");
-		}
-		List<Contributor> contributors = staffHandler.involve(project, repo);
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("%d contributors retrieved : ", contributors.size()));
-			contributors.stream().forEach(contributor -> {
-				String fullname = staffHandler.getFullname(contributor.getIdStaff());
-				logger.debug(String.format(
-						"%d %s", 
-						contributor.getIdStaff(), (fullname != null) ? fullname : "unknown"));
-			});
-		}
-
 		// Does the process requires a personalization ?
 		// e.g. filtering on a staff identifier or starting the history crawl from a starting date
 		if (cfgGeneration.requiresPersonalization()) {
@@ -686,7 +757,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			if ( (data.undefinedContributors != null) && (!data.undefinedContributors.isEmpty()) ) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("Unknown contributors detected during the dashboard generation").append(LN);
-				data.undefinedContributors.stream().forEach(ukwn -> sb.append(ukwn.getCommitPseudo()).append(LN));
+				data.undefinedContributors.stream().forEach(ukwn -> sb.append(ukwn.getPseudo()).append(LN));
 				logger.debug(sb.toString());
 			}
 			
@@ -702,7 +773,8 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 
 	@Override
 	public CommitRepository personalizeRepo(CommitRepository globalRepo, SettingsGeneration settings) {
-		final Date startingDate = new Date(settings.getStartingDate());
+		final LocalDate startingDate = new Date(settings.getStartingDate()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		
 		if (logger.isDebugEnabled()) {
 			logger.debug(
 				MessageFormat.format(
@@ -713,8 +785,9 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		for (CommitHistory commits : globalRepo.getRepository().values()) {
 			commits.operations.stream()
 				.filter(it -> ((it.idStaff == settings.getIdStaffSelected()) || (settings.getIdStaffSelected() == 0)))
-				.filter(it -> (it.getDateCommit()).after(startingDate))
-				.forEach(item -> personalizedRepo.addCommit(commits.sourcePath, item.idStaff, item.getDateCommit()));
+				.filter(it -> (it.getDateCommit()).isAfter(startingDate))
+				.forEach(item -> personalizedRepo.addCommit(commits.sourcePath, item.idStaff, 
+						item.getDateCommit()));
 		}
 		return personalizedRepo;
 	}
@@ -780,7 +853,11 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	@Override
 	public void updateStaff(Project project, List<SCMChange> changes, Set<String> unknownContributors) {
 		
-		List<String> authors = changes.stream().map(SCMChange::getAuthorName).distinct().collect(Collectors.toList());
+		List<String> authors = changes.stream()
+				.filter(SCMChange::isAuthorIdentified)
+				.map(SCMChange::getAuthorName)
+				.distinct()
+				.collect(Collectors.toList());
 		
 		authors.forEach(		
 				

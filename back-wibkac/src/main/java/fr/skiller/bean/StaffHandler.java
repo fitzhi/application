@@ -72,14 +72,24 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	
 	/**
 	 * <p>
-	 * Involve the contributors retrieved by their pseudo into the staff team of the project.
-	 * The method update the list of participants of a project, if needed.
+	 * Involve the contributors into the project.<br/>
+	 * The method add, or update, the missions for every staff member present in the contributors list.
 	 * </p>
 	 * @param project the current project
-	 * @return the list of contributors identified, or not, as contributors inside the repository
+	 * @param contributors the list of contributors retrieved from the repository
 	 * @throws SkillerException thrown if any problem occurs 
 	 */
-	List<Contributor> involve(Project project, CommitRepository repository) throws SkillerException;
+	void involve(Project project, List<Contributor> contributors) throws SkillerException;
+	
+	
+	/**
+	 * <p>
+	 * Retrieve the contributors list for the given project.
+	 * </p>
+	 * @param project the project identifier.
+	 * @return the list of contributors, which might be empty (but not <code>null</code>)
+	 */
+	List<Contributor> getContributors(int projectId);
 	
 	/**
 	 * @param idStaff the staff identifier
