@@ -33,6 +33,11 @@ public class Project  {
 	private String urlRepository;
 	
 	/**
+	 * The directory where the repository has been cloned.
+	 */
+	private String locationRepository;
+	
+	/**
 	 * The user name required to access the version control repository.
 	 */
 	private String username;
@@ -96,26 +101,15 @@ public class Project  {
 		this(id, name, null);
 	}
 
-	/**
-	 * Private constructor declared to be used by the copy constructor.
-	 * @param id
-	 * @param name
-	 * @param connectionSettings
-	 * @param urlRepository
-	 * @param username
-	 * @param password
-	 * @param filename
-	 * @param skills
-	 * @param ghosts
-	 */
-	@Generated ("for.copy.constructor")
-	private Project (int id, String name, int connectionSettings, String urlRepository, String username, String password,
-			String filename, List<Skill> skills, List<Ghost> ghosts) {
+	@Generated ("eclipse")
+	private Project(int id, String name, int connectionSettings, String urlRepository, String locationRepository,
+			String username, String password, String filename, List<Skill> skills, List<Ghost> ghosts) {
 		super();
 		this.id = id;
 		this.name = name;
 		this.connectionSettings = connectionSettings;
 		this.urlRepository = urlRepository;
+		this.locationRepository = locationRepository;
 		this.username = username;
 		this.password = password;
 		this.filename = filename;
@@ -128,7 +122,7 @@ public class Project  {
 	 * @param project the project instance to be copied.
 	 */
 	public Project(Project project) {
-		this (project.id, project.name, project.connectionSettings, project.urlRepository, 
+		this (project.id, project.name, project.connectionSettings, project.urlRepository, project.locationRepository,
 				project.username, project.password, project.filename, project.skills, project.ghosts);
 	}
 	
@@ -280,5 +274,19 @@ public class Project  {
 	public void setGhosts(List<Ghost> ghosts) {
 		this.ghosts = ghosts;
 	}
-	
+
+	/**
+	 * @return the location repository <br/><i>e.g. This is where the Git clone() occurs.</i>
+	 */
+	public String getLocationRepository() {
+		return locationRepository;
+	}
+
+	/**
+	 * @param locationRepository the location where the repository occurs.
+	 */
+	public void setLocationRepository(String locationRepository) {
+		this.locationRepository = locationRepository;
+	}
+
 }

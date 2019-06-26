@@ -218,5 +218,15 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				.collect(Collectors.toList());
 		return actualGhosts.isEmpty() ? null : actualGhosts.get(0);
 	}
+
+	@Override
+	public void saveLocationRepository(int idProject, String location) throws SkillerException {
+		Project project = get(idProject);
+		synchronized (lockDataUpdated) {
+			project.setLocationRepository(location);
+			this.dataUpdated = true;
+		}
+		
+	}
 	
 }

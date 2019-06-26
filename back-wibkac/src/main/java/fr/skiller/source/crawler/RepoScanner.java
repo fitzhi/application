@@ -10,6 +10,7 @@ import java.util.Set;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 
+import fr.skiller.bean.ProjectHandler;
 import fr.skiller.controller.ProjectController.SettingsGeneration;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RiskDashboard;
@@ -27,13 +28,18 @@ import fr.skiller.source.crawler.git.SCMChange;
 public interface RepoScanner {
 
 	/**
-	 * Clone the source code repository
+	 * <p>
+	 * <b>Clone</b> or <b>Pull</b> the source code from the remote repository
+	 * </p>
 	 * @param project Project whose source code files should be scan in the repository
 	 * @param settings connection settings
 	 * @throws IOException thrown if any application or network error occurs.
 	 * @throws GitAPIException thrown if any application or network error occurs.
+	 * @throws GitAPIException thrown if any application or network error occurs.
+	 * @throws SkillerException will be thrown by only
+	 * {@link fr.skiller.bean.ProjectHandler#saveLocationRepository } 
 	 */
-	void clone(Project project, ConnectionSettings settings) throws IOException, GitAPIException;
+	void clone(Project project, ConnectionSettings settings) throws IOException, GitAPIException, SkillerException;
 
 	/**
 	 * <p>Extract all changes from the repository and generate the commits collection.

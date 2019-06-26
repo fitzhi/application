@@ -234,29 +234,73 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	
 	@Override
 	public void clone(final Project project, ConnectionSettings settings) 
-			throws IOException, GitAPIException {
+			throws IOException, GitAPIException, SkillerException {
 
+		// Will we execute a git.clone() or a git.pull().
+		// if TRUE, this will be a clone
+		boolean execClone;
+		
+		Path path;
+		if (project.getLocationRepository() == null) { 
+			path = createDirectoryAsCloneDestination(project, settings);
+			execClone = true;
+		} else {
+			path = Paths.get(project.getLocationRepository());
+			if (logger.isDebugEnabled()) {
+				logger.debug(String.format(
+						"Pulling the repository %s inside the PREVIOUS path %s", 
+						settings.getUrl(), path.toAbsolutePath()));
+			}	
+			
+			// If the directory has been cleanup, we create a new one.
+			if (!path.toFile().exists()) {
+				path = createDirectoryAsCloneDestination(project, settings);
+				execClone = true;
+			} else {
+				execClone = false;
+			}
+		}
+		if (execClone) {
+			Git.cloneRepository()
+					.setDirectory(path.toAbsolutePath().toFile())
+					.setURI(settings.getUrl())
+					.setCredentialsProvider(new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()))
+					.setProgressMonitor(new CustomProgressMonitor())
+					.call();
+			if (logger.isDebugEnabled()) {
+				logger.debug("Clone done & succcessful !");
+			}
+		} else {
+			try (Git git = Git.open(Paths.get(project.getLocationRepository()).toFile())) {
+				git.pull().setProgressMonitor(new CustomProgressMonitor());
+			}
+			if (logger.isDebugEnabled()) {
+				logger.debug("Pull done & succcessful !");
+			}
+		}
+
+		
+		// Saving the local repository location
+		projectHandler.saveLocationRepository(project.getId(), path.toFile().getCanonicalPath());
+		
+	}
+	
+	/**
+	 * Create a directory in the temp directory as a destination of the clone process.
+	 * @param project the actual project
+	 * @param settings the connection settings <i>(these settings are given for trace only support)</i>
+	 * @return the resulting path 
+	 * @throws IOException an IO oops ! occurs. Too bad!
+	 */
+	private Path createDirectoryAsCloneDestination(Project project, ConnectionSettings settings) throws IOException {
 		// Creating a temporary local path where the remote project repository will be cloned.
 		Path path = Files.createTempDirectory("skiller_jgit_" +  project.getName() + "_");
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(
-					"Using GIT repository path %s cloned in %s", 
+					"Cloning the repository %s inside the CREATED path %s", 
 					settings.getUrl(), path.toAbsolutePath()));
-		}
-
-		Git.cloneRepository()
-				.setDirectory(path.toAbsolutePath().toFile())
-				.setURI(settings.getUrl())
-				.setCredentialsProvider(new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()))
-				.setProgressMonitor(new CustomProgressMonitor())
-				.call();
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("clone of repository done !");
-		}
-		// Saving the local repository location
-		settings.setLocalRepository(path.toAbsolutePath().toString());
-		
+		}	
+		return path;
 	}
 
 	@Override
@@ -486,7 +530,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			return repository;
 		}
 		
-		if (settings.getLocalRepository() == null) {
+		if (project.getLocationRepository() == null) {
 			throw new SkillerException(Error.CODE_REPO_MUST_BE_ALREADY_CLONED, Error.MESSAGE_REPO_MUST_BE_ALREADY_CLONED);
 		}
 		
@@ -496,7 +540,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		// Repository 
 		final CommitRepository repositoryOfCommit;
 		
-  		try (Git git = Git.open(new File(settings.getLocalRepository())) ) {
+  		try (Git git = Git.open(new File(project.getLocationRepository())) ) {
 
 			Repository repo = git.getRepository();
 			/**
@@ -512,7 +556,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			 * We finalize & cleanup the content of the collection
 			 */
 			this.finalizeListChanges(
-					settings.getLocalRepository()+"/", 
+					project.getLocationRepository()+"/", 
 					changes);
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("finalizeListChanges (%s) returns %d entries", project.getName(), changes.size()));

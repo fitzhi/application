@@ -30,6 +30,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
@@ -60,6 +61,9 @@ public class GitScannerTest {
 		
 	@Autowired
 	StaffHandler staffHandler;
+	
+	@Autowired
+	ProjectHandler projectHandler;
 	
 	/**
 	 * Source control parser.
@@ -100,10 +104,10 @@ public class GitScannerTest {
 	public void cloneAndParseRepo() throws IOException, SkillerException, GitAPIException {
 
 		
-		Project project = new Project(2, "skiller");
+		Project project = projectHandler.get(2);
 		
 		scanner.clone(project, settings);
-        assertThat(settings.getLocalRepository()).isNotNull();
+        assertThat(project.getLocationRepository()).isNotNull();
         
 		final CommitRepository repo = scanner.parseRepository(project, settings);
         assertThat(repo.size()).isGreaterThan(0);
