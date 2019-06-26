@@ -3,13 +3,13 @@ package fr.skiller.data.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.skiller.SkillerRuntimeException;
+import javax.annotation.Generated;
 
 /**
  * Project class. 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class Project implements Cloneable {
+public class Project  {
 
 	/**
 	 * The project identifier
@@ -97,6 +97,42 @@ public class Project implements Cloneable {
 	}
 
 	/**
+	 * Private constructor declared to be used by the copy constructor.
+	 * @param id
+	 * @param name
+	 * @param connectionSettings
+	 * @param urlRepository
+	 * @param username
+	 * @param password
+	 * @param filename
+	 * @param skills
+	 * @param ghosts
+	 */
+	@Generated ("for.copy.constructor")
+	private Project (int id, String name, int connectionSettings, String urlRepository, String username, String password,
+			String filename, List<Skill> skills, List<Ghost> ghosts) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.connectionSettings = connectionSettings;
+		this.urlRepository = urlRepository;
+		this.username = username;
+		this.password = password;
+		this.filename = filename;
+		this.skills = skills;
+		this.ghosts = ghosts;
+	}
+	
+	/**
+	 * Copy constructor of <code>Project</code>
+	 * @param project the project instance to be copied.
+	 */
+	public Project(Project project) {
+		this (project.id, project.name, project.connectionSettings, project.urlRepository, 
+				project.username, project.password, project.filename, project.skills, project.ghosts);
+	}
+	
+	/**
 	 * @return {@code true} if the project is setup with a direct access to the version control repository 
 	 * <i>(the Project self-contains connection parameters)</i>
 	 */
@@ -117,17 +153,6 @@ public class Project implements Cloneable {
 		return "Project [id=" + id + ", name=" + name + ", connection_settings=" + connectionSettings
 				+ ", urlRepository=" + urlRepository + ", username=" + username + ", filename=" + filename + ", skills="
 				+ skills + ", ghosts=" + ghosts + "]";
-	}
-
-	@Override
-	public Project clone() { 
-		Project clone = null; 
-		try { 
-			clone = (Project) super.clone(); 
-		} catch(CloneNotSupportedException e) { 
-			throw new SkillerRuntimeException(e); // won't happen
-		} 
-		return clone; 
 	}
 
 	/**

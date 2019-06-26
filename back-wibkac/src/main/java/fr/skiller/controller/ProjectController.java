@@ -217,7 +217,7 @@ public class ProjectController {
 					logger.info("The projects collection is beeing shuffled for confidentiality purpose");
 				}
 				projects.stream().forEach(project -> {
-					final Project clone = project.clone();
+					final Project clone = new Project(project);
 					clone.setName(shuffleService.shuffle(clone.getName()));
 					clone.setUsername(shuffleService.shuffle(clone.getUsername()));
 					clone.setUrlRepository(shuffleService.shuffle(clone.getName()));
