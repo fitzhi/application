@@ -57,13 +57,18 @@
         </div>
 
         <div class="row" [hidden]="!sunburst_waiting">
-            <div class="col-md-12 text-center w100">
-                <h3>Chart is on preparation !</h3>
-                <p class="lead">Please wait !</p>
-                <div>
-                    <img id="sunburstWaitingImage" alt="Waiting image" [src]="sunburstWaitingImage" width="256px" height="256px"/>
-                </div>
-            </div>
+			<div class="col-md-1"></div>
+            <div class="col-md-10 text-left w100">
+				<mat-card style="margin-top:30px">
+				  	<mat-card-content>
+						<h4 class="text-progress-bar">Chart on preparation. Please wait !</h4>
+						<section class="sunburst-progress-bar">
+								<mat-progress-bar color="warn" mode="indeterminate" ></mat-progress-bar>	  
+						</section>
+					</mat-card-content>
+				</mat-card>
+			</div>
+			<div class="col-md-1"></div>
         </div>
         
     </mat-sidenav-content>

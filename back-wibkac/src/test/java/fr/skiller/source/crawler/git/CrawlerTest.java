@@ -3,26 +3,41 @@
  */
 package fr.skiller.source.crawler.git;
 
+import static fr.skiller.Error.CODE_PARSING_SOURCE_CODE;
+import static fr.skiller.Error.MESSAGE_PARSING_SOURCE_CODE;
 import static fr.skiller.Global.UNKNOWN;
+import static org.eclipse.jgit.diff.DiffEntry.DEV_NULL;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.activation.DataHandler;
 
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.diff.RenameDetector;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevCommitList;
+import org.eclipse.jgit.revwalk.RevSort;
 import org.eclipse.jgit.revwalk.RevTree;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.junit.After;
 import org.junit.Before;
@@ -53,21 +68,21 @@ public class CrawlerTest {
 	private static final String DIR_GIT = "../git_repo_for_test/%s/";
 
 	private static final String FILE_GIT = DIR_GIT + ".git";
-	
+
 	@Autowired
 	@Qualifier("GIT")
 	RepoScanner scanner;
 
 	@Autowired
 	DataSaver dataSaver;
-	
+
 	@Autowired
 	DataChartHandler dataChartHandler;
-	
+
 	private Repository repository;
 
 	@Test
-	public void loadChangesForFirstTest() throws IOException {
+	public void loadChangesForFirstTest() throws IOException, SkillerException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, "first-test"))).readEnvironment().findGitDir()
@@ -83,10 +98,14 @@ public class CrawlerTest {
 		// rename by the JGIT RenameDetector
 		assertTrue(gitChanges.stream().map(SCMChange::getPath).anyMatch("moduleAchanged/creationInA.txt"::equals));
 
+		// At this level if a java class move from one package to one another, system does not detect it
+		assertTrue(gitChanges.stream().map(SCMChange::getPath).noneMatch("com/application/packageA/MyClass.java"::equals));
+		assertTrue(gitChanges.stream().map(SCMChange::getPath).anyMatch("com/application/packageB/MyClass.java"::equals));
+
 	}
 
 	@Test
-	public void finalizeListChangesForFirstTest() throws IOException {
+	public void finalizeListChangesForFirstTest() throws IOException, SkillerException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, "first-test"))).readEnvironment().findGitDir()
@@ -103,10 +122,11 @@ public class CrawlerTest {
 
 	/**
 	 * Test the method filterElibilible
+	 * 
 	 * @throws IOException
 	 */
 	@Test
-	public void testFilterEligible() throws IOException {
+	public void testFilterEligible() throws IOException, SkillerException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, "wibkac"))).readEnvironment().findGitDir()
@@ -114,26 +134,23 @@ public class CrawlerTest {
 
 		List<SCMChange> gitChanges = scanner.loadChanges(repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, "wibkac"), gitChanges);
-		assertTrue (gitChanges.stream()
-			.map(SCMChange::getPath)
-			.anyMatch("front-skiller/src/assets/img/pdf.png"::equals));
+		assertTrue(
+				gitChanges.stream().map(SCMChange::getPath).anyMatch("front-skiller/src/assets/img/pdf.png"::equals));
 
-		
 		scanner.filterEligible(gitChanges);
 
-		assertTrue (gitChanges.stream()
-				.map(SCMChange::getPath)
-				.noneMatch("front-skiller/src/assets/img/pdf.png"::equals));		
+		assertTrue(
+				gitChanges.stream().map(SCMChange::getPath).noneMatch("front-skiller/src/assets/img/pdf.png"::equals));
 
 	}
-	
-	
+
 	/**
 	 * Test the method filterElibilible
+	 * 
 	 * @throws IOException
 	 */
 	@Test
-	public void testCleanupPaths() throws IOException {
+	public void testCleanupPaths() throws IOException, SkillerException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, "wibkac"))).readEnvironment().findGitDir()
@@ -146,9 +163,10 @@ public class CrawlerTest {
 		gitChanges.stream().map(SCMChange::getPath).forEach(System.out::println);
 
 	}
-	
+
 	/**
 	 * Test the method dataHandler.saveChanges
+	 * 
 	 * @throws IOException
 	 */
 	@Test
@@ -159,11 +177,11 @@ public class CrawlerTest {
 				.build();
 
 		List<SCMChange> gitChanges = scanner.loadChanges(repository);
-		
-		dataSaver.saveChanges(new Project (777, "test"), gitChanges);
+
+		dataSaver.saveChanges(new Project(777, "test"), gitChanges);
 	}
-	
-	public void testDebug() throws IOException {
+
+	public void testDebug() throws IOException, SkillerException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, "first-test"))).readEnvironment().findGitDir()
@@ -173,101 +191,32 @@ public class CrawlerTest {
 		scanner.finalizeListChanges(String.format(DIR_GIT, "first-test"), gitChanges);
 		gitChanges.stream().map(SCMChange::getPath).forEach(System.out::println);
 	}
-	
-	public void testVIP() throws IOException {
+
+	public void testVEGEO() throws IOException, SkillerException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
-		repository = builder.setGitDir(new File(String.format(FILE_GIT, "VIP-MIDDLEWARE"))).readEnvironment().findGitDir()
+		repository = builder.setGitDir(new File(String.format(FILE_GIT, "vegeo"))).readEnvironment().findGitDir()
 				.build();
-
-		List<SCMChange> gitChanges = scanner.loadChanges(repository);
-
-		scanner.finalizeListChanges(String.format(DIR_GIT, "VIP-MIDDLEWARE"), gitChanges);
-
-		
-		/**
-		 * We filter the collection on eligible entries (.java; .js...)
-		 */
-		scanner.filterEligible(gitChanges);
-		
-		/**
-		 * We cleanup the pathnames each location (e.g. "src/main/java" is removed) 
-		 */
-		scanner.cleanupPaths(gitChanges);
-		
-		CommitRepository repositoryOfCommit = new BasicCommitRepository();
-		
-        /**
-         * Set of unknown contributors having work on this repository.
-         */
-        Set<String >unknown = repositoryOfCommit.unknownContributors();
-
-        Project p = new Project(7, "VIP");
-        /**
-		 * We update the staff identifier on each change entry.
-		 */
-		scanner.updateStaff(p, gitChanges, unknown);
-
-		gitChanges.stream().forEach(
-				change -> 
-				repositoryOfCommit.addCommit(
-						change.getPath(), 
-						change.isIdentified() ? change.getIdStaff() : UNKNOWN,
-						change.getDateCommit())
-				);
-		
-		gitChanges.stream().map(SCMChange::getPath).forEach(System.out::println);
-
-		RiskDashboard data = scanner.aggregateDashboard(p, repositoryOfCommit);
-
-		dataChartHandler.aggregateDataChart(data.riskChartData);
-		
-		StringBuilder sb = new StringBuilder();
-		data.riskChartData.dump(sb,"");
-		System.out.println(sb);
-	
+/*
+		List<RevCommit> allCommits = new ArrayList<>();
+	      try (Git git = new Git(repository)) {
+	            Iterable<RevCommit> commits = git.log().all().call();
+	            for (RevCommit commit : commits) {
+	                allCommits.add(commit);
+	            }
+	        } catch (final IOException | GitAPIException e) {
+	        	throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
+	        }
+	  
+	      allCommits.stream()
+	      	.map(RevCommit::getAuthorIdent)
+	      	.map(PersonIdent::getName)
+	      	.distinct()
+	      	.forEach(System.out::println);
+	      */
+	      scanner.loadChanges(repository);
 	}
 
-	/*
-	 * public void test() throws IOException {
-	 * 
-	 * // a RevWalk allows to walk over commits based on some filtering that is
-	 * defined RevWalk walk = new RevWalk(repository); ObjectId headId =
-	 * repository.resolve(Constants.HEAD); RevCommit start =
-	 * walk.parseCommit(headId); walk.markStart(start);
-	 * 
-	 * RevCommitList<RevCommit> list = new RevCommitList<>(); list.source(walk);
-	 * list.fillTo(Integer.MAX_VALUE);
-	 * 
-	 * TreeWalk treeWalk = new TreeWalk(repository); for (RevCommit commit : list) {
-	 * 
-	 * RenameDetector rd = new RenameDetector(repository);
-	 * 
-	 * 
-	 * System.out.print("-> " + commit.getId() + " " + commit.getFullMessage());
-	 * 
-	 * 
-	 * treeWalk.reset(); RevTree revTree = commit.getTree();
-	 * treeWalk.addTree(commit.getTree());
-	 * 
-	 * 
-	 * treeWalk.setRecursive(true);
-	 * 
-	 * for (RevCommit parent : commit.getParents()) { System.out.print("---------> "
-	 * + parent.getId() + " " + parent.getFullMessage()); RevTree rt =
-	 * parent.getTree(); System.out.println("---------> " + rt.getId());
-	 * treeWalk.addTree(rt); }
-	 * 
-	 * while (treeWalk.next()) { if (treeWalk.getTreeCount() == 1) {
-	 * System.out.println(treeWalk.getOperationType() + " " +
-	 * treeWalk.getPathString()); } if (treeWalk.getTreeCount() == 2) {
-	 * rd.addAll(DiffEntry.scan(treeWalk)); List<DiffEntry> files = rd.compute();
-	 * for (DiffEntry de : files) { System.out.println(de.getChangeType() + " " +
-	 * de.getOldPath() + " " + de.getNewPath()); } }
-	 * System.out.println(treeWalk.getPathString() + " " + treeWalk.getFileMode() +
-	 * " " + treeWalk.getDepth() + " " + treeWalk.getPathString()); } }
-	 * treeWalk.close(); walk.close(); }
-	 */
 	@After
 	public void after() {
 		if (repository != null) {

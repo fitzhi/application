@@ -9,6 +9,9 @@ import static fr.skiller.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
 import static fr.skiller.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
 import static fr.skiller.Error.MESSAGE_INVALID_LOGIN_PASSWORD;
 import static fr.skiller.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
+import static fr.skiller.Error.CODE_PARSING_SOURCE_CODE;
+import static fr.skiller.Error.MESSAGE_PARSING_SOURCE_CODE;
+
 import static fr.skiller.Global.LN;
 import static fr.skiller.Global.UNKNOWN;
 import static fr.skiller.controller.ProjectController.DASHBOARD_GENERATION;
@@ -41,10 +44,13 @@ import javax.annotation.PostConstruct;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.RenameDetector;
+import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -52,6 +58,7 @@ import org.eclipse.jgit.revwalk.RevCommitList;
 import org.eclipse.jgit.revwalk.RevSort;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,7 +103,7 @@ import static fr.skiller.Error.SHOULD_NOT_PASS_HERE;
  * @author Fr&eacute;d&eacute;ric VIDAL 
  */
 @Service("GIT")
-public class GitScanner extends AbstractScannerDataGenerator implements RepoScanner {
+public class GitCrawler extends AbstractScannerDataGenerator implements RepoScanner {
 
 	/**
 	 * These directories will be removed from the full path of class files<br/>
@@ -125,7 +132,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
  	/**
  	 * The logger for the GitScanner.
  	 */
-	final Logger logger = LoggerFactory.getLogger(GitScanner.class.getCanonicalName());
+	final Logger logger = LoggerFactory.getLogger(GitCrawler.class.getCanonicalName());
 	
 	/** 
 	 * A tree representing a class like <code>fr.common.my-package.MyClass"</code> might create 3 nodes of <code>RiskChartData</code>.
@@ -198,7 +205,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	/**
 	 * GitScanner constructor.
 	 */
-	public GitScanner() {
+	public GitCrawler() {
 		// This constructor is an empty one.
 	}
 	
@@ -304,45 +311,165 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 	}
 
 	@Override
-	public List<SCMChange> loadChanges(Repository repository) throws IOException {
+	public List<SCMChange> loadChanges(Repository repository) throws SkillerException {
 
 		List<SCMChange> gitChanges = new ArrayList<>();
 		
-		RevWalk walk = new RevWalk(repository);
-		ObjectId headId = repository.resolve(Constants.HEAD);
-		RevCommit start = walk.parseCommit(headId);
-		walk.markStart(start);
-		walk.sort(RevSort.REVERSE);
+		List<RevCommit> allCommits = new ArrayList<>(); 
+        try (Git git = new Git(repository)) {
+        	
+        	String treeName = "refs/heads/master"; // tag or branch
+        	for (RevCommit commit : git.log().add(repository.resolve(treeName)).call()) {
+                allCommits.add(commit);
+        	}        	
+        } catch (final IOException | GitAPIException e) {
+        	throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
+        }
+        
+        if (logger.isInfoEnabled()) {
+        	logger.info (String.format("Retrieving %d on the repository %s", allCommits.size(), repository.getDirectory().getAbsoluteFile() ));
+        }
 		
-		RevCommitList<RevCommit> list = new RevCommitList<>();
-		list.source(walk);
-		list.fillTo(Integer.MAX_VALUE);
 		
-		TreeWalk treeWalk = new TreeWalk(repository);
-		for (RevCommit commit : list) {
+
+		final Comparator<RevCommit> dateCommitComparator = 
+            (RevCommit revCommit1, RevCommit revCommit2) -> {
+				return revCommit1.getCommitterIdent().getWhen().compareTo(revCommit2.getCommitterIdent().getWhen());
+            };
+            
+        List<RevCommit> allDateAscendingCommits = allCommits.stream()
+                .sorted(dateCommitComparator)
+                .collect(Collectors.toList());
+				
+        ObjectId previous = null;
+        
+        for (RevCommit commit : allDateAscendingCommits) {
 
 			log (commit);
 			
-	    	RenameDetector renameDetector = new RenameDetector(repository);
+            if (previous == null) {
+            	previous = commit.getTree().getId();
+            } else {
+            	ObjectId current = commit.getTree().getId();
+		        diff(repository, gitChanges, commit, previous, current);
+		        previous = current;
+            }
 	    	
-			treeWalk.reset();
-	        treeWalk.addTree(commit.getTree());
-	        treeWalk.setRecursive(true);
 	        
 	        if ((logger.isDebugEnabled()) && (commit.getParentCount() >= 2)) {
 	        	logger.debug( String.format("commit %s with merge ?", commit.getShortMessage()));
 	        }
-	        for (RevCommit parent : commit.getParents()) {
-	        	treeWalk.addTree(parent.getTree());
-	        	processWalkEntry (commit, treeWalk, gitChanges, renameDetector);
-	        }
 		}		
-		treeWalk.close();
-		walk.close();
-
 		return gitChanges;
 	}
+
+	private void diff(Repository repository, List<SCMChange> changes, RevCommit commit, ObjectId prevObjectId, ObjectId curObjectId) 
+		throws SkillerException {
+
+		final RenameDetector renameDetector = new RenameDetector(repository);
+
+		try (ObjectReader reader = repository.newObjectReader()) {
+    		CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+    		oldTreeIter.reset(reader, prevObjectId);
+    		CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+    		newTreeIter.reset(reader, curObjectId);
+
+    		// finally get the list of changed files
+    		try (Git git = new Git(repository)) {
+                List<DiffEntry> diffs= git.diff()
+        		                    .setNewTree(newTreeIter)
+        		                    .setOldTree(oldTreeIter)
+        		                    .call();
+                
+                // Might be a rename with specific action
+                if (isRenamePossible(diffs)) {
+                	if (logger.isDebugEnabled()) {
+                		logger.debug(String.format("commit '%s' is treated as a 'rename' commit", commit.getShortMessage()));
+                	}
+            		renameDetector.addAll(diffs);
+                	List<DiffEntry> files = renameDetector.compute();
+	                processDiffEntries(changes, commit, files);
+                } else {
+	                processDiffEntries(changes, commit, diffs);
+                }
+    		}
+		} catch (final Exception e) {
+			throw new SkillerException (CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e); 
+		}
+	}
 	
+
+	/**
+	 * Take in account the list of files impacted by a commit
+	 * @param gitChanges the complete list of changes detected in the studying repository
+	 * @param commit the actual commit evaluated
+	 * @param diffs the list of difference between this current commit and the previous one
+	 * @throws IOException thrown if any IO Oops occurs.
+	 */
+	private void processDiffEntries (List<SCMChange> gitChanges, RevCommit commit, List<DiffEntry> diffs) {
+        	
+        	for (DiffEntry de : diffs) {
+        		switch (de.getChangeType()) {
+        		case RENAME:
+                	if (logger.isDebugEnabled()) {
+                		logger.debug(String.format("%s is renammed into %s", de.getOldPath(), de.getNewPath()));
+                	}
+        			renameFilePath (de.getNewPath(), de.getOldPath(), gitChanges);
+        			break;
+        		case DELETE:
+           			if (DEV_NULL.equals(de.getNewPath())) {
+           				removeFilePath (de.getOldPath(), gitChanges);
+           			} else {
+           				throw new SkillerRuntimeException(String.format("%s REQUIRES TO BE NULL", de.getNewPath()));
+           			}
+           			break;
+        		case COPY:
+        			// 
+        			// We assume that the COPY change is connected to MERGE operations
+        			// Therefore the author of the merge is useless for the scope of this application
+        			// This committer did not touch the content of the source
+        			//
+        			break;
+        		case ADD: 
+        		case MODIFY: 
+        			PersonIdent author = commit.getAuthorIdent();
+           			gitChanges.add(new SCMChange(commit.getId().toString(), de.getNewPath(), 
+           					author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+           					author.getName(), author.getEmailAddress()));
+        			break;
+    			default: 
+    				if (logger.isDebugEnabled()) {
+    					logger.debug ( 
+    						String.format("Unexpected type of change %s %s %s",
+    							de.getChangeType(),
+    							de.getOldPath(),
+    							de.getNewPath()));
+    				}
+    				break;
+        		}
+        	}
+	}
+	
+	/**
+	 * <p>
+	 * The rename of file is not correctly treated by the {@code git.diff()}.<br/>
+	 * This function detects the possibility of a rename, and jump into another Diff process more time consuming.
+	 * </p>
+	 * @param diffs
+	 * @return
+	 */
+	public boolean isRenamePossible(List<DiffEntry> diffs) {
+		boolean rename = diffs.stream()
+				.map(DiffEntry::getChangeType)
+				.anyMatch(ChangeType.ADD::equals);
+		if (rename) {
+			return diffs.stream()
+					.map(DiffEntry::getChangeType)
+					.anyMatch(ChangeType.DELETE::equals);
+		}
+		return rename;
+	}
+
 	@Override
 	public void finalizeListChanges(String sourceLocation, List<SCMChange> changes)  throws IOException {
 		
@@ -402,77 +529,6 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		changes.stream().forEach(change -> change.setPath(cleanupPath(change.getPath())));
 	}
 	
-	/**
-	 * Take into account this tree-walk entry in the change collection.
-	 * @param commit current commit scrutinized
-	 * @param treeWalk the walk node.
-	 * @param changes the change collection
-	 * @param renameDetector a rename detector created for this repository.
-	 * @throws IOException thrown during the crawl
-	 */
-	private void processWalkEntry (RevCommit commit, TreeWalk treeWalk, List<SCMChange> gitChanges, RenameDetector renameDetector) 
-			throws IOException {
-    	if (treeWalk.getTreeCount() == 1) {
-    		System.out.println("treeWalk.getTreeCount()  " + commit.getName());
-    	}
-    	
-    	if (treeWalk.getTreeCount() == 2) {
-    		renameDetector.addAll(DiffEntry.scan(treeWalk));
-        	List<DiffEntry> files = renameDetector.compute();
-        	
-        	for (DiffEntry de : files) {
-        		switch (de.getChangeType()) {
-        		case RENAME:
-        			//
-        			// WARNING :
-        			// 
-        			// It looks like the old path and the new path, are inverted.
-        			// A nominal call should be "renameFilePath (de.getNewPath(), de.getOldPath()...
-        			//
-        			renameFilePath (de.getOldPath(), de.getNewPath(), gitChanges);
-        			break;
-        		case ADD:
-        			// The ADD is treated like a DELETE operation !!!
-           			if (DEV_NULL.equals(de.getOldPath())) {
-           				removeFilePath (de.getNewPath(), gitChanges);
-           			} 
-           			break;
-        		case COPY:
-        			// 
-        			// We assume that the COPY change is connected to MERGE operations
-        			// Therefore the author of the merge is useless for the scope of this application
-        			// This committer did not touch the content of the source
-        			//
-        			break;
-        		case DELETE:
-        			// The DELETE is treated like an ADD operation.
-        			if (DEV_NULL.equals(de.getNewPath())) {
-            			PersonIdent author = commit.getAuthorIdent();
-               			gitChanges.add(new SCMChange(commit.getId().toString(), de.getOldPath(), 
-               					author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-               					author.getName(), author.getEmailAddress()));
-        			}
-        			break;
-        		case MODIFY:
-        			PersonIdent author = commit.getAuthorIdent();
-        			gitChanges.add(new SCMChange(commit.getId().toString(), de.getNewPath(), 
-          						author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-          					    author.getName(), author.getEmailAddress()));
-        			break;
-    			default: 
-    				if (logger.isDebugEnabled()) {
-    					logger.debug ( 
-    						String.format("Unexpected type of change %s %s %s",
-    							de.getChangeType(),
-    							de.getOldPath(),
-    							de.getNewPath()));
-    				}
-    				break;
-        		}
-        	}
-    	}
-		
-	}
 	
 	/**
 	 * <p>
@@ -488,6 +544,7 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 			.filter(change -> oldPath.equals(change.getPath()))
 			.forEach(change -> change.setPath(newPath));
 	}
+	
 	/**
 	 * <p>
 	 * Remove a path from the collection of changes.
@@ -500,10 +557,14 @@ public class GitScanner extends AbstractScannerDataGenerator implements RepoScan
 		while(iter.hasNext()){
 		    SCMChange change = iter.next();
 		    if (change.getPath().equals(removedPath)) {
+		    	if ("copoix".equals(change.getAuthorName()) 
+		    			&& "vegeo-desktop-web/app/scripts/attributaire/dossier/controllers/maj-apres-travaux.js".equals(removedPath)) {
+		    		System.out.println("here");
+		    	}
 		        iter.remove();
 		    } 
 		}
-	}
+	} 
 	
 	@Override
 	public CommitRepository parseRepository(final Project project, final ConnectionSettings settings) throws IOException, SkillerException {

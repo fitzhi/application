@@ -48,9 +48,9 @@ public interface RepoScanner {
 	 * </p>
 	 * @param repository the <b><font color="red">GIT</font></b> repository.
 	 * @return a collection with all changed occurred on the passed repository.
-	 * @throws IOException thrown by the crawling operation.
+	 * @throws SkillerException thrown by the crawling operation.
 	 */
-	List<SCMChange> loadChanges(Repository repository) throws IOException;
+	List<SCMChange> loadChanges(Repository repository) throws SkillerException;
 
 	/**
 	 * <p>

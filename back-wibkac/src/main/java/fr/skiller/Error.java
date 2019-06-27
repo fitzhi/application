@@ -54,6 +54,9 @@ public class Error {
 	public static final int CODE_CANNOT_SELF_CREATE_USER = -1013;
 	public static final String MESSAGE_CANNOT_SELF_CREATE_USER = "You cannot create your own user. Please contact your administrator"; 
 
+	public static final int CODE_PARSING_SOURCE_CODE = -1014;
+	public static final String MESSAGE_PARSING_SOURCE_CODE = "an error occurs when parsing the source code on server."; 
+
 	private Error() {
 	}
 	

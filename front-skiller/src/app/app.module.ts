@@ -153,7 +153,7 @@ import { CiaoComponent } from './ciao/ciao.component';
 		MatExpansionModule,
 		MatGridListModule,
 		MatStepperModule,
-		MatIconModule,
+		MatIconModule
 	],
 	providers: [
 		CinematicService,

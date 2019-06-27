@@ -22,7 +22,7 @@ import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.RepoScanner;
-import fr.skiller.source.crawler.git.GitScanner;
+import fr.skiller.source.crawler.git.TreeWalkGitCrawler;
 import fr.skiller.source.crawler.git.SCMChange;
 
 /**

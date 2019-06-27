@@ -31,14 +31,14 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	/**
 	 * Service in charge of handling the staff collection.<br/>
 	 * This bean in filled by the upper concrete service<br/>
-	 * {@link fr.skiller.source.crawler.git.GitScanner#init() GitScanner.init} is the first implementation for Git.
+	 * {@link fr.skiller.source.crawler.git.TreeWalkGitCrawler#init() GitScanner.init} is the first implementation for Git.
 	 */
 	protected StaffHandler parentStaffHandler;
 
 	/**
 	 * Service in charge of handling the projects.
 	 * This bean in filled by the upper concrete service<br/>
-	 * {@link fr.skiller.source.crawler.git.GitScanner#init() GitScanner.init} is the first implementation for Git.
+	 * {@link fr.skiller.source.crawler.git.TreeWalkGitCrawler#init() GitScanner.init} is the first implementation for Git.
 	 */
 	protected ProjectHandler parentProjectHandler;
 	

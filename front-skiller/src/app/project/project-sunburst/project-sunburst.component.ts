@@ -214,7 +214,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 			const contributors = new Set<Contributor>();
 			nodeClicked.classnames.forEach(file => {
-				if (typeof file.idStaffs !== 'undefined') {
+				if (file.idStaffs) {
 					file.idStaffs.forEach(element => {
 						contributors.add(this.findContributor(element));
 					});
