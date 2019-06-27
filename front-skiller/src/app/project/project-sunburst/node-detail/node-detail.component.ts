@@ -6,36 +6,36 @@ import { BehaviorSubject } from 'rxjs';
 import { Filename } from 'src/app/data/filename';
 
 @Component({
-  selector: 'app-node-detail',
-  templateUrl: './node-detail.component.html',
-  styleUrls: ['./node-detail.component.css']
+	selector: 'app-node-detail',
+	templateUrl: './node-detail.component.html',
+	styleUrls: ['./node-detail.component.css']
 })
 export class NodeDetailComponent extends BaseComponent implements OnInit, OnDestroy {
 
-  @Input('filenames')
-  public filenames: FilenamesDataSource;
+	@Input('filenames')
+	public filenames: FilenamesDataSource;
 
-  @Input('contributors')
-  public contributors: ContributorsDataSource;
+	@Input('contributors')
+	public contributors: ContributorsDataSource;
 
-  @Input('location')
-  public location: BehaviorSubject<Filename[]>;
+	@Input('location')
+	public location: BehaviorSubject<Filename[]>;
 
-  public node: Filename[];
+	public node: Filename[];
 
-  constructor() {
-    super();
-  }
+	constructor() {
+		super();
+	}
 
-  ngOnInit() {
-    this.subscriptions.add(
-      this.location.subscribe(element => this.node = element));
-  }
+	ngOnInit() {
+		this.subscriptions.add(
+			this.location.subscribe(element => this.node = element));
+	}
 
-  /**
-   * Calling the base class to unsubscribe all subscriptions.
-   */
-  ngOnDestroy() {
-    super.ngOnDestroy();
-  }
+	/**
+	 * Calling the base class to unsubscribe all subscriptions.
+	 */
+	ngOnDestroy() {
+		super.ngOnDestroy();
+	}
 }

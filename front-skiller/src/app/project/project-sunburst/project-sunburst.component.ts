@@ -214,7 +214,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 			const contributors = new Set<Contributor>();
 			nodeClicked.classnames.forEach(file => {
-				if (file.idStaffs) {
+				if ( (file.idStaffs) && (file.idStaffs > 0) ) {
 					file.idStaffs.forEach(element => {
 						contributors.add(this.findContributor(element));
 					});
@@ -231,6 +231,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	findContributor(idStaff: number): Contributor {
 		const foundContributor = this.projectStaffService.contributors
 			.find(contributor => contributor.idStaff === idStaff);
+		if (!foundContributor) {
+			console.log (idStaff, 'id Staff not found as a contributor.' );
+		}
 		return foundContributor;
 	}
 
