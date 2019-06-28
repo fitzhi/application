@@ -18,7 +18,7 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 		return next.handle(request)
 			.pipe(
 				retry(0),
-				catchError((error: HttpErrorResponse) => {
+				catchError((response: HttpErrorResponse) => {
 					const messageService = this.injector.get(MessageService);
 					let errorMessage: string;
 
@@ -28,14 +28,14 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 						return throwError(errorMessage);
 					}
 
-					if (error.error instanceof ErrorEvent) {
+					if (response.error instanceof ErrorEvent) {
 						// client-side error
 						errorMessage = 'Error: ${error.error.message}';
 						setTimeout(() => messageService.error(errorMessage), 0);
 						return throwError(errorMessage);
 					}
 
-					switch (error.status) {
+					switch (response.status) {
 						case 0:
 							setTimeout(() => messageService.error("Server is down or unreachable!"), 0);
 							break;
@@ -44,45 +44,52 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 						case 400:
 						case 404:
 						case 500:
-							const return_code = error.headers.get('backend.return_code');
+							const return_code = response.headers.get('backend.return_code');
 							if ( (return_code !== null) && (return_code !== undefined) ) {
-								const return_message = error.headers.get('backend.return_message');
+								const return_message = response.headers.get('backend.return_message');
 								if (Constants.DEBUG) {
-									console.log('Error ' + error.status
+									console.log('Error ' + response.status
 										+ ' with back-end error code/message '
 										+ return_code + '/' + return_message);
 								}
 								errorMessage = return_message;
 							} else {
 								if (Constants.DEBUG) {
-									console.log('Error ' + error.status + ' ' + error.message);
+									console.log('Error ' + response.status + ' ' + response.message);
 								}
-								if ( (error.error !== null) &&  (error.error !== undefined) ) {
-									errorMessage = error.error.message + ' (' + error.error.code + ')';
+								if ( (response.error !== null) &&  (response.error !== undefined) ) {
+									errorMessage = response.error.message + ' (' + response.error.code + ')';
 								} else {
-									errorMessage = error.message + ' (' + error.status + ')';
+									errorMessage = response.message + ' (' + response.status + ')';
 								}
 							}
 							setTimeout(() => messageService.warning(errorMessage), 0);
 							return throwError(errorMessage);
 						case 401:
 							if (Constants.DEBUG) {
-								console.log(error.error.error, error.error.error_description);
+								console.log(response.error.error, response.error.error_description);
 							}
-							setTimeout(() => messageService.error(error.error.error_description), 0);
-							if (error.error.error === 'invalid_token') {
-								setTimeout(() => this.router.navigate(['/welcome']), 0);
+							if (response.error.error === 'unauthorized') {
+								setTimeout(() => messageService.error('User/password invalid !'), 0);
+							} else {
+								if (response.error.error === 'invalid_token') {
+									setTimeout(() => messageService.error('Your session has expired. Please connect again'), 0);
+									setTimeout(() => this.router.navigate(['/welcome']), 0);
+								} else {
+									setTimeout(() => messageService.error(response.error.error_description), 0);
+									return throwError(errorMessage);
+								}
 							}
 							break;
 						default:
 							if (Constants.DEBUG) {
-								console.log(error);
+								console.log(response);
 							}
-							if (error !== null) {
+							if (response !== null) {
 								if (Constants.DEBUG) {
-									console.log('Error ' + error.status + ' ' + error.message);
+									console.log('Error ' + response.status + ' ' + response.message);
 								}
-								errorMessage = error.message + ' (' + error.status + ')';
+								errorMessage = response.message + ' (' + response.status + ')';
 								setTimeout(() => messageService.error(errorMessage), 0);
 							}
 							return throwError(errorMessage);
