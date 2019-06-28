@@ -45,7 +45,7 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 						case 404:
 						case 500:
 							const return_code = response.headers.get('backend.return_code');
-							if ( (return_code !== null) && (return_code !== undefined) ) {
+							if (return_code) {
 								const return_message = response.headers.get('backend.return_message');
 								if (Constants.DEBUG) {
 									console.log('Error ' + response.status
@@ -85,7 +85,7 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 							if (Constants.DEBUG) {
 								console.log(response);
 							}
-							if (response !== null) {
+							if (response) {
 								if (Constants.DEBUG) {
 									console.log('Error ' + response.status + ' ' + response.message);
 								}
