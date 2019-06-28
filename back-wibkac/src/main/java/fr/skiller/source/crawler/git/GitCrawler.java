@@ -357,7 +357,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	    	
 	        
 	        if ((logger.isDebugEnabled()) && (commit.getParentCount() >= 2)) {
-	        	logger.debug( String.format("commit %s with merge ?", commit.getShortMessage()));
+	        	logger.debug( String.format("commit '%s' with merge ?", commit.getShortMessage()));
 	        }
 		}		
 		return gitChanges;
@@ -419,7 +419,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
         		case DELETE:
            			if (DEV_NULL.equals(de.getNewPath())) {
            				removeFilePath (de.getOldPath(), gitChanges);
-           			} else {
+            		} else {
            				throw new SkillerRuntimeException(String.format("%s REQUIRES TO BE NULL", de.getNewPath()));
            			}
            			break;

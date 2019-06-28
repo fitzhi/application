@@ -98,9 +98,12 @@ public class CrawlerTest {
 		// rename by the JGIT RenameDetector
 		assertTrue(gitChanges.stream().map(SCMChange::getPath).anyMatch("moduleAchanged/creationInA.txt"::equals));
 
-		// At this level if a java class move from one package to one another, system does not detect it
-		assertTrue(gitChanges.stream().map(SCMChange::getPath).noneMatch("com/application/packageA/MyClass.java"::equals));
-		assertTrue(gitChanges.stream().map(SCMChange::getPath).anyMatch("com/application/packageB/MyClass.java"::equals));
+		// At this level if a java class move from one package to one another, system
+		// does not detect it
+		assertTrue(
+				gitChanges.stream().map(SCMChange::getPath).noneMatch("com/application/packageA/MyClass.java"::equals));
+		assertTrue(
+				gitChanges.stream().map(SCMChange::getPath).anyMatch("com/application/packageB/MyClass.java"::equals));
 
 	}
 
@@ -197,24 +200,26 @@ public class CrawlerTest {
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, "vegeo"))).readEnvironment().findGitDir()
 				.build();
-/*
+
 		List<RevCommit> allCommits = new ArrayList<>();
-	      try (Git git = new Git(repository)) {
-	            Iterable<RevCommit> commits = git.log().all().call();
-	            for (RevCommit commit : commits) {
-	                allCommits.add(commit);
-	            }
-	        } catch (final IOException | GitAPIException e) {
-	        	throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
-	        }
-	  
-	      allCommits.stream()
-	      	.map(RevCommit::getAuthorIdent)
-	      	.map(PersonIdent::getName)
-	      	.distinct()
-	      	.forEach(System.out::println);
-	      */
-	      scanner.loadChanges(repository);
+		try (Git git = new Git(repository)) {
+
+			String treeName = "refs/heads/master"; // tag or branch
+			for (RevCommit commit : git.log().add(repository.resolve(treeName)).call()) {
+				allCommits.add(commit);
+			}
+		} catch (final IOException | GitAPIException e) {
+			throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
+		}
+
+		
+		allCommits.stream().filter(revc -> revc.getCommitterIdent().getName().contains("Alonso"))
+				.map(revc -> revc.getShortMessage() + " " + revc.getCommitterIdent().getName())
+			.distinct()
+				.forEach(System.out::println);
+		
+//	      scanner.loadChanges(repository);
+
 	}
 
 	@After
