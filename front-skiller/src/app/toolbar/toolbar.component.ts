@@ -144,7 +144,10 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
      * @return true if the PROJECT button has been selected by the end-user.
      */
 	isProjectActive() {
-		return ((this.editedEntity === this.PROJECT_TAB_FORM) || (this.editedEntity === Constants.PROJECT_SEARCH));
+		return (
+					(this.editedEntity === this.PROJECT_TAB_FORM)
+				|| (this.editedEntity === Constants.PROJECT_TAB_STAFF)
+				|| (this.editedEntity === Constants.PROJECT_SEARCH));
 	}
 
 	/**
