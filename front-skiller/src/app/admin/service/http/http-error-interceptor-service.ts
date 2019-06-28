@@ -67,10 +67,10 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 							return throwError(errorMessage);
 						case 401:
 							if (Constants.DEBUG) {
-								console.log(error.error, error.error.error_description);
+								console.log(error.error.error, error.error.error_description);
 							}
 							setTimeout(() => messageService.error(error.error.error_description), 0);
-							if (error.error === 'invalid_token') {
+							if (error.error.error === 'invalid_token') {
 								setTimeout(() => this.router.navigate(['/welcome']), 0);
 							}
 							break;
