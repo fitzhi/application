@@ -44,10 +44,18 @@
       <div class="row">
         <div class="col-md-6"></div>
         <div class="col-md-3">
-          <button class="btn btn-outline-secondary rounded connection-cancel" type="cancel" alt="cancel this operation" (click)="onCancel()">Cancel</button>
+		  <button 
+			class="btn btn-outline-secondary rounded connection-cancel" 
+			type="reset" 
+			alt="cancel this operation" 
+			(click)="onCancel()">Cancel</button>
         </div>
         <div class="col-md-3">
-          <button class="btn btn-outline-secondary rounded connection-ok" type="submit" [disabled]="connectionGroup.invalid">Ok</button>
+		  <button class="btn 
+			  btn-outline-secondary rounded connection-ok" 
+			  (click)="onSubmit()"
+			  (keyup.enter)="onSubmit()"
+			  [disabled]="connectionGroup.invalid">Ok</button>
         </div>
       </div>
     </form>
