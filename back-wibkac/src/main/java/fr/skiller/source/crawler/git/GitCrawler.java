@@ -330,8 +330,6 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
         	logger.info (String.format("Retrieving %d on the repository %s", allCommits.size(), repository.getDirectory().getAbsoluteFile() ));
         }
 		
-		
-
 		final Comparator<RevCommit> dateCommitComparator = 
             (RevCommit revCommit1, RevCommit revCommit2) -> {
 				return revCommit1.getCommitterIdent().getWhen().compareTo(revCommit2.getCommitterIdent().getWhen());
@@ -557,10 +555,6 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		while(iter.hasNext()){
 		    SCMChange change = iter.next();
 		    if (change.getPath().equals(removedPath)) {
-		    	if ("copoix".equals(change.getAuthorName()) 
-		    			&& "vegeo-desktop-web/app/scripts/attributaire/dossier/controllers/maj-apres-travaux.js".equals(removedPath)) {
-		    		System.out.println("here");
-		    	}
 		        iter.remove();
 		    } 
 		}
