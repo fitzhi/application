@@ -146,7 +146,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	initStaff() {
 		this.collaborator = {
 			idStaff: -1, firstName: '', lastName: '', nickName: '', login: '', email: '', level: '',
-			dateInactive: null, application: '', typeOfApplication: null, active: true, external: true,
+			dateInactive: null, application: null, typeOfApplication: null, active: true, external: true,
 			experiences: [], missions: []
 		};
 		this.profileStaff.get('firstName').setValue('');
