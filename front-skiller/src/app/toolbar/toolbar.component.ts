@@ -103,7 +103,8 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 		this.subscriptions.add(
 			this.cinematicService.newCollaboratorDisplayEmitted$.subscribe(id => {
 				if (Constants.DEBUG) {
-					console.log ('Former form identifier (Where fo we comme from?)', this.cinematicService.getFormerFormIdentifier());
+					console.log ('Former form identifier (Where do we come from?)',
+					this.cinematicService.getFormerFormIdentifier());
 				}
 				switch (this.cinematicService.getFormerFormIdentifier()) {
 					case Constants.TABS_STAFF_LIST:

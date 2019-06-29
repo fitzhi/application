@@ -219,9 +219,11 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		const oldLastName = this.collaborator.lastName;
 
 		if (Constants.DEBUG) {
-			console.log ('Field changed', field);
-			console.log ('Firstname', newFirstName + ' ' + oldFirstName);
-			console.log ('Lastname', newLastName + ' ' + oldLastName);
+			console.groupCollapsed('Staff member is moving')
+			console.log ('Field', field);
+			console.log ('Firstname', newFirstName + '->' + oldFirstName);
+			console.log ('Lastname', newLastName + '->' + oldLastName);
+			console.groupEnd();
 		}
 
 		if ( (newFirstName !== oldFirstName) && (newLastName !== oldLastName) ) {
