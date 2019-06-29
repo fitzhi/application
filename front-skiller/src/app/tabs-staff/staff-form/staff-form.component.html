@@ -8,6 +8,7 @@
                     <label for="firstName">First name</label> 
                     <input type="text"
 						class="form-control" id="firstName" name="firstName"
+						(change)="onChange(FIRST_NAME)"
 						[readonly]="isAlreadyDeactived()" placeholder="" value=""
                         formControlName="firstName"/> 
                     <label
@@ -19,6 +20,7 @@
                     <label for="lastName" class="required">Last name</label> 
                     <input type="text"
 						class="form-control required" id="lastName" name="lastName"
+						(change)="onChange(LAST_NAME)"
 						[readonly]="isAlreadyDeactived()" placeholder="Enter the last name"
                         value="" formControlName="lastName"/> 
                     <label
