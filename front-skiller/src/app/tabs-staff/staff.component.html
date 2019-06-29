@@ -1,7 +1,7 @@
 <mat-tab-group>
   <mat-tab label="Form">
     <div>
-      <app-staff-form [idStaff]="idStaff"></app-staff-form>
+      <app-staff-form [idStaff]="idStaff" (messengerInit)="initCollaborator(true)"></app-staff-form>
     </div>
   </mat-tab>
   <mat-tab label="Projects">

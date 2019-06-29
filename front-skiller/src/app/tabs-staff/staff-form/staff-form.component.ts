@@ -31,11 +31,17 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	LAST_NAME = 2;
 
 	/**
-     * This messenger is there to be used in one case : if the parent component is the startingSetup.
-     * The staff member has been updated during the first start process.
+     * This messenger is there to be used in one case : if the parent component is the INSTALLATION SETUP.
+     * The staff member has been updated during the first setup of INSTALLATION.
      * We can continue to next step.
      */
 	@Output() messengerStaffUpdated = new EventEmitter<Collaborator>();
+
+	/**
+	 * Inform the parent component, e.g. the staff component that we must switch the context to an empty collaborator.
+	 */
+	@Output() messengerInit = new EventEmitter<Boolean>();
+
 
 	private collaborator: Collaborator;
 
@@ -219,17 +225,19 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		}
 
 		if ( (newFirstName !== oldFirstName) && (newLastName !== oldLastName) ) {
-
 			this.messageBoxService.question(
 				'Staff Form',
-				'You have already changed the first and the last name of ' + oldFirstName + ' ' + oldLastName
-				+ '<br/>Click \'Yes\' if you want to create a new staff.<br/>\'No\' to continue updating this one.')
+				'You have already changed the first name and the last name of ' + oldFirstName + ' ' + oldLastName + '.'
+				+ '<br/>Maybe you do not want to change this record and just prefer to create a new one.<br/>'
+				+ '<br/>Click \'Yes\' if you want to create a new staff member' 
+				+ '<br/>\'No\' to continue updating this one.')
 				.pipe(take(1))
 				.subscribe(answer => {
 					if (answer) {
 						this.initStaff();
-						this.profileStaff.get('firstName').setValue(newFirstName);
-						this.profileStaff.get('lastName').setValue(newLastName);
+						this.collaborator.firstName = newFirstName;
+						this.collaborator.lastName = newLastName;
+						this.staffDataExchangeService.changeCollaborator(this.collaborator);
 					}
 				});
 		}
