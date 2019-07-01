@@ -37,7 +37,7 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 
 					switch (response.status) {
 						case 0:
-							setTimeout(() => messageService.error("Server is down or unreachable!"), 0);
+							setTimeout(() => messageService.error('Server is down or unreachable!'), 0);
 							break;
 						// The 404 error can be thrown from the back-end server for good reason,
 						// with its own appropriate message.

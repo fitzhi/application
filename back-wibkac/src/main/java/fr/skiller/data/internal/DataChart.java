@@ -53,9 +53,15 @@ public class DataChart implements Serializable {
     private String color ="whiteSmoke";
     
 	/**
-	 * Number of source files contained within this directory and its subsequent sub-directories.
+	 * Number of source files contained within this directory.
 	 */        
     private int numberOfFiles;
+    
+	/**
+	 * <p>Proportion of the location inside the diagram.</p>
+	 * <i>A 2000 lines Java Class will have a higher proportion than  2 small class of 100 lines</i>
+	 */        
+    private int importance = 0;
     
 	/**
 	 * Array containing the sub-directories of the actual directory.
@@ -99,22 +105,23 @@ public class DataChart implements Serializable {
 	/**
 	 * Inject a source file in the collection.
 	 * @param current position
-	 * @param dirAndFilename an array containing the remaining sub-directories and the filename of the source element.
+	 * @param dirAndFilename an array containing the clean path of a source file.
+	 * @param importance the importance of a source file
 	 * @param date of the latest commit.
 	 * @param committers Array of staff identifiers who are committed in this source file
 	 */
-	public void injectFile(final DataChart element, final String[] dirAndFilename, final LocalDate latestCommit, final int[] committers) {
 		// We register the filename in the source files set
+	public void injectFile(final DataChart element, String[] dirAndFilename, final long importance, final LocalDate latestCommit, final int[] committers) {
 		if (dirAndFilename.length == 1) {
-			element.addSource(dirAndFilename[0], latestCommit, committers);
+			element.addSource(dirAndFilename[0], importance, latestCommit, committers);
 			if ((element.getLastUpdate() == null) || (element.getLastUpdate().isBefore(latestCommit)))  {
 				element.setLastUpdate(latestCommit);
 			}
 			return;
 		}
 		// Recursive call.
-		injectFile( element.addSubDir(new DataChart(dirAndFilename[0])), 
-				Arrays.copyOfRange(dirAndFilename, 1, dirAndFilename.length), 
+		injectFile( element.addSubDir(new DataChart(dirAndFilename[0])),  
+				Arrays.copyOfRange(dirAndFilename, 1, dirAndFilename.length), importance,
 				latestCommit, committers);
 	}
 	
@@ -128,10 +135,13 @@ public class DataChart implements Serializable {
 	}
 	
 	/**
-	 * Add a source file inside the collection, and subsequently, update the number of elements declared in that sub-directory.
+	 * <p>
+	 * Add a source file inside the collection, and subsequently, 
+	 * update the number of elements declared in that sub-directory.
+	 * </p>
 	 * @param source the source filename.
 	 */
-	public void addSource(SourceFile sourceFile) {
+	public void addSource(SourceFile sourceFile, long importance) {
 		
 		if (this.sources == null) {
 			this.sources = new HashSet<>();
@@ -142,15 +152,17 @@ public class DataChart implements Serializable {
 		}
 		this.sources.add(sourceFile);
 		this.setNumberOfFiles(this.sources.size());
+		this.addToImportance(importance);
 	}
 
 	/**
 	 * Add a filename inside the collection, and subsequently, update the number of elements declared in that sub-directory.
 	 * @param filename the source filename.
+	 * @param importance importance of this source file within the project
 	 * @param lastCommit The most recent date of commit done on this file.
 	 * @param committers list of committers involved in this source file
 	 */
-	public void addSource(final String filename, final LocalDate lastCommit, final int[] committers) {
+	public void addSource(final String filename, long importance, final LocalDate lastCommit, final int[] committers) {
 		
 		if (this.sources == null) {
 			this.sources = new HashSet<>();
@@ -160,6 +172,7 @@ public class DataChart implements Serializable {
 		}
 		this.sources.add(new SourceFile(filename, lastCommit, committers));
 		this.setNumberOfFiles(this.sources.size());
+		this.addToImportance(importance);
 	}
 	/**
 	 * Set the risk level.
@@ -252,6 +265,21 @@ public class DataChart implements Serializable {
 	 */
 	public void setNumberOfFiles(int numberOfFiles) {
 		this.numberOfFiles = numberOfFiles;
+	}
+
+	/**
+	 * @return the proportion representing this location.
+	 */
+	public long getImportance() {
+		return importance;
+	}
+
+	/**
+	 * @param importance the importance of a source file located in that directory 
+	 * and contributing to the weight of that location in the project.
+	 */
+	public void addToImportance(long importance) {
+		this.importance += importance;
 	}
 
 	/**

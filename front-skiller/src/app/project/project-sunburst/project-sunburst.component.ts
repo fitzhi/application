@@ -239,7 +239,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	handleSunburstData(response: any) {
 		if (this.myChart !== null) {
-			this.myChart.data(response.sunburstData).width(500).height(500).label('location').size('numberOfFiles').color('color')
+			this.myChart.data(response.sunburstData).width(500).height(500).label('location').size('importance').color('color')
 				(document.getElementById('chart'));
 			if (typeof this.dataGhosts === 'undefined') {
 				this.dataGhosts = new ProjectGhostsDataSource(this.project);

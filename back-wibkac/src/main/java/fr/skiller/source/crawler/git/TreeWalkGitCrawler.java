@@ -4,15 +4,12 @@
 package fr.skiller.source.crawler.git;
 
 import static fr.skiller.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
-import static fr.skiller.Error.CODE_INVALID_LOGIN_PASSWORD;
+import static fr.skiller.Error.CODE_PARSING_SOURCE_CODE;
 import static fr.skiller.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
 import static fr.skiller.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
-import static fr.skiller.Error.MESSAGE_INVALID_LOGIN_PASSWORD;
-import static fr.skiller.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
-import static fr.skiller.Error.CODE_PARSING_SOURCE_CODE;
 import static fr.skiller.Error.MESSAGE_PARSING_SOURCE_CODE;
-
-
+import static fr.skiller.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
+import static fr.skiller.Error.SHOULD_NOT_PASS_HERE;
 import static fr.skiller.Global.LN;
 import static fr.skiller.Global.UNKNOWN;
 import static fr.skiller.controller.ProjectController.DASHBOARD_GENERATION;
@@ -43,6 +40,7 @@ import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.xmlbeans.impl.jam.xml.TunnelledException;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -88,10 +86,12 @@ import fr.skiller.data.source.CommitHistory;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
 import fr.skiller.data.source.Contributor;
+import fr.skiller.data.source.importance.FileSizeImportance;
+import fr.skiller.data.source.importance.ImportanceCriteria;
+import fr.skiller.data.source.importance.AssessorImportance;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.AbstractScannerDataGenerator;
 import fr.skiller.source.crawler.RepoScanner;
-import static fr.skiller.Error.SHOULD_NOT_PASS_HERE;
 
 /**
  * <p>
@@ -193,11 +193,16 @@ public class TreeWalkGitCrawler extends AbstractScannerDataGenerator implements 
 
 	@Autowired
 	DataSaver dataSaver;
-	
+
 	/**
 	 * Initialization of the Google JSON parser.
 	 */
 	Gson gson = new Gson();
+
+	/**
+	 * Evaluation of the importance of file.
+	 */
+	AssessorImportance scorer = new FileSizeImportance();
 	
 	/**
 	 * GitScanner constructor.
@@ -416,9 +421,10 @@ public class TreeWalkGitCrawler extends AbstractScannerDataGenerator implements 
 	 * @param changes the change collection
 	 * @param renameDetector a rename detector created for this repository.
 	 * @throws IOException thrown during the crawl
+	 * @throws SkillerException thrown during the crawl
 	 */
 	private void processWalkEntry (RevCommit commit, TreeWalk treeWalk, List<SCMChange> gitChanges, RenameDetector renameDetector) 
-			throws IOException {
+			throws IOException, SkillerException {
     	if (treeWalk.getTreeCount() == 1) {
     		System.out.println("treeWalk.getTreeCount()  " + commit.getName());
     	}
@@ -455,9 +461,10 @@ public class TreeWalkGitCrawler extends AbstractScannerDataGenerator implements 
         			// The DELETE is treated like an ADD operation.
         			if (DEV_NULL.equals(de.getNewPath())) {
             			PersonIdent author = commit.getAuthorIdent();
-               			gitChanges.add(new SCMChange(commit.getId().toString(), de.getOldPath(), 
+            			SCMChange change = new SCMChange(commit.getId().toString(), de.getOldPath(), 
                					author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-               					author.getName(), author.getEmailAddress()));
+               					author.getName(), author.getEmailAddress());
+            			gitChanges.add(change);
         			}
         			break;
         		case MODIFY:
@@ -627,7 +634,8 @@ public class TreeWalkGitCrawler extends AbstractScannerDataGenerator implements 
 					repositoryOfCommit.addCommit(
 							change.getPath(), 
 							change.isIdentified() ? change.getIdStaff() : UNKNOWN,
-							change.getDateCommit())
+							change.getDateCommit(),
+							-1)
 					);
 			
   		}
@@ -838,7 +846,7 @@ public class TreeWalkGitCrawler extends AbstractScannerDataGenerator implements 
 				.filter(it -> ((it.idStaff == settings.getIdStaffSelected()) || (settings.getIdStaffSelected() == 0)))
 				.filter(it -> (it.getDateCommit()).isAfter(startingDate))
 				.forEach(item -> personalizedRepo.addCommit(commits.sourcePath, item.idStaff, 
-						item.getDateCommit()));
+						item.getDateCommit(), -1));
 		}
 		return personalizedRepo;
 	}
@@ -955,4 +963,14 @@ public class TreeWalkGitCrawler extends AbstractScannerDataGenerator implements 
 				});
 					
     	}
+
+	@Override
+	public void updateImportance(Project project, List<SCMChange> changes) throws SkillerException {
+		throw new SkillerRuntimeException("SHOULD NOT PASS HERE!");
+	}
+
+	@Override
+	public void removeNonRelevantDirectories(Project project, List<SCMChange> changes) {
+		throw new SkillerRuntimeException("SHOULD NOT PASS HERE!");
+	}
 }

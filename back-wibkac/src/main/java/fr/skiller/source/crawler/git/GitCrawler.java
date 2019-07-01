@@ -47,11 +47,14 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.RenameDetector;
+import org.eclipse.jgit.errors.IncorrectObjectTypeException;
+import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevCommitList;
@@ -91,6 +94,9 @@ import fr.skiller.data.source.CommitHistory;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
 import fr.skiller.data.source.Contributor;
+import fr.skiller.data.source.importance.FileSizeImportance;
+import fr.skiller.data.source.importance.ImportanceCriteria;
+import fr.skiller.data.source.importance.AssessorImportance;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.AbstractScannerDataGenerator;
 import fr.skiller.source.crawler.RepoScanner;
@@ -100,14 +106,16 @@ import static fr.skiller.Error.SHOULD_NOT_PASS_HERE;
  * <p>
  * GIT implementation of a source code crawler
  * </p>
- * @author Fr&eacute;d&eacute;ric VIDAL 
+ * 
+ * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @Service("GIT")
 public class GitCrawler extends AbstractScannerDataGenerator implements RepoScanner {
 
 	/**
 	 * These directories will be removed from the full path of class files<br/>
-	 * For example : <code>/src/main/java/java/util/List.java</code> will be treated like <code>java/util/List.java</code>
+	 * For example : <code>/src/main/java/java/util/List.java</code> will be treated
+	 * like <code>java/util/List.java</code>
 	 */
 	@Value("${patternsCleanup}")
 	private String patternsCleanup;
@@ -115,7 +123,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	/**
 	 * Cleanup patterns list.
 	 */
- 	private List<Pattern> patternsCleanupList;
+	private List<Pattern> patternsCleanupList;
 
 	/**
 	 * Patterns to take account, OR NOT, a file within the parsing process.<br/>
@@ -125,25 +133,27 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	private String patternsInclusion;
 
 	/**
- 	 * List of file patterns, to be included, or excluded, from the parsing process
- 	 */
+	 * List of file patterns, to be included, or excluded, from the parsing process
+	 */
 	private List<Pattern> patternsInclusionList;
 
- 	/**
- 	 * The logger for the GitScanner.
- 	 */
+	/**
+	 * The logger for the GitScanner.
+	 */
 	final Logger logger = LoggerFactory.getLogger(GitCrawler.class.getCanonicalName());
-	
-	/** 
-	 * A tree representing a class like <code>fr.common.my-package.MyClass"</code> might create 3 nodes of <code>RiskChartData</code>.
+
+	/**
+	 * A tree representing a class like <code>fr.common.my-package.MyClass"</code>
+	 * might create 3 nodes of <code>RiskChartData</code>.
 	 * <ul>
 	 * <li>one for <code><b>fr</b></code></li>
 	 * <li>one for <code><b>common</b></code></li>
 	 * <li>one for <code><b>my-package</b></code></li>
 	 * </ul>
-	 * <b>BURT</b> Possibly, there is no source files present in <code><b>fr</b></code>. 
-	 * So instead of keeping 2 levels of hierarchy (with an empty one), 
-	 * it would be easier to aggregate the 2 directories into the resulting one : <code>fr.my-package</code>
+	 * <b>BURT</b> Possibly, there is no source files present in
+	 * <code><b>fr</b></code>. So instead of keeping 2 levels of hierarchy (with an
+	 * empty one), it would be easier to aggregate the 2 directories into the
+	 * resulting one : <code>fr.my-package</code>
 	 * </p>
 	 */
 	@Value("${collapseEmptyDirectory}")
@@ -160,34 +170,35 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	 */
 	@Autowired
 	ProjectHandler projectHandler;
-	
+
 	/**
 	 * Service in charge of caching the parsed repository.
 	 */
 	@Autowired
 	CacheDataHandler cacheDataHandler;
-	
+
 	/**
 	 * Service in charge of the evaluation of the risks.
 	 */
 	@Autowired()
 	@Qualifier("commitAndDevActive")
 	RiskProcessor riskSurveyor;
-	
+
 	/**
 	 * Collection of active tasks.
 	 */
 	@Autowired()
 	AsyncTask tasks;
-	
+
 	/**
-	 * Path access to retrieve the properties file for a given project  
-	 * By default, this file will be located in {@code /src/main/resources/repository-settings/}
+	 * Path access to retrieve the properties file for a given project By default,
+	 * this file will be located in {@code /src/main/resources/repository-settings/}
 	 */
 	@Value("${versionControl.ConnectionSettings}")
 	private String pathConnectionSettings;
-	
-	// Should the slices without source be average to the value of their children, or stayed in the void color.
+
+	// Should the slices without source be average to the value of their children,
+	// or stayed in the void color.
 	@Value("${Sunburst.fillTheHoles}")
 	private boolean fillTheHoles;
 
@@ -196,39 +207,33 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 	@Autowired
 	DataSaver dataSaver;
-	
+
 	/**
 	 * Initialization of the Google JSON parser.
 	 */
 	Gson gson = new Gson();
-	
+
 	/**
 	 * GitScanner constructor.
 	 */
 	public GitCrawler() {
 		// This constructor is an empty one.
 	}
-	
+
 	@PostConstruct
-    public void init() {
-		
-        patternsCleanupList = 
-				Arrays.asList(patternsCleanup.split(";"))
-				.stream()
-				.map( Pattern::compile )
-				.collect( Collectors.toList());
-		
+	public void init() {
+
+		patternsCleanupList = Arrays.asList(patternsCleanup.split(";")).stream().map(Pattern::compile)
+				.collect(Collectors.toList());
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("Pattern CLEANUP loaded from the file application.properties : ");
 			patternsCleanupList.stream().forEach(p -> logger.debug(p.pattern()));
 		}
- 		
-		patternsInclusionList = 
-				Arrays.asList(patternsInclusion.split(";"))
-				.stream()
-				.map(Pattern::compile)
-				.collect( Collectors.toList());
-		
+
+		patternsInclusionList = Arrays.asList(patternsInclusion.split(";")).stream().map(Pattern::compile)
+				.collect(Collectors.toList());
+
 		if (logger.isDebugEnabled()) {
 			logger.debug("Pattern INCLUSION loaded from the file application.properties : ");
 			patternsInclusionList.stream().forEach(p -> logger.debug(p.pattern()));
@@ -238,27 +243,26 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		super.parentStaffHandler = staffHandler;
 		super.parentProjectHandler = projectHandler;
 	}
-	
+
 	@Override
-	public void clone(final Project project, ConnectionSettings settings) 
+	public void clone(final Project project, ConnectionSettings settings)
 			throws IOException, GitAPIException, SkillerException {
 
 		// Will we execute a git.clone() or a git.pull().
 		// if TRUE, this will be a clone
 		boolean execClone;
-		
+
 		Path path;
-		if (project.getLocationRepository() == null) { 
+		if (project.getLocationRepository() == null) {
 			path = createDirectoryAsCloneDestination(project, settings);
 			execClone = true;
 		} else {
 			path = Paths.get(project.getLocationRepository());
 			if (logger.isDebugEnabled()) {
-				logger.debug(String.format(
-						"Pulling the repository %s inside the PREVIOUS path %s", 
-						settings.getUrl(), path.toAbsolutePath()));
-			}	
-			
+				logger.debug(String.format("Pulling the repository %s inside the PREVIOUS path %s", settings.getUrl(),
+						path.toAbsolutePath()));
+			}
+
 			// If the directory has been cleanup, we create a new one.
 			if (!path.toFile().exists()) {
 				path = createDirectoryAsCloneDestination(project, settings);
@@ -268,12 +272,10 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			}
 		}
 		if (execClone) {
-			Git.cloneRepository()
-					.setDirectory(path.toAbsolutePath().toFile())
-					.setURI(settings.getUrl())
-					.setCredentialsProvider(new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()))
-					.setProgressMonitor(new CustomProgressMonitor())
-					.call();
+			Git.cloneRepository().setDirectory(path.toAbsolutePath().toFile()).setURI(settings.getUrl())
+					.setCredentialsProvider(
+							new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()))
+					.setProgressMonitor(new CustomProgressMonitor()).call();
 			if (logger.isDebugEnabled()) {
 				logger.debug("Clone done & succcessful !");
 			}
@@ -286,27 +288,29 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			}
 		}
 
-		
 		// Saving the local repository location
 		projectHandler.saveLocationRepository(project.getId(), path.toFile().getCanonicalPath());
-		
+
 	}
-	
+
 	/**
-	 * Create a directory in the temp directory as a destination of the clone process.
-	 * @param project the actual project
-	 * @param settings the connection settings <i>(these settings are given for trace only support)</i>
-	 * @return the resulting path 
+	 * Create a directory in the temp directory as a destination of the clone
+	 * process.
+	 * 
+	 * @param project  the actual project
+	 * @param settings the connection settings <i>(these settings are given for
+	 *                 trace only support)</i>
+	 * @return the resulting path
 	 * @throws IOException an IO oops ! occurs. Too bad!
 	 */
 	private Path createDirectoryAsCloneDestination(Project project, ConnectionSettings settings) throws IOException {
-		// Creating a temporary local path where the remote project repository will be cloned.
-		Path path = Files.createTempDirectory("skiller_jgit_" +  project.getName() + "_");
+		// Creating a temporary local path where the remote project repository will be
+		// cloned.
+		Path path = Files.createTempDirectory("skiller_jgit_" + project.getName() + "_");
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(
-					"Cloning the repository %s inside the CREATED path %s", 
-					settings.getUrl(), path.toAbsolutePath()));
-		}	
+			logger.debug(String.format("Cloning the repository %s inside the CREATED path %s", settings.getUrl(),
+					path.toAbsolutePath()));
+		}
 		return path;
 	}
 
@@ -314,256 +318,264 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	public List<SCMChange> loadChanges(Repository repository) throws SkillerException {
 
 		List<SCMChange> gitChanges = new ArrayList<>();
-		
-		List<RevCommit> allCommits = new ArrayList<>(); 
-        try (Git git = new Git(repository)) {
-        	
-        	String treeName = "refs/heads/master"; // tag or branch
-        	for (RevCommit commit : git.log().add(repository.resolve(treeName)).call()) {
-                allCommits.add(commit);
-        	}        	
-        } catch (final IOException | GitAPIException e) {
-        	throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
-        }
-        
-        if (logger.isInfoEnabled()) {
-        	logger.info (String.format("Retrieving %d on the repository %s", allCommits.size(), repository.getDirectory().getAbsoluteFile() ));
-        }
-		
-		final Comparator<RevCommit> dateCommitComparator = 
-            (RevCommit revCommit1, RevCommit revCommit2) -> {
-				return revCommit1.getCommitterIdent().getWhen().compareTo(revCommit2.getCommitterIdent().getWhen());
-            };
-            
-        List<RevCommit> allDateAscendingCommits = allCommits.stream()
-                .sorted(dateCommitComparator)
-                .collect(Collectors.toList());
-				
-        ObjectId previous = null;
-        
-        for (RevCommit commit : allDateAscendingCommits) {
 
-			log (commit);
+		List<RevCommit> allCommits = new ArrayList<>();
+		try (Git git = new Git(repository)) {
+
+			List<String> tagOrBranchNames = git.branchList().call().stream()
+				.map(Ref::getName).collect(Collectors.toList());
 			
-            if (previous == null) {
-            	previous = commit.getTree().getId();
-            } else {
-            	ObjectId current = commit.getTree().getId();
-		        diff(repository, gitChanges, commit, previous, current);
-		        previous = current;
-            }
-	    	
-	        
-	        if ((logger.isDebugEnabled()) && (commit.getParentCount() >= 2)) {
-	        	logger.debug( String.format("commit '%s' with merge ?", commit.getShortMessage()));
-	        }
-		}		
+			for ( String tagOrBranchName : tagOrBranchNames) {
+				for (RevCommit commit : git.log().add(repository.resolve(tagOrBranchName)).call()) {
+					allCommits.add(commit);
+				}
+			}
+		} catch (final IOException | GitAPIException e) {
+			throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
+		}
+
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("Retrieving %d on the repository %s", allCommits.size(),
+					repository.getDirectory().getAbsoluteFile()));
+		}
+
+		final Comparator<RevCommit> dateCommitComparator = (RevCommit revCommit1, RevCommit revCommit2) -> {
+			return revCommit1.getCommitterIdent().getWhen().compareTo(revCommit2.getCommitterIdent().getWhen());
+		};
+
+		List<RevCommit> allDateAscendingCommits = allCommits.stream().sorted(dateCommitComparator)
+				.collect(Collectors.toList());
+
+		ObjectId previous = null;
+
+		for (RevCommit commit : allDateAscendingCommits) {
+
+			log(commit);
+
+			if (previous == null) {
+				previous = commit.getTree().getId();
+			} else {
+				ObjectId current = commit.getTree().getId();
+				diff(repository, gitChanges, commit, previous, current);
+				previous = current;
+			}
+
+			if ((logger.isDebugEnabled()) && (commit.getParentCount() >= 2)) {
+				logger.debug(String.format("commit '%s' with merge ?", commit.getShortMessage()));
+			}
+		}
 		return gitChanges;
 	}
 
-	private void diff(Repository repository, List<SCMChange> changes, RevCommit commit, ObjectId prevObjectId, ObjectId curObjectId) 
-		throws SkillerException {
+	private void diff(Repository repository, List<SCMChange> changes, RevCommit commit, ObjectId prevObjectId,
+			ObjectId curObjectId) throws SkillerException {
 
 		final RenameDetector renameDetector = new RenameDetector(repository);
 
 		try (ObjectReader reader = repository.newObjectReader()) {
-    		CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
-    		oldTreeIter.reset(reader, prevObjectId);
-    		CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
-    		newTreeIter.reset(reader, curObjectId);
+			CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+			oldTreeIter.reset(reader, prevObjectId);
+			CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+			newTreeIter.reset(reader, curObjectId);
 
-    		// finally get the list of changed files
-    		try (Git git = new Git(repository)) {
-                List<DiffEntry> diffs= git.diff()
-        		                    .setNewTree(newTreeIter)
-        		                    .setOldTree(oldTreeIter)
-        		                    .call();
-                
-                // Might be a rename with specific action
-                if (isRenamePossible(diffs)) {
-                	if (logger.isDebugEnabled()) {
-                		logger.debug(String.format("commit '%s' is treated as a 'rename' commit", commit.getShortMessage()));
-                	}
-            		renameDetector.addAll(diffs);
-                	List<DiffEntry> files = renameDetector.compute();
-	                processDiffEntries(changes, commit, files);
-                } else {
-	                processDiffEntries(changes, commit, diffs);
-                }
-    		}
+			// finally get the list of changed files
+			try (Git git = new Git(repository)) {
+				List<DiffEntry> diffs = git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();
+
+				// Might be a rename with specific action
+				if (isRenamePossible(diffs)) {
+					if (logger.isDebugEnabled()) {
+						logger.debug(
+								String.format("commit '%s' is treated as a 'rename' commit", commit.getShortMessage()));
+					}
+					renameDetector.addAll(diffs);
+					List<DiffEntry> files = renameDetector.compute();
+					processDiffEntries(changes, commit, files);
+				} else {
+					processDiffEntries(changes, commit, diffs);
+				}
+			}
 		} catch (final Exception e) {
-			throw new SkillerException (CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e); 
+			throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
 		}
 	}
-	
 
 	/**
 	 * Take in account the list of files impacted by a commit
-	 * @param gitChanges the complete list of changes detected in the studying repository
-	 * @param commit the actual commit evaluated
-	 * @param diffs the list of difference between this current commit and the previous one
-	 * @throws IOException thrown if any IO Oops occurs.
+	 * 
+	 * @param gitChanges the complete list of changes detected in the studying
+	 *                   repository
+	 * @param commit     the actual commit evaluated
+	 * @param diffs      the list of difference between this current commit and the
+	 *                   previous one
+	 * @throws SkillerException thrown if any problem occurs.
 	 */
-	private void processDiffEntries (List<SCMChange> gitChanges, RevCommit commit, List<DiffEntry> diffs) {
-        	
-        	for (DiffEntry de : diffs) {
-        		switch (de.getChangeType()) {
-        		case RENAME:
-                	if (logger.isDebugEnabled()) {
-                		logger.debug(String.format("%s is renammed into %s", de.getOldPath(), de.getNewPath()));
-                	}
-        			renameFilePath (de.getNewPath(), de.getOldPath(), gitChanges);
-        			break;
-        		case DELETE:
-           			if (DEV_NULL.equals(de.getNewPath())) {
-           				removeFilePath (de.getOldPath(), gitChanges);
-            		} else {
-           				throw new SkillerRuntimeException(String.format("%s REQUIRES TO BE NULL", de.getNewPath()));
-           			}
-           			break;
-        		case COPY:
-        			// 
-        			// We assume that the COPY change is connected to MERGE operations
-        			// Therefore the author of the merge is useless for the scope of this application
-        			// This committer did not touch the content of the source
-        			//
-        			break;
-        		case ADD: 
-        		case MODIFY: 
-        			PersonIdent author = commit.getAuthorIdent();
-           			gitChanges.add(new SCMChange(commit.getId().toString(), de.getNewPath(), 
-           					author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-           					author.getName(), author.getEmailAddress()));
-        			break;
-    			default: 
-    				if (logger.isDebugEnabled()) {
-    					logger.debug ( 
-    						String.format("Unexpected type of change %s %s %s",
-    							de.getChangeType(),
-    							de.getOldPath(),
-    							de.getNewPath()));
-    				}
-    				break;
-        		}
-        	}
+	private void processDiffEntries(List<SCMChange> gitChanges, RevCommit commit, List<DiffEntry> diffs)
+			throws SkillerException {
+
+		for (DiffEntry de : diffs) {
+			switch (de.getChangeType()) {
+			case RENAME:
+				if (logger.isDebugEnabled()) {
+					logger.debug(String.format("%s is renammed into %s", de.getOldPath(), de.getNewPath()));
+				}
+				renameFilePath(de.getNewPath(), de.getOldPath(), gitChanges);
+				break;
+			case DELETE:
+				if (DEV_NULL.equals(de.getNewPath())) {
+					removeFilePath(de.getOldPath(), gitChanges);
+				} else {
+					throw new SkillerRuntimeException(String.format("%s REQUIRES TO BE NULL", de.getNewPath()));
+				}
+				break;
+			case COPY:
+				//
+				// We assume that the COPY change is connected to MERGE operations
+				// Therefore the author of the merge is useless for the scope of this
+				// application
+				// This committer did not touch the content of the source
+				//
+				break;
+			case ADD:
+			case MODIFY:
+				PersonIdent author = commit.getAuthorIdent();
+				SCMChange change = new SCMChange(commit.getId().toString(), de.getNewPath(),
+						author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), author.getName(),
+						author.getEmailAddress());
+				gitChanges.add(change);
+				break;
+			default:
+				if (logger.isDebugEnabled()) {
+					logger.debug(String.format("Unexpected type of change %s %s %s", de.getChangeType(),
+							de.getOldPath(), de.getNewPath()));
+				}
+				break;
+			}
+		}
 	}
-	
+
 	/**
 	 * <p>
 	 * The rename of file is not correctly treated by the {@code git.diff()}.<br/>
-	 * This function detects the possibility of a rename, and jump into another Diff process more time consuming.
+	 * This function detects the possibility of a rename, and jump into another Diff
+	 * process more time consuming.
 	 * </p>
+	 * 
 	 * @param diffs
 	 * @return
 	 */
 	public boolean isRenamePossible(List<DiffEntry> diffs) {
-		boolean rename = diffs.stream()
-				.map(DiffEntry::getChangeType)
-				.anyMatch(ChangeType.ADD::equals);
+		boolean rename = diffs.stream().map(DiffEntry::getChangeType).anyMatch(ChangeType.ADD::equals);
 		if (rename) {
-			return diffs.stream()
-					.map(DiffEntry::getChangeType)
-					.anyMatch(ChangeType.DELETE::equals);
+			return diffs.stream().map(DiffEntry::getChangeType).anyMatch(ChangeType.DELETE::equals);
 		}
 		return rename;
 	}
 
 	@Override
-	public void finalizeListChanges(String sourceLocation, List<SCMChange> changes)  throws IOException {
-		
+	public void finalizeListChanges(String sourceLocation, List<SCMChange> changes) throws IOException {
+
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Finalizing the changes collection with the repository location %s", sourceLocation));
+			logger.debug(
+					String.format("Finalizing the changes collection with the repository location %s", sourceLocation));
 		}
 		/*
-		 * For DEBUG purpose we make a redundant test on the list of changes
-		 * Are all files in the repository referenced in the list of change ?
-		 * They should be all present.
+		 * For DEBUG purpose we make a redundant test on the list of changes Are all
+		 * files in the repository referenced in the list of change ? They should be all
+		 * present.
 		 */
 		if (logger.isDebugEnabled()) {
 			logger.debug("List of ghost files");
 			List<String> content;
-			try (Stream<Path> stream = Files
-					.find(Paths.get(sourceLocation), 999, (p, bfa) -> bfa.isRegularFile())) { 
-					content = stream
-						.map(Path::toString)
-						.map(s -> s.substring(sourceLocation.length()))
+			try (Stream<Path> stream = Files.find(Paths.get(sourceLocation), 999, (p, bfa) -> bfa.isRegularFile())) {
+				content = stream.map(Path::toString).map(s -> s.substring(sourceLocation.length()))
 						.collect(Collectors.toList());
 
-					content.stream()
-						.filter(s -> changes.stream().map(SCMChange::getPath).noneMatch(s::equals))
-						.forEach(logger::debug); 
-			} 
+				content.stream().filter(s -> changes.stream().map(SCMChange::getPath).noneMatch(s::equals))
+						.forEach(logger::debug);
+			}
 		}
 
 		Iterator<SCMChange> iter = changes.iterator();
-		while(iter.hasNext()){
-		    SCMChange change = iter.next();
-		    // File does not exist anymore on the repository
-		    File f = Paths.get(sourceLocation + change.getPath()).toFile();
-		    if(!f.exists()) {
-		        iter.remove();
-		    } else {
-			    // Hidden files, mainly internal GIT files are removed. 
-			    if (f.isHidden()) {
-			    	iter.remove();
-			    }
-		    }
+		while (iter.hasNext()) {
+			SCMChange change = iter.next();
+			// File does not exist anymore on the repository
+			File f = Paths.get(sourceLocation + change.getPath()).toFile();
+			if (!f.exists()) {
+				iter.remove();
+			} else {
+				// Hidden files, mainly internal GIT files are removed.
+				if (f.isHidden()) {
+					iter.remove();
+				}
+			}
 		}
 	}
 
 	@Override
 	public void filterEligible(List<SCMChange> changes) {
 		Iterator<SCMChange> iter = changes.iterator();
-		while(iter.hasNext()){
-		    SCMChange change = iter.next();
-		    if (!isElligible(change.getPath())) {
-		    	iter.remove();
-		    }
-		}		
+		while (iter.hasNext()) {
+			SCMChange change = iter.next();
+			if (!isElligible(change.getPath())) {
+				iter.remove();
+			}
+		}
 	}
-	
+
 	@Override
 	public void cleanupPaths(List<SCMChange> changes) {
 		changes.stream().forEach(change -> change.setPath(cleanupPath(change.getPath())));
 	}
-	
+
+	@Override
+	public void removeNonRelevantDirectories(Project project, List<SCMChange> changes) {
+		changes.removeIf(change -> change.getPath().contains("docs/")); 
+		changes.removeIf(change -> change.getPath().contains("com/microsoft/schemas")); 
+		changes.removeIf(change -> change.getPath().contains("vegeo-ihm-testing/")); 
+		changes.removeIf(change -> change.getPath().contains("maquettes")); 
+		changes.removeIf(change -> change.getPath().contains("perf/")); 
+		changes.removeIf(change -> change.getPath().contains("env-dev/config")); 
+	}
 	
 	/**
 	 * <p>
 	 * Take in account the fact that a file has been renamed.<br/>
 	 * All records with the old path will be renamed to the new one.
 	 * </p>
-	 * @param newPath the new file path
-	 * @param oldPath the old file path
+	 * 
+	 * @param newPath    the new file path
+	 * @param oldPath    the old file path
 	 * @param gitChanges the changes collection
 	 */
-	private void renameFilePath (String newPath, String oldPath, List<SCMChange> gitChanges) {
-		gitChanges.stream()
-			.filter(change -> oldPath.equals(change.getPath()))
-			.forEach(change -> change.setPath(newPath));
+	private void renameFilePath(String newPath, String oldPath, List<SCMChange> gitChanges) {
+		gitChanges.stream().filter(change -> oldPath.equals(change.getPath()))
+				.forEach(change -> change.setPath(newPath));
 	}
-	
+
 	/**
 	 * <p>
 	 * Remove a path from the collection of changes.
 	 * </p>
+	 * 
 	 * @param removedPath the path removed from the file system
-	 * @param gitChanges the changes collection
+	 * @param gitChanges  the changes collection
 	 */
-	private void removeFilePath (String removedPath, List<SCMChange> gitChanges) {
+	private void removeFilePath(String removedPath, List<SCMChange> gitChanges) {
 		Iterator<SCMChange> iter = gitChanges.iterator();
-		while(iter.hasNext()){
-		    SCMChange change = iter.next();
-		    if (change.getPath().equals(removedPath)) {
-		        iter.remove();
-		    } 
+		while (iter.hasNext()) {
+			SCMChange change = iter.next();
+			if (change.getPath().equals(removedPath)) {
+				iter.remove();
+			}
 		}
-	} 
-	
+	}
+
 	@Override
-	public CommitRepository parseRepository(final Project project, final ConnectionSettings settings) throws IOException, SkillerException {
- 
-		// Test if this repository is available in cache. 
+	public CommitRepository parseRepository(final Project project, final ConnectionSettings settings)
+			throws IOException, SkillerException {
+
+		// Test if this repository is available in cache.
 		// If this repository exists, return it immediately.
 		if (cacheDataHandler.hasCommitRepositoryAvailable(project)) {
 			if (logger.isDebugEnabled()) {
@@ -571,31 +583,28 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			}
 
 			CommitRepository repository = cacheDataHandler.getRepository(project);
-			
-			// Since the last parsing of the repository, some developers might have been declared and are responding now to unknown pseudos.
+
+			// Since the last parsing of the repository, some developers might have been
+			// declared and are responding now to unknown pseudos.
 			// We cleanup the set.
-			repository.setUnknownContributors(
-						repository
-						.unknownContributors()	
-						.stream()
-						.filter(pseudo -> (staffHandler.lookup(pseudo) == null))
-						.collect(Collectors.toSet())
-						);
-			
+			repository.setUnknownContributors(repository.unknownContributors().stream()
+					.filter(pseudo -> (staffHandler.lookup(pseudo) == null)).collect(Collectors.toSet()));
+
 			return repository;
 		}
-		
+
 		if (project.getLocationRepository() == null) {
-			throw new SkillerException(Error.CODE_REPO_MUST_BE_ALREADY_CLONED, Error.MESSAGE_REPO_MUST_BE_ALREADY_CLONED);
+			throw new SkillerException(Error.CODE_REPO_MUST_BE_ALREADY_CLONED,
+					Error.MESSAGE_REPO_MUST_BE_ALREADY_CLONED);
 		}
-		
+
 		// Unknown committers
 		final Set<String> unknown;
-		
-		// Repository 
+
+		// Repository
 		final CommitRepository repositoryOfCommit;
-		
-  		try (Git git = Git.open(new File(project.getLocationRepository())) ) {
+
+		try (Git git = Git.open(new File(project.getLocationRepository()))) {
 
 			Repository repo = git.getRepository();
 			/**
@@ -606,38 +615,47 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				logger.debug(String.format("loadChanges (%s) returns %d entries", project.getName(), changes.size()));
 			}
 			dataSaver.saveChanges(project, changes);
-			
+
 			/**
 			 * We finalize & cleanup the content of the collection
 			 */
-			this.finalizeListChanges(
-					project.getLocationRepository()+"/", 
-					changes);
+			this.finalizeListChanges(project.getLocationRepository() + "/", changes);
 			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("finalizeListChanges (%s) returns %d entries", project.getName(), changes.size()));
+				logger.debug(String.format("finalizeListChanges (%s) returns %d entries", project.getName(),
+						changes.size()));
 			}
-			
+
 			/**
 			 * We filter the collection on eligible entries (.java; .js...)
 			 */
 			this.filterEligible(changes);
 			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("filterEligible (%s) returns %d entries", project.getName(), changes.size()));
+				logger.debug(
+						String.format("filterEligible (%s) returns %d entries", project.getName(), changes.size()));
 			}
+
+			// Updating the importance
+			this.updateImportance(project, changes);
 			
 			/**
-			 * We cleanup the pathnames each location (e.g. "src/main/java" is removed) 
+			 * We cleanup the pathnames each location (e.g. "src/main/java" is removed)
 			 */
 			this.cleanupPaths(changes);
+
+			/**
+			 * We remove the non relevant directories from the crawl
+			 */
+			this.removeNonRelevantDirectories(project, changes);
+			
 			
 			repositoryOfCommit = new BasicCommitRepository();
-			
-	        /**
-	         * Set of unknown contributors having work on this repository.
-	         */
-	        unknown = repositoryOfCommit.unknownContributors();
 
-	        /**
+			/**
+			 * Set of unknown contributors having work on this repository.
+			 */
+			unknown = repositoryOfCommit.unknownContributors();
+
+			/**
 			 * We update the staff identifier on each change entry.
 			 */
 			this.updateStaff(project, changes, unknown);
@@ -646,11 +664,12 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			 * Retrieve the list of contributors involved in the project.
 			 */
 			List<Contributor> contributors = this.gatherContributors(changes);
-			
+
 			if (logger.isDebugEnabled()) {
-				logger.debug("Taking account of retrieved contributors from the repository into the project list of participants");
+				logger.debug(
+						"Taking account of retrieved contributors from the repository into the project list of participants");
 			}
-			
+
 			/**
 			 * Update the staff team missions with the contributors.
 			 */
@@ -659,149 +678,129 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				logger.debug(String.format("%d contributors retrieved : ", contributors.size()));
 				contributors.stream().forEach(contributor -> {
 					String fullname = staffHandler.getFullname(contributor.getIdStaff());
-					logger.debug(String.format(
-							"%d %s", 
-							contributor.getIdStaff(), (fullname != null) ? fullname : "unknown"));
+					logger.debug(String.format("%d %s", contributor.getIdStaff(),
+							(fullname != null) ? fullname : "unknown"));
 				});
 			}
-			
-	        // Displaying results...
-	        if (logger.isWarnEnabled()) {
-	        	unknown.stream().forEach(logger::warn);
-	        }
-	        
-			changes.stream().forEach(
-					change -> 
-					repositoryOfCommit.addCommit(
-							change.getPath(), 
-							change.isIdentified() ? change.getIdStaff() : UNKNOWN,
-							change.getDateCommit())
-					);
-			
-  		}
-			
-        // Saving the repository into the cache
+
+			// Displaying results...
+			if (logger.isWarnEnabled()) {
+				unknown.stream().forEach(logger::warn);
+			}
+
+			changes.stream()
+					.forEach(change -> repositoryOfCommit.addCommit(change.getPath(),
+							change.isIdentified() ? change.getIdStaff() : UNKNOWN, change.getDateCommit(),
+							change.getImportance()));
+
+		}
+
+		// Saving the repository into the cache
 		cacheDataHandler.saveRepository(project, repositoryOfCommit);
-		
+
 		return repositoryOfCommit;
 	}
- 	
+
 	/**
 	 * Log a commit record in debug mode.
+	 * 
 	 * @param commit the given commit
 	 */
-	
-	private void log (RevCommit commit) {
+
+	private void log(RevCommit commit) {
 		if (logger.isDebugEnabled()) {
 			PersonIdent author = commit.getAuthorIdent();
 			StringBuilder sb = new StringBuilder();
-			sb.append(Global.LN)
-				.append ("shortMessage : " + commit.getShortMessage())
-				.append(Global.LN)
-				.append("id : " + author.getEmailAddress())
-				.append (Global.LN)
-				.append("date : " + author.getWhen())
-				.append (Global.LN)
-				.append("authorIdent.name : " + author.getName())
-				.append (Global.LN).append(Global.LN);
+			sb.append(Global.LN).append("shortMessage : " + commit.getShortMessage()).append(Global.LN)
+					.append("id : " + author.getEmailAddress()).append(Global.LN).append("date : " + author.getWhen())
+					.append(Global.LN).append("authorIdent.name : " + author.getName()).append(Global.LN)
+					.append(Global.LN);
 			logger.debug(sb.toString());
-		}	
-		
+		}
+
 	}
-	
-	
- 	/**
- 	 * Check if the path is an eligible source for the activity dashboard.
- 	 * @param path
- 	 * @return True if the path should be included
- 	 */
- 	boolean isElligible (final String path) {
- 		
- 		boolean select = true;
- 		for (Pattern pattern : patternsInclusionList) {
- 			Matcher matcher = pattern.matcher(path);
- 			if (!matcher.find()) {
- 				select = false;
- 			}
- 		}
- 		
- 		return select;
- 	}
- 
- 	@Override
-	public String cleanupPath (final String path) {
 
- 		String cleanupPath = "";
+	/**
+	 * Check if the path is an eligible source for the activity dashboard.
+	 * 
+	 * @param path
+	 * @return True if the path should be included
+	 */
+	boolean isElligible(final String path) {
 
- 		for (Pattern pattern : patternsCleanupList) {
- 			Matcher matcher = pattern.matcher(path);
- 			if (matcher.find() && (cleanupPath.length()==0)) {
- 				cleanupPath = path.substring(0, matcher.start()+1) + path.substring(matcher.end());
- 			}
- 		}
- 		return (cleanupPath.length() == 0) ? path : cleanupPath;
- 	}
+		boolean select = true;
+		for (Pattern pattern : patternsInclusionList) {
+			Matcher matcher = pattern.matcher(path);
+			if (!matcher.find()) {
+				select = false;
+			}
+		}
+
+		return select;
+	}
+
+	@Override
+	public String cleanupPath(final String path) {
+
+		String cleanupPath = "";
+
+		for (Pattern pattern : patternsCleanupList) {
+			Matcher matcher = pattern.matcher(path);
+			if (matcher.find() && (cleanupPath.length() == 0)) {
+				cleanupPath = path.substring(0, matcher.start() + 1) + path.substring(matcher.end());
+			}
+		}
+		return (cleanupPath.length() == 0) ? path : cleanupPath;
+	}
 
 	@Override
 	public List<Contributor> gatherContributors(List<SCMChange> changes) {
 		Set<Integer> idContributors = new HashSet<>();
-		changes.stream()
-			.map(SCMChange::getIdStaff)
-			.filter(idStaff -> idStaff != 0)
-			.distinct()
-			.forEach(idContributors::add);
-		
+		changes.stream().map(SCMChange::getIdStaff).filter(idStaff -> idStaff != 0).distinct()
+				.forEach(idContributors::add);
+
 		List<Contributor> contributors = new ArrayList<>();
 		for (int idStaff : idContributors) {
-			
+
 			// The first commit submitted by this staff member
-			LocalDate firstCommit = changes.stream()
-					.filter(change -> idStaff == change.getIdStaff())
-					.map(SCMChange::getDateCommit)
-					.min( Comparator.comparing( LocalDate::toEpochDay ) )
+			LocalDate firstCommit = changes.stream().filter(change -> idStaff == change.getIdStaff())
+					.map(SCMChange::getDateCommit).min(Comparator.comparing(LocalDate::toEpochDay))
 					.orElseThrow(() -> new SkillerRuntimeException(SHOULD_NOT_PASS_HERE));
 
 			// The last commit submitted by this staff member
-			LocalDate lastCommit = 
-					changes.stream()
-					.filter(change -> idStaff == change.getIdStaff())
-					.map(SCMChange::getDateCommit)
-					.max( Comparator.comparing( LocalDate::toEpochDay ) )
+			LocalDate lastCommit = changes.stream().filter(change -> idStaff == change.getIdStaff())
+					.map(SCMChange::getDateCommit).max(Comparator.comparing(LocalDate::toEpochDay))
 					.orElseThrow(() -> new SkillerRuntimeException(SHOULD_NOT_PASS_HERE));
-			
-			long numberOfCommits = changes.stream()
-						.filter(change -> idStaff == change.getIdStaff())
-						.map(SCMChange::getCommitId)
-						.distinct()
-						.count();
-						
-			long numberOfFiles = changes.stream()
-					.filter(change -> idStaff == change.getIdStaff())
-					.map(SCMChange::getPath)
-					.distinct()
-					.count();
-		
-			contributors.add (
-					new Contributor(idStaff, firstCommit , lastCommit, (int) numberOfCommits, (int) numberOfFiles));
+
+			long numberOfCommits = changes.stream().filter(change -> idStaff == change.getIdStaff())
+					.map(SCMChange::getCommitId).distinct().count();
+
+			long numberOfFiles = changes.stream().filter(change -> idStaff == change.getIdStaff())
+					.map(SCMChange::getPath).distinct().count();
+
+			contributors
+					.add(new Contributor(idStaff, firstCommit, lastCommit, (int) numberOfCommits, (int) numberOfFiles));
 		}
-		
+
 		return contributors;
 	}
 
 	@Override
 	@Async
-	public RiskDashboard generateAsync(final Project project, final SettingsGeneration settings) throws SkillerException, GitAPIException, IOException {
+	public RiskDashboard generateAsync(final Project project, final SettingsGeneration settings)
+			throws SkillerException, GitAPIException, IOException {
 		try {
-			tasks.addTask( DASHBOARD_GENERATION, "project", project.getId());
+			tasks.addTask(DASHBOARD_GENERATION, "project", project.getId());
 			return generate(project, settings);
 		} finally {
 			tasks.removeTask(DASHBOARD_GENERATION, "project", project.getId());
 		}
 	}
-	
+
 	@Override
-	public RiskDashboard generate(final Project project, final SettingsGeneration cfgGeneration) throws IOException, SkillerException, GitAPIException {
-		
+	public RiskDashboard generate(final Project project, final SettingsGeneration cfgGeneration)
+			throws IOException, SkillerException, GitAPIException {
+
 		final ConnectionSettings settings = connectionSettings(project);
 
 		if (!cacheDataHandler.hasCommitRepositoryAvailable(project)) {
@@ -809,62 +808,63 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("The project %s is cloned into a temporay directory", project.getName()));
 			}
-		}	
+		}
 
-		// If a cache is detected and available for this project, it will be returned by this method.
-		// This variable is not final. Might be overridden by the filtering operation (date of staff member filtering)
+		// If a cache is detected and available for this project, it will be returned by
+		// this method.
+		// This variable is not final. Might be overridden by the filtering operation
+		// (date of staff member filtering)
 		CommitRepository repo = this.parseRepository(project, settings);
 		if (logger.isDebugEnabled()) {
-			logger.debug(
-					"The repository has been parsed. It contains "
-					+ repo.size() + " records in the repository");
+			logger.debug("The repository has been parsed. It contains " + repo.size() + " records in the repository");
 		}
-		
+
 		// Does the process requires a personalization ?
-		// e.g. filtering on a staff identifier or starting the history crawl from a starting date
+		// e.g. filtering on a staff identifier or starting the history crawl from a
+		// starting date
 		if (cfgGeneration.requiresPersonalization()) {
 			repo = personalizeRepo(repo, cfgGeneration);
 		}
-		
+
 		RiskDashboard data = this.aggregateDashboard(project, repo);
-		
-		
+
 		// We collapse empty directory inside their first sub-directory
 		// the node com & the node google will become one single node com/google
-		if (collapseEmptyDirectory ) {
+		if (collapseEmptyDirectory) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("Aggregating empty directories in the chart");
 			}
 			dataChartHandler.aggregateDataChart(data.riskChartData);
 		}
 
-		
 		// Evaluate the risk for each directory, and sub-directory, in the repository.
 		final List<StatActivity> statsCommit = new ArrayList<>();
 		this.riskSurveyor.evaluateTheRisk(repo, data.riskChartData, statsCommit);
-		
-		// Fill the holes for directories without source files, and therefore without risk level measured.
+
+		// Fill the holes for directories without source files, and therefore without
+		// risk level measured.
 		// We do not fill the holes if the chart is filtered on a specific developer
-		if (fillTheHoles && cfgGeneration.getIdStaffSelected()==0) {
+		if (fillTheHoles && cfgGeneration.getIdStaffSelected() == 0) {
 			this.riskSurveyor.meanTheRisk(data.riskChartData);
 		}
-		
-		// Evaluate the preview display for each slice of the sunburst chart.  
+
+		// Evaluate the preview display for each slice of the sunburst chart.
 		this.riskSurveyor.setPreviewSettings(data.riskChartData);
 
 		if (logger.isDebugEnabled()) {
-			if ( (data.undefinedContributors != null) && (!data.undefinedContributors.isEmpty()) ) {
+			if ((data.undefinedContributors != null) && (!data.undefinedContributors.isEmpty())) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("Unknown contributors detected during the dashboard generation").append(LN);
 				data.undefinedContributors.stream().forEach(ukwn -> sb.append(ukwn.getPseudo()).append(LN));
 				logger.debug(sb.toString());
 			}
-			
+
 			if ((project.getGhosts() != null) && (!project.getGhosts().isEmpty())) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("Registered ghosts in the project record :").append(LN);
-				project.getGhosts().stream().forEach(g -> sb.append(g.getPseudo()).append(" : ").append(g.getIdStaff()).append("/").append(g.isTechnical()).append(LN));
-				logger.debug(sb.toString());					
+				project.getGhosts().stream().forEach(g -> sb.append(g.getPseudo()).append(" : ").append(g.getIdStaff())
+						.append("/").append(g.isTechnical()).append(LN));
+				logger.debug(sb.toString());
 			}
 		}
 		return data;
@@ -872,27 +872,27 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 	@Override
 	public CommitRepository personalizeRepo(CommitRepository globalRepo, SettingsGeneration settings) {
-		final LocalDate startingDate = new Date(settings.getStartingDate()).toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-		
+		final LocalDate startingDate = new Date(settings.getStartingDate()).toInstant().atZone(ZoneId.systemDefault())
+				.toLocalDate();
+
 		if (logger.isDebugEnabled()) {
-			logger.debug(
-				MessageFormat.format(
-					"Filtering the repositiory for id:{0}, and starting date:{1}", 
+			logger.debug(MessageFormat.format("Filtering the repositiory for id:{0}, and starting date:{1}",
 					settings.getIdStaffSelected(), startingDate));
 		}
-		CommitRepository personalizedRepo = new BasicCommitRepository(); 
+		CommitRepository personalizedRepo = new BasicCommitRepository();
 		for (CommitHistory commits : globalRepo.getRepository().values()) {
-			commits.operations.stream()
-				.filter(it -> ((it.idStaff == settings.getIdStaffSelected()) || (settings.getIdStaffSelected() == 0)))
-				.filter(it -> (it.getDateCommit()).isAfter(startingDate))
-				.forEach(item -> personalizedRepo.addCommit(commits.sourcePath, item.idStaff, 
-						item.getDateCommit()));
+			commits.operations.stream().filter(
+					it -> ((it.idStaff == settings.getIdStaffSelected()) || (settings.getIdStaffSelected() == 0)))
+					.filter(it -> (it.getDateCommit()).isAfter(startingDate))
+					.forEach(item -> personalizedRepo.addCommit(commits.sourcePath, item.idStaff, item.getDateCommit(),
+							commits.getImportance()));
 		}
 		return personalizedRepo;
 	}
-	
+
 	/**
 	 * Load the connection settings for the given project.
+	 * 
 	 * @param project the passed project
 	 * @return the connection settings.
 	 * @throws SkillerException thrown certainly if an IO exception occurs
@@ -906,38 +906,38 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			settings.setPassword(project.getPassword());
 			return settings;
 		}
-		
+
 		if (project.isIndirectAccess()) {
 			final String fileProperties = pathConnectionSettings + project.getFilename();
 			File f = new File(fileProperties);
 			if (!f.exists()) {
-				throw new SkillerException(CODE_FILE_CONNECTION_SETTINGS_NOFOUND, 
+				throw new SkillerException(CODE_FILE_CONNECTION_SETTINGS_NOFOUND,
 						MessageFormat.format(MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND, fileProperties));
 			}
-			
+
 			ConnectionSettings settings = new ConnectionSettings();
-			try ( FileReader fr = new FileReader(f )) {
+			try (FileReader fr = new FileReader(f)) {
 				settings = gson.fromJson(fr, settings.getClass());
-				
-				// We accept a global URL declared in the connection file, but its value will be overridden if the project get its own.
+
+				// We accept a global URL declared in the connection file, but its value will be
+				// overridden if the project get its own.
 				if (project.getUrlRepository() != null) {
 					settings.setUrl(project.getUrlRepository());
 				}
-			} catch (IOException  ioe) {
-				throw new SkillerException(
-						CODE_FILE_CONNECTION_SETTINGS_NOFOUND, 
-						MessageFormat.format(MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND, fileProperties), 
-						ioe);
+			} catch (IOException ioe) {
+				throw new SkillerException(CODE_FILE_CONNECTION_SETTINGS_NOFOUND,
+						MessageFormat.format(MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND, fileProperties), ioe);
 			}
-			
+
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("GIT remote URL %s with user %s", settings.getUrl(), settings.getLogin()));
 			}
 			return settings;
 		}
-		
-		throw new SkillerException(CODE_UNEXPECTED_VALUE_PARAMETER, "[Project : "+project.getName()+"] "+
-				MessageFormat.format(MESSAGE_UNEXPECTED_VALUE_PARAMETER, "project.connection_Settings", project.getConnectionSettings()));
+
+		throw new SkillerException(CODE_UNEXPECTED_VALUE_PARAMETER,
+				"[Project : " + project.getName() + "] " + MessageFormat.format(MESSAGE_UNEXPECTED_VALUE_PARAMETER,
+						"project.connection_Settings", project.getConnectionSettings()));
 	}
 
 	@Override
@@ -951,36 +951,30 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 	@Override
 	public void updateStaff(Project project, List<SCMChange> changes, Set<String> unknownContributors) {
-		
-		List<String> authors = changes.stream()
-				.filter(SCMChange::isAuthorIdentified)
-				.map(SCMChange::getAuthorName)
-				.distinct()
-				.collect(Collectors.toList());
-		
-		authors.forEach(		
-				
+
+		List<String> authors = changes.stream().filter(SCMChange::isAuthorIdentified).map(SCMChange::getAuthorName)
+				.distinct().collect(Collectors.toList());
+
+		authors.forEach(
+
 				author -> {
-					
+
 					final Staff staff = staffHandler.lookup(author);
-					if ( (staff == null) && (author.split(" ").length == 1) ) {
-						Optional<Ghost> oGhost = project.getGhosts().stream()
-							.filter(g -> (!g.isTechnical()))
-							.filter(g -> 
-								author.equalsIgnoreCase(g.getPseudo())
-							).findFirst();
+					if ((staff == null) && (author.split(" ").length == 1)) {
+						Optional<Ghost> oGhost = project.getGhosts().stream().filter(g -> (!g.isTechnical()))
+								.filter(g -> author.equalsIgnoreCase(g.getPseudo())).findFirst();
 						if (oGhost.isPresent()) {
-							Ghost selectedGhost =  oGhost.get();
+							Ghost selectedGhost = oGhost.get();
 							int ghostIdentified = staffHandler.getStaff().get(selectedGhost.getIdStaff()).getIdStaff();
 							//
 							// We update the staff collection !
 							//
-							changes.stream()
-								.filter( change -> author.equals(change.getAuthorName()))
-								.forEach(change -> change.setIdStaff(ghostIdentified)); 
+							changes.stream().filter(change -> author.equals(change.getAuthorName()))
+									.forEach(change -> change.setIdStaff(ghostIdentified));
 							//
 							// We find a staff entry, but we keep the pseudo in the unknowns list
-							// in order to be able to change the relation between the ghost & the staff membre 
+							// in order to be able to change the relation between the ghost & the staff
+							// membre
 							// in the dedicated dialog box
 							//
 							unknownContributors.add(author);
@@ -995,12 +989,36 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 						//
 						// We update the staff collection !
 						//
-						changes.stream()
-							.filter( change -> author.equals(change.getAuthorName()))
-							.forEach(change -> change.setIdStaff(staff.getIdStaff())); 
+						changes.stream().filter(change -> author.equals(change.getAuthorName()))
+								.forEach(change -> change.setIdStaff(staff.getIdStaff()));
 					}
-					
+
 				});
-					
-    	}
+
+	}
+
+	@Override
+	public void updateImportance(Project project, List<SCMChange> changes) throws SkillerException {
+		
+		final AssessorImportance assessor = new FileSizeImportance();
+
+		final Comparator<SCMChange> filePathComparator = (SCMChange change1, SCMChange change2) -> {
+			return change1.getPath().compareTo(change2.getPath());
+		};
+		
+		List<SCMChange> sortedChanges = changes.stream()
+					.sorted(filePathComparator)
+					.collect(Collectors.toList());
+
+		String pathMem = "";
+		long importanceMem = -1;
+		for (SCMChange change : sortedChanges) {
+			
+			if (!pathMem.equals(change.getPath())) {
+				importanceMem = assessor.getImportance(project, change, ImportanceCriteria.FILE_SIZE);
+				pathMem = change.getPath();
+			}
+			change.setImportance(importanceMem);
+		}
+	}
 }

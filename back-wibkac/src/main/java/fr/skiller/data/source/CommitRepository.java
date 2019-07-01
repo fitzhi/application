@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import fr.skiller.data.source.importance.AssessorImportance;
+
 /**
  * Interface in charge of handling the history of commits for a repository.<br/>
  * <code>BasicCommitRepository</code> based on a GIT repository is the actual implementation.
@@ -18,8 +20,9 @@ public interface CommitRepository {
 	 * @param sourceCodePath the complete source code path 
 	 * @param idStaff staff member's identifier
 	 * @param timestamp date of the operation
+	 * @param importance the importance of this source file in the project in a numeric value format
 	 */
-	void addCommit(String sourceCodePath, int idStaff, LocalDate timestamp);
+	void addCommit(String sourceCodePath, int idStaff, LocalDate timestamp, long importance);
 	
 	/**
 	 * <p>
@@ -29,8 +32,9 @@ public interface CommitRepository {
 	 * @param sourceCodePath the complete source code path 
 	 * @param idStaff staff member's identifier
 	 * @param timestamp date of the operation (without time offset)
+	 * @param importance the importance of this source file in the project in a numeric value format
 	 */
-	void addCommit(String sourceCodePath, int idStaff, Date timestamp);
+	void addCommit(String sourceCodePath, int idStaff, Date timestamp, long importance);
 	
 	/**
 	 * Test the presence of a record for the given source code file

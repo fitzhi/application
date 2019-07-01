@@ -72,13 +72,13 @@ public class RiskCommitAndDevProcessorMeanTheRiskTest {
 		Project prj = new Project(8021964, "testRiskEvaluation");
 		projectHandler.addNewProject(prj);
 
-		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000));
-		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()-2000));
-		comRep.addCommit("fr/one/one/B.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit("fr/one/one/C.java", third.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000), 1);
+		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()-2000), 1);
+		comRep.addCommit("fr/one/one/B.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit("fr/one/one/C.java", third.getIdStaff(), new Timestamp(System.currentTimeMillis()), 1);
 
-		comRep.addCommit("fr/A.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit("fr/A.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()), 1);
 }
 
 	@Test
@@ -94,6 +94,7 @@ public class RiskCommitAndDevProcessorMeanTheRiskTest {
 				commit -> 
 				data.injectFile(data, 
 						commit.sourcePath.split(File.separator), 
+						1,
 						commit.evaluateDateLastestCommit(),
 						commit.committers()));
 

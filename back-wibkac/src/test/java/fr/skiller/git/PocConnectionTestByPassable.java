@@ -209,7 +209,7 @@ public class PocConnectionTestByPassable {
 						repositoryOfCommit.addCommit(
 								str, 
 								UNKNOWN,
-								commit.getAuthorIdent().getWhen());
+								commit.getAuthorIdent().getWhen(), 1);
 					}
 	        	}
 	        }

@@ -87,6 +87,15 @@ public interface RepoScanner {
 	
 	/**
 	 * <p>
+	 * This method remove the non relevant directories from the crawl.
+	 * </p>
+	 * @param project the current project
+	 * @param changes the changes collection
+	 */
+	public void removeNonRelevantDirectories(Project project, List<SCMChange> changes);
+	
+	/**
+	 * <p>
 	 * Update the collection changes by setting the staff identifier <b>found</b> for every entry.<br/>
 	 * This method lookup in the staff team with the author declared for each commit.<br/>
 	 * A set of unknown contributors is also generated.
@@ -97,6 +106,16 @@ public interface RepoScanner {
 	 */
 	void updateStaff(Project project, List<SCMChange> changes, Set<String> unknownContributors);
 
+	/**
+	 * <p>
+	 * Update the GIT changes collection by setting the importance for every path impacted by each commit.
+	 * </p>
+	 * @param project the current project
+	 * @param changes the changes collection
+	 * @throws SkillerException thrown if any exceptions occurs.
+	 */
+	void updateImportance(Project project, List<SCMChange> changes) throws SkillerException;	
+	
 	/**
 	 * Gather the identified contributors with their personal stats.
 	 * @param changes the changes collection

@@ -51,6 +51,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 				commit -> 
 				root.injectFile(root, 
 						commit.sourcePath.split(File.separator), 
+						commit.getImportance(), 
 						commit.evaluateDateLastestCommit(),
 						commit.committers()));
 

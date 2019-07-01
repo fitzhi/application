@@ -34,7 +34,7 @@ public class CommitHistoryTest {
     
     @Before
     public void before() {
-		ch = new CommitHistory("test");
+		ch = new CommitHistory("test", 1);
 		ch.addOperation(new Operation(1, LocalDate.of(2018, 11, 1)));
 		ch.addOperation(new Operation(1, LocalDate.of(2018, 10, 17)));
 		ch.addOperation(new Operation(2, LocalDate.of(2018, 11, 25)));

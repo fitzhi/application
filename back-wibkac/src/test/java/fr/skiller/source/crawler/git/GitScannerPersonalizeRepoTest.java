@@ -45,19 +45,19 @@ public class GitScannerPersonalizeRepoTest  {
 	@Test
 	public void test() {
 		CommitRepository repo = new BasicCommitRepository();
-		repo.addCommit("A", 1, new Date(System.currentTimeMillis()));
-		repo.addCommit("A", 1, new Date(System.currentTimeMillis()-1000));
-		repo.addCommit("A", 1, new Date(System.currentTimeMillis()-10000));
-		repo.addCommit("A", 2, new Date(System.currentTimeMillis()-2000));
-		repo.addCommit("A", 2, new Date(System.currentTimeMillis()-20000));
-		repo.addCommit("A", 3, new Date(System.currentTimeMillis()-5000));
+		repo.addCommit("A", 1, new Date(System.currentTimeMillis()), 1);
+		repo.addCommit("A", 1, new Date(System.currentTimeMillis()-1000), 1);
+		repo.addCommit("A", 1, new Date(System.currentTimeMillis()-10000), 1);
+		repo.addCommit("A", 2, new Date(System.currentTimeMillis()-2000), 1);
+		repo.addCommit("A", 2, new Date(System.currentTimeMillis()-20000), 1);
+		repo.addCommit("A", 3, new Date(System.currentTimeMillis()-5000), 1);
 
-		repo.addCommit("B", 2, new Date(System.currentTimeMillis()));
-		repo.addCommit("B", 2, new Date(System.currentTimeMillis()-1000));
-		repo.addCommit("B", 2, new Date(System.currentTimeMillis()-10000));
-		repo.addCommit("B", 3, new Date(System.currentTimeMillis()-2000));
-		repo.addCommit("B", 3, new Date(System.currentTimeMillis()-20000));
-		repo.addCommit("B", 1, new Date(System.currentTimeMillis()-5000));
+		repo.addCommit("B", 2, new Date(System.currentTimeMillis()), 1);
+		repo.addCommit("B", 2, new Date(System.currentTimeMillis()-1000), 1);
+		repo.addCommit("B", 2, new Date(System.currentTimeMillis()-10000), 1);
+		repo.addCommit("B", 3, new Date(System.currentTimeMillis()-2000), 1);
+		repo.addCommit("B", 3, new Date(System.currentTimeMillis()-20000), 1);
+		repo.addCommit("B", 1, new Date(System.currentTimeMillis()-5000), 1);
 
 		CommitRepository personalRepo = scanner.personalizeRepo(repo, projectController.new SettingsGeneration(-1, 2));		
 		Assert.assertEquals( 2 ,personalRepo.getRepository().get("A").operations.size());

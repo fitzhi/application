@@ -82,25 +82,25 @@ public class RiskCommitAndDevActiveProcessorTest {
 		prj = new Project(8021964, "testRiskEvaluation");
 		projectHandler.addNewProject(prj);
 
-		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000));
-		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()-2000));
-		comRep.addCommit("fr/one/one/B.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit("fr/one/one/C.java", third.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000), 1);
+		comRep.addCommit(FR_ONE_ONE_A_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()-2000), 1);
+		comRep.addCommit("fr/one/one/B.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit("fr/one/one/C.java", third.getIdStaff(), new Timestamp(System.currentTimeMillis()), 1);
 
-		comRep.addCommit("fr/one/two/D.java", fourth.getIdStaff(), new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit("fr/one/two/E.java", fifth.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit("fr/one/two/D.java", fourth.getIdStaff(), new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit("fr/one/two/E.java", fifth.getIdStaff(), new Timestamp(System.currentTimeMillis()), 1);
 		
-		comRep.addCommit("fr/two/Z.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()));
+		comRep.addCommit("fr/two/Z.java", second.getIdStaff(), new Timestamp(System.currentTimeMillis()), 1);
 		
-		comRep.addCommit(FR_TWO_ONE_F_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit(FR_TWO_ONE_F_JAVA, second.getIdStaff(), new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit(FR_TWO_ONE_F_JAVA, second.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000));
+		comRep.addCommit(FR_TWO_ONE_F_JAVA, first.getIdStaff(), new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit(FR_TWO_ONE_F_JAVA, second.getIdStaff(), new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit(FR_TWO_ONE_F_JAVA, second.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000), 1);
 		
-		comRep.addCommit(FR_TWO_TWO_G_JAVA, fourth.getIdStaff(), new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit(FR_TWO_TWO_G_JAVA, fifth.getIdStaff(), new Timestamp(System.currentTimeMillis()));
-		comRep.addCommit(FR_TWO_TWO_G_JAVA, fifth.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000));
-		comRep.addCommit(FR_TWO_TWO_G_JAVA, fifth.getIdStaff(), new Timestamp(System.currentTimeMillis()-2000));
+		comRep.addCommit(FR_TWO_TWO_G_JAVA, fourth.getIdStaff(), new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit(FR_TWO_TWO_G_JAVA, fifth.getIdStaff(), new Timestamp(System.currentTimeMillis()), 1);
+		comRep.addCommit(FR_TWO_TWO_G_JAVA, fifth.getIdStaff(), new Timestamp(System.currentTimeMillis()-1000), 1);
+		comRep.addCommit(FR_TWO_TWO_G_JAVA, fifth.getIdStaff(), new Timestamp(System.currentTimeMillis()-2000), 1);
 	}
 	
 	@Test

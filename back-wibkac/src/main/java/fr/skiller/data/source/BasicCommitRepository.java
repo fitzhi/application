@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import fr.skiller.data.source.importance.AssessorImportance;
+
 /**
  * Repository containing time-stamped commits for the given project.
  * <br/><i>This is the first & basic implementation for the Commit repository</i>.
@@ -31,21 +33,21 @@ public class BasicCommitRepository implements CommitRepository {
 	Set<String> unknownContributors = new HashSet<>();
 	
 	@Override
-	public void addCommit(final String sourceCodePath, final int idStaff, final LocalDate dateCommit) {
+	public void addCommit(String sourceCodePath, int idStaff, LocalDate dateCommit, long importance) {
 		
 		if (repo.containsKey(sourceCodePath)) {
 			final CommitHistory history = repo.get(sourceCodePath);
 			history.handle(idStaff, dateCommit);
 		} else {
-			CommitHistory fileLogs = new CommitHistory(sourceCodePath);
+			CommitHistory fileLogs = new CommitHistory(sourceCodePath, importance);
 			fileLogs.addOperation(new Operation(idStaff, dateCommit));
 			repo.put(sourceCodePath, fileLogs);
 		}
 	}
 	
 	@Override
-	public void addCommit(final String sourceCodePath, final int idStaff, final Date dateCommit) {
-		addCommit(sourceCodePath, idStaff, dateCommit.toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+	public void addCommit(String sourceCodePath, int idStaff, Date dateCommit, long importance) {
+		addCommit(sourceCodePath, idStaff, dateCommit.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), importance);
 	}
 	
 	@Override

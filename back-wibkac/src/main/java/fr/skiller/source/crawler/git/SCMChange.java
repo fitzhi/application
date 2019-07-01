@@ -6,6 +6,10 @@ package fr.skiller.source.crawler.git;
 import java.time.LocalDate;
 import java.util.Date;
 
+import fr.skiller.data.source.importance.FileSizeImportance;
+import fr.skiller.data.source.importance.ImportanceCriteria;
+import fr.skiller.data.source.importance.AssessorImportance;
+
 /**
  * <p>
  * <b>Source Control Change : </b><br/><br/>
@@ -46,6 +50,11 @@ public class SCMChange {
 	 */
 	private int idStaff = 0;
 	
+	/**
+	 * A numeric value representing the importance of the source file impacted by the change.
+	 */
+	private long importance;
+		
 	/**
 	 * Constructor.
 	 * @param commitId commit identifier
@@ -133,10 +142,25 @@ public class SCMChange {
 		return (idStaff > 0);
 	}
 
+	/**
+	 * @return the importance
+	 */
+	public long getImportance() {
+		return importance;
+	}
+
+	/**
+	 * @param importance to set
+	 */
+	public void setImportance(long importance) {
+		this.importance = importance;
+	}
+	
 	@Override
 	public String toString() {
 		return "SCMChange [commitId=" + commitId + ", path=" + path + ", dateCommit=" + dateCommit + ", authorName="
-				+ authorName + ", authorEmail=" + authorEmail + ", idStaff=" + idStaff + "]";
+				+ authorName + ", authorEmail=" + authorEmail + ", idStaff=" + idStaff + ", importance=" + importance
+				+ "]";
 	}
-	
+
 }

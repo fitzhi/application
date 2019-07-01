@@ -31,6 +31,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	DEVELOPERS_CRUD = Constants.DEVELOPERS_CRUD;
 	SKILLS_CRUD = Constants.SKILLS_CRUD;
 	PROJECT_TAB_FORM = Constants.PROJECT_TAB_FORM;
+	PROJECT_TAB_STAFF = Constants.PROJECT_TAB_STAFF;
 
 	/**
      * Type of entity currently active.
@@ -195,6 +196,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 				this.messengerFormActive.emit(Constants.DEVELOPERS_SEARCH);
 				break;
 			case this.PROJECT_TAB_FORM:
+			case this.PROJECT_TAB_STAFF:
 				this.messengerFormActive.emit(Constants.PROJECT_SEARCH);
 				break;
 			case this.SKILLS_CRUD:

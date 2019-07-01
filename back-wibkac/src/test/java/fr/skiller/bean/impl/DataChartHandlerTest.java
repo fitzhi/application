@@ -56,21 +56,21 @@ public class DataChartHandlerTest {
 
 		// One source file in fr, one sub-directory.
 		root.addSubDir(fr);
-		fr.addSource("fr/file", LocalDate.now(), dev);
+		fr.addSource("fr/file", 1, LocalDate.now(), dev);
 		fr.addSubDir(frEmptyOne);
 		
 		// No source file neither in com, nor com_empty_one, but ONE file in COM_NOT_EMPTY_ONE
 		root.addSubDir(com);
 		com.addSubDir(comEmptyOne);
 		com.addSubDir(comNotEmptyOne);
-		comNotEmptyOne.addSource("oneNotEmpty/file", LocalDate.now(), dev);
+		comNotEmptyOne.addSource("oneNotEmpty/file", 1, LocalDate.now(), dev);
 		
 		root.addSubDir(subOrg[0]);
 		for (int i=1; i<10; i++) {
 			subOrg[i] = new DataChart("org-"+i);
 			subOrg[i-1].addSubDir(subOrg[i]);
 		}
-		subOrg[9].addSource("file", LocalDate.now(), dev);
+		subOrg[9].addSource("file", 1, LocalDate.now(), dev);
 		
 		dataChartHandler.aggregateDataChart(root);
 		
@@ -92,7 +92,7 @@ public class DataChartHandlerTest {
 		int[] dev = new int[1];
 		dev[0]=1;
 		DataChart dataChart = new DataChart("location");
-		dataChart.addSource("filename", LocalDate.now(), dev);
+		dataChart.addSource("filename", 1, LocalDate.now(), dev);
 		dataChart.setColor("color");
 		dataChart.addSubDir(new DataChart("inner"));
 		

@@ -33,16 +33,23 @@ public class CommitHistory {
 	int riskLevel;
 	
 	/**
+	 * A numeric value representing the importance of the source file impacted by the change.
+	 */
+	private long importance;
+	
+	/**
 	 * All operations that occur on the source file.
 	 */
 	public final List<Operation> operations = new ArrayList<>();
 
 	/**
-	 * @param sourcePath
-	 * @param operations
+	 * Constructor of commit history.
+	 * @param sourcePath the source path which history has to be kept
+	 * @param importance the importance for this file with the project
 	 */
-	public CommitHistory(String sourcePath) {
+	public CommitHistory(String sourcePath, long importance) {
 		this.sourcePath = sourcePath;
+		this.importance = importance;
 	}
 
 	/**
@@ -50,6 +57,20 @@ public class CommitHistory {
 	 */
 	public String getSourcePath() {
 		return sourcePath;
+	}
+
+	/**
+	 * @return the importance
+	 */
+	public long getImportance() {
+		return importance;
+	}
+
+	/**
+	 * @param importance the importance to set
+	 */
+	public void setImportance(long importance) {
+		this.importance = importance;
 	}
 
 	/**

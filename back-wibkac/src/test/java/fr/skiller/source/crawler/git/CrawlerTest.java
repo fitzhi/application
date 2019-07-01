@@ -30,6 +30,7 @@ import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevCommitList;
@@ -195,12 +196,17 @@ public class CrawlerTest {
 		gitChanges.stream().map(SCMChange::getPath).forEach(System.out::println);
 	}
 
-	public void testVEGEO() throws IOException, SkillerException {
+	@Test
+	public void testVEGEO() throws IOException, SkillerException, GitAPIException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
-		repository = builder.setGitDir(new File(String.format(FILE_GIT, "vegeo"))).readEnvironment().findGitDir()
+		repository = builder.setGitDir(new File(String.format(FILE_GIT, "VIP-MIDDLEWARE"))).readEnvironment().findGitDir()
 				.build();
 
+		Git git = new Git(repository);
+		
+		git.branchList().call().stream().map(Ref::getName).forEach(System.out::println);
+/*
 		List<RevCommit> allCommits = new ArrayList<>();
 		try (Git git = new Git(repository)) {
 
@@ -219,7 +225,7 @@ public class CrawlerTest {
 				.forEach(System.out::println);
 		
 //	      scanner.loadChanges(repository);
-
+*/
 	}
 
 	@After
