@@ -52,6 +52,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import fr.skiller.bean.DataChartHandler;
 import fr.skiller.bean.DataSaver;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.RepositoryAnalysis;
 import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
@@ -89,7 +90,8 @@ public class CrawlerTest {
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, "first-test"))).readEnvironment().findGitDir()
 				.build();
 
-		List<SCMChange> gitChanges = scanner.loadChanges(repository);
+		RepositoryAnalysis analysis = scanner.loadChanges(repository);
+		List<SCMChange> gitChanges = analysis.getChanges();
 
 		assertTrue(gitChanges.stream().map(SCMChange::getPath).noneMatch("moduleA/test.txt"::equals));
 		assertTrue(gitChanges.stream().map(SCMChange::getPath).anyMatch("moduleB/test.txt"::equals));
@@ -115,13 +117,14 @@ public class CrawlerTest {
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, "first-test"))).readEnvironment().findGitDir()
 				.build();
 
-		List<SCMChange> gitChanges = scanner.loadChanges(repository);
-		scanner.finalizeListChanges(String.format(DIR_GIT, "first-test"), gitChanges);
-
-		assertTrue(gitChanges.stream().map(SCMChange::getPath).noneMatch("moduleA/creationInA.txt"::equals));
+		RepositoryAnalysis analysis = scanner.loadChanges(repository);
+		
+		scanner.finalizeListChanges(String.format(DIR_GIT, "first-test"), analysis);
+		
+		assertTrue(analysis.getChanges().stream().map(SCMChange::getPath).noneMatch("moduleA/creationInA.txt"::equals));
 		// This file has been updated and renamed, and therefore not detected as a
 		// rename by the JGIT RenameDetector
-		assertTrue(gitChanges.stream().map(SCMChange::getPath).anyMatch("moduleAchanged/creationInA.txt"::equals));
+		assertTrue(analysis.getChanges().stream().map(SCMChange::getPath).anyMatch("moduleAchanged/creationInA.txt"::equals));
 	}
 
 	/**
@@ -136,15 +139,15 @@ public class CrawlerTest {
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, "wibkac"))).readEnvironment().findGitDir()
 				.build();
 
-		List<SCMChange> gitChanges = scanner.loadChanges(repository);
-		scanner.finalizeListChanges(String.format(DIR_GIT, "wibkac"), gitChanges);
+		RepositoryAnalysis analysis = scanner.loadChanges(repository);
+		scanner.finalizeListChanges(String.format(DIR_GIT, "wibkac"), analysis);
 		assertTrue(
-				gitChanges.stream().map(SCMChange::getPath).anyMatch("front-skiller/src/assets/img/pdf.png"::equals));
+				analysis.getChanges().stream().map(SCMChange::getPath).anyMatch("front-skiller/src/assets/img/pdf.png"::equals));
 
-		scanner.filterEligible(gitChanges);
+		scanner.filterEligible(analysis);
 
 		assertTrue(
-				gitChanges.stream().map(SCMChange::getPath).noneMatch("front-skiller/src/assets/img/pdf.png"::equals));
+				analysis.getChanges().stream().map(SCMChange::getPath).noneMatch("front-skiller/src/assets/img/pdf.png"::equals));
 
 	}
 
@@ -160,11 +163,11 @@ public class CrawlerTest {
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, "wibkac"))).readEnvironment().findGitDir()
 				.build();
 
-		List<SCMChange> gitChanges = scanner.loadChanges(repository);
-		scanner.finalizeListChanges(String.format(DIR_GIT, "wibkac"), gitChanges);
-		scanner.filterEligible(gitChanges);
-		scanner.cleanupPaths(gitChanges);
-		gitChanges.stream().map(SCMChange::getPath).forEach(System.out::println);
+		RepositoryAnalysis analysis = scanner.loadChanges(repository);
+		scanner.finalizeListChanges(String.format(DIR_GIT, "wibkac"), analysis);
+		scanner.filterEligible(analysis);
+		scanner.cleanupPaths(analysis);
+		analysis.getChanges().stream().map(SCMChange::getPath).forEach(System.out::println);
 
 	}
 
@@ -180,9 +183,9 @@ public class CrawlerTest {
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, "wibkac"))).readEnvironment().findGitDir()
 				.build();
 
-		List<SCMChange> gitChanges = scanner.loadChanges(repository);
+		RepositoryAnalysis analysis = scanner.loadChanges(repository);
 
-		dataSaver.saveChanges(new Project(777, "test"), gitChanges);
+		dataSaver.saveChanges(new Project(777, "test"), analysis.getChanges());
 	}
 
 	public void testDebug() throws IOException, SkillerException {
@@ -191,9 +194,9 @@ public class CrawlerTest {
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, "first-test"))).readEnvironment().findGitDir()
 				.build();
 
-		List<SCMChange> gitChanges = scanner.loadChanges(repository);
-		scanner.finalizeListChanges(String.format(DIR_GIT, "first-test"), gitChanges);
-		gitChanges.stream().map(SCMChange::getPath).forEach(System.out::println);
+		RepositoryAnalysis analysis =  scanner.loadChanges(repository);
+		scanner.finalizeListChanges(String.format(DIR_GIT, "first-test"), analysis);
+		analysis.getChanges().stream().map(SCMChange::getPath).forEach(System.out::println);
 	}
 
 	@Test

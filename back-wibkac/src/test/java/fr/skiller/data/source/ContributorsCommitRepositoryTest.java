@@ -4,7 +4,6 @@
 package fr.skiller.data.source;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -20,9 +19,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.RepositoryAnalysis;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.RepoScanner;
-import fr.skiller.source.crawler.git.TreeWalkGitCrawler;
 import fr.skiller.source.crawler.git.SCMChange;
 
 /**
@@ -58,7 +57,8 @@ public class ContributorsCommitRepositoryTest {
     	
     	Project p = new Project(100, "Test");
     	
-    	List<SCMChange> repo = new ArrayList<>();
+    	RepositoryAnalysis analysis = new RepositoryAnalysis();
+    	List<SCMChange> repo = analysis.getChanges();
     	
 		repo.add(new SCMChange(String.valueOf(System.nanoTime()), TEST, LocalDate.of(2018, 11, 1), FVIDAL, ""));
 		repo.add(new SCMChange(String.valueOf(System.nanoTime()), TEST, LocalDate.of(2018, 11, 17), FVIDAL, ""));
@@ -78,8 +78,8 @@ public class ContributorsCommitRepositoryTest {
 		repo.add(new SCMChange(String.valueOf(System.nanoTime()), TEST3, LocalDate.of(2018, 11, 2), "haddock", ""));
 		
 		Set<String> unknownContributors = new HashSet<>();
-		scanner.updateStaff (p, repo, unknownContributors);
-    	contributors = scanner.gatherContributors(repo);
+		scanner.updateStaff (p, analysis, unknownContributors);
+    	contributors = scanner.gatherContributors(analysis);
     }
     
     @Test

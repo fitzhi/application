@@ -10,16 +10,14 @@ import java.util.Set;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 
-import fr.skiller.bean.ProjectHandler;
 import fr.skiller.controller.ProjectController.SettingsGeneration;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.RepositoryAnalysis;
 import fr.skiller.data.internal.RiskDashboard;
-import fr.skiller.data.internal.Unknown;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
-import fr.skiller.source.crawler.git.SCMChange;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -47,10 +45,10 @@ public interface RepoScanner {
 	 * <b><font color="red">BE CAUTIOUS : This method has an unsatisfying adherence with GIT</font></b>
 	 * </p>
 	 * @param repository the <b><font color="red">GIT</font></b> repository.
-	 * @return a collection with all changed occurred on the passed repository.
+	 * @return the analysis extracted from the repository. This analysis contains the  collection with all changed detected on the passed repository.
 	 * @throws SkillerException thrown by the crawling operation.
 	 */
-	List<SCMChange> loadChanges(Repository repository) throws SkillerException;
+	RepositoryAnalysis loadChanges(Repository repository) throws SkillerException;
 
 	/**
 	 * <p>
@@ -62,37 +60,37 @@ public interface RepoScanner {
 	 * We remove useless entries if the file does not exist anymore on file system.
 	 * </font></p>
 	 * @param sourceLocation the directory where the sources are located.
-	 * @param changes the changes collection.
+	 * @param analysis the analysis generated from the collection.
 	 * @throws IOException if any IO exception occurs during the finalization.
 	 */
-	void finalizeListChanges(String sourceLocation, List<SCMChange> changes) throws IOException;
+	void finalizeListChanges(String sourceLocation, RepositoryAnalysis analysis) throws IOException;
 
 	/**
 	 * <p>
 	 * Filter the collection of changes to the eligible pathnames.<br/>
 	 * Theses pathnames must match the patterns declared by the settings <b>patternsCleanup<b> in your <b>application.properties</b> file.
 	 * </p>
-	 * @param changes the changes collection
+	 * @param analysis the repository analysis.
 	 */
-	public void filterEligible(List<SCMChange> changes);
+	public void filterEligible(RepositoryAnalysis analysis);
 
 	/**
 	 * <p>
 	 * Cleanup the pathnames of the changes collection.<br/>
 	 * For example : <code>/src/main/java/java/util/List.java</code> will be treated like <code>java/util/List.java</code>
 	 * </p>
-	 * @param changes the changes collection
+	 * @param analysis the repository analysis.
 	 */
-	void cleanupPaths(List<SCMChange> changes);
+	void cleanupPaths(RepositoryAnalysis analysis);
 	
 	/**
 	 * <p>
 	 * This method remove the non relevant directories from the crawl.
 	 * </p>
 	 * @param project the current project
-	 * @param changes the changes collection
+	 * @param analysis the repository analysis.
 	 */
-	public void removeNonRelevantDirectories(Project project, List<SCMChange> changes);
+	public void removeNonRelevantDirectories(Project project, RepositoryAnalysis analysis);
 	
 	/**
 	 * <p>
@@ -101,27 +99,27 @@ public interface RepoScanner {
 	 * A set of unknown contributors is also generated.
 	 * </p>
 	 * @param project the current project
-	 * @param changes the changes collection
+	 * @param analysis the repository analysis.
 	 * @param unknownContributors the set of ghost, i.e. the unknown contributors
 	 */
-	void updateStaff(Project project, List<SCMChange> changes, Set<String> unknownContributors);
+	void updateStaff(Project project, RepositoryAnalysis analysis, Set<String> unknownContributors);
 
 	/**
 	 * <p>
 	 * Update the GIT changes collection by setting the importance for every path impacted by each commit.
 	 * </p>
 	 * @param project the current project
-	 * @param changes the changes collection
+	 * @param analysis the repository analysis.
 	 * @throws SkillerException thrown if any exceptions occurs.
 	 */
-	void updateImportance(Project project, List<SCMChange> changes) throws SkillerException;	
+	void updateImportance(Project project, RepositoryAnalysis analysis) throws SkillerException;	
 	
 	/**
 	 * Gather the identified contributors with their personal stats.
-	 * @param changes the changes collection
+	 * @param analysis the repository analysis.
 	 * @return the list of contributors involved in the repository
 	 */
-	List<Contributor> gatherContributors(List<SCMChange> changes);
+	List<Contributor> gatherContributors(RepositoryAnalysis analysis);
 
 	/**
 	 * Parse the repository <u>already</u> cloned on the file system.<br/>

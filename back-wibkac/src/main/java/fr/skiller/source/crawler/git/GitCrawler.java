@@ -87,6 +87,7 @@ import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import fr.skiller.controller.ProjectController.SettingsGeneration;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.RepositoryAnalysis;
 import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.BasicCommitRepository;
@@ -315,9 +316,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	}
 
 	@Override
-	public List<SCMChange> loadChanges(Repository repository) throws SkillerException {
+	public RepositoryAnalysis loadChanges(Repository repository) throws SkillerException {
 
-		List<SCMChange> gitChanges = new ArrayList<>();
+		RepositoryAnalysis analysis = new RepositoryAnalysis();
 
 		List<RevCommit> allCommits = new ArrayList<>();
 		try (Git git = new Git(repository)) {
@@ -356,7 +357,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				previous = commit.getTree().getId();
 			} else {
 				ObjectId current = commit.getTree().getId();
-				diff(repository, gitChanges, commit, previous, current);
+				diff(repository, analysis, commit, previous, current);
 				previous = current;
 			}
 
@@ -364,10 +365,10 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				logger.debug(String.format("commit '%s' with merge ?", commit.getShortMessage()));
 			}
 		}
-		return gitChanges;
+		return analysis;
 	}
 
-	private void diff(Repository repository, List<SCMChange> changes, RevCommit commit, ObjectId prevObjectId,
+	private void diff(Repository repository, RepositoryAnalysis analysis, RevCommit commit, ObjectId prevObjectId,
 			ObjectId curObjectId) throws SkillerException {
 
 		final RenameDetector renameDetector = new RenameDetector(repository);
@@ -390,9 +391,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 					}
 					renameDetector.addAll(diffs);
 					List<DiffEntry> files = renameDetector.compute();
-					processDiffEntries(changes, commit, files);
+					processDiffEntries(analysis, commit, files);
 				} else {
-					processDiffEntries(changes, commit, diffs);
+					processDiffEntries(analysis, commit, diffs);
 				}
 			}
 		} catch (final Exception e) {
@@ -408,11 +409,14 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	 * @param commit     the actual commit evaluated
 	 * @param diffs      the list of difference between this current commit and the
 	 *                   previous one
-	 * @throws SkillerException thrown if any problem occurs.
 	 */
-	private void processDiffEntries(List<SCMChange> gitChanges, RevCommit commit, List<DiffEntry> diffs)
-			throws SkillerException {
+	private void processDiffEntries
+			(	RepositoryAnalysis analysis, 
+				RevCommit commit, 
+				List<DiffEntry> diffs) {
 
+		List<SCMChange> gitChanges = analysis.getChanges();
+		
 		for (DiffEntry de : diffs) {
 			switch (de.getChangeType()) {
 			case RENAME:
@@ -436,8 +440,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				// This committer did not touch the content of the source
 				//
 				break;
-			case ADD:
 			case MODIFY:
+			case ADD:
 				PersonIdent author = commit.getAuthorIdent();
 				SCMChange change = new SCMChange(commit.getId().toString(), de.getNewPath(),
 						author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), author.getName(),
@@ -473,8 +477,10 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	}
 
 	@Override
-	public void finalizeListChanges(String sourceLocation, List<SCMChange> changes) throws IOException {
+	public void finalizeListChanges(String sourceLocation, RepositoryAnalysis analysis) throws IOException {
 
+		List<SCMChange> changes = analysis.getChanges();
+		
 		if (logger.isDebugEnabled()) {
 			logger.debug(
 					String.format("Finalizing the changes collection with the repository location %s", sourceLocation));
@@ -513,8 +519,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	}
 
 	@Override
-	public void filterEligible(List<SCMChange> changes) {
-		Iterator<SCMChange> iter = changes.iterator();
+	public void filterEligible(RepositoryAnalysis analysis) {
+		
+		Iterator<SCMChange> iter = analysis.getChanges().iterator();
 		while (iter.hasNext()) {
 			SCMChange change = iter.next();
 			if (!isElligible(change.getPath())) {
@@ -524,18 +531,18 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	}
 
 	@Override
-	public void cleanupPaths(List<SCMChange> changes) {
-		changes.stream().forEach(change -> change.setPath(cleanupPath(change.getPath())));
+	public void cleanupPaths(RepositoryAnalysis analysis) {
+		analysis.getChanges().stream().forEach(change -> change.setPath(cleanupPath(change.getPath())));
 	}
 
 	@Override
-	public void removeNonRelevantDirectories(Project project, List<SCMChange> changes) {
-		changes.removeIf(change -> change.getPath().contains("docs/")); 
-		changes.removeIf(change -> change.getPath().contains("com/microsoft/schemas")); 
-		changes.removeIf(change -> change.getPath().contains("vegeo-ihm-testing/")); 
-		changes.removeIf(change -> change.getPath().contains("maquettes")); 
-		changes.removeIf(change -> change.getPath().contains("perf/")); 
-		changes.removeIf(change -> change.getPath().contains("env-dev/config")); 
+	public void removeNonRelevantDirectories(Project project, RepositoryAnalysis analysis) {
+		analysis.getChanges().removeIf(change -> change.getPath().contains("docs/")); 
+		analysis.getChanges().removeIf(change -> change.getPath().contains("com/microsoft/schemas")); 
+		analysis.getChanges().removeIf(change -> change.getPath().contains("vegeo-ihm-testing/")); 
+		analysis.getChanges().removeIf(change -> change.getPath().contains("maquettes")); 
+		analysis.getChanges().removeIf(change -> change.getPath().contains("perf/")); 
+		analysis.getChanges().removeIf(change -> change.getPath().contains("env-dev/config")); 
 	}
 	
 	/**
@@ -610,42 +617,42 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			/**
 			 * We load all raw changes declared in the given repository
 			 */
-			List<SCMChange> changes = this.loadChanges(repo);
+			RepositoryAnalysis analysis = this.loadChanges(repo);
 			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("loadChanges (%s) returns %d entries", project.getName(), changes.size()));
+				logger.debug(String.format("loadChanges (%s) returns %d entries", project.getName(), analysis.size()));
 			}
-			dataSaver.saveChanges(project, changes);
+			dataSaver.saveChanges(project, analysis.getChanges());
 
 			/**
 			 * We finalize & cleanup the content of the collection
 			 */
-			this.finalizeListChanges(project.getLocationRepository() + "/", changes);
+			this.finalizeListChanges(project.getLocationRepository() + "/", analysis);
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("finalizeListChanges (%s) returns %d entries", project.getName(),
-						changes.size()));
+						analysis.size()));
 			}
 
 			/**
 			 * We filter the collection on eligible entries (.java; .js...)
 			 */
-			this.filterEligible(changes);
+			this.filterEligible(analysis);
 			if (logger.isDebugEnabled()) {
 				logger.debug(
-						String.format("filterEligible (%s) returns %d entries", project.getName(), changes.size()));
+						String.format("filterEligible (%s) returns %d entries", project.getName(), analysis.size()));
 			}
 
 			// Updating the importance
-			this.updateImportance(project, changes);
+			this.updateImportance(project, analysis);
 			
 			/**
 			 * We cleanup the pathnames each location (e.g. "src/main/java" is removed)
 			 */
-			this.cleanupPaths(changes);
+			this.cleanupPaths(analysis);
 
 			/**
 			 * We remove the non relevant directories from the crawl
 			 */
-			this.removeNonRelevantDirectories(project, changes);
+			this.removeNonRelevantDirectories(project, analysis);
 			
 			
 			repositoryOfCommit = new BasicCommitRepository();
@@ -658,12 +665,12 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			/**
 			 * We update the staff identifier on each change entry.
 			 */
-			this.updateStaff(project, changes, unknown);
+			this.updateStaff(project, analysis, unknown);
 
 			/**
 			 * Retrieve the list of contributors involved in the project.
 			 */
-			List<Contributor> contributors = this.gatherContributors(changes);
+			List<Contributor> contributors = this.gatherContributors(analysis);
 
 			if (logger.isDebugEnabled()) {
 				logger.debug(
@@ -688,7 +695,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				unknown.stream().forEach(logger::warn);
 			}
 
-			changes.stream()
+			analysis.getChanges().stream()
 					.forEach(change -> repositoryOfCommit.addCommit(change.getPath(),
 							change.isIdentified() ? change.getIdStaff() : UNKNOWN, change.getDateCommit(),
 							change.getImportance()));
@@ -754,28 +761,28 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	}
 
 	@Override
-	public List<Contributor> gatherContributors(List<SCMChange> changes) {
+	public List<Contributor> gatherContributors(RepositoryAnalysis analysis) {
 		Set<Integer> idContributors = new HashSet<>();
-		changes.stream().map(SCMChange::getIdStaff).filter(idStaff -> idStaff != 0).distinct()
+		analysis.getChanges().stream().map(SCMChange::getIdStaff).filter(idStaff -> idStaff != 0).distinct()
 				.forEach(idContributors::add);
 
 		List<Contributor> contributors = new ArrayList<>();
 		for (int idStaff : idContributors) {
 
 			// The first commit submitted by this staff member
-			LocalDate firstCommit = changes.stream().filter(change -> idStaff == change.getIdStaff())
+			LocalDate firstCommit = analysis.getChanges().stream().filter(change -> idStaff == change.getIdStaff())
 					.map(SCMChange::getDateCommit).min(Comparator.comparing(LocalDate::toEpochDay))
 					.orElseThrow(() -> new SkillerRuntimeException(SHOULD_NOT_PASS_HERE));
 
 			// The last commit submitted by this staff member
-			LocalDate lastCommit = changes.stream().filter(change -> idStaff == change.getIdStaff())
+			LocalDate lastCommit = analysis.getChanges().stream().filter(change -> idStaff == change.getIdStaff())
 					.map(SCMChange::getDateCommit).max(Comparator.comparing(LocalDate::toEpochDay))
 					.orElseThrow(() -> new SkillerRuntimeException(SHOULD_NOT_PASS_HERE));
 
-			long numberOfCommits = changes.stream().filter(change -> idStaff == change.getIdStaff())
+			long numberOfCommits = analysis.getChanges().stream().filter(change -> idStaff == change.getIdStaff())
 					.map(SCMChange::getCommitId).distinct().count();
 
-			long numberOfFiles = changes.stream().filter(change -> idStaff == change.getIdStaff())
+			long numberOfFiles = analysis.getChanges().stream().filter(change -> idStaff == change.getIdStaff())
 					.map(SCMChange::getPath).distinct().count();
 
 			contributors
@@ -816,7 +823,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		// (date of staff member filtering)
 		CommitRepository repo = this.parseRepository(project, settings);
 		if (logger.isDebugEnabled()) {
-			logger.debug("The repository has been parsed. It contains " + repo.size() + " records in the repository");
+			logger.debug(String.format("The repository has been parsed. It contains %d records in the repository", repo.size()));
 		}
 
 		// Does the process requires a personalization ?
@@ -950,9 +957,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	}
 
 	@Override
-	public void updateStaff(Project project, List<SCMChange> changes, Set<String> unknownContributors) {
+	public void updateStaff(Project project, RepositoryAnalysis analysis, Set<String> unknownContributors) {
 
-		List<String> authors = changes.stream().filter(SCMChange::isAuthorIdentified).map(SCMChange::getAuthorName)
+		List<String> authors = analysis.getChanges().stream().filter(SCMChange::isAuthorIdentified).map(SCMChange::getAuthorName)
 				.distinct().collect(Collectors.toList());
 
 		authors.forEach(
@@ -969,7 +976,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 							//
 							// We update the staff collection !
 							//
-							changes.stream().filter(change -> author.equals(change.getAuthorName()))
+							analysis.getChanges().stream().filter(change -> author.equals(change.getAuthorName()))
 									.forEach(change -> change.setIdStaff(ghostIdentified));
 							//
 							// We find a staff entry, but we keep the pseudo in the unknowns list
@@ -989,7 +996,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 						//
 						// We update the staff collection !
 						//
-						changes.stream().filter(change -> author.equals(change.getAuthorName()))
+						analysis.getChanges().stream().filter(change -> author.equals(change.getAuthorName()))
 								.forEach(change -> change.setIdStaff(staff.getIdStaff()));
 					}
 
@@ -998,7 +1005,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	}
 
 	@Override
-	public void updateImportance(Project project, List<SCMChange> changes) throws SkillerException {
+	public void updateImportance(Project project, RepositoryAnalysis analysis) throws SkillerException {
 		
 		final AssessorImportance assessor = new FileSizeImportance();
 
@@ -1006,7 +1013,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			return change1.getPath().compareTo(change2.getPath());
 		};
 		
-		List<SCMChange> sortedChanges = changes.stream()
+		List<SCMChange> sortedChanges = analysis.getChanges().stream()
 					.sorted(filePathComparator)
 					.collect(Collectors.toList());
 
