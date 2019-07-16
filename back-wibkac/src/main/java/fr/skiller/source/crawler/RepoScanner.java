@@ -48,7 +48,7 @@ public interface RepoScanner {
 	 * @return the analysis extracted from the repository. This analysis contains the  collection with all changed detected on the passed repository.
 	 * @throws SkillerException thrown by the crawling operation.
 	 */
-	RepositoryAnalysis loadChanges(Repository repository) throws SkillerException;
+	RepositoryAnalysis loadChanges(Project project, Repository repository) throws SkillerException;
 
 	/**
 	 * <p>
@@ -200,5 +200,36 @@ public interface RepoScanner {
  	 * @return the cleanup path
  	 */
 	String cleanupPath (String path);
+
+	/**
+	 * <p>
+	 * Select the list of paths (the shortest possible) containing dependency keywords such as {@code jquery}, {@code bootstrap}...<br/>
+	 * The resulting list is kept inside the repositoryAnalysis container ({@link RepositoryAnalysis#getPathsCandidate()}.<br/>
+	 * The crawler will verify in {@link #retrieveRootPath(List)} 
+	 * if a sub-directory in the parent tree can be excluded from the analysis.<br/>
+	 * </p>
+	 * @param analysis the current repository container analysis.
+	 * @param dependencyKeywords list of keywords which might identify the existence of an external dependency inside the repository
+	 */
+	void selectPathDependencies (RepositoryAnalysis analysis, List<String> dependencyKeywords);
+
+	/**
+	 * <p>
+	 * Retrieve the root directory on each dependency pathnames where exclusion can start.</br>
+	 * e.g. a pathname like {@code src/main/javascript/app/component/jquery/src/internal-js-.js} 
+	 * will become {@code src/main/javascript/app/component/jquery}<br/><br/>
+	 * <font color="red">IMPORTANT : The method tests also that ALL files on each directory are identified as dependencies</font><br/>
+	 * This method will fill the dependencies collection {@link Project#getDependencies()} in the Project.
+	 * </p>
+	 * @param analysis the current repository container analysis.
+	 * @param pathnames collection of pathnames which contains an external dependency keyword such as {@code jquery} or {@code bootstrap} 
+	 * throws {@link IOException} if any IOExceptio occurs.
+	 */
+	void retrieveRootPath (RepositoryAnalysis analysis) throws IOException;
+
+	/**
+	 * @return the list of markers of dependencies such as {@code jquery}, {@code bootstrap}...
+	 */
+	List<String> dependenciesMarker();
 
 }

@@ -1,5 +1,6 @@
 package fr.skiller.data.internal;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,6 +64,12 @@ public class Project  {
 	 * Either they are missing from the staff collection, or they are technical.
 	 */
 	private List<Ghost> ghosts = new ArrayList<>();
+	
+	/**
+	 * List of path containing external dependencies.
+	 * They will be excluded from the crawl.
+	 */
+	private List<String> dependencies = new ArrayList<>();
 	
 	/**
 	 * Constant representing one the 2 models of connection settings.
@@ -281,12 +288,26 @@ public class Project  {
 	public String getLocationRepository() {
 		return locationRepository;
 	}
-
+	
 	/**
 	 * @param locationRepository the location where the repository occurs.
 	 */
 	public void setLocationRepository(String locationRepository) {
 		this.locationRepository = locationRepository;
+	}
+
+	/**
+	 * @return the dependencies list
+	 */
+	public List<String> getDependencies() {
+		return dependencies;
+	}
+
+	/**
+	 * Initialize the dependencies list.
+	 */
+	public void initDependencies() {
+		dependencies.clear();
 	}
 
 }

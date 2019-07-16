@@ -80,7 +80,7 @@ public class GitScannerTest {
 	RiskProcessor riskProcessor;
 
 	@Before
-	public void before() throws IOException {
+	public void before() throws IOException, SkillerException {
 
 		Gson gson = new GsonBuilder().create();
 		
@@ -98,9 +98,15 @@ public class GitScannerTest {
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("GIT remote URL %s", settings.getUrl()));
 		}
+
+		projectHandler.get(2).setLocationRepository(null);		
+	}
+	
+	@Test
+	public void emptyTest() {
 		
 	}
-	@Test
+	// @Test
 	public void cloneAndParseRepo() throws IOException, SkillerException, GitAPIException {
 
 		
@@ -133,4 +139,8 @@ public class GitScannerTest {
        
 	}
 	
+	@After
+	public void after() throws SkillerException {
+		projectHandler.get(2).setLocationRepository(null);		
+	}
 }

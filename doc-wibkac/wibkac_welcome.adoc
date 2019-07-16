@@ -94,7 +94,8 @@ cd wibkac
 |deploy/data
 |the data directories used by wibkac
 |deploy/data/application
-|the data directories where your corporate data will be stored (e.g. staff.json, project.json & skill.json). All of your updates will be stored there.
+|the data directories where your corporate data will be stored (e.g. staff.json, project.json & skill.json). 
+All of your updates will be stored there.
 |deploy/data/referential
 |the referential data which contains the static data used by the application
 |===
@@ -117,7 +118,7 @@ To test if the server is started, just visit the url http://localhost:8080/ping 
 
 The easiest installation involved no-installation. +
 The last stable release of front-wibkac is available here https://frvidal.github.io/wibkac/ . +
-This URL only a static web server delivering JS files. So just go there.
+This URL hosts only a static web server which delivers JS files. So just go there.
 
 If you prefer to deploy the front-end on-premise, like any other Angular application. +
 Just type 
@@ -133,6 +134,17 @@ For more precision, just RTFM, https://angular.io/guide/deployment
 
  
 == FIRST LAUNCH OF WIBKAC
+
+The common sense might consider that there only can be one first launch. 
+In fact, *two* are available with Lombok : the first launch and the *very* first launch. +
+
+
+
+=== THE VERY FIRST LAUNCH
+The first user of Lombok will the first administrative user. +
+
+image::img/very-first-connection-1.png[400,300]
+
 
 
 

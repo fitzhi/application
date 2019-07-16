@@ -13,11 +13,11 @@
 	</root>
 
 	<logger name="fr.skiller.controller" additivity="false">
-		<level value="DEBUG" />
+		<level value="WARN" />
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="fr.skiller.source.crawler.git" additivity="false">
+	<logger name="fr.skiller.source.crawler.git.GitCrawler" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>

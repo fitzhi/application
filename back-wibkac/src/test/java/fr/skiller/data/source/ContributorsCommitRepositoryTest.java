@@ -57,7 +57,7 @@ public class ContributorsCommitRepositoryTest {
     	
     	Project p = new Project(100, "Test");
     	
-    	RepositoryAnalysis analysis = new RepositoryAnalysis();
+    	RepositoryAnalysis analysis = new RepositoryAnalysis(p);
     	List<SCMChange> repo = analysis.getChanges();
     	
 		repo.add(new SCMChange(String.valueOf(System.nanoTime()), TEST, LocalDate.of(2018, 11, 1), FVIDAL, ""));

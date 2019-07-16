@@ -158,9 +158,9 @@ public class SCMChange {
 	
 	@Override
 	public String toString() {
-		return "SCMChange [commitId=" + commitId + ", path=" + path + ", dateCommit=" + dateCommit + ", authorName="
+		return "SCMChange[path=" + path + ", dateCommit=" + dateCommit + ", authorName="
 				+ authorName + ", authorEmail=" + authorEmail + ", idStaff=" + idStaff + ", importance=" + importance
-				+ "]";
+				+ "commitId=" + commitId + "]";
 	}
 
 }
