@@ -2,43 +2,41 @@
 
     <mat-sidenav mode="side" class="bg-light" opened>
 
-        <a [routerLink]=""  (click)="show(LEGEND_SUNBURST)"
-            [class]="(buttonActivated(LEGEND_SUNBURST) 
-						? 'activated sidenav round' 
-						: 'inactive sidenav round')">		
-            <img id="rules-of-risks" alt="Risks color legend" title=""
-                src="/assets/img/rules-of-risks.png"/>
-		</a> 
+		<button 
+			id="legend"
+			class="btn btn-outline-secondary rounded"
+            [ngClass]="{'btn-outline-success' : buttonActivated(LEGEND_SUNBURST), 'btn-outline-secondary': !buttonActivated(LEGEND_SUNBURST)}" 
+			[disabled]="buttonActivated(LEGEND_SUNBURST)"
+			(click)="show(LEGEND_SUNBURST)">
+			<i class="fas fa-question-circle font-awesome-settings"></i>
+		</button>
 
-        <br/>
+		<button 
+			id="settings"
+			class="btn btn-outline-secondary rounded"
+            [ngClass]="{'btn-outline-success' : buttonActivated(SETTINGS), 'btn-outline-secondary': !buttonActivated(SETTINGS)}" 
+			[disabled]="buttonActivated(SETTINGS)"
+			(click)="show(SETTINGS)">
+			<i class="fas fa-sliders-h font-awesome-settings"></i>
+		</button>
 
-        <a [routerLink]=""  (click)="show(SETTINGS)"
-           [class]="(buttonActivated(SETTINGS) 
-						? 'activated sidenav round' 
-						: 'inactive sidenav round')">		
-            <img id="settings" alt="Settings" title=""
-                src="/assets/img/settings.png"/>
-		</a> 
+		<button 
+			id="unknown"
+			class="btn btn-outline-secondary rounded"
+            [ngClass]="{'btn-outline-success' : buttonActivated(UNKNOWN), 'btn-outline-secondary': !buttonActivated(UNKNOWN)}" 
+			[disabled]="buttonActivated(UNKNOWN)"
+			(click)="show(UNKNOWN)">
+			<i class="fas fa-ghost font-awesome-settings"></i>
+		</button>
 
-        <br/>
-
-        <a [routerLink]=""  (click)="show(UNKNOWN)"
-           [class]="(buttonActivated(UNKNOWN) 
-						? 'activated sidenav round' 
-						: 'inactive sidenav round')">		
-            <img id="unknown" alt="Unknown contributors" title=""
-                src="/assets/img/question-marks.png"/>
-		</a> 
-
-        <br/>
-
-        <a [routerLink]=""  (click)="show(RESET)"
-           [class]="(buttonActivated(RESET) 
-						? 'activated sidenav round' 
-						: 'inactive sidenav round')">		
-            <img id="reset" alt="Reset the former calculation" title=""
-                src="/assets/img/reset.png"/>
-		</a> 
+ 		<button 
+			id="reset"
+			class="btn btn-outline-secondary rounded"
+            [ngClass]="{'btn-outline-success' : buttonActivated(RESET), 'btn-outline-secondary': !buttonActivated(RESET)}" 
+			[disabled]="buttonActivated(RESET)"
+			(click)="show(RESET)">
+			<i class="fas fa-trash-alt font-awesome-settings"></i>
+		</button>
 
     </mat-sidenav>
 

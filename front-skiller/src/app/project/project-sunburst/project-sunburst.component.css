@@ -26,60 +26,25 @@ mat-sidenav-container {
 }
 
 mat-sidenav {
-  width: 2.4em;
+  width: 50px;
 }
 
 mat-sidenav-content {
   margin-left: 50px;
 }
 
-#rules-of-risks {
-  margin-top: 0.2em;
-  margin-left: 0.1em;
-  width: 1.8em;
-  /*  */
-  height: 1.8em;
-  margin-bottom: 0.5em;
+#settings, #reset, #unknown, #legend {
+  margin-top: 5px;
+  margin-left: 3px;
+  margin-right: 0px;
+  width: 40px;
+  height: 40px;
+  padding: 0px;
+  margin-bottom: 5px;
 }
 
-#settings {
-  margin-top: 0.15em;
-  margin-left: 0.1em;
-  width: 1.8em;
-  height: 1.8em;
-  margin-bottom: 0.5em;
-}
-
-#unknown {
-  margin-top: 0.1em;
-  margin-left: 0.2em;
-  width: 1.8em;
-  height: 1.8em;
-  margin-bottom: 0.5em;
-}
-
-#reset {
-  margin-top: 0.1em;
-  margin-left: 0.1em;
-  width: 1.8em;
-  height: 1.8em;
-  margin-bottom: 0.5em;
-}
-
-a.sidenav {
-  text-decoration: none;
-  display: inline-block;
-  width: 2em;
-  height: 2em;
-  margin-top: 0.5em;
-  margin-left: 0.15em;
-}
-
-a.sidenav:hover,
-.activated {
-  background-color: lightGrey;
-  width: 2em;
-  height: 2em;
+.font-awesome-settings {
+	font-size: 23px;
 }
 
 .inactive {
@@ -109,6 +74,11 @@ a.sidenav:hover,
   top: 0.1em;
   left: 2.6em;
   font-size: 20px;
+}
+
+button.btn-outline-success {
+    background-color: #28a745;
+    color: white;
 }
 
 

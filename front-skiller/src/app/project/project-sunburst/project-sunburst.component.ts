@@ -355,6 +355,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
     * @param idPanel Panel identifier
     */
 	public show(idPanel: number) {
+		this.idPanelSelected = idPanel;
 		switch (idPanel) {
 			case this.UNKNOWN:
 				this.dialogGhosts();
@@ -400,6 +401,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 							this.dataGhosts.ghostsSubject.next(result);
 						}
 					}
+					this.idPanelSelected = -1;
 				}));
 	}
 
@@ -409,12 +411,16 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		dialogConfig.autoFocus = true;
 		dialogConfig.position = { top: '5em', left: '5em' };
 		dialogConfig.panelClass = 'default-dialog-container-class';
-		this.dialog.open(DialogLegendSunburstComponent, dialogConfig);
+		const dlg = this.dialog.open(DialogLegendSunburstComponent, dialogConfig);
+		this.subscriptions.add(
+			dlg.afterClosed().subscribe(() => this.idPanelSelected = -1));
+
 	}
 
 	reset() {
 		if (typeof this.project === 'undefined') {
 			this.messageService.info('Nothing to reset !');
+			this.idPanelSelected = -1;
 			return;
 		}
 		this.subscriptions.add(
@@ -431,7 +437,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 										'The request is not necessary : no dashboard available.');
 								}
 							}));
-					}
+						}
+					this.idPanelSelected = -1;
 				})
 		);
 	}
@@ -439,11 +446,13 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	dialogFilter() {
 		if (typeof this.project === 'undefined') {
 			this.messageService.info('Nothing to filter !');
+			this.idPanelSelected = -1;
 			return;
 		}
 
 		if (typeof this.dataGhosts === 'undefined') {
 			this.messageService.info('Please wait !');
+			this.idPanelSelected = -1;
 			return;
 		}
 
@@ -455,6 +464,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		const dlg = this.dialog.open(DialogFilterComponent, dialogConfig);
 		this.subscriptions.add(
 			dlg.afterClosed().subscribe(settings => {
+				this.idPanelSelected = -1;
 				this.settings.idStaffSelected =
 					((typeof settings.idStaffSelected === 'undefined') || (settings.idStaffSelected.length === 0))
 						? 0 : settings.idStaffSelected;
