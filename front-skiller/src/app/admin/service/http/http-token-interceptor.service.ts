@@ -29,6 +29,13 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 
 			const authService = this.injector.get(AuthService);
 
+		/** 
+		 * FOR DEVELOPMENT PURPOSE ONLY we deactivate the security control.
+		 */
+		if (localStorage.getItem('dev') === '1') {
+			return next.handle(req);
+		}
+
 		if (req.url.includes('/referential/')
 			|| req.url.includes('/skill/all')
 			|| req.url.includes('/admin/isVeryFirstConnection')

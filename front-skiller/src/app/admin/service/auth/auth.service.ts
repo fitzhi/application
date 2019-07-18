@@ -72,6 +72,11 @@ export class AuthService extends InternalService {
      * @returns TRUE if the user is connected, FALSE otherwise.
      */
 	public isConnected() {
+
+		// For development convenience, we deactivate the security control.
+		if (localStorage.getItem('dev') === '1') {
+			return true;
+		}
 		return this.connected;
 	}
 
