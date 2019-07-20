@@ -33,7 +33,7 @@ mat-sidenav-content {
   margin-left: 50px;
 }
 
-#settings, #reset, #unknown, #legend {
+#settings, #reset, #unknown, #legend, #dependencies {
   margin-top: 5px;
   margin-left: 3px;
   margin-right: 0px;

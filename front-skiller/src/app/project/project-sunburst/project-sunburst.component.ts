@@ -65,8 +65,11 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	// Unknown contributors panel has to be displayed.
 	public UNKNOWN = 3;
 
+	// Dependencies either detected or declared in the project.
+	public DEPENDENCIES = 4;
+
 	// After confirmation, we reset the dashboard data.
-	public RESET = 4;
+	public RESET = 5;
 
 	// Identifier of the panel selected.
 	private idPanelSelected = -1;
@@ -357,17 +360,19 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	public show(idPanel: number) {
 		this.idPanelSelected = idPanel;
 		switch (idPanel) {
-			case this.UNKNOWN:
-				this.dialogGhosts();
-				break;
 			case this.LEGEND_SUNBURST:
 				this.dialogLegend();
 				break;
-			case this.RESET:
-				this.reset();
-				break;
 			case this.SETTINGS:
 				this.dialogFilter();
+				break;
+			case this.UNKNOWN:
+				this.dialogGhosts();
+				break;
+			case this.DEPENDENCIES:
+				break;
+			case this.RESET:
+				this.reset();
 				break;
 			default:
 				break;

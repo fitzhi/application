@@ -29,6 +29,15 @@
 			<i class="fas fa-ghost font-awesome-settings"></i>
 		</button>
 
+		<button 
+			id="dependencies"
+			class="btn btn-outline-secondary rounded"
+            [ngClass]="{'btn-outline-success' : buttonActivated(DEPENDENCIES), 'btn-outline-secondary': !buttonActivated(DEPENDENCIES)}" 
+			[disabled]="buttonActivated(DEPENDENCIES)"
+			(click)="show(DEPENDENCIES)">
+			<i class="fab fa-elementor font-awesome-settings"></i>
+		</button>
+
  		<button 
 			id="reset"
 			class="btn btn-outline-secondary rounded"
