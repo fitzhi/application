@@ -90,6 +90,18 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	}
 
 	/**
+	 * This method receives the new tab to activate from e.g. the sunburst tab pane child (but it won't be the only one).
+	 * @param tabIndex new tab to activate.
+	 */
+	public tabActivation (tabIndex: number) {
+		setTimeout (() => this.tabIndex = tabIndex);
+		if (Constants.DEBUG) {
+			console.log ('Selected index', this.tabIndex);
+		}
+
+	}
+
+	/**
      * Loading the project from the back-end.
      */
 	loadProject() {

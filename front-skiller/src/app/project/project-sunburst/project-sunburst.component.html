@@ -4,6 +4,7 @@
 
 		<button 
 			id="legend"
+			data-toggle="tooltip" data-placement="right" title="Diagram legend. What does mean all these colors?"
 			class="btn btn-outline-secondary rounded"
             [ngClass]="{'btn-outline-success' : buttonActivated(LEGEND_SUNBURST), 'btn-outline-secondary': !buttonActivated(LEGEND_SUNBURST)}" 
 			[disabled]="buttonActivated(LEGEND_SUNBURST)"
@@ -13,6 +14,7 @@
 
 		<button 
 			id="settings"
+			data-toggle="tooltip" data-placement="right" title="Filtering the diagram by date or developer"
 			class="btn btn-outline-secondary rounded"
             [ngClass]="{'btn-outline-success' : buttonActivated(SETTINGS), 'btn-outline-secondary': !buttonActivated(SETTINGS)}" 
 			[disabled]="buttonActivated(SETTINGS)"
@@ -22,6 +24,7 @@
 
 		<button 
 			id="unknown"
+			data-toggle="tooltip" data-placement="right" title="Ghosts list of the repository. unknown developers"
 			class="btn btn-outline-secondary rounded"
             [ngClass]="{'btn-outline-success' : buttonActivated(UNKNOWN), 'btn-outline-secondary': !buttonActivated(UNKNOWN)}" 
 			[disabled]="buttonActivated(UNKNOWN)"
@@ -31,6 +34,7 @@
 
 		<button 
 			id="dependencies"
+			data-toggle="tooltip" data-placement="right" data-delay="10" title="Dependencies list detected or declared for this project"
 			class="btn btn-outline-secondary rounded"
             [ngClass]="{'btn-outline-success' : buttonActivated(DEPENDENCIES), 'btn-outline-secondary': !buttonActivated(DEPENDENCIES)}" 
 			[disabled]="buttonActivated(DEPENDENCIES)"
@@ -40,6 +44,7 @@
 
  		<button 
 			id="reset"
+			data-toggle="tooltip" data-placement="right" title="Reset the dashboard and regenerate a brand new one."
 			class="btn btn-outline-secondary rounded"
             [ngClass]="{'btn-outline-success' : buttonActivated(RESET), 'btn-outline-secondary': !buttonActivated(RESET)}" 
 			[disabled]="buttonActivated(RESET)"
@@ -47,23 +52,33 @@
 			<i class="fas fa-trash-alt font-awesome-settings"></i>
 		</button>
 
-    </mat-sidenav>
-
+	</mat-sidenav>
+	
     <mat-sidenav-content>
 
-        <div [hidden]="!sunburst_impossible">
-                <br/><br/><h4>Version control connection settings are unknown !<br>They need to be filled out first.</h4>
+		<div id="titleSunburst">
+			{{titleSunburst}}  
+		</div>
+
+		<div id="warningSunburstImpossible" [hidden]="!isActiveContext(CONTEXT.SUNBURST_IMPOSSIBLE)">
+			<ul>
+				<li>Either your project does not exist yet. You need first to save the project, before working on its evaluation.</li>
+				<li>Or the connection settings of your source control is unknown.</li>
+			</ul>
+			<a href="javascript:;" (click)="jumpToTab (-1)">You have to complete the project form.</a>
         </div>
 
-        <div [hidden]="!sunburst_ready" >
-            <app-node-detail id="node-details" [filenames]="filenames" [contributors]="contributors" [location]="location$"></app-node-detail>
-            <div id="titleSunburst">
-                {{titleSunburst}}  
-            </div>
-            <div id="chart"></div>
-        </div>
+        <div [hidden]="!isActiveContext(CONTEXT.SUNBURST_READY)">
+			<app-node-detail id="node-details" 
+				[filenames]="filenames" 
+				[contributors]="contributors" 
+				[location]="location$">
+			</app-node-detail>		
+		</div>
+		
+		<div id="chart" [hidden]="!isActiveContext(CONTEXT.SUNBURST_READY)"></div>
 
-        <div class="row" [hidden]="!sunburst_waiting">
+		<div class="row" style="width: 100%" [hidden]="!isActiveContext(CONTEXT.SUNBURST_WAITING)">
 			<div class="col-md-1"></div>
             <div class="col-md-10 text-left w100">
 				<mat-card style="margin-top:30px">
@@ -76,11 +91,13 @@
 				</mat-card>
 			</div>
 			<div class="col-md-1"></div>
-        </div>
-        
+		</div>
+
+		<div class="row" style="width: 100px; height: 100px; background-color: green" 
+			[hidden]="!isActiveContext(CONTEXT.SUNBURST_DEPENDENCIES)">
+		</div>
+
     </mat-sidenav-content>
-
 </mat-sidenav-container>
-
 
 

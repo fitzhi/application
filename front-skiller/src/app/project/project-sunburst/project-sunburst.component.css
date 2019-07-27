@@ -81,4 +81,9 @@ button.btn-outline-success {
     color: white;
 }
 
-
+#warningSunburstImpossible {
+	margin: 20px;
+	padding: 10px;
+	background-color: whitesmoke;
+	color: red;
+}

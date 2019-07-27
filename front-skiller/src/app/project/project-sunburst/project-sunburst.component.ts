@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import Sunburst from 'sunburst-chart';
 import { Constants } from '../../constants';
 import { MessageService } from '../../message/message.service';
@@ -32,6 +32,15 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
      * The project loaded in the parent component.
      */
 	@Input('subjProject') subjProject;
+
+	/**
+	 * This component, hosted in a tab pane, use this emitter to inform its parent to change the active pane.
+	 * e.g. if the project form is not complete, application will jump to this tab pane.
+	 */
+	@Output() tabActivationEmitter = new EventEmitter<number>();
+
+	public PROJECT_IDX_TAB_FORM = Constants.PROJECT_IDX_TAB_FORM;
+	
 	/**
     * Project loaded on the parent component.
     */
@@ -44,14 +53,16 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	public dataGhosts: ProjectGhostsDataSource;
 
-	// this boolean is indicating that the sunburst chart is ready to be viewed.
-	public sunburst_ready = false;
+	// Active current context
+	public activeContext = 0;
 
-	// this boolean is indicating that the sunburst chart is not possible.
-	public sunburst_impossible = true;
-
-	// this boolean is indicating that the sunburst chart is on fabrication
-	public sunburst_waiting = false;
+	// this context is indicating that the sunburst chart is ready to be viewed.
+	public CONTEXT = {
+		SUNBURST_READY: 1,
+		SUNBURST_IMPOSSIBLE: 2,
+		SUNBURST_WAITING: 3,
+		SUNBURST_DEPENDENCIES: 4
+	};
 
 	// Waiting images previewed during the chart generation.
 	public sunburstWaitingImage = './assets/img/sunburst-waiting-image.png';
@@ -127,9 +138,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				this.projectName = this.project.name;
 				if ((typeof this.project.urlRepository === 'undefined') || (this.project.urlRepository.length === 0)) {
 					this.messageService.info('No repository URL avalaible !');
-					this.sunburst_ready = false;
-					this.sunburst_waiting = false;
-					this.sunburst_impossible = true;
+					this.setActiveContext (this.CONTEXT.SUNBURST_IMPOSSIBLE);
 				}
 			}));
 
@@ -151,9 +160,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			if (Constants.DEBUG) {
 				console.log('No project identifier passed to this tab. No data available for preview !');
 			}
-			this.sunburst_ready = false;
-			this.sunburst_waiting = false;
-			this.sunburst_impossible = true;
+			this.setActiveContext (this.CONTEXT.SUNBURST_IMPOSSIBLE);
 			return;
 		}
 	}
@@ -164,14 +171,10 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	loadSunburst() {
 
 		if ((typeof this.project === 'undefined') || (typeof this.project.id === 'undefined')) {
-			this.sunburst_impossible = true;
-			this.sunburst_waiting = false;
-			this.sunburst_ready = false;
+			this.setActiveContext (this.CONTEXT.SUNBURST_IMPOSSIBLE);
 			return;
 		} else {
-			this.sunburst_impossible = false;
-			this.sunburst_waiting = true;
-			this.sunburst_ready = false;
+			this.setActiveContext (this.CONTEXT.SUNBURST_WAITING);
 		}
 
 		if (typeof this.myChart === 'undefined') {
@@ -190,8 +193,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					() => {
 						this.hackSunburstStyle();
 						this.tooltipChart();
-						this.sunburst_ready = true;
-						this.sunburst_waiting = false;
+						this.setActiveContext (this.CONTEXT.SUNBURST_READY);
 					}));
 	}
 
@@ -370,6 +372,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				this.dialogGhosts();
 				break;
 			case this.DEPENDENCIES:
+				this.setActiveContext(this.CONTEXT.SUNBURST_DEPENDENCIES);
 				break;
 			case this.RESET:
 				this.reset();
@@ -436,7 +439,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 							this.projectService.resetDashboard(this.settings.idProject).subscribe(response => {
 								if (response) {
 									this.messageBoxService.exclamation('Operation complete',
-										'Dashboard reinitialization is done.');
+										'Dashboard reinitialization has been requested. The operation might last a while.');
 								} else {
 									this.messageBoxService.exclamation('Operation failed',
 										'The request is not necessary : no dashboard available.');
@@ -507,6 +510,36 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
     **/
 	public buttonActivated(idPanel: number) {
 		return (idPanel === this.idPanelSelected);
+	}
+
+	/**
+	 * Set the new active context insoide the form component.
+	 */
+	public setActiveContext(context: number) {
+		this.activeContext = context;
+		if (Constants.DEBUG) {
+			console.log ('New active context', this.activeContext);
+		}
+	}
+
+	/**
+	 * Test if the passed context is the current active context.
+	 * There are 4 context possible in this form container
+	 * . sunburst_waiting : the graph representing the risk of staff coverage is currently being build</li>
+	 * . sunburst_ready : the graph is ready to be displayed
+	 * . sunburst_impossible : either lack of connection information, or lack of internet, or something else : the graph cannot be displayed.
+	 * . sunburst_detail_dependencies : the table of dependencies detected or declared is available in the container.
+	 */
+	public isActiveContext(context: number) {
+		return (context === this.activeContext);
+	}
+
+	/**
+	 * Change the current active tab.
+	 * @param tabIndex index of tab requested.
+	 */
+	public jumpToTab(tabIndex: number) {
+		this.tabActivationEmitter.next(tabIndex);
 	}
 
 	/**

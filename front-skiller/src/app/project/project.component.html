@@ -1,4 +1,4 @@
-<mat-tab-group  [selectedIndex]="tabIndex" (selectedIndexChange)="selectedIndexChange($event)">
+<mat-tab-group [selectedIndex]="tabIndex" (selectedIndexChange)="selectedIndexChange($event)">
 	<mat-tab label="Project"> 
 		<div class="large-box mat-elevation-z4">
 			<app-project-form [subjProject]="subjProject"></app-project-form>
@@ -11,7 +11,10 @@
 	</mat-tab> 
 	<mat-tab [disabled]="!canConnectSourceControl()" label="Staff Coverage"> 
 		<div class="large-box mat-elevation-z4" style="background-color: pink; height: inherit">
-			<app-project-sunburst [subjProject]="subjProject"></app-project-sunburst>
+			<app-project-sunburst 
+			[subjProject]="subjProject"
+			(tabActivationEmitter)="tabActivation($event)">
+			</app-project-sunburst>
 		</div>
 	</mat-tab> 
 </mat-tab-group>
