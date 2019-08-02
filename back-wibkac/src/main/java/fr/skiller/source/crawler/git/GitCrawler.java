@@ -82,6 +82,7 @@ import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.DataChartHandler;
 import fr.skiller.bean.DataSaver;
+import fr.skiller.bean.ProjectDashboardCustomizer;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
@@ -116,19 +117,6 @@ import static fr.skiller.Error.SHOULD_NOT_PASS_HERE;
 public class GitCrawler extends AbstractScannerDataGenerator implements RepoScanner {
 
 	/**
-	 * These directories will be removed from the full path of class files<br/>
-	 * For example : <code>/src/main/java/java/util/List.java</code> will be treated
-	 * like <code>java/util/List.java</code>
-	 */
-	@Value("${patternsCleanup}")
-	private String patternsCleanup;
-
-	/**
-	 * Cleanup patterns list.
-	 */
-	private List<Pattern> patternsCleanupList;
-
-	/**
 	 * Patterns to take account, OR NOT, a file within the parsing process.<br/>
 	 * For example, a file with the suffix .java is involved.
 	 */
@@ -150,6 +138,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	 */
 	@Value("${dependenciesMarker}")
 	private String dependenciesMarker;
+	
+	@Autowired
+	ProjectDashboardCustomizer projectDashboardCustomizer;
 	
 	/**
 	 * List of file patterns, to be included, or excluded, from the parsing process
@@ -247,14 +238,6 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 	@PostConstruct
 	public void init() {
-
-		patternsCleanupList = Arrays.asList(patternsCleanup.split(";")).stream().map(Pattern::compile)
-				.collect(Collectors.toList());
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("Pattern CLEANUP loaded from the file application.properties : ");
-			patternsCleanupList.stream().forEach(p -> logger.debug(p.pattern()));
-		}
 
 		patternsInclusionList = Arrays.asList(patternsInclusion.split(";")).stream().map(Pattern::compile)
 				.collect(Collectors.toList());
@@ -590,7 +573,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 	@Override
 	public void cleanupPaths(RepositoryAnalysis analysis) {
-		analysis.getChanges().stream().forEach(change -> change.setPath(cleanupPath(change.getPath())));
+		analysis.getChanges().stream().forEach(change -> change.setPath(projectDashboardCustomizer.cleanupPath(change.getPath())));
 	}
 
 	@Override
@@ -689,6 +672,14 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			logger.debug(String.format("loadChanges (%s) returns %d entries", project.getName(), analysis.sizeChanges()));
 		}
 		
+		/**
+		 * We save the directories of the repository.
+		 */
+		dataSaver.saveRepositoryDirectories(project, analysis.getChanges());
+		
+		/**
+		 * For test and debug purpose
+		 */
 		dataSaver.saveChanges(project, analysis.getChanges());
 
 		/**
@@ -745,7 +736,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		repositoryOfCommit = new BasicCommitRepository();
 
 		/**
-		 * Set of unknown contributors having work on this repository.
+		 * Set of unknown contributors who have work on this repository.
 		 */
 		unknown = repositoryOfCommit.unknownContributors();
 
@@ -830,20 +821,6 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			}
 		}
 		return select;
-	}
-
-	@Override
-	public String cleanupPath(final String path) {
-
-		String cleanupPath = "";
-
-		for (Pattern pattern : patternsCleanupList) {
-			Matcher matcher = pattern.matcher(path);
-			if (matcher.find() && (cleanupPath.length() == 0)) {
-				cleanupPath = path.substring(0, matcher.start() + 1) + path.substring(matcher.end());
-			}
-		}
-		return (cleanupPath.length() == 0) ? path : cleanupPath;
 	}
 
 	@Override

@@ -15,35 +15,29 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import fr.skiller.bean.ProjectDashboardCustomizer;
 import fr.skiller.source.crawler.RepoScanner;
 
 /**
+ * <p>Testing the implementation of {@link fr.skiller.bean.ProjectDashboardCustomizer#cleanupPath(String)}</p>
  * @author Fr&eacute;d&eacute;ric VIDAL
- * Testing the implementation of the GIT scanner.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class GitScannerCleanupPathTest {
+public class ProjectDashboardCustomizerCleanupPathTest {
 	
-	Logger logger = LoggerFactory.getLogger(GitScannerCleanupPathTest.class.getCanonicalName());
+	Logger logger = LoggerFactory.getLogger(ProjectDashboardCustomizerCleanupPathTest.class.getCanonicalName());
 	
-	/**
-	 * Source control parser.
-	 */
 	@Autowired
-	@Qualifier("GIT")
-	RepoScanner scanner;
+	ProjectDashboardCustomizer projectDashboardCustomizer;
 
 	@Test
-	public void cloneAndParseRepo() throws Exception {
+	public void cloneAndParseRepo()  {
 		
 		Assert.assertEquals( 
 				"TOTO/fr/test/MyClass.java",
-				scanner.cleanupPath("TOTO/src/main/java/fr/test/MyClass.java"));
+				projectDashboardCustomizer.cleanupPath("TOTO/src/main/java/fr/test/MyClass.java"));
 		
 	}
 	
-	@After
-	public void after() throws IOException {
-	}
 }

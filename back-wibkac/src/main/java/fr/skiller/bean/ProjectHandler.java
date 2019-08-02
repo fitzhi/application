@@ -114,4 +114,5 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @throws SkillerException thrown if any problem, most propably, the project does not exist any more.
 	 */
 	void saveLocationRepository (int idProject, String location) throws SkillerException;
+	
 }

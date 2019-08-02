@@ -44,7 +44,6 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	 */
 	Logger logger = LoggerFactory.getLogger(SkillHandlerImpl.class.getCanonicalName());
 
-
 	@Override
 	public Map<Integer, Skill> getSkills() {
 		

@@ -28,7 +28,7 @@ public class RepositoryAnalysis {
 
 	/**
 	 * List of paths detected as having been modified in the history of the repository.<br/>
-	 * This list is used to retrieve, by subtraction, i.e. the files never modified, the list of files just <b>added</b>, maybe <u>external files include?</u> 
+	 * This list is used to retrieve, by subtraction, i.e. the files never modified, the list of files just <b>added</b>, maybe <u>external files include.</u> 
 	 * These files might be external dependencies, non relevant for audit.  
 	 */
 	private final Set<String> pathsModified = new HashSet<>();

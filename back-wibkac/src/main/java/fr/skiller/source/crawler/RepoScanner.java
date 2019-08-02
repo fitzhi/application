@@ -77,7 +77,7 @@ public interface RepoScanner {
 	/**
 	 * <p>
 	 * Cleanup the pathnames of the changes collection.<br/>
-	 * For example : <code>/src/main/java/java/util/List.java</code> will be treated like <code>java/util/List.java</code>
+	 * e.g. <code>/src/main/java/java/util/List.java</code> will be treated like <code>java/util/List.java</code>
 	 * </p>
 	 * @param analysis the repository analysis.
 	 */
@@ -193,14 +193,6 @@ public interface RepoScanner {
 	 */
 	boolean hasAvailableGeneration(Project project) throws IOException;
 	
- 	/**
- 	 * Extract from the filename path the non relevant directory (such as {@code /src/main/java}) <br/>
- 	 * <i>(This method is public for testing purpose.)</i>
- 	 * @param path the given path
- 	 * @return the cleanup path
- 	 */
-	String cleanupPath (String path);
-
 	/**
 	 * <p>
 	 * Select the list of paths (the shortest possible) containing dependency keywords such as {@code jquery}, {@code bootstrap}...<br/>

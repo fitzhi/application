@@ -605,7 +605,6 @@ public class ProjectController {
 		if (logger.isDebugEnabled()) {
 			logger.debug (String.format("Removing project with %d", idProject));
 		}
-
 		MyReference<ResponseEntity<String>> refResponse = new MyReference<>();
 		Project project = getProject(idProject, "", refResponse);
 		if (refResponse.response != null) {
@@ -613,6 +612,7 @@ public class ProjectController {
 		}
 
 		try {
+			projectHandler.saveLocationRepository(idProject, null);
 			String response = cacheDataHandler.removeRepository(project) ? "1" : "0";
 			if ("1".equals(response)) {
 				scanner.generateAsync(project, new SettingsGeneration(project.getId()));

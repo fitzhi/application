@@ -6,10 +6,13 @@ package fr.skiller.bean.impl;
 import static fr.skiller.Error.CODE_IO_ERROR;
 import static fr.skiller.Error.MESSAGE_IO_ERROR;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
@@ -19,6 +22,7 @@ import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -33,6 +37,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.opencsv.CSVWriter;
 
+import fr.skiller.Global;
 import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.ShuffleService;
@@ -246,12 +251,62 @@ public class FileDataSaverImpl implements DataSaver {
 		        			change.getDateCommit().toString(),
 		        			change.getAuthorName(),
 		        			change.getAuthorEmail()}));
-		        }
-	        } catch (IOException ioe) {
-	        	throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
-	        }
-		}
+		    }
+        } catch (IOException ioe) {
+        	throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
+        }
+	}
 	
+	/**
+	 * Extract the directory path from the file path. 
+	 * @param pathFilename path filename
+	 * @return the path of the directory
+	 */
+	private String extractDirectory (String pathFilename) {
+		int lastIndexOf = pathFilename.lastIndexOf('/');
+		if (lastIndexOf == -1) {
+			return pathFilename;
+		} else {
+			return pathFilename.substring(0, lastIndexOf);
+		}
+	}
+
+	/**
+	 * Reset or create a new file
+	 * @param filename the current filename
+	 * @return a new file
+	 * @throws SkillerException
+	 */
+	private File createResetOrCreateFile (String filename) throws SkillerException {
+		Path path = rootLocation.resolve(filename);
+		try {
+			if (path.toFile().exists()) {
+				Files.delete(path);
+			}
+			Path newPath = Files.createFile(path);
+			return newPath.toFile();
+	    } catch (IOException ioe) {
+	    	throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, path.toFile().getAbsolutePath()), ioe);
+	    }
+	}
+	
+	/**
+	 * <p>Test if the pathname is a directory in the repository.</p>
+	 * @param project the current project whose repository is crawled.
+	 * @param pathname the given pathname
+	 * @return {@code true} if the pathname is a directory.
+	 */
+	private boolean isDirectory (final Project project, final String pathname) {
+		
+		if (pathname.indexOf(File.separatorChar) != -1) {
+				return true;
+		}
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("Examining if %s is a directory", project.getLocationRepository() + File.separatorChar + pathname));
+		}
+		return Paths.get(project.getLocationRepository() + File.separatorChar + pathname).toFile().isDirectory();
+	}
+
 	@Override
 	public Map<Integer, Skill> loadSkills() throws SkillerException {
 
@@ -280,6 +335,55 @@ public class FileDataSaverImpl implements DataSaver {
 			logger.debug(sb.toString());
 		}
 		return skills;
+	}
+	
+	@Override
+	public void saveRepositoryDirectories(Project project, List<SCMChange> changes) throws SkillerException {
+
+		final String filename = "project-" + project.getId() + "-pathnames.txt";
+
+		List<String> directories = changes.stream()
+				.map(SCMChange::getPath)
+				.distinct()
+				.map(this::extractDirectory)
+				.distinct()
+				.filter(path -> isDirectory(project, path))
+				.sorted()
+				.collect(Collectors.toList());
+
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("Saving paths file %s", rootLocation.resolve(filename)));
+		}		
+		
+		File file = createResetOrCreateFile(filename);
+		
+		try (Writer writer = new FileWriter(file)) {
+			for (String dir : directories) {
+				writer.write(dir);
+				writer.write(Global.LN);
+			}
+        } catch (IOException ioe) {
+        	throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
+        }
+	}
+
+
+	@Override
+	public List<String> loadRepositoryDirectories(Project project) throws SkillerException {
+		
+		final String filename = "project-" + project.getId() + "-pathnames.txt";
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("Loading the paths file %s", rootLocation.resolve(filename)));
+		}
+
+		File file = rootLocation.resolve(filename).toFile();
+		try (Reader reader = new FileReader(file)) {
+			BufferedReader br = new BufferedReader(reader);
+			return br.lines().collect(Collectors.toList());
+        } catch (IOException ioe) {
+        	throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
+        }
+		
 	}
 
 

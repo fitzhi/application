@@ -155,6 +155,24 @@ public class CrawlerWibkacTest {
 		dataSaver.saveChanges(new Project(777, "test"), analysis.getChanges());
 	}
 
+	/**
+	 * Test the method dataHandler.saveSCMPath
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void testsaveSCMPath() throws IOException, SkillerException {
+
+		FileRepositoryBuilder builder = new FileRepositoryBuilder();
+		repository = builder.setGitDir(new File(String.format(FILE_GIT, WIBKAC))).readEnvironment().findGitDir()
+				.build();
+
+		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);
+
+		Project p = new Project(777, "test");
+		p.setLocationRepository(new File(String.format(FILE_GIT, WIBKAC)).getAbsolutePath());
+		dataSaver.saveRepositoryDirectories(p, analysis.getChanges());
+	}
 
 	@Test
 	public void testParseRepository() throws IOException, SkillerException, GitAPIException {
