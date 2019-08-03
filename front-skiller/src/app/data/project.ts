@@ -13,7 +13,7 @@ export class Project {
 	public skills: Skill[];
 
 	/**
-	 * Array of dependencies
+	 * Array of dependeny paths (detected or declared) for this project.
 	 */
 	public dependencies: Dependency[];
 
