@@ -69,7 +69,7 @@ public class Project  {
 	 * List of path containing external dependencies.
 	 * They will be excluded from the crawl.
 	 */
-	private List<String> dependencies = new ArrayList<>();
+	private List<Dependency> dependencies = new ArrayList<>();
 	
 	/**
 	 * Constant representing one the 2 models of connection settings.
@@ -299,7 +299,7 @@ public class Project  {
 	/**
 	 * @return the dependencies list
 	 */
-	public List<String> getDependencies() {
+	public List<Dependency> getDependencies() {
 		return dependencies;
 	}
 

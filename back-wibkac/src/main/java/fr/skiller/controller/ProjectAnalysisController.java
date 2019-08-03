@@ -75,9 +75,15 @@ public class ProjectAnalysisController {
 
 		final Project project = projectLoader.getProject(idProject, new ArrayList<String>(), refResponse);
 		if (refResponse.response != null) {
+			if (logger.isDebugEnabled()) {
+				logger.debug (String.format("Project not found for id %d" , idProject));
+			} 
 			return refResponse.response;
 		}
-
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("scanning the directories from %s", project.getLocationRepository()));
+		}
+		
 		try {
 
 			List<String> paths = this.dashboardCustomizer.lookupPathRepository(project, criteria);

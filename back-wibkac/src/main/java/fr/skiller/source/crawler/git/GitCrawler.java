@@ -88,6 +88,7 @@ import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import fr.skiller.controller.ProjectController.SettingsGeneration;
+import fr.skiller.data.internal.Dependency;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RepositoryAnalysis;
@@ -580,7 +581,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	public void removeNonRelevantDirectories(Project project, RepositoryAnalysis analysis) {
 		
 		project.getDependencies().stream().forEach(dep ->
-			analysis.getChanges().removeIf(change -> change.getPath().contains(dep))
+			analysis.getChanges().removeIf(change -> change.getPath().contains(dep.getExclusionDirectory()))
 		);
 /*
 		analysis.getChanges().removeIf(change -> change.getPath().contains("docs/")); 
@@ -1152,7 +1153,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			}
 
 			if (containFilesOnlyAdded(analysis, new File(absolutePath))) {
-				analysis.getProject().getDependencies().add(pathname);
+				analysis.getProject().getDependencies().add( new Dependency(pathname, 1));
 				if (logger.isDebugEnabled()) {
 					logger.debug (String.format("Handling %s as a dependency", pathname));
 				}
@@ -1160,7 +1161,10 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		}
 		if (logger.isInfoEnabled()) {
 			logger.info("Dependencies detected in the repository :");
-			analysis.getProject().getDependencies().forEach(logger::info);
+			analysis.getProject().getDependencies()
+				.stream()
+				.map(Dependency::getExclusionDirectory)
+				.forEach(logger::info);
 		}
 	}
 		

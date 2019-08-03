@@ -114,7 +114,8 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 
 		return pathsList.stream()
 			.map(this::cleanupPath)
-			.filter(s -> s.startsWith(criteria))
+			.map(String::toLowerCase)
+			.filter(s -> s.startsWith(criteria.toLowerCase()))
 			.map (s -> this.extractPath(s, criteria.length()))
 			.distinct()
 			.collect(Collectors.toList());
