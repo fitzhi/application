@@ -1,0 +1,103 @@
+package fr.skiller.controller;
+
+import static fr.skiller.Error.getStackTrace;
+import static fr.skiller.Global.BACKEND_RETURN_CODE;
+import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.PostConstruct;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import fr.skiller.bean.ProjectDashboardCustomizer;
+import fr.skiller.bean.ProjectHandler;
+import fr.skiller.controller.util.ProjectLoader;
+import fr.skiller.controller.util.ProjectLoader.MyReference;
+import fr.skiller.data.internal.Project;
+import fr.skiller.exception.SkillerException;
+
+/**
+ * <p>
+ * Controller in charge of the interaction between the front-end and the
+ * analysis processed by the back-end.
+ * </p>
+ * 
+ * @author Fr&eacute;d&eacute;ric VIDAL
+ */
+@RestController
+@RequestMapping("/project/analysis")
+public class ProjectAnalysisController {
+
+	private final Logger logger = LoggerFactory.getLogger(ProjectAnalysisController.class.getCanonicalName());
+
+	@Autowired
+	ProjectDashboardCustomizer dashboardCustomizer;
+
+	@Autowired
+	ProjectHandler projectHandler;
+
+	/**
+	 * Utility class in charge of loading the project.
+	 */
+	ProjectLoader projectLoader;
+
+	/**
+	 * Initialization of the controller post-construction.
+	 */
+	@PostConstruct
+	public void init() {
+		projectLoader = new ProjectLoader(projectHandler);
+	}
+
+	/**
+	 * Lookup all directories from the repository starting with a given criteria.
+	 * @param idProject the project identifier
+	 * @param criteria the given searched criteria
+	 */
+	@GetMapping(value = "/lookupDir")
+	public ResponseEntity<List<String>> lookupDir(
+			final @RequestParam("idProject") int idProject,
+			final @RequestParam("criteria") String criteria) throws SkillerException {
+
+		MyReference<ResponseEntity<List<String>>> refResponse = projectLoader.new MyReference<>();
+
+		final Project project = projectLoader.getProject(idProject, new ArrayList<String>(), refResponse);
+		if (refResponse.response != null) {
+			return refResponse.response;
+		}
+
+		try {
+
+			List<String> paths = this.dashboardCustomizer.lookupPathRepository(project, criteria);
+			if (logger.isDebugEnabled()) {
+				logger.debug(String.format("Resulting paths starting with %s", criteria));
+				paths.stream().forEach(logger::debug);
+			}
+
+			return new ResponseEntity<>(paths, new HttpHeaders(), HttpStatus.OK);
+
+		} catch (final SkillerException e) {
+
+			logger.error(getStackTrace(e));
+
+			final HttpHeaders headers = new HttpHeaders();
+			headers.set(BACKEND_RETURN_CODE, "O");
+			headers.set(BACKEND_RETURN_MESSAGE, e.getMessage());
+			return new ResponseEntity<>(new ArrayList<String>(), headers, HttpStatus.BAD_REQUEST);
+
+		}
+	}
+
+}

@@ -14,6 +14,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.annotation.PostConstruct;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,10 +35,13 @@ import com.google.gson.Gson;
 
 import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
+import fr.skiller.bean.ProjectDashboardCustomizer;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.ShuffleService;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.controller.util.ProjectLoader;
+import fr.skiller.controller.util.ProjectLoader.MyReference;
 import fr.skiller.data.external.ProjectContributorDTO;
 import fr.skiller.data.external.ProjectDTO;
 import fr.skiller.data.external.PseudoListDTO;
@@ -97,14 +102,18 @@ public class ProjectController {
 	public static final String DASHBOARD_GENERATION = "Dashboard generation";
 	
 	/**
-	 * Class used as a passed reference to a method in order to change it. The class will be used to setup a response entity.
-	 * @author Fr&eacute;d&eacute;ric VIDAL
-	 * @param <T> the type of cariable top be passed
+	 * Utility class in charge of loading the project.
 	 */
-	class MyReference<T> {
-		T response;
+	ProjectLoader projectLoader;
+	
+	/**
+	 * Initialization of the controller post-construction.
+	 */
+	@PostConstruct
+	public void init() {
+		projectLoader = new ProjectLoader(projectHandler);
 	}
-
+	
 	@GetMapping(path = "/name/{projectName}")
 	public ResponseEntity<ProjectDTO> read(@PathVariable("projectName") String projectName) {
 		
@@ -141,8 +150,8 @@ public class ProjectController {
 	@GetMapping(value = "/id/{idParam}")
 	public ResponseEntity<Project> read(@PathVariable("idParam") int idProject) {
 
-		MyReference<ResponseEntity<Project>> refResponse = new MyReference<>();
-		final Project searchProject = getProject(idProject, new Project(), refResponse);
+		MyReference<ResponseEntity<Project>> refResponse = projectLoader.new MyReference<>();
+		final Project searchProject = projectLoader.getProject(idProject, new Project(), refResponse);
 		if (refResponse.response != null) {
 			return refResponse.response;
 		}
@@ -163,43 +172,12 @@ public class ProjectController {
 	@GetMapping(value="/skills/{idProject}")
 	public ResponseEntity<List<Skill>> get(final @PathVariable("idProject") int idProject) {
 		
-		MyReference<ResponseEntity<List<Skill>>> refResponse = new MyReference<>();
+		MyReference<ResponseEntity<List<Skill>>> refResponse = projectLoader.new MyReference<>();
 
-		final Project project = getProject(idProject, new ArrayList<Skill>(), refResponse);
+		final Project project = projectLoader.getProject(idProject, new ArrayList<Skill>(), refResponse);
 		return  (refResponse.response != null) ? refResponse.response : 
 			new ResponseEntity<>(project.getSkills(), new HttpHeaders(), HttpStatus.OK);
-	}
-
-	/**
-	 * Read the project
-	 * @param <T> The class of instance which will be sent within the envelop of the ResponseEntity
-	 * @param idProject project identifier
-	 * @param t the object to be sent back inside the ResponseEntit.
-	 * @param response the response to be returned to the front if the search is unsuccessful.<br/>
-	 * 			<b>This parameter is not final. This method might change its value.</b>
-	 * @return the retrieved project, or {@code null} if none's found.
-	 */
-	<T> Project getProject(final int idProject, final T t, MyReference<ResponseEntity<T>> refResponse) {
-
-		Project project = null;
-		
-		final HttpHeaders headers = new HttpHeaders();
-		headers.set(BACKEND_RETURN_CODE, "O");
-		headers.set(BACKEND_RETURN_MESSAGE, "No project found for the identifier " + idProject);
-
-		try {
-			project = projectHandler.get(idProject);
-			if (project == null) {
-				refResponse.response = new ResponseEntity<T>(t, headers, HttpStatus.NOT_FOUND);			
-			} 
-		} catch (final SkillerException e) {
-			logger.error(getStackTrace(e));
-			refResponse.response = new ResponseEntity<T>(t, headers, HttpStatus.BAD_REQUEST);
-		}
-		
-		return project;
-	}
-	
+	}	
 	
 	@GetMapping("/all")
 	public String readAll() {
@@ -311,8 +289,8 @@ public class ProjectController {
 					p.idProject, p.newSkillTitle, p.formerSkillTitle));
 		}
 		
-		MyReference<ResponseEntity<ProjectDTO>> refResponse = new MyReference<>();
-		Project project = getProject(p.idProject, new ProjectDTO(new Project()), refResponse);
+		MyReference<ResponseEntity<ProjectDTO>> refResponse = projectLoader.new MyReference<>();
+		Project project = projectLoader.getProject(p.idProject, new ProjectDTO(new Project()), refResponse);
 		if (refResponse.response != null) {
 			return refResponse.response;
 		}
@@ -387,8 +365,8 @@ public class ProjectController {
 				p.idProject, p.idSkill));
 		}
 
-		MyReference<ResponseEntity<ProjectDTO>> refResponse = new MyReference<>();
-		Project project = getProject(p.idProject, new ProjectDTO(new Project()), refResponse);
+		MyReference<ResponseEntity<ProjectDTO>> refResponse = projectLoader.new MyReference<>();
+		Project project = projectLoader.getProject(p.idProject, new ProjectDTO(new Project()), refResponse);
 		if (refResponse.response != null) {
 			return refResponse.response;
 		}
@@ -492,8 +470,8 @@ public class ProjectController {
 				gp.getIdStaffSelected()));
 		}
 
-		MyReference<ResponseEntity<SunburstDTO>> refResponse = new MyReference<>();
-		Project project = getProject(gp.idProject, new SunburstDTO(), refResponse);
+		MyReference<ResponseEntity<SunburstDTO>> refResponse = projectLoader.new MyReference<>();
+		Project project = projectLoader.getProject(gp.idProject, new SunburstDTO(), refResponse);
 		if (refResponse.response != null) {
 			return refResponse.response;
 		}
@@ -605,8 +583,8 @@ public class ProjectController {
 		if (logger.isDebugEnabled()) {
 			logger.debug (String.format("Removing project with %d", idProject));
 		}
-		MyReference<ResponseEntity<String>> refResponse = new MyReference<>();
-		Project project = getProject(idProject, "", refResponse);
+		MyReference<ResponseEntity<String>> refResponse = projectLoader.new MyReference<>();
+		Project project = projectLoader.getProject(idProject, "", refResponse);
 		if (refResponse.response != null) {
 			return refResponse.response;
 		}
