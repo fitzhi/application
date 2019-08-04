@@ -1,0 +1,53 @@
+.actionButton {
+	height: 25px;
+	width: 25px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	padding: 0;
+	border: none;
+    outline: none;
+}
+
+.actionButton:focus, .actionButton:active {
+   outline: none !important;
+   box-shadow: none;
+}
+
+.actionRemove  {
+	color: brown;
+}
+
+.actionRemove:hover  {
+	color: red;
+	background-color: whitesmoke;
+}
+
+.actionAdd  {
+	color: black;
+}
+
+.actionAdd:hover  {
+	color: green;
+	background-color: whitesmoke;
+}
+
+#pathDependencyHeader, #typeDependencyHeader {
+	color: darkblue;
+	margin-top: 0px;
+}
+
+#pathDependencyHeader {
+	width: 300px;
+}
+
+#typeDependencyHeader {
+	width: 50px;
+}
+
+.typeDependency {
+	text-align:center;
+}
+
+.pathDependency:hover {
+	color: blue;
+}

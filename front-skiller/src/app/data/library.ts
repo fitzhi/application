@@ -1,9 +1,9 @@
-export class Dependency {
+export class Library {
 
 	/**
 	 * Dependency pathname.
 	 */
-	pathname: string;
+	exclusionDirectory: string;
 
 	/**
 	 * Type of dependency.
@@ -12,8 +12,8 @@ export class Dependency {
 	 */
 	type: number;
 
-	public constructor(pathname: string, type: number) {
-		this.pathname = pathname;
+	public constructor(exclusionDirectory: string, type: number) {
+		this.exclusionDirectory = exclusionDirectory;
 		this.type = type;
 	}
 }

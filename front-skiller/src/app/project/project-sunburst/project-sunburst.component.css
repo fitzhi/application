@@ -87,3 +87,8 @@ button.btn-outline-success {
 	background-color: whitesmoke;
 	color: red;
 }
+
+#tblLibraries {
+	width: 100%;
+	height: 100%;
+}

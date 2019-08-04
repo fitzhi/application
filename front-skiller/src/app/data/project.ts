@@ -1,5 +1,5 @@
 import { Skill } from './skill';
-import { Dependency } from './dependency';
+import { Library } from './library';
 
 export class Project {
 
@@ -15,7 +15,7 @@ export class Project {
 	/**
 	 * Array of dependeny paths (detected or declared) for this project.
 	 */
-	public dependencies: Dependency[];
+	public libraries: Library[];
 
 	constructor() { }
 

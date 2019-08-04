@@ -38,7 +38,7 @@ import { StaffFormComponent } from './tabs-staff/staff-form/staff-form.component
 import { StaffProjectsComponent } from './tabs-staff/staff-projects/staff-projects.component';
 import { StaffExperienceComponent } from './tabs-staff/staff-experience/staff-experience.component';
 import { StaffUploadCvComponent } from './tabs-staff/staff-experience/staff-upload-cv/staff-upload-cv.component';
-import { MatNativeDateModule, MatExpansionModule, MatGridListModule, MatStepperModule, MatIconModule } from '@angular/material';
+import { MatNativeDateModule, MatExpansionModule, MatGridListModule, MatStepperModule, MatIconModule, MatAutocompleteModule } from '@angular/material';
 import { MatSortModule, MatButtonToggleModule, MatSidenavModule, MatCardModule, MatFormFieldModule } from '@angular/material';
 import { MatInputModule, MatSnackBarModule, MatSelectModule, MatDatepickerModule } from '@angular/material';
 import { MatTabsModule, MatDialogModule, MatProgressBarModule, MatPaginatorModule } from '@angular/material';
@@ -72,7 +72,8 @@ import { AuthGuardService } from './admin/security/auth-guard.service';
 import { HttpErrorInterceptorService } from './admin/service/http/http-error-interceptor-service';
 import { HttpTokenInterceptorService } from './admin/service/http/http-token-interceptor.service';
 import { CiaoComponent } from './ciao/ciao.component';
-
+import { TableDependenciesComponent } from './project/project-sunburst/table-dependencies/table-dependencies.component';
+import { InLineEditDialogComponent } from './project/project-sunburst/table-dependencies/in-line-edit-dialog/in-line-edit-dialog.component';
 @NgModule({
 	declarations: [
 		AppComponent,
@@ -111,6 +112,8 @@ import { CiaoComponent } from './ciao/ciao.component';
 		ToolbarComponent,
 		ConnectUserComponent,
 		CiaoComponent,
+		TableDependenciesComponent,
+		InLineEditDialogComponent
 	],
 	entryComponents: [
 		StarsSkillLevelRenderComponent,
@@ -121,6 +124,7 @@ import { CiaoComponent } from './ciao/ciao.component';
 		DialogUpdatedProjectGhostsComponent,
 		DialogLegendSunburstComponent,
 		DialogFilterComponent,
+		InLineEditDialogComponent
 	],
 	imports: [
 		BrowserModule,
@@ -153,7 +157,8 @@ import { CiaoComponent } from './ciao/ciao.component';
 		MatExpansionModule,
 		MatGridListModule,
 		MatStepperModule,
-		MatIconModule
+		MatIconModule,
+		MatAutocompleteModule
 	],
 	providers: [
 		CinematicService,

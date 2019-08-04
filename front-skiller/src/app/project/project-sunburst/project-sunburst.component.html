@@ -93,8 +93,9 @@
 			<div class="col-md-1"></div>
 		</div>
 
-		<div class="row" style="width: 100px; height: 100px; background-color: green" 
+		<div id="tblLibraries" class="row" 
 			[hidden]="!isActiveContext(CONTEXT.SUNBURST_DEPENDENCIES)">
+			<app-table-dependencies></app-table-dependencies>
 		</div>
 
     </mat-sidenav-content>

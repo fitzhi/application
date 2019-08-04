@@ -1,0 +1,15 @@
+    <input matInput 
+        id="pathsInput"
+		(keydown)="closeIfEnter($event)"
+		class="completer-input form-control mdb-autocomplete"
+		name="path"
+		[ngModel]="searchPath$ | async"
+		(ngModelChange)="changePath($event)"
+		[matAutocomplete]="auto"
+		placeholder="Type the path dependency">
+
+	<mat-autocomplete #auto="matAutocomplete">
+		<mat-option id="pathsOption" *ngFor="let path of paths" [value]="path">
+			{{ path }}
+		</mat-option>
+	</mat-autocomplete>

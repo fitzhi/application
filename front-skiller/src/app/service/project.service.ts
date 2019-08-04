@@ -12,6 +12,8 @@ import { ContributorsDTO } from '../data/external/contributorsDTO';
 import { PseudoList } from '../data/PseudoList';
 import { SettingsGeneration } from '../data/settingsGeneration';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
+import { take } from 'rxjs/operators';
+import { Library } from '../data/library';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -163,4 +165,34 @@ export class ProjectService extends InternalService {
 		}
 		return this.httpClient.get<string>(url, httpOptions);
 	}
+
+	/**
+	 * Retrieve the directories starting with 'criteria'.
+	 * @param idProject the identifier of the project
+	 * @param criteria the searched criteria
+	 * @return an observable to the list of directories found
+	 */
+	libDirLookup(idProject: number, criteria: string): Observable<string[]> {
+		const url = this.backendSetupService.url()
+			+ '/project/analysis/lib-dir/lookup?idProject=' + idProject
+			+ '&criteria=' + criteria;
+		return this.httpClient.get<string[]>(url)
+			.pipe(take(1));
+	}
+
+	/**
+	 * Save the libraries detected or declared.
+	 * @param idProject the identifier of the project
+	 * @param libraries the libraries directories
+	 */
+	libDirSave(idProject: number, libraries: Library[]) {
+		console.log('Saving libraries', libraries);
+		const url = this.backendSetupService.url()
+			+ '/project/analysis/lib-dir/save/' + idProject;
+		return this.httpClient
+			.post<Boolean>(url, libraries, httpOptions)
+			.pipe(take(1))
+			.subscribe(res => console.log(res));
+	}
+
 }
