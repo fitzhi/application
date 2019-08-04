@@ -69,7 +69,7 @@ public class Project  {
 	 * List of path containing external dependencies.
 	 * They will be excluded from the crawl.
 	 */
-	private List<Dependency> dependencies = new ArrayList<>();
+	private List<Library> libraries = new ArrayList<>();
 	
 	/**
 	 * Constant representing one the 2 models of connection settings.
@@ -79,7 +79,7 @@ public class Project  {
 	
 	/**
 	 * Constant representing one the 2 models of connection settings.
-	 * This one if for the inderect access : url repository / remote filename with connection parameters.
+	 * This one if for the indirect access : url repository / remote filename with connection parameters.
 	 */
 	private static final int REMOTE_FILE_ACCESS = 2;
 	
@@ -299,15 +299,15 @@ public class Project  {
 	/**
 	 * @return the dependencies list
 	 */
-	public List<Dependency> getDependencies() {
-		return dependencies;
+	public List<Library> getLibraries() {
+		return libraries;
 	}
 
 	/**
-	 * Initialize the dependencies list.
+	 * Initialize the libraries list.
 	 */
-	public void initDependencies() {
-		dependencies.clear();
+	public void initLibraries() {
+		libraries.clear();
 	}
 
 }

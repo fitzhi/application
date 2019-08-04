@@ -9,13 +9,13 @@ package fr.skiller.data.internal;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public class Dependency {
+public class Library {
 	
 	private String exclusionDirectory;
 	
 	private int type;
 
-	public Dependency(String exclusionDirectory, int type) {
+	public Library(String exclusionDirectory, int type) {
 		super();
 		this.exclusionDirectory = exclusionDirectory;
 		this.type = type;

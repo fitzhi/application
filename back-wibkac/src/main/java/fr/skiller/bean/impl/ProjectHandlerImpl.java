@@ -30,6 +30,7 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.external.Action;
 import fr.skiller.data.internal.Ghost;
+import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Mission;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Committer;
@@ -224,6 +225,12 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		return newPseudos;
 	}
 	
+	
+	@Override
+	public List<Library> saveLibraries(int idProject, List<Library> libraries) throws SkillerException {
+		return null;
+	}
+
 	@Override
 	public Ghost getGhost(final Project project, final String pseudo) {
 		List<Ghost> actualGhosts = project.getGhosts().stream()

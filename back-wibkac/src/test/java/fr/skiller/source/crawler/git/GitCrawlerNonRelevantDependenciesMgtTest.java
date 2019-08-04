@@ -124,7 +124,7 @@ public class GitCrawlerNonRelevantDependenciesMgtTest {
 
 		analysis.getPathsCandidate().add("src/main/java/fr/skiller/data/source/importance");
 		scanner.retrieveRootPath(analysis);
-		Assert.assertEquals(1, p.getDependencies().size());
+		Assert.assertEquals(1, p.getLibraries().size());
 	}
 	
 	@Test
@@ -147,7 +147,7 @@ public class GitCrawlerNonRelevantDependenciesMgtTest {
 
 		analysis.getPathsCandidate().add("src/test/java/com/sample/source/dependency");
 		scanner.retrieveRootPath(analysis);
-		Assert.assertEquals(0, p.getDependencies().size());
+		Assert.assertEquals(0, p.getLibraries().size());
 		
 	}
 	
@@ -173,7 +173,7 @@ public class GitCrawlerNonRelevantDependenciesMgtTest {
 
 		analysis.getPathsCandidate().add("src/test/java/com/sample/source/dependency");
 		scanner.retrieveRootPath(analysis);
-		Assert.assertEquals(1, p.getDependencies().size());
+		Assert.assertEquals(1, p.getLibraries().size());
 		
 	}
 }

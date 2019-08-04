@@ -7,6 +7,7 @@ import java.util.Optional;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Committer;
+import fr.skiller.data.internal.Library;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 
@@ -88,12 +89,20 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @return the result list of impacted pseudos in the
 	 *         {@link fr.skiller.data.internal.Project#ghosts ghosts list} of
 	 *         the project
-	 * @exception if
-	 *                any exception occurs (such as project does not exist)
-	 *                {@link fr.skiller.data.internal.Ghost}
+	 * @exception SkillerException thrown if any exception occurs (such as project does not exist)
 	 */
 	List<Committer> saveGhosts(int idProject, List<Committer> pseudos) throws SkillerException;
 
+	
+	/**
+	 * Save the list of library detected or declared inside the project.
+	 * @param idProject the identifier of the project
+	 * @param libraries the list of library
+	 * @return the former list (if any) 
+	 * @exception SkillerException thrown if any exception occurs (such as project does not exist)
+	 */
+	List<Library> saveLibraries (int idProject, List<Library> libraries) throws SkillerException;
+	
 	/**
 	 * Retrieve a ghost in the project, if any.
 	 * 
