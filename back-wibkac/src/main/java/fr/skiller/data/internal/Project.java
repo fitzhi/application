@@ -304,6 +304,13 @@ public class Project  {
 	}
 
 	/**
+	 * @param libraries the libraries to set
+	 */
+	public void setLibraries(List<Library> libraries) {
+		this.libraries = libraries;
+	}
+
+	/**
 	 * Initialize the libraries list.
 	 */
 	public void initLibraries() {

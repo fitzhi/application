@@ -228,7 +228,13 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	
 	@Override
 	public List<Library> saveLibraries(int idProject, List<Library> libraries) throws SkillerException {
-		return null;
+		Project prj = this.get(idProject);
+		List<Library> previousLibraries = prj.getLibraries();
+		synchronized (lockDataUpdated) {
+			prj.setLibraries(libraries);
+			this.dataUpdated = true;
+		}
+		return previousLibraries;
 	}
 
 	@Override

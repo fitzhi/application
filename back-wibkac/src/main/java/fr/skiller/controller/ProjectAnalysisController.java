@@ -5,7 +5,9 @@ import static fr.skiller.Global.BACKEND_RETURN_CODE;
 import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -17,14 +19,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.gson.Gson;
+import com.sun.javafx.binding.SelectBinding.AsLong;
+
 import fr.skiller.bean.ProjectDashboardCustomizer;
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.controller.ProjectController.ParamProjectSkill;
 import fr.skiller.controller.util.ProjectLoader;
 import fr.skiller.controller.util.ProjectLoader.MyReference;
+import fr.skiller.data.external.ProjectDTO;
+import fr.skiller.data.external.SunburstDTO;
+import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
 
@@ -41,6 +52,11 @@ import fr.skiller.exception.SkillerException;
 public class ProjectAnalysisController {
 
 	private final Logger logger = LoggerFactory.getLogger(ProjectAnalysisController.class.getCanonicalName());
+
+	/**
+	 * Initialization of the Google JSON parser.
+	 */
+	private Gson g = new Gson();
 
 	@Autowired
 	ProjectDashboardCustomizer dashboardCustomizer;
@@ -66,8 +82,8 @@ public class ProjectAnalysisController {
 	 * @param idProject the project identifier
 	 * @param criteria the given searched criteria
 	 */
-	@GetMapping(value = "/lookupDir")
-	public ResponseEntity<List<String>> lookupDir(
+	@GetMapping(value = "/lib-dir/lookup")
+	public ResponseEntity<List<String>> libDir(
 			final @RequestParam("idProject") int idProject,
 			final @RequestParam("criteria") String criteria) throws SkillerException {
 
@@ -106,4 +122,43 @@ public class ProjectAnalysisController {
 		}
 	}
 
+	/**
+	 * Add or change the name of skill required for a project.
+	 * @param param the body of the post containing an instance of ParamProjectSkill in JSON format
+	 * @see ProjectController.ParamProjectSkill
+	 * @return
+	 */
+	@PostMapping("/lib-dir/save/{idProject}")
+	public ResponseEntity<Boolean> saveLibDir(@PathVariable int idProject, @RequestBody String param) {
+		
+		Library[] tabLib = g.fromJson(param, Library[].class);
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format(
+					"POST command on /project/analysis/save/libDir/save/%d ", 
+					idProject));
+		}
+		
+		List<Library> libraries = Arrays.asList(tabLib);
+		
+		MyReference<ResponseEntity<Boolean>> refResponse = projectLoader.new MyReference<>();
+		Project project = projectLoader.getProject(idProject, Boolean.FALSE, refResponse);
+		if (refResponse.response != null) {
+			return refResponse.response;
+		}
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("Saving the librairies of project %s", project.getName()));
+			libraries.stream().map(Library::getExclusionDirectory).forEach(logger::debug);
+		}
+		
+		try {
+		 this.projectHandler.saveLibraries(idProject, libraries);
+		} catch (Exception e) {
+			logger.error(getStackTrace(e));
+			return new ResponseEntity<> (Boolean.FALSE, 
+					new HttpHeaders(), 
+					HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(Boolean.TRUE, new HttpHeaders(), HttpStatus.OK);
+	}
 }

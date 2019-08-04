@@ -1,6 +1,7 @@
 package fr.skiller.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -15,15 +16,15 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
 
@@ -35,7 +36,7 @@ import fr.skiller.exception.SkillerException;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectAnalysisControllerLookupDirTest {
+public class ProjectAnalysisControllerSaveLibDirTest {
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -58,22 +59,21 @@ public class ProjectAnalysisControllerLookupDirTest {
 	@Test
 	public void testA() throws Exception {
 	
-		List<String> continents  = new ArrayList<>();
-		continents.add("africa");
-		continents.add("america");
-		continents.add("antartic");
-		continents.add("asia");
+		List<Library> continents  = new ArrayList<>();
+		continents.add(new Library("/africa", 1));
+		continents.add(new Library("/america", 1));
+		continents.add(new Library("/antartic", 1));
+		continents.add(new Library("/asia", 1));
 		
-		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-	    params.add("idProject", "9999");
-	    params.add("criteria", "a"); 
-	    
-		mvc.perform(get("/project/analysis/lib-dir/lookup")
-		    .params(params)
-		    .accept("application/json;charset=UTF-8"))
-		    .andExpect(status().isOk())
-		    .andExpect(content().contentType("application/json;charset=UTF-8"))
-			.andExpect(content().json(gson.toJson(continents)));
+		String jsonInput = gson.toJson(continents);
+		
+		this.mvc.perform(post("/project/analysis/lib-dir/save/9999")
+		.content(jsonInput))
+		.andExpect(status().isOk())
+		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+		
+		List<Library> libs = project.getLibraries();
+		Assert.assertEquals("4 records in the libraries list", 4, libs.size());
 	}
 
 	@After
