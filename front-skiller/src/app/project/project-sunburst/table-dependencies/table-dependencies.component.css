@@ -1,3 +1,7 @@
+.tblLibraries {
+		  width: 475px;
+}
+
 .actionButton {
 	height: 25px;
 	width: 25px;
@@ -37,7 +41,7 @@
 }
 
 #pathDependencyHeader {
-	width: 300px;
+	width: 400px;
 }
 
 #typeDependencyHeader {

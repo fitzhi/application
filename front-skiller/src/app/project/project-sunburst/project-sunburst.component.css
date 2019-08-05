@@ -25,12 +25,18 @@ mat-sidenav-container {
   min-height: 300px;
 }
 
-mat-sidenav {
+.sidenav-toolbar {
   width: 50px;
+  min-height: 100%;
+  background-color: whitesmoke;
 }
 
 mat-sidenav-content {
   margin-left: 50px;
+}
+
+.sidenav__content--height{
+  min-height: 100vh;
 }
 
 #settings, #reset, #unknown, #legend, #dependencies {
@@ -88,7 +94,13 @@ button.btn-outline-success {
 	color: red;
 }
 
-#tblLibraries {
+.divLibraries {
 	width: 100%;
 	height: 100%;
+	background-color: whitesmoke;
+}
+
+
+.tblLibraries {
+	margin: 50px auto;
 }

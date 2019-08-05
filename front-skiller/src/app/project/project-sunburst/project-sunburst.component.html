@@ -1,6 +1,6 @@
 <mat-sidenav-container class="component-container" >
 
-    <mat-sidenav mode="side" class="bg-light" opened>
+    <mat-sidenav mode="side" class="sidenav-toolbar" opened>
 
 		<button 
 			id="legend"
@@ -54,7 +54,7 @@
 
 	</mat-sidenav>
 	
-    <mat-sidenav-content>
+    <mat-sidenav-content class="sidenav__content--height">
 
 		<div id="titleSunburst">
 			{{titleSunburst}}  
@@ -93,9 +93,9 @@
 			<div class="col-md-1"></div>
 		</div>
 
-		<div id="tblLibraries" class="row" 
-			[hidden]="!isActiveContext(CONTEXT.SUNBURST_DEPENDENCIES)">
-			<app-table-dependencies></app-table-dependencies>
+		<div class="divLibraries row" 
+			[hidden]="!isActiveContext(CONTEXT.SUNBURST_DEPENDENCIES)">		
+			<app-table-dependencies class="tblLibraries"  ></app-table-dependencies>
 		</div>
 
     </mat-sidenav-content>
