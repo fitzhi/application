@@ -39,7 +39,7 @@ mat-sidenav-content {
   min-height: 100vh;
 }
 
-#settings, #reset, #unknown, #legend, #dependencies {
+#settings, #reset, #unknown, #legend, #dependencies, #sunburst {
   margin-top: 5px;
   margin-left: 3px;
   margin-right: 0px;

@@ -20,6 +20,7 @@ import { FilenamesDataSource } from './node-detail/filenames-data-source';
 import { ContributorsDataSource } from './node-detail/contributors-data-source';
 import { BehaviorSubject } from 'rxjs';
 import { Contributor } from '../../data/contributor';
+import { take } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-project-sunburst',
@@ -31,7 +32,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	/**
      * The project loaded in the parent component.
      */
-	@Input('subjProject') subjProject;
+	@Input('project$') project$;
 
 	/**
 	 * This component, hosted in a tab pane, use this emitter to inform its parent to change the active pane.
@@ -53,6 +54,10 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	public dataGhosts: ProjectGhostsDataSource;
 
+	// Previous context
+	public previousContext = 0;
+
+
 	// Active current context
 	public activeContext = 0;
 
@@ -61,7 +66,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		SUNBURST_READY: 1,
 		SUNBURST_IMPOSSIBLE: 2,
 		SUNBURST_WAITING: 3,
-		SUNBURST_DEPENDENCIES: 4
+		SUNBURST_DEPENDENCIES: 4,
+		SUNBURST: 5
 	};
 
 	// Waiting images previewed during the chart generation.
@@ -81,6 +87,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	// After confirmation, we reset the dashboard data.
 	public RESET = 5;
+
+	// We want to preview the chart if ready
+	public SUNBURST = 6;
 
 	// Identifier of the panel selected.
 	private idPanelSelected = -1;
@@ -113,12 +122,12 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		private messageBoxService: MessageBoxService,
 		private dialog: MatDialog,
 		private projectService: ProjectService) {
-		super();
+			super();
 	}
 
 	ngOnInit() {
 
-		this.subscriptions.add(this.route.params.subscribe(params => {
+		this.route.params.pipe(take(1)).subscribe(params => {
 			if (Constants.DEBUG) {
 				console.log('params[\'id\'] ' + params['id']);
 			}
@@ -127,10 +136,10 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			} else {
 				this.settings.idProject = + params['id']; // (+) converts string 'id' to a number
 			}
-		}));
+		});
 
 		this.subscriptions.add(
-			this.subjProject.subscribe((project: Project) => {
+			this.project$.subscribe((project: Project) => {
 				if (Constants.DEBUG) {
 					console.log('Project ' + project.id + ' ' + project.name + ' reveived in sunburst-component');
 				}
@@ -170,6 +179,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
      */
 	loadSunburst() {
 
+		this.idPanelSelected = this.SUNBURST;
+
 		if ((typeof this.project === 'undefined') || (typeof this.project.id === 'undefined')) {
 			this.setActiveContext (this.CONTEXT.SUNBURST_IMPOSSIBLE);
 			return;
@@ -185,16 +196,15 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			});
 		}
 
-		this.subscriptions.add(
-			this.projectService.loadDashboardData(this.settings)
-				.subscribe(
-					response => this.handleSunburstData(response),
-					response => this.handleErrorData(response),
-					() => {
-						this.hackSunburstStyle();
-						this.tooltipChart();
-						this.setActiveContext (this.CONTEXT.SUNBURST_READY);
-					}));
+		this.projectService.loadDashboardData(this.settings)
+			.pipe(take(1)).subscribe(
+				response => this.handleSunburstData(response),
+				response => this.handleErrorData(response),
+				() => {
+					this.hackSunburstStyle();
+					this.tooltipChart();
+					this.setActiveContext (this.CONTEXT.SUNBURST_READY);
+				});
 	}
 
 	/**
@@ -362,6 +372,12 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	public show(idPanel: number) {
 		this.idPanelSelected = idPanel;
 		switch (idPanel) {
+			case this.SUNBURST:
+				this.setActiveContext(this.previousContext);
+				break;
+			case this.LEGEND_SUNBURST:
+				this.dialogLegend();
+				break;
 			case this.LEGEND_SUNBURST:
 				this.dialogLegend();
 				break;
@@ -399,18 +415,18 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		dialogConfig.panelClass = 'default-dialog-container-class';
 		dialogConfig.data = this.dataGhosts;
 		const dialogReference = this.dialog.open(DialogProjectGhostsComponent, dialogConfig);
-		this.subscriptions.add(
-			dialogReference.afterClosed()
-				.subscribe(result => {
-					if (result !== null) {
-						if (typeof result === 'boolean') {
-							this.dataGhosts.ghostsSubject.next(this.dataGhosts.ghostsSubject.getValue());
-						} else {
-							this.dataGhosts.ghostsSubject.next(result);
-						}
+		dialogReference.afterClosed()
+			.pipe(take(1))
+			.subscribe(result => {
+				if (result !== null) {
+					if (typeof result === 'boolean') {
+						this.dataGhosts.ghostsSubject.next(this.dataGhosts.ghostsSubject.getValue());
+					} else {
+						this.dataGhosts.ghostsSubject.next(result);
 					}
-					this.idPanelSelected = -1;
-				}));
+				}
+				this.idPanelSelected = -1;
+			});
 	}
 
 	dialogLegend() {
@@ -420,47 +436,50 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		dialogConfig.position = { top: '5em', left: '5em' };
 		dialogConfig.panelClass = 'default-dialog-container-class';
 		const dlg = this.dialog.open(DialogLegendSunburstComponent, dialogConfig);
-		this.subscriptions.add(
-			dlg.afterClosed().subscribe(() => this.idPanelSelected = -1));
+		dlg.afterClosed().pipe(take(1)).subscribe(() => {
+			this.idPanelSelected = this.SUNBURST;
+		});
 
 	}
 
 	reset() {
 		if (typeof this.project === 'undefined') {
 			this.messageService.info('Nothing to reset !');
-			this.idPanelSelected = -1;
+			this.idPanelSelected = this.SUNBURST;
 			return;
 		}
-		this.subscriptions.add(
-			this.messageBoxService.question('Reset the dashboard',
-				'Please confirm the dashboard reinitialization').subscribe(answer => {
-					if (answer) {
-						this.subscriptions.add(
-							this.projectService.resetDashboard(this.settings.idProject).subscribe(response => {
-								if (response) {
-									this.messageBoxService.exclamation('Operation complete',
-										'Dashboard reinitialization has been requested. The operation might last a while.');
-								} else {
-									this.messageBoxService.exclamation('Operation failed',
-										'The request is not necessary : no dashboard available.');
-								}
-							}));
+		this.messageBoxService.question('Reset the dashboard',
+			'Please confirm the dashboard reinitialization')
+				.pipe(take(1))
+				.subscribe(answer => {
+				if (answer) {
+					this.projectService.resetDashboard(this.settings.idProject)
+						.pipe(take(1))
+						.subscribe(response => {
+						if (response) {
+							this.messageBoxService.exclamation('Operation complete',
+								'Dashboard reinitialization has been requested. The operation might last a while.');
+						} else {
+							this.messageBoxService.exclamation('Operation failed',
+								'The request is not necessary : no dashboard available.');
 						}
-					this.idPanelSelected = -1;
-				})
+					});
+					}
+				this.idPanelSelected = this.SUNBURST;
+			}
 		);
 	}
 
 	dialogFilter() {
 		if (typeof this.project === 'undefined') {
 			this.messageService.info('Nothing to filter !');
-			this.idPanelSelected = -1;
+			this.idPanelSelected = this.SUNBURST;
 			return;
 		}
 
 		if (typeof this.dataGhosts === 'undefined') {
 			this.messageService.info('Please wait !');
-			this.idPanelSelected = -1;
+			this.idPanelSelected = this.SUNBURST;
 			return;
 		}
 
@@ -470,24 +489,23 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		dialogConfig.position = { top: '6em', left: '5em' };
 		dialogConfig.panelClass = 'default-dialog-container-class';
 		const dlg = this.dialog.open(DialogFilterComponent, dialogConfig);
-		this.subscriptions.add(
-			dlg.afterClosed().subscribe(settings => {
-				this.idPanelSelected = -1;
-				this.settings.idStaffSelected =
-					((typeof settings.idStaffSelected === 'undefined') || (settings.idStaffSelected.length === 0))
-						? 0 : settings.idStaffSelected;
-				this.settings.startingDate = settings.startingDate;
-				this.generateTitleSunburst();
-				this.subscriptions.add(
-					this.projectService.loadDashboardData(this.settings)
-						.subscribe(
-							response => this.myChart.data(response.sunburstData),
-							response => this.handleErrorData(response),
-							() => {
-								this.hackSunburstStyle();
-								this.tooltipChart();
-							}));
-			}));
+		dlg.afterClosed().pipe(take(1)).subscribe(settings => {
+			this.idPanelSelected = this.SUNBURST;
+			this.settings.idStaffSelected =
+				((typeof settings.idStaffSelected === 'undefined') || (settings.idStaffSelected.length === 0))
+					? 0 : settings.idStaffSelected;
+			this.settings.startingDate = settings.startingDate;
+			this.generateTitleSunburst();
+			this.projectService.loadDashboardData(this.settings)
+				.pipe(take(1))
+				.subscribe(
+					response => this.myChart.data(response.sunburstData),
+					response => this.handleErrorData(response),
+					() => {
+						this.hackSunburstStyle();
+						this.tooltipChart();
+					});
+		});
 	}
 
 	private generateTitleSunburst() {
@@ -516,10 +534,15 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 * Set the new active context insoide the form component.
 	 */
 	public setActiveContext(context: number) {
-		this.activeContext = context;
+
 		if (Constants.DEBUG) {
-			console.log ('New active context', this.activeContext);
+			console.log ('New active context ' + context + ' after ' + this.previousContext);
 		}
+
+		// We keep away the previous context
+		this.previousContext = this.activeContext;
+
+		this.activeContext = context;
 	}
 
 	/**
@@ -528,7 +551,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 * . sunburst_waiting : the graph representing the risk of staff coverage is currently being build</li>
 	 * . sunburst_ready : the graph is ready to be displayed
 	 * . sunburst_impossible : either lack of connection information, or lack of internet, or something else : the graph cannot be displayed.
-	 * . sunburst_detail_dependencies : the table of dependencies detected or declared is available in the container.
+	 * . sunburst_detail_dependencies : the table of libraries detected or declared is available in the container.
 	 */
 	public isActiveContext(context: number) {
 		return (context === this.activeContext);
@@ -543,9 +566,10 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	}
 
 	/**
-     * Calling the base class to unsubscribe all subscriptions.
-     */
+	* Calling the base class to unsubscribe all subscriptions.
+	*/
 	ngOnDestroy() {
 		super.ngOnDestroy();
 	}
+
 }

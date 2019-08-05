@@ -3,6 +3,16 @@
     <mat-sidenav mode="side" class="sidenav-toolbar" opened>
 
 		<button 
+			id="sunburst"
+			data-toggle="tooltip" data-placement="right" title="Display the sunburst chart if ready"
+			class="btn btn-outline-secondary rounded"
+            [ngClass]="{'btn-outline-success' : buttonActivated(SUNBURST), 'btn-outline-secondary': !buttonActivated(SUNBURST)}" 
+			[disabled]="buttonActivated(SUNBURST)"
+			(click)="show(SUNBURST)">
+			<i class="fas fa-chart-pie font-awesome-settings"></i>
+		</button>
+
+		<button 
 			id="legend"
 			data-toggle="tooltip" data-placement="right" title="Diagram legend. What does mean all these colors?"
 			class="btn btn-outline-secondary rounded"

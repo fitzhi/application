@@ -15,7 +15,7 @@ import { BaseComponent } from '../base/base.component';
 })
 export class ProjectComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
-	public subjProject = new Subject<Project>();
+	public project$ = new Subject<Project>();
 
 	/**
      * Index of the tab selected.
@@ -112,7 +112,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 			this.subscriptions.add(
 				this.listProjectsService.getProject(this.idProject).subscribe(
 					(project: Project) => {
-						this.subjProject.next(project);
+						this.project$.next(project);
 					},
 					error => {
 						if (error.status === 404) {

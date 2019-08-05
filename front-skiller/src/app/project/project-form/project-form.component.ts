@@ -23,7 +23,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
 	/**
 	 * The project loaded in the parent component.
 	 */
-	@Input('subjProject') subjProject;
+	@Input('project$') project$;
 
 	public project: Project;
 
@@ -61,7 +61,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
 	ngOnInit() {
 
 		this.subscriptions.add(
-			this.subjProject.subscribe((project: Project) => {
+			this.project$.subscribe((project: Project) => {
 				this.project = project;
 				this.profileProject.get('projectName').setValue(project.name);
 				this.connection_settings = String(this.project.connectionSettings);
