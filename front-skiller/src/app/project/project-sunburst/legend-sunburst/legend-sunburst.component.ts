@@ -2,11 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ReferentialService } from '../../../service/referential.service';
 import { RiskLegend } from '../../../data/riskLegend';
 import { BaseComponent } from '../../../base/base.component';
+import { take } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-dialog-legend-sunburst',
-  templateUrl: './dialog-legend-sunburst.component.html',
-  styleUrls: ['./dialog-legend-sunburst.component.css']
+  selector: 'app-legend-sunburst',
+  templateUrl: './legend-sunburst.component.html',
+  styleUrls: ['./legend-sunburst.component.css']
 })
 export class DialogLegendSunburstComponent extends BaseComponent implements OnInit, OnDestroy {
 
@@ -19,7 +20,7 @@ export class DialogLegendSunburstComponent extends BaseComponent implements OnIn
   }
 
   ngOnInit() {
-    this.dataSource = this.referentialService.legends;
+    this.referentialService.legends$.pipe(take(1)).subscribe(legends => this.dataSource = legends);
   }
 
   ngOnDestroy() {

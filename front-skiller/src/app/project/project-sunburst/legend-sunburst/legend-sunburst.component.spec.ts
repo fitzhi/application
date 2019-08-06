@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { DialogLegendSunburstComponent } from './dialog-legend-sunburst.component';
+import { DialogLegendSunburstComponent } from './legend-sunburst.component';
 
 describe('DialogLegendSunburstComponent', () => {
   let component: DialogLegendSunburstComponent;
@@ -8,9 +8,9 @@ describe('DialogLegendSunburstComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DialogLegendSunburstComponent ]
+      declarations: [DialogLegendSunburstComponent]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {

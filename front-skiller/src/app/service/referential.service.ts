@@ -6,6 +6,7 @@ import { RiskLegend } from '../data/riskLegend';
 import { Skill } from '../data/skill';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { take } from 'rxjs/operators';
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable()
 export class ReferentialService {
@@ -18,7 +19,7 @@ export class ReferentialService {
 	/*
 	 * Legend of the sunburst chart.
 	 */
-	public legends: RiskLegend[] = [];
+	public legends$ = new Subject<RiskLegend[]>();
 
 	/*
 	 * Skills.
@@ -72,7 +73,7 @@ export class ReferentialService {
 						});
 						console.groupEnd();
 					}
-					legends.forEach(legend => this.legends.push(legend));
+					this.legends$.next(legends);
 				});
 	}
 

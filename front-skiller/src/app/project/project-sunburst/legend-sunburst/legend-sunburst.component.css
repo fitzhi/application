@@ -1,0 +1,24 @@
+.mat-header-cell {
+  color: darkblue;
+  padding-left: 1em;
+}
+
+.td-description {
+  height: 0.5em;
+  width: fit-content;
+  padding-right: 1em;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 1em;
+}
+
+.td-color {
+  width: fit-content;
+  padding: 0px;
+  text-align: center;
+}
+
+.tableLegends {
+  width: 700px;
+  height: 500px;
+}

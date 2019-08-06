@@ -9,7 +9,7 @@ import { Project } from '../../data/project';
 import { MatDialogConfig, MatDialog } from '@angular/material';
 import { DialogProjectGhostsComponent } from './dialog-project-ghosts/dialog-project-ghosts.component';
 import { ProjectGhostsDataSource } from './dialog-project-ghosts/project-ghosts-data-source';
-import { DialogLegendSunburstComponent } from './dialog-legend-sunburst/dialog-legend-sunburst.component';
+import { DialogLegendSunburstComponent } from './legend-sunburst/legend-sunburst.component';
 import { MessageBoxService } from '../../message-box/service/message-box.service';
 import { DialogFilterComponent } from './dialog-filter/dialog-filter.component';
 import { BaseComponent } from '../../base/base.component';
@@ -54,8 +54,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	public dataGhosts: ProjectGhostsDataSource;
 
-	// Previous context
-	public previousContext = 0;
+	// Previous context related to the sunburst construction.
+	public lastSunburstContext = 0;
 
 
 	// Active current context
@@ -67,7 +67,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		SUNBURST_IMPOSSIBLE: 2,
 		SUNBURST_WAITING: 3,
 		SUNBURST_DEPENDENCIES: 4,
-		SUNBURST: 5
+		SUNBURST: 5,
+		SUNBURST_LEGEND: 6
 	};
 
 	// Waiting images previewed during the chart generation.
@@ -373,13 +374,10 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		this.idPanelSelected = idPanel;
 		switch (idPanel) {
 			case this.SUNBURST:
-				this.setActiveContext(this.previousContext);
+				this.setActiveContext(this.lastSunburstContext);
 				break;
 			case this.LEGEND_SUNBURST:
-				this.dialogLegend();
-				break;
-			case this.LEGEND_SUNBURST:
-				this.dialogLegend();
+				this.setActiveContext(this.CONTEXT.SUNBURST_LEGEND);
 				break;
 			case this.SETTINGS:
 				this.dialogFilter();
@@ -427,19 +425,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				}
 				this.idPanelSelected = -1;
 			});
-	}
-
-	dialogLegend() {
-		const dialogConfig = new MatDialogConfig();
-		dialogConfig.disableClose = true;
-		dialogConfig.autoFocus = true;
-		dialogConfig.position = { top: '5em', left: '5em' };
-		dialogConfig.panelClass = 'default-dialog-container-class';
-		const dlg = this.dialog.open(DialogLegendSunburstComponent, dialogConfig);
-		dlg.afterClosed().pipe(take(1)).subscribe(() => {
-			this.idPanelSelected = this.SUNBURST;
-		});
-
 	}
 
 	reset() {
@@ -536,12 +521,15 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	public setActiveContext(context: number) {
 
 		if (Constants.DEBUG) {
-			console.log ('New active context ' + context + ' after ' + this.previousContext);
+			console.log ('New active context ' + context + ' after ' + this.lastSunburstContext);
 		}
 
-		// We keep away the previous context
-		this.previousContext = this.activeContext;
-
+		// We keep away the previous context related to the construction of the sunburst chart.
+		if ( 	(context === this.CONTEXT.SUNBURST_READY)
+			|| (context === this.CONTEXT.SUNBURST_IMPOSSIBLE)
+			|| (context === this.CONTEXT.SUNBURST_WAITING)) {
+			this.lastSunburstContext = context;
+		}
 		this.activeContext = context;
 	}
 

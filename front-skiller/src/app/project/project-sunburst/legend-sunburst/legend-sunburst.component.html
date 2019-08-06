@@ -1,0 +1,19 @@
+<h1 mat-dialog-title>Legend</h1>
+<table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8 tableLegends">
+  
+  <ng-container matColumnDef="color">
+    <th id="color" mat-header-cell *matHeaderCellDef>Color</th>
+    <td mat-cell class="td-color" [style.background-color]="row.color" [style.padding]="0" *matCellDef="let row">
+      level&nbsp;{{row.level}}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="description">
+    <th id="description" mat-header-cell *matHeaderCellDef>Description</th>
+    <td class="td-description" mat-cell *matCellDef="let row; let i = index;">{{row.description}}</td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="riskColumns; sticky: true"></tr>
+  <tr mat-row class="td-ghost" *matRowDef="let row; columns: riskColumns;"></tr>
+</table>
+

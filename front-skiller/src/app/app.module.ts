@@ -52,7 +52,7 @@ import { DialogProjectGhostsComponent } from './project/project-sunburst/dialog-
 import { ProjectGhostsComponent } from './project/project-sunburst/dialog-project-ghosts/project-ghosts/project-ghosts.component';
 // tslint:disable-next-line:max-line-length
 import { DialogUpdatedProjectGhostsComponent } from './project/project-sunburst/dialog-project-ghosts/dialog-updated-project-ghosts/dialog-updated-project-ghosts.component';
-import { DialogLegendSunburstComponent } from './project/project-sunburst/dialog-legend-sunburst/dialog-legend-sunburst.component';
+import { DialogLegendSunburstComponent } from './project/project-sunburst/legend-sunburst/legend-sunburst.component';
 import { registerLocaleData } from '@angular/common';
 
 // Remove this line if you want to return to us_US local
@@ -113,7 +113,8 @@ import { InLineEditDialogComponent } from './project/project-sunburst/table-depe
 		ConnectUserComponent,
 		CiaoComponent,
 		TableDependenciesComponent,
-		InLineEditDialogComponent
+		InLineEditDialogComponent,
+		DialogLegendSunburstComponent
 	],
 	entryComponents: [
 		StarsSkillLevelRenderComponent,
@@ -122,7 +123,6 @@ import { InLineEditDialogComponent } from './project/project-sunburst/table-depe
 		UploadedSkillsPickupComponent,
 		DialogProjectGhostsComponent,
 		DialogUpdatedProjectGhostsComponent,
-		DialogLegendSunburstComponent,
 		DialogFilterComponent,
 		InLineEditDialogComponent
 	],

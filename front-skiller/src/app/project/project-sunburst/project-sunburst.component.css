@@ -94,13 +94,16 @@ button.btn-outline-success {
 	color: red;
 }
 
-.divLibraries {
+.divPanel {
 	width: 100%;
 	height: 100%;
 	background-color: whitesmoke;
 }
 
-
-.tblLibraries {
+.content-divPanel {
 	margin: 50px auto;
+}
+
+.content-divPanelLegend {
+  margin: 0px auto;
 }

@@ -5,7 +5,6 @@
 .actionButton {
 	height: 25px;
 	width: 25px;
-	margin-top: 10px;
 	margin-bottom: 10px;
 	padding: 0;
 	border: none;
@@ -19,6 +18,7 @@
 
 .actionRemove  {
 	color: brown;
+	margin-top: 10px;
 }
 
 .actionRemove:hover  {
@@ -28,6 +28,7 @@
 
 .actionAdd  {
 	color: black;
+	margin-top: 25px;
 }
 
 .actionAdd:hover  {
