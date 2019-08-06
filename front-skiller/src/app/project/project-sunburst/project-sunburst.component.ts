@@ -254,6 +254,13 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	}
 
 	handleSunburstData(response: any) {
+
+		// Removing the last chart generated from the DOM.
+		const node = document.getElementById('chart');
+		while (node.hasChildNodes()) {
+			node.removeChild(node.lastChild);
+		}
+
 		if (this.myChart !== null) {
 			this.myChart.data(response.sunburstData).width(500).height(500).label('location').size('importance').color('color')
 				(document.getElementById('chart'));
