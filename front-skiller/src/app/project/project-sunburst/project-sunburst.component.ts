@@ -41,7 +41,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	@Output() tabActivationEmitter = new EventEmitter<number>();
 
 	public PROJECT_IDX_TAB_FORM = Constants.PROJECT_IDX_TAB_FORM;
-	
+
 	/**
     * Project loaded on the parent component.
     */

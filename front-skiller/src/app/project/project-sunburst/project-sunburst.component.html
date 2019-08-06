@@ -105,7 +105,7 @@
 
 		<div class="divPanel row" 
 			[hidden]="!isActiveContext(CONTEXT.SUNBURST_DEPENDENCIES)">		
-			<app-table-dependencies class="content-divPanel"  ></app-table-dependencies>
+			<app-table-dependencies [project$]="project$" class="content-divPanel"  ></app-table-dependencies>
 		</div>
 
 		<div class="divPanel row" 
