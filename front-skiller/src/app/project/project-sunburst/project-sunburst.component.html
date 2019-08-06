@@ -86,7 +86,7 @@
 			</app-node-detail>		
 		</div>
 		
-		<div id="chart" [hidden]="!isActiveContext(CONTEXT.SUNBURST_READY)"></div>
+		<div id="chart" class="divPanelOnTop" [hidden]="!isActiveContext(CONTEXT.SUNBURST_READY)"></div>
 
 		<div class="row" style="width: 100%" [hidden]="!isActiveContext(CONTEXT.SUNBURST_WAITING)">
 			<div class="col-md-1"></div>
@@ -108,9 +108,9 @@
 			<app-table-dependencies [project$]="project$" class="content-divPanel"  ></app-table-dependencies>
 		</div>
 
-		<div class="divPanel row" 
+		<div class="divPanelOnTop row" 
 			[hidden]="!isActiveContext(CONTEXT.SUNBURST_LEGEND)">	
-			<app-legend-sunburst class="content-divPanelLegend"></app-legend-sunburst>
+			<app-legend-sunburst class="divPanelOnTop"></app-legend-sunburst>
 		</div>
 
     </mat-sidenav-content>

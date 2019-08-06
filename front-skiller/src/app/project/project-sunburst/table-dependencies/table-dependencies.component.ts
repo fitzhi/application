@@ -36,7 +36,7 @@ export class TableDependenciesComponent implements OnInit {
 	editDependency(library: Library) {
 		const dialogConfig = new MatDialogConfig();
 		dialogConfig.disableClose = true;
-		dialogConfig.data = { initialValue: library.exclusionDirectory };
+		dialogConfig.data = { initialValue: library.exclusionDirectory, idProject: this.idProject };
 		const dialogRef = this.dialog.open(InLineEditDialogComponent, dialogConfig);
 
 		dialogRef.afterClosed().subscribe(newPath => {

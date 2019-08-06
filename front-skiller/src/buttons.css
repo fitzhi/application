@@ -28,3 +28,12 @@ button.okButtonValid:active {
 button.okButtonValid  {
     background-image: url( "./assets/img/ok-valid.png" );
 }
+
+button.btn-outline-secondary {
+    background-color: white;
+  }
+  
+  button.btn-outline-success {
+    color: white;
+  }
+  

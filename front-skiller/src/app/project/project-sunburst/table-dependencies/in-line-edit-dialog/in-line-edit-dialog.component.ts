@@ -16,11 +16,17 @@ export class InLineEditDialogComponent implements OnInit {
 
 	public paths: string[] = [];
 
+	/**
+	 * Project identifier.
+	 */
+	private idProject: number;
+
 	constructor(
 		private dialogRef: MatDialogRef<InLineEditDialogComponent>,
 		private projectService: ProjectService,
 		@Inject(MAT_DIALOG_DATA) private data) {
 		this.searchPath$.next(data.initialValue);
+		this.idProject = data.idProject;
 	}
 
 	ngOnInit() {
@@ -30,7 +36,7 @@ export class InLineEditDialogComponent implements OnInit {
 		this.paths = this.paths.filter(s => s.toLowerCase().startsWith($event));
 		this.pathSearched = $event;
 		this.searchPath$.next($event);
-		return this.projectService.libDirLookup(5, $event)
+		return this.projectService.libDirLookup(this.idProject, $event)
 			.subscribe(res => this.paths = res);
 	}
 

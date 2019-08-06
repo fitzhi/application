@@ -47,7 +47,7 @@ export class DependenciesDataSource extends MatTableDataSource<Library> {
 		}
 
 		library.exclusionDirectory = newPath;
-		// The path is no more a detected/calculated dependency path but a declared one. 
+		// The path is no more a detected/calculated dependency path but a declared one.
 		library.type = 2;
 		this.subjectLibraries$.next(this.libraries);
 	}

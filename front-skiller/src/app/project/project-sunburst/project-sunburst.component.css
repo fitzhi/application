@@ -18,7 +18,7 @@
 }
 
 #chart {
-  margin-left: 10em;
+  width: 500px;
 }
 
 mat-sidenav-container {
@@ -104,6 +104,6 @@ button.btn-outline-success {
 	margin: 50px auto;
 }
 
-.content-divPanelLegend {
+.divPanelOnTop {
   margin: 0px auto;
 }
