@@ -8,6 +8,11 @@ import java.util.Date;
 
 public class Global {
 
+	public static final int LIBRARY_DETECTED = 1;
+	public static final int LIBRARY_DECLARED = 2;
+	public static final int LIBRARY_REMOVED = -1;
+	
+	
 	public static final String LN = System.getProperty("line.separator");
 
 	public static final String BACKEND_RETURN_CODE = "backend.return_code";

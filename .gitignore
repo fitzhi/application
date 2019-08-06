@@ -77,3 +77,6 @@ back-wibkac/src/test/resources/repository-settings/properties-VEGEO.json
 git_repo_for_test
 
 back-wibkac/src/test/resources/out_dir/saved-changes/
+
+front-skiller/.vscode/
+

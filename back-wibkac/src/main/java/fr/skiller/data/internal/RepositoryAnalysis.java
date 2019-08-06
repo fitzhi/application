@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import fr.skiller.source.crawler.git.SCMChange;
 
@@ -135,4 +134,5 @@ public class RepositoryAnalysis {
 				.map(SCMChange::getPath)
 				.anyMatch(filename::equals);
 	}
+	
 }

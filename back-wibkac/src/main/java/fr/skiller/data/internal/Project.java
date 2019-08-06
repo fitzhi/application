@@ -3,8 +3,12 @@ package fr.skiller.data.internal;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.annotation.Generated;
+
+import fr.skiller.Global;
+import fr.skiller.SkillerRuntimeException;
 
 /**
  * Project class. 
@@ -69,7 +73,7 @@ public class Project  {
 	 * List of path containing external dependencies.
 	 * They will be excluded from the crawl.
 	 */
-	private List<Library> libraries = new ArrayList<>();
+	private final List<Library> libraries = new ArrayList<>();
 	
 	/**
 	 * Constant representing one the 2 models of connection settings.
@@ -297,6 +301,43 @@ public class Project  {
 	}
 
 	/**
+	 * Integrate a new library detected or declared to the list of exclusion paths.
+	 * @param library the passed library
+	 */
+	public void add(Library library) {
+		
+		List<Library> libs = this.libraries
+			.stream()
+			.filter(lib -> lib.getExclusionDirectory().equals(library.getExclusionDirectory()))
+			.collect(Collectors.toList());
+		
+		if (libs.size() > 1) {
+			throw new SkillerRuntimeException(String.format("SHOULD NOT PASS HERE (%s)", library.getExclusionDirectory()));
+		}
+		
+		if (libs.isEmpty()) {
+			this.libraries.add(library);
+			return;
+		}
+		
+		Library previous = libs.get(0);
+		
+		switch (previous.getType()) {
+			case Global.LIBRARY_DETECTED: 
+			// If this library was intentionally removed from the audit, we do not try to enforce the add 
+			case Global.LIBRARY_REMOVED: 
+				break;	
+				// The library was previously declared, now it is detected.
+			case Global.LIBRARY_DECLARED:
+				previous.setType(Global.LIBRARY_DETECTED);
+				break;
+			default:
+				throw new SkillerRuntimeException("SHOULD NOT PASS HERE");
+		}
+		
+	}
+	
+	/**
 	 * @return the dependencies list
 	 */
 	public List<Library> getLibraries() {
@@ -307,14 +348,8 @@ public class Project  {
 	 * @param libraries the libraries to set
 	 */
 	public void setLibraries(List<Library> libraries) {
-		this.libraries = libraries;
-	}
-
-	/**
-	 * Initialize the libraries list.
-	 */
-	public void initLibraries() {
-		libraries.clear();
+		this.libraries.clear();
+		this.libraries.addAll(libraries);
 	}
 
 }

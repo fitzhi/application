@@ -717,11 +717,10 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		selectPathDependencies (analysis, dependenciesMarker());
 		
 		//
-		// We retrieve the root paths of all dependencies present in the project (if any) 
+		// We retrieve the root paths of all libraries present in the project (if any) 
 		// The resulting list is saved in the project object.
 		//
 		this.retrieveRootPath(analysis);
-		
 		
 		/**
 		 * We remove the non relevant directories from the crawl
@@ -1153,16 +1152,17 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			}
 
 			if (containFilesOnlyAdded(analysis, new File(absolutePath))) {
-				analysis.getProject().getLibraries().add( new Library(pathname, 1));
+				analysis.getProject().add( new Library(pathname, Global.LIBRARY_DETECTED));
 				if (logger.isDebugEnabled()) {
 					logger.debug (String.format("Handling %s as a dependency", pathname));
 				}
 			}
 		}
 		if (logger.isInfoEnabled()) {
-			logger.info("Dependencies detected in the repository :");
+			logger.info("Libraries detected in the repository :");
 			analysis.getProject().getLibraries()
 				.stream()
+				.filter(lib -> lib.getType() == Global.LIBRARY_DETECTED)
 				.map(Library::getExclusionDirectory)
 				.forEach(logger::info);
 		}
