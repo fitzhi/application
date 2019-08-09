@@ -33,6 +33,8 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
 	sourceSkills = new LocalDataSource([]);
 	settings_skills = Constants.SETTINGS_SKILL_SMARTTABLE;
 
+	public colorOfRisk = 'darkGreen';
+	
 	profileProject = new FormGroup({
 		projectName: new FormControl(''),
 		urlRepository1: new FormControl(''),
@@ -290,4 +292,16 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
 		super.ngOnDestroy();
 	}
 
+	/**
+     * Class of the button corresponding to the 3 possible states of the "Ok" button.
+     */
+	classOkButton() {
+		return (this.profileProject.invalid) ?
+			'okButton okButtonInvalid' : 'okButton okButtonValid';
+	}
+
+
+	evaluationStyle () {
+		return { 'fill': this.colorOfRisk };
+	}
 }
