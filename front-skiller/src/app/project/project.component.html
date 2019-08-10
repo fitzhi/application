@@ -1,6 +1,6 @@
 <mat-tab-group [selectedIndex]="tabIndex" (selectedIndexChange)="selectedIndexChange($event)">
 	<mat-tab label="Project"> 
-			<app-project-form [project$]="project$"></app-project-form>
+			<app-project-form [project$]="project$" [risk$]="risk$"></app-project-form>
 	</mat-tab> 
 	<mat-tab [disabled]="!canConnectSourceControl()" label="Staff"> 
 			<app-project-staff></app-project-staff>
@@ -8,7 +8,8 @@
 	<mat-tab [disabled]="!canConnectSourceControl()" label="Staff Coverage"> 
 		<app-project-sunburst 
 			[project$]="project$"
-			(tabActivationEmitter)="tabActivation($event)">
+			(tabActivationEmitter)="tabActivation($event)"
+			(updateRiskLevel)="updateRiskLevel($event)">
 		</app-project-sunburst>
 	</mat-tab> 
 </mat-tab-group>

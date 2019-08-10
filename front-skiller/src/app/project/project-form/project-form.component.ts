@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
+import { take, switchMap, catchError } from 'rxjs/operators';
 
 import { ProjectService } from '../../service/project.service';
 import { CinematicService } from '../../service/cinematic.service';
@@ -12,6 +13,8 @@ import { LocalDataSource } from 'ng2-smart-table';
 import { SkillService } from '../../service/skill.service';
 import { MessageService } from '../../message/message.service';
 import { BaseComponent } from '../../base/base.component';
+import { ReferentialService } from 'src/app/service/referential.service';
+import { RiskLegend } from 'src/app/data/riskLegend';
 
 @Component({
 	selector: 'app-project-form',
@@ -25,16 +28,22 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
 	 */
 	@Input('project$') project$;
 
+	/**
+	 * The risk might have changed due to the last dashboard calculation.
+	 */
+	@Input('risk$') risk$;
+
 	public project: Project;
 
+	public legends: RiskLegend[];
 	public DIRECT_ACCESS = 1;
 	public REMOTE_FILE_ACCESS = 2;
 
 	sourceSkills = new LocalDataSource([]);
 	settings_skills = Constants.SETTINGS_SKILL_SMARTTABLE;
 
-	public colorOfRisk = 'darkGreen';
-	
+	public colorOfRisk = 'transparent';
+
 	profileProject = new FormGroup({
 		projectName: new FormControl(''),
 		urlRepository1: new FormControl(''),
@@ -56,9 +65,16 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
 		private messageService: MessageService,
 		private skillService: SkillService,
 		private projectService: ProjectService,
+		private referentialService: ReferentialService,
 		private router: Router) {
 		super();
-	}
+
+		this.subscriptions.add(
+			this.referentialService.legends$.subscribe(legends => {
+				this.legends = legends;
+				console.log ('Nope');
+			}));
+}
 
 	ngOnInit() {
 
@@ -73,10 +89,36 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
 				this.profileProject.get('password').setValue(this.project.password);
 				this.profileProject.get('filename').setValue(this.project.filename);
 				this.sourceSkills.load(this.project.skills);
+
+				setTimeout(() => this.updateDotRiskColor(this.project.risk));
 			}));
+
+		this.subscriptions.add(
+			this.risk$.subscribe((risk: number) => this.updateDotRiskColor(risk)));
 
 		this.project = new Project();
 		this.cinematicService.setForm(Constants.PROJECT_TAB_FORM, this.router.url);
+	}
+
+	/**
+	 * Update the color of the SCG circle figuring the technical risk of this project.
+	 * @param levelOfRisk the evaluated level of risk
+	 */
+	updateDotRiskColor(levelOfRisk: number) {
+		if (Constants.DEBUG) {
+			console.log ('updateDotRiskColor for level of risk', levelOfRisk);
+		}
+		switch (levelOfRisk) {
+			case -1:
+				this.colorOfRisk = 'whiteSmoke';
+				break;
+			default:
+				this.colorOfRisk = this.legends.find (legend => legend.level === levelOfRisk).color;
+				if (Constants.DEBUG) {
+					console.log ('the new DOT risk color', this.colorOfRisk);
+				}
+				break;
+			}
 	}
 
 	/**
@@ -234,12 +276,11 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
 			console.log('saving the project ');
 			console.log(this.project);
 		}
-		this.subscriptions.add(
-			this.projectService.save(this.project).subscribe(
-				project => {
-					this.project = project;
-					this.messageService.info('Project ' + this.project.name + '  saved !');
-				}));
+		this.projectService.save(this.project).pipe(take(1)).subscribe(
+			project => {
+				this.project = project;
+				this.messageService.info('Project ' + this.project.name + '  saved !');
+			});
 	}
 
 	public onConnectionSettingsChange(val: string) {

@@ -10,6 +10,7 @@ export class Project {
 	public username: string;
 	public password: string;
 	public filename: string;
+	public risk: number;
 	public skills: Skill[];
 
 	/**

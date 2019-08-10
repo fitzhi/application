@@ -17,6 +17,8 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 
 	public project$ = new Subject<Project>();
 
+	public risk$ = new Subject<number>();
+
 	/**
      * Index of the tab selected.
      */
@@ -28,6 +30,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	public idProject: number;
 
 	sub: any;
+
 
 	constructor(
 		private cinematicService: CinematicService,
@@ -75,6 +78,16 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 		setTimeout(() => {
 			this.loadProject();
 		});
+	}
+
+	/**
+	 * Reload the the project record.
+	 */
+	updateRiskLevel(riskLevel: number) {
+		if (Constants.DEBUG) {
+			console.log('Update the project risk level to ', riskLevel);
+		}
+		this.risk$.next(riskLevel);
 	}
 
 	/**

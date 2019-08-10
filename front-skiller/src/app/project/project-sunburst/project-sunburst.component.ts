@@ -40,6 +40,12 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 */
 	@Output() tabActivationEmitter = new EventEmitter<number>();
 
+	/**
+	 * This event is fired if the sunburst is processed to inform the form component that the project might have changed.
+	 * At least, the level of risk has changed.
+	 */
+	@Output() updateRiskLevel = new EventEmitter<number>();
+
 	public PROJECT_IDX_TAB_FORM = Constants.PROJECT_IDX_TAB_FORM;
 
 	/**
@@ -199,8 +205,13 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 		this.projectService.loadDashboardData(this.settings)
 			.pipe(take(1)).subscribe(
-				response => this.handleSunburstData(response),
-				response => this.handleErrorData(response),
+				response => {
+					this.handleSunburstData(response);
+					if (Constants.DEBUG) {
+						console.log ('The risk of the current project is', response.projectRiskLevel);
+					}
+					this.updateRiskLevel.next(response.projectRiskLevel);
+				}, response => this.handleErrorData(response),
 				() => {
 					this.hackSunburstStyle();
 					this.tooltipChart();
