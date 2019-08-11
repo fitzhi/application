@@ -252,7 +252,18 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			project.setLocationRepository(location);
 			this.dataUpdated = true;
 		}
+	}
+
+	@Override
+	public void saveRisk(Project project, int risk) {
 		
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("The project %s has now, the level of risk %d", project.getName(), risk));
+		}
+		synchronized (lockDataUpdated) {
+			project.setRisk(risk);
+			this.dataUpdated = true;
+		}
 	}
 	
 }

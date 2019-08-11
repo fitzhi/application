@@ -175,7 +175,7 @@ public class CrawlerWibkacTest {
 	}
 
 	@Test
-	public void testParseRepository() throws IOException, SkillerException, GitAPIException {
+	public void testParseRepository() throws IOException, SkillerException {
 		Project prj = new Project (777, "vegeo");
 		prj.setLocationRepository(String.format(DIR_GIT, WIBKAC));
 		scanner.parseRepository(prj, new ConnectionSettings());

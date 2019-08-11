@@ -104,12 +104,13 @@ public class GitScannerTest {
 	
 	@Test
 	public void emptyTest() {
-		
+		// Empty test to avoid a test execution error if the cloneAndParseRepo is commented.
+		// cloneAndParseRepo() is a test which might last a long while.
 	}
+	
 	// @Test
 	public void cloneAndParseRepo() throws IOException, SkillerException, GitAPIException {
 
-		
 		Project project = projectHandler.get(2);
 		
 		scanner.clone(project, settings);
@@ -136,6 +137,12 @@ public class GitScannerTest {
 		// Evaluate the risk for each directory, and sub-directory, in the repository.
 		final List<StatActivity> stats = new ArrayList<>();
 		riskProcessor.evaluateTheRisk(repo, data.riskChartData, stats);
+		
+		StringBuilder dump = new StringBuilder();
+		data.riskChartData.dump(dump, "");
+		if (logger.isDebugEnabled()) {
+			logger.debug(dump.toString());
+		}
        
 	}
 	

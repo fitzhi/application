@@ -15,6 +15,12 @@ public class Library {
 	
 	private int type;
 
+	/**
+	 * Empty constructor for serialization purpose.
+	 */
+	public Library() {
+	}
+	
 	public Library(String exclusionDirectory, int type) {
 		super();
 		this.exclusionDirectory = exclusionDirectory;

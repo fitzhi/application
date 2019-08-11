@@ -87,6 +87,10 @@ public class Project  {
 	 */
 	private static final int REMOTE_FILE_ACCESS = 2;
 	
+	/**
+	 * Level of risk evaluated for the project.
+	 */
+	private int risk = -1;
 	
 	/**
 	 * Empty constructor.
@@ -352,4 +356,19 @@ public class Project  {
 		this.libraries.addAll(libraries);
 	}
 
+	/**
+	 * @return the actual risk of this project.
+	 */
+	public int getRisk() {
+		return risk;
+	}
+
+	/**
+	 * @param risk the estimated risk to set.
+	 */
+	public void setRisk(int risk) {
+		this.risk = risk;
+	}
+
+	
 }

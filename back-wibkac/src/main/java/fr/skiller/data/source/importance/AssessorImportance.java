@@ -19,11 +19,17 @@ import fr.skiller.source.crawler.git.SCMChange;
 public interface AssessorImportance {
 
 	/**
-	 * Evaluate the importance of a change
+	 * <p>Evaluate the importance of a change.</p>
+	 * <p>
+	 * <i>
+	 * The first natural implementation of this interface is the file size of a source. 
+	 * As large is a file, as important is this file.
+	 * </i>
+	 * </p>
 	 * @param project the current project actually crawled.
 	 * @param change the given change whose importance has to be evaluated
 	 * @param criteria the criteria of importance
-	 * @return the importance
+	 * @return the evaluated importance
 	 * @throws SkillerException thrown if any exception occurs during the evaluation
 	 */
 	long getImportance(Project project, SCMChange change, ImportanceCriteria criteria) throws SkillerException;

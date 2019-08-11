@@ -5,6 +5,8 @@ package fr.skiller.bean.impl;
 
 import static fr.skiller.Global.LN;
 import static fr.skiller.Global.UNKNOWN;
+import static fr.skiller.data.internal.DataChartTypeData.IMPORTANCE;
+import static fr.skiller.data.internal.DataChartTypeData.RISKLEVEL_TIMES_IMPORTANCE;
 
 import java.io.File;
 import java.util.HashMap;
@@ -20,9 +22,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import fr.skiller.SkillerRuntimeException;
+import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.DataChart;
+import fr.skiller.data.internal.DataChartTypeData;
+import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RiskLegend;
 import fr.skiller.data.internal.SourceFile;
 import fr.skiller.data.source.CommitHistory;
@@ -35,6 +40,7 @@ import fr.skiller.data.source.CommitRepository;
 @Service("commitAndDevActive")
 public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 
+	
 	/**
 	 * Statistic of activity
 	 * 
@@ -164,11 +170,17 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	}
 
 	/**
-	 * Bean in charge of handling staff.
+	 * Bean in charge of handling the staff.
 	 */
 	@Autowired
 	StaffHandler staffHandler;
 
+	/**
+	 * Bean in charge of handling the projects.
+	 */
+	@Autowired
+	ProjectHandler projectHandler;
+	
 	/**
 	 * The logger for the Risk Surveyor.
 	 */
@@ -396,6 +408,20 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 			location.setRiskLevel((int) Math.floor((double) (risk + location.getRiskLevel()) / 2));
 		}
 		return location.getRiskLevel();
+	}
+
+	@Override
+	public void evaluateProjectRisk(Project project, DataChart dataTree) {
+		
+		double sumImportance = dataTree.sum(IMPORTANCE);
+		double sumRiskLevelTimesImportance = dataTree.sum(RISKLEVEL_TIMES_IMPORTANCE);
+		int projectRisk = (int) (sumRiskLevelTimesImportance / sumImportance);
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format(
+					"Project %s has risk %d ", 
+					project.getName(), projectRisk));
+		}
+		this.projectHandler.saveRisk(project, projectRisk);
 	}
 
 }

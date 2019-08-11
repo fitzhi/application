@@ -921,6 +921,15 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		// Evaluate the preview display for each slice of the sunburst chart.
 		this.riskSurveyor.setPreviewSettings(data.riskChartData);
 
+		/**
+		 * Evaluate and save the level of risk for the whole project.
+		 * This estimation will affect the color of the dot-risk in the form project.
+		 */
+		this.riskSurveyor.evaluateProjectRisk(project, data.riskChartData);
+
+		// We send back to new risk level to the front-end application.
+		data.setProjectRiskLevel(project.getRisk());
+		
 		if (logger.isDebugEnabled()) {
 			if ((data.undefinedContributors != null) && (!data.undefinedContributors.isEmpty())) {
 				StringBuilder sb = new StringBuilder();

@@ -21,6 +21,7 @@ import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.DataChart;
+import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RiskLegend;
 import fr.skiller.data.internal.SourceFile;
 import fr.skiller.data.source.CommitHistory;
@@ -348,4 +349,10 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 		throw new SkillerRuntimeException("Should not pass here!");
 	}
 
+	@Override
+	public void evaluateProjectRisk(Project project, DataChart dataTree) {
+		throw new SkillerRuntimeException("Should not pass here!");
+	}
+
+	
 }

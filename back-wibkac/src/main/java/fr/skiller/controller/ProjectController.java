@@ -490,7 +490,7 @@ public class ProjectController {
 								+ project.getName() + ". Please wait !");
 					}
 					return new ResponseEntity<> (
-							new SunburstDTO(project.getId(), CODE_MULTIPLE_TASK,
+							new SunburstDTO(project.getId(), project.getRisk(), CODE_MULTIPLE_TASK,
 							"A dashboard generation has already been launched for " + project.getName()), 
 							new HttpHeaders(), 
 							HttpStatus.BAD_REQUEST);
@@ -499,14 +499,14 @@ public class ProjectController {
 					logger.debug("The generation will be processed asynchronously !");
 				}
 				scanner.generateAsync(project, gp);
-				return new ResponseEntity<> (new SunburstDTO(project.getId(), null, HttpStatus.CREATED.value(), 
+				return new ResponseEntity<> (new SunburstDTO(project.getId(), project.getRisk(), null, HttpStatus.CREATED.value(), 
 						"The dashboard generation has been launched. Operation might last a while. Please try later !"), 
 						new HttpHeaders(), 
 						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			logger.error(getStackTrace(e));
-			return new ResponseEntity<> (new SunburstDTO(project.getId(), null, -1, e.getMessage()), 
+			return new ResponseEntity<> (new SunburstDTO(project.getId(), project.getRisk(), null, -1, e.getMessage()), 
 					new HttpHeaders(), 
 					HttpStatus.BAD_REQUEST);
 		}
@@ -532,10 +532,10 @@ public class ProjectController {
 				);
 			}
 			return new ResponseEntity<>(
-					new SunburstDTO(project.getId(), data), new HttpHeaders(), HttpStatus.OK);
+					new SunburstDTO(project.getId(), project.getRisk(), data), new HttpHeaders(), HttpStatus.OK);
 		} catch (final Exception e) {
 			logger.error(getStackTrace(e));
-			return new ResponseEntity<>(new SunburstDTO( UNKNOWN_PROJECT,null, CODE_UNDEFINED, e.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);			
+			return new ResponseEntity<>(new SunburstDTO( UNKNOWN_PROJECT, -1, null, CODE_UNDEFINED, e.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);			
 		} finally {
 			tasks.removeTask(DASHBOARD_GENERATION, PROJECT, project.getId());
 		}

@@ -4,12 +4,13 @@
 package fr.skiller.data.internal;
 
 import static fr.skiller.Global.UNKNOWN;
+import static fr.skiller.data.internal.DataChartTypeData.IMPORTANCE;
+import static fr.skiller.data.internal.DataChartTypeData.RISKLEVEL_TIMES_IMPORTANCE;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +18,10 @@ import java.util.Set;
 
 import fr.skiller.Global;
 import fr.skiller.SkillerRuntimeException;
+
 /**
+ * <p>Sunburst data build from the History of the Source repository with layout information.</p>
  * @author Fr&eacute;d&eacute;ric VIDAL
- * Sunburst data build from the History of the Source repository with layout information.
  */
 public class DataChart implements Serializable {
 
@@ -59,7 +61,9 @@ public class DataChart implements Serializable {
     
 	/**
 	 * <p>Proportion of the location inside the diagram.</p>
-	 * <i>A 2000 lines Java Class will have a higher proportion than  2 small class of 100 lines</i>
+	 * <p>
+	 * <i>A 2000 lines Java Class should have a higher importance than  2 small class of 100 lines</i>
+	 * </p>
 	 */        
     private int importance = 0;
     
@@ -126,7 +130,12 @@ public class DataChart implements Serializable {
 	}
 	
 	public void dump(StringBuilder sb, String offset) {
-		sb.append(offset).append(getLocation()).append(Global.LN);
+		sb.append(offset).append(getLocation()).append(" i:").append(importance).append(" r:").append(riskLevel).append(Global.LN);
+		if (sources!=null) {
+			sb.append(offset);
+			sources.stream().map(SourceFile::getFilename).forEach(s -> sb.append(s).append("/"));
+			sb.append(Global.LN);
+		}
 		if (getChildren()!=null) {
 			for (DataChart child : getChildren()) {
 				child.dump (sb, offset+" ");
@@ -268,7 +277,7 @@ public class DataChart implements Serializable {
 	}
 
 	/**
-	 * @return the proportion representing this location.
+	 * @return the importance representing this location.
 	 */
 	public long getImportance() {
 		return importance;
@@ -309,5 +318,19 @@ public class DataChart implements Serializable {
 		this.riskLevel = input.riskLevel;
 		this.sources = input.sources;
 		this.children = input.children;
+	}
+	
+	public double sum (DataChartTypeData type) {
+		if ((this.children == null) || (this.children.isEmpty())) {
+			return (type == IMPORTANCE) ?
+			((double) this.importance) : ((double) this.importance * this.riskLevel);
+		}
+		if (type == IMPORTANCE) {
+			return this.importance + 
+					this.children.stream().mapToDouble(dc -> dc.sum(IMPORTANCE)).sum();
+		} else {
+			return this.riskLevel * this.importance + 
+					this.children.stream().mapToDouble(dc -> dc.sum(RISKLEVEL_TIMES_IMPORTANCE)).sum();				
+		}
 	}
 }

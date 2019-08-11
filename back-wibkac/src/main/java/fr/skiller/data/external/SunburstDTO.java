@@ -18,6 +18,11 @@ import fr.skiller.data.internal.RiskDashboard;
 public class SunburstDTO extends BaseDTO {
 
 	/**
+	 * Project risk livel.
+	 */
+	private int projectRiskLevel;
+	
+	/**
 	 * Project identifier.
 	 */
 	private int idProject;
@@ -34,24 +39,28 @@ public class SunburstDTO extends BaseDTO {
 	
 	/**
 	 * @param idProject project identifier.
+	 * @param projectRiskLevel evaluated risk level of the whole project.
 	 * @param riskDashboard Dashboard data ready to be injected in the sunburst chart.
 	 */
-	public SunburstDTO(final int idProject, RiskDashboard riskDashboard) {
+	public SunburstDTO(final int idProject, final int projectRiskLevel, RiskDashboard riskDashboard) {
 		super();
 		this.setIdProject(idProject);
+		this.projectRiskLevel = projectRiskLevel;
 		this.setSunburstData(riskDashboard.riskChartData);
 		this.setGhosts(riskDashboard.undefinedContributors);
 	}
 
 	/**
 	 * @param idProject project identifier.
+	 * @param projectRiskLevel evaluated risk level of the whole project.
 	 * @param sunburstData data ready to be injected in the sunburst chart.
 	 * @param code code of processing error
 	 * @param message corresponding message of error
 	 */
-	public SunburstDTO(final int idProject, DataChart sunburstData, int code, String message) {
+	public SunburstDTO(final int idProject, final int projectRiskLevel, DataChart sunburstData, int code, String message) {
 		super();
 		this.setIdProject(idProject);
+		this.projectRiskLevel = projectRiskLevel;		
 		this.setSunburstData(sunburstData);
 		this.code = code;
 		this.message = message;
@@ -59,11 +68,12 @@ public class SunburstDTO extends BaseDTO {
 
 	/**
 	 * @param idProject project identifier.
+	 * @param projectRiskLevel evaluated risk level of the whole project.
 	 * @param code code of processing error
 	 * @param message corresponding message of error
 	 */
-	public SunburstDTO(final int idProject, int code, String message) {
-		this(idProject, null, code, message);
+	public SunburstDTO(final int idProject, final int projectRiskLevel, int code, String message) {
+		this(idProject, projectRiskLevel, null, code, message);
 	}
 	
 	/**
@@ -113,4 +123,20 @@ public class SunburstDTO extends BaseDTO {
 	public void setGhosts(Set<Committer> ghosts) {
 		this.ghosts = ghosts;
 	}
+
+	/**
+	 * @return the projectRiskLevel
+	 */
+	public int getProjectRiskLevel() {
+		return projectRiskLevel;
+	}
+
+	/**
+	 * @param projectRiskLevel the projectRiskLevel to set
+	 */
+	public void setProjectRiskLevel(int projectRiskLevel) {
+		this.projectRiskLevel = projectRiskLevel;
+	}
+	
+	
 }

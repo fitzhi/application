@@ -12,6 +12,11 @@ import java.util.Set;
 public class RiskDashboard {
 
 	/**
+	 * Global level of risk evaluated of the whole project.
+	 */
+	private int projectRiskLevel = -1;
+	
+	/**
 	 * Data ready to use for the chart.
 	 */
 	public final DataChart riskChartData;	
@@ -30,6 +35,20 @@ public class RiskDashboard {
 		super();
 		this.riskChartData = riskChartData;
 		this.undefinedContributors = contributors;
+	}
+
+	/**
+	 * @return the projectRiskLevel
+	 */
+	public int getProjectRiskLevel() {
+		return projectRiskLevel;
+	}
+
+	/**
+	 * @param projectRiskLevel the projectRiskLevel to set
+	 */
+	public void setProjectRiskLevel(int projectRiskLevel) {
+		this.projectRiskLevel = projectRiskLevel;
 	}
 	
 }

@@ -17,10 +17,11 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="fr.skiller.source.crawler.git.GitCrawler" additivity="false">
+	<logger name="fr.skiller.source.crawler.git" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
+
 
 
 </configuration>

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import fr.skiller.data.internal.DataChart;
+import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RiskLegend;
 import fr.skiller.data.source.CommitRepository;
 
@@ -34,7 +35,17 @@ public interface RiskProcessor {
 	void evaluateTheRisk(CommitRepository repository, DataChart data, List<StatActivity> statsCommit) ;
 
 	/**
-	 * Set the preview settings for each directory in the passed tree.
+	 * <p>Evaluated the global risk of the given project.</p>
+	 * @param project active project currently under investigation.
+	 * @param dataTree the data tree representing the repository of this project.
+	 */
+	void evaluateProjectRisk(Project project, DataChart dataTree);
+
+	/**
+	 * <p>Set the preview settings for each directory in the passed tree.</p>
+	 * <p>
+	 * e.g. for the Sunburst chart, the color of each sliced is designed 
+	 * depending on the level of risk evaluated. </p>
 	 * @param dataTree the data tree representing the repository directories
 	 */
 	void setPreviewSettings(DataChart dataTree);
