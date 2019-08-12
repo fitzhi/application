@@ -4,7 +4,8 @@ import { ReturnCodeMessage } from '../../../../data/return_code_message';
 import { StaffService } from '../../../../service/staff.service';
 import { SelectionModel } from '@angular/cdk/collections';
 import {Component, Inject, ViewChild, AfterViewInit} from '@angular/core';
-import { MAT_DIALOG_DATA, MatTableDataSource, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { INTERNAL_SERVER_ERROR} from 'http-status-codes';
 
@@ -24,7 +25,7 @@ export class UploadedSkillsPickupComponent implements AfterViewInit {
 
   private selection: SelectionModel<DeclaredExperience>;
 
-  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   constructor(
     private staffService: StaffService,

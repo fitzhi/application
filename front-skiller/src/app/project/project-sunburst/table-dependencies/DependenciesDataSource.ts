@@ -1,4 +1,4 @@
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource } from '@angular/material/table';
 import { Library } from '../../../data/library';
 import { BehaviorSubject } from 'rxjs';
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Library } from '../../../data/library';
 import { DependenciesDataSource } from './DependenciesDataSource';
 import { InLineEditDialogComponent } from './in-line-edit-dialog/in-line-edit-dialog.component';

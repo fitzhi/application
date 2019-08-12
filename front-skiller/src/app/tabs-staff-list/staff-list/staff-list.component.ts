@@ -2,7 +2,8 @@ import { Component, OnInit, Input, OnDestroy, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TabsStaffListService } from '../service/tabs-staff-list.service';
 import { BaseComponent } from '../../base/base.component';
-import { MatTableDataSource, MatSort, Sort } from '@angular/material';
+import { MatSort, Sort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { Constants } from '../../constants';
 import { Profile } from '../../data/profile';
 import { ReferentialService } from '../../service/referential.service';
@@ -26,7 +27,7 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 
 	public dataSource: MatTableDataSource<Collaborator>;
 
-	@ViewChild(MatSort) sort: MatSort;
+	@ViewChild(MatSort, { static: true }) sort: MatSort;
 
 	public displayedColumns: string[] = ['firstName lastName', 'level', 'skills', 'active', 'external'];
 

@@ -1,6 +1,6 @@
 import { Collaborator } from './collaborator';
 import { ListCriteria } from './listCriteria';
-import { MatSortable } from '@angular/material';
+import { MatSortable } from '@angular/material/sort';
 import { Constants } from '../constants';
 
 class SortingContext {

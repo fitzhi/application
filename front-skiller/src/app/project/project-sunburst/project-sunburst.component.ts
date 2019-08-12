@@ -6,7 +6,7 @@ import { ProjectService } from '../../service/project.service';
 import { ActivatedRoute } from '@angular/router';
 import { CinematicService } from '../../service/cinematic.service';
 import { Project } from '../../data/project';
-import { MatDialogConfig, MatDialog } from '@angular/material';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { DialogProjectGhostsComponent } from './dialog-project-ghosts/dialog-project-ghosts.component';
 import { ProjectGhostsDataSource } from './dialog-project-ghosts/project-ghosts-data-source';
 import { DialogLegendSunburstComponent } from './legend-sunburst/legend-sunburst.component';

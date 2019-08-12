@@ -4,7 +4,8 @@ import { Constants } from '../../constants';
 import { MessageService } from '../../message/message.service';
 import { CinematicService } from '../../service/cinematic.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatSort, MatTableDataSource } from '@angular/material';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import { ProjectStaffService } from '../project-staff-service/project-staff.service';
 import { BaseComponent } from '../../base/base.component';
 import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
@@ -24,7 +25,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 
 	public sub: any;
 
-	@ViewChild(MatSort) sort: MatSort;
+	@ViewChild(MatSort, { static: true }) sort: MatSort;
 
 	constructor(
 		private projectService: ProjectService,

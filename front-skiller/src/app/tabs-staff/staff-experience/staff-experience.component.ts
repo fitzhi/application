@@ -9,7 +9,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 
 import { LocalDataSource } from 'ng2-smart-table';
 import { StaffUploadCvComponent } from './staff-upload-cv/staff-upload-cv.component';
-import { MatDialog, MatDialogConfig } from '@angular/material';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { BaseComponent } from '../../base/base.component';
 import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
 

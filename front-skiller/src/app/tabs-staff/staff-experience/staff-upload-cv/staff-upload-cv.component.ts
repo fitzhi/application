@@ -10,7 +10,7 @@ import {HttpEventType} from '@angular/common/http';
 import {HttpRequest} from '@angular/common/http';
 import {Component, OnInit, Inject, OnDestroy} from '@angular/core';
 import {Subject} from 'rxjs';
-import {MAT_DIALOG_DATA, MatDialogConfig} from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
 import {MatDialog, MatDialogRef} from '@angular/material/dialog';
 import { BaseComponent } from '../../../base/base.component';
 import { BackendSetupService } from '../../../service/backend-setup/backend-setup.service';

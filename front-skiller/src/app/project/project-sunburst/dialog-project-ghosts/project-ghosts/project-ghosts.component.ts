@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, ViewChild } from '@angular/core';
-import { MatSort } from '@angular/material';
+import { MatSort } from '@angular/material/sort';
 import { Constants } from '../../../../constants';
 import { Unknown } from '../../../../data/unknown';
 
@@ -26,7 +26,7 @@ export class ProjectGhostsComponent implements OnInit {
 	/**
 	 * Array will be sortable
 	 */
-	@ViewChild(MatSort) sort: MatSort;
+	@ViewChild(MatSort, { static: true }) sort: MatSort;
 
 	constructor() { }
 

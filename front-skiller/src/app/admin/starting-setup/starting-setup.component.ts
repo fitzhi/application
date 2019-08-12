@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { MatStepper } from '@angular/material';
+import { MatStepper } from '@angular/material/stepper';
 import { Constants } from 'src/app/constants';
 import { Collaborator } from 'src/app/data/collaborator';
 import { BaseComponent } from 'src/app/base/base.component';
@@ -22,7 +22,7 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 	/**
      * The main stepper is passed in order to procede a programmatly step.next().
      */
-	@ViewChild('stepper') stepper: MatStepper;
+	@ViewChild('stepper', { static: true }) stepper: MatStepper;
 
 	/**
      * Are we in the very first connection ?

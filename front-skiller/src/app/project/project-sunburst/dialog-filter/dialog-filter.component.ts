@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ProjectStaffService } from '../../project-staff-service/project-staff.service';
 import { Constants } from '../../../constants';
 import { Contributor } from '../../../data/contributor';
-import { MatDialogRef } from '@angular/material';
+import { MatDialogRef } from '@angular/material/dialog';
 import { SettingsGeneration } from '../../../data/settingsGeneration';
 import { FormGroup, FormControl } from '@angular/forms';
 
