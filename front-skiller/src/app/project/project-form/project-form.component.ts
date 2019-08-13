@@ -16,6 +16,9 @@ import { BaseComponent } from '../../base/base.component';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { RiskLegend } from 'src/app/data/riskLegend';
 import Tagify from '@yaireo/tagify';
+import { getHeapStatistics } from 'v8';
+import { Skill } from 'src/app/data/skill';
+import { WebDriverLogger } from 'blocking-proxy/built/lib/webdriver_logger';
 
 @Component({
 	selector: 'app-project-form',
@@ -36,11 +39,13 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	public project: Project;
 
+
 	public legends: RiskLegend[];
 	public DIRECT_ACCESS = 1;
 	public REMOTE_FILE_ACCESS = 2;
 
 	sourceSkills = new LocalDataSource([]);
+
 	settings_skills = Constants.SETTINGS_SKILL_SMARTTABLE;
 
 	public colorOfRisk = 'transparent';
@@ -56,6 +61,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	sub: any;
 
+	/**
+	 * JS object handling the skills component.
+	 */
 	tagify: Tagify;
 
 	/**
@@ -63,7 +71,17 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	*/
 	public connection_settings: string;
 
-	public settings = { whitelist: ['java', 'css', 'javascript'], blacklist: ['fucking', 'shit']};
+	/**
+	 * Bound addSkill to the current active component.
+	 * The goal of this bind is to access the member variables of this class, such as projet
+	 */
+	private boundAddSkill: any;
+
+	/**
+	 * Bound removeSkill to the current active component.
+	 * The goal of this bind is to access the member variables of this class, such as projet
+	 */
+	private boundRemoveSkill: any;
 
 	constructor(
 		private cinematicService: CinematicService,
@@ -78,6 +96,10 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			this.referentialService.legends$.subscribe(legends => {
 				this.legends = legends;
 			}));
+
+		this.boundAddSkill = this.addSkill.bind(this);
+		this.boundRemoveSkill = this.removeSkill.bind(this);
+
 }
 
 	ngOnInit() {
@@ -113,11 +135,10 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 		this.tagify = new Tagify (input, {
 			enforceWhitelist : true,
-			whitelist        : ['Java', 'CSS'],
+			whitelist        : [],
 			callbacks        : {
-				edit   : console.log,  // callback when editing a tag
-				add    : console.log,  // callback when adding a tag
-				remove : console.log   // callback when removing a tag
+				add    : this.boundAddSkill,  // callback when adding a tag, this callback is bound to the main component, instead of the function.
+				remove : this.boundRemoveSkill   // callback when removing a tag
 			}
 		});
 
@@ -127,6 +148,77 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					this.tagify.settings.whitelist.push(element);
 				});
 			});
+	}
+
+	/**
+	 * Add a skill inside the project.
+	 * @param event ADD event fired by the tagify component.
+	 */
+	addSkill(event: CustomEvent) {
+		if (Constants.DEBUG) {
+			console.log ('Adding the skill', event.detail.data.value);
+		}
+
+		// This skills is already registered for this project.
+		if ( (this.project.skills !== undefined)
+			&& (this.project.skills.find (sk => sk.title === event.detail.data.value) !== undefined)) {
+			return;
+		}
+
+		const skill = this.skillService.search (event.detail.data.value);
+		if (skill === undefined) {
+			console.log ('SEVERE ERROR : Unregistered skill', event.detail.data.value);
+			return;
+		}
+
+		this.project.skills.push(skill);
+
+		// Log the resulting collection.
+		this.logProjectSkills();
+	}
+
+	/**
+	 * Remove a skill from the project.
+	 * @param event ADD event fired by the tagify component.
+	 */
+	removeSkill(event: CustomEvent) {
+		if (Constants.DEBUG) {
+			console.log ('Removing the skill', event.detail.data.value);
+		}
+
+		// This skill HAS TO BE registered inside the project.
+		if ( (this.project.skills === undefined) || (this.project.skills.length === 0)) {
+			console.log ('SHOULD NOT PASS HERE : ' + this.project.name
+			+ ' does not contain any skill. So, we should not be able to remove one');
+		}
+
+		const skill = this.project.skills.find (sk => sk.title === event.detail.data.value);
+		if (skill === undefined) {
+			console.log ('SHOULD NOT PASS HERE : Cannot remove the skill '
+			+ event.detail.data.value + ' from project ' + this.project.name);
+			return;
+		}
+
+		const indexOfSkill = this.project.skills.indexOf(skill);
+		if (Constants.DEBUG) {
+			console.log ('Index of the skill ' + skill.title, indexOfSkill);
+		}
+		this.project.skills.splice(indexOfSkill, 1);
+
+		// Log the resulting collection.
+		this.logProjectSkills();
+	}
+
+	/**
+	 * Log the skills of the current project in DEBUG mode.
+	 */
+	logProjectSkills() {
+		if (Constants.DEBUG) {
+			console.log (this.project.skills);
+			console.groupCollapsed ('list of skills for project ' + this.project.name);
+			this.project.skills.forEach(sk => console.log (sk.id + ' ' +  sk.title));
+			console.groupEnd();
+		}
 	}
 
 	/**

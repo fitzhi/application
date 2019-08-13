@@ -8,6 +8,7 @@ import { Constants } from '../constants';
 import { ListCriteria } from '../data/listCriteria';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { take } from 'rxjs/operators';
+import { SIGILL } from 'constants';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -118,6 +119,19 @@ export class SkillService extends InternalService {
 			console.log('Fetching the skill title ' + skillTitle + ' on the address ' + url);
 		}
 		return this.httpClient.get<Skill>(url);
+	}
+
+	/**
+	 * Search accross the array "all skills" for a skill with the same name as the passed one.
+	 * @param title the given title of the skill (as e.g. 'Java')
+	 * @return either undefined if found none, or the first one AND THE ONLY ONE with the same title.
+	 */
+	search(title: String) {
+		if (this.allSkills.length === 0) {
+			console.error('the array containing all skills is empty');
+			return undefined;
+		}
+		return this.allSkills.find (skill => skill.title === title);
 	}
 
 	/**

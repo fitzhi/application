@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { CinematicService } from './service/cinematic.service';
 import { Constants } from './constants';
 import { ListProjectsService } from './list-projects-service/list-projects.service';
@@ -11,12 +11,14 @@ import { SkillService } from './service/skill.service';
 import { ListCriteria } from './data/listCriteria';
 import { AuthService } from './admin/service/auth/auth.service';
 
+declare var $:any;
+
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
 	styleUrls: ['./app.component.css']
 })
-export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
+export class AppComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
     * Context identfifier : Entity currently active.
@@ -66,6 +68,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
          * Loading the referentials.
          */
 		this.referentialService.loadAllReferentials();
+
 	}
 
 	/**
@@ -210,4 +213,11 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 		super.ngOnDestroy();
 	}
 
+	public ngAfterViewInit () {
+		$(document).ready(
+			$(function () {
+				$('[data-toggle="tooltip"]').tooltip();
+			}
+			));
+	}
 }
