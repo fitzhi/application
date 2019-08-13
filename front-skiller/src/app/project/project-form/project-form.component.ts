@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { take, switchMap, catchError } from 'rxjs/operators';
@@ -15,13 +15,14 @@ import { MessageService } from '../../message/message.service';
 import { BaseComponent } from '../../base/base.component';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { RiskLegend } from 'src/app/data/riskLegend';
+import Tagify from '@yaireo/tagify';
 
 @Component({
 	selector: 'app-project-form',
 	templateUrl: './project-form.component.html',
 	styleUrls: ['./project-form.component.css']
 })
-export class ProjectFormComponent extends BaseComponent implements OnInit, OnDestroy {
+export class ProjectFormComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
 	 * The project loaded in the parent component.
@@ -55,10 +56,14 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
 
 	sub: any;
 
+	tagify: Tagify;
+
 	/**
 	* Member variable linked to the connection settings toggle.
 	*/
 	public connection_settings: string;
+
+	public settings = { whitelist: ['java', 'css', 'javascript'], blacklist: ['fucking', 'shit']};
 
 	constructor(
 		private cinematicService: CinematicService,
@@ -72,7 +77,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
 		this.subscriptions.add(
 			this.referentialService.legends$.subscribe(legends => {
 				this.legends = legends;
-				console.log ('Nope');
 			}));
 }
 
@@ -91,6 +95,10 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
 				this.sourceSkills.load(this.project.skills);
 
 				setTimeout(() => this.updateDotRiskColor(this.project.risk));
+
+				this.tagify.addTags(
+					this.project.skills
+					.map(function(skill) { return skill.title; }));
 			}));
 
 		this.subscriptions.add(
@@ -98,6 +106,27 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
 
 		this.project = new Project();
 		this.cinematicService.setForm(Constants.PROJECT_TAB_FORM, this.router.url);
+	}
+
+	ngAfterViewInit() {
+		const input = document.querySelector('textarea[name=skills]');
+
+		this.tagify = new Tagify (input, {
+			enforceWhitelist : true,
+			whitelist        : ['Java', 'CSS'],
+			callbacks        : {
+				edit   : console.log,  // callback when editing a tag
+				add    : console.log,  // callback when adding a tag
+				remove : console.log   // callback when removing a tag
+			}
+		});
+
+		this.skillService.allSkills$
+			.subscribe (skills => {
+				skills.map(function(skill) { return skill.title; }).forEach(element => {
+					this.tagify.settings.whitelist.push(element);
+				});
+			});
 	}
 
 	/**
@@ -345,4 +374,5 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, OnDes
 	evaluationStyle () {
 		return { 'fill': this.colorOfRisk };
 	}
+
 }

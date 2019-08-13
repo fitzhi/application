@@ -68,7 +68,20 @@ div.explanation_access {
     width: 96px;
 }
 
+div.field {
+	padding-left: 35px;
+}
+
 .labelProject {
 	font-size: 24px;;
 	margin-bottom: 2px;
+}
+
+.labelSkills {
+	font-size: 15px;;
+	margin-bottom: 2px;
+}
+
+#skills {
+	width: 100%;
 }

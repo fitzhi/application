@@ -13,12 +13,20 @@
 						<circle cx="40" cy="40" r="40" [ngStyle]="evaluationStyle()" />
 					</svg>				
 				</div>
-				<div class="col-10" style="padding-left: 35px">
+				<div class="col-10 field">
 					<label class="required labelProject" for="project">Project information</label> 
 					<input type="text"
 						class="form-control required" id="projectName" name="projectName"
 						placeholder="Project name (Required)" value="" required
 						formControlName="projectName" />
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-1"></div>
+				<div class="col-10 field">
+					<label class="labelSkills" for="skills">Skills involved</label> 
+					<textarea id="skills" name="skills" placeholder="Type your skills"></textarea>
 				</div>
 			</div>
 

@@ -89,6 +89,7 @@ import { HttpTokenInterceptorService } from './admin/service/http/http-token-int
 import { CiaoComponent } from './ciao/ciao.component';
 import { TableDependenciesComponent } from './project/project-sunburst/table-dependencies/table-dependencies.component';
 import { InLineEditDialogComponent } from './project/project-sunburst/table-dependencies/in-line-edit-dialog/in-line-edit-dialog.component';
+
 @NgModule({
 	declarations: [
 		AppComponent,

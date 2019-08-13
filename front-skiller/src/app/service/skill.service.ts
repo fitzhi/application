@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Skill } from '../data/skill';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { InternalService } from '../internal-service';
 
 import { Constants } from '../constants';
 import { ListCriteria } from '../data/listCriteria';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
+import { take } from 'rxjs/operators';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -20,7 +21,12 @@ export class SkillService extends InternalService {
 	/*
 	 * skills
 	 */
-	public allSkills: Skill[] = [];
+	public allSkills$  = new BehaviorSubject<Skill[]>([]);
+
+	/*
+	 * skills
+	 */
+	public allSkills: Skill[];
 
 	/**
 	 * skills
@@ -40,6 +46,8 @@ export class SkillService extends InternalService {
 		if (this.backendSetupService.hasSavedAnUrl()) {
 			this.loadSkills();
 		}
+
+		this.allSkills$.subscribe(sks => this.allSkills = sks);
 	}
 
 	/**
@@ -50,19 +58,21 @@ export class SkillService extends InternalService {
 		if (Constants.DEBUG) {
 			this.log('Fetching all skills on URL ' + this.backendSetupService.url() + '/skill' + '/all');
 		}
-		const subSkills = this.httpClient.get<Skill[]>(this.backendSetupService.url() + '/skill' + '/all').subscribe(
-			skills => {
-				if (Constants.DEBUG) {
-					console.groupCollapsed('Skills registered : ');
-					skills.forEach(function (skill) {
-						console.log(skill.id + ' ' + skill.title);
-					});
-					console.groupEnd();
-				}
-				skills.forEach(skill => this.allSkills.push(skill));
-			},
-			error => console.log(error),
-			() => setTimeout(() => { subSkills.unsubscribe(); }, 1000));
+		const subSkills = this.httpClient
+			.get<Skill[]>(this.backendSetupService.url() + '/skill' + '/all')
+			.pipe(take(1))
+			.subscribe(
+				skills => {
+					if (Constants.DEBUG) {
+						console.groupCollapsed('Skills registered : ');
+						skills.forEach(function (skill) {
+							console.log(skill.id + ' ' + skill.title);
+						});
+						console.groupEnd();
+					}
+					this.allSkills$.next(skills);
+				},
+				error => console.log(error));
 	}
 
 	/**
