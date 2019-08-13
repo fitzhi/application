@@ -8,10 +8,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.After;
 import org.junit.Before;
@@ -85,8 +86,14 @@ public class GitScannerTest {
 		Gson gson = new GsonBuilder().create();
 		
 		String fileProperties = versionControlConnectionSettings + "/properties-SKILLER.json";		
-		
+
 		File file = new File(fileProperties);
+		
+		// This test is only available on the PIC of wibkac
+		if (!file.exists()) {
+			return;
+		}
+
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("connection settings pathname %s", file.getAbsolutePath()));
 		}
