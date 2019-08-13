@@ -27,12 +27,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	/**
 	 * The project loaded in the parent component.
 	 */
-	@Input('project$') project$;
+	@Input() project$;
 
 	/**
 	 * The risk might have changed due to the last dashboard calculation.
 	 */
-	@Input('risk$') risk$;
+	@Input() risk$;
 
 	public project: Project;
 
