@@ -32,7 +32,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	/**
      * The project loaded in the parent component.
      */
-	@Input('project$') project$;
+	@Input() project$;
 
 	/**
 	 * This component, hosted in a tab pane, use this emitter to inform its parent to change the active pane.
@@ -152,7 +152,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				}
 				this.project = project;
 				this.projectName = this.project.name;
-				if ((typeof this.project.urlRepository === 'undefined') || (this.project.urlRepository.length === 0)) {
+				if ((!this.project.urlRepository) || (this.project.urlRepository.length === 0)) {
 					this.messageService.info('No repository URL avalaible !');
 					this.setActiveContext (this.CONTEXT.SUNBURST_IMPOSSIBLE);
 				}

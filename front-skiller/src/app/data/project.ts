@@ -11,12 +11,12 @@ export class Project {
 	public password: string;
 	public filename: string;
 	public risk: number;
-	public skills: Skill[];
+	public skills: Skill[] = [];
 
 	/**
 	 * Array of dependeny paths (detected or declared) for this project.
 	 */
-	public libraries: Library[];
+	public libraries: Library[] = [];
 
 	constructor() { }
 
