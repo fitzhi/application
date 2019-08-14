@@ -74,6 +74,11 @@ public class FileDataSaverImpl implements DataSaver {
 	private Logger logger = LoggerFactory.getLogger(FileDataSaverImpl.class.getCanonicalName());
 
 	/**
+	 * Directory to save the changes file.s
+	 */
+	private final String SAVED_CHANGES = "saved-changes";
+
+	/**
 	 * Initialization of the Google JSON parser.
 	 */
 	private static Gson gson = new GsonBuilder().create();
@@ -229,10 +234,25 @@ public class FileDataSaverImpl implements DataSaver {
 		}
 	}
 
+	private void createIfNeededDirectorySavedChanges() throws SkillerException { 
+
+		Path dir = rootLocation.resolve(SAVED_CHANGES);
+		if (Files.notExists(dir)) {
+			try {
+				Files.createDirectories(dir);
+			} catch (Exception e) {
+				throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, SAVED_CHANGES), e);
+			}
+		}
+
+	}
+
 	@Override
 	public void saveChanges(Project project, List<SCMChange> changes) throws SkillerException {
 	
-		final String filename = "saved-changes/" + project.getName() + "-changes.csv";
+		createIfNeededDirectorySavedChanges();
+
+		final String filename = SAVED_CHANGES + File.separatorChar + project.getName() + "-changes.csv";
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("Saving file %s", rootLocation.resolve(filename)));
