@@ -3,7 +3,6 @@ package fr.skiller.data.source;
 import java.time.LocalDate;
 import java.util.Calendar;
 
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -7,15 +7,11 @@ import static fr.skiller.Global.LN;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import fr.skiller.data.source.importance.AssessorImportance;
 
 /**
  * Repository containing time-stamped commits for the given project.

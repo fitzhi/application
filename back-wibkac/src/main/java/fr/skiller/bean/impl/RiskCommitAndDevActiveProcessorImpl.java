@@ -26,7 +26,6 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.DataChart;
-import fr.skiller.data.internal.DataChartTypeData;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RiskLegend;
 import fr.skiller.data.internal.SourceFile;

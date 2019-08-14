@@ -7,7 +7,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.util.Date;
 
 import org.junit.Test;
 import org.slf4j.Logger;

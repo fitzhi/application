@@ -5,7 +5,6 @@ package fr.skiller.bean.impl;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Date;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,7 +15,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.data.internal.Project;
@@ -33,9 +31,6 @@ import fr.skiller.data.source.CommitRepository;
 @TestPropertySource(properties = { "cache_duration=1" }) 
 public class CacheDataHandlerImplTest {
 	
-	@Autowired
-	private MockMvc mvc;
-
 	@Autowired
 	CacheDataHandler cacheDataHandler;
 	

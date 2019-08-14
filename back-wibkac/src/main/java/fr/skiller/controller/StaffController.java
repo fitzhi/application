@@ -185,7 +185,7 @@ public class StaffController {
 					mission.setName(projectHandler.get(mission.getIdProject()).getName());
 			}
 			
-			ResponseEntity re = new ResponseEntity<>(
+			ResponseEntity<List<Mission>> re = new ResponseEntity<>(
 					responseEntityStaffMember.getBody().getMissions(), 
 					responseEntityStaffMember.getHeaders(),
 					responseEntityStaffMember.getStatusCode());

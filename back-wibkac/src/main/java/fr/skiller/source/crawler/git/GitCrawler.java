@@ -4,10 +4,8 @@
 package fr.skiller.source.crawler.git;
 
 import static fr.skiller.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
-import static fr.skiller.Error.CODE_INVALID_LOGIN_PASSWORD;
 import static fr.skiller.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
 import static fr.skiller.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
-import static fr.skiller.Error.MESSAGE_INVALID_LOGIN_PASSWORD;
 import static fr.skiller.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
 import static fr.skiller.Error.CODE_PARSING_SOURCE_CODE;
 import static fr.skiller.Error.MESSAGE_PARSING_SOURCE_CODE;
@@ -16,7 +14,6 @@ import static fr.skiller.Global.LN;
 import static fr.skiller.Global.UNKNOWN;
 import static fr.skiller.controller.ProjectController.DASHBOARD_GENERATION;
 import static org.eclipse.jgit.diff.DiffEntry.DEV_NULL;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileReader;
@@ -45,26 +42,18 @@ import javax.annotation.PostConstruct;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.api.errors.NoHeadException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.RenameDetector;
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
-import org.eclipse.jgit.errors.MissingObjectException;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
-import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevCommitList;
-import org.eclipse.jgit.revwalk.RevSort;
-import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
-import org.eclipse.jgit.treewalk.TreeWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

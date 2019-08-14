@@ -1,7 +1,5 @@
 package fr.skiller.controller;
 
-import java.io.File;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,8 +48,6 @@ public class TestController {
 	 */
 	@Autowired
 	CacheDataHandler cacheDataHandler;
-
-	private static File resourcesDirectory = new File("src/main/resources");
 
 	@GetMapping("/get")
 	public ResponseEntity<ForTest> test() {

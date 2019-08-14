@@ -1,7 +1,5 @@
 package fr.skiller;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 

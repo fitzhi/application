@@ -8,7 +8,6 @@ import fr.skiller.data.internal.PeopleCountExperienceMap;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.ResumeSkill;
 import fr.skiller.data.internal.Staff;
-import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 

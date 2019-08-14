@@ -1,7 +1,6 @@
 package fr.skiller.data.source;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * Class for the contributor inside the repository.

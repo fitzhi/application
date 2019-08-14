@@ -16,8 +16,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -38,7 +36,6 @@ import fr.skiller.data.internal.PeopleCountExperienceMap;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.ResumeSkill;
 import fr.skiller.data.internal.Staff;
-import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 

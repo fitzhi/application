@@ -16,7 +16,6 @@ import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,6 @@ import com.google.gson.Gson;
 
 import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
-import fr.skiller.bean.ProjectDashboardCustomizer;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.ShuffleService;
 import fr.skiller.bean.SkillHandler;

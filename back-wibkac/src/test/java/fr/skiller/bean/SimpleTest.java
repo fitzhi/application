@@ -1,8 +1,6 @@
 package fr.skiller.bean;
 
 import java.io.File;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.junit.Test;
 

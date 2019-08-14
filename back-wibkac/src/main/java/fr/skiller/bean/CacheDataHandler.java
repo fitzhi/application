@@ -1,11 +1,9 @@
 package fr.skiller.bean;
 
 import java.io.IOException;
-import java.util.List;
 
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.source.CommitRepository;
-import fr.skiller.exception.SkillerException;
 
 /**
  * Interface in charge of saving the JSON data into the file system<br/>

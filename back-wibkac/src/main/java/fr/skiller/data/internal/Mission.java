@@ -5,7 +5,6 @@ package fr.skiller.data.internal;
 
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.util.Date;
 
 /**
  * Mission of a developer inside a project

@@ -4,11 +4,6 @@
 package fr.skiller.source.crawler.git;
 
 import java.time.LocalDate;
-import java.util.Date;
-
-import fr.skiller.data.source.importance.FileSizeImportance;
-import fr.skiller.data.source.importance.ImportanceCriteria;
-import fr.skiller.data.source.importance.AssessorImportance;
 
 /**
  * <p>

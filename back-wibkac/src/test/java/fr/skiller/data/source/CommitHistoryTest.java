@@ -4,8 +4,6 @@
 package fr.skiller.data.source;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,8 +22,6 @@ import fr.skiller.bean.StaffHandler;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CommitHistoryTest {
-
-    private static final String TEST_JAVA = "test.java";
 
 	@Autowired
 	private StaffHandler staffHandler;

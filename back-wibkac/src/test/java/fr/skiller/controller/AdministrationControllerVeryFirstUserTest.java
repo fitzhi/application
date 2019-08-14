@@ -44,14 +44,10 @@ public class AdministrationControllerVeryFirstUserTest {
 
 	private static final String LOGIN = "login";
 
-	private static final String CST_CODE = "$.code";
-
 	private static final String CST_STAFF_ID_STAFF = "$.staff.idStaff";
 
 	private static final String PASS_WORD = "password"; //NOSONAR
 
-	private static String pass = "passvoid";
-	
 	@Autowired
 	private MockMvc mvc;
 

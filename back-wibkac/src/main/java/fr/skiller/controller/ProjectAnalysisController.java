@@ -7,7 +7,6 @@ import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
@@ -26,15 +25,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
-import com.sun.javafx.binding.SelectBinding.AsLong;
 
 import fr.skiller.bean.ProjectDashboardCustomizer;
 import fr.skiller.bean.ProjectHandler;
-import fr.skiller.controller.ProjectController.ParamProjectSkill;
 import fr.skiller.controller.util.ProjectLoader;
 import fr.skiller.controller.util.ProjectLoader.MyReference;
-import fr.skiller.data.external.ProjectDTO;
-import fr.skiller.data.external.SunburstDTO;
 import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;

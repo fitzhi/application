@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.DataChartHandler;
 import fr.skiller.data.internal.DataChart;
 
@@ -19,7 +18,6 @@ import fr.skiller.data.internal.DataChart;
 @Service
 public class DataChartHandlerImpl implements DataChartHandler {
 
- 	private static final String ADDING_S_IN_S = "adding %s in %s";
 	/**
  	 * The logger for the GitScanner.
  	 */

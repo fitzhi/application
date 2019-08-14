@@ -3,20 +3,15 @@
  */
 package fr.skiller.bean.impl;
 
-import static fr.skiller.Error.CODE_IO_ERROR;
 import static fr.skiller.Error.CODE_MULTIPLE_LOGIN;
 import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
-import static fr.skiller.Error.MESSAGE_IO_ERROR;
 import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
 
-import java.io.File;
-import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.WeakHashMap;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -24,7 +19,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;

@@ -61,7 +61,6 @@ public class FileUploadTests {
         then(this.storageService).should().store(multipartFile);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
 	@WithMockUser
     public void should404WhenMissingFile() throws Exception {

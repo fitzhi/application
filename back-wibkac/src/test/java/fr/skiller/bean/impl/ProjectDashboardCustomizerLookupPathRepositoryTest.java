@@ -15,8 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectDashboardCustomizer;
-import fr.skiller.bean.ProjectHandler;
-import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
 

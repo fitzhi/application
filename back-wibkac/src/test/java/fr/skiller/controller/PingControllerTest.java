@@ -16,10 +16,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.security.web.FilterChainProxy;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.context.WebApplicationContext;
 
 import fr.skiller.security.TokenLoader;
 
@@ -31,12 +29,6 @@ import fr.skiller.security.TokenLoader;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class PingControllerTest {
-
-	@Autowired
-	private WebApplicationContext wac;
-
-	@Autowired
-	private FilterChainProxy springSecurityFilterChain;
 
 	@Autowired
 	private MockMvc mockMvc;
