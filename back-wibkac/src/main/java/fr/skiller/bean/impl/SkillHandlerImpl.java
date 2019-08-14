@@ -97,4 +97,15 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		}
 	}
 
+	@Override
+	public Skill getSkill(int idSkill) throws SkillerException {
+		
+		Skill skill = getSkills().get(idSkill);
+		if (skill == null) {
+			throw new SkillerException(CODE_SKILL_NOFOUND, MessageFormat.format(MESSAGE_SKILL_NOFOUND, idSkill));
+		}
+		
+		return skill;
+	}
+
 }

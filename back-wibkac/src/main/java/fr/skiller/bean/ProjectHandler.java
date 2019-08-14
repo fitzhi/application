@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Committer;
 import fr.skiller.data.internal.Library;
 import fr.skiller.data.source.Contributor;
@@ -93,7 +94,6 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 */
 	List<Committer> saveGhosts(int idProject, List<Committer> pseudos) throws SkillerException;
 
-	
 	/**
 	 * Save the list of library detected or declared inside the project.
 	 * @param idProject the identifier of the project
@@ -130,4 +130,18 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @param risk the calculated risk to set.
 	 */
 	void saveRisk(Project project, int risk);
+
+	/**
+	 * <p>Add the passed Skill inside the project.</p>
+	 * @param project the given project.
+	 * @param skill the passed new skill to add in the project.
+	 */
+	void addSkill(Project project, Skill skill);
+
+	/**
+	 * <p>Remove a skill from the scope of a project.</p>
+	 * @param project the given project.
+	 * @param idSkill the passed skill identifier
+	 */
+	void removeSkill(Project project, int idSkill);
 }

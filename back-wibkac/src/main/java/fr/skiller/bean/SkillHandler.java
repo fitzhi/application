@@ -39,5 +39,13 @@ public interface SkillHandler extends DataSaverLifeCycle {
 	  * @throws SkillerException exception occurs
 	  */
 	 void saveSkill(Skill skill) throws SkillerException;
+	
+	 /**
+	  * <p>Retrieve the skill corresponding to the passed identifier</p>
+	  * @param idSkill the search skill identifier.
+	  * @return the skill found.
+	  * @throws SkillerException thrown if the passed id does not exist.
+	  */
+	 Skill getSkill(int idSkill) throws SkillerException;
 
 }

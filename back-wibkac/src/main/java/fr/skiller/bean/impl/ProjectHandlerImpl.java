@@ -27,6 +27,7 @@ import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Mission;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Committer;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.Contributor;
@@ -256,6 +257,41 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		}
 		synchronized (lockDataUpdated) {
 			project.setRisk(risk);
+			this.dataUpdated = true;
+		}
+	}
+	
+	@Override
+	public void addSkill(Project project, Skill skill) {
+		
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("The project %s has declared the skill %s in its scope", 
+					project.getName(), skill.getTitle()));
+		}
+		synchronized (lockDataUpdated) {
+			if (!project.getSkills().contains(skill)) {
+				project.getSkills().add(skill);
+			}
+			this.dataUpdated = true;
+		}
+	}
+
+	@Override
+	public void removeSkill(Project project, int idSkill) {
+		
+		if (logger.isInfoEnabled()) {
+			logger.info(String.format("The project %s will loose the skill with id %d from its scope", 
+					project.getName(), idSkill));
+		}
+		synchronized (lockDataUpdated) {
+
+			Optional<Skill> oSkill = project.getSkills()
+					.stream()
+					.filter(exp -> (exp.getId() == idSkill) )
+					.findFirst();
+			if (oSkill.isPresent()) {
+				project.getSkills().remove(oSkill.get());
+			}			
 			this.dataUpdated = true;
 		}
 	}

@@ -40,6 +40,7 @@ import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.controller.util.ProjectLoader;
 import fr.skiller.controller.util.ProjectLoader.MyReference;
+import fr.skiller.data.external.BooleanDTO;
 import fr.skiller.data.external.ProjectContributorDTO;
 import fr.skiller.data.external.ProjectDTO;
 import fr.skiller.data.external.PseudoListDTO;
@@ -256,105 +257,60 @@ public class ProjectController {
 	}
 	
 	/**
-	 * Internal Parameters class containing all possible parameters necessaries for add/remove a skill from a project.
+	 * <p>Internal Parameters class containing all possible parameters necessaries for add/remove a skill from a project.</p>
 	 * @author Fr&eacute;d&eacute;ric VIDAL 
 	 */
 	class ParamProjectSkill {
+		public ParamProjectSkill() { }
 		int idProject;
 		int idSkill;
-		String formerSkillTitle;
-		String newSkillTitle;
-		@Override
-		public String toString() {
-			return "ParamProjectSkill [idProject=" + idProject + ", idSkill=" + idSkill + ", formerSkillTitle="
-					+ formerSkillTitle + ", newSkillTitle=" + newSkillTitle + "]";
-		}
 	}
 	
 	/**
-	 * Add or change the name of skill required for a project.
+	 * <p>Add a new skill required for a project.</p>
 	 * @param param the body of the post containing an instance of ParamProjectSkill in JSON format
 	 * @see ProjectController.ParamProjectSkill
 	 * @return
 	 */
-	@PostMapping("/skills/save")
-	public ResponseEntity<ProjectDTO> saveSkill(@RequestBody String param) {
+	@PostMapping("/skill/add")
+	public ResponseEntity<BooleanDTO> saveSkill(@RequestBody String param) {
 		
 		ParamProjectSkill p = g.fromJson(param, ParamProjectSkill.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(
-					"POST command on /project/skill/save with params id:%d, new skillTitle:%s, former skillTitle:%s", 
-					p.idProject, p.newSkillTitle, p.formerSkillTitle));
+					"POST command on /project/skill/save with params idProjject:%d, idSkill:%d", 
+					p.idProject, p.idSkill));
 		}
 		
-		MyReference<ResponseEntity<ProjectDTO>> refResponse = projectLoader.new MyReference<>();
-		Project project = projectLoader.getProject(p.idProject, new ProjectDTO(new Project()), refResponse);
+		MyReference<ResponseEntity<BooleanDTO>> refResponse = projectLoader.new MyReference<>();
+		Project project = projectLoader.getProject(p.idProject, new BooleanDTO(), refResponse);
 		if (refResponse.response != null) {
 			return refResponse.response;
 		}
 		
 		final HttpHeaders headers = new HttpHeaders();
-		
-		if ( 		(p.formerSkillTitle != null) 
-				&& 	(p.newSkillTitle != null)
-				&& 	(p.formerSkillTitle.equals(p.newSkillTitle))) {
-			// Nothing to DO.
-			return new ResponseEntity<> (new ProjectDTO(project), headers, HttpStatus.OK);
-		}
-		
-		Optional<Skill> result = skillHandler.lookup(p.newSkillTitle);
-		if (result.isPresent()) {
-			
-			/**
-			 *  If the user change the title of the skill, 
-			 *  1) we create a new entry into the skills list of the project
-			 *  2) we remove the former entry assigned to the previous title.
-			 *  
-			 *  Below, is the code in charge of REMOVING the former skill.
-			 */
-			if ( 		(p.formerSkillTitle != null) 
-					&& 	(p.formerSkillTitle.length() > 0) 
-					&& 	(!p.formerSkillTitle.equals(p.newSkillTitle))) {
-				Optional<Skill> formerSkill = skillHandler.lookup(p.formerSkillTitle);
-				if (formerSkill.isPresent()) {
-					Optional<Skill> oSkill = project.getSkills().stream().
-							filter(skill -> (skill.getId() == formerSkill.get().getId()) ).
-							findFirst();
-					if (oSkill.isPresent()) {
-						project.getSkills().remove(oSkill.get());
-					}
-				}				
-			}
-			
-			/*
-			 * If the passed skill is already present in the skills list for the project, nothing to do.
-			 * otherwise we add this new skill.
-			 */
-			if (project.getSkills().stream().anyMatch(skill -> (skill.getId() == result.get().getId()))) {
-				return postErrorReturnBodyMessage(HttpStatus.BAD_REQUEST.value(), 
-						"The project " + project.getName() + " has already the skill " + p.newSkillTitle + " declared within.", project);
-			} else {
-				if (logger.isDebugEnabled()) {
-					logger.debug(String.format("Adding the skill %s to the project %s", 
-							result.get().getTitle(), project.getName()));
-				}
-				project.getSkills().add(result.get());
-				return new ResponseEntity<> (new ProjectDTO(project), headers, HttpStatus.OK);
-			}
-						
-		} else {
+		try {
+			Skill skill = this.skillHandler.getSkill(p.idSkill);
+			this.projectHandler.addSkill(project, skill);	
+			return new ResponseEntity<BooleanDTO>(new BooleanDTO(), headers, HttpStatus.OK);
+		} catch (final SkillerException ske) {
 			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("Cannot find a skill with the name %s", p.newSkillTitle));
+				logger.debug(String.format(
+						"Cannot save the skill %d inside the project %s", p.idSkill, project.getName()));
+				logger.debug (ske.errorMessage);
 			}
-			return postErrorReturnBodyMessage(HttpStatus.NOT_FOUND.value(), "There is no skill with the name " + p.newSkillTitle, project);
+			return new ResponseEntity<BooleanDTO>(
+					new BooleanDTO(-1, String.format("There is no skill with id " + p.idSkill)), 
+					headers, HttpStatus.BAD_REQUEST);
 		}
 	}	
 	
 	/**
-	* Unregister a skill within a project.
+	* <p>Unregister a skill within a project.</p>
+	* @param param an instance of {@link ParamProjectSkill} containing the project identifier and the skill identifier
 	*/
-	@PostMapping("/skills/del")
-	public ResponseEntity<ProjectDTO> revokeSkill(@RequestBody String param) {
+	@PostMapping("/skill/del")
+	public ResponseEntity<BooleanDTO> revokeSkill(@RequestBody String param) {
 
 		ParamProjectSkill p = g.fromJson(param, ParamProjectSkill.class);
 		if (logger.isDebugEnabled()) {
@@ -363,18 +319,15 @@ public class ProjectController {
 				p.idProject, p.idSkill));
 		}
 
-		MyReference<ResponseEntity<ProjectDTO>> refResponse = projectLoader.new MyReference<>();
-		Project project = projectLoader.getProject(p.idProject, new ProjectDTO(new Project()), refResponse);
+		MyReference<ResponseEntity<BooleanDTO>> refResponse = projectLoader.new MyReference<>();
+		Project project = projectLoader.getProject(p.idProject, new BooleanDTO(), refResponse);
 		if (refResponse.response != null) {
 			return refResponse.response;
 		}
 		
-		Optional<Skill> oSkill = project.getSkills().stream().filter(exp -> (exp.getId() == p.idSkill) ).findFirst();
-		if (oSkill.isPresent()) {
-			project.getSkills().remove(oSkill.get());
-		}
+		projectHandler.removeSkill(project, p.idSkill);
 		
-		return new ResponseEntity<>(new ProjectDTO(project), new HttpHeaders(), HttpStatus.OK);
+		return new ResponseEntity<>(new BooleanDTO(), new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	/**
