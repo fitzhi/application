@@ -35,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import fr.skiller.Error;
 import fr.skiller.Global;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.ShuffleService;
@@ -285,6 +286,117 @@ public class StaffController {
 	}
 
 	/**
+	 * Add an experience to a staff member
+	 * @param param
+	 *            the body of the post containing an instance of {@link StaffController.ParamStaffSkill}
+	 *            in JSON format
+	 * @return
+	 */
+	@PostMapping("/experiences/add")
+	public ResponseEntity<Boolean> addExperience(@RequestBody String param) {
+
+		HttpHeaders headers = new HttpHeaders();
+		
+		ParamStaffSkill p = gson.fromJson(param, ParamStaffSkill.class);
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format(
+					"POST command on /staff/experiences/add with params id:%d, idSkill:%d, level:%d", 
+					p.idStaff, p.idSkill, p.level));
+		}
+
+		final Staff staff = staffHandler.getStaff().get(p.idStaff);
+		if (staff == null) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_STAFF_NOFOUND));
+			headers.set(BACKEND_RETURN_MESSAGE, String.format(Error.MESSAGE_STAFF_NOFOUND, p.idStaff));
+			return new ResponseEntity<>(
+					Boolean.FALSE, headers,
+					HttpStatus.INTERNAL_SERVER_ERROR);			
+		}
+		
+		Experience experience = staff.getExperience(p.idSkill);
+		if (experience == null) {
+			this.staffHandler.addExperience(p.idStaff, new Experience(p.idSkill, p.level));
+		} else {
+			this.staffHandler.removeExperience(p.idStaff, experience);
+			this.staffHandler.addExperience(p.idStaff, new Experience(p.idSkill, p.level));
+		}
+		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
+		
+	}
+	
+	/**
+	 * Add an experience to a staff member
+	 * @param param
+	 *            the body of the post containing an instance of {@link StaffController.ParamStaffSkill}
+	 *            in JSON format
+	 * @return
+	 */
+	@PostMapping("/experiences/remove")
+	public ResponseEntity<Boolean> removeExperience(@RequestBody String param) {
+
+		HttpHeaders headers = new HttpHeaders();
+		
+		ParamStaffSkill p = gson.fromJson(param, ParamStaffSkill.class);
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format(
+					"POST command on /staff/experiences/remove with params id:%d, idSkill:%d, level:%d", 
+					p.idStaff, p.idSkill, p.level));
+		}
+
+		final Staff staff = staffHandler.getStaff().get(p.idStaff);
+		if (staff == null) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_STAFF_NOFOUND));
+			headers.set(BACKEND_RETURN_MESSAGE, String.format(Error.MESSAGE_STAFF_NOFOUND, p.idStaff));
+			return new ResponseEntity<>(
+					Boolean.FALSE, headers,
+					HttpStatus.INTERNAL_SERVER_ERROR);			
+		}
+		
+		Experience experience = staff.getExperience(p.idSkill);
+		if (experience != null) {
+			this.staffHandler.removeExperience(p.idStaff, experience);
+		}
+		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
+		
+	}
+	
+	/**
+	 * Adding or changing the level of an experience assign to a developer.
+	 * 
+	 * @param param
+	 *            the body of the post containing an instance of ParamStaffSkill
+	 *            in JSON format
+	 * @see StaffController.ParamStaffSkill
+	 * @return
+	 */
+	@PostMapping("/experiences/update")
+	public ResponseEntity<Boolean> saveExperience(@RequestBody String param) {
+		
+		HttpHeaders headers = new HttpHeaders();		
+		ParamStaffSkill p = gson.fromJson(param, ParamStaffSkill.class);
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format(
+					"POST command on /staff/experiences/update with params id:%d, idSkill:%d, level:%d", 
+					p.idStaff, p.idSkill, p.level));
+		}
+
+		final Staff staff = staffHandler.getStaff().get(p.idStaff);
+		if (staff == null) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_STAFF_NOFOUND));
+			headers.set(BACKEND_RETURN_MESSAGE, String.format(Error.MESSAGE_STAFF_NOFOUND, p.idStaff));
+			return new ResponseEntity<>(
+					Boolean.FALSE, headers,
+					HttpStatus.INTERNAL_SERVER_ERROR);			
+		}
+		
+		Experience experience = staff.getExperience(p.idSkill);
+		if (experience != null) {
+			this.staffHandler.updateExperience(p.idStaff, new Experience(p.idSkill, p.level));
+		}
+		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
+	}
+	
+	/**
 	 * Adding or changing the name of an experience assign to a developer.
 	 * 
 	 * @param param
@@ -293,8 +405,8 @@ public class StaffController {
 	 * @see StaffController.ParamStaffSkill
 	 * @return
 	 */
-	@PostMapping("/experiences/save")
-	public ResponseEntity<StaffDTO> saveExperience(@RequestBody String param) {
+	@PostMapping("/experiences/formerSave")
+	public ResponseEntity<StaffDTO> formerSaveExperience(@RequestBody String param) {
 
 		
 		HttpHeaders headers = new HttpHeaders();

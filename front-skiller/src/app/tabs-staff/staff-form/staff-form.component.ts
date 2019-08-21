@@ -214,7 +214,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	}
 
 	public onChange(field: number) {
-		if (this.collaborator.idStaff === -1){
+		if (this.collaborator.idStaff === -1) {
 			return;
 		}
 
@@ -224,7 +224,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		const oldLastName = this.collaborator.lastName;
 
 		if (Constants.DEBUG) {
-			console.groupCollapsed('Staff member is moving')
+			console.groupCollapsed('Staff member is moving');
 			console.log ('Field', field);
 			console.log ('Firstname', newFirstName + '->' + oldFirstName);
 			console.log ('Lastname', newLastName + '->' + oldLastName);
@@ -236,7 +236,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 				'Staff Form',
 				'You have already changed the first name and the last name of ' + oldFirstName + ' ' + oldLastName + '.'
 				+ '<br/>Maybe you do not want to change this record and just prefer to create a new one.<br/>'
-				+ '<br/>Click \'Yes\' if you want to create a new staff member' 
+				+ '<br/>Click \'Yes\' if you want to create a new staff member'
 				+ '<br/>\'No\' to continue updating this one.')
 				.pipe(take(1))
 				.subscribe(answer => {

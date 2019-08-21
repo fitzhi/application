@@ -38,7 +38,7 @@ import fr.skiller.data.internal.Skill;
 @AutoConfigureMockMvc
 public class StaffControllerSkillTest {
 
-	private static final String STAFF_EXPERIENCES_SAVE = "/staff/experiences/save";
+	private static final String STAFF_EXPERIENCES_SAVE = "/staff/experiences/formerSave";
 
 	private static final String STAFF_EXPERIENCES_1 = "/staff/experiences/1";
 

@@ -428,5 +428,62 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				.findFirst();
 	}
 
+	@Override
+	public void addExperience(int idStaff, Experience experience) {
+		
+		Staff staff = getStaff().get(idStaff);
+		if (staff == null) {
+			throw new SkillerRuntimeException(
+					"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
+		}
+		
+		Experience exp = staff.getExperience(experience.getId());
+		
+		synchronized (lockDataUpdated) {
+			if (exp == null) {
+				staff.getExperiences().add(experience);
+			} else {
+				exp.setLevel(experience.getLevel());
+			}
+			this.dataUpdated = true;
+		}
+	}
 
+	@Override
+	public void removeExperience(int idStaff, Experience experience) {
+		
+		Staff staff = getStaff().get(idStaff);
+		if (staff == null) {
+			throw new SkillerRuntimeException(
+					"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
+		}
+		
+		Experience exp = staff.getExperience(experience.getId());
+		if (exp == null) return;
+		
+		synchronized (lockDataUpdated) {
+			staff.getExperiences().remove(experience);
+			this.dataUpdated = true;
+		}
+	}
+
+	@Override
+	public void updateExperience(int idStaff, Experience experience) {
+		
+		Staff staff = getStaff().get(idStaff);
+		if (staff == null) {
+			throw new SkillerRuntimeException(
+				"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
+		}
+		
+		Experience exp = staff.getExperience(experience.getId());
+		if (exp == null) return;
+		
+		synchronized (lockDataUpdated) {
+			exp.setLevel(experience.getLevel());
+			this.dataUpdated = true;
+		}
+	}
+	
+	
 }

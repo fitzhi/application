@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import fr.skiller.data.internal.Experience;
 import fr.skiller.data.internal.PeopleCountExperienceMap;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.ResumeSkill;
@@ -131,5 +132,25 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	  */
 	 Optional<Staff> findStaffWithLogin(String login);
 
+	 /**
+	  * <p>Add the experience to a staff.</p>
+	  * @param idStaff the staff identifier
+	  * @param experience the experience to be added
+	  */
+	 void addExperience(int idStaff, Experience experience);
+	 
+	 /**
+	  * <p>Remove the experience from the staff.</p>
+	  * @param idStaff the staff identifier
+	  * @param experience the experience to be added
+	  */
+	 void removeExperience(int idStaff, Experience experience);
+
+	 /**
+	  * <p>Update THE LEVEL ONLY of an experience.</p>
+	  * @param idStaff the staff identifier
+	  * @param experience the experience whose level has to be updated.
+	  */
+	 void updateExperience(int idStaff, Experience experience);
 }
 

@@ -1,4 +1,4 @@
-<div class="skill_card">
+<div class="skill_card skill">
 	<h4 class="d-flex justify-content-between align-items-center mb-3">
 		<div>
 			<a [routerLink]=""	id="upLoadCV" (click)="upload()">
@@ -17,16 +17,18 @@
 		</div>
 		<div>		
 			<span class="text-muted">Skills&nbsp;</span>
-			<span class="badge badge-secondary badge-pill">{{sourceExperience.count()}}</span>
+			<span class="badge badge-secondary badge-pill">{{this.staff.experiences.length}}</span>
 		</div>
 	</h4>
+	<!--
 	<ng2-smart-table #EXP [settings]="settings_experience"
 		[source]="sourceExperience"
 		(createConfirm)="onConfirmAddStaffSkill($event)"
 		(editConfirm)="onConfirmEditStaffSkill($event)"
 		(deleteConfirm)="onConfirmRemoveSkill($event)"> 
 	</ng2-smart-table>
-	<div style="width:600px; height: 100px">
+	-->
+	<div class="tagify-stars skill">
 		<app-tagify-stars 
 			[whitelist]="whitelist" 
 			[blacklist]="blacklist"
@@ -34,7 +36,9 @@
 			[colorON]="'#28a745'"
 			[colorOFF]="'white'"
 			[originalValues]="originalValues"
+			[additionalValues$]="additionalValues$"
 			(addTagEvent)="onAddTagEvent($event)"
+			(editTagEvent)="onEditTagEvent($event)"
 			(removeTagEvent)="onRemoveTagEvent($event)"
 			style="width:100%;height:100%;">
 		</app-tagify-stars>
