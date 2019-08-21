@@ -90,6 +90,7 @@ import { CiaoComponent } from './ciao/ciao.component';
 import { TableDependenciesComponent } from './project/project-sunburst/table-dependencies/table-dependencies.component';
 import { InLineEditDialogComponent } from './project/project-sunburst/table-dependencies/in-line-edit-dialog/in-line-edit-dialog.component';
 import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
+import { ProjectAuditComponent } from './project/project-audit/project-audit.component';
 
 @NgModule({
 	declarations: [
@@ -132,7 +133,8 @@ import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars
 		TableDependenciesComponent,
 		InLineEditDialogComponent,
 		DialogLegendSunburstComponent,
-		TagifyStarsComponent
+		TagifyStarsComponent,
+		ProjectAuditComponent
 	],
 	entryComponents: [
 		StarsSkillLevelRenderComponent,
