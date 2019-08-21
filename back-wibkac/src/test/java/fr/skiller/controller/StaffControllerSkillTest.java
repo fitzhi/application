@@ -38,7 +38,11 @@ import fr.skiller.data.internal.Skill;
 @AutoConfigureMockMvc
 public class StaffControllerSkillTest {
 
-	private static final String STAFF_EXPERIENCES_SAVE = "/staff/experiences/formerSave";
+	private static final String STAFF_EXPERIENCES_SAVE = "/staff/experiences/update";
+
+	private static final String STAFF_EXPERIENCES_ADD = "/staff/experiences/add";
+	
+	private static final String STAFF_EXPERIENCES_REMOVE = "/staff/experiences/remove";
 
 	private static final String STAFF_EXPERIENCES_1 = "/staff/experiences/1";
 
@@ -71,29 +75,19 @@ public class StaffControllerSkillTest {
 	public void addAndUpdateASkillForAStaffMember() throws Exception {
 
 		this.mvc.perform(get(STAFF_EXPERIENCES_1)).andExpect(status().isOk()).andExpect(content().string("[]"));	
-		String body = "{ idStaff: 1, formerSkillTitle: \"\", newSkillTitle: \""+ skillHandler.getSkills().get(2).getTitle()  +"\", level: 2}";
-		this.mvc.perform(post(STAFF_EXPERIENCES_SAVE).content(body)).andExpect(status().isOk());		
+		String body = "{ idStaff: 1, idSkill: 2 ,level: 2}";
+		this.mvc.perform(post(STAFF_EXPERIENCES_ADD).content(body)).andExpect(status().isOk());		
 		
 		List<Experience> assets = new ArrayList<>();
 		
 		assets.add(new Experience(2,  2));
 		this.mvc.perform(get(STAFF_EXPERIENCES_1)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));
 
-		body = "{ idStaff: 1, formerSkillTitle: \"" + skillHandler.getSkills().get(2).getTitle() + "\", newSkillTitle: \"Java\", level: 3}";
+		body = "{ idStaff: 1, idSkill: 2 ,level: 4}";
 		this.mvc.perform(post(STAFF_EXPERIENCES_SAVE).content(body)).andExpect(status().isOk());		
 		
 		assets.clear();
-		assets.add(new Experience (1, 3));
-		this.mvc.perform(get(STAFF_EXPERIENCES_1)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));
-
-		/*
-		 * We down-grade the level from 3 to 1.
-		 */
-		body = "{ idStaff: 1, formerSkillTitle: \"" + skillHandler.getSkills().get(2).getTitle() + "\", newSkillTitle: \"" + skillHandler.getSkills().get(1).getTitle() +"\", level: 1}";
-		this.mvc.perform(post(STAFF_EXPERIENCES_SAVE).content(body)).andExpect(status().isOk());		
-
-		assets.clear();
-		assets.add(new Experience (1,  1));
+		assets.add(new Experience (2, 4));
 		this.mvc.perform(get(STAFF_EXPERIENCES_1)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));
 
 		staffHandler.init();
@@ -105,16 +99,16 @@ public class StaffControllerSkillTest {
 	public void addAndRemoveASkillForAStaffMember() throws Exception {
 		
 		this.mvc.perform(get(STAFF_EXPERIENCES_1)).andExpect(status().isOk()).andExpect(content().string("[]"));	
-		String body = "{idStaff: 1, formerSkillTitle: \"\", newSkillTitle: \""+skillHandler.getSkills().get(2).getTitle()+"\", level: 1}";
-		this.mvc.perform(post(STAFF_EXPERIENCES_SAVE).content(body)).andExpect(status().isOk());		
-
-	
+		String body = "{ idStaff: 1, idSkill: 2 ,level: 2}";
+		this.mvc.perform(post(STAFF_EXPERIENCES_ADD).content(body)).andExpect(status().isOk());		
+		
 		List<Experience> assets = new ArrayList<>();
-		assets.add(new Experience (2, 1));
+		
+		assets.add(new Experience(2,  2));
 		this.mvc.perform(get(STAFF_EXPERIENCES_1)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));
 		
 		body = "{idStaff: 1, idSkill: 2}";
-		this.mvc.perform(post("/staff/experiences/del").content(body)).andExpect(status().isOk());
+		this.mvc.perform(post(STAFF_EXPERIENCES_REMOVE).content(body)).andExpect(status().isOk());
 		
 		assets.clear();
 		this.mvc.perform(get(STAFF_EXPERIENCES_1)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));

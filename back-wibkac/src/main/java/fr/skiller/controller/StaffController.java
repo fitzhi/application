@@ -396,85 +396,6 @@ public class StaffController {
 		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 	}
 	
-	/**
-	 * Adding or changing the name of an experience assign to a developer.
-	 * 
-	 * @param param
-	 *            the body of the post containing an instance of ParamStaffSkill
-	 *            in JSON format
-	 * @see StaffController.ParamStaffSkill
-	 * @return
-	 */
-	@PostMapping("/experiences/formerSave")
-	public ResponseEntity<StaffDTO> formerSaveExperience(@RequestBody String param) {
-
-		
-		HttpHeaders headers = new HttpHeaders();
-		
-		ParamStaffSkill p = gson.fromJson(param, ParamStaffSkill.class);
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(
-					"POST command on /staff/skill/save with params id:%d ,skillName:%s, level %s", 
-					p.idStaff, p.newSkillTitle, p.level));
-		}
-		final ResponseEntity<StaffDTO> responseEntity;
-
-		final Staff staff = staffHandler.getStaff().get(p.idStaff);
-		assert (staff != null);
-
-		Optional<Skill> result;
-
-		result = skillHandler.lookup(p.newSkillTitle);
-		if (result.isPresent()) {
-
-			/**
-			 * If the user change the title of the skill, 1) we create a new
-			 * entry into the projects list of the staff member 2) we remove the
-			 * former entry assigned to the previous title.
-			 * 
-			 * Below, is the code for REMOVE.
-			 */
-			if ((p.formerSkillTitle != null) && (p.formerSkillTitle.length() > 0)
-					&& (!p.formerSkillTitle.equals(p.newSkillTitle))) {
-				Optional<Skill> formerSkill = skillHandler.lookup(p.formerSkillTitle);
-				if (formerSkill.isPresent()) {
-					final Experience formerExperienceToRemove = staff.getExperience(formerSkill.get().getId());
-					staff.getExperiences().remove(formerExperienceToRemove);
-				}
-			}
-
-			/*
-			 * If the passed skill is already present in the staff member's
-			 * skill list, we update the level if necessary, or we send back an
-			 * warning. No Update made.
-			 */
-			final Experience asset = staff.getExperience(result.get().getId());
-			if (asset != null) {
-				if (asset.getLevel() != p.level) {
-					asset.setLevel(p.level);
-					return new ResponseEntity<>(new StaffDTO(staff), HttpStatus.OK);
-				}
-				return postErrorReturnBodyMessage(HttpStatus.BAD_REQUEST.value(), "The collaborator " + staff.fullName()
-						+ " has already this level (" + p.level + ") of skill for " + p.newSkillTitle, staff);
-			}
-
-			/*
-			 * We create a NEW asset for this staff member.
-			 */
-			staff.getExperiences().add(new Experience(result.get().getId(), p.level));
-			responseEntity = new ResponseEntity<>(new StaffDTO(staff), headers, HttpStatus.OK);
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("Returning  staff %s", gson.toJson(staff)));
-			}
-
-		} else {
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("Cannot find a skill with the name %s", p.newSkillTitle));
-			}
-			return postErrorReturnBodyMessage(404, "There is no skill with the name " + p.newSkillTitle, staff);
-		}
-		return responseEntity;
-	}
 
 	/**
 	 * Internal Parameters class containing all possible parameters necessaries
@@ -493,31 +414,6 @@ public class StaffController {
 			return "ParamStaffProject [idStaff=" + idStaff + ", idProject=" + idProject + ", formerProjectName="
 					+ formerProjectName + ", newProjectName=" + newProjectName + "]";
 		}
-	}
-
-	/**
-	 * Revoke an experience for a staff member.
-	 */
-	@PostMapping("/experiences/del")
-	public ResponseEntity<StaffDTO> revokeSkill(@RequestBody String param) {
-		ParamStaffSkill p = gson.fromJson(param, ParamStaffSkill.class);
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(
-					"POST command on /staff/experiences/del with params idStaff:%d, idSkill:%d",
-					p.idStaff, p.idSkill));
-		}
-
-		final Staff staff = staffHandler.getStaff().get(p.idStaff);
-		if (staff == null) {
-			return postErrorReturnBodyMessage(404, "There is no staff member for id" + p.idStaff);
-		}
-
-		Optional<Experience> oExperience = staff.getExperiences().stream().filter(exp -> (exp.getId() == p.idSkill)).findFirst();
-		if (oExperience.isPresent()) {
-			staff.getExperiences().remove(oExperience.get());
-		}
-
-		return new ResponseEntity<>(new StaffDTO(staff), new HttpHeaders(), HttpStatus.OK);
 	}
 
 	@PostMapping("/api/uploadCV")
@@ -729,7 +625,7 @@ public class StaffController {
 	}
 
 	/**
-	 * Revoke the participation of staff member in a project.
+	 * Revoke the participation of staff member into a project.
 	 */
 	@PostMapping("/project/del")
 	public ResponseEntity<StaffDTO> revokeProject(@RequestBody String param) {
