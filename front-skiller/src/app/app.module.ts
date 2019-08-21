@@ -32,8 +32,6 @@ import { ReferentialService } from './service/referential.service';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StaffTabsComponent } from './tabs-staff/staff-tabs/staff-tabs.component';
-// tslint:disable-next-line:max-line-length
-import { UploadedSkillsPickupComponent } from './tabs-staff/staff-experience/staff-upload-cv/pickup/uploaded-skills-pickup.component';
 import { StaffFormComponent } from './tabs-staff/staff-form/staff-form.component';
 import { StaffProjectsComponent } from './tabs-staff/staff-projects/staff-projects.component';
 import { StaffExperienceComponent } from './tabs-staff/staff-experience/staff-experience.component';
@@ -110,7 +108,6 @@ import { ProjectAuditComponent } from './project/project-audit/project-audit.com
 		StaffExperienceComponent,
 		StaffUploadCvComponent,
 		MessageBoxComponent,
-		UploadedSkillsPickupComponent,
 		ProjectComponent,
 		ProjectSunburstComponent,
 		ProjectStaffComponent,
@@ -140,7 +137,6 @@ import { ProjectAuditComponent } from './project/project-audit/project-audit.com
 		StarsSkillLevelRenderComponent,
 		StaffUploadCvComponent,
 		MessageBoxComponent,
-		UploadedSkillsPickupComponent,
 		DialogProjectGhostsComponent,
 		DialogUpdatedProjectGhostsComponent,
 		DialogFilterComponent,
