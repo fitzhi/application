@@ -133,7 +133,7 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 				}
 			},
 				responseInError =>
-					this.messageBoxService.error('Uploading error !', responseInError.error.message)));
+					this.messageBoxService.error('Uploading error !', responseInError)));
 	}
 
 	pickupSkills() {

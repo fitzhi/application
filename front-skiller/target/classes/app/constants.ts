@@ -92,69 +92,6 @@ export class Constants {
 
 	public static canAdd = true;
 
-
-	/**
-	   * Declared settings for the grid dedicated to the experiences inside the form STAFF.
-	 */
-	public static SETTINGS_EXPERIENCE_SMARTTABLE = {
-		columns: {
-			title: {
-				title: 'Skills',
-				filter: false,
-				width: '75%',
-				type: 'text'
-			},
-			level: {
-				title: 'Level',
-				filter: false,
-				width: '25%',
-				defaultValue: 1,
-				type: 'custom',
-				renderComponent: StarsSkillLevelRenderComponent,
-				editor: {
-					type: 'list',
-					config: {
-						list: [{ value: '1', title: '*' },
-						{ value: '2', title: '**' },
-						{ value: '3', title: '***' },
-						{ value: '4', title: '****' },
-						{ value: '5', title: '*****' }]
-					},
-				},
-			}
-		},
-		attr: {
-			class: 'table-bordered skills_table'
-		},
-		actions: {
-			columnTitle: '_______',
-			add: Constants.canAdd,
-			edit: true,
-			delete: true,
-		},
-		add: {
-			addButtonContent: '<img src="./assets/img/add.png"></img>',
-			createButtonContent: '<img src="./assets/img/save.png"></img>',
-			cancelButtonContent: '<img src="./assets/img/cancel.png"></img>',
-			confirmCreate: true,
-		},
-		delete: {
-			deleteButtonContent: '<img src="./assets/img/delete.png"></img>',
-			confirmDelete: true,
-		},
-		edit: {
-			editButtonContent: '<img src="./assets/img/edit.png"></img>',
-			cancelButtonContent: '<img src="./assets/img/cancel.png"></img>',
-			saveButtonContent: '<img src="./assets/img/save.png"></img>',
-			confirmSave: true,
-		},
-		hideSubHeader: false,
-		noDataMessage: 'No experience registered yet.',
-		pager: {
-			perPage: 10
-		}
-	};
-
 	/**
 	 * Declared settings for the grid dedicated to the PROJECTS inside the form STAFF
      */

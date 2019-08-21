@@ -47,16 +47,6 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 	image_winword = 'word.png';
 	image_pdf = 'pdf.png';
 
-	/**
-     * Data store associated with the projects grid
-     */
-	sourceExperience = new LocalDataSource([]);
-
-	/**
-     * Settings of the projects grid
-     */
-	settings_experience = Constants.SETTINGS_EXPERIENCE_SMARTTABLE;
-
 	/***
      * Employee retrieve from StaffComponent access.
      */
@@ -98,8 +88,6 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 					// The title of the skill is not propagated by the server. We filled this property "live" on the desktop
 					this.staff.experiences.forEach(exp => exp.title = this.skillService.title(exp.id));
 
-					this.sourceExperience.load(this.staff.experiences);
-
 					// We transfert the experience into the array originalValues
 					// in order to be displayed into the tagify-stars component
 					// We subtract 1 from the level because the array in TagifyStars is numbered from 0 to 4
@@ -139,114 +127,11 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 		this.subscriptions.add(
 			this.staffService.loadExperiences(idStaff).subscribe(
 				experiences => {
-
 					// The title of the skill is not propagated by the server. We filled this property "live" on the desktop
 					experiences.forEach(exp => exp.title = this.skillService.title(exp.id));
-
-					this.sourceExperience.load(experiences);
 				},
 				error => console.log(error),
 			));
-	}
-	onBeforeAddStaffSkill(event) {
-		if (Constants.DEBUG) {
-			console.log('onBeforeAddStaffSkill for event ' + event.newData.title);
-		}
-		if (this.isAlreadyDeactived()) {
-			event.confirm.reject();
-		} else {
-			event.confirm.confirm();
-		}
-	}
-
-	/**
-     * Confirm to the end-user that his operation succeeds. The skill is added to the collaborator.
-     * @param staff the staff member concerned
-     * @param skillTitle the title of the skill added.
-     * @param event the active JS event thrown by the framework.
-     */
-	messageConfirmationSkillAdded(staff: Collaborator, skillTitle: string, event: any) {
-		this.messageService.info(staff.firstName + ' ' + staff.lastName +
-			' has gained the skill ' + skillTitle);
-		this.reloadExperiences(this.staff.idStaff);
-		event.confirm.resolve();
-	}
-
-	onConfirmAddStaffSkill($event) {
-		if (Constants.DEBUG) {
-			console.log('onConfirmAddStaffSkill for event ' + $event.newData.title);
-		}
-		if (this.checkStaffMemberExist()) {
-			this.subscriptions.add(
-				this.staffService.addExperienceByItsTitle(this.staff.idStaff, $event.newData.title, $event.newData.level)
-					.subscribe(
-					(staffDTO: StaffDTO) => {
-						/**
-                         * If this staff member exists in pre-existing list of collaborators. We actualize the content.
-                         */
-						this.staff.experiences.push({
-							'id': this.skillService.id($event.newData.title),
-							'title': $event.newData.title,
-							'level': $event.newData.level
-							});
-						this.logExperiences(this.staff);
-
-						this.tabsStaffListService.actualizeCollaborator(staffDTO.staff);
-						this.messageConfirmationSkillAdded(staffDTO.staff, $event.newData.title, $event);
-					},
-					response_error => {
-						if (Constants.DEBUG) {
-							console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
-						}
-						this.reloadExperiences(this.staff.idStaff);
-						this.messageService.error(response_error.error.message);
-						$event.confirm.reject();
-					}
-				));
-		} else {
-			$event.confirm.reject();
-		}
-	}
-
-	onConfirmEditStaffSkill(event) {
-		if (Constants.DEBUG) {
-			console.log('onConfirmEditStaffSkill for event from ' + event.data.title + ' to ' + event.newData.title);
-		}
-		if (this.checkStaffMemberExist()) {
-			this.subscriptions.add(
-				this.skillService.lookup(event.newData.title).subscribe(
-					() => {
-						this.subscriptions.add(
-							this.staffService.changeExperience(this.staff.idStaff, event.data.title, event.newData.title,
-								event.newData.level).subscribe(
-									(staffDTO: StaffDTO) => {
-										this.messageConfirmationSkillAdded(staffDTO.staff, event.newData.title, event);
-										this.reloadExperiences(this.staff.idStaff);
-										/**
-                                         * If this staff member exists in pre-existing list of collaborators. We actualize the content.
-                                         */
-										this.tabsStaffListService.actualizeCollaborator(staffDTO.staff);
-									},
-									response_error => {
-										if (Constants.DEBUG) {
-											console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
-										}
-										this.reloadExperiences(this.staff.idStaff);
-										event.confirm.reject();
-										this.messageService.error(response_error.error.message);
-									}
-								));
-					},
-					response_error => {
-						if (Constants.DEBUG) {
-							console.error(response_error);
-						}
-						this.messageService.error(response_error.error.message);
-						event.confirm.reject();
-					}));
-		} else {
-			event.confirm.reject();
-		}
 	}
 
 	/**
@@ -260,53 +145,6 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 			return false;
 		} else {
 			return true;
-		}
-	}
-
-	onConfirmRemoveSkill(event) {
-		if (!this.checkStaffMemberExist()) {
-			event.confirm.reject();
-			return;
-		}
-		if (window.confirm('Are you sure you want to remove the skill '
-			+ event.data['title'] + ' for '
-			+ this.staff.firstName + ' '
-			+ this.staff.lastName
-			+ '?')) {
-			/*
-             * After the addition of an experience to a staff member, and before the reloadExperiences has been completed,
-             * there is a little laps of time without id in the experiences list.
-             */
-			if (typeof event.data['id'] !== 'undefined') {
-				this.subscriptions.add(
-					this.staffService.revokeExperience(this.staff.idStaff, event.data['id']).subscribe(
-						(staffDTO: StaffDTO) => {
-							this.messageService.info(staffDTO.staff.firstName + ' ' +
-								staffDTO.staff.lastName + ' has no more the skill ' + event.data.title);
-
-							const idx = this.staff.experiences.findIndex(exp => exp.title === event.data.title);
-							this.staff.experiences.splice(idx, 1);
-							this.logExperiences(this.staff);
-
-							this.reloadExperiences(this.staff.idStaff);
-							event.confirm.resolve();
-						/**
-                             * If this staff member exists in pre-existing list of collaborators. We actualize the content.
-                             */
-							this.tabsStaffListService.actualizeCollaborator(staffDTO.staff);
-						},
-						response_error => {
-							if (Constants.DEBUG) {
-								console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
-							}
-							this.reloadExperiences(this.staff.idStaff);
-							this.messageService.error(response_error.error.message);
-							event.confirm.reject();
-						}
-					));
-			}
-		} else {
-			event.confirm.reject();
 		}
 	}
 
@@ -520,14 +358,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 					 */
 					this.tabsStaffListService.actualizeCollaborator(this.staff);
 				}
-			},
-				response_error => {
-					if (Constants.DEBUG) {
-						console.log('Error ' + response_error.error.code + ' ' + response_error.error.message);
-					}
-					this.reloadExperiences(this.staff.idStaff);
-					this.messageService.error(response_error.error.message);
-				});
+			});
 	}
 
 	ngOnDestroy() {
