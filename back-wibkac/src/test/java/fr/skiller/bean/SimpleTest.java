@@ -9,8 +9,16 @@ public class SimpleTest {
 
 	@Test
 	public void test() throws Exception {
+
+		String baseDir = "";
+		String sunburstData_getLocation = "root";
+		String source_getFilename = "test-perf.groovy";
 		
-		File f = new File ("src/main/java/fr/skiller/bean/SimpleTest.java");
-		System.out.println(f.exists());
+		final String searchedFile = (baseDir.indexOf("root/") == 0)
+				? (baseDir + sunburstData_getLocation + "/" + source_getFilename).substring("root/".length())
+				: (baseDir + sunburstData_getLocation + "/" + source_getFilename).substring("/".length());	
+		
+			System.out.println(searchedFile);;
 	}
 }
+	

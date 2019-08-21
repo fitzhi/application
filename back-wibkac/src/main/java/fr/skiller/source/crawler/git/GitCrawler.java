@@ -516,10 +516,11 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			logger.debug(
 					String.format("Finalizing the changes collection with the repository location %s", sourceLocation));
 		}
+		
 		/*
-		 * For DEBUG purpose we make a redundant test on the list of changes Are all
-		 * files in the repository referenced in the list of change ? They should be all
-		 * present.
+		 * For DEBUG purpose we make a redundant test on the list of changes 
+		 * Are all files in the repository referenced in the list of change ? 
+		 * They should be all present.
 		 */
 		if (logger.isDebugEnabled()) {
 			logger.debug("List of ghost files");
@@ -668,7 +669,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		dataSaver.saveRepositoryDirectories(project, analysis.getChanges());
 		
 		/**
-		 * For test and debug purpose
+		 * For test and debug purpose, we save the changes file on the file system.
 		 */
 		dataSaver.saveChanges(project, analysis.getChanges());
 

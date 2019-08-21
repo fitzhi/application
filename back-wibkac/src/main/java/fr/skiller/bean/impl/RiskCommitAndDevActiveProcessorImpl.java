@@ -327,9 +327,15 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 		if ((sunburstData.getClassnames() != null) && !sunburstData.getClassnames().isEmpty()) {
 			for (SourceFile source : sunburstData.getClassnames()) {
 
-				final String searchedFile = (baseDir.indexOf("root/") == 0)
+				final String searchedFile;
+				if (baseDir.length() == 0) {
+					searchedFile = source.getFilename();
+				} else {
+					searchedFile = (baseDir.indexOf("root") == 0)
 						? (baseDir + sunburstData.getLocation() + "/" + source.getFilename()).substring("root/".length())
 						: (baseDir + sunburstData.getLocation() + "/" + source.getFilename()).substring("/".length());
+				}
+				
 				// We retrieve historic information regarding this class name
 				Optional<String> optKey;
 				optKey = repository.getRepository().keySet().stream().filter(k -> k.equals(searchedFile)).findFirst();
@@ -338,7 +344,8 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 						logger.error(String.format("Searching %s in", searchedFile));
 						repository.getRepository().keySet().stream().forEach(f -> logger.error(f));
 					}
-					throw new SkillerRuntimeException(searchedFile + " not found!");
+					System.out.println(source.getFilename());
+					throw new SkillerRuntimeException( String.format("%s not found! (base dir %s, sunB location %s, source filename %s)", searchedFile, baseDir, sunburstData.getLocation(), source.getFilename()));
 				}
 
 				final CommitHistory activity = repository.getRepository().get(optKey.get());
