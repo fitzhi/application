@@ -66,6 +66,16 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 	 */
 	public additionalValues$ = new Subject<TagStar[]>();
 
+	/**
+	 * Values to replace the content of he component TagifyStar.
+	 */
+	public values$ = new Subject<TagStar[]>();
+
+	/**
+	 * If this this staff member is inactive, the tag stars component should be inactive readonly.
+	 */
+	public readOnly$ = new Subject<boolean>();
+
 	constructor(
 		private staffDataExchangeService: StaffDataExchangeService,
 		private tabsStaffListService: TabsStaffListService,
@@ -84,16 +94,23 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 			this.staffDataExchangeService.collaboratorObserver
 				.subscribe((collabRetrieved: Collaborator) => {
 					this.staff = collabRetrieved;
-
-					// The title of the skill is not propagated by the server. We filled this property "live" on the desktop
-					this.staff.experiences.forEach(exp => exp.title = this.skillService.title(exp.id));
-
+					if (Constants.DEBUG) {
+						console.log ('new staff member loaded', this.staff.firstName + ' ' + this.staff.lastName);
+					}
 					// We transfert the experience into the array originalValues
 					// in order to be displayed into the tagify-stars component
 					// We subtract 1 from the level because the array in TagifyStars is numbered from 0 to 4
-					this.staff.experiences.forEach(experience => {
-						this.originalValues.push(new TagStar(experience.title, experience.level - 1));
-					});
+					setTimeout(() => {
+						const values: TagStar[] = [];
+						this.staff.experiences.forEach(experience => {
+							values.push(new TagStar(experience.title, experience.level - 1));
+						});
+						this.values$.next(values);
+						this.readOnly$.next(!this.staff.active);
+					}, 0);
+
+					// The title of the skill is not propagated by the server. We filled this property "live" on the desktop
+					this.staff.experiences.forEach(exp => exp.title = this.skillService.title(exp.id));
 
 					// We transfert all available skills into the whitelist of the tagify-stars component
 					this.skillService.allSkills.forEach (
