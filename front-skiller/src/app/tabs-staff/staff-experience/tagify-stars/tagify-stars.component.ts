@@ -66,7 +66,8 @@ export class TagifyStarsComponent implements AfterViewInit {
         tag(v, tagData) {
           return `<tag title='${v}' contenteditable='false' spellcheck="false" class='tagify__tag
               ${tagData.class ? tagData.class : ''}' ${this.getAttributes(tagData)}>
-                <x title='' class='tagify__tag__removeBtn'></x><div style="background-color:lightGrey" ><span class='tagify__tag-text'>
+                <x title='' class='tagify__tag__removeBtn'></x>
+                <div style="background-color:lightGrey" ><span class='tagify__tag-text'>
                   ${v}
                   <i class="fas fa-star" id='tag-star-${v}-0'></i>
                   <i class="fas fa-star" id='tag-star-${v}-1'></i>
@@ -113,11 +114,11 @@ export class TagifyStarsComponent implements AfterViewInit {
       const tagInput = document.getElementById('tag-input');
       tagInput.contentEditable = readOnly ? 'false' : 'true';
 
-      document.querySelectorAll('.tagify__tag__removeBtn').forEach (
-        elt => elt.style.visibility = (readOnly ? 'hidden' : 'visible')
+      document.querySelectorAll('.tagify__tag__removeBtn').forEach(elt =>
+        elt.setAttribute('style', (readOnly ? 'visibility:hidden' : 'visibility:visible'))
       );
-    });
 
+    });
   }
 
   private addValues(values: TagStar[]) {
