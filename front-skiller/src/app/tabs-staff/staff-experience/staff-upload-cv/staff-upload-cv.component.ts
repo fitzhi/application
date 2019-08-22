@@ -3,7 +3,6 @@ import { Collaborator } from '../../../data/collaborator';
 import { DeclaredExperience } from '../../../data/declared-experience';
 import { DeclaredExperienceDTO } from '../../../data/external/declaredExperienceDTO';
 import { MessageBoxService } from '../../../message-box/service/message-box.service';
-import { UploadedSkillsPickupComponent } from './pickup/uploaded-skills-pickup.component';
 import { HttpClient } from '@angular/common/http';
 import { HttpResponse } from '@angular/common/http';
 import { HttpEventType } from '@angular/common/http';
@@ -134,28 +133,6 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 			},
 				responseInError =>
 					this.messageBoxService.error('Uploading error !', responseInError)));
-	}
-
-	pickupSkills() {
-		const dataExchange = {
-			'idStaff': this.staff.idStaff,
-			'lastName': this.staff.lastName,
-			'firstName': this.staff.firstName,
-			'experience': this.declaredExperience
-		};
-		const dialogConfig = new MatDialogConfig();
-		dialogConfig.disableClose = true;
-		dialogConfig.autoFocus = true;
-		dialogConfig.panelClass = 'default-dialog-container-class';
-		dialogConfig.data = dataExchange;
-		dialogConfig.width = '600px';
-		const dialogReference = this.dialog.open(UploadedSkillsPickupComponent, dialogConfig);
-		dialogReference.updatePosition({ bottom: '5px' });
-		this.subscriptions.add(
-			dialogReference.afterClosed()
-				.subscribe(result => {
-					this.dialogRef.close(result);
-				}));
 	}
 
 	/**
