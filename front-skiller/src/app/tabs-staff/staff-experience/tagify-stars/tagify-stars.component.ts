@@ -3,7 +3,7 @@ import Tagify from '@yaireo/tagify';
 import { TagStar } from '../tag-star';
 import { Placeholder } from '@angular/compiler/src/i18n/i18n_ast';
 import { mapToMapExpression } from '@angular/compiler/src/render3/util';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-tagify-stars',
@@ -19,6 +19,8 @@ export class TagifyStarsComponent implements AfterViewInit {
   @Input() originalValues;
 
   @Input() additionalValues$: Subject<TagStar[]>;
+
+  @Input() readOnly$: BehaviorSubject<boolean>;
 
   @Input() placeholder;
 
@@ -38,13 +40,14 @@ export class TagifyStarsComponent implements AfterViewInit {
 
   input: any;
 
+  readOnly = false;
+
   // Array of eventHandler bound the the tagigy-stars component.
   // The goal of these eventHandler is to catch & save the selected star.
   boundOnClick = new Array(5);
 
   // The selected star
   public star: number;
-
 
   ngAfterViewInit() {
 
@@ -53,14 +56,15 @@ export class TagifyStarsComponent implements AfterViewInit {
     this.tagify = new Tagify(this.input, {
       enforceWhitelist: true,
       placeholder: this.placeholder,
+      readOnly: true,
       templates: {
         wrapper(input, settings) {
-          return `<tags style="height:99%;width:99%;margin:1px;"
+          return `<tags
                 class="tagify ${settings.mode ? 'tagify--mix' : ''} ${input.className}" ${settings.readonly ? 'readonly' : ''}>
-                <span contenteditable data-placeholder="${settings.placeholder}" class="tagify__input"></span></tags>`;
+                <span id="tag-input" contenteditable data-placeholder="${settings.placeholder}" class="tagify__input"></span></tags>`;
         },
         tag(v, tagData) {
-          return `<tag title='${v}' scontenteditable='false' spellcheck="false" class='tagify__tag
+          return `<tag title='${v}' contenteditable='false' spellcheck="false" class='tagify__tag
               ${tagData.class ? tagData.class : ''}' ${this.getAttributes(tagData)}>
                 <x title='' class='tagify__tag__removeBtn'></x><div style="background-color:lightGrey" ><span class='tagify__tag-text'>
                   ${v}
@@ -79,8 +83,7 @@ export class TagifyStarsComponent implements AfterViewInit {
 
     this.whitelist.forEach(element => this.tagify.settings.whitelist.push(element));
     this.blacklist.forEach(element => this.tagify.settings.blacklist.push(element));
-    this.tagify.settings.readonly = true;
-    this.tagify.settings.placeholder = 'Nope';
+    this.tagify.settings.placeholder = '';
 
     this.boundOnClick[0] = this.onClick_0.bind(this);
     this.boundOnClick[1] = this.onClick_1.bind(this);
@@ -97,12 +100,24 @@ export class TagifyStarsComponent implements AfterViewInit {
       .on('remove', this.onRemoveTag.bind(this))
       .on('click', this.onTagClick.bind(this));
 
-    this.updateStars(this.originalValues);
+    this.updateEventHandlerStars(this.originalValues);
 
     this.additionalValues$.subscribe(addedValues => {
       this.addValues(addedValues);
-      this.updateStars(addedValues);
+      this.updateEventHandlerStars(addedValues);
     });
+
+    this.readOnly$.subscribe(readOnly => {
+      this.readOnly = readOnly;
+
+      const tagInput = document.getElementById('tag-input');
+      tagInput.contentEditable = readOnly ? 'false' : 'true';
+
+      document.querySelectorAll('.tagify__tag__removeBtn').forEach (
+        elt => elt.style.visibility = (readOnly ? 'hidden' : 'visible')
+      );
+    });
+
   }
 
   private addValues(values: TagStar[]) {
@@ -131,7 +146,7 @@ export class TagifyStarsComponent implements AfterViewInit {
   /**
    * Register an event handler for each star in the component.
    */
-  updateStars(tagStars: TagStar[]) {
+  updateEventHandlerStars(tagStars: TagStar[]) {
     tagStars.forEach(tagstar => {
       for (let i = 0; i < 5; i++) {
         const id = this.idStar(tagstar.tag, i);
@@ -158,6 +173,7 @@ export class TagifyStarsComponent implements AfterViewInit {
    * @param e the associated tag
    */
   onRemoveTag(e: CustomEvent) {
+
     for (let i = 0; i < 5; i++) {
       const id = this.idStar(e.detail.data.value, i);
       document.getElementById(id).onclick = null;
@@ -166,6 +182,14 @@ export class TagifyStarsComponent implements AfterViewInit {
   }
 
   onTagClick(e: CustomEvent) {
+
+    /**
+     * If we are in a readonly mode, we cancel this treatment.
+     */
+    if (this.readOnly) {
+      return;
+    }
+
     const tag = e.detail.data.value;
     for (let i = 0; i <= this.star; i++) {
       this.setColor(tag, i, this.colorON);
