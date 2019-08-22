@@ -19,6 +19,11 @@ export class ReferentialService {
 	/*
 	 * Legend of the sunburst chart.
 	 */
+	public legends: RiskLegend[] = [];
+
+	/*
+	 * Legend of the sunburst chart.
+	 */
 	public legends$ = new Subject<RiskLegend[]>();
 
 	/*
@@ -74,6 +79,7 @@ export class ReferentialService {
 						console.groupEnd();
 					}
 					this.legends$.next(legends);
+					legends.forEach(legend => this.legends.push(legend));
 				});
 	}
 

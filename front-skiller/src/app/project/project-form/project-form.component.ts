@@ -41,7 +41,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	public project: Project;
 
-	public legends: RiskLegend[];
 	public DIRECT_ACCESS = 1;
 	public REMOTE_FILE_ACCESS = 2;
 
@@ -88,11 +87,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		private referentialService: ReferentialService,
 		private router: Router) {
 		super();
-
-		this.subscriptions.add(
-			this.referentialService.legends$.subscribe(legends => {
-				this.legends = legends;
-			}));
 
 		this.boundAddSkill = this.addSkill.bind(this);
 		this.boundRemoveSkill = this.removeSkill.bind(this);
@@ -141,6 +135,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 		this.skillService.allSkills$
 			.subscribe (skills => {
+				this.tagify.settings.whitelist = [];
 				skills.map(function(skill) { return skill.title; }).forEach(element => {
 					this.tagify.settings.whitelist.push(element);
 				});
@@ -262,7 +257,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				this.colorOfRisk = 'whiteSmoke';
 				break;
 			default:
-				this.colorOfRisk = this.legends.find (legend => legend.level === levelOfRisk).color;
+				this.colorOfRisk = this.referentialService.legends.find (legend => legend.level === levelOfRisk).color;
 				if (Constants.DEBUG) {
 					console.log ('the new DOT risk color', this.colorOfRisk);
 				}
