@@ -5,6 +5,7 @@ package fr.skiller.bean.impl;
 
 import static fr.skiller.Error.CODE_IO_ERROR;
 import static fr.skiller.Error.MESSAGE_IO_ERROR;
+import static fr.skiller.Global.INTERNAL_FILE_SEPARATORCHAR;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -319,13 +320,13 @@ public class FileDataSaverImpl implements DataSaver {
 	 */
 	private boolean isDirectory (final Project project, final String pathname) {
 		
-		if (pathname.indexOf(File.separatorChar) != -1) {
+		if (pathname.indexOf(INTERNAL_FILE_SEPARATORCHAR) != -1) {
 				return true;
 		}
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Examining if %s is a directory", project.getLocationRepository() + File.separatorChar + pathname));
+			logger.debug(String.format("Examining if %s is a directory", project.getLocationRepository() + INTERNAL_FILE_SEPARATORCHAR + pathname));
 		}
-		return Paths.get(project.getLocationRepository() + File.separatorChar + pathname).toFile().isDirectory();
+		return Paths.get(project.getLocationRepository() + INTERNAL_FILE_SEPARATORCHAR + pathname).toFile().isDirectory();
 	}
 
 	@Override

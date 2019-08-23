@@ -1,5 +1,5 @@
 /**
- *
+ * 
  */
 package fr.skiller.bean.impl;
 
@@ -54,9 +54,9 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 	 */
 	@Autowired
 	public DataSaver dataSaver;
-
+			
 	/**
-	 * Cache which contains the content of the directories paths
+	 * Cache which contains the content of the directories paths 
 	 */
 	Map<Integer,List<String>> cachePaths = new WeakHashMap<>();
 
@@ -71,7 +71,7 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 			patternsCleanupList.stream().forEach(p -> logger.debug(p.pattern()));
 		}
 	}
-
+	
 	@Override
 	public String cleanupPath(final String path) {
 
@@ -86,10 +86,10 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 		return (cleanupPath.length() == 0) ? path : cleanupPath;
 	}
 
-
+	
 	@Override
 	public List<String> lookupPathRepository(Project project, String criteria) throws SkillerException {
-
+				
 		final List<String > pathsList;
 		if (!this.cachePaths.containsKey(project.getId())) {
 			pathsList = dataSaver.loadRepositoryDirectories(project);
@@ -100,7 +100,7 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 		} else {
 			pathsList = this.cachePaths.get(project.getId());
 		}
-
+		
 		return lookupPathRepository(pathsList, criteria);
 	}
 
@@ -120,7 +120,7 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 			.distinct()
 			.collect(Collectors.toList());
 	}
-
+	
 	private String extractPath (String path, int criteriaLength) {
 		int nextSeparatorChar = path.indexOf(INTERNAL_FILE_SEPARATORCHAR, criteriaLength);
 		if (nextSeparatorChar == -1) {
@@ -129,5 +129,5 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 			return path.substring(0, nextSeparatorChar);
 		}
 	}
-
+	
 }
