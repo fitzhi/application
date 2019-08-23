@@ -94,7 +94,7 @@ import fr.skiller.data.source.importance.ImportanceCriteria;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.AbstractScannerDataGenerator;
 import fr.skiller.source.crawler.RepoScanner;
-
+import static fr.skiller.Global.INTERNAL_FILE_SEPARATORCHAR;;
 /**
  * <p>
  * GIT implementation of a source code crawler
@@ -1108,7 +1108,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				if (posMarker != -1) {
 					
 					final String pathDependency;
-					if (pathAdded.charAt(posMarker + marker.length() - 1) == File.separatorChar) {
+					if (pathAdded.charAt(posMarker + marker.length() - 1) == INTERNAL_FILE_SEPARATORCHAR) {
 						pathDependency = pathAdded.substring(0, posMarker + marker.length() -	 1);
 					} else {
 						pathDependency = pathAdded.substring(0, posMarker + marker.length());
