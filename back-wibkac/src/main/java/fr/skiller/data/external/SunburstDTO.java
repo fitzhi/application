@@ -2,8 +2,8 @@ package fr.skiller.data.external;
 
 import java.util.Set;
 
-import fr.skiller.data.internal.DataChart;
 import fr.skiller.data.internal.Committer;
+import fr.skiller.data.internal.DataChart;
 import fr.skiller.data.internal.RiskDashboard;
 
 /**

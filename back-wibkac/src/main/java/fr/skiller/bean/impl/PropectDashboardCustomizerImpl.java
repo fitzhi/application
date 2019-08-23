@@ -20,8 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import fr.skiller.bean.ProjectDashboardCustomizer;
 import fr.skiller.bean.DataSaver;
+import fr.skiller.bean.ProjectDashboardCustomizer;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
 

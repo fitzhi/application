@@ -4,12 +4,12 @@
 package fr.skiller.source.crawler.git;
 
 import static fr.skiller.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
+import static fr.skiller.Error.CODE_PARSING_SOURCE_CODE;
 import static fr.skiller.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
 import static fr.skiller.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
-import static fr.skiller.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
-import static fr.skiller.Error.CODE_PARSING_SOURCE_CODE;
 import static fr.skiller.Error.MESSAGE_PARSING_SOURCE_CODE;
-
+import static fr.skiller.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
+import static fr.skiller.Error.SHOULD_NOT_PASS_HERE;
 import static fr.skiller.Global.LN;
 import static fr.skiller.Global.UNKNOWN;
 import static fr.skiller.controller.ProjectController.DASHBOARD_GENERATION;
@@ -43,8 +43,8 @@ import javax.annotation.PostConstruct;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.RenameDetector;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
+import org.eclipse.jgit.diff.RenameDetector;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -77,8 +77,8 @@ import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import fr.skiller.controller.ProjectController.SettingsGeneration;
-import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Ghost;
+import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RepositoryAnalysis;
 import fr.skiller.data.internal.RiskDashboard;
@@ -88,13 +88,12 @@ import fr.skiller.data.source.CommitHistory;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.data.source.ConnectionSettings;
 import fr.skiller.data.source.Contributor;
+import fr.skiller.data.source.importance.AssessorImportance;
 import fr.skiller.data.source.importance.FileSizeImportance;
 import fr.skiller.data.source.importance.ImportanceCriteria;
-import fr.skiller.data.source.importance.AssessorImportance;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.AbstractScannerDataGenerator;
 import fr.skiller.source.crawler.RepoScanner;
-import static fr.skiller.Error.SHOULD_NOT_PASS_HERE;
 
 /**
  * <p>

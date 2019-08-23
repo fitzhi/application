@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import fr.skiller.data.internal.Committer;
 import fr.skiller.data.internal.Ghost;
+import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
-import fr.skiller.data.internal.Committer;
-import fr.skiller.data.internal.Library;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 

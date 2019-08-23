@@ -3,6 +3,9 @@
  */
 package fr.skiller.data.source.importance;
 
+import static fr.skiller.Error.CODE_IO_ERROR;
+import static fr.skiller.Error.MESSAGE_IO_ERROR;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -10,9 +13,6 @@ import java.nio.file.Paths;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.git.SCMChange;
-
-import static fr.skiller.Error.CODE_IO_ERROR;
-import static fr.skiller.Error.MESSAGE_IO_ERROR;
 
 /**
  * <p>

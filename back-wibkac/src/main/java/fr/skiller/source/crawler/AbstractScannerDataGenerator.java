@@ -12,10 +12,10 @@ import org.slf4j.LoggerFactory;
 
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.data.internal.Committer;
 import fr.skiller.data.internal.DataChart;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.Committer;
 import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.CommitRepository;
 

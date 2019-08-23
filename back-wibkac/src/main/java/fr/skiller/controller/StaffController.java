@@ -49,7 +49,6 @@ import fr.skiller.data.internal.PeopleCountExperienceMap;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Resume;
 import fr.skiller.data.internal.ResumeSkill;
-import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.service.FileType;
