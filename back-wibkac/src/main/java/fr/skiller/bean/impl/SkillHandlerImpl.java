@@ -72,7 +72,9 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	@Override
 	public Skill addNewSkill(final Skill skill) {
 		synchronized (lockDataUpdated) {
-			getSkills().put(getSkills().size()+1, skill);
+			int id = getSkills().size()+1;
+			skill.setId(id);
+			getSkills().put(id, skill);
 			this.dataUpdated = true;
 		}
 		if (logger.isDebugEnabled()) {
