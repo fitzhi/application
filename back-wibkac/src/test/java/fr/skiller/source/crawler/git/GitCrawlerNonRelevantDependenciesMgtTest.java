@@ -141,6 +141,7 @@ public class GitCrawlerNonRelevantDependenciesMgtTest {
 				new SCMChange("4", SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_ASSET_D_JAVA, LocalDate.now(), "fvi", "fvi@void.com") );
 		
 		analysis.getPathsAdded().add(SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_A_JAVA);
+		
 		analysis.getPathsAdded().add(SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_B_JAVA);
 
 		analysis.getPathsCandidate().add("src/test/java/com/sample/source/dependency");

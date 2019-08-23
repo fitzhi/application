@@ -13,10 +13,13 @@ public class Global {
 	public static final int LIBRARY_REMOVED = -1;
 	
 	public static final String INTERNAL_FILE_SEPARATOR = "/";
-	
+
+	public static final char INTERNAL_FILE_SEPARATORCHAR = '/';
+
 	public static final String LN = System.getProperty("line.separator");
 
 	public static final String BACKEND_RETURN_CODE = "backend.return_code";
+	
 	public static final String BACKEND_RETURN_MESSAGE = "backend.return_message";
 
 	private Global() {
