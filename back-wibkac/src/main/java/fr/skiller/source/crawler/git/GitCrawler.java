@@ -95,6 +95,7 @@ import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.AbstractScannerDataGenerator;
 import fr.skiller.source.crawler.RepoScanner;
 import static fr.skiller.Global.INTERNAL_FILE_SEPARATORCHAR;;
+
 /**
  * <p>
  * GIT implementation of a source code crawler
@@ -1144,7 +1145,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		
 		for (String pathname : analysis.getPathsCandidate()) {
 			
-			String absolutePath = analysis.getProject().getLocationRepository() + File.separatorChar + pathname;
+			String absolutePath = analysis.getProject().getLocationRepository() + INTERNAL_FILE_SEPARATORCHAR + pathname;
 			if (!Files.exists(Paths.get(absolutePath))) {
 				throw new SkillerRuntimeException(String.format("WTF %s does not exist anymore !", absolutePath));
 			}

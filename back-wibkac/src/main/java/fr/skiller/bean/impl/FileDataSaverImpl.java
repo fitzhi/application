@@ -46,6 +46,7 @@ import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.git.SCMChange;
+import static fr.skiller.Global.INTERNAL_FILE_SEPARATORCHAR;
 
 /**
  * <p>Implementation of DataSaver on the file system.</p>
@@ -252,7 +253,7 @@ public class FileDataSaverImpl implements DataSaver {
 	
 		createIfNeededDirectorySavedChanges();
 
-		final String filename = SAVED_CHANGES + File.separatorChar + project.getName() + "-changes.csv";
+		final String filename = SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getName() + "-changes.csv";
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("Saving file %s", rootLocation.resolve(filename)));
