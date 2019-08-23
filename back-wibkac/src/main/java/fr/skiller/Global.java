@@ -12,6 +12,7 @@ public class Global {
 	public static final int LIBRARY_DECLARED = 2;
 	public static final int LIBRARY_REMOVED = -1;
 	
+	public static final String INTERNAL_FILE_SEPARATOR = "/";
 	
 	public static final String LN = System.getProperty("line.separator");
 

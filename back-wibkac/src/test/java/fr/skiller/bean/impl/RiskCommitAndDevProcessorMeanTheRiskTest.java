@@ -30,6 +30,7 @@ import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.exception.SkillerException;
+import static fr.skiller.Global.INTERNAL_FILE_SEPARATOR;
 
 /**
  * 
@@ -93,7 +94,7 @@ public class RiskCommitAndDevProcessorMeanTheRiskTest {
 		comRep.getRepository().values().stream().forEach(
 				commit -> 
 				data.injectFile(data, 
-						commit.sourcePath.split(File.separator), 
+						commit.sourcePath.split(INTERNAL_FILE_SEPARATOR), 
 						1,
 						commit.evaluateDateLastestCommit(),
 						commit.committers()));

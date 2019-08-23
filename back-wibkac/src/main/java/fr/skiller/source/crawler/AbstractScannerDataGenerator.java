@@ -18,6 +18,7 @@ import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.CommitRepository;
+import static fr.skiller.Global.INTERNAL_FILE_SEPARATOR;
 
 /**
  * Abstract class in charge of generating the data collection for the project Sunburst viewer.
@@ -50,7 +51,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 		commitRepo.getRepository().values().stream().forEach(
 				commit -> 
 				root.injectFile(root, 
-						commit.sourcePath.split(File.separator), 
+						commit.sourcePath.split(INTERNAL_FILE_SEPARATOR), 
 						commit.getImportance(), 
 						commit.evaluateDateLastestCommit(),
 						commit.committers()));
