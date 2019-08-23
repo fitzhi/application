@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import static fr.skiller.Global.INTERNAL_FILE_SEPARATOR;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -28,7 +29,7 @@ public class SunburstDataTest {
 		final DataChart root = new DataChart("root");
 		DataChart data = root; 
 		String testClassname = "fr/skiller/test/world/mbappe/Number9.java";
-		String s[] = testClassname.split(File.separator);
+		String s[] = testClassname.split(INTERNAL_FILE_SEPARATOR);
 		for (int i=0; i<s.length-1; i++) {
 			data = data.addSubDir(new DataChart(s[i]));
 		}
@@ -53,7 +54,7 @@ public class SunburstDataTest {
 		final DataChart root = new DataChart("root");
 		String testClassname = "fr/skiller/test/world/mbappe/Number9.java";
 		int[] i = new int[0];
-		root.injectFile(root, testClassname.split(File.separator), 1, LocalDate.now(), i);
+		root.injectFile(root, testClassname.split(INTERNAL_FILE_SEPARATOR), 1, LocalDate.now(), i);
 
 		if (logger.isDebugEnabled()) {
 			logger.debug(root.toString());
@@ -77,7 +78,7 @@ public class SunburstDataTest {
 		DataChart data = root; 
 		
 		String testClassname = "fr/skiller/test/world/mbappe/Number9.java";
-		String s1[] = testClassname.split(File.separator);
+		String s1[] = testClassname.split(INTERNAL_FILE_SEPARATOR);
 		for (int i=0; i<s1.length-1; i++) {
 			data = data.addSubDir(new DataChart(s1[i]));
 			data.setNumberOfFiles(data.getNumberOfFiles() + 1);
@@ -85,7 +86,7 @@ public class SunburstDataTest {
 		
 		data = root;
 		testClassname = "fr/skiller/test/world-champion/mbappe/Number9.java";
-		String s2[] = testClassname.split(File.separator);
+		String s2[] = testClassname.split(INTERNAL_FILE_SEPARATOR);
 		for (int i=0; i<s2.length-1; i++) {
 			data = data.addSubDir(new DataChart(s2[i]));
 			data.setNumberOfFiles(data.getNumberOfFiles() + 1);
@@ -108,9 +109,9 @@ public class SunburstDataTest {
 		final DataChart root = new DataChart("root");
 		String testClassname = "fr/skiller/test/world/mbappe/Number9.java";
 		int[] i = new int[0];
-		root.injectFile(root, testClassname.split(File.separator), 1, LocalDate.now(), i);
+		root.injectFile(root, testClassname.split(INTERNAL_FILE_SEPARATOR), 1, LocalDate.now(), i);
 		testClassname = "fr/skiller/test/world-champion/mbappe/Number9.java";
-		root.injectFile(root, testClassname.split(File.separator), 1, LocalDate.now(), i);
+		root.injectFile(root, testClassname.split(INTERNAL_FILE_SEPARATOR), 1, LocalDate.now(), i);
 
 		if (logger.isDebugEnabled()) {
 			logger.debug(root.toString());

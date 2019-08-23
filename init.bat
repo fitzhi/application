@@ -4,9 +4,9 @@ echo "------------------------"
 echo ""
 mkdir -pv git_repo_for_test
 cd git_repo_for_test
-rmdir /s first-test
+rmdir /Q /s first-test
 git clone https://github.com/frvidal/first-test 
-rmdir /s wibkac
+rmdir /Q /s wibkac
 git clone https://github.com/frvidal/wibkac
 cd ..
 mkdir -pv deploy/backend-wibkac

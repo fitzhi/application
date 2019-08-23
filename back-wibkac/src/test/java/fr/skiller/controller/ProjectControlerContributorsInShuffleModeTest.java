@@ -52,13 +52,13 @@ public class ProjectControlerContributorsInShuffleModeTest {
 	Gson gson = new GsonBuilder().create();
 
 	@Autowired
-	private MockMvc mvc;
+	public MockMvc mvc;
 
 	@MockBean
-	private ProjectHandler projectHandler;
+	public ProjectHandler projectHandler;
 	
 	@Autowired
-	private StaffHandler staffHandler;
+	public StaffHandler staffHandler;
 
 	private static final int ID_STAFF = 1;
 
