@@ -31,6 +31,7 @@ import fr.skiller.data.internal.RiskLegend;
 import fr.skiller.data.internal.SourceFile;
 import fr.skiller.data.source.CommitHistory;
 import fr.skiller.data.source.CommitRepository;
+import static fr.skiller.Global.INTERNAL_FILE_SEPARATOR;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -246,7 +247,7 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	public long agregateCountCommits(final String dir, final List<StatActivity> stats) {
 		return stats.stream().filter(entry -> entry.getFilename().indexOf(dir) == 0)
 				.filter(entry -> ((entry.getFilename().length() == dir.length())
-						|| (entry.getFilename().indexOf(File.separator, dir.length() + 1) == -1)))
+						|| (entry.getFilename().indexOf(INTERNAL_FILE_SEPARATOR, dir.length() + 1) == -1)))
 				.mapToLong(StatActivity::getCountCommits).sum();
 	}
 
@@ -262,7 +263,7 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	public long agregateCountCommitsByActiveDevelopers(String dir, List<StatActivity> stats) {
 		return stats.stream().filter(entry -> entry.getFilename().indexOf(dir) == 0)
 				.filter(entry -> ((entry.getFilename().length() == dir.length())
-						|| (entry.getFilename().indexOf(File.separator, dir.length() + 1) == -1)))
+						|| (entry.getFilename().indexOf(INTERNAL_FILE_SEPARATOR, dir.length() + 1) == -1)))
 				.mapToLong(StatActivity::getCountCommitsByActiveDevelopers).sum();
 	}
 
