@@ -3,7 +3,6 @@
  */
 package fr.skiller.bean.impl;
 
-import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +23,7 @@ import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectDashboardCustomizer;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
+import static fr.skiller.Global.INTERNAL_FILE_SEPARATOR;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -122,7 +122,7 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 	}
 	
 	private String extractPath (String path, int criteriaLength) {
-		int nextSeparatorChar = path.indexOf(File.separatorChar, criteriaLength);
+		int nextSeparatorChar = path.indexOf(INTERNAL_FILE_SEPARATOR, criteriaLength);
 		if (nextSeparatorChar == -1) {
 			return path;
 		} else {
