@@ -1186,6 +1186,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			
 			int lengthLocationReposition = analysis.getProject().getLocationRepository().length();
 			String testing = child.getCanonicalPath().substring(lengthLocationReposition+1);
+			testing = testing.replace(File.separatorChar, INTERNAL_FILE_SEPARATORCHAR);
+			
 			
 			//  First, the file has to be captured by the crawler.
 			// We avoid all files which do not match the filter criteria (.java, .js, ...)
