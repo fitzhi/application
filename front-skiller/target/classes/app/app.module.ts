@@ -89,6 +89,7 @@ import { TableDependenciesComponent } from './project/project-sunburst/table-dep
 import { InLineEditDialogComponent } from './project/project-sunburst/table-dependencies/in-line-edit-dialog/in-line-edit-dialog.component';
 import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 import { ProjectAuditComponent } from './project/project-audit/project-audit.component';
+import { DevOnOffComponent } from './dev-on-off/dev-on-off.component';
 
 @NgModule({
 	declarations: [
@@ -131,7 +132,8 @@ import { ProjectAuditComponent } from './project/project-audit/project-audit.com
 		InLineEditDialogComponent,
 		DialogLegendSunburstComponent,
 		TagifyStarsComponent,
-		ProjectAuditComponent
+		ProjectAuditComponent,
+		DevOnOffComponent,
 	],
 	entryComponents: [
 		StarsSkillLevelRenderComponent,

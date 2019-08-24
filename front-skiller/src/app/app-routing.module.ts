@@ -15,12 +15,14 @@ import { AuthGuardService } from './admin/security/auth-guard.service';
 import { StaffFormComponent } from './tabs-staff/staff-form/staff-form.component';
 import { ConnectUserComponent } from './admin/connect-user/connect-user.component';
 import { CiaoComponent } from './ciao/ciao.component';
+import { DevOnOffComponent } from './dev-on-off/dev-on-off.component';
 
 const routes: Routes = [
 	{ path: '', redirectTo: '/welcome', pathMatch: 'full' },
 	{ path: 'welcome', component: WelcomeComponent },
 	{ path: 'login', component: ConnectUserComponent },
 	{ path: 'ciao', component: CiaoComponent },
+	{ path: 'dev-on-off', component: DevOnOffComponent },
 	{ path: 'searchSkill', component: ListSkillComponent, canActivate: [AuthGuardService] },
 	{ path: 'skill', component: SkillComponent, canActivate: [AuthGuardService] },
 	{ path: 'skill/:id', component: SkillComponent, canActivate: [AuthGuardService] },
