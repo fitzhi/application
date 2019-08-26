@@ -25,6 +25,12 @@ export class SkillService extends InternalService {
 	public allSkills$  = new BehaviorSubject<Skill[]>([]);
 
 	/*
+	 * list of skills filtered.
+	 * This observable will be listen from the ListSkillComponent.
+	 */
+	public filteredSkills$  = new BehaviorSubject<Skill[]>([]);
+
+	/*
 	 * skills
 	 */
 	public allSkills: Skill[];
@@ -147,17 +153,29 @@ export class SkillService extends InternalService {
 	}
 
 	/**
-	 * @param searchContext Filter the global list on the passed criteria
+	 * Filter and emit a filtered list of skills corresponding to the current criteria.
+	 * @param criteria the criteria filled by the user.
 	 */
-	filter(criteria: ListCriteria) {
-		this.criteria = criteria;
-	}
+	filterSkills(criteria: ListCriteria) {
 
-	/**
-	 * Filter and return the skills corresponding to the current criterias.
-	 */
-	getFilteredSkills(): Skill[] {
-		this.filteredSkills = Object.assign([], this.allSkills);
-		return this.filteredSkills;
+		if (Constants.DEBUG) {
+			console.log ('Filtering the skills for the criteria', criteria);
+		}
+		this.criteria = criteria;
+
+		const filteredSkills: Skill[] = [];
+		this.allSkills.forEach (skill => {
+			if (skill.title.indexOf(this.criteria.criteria) !== -1)  {
+				filteredSkills.push(skill);
+			}
+		});
+		if (Constants.DEBUG) {
+			console.groupCollapsed('Emitting the skills');
+			filteredSkills.forEach (skill => {
+				console.log (skill.id, skill.title);
+			});
+			console.groupEnd();
+		}
+		this.filteredSkills$.next(filteredSkills);
 	}
 }

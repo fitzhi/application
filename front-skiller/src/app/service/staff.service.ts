@@ -8,7 +8,7 @@ import { StaffDTO } from '../data/external/staffDTO';
 import { Constants } from '../constants';
 import { DeclaredExperience } from '../data/declared-experience';
 import { Experience } from '../data/experience';
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 import { saveAs } from 'file-saver';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
@@ -23,7 +23,10 @@ const httpOptions = {
 })
 export class StaffService {
 
-	private static peopleCountExperience: Map<string, number> = new Map<string, number>();
+	/**
+     * Observable to a map containig the count of staff members aggregated by skill & level (i.e. experience)
+     */
+	public peopleCountExperience$ = new Subject<Map<string, number>>();
 
 	constructor(
 		private http: HttpClient,
@@ -233,13 +236,6 @@ export class StaffService {
 		saveAs(blob, filename);
 	}
 
-	/**
-     * Get the count of staff members aggregated by skill & level (i.e. experience)
-     * @param activeOnly : Only active employees count into the aggregation.
-     */
-	getPeopleCountExperience(): Map<string, number> {
-		return StaffService.peopleCountExperience;
-	}
 
 	/**
      * Retrieving the sum of staff members aggregated by skill & level (i.e. experience)
@@ -249,19 +245,27 @@ export class StaffService {
 		if (Constants.DEBUG) {
 			console.log('countAll_groupBy_experience loading aggegations count from the server');
 		}
-		this.http.get<any>(this.backendSetupService.url() + '/staff' + '/countGroupByExperiences/'
+		this.http.get<any>(this.backendSetupService.url() + '/staff' + '/countGroupByExperiences'
 			+ (activeOnly ? '/active' : '/all'))
 			.subscribe(
 				response => {
-					StaffService.peopleCountExperience.clear();
+					const peopleCountExperience = new Map<string, number>();
 					Object.entries(response)
 						.forEach(entry => {
 							let key: string;
 							let value: string;
 							key = entry[0] as string;
 							value = entry[1] as string;
-							StaffService.peopleCountExperience.set(key, parseInt(value, 0));
+							peopleCountExperience.set(key, parseInt(value, 0));
 						});
+						if (Constants.DEBUG) {
+							console.groupCollapsed('peopleCountExperience');
+							peopleCountExperience.forEach((key, value) => {
+								console.log (key, value);
+							});
+							console.profileEnd();
+						}
+						this.peopleCountExperience$.next(peopleCountExperience);
 				},
 				error => console.log(error),
 				() => {

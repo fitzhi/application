@@ -1,9 +1,9 @@
-import { Component, OnInit, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { Constants } from '../constants';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { BaseComponent } from '../base/base.component';
+import { Constants } from '../constants';
+import { ProjectStaffService } from '../project/project-staff-service/project-staff.service';
 import { CinematicService } from '../service/cinematic.service';
 import { TabsStaffListService } from '../tabs-staff-list/service/tabs-staff-list.service';
-import { ProjectStaffService } from '../project/project-staff-service/project-staff.service';
 
 @Component({
 	selector: 'app-toolbar',
@@ -29,6 +29,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	@Output() messengerActiveOnly = new EventEmitter<boolean>();
 
 	DEVELOPERS_CRUD = Constants.DEVELOPERS_CRUD;
+	SKILLS_SEARCH = Constants.SKILLS_SEARCH;
 	SKILLS_CRUD = Constants.SKILLS_CRUD;
 	PROJECT_TAB_FORM = Constants.PROJECT_TAB_FORM;
 	PROJECT_TAB_STAFF = Constants.PROJECT_TAB_STAFF;
@@ -201,6 +202,15 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 				break;
 			case this.SKILLS_CRUD:
 				this.messengerFormActive.emit(Constants.SKILLS_SEARCH);
+				if (Constants.DEBUG) {
+					console.log ('Complete search as default search');
+				}
+				setTimeout(() => {
+					this.criteria = '';
+					this.messengerCriteria.emit(this.criteria);
+				}, 0);
+				break;
+			case this.SKILLS_SEARCH:
 				break;
 			default:
 				console.error('Unattempted editedEntity', Constants.CONTEXT[this.editedEntity]);
@@ -212,7 +222,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
      * Launch a query based on the requested criteria, if, at least, one caracter is present on the search field.
      */
 	query() {
-		if ((typeof this.criteria !== 'undefined') && (this.criteria !== null)) {
+		if (this.criteria) {
 			this.messengerCriteria.emit(this.criteria);
 		}
 	}
@@ -239,7 +249,6 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 		this.masterDetail = false;
 		this.mode(Constants.DEVELOPERS_CRUD);
 	}
-
 
 	/**
      * All subscriptions are closed in the BaseComponent

@@ -11,7 +11,7 @@ import { SkillService } from './service/skill.service';
 import { ListCriteria } from './data/listCriteria';
 import { AuthService } from './admin/service/auth/auth.service';
 
-declare var $:any;
+declare var $: any;
 
 @Component({
 	selector: 'app-root',
@@ -45,7 +45,6 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
      */
 	previousId: number;
 
-
 	constructor(
 		private cinematicService: CinematicService,
 		private authService: AuthService,
@@ -68,7 +67,6 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
          * Loading the referentials.
          */
 		this.referentialService.loadAllReferentials();
-
 	}
 
 	/**
@@ -91,7 +89,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 				if (Constants.DEBUG) {
 					console.log('Reloading skills for search criteria ' + this.criteria);
 				}
-				this.skillService.filter(new ListCriteria(this.criteria, this.activeOnly));
+				this.skillService.filterSkills(new ListCriteria(this.criteria, this.activeOnly));
 				this.staffService.countAll_groupBy_experience(this.activeOnly);
 				break;
 			}
@@ -204,7 +202,6 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 	isConnected() {
 		return this.authService.isConnected();
 	}
-
 
 	/**
      * All subscriptions are closed in the BaseComponent

@@ -1,10 +1,10 @@
 export class ListCriteria {
-  criteria: string;
-  activeOnly: boolean;
+	criteria: string;
+	activeOnly: boolean;
 
-  public constructor (criteria: string, activeOnly: boolean) {
-    this.criteria = criteria;
-    this.activeOnly = activeOnly;
-  }
+	public constructor (criteria: string, activeOnly: boolean) {
+		this.criteria = criteria;
+		this.activeOnly = activeOnly;
+	}
 
 }

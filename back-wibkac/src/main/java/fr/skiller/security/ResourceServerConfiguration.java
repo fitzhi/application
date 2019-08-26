@@ -25,8 +25,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 		.antMatchers(
 				
 				// For development only.
-				// "/staff/**", 
-				// "/project/**", 
+				 "/staff/**", 
+				 "/skill/**", 
 				
 				"/admin/isVeryFirstConnection", 
 				"/admin/saveVeryFirstConnection", 
