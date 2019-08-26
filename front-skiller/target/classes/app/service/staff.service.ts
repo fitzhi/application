@@ -263,7 +263,7 @@ export class StaffService {
 							peopleCountExperience.forEach((key, value) => {
 								console.log (key, value);
 							});
-							console.profileEnd();
+							console.groupCollapsed();
 						}
 						this.peopleCountExperience$.next(peopleCountExperience);
 				},
