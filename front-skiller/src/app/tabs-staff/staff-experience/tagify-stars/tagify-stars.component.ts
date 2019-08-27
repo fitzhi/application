@@ -93,8 +93,9 @@ export class TagifyStarsComponent implements AfterViewInit {
 			}
 		}
 		);
-
+		this.tagify.settings.whitelist = [];
 		this.whitelist.forEach(element => this.tagify.settings.whitelist.push(element));
+		this.tagify.settings.blacklist = [];
 		this.blacklist.forEach(element => this.tagify.settings.blacklist.push(element));
 		this.tagify.settings.placeholder = '';
 
