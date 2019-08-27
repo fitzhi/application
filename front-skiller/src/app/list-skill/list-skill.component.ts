@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { SkillService } from '../service/skill.service';
 import { TabsStaffListService } from '../tabs-staff-list/service/tabs-staff-list.service';
 import { ListCriteria } from '../data/listCriteria';
-import { BaseComponent } from 'target/classes/app/base/base.component';
+import { BaseComponent } from '../base/base.component';
 
 @Component({
 	selector: 'app-list-skill',
