@@ -193,6 +193,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 					 * If this staff member exists in pre-existing list of collaborators. We actualize the content.
 					 */
 					this.tabsStaffListService.actualizeCollaborator(staff);
+					this.staffDataExchangeService.changeCollaborator(staff);
 					this.messageService.info('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
 				});
 	}

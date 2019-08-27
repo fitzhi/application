@@ -133,11 +133,6 @@ export class TagifyStarsComponent implements AfterViewInit {
 
 		this.readOnly$.subscribe(readOnly => {
 
-			if (Constants.DEBUG) {
-				console.log ('Taggify was ' + (this.readOnly ? 'R' : 'RW') + ' and is now ' + (readOnly ? 'R' : 'RW'));
-			}
-
-
 			this.readOnly = readOnly;
 
 			const tagInput = document.getElementById('tag-input');
