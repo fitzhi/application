@@ -4,6 +4,7 @@ import { TagStar } from '../tag-star';
 import { Placeholder } from '@angular/compiler/src/i18n/i18n_ast';
 import { mapToMapExpression } from '@angular/compiler/src/render3/util';
 import { Subject, BehaviorSubject } from 'rxjs';
+import { Constants } from 'src/app/constants';
 
 @Component({
 	selector: 'app-tagify-stars',
@@ -52,7 +53,7 @@ export class TagifyStarsComponent implements AfterViewInit {
 
 	input: any;
 
-	readOnly = false;
+	readOnly = true;
 
 	// Array of eventHandler bound the the tagigy-stars component.
 	// The goal of these eventHandler is to catch & save the selected star.
@@ -72,7 +73,8 @@ export class TagifyStarsComponent implements AfterViewInit {
 			templates: {
 				wrapper(input, settings) {
 					return `<tags
-								class="tagify ${settings.mode ? 'tagify--mix' : ''} ${input.className}" ${settings.readonly ? 'readonly' : ''}>
+								class="tagify ${settings.mode ? 'tagify--mix' : ''} ${input.className}" ${settings.readonly ? 'readonly' : ''}
+								style="min-height:40px;">
 								<span id="tag-input" contenteditable data-placeholder="${settings.placeholder}" class="tagify__input"></span></tags>`;
 				},
 				tag(v, tagData) {
@@ -130,6 +132,12 @@ export class TagifyStarsComponent implements AfterViewInit {
 		});
 
 		this.readOnly$.subscribe(readOnly => {
+
+			if (Constants.DEBUG) {
+				console.log ('Taggify was ' + (this.readOnly ? 'R' : 'RW') + ' and is now ' + (readOnly ? 'R' : 'RW'));
+			}
+
+
 			this.readOnly = readOnly;
 
 			const tagInput = document.getElementById('tag-input');

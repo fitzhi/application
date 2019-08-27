@@ -17,9 +17,9 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Experience } from 'src/app/data/experience';
 import { BooleanDTO } from 'src/app/data/external/booleanDTO';
-import { DeclaredExperience } from 'target/classes/app/data/declared-experience';
 import { INTERNAL_SERVER_ERROR} from 'http-status-codes';
 import { take } from 'rxjs/operators';
+import { DeclaredExperience } from 'src/app/data/declared-experience';
 
 @Component({
 	selector: 'app-staff-experience',
@@ -87,6 +87,10 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 	}
 
 	ngOnInit() {
+
+		if (!this.staff) {
+			setTimeout(() => this.readOnly$.next(true), 0);
+		}
 		/***
          * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
          */
@@ -95,7 +99,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 				.subscribe((collabRetrieved: Collaborator) => {
 					this.staff = collabRetrieved;
 					if (Constants.DEBUG) {
-						console.log ('new staff member loaded', this.staff.firstName + ' ' + this.staff.lastName);
+						console.log ('staff member loaded', this.staff.firstName + ' ' + this.staff.lastName);
 					}
 					// We transfert the experience into the array originalValues
 					// in order to be displayed into the tagify-stars component
@@ -106,7 +110,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 							values.push(new TagStar(experience.title, experience.level - 1));
 						});
 						this.values$.next(values);
-						this.readOnly$.next(!this.staff.active);
+						this.readOnly$.next(!this.staff.idStaff || !this.staff.active);
 					}, 0);
 
 					// The title of the skill is not propagated by the server. We filled this property "live" on the desktop
