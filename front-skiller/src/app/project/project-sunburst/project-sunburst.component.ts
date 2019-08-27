@@ -195,7 +195,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			this.setActiveContext (this.CONTEXT.SUNBURST_WAITING);
 		}
 
-		if (typeof this.myChart === 'undefined') {
+		if (!this.myChart) {
 			this.myChart = Sunburst();
 			this.myChart.onNodeClick(nodeClicked => {
 				this.onNodeClick(nodeClicked);
@@ -223,35 +223,37 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
     * user click on a a node.
     **/
 	public onNodeClick(nodeClicked: any) {
-		this.location$.next(nodeClicked.location);
-		if (nodeClicked.classnames !== null) {
-			if (Constants.DEBUG) {
-				console.groupCollapsed('Filenames : ');
-				nodeClicked.classnames.forEach(element => {
-					console.log(element.filename + ' ' + element.lastCommit);
-				});
-				console.groupEnd();
-			}
-
-			const filenames = [];
-			nodeClicked.classnames.forEach(element => {
-				filenames.push(new Filename(element.filename, element.lastCommit));
-			});
-			this.filenames.sendClassnames(filenames);
-
-			const contributors = new Set<Contributor>();
-			nodeClicked.classnames.forEach(file => {
-				if ( (file.idStaffs) && (file.idStaffs > 0) ) {
-					file.idStaffs.forEach(element => {
-						contributors.add(this.findContributor(element));
+		if (nodeClicked) {
+			this.location$.next(nodeClicked.location);
+			if (nodeClicked.classnames !== null) {
+				if (Constants.DEBUG) {
+					console.groupCollapsed('Filenames : ');
+					nodeClicked.classnames.forEach(element => {
+						console.log(element.filename + ' ' + element.lastCommit);
 					});
+					console.groupEnd();
 				}
-			});
-			this.contributors.sendContributors(Array.from(contributors));
 
-		} else {
-			this.filenames.sendClassnames([]);
-			this.contributors.sendContributors([]);
+				const filenames = [];
+				nodeClicked.classnames.forEach(element => {
+					filenames.push(new Filename(element.filename, element.lastCommit));
+				});
+				this.filenames.sendClassnames(filenames);
+
+				const contributors = new Set<Contributor>();
+				nodeClicked.classnames.forEach(file => {
+					if ( (file.idStaffs) && (file.idStaffs > 0) ) {
+						file.idStaffs.forEach(element => {
+							contributors.add(this.findContributor(element));
+						});
+					}
+				});
+				this.contributors.sendContributors(Array.from(contributors));
+
+			} else {
+				this.filenames.sendClassnames([]);
+				this.contributors.sendContributors([]);
+			}
 		}
 	}
 
