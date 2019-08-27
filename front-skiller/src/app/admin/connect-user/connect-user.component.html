@@ -1,20 +1,17 @@
 <div class="container">
   <div class="col-md-12">
     <form class="needs-validation" [formGroup]="connectionGroup" (submit)="onSubmit()">
-      <p>Wibkac connection</p>
+      <div class="row" id="titleConnection">
+        <img id="zhi" src="./assets/img/zhi.png" />
+        Wibkac connection
+      </div>
       <div class="row">
         <div class="col-md-5 labelConnection">
           <label for="username" class="required float-right labelConnection">Username :</label>
         </div>
         <div class="col-md-7">
-          <input 
-            type="text" 
-            class="form-control required" 
-            id="username" 
-            name="username"
-            placeholder="Username (Required)" 
-            formControlName="username"
-          />
+          <input type="text" class="form-control required" id="username" name="username"
+            placeholder="Username (Required)" formControlName="username" />
           <label *ngIf="username.touched && username.invalid" [ngClass]="'alert alert-warning'">
             Username is required and cannot exceed 16 chars max.
           </label>
@@ -23,18 +20,11 @@
 
       <div class="row">
         <div class="col-md-5 labelConnection">
-          <label 
-            for="password" 
-            class="required float-right labelConnection">Password :</label>
+          <label for="password" class="required float-right labelConnection">Password :</label>
         </div>
         <div class="col-md-7">
-          <input type="password" 
-            class="form-control required" 
-            id="connect-password" 
-            name="password"
-            placeholder="Password (Required)" 
-            formControlName="password"
-          />
+          <input type="password" class="form-control required" id="connect-password" name="password"
+            placeholder="Password (Required)" formControlName="password" />
           <label *ngIf="password.touched && password.invalid" [ngClass]="'alert alert-warning'">
             Password is required, between 8 and 16 chars max
           </label>
@@ -44,21 +34,15 @@
       <div class="row">
         <div class="col-md-6"></div>
         <div class="col-md-3">
-		  <button 
-			class="btn btn-outline-secondary rounded connection-cancel" 
-			type="reset" 
-			alt="cancel this operation" 
-			(click)="onCancel()">Cancel</button>
+          <button class="btn btn-outline-secondary rounded connection-cancel" type="reset" alt="cancel this operation"
+            (click)="onCancel()">Cancel</button>
         </div>
         <div class="col-md-3">
-		  <button class="btn 
-			  btn-outline-secondary rounded connection-ok" 
-			  (click)="onSubmit()"
-			  (keyup.enter)="onSubmit()"
-			  [disabled]="connectionGroup.invalid">Ok</button>
+          <button class="btn 
+			  btn-outline-secondary rounded connection-ok" (click)="onSubmit()" (keyup.enter)="onSubmit()"
+            [disabled]="connectionGroup.invalid">Ok</button>
         </div>
       </div>
     </form>
   </div>
 </div>
-
