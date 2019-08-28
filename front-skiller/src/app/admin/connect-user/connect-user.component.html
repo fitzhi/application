@@ -1,6 +1,6 @@
 <div class="container">
   <div class="col-md-12">
-    <form class="needs-validation" [formGroup]="connectionGroup" (submit)="onSubmit()">
+    <form class="needs-validation" [formGroup]="connectionGroup">
       <div class="row" id="titleConnection">
         <img id="zhi" src="./assets/img/zhi.png" />
         Wibkac connection
@@ -39,7 +39,7 @@
         </div>
         <div class="col-md-3">
           <button class="btn 
-			  btn-outline-secondary rounded connection-ok" (click)="onSubmit()" (keyup.enter)="onSubmit()"
+			  btn-outline-secondary rounded connection-ok" (click)="onSubmit()" 
             [disabled]="connectionGroup.invalid">Ok</button>
         </div>
       </div>

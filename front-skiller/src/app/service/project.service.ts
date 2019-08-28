@@ -3,7 +3,7 @@ import { Project } from '../data/project';
 import { ProjectDTO } from '../data/external/projectDTO';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { InternalService } from '../internal-service';
 
 import { Constants } from '../constants';
@@ -25,22 +25,37 @@ const httpOptions = {
 })
 export class ProjectService extends InternalService {
 
+	allProjects: Project[];
+
+	allProjects$ = new Subject<Project[]>();
 
 	constructor(
 		private httpClient: HttpClient,
 		private backendSetupService: BackendSetupService) {
-		super();
+			super();
 	}
 
 	/**
-   * Return the global list of ALL collaborators, working for the company.
-   */
-	getAll(): Observable<Project[]> {
+   	* Load the global list of ALL collaborators, working for the company.
+   	*/
+	loadProjects() {
 		if (Constants.DEBUG) {
 			this.log('Fetching the projects on URL ' + this.backendSetupService.url() + '/project/all');
 		}
-		return this.httpClient.get<Project[]>(this.backendSetupService.url() + '/project/all');
+		this.httpClient
+			.get<Project[]>(this.backendSetupService.url() + '/project/all')
+			.pipe(take(1))
+			.subscribe(projects => {
+				if (Constants.DEBUG) {
+					console.groupCollapsed('Projects retrieved');
+					projects.forEach (project => console.log (project.name));
+					console.groupEnd();
+				}
+				this.allProjects = projects;
+				this.allProjects$.next(projects);
+			});
 	}
+
 
 	/**
 	* Save the project.

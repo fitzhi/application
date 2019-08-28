@@ -71,7 +71,6 @@ export class ConnectUserComponent implements OnInit {
 					/**
 					 * If the connection has succeeded, we load the projects.
 					 */
-					console.log ('nope');
 					if (connectionStatus) {
 						this.projectService.loadProjects();
 					}
