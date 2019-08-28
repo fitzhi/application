@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms'
 import { AuthService } from '../service/auth/auth.service';
 import { Router } from '@angular/router';
 import { Constants } from 'src/app/constants';
+import { ProjectService } from 'src/app/service/project.service';
 
 @Component({
 	selector: 'app-connect-user',
@@ -19,8 +20,7 @@ export class ConnectUserComponent implements OnInit {
 	/**
 	 * Are we entering in this component, just by routing directly into '/login'
 	 */
-	@Input('directLogin')
-	private directLogin = true;
+	@Input() private directLogin = true;
 
 	/**
      * Group of the components present in the form.
@@ -29,6 +29,7 @@ export class ConnectUserComponent implements OnInit {
 
 	constructor(
 		private authService: AuthService,
+		private projectService: ProjectService,
 		private router: Router,
 		private formBuilder: FormBuilder) {
 		this.connectionGroup = this.formBuilder.group({
@@ -67,6 +68,13 @@ export class ConnectUserComponent implements OnInit {
 		this.authService.connect(username, password)
 			.subscribe(connectionStatus => {
 					this.messengerUserConnected.emit(connectionStatus);
+					/**
+					 * If the connection has succeeded, we load the projects.
+					 */
+					console.log ('nope');
+					if (connectionStatus) {
+						this.projectService.loadProjects();
+					}
 					if (this.directLogin) {
 						this.router.navigate(['/welcome'], {});
 					}
