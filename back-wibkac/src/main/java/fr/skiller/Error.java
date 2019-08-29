@@ -55,6 +55,9 @@ public class Error {
 	public static final int CODE_PARSING_SOURCE_CODE = -1014;
 	public static final String MESSAGE_PARSING_SOURCE_CODE = "an error occurs when parsing the source code on server."; 
 
+	public static final int CODE_MISSION_NOFOUND = -1015;
+	public static final String MESSAGE_MISSION_NOFOUND = "There is no mission for the staff identifier {0} and project identifier {1}";
+	
 	private Error() {
 	}
 	

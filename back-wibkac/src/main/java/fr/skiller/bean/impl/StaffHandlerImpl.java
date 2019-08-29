@@ -484,6 +484,45 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			this.dataUpdated = true;
 		}
 	}
+
+	@Override
+	public void addMission(int idStaff, int idProject, String projectName) {
+		
+		final Staff staff = getStaff().get(idStaff);
+		if (staff == null) {
+			throw new SkillerRuntimeException(
+				"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
+		}
+		
+		synchronized (lockDataUpdated) {
+			staff.getMissions().add(new Mission (idStaff, idProject, projectName));
+			this.dataUpdated = true;
+		}
+	}
+
+	@Override
+	public void delMission(int idStaff, int idProject) {
+
+		final Staff staff = getStaff().get(idStaff);
+		if (staff == null) {
+			throw new SkillerRuntimeException(
+				"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
+		}
+		
+		Optional<Mission> oMission = staff.getMissions()
+			.stream()
+			.filter(mission -> mission.getIdProject() == idProject)
+			.findFirst();
+			
+		if (!oMission.isPresent()) {
+			throw new SkillerRuntimeException(
+					"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_MISSION_NOFOUND, idStaff, idProject));
+		}
+		synchronized (lockDataUpdated) {
+			staff.getMissions().remove(oMission.get());
+			this.dataUpdated = true;
+		}
+	}
 	
 	
 }

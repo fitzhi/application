@@ -539,88 +539,59 @@ public class StaffController {
 	}	
 	
 	/**
-	 * Add or change the name of a project assigned to a developer.
+	 * Add a project assigned to a developer.
 	 * 
 	 * @param param
 	 *            the body of the post containing an instance of
 	 *            ParamStaffProject in JSON format
 	 * @return
 	 */
-	@PostMapping("/project/save")
-	public ResponseEntity<StaffDTO> saveProject(@RequestBody String param) {
+	@PostMapping("/project/add")
+	public ResponseEntity<StaffDTO> addProject(@RequestBody String param) {
 
-		
-		HttpHeaders headers = new HttpHeaders();
-		
 		try {
+			HttpHeaders headers = new HttpHeaders();
+		
 			ParamStaffProject p = gson.fromJson(param, ParamStaffProject.class);
 			if (logger.isDebugEnabled()) {
 				logger.debug(
-						String.format("POST command on /staff/project/save with params id:%d, projectName:%s", 
-								p.idStaff, p.newProjectName));
+						String.format("POST command on /staff/project/add with params idStaff: %d, idProject: %d", 
+								p.idStaff, p.idProject));
 			}
 			final ResponseEntity<StaffDTO> responseEntity;
 	
 			final Staff staff = staffHandler.getStaff().get(p.idStaff);
 			assert (staff != null);
-	
-			Optional<Project> result = projectHandler.lookup(p.newProjectName);
 			
-			if (result.isPresent()) {
+			final Project project = projectHandler.get(p.idProject);
+			assert (project != null);
+
+			/*
+			 * If the passed project is already present in the staff member's
+			 * project list, we send back a BAD_REQUEST to avoid duplicate
+			 * entries
+			 */
+			Predicate<Mission> predicate = pr -> (pr.getIdProject() == p.idProject);
+			if (staff.getMissions().stream().anyMatch(predicate)) {
+				responseEntity = new ResponseEntity<>(
+						new StaffDTO(staff, 0,
+								"The collaborator " + staff.fullName() + " is already involved in " + project.getName()),
+						headers, HttpStatus.BAD_REQUEST);
+				return responseEntity;
+			}
 	
-				/*
-				 * If the passed project is already present in the staff member's
-				 * project list, we send back a BAD_REQUEST to avoid duplicate
-				 * entries
-				 */
-				Predicate<Mission> predicate = pr -> (pr.getIdProject() == result.get().getId());
-				if (staff.getMissions().stream().anyMatch(predicate)) {
-					responseEntity = new ResponseEntity<>(
-							new StaffDTO(staff, 0,
-									"The collaborator " + staff.fullName() + " is already involved in " + p.newProjectName),
-							headers, HttpStatus.BAD_REQUEST);
-					return responseEntity;
-				}
-	
-				/**
-				 * If the user change the name of the project, 1) we create a new
-				 * entry into the projects list of the staff member 2) we remove the
-				 * former entry of the previous name
-				 */
-				if ((p.formerProjectName != null) && (p.formerProjectName.length() > 0)) {
-					Optional<Project> formerProject = projectHandler.lookup(p.formerProjectName);
-					Optional<Mission> optMission = staff.getMissions()
-						.stream()
-						.filter(mission -> mission.getIdProject() == formerProject.get().getId())
-						.findFirst();
-					if (optMission.isPresent()) {
-						staff.getMissions().remove(optMission.get());
-					}
-				}
-	
-				staff.getMissions().add(
-						new Mission(
-								staff.getIdStaff(), 
-								result.get().getId(), 
-								projectHandler.get(result.get().getId()).getName()));
-				responseEntity = new ResponseEntity<>(new StaffDTO(staff), headers, HttpStatus.OK);
-				if (logger.isDebugEnabled()) {
-					logger.debug(String.format("returning  staff %s", gson.toJson(staff)));
-				}
-	
-			} else {
-				if (logger.isDebugEnabled()) {
-					logger.debug(String.format("Cannot find a Project for the name %s", p.newProjectName));
-				}
-				return postErrorReturnBodyMessage(404, "There is no project with the name " + p.newProjectName, staff);
+			staffHandler.addMission(p.idStaff, p.idProject, project.getName());
+			responseEntity = new ResponseEntity<>(new StaffDTO(staff), headers, HttpStatus.OK);
+			if (logger.isDebugEnabled()) {
+				logger.debug(String.format("returning  staff %s", gson.toJson(staff)));
 			}
 			return responseEntity;
-		} catch (SkillerException e) {
-			logger.error(getStackTrace(e));
+		} catch (final SkillerException se) {
 			return new ResponseEntity<>(
-					new StaffDTO(new Staff(), e.errorCode,e.errorMessage), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+					new StaffDTO(new Staff(), se.errorCode, se.errorMessage), 
+					new HttpHeaders(), 
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		
 	}
 
 	/**

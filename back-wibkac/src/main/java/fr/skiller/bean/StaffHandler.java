@@ -81,7 +81,6 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 */
 	void involve(Project project, List<Contributor> contributors) throws SkillerException;
 	
-	
 	/**
 	 * <p>
 	 * Retrieve the contributors list for the given project.
@@ -152,5 +151,24 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	  * @param experience the experience whose level has to be updated.
 	  */
 	 void updateExperience(int idStaff, Experience experience);
+	 
+	 /**
+	  * <p>
+	  * Add a project inside the missions of a staff member.
+	  * </p>
+	  * @param idStaff the staff identifier
+	  * @param idProject the project identifier
+	  * @param projectName the name of the project
+	  */	 
+	 void addMission(int idStaff, int idProject, String projectName);
+	 
+	 /**
+	  * <p>
+	  * Revoke a project from the missions of a staff member.
+	  * </p>
+	  * @param idStaff the staff identifier
+	  * @param idProject the project identifier
+	  */	 
+	 void delMission(int idStaff, int idProject);
 }
 
