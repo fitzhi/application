@@ -14,7 +14,7 @@ export class StaffDataExchangeService {
 			missions: [], experiences: []
 		});
 
-	collaboratorObserver = this.collaboratorSource.asObservable();
+	collaborator$ = this.collaboratorSource.asObservable();
 
 	constructor() { }
 

@@ -3,7 +3,7 @@ import { Project } from '../data/project';
 import { ProjectDTO } from '../data/external/projectDTO';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { InternalService } from '../internal-service';
 
 import { Constants } from '../constants';
@@ -116,10 +116,29 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	 * GET the project associated to the passed name, if any, from the back-end skiller.
+	 * Search the project associated to the passed name within the collection of all projects
+	 * @param projectName the project name to search for inside the collection
+	 * @returns the found project or undefined if none's found
+	 */
+	getProject(projectName: string): Project {
+		const project = this.allProjects.find(prj => prj.name === projectName);
+		return project;
+	}
+
+	/**
+	 * Load the project associated to the passed name, if any, from the back-end skiller.
 	 * Will throw a 404 if this name is not retrieved.
+	 * @param projectName the project name to loook for on the backend.
 	 */
 	lookup(projectName: string): Observable<Project> {
+
+		const project = this.getProject(projectName);
+		if (!project) {
+			return new BehaviorSubject<Project>(project);
+		}
+
+		// If we do not find the project in the global collection of projects,
+		// we try our chance in the backend.
 		const url = this.backendSetupService.url() + '/project/name/' + projectName;
 		if (Constants.DEBUG) {
 			console.log('Fetching the project name ' + projectName + ' on the address ' + url);

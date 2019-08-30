@@ -1,22 +1,21 @@
-<div class="projects_card">
+<div class="projects_card project">
 	<h4 class="d-flex justify-content-between align-items-center">
 		<span class="text-muted">Projects card</span> <span
 			class="badge badge-secondary badge-pill">{{sourceProjects.count()}}</span>
 	</h4>
-	
+
+<!--	
 	<ng2-smart-table [settings]="settings_projects"
 		[source]="sourceProjects"
 		(createConfirm)="onConfirmCreateFromProject($event)"
 		(editConfirm)="onConfirmEditFromProject($event)"
 		(deleteConfirm)="onConfirmRemoveFromProject($event)">
 	</ng2-smart-table>
-
+-->
 			
-	<div class="row">
-		<div class="col-1"></div>
-		<div class="col-10 field">
-			<label class="labelProjects" for="projects">Projects</label> 
-			<textarea id="projects" name="projects" placeholder="Type the project first letters"></textarea>
+	<div class="row project">
+		<div class="col-12">
+			<textarea id="projects" name="projects" placeholder="Type the first letters of the project"></textarea>
 		</div>
 	</div>
 

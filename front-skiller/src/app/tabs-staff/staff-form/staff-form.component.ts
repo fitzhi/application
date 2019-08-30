@@ -96,7 +96,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
              * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
              */
 			this.subscriptions.add(
-				this.staffDataExchangeService.collaboratorObserver
+				this.staffDataExchangeService.collaborator$
 					.subscribe((employee: Collaborator) => {
 						if (Constants.DEBUG) {
 							console.log('Employee loaded ' + employee.idStaff);

@@ -13,6 +13,7 @@ import { Observable, Subject } from 'rxjs';
 import { saveAs } from 'file-saver';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { take } from 'rxjs/operators';
+import { BooleanDTO } from '../data/external/booleanDTO';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json', 'observe': 'response' })
@@ -77,31 +78,28 @@ export class StaffService {
 	}
 
 	/**
-     * POST: Add the contribution of a staff member into a project defined by its name
+     * POST Verb :
+	 * Add the contribution of a staff member into a project.
+	 * @param idStaff the staff identifier.
+	 * @param idProject the project identifier to add.
+	 * @returns an observable emetting the staff record updated or an empty staff if any error occurs.
      */
-	addProject(idStaff: number, projectName: string): Observable<StaffDTO> {
+	addProject(idStaff: number, idProject: number): Observable<BooleanDTO> {
 		if (Constants.DEBUG) {
-			console.log('Adding the collaborator with id : ' + idStaff + ' into the project ' + projectName);
+			console.log('Adding the collaborator with the id : ' + idStaff + ' into the project id ' + idProject);
 		}
-		const body = { idStaff: idStaff, newProjectName: projectName };
-		return this.http.post<StaffDTO>(this.backendSetupService.url() + '/staff' + '/project/save', body, httpOptions);
+		const body = { idStaff: idStaff, idProject: idProject };
+		return this.http.post<BooleanDTO>(this.backendSetupService.url() + '/staff' + '/project/add', body, httpOptions);
 	}
 
 	/**
-     * POST: Change the contribution of a staff member into a project defined by its name.
+     * POST Verb :
+	 * Unregister the contribution of a staff member into a project.
+	 * @param idStaff the staff identifier.
+	 * @param idProject the project identifier to remove from the missions.
+	 * @returns an observable emetting the staff record updated or an empty staff if any error occurs.
      */
-	changeProject(idStaff: number, formerProjectName: string, newProjectName: string): Observable<StaffDTO> {
-		if (Constants.DEBUG) {
-			console.log('Adding the collaborator with id : ' + idStaff + ' into the project ' + newProjectName);
-		}
-		const body = { idStaff: idStaff, newProjectName: newProjectName, formerProjectName: formerProjectName };
-		return this.http.post<StaffDTO>(this.backendSetupService.url() + '/staff' + '/project/save', body, httpOptions);
-	}
-
-	/**
-     * POST: Unregister the contribution of a staff member into a project.
-     */
-	removeFromProject(idStaff: number, idProject: number): Observable<StaffDTO> {
+	removeProject(idStaff: number, idProject: number): Observable<StaffDTO> {
 		if (Constants.DEBUG) {
 			console.log('Removing the collaborator with id : ' + idStaff + ' from project with id ' + idProject);
 		}

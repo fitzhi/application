@@ -33,7 +33,8 @@ export class Mission {
 	/**
 	 * Constructor
 	 */
-	constructor(id: number) {
+	constructor(id: number, name: string) {
 		this.idProject = id;
+		this.name = name;
 	}
 }

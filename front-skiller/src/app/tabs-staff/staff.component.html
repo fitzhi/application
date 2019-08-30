@@ -1,14 +1,16 @@
 <mat-tab-group (selectedIndexChange)="selectedIndexChange($event)">
   <mat-tab label="Info">
     <div>
-      <app-staff-form [idStaff]="idStaff" [selectedTab$]="selectedTab$" 
-        (messengerInit)="initCollaborator(true)"></app-staff-form>
+      <app-staff-form [idStaff]="idStaff" [selectedTab$]="selectedTab$" (messengerInit)="initCollaborator(true)">
+      </app-staff-form>
     </div>
   </mat-tab>
   <mat-tab label="Projects">
-    <div>
-      <app-staff-projects [selectedTab$]="selectedTab$"></app-staff-projects>
-    </div>
+    <ng-template matTabContent>
+      <div>
+        <app-staff-projects [selectedTab$]="selectedTab$"></app-staff-projects>
+      </div>
+    </ng-template>
   </mat-tab>
   <mat-tab label="Skills">
     <ng-template matTabContent>
