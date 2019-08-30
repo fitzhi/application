@@ -3,6 +3,8 @@
  */
 package fr.skiller.bean.impl;
 
+import static fr.skiller.Global.INTERNAL_FILE_SEPARATORCHAR;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +25,6 @@ import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectDashboardCustomizer;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
-import static fr.skiller.Global.INTERNAL_FILE_SEPARATORCHAR;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

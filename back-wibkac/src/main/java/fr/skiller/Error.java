@@ -57,6 +57,11 @@ public class Error {
 
 	public static final int CODE_MISSION_NOFOUND = -1015;
 	public static final String MESSAGE_MISSION_NOFOUND = "There is no mission for the staff identifier {0} and project identifier {1}";
+
+	public static final int CODE_STAFF_ACTIVE_ON_PROJECT = -1016;
+	public static final String MESSAGE_STAFF_ACTIVE_ON_PROJECT = "You cannot remove an active project. {0} commits detected";
+	
+	CODE
 	
 	private Error() {
 	}

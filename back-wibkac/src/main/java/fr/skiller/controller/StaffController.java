@@ -1,9 +1,14 @@
 package fr.skiller.controller;
 
+import static fr.skiller.Error.CODE_STAFF_NOFOUND;
+import static fr.skiller.Error.MESSAGE_STAFF_NOFOUND;
+import static fr.skiller.Error.CODE_STAFF_ACTIVE_ON_PROJECT;
+import static fr.skiller.Error.MESSAGE_STAFF_ACTIVE_ON_PROJECT;
 import static fr.skiller.Error.getStackTrace;
 import static fr.skiller.Global.BACKEND_RETURN_CODE;
 import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,6 +46,7 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.ShuffleService;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.data.external.BooleanDTO;
 import fr.skiller.data.external.ResumeDTO;
 import fr.skiller.data.external.StaffDTO;
 import fr.skiller.data.internal.Experience;
@@ -306,7 +312,7 @@ public class StaffController {
 		final Staff staff = staffHandler.getStaff().get(p.idStaff);
 		if (staff == null) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_STAFF_NOFOUND));
-			headers.set(BACKEND_RETURN_MESSAGE, String.format(Error.MESSAGE_STAFF_NOFOUND, p.idStaff));
+			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, p.idStaff));
 			return new ResponseEntity<>(
 					Boolean.FALSE, headers,
 					HttpStatus.INTERNAL_SERVER_ERROR);			
@@ -397,22 +403,19 @@ public class StaffController {
 	
 
 	/**
-	 * Internal Parameters class containing all possible parameters necessaries
-	 * for add/remove a project from a staff member.
-	 * 
+	 * <p>
+	 * Parameters used to add or remove a project from a staff member.
+	 * </p>
 	 * @author Fr&eacute;d&eacute;ric VIDAL
 	 */
 	class ParamStaffProject {
 		int idStaff;
 		int idProject;
-		String formerProjectName;
-		String newProjectName;
-
 		@Override
 		public String toString() {
-			return "ParamStaffProject [idStaff=" + idStaff + ", idProject=" + idProject + ", formerProjectName="
-					+ formerProjectName + ", newProjectName=" + newProjectName + "]";
+			return "ParamStaffProject [idStaff=" + idStaff + ", idProject=" + idProject + "]";
 		}
+
 	}
 
 	@PostMapping("/api/uploadCV")
@@ -547,10 +550,10 @@ public class StaffController {
 	 * @return
 	 */
 	@PostMapping("/project/add")
-	public ResponseEntity<StaffDTO> addProject(@RequestBody String param) {
+	public ResponseEntity<BooleanDTO> addProject(@RequestBody String param) {
 
+		HttpHeaders headers = new HttpHeaders();
 		try {
-			HttpHeaders headers = new HttpHeaders();
 		
 			ParamStaffProject p = gson.fromJson(param, ParamStaffProject.class);
 			if (logger.isDebugEnabled()) {
@@ -558,7 +561,7 @@ public class StaffController {
 						String.format("POST command on /staff/project/add with params idStaff: %d, idProject: %d", 
 								p.idStaff, p.idProject));
 			}
-			final ResponseEntity<StaffDTO> responseEntity;
+			final ResponseEntity<BooleanDTO> responseEntity;
 	
 			final Staff staff = staffHandler.getStaff().get(p.idStaff);
 			assert (staff != null);
@@ -574,21 +577,20 @@ public class StaffController {
 			Predicate<Mission> predicate = pr -> (pr.getIdProject() == p.idProject);
 			if (staff.getMissions().stream().anyMatch(predicate)) {
 				responseEntity = new ResponseEntity<>(
-						new StaffDTO(staff, 0,
-								"The collaborator " + staff.fullName() + " is already involved in " + project.getName()),
-						headers, HttpStatus.BAD_REQUEST);
+						new BooleanDTO(-1, "The collaborator " + staff.fullName() + " is already involved in " + project.getName()),
+						headers, HttpStatus.INTERNAL_SERVER_ERROR);
 				return responseEntity;
 			}
 	
 			staffHandler.addMission(p.idStaff, p.idProject, project.getName());
-			responseEntity = new ResponseEntity<>(new StaffDTO(staff), headers, HttpStatus.OK);
+			responseEntity = new ResponseEntity<>(new BooleanDTO(), headers, HttpStatus.OK);
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("returning  staff %s", gson.toJson(staff)));
 			}
 			return responseEntity;
 		} catch (final SkillerException se) {
 			return new ResponseEntity<>(
-					new StaffDTO(new Staff(), se.errorCode, se.errorMessage), 
+					new BooleanDTO(se.errorCode, se.errorMessage), 
 					new HttpHeaders(), 
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
@@ -598,7 +600,7 @@ public class StaffController {
 	 * Revoke the participation of staff member into a project.
 	 */
 	@PostMapping("/project/del")
-	public ResponseEntity<StaffDTO> revokeProject(@RequestBody String param) {
+	public ResponseEntity<BooleanDTO> revokeProject(@RequestBody String param) {
 
 		ParamStaffProject p = gson.fromJson(param, ParamStaffProject.class);
 		if (logger.isDebugEnabled()) {
@@ -609,15 +611,29 @@ public class StaffController {
 
 		final Staff staff = staffHandler.getStaff().get(p.idStaff);
 		if (staff == null) {
-			return postErrorReturnBodyMessage(404, "There is no staff member for id" + p.idStaff);
+			return new ResponseEntity<>(
+					new BooleanDTO(CODE_STAFF_NOFOUND, 
+					MessageFormat.format(MESSAGE_STAFF_NOFOUND, p.idStaff)), 
+					new HttpHeaders(), 
+					HttpStatus.NOT_FOUND);
 		}
 
 		Optional<Mission> oProject = staff.getMissions().stream().filter(pr -> (pr.getIdProject() == p.idProject)).findFirst();
 		if (oProject.isPresent()) {
+			
+			Mission mission = oProject.get();
+			if (mission.getNumberOfCommits() > 0) {
+				return new ResponseEntity<>(
+						new BooleanDTO(CODE_STAFF_ACTIVE_ON_PROJECT, 
+						MessageFormat.format(MESSAGE_STAFF_ACTIVE_ON_PROJECT, 
+								mission.getNumberOfCommits())), 
+						new HttpHeaders(), 
+						HttpStatus.NOT_FOUND);
+			}
 			staff.getMissions().remove(oProject.get());
 		}
 
-		return new ResponseEntity<>(new StaffDTO(staff), new HttpHeaders(), HttpStatus.OK);
+		return new ResponseEntity<>(new BooleanDTO(), new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	ResponseEntity<StaffDTO> postErrorReturnBodyMessage(int code, String message) {

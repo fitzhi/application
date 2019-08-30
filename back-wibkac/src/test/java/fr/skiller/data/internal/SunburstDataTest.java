@@ -3,15 +3,14 @@
  */
 package fr.skiller.data.internal;
 
+import static fr.skiller.Global.INTERNAL_FILE_SEPARATOR;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.io.File;
 import java.time.LocalDate;
 
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static fr.skiller.Global.INTERNAL_FILE_SEPARATOR;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

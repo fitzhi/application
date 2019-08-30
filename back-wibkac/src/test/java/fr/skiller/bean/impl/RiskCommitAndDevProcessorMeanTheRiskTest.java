@@ -3,7 +3,8 @@
  */
 package fr.skiller.bean.impl;
 
-import java.io.File;
+import static fr.skiller.Global.INTERNAL_FILE_SEPARATOR;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,6 @@ import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
 import fr.skiller.exception.SkillerException;
-import static fr.skiller.Global.INTERNAL_FILE_SEPARATOR;
 
 /**
  * 

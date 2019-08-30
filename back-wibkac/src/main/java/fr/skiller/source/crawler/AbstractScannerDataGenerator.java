@@ -1,8 +1,8 @@
 package fr.skiller.source.crawler;
 
+import static fr.skiller.Global.INTERNAL_FILE_SEPARATOR;
 import static fr.skiller.Global.LN;
 
-import java.io.File;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -18,7 +18,6 @@ import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.CommitRepository;
-import static fr.skiller.Global.INTERNAL_FILE_SEPARATOR;
 
 /**
  * Abstract class in charge of generating the data collection for the project Sunburst viewer.

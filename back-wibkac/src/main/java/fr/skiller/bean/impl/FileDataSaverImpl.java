@@ -47,7 +47,6 @@ import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.git.SCMChange;
-import static fr.skiller.Global.INTERNAL_FILE_SEPARATORCHAR;
 
 /**
  * <p>Implementation of DataSaver on the file system.</p>

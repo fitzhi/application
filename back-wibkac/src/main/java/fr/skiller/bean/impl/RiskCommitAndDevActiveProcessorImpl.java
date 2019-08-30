@@ -3,12 +3,12 @@
  */
 package fr.skiller.bean.impl;
 
+import static fr.skiller.Global.INTERNAL_FILE_SEPARATOR;
 import static fr.skiller.Global.LN;
 import static fr.skiller.Global.UNKNOWN;
 import static fr.skiller.data.internal.DataChartTypeData.IMPORTANCE;
 import static fr.skiller.data.internal.DataChartTypeData.RISKLEVEL_TIMES_IMPORTANCE;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +31,6 @@ import fr.skiller.data.internal.RiskLegend;
 import fr.skiller.data.internal.SourceFile;
 import fr.skiller.data.source.CommitHistory;
 import fr.skiller.data.source.CommitRepository;
-import static fr.skiller.Global.INTERNAL_FILE_SEPARATOR;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

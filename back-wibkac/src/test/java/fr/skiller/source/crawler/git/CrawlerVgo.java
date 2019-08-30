@@ -5,6 +5,7 @@ package fr.skiller.source.crawler.git;
 
 import java.io.File;
 import java.io.IOException;
+
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.Test;
 import org.junit.runner.RunWith;

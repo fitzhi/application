@@ -1,7 +1,5 @@
 package fr.skiller.bean;
 
-import java.io.File;
-
 import org.junit.Test;
 
 

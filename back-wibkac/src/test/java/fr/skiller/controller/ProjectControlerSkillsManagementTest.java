@@ -1,16 +1,10 @@
 package fr.skiller.controller;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -28,17 +22,9 @@ import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;
-import fr.skiller.bean.StaffHandler;
-import fr.skiller.bean.impl.ProjectHandlerImpl;
-import fr.skiller.data.external.Action;
 import fr.skiller.data.external.BooleanDTO;
-import fr.skiller.data.external.PseudoListDTO;
-import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
-import fr.skiller.data.internal.Committer;
-import fr.skiller.data.internal.Staff;
-import fr.skiller.exception.SkillerException;
 
 /**
  * <p>Testing the action of adding or removing a skill inside a project.</p>

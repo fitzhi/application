@@ -26,9 +26,9 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.external.Action;
 import fr.skiller.data.external.PseudoListDTO;
+import fr.skiller.data.internal.Committer;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.Committer;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 

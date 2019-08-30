@@ -22,7 +22,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.ProjectHandler;
-import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Mission;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
@@ -40,9 +39,6 @@ public class StaffControllerProjectTest {
 
 	private static final String STAFF_PROJECTS_2 = "/staff/projects/2";
 
-	private static final int ID_PROJECT_1234 = 1234;
-	private static final String PROJECT_1234 = "TEST_1234";
-	
 	private static final int ID_PROJECT_1235 = 1235;
 	private static final String PROJECT_1235 = "TEST_1235";
 
@@ -54,9 +50,6 @@ public class StaffControllerProjectTest {
 	@Autowired
 	private MockMvc mvc;
 
-	@Autowired
-	private StaffHandler staffHandler;
-	
 	@Autowired
 	private ProjectHandler projectHandler;
 	

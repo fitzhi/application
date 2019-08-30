@@ -10,6 +10,7 @@ import static fr.skiller.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
 import static fr.skiller.Error.MESSAGE_PARSING_SOURCE_CODE;
 import static fr.skiller.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
 import static fr.skiller.Error.SHOULD_NOT_PASS_HERE;
+import static fr.skiller.Global.INTERNAL_FILE_SEPARATORCHAR;
 import static fr.skiller.Global.LN;
 import static fr.skiller.Global.UNKNOWN;
 import static fr.skiller.controller.ProjectController.DASHBOARD_GENERATION;
@@ -93,8 +94,7 @@ import fr.skiller.data.source.importance.FileSizeImportance;
 import fr.skiller.data.source.importance.ImportanceCriteria;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.AbstractScannerDataGenerator;
-import fr.skiller.source.crawler.RepoScanner;
-import static fr.skiller.Global.INTERNAL_FILE_SEPARATORCHAR;;
+import fr.skiller.source.crawler.RepoScanner;;
 
 /**
  * <p>
