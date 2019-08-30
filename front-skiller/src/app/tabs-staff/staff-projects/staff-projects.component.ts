@@ -33,11 +33,6 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	 */
 	sourceProjects = new LocalDataSource([]);
 
-	/*
-	 * Settings of the projects grid
-	 */
-	settings_projects = Constants.SETTINGS_PROJECTS_SMARTTABLE;
-
 	/**
 	 * Employee retrieve from StaffComponent access.
 	 */
@@ -111,32 +106,6 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 		this.tagify
 			.on('add', this.boundAddProject)
 			.on('remove', this.boundRemoveProject);
-	}
-
-	/**
-	 * Confirm the end-user that the project has been added to this staff member.
-	 * @param staff the staff member
-	 * @param event the JS cinematic event thrown (of creation or edition)
-	 */
-	messageConfirmationInProject(staff: Collaborator, event: any) {
-		this.messageService.info(staff.firstName + ' ' + staff.lastName +
-			' is involved now in project ' + event.newData.name);
-		this.reloadProjects(this.collaborator.idStaff);
-		event.confirm.resolve();
-	}
-
-	/**
-	 * Handle the error returned by the backend.
-	 * @param responseInError the back-end response in error
-	 * @param event the JS cinematic event thrown (of creation or edition)
-	 */
-	handleError(responseInError: any, event: any) {
-		if (Constants.DEBUG) {
-			console.log('Error ' + responseInError.error.code + ' ' + responseInError.error.message);
-		}
-		this.reloadProjects(this.collaborator.idStaff);
-		this.messageService.error(responseInError.error.message);
-		event.confirm.reject();
 	}
 
 	/**

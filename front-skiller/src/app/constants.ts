@@ -92,48 +92,4 @@ export class Constants {
 
 	public static canAdd = true;
 
-	/**
-	 * Declared settings for the grid dedicated to the PROJECTS inside the form STAFF
-     */
-	public static SETTINGS_PROJECTS_SMARTTABLE = {
-		columns: {
-			name: {
-				title: 'Projects',
-				filter: false,
-				width: '100%',
-				type: 'text'
-			}
-		},
-		add: {
-			addButtonContent: '<img src="./assets/img/add.png"></img>',
-			createButtonContent: '<img src="./assets/img/save.png"></img>',
-			cancelButtonContent: '<img src="./assets/img/cancel.png"></img>',
-			confirmCreate: true,
-		},
-		delete: {
-			deleteButtonContent: '<img src="./assets/img/delete.png"></img>',
-			confirmDelete: true,
-		},
-		edit: {
-			editButtonContent: '<img src="./assets/img/edit.png"></img>',
-			cancelButtonContent: '<img src="./assets/img/cancel.png"></img>',
-			saveButtonContent: '<img src="./assets/img/save.png"></img>',
-			confirmSave: true,
-		},
-		hideSubHeader: false,
-		attr: {
-			class: 'table table-bordered'
-		},
-		actions: {
-			columnTitle: '_______',
-			add: true,
-			edit: true,
-			delete: true
-		},
-		noDataMessage: 'No Project declaration for now!',
-		pager: {
-			perPage: 10
-		}
-	};
-
 }

@@ -23,8 +23,6 @@ import { MessageComponent } from './message/message.component';
 
 import { ErrorComponent } from './error/error.component';
 
-import { Ng2SmartTableModule } from 'ng2-smart-table';
-
 import { StarsSkillLevelRenderComponent } from './tabs-staff/starsSkillLevelRenderComponent';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
 import { ListProjectComponent } from './list-project/list-project.component';
@@ -153,7 +151,6 @@ import { DevOnOffComponent } from './dev-on-off/dev-on-off.component';
 		NgbModule.forRoot(),
 		FormsModule,
 		HttpClientModule,
-		Ng2SmartTableModule,
 		ReactiveFormsModule,
 		BrowserAnimationsModule,
 		MatTabsModule,
