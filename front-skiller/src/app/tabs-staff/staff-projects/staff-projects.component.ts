@@ -94,6 +94,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	 */
 	loadMissions(missions: Mission[]) {
 		this.dataSource = new MatTableDataSource(missions);
+		this.dataSource.data = missions;
 		if (Constants.DEBUG) {
 			console.log ('Missions loaded', missions.length);
 		}
@@ -116,15 +117,23 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 		// We add the already attached project into the tagify-textarea component.
 		this.subscriptions.add(
 			this.staffDataExchangeService.collaborator$.subscribe(
-				(collab: Collaborator) =>
-				this.tagify.addTags(
-					this.collaborator.missions
-					.map(function(mission) { return mission.name; }))));
+				(collab: Collaborator) => {
+					this.removeValues();
+					this.tagify.addTags(
+						this.collaborator.missions
+					.map(function(mission) { return mission.name; }));
+				}));
 
 		// We register the listener for the tagify-textarea.
 		this.tagify
 			.on('add', this.boundAddProject)
 			.on('remove', this.boundRemoveProject);
+	}
+
+	private removeValues() {
+		this.tagify.off('remove', this.boundRemoveProject);
+		this.tagify.removeAllTags();
+		this.tagify.on('remove', this.boundRemoveProject);
 	}
 
 	/**
