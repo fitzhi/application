@@ -58,6 +58,11 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	public dataSource;
 
 	/**
+	 * The table of missions is sortable.
+	 */
+	@ViewChild(MatSort, { static: true }) sort: MatSort;
+
+	/**
 	 * The columns to be displayed in the table of missions.
 	 */
 	public displayedColumns: string[] = ['name', 'firstCommit', 'lastCommit', 'numberOfCommits', 'numberOfFiles'];
@@ -95,6 +100,16 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	loadMissions(missions: Mission[]) {
 		this.dataSource = new MatTableDataSource(missions);
 		this.dataSource.data = missions;
+		this.dataSource.sort = this.sort;
+		this.subscriptions.add(
+			this.dataSource.connect().subscribe(data => this.collaborator.missions = data));
+		this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: string): string => {
+			if (typeof data[sortHeaderId] === 'string') {
+				return data[sortHeaderId].toLocaleLowerCase();
+			}
+			return data[sortHeaderId];
+		};
+
 		if (Constants.DEBUG) {
 			console.log ('Missions loaded', missions.length);
 		}
@@ -120,8 +135,8 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 				(collab: Collaborator) => {
 					this.removeValues();
 					this.tagify.addTags(
-						this.collaborator.missions
-					.map(function(mission) { return mission.name; }));
+						this.collaborator.missions.
+						map(function(mission) { return mission.name; }));
 				}));
 
 		// We register the listener for the tagify-textarea.
@@ -134,20 +149,6 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 		this.tagify.off('remove', this.boundRemoveProject);
 		this.tagify.removeAllTags();
 		this.tagify.on('remove', this.boundRemoveProject);
-	}
-
-	/**
-	 * Check if the staff member available in this form is a brand new, unregistered, staff member or an already registered one.
-	 * To add or remove skills, projects, the staff object must have an id.
-	 */
-	checkStaffMemberExist(event: any): boolean {
-		if (this.collaborator.idStaff === null) {
-			this.messageService.error('You cannot update a skill, or a project, of an unregistered staff member. '
-				+ 'Please saved this new member first !');
-			return false;
-		} else {
-			return true;
-		}
 	}
 
 	/**
@@ -172,6 +173,8 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 		}
 
 		this.collaborator.missions.push(new Mission(project.id, project.name));
+		this.numberOfMissions$.next(this.collaborator.missions.length);
+		this.loadMissions(this.collaborator.missions);
 
 		// We have already loaded or saved the collaborator, so we can add each new project as they appear, one by one.
 		if (this.collaborator.idStaff) {
@@ -179,7 +182,6 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 			new Mission(project.id, project.name),
 			this.staffService.addProject.bind(this.staffService));
 		}
-
 	}
 
 	/**
@@ -249,7 +251,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	 */
 	undoRemoveProject(mission: Mission) {
 		if (Constants.DEBUG) {
-			console.log ('Update failed, we reintroduce the project ' + mission.name);
+			console.log ('Update failed, we re-introduce the project ' + mission.name);
 		}
 		this.collaborator.missions.push(mission);
 		this.tagify.addTags([mission.name]);
