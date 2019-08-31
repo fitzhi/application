@@ -15,6 +15,7 @@ import { BaseComponent } from '../../base/base.component';
 import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
 import { take } from 'rxjs/operators';
 import { MessageBoxService } from 'src/app/message-box/service/message-box.service';
+import { Mission } from 'src/app/data/mission';
 
 
 @Component({
@@ -249,6 +250,28 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 					}
 				});
 		}
+	}
+
+	/**
+	 * Evaluate if the current collaborator is registered as active inside the Zhistem.
+	 * @returns TRUE if the collaborator has an active mission.
+	 */
+	hasBeenActive(): boolean {
+		const activeMission = this.collaborator.missions
+			.find(mission => mission.lastCommit);
+		return (activeMission !== undefined);
+	}
+
+	/**
+	 * @returns the last mission executed by this collaborator, as declared in his mission list.
+	 */
+	lastMission(): Mission {
+		const missions = this.collaborator.missions
+			.filter(mission => mission.lastCommit)
+			.sort( (mission1, mission2) => {
+				return (new Date(mission2.lastCommit).getTime() - new Date(mission1.lastCommit).getTime());
+			});
+		return missions[0];
 	}
 
 	get firstName(): any {

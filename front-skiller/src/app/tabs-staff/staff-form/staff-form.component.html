@@ -1,6 +1,5 @@
 <div id="staffDiv">
 	<div id="staffForm">
-		<h4 class="mb-3">Personal information</h4>
 		<form class="needs-validation" [formGroup]="profileStaff"
 			(ngSubmit)="onSubmit()">
 			<div class="row">
@@ -59,7 +58,9 @@
 						with 16 max character.</label>
 				</div>
 			</div>
-
+			<div class="row" *ngIf="hasBeenActive()">
+				<p class="lastActivity">Last activity recorded : {{lastMission().lastCommit | date:'mediumDate'}} on {{lastMission().name}}</p>
+			</div>
 			<div class="mb-3">
 				<label for="email" class="required">Email</label>
                 <input type="email" 
