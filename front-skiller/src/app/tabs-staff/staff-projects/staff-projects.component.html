@@ -1,17 +1,8 @@
 <div class="projects_card project">
 	<h4 class="d-flex justify-content-between align-items-center">
-		<span class="text-muted">Projects card</span> <span
-			class="badge badge-secondary badge-pill">{{sourceProjects.count()}}</span>
+		<span class="text-muted">Projects card</span> 
+		<span class="badge badge-secondary badge-pill">{{numberOfMissions$ | async}}</span>
 	</h4>
-
-<!--	
-	<ng2-smart-table [settings]="settings_projects"
-		[source]="sourceProjects"
-		(createConfirm)="onConfirmCreateFromProject($event)"
-		(editConfirm)="onConfirmEditFromProject($event)"
-		(deleteConfirm)="onConfirmRemoveFromProject($event)">
-	</ng2-smart-table>
--->
 			
 	<div class="row project">
 		<div class="col-12">
@@ -19,5 +10,47 @@
 		</div>
 	</div>
 
-	 
+	<div class="row tableMissions">
+		<table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+
+			<ng-container matColumnDef="name">
+				<th id="name" mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+				<td mat-cell class="col_name" *matCellDef="let mission">
+					{{mission.name}}
+				</td>
+			</ng-container>
+		
+			<ng-container id="firstCommit" matColumnDef="firstCommit">
+				<th mat-header-cell id="firstCommit" class="col_date" *matHeaderCellDef mat-sort-header> First commit </th>
+				<td mat-cell class="col_date" *matCellDef="let mission">
+					{{mission.firstCommit | date:'mediumDate'}}
+				</td>
+			</ng-container>
+		
+			<ng-container matColumnDef="lastCommit">
+				<th mat-header-cell id="lastCommit" class="col_date" *matHeaderCellDef mat-sort-header> Last commit </th>
+				<td mat-cell class="col_date" *matCellDef="let mission">
+					{{mission.lastCommit | date:'mediumDate'}}
+				</td>
+			</ng-container>
+		
+			<ng-container matColumnDef="numberOfCommits">
+				<th mat-header-cell id="numberOfCommits" *matHeaderCellDef mat-sort-header>Number of commits</th>
+				<td mat-cell class="col_numeric" *matCellDef="let mission">
+					{{mission.numberOfCommits}}
+				</td>
+			</ng-container>
+		
+			<ng-container matColumnDef="numberOfFiles">
+				<th mat-header-cell id="numberOfFiles" *matHeaderCellDef mat-sort-header>Number of files</th>
+				<td mat-cell class="col_numeric" *matCellDef="let mission">
+					{{mission.numberOfFiles}}&nbsp;&nbsp;
+				</td>
+			</ng-container>
+		
+			<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+			<tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row_any"></tr>
+		
+		</table>
+	</div>		
 </div>

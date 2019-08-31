@@ -5,15 +5,17 @@ import { MessageService } from '../../message/message.service';
 import { ProjectService } from '../../service/project.service';
 import { StaffService } from '../../service/staff.service';
 import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
-import { Component, OnInit, OnDestroy, Input, AfterViewInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, AfterViewInit, ViewChild } from '@angular/core';
 
 import { LocalDataSource } from 'ng2-smart-table';
 import { BaseComponent } from '../../base/base.component';
 import Tagify from '@yaireo/tagify';
 import { Mission } from 'src/app/data/mission';
 import { BooleanDTO } from 'src/app/data/external/booleanDTO';
-import { Observable } from 'rxjs';
+import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { ProjectGhostsComponent } from 'src/app/project/project-sunburst/dialog-project-ghosts/project-ghosts/project-ghosts.component';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
 	selector: 'app-staff-projects',
@@ -23,15 +25,10 @@ import { ProjectGhostsComponent } from 'src/app/project/project-sunburst/dialog-
 export class StaffProjectsComponent extends BaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	/**
- * Selected TAB.
- * This observable is fired by the StaffComponent class when the user changes the tab selected.
- */
+ 	* Selected TAB.
+ 	* This observable is fired by the StaffComponent class when the user changes the tab selected.
+ 	*/
 	@Input() selectedTab$;
-
-	/*
-	 * Data store associated with the projects grid
-	 */
-	sourceProjects = new LocalDataSource([]);
 
 	/**
 	 * Employee retrieve from StaffComponent access.
@@ -42,7 +39,6 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	 * JS object handling the projects component.
 	 */
 	tagify: Tagify;
-
 
 	/**
 	 * Bound addProject to the current active component.
@@ -55,6 +51,18 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	 * The goal of this bind is to access the member variables of this class, such as projet
 	 */
 	private boundRemoveProject: any;
+
+	/**
+	 * The datasource containing the missions of the staff member.
+	 */
+	public dataSource;
+
+	/**
+	 * The columns to be displayed in the table of missions.
+	 */
+	public displayedColumns: string[] = ['name', 'firstCommit', 'lastCommit', 'numberOfCommits', 'numberOfFiles'];
+
+	numberOfMissions$ = new BehaviorSubject<number>(0);
 
 	constructor(
 		private messageService: MessageService,
@@ -77,8 +85,19 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 			this.staffDataExchangeService.collaborator$
 				.subscribe((collabRetrieved: Collaborator) => {
 					this.collaborator = collabRetrieved;
-					this.sourceProjects.load(this.collaborator.missions);
+					this.loadMissions(this.collaborator.missions);
 				}));
+	}
+
+	/**
+	 * Load the missions for the current active staff member.
+	 */
+	loadMissions(missions: Mission[]) {
+		this.dataSource = new MatTableDataSource(missions);
+		if (Constants.DEBUG) {
+			console.log ('Missions loaded', missions.length);
+		}
+		this.numberOfMissions$.next(missions.length);
 	}
 
 	ngAfterViewInit() {
@@ -120,21 +139,6 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 		} else {
 			return true;
 		}
-	}
-
-	/*
-	 * Refresh the projects content after an update.
-	 * @param idStaff staff identifier
-	 */
-	reloadProjects(idStaff: number): void {
-		if (Constants.DEBUG) {
-			console.log('Refreshing projects for the staff\'s id ' + idStaff);
-		}
-		this.subscriptions.add(
-			this.staffService.loadProjects(idStaff).subscribe(
-				missions => this.sourceProjects.load(missions),
-				error => console.log(error),
-			));
 	}
 
 	/**
@@ -207,7 +211,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	}
 
 	/**
-	 *  Update a skill inside a project. This might be an addition or a removal.
+	 *  Update a project associated to a staff member. This might be an addition or a removal.
 	 * @param idStaff the staff member identifier
 	 * @param idProject the project identifier
 	 * @param callback the callback function, which might be staffService.addProject or staffService.removeProject

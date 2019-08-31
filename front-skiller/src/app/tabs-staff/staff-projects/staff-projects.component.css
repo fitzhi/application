@@ -5,6 +5,28 @@ div.projects_card {
     */
     margin-left: 50px;
     margin-top: 20px;
-    min-width: 600px;
+    min-width: 500px;
     max-width: 800px;
+}
+
+.tableMissions {
+    margin-top: 30px;
+    margin-left: 0px;
+}
+
+.col_numeric, .col_date {
+    height: 2em;
+}
+
+.col_numeric {
+    text-align:right;
+    height: 2em;
+}
+
+.col_date {
+    text-align:center;   
+}
+
+.col_name {
+    width : 350px;
 }
