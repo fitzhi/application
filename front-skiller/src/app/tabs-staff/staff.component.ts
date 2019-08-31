@@ -91,7 +91,7 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
 								missions: [], experiences: []
 							};
 						} else {
-							console.error(error.message);
+							console.error(error);
 						}
 					},
 					() => {
