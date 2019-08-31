@@ -217,10 +217,26 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	}
 
 	/**
+	 * <p>
 	 * Evaluate the level of risk on all entries in the repository from the
-	 * staff/level point of view.<br/>
-	 * The scale of risks contains 10 levels + 1 problem: <br/>
-	 * 
+	 * staff/level point of view.
+	 * </p>
+	 * <p>
+	 * This implementation will compute the proportion of commits executed by active developers regarding the total number of commits.<br/>
+	 * 11 levels of risks are inferred from this proportion.
+	 * <ul>
+	 * <li>0% of commits have been made on this directory by active developers. 
+	 * the level of risk is 10. This is a problem</li> 
+	 * <li>x% of commits have been made on this directory by active developers. Level is ceil(1-X%)</li> 
+	 * </ul>
+	 * </p>
+	 * <p>
+	 * The range of risks start a 0 and ends at 10. It presents 11 steps.<br/>
+	 * </p>
+	 * <p>
+	 * <font color="darkOrange">
+	 * If there is no commit on this directory, the level of risk is set to -1.
+	 * </font></br>
 	 * @param repository the repository retrieved and parsed from the source control
 	 *                   tool (i.e. GIT, SVN...).
 	 * @param data       repository data prepared to be displayed by the Sunburst
@@ -267,7 +283,7 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	}
 
 	/**
-	 * Evaluate the risk for the active developers.<br/>
+	 * <p>Evaluate the risk regarding the proportion of active developers.</p>
 	 * <i>This method is public for testing purpose.</i>
 	 * 
 	 * @param dir   directory where the commits have been executed.

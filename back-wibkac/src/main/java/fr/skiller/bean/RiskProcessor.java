@@ -6,6 +6,7 @@ package fr.skiller.bean;
 import java.util.List;
 import java.util.Map;
 
+import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl;
 import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import fr.skiller.data.internal.DataChart;
 import fr.skiller.data.internal.Project;
@@ -26,7 +27,8 @@ public interface RiskProcessor {
 	Map<Integer, RiskLegend> riskLegends();
 	
 	/**
-     * Evaluate the level of risk on all entries in the repository from the staff/level point of view.<br/>
+     * <p>Evaluate the level of risk on all entries in the repository from the staff/level point of view.<p>
+     * The actual active risk computation is located in {@link RiskCommitAndDevActiveProcessorImpl#evaluateTheRisk}<br/> 
      * The scale of risks contains 10 levels x+ 1 problem: <br/>
 	 * @param repository the repository retrieved and parsed from the source control tool (i.e. GIT, SVN...)..
 	 * @param data repository data prepared for the Sunburst chart.
@@ -51,8 +53,10 @@ public interface RiskProcessor {
 	void setPreviewSettings(DataChart dataTree);
 	
 	/**
-	 * Mean the risk for the children of this location.<br/>
-	 * Fill the risk for this location if no risk has been affected yet.<br/>
+	 * <p>Mean the risk for the children of this location.</p>
+	 * <p>
+	 * Fill the risk for this location if no risk has been affected yet.
+	 * </p>
 	 * A location without source files, cannot get a calculated risk level.
 	 * @param data data previewed location prepared for the sunburst chart 
 	 * @return the calculated level of risk

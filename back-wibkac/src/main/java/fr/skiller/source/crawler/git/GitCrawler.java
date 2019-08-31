@@ -573,14 +573,6 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		project.getLibraries().stream().forEach(dep ->
 			analysis.getChanges().removeIf(change -> change.getPath().contains(dep.getExclusionDirectory()))
 		);
-/*
-		analysis.getChanges().removeIf(change -> change.getPath().contains("docs/")); 
-		analysis.getChanges().removeIf(change -> change.getPath().contains("com/microsoft/schemas")); 
-		analysis.getChanges().removeIf(change -> change.getPath().contains("vegeo-ihm-testing/")); 
-		analysis.getChanges().removeIf(change -> change.getPath().contains("maquettes")); 
-		analysis.getChanges().removeIf(change -> change.getPath().contains("perf/")); 
-		analysis.getChanges().removeIf(change -> change.getPath().contains("env-dev/config")); 
-*/
 	}
 	
 	/**
@@ -700,9 +692,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		analysis.extractCandidateForDependencies();
 	
 		//
-		// We filter the candidates with dependencies marker such as "jquery"
-		// The analysis container has a set of path (pathsCandidate) 
-		// which might be contain file as /toto/titi/jquery/src/jquery-internal.js
+		// We filter the candidates with a dependency marker such as "jquery".
+		// The analysis container has a collection of path (pathsCandidate) 
+		// which might be contain file like /toto/titi/jquery/src/jquery-internal.js, candidate for being excluded from the analysis.
 		//
 		selectPathDependencies (analysis, dependenciesMarker());
 		
@@ -713,7 +705,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		this.retrieveRootPath(analysis);
 		
 		/**
-		 * We remove the non relevant directories from the crawl
+		 * We remove the non relevant directories from the crawler analysis
 		 */
 		this.removeNonRelevantDirectories(project, analysis);
 		
@@ -913,7 +905,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 		/**
 		 * Evaluate and save the level of risk for the whole project.
-		 * This estimation will affect the color of the dot-risk in the form project.
+		 * This estimation will affect the color of the dot-risk on the form project.
 		 */
 		this.riskSurveyor.evaluateProjectRisk(project, data.riskChartData);
 
