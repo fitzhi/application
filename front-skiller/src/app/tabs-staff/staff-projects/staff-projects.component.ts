@@ -82,7 +82,6 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	}
 
 	ngOnInit() {
-
 		/**
 		 * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
 		 */

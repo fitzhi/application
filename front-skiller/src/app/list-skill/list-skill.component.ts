@@ -1,14 +1,17 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { CinematicService } from '../service/cinematic.service';
-import { Constants } from '../constants';
-import { Skill } from '../data/skill';
-import { StaffService } from '../service/staff.service';
-import { BehaviorSubject } from 'rxjs';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { SkillService } from '../service/skill.service';
-import { TabsStaffListService } from '../tabs-staff-list/service/tabs-staff-list.service';
-import { ListCriteria } from '../data/listCriteria';
+import { BehaviorSubject } from 'rxjs';
 import { BaseComponent } from '../base/base.component';
+import { Constants } from '../constants';
+import { ListCriteria } from '../data/listCriteria';
+import { CinematicService } from '../service/cinematic.service';
+import { SkillService } from '../service/skill.service';
+import { StaffService } from '../service/staff.service';
+import { TabsStaffListService } from '../tabs-staff-list/service/tabs-staff-list.service';
+import { SkillCountExperiences } from './skill-count-experiences/skill.count.experiences';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
+
 
 @Component({
 	selector: 'app-list-skill',
@@ -17,9 +20,9 @@ import { BaseComponent } from '../base/base.component';
 })
 export class ListSkillComponent extends BaseComponent implements OnInit, OnDestroy {
 
-	public dataSource: Skill[];
+	private experiences: SkillCountExperiences[];
 
-	public peopleCountExperience: Map<string, number> = null;
+	public dataSource;
 
 	private vide = {};
 
@@ -35,6 +38,11 @@ export class ListSkillComponent extends BaseComponent implements OnInit, OnDestr
 	public fakeArray4 = new Array(4);
 	public fakeArray5 = new Array(5);
 
+	/**
+	 * The table of missions is sortable.
+	 */
+	@ViewChild(MatSort, { static: true }) sort: MatSort;
+
 	constructor(
 		private cinematicService: CinematicService,
 		private tabsStaffListService: TabsStaffListService,
@@ -48,16 +56,53 @@ export class ListSkillComponent extends BaseComponent implements OnInit, OnDestr
 		this.cinematicService.setForm(Constants.SKILLS_SEARCH, this.router.url);
 
 		this.subscriptions.add(
-			this.skillService.filteredSkills$.subscribe(skills =>
-				this.dataSource = skills));
+			this.skillService.filteredSkills$.subscribe(skills => {
+				this.experiences = [];
+				skills.forEach(skill => {
+					this.experiences.push(new SkillCountExperiences(skill.id, skill.title));
+				});
+			}));
 
 		this.subscriptions.add(
 			this.staffService.peopleCountExperience$.subscribe( peopleCountExperience =>  {
-				this.peopleCountExperience = peopleCountExperience;
+				this.experiences.forEach(sce => {
+					sce.count_1_star = this.count_n_star (peopleCountExperience, sce.id, 1);
+					sce.count_2_star = this.count_n_star (peopleCountExperience, sce.id, 2);
+					sce.count_3_star = this.count_n_star (peopleCountExperience, sce.id, 3);
+					sce.count_4_star = this.count_n_star (peopleCountExperience, sce.id, 4);
+					sce.count_5_star = this.count_n_star (peopleCountExperience, sce.id, 5);
+				});
+				this.dataSource = new MatTableDataSource(this.experiences);
+				this.dataSource.data = this.experiences;
+				this.dataSource.sort = this.sort;
+				this.subscriptions.add(
+					this.dataSource.connect().subscribe(data => this.experiences = data));
+				this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: string): string => {
+					if (typeof data[sortHeaderId] === 'string') {
+						return data[sortHeaderId].toLocaleLowerCase();
+					}
+					return data[sortHeaderId];
+				};
+				if (Constants.DEBUG) {
+					console.groupCollapsed ('Skills counting');
+					this.experiences.forEach(element => {
+						console.log (element.title,
+							element.count_1_star
+							+ ' ' + element.count_2_star
+							+ ' ' + element.count_3_star
+							+ ' ' + element.count_4_star
+							+ ' ' + element.count_5_star);
+					});
+					console.groupEnd();
+				}
 			})
 		);
 	}
 
+	private count_n_star (peopleCountExperience: Map<string, number>, idSkill: number, level: number): string {
+		const count_n_star = peopleCountExperience.get(idSkill + '-' + level);
+		return (!count_n_star) ? '' : count_n_star.toString();
+	}
 	public listStaff(title: string, level: number) {
 		const criteria = 'skill:' + title + ':' + level;
 		this.tabsStaffListService.addTabResult(criteria, this.skillService.criteria.activeOnly);

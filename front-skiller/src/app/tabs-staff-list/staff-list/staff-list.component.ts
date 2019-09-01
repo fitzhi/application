@@ -19,11 +19,9 @@ import { Collaborator } from 'src/app/data/collaborator';
 })
 export class StaffListComponent extends BaseComponent implements OnInit, OnDestroy {
 
-	@Input('criteria')
-	public criteria: string;
+	@Input() criteria: string;
 
-	@Input('activeOnly')
-	public activeOnly: boolean;
+	@Input() activeOnly: boolean;
 
 	public dataSource: MatTableDataSource<Collaborator>;
 
