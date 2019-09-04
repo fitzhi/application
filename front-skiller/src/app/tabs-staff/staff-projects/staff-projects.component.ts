@@ -13,7 +13,7 @@ import Tagify from '@yaireo/tagify';
 import { Mission } from 'src/app/data/mission';
 import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
-import { ProjectGhostsComponent } from 'src/app/project/project-sunburst/dialog-project-ghosts/project-ghosts/project-ghosts.component';
+import { TableGhostsComponent } from 'src/app/project/project-sunburst/project-ghosts/table-ghosts/table-ghosts.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 

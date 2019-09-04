@@ -101,9 +101,15 @@ button.btn-outline-success {
 }
 
 .content-divPanel {
-	margin: 50px auto;
+  margin: 50px auto;
 }
 
 .divPanelOnTop {
   margin: 0px auto;
+}
+
+#panelGhosts {
+  min-width: 800px;
+  margin-left: 30px;
+  margin-top: 10px;
 }

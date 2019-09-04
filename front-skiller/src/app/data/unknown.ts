@@ -31,6 +31,26 @@ export class Unknown {
 	public action: string;
 
 	/**
+	 * Staff's first name related to this pseudo.
+	 */
+	public firstname: string;
+
+	/**
+	 * Staff's first name related to this pseudo.
+	 */
+	public lastname: string;
+
+	/**
+	 * Staff status as active in the company.
+	 */
+	public active: boolean;
+
+	/**
+	 * Staff status as active in the company.
+	 */
+	public external: boolean;
+
+	/**
 	 * Constructor.
 	 */
 	constructor() {

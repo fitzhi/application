@@ -1,0 +1,26 @@
+<div class="container" > 
+  <h3>Handling the ghosts</h3>
+    <div class="row container-ghosts">
+      <div class="col-6"> 
+          <br/>
+          <p class="description">
+              The table below lists the unregistered contributors picked up for this project.<br/>
+              Each <span class="keyword">Pseudo</span> (on the first column), is not recognized in any staff member.<br/>
+              In order to complete the evaluation, all of these "commit/pseudo" need to be revoked or assigned.
+          </p>
+      </div>
+      <div class="col-6" >
+        <p class="description">
+          <b>3 actions are possible :</b>
+        </p>
+        <ul class="description">
+            <li>Tag this pseudo as <span class="keyword">Technical</span>. There is nobody behind this pseudo.</li>
+            <li>Type an <span class="keyword">Relating login</span>, to be linked with this pseudo.</li>
+          <li><span class="keyword"><i class="fas glyphicon fa-users-cog">&nbsp;</i></span>Create a new staff member with this pseudo.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="row container-ghosts">
+      <app-table-ghosts [dataSourceGhosts$]="dataSourceGhosts$" [editable]="true"></app-table-ghosts>
+    </div>
+</div>

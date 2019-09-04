@@ -1,0 +1,21 @@
+.description {
+    font-size: 80%;
+    margin-bottom: 0.4em;
+}
+
+p.description {
+	text-align: justify;
+	text-justify: inter-word;
+	margin-left: 10px;
+}
+
+.container-ghosts {
+	margin-left: 20px;
+	margin-bottom: 10px;
+}
+
+span.keyword {
+	color:darkblue;
+	font-size: larger;
+	font-weight: 600;
+}

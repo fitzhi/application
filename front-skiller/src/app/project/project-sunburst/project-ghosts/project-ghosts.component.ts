@@ -1,44 +1,37 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { ProjectGhostsDataSource } from './project-ghosts-data-source';
 import { ProjectService } from '../../../service/project.service';
 import { PseudoList } from '../../../data/PseudoList';
 import { Constants } from '../../../constants';
 import { MessageService } from '../../../message/message.service';
-import { DialogUpdatedProjectGhostsComponent } from './dialog-updated-project-ghosts/dialog-updated-project-ghosts.component';
 import { BaseComponent } from '../../../base/base.component';
+import { Project } from 'target/classes/app/data/project';
 
 @Component({
-	selector: 'app-dialog-project-ghosts',
-	templateUrl: './dialog-project-ghosts.component.html',
-	styleUrls: ['./dialog-project-ghosts.component.css']
+	selector: 'app-project-ghosts',
+	templateUrl: './project-ghosts.component.html',
+	styleUrls: ['./project-ghosts.component.css']
 })
-export class DialogProjectGhostsComponent extends BaseComponent implements OnInit, OnDestroy {
+export class ProjectGhostsComponent extends BaseComponent implements OnDestroy {
 
 	/**
-	 * The undeclared contributors in the repository.
+	 * Observable to the active project.
 	 */
-	public dataSource: ProjectGhostsDataSource;
+	@Input() dataSourceGhosts$;
 
 	private updatedData: ProjectGhostsDataSource;
-
 
 	private dialogReference: MatDialogRef<any, any>;
 
 	constructor(
-		private dialogRef: MatDialogRef<DialogProjectGhostsComponent>,
-		private dialog: MatDialog,
 		private projectService: ProjectService,
-		private messageService: MessageService,
-		@Inject(MAT_DIALOG_DATA) public data: ProjectGhostsDataSource) {
+		private messageService: MessageService) {
 		super();
 	}
 
-	ngOnInit() {
-		this.dataSource = this.data;
-	}
-
 	public submit() {
+		/*
 		this.subscriptions.add(
 			this.projectService.saveGhosts(new PseudoList(
 				this.dataSource.project.id,
@@ -52,26 +45,14 @@ export class DialogProjectGhostsComponent extends BaseComponent implements OnIni
 					}
 					this.updatedData = new ProjectGhostsDataSource(this.dataSource.project);
 					this.updatedData.sendUnknowns(pseudoList.unknowns);
-
-					const dialogConfig = new MatDialogConfig();
-					dialogConfig.disableClose = true;
-					dialogConfig.autoFocus = true;
-					dialogConfig.position = { top: '7em', left: '7em' };
-					dialogConfig.panelClass = 'default-dialog-container-class';
-					dialogConfig.data = this.updatedData;
-					this.dialogReference = this.dialog.open(DialogUpdatedProjectGhostsComponent, dialogConfig);
-					this.subscriptions.add(
-						this.dialogReference
-							.afterClosed()
-							.subscribe(() => this.dialogRef.close(this.dataSource.ghostsSubject.getValue())));
 				},
 					responseInError => {
 						if (Constants.DEBUG) {
 							console.log('Error ' + responseInError.error.code + ' ' + responseInError.error.message);
 						}
 						this.messageService.error(responseInError.error.message);
-						this.dialogRef.close(this.dataSource.ghostsSubject.getValue());
 					}));
+					*/
 	}
 
 	ngOnDestroy() {

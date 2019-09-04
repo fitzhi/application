@@ -34,7 +34,6 @@ export class StaffService {
 		private backendSetupService: BackendSetupService) {
 	}
 
-
 	/**
      * Return the global list of ALL collaborators, working for the company.
      */

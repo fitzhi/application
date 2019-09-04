@@ -7,8 +7,8 @@ import { ActivatedRoute } from '@angular/router';
 import { CinematicService } from '../../service/cinematic.service';
 import { Project } from '../../data/project';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { DialogProjectGhostsComponent } from './dialog-project-ghosts/dialog-project-ghosts.component';
-import { ProjectGhostsDataSource } from './dialog-project-ghosts/project-ghosts-data-source';
+import { ProjectGhostsComponent } from './project-ghosts/project-ghosts.component';
+import { ProjectGhostsDataSource } from './project-ghosts/project-ghosts-data-source';
 import { DialogLegendSunburstComponent } from './legend-sunburst/legend-sunburst.component';
 import { MessageBoxService } from '../../message-box/service/message-box.service';
 import { DialogFilterComponent } from './dialog-filter/dialog-filter.component';
@@ -18,7 +18,7 @@ import { ProjectStaffService } from '../project-staff-service/project-staff.serv
 import { Filename } from '../../data/filename';
 import { FilenamesDataSource } from './node-detail/filenames-data-source';
 import { ContributorsDataSource } from './node-detail/contributors-data-source';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { Contributor } from '../../data/contributor';
 import { take } from 'rxjs/operators';
 
@@ -46,6 +46,11 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 */
 	@Output() updateRiskLevel = new EventEmitter<number>();
 
+	/**
+	 * This datasource of ghosts will be pass and listen in the project-ghosts-component, and table-project-componeet.
+	 */
+	public dataSourceGhosts$ = new Subject<ProjectGhostsDataSource>();
+
 	public PROJECT_IDX_TAB_FORM = Constants.PROJECT_IDX_TAB_FORM;
 
 	/**
@@ -57,8 +62,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
      * Parameters passed to the generation method on the back-end.
      */
 	private settings = new SettingsGeneration(-1, new Date(0).getTime(), 0);
-
-	public dataGhosts: ProjectGhostsDataSource;
 
 	// Previous context related to the sunburst construction.
 	public lastSunburstContext = 0;
@@ -74,7 +77,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		SUNBURST_WAITING: 3,
 		SUNBURST_DEPENDENCIES: 4,
 		SUNBURST: 5,
-		SUNBURST_LEGEND: 6
+		SUNBURST_LEGEND: 6,
+		SUNBURST_GHOSTS: 7
 	};
 
 	// Waiting images previewed during the chart generation.
@@ -277,12 +281,12 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		if (this.myChart !== null) {
 			this.myChart.data(response.sunburstData).width(500).height(500).label('location').size('importance').color('color')
 				(document.getElementById('chart'));
-			if (typeof this.dataGhosts === 'undefined') {
-				this.dataGhosts = new ProjectGhostsDataSource(this.project);
-			}
+			const dataSourceGhosts = new ProjectGhostsDataSource(this.project);
 			// Send the unregistered contributors to the panel list
-			this.dataGhosts.sendUnknowns(response.ghosts);
+			dataSourceGhosts.sendUnknowns(response.ghosts);
+			this.dataSourceGhosts$.next(dataSourceGhosts);
 		}
+
 	}
 
 	handleErrorData(response: any) {
@@ -391,31 +395,41 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
     * @param idPanel Panel identifier
     */
 	public show(idPanel: number) {
-		this.idPanelSelected = idPanel;
 		switch (idPanel) {
 			case this.SUNBURST:
-				this.setActiveContext(this.lastSunburstContext);
+					this.idPanelSelected = idPanel;
+					this.setActiveContext(this.lastSunburstContext);
 				break;
 			case this.LEGEND_SUNBURST:
-				this.setActiveContext(this.CONTEXT.SUNBURST_LEGEND);
+					this.idPanelSelected = idPanel;
+					this.setActiveContext(this.CONTEXT.SUNBURST_LEGEND);
 				break;
 			case this.SETTINGS:
-				this.dialogFilter();
+					this.idPanelSelected = idPanel;
+					this.dialogFilter();
 				break;
 			case this.UNKNOWN:
-				this.dialogGhosts();
+				if (document.getElementById('chart').childElementCount === 0) {
+					this.messageService.info('Just a second !   Dashboard generation is currently processed.');
+					break;
+				}
+				this.idPanelSelected = idPanel;
+				this.setActiveContext(this.CONTEXT.SUNBURST_GHOSTS);
 				break;
 			case this.DEPENDENCIES:
+				this.idPanelSelected = idPanel;
 				this.setActiveContext(this.CONTEXT.SUNBURST_DEPENDENCIES);
 				break;
 			case this.RESET:
+				this.idPanelSelected = idPanel;
 				this.reset();
 				break;
 			default:
+				this.idPanelSelected = idPanel;
 				break;
 		}
 	}
-
+/*
 	dialogGhosts() {
 		if (typeof this.project === 'undefined') {
 			this.messageService.info('Nothing to show !');
@@ -425,7 +439,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			this.messageService.info('Please wait !');
 			return;
 		}
-
 		const dialogConfig = new MatDialogConfig();
 		dialogConfig.disableClose = true;
 		dialogConfig.autoFocus = true;
@@ -446,6 +459,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				this.idPanelSelected = -1;
 			});
 	}
+*/
 
 	reset() {
 		if (typeof this.project === 'undefined') {
@@ -482,12 +496,13 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			return;
 		}
 
+/* SHOULD WE KEEP THIS BLOCK ?
 		if (typeof this.dataGhosts === 'undefined') {
 			this.messageService.info('Please wait !');
 			this.idPanelSelected = this.SUNBURST;
 			return;
 		}
-
+*/
 		const dialogConfig = new MatDialogConfig();
 		dialogConfig.disableClose = true;
 		dialogConfig.autoFocus = true;
@@ -516,7 +531,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	private generateTitleSunburst() {
 		this.titleSunburst = 'Chart';
 		if (this.settings.idStaffSelected > 0) {
-
 			const selectedDeveloper = this.projectStaffService.contributors
 				.find(contributor => contributor.idStaff === this.settings.idStaffSelected).fullname;
 			this.titleSunburst += ' for ' + selectedDeveloper;

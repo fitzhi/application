@@ -59,10 +59,9 @@ import { MatTableModule } from '@angular/material/table';
 import { ProjectComponent } from './project/project.component';
 import { ProjectSunburstComponent } from './project/project-sunburst/project-sunburst.component';
 import { ProjectStaffComponent } from './project/project-staff/project-staff.component';
-import { DialogProjectGhostsComponent } from './project/project-sunburst/dialog-project-ghosts/dialog-project-ghosts.component';
-import { ProjectGhostsComponent } from './project/project-sunburst/dialog-project-ghosts/project-ghosts/project-ghosts.component';
+import { ProjectGhostsComponent } from './project/project-sunburst/project-ghosts/project-ghosts.component';
+import { TableGhostsComponent } from './project/project-sunburst/project-ghosts/table-ghosts/table-ghosts.component';
 // tslint:disable-next-line:max-line-length
-import { DialogUpdatedProjectGhostsComponent } from './project/project-sunburst/dialog-project-ghosts/dialog-updated-project-ghosts/dialog-updated-project-ghosts.component';
 import { DialogLegendSunburstComponent } from './project/project-sunburst/legend-sunburst/legend-sunburst.component';
 import { registerLocaleData } from '@angular/common';
 
@@ -110,9 +109,8 @@ import { DevOnOffComponent } from './dev-on-off/dev-on-off.component';
 		ProjectComponent,
 		ProjectSunburstComponent,
 		ProjectStaffComponent,
-		DialogProjectGhostsComponent,
 		ProjectGhostsComponent,
-		DialogUpdatedProjectGhostsComponent,
+		TableGhostsComponent,
 		DialogLegendSunburstComponent,
 		DialogFilterComponent,
 		ListFilenamesComponent,
@@ -137,8 +135,6 @@ import { DevOnOffComponent } from './dev-on-off/dev-on-off.component';
 		StarsSkillLevelRenderComponent,
 		StaffUploadCvComponent,
 		MessageBoxComponent,
-		DialogProjectGhostsComponent,
-		DialogUpdatedProjectGhostsComponent,
 		DialogFilterComponent,
 		InLineEditDialogComponent
 	],
