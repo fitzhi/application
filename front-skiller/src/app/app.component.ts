@@ -10,6 +10,8 @@ import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.
 import { SkillService } from './service/skill.service';
 import { ListCriteria } from './data/listCriteria';
 import { AuthService } from './admin/service/auth/auth.service';
+import { ProjectService } from 'target/classes/app/service/project.service';
+import { StaffListService } from './staff-list-service/staff-list.service';
 
 declare var $: any;
 
@@ -53,6 +55,8 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 		private listProjectsService: ListProjectsService,
 		private referentialService: ReferentialService,
 		private staffService: StaffService,
+		private projectService: ProjectService,
+		private staffListService: StaffListService,
 		private router: Router) {
 
 		super();
@@ -211,10 +215,17 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 	}
 
 	public ngAfterViewInit () {
+
 		$(document).ready(
 			$(function () {
 				$('[data-toggle="tooltip"]').tooltip();
 			}
-			));
+		));
+
+		// For development convenience, we deactivate the security control.
+		if (localStorage.getItem('dev') === '1') {
+			this.projectService.loadProjects();
+		}
 	}
+
 }

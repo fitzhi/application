@@ -95,7 +95,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 						}
 						this.messageService.error('Cannot retrieve the contributors for the project identifier ' + this.idProject);
 					} else {
-						console.error(error.message);
+						console.error(error);
 					}
 				},
 				() => {

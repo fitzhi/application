@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { Constants } from '../../../../constants';
 import { Unknown } from '../../../../data/unknown';
@@ -11,6 +11,8 @@ import { Collaborator } from 'src/app/data/collaborator';
 import { StaffService } from 'target/classes/app/service/staff.service';
 import { take } from 'rxjs/operators';
 import { MessageService } from 'src/app/message/message.service';
+import { StaffListService } from 'target/classes/app/staff-list-service/staff-list.service';
+import { runInThisContext } from 'vm';
 
 @Component({
 	selector: 'app-table-ghosts',
@@ -37,6 +39,11 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	dataSource: MatTableDataSource<Unknown>;
 
 	/**
+	 * Staff member associated to a row by its login.
+	 */
+	public relatedStaff: Collaborator;
+
+	/**
 	 * The paginator of the ghosts data source.
 	 */
 	@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
@@ -49,8 +56,14 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	 */
 	@ViewChild(MatSort, { static: true }) sort: MatSort;
 
+	/**
+	 * List of all developpers existing in the application.
+	 */
+	allStaff: Collaborator[] = [];
+
 	constructor(
 		private staffService: StaffService,
+		private staffListService: StaffListService,
 		private messageService: MessageService) {
 		super();
 	}
@@ -64,8 +77,13 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 				this.dataSource = dataSource;
 				this.dataSource.paginator = this.paginator;
 		}));
-	}
 
+		this.staffListService.loadStaff();
+		this.subscriptions.add(
+			this.staffListService.allStaff$.subscribe(staff => {
+				this.allStaff = staff;
+			}));
+	}
 	/**
 	 * The check Box for the id "technical" has been checked or unchecked.
 	 */
@@ -161,6 +179,23 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 			.subscribe(staff => {
 				this.messageService.info('Staff member ' + staff.firstName + ' ' + staff.lastName + ' saved');
 			});
+	}
+
+	/**
+	 * @param ghost the actual ghost line concerned.
+	 * @returns TRUE if the related login typed is matching an existing staff member.
+	 */
+	relatedLoginMatch(ghost: Unknown): boolean {
+		const selectedStaff = this.allStaff.filter(s => (s.login.toLowerCase() === ghost.login));
+		if (selectedStaff.length === 1) {
+			this.relatedStaff = selectedStaff[0];
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	changeLogin($event: string) {
 	}
 
 	/**

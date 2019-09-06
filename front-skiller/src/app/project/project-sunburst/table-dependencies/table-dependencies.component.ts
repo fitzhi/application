@@ -15,7 +15,7 @@ import { Project } from 'src/app/data/project';
 })
 export class TableDependenciesComponent implements OnInit {
 
-	@Input ('project$') project$: Observable<Project>;
+	@Input() project$: Observable<Project>;
 
 	private idProject: number;
 

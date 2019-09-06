@@ -14,12 +14,12 @@ public class Ghost {
 	
 	/**
 	 * Trace attached to a commit and not linked to a real, registered staff member. <br/> 
-	 * Nothing forbids Bruce Wayne to use Batman as a commit pseudo 
+	 * Nothing forbids Bruce Wayne to use Batman as a commit pseudo.
 	 */
 	private String pseudo;
 	
 	/**
-	 * Staff id associated to the {@code pseudo} property.
+	 * Staff id associated to the {@link fr.skiller.data.internal.Ghost#pseudo pseudo} property.
 	 */
 	private int idStaff;
 	

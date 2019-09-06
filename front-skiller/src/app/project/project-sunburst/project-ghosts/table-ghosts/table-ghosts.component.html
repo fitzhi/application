@@ -11,8 +11,9 @@
       <th id="login" mat-header-cell *matHeaderCellDef mat-sort-header>Related login</th>
       <td class="td-ghost" mat-cell *matCellDef="let row; let i = index;">
         <mat-form-field>
-          <input matInput name="login-{{i}}" [readonly]="isAssociationNotAllowed(row)" [(ngModel)]="row.login"
-            placeholder="Type an existing login"/>
+          <input matInput name="login-{{i}}" class="completer-input mdb-autocomplete"
+            [readonly]="isAssociationNotAllowed(row)" [(ngModel)]="row.login" (ngModelChange)="changeLogin($event)"
+            placeholder="Type an existing login" />
         </mat-form-field>
       </td>
     </ng-container>
@@ -25,51 +26,70 @@
     </ng-container>
 
     <ng-container matColumnDef="firstname">
-        <th id="firstname" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>Firstname</th>
-        <td mat-cell class="td-ghost" *matCellDef="let row; let i = index;">
+      <th id="firstname" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>Firstname</th>
+      <td mat-cell class="td-ghost" *matCellDef="let row; let i = index;">
+        <div *ngIf="relatedLoginMatch(row);else editFieldsVisible">
+          {{relatedStaff.firstName}}
+        </div>
+        <ng-template #editFieldsVisible>
           <mat-form-field>
             <input matInput id="firstname-{{i}}" [readonly]="isCreationNotAllowed(row)" [(ngModel)]="row.firstname">
           </mat-form-field>
-        </td>
+        </ng-template>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="lastname">
-        <th id="lastname" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>Lastname</th>
-        <td mat-cell class="td-ghost" *matCellDef="let row; let i = index;">
+      <th id="lastname" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>Lastname</th>
+      <td mat-cell class="td-ghost" *matCellDef="let row; let i = index;">
+        <div *ngIf="relatedLoginMatch(row);else editFieldsVisible">
+          {{relatedStaff.lastName}}
+        </div>
+        <ng-template #editFieldsVisible>
           <mat-form-field>
             <input matInput id="lastname-{{i}}" [readonly]="isCreationNotAllowed(row)" [(ngModel)]="row.lastname">
           </mat-form-field>
-        </td>
+        </ng-template>
+      </td>
     </ng-container>
-      
+
     <ng-container matColumnDef="active">
-        <th id="active" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>Active</th>
-        <td mat-cell class="td-technical" *matCellDef="let row; let i = index;">
+      <th id="active" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>Active</th>
+      <td mat-cell class="td-technical" *matCellDef="let row; let i = index;">
+        <div *ngIf="relatedLoginMatch(row);else editFieldsVisible">
+          <mat-checkbox id="active-{{i}}" [checked]="relatedStaff.active" [disabled]="true"></mat-checkbox>
+        </div>
+        <ng-template #editFieldsVisible>
           <mat-checkbox id="active-{{i}}" [(ngModel)]="row.active" (change)="checkActive(row)"
-          [disabled]="isCreationNotAllowed(row)"></mat-checkbox>
-        </td>
+            [disabled]="isCreationNotAllowed(row)"></mat-checkbox>
+        </ng-template>
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="external">
-        <th id="external" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>External</th>
-        <td mat-cell class="td-technical" *matCellDef="let row; let i = index;">
+      <th id="external" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>External</th>
+      <td mat-cell class="td-technical" *matCellDef="let row; let i = index;">
+        <div *ngIf="relatedLoginMatch(row);else editFieldsVisible">
+          <mat-checkbox id="external-{{i}}" [(ngModel)]="relatedStaff.external" [disabled]="true"></mat-checkbox>
+        </div>
+        <ng-template #editFieldsVisible>
           <mat-checkbox id="external-{{i}}" [(ngModel)]="row.external" (change)="checkExternal(row)"
-          [disabled]="isCreationNotAllowed(row)"></mat-checkbox>
-        </td>
+            [disabled]="isCreationNotAllowed(row)"></mat-checkbox>
+        </ng-template>
+      </td>
     </ng-container>
 
-      <ng-container matColumnDef="creation">
-        <th id="creation" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>
-          <i class="fas glyphicon fa-users-cog"></i>
-        </th>
-        <td mat-cell class="td-creation" *matCellDef="let row; let i = index;">
-          <button id="addStaff"
-              (click)="addStaff(row)">
-            <i class="fas glyphicon fa-users-cog fa-plus-square-customized"></i>
-          </button>
-        </td>
+    <ng-container matColumnDef="creation">
+      <th id="creation" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>
+        <i class="fas glyphicon fa-users-cog"></i>
+      </th>
+      <td mat-cell class="td-creation" *matCellDef="let row; let i = index;">
+        <button id="addStaff" (click)="addStaff(row)">
+          <i class="fas glyphicon fa-users-cog fa-plus-square-customized"></i>
+        </button>
+      </td>
     </ng-container>
-      
+
     <tr mat-header-row *matHeaderRowDef="editableColumns; sticky: true"></tr>
     <tr mat-row class="td-ghost" *matRowDef="let row; columns: editableColumns;"></tr>
   </div>
@@ -94,7 +114,7 @@
     <tr mat-header-row *matHeaderRowDef="enhancedColumns; sticky: true"></tr>
     <tr mat-row class="td-ghost" *matRowDef="let row; columns: enhancedColumns;"></tr>
   </ng-template>
-  
+
 </table>
 
 <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

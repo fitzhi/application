@@ -32,6 +32,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
 
+import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.ProjectHandler;
@@ -510,6 +511,9 @@ public class ProjectController {
 		
 		contributors.stream().forEach(contributor -> {
 			final Staff staff = staffHandler.getStaff().get(contributor.getIdStaff());
+			if (staff == null) {
+				throw new SkillerRuntimeException(String.format("No staff member retrieved for the id %d", contributor.getIdStaff()));
+			}
 			projectContributorDTO.addContributor(
 							contributor.getIdStaff(), 
 							shuffleService.isShuffleMode() ? shuffleService.shuffle(staff.getFirstName() + " " + staff.getLastName()) : (staff.getFirstName() + " " + staff.getLastName()), 

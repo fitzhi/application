@@ -85,6 +85,8 @@ public class Staff implements UserDetails {
 	 */
 	public Staff() {
     	authorities.add(new CustomGrantedAuthority(ROLE_USER));
+		missions = new ArrayList<>();
+		experiences = new ArrayList<>();
 	}
 
 

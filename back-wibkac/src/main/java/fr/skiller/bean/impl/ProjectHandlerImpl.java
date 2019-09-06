@@ -94,6 +94,9 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 	@Override
 	public List<Contributor> contributors(int idProject) {
+		if (logger.isDebugEnabled()) {
+			logger.debug (String.format("Retrieve the contributors list for the project id %d", idProject));
+		}
 		List<Contributor> contributors = new ArrayList<>();
 		staffHandler.getStaff().values().forEach(staff -> {
 			Optional<Mission> optMission  = 

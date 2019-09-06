@@ -4,6 +4,7 @@ import { AuthService } from '../service/auth/auth.service';
 import { Router } from '@angular/router';
 import { Constants } from 'src/app/constants';
 import { ProjectService } from 'src/app/service/project.service';
+import { StaffListService } from 'target/classes/app/staff-list-service/staff-list.service';
 
 @Component({
 	selector: 'app-connect-user',
@@ -30,6 +31,7 @@ export class ConnectUserComponent implements OnInit {
 	constructor(
 		private authService: AuthService,
 		private projectService: ProjectService,
+		private staffListService: StaffListService,
 		private router: Router,
 		private formBuilder: FormBuilder) {
 		this.connectionGroup = this.formBuilder.group({
@@ -73,7 +75,9 @@ export class ConnectUserComponent implements OnInit {
 					 */
 					if (connectionStatus) {
 						this.projectService.loadProjects();
+						this.staffListService.loadStaff();
 					}
+
 					if (this.directLogin) {
 						this.router.navigate(['/welcome'], {});
 					}

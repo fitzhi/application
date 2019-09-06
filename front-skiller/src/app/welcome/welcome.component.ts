@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { BackendSetupService } from '../service/backend-setup/backend-setup.service';
 import { AuthService } from '../admin/service/auth/auth.service';
+import { StaffListService } from '../staff-list-service/staff-list.service';
+import { Collaborator } from '../data/collaborator';
 
 @Component({
 	selector: 'app-welcome',
@@ -22,13 +24,18 @@ export class WelcomeComponent implements OnInit {
      */
 	firstLaunch = false;
 
+	private allStaff: Collaborator[] = [];
+
 	constructor(
 		private backendSetupService: BackendSetupService,
+		private staffListService: StaffListService,
 		private authService: AuthService) {
 		this.firstLaunch = !this.backendSetupService.hasSavedAnUrl();
 	}
 
-	ngOnInit() { }
+	ngOnInit() {
+		this.allStaff = this.staffListService.allStaff;
+	}
 
 	/**
      * @returns TRUE if the connection is requested.
