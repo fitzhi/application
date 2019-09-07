@@ -3,17 +3,25 @@ package fr.skiller.data.internal;
 import javax.annotation.Generated;
 
 /**
- * Repository ghosts. Unregistered committers in the repository. 
+ * <p>
+ * Ghost identified in the repository.<br/>
+ * Ghost are unregistered committers in the repository.<br/>
+ * System failed to retrieve the read developer behind a {@link #pseudo pseudo}.<br/>
+ * A ghost can be 
+ * <ul>
+ * <li>{@link #technical technical}</li>
+ * <li>{@link #idStaff associate to a staff identifier}</li>
+ * </ul>
+ * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 public class Ghost {
 
 	public static final int NULL = -1;
 	
 	/**
-	 * Trace attached to a commit and not linked to a real, registered staff member. <br/> 
+	 * Pseudo attached to a commit and not linked to a real and registered staff member. <br/> 
 	 * Nothing forbids Bruce Wayne to use Batman as a commit pseudo.
 	 */
 	private String pseudo;

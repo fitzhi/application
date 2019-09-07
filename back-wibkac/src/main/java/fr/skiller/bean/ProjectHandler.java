@@ -1,10 +1,10 @@
 package fr.skiller.bean;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import fr.skiller.data.internal.Committer;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Project;
@@ -80,21 +80,6 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	void saveProject(Project project) throws SkillerException;
 
 	/**
-	 * Take account the list of pseudos identified by the end-user in the ghosts
-	 * dialog.
-	 * 
-	 * @param idProject
-	 *            identifier of this current project.
-	 * @param pseudos
-	 *            list of pseudos with their additional information, is any.
-	 * @return the result list of impacted pseudos in the
-	 *         {@link fr.skiller.data.internal.Project#ghosts ghosts list} of
-	 *         the project
-	 * @exception SkillerException thrown if any exception occurs (such as project does not exist)
-	 */
-	List<Committer> saveGhosts(int idProject, List<Committer> pseudos) throws SkillerException;
-
-	/**
 	 * Save the list of library detected or declared inside the project.
 	 * @param idProject the identifier of the project
 	 * @param libraries the list of library
@@ -120,7 +105,8 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * <p>Save the path location where the remote branch(master) has been cloned/pulled</p>
 	 * @param idProject the project identifier
 	 * @param pathLocation the path location
-	 * @throws SkillerException thrown if any problem, most propably, the project does not exist any more.
+	 * @throws SkillerException thrown if any problem, 
+	 * most probably either an {@link IOException} or the <i>project does not exist</i>.
 	 */
 	void saveLocationRepository (int idProject, String location) throws SkillerException;
 	
@@ -144,4 +130,34 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @param idSkill the passed skill identifier
 	 */
 	void removeSkill(Project project, int idSkill);
+	
+	/**
+	 * <p>
+	 * Associate the given staff to the pseudo.
+	 * </p>
+	 * @param project the given project
+	 * @param pseudo the given pseudo
+	 * @param idAssociatedStaff the associated staff
+	 */
+	void associateStaffToGhost(Project project, String pseudo, int idAssociatedStaff);
+
+	/**
+	 * <p>
+	 * Reset the content of the {@link fr.skiller.data.internal.Ghost ghost} for this project.
+	 * </p>
+	 * @param project the given project
+	 * @param pseudo the given pseudo
+	 */
+	void resetGhost(Project project, String pseudo);
+
+	/**
+	 * <p>
+	 * Set the technical status of a {@link fr.skiller.data.internal.Ghost ghost}.
+	 * </p>
+	 * @param project the given project
+	 * @param pseudo the given pseudo
+	 * @param technical the given technical status
+	 */
+	void setGhostTechnicalStatus(Project project, String pseudo, boolean technical);
+
 }

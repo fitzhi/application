@@ -109,7 +109,7 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 boolean containsStaffMember(int idStaff);
 
 	 /**
-	  * Control and save the given staff.s
+	  * <p>Control and save the given staff.</p>
 	  * @param staff the staff member to be updated.
 	  * @throws SkillerException thrown if an exception occurs such as for instance
 	  * <ul>
@@ -170,5 +170,14 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	  * @param idProject the project identifier
 	  */	 
 	 void delMission(int idStaff, int idProject);
+	 
+	 /**
+	  * <p>
+	  * Get and return a staff member given his identifier.
+	  * </p>
+	  * @param idStaff the staff identifier.
+	  * @return the selected staff or {@code null} if none exists.
+	  */
+	 Staff getStaff(int idStaff);
 }
 

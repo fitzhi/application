@@ -33,12 +33,12 @@ import fr.skiller.data.internal.Skill;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectControlerSkillsManagementTest {
+public class ProjectControllerSkillsManagementTest {
 
 	/**
 	 * logger
 	 */
-	Logger logger = LoggerFactory.getLogger(ProjectControlerSkillsManagementTest.class.getCanonicalName());
+	Logger logger = LoggerFactory.getLogger(ProjectControllerSkillsManagementTest.class.getCanonicalName());
 
 	/**
 	 * Initialization of the Google JSON parser.

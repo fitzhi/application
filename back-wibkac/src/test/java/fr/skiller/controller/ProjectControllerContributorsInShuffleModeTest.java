@@ -42,9 +42,9 @@ import fr.skiller.data.source.Contributor;
 @AutoConfigureMockMvc
 @TestPropertySource(properties = { "shuffleData=1" }) 
 
-public class ProjectControlerContributorsInShuffleModeTest {
+public class ProjectControllerContributorsInShuffleModeTest {
 
-	private final Logger logger = LoggerFactory.getLogger(ProjectControlerContributorsInShuffleModeTest.class.getCanonicalName());
+	private final Logger logger = LoggerFactory.getLogger(ProjectControllerContributorsInShuffleModeTest.class.getCanonicalName());
 
 	/**
 	 * Initialization of the Google JSON parser.

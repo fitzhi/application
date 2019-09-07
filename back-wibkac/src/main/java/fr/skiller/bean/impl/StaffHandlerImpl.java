@@ -523,6 +523,11 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			this.dataUpdated = true;
 		}
 	}
+
+	@Override
+	public Staff getStaff(int idStaff) {
+		return getStaff().get(idStaff);
+	}
 	
 	
 }

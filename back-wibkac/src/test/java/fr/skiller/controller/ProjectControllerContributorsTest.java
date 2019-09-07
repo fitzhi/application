@@ -41,9 +41,9 @@ import fr.skiller.data.source.Contributor;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectControlerContributorsTest {
+public class ProjectControllerContributorsTest {
 
-	private final Logger logger = LoggerFactory.getLogger(ProjectControlerContributorsTest.class.getCanonicalName());
+	private final Logger logger = LoggerFactory.getLogger(ProjectControllerContributorsTest.class.getCanonicalName());
 
 	/**
 	 * Initialization of the Google JSON parser.

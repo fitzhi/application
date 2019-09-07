@@ -44,9 +44,7 @@ import fr.skiller.controller.util.ProjectLoader.MyReference;
 import fr.skiller.data.external.BooleanDTO;
 import fr.skiller.data.external.ProjectContributorDTO;
 import fr.skiller.data.external.ProjectDTO;
-import fr.skiller.data.external.PseudoListDTO;
 import fr.skiller.data.external.SunburstDTO;
-import fr.skiller.data.internal.Committer;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.internal.Skill;
@@ -182,8 +180,6 @@ public class ProjectController {
 	@GetMapping("/all")
 	public String readAll() {
 		try {
-			
-			
 			Collection<Project> projects = projectHandler.getProjects().values();
 			
 			// Returning project
@@ -557,30 +553,6 @@ public class ProjectController {
 		} catch (Exception e) {
 			logger.error(getStackTrace(e)); 
 			return new ResponseEntity<> (e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
-		}
-	}
-
-	/**
-	 * Revoke the participation of staff member in a project.
-	 */
-	@PostMapping("/api-ghosts")
-	public ResponseEntity<PseudoListDTO> saveGhosts(@RequestBody String param) {
-		
-		PseudoListDTO pseudosDTO = g.fromJson(param, PseudoListDTO.class);
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("POST command on /project/ghosts for project : %s", pseudosDTO.idProject));
-			logger.debug(String.format("%d pseudos received", pseudosDTO.unknowns.size()));
-		}
-		try {
-			List<Committer> pseudos = projectHandler.saveGhosts(pseudosDTO.idProject, pseudosDTO.unknowns);
-			return new ResponseEntity<>( 
-					new PseudoListDTO(pseudosDTO.idProject, pseudos),
-					new HttpHeaders(), 
-					HttpStatus.OK);
-		} catch (SkillerException e) {
-			logger.error(getStackTrace(e)); 
-			return new ResponseEntity<> (new PseudoListDTO(pseudosDTO.idProject, e), 
-					new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}
 		

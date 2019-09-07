@@ -3,7 +3,6 @@
  */
 package fr.skiller.bean.impl;
 
-import static fr.skiller.Error.CODE_MULTIPLE_LOGIN;
 import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
 import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
 
@@ -19,11 +18,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
-import fr.skiller.data.external.Action;
-import fr.skiller.data.internal.Committer;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Mission;
@@ -145,83 +143,6 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			this.dataUpdated = true;
 		}
 	}
-
-	@Override
-	public List<Committer> saveGhosts(int idProject, List<Committer> pseudos) throws SkillerException {
-	
-		Project project = get(idProject);
-		if (project == null) {
-			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
-		
-		List<Ghost> newGhosts = new ArrayList<>();
-		List<Committer> newPseudos = new ArrayList<>();
-		
-		for (Committer pseudo : pseudos) {
-			
-			// Nothing to do for this pseudo. We'll keep him present in the list. 
-			if ( ((pseudo.getLogin() == null) || (pseudo.getLogin().length() == 0)) && !pseudo.isTechnical() ) {
-				// In fact, this pseudo was present in the project.ghosts list, we'll remove it
-				if (getGhost(project, pseudo.getPseudo()) != null) {
-					pseudo.setAction(Action.D);
-					newPseudos.add(pseudo);
-				}
-				continue;
-			}
-			
-			if ((pseudo.getLogin() != null) && (pseudo.getLogin().length() > 0)) {
-				List<Staff> result = staffHandler.getStaff().values()
-					.stream()
-					.filter(staff -> pseudo.getLogin().equals(staff.getLogin()))
-					.collect(Collectors.toList());
-				
-				// Unknown login
-				if (result.isEmpty()) {
-					pseudo.setAction(Action.N);
-					newPseudos.add(pseudo);
-					continue;
-				}
-				
-				if (result.size() > 1) {
-					throw new SkillerException(CODE_MULTIPLE_LOGIN, 
-							MessageFormat.format(MESSAGE_PROJECT_NOFOUND, pseudo.getLogin(), result.size()));
-				}
-				
-				newGhosts.add(new Ghost(pseudo.getPseudo(), result.get(0).getIdStaff(), false));
-				Ghost gh = getGhost(project, pseudo.getPseudo());
-				if (gh == null) {
-					pseudo.setAction(Action.A);
-				} else {
-					pseudo.setAction((gh.getIdStaff() == result.get(0).getIdStaff()) ? Action.N : Action.U);
-				}
-				pseudo.setIdStaff(result.get(0).getIdStaff());
-				pseudo.setFullName(staffHandler.getFullname(pseudo.getIdStaff()));
-				newPseudos.add(pseudo);
-			}
-			
-			// login technical and not a developer.
-			if (pseudo.isTechnical()) {
-				newGhosts.add(new Ghost(pseudo.getPseudo(), true));	
-				Ghost gh = getGhost(project, pseudo.getPseudo());
-				pseudo.setTechnical(true);
-				pseudo.setIdStaff(Ghost.NULL);
-				pseudo.setFullName("");
-				if (gh == null) {
-					pseudo.setAction(Action.A);
-				} else {
-					pseudo.setAction((gh.getIdStaff() > 0) ? Action.U : Action.N);
-				}
-				newPseudos.add(pseudo);						
-			}
-		}
-
-		synchronized (lockDataUpdated) {
-			project.setGhosts(newGhosts);
-			this.dataUpdated = true;
-		}
-		
-		return newPseudos;
-	}
 	
 	
 	@Override
@@ -286,8 +207,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			logger.info(String.format("The project %s will loose the skill with id %d from its scope", 
 					project.getName(), idSkill));
 		}
-		synchronized (lockDataUpdated) {
 
+		synchronized (lockDataUpdated) {
 			Optional<Skill> oSkill = project.getSkills()
 					.stream()
 					.filter(exp -> (exp.getId() == idSkill) )
@@ -297,6 +218,110 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			}			
 			this.dataUpdated = true;
 		}
+	}
+
+	@Override
+	public void associateStaffToGhost(Project project, String pseudo, int idAssociatedStaff) {
+
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format(
+					"the project %s has associated the pseudo ghost % to the staff identifier %d",
+					project.getName(),
+					pseudo,
+					idAssociatedStaff));
+		}
+		
+		Staff staff = staffHandler.getStaff(idAssociatedStaff);
+		if (staff == null) {
+			throw new SkillerRuntimeException(
+					String.format("SHOULD NOT PASS HERE : id %d does not exist anymore!", idAssociatedStaff));
+		}
+		boolean projectAlreadyDeclared = staff.getMissions().stream().anyMatch(mission -> mission.getIdProject() == project.getId());
+		synchronized (lockDataUpdated) {
+			Optional<Ghost> oGhost = project.getGhosts()
+					.stream()
+					.filter(g -> g.getPseudo().equals(pseudo))
+					.findFirst();
+			if (oGhost.isPresent()) {
+				oGhost.get().setIdStaff(idAssociatedStaff);
+
+				if (!projectAlreadyDeclared) {
+					staff.addMission(new Mission(idAssociatedStaff, project.getId(), project.getName()));
+				}
+				return;
+			}
+			
+		}
+		throw new SkillerRuntimeException(
+				String.format("%s does not exist anymore in the project %s (id: %d)",
+						pseudo, project.getName(), project.getId()));
+	}
+
+	@Override
+	public void setGhostTechnicalStatus(Project project, String pseudo, boolean technical) {
+
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format(
+				"the project %s has setup %s the ghost pseudo %s",
+				project.getName(),
+				technical ? "technical" : "non technical",
+				pseudo));
+		}
+		
+		synchronized (lockDataUpdated) {
+			Optional<Ghost> oGhost = project.getGhosts()
+					.stream()
+					.filter(g -> g.getPseudo().equals(pseudo))
+					.findFirst();
+			if (oGhost.isPresent()) {
+				
+				oGhost.get().setTechnical(technical);
+				
+				Staff staff = staffHandler.getStaff(oGhost.get().getIdStaff());
+				if ((staff != null) && (technical)) {
+					staff.getMissions().stream()
+						.filter(mission -> mission.getIdProject() == project.getId())
+						.filter(mission -> mission.getFirstCommit() == null)
+						.findFirst()
+						.ifPresent(mission -> staff.getMissions().remove(mission));
+				}
+				
+				if (technical) {
+					oGhost.get().setIdStaff(Ghost.NULL);			
+				}
+				return;
+			}		
+		}
+		throw new SkillerRuntimeException(
+				String.format("%s does not exist anymore in the project %s (id: %d)",
+						pseudo, project.getName(), project.getId()));
+		
+	}
+
+	@Override
+	public void resetGhost(Project project, String pseudo) {
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format(
+				"Resetting the Ghost pseudo %s of the project %s",
+				project.getName(),
+				pseudo));
+		}
+		
+		synchronized (lockDataUpdated) {
+			Optional<Ghost> oGhost = project.getGhosts()
+					.stream()
+					.filter(g -> g.getPseudo().equals(pseudo))
+					.findFirst();
+			if (oGhost.isPresent()) {
+				oGhost.get().setTechnical(false);
+				oGhost.get().setIdStaff(Ghost.NULL);
+				return;
+			}		
+		}
+		throw new SkillerRuntimeException(
+				String.format("%s does not exist anymore in the project %s (id: %d)",
+						pseudo, project.getName(), project.getId()));
 	}
 	
 }
