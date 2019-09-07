@@ -279,11 +279,16 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				
 				Staff staff = staffHandler.getStaff(oGhost.get().getIdStaff());
 				if ((staff != null) && (technical)) {
+					System.out.println("removing mission " + staff.getMissions().size());
 					staff.getMissions().stream()
 						.filter(mission -> mission.getIdProject() == project.getId())
 						.filter(mission -> mission.getFirstCommit() == null)
 						.findFirst()
-						.ifPresent(mission -> staff.getMissions().remove(mission));
+						.ifPresent(mission -> {
+							System.out.println("removing mission " + mission.getIdProject() + " " + mission.getIdStaff());
+							staff.getMissions().remove(mission);
+						});
+					System.out.println("removing mission " + staff.getMissions().size());
 				}
 				
 				if (technical) {

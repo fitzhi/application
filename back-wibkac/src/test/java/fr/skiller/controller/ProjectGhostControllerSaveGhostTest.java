@@ -46,7 +46,7 @@ import fr.skiller.exception.SkillerException;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectGhostControllerTest {
+public class ProjectGhostControllerSaveGhostTest {
 
 //	private final Logger logger = LoggerFactory.getLogger(ProjectGhostControllerTest.class.getCanonicalName());
 
@@ -78,32 +78,27 @@ public class ProjectGhostControllerTest {
 		project.getGhosts().add(new Ghost("pseudoUnlinked", false));
 		project.getGhosts().add(new Ghost("pseudoLinked", 2, false));
 		
-		Staff staff = staffHandler.getStaff(2);
-		staff.addMission(new Mission(2, ID_PROJECT, project.getName()));
 	}
 	
-
 	@Test
 	public void test() throws Exception {
-		MvcResult result = this.mvc.perform(get("/staff/2"))
+		BodyUpdateGhost bug = projectGhostController.new BodyUpdateGhost();
+		bug.idProject = ID_PROJECT;
+		bug.pseudo = "pseudoUnlinked";
+		bug.idStaff = 1;
+	
+		MvcResult result = this.mvc.perform(get("/staff/1"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
 				.andReturn();
 		Staff staff = gson.fromJson(result.getResponse().getContentAsString(), Staff.class);
 		//
-		// THIS PROJECT IS ALREADY DECLARED FOR THIS STAFF MEMBER 2. 
-		// IT HAS BEEN ADDED IN THE @BEFORE METHOD 
+		// THIS PROJECT IS NOT ALREADY DECLARED FOR THIS STAFF MEMBER
 		//
-		Assert.assertTrue(
+		Assert.assertFalse(
 				staff.getMissions().stream().anyMatch(mission -> mission.getIdProject() == ID_PROJECT));
 		
-		BodyUpdateGhost bug = projectGhostController.new BodyUpdateGhost();
-		bug.idProject = ID_PROJECT;
-		bug.pseudo = "pseudoLinked";
-		bug.idStaff = -1;
-		bug.technical = true;
-	
 		this.mvc.perform(post("/project/ghost/save")
 			.content(gson.toJson(bug)))
 			.andExpect(status().isOk())
@@ -111,24 +106,18 @@ public class ProjectGhostControllerTest {
 			.andExpect(content().string("true"))
 			.andDo(print());
 
-		this.mvc.perform(get("/project/id/"+ ID_PROJECT))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andDo(print());
-
-		result = this.mvc.perform(get("/staff/2"))
+		result = this.mvc.perform(get("/staff/1"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
 				.andReturn();
 		staff = gson.fromJson(result.getResponse().getContentAsString(), Staff.class);
 		//
-		// THIS PROJECT HAS BEEN REVOKED FOR THIS STAFF MEMBER.
+		// THIS PROJECT HAS BEEN ADDED TO THIS STAFF MEMBER.
 		//
-		Assert.assertFalse(
+		Assert.assertTrue(
 				staff.getMissions().stream().anyMatch(mission -> mission.getIdProject() == ID_PROJECT));
 	}
-	
 	
 	@After
 	public void after() throws SkillerException {
