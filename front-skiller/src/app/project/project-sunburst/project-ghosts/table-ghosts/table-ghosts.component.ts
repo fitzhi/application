@@ -192,10 +192,23 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 				false)
 			.pipe(take(1))
 			.subscribe(staff => {
-				this.messageService.info('Pseudo ' + ghost.pseudo + ' updated');
+				this.messageService.info('The pseudo ' + ghost.pseudo + ' has been associated to ' 
+					+ ghost.staffRelated.firstName + ' ' + ghost.staffRelated.lastName);
 			});
 			return true;
 		} else {
+			// If the ghost was already associated, we reset this association
+			if (ghost.idStaff  > 0) {
+				this.projectService.updateGhost (
+					this.dataSource.project.id,
+					ghost.pseudo,
+					-1,
+					false)
+				.pipe(take(1))
+				.subscribe(staff => {
+					this.messageService.info('The pseudo ' + ghost.pseudo + ' is no more associated to an existing staff member');
+				});
+			}
 			ghost.idStaff = -1;
 			return false;
 		}
