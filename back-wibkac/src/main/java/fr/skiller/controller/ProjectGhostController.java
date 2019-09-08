@@ -63,7 +63,7 @@ public class ProjectGhostController {
 	
 	/**
 	 * <p>
-	 * Revoke the participation of staff member in a project.
+	 * Manage a ghost in a project.
 	 * </p>
 	 */
 	@PostMapping(path="/save")
@@ -97,12 +97,59 @@ public class ProjectGhostController {
 			
 			
 		} catch (SkillerException se) {
-			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_STAFF_NOFOUND));
-			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, param.idStaff));
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
+			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.idProject));
 			return new ResponseEntity<>(
 					Boolean.FALSE, headers,
 					HttpStatus.INTERNAL_SERVER_ERROR);			
 		}
 		
 	}
+	
+	/**
+	 * <p>
+	 * Internal container hosting all possible parameters required to remove a ghost from a project.
+	 * </p>
+	 * @author Fr&eacute;d&eacute;ric VIDAL 
+	 */
+	public class BodyRemoveGhost {
+		public BodyRemoveGhost() { }
+		int idProject;
+		String pseudo;
+	}
+	
+	/**
+	 * <p>
+	 * Manage a ghost in a project.
+	 * </p>
+	 */
+	@PostMapping(path="/remove")
+	public ResponseEntity<Boolean> removeGhost(@RequestBody String body) {
+		
+		HttpHeaders headers = new HttpHeaders();
+
+		BodyRemoveGhost param = g.fromJson(body, BodyRemoveGhost.class);
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("POST command on /project/ghosts/remove for project : %d and pseudi %s", 
+					param.idProject, param.pseudo));
+		}
+		
+		try {
+			Project project = projectHandler.get(param.idProject);
+			
+			// Neither staff member, nor technical, we reset the ghost
+			projectHandler.removeGhost(project, param.pseudo); 				
+			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);			
+			
+			
+		} catch (SkillerException se) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
+			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.idProject));
+			return new ResponseEntity<>(
+					Boolean.FALSE, headers,
+					HttpStatus.INTERNAL_SERVER_ERROR);			
+		}
+		
+	}
+	
 }

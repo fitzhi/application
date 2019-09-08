@@ -8,6 +8,7 @@ import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -350,4 +351,18 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			project.setGhosts(ghosts);
 		}
 	}
+
+	@Override
+	public void removeGhost(Project project, String pseudo) {
+		synchronized (lockDataUpdated) {
+			for (Iterator<Ghost> iter = project.getGhosts().listIterator(); iter.hasNext(); ) {
+			    Ghost ghost = iter.next();
+			    if (pseudo.equals(ghost.getPseudo())) {
+			        iter.remove();
+			    }
+			}			
+		}
+	}
+	
+	
 }

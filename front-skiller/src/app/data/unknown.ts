@@ -18,6 +18,11 @@ export class Unknown {
 	public staffRelated: Collaborator;
 
 	/**
+	 * The related staff has been saved. The ghost can not modified anymore.
+	 */
+	public staffRecorded: boolean;
+
+	/**
 	 * Staff's full name related to this pseudo.
 	 */
 	public fullName: string;

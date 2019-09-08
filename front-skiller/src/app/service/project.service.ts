@@ -241,5 +241,20 @@ export class ProjectService extends InternalService {
 		return this.httpClient.post<Boolean>(this.backendSetupService.url() + '/project/ghost/save', body, httpOptions);
 	}
 
+	/**
+	* Remove a ghost from the ghost list of a project.
+	* @param idProject the given project identifier
+	* @param pseudo the pseudo used by a ghost to proceed a commit
+	*/
+	removeGhost(idProject: number, pseudo: string): Observable<Boolean> {
+		if (Constants.DEBUG) {
+			console.groupCollapsed('Removing a ghost');
+			console.log ('idProject', idProject);
+			console.log ('pseudo', pseudo);
+			console.groupEnd();
+		}
+		const body = { idProject: idProject, pseudo: pseudo };
+		return this.httpClient.post<Boolean>(this.backendSetupService.url() + '/project/ghost/remove', body, httpOptions);
+	}
 
 }

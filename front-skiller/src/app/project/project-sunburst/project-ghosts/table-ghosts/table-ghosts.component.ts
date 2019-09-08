@@ -124,6 +124,12 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	 * @return TRUE if the creation is not allowed, the field has to be readonly, FALSE otherwise.
 	 */
 	isCreationNotAllowed(ghost: Unknown): boolean {
+
+		// A staff has been created and saved for this ghost. This ghost is readonly for this session.
+		if (ghost.staffRecorded) {
+			return true;
+		}
+
 		if (ghost.technical) {
 			return true;
 		}
@@ -143,6 +149,12 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	 * @return TRUE if the association is not allowed, the field has to be readonly, FALSE otherwise.
 	 */
 	isAssociationNotAllowed(ghost: Unknown): boolean {
+
+		// A staff has been created and saved for this ghost. This ghost is readonly for this session.
+		if (ghost.staffRecorded) {
+			return true;
+		}
+
 		if (ghost.technical) {
 			return true;
 		}
@@ -175,7 +187,16 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 		this.staffService.save(collaborator)
 			.pipe(take(1))
 			.subscribe(staff => {
-				this.messageService.info('Staff member ' + staff.firstName + ' ' + staff.lastName + ' saved');
+				ghost.staffRecorded = true;
+				this.dataSource.removePseudo(ghost.pseudo);
+				this.projectService
+					.removeGhost(this.dataSource.project.id, ghost.pseudo)
+					.pipe(take(1))
+					.subscribe(result => {
+						if (result) {
+							this.messageService.info('Staff member ' + staff.firstName + ' ' + staff.lastName + ' saved');
+						}
+					});
 			});
 	}
 
@@ -192,7 +213,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 				false)
 			.pipe(take(1))
 			.subscribe(staff => {
-				this.messageService.info('The pseudo ' + ghost.pseudo + ' has been associated to ' 
+				this.messageService.info('The pseudo ' + ghost.pseudo + ' has been associated to '
 					+ ghost.staffRelated.firstName + ' ' + ghost.staffRelated.lastName);
 			});
 			return true;

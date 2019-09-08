@@ -23,7 +23,7 @@
     <ng-container matColumnDef="technical">
       <th id="technical" mat-header-cell *matHeaderCellDef mat-sort-header>Technical</th>
       <td mat-cell class="td-technical" *matCellDef="let row; let i = index;">
-        <mat-checkbox id="technical-{{i}}"
+        <mat-checkbox id="technical-{{i}}" [disabled]="row.staffRecorded"
           [(ngModel)]="row.technical" (change)="checkTechnical(row)"></mat-checkbox>
       </td>
     </ng-container>
@@ -36,7 +36,7 @@
         </div>
         <ng-template #editFieldsVisible>
           <mat-form-field>
-            <input matInput id="firstname-{{i}}" [readonly]="isCreationNotAllowed(row)" [(ngModel)]="row.staffRelated.firstname">
+            <input matInput id="firstname-{{i}}" [readonly]="isCreationNotAllowed(row)" [(ngModel)]="row.firstname">
           </mat-form-field>
         </ng-template>
       </td>
@@ -50,7 +50,7 @@
         </div>
         <ng-template #editFieldsVisible>
           <mat-form-field>
-            <input matInput id="lastname-{{i}}" [readonly]="isCreationNotAllowed(row)" [(ngModel)]="row.staffRelated.lastname">
+            <input matInput id="lastname-{{i}}" [readonly]="isCreationNotAllowed(row)" [(ngModel)]="row.lastname">
           </mat-form-field>
         </ng-template>
       </td>

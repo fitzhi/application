@@ -170,4 +170,14 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @throws SkillerException thrown if any problem occurs (most probably if the project identifier does not exist)
 	 */
 	void integrateGhosts(int idProject, Set<String> pseudos) throws SkillerException;
+
+	/**
+	 * <p>
+	 * Remove a ghost from the ghosts list.
+	 * </p>
+	 * @param project the given project
+	 * @param pseudo the given pseudo
+	 */
+	void removeGhost(Project project, String pseudo);
+
 }

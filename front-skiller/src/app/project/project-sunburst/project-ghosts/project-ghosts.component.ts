@@ -30,31 +30,6 @@ export class ProjectGhostsComponent extends BaseComponent implements OnDestroy {
 		super();
 	}
 
-	public submit() {
-		/*
-		this.subscriptions.add(
-			this.projectService.saveGhosts(new PseudoList(
-				this.dataSource.project.id,
-				this.dataSource.ghostsSubject.getValue()))
-				.subscribe(pseudoList => {
-					if (Constants.DEBUG) {
-						console.group('[Response from /project/api-ghosts] peudoList');
-						console.log('idProject ' + pseudoList.idProject);
-						pseudoList.unknowns.forEach(function (value) { console.log(value); });
-						console.groupEnd();
-					}
-					this.updatedData = new ProjectGhostsDataSource(this.dataSource.project);
-					this.updatedData.sendUnknowns(pseudoList.unknowns);
-				},
-					responseInError => {
-						if (Constants.DEBUG) {
-							console.log('Error ' + responseInError.error.code + ' ' + responseInError.error.message);
-						}
-						this.messageService.error(responseInError.error.message);
-					}));
-					*/
-	}
-
 	ngOnDestroy() {
 		super.ngOnDestroy();
 	}

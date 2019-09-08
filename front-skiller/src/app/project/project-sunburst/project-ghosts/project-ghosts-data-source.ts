@@ -35,13 +35,13 @@ export class ProjectGhostsDataSource extends MatTableDataSource<Unknown> {
 			g.active = false;
 			g.external = false;
 			g.staffRelated = new Collaborator();
+			g.staffRecorded = false;
 			ghosts.push(g);
 		});
 		this.data = ghosts;
 		if (Constants.DEBUG) {
 			console.groupCollapsed	(ghosts.length + ' ghosts identified');
 			ghosts.forEach(g => {
-				console.log (g.technical);
 				console.log (g.pseudo, (g.technical ? 'technical' : g.idStaff));
 			});
 			console.groupEnd();
@@ -49,11 +49,13 @@ export class ProjectGhostsDataSource extends MatTableDataSource<Unknown> {
 	}
 
 	/**
-	 * @param technical value of the check-box "technical"
-	 * @returns a string representation of the technical
+	 * @param pseudo remove the ghost associated to the passed pseudo.
 	 */
-	public checkValue(_technical: boolean): string {
-		return;
+	removePseudo (pseudo: string) {
+		const indexPseudo = this.data.findIndex(ghost => pseudo === ghost.pseudo);
+		if (indexPseudo === -1) {
+			console.error ('Pseudo ' + pseudo + ' has disappeared from ths ghosts list');
+		}
+		this.data.splice(indexPseudo, 1);
 	}
-
 }
