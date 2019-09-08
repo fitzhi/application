@@ -474,10 +474,6 @@ public class ProjectController {
 				if (logger.isInfoEnabled()) {
 					logger.info("Shuffling the sunburst data");
 				}
-				data.undefinedContributors.stream()
-					.forEach(pseudo -> 
-					pseudo.setFullName(shuffleService.shuffle(pseudo.getFullName()))
-				);
 			}
 			return new ResponseEntity<>(
 					new SunburstDTO(project.getId(), project.getRisk(), data), new HttpHeaders(), HttpStatus.OK);

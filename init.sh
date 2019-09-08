@@ -11,7 +11,7 @@ git clone https://github.com/frvidal/wibkac
 cd ..
 mkdir -pv deploy/backend-wibkac
 cd back-wibkac
-mvn package
+mvn clean package
 cp target/wibkac.jar ../deploy/backend-wibkac/wibkac.jar
 cp -R data ../deploy/data
 cd ..

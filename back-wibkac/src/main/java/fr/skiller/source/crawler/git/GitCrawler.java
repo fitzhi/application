@@ -624,8 +624,11 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			// Since the last parsing of the repository, some developers might have been
 			// declared and are responding now to unknown pseudos.
 			// We cleanup the set.
-			repository.setUnknownContributors(repository.unknownContributors().stream()
-					.filter(pseudo -> (staffHandler.lookup(pseudo) == null)).collect(Collectors.toSet()));
+			repository.setUnknownContributors(
+					repository.unknownContributors()
+						.stream()
+						.filter(pseudo -> (staffHandler.lookup(pseudo) == null)) // Pseudo does not match any staff member
+						.collect(Collectors.toSet()));
 
 			return repository;
 		}
@@ -634,9 +637,6 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			throw new SkillerException(Error.CODE_REPO_MUST_BE_ALREADY_CLONED,
 					Error.MESSAGE_REPO_MUST_BE_ALREADY_CLONED);
 		}
-
-		// Unknown committers
-		final Set<String> unknown;
 
 		// Repository
 		final CommitRepository repositoryOfCommit;
@@ -720,13 +720,18 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		/**
 		 * Set of unknown contributors who have work on this repository.
 		 */
-		unknown = repositoryOfCommit.unknownContributors();
+		final Set<String> unknownContributors = repositoryOfCommit.unknownContributors();
 
 		/**
 		 * We update the staff identifier on each change entry.
 		 */
-		this.updateStaff(project, analysis, unknown);
+		this.updateStaff(project, analysis, unknownContributors);
 
+		/**
+		 * We save the unknown contributors, into the "ghosts project"
+		 */
+		projectHandler.integrateGhosts(project.getId(), unknownContributors);
+		
 		/**
 		 * Retrieve the list of contributors involved in the project.
 		 */
@@ -751,9 +756,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		}
 
 		// Displaying results...
-		if (logger.isInfoEnabled() && (!unknown.isEmpty())) {
+		if (logger.isInfoEnabled() && (!unknownContributors.isEmpty())) {
 			logger.info(String.format("Unknown contributors for project %s", analysis.getProject().getName()));
-			unknown.stream().forEach(logger::info);
+			unknownContributors.stream().forEach(logger::info);
 		}
 
 		analysis.getChanges().stream()
@@ -1013,8 +1018,12 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	@Override
 	public void updateStaff(Project project, RepositoryAnalysis analysis, Set<String> unknownContributors) {
 
-		List<String> authors = analysis.getChanges().stream().filter(SCMChange::isAuthorIdentified).map(SCMChange::getAuthorName)
-				.distinct().collect(Collectors.toList());
+		List<String> authors = analysis
+				.getChanges().stream()
+				.filter(SCMChange::isAuthorIdentified)
+				.map(SCMChange::getAuthorName)
+				.distinct()
+				.collect(Collectors.toList());
 
 		authors.forEach(
 
@@ -1022,21 +1031,24 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 					final Staff staff = staffHandler.lookup(author);
 					if ((staff == null) && (author.split(" ").length == 1)) {
-						Optional<Ghost> oGhost = project.getGhosts().stream().filter(g -> (!g.isTechnical()))
-								.filter(g -> author.equalsIgnoreCase(g.getPseudo())).findFirst();
+						Optional<Ghost> oGhost = project.getGhosts()
+								.stream()
+								.filter(g -> !g.isTechnical())
+								.filter(g -> author.equalsIgnoreCase(g.getPseudo()))
+								.findFirst();
 						if (oGhost.isPresent()) {
 							Ghost selectedGhost = oGhost.get();
 							int ghostIdentified = staffHandler.getStaff().get(selectedGhost.getIdStaff()).getIdStaff();
 							//
 							// We update the staff collection !
 							//
-							analysis.getChanges().stream().filter(change -> author.equals(change.getAuthorName()))
+							analysis.getChanges().stream()
+									.filter(change -> author.equals(change.getAuthorName()))
 									.forEach(change -> change.setIdStaff(ghostIdentified));
 							//
 							// We find a staff entry, but we keep the pseudo in the unknowns list
 							// in order to be able to change the relation between the ghost & the staff
-							// membre
-							// in the dedicated dialog box
+							// member in the dedicated Angular component
 							//
 							unknownContributors.add(author);
 						}
@@ -1050,7 +1062,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 						//
 						// We update the staff collection !
 						//
-						analysis.getChanges().stream().filter(change -> author.equals(change.getAuthorName()))
+						analysis.getChanges().stream()
+								.filter(change -> author.equals(change.getAuthorName()))
 								.forEach(change -> change.setIdStaff(staff.getIdStaff()));
 					}
 

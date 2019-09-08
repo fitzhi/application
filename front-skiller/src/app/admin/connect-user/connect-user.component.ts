@@ -4,7 +4,7 @@ import { AuthService } from '../service/auth/auth.service';
 import { Router } from '@angular/router';
 import { Constants } from 'src/app/constants';
 import { ProjectService } from 'src/app/service/project.service';
-import { StaffListService } from 'target/classes/app/staff-list-service/staff-list.service';
+import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
 
 @Component({
 	selector: 'app-connect-user',

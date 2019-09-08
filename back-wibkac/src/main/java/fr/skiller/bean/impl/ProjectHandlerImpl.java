@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -225,7 +226,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(
-					"the project %s has associated the pseudo ghost % to the staff identifier %d",
+					"the project %s is associating the pseudo ghost %s to the staff identifier %d",
 					project.getName(),
 					pseudo,
 					idAssociatedStaff));
@@ -242,6 +243,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 					.stream()
 					.filter(g -> g.getPseudo().equals(pseudo))
 					.findFirst();
+			
 			if (oGhost.isPresent()) {
 				oGhost.get().setIdStaff(idAssociatedStaff);
 
@@ -328,5 +330,24 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				String.format("%s does not exist anymore in the project %s (id: %d)",
 						pseudo, project.getName(), project.getId()));
 	}
-	
+
+	@Override
+	public void integrateGhosts(int idProject, Set<String> pseudos) throws SkillerException {
+
+		Project project = get(idProject);
+		
+		List<Ghost> ghosts = project.getGhosts().stream()
+			.filter (ghost ->  (ghost.getIdStaff() > 0) || (ghost.isTechnical()) )
+			.collect(Collectors.toList());
+		
+		for (String pseudo : pseudos) {
+			if (!ghosts.stream().anyMatch(ghost -> pseudo.equals(ghost.getPseudo()))) {
+				ghosts.add(new Ghost(pseudo, false));
+			}
+		}
+		
+		synchronized (lockDataUpdated) {
+			project.setGhosts(ghosts);
+		}
+	}
 }

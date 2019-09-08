@@ -1,3 +1,5 @@
+import { Collaborator } from './collaborator';
+
 export class Unknown {
 
 	/**
@@ -9,6 +11,11 @@ export class Unknown {
 	 * Staff's idendifier related to this pseudo.
 	 */
 	public idStaff: number;
+
+	/**
+	 * Staff related if any to this pseudo.
+	 */
+	public staffRelated: Collaborator;
 
 	/**
 	 * Staff's full name related to this pseudo.

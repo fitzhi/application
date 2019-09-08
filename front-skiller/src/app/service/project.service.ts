@@ -180,16 +180,6 @@ export class ProjectService extends InternalService {
 	/**
 	 * Save the ghosts list with their connected data;
 	 */
-	saveGhosts(pseudoList: PseudoList): Observable<PseudoList> {
-		if (Constants.DEBUG) {
-			console.log('Saving data with for the project ' + pseudoList.idProject);
-		}
-		return this.httpClient.post<any>(this.backendSetupService.url() + '/project/api-ghosts', pseudoList, httpOptions);
-	}
-
-	/**
-	 * Save the ghosts list with their connected data;
-	 */
 	resetDashboard(id: number): Observable<string> {
 		const url = this.backendSetupService.url() + '/project/resetDashboard/' + id;
 		if (Constants.DEBUG) {
@@ -218,7 +208,11 @@ export class ProjectService extends InternalService {
 	 * @param libraries the libraries directories
 	 */
 	libDirSave(idProject: number, libraries: Library[]) {
-		console.log('Saving libraries', libraries);
+		if (Constants.DEBUG) {
+			console.groupCollapsed('Saving libraries', libraries);
+			libraries.forEach(lib => console.log (lib.exclusionDirectory));
+			console.groupEnd();
+		}
 		const url = this.backendSetupService.url()
 			+ '/project/analysis/lib-dir/save/' + idProject;
 		return this.httpClient
@@ -226,5 +220,26 @@ export class ProjectService extends InternalService {
 			.pipe(take(1))
 			.subscribe(res => console.log(res));
 	}
+
+	/**
+	* Update a ghost from a project.
+	* @param idProject the given project identifier
+	* @param pseudo the pseudo used by a ghost to proceed a commit
+	* @param idRelatedStaff a staff identifier if the ghost has to be related to him, or -1 if this pseudo is related to no one.
+	* @param technical: TRUE if the ghost is in fact a technical user used for administration operations
+	*/
+	updateGhost(idProject: number, pseudo: string, idRelatedStaff: number, technical: boolean): Observable<Boolean> {
+		if (Constants.DEBUG) {
+			console.groupCollapsed('Updating a ghost');
+			console.log ('idProject', idProject);
+			console.log ('pseudo', pseudo);
+			console.log ('idStaff', idRelatedStaff);
+			console.log ('techinical?', technical);
+			console.groupEnd();
+		}
+		const body = { idProject: idProject, pseudo: pseudo, idStaff: idRelatedStaff, technical: technical };
+		return this.httpClient.post<Boolean>(this.backendSetupService.url() + '/project/ghost/save', body, httpOptions);
+	}
+
 
 }

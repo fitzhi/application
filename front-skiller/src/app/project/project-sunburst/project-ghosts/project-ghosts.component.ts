@@ -6,7 +6,7 @@ import { PseudoList } from '../../../data/PseudoList';
 import { Constants } from '../../../constants';
 import { MessageService } from '../../../message/message.service';
 import { BaseComponent } from '../../../base/base.component';
-import { Project } from 'target/classes/app/data/project';
+import { Project } from 'src/app/data/project';
 
 @Component({
 	selector: 'app-project-ghosts',

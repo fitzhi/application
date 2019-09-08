@@ -23,11 +23,6 @@ public class Committer {
 	private int idStaff;
 
 	/**
-	 * Staff full name associated to the {@code pseudo} property.
-	 */
-	private String fullName;
-
-	/**
 	 * Login associated to the {@code pseudo} property.
 	 */
 	private String login;
@@ -81,7 +76,6 @@ public class Committer {
 		this.setTechnical(technical);
 		this.setIdStaff(Ghost.NULL);
 		this.setLogin("");
-		this.setFullName("");
 		this.setAction(action);
 	}
 
@@ -93,7 +87,7 @@ public class Committer {
 	 *            login associated to this identifier
 	 */
 	public Committer(String pseudo, String login) {
-		this(pseudo, Ghost.NULL, "", login, false);
+		this(pseudo, Ghost.NULL, login, false);
 	}
 
 	/**
@@ -108,8 +102,6 @@ public class Committer {
 	 *            control.
 	 * @param idStaff
 	 *            staff identifier
-	 * @param fullName
-	 *            full name associated to this identifier
 	 * @param login
 	 *            login associated to this identifier
 	 * @param technical
@@ -117,11 +109,10 @@ public class Committer {
 	 *            idStaff, fullName will be null), {@code false} if it's a real
 	 *            human being
 	 */
-	public Committer(String pseudo, int idStaff, String fullName, String login, boolean technical) {
+	public Committer(String pseudo, int idStaff, String login, boolean technical) {
 		super();
 		this.setPseudo(pseudo);
 		this.setIdStaff(idStaff);
-		this.setFullName(fullName);
 		this.setLogin(login);
 		this.setTechnical(false);
 	}
@@ -132,8 +123,6 @@ public class Committer {
 	 *            control.
 	 * @param idStaff
 	 *            staff identifier
-	 * @param fullName
-	 *            full name associated to this identifier
 	 * @param login
 	 *            login associated to this identifier
 	 * @param technical
@@ -143,11 +132,10 @@ public class Committer {
 	 * @param action
 	 *            type of {@link Action action}
 	 */
-	public Committer(String pseudo, int idStaff, String fullName, String login, boolean technical, Action action) {
+	public Committer(String pseudo, int idStaff, String login, boolean technical, Action action) {
 		super();
 		this.setPseudo(pseudo);
 		this.setIdStaff(idStaff);
-		this.setFullName(fullName);
 		this.setLogin(login);
 		this.setTechnical(technical);
 		this.setAction(action);
@@ -155,57 +143,10 @@ public class Committer {
 
 	@Override
 	public String toString() {
-		return "Pseudo [pseudo=" + getPseudo() + ", idStaff=" + getIdStaff() + ", fullName=" + getFullName() + ", login=" + getLogin()
+		return "Pseudo [pseudo=" + getPseudo() + ", idStaff=" + getIdStaff()  + ", login=" + getLogin()
 				+ ", technical=" + isTechnical() + ", action=" + getAction() + "]";
 	}
 
-	@Override
-	@Generated ("eclipse")
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((getAction() == null) ? 0 : getAction().hashCode());
-		result = prime * result + ((getFullName() == null) ? 0 : getFullName().hashCode());
-		result = prime * result + getIdStaff();
-		result = prime * result + ((getLogin() == null) ? 0 : getLogin().hashCode());
-		result = prime * result + ((getPseudo() == null) ? 0 : getPseudo().hashCode());
-		result = prime * result + (isTechnical() ? 1231 : 1237);
-		return result;
-	}
-
-	@Override
-	@Generated ("eclipse")
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Committer other = (Committer) obj;
-		if (getAction() != other.getAction())
-			return false;
-		if (getFullName() == null) {
-			if (other.getFullName() != null)
-				return false;
-		} else if (!getFullName().equals(other.getFullName()))
-			return false;
-		if (getIdStaff() != other.getIdStaff())
-			return false;
-		if (getLogin() == null) {
-			if (other.getLogin() != null)
-				return false;
-		} else if (!getLogin().equals(other.getLogin()))
-			return false;
-		if (getPseudo() == null) {
-			if (other.getPseudo() != null)
-				return false;
-		} else if (!getPseudo().equals(other.getPseudo()))
-			return false;
-		if (isTechnical() != other.isTechnical())
-			return false;
-		return true;
-	}
 
 	/**
 	 * @return the pseudo of the developer<br/>
@@ -236,21 +177,6 @@ public class Committer {
 	 */
 	public void setIdStaff(int idStaff) {
 		this.idStaff = idStaff;
-	}
-
-	/**
-	 * @return the fullName
-	 * Staff full name associated to the {@code commitPseudo} property.
-	 */
-	public String getFullName() {
-		return fullName;
-	}
-
-	/**
-	 * @param fullName the fullName to set, which is associated to the {@code commitPseudo} property.
-	 */
-	public void setFullName(String fullName) {
-		this.fullName = fullName;
 	}
 
 	/**
@@ -306,4 +232,45 @@ public class Committer {
 		this.action = action;
 	}
 
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((action == null) ? 0 : action.hashCode());
+		result = prime * result + idStaff;
+		result = prime * result + ((login == null) ? 0 : login.hashCode());
+		result = prime * result + ((pseudo == null) ? 0 : pseudo.hashCode());
+		result = prime * result + (technical ? 1231 : 1237);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Committer other = (Committer) obj;
+		if (action != other.action)
+			return false;
+		if (idStaff != other.idStaff)
+			return false;
+		if (login == null) {
+			if (other.login != null)
+				return false;
+		} else if (!login.equals(other.login))
+			return false;
+		if (pseudo == null) {
+			if (other.pseudo != null)
+				return false;
+		} else if (!pseudo.equals(other.pseudo))
+			return false;
+		if (technical != other.technical)
+			return false;
+		return true;
+	}
+
+	
 }

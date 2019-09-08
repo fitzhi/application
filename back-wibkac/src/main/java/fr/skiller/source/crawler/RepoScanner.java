@@ -122,8 +122,10 @@ public interface RepoScanner {
 	List<Contributor> gatherContributors(RepositoryAnalysis analysis);
 
 	/**
+	 * <p>
 	 * Parse the repository <u>already</u> cloned on the file system.<br/>
 	 * <b>PREREQUESIT = The repository must have be cloned before</b>
+	 * </p>
 	 * @param project Project whose source code files should be scan in the repository
 	 * @param settings connection settings
 	 * @return the parsed repository 

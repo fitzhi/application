@@ -1,5 +1,6 @@
 package fr.skiller.data.external;
 
+import java.util.List;
 import java.util.Set;
 
 import fr.skiller.data.internal.Committer;
@@ -35,7 +36,7 @@ public class SunburstDTO extends BaseDTO {
 	/**
 	 * Array of unknown contributors who are unknown in the staff collection.
 	 */
-	private Set<Committer> ghosts;
+	private List<Committer> ghosts;
 	
 	/**
 	 * @param idProject project identifier.
@@ -113,14 +114,14 @@ public class SunburstDTO extends BaseDTO {
 	/**
 	 * @return the ghosts
 	 */
-	public Set<Committer> getGhosts() {
+	public List<Committer> getGhosts() {
 		return ghosts;
 	}
 
 	/**
 	 * @param ghosts the ghosts to set
 	 */
-	public void setGhosts(Set<Committer> ghosts) {
+	public void setGhosts(List<Committer> ghosts) {
 		this.ghosts = ghosts;
 	}
 

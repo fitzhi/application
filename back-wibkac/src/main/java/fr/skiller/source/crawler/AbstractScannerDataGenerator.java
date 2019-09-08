@@ -3,7 +3,9 @@ package fr.skiller.source.crawler;
 import static fr.skiller.Global.INTERNAL_FILE_SEPARATOR;
 import static fr.skiller.Global.LN;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -56,22 +58,20 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 						commit.committers()));
 
 		
-		Set<Committer> ghosts = new HashSet<>();
-		commitRepo.unknownContributors().stream()
-			.forEach(unknown -> {
-				Ghost g = parentProjectHandler.getGhost(project, unknown);
-				if (g == null) {
-					ghosts.add(new Committer(unknown, false));
+		List<Committer> ghosts = new ArrayList<>();
+		project.getGhosts().stream().forEach(ghost -> {
+			if (ghost.isTechnical()) {
+				ghosts.add (new Committer(ghost.getPseudo(), true));
+			} else {
+				if (ghost.getIdStaff() > 0) {
+					String login = parentStaffHandler.getStaff().get(ghost.getIdStaff()).getLogin();
+					ghosts.add(new Committer(ghost.getPseudo(), ghost.getIdStaff(), login, false));
 				} else {
-					if (g.isTechnical()) {
-						ghosts.add(new Committer(unknown, true));											
-					} else {
-						String fullName = parentStaffHandler.getFullname(g.getIdStaff());
-						String login = parentStaffHandler.getStaff().get(g.getIdStaff()).getLogin();
-						ghosts.add(new Committer(unknown, g.getIdStaff(), fullName, login, g.isTechnical()));
-					}
+					ghosts.add(new Committer(ghost.getPseudo(), false));
 				}
-			});
+			}
+		});
+		
 		if (logger.isDebugEnabled()) {
 			StringBuilder sb = new StringBuilder(LN);
 			ghosts.stream().forEach(g -> sb.append(g).append(LN));

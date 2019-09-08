@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Library;
@@ -160,4 +161,13 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 */
 	void setGhostTechnicalStatus(Project project, String pseudo, boolean technical);
 
+	/**
+	 * <p>
+	 * Integrate the last list of unknowns pseudos into the ghosts list.
+	 * </p>
+	 * @param idProject idProject project identifiers 
+	 * @param pseudos the given list of pseudos retrieved from the repository
+	 * @throws SkillerException thrown if any problem occurs (most probably if the project identifier does not exist)
+	 */
+	void integrateGhosts(int idProject, Set<String> pseudos) throws SkillerException;
 }

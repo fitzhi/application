@@ -10,7 +10,7 @@ import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.
 import { SkillService } from './service/skill.service';
 import { ListCriteria } from './data/listCriteria';
 import { AuthService } from './admin/service/auth/auth.service';
-import { ProjectService } from 'target/classes/app/service/project.service';
+import { ProjectService } from 'src/app/service/project.service';
 import { StaffListService } from './staff-list-service/staff-list.service';
 
 declare var $: any;

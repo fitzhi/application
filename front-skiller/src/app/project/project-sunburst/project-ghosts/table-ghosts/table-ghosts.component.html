@@ -12,8 +12,10 @@
       <td class="td-ghost" mat-cell *matCellDef="let row; let i = index;">
         <mat-form-field>
           <input matInput name="login-{{i}}" class="completer-input mdb-autocomplete"
-            [readonly]="isAssociationNotAllowed(row)" [(ngModel)]="row.login" (ngModelChange)="changeLogin($event)"
-            placeholder="Type an existing login" />
+            [readonly]="isAssociationNotAllowed(row)" 
+            [(ngModel)]="row.login" 
+            (ngModelChange)="handleRelatedLogin(row)"
+            placeholder="Type an existing login..." />
         </mat-form-field>
       </td>
     </ng-container>
@@ -21,7 +23,8 @@
     <ng-container matColumnDef="technical">
       <th id="technical" mat-header-cell *matHeaderCellDef mat-sort-header>Technical</th>
       <td mat-cell class="td-technical" *matCellDef="let row; let i = index;">
-        <mat-checkbox id="technical-{{i}}" [(ngModel)]="row.technical" (change)="checkTechnical(row)"></mat-checkbox>
+        <mat-checkbox id="technical-{{i}}"
+          [(ngModel)]="row.technical" (change)="checkTechnical(row)"></mat-checkbox>
       </td>
     </ng-container>
 
@@ -29,11 +32,11 @@
       <th id="firstname" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>Firstname</th>
       <td mat-cell class="td-ghost" *matCellDef="let row; let i = index;">
         <div *ngIf="relatedLoginMatch(row);else editFieldsVisible">
-          {{relatedStaff.firstName}}
+          {{row.staffRelated.firstName}}
         </div>
         <ng-template #editFieldsVisible>
           <mat-form-field>
-            <input matInput id="firstname-{{i}}" [readonly]="isCreationNotAllowed(row)" [(ngModel)]="row.firstname">
+            <input matInput id="firstname-{{i}}" [readonly]="isCreationNotAllowed(row)" [(ngModel)]="row.staffRelated.firstname">
           </mat-form-field>
         </ng-template>
       </td>
@@ -43,11 +46,11 @@
       <th id="lastname" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>Lastname</th>
       <td mat-cell class="td-ghost" *matCellDef="let row; let i = index;">
         <div *ngIf="relatedLoginMatch(row);else editFieldsVisible">
-          {{relatedStaff.lastName}}
+          {{row.staffRelated.lastName}}
         </div>
         <ng-template #editFieldsVisible>
           <mat-form-field>
-            <input matInput id="lastname-{{i}}" [readonly]="isCreationNotAllowed(row)" [(ngModel)]="row.lastname">
+            <input matInput id="lastname-{{i}}" [readonly]="isCreationNotAllowed(row)" [(ngModel)]="row.staffRelated.lastname">
           </mat-form-field>
         </ng-template>
       </td>
@@ -57,7 +60,7 @@
       <th id="active" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>Active</th>
       <td mat-cell class="td-technical" *matCellDef="let row; let i = index;">
         <div *ngIf="relatedLoginMatch(row);else editFieldsVisible">
-          <mat-checkbox id="active-{{i}}" [checked]="relatedStaff.active" [disabled]="true"></mat-checkbox>
+          <mat-checkbox id="active-{{i}}" [checked]="row.staffRelated.active" [disabled]="true"></mat-checkbox>
         </div>
         <ng-template #editFieldsVisible>
           <mat-checkbox id="active-{{i}}" [(ngModel)]="row.active" (change)="checkActive(row)"
@@ -70,7 +73,7 @@
       <th id="external" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>External</th>
       <td mat-cell class="td-technical" *matCellDef="let row; let i = index;">
         <div *ngIf="relatedLoginMatch(row);else editFieldsVisible">
-          <mat-checkbox id="external-{{i}}" [(ngModel)]="relatedStaff.external" [disabled]="true"></mat-checkbox>
+          <mat-checkbox id="external-{{i}}" [(ngModel)]="row.staffRelated.external" [disabled]="true"></mat-checkbox>
         </div>
         <ng-template #editFieldsVisible>
           <mat-checkbox id="external-{{i}}" [(ngModel)]="row.external" (change)="checkExternal(row)"

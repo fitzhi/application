@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.skiller.bean.DataChartHandler;
 import fr.skiller.bean.DataSaver;
+import fr.skiller.bean.ProjectHandler;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RepositoryAnalysis;
 import fr.skiller.data.source.ConnectionSettings;
@@ -47,6 +48,9 @@ public class CrawlerWibkacTest {
 
 	@Autowired
 	DataSaver dataSaver;
+
+	@Autowired
+	ProjectHandler projectHandler;
 
 	@Autowired
 	DataChartHandler dataChartHandler;
@@ -144,6 +148,7 @@ public class CrawlerWibkacTest {
 	public void testParseRepository() throws IOException, SkillerException {
 		Project prj = new Project (777, "vegeo");
 		prj.setLocationRepository(String.format(DIR_GIT, WIBKAC));
+		projectHandler.addNewProject(prj);
 		scanner.parseRepository(prj, new ConnectionSettings());
 	}
 

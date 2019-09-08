@@ -14,7 +14,7 @@ export class StaffListService {
 	/**
 	 * List of collaborators corresponding to the search criteria.
 	 */
-	public allStaff$: BehaviorSubject<Collaborator[]>;
+	public allStaff$ = new BehaviorSubject<Collaborator[]>([]);
 
 	/**
 	 * List of collaborators corresponding to the search criteria.

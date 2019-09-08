@@ -1,9 +1,8 @@
-import { DataSource } from '@angular/cdk/table';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { CollectionViewer } from '@angular/cdk/collections';
 import { Project } from '../../../data/project';
 import { Unknown } from '../../../data/unknown';
 import { MatTableDataSource } from '@angular/material/table';
+import { Constants } from '../../../constants';
+import { Collaborator } from 'src/app/data/collaborator';
 
 export class ProjectGhostsDataSource extends MatTableDataSource<Unknown> {
 
@@ -29,19 +28,24 @@ export class ProjectGhostsDataSource extends MatTableDataSource<Unknown> {
 			g.pseudo = unknown.pseudo;
 			g.idStaff = unknown.idStaff;
 			g.login = unknown.login;
-			g.fullName = unknown.fullName;
 			g.technical = unknown.technical;
 			g.action = unknown.action;
-			if ((g.action === 'N') && (g.idStaff === -1) && !g.technical) {
-				g.fullName = 'Unrecognized login';
-			}
 			g.firstname = '';
 			g.lastname = '';
 			g.active = false;
 			g.external = false;
+			g.staffRelated = new Collaborator();
 			ghosts.push(g);
 		});
 		this.data = ghosts;
+		if (Constants.DEBUG) {
+			console.groupCollapsed	(ghosts.length + ' ghosts identified');
+			ghosts.forEach(g => {
+				console.log (g.technical);
+				console.log (g.pseudo, (g.technical ? 'technical' : g.idStaff));
+			});
+			console.groupEnd();
+		}
 	}
 
 	/**

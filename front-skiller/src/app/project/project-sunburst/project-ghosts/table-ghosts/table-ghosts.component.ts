@@ -1,18 +1,21 @@
-import { Component, OnInit, Input, Output, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, Output, ViewChild, OnDestroy, AfterViewInit, SimpleChanges } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { Constants } from '../../../../constants';
 import { Unknown } from '../../../../data/unknown';
 import { BaseComponent } from 'src/app/base/base.component';
-import { ProjectGhostsDataSource } from 'target/classes/app/project/project-sunburst/project-ghosts/project-ghosts-data-source';
-import { Project } from 'target/classes/app/data/project';
+import { ProjectGhostsDataSource } from 'src/app/project/project-sunburst/project-ghosts/project-ghosts-data-source';
+import { Project } from 'src/app/data/project';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Collaborator } from 'src/app/data/collaborator';
-import { StaffService } from 'target/classes/app/service/staff.service';
+import { StaffService } from 'src/app/service/staff.service';
 import { take } from 'rxjs/operators';
 import { MessageService } from 'src/app/message/message.service';
-import { StaffListService } from 'target/classes/app/staff-list-service/staff-list.service';
+import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
 import { runInThisContext } from 'vm';
+import { ProjectService } from 'src/app/service/project.service';
+import { csvFormatRows } from 'd3';
+import { Row } from 'ng2-smart-table/lib/lib/data-set/row';
 
 @Component({
 	selector: 'app-table-ghosts',
@@ -36,12 +39,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	/**
 	 * The undeclared contributors in the repository.
 	 */
-	dataSource: MatTableDataSource<Unknown>;
-
-	/**
-	 * Staff member associated to a row by its login.
-	 */
-	public relatedStaff: Collaborator;
+	dataSource: ProjectGhostsDataSource;
 
 	/**
 	 * The paginator of the ghosts data source.
@@ -63,6 +61,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 
 	constructor(
 		private staffService: StaffService,
+		private projectService: ProjectService,
 		private staffListService: StaffListService,
 		private messageService: MessageService) {
 		super();
@@ -89,7 +88,6 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	 */
 	checkTechnical(unknown: Unknown) {
 		if (unknown.technical) {
-			unknown.fullName = '';
 			unknown.login = '';
 			unknown.idStaff = -1;
 			unknown.firstname = '';
@@ -181,18 +179,33 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 			});
 	}
 
+	handleRelatedLogin(ghost: Unknown) {
+
+		const selectedStaff = this.allStaff.filter(s => (s.login.toLowerCase() === ghost.login));
+		if (selectedStaff.length === 1) {
+			ghost.staffRelated = selectedStaff[0];
+			ghost.idStaff = ghost.staffRelated.idStaff;
+			this.projectService.updateGhost (
+				this.dataSource.project.id,
+				ghost.pseudo,
+				ghost.idStaff,
+				false)
+			.pipe(take(1))
+			.subscribe(staff => {
+				this.messageService.info('Pseudo ' + ghost.pseudo + ' updated');
+			});
+			return true;
+		} else {
+			ghost.idStaff = -1;
+			return false;
+		}
+	}
 	/**
 	 * @param ghost the actual ghost line concerned.
 	 * @returns TRUE if the related login typed is matching an existing staff member.
 	 */
 	relatedLoginMatch(ghost: Unknown): boolean {
-		const selectedStaff = this.allStaff.filter(s => (s.login.toLowerCase() === ghost.login));
-		if (selectedStaff.length === 1) {
-			this.relatedStaff = selectedStaff[0];
-			return true;
-		} else {
-			return false;
-		}
+		return (ghost.idStaff > 0);
 	}
 
 	changeLogin($event: string) {

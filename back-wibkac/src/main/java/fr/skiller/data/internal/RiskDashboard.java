@@ -3,6 +3,7 @@
  */
 package fr.skiller.data.internal;
 
+import java.util.List;
 import java.util.Set;
 
 
@@ -24,14 +25,14 @@ public class RiskDashboard {
 	/**
 	 * List of unknown contributors.
 	 */
-	public final Set<Committer> undefinedContributors;
+	public final List<Committer> undefinedContributors;
 
 	/**
 	 * Main constructor of the risk Dashboard
 	 * @param riskChartData data ready to use for the Sunburst chart.
 	 * @param contributors list of unknown contributors.
 	 */
-	public RiskDashboard(final DataChart riskChartData, final Set<Committer> contributors) {
+	public RiskDashboard(final DataChart riskChartData, final List<Committer> contributors) {
 		super();
 		this.riskChartData = riskChartData;
 		this.undefinedContributors = contributors;
