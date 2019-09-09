@@ -11,11 +11,13 @@
 			(tabActivationEmitter)="tabActivation($event)"
 			(updateRiskLevel)="updateRiskLevel($event)">
 		</app-project-sunburst>
-	</mat-tab> 
+</mat-tab> 
 	<mat-tab label="Sonar"> 
 			<img [src]="'./assets/img/demo/demo-sonar.png'" style=" height: 600px;">
 	</mat-tab> 
 	<mat-tab label="Audit"> 
+		<ng-template matTabContent>
 			<app-project-audit></app-project-audit> 
+		</ng-template>
 	</mat-tab> 
 </mat-tab-group>
