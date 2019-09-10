@@ -15,7 +15,6 @@ import { StaffListService } from 'src/app/staff-list-service/staff-list.service'
 import { runInThisContext } from 'vm';
 import { ProjectService } from 'src/app/service/project.service';
 import { csvFormatRows } from 'd3';
-import { Row } from 'ng2-smart-table/lib/lib/data-set/row';
 
 @Component({
 	selector: 'app-table-ghosts',

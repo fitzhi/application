@@ -9,7 +9,6 @@ import { CinematicService } from '../../service/cinematic.service';
 import { Project } from '../../data/project';
 import { ProjectDTO } from '../../data/external/projectDTO';
 import { Constants } from '../../constants';
-import { LocalDataSource } from 'ng2-smart-table';
 import { SkillService } from '../../service/skill.service';
 import { MessageService } from '../../message/message.service';
 import { BaseComponent } from '../../base/base.component';

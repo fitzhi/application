@@ -42,6 +42,7 @@
     "@angular/cli": "^8.2.1",
     "@angular/compiler-cli": "^8.2.1",
     "@angular/language-service": "^8.2.1",
+    "@fortawesome/fontawesome-free": "^5.10.2",
     "@types/d3": "^5.0.1",
     "@types/file-saver": "^2.0.0",
     "@types/jasmine": "~2.8.6",

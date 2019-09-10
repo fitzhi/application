@@ -7,7 +7,6 @@ import { StaffService } from '../../service/staff.service';
 import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
-import { LocalDataSource } from 'ng2-smart-table';
 import { StaffUploadCvComponent } from './staff-upload-cv/staff-upload-cv.component';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { BaseComponent } from '../../base/base.component';

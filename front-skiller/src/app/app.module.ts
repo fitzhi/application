@@ -23,7 +23,6 @@ import { MessageComponent } from './message/message.component';
 
 import { ErrorComponent } from './error/error.component';
 
-import { StarsSkillLevelRenderComponent } from './tabs-staff/starsSkillLevelRenderComponent';
 import { ProjectFormComponent } from './project/project-form/project-form.component';
 import { ListProjectComponent } from './list-project/list-project.component';
 import { ReferentialService } from './service/referential.service';
@@ -97,7 +96,6 @@ import { DevOnOffComponent } from './dev-on-off/dev-on-off.component';
 		StaffComponent,
 		MessageComponent,
 		ErrorComponent,
-		StarsSkillLevelRenderComponent,
 		ProjectFormComponent,
 		ListProjectComponent,
 		StaffTabsComponent,
@@ -132,7 +130,6 @@ import { DevOnOffComponent } from './dev-on-off/dev-on-off.component';
 		DevOnOffComponent,
 	],
 	entryComponents: [
-		StarsSkillLevelRenderComponent,
 		StaffUploadCvComponent,
 		MessageBoxComponent,
 		DialogFilterComponent,

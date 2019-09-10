@@ -7,7 +7,6 @@ import { StaffService } from '../../service/staff.service';
 import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
 import { Component, OnInit, OnDestroy, Input, AfterViewInit, ViewChild } from '@angular/core';
 
-import { LocalDataSource } from 'ng2-smart-table';
 import { BaseComponent } from '../../base/base.component';
 import Tagify from '@yaireo/tagify';
 import { Mission } from 'src/app/data/mission';
