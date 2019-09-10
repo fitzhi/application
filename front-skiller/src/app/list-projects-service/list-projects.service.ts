@@ -63,7 +63,7 @@ export class ListProjectsService {
 		if (typeof foundProject !== 'undefined') {
 			return of(foundProject);
 		} else {
-			// The collaborator's id is not, or no more, available in the cache.
+			// The project's id is not, or no more, available in the cache.
 			// We try a direct access
 			if (Constants.DEBUG) {
 				console.log('Direct access for : ' + id);

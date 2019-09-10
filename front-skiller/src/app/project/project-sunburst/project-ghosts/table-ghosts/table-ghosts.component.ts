@@ -31,11 +31,6 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	@Input() dataSourceGhosts$;
 
 	/**
-	 * Table is editable.
-	 */
-	@Input() editable;
-
-	/**
 	 * The undeclared contributors in the repository.
 	 */
 	dataSource: ProjectGhostsDataSource;
