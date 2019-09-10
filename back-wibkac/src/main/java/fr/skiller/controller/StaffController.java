@@ -101,7 +101,7 @@ public class StaffController {
 	ShuffleService shuffleService;
 
 	@GetMapping("/all")
-	public String readAll() {
+	public Collection<Staff> readAll() {
 		
 		final Collection<Staff> staffTeam = staffHandler.getStaff().values();
 		
@@ -115,7 +115,7 @@ public class StaffController {
 				staff.getMissions().stream().forEach(mission -> mission.setName(shuffleService.shuffle(mission.getName())));
 			});
 		}
-		return gson.toJson(staffTeam);
+		return staffTeam;
 	}
 
 	@GetMapping("/countGroupByExperiences/active")

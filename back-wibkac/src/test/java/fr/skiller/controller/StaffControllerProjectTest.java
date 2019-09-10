@@ -64,7 +64,7 @@ public class StaffControllerProjectTest {
 		
 		this.mvc.perform(get(STAFF_PROJECTS_2)).andExpect(status().isOk()).andExpect(content().string("[]"));	
 		
-		String body = "{ idStaff: 2, idProject: 1235}";
+		String body = "{ \"idStaff\": \"2\", \"idProject\": \"1235\"}";
 		this.mvc.perform(post(STAFF_PROJECT_ADD).content(body)).andExpect(status().isOk());		
 		
 		List<Mission> missions = new ArrayList<>();
