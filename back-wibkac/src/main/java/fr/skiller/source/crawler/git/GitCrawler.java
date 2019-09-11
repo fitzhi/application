@@ -1034,11 +1034,15 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 						Optional<Ghost> oGhost = project.getGhosts()
 								.stream()
 								.filter(g -> !g.isTechnical())
+								.filter(g -> g.getIdStaff() > 0)
 								.filter(g -> author.equalsIgnoreCase(g.getPseudo()))
 								.findFirst();
 						if (oGhost.isPresent()) {
 							Ghost selectedGhost = oGhost.get();
-							int ghostIdentified = staffHandler.getStaff().get(selectedGhost.getIdStaff()).getIdStaff();
+							if (staffHandler.getStaff(selectedGhost.getIdStaff()) == null) {
+								throw new SkillerRuntimeException("Ghost " + selectedGhost.getPseudo() + " has an invalid idStaff " + selectedGhost.getIdStaff());
+							}
+							int ghostIdentified = staffHandler.getStaff(selectedGhost.getIdStaff()).getIdStaff();
 							//
 							// We update the staff collection !
 							//
