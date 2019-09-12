@@ -61,7 +61,6 @@ export class ListSkillComponent extends BaseComponent implements OnInit, OnDestr
 				skills.forEach(skill => {
 					this.experiences.push(new SkillCountExperiences(skill.id, skill.title));
 				});
-			}));
 
 		this.subscriptions.add(
 			this.staffService.peopleCountExperience$.subscribe( peopleCountExperience =>  {
@@ -73,16 +72,26 @@ export class ListSkillComponent extends BaseComponent implements OnInit, OnDestr
 					sce.count_5_star = this.count_n_star (peopleCountExperience, sce.id, 5);
 				});
 				this.dataSource = new MatTableDataSource(this.experiences);
-				this.dataSource.data = this.experiences;
+				// this.dataSource.data = this.experiences;
+				this.dataSource.sortingDataAccessor = (item: SkillCountExperiences, property: string) => {
+					switch (property) {
+						case 'skill':
+							return item.title.toLocaleLowerCase();
+						case 'level-1':
+							return item.count_1_star;
+						case 'level-2':
+							return item.count_2_star;
+						case 'level-3':
+							return item.count_3_star;
+						case 'level-4':
+							return item.count_4_star;
+						case 'level-5':
+							return item.count_5_star;
+					}
+				};
 				this.dataSource.sort = this.sort;
 				this.subscriptions.add(
 					this.dataSource.connect().subscribe(data => this.experiences = data));
-				this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: string): string => {
-					if (typeof data[sortHeaderId] === 'string') {
-						return data[sortHeaderId].toLocaleLowerCase();
-					}
-					return data[sortHeaderId];
-				};
 				if (Constants.DEBUG) {
 					console.groupCollapsed ('Skills counting');
 					this.experiences.forEach(element => {
@@ -97,7 +106,8 @@ export class ListSkillComponent extends BaseComponent implements OnInit, OnDestr
 				}
 			})
 		);
-	}
+	}));
+}
 
 	private count_n_star (peopleCountExperience: Map<string, number>, idSkill: number, level: number): string {
 		const count_n_star = peopleCountExperience.get(idSkill + '-' + level);
