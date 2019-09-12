@@ -244,24 +244,11 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	}
 
 	/**
-	 * Update the color of the SCG circle figuring the technical risk of this project.
-	 * @param levelOfRisk the evaluated level of risk
+	 * Update the color of the SVG circle figuring the technical risk of this project.
+	 * @param risk the evaluated level of risk
 	 */
-	updateDotRiskColor(levelOfRisk: number) {
-		if (Constants.DEBUG) {
-			console.log ('updateDotRiskColor for level of risk', levelOfRisk);
-		}
-		switch (levelOfRisk) {
-			case -1:
-				this.colorOfRisk = 'whiteSmoke';
-				break;
-			default:
-				this.colorOfRisk = this.referentialService.legends.find (legend => legend.level === levelOfRisk).color;
-				if (Constants.DEBUG) {
-					console.log ('the new DOT risk color', this.colorOfRisk);
-				}
-				break;
-			}
+	updateDotRiskColor(risk: number) {
+		this.colorOfRisk = this.projectService.getRiskColor(risk);
 	}
 
 	/**
@@ -356,7 +343,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	/**
 	 * @returns the color figuring the risk evaluation for this project.
 	 */
-	evaluationStyle () {
+	styleDot () {
 		return { 'fill': this.colorOfRisk };
 	}
 

@@ -71,7 +71,6 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 				this.dataSource.paginator = this.paginator;
 		}));
 
-		this.staffListService.loadStaff();
 		this.subscriptions.add(
 			this.staffListService.allStaff$.subscribe(staff => {
 				this.allStaff = staff;

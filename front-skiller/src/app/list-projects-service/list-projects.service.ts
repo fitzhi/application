@@ -1,55 +1,44 @@
 import { Constants } from '../constants';
 import {Project} from '../data/project';
 import { ProjectService } from '../service/project.service';
-import {Injectable} from '@angular/core';
-import {Subject, Observable, of} from 'rxjs';
-import {catchError, map, tap, filter} from 'rxjs/operators';
+import {Injectable, OnInit} from '@angular/core';
+import {Observable, of, BehaviorSubject} from 'rxjs';
+import {tap} from 'rxjs/operators';
 
 @Injectable({
 	providedIn: 'root'
 })
-export class ListProjectsService {
+export class ListProjectsService  {
+
+	public filteredProjects$ = new BehaviorSubject<Project[]>([]);
+
+	constructor(
+		private projectService: ProjectService) {}
 
 	/**
-	 * List of projects corresponding to the search criteria.
-	 */
-	private theProjects: Project[] = [];
-
-	constructor(private projectService: ProjectService) {}
-
-	/**
-	* Reload the projects for the passed criteria.
+	* Filter the projects for the passed criteria.
+	* @param myCriteria criteria typed by the end-user
 	*/
 	reloadProjects(myCriteria: string) {
+
+		// '*' is a wildcard for all projects.
+		if (myCriteria === '*') {
+			this.filteredProjects$.next(this.projectService.allProjects);
+			return;
+		}
+
+		const projects: Project[] = [];
 
 		function testCriteria(project, index, array) {
 			return (myCriteria == null) ?
 				true : (project.name.toLowerCase().indexOf(myCriteria.toLowerCase()) > -1);
 		}
+		projects.push(...this.projectService.allProjects.filter(testCriteria));
 
-		this.cleanUpProjects();
-		this.theProjects.push(...this.projectService.allProjects.filter(testCriteria));
-	}
-
-	/**
-	 * Cleanup the list of projects formerly loaded on the browser.
-	 */
-	cleanUpProjects() {
-		if (Constants.DEBUG) {
-			if (this.theProjects == null) {
-				console.log('INTERNAL ERROR : collection theProjects SHOULD NOT BE NULL, dude !');
-			} else {
-				console.log('Cleaning up the projects collection containing ' + this.theProjects.length + ' records');
-			}
-		}
-		this.theProjects.length = 0;
-	}
-
-	/**
-	* Return the list of projects.
-	*/
-	getProjects(): Project[] {
-		return this.theProjects;
+		/**
+		 * We throw the resulting collection.
+		 */
+		this.filteredProjects$.next(projects);
 	}
 
 	/**
@@ -58,7 +47,7 @@ export class ListProjectsService {
 	getProject(id: number): Observable<Project> {
 
 		let foundProject: Project = null;
-		foundProject = this.theProjects.find(project => project.id === id);
+		foundProject = this.projectService.allProjects.find(project => project.id === id);
 
 		if (typeof foundProject !== 'undefined') {
 			return of(foundProject);

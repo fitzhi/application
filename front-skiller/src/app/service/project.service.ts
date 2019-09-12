@@ -15,6 +15,7 @@ import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { take } from 'rxjs/operators';
 import { Library } from '../data/library';
 import { BooleanDTO } from '../data/external/booleanDTO';
+import { ReferentialService } from './referential.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -31,6 +32,7 @@ export class ProjectService extends InternalService {
 
 	constructor(
 		private httpClient: HttpClient,
+		private referentialService: ReferentialService,
 		private backendSetupService: BackendSetupService) {
 			super();
 	}
@@ -257,4 +259,19 @@ export class ProjectService extends InternalService {
 		return this.httpClient.post<Boolean>(this.backendSetupService.url() + '/project/ghost/remove', body, httpOptions);
 	}
 
+	/**
+	 * @param risk the risk evaluated for a project
+	 * @returns the color corresponding to the passed risk
+	 */
+	getRiskColor(risk: number): string {
+		switch (risk) {
+			case -1:
+				return 'whiteSmoke';
+			default:
+				return this.referentialService.legends
+					.find (legend => legend.level === risk)
+					.color;
+			}
+
+	}
 }
