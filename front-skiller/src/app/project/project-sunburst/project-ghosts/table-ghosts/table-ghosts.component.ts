@@ -89,7 +89,19 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 			unknown.external = false;
 
 		}
-	}
+		this.projectService.updateGhost (
+			this.dataSource.project.id,
+			unknown.pseudo,
+			-1,
+			unknown.technical)
+		.pipe(take(1))
+		.subscribe(result => {
+			if (result) {
+				this.messageService.info('The pseudo ' + unknown.pseudo + ' is now ' 
+						+ (unknown.technical ? 'technical' : 'non technical'));
+			}
+		});
+}
 
 	/**
 	 * The check Box for the id "active" has been checked or unchecked.
@@ -170,27 +182,6 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 			console.log ('external', ghost.external);
 			console.groupEnd();
 		}
-		const collaborator = new Collaborator();
-		collaborator.idStaff = -1;
-		collaborator.firstName = ghost.firstname;
-		collaborator.lastName = ghost.lastname;
-		collaborator.login = ghost.pseudo;
-		collaborator.active = ghost.active;
-		collaborator.external = ghost.external;
-		this.staffService.save(collaborator)
-			.pipe(take(1))
-			.subscribe(staff => {
-				ghost.staffRecorded = true;
-				this.dataSource.removePseudo(ghost.pseudo);
-				this.projectService
-					.removeGhost(this.dataSource.project.id, ghost.pseudo)
-					.pipe(take(1))
-					.subscribe(result => {
-						if (result) {
-							this.messageService.info('Staff member ' + staff.firstName + ' ' + staff.lastName + ' saved');
-						}
-					});
-			});
 	}
 
 	handleRelatedLogin(ghost: Unknown) {
@@ -205,9 +196,11 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 				ghost.idStaff,
 				false)
 			.pipe(take(1))
-			.subscribe(staff => {
-				this.messageService.info('The pseudo ' + ghost.pseudo + ' has been associated to '
-					+ ghost.staffRelated.firstName + ' ' + ghost.staffRelated.lastName);
+			.subscribe(result => {
+				if (result) {
+					this.messageService.info('The pseudo ' + ghost.pseudo + ' has been associated to '
+						+ ghost.staffRelated.firstName + ' ' + ghost.staffRelated.lastName);
+				}
 			});
 			return true;
 		} else {
@@ -219,8 +212,10 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 					-1,
 					false)
 				.pipe(take(1))
-				.subscribe(staff => {
-					this.messageService.info('The pseudo ' + ghost.pseudo + ' is no more associated to an existing staff member');
+				.subscribe(result => {
+					if (result) {
+						this.messageService.info('The pseudo ' + ghost.pseudo + ' is no more associated to an existing staff member');
+					}
 				});
 			}
 			ghost.idStaff = -1;
