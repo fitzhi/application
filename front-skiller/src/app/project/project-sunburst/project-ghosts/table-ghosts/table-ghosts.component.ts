@@ -177,7 +177,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	 * @returns TRUE if the staff record is complete to be saved.
 	 */
 	staffComplete(ghost: Unknown): boolean {
-		return ( (ghost.firstname) && (ghost.lastname));
+		return !( (!ghost.firstname) || (!ghost.lastname));
 	}
 
 	addStaff(ghost: Unknown) {
