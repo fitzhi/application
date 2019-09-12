@@ -4,7 +4,8 @@ import { StaffService } from '../service/staff.service';
 import { Injectable } from '@angular/core';
 
 import { Observable, of, Subject, BehaviorSubject } from 'rxjs';
-import { tap, take } from 'rxjs/operators';
+import { tap, take, delay } from 'rxjs/operators';
+import { Commit } from '../data/commit';
 
 @Injectable({
 	providedIn: 'root'
@@ -21,6 +22,10 @@ export class StaffListService {
 	 */
 	public allStaff: Collaborator[] = [];
 
+	/**
+	 * Constructor.
+	 * @param staffService service un charge of accessing the backend to retrive the staff members.
+	 */
 	constructor(private staffService: StaffService) {
 	}
 
@@ -81,4 +86,26 @@ export class StaffListService {
 		return this.allStaff;
 	}
 
+	/**
+	 * @param idProject the project identifier
+	 * @returns the last registered commit.
+	 */
+	retrieveLastCommit(idProject: number): Commit {
+
+		const latest = new Commit(-1, '', '', new Date(0));
+		this.allStaff.forEach(staff => {
+			staff.missions.forEach(mission => {
+				if (mission.idProject === idProject) {
+					if (mission.lastCommit) {
+						if (new Date(mission.lastCommit) > latest.dateCommit) {
+							latest.idStaff = staff.idStaff;
+							latest.firstName = staff.firstName;
+							latest.lastName = staff.lastName;
+							latest.dateCommit = mission.lastCommit;
+						}
+					}
+				}});
+			});
+		return latest;
+	}
 }

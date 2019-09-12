@@ -4,10 +4,24 @@
 
 :host >>> th#name > .mat-sort-header-container  {
     color: darkblue;
+    min-width: 300px;
+}
+
+:host >>> th#lastCommit > .mat-sort-header-container  {
+    color: darkblue;
+    min-width: 100px;
+}
+
+:host >>> th#lastCommitter > .mat-sort-header-container  {
+    color: darkblue;
     min-width: 200px;
 }
 
-
 .row_any  {
     height: 40px;
+}
+
+#hostProjectsTable {
+    width:600px;
+    margin-left: 50px;
 }
