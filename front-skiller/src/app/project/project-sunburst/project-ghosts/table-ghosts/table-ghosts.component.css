@@ -97,7 +97,7 @@
   background-color: transparent;
 }
 
-#addStaff:hover {
+#addStaff:hover:enabled {
   border: none; 
   background-color: green;
   color: white;

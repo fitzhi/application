@@ -172,6 +172,14 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 		return false;
 	}
 
+	/**
+	 * @param ghost the ghost treated
+	 * @returns TRUE if the staff record is complete to be saved.
+	 */
+	staffComplete(ghost: Unknown): boolean {
+		return ( (ghost.firstname) && (ghost.lastname));
+	}
+
 	addStaff(ghost: Unknown) {
 		if (Constants.DEBUG) {
 			console.groupCollapsed ('Creation of the the staff member');
@@ -182,7 +190,27 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 			console.log ('external', ghost.external);
 			console.groupEnd();
 		}
-	}
+		const collaborator = new Collaborator();
+		collaborator.idStaff = -1;
+		collaborator.firstName = ghost.firstname;
+		collaborator.lastName = ghost.lastname;
+		collaborator.login = ghost.pseudo;
+		collaborator.active = ghost.active;
+		collaborator.external = ghost.external;
+		this.staffService.save(collaborator)
+			.pipe(take(1))
+			.subscribe(staff => {
+				ghost.staffRecorded = true;
+				this.dataSource.removePseudo(ghost.pseudo);
+				this.projectService
+					.removeGhost(this.dataSource.project.id, ghost.pseudo)
+					.pipe(take(1))
+					.subscribe(result => {
+						if (result) {
+							this.messageService.info('Staff member ' + staff.firstName + ' ' + staff.lastName + ' saved');
+						}
+					});
+			});	}
 
 	handleRelatedLogin(ghost: Unknown) {
 

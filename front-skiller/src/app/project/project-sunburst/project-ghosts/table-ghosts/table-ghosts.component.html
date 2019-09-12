@@ -85,7 +85,8 @@
       <i class="fas glyphicon fa-users-cog"></i>
     </th>
     <td mat-cell class="td-creation" *matCellDef="let row; let i = index;">
-      <button id="addStaff" (click)="addStaff(row)">
+      <button id="addStaff" (click)="addStaff(row)" 
+        [disabled]="isCreationNotAllowed(row) || !staffComplete(row)">
         <i class="fas glyphicon fa-users-cog fa-plus-square-customized"></i>
       </button>
     </td>
