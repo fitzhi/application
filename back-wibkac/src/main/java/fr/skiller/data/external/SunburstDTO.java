@@ -1,7 +1,6 @@
 package fr.skiller.data.external;
 
 import java.util.List;
-import java.util.Set;
 
 import fr.skiller.data.internal.Committer;
 import fr.skiller.data.internal.DataChart;

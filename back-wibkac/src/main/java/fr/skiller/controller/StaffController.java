@@ -1,9 +1,9 @@
 package fr.skiller.controller;
 
-import static fr.skiller.Error.CODE_STAFF_NOFOUND;
-import static fr.skiller.Error.MESSAGE_STAFF_NOFOUND;
 import static fr.skiller.Error.CODE_STAFF_ACTIVE_ON_PROJECT;
+import static fr.skiller.Error.CODE_STAFF_NOFOUND;
 import static fr.skiller.Error.MESSAGE_STAFF_ACTIVE_ON_PROJECT;
+import static fr.skiller.Error.MESSAGE_STAFF_NOFOUND;
 import static fr.skiller.Error.getStackTrace;
 import static fr.skiller.Global.BACKEND_RETURN_CODE;
 import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;

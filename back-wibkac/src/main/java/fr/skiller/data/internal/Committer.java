@@ -1,7 +1,5 @@
 package fr.skiller.data.internal;
 
-import javax.annotation.Generated;
-
 import fr.skiller.data.external.Action;
 
 /**

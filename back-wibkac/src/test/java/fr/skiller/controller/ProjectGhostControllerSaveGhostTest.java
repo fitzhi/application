@@ -1,14 +1,12 @@
 package fr.skiller.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.log;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -28,11 +26,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.ProjectHandler;
-import fr.skiller.bean.StaffHandler;
 import fr.skiller.controller.ProjectGhostController.BodyUpdateGhost;
 import fr.skiller.controller.util.LocalDateAdapter;
 import fr.skiller.data.internal.Ghost;
-import fr.skiller.data.internal.Mission;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
@@ -65,9 +61,6 @@ public class ProjectGhostControllerSaveGhostTest {
 
 	@Autowired
 	private ProjectHandler projectHandler;
-
-	@Autowired
-	private StaffHandler staffHandler;
 
 	Project project;
 	

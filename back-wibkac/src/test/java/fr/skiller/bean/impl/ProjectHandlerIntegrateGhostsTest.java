@@ -1,9 +1,9 @@
 package fr.skiller.bean.impl;
 
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,17 +12,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
-
-import org.junit.After;
-import org.junit.Assert;
 
 /**
  * <p>

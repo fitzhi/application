@@ -4,10 +4,8 @@ import static fr.skiller.Global.INTERNAL_FILE_SEPARATOR;
 import static fr.skiller.Global.LN;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +14,6 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Committer;
 import fr.skiller.data.internal.DataChart;
-import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.CommitRepository;
