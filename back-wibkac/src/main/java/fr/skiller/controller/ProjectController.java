@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,8 +31,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.Gson;
-
 import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
@@ -39,6 +38,8 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.ShuffleService;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.controller.in.ParamProjectSkill;
+import fr.skiller.controller.in.SettingsGeneration;
 import fr.skiller.controller.util.ProjectLoader;
 import fr.skiller.controller.util.ProjectLoader.MyReference;
 import fr.skiller.data.external.BooleanDTO;
@@ -60,11 +61,6 @@ public class ProjectController {
 	private static final String PROJECT = "project";
 
 	private final Logger logger = LoggerFactory.getLogger(ProjectController.class.getCanonicalName());
-
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	private Gson g = new Gson();
 
 	@Autowired
 	ProjectHandler projectHandler;
@@ -116,15 +112,14 @@ public class ProjectController {
 	public ResponseEntity<ProjectDTO> read(@PathVariable("projectName") String projectName) {
 		
 		final ResponseEntity<ProjectDTO> responseEntity;
-		final HttpHeaders headers = new HttpHeaders();
 		try {
 			Optional<Project> result = projectHandler.lookup(projectName);
 			if (result.isPresent()) {
-				responseEntity = new ResponseEntity<>(new ProjectDTO(result.get()), new HttpHeaders(), HttpStatus.OK);
+				responseEntity = new ResponseEntity<>(new ProjectDTO(result.get()), headers(), HttpStatus.OK);
 			} else {
 				responseEntity = new ResponseEntity<>(
 						new ProjectDTO(new Project(), 404, "There is no project with the name " + projectName), 
-						headers, 
+						headers(), 
 						HttpStatus.NOT_FOUND);
 				if (logger.isDebugEnabled()) {
 					logger.debug(String.format("Cannot find a Project with the name %s", projectName));
@@ -135,7 +130,7 @@ public class ProjectController {
 			logger.error(getStackTrace(e));
 			return new ResponseEntity<>(
 					new ProjectDTO(new Project(), e.errorCode, e.getMessage()), 
-					headers, 
+					headers(), 
 					HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -154,7 +149,7 @@ public class ProjectController {
 			return refResponse.response;
 		}
 		
-		ResponseEntity<Project> response = new ResponseEntity<>(searchProject, new HttpHeaders(), HttpStatus.OK);
+		ResponseEntity<Project> response = new ResponseEntity<>(searchProject, headers(), HttpStatus.OK);
 		if (logger.isDebugEnabled()) {
 			logger.debug(
 					String.format("Project corresponding to the id %d has returned %s", 
@@ -174,11 +169,11 @@ public class ProjectController {
 
 		final Project project = projectLoader.getProject(idProject, new ArrayList<Skill>(), refResponse);
 		return  (refResponse.response != null) ? refResponse.response : 
-			new ResponseEntity<>(project.getSkills(), new HttpHeaders(), HttpStatus.OK);
+			new ResponseEntity<>(project.getSkills(), headers(), HttpStatus.OK);
 	}	
 	
 	@GetMapping("/all")
-	public String readAll() {
+	public Collection<Project> readAll() {
 		try {
 			Collection<Project> projects = projectHandler.getProjects().values();
 			
@@ -201,14 +196,14 @@ public class ProjectController {
 				responseProjects = projects;
 			}
 			
-			final String resultContent = g.toJson(responseProjects);
 			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("'/Project/all' is returning %s", resultContent));
+				logger.debug(String.format("'/Project/all' is returning %d projects", responseProjects.size()));
 			}
-			return resultContent;
+			return responseProjects;
+			
 		} catch (final SkillerException e) {
 			logger.error(getStackTrace(e));
-			return "";
+			return new ArrayList<Project>();
 		}
 
 	}
@@ -222,7 +217,7 @@ public class ProjectController {
 	public ResponseEntity<Project> save(@RequestBody Project project) {
 
 		final ResponseEntity<Project> responseEntity;
-		final HttpHeaders headers = new HttpHeaders();
+		final HttpHeaders headers = headers();
 		try {
 			if (project.getId() == 0) {
 				project = projectHandler.addNewProject(project);
@@ -248,57 +243,45 @@ public class ProjectController {
 			logger.error(getStackTrace(e));
 			return new ResponseEntity<>(
 					new Project(), 
-					new HttpHeaders(), 
+					headers(), 
 					HttpStatus.BAD_REQUEST);
 		}
 	}
-	
-	/**
-	 * <p>Internal Parameters class containing all possible parameters necessaries for add/remove a skill from a project.</p>
-	 * @author Fr&eacute;d&eacute;ric VIDAL 
-	 */
-	class ParamProjectSkill {
-		public ParamProjectSkill() { }
-		int idProject;
-		int idSkill;
-	}
-	
+		
 	/**
 	 * <p>Add a new skill required for a project.</p>
-	 * @param param the body of the post containing an instance of ParamProjectSkill in JSON format
+	 * @param projectSkill the body of the post containing an instance of ParamProjectSkill in JSON format
 	 * @see ProjectController.ParamProjectSkill
 	 * @return
 	 */
 	@PostMapping("/skill/add")
-	public ResponseEntity<BooleanDTO> saveSkill(@RequestBody String param) {
+	public ResponseEntity<BooleanDTO> saveSkill(@RequestBody ParamProjectSkill projectSkill) {
 		
-		ParamProjectSkill p = g.fromJson(param, ParamProjectSkill.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(
-					"POST command on /project/skill/save with params idProjject:%d, idSkill:%d", 
-					p.idProject, p.idSkill));
+					"POST command on /project/skill/add with params idProject:%d, idSkill:%d", 
+					projectSkill.idProject, projectSkill.idSkill));
 		}
 		
 		MyReference<ResponseEntity<BooleanDTO>> refResponse = projectLoader.new MyReference<>();
-		Project project = projectLoader.getProject(p.idProject, new BooleanDTO(), refResponse);
+		Project project = projectLoader.getProject(projectSkill.idProject, new BooleanDTO(), refResponse);
 		if (refResponse.response != null) {
 			return refResponse.response;
 		}
 		
-		final HttpHeaders headers = new HttpHeaders();
 		try {
-			Skill skill = this.skillHandler.getSkill(p.idSkill);
+			Skill skill = this.skillHandler.getSkill(projectSkill.idSkill);
 			this.projectHandler.addSkill(project, skill);	
-			return new ResponseEntity<BooleanDTO>(new BooleanDTO(), headers, HttpStatus.OK);
+			return new ResponseEntity<BooleanDTO>(new BooleanDTO(), headers(), HttpStatus.OK);
 		} catch (final SkillerException ske) {
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format(
-						"Cannot save the skill %d inside the project %s", p.idSkill, project.getName()));
+						"Cannot save the skill %d inside the project %s", projectSkill.idSkill, project.getName()));
 				logger.debug (ske.errorMessage);
 			}
 			return new ResponseEntity<BooleanDTO>(
-					new BooleanDTO(-1, String.format("There is no skill with id " + p.idSkill)), 
-					headers, HttpStatus.BAD_REQUEST);
+					new BooleanDTO(-1, String.format("There is no skill with id " + projectSkill.idSkill)), 
+					headers(), HttpStatus.BAD_REQUEST);
 		}
 	}	
 	
@@ -307,126 +290,49 @@ public class ProjectController {
 	* @param param an instance of {@link ParamProjectSkill} containing the project identifier and the skill identifier
 	*/
 	@PostMapping("/skill/del")
-	public ResponseEntity<BooleanDTO> revokeSkill(@RequestBody String param) {
+	public ResponseEntity<BooleanDTO> revokeSkill(@RequestBody ParamProjectSkill projectSkill) {
 
-		ParamProjectSkill p = g.fromJson(param, ParamProjectSkill.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(
 				"POST command on /staff/skills/del with params (idProject: %d, idSkill: %d)",
-				p.idProject, p.idSkill));
+				projectSkill.idProject, projectSkill.idSkill));
 		}
 
 		MyReference<ResponseEntity<BooleanDTO>> refResponse = projectLoader.new MyReference<>();
-		Project project = projectLoader.getProject(p.idProject, new BooleanDTO(), refResponse);
+		Project project = projectLoader.getProject(projectSkill.idProject, new BooleanDTO(), refResponse);
 		if (refResponse.response != null) {
 			return refResponse.response;
 		}
 		
-		projectHandler.removeSkill(project, p.idSkill);
+		projectHandler.removeSkill(project, projectSkill.idSkill);
 		
-		return new ResponseEntity<>(new BooleanDTO(), new HttpHeaders(), HttpStatus.OK);
+		return new ResponseEntity<>(new BooleanDTO(), headers(), HttpStatus.OK);
 	}
 	
-	/**
-	 * Parameter sent to the controller in order to obtain the sunburst data. 
-	 * @author Fr&eacute;d&eacute;ric VIDAL
-	 */
-	public class SettingsGeneration {
-		/**
-		 * Project identifier.
-		 */
-		int idProject;
-
-		/**
-		 * Starting date of investigation.
-		 */
-		private long startingDate;
-		
-		/**
-		 * selected staff identifier.
-		 */
-		private int idStaffSelected;
-		
-		/**
-		 * ParamSunburst.
-		 */
-		public SettingsGeneration() {
-			super();
-		}
-
-		/**
-		 * @param idProject project identifier
-		 */
-		public SettingsGeneration(final int idProject) {
-			this.idProject = idProject;
-		}
-		
-		/**
-		 * @param idProject project identifier.
-		 * @param idStaffSelected staff identifier selected.
-		 */
-		public SettingsGeneration(final int idProject, final int idStaffSelected) {
-			this.idProject = idProject;
-			this.setIdStaffSelected(idStaffSelected);
-		}
-		
-		/**
-		 * @return {@code true} if the repository requires personalization, {@code false} otherwise.
-		 */
-		public boolean requiresPersonalization() {
-			return (getIdStaffSelected() > 0 || getStartingDate() > 0);
-		}
-
-
-		/**
-		 * @return the startingDate of investigation.
-		 */
-		public long getStartingDate() {
-			return startingDate;
-		}
-
-		/**
-		 * @return the idStaffSelected
-		 */
-		public int getIdStaffSelected() {
-			return idStaffSelected;
-		}
-
-		/**
-		 * @param idStaffSelected the idStaffSelected to set
-		 */
-		private void setIdStaffSelected(int idStaffSelected) {
-			this.idStaffSelected = idStaffSelected;
-		}
-
-	}
 	
 	/**
 	* Retrieve the activities for a project in an object ready made to be injected into the sunburst chart.
 	*/
 	@PostMapping("/sunburst")
-	public ResponseEntity<SunburstDTO> retrieveRiskDashboard(@RequestBody String param) {
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Reception of the JSON body %s", param));
-		}
-		SettingsGeneration gp = g.fromJson(param, SettingsGeneration.class);
+	public ResponseEntity<SunburstDTO> retrieveRiskDashboard(@RequestBody SettingsGeneration settings) {
+
 		if (logger.isDebugEnabled()) {
 			logger.debug( MessageFormat.format(
 				"POST command on /sunburst with params idProject : {0}, starting from {1}, for the staff member {2}",
-				gp.idProject,
-				(gp.getStartingDate() == 0) ? "EPOC" : new Date(gp.getStartingDate()),
-				gp.getIdStaffSelected()));
+				settings.getIdProject(),
+				(settings.getStartingDate() == 0) ? "EPOC" : new Date(settings.getStartingDate()),
+				settings.getIdStaffSelected()));
 		}
 
 		MyReference<ResponseEntity<SunburstDTO>> refResponse = projectLoader.new MyReference<>();
-		Project project = projectLoader.getProject(gp.idProject, new SunburstDTO(), refResponse);
+		Project project = projectLoader.getProject(settings.getIdProject(), new SunburstDTO(), refResponse);
 		if (refResponse.response != null) {
 			return refResponse.response;
 		}
 		
 		try {
 			if (scanner.hasAvailableGeneration(project)) {
-				return generate(project, gp);
+				return generate(project, settings);
 			} else {
 				if (logger.isDebugEnabled()) {
 					logger.debug ("Tasks present in the tasks collection");
@@ -440,22 +346,22 @@ public class ProjectController {
 					return new ResponseEntity<> (
 							new SunburstDTO(project.getId(), project.getRisk(), CODE_MULTIPLE_TASK,
 							"A dashboard generation has already been launched for " + project.getName()), 
-							new HttpHeaders(), 
+							headers(), 
 							HttpStatus.BAD_REQUEST);
 				}
 				if (logger.isDebugEnabled()) {
 					logger.debug("The generation will be processed asynchronously !");
 				}
-				scanner.generateAsync(project, gp);
+				scanner.generateAsync(project, settings);
 				return new ResponseEntity<> (new SunburstDTO(project.getId(), project.getRisk(), null, HttpStatus.CREATED.value(), 
 						"The dashboard generation has been launched. Operation might last a while. Please try later !"), 
-						new HttpHeaders(), 
+						headers(), 
 						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
 			logger.error(getStackTrace(e));
 			return new ResponseEntity<> (new SunburstDTO(project.getId(), project.getRisk(), null, -1, e.getMessage()), 
-					new HttpHeaders(), 
+					headers(), 
 					HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -561,8 +467,17 @@ public class ProjectController {
 	public ResponseEntity<ProjectDTO> postErrorReturnBodyMessage (int code, String message, Project project) {
 		return new ResponseEntity<>( 
 				new ProjectDTO(project, code, message),
-				new HttpHeaders(), 
+				headers(), 
 				HttpStatus.BAD_REQUEST);
 	}
 
+	
+	/**
+	 * @return a generated HTTP Headers for the response
+	 */
+	private HttpHeaders headers() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+		return headers;
+	}
 }

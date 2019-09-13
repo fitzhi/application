@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 import fr.skiller.bean.ProjectHandler;
@@ -62,6 +63,7 @@ public class ProjectLoader {
 		Project project = null;
 		
 		final HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 		headers.set(BACKEND_RETURN_CODE, "O");
 		headers.set(BACKEND_RETURN_MESSAGE, "No project found for the identifier " + idProject);
 

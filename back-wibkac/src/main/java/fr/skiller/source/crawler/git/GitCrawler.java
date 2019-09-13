@@ -77,7 +77,7 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
-import fr.skiller.controller.ProjectController.SettingsGeneration;
+import fr.skiller.controller.in.SettingsGeneration;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Project;

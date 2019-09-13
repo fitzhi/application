@@ -24,7 +24,7 @@ import com.google.gson.GsonBuilder;
 import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.ProjectHandler;
-import fr.skiller.controller.ProjectController.SettingsGeneration;
+import fr.skiller.controller.in.SettingsGeneration;
 import fr.skiller.data.external.SunburstDTO;
 import fr.skiller.data.internal.Project;
 
@@ -61,8 +61,8 @@ public class ProjectControllerRetrieveDashboardTest {
 		Project p = projectHandler.get(1);
 		Assert.assertNotNull(p);
 
-		SettingsGeneration param = new ProjectController().new SettingsGeneration();
-		param.idProject = 1;
+		SettingsGeneration param = new SettingsGeneration();
+		param.setIdProject(1);
 		
 		Mockito.when(cacheDataHandler.hasCommitRepositoryAvailable(p)).thenReturn(false);
 		Mockito.when(tasks.containsTask(ProjectController.DASHBOARD_GENERATION, "project", 1))
@@ -74,6 +74,7 @@ public class ProjectControllerRetrieveDashboardTest {
 				"A dashboard generation has already been launched for TEST 1");
 		
 		this.mvc.perform(post("/project/sunburst")
+		.contentType(MediaType.APPLICATION_JSON_UTF8)
 		.content(jsonInput))
 		.andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))

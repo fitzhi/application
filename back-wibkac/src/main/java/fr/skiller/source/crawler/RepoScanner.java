@@ -10,7 +10,7 @@ import java.util.Set;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 
-import fr.skiller.controller.ProjectController.SettingsGeneration;
+import fr.skiller.controller.in.SettingsGeneration;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RepositoryAnalysis;
 import fr.skiller.data.internal.RiskDashboard;

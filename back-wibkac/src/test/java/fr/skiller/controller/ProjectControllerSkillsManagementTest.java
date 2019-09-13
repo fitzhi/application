@@ -22,6 +22,7 @@ import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;
+import fr.skiller.controller.in.ParamProjectSkill;
 import fr.skiller.data.external.BooleanDTO;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
@@ -66,13 +67,14 @@ public class ProjectControllerSkillsManagementTest {
 			logger.debug("Skill found " + skill.getTitle());
 		}
 		
-		ProjectController.ParamProjectSkill ps = projectController.new ParamProjectSkill();
+		ParamProjectSkill ps = new ParamProjectSkill();
 		ps.idProject = 1;
 		ps.idSkill = 2;
 
 		String jsonInput = gson.toJson(ps);
 		
 		this.mvc.perform(post("/project/skill/add")
+		.contentType(MediaType.APPLICATION_JSON_UTF8)
 		.content(jsonInput))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -85,6 +87,7 @@ public class ProjectControllerSkillsManagementTest {
 				.count());
 								
 		this.mvc.perform(post("/project/skill/del")
+		.contentType(MediaType.APPLICATION_JSON_UTF8)
 		.content(jsonInput))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
