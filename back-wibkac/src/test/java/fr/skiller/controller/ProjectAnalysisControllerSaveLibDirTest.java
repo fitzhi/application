@@ -69,9 +69,10 @@ public class ProjectAnalysisControllerSaveLibDirTest {
 		String jsonInput = gson.toJson(continents);
 		
 		this.mvc.perform(post("/project/analysis/lib-dir/save/9999")
-		.content(jsonInput))
-		.andExpect(status().isOk())
-		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(jsonInput))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
 		
 		List<Library> libs = project.getLibraries();
 		Assert.assertEquals("4 records in the libraries list", 4, libs.size());

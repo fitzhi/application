@@ -4,6 +4,9 @@ import static fr.skiller.Error.getStackTrace;
 import static fr.skiller.Global.BACKEND_RETURN_CODE;
 import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -20,8 +23,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.Gson;
-
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.data.external.SkillDTO;
 import fr.skiller.data.internal.Skill;
@@ -32,11 +33,6 @@ import fr.skiller.exception.SkillerException;
 public class SkillController {
 
 	private final Logger logger = LoggerFactory.getLogger(SkillController.class.getCanonicalName());
-
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	Gson g = new Gson();
 
 	@Autowired
 	SkillHandler skillHandler;
@@ -87,12 +83,12 @@ public class SkillController {
 	}
 
 	@GetMapping("/all")
-	public String readAll() {
-		final String resultContent = g.toJson(skillHandler.getSkills().values());
+	public Collection<Skill> readAll() {
+		Collection<Skill> skills = skillHandler.getSkills().values();
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("'/skill/all' is returning %s", resultContent));
+			logger.debug(String.format("'/skill/all' is returning %d skills", skills.size()));
 		}
-		return resultContent;
+		return skills;
 	}
 	
 	/**

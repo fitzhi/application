@@ -14,11 +14,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.Gson;
-
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.data.internal.ForTest;
 import fr.skiller.source.crawler.RepoScanner;
+
 
 @RestController
 @RequestMapping("/test")

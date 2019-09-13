@@ -24,8 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.Gson;
-
 import fr.skiller.bean.ProjectDashboardCustomizer;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.controller.util.ProjectLoader;
@@ -47,11 +45,6 @@ import fr.skiller.exception.SkillerException;
 public class ProjectAnalysisController {
 
 	private final Logger logger = LoggerFactory.getLogger(ProjectAnalysisController.class.getCanonicalName());
-
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	private Gson g = new Gson();
 
 	@Autowired
 	ProjectDashboardCustomizer dashboardCustomizer;
@@ -124,9 +117,8 @@ public class ProjectAnalysisController {
 	 * @return
 	 */
 	@PostMapping("/lib-dir/save/{idProject}")
-	public ResponseEntity<Boolean> saveLibDir(@PathVariable int idProject, @RequestBody String param) {
+	public ResponseEntity<Boolean> saveLibDir(@PathVariable int idProject, @RequestBody Library[] tabLib) {
 		
-		Library[] tabLib = g.fromJson(param, Library[].class);
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(
 					"POST command on /project/analysis/save/libDir/save/%d ", 

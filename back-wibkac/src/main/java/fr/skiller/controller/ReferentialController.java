@@ -20,8 +20,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.Gson;
-
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.data.internal.RiskLegend;
 
@@ -30,11 +28,6 @@ import fr.skiller.data.internal.RiskLegend;
 public class ReferentialController {
 
 	Logger logger = LoggerFactory.getLogger(ReferentialController.class.getCanonicalName());
-
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	final Gson g = new Gson();
 
 	/**
 	 * Directory where data will be saved.

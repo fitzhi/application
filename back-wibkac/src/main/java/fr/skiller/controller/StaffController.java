@@ -38,9 +38,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 import fr.skiller.Error;
 import fr.skiller.Global;
 import fr.skiller.bean.ProjectHandler;
