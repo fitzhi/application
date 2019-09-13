@@ -25,19 +25,16 @@ import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
+@Slf4j
 @Service
 public class CacheDataHandlerImpl implements CacheDataHandler {
 	
- 	/**
- 	 * The logger for the GitScanner.
- 	 */
-	private Logger logger = LoggerFactory.getLogger(CacheDataHandlerImpl.class.getCanonicalName());
-
 	/**
 	 * cache directory for intermediate files representing the repositories.
 	 */
@@ -63,8 +60,8 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	@Override
 	public boolean hasCommitRepositoryAvailable(Project project) throws IOException {
 		Path savedProject = Paths.get(getCacheFilename(project));
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Examining %s", savedProject));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Examining %s", savedProject));
 		}
 		if (savedProject.toFile().exists()) {
 			FileTime lastModified = Files.getLastModifiedTime(savedProject);
@@ -96,8 +93,8 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 
 		CommitRepository repository = new BasicCommitRepository();
 		repository = gson.fromJson(fr, repository.getClass());
-		if (logger.isDebugEnabled()) {
-			logger.debug("repository of project " 
+		if (log.isDebugEnabled()) {
+			log.debug("repository of project " 
 					+ project.getName() 
 					+ " retrieved from cache. It contains " 
 					+ repository.size() 
@@ -128,7 +125,7 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 			Files.delete(cacheFile);
 			return true;
 		} catch (final Exception e) {
-			logger.error(e.getMessage());
+			log.error(e.getMessage());
 			return false;
 		}
 	}

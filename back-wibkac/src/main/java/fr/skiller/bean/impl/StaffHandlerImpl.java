@@ -38,11 +38,15 @@ import fr.skiller.data.internal.ResumeSkill;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
+ * <p>
  * Main implementation of the {@link StaffHandler}.
+ * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@Slf4j
 @Component
 public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements StaffHandler {
 
@@ -51,11 +55,6 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	 */
 	private static final int FIRST_LEVEL = 1;
 
-	/**
-	 * The logger.
-	 */
-	private Logger logger = LoggerFactory.getLogger(StaffHandlerImpl.class.getName());
-	
 	/**
 	 * Initialization of the Google JSON parser.
 	 */
@@ -116,11 +115,11 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		Map<String, Long> result = completeExperiences.stream()
 			      .collect(Collectors.groupingBy(Experience::key, Collectors.counting()));
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("'/countGroupBySkills' number of agregators %d",result.keySet().size()));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("'/countGroupBySkills' number of agregators %d",result.keySet().size()));
 			
 			for (Map.Entry<String, Long> entry : result.entrySet()) {
-				logger.debug(String.format("%s : %d", entry.getKey(), entry.getValue()));
+				log.debug(String.format("%s : %d", entry.getKey(), entry.getValue()));
 			}
 		}
 		
@@ -135,8 +134,8 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		if (staff == null) {
 			throw new SkillerException(-1, "There is no staff for the ID " + idStaff);
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("Working with the staff member " 
+		if (log.isDebugEnabled()) {
+			log.debug("Working with the staff member " 
 					+ (staff.getFirstName() == null ? "" : staff.getFirstName()) 
 					+ "  " + staff.getLastName()); 
 		}
@@ -149,8 +148,8 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				.collect(Collectors.toList()); 
 		final List<ResumeSkill> listOfNewSkills = listOfSkills.stream()
 			.filter(entry -> !currentExperience.contains(entry.getIdSkill())).collect(Collectors.toList());
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Adding %d new skills", listOfNewSkills.size()));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Adding %d new skills", listOfNewSkills.size()));
 		}
 		if (listOfNewSkills.isEmpty()) {
 			throw new SkillerException(-1, 
@@ -248,8 +247,8 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			// Either with the firstName + " " + lastName, or the lastName + " " + firstName
 			// We will rotate words inside the criteria 
 			// in order to test any combinations of criteria ("John William Doe Senior" -> "William Doe Senior John" --> ...)
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("Rotation of words within the criteria %s and trying a lookup", criteria));
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Rotation of words within the criteria %s and trying a lookup", criteria));
 			}
 			for (int i=0; i<word.length; i++) {
 				
@@ -266,13 +265,13 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 						.collect(Collectors.toList());
 				
 				if (!ids.isEmpty()) {
-					if (logger.isDebugEnabled()) {
-						logger.debug(String.format("          ---> %s OK ! :-)", sb.toString()));
+					if (log.isDebugEnabled()) {
+						log.debug(String.format("          ---> %s OK ! :-)", sb.toString()));
 					}
 					break;
 				} else {
-					if (logger.isDebugEnabled()) {
-						logger.debug(String.format("          ---> %s KO", sb.toString()));
+					if (log.isDebugEnabled()) {
+						log.debug(String.format("          ---> %s KO", sb.toString()));
 					}					
 				}
 			}
@@ -285,11 +284,11 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			return ids.get(0);
 		}
 		if (ids.size() > 1) {
-			if (logger.isWarnEnabled()) {
-				logger.warn(String.format("Multiple ids for this criteria %s", criteria));
-				logger.warn("Ids listed below :");
-				ids.stream().forEach(staff -> logger.warn(String.format("%d %s %s", staff.getIdStaff(), staff.getFirstName(), staff.getLastName())));
-				logger.warn("By default, we assumed to return the first one...");
+			if (log.isWarnEnabled()) {
+				log.warn(String.format("Multiple ids for this criteria %s", criteria));
+				log.warn("Ids listed below :");
+				ids.stream().forEach(staff -> log.warn(String.format("%d %s %s", staff.getIdStaff(), staff.getFirstName(), staff.getLastName())));
+				log.warn("By default, we assumed to return the first one...");
 			}
 			return ids.get(0);
 		}
@@ -341,8 +340,8 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			.filter(mission -> mission.getIdProject() == idProject)
 			.collect(Collectors.toList());
 		
-		if (logger.isDebugEnabled()) {
-			logger.debug("Contributors retrieved ");
+		if (log.isDebugEnabled()) {
+			log.debug("Contributors retrieved ");
 			missions.stream().forEach(Mission::getIdStaff);
 		}
 		final List<Contributor> contributors = new ArrayList<>();
@@ -402,8 +401,8 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		// The login is unique for each Wibkac user
 		Optional<Staff> emp = findStaffWithLogin(staff.getLogin());
 		if ( (emp.isPresent()) && (emp.get().getIdStaff() != staff.getIdStaff()) && (emp.get().getLogin().equals(staff.getLogin()))) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format(
+			if (log.isDebugEnabled()) {
+				log.debug(String.format(
 						"the employee %d %s gets the same login %s as %d %s" , 
 						staff.getIdStaff(), staff.fullName(),
 						staff.getLogin(),

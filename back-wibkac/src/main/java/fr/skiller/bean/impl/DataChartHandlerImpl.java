@@ -1,11 +1,10 @@
 package fr.skiller.bean.impl;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import fr.skiller.bean.DataChartHandler;
 import fr.skiller.data.internal.DataChart;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -17,11 +16,6 @@ import fr.skiller.data.internal.DataChart;
  */
 @Service
 public class DataChartHandlerImpl implements DataChartHandler {
-
-	/**
- 	 * The logger for the GitScanner.
- 	 */
-	final Logger logger = LoggerFactory.getLogger(DataChartHandlerImpl.class.getCanonicalName());
 
 	@Override
 	public void aggregateDataChart(DataChart dataChart) {

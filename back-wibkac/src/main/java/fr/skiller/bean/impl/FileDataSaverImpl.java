@@ -47,12 +47,14 @@ import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.git.SCMChange;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>Implementation of DataSaver on the file system.</p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@Slf4j
 @Service
 public class FileDataSaverImpl implements DataSaver {
 
@@ -68,11 +70,6 @@ public class FileDataSaverImpl implements DataSaver {
 	 */
 	@Value("${applicationOutDirectory}")
 	private String saveDir;
-
-	/**
-	 * The logger for the GitScanner.
-	 */
-	private Logger logger = LoggerFactory.getLogger(FileDataSaverImpl.class.getCanonicalName());
 
 	/**
 	 * Directory to save the changes file.s
@@ -111,12 +108,12 @@ public class FileDataSaverImpl implements DataSaver {
 
 		final String filename = "projects.json";
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Saving %d projects into file %s.", projects.size(), filename));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Saving %d projects into file %s.", projects.size(), filename));
 			final StringBuilder sb = new StringBuilder();
 			projects.values().stream()
 					.forEach(project -> sb.append(project.getId()).append(" ").append(project.getName()).append(", "));
-			logger.debug(sb.toString());
+			log.debug(sb.toString());
 		}
 
 		Path path = rootLocation.resolve(filename);
@@ -147,12 +144,12 @@ public class FileDataSaverImpl implements DataSaver {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		}
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Loading %d projects into file %s.", projects.size(), filename));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Loading %d projects into file %s.", projects.size(), filename));
 			final StringBuilder sb = new StringBuilder();
 			projects.values().stream()
 					.forEach(project -> sb.append(project.getId()).append(" ").append(project.getName()).append(", "));
-			logger.debug(sb.toString());
+			log.debug(sb.toString());
 		}
 		return projects;
 	}
@@ -169,12 +166,12 @@ public class FileDataSaverImpl implements DataSaver {
 
 		final String filename = "staff.json";
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Saving %d staff members into file %s.", company.size(), filename));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Saving %d staff members into file %s.", company.size(), filename));
 			final StringBuilder sb = new StringBuilder();
 			company.values().stream()
 					.forEach(staff -> sb.append(staff.getIdStaff()).append(" ").append(staff.getLastName()).append(", "));
-			logger.debug(sb.toString());
+			log.debug(sb.toString());
 		}
 
 		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
@@ -199,12 +196,12 @@ public class FileDataSaverImpl implements DataSaver {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, rootLocation.resolve(filename).toFile().getAbsoluteFile()), e);
 		}
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Loading %d staff members from file %s.", theStaff.size(), filename));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Loading %d staff members from file %s.", theStaff.size(), filename));
 			final StringBuilder sb = new StringBuilder();
 			theStaff.values().stream()
 					.forEach(staff -> sb.append(staff.getIdStaff()).append(" ").append(staff.getLastName()).append(", "));
-			logger.debug(sb.toString());
+			log.debug(sb.toString());
 		}
 		return theStaff;
 	}
@@ -221,11 +218,11 @@ public class FileDataSaverImpl implements DataSaver {
 
 		final String filename = "skills.json";
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Saving %d skills into file %s.", skills.size(), filename));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Saving %d skills into file %s.", skills.size(), filename));
 			final StringBuilder sb = new StringBuilder();
 			skills.values().stream().forEach(skill -> sb.append(skill.getId()).append(" ").append(skill.getTitle()).append(", "));
-			logger.debug(sb.toString());
+			log.debug(sb.toString());
 		}
 
 		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
@@ -255,8 +252,8 @@ public class FileDataSaverImpl implements DataSaver {
 
 		final String filename = SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getName() + "-changes.csv";
 		
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Saving file %s", rootLocation.resolve(filename)));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Saving file %s", rootLocation.resolve(filename)));
 		}
 		try (Writer writer = new FileWriter(rootLocation.resolve(filename).toFile())) {
 
@@ -322,8 +319,8 @@ public class FileDataSaverImpl implements DataSaver {
 		if (pathname.indexOf(INTERNAL_FILE_SEPARATORCHAR) != -1) {
 				return true;
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Examining if %s is a directory", project.getLocationRepository() + INTERNAL_FILE_SEPARATORCHAR + pathname));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Examining if %s is a directory", project.getLocationRepository() + INTERNAL_FILE_SEPARATORCHAR + pathname));
 		}
 		return Paths.get(project.getLocationRepository() + INTERNAL_FILE_SEPARATORCHAR + pathname).toFile().isDirectory();
 	}
@@ -349,11 +346,11 @@ public class FileDataSaverImpl implements DataSaver {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		}
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Loading %d skills from file %s.", skills.size(), filename));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Loading %d skills from file %s.", skills.size(), filename));
 			final StringBuilder sb = new StringBuilder();
 			skills.values().stream().forEach(skill -> sb.append(skill.getId()).append(" ").append(skill.getTitle()).append(", "));
-			logger.debug(sb.toString());
+			log.debug(sb.toString());
 		}
 		return skills;
 	}
@@ -372,8 +369,8 @@ public class FileDataSaverImpl implements DataSaver {
 				.sorted()
 				.collect(Collectors.toList());
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Saving paths file %s", rootLocation.resolve(filename)));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Saving paths file %s", rootLocation.resolve(filename)));
 		}		
 		
 		File file = createResetOrCreateFile(filename);
@@ -393,8 +390,8 @@ public class FileDataSaverImpl implements DataSaver {
 	public List<String> loadRepositoryDirectories(Project project) throws SkillerException {
 		
 		final String filename = "project-" + project.getId() + "-pathnames.txt";
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Loading the paths file %s", rootLocation.resolve(filename)));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Loading the paths file %s", rootLocation.resolve(filename)));
 		}
 
 		File file = rootLocation.resolve(filename).toFile();

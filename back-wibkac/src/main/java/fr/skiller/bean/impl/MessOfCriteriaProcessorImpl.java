@@ -26,6 +26,8 @@ import fr.skiller.data.internal.RiskLegend;
 import fr.skiller.data.internal.SourceFile;
 import fr.skiller.data.source.CommitHistory;
 import fr.skiller.data.source.CommitRepository;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @deprecated
@@ -34,6 +36,7 @@ import fr.skiller.data.source.CommitRepository;
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@Slf4j
 @Service("messOfCriteria")
 @Deprecated
 public class MessOfCriteriaProcessorImpl implements RiskProcessor {
@@ -42,45 +45,29 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 	 * Statistic of activity
 	 * @author Fr&eacute;d&eacute;ric VIDAL
 	 */
-	class StatActivity {
+	@Data class StatActivity {
 		
 		/**
 		 * Total number of commits submitted.
 		 */
-		long countCommits;
+		final long countCommits;
 		
 		/**
 		 * Number of commits submitted by active developers.
 		 */
-		long countCommitsByActiveDevelopers;
+		final long countCommitsByActiveDevelopers;
 		
 		/**
 		 * Is the last contributor on this source file still active ? 
 		 */
-		boolean isLastCommiterStillActive;
+		final boolean isLastCommiterStillActive;
 
-		/**
-		 * @param countCommits
-		 * @param countCommitsByActiveDevelopers
-		 * @param isLastCommiterStillActive
-		 */
-		public StatActivity(long countCommits, long countCommitsByActiveDevelopers, boolean isLastCommiterStillActive) {
-			super();
-			this.countCommits = countCommits;
-			this.countCommitsByActiveDevelopers = countCommitsByActiveDevelopers;
-			this.isLastCommiterStillActive = isLastCommiterStillActive;
-		}
 	}
 
 	/**
 	 * Bean in charge of handling staff.
 	 */
 	@Autowired StaffHandler staffHandler;
-
- 	/**
- 	 * The logger for the Risk Surveyor.
- 	 */
-	Logger logger = LoggerFactory.getLogger(MessOfCriteriaProcessorImpl.class.getCanonicalName());
 
 	@Override
 	public Map<Integer, RiskLegend> riskLegends() {
@@ -207,14 +194,14 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 					.mapToLong(stat -> stat.countCommitsByActiveDevelopers)
 					.anyMatch(i -> i == 0);
 			
-			if (logger.isDebugEnabled()) {
+			if (log.isDebugEnabled()) {
 				final StringBuilder sb = new StringBuilder();
 				sb.append(LN+"dir : " + sunburstData.getLocation() + LN)
 					.append("percentageOfCommitsMadeByActiveDevelopers : " + percentageOfCommitsMadeByActiveDevelopers + LN)
 					.append("hasLostARecentContributor : " + hasLostARecentContributor + LN)
 					.append("hasASourceFileUnder50pct : " + hasASourceFileUnder50pct + LN)
 					.append("hasSourceWithoutContributor : " + hasSourceWithoutContributor + LN);
-				logger.debug(sb.toString());
+				log.debug(sb.toString());
 			}
 			
 			setRiskLevel(sunburstData, 

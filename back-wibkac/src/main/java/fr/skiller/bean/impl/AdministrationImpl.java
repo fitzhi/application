@@ -15,8 +15,6 @@ import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -25,18 +23,15 @@ import fr.skiller.bean.Administration;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Main (and unique) implementation of the administration interface.
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@Slf4j
 @Service("admin")
 public class AdministrationImpl implements Administration {
-
-	/**
-	 * The logger.
-	 */
-	private Logger logger = LoggerFactory.getLogger(AdministrationImpl.class.getCanonicalName());
 
 	/**
 	 * Directory where the footprint of the very first solution is made.
@@ -76,8 +71,8 @@ public class AdministrationImpl implements Administration {
 	public void saveVeryFirstConnection() throws SkillerException {
         final Path root = Paths.get(rootLocation);
 		final Path firstConnection = root.resolve(FIRST_CONNECTION_FILE);
-		if (logger.isInfoEnabled()) {
-			logger.info(
+		if (log.isInfoEnabled()) {
+			log.info(
 					String.format(
 					"Saving the footprint file for the first connection %s",
 					firstConnection.toAbsolutePath().toString()));

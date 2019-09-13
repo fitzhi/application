@@ -14,79 +14,23 @@ import org.springframework.stereotype.Service;
 
 import fr.skiller.bean.AsyncTask;
 import fr.skiller.exception.SkillerException;
+import lombok.Data;
 
-class Task {
+@Data class Task {
 	/**
 	 * Type of operation
 	 */
-	String operation;
+	final String operation;
 	/**
 	 * Title corresponding the entity id
 	 */
-	String title;
+	final String title;
 	/**
 	 * Identifier. It might be a project, a staff, a skill...
 	 */
-	int id;
-	
-	/**
-	 * @param operation Type of operation
-	 * @param tile Title corresponding the entity identifier
-	 * @param id Identifier. It might be a project, a staff, a skill...
-	 */
-	public Task(final String operation, final String title, final int id) {
-		super();
-		this.operation = operation;
-		this.title = title;
-		this.id = id;
-	}
-
-	@Override
-	@Generated ("eclipse")
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + id;
-		result = prime * result + ((operation == null) ? 0 : operation.hashCode());
-		result = prime * result + ((title == null) ? 0 : title.hashCode());
-		return result;
-	}
+	final int id;	
 
 
-	@Override
-	@Generated ("eclipse")
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Task other = (Task) obj;
-		if (id != other.id)
-			return false;
-		if (operation == null) {
-			if (other.operation != null)
-				return false;
-		} else {
-			if (!operation.equals(other.operation))
-				return false;
-		}
-		if (title == null) {
-			if (other.title != null)
-				return false;
-		} else {
-			if (!title.equals(other.title))
-				return false;
-		}
-		return true;
-	}
-
-	@Override
-	public String toString() {
-		return "Task [operation=" + operation + ", title=" + title + ", id=" + id + "]";
-	}
-	
 }
 
 /**

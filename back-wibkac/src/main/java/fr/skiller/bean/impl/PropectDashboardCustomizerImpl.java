@@ -25,10 +25,12 @@ import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectDashboardCustomizer;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@Slf4j
 @Service
 public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomizer {
 
@@ -44,11 +46,6 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 	 * Cleanup patterns list.
 	 */
 	private List<Pattern> patternsCleanupList;
-
-	/**
-	 * logger
-	 */
-	Logger logger = LoggerFactory.getLogger(PropectDashboardCustomizerImpl.class.getCanonicalName());
 
 	/**
 	 * For retrieving data from the persistent repository.
@@ -67,9 +64,9 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 		patternsCleanupList = Arrays.asList(patternsCleanup.split(";")).stream().map(Pattern::compile)
 				.collect(Collectors.toList());
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("Pattern CLEANUP loaded from the file application.properties : ");
-			patternsCleanupList.stream().forEach(p -> logger.debug(p.pattern()));
+		if (log.isDebugEnabled()) {
+			log.debug("Pattern CLEANUP loaded from the file application.properties : ");
+			patternsCleanupList.stream().forEach(p -> log.debug(p.pattern()));
 		}
 	}
 	
@@ -95,8 +92,8 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 		if (!this.cachePaths.containsKey(project.getId())) {
 			pathsList = dataSaver.loadRepositoryDirectories(project);
 			this.cachePaths.put(project.getId(), pathsList);
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("The repository dir paths for the project %d %s is successfully loaded", project.getId(), project.getName()));
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("The repository dir paths for the project %d %s is successfully loaded", project.getId(), project.getName()));
 			}
 		} else {
 			pathsList = this.cachePaths.get(project.getId());

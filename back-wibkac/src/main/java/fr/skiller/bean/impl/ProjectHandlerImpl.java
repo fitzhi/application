@@ -32,19 +32,16 @@ import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
+@Slf4j
 @Component
 public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implements ProjectHandler {
 	
-	/**
-	 * logger
-	 */
-	Logger logger = LoggerFactory.getLogger(ProjectHandlerImpl.class.getCanonicalName());
-
 	/**
 	 * The Project collection.
 	 */
@@ -94,8 +91,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 	@Override
 	public List<Contributor> contributors(int idProject) {
-		if (logger.isDebugEnabled()) {
-			logger.debug (String.format("Retrieve the contributors list for the project id %d", idProject));
+		if (log.isDebugEnabled()) {
+			log.debug (String.format("Retrieve the contributors list for the project id %d", idProject));
 		}
 		List<Contributor> contributors = new ArrayList<>();
 		staffHandler.getStaff().values().forEach(staff -> {
@@ -178,8 +175,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Override
 	public void saveRisk(Project project, int risk) {
 		
-		if (logger.isInfoEnabled()) {
-			logger.info(String.format("The project %s has now, the level of risk %d", project.getName(), risk));
+		if (log.isInfoEnabled()) {
+			log.info(String.format("The project %s has now, the level of risk %d", project.getName(), risk));
 		}
 		synchronized (lockDataUpdated) {
 			project.setRisk(risk);
@@ -190,8 +187,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Override
 	public void addSkill(Project project, Skill skill) {
 		
-		if (logger.isInfoEnabled()) {
-			logger.info(String.format("The project %s has declared the skill %s in its scope", 
+		if (log.isInfoEnabled()) {
+			log.info(String.format("The project %s has declared the skill %s in its scope", 
 					project.getName(), skill.getTitle()));
 		}
 		synchronized (lockDataUpdated) {
@@ -205,8 +202,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Override
 	public void removeSkill(Project project, int idSkill) {
 		
-		if (logger.isInfoEnabled()) {
-			logger.info(String.format("The project %s will loose the skill with id %d from its scope", 
+		if (log.isInfoEnabled()) {
+			log.info(String.format("The project %s will loose the skill with id %d from its scope", 
 					project.getName(), idSkill));
 		}
 
@@ -225,8 +222,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Override
 	public void associateStaffToGhost(Project project, String pseudo, int idAssociatedStaff) {
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
 					"the project %s is associating the pseudo ghost %s to the staff identifier %d",
 					project.getName(),
 					pseudo,
@@ -263,8 +260,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Override
 	public void setGhostTechnicalStatus(Project project, String pseudo, boolean technical) {
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
 				"the project %s has setup %s the ghost pseudo %s",
 				project.getName(),
 				technical ? "technical" : "non technical",
@@ -309,8 +306,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Override
 	public void resetGhost(Project project, String pseudo) {
 		
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
 				"Resetting the Ghost pseudo %s of the project %s",
 				project.getName(),
 				pseudo));

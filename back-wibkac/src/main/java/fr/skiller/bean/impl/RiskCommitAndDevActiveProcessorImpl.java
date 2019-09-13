@@ -31,6 +31,7 @@ import fr.skiller.data.internal.RiskLegend;
 import fr.skiller.data.internal.SourceFile;
 import fr.skiller.data.source.CommitHistory;
 import fr.skiller.data.source.CommitRepository;
+import lombok.Data;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -45,125 +46,26 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 	 * 
 	 * @author Fr&eacute;d&eacute;ric VIDAL
 	 */
-	public class StatActivity {
+	public @Data class StatActivity {
 
 		/**
 		 * Filename.
 		 */
-		private String filename;
+		private final String filename;
 
 		/**
 		 * Total number of the commits submitted.
 		 */
-		private long countCommits;
+		private final long countCommits;
 
 		/**
 		 * Number of the commits submitted by active developers.
 		 */
-		private long countCommitsByActiveDevelopers;
+		private final long countCommitsByActiveDevelopers;
 
-		/**
-		 * @param fileName
-		 * @param countCommits
-		 * @param countCommitsByActiveDevelopers
-		 */
-		StatActivity(final String fileName, final long countCommits, final long countCommitsByActiveDevelopers) {
-			super();
-			this.setFilename(fileName);
-			this.setCountCommits(countCommits);
-			this.setCountCommitsByActiveDevelopers(countCommitsByActiveDevelopers);
-		}
-
-		@Override
-		@Generated("eclipse")
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result + getOuterType().hashCode();
-			result = prime * result + (int) (getCountCommits() ^ (getCountCommits() >>> 32));
-			result = prime * result
-					+ (int) (getCountCommitsByActiveDevelopers() ^ (getCountCommitsByActiveDevelopers() >>> 32));
-			result = prime * result + ((getFilename() == null) ? 0 : getFilename().hashCode());
-			return result;
-		}
-
-		@Override
-		@Generated("eclipse")
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			StatActivity other = (StatActivity) obj;
-			if (!getOuterType().equals(other.getOuterType()))
-				return false;
-			if (getCountCommits() != other.getCountCommits())
-				return false;
-			if (getCountCommitsByActiveDevelopers() != other.getCountCommitsByActiveDevelopers())
-				return false;
-			if (getFilename() == null) {
-				if (other.getFilename() != null)
-					return false;
-			} else if (!getFilename().equals(other.getFilename()))
-				return false;
-			return true;
-		}
 
 		private RiskCommitAndDevActiveProcessorImpl getOuterType() {
 			return RiskCommitAndDevActiveProcessorImpl.this;
-		}
-
-		@Override
-		public String toString() {
-			return "StatActivity [filename=" + getFilename() + ", countCommits=" + getCountCommits()
-					+ ", countCommitsByActiveDevelopers=" + getCountCommitsByActiveDevelopers() + "]";
-		}
-
-		/**
-		 * @return the filename
-		 */
-		public String getFilename() {
-			return filename;
-		}
-
-		/**
-		 * @param filename the filename to set
-		 */
-		public void setFilename(String filename) {
-			this.filename = filename;
-		}
-
-		/**
-		 * @return the countCommits<br/>
-		 *         <i>(Total number of the commits submitted)</i>
-		 */
-		public long getCountCommits() {
-			return countCommits;
-		}
-
-		/**
-		 * @param countCommits the countCommits to set
-		 */
-		public void setCountCommits(long countCommits) {
-			this.countCommits = countCommits;
-		}
-
-		/**
-		 * @return the countCommitsByActiveDevelopers<br/>
-		 *         <i>(Number of the commits submitted by active developers)</i>
-		 */
-		public long getCountCommitsByActiveDevelopers() {
-			return countCommitsByActiveDevelopers;
-		}
-
-		/**
-		 * @param countCommitsByActiveDevelopers the countCommitsByActiveDevelopers to
-		 *                                       set
-		 */
-		public void setCountCommitsByActiveDevelopers(long countCommitsByActiveDevelopers) {
-			this.countCommitsByActiveDevelopers = countCommitsByActiveDevelopers;
 		}
 
 	}

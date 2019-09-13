@@ -20,11 +20,13 @@ import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.exception.SkillerException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
+@Slf4j
 @Component
 public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements SkillHandler {
 
@@ -39,11 +41,6 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	@Autowired
 	DataSaver dataSaver;
 
-	/**
-	 * logger
-	 */
-	Logger logger = LoggerFactory.getLogger(SkillHandlerImpl.class.getCanonicalName());
-
 	@Override
 	public Map<Integer, Skill> getSkills() {
 		
@@ -53,8 +50,8 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 
 		try {
 			this.skills = dataSaver.loadSkills();
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("%d %s", this.skills.size(), "skills loaded"));
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("%d %s", this.skills.size(), "skills loaded"));
 			}
 		} catch (final SkillerException e) {
 			// Without skills, this application is absolutely not viable
@@ -77,8 +74,8 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			getSkills().put(id, skill);
 			this.dataUpdated = true;
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Skill added %s", skill.toString()));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Skill added %s", skill.toString()));
 		}
 		return skill;
 	}
