@@ -27,7 +27,7 @@ import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
-import fr.skiller.controller.ProjectGhostController.BodyUpdateGhost;
+import fr.skiller.controller.in.BodyUpdateGhost;
 import fr.skiller.controller.util.LocalDateAdapter;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Mission;
@@ -98,13 +98,14 @@ public class ProjectGhostControllerTest {
 		Assert.assertTrue(
 				staff.getMissions().stream().anyMatch(mission -> mission.getIdProject() == ID_PROJECT));
 		
-		BodyUpdateGhost bug = projectGhostController.new BodyUpdateGhost();
+		BodyUpdateGhost bug = new BodyUpdateGhost();
 		bug.idProject = ID_PROJECT;
 		bug.pseudo = "pseudoLinked";
 		bug.idStaff = -1;
 		bug.technical = true;
 	
 		this.mvc.perform(post("/project/ghost/save")
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(bug)))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))

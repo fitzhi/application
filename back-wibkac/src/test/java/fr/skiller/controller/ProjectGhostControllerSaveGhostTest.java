@@ -26,7 +26,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.ProjectHandler;
-import fr.skiller.controller.ProjectGhostController.BodyUpdateGhost;
+import fr.skiller.controller.in.BodyUpdateGhost;
 import fr.skiller.controller.util.LocalDateAdapter;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
@@ -77,7 +77,7 @@ public class ProjectGhostControllerSaveGhostTest {
 	@Test
 	@WithMockUser
 	public void test() throws Exception {
-		BodyUpdateGhost bug = projectGhostController.new BodyUpdateGhost();
+		BodyUpdateGhost bug = new BodyUpdateGhost();
 		bug.idProject = ID_PROJECT;
 		bug.pseudo = "pseudoUnlinked";
 		bug.idStaff = 1;
@@ -95,6 +95,7 @@ public class ProjectGhostControllerSaveGhostTest {
 				staff.getMissions().stream().anyMatch(mission -> mission.getIdProject() == ID_PROJECT));
 		
 		this.mvc.perform(post("/project/ghost/save")
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(bug)))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))

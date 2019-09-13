@@ -20,6 +20,8 @@ import com.google.gson.Gson;
 
 import fr.skiller.Error;
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.controller.in.BodyRemoveGhost;
+import fr.skiller.controller.in.BodyUpdateGhost;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
@@ -38,27 +40,8 @@ public class ProjectGhostController {
 
 	private final Logger logger = LoggerFactory.getLogger(ProjectGhostController.class.getCanonicalName());
 
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	private Gson g = new Gson();
-
 	@Autowired
 	ProjectHandler projectHandler;
-	
-	/**
-	 * <p>
-	 * Internal container hosting all possible parameters required to manage a ghost of a project.
-	 * </p>
-	 * @author Fr&eacute;d&eacute;ric VIDAL 
-	 */
-	public class BodyUpdateGhost {
-		public BodyUpdateGhost() { }
-		int idProject;
-		String pseudo;
-		int idStaff;
-		boolean technical;
-	}
 	
 	/**
 	 * <p>
@@ -66,11 +49,10 @@ public class ProjectGhostController {
 	 * </p>
 	 */
 	@PostMapping(path="/save")
-	public ResponseEntity<Boolean> saveGhost(@RequestBody String body) {
+	public ResponseEntity<Boolean> saveGhost(@RequestBody BodyUpdateGhost param) {
 		
 		HttpHeaders headers = new HttpHeaders();
 
-		BodyUpdateGhost param = g.fromJson(body, BodyUpdateGhost.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("POST command on /project/ghosts/save for project : %d", param.idProject));
 		}
@@ -105,17 +87,6 @@ public class ProjectGhostController {
 		
 	}
 	
-	/**
-	 * <p>
-	 * Internal container hosting all possible parameters required to remove a ghost from a project.
-	 * </p>
-	 * @author Fr&eacute;d&eacute;ric VIDAL 
-	 */
-	public class BodyRemoveGhost {
-		public BodyRemoveGhost() { }
-		int idProject;
-		String pseudo;
-	}
 	
 	/**
 	 * <p>
@@ -123,11 +94,10 @@ public class ProjectGhostController {
 	 * </p>
 	 */
 	@PostMapping(path="/remove")
-	public ResponseEntity<Boolean> removeGhost(@RequestBody String body) {
+	public ResponseEntity<Boolean> removeGhost(@RequestBody BodyRemoveGhost param) {
 		
 		HttpHeaders headers = new HttpHeaders();
 
-		BodyRemoveGhost param = g.fromJson(body, BodyRemoveGhost.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("POST command on /project/ghosts/remove for project : %d and pseudi %s", 
 					param.idProject, param.pseudo));

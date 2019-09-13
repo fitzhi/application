@@ -17,6 +17,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -75,16 +76,22 @@ public class StaffControllerSkillTest {
 	public void addAndUpdateASkillForAStaffMember() throws Exception {
 
 		this.mvc.perform(get(STAFF_EXPERIENCES_1)).andExpect(status().isOk()).andExpect(content().string("[]"));	
-		String body = "{ idStaff: 1, idSkill: 2 ,level: 2}";
-		this.mvc.perform(post(STAFF_EXPERIENCES_ADD).content(body)).andExpect(status().isOk());		
+		String body = "{ \"idStaff\": 1, \"idSkill\": 2 , \"level\": 2}";
+		this.mvc.perform(post(STAFF_EXPERIENCES_ADD)
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(body))
+			.andExpect(status().isOk());		
 		
 		List<Experience> assets = new ArrayList<>();
 		
 		assets.add(new Experience(2,  2));
 		this.mvc.perform(get(STAFF_EXPERIENCES_1)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));
 
-		body = "{ idStaff: 1, idSkill: 2 ,level: 4}";
-		this.mvc.perform(post(STAFF_EXPERIENCES_SAVE).content(body)).andExpect(status().isOk());		
+		body = "{ \"idStaff\": 1, \"idSkill\": 2 , \"level\": 4}";
+		this.mvc.perform(post(STAFF_EXPERIENCES_SAVE)
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(body))
+			.andExpect(status().isOk());		
 		
 		assets.clear();
 		assets.add(new Experience (2, 4));
@@ -99,16 +106,22 @@ public class StaffControllerSkillTest {
 	public void addAndRemoveASkillForAStaffMember() throws Exception {
 		
 		this.mvc.perform(get(STAFF_EXPERIENCES_1)).andExpect(status().isOk()).andExpect(content().string("[]"));	
-		String body = "{ idStaff: 1, idSkill: 2 ,level: 2}";
-		this.mvc.perform(post(STAFF_EXPERIENCES_ADD).content(body)).andExpect(status().isOk());		
+		String body = "{ \"idStaff\": 1, \"idSkill\": 2, \"level\": 2}";
+		this.mvc.perform(post(STAFF_EXPERIENCES_ADD)
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(body))
+			.andExpect(status().isOk());		
 		
 		List<Experience> assets = new ArrayList<>();
 		
 		assets.add(new Experience(2,  2));
 		this.mvc.perform(get(STAFF_EXPERIENCES_1)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));
 		
-		body = "{idStaff: 1, idSkill: 2}";
-		this.mvc.perform(post(STAFF_EXPERIENCES_REMOVE).content(body)).andExpect(status().isOk());
+		body = "{\"idStaff\": 1, \"idSkill\": 2}";
+		this.mvc.perform(post(STAFF_EXPERIENCES_REMOVE)
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(body))
+			.andExpect(status().isOk());
 		
 		assets.clear();
 		this.mvc.perform(get(STAFF_EXPERIENCES_1)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(assets)));

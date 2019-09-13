@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -46,6 +47,9 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.ShuffleService;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.controller.in.BodyParamResumeSkills;
+import fr.skiller.controller.in.BodyParamStaffProject;
+import fr.skiller.controller.in.BodyParamStaffSkill;
 import fr.skiller.data.external.BooleanDTO;
 import fr.skiller.data.external.ResumeDTO;
 import fr.skiller.data.external.StaffDTO;
@@ -73,11 +77,6 @@ import fr.skiller.service.StorageService;
 public class StaffController {
 
 	private final Logger logger = LoggerFactory.getLogger(StaffController.class.getCanonicalName());
-
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	Gson gson = new GsonBuilder().create();
 
 	@Autowired
 	ProjectHandler projectHandler;
@@ -119,25 +118,27 @@ public class StaffController {
 	}
 
 	@GetMapping("/countGroupByExperiences/active")
-	public String countActive() {
+	public Map<String, Long> countActive() {
+		
 		final PeopleCountExperienceMap peopleCountExperienceMap = staffHandler.countAllStaffGroupBySkillLevel(true);
 
-		final String resultContent = gson.toJson(peopleCountExperienceMap.getData());
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("'/countGroupBySkills/active' is returning %s", resultContent));
+			logger.debug(String.format("'/countGroupBySkills/active' is returning %d experiences", peopleCountExperienceMap.getData().size()));
 		}
-		return resultContent;
+		
+		return peopleCountExperienceMap.getData();
 	}
 
 	@GetMapping("/countGroupByExperiences/all")
-	public String countAll() {
+	public Map<String, Long> countAll() {
+		
 		final PeopleCountExperienceMap peopleCountExperienceMap = staffHandler.countAllStaffGroupBySkillLevel(false);
 
-		final String resultContent = gson.toJson(peopleCountExperienceMap.getData());
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("'/countGroupBySkills/all' is returning %s", resultContent));
+			logger.debug(String.format("'/countGroupBySkills/all' is returning %d experiences", peopleCountExperienceMap.getData().size()));
 		}
-		return resultContent;
+		
+		return peopleCountExperienceMap.getData();
 	}
 
 	/**
@@ -270,25 +271,6 @@ public class StaffController {
 		return responseEntity;
 	}
 
-	/**
-	 * Internal Parameters class containing all possible parameters necessaries
-	 * for add/remove a skill from a staff member.
-	 * 
-	 * @author Fr&eacute;d&eacute;ric VIDAL
-	 */
-	class ParamStaffSkill {
-		int idStaff;
-		int idSkill;
-		int level;
-		String formerSkillTitle;
-		String newSkillTitle;
-
-		@Override
-		public String toString() {
-			return "ParamSkillProject [idStaff=" + idStaff + ", idSkill=" + idSkill + ", level=" + level
-					+ ", formerSkillTitle=" + formerSkillTitle + ", newSkillTitle=" + newSkillTitle + "]";
-		}
-	}
 
 	/**
 	 * Add an experience to a staff member
@@ -298,32 +280,31 @@ public class StaffController {
 	 * @return
 	 */
 	@PostMapping("/experiences/add")
-	public ResponseEntity<Boolean> addExperience(@RequestBody String param) {
+	public ResponseEntity<Boolean> addExperience(@RequestBody BodyParamStaffSkill param) {
 
 		HttpHeaders headers = new HttpHeaders();
 		
-		ParamStaffSkill p = gson.fromJson(param, ParamStaffSkill.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(
 					"POST command on /staff/experiences/add with params id:%d, idSkill:%d, level:%d", 
-					p.idStaff, p.idSkill, p.level));
+					param.idStaff, param.idSkill, param.level));
 		}
 
-		final Staff staff = staffHandler.getStaff().get(p.idStaff);
+		final Staff staff = staffHandler.getStaff().get(param.idStaff);
 		if (staff == null) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_STAFF_NOFOUND));
-			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, p.idStaff));
+			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, param.idStaff));
 			return new ResponseEntity<>(
 					Boolean.FALSE, headers,
 					HttpStatus.INTERNAL_SERVER_ERROR);			
 		}
 		
-		Experience experience = staff.getExperience(p.idSkill);
+		Experience experience = staff.getExperience(param.idSkill);
 		if (experience == null) {
-			this.staffHandler.addExperience(p.idStaff, new Experience(p.idSkill, p.level));
+			this.staffHandler.addExperience(param.idStaff, new Experience(param.idSkill, param.level));
 		} else {
-			this.staffHandler.removeExperience(p.idStaff, experience);
-			this.staffHandler.addExperience(p.idStaff, new Experience(p.idSkill, p.level));
+			this.staffHandler.removeExperience(param.idStaff, experience);
+			this.staffHandler.addExperience(param.idStaff, new Experience(param.idSkill, param.level));
 		}
 		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 		
@@ -337,29 +318,28 @@ public class StaffController {
 	 * @return
 	 */
 	@PostMapping("/experiences/remove")
-	public ResponseEntity<Boolean> removeExperience(@RequestBody String param) {
+	public ResponseEntity<Boolean> removeExperience(@RequestBody BodyParamStaffSkill param) {
 
 		HttpHeaders headers = new HttpHeaders();
 		
-		ParamStaffSkill p = gson.fromJson(param, ParamStaffSkill.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(
 					"POST command on /staff/experiences/remove with params id:%d, idSkill:%d, level:%d", 
-					p.idStaff, p.idSkill, p.level));
+					param.idStaff, param.idSkill, param.level));
 		}
 
-		final Staff staff = staffHandler.getStaff().get(p.idStaff);
+		final Staff staff = staffHandler.getStaff().get(param.idStaff);
 		if (staff == null) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_STAFF_NOFOUND));
-			headers.set(BACKEND_RETURN_MESSAGE, String.format(Error.MESSAGE_STAFF_NOFOUND, p.idStaff));
+			headers.set(BACKEND_RETURN_MESSAGE, String.format(Error.MESSAGE_STAFF_NOFOUND, param.idStaff));
 			return new ResponseEntity<>(
 					Boolean.FALSE, headers,
 					HttpStatus.INTERNAL_SERVER_ERROR);			
 		}
 		
-		Experience experience = staff.getExperience(p.idSkill);
+		Experience experience = staff.getExperience(param.idSkill);
 		if (experience != null) {
-			this.staffHandler.removeExperience(p.idStaff, experience);
+			this.staffHandler.removeExperience(param.idStaff, experience);
 		}
 		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 		
@@ -375,48 +355,31 @@ public class StaffController {
 	 * @return
 	 */
 	@PostMapping("/experiences/update")
-	public ResponseEntity<Boolean> saveExperience(@RequestBody String param) {
+	public ResponseEntity<Boolean> saveExperience(@RequestBody BodyParamStaffSkill param) {
 		
 		HttpHeaders headers = new HttpHeaders();		
-		ParamStaffSkill p = gson.fromJson(param, ParamStaffSkill.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(
 					"POST command on /staff/experiences/update with params id:%d, idSkill:%d, level:%d", 
-					p.idStaff, p.idSkill, p.level));
+					param.idStaff, param.idSkill, param.level));
 		}
 
-		final Staff staff = staffHandler.getStaff().get(p.idStaff);
+		final Staff staff = staffHandler.getStaff().get(param.idStaff);
 		if (staff == null) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_STAFF_NOFOUND));
-			headers.set(BACKEND_RETURN_MESSAGE, String.format(Error.MESSAGE_STAFF_NOFOUND, p.idStaff));
+			headers.set(BACKEND_RETURN_MESSAGE, String.format(Error.MESSAGE_STAFF_NOFOUND, param.idStaff));
 			return new ResponseEntity<>(
 					Boolean.FALSE, headers,
 					HttpStatus.INTERNAL_SERVER_ERROR);			
 		}
 		
-		Experience experience = staff.getExperience(p.idSkill);
+		Experience experience = staff.getExperience(param.idSkill);
 		if (experience != null) {
-			this.staffHandler.updateExperience(p.idStaff, new Experience(p.idSkill, p.level));
+			this.staffHandler.updateExperience(param.idStaff, new Experience(param.idSkill, param.level));
 		}
 		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 	}
 	
-
-	/**
-	 * <p>
-	 * Parameters used to add or remove a project from a staff member.
-	 * </p>
-	 * @author Fr&eacute;d&eacute;ric VIDAL
-	 */
-	class ParamStaffProject {
-		int idStaff;
-		int idProject;
-		@Override
-		public String toString() {
-			return "ParamStaffProject [idStaff=" + idStaff + ", idProject=" + idProject + "]";
-		}
-
-	}
 
 	@PostMapping("/api/uploadCV")
 	public ResponseEntity<ResumeDTO> uploadApplicationFile(
@@ -509,26 +472,19 @@ public class StaffController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
 	}
-	
-	class ResumeSkills {
-		int idStaff;
-		ResumeSkill[] skills;
-	}
-	
-	@PostMapping("/api/experiences/resume/save")
-	public ResponseEntity<StaffDTO> saveExperiences(@RequestBody String body) {
-
-		ResumeSkills p = gson.fromJson(body, ResumeSkills.class);
 		
+	@PostMapping("/api/experiences/resume/save")
+	public ResponseEntity<StaffDTO> saveExperiences(@RequestBody BodyParamResumeSkills param) {
+
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Adding %d skills for the staff ID %d", p.skills.length, p.idStaff));
+			logger.debug(String.format("Adding %d skills for the staff ID %d", param.skills.length, param.idStaff));
 		}
 		if (logger.isTraceEnabled()) {
-			logger.trace(String.format("Adding the skills below for the staff identifier %d", p.idStaff));
-			Arrays.asList(p.skills).stream().forEach(skill -> logger.trace(String.format("%s %s", skill.getIdSkill(), skill.getTitle())));
+			logger.trace(String.format("Adding the skills below for the staff identifier %d", param.idStaff));
+			Arrays.asList(param.skills).stream().forEach(skill -> logger.trace(String.format("%s %s", skill.getIdSkill(), skill.getTitle())));
 		}
 		try {
-			Staff staff = staffHandler.addExperiences(p.idStaff, p.skills);
+			Staff staff = staffHandler.addExperiences(param.idStaff, param.skills);
 			return new ResponseEntity<>(new StaffDTO(staff, 1, 
 					staff.getFirstName() + " " + staff.getLastName() + " has " + staff.getExperiences().size() + " skills now!"), 
 					HttpStatus.OK);
@@ -550,23 +506,22 @@ public class StaffController {
 	 * @return
 	 */
 	@PostMapping("/project/add")
-	public ResponseEntity<BooleanDTO> addProject(@RequestBody String param) {
+	public ResponseEntity<BooleanDTO> addProject(@RequestBody BodyParamStaffProject param) {
 
 		HttpHeaders headers = new HttpHeaders();
 		try {
 		
-			ParamStaffProject p = gson.fromJson(param, ParamStaffProject.class);
 			if (logger.isDebugEnabled()) {
 				logger.debug(
 						String.format("POST command on /staff/project/add with params idStaff: %d, idProject: %d", 
-								p.idStaff, p.idProject));
+								param.idStaff, param.idProject));
 			}
 			final ResponseEntity<BooleanDTO> responseEntity;
 	
-			final Staff staff = staffHandler.getStaff().get(p.idStaff);
+			final Staff staff = staffHandler.getStaff().get(param.idStaff);
 			assert (staff != null);
 			
-			final Project project = projectHandler.get(p.idProject);
+			final Project project = projectHandler.get(param.idProject);
 			assert (project != null);
 
 			/*
@@ -574,7 +529,7 @@ public class StaffController {
 			 * project list, we send back a BAD_REQUEST to avoid duplicate
 			 * entries
 			 */
-			Predicate<Mission> predicate = pr -> (pr.getIdProject() == p.idProject);
+			Predicate<Mission> predicate = pr -> (pr.getIdProject() == param.idProject);
 			if (staff.getMissions().stream().anyMatch(predicate)) {
 				responseEntity = new ResponseEntity<>(
 						new BooleanDTO(-1, "The collaborator " + staff.fullName() + " is already involved in " + project.getName()),
@@ -582,11 +537,8 @@ public class StaffController {
 				return responseEntity;
 			}
 	
-			staffHandler.addMission(p.idStaff, p.idProject, project.getName());
+			staffHandler.addMission(param.idStaff, param.idProject, project.getName());
 			responseEntity = new ResponseEntity<>(new BooleanDTO(), headers, HttpStatus.OK);
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("returning  staff %s", gson.toJson(staff)));
-			}
 			return responseEntity;
 		} catch (final SkillerException se) {
 			return new ResponseEntity<>(
@@ -600,25 +552,24 @@ public class StaffController {
 	 * Revoke the participation of staff member into a project.
 	 */
 	@PostMapping("/project/del")
-	public ResponseEntity<BooleanDTO> revokeProject(@RequestBody String param) {
+	public ResponseEntity<BooleanDTO> revokeProject(@RequestBody BodyParamStaffProject param) {
 
-		ParamStaffProject p = gson.fromJson(param, ParamStaffProject.class);
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format(
-					"POST command on /staff/project/del with params idStaff : %d,idProject : %d", 
-					p.idStaff, p.idProject));
+				"POST command on /staff/project/del with params idStaff : %d,idProject : %d", 
+				param.idStaff, param.idProject));
 		}
 
-		final Staff staff = staffHandler.getStaff().get(p.idStaff);
+		final Staff staff = staffHandler.getStaff().get(param.idStaff);
 		if (staff == null) {
 			return new ResponseEntity<>(
 					new BooleanDTO(CODE_STAFF_NOFOUND, 
-					MessageFormat.format(MESSAGE_STAFF_NOFOUND, p.idStaff)), 
+					MessageFormat.format(MESSAGE_STAFF_NOFOUND, param.idStaff)), 
 					new HttpHeaders(), 
 					HttpStatus.NOT_FOUND);
 		}
 
-		Optional<Mission> oProject = staff.getMissions().stream().filter(pr -> (pr.getIdProject() == p.idProject)).findFirst();
+		Optional<Mission> oProject = staff.getMissions().stream().filter(pr -> (pr.getIdProject() == param.idProject)).findFirst();
 		if (oProject.isPresent()) {
 			
 			Mission mission = oProject.get();

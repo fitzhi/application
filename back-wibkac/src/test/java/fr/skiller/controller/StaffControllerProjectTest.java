@@ -14,6 +14,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -65,7 +66,10 @@ public class StaffControllerProjectTest {
 		this.mvc.perform(get(STAFF_PROJECTS_2)).andExpect(status().isOk()).andExpect(content().string("[]"));	
 		
 		String body = "{ \"idStaff\": \"2\", \"idProject\": \"1235\"}";
-		this.mvc.perform(post(STAFF_PROJECT_ADD).content(body)).andExpect(status().isOk());		
+		this.mvc.perform(post(STAFF_PROJECT_ADD)
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(body))
+			.andExpect(status().isOk());		
 		
 		List<Mission> missions = new ArrayList<>();
 		missions.add(new Mission (2, ID_PROJECT_1235, PROJECT_1235));
@@ -74,8 +78,11 @@ public class StaffControllerProjectTest {
 				.isOk())
 				.andExpect(content().json(gson.toJson(missions)));
 		
-		body = "{ idStaff: 2, idProject: 1235 }";
-		this.mvc.perform(post("/staff/project/del").content(body)).andExpect(status().isOk());
+		body = "{ \"idStaff\": 2, \"idProject\": 1235 }";
+		this.mvc.perform(post("/staff/project/del")
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(body))
+			.andExpect(status().isOk());
 		
 		missions.clear();
 		this.mvc.perform(get(STAFF_PROJECTS_2)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(missions)));
