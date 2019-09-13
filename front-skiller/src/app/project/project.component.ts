@@ -20,17 +20,14 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	public risk$ = new Subject<number>();
 
 	/**
-     * Index of the tab selected.
-     */
+	 * Index of the tab selected.
+	 */
 	public tabIndex = 0;
 
 	/**
-     * Project identifier.
-     */
+	 * Project identifier.
+	 */
 	public idProject: number;
-
-	sub: any;
-
 
 	constructor(
 		private cinematicService: CinematicService,
@@ -42,8 +39,8 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	}
 
 	/**
-     * Initialization treatment.
-     */
+	 * Initialization treatment.
+	 */
 	ngOnInit() {
 		if (Constants.DEBUG) {
 			console.log('Current url ' + this.router.url);
@@ -72,8 +69,8 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	}
 
 	/**
-     * After init treatment. We load the project.
-     */
+	 * After init treatment. We load the project.
+	 */
 	ngAfterViewInit() {
 		setTimeout(() => {
 			this.loadProject();
@@ -91,8 +88,8 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	}
 
 	/**
-     * User has changed the selected tab.
-     */
+	 * User has changed the selected tab.
+	 */
 	public selectedIndexChange(selectedIndex: number): void {
 		if (Constants.DEBUG) {
 			const today = new Date();
@@ -115,8 +112,8 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	}
 
 	/**
-     * Loading the project from the back-end.
-     */
+	 * Loading the project from the back-end.
+	 */
 	loadProject() {
 		// EITHER we are in creation mode,
 		// OR we load the Project from the back-end...
@@ -142,13 +139,13 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 							console.log('Loading complete for id ' + this.idProject);
 						}
 					})
-			);
+				);
 		}
 	}
 
 	/**
-     * @returns TRUE if the project has an avalaible connection to the source repository.
-     */
+	 * @returns TRUE if the project has an avalaible connection to the source repository.
+	 */
 	canConnectSourceControl() {
 		return true;
 	}

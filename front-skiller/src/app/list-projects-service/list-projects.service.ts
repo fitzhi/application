@@ -2,8 +2,9 @@ import { Constants } from '../constants';
 import {Project} from '../data/project';
 import { ProjectService } from '../service/project.service';
 import {Injectable, OnInit} from '@angular/core';
-import {Observable, of, BehaviorSubject} from 'rxjs';
+import {Observable, of, BehaviorSubject, throwError, empty, EMPTY} from 'rxjs';
 import {tap} from 'rxjs/operators';
+import { MessageService } from '../message/message.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -13,6 +14,7 @@ export class ListProjectsService  {
 	public filteredProjects$ = new BehaviorSubject<Project[]>([]);
 
 	constructor(
+		private messageService: MessageService,
 		private projectService: ProjectService) {}
 
 	/**
@@ -46,6 +48,10 @@ export class ListProjectsService  {
 	 */
 	getProject(id: number): Observable<Project> {
 
+		if (!this.projectService.allProjects) {
+			this.messageService.info('Please wait until the loading of projects is complete!');
+			return EMPTY;
+		}
 		let foundProject: Project = null;
 		foundProject = this.projectService.allProjects.find(project => project.id === id);
 
