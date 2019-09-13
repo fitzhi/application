@@ -20,8 +20,6 @@ import java.util.function.Predicate;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
@@ -61,6 +59,7 @@ import fr.skiller.exception.SkillerException;
 import fr.skiller.service.FileType;
 import fr.skiller.service.ResumeParserService;
 import fr.skiller.service.StorageService;
+import lombok.extern.slf4j.Slf4j;
 
 
 /**
@@ -69,11 +68,10 @@ import fr.skiller.service.StorageService;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
+@Slf4j
 @RestController
 @RequestMapping("/staff")
 public class StaffController {
-
-	private final Logger logger = LoggerFactory.getLogger(StaffController.class.getCanonicalName());
 
 	@Autowired
 	ProjectHandler projectHandler;
@@ -102,8 +100,8 @@ public class StaffController {
 		final Collection<Staff> staffTeam = staffHandler.getStaff().values();
 		
 		if (shuffleService.isShuffleMode()) {
-			if (logger.isInfoEnabled()) {
-				logger.info("The projects collection has been shuffled");
+			if (log.isInfoEnabled()) {
+				log.info("The projects collection has been shuffled");
 			}
 			staffTeam.stream().forEach(staff -> {
 				staff.setFirstName(shuffleService.shuffle(staff.getFirstName()));
@@ -119,8 +117,8 @@ public class StaffController {
 		
 		final PeopleCountExperienceMap peopleCountExperienceMap = staffHandler.countAllStaffGroupBySkillLevel(true);
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("'/countGroupBySkills/active' is returning %d experiences", peopleCountExperienceMap.getData().size()));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("'/countGroupBySkills/active' is returning %d experiences", peopleCountExperienceMap.getData().size()));
 		}
 		
 		return peopleCountExperienceMap.getData();
@@ -131,8 +129,8 @@ public class StaffController {
 		
 		final PeopleCountExperienceMap peopleCountExperienceMap = staffHandler.countAllStaffGroupBySkillLevel(false);
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("'/countGroupBySkills/all' is returning %d experiences", peopleCountExperienceMap.getData().size()));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("'/countGroupBySkills/all' is returning %d experiences", peopleCountExperienceMap.getData().size()));
 		}
 		
 		return peopleCountExperienceMap.getData();
@@ -154,9 +152,9 @@ public class StaffController {
 		Staff searchCollab = staffHandler.getStaff().get(idStaff);
 		if (searchCollab != null) {
 			responseEntity = new ResponseEntity<>(searchCollab, headers, HttpStatus.OK);
-			if (logger.isDebugEnabled()) {
+			if (log.isDebugEnabled()) {
 				Staff staff = responseEntity.getBody();
-				logger.debug(String.format(
+				log.debug(String.format(
 						"looking for id %d in the Staff collection returns %s %s",
 						idStaff, staff.getFirstName(), staff.getLastName()));
 			}
@@ -164,8 +162,8 @@ public class StaffController {
 			headers.set(BACKEND_RETURN_CODE, "O");
 			headers.set(BACKEND_RETURN_MESSAGE, "There is no collaborator associated to the id " + idStaff);
 			responseEntity = new ResponseEntity<>(new Staff(), headers, HttpStatus.NOT_FOUND);
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format(
+			if (log.isDebugEnabled()) {
+				log.debug(String.format(
 						"Cannot find a staff member for id %d in the Staff collection",
 						idStaff));
 			}
@@ -196,7 +194,7 @@ public class StaffController {
 			return re;
 			
 		} catch (final SkillerException e) {
-			logger.error(getStackTrace(e));
+			log.error(getStackTrace(e));
 			return new ResponseEntity<>(
 					new ArrayList<Mission>(), 
 					new HttpHeaders(),
@@ -225,9 +223,9 @@ public class StaffController {
 
 		final ResponseEntity<Staff> responseEntity;
 
-		if (logger.isDebugEnabled()) {
-			logger.debug (String.format("Add or Update the staff.id %d", input.getIdStaff()));
-			logger.debug (String.format("Content %s ", input));
+		if (log.isDebugEnabled()) {
+			log.debug (String.format("Add or Update the staff.id %d", input.getIdStaff()));
+			log.debug (String.format("Content %s ", input));
 		}
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -249,8 +247,8 @@ public class StaffController {
 				try {
 					staffHandler.saveStaffMember(input);
 				} catch (SkillerException e) {
-					if (logger.isDebugEnabled()) {
-						logger.debug(String.format("Exception occurs for idStaff %d, message %s", input.getIdStaff(), e.errorMessage));
+					if (log.isDebugEnabled()) {
+						log.debug(String.format("Exception occurs for idStaff %d, message %s", input.getIdStaff(), e.errorMessage));
 					}
 					headers.set(BACKEND_RETURN_CODE, String.valueOf(e.errorCode));
 					headers.set(BACKEND_RETURN_MESSAGE, e.errorMessage);
@@ -262,8 +260,8 @@ public class StaffController {
 				headers.set(BACKEND_RETURN_CODE, "1");
 			}
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("POST command on /staff/save returns the body %s", responseEntity.getBody()));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("POST command on /staff/save returns the body %s", responseEntity.getBody()));
 		}
 		return responseEntity;
 	}
@@ -281,8 +279,8 @@ public class StaffController {
 
 		HttpHeaders headers = new HttpHeaders();
 		
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
 					"POST command on /staff/experiences/add with params id:%d, idSkill:%d, level:%d", 
 					param.idStaff, param.idSkill, param.level));
 		}
@@ -319,8 +317,8 @@ public class StaffController {
 
 		HttpHeaders headers = new HttpHeaders();
 		
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
 					"POST command on /staff/experiences/remove with params id:%d, idSkill:%d, level:%d", 
 					param.idStaff, param.idSkill, param.level));
 		}
@@ -355,8 +353,8 @@ public class StaffController {
 	public ResponseEntity<Boolean> saveExperience(@RequestBody BodyParamStaffSkill param) {
 		
 		HttpHeaders headers = new HttpHeaders();		
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
 					"POST command on /staff/experiences/update with params id:%d, idSkill:%d, level:%d", 
 					param.idStaff, param.idSkill, param.level));
 		}
@@ -389,8 +387,8 @@ public class StaffController {
 		
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("uploading %s for staff identifer %d of type %s", filename, id, type));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("uploading %s for staff identifer %d of type %s", filename, id, type));
 		}
 
 		FileType typeOfApplication = FileType.valueOf(type);
@@ -431,8 +429,8 @@ public class StaffController {
 		assert (staff != null);
 
 		if ((staff.getApplication() == null) || (staff.getApplication().length() == 0)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("No application file for %d", staff.getIdStaff()));
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("No application file for %d", staff.getIdStaff()));
 			}
 	        return ResponseEntity.notFound().build();
 		}
@@ -460,8 +458,8 @@ public class StaffController {
 			contentType = "application/octet-stream";
 			break;
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("%s %s", staff.getApplication(), contentType));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("%s %s", staff.getApplication(), contentType));
 		}
 
         return ResponseEntity.ok()
@@ -473,12 +471,12 @@ public class StaffController {
 	@PostMapping("/api/experiences/resume/save")
 	public ResponseEntity<StaffDTO> saveExperiences(@RequestBody BodyParamResumeSkills param) {
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Adding %d skills for the staff ID %d", param.skills.length, param.idStaff));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Adding %d skills for the staff ID %d", param.skills.length, param.idStaff));
 		}
-		if (logger.isTraceEnabled()) {
-			logger.trace(String.format("Adding the skills below for the staff identifier %d", param.idStaff));
-			Arrays.asList(param.skills).stream().forEach(skill -> logger.trace(String.format("%s %s", skill.getIdSkill(), skill.getTitle())));
+		if (log.isTraceEnabled()) {
+			log.trace(String.format("Adding the skills below for the staff identifier %d", param.idStaff));
+			Arrays.asList(param.skills).stream().forEach(skill -> log.trace(String.format("%s %s", skill.getIdSkill(), skill.getTitle())));
 		}
 		try {
 			Staff staff = staffHandler.addExperiences(param.idStaff, param.skills);
@@ -508,8 +506,8 @@ public class StaffController {
 		HttpHeaders headers = new HttpHeaders();
 		try {
 		
-			if (logger.isDebugEnabled()) {
-				logger.debug(
+			if (log.isDebugEnabled()) {
+				log.debug(
 						String.format("POST command on /staff/project/add with params idStaff: %d, idProject: %d", 
 								param.idStaff, param.idProject));
 			}
@@ -551,8 +549,8 @@ public class StaffController {
 	@PostMapping("/project/del")
 	public ResponseEntity<BooleanDTO> revokeProject(@RequestBody BodyParamStaffProject param) {
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
 				"POST command on /staff/project/del with params idStaff : %d,idProject : %d", 
 				param.idStaff, param.idProject));
 		}

@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,12 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.skiller.bean.RiskProcessor;
 import fr.skiller.data.internal.RiskLegend;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/referential")
 public class ReferentialController {
-
-	Logger logger = LoggerFactory.getLogger(ReferentialController.class.getCanonicalName());
 
 	/**
 	 * Directory where data will be saved.
@@ -45,15 +43,15 @@ public class ReferentialController {
 	@GetMapping(value = "/{referential}")
 	public ResponseEntity<String> read(@PathVariable("referential") String referentialName) {
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Reading the referential %s", referentialName));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Reading the referential %s", referentialName));
 		}
 
 		ResponseEntity<String> responseEntity;
 		try {
 			final File refFile = new File (referentialDir+referentialName+".json"); 
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("Trying to load the file %s", refFile.getAbsolutePath()));
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Trying to load the file %s", refFile.getAbsolutePath()));
 			}
 			if (!refFile.exists()) {
 				responseEntity = new ResponseEntity<>("Referential " + referentialName + " does not exist !", new HttpHeaders(), HttpStatus.NOT_FOUND);
@@ -65,7 +63,7 @@ public class ReferentialController {
 			}
 		} catch (IOException ioe) {
 			final String errorMessage = "INTERNAL ERROR with file " + referentialName + ".json : " + ioe.getMessage();
-			logger.error(errorMessage);
+			log.error(errorMessage);
 			responseEntity = new ResponseEntity<>(errorMessage, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR);
 		} 
 		return responseEntity;

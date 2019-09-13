@@ -5,12 +5,8 @@ import static fr.skiller.Global.BACKEND_RETURN_CODE;
 import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -27,12 +23,12 @@ import fr.skiller.bean.SkillHandler;
 import fr.skiller.data.external.SkillDTO;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.exception.SkillerException;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/skill")
 public class SkillController {
-
-	private final Logger logger = LoggerFactory.getLogger(SkillController.class.getCanonicalName());
 
 	@Autowired
 	SkillHandler skillHandler;
@@ -51,8 +47,8 @@ public class SkillController {
 					new SkillDTO(new Skill(), 404, "There is no skill for the name " + skillTitle), 
 					headers, 
 					HttpStatus.NOT_FOUND);
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("Cannot find a skill with the name %s", skillTitle));
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Cannot find a skill with the name %s", skillTitle));
 			}			
 		}
 		return responseEntity;
@@ -67,16 +63,16 @@ public class SkillController {
 		final Skill searchSkill = skillHandler.getSkills().get(idParam);
 		if (searchSkill != null) {
 			responseEntity = new ResponseEntity<>(searchSkill, headers, HttpStatus.OK);
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format(
+			if (log.isDebugEnabled()) {
+				log.debug(String.format(
 					"Skill read for id %d returns %s", idParam, responseEntity.getBody()));
 			}
 		} else {
 			headers.set(BACKEND_RETURN_CODE, "O");
 			headers.set(BACKEND_RETURN_MESSAGE, "There is no collaborator associated to the id " + idParam);
 			responseEntity = new ResponseEntity<>(new Skill(), headers, HttpStatus.NOT_FOUND);
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("Cannot find a skill for id %d", idParam));
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Cannot find a skill for id %d", idParam));
 			}
 		}
 		return responseEntity;
@@ -85,8 +81,8 @@ public class SkillController {
 	@GetMapping("/all")
 	public Collection<Skill> readAll() {
 		Collection<Skill> skills = skillHandler.getSkills().values();
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("'/skill/all' is returning %d skills", skills.size()));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("'/skill/all' is returning %d skills", skills.size()));
 		}
 		return skills;
 	}
@@ -117,15 +113,15 @@ public class SkillController {
 				try {
 					skillHandler.saveSkill(skill);
 				} catch (SkillerException e) {
-					logger.error(getStackTrace(e));
+					log.error(getStackTrace(e));
 					return new ResponseEntity<>(new Skill(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
 				}
 				responseEntity = new ResponseEntity<>(skill, headers, HttpStatus.OK);
 				headers.add("backend.return_code", "1");
 			}
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("POST command on /skill/save returns the body %s", responseEntity.getBody()));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("POST command on /skill/save returns the body %s", responseEntity.getBody()));
 		}
 		return responseEntity;
 	}

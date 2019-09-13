@@ -16,8 +16,6 @@ import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -53,14 +51,14 @@ import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.RepoScanner;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/project")
 public class ProjectController {
 
 	private static final String PROJECT = "project";
-
-	private final Logger logger = LoggerFactory.getLogger(ProjectController.class.getCanonicalName());
 
 	@Autowired
 	ProjectHandler projectHandler;
@@ -121,13 +119,13 @@ public class ProjectController {
 						new ProjectDTO(new Project(), 404, "There is no project with the name " + projectName), 
 						headers(), 
 						HttpStatus.NOT_FOUND);
-				if (logger.isDebugEnabled()) {
-					logger.debug(String.format("Cannot find a Project with the name %s", projectName));
+				if (log.isDebugEnabled()) {
+					log.debug(String.format("Cannot find a Project with the name %s", projectName));
 				}			
 			}
 			return responseEntity;
 		} catch (final SkillerException e) {
-			logger.error(getStackTrace(e));
+			log.error(getStackTrace(e));
 			return new ResponseEntity<>(
 					new ProjectDTO(new Project(), e.errorCode, e.getMessage()), 
 					headers(), 
@@ -150,8 +148,8 @@ public class ProjectController {
 		}
 		
 		ResponseEntity<Project> response = new ResponseEntity<>(searchProject, headers(), HttpStatus.OK);
-		if (logger.isDebugEnabled()) {
-			logger.debug(
+		if (log.isDebugEnabled()) {
+			log.debug(
 					String.format("Project corresponding to the id %d has returned %s", 
 							idProject, response.getBody()));
 		}
@@ -182,8 +180,8 @@ public class ProjectController {
 			
 			if (shuffleService.isShuffleMode()) {
 				responseProjects = new ArrayList<>();
-				if (logger.isInfoEnabled()) {
-					logger.info("The projects collection is beeing shuffled for confidentiality purpose");
+				if (log.isInfoEnabled()) {
+					log.info("The projects collection is beeing shuffled for confidentiality purpose");
 				}
 				projects.stream().forEach(project -> {
 					final Project clone = new Project(project);
@@ -196,13 +194,13 @@ public class ProjectController {
 				responseProjects = projects;
 			}
 			
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("'/Project/all' is returning %d projects", responseProjects.size()));
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("'/Project/all' is returning %d projects", responseProjects.size()));
 			}
 			return responseProjects;
 			
 		} catch (final SkillerException e) {
-			logger.error(getStackTrace(e));
+			log.error(getStackTrace(e));
 			return new ArrayList<Project>();
 		}
 
@@ -235,12 +233,12 @@ public class ProjectController {
 					headers.add(BACKEND_RETURN_CODE, "1");
 				}
 			}
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("POST command on /project/save returns the body %s", responseEntity.getBody()));
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("POST command on /project/save returns the body %s", responseEntity.getBody()));
 			}
 			return responseEntity;
 		} catch (final SkillerException e) {
-			logger.error(getStackTrace(e));
+			log.error(getStackTrace(e));
 			return new ResponseEntity<>(
 					new Project(), 
 					headers(), 
@@ -257,8 +255,8 @@ public class ProjectController {
 	@PostMapping("/skill/add")
 	public ResponseEntity<BooleanDTO> saveSkill(@RequestBody ParamProjectSkill projectSkill) {
 		
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
 					"POST command on /project/skill/add with params idProject:%d, idSkill:%d", 
 					projectSkill.idProject, projectSkill.idSkill));
 		}
@@ -274,10 +272,10 @@ public class ProjectController {
 			this.projectHandler.addSkill(project, skill);	
 			return new ResponseEntity<BooleanDTO>(new BooleanDTO(), headers(), HttpStatus.OK);
 		} catch (final SkillerException ske) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format(
+			if (log.isDebugEnabled()) {
+				log.debug(String.format(
 						"Cannot save the skill %d inside the project %s", projectSkill.idSkill, project.getName()));
-				logger.debug (ske.errorMessage);
+				log.debug (ske.errorMessage);
 			}
 			return new ResponseEntity<BooleanDTO>(
 					new BooleanDTO(-1, String.format("There is no skill with id " + projectSkill.idSkill)), 
@@ -292,8 +290,8 @@ public class ProjectController {
 	@PostMapping("/skill/del")
 	public ResponseEntity<BooleanDTO> revokeSkill(@RequestBody ParamProjectSkill projectSkill) {
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
 				"POST command on /staff/skills/del with params (idProject: %d, idSkill: %d)",
 				projectSkill.idProject, projectSkill.idSkill));
 		}
@@ -316,8 +314,8 @@ public class ProjectController {
 	@PostMapping("/sunburst")
 	public ResponseEntity<SunburstDTO> retrieveRiskDashboard(@RequestBody SettingsGeneration settings) {
 
-		if (logger.isDebugEnabled()) {
-			logger.debug( MessageFormat.format(
+		if (log.isDebugEnabled()) {
+			log.debug( MessageFormat.format(
 				"POST command on /sunburst with params idProject : {0}, starting from {1}, for the staff member {2}",
 				settings.getIdProject(),
 				(settings.getStartingDate() == 0) ? "EPOC" : new Date(settings.getStartingDate()),
@@ -334,13 +332,13 @@ public class ProjectController {
 			if (scanner.hasAvailableGeneration(project)) {
 				return generate(project, settings);
 			} else {
-				if (logger.isDebugEnabled()) {
-					logger.debug ("Tasks present in the tasks collection");
-					logger.debug (tasks.trace());
+				if (log.isDebugEnabled()) {
+					log.debug ("Tasks present in the tasks collection");
+					log.debug (tasks.trace());
 				}
 				if (tasks.containsTask(DASHBOARD_GENERATION, PROJECT, project.getId())) {
-					if (logger.isDebugEnabled()) {
-						logger.debug("The generation has already been called for the project " 
+					if (log.isDebugEnabled()) {
+						log.debug("The generation has already been called for the project " 
 								+ project.getName() + ". Please wait !");
 					}
 					return new ResponseEntity<> (
@@ -349,8 +347,8 @@ public class ProjectController {
 							headers(), 
 							HttpStatus.BAD_REQUEST);
 				}
-				if (logger.isDebugEnabled()) {
-					logger.debug("The generation will be processed asynchronously !");
+				if (log.isDebugEnabled()) {
+					log.debug("The generation will be processed asynchronously !");
 				}
 				scanner.generateAsync(project, settings);
 				return new ResponseEntity<> (new SunburstDTO(project.getId(), project.getRisk(), null, HttpStatus.CREATED.value(), 
@@ -359,7 +357,7 @@ public class ProjectController {
 						HttpStatus.BAD_REQUEST);
 			}
 		} catch (Exception e) {
-			logger.error(getStackTrace(e));
+			log.error(getStackTrace(e));
 			return new ResponseEntity<> (new SunburstDTO(project.getId(), project.getRisk(), null, -1, e.getMessage()), 
 					headers(), 
 					HttpStatus.BAD_REQUEST);
@@ -377,14 +375,14 @@ public class ProjectController {
 			tasks.addTask( DASHBOARD_GENERATION, PROJECT, project.getId());
 			RiskDashboard data = scanner.generate(project, settings);
 			if (shuffleService.isShuffleMode()) {
-				if (logger.isInfoEnabled()) {
-					logger.info("Shuffling the sunburst data");
+				if (log.isInfoEnabled()) {
+					log.info("Shuffling the sunburst data");
 				}
 			}
 			return new ResponseEntity<>(
 					new SunburstDTO(project.getId(), project.getRisk(), data), new HttpHeaders(), HttpStatus.OK);
 		} catch (final Exception e) {
-			logger.error(getStackTrace(e));
+			log.error(getStackTrace(e));
 			return new ResponseEntity<>(new SunburstDTO( UNKNOWN_PROJECT, -1, null, CODE_UNDEFINED, e.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);			
 		} finally {
 			tasks.removeTask(DASHBOARD_GENERATION, PROJECT, project.getId());
@@ -399,8 +397,8 @@ public class ProjectController {
 	public ResponseEntity<ProjectContributorDTO> projectContributors(final @PathVariable("idProject") int idProject) {
 
 		final List<Contributor> contributors = projectHandler.contributors(idProject);
-		if (logger.isDebugEnabled()) {
-			logger.debug(
+		if (log.isDebugEnabled()) {
+			log.debug(
 					contributors.stream().collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
 					.toString());
 		}
@@ -433,8 +431,8 @@ public class ProjectController {
 	 */
 	@GetMapping(value="/resetDashboard/{idProject}")
 	public ResponseEntity<String> resetDashboard(final @PathVariable("idProject") int idProject) {
-		if (logger.isDebugEnabled()) {
-			logger.debug (String.format("Removing project with %d", idProject));
+		if (log.isDebugEnabled()) {
+			log.debug (String.format("Removing project with %d", idProject));
 		}
 		MyReference<ResponseEntity<String>> refResponse = projectLoader.new MyReference<>();
 		Project project = projectLoader.getProject(idProject, "", refResponse);
@@ -453,7 +451,7 @@ public class ProjectController {
 					new HttpHeaders(), 
 					HttpStatus.OK);
 		} catch (Exception e) {
-			logger.error(getStackTrace(e)); 
+			log.error(getStackTrace(e)); 
 			return new ResponseEntity<> (e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
 		}
 	}

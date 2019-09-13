@@ -28,7 +28,7 @@ import fr.skiller.source.crawler.RepoScanner;
 
 public class TestController {
 
-	Logger logger = LoggerFactory.getLogger(TestController.class.getCanonicalName());
+	Logger log = LoggerFactory.getLogger(TestController.class.getCanonicalName());
 
 
 	/**
@@ -54,9 +54,9 @@ public class TestController {
 		t.setTest("Ok");
 		
 		responseEntity = new ResponseEntity<>(t, headers, HttpStatus.OK);
-		if (logger.isDebugEnabled()) {
-			logger.debug(t.toString());
-			logger.debug(headers.toString());
+		if (log.isDebugEnabled()) {
+			log.debug(t.toString());
+			log.debug(headers.toString());
 		}
 		return responseEntity;
 	}
@@ -64,8 +64,8 @@ public class TestController {
 	@PostMapping("/post_a_String")
 	public ResponseEntity<String> verySimplePostString(@RequestBody String input) {
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Input %s", input));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Input %s", input));
 		}
 		
 		final ResponseEntity<String> responseEntity;
@@ -73,8 +73,8 @@ public class TestController {
 		String test = input + " OK";
 		
 		responseEntity = new ResponseEntity<>(test, headers, HttpStatus.OK);
-		if (logger.isDebugEnabled()) {
-			logger.debug(responseEntity.toString());
+		if (log.isDebugEnabled()) {
+			log.debug(responseEntity.toString());
 		}
 		return responseEntity;
 	}
@@ -82,8 +82,8 @@ public class TestController {
 	@PostMapping("/post_a_Test")
 	public ResponseEntity<ForTest> verySimplePostTest(@RequestBody ForTest input) {
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Input.test : %s", input.getTest()));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Input.test : %s", input.getTest()));
 		}
 		
 		final ResponseEntity<ForTest> responseEntity;
@@ -91,9 +91,9 @@ public class TestController {
 		ForTest test = new ForTest(input.getTest() + " OK");
 		
 		responseEntity = new ResponseEntity<>(test, headers, HttpStatus.OK);
-		if (logger.isDebugEnabled()) {
-			logger.debug(test.toString());
-			logger.debug(headers.toString());
+		if (log.isDebugEnabled()) {
+			log.debug(test.toString());
+			log.debug(headers.toString());
 		}
 		return responseEntity;
 	}

@@ -44,7 +44,7 @@ import fr.skiller.exception.SkillerException;
 @RequestMapping("/project/analysis")
 public class ProjectAnalysisController {
 
-	private final Logger logger = LoggerFactory.getLogger(ProjectAnalysisController.class.getCanonicalName());
+	private final Logger log = LoggerFactory.getLogger(ProjectAnalysisController.class.getCanonicalName());
 
 	@Autowired
 	ProjectDashboardCustomizer dashboardCustomizer;
@@ -79,28 +79,28 @@ public class ProjectAnalysisController {
 
 		final Project project = projectLoader.getProject(idProject, new ArrayList<String>(), refResponse);
 		if (refResponse.response != null) {
-			if (logger.isDebugEnabled()) {
-				logger.debug (String.format("Project not found for id %d" , idProject));
+			if (log.isDebugEnabled()) {
+				log.debug (String.format("Project not found for id %d" , idProject));
 			} 
 			return refResponse.response;
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("scanning the directories from %s", project.getLocationRepository()));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("scanning the directories from %s", project.getLocationRepository()));
 		}
 		
 		try {
 
 			List<String> paths = this.dashboardCustomizer.lookupPathRepository(project, criteria);
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("Resulting paths starting with %s", criteria));
-				paths.stream().forEach(logger::debug);
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Resulting paths starting with %s", criteria));
+				paths.stream().forEach(log::debug);
 			}
 
 			return new ResponseEntity<>(paths, new HttpHeaders(), HttpStatus.OK);
 
 		} catch (final SkillerException e) {
 
-			logger.error(getStackTrace(e));
+			log.error(getStackTrace(e));
 
 			final HttpHeaders headers = new HttpHeaders();
 			headers.set(BACKEND_RETURN_CODE, "O");
@@ -119,8 +119,8 @@ public class ProjectAnalysisController {
 	@PostMapping("/lib-dir/save/{idProject}")
 	public ResponseEntity<Boolean> saveLibDir(@PathVariable int idProject, @RequestBody Library[] tabLib) {
 		
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
 					"POST command on /project/analysis/save/libDir/save/%d ", 
 					idProject));
 		}
@@ -133,15 +133,15 @@ public class ProjectAnalysisController {
 			return refResponse.response;
 		}
 		
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Saving the librairies of project %s", project.getName()));
-			libraries.stream().map(Library::getExclusionDirectory).forEach(logger::debug);
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Saving the librairies of project %s", project.getName()));
+			libraries.stream().map(Library::getExclusionDirectory).forEach(log::debug);
 		}
 		
 		try {
 		 this.projectHandler.saveLibraries(idProject, libraries);
 		} catch (Exception e) {
-			logger.error(getStackTrace(e));
+			log.error(getStackTrace(e));
 			return new ResponseEntity<> (Boolean.FALSE, 
 					new HttpHeaders(), 
 					HttpStatus.BAD_REQUEST);
