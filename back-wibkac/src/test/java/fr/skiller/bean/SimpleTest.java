@@ -1,8 +1,20 @@
 package fr.skiller.bean;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.time.LocalDate;
 
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -14,23 +26,26 @@ import fr.skiller.data.internal.Mission;
  * <p>Simple class used for simple test.</p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 public class SimpleTest {
 
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	Gson gson = new GsonBuilder()
-		      .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe()).create();
+	@Autowired
+	private MockMvc mvc;
 	
 	@Test
 	public void test() throws Exception {
 
-		String s = "{\"idStaff\":1,\"firstName\":\"Frédéric\",\"lastName\":\"VIDAL\",\"nickName\":\"fvidal\",\"login\":\"frvidal\",\"email\":\"frederic.vidal.pro@gmail.com\",\"level\":null,\"password\":\"thePassword\",\"active\":false,\"dateInactive\":null,\"application\":null,\"typeOfApplication\":0,\"external\":false,\"missions\":[{\"idStaff\":1,\"idProject\":777,\"name\":\"First test\","+
-		"\"firstCommit\":\"2019-06-19\",\"lastCommit\":\"2019-06-27\",\"numberOfCommits\":6,\"numberOfFiles\":9}],\"experiences\":[],\"authorities\":[{\"authority\":\"ROLE_USER\"}],\"empty\":false,\"username\":\"frvidal\",\"enabled\":false,\"accountNonExpired\":false,\"accountNonLocked\":false,\"credentialsNonExpired\":false}";
+		String s = "{\"test\":\"test de frederic\"}";
 
-		Mission m = new Mission(1, 1, "test");
-		m.setFirstCommit(LocalDate.of(2019, 9, 7));
-		System.out.println(gson.toJson(m));
+		this.mvc.perform(post("/test/post_a_Test")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(s))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andDo(print());
+		
 	}
 }
 	

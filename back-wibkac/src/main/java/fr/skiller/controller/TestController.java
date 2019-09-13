@@ -31,10 +31,6 @@ public class TestController {
 
 	Logger logger = LoggerFactory.getLogger(TestController.class.getCanonicalName());
 
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	Gson g = new Gson();
 
 	/**
 	 * Source control parser.
