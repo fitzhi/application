@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +23,7 @@ import fr.skiller.bean.Administration;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.external.BooleanDTO;
 import fr.skiller.data.external.StaffDTO;
+import fr.skiller.data.internal.Settings;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 
@@ -167,4 +170,26 @@ public class AdminController {
 		
 	}
 	
+	/**
+	 * <p>
+	 * <font color="orange">
+	 * This is the first implementation of this method, 
+	 * with a default behavior hard-coded. 
+	 * </font>
+	 * </p>
+	 * @return the global settings of the application
+	 */
+	@GetMapping("/settings")
+	public ResponseEntity<Settings> settings() {
+		return new ResponseEntity<>(new Settings("localhost:9000"), headers(), HttpStatus.OK);
+	}
+
+	/**
+	 * @return a generated header.
+	 */
+	private HttpHeaders headers() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+		return headers;
+	}
 }
