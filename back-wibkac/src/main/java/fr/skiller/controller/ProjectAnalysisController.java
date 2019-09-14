@@ -10,8 +10,6 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -31,6 +29,7 @@ import fr.skiller.controller.util.ProjectLoader.MyReference;
 import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -40,11 +39,10 @@ import fr.skiller.exception.SkillerException;
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@Slf4j
 @RestController
 @RequestMapping("/project/analysis")
 public class ProjectAnalysisController {
-
-	private final Logger log = LoggerFactory.getLogger(ProjectAnalysisController.class.getCanonicalName());
 
 	@Autowired
 	ProjectDashboardCustomizer dashboardCustomizer;

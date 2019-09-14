@@ -9,8 +9,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import javax.annotation.Generated;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.security.CustomGrantedAuthority;
 import fr.skiller.service.FileType;
+import lombok.Data;
 
 /**
  * A staff member in the company (most probably a developer).<br/>
@@ -27,7 +26,7 @@ import fr.skiller.service.FileType;
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class Staff implements UserDetails {
+public @Data class Staff implements UserDetails {
 
 	private static final String ROLE_USER = "ROLE_USER";
 
@@ -251,220 +250,6 @@ public class Staff implements UserDetails {
 		return password.equals(this.password);
 	}
 
-	@Override
-	@Generated("eclipse")
-	public String toString() {
-		return "Staff [idStaff=" + idStaff + ", firstName=" + firstName + ", lastName=" + lastName + ", nickName="
-				+ nickName + ", login=" + login + ", email=" + email + ", level=" + level + ", isActive=" + active
-				+ ", dateInactive=" + dateInactive + ", application=" + application + ", typeOfApplication="
-				+ typeOfApplication + ", external=" + external + ", missions=" + missions + ", experiences="
-				+ experiences + "]";
-	}
-
-	/**
-	 * @return the idStaff
-	 */
-	public int getIdStaff() {
-		return idStaff;
-	}
-
-	/**
-	 * @param idStaff the idStaff to set
-	 */
-	public void setIdStaff(int idStaff) {
-		this.idStaff = idStaff;
-	}
-
-	/**
-	 * @return the firstName
-	 */
-	public String getFirstName() {
-		return firstName;
-	}
-
-	/**
-	 * @param firstName the firstName to set
-	 */
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	/**
-	 * @return the lastName
-	 */
-	public String getLastName() {
-		return lastName;
-	}
-
-	/**
-	 * @param lastName the lastName to set
-	 */
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-
-	/**
-	 * @return the nickName
-	 */
-	public String getNickName() {
-		return nickName;
-	}
-
-	/**
-	 * @param nickName the nickName to set
-	 */
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
-	}
-
-	/**
-	 * @return the login
-	 */
-	public String getLogin() {
-		return login;
-	}
-
-	/**
-	 * @param login the login to set
-	 */
-	public void setLogin(String login) {
-		this.login = login;
-	}
-
-	/**
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
-	}
-
-	/**
-	 * @param email the email to set
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	/**
-	 * @return the level
-	 */
-	public String getLevel() {
-		return level;
-	}
-
-	/**
-	 * @param level the level to set
-	 */
-	public void setLevel(String level) {
-		this.level = level;
-	}
-
-	/**
-	 * @return the isActive
-	 */
-	public boolean isActive() {
-		return active;
-	}
-
-	/**
-	 * @param isActive the isActive to set
-	 */
-	public void setActive(boolean isActive) {
-		this.active = isActive;
-	}
-
-	/**
-	 * @return the dateInactive
-	 */
-	public Date getDateInactive() {
-		return dateInactive;
-	}
-
-	/**
-	 * @param dateInactive the dateInactive to set
-	 */
-	public void setDateInactive(Date dateInactive) {
-		this.dateInactive = dateInactive;
-	}
-
-	/**
-	 * @return the application
-	 */
-	public String getApplication() {
-		return application;
-	}
-
-	/**
-	 * @param application the application to set
-	 */
-	public void setApplication(String application) {
-		this.application = application;
-	}
-
-	/**
-	 * @return the typeOfApplication
-	 */
-	public int getTypeOfApplication() {
-		return typeOfApplication;
-	}
-
-	/**
-	 * @param typeOfApplication the typeOfApplication to set
-	 */
-	public void setTypeOfApplication(int typeOfApplication) {
-		this.typeOfApplication = typeOfApplication;
-	}
-
-	/**
-	 * @return the external
-	 */
-	public boolean isExternal() {
-		return external;
-	}
-
-	/**
-	 * @param external the external to set
-	 */
-	public void setExternal(boolean external) {
-		this.external = external;
-	}
-
-	/**
-	 * @return the missions
-	 */
-	public List<Mission> getMissions() {
-		return missions;
-	}
-
-	/**
-	 * @param missions the missions to set
-	 */
-	public void setMissions(List<Mission> missions) {
-		this.missions = missions;
-	}
-
-	/**
-	 * @return the experiences
-	 */
-	public List<Experience> getExperiences() {
-		return experiences;
-	}
-
-	/**
-	 * @param experiences the experiences to set
-	 */
-	public void setExperiences(List<Experience> experiences) {
-		this.experiences = experiences;
-	}
-
-	/**
-	 * set the new password for this staff member.
-	 * 
-	 * @param password the new password
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {

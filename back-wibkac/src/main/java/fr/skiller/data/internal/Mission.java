@@ -6,12 +6,14 @@ package fr.skiller.data.internal;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import lombok.Data;
+
 /**
  * Mission of a developer inside a project
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class Mission implements Serializable {
+public @Data class Mission implements Serializable {
 
 	/**
 	 * For serialization purpose.
@@ -86,103 +88,5 @@ public class Mission implements Serializable {
 		this(idStaff, idProject, name, null, null, 0, 0);
 	}
 
-
-	@Override
-	public String toString() {
-		return "Mission [idStaff=" + idStaff + ", idProject=" + idProject + ", name=" + name + ", firstCommit="
-				+ firstCommit + ", lastCommit=" + lastCommit + ", numberOfCommits=" + numberOfCommits
-				+ ", numberOfFiles=" + numberOfFiles + "]";
-	}
-
-	/**
-	 * @return the staff identifier
-	 */
-	public int getIdStaff() {
-		return idStaff;
-	}
-	
-	/**
-	 * @return the idProject
-	 */
-	public int getIdProject() {
-		return idProject;
-	}
-
-	/**
-	 * @param idProject the idProject to set
-	 */
-	public void setIdProject(int idProject) {
-		this.idProject = idProject;
-	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * @return the firstCommit
-	 */
-	public LocalDate getFirstCommit() {
-		return firstCommit;
-	}
-
-	/**
-	 * @param firstCommit the firstCommit to set
-	 */
-	public void setFirstCommit(LocalDate firstCommit) {
-		this.firstCommit = firstCommit;
-	}
-
-	/**
-	 * @return the lastCommit
-	 */
-	public LocalDate getLastCommit() {
-		return lastCommit;
-	}
-
-	/**
-	 * @param lastCommit the lastCommit to set
-	 */
-	public void setLastCommit(LocalDate lastCommit) {
-		this.lastCommit = lastCommit;
-	}
-
-	/**
-	 * @return the numberOfCommits
-	 */
-	public int getNumberOfCommits() {
-		return numberOfCommits;
-	}
-
-	/**
-	 * @param numberOfCommits the numberOfCommits to set
-	 */
-	public void setNumberOfCommits(int numberOfCommits) {
-		this.numberOfCommits = numberOfCommits;
-	}
-
-	/**
-	 * @return the numberOfFiles
-	 */
-	public int getNumberOfFiles() {
-		return numberOfFiles;
-	}
-
-	/**
-	 * @param numberOfFiles the numberOfFiles to set
-	 */
-	public void setNumberOfFiles(int numberOfFiles) {
-		this.numberOfFiles = numberOfFiles;
-	}	
 
 }

@@ -1,6 +1,5 @@
 package fr.skiller.data.internal;
-
-import javax.annotation.Generated;
+import lombok.Data;
 
 /**
  * <p>
@@ -16,7 +15,7 @@ import javax.annotation.Generated;
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class Ghost {
+public @Data class Ghost {
 
 	public static final int NULL = -1;
 	
@@ -137,43 +136,5 @@ public class Ghost {
 	public void setTechnical(boolean technical) {
 		this.technical = technical;
 	}	
-	
-	@Override
-	public String toString() {
-		return "Ghost [pseudo=" + getPseudo() + ", idStaff=" + getIdStaff() + ", technical=" + isTechnical() + "]";
-	}
-
-	@Override
-	@Generated("eclipse")
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + getIdStaff();
-		result = prime * result + ((getPseudo() == null) ? 0 : getPseudo().hashCode());
-		result = prime * result + (isTechnical() ? 1231 : 1237);
-		return result;
-	}
-
-	@Override
-	@Generated("eclipse")
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Ghost other = (Ghost) obj;
-		if (getIdStaff() != other.getIdStaff())
-			return false;
-		if (getPseudo() == null) {
-			if (other.getPseudo() != null)
-				return false;
-		} else if (!getPseudo().equals(other.getPseudo()))
-			return false;
-		if (isTechnical() != other.isTechnical())
-			return false;
-		return true;
-	}
-	
+		
 }

@@ -5,11 +5,13 @@ package fr.skiller.data.internal;
 
 import java.io.Serializable;
 
+import lombok.Data;
+
 /**
  * Knowledge background of a developer, technical expert, any staff member of the company.
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class Experience implements Serializable {
+public @Data class Experience implements Serializable {
 
 	/**
 	 * For serialization purpose.
@@ -43,40 +45,6 @@ public class Experience implements Serializable {
 	 * @return key : constructed key
 	 */
 	public String key() {
-		return getId()+"-"+getLevel();
-	}
-
-	@Override
-	public String toString() {
-		return "Experience [id=" + getId() + ", level=" + getLevel() + "]";
-	}
-
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return the level
-	 */
-	public int getLevel() {
-		return level;
-	}
-
-	/**
-	 * @param level the level to set
-	 */
-	public void setLevel(int level) {
-		this.level = level;
-	}
+		return getId()+"-"+getLevel();	}
 
 }

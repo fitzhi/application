@@ -8,12 +8,13 @@ import javax.annotation.Generated;
 
 import fr.skiller.Global;
 import fr.skiller.SkillerRuntimeException;
+import lombok.Data;
 
 /**
  * Project class. 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class Project  {
+public @Data class Project  {
 
 	/**
 	 * The project identifier
@@ -72,7 +73,7 @@ public class Project  {
 	 * List of path containing external dependencies.
 	 * They will be excluded from the crawl.
 	 */
-	private final List<Library> libraries = new ArrayList<>();
+	private List<Library> libraries = new ArrayList<>();
 	
 	/**
 	 * Constant representing one the 2 models of connection settings.
@@ -156,153 +157,6 @@ public class Project  {
 		return (connectionSettings == REMOTE_FILE_ACCESS);
 	}
 
-	@Override
-	public String toString() {
-		return "Project [id=" + id + ", name=" + name + ", connection_settings=" + connectionSettings
-				+ ", urlRepository=" + urlRepository + ", username=" + username + ", filename=" + filename + ", skills="
-				+ skills + ", ghosts=" + ghosts + "]";
-	}
-
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * @param name the name to set
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	/**
-	 * @return the connection_settings
-	 */
-	public int getConnectionSettings() {
-		return connectionSettings;
-	}
-
-	/**
-	 * @param connectionSettings the connection_settings to set
-	 */
-	public void setConnectionSettings(int connectionSettings) {
-		this.connectionSettings = connectionSettings;
-	}
-
-	/**
-	 * @return the urlRepository
-	 */
-	public String getUrlRepository() {
-		return urlRepository;
-	}
-
-	/**
-	 * @param urlRepository the urlRepository to set
-	 */
-	public void setUrlRepository(String urlRepository) {
-		this.urlRepository = urlRepository;
-	}
-
-	/**
-	 * @return the username
-	 */
-	public String getUsername() {
-		return username;
-	}
-
-	/**
-	 * @param username the username to set
-	 */
-	public void setUsername(String username) {
-		this.username = username;
-	}
-
-	/**
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
-	}
-
-	/**
-	 * @param password the password to set
-	 */
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	/**
-	 * @return the filename
-	 */
-	public String getFilename() {
-		return filename;
-	}
-
-	/**
-	 * @param filename the filename to set
-	 */
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
-
-	/**
-	 * @return the skills
-	 */
-	public List<Skill> getSkills() {
-		return skills;
-	}
-
-	/**
-	 * @param skills the skills to set
-	 */
-	public void setSkills(List<Skill> skills) {
-		this.skills = skills;
-	}
-
-	/**
-	 * @return the ghosts
-	 */
-	public List<Ghost> getGhosts() {
-		return ghosts;
-	}
-
-	/**
-	 * @param ghosts the ghosts to set
-	 */
-	public void setGhosts(List<Ghost> ghosts) {
-		this.ghosts = ghosts;
-	}
-
-	/**
-	 * @return the location repository <br/><i>e.g. This is where the Git clone() occurs.</i>
-	 */
-	public String getLocationRepository() {
-		return locationRepository;
-	}
-	
-	/**
-	 * @param locationRepository the location where the repository occurs.
-	 */
-	public void setLocationRepository(String locationRepository) {
-		this.locationRepository = locationRepository;
-	}
-
 	/**
 	 * Integrate a new library detected or declared to the list of exclusion paths.
 	 * @param library the passed library
@@ -339,35 +193,5 @@ public class Project  {
 		}
 		
 	}
-	
-	/**
-	 * @return the dependencies list
-	 */
-	public List<Library> getLibraries() {
-		return libraries;
-	}
-
-	/**
-	 * @param libraries the libraries to set
-	 */
-	public void setLibraries(List<Library> libraries) {
-		this.libraries.clear();
-		this.libraries.addAll(libraries);
-	}
-
-	/**
-	 * @return the actual risk of this project.
-	 */
-	public int getRisk() {
-		return risk;
-	}
-
-	/**
-	 * @param risk the estimated risk to set.
-	 */
-	public void setRisk(int risk) {
-		this.risk = risk;
-	}
-
 	
 }
