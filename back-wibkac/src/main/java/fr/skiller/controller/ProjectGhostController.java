@@ -50,32 +50,32 @@ public class ProjectGhostController {
 		HttpHeaders headers = new HttpHeaders();
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("POST command on /project/ghosts/save for project : %d", param.idProject));
+			log.debug(String.format("POST command on /project/ghosts/save for project : %d", param.getIdProject()));
 		}
 		
 		try {
-			Project project = projectHandler.get(param.idProject);
+			Project project = projectHandler.get(param.getIdProject());
 			
 			// We update the staff identifier associated to this ghost
-			if (param.idStaff > 0) {
-				projectHandler.associateStaffToGhost(project, param.pseudo, param.idStaff);
+			if (param.getIdStaff() > 0) {
+				projectHandler.associateStaffToGhost(project, param.getPseudo(), param.getIdStaff());
 				return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);	
 			}
 
 			// This ghost is technical
-			if (param.technical) {
-				projectHandler.setGhostTechnicalStatus(project, param.pseudo, true); 				
+			if (param.isTechnical()) {
+				projectHandler.setGhostTechnicalStatus(project, param.getPseudo(), true); 				
 				return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);			
 			}
 			
 			// Neither staff member, nor technical, we reset the ghost
-			projectHandler.resetGhost(project, param.pseudo); 				
+			projectHandler.resetGhost(project, param.getPseudo()); 				
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);			
 			
 			
 		} catch (SkillerException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
-			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.idProject));
+			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
 			return new ResponseEntity<>(
 					Boolean.FALSE, headers,
 					HttpStatus.INTERNAL_SERVER_ERROR);			
@@ -96,20 +96,20 @@ public class ProjectGhostController {
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("POST command on /project/ghosts/remove for project : %d and pseudi %s", 
-					param.idProject, param.pseudo));
+					param.getIdProject(), param.getPseudo()));
 		}
 		
 		try {
-			Project project = projectHandler.get(param.idProject);
+			Project project = projectHandler.get(param.getIdProject());
 			
 			// Neither staff member, nor technical, we reset the ghost
-			projectHandler.removeGhost(project, param.pseudo); 				
+			projectHandler.removeGhost(project, param.getPseudo()); 				
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);			
 			
 			
 		} catch (SkillerException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
-			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.idProject));
+			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
 			return new ResponseEntity<>(
 					Boolean.FALSE, headers,
 					HttpStatus.INTERNAL_SERVER_ERROR);			

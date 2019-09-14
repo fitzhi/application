@@ -1,12 +1,14 @@
 package fr.skiller.controller.in;
 
+import lombok.Data;
+
 /**
  * <p>
  * Parameter sent to the controller in order to obtain the sunburst data.
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class SettingsGeneration {
+public @Data class SettingsGeneration {
 	/**
 	 * Project identifier.
 	 */
@@ -50,35 +52,6 @@ public class SettingsGeneration {
 	 */
 	public boolean requiresPersonalization() {
 		return (getIdStaffSelected() > 0 || getStartingDate() > 0);
-	}
-
-	/**
-	 * @return the startingDate of investigation.
-	 */
-	public long getStartingDate() {
-		return startingDate;
-	}
-
-	/**
-	 * @return the idStaffSelected
-	 */
-	public int getIdStaffSelected() {
-		return idStaffSelected;
-	}
-
-	/**
-	 * @param idStaffSelected the idStaffSelected to set
-	 */
-	private void setIdStaffSelected(int idStaffSelected) {
-		this.idStaffSelected = idStaffSelected;
-	}
-
-	public int getIdProject() {
-		return idProject;
-	}
-
-	public void setIdProject(int idProject) {
-		this.idProject = idProject;
 	}
 
 }

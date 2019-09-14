@@ -22,7 +22,7 @@ import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;
-import fr.skiller.controller.in.ParamProjectSkill;
+import fr.skiller.controller.in.BodyParamProjectSkill;
 import fr.skiller.data.external.BooleanDTO;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
@@ -67,9 +67,9 @@ public class ProjectControllerSkillsManagementTest {
 			logger.debug("Skill found " + skill.getTitle());
 		}
 		
-		ParamProjectSkill ps = new ParamProjectSkill();
-		ps.idProject = 1;
-		ps.idSkill = 2;
+		BodyParamProjectSkill ps = new BodyParamProjectSkill();
+		ps.setIdProject(1);
+		ps.setIdSkill (2);
 
 		String jsonInput = gson.toJson(ps);
 		

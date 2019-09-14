@@ -78,9 +78,9 @@ public class ProjectGhostControllerSaveGhostTest {
 	@WithMockUser
 	public void test() throws Exception {
 		BodyUpdateGhost bug = new BodyUpdateGhost();
-		bug.idProject = ID_PROJECT;
-		bug.pseudo = "pseudoUnlinked";
-		bug.idStaff = 1;
+		bug.setIdProject(ID_PROJECT);
+		bug.setPseudo("pseudoUnlinked");
+		bug.setIdStaff(1);
 	
 		MvcResult result = this.mvc.perform(get("/staff/1"))
 				.andExpect(status().isOk())

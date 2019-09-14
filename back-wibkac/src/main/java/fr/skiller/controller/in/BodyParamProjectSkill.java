@@ -1,5 +1,7 @@
 package fr.skiller.controller.in;
 
+import lombok.Data;
+
 /**
  * <p>
  * Parameters passed to the controller inside the body.
@@ -7,17 +9,19 @@ package fr.skiller.controller.in;
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class ParamProjectSkill {
-	public ParamProjectSkill() {
+public @Data class BodyParamProjectSkill {
+
+	public BodyParamProjectSkill() {
+		// Empty constructor declared for serialization / deserialization purpose 
 	}
 
 	/**
 	 * The given project identifier
 	 */
-	public int idProject;
+	private int idProject;
 
 	/**
 	 * The given skill identifier
 	 */
-	public int idSkill;
+	private int idSkill;
 }

@@ -1,22 +1,26 @@
 package fr.skiller.controller.in;
 
+import lombok.Data;
+
 /**
  * <p>
  * Internal container hosting all possible parameters required to remove a ghost from a project.
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL 
  */
-public class BodyRemoveGhost {
+public @Data class BodyRemoveGhost {
 	
-	public BodyRemoveGhost() { }
+	public BodyRemoveGhost() {
+		// Empty constructor declared for serialization / deserialization purpose 
+	}
 	
 	/**
 	 * the project identifier
 	 */
-	public int idProject;
+	private int idProject;
 	
 	/**
 	 * The ghost's pseudo
 	 */
-	public String pseudo;
+	private String pseudo;
 }

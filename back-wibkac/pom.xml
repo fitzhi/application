@@ -27,6 +27,7 @@
 		<cglib.version>3.2.10</cglib.version>
 		<jgit.version>5.4.0.201906121030-r</jgit.version>
 		<bypass>N</bypass>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
 
@@ -265,6 +266,7 @@
 				<configuration>
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
+					<encoding>${project.build.sourceEncoding}</encoding>
 				</configuration>
 			</plugin>
 

@@ -1,5 +1,7 @@
 package fr.skiller.controller.in;
 
+import lombok.Data;
+
 /**
  * <p>
  * Internal container hosting all possible parameters required to manage a ghost
@@ -8,28 +10,29 @@ package fr.skiller.controller.in;
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class BodyUpdateGhost {
+public @Data class BodyUpdateGhost {
 	
 	public BodyUpdateGhost() {
+		// Empty constructor declared for serialization / deserialization purpose 
 	}
 
 	/**
 	 * The project identifier
 	 */
-	public int idProject;
+	private int idProject;
 	
 	/**
 	 * the ghost's pseudo
 	 */
-	public String pseudo;
+	private String pseudo;
 	
 	/**
 	 * The staff's identifier
 	 */
-	public int idStaff;
+	private int idStaff;
 	
 	/**
 	 * Status technical or not of the ghost.s
 	 */
-	public boolean technical;
+	private boolean technical;
 }

@@ -36,7 +36,7 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.ShuffleService;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
-import fr.skiller.controller.in.ParamProjectSkill;
+import fr.skiller.controller.in.BodyParamProjectSkill;
 import fr.skiller.controller.in.SettingsGeneration;
 import fr.skiller.controller.util.ProjectLoader;
 import fr.skiller.controller.util.ProjectLoader.MyReference;
@@ -143,8 +143,8 @@ public class ProjectController {
 
 		MyReference<ResponseEntity<Project>> refResponse = projectLoader.new MyReference<>();
 		final Project searchProject = projectLoader.getProject(idProject, new Project(), refResponse);
-		if (refResponse.response != null) {
-			return refResponse.response;
+		if (refResponse.getResponse() != null) {
+			return refResponse.getResponse();
 		}
 		
 		ResponseEntity<Project> response = new ResponseEntity<>(searchProject, headers(), HttpStatus.OK);
@@ -166,7 +166,7 @@ public class ProjectController {
 		MyReference<ResponseEntity<List<Skill>>> refResponse = projectLoader.new MyReference<>();
 
 		final Project project = projectLoader.getProject(idProject, new ArrayList<Skill>(), refResponse);
-		return  (refResponse.response != null) ? refResponse.response : 
+		return  (refResponse.getResponse() != null) ? refResponse.getResponse() : 
 			new ResponseEntity<>(project.getSkills(), headers(), HttpStatus.OK);
 	}	
 	
@@ -249,60 +249,60 @@ public class ProjectController {
 	/**
 	 * <p>Add a new skill required for a project.</p>
 	 * @param projectSkill the body of the post containing an instance of ParamProjectSkill in JSON format
-	 * @see ProjectController.ParamProjectSkill
+	 * @see ProjectController.BodyParamProjectSkill
 	 * @return
 	 */
 	@PostMapping("/skill/add")
-	public ResponseEntity<BooleanDTO> saveSkill(@RequestBody ParamProjectSkill projectSkill) {
+	public ResponseEntity<BooleanDTO> saveSkill(@RequestBody BodyParamProjectSkill projectSkill) {
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 					"POST command on /project/skill/add with params idProject:%d, idSkill:%d", 
-					projectSkill.idProject, projectSkill.idSkill));
+					projectSkill.getIdProject(), projectSkill.getIdSkill()));
 		}
 		
 		MyReference<ResponseEntity<BooleanDTO>> refResponse = projectLoader.new MyReference<>();
-		Project project = projectLoader.getProject(projectSkill.idProject, new BooleanDTO(), refResponse);
-		if (refResponse.response != null) {
-			return refResponse.response;
+		Project project = projectLoader.getProject(projectSkill.getIdProject(), new BooleanDTO(), refResponse);
+		if (refResponse.getResponse() != null) {
+			return refResponse.getResponse();
 		}
 		
 		try {
-			Skill skill = this.skillHandler.getSkill(projectSkill.idSkill);
+			Skill skill = this.skillHandler.getSkill(projectSkill.getIdSkill());
 			this.projectHandler.addSkill(project, skill);	
 			return new ResponseEntity<BooleanDTO>(new BooleanDTO(), headers(), HttpStatus.OK);
 		} catch (final SkillerException ske) {
 			if (log.isDebugEnabled()) {
 				log.debug(String.format(
-						"Cannot save the skill %d inside the project %s", projectSkill.idSkill, project.getName()));
+						"Cannot save the skill %d inside the project %s", projectSkill.getIdSkill(), project.getName()));
 				log.debug (ske.errorMessage);
 			}
 			return new ResponseEntity<BooleanDTO>(
-					new BooleanDTO(-1, String.format("There is no skill with id " + projectSkill.idSkill)), 
+					new BooleanDTO(-1, String.format("There is no skill with id " + projectSkill.getIdSkill())), 
 					headers(), HttpStatus.BAD_REQUEST);
 		}
 	}	
 	
 	/**
 	* <p>Unregister a skill within a project.</p>
-	* @param param an instance of {@link ParamProjectSkill} containing the project identifier and the skill identifier
+	* @param param an instance of {@link BodyParamProjectSkill} containing the project identifier and the skill identifier
 	*/
 	@PostMapping("/skill/del")
-	public ResponseEntity<BooleanDTO> revokeSkill(@RequestBody ParamProjectSkill projectSkill) {
+	public ResponseEntity<BooleanDTO> revokeSkill(@RequestBody BodyParamProjectSkill projectSkill) {
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 				"POST command on /staff/skills/del with params (idProject: %d, idSkill: %d)",
-				projectSkill.idProject, projectSkill.idSkill));
+				projectSkill.getIdProject(), projectSkill.getIdSkill()));
 		}
 
 		MyReference<ResponseEntity<BooleanDTO>> refResponse = projectLoader.new MyReference<>();
-		Project project = projectLoader.getProject(projectSkill.idProject, new BooleanDTO(), refResponse);
-		if (refResponse.response != null) {
-			return refResponse.response;
+		Project project = projectLoader.getProject(projectSkill.getIdProject(), new BooleanDTO(), refResponse);
+		if (refResponse.getResponse() != null) {
+			return refResponse.getResponse();
 		}
 		
-		projectHandler.removeSkill(project, projectSkill.idSkill);
+		projectHandler.removeSkill(project, projectSkill.getIdSkill());
 		
 		return new ResponseEntity<>(new BooleanDTO(), headers(), HttpStatus.OK);
 	}
@@ -324,8 +324,8 @@ public class ProjectController {
 
 		MyReference<ResponseEntity<SunburstDTO>> refResponse = projectLoader.new MyReference<>();
 		Project project = projectLoader.getProject(settings.getIdProject(), new SunburstDTO(), refResponse);
-		if (refResponse.response != null) {
-			return refResponse.response;
+		if (refResponse.getResponse() != null) {
+			return refResponse.getResponse();
 		}
 		
 		try {
@@ -436,8 +436,8 @@ public class ProjectController {
 		}
 		MyReference<ResponseEntity<String>> refResponse = projectLoader.new MyReference<>();
 		Project project = projectLoader.getProject(idProject, "", refResponse);
-		if (refResponse.response != null) {
-			return refResponse.response;
+		if (refResponse.getResponse() != null) {
+			return refResponse.getResponse();
 		}
 
 		try {

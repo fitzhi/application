@@ -1,5 +1,7 @@
 package fr.skiller.controller.in;
 
+import lombok.Data;
+
 /**
  * <p>
  * Internal Parameters class containing all possible parameters necessaries
@@ -7,16 +9,16 @@ package fr.skiller.controller.in;
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class BodyParamStaffSkill {
-	public int idStaff;
-	public int idSkill;
-	public int level;
-	public String formerSkillTitle;
-	public String newSkillTitle;
+public @Data class BodyParamStaffSkill {
+	
+	private int idStaff;
+	private int idSkill;
+	private int level;
+	private String formerSkillTitle;
+	private String newSkillTitle;
 
-	@Override
-	public String toString() {
-		return "ParamSkillProject [idStaff=" + idStaff + ", idSkill=" + idSkill + ", level=" + level
-				+ ", formerSkillTitle=" + formerSkillTitle + ", newSkillTitle=" + newSkillTitle + "]";
+	public BodyParamStaffSkill() {
+		// Empty constructor declared for serialization / deserialization purpose 		
 	}
+	
 }

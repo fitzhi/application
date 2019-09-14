@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>This class is an utility class in charge of loading the project</p>
@@ -28,9 +30,8 @@ import fr.skiller.exception.SkillerException;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
+@Slf4j
 public class ProjectLoader {
-
-	private final Logger logger = LoggerFactory.getLogger(ProjectLoader.class.getCanonicalName());
 
 	final ProjectHandler projectHandler;
 	
@@ -44,9 +45,11 @@ public class ProjectLoader {
 	 * @author Fr&eacute;d&eacute;ric VIDAL
 	 * @param <T> the type of variable on boarded within this reference
 	 */
-	public class MyReference<T> {
-		public T response;
-		public MyReference() {}
+	public @Data class MyReference<T> {
+		private T response;
+		public MyReference() {
+			// Empty constructor for serialization / deserialization purpose
+		}
 	}
 	
 	/**
@@ -73,7 +76,7 @@ public class ProjectLoader {
 				refResponse.response = new ResponseEntity<T>(t, headers, HttpStatus.NOT_FOUND);			
 			} 
 		} catch (final SkillerException e) {
-			logger.error(getStackTrace(e));
+			log.error(getStackTrace(e));
 			refResponse.response = new ResponseEntity<T>(t, headers, HttpStatus.BAD_REQUEST);
 		}
 		

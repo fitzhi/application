@@ -25,17 +25,16 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 		.antMatchers(
 				
 				// For development only.
-				/*
 				 "/staff/**", 
 				 "/skill/**", 
 				 "/project/**", 
-				 */
+				 "/test/post_a_Test",
 				
 				"/admin/isVeryFirstConnection", 
 				"/admin/saveVeryFirstConnection", 
 				"/admin/veryFirstUser",
 				"/admin/register",
-				"/skill/all",
+	//DEV			"/skill/all",
 				"/referential/**").permitAll()
 		.antMatchers("/**").access("hasRole('USER')")
 		.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());

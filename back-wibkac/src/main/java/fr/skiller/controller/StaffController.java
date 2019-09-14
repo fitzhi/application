@@ -282,24 +282,24 @@ public class StaffController {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 					"POST command on /staff/experiences/add with params id:%d, idSkill:%d, level:%d", 
-					param.idStaff, param.idSkill, param.level));
+					param.getIdStaff(), param.getIdSkill(), param.getLevel()));
 		}
 
-		final Staff staff = staffHandler.getStaff().get(param.idStaff);
+		final Staff staff = staffHandler.getStaff().get(param.getIdStaff());
 		if (staff == null) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_STAFF_NOFOUND));
-			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, param.idStaff));
+			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, param.getIdStaff()));
 			return new ResponseEntity<>(
 					Boolean.FALSE, headers,
 					HttpStatus.INTERNAL_SERVER_ERROR);			
 		}
 		
-		Experience experience = staff.getExperience(param.idSkill);
+		Experience experience = staff.getExperience(param.getIdSkill());
 		if (experience == null) {
-			this.staffHandler.addExperience(param.idStaff, new Experience(param.idSkill, param.level));
+			this.staffHandler.addExperience(param.getIdStaff(), new Experience(param.getIdSkill(), param.getLevel()));
 		} else {
-			this.staffHandler.removeExperience(param.idStaff, experience);
-			this.staffHandler.addExperience(param.idStaff, new Experience(param.idSkill, param.level));
+			this.staffHandler.removeExperience(param.getIdStaff(), experience);
+			this.staffHandler.addExperience(param.getIdStaff(), new Experience(param.getIdSkill(), param.getLevel()));
 		}
 		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 		
@@ -320,21 +320,21 @@ public class StaffController {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 					"POST command on /staff/experiences/remove with params id:%d, idSkill:%d, level:%d", 
-					param.idStaff, param.idSkill, param.level));
+					param.getIdStaff(), param.getIdSkill(), param.getLevel()));
 		}
 
-		final Staff staff = staffHandler.getStaff().get(param.idStaff);
+		final Staff staff = staffHandler.getStaff().get(param.getIdStaff());
 		if (staff == null) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_STAFF_NOFOUND));
-			headers.set(BACKEND_RETURN_MESSAGE, String.format(Error.MESSAGE_STAFF_NOFOUND, param.idStaff));
+			headers.set(BACKEND_RETURN_MESSAGE, String.format(Error.MESSAGE_STAFF_NOFOUND, param.getIdStaff()));
 			return new ResponseEntity<>(
 					Boolean.FALSE, headers,
 					HttpStatus.INTERNAL_SERVER_ERROR);			
 		}
 		
-		Experience experience = staff.getExperience(param.idSkill);
+		Experience experience = staff.getExperience(param.getIdSkill());
 		if (experience != null) {
-			this.staffHandler.removeExperience(param.idStaff, experience);
+			this.staffHandler.removeExperience(param.getIdStaff(), experience);
 		}
 		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 		
@@ -356,21 +356,21 @@ public class StaffController {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 					"POST command on /staff/experiences/update with params id:%d, idSkill:%d, level:%d", 
-					param.idStaff, param.idSkill, param.level));
+					param.getIdStaff(), param.getIdSkill(), param.getLevel()));
 		}
 
-		final Staff staff = staffHandler.getStaff().get(param.idStaff);
+		final Staff staff = staffHandler.getStaff().get(param.getIdStaff());
 		if (staff == null) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_STAFF_NOFOUND));
-			headers.set(BACKEND_RETURN_MESSAGE, String.format(Error.MESSAGE_STAFF_NOFOUND, param.idStaff));
+			headers.set(BACKEND_RETURN_MESSAGE, String.format(Error.MESSAGE_STAFF_NOFOUND, param.getIdStaff()));
 			return new ResponseEntity<>(
 					Boolean.FALSE, headers,
 					HttpStatus.INTERNAL_SERVER_ERROR);			
 		}
 		
-		Experience experience = staff.getExperience(param.idSkill);
+		Experience experience = staff.getExperience(param.getIdSkill());
 		if (experience != null) {
-			this.staffHandler.updateExperience(param.idStaff, new Experience(param.idSkill, param.level));
+			this.staffHandler.updateExperience(param.getIdStaff(), new Experience(param.getIdSkill(), param.getLevel()));
 		}
 		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 	}
@@ -472,14 +472,14 @@ public class StaffController {
 	public ResponseEntity<StaffDTO> saveExperiences(@RequestBody BodyParamResumeSkills param) {
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Adding %d skills for the staff ID %d", param.skills.length, param.idStaff));
+			log.debug(String.format("Adding %d skills for the staff ID %d", param.getSkills().length, param.getIdStaff()));
 		}
 		if (log.isTraceEnabled()) {
-			log.trace(String.format("Adding the skills below for the staff identifier %d", param.idStaff));
-			Arrays.asList(param.skills).stream().forEach(skill -> log.trace(String.format("%s %s", skill.getIdSkill(), skill.getTitle())));
+			log.trace(String.format("Adding the skills below for the staff identifier %d", param.getIdStaff()));
+			Arrays.asList(param.getSkills()).stream().forEach(skill -> log.trace(String.format("%s %s", skill.getIdSkill(), skill.getTitle())));
 		}
 		try {
-			Staff staff = staffHandler.addExperiences(param.idStaff, param.skills);
+			Staff staff = staffHandler.addExperiences(param.getIdStaff(), param.getSkills());
 			return new ResponseEntity<>(new StaffDTO(staff, 1, 
 					staff.getFirstName() + " " + staff.getLastName() + " has " + staff.getExperiences().size() + " skills now!"), 
 					HttpStatus.OK);
@@ -509,14 +509,14 @@ public class StaffController {
 			if (log.isDebugEnabled()) {
 				log.debug(
 						String.format("POST command on /staff/project/add with params idStaff: %d, idProject: %d", 
-								param.idStaff, param.idProject));
+								param.getIdStaff(), param.getIdProject()));
 			}
 			final ResponseEntity<BooleanDTO> responseEntity;
 	
-			final Staff staff = staffHandler.getStaff().get(param.idStaff);
+			final Staff staff = staffHandler.getStaff().get(param.getIdStaff());
 			assert (staff != null);
 			
-			final Project project = projectHandler.get(param.idProject);
+			final Project project = projectHandler.get(param.getIdProject());
 			assert (project != null);
 
 			/*
@@ -524,7 +524,7 @@ public class StaffController {
 			 * project list, we send back a BAD_REQUEST to avoid duplicate
 			 * entries
 			 */
-			Predicate<Mission> predicate = pr -> (pr.getIdProject() == param.idProject);
+			Predicate<Mission> predicate = pr -> (pr.getIdProject() == param.getIdProject());
 			if (staff.getMissions().stream().anyMatch(predicate)) {
 				responseEntity = new ResponseEntity<>(
 						new BooleanDTO(-1, "The collaborator " + staff.fullName() + " is already involved in " + project.getName()),
@@ -532,7 +532,7 @@ public class StaffController {
 				return responseEntity;
 			}
 	
-			staffHandler.addMission(param.idStaff, param.idProject, project.getName());
+			staffHandler.addMission(param.getIdStaff(), param.getIdProject(), project.getName());
 			responseEntity = new ResponseEntity<>(new BooleanDTO(), headers, HttpStatus.OK);
 			return responseEntity;
 		} catch (final SkillerException se) {
@@ -552,19 +552,19 @@ public class StaffController {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 				"POST command on /staff/project/del with params idStaff : %d,idProject : %d", 
-				param.idStaff, param.idProject));
+				param.getIdStaff(), param.getIdProject()));
 		}
 
-		final Staff staff = staffHandler.getStaff().get(param.idStaff);
+		final Staff staff = staffHandler.getStaff().get(param.getIdStaff());
 		if (staff == null) {
 			return new ResponseEntity<>(
 					new BooleanDTO(CODE_STAFF_NOFOUND, 
-					MessageFormat.format(MESSAGE_STAFF_NOFOUND, param.idStaff)), 
+					MessageFormat.format(MESSAGE_STAFF_NOFOUND, param.getIdStaff())), 
 					new HttpHeaders(), 
 					HttpStatus.NOT_FOUND);
 		}
 
-		Optional<Mission> oProject = staff.getMissions().stream().filter(pr -> (pr.getIdProject() == param.idProject)).findFirst();
+		Optional<Mission> oProject = staff.getMissions().stream().filter(pr -> (pr.getIdProject() == param.getIdProject())).findFirst();
 		if (oProject.isPresent()) {
 			
 			Mission mission = oProject.get();

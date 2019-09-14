@@ -99,10 +99,10 @@ public class ProjectGhostControllerTest {
 				staff.getMissions().stream().anyMatch(mission -> mission.getIdProject() == ID_PROJECT));
 		
 		BodyUpdateGhost bug = new BodyUpdateGhost();
-		bug.idProject = ID_PROJECT;
-		bug.pseudo = "pseudoLinked";
-		bug.idStaff = -1;
-		bug.technical = true;
+		bug.setIdProject(ID_PROJECT);
+		bug.setPseudo("pseudoLinked");
+		bug.setIdStaff(-1);
+		bug.setTechnical(true);
 	
 		this.mvc.perform(post("/project/ghost/save")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)

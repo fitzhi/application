@@ -1,5 +1,7 @@
 package fr.skiller.controller.in;
 
+import lombok.Data;
+
 /**
  * <p>
  * Parameters used to add or remove a project from a staff member.
@@ -7,23 +9,20 @@ package fr.skiller.controller.in;
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class BodyParamStaffProject {
-	
-	public BodyParamStaffProject() {}
+public @Data class BodyParamStaffProject {
 	
 	/**
 	 * The staff identifier.
 	 */
-	public int idStaff;
+	private int idStaff;
 	
 	/**
 	 * The project identifier.
 	 */
-	public int idProject;
+	private int idProject;
 
-	@Override
-	public String toString() {
-		return "ParamStaffProject [idStaff=" + idStaff + ", idProject=" + idProject + "]";
+	public BodyParamStaffProject() {
+		// Empty constructor declared for serialization / deserialization purpose 
 	}
 
 }

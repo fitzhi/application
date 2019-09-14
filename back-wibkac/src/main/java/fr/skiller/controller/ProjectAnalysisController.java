@@ -76,11 +76,11 @@ public class ProjectAnalysisController {
 		MyReference<ResponseEntity<List<String>>> refResponse = projectLoader.new MyReference<>();
 
 		final Project project = projectLoader.getProject(idProject, new ArrayList<String>(), refResponse);
-		if (refResponse.response != null) {
+		if (refResponse.getResponse() != null) {
 			if (log.isDebugEnabled()) {
 				log.debug (String.format("Project not found for id %d" , idProject));
 			} 
-			return refResponse.response;
+			return refResponse.getResponse();
 		}
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("scanning the directories from %s", project.getLocationRepository()));
@@ -111,7 +111,7 @@ public class ProjectAnalysisController {
 	/**
 	 * Add or change the name of skill required for a project.
 	 * @param param the body of the post containing an instance of ParamProjectSkill in JSON format
-	 * @see ProjectController.ParamProjectSkill
+	 * @see ProjectController.BodyParamProjectSkill
 	 * @return
 	 */
 	@PostMapping("/lib-dir/save/{idProject}")
@@ -127,8 +127,8 @@ public class ProjectAnalysisController {
 		
 		MyReference<ResponseEntity<Boolean>> refResponse = projectLoader.new MyReference<>();
 		Project project = projectLoader.getProject(idProject, Boolean.FALSE, refResponse);
-		if (refResponse.response != null) {
-			return refResponse.response;
+		if (refResponse.getResponse() != null) {
+			return refResponse.getResponse();
 		}
 		
 		if (log.isDebugEnabled()) {
