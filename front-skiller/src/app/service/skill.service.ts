@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Skill } from '../data/skill';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { InternalService } from '../internal-service';
 
 import { Constants } from '../constants';
 import { ListCriteria } from '../data/listCriteria';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { take } from 'rxjs/operators';
-import { SIGILL } from 'constants';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })

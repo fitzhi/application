@@ -29,6 +29,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				 "/skill/**", 
 				 "/project/**", 
 				 "/test/post_a_Test",
+				 "/admin/settings",
 				
 				"/admin/isVeryFirstConnection", 
 				"/admin/saveVeryFirstConnection", 

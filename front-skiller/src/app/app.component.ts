@@ -12,6 +12,7 @@ import { ListCriteria } from './data/listCriteria';
 import { AuthService } from './admin/service/auth/auth.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { StaffListService } from './staff-list-service/staff-list.service';
+import { SonarService } from './service/sonar.service';
 
 declare var $: any;
 
@@ -49,6 +50,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 
 	constructor(
 		private cinematicService: CinematicService,
+		private sonarService: SonarService,
 		private authService: AuthService,
 		private tabsStaffListService: TabsStaffListService,
 		private skillService: SkillService,
@@ -71,6 +73,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
          * Loading the referentials.
          */
 		this.referentialService.loadAllReferentials();
+		this.sonarService.loadSonarVersion();
 	}
 
 	/**

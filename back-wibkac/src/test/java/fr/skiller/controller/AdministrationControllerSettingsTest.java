@@ -40,7 +40,7 @@ public class AdministrationControllerSettingsTest {
 	        .accept("application/json;charset=UTF-8"))
 	        .andExpect(status().isOk())
 	        .andExpect(content().contentType("application/json;charset=UTF-8"))
-	        .andExpect(jsonPath("$.urlSonar", is("localhost:9000")))
+	        .andExpect(jsonPath("$.urlSonar", is("http://localhost:9000")))
 	    	.andDo(print());
 	    	
 
