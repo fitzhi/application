@@ -57,9 +57,6 @@ public class ProjectGhostControllerSaveGhostTest {
 	private MockMvc mvc;
 
 	@Autowired
-	private ProjectGhostController projectGhostController;
-
-	@Autowired
 	private ProjectHandler projectHandler;
 
 	Project project;

@@ -18,14 +18,14 @@ import fr.skiller.Error;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.controller.in.BodyParamSonarEntry;
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.SonarEntry;
+import fr.skiller.data.internal.SonarProject;
 import fr.skiller.exception.SkillerException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * 
  * <p>
- * Controller in charge the collection of {@link SonarEntry} declared in the project.
+ * Controller in charge the collection of {@link SonarProject} declared in the project.
  * </p>
  *
  * @author Fr&eacute;d&eacute;ric VIDAL

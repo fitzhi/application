@@ -23,7 +23,7 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.controller.in.BodyParamSonarEntry;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
-import fr.skiller.data.internal.SonarEntry;
+import fr.skiller.data.internal.SonarProject;
 
 /**
  * <p>
@@ -53,7 +53,7 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 
 		Project newProject = new Project(-1, "name of the project");
 		newProject.getSkills().add(new Skill(1, "title of skill"));
-		newProject.getSonarEntries().add(new SonarEntry("idProjectSonar", "name of project"));
+		newProject.getSonarProjects().add(new SonarProject("idProjectSonar", "name of project"));
 		
 		System.out.println(gson.toJson(newProject));
 		
@@ -66,16 +66,16 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 		Optional<Project> oProject = projectHandler.lookup("name of the project");
 		Assert.assertTrue(oProject.isPresent());
 		Assert.assertTrue(oProject.get().getSkills().size() == 1);
-		Assert.assertTrue(oProject.get().getSonarEntries().size() == 1);
-		Assert.assertTrue("idProjectSonar".contentEquals(oProject.get().getSonarEntries().get(0).getId()));
-		Assert.assertTrue("name of project".contentEquals(oProject.get().getSonarEntries().get(0).getName()));
+		Assert.assertTrue(oProject.get().getSonarProjects().size() == 1);
+		Assert.assertTrue("idProjectSonar".contentEquals(oProject.get().getSonarProjects().get(0).getId()));
+		Assert.assertTrue("name of project".contentEquals(oProject.get().getSonarProjects().get(0).getName()));
 
 		int id = oProject.get().getId();
 		
 		// 
 		// ADDING A SONAR ENTRY.
 		//
-		SonarEntry entry = new SonarEntry("otherId", "other name");
+		SonarProject entry = new SonarProject("otherId", "other name");
 		BodyParamSonarEntry bpse = new BodyParamSonarEntry(id, entry);
 		this.mvc.perform(post("/project/sonar/saveEntry")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -85,14 +85,14 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 		
 		Project p = projectHandler.get(id);
 		Assert.assertTrue(p != null);
-		Assert.assertTrue(p.getSonarEntries().size() == 2);
-		Assert.assertTrue("otherId".contentEquals(oProject.get().getSonarEntries().get(1).getId()));
-		Assert.assertTrue("other name".contentEquals(oProject.get().getSonarEntries().get(1).getName()));
+		Assert.assertTrue(p.getSonarProjects().size() == 2);
+		Assert.assertTrue("otherId".contentEquals(oProject.get().getSonarProjects().get(1).getId()));
+		Assert.assertTrue("other name".contentEquals(oProject.get().getSonarProjects().get(1).getName()));
 	
 		// 
 		// UPDATING A SONAR ENTRY.
 		//
-		entry = new SonarEntry("otherId", "new other name");
+		entry = new SonarProject("otherId", "new other name");
 		bpse = new BodyParamSonarEntry(id, entry);
 		this.mvc.perform(post("/project/sonar/saveEntry")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -102,14 +102,14 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 		
 		p = projectHandler.get(id);
 		Assert.assertTrue(p != null);
-		Assert.assertTrue(p.getSonarEntries().size() == 2);
-		Assert.assertTrue("otherId".contentEquals(oProject.get().getSonarEntries().get(1).getId()));
-		Assert.assertTrue("new other name".contentEquals(oProject.get().getSonarEntries().get(1).getName()));
+		Assert.assertTrue(p.getSonarProjects().size() == 2);
+		Assert.assertTrue("otherId".contentEquals(oProject.get().getSonarProjects().get(1).getId()));
+		Assert.assertTrue("new other name".contentEquals(oProject.get().getSonarProjects().get(1).getName()));
 	
 		// 
 		// DELETING A SONAR ENTRY.
 		//
-		entry = new SonarEntry("otherId", "new other name");
+		entry = new SonarProject("otherId", "new other name");
 		bpse = new BodyParamSonarEntry(id, entry);
 		this.mvc.perform(post("/project/sonar/removeEntry")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -119,7 +119,7 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 		
 		p = projectHandler.get(id);
 		Assert.assertTrue(p != null);
-		Assert.assertTrue(p.getSonarEntries().size() == 1);
+		Assert.assertTrue(p.getSonarProjects().size() == 1);
 	
 	}
 

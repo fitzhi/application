@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import fr.skiller.bean.DataChartHandler;
 import fr.skiller.data.internal.DataChart;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>

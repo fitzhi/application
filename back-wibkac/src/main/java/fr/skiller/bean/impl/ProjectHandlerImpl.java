@@ -27,7 +27,7 @@ import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Mission;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
-import fr.skiller.data.internal.SonarEntry;
+import fr.skiller.data.internal.SonarProject;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
@@ -363,9 +363,9 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public void saveSonarEntry(Project project, SonarEntry sonarEntry) {
+	public void saveSonarEntry(Project project, SonarProject sonarEntry) {
 
-		Optional<SonarEntry> oEntry = project.getSonarEntries()
+		Optional<SonarProject> oEntry = project.getSonarProjects()
 				.stream()
 				.filter(entry -> entry.getId().equals(sonarEntry.getId()))
 				.findFirst();
@@ -385,19 +385,19 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 					log.debug(String.format
 						("Adding Sonar entry (%s; %s)", sonarEntry.getId(), sonarEntry.getName()));
 				}
-				project.getSonarEntries().add(sonarEntry);
+				project.getSonarProjects().add(sonarEntry);
 			}
 		}
 	}
 
 	@Override
-	public void removeSonarEntry(Project project, SonarEntry sonarEntry) {
+	public void removeSonarEntry(Project project, SonarProject sonarEntry) {
 
 		boolean isDeleted;
 		
 		synchronized (lockDataUpdated) {
 			isDeleted = project
-				.getSonarEntries()
+				.getSonarProjects()
 				.removeIf(entry -> sonarEntry.getId().equals(entry.getId()));
 		}
 		
@@ -410,7 +410,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 	@Override
 	public boolean containsSonarEntry(Project project, String key) {
-		return project.getSonarEntries()
+		return project.getSonarProjects()
 				.stream()
 				.anyMatch(entry -> key.equals(entry.getId()));
 	}

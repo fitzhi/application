@@ -55,9 +55,6 @@ public class ProjectControllerSkillsManagementTest {
 	@Autowired
 	private ProjectHandler projectHandler;
 		
-	@Autowired
-	private ProjectController projectController;
-	
 	@Test
 	@WithMockUser
 	public void test() throws Exception {

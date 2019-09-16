@@ -10,7 +10,7 @@ import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
-import fr.skiller.data.internal.SonarEntry;
+import fr.skiller.data.internal.SonarProject;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 
@@ -188,7 +188,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @param project the given project
 	 * @param sonarEntry the given sonar entry
 	 */
-	void saveSonarEntry(Project project, SonarEntry sonarEntry);
+	void saveSonarEntry(Project project, SonarProject sonarEntry);
 
 	/**
 	 * <p>
@@ -197,7 +197,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @param project the given project
 	 * @param sonarEntry the given sonar entry
 	 */
-	void removeSonarEntry(Project project, SonarEntry sonarEntry);
+	void removeSonarEntry(Project project, SonarProject sonarEntry);
 
 	/**
 	 * <p>

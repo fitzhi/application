@@ -78,7 +78,7 @@ public @Data class Project  {
 	/**
 	 * List of Sonar entries declared for this project.
 	 */
-	private List<SonarEntry> sonarEntries = new ArrayList<>();
+	private List<SonarProject> sonarProjects = new ArrayList<>();
 	
 	/**
 	 * Constant representing one the 2 models of connection settings.

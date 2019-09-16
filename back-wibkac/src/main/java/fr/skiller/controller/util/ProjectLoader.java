@@ -7,8 +7,6 @@ import static fr.skiller.Error.getStackTrace;
 import static fr.skiller.Global.BACKEND_RETURN_CODE;
 import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

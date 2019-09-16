@@ -7,8 +7,6 @@ import static fr.skiller.Global.LN;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.annotation.Generated;
-
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 

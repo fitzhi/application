@@ -10,7 +10,7 @@ import lombok.Data;
  * @author Frédéric VIDAL
  *
  */
-public @Data class SonarEntry {
+public @Data class SonarProject {
 
 	/**
 	 * Identifier of a Sonar entry
@@ -22,7 +22,7 @@ public @Data class SonarEntry {
 	 */
 	String name;
 	
-	public SonarEntry() {
+	public SonarProject() {
 		// Empty constructor for serialization / de-serialization purpose
 	}
 
@@ -31,7 +31,7 @@ public @Data class SonarEntry {
 	 * @param id identifier of the sonar project entry.
 	 * @param name name of the sonar project entry.
 	 */
-	public SonarEntry(String id, String name) {
+	public SonarProject(String id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
