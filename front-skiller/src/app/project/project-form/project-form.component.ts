@@ -1,25 +1,20 @@
 import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { take, switchMap, catchError } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 
 import { ProjectService } from '../../service/project.service';
 import { CinematicService } from '../../service/cinematic.service';
 
 import { Project } from '../../data/project';
-import { ProjectDTO } from '../../data/external/projectDTO';
 import { Constants } from '../../constants';
 import { SkillService } from '../../service/skill.service';
 import { MessageService } from '../../message/message.service';
 import { BaseComponent } from '../../base/base.component';
-import { ReferentialService } from 'src/app/service/referential.service';
-import { RiskLegend } from 'src/app/data/riskLegend';
-import Tagify from '@yaireo/tagify';
-import { getHeapStatistics } from 'v8';
-import { Skill } from 'src/app/data/skill';
-import { WebDriverLogger } from 'blocking-proxy/built/lib/webdriver_logger';
 import { Observable } from 'rxjs';
 import { BooleanDTO } from 'src/app/data/external/booleanDTO';
+import { SonarService } from 'src/app/service/sonar.service';
+import Tagify from '@yaireo/tagify';
 
 @Component({
 	selector: 'app-project-form',
@@ -59,7 +54,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	/**
 	 * JS object handling the skills component.
 	 */
-	tagify: Tagify;
+	tagifySkills: Tagify;
+
+	/**
+	 * JS object handling the sonar projects component.
+	 */
+	tagifySonarProjects: Tagify;
 
 	/**
 	* Member variable linked to the connection settings toggle.
@@ -78,17 +78,32 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	private boundRemoveSkill: any;
 
+	/**
+	 * Bound addSonarProject to the current active component.
+	 * The goal of this bind is to access the member variables of this class, such as projet
+	 */
+	private boundAddSonarProject: any;
+
+	/**
+	 * Bound removeSonarProject to the current active component.
+	 * The goal of this bind is to access the member variables of this class, such as projet
+	 */
+	private boundRemoveSonarProject: any;
+
 	constructor(
 		private cinematicService: CinematicService,
 		private messageService: MessageService,
 		private skillService: SkillService,
 		private projectService: ProjectService,
-		private referentialService: ReferentialService,
+		private sonarService: SonarService,
 		private router: Router) {
 		super();
 
 		this.boundAddSkill = this.addSkill.bind(this);
 		this.boundRemoveSkill = this.removeSkill.bind(this);
+
+		this.boundAddSonarProject = this.addSonarProject.bind(this);
+		this.boundRemoveSonarProject = this.removeSonarProject.bind(this);
 
 }
 
@@ -107,7 +122,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 				setTimeout(() => this.updateDotRiskColor(this.project.risk));
 
-				this.tagify.addTags(
+				this.tagifySkills.addTags(
 					this.project.skills
 					.map(function(skill) { return skill.title; }));
 			}));
@@ -121,9 +136,14 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	}
 
 	ngAfterViewInit() {
+		this.ngAfterViewInitSkills();
+		this.ngAfterViewInitSonarProjects();
+	}
+
+	ngAfterViewInitSkills() {
 		const input = document.querySelector('textarea[name=skills]');
 
-		this.tagify = new Tagify (input, {
+		this.tagifySkills = new Tagify (input, {
 			enforceWhitelist : true,
 			whitelist        : [],
 			callbacks        : {
@@ -134,9 +154,33 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 		this.skillService.allSkills$
 			.subscribe (skills => {
-				this.tagify.settings.whitelist = [];
+				this.tagifySkills.settings.whitelist = [];
 				skills.map(function(skill) { return skill.title; }).forEach(element => {
-					this.tagify.settings.whitelist.push(element);
+					this.tagifySkills.settings.whitelist.push(element);
+				});
+			});
+	}
+
+	ngAfterViewInitSonarProjects() {
+		const input = document.querySelector('textarea[name=sonarProjects]');
+
+		this.tagifySonarProjects = new Tagify (input, {
+			enforceWhitelist : true,
+			whitelist        : [],
+			callbacks        : {
+				add    : this.boundAddSonarProject,
+					// callback when adding a tag, this callback is bound to the main component, instead of the function.
+				remove : this.boundRemoveSonarProject
+					// callback when removing a tag
+			}
+		});
+
+		this.sonarService.allSonarProjects$
+			.subscribe (sonarProjects => {
+				this.tagifySonarProjects.settings.whitelist = [];
+				sonarProjects.map(function(sonarProject) { return sonarProject.name; })
+				.forEach(element => {
+					this.tagifySonarProjects.settings.whitelist.push(element);
 				});
 			});
 	}
@@ -241,6 +285,20 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			this.project.skills.forEach(sk => console.log (sk.id + ' ' +  sk.title));
 			console.groupEnd();
 		}
+	}
+
+	/**
+	 * Add an entry on Sonar inside the project.
+	 * @param event ADD event fired by the tagify component.
+	 */
+	addSonarProject(event: CustomEvent) {
+	}
+
+	/**
+	 * Remove an entry on Sonar inside the project.
+	 * @param event ADD event fired by the tagify component.
+	 */
+	removeSonarProject(event: CustomEvent) {
 	}
 
 	/**

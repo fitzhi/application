@@ -9,6 +9,7 @@ import { Metric } from '../data/sonar/metric';
 import { of, BehaviorSubject, Subject, Observable } from 'rxjs';
 import { Metrics } from '../data/sonar/metrics';
 import { Components } from '../data/sonar/components';
+import { Component } from '../data/sonar/component';
 
 @Injectable({
 	providedIn: 'root'
@@ -34,6 +35,11 @@ export class SonarService extends InternalService {
 	 * This observable inform the application is SONAR is accessible.
 	 */
 	public sonarIsAccessible$ = new Subject<boolean>();
+
+	/**
+	 * This observable inform the application is SONAR is accessible.
+	 */
+	public allSonarProjects$ = new Subject<Component[]>();
 
 	constructor(
 		private httpClient: HttpClient,
@@ -115,6 +121,7 @@ export class SonarService extends InternalService {
 					console.groupCollapsed(components.components.length + ' components retrieved.');
 					components.components.forEach(component => console.log (component.name));
 					console.groupEnd();
+					this.allSonarProjects$.next(components.components);
 				}
 		});
 }
