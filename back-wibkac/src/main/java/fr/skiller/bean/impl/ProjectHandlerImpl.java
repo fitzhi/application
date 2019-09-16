@@ -15,8 +15,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,6 +27,7 @@ import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Mission;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
+import fr.skiller.data.internal.SonarEntry;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
@@ -133,6 +132,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
+	//TODO We have to be more precise on the saving process.
+	// The implementation DELETE and REPLACE seams dangerous.
 	public void saveProject(Project project) throws SkillerException {
 		if (project.getId() == 0) {
 			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, project.getId()));
@@ -359,6 +360,59 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			    }
 			}			
 		}
+	}
+
+	@Override
+	public void saveSonarEntry(Project project, SonarEntry sonarEntry) {
+
+		Optional<SonarEntry> oEntry = project.getSonarEntries()
+				.stream()
+				.filter(entry -> entry.getId().equals(sonarEntry.getId()))
+				.findFirst();
+
+		/**
+		 * We update the name if necessary.
+		 */
+		synchronized (lockDataUpdated) {
+			if (oEntry.isPresent()) {
+				if (log.isDebugEnabled()) {
+					log.debug(String.format
+						("Updating Sonar entry %s name to %s", sonarEntry.getId(), sonarEntry.getName()));
+				}
+				oEntry.get().setName(sonarEntry.getName());
+			} else {
+				if (log.isDebugEnabled()) {
+					log.debug(String.format
+						("Adding Sonar entry (%s; %s)", sonarEntry.getId(), sonarEntry.getName()));
+				}
+				project.getSonarEntries().add(sonarEntry);
+			}
+		}
+	}
+
+	@Override
+	public void removeSonarEntry(Project project, SonarEntry sonarEntry) {
+
+		boolean isDeleted;
+		
+		synchronized (lockDataUpdated) {
+			isDeleted = project
+				.getSonarEntries()
+				.removeIf(entry -> sonarEntry.getId().equals(entry.getId()));
+		}
+		
+		if ((isDeleted) && (log.isDebugEnabled())) {
+			log.debug(
+				String.format("The Sonar project %s has been deleted for id %s",
+				sonarEntry.getName(), sonarEntry.getId()));
+		}
+	}
+
+	@Override
+	public boolean containsSonarEntry(Project project, String key) {
+		return project.getSonarEntries()
+				.stream()
+				.anyMatch(entry -> key.equals(entry.getId()));
 	}
 	
 	

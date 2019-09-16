@@ -10,6 +10,7 @@ import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
+import fr.skiller.data.internal.SonarEntry;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 
@@ -180,4 +181,31 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 */
 	void removeGhost(Project project, String pseudo);
 
+	/**
+	 * <p>
+	 * Add or replace a sonar entry
+	 * </p>
+	 * @param project the given project
+	 * @param sonarEntry the given sonar entry
+	 */
+	void saveSonarEntry(Project project, SonarEntry sonarEntry);
+
+	/**
+	 * <p>
+	 * Remove a sonar entry from the entries collection.
+	 * </p>
+	 * @param project the given project
+	 * @param sonarEntry the given sonar entry
+	 */
+	void removeSonarEntry(Project project, SonarEntry sonarEntry);
+
+	/**
+	 * <p>
+	 * Test the presence of a sonar entry declared inside the project.
+	 * </p>
+	 * @param project the given project.
+	 * @param key the key of a project declared in Sonar.
+	 * @return {@code true} if the key exists in the collection
+	 */
+	boolean containsSonarEntry(Project project, String key);
 }

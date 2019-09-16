@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Settings } from '../data/settings';
-import { switchMap, map, catchError } from 'rxjs/operators';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { switchMap, map, catchError, take } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { InternalService } from '../internal-service';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { Constants } from '../constants';
-import { empty, of } from 'rxjs';
+import { Metric } from '../data/sonar/metric';
+import { of, BehaviorSubject, Subject, Observable } from 'rxjs';
+import { Metrics } from '../data/sonar/metrics';
+import { Components } from '../data/sonar/components';
 
 @Injectable({
 	providedIn: 'root'
@@ -27,15 +30,47 @@ export class SonarService extends InternalService {
 	 */
 	sonarOn = false;
 
+	/**
+	 * This observable inform the application is SONAR is accessible.
+	 */
+	public sonarIsAccessible$ = new Subject<boolean>();
+
 	constructor(
 		private httpClient: HttpClient,
 		private backendSetupService: BackendSetupService) {
 		super();
 	}
 
+	/**
+	 * Connecting the user into SONAT
+	 *
+	connectSonar() {
+
+		const params = new HttpParams()
+			.set('login', 'admin')
+			.set('password', 'admin');
+
+		// const body = { username: 'admin', password: 'admin' };
+
+		return this.httpClient
+			.post<Metrics>(this.urlSonar + '/api/authentication/login', {params} )
+			.subscribe ( console.log, error => console.log );
+	}
+	*/
+
+	loadSonarMetrics() {
+		return this.httpClient.get<Metrics>(this.urlSonar + '/api/metrics/search?ps=500')
+			.subscribe ( metrics => {
+				if (Constants.DEBUG) {
+					console.groupCollapsed(metrics.metrics.length + ' metrics available on Sonar');
+					metrics.metrics.forEach(metric => console.log (metric.name));
+					console.groupEnd();
+				}
+			});
+	}
+
 	loadSonarVersion() {
 
-		console.log ('nope')
 		this.httpClient
 			.get(this.backendSetupService.url() + '/admin/settings')
 				.pipe(switchMap( (settings: Settings) => {
@@ -56,10 +91,11 @@ export class SonarService extends InternalService {
 							})
 					); }))
 				.subscribe(
-					data => {
+					(data: any) => {
 						this.sonarVersion = data.version;
 						this.urlSonar =  data.settings.urlSonar;
 						this.sonarOn = data.sonarOn;
+						this.sonarIsAccessible$.next(this.sonarOn);
 						if (this.sonarOn) {
 							console.log('Sonar version ' + data.version + ' installed at the URL ' + data.settings.urlSonar);
 						} else {
@@ -70,4 +106,27 @@ export class SonarService extends InternalService {
 				);
 	}
 
+	/**
+	 * Load the projects declared on the Sonar instance.
+	 */
+	loadProjects () {
+		this.loadComponents('TRK').subscribe ( components => {
+				if (Constants.DEBUG) {
+					console.groupCollapsed(components.components.length + ' components retrieved.');
+					components.components.forEach(component => console.log (component.name));
+					console.groupEnd();
+				}
+		});
+}
+
+/**
+ * Load the components filtered on a passed type.
+ * @param type the given type.
+ */
+	loadComponents (type: string): Observable<Components> {
+		const params = new HttpParams().set('qualifiers', type).set('ps', '500');
+		return this.httpClient
+			.get<Components>(this.urlSonar + '/api/components/search', {params})
+			.pipe(take(1));
+	}
 }

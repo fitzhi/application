@@ -1,6 +1,3 @@
-/**
- * 
- */
 package fr.skiller.bean.impl;
 
 import static fr.skiller.Error.CODE_IO_ERROR;
@@ -27,8 +24,6 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -151,6 +146,7 @@ public class FileDataSaverImpl implements DataSaver {
 					.forEach(project -> sb.append(project.getId()).append(" ").append(project.getName()).append(", "));
 			log.debug(sb.toString());
 		}
+		
 		return projects;
 	}
 

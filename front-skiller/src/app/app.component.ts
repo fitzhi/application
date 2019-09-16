@@ -13,6 +13,7 @@ import { AuthService } from './admin/service/auth/auth.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { StaffListService } from './staff-list-service/staff-list.service';
 import { SonarService } from './service/sonar.service';
+import { take } from 'rxjs/operators';
 
 declare var $: any;
 
@@ -58,7 +59,6 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 		private referentialService: ReferentialService,
 		private staffService: StaffService,
 		private projectService: ProjectService,
-		private staffListService: StaffListService,
 		private router: Router) {
 
 		super();
@@ -74,6 +74,14 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
          */
 		this.referentialService.loadAllReferentials();
 		this.sonarService.loadSonarVersion();
+		this.sonarService.sonarIsAccessible$
+			.pipe(take(1))
+			.subscribe(accessible => {
+				if (accessible) {
+					this.sonarService.loadSonarMetrics();
+					this.sonarService.loadProjects();
+				}
+			});
 	}
 
 	/**

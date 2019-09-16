@@ -217,7 +217,7 @@ public class ProjectController {
 		final ResponseEntity<Project> responseEntity;
 		final HttpHeaders headers = headers();
 		try {
-			if (project.getId() == 0) {
+			if (project.getId() <= 0) {
 				project = projectHandler.addNewProject(project);
 				headers.add(BACKEND_RETURN_CODE, "1");
 				responseEntity = new ResponseEntity<>(project, headers, HttpStatus.OK);
@@ -225,7 +225,7 @@ public class ProjectController {
 				if (!projectHandler.containsProject(project.getId())) {
 					responseEntity = new ResponseEntity<>(project, headers, HttpStatus.NOT_FOUND);
 					headers.add(BACKEND_RETURN_CODE, "O");
-					responseEntity.getHeaders().set(BACKEND_RETURN_MESSAGE,
+					headers.set(BACKEND_RETURN_MESSAGE,
 							"There is no Project associated to the id " + project.getId());
 				} else {
 					projectHandler.saveProject(project);
