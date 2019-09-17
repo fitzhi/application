@@ -67,7 +67,7 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 		Assert.assertTrue(oProject.isPresent());
 		Assert.assertTrue(oProject.get().getSkills().size() == 1);
 		Assert.assertTrue(oProject.get().getSonarProjects().size() == 1);
-		Assert.assertTrue("idProjectSonar".contentEquals(oProject.get().getSonarProjects().get(0).getId()));
+		Assert.assertTrue("idProjectSonar".contentEquals(oProject.get().getSonarProjects().get(0).getKey()));
 		Assert.assertTrue("name of project".contentEquals(oProject.get().getSonarProjects().get(0).getName()));
 
 		int id = oProject.get().getId();
@@ -86,7 +86,7 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 		Project p = projectHandler.get(id);
 		Assert.assertTrue(p != null);
 		Assert.assertTrue(p.getSonarProjects().size() == 2);
-		Assert.assertTrue("otherId".contentEquals(oProject.get().getSonarProjects().get(1).getId()));
+		Assert.assertTrue("otherId".contentEquals(oProject.get().getSonarProjects().get(1).getKey()));
 		Assert.assertTrue("other name".contentEquals(oProject.get().getSonarProjects().get(1).getName()));
 	
 		// 
@@ -103,7 +103,7 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 		p = projectHandler.get(id);
 		Assert.assertTrue(p != null);
 		Assert.assertTrue(p.getSonarProjects().size() == 2);
-		Assert.assertTrue("otherId".contentEquals(oProject.get().getSonarProjects().get(1).getId()));
+		Assert.assertTrue("otherId".contentEquals(oProject.get().getSonarProjects().get(1).getKey()));
 		Assert.assertTrue("new other name".contentEquals(oProject.get().getSonarProjects().get(1).getName()));
 	
 		// 

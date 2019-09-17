@@ -13,9 +13,9 @@ import lombok.Data;
 public @Data class SonarProject {
 
 	/**
-	 * Identifier of a Sonar entry
+	 * Key of a Sonar entry
 	 */
-	String id;
+	String key;
 
 	/**
 	 * Name of a Sonar entry
@@ -28,12 +28,12 @@ public @Data class SonarProject {
 
 	/**
 	 * Sonar entry.
-	 * @param id identifier of the sonar project entry.
+	 * @param key identifier of the sonar project entry.
 	 * @param name name of the sonar project entry.
 	 */
-	public SonarProject(String id, String name) {
+	public SonarProject(String key, String name) {
 		super();
-		this.id = id;
+		this.key = key;
 		this.name = name;
 	}
 	
