@@ -4,17 +4,13 @@ import { Constants } from '../../../../constants';
 import { Unknown } from '../../../../data/unknown';
 import { BaseComponent } from 'src/app/base/base.component';
 import { ProjectGhostsDataSource } from 'src/app/project/project-sunburst/project-ghosts/project-ghosts-data-source';
-import { Project } from 'src/app/data/project';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
 import { Collaborator } from 'src/app/data/collaborator';
 import { StaffService } from 'src/app/service/staff.service';
 import { take } from 'rxjs/operators';
 import { MessageService } from 'src/app/message/message.service';
 import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
-import { runInThisContext } from 'vm';
 import { ProjectService } from 'src/app/service/project.service';
-import { csvFormatRows } from 'd3';
 
 @Component({
 	selector: 'app-table-ghosts',
@@ -97,7 +93,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 		.pipe(take(1))
 		.subscribe(result => {
 			if (result) {
-				this.messageService.info('The pseudo ' + unknown.pseudo + ' is now ' 
+				this.messageService.info('The pseudo ' + unknown.pseudo + ' is now '
 						+ (unknown.technical ? 'technical' : 'non technical'));
 			}
 		});

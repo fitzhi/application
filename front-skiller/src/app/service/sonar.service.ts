@@ -39,7 +39,7 @@ export class SonarService extends InternalService {
 	/**
 	 * This observable inform the application is SONAR is accessible.
 	 */
-	public allSonarProjects$ = new Subject<Component[]>();
+	public allSonarProjects$ = new BehaviorSubject<Component[]>([]);
 
 	constructor(
 		private httpClient: HttpClient,

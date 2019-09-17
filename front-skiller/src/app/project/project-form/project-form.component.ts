@@ -90,6 +90,11 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	private boundRemoveSonarProject: any;
 
+	/**
+	 * Is Sonar accessibke ?
+	 */
+	private sonarIsAccessible = false;
+
 	constructor(
 		private cinematicService: CinematicService,
 		private messageService: MessageService,
@@ -105,7 +110,11 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		this.boundAddSonarProject = this.addSonarProject.bind(this);
 		this.boundRemoveSonarProject = this.removeSonarProject.bind(this);
 
-}
+		this.subscriptions.add(
+			this.sonarService.sonarIsAccessible$.subscribe
+				(sonarIsAccessible => this.sonarIsAccessible = sonarIsAccessible)
+		);
+	}
 
 	ngOnInit() {
 
@@ -122,10 +131,18 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 				setTimeout(() => this.updateDotRiskColor(this.project.risk));
 
-				this.tagifySkills.addTags(
-					this.project.skills
-					.map(function(skill) { return skill.title; }));
-			}));
+				if (this.project.skills) {
+					this.tagifySkills.addTags(
+						this.project.skills
+						.map(function(skill) { return skill.title; }));
+				}
+
+				if (this.project.sonarProjects) {
+					this.tagifySkills.addTags(
+						this.project.sonarProjects
+						.map(function(sonarProject) { return sonarProject.name; }));
+					}
+				}));
 
 		this.subscriptions.add(
 			this.risk$.subscribe((risk: number) => this.updateDotRiskColor(risk)));
@@ -177,6 +194,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 		this.sonarService.allSonarProjects$
 			.subscribe (sonarProjects => {
+				if (Constants.DEBUG) {
+					console.log ('Receiving ' + sonarProjects.length + ' Sonar projects');
+				}
 				this.tagifySonarProjects.settings.whitelist = [];
 				sonarProjects.map(function(sonarProject) { return sonarProject.name; })
 				.forEach(element => {
@@ -329,7 +349,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				break;
 		}
 		if (Constants.DEBUG) {
-			console.log('saving the project ');
+			console.log('Saving the project ');
 			console.log(this.project);
 		}
 		this.projectService.save(this.project).pipe(take(1)).subscribe(
