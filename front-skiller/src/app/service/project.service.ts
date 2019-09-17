@@ -16,6 +16,7 @@ import { take } from 'rxjs/operators';
 import { Library } from '../data/library';
 import { BooleanDTO } from '../data/external/booleanDTO';
 import { ReferentialService } from './referential.service';
+import { SonarProject } from "../data/SonarProject";
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -96,6 +97,46 @@ export class ProjectService extends InternalService {
 		const body = { idProject: idProject, idSkill: idSkill };
 		return this.httpClient
 			.post<BooleanDTO>(this.backendSetupService.url() + '/project/skill/del', body, httpOptions)
+			.pipe(take(1));
+	}
+
+	/**
+	 * Link a Sonar project to 'our project'
+	 * @param idProject the project identifier
+	 * @param sonarProject the sonar project
+	 */
+	addSonarProject(idProject: number, sonarProject: SonarProject) {
+		return this.accessSonarProject(idProject, sonarProject, 'saveEntry');
+	}
+
+	/**
+	 * Unlink a Sonar project to 'our project'
+	 * @param idProject the project identifier
+	 * @param sonarProject the sonar project
+	 */
+	delSonarProject(idProject: number, sonarProject: SonarProject) {
+		return this.accessSonarProject(idProject, sonarProject, 'removeEntry');
+	}
+
+	/**
+	 * Access the Sonar projects of 'our project'
+	 * @param idProject the project identifier
+	 * @param sonarProject the sonar project
+	 * @param action the action to be executed on the Sonar projects collection
+	 */
+	private accessSonarProject(idProject: number, sonarProject: SonarProject, action: string) {
+
+		if (Constants.DEBUG) {
+			console.log ('Action ' + action + ' for a Sonar project ' + sonarProject.name + ' for project ID ' + idProject);
+		}
+
+		const body = {
+			'idProject': idProject,
+			'sonarProject': {'id': sonarProject.id, 'name': sonarProject.name}
+		};
+
+		return this.httpClient
+			.post<BooleanDTO>(this.backendSetupService.url() + '/project/sonar/' + action, body, httpOptions)
 			.pipe(take(1));
 	}
 

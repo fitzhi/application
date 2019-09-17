@@ -10,6 +10,7 @@ import { of, BehaviorSubject, Subject, Observable } from 'rxjs';
 import { Metrics } from '../data/sonar/metrics';
 import { Components } from '../data/sonar/components';
 import { Component } from '../data/sonar/component';
+import { SonarProject } from '../data/SonarProject';
 
 @Injectable({
 	providedIn: 'root'
@@ -40,6 +41,11 @@ export class SonarService extends InternalService {
 	 * This observable inform the application is SONAR is accessible.
 	 */
 	public allSonarProjects$ = new BehaviorSubject<Component[]>([]);
+
+	/**
+	 * List of all Sonar projects retrieved from the server.
+	 */
+	allSonarProjects: Component[] = [];
 
 	constructor(
 		private httpClient: HttpClient,
@@ -121,19 +127,33 @@ export class SonarService extends InternalService {
 					console.groupCollapsed(components.components.length + ' components retrieved.');
 					components.components.forEach(component => console.log (component.name));
 					console.groupEnd();
+					this.allSonarProjects = components.components;
 					this.allSonarProjects$.next(components.components);
 				}
 		});
-}
+	}
 
-/**
- * Load the components filtered on a passed type.
- * @param type the given type.
- */
+	/**
+	 * Load the components filtered on a passed type.
+	 * @param type the given type.
+	 */
 	loadComponents (type: string): Observable<Components> {
 		const params = new HttpParams().set('qualifiers', type).set('ps', '500');
 		return this.httpClient
 			.get<Components>(this.urlSonar + '/api/components/search', {params})
 			.pipe(take(1));
 	}
+
+	/**
+	 * Search the sonar project
+	 * @param sonarProject the Sonar project name
+	 */
+	search (nameOfSonarProject: string): SonarProject {
+		if (this.allSonarProjects.length === 0) {
+			console.error('the array containing all projects declared in Sonar is empty');
+			return undefined;
+		}
+		return this.allSonarProjects.find (sp => sp.name === nameOfSonarProject);
+	}
+
 }

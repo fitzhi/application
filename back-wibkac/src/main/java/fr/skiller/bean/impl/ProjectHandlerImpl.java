@@ -383,7 +383,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			} else {
 				if (log.isDebugEnabled()) {
 					log.debug(String.format
-						("Adding Sonar entry (%s; %s)", sonarEntry.getId(), sonarEntry.getName()));
+						("Adding Sonar entry (%s, %s)", sonarEntry.getId(), sonarEntry.getName()));
 				}
 				project.getSonarProjects().add(sonarEntry);
 			}

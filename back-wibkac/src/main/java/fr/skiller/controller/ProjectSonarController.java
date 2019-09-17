@@ -45,13 +45,15 @@ public class ProjectSonarController {
 		HttpHeaders headers = new HttpHeaders();
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("POST command on /project/sonar/addEntry for project : %d", param.getIdProject()));
+			log.debug(String.format(
+					"POST command on /project/sonar/addEntry for project : %d", param.getIdProject()));
+			System.out.println(param.getSonarProject());
 		}
 		
 		try {
 			Project project = projectHandler.get(param.getIdProject());
 			
-			projectHandler.saveSonarEntry(project, param.getSonarEntry()); 
+			projectHandler.saveSonarEntry(project, param.getSonarProject()); 
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 			
 		} catch (SkillerException se) {
@@ -70,13 +72,13 @@ public class ProjectSonarController {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 				"POST command on /project/sonar/removeEntry for project : %s %s", 
-				param.getIdProject(), param.getSonarEntry().getName()));
+				param.getIdProject(), param.getSonarProject().getName()));
 		}
 		
 		try {
 			Project project = projectHandler.get(param.getIdProject());
 			
-			projectHandler.removeSonarEntry(project, param.getSonarEntry()); 
+			projectHandler.removeSonarEntry(project, param.getSonarProject()); 
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 			
 		} catch (SkillerException se) {

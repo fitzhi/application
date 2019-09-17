@@ -28,6 +28,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				 "/staff/**", 
 				 "/skill/**", 
 				 "/project/**", 
+				 "/project/sonar/**", 
 				 "/test/post_a_Test",
 				 "/admin/settings",
 				

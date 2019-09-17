@@ -196,7 +196,16 @@ public @Data class Project  {
 			default:
 				throw new SkillerRuntimeException("SHOULD NOT PASS HERE");
 		}
-		
 	}
+
 	
+	/**
+	 * @return a not null list of {@link SonarProject}
+	 */
+	public List<SonarProject> getSonarProjects() {
+		if (this.sonarProjects == null) {
+			this.sonarProjects = new ArrayList<SonarProject>();
+		}
+		return this.sonarProjects;
+	}
 }

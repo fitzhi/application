@@ -7,6 +7,7 @@ import { ProjectService } from '../../service/project.service';
 import { CinematicService } from '../../service/cinematic.service';
 
 import { Project } from '../../data/project';
+import { SonarProject } from "../../data/SonarProject";
 import { Constants } from '../../constants';
 import { SkillService } from '../../service/skill.service';
 import { MessageService } from '../../message/message.service';
@@ -138,7 +139,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				}
 
 				if (this.project.sonarProjects) {
-					this.tagifySkills.addTags(
+					this.tagifySonarProjects.addTags(
 						this.project.sonarProjects
 						.map(function(sonarProject) { return sonarProject.name; }));
 					}
@@ -278,9 +279,10 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 *  Update a skill inside a project. This might be an addition or a removal.
 	 * @param idProject the project identifier
 	 * @param idSkill the skill identifier
-	 * @param callback the callbakc function, which might be projectService.addSkill or projectService.delSkill
+	 * @param callback the callback function, which might be projectService.addSkill or projectService.delSkill
 	 */
-	updateSkill(idProject: number, idSkill:  number, callback: (idProject: number, idSkill:  number) => Observable<BooleanDTO>) {
+	updateSkill(idProject: number, idSkill:  number,
+		callback: (idProject: number, idSkill:  number) => Observable<BooleanDTO>) {
 		callback(idProject, idSkill)
 		.subscribe (result => {
 			if (!result) {
@@ -292,6 +294,27 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				console.log('Error ' + response_in_error.error.code + ' ' + response_in_error.error.message);
 			}
 			this.messageService.error(response_in_error.error.message);
+		});
+	}
+
+	/**
+	 * Update a sonar project linked to the application project. This might be an addition or a removal.
+	 * @param idProject the project identifier
+	 * @param sonarProject the sonar project to update
+	 * @param callback the callback function, which might be projectService.addSonarProject or projectService.delSonarProject
+	 */
+	updateSonarProject(idProject: number, sonarProject:  SonarProject,
+		callback: (idProject: number, sonarProject:  SonarProject) => Observable<BooleanDTO>) {
+		callback(idProject, sonarProject)
+		.subscribe (result => {
+			if (!result) {
+				this.messageService.error (result.message);
+			}
+		},
+		response_in_error => {
+			if (Constants.DEBUG) {
+				console.log('Error ' + response_in_error);
+			}
 		});
 	}
 
@@ -308,17 +331,90 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	}
 
 	/**
-	 * Add an entry on Sonar inside the project.
+	 * Add an entry declared in Sonar for this project.
 	 * @param event ADD event fired by the tagify component.
 	 */
 	addSonarProject(event: CustomEvent) {
+		if (Constants.DEBUG) {
+			console.log ('Adding the Sonar project entry', event.detail.data.value);
+		}
+
+		// This sonar project is already associated tp this project.
+		if ( (this.project.sonarProjects)
+			&& (this.project.sonarProjects.find (sp => sp.name === event.detail.data.value))) {
+			return;
+		}
+
+		const sonarProject = this.sonarService.search (event.detail.data.value);
+		if (sonarProject === undefined) {
+			console.log ('SEVERE ERROR : Unregistered skill', event.detail.data.value);
+			return;
+		}
+
+		// For compatibility reason with the previsous version.
+		if (!this.project.sonarProjects) {
+			this.project.sonarProjects = [];
+		}
+
+		this.project.sonarProjects.push(sonarProject);
+
+		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
+		if (this.project.id) {
+			this.updateSonarProject(this.project.id, sonarProject,
+				this.projectService.addSonarProject.bind(this.projectService));
+		}
+
+		// Log the resulting collection.
+		this.logProjectSonarProjects();
 	}
 
 	/**
-	 * Remove an entry on Sonar inside the project.
+	 * Log the skills of the current project in DEBUG mode.
+	 */
+	logProjectSonarProjects() {
+		if (Constants.DEBUG) {
+			console.log (this.project.skills);
+			console.groupCollapsed ('list of sonar projects for project ' + this.project.name);
+			this.project.sonarProjects.forEach(sp => console.log (sp.id + ' ' +  sp.name));
+			console.groupEnd();
+		}
+	}
+
+	/**
+	 * Remove teh reference of a Sonar project declared inside 'our project'.
 	 * @param event ADD event fired by the tagify component.
 	 */
 	removeSonarProject(event: CustomEvent) {
+		if (Constants.DEBUG) {
+			console.log ('Removing the Sonar project', event.detail.data.value);
+		}
+
+		// This Sonar project HAS TO BE registered inside the project.
+		if ( (this.project.sonarProjects) || (this.project.sonarProjects.length === 0)) {
+			console.log ('SHOULD NOT PASS HERE : ' + this.project.name
+			+ ' does not contain any Sonar project. So, we should not be able to remove one of them');
+		}
+
+		const sonarProject = this.project.sonarProjects.find (sp => sp.name === event.detail.data.value);
+		if (!sonarProject) {
+			console.log ('SHOULD NOT PASS HERE : Cannot remove the Sonar project '
+			+ event.detail.data.value + ' from project ' + this.project.name);
+			return;
+		}
+
+		const indexOfSonarProject = this.project.sonarProjects.indexOf(sonarProject);
+		if (Constants.DEBUG) {
+			console.log ('Index of the Sonar project ' + sonarProject.name, indexOfSonarProject);
+		}
+		this.project.skills.splice(indexOfSonarProject, 1);
+
+		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
+		if (this.project.id) {
+			this.updateSonarProject(this.project.id, sonarProject, this.projectService.delSonarProject.bind(this.projectService));
+		}
+
+		// Log the resulting collection.
+		this.logProjectSkills();
 	}
 
 	/**
