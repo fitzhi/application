@@ -69,7 +69,7 @@ export class ListProjectComponent implements OnInit {
 					case 'lastCommitter':
 						return this.retrieveLastCommit(item.id).fullname();
 					case 'lastCommit':
-							return this.retrieveLastCommit(item.id).dateCommit.toDateString;
+						return this.retrieveLastCommit(item.id).dateCommit;
 				}
 			};
 			this.dataSource.sort = this.sort;

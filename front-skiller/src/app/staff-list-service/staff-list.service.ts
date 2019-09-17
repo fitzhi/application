@@ -92,16 +92,16 @@ export class StaffListService {
 	 */
 	retrieveLastCommit(idProject: number): Commit {
 
-		const latest = new Commit(-1, '', '', new Date(0));
+		const latest = new Commit(-1, '', '', '1970-01-01');
 		this.allStaff.forEach(staff => {
 			staff.missions.forEach(mission => {
 				if (mission.idProject === idProject) {
 					if (mission.lastCommit) {
-						if (new Date(mission.lastCommit) > latest.dateCommit) {
+						if (new Date(mission.lastCommit) > new Date(latest.dateCommit)) {
 							latest.idStaff = staff.idStaff;
 							latest.firstName = staff.firstName;
 							latest.lastName = staff.lastName;
-							latest.dateCommit = mission.lastCommit;
+							latest.dateCommit = mission.lastCommit.toString();
 						}
 					}
 				}});
