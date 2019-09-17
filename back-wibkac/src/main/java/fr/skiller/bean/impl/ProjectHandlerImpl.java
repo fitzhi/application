@@ -215,7 +215,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 					.findFirst();
 			if (oSkill.isPresent()) {
 				project.getSkills().remove(oSkill.get());
-			}			
+			}
 			this.dataUpdated = true;
 		}
 	}
@@ -251,7 +251,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				}
 				return;
 			}
-			
+			this.dataUpdated = true;
 		}
 		throw new SkillerRuntimeException(
 				String.format("%s does not exist anymore in the project %s (id: %d)",
@@ -289,12 +289,12 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 							System.out.println("removing mission " + mission.getIdProject() + " " + mission.getIdStaff());
 							staff.getMissions().remove(mission);
 						});
-					System.out.println("removing mission " + staff.getMissions().size());
 				}
 				
 				if (technical) {
 					oGhost.get().setIdStaff(Ghost.NULL);			
 				}
+				this.dataUpdated = true;
 				return;
 			}		
 		}
@@ -322,8 +322,9 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			if (oGhost.isPresent()) {
 				oGhost.get().setTechnical(false);
 				oGhost.get().setIdStaff(Ghost.NULL);
+				this.dataUpdated = true;			
 				return;
-			}		
+			}	
 		}
 		throw new SkillerRuntimeException(
 				String.format("%s does not exist anymore in the project %s (id: %d)",
@@ -347,6 +348,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		
 		synchronized (lockDataUpdated) {
 			project.setGhosts(ghosts);
+			this.dataUpdated = true;
 		}
 	}
 
@@ -359,6 +361,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			        iter.remove();
 			    }
 			}			
+			this.dataUpdated = true;
 		}
 	}
 
@@ -367,7 +370,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 		Optional<SonarProject> oEntry = project.getSonarProjects()
 				.stream()
-				.filter(entry -> entry.getId().equals(sonarEntry.getId()))
+				.filter(entry -> entry.getKey().equals(sonarEntry.getKey()))
 				.findFirst();
 
 		/**
@@ -377,16 +380,17 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			if (oEntry.isPresent()) {
 				if (log.isDebugEnabled()) {
 					log.debug(String.format
-						("Updating Sonar entry %s name to %s", sonarEntry.getId(), sonarEntry.getName()));
+						("Updating Sonar entry %s name to %s", sonarEntry.getKey(), sonarEntry.getName()));
 				}
 				oEntry.get().setName(sonarEntry.getName());
 			} else {
 				if (log.isDebugEnabled()) {
 					log.debug(String.format
-						("Adding Sonar entry (%s, %s)", sonarEntry.getId(), sonarEntry.getName()));
+						("Adding Sonar entry (%s, %s)", sonarEntry.getKey(), sonarEntry.getName()));
 				}
 				project.getSonarProjects().add(sonarEntry);
 			}
+			this.dataUpdated = true;
 		}
 	}
 
@@ -398,13 +402,14 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		synchronized (lockDataUpdated) {
 			isDeleted = project
 				.getSonarProjects()
-				.removeIf(entry -> sonarEntry.getId().equals(entry.getId()));
+				.removeIf(entry -> sonarEntry.getKey().equals(entry.getKey()));
+			this.dataUpdated = true;
 		}
 		
 		if ((isDeleted) && (log.isDebugEnabled())) {
 			log.debug(
 				String.format("The Sonar project %s has been deleted for id %s",
-				sonarEntry.getName(), sonarEntry.getId()));
+				sonarEntry.getName(), sonarEntry.getKey()));
 		}
 	}
 
@@ -412,7 +417,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	public boolean containsSonarEntry(Project project, String key) {
 		return project.getSonarProjects()
 				.stream()
-				.anyMatch(entry -> key.equals(entry.getId()));
+				.anyMatch(entry -> key.equals(entry.getKey()));
 	}
 	
 	
