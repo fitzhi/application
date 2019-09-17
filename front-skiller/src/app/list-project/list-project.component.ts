@@ -58,7 +58,6 @@ export class ListProjectComponent implements OnInit {
 			this.staffListService.loadStaff();
 		}
 
-
 		this.listProjectsService.filteredProjects$.subscribe(projects => {
 			this.dataSource = new MatTableDataSource<Project>(projects);
 			this.dataSource.sortingDataAccessor = (item: Project, property: string) => {
@@ -67,6 +66,10 @@ export class ListProjectComponent implements OnInit {
 						return item.name.toLocaleLowerCase();
 					case 'risk':
 						return item.risk;
+					case 'lastCommitter':
+						return this.retrieveLastCommit(item.id).fullname();
+					case 'lastCommit':
+							return this.retrieveLastCommit(item.id).dateCommit.toDateString;
 				}
 			};
 			this.dataSource.sort = this.sort;
