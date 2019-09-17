@@ -75,7 +75,7 @@ export class SonarService extends InternalService {
 			.subscribe ( metrics => {
 				if (Constants.DEBUG) {
 					console.groupCollapsed(metrics.metrics.length + ' metrics available on Sonar');
-					metrics.metrics.forEach(metric => console.log (metric.name));
+					metrics.metrics.forEach(metric => console.log (metric.key, metric.name));
 					console.groupEnd();
 				}
 			});
@@ -125,7 +125,7 @@ export class SonarService extends InternalService {
 		this.loadComponents('TRK').subscribe ( components => {
 				if (Constants.DEBUG) {
 					console.groupCollapsed(components.components.length + ' components retrieved.');
-					components.components.forEach(component => console.log (component.name));
+					components.components.forEach(component => console.log (component.name, component.key));
 					console.groupEnd();
 					this.allSonarProjects = components.components;
 					this.allSonarProjects$.next(components.components);

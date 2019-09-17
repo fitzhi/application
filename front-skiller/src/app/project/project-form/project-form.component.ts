@@ -248,7 +248,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		}
 
 		// This skill HAS TO BE registered inside the project.
-		if ( (this.project.skills === undefined) || (this.project.skills.length === 0)) {
+		if ( (!this.project.skills) || (this.project.skills.length === 0)) {
 			console.log ('SHOULD NOT PASS HERE : ' + this.project.name
 			+ ' does not contain any skill. So, we should not be able to remove one');
 		}
@@ -390,7 +390,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		}
 
 		// This Sonar project HAS TO BE registered inside the project.
-		if ( (this.project.sonarProjects) || (this.project.sonarProjects.length === 0)) {
+		if ( (!this.project.sonarProjects) || (this.project.sonarProjects.length === 0)) {
 			console.log ('SHOULD NOT PASS HERE : ' + this.project.name
 			+ ' does not contain any Sonar project. So, we should not be able to remove one of them');
 		}
@@ -406,7 +406,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		if (Constants.DEBUG) {
 			console.log ('Index of the Sonar project ' + sonarProject.name, indexOfSonarProject);
 		}
-		this.project.skills.splice(indexOfSonarProject, 1);
+		this.project.sonarProjects.splice(indexOfSonarProject, 1);
 
 		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
 		if (this.project.id) {
@@ -414,7 +414,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		}
 
 		// Log the resulting collection.
-		this.logProjectSkills();
+		this.logProjectSonarProjects();
 	}
 
 	/**
