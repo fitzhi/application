@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Settings } from '../data/settings';
-import { switchMap, map, catchError, take } from 'rxjs/operators';
+import { switchMap, map, catchError, take, tap } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { InternalService } from '../internal-service';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
@@ -11,6 +11,8 @@ import { Metrics } from '../data/sonar/metrics';
 import { Components } from '../data/sonar/components';
 import { Component } from '../data/sonar/component';
 import { SonarProject } from '../data/SonarProject';
+import { ComponentMeasures } from '../data/sonar/component-measures';
+import { ResponseComponentMeasures } from '../data/sonar/reponse-component-measures';
 
 @Injectable({
 	providedIn: 'root'
@@ -79,6 +81,25 @@ export class SonarService extends InternalService {
 					console.groupEnd();
 				}
 			});
+	}
+
+	/**
+	 * Load the measures evaluated for a component.
+	 * @param key the key of the evaluated componsent
+	 * @param metrics list of metrics to be evaluated
+	 */
+	loadSonarComponentMeasures(key: string, metrics: string[]): Observable<ResponseComponentMeasures> {
+		const params = new HttpParams().set('component', key).set('metricKeys', metrics.join(''));
+		return this.httpClient
+			.get<ResponseComponentMeasures>(this.urlSonar + '/api/measures/component', {params: params})
+			.pipe(
+				tap ( response => {
+					if (Constants.DEBUG) {
+						console.groupCollapsed(response.component.measures.length + ' measures obtained for component ' + response.component.key);
+						response.component.measures.forEach(measure => console.log (measure.metric, measure.value));
+						console.groupEnd();
+					}
+			}));
 	}
 
 	loadSonarVersion() {

@@ -1,0 +1,34 @@
+<mat-sidenav-container class="component-container" >
+
+    <mat-sidenav mode="side" class="sidenav-toolbar" opened>
+
+        <button 
+			id="sonar"
+			data-toggle="tooltip" data-placement="right" title="Sonar scoreboard"
+			class="btn btn-outline-secondary rounded"
+            [ngClass]="{'btn-outline-success' : buttonActivated(SONAR), 'btn-outline-secondary': !buttonActivated(SONAR)}" 
+			[disabled]="buttonActivated(SONAR)"
+			(click)="show(SONAR)">
+        </button>
+
+		<button 
+			id="settings"
+			data-toggle="tooltip" data-placement="right" title="Settings up the sonar scoreboard"
+			class="btn btn-outline-secondary rounded"
+            [ngClass]="{'btn-outline-success' : buttonActivated(SETTINGS), 'btn-outline-secondary': !buttonActivated(SETTINGS)}" 
+			[disabled]="buttonActivated(SETTINGS)"
+			(click)="show(SETTINGS)">
+			<i class="fas fa-sliders-h font-awesome-settings"></i>
+        </button>
+        
+	</mat-sidenav>
+	
+    <mat-sidenav-content class="sidenav__content--height">
+        <div id="panelSettings">
+            Settings
+        </div>
+        <div id="panelSonar">
+            Sonar
+        </div>    
+    </mat-sidenav-content>
+</mat-sidenav-container>

@@ -16,7 +16,7 @@ import { take } from 'rxjs/operators';
 import { Library } from '../data/library';
 import { BooleanDTO } from '../data/external/booleanDTO';
 import { ReferentialService } from './referential.service';
-import { SonarProject } from "../data/SonarProject";
+import { SonarProject } from '../data/SonarProject';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -132,7 +132,7 @@ export class ProjectService extends InternalService {
 
 		const body = {
 			'idProject': idProject,
-			'sonarProject': {'id': sonarProject.id, 'name': sonarProject.name}
+			'sonarProject': {'key': sonarProject.key, 'name': sonarProject.name}
 		};
 
 		return this.httpClient

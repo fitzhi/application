@@ -7,7 +7,7 @@ import { ProjectService } from '../../service/project.service';
 import { CinematicService } from '../../service/cinematic.service';
 
 import { Project } from '../../data/project';
-import { SonarProject } from "../../data/SonarProject";
+import { SonarProject } from '../../data/SonarProject';
 import { Constants } from '../../constants';
 import { SkillService } from '../../service/skill.service';
 import { MessageService } from '../../message/message.service';
@@ -211,14 +211,14 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * @param event ADD event fired by the tagify component.
 	 */
 	addSkill(event: CustomEvent) {
-		if (Constants.DEBUG) {
-			console.log ('Adding the skill', event.detail.data.value);
-		}
-
 		// This skills is already registered for this project.
 		if ( (this.project.skills !== undefined)
 			&& (this.project.skills.find (sk => sk.title === event.detail.data.value) !== undefined)) {
 			return;
+		}
+
+		if (Constants.DEBUG) {
+			console.log ('Adding the skill', event.detail.data.value);
 		}
 
 		const skill = this.skillService.search (event.detail.data.value);
@@ -373,9 +373,8 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	logProjectSonarProjects() {
 		if (Constants.DEBUG) {
-			console.log (this.project.skills);
 			console.groupCollapsed ('list of sonar projects for project ' + this.project.name);
-			this.project.sonarProjects.forEach(sp => console.log (sp.id + ' ' +  sp.name));
+			this.project.sonarProjects.forEach(sp => console.log (sp.key + ' ' +  sp.name));
 			console.groupEnd();
 		}
 	}

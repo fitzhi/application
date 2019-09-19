@@ -11,9 +11,7 @@ import { SkillService } from './service/skill.service';
 import { ListCriteria } from './data/listCriteria';
 import { AuthService } from './admin/service/auth/auth.service';
 import { ProjectService } from 'src/app/service/project.service';
-import { StaffListService } from './staff-list-service/staff-list.service';
 import { SonarService } from './service/sonar.service';
-import { take } from 'rxjs/operators';
 import { MessageService } from './message/message.service';
 
 declare var $: any;

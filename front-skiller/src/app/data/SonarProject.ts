@@ -1,4 +1,4 @@
 export class SonarProject {
-	id: string;
+	key: string;
 	name: string;
 }

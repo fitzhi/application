@@ -86,6 +86,7 @@ import { InLineEditDialogComponent } from './project/project-sunburst/table-depe
 import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 import { ProjectAuditComponent } from './project/project-audit/project-audit.component';
 import { DevOnOffComponent } from './dev-on-off/dev-on-off.component';
+import { ProjectSonarComponent } from './project/project-sonar/project-sonar.component';
 
 @NgModule({
 	declarations: [
@@ -128,6 +129,7 @@ import { DevOnOffComponent } from './dev-on-off/dev-on-off.component';
 		TagifyStarsComponent,
 		ProjectAuditComponent,
 		DevOnOffComponent,
+		ProjectSonarComponent,
 	],
 	entryComponents: [
 		StaffUploadCvComponent,

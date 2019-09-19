@@ -7,9 +7,7 @@ import { ActivatedRoute } from '@angular/router';
 import { CinematicService } from '../../service/cinematic.service';
 import { Project } from '../../data/project';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
-import { ProjectGhostsComponent } from './project-ghosts/project-ghosts.component';
 import { ProjectGhostsDataSource } from './project-ghosts/project-ghosts-data-source';
-import { DialogLegendSunburstComponent } from './legend-sunburst/legend-sunburst.component';
 import { MessageBoxService } from '../../message-box/service/message-box.service';
 import { DialogFilterComponent } from './dialog-filter/dialog-filter.component';
 import { BaseComponent } from '../../base/base.component';
@@ -429,38 +427,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				break;
 		}
 	}
-/*
-	dialogGhosts() {
-		if (typeof this.project === 'undefined') {
-			this.messageService.info('Nothing to show !');
-			return;
-		}
-		if (typeof this.dataGhosts === 'undefined') {
-			this.messageService.info('Please wait !');
-			return;
-		}
-		const dialogConfig = new MatDialogConfig();
-		dialogConfig.disableClose = true;
-		dialogConfig.autoFocus = true;
-		dialogConfig.position = { top: '5em', left: '5em' };
-		dialogConfig.panelClass = 'default-dialog-container-class';
-		dialogConfig.data = this.dataGhosts;
-		const dialogReference = this.dialog.open(DialogProjectGhostsComponent, dialogConfig);
-		dialogReference.afterClosed()
-			.pipe(take(1))
-			.subscribe(result => {
-				if (result !== null) {
-					if (typeof result === 'boolean') {
-						this.dataGhosts.ghostsSubject.next(this.dataGhosts.ghostsSubject.getValue());
-					} else {
-						this.dataGhosts.ghostsSubject.next(result);
-					}
-				}
-				this.idPanelSelected = -1;
-			});
-	}
-*/
-
 	reset() {
 		if (typeof this.project === 'undefined') {
 			this.messageService.info('Nothing to reset !');
