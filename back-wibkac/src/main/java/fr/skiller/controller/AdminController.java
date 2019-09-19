@@ -33,6 +33,12 @@ import fr.skiller.exception.SkillerException;
 @RequestMapping("/admin")
 public class AdminController {
 
+	/**
+	 * URL of the Sonar server accessible from the user browser.
+	 */
+	@Value("${urlSonar}")
+	private String urlSonar;
+
 	@Autowired
 	private Administration administration;
 
@@ -180,7 +186,7 @@ public class AdminController {
 	 */
 	@GetMapping("/settings")
 	public ResponseEntity<Settings> settings() {
-		return new ResponseEntity<>(new Settings("http://localhost:9000"), headers(), HttpStatus.OK);
+		return new ResponseEntity<>(new Settings(urlSonar), headers(), HttpStatus.OK);
 	}
 
 	/**
