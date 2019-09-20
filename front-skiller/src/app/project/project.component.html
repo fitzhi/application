@@ -13,7 +13,7 @@
 		</app-project-sunburst>
 </mat-tab> 
 	<mat-tab label="Sonar"> 
-		<app-project-sonar 
+		<app-project-sonar
 			[project$]="project$"
 			(tabActivationEmitter)="tabActivation($event)"
 			(updateRiskLevel)="updateRiskLevel($event)">

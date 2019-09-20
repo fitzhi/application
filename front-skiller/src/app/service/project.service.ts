@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { Project } from '../data/project';
-import { ProjectDTO } from '../data/external/projectDTO';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
@@ -9,7 +8,6 @@ import { InternalService } from '../internal-service';
 import { Constants } from '../constants';
 import { Skill } from '../data/skill';
 import { ContributorsDTO } from '../data/external/contributorsDTO';
-import { PseudoList } from '../data/PseudoList';
 import { SettingsGeneration } from '../data/settingsGeneration';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { take } from 'rxjs/operators';
@@ -58,7 +56,6 @@ export class ProjectService extends InternalService {
 				this.allProjects$.next(projects);
 			});
 	}
-
 
 	/**
 	* Save the project.
@@ -164,6 +161,7 @@ export class ProjectService extends InternalService {
 	 * @returns the found project or undefined if none's found
 	 */
 	getProject(projectName: string): Project {
+
 		const project = this.allProjects.find(prj => prj.name === projectName);
 		return project;
 	}

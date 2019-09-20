@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {CinematicService} from '../service/cinematic.service';
 import {Constants} from '../constants';
 import {Project} from '../data/project';
 import { ListProjectsService } from '../list-projects-service/list-projects.service';
@@ -73,6 +72,7 @@ export class ListProjectComponent implements OnInit {
 				}
 			};
 			this.dataSource.sort = this.sort;
+			this.dataSource.paginator = this.paginator;
 		});
 	}
 

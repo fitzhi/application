@@ -111,7 +111,6 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 
 	logoutUser() {
 		// Route to the login page (implementation up to you)
-
-		return observableThrowError("");
+		return observableThrowError('');
 	}
 }

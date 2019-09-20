@@ -32,7 +32,8 @@ export class ProjectSonarComponent implements OnInit {
 	public SETTINGS = 2;
 
 	// Identifier of the panel selected.
-	private idPanelSelected = -1;
+	// By default we begin with the panel SONAR
+	private idPanelSelected = 1;
 
 	constructor(private sonarService: SonarService) { }
 
@@ -57,23 +58,24 @@ export class ProjectSonarComponent implements OnInit {
 	public show(idPanel: number) {
 		switch (idPanel) {
 			case this.SONAR:
-					this.idPanelSelected = idPanel;
+				this.idPanelSelected = idPanel;
 				break;
 			case this.SETTINGS:
 					this.idPanelSelected = idPanel;
 				break;
 			default:
-				console.error ('SHOULD NOT PASS HERE');
+				console.error ('SHOULD NOT PASS HERE FOR ID ' + idPanel);
 				break;
 		}
 	}
 
 	/**
-  * The button associated to this panel id is activated.
-  * @param idPanel panel identifier
-  **/
-public buttonActivated(idPanel: number) {
-		return (idPanel === this.idPanelSelected);
+	* Test if the given panel is activated.
+	* @returns TRUE if the passed panel identifier is the selected one
+	* @param idPanel panel identifier
+	**/
+	public isPanelActive(panel: number) {
+		return (panel === this.idPanelSelected);
 	}
 
 }

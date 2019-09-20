@@ -40,9 +40,14 @@ export class SonarService extends InternalService {
 	public sonarIsAccessible$ = new Subject<boolean>();
 
 	/**
-	 * This observable inform the application is SONAR is accessible.
+	 * This observable provide all projects declared on Sonar.
 	 */
 	public allSonarProjects$ = new BehaviorSubject<Component[]>([]);
+
+	/**
+	 * This observable provide all metrics declared on Sonar.
+	 */
+	public allSonarMetrics$ = new BehaviorSubject<Metric[]>([]);
 
 	/**
 	 * List of all Sonar projects retrieved from the server.
@@ -74,12 +79,17 @@ export class SonarService extends InternalService {
 
 	loadSonarMetrics() {
 		return this.httpClient.get<Metrics>(this.urlSonar + '/api/metrics/search?ps=500')
-			.subscribe ( metrics => {
-				if (Constants.DEBUG) {
-					console.groupCollapsed(metrics.metrics.length + ' metrics available on Sonar');
-					metrics.metrics.forEach(metric => console.log (metric.key, metric.name));
-					console.groupEnd();
-				}
+			.pipe(
+				tap (
+					metrics => {
+						if (Constants.DEBUG) {
+							console.groupCollapsed(metrics.metrics.length + ' metrics available on Sonar');
+							metrics.metrics.forEach(metric => console.log (metric.key, metric.name));
+							console.groupEnd();
+						}
+					}))
+			.subscribe(metrics => {
+				this.allSonarMetrics$.next(metrics.metrics);
 			});
 	}
 
@@ -103,7 +113,6 @@ export class SonarService extends InternalService {
 	}
 
 	loadSonarVersion() {
-
 		this.httpClient
 			.get(this.backendSetupService.url() + '/admin/settings')
 				.pipe(switchMap( (settings: Settings) => {
@@ -118,7 +127,7 @@ export class SonarService extends InternalService {
 									version: version
 								};
 							}),
-							catchError( (error, caught$)  => {
+							catchError( (error)  => {
 								console.log ('error', error);
 								return of( {settings: settings, sonarOn: false, version: ''});
 							})

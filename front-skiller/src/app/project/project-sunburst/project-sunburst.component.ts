@@ -462,13 +462,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			return;
 		}
 
-/* SHOULD WE KEEP THIS BLOCK ?
-		if (typeof this.dataGhosts === 'undefined') {
-			this.messageService.info('Please wait !');
-			this.idPanelSelected = this.SUNBURST;
-			return;
-		}
-*/
 		const dialogConfig = new MatDialogConfig();
 		dialogConfig.disableClose = true;
 		dialogConfig.autoFocus = true;

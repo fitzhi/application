@@ -2,35 +2,35 @@
   <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
 
     <ng-container matColumnDef="risk">
-        <th id="risk" mat-header-cell *matHeaderCellDef mat-sort-header>Risk</th>
-        <td mat-cell *matCellDef="let row">
-            <svg height="20" width="20">
-                <circle cx="10" cy="10" r="10" [ngStyle]="styleOfTheDot(row.risk)" />
-              </svg>				
-          </td>
+      <th id="risk" mat-header-cell *matHeaderCellDef mat-sort-header>Risk</th>
+      <td mat-cell *matCellDef="let row">
+        <svg height="20" width="20">
+          <circle cx="10" cy="10" r="10" [ngStyle]="styleOfTheDot(row.risk)" />
+        </svg>
+      </td>
     </ng-container>
-      
+
     <ng-container matColumnDef="name">
       <th id="name" mat-header-cell *matHeaderCellDef mat-sort-header>Project</th>
       <td mat-cell *matCellDef="let row">
-          <a [routerLink]="['/project', row.id]">{{row.name}}</a>
+        <a [routerLink]="['/project', row.id]">{{row.name}}</a>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="lastCommit">
-        <th id="lastCommit" mat-header-cell *matHeaderCellDef mat-sort-header>Last commit</th>
-        <td mat-cell *matCellDef="let row">
-            {{retrieveLastCommit(row.id).dateCommit | date:'mediumDate'}}
-        </td>
-      </ng-container>
+      <th id="lastCommit" mat-header-cell *matHeaderCellDef mat-sort-header>Last commit</th>
+      <td mat-cell *matCellDef="let row">
+        {{retrieveLastCommit(row.id).dateCommit | date:'mediumDate'}}
+      </td>
+    </ng-container>
 
-      <ng-container matColumnDef="lastCommitter">
-          <th id="lastCommitter" mat-header-cell *matHeaderCellDef mat-sort-header>Last committer</th>
-          <td mat-cell *matCellDef="let row">
-              {{retrieveLastCommit(row.id).fullname()}}
-          </td>
-        </ng-container>
-        
+    <ng-container matColumnDef="lastCommitter">
+      <th id="lastCommitter" mat-header-cell *matHeaderCellDef mat-sort-header>Last committer</th>
+      <td mat-cell *matCellDef="let row">
+        {{retrieveLastCommit(row.id).fullname()}}
+      </td>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="editableColumns; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: editableColumns;" class="row_any"></tr>
   </table>

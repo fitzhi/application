@@ -87,6 +87,7 @@ import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars
 import { ProjectAuditComponent } from './project/project-audit/project-audit.component';
 import { DevOnOffComponent } from './dev-on-off/dev-on-off.component';
 import { ProjectSonarComponent } from './project/project-sonar/project-sonar.component';
+import { SonarMetricsComponent } from './project/project-sonar/sonar-metrics/sonar-metrics.component';
 
 @NgModule({
 	declarations: [
@@ -130,6 +131,7 @@ import { ProjectSonarComponent } from './project/project-sonar/project-sonar.com
 		ProjectAuditComponent,
 		DevOnOffComponent,
 		ProjectSonarComponent,
+		SonarMetricsComponent,
 	],
 	entryComponents: [
 		StaffUploadCvComponent,
