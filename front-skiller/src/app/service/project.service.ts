@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Project } from '../data/project';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Observable, Subject, BehaviorSubject, EMPTY } from 'rxjs';
 import { InternalService } from '../internal-service';
 
 import { Constants } from '../constants';
@@ -29,6 +29,8 @@ export class ProjectService extends InternalService {
 
 	allProjects$ = new Subject<Project[]>();
 
+	allProjectsIsLoaded$ = new BehaviorSubject<Boolean>(false);
+
 	constructor(
 		private httpClient: HttpClient,
 		private referentialService: ReferentialService,
@@ -54,6 +56,7 @@ export class ProjectService extends InternalService {
 				}
 				this.allProjects = projects;
 				this.allProjects$.next(projects);
+				this.allProjectsIsLoaded$.next(true);
 			});
 	}
 

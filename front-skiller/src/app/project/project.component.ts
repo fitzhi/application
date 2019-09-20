@@ -7,6 +7,8 @@ import { Project } from '../data/project';
 import { ListProjectsService } from '../list-projects-service/list-projects.service';
 import { MessageService } from '../message/message.service';
 import { BaseComponent } from '../base/base.component';
+import { ProjectService } from '../service/project.service';
+import { switchMap, take } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-project',
@@ -34,6 +36,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 		private route: ActivatedRoute,
 		private messageService: MessageService,
 		private listProjectsService: ListProjectsService,
+		private projectService: ProjectService,
 		private router: Router) {
 		super();
 	}
@@ -120,7 +123,11 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 		// Anyway, We create an empty project until the subscription is complete
 		if (this.idProject != null) {
 			this.subscriptions.add(
-				this.listProjectsService.getProject(this.idProject).subscribe(
+				this.projectService.allProjectsIsLoaded$.pipe (
+					switchMap( (success: boolean) => {
+						return this.listProjectsService.getProject(this.idProject).pipe(take(1));
+					}))
+				.subscribe(
 					(project: Project) => {
 						this.project$.next(project);
 					},
