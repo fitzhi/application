@@ -1,50 +1,5 @@
-.sidenav-toolbar {
-    width: 50px;
-    min-height: 100%;
-    background-color: whitesmoke;
-}
-  
-mat-sidenav-content {
-    margin-left: 50px;
-}
-
-.sidenav__content--height{
-    min-height: 100vh;
-}
-
 .font-awesome-settings {
     font-size: 23px;
-}
-
-.inactive {
-    background-color: transparent;
-}
-
-.round {
-  border-radius: 25%;
-}
-
-#settings, #sonar {
-    margin-top: 5px;
-    margin-left: 3px;
-    margin-right: 0px;
-    width: 40px;
-    height: 40px;
-    padding: 0px;
-    margin-bottom: 5px;
-}
-
-.class-sonar-activated, .class-sonar-inactivated {
-    background-size: contain;
-    background-repeat: no-repeat;    
-    border: 1px solid back;
-}
-.class-sonar-inactivated {
-    background-image: url('../../../assets/img/sonar.png');
-}
-
-.class-sonar-activated {
-    background-image: url('../../../assets/img/sonar-selected.png');
 }
 
 #panelSettings {
@@ -54,4 +9,11 @@ mat-sidenav-content {
 #panelSonar {
     width: 100%;
     height: 100px;
+}
+
+.contentProjectSonar {
+    background-color: transparent;
+    width: 100%;
+    height: fit-content;
+    min-height: 600px;
 }

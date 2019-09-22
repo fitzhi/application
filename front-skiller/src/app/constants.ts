@@ -62,6 +62,11 @@ export class Constants {
 	public static STAFF_IDX_TAB_PROJECTS = 1;
 	public static STAFF_IDX_TAB_EXPERIENCES = 2;
 
+	public static PROJECT_SONAR_PANEL = {
+		SONAR: 1,
+		SETTINGS: 2
+	};
+
 	/**
 	 * Type of file allowed to be uploaded by the back-end for the application file.
 	 * These constants declaration are inherited from the back-end project

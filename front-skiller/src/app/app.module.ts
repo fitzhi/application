@@ -88,6 +88,7 @@ import { ProjectAuditComponent } from './project/project-audit/project-audit.com
 import { DevOnOffComponent } from './dev-on-off/dev-on-off.component';
 import { ProjectSonarComponent } from './project/project-sonar/project-sonar.component';
 import { SonarMetricsComponent } from './project/project-sonar/sonar-metrics/sonar-metrics.component';
+import { SonarDashboardComponent } from './project/project-sonar/sonar-dashboard/sonar-dashboard.component';
 
 @NgModule({
 	declarations: [
@@ -132,6 +133,7 @@ import { SonarMetricsComponent } from './project/project-sonar/sonar-metrics/son
 		DevOnOffComponent,
 		ProjectSonarComponent,
 		SonarMetricsComponent,
+		SonarDashboardComponent
 	],
 	entryComponents: [
 		StaffUploadCvComponent,

@@ -5,7 +5,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { ProjectSonarMetric } from 'src/app/data/sonar/project-sonar-metric';
 import { SonarService } from 'src/app/service/sonar.service';
 import { switchMap, map, catchError } from 'rxjs/operators';
-import { Metrics } from 'target/classes/app/data/sonar/metrics';
 import { Project } from 'src/app/data/project';
 import { of, Observable, EMPTY } from 'rxjs';
 import { Metric } from 'src/app/data/sonar/metric';
@@ -86,6 +85,24 @@ export class SonarMetricsComponent implements OnInit {
 		};
 		this.dataSource.sort = this.sort;
 		this.dataSource.paginator = this.paginator;
+	}
+
+	/**
+	 * Test if the current metric is selected.
+	 * @return TRUE if the passed Sonar metric has been elected for the analysis
+	 * @param metric current Sonar metric
+	 */
+	private isAMetricSelected(metric: ProjectSonarMetric): boolean {
+		return metric.selected;
+	}
+
+	/**
+	 * User a selected a metric for his Sonar analysis.
+	 * @param metric current Sonar metric
+	 */
+	private changeSelected(metric: ProjectSonarMetric) {
+		metric.selected = !metric.selected;
+		metric.weight = 0;
 	}
 
 }

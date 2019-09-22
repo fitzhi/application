@@ -1,5 +1,6 @@
 <mat-sidenav-container class="component-container" >
 
+<!--
     <mat-sidenav mode="side" class="sidenav-toolbar" opened>
 
         <button 
@@ -13,7 +14,7 @@
 			(click)="show(SONAR)">
         </button>
 
-		<button 
+        <button 
 			id="settings"
 			data-toggle="tooltip" data-placement="right" title="Settings up the sonar scoreboard"
 			class="btn btn-outline-secondary rounded"
@@ -24,15 +25,15 @@
 			(click)="show(SETTINGS)">
 			<i class="fas fa-sliders-h font-awesome-settings"></i>
         </button>
-        
 	</mat-sidenav>
+-->       
 	
-    <mat-sidenav-content class="sidenav__content--height">
+    <div class="contentProjectSonar">
+        <div id="panelSonar" [hidden]="!isPanelActive(SONAR)">
+            <app-sonar-dashboard [project$]="project$" [panelSelected$]="panelSelected$"></app-sonar-dashboard>
+        </div>    
         <div id="panelSettings" [hidden]="!isPanelActive(SETTINGS)">
             <app-sonar-metrics [project$]="project$"></app-sonar-metrics>
         </div>
-        <div id="panelSonar" [hidden]="!isPanelActive(SONAR)">
-            Sonar
-        </div>    
-    </mat-sidenav-content>
+    </div>
 </mat-sidenav-container>

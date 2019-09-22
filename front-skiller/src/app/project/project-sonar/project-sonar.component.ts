@@ -1,12 +1,15 @@
-import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, OnDestroy } from '@angular/core';
 import { SonarService } from 'src/app/service/sonar.service';
+import { Subject } from 'rxjs';
+import { BaseComponent } from 'src/app/base/base.component';
+import { Constants } from 'src/app/constants';
 
 @Component({
 	selector: 'app-project-sonar',
 	templateUrl: './project-sonar.component.html',
 	styleUrls: ['./project-sonar.component.css']
 })
-export class ProjectSonarComponent implements OnInit {
+export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	/**
 	* The project loaded in the parent component.
@@ -25,30 +28,34 @@ export class ProjectSonarComponent implements OnInit {
 	 */
 	@Output() updateRiskLevel = new EventEmitter<number>();
 
-	// The Sonar panel has to displayed.
-	public SONAR = 1;
-
-	// The settings panel has to be displayed.
-	public SETTINGS = 2;
+	/**
+	 * Observable emitting the panel identifier.
+	 */
+	panelSelected$ = new Subject<number>();
 
 	// Identifier of the panel selected.
 	// By default we begin with the panel SONAR
 	private idPanelSelected = 1;
 
-	constructor(private sonarService: SonarService) { }
+	SETTINGS = Constants.PROJECT_SONAR_PANEL.SETTINGS;
+	SONAR = Constants.PROJECT_SONAR_PANEL.SONAR;
+
+	constructor(private sonarService: SonarService) { super(); }
+
 
 	ngOnInit() {
-		this.sonarService.sonarIsAccessible$
-			.subscribe ( isAccessible => {
-				if (isAccessible) {
-					const bugs = ['bugs'];
-					this.sonarService
-						.loadSonarComponentMeasures ('Skiller', bugs)
-						.subscribe(response => {
-							console.log (response.component.key);
-						});
-				}
-			});
+		this.subscriptions.add(
+			this.sonarService.sonarIsAccessible$
+				.subscribe ( isAccessible => {
+					if (isAccessible) {
+						const bugs = ['bugs'];
+						this.sonarService
+							.loadSonarComponentMeasures ('Skiller', bugs)
+							.subscribe(response => {
+								console.log (response.component.key);
+							});
+					}
+				}));
 	}
 
 	/**
@@ -57,11 +64,13 @@ export class ProjectSonarComponent implements OnInit {
     */
 	public show(idPanel: number) {
 		switch (idPanel) {
-			case this.SONAR:
+			case Constants.PROJECT_SONAR_PANEL.SONAR:
 				this.idPanelSelected = idPanel;
+				this.panelSelected$.next(idPanel);
 				break;
-			case this.SETTINGS:
-					this.idPanelSelected = idPanel;
+			case Constants.PROJECT_SONAR_PANEL.SETTINGS:
+				this.idPanelSelected = idPanel;
+				this.panelSelected$.next(idPanel);
 				break;
 			default:
 				console.error ('SHOULD NOT PASS HERE FOR ID ' + idPanel);
@@ -76,6 +85,13 @@ export class ProjectSonarComponent implements OnInit {
 	**/
 	public isPanelActive(panel: number) {
 		return (panel === this.idPanelSelected);
+	}
+
+	/**
+	 * Calling the base class to unsubscribe all subscriptions.
+	 */
+	ngOnDestroy() {
+		super.ngOnDestroy();
 	}
 
 }
