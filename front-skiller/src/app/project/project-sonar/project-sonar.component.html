@@ -1,33 +1,4 @@
 <mat-sidenav-container class="component-container">
-
-    <!--
-    <mat-sidenav mode="side" class="sidenav-toolbar" opened>
-
-        <button 
-			id="sonar"
-			data-toggle="tooltip" data-placement="right" title="Sonar scoreboard"
-			class="btn btn-outline-secondary rounded class-sonar-inactivated"
-            [ngClass]="{
-                'btn-outline-success class-sonar-activated' : isPanelActive(SONAR), 
-                'btn-outline-secondary class-sonar-inactivated': !isPanelActive(SONAR)}" 
-			[disabled]="isPanelActive(SONAR)"
-			(click)="show(SONAR)">
-        </button>
-
-        <button 
-			id="settings"
-			data-toggle="tooltip" data-placement="right" title="Settings up the sonar scoreboard"
-			class="btn btn-outline-secondary rounded"
-            [ngClass]="{
-                'btn-outline-success' : isPanelActive(SETTINGS), 
-                'btn-outline-secondary': !isPanelActive(SETTINGS)}" 
-			[disabled]="isPanelActive(SETTINGS)"
-			(click)="show(SETTINGS)">
-			<i class="fas fa-sliders-h font-awesome-settings"></i>
-        </button>
-	</mat-sidenav>
--->
-
     <div class="contentProjectSonar">
         <div id="panelSonarThumbnails">
             <app-sonar-thumbnails 

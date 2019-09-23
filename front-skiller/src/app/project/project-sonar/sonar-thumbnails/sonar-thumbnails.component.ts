@@ -48,6 +48,10 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 		this.subscriptions.add(
 			this.project$.subscribe(project => {
 				this.project = project;
+				if (this.project.sonarProjects.length > 0) {
+					this.idPanelSelected = this.SONAR;
+					this.keySummarySelected = this.project.sonarProjects[0].key;
+				}
 			}));
 
 		this.subscriptions.add(
@@ -92,11 +96,12 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 
 	/**
 	* Test if the given panel is activated.
-	* @returns TRUE if the passed panel identifier is the selected one
 	* @param idPanel panel identifier
+	* @param keySonarProject key identifying the Sonar project.
+	* @returns TRUE if the passed couple (panel identifier/key Sonar project) is the selected one, FALSE otherwise
 	**/
-	public isPanelActive(panel: number) {
-		return (panel === this.idPanelSelected);
+	public isPanelActive(idPanel: number, keySonarProject: string) {
+		return ( (idPanel === this.idPanelSelected) && (keySonarProject === this.keySummarySelected));
 	}
 
 	/**

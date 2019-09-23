@@ -9,9 +9,9 @@
                         title="Settings up the sonar scoreboard" 
                         class="btn btn-outline-secondary rounded" 
                         [ngClass]="{
-                                'btn-outline-success' : isPanelActive(SETTINGS), 
-                                'btn-outline-secondary': !isPanelActive(SETTINGS)}"
-                        [disabled]="isPanelActive(SETTINGS)" 
+                                'btn-outline-success' : isPanelActive(SETTINGS, sonarProject.key), 
+                                'btn-outline-secondary': !isPanelActive(SETTINGS,  sonarProject.key)}"
+                        [disabled]="isPanelActive(SETTINGS,  sonarProject.key)" 
                         (click)="show(SETTINGS, sonarProject.key)">
                         <i class="fas fa-sliders-h font-awesome-settings"></i>
                     </button>
@@ -19,9 +19,9 @@
                 <mat-grid-tile [colspan]="1" [rowspan]="1">
                     <button id="sonar" data-toggle="tooltip" data-placement="right" title="Display the Sonar dashboard"
                         class="btn btn-outline-secondary rounded class-sonar-inactivated" 
-                        [ngClass]="{    'btn-outline-success class-sonar-activated' : isPanelActive(SONAR), 
-                                        'btn-outline-secondary class-sonar-inactivated': !isPanelActive(SONAR)}"
-                        [disabled]="isPanelActive(SONAR)" 
+                        [ngClass]="{    'btn-outline-success class-sonar-activated' : isPanelActive(SONAR, sonarProject.key), 
+                                        'btn-outline-secondary class-sonar-inactivated': !isPanelActive(SONAR, sonarProject.key)}"
+                        [disabled]="isPanelActive(SONAR,  sonarProject.key)" 
                         (click)="show(SONAR, sonarProject.key)">
                     </button>
                 </mat-grid-tile>
