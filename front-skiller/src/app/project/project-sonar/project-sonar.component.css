@@ -16,4 +16,7 @@
     width: 100%;
     height: fit-content;
     min-height: 600px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;   
 }

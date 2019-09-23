@@ -1,6 +1,6 @@
-<mat-sidenav-container class="component-container" >
+<mat-sidenav-container class="component-container">
 
-<!--
+    <!--
     <mat-sidenav mode="side" class="sidenav-toolbar" opened>
 
         <button 
@@ -26,12 +26,19 @@
 			<i class="fas fa-sliders-h font-awesome-settings"></i>
         </button>
 	</mat-sidenav>
--->       
-	
+-->
+
     <div class="contentProjectSonar">
+        <div id="panelSonarThumbnails">
+            <app-sonar-thumbnails 
+                [project$]="project$" 
+                [panelSelected$]="panelSelected$"
+                (panelSwitchEmitter$)="onPanelSwitch($event)">
+            </app-sonar-thumbnails>
+        </div>
         <div id="panelSonar" [hidden]="!isPanelActive(SONAR)">
-            <app-sonar-dashboard [project$]="project$" [panelSelected$]="panelSelected$"></app-sonar-dashboard>
-        </div>    
+            <app-sonar-dashboard [project$]="project$"></app-sonar-dashboard>
+        </div>
         <div id="panelSettings" [hidden]="!isPanelActive(SETTINGS)">
             <app-sonar-metrics [project$]="project$"></app-sonar-metrics>
         </div>

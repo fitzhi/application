@@ -89,6 +89,7 @@ import { DevOnOffComponent } from './dev-on-off/dev-on-off.component';
 import { ProjectSonarComponent } from './project/project-sonar/project-sonar.component';
 import { SonarMetricsComponent } from './project/project-sonar/sonar-metrics/sonar-metrics.component';
 import { SonarDashboardComponent } from './project/project-sonar/sonar-dashboard/sonar-dashboard.component';
+import { SonarThumbnailsComponent } from './project/project-sonar/sonar-thumbnails/sonar-thumbnails.component';
 
 @NgModule({
 	declarations: [
@@ -133,7 +134,8 @@ import { SonarDashboardComponent } from './project/project-sonar/sonar-dashboard
 		DevOnOffComponent,
 		ProjectSonarComponent,
 		SonarMetricsComponent,
-		SonarDashboardComponent
+		SonarDashboardComponent,
+		SonarThumbnailsComponent
 	],
 	entryComponents: [
 		StaffUploadCvComponent,

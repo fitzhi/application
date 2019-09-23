@@ -3,6 +3,7 @@ import { SonarService } from 'src/app/service/sonar.service';
 import { Subject } from 'rxjs';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
+import { PanelSwitchEvent } from './sonar-thumbnails/panel-switch-event';
 
 @Component({
 	selector: 'app-project-sonar',
@@ -76,6 +77,13 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 				console.error ('SHOULD NOT PASS HERE FOR ID ' + idPanel);
 				break;
 		}
+	}
+
+	/**
+	 * @param event Data sent from the SonarThumbNails instance to inform the parent component of the panel and sonar project selected.
+	 */
+	onPanelSwitch(event: PanelSwitchEvent) {
+		this.show(event.idPanel);
 	}
 
 	/**
