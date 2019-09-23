@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { take } from 'rxjs/operators';
+import { take, map, catchError, switchMap } from 'rxjs/operators';
 
 import { ProjectService } from '../../service/project.service';
 import { CinematicService } from '../../service/cinematic.service';
@@ -12,10 +12,11 @@ import { Constants } from '../../constants';
 import { SkillService } from '../../service/skill.service';
 import { MessageService } from '../../message/message.service';
 import { BaseComponent } from '../../base/base.component';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { SonarService } from 'src/app/service/sonar.service';
 import Tagify from '@yaireo/tagify';
+import { truncateSync } from 'fs';
 
 @Component({
 	selector: 'app-project-form',
@@ -138,11 +139,14 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 						.map(function(skill) { return skill.title; }));
 				}
 
-				if (this.project.sonarProjects) {
-					this.tagifySonarProjects.addTags(
-						this.project.sonarProjects
-						.map(function(sonarProject) { return sonarProject.name; }));
-					}
+				this.sonarProjectsLoaded$().subscribe (doneAndOk => {
+					if (doneAndOk) {
+						if (this.project.sonarProjects) {
+							this.tagifySonarProjects.addTags(
+								this.project.sonarProjects
+								.map(function(sonarProject) { return sonarProject.name; }));
+							}
+					}});
 				}));
 
 		this.subscriptions.add(
@@ -155,7 +159,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	ngAfterViewInit() {
 		this.ngAfterViewInitSkills();
-		this.ngAfterViewInitSonarProjects();
 	}
 
 	ngAfterViewInitSkills() {
@@ -179,7 +182,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			});
 	}
 
-	ngAfterViewInitSonarProjects() {
+	/**
+	 * Load the accessible Sonar projects declared on the Sonar project.
+	 * The returned observable emits a TRUE if the loading has been successful.
+	 */
+	sonarProjectsLoaded$(): Observable<boolean> {
+
 		const input = document.querySelector('textarea[name=sonarProjects]');
 
 		this.tagifySonarProjects = new Tagify (input, {
@@ -193,17 +201,21 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			}
 		});
 
-		this.sonarService.allSonarProjects$
-			.subscribe (sonarProjects => {
-				if (Constants.DEBUG) {
-					console.log ('Receiving ' + sonarProjects.length + ' Sonar projects');
-				}
-				this.tagifySonarProjects.settings.whitelist = [];
-				sonarProjects.map(function(sonarProject) { return sonarProject.name; })
-				.forEach(element => {
-					this.tagifySonarProjects.settings.whitelist.push(element);
-				});
-			});
+		return this.sonarService.allSonarProjects$
+			.pipe (
+				map (sonarProjects => {
+					if (Constants.DEBUG) {
+						console.log ('Receiving ' + sonarProjects.length + ' Sonar projects');
+					}
+
+					this.tagifySonarProjects.settings.whitelist = [];
+					sonarProjects.map(function(sonarProject) { return sonarProject.name; })
+					.forEach(element => {
+						this.tagifySonarProjects.settings.whitelist.push(element);
+					});
+					return true;
+				}),
+				catchError(err =>  of(false)));
 	}
 
 	/**
