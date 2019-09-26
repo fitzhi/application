@@ -16,7 +16,6 @@ import { Observable, of } from 'rxjs';
 import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { SonarService } from 'src/app/service/sonar.service';
 import Tagify from '@yaireo/tagify';
-import { truncateSync } from 'fs';
 
 @Component({
 	selector: 'app-project-form',

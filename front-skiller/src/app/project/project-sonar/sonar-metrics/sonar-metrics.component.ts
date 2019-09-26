@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnDestroy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -7,14 +7,14 @@ import { SonarService } from 'src/app/service/sonar.service';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { Project } from 'src/app/data/project';
 import { of, Observable, EMPTY } from 'rxjs';
-import { Metric } from 'src/app/data/sonar/metric';
+import { BaseComponent } from 'src/app/base/base.component';
 
 @Component({
 	selector: 'app-sonar-metrics',
 	templateUrl: './sonar-metrics.component.html',
 	styleUrls: ['./sonar-metrics.component.css']
 })
-export class SonarMetricsComponent implements OnInit {
+export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	/**
 	* The project loaded in the parent component.
@@ -39,6 +39,7 @@ export class SonarMetricsComponent implements OnInit {
 	public editableColumns: string[] = ['name', 'selected', 'weight'];
 
 	constructor(private sonarService: SonarService) {
+		super();
 	}
 
 	private loadMetrics (project: Project): Observable<ProjectSonarMetric[]> {
@@ -57,17 +58,21 @@ export class SonarMetricsComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.project$.pipe (
-			switchMap( (project: Project) => {
-				return this.loadMetrics (project);
-			}))
-			.subscribe (data => {
-				this.initDataSource(data);
-			});
+
+		this.subscriptions.add(
+			this.project$.pipe (
+				switchMap( (project: Project) => {
+					return this.loadMetrics (project);
+				}))
+				.subscribe (data => {
+					this.sonarService.loadFiles(('Skiller')).subscribe(rep => console.log (rep));
+					this.initDataSource(data);
+				}));
+
 	}
 
 	private initDataSource(projectSonarMetrics: ProjectSonarMetric[]) {
-		console.groupCollapsed(projectSonarMetrics.length + ' recors in projectSonarMetrics');
+		console.groupCollapsed(projectSonarMetrics.length + ' records in projectSonarMetrics');
 		projectSonarMetrics.forEach(projectSonarMetric => {
 			console.log(projectSonarMetric.key, projectSonarMetric.name);
 		});
@@ -105,4 +110,10 @@ export class SonarMetricsComponent implements OnInit {
 		metric.weight = 0;
 	}
 
+	/**
+	 * Calling the base class to unsubscribe all subscriptions.
+	 */
+	ngOnDestroy() {
+		super.ngOnDestroy();
+	}
 }

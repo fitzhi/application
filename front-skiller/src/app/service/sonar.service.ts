@@ -6,13 +6,14 @@ import { InternalService } from '../internal-service';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { Constants } from '../constants';
 import { Metric } from '../data/sonar/metric';
-import { of, BehaviorSubject, Subject, Observable } from 'rxjs';
+import { of, BehaviorSubject, Subject, Observable, EMPTY } from 'rxjs';
 import { Metrics } from '../data/sonar/metrics';
 import { Components } from '../data/sonar/components';
 import { Component } from '../data/sonar/component';
 import { SonarProject } from '../data/SonarProject';
-import { ComponentMeasures } from '../data/sonar/component-measures';
 import { ResponseComponentMeasures } from '../data/sonar/reponse-component-measures';
+import { ComponentTree } from '../data/sonar/component-tree';
+import { ILanguageCount } from 'target/classes/app/service/ILanguageCount';
 
 @Injectable({
 	providedIn: 'root'
@@ -185,5 +186,41 @@ export class SonarService extends InternalService {
 		}
 		return this.allSonarProjects.find (sp => sp.name === nameOfSonarProject);
 	}
+
+	loadFiles(key: string): Observable<ILanguageCount> {
+		const params = new HttpParams().set('component', key).set('qualifiers', 'FIL').set('ps', '500');
+		return this.httpClient
+			.get<ComponentTree>(this.urlSonar + '/api/components/tree', {params: params})
+			.pipe(
+				tap ( (response: ComponentTree) => {
+					if (Constants.DEBUG) {
+						console.groupCollapsed(response.components.length + ' FIL components retrieved');
+						response.components.forEach(
+							component => console.log (component.language + ' ' + component.name));
+						console.groupEnd();
+					}
+			}),
+			switchMap ( (response: ComponentTree) => {
+				const languageCounts: ILanguageCount = {};
+				response.components.forEach(element => {
+					if (!languageCounts[element.language]) {
+						languageCounts[element.language] = 1;
+					} else {
+						languageCounts[element.language]++;
+					}
+				});
+				if (Constants.DEBUG) {
+					Object.entries(languageCounts).forEach( ([language, count]) => {
+						console.log(language, count);
+					});
+				}
+				return of(languageCounts);
+			}), catchError( (error)  => {
+				console.error ('error', error);
+				return of({});
+			})
+		);
+	}
+
 
 }
