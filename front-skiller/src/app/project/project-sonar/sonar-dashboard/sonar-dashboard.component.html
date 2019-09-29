@@ -1,1 +1,9 @@
-Sonar DATA
+<div [hidden]="(!isSonarAccessible + !isSonarVersion7x)">
+    Sonar version 7.x dashboard    
+</div>
+<div [hidden]="(!isSonarAccessible + isSonarVersion7x)">
+        Sonar version below 7.x dashboard    
+</div>
+<div [hidden]="isSonarAccessible">
+        Sonar is not accessible !
+</div>
