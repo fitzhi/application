@@ -1,3 +1,3 @@
 export interface ILanguageCount {
-	[language: string]: string;
+	[language: string]: number;
 }

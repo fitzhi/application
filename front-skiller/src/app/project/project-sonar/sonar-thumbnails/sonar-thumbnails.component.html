@@ -25,9 +25,23 @@
                         (click)="show(SONAR, sonarProject.key)">
                     </button>
                 </mat-grid-tile>
-
                 <mat-grid-tile [colspan]="4" [rowspan]="1">
                     {{sonarProject.name}}
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="3" [rowspan]="2">
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="3" [rowspan]="2">
+                    <table>
+                        <tr *ngFor="let languageCount of languageFilesNumber.get(sonarProject.key)">
+                            <td class="table-counting language">{{labelOfLanguage(languageCount.language)}}</td>
+                            <!--
+                            <td><svg widt="30px" height="20px" x="200px">
+                                <rect class="bar-chart-bar" width="21px" height="10px"></rect>
+                            </svg></td>
+                            -->
+                            <td class="table-counting fileNumber">{{languageCount.numberOfFiles}}</td>
+                        </tr>
+                    </table>
                 </mat-grid-tile>
             </mat-grid-list>
         </div>

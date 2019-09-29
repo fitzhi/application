@@ -13,7 +13,7 @@ import { Component } from '../data/sonar/component';
 import { SonarProject } from '../data/SonarProject';
 import { ResponseComponentMeasures } from '../data/sonar/reponse-component-measures';
 import { ComponentTree } from '../data/sonar/component-tree';
-import { ILanguageCount } from 'target/classes/app/service/ILanguageCount';
+import { ILanguageCount } from './ILanguageCount';
 
 @Injectable({
 	providedIn: 'root'
@@ -210,9 +210,11 @@ export class SonarService extends InternalService {
 					}
 				});
 				if (Constants.DEBUG) {
+					console.groupCollapsed ( key + ' files summary');
 					Object.entries(languageCounts).forEach( ([language, count]) => {
 						console.log(language, count);
 					});
+					console.groupEnd ();
 				}
 				return of(languageCounts);
 			}), catchError( (error)  => {

@@ -15,6 +15,7 @@ import { Library } from '../data/library';
 import { BooleanDTO } from '../data/external/booleanDTO';
 import { ReferentialService } from './referential.service';
 import { SonarProject } from '../data/SonarProject';
+import { FilesStats } from '../data/sonar/FilesStats';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -314,6 +315,24 @@ export class ProjectService extends InternalService {
 					.find (legend => legend.level === risk)
 					.color;
 			}
-
 	}
+
+	/**
+	* Save the file statistics for a project.
+	* @param idProject the given project identifier
+	* @param key the Sonar key from where the stats are coming from
+	* @param filesStats the language file statistics retrieved from the Sonar instance.
+	*/
+	saveFilesStats(idProject: number, key: string, filesStats: FilesStats[]): Observable<Boolean> {
+		if (Constants.DEBUG) {
+			console.groupCollapsed('Save the files stats');
+			console.log ('idProject', idProject);
+			console.log ('key', key);
+			filesStats.forEach(fs => console.log (fs.language, fs.numberOfFiles));
+			console.groupEnd();
+		}
+		const body = { idProject: idProject, sonarProjectKey: key, filesStats: filesStats };
+		return this.httpClient.post<Boolean>(this.backendSetupService.url() + '/project/sonar/files-stats', body, httpOptions);
+	}
+
 }

@@ -8,6 +8,7 @@ import { switchMap, map, catchError } from 'rxjs/operators';
 import { Project } from 'src/app/data/project';
 import { of, Observable, EMPTY } from 'rxjs';
 import { BaseComponent } from 'src/app/base/base.component';
+import { Constants } from 'src/app/constants';
 
 @Component({
 	selector: 'app-sonar-metrics',
@@ -20,6 +21,11 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	* The project loaded in the parent component.
 	*/
 	@Input() project$;
+
+	/**
+	 * Current active project.
+	 */
+	private project: Project;
 
 	/**
 	 * The datasource that contains the filtered projects;
@@ -62,21 +68,23 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 		this.subscriptions.add(
 			this.project$.pipe (
 				switchMap( (project: Project) => {
+					this.project = project;
 					return this.loadMetrics (project);
 				}))
 				.subscribe (data => {
-					this.sonarService.loadFiles(('Skiller')).subscribe(rep => console.log (rep));
 					this.initDataSource(data);
 				}));
 
 	}
 
 	private initDataSource(projectSonarMetrics: ProjectSonarMetric[]) {
-		console.groupCollapsed(projectSonarMetrics.length + ' records in projectSonarMetrics');
-		projectSonarMetrics.forEach(projectSonarMetric => {
-			console.log(projectSonarMetric.key, projectSonarMetric.name);
-		});
-		console.groupEnd();
+		if (Constants.DEBUG) {
+			console.groupCollapsed(projectSonarMetrics.length + ' records in projectSonarMetrics');
+			projectSonarMetrics.forEach(projectSonarMetric => {
+				console.log(projectSonarMetric.key, projectSonarMetric.name);
+			});
+			console.groupEnd();
+		}
 		this.dataSource = new MatTableDataSource<ProjectSonarMetric>(projectSonarMetrics);
 		this.dataSource.sortingDataAccessor = (item: ProjectSonarMetric, property: string) => {
 			switch (property) {

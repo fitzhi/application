@@ -1,6 +1,6 @@
 import { Skill } from './skill';
 import { Library } from './library';
-import { SonarProject } from "./SonarProject";
+import { SonarProject } from './SonarProject';
 
 export class Project {
 

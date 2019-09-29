@@ -66,3 +66,12 @@
     height: 40px;
     padding: 0px;
 }
+
+td.table-counting {
+    padding-right: 10px;
+}
+
+td.language {
+    text-align: right;
+}
+
