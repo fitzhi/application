@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import fr.skiller.Error;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.controller.in.BodyParamSonarEntry;
+import fr.skiller.controller.in.BodyParamSonarFilesStats;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.SonarProject;
 import fr.skiller.exception.SkillerException;
@@ -88,4 +89,27 @@ public class ProjectSonarController {
 		}
 	}
 	
+	@PostMapping(path="/files-stats")
+	public ResponseEntity<Boolean> saveFilesStats(@RequestBody BodyParamSonarFilesStats param) {
+
+		HttpHeaders headers = new HttpHeaders();
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
+				"POST command on /project/sonar/file-stats for project : %s %s", 
+				param.getIdProject(), param.getSonarProjectKey()));
+		}
+		
+		try {
+			Project project = projectHandler.get(param.getIdProject());
+			
+			projectHandler.saveFilesStats(project, param.getSonarProjectKey(), param.getFilesStats()); 
+			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
+			
+		} catch (SkillerException se) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
+			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
+			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
+		}
+	}
 }

@@ -1,5 +1,8 @@
 package fr.skiller.data.internal;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Data;
 
 /**
@@ -22,6 +25,16 @@ public @Data class SonarProject {
 	 */
 	String name;
 	
+	/**
+	 * List of Sonar metrics chosen to evaluate this project.
+	 */
+	private List<ProjectSonarMetric> projectSonarMetrics = new ArrayList<>();
+
+	/**
+	 * Statistics retrieved from the Sonar instance.
+	 */
+	private List<FilesStats> projectFilesStats = new ArrayList<>();
+	
 	public SonarProject() {
 		// Empty constructor for serialization / de-serialization purpose
 	}
@@ -32,9 +45,19 @@ public @Data class SonarProject {
 	 * @param name name of the sonar project entry.
 	 */
 	public SonarProject(String key, String name) {
+		this(key, name, new ArrayList<ProjectSonarMetric>());
+	}
+
+	/**
+	 * Sonar entry.
+	 * @param key identifier of the sonar project entry.
+	 * @param name name of the sonar project entry.
+	 */
+	public SonarProject(String key, String name, List<ProjectSonarMetric> projectSonarMetrics) {
 		super();
 		this.key = key;
 		this.name = name;
+		this.projectSonarMetrics = projectSonarMetrics;
 	}
 	
 }

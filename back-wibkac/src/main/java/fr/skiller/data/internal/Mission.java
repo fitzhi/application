@@ -9,7 +9,9 @@ import java.time.LocalDate;
 import lombok.Data;
 
 /**
- * Mission of a developer inside a project
+ * <p>
+ * Mission of a developer inside a project.
+ * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */

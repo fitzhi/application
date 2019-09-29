@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -22,6 +23,7 @@ import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.data.internal.FilesStats;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Mission;
@@ -419,6 +421,24 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				.stream()
 				.anyMatch(entry -> key.equals(entry.getKey()));
 	}
-	
+
+	@Override
+	public void saveFilesStats(Project project, String sonarProjectKey, List<FilesStats> filesStats) {
+		
+		try {
+			SonarProject sonarPrj = project.getSonarProjects()
+				.stream()
+				.filter(sonarP -> sonarProjectKey.equals(sonarP.getKey()))
+				.findFirst().get();
+				
+			synchronized (lockDataUpdated) {
+				sonarPrj.setProjectFilesStats(filesStats);
+				this.dataUpdated = true;
+			}
+		} catch (NoSuchElementException nsee) {
+			throw new SkillerRuntimeException(nsee);
+		}
+		
+	}
 	
 }

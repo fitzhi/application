@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import fr.skiller.data.internal.FilesStats;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Project;
@@ -208,4 +209,12 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @return {@code true} if the key exists in the collection
 	 */
 	boolean containsSonarEntry(Project project, String key);
+	
+	/**
+	 * Save the files statistics retrieved from the Sonar project.
+	 * @param project the given project.
+	 * @param sonarProjectKey the key of the Sonar project.
+	 * @param filesStats stats retrieved from the file system.
+	 */
+	void saveFilesStats (Project project, String sonarProjectKey, List<FilesStats> filesStats);
 }

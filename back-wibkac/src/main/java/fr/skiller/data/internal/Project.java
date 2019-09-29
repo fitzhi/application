@@ -76,10 +76,10 @@ public @Data class Project  {
 	private List<Library> libraries = new ArrayList<>();
 	
 	/**
-	 * List of Sonar entries declared for this project.
+	 * List of Sonar projects associated to this project.
 	 */
 	private List<SonarProject> sonarProjects = new ArrayList<>();
-	
+		
 	/**
 	 * Constant representing one the 2 models of connection settings.
 	 * This one if for the direct access : url repository / user / password
