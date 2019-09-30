@@ -8,7 +8,7 @@
                     <input type="text"
 						class="form-control" id="firstName" name="firstName"
 						(change)="onChange(FIRST_NAME)"
-						[readonly]="isAlreadyDeactived()" placeholder="" value=""
+						[readonly]="isAlreadyDesactivated()" placeholder="" value=""
                         formControlName="firstName"/> 
                     <label
 						*ngIf="firstName.touched && firstName.invalid" [ngClass]="'alert alert-warning'"
@@ -20,7 +20,7 @@
                     <input type="text"
 						class="form-control required" id="lastName" name="lastName"
 						(change)="onChange(LAST_NAME)"
-						[readonly]="isAlreadyDeactived()" placeholder="Enter the last name"
+						[readonly]="isAlreadyDesactivated()" placeholder="Enter the last name"
                         value="" formControlName="lastName"/> 
                     <label
 						*ngIf="lastName.touched && lastName.invalid" [ngClass]="'alert alert-warning'"
@@ -38,7 +38,7 @@
 							<span class="input-group-text">@</span>
 						</div>
 						<input type="text" class="form-control" id="nickName"
-							name="nickName" [readonly]="isAlreadyDeactived()"
+							name="nickName" [readonly]="isAlreadyDesactivated()"
 							placeholder="Enter the nickname (if any) for this staff member"
                             value="" formControlName="nickName"/> 
                         <label
@@ -50,7 +50,7 @@
 				<div class="col-md-6 mb-3">
 					<label for="login" class="required">Login</label> <input type="text"
 						class="form-control required" id="login" name="login"
-						[readonly]="isAlreadyDeactived()" 
+						[readonly]="isAlreadyDesactivated()" 
 						placeholder="Enter the connection login"
 						value="" formControlName="login"> <label
 						*ngIf="login.touched && login.invalid" [ngClass]="'alert alert-warning'"
@@ -66,7 +66,7 @@
                 <input type="email" 
                     class="form-control" 
                     id="email" name="email"
-                    [readonly]="isAlreadyDeactived()" 
+                    [readonly]="isAlreadyDesactivated()" 
                     placeholder="you@example.com"
                     formControlName="email"/> 
                 <label *ngIf="email.touched && email.invalid"
@@ -87,8 +87,15 @@
 
 			<div class="mb-3">
 				<label>
-					<input type="checkbox" id="active" name="active" formControlName="active"/>
-					{{label_isActive}} {{label_dateInactive | date : 'longDate'}}
+					<input 
+						type="checkbox" 
+						id="active" 
+						name="active" 
+						formControlName="active"
+						(change)="onChange(IS_ACTIVE)"/>
+					{{label_isActive}} {{label_dateInactive | date : 'longDate'}} 
+					<span [hidden]="!isAlreadyDesactivated()"><br/>&nbsp;&nbsp;&nbsp;&nbsp;Recheck this checkbox to reactivate this staff member</span>
+
 				</label>
 			</div>
 
@@ -108,7 +115,7 @@
             <div class="row">
                 <div class="col-md-10"></div>
                 <div class="col-md-2">
-                    <button [ngClass]="classOkButton()" [disabled]="(!profileStaff.valid)||isAlreadyDeactived()" type="submit"></button>
+                    <button [ngClass]="classOkButton()" [disabled]="(!profileStaff.valid)||isAlreadyDesactivated()" type="submit"></button>
                 </div>
             </div>
 		</form>

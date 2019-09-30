@@ -16,6 +16,7 @@ import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff
 import { take } from 'rxjs/operators';
 import { MessageBoxService } from 'src/app/message-box/service/message-box.service';
 import { Mission } from 'src/app/data/mission';
+import { active } from 'd3';
 
 
 @Component({
@@ -35,6 +36,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 
 	FIRST_NAME = 1;
 	LAST_NAME = 2;
+	IS_ACTIVE = 3;
 
 	/**
      * This messenger is there to be used in one case : if the parent component is the INSTALLATION SETUP.
@@ -203,7 +205,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
      * Test if the collaborator has been already deactivated on the database.
      * You can test this state by testing the dateInactive, filled by the back-end during the deactivation process.
      */
-	public isAlreadyDeactived(): boolean {
+	public isAlreadyDesactivated(): boolean {
 		return (!this.collaborator.active);
 	}
 
@@ -224,6 +226,19 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		const oldFirstName = this.collaborator.firstName;
 		const newLastName = this.profileStaff.get('lastName').value;
 		const oldLastName = this.collaborator.lastName;
+
+		// The staff member was desactivated. Ans the user wants to reactivate him.
+		if (field === this.IS_ACTIVE) {
+			if (this.profileStaff.get('active').value) {
+				if (Constants.DEBUG) {
+					console.log ('The end-user wants to reactivate %s %s', oldFirstName, oldLastName);
+				}
+				this.collaborator.active = true;
+				this.profileStaff.get('active').setValue(true);
+				this.collaborator.dateInactive = null;
+			}
+			return;
+		}
 
 		if (Constants.DEBUG) {
 			console.groupCollapsed('Staff member is moving');
