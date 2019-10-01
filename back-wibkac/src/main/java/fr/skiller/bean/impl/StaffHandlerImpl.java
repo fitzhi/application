@@ -180,7 +180,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		// If no one's found, we re-process the search with NORMALIZED AND LOWER CASE String
 		if (staff == null) {
 			staff =  lookup(criteria, input ->
-					(input != null) ? Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "") : null);
+					(input != null) ? Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "").toLowerCase() : null);
 		}
 		
 		return staff;

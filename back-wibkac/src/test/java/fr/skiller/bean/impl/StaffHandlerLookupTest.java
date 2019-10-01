@@ -26,6 +26,8 @@ public class StaffHandlerLookupTest {
 	private static final String JEROME_SANS_ACCENT = "Jerome WithAccent";
 	
 	private static final String JEROME_WITH_ACCENT = "Jérôme WithAccent";
+
+	private static final String FREDERIC_SANS_ACCENT = "Frederic NABILLAU";
 	
 	@Autowired
 	private StaffHandler staffHandler;
@@ -40,6 +42,8 @@ public class StaffHandlerLookupTest {
 				new Staff(1002, "Jérôme", "WithAccent", "jwithaccent" , "jwithaccent", "jwithaccent@void.com", ""));
 		staffHandler.getStaff().put(1003, 
 				new Staff(1003, "Guillaume", "Guorin De Tourville", "gguorin" , "gguorin", "gguorin@void.com", ""));
+		staffHandler.getStaff().put(1004, 
+				new Staff(1004, "Frédéric", "NABILLAU", "fnabillau" , "fnabillau", "fnabillau@void.com", ""));
 		
 	}
 	
@@ -73,10 +77,19 @@ public class StaffHandlerLookupTest {
 		assertThat(staffHandler.lookup(JEROME_SANS_ACCENT)).isNotNull();
 	}
 	
+	@Test
+	public void testFrederiucNabillauSansAccent()  {
+		assertThat(staffHandler.lookup("Frederic Nabillau")).isNotNull();
+	}
+	
+	
+	
 	@After
 	public void after() {
 		staffHandler.getStaff().remove(1000);
 		staffHandler.getStaff().remove(1001);
 		staffHandler.getStaff().remove(1002);
+		staffHandler.getStaff().remove(1003);
+		staffHandler.getStaff().remove(1004);
 	}
 }
