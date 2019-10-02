@@ -49,7 +49,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	private loadMetrics (project: Project): Observable<ProjectSonarMetric[]> {
-		return this.sonarService.allSonarMetrics$.pipe(
+		return this.sonarService.sonarMetrics$.pipe(
 			map (metrics => {
 				const projectSonarMetrics: ProjectSonarMetric[] = [];
 				metrics.forEach( metric => {

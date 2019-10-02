@@ -25,7 +25,7 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	/**
 	 * Equal to TRUE if the current Sonar version is 7.x or higher
 	 */
-	private isSonarVersion7x = false;
+	private isSonarVersion71x = false;
 
 	ngOnInit() {
 		this.subscriptions.add(
@@ -36,10 +36,10 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 			this.sonarService.sonarIsAccessible$.subscribe(isSonarAccessible => {
 				if (isSonarAccessible) {
 					this.isSonarAccessible = isSonarAccessible;
-					this.isSonarVersion7x = (this.sonarService.sonarVersion.substring(0, 1) === '7');
+					this.isSonarVersion71x = (this.sonarService.sonarVersion.substring(0, 3) === '7.1');
 					if (Constants.DEBUG) {
-						if (this.isSonarVersion7x) {
-							console.log('Sonar version 7.x');
+						if (this.isSonarVersion71x) {
+							console.log('Sonar version 7.1x');
 						} else {
 							console.log('Sonar version < 7.x');
 						}

@@ -79,7 +79,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 			.subscribe(accessible => {
 				if (accessible) {
 					this.sonarService.loadProjects();
-					this.sonarService.loadSonarMetrics();
+					this.sonarService.loadSonarSupportedMetrics();
 				} else {
 					this.messageService.warning('Warning : Sonar is offline or unreachable!');
 				}

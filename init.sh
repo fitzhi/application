@@ -13,6 +13,6 @@ mkdir -pv deploy/backend-wibkac
 cd back-wibkac
 mvn clean package
 cp target/wibkac.jar ../deploy/backend-wibkac/wibkac.jar
-cp -R data ../deploy/data
+cp -R data ../deploy/
 cd ..
 

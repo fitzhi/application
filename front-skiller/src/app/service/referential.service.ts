@@ -7,6 +7,7 @@ import { Skill } from '../data/skill';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { take } from 'rxjs/operators';
 import { Observable, BehaviorSubject, Subject } from 'rxjs';
+import { SupportedMetric } from '../data/supported-metric';
 
 @Injectable()
 export class ReferentialService {
@@ -25,6 +26,11 @@ export class ReferentialService {
 	 * Legend of the sunburst chart.
 	 */
 	public legends$ = new Subject<RiskLegend[]>();
+
+	/*
+	 * Observable emetting the metrics supported by the application.
+	 */
+	public supportedMetrics$ = new BehaviorSubject<string[]>([]);
 
 	/*
 	 * Skills.
@@ -81,6 +87,23 @@ export class ReferentialService {
 					this.legends$.next(legends);
 					legends.forEach(legend => this.legends.push(legend));
 				});
+
+		this.httpClient.get<SupportedMetric[]>(this.backendSetupService.url() + '/referential/supported-metrics')
+/*			.pipe(take(1)) */
+			.subscribe(
+				(metrics: SupportedMetric[]) => {
+					if (Constants.DEBUG) {
+						console.groupCollapsed('Supported metrics : ');
+						metrics.forEach(metric => console.log(metric.metric));
+						console.groupEnd();
+					}
+					const supported: string[] = [];
+					metrics.forEach( metric => {
+						supported.push(metric.metric);
+					});
+					this.supportedMetrics$.next(supported);
+				});
+
 	}
 
 }

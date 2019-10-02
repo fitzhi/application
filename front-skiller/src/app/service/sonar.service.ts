@@ -14,6 +14,8 @@ import { SonarProject } from '../data/SonarProject';
 import { ResponseComponentMeasures } from '../data/sonar/reponse-component-measures';
 import { ComponentTree } from '../data/sonar/component-tree';
 import { ILanguageCount } from './ILanguageCount';
+import { SupportedMetric } from '../data/supported-metric';
+import { ReferentialService } from './referential.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -48,7 +50,7 @@ export class SonarService extends InternalService {
 	/**
 	 * This observable provide all metrics declared on Sonar.
 	 */
-	public allSonarMetrics$ = new BehaviorSubject<Metric[]>([]);
+	public sonarMetrics$ = new BehaviorSubject<Metric[]>([]);
 
 	/**
 	 * List of all Sonar projects retrieved from the server.
@@ -57,40 +59,42 @@ export class SonarService extends InternalService {
 
 	constructor(
 		private httpClient: HttpClient,
+		private referentialService: ReferentialService,
 		private backendSetupService: BackendSetupService) {
 		super();
 	}
 
-	/**
-	 * Connecting the user into SONAT
-	 *
-	connectSonar() {
-
-		const params = new HttpParams()
-			.set('login', 'admin')
-			.set('password', 'admin');
-
-		// const body = { username: 'admin', password: 'admin' };
-
-		return this.httpClient
-			.post<Metrics>(this.urlSonar + '/api/authentication/login', {params} )
-			.subscribe ( console.log, error => console.log );
+	loadSonarSupportedMetrics() {
+		console.log ('loadSonarSupportedMetrics()');
+		this.referentialService.supportedMetrics$.subscribe(
+				supported => this.loadSonarMetrics(supported));
 	}
-	*/
 
-	loadSonarMetrics() {
-		return this.httpClient.get<Metrics>(this.urlSonar + '/api/metrics/search?ps=500')
+	loadSonarMetrics(supported: string[]) {
+		this.httpClient.get<Metrics>(this.urlSonar + '/api/metrics/search?ps=500')
 			.pipe(
 				tap (
 					metrics => {
 						if (Constants.DEBUG) {
-							console.groupCollapsed(metrics.metrics.length + ' metrics available on Sonar');
+							console.groupCollapsed(metrics.metrics.length + ' (all) metrics available on Sonar');
 							metrics.metrics.forEach(metric => console.log (metric.key, metric.name));
 							console.groupEnd();
 						}
-					}))
+					}),
+				take(1))
 			.subscribe(metrics => {
-				this.allSonarMetrics$.next(metrics.metrics);
+				const sonarMetrics: Metric[]  = [];
+				metrics.metrics.forEach(element => {
+					if (supported.includes(element.key)) {
+						sonarMetrics.push(element);
+					}
+				});
+				if (Constants.DEBUG) {
+					console.groupCollapsed(sonarMetrics.length + ' suported metrics by the application');
+					sonarMetrics.forEach(metric => console.log (metric.key, metric.name));
+					console.groupEnd();
+				}
+				this.sonarMetrics$.next(sonarMetrics);
 			});
 	}
 
@@ -158,9 +162,9 @@ export class SonarService extends InternalService {
 					console.groupCollapsed(components.components.length + ' components retrieved.');
 					components.components.forEach(component => console.log (component.name, component.key));
 					console.groupEnd();
-					this.allSonarProjects = components.components;
-					this.allSonarProjects$.next(components.components);
 				}
+				this.allSonarProjects = components.components;
+				this.allSonarProjects$.next(components.components);
 		});
 	}
 

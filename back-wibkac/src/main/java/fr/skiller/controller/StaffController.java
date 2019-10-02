@@ -231,6 +231,13 @@ public class StaffController {
 		HttpHeaders headers = new HttpHeaders();
 		
 		if (input.getIdStaff() == -1) {
+			
+			// We create an already inactive user. 
+			// That kind of user is supposed to be created from the ghost table form
+			if ( !input.isActive() && (input.getDateInactive() == null)) {
+				input.setDateInactive(Global.now());
+			}
+			
 			staffHandler.addNewStaffMember(input);
 			headers.set("backend.return_code", "1");
 			responseEntity = new ResponseEntity<>(input, headers, HttpStatus.OK);

@@ -1,0 +1,35 @@
+[
+	{
+		"metric": "bugs"
+	},
+	{
+		"metric": "code_smells"
+	},
+	{
+		"metric": "coverage"
+	},
+	{
+		"metric": "duplicated_lines_density"
+	},
+	{
+		"metric": "ncloc"
+	},
+	{
+		"metric": "sqale_rating"
+	},
+	{
+		"metric": "reliability_rating"
+	},
+	{
+		"metric": "alert_status"
+	},
+	{
+		"metric": "security_rating"
+	},
+	{
+		"metric": "sqale_index"
+	},
+	{
+		"metric": "vulnerabilities"
+	}
+]

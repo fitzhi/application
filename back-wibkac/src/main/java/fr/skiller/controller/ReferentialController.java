@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -68,7 +70,7 @@ public class ReferentialController {
 		} 
 		return responseEntity;
 	}
-
+	
 	/**
 	 * HTTP GET to retrieve the risks legend of the sunburst-chart
 	 * @return the risks legend for the actual implementation of {@link RiskProcessor}

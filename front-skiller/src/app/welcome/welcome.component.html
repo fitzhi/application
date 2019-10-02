@@ -5,3 +5,33 @@
 <div id="setup" *ngIf="connectionIsNeeded()">
     <app-connect-user></app-connect-user>
 </div>
+<div id="test" style="background-color: #371450; width:800px;height:500px;" [hidden]="true">
+    Test only div.
+    <div class="pieContainer" style="left:10px;">
+            <div class="pieBackground"></div>
+            <div id="pieSlice1_a" class="hold"><div class="pie"></div></div>
+            <!--
+            <div id="pieSlice2" class="hold"><div class="pie"></div></div>
+            <div id="pieSlice3" class="hold"><div class="pie"></div></div>
+            <div id="pieSlice4" class="hold"><div class="pie"></div></div>
+            -->
+       </div>
+       <div class="pieContainer" style="left:150px;">
+            <div class="pieBackground"></div>
+            <div id="pieSlice1_b" class="hold"><div class="pie"></div></div>
+       </div>
+       <div class="pieContainer" style="left:300px;">
+            <div class="pieBackground"></div>
+            <div id="pieSlice1_c" class="hold"><div class="pie"></div></div>
+       </div>
+       <div class="pieContainer" style="left:450px;">
+            <div class="pieBackground"></div>
+            <div id="pieSlice1_d" class="hold"><div class="pie"></div></div>
+       </div>
+       <div class="pieContainer" style="left:600px;">
+            <div class="pieBackground"></div>
+            <div id="pieSlice1_e" class="hold"><div class="pie"></div></div>
+       </div>
+
+
+    </div>

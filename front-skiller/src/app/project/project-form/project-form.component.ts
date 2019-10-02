@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { take, map, catchError, switchMap } from 'rxjs/operators';
 
 import { ProjectService } from '../../service/project.service';
@@ -96,12 +96,18 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	private sonarIsAccessible = false;
 
+	/**
+	 * Are we creating a new project ? or are we updating an existing one ?
+	 */
+	private creation = false;
+
 	constructor(
 		private cinematicService: CinematicService,
 		private messageService: MessageService,
 		private skillService: SkillService,
 		private projectService: ProjectService,
 		private sonarService: SonarService,
+		private route: ActivatedRoute,
 		private router: Router) {
 		super();
 
@@ -118,6 +124,15 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	}
 
 	ngOnInit() {
+
+		this.route.params.pipe(take(1)).subscribe(params => {
+			if (params['id'] == null) {
+				if (Constants.DEBUG) {
+					console.log('No project ID is given. We are in creation mode');
+				}
+				this.creation = true;
+			}
+		});
 
 		this.subscriptions.add(
 			this.project$.subscribe((project: Project) => {
@@ -138,15 +153,16 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 						.map(function(skill) { return skill.title; }));
 				}
 
-				this.sonarProjectsLoaded$().subscribe (doneAndOk => {
-					if (doneAndOk) {
-						if (this.project.sonarProjects) {
-							this.tagifySonarProjects.addTags(
-								this.project.sonarProjects
-								.map(function(sonarProject) { return sonarProject.name; }));
-							}
-					}});
-				}));
+				this.subscriptions.add(
+					this.sonarProjectsLoaded$().subscribe (doneAndOk => {
+						if (doneAndOk) {
+							if (this.project.sonarProjects) {
+								this.tagifySonarProjects.addTags(
+									this.project.sonarProjects
+									.map(function(sonarProject) { return sonarProject.name; }));
+								}
+						}}));
+					}));
 
 		this.subscriptions.add(
 			this.risk$.subscribe((risk: number) => this.updateDotRiskColor(risk)));
@@ -157,6 +173,14 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	}
 
 	ngAfterViewInit() {
+		if (this.creation) {
+			this.subscriptions.add(
+				this.sonarProjectsLoaded$().subscribe (doneAndOk => {
+					if (!doneAndOk) {
+						this.messageService.error('Cannot retrieve the declared applications in Sonar');
+					}
+			}));
+		}
 		this.ngAfterViewInitSkills();
 	}
 

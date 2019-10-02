@@ -164,7 +164,6 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	 * @param key the project Sonar key whose metrics have to be set up.
 	 */
 	show(idPanel: number, key: string) {
-		console.log (this.SETTINGS);
 		if (Constants.DEBUG) {
 			console.log ('Displaying panel ID ' + idPanel + ' for the Sonar project ' + key);
 		}
