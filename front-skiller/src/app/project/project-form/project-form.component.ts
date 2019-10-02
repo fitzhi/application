@@ -101,6 +101,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	private creation = false;
 
+	/**
+	 * This boolean caracterize the fact that the Sonar server is reachable.
+	 * We can add Sonar project to this internal project.
+	 */
+	private sonarProjectsLoaded = false;
+
 	constructor(
 		private cinematicService: CinematicService,
 		private messageService: MessageService,
@@ -161,8 +167,10 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 									this.project.sonarProjects
 									.map(function(sonarProject) { return sonarProject.name; }));
 								}
-						}}));
+						}
+						this.sonarProjectsLoaded = doneAndOk;
 					}));
+				}));
 
 		this.subscriptions.add(
 			this.risk$.subscribe((risk: number) => this.updateDotRiskColor(risk)));
@@ -229,6 +237,10 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				map (sonarProjects => {
 					if (Constants.DEBUG) {
 						console.log ('Receiving ' + sonarProjects.length + ' Sonar projects');
+					}
+
+					if (sonarProjects.length === 0) {
+						return false;
 					}
 
 					this.tagifySonarProjects.settings.whitelist = [];
