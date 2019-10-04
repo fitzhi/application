@@ -78,11 +78,16 @@ public class StaffHandlerLookupTest {
 	}
 	
 	@Test
-	public void testFrederiucNabillauSansAccent()  {
+	public void testFredericNabillauSansAccent()  {
 		assertThat(staffHandler.lookup("Frederic Nabillau")).isNotNull();
 	}
 	
-	
+	@Test
+	public void testFredericNabillauWithSpaces()  {
+		assertThat(staffHandler.lookup("Frédéric  NABILLAU")).isNotNull();
+		assertThat(staffHandler.lookup("   Frédéric    NABILLAU   ")).isNotNull();
+	}
+		
 	
 	@After
 	public void after() {

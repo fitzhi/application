@@ -199,7 +199,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			return null;
 		}
 		
-		String[] word = criteria.split(" ");
+		String[] word = criteria.trim().replaceAll(" +", " ").split(" ");
 		
 		List<Staff> ids = null;
 		switch (word.length) {
