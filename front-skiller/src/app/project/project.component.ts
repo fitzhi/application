@@ -31,6 +31,8 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	 */
 	public idProject: number;
 
+	private TAB_TITLE = ['Project', 'Staff list', 'Staff coverage', 'Sonar'];
+
 	constructor(
 		private cinematicService: CinematicService,
 		private route: ActivatedRoute,
@@ -96,7 +98,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	public selectedIndexChange(selectedIndex: number): void {
 		if (Constants.DEBUG) {
 			const today = new Date();
-			console.log('The index ' + selectedIndex + ' is selected @ '
+			console.log('The tab "' + this.TAB_TITLE[selectedIndex] + '" is selected @'
 				+ today.getHours() + ':' + today.getMinutes() + ':' + today.getSeconds());
 		}
 		this.cinematicService.setProjectTab(selectedIndex);
@@ -107,9 +109,10 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	 * @param tabIndex new tab to activate.
 	 */
 	public tabActivation (tabIndex: number) {
-		setTimeout (() => this.tabIndex = tabIndex);
+		// setTimeout (() => this.tabIndex = tabIndex);
+		this.tabIndex = tabIndex;
 		if (Constants.DEBUG) {
-			console.log ('Selected index', this.tabIndex);
+			console.log ('Selected index', this.TAB_TITLE[this.tabIndex]);
 		}
 
 	}

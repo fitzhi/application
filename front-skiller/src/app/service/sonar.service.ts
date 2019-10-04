@@ -65,7 +65,6 @@ export class SonarService extends InternalService {
 	}
 
 	loadSonarSupportedMetrics() {
-		console.log ('loadSonarSupportedMetrics()');
 		this.referentialService.supportedMetrics$.subscribe(
 				supported => this.loadSonarMetrics(supported));
 	}

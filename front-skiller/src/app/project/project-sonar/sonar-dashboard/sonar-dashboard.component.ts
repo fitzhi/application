@@ -36,7 +36,8 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 			this.sonarService.sonarIsAccessible$.subscribe(isSonarAccessible => {
 				if (isSonarAccessible) {
 					this.isSonarAccessible = isSonarAccessible;
-					this.isSonarVersion71x = (this.sonarService.sonarVersion.substring(0, 3) === '7.1');
+					const version = parseFloat(this.sonarService.sonarVersion.substring(0, 3));
+					this.isSonarVersion71x = (version > 7.1);
 					if (Constants.DEBUG) {
 						if (this.isSonarVersion71x) {
 							console.log('Sonar version 7.1x');

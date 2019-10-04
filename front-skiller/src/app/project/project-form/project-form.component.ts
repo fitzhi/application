@@ -353,9 +353,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	updateSonarProject(idProject: number, sonarProject:  SonarProject,
 		callback: (idProject: number, sonarProject:  SonarProject) => Observable<BooleanDTO>) {
 		callback(idProject, sonarProject)
-		.subscribe (result => {
-			if (!result) {
-				this.messageService.error (result.message);
+		.subscribe (doneAndOk => {
+			if (!doneAndOk) {
+				this.messageService.error (doneAndOk.message);
 			}
 		},
 		response_in_error => {
