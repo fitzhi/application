@@ -69,7 +69,7 @@ public class FileDataSaverImpl implements DataSaver {
 	/**
 	 * Directory to save the changes file.s
 	 */
-	private final String SAVED_CHANGES = "saved-changes";
+	private final String SAVED_CHANGES = "changes-data";
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -88,8 +88,6 @@ public class FileDataSaverImpl implements DataSaver {
 	private void init() {
         this.rootLocation = Paths.get(saveDir);
 	}
-	
-
 	
 	@Override
 	public void saveProjects(Map<Integer, Project> projects) throws SkillerException {
@@ -354,7 +352,7 @@ public class FileDataSaverImpl implements DataSaver {
 	@Override
 	public void saveRepositoryDirectories(Project project, List<SCMChange> changes) throws SkillerException {
 
-		final String filename = "project-" + project.getId() + "-pathnames.txt";
+		final String filename = "pathnames-data/project-" + project.getId() + "-pathnames.txt";
 
 		List<String> directories = changes.stream()
 				.map(SCMChange::getPath)
@@ -385,7 +383,7 @@ public class FileDataSaverImpl implements DataSaver {
 	@Override
 	public List<String> loadRepositoryDirectories(Project project) throws SkillerException {
 		
-		final String filename = "project-" + project.getId() + "-pathnames.txt";
+		final String filename = "pathnames-data/project-" + project.getId() + "-pathnames.txt";
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Loading the paths file %s", rootLocation.resolve(filename)));
 		}

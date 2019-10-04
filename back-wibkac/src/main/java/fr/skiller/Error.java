@@ -29,7 +29,7 @@ public class Error {
 	public static final String MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND = "The connection property file {0} doesn't exist!";
 	
 	public static final int CODE_UNEXPECTED_VALUE_PARAMETER = -1006;
-	public static final String MESSAGE_UNEXPECTED_VALUE_PARAMETER = "The variable {0} has the unexpected value {1}";
+	public static final String MESSAGE_UNEXPECTED_VALUE_PARAMETER = "The variable {0} has the unexpected value {1}.";
 	
 	public static final int CODE_MULTIPLE_LOGIN = -1007;
 	public static final String MESSAGE_MULTIPLE_LOGIN = "Cannot connect the login {0} to a developer. {1} are eligible.";

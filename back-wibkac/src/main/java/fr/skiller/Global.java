@@ -26,6 +26,19 @@ public class Global {
 	
 	public static final String BACKEND_RETURN_MESSAGE = "backend.return_message";
 
+	/**
+	 * Constant representing one the 2 models of connection settings for project.
+	 * This one if for the direct access : url repository / user / password
+	 */
+	public static final int DIRECT_ACCESS = 1;
+	
+	/**
+	 * Constant representing one the 2 models of connection settings.
+	 * This one if for the indirect access : url repository / remote filename with connection parameters.
+	 */
+	public static final int REMOTE_FILE_ACCESS = 2;
+
+	
 	private Global() {
 	}
 

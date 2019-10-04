@@ -8,10 +8,15 @@ import javax.annotation.Generated;
 
 import fr.skiller.Global;
 import fr.skiller.SkillerRuntimeException;
+import fr.skiller.bean.ShuffleService;
 import lombok.Data;
+import static fr.skiller.Global.DIRECT_ACCESS;
+import static fr.skiller.Global.REMOTE_FILE_ACCESS;
 
 /**
- * Project class. 
+ * <p>
+ * This class represents a project in the application.
+ * </p> 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public @Data class Project  {
@@ -55,7 +60,7 @@ public @Data class Project  {
 	/**
 	 * The filename containing the connection parameters to access the version control system.
 	 */
-	private String filename;
+	private String connectionSettingsFile;
 	
 	/**
 	 * List of skills required for this project.
@@ -79,19 +84,7 @@ public @Data class Project  {
 	 * List of Sonar projects associated to this project.
 	 */
 	private List<SonarProject> sonarProjects = new ArrayList<>();
-		
-	/**
-	 * Constant representing one the 2 models of connection settings.
-	 * This one if for the direct access : url repository / user / password
-	 */
-	private static final int DIRECT_ACCESS = 1;
-	
-	/**
-	 * Constant representing one the 2 models of connection settings.
-	 * This one if for the indirect access : url repository / remote filename with connection parameters.
-	 */
-	private static final int REMOTE_FILE_ACCESS = 2;
-	
+			
 	/**
 	 * Level of risk evaluated for the project.
 	 */
@@ -123,7 +116,7 @@ public @Data class Project  {
 
 	@Generated ("eclipse")
 	private Project(int id, String name, int connectionSettings, String urlRepository, String locationRepository,
-			String username, String password, String filename, List<Skill> skills, List<Ghost> ghosts) {
+			String username, String password, String filename, List<Skill> skills, List<Ghost> ghosts, String connectionSettingsFile) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -132,18 +125,25 @@ public @Data class Project  {
 		this.locationRepository = locationRepository;
 		this.username = username;
 		this.password = password;
-		this.filename = filename;
+		this.connectionSettingsFile = connectionSettingsFile;
 		this.skills = skills;
 		this.ghosts = ghosts;
 	}
 	
 	/**
-	 * Copy constructor of <code>Project</code>
+	 * <p>Copy constructor of {@link Project}</code></p>
+	 * <p>This construction exists only for one purpose.<br/>
+	 * It is used by the {@link ShuffleService} to shuffle the projects information and prevent any unintentional serialization.
+	 * </p>
 	 * @param project the project instance to be copied.
 	 */
 	public Project(Project project) {
-		this (project.id, project.name, project.connectionSettings, project.urlRepository, project.locationRepository,
-				project.username, project.password, project.filename, project.skills, project.ghosts);
+		this (project.id, project.name, project.connectionSettings, 
+				project.urlRepository, 
+				project.locationRepository,
+				project.username, project.password, 
+				project.connectionSettingsFile, 
+				project.skills, project.ghosts, project.connectionSettingsFile);
 	}
 	
 	/**

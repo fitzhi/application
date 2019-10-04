@@ -974,7 +974,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		}
 
 		if (project.isIndirectAccess()) {
-			final String fileProperties = pathConnectionSettings + project.getFilename();
+			final String fileProperties = pathConnectionSettings + project.getConnectionSettingsFile();
 			File f = new File(fileProperties);
 			if (!f.exists()) {
 				throw new SkillerException(CODE_FILE_CONNECTION_SETTINGS_NOFOUND,

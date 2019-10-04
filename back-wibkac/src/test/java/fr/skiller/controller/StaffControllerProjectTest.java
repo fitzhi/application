@@ -87,7 +87,6 @@ public class StaffControllerProjectTest {
 		missions.clear();
 		this.mvc.perform(get(STAFF_PROJECTS_2)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(missions)));
 		
-		
 	}	
 
 	@Before 
