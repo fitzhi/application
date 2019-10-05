@@ -400,11 +400,15 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			return;
 		}
 
-		const sonarProject = this.sonarService.search (event.detail.data.value);
-		if (sonarProject === undefined) {
-			console.log ('SEVERE ERROR : Unregistered skill', event.detail.data.value);
+		const sonarComponent = this.sonarService.search (event.detail.data.value);
+		if (!sonarComponent) {
+			console.log ('SEVERE ERROR : This Sonar project is unknown.', event.detail.data.value);
 			return;
 		}
+		const sonarProject = new SonarProject();
+		sonarProject.key = sonarComponent.key;
+		sonarProject.name = sonarComponent.name;
+		sonarProject.projectFilesStats = [];
 
 		// For compatibility reason with the previsous version.
 		if (!this.project.sonarProjects) {
@@ -508,6 +512,8 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 				// If we were in creation (i.e. url = ".../project/"), we leave this mode
 				this.creation = false;
+
+				this.project$.next(this.project);
 
 				this.messageService.info('Project ' + this.project.name + '  saved !');
 			});

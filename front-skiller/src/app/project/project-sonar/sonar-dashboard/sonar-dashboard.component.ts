@@ -4,6 +4,7 @@ import { BaseComponent } from 'src/app/base/base.component';
 import { SonarService } from 'src/app/service/sonar.service';
 import { Constants } from 'src/app/constants';
 import { CinematicService } from 'src/app/service/cinematic.service';
+import { SonarThumbnailsComponent } from '../sonar-thumbnails/sonar-thumbnails.component';
 
 @Component({
 	selector: 'app-sonar-dashboard',
@@ -20,8 +21,7 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	private project = new Project();
 
 	constructor(
-		private sonarService: SonarService,
-		private cinematiqueService: CinematicService) { super(); }
+		private sonarService: SonarService) { super(); }
 
 	private isSonarAccessible = false;
 
@@ -57,14 +57,6 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 
 		}));
 
-		this.subscriptions.add(
-			this.cinematiqueService.tabProjectActivated$.subscribe(tabSelected => {
-				if (tabSelected === Constants.PROJECT_IDX_TAB_SONAR) {
-					if (Constants.DEBUG) {
-						console.log ('Sonar dashboard Activated');
-					}
-				}
-			}));
 	}
 
 	/**

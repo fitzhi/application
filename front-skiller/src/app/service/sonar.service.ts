@@ -182,7 +182,7 @@ export class SonarService extends InternalService {
 	 * Search the sonar project
 	 * @param sonarProject the Sonar project name
 	 */
-	search (nameOfSonarProject: string): SonarProject {
+	search (nameOfSonarProject: string): Component {
 		if (this.allSonarProjects.length === 0) {
 			console.error('the array containing all projects declared in Sonar is empty');
 			return undefined;

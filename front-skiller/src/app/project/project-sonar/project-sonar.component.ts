@@ -1,9 +1,12 @@
-import { Component, OnInit, Output, Input, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, Output, Input, EventEmitter, OnDestroy, ViewChild } from '@angular/core';
 import { SonarService } from 'src/app/service/sonar.service';
 import { Subject } from 'rxjs';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
 import { PanelSwitchEvent } from './sonar-thumbnails/panel-switch-event';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { SonarThumbnailsComponent } from './sonar-thumbnails/sonar-thumbnails.component';
+import { Project } from 'src/app/data/project';
 
 @Component({
 	selector: 'app-project-sonar',
@@ -30,6 +33,11 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 	@Output() updateRiskLevel = new EventEmitter<number>();
 
 	/**
+	 * The Sonar Thumnbails composant hosted on the top of the dashboard
+	 */
+	@ViewChild(SonarThumbnailsComponent, {static: false}) thumbNails: SonarThumbnailsComponent;
+
+	/**
 	 * Observable emitting the panel identifier.
 	 */
 	panelSelected$ = new Subject<number>();
@@ -38,13 +46,23 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 	// By default we begin with the panel SONAR
 	private idPanelSelected = 1;
 
+	/**
+	 * Current project.
+	 */
+	private project: Project;
+
 	SETTINGS = Constants.PROJECT_SONAR_PANEL.SETTINGS;
 	SONAR = Constants.PROJECT_SONAR_PANEL.SONAR;
 
-	constructor(private sonarService: SonarService) { super(); }
+	constructor(
+		private sonarService: SonarService,
+		private cinematicService: CinematicService) { super(); }
 
 
 	ngOnInit() {
+		this.subscriptions.add(
+			this.project$.subscribe(project => this.project = project));
+
 		this.subscriptions.add(
 			this.sonarService.sonarIsAccessible$
 				.subscribe ( isAccessible => {
@@ -57,7 +75,23 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 							});
 					}
 				}));
-	}
+
+		this.subscriptions.add(
+			this.cinematicService.tabProjectActivated$.subscribe(tabSelected => {
+				if (tabSelected === Constants.PROJECT_IDX_TAB_SONAR) {
+					if (Constants.DEBUG) {
+						if (!this.project) {
+							console.log ('Sonar dashboard Activated');
+						} else {
+							console.log ('Sonar dashboard Activated for project %s', this.project.name);
+						}
+					}
+					if (this.thumbNails) {
+						this.thumbNails.loadFilesNumber();
+					}
+				}
+			}));
+			}
 
 	/**
     * Show the panel associated to this id.
