@@ -53,7 +53,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 			}));
 
 		this.subscriptions.add(
-			this.cinematicService.tabProjectActivated.subscribe(
+			this.cinematicService.tabProjectActivated$.subscribe(
 				index => {
 					if (index === Constants.PROJECT_IDX_TAB_STAFF) {
 						// Either we reach this component with this url '/project/:id' and the selection of the tab Staff

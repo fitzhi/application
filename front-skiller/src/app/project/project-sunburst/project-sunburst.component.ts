@@ -161,7 +161,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			}));
 
 		this.subscriptions.add(
-			this.cinematicService.tabProjectActivated.subscribe(
+			this.cinematicService.tabProjectActivated$.subscribe(
 				index => {
 					if (index === Constants.PROJECT_IDX_TAB_SUNBURST) {
 						if (Constants.DEBUG) {

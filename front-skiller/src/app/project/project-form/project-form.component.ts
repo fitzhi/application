@@ -55,7 +55,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	/**
 	 * JS object handling the skills component.
 	 */
-	tagifySkills: Tagify;
+	tagifySkills: Tagify = null;
 
 	/**
 	 * JS object handling the sonar projects component.
@@ -166,9 +166,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 								this.tagifySonarProjects.addTags(
 									this.project.sonarProjects
 									.map(function(sonarProject) { return sonarProject.name; }));
-								}
+							}
 						}
-						this.sonarProjectsLoaded = doneAndOk;
+						// Asynchronous update to avoid ExpressionChangedAfterItHasBeenCheckedError
+						setTimeout(() => {
+							this.sonarProjectsLoaded = doneAndOk;
+						}, 0);
 					}));
 				}));
 
@@ -181,14 +184,16 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	}
 
 	ngAfterViewInit() {
-		if (this.creation) {
-			this.subscriptions.add(
-				this.sonarProjectsLoaded$().subscribe (doneAndOk => {
-					if (!doneAndOk) {
-						this.messageService.error('Cannot retrieve the declared applications in Sonar');
-					}
-			}));
-		}
+		this.subscriptions.add(
+			this.sonarProjectsLoaded$().subscribe (doneAndOk => {
+				if (!doneAndOk && !this.creation) {
+					this.messageService.error('Cannot retrieve the declared applications in Sonar');
+				}
+				// Asynchronous update to avoid ExpressionChangedAfterItHasBeenCheckedError
+				setTimeout(() => {
+					this.sonarProjectsLoaded = doneAndOk;
+				}, 0);
+		}));
 		this.ngAfterViewInitSkills();
 	}
 
@@ -219,18 +224,21 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	sonarProjectsLoaded$(): Observable<boolean> {
 
-		const input = document.querySelector('textarea[name=sonarProjects]');
+		// If we re-enter in this method, the do not create twice the tagify component.
+		if (!this.tagifySonarProjects) {
+			const input = document.querySelector('textarea[name=sonarProjects]');
 
-		this.tagifySonarProjects = new Tagify (input, {
-			enforceWhitelist : true,
-			whitelist        : [],
-			callbacks        : {
-				add    : this.boundAddSonarProject,
-					// callback when adding a tag, this callback is bound to the main component, instead of the function.
-				remove : this.boundRemoveSonarProject
-					// callback when removing a tag
-			}
-		});
+			this.tagifySonarProjects = new Tagify (input, {
+				enforceWhitelist : true,
+				whitelist        : [],
+				callbacks        : {
+					add    : this.boundAddSonarProject,
+						// callback when adding a tag, this callback is bound to the main component, instead of the function.
+					remove : this.boundRemoveSonarProject
+						// callback when removing a tag
+				}
+			});
+		}
 
 		return this.sonarService.allSonarProjects$
 			.pipe (
@@ -497,6 +505,10 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		this.projectService.save(this.project).pipe(take(1)).subscribe(
 			project => {
 				this.project = project;
+
+				// If we were in creation (i.e. url = ".../project/"), we leave this mode
+				this.creation = false;
+
 				this.messageService.info('Project ' + this.project.name + '  saved !');
 			});
 	}

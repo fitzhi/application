@@ -40,7 +40,7 @@ export class SonarService extends InternalService {
 	/**
 	 * This observable inform the application is SONAR is accessible.
 	 */
-	public sonarIsAccessible$ = new Subject<boolean>();
+	public sonarIsAccessible$ = new BehaviorSubject<boolean>(false);
 
 	/**
 	 * This observable provide all projects declared on Sonar.

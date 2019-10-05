@@ -49,7 +49,7 @@ export class CinematicService {
 	/**
      * This subject containts the tab selected in the projects Tab Group container
      */
-	public tabProjectActivated = new BehaviorSubject<number>(Constants.PROJECT_IDX_TAB_FORM);
+	public tabProjectActivated$ = new BehaviorSubject<number>(Constants.PROJECT_IDX_TAB_FORM);
 
 
 	/**
@@ -96,7 +96,7 @@ export class CinematicService {
      * Fire the event that the tab index has changed.
      */
 	setProjectTab(tab: number) {
-		this.tabProjectActivated.next(tab);
+		this.tabProjectActivated$.next(tab);
 	}
 
 }

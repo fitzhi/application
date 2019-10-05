@@ -67,21 +67,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 					this.idPanelSelected = this.SONAR;
 					this.keySummarySelected = this.project.sonarProjects[0].key;
 				}
-				this.project.sonarProjects.forEach((sonar: SonarProject) => {
-					this.languageFilesNumber.set(sonar.key, sonar.projectFilesStats);
-					if (Constants.DEBUG) {
-						console.groupCollapsed('Files statistics for the Sonar instance %s.', sonar.key);
-						sonar.projectFilesStats.forEach(fs => console.log (fs.language, fs.numberOfFiles));
-						console.groupEnd();
-					}
-				});
-				this.subscriptions.add(
-					this.sonarService.sonarIsAccessible$.subscribe( connected => {
-						if (connected) {
-							this.project.sonarProjects.forEach (
-								sonarP => this.retrieveAndUpdateFilesSummary(sonarP));
-						}
-					}));
+				this.loadFilesNumber();
 			}));
 
 		this.subscriptions.add(
@@ -90,6 +76,24 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 			}));
 	}
 
+	loadFilesNumber() {
+		this.subscriptions.add(
+			this.project.sonarProjects.forEach((sonar: SonarProject) => {
+				this.languageFilesNumber.set(sonar.key, sonar.projectFilesStats);
+				if (Constants.DEBUG) {
+					console.groupCollapsed('Files statistics for the Sonar instance %s.', sonar.key);
+					sonar.projectFilesStats.forEach(fs => console.log (fs.language, fs.numberOfFiles));
+					console.groupEnd();
+				}
+			}));
+		this.subscriptions.add(
+			this.sonarService.sonarIsAccessible$.subscribe( connected => {
+				if (connected) {
+					this.project.sonarProjects.forEach (
+						sonarP => this.retrieveAndUpdateFilesSummary(sonarP));
+				}
+			}));
+	}
 	/**
 	 * Retrieve and save (IF NECESSARY) the number of files per language examined by the passed sonar component
 	 * @param keyComponentSonar : the component key
@@ -105,14 +109,15 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 				console.groupEnd();
 				this.languageFilesNumber.set(componentSonar.key, componentSonar.projectFilesStats);
 			}
-			this.projectService
-				.saveFilesStats(this.project.id, componentSonar.key, componentSonar.projectFilesStats)
-				.subscribe(res => {
-					if (res) {
-						this.messageService.info('Saving Files source statistics for the key ' + componentSonar.key);
-					}
+			this.subscriptions.add(
+				this.projectService
+					.saveFilesStats(this.project.id, componentSonar.key, componentSonar.projectFilesStats)
+					.subscribe(doneAndOk => {
+						if (doneAndOk) {
+							this.messageService.info('Saving Files source statistics for the key ' + componentSonar.key);
+						}
+					}));
 				});
-		});
 	}
 
 	/**

@@ -30,7 +30,7 @@
 				</div>
 			</div>
 
-			<div class="row" [hidden]="!sonarProjectsLoaded">
+			<div class="row" [hidden]="!sonarProjectsLoaded || creation">
 				<div class="col-1"></div>
 				<div class="col-10 field">
 					<label class="labelSkills" for="sonarProjects">Sonar projects</label> 
@@ -39,13 +39,12 @@
 					</textarea>
 				</div>
 			</div>
-			<div class="row" [hidden]="sonarProjectsLoaded">
+			<div class="row" [hidden]="sonarProjectsLoaded || creation">
 				<div class="col-1"></div>
 				<div class="col-10">
 					<p class="error">Cannot reach the Sonar server on the URL {{sonarService.urlSonar}}.</p>
 				</div>
 			</div>
-
 			<div class="mb-12" class="buttons_toggle">
 				<label for="connection_settings">Version control connection settings : &nbsp;&nbsp;</label>
 				<mat-button-toggle-group #group="matButtonToggleGroup" name="connection_settings" 
