@@ -5,6 +5,7 @@ import { SonarService } from 'src/app/service/sonar.service';
 import { Constants } from 'src/app/constants';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { SonarThumbnailsComponent } from '../sonar-thumbnails/sonar-thumbnails.component';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
 	selector: 'app-sonar-dashboard',
@@ -18,7 +19,12 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	*/
 	@Input() project$;
 
-	private project = new Project();
+	/**
+	* Observable emitting the panel selected.
+	*/
+	@Input() panelSelected$;
+
+	private project: Project;
 
 	constructor(
 		private sonarService: SonarService) { super(); }
@@ -29,6 +35,13 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	 * Equal to TRUE if the current Sonar version is 7.x or higher
 	 */
 	private isSonarVersion71x = false;
+
+	/**
+	 * Key of the current selected Sonar project.
+	 */
+	private sonarKey = '';
+
+	private badge = '';
 
 	ngOnInit() {
 
@@ -54,8 +67,15 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 						}
 					}
 				}
-
 		}));
+
+		this.subscriptions.add(
+			this.panelSelected$.subscribe(idPanel => {
+				if (this.project && (idPanel >= 0) ) {
+					this.sonarKey = this.project.sonarProjects[idPanel].key;
+					this.badge = 'Metric for ' + this.sonarKey;
+				}
+			}));
 
 	}
 

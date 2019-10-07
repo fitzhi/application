@@ -1,6 +1,5 @@
 <div [hidden]="(!isSonarAccessible + !isSonarVersion71x)">
-    Sonar version 7.1x dashboard    
-</div>
+        <div [(innerHtml)]="badge"></div>
 <div [hidden]="(!isSonarAccessible + isSonarVersion71x)">
         Sonar version below 7.1x dashboard    
 </div>

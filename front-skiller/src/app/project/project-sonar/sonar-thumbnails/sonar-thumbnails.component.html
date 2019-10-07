@@ -1,5 +1,5 @@
 <div id="containerDashboard">
-    <div *ngFor="let sonarProject of project.sonarProjects; index as i" (click)="selectSummary(sonarProject.key)"
+    <div *ngFor="let sonarProject of project.sonarProjects; index as i" (click)="selectSummary(i, sonarProject.key)"
         [ngClass]="classForSonarProjectSummary(sonarProject.key)">
         <div class="sonarNotation"></div>
         <div class="insideSonarProjectSummary">

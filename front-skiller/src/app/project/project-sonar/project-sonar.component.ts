@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, Input, EventEmitter, OnDestroy, ViewChild } from '@angular/core';
 import { SonarService } from 'src/app/service/sonar.service';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
 import { PanelSwitchEvent } from './sonar-thumbnails/panel-switch-event';
@@ -40,7 +40,7 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 	/**
 	 * Observable emitting the panel identifier.
 	 */
-	panelSelected$ = new Subject<number>();
+	panelSelected$ = new BehaviorSubject<number>(-1);
 
 	// Identifier of the panel selected.
 	// By default we begin with the panel SONAR
@@ -85,6 +85,9 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 						} else {
 							console.log ('Sonar dashboard Activated for project %s', this.project.name);
 						}
+					}
+					if (this.project && this.project.sonarProjects.length > 0) {
+						this.panelSelected$.next(0);
 					}
 					if (this.thumbNails) {
 						this.thumbNails.loadFilesNumber();

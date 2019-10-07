@@ -153,14 +153,16 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	}
 
 	/**
-	 * A Summary panel had been selected
+	 * A Summary panel had been selected.
+	 * @param index : Index of the selected panel
 	 * @param key the Sonar project key
 	 */
-	selectSummary(key: string) {
+	selectSummary(index: number, key: string) {
 		if (Constants.DEBUG) {
 			console.log('the Sonar key ' + key + ' is selected');
 		}
 		this.keySummarySelected = key;
+		this.panelSelected$.next(index);
 	}
 
 	/**
