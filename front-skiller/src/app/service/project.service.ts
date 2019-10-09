@@ -16,6 +16,7 @@ import { BooleanDTO } from '../data/external/booleanDTO';
 import { ReferentialService } from './referential.service';
 import { SonarProject } from '../data/SonarProject';
 import { FilesStats } from '../data/sonar/FilesStats';
+import { Component } from '@angular/compiler/src/core';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -335,4 +336,23 @@ export class ProjectService extends InternalService {
 		return this.httpClient.post<Boolean>(this.backendSetupService.url() + '/project/sonar/files-stats', body, httpOptions);
 	}
 
+	/**
+	 * Dump the content of a given project.
+	 * @param project the passed project.
+	 * @param from: Method which made that call
+	 */
+	dump(project: Project, from: string) {
+		console.groupCollapsed('Project %d %s from %s',
+			project.id, project.name, from);
+		project.sonarProjects.forEach(sonarProject => {
+			if (sonarProject.projectSonarMetricValues) {
+				console.groupCollapsed('Soner project %s', sonarProject.key);
+				sonarProject.projectSonarMetricValues.forEach(metricValue =>
+					console.log (metricValue.metric, metricValue.value)
+				);
+				console.groupEnd();
+			}
+		});
+		console.groupEnd();
+	}
 }

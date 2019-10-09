@@ -1,8 +1,11 @@
-<div [hidden]="(!isSonarAccessible + !isSonarVersion71x)">
-        <div [(innerHtml)]="badge"></div>
-<div [hidden]="(!isSonarAccessible + isSonarVersion71x)">
-        Sonar version below 7.1x dashboard    
+<div *ngIf="(isSonarAccessible && isSonarVersion71x)">
+        <div *ngFor="let badge of safeBadge; index as badgeNumero">
+                <app-sonar-badge [safeBadge]="badge"></app-sonar-badge>
+        </div>
 </div>
-<div [hidden]="isSonarAccessible">
+<div *ngIf="(isSonarAccessible && !isSonarVersion71x)">
+        Sonar version below 7.1x dashboard
+</div>
+<div *ngIf="!isSonarAccessible">
         Sonar is not accessible !
 </div>

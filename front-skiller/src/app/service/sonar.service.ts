@@ -190,6 +190,18 @@ export class SonarService extends InternalService {
 		return this.allSonarProjects.find (sp => sp.name === nameOfSonarProject);
 	}
 
+	/**
+	 * Load the badge for the given metric.
+	 * @param key the Sonar key project
+	 * @param metric the current metric
+	 */
+	loadBadge(key: string, metric: string): Observable<string> {
+		const params = new HttpParams().set('metric', metric).set('project', key);
+		return this.httpClient
+			.get<string>(this.urlSonar + '/api/project_badges/measure', 
+				{params: params, responseType: 'text' as 'json' });
+	}
+
 	loadFiles(key: string): Observable<ILanguageCount> {
 		const params = new HttpParams().set('component', key).set('qualifiers', 'FIL').set('ps', '500');
 		return this.httpClient

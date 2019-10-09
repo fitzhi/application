@@ -14,7 +14,10 @@
             </app-sonar-dashboard>
         </div>
         <div id="panelSettings" [hidden]="!isPanelActive(SETTINGS)">
-            <app-sonar-metrics [project$]="project$"></app-sonar-metrics>
+            <app-sonar-metrics 
+                [project$]="project$"                 
+                [panelSelected$]="panelSelected$">
+            </app-sonar-metrics>
         </div>
     </div>
 </mat-sidenav-container>

@@ -6,6 +6,9 @@ import { Constants } from 'src/app/constants';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { SonarThumbnailsComponent } from '../sonar-thumbnails/sonar-thumbnails.component';
 import { ThrowStmt } from '@angular/compiler';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { ProjectService } from 'src/app/service/project.service';
+import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value';
 
 @Component({
 	selector: 'app-sonar-dashboard',
@@ -27,6 +30,8 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	private project: Project;
 
 	constructor(
+		private sanitize: DomSanitizer,
+		private projectService: ProjectService,
 		private sonarService: SonarService) { super(); }
 
 	private isSonarAccessible = false;
@@ -41,7 +46,15 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	 */
 	private sonarKey = '';
 
-	private badge = '';
+	/**
+	 * Actual Sonar metrics value corresponding to the selected sonarKey.
+	 */
+	private projectSonarMetricValues: ProjectSonarMetricValue[];
+
+	/**
+	 * SVG badge to be displayed for the selected metrics.
+	 */
+	private safeBadge: SafeHtml[] = [];
 
 	ngOnInit() {
 
@@ -73,10 +86,33 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 			this.panelSelected$.subscribe(idPanel => {
 				if (this.project && (idPanel >= 0) ) {
 					this.sonarKey = this.project.sonarProjects[idPanel].key;
-					this.badge = 'Metric for ' + this.sonarKey;
+					this.safeBadge = [];
+					this.projectSonarMetricValues = this.project.sonarProjects[idPanel].projectSonarMetricValues;
+					if (this.projectSonarMetricValues) {
+						this.projectService.dump(this.project, 'SonarDashboard.ngOnInit');
+						this.loadBadge(0);
+					}
 				}
 			}));
 
+	}
+
+	/**
+	 * This method is reccurcive !!
+	 * Load the Sonar badge corresponding to the numero of badge.
+	 * @param badgeNumero the numero of badge
+	 */
+	loadBadge(badgeNumero: number) {
+		if (badgeNumero === this.projectSonarMetricValues.length) {
+			return;
+		}
+		this.subscriptions.add(
+			this.sonarService
+				.loadBadge(this.sonarKey, this.projectSonarMetricValues[badgeNumero].metric)
+				.subscribe(svg => {
+					this.safeBadge.push(this.sanitize.bypassSecurityTrustHtml(svg));
+					this.loadBadge(badgeNumero + 1);
+				}));
 	}
 
 	/**
