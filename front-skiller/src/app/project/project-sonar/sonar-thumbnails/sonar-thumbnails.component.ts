@@ -47,8 +47,8 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	private project = new Project();
 
 	public SETTINGS = Constants.PROJECT_SONAR_PANEL.SETTINGS;
-
 	public SONAR = Constants.PROJECT_SONAR_PANEL.SONAR;
+	public NONE = Constants.PROJECT_SONAR_PANEL.NONE;
 
 	public languageFilesNumber = new Map<string, FilesStats[]>();
 
@@ -71,9 +71,10 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 			}));
 
 		this.subscriptions.add(
-			this.panelSelected$.subscribe(idPanel => {
-				this.idPanelSelected = idPanel;
-			}));
+			this.panelSelected$.subscribe(keyPanelSelected => {
+				this.idPanelSelected = this.SONAR;
+				this.keySummarySelected = keyPanelSelected;
+		}));
 	}
 
 	loadFilesNumber() {
@@ -161,8 +162,11 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 		if (Constants.DEBUG) {
 			console.log('the Sonar key ' + key + ' is selected');
 		}
-		this.keySummarySelected = key;
-		this.panelSelected$.next(index);
+		this.idPanelSelected = index;
+		if (key !== this.keySummarySelected) {
+			this.keySummarySelected = key;
+			this.panelSelected$.next(key);
+		}
 	}
 
 	/**

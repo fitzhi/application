@@ -86,26 +86,25 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 					return this.loadMetrics (project);
 				}))
 				.subscribe ((data: ProjectSonarMetric[]) => {
-
 					this.initDataSource(data);
-
-					this.subscriptions.add(
-						this.panelSelected$.subscribe(idPanel => {
-								if (this.project && (idPanel >= 0) ) {
-									this.sonarKey = this.project.sonarProjects[idPanel].key;
-									this.project.sonarProjects[idPanel].projectSonarMetricValues = [];
-									this.dataSource.data.forEach(element => {
-										this.project
-											.sonarProjects[idPanel]
-											.projectSonarMetricValues
-											.push (new ProjectSonarMetricValue(element.key, element.weight, 0));
-								});
-								if (Constants.DEBUG) {
-									this.projectService.dump(this.project, 'SonarMetrics.ngInit');
-								}
-							}
-						}));
 				}));
+
+		this.subscriptions.add(
+			this.panelSelected$.subscribe(keyPanelSelected => {
+				if (this.project && (keyPanelSelected.length > 0) ) {
+					this.sonarKey = keyPanelSelected;
+					const sonarProject = this.project.sonarProjects.find(sonarP => sonarP.key === keyPanelSelected);
+					sonarProject.projectSonarMetricValues = [];
+					this.dataSource.data.forEach(element => {
+						sonarProject.projectSonarMetricValues
+							.push (new ProjectSonarMetricValue(element.key, element.weight, 0));
+				});
+				if (Constants.DEBUG) {
+					this.projectService.dump(this.project, 'SonarMetrics.ngInit');
+				}
+			}
+		}));
+
 	}
 
 	private initDataSource(projectSonarMetrics: ProjectSonarMetric[]) {

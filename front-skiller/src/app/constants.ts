@@ -66,7 +66,8 @@ export class Constants {
 
 	public static PROJECT_SONAR_PANEL = {
 		SONAR: 1,
-		SETTINGS: 2
+		SETTINGS: 2,
+		NONE: 3
 	};
 
 	/**

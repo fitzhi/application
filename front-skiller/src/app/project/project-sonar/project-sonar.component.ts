@@ -40,7 +40,7 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 	/**
 	 * Observable emitting the panel identifier.
 	 */
-	panelSelected$ = new BehaviorSubject<number>(-1);
+	panelSelected$ = new BehaviorSubject<string>('');
 
 	// Identifier of the panel selected.
 	// By default we begin with the panel SONAR
@@ -87,7 +87,7 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 						}
 					}
 					if (this.project && this.project.sonarProjects.length > 0) {
-						this.panelSelected$.next(0);
+						this.panelSelected$.next(this.project.sonarProjects[0].key);
 					}
 					if (this.thumbNails) {
 						this.thumbNails.loadFilesNumber();
@@ -101,14 +101,17 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
     * @param idPanel Panel identifier
     */
 	public show(idPanel: number) {
+		if (Constants.DEBUG) {
+			console.log ('show(%s)', idPanel);
+		}
 		switch (idPanel) {
 			case Constants.PROJECT_SONAR_PANEL.SONAR:
 				this.idPanelSelected = idPanel;
-				this.panelSelected$.next(idPanel);
+				//FVI this.panelSelected$.next(idPanel);
 				break;
 			case Constants.PROJECT_SONAR_PANEL.SETTINGS:
 				this.idPanelSelected = idPanel;
-				this.panelSelected$.next(idPanel);
+				//FVI this.panelSelected$.next(idPanel);
 				break;
 			default:
 				console.error ('SHOULD NOT PASS HERE FOR ID ' + idPanel);

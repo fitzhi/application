@@ -26,7 +26,12 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	@Output() settingsEmitter = new EventEmitter<string>();
 
 	/**
-	 * Identifier representing the selected panel.
+	 * Key og the Sonar project selected.
+	 */
+	private keyPanelSelected = '';
+
+	/**
+	 * Key og the Sonar project selected.
 	 */
 	private idPanelSelected = -1;
 
@@ -45,13 +50,12 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	ngOnInit() {
 		this.subscriptions.add(
 			this.project$.subscribe(project => {
-				console.log('nope');
 				this.project = project;
 			}));
 
 		this.subscriptions.add(
-			this.panelSelected$.subscribe(idPanel => {
-				this.idPanelSelected = idPanel;
+			this.panelSelected$.subscribe(keyPanelSelected => {
+				this.keyPanelSelected = keyPanelSelected;
 			}));
 	}
 

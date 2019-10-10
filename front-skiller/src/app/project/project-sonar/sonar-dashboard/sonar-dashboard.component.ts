@@ -83,13 +83,14 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 		}));
 
 		this.subscriptions.add(
-			this.panelSelected$.subscribe(idPanel => {
-				if (this.project && (idPanel >= 0) ) {
-					this.sonarKey = this.project.sonarProjects[idPanel].key;
+			this.panelSelected$.subscribe(keyPanelSelected => {
+				if (this.project && (keyPanelSelected.length > 0) ) {
+					this.sonarKey = keyPanelSelected;
 					this.safeBadge = [];
-					this.projectSonarMetricValues = this.project.sonarProjects[idPanel].projectSonarMetricValues;
+					const sonarProject = this.project.sonarProjects.find(sonarP => sonarP.key === keyPanelSelected);
+					this.projectSonarMetricValues = sonarProject.projectSonarMetricValues;
 					if (this.projectSonarMetricValues) {
-						this.projectService.dump(this.project, 'SonarDashboard.ngOnInit');
+						this.projectService.dump(this.project, 'SonarDashboard.ngOnInit (in subscription)');
 						this.loadBadge(0);
 					}
 				}

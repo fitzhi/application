@@ -1,5 +1,6 @@
 <div id="containerDashboard">
-    <div *ngFor="let sonarProject of project.sonarProjects; index as i" (click)="selectSummary(i, sonarProject.key)"
+    <div *ngFor="let sonarProject of project.sonarProjects" 
+        (click)="selectSummary(NONE, sonarProject.key)"
         [ngClass]="classForSonarProjectSummary(sonarProject.key)">
         <div class="sonarNotation"></div>
         <div class="insideSonarProjectSummary">
@@ -34,11 +35,6 @@
                     <table>
                         <tr *ngFor="let languageCount of languageFilesNumber.get(sonarProject.key)">
                             <td class="table-counting language">{{labelOfLanguage(languageCount.language)}}</td>
-                            <!--
-                            <td><svg widt="30px" height="20px" x="200px">
-                                <rect class="bar-chart-bar" width="21px" height="10px"></rect>
-                            </svg></td>
-                            -->
                             <td class="table-counting fileNumber">{{languageCount.numberOfFiles}}</td>
                         </tr>
                     </table>
