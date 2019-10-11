@@ -16,6 +16,7 @@ import { ComponentTree } from '../data/sonar/component-tree';
 import { ILanguageCount } from './ILanguageCount';
 import { SupportedMetric } from '../data/supported-metric';
 import { ReferentialService } from './referential.service';
+import { ProjectSonarMetric } from 'target/classes/app/data/sonar/project-sonar-metric';
 
 @Injectable({
 	providedIn: 'root'
@@ -56,6 +57,11 @@ export class SonarService extends InternalService {
 	 * List of all Sonar projects retrieved from the server.
 	 */
 	allSonarProjects: Component[] = [];
+
+	/**
+	 * Sonar metrics currently available inside our application.
+	 */
+	projectSonarMetrics: ProjectSonarMetric[] = [];
 
 	constructor(
 		private httpClient: HttpClient,
@@ -198,7 +204,7 @@ export class SonarService extends InternalService {
 	loadBadge(key: string, metric: string): Observable<string> {
 		const params = new HttpParams().set('metric', metric).set('project', key);
 		return this.httpClient
-			.get<string>(this.urlSonar + '/api/project_badges/measure', 
+			.get<string>(this.urlSonar + '/api/project_badges/measure',
 				{params: params, responseType: 'text' as 'json' });
 	}
 
@@ -239,5 +245,12 @@ export class SonarService extends InternalService {
 		);
 	}
 
+	/**
+	 * set the Project available Sonar metrics.
+	 * @param projectSonarMetrics  the given Sonar metrics
+	 */
+	setProjectSonarMetrics(projectSonarMetrics: ProjectSonarMetric[]) {
+		this.projectSonarMetrics = projectSonarMetrics;
+	}
 
 }

@@ -6,7 +6,7 @@ import { ProjectSonarMetric } from 'src/app/data/sonar/project-sonar-metric';
 import { SonarService } from 'src/app/service/sonar.service';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { Project } from 'src/app/data/project';
-import { Observable, EMPTY } from 'rxjs';
+import { Observable, EMPTY, of } from 'rxjs';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
 import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value';
@@ -63,6 +63,12 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	private loadMetrics (project: Project): Observable<ProjectSonarMetric[]> {
+
+		// We have saved the first array of ProjectSonarMetric for caching purpose
+		if (this.sonarService.projectSonarMetrics.length > 0) {
+			return of(this.sonarService.projectSonarMetrics);
+		}
+
 		return this.sonarService.sonarMetrics$.pipe(
 			map (metrics => {
 				const projectSonarMetrics: ProjectSonarMetric[] = [];
@@ -86,6 +92,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 					return this.loadMetrics (project);
 				}))
 				.subscribe ((data: ProjectSonarMetric[]) => {
+					this.sonarService.setProjectSonarMetrics(data);
 					this.initDataSource(data);
 				}));
 

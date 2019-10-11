@@ -9,6 +9,7 @@ import { ThrowStmt } from '@angular/compiler';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ProjectService } from 'src/app/service/project.service';
 import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Component({
 	selector: 'app-sonar-dashboard',
@@ -56,6 +57,13 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	 */
 	private safeBadge: SafeHtml[] = [];
 
+	/**
+	 * Observable to this array.
+	 */
+	private safeBadge$ = new Subject<SafeHtml[]>();
+
+	safeBadgeLength = 0;
+
 	ngOnInit() {
 
 		this.subscriptions.add(
@@ -87,15 +95,14 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 				if (this.project && (keyPanelSelected.length > 0) ) {
 					this.sonarKey = keyPanelSelected;
 					this.safeBadge = [];
-					const sonarProject = this.project.sonarProjects.find(sonarP => sonarP.key === keyPanelSelected);
-					this.projectSonarMetricValues = sonarProject.projectSonarMetricValues;
-					if (this.projectSonarMetricValues) {
-						this.projectService.dump(this.project, 'SonarDashboard.ngOnInit (in subscription)');
+					if (this.sonarService.projectSonarMetrics) {
+						if (Constants.DEBUG) {
+							this.projectService.dump(this.project, 'SonarDashboard.ngOnInit (in subscription)');
+						}
 						this.loadBadge(0);
 					}
 				}
 			}));
-
 	}
 
 	/**
@@ -104,14 +111,16 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	 * @param badgeNumero the numero of badge
 	 */
 	loadBadge(badgeNumero: number) {
-		if (badgeNumero === this.projectSonarMetricValues.length) {
+		if (badgeNumero === this.sonarService.projectSonarMetrics.length) {
+			this.safeBadge$.next(this.safeBadge);
 			return;
 		}
 		this.subscriptions.add(
 			this.sonarService
-				.loadBadge(this.sonarKey, this.projectSonarMetricValues[badgeNumero].metric)
+				.loadBadge(this.sonarKey, this.sonarService.projectSonarMetrics[badgeNumero].key)
 				.subscribe(svg => {
 					this.safeBadge.push(this.sanitize.bypassSecurityTrustHtml(svg));
+					this.safeBadgeLength = this.safeBadge.length;
 					this.loadBadge(badgeNumero + 1);
 				}));
 	}

@@ -1,5 +1,5 @@
 <div *ngIf="(isSonarAccessible && isSonarVersion71x)">
-        <div *ngFor="let badge of safeBadge; index as badgeNumero">
+        <div *ngFor="let badge of safeBadge$|async; index as badgeNumero">
                 <app-sonar-badge [safeBadge]="badge"></app-sonar-badge>
         </div>
 </div>
