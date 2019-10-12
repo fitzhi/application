@@ -1,6 +1,16 @@
-<div *ngIf="(isSonarAccessible && isSonarVersion71x)">
-        <div *ngFor="let badge of safeBadge$|async; index as badgeNumero">
-                <app-sonar-badge [safeBadge]="badge"></app-sonar-badge>
+<div id="sonarDashboard" *ngIf="(isSonarAccessible && isSonarVersion71x)">
+        <div id="liveSonarBadges">
+                <div id="headerSonarBadges">
+                        <button class="class-sonar-activated"></button><span>Live from Sonar</span>
+                </div>
+                <div class="badges">
+                        <div *ngFor="let badge of safeBadge$|async; index as badgeNumero">
+                                <app-sonar-badge [safeBadge]="badge"></app-sonar-badge>
+                        </div>
+                </div>
+        </div>
+        <div id="sonarQuotation">
+                <p>Sonar Quotation</p>
         </div>
 </div>
 <div *ngIf="(isSonarAccessible && !isSonarVersion71x)">

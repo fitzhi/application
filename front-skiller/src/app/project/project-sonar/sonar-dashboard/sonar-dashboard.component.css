@@ -1,0 +1,39 @@
+#sonarDashboard {
+    display: flex;
+}
+
+#liveSonarBadges {
+    height: 100%;
+    background-color: whitesmoke;
+}
+
+#headerSonarBadges {
+    display: inline-flex;
+    margin: 10px;
+}
+
+div.badges {
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+}
+
+button.class-sonar-activated {
+    background-image: url('../../../../assets/img/sonar-selected.png');
+    background-size: contain;
+    background-repeat: no-repeat;    
+    border: 1px solid back;
+    width: 30px;
+    height: 30px;
+    border-radius: 10%;
+    margin-right: 5px;
+
+}
+
+#sonarQuotation {
+    min-width: 100px;
+    height: 100%;
+    background-color: cadetblue;
+}
+
