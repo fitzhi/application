@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angu
 import { Project } from 'src/app/data/project';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
+import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
 
 @Component({
 	selector: 'app-sonar-dashboard',
@@ -16,9 +17,11 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	@Input() project$;
 
 	/**
-	* Observable emitting the panel selected.
+	* Observable emitting a PanelSwitchEvent when
+	* another Sonar project is selected or
+	* another panel is selected
 	*/
-	@Input() panelSelected$;
+	@Input() panelSwitchTransmitter$;
 
 	/**
 	 * One of the summary requires to setup its metrics.
@@ -26,7 +29,7 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	@Output() settingsEmitter = new EventEmitter<string>();
 
 	/**
-	 * Key og the Sonar project selected.
+	 * Key of the Sonar project selected.
 	 */
 	private keyPanelSelected = '';
 
@@ -54,8 +57,8 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 			}));
 
 		this.subscriptions.add(
-			this.panelSelected$.subscribe(keyPanelSelected => {
-				this.keyPanelSelected = keyPanelSelected;
+			this.panelSwitchTransmitter$.subscribe((panelSwitchEvent: PanelSwitchEvent) => {
+				this.keyPanelSelected = panelSwitchEvent.keySonar;
 			}));
 	}
 

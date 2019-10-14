@@ -1,6 +1,6 @@
 <div id="containerDashboard">
     <div *ngFor="let sonarProject of project.sonarProjects" 
-        (click)="selectSummary(NONE, sonarProject.key)"
+        (click)="switchSonarContext(NONE, sonarProject.key)"
         [ngClass]="classForSonarProjectSummary(sonarProject.key)">
         <div class="sonarNotation"></div>
         <div class="insideSonarProjectSummary">
@@ -13,7 +13,7 @@
                                 'btn-outline-success' : isPanelActive(SETTINGS, sonarProject.key), 
                                 'btn-outline-secondary': !isPanelActive(SETTINGS,  sonarProject.key)}"
                         [disabled]="isPanelActive(SETTINGS,  sonarProject.key)" 
-                        (click)="show(SETTINGS, sonarProject.key)">
+                        (click)="switchSonarContext(SETTINGS, sonarProject.key)">
                         <i class="fas fa-sliders-h font-awesome-settings"></i>
                     </button>
                 </mat-grid-tile>
@@ -23,7 +23,7 @@
                         [ngClass]="{    'btn-outline-success class-sonar-activated' : isPanelActive(SONAR, sonarProject.key), 
                                         'btn-outline-secondary class-sonar-inactivated': !isPanelActive(SONAR, sonarProject.key)}"
                         [disabled]="isPanelActive(SONAR,  sonarProject.key)" 
-                        (click)="show(SONAR, sonarProject.key)">
+                        (click)="switchSonarContext(SONAR, sonarProject.key)">
                     </button>
                 </mat-grid-tile>
                 <mat-grid-tile [colspan]="4" [rowspan]="1">

@@ -21,6 +21,11 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 	@Input() project$;
 
 	/**
+	 * Observable emitting the panel identifier.
+	 */
+	panelSwitchTransmitter$ = new Subject<PanelSwitchEvent>();
+
+	/**
 	 * This component, hosted in a tab pane, use this emitter to inform its parent to change the active pane.
 	 * e.g. if the project form is not complete, application will jump to this tab pane.
 	 */
@@ -36,11 +41,6 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 	 * The Sonar Thumnbails composant hosted on the top of the dashboard
 	 */
 	@ViewChild(SonarThumbnailsComponent, {static: false}) thumbNails: SonarThumbnailsComponent;
-
-	/**
-	 * Observable emitting the panel identifier.
-	 */
-	panelSelected$ = new BehaviorSubject<string>('');
 
 	// Identifier of the panel selected.
 	// By default we begin with the panel SONAR
@@ -87,43 +87,20 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 						}
 					}
 					if (this.project && this.project.sonarProjects.length > 0) {
-						this.panelSelected$.next(this.project.sonarProjects[0].key);
+						this.panelSwitchTransmitter$.next(
+							new PanelSwitchEvent(
+								this.SONAR,
+								this.project.sonarProjects[0].key));
 					}
 					if (this.thumbNails) {
 						this.thumbNails.loadFilesNumber();
 					}
 				}
 			}));
-			}
 
-	/**
-    * Show the panel associated to this id.
-    * @param idPanel Panel identifier
-    */
-	public show(idPanel: number) {
-		if (Constants.DEBUG) {
-			console.log ('show(%s)', idPanel);
-		}
-		switch (idPanel) {
-			case Constants.PROJECT_SONAR_PANEL.SONAR:
-				this.idPanelSelected = idPanel;
-				//FVI this.panelSelected$.next(idPanel);
-				break;
-			case Constants.PROJECT_SONAR_PANEL.SETTINGS:
-				this.idPanelSelected = idPanel;
-				//FVI this.panelSelected$.next(idPanel);
-				break;
-			default:
-				console.error ('SHOULD NOT PASS HERE FOR ID ' + idPanel);
-				break;
-		}
-	}
-
-	/**
-	 * @param event Data sent from the SonarThumbNails instance to inform the parent component of the panel and sonar project selected.
-	 */
-	onPanelSwitch(event: PanelSwitchEvent) {
-		this.show(event.idPanel);
+		this.panelSwitchTransmitter$.subscribe((panelSwitchEvent: PanelSwitchEvent) => {
+			this.idPanelSelected = panelSwitchEvent.idPanel;
+		});
 	}
 
 	/**

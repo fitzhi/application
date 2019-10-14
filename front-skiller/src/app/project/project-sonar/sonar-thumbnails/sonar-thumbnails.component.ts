@@ -23,21 +23,15 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	@Input() project$;
 
 	/**
-	* Observable emitting the panel selected.
-	*/
-	@Input() panelSelected$;
-
-	/**
-	 * One of the summary requires to setup its metrics.
+	 * Observable emitting a PanelSwitchEvent
+	 * when the user switch to another Sonar project or a new panel.
 	 */
-	@Output() panelSwitchEmitter$ = new EventEmitter<PanelSwitchEvent>();
+	@Input() panelSwitchTransmitter$;
 
 	/**
 	 * Identifier representing the selected panel.
 	 */
 	private idPanelSelected = -1;
-
-	private languageCounts: SonarThumbnailsComponent.LanguageCount;
 
 	/**
 	 * Key of the Sonar project summary.
@@ -45,6 +39,8 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	private keySummarySelected = '';
 
 	private project = new Project();
+
+	private languageCounts: SonarThumbnailsComponent.LanguageCount;
 
 	public SETTINGS = Constants.PROJECT_SONAR_PANEL.SETTINGS;
 	public SONAR = Constants.PROJECT_SONAR_PANEL.SONAR;
@@ -71,9 +67,9 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 			}));
 
 		this.subscriptions.add(
-			this.panelSelected$.subscribe(keyPanelSelected => {
-				this.idPanelSelected = this.SONAR;
-				this.keySummarySelected = keyPanelSelected;
+			this.panelSwitchTransmitter$.subscribe( (panelSwitchEvent: PanelSwitchEvent) => {
+				this.idPanelSelected = panelSwitchEvent.idPanel;
+				this.keySummarySelected = panelSwitchEvent.keySonar;
 		}));
 	}
 
@@ -108,8 +104,8 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 					console.log (counting.language, counting.numberOfFiles);
 				});
 				console.groupEnd();
-				this.languageFilesNumber.set(componentSonar.key, componentSonar.projectFilesStats);
 			}
+			this.languageFilesNumber.set(componentSonar.key, componentSonar.projectFilesStats);
 			this.subscriptions.add(
 				this.projectService
 					.saveFilesStats(this.project.id, componentSonar.key, componentSonar.projectFilesStats)
@@ -154,31 +150,27 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	}
 
 	/**
-	 * A Summary panel had been selected.
-	 * @param index : Index of the selected panel
-	 * @param key the Sonar project key
-	 */
-	selectSummary(index: number, key: string) {
-		if (Constants.DEBUG) {
-			console.log('the Sonar key ' + key + ' is selected');
-		}
-		this.idPanelSelected = index;
-		if (key !== this.keySummarySelected) {
-			this.keySummarySelected = key;
-			this.panelSelected$.next(key);
-		}
-	}
-
-	/**
-	 * Show the settings for sonar project Sonar.
+	 * A thumbnail panel had been clicked.
 	 * @param idPanel the identifier of the panel to be shown.
-	 * @param key the project Sonar key whose metrics have to be set up.
+	 * @param key the active project Sonar key.
 	 */
-	show(idPanel: number, key: string) {
+	switchSonarContext(idPanel: number, key: string) {
 		if (Constants.DEBUG) {
 			console.log ('Displaying panel ID ' + idPanel + ' for the Sonar project ' + key);
 		}
-		this.panelSwitchEmitter$.next(new PanelSwitchEvent(idPanel, key));
+
+		if ((key === this.keySummarySelected) && (idPanel === this.NONE)) {
+			return;
+		}
+
+		// If the user clicks on the body of the thumbnail; but not on a button,
+		// we continue to work with the same panel, but maybe on a different Sonar project.
+		if (idPanel !== this.NONE) {
+			this.idPanelSelected = idPanel;
+		}
+		this.keySummarySelected = key;
+		this.panelSwitchTransmitter$.next( new PanelSwitchEvent(this.idPanelSelected, key));
+
 	}
 
 	/**

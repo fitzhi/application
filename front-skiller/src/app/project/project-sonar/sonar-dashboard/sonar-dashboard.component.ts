@@ -10,6 +10,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ProjectService } from 'src/app/service/project.service';
 import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { PanelSwitchEvent } from 'target/classes/app/project/project-sonar/sonar-thumbnails/panel-switch-event';
 
 @Component({
 	selector: 'app-sonar-dashboard',
@@ -24,9 +25,11 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	@Input() project$;
 
 	/**
-	* Observable emitting the panel selected.
+	* Observable emitting a PanelSwitchEvent when
+	* another Sonar project is selected or
+	* another panel is selected
 	*/
-	@Input() panelSelected$;
+	@Input() panelSwitchTransmitter$;
 
 	private project: Project;
 
@@ -91,9 +94,9 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 		}));
 
 		this.subscriptions.add(
-			this.panelSelected$.subscribe(keyPanelSelected => {
-				if (this.project && (keyPanelSelected.length > 0) ) {
-					this.sonarKey = keyPanelSelected;
+			this.panelSwitchTransmitter$.subscribe((panelSwitchEvent: PanelSwitchEvent) => {
+				if (this.project && (panelSwitchEvent.keySonar.length > 0) ) {
+					this.sonarKey = panelSwitchEvent.keySonar;
 					this.safeBadge = [];
 					if (this.sonarService.projectSonarMetrics) {
 						if (Constants.DEBUG) {

@@ -3,20 +3,19 @@
         <div id="panelSonarThumbnails">
             <app-sonar-thumbnails 
                 [project$]="project$" 
-                [panelSelected$]="panelSelected$"
-                (panelSwitchEmitter$)="onPanelSwitch($event)">
+                [panelSwitchTransmitter$]="panelSwitchTransmitter$">
             </app-sonar-thumbnails>
         </div>
         <div id="panelSonar" [hidden]="!isPanelActive(SONAR)">
             <app-sonar-dashboard 
                 [project$]="project$"
-                [panelSelected$]="panelSelected$">
+                [panelSwitchTransmitter$]="panelSwitchTransmitter$">
             </app-sonar-dashboard>
         </div>
         <div id="panelSettings" [hidden]="!isPanelActive(SETTINGS)">
             <app-sonar-metrics 
                 [project$]="project$"                 
-                [panelSelected$]="panelSelected$">
+                [panelSwitchTransmitter$]="panelSwitchTransmitter$">
             </app-sonar-metrics>
         </div>
     </div>

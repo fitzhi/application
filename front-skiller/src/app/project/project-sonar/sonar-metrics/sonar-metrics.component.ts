@@ -11,6 +11,7 @@ import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
 import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value';
 import { ProjectService } from 'src/app/service/project.service';
+import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
 
 @Component({
 	selector: 'app-sonar-metrics',
@@ -25,14 +26,16 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	@Input() project$;
 
 	/**
+	* Observable emitting a PanelSwitchEvent when
+	* another Sonar project is selected or
+	* another panel is selected
+	*/
+	@Input() panelSwitchTransmitter$;
+
+	/**
 	 * Current active project.
 	 */
 	private project: Project;
-
-	/**
-	* Observable emitting the panel selected.
-	*/
-	@Input() panelSelected$;
 
 	/**
 	 * The datasource that contains the filtered projects;
@@ -97,10 +100,11 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 				}));
 
 		this.subscriptions.add(
-			this.panelSelected$.subscribe(keyPanelSelected => {
-				if (this.project && (keyPanelSelected.length > 0) ) {
-					this.sonarKey = keyPanelSelected;
-					const sonarProject = this.project.sonarProjects.find(sonarP => sonarP.key === keyPanelSelected);
+			this.panelSwitchTransmitter$.subscribe(
+					(panelSwitchEvent: PanelSwitchEvent)  => {
+				if (this.project && (panelSwitchEvent.keySonar.length > 0) ) {
+					this.sonarKey = panelSwitchEvent.keySonar;
+					const sonarProject = this.project.sonarProjects.find(sonarP => sonarP.key === panelSwitchEvent.keySonar);
 					sonarProject.projectSonarMetricValues = [];
 					this.dataSource.data.forEach(element => {
 						sonarProject.projectSonarMetricValues
