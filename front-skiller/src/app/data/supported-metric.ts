@@ -1,3 +1,4 @@
 export class SupportedMetric {
-	metric: string;
+	key: string;
+	weight: number;
 }

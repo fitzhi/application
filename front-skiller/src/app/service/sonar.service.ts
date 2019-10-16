@@ -14,9 +14,8 @@ import { SonarProject } from '../data/SonarProject';
 import { ResponseComponentMeasures } from '../data/sonar/reponse-component-measures';
 import { ComponentTree } from '../data/sonar/component-tree';
 import { ILanguageCount } from './ILanguageCount';
-import { SupportedMetric } from '../data/supported-metric';
 import { ReferentialService } from './referential.service';
-import { ProjectSonarMetric } from 'target/classes/app/data/sonar/project-sonar-metric';
+import { ProjectSonarMetric } from '../data/sonar/project-sonar-metric';
 
 @Injectable({
 	providedIn: 'root'
@@ -57,6 +56,55 @@ export class SonarService extends InternalService {
 	 * List of all Sonar projects retrieved from the server.
 	 */
 	allSonarProjects: Component[] = [];
+
+	public CALCULATION_RULES = {
+		'bugs':
+			'This is a ONE or ZERO rule :' +
+			'\nEither Sonar reveals a bug and the project is getting 0% of its note (dura lex, sed lex). ' +
+			'\nOr the project is simply perfect and deserves 100% of the note.',
+		'code_smells':
+			'The "code smell" quotation is calculated as follow :\n' +
+			'Note = Max(100-ceil(code_smells/5)*10, 0).' +
+			'The ceil function of x is the smallest integral value that is not less than x. ',
+		'coverage':
+			'Test coverage is a percentage. Our evaluation will reproduce that rate.' +
+			'So we presume that it will be difficut to reach a note of 100%.',
+		'duplicated_lines_density':
+			'Duplication is a percentage. Our evaluation will substract this number from 100% to get ths metric evaluation.',
+		'sqale_rating':
+			'We reproduce the Sonar range rating in a numeric way :\n' +
+			'- a rating of 100%, if <=5% of the time that has already gone into the application\n' +
+			'- a rating of 80%, if between 6 to 10%\n' +
+			'- a rating of 60%, if between 11 to 20%\n' +
+			'- a rating of 40%, if between 21 to 50%\n' +
+			'- a rating of 20%, anything over 50%',
+		'security_rating':
+			'We reproduce the Sonar security rating in a numeric way :\n' +
+			'Can the current code be exploited by hackers?\n' +
+			'- a rating of 100%, if no vulnerability has been detected\n' +
+			'- a rating of 80%, if at least 1 Minor Vulnerability has been detected\n' +
+			'- a rating of 60%, if at least 1 Major Vulnerability has been detected\n' +
+			'- a rating of 40%, if at least 1 Critical Vulnerability has been detected\n' +
+			'- a rating of 20%, if at least 1 Blocker Vulnerability has been detected',
+		'reliability_rating':
+			'We reproduce the Sonar reliability rating in a numeric way :\n' +
+			'- a rating of 100%, if no Bug has been detected\n' +
+			'- a rating of 80%, if at least 1 Minor Bug has been detected\n' +
+			'- a rating of 60%, if at least 1 Major Bug has been detected\n' +
+			'- a rating of 40%, if at least 1 Critical Bug has been detected\n' +
+			'- a rating of 20%, if at least 1 Blocker Bug has been detected',
+		'sqale_index':
+			'We evaluate the technical debt as follow :\n' +
+			'- no more than 1 hour of debt : 100%\n' +
+			'- from 1 hour to 1 day : 90%\n' +
+			'- from 1 day to 1 week : 50%\n' +
+			'- from 1 week to 1 month : 10%\n' +
+			'- More than 1 MONTH : 0% (are-you kidding me?)',
+		'alert_status':
+			'This is a binary metric (Yes/No, One/Zero) :\n' +
+			'- If the quality gate passed, you get the whole note : 100%\n' +
+			'- If the quality gate failed, you get a zero',
+	};
 
 	/**
 	 * Sonar metrics currently available inside our application.

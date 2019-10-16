@@ -61,6 +61,9 @@ public class Error {
 	public static final int CODE_STAFF_ACTIVE_ON_PROJECT = -1016;
 	public static final String MESSAGE_STAFF_ACTIVE_ON_PROJECT = "You cannot remove an active project. {0} commits are registered for this staff member";
 	
+	public static final int CODE_FILE_REFERENTIAL_NOFOUND = -1017;
+	public static final String MESSAGE_FILE_REFERENTIAL_NOFOUND = "The referential file {0} doesn't exist!";
+
 	private Error() {
 	}
 	

@@ -3,14 +3,14 @@
 
         <ng-container matColumnDef="name">
             <th id="name" mat-header-cell *matHeaderCellDef mat-sort-header>Metric</th>
-            <td mat-cell *matCellDef="let row">
+            <td mat-cell class="metric" *matCellDef="let row">
                 {{row.name}}
             </td>
         </ng-container>
 
         <ng-container matColumnDef="selected">
             <th id="selected" mat-header-cell *matHeaderCellDef mat-sort-header>Selected</th>
-            <td mat-cell *matCellDef="let row; let i = index;">
+            <td mat-cell class="metric" *matCellDef="let row; let i = index;">
                 <mat-checkbox id="active-{{i}}" 
                     [(ngModel)]="row.Selected" 
                     (change)="changeSelected(row)">
@@ -20,13 +20,20 @@
 
         <ng-container matColumnDef="weight">
             <th id="weight" mat-header-cell *matHeaderCellDef mat-sort-header>Weight</th>
-            <td mat-cell *matCellDef="let row; let i = index;">
+            <td mat-cell class="metric" *matCellDef="let row; let i = index;">
                 <div *ngIf="isAMetricSelected(row)">
                     <input matInput id="weight-{{i}}" [(ngModel)]="row.weight">
                 </div>
             </td>
         </ng-container>
 
+        <ng-container matColumnDef="explanation">
+            <th id="explanation" mat-header-cell *matHeaderCellDef>Explanation</th>
+            <td mat-cell class="metric" *matCellDef="let row; let i = index;">
+                <div class="explanation"><pre class="explanation">{{row.explanation}}</pre></div>
+            </td>
+        </ng-container>
+    
         <tr mat-header-row *matHeaderRowDef="editableColumns; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: editableColumns;" class="row_any"></tr>
     </table>

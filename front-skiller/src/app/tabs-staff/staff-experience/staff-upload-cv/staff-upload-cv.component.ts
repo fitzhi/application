@@ -45,7 +45,6 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 	constructor(
 		private httpClient: HttpClient,
 		private messageBoxService: MessageBoxService,
-		private dialog: MatDialog,
 		private dialogRef: MatDialogRef<StaffUploadCvComponent>,
 		private backendSetupService: BackendSetupService,
 		@Inject(MAT_DIALOG_DATA) public data: any) {

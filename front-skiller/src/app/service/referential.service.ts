@@ -89,17 +89,17 @@ export class ReferentialService {
 				});
 
 		this.httpClient.get<SupportedMetric[]>(this.backendSetupService.url() + '/referential/supported-metrics')
-/*			.pipe(take(1)) */
+			.pipe(take(1))
 			.subscribe(
 				(metrics: SupportedMetric[]) => {
 					if (Constants.DEBUG) {
 						console.groupCollapsed('Supported metrics : ');
-						metrics.forEach(metric => console.log(metric.metric));
+						metrics.forEach(metric => console.log(metric.key));
 						console.groupEnd();
 					}
 					const supported: string[] = [];
 					metrics.forEach( metric => {
-						supported.push(metric.metric);
+						supported.push(metric.key);
 					});
 					this.supportedMetrics$.next(supported);
 				});

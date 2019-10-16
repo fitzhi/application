@@ -1,7 +1,26 @@
 #ProjectSonarMetricsDiv {
-    width: 500px;
+    width: 100%;
 }
 
 .projectSonarMetricsDiv-content {
     width: 100%;
+}
+
+#explanation {
+    min-width: 500px;
+}
+
+#name {
+    min-width: 200px;
+}
+
+div.explanation {
+    min-width: 500px;
+    width: 90%;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+pre.explanation {
+    margin: 3px;
 }

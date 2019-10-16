@@ -57,7 +57,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	 */
 	private sonarKey = '';
 
-	public editableColumns: string[] = ['name', 'selected', 'weight'];
+	public editableColumns: string[] = ['name', 'selected', 'weight', 'explanation'];
 
 	constructor(
 		private sonarService: SonarService,
@@ -80,7 +80,8 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 						metric.key,
 						metric.name,
 						false,
-						0));
+						0,
+						this.sonarService.CALCULATION_RULES[metric.key]));
 					});
 					return projectSonarMetrics;
 				}));

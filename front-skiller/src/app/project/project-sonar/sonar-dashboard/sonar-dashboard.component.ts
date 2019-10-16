@@ -1,16 +1,13 @@
-import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Project } from 'src/app/data/project';
 import { BaseComponent } from 'src/app/base/base.component';
 import { SonarService } from 'src/app/service/sonar.service';
 import { Constants } from 'src/app/constants';
-import { CinematicService } from 'src/app/service/cinematic.service';
-import { SonarThumbnailsComponent } from '../sonar-thumbnails/sonar-thumbnails.component';
-import { ThrowStmt } from '@angular/compiler';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ProjectService } from 'src/app/service/project.service';
 import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { PanelSwitchEvent } from 'target/classes/app/project/project-sonar/sonar-thumbnails/panel-switch-event';
+import { Subject } from 'rxjs';
+import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
 
 @Component({
 	selector: 'app-sonar-dashboard',

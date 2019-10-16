@@ -22,6 +22,10 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
+	<logger name="fr.skiller.bean.impl.SonarHandlerImpl" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
 
 
 </configuration>

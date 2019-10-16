@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ReferentialController {
 
 	/**
-	 * Directory where data will be saved.
+	 * Directory where the referential data are stored.
 	 */
 	@Value("${referential.dir}")
 	private String referentialDir;
