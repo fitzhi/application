@@ -184,12 +184,13 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 
 	/**
 	 * <p>
-	 * Add or replace a sonar entry
+	 * Add a sonar entry
 	 * </p>
 	 * @param project the given project
 	 * @param sonarEntry the given sonar entry
+	 * @throws SkillerException thrown if any exception occurs during the adding process.
 	 */
-	void saveSonarEntry(Project project, SonarProject sonarEntry);
+	void addSonarEntry(Project project, SonarProject sonarEntry) throws SkillerException;
 
 	/**
 	 * <p>

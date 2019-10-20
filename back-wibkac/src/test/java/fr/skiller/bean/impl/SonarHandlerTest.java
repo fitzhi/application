@@ -12,7 +12,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.skiller.bean.SonarHandler;
-import fr.skiller.data.internal.ProjectSonarMetric;
+import fr.skiller.data.internal.ProjectSonarMetricValue;
 import fr.skiller.exception.SkillerException;
 
 
@@ -38,7 +38,7 @@ public class SonarHandlerTest {
 	@Test
 	public void getDefaultProjectSonarMetrics() throws SkillerException {
 		
-		List<ProjectSonarMetric> defaultMetrics = sonarHandler.getDefaultProjectSonarMetrics();
+		List<ProjectSonarMetricValue> defaultMetrics = sonarHandler.getDefaultProjectSonarMetrics();
 		assertNotNull(defaultMetrics);
 		assertEquals("We're supposed to get 4 metrics", 4, defaultMetrics.size());
 	}

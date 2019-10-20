@@ -12,6 +12,7 @@ import { Constants } from 'src/app/constants';
 import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value';
 import { ProjectService } from 'src/app/service/project.service';
 import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
+import { ElementSchemaRegistry } from '@angular/compiler';
 
 @Component({
 	selector: 'app-sonar-metrics',
@@ -65,7 +66,39 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 		super();
 	}
 
-	private loadMetrics (project: Project): Observable<ProjectSonarMetric[]> {
+	ngOnInit() {
+
+		this.subscriptions.add(
+			this.project$.subscribe(project => this.project = project));
+
+		this.subscriptions.add(
+			this.loadMetrics$().subscribe ((data: ProjectSonarMetric[]) => {
+				this.sonarService.setProjectSonarMetrics(data);
+				this.initDataSource(data);
+			}));
+
+		this.subscriptions.add(
+			this.panelSwitchTransmitter$.subscribe(
+					(panelSwitchEvent: PanelSwitchEvent)  => {
+				if (this.project && (panelSwitchEvent.keySonar.length > 0) ) {
+					this.sonarKey = panelSwitchEvent.keySonar;
+					const sonarProject = this.project.sonarProjects
+						.find(sonarP => sonarP.key === panelSwitchEvent.keySonar);
+					this.dataSource.data.forEach(element => {
+						const weight = this.getWeightOfSonarProjectMetric(element.key);
+						if (weight) {
+							element.selected = true;
+							element.weight = weight;
+						}
+					});
+					if (Constants.DEBUG) {
+						this.projectService.dump(this.project, 'SonarMetrics.ngInit');
+					}
+				}
+			}));
+	}
+
+	private loadMetrics$(): Observable<ProjectSonarMetric[]> {
 
 		// We have saved the first array of ProjectSonarMetric for caching purpose
 		if (this.sonarService.projectSonarMetrics.length > 0) {
@@ -87,36 +120,14 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 				}));
 	}
 
-	ngOnInit() {
-
-		this.subscriptions.add(
-			this.project$.pipe (
-				switchMap( (project: Project) => {
-					this.project = project;
-					return this.loadMetrics (project);
-				}))
-				.subscribe ((data: ProjectSonarMetric[]) => {
-					this.sonarService.setProjectSonarMetrics(data);
-					this.initDataSource(data);
-				}));
-
-		this.subscriptions.add(
-			this.panelSwitchTransmitter$.subscribe(
-					(panelSwitchEvent: PanelSwitchEvent)  => {
-				if (this.project && (panelSwitchEvent.keySonar.length > 0) ) {
-					this.sonarKey = panelSwitchEvent.keySonar;
-					const sonarProject = this.project.sonarProjects.find(sonarP => sonarP.key === panelSwitchEvent.keySonar);
-					sonarProject.projectSonarMetricValues = [];
-					this.dataSource.data.forEach(element => {
-						sonarProject.projectSonarMetricValues
-							.push (new ProjectSonarMetricValue(element.key, element.weight, 0));
-				});
-				if (Constants.DEBUG) {
-					this.projectService.dump(this.project, 'SonarMetrics.ngInit');
-				}
-			}
-		}));
-
+	/**
+	 * @param sonarKey the key of the Sonar project
+	 * @param metricKey the key of the metric
+	 * @returns the searched weight, or null if no weight has been setup for the given parameters
+	 */
+	getWeightOfSonarProjectMetric (metricKey: string): number {
+		const metricValue = this.projectService.getProjectSonarMetricValue(this.project, this.sonarKey, metricKey);
+		return (metricValue) ? metricValue.weight : undefined;
 	}
 
 	private initDataSource(projectSonarMetrics: ProjectSonarMetric[]) {
@@ -156,8 +167,9 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	 * @param metric current Sonar metric
 	 */
 	private changeSelected(metric: ProjectSonarMetric) {
-		metric.selected = !metric.selected;
-		metric.weight = 0;
+		if (metric.selected) {
+			metric.weight = 0;
+		}
 	}
 
 	/**

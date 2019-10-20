@@ -24,3 +24,8 @@ div.explanation {
 pre.explanation {
     margin: 3px;
 }
+
+.inputNumber {
+    text-align: right;
+    padding-right: 5px;
+}

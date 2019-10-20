@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.bean.SonarHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.FilesStats;
 import fr.skiller.data.internal.Ghost;
@@ -60,6 +61,12 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Autowired
 	public DataSaver dataSaver;
 			
+	/**
+	 * Bean in charge of handling connected Sonar server.
+	 */
+	@Autowired
+	public SonarHandler sonarHandler;
+	
 	/**
 	 * @return the Project collection.
 	 * @throws SkillerException 
@@ -368,30 +375,36 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public void saveSonarEntry(Project project, SonarProject sonarEntry) {
+	public void addSonarEntry(Project project, SonarProject sonarEntry) throws SkillerException {
 
 		Optional<SonarProject> oEntry = project.getSonarProjects()
 				.stream()
 				.filter(entry -> entry.getKey().equals(sonarEntry.getKey()))
 				.findFirst();
+		
+		if (oEntry.isPresent()) {
+			throw new SkillerRuntimeException(
+					String.format(
+							"The project %d:%s has already this Sonar key %s registered", 
+							project.getId(), 
+							project.getName(), 
+							sonarEntry.getKey()));
+		}
 
 		/**
 		 * We update the name if necessary.
 		 */
 		synchronized (lockDataUpdated) {
-			if (oEntry.isPresent()) {
-				if (log.isDebugEnabled()) {
-					log.debug(String.format
-						("Updating Sonar entry %s name to %s", sonarEntry.getKey(), sonarEntry.getName()));
-				}
-				oEntry.get().setName(sonarEntry.getName());
-			} else {
-				if (log.isDebugEnabled()) {
-					log.debug(String.format
-						("Adding Sonar entry (%s, %s)", sonarEntry.getKey(), sonarEntry.getName()));
-				}
-				project.getSonarProjects().add(sonarEntry);
+			if (log.isDebugEnabled()) {
+				log.debug(String.format
+					("Adding Sonar entry (%s, %s)", sonarEntry.getKey(), sonarEntry.getName()));
 			}
+			project.getSonarProjects().add(sonarEntry);
+			
+			/**
+			 * We add the default metrics for this new Sonar project
+			 */
+			sonarEntry.setProjectSonarMetricValues(sonarHandler.getDefaultProjectSonarMetrics());
 			this.dataUpdated = true;
 		}
 	}

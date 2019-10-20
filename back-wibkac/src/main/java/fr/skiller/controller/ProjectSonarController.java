@@ -57,7 +57,7 @@ public class ProjectSonarController {
 		try {
 			Project project = projectHandler.get(param.getIdProject());
 			
-			projectHandler.saveSonarEntry(project, param.getSonarProject()); 
+			projectHandler.addSonarEntry(project, param.getSonarProject()); 
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 			
 		} catch (SkillerException se) {

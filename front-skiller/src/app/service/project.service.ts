@@ -17,6 +17,7 @@ import { ReferentialService } from './referential.service';
 import { SonarProject } from '../data/SonarProject';
 import { FilesStats } from '../data/sonar/FilesStats';
 import { Component } from '@angular/compiler/src/core';
+import { ProjectSonarMetricValue } from '../data/project-sonar-metric-value';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -337,6 +338,31 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
+	 * Select and retrieve the SonarProject.
+	 * @param project the given project
+	 * @param sonarKey the key of the Sonar project.
+	 * @returns the Sonar project for the given key
+	 */
+	getSonarProject(project: Project, sonarKey: String): SonarProject {
+		return project.sonarProjects.find(sonarP => (sonarKey === sonarP.key));
+	}
+
+	/**
+	 * Select and retrieve the ProjectSonarMetricValue or undefined if none is found.
+	 * @param project the given project
+	 * @param sonarKey the key of the Sonar project.
+	 * @returns the Sonar metric record for the given metric key
+	 */
+	getProjectSonarMetricValue(project: Project, sonarKey: String, metricKey): ProjectSonarMetricValue {
+		const sonarProject = this.getSonarProject(project, sonarKey);
+		if (sonarProject) {
+			return sonarProject.projectSonarMetricValues.find(
+				(psmv: ProjectSonarMetricValue) => (metricKey === psmv.key));
+		}
+		return undefined;
+	}
+
+	/**
 	 * Dump the content of a given project.
 	 * @param project the passed project.
 	 * @param from: Method which made that call
@@ -348,7 +374,7 @@ export class ProjectService extends InternalService {
 			if (sonarProject.projectSonarMetricValues) {
 				console.groupCollapsed('Soner project %s', sonarProject.key);
 				sonarProject.projectSonarMetricValues.forEach(metricValue =>
-					console.log (metricValue.metric, metricValue.value)
+					console.log (metricValue.key, metricValue.value)
 				);
 				console.groupEnd();
 			}

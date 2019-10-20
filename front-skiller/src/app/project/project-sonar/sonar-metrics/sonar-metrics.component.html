@@ -12,7 +12,7 @@
             <th id="selected" mat-header-cell *matHeaderCellDef mat-sort-header>Selected</th>
             <td mat-cell class="metric" *matCellDef="let row; let i = index;">
                 <mat-checkbox id="active-{{i}}" 
-                    [(ngModel)]="row.Selected" 
+                    [(ngModel)]="row.selected" 
                     (change)="changeSelected(row)">
                 </mat-checkbox>
             </td>
@@ -22,7 +22,7 @@
             <th id="weight" mat-header-cell *matHeaderCellDef mat-sort-header>Weight</th>
             <td mat-cell class="metric" *matCellDef="let row; let i = index;">
                 <div *ngIf="isAMetricSelected(row)">
-                    <input matInput id="weight-{{i}}" [(ngModel)]="row.weight">
+                    <input class="inputNumber" matInput id="weight-{{i}}" type="number" [(ngModel)]="row.weight">
                 </div>
             </td>
         </ng-container>

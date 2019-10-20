@@ -88,24 +88,12 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 		Assert.assertTrue(p.getSonarProjects().size() == 2);
 		Assert.assertTrue("otherId".contentEquals(oProject.get().getSonarProjects().get(1).getKey()));
 		Assert.assertTrue("other name".contentEquals(oProject.get().getSonarProjects().get(1).getName()));
-	
-		// 
-		// UPDATING A SONAR ENTRY.
-		//
-		entry = new SonarProject("otherId", "new other name");
-		bpse = new BodyParamSonarEntry(id, entry);
-		this.mvc.perform(post("/project/sonar/saveEntry")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpse)))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
 		
-		p = projectHandler.get(id);
-		Assert.assertTrue(p != null);
-		Assert.assertTrue(p.getSonarProjects().size() == 2);
-		Assert.assertTrue("otherId".contentEquals(oProject.get().getSonarProjects().get(1).getKey()));
-		Assert.assertTrue("new other name".contentEquals(oProject.get().getSonarProjects().get(1).getName()));
-	
+		SonarProject sp = p.getSonarProjects().get(1);
+		Assert.assertEquals(4, sp.getProjectSonarMetricValues().size());
+		Assert.assertEquals("bugs", sp.getProjectSonarMetricValues().get(0).getKey());
+		Assert.assertEquals(40, sp.getProjectSonarMetricValues().get(0).getWeight());
+		
 		// 
 		// DELETING A SONAR ENTRY.
 		//

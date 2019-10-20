@@ -23,7 +23,7 @@ import com.google.gson.reflect.TypeToken;
 import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.SonarHandler;
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.ProjectSonarMetric;
+import fr.skiller.data.internal.ProjectSonarMetricValue;
 import fr.skiller.exception.SkillerException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -63,16 +63,16 @@ public class SonarHandlerImpl implements SonarHandler {
 	/**
 	 * List of default Sonar metrics.
 	 */
-	private List<ProjectSonarMetric> defaultMetrics = null;
+	private List<ProjectSonarMetricValue> defaultMetrics = null;
 		
 	@Override
-	public List<ProjectSonarMetric> getDefaultProjectSonarMetrics() throws SkillerException {
+	public List<ProjectSonarMetricValue> getDefaultProjectSonarMetrics() throws SkillerException {
 		if (defaultMetrics == null) {
-			defaultMetrics = new ArrayList<ProjectSonarMetric>();
+			defaultMetrics = new ArrayList<ProjectSonarMetricValue>();
 			String fileMetricsContent = loadDefaultMetrics();
 
-			Type listMetricsType = new TypeToken<List<ProjectSonarMetric>>(){}.getType();
-			List<ProjectSonarMetric> metrics = gson.fromJson(fileMetricsContent, listMetricsType);
+			Type listMetricsType = new TypeToken<List<ProjectSonarMetricValue>>(){}.getType();
+			List<ProjectSonarMetricValue> metrics = gson.fromJson(fileMetricsContent, listMetricsType);
 			metrics.stream().forEach(metric -> {
 				if (metric.getWeight() > 0) {
 					if (log.isDebugEnabled()) {

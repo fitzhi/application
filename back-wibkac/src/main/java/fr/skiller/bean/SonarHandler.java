@@ -2,7 +2,7 @@ package fr.skiller.bean;
 
 import java.util.List;
 
-import fr.skiller.data.internal.ProjectSonarMetric;
+import fr.skiller.data.internal.ProjectSonarMetricValue;
 import fr.skiller.exception.SkillerException;
 
 /**
@@ -17,11 +17,11 @@ public interface SonarHandler {
 
 	/**
 	 * <p>
-	 * Load from the referential the default list of {@link ProjectSonarMetric} declared in this server
+	 * Load from the referential the default list of {@link ProjectSonarMetricValue} declared in this server
 	 * </p>
 	 *  
 	 * @return the resulting list or {@code null} if an error occurs.
 	 * @throws SkillerException exception thrown if any problem occurs
 	 */
-	List<ProjectSonarMetric> getDefaultProjectSonarMetrics() throws SkillerException;
+	List<ProjectSonarMetricValue> getDefaultProjectSonarMetrics() throws SkillerException;
 }

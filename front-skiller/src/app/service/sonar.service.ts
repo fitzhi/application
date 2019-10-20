@@ -143,7 +143,7 @@ export class SonarService extends InternalService {
 					}
 				});
 				if (Constants.DEBUG) {
-					console.groupCollapsed(sonarMetrics.length + ' suported metrics by the application');
+					console.groupCollapsed(sonarMetrics.length + ' supported metrics by the application');
 					sonarMetrics.forEach(metric => console.log (metric.key, metric.name));
 					console.groupEnd();
 				}

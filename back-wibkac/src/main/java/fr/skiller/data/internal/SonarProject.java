@@ -28,12 +28,13 @@ public @Data class SonarProject {
 	/**
 	 * List of Sonar metrics chosen to evaluate this project.
 	 */
-	private List<ProjectSonarMetric> projectSonarMetrics = new ArrayList<>();
+	private List<ProjectSonarMetricValue> projectSonarMetricValues = new ArrayList<>();
 
 	/**
 	 * Statistics retrieved from the Sonar instance.
 	 */
 	private List<FilesStats> projectFilesStats = new ArrayList<>();
+	
 	
 	public SonarProject() {
 		// Empty constructor for serialization / de-serialization purpose
@@ -45,7 +46,7 @@ public @Data class SonarProject {
 	 * @param name name of the sonar project entry.
 	 */
 	public SonarProject(String key, String name) {
-		this(key, name, new ArrayList<ProjectSonarMetric>());
+		this(key, name, new ArrayList<ProjectSonarMetricValue>());
 	}
 
 	/**
@@ -53,11 +54,11 @@ public @Data class SonarProject {
 	 * @param key identifier of the sonar project entry.
 	 * @param name name of the sonar project entry.
 	 */
-	public SonarProject(String key, String name, List<ProjectSonarMetric> projectSonarMetrics) {
+	public SonarProject(String key, String name, List<ProjectSonarMetricValue> projectSonarMetrics) {
 		super();
 		this.key = key;
 		this.name = name;
-		this.projectSonarMetrics = projectSonarMetrics;
+		this.projectSonarMetricValues = projectSonarMetrics;
 	}
 	
 }

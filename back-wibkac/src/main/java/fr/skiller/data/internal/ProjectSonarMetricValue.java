@@ -5,13 +5,14 @@ import lombok.Data;
 /**
  * 
  * <p>
- * This class represents a metric key and its weight in the evaluation of a project.
+ * This class represents a metric key, its weight in the evaluation of a project, and the value obtained.
  * </p>
  * <p>
  * You might have an instance with these 2 fields
  * <ul>
  * <li>{@code "metric": "bugs"}</li>
- * <li>{@code "value": 30}</li>
+ * <li>{@code "weight": 40}</li>
+ * <li>{@code "value": 15}</li>
  * </ul>
  * which means the metric note count as 30% in the global note.
  * </p>
@@ -19,7 +20,7 @@ import lombok.Data;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public @Data class ProjectSonarMetric {
+public @Data class ProjectSonarMetricValue {
 
 	/**
 	 * Key of the metric
@@ -31,7 +32,13 @@ public @Data class ProjectSonarMetric {
 	 */
 	int weight;
 	
-	public ProjectSonarMetric() {
+	/**
+	 * Value of the evaluation for this metric.
+	 */
+	int value;
+	
+	
+	public ProjectSonarMetricValue() {
 		// Empty constructor for serialization / de-serialization purpose		
 	}
 
@@ -39,11 +46,13 @@ public @Data class ProjectSonarMetric {
 	 * Constructor.
 	 * @param key the given metric key
 	 * @param weight the proportion of this metric in the global evaluation.
+	 * @param value of the evaluation
 	 */
-	public ProjectSonarMetric(String key, int weight) {
+	public ProjectSonarMetricValue(String key, int weight, int value) {
 		super();
 		this.key = key;
 		this.weight = weight;
+		this.value = value;
 	}
 	
 	
