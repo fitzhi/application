@@ -15,7 +15,8 @@
         <div id="panelSettings" [hidden]="!isPanelActive(SETTINGS)">
             <app-sonar-metrics 
                 [project$]="project$"                 
-                [panelSwitchTransmitter$]="panelSwitchTransmitter$">
+                [panelSwitchTransmitter$]="panelSwitchTransmitter$"
+                (throwMessage)="catchMessage($event)">
             </app-sonar-metrics>
         </div>
     </div>

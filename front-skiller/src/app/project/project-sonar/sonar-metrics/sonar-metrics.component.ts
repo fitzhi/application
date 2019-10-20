@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -13,6 +13,8 @@ import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value
 import { ProjectService } from 'src/app/service/project.service';
 import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
 import { ElementSchemaRegistry } from '@angular/compiler';
+import { MessageService } from 'target/classes/app/message/message.service';
+import { MessageGravity } from 'src/app/message/message-gravity';
 
 @Component({
 	selector: 'app-sonar-metrics',
@@ -32,6 +34,12 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	* another panel is selected
 	*/
 	@Input() panelSwitchTransmitter$;
+
+	/**
+	 * This Output EventEmitter is in charge of the propagation of info/warning/error messages to the host container
+	 * For an unknown reason the messageService.* is failing outsite the host panel
+	 */
+	@Output() throwMessage = new EventEmitter<MessageGravity>();
 
 	/**
 	 * Current active project.
@@ -62,11 +70,13 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 
 	constructor(
 		private sonarService: SonarService,
+		private messageService: MessageService,
 		private projectService: ProjectService) {
 		super();
 	}
 
 	ngOnInit() {
+
 
 		this.subscriptions.add(
 			this.project$.subscribe(project => this.project = project));
@@ -170,6 +180,31 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 		if (metric.selected) {
 			metric.weight = 0;
 		}
+	}
+
+	/**
+	 * User a selected a metric for his Sonar analysis.
+	 * @param metric current Sonar metric
+	 */
+	private changeWeight(metric: ProjectSonarMetric) {
+		const sum = this.dataSource.data.map(met => met.weight).reduce ( (w1, w2) => w1 + w2, 0);
+		if (sum !== 100) {
+			this.throwMessage.next(
+				new MessageGravity(Constants.MESSAGE_WARNING,
+				'Distribution of metrics cannot be saved unless the sum reach 100%'));
+		}
+	}
+
+	/**
+	 * 
+	 * @param metric
+	 * @returns the class for this weight.
+	 */
+	cssclassOfWeight(metric: ProjectSonarMetric): string {
+		if ((metric.weight < 0) || (metric.weight > 100)) {
+			return 'invalid-field';
+		}
+		return 'valid-field';
 	}
 
 	/**

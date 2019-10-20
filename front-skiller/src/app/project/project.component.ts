@@ -9,6 +9,7 @@ import { MessageService } from '../message/message.service';
 import { BaseComponent } from '../base/base.component';
 import { ProjectService } from '../service/project.service';
 import { switchMap, take } from 'rxjs/operators';
+import { MessageGravity } from '../message/message-gravity';
 
 @Component({
 	selector: 'app-project',
@@ -148,6 +149,14 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 					})
 				);
 		}
+	}
+
+	/**
+	 * Catch the messageGravity.
+	 * @param messageGravity a message and its severity
+	 */
+	catchMessage(messageGravity: MessageGravity) {
+		this.messageService.set(messageGravity.severity, messageGravity.message);
 	}
 
 	/**

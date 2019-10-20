@@ -7,6 +7,9 @@ import { PanelSwitchEvent } from './sonar-thumbnails/panel-switch-event';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { SonarThumbnailsComponent } from './sonar-thumbnails/sonar-thumbnails.component';
 import { Project } from 'src/app/data/project';
+import { MessageService } from 'target/classes/app/message/message.service';
+import { MessageGravity } from 'src/app/message/message-gravity';
+import { Message } from 'src/app/message/message';
 
 @Component({
 	selector: 'app-project-sonar',
@@ -38,6 +41,12 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 	@Output() updateRiskLevel = new EventEmitter<number>();
 
 	/**
+	 * This Output EventEmitter is in charge of the propagation of info/warning/error messages to the host container
+	 * For an unknown reason the messageService.* is failing outsite the host panel
+	 */
+	@Output() throwMessage = new EventEmitter<MessageGravity>();
+
+	/**
 	 * The Sonar Thumnbails composant hosted on the top of the dashboard
 	 */
 	@ViewChild(SonarThumbnailsComponent, {static: false}) thumbNails: SonarThumbnailsComponent;
@@ -56,6 +65,7 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 
 	constructor(
 		private sonarService: SonarService,
+		private messageService: MessageService,
 		private cinematicService: CinematicService) { super(); }
 
 
@@ -101,6 +111,14 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 		this.panelSwitchTransmitter$.subscribe((panelSwitchEvent: PanelSwitchEvent) => {
 			this.idPanelSelected = panelSwitchEvent.idPanel;
 		});
+	}
+
+	/**
+	 * Propagation of the message to the host panel
+	 * @param messageGravity the message and its gravity
+	 */
+	catchMessage(messageGravity: MessageGravity) {
+		this.throwMessage.next(messageGravity);
 	}
 
 	/**

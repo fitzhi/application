@@ -1,5 +1,5 @@
 <div id="ProjectSonarMetricsDiv">
-    <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8 projectSonarMetricsDiv-content" matSort>
+   <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8 projectSonarMetricsDiv-content" matSort>
 
         <ng-container matColumnDef="name">
             <th id="name" mat-header-cell *matHeaderCellDef mat-sort-header>Metric</th>
@@ -22,7 +22,13 @@
             <th id="weight" mat-header-cell *matHeaderCellDef mat-sort-header>Weight</th>
             <td mat-cell class="metric" *matCellDef="let row; let i = index;">
                 <div *ngIf="isAMetricSelected(row)">
-                    <input class="inputNumber" matInput id="weight-{{i}}" type="number" [(ngModel)]="row.weight">
+                    <input 
+                        class="number-field"
+                        matInput id="weight-{{i}}" 
+                        type="number" 
+                        [ngClass]="cssclassOfWeight(row)"
+                        [(ngModel)]="row.weight"
+                        (change)="changeWeight(row)">
                 </div>
             </td>
         </ng-container>

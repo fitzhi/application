@@ -2,10 +2,11 @@
  * Class of message
  */
 export class Message {
-    constructor(public severity: number, public message: string) {
-    }
 
-    trace() {
-        return this.severity + ' ' + this.message;
-    }
+	constructor(private severity: number, private message: string) {
+	}
+
+	trace() {
+		return this.severity + ' ' + this.message;
+	}
 }

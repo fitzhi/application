@@ -3,7 +3,7 @@
 }
 
 .projectSonarMetricsDiv-content {
-    width: 100%;
+    width: fit-content
 }
 
 #explanation {
@@ -25,7 +25,14 @@ pre.explanation {
     margin: 3px;
 }
 
-.inputNumber {
+.number-field {
     text-align: right;
-    padding-right: 5px;
+}
+
+.valid-field {
+    color: black;
+}
+
+.invalid-field {
+    color: red;
 }
