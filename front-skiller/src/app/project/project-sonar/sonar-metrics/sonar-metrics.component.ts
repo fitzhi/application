@@ -153,7 +153,19 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 				.subscribe((measures: ResponseComponentMeasures) => {
 					measures.component.measures.forEach(measure => {
 						const psmv = metricValues.find(mv => mv.key === measure.metric);
-						psmv.value = Number(measure.value);
+						if (!isNaN(Number(measure.value))) {
+							psmv.value = Number(measure.value);
+						} else {
+							if (measure.value === 'OK') {
+								psmv.value = 1;
+							} else {
+								if (measure.value === 'ERROR') {
+									psmv.value = 0;
+								} else {
+									console.error ('Unexpected value of measure', measure.value);
+								}
+							}
+						}
 					});
 					this.projectService.dump(this.project, 'loadEvaluations');
 				}));
