@@ -10,6 +10,7 @@ import fr.skiller.data.internal.FilesStats;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.ProjectSonarMetricValue;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.SonarProject;
 import fr.skiller.data.source.Contributor;
@@ -218,4 +219,14 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @param filesStats stats retrieved from the file system.
 	 */
 	void saveFilesStats (Project project, String sonarProjectKey, List<FilesStats> filesStats);
+	
+	/**
+	 * Save the metric values & weights for this Sonar project.
+	 * @param project the given project.
+	 * @param sonarKey the key of the Sonar project.
+	 * @param metricValues The Sonar metric values/weights for this Sonar project
+	 * @throws SkillerException thrown if any problem occurs.
+	 */
+	void saveSonarMetricValues (Project project, String sonarProjectKey, List<ProjectSonarMetricValue> metricValues)
+		throws SkillerException;
 }

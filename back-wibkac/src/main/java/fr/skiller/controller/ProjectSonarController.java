@@ -21,6 +21,7 @@ import fr.skiller.Error;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.controller.in.BodyParamSonarEntry;
 import fr.skiller.controller.in.BodyParamSonarFilesStats;
+import fr.skiller.controller.in.BodyParamProjectSonarMetricValues;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.SonarProject;
 import fr.skiller.exception.SkillerException;
@@ -115,4 +116,38 @@ public class ProjectSonarController {
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
 		}
 	}
+	
+	@PostMapping(path="/saveMetricValues")
+	public ResponseEntity<Boolean> updateMetricValues(@RequestBody BodyParamProjectSonarMetricValues param) {
+		
+		HttpHeaders headers = new HttpHeaders();
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
+				"POST command on /project/sonar/saveMetricValues for project : %s %s", 
+				param.getIdProject(), param.getSonarKey()));
+		}
+		
+		Project project = null;
+		try {
+			project = projectHandler.get(param.getIdProject());
+		} catch (SkillerException se) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
+			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
+			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
+		}
+		
+		try {
+			projectHandler.saveSonarMetricValues(project, param.getSonarKey(), param.getMetricValues()); 
+			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
+		} catch (SkillerException se) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
+			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
+			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
+		}
+			
+		
+	}
+	
+	
 }

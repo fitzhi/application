@@ -5,6 +5,8 @@ package fr.skiller.bean.impl;
 
 import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
 import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
+import static fr.skiller.Error.CODE_SONAR_KEY_NOFOUND;
+import static fr.skiller.Error.MESSAGE_SONAR_KEY_NOFOUND;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Mission;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.ProjectSonarMetricValue;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.SonarProject;
 import fr.skiller.data.internal.Staff;
@@ -451,7 +454,25 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		} catch (NoSuchElementException nsee) {
 			throw new SkillerRuntimeException(nsee);
 		}
-		
 	}
-	
+
+	@Override
+	public void saveSonarMetricValues(
+			Project project, 
+			String sonarProjectKey,
+			List<ProjectSonarMetricValue> metricValues) throws SkillerException {
+		
+		Optional<SonarProject> oSonarProject = project.getSonarProjects()
+			.stream()
+			.filter(sp -> sonarProjectKey.equals(sp.getKey()))
+			.findFirst();
+		if (!oSonarProject.isPresent()) {
+			throw new SkillerException(CODE_SONAR_KEY_NOFOUND, MESSAGE_SONAR_KEY_NOFOUND, sonarProjectKey, project.getName());
+		}
+		
+		synchronized (lockDataUpdated) {
+			oSonarProject.get().setProjectSonarMetricValues(metricValues); 
+			this.dataUpdated = true;
+		}
+	}
 }
