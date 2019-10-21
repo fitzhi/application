@@ -374,7 +374,7 @@ export class ProjectService extends InternalService {
 			if (sonarProject.projectSonarMetricValues) {
 				console.groupCollapsed('Soner project %s', sonarProject.key);
 				sonarProject.projectSonarMetricValues.forEach(metricValue =>
-					console.log (metricValue.key, metricValue.value)
+					console.log (metricValue.key, 'w' + metricValue.weight + ' v:' + metricValue.value)
 				);
 				console.groupEnd();
 			}

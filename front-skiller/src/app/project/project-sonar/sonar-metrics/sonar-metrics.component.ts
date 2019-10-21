@@ -99,11 +99,11 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 						if (weight) {
 							element.selected = true;
 							element.weight = weight;
+						} else {
+							element.selected = false;
+							element.weight = 0;
 						}
 					});
-					if (Constants.DEBUG) {
-						this.projectService.dump(this.project, 'SonarMetrics.ngInit');
-					}
 				}
 			}));
 	}
@@ -192,6 +192,22 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 			this.throwMessage.next(
 				new MessageGravity(Constants.MESSAGE_WARNING,
 				'Distribution of metrics cannot be saved unless the sum reach 100%'));
+		} else {
+			const sonarProject = this.projectService.getSonarProject(this.project, this.sonarKey);
+			sonarProject.projectSonarMetricValues = [];
+			this.dataSource.data.forEach(psm => {
+				if (psm.weight > 0) {
+					sonarProject.projectSonarMetricValues.push(
+						new ProjectSonarMetricValue(
+							psm.key,
+							psm.weight,
+							0
+						));
+				}
+			});
+			this.throwMessage.next(
+				new MessageGravity(Constants.MESSAGE_INFO,
+				'Metrics weight has been saved for the Sonar project ' + this.sonarKey));
 		}
 	}
 
