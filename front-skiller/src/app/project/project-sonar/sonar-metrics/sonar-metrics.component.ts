@@ -15,6 +15,7 @@ import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
 import { ElementSchemaRegistry } from '@angular/compiler';
 import { MessageService } from 'target/classes/app/message/message.service';
 import { MessageGravity } from 'src/app/message/message-gravity';
+import { ResponseComponentMeasures } from 'src/app/data/sonar/reponse-component-measures';
 
 @Component({
 	selector: 'app-sonar-metrics',
@@ -140,6 +141,28 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 		return (metricValue) ? metricValue.weight : undefined;
 	}
 
+	/**
+	 * Load from Sonar the evaluation for the given metrics.
+	 * @param metricValues the array of Metric record to update with the Sonar last evaluation.
+	 */
+	loadEvaluations(metricValues: ProjectSonarMetricValue[]) {
+		this.subscriptions.add(
+			this.sonarService.loadSonarComponentMeasures(
+					this.sonarKey,
+					metricValues.map(psmv => psmv.key))
+				.subscribe((measures: ResponseComponentMeasures) => {
+					measures.component.measures.forEach(measure => {
+						const psmv = metricValues.find(mv => mv.key === measure.metric);
+						psmv.value = Number(measure.value);
+					});
+					this.projectService.dump(this.project, 'loadEvaluations');
+				}));
+	}
+
+	/**
+	 * Initialize the dataSource of the table.
+	 * @param projectSonarMetrics the array of metrics as origine of the dataSource
+	 */
 	private initDataSource(projectSonarMetrics: ProjectSonarMetric[]) {
 		if (Constants.DEBUG) {
 			console.groupCollapsed(projectSonarMetrics.length + ' records in projectSonarMetrics');
@@ -205,6 +228,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 						));
 				}
 			});
+			this.loadEvaluations(sonarProject.projectSonarMetricValues);
 			this.throwMessage.next(
 				new MessageGravity(Constants.MESSAGE_INFO,
 				'Metrics weight has been saved for the Sonar project ' + this.sonarKey));
@@ -212,11 +236,11 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	/**
-	 * 
-	 * @param metric
+	 * Evaluate the CSS classname for the weight input for a given metric record
+	 * @param metric the given metric
 	 * @returns the class for this weight.
 	 */
-	cssclassOfWeight(metric: ProjectSonarMetric): string {
+	cssClassOfWeight(metric: ProjectSonarMetric): string {
 		if ((metric.weight < 0) || (metric.weight > 100)) {
 			return 'invalid-field';
 		}

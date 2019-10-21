@@ -157,7 +157,7 @@ export class SonarService extends InternalService {
 	 * @param metrics list of metrics to be evaluated
 	 */
 	loadSonarComponentMeasures(key: string, metrics: string[]): Observable<ResponseComponentMeasures> {
-		const params = new HttpParams().set('component', key).set('metricKeys', metrics.join(''));
+		const params = new HttpParams().set('component', key).set('metricKeys', metrics.join(','));
 		return this.httpClient
 			.get<ResponseComponentMeasures>(this.urlSonar + '/api/measures/component', {params: params})
 			.pipe(

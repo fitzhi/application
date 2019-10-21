@@ -96,9 +96,6 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 					this.sonarKey = panelSwitchEvent.keySonar;
 					this.safeBadge = [];
 					if (this.sonarService.projectSonarMetrics) {
-						if (Constants.DEBUG) {
-							this.projectService.dump(this.project, 'SonarDashboard.ngOnInit (in subscription)');
-						}
 						this.loadBadge(0);
 					}
 				}
@@ -106,7 +103,7 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	}
 
 	/**
-	 * This method is reccurcive !!
+	 * This method is recurcive !!
 	 * Load the Sonar badge corresponding to the numero of badge.
 	 * @param badgeNumero the numero of badge
 	 */
