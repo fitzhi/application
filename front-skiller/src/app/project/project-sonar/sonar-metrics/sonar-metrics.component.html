@@ -33,6 +33,15 @@
             </td>
         </ng-container>
 
+        <ng-container matColumnDef="value">
+            <th id="weight" mat-header-cell *matHeaderCellDef mat-sort-header>Evaluation</th>
+            <td mat-cell class="metric" *matCellDef="let row; let i = index;">
+                <div class="number-field metricValue" *ngIf="isAMetricSelected(row)"> 
+                    {{row.value}} 
+                </div>
+            </td>
+        </ng-container>
+
         <ng-container matColumnDef="explanation">
             <th id="explanation" mat-header-cell *matHeaderCellDef>Explanation</th>
             <td mat-cell class="metric" *matCellDef="let row; let i = index;">

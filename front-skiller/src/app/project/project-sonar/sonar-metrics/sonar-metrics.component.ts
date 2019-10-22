@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { ProjectSonarMetric } from 'src/app/data/sonar/project-sonar-metric';
 import { SonarService } from 'src/app/service/sonar.service';
-import { switchMap, map, catchError } from 'rxjs/operators';
+import { switchMap, map, catchError, take } from 'rxjs/operators';
 import { Project } from 'src/app/data/project';
 import { Observable, EMPTY, of } from 'rxjs';
 import { BaseComponent } from 'src/app/base/base.component';
@@ -67,7 +67,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	 */
 	private sonarKey = '';
 
-	public editableColumns: string[] = ['name', 'selected', 'weight', 'explanation'];
+	public editableColumns: string[] = ['name', 'selected', 'weight', 'value', 'explanation'];
 
 	constructor(
 		private sonarService: SonarService,
@@ -100,9 +100,11 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 						if (weight) {
 							element.selected = true;
 							element.weight = weight;
+							element.value = this.getValueOfSonarProjectMetric(element.key);
 						} else {
 							element.selected = false;
 							element.weight = 0;
+							element.value = 0;
 						}
 					});
 				}
@@ -125,6 +127,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 						metric.name,
 						false,
 						0,
+						0,
 						this.sonarService.CALCULATION_RULES[metric.key]));
 					});
 					return projectSonarMetrics;
@@ -132,9 +135,8 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	/**
-	 * @param sonarKey the key of the Sonar project
 	 * @param metricKey the key of the metric
-	 * @returns the searched weight, or null if no weight has been setup for the given parameters
+	 * @returns the searched weight, or null if no weight has been setup for the given metric
 	 */
 	getWeightOfSonarProjectMetric (metricKey: string): number {
 		const metricValue = this.projectService.getProjectSonarMetricValue(this.project, this.sonarKey, metricKey);
@@ -142,10 +144,19 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	/**
+	 * @param metricKey the key of the metric
+	 * @returns the Sonar note, or null if no data has been retrieved for the given metric
+	 */
+	getValueOfSonarProjectMetric (metricKey: string): number {
+		const metricValue = this.projectService.getProjectSonarMetricValue(this.project, this.sonarKey, metricKey);
+		return (metricValue) ? metricValue.value : undefined;
+	}
+
+	/**
 	 * Load from Sonar the evaluation for the given metrics.
 	 * @param metricValues the array of Metric record to update with the Sonar last evaluation.
 	 */
-	loadEvaluations(metricValues: ProjectSonarMetricValue[]) {
+	loadAndSaveEvaluations(metricValues: ProjectSonarMetricValue[]) {
 		this.subscriptions.add(
 			this.sonarService.loadSonarComponentMeasures(
 					this.sonarKey,
@@ -168,6 +179,22 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 						}
 					});
 					this.projectService.dump(this.project, 'loadEvaluations');
+
+					//
+					// the metricValues is updated with the evaluation returned by Sonar.
+					//
+					this.projectService.saveMetricValues(this.project.id, this.sonarKey, metricValues)
+						.pipe(take(1))
+						.subscribe (ok => {
+							if (ok) {
+								this.throwMessage.next(
+									new MessageGravity(Constants.MESSAGE_INFO,
+									'Metrics weights and values have been saved for the Sonar project ' + this.sonarKey));
+							} else {
+								this.throwMessage.next(
+									new MessageGravity(Constants.MESSAGE_ERROR,
+									'Error when saving weights and values for the Sonar project ' + this.sonarKey));
+							}});
 				}));
 	}
 
@@ -192,6 +219,8 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 					return item.selected ? 1 : 0;
 				case 'weight':
 					return item.weight;
+				case 'value':
+					return item.value;
 			}
 		};
 		this.dataSource.sort = this.sort;
@@ -240,10 +269,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 						));
 				}
 			});
-			this.loadEvaluations(sonarProject.projectSonarMetricValues);
-			this.throwMessage.next(
-				new MessageGravity(Constants.MESSAGE_INFO,
-				'Metrics weight has been saved for the Sonar project ' + this.sonarKey));
+			this.loadAndSaveEvaluations(sonarProject.projectSonarMetricValues);
 		}
 	}
 

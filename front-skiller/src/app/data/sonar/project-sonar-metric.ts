@@ -9,6 +9,7 @@ export class ProjectSonarMetric {
 	 * @param name The metric key.
 	 * @param selected Is this metric selected ?
 	 * @param weight: weight of this metric in the global Sonar evaluation.
+	 * @param value: note retrieved from Sonar for this metric.
 	 * @param explanation Explanation of the calculation rule for this metrix key.
 	 */
 	constructor(
@@ -16,6 +17,7 @@ export class ProjectSonarMetric {
 		public name: string,
 		public selected: boolean,
 		public weight:  number,
+		public value: number,
 		public explanation: string) {
 	}
 }

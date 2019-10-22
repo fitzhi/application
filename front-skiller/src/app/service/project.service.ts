@@ -338,6 +338,23 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
+	* Save the file statistics for a project.
+	* @param idProject the given project identifier
+	* @param key the Sonar key from where the stats are coming from
+	* @param filesStats the language file statistics retrieved from the Sonar instance.
+	*/
+	saveMetricValues(idProject: number, key: string, metricValues: ProjectSonarMetricValue[]): Observable<Boolean> {
+		if (Constants.DEBUG) {
+			console.groupCollapsed('Save the metric values for Sonar entry %s project identifier %d', key, idProject);
+			metricValues.forEach(mv => console.log ('Saving %s %d %d', mv.key, mv.weight, mv.value));
+			console.groupEnd();
+		}
+		const body = { idProject: idProject, sonarKey: key, metricValues: metricValues };
+		return this.httpClient.post<Boolean>(this.backendSetupService.url() + '/project/sonar/saveMetricValues', body, httpOptions);
+	}
+
+
+	/**
 	 * Select and retrieve the SonarProject.
 	 * @param project the given project
 	 * @param sonarKey the key of the Sonar project.

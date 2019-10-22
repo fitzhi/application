@@ -29,6 +29,10 @@ pre.explanation {
     text-align: right;
 }
 
+.metricValue {
+    margin-right: 20px;
+}
+
 .valid-field {
     color: black;
 }
