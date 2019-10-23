@@ -7,9 +7,9 @@ import { PanelSwitchEvent } from './sonar-thumbnails/panel-switch-event';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { SonarThumbnailsComponent } from './sonar-thumbnails/sonar-thumbnails.component';
 import { Project } from 'src/app/data/project';
-import { MessageService } from 'target/classes/app/message/message.service';
 import { MessageGravity } from 'src/app/message/message-gravity';
 import { Message } from 'src/app/message/message';
+import { MessageService } from 'src/app/message/message.service';
 
 @Component({
 	selector: 'app-project-sonar',
@@ -100,7 +100,7 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 								this.SONAR,
 								this.project.sonarProjects[0].key));
 					}
-					
+
 					if (this.thumbNails) {
 						this.thumbNails.loadFilesNumber();
 					}
