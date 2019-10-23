@@ -74,19 +74,6 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 			this.project$.subscribe(project => this.project = project));
 
 		this.subscriptions.add(
-			this.sonarService.sonarIsAccessible$
-				.subscribe ( isAccessible => {
-					if (isAccessible) {
-						const bugs = ['bugs'];
-						this.sonarService
-							.loadSonarComponentMeasures ('Skiller', bugs)
-							.subscribe(response => {
-								console.log (response.component.key);
-							});
-					}
-				}));
-
-		this.subscriptions.add(
 			this.cinematicService.tabProjectActivated$.subscribe(tabSelected => {
 				if (tabSelected === Constants.PROJECT_IDX_TAB_SONAR) {
 					if (Constants.DEBUG) {
@@ -96,6 +83,7 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 							console.log ('Sonar dashboard Activated for project %s', this.project.name);
 						}
 					}
+
 					if (this.project && this.project.sonarProjects.length > 0) {
 						this.panelSwitchTransmitter$.next(
 							new PanelSwitchEvent(

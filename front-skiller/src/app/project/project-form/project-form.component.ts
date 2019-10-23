@@ -357,13 +357,19 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * @param idProject the project identifier
 	 * @param sonarProject the sonar project to update
 	 * @param callback the callback function, which might be projectService.addSonarProject or projectService.delSonarProject
+	 * @param postCallback the post callback function, which will be executed most probably after the callback "projectService.addSonarProject"
 	 */
 	updateSonarProject(idProject: number, sonarProject:  SonarProject,
-		callback: (idProject: number, sonarProject:  SonarProject) => Observable<BooleanDTO>) {
+		callback: (idProject: number, sonarProject:  SonarProject) => Observable<BooleanDTO>,
+		postCallbackTreatment?: (idProject: number, sonarProject:  SonarProject) => void) {
 		callback(idProject, sonarProject)
 		.subscribe (doneAndOk => {
 			if (!doneAndOk) {
 				this.messageService.error (doneAndOk.message);
+			} else {
+				if (postCallbackTreatment) {
+					postCallbackTreatment(idProject, sonarProject);
+				}
 			}
 		},
 		response_in_error => {
@@ -420,11 +426,23 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
 		if (this.project.id) {
 			this.updateSonarProject(this.project.id, sonarProject,
-				this.projectService.addSonarProject.bind(this.projectService));
+				this.projectService.addSonarProject.bind(this.projectService),
+				this.reloadSonarProjectMetrics.bind(this));
+
 		}
 
 		// Log the resulting collection.
 		this.logProjectSonarProjects();
+	}
+
+	reloadSonarProjectMetrics(idProject: number, sonarProject: SonarProject) {
+		this.projectService
+			.loadSonarProject(this.project, sonarProject.key)
+			.pipe(take(1))
+			.subscribe((sp: SonarProject) => {
+				sonarProject.projectSonarMetricValues = sp.projectSonarMetricValues;
+				this.projectService.dump(this.project, 'addSonarProject');
+			});
 	}
 
 	/**

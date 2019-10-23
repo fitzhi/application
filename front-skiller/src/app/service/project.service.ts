@@ -10,7 +10,7 @@ import { Skill } from '../data/skill';
 import { ContributorsDTO } from '../data/external/contributorsDTO';
 import { SettingsGeneration } from '../data/settingsGeneration';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
-import { take } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 import { Library } from '../data/library';
 import { BooleanDTO } from '../data/external/booleanDTO';
 import { ReferentialService } from './referential.service';
@@ -108,8 +108,8 @@ export class ProjectService extends InternalService {
 	 * @param idProject the project identifier
 	 * @param sonarProject the sonar project
 	 */
-	addSonarProject(idProject: number, sonarProject: SonarProject) {
-		return this.accessSonarProject(idProject, sonarProject, 'saveEntry');
+	addSonarProject(idProject: number, sonarProject: SonarProject): Observable<Boolean> {
+		return this.accessSonarProject$(idProject, sonarProject, 'saveEntry');
 	}
 
 	/**
@@ -118,7 +118,7 @@ export class ProjectService extends InternalService {
 	 * @param sonarProject the sonar project
 	 */
 	delSonarProject(idProject: number, sonarProject: SonarProject) {
-		return this.accessSonarProject(idProject, sonarProject, 'removeEntry');
+		return this.accessSonarProject$(idProject, sonarProject, 'removeEntry');
 	}
 
 	/**
@@ -127,7 +127,7 @@ export class ProjectService extends InternalService {
 	 * @param sonarProject the sonar project
 	 * @param action the action to be executed on the Sonar projects collection
 	 */
-	private accessSonarProject(idProject: number, sonarProject: SonarProject, action: string) {
+	private accessSonarProject$(idProject: number, sonarProject: SonarProject, action: string): Observable<Boolean> {
 
 		if (Constants.DEBUG) {
 			console.log ('Action ' + action + ' for a Sonar project ' + sonarProject.name + ' for project ID ' + idProject);
@@ -139,7 +139,7 @@ export class ProjectService extends InternalService {
 		};
 
 		return this.httpClient
-			.post<BooleanDTO>(this.backendSetupService.url() + '/project/sonar/' + action, body, httpOptions)
+			.post<Boolean>(this.backendSetupService.url() + '/project/sonar/' + action, body, httpOptions)
 			.pipe(take(1));
 	}
 
@@ -362,6 +362,27 @@ export class ProjectService extends InternalService {
 	 */
 	getSonarProject(project: Project, sonarKey: String): SonarProject {
 		return project.sonarProjects.find(sonarP => (sonarKey === sonarP.key));
+	}
+
+	/**
+	 * Load the Sonar project for the given parameter.
+	 * @param project the current project
+	 * @param sonarKey the key of the Sonar project
+	 */
+	loadSonarProject (project: Project, sonarKey: string): Observable<SonarProject> {
+		return this.httpClient.get<SonarProject>(
+			this.backendSetupService.url() + '/project/sonar/load/' + project.id + '/' + sonarKey, httpOptions)
+			.pipe(tap(
+				(sonarProject: SonarProject) => {
+					if (Constants.DEBUG) {
+						console.groupCollapsed ('Sonar project', sonarProject.key);
+						sonarProject.projectSonarMetricValues.forEach(metricValues => {
+							console.log (metricValues.key, metricValues.weight);
+						});
+						console.groupEnd();
+					}
+				}));
+
 	}
 
 	/**

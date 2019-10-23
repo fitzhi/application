@@ -5,6 +5,7 @@ import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
 
 import java.text.MessageFormat;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +26,7 @@ import fr.skiller.controller.in.BodyParamSonarEntry;
 import fr.skiller.controller.in.BodyParamSonarFilesStats;
 import fr.skiller.controller.in.BodyParamProjectSonarMetricValues;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.ProjectSonarMetricValue;
 import fr.skiller.data.internal.SonarProject;
 import fr.skiller.exception.SkillerException;
 import lombok.extern.slf4j.Slf4j;
@@ -67,6 +71,42 @@ public class ProjectSonarController {
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
 		}
 		
+	}
+	
+	/**
+	 * load and return a SonarProject
+	 * @param idProject the project identifier
+	 * @param sonarKey the key of the Sonar project
+	 * @return an HTTP response with the found Sonar project, or {@code null} if none is found
+	 */
+	@GetMapping(path="/load/{idProject}/{sonarKey}")
+	public ResponseEntity<SonarProject> getSonarProject(
+			@PathVariable("idProject") int idProject,
+			@PathVariable("sonarKey") String sonarKey) {
+
+		HttpHeaders headers = new HttpHeaders();
+
+		try {
+			Project project = projectHandler.get(idProject);
+			
+			Optional<SonarProject> oSonarProject = project.getSonarProjects()
+				.stream()
+				.filter(sp -> sp.getKey().equals(sonarKey))
+				.findFirst();
+			
+			if (oSonarProject.isPresent()) {
+				return  new ResponseEntity<>(oSonarProject.get(), headers, HttpStatus.OK);
+			} else {
+				headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_SONAR_KEY_NOFOUND));
+				headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_SONAR_KEY_NOFOUND, sonarKey, idProject));
+				return  new ResponseEntity<>(null, headers, HttpStatus.INTERNAL_SERVER_ERROR);				
+			}
+			
+		} catch (SkillerException se) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
+			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, idProject));
+			return new ResponseEntity<>(null, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
+		}
 	}
 	
 	@PostMapping(path="/removeEntry")

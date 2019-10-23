@@ -178,6 +178,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 							}
 						}
 					});
+
 					this.projectService.dump(this.project, 'loadEvaluations');
 
 					//
