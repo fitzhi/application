@@ -68,8 +68,14 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 
 		this.subscriptions.add(
 			this.panelSwitchTransmitter$.subscribe( (panelSwitchEvent: PanelSwitchEvent) => {
-				this.idPanelSelected = panelSwitchEvent.idPanel;
-				this.keySummarySelected = panelSwitchEvent.keySonar;
+				if (!panelSwitchEvent.keySonar) {
+					if (Constants.DEBUG) {
+						console.log ('No Sonar project declared!');
+					}
+				} else {
+					this.idPanelSelected = panelSwitchEvent.idPanel;
+					this.keySummarySelected = panelSwitchEvent.keySonar;
+				}
 		}));
 	}
 

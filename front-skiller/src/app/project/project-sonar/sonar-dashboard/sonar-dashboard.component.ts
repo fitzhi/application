@@ -92,7 +92,13 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 
 		this.subscriptions.add(
 			this.panelSwitchTransmitter$.subscribe((panelSwitchEvent: PanelSwitchEvent) => {
-				if (this.project && (panelSwitchEvent.keySonar.length > 0) ) {
+				if (!panelSwitchEvent.keySonar) {
+					if (Constants.DEBUG) {
+						console.log ('No Sonar project declared.');
+					}
+					return;
+				}
+				if (this.project && (panelSwitchEvent.keySonar) ) {
 					this.sonarKey = panelSwitchEvent.keySonar;
 					this.safeBadge = [];
 					if (this.sonarService.projectSonarMetrics) {

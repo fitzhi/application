@@ -14,10 +14,13 @@
         </div>
         <div id="panelSettings" [hidden]="!isPanelActive(SETTINGS)">
             <app-sonar-metrics 
-                [project$]="project$"                 
+                [project$]="project$"               
                 [panelSwitchTransmitter$]="panelSwitchTransmitter$"
                 (throwMessage)="catchMessage($event)">
             </app-sonar-metrics>
+        </div>
+        <div id="panelNoSonarProject" [hidden]="!isPanelActive(NONE)">
+            NO SONAR PROJECT DECLARED FOR THIS PROJECT
         </div>
     </div>
 </mat-sidenav-container>

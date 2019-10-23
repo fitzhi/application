@@ -78,7 +78,6 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 
 	ngOnInit() {
 
-
 		this.subscriptions.add(
 			this.project$.subscribe(project => this.project = project));
 
@@ -91,6 +90,17 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 		this.subscriptions.add(
 			this.panelSwitchTransmitter$.subscribe(
 					(panelSwitchEvent: PanelSwitchEvent)  => {
+				if (!panelSwitchEvent.keySonar) {
+					if (Constants.DEBUG) {
+						console.log ('No Sonar project declared. We reinitialize the dataSource');
+					}
+					/*
+					if (this.dataSource.data) {
+						this.dataSource.data = [];
+					}
+					*/
+					return;
+				}
 				if (this.project && (panelSwitchEvent.keySonar.length > 0) ) {
 					this.sonarKey = panelSwitchEvent.keySonar;
 					const sonarProject = this.project.sonarProjects

@@ -60,8 +60,9 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 	 */
 	private project: Project;
 
-	SETTINGS = Constants.PROJECT_SONAR_PANEL.SETTINGS;
-	SONAR = Constants.PROJECT_SONAR_PANEL.SONAR;
+	private SETTINGS = Constants.PROJECT_SONAR_PANEL.SETTINGS;
+	private SONAR = Constants.PROJECT_SONAR_PANEL.SONAR;
+	private NONE = Constants.PROJECT_SONAR_PANEL.NONE;
 
 	constructor(
 		private sonarService: SonarService,
@@ -84,12 +85,22 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 						}
 					}
 
+					// If there is no (more) SonarProject, we cleanup the child containers.
+					if (this.project && this.project.sonarProjects.length === 0) {
+						// We send a null as SonarKey to force the initialization of the children data (such as i.e. rhe metrics dataSource)
+						this.panelSwitchTransmitter$.next(
+							new PanelSwitchEvent(
+								this.NONE,
+								null));
+					}
+
 					if (this.project && this.project.sonarProjects.length > 0) {
 						this.panelSwitchTransmitter$.next(
 							new PanelSwitchEvent(
 								this.SONAR,
 								this.project.sonarProjects[0].key));
 					}
+					
 					if (this.thumbNails) {
 						this.thumbNails.loadFilesNumber();
 					}

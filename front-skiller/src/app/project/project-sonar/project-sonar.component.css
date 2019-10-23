@@ -10,6 +10,12 @@
     width: 100%;
 }
 
+#panelNoSonarProject {
+    width: 100%;
+    text-align: center;
+    color: brown;
+}
+
 .contentProjectSonar {
     background-color: transparent;
     width: 100%;
