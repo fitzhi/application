@@ -18,6 +18,7 @@ import { SonarProject } from '../data/SonarProject';
 import { FilesStats } from '../data/sonar/FilesStats';
 import { Component } from '@angular/compiler/src/core';
 import { ProjectSonarMetricValue } from '../data/project-sonar-metric-value';
+import { MessageService } from '../message/message.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -37,6 +38,7 @@ export class ProjectService extends InternalService {
 	constructor(
 		private httpClient: HttpClient,
 		private referentialService: ReferentialService,
+		private messageService: MessageService,
 		private backendSetupService: BackendSetupService) {
 			super();
 	}
@@ -265,7 +267,11 @@ export class ProjectService extends InternalService {
 		return this.httpClient
 			.post<Boolean>(url, libraries, httpOptions)
 			.pipe(take(1))
-			.subscribe(res => console.log(res));
+			.subscribe(doneAndOk => {
+				if (doneAndOk) {
+					this.messageService.info('Libraries detected have been saved');
+				}
+			});
 	}
 
 	/**
