@@ -10,12 +10,13 @@ import { of, BehaviorSubject, Subject, Observable, EMPTY } from 'rxjs';
 import { Metrics } from '../data/sonar/metrics';
 import { Components } from '../data/sonar/components';
 import { Component } from '../data/sonar/component';
-import { SonarProject } from '../data/SonarProject';
 import { ResponseComponentMeasures } from '../data/sonar/reponse-component-measures';
 import { ComponentTree } from '../data/sonar/component-tree';
 import { ILanguageCount } from './ILanguageCount';
 import { ReferentialService } from './referential.service';
 import { ProjectSonarMetric } from '../data/sonar/project-sonar-metric';
+import { Project } from '../data/project';
+import { ProjectService } from './project.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -114,6 +115,7 @@ export class SonarService extends InternalService {
 	constructor(
 		private httpClient: HttpClient,
 		private referentialService: ReferentialService,
+		private projectService: ProjectService,
 		private backendSetupService: BackendSetupService) {
 		super();
 	}
@@ -158,8 +160,9 @@ export class SonarService extends InternalService {
 	 */
 	loadSonarComponentMeasures(key: string, metrics: string[]): Observable<ResponseComponentMeasures> {
 		const params = new HttpParams().set('component', key).set('metricKeys', metrics.join(','));
+		const apiMesures = '/api/measures/component';
 		return this.httpClient
-			.get<ResponseComponentMeasures>(this.urlSonar + '/api/measures/component', {params: params})
+			.get<ResponseComponentMeasures>(this.urlSonar + apiMesures, {params: params})
 			.pipe(
 				tap ( response => {
 					if (Constants.DEBUG) {
@@ -301,4 +304,19 @@ export class SonarService extends InternalService {
 		this.projectSonarMetrics = projectSonarMetrics;
 	}
 
+	evaluateSonarProject(project: Project, sonarKey: string): number {
+		const sonarProject = this.projectService.getSonarProject (project, sonarKey);
+		let result = 0;
+		sonarProject.projectSonarMetricValues.forEach(metricValues => {
+			if (metricValues.weight) {
+				switch (metricValues.key) {
+					case 'bugs':
+						result = metricValues.weight * metricValues.value;
+						break;
+
+				}
+			}
+		});
+		return result;
+	}
 }

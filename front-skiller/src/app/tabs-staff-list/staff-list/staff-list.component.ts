@@ -71,7 +71,7 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 				}));
 		const key = this.tabsStaffListComponent.key(new ListCriteria(this.criteria, this.activeOnly));
 		const context = this.tabsStaffListComponent.getContext(key);
-		if (context.isSorted()) {
+		if ((context) && (context.isSorted())) {
 			this.sort.sort(context.getSortConfiguration());
 		}
 	}

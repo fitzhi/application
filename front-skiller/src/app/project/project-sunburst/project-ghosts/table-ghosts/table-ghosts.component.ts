@@ -7,7 +7,7 @@ import { ProjectGhostsDataSource } from 'src/app/project/project-sunburst/projec
 import { MatPaginator } from '@angular/material/paginator';
 import { Collaborator } from 'src/app/data/collaborator';
 import { StaffService } from 'src/app/service/staff.service';
-import { take } from 'rxjs/operators';
+import { take, throwIfEmpty } from 'rxjs/operators';
 import { MessageService } from 'src/app/message/message.service';
 import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
 import { ProjectService } from 'src/app/service/project.service';
@@ -58,19 +58,27 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	}
 
 	ngOnInit() {
-		this.subscriptions.add(
-			this.dataSourceGhosts$.subscribe((dataSource: ProjectGhostsDataSource) => {
-				if (Constants.DEBUG) {
-					console.log('Project ' + dataSource.project.id + ' ' + dataSource.project.name + ' reveived in the table of ghosts component');
-				}
-				this.dataSource = dataSource;
-				this.dataSource.paginator = this.paginator;
-		}));
+		if (this.dataSourceGhosts$) {
+			if (this.dataSourceGhosts$) {
+				this.subscriptions.add(
+					this.dataSourceGhosts$.subscribe((dataSource: ProjectGhostsDataSource) => {
+						if (Constants.DEBUG) {
+							console.log('Project ' + dataSource.project.id + ' ' + dataSource.project.name + ' reveived in the table of ghosts component');
+						}
+						this.dataSource = dataSource;
+						this.dataSource.paginator = this.paginator;
+				}));
+			}
+		}
 
-		this.subscriptions.add(
-			this.staffListService.allStaff$.subscribe(staff => {
-				this.allStaff = staff;
-			}));
+		if (this.subscriptions) {
+			if ( (this.staffListService) && (this.staffListService.allStaff$)) {
+				this.subscriptions.add(
+					this.staffListService.allStaff$.subscribe(staff => {
+						this.allStaff = staff;
+				}));
+			}
+		}
 	}
 	/**
 	 * The check Box for the id "technical" has been checked or unchecked.

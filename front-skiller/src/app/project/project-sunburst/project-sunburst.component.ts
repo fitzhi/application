@@ -147,18 +147,20 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			}
 		});
 
-		this.subscriptions.add(
-			this.project$.subscribe((project: Project) => {
-				if (Constants.DEBUG) {
-					console.log('Project ' + project.id + ' ' + project.name + ' reveived in sunburst-component');
-				}
-				this.project = project;
-				this.projectName = this.project.name;
-				if ((!this.project.urlRepository) || (this.project.urlRepository.length === 0)) {
-					this.messageService.info('No repository URL avalaible !');
-					this.setActiveContext (this.CONTEXT.SUNBURST_IMPOSSIBLE);
-				}
+		if (this.project$) {
+			this.subscriptions.add(
+				this.project$.subscribe((project: Project) => {
+					if (Constants.DEBUG) {
+						console.log('Project ' + project.id + ' ' + project.name + ' reveived in sunburst-component');
+					}
+					this.project = project;
+					this.projectName = this.project.name;
+					if ((!this.project.urlRepository) || (this.project.urlRepository.length === 0)) {
+						this.messageService.info('No repository URL avalaible !');
+						this.setActiveContext (this.CONTEXT.SUNBURST_IMPOSSIBLE);
+					}
 			}));
+		}
 
 		this.subscriptions.add(
 			this.cinematicService.tabProjectActivated$.subscribe(

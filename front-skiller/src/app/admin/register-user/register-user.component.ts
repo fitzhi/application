@@ -3,14 +3,11 @@ import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms'
 import { BaseComponent } from '../../base/base.component';
 import { MustMatch } from 'src/app/service/mustmatch';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
-import { StaffDTO } from 'src/app/data/external/staffDTO';
 import { Constants } from 'src/app/constants';
-import { HttpClient } from '@angular/common/http';
 import { MessageService } from 'src/app/message/message.service';
 import { StaffDataExchangeService } from 'src/app/tabs-staff/service/staff-data-exchange.service';
 import { MessageBoxService } from 'src/app/message-box/service/message-box.service';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { StaffService } from 'src/app/service/staff.service';
 
 @Component({
 	selector: 'app-register-user',
@@ -42,11 +39,10 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 
 	constructor(
 		private formBuilder: FormBuilder,
-		private httpClient: HttpClient,
+		private staffService: StaffService,
 		private backendSetupService: BackendSetupService,
 		private staffDataExchangeService: StaffDataExchangeService,
 		private messageBoxService: MessageBoxService,
-		private router: Router,
 		private messageService: MessageService) {
 		super();
 	}
@@ -101,10 +97,10 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 		}
 
 		this.subscriptions
-			.add(this.httpClient.get<StaffDTO>(
-				this.backendSetupService.url() + '/admin/' +
-				(this.veryFirstConnection ? 'veryFirstUser' : 'register'),
-				{ params: { login: username, password: password } })
+			.add(this.staffService.registerUser(
+					this.veryFirstConnection, 
+					username, 
+					password)
 				.subscribe(
 					response => {
 						if (response.code === 0) {

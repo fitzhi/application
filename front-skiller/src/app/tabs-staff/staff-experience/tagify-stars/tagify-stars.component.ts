@@ -1,10 +1,7 @@
-import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import Tagify from '@yaireo/tagify';
 import { TagStar } from '../tag-star';
-import { Placeholder } from '@angular/compiler/src/i18n/i18n_ast';
-import { mapToMapExpression } from '@angular/compiler/src/render3/util';
 import { Subject, BehaviorSubject } from 'rxjs';
-import { Constants } from 'src/app/constants';
 
 @Component({
 	selector: 'app-tagify-stars',
@@ -93,13 +90,19 @@ export class TagifyStarsComponent implements AfterViewInit {
 								</tag>`;
 				}
 			}
+		});
+
+		// This test of non-nullable and non 'undefined-able' is there for Karma testing purpose.
+		if (this.tagify.settings) {
+			this.tagify.settings.whitelist = [];
+			this.whitelist.forEach(element => this.tagify.settings.whitelist.push(element));
+			this.tagify.settings.blacklist = [];
+			// This test of non-nullable and non 'undefined-able' is there for Karma testing purpose.
+			if (this.blacklist) {
+				this.blacklist.forEach(element => this.tagify.settings.blacklist.push(element));
+			}
+			this.tagify.settings.placeholder = '';
 		}
-		);
-		this.tagify.settings.whitelist = [];
-		this.whitelist.forEach(element => this.tagify.settings.whitelist.push(element));
-		this.tagify.settings.blacklist = [];
-		this.blacklist.forEach(element => this.tagify.settings.blacklist.push(element));
-		this.tagify.settings.placeholder = '';
 
 		this.boundOnClick[0] = this.onClick_0.bind(this);
 		this.boundOnClick[1] = this.onClick_1.bind(this);
@@ -107,42 +110,59 @@ export class TagifyStarsComponent implements AfterViewInit {
 		this.boundOnClick[3] = this.onClick_3.bind(this);
 		this.boundOnClick[4] = this.onClick_4.bind(this);
 
-		this.addValues(this.originalValues);
+		// This test of non nullable and non 'undefined-able' is there for Karma testing purpose.
+		if ((this.originalValues) && (this.originalValues.length > 0)) {
+			this.addValues(this.originalValues);
+		}
 
 		this.boundOnAddTag = this.onAddTag.bind(this);
 		this.boundOnRemoveTag = this.onRemoveTag.bind(this);
 
-		// Chainable event listeners
+		// This test of the function 'off' being effectively a function is due to Karma processing purpose.
+		if (typeof this.tagify.off === 'function') {
+			// Chainable event listeners
+			this.tagify.on('add', this.boundOnAddTag)
+				.on('remove', this.onRemoveTag.bind(this))
+				.on('click', this.onTagClick.bind(this));
+		}
 
-		this.tagify.on('add', this.boundOnAddTag)
-			.on('remove', this.onRemoveTag.bind(this))
-			.on('click', this.onTagClick.bind(this));
+		// This test of non nullable and non 'undefined-able' is there for Karma testing purpose.
+		if (this.originalValues) {
+			this.updateEventHandlerStars(this.originalValues);
+		}
 
-		this.updateEventHandlerStars(this.originalValues);
+		// This test of non nullable and non 'undefined-able' is there for Karma testing purpose.
+		if (this.additionalValues$) {
+			this.additionalValues$.subscribe(addedValues => {
+				this.addValues(addedValues);
+				this.updateEventHandlerStars(addedValues);
+			});
+		}
 
-		this.additionalValues$.subscribe(addedValues => {
-			this.addValues(addedValues);
-			this.updateEventHandlerStars(addedValues);
-		});
+		// This test of non nullable and non 'undefined-able' is there for Karma testing purpose.
+		if (this.values$) {
+			this.values$.subscribe(values => {
+					this.removeValues();
+					this.addValues(values);
+					this.updateEventHandlerStars(values);
+				});
+		}
 
-		this.values$.subscribe(values => {
-			this.removeValues();
-			this.addValues(values);
-			this.updateEventHandlerStars(values);
-		});
+		// This test of non nullable and non 'undefined-able' is there for Karma testing purpose.
+		if (this.readOnly$) {
+			this.readOnly$.subscribe(readOnly => {
 
-		this.readOnly$.subscribe(readOnly => {
+				this.readOnly = readOnly;
 
-			this.readOnly = readOnly;
+				const tagInput = document.getElementById('tag-input');
+				tagInput.contentEditable = readOnly ? 'false' : 'true';
 
-			const tagInput = document.getElementById('tag-input');
-			tagInput.contentEditable = readOnly ? 'false' : 'true';
+				document.querySelectorAll('.tagify__tag__removeBtn').forEach(elt =>
+					elt.setAttribute('style', (readOnly ? 'visibility:hidden' : 'visibility:visible'))
+				);
 
-			document.querySelectorAll('.tagify__tag__removeBtn').forEach(elt =>
-				elt.setAttribute('style', (readOnly ? 'visibility:hidden' : 'visibility:visible'))
-			);
-
-		});
+			});
+		}
 	}
 
 	private removeValues() {
@@ -152,7 +172,11 @@ export class TagifyStarsComponent implements AfterViewInit {
 	}
 
 	private addValues(values: TagStar[]) {
-		this.tagify.off('add', this.boundOnAddTag);
+
+		if (typeof this.tagify.off === 'function') {
+			this.tagify.off('add', this.boundOnAddTag);
+		}
+
 		this.tagify.addTags(values.map(tagStar => tagStar.tag));
 		values.forEach(tagStar => {
 			for (let i = 0; i <= tagStar.star; i++) {
@@ -162,7 +186,10 @@ export class TagifyStarsComponent implements AfterViewInit {
 				this.setColor(tagStar.tag, i, this.colorOFF);
 			}
 		});
-		this.tagify.on('add', this.boundOnAddTag);
+
+		if (typeof this.tagify.on === 'function') {
+			this.tagify.on('add', this.boundOnAddTag);
+		}
 	}
 
 	/**

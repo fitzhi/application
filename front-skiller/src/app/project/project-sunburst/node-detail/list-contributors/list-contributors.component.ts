@@ -4,44 +4,45 @@ import { BaseComponent } from '../../../../base/base.component';
 import { ContributorsDataSource } from '../contributors-data-source';
 
 @Component({
-  selector: 'app-list-contributors',
-  templateUrl: './list-contributors.component.html',
-  styleUrls: ['./list-contributors.component.css']
+	selector: 'app-list-contributors',
+	templateUrl: './list-contributors.component.html',
+	styleUrls: ['./list-contributors.component.css']
 })
 export class ListContributorsComponent extends BaseComponent implements OnInit, OnDestroy {
 
-  public tblColumns: string[] = ['fullname', 'active', 'external', 'lastCommit'];
+	public tblColumns: string[] = ['fullname', 'active', 'external', 'lastCommit'];
 
-  @Input('contributors')
-  public contributors: ContributorsDataSource;
+	@Input() contributors: ContributorsDataSource;
 
-  constructor() { super(); }
+	constructor() { super(); }
 
-  ngOnInit() {
-    if (Constants.DEBUG) {
-      this.subscriptions.add(
-        this.contributors.committersSubject.subscribe(elements => {
-          if ( (elements !== null) && (elements.length > 0)) {
-            console.groupCollapsed('Contributors');
-            elements.forEach(element => console.log  (element.fullname));
-            console.groupEnd();
-          }
-        }));
-    }
-  }
+	ngOnInit() {
+		if (Constants.DEBUG) {
+			if (this.contributors) {
+				this.subscriptions.add(
+					this.contributors.committersSubject.subscribe(elements => {
+						if (elements) {
+							console.groupCollapsed('Contributors');
+							elements.forEach(element => console.log  (element.fullname));
+							console.groupEnd();
+						}
+				}));
+			}
+		}
+	}
 
-  /**
-   * Return the CSS class corresponding to the active vs inactive status of a developer.
-   */
-  public class_active_inactive(active: boolean) {
-    return active ? 'contributor_active' : 'contributor_inactive';
-  }
+	/**
+	 * Return the CSS class corresponding to the active vs inactive status of a developer.
+	 */
+	public class_active_inactive(active: boolean) {
+		return active ? 'contributor_active' : 'contributor_inactive';
+	}
 
 
-  /**
-   * Calling the base class to unsubscribe all subscriptions.
-   */
-  ngOnDestroy() {
-    super.ngOnDestroy();
-  }
+	/**
+	 * Calling the base class to unsubscribe all subscriptions.
+	 */
+	ngOnDestroy() {
+		super.ngOnDestroy();
+	}
 }

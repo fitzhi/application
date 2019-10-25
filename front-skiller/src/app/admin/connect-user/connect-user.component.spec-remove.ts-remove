@@ -1,0 +1,122 @@
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ConnectUserComponent } from './connect-user.component';
+import { HttpClientModule } from '@angular/common/http';
+import { ReferentialService } from 'src/app/service/referential.service';
+import { WelcomeComponent } from 'src/app/welcome/welcome.component';
+import { AppRoutingModule } from 'src/app/app-routing.module';
+import { CiaoComponent } from 'src/app/ciao/ciao.component';
+import { DevOnOffComponent } from 'src/app/dev-on-off/dev-on-off.component';
+import { ListSkillComponent } from 'src/app/list-skill/list-skill.component';
+import { SkillComponent } from 'src/app/skill/skill.component';
+import { TabsStaffListComponent } from 'src/app/tabs-staff-list/tabs-staff-list.component';
+import { StaffComponent } from 'src/app/tabs-staff/staff.component';
+import { AppComponent } from 'src/app/app.component';
+import { MessageComponent } from 'src/app/message/message.component';
+import { ErrorComponent } from 'src/app/error/error.component';
+import { ProjectFormComponent } from 'src/app/project/project-form/project-form.component';
+import { ListProjectComponent } from 'src/app/list-project/list-project.component';
+import { StaffTabsComponent } from 'src/app/tabs-staff/staff-tabs/staff-tabs.component';
+import { StaffFormComponent } from 'src/app/tabs-staff/staff-form/staff-form.component';
+import { StaffProjectsComponent } from 'src/app/tabs-staff/staff-projects/staff-projects.component';
+import { StaffExperienceComponent } from 'src/app/tabs-staff/staff-experience/staff-experience.component';
+import { StaffUploadCvComponent } from 'src/app/tabs-staff/staff-experience/staff-upload-cv/staff-upload-cv.component';
+import { MessageBoxComponent } from 'src/app/message-box/dialog/message-box.component';
+import { ProjectComponent } from 'src/app/project/project.component';
+import { ProjectSunburstComponent } from 'src/app/project/project-sunburst/project-sunburst.component';
+import { ProjectStaffComponent } from 'src/app/project/project-staff/project-staff.component';
+import { ProjectGhostsComponent } from 'src/app/project/project-sunburst/project-ghosts/project-ghosts.component';
+import { TableGhostsComponent } from 'src/app/project/project-sunburst/project-ghosts/table-ghosts/table-ghosts.component';
+import { DialogLegendSunburstComponent } from 'src/app/project/project-sunburst/legend-sunburst/legend-sunburst.component';
+import { DialogFilterComponent } from 'src/app/project/project-sunburst/dialog-filter/dialog-filter.component';
+import { ListFilenamesComponent } from 'src/app/project/project-sunburst/node-detail/list-filenames/list-filenames.component';
+import { ListContributorsComponent } from 'src/app/project/project-sunburst/node-detail/list-contributors/list-contributors.component';
+import { NodeDetailComponent } from 'src/app/project/project-sunburst/node-detail/node-detail.component';
+import { StaffListComponent } from 'src/app/tabs-staff-list/staff-list/staff-list.component';
+import { BackendSetupComponent } from '../backend-setup/backend-setup.component';
+import { RegisterUserComponent } from '../register-user/register-user.component';
+import { StartingSetupComponent } from '../starting-setup/starting-setup.component';
+import { ToolbarComponent } from 'src/app/toolbar/toolbar.component';
+import { TableDependenciesComponent } from 'src/app/project/project-sunburst/table-dependencies/table-dependencies.component';
+import { InLineEditDialogComponent } from 'src/app/project/project-sunburst/table-dependencies/in-line-edit-dialog/in-line-edit-dialog.component';
+import { TagifyStarsComponent } from 'src/app/tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
+import { ProjectAuditComponent } from 'src/app/project/project-audit/project-audit.component';
+import { ProjectSonarComponent } from 'src/app/project/project-sonar/project-sonar.component';
+import { SonarMetricsComponent } from 'src/app/project/project-sonar/sonar-metrics/sonar-metrics.component';
+import { SonarDashboardComponent } from 'src/app/project/project-sonar/sonar-dashboard/sonar-dashboard.component';
+import { SonarThumbnailsComponent } from 'src/app/project/project-sonar/sonar-thumbnails/sonar-thumbnails.component';
+import { SonarBadgeComponent } from 'src/app/project/project-sonar/sonar-dashboard/sonar-badge/sonar-badge.component';
+import { MatTableModule } from '@angular/material/table';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup, FormControl, Validators} from '@angular/forms';
+
+describe('ConnectUserComponent', () => {
+	let component: ConnectUserComponent;
+	let fixture: ComponentFixture<ConnectUserComponent>;
+
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			declarations: [
+				AppComponent,
+				SkillComponent,
+				ListSkillComponent,
+				WelcomeComponent,
+				StaffComponent,
+				MessageComponent,
+				ErrorComponent,
+				ProjectFormComponent,
+				ListProjectComponent,
+				StaffTabsComponent,
+				StaffFormComponent,
+				StaffProjectsComponent,
+				StaffExperienceComponent,
+				StaffUploadCvComponent,
+				MessageBoxComponent,
+				ProjectComponent,
+				ProjectSunburstComponent,
+				ProjectStaffComponent,
+				ProjectGhostsComponent,
+				TableGhostsComponent,
+				DialogLegendSunburstComponent,
+				DialogFilterComponent,
+				ListFilenamesComponent,
+				NodeDetailComponent,
+				ListContributorsComponent,
+				TabsStaffListComponent,
+				StaffListComponent,
+				BackendSetupComponent,
+				RegisterUserComponent,
+				StartingSetupComponent,
+				ToolbarComponent,
+				ConnectUserComponent,
+				CiaoComponent,
+				TableDependenciesComponent,
+				InLineEditDialogComponent,
+				DialogLegendSunburstComponent,
+				TagifyStarsComponent,
+				ProjectAuditComponent,
+				DevOnOffComponent,
+				ProjectSonarComponent,
+				SonarMetricsComponent,
+				SonarDashboardComponent,
+			‚	SonarThumbnailsComponent,
+				SonarBadgeComponent ],
+			imports: [HttpClientModule, AppRoutingModule, MatTableModule, MatButtonToggleModule, MatAutocompleteModule],
+			providers: [ReferentialService, FormBuilder, FormGroup, FormControl, Validators],
+			schemas: [ NO_ERRORS_SCHEMA ]
+		})
+		.compileComponents();
+	}));
+
+	beforeEach(() => {
+		fixture = TestBed.createComponent(ConnectUserComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
+
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
+});

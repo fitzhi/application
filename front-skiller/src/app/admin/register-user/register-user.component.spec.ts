@@ -1,25 +1,41 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { RegisterUserComponent } from './register-user.component';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClient } from '@angular/common/http';
+import { RootTestModule } from 'src/app/root-test/root-test.module';
 
-describe('ConnectionComponent', () => {
-  let component: RegisterUserComponent;
-  let fixture: ComponentFixture<RegisterUserComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ RegisterUserComponent ]
-    })
-    .compileComponents();
-  }));
+describe('RegisterUserComponent', () => {
+	let component: RegisterUserComponent;
+	let fixture: ComponentFixture<RegisterUserComponent>;
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(RegisterUserComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+	let httpClient: HttpClient;
+	let httpTestingController: HttpTestingController;
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			declarations: [],
+			providers: [],
+			imports: [
+				HttpClientTestingModule,
+				RootTestModule,
+			]
+		})
+		.compileComponents();
+	}));
+
+	beforeEach(() => {
+		// Inject the http service and test controller for each test
+		httpClient = TestBed.get(HttpClient);
+		httpTestingController = TestBed.get(HttpTestingController);
+
+		fixture = TestBed.createComponent(RegisterUserComponent);
+		component = fixture.componentInstance;
+
+		fixture.detectChanges();
+	});
+
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 });

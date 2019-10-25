@@ -24,6 +24,11 @@ declare var $: any;
 export class AppComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
+	 * Definitive name of the application, for today at least....
+	 */
+	public title = 'techxhicolor';
+
+	/**
     * Context identfifier : Entity currently active.
     */
 	public activeContext: number;

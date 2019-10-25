@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { ProjectSunburstComponent } from './project-sunburst.component';
+import { RootTestModule } from 'src/app/root-test/root-test.module';
 
 describe('ProjectSunburstComponent', () => {
 	let component: ProjectSunburstComponent;
@@ -8,7 +8,8 @@ describe('ProjectSunburstComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ProjectSunburstComponent]
+			declarations: [],
+			imports: [RootTestModule]
 		})
 			.compileComponents();
 	}));

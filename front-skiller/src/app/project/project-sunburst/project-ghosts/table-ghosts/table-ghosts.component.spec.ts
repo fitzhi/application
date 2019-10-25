@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TableGhostsComponent } from './table-ghosts.component';
+import { RootTestModule } from 'src/app/root-test/root-test.module';
 
 describe('TableGhostsComponent', () => {
 	let component: TableGhostsComponent;
@@ -8,7 +9,8 @@ describe('TableGhostsComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ TableGhostsComponent ]
+			declarations: [  ],
+			imports: [RootTestModule]
 		})
 		.compileComponents();
 	}));

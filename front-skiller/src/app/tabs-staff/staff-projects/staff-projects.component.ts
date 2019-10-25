@@ -121,11 +121,14 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 			whitelist        : []
 		});
 
-		// We setup the whitelist of the componenet
-		this.projectService.allProjects
-			.map(function(project) { return project.name; }).forEach(element => {
-					this.tagify.settings.whitelist.push(element);
-				});
+		// We setup the whitelist of the component
+		// This test of non nullable and non 'undefined-able' is there for Karma testing purpose. 
+		if (this.projectService.allProjects) {
+			this.projectService.allProjects
+				.map(function(project) { return project.name; }).forEach(element => {
+						this.tagify.settings.whitelist.push(element);
+					});
+		}
 
 		// We add the already attached project into the tagify-textarea component.
 		this.subscriptions.add(

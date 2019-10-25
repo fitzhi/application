@@ -27,10 +27,12 @@ export class TableDependenciesComponent implements OnInit {
 
 	ngOnInit() {
 		this.dataSource = new DependenciesDataSource([]);
-		this.project$.pipe(take(1)).subscribe(prj => {
-			this.idProject = prj.id;
-			this.dataSource.update(prj.libraries);
-		});
+		if (this.project$) {
+			this.project$.pipe(take(1)).subscribe(prj => {
+				this.idProject = prj.id;
+				this.dataSource.update(prj.libraries);
+			});
+		}
 	}
 
 	editDependency(library: Library) {

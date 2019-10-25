@@ -12,14 +12,11 @@ import { Filename } from 'src/app/data/filename';
 })
 export class NodeDetailComponent extends BaseComponent implements OnInit, OnDestroy {
 
-	@Input('filenames')
-	public filenames: FilenamesDataSource;
+	@Input() filenames: FilenamesDataSource;
 
-	@Input('contributors')
-	public contributors: ContributorsDataSource;
+	@Input() contributors: ContributorsDataSource;
 
-	@Input('location')
-	public location: BehaviorSubject<Filename[]>;
+	@Input() location: BehaviorSubject<Filename[]>;
 
 	public node: Filename[];
 
@@ -28,8 +25,10 @@ export class NodeDetailComponent extends BaseComponent implements OnInit, OnDest
 	}
 
 	ngOnInit() {
-		this.subscriptions.add(
-			this.location.subscribe(element => this.node = element));
+		if (this.location) {
+			this.subscriptions.add(
+				this.location.subscribe(element => this.node = element));
+		}
 	}
 
 	/**

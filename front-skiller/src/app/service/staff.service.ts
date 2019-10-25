@@ -273,4 +273,18 @@ export class StaffService {
 			);
 	}
 
+	/**
+	 * Register a new user inside the application
+	 * @param veryFirstConnection TRUE if the is the VERY FIRST USER to be created, and subsequently the FIRST ADMIN USER.
+	 * @param username the given username
+	 * @param password  the given password
+	 */
+	registerUser(veryFirstConnection: boolean, username: string, password: string): Observable<StaffDTO> {
+		return this.http.get<StaffDTO>(
+			this.backendSetupService.url() + '/admin/' +
+			(veryFirstConnection ? 'veryFirstUser' : 'register'),
+			{ params: { login: username, password: password } });
+	}
+
+
 }

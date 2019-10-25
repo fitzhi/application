@@ -3,7 +3,9 @@
  */
 export class Message {
 
-	constructor(private severity: number, private message: string) {
+	constructor(
+		public severity: number,
+		public message: string) {
 	}
 
 	trace() {

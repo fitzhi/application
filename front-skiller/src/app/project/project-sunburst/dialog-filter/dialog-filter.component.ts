@@ -7,53 +7,56 @@ import { SettingsGeneration } from '../../../data/settingsGeneration';
 import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-dialog-filter',
-  templateUrl: './dialog-filter.component.html',
-  styleUrls: ['./dialog-filter.component.css']
+	selector: 'app-dialog-filter',
+	templateUrl: './dialog-filter.component.html',
+	styleUrls: ['./dialog-filter.component.css']
 })
 export class DialogFilterComponent implements OnInit {
 
-  public contributors: Contributor[];
+	public contributors: Contributor[];
 
-  public filters = new FormGroup({
-    startingDate: new FormControl(''),
-    idStaffSelected: new FormControl('')
-  });
+	public filters = new FormGroup({
+		startingDate: new FormControl(''),
+		idStaffSelected: new FormControl('')
+	});
 
-  constructor(
-      private projectStaffService: ProjectStaffService,
-      private dialogRef: MatDialogRef<DialogFilterComponent>) { }
+	constructor(
+		private projectStaffService: ProjectStaffService,
+		private dialogRef: MatDialogRef<DialogFilterComponent>) { }
 
-  ngOnInit() {
-    if (Constants.DEBUG) {
-      console.groupCollapsed('Contributors list');
-      this.projectStaffService.contributors.forEach(entry => {
-        console.log(entry.fullname);
-      });
-      console.groupEnd();
-      this.filters.get('startingDate').setValue('');
-      this.filters.get('idStaffSelected').setValue('');
-    }
+	ngOnInit() {
+		if (Constants.DEBUG) {
+			if (this.projectStaffService.contributors) {
+				console.groupCollapsed('Contributors list');
+				this.projectStaffService.contributors.forEach(entry => {
+					console.log(entry.fullname);
+				});
+				console.groupEnd();
+			}
+		}
 
-    this.contributors = this.projectStaffService.contributors;
-  }
+		this.filters.get('startingDate').setValue('');
+		this.filters.get('idStaffSelected').setValue('');
 
-  get idStaffSelected(): any {
-    return this.filters.get('idStaffSelected');
-  }
+		this.contributors = this.projectStaffService.contributors;
+	}
 
-  get startingDate(): any {
-    return this.filters.get('startingDate');
-  }
+	get idStaffSelected(): any {
+		return this.filters.get('idStaffSelected');
+	}
 
-  submit() {
-    const startingDate = (this.filters.get('startingDate').value === '')
-            ? new Date(0) : this.filters.get('startingDate').value;
-    const idStaffSelected = this.filters.get('idStaffSelected').value;
-    if (Constants.DEBUG) {
-      console.log('idStaffSelected ' + idStaffSelected + ' / startingDate : ' + startingDate);
-    }
-    const settings = new SettingsGeneration(0, startingDate.getTime(), idStaffSelected);
-    this.dialogRef.close (settings);
-  }
+	get startingDate(): any {
+		return this.filters.get('startingDate');
+	}
+
+	submit() {
+		const startingDate = (this.filters.get('startingDate').value === '')
+			? new Date(0) : this.filters.get('startingDate').value;
+		const idStaffSelected = this.filters.get('idStaffSelected').value;
+		if (Constants.DEBUG) {
+			console.log('idStaffSelected ' + idStaffSelected + ' / startingDate : ' + startingDate);
+		}
+		const settings = new SettingsGeneration(0, startingDate.getTime(), idStaffSelected);
+		this.dialogRef.close(settings);
+	}
 }
