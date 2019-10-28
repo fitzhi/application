@@ -6,6 +6,7 @@ import { NoPreloading } from '@angular/router';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { Profile } from '../../data/profile';
 import { format } from 'url';
+import { StaffComponent } from '../staff.component';
 
 describe('StaffFormComponent', () => {
 	let component: StaffFormComponent;
@@ -22,11 +23,13 @@ describe('StaffFormComponent', () => {
 	beforeEach(() => {
 
 		fixture = TestBed.createComponent(StaffFormComponent);
-
 		component = fixture.componentInstance;
-		component.profiles = [];
-		component.profiles.push (new Profile('one Code', 'labelOfCode for One'));
-		component.profiles.push (new Profile('code nope', 'another labelOfCode'));
+
+		const referentialService = TestBed.get(ReferentialService);
+		referentialService.profiles = [];
+		referentialService.profiles.push (new Profile('one Code', 'labelOfCode for One'));
+		referentialService.profiles.push (new Profile('code nope', 'another labelOfCode'));
+
 
 		fixture.detectChanges();
 

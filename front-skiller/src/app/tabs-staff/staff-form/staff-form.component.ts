@@ -144,9 +144,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 					}));
 		}
 
-		if (this.profiles.length === 0) {
-			this.profiles = this.referentialService.profiles;
-		}
+		this.profiles = this.referentialService.profiles;
 	}
 
 	/**
@@ -214,10 +212,18 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
      * Class of the button corresponding to the 3 possible states of the "Ok" button.
      */
 	classOkButton() {
+		if (this.isAlreadyDesactivated()) {
+			return (this.collaborator.active) ?
+				'okButton okButtonValid' : 'okButton okButtonInvalid';
+		}
 		return (this.profileStaff.invalid) ?
 			'okButton okButtonInvalid' : 'okButton okButtonValid';
 	}
 
+	/**
+	 * Content of a field has been updated.
+	 * @param field field identified throwing this event.
+	 */
 	public onChange(field: number) {
 		if (this.collaborator.idStaff === -1) {
 			return;
