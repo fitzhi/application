@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Constants } from '../../constants';
 import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
 import { MessageService } from 'src/app/message/message.service';
+import { take } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-backend-setup',
@@ -47,6 +48,7 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
 		private backendSetupService: BackendSetupService) { super(); }
 
 	ngOnInit() {
+		console.log(this.backendSetupService.hasSavedAnUrl());
 		this.backendSetupForm.get('url').setValue(
 			this.backendSetupService.hasSavedAnUrl() ?
 				this.backendSetupService.url() : this.backendSetupService.defaultUrl);
@@ -64,27 +66,27 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
 		if (Constants.DEBUG) {
 			console.log('Testing the URL', urlCandidate);
 		}
-		this.subscriptions
-			.add(this.httpClient.get<String>(urlCandidate + '/admin/isVeryFirstConnection', { responseType: 'text' as 'json' })
-				.subscribe(
-					data => {
-						this.veryFirstConnection = (data === 'true');
-						if (Constants.DEBUG && this.veryFirstConnection) {
-							console.log('This is the very first connection into Wibkac');
-						}
-						this.currentState = this.BUTTON_VALID_URL;
-						this.messageService.info('This URL is valid. Let\'s go ahead !');
-						this.backendSetupService.saveUrl(urlCandidate);
-						this.messengerVeryFirstConnection.emit(this.veryFirstConnection);
-					},
-					error => {
-						if (Constants.DEBUG) {
-							console.log('Connection error ', error);
-						}
-						this.currentState = this.BUTTON_INVALID_URL;
-						setTimeout(() => this.messageService.error(
-							'Error ! Either this URL is invalid, or your server is offline'), 0);
-					}));
+		this.backendSetupService.isVeryFirstConnection(urlCandidate)
+			.pipe(take(1))
+			.subscribe(
+				data => {
+					this.veryFirstConnection = (data === 'true');
+					if (Constants.DEBUG && this.veryFirstConnection) {
+						console.log('This is the very first connection into Wibkac');
+					}
+					this.currentState = this.BUTTON_VALID_URL;
+					this.messageService.info('This URL is valid. Let\'s go ahead !');
+					this.backendSetupService.saveUrl(urlCandidate);
+					this.messengerVeryFirstConnection.emit(this.veryFirstConnection);
+				},
+				error => {
+					if (Constants.DEBUG) {
+						console.log('Connection error', error);
+					}
+					this.currentState = this.BUTTON_INVALID_URL;
+					setTimeout(() => this.messageService.error(
+						'Error ! Either this URL is invalid, or your server is offline'), 0);
+				});
 	}
 
 	/**

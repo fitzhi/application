@@ -98,8 +98,8 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 
 		this.subscriptions
 			.add(this.staffService.registerUser(
-					this.veryFirstConnection, 
-					username, 
+					this.veryFirstConnection,
+					username,
 					password)
 				.subscribe(
 					response => {

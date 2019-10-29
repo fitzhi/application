@@ -3,7 +3,7 @@
     <div id="backendSetup" class="col-md-8">
         <mat-grid-list cols="5"  rowHeight="40px">
 
-            <mat-grid-tile i [colspan]="4" [rowspan]="6"  >
+            <mat-grid-tile [colspan]="4" [rowspan]="6"  >
                 Welcome !<br/><br/>
                 We have detected that this is your first execution of Wibkac for this desktop.<br/>
                 This application requires a back-end server installed somewhere on your network.<br/>
@@ -19,7 +19,7 @@
             </mat-grid-tile>
 
             <mat-grid-tile [colspan]="5" [rowspan]="1" class="tile">
-                <label id="url" for="url" class="required">Server</label>
+                <label id="labelUrl" for="url" class="required">Server</label>
                 <input type="text" 
                         class="form-control required" 
                         id="url" 
