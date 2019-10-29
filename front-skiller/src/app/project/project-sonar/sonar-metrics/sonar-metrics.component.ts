@@ -43,6 +43,11 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	@Output() throwMessage = new EventEmitter<MessageGravity>();
 
 	/**
+	 * Is The Sonar server accessible ?
+	 */
+	private isSonarAccessible = false;
+
+	/**
 	 * Current active project.
 	 */
 	private project: Project;
@@ -79,6 +84,11 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	ngOnInit() {
 
 		this.subscriptions.add(
+			this.sonarService.sonarIsAccessible$.subscribe(isSonarAccessible => {
+					this.isSonarAccessible = isSonarAccessible;
+		}));
+
+		this.subscriptions.add(
 			this.project$.subscribe(project => this.project = project));
 
 		this.subscriptions.add(
@@ -94,11 +104,6 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 					if (Constants.DEBUG) {
 						console.log ('No Sonar project declared. We reinitialize the dataSource');
 					}
-					/*
-					if (this.dataSource.data) {
-						this.dataSource.data = [];
-					}
-					*/
 					return;
 				}
 				if (this.project && (panelSwitchEvent.keySonar.length > 0) ) {

@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
 	providedIn: 'root'
@@ -10,34 +12,27 @@ export class BackendSetupService {
      */
 	public defaultUrl = 'http://localhost:8080';
 
-	/**
-     * Current registered URL.
-     */
-	private currentUrl = null;
-
-	constructor() {
-		this.currentUrl = localStorage.getItem('backendUrl');
+	constructor(private  httpClient: HttpClient) {
 	}
 
 	/**
      * A URL has already been saved in the localstorage.
      */
 	hasSavedAnUrl() {
-		return (this.currentUrl !== null);
+		return (localStorage.getItem('backendUrl') !== null);
 	}
 
 	/**
      * @return the back-end URL
      */
 	public url() {
-		return this.currentUrl;
+		return localStorage.getItem('backendUrl');
 	}
 
 	/**
      * @param validated URL pointing to the back-end server.
      */
 	public saveUrl(url: string) {
-		this.currentUrl = url;
 		localStorage.setItem('backendUrl', url);
 	}
 
@@ -46,5 +41,14 @@ export class BackendSetupService {
      */
 	public removeUrl() {
 		localStorage.removeItem('backendUrl');
+	}
+
+	/**
+	 * Test the passed URL and check if it is the very first connection.
+	 * @param urlCandidate the url candidate for hosting the backend.
+	 */
+	public isVeryFirstConnection(urlCandidate: string): Observable<string> {
+		return this.httpClient.get<string>(
+			urlCandidate + '/admin/isVeryFirstConnection', { responseType: 'text' as 'json' });
 	}
 }
