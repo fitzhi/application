@@ -161,12 +161,13 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	 * @param key the active project Sonar key.
 	 */
 	switchSonarContext(idPanel: number, key: string) {
-		if (Constants.DEBUG) {
-			console.log ('Displaying panel ID ' + idPanel + ' for the Sonar project ' + key);
-		}
 
 		if ((key === this.keySummarySelected) && (idPanel === this.NONE)) {
 			return;
+		}
+
+		if (Constants.DEBUG) {
+			console.log ('Displaying  ' + Constants.TITLE_PANELS[idPanel] + ' for the Sonar ' + key);
 		}
 
 		// If the user clicks on the body of the thumbnail; but not on a button,

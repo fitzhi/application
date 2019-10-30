@@ -14,7 +14,6 @@ export class Constants {
 	 */
 	public static UNKNOWN = -1;
 
-
 	public static LEVEL_Expert = 5;
 	public static LEVEL_Experienced = 4;
 	public static LEVEL_Senior = 3;
@@ -65,10 +64,12 @@ export class Constants {
 	public static STAFF_IDX_TAB_EXPERIENCES = 2;
 
 	public static PROJECT_SONAR_PANEL = {
-		SONAR: 1,
-		SETTINGS: 2,
-		NONE: 3
+		SONAR: 0,
+		SETTINGS: 1,
+		NONE: 2
 	};
+
+	public static TITLE_PANELS: string[] = ['Sonar', 'Settings', 'None'];
 
 	/**
 	 * Type of file allowed to be uploaded by the back-end for the application file.

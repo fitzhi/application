@@ -8,6 +8,7 @@ import { ProjectService } from 'src/app/service/project.service';
 import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value';
 import { Subject } from 'rxjs';
 import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
+import * as d3 from 'd3';
 
 @Component({
 	selector: 'app-sonar-dashboard',
@@ -26,7 +27,7 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	* another Sonar project is selected or
 	* another panel is selected
 	*/
-	@Input() panelSwitchTransmitter$;
+	@Input() panelSwitchTransmitter$: Subject<PanelSwitchEvent>;
 
 	private project: Project;
 

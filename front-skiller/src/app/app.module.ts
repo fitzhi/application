@@ -91,6 +91,7 @@ import { SonarMetricsComponent } from './project/project-sonar/sonar-metrics/son
 import { SonarDashboardComponent } from './project/project-sonar/sonar-dashboard/sonar-dashboard.component';
 import { SonarThumbnailsComponent } from './project/project-sonar/sonar-thumbnails/sonar-thumbnails.component';
 import { SonarBadgeComponent } from './project/project-sonar/sonar-dashboard/sonar-badge/sonar-badge.component';
+import { SonarQuotationComponent } from './project/project-sonar/sonar-dashboard/sonar-quotation/sonar-quotation.component';
 
 @NgModule({
 	declarations: [
@@ -137,7 +138,8 @@ import { SonarBadgeComponent } from './project/project-sonar/sonar-dashboard/son
 		SonarMetricsComponent,
 		SonarDashboardComponent,
 		SonarThumbnailsComponent,
-		SonarBadgeComponent
+		SonarBadgeComponent,
+		SonarQuotationComponent
 	],
 	entryComponents: [
 		StaffUploadCvComponent,
