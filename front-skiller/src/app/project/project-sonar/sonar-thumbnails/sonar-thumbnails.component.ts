@@ -56,6 +56,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	}
 
 	ngOnInit() {
+
 		this.subscriptions.add(
 			this.project$.subscribe(project => {
 				this.project = project;

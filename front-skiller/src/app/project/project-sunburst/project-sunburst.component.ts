@@ -150,6 +150,12 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		if (this.project$) {
 			this.subscriptions.add(
 				this.project$.subscribe((project: Project) => {
+
+					// The behaviorSubject project$ is initialized with a null.
+					if (!project) {
+						return;
+					}
+
 					if (Constants.DEBUG) {
 						console.log('Project ' + project.id + ' ' + project.name + ' reveived in sunburst-component');
 					}

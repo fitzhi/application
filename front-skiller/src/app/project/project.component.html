@@ -1,28 +1,25 @@
 <mat-tab-group [selectedIndex]="tabIndex" (selectedIndexChange)="selectedIndexChange($event)">
-	<mat-tab label="Project"> 
-			<app-project-form [project$]="project$" [risk$]="risk$"></app-project-form>
-	</mat-tab> 
-	<mat-tab [disabled]="!canConnectSourceControl()" label="Staff"> 
-			<app-project-staff></app-project-staff>
-	</mat-tab> 
-	<mat-tab [disabled]="!canConnectSourceControl()" label="Staff Coverage"> 
-		<app-project-sunburst 
-			[project$]="project$"
-			(tabActivationEmitter)="tabActivation($event)"
+	<mat-tab label="Project">
+		<app-project-form [project$]="project$" [risk$]="risk$"></app-project-form>
+	</mat-tab>
+	<mat-tab [disabled]="!canConnectSourceControl()" label="Staff">
+		<app-project-staff></app-project-staff>
+	</mat-tab>
+	<mat-tab [disabled]="!canConnectSourceControl()" label="Staff Coverage">
+		<app-project-sunburst [project$]="project$" (tabActivationEmitter)="tabActivation($event)"
 			(updateRiskLevel)="updateRiskLevel($event)">
 		</app-project-sunburst>
-</mat-tab> 
-	<mat-tab label="Sonar"> 
-		<app-project-sonar
-			[project$]="project$"
-			(tabActivationEmitter)="tabActivation($event)"
-			(updateRiskLevel)="updateRiskLevel($event)"
-			(throwMessage)="catchMessage($event)">
-		</app-project-sonar>
-	</mat-tab> 
-	<mat-tab label="Audit"> 
+	</mat-tab>
+	<mat-tab label="Sonar">
 		<ng-template matTabContent>
-			<app-project-audit></app-project-audit> 
+			<app-project-sonar [project$]="project$" (tabActivationEmitter)="tabActivation($event)"
+				(updateRiskLevel)="updateRiskLevel($event)" (throwMessage)="catchMessage($event)">
+			</app-project-sonar>
 		</ng-template>
-	</mat-tab> 
+	</mat-tab>
+	<mat-tab label="Audit">
+		<ng-template matTabContent>
+			<app-project-audit></app-project-audit>
+		</ng-template>
+	</mat-tab>
 </mat-tab-group>

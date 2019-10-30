@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { CinematicService } from '../service/cinematic.service';
 import { Constants } from '../constants';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { Project } from '../data/project';
 import { ListProjectsService } from '../list-projects-service/list-projects.service';
 import { MessageService } from '../message/message.service';
@@ -18,7 +18,17 @@ import { MessageGravity } from '../message/message-gravity';
 })
 export class ProjectComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
-	public project$ = new Subject<Project>();
+	/**
+	 * IMPORTANT :
+	 *
+	 * The observable 'project$' cannot be a simple Subject
+	 * because the lifecycle of the tabs under the component project is not homogenous.
+	 * Some tab content are eagerly loaded, some other lazy.
+	 *
+	 * We need to use a persistant observable whenever the tab is already created, or not.
+	 *
+	 */
+	public project$ = new BehaviorSubject<Project>(null);
 
 	public risk$ = new Subject<number>();
 
@@ -104,7 +114,8 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	}
 
 	/**
-	 * This method receives the new tab to activate from e.g. the sunburst tab pane child (but it won't be the only one).
+	 * This method receives the new tab to activate from e.g. the sunburst tab pane child
+	 * (but it won't be the only one).
 	 * @param tabIndex new tab to activate.
 	 */
 	public tabActivation (tabIndex: number) {
@@ -112,7 +123,6 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 		if (Constants.DEBUG) {
 			console.log ('Selected index', this.TAB_TITLE[this.tabIndex]);
 		}
-
 	}
 
 	/**

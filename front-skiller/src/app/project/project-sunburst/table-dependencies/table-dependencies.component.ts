@@ -7,13 +7,14 @@ import { ProjectService } from '../../../service/project.service';
 import { take } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { Project } from 'src/app/data/project';
+import { BaseComponent } from 'src/app/base/base.component';
 
 @Component({
 	selector: 'app-table-dependencies',
 	templateUrl: './table-dependencies.component.html',
 	styleUrls: ['./table-dependencies.component.css']
 })
-export class TableDependenciesComponent implements OnInit {
+export class TableDependenciesComponent extends BaseComponent implements OnInit {
 
 	@Input() project$: Observable<Project>;
 
@@ -23,15 +24,24 @@ export class TableDependenciesComponent implements OnInit {
 
 	public displayedColumns: string[] = ['path', 'type', 'actionsColumn'];
 
-	constructor(private dialog: MatDialog, public projectService: ProjectService) { }
+	constructor(private dialog: MatDialog, public projectService: ProjectService) {
+		super();
+	}
 
 	ngOnInit() {
 		this.dataSource = new DependenciesDataSource([]);
 		if (this.project$) {
-			this.project$.pipe(take(1)).subscribe(prj => {
-				this.idProject = prj.id;
-				this.dataSource.update(prj.libraries);
-			});
+			this.subscriptions.add(
+				this.project$.subscribe(project => {
+
+					// The behaviorSubject project$ is initialized with a null.
+					if (!project) {
+						return;
+					}
+
+					this.idProject = project.id;
+					this.dataSource.update(project.libraries);
+				}));
 		}
 	}
 
@@ -50,6 +60,13 @@ export class TableDependenciesComponent implements OnInit {
 	removeDependency(library: Library) {
 		this.dataSource.remove(library);
 		this.projectService.libDirSave(this.idProject, this.dataSource.getLibraries());
+	}
+
+	/**
+	* Calling the base class to unsubscribe all subscriptions.
+	*/
+	ngOnDestroy() {
+		super.ngOnDestroy();
 	}
 
 }

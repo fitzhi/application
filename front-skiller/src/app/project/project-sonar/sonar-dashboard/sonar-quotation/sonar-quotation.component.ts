@@ -9,9 +9,7 @@ import { Constants } from 'src/app/constants';
 	templateUrl: './sonar-quotation.component.html',
 	styleUrls: ['./sonar-quotation.component.css']
 })
-export class SonarQuotationComponent implements OnInit, AfterViewInit {
-
-	private svg;
+export class SonarQuotationComponent implements OnInit {
 
 	/**
 	* Observable emitting a PanelSwitchEvent when
@@ -37,14 +35,11 @@ export class SonarQuotationComponent implements OnInit, AfterViewInit {
 		);
 	}
 
-	ngAfterViewInit() {
-	}
-
 	public draw(color: string) {
 
 		d3.select('svg').remove();
 
-		const my_svg = d3
+		const svg = d3
 			.select('p')
 			.append('svg')
 			.attr('width', '100%')
@@ -52,6 +47,6 @@ export class SonarQuotationComponent implements OnInit, AfterViewInit {
 			.append('g')
 			.attr('transform', 'translate(100,100)');
 
-		my_svg.append('circle').attr('cx', 100).attr('cx', 100).attr('r', 50).attr('fill', color);
+		svg.append('circle').attr('cx', 60).attr('cx', 60).attr('r', 50).attr('fill', color);
 	}
 }

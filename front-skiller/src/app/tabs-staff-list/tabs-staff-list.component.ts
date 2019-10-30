@@ -46,7 +46,7 @@ export class TabsStaffListComponent extends BaseComponent implements OnInit, OnD
 
 	/**
 	 * Reload the search history.
-	 * This method will be called during the ngInit process to retrieve the search context.
+	 * This method will be called during the ngOnInit process to retrieve the search context.
 	 */
 	public reloadHistory() {
 		this.tabsStaffListComponent.staffListContexts.forEach(criterias => {

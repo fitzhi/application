@@ -142,6 +142,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 		this.subscriptions.add(
 			this.project$.subscribe((project: Project) => {
+
+				// The behaviorSubject project$ is initialized with a null.
+				if (!project) {
+					return;
+				}
+
 				this.project = project;
 				this.profileProject.get('projectName').setValue(project.name);
 				this.connection_settings = String(this.project.connectionSettings);

@@ -65,14 +65,15 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 	private NONE = Constants.PROJECT_SONAR_PANEL.NONE;
 
 	constructor(
-		private sonarService: SonarService,
-		private messageService: MessageService,
 		private cinematicService: CinematicService) { super(); }
 
 
 	ngOnInit() {
 		this.subscriptions.add(
-			this.project$.subscribe(project => this.project = project));
+			this.project$.subscribe(project => {
+				console.log ('project', project.name);
+				this.project = project;
+			}));
 
 		this.subscriptions.add(
 			this.cinematicService.tabProjectActivated$.subscribe(tabSelected => {
@@ -122,8 +123,8 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 
 	/**
 	* Test if the given panel is activated.
+	* @param idPanel the Panel identifier
 	* @returns TRUE if the passed panel identifier is the selected one
-	* @param idPanel panel identifier
 	**/
 	public isPanelActive(panel: number) {
 		return (panel === this.idPanelSelected);

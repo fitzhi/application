@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
 import { Project } from 'src/app/data/project';
 import { BaseComponent } from 'src/app/base/base.component';
 import { SonarService } from 'src/app/service/sonar.service';
@@ -29,6 +29,9 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	*/
 	@Input() panelSwitchTransmitter$: Subject<PanelSwitchEvent>;
 
+	/**
+	 * The current project loaded.
+	 */
 	private project: Project;
 
 	constructor(
