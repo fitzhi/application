@@ -16,6 +16,7 @@ import { ElementSchemaRegistry } from '@angular/compiler';
 import { MessageGravity } from 'src/app/message/message-gravity';
 import { ResponseComponentMeasures } from 'src/app/data/sonar/reponse-component-measures';
 import { MessageService } from 'src/app/message/message.service';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Component({
 	selector: 'app-sonar-metrics',
@@ -89,7 +90,12 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 		}));
 
 		this.subscriptions.add(
-			this.project$.subscribe(project => this.project = project));
+			this.project$.subscribe(project => {
+				if (!project) {
+					return;
+				}
+				this.project = project;
+			}));
 
 		this.subscriptions.add(
 			this.loadMetrics$().subscribe ((data: ProjectSonarMetric[]) => {
@@ -100,6 +106,9 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 		this.subscriptions.add(
 			this.panelSwitchTransmitter$.subscribe(
 					(panelSwitchEvent: PanelSwitchEvent)  => {
+				if ( (Constants.DEBUG) && (panelSwitchEvent.idPanel === Constants.PROJECT_SONAR_PANEL.SETTINGS) ) {
+					console.log('Updating the metrics for the Sonar project %s', panelSwitchEvent.keySonar);
+				}
 				if (!panelSwitchEvent.keySonar) {
 					if (Constants.DEBUG) {
 						console.log ('No Sonar project declared. We reinitialize the dataSource');

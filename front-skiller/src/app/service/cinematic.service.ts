@@ -47,7 +47,16 @@ export class CinematicService {
 	newCollaboratorDisplayEmitted$ = this.emitActualCollaboratorDisplay.asObservable();
 
 	/**
-     * This subject containts the tab selected in the projects Tab Group container
+     * This subject informs on the selected tab in the projects Tab Group container.
+	 * Each-time the end-user clicks on a tab, this BehaviorSubject emits an identifier corresponding to the tab selected.
+	 *
+	 * This identifier can be :
+	 *
+	 *  - PROJECT_IDX_TAB_FORM for the project tab form
+	 *  - PROJECT_IDX_TAB_STAFF for the project staff list
+	 *  - PROJECT_IDX_TAB_SUNBURST for the Staff coverage graph
+	 *  - PROJECT_IDX_TAB_SONAR for the Sonar dashboard
+	 *
      */
 	public tabProjectActivated$ = new BehaviorSubject<number>(Constants.PROJECT_IDX_TAB_FORM);
 

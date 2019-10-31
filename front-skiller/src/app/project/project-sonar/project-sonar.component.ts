@@ -69,10 +69,19 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 
 
 	ngOnInit() {
+
 		this.subscriptions.add(
 			this.project$.subscribe(project => {
-				console.log ('project', project.name);
 				this.project = project;
+			}));
+
+		this.subscriptions.add(
+			this.panelSwitchTransmitter$.subscribe((
+				panelSwitchEvent: PanelSwitchEvent) => {
+					if (Constants.DEBUG) {
+						console.log ('Being informed that the panel %s has been selected', Constants.TITLE_PANELS[panelSwitchEvent.idPanel]);
+					}
+					this.idPanelSelected = panelSwitchEvent.idPanel;
 			}));
 
 		this.subscriptions.add(
@@ -88,7 +97,7 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 
 					// If there is no (more) SonarProject, we cleanup the child containers.
 					if (this.project && this.project.sonarProjects.length === 0) {
-						// We send a null as SonarKey to force the initialization of the children data (such as i.e. rhe metrics dataSource)
+						// We send a null as SonarKey to force the initialization of the children data (such as i.e. the metrics dataSource)
 						this.panelSwitchTransmitter$.next(
 							new PanelSwitchEvent(
 								this.NONE,
@@ -96,10 +105,18 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 					}
 
 					if (this.project && this.project.sonarProjects.length > 0) {
-						this.panelSwitchTransmitter$.next(
-							new PanelSwitchEvent(
-								this.SONAR,
-								this.project.sonarProjects[0].key));
+						if (Constants.DEBUG) {
+							console.log ('By default, we starts on the %s dashboard with %s.',
+								Constants.TITLE_PANELS[this.SETTINGS],
+								this.project.sonarProjects[0].key);
+						}
+						
+						setTimeout(() => {
+							this.panelSwitchTransmitter$.next(
+								new PanelSwitchEvent(
+									this.SETTINGS,
+									this.project.sonarProjects[0].key));
+						}, 0);
 					}
 
 					if (this.thumbNails) {
@@ -108,9 +125,6 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 				}
 			}));
 
-		this.panelSwitchTransmitter$.subscribe((panelSwitchEvent: PanelSwitchEvent) => {
-			this.idPanelSelected = panelSwitchEvent.idPanel;
-		});
 	}
 
 	/**

@@ -163,12 +163,14 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	 */
 	switchSonarContext(idPanel: number, key: string) {
 
+		// We ckick on the same panel without selecting a specific detail button (Quotation vs metric)
+		// We do not change anything at all
 		if ((key === this.keySummarySelected) && (idPanel === this.NONE)) {
 			return;
 		}
 
 		if (Constants.DEBUG) {
-			console.log ('Displaying  ' + Constants.TITLE_PANELS[idPanel] + ' for the Sonar ' + key);
+			console.log ('Displaying ' + Constants.TITLE_PANELS[idPanel] + ' for the ' + key);
 		}
 
 		// If the user clicks on the body of the thumbnail; but not on a button,
@@ -176,7 +178,9 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 		if (idPanel !== this.NONE) {
 			this.idPanelSelected = idPanel;
 		}
+
 		this.keySummarySelected = key;
+		// We broadcast this change (if any) to all children panel.
 		this.panelSwitchTransmitter$.next( new PanelSwitchEvent(this.idPanelSelected, key));
 
 	}
