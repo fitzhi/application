@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild, Input, OnDestroy, Output, EventEmitter, AfterViewInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -66,7 +66,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	/**
 	 * The paginator of the ghosts data source.
 	 */
-	@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+	@ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
 
 	/**
 	 * Key of the current selected Sonar project.
@@ -117,8 +117,6 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 				}
 				if (this.project && (panelSwitchEvent.keySonar.length > 0) ) {
 					this.sonarKey = panelSwitchEvent.keySonar;
-					const sonarProject = this.project.sonarProjects
-						.find(sonarP => sonarP.key === panelSwitchEvent.keySonar);
 					this.dataSource.data.forEach(element => {
 						const weight = this.getWeightOfSonarProjectMetric(element.key);
 						if (weight) {
@@ -133,6 +131,13 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 					});
 				}
 			}));
+	}
+
+	/**
+	 * ngAfterViewInit.
+	 */
+	ngAfterViewInit() {
+		this.dataSource.paginator = this.paginator;
 	}
 
 	private loadMetrics$(): Observable<ProjectSonarMetric[]> {
@@ -249,7 +254,6 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 			}
 		};
 		this.dataSource.sort = this.sort;
-		this.dataSource.paginator = this.paginator;
 	}
 
 	/**

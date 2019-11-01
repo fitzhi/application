@@ -110,7 +110,7 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 								Constants.TITLE_PANELS[this.SETTINGS],
 								this.project.sonarProjects[0].key);
 						}
-						
+
 						setTimeout(() => {
 							this.panelSwitchTransmitter$.next(
 								new PanelSwitchEvent(

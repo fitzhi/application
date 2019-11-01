@@ -52,7 +52,14 @@
         <tr mat-header-row *matHeaderRowDef="editableColumns; sticky: true"></tr>
         <tr mat-row *matRowDef="let row; columns: editableColumns;" class="row_any"></tr>
     </table>
-    <mat-paginator class="projectSonarMetricsDiv-content" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+    <!-- 
+        class="projectSonarMetricsDiv-content"   
+    -->
+    <mat-paginator 
+        #paginator
+        [pageSize]="5" 
+        [pageSizeOptions]="[5, 10, 20]" 
+        showFirstLastButtons>
     </mat-paginator>
 </div>
 
