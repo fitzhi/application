@@ -1,13 +1,11 @@
 <div>
     <p>Global Sonar Evaluation</p>
     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
-        <svg>
-            <g>
-                <path id="arc1" [ngClass]="arcStyle(evaluation)" />
-                <path id="arc2" [ngClass]="arcStyle(evaluation)" />
-                <path id="arc3" [ngClass]="arcStyle(evaluation)" />
-                <text x="42px" y="60px" id="textGlobalEvaluation">{{evaluation}}</text>
-            </g>
-        </svg>
+        <g>
+            <path id="arc1" [ngStyle]="arcStyle(evaluation)"/>
+            <path id="arc2" [ngStyle]="arcStyle(evaluation)" />
+            <path id="arc3" [ngStyle]="arcStyle(evaluation)"/>
+            <text x="42px" y="60px" id="textGlobalEvaluation">{{evaluation}}</text>
+        </g>
     </svg>
 </div>

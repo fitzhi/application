@@ -5,6 +5,7 @@ import { PanelSwitchEvent } from '../../sonar-thumbnails/panel-switch-event';
 import { Constants } from 'src/app/constants';
 import { SonarService } from 'src/app/service/sonar.service';
 import { Project } from 'src/app/data/project';
+import { ProjectService } from 'src/app/service/project.service';
 
 @Component({
 	selector: 'app-sonar-quotation',
@@ -30,14 +31,11 @@ export class SonarQuotationComponent implements OnInit {
 	/**
 	 * Project evaluation
 	 */
-	private evaluation: number;
+	private evaluation = -1;
 
-	/**
-	 * Path to use for drawing the first Sonar arc.
-	 */
-	private pathForArc1: string;
-
-	constructor(private sonarService: SonarService) { }
+	constructor(
+		private sonarService: SonarService,
+		private projectService: ProjectService) { }
 
 	ngOnInit() {
 
@@ -45,7 +43,6 @@ export class SonarQuotationComponent implements OnInit {
 
 		this.panelSwitchTransmitter$.subscribe(
 			panelSwitchEvent => {
-				console.log(panelSwitchEvent.keySonar, Constants.TITLE_PANELS[panelSwitchEvent.idPanel]);
 				if (panelSwitchEvent.idPanel === Constants.PROJECT_SONAR_PANEL.SONAR) {
 					this.evaluateProject(panelSwitchEvent.keySonar);
 				}
@@ -82,20 +79,29 @@ export class SonarQuotationComponent implements OnInit {
 			return d.join(' ');
 		};
 
+		this.evaluation = this.sonarService.evaluateSonarProject(this.project, keySonar);
+
 		document.getElementById('arc1').setAttribute('d', arc(50, 60, 40, 0, 90));
 		document.getElementById('arc2').setAttribute('d', arc(50, 60, 48, 15, 75));
 		document.getElementById('arc3').setAttribute('d', arc(50, 60, 56, 30, 60));
 
-		this.evaluation = this.sonarService.evaluateSonarProject(this.project, keySonar);
 
 	}
 
 
 	/**
-	 * @param projectEvaluation the currrent Sonar project evaluation
+	 * @param evaluation evaluation processed for the selected Sonar project
 	 * @returns thee classnames to draw the Sonar-liked arcs
 	 */
-	arcStyle(projectEvaluation: number): string {
-		return 'arc';
+	arcStyle(evaluation: number) {
+
+		const risk = Math.ceil(evaluation / 10);
+		const styles = {
+			'fill': 'none',
+			'stroke-width': '4px',
+			'stroke': this.projectService.getRiskColor(risk)
+		};
+		return styles;
 	}
+
 }
