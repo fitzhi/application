@@ -73,8 +73,8 @@ export class SonarService extends InternalService {
 			'So we presume that it will be difficut to reach a note of 100%.',
 		'duplicated_lines_density':
 			'Duplication is a percentage. Our evaluation will substract this number from 100% to get ths metric evaluation.',
-		'sqale_index':
-			'We reproduce the Sonar range rating in a numeric way :\n' +
+		'sqale_rating':
+			'We reproduce the Maintainability Sonar range rating in a numeric way :\n' +
 			'- a rating of 100%, if <=5% of the time that has already gone into the application\n' +
 			'- a rating of 80%, if between 6 to 10%\n' +
 			'- a rating of 60%, if between 11 to 20%\n' +
@@ -95,7 +95,7 @@ export class SonarService extends InternalService {
 			'- a rating of 60%, if at least 1 Major Bug has been detected\n' +
 			'- a rating of 40%, if at least 1 Critical Bug has been detected\n' +
 			'- a rating of 20%, if at least 1 Blocker Bug has been detected',
-		'sqale_rating':
+		'sqale_index':
 			'We evaluate the technical debt as follow\n' +
 			'   This evaluation is absolute and not related to the size of the project.\n' +
 			'   (Use the metric \'Maintainability Rating\' for a relative evaluation)\n' +
@@ -331,25 +331,37 @@ export class SonarService extends InternalService {
 						if (metricValues.value < 60) {
 							result += metricValues.weight;
 						} else {
-							if (metricValues.value < 1400) {
+							if (metricValues.value < 480) {
 								result += metricValues.weight * 0.9;
-							} else if (metricValues.value < 4200) {
+							} else if (metricValues.value < 1440) {
 								result += metricValues.weight * 0.5;
 							} else {
-								if (metricValues.value < 9800) {
+								if (metricValues.value < 3360) {
 									result += metricValues.weight * 0.1;
 								}
 							}
 						}
 						break;
 					case 'sqale_rating':
-						result += metricValues.weight * metricValues.value;
+						// A=0-0.05, B=0.06-0.1, C=0.11-0.20, D=0.21-0.5, E=0.51-1
+						result += metricValues.weight *
+							(((6 - metricValues.value) * 20) / 100);
 						break;
 					case 'security_rating':
-						result += metricValues.weight * metricValues.value;
+						/*
+						Security Rating (security_rating)
+							1 = 0 Vulnerabilities
+							2 = at least 1 Minor Vulnerability
+							3 = at least 1 Major Vulnerability
+							4 = at least 1 Critical Vulnerability
+							5 = at least 1 Blocker Vulnerability
+						*/
+						result += metricValues.weight *
+							(((6 - metricValues.value) * 20) / 100);
 						break;
 					case 'reliability_rating':
-						result += metricValues.weight * metricValues.value;
+						result += metricValues.weight *
+							(((6 - metricValues.value) * 20) / 100);
 						break;
 					case 'alert_status':
 						result += metricValues.weight * metricValues.value;
