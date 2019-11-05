@@ -370,7 +370,6 @@ export class SonarService extends InternalService {
 						throw new Error('Unknown metric key ' + metricValues.key);
 				}
 			}
-			console.log ('%s %d %d = %d', metricValues.key, metricValues.weight, metricValues.value,  result);
 		});
 		return result;
 	}
