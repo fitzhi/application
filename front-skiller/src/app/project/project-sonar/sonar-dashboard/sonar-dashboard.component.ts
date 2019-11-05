@@ -71,12 +71,7 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	ngOnInit() {
 
 		this.subscriptions.add(
-			this.project$.subscribe((project: Project) => {
-				if (Constants.DEBUG) {
-					console.log ('Receiving project %s', project.name);
-				}
-				this.project = project;
-			}));
+			this.project$.subscribe((project: Project) => this.project = project));
 
 		this.subscriptions.add(
 			this.sonarService.sonarIsAccessible$.subscribe(isSonarAccessible => {

@@ -3,6 +3,8 @@ import * as d3 from 'd3';
 import { Subject } from 'rxjs';
 import { PanelSwitchEvent } from '../../sonar-thumbnails/panel-switch-event';
 import { Constants } from 'src/app/constants';
+import { SonarService } from 'src/app/service/sonar.service';
+import { Project } from 'src/app/data/project';
 
 @Component({
 	selector: 'app-sonar-quotation',
@@ -11,6 +13,8 @@ import { Constants } from 'src/app/constants';
 })
 export class SonarQuotationComponent implements OnInit {
 
+	@Input() project$;
+
 	/**
 	* Observable emitting a PanelSwitchEvent when
 	* another Sonar project is selected or
@@ -18,26 +22,37 @@ export class SonarQuotationComponent implements OnInit {
 	*/
 	@Input() panelSwitchTransmitter$: Subject<PanelSwitchEvent>;
 
-	constructor() { }
+	/**
+	 * Project loaded and received by the host component.
+	 */
+	private project: Project;
+
+	/**
+	 * Project evaluation
+	 */
+	private evaluation: number;
+
+	constructor(private sonarService: SonarService) { }
 
 	ngOnInit() {
+
+		this.project$.subscribe(project => this.project = project);
+
 		this.panelSwitchTransmitter$.subscribe(
 			panelSwitchEvent => {
 				console.log(panelSwitchEvent.keySonar, Constants.TITLE_PANELS[panelSwitchEvent.idPanel]);
 				if (panelSwitchEvent.idPanel === Constants.PROJECT_SONAR_PANEL.SONAR) {
-					if (panelSwitchEvent.keySonar === 'front-skiller') {
-						this.draw('red');
-					} else {
-						this.draw('green');
-					}
+					this.evaluateProject(panelSwitchEvent.keySonar);
 				}
 			}
 		);
 	}
 
-	public draw(color: string) {
-
+	public evaluateProject(keySonar: string) {
+		this.evaluation = this.sonarService.evaluateSonarProject(this.project, keySonar);
+		/*
 		d3.select('svg').remove();
+
 
 		const svg = d3
 			.select('p')
@@ -47,6 +62,8 @@ export class SonarQuotationComponent implements OnInit {
 			.append('g')
 			.attr('transform', 'translate(100,100)');
 
-		svg.append('circle').attr('cx', 60).attr('cx', 60).attr('r', 50).attr('fill', color);
+		svg.append('circle').attr('cx', 60).attr('cx', 60).attr('r', 50).attr('fill', 'blue');
+		svg.append(evaluation + '');
+		*/
 	}
 }

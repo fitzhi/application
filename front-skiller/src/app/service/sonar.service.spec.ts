@@ -86,42 +86,42 @@ describe('SonarService', () => {
 
 	it('testing the method evaluateSonarProject with a technical debt of 30 minutes', () => {
 		const service: SonarService = TestBed.get(SonarService);
-		const project = createProjectWithMetric('sqale_rating', 10, 30);
+		const project = createProjectWithMetric('sqale_index', 10, 30);
 		const result = service.evaluateSonarProject (project, 'keySonar');
 		expect(10).toEqual(result);
 	});
 
 	it('testing the method evaluateSonarProject with a technical debt of 4 hours', () => {
 		const service: SonarService = TestBed.get(SonarService);
-		const project = createProjectWithMetric('sqale_rating', 10, 240);
+		const project = createProjectWithMetric('sqale_index', 10, 240);
 		const result = service.evaluateSonarProject (project, 'keySonar');
 		expect(9).toEqual(result);
 	});
 
 	it('testing the method evaluateSonarProject with a technical debt of 4000 minutes', () => {
 		const service: SonarService = TestBed.get(SonarService);
-		const project = createProjectWithMetric('sqale_rating', 10, 4000);
+		const project = createProjectWithMetric('sqale_index', 10, 4000);
 		const result = service.evaluateSonarProject (project, 'keySonar');
 		expect(5).toEqual(result);
 	});
 
 	it('testing the method evaluateSonarProject with a technical debt of 5 days', () => {
 		const service: SonarService = TestBed.get(SonarService);
-		const project = createProjectWithMetric('sqale_rating', 10, 7200);
+		const project = createProjectWithMetric('sqale_index', 10, 7200);
 		const result = service.evaluateSonarProject (project, 'keySonar');
 		expect(1).toEqual(result);
 	});
 
 	it('testing the method evaluateSonarProject with a technical debt of 100000 hours (Shame in you)', () => {
 		const service: SonarService = TestBed.get(SonarService);
-		const project = createProjectWithMetric('sqale_rating', 10, 100000);
+		const project = createProjectWithMetric('sqale_index', 10, 100000);
 		const result = service.evaluateSonarProject (project, 'keySonar');
 		expect(0).toEqual(result);
 	});
 
 	it('Testing the method evaluateSonarProject with a maintanibiliy of 80%', () => {
 		const service: SonarService = TestBed.get(SonarService);
-		const project = createProjectWithMetric('sqale_index', 10, 0.8);
+		const project = createProjectWithMetric('sqale_rating', 10, 0.8);
 		const result = service.evaluateSonarProject (project, 'keySonar');
 		expect(8).toEqual(result);
 	});
@@ -160,10 +160,36 @@ describe('SonarService', () => {
 		project.sonarProjects[0].projectSonarMetricValues
 			.push(new ProjectSonarMetricValue('coverage', 30, 0.14));
 		project.sonarProjects[0].projectSonarMetricValues
-			.push(new ProjectSonarMetricValue('sqale_rating', 30, 5000));
+			.push(new ProjectSonarMetricValue('sqale_index', 30, 5000));
 
 		const result = service.evaluateSonarProject (project, 'keySonar');
 		expect(47.2).toEqual(result);
+	});
+
+	it('Testing the method evaluateSonarProject with the whole possible metrics', () => {
+		const service: SonarService = TestBed.get(SonarService);
+
+		const project = createProjectWithMetric('bugs', 40, 10);
+		project.sonarProjects[0].projectSonarMetricValues
+			.push(new ProjectSonarMetricValue('code_smells', 10, 113));
+		project.sonarProjects[0].projectSonarMetricValues
+			.push(new ProjectSonarMetricValue('coverage', 10, 0));
+		project.sonarProjects[0].projectSonarMetricValues
+			.push(new ProjectSonarMetricValue('duplicated_lines_density', 10, 0));
+		project.sonarProjects[0].projectSonarMetricValues
+			.push(new ProjectSonarMetricValue('sqale_rating', 20, 1));
+
+		project.sonarProjects[0].projectSonarMetricValues
+			.push(new ProjectSonarMetricValue('alert_status', 10, 0));
+		project.sonarProjects[0].projectSonarMetricValues
+			.push(new ProjectSonarMetricValue('reliability_rating', 10, 1));
+		project.sonarProjects[0].projectSonarMetricValues
+			.push(new ProjectSonarMetricValue('security_rating', 10, 1));
+		project.sonarProjects[0].projectSonarMetricValues
+			.push(new ProjectSonarMetricValue('sqale_index', 10, 800));
+
+		const result = service.evaluateSonarProject (project, 'keySonar');
+		expect(59).toEqual(result);
 	});
 
 });

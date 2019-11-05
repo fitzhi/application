@@ -1,0 +1,13 @@
+#textGlobalEvaluation {
+    font-size: 22px;
+    font-weight: 500;
+    position: relative;
+}
+
+#circleGlobalEvaluation {
+    fill:none;
+    stroke:red;
+    stroke-width:15px;
+    stroke-miterlimit:10;
+    position: relative;
+}

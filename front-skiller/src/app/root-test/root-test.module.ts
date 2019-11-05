@@ -1,6 +1,6 @@
 
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { RegisterUserComponent } from '../admin/register-user/register-user.component';
 import { WelcomeComponent } from '../welcome/welcome.component';
 import { ConnectUserComponent } from '../admin/connect-user/connect-user.component';
@@ -70,6 +70,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { TabsStaffListService } from '../tabs-staff-list/service/tabs-staff-list.service';
 import { StaffTabsComponent } from '../tabs-staff/staff-tabs/staff-tabs.component';
+import { SonarQuotationComponent } from '../project/project-sonar/sonar-dashboard/sonar-quotation/sonar-quotation.component';
+import { BackendSetupService } from '../service/backend-setup/backend-setup.service';
 
 @NgModule({
 	declarations: [
@@ -114,13 +116,15 @@ import { StaffTabsComponent } from '../tabs-staff/staff-tabs/staff-tabs.componen
 		ListContributorsComponent,
 		TableGhostsComponent,
 		SonarBadgeComponent,
-		StaffTabsComponent
+		StaffTabsComponent,
+		SonarQuotationComponent
 	],
 	providers: [
 		ReferentialService,
 		CinematicService,
 		ProjectStaffService,
 		TabsStaffListService,
+		BackendSetupService,
 		{ provide: MAT_DIALOG_DATA, useValue: {} },
 		{ provide: MatDialogRef, useValue: {} }
 	],
@@ -144,7 +148,7 @@ import { StaffTabsComponent } from '../tabs-staff/staff-tabs/staff-tabs.componen
 		BrowserAnimationsModule,
 		FormsModule, ReactiveFormsModule,
 	],
-/*	schemas: [NO_ERRORS_SCHEMA] */
+	schemas: [NO_ERRORS_SCHEMA]
 })
 export class RootTestModule {
 }

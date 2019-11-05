@@ -23,7 +23,7 @@ import { connectableObservableDescriptor } from 'rxjs/internal/observable/Connec
 	templateUrl: './sonar-metrics.component.html',
 	styleUrls: ['./sonar-metrics.component.css']
 })
-export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDestroy {
+export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	/**
 	* The project loaded in the parent component.

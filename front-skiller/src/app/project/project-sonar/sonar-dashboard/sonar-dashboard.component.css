@@ -32,8 +32,8 @@ button.class-sonar-activated {
 }
 
 #sonarQuotation {
-    min-width: 100px;
+    min-width: 200px;
+    min-height: 200px;
     height: 100%;
-    background-color: cadetblue;
 }
 

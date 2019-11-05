@@ -316,7 +316,7 @@ export class SonarService extends InternalService {
 			if (metricValues.weight) {
 				switch (metricValues.key) {
 					case 'bugs':
-						result += metricValues.weight * (1 - metricValues.value);
+						result += (metricValues.value) ? 0 : metricValues.weight;
 						break;
 					case 'code_smells':
 						result += metricValues.weight * Math.max(100 - Math.ceil(metricValues.value / 5) * 10, 0) / 100;
@@ -327,7 +327,7 @@ export class SonarService extends InternalService {
 					case 'duplicated_lines_density':
 						result += metricValues.weight * (1 - metricValues.value / 100);
 						break;
-					case 'sqale_rating':
+					case 'sqale_index':
 						if (metricValues.value < 60) {
 							result += metricValues.weight;
 						} else {
@@ -342,7 +342,7 @@ export class SonarService extends InternalService {
 							}
 						}
 						break;
-					case 'sqale_index':
+					case 'sqale_rating':
 						result += metricValues.weight * metricValues.value;
 						break;
 					case 'security_rating':
@@ -354,8 +354,11 @@ export class SonarService extends InternalService {
 					case 'alert_status':
 						result += metricValues.weight * metricValues.value;
 						break;
+					default:
+						throw new Error('Unknown metric key ' + metricValues.key);
 				}
 			}
+			console.log ('%s %d %d = %d', metricValues.key, metricValues.weight, metricValues.value,  result);
 		});
 		return result;
 	}
