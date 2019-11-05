@@ -32,6 +32,11 @@ export class SonarQuotationComponent implements OnInit {
 	 */
 	private evaluation: number;
 
+	/**
+	 * Path to use for drawing the first Sonar arc.
+	 */
+	private pathForArc1: string;
+
 	constructor(private sonarService: SonarService) { }
 
 	ngOnInit() {
@@ -49,21 +54,48 @@ export class SonarQuotationComponent implements OnInit {
 	}
 
 	public evaluateProject(keySonar: string) {
+
+		const angleInRadians = angleInDegrees => (angleInDegrees - 90) * (Math.PI / 180.0);
+
+		const polarToCartesian = (centerX, centerY, radius, angleInDegrees) => {
+			const a = angleInRadians(angleInDegrees);
+			return {
+				x: centerX + (radius * Math.cos(a)),
+				y: centerY + (radius * Math.sin(a)),
+			};
+		};
+
+		const arc = (x, y, radius, startAngle, endAngle) => {
+			const fullCircle = endAngle - startAngle === 360;
+			const start = polarToCartesian(x, y, radius, endAngle - 0.01);
+			const end = polarToCartesian(x, y, radius, startAngle);
+			const arcSweep = endAngle - startAngle <= 180 ? '0' : '1';
+
+			const d = [
+				'M', start.x, start.y,
+				'A', radius, radius, 0, arcSweep, 0, end.x, end.y,
+			];
+
+			if (fullCircle) {
+				d.push('z');
+			}
+			return d.join(' ');
+		};
+
+		document.getElementById('arc1').setAttribute('d', arc(50, 60, 40, 0, 90));
+		document.getElementById('arc2').setAttribute('d', arc(50, 60, 48, 15, 75));
+		document.getElementById('arc3').setAttribute('d', arc(50, 60, 56, 30, 60));
+
 		this.evaluation = this.sonarService.evaluateSonarProject(this.project, keySonar);
-		/*
-		d3.select('svg').remove();
+
+	}
 
 
-		const svg = d3
-			.select('p')
-			.append('svg')
-			.attr('width', '100%')
-			.attr('height', '100%')
-			.append('g')
-			.attr('transform', 'translate(100,100)');
-
-		svg.append('circle').attr('cx', 60).attr('cx', 60).attr('r', 50).attr('fill', 'blue');
-		svg.append(evaluation + '');
-		*/
+	/**
+	 * @param projectEvaluation the currrent Sonar project evaluation
+	 * @returns thee classnames to draw the Sonar-liked arcs
+	 */
+	arcStyle(projectEvaluation: number): string {
+		return 'arc';
 	}
 }

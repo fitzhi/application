@@ -1,13 +1,11 @@
 #textGlobalEvaluation {
-    font-size: 22px;
+    font-size: 30px;
     font-weight: 500;
     position: relative;
 }
 
-#circleGlobalEvaluation {
+.arc {
     fill:none;
     stroke:red;
-    stroke-width:15px;
-    stroke-miterlimit:10;
-    position: relative;
+    stroke-width:4px;
 }
