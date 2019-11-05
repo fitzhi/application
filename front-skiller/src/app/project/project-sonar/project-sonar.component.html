@@ -1,5 +1,5 @@
 <mat-sidenav-container class="component-container">
-    <div class="contentProjectSonar">
+    <div *ngIf="(project)" class="contentProjectSonar">
         <div id="panelSonarThumbnails">
             <app-sonar-thumbnails 
                 [project$]="project$" 
@@ -22,5 +22,8 @@
         <div id="panelNoSonarProject" [hidden]="!isPanelActive(NONE)">
             NO SONAR PROJECT DECLARED FOR THIS PROJECT
         </div>
+    </div>
+    <div *ngIf="!(project)">
+        <H2>PLEASE, CREATE A PROJECT FIRST !</H2>
     </div>
 </mat-sidenav-container>
