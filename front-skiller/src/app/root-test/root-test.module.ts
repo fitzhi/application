@@ -72,6 +72,7 @@ import { TabsStaffListService } from '../tabs-staff-list/service/tabs-staff-list
 import { StaffTabsComponent } from '../tabs-staff/staff-tabs/staff-tabs.component';
 import { SonarQuotationComponent } from '../project/project-sonar/sonar-dashboard/sonar-quotation/sonar-quotation.component';
 import { BackendSetupService } from '../service/backend-setup/backend-setup.service';
+import { QuotationBadgeComponent } from '../project/project-sonar/sonar-dashboard/sonar-quotation/quotation-badge/quotation-badge.component';
 
 @NgModule({
 	declarations: [
@@ -117,7 +118,8 @@ import { BackendSetupService } from '../service/backend-setup/backend-setup.serv
 		TableGhostsComponent,
 		SonarBadgeComponent,
 		StaffTabsComponent,
-		SonarQuotationComponent
+		SonarQuotationComponent,
+		QuotationBadgeComponent
 	],
 	providers: [
 		ReferentialService,
