@@ -8,6 +8,7 @@ import { Project } from 'src/app/data/project';
 import { ProjectService } from 'src/app/service/project.service';
 import { BadgeQuotation } from './badge-quotation';
 import { BaseComponent } from 'src/app/base/base.component';
+import { SonarProject } from 'src/app/data/SonarProject';
 
 @Component({
 	selector: 'app-sonar-quotation',
@@ -75,7 +76,8 @@ export class SonarQuotationComponent extends BaseComponent implements OnInit, On
 		this.evaluations.push(
 			new BadgeQuotation(
 				'Global quotation',
-				this.sonarService.evaluateSonarProject(this.project, keySonar)));
+				this.sonarService.evaluateSonarProject(this.project, keySonar),
+				100));
 
 		const sonarProject = this.projectService.getSonarProject(this.project, keySonar);
 		if (!sonarProject) {
@@ -83,10 +85,20 @@ export class SonarQuotationComponent extends BaseComponent implements OnInit, On
 		}
 
 		sonarProject.projectSonarMetricValues.forEach( metricValue => {
+
+			const emptyProject = new Project();
+			emptyProject.sonarProjects = [];
+			const sonar = new SonarProject();
+			sonar.key = keySonar;
+			sonar.projectSonarMetricValues = [];
+			sonar.projectSonarMetricValues.push(metricValue);
+			emptyProject.sonarProjects.push (sonar);
+
 			this.evaluations.push(
 				new BadgeQuotation(
 					metricValue.key,
-					this.sonarService.evaluateSonarProject(this.project, keySonar)));
+					this.sonarService.evaluateSonarProject(emptyProject, keySonar),
+					metricValue.weight));
 			});
 	}
 

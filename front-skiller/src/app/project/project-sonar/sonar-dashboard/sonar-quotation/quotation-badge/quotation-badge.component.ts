@@ -23,6 +23,11 @@ export class QuotationBadgeComponent implements AfterViewInit {
 	 */
 	@Input() evaluation;
 
+	/**
+	 * Quotation ratio in the global result for this metric.
+	 */
+	@Input() weight;
+
 	constructor(private projectService: ProjectService) { }
 
 	ngAfterViewInit() {
@@ -71,7 +76,7 @@ export class QuotationBadgeComponent implements AfterViewInit {
 	 */
 	arcStyle(evaluation: number) {
 
-		const risk = Math.ceil(evaluation / 10);
+		const risk = (evaluation === 100) ? 0 : (10 - Math.ceil(evaluation / 10));
 		const styles = {
 			'fill': 'none',
 			'stroke-width': '4px',

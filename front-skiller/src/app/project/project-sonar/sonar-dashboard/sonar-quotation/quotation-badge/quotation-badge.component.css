@@ -2,3 +2,6 @@ div.badge, .svg {
     width: 150px;
     height: 100px;
 }
+P.badgeText {
+    margin: 3px;
+}

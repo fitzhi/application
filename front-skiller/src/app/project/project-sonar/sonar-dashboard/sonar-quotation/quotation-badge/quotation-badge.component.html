@@ -1,6 +1,7 @@
 <div class="badge">
-    <p>{{title}}</p>
-    <svg class="badge" class="svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+    <p class="badgeText">{{title}}</p>
+    <p class="badgeText">{{weight}}%</p>
+    <svg class="svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
         <g>
             <path id="arc1-{{index}}" [ngStyle]="arcStyle(evaluation)"/>
             <path id="arc2-{{index}}" [ngStyle]="arcStyle(evaluation)" />

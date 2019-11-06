@@ -1,6 +1,10 @@
 <div id="containerQuotationBadges">
     <div *ngFor="let evaluation of evaluations; index as index" style="margin-bottom: 20px;">
-        <app-quotation-badge [index]=index [title]="evaluation.title" [evaluation]="evaluation.quotation">
+        <app-quotation-badge 
+            [index]=index 
+            [title]="evaluation.title" 
+            [evaluation]="evaluation.quotation"
+            [weight]="evaluation.weight">
         </app-quotation-badge>
     </div>
 </div>
