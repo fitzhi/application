@@ -1,5 +1,12 @@
-div.badge, .svg {
+div.badge {
     width: 150px;
+    height: 150px;
+    background-color: lightgray;
+    padding: 10px;
+}
+
+.svg {
+    width: 130px;
     height: 100px;
 }
 

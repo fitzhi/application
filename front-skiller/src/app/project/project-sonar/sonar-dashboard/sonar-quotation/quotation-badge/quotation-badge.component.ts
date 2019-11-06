@@ -67,9 +67,9 @@ export class QuotationBadgeComponent implements AfterViewInit {
 			return d.join(' ');
 		};
 
-		document.getElementById('arc1-' + this.index).setAttribute('d', arc(50, 60, 40, 0, 90));
-		document.getElementById('arc2-' + this.index).setAttribute('d', arc(50, 60, 48, 15, 75));
-		document.getElementById('arc3-' + this.index).setAttribute('d', arc(50, 60, 56, 30, 60));
+		document.getElementById('arc1-' + this.index).setAttribute('d', arc(20, 55, 40, 0, 90));
+		document.getElementById('arc2-' + this.index).setAttribute('d', arc(20, 55, 48, 15, 75));
+		document.getElementById('arc3-' + this.index).setAttribute('d', arc(20, 55, 56, 30, 60));
 	}
 
 		/**
