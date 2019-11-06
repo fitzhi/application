@@ -1,11 +1,6 @@
-<div>
-    <p>Global Sonar Evaluation</p>
-    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
-        <g>
-            <path id="arc1" [ngStyle]="arcStyle(evaluation)"/>
-            <path id="arc2" [ngStyle]="arcStyle(evaluation)" />
-            <path id="arc3" [ngStyle]="arcStyle(evaluation)"/>
-            <text x="42px" y="60px" id="textGlobalEvaluation">{{evaluation}}</text>
-        </g>
-    </svg>
+<div id="containerQuotationBadges">
+    <app-quotation-badge [index]=1 [title]="title" [evaluation]="evaluation"></app-quotation-badge>
+    <app-quotation-badge [index]=2 [title]="title" [evaluation]="evaluation"></app-quotation-badge>
+    <app-quotation-badge [index]=3 [title]="title" [evaluation]="evaluation"></app-quotation-badge>
+    <app-quotation-badge [index]=4 [title]="title" [evaluation]="evaluation"></app-quotation-badge>
 </div>

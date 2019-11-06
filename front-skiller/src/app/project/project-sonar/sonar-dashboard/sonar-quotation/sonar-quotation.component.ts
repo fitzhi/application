@@ -33,6 +33,11 @@ export class SonarQuotationComponent implements OnInit {
 	 */
 	private evaluation = -1;
 
+	/**
+	 * Title of the quotation badge
+	 */
+	private title: string;
+
 	constructor(
 		private sonarService: SonarService,
 		private projectService: ProjectService) { }
@@ -52,56 +57,8 @@ export class SonarQuotationComponent implements OnInit {
 
 	public evaluateProject(keySonar: string) {
 
-		const angleInRadians = angleInDegrees => (angleInDegrees - 90) * (Math.PI / 180.0);
-
-		const polarToCartesian = (centerX, centerY, radius, angleInDegrees) => {
-			const a = angleInRadians(angleInDegrees);
-			return {
-				x: centerX + (radius * Math.cos(a)),
-				y: centerY + (radius * Math.sin(a)),
-			};
-		};
-
-		const arc = (x, y, radius, startAngle, endAngle) => {
-			const fullCircle = endAngle - startAngle === 360;
-			const start = polarToCartesian(x, y, radius, endAngle - 0.01);
-			const end = polarToCartesian(x, y, radius, startAngle);
-			const arcSweep = endAngle - startAngle <= 180 ? '0' : '1';
-
-			const d = [
-				'M', start.x, start.y,
-				'A', radius, radius, 0, arcSweep, 0, end.x, end.y,
-			];
-
-			if (fullCircle) {
-				d.push('z');
-			}
-			return d.join(' ');
-		};
-
 		this.evaluation = this.sonarService.evaluateSonarProject(this.project, keySonar);
-
-		document.getElementById('arc1').setAttribute('d', arc(50, 60, 40, 0, 90));
-		document.getElementById('arc2').setAttribute('d', arc(50, 60, 48, 15, 75));
-		document.getElementById('arc3').setAttribute('d', arc(50, 60, 56, 30, 60));
-
-
-	}
-
-
-	/**
-	 * @param evaluation evaluation processed for the selected Sonar project
-	 * @returns thee classnames to draw the Sonar-liked arcs
-	 */
-	arcStyle(evaluation: number) {
-
-		const risk = Math.ceil(evaluation / 10);
-		const styles = {
-			'fill': 'none',
-			'stroke-width': '4px',
-			'stroke': this.projectService.getRiskColor(risk)
-		};
-		return styles;
+		this.title = 'Global quotation';
 	}
 
 }

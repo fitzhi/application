@@ -1,1 +1,11 @@
-<p>quotation-badge works!</p>
+<div class="badge">
+    <p>{{title}}</p>
+    <svg class="svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+        <g>
+            <path id="arc1-{{index}}" [ngStyle]="arcStyle(evaluation)"/>
+            <path id="arc2-{{index}}" [ngStyle]="arcStyle(evaluation)" />
+            <path id="arc3-{{index}}" [ngStyle]="arcStyle(evaluation)"/>
+            <text x="42px" y="60px" id="textGlobalEvaluation">{{evaluation}}</text>
+        </g>
+    </svg>
+</div>
