@@ -28,6 +28,8 @@ export class QuotationBadgeComponent implements AfterViewInit {
 	 */
 	@Input() weight;
 
+	private x_viewBox = 150;
+
 	constructor(private projectService: ProjectService) { }
 
 	ngAfterViewInit() {
@@ -71,12 +73,17 @@ export class QuotationBadgeComponent implements AfterViewInit {
 	}
 
 		/**
-	 * @param evaluation evaluation processed for the selected Sonar project
+	 * @param quotation evaluation processed for the selected Sonar project
 	 * @returns thee classnames to draw the Sonar-liked arcs
 	 */
-	arcStyle(evaluation: number) {
+	arcStyle(quotation: number, weight: number) {
 
-		const risk = (evaluation === 100) ? 0 : (10 - Math.ceil(evaluation / 10));
+		//
+		// The result received for a single metric is scaled on the absolute weight of this metric
+		// We rescale this quotation to a base 100 to obtain the corresponding risk.
+		//
+		const rescaledQuotation = quotation * 100 / weight;
+		const risk = (rescaledQuotation === 100) ? 0 : (10 - Math.ceil(rescaledQuotation / 10));
 		const styles = {
 			'fill': 'none',
 			'stroke-width': '4px',

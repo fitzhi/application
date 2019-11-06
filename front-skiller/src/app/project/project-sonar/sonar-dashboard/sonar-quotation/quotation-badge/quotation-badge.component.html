@@ -1,12 +1,30 @@
-<div class="badge">
+<div *ngIf="(weight === 100)" class="badge">
+    <p class="badgeTextGlobal">{{title}}</p>
+    <p class="badgeTextGlobal">{{weight}}%</p>
+    <svg class="svg" xmlns="http://www.w3.org/2000/svg" 
+        xmlns:xlink="http://www.w3.org/1999/xlink" 
+        xml:space="preserve"
+        viewBox="0 0 150 100">
+        <g>
+            <path id="arc1-{{index}}" [ngStyle]="arcStyle(evaluation, weight)"/>
+            <path id="arc2-{{index}}" [ngStyle]="arcStyle(evaluation, weight)" />
+            <path id="arc3-{{index}}" [ngStyle]="arcStyle(evaluation, weight)"/>
+            <text x="45px" y="55px" id="textGlobalEvaluation">{{evaluation}}</text>
+        </g>
+    </svg>
+</div>
+<div *ngIf="(weight < 100)" class="badge">
     <p class="badgeText">{{title}}</p>
     <p class="badgeText">{{weight}}%</p>
-    <svg class="svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+    <svg class="svg" xmlns="http://www.w3.org/2000/svg" 
+        xmlns:xlink="http://www.w3.org/1999/xlink" 
+        xml:space="preserve"
+        viewBox="0 0 200 133">
         <g>
-            <path id="arc1-{{index}}" [ngStyle]="arcStyle(evaluation)"/>
-            <path id="arc2-{{index}}" [ngStyle]="arcStyle(evaluation)" />
-            <path id="arc3-{{index}}" [ngStyle]="arcStyle(evaluation)"/>
-            <text x="42px" y="60px" id="textGlobalEvaluation">{{evaluation}}</text>
+            <path id="arc1-{{index}}" [ngStyle]="arcStyle(evaluation, weight)"/>
+            <path id="arc2-{{index}}" [ngStyle]="arcStyle(evaluation, weight)" />
+            <path id="arc3-{{index}}" [ngStyle]="arcStyle(evaluation, weight)"/>
+            <text x="45px" y="60px" id="textGlobalEvaluation">{{evaluation}}</text>
         </g>
     </svg>
 </div>

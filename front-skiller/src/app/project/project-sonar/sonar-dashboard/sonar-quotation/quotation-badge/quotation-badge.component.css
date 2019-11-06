@@ -2,6 +2,17 @@ div.badge, .svg {
     width: 150px;
     height: 100px;
 }
+
+P.badgeTextGlobal {
+    margin: 3px;
+    font-size: 14px;
+}
+
 P.badgeText {
     margin: 3px;
+    font-size: 12px;
 }
+
+#textGlobalEvaluation {
+    font-size: 18px;
+} 
