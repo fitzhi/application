@@ -6,6 +6,7 @@ import { Constants } from 'src/app/constants';
 import { SonarService } from 'src/app/service/sonar.service';
 import { Project } from 'src/app/data/project';
 import { ProjectService } from 'src/app/service/project.service';
+import { BadgeQuotation } from './badge-quotation';
 
 @Component({
 	selector: 'app-sonar-quotation',
@@ -14,6 +15,9 @@ import { ProjectService } from 'src/app/service/project.service';
 })
 export class SonarQuotationComponent implements OnInit {
 
+	/**
+	 * Observable throwing the current project.
+	 */
 	@Input() project$;
 
 	/**
@@ -29,9 +33,9 @@ export class SonarQuotationComponent implements OnInit {
 	private project: Project;
 
 	/**
-	 * Project evaluation
+	 * Array of Project evaluations.
 	 */
-	private evaluation = -1;
+	private evaluations: BadgeQuotation[] = [];
 
 	/**
 	 * Title of the quotation badge
@@ -49,16 +53,23 @@ export class SonarQuotationComponent implements OnInit {
 		this.panelSwitchTransmitter$.subscribe(
 			panelSwitchEvent => {
 				if (panelSwitchEvent.idPanel === Constants.PROJECT_SONAR_PANEL.SONAR) {
+					this.evaluations = [];
 					this.evaluateProject(panelSwitchEvent.keySonar);
 				}
 			}
 		);
 	}
 
+	/**
+	 * Fill the array of relevant metrics for a given Sonar project.
+	 * @param keySonar the project Sonar key
+	 */
 	public evaluateProject(keySonar: string) {
 
-		this.evaluation = this.sonarService.evaluateSonarProject(this.project, keySonar);
-		this.title = 'Global quotation';
+		this.evaluations.push(
+			new BadgeQuotation(
+				'Global quotation',
+				this.sonarService.evaluateSonarProject(this.project, keySonar)));
 	}
 
 }

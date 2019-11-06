@@ -1,6 +1,4 @@
-<div id="containerQuotationBadges">
-    <app-quotation-badge [index]=1 [title]="title" [evaluation]="evaluation"></app-quotation-badge>
-    <app-quotation-badge [index]=2 [title]="title" [evaluation]="evaluation"></app-quotation-badge>
-    <app-quotation-badge [index]=3 [title]="title" [evaluation]="evaluation"></app-quotation-badge>
-    <app-quotation-badge [index]=4 [title]="title" [evaluation]="evaluation"></app-quotation-badge>
+<div *ngFor="let evaluation of evaluations; index as index" id="containerQuotationBadges">
+    <app-quotation-badge [index]=index [title]="evaluation.titke" [evaluation]="evaluation.quotation">
+    </app-quotation-badge>
 </div>
