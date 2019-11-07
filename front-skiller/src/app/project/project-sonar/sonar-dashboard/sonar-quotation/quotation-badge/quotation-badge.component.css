@@ -1,17 +1,22 @@
 div.badge {
     padding: 10px;
+    border-style:solid;
 }
 
 div.global {
     background-color: lightgrey;
     width: 150px;
     height: 150px;
+    border-color: black;
+    border-width: 2px;
 }
 
 div.metric {
     width: 120px;
     height: 120px;
     background-color: whitesmoke;
+    border-color: grey;
+    border-width: 1px;
 }
 
 .svg {
