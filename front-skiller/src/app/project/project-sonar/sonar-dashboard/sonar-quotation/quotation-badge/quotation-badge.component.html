@@ -1,4 +1,4 @@
-<div *ngIf="(weight === 100)" class="badge">
+<div *ngIf="(weight === 100)" class="badge global">
     <p class="badgeTextGlobal">{{title}}</p>
     <p class="badgeTextGlobal">{{weight}}%</p>
     <svg class="svg" xmlns="http://www.w3.org/2000/svg" 
@@ -13,7 +13,7 @@
         </g>
     </svg>
 </div>
-<div *ngIf="(weight < 100)" class="badge">
+<div *ngIf="(weight < 100)" class="badge metric">
     <p class="badgeText">{{title}}</p>
     <p class="badgeText">{{weight}}%</p>
     <svg class="svg" xmlns="http://www.w3.org/2000/svg" 

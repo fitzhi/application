@@ -1,8 +1,17 @@
 div.badge {
+    padding: 10px;
+}
+
+div.global {
+    background-color: lightgrey;
     width: 150px;
     height: 150px;
-    background-color: lightgray;
-    padding: 10px;
+}
+
+div.metric {
+    width: 120px;
+    height: 120px;
+    background-color: whitesmoke;
 }
 
 .svg {
