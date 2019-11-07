@@ -1,5 +1,8 @@
 div.badge {
-    padding: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 0px;
+    padding-right: 0px;
     border-style:solid;
 }
 
@@ -31,7 +34,7 @@ P.badgeTextGlobal {
 
 P.badgeText {
     margin: 3px;
-    font-size: 12px;
+    font-size: 11px;
 }
 
 #textGlobalEvaluation {
