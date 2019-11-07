@@ -18,6 +18,7 @@ import { ProjectSonarMetric } from '../data/sonar/project-sonar-metric';
 import { Project } from '../data/project';
 import { ProjectService } from './project.service';
 import { ɵangular_packages_platform_browser_platform_browser_j } from '@angular/platform-browser';
+import { ParseSpan } from '@angular/compiler';
 
 @Injectable({
 	providedIn: 'root'
@@ -309,6 +310,27 @@ export class SonarService extends InternalService {
 		this.projectSonarMetrics = projectSonarMetrics;
 	}
 
+	/**
+	 * @param key the given metric key
+	 * @returns the explicite titile for this key, or null if the projectSonarMetrics is not already initialized.
+	 */
+	getMetricTitle(key: string) {
+		if ((this.projectSonarMetrics) && (this.projectSonarMetrics.length > 0)) {
+			const psm = this.projectSonarMetrics.find(metric => (metric.key === key));
+			if (!psm) {
+				throw new Error('Cannot retrieved the metric ' + key + ' inside the collection');
+			}
+			return psm.name;
+		}
+		return null;
+	}
+
+	/**
+	 * Process the Sonar evaluation for the selected metrics.
+	 * @param project the current active project.
+	 * @param sonarKey the Sonar key identifier on the Sonar server.
+	 * @returns an evaluation of the Sonar project on a base of 100.
+	 */
 	evaluateSonarProject(project: Project, sonarKey: string): number {
 		const sonarProject = this.projectService.getSonarProject(project, sonarKey);
 		let result = 0;

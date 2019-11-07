@@ -96,7 +96,7 @@ export class SonarQuotationComponent extends BaseComponent implements OnInit, On
 
 			this.evaluations.push(
 				new BadgeQuotation(
-					metricValue.key,
+					this.sonarService.getMetricTitle (metricValue.key),
 					this.sonarService.evaluateSonarProject(emptyProject, keySonar),
 					metricValue.weight));
 			});
