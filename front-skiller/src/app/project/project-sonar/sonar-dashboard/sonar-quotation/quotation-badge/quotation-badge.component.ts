@@ -28,8 +28,6 @@ export class QuotationBadgeComponent implements AfterViewInit {
 	 */
 	@Input() weight;
 
-	private x_viewBox = 150;
-
 	constructor(private projectService: ProjectService) { }
 
 	ngAfterViewInit() {
