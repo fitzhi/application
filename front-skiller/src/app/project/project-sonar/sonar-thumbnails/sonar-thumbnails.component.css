@@ -33,15 +33,15 @@
     top: 0px;
     left: 0px;
     margin-left: 1px;
-    width: 2%;
+    width: 4%;
     height: 99.9%;
-    background-color: orange;
+    background-color: lightgray;
 }
 
 .insideSonarProjectSummary {
     left: 5px;
     top: 0px;
-    width: 98%;
+    width: 96%;
     height: 100%;
     background-color: white;
     display: contents;

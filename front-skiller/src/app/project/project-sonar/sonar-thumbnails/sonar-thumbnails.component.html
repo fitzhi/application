@@ -2,7 +2,9 @@
     <div *ngFor="let sonarProject of project.sonarProjects; index as index" 
         (click)="switchSonarContext(NONE, sonarProject.key)"
         [ngClass]="classForSonarProjectSummary(sonarProject.key)">
-        <div class="sonarNotation"></div>
+        <div    class="sonarNotation" 
+                [ngStyle]="{'background-color': colors.get(sonarProject.key)}">
+        </div>
         <div class="insideSonarProjectSummary">
             <mat-grid-list cols="6" rowHeight="50px" style="width:100%; height:100%">
                 <mat-grid-tile [colspan]="1" [rowspan]="1">

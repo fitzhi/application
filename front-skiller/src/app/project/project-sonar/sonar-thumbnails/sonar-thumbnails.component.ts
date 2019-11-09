@@ -53,6 +53,11 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	 */
 	private evaluations = new Map<string, number>();
 
+	/**
+	 * Colors figuring the evaluations for each Sonar project.
+	 */
+	private colors = new Map<string, string>();
+
 	constructor(
 		private sonarService: SonarService,
 		private projectService: ProjectService,
@@ -70,11 +75,12 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 					this.idPanelSelected = this.SONAR;
 					this.keySummarySelected = this.project.sonarProjects[0].key;
 
-					this.project.sonarProjects.forEach (sonarProject =>
-						this.evaluations.set (
-							sonarProject.key,
-							this.sonarService.evaluateSonarProject(this.project, sonarProject.key))
-					);
+					this.project.sonarProjects.forEach (sonarProject => {
+						const quotation = this.sonarService.evaluateSonarProject(this.project, sonarProject.key);
+						this.evaluations.set (sonarProject.key, quotation);
+						const risk = (quotation === 100) ? 0 : (10 - Math.ceil(quotation / 10));
+						this.colors.set (sonarProject.key, this.projectService.getRiskColor(risk));
+					});
 				}
 				this.loadFilesNumber();
 			}));
