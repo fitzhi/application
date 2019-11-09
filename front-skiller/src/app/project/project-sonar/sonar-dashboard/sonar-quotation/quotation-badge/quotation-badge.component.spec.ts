@@ -28,7 +28,7 @@ describe('QuotationBadgeComponent', () => {
 		component.index = 1;
 	});
 
-	it('should create for the single metric value (weight <100)', () => {
+	it('should be sucessfully created for the single metric value (weight <100)', () => {
 		component.weight = 10;
 		fixture.detectChanges();
 		expect(component).toBeTruthy();
@@ -39,7 +39,7 @@ describe('QuotationBadgeComponent', () => {
 		expect(field('#quotationBadge').getAttribute('class')).toEqual('badge metric');
 	});
 
-	it('should create for the GLOBAL evaluation (weight = 100)', () => {
+	it('should be sucessfully created for the GLOBAL evaluation (weight = 100)', () => {
 		component.weight = 100;
 		fixture.detectChanges();
 		expect(component).toBeTruthy();

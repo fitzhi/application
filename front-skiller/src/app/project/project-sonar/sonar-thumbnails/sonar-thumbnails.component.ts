@@ -48,6 +48,11 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 
 	public languageFilesNumber = new Map<string, FilesStats[]>();
 
+	/**
+	 * Map containting the evaluations for each Sonar project.
+	 */
+	private evaluations = new Map<string, number>();
+
 	constructor(
 		private sonarService: SonarService,
 		private projectService: ProjectService,
@@ -59,10 +64,17 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 
 		this.subscriptions.add(
 			this.project$.subscribe(project => {
+				this.evaluations.clear();
 				this.project = project;
 				if (this.project.sonarProjects.length > 0) {
 					this.idPanelSelected = this.SONAR;
 					this.keySummarySelected = this.project.sonarProjects[0].key;
+
+					this.project.sonarProjects.forEach (sonarProject =>
+						this.evaluations.set (
+							sonarProject.key,
+							this.sonarService.evaluateSonarProject(this.project, sonarProject.key))
+					);
 				}
 				this.loadFilesNumber();
 			}));

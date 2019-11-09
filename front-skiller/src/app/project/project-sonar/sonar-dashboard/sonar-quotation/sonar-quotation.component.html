@@ -2,6 +2,7 @@
     <div *ngFor="let evaluation of evaluations; index as index" style="padding:10px">
         <app-quotation-badge 
             [index]=index 
+            [thumbnail]=false
             [title]="evaluation.title" 
             [evaluation]="evaluation.quotation"
             [weight]="evaluation.weight">

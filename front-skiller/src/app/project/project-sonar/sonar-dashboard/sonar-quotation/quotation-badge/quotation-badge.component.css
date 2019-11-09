@@ -22,9 +22,16 @@ div.metric {
     border-width: 1px;
 }
 
+div.thumbnail {
+    width: 70px;
+    height: 70px;
+    background-color: transparent;
+    border-width: 0px;
+}
+
 .svg {
-    width: 130px;
-    height: 100px;
+    width: 90%;
+    height: 82%x;
 }
 
 P.badgeTextGlobal {

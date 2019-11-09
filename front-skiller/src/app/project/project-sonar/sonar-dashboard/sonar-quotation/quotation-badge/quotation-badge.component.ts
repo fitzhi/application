@@ -28,6 +28,11 @@ export class QuotationBadgeComponent implements AfterViewInit {
 	 */
 	@Input() weight;
 
+	/**
+	 * Boolean indicated if we use this component inside the thumnail or not.
+	 */
+	@Input() thumbnail;
+
 	constructor(private projectService: ProjectService) { }
 
 	ngAfterViewInit() {
