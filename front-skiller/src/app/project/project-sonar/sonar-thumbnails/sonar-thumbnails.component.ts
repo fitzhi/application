@@ -9,6 +9,7 @@ import { ILanguageCount } from 'src/app/service/ILanguageCount';
 import { FilesStats } from 'src/app/data/sonar/FilesStats';
 import { ProjectService } from 'src/app/service/project.service';
 import { MessageService } from 'src/app/message/message.service';
+import { ThumbnailQuotationBadge } from './thumbnail-quotation-badge';
 
 @Component({
 	selector: 'app-sonar-thumbnails',
@@ -51,12 +52,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	/**
 	 * Map containting the evaluations for each Sonar project.
 	 */
-	private evaluations = new Map<string, number>();
-
-	/**
-	 * Colors figuring the evaluations for each Sonar project.
-	 */
-	private colors = new Map<string, string>();
+	private evaluations = new Map<string, ThumbnailQuotationBadge>();
 
 	constructor(
 		private sonarService: SonarService,
@@ -77,9 +73,12 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 
 					this.project.sonarProjects.forEach (sonarProject => {
 						const quotation = this.sonarService.evaluateSonarProject(this.project, sonarProject.key);
-						this.evaluations.set (sonarProject.key, quotation);
 						const risk = (quotation === 100) ? 0 : (10 - Math.ceil(quotation / 10));
-						this.colors.set (sonarProject.key, this.projectService.getRiskColor(risk));
+						this.evaluations.set (sonarProject.key,
+							new ThumbnailQuotationBadge(
+								quotation, 
+								this.projectService.getRiskColor(risk),
+								'lines of code'));
 					});
 				}
 				this.loadFilesNumber();
@@ -153,7 +152,6 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 				mapAll.set(language, count);
 		});
 		const mapAllSorted = new Map([...mapAll.entries()].sort((a, b) => b[1] - a[1]));
-
 
 		const top3: FilesStats[] = [];
 		for (const key of mapAllSorted.keys()) {

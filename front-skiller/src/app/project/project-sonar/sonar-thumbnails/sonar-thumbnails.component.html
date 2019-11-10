@@ -3,7 +3,7 @@
         (click)="switchSonarContext(NONE, sonarProject.key)"
         [ngClass]="classForSonarProjectSummary(sonarProject.key)">
         <div    class="sonarNotation" 
-                [ngStyle]="{'background-color': colors.get(sonarProject.key)}">
+                [ngStyle]="{'background-color': evaluations.get(sonarProject.key).color}">
         </div>
         <div class="insideSonarProjectSummary">
             <mat-grid-list cols="6" rowHeight="50px" style="width:100%; height:100%">
@@ -35,8 +35,8 @@
                     <app-quotation-badge
                         [index]= "'-' + sonarProject.key + index"
                         [thumbnail]=true
-                        [title]="'Evalutation'" 
-                        [evaluation]="evaluations.get(sonarProject.key)"
+                        [title]="evaluations.get(sonarProject.key).titleLinesOfCode"
+                        [evaluation]="evaluations.get(sonarProject.key).quotation"
                         [weight]="100">
                     </app-quotation-badge>
                 </mat-grid-tile>

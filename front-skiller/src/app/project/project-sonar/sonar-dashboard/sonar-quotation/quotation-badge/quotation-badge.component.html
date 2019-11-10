@@ -29,15 +29,16 @@
     </svg>
 </div>
 <div id="quotationBadge" *ngIf="thumbnail" class="badge thumbnail">
-        <svg class="svg" xmlns="http://www.w3.org/2000/svg" 
-            xmlns:xlink="http://www.w3.org/1999/xlink" 
-            xml:space="preserve"
-            viewBox="0 0 77 60">
-            <g>
-                <path id="arc1-{{index}}" [ngStyle]="arcStyle(evaluation, weight)"/>
-                <path id="arc2-{{index}}" [ngStyle]="arcStyle(evaluation, weight)" />
-                <path id="arc3-{{index}}" [ngStyle]="arcStyle(evaluation, weight)"/>
-                <text x="15px" y="55px" id="textGlobalEvaluation">{{evaluation}}</text>
-            </g>
-        </svg>
-    </div>
+    <p class="badgeText">{{title}}</p>
+    <svg class="svg" xmlns="http://www.w3.org/2000/svg" 
+        xmlns:xlink="http://www.w3.org/1999/xlink" 
+        xml:space="preserve"
+        viewBox="0 0 77 60">
+        <g>
+            <path id="arc1-{{index}}" [ngStyle]="arcStyle(evaluation, weight)"/>
+            <path id="arc2-{{index}}" [ngStyle]="arcStyle(evaluation, weight)" />
+            <path id="arc3-{{index}}" [ngStyle]="arcStyle(evaluation, weight)"/>
+            <text x="15px" y="55px" id="textGlobalEvaluation">{{evaluation}}</text>
+        </g>
+    </svg>
+</div>
