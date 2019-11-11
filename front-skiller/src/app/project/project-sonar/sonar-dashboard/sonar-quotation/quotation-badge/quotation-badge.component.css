@@ -24,7 +24,7 @@ div.metric {
 
 div.thumbnail {
     width: 70px;
-    height: 70px;
+    height: 100px;
     background-color: transparent;
     border-width: 0px;
 }
@@ -44,6 +44,16 @@ P.badgeText {
     font-size: 11px;
 }
 
+P.badgeLinesOfCode{
+    font-size: 10px;
+    margin: 2px;
+    color: gray;
+}
+
 #textGlobalEvaluation {
     font-size: 18px;
 } 
+
+#quotationBadge {
+    margin-bottom: 5px;
+}

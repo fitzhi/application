@@ -187,7 +187,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	 */
 	loadAndSaveEvaluations(metricValues: ProjectSonarMetricValue[]) {
 		this.subscriptions.add(
-			this.sonarService.loadSonarComponentMeasures(
+			this.sonarService.loadSonarComponentMeasures$(
 					this.sonarKey,
 					metricValues.map(psmv => psmv.key))
 				.subscribe((measures: ResponseComponentMeasures) => {

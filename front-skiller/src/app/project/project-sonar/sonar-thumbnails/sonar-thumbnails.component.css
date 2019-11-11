@@ -69,9 +69,11 @@
 
 td.table-counting {
     padding-right: 10px;
+    font-size: 12px;
 }
 
 td.language {
     text-align: right;
+    font-weight: 800;
 }
 

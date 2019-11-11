@@ -29,7 +29,8 @@
     </svg>
 </div>
 <div id="quotationBadge" *ngIf="thumbnail" class="badge thumbnail">
-    <p class="badgeText">{{title}}</p>
+    <p class="badgeText">{{totalNumberLinesOfCode | number}}</p>
+    <p class="badgeLinesOfCode">{{title}}</p>
     <svg class="svg" xmlns="http://www.w3.org/2000/svg" 
         xmlns:xlink="http://www.w3.org/1999/xlink" 
         xml:space="preserve"

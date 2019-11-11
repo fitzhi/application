@@ -24,9 +24,17 @@ export class QuotationBadgeComponent implements AfterViewInit {
 	@Input() evaluation;
 
 	/**
-	 * Quotation ratio in the global result for this metric.
+	 * The weight corresponding to the given metric
+	 * It might be :
+	 *  - 100 if the metric is in fact the complete quotation for the Sonar project.
+	 *  - the weight of a particular metric
 	 */
 	@Input() weight;
+
+	/**
+	 * The total number lines of code
+	 */
+	@Input() totalNumberLinesOfCode;
 
 	/**
 	 * Boolean indicated if we use this component inside the thumnail or not.

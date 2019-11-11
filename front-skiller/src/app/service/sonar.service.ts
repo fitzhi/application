@@ -6,7 +6,7 @@ import { InternalService } from '../internal-service';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { Constants } from '../constants';
 import { Metric } from '../data/sonar/metric';
-import { of, BehaviorSubject, Subject, Observable, EMPTY } from 'rxjs';
+import { of, BehaviorSubject, Subject, Observable, EMPTY, pipe } from 'rxjs';
 import { Metrics } from '../data/sonar/metrics';
 import { Components } from '../data/sonar/components';
 import { Component } from '../data/sonar/component';
@@ -17,8 +17,6 @@ import { ReferentialService } from './referential.service';
 import { ProjectSonarMetric } from '../data/sonar/project-sonar-metric';
 import { Project } from '../data/project';
 import { ProjectService } from './project.service';
-import { ɵangular_packages_platform_browser_platform_browser_j } from '@angular/platform-browser';
-import { ParseSpan } from '@angular/compiler';
 
 @Injectable({
 	providedIn: 'root'
@@ -159,10 +157,10 @@ export class SonarService extends InternalService {
 
 	/**
 	 * Load the measures evaluated for a component.
-	 * @param key the key of the evaluated componsent
+	 * @param key the key of the evaluated Sonar project
 	 * @param metrics list of metrics to be evaluated
 	 */
-	loadSonarComponentMeasures(key: string, metrics: string[]): Observable<ResponseComponentMeasures> {
+	loadSonarComponentMeasures$(key: string, metrics: string[]): Observable<ResponseComponentMeasures> {
 		const params = new HttpParams().set('component', key).set('metricKeys', metrics.join(','));
 		const apiMesures = '/api/measures/component';
 		return this.httpClient
@@ -175,6 +173,22 @@ export class SonarService extends InternalService {
 						console.groupEnd();
 					}
 				}));
+	}
+
+	/**
+	 * Load the total number of code
+	 * @param key the Sonar project key
+	 * @returns an observable emiting the total number of lines of code in this project
+	 */
+
+	loadTotalNumberLinesOfCode$(key: string): Observable<number> {
+		return this.loadSonarComponentMeasures$(key, ['ncloc']).
+			pipe(
+				take(1),
+				switchMap( (response: ResponseComponentMeasures) => {
+					return of(Number(response.component.measures[0].value));
+				})
+			);
 	}
 
 	loadSonarVersion() {

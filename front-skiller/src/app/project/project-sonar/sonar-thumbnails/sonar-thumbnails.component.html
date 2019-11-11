@@ -1,9 +1,10 @@
-<div id="containerDashboard">
+<div *ngIf="allEvaluationsCompleted()" id="containerDashboard">
     <div *ngFor="let sonarProject of project.sonarProjects; index as index" 
         (click)="switchSonarContext(NONE, sonarProject.key)"
         [ngClass]="classForSonarProjectSummary(sonarProject.key)">
-        <div    class="sonarNotation" 
-                [ngStyle]="{'background-color': evaluations.get(sonarProject.key).color}">
+        <div    
+            class="sonarNotation" 
+            [ngStyle]="{'background-color': evaluations.get(sonarProject.key).color}">
         </div>
         <div class="insideSonarProjectSummary">
             <mat-grid-list cols="6" rowHeight="50px" style="width:100%; height:100%">
@@ -35,9 +36,10 @@
                     <app-quotation-badge
                         [index]= "'-' + sonarProject.key + index"
                         [thumbnail]=true
+                        [totalNumberLinesOfCode]="evaluations.get(sonarProject.key).totalNumberLinesOfCode"
                         [title]="evaluations.get(sonarProject.key).titleLinesOfCode"
-                        [evaluation]="evaluations.get(sonarProject.key).quotation"
-                        [weight]="100">
+                        [weight]="100"
+                        [evaluation]="evaluations.get(sonarProject.key).quotation">
                     </app-quotation-badge>
                 </mat-grid-tile>
                 <mat-grid-tile [colspan]="1" [rowspan]="2">

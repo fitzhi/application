@@ -74,11 +74,15 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 					this.project.sonarProjects.forEach (sonarProject => {
 						const quotation = this.sonarService.evaluateSonarProject(this.project, sonarProject.key);
 						const risk = (quotation === 100) ? 0 : (10 - Math.ceil(quotation / 10));
-						this.evaluations.set (sonarProject.key,
-							new ThumbnailQuotationBadge(
-								quotation, 
-								this.projectService.getRiskColor(risk),
-								'lines of code'));
+						this.sonarService
+							.loadTotalNumberLinesOfCode$(sonarProject.key)
+							.subscribe (totalNulberLinesOfCode =>
+								this.evaluations.set (sonarProject.key,
+									new ThumbnailQuotationBadge(
+										quotation,
+										this.projectService.getRiskColor(risk),
+										totalNulberLinesOfCode,
+										'Lines of code')));
 					});
 				}
 				this.loadFilesNumber();
@@ -228,6 +232,21 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 		};
 		return labels[key];
 	}
+
+	/**
+	 * This function is conditionning the preview of thumbnails.
+	 *
+	 * All evaluations has to be retrieved before preview.
+	 * And we know that all evaluations are complete
+	 * when the evaluations map has the same size than the Sonar project.
+	 */
+	allEvaluationsCompleted(): boolean {
+		if (!this.project) {
+			return false;
+		}
+		return (this.evaluations.size === this.project.sonarProjects.length);
+	}
+
 	/**
 	 * Calling the base class to unsubscribe all subscriptions.
 	 */
@@ -236,6 +255,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	}
 
 }
+
 
 export namespace SonarThumbnailsComponent {
 	export class LanguageCount {
