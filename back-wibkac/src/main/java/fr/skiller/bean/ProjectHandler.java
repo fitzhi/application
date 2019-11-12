@@ -12,6 +12,7 @@ import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.ProjectSonarMetricValue;
 import fr.skiller.data.internal.Skill;
+import fr.skiller.data.internal.SonarEvaluation;
 import fr.skiller.data.internal.SonarProject;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
@@ -229,4 +230,16 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 */
 	void saveSonarMetricValues (Project project, String sonarProjectKey, List<ProjectSonarMetricValue> metricValues)
 		throws SkillerException;
+
+
+	/**
+	 * Save the evaluation and the total number of lines of code for this Sonar project.
+	 * @param project the given project.
+	 * @param sonarKey the key of the Sonar project.
+	 * @param sonarEvaluation the evaluation processed for the Sonar project
+	 * @throws SkillerException thrown if any problem occurs.
+	 */
+	void saveSonarEvaluation (Project project, String sonarProjectKey, SonarEvaluation sonarEvaluation)
+		throws SkillerException;
+	
 }

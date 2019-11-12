@@ -4,12 +4,9 @@ import static fr.skiller.Global.BACKEND_RETURN_CODE;
 import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
 
 import java.text.MessageFormat;
-import java.util.HashSet;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,9 +21,9 @@ import fr.skiller.Error;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.controller.in.BodyParamSonarEntry;
 import fr.skiller.controller.in.BodyParamSonarFilesStats;
+import fr.skiller.controller.in.BodyParamProjectSonarEvaluation;
 import fr.skiller.controller.in.BodyParamProjectSonarMetricValues;
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.ProjectSonarMetricValue;
 import fr.skiller.data.internal.SonarProject;
 import fr.skiller.exception.SkillerException;
 import lombok.extern.slf4j.Slf4j;
@@ -153,6 +150,40 @@ public class ProjectSonarController {
 		} catch (SkillerException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
 			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
+			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
+		}
+	}
+
+	/**
+	 * Add or update the Sonar evaluation of a Sonar project
+	 * @param param
+	 * @return {@code TRUE} if the operation succeeded, {@code FALSE} otherwise.
+	 */
+	@PostMapping(path="/saveEvaluation")
+	public ResponseEntity<Boolean> saveEvaluation(@RequestBody BodyParamProjectSonarEvaluation param) {
+		HttpHeaders headers = new HttpHeaders();
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
+				"POST command on /project/sonar/saveEvaluation for project : %s %s", 
+				param.getIdProject(), param.getSonarKey()));
+		}
+		
+		Project project = null;
+		try {
+			project = projectHandler.get(param.getIdProject());
+		} catch (SkillerException se) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
+			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
+			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
+		}
+		
+		try {
+			projectHandler.saveSonarEvaluation(project, param.getSonarKey(), param.getSonarEvaluation()); 
+			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
+		} catch (SkillerException se) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
+			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
 		}
 	}

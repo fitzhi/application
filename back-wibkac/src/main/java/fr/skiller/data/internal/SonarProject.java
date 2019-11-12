@@ -35,6 +35,10 @@ public @Data class SonarProject {
 	 */
 	private List<FilesStats> projectFilesStats = new ArrayList<>();
 	
+	/**
+	 * The Sonar evaluation processed for this project.
+	 */
+	private SonarEvaluation sonarEvaluation;
 	
 	public SonarProject() {
 		// Empty constructor for serialization / de-serialization purpose

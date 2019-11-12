@@ -33,6 +33,7 @@ import fr.skiller.data.internal.Mission;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.ProjectSonarMetricValue;
 import fr.skiller.data.internal.Skill;
+import fr.skiller.data.internal.SonarEvaluation;
 import fr.skiller.data.internal.SonarProject;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.Contributor;
@@ -438,41 +439,64 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				.anyMatch(entry -> key.equals(entry.getKey()));
 	}
 
+	/**
+	 * Select the Sonar project corresponding to the couple (project, sonarKey)
+	 * @param project the given project
+	 * @param sonarKey the given 
+	 * @return
+	 * @throws SkillerException
+	 */
+	private SonarProject getSonarProject(Project project, String sonarKey) throws SkillerException {
+		Optional<SonarProject> oSonarProject = project.getSonarProjects()
+				.stream()
+				.filter(sp -> sonarKey.equals(sp.getKey()))
+				.findFirst();
+		if (!oSonarProject.isPresent()) {
+			throw new SkillerException(CODE_SONAR_KEY_NOFOUND, MESSAGE_SONAR_KEY_NOFOUND, sonarKey, project.getName());
+		}
+		return oSonarProject.get();
+	}
+	
 	@Override
 	public void saveFilesStats(Project project, String sonarProjectKey, List<FilesStats> filesStats) {
 		
 		try {
-			SonarProject sonarPrj = project.getSonarProjects()
-				.stream()
-				.filter(sonarP -> sonarProjectKey.equals(sonarP.getKey()))
-				.findFirst().get();
+
+			SonarProject sonarProject = getSonarProject(project, sonarProjectKey);
 				
 			synchronized (lockDataUpdated) {
-				sonarPrj.setProjectFilesStats(filesStats);
+				sonarProject.setProjectFilesStats(filesStats);
 				this.dataUpdated = true;
 			}
-		} catch (NoSuchElementException nsee) {
-			throw new SkillerRuntimeException(nsee);
+		} catch (Exception e) {
+			throw new SkillerRuntimeException(e);
 		}
 	}
-
+	
 	@Override
 	public void saveSonarMetricValues(
 			Project project, 
 			String sonarProjectKey,
 			List<ProjectSonarMetricValue> metricValues) throws SkillerException {
 		
-		Optional<SonarProject> oSonarProject = project.getSonarProjects()
-			.stream()
-			.filter(sp -> sonarProjectKey.equals(sp.getKey()))
-			.findFirst();
-		if (!oSonarProject.isPresent()) {
-			throw new SkillerException(CODE_SONAR_KEY_NOFOUND, MESSAGE_SONAR_KEY_NOFOUND, sonarProjectKey, project.getName());
-		}
+		SonarProject sonarProject = getSonarProject(project, sonarProjectKey);
 		
 		synchronized (lockDataUpdated) {
-			oSonarProject.get().setProjectSonarMetricValues(metricValues); 
+			sonarProject.setProjectSonarMetricValues(metricValues); 
 			this.dataUpdated = true;
 		}
 	}
+
+	@Override
+	public void saveSonarEvaluation(Project project, String sonarProjectKey, SonarEvaluation sonarEvaluation)
+			throws SkillerException {
+		
+		SonarProject sonarProject = getSonarProject(project, sonarProjectKey);
+		synchronized (lockDataUpdated) {
+			sonarProject.setSonarEvaluation(sonarEvaluation);
+			this.dataUpdated = true;
+		}
+		
+	}
+
 }

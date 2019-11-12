@@ -9,13 +9,13 @@ import lombok.Data;
 
 /**
  * <p>
- * Parameters passed to the controller method {@link ProjectSonarController#updateMetricValues(fr.skiller.controller.BodyParameProjectSonarMetricValues)}
+ * Parameters passed to the controller method {@link ProjectSonarController#saveEvaluation(BodyParamProjectSonarEvaluation)}
  * </p>
  *
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public @Data class BodyParamProjectSonarMetricValues {
+public @Data class BodyParamProjectSonarEvaluation {
 
 	/**
 	 * The given project identifier
@@ -30,6 +30,6 @@ public @Data class BodyParamProjectSonarMetricValues {
 	/**
 	 * Sonar metric values and their weight passed to method updateMetricValues.
 	 */
-	private List<ProjectSonarMetricValue> metricValues;
+	private SonarEvaluation sonarEvaluation;
 	
 }

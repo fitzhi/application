@@ -28,16 +28,18 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.controller.in.BodyParamProjectSonarEvaluation;
 import fr.skiller.controller.in.BodyParamProjectSonarMetricValues;
 import fr.skiller.controller.util.LocalDateAdapter;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.ProjectSonarMetricValue;
+import fr.skiller.data.internal.SonarEvaluation;
 import fr.skiller.data.internal.SonarProject;
 import fr.skiller.exception.SkillerException;
 
 /**
  * <p>
- * Test of the method {@link ProjectSonarController#updateMetricValues(BodyParamProjectSonarMetricValues)}
+ * Test of the method {@link ProjectSonarController#saveEvaluation(fr.skiller.controller.in.BodyParamProjectSonarEvaluation)}
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
@@ -45,7 +47,7 @@ import fr.skiller.exception.SkillerException;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectSonarControllerSaveMetricValuesTest {
+public class ProjectSonarControllerSaveSonarEvaluationTest {
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -80,18 +82,17 @@ public class ProjectSonarControllerSaveMetricValuesTest {
 	@Test
 	@WithMockUser
 	public void test() throws Exception {
-		BodyParamProjectSonarMetricValues bppsmv = new BodyParamProjectSonarMetricValues();
-		bppsmv.setIdProject(ID_PROJECT);
-		bppsmv.setSonarKey(KEY_SONAR_1);
-		List<ProjectSonarMetricValue> list = new ArrayList<>();
-		list.add(new ProjectSonarMetricValue("bugs1", 40, 10));
-		list.add(new ProjectSonarMetricValue("bugs2", 40, 15));
-		list.add(new ProjectSonarMetricValue("bugs3", 20, 17));
-		bppsmv.setMetricValues(list);
+		BodyParamProjectSonarEvaluation bppse = new BodyParamProjectSonarEvaluation();
+		bppse.setIdProject(ID_PROJECT);
+		bppse.setSonarKey(KEY_SONAR_1);
+		SonarEvaluation sonarEvaluation = new SonarEvaluation();
+		sonarEvaluation.setEvaluation(50);
+		sonarEvaluation.setTotalNumberLinesofCode(3414);
+		bppse.setSonarEvaluation(sonarEvaluation);
 	
-		MvcResult result = this.mvc.perform(post("/project/sonar/saveMetricValues")
+		MvcResult result = this.mvc.perform(post("/project/sonar/saveEvaluation")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bppsmv)))
+				.content(gson.toJson(bppse)))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -112,19 +113,12 @@ public class ProjectSonarControllerSaveMetricValuesTest {
 		//
 		// THIS PROJECT HAS BEEN ADDED TO THIS STAFF MEMBER.
 		//
-		Assert.assertTrue(sp.getProjectSonarMetricValues().size() == 3);
-		Assert.assertTrue("bugs1".equals(sp.getProjectSonarMetricValues().get(0).getKey()));
-		Assert.assertTrue("bugs2".equals(sp.getProjectSonarMetricValues().get(1).getKey()));
-		Assert.assertTrue("bugs3".equals(sp.getProjectSonarMetricValues().get(2).getKey()));
+		Assert.assertNotNull(sp.getSonarEvaluation());
+		Assert.assertEquals(50, sp.getSonarEvaluation().getEvaluation());
+		Assert.assertEquals(3414, sp.getSonarEvaluation().getTotalNumberLinesofCode());
 
-		Assert.assertTrue(sp.getProjectSonarMetricValues().get(0).getWeight() == 40);
-		Assert.assertTrue(sp.getProjectSonarMetricValues().get(1).getWeight() == 40);
-		Assert.assertTrue(sp.getProjectSonarMetricValues().get(2).getWeight() == 20);
-
-		Assert.assertTrue(sp.getProjectSonarMetricValues().get(0).getValue() == 10);
-		Assert.assertTrue(sp.getProjectSonarMetricValues().get(1).getValue() == 15);
-		Assert.assertTrue(sp.getProjectSonarMetricValues().get(2).getValue() == 17);
-
+		SonarProject spEmpty = project.getSonarProjects().get(1);
+		Assert.assertNull(spEmpty.getSonarEvaluation());
 	}
 	
 	@After
