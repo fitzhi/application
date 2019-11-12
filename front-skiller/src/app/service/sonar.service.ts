@@ -380,8 +380,11 @@ export class SonarService extends InternalService {
 						break;
 					case 'sqale_rating':
 						// A=0-0.05, B=0.06-0.1, C=0.11-0.20, D=0.21-0.5, E=0.51-1
-						result += metricValues.weight *
-							(((6 - metricValues.value) * 20) / 100);
+						// During first initialization, the value has not yet been retrieved from the Sonar server
+						if (metricValues.value !== 0) {
+							result += metricValues.weight *
+								(((6 - metricValues.value) * 20) / 100);
+						}
 						break;
 					case 'security_rating':
 						/*
@@ -392,12 +395,18 @@ export class SonarService extends InternalService {
 							4 = at least 1 Critical Vulnerability
 							5 = at least 1 Blocker Vulnerability
 						*/
-						result += metricValues.weight *
+						// During first initialization, the value has not yet been retrieved from the Sonar server
+						if (metricValues.value !== 0) {
+							result += metricValues.weight *
 							(((6 - metricValues.value) * 20) / 100);
+						}
 						break;
 					case 'reliability_rating':
-						result += metricValues.weight *
+						// During first initialization, the value has not yet been retrieved from the Sonar server
+						if (metricValues.value !== 0) {
+							result += metricValues.weight *
 							(((6 - metricValues.value) * 20) / 100);
+						}
 						break;
 					case 'alert_status':
 						result += metricValues.weight * metricValues.value;

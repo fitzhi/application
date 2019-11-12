@@ -182,53 +182,6 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	/**
-	 * Load from Sonar the evaluation for the given metrics.
-	 * @param metricValues the array of Metric record to update with the Sonar last evaluation.
-	 */
-	loadAndSaveEvaluations(metricValues: ProjectSonarMetricValue[]) {
-		this.subscriptions.add(
-			this.sonarService.loadSonarComponentMeasures$(
-					this.sonarKey,
-					metricValues.map(psmv => psmv.key))
-				.subscribe((measures: ResponseComponentMeasures) => {
-					measures.component.measures.forEach(measure => {
-						const psmv = metricValues.find(mv => mv.key === measure.metric);
-						if (!isNaN(Number(measure.value))) {
-							psmv.value = Number(measure.value);
-						} else {
-							if (measure.value === 'OK') {
-								psmv.value = 1;
-							} else {
-								if (measure.value === 'ERROR') {
-									psmv.value = 0;
-								} else {
-									console.error ('Unexpected value of measure', measure.value);
-								}
-							}
-						}
-					});
-
-					this.projectService.dump(this.project, 'loadEvaluations');
-
-					//
-					// the metricValues is updated with the evaluation returned by Sonar.
-					//
-					this.projectService.saveMetricValues(this.project.id, this.sonarKey, metricValues)
-						.pipe(take(1))
-						.subscribe (ok => {
-							if (ok) {
-								this.throwMessage.next(
-									new MessageGravity(Constants.MESSAGE_INFO,
-									'Metrics weights and values have been saved for the Sonar project ' + this.sonarKey));
-							} else {
-								this.throwMessage.next(
-									new MessageGravity(Constants.MESSAGE_ERROR,
-									'Error when saving weights and values for the Sonar project ' + this.sonarKey));
-							}});
-				}));
-	}
-
-	/**
 	 * Initialize the dataSource of the table.
 	 * @param projectSonarMetrics the array of metrics as origine of the dataSource
 	 */
@@ -298,7 +251,12 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 						));
 				}
 			});
-			this.loadAndSaveEvaluations(sonarProject.projectSonarMetricValues);
+			this.projectService.loadAndSaveEvaluations(
+				this.sonarService,
+				this.project,
+				sonarProject.key,
+				sonarProject.projectSonarMetricValues,
+				this.throwMessage);
 		}
 	}
 

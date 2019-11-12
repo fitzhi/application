@@ -209,4 +209,19 @@ describe('SonarService', () => {
 		expect(51).toEqual(result);
 	});
 
+	it('Reproduction of a bug. What\'s going on with the default weigths without metrics retrieved', () => {
+		const service: SonarService = TestBed.get(SonarService);
+
+		const project = createProjectWithMetric('bugs', 40, 0);
+		// The 3 next metrics will be ignored.
+		project.sonarProjects[0].projectSonarMetricValues
+			.push(new ProjectSonarMetricValue('sqale_rating', 20, 0));
+		project.sonarProjects[0].projectSonarMetricValues
+			.push(new ProjectSonarMetricValue('reliability_rating', 20, 0));
+		project.sonarProjects[0].projectSonarMetricValues
+			.push(new ProjectSonarMetricValue('security_rating', 20, 0));
+
+		const result = service.evaluateSonarProject (project, 'keySonar');
+		expect(40).toEqual(result);
+	});
 });

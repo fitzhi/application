@@ -10,6 +10,7 @@ import { FilesStats } from 'src/app/data/sonar/FilesStats';
 import { ProjectService } from 'src/app/service/project.service';
 import { MessageService } from 'src/app/message/message.service';
 import { ThumbnailQuotationBadge } from './thumbnail-quotation-badge';
+import { SonarEvaluation } from 'src/app/data/sonar-evaluation';
 
 @Component({
 	selector: 'app-sonar-thumbnails',
@@ -70,26 +71,14 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 				if (this.project.sonarProjects.length > 0) {
 					this.idPanelSelected = this.SONAR;
 					this.keySummarySelected = this.project.sonarProjects[0].key;
-
-					this.project.sonarProjects.forEach (sonarProject => {
-						const quotation = this.sonarService.evaluateSonarProject(this.project, sonarProject.key);
-						const risk = (quotation === 100) ? 0 : (10 - Math.ceil(quotation / 10));
-						this.sonarService
-							.loadTotalNumberLinesOfCode$(sonarProject.key)
-							.subscribe (totalNulberLinesOfCode =>
-								this.evaluations.set (sonarProject.key,
-									new ThumbnailQuotationBadge(
-										quotation,
-										this.projectService.getRiskColor(risk),
-										totalNulberLinesOfCode,
-										'Lines of code')));
-					});
+					this.updateDisplayConsolidationBadge();
 				}
 				this.loadFilesNumber();
 			}));
 
 		this.subscriptions.add(
 			this.panelSwitchTransmitter$.subscribe( (panelSwitchEvent: PanelSwitchEvent) => {
+				this.updateDisplayConsolidationBadge();
 				if (!panelSwitchEvent.keySonar) {
 					if (Constants.DEBUG) {
 						console.log ('No Sonar project declared!');
@@ -99,6 +88,27 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 					this.keySummarySelected = panelSwitchEvent.keySonar;
 				}
 		}));
+	}
+
+	/**
+	 * Update the Sonar badge on each thumbnail.
+	 */
+	updateDisplayConsolidationBadge() {
+		this.project.sonarProjects.forEach (sonarProject => {
+			const quotation = this.sonarService.evaluateSonarProject(this.project, sonarProject.key);
+			const risk = (quotation === 100) ? 0 : (10 - Math.ceil(quotation / 10));
+			this.sonarService
+			.loadTotalNumberLinesOfCode$(sonarProject.key)
+			.subscribe (totalNulberLinesOfCode => {
+				sonarProject.sonarEvaluation = new SonarEvaluation(quotation, totalNulberLinesOfCode);
+				this.evaluations.set (sonarProject.key,
+						new ThumbnailQuotationBadge(
+							quotation,
+							this.projectService.getRiskColor(risk),
+							totalNulberLinesOfCode,
+							'Lines of code'));
+				});
+		});
 	}
 
 	loadFilesNumber() {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, EventEmitter } from '@angular/core';
 import { Project } from '../data/project';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
@@ -19,6 +19,9 @@ import { FilesStats } from '../data/sonar/FilesStats';
 import { Component } from '@angular/compiler/src/core';
 import { ProjectSonarMetricValue } from '../data/project-sonar-metric-value';
 import { MessageService } from '../message/message.service';
+import { ResponseComponentMeasures } from '../data/sonar/reponse-component-measures';
+import { SonarService } from './sonar.service';
+import { MessageGravity } from '../message/message-gravity';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -319,9 +322,13 @@ export class ProjectService extends InternalService {
 			case -1:
 				return 'whiteSmoke';
 			default:
-				return this.referentialService.legends
-					.find (legend => legend.level === risk)
-					.color;
+				const riskLegend = this.referentialService.legends
+					.find (legend => legend.level === risk);
+				if (riskLegend) {
+					return riskLegend.color;
+				} else {
+					throw new Error('Unknown risk level ' + risk);
+				}
 			}
 	}
 
@@ -404,6 +411,66 @@ export class ProjectService extends InternalService {
 				(psmv: ProjectSonarMetricValue) => (metricKey === psmv.key));
 		}
 		return undefined;
+	}
+
+	/**
+	 * Load from Sonar the evaluation for the given metrics.
+	 * @param sonarService the service **sonarService** is passed to the method after the creation of the service **projectService**.
+	 * Because, the url of the *Sonar server* is saved on the project object.
+	 * So we need to create :
+	 * - First the projectService,
+	 * - Then the sonarService *(which will be informed of the url of the Sonar server)*.
+	 * @param project the given project
+	 * @param sonarKey the key of the Sonar project
+	 * @param metricValues the array of Metric records to update with the Sonar last evaluation.
+	 * @param messageErrorEmitter an eventEmitter to throw the success, or error message, if any.
+	 */
+	loadAndSaveEvaluations(
+			sonarService: SonarService,
+			project: Project,
+			sonarKey: string,
+			metricValues: ProjectSonarMetricValue[],
+			messageErrorEmitter: EventEmitter<MessageGravity>) {
+
+		sonarService.loadSonarComponentMeasures$(
+				sonarKey,
+				metricValues.map(psmv => psmv.key))
+			.subscribe((measures: ResponseComponentMeasures) => {
+				measures.component.measures.forEach(measure => {
+					const psmv = metricValues.find(mv => mv.key === measure.metric);
+					if (!isNaN(Number(measure.value))) {
+						psmv.value = Number(measure.value);
+					} else {
+						if (measure.value === 'OK') {
+							psmv.value = 1;
+						} else {
+							if (measure.value === 'ERROR') {
+								psmv.value = 0;
+							} else {
+								console.error ('Unexpected value of measure', measure.value);
+							}
+						}
+					}
+				});
+
+				this.dump(project, 'loadEvaluations');
+
+				//
+				// the metricValues is updated with the evaluation returned by Sonar.
+				//
+				this.saveMetricValues(project.id, sonarKey, metricValues)
+					.pipe(take(1))
+					.subscribe (ok => {
+						if (ok) {
+							messageErrorEmitter.next(
+								new MessageGravity(Constants.MESSAGE_INFO,
+								'Metrics weights and values have been saved for the Sonar project ' + sonarKey));
+						} else {
+							messageErrorEmitter.next(
+								new MessageGravity(Constants.MESSAGE_ERROR,
+								'Error when saving weights and values for the Sonar project ' + sonarKey));
+						}});
+			});
 	}
 
 	/**

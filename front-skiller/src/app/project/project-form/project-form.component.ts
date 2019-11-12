@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, AfterViewInit, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { take, map, catchError, switchMap } from 'rxjs/operators';
@@ -16,6 +16,7 @@ import { Observable, of } from 'rxjs';
 import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { SonarService } from 'src/app/service/sonar.service';
 import Tagify from '@yaireo/tagify';
+import { MessageGravity } from 'src/app/message/message-gravity';
 
 @Component({
 	selector: 'app-project-form',
@@ -106,6 +107,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * We can add Sonar project to this internal project.
 	 */
 	private sonarProjectsLoaded = false;
+
+	/**
+	 * This event emitter will throw an error if the method.
+	 */
+	errorEmitter: EventEmitter<MessageGravity> = new EventEmitter<MessageGravity>();
+
 
 	constructor(
 		private cinematicService: CinematicService,
@@ -434,7 +441,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			this.updateSonarProject(this.project.id, sonarProject,
 				this.projectService.addSonarProject.bind(this.projectService),
 				this.reloadSonarProjectMetrics.bind(this));
-
 		}
 
 		// Log the resulting collection.
@@ -447,6 +453,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			.pipe(take(1))
 			.subscribe((sp: SonarProject) => {
 				sonarProject.projectSonarMetricValues = sp.projectSonarMetricValues;
+				this.projectService.loadAndSaveEvaluations(
+					this.sonarService,
+					this.project,
+					sp.key,
+					sp.projectSonarMetricValues,
+					this.errorEmitter);
 				this.projectService.dump(this.project, 'addSonarProject');
 			});
 	}
