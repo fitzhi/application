@@ -4,47 +4,51 @@
 			(ngSubmit)="onSubmit()">
 			
 			<div class="row">
-				<div class="col-1" 
+				<div class="col-1 globalBadge">
+					<div  
 						data-toggle="tooltip" 
 						data-placement="right"
 						data-html="true" 
 						title="This color represents the level of technical risk for this project">
-					<svg height="80" width="80">
-						<circle cx="40" cy="40" r="40" [ngStyle]="styleDot()" />
-					</svg>				
+						<svg height="60" width="60">
+							<circle cx="30" cy="30" r="25" [ngStyle]="styleDot()" />
+						</svg>				
+					</div>
 				</div>
-				<div class="col-10 field">
-					<label class="required labelProject" for="project">Project information</label> 
-					<input type="text"
-						class="form-control required" id="projectName" name="projectName"
-						placeholder="Project name (Required)" value="" required
-						formControlName="projectName" />
+				<div class="col-10 fields_host">
+					<div class="row field">
+						<label class="required labelProject" for="project">Project information</label> 
+						<input type="text"
+							class="form-control required" id="projectName" name="projectName"
+							placeholder="Project name (Required)" value="" required
+							formControlName="projectName" />
+					</div>
+
+					<div class="row field">
+						<div class="col-12 insideField">
+							<label class="labelSkills" for="skills">Skills involved</label> 
+							<textarea id="skills" name="skills" placeholder="Type your skills"></textarea>
+						</div>
+					</div>
+
+					<div class="row field" [hidden]="!sonarProjectsLoaded || creation">
+						<div class="col-12 insideField">
+							<label class="labelSkills" for="sonarProjects">Sonar projects</label> 
+							<textarea id="sonarProjects" name="sonarProjects" 
+								placeholder="Type a Sonar project associated to this project">
+							</textarea>
+						</div>
+					</div>
+					<div class="row field" [hidden]="sonarProjectsLoaded || creation">
+						<div class="col-12 insideField">
+							<p class="error">Cannot reach the Sonar server on the URL {{sonarService.urlSonar}}.</p>
+						</div>
+					</div>	
+
 				</div>
 			</div>
 			
-			<div class="row">
-				<div class="col-1"></div>
-				<div class="col-10 field">
-					<label class="labelSkills" for="skills">Skills involved</label> 
-					<textarea id="skills" name="skills" placeholder="Type your skills"></textarea>
-				</div>
-			</div>
 
-			<div class="row" [hidden]="!sonarProjectsLoaded || creation">
-				<div class="col-1"></div>
-				<div class="col-10 field">
-					<label class="labelSkills" for="sonarProjects">Sonar projects</label> 
-					<textarea id="sonarProjects" name="sonarProjects" 
-						placeholder="Type a Sonar project associated to this project">
-					</textarea>
-				</div>
-			</div>
-			<div class="row" [hidden]="sonarProjectsLoaded || creation">
-				<div class="col-1"></div>
-				<div class="col-10">
-					<p class="error">Cannot reach the Sonar server on the URL {{sonarService.urlSonar}}.</p>
-				</div>
-			</div>
 			<div class="mb-12" class="buttons_toggle">
 				<label for="connection_settings">Version control connection settings : &nbsp;&nbsp;</label>
 				<mat-button-toggle-group #group="matButtonToggleGroup" name="connection_settings" 

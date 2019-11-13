@@ -39,12 +39,15 @@ div.explanation_access {
 }
 
 .container {
-	margin-left: 50px;
-	margin-top: 0px;
+	margin: 5px;
+}
+
+div.fields_host {
+	margin-left: 2px;
 }
 
 #projectForm {
-	padding: 20px;
+	padding: 10px;
 	max-width: 800px;
 }
 
@@ -54,7 +57,7 @@ div.explanation_access {
 }
 
 div.field {
-	padding-left: 35px;
+	margin-left: 20px;
 }
 
 .labelProject {
@@ -75,4 +78,18 @@ p.error {
 	color: brown;
 	font-weight: 500;
 	padding: 10px 10px 10px 20px; /* top right bottom left */
+}
+
+div.insideField {
+	padding-left: 0px; 
+	padding-top: 5px;
+}
+
+div.globalBadge {
+	height: 250px;
+	background-color: lightgrey;
+	margin-left: 20px;
+	margin-right: 20px;
+	padding-left: 10px;
+	padding-right: 10px;
 }
