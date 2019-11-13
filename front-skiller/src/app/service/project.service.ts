@@ -366,7 +366,6 @@ export class ProjectService extends InternalService {
 		return this.httpClient.post<Boolean>(this.backendSetupService.url() + '/project/sonar/saveMetricValues', body, httpOptions);
 	}
 
-
 	/**
 	 * Select and retrieve the SonarProject.
 	 * @param project the given project
@@ -471,6 +470,25 @@ export class ProjectService extends InternalService {
 								'Error when saving weights and values for the Sonar project ' + sonarKey));
 						}});
 			});
+	}
+
+	/**
+	* Save the evaluation for a project.
+	* @param idProject the given project identifier
+	* @param key the Sonar key from where the stats are coming from
+	* @param evaluation the evaluation processed for this Sonar project
+	* @param totalNumberLinesofCode the number of lines of code detected for this Sonar project
+	*/
+	saveSonarEvaluation(idProject: number, key: string, evaluation: number, totalNumberLinesOfCode: number): Observable<Boolean> {
+		if (Constants.DEBUG) {
+			console.groupCollapsed('Saving the evaluation for Sonar entry %s project identifier %d', key, idProject);
+			console.log ('Evaluation obtained', evaluation);
+			console.log ('Total number of lines of code', totalNumberLinesOfCode);
+			console.groupEnd();
+		}
+		const body = { idProject: idProject, sonarKey: key,
+			sonarEvaluation: {evaluation: evaluation, totalNumberLinesOfCode: totalNumberLinesOfCode}};
+		return this.httpClient.post<Boolean>(this.backendSetupService.url() + '/project/sonar/saveEvaluation', body, httpOptions);
 	}
 
 	/**

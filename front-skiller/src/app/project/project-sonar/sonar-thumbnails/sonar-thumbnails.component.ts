@@ -99,13 +99,22 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 			const risk = (quotation === 100) ? 0 : (10 - Math.ceil(quotation / 10));
 			this.sonarService
 			.loadTotalNumberLinesOfCode$(sonarProject.key)
-			.subscribe (totalNulberLinesOfCode => {
-				sonarProject.sonarEvaluation = new SonarEvaluation(quotation, totalNulberLinesOfCode);
+			.subscribe (totalNumberLinesOfCode => {
+				sonarProject.sonarEvaluation = new SonarEvaluation(quotation, totalNumberLinesOfCode);
+				this.projectService.saveSonarEvaluation(
+					this.project.id, sonarProject.key, quotation, totalNumberLinesOfCode)
+					.subscribe(doneAndOk => {
+						if (doneAndOk) {
+							this.messageService.info('Saving the quotation for project ' + sonarProject.name);
+						} else {
+							this.messageService.error('Error when saving the quotation for project ' + sonarProject.name);
+						}
+					});
 				this.evaluations.set (sonarProject.key,
 						new ThumbnailQuotationBadge(
 							quotation,
 							this.projectService.getRiskColor(risk),
-							totalNulberLinesOfCode,
+							totalNumberLinesOfCode,
 							'Lines of code'));
 				});
 		});

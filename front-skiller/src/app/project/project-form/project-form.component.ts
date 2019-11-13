@@ -453,6 +453,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			.pipe(take(1))
 			.subscribe((sp: SonarProject) => {
 				sonarProject.projectSonarMetricValues = sp.projectSonarMetricValues;
+
 				this.projectService.loadAndSaveEvaluations(
 					this.sonarService,
 					this.project,
