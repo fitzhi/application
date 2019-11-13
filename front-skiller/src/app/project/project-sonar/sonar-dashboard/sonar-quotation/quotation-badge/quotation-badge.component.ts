@@ -41,6 +41,11 @@ export class QuotationBadgeComponent implements AfterViewInit {
 	 */
 	@Input() thumbnail;
 
+	/**
+	 * Boolean indicated if we use this component inside the Project techxhi medal.
+	 */
+	@Input() medal;
+
 	constructor(private projectService: ProjectService) { }
 
 	ngAfterViewInit() {

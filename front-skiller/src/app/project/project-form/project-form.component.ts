@@ -615,11 +615,4 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			'okButton okButtonInvalid' : 'okButton okButtonValid';
 	}
 
-	/**
-	 * @returns the color figuring the risk evaluation for this project.
-	 */
-	styleDot () {
-		return { 'fill': this.colorOfRisk };
-	}
-
 }

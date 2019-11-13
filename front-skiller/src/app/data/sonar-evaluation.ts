@@ -4,7 +4,7 @@
 export class SonarEvaluation {
 	constructor(
 		public evaluation: number,
-		public totalNumberOfLines: number) {}
+		public totalNumberLinesOfCode: number) {}
 }
 
 

@@ -1,133 +1,128 @@
-<div id="projectDiv" >
+<div id="projectDiv">
 	<div id="projectForm" class="container">
-		<form class="needs-validation" [formGroup]="profileProject"
-			(ngSubmit)="onSubmit()">
-			
+		<form class="needs-validation" [formGroup]="profileProject" (ngSubmit)="onSubmit()">
 			<div class="row">
-				<div class="col-1 globalBadge">
-					<div  
-						data-toggle="tooltip" 
-						data-placement="right"
-						data-html="true" 
-						title="This color represents the level of technical risk for this project">
-						<svg height="60" width="60">
-							<circle cx="30" cy="30" r="25" [ngStyle]="styleDot()" />
-						</svg>				
-					</div>
+				<div class="col-2 globalBadge">
+					<app-techxhi-medal 
+						[colorOfRisk]="colorOfRisk"
+						[project$]="project$">
+					</app-techxhi-medal>
 				</div>
 				<div class="col-10 fields_host">
-					<div class="row field">
-						<label class="required labelProject" for="project">Project information</label> 
-						<input type="text"
-							class="form-control required" id="projectName" name="projectName"
-							placeholder="Project name (Required)" value="" required
-							formControlName="projectName" />
-					</div>
+					<div class="container">
+						<div class="row field">
+							<label class="required labelProject" for="project">Project information</label>
+							<input type="text" class="form-control required" id="projectName" name="projectName"
+								placeholder="Project name (Required)" value="" required formControlName="projectName" />
+						</div>
 
-					<div class="row field">
-						<div class="col-12 insideField">
-							<label class="labelSkills" for="skills">Skills involved</label> 
-							<textarea id="skills" name="skills" placeholder="Type your skills"></textarea>
+						<div class="row field">
+							<div class="col-12 insideField">
+								<label class="labelSkills" for="skills">Skills involved</label>
+								<textarea id="skills" name="skills" placeholder="Type your skills"></textarea>
+							</div>
+						</div>
+
+						<div class="row field" [hidden]="!sonarProjectsLoaded || creation">
+							<div class="col-12 insideField">
+								<label class="labelSkills" for="sonarProjects">Sonar projects</label>
+								<textarea id="sonarProjects" name="sonarProjects"
+									placeholder="Type a Sonar project associated to this project">
+								</textarea>
+							</div>
+						</div>
+						<div class="row field" [hidden]="sonarProjectsLoaded || creation">
+							<div class="col-12 insideField">
+								<p class="error">Cannot reach the Sonar server on the URL {{sonarService.urlSonar}}.</p>
+							</div>
 						</div>
 					</div>
-
-					<div class="row field" [hidden]="!sonarProjectsLoaded || creation">
-						<div class="col-12 insideField">
-							<label class="labelSkills" for="sonarProjects">Sonar projects</label> 
-							<textarea id="sonarProjects" name="sonarProjects" 
-								placeholder="Type a Sonar project associated to this project">
-							</textarea>
-						</div>
-					</div>
-					<div class="row field" [hidden]="sonarProjectsLoaded || creation">
-						<div class="col-12 insideField">
-							<p class="error">Cannot reach the Sonar server on the URL {{sonarService.urlSonar}}.</p>
-						</div>
-					</div>	
-
-				</div>
-			</div>
-			
-
-			<div class="mb-12" class="buttons_toggle">
-				<label for="connection_settings">Version control connection settings : &nbsp;&nbsp;</label>
-				<mat-button-toggle-group #group="matButtonToggleGroup" name="connection_settings" 
-				[value]="connection_settings" 
-					(change)="onConnectionSettingsChange(group.value)"
-					style="padding:0.1em;">
-					<mat-button-toggle value="1">Direct User/Password</mat-button-toggle>
-					<mat-button-toggle value="2">Using a remote File</mat-button-toggle>
-				</mat-button-toggle-group>
-			</div>
-			<div class="connection_settings mb-12" [hidden]="undirectAccess()">
-				Direct settings : <br/>
-				<div class="explanation_access">
-					You can update the version control url and the couple of user/password required for connection.<br/>
-					Be Aware that all these informations will be updated on the record of this project, and later on the file system. 
-				</div>
-				<div class="d-flex  align-items-center flex-row lab_and_row_repository">
-					<label for="urlRepository1">Repository&nbsp;&nbsp;</label> 
-					<input type="text"
-						class="form-control" id="urlRepository1" name="urlRepository1"
-						placeholder="Repository URL" value="" 
-						formControlName="urlRepository1" />
-				</div>
-
-				<div class="d-flex align-items-center flex-row lab_and_row_user_password">
-					<label for="user">Username&nbsp;:&nbsp;</label> 
-					<input type="text"
-						class="form-control" id="username" name="username"
-						placeholder="Username" value="" 
-						formControlName="username" />
-				</div>
-
-				<div class="d-flex align-items-center flex-row lab_and_row_user_password">
-					<label for="urlRepository">Password&nbsp;:&nbsp;</label> 
-					<input type="password"
-						class="form-control" id="password" name="password"
-						placeholder="Repository URL" value="" autocomplete="off"
-						formControlName="password" />
 				</div>
 			</div>
 
-			<div class="connection_settings mb-12" [hidden]="directAccess()"> 
-				Indirect settings : <br/>
-				<div class="explanation_access">
-You can avoid to store the <u>highly critical</u> user/password couple of your version control system on each <strong>Project</strong> record, by setting the filename of a property file installed on the remote server.<br/>
-This file has to be installed in the directory customized behind the global setting <code>versionControl.ConnectionSettings</code>.<br/>
-Each of those files must contain 2 properties : <br/>
-- a <code>user</code> property <br/>
-- a <code>password</code> property<br/>
+			<div class="row">
+				<div class="col-1"></div>
+				<div class="col-11" class="buttons_toggle">
+					<label for="connection_settings">Version control connection settings : &nbsp;&nbsp;</label>
+					<mat-button-toggle-group #group="matButtonToggleGroup" name="connection_settings"
+						[value]="connection_settings" (change)="onConnectionSettingsChange(group.value)"
+						style="padding:0.1em;">
+						<mat-button-toggle value="1">Direct User/Password</mat-button-toggle>
+						<mat-button-toggle value="2">Using a remote File</mat-button-toggle>
+					</mat-button-toggle-group>
 				</div>
-				<div class="d-flex  align-items-center flex-row lab_and_row_repository">
-					<label for="urlRepository2">Repository&nbsp;:&nbsp;</label> 
-					<input type="text"
-						class="form-control" id="urlRepository2" name="urlRepository2"
-						placeholder="Repository URL" value="" 
-						formControlName="urlRepository2" />
-				</div>
+			</div>
 
-				<div class="d-flex  align-items-center flex-row lab_and_row_repository">
-					<label>File&nbsp;name&nbsp;:&nbsp;</label>
-					<input type="text"
-						class="form-control" id="filename" name="filename"
-						placeholder="Remote filename" value="" 
-						formControlName="filename" />
+			<div class="row">
+				<div class="col-1"></div>
+				<div class="col-11 connection_settings" [hidden]="undirectAccess()">
+					Direct settings : <br />
+					<div class="explanation_access">
+						You can update the version control url and the couple of user/password required for
+						connection.<br />
+						Be Aware that all these informations will be updated on the record of this project, and later on
+						the file system.
+					</div>
+					<div class="d-flex  align-items-center flex-row lab_and_row_repository">
+						<label for="urlRepository1">Repository&nbsp;&nbsp;</label>
+						<input type="text" class="form-control" id="urlRepository1" name="urlRepository1"
+							placeholder="Repository URL" value="" formControlName="urlRepository1" />
+					</div>
+
+					<div class="d-flex align-items-center flex-row lab_and_row_user_password">
+						<label for="user">Username&nbsp;:&nbsp;</label>
+						<input type="text" class="form-control" id="username" name="username" placeholder="Username"
+							value="" formControlName="username" />
+					</div>
+
+					<div class="d-flex align-items-center flex-row lab_and_row_user_password">
+						<label for="urlRepository">Password&nbsp;:&nbsp;</label>
+						<input type="password" class="form-control" id="password" name="password"
+							placeholder="Repository URL" value="" autocomplete="off" formControlName="password" />
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-1"></div>
+				<div class="connection_settings col-11" [hidden]="directAccess()">
+					Indirect settings : <br />
+					<div class="explanation_access">
+						You can avoid to store the <u>highly critical</u> user/password couple of your version control
+						system on each <strong>Project</strong> record, by setting the filename of a property file
+						installed on the remote server.<br />
+						This file has to be installed in the directory customized behind the global setting
+						<code>versionControl.ConnectionSettings</code>.<br />
+						Each of those files must contain 2 properties : <br />
+						- a <code>user</code> property <br />
+						- a <code>password</code> property<br />
+					</div>
+					<div class="d-flex  align-items-center flex-row lab_and_row_repository">
+						<label for="urlRepository2">Repository&nbsp;:&nbsp;</label>
+						<input type="text" class="form-control" id="urlRepository2" name="urlRepository2"
+							placeholder="Repository URL" value="" formControlName="urlRepository2" />
+					</div>
+
+					<div class="d-flex  align-items-center flex-row lab_and_row_repository">
+						<label>File&nbsp;name&nbsp;:&nbsp;</label>
+						<input type="text" class="form-control" id="filename" name="filename" placeholder="Remote filename"
+							value="" formControlName="filename" />
+					</div>
 				</div>
 			</div>
 
 			<div class="row col-md-12">
-                <div class="col-md-9"></div>               
-                <div class="col-md-3">              
-                    <hr/>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-10"></div>
-                <div class="col-md-2">
-                    <button [ngClass]="classOkButton()" [disabled]="!profileProject.valid" type="submit"></button>
-                </div>
-            </div>
+				<div class="col-md-9"></div>
+				<div class="col-md-3">
+					<hr />
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-10"></div>
+				<div class="col-md-2">
+					<button [ngClass]="classOkButton()" [disabled]="!profileProject.valid" type="submit"></button>
+				</div>
+			</div>
 		</form>
 	</div>
 </div>

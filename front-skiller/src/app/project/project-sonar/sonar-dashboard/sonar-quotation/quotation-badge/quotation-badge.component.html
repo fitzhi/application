@@ -1,4 +1,4 @@
-<div id="quotationBadge" *ngIf="(weight === 100) && !thumbnail" class="badge global">
+<div id="quotationBadge" *ngIf="(weight === 100) && !thumbnail && !medal" class="badge global">
     <p class="badgeTextGlobal">{{title}}</p>
     <p class="badgeTextGlobal">{{weight}}%</p>
     <svg class="svg" xmlns="http://www.w3.org/2000/svg" 
@@ -13,7 +13,7 @@
         </g>
     </svg>
 </div>
-<div id="quotationBadge" *ngIf="(weight < 100) && !thumbnail" class="badge metric">
+<div id="quotationBadge" *ngIf="(weight < 100) && !thumbnail && !medal" class="badge metric">
     <p class="badgeText">{{title}}</p>
     <p class="badgeText">{{weight}}%</p>
     <svg class="svg" xmlns="http://www.w3.org/2000/svg" 
@@ -28,7 +28,7 @@
         </g>
     </svg>
 </div>
-<div id="quotationBadge" *ngIf="thumbnail" class="badge thumbnail">
+<div id="quotationBadge" *ngIf="thumbnail && !medal" class="badge thumbnail">
     <p class="badgeText">{{totalNumberLinesOfCode | number}}</p>
     <p class="badgeLinesOfCode">{{title}}</p>
     <svg class="svg" xmlns="http://www.w3.org/2000/svg" 
@@ -40,6 +40,20 @@
             <path id="arc2-{{index}}" [ngStyle]="arcStyle(evaluation, weight)" />
             <path id="arc3-{{index}}" [ngStyle]="arcStyle(evaluation, weight)"/>
             <text x="15px" y="55px" id="textGlobalEvaluation">{{evaluation}}</text>
+        </g>
+    </svg>
+</div>
+
+<div id="quotationBadge" *ngIf="medal">
+    <svg class="svg" xmlns="http://www.w3.org/2000/svg" 
+        xmlns:xlink="http://www.w3.org/1999/xlink" 
+        xml:space="preserve"
+        viewBox="5 0 77 60">
+        <g>
+            <path id="arc1-{{index}}" [ngStyle]="arcStyle(evaluation, weight)"/>
+            <path id="arc2-{{index}}" [ngStyle]="arcStyle(evaluation, weight)" />
+            <path id="arc3-{{index}}" [ngStyle]="arcStyle(evaluation, weight)"/>
+            <text x="20px" y="47px" id="textGlobalEvaluation">{{evaluation}}</text>
         </g>
     </svg>
 </div>

@@ -36,6 +36,7 @@
                     <app-quotation-badge
                         [index]= "'-' + sonarProject.key + index"
                         [thumbnail]=true
+                        [medal]=false
                         [totalNumberLinesOfCode]="evaluations.get(sonarProject.key).totalNumberLinesOfCode"
                         [title]="evaluations.get(sonarProject.key).titleLinesOfCode"
                         [weight]="100"

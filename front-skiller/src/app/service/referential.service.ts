@@ -23,9 +23,9 @@ export class ReferentialService {
 	public legends: RiskLegend[] = [];
 
 	/*
-	 * Legend of the sunburst chart.
+	 * Observable emiting the completion of the legends loading of the sunburst chart.
 	 */
-	public legends$ = new Subject<RiskLegend[]>();
+	public legendsLoaded$ = new BehaviorSubject<boolean>(false);
 
 	/*
 	 * Observable emetting the metrics supported by the application.
@@ -84,7 +84,7 @@ export class ReferentialService {
 						});
 						console.groupEnd();
 					}
-					this.legends$.next(legends);
+					this.legendsLoaded$.next(true);
 					legends.forEach(legend => this.legends.push(legend));
 				});
 

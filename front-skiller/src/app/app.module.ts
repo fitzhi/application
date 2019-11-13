@@ -93,6 +93,7 @@ import { SonarThumbnailsComponent } from './project/project-sonar/sonar-thumbnai
 import { SonarBadgeComponent } from './project/project-sonar/sonar-dashboard/sonar-badge/sonar-badge.component';
 import { SonarQuotationComponent } from './project/project-sonar/sonar-dashboard/sonar-quotation/sonar-quotation.component';
 import { QuotationBadgeComponent } from './project/project-sonar/sonar-dashboard/sonar-quotation/quotation-badge/quotation-badge.component';
+import { TechxhiMedalComponent } from './project/project-form/techxhi-medal/techxhi-medal.component';
 
 @NgModule({
 	declarations: [
@@ -141,7 +142,8 @@ import { QuotationBadgeComponent } from './project/project-sonar/sonar-dashboard
 		SonarThumbnailsComponent,
 		SonarBadgeComponent,
 		SonarQuotationComponent,
-		QuotationBadgeComponent
+		QuotationBadgeComponent,
+		TechxhiMedalComponent
 	],
 	entryComponents: [
 		StaffUploadCvComponent,

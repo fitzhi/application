@@ -1,0 +1,9 @@
+div.qualityRectangle {
+	margin: 10px;
+	height: 230px;
+	padding-top: 10px;
+	background-color: whitesmoke;
+	text-align: center ;
+	border-radius: 10%;
+    border: 2px solid lightgray;
+}

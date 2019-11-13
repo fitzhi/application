@@ -1,0 +1,28 @@
+<div class="qualityRectangle">
+    <div data-toggle="tooltip" data-placement="right" data-html="true"
+        title="This color figures the staff risk for this project">
+        <svg height="70" width="70">
+            <circle cx="35" cy="35" r="30" [ngStyle]="styleDot()" />
+        </svg>
+    </div>
+
+    <div *ngIf="(referentialService.legendsLoaded$ | async) && (project$ | async)" 
+        data-toggle="tooltip" data-placement="right" data-html="true"
+        title="This color represents the level of technical risk for this project">
+        <app-quotation-badge height="70" width="70"
+            [index]=1 
+            [thumbnail]=false
+            [medal]=true
+            [title]="'evaluation.title'" 
+            [weight]=100
+            [evaluation]=globalSonarEvaluation>
+        </app-quotation-badge>
+    </div>
+
+    <div data-toggle="tooltip" data-placement="right" data-html="true"
+        title="This color represents the level of technical risk for this project">
+        <svg height="70" width="70">
+            <circle cx="35" cy="35" r="30" [ngStyle]="styleDot()" />
+        </svg>
+    </div>
+</div>
