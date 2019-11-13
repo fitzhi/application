@@ -87,7 +87,7 @@ public class ProjectSonarControllerSaveSonarEvaluationTest {
 		bppse.setSonarKey(KEY_SONAR_1);
 		SonarEvaluation sonarEvaluation = new SonarEvaluation();
 		sonarEvaluation.setEvaluation(50);
-		sonarEvaluation.setTotalNumberLinesofCode(3414);
+		sonarEvaluation.setTotalNumberLinesOfCode(3414);
 		bppse.setSonarEvaluation(sonarEvaluation);
 	
 		MvcResult result = this.mvc.perform(post("/project/sonar/saveEvaluation")
@@ -115,7 +115,7 @@ public class ProjectSonarControllerSaveSonarEvaluationTest {
 		//
 		Assert.assertNotNull(sp.getSonarEvaluation());
 		Assert.assertEquals(50, sp.getSonarEvaluation().getEvaluation());
-		Assert.assertEquals(3414, sp.getSonarEvaluation().getTotalNumberLinesofCode());
+		Assert.assertEquals(3414, sp.getSonarEvaluation().getTotalNumberLinesOfCode());
 
 		SonarProject spEmpty = project.getSonarProjects().get(1);
 		Assert.assertNull(spEmpty.getSonarEvaluation());

@@ -20,5 +20,5 @@ public @Data class SonarEvaluation {
 	/**
 	 * The total number of lines of code saved for this project.
 	 */
-	private int totalNumberLinesofCode;
+	private int totalNumberLinesOfCode;
 }
