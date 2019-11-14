@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { Project } from 'src/app/data/project';
 import { BaseComponent } from 'src/app/base/base.component';
@@ -22,9 +22,18 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	@Input() colorOfRisk: string;
 
 	/**
+	 * This component, hosted in a tab pane, use this emitter to inform its parent to change the active pane.
+	 */
+	@Output() tabActivationEmitter = new EventEmitter<number>();
+
+	/**
 	 * Mean Sonar evaluation.
 	 */
 	globalSonarEvaluation = 0;
+
+	public PROJECT_IDX_TAB_SONAR = Constants.PROJECT_IDX_TAB_SONAR;
+	public PROJECT_IDX_TAB_SUNBURST = Constants.PROJECT_IDX_TAB_SUNBURST;
+	public PROJECT_IDX_TAB_AUDIT = Constants.PROJECT_IDX_TAB_AUDIT;
 
 	constructor(private referentialService: ReferentialService) {
 		super();
@@ -47,6 +56,16 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 				}
 			}));
 	}
+
+	/**
+	 * Change the current active tab.
+	 * @param tabIndex index of tab requested.
+	 */
+	public jumpToTab(tabIndex: number) {
+		console.log ('emit', tabIndex);
+		this.tabActivationEmitter.next(tabIndex);
+	}
+
 
 	/**
 	 * @returns the color figuring the risk evaluation for this project.

@@ -54,6 +54,7 @@ export class Constants {
 	public static PROJECT_IDX_TAB_STAFF = 1;
 	public static PROJECT_IDX_TAB_SUNBURST = 2;
 	public static PROJECT_IDX_TAB_SONAR = 3;
+	public static PROJECT_IDX_TAB_AUDIT = 4;
 
 
 	/*

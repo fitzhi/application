@@ -7,3 +7,15 @@ div.qualityRectangle {
 	border-radius: 10%;
     border: 2px solid lightgray;
 }
+
+#sonarSummaryBadge, #staffSummaryBadge, #auditSummaryBadge {
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+
+#sonarSummaryBadge:hover, #staffSummaryBadge:hover, #auditSummaryBadge:hover {
+	border-radius: 10%;
+	background-color: white;
+    border: 1px solid lightgray;
+}

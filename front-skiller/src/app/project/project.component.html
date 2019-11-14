@@ -1,6 +1,10 @@
 <mat-tab-group [selectedIndex]="tabIndex" (selectedIndexChange)="selectedIndexChange($event)">
 	<mat-tab label="Project">
-		<app-project-form [project$]="project$" [risk$]="risk$"></app-project-form>
+		<app-project-form 
+			[project$]="project$" 
+			[risk$]="risk$"
+			(tabActivationEmitter)="tabActivation($event)">
+		</app-project-form>
 	</mat-tab>
 	<mat-tab [disabled]="!canConnectSourceControl()" label="Staff">
 		<app-project-staff></app-project-staff>
@@ -12,8 +16,9 @@
 	</mat-tab>
 	<mat-tab label="Sonar">
 		<ng-template matTabContent>
-			<app-project-sonar [project$]="project$" (tabActivationEmitter)="tabActivation($event)"
-				(updateRiskLevel)="updateRiskLevel($event)" (throwMessage)="catchMessage($event)">
+			<app-project-sonar [project$]="project$"
+				(updateRiskLevel)="updateRiskLevel($event)" 
+				(throwMessage)="catchMessage($event)">
 			</app-project-sonar>
 		</ng-template>
 	</mat-tab>

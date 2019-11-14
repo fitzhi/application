@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, AfterViewInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, AfterViewInit, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { take, map, catchError, switchMap } from 'rxjs/operators';
@@ -34,6 +34,11 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * The risk might have changed due to the last dashboard calculation.
 	 */
 	@Input() risk$;
+
+	/**
+	 * This component, hosted in a tab pane, use this emitter to inform its parent to change the active pane.
+	 */
+	@Output() tabActivationEmitter = new EventEmitter<number>();
 
 	public project: Project;
 
@@ -598,6 +603,16 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			return true;
 		}
 		return (this.project.connectionSettings === this.REMOTE_FILE_ACCESS);
+	}
+
+
+	/**
+	 * This method receives the nex tab to activate from here.
+	 * @param tabIndex new tab to activate.
+	 */
+	public tabActivation (tabIndex: number) {
+		console.log ('tabIndex', tabIndex);
+		this.tabActivationEmitter.next(tabIndex);
 	}
 
 	/**

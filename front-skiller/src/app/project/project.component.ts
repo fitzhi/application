@@ -110,6 +110,9 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 		if (Constants.DEBUG) {
 			console.log('Tab "' + this.TAB_TITLE[selectedIndex] + '" selected.');
 		}
+		if (this.tabIndex !== selectedIndex) {
+			this.tabIndex = selectedIndex;
+		}
 		this.cinematicService.setProjectTab(selectedIndex);
 	}
 
