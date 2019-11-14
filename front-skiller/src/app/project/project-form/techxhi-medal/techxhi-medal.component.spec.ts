@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TechxhiMedalComponent } from './techxhi-medal.component';
+import { RootTestModule } from 'src/app/root-test/root-test.module';
 
 describe('TechxhiMedalComponent', () => {
 	let component: TechxhiMedalComponent;
@@ -8,7 +9,8 @@ describe('TechxhiMedalComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ TechxhiMedalComponent ]
+			declarations: [ ],
+			imports: [RootTestModule]
 		})
 		.compileComponents();
 	}));
