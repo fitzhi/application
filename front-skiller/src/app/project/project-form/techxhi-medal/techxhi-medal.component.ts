@@ -33,7 +33,6 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	ngOnInit() {
 		this.subscriptions.add(
 			this.project$.subscribe((project: Project) => {
-				console.log ('nope', project);
 				if ((project) && (project.sonarProjects)) {
 					let totalEvalution = 0;
 					let totalNumerberLinesOfCode = 0;
@@ -43,7 +42,7 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 					});
 					this.globalSonarEvaluation = Math.round(totalEvalution / totalNumerberLinesOfCode);
 					if (Constants.DEBUG) {
-						console.log ('globalSonarEvaluation', this.globalSonarEvaluation);
+						console.log ('globalSonarEvaluation %d for project %s', this.globalSonarEvaluation, project.name);
 					}
 				}
 			}));

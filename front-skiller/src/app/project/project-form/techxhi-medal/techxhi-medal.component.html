@@ -7,6 +7,7 @@
     </div>
 
     <div *ngIf="(referentialService.legendsLoaded$ | async) && (project$ | async)" 
+        id="sonarSummaryBadge"
         data-toggle="tooltip" data-placement="right" data-html="true"
         title="This color represents the level of technical risk for this project">
         <app-quotation-badge height="70" width="70"
