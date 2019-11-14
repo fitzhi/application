@@ -27,6 +27,11 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	@Output() tabActivationEmitter = new EventEmitter<number>();
 
 	/**
+	 * Current active project.
+	 */
+	project: Project;
+
+	/**
 	 * Mean Sonar evaluation.
 	 */
 	globalSonarEvaluation = 0;
@@ -43,6 +48,7 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 		this.subscriptions.add(
 			this.project$.subscribe((project: Project) => {
 				if ((project) && (project.sonarProjects)) {
+					this.project = project;
 					let totalEvalution = 0;
 					let totalNumerberLinesOfCode = 0;
 					project.sonarProjects.forEach(sonarProject => {

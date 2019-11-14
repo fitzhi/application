@@ -60,8 +60,25 @@ describe('TechxhiMedalComponent', () => {
 
 	});
 
+	it('Techxhì should not display the Sonnar summary badge without any associated Sonar project', () => {
+		function field(id: string): HTMLInputElement {
+			return (fixture.nativeElement.querySelector(id) as HTMLInputElement);
+		}
+
+		referentialService.legendsLoaded$.next(true);
+		const p1 = new Project();
+		component.project$.next(p1);
+		fixture.detectChanges();
+		expect(field('#sonarSummaryBadge')).toBeNull();
+
+		p1.sonarProjects = [];
+		expect(field('#sonarSummaryBadge')).toBeNull();
+
+		p1.sonarProjects.push(new SonarProject());
+		expect(field('#sonarSummaryBadge')).toBeDefined();
+	});
+
 	it('Techxhì should not display the summary badges without a project loaded', () => {
-		expect(component).toBeTruthy();
 
 		function field(id: string): HTMLInputElement {
 			return (fixture.nativeElement.querySelector(id) as HTMLInputElement);
