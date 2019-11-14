@@ -60,7 +60,7 @@ describe('TechxhiMedalComponent', () => {
 
 	});
 
-	it('Techxhì should not display the Sonar summary badge without a project loaded', () => {
+	it('Techxhì should not display the summary badges without a project loaded', () => {
 		expect(component).toBeTruthy();
 
 		function field(id: string): HTMLInputElement {
@@ -69,11 +69,16 @@ describe('TechxhiMedalComponent', () => {
 
 		referentialService.legendsLoaded$.next(true);
 		component.project$.next(null);
+		fixture.detectChanges();
 
 		expect(field('#sonarSummaryBadge')).toBeNull();
+		expect(field('#staffSummaryBadge')).toBeNull();
+		expect(field('#auditSummaryBadge')).toBeNull();
 
 		component.project$.next(new Project());
 		expect(field('#sonarSummaryBadge')).toBeDefined();
+		expect(field('#staffSummaryBadge')).toBeDefined();
+		expect(field('#auditSummaryBadge')).toBeDefined();
 	});
 
 	it('The mean of Sonar evaluations is properly calculated.', () => {
