@@ -41,6 +41,12 @@ export class ProjectAuditComponent implements OnInit, AfterViewInit {
 			category.title);
 		if (category.select) {
 			this.auditTopics.push({id: category.id, title: category.title});
+		} else {
+			const index = this.auditTopics.findIndex(item => item.id === category.id);
+			if (index === -1) {
+				throw new Error ('Internal erreur. This index is supposed to be > 0');
+			}
+			this.auditTopics.splice(index, 1);
 		}
 		this.auditTopics$.next(this.auditTopics);
 	}

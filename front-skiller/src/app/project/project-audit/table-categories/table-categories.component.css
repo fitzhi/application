@@ -1,12 +1,24 @@
 .mat-header-cell {
     color: darkblue;
     padding-left: 5px;
+    font-size: large;
 }
 
 .tableCategories {
-    width: 396px;
+    width: 100%;
 }
 
-#select {
-    font-size: 20px;
+.td-select {
+    text-align:center;   
+}
+
+.row-involved {
+/*    background-color: #28a745 */
+    background-color: lightgray;
+    border-spacing: 2 2px;
+}
+
+.row-ignored {
+    background-color: white;
+    border-spacing: 2 2px;
 }

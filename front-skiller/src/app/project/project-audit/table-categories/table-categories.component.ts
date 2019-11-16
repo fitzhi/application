@@ -26,22 +26,33 @@ export class TableCategoriesComponent implements OnInit {
 
 	public dataSource: Category[] = [];
 
+	private colorRow = 'white';
+
 	constructor() { }
 
 	ngOnInit() {
 		this.auditCategories.forEach(element => {
-			this.dataSource.push (new Category(false, element.id, element.title));
+			this.dataSource.push (new Category(false, element.id, element.title, 'white'));
 		});
 	}
 
 	/**
-	 * __Selection__ or __Deselection__ of a category.
-	 * @param category the given category
+	 * __Selection__ or __Deselection__ of a topic.
+	 * @param topic the given category
 	 */
-	updateCategory(category: Category) {
+	updateCategory(topic: Category) {
 		if (Constants.DEBUG) {
-			console.log (category.title, (category.select) ? 'is selected' : 'is deselected');
+			console.log (topic.title, (topic.select) ? 'is selected' : 'is deselected');
 		}
-		this.messengerCategoryUpdated.emit(category);
+		this.messengerCategoryUpdated.emit(topic);
 	}
+
+	/**
+	 * Return the class for the row preview depending on the involvement, of not, of this toppic inside the audit.
+	 * @param select a boolean representing the fact that a topic has been selected
+	 */
+	class_select_deselect(select: boolean): string {
+		return (select) ? 'row-involved' : 'row-ignored';
+	}
+
 }

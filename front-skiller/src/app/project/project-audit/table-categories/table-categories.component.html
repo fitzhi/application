@@ -2,15 +2,18 @@
 
     <ng-container matColumnDef="select">
         <th id="select" mat-header-cell *matHeaderCellDef><i class="far glyphicon fa-check-square"></i></th>
-        <td mat-cell class="td-select" *matCellDef="let row; let i = index;">
-            <mat-checkbox id="select-{{i}}" [disabled]="row.select" [(ngModel)]="row.select" (change)="updateCategory(row)">
+        <td mat-cell class="td-select {{class_select_deselect(row.select)}}"
+            *matCellDef="let row; let i = index;">
+            <mat-checkbox id="select-{{i}}" 
+                [(ngModel)]="row.select" (change)="updateCategory(row)">
             </mat-checkbox>
         </td>
     </ng-container>
 
     <ng-container matColumnDef="title">
         <th id="title" mat-header-cell *matHeaderCellDef>Topic to involve in the audit</th>
-        <td mat-cell class="td-title" *matCellDef="let row; let i = index;">
+        <td mat-cell  class="td-title {{class_select_deselect(row.select)}}"
+            *matCellDef="let row; let i = index;">
             {{row.title}}
         </td>
     </ng-container>
