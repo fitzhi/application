@@ -32,7 +32,7 @@ export class TableCategoriesComponent implements OnInit {
 
 	ngOnInit() {
 		this.auditCategories.forEach(element => {
-			this.dataSource.push (new Category(false, element.id, element.title, 'white'));
+			this.dataSource.push (new Category(false, element.id, element.title));
 		});
 	}
 
