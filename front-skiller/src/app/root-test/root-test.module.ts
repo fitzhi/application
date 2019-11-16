@@ -74,6 +74,7 @@ import { SonarQuotationComponent } from '../project/project-sonar/sonar-dashboar
 import { BackendSetupService } from '../service/backend-setup/backend-setup.service';
 import { QuotationBadgeComponent } from '../project/project-sonar/sonar-dashboard/sonar-quotation/quotation-badge/quotation-badge.component';
 import { TechxhiMedalComponent } from '../project/project-form/techxhi-medal/techxhi-medal.component';
+import { TableCategoriesComponent } from '../project/project-audit/table-categories/table-categories.component';
 
 @NgModule({
 	declarations: [
@@ -121,7 +122,8 @@ import { TechxhiMedalComponent } from '../project/project-form/techxhi-medal/tec
 		StaffTabsComponent,
 		SonarQuotationComponent,
 		QuotationBadgeComponent,
-		TechxhiMedalComponent
+		TechxhiMedalComponent,
+		TableCategoriesComponent
 	],
 	providers: [
 		ReferentialService,

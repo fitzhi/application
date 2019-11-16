@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'app-project-audit-badges',
@@ -7,17 +8,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProjectAuditBadgesComponent implements OnInit {
 
-	private auditCategories = [
-		{id: 0, title: 'General organization'},
-		{id: 1, title: 'Technical Design'},
-		{id: 2, title: 'Build Process'},
-		{id: 3, title: 'General Documentation'},
-		{id: 4, title: 'Testability'},
-	];
+	/**
+	 * The Topics involed for this audit.
+	 */
+	@Input() auditTopics$: Observable<any>;
 
 	constructor() { }
 
 	ngOnInit() {
+		this.auditTopics$.subscribe(items => {
+			items.forEach(item => console.log (item.id, item.title));
+		});
 	}
 
 }

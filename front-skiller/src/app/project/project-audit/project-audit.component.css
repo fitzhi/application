@@ -1,5 +1,6 @@
 #audit {
     margin-top: 0px;
+    height: 800px;
     position: relative;
 }
 
@@ -12,10 +13,9 @@
 #setupCategories {
     position: absolute;
     width: 400px;
-    height: 400px;
+    height: fit-content;
     background-color: whitesmoke;
     right: 50px;
-    top: 5px;
-    border: 2px ridge black;
-    /*  ; border-radius: 10%; */
+    top: 110px;
+    border: 2px solid black;
 }

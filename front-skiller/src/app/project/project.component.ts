@@ -19,9 +19,9 @@ import { MessageGravity } from '../message/message-gravity';
 export class ProjectComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
-	 * IMPORTANT :
+	 * ## IMPORTANT :
 	 *
-	 * The observable 'project$' cannot be a simple Subject
+	 *  The observable `project$` cannot be a simple `Subject`
 	 * because the lifecycle of the tabs under the component project is not homogenous.
 	 * Some tab content are eagerly loaded, some other lazy.
 	 *
@@ -42,7 +42,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	 */
 	public idProject: number;
 
-	private TAB_TITLE = ['Project', 'Staff list', 'Staff coverage', 'Sonar'];
+	private TAB_TITLE = ['Project', 'Staff list', 'Staff coverage', 'Sonar', 'Audit'];
 
 	constructor(
 		private cinematicService: CinematicService,

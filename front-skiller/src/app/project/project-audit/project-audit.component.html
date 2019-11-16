@@ -1,11 +1,17 @@
 <div id="audit">
         <div>
-                <app-project-audit-badges></app-project-audit-badges>
+                <app-project-audit-badges
+                        [auditTopics$]="auditTopics$">
+                </app-project-audit-badges>
         </div>
         <button 
                 id="auditSetup"
                 class="btn btn-outline btn-outline-secondary rounded"
                 (click)="setupCategories()">+
         </button>
-        <div id="setupCategories" [hidden]="displayCategories">Nope...</div>
+        <div id="setupCategories" [hidden]="displayCategories">
+                <app-table-categories
+                        (messengerCategoryUpdated)="onCategoryUpdated($event)">
+                </app-table-categories>
+        </div>
 </div>

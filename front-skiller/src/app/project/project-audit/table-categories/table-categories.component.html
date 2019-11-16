@@ -1,0 +1,22 @@
+<table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8 tableCategories">
+
+    <ng-container matColumnDef="select">
+        <th id="select" mat-header-cell *matHeaderCellDef><i class="far glyphicon fa-check-square"></i></th>
+        <td mat-cell class="td-select" *matCellDef="let row; let i = index;">
+            <mat-checkbox id="select-{{i}}" [disabled]="row.select" [(ngModel)]="row.select" (change)="updateCategory(row)">
+            </mat-checkbox>
+        </td>
+    </ng-container>
+
+    <ng-container matColumnDef="title">
+        <th id="title" mat-header-cell *matHeaderCellDef>Topic to involve in the audit</th>
+        <td mat-cell class="td-title" *matCellDef="let row; let i = index;">
+            {{row.title}}
+        </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="categoryColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: categoryColumns;"></tr>
+</table>
+
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

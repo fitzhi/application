@@ -1,5 +1,6 @@
 <div id="containerAuditBadges">
-    <div *ngFor="let category of auditCategories; index as index" style="padding-left:5px; padding-top:5px">
+    <div *ngFor="let category of (auditTopics$ | async); index as index" 
+        style="padding-left:5px; padding-top:5px">
         <app-audit-badge 
             [index]=index 
             [id]="category.id"

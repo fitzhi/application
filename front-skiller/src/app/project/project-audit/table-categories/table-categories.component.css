@@ -1,0 +1,12 @@
+.mat-header-cell {
+    color: darkblue;
+    padding-left: 5px;
+}
+
+.tableCategories {
+    width: 396px;
+}
+
+#select {
+    font-size: 20px;
+}
