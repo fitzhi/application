@@ -1,0 +1,13 @@
+#containerAuditBadges {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+#auditSetup {
+    position: fixed;
+    right: 0px;
+    top: 100px;
+}
