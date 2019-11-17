@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.skiller.bean.ProjectAuditHandler;
 import fr.skiller.bean.ProjectHandler;
-import fr.skiller.data.internal.AuditProject;
+import fr.skiller.data.internal.AuditTopic;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
 
@@ -41,8 +41,8 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 	@Before
 	public void before() throws SkillerException {
 		project = projectHandler.addNewProject(new Project(314116, "PI"));
-		project.setAuditProjects(new HashMap<Integer, AuditProject>());
-		project.getAuditProjects().put(1, new AuditProject());
+		project.setAudit(new HashMap<Integer, AuditTopic>());
+		project.getAudit().put(1, new AuditTopic());
 
 	}
 	
@@ -54,8 +54,8 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 	@Test
 	public void addNewTopic() throws SkillerException {
 		projectAuditHandler.addTopic(314116, 2);
-		Assert.assertTrue("addNewTopic did not succeed", project.getAuditProjects().containsKey(2));
-		Assert.assertTrue("addNewTopic did not succeed", project.getAuditProjects().get(2).getIdTopic() == 2);
+		Assert.assertTrue("addNewTopic did not succeed", project.getAudit().containsKey(2));
+		Assert.assertTrue("addNewTopic did not succeed", project.getAudit().get(2).getIdTopic() == 2);
 		
 	}
 	
@@ -67,13 +67,13 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 	@Test
 	public void removeTopic() throws SkillerException {
 		projectAuditHandler.removeTopic(314116, 1, false);
-		Assert.assertFalse("removeTopic did not succeed", project.getAuditProjects().containsKey(1));
+		Assert.assertFalse("removeTopic did not succeed", project.getAudit().containsKey(1));
 	}
 	
 	@Test
 	public void loadExistingTopic() throws SkillerException {
 		projectAuditHandler.addTopic(314116, 2);
-		AuditProject auditTopic = projectAuditHandler.getTopic(314116, 2);
+		AuditTopic auditTopic = projectAuditHandler.getTopic(314116, 2);
 		Assert.assertNotNull(auditTopic);
 		Assert.assertTrue("addNewTopic did not succeed", auditTopic.getIdTopic() == 2);
 		

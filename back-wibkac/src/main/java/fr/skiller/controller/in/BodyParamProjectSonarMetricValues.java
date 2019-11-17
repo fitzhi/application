@@ -4,7 +4,6 @@ import java.util.List;
 
 import fr.skiller.controller.ProjectSonarController;
 import fr.skiller.data.internal.ProjectSonarMetricValue;
-import fr.skiller.data.internal.SonarEvaluation;
 import lombok.Data;
 
 /**

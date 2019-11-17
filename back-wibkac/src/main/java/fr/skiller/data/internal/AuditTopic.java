@@ -1,7 +1,5 @@
 package fr.skiller.data.internal;
 
-import java.util.ArrayList;
-
 import lombok.Data;
 
 /**
@@ -12,7 +10,7 @@ import lombok.Data;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public @Data class AuditProject {
+public @Data class AuditTopic {
 	
 	/**
 	 * Topic identifier involved in the audit.
@@ -22,15 +20,15 @@ public @Data class AuditProject {
 	/**
 	 * Empty constructor for <u>serialization</u> / <u>de-serialization</u> purpose
 	 */
-	public AuditProject() {
+	public AuditTopic() {
 		// Empty constructor for serialization / de-serialization purpose
 	}
 
 	/**
-	 * AuditProject constructor.
+	 * AuditTopic constructor.
 	 * @param key identifier of the sonar project entry.
 	 */
-	public AuditProject(int idTopic) {
+	public AuditTopic(int idTopic) {
 		this.idTopic = idTopic;
 	}
 	

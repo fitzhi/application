@@ -1,7 +1,6 @@
 package fr.skiller.controller.in;
 
-import fr.skiller.data.internal.AuditProject;
-import fr.skiller.data.internal.SonarProject;
+import fr.skiller.data.internal.AuditTopic;
 import lombok.Data;
 
 /**
@@ -21,7 +20,7 @@ public @Data class BodyParamAuditEntry {
 	/**
 	 * A project declared in Audit and linked to a Techxhì project
 	 */
-	private AuditProject auditProject;
+	private AuditTopic auditTopic;
 	
 	/**
 	 * Empty constructor.
@@ -34,10 +33,9 @@ public @Data class BodyParamAuditEntry {
 	 * @param idProject the project identifier
 	 * @param sonarEntry the entry
 	 */
-	public BodyParamAuditEntry(int idProject, AuditProject auditProject) {
-		super();
+	public BodyParamAuditEntry(int idProject, AuditTopic auditProject) {
 		this.idProject = idProject;
-		this.auditProject = auditProject;
+		this.auditTopic = auditTopic;
 	}
 	
 }

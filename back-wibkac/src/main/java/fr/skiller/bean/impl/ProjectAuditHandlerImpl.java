@@ -19,7 +19,7 @@ import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.ProjectAuditHandler;
 import fr.skiller.bean.ProjectHandler;
-import fr.skiller.data.internal.AuditProject;
+import fr.skiller.data.internal.AuditTopic;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
 
@@ -44,14 +44,14 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 
-		if (project.getAuditProjects() == null) {
-			project.setAuditProjects(new HashMap<Integer, AuditProject>());
+		if (project.getAudit() == null) {
+			project.setAudit(new HashMap<Integer, AuditTopic>());
 		}
 		
 		// We do not add this topic if it already exists.
-		if (!project.getAuditProjects().containsKey(idTopic)) {		
+		if (!project.getAudit().containsKey(idTopic)) {		
 			synchronized (lockDataUpdated) {
-				project.getAuditProjects().put(idTopic, new AuditProject(idTopic));
+				project.getAudit().put(idTopic, new AuditTopic(idTopic));
 				this.dataUpdated = true;
 			}
 		}
@@ -69,24 +69,24 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 		}
 		
 		synchronized (lockDataUpdated) {
-			project.getAuditProjects().remove(idTopic);
+			project.getAudit().remove(idTopic);
 			this.dataUpdated = true;
 		}
 	}
 
 	@Override
-	public AuditProject getTopic(int idProject, int idTopic) throws SkillerException {
+	public AuditTopic getTopic(int idProject, int idTopic) throws SkillerException {
 
 		final Project project = projectHandler.get(idProject);
 		if (project == null) {
 			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 		
-		if (project.getAuditProjects() == null) {
+		if (project.getAudit() == null) {
 			throw new SkillerException(CODE_PROJECT_TOPIC_UNKNOWN, MessageFormat.format(MESSAGE_PROJECT_TOPIC_UNKNOWN, idTopic, project.getName()));
 		}
 		
-		final AuditProject auditProject = project.getAuditProjects().get(idTopic);
+		final AuditTopic auditProject = project.getAudit().get(idTopic);
 		if (auditProject == null) {
 			throw new SkillerException(CODE_PROJECT_TOPIC_UNKNOWN, MessageFormat.format(MESSAGE_PROJECT_TOPIC_UNKNOWN, idTopic, project.getName()));
 		}

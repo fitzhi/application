@@ -88,9 +88,9 @@ public @Data class Project  {
 	private List<SonarProject> sonarProjects = new ArrayList<>();
 			
 	/**
-	 * Map of {@link AuditProject} associated to this project.
+	 * Map of {@link AuditTopic} associated to this project.
 	 */
-	private Map<Integer, AuditProject> auditProjects = new HashMap<>();
+	private Map<Integer, AuditTopic> audit = new HashMap<>();
 			
 	/**
 	 * Level of risk evaluated for the project.

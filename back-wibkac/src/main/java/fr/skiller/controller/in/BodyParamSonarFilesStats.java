@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import fr.skiller.data.internal.FilesStats;
-import fr.skiller.data.internal.SonarProject;
 import lombok.Data;
 
 /**

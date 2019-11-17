@@ -1,6 +1,6 @@
 package fr.skiller.bean;
 
-import fr.skiller.data.internal.AuditProject;
+import fr.skiller.data.internal.AuditTopic;
 import fr.skiller.exception.SkillerException;
 
 /**
@@ -38,6 +38,6 @@ public interface ProjectAuditHandler extends DataSaverLifeCycle {
 	 * @return the audit project
 	 * @throws SkillerException thrown if any problem occurs such as <i>'topic identifier unknown'</i>
 	 */
-	AuditProject getTopic(int idProject, int idTopic) throws SkillerException;
+	AuditTopic getTopic(int idProject, int idTopic) throws SkillerException;
 	
 }

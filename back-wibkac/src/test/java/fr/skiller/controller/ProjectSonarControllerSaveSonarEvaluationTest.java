@@ -7,8 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -29,10 +27,8 @@ import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.controller.in.BodyParamProjectSonarEvaluation;
-import fr.skiller.controller.in.BodyParamProjectSonarMetricValues;
 import fr.skiller.controller.util.LocalDateAdapter;
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.ProjectSonarMetricValue;
 import fr.skiller.data.internal.SonarEvaluation;
 import fr.skiller.data.internal.SonarProject;
 import fr.skiller.exception.SkillerException;

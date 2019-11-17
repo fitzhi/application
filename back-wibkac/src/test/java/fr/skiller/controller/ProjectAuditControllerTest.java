@@ -1,15 +1,12 @@
 package fr.skiller.controller;
 
+import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
+import static fr.skiller.Error.CODE_PROJECT_TOPIC_UNKNOWN;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
-import static fr.skiller.Error.CODE_PROJECT_TOPIC_UNKNOWN;
-import static fr.skiller.Error.CODE_PROJECT_TOPIC_ALREADY_DECLARED;
-import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
-
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -34,15 +31,10 @@ import com.google.gson.GsonBuilder;
 
 import fr.skiller.Global;
 import fr.skiller.bean.ProjectHandler;
-import fr.skiller.bean.StaffHandler;
 import fr.skiller.controller.in.BodyParamAuditEntry;
-import fr.skiller.controller.in.BodyUpdateGhost;
 import fr.skiller.controller.util.LocalDateAdapter;
-import fr.skiller.data.internal.AuditProject;
-import fr.skiller.data.internal.Ghost;
-import fr.skiller.data.internal.Mission;
+import fr.skiller.data.internal.AuditTopic;
 import fr.skiller.data.internal.Project;
-import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 /**
  * <p>
@@ -69,9 +61,6 @@ public class ProjectAuditControllerTest {
 	@Autowired
 	private ProjectHandler projectHandler;
 
-	@Autowired
-	private StaffHandler staffHandler;
-
 	Project project;
 	
 	final int ID_PROJECT = 1;
@@ -83,9 +72,9 @@ public class ProjectAuditControllerTest {
 	public void before() throws SkillerException {
 		project = projectHandler.get(ID_PROJECT);
 
-		Map<Integer, AuditProject> mapAudit = new HashMap<>();
-		mapAudit.put(ID_TOPIC_2, new AuditProject(ID_TOPIC_2));
-		project.setAuditProjects(mapAudit);
+		Map<Integer, AuditTopic> mapAudit = new HashMap<>();
+		mapAudit.put(ID_TOPIC_2, new AuditTopic(ID_TOPIC_2));
+		project.setAudit(mapAudit);
 	}
 	
 	@Test
@@ -94,7 +83,7 @@ public class ProjectAuditControllerTest {
 		
 		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
 		bpae.setIdProject(ID_PROJECT);
-		bpae.setAuditProject(new AuditProject(ID_TOPIC_1));
+		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_1));
 	
 		this.mvc.perform(post("/project/audit/saveTopic")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -110,7 +99,7 @@ public class ProjectAuditControllerTest {
 				.andDo(print())
 				.andReturn();
 
-		AuditProject auditProject = gson.fromJson(result.getResponse().getContentAsString(), AuditProject.class);
+		AuditTopic auditProject = gson.fromJson(result.getResponse().getContentAsString(), AuditTopic.class);
 		// The topic has been successfully added
 		Assert.assertTrue(auditProject.getIdTopic() == ID_TOPIC_1);
 	}
@@ -122,9 +111,9 @@ public class ProjectAuditControllerTest {
 		
 		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
 		bpae.setIdProject(ID_PROJECT);
-		bpae.setAuditProject(new AuditProject(ID_TOPIC_2));
+		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2));
 	
-		MvcResult result = this.mvc.perform(post("/project/audit/saveTopic")
+		this.mvc.perform(post("/project/audit/saveTopic")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(bpae)))
 			.andExpect(status().isOk())
@@ -142,7 +131,7 @@ public class ProjectAuditControllerTest {
 	public void addTopicUnknownProject() throws Exception {
 		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
 		bpae.setIdProject(666);
-		bpae.setAuditProject(new AuditProject(ID_TOPIC_2));
+		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2));
 	
 		MvcResult result = this.mvc.perform(post("/project/audit/saveTopic")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -163,7 +152,7 @@ public class ProjectAuditControllerTest {
 				.andDo(print())
 				.andReturn();
 
-		AuditProject auditProject = gson.fromJson(result.getResponse().getContentAsString(), AuditProject.class);
+		AuditTopic auditProject = gson.fromJson(result.getResponse().getContentAsString(), AuditTopic.class);
 		// The topic has been successfully added
 		Assert.assertTrue(auditProject.getIdTopic() == ID_TOPIC_2);
 		
@@ -173,7 +162,7 @@ public class ProjectAuditControllerTest {
 		//
 		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
 		bpae.setIdProject(ID_PROJECT);
-		bpae.setAuditProject(new AuditProject(ID_TOPIC_2));
+		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2));
 	
 		this.mvc.perform(post("/project/audit/removeTopic")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -198,7 +187,7 @@ public class ProjectAuditControllerTest {
 	@After
 	public void after() throws SkillerException {
 		project = projectHandler.get(ID_PROJECT);
-		project.getAuditProjects().clear();
+		project.getAudit().clear();
 				
 	}
 	

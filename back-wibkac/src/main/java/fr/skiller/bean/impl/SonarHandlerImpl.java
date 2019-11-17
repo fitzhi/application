@@ -1,5 +1,9 @@
 package fr.skiller.bean.impl;
 
+import static fr.skiller.Error.CODE_FILE_REFERENTIAL_NOFOUND;
+import static fr.skiller.Error.CODE_IO_ERROR;
+import static fr.skiller.Error.MESSAGE_FILE_REFERENTIAL_NOFOUND;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -7,29 +11,19 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.SonarHandler;
-import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.ProjectSonarMetricValue;
 import fr.skiller.exception.SkillerException;
 import lombok.extern.slf4j.Slf4j;
-
-import static fr.skiller.Error.CODE_FILE_REFERENTIAL_NOFOUND;
-import static fr.skiller.Error.MESSAGE_FILE_REFERENTIAL_NOFOUND;
-import static fr.skiller.Error.CODE_IO_ERROR;
 
 /**
  * <p>

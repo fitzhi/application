@@ -4,8 +4,8 @@
 package fr.skiller.bean.impl;
 
 import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
-import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
 import static fr.skiller.Error.CODE_SONAR_KEY_NOFOUND;
+import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
 import static fr.skiller.Error.MESSAGE_SONAR_KEY_NOFOUND;
 
 import java.text.MessageFormat;
@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
