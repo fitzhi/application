@@ -53,7 +53,6 @@ public class ProjectSonarController {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 					"POST command on /project/sonar/addEntry for project : %d", param.getIdProject()));
-			System.out.println(param.getSonarProject());
 		}
 		
 		try {

@@ -66,6 +66,12 @@ public class Error {
 
 	public static final int CODE_SONAR_KEY_NOFOUND = -1018;
 	public static final String MESSAGE_SONAR_KEY_NOFOUND = "There is no Sonar project {0} declared for the project {1}";
+
+	public static final int CODE_PROJECT_TOPIC_ALREADY_DECLARED = -1019;
+	public static final String MESSAGE_PROJECT_TOPIC_ALREADY_DECLARED = "The topic {0} is already declared for the project {1}";
+	
+	public static final int CODE_PROJECT_TOPIC_UNKNOWN = -1020;
+	public static final String MESSAGE_PROJECT_TOPIC_UNKNOWN = "The topic {0} is not involved in project {1}";
 	
 	private Error() {
 	}

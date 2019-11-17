@@ -1,7 +1,9 @@
 package fr.skiller.data.internal;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.annotation.Generated;
@@ -84,6 +86,11 @@ public @Data class Project  {
 	 * List of Sonar projects associated to this project.
 	 */
 	private List<SonarProject> sonarProjects = new ArrayList<>();
+			
+	/**
+	 * Map of {@link AuditProject} associated to this project.
+	 */
+	private Map<Integer, AuditProject> auditProjects = new HashMap<>();
 			
 	/**
 	 * Level of risk evaluated for the project.
