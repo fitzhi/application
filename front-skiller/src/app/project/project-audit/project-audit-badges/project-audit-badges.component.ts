@@ -16,6 +16,11 @@ export class ProjectAuditBadgesComponent implements OnInit {
 	constructor() { }
 
 	ngOnInit() {
+		this.auditTopics$.subscribe(elements => {
+			elements.forEach(element => {
+				console.log (element.title);
+			});
+		});
 	}
 
 }

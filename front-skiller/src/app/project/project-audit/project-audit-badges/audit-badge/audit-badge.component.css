@@ -1,9 +1,18 @@
-div.audit-badge {
+
+div.audit-badge, div.audit-badge-selected {
     background-color: whitesmoke;
     width: 240px;
     height: 100px;
     border: 1px solid black;
     border-radius: 10%;
+}
+
+div.audit-badge:hover {
+    border: 1px solid black !important;
+}
+
+div.audit-badge-selected {
+    border: 2px solid black !important;
 }
 
 .mat-grid-tile .mat-figure {

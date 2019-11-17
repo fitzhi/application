@@ -47,15 +47,21 @@ export class CinematicService {
 	newCollaboratorDisplayEmitted$ = this.emitActualCollaboratorDisplay.asObservable();
 
 	/**
+     * This `BehaviorSubject` broadcasts the selection of an audit thumbnail by the end-user.
+     */
+	public auditTopicSelected$ = new BehaviorSubject<number>(-1);
+
+	/**
      * This subject informs on the selected tab in the projects Tab Group container.
 	 * Each-time the end-user clicks on a tab, this BehaviorSubject emits an identifier corresponding to the tab selected.
 	 *
 	 * This identifier can be :
 	 *
-	 *  - PROJECT_IDX_TAB_FORM for the project tab form
-	 *  - PROJECT_IDX_TAB_STAFF for the project staff list
-	 *  - PROJECT_IDX_TAB_SUNBURST for the Staff coverage graph
-	 *  - PROJECT_IDX_TAB_SONAR for the Sonar dashboard
+	 *  - `PROJECT_IDX_TAB_FORM` for the project tab form
+	 *  - `PROJECT_IDX_TAB_STAFF` for the project staff list
+	 *  - `PROJECT_IDX_TAB_SUNBURST` for the Staff coverage graph
+	 *  - `PROJECT_IDX_TAB_SONAR` for the Sonar dashboard
+	 *  - `PROJECT_IDX_TAB_AUDIT` for the Audit dashboard
 	 *
      */
 	public tabProjectActivated$ = new BehaviorSubject<number>(Constants.PROJECT_IDX_TAB_FORM);
