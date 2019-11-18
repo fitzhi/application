@@ -3,6 +3,7 @@ import { ReferentialService } from 'src/app/service/referential.service';
 import { Project } from 'src/app/data/project';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
+import { SonarProject } from 'src/app/data/SonarProject';
 
 @Component({
 	selector: 'app-techxhi-medal',
@@ -31,11 +32,6 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	 */
 	project: Project;
 
-	/**
-	 * Mean Sonar evaluation.
-	 */
-	globalSonarEvaluation = 0;
-
 	public PROJECT_IDX_TAB_SONAR = Constants.PROJECT_IDX_TAB_SONAR;
 	public PROJECT_IDX_TAB_SUNBURST = Constants.PROJECT_IDX_TAB_SUNBURST;
 	public PROJECT_IDX_TAB_AUDIT = Constants.PROJECT_IDX_TAB_AUDIT;
@@ -47,20 +43,49 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	ngOnInit() {
 		this.subscriptions.add(
 			this.project$.subscribe((project: Project) => {
-				if ((project) && (project.sonarProjects)) {
+				if (project) {
 					this.project = project;
-					let totalEvalution = 0;
-					let totalNumerberLinesOfCode = 0;
-					project.sonarProjects.forEach(sonarProject => {
-						totalEvalution += sonarProject.sonarEvaluation.evaluation * sonarProject.sonarEvaluation.totalNumberLinesOfCode;
-						totalNumerberLinesOfCode += sonarProject.sonarEvaluation.totalNumberLinesOfCode;
-					});
-					this.globalSonarEvaluation = Math.round(totalEvalution / totalNumerberLinesOfCode);
-					if (Constants.DEBUG) {
-						console.log ('globalSonarEvaluation %d for project %s', this.globalSonarEvaluation, project.name);
-					}
 				}
 			}));
+	}
+
+	/**
+	 * Return the global mean __Sonar__ evaluation processed for all Sonar projects
+	 * declared in the techzhì project.
+	 */
+	globalSonarEvaluation() {
+
+		let globalSonarEvaluation = 0;
+		if (!this.project) {
+			return 0;
+		}
+
+		if ((this.project.sonarProjects) && this.allSonarProjectsEvaluated(this.project)) {
+			let totalEvalution = 0;
+			let totalNumerberLinesOfCode = 0;
+			this.project.sonarProjects.forEach(sonarProject => {
+				totalEvalution += sonarProject.sonarEvaluation.evaluation * sonarProject.sonarEvaluation.totalNumberLinesOfCode;
+				totalNumerberLinesOfCode += sonarProject.sonarEvaluation.totalNumberLinesOfCode;
+			});
+			globalSonarEvaluation = Math.round(totalEvalution / totalNumerberLinesOfCode);
+		}
+
+		return globalSonarEvaluation;
+	}
+
+
+	/**
+	 * Return `true` if all sonar projects declared in this projet, have been evaluated, false otherwise.
+	 * @param project the current project
+	 */
+	allSonarProjectsEvaluated(project: Project) {
+		let complete = true;
+		project.sonarProjects.forEach(sonarP => {
+			if (complete && (!sonarP.sonarEvaluation)) {
+				complete = false;
+			}
+		});
+		return complete;
 	}
 
 	/**
@@ -68,7 +93,6 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	 * @param tabIndex index of tab requested.
 	 */
 	public jumpToTab(tabIndex: number) {
-		console.log ('emit', tabIndex);
 		this.tabActivationEmitter.next(tabIndex);
 	}
 
@@ -82,7 +106,7 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 
 
 	/**
-	 * This function is handling the `*ngIf` preview condition of the audit summary badge.
+	 * This function is handling the `*ngIf` preview condition of the __Audit__ summary badge.
 	 */
 	auditReady() {
 		if (!this.project) {
@@ -99,7 +123,33 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 
 		return true;
 	}
-	
+
+	/**
+	 * This function is handling the `*ngIf` preview condition of the __Sonar__ summary badge.
+	 */
+	sonarReady() {
+		if (!this.project) {
+			return false;
+		}
+
+		if (!this.project.sonarProjects) {
+			return false;
+		}
+
+		if (this.project.sonarProjects.length === 0) {
+			return false;
+		}
+
+		let preview = true;
+		this.project.sonarProjects.forEach(sonarProject => {
+			if ((!sonarProject.sonarEvaluation) && preview) {
+				preview = false;
+			}
+		});
+		return preview;
+	}
+
+
 	/**
 	* Calling the base class to unsubscribe all subscriptions.
 	*/

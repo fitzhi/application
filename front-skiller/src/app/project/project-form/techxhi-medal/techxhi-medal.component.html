@@ -9,7 +9,7 @@
         </svg>
     </div>
 
-    <div *ngIf="(referentialService.legendsLoaded$ | async) && (project$ | async) && (project.sonarProjects) && (project.sonarProjects.length > 0)" 
+    <div *ngIf="(referentialService.legendsLoaded$ | async) && sonarReady()" 
         id="sonarSummaryBadge"
         (click)="jumpToTab(PROJECT_IDX_TAB_SONAR)"
         data-toggle="tooltip" data-placement="right" data-html="true"
@@ -20,7 +20,7 @@
             [medal]=true
             [title]="'evaluation.title'" 
             [weight]=100
-            [evaluation]=globalSonarEvaluation>
+            [evaluation]="globalSonarEvaluation()">
         </app-quotation-badge>
     </div>
 

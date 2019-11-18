@@ -108,8 +108,4 @@ export class QuotationBadgeComponent implements AfterViewInit {
 		return styles;
 	}
 
-	arc() {
-
-
-	}
 }
