@@ -99,6 +99,7 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 
 		return true;
 	}
+	
 	/**
 	* Calling the base class to unsubscribe all subscriptions.
 	*/

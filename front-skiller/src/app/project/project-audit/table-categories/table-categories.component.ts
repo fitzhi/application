@@ -55,9 +55,9 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 
 	/**
 	 * __Selection__ or __Deselection__ of a topic.
-	 * @param topic the given category
+	 * @param topic the given topic
 	 */
-	updateCategory(topic: Topic) {
+	updateTopic(topic: Topic) {
 		if (Constants.DEBUG) {
 			console.log (topic.title, (topic.select) ? 'is selected' : 'is deselected');
 		}
@@ -79,8 +79,20 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 						delete this.project.audit[topic.id];
 						this.messageService.info('The topic \'' + topic.title + '\' is removed from audit');
 				}});
-	}
+		}
 		this.messengerCategoryUpdated.emit(topic);
+	}
+
+	/**
+	 * This function is called when the user click on the topic title to reverse the selection status
+	 * of the topic (involved, or not).
+	 * After the reversal, the `updateTopic` is invoked to complete the treatment.
+	 * @param topic the topic which title has been clicked
+	 */
+	reverseTopicSelection(topic: Topic) {
+		console.log ('reverseTopisSelection');
+		topic.select = !topic.select;
+		this.updateTopic(topic);
 	}
 
 	/**

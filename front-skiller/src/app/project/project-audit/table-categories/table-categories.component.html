@@ -5,7 +5,7 @@
         <td mat-cell class="td-select {{class_select_deselect(row.select)}}"
             *matCellDef="let row; let i = index;">
             <mat-checkbox id="select-{{i}}" 
-                [(ngModel)]="row.select" (change)="updateCategory(row)">
+                [(ngModel)]="row.select" (change)="updateTopic(row)">
             </mat-checkbox>
         </td>
     </ng-container>
@@ -13,6 +13,7 @@
     <ng-container matColumnDef="title">
         <th id="title" mat-header-cell *matHeaderCellDef>Topic to involve in the audit</th>
         <td mat-cell  class="td-title {{class_select_deselect(row.select)}}"
+            (click)='reverseTopicSelection(row)'
             *matCellDef="let row; let i = index;">
             {{row.title}}
         </td>
