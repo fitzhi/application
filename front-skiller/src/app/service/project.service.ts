@@ -22,6 +22,7 @@ import { MessageService } from '../message/message.service';
 import { ResponseComponentMeasures } from '../data/sonar/reponse-component-measures';
 import { SonarService } from './sonar.service';
 import { MessageGravity } from '../message/message-gravity';
+import { AuditTopic } from '../data/AuditTopic';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -114,7 +115,7 @@ export class ProjectService extends InternalService {
 	 * @param sonarProject the sonar project
 	 */
 	addSonarProject(idProject: number, sonarProject: SonarProject): Observable<Boolean> {
-		return this.accessSonarProject$(idProject, sonarProject, 'saveEntry');
+		return this.handleActionSonarProject$(idProject, sonarProject, 'saveEntry');
 	}
 
 	/**
@@ -123,16 +124,16 @@ export class ProjectService extends InternalService {
 	 * @param sonarProject the sonar project
 	 */
 	delSonarProject(idProject: number, sonarProject: SonarProject) {
-		return this.accessSonarProject$(idProject, sonarProject, 'removeEntry');
+		return this.handleActionSonarProject$(idProject, sonarProject, 'removeEntry');
 	}
 
 	/**
-	 * Access the Sonar projects of 'our project'
+	 * Execute an operation on the Sonar projects of a Techxhì project
 	 * @param idProject the project identifier
 	 * @param sonarProject the sonar project
 	 * @param action the action to be executed on the Sonar projects collection
 	 */
-	private accessSonarProject$(idProject: number, sonarProject: SonarProject, action: string): Observable<Boolean> {
+	private handleActionSonarProject$(idProject: number, sonarProject: SonarProject, action: string): Observable<Boolean> {
 
 		if (Constants.DEBUG) {
 			console.log ('Action ' + action + ' for a Sonar project ' + sonarProject.name + ' for project ID ' + idProject);
@@ -145,6 +146,46 @@ export class ProjectService extends InternalService {
 
 		return this.httpClient
 			.post<Boolean>(this.backendSetupService.url() + '/project/sonar/' + action, body, httpOptions)
+			.pipe(take(1));
+	}
+
+	/**
+	 * Add a topic to the audit.
+	 * @param idProject the project identifier
+	 * @param idTopic the topic identifier
+	 */
+	addAuditTopic(idProject: number, idTopic: number): Observable<Boolean> {
+		return this.handleActionAudit$(idProject, new AuditTopic(idTopic), 'saveTopic');
+	}
+
+	/**
+	 * Remove a topic from the audit.
+	 * @param idProject the project identifier
+	 * @param idTopic the topic identifier
+	 */
+	removeAuditTopic(idProject: number, idTopic: number): Observable<Boolean> {
+		return this.handleActionAudit$(idProject, new AuditTopic(idTopic), 'removeTopic');
+	}
+
+	/**
+	 * Execute an operation on the audit of a Techxhì project
+	 * @param idProject the project identifier
+	 * @param auditTopic the given auditTopic to be taken in account
+	 * @param action the action to be executed on the audit collection
+	 */
+	private handleActionAudit$(idProject: number, auditTopic: AuditTopic, action: string): Observable<Boolean> {
+
+		if (Constants.DEBUG) {
+			console.log ('Action ' + action + ' on topic id ' + auditTopic.id + ' for project ID ' + idProject);
+		}
+
+		const body = {
+			'idProject': idProject,
+			'auditTopic': {'id': auditTopic.id}
+		};
+
+		return this.httpClient
+			.post<Boolean>(this.backendSetupService.url() + '/project/audit/' + action, body, httpOptions)
 			.pipe(take(1));
 	}
 

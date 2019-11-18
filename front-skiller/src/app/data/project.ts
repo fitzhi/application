@@ -1,6 +1,7 @@
 import { Skill } from './skill';
 import { Library } from './library';
 import { SonarProject } from './SonarProject';
+import { AuditTopic } from './AuditTopic';
 
 export class Project {
 
@@ -27,6 +28,12 @@ export class Project {
 	 * Array containing the list of Sonar projects associated to this project.
 	 */
 	public sonarProjects: SonarProject[] = [];
+
+	/**
+	 * Map containing the list of topics.
+	 * Key is the topic identifier.
+	 */
+	public audit: { [id: number]: AuditTopic; } = {};
 
 	constructor() { }
 

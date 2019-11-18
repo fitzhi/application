@@ -1,4 +1,4 @@
-export class Category {
+export class Topic {
 	constructor(
 		public select: boolean,
 		public id: number,

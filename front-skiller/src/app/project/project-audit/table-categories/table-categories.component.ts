@@ -1,18 +1,27 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
-import {Category} from './category';
+import { Component, OnInit, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
 import { Constants } from 'src/app/constants';
+import { ProjectService } from 'src/app/service/project.service';
+import { BaseComponent } from 'src/app/base/base.component';
+import { Project } from 'src/app/data/project';
+import { take } from 'rxjs/operators';
+import { MessageService } from 'src/app/message/message.service';
+import { Topic } from './topic';
 
 @Component({
 	selector: 'app-table-categories',
 	templateUrl: './table-categories.component.html',
 	styleUrls: ['./table-categories.component.css']
 })
-export class TableCategoriesComponent implements OnInit {
+export class TableCategoriesComponent extends BaseComponent implements OnInit, OnDestroy {
+
+	@Input() project$;
 
 	/**
 	 * We inform the parent component that a category has been selectect or deselected.
 	 */
-	@Output() messengerCategoryUpdated = new EventEmitter<Category>();
+	@Output() messengerCategoryUpdated = new EventEmitter<Topic>();
+
+	private project: Project;
 
 	private auditCategories = [
 		{ id: 0, title: 'General organization' },
@@ -24,26 +33,50 @@ export class TableCategoriesComponent implements OnInit {
 
 	public categoryColumns: string[] = ['select', 'title'];
 
-	public dataSource: Category[] = [];
+	public dataSource: Topic[] = [];
 
 	private colorRow = 'white';
 
-	constructor() { }
+	constructor(
+		private projectService: ProjectService,
+		private messageService: MessageService) { super(); }
 
 	ngOnInit() {
-		this.auditCategories.forEach(element => {
-			this.dataSource.push (new Category(false, element.id, element.title));
-		});
+		this.subscriptions.add(
+			this.project$.subscribe(project => {
+				this.project = project;
+				this.auditCategories.forEach(element => {
+					this.dataSource.push (new Topic(
+						(project.audit[element.id]), element.id, element.title));
+				});
+			}));
 	}
 
 	/**
 	 * __Selection__ or __Deselection__ of a topic.
 	 * @param topic the given category
 	 */
-	updateCategory(topic: Category) {
+	updateCategory(topic: Topic) {
 		if (Constants.DEBUG) {
 			console.log (topic.title, (topic.select) ? 'is selected' : 'is deselected');
 		}
+		if (topic.select) {
+			this.projectService
+				.addAuditTopic(this.project.id, topic.id)
+				.pipe(take(1))
+				.subscribe(doneAndOk => {
+					if (doneAndOk) {
+						this.messageService.info('Topic ' + topic.title + ' is added to the audit');
+				}});
+		} else {
+			this.projectService
+				.removeAuditTopic(this.project.id, topic.id)
+				.pipe(take(1))
+				.subscribe(doneAndOk => {
+					if (doneAndOk) {
+						this.messageService.info('Topic ' + topic.title + ' is removed from audit');
+				}});
+	}
 		this.messengerCategoryUpdated.emit(topic);
 	}
 
@@ -53,6 +86,13 @@ export class TableCategoriesComponent implements OnInit {
 	 */
 	class_select_deselect(select: boolean): string {
 		return (select) ? 'row-involved' : 'row-ignored';
+	}
+
+	/**
+	* Calling the base class to unsubscribe all subscriptions.
+	*/
+	ngOnDestroy() {
+		super.ngOnDestroy();
 	}
 
 }

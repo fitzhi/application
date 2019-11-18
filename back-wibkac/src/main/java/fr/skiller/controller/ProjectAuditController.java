@@ -49,11 +49,11 @@ public class ProjectAuditController {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 				"POST command on /project/audit/addTopic for project.id %d and topic.id %d", 
-						param.getIdProject(), param.getAuditTopic().getIdTopic()));
+						param.getIdProject(), param.getAuditTopic().getId()));
 		}
 		
 		try {
-			projectAuditHandler.addTopic(param.getIdProject(), param.getAuditTopic().getIdTopic());
+			projectAuditHandler.addTopic(param.getIdProject(), param.getAuditTopic().getId());
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 		} catch (SkillerException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
@@ -94,11 +94,11 @@ public class ProjectAuditController {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 				"POST command on /project/audit/removeTopic for project.id %d and topic.id %d", 
-						param.getIdProject(), param.getAuditTopic().getIdTopic()));
+						param.getIdProject(), param.getAuditTopic().getId()));
 		}
 		
 		try {
-			projectAuditHandler.removeTopic(param.getIdProject(), param.getAuditTopic().getIdTopic(), false);
+			projectAuditHandler.removeTopic(param.getIdProject(), param.getAuditTopic().getId(), false);
 			
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 			

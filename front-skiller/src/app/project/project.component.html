@@ -24,7 +24,9 @@
 	</mat-tab>
 	<mat-tab label="Audit">
 		<ng-template matTabContent>
-			<app-project-audit></app-project-audit>
+			<app-project-audit
+				[project$]="project$">
+			</app-project-audit>
 		</ng-template>
 	</mat-tab>
 </mat-tab-group>

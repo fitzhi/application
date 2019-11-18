@@ -32,6 +32,17 @@ export class ReferentialService {
 	 */
 	public supportedMetrics$ = new BehaviorSubject<string[]>([]);
 
+
+	private topics: { [id: number]: string; } = {
+		'0': 'General organization',
+		'1': 'Technical Design',
+		'2': 'Build Process',
+		'3': 'General Documentation',
+		'4': 'Testability'
+	};
+
+	public topics$ = new BehaviorSubject<{[id: string]: string}>(this.topics);
+
 	/*
 	 * Skills.
 	 */

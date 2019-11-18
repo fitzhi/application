@@ -10,6 +10,7 @@
         </button>
         <div id="setupCategories" [hidden]="displayCategories">
                 <app-table-categories
+                        [project$]="project$"
                         (messengerCategoryUpdated)="onCategoryUpdated($event)">
                 </app-table-categories>
         </div>

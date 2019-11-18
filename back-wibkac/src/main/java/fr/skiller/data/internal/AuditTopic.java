@@ -15,7 +15,7 @@ public @Data class AuditTopic {
 	/**
 	 * Topic identifier involved in the audit.
 	 */
-	int idTopic;
+	int id;
 
 	/**
 	 * Empty constructor for <u>serialization</u> / <u>de-serialization</u> purpose
@@ -29,7 +29,7 @@ public @Data class AuditTopic {
 	 * @param key identifier of the sonar project entry.
 	 */
 	public AuditTopic(int idTopic) {
-		this.idTopic = idTopic;
+		this.id = idTopic;
 	}
 	
 }
