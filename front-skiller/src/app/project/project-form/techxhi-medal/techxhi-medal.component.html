@@ -24,7 +24,7 @@
         </app-quotation-badge>
     </div>
 
-    <div *ngIf="(project$ | async)" 
+    <div *ngIf="auditReady()" 
         id="auditSummaryBadge" 
         (click)="jumpToTab(PROJECT_IDX_TAB_AUDIT)"
         data-toggle="tooltip" data-placement="right" data-html="true"

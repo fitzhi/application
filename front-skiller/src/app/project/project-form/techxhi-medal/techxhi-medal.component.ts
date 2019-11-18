@@ -80,6 +80,25 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 		return { 'fill': this.colorOfRisk };
 	}
 
+
+	/**
+	 * This function is handling the `*ngIf` preview condition of the audit summary badge.
+	 */
+	auditReady() {
+		if (!this.project) {
+			return false;
+		}
+
+		if (!this.project.audit) {
+			return false;
+		}
+
+		if (Object.keys(this.project.audit).length === 0) {
+			return false;
+		}
+
+		return true;
+	}
 	/**
 	* Calling the base class to unsubscribe all subscriptions.
 	*/

@@ -6,6 +6,7 @@ import { Project } from 'src/app/data/project';
 import { take } from 'rxjs/operators';
 import { MessageService } from 'src/app/message/message.service';
 import { Topic } from './topic';
+import { AuditTopic } from 'src/app/data/AuditTopic';
 
 @Component({
 	selector: 'app-table-categories',
@@ -66,7 +67,8 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 				.pipe(take(1))
 				.subscribe(doneAndOk => {
 					if (doneAndOk) {
-						this.messageService.info('Topic ' + topic.title + ' is added to the audit');
+						this.project.audit[topic.id] = new AuditTopic(topic.id);
+						this.messageService.info('The topic \'' + topic.title + '\' is added to the audit');
 				}});
 		} else {
 			this.projectService
@@ -74,7 +76,8 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 				.pipe(take(1))
 				.subscribe(doneAndOk => {
 					if (doneAndOk) {
-						this.messageService.info('Topic ' + topic.title + ' is removed from audit');
+						delete this.project.audit[topic.id];
+						this.messageService.info('The topic \'' + topic.title + '\' is removed from audit');
 				}});
 	}
 		this.messengerCategoryUpdated.emit(topic);
