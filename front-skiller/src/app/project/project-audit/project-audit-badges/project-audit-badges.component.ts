@@ -13,7 +13,20 @@ export class ProjectAuditBadgesComponent implements OnInit {
 	 */
 	@Input() auditTopics$: Observable<any>;
 
+	/**
+	 * This `boolean` control the `[hidden]` property of the div `auditTask`.
+	 */
+	private hideDivAuditTask = true;
+
 	constructor() { }
+
+	addAuditTask() {
+		this.hideDivAuditTask = !this.hideDivAuditTask;
+	}
+
+	onShowDivAuditTask(idTopic: number) {
+		this.hideDivAuditTask = !this.hideDivAuditTask;
+	}
 
 	ngOnInit() {
 		this.auditTopics$.subscribe(elements => {

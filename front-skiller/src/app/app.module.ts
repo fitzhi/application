@@ -99,6 +99,7 @@ import { ProjectAuditBadgesComponent } from './project/project-audit/project-aud
 // tslint:disable-next-line:max-line-length
 import { AuditGraphicBadgeComponent } from './project/project-audit/project-audit-badges/audit-badge/audit-graphic-badge/audit-graphic-badge.component';
 import { TableCategoriesComponent } from './project/project-audit/table-categories/table-categories.component';
+import { AuditTaskComponent } from './audit-task/audit-task.component';
 
 @NgModule({
 	declarations: [
@@ -153,6 +154,7 @@ import { TableCategoriesComponent } from './project/project-audit/table-categori
 		ProjectAuditBadgesComponent,
 		AuditGraphicBadgeComponent,
 		TableCategoriesComponent,
+		AuditTaskComponent,
 	],
 	entryComponents: [
 		StaffUploadCvComponent,

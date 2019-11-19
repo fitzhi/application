@@ -15,6 +15,11 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 
 	@Input() project$;
 
+	/**
+	 * This `boolean` control the `[hidden]` property of the div `auditTask`.
+	 */
+	private showDivAuditTask = false;
+
 	private project: Project;
 
 	/**
@@ -33,7 +38,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 */
 	private auditTopics$ = new BehaviorSubject<any>([]);
 
-	displayCategories = true;
+	private topicsHidden = true;
 
 	constructor(private referentialService: ReferentialService) { super(); }
 
@@ -61,7 +66,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 * Setup the categories involved in the manuel audit evaluation.
 	 */
 	setupCategories() {
-		this.displayCategories = !this.displayCategories;
+		this.topicsHidden = !this.topicsHidden;
 	}
 
 	/**

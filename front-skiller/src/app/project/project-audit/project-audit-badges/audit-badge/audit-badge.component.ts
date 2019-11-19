@@ -1,8 +1,7 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { Constants } from 'src/app/constants';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { BaseComponent } from 'src/app/base/base.component';
-import { TagifyStarsComponent } from 'src/app/tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 
 @Component({
 	selector: 'app-audit-badge',
@@ -10,7 +9,6 @@ import { TagifyStarsComponent } from 'src/app/tabs-staff/staff-experience/tagify
 	styleUrls: ['./audit-badge.component.css']
 })
 export class AuditBadgeComponent extends BaseComponent implements OnInit, OnDestroy {
-
 
 	/**
 	 * Index of the badge
@@ -20,6 +18,8 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, OnDest
 	@Input() id;
 
 	@Input() title;
+
+	@Output() messengerShowDivAuditTask = new EventEmitter<number>();
 
 	private idSelected = -1;
 
@@ -42,6 +42,10 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, OnDest
 		return clazz;
 	}
 
+	addAuditTask() {
+		this.messengerShowDivAuditTask.emit(this.id);
+	}
+
 	/**
 	 * Calling the base class to unsubscribe all subscriptions.
 	 */
@@ -50,3 +54,4 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, OnDest
 	}
 
 }
+

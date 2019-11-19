@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectAuditBadgesComponent } from './project-audit-badges.component';
+import { RootTestModule } from 'src/app/root-test/root-test.module';
 
 describe('ProjectAuditBadgesComponent', () => {
 	let component: ProjectAuditBadgesComponent;
@@ -8,7 +9,8 @@ describe('ProjectAuditBadgesComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ ProjectAuditBadgesComponent ]
+			declarations: [  ],
+			imports: [RootTestModule]
 		})
 		.compileComponents();
 	}));

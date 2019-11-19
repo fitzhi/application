@@ -8,7 +8,7 @@
                 class="btn btn-outline btn-outline-secondary rounded"
                 (click)="setupCategories()">+
         </button>
-        <div id="setupCategories" [hidden]="displayCategories">
+        <div id="setupCategories" [hidden]="topicsHidden">
                 <app-table-categories
                         [project$]="project$"
                         (messengerCategoryUpdated)="onCategoryUpdated($event)">

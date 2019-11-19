@@ -2,9 +2,13 @@
     <div *ngFor="let category of (auditTopics$ | async); index as index" 
         style="padding-left:5px; padding-top:5px">
         <app-audit-badge 
+            (messengerShowDivAuditTask)="onShowDivAuditTask($event)"
             [index]=index 
             [id]="category.id"
             [title]="category.title" >
         </app-audit-badge>
     </div>
+</div>
+<div class="auditTask" [hidden]="hideDivAuditTask">
+        <app-audit-task></app-audit-task>
 </div>
