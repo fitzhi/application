@@ -20,20 +20,12 @@ export class ProjectAuditBadgesComponent implements OnInit {
 
 	constructor() { }
 
-	addAuditTask() {
-		this.hideDivAuditTask = !this.hideDivAuditTask;
+	ngOnInit() {
 	}
 
 	onShowDivAuditTask(idTopic: number) {
 		this.hideDivAuditTask = !this.hideDivAuditTask;
 	}
 
-	ngOnInit() {
-		this.auditTopics$.subscribe(elements => {
-			elements.forEach(element => {
-				console.log (element.title);
-			});
-		});
-	}
 
 }

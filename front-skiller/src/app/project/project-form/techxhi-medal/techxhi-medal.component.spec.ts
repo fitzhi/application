@@ -10,6 +10,7 @@ import { PortalHostDirective } from '@angular/cdk/portal';
 import { SonarProject } from 'src/app/data/SonarProject';
 import { SonarEvaluation } from 'src/app/data/sonar-evaluation';
 import { RiskLegend } from 'src/app/data/riskLegend';
+import { MatGridList, MatGridListModule } from '@angular/material/grid-list';
 
 describe('TechxhiMedalComponent', () => {
 	let component: TechxhiMedalComponent;
@@ -121,7 +122,7 @@ describe('TechxhiMedalComponent', () => {
 		fixture.detectChanges();
 		expect(field('#sonarSummaryBadge')).toBeDefined();
 
-		expect(component.globalSonarEvaluation === 28).toBeTruthy();
+		expect(component.globalSonarEvaluation() === 28).toBeTruthy();
 	});
 
 });

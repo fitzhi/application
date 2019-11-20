@@ -56,11 +56,11 @@ export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 				return d;
 		};
 
-		document.getElementById('arc-' + this.index).setAttribute('d', arc(37, 37, 33, -180, 90));
-		document.getElementById('arc-' + this.index).setAttribute('stroke', this.color);
+		document.getElementById('topic-arc-' + this.index).setAttribute('d', arc(37, 37, 33, -180, 90));
+		document.getElementById('topic-arc-' + this.index).setAttribute('stroke', this.color);
 
-		document.getElementById('txt-' + this.index).setAttribute('x', '22');
-		document.getElementById('txt-' + this.index).setAttribute('y', '47');
+		document.getElementById('topic-note-' + this.index).setAttribute('x', '22');
+		document.getElementById('topic-note-' + this.index).setAttribute('y', '47');
 	}
 
 }

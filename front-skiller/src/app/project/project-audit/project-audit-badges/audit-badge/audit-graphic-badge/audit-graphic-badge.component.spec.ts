@@ -1,20 +1,31 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AuditGraphicBadgeComponent } from './audit-graphic-badge.component';
+import { RootTestModule } from 'src/app/root-test/root-test.module';
+import { Component } from '@angular/core';
 
 describe('AuditGraphicBadgeComponent', () => {
-	let component: AuditGraphicBadgeComponent;
-	let fixture: ComponentFixture<AuditGraphicBadgeComponent>;
+	let component: TestHostComponent;
+	let fixture: ComponentFixture<TestHostComponent>;
+
+	@Component({
+		selector: 'app-host-component',
+		template: '<app-audit-graphic-badge [index]="1" [evaluation]="50"></app-audit-graphic-badge>'
+	})
+
+	class TestHostComponent {
+	}
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ AuditGraphicBadgeComponent ]
+			declarations: [TestHostComponent, AuditGraphicBadgeComponent],
+			imports: [RootTestModule]
 		})
-		.compileComponents();
+			.compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(AuditGraphicBadgeComponent);
+		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});
@@ -22,4 +33,5 @@ describe('AuditGraphicBadgeComponent', () => {
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
+
 });

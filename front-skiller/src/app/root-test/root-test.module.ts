@@ -72,9 +72,15 @@ import { TabsStaffListService } from '../tabs-staff-list/service/tabs-staff-list
 import { StaffTabsComponent } from '../tabs-staff/staff-tabs/staff-tabs.component';
 import { SonarQuotationComponent } from '../project/project-sonar/sonar-dashboard/sonar-quotation/sonar-quotation.component';
 import { BackendSetupService } from '../service/backend-setup/backend-setup.service';
+// tslint:disable-next-line:max-line-length
 import { QuotationBadgeComponent } from '../project/project-sonar/sonar-dashboard/sonar-quotation/quotation-badge/quotation-badge.component';
 import { TechxhiMedalComponent } from '../project/project-form/techxhi-medal/techxhi-medal.component';
 import { TableCategoriesComponent } from '../project/project-audit/table-categories/table-categories.component';
+import { AuditBadgeComponent } from '../project/project-audit/project-audit-badges/audit-badge/audit-badge.component';
+// tslint:disable-next-line:max-line-length
+import { AuditGraphicBadgeComponent } from '../project/project-audit/project-audit-badges/audit-badge/audit-graphic-badge/audit-graphic-badge.component';
+import { ProjectAuditBadgesComponent } from '../project/project-audit/project-audit-badges/project-audit-badges.component';
+import { AuditTaskComponent } from '../project/project-audit/audit-task/audit-task.component';
 
 @NgModule({
 	declarations: [
@@ -123,7 +129,7 @@ import { TableCategoriesComponent } from '../project/project-audit/table-categor
 		SonarQuotationComponent,
 		QuotationBadgeComponent,
 		TechxhiMedalComponent,
-		TableCategoriesComponent
+		TableCategoriesComponent,
 	],
 	providers: [
 		ReferentialService,
@@ -149,7 +155,7 @@ import { TableCategoriesComponent } from '../project/project-audit/table-categor
 		MatStepperModule, MatButtonModule, MatButtonToggleModule, MatDatepickerModule,
 		MatFormFieldModule, MatOptionModule, MatInputModule, MatNativeDateModule,
 		MatExpansionModule, MatGridListModule, MatCheckboxModule, MatSelectModule,
-		MatSortModule, MatSidenavModule,
+		MatSortModule, MatSidenavModule, MatCardModule,
 
 		BrowserAnimationsModule,
 		FormsModule, ReactiveFormsModule,

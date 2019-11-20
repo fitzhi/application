@@ -1,6 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AuditBadgeComponent } from './audit-badge.component';
+import { RootTestModule } from 'src/app/root-test/root-test.module';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { AuditGraphicBadgeComponent } from './audit-graphic-badge/audit-graphic-badge.component';
 
 describe('AuditBadgeComponent', () => {
 	let component: AuditBadgeComponent;
@@ -8,7 +11,8 @@ describe('AuditBadgeComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ AuditBadgeComponent ]
+			declarations: [AuditBadgeComponent, AuditGraphicBadgeComponent],
+			imports : [RootTestModule, MatGridListModule]
 		})
 		.compileComponents();
 	}));
@@ -16,6 +20,7 @@ describe('AuditBadgeComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AuditBadgeComponent);
 		component = fixture.componentInstance;
+		component.index = 1;
 		fixture.detectChanges();
 	});
 
