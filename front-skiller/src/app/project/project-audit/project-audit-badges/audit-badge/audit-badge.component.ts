@@ -36,6 +36,10 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, OnDest
 			this.cinemeticService.auditTopicSelected$.subscribe (id => this.idSelected = id));
 	}
 
+	/**
+	 * Emit the signal that the enduser choosed a new topic.
+	 * @param id the topic identifier selected
+	 */
 	switchTopic(id: number) {
 		if (Constants.DEBUG) {
 			console.log ('switching to ' + id + ' ' + this.title);
@@ -43,24 +47,33 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, OnDest
 		this.cinemeticService.auditTopicSelected$.next(id);
 	}
 
+	/**
+	 * Return the __CSS class__ to used for the thumbail.
+	 *
+	 * This function is called by the container DIV.
+	 * @param id the topic identifier.
+	 */
 	private classTopic(id: number) {
 		const clazz = (this.idSelected === id) ? 'audit-thumbnail-selected' : 'audit-thumbnail';
 		return clazz;
 	}
 
-	addAuditTask() {
-		this.messengerShowDivAuditTask.emit(this.id);
-	}
-
 	/**
 	 * Return the __CSS class__ to used for the tasks icon.
 	 *
-	 * This function is called by the DIV with `'tasks-{{id}}'` for its dispkay
+	 * This function is called by the DIV with `'tasks-{{id}}'` for its display.
 	 * @param id the topic identifier.
 	 */
 	private classIconTasks(id: number) {
 		const clazz = (this.idSelected === id) ? 'tasks-selected' : 'tasks';
 		return clazz;
+	}
+
+	/**
+	 * Emit the signal that audit-task form should be displayed, or hidden.
+	 */
+	private addAuditTask() {
+		this.messengerShowDivAuditTask.emit(this.id);
 	}
 
 	/**

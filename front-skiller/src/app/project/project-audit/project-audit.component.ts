@@ -51,6 +51,11 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 */
 	public topic$ = new Subject<TopicProject>();
 
+	/**
+	 * Current identifier of the selected topic.
+	 */
+	private idTopicSelected = -1;
+
 	constructor(private referentialService: ReferentialService) { super(); }
 
 	ngOnInit() {
@@ -66,8 +71,6 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 						this.auditTopics$.next(this.auditTopics);
 					}));
 				}));
-
-
 	}
 
 	ngAfterViewInit() {
@@ -102,8 +105,14 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	}
 
 	onShowDivAuditTask(idTopic: number) {
-		this.hideDivAuditTask = !this.hideDivAuditTask;
-		this.topic$.next(new TopicProject(this.project.id, idTopic, 'Title for ' + idTopic));
+		if ((!this.hideDivAuditTask) && (idTopic !== this.idTopicSelected)) {
+			this.topic$.next(new TopicProject(this.project.id, idTopic, this.topics[idTopic]));
+		} else {
+			console.log ('nope');
+			this.hideDivAuditTask = !this.hideDivAuditTask;
+			this.topic$.next(new TopicProject(this.project.id, idTopic, this.topics[idTopic]));
+		}
+		this.idTopicSelected = idTopic;
 	}
 
 	/**
