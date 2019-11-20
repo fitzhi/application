@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -14,9 +14,9 @@ export class ProjectAuditBadgesComponent implements OnInit {
 	@Input() auditTopics$: Observable<any>;
 
 	/**
-	 * This `boolean` control the `[hidden]` property of the div `auditTask`.
+	 * This messenger propagates the signal to show/hide the audit form panel
 	 */
-	private hideDivAuditTask = true;
+	@Output() messengerShowDivAuditTask = new EventEmitter<number>();
 
 	constructor() { }
 
@@ -24,8 +24,7 @@ export class ProjectAuditBadgesComponent implements OnInit {
 	}
 
 	onShowDivAuditTask(idTopic: number) {
-		this.hideDivAuditTask = !this.hideDivAuditTask;
+		this.messengerShowDivAuditTask.next(idTopic);
 	}
-
 
 }

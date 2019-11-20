@@ -1,10 +1,11 @@
 import { Component, OnInit, AfterViewInit, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
 import { Topic } from './table-categories/topic';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { Constants } from 'src/app/constants';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Project } from 'src/app/data/project';
 import { ReferentialService } from 'src/app/service/referential.service';
+import { TopicProject } from './topic-project';
 
 @Component({
 	selector: 'app-project-audit',
@@ -39,6 +40,16 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	private auditTopics$ = new BehaviorSubject<any>([]);
 
 	private topicsHidden = true;
+
+	/**
+	 * This `boolean` control the `[hidden]` property of the div `auditTask`.
+	 */
+	private hideDivAuditTask = true;
+
+	/**
+	 * This subject is used to notify the `audit-task-form` of the current active topic.
+	 */
+	public topic$ = new Subject<TopicProject>();
 
 	constructor(private referentialService: ReferentialService) { super(); }
 
@@ -88,6 +99,11 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 			this.auditTopics.splice(index, 1);
 		}
 		this.auditTopics$.next(this.auditTopics);
+	}
+
+	onShowDivAuditTask(idTopic: number) {
+		this.hideDivAuditTask = !this.hideDivAuditTask;
+		this.topic$.next(new TopicProject(this.project.id, idTopic, 'Title for ' + idTopic));
 	}
 
 	/**

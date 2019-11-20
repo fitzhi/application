@@ -1,7 +1,8 @@
 <div id="audit">
         <div>
                 <app-project-audit-badges
-                        [auditTopics$]="auditTopics$">
+                (messengerShowDivAuditTask)="onShowDivAuditTask($event)"
+                [auditTopics$]="auditTopics$">
                 </app-project-audit-badges>
         </div>
         <button id="auditSetup"
@@ -13,5 +14,8 @@
                         [project$]="project$"
                         (messengerCategoryUpdated)="onCategoryUpdated($event)">
                 </app-table-categories>
+        </div>
+        <div class="auditTask" [hidden]="hideDivAuditTask">
+                <app-audit-task-form [topic$]="topic$"></app-audit-task-form>
         </div>
 </div>

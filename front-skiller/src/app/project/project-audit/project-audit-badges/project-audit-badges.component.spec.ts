@@ -4,7 +4,7 @@ import { ProjectAuditBadgesComponent } from './project-audit-badges.component';
 import { Component } from '@angular/core';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { AuditBadgeComponent } from './audit-badge/audit-badge.component';
-import { AuditTaskComponent } from '../audit-task/audit-task.component';
+import { AuditTaskFormComponent } from '../audit-task-form/audit-task-form.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { RootTestModule } from 'src/app/root-test/root-test.module';
 import { AuditGraphicBadgeComponent } from './audit-badge/audit-graphic-badge/audit-graphic-badge.component';
@@ -26,7 +26,7 @@ describe('ProjectAuditBadgesComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ProjectAuditBadgesComponent, TestHostComponent, AuditBadgeComponent,
-				AuditTaskComponent, AuditGraphicBadgeComponent],
+				AuditTaskFormComponent, AuditGraphicBadgeComponent],
 			imports: [RootTestModule, MatGridListModule]
 		})
 		.compileComponents();
@@ -56,7 +56,7 @@ describe('ProjectAuditBadgesComponent', () => {
 		//
 		expect (field('#topic-note-0')).toBeDefined();
 		expect(field('#topic-note-0').innerHTML).toBe('50');
-		expect(field('#topic-title-0').innerHTML).toBe('test title One');
+		expect(field('#topic-title-1').innerHTML).toBe('test title One');
 
 	});
 
@@ -71,7 +71,7 @@ describe('ProjectAuditBadgesComponent', () => {
 		//
 		expect (field('#topic-note-0')).toBeDefined();
 		expect(field('#topic-note-0').innerHTML).toBe('50');
-		expect(field('#topic-title-0').innerHTML).toBe('second test title');
+		expect(field('#topic-title-2').innerHTML).toBe('second test title');
 
 	});
 

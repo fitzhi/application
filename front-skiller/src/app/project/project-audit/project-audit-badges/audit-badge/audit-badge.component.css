@@ -1,5 +1,5 @@
 
-div.audit-badge, div.audit-badge-selected {
+div.audit-thumbnail, div.audit-thumbnail-selected {
     background-color: whitesmoke;
     width: 240px;
     height: 130px;
@@ -8,11 +8,11 @@ div.audit-badge, div.audit-badge-selected {
     border-bottom-left-radius: 10%;
 }
 
-div.audit-badge:hover {
+div.audit-thumbnail:hover {
     border: 1px solid black !important;
 }
 
-div.audit-badge-selected {
+div.audit-thumbnail-selected {
     border: 2px solid black !important;
 }
 
@@ -27,12 +27,16 @@ div.title {
     padding: 0px;
 }
 
-div.tasks {
+div.tasks, div.tasks-selected {
     padding: 0px;
     margin: 0px;
     width: 100%;
     height: 100%;
     background-color: transparent;
+}
+
+div.tasks-selected {
+    color: #28a745;
 }
 
 div.tasks:hover {

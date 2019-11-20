@@ -4,7 +4,7 @@ import { ProjectAuditComponent } from './project-audit.component';
 import { ProjectAuditBadgesComponent } from './project-audit-badges/project-audit-badges.component';
 import { TableCategoriesComponent } from './table-categories/table-categories.component';
 import { AuditBadgeComponent } from './project-audit-badges/audit-badge/audit-badge.component';
-import { AuditTaskComponent } from './audit-task/audit-task.component';
+import { AuditTaskFormComponent } from './audit-task-form/audit-task-form.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
@@ -24,7 +24,7 @@ describe('ProjectAuditComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ProjectAuditComponent, ProjectAuditBadgesComponent,
-				TableCategoriesComponent, AuditBadgeComponent, AuditTaskComponent,
+				TableCategoriesComponent, AuditBadgeComponent, AuditTaskFormComponent,
 				AuditGraphicBadgeComponent,  ],
 			providers: [ReferentialService],
 			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,

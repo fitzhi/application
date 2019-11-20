@@ -80,7 +80,7 @@ import { AuditBadgeComponent } from '../project/project-audit/project-audit-badg
 // tslint:disable-next-line:max-line-length
 import { AuditGraphicBadgeComponent } from '../project/project-audit/project-audit-badges/audit-badge/audit-graphic-badge/audit-graphic-badge.component';
 import { ProjectAuditBadgesComponent } from '../project/project-audit/project-audit-badges/project-audit-badges.component';
-import { AuditTaskComponent } from '../project/project-audit/audit-task/audit-task.component';
+import { AuditTaskFormComponent } from '../project/project-audit/audit-task-form/audit-task-form.component';
 
 @NgModule({
 	declarations: [

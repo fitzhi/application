@@ -19,8 +19,14 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, OnDest
 
 	@Input() title;
 
+	/**
+	 * This messenger emits a signal to show/hide the audit form panel
+	 */
 	@Output() messengerShowDivAuditTask = new EventEmitter<number>();
 
+	/**
+	 * Topic identitier selected.
+	 */
 	private idSelected = -1;
 
 	constructor(private cinemeticService: CinematicService) { super(); }
@@ -38,12 +44,23 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, OnDest
 	}
 
 	private classTopic(id: number) {
-		const clazz = (this.idSelected === id) ? 'audit-badge-selected' : 'audit-badge';
+		const clazz = (this.idSelected === id) ? 'audit-thumbnail-selected' : 'audit-thumbnail';
 		return clazz;
 	}
 
 	addAuditTask() {
 		this.messengerShowDivAuditTask.emit(this.id);
+	}
+
+	/**
+	 * Return the __CSS class__ to used for the tasks icon.
+	 *
+	 * This function is called by the DIV with `'tasks-{{id}}'` for its dispkay
+	 * @param id the topic identifier.
+	 */
+	private classIconTasks(id: number) {
+		const clazz = (this.idSelected === id) ? 'tasks-selected' : 'tasks';
+		return clazz;
 	}
 
 	/**
