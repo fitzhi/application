@@ -28,7 +28,7 @@ export class AuditTaskFormComponent extends BaseComponent implements OnInit, OnD
 			this.topic$.subscribe(topic => {
 				this.topic = topic;
 				if (Constants.DEBUG) {
-					console.log ('Active topic', topic.id + ':' + this.topic.title);
+					console.log ('Active topic', this.topic.id + ':' + this.topic.title);
 				}
 			})
 		);

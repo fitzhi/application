@@ -52,6 +52,21 @@ export class CinematicService {
 	public auditTopicSelected$ = new BehaviorSubject<number>(-1);
 
 	/**
+	 * `idTopic` of the selected Topic thumbnail.
+	 *
+	 * This identifier is used to manager the display selection behavior of a topic thumbnail
+	 * (such as its border thickness)
+	 */
+	public idTopicSelected = -1;
+
+	/**
+	 * `idTopic` of a Topic thumbnail
+	 * __from where, the end-user is working on an audit remark__.
+	 *
+	 */
+	public idTopicTaskAuditFormSelected = -1;
+
+	/**
      * This subject informs on the selected tab in the projects Tab Group container.
 	 * Each-time the end-user clicks on a tab, this BehaviorSubject emits an identifier corresponding to the tab selected.
 	 *

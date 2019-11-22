@@ -76,11 +76,7 @@ import { BackendSetupService } from '../service/backend-setup/backend-setup.serv
 import { QuotationBadgeComponent } from '../project/project-sonar/sonar-dashboard/sonar-quotation/quotation-badge/quotation-badge.component';
 import { TechxhiMedalComponent } from '../project/project-form/techxhi-medal/techxhi-medal.component';
 import { TableCategoriesComponent } from '../project/project-audit/table-categories/table-categories.component';
-import { AuditBadgeComponent } from '../project/project-audit/project-audit-badges/audit-badge/audit-badge.component';
 // tslint:disable-next-line:max-line-length
-import { AuditGraphicBadgeComponent } from '../project/project-audit/project-audit-badges/audit-badge/audit-graphic-badge/audit-graphic-badge.component';
-import { ProjectAuditBadgesComponent } from '../project/project-audit/project-audit-badges/project-audit-badges.component';
-import { AuditTaskFormComponent } from '../project/project-audit/audit-task-form/audit-task-form.component';
 
 @NgModule({
 	declarations: [

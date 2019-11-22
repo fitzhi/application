@@ -6,6 +6,7 @@ import { BaseComponent } from 'src/app/base/base.component';
 import { Project } from 'src/app/data/project';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { TopicProject } from './topic-project';
+import { CinematicService } from 'src/app/service/cinematic.service';
 
 @Component({
 	selector: 'app-project-audit',
@@ -42,9 +43,12 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	private topicsHidden = true;
 
 	/**
-	 * This `boolean` control the `[hidden]` property of the div `auditTask`.
+	 * This `boolean` represents the fact that the panel
+	 * in charge of create or update a remark for this audit is visible.
+	 *
+	 * This `boolean` controls the `[hidden]` property of the div `auditTask`.
 	 */
-	private hideDivAuditTask = true;
+	private auditTaskFormModeIsOn = false;
 
 	/**
 	 * This subject is used to notify the `audit-task-form` of the current active topic.
@@ -56,7 +60,9 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 */
 	private idTopicSelected = -1;
 
-	constructor(private referentialService: ReferentialService) { super(); }
+	constructor(
+		private referentialService: ReferentialService,
+		private cinematicService: CinematicService) { super(); }
 
 	ngOnInit() {
 		this.subscriptions.add(
@@ -71,6 +77,14 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 						this.auditTopics$.next(this.auditTopics);
 					}));
 				}));
+		this.subscriptions.add(
+			this.cinematicService.auditTopicSelected$.subscribe(idTopic => {
+				console.log ('nopi', this.auditTaskFormModeIsOn);
+				if (idTopic !== this.idTopicSelected && this.auditTaskFormModeIsOn) {
+					this.auditTaskFormModeIsOn = false;
+					this.idTopicSelected = idTopic;
+				}
+			}));
 	}
 
 	ngAfterViewInit() {
@@ -105,12 +119,16 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	}
 
 	onShowDivAuditTask(idTopic: number) {
-		if ((!this.hideDivAuditTask) && (idTopic !== this.idTopicSelected)) {
+		console.log ('nope');
+		if ((!this.auditTaskFormModeIsOn) && (idTopic !== this.idTopicSelected)) {
 			this.topic$.next(new TopicProject(this.project.id, idTopic, this.topics[idTopic]));
+			this.auditTaskFormModeIsOn = true;
 		} else {
-			console.log ('nope');
-			this.hideDivAuditTask = !this.hideDivAuditTask;
-			this.topic$.next(new TopicProject(this.project.id, idTopic, this.topics[idTopic]));
+			if (idTopic === this.idTopicSelected) {
+				this.auditTaskFormModeIsOn = false;
+			} else {
+				this.topic$.next(new TopicProject(this.project.id, idTopic, this.topics[idTopic]));
+			}
 		}
 		this.idTopicSelected = idTopic;
 	}

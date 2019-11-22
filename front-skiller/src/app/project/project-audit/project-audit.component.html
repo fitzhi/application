@@ -15,7 +15,7 @@
                         (messengerCategoryUpdated)="onCategoryUpdated($event)">
                 </app-table-categories>
         </div>
-        <div class="auditTask" [hidden]="hideDivAuditTask">
+        <div class="auditTask" [hidden]="!auditTaskFormModeIsOn">
                 <app-audit-task-form [topic$]="topic$"></app-audit-task-form>
         </div>
 </div>

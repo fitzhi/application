@@ -17,7 +17,7 @@
         
         <mat-grid-tile [colspan]="2" [rowspan]="2"></mat-grid-tile>
         <mat-grid-tile [colspan]="2" [rowspan]="2" style="margin-top:-13px">
-            <div id="tasks-{{id}}" [ngClass]="classIconTasks(id)" (click)="addAuditTask()">
+            <div id="tasks-{{id}}" [ngClass]="classIconTasks(id)" (click)="showOrHideAuditTask()">
                 <span class="tasks">
                     <i class="fas fa-tasks" style="font-size: 40px;top:0px;right:7px;position: absolute;"></i>
                 </span>

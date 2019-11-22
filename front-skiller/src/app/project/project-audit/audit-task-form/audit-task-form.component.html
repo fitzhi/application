@@ -1,3 +1,24 @@
-<div *ngIf="topic$ | async">
-    <h3>{{topic.title}}</h3>
+<div id="auditTaskForm" *ngIf="topic$ | async">
+    <div class="header">{{topic.title}}</div>
+    <form class="needs-validation" (ngSubmit)="onSubmit()">
+        <p>
+            Tutorial information
+        </p>
+        <div class="containerWeight">
+            <mat-form-field appearance="standart" class="fieldWeight">
+                <mat-label class="labelWeight">Weight</mat-label>
+                <input id="weight" type="number" matInput />
+                <span matSuffix>  %</span>
+            </mat-form-field>
+        </div>
+        <p>
+            <mat-form-field appearance="outline" class="comment">
+                <mat-label>Audit topic</mat-label>
+                <textarea id="comment" class="comment" matInput placeholder=
+                "Type here a technical appreciation regarding the '{{topic.title}}' and assign it a weight"></textarea>
+                <mat-hint>2000 caracters max</mat-hint>
+            </mat-form-field>
+        </p>
+
+    </form>
 </div>

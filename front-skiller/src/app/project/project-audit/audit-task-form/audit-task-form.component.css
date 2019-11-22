@@ -1,0 +1,35 @@
+div.header {
+    width: 100%;
+    height: 30px;
+    background-color:  #28a745;
+    color:  white;
+    text-align: center;
+}
+
+.comment {
+    width: 98%;
+    height: 100px;
+    margin-left: 4px;
+}
+
+div.containerWeight {
+    width: 100%;
+}
+
+#weight {
+    text-align: right;
+}
+  
+#weight::-webkit-outer-spin-button,
+#weight::-webkit-inner-spin-button {
+    display: none;
+}
+
+.fieldWeight {
+    width: 50px;
+}
+
+.labelWeight {
+    color: blue;
+    font-size: 10px;
+}

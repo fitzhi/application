@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnDestroy, EventEmitter, Output } from '@angu
 import { Constants } from 'src/app/constants';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { BaseComponent } from 'src/app/base/base.component';
+import { thresholdFreedmanDiaconis } from 'd3';
 
 @Component({
 	selector: 'app-audit-badge',
@@ -25,26 +26,18 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, OnDest
 	@Output() messengerShowDivAuditTask = new EventEmitter<number>();
 
 	/**
-	 * Topic identitier selected.
+	 * This `boolean` represents the fact that the panel
+	 * in charge of create or update a remark for this audit is visible.
 	 */
-	private idSelected = -1;
+	private auditTaskFormModeIsOn = false;
 
-	constructor(private cinemeticService: CinematicService) { super(); }
+	constructor(private cinematicService: CinematicService) { super(); }
 
 	ngOnInit() {
 		this.subscriptions.add(
-			this.cinemeticService.auditTopicSelected$.subscribe (id => this.idSelected = id));
-	}
-
-	/**
-	 * Emit the signal that the enduser choosed a new topic.
-	 * @param id the topic identifier selected
-	 */
-	switchTopic(id: number) {
-		if (Constants.DEBUG) {
-			console.log ('switching to ' + id + ' ' + this.title);
-		}
-		this.cinemeticService.auditTopicSelected$.next(id);
+			this.cinematicService.auditTopicSelected$.subscribe (id => {
+				console.log ('showOrHideAuditTask called from ngOnInit()');
+			}));
 	}
 
 	/**
@@ -54,7 +47,7 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, OnDest
 	 * @param id the topic identifier.
 	 */
 	private classTopic(id: number) {
-		const clazz = (this.idSelected === id) ? 'audit-thumbnail-selected' : 'audit-thumbnail';
+		const clazz = (this.cinematicService.idTopicSelected === id) ? 'audit-thumbnail-selected' : 'audit-thumbnail';
 		return clazz;
 	}
 
@@ -65,14 +58,28 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, OnDest
 	 * @param id the topic identifier.
 	 */
 	private classIconTasks(id: number) {
-		const clazz = (this.idSelected === id) ? 'tasks-selected' : 'tasks';
+		const clazz = ((this.cinematicService.idTopicTaskAuditFormSelected === id) && this.auditTaskFormModeIsOn) ? 'tasks-selected' : 'tasks';
 		return clazz;
+	}
+
+	/**
+	 * Emit the signal that the end-user choosed a new topic.
+	 * @param id the topic identifier selected
+	 */
+	switchTopic(id: number) {
+		if (Constants.DEBUG) {
+			console.log ('switching to ' + id + ' ' + this.title);
+		}
+		this.cinematicService.auditTopicSelected$.next(id);
+		this.cinematicService.idTopicSelected = id;
 	}
 
 	/**
 	 * Emit the signal that audit-task form should be displayed, or hidden.
 	 */
-	private addAuditTask() {
+	private showOrHideAuditTask() {
+		console.log ('showOrHideAuditTask called from HTML');
+		this.auditTaskFormModeIsOn = !this.auditTaskFormModeIsOn;
 		this.messengerShowDivAuditTask.emit(this.id);
 	}
 
