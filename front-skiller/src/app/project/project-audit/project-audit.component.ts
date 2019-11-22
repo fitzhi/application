@@ -76,6 +76,14 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 
 		this.subscriptions.add(
 			this.cinematicService.auditTopicSelected$.subscribe(idTopic => {
+
+				/**
+				 * Use case :
+				 * Given,
+				 * this audit-task form is displayed for a given topic,
+				 * and the end-user clicked on another thumbnail body (whithout clicking on the tasks button)
+				 * Then we hide the audit-task form.
+				 */
 				if ( (idTopic !== this.cinematicService.idTopicTaskAuditFormSelected)
 					&&  (-1 !== this.cinematicService.idTopicTaskAuditFormSelected)) {
 						this.auditTaskFormModeIsOn = false;
