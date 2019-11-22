@@ -34,10 +34,6 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, OnDest
 	constructor(private cinematicService: CinematicService) { super(); }
 
 	ngOnInit() {
-		this.subscriptions.add(
-			this.cinematicService.auditTopicSelected$.subscribe (id => {
-				console.log ('showOrHideAuditTask called from ngOnInit()');
-			}));
 	}
 
 	/**
@@ -78,7 +74,6 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, OnDest
 	 * Emit the signal that audit-task form should be displayed, or hidden.
 	 */
 	private showOrHideAuditTask() {
-		console.log ('showOrHideAuditTask called from HTML');
 		this.auditTaskFormModeIsOn = !this.auditTaskFormModeIsOn;
 		this.messengerShowDivAuditTask.emit(this.id);
 	}

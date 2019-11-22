@@ -55,16 +55,12 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 */
 	public topic$ = new Subject<TopicProject>();
 
-	/**
-	 * Current identifier of the selected topic.
-	 */
-	private idTopicSelected = -1;
-
 	constructor(
 		private referentialService: ReferentialService,
 		private cinematicService: CinematicService) { super(); }
 
 	ngOnInit() {
+
 		this.subscriptions.add(
 			this.project$.subscribe(project => {
 				this.project = project;
@@ -77,19 +73,19 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 						this.auditTopics$.next(this.auditTopics);
 					}));
 				}));
+
 		this.subscriptions.add(
 			this.cinematicService.auditTopicSelected$.subscribe(idTopic => {
-				console.log ('nopi', this.auditTaskFormModeIsOn);
-				if (idTopic !== this.idTopicSelected && this.auditTaskFormModeIsOn) {
-					this.auditTaskFormModeIsOn = false;
-					this.idTopicSelected = idTopic;
+				if ( (idTopic !== this.cinematicService.idTopicTaskAuditFormSelected)
+					&&  (-1 !== this.cinematicService.idTopicTaskAuditFormSelected)) {
+						this.auditTaskFormModeIsOn = false;
+						this.cinematicService.idTopicTaskAuditFormSelected = -1;
 				}
-			}));
+		}));
 	}
 
 	ngAfterViewInit() {
 	}
-
 	/**
 	 * Setup the categories involved in the manuel audit evaluation.
 	 */
@@ -119,18 +115,19 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	}
 
 	onShowDivAuditTask(idTopic: number) {
-		console.log ('nope');
-		if ((!this.auditTaskFormModeIsOn) && (idTopic !== this.idTopicSelected)) {
+		if ((!this.auditTaskFormModeIsOn) && (idTopic !== this.cinematicService.idTopicTaskAuditFormSelected)) {
 			this.topic$.next(new TopicProject(this.project.id, idTopic, this.topics[idTopic]));
 			this.auditTaskFormModeIsOn = true;
+			this.cinematicService.idTopicTaskAuditFormSelected = idTopic;
 		} else {
-			if (idTopic === this.idTopicSelected) {
+			if (idTopic === this.cinematicService.idTopicTaskAuditFormSelected) {
 				this.auditTaskFormModeIsOn = false;
+				this.cinematicService.idTopicTaskAuditFormSelected = -1;
 			} else {
 				this.topic$.next(new TopicProject(this.project.id, idTopic, this.topics[idTopic]));
+				this.cinematicService.idTopicTaskAuditFormSelected = idTopic;
 			}
 		}
-		this.idTopicSelected = idTopic;
 	}
 
 	/**
