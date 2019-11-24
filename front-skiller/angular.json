@@ -23,6 +23,7 @@
               "src/assets"
             ],
             "styles": [
+              "src/techxhi-themes.scss",
 			        "src/styles.css",
               "./node_modules/bootstrap/dist/css/bootstrap.min.css",
               "./node_modules/@yaireo/tagify/dist/tagify.css"
