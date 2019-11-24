@@ -100,6 +100,7 @@ import { ProjectAuditBadgesComponent } from './project/project-audit/project-aud
 import { AuditGraphicBadgeComponent } from './project/project-audit/project-audit-badges/audit-badge/audit-graphic-badge/audit-graphic-badge.component';
 import { TableCategoriesComponent } from './project/project-audit/table-categories/table-categories.component';
 import { AuditTaskFormComponent } from './project/project-audit/audit-task-form/audit-task-form.component';
+import {MatSliderModule} from '@angular/material/slider';
 
 @NgModule({
 	declarations: [
@@ -193,7 +194,8 @@ import { AuditTaskFormComponent } from './project/project-audit/audit-task-form/
 		MatGridListModule,
 		MatStepperModule,
 		MatIconModule,
-		MatAutocompleteModule
+		MatAutocompleteModule,
+		MatSliderModule,
 	],
 	providers: [
 		CinematicService,

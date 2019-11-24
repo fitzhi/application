@@ -1,8 +1,10 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { Topic } from '../table-categories/topic';
 import { BaseComponent } from 'src/app/base/base.component';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { Constants } from 'src/app/constants';
+import { MatSliderChange } from '@angular/material/slider';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
 	selector: 'app-audit-task-form',
@@ -21,6 +23,17 @@ export class AuditTaskFormComponent extends BaseComponent implements OnInit, OnD
 	 */
 	private topic: Topic;
 
+	/**
+	 * Corresponding slider value;
+	 */
+	private sliderWeightValue = 0;
+
+	profileAuditTask = new FormGroup({
+		evaluation: new FormControl('', Validators.max(100)),
+		weight: new FormControl('', Validators.max(100)),
+		comment: new FormControl('', [Validators.maxLength(2000)])
+	});
+
 	constructor() { super(); }
 
 	ngOnInit() {
@@ -32,6 +45,31 @@ export class AuditTaskFormComponent extends BaseComponent implements OnInit, OnD
 				}
 			})
 		);
+	}
+
+	/**
+	* Content of a field has been updated.
+	* @param field field identified throwing this event.
+	*/
+	public onChange(field: string) {
+		if (field === 'weight') {
+			this.sliderWeightValue = this.profileAuditTask.get('weight').value;
+		}
+	}
+
+	/**
+	 * The method is invoked when the slider is moved.
+	 * @param sliderWeight the event emit by the slider.
+	 */
+	onChangeWeight(sliderWeight: MatSliderChange) {
+		this.profileAuditTask.get('weight').setValue(sliderWeight.value);
+	}
+
+	/**
+	 * Return the weight.
+	 */
+	get weight(): any {
+		return this.profileAuditTask.get('weight');
 	}
 
 	/**

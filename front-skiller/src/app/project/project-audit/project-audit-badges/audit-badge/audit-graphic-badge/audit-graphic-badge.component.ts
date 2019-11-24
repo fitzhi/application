@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
+import { ProjectService } from 'src/app/service/project.service';
 
 @Component({
 	selector: 'app-audit-graphic-badge',
@@ -20,15 +21,21 @@ export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 	/**
 	 * Quotation given to this category.
 	 */
-	@Input() evaluation;
+	@Input() evaluation: number;
 
-	constructor() { }
+	/**
+	 * if this boolean is equal to __true__, there will be an input field in the middle of the badge __editable__.
+	 */
+	@Input() editable;
+
+	constructor(private projectService: ProjectService) { }
 
 	ngOnInit() {
 	}
 
 	ngAfterViewInit() {
 		this.drawAuditArc();
+		this.drawAuditText();
 	}
 
 	drawAuditArc() {
@@ -56,11 +63,34 @@ export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 				return d;
 		};
 
-		document.getElementById('topic-arc-' + this.index).setAttribute('d', arc(37, 37, 33, -180, 90));
+		const endAngleEvaluation = this.evaluation * 3.6 - 180;
+		if (endAngleEvaluation === -180) {
+			console.log ('nope');
+			this.color = 'none';
+		} else {
+			this.color = this.projectService.getRiskColor(10 - Math.ceil(this.evaluation / 10));
+		}
+		console.log (this.color);
+		document.getElementById('topic-arc-' + this.index).setAttribute('d', arc(37, 37, 33, -180, endAngleEvaluation));
 		document.getElementById('topic-arc-' + this.index).setAttribute('stroke', this.color);
 
-		document.getElementById('topic-note-' + this.index).setAttribute('x', '22');
-		document.getElementById('topic-note-' + this.index).setAttribute('y', '47');
 	}
 
+	drawAuditText() {
+		if (!this.editable) {
+			document.getElementById('topic-note-' + this.index).setAttribute('x', '22');
+			document.getElementById('topic-note-' + this.index).setAttribute('y', '47');
+		} else {
+			document.getElementById('topic-note-' + this.index).setAttribute('x', '15');
+			document.getElementById('topic-note-' + this.index).setAttribute('y', '20');
+		}
+	}
+
+	onChange() {
+		if (this.evaluation > 100) {
+			this.evaluation = 100;
+		}
+		this.drawAuditArc();
+	}
 }
+

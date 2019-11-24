@@ -14,10 +14,22 @@ div.header {
 
 div.containerWeight {
     width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+div.containerWeight {
+    width: 100%;
+}
+
+div.formfieldWeight {
+    width: 15%;
 }
 
 #weight {
     text-align: right;
+    width: 30px;
 }
   
 #weight::-webkit-outer-spin-button,
@@ -25,11 +37,21 @@ div.containerWeight {
     display: none;
 }
 
-.fieldWeight {
-    width: 50px;
+.labelWeight {
+    font-size: 12px;
 }
 
-.labelWeight {
-    color: blue;
-    font-size: 10px;
+div.weight {
+    width: 20%;
+    margin-right: 10px;
+}
+
+div.sliderWeight {
+    width: 80%;
+}
+
+.mat-slider-horizontal {
+    width: 100%;
+    margin-bottom: 10px;
+    margin-left: 20px;
 }
