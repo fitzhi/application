@@ -1,36 +1,22 @@
 <div [ngClass]="classTopic(id)" (click)="switchTopic(id)">
 
+    <div id="headerRisk-{{id}}" class="headerRisk"></div>
 
-    <mat-grid-list cols="7" rowHeight="25px" style="width:100%; height:100%">
+    <div class="auditGraphicBadge">
+        <app-audit-graphic-badge
+            (messengerEvaluationChange)="onEvaluationChange($event)"
+            [editable]=true
+            [index]=index
+            [evaluation]=evaluation>
+        </app-audit-graphic-badge>
+    </div>
+    
+    <div id="tasks-{{id}}" class="buttonTasks" [ngClass]="classIconTasks(id)" (click)="showOrHideAuditTask()">
+        <span class="tasks">
+            <i class="fas fa-tasks" style="font-size: 40px;top:0px;right:7px;position: absolute;"></i>
+        </span>
+    </div>
 
-        <mat-grid-tile [colspan]="7" [rowspan]="1">
-            <div style="background-color: red;width: 100%;height:40%;top:0px;position:absolute"></div>
-        </mat-grid-tile>
-
-        <mat-grid-tile [colspan]="3" [rowspan]="4">
-            <app-audit-graphic-badge
-                [editable]=true
-                [index]=index
-                [evaluation]=50
-                [color]="'red'">
-            </app-audit-graphic-badge>
-        </mat-grid-tile>
-        
-        <mat-grid-tile [colspan]="2" [rowspan]="2"></mat-grid-tile>
-        <mat-grid-tile [colspan]="2" [rowspan]="2" style="margin-top:-13px">
-            <div id="tasks-{{id}}" [ngClass]="classIconTasks(id)" (click)="showOrHideAuditTask()">
-                <span class="tasks">
-                    <i class="fas fa-tasks" style="font-size: 40px;top:0px;right:7px;position: absolute;"></i>
-                </span>
-            </div>
-        </mat-grid-tile>
-
-        <mat-grid-tile [colspan]="4" [rowspan]="2">
-            <div id="topic-title-{{id}}" class="title">{{title}}</div>
-        </mat-grid-tile>
-
-        <mat-grid-tile [colspan]="7">
-        </mat-grid-tile>
-    </mat-grid-list>
+    <div id="topic-title-{{id}}" class="title">{{title}}</div>
 
 </div>

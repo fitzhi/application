@@ -355,8 +355,19 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	 * @param risk the risk evaluated for a project
-	 * @returns the color corresponding to the passed risk
+	 * Returns the color associated to the given evalution.
+	 *
+	 * The function transform the evaluation into a risk and then will invoke `getRiskColor`.
+	 * @param evaluation the evaluation processed for the project (between 0 and 100).
+	 */
+	getEvaluationColor(evaluation: number): string {
+		const risk = 10 - Math.ceil(evaluation / 10);
+		return this.getRiskColor(risk);
+	}
+
+	/**
+	 * Returns the color associated to the given risk.
+	 * @param risk the risk evaluated for ths project. A risk is a number between 0 an 10.
 	 */
 	getRiskColor(risk: number): string {
 		switch (risk) {

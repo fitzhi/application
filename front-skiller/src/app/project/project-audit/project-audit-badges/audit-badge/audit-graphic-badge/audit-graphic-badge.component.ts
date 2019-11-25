@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { ProjectService } from 'src/app/service/project.service';
 
 @Component({
@@ -14,11 +14,6 @@ export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 	@Input() index;
 
 	/**
-	 * color of the badge
-	 */
-	@Input() color;
-
-	/**
 	 * Quotation given to this category.
 	 */
 	@Input() evaluation: number;
@@ -27,6 +22,16 @@ export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 	 * if this boolean is equal to __true__, there will be an input field in the middle of the badge __editable__.
 	 */
 	@Input() editable;
+
+	/**
+	 * The messenger throws the new evaluation givent by the end-user after each change.
+	 */
+	@Output() messengerEvaluationChange = new EventEmitter<number>();
+
+	/**
+	 * color of the badge
+	 */
+	private color;
 
 	constructor(private projectService: ProjectService) { }
 
@@ -65,24 +70,22 @@ export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 
 		const endAngleEvaluation = this.evaluation * 3.6 - 180;
 		if (endAngleEvaluation === -180) {
-			console.log ('nope');
 			this.color = 'none';
 		} else {
-			this.color = this.projectService.getRiskColor(10 - Math.ceil(this.evaluation / 10));
+			this.color = this.projectService.getEvaluationColor(this.evaluation);
 		}
-		console.log (this.color);
-		document.getElementById('topic-arc-' + this.index).setAttribute('d', arc(37, 37, 33, -180, endAngleEvaluation));
+		document.getElementById('topic-arc-' + this.index).setAttribute('d', arc(60, 60, 50, -180, endAngleEvaluation));
 		document.getElementById('topic-arc-' + this.index).setAttribute('stroke', this.color);
 
 	}
 
 	drawAuditText() {
 		if (!this.editable) {
-			document.getElementById('topic-note-' + this.index).setAttribute('x', '22');
-			document.getElementById('topic-note-' + this.index).setAttribute('y', '47');
+			document.getElementById('topic-note-' + this.index).setAttribute('x', '30');
+			document.getElementById('topic-note-' + this.index).setAttribute('y', '70');
 		} else {
-			document.getElementById('topic-note-' + this.index).setAttribute('x', '15');
-			document.getElementById('topic-note-' + this.index).setAttribute('y', '20');
+			document.getElementById('topic-note-' + this.index).setAttribute('x', '30');
+			document.getElementById('topic-note-' + this.index).setAttribute('y', '40');
 		}
 	}
 
@@ -90,6 +93,7 @@ export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 		if (this.evaluation > 100) {
 			this.evaluation = 100;
 		}
+		this.messengerEvaluationChange.emit(this.evaluation);
 		this.drawAuditArc();
 	}
 }

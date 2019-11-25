@@ -1,18 +1,18 @@
 div.graphic-badge {
-    width: 75px;
-    height: 75px;
+    width: 120px;
+    height: 120px;
 }
 
 .evaluation {
-    font-size: 28px;
+    font-size: 38px;
     font-weight: 600;
 }
 
 .inputEvaluation {
-    font-size: 22px;
+    font-size: 30px;
     font-weight: 600;
-    width: 45px;
-    height: 30px;
+    width: 60px;
+    height: 40px;
     background-color: transparent;
     text-align: center;
 
