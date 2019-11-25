@@ -11,9 +11,9 @@
         </app-audit-graphic-badge>
     </div>
     
-    <div id="tasks-{{id}}" class="buttonTasks" [ngClass]="classIconTasks(id)" (click)="showOrHideAuditTask()">
-        <span class="tasks">
-            <i class="fas fa-tasks" style="font-size: 40px;top:0px;right:7px;position: absolute;"></i>
+    <div id="tasks-{{id}}" [ngClass]="classIconTasks(id)" (click)="showOrHideAuditTask()">
+        <span>
+            <i class="fas fa-tasks" style="font-size: 40px"></i>
         </span>
     </div>
 
