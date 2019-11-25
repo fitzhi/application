@@ -3,14 +3,14 @@
     <div id="headerRisk-{{id}}" class="headerRisk"></div>
 
     <div class="auditGraphicBadge">
-        <app-audit-graphic-badge
-            (messengerEvaluationChange)="onEvaluationChange($event)"
-            [editable]=true
+        <app-audit-graphic-badge 
+            (messengerEvaluationChange)="onEvaluationChange($event)" 
+            [editable]=true 
             [index]=index
             [evaluation]=evaluation>
         </app-audit-graphic-badge>
     </div>
-    
+
     <div id="tasks-{{id}}" [ngClass]="classIconTasks(id)" (click)="showOrHideAuditTask()">
         <span>
             <i class="fas fa-tasks" style="font-size: 40px"></i>
@@ -18,5 +18,23 @@
     </div>
 
     <div id="topic-title-{{id}}" class="title">{{title}}</div>
+
+    <div class="weight">
+        <div class="formfieldWeight">
+            <mat-form-field style="width: 100%">
+                <mat-label>Weight</mat-label>
+                <input 
+                    id="weight" class="weight"
+                    [(ngModel)]="weight"
+                    (change)="onChange('weight')" (input)="onInput('weight')"
+                    type="number" matInput />
+                <span matSuffix> %</span>
+            </mat-form-field>
+        </div>
+        <div class="sliderWeight">
+            <mat-slider min="5" max="100" step="1" [value]='weight' (input)="onChangeWeight($event)">
+            </mat-slider>
+        </div>
+    </div>
 
 </div>

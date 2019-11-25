@@ -7,6 +7,7 @@ import { Project } from 'src/app/data/project';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { TopicProject } from './topic-project';
 import { CinematicService } from 'src/app/service/cinematic.service';
+import { TopicEvaluation } from './project-audit-badges/topic-evaluation';
 
 @Component({
 	selector: 'app-project-audit',
@@ -22,6 +23,9 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 */
 	private showDivAuditTask = false;
 
+	/**
+	 * The project loaded the input observable.
+	 */
 	private project: Project;
 
 	/**
@@ -94,6 +98,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 
 	ngAfterViewInit() {
 	}
+
 	/**
 	 * Setup the categories involved in the manuel audit evaluation.
 	 */
@@ -135,6 +140,16 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 				this.topic$.next(new TopicProject(this.project.id, idTopic, this.topics[idTopic]));
 				this.cinematicService.idTopicTaskAuditFormSelected = idTopic;
 			}
+		}
+	}
+
+	/**
+	 * The function is informed that an evaluation has been given to a topic of the audit.
+	 * @param topicEvaluation the topic evaluation emitted
+	 */
+	onEvaluationChange(topicEvaluation: TopicEvaluation) {
+		if (Constants.DEBUG) {
+			console.log (this.topics[topicEvaluation.idTopic], topicEvaluation.value);
 		}
 	}
 

@@ -4,6 +4,8 @@ import { CinematicService } from 'src/app/service/cinematic.service';
 import { BaseComponent } from 'src/app/base/base.component';
 import { thresholdFreedmanDiaconis, color, timeHours } from 'd3';
 import { ProjectService } from 'src/app/service/project.service';
+import { MatSliderChange } from '@angular/material/slider';
+import { TopicEvaluation } from '../topic-evaluation';
 
 @Component({
 	selector: 'app-audit-badge',
@@ -27,6 +29,12 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	@Output() messengerShowDivAuditTask = new EventEmitter<number>();
 
 	/**
+	 * This messenger emits a signal to inform the parent component
+	 * that an evaluation has been made on this topic.
+	 */
+	@Output() messengerEvaluationChange = new EventEmitter<TopicEvaluation>();
+
+	/**
 	 * Evaluation retrieved from the project.
 	 */
 	private evaluation = 100;
@@ -37,15 +45,22 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 */
 	private auditTaskFormModeIsOn = false;
 
+	/**
+	 * The weight of this topic in the global evaluation.
+	 */
+	private weight;
+
 	constructor(
 		private cinematicService: CinematicService,
 		private projectService: ProjectService) { super(); }
 
 	ngOnInit(): void {
-		this.drawHeaderColor(this.evaluation);
 	}
 
 	ngAfterViewInit(): void {
+		if (this.weight) {
+			this.weight = 5;
+		}
 		this.drawHeaderColor(this.evaluation);
 	}
 
@@ -100,6 +115,8 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 */
 	onEvaluationChange(evaluation: number): void {
 		this.drawHeaderColor(evaluation);
+		console.log ('nope');
+		this.messengerEvaluationChange.emit(new TopicEvaluation(this.id, evaluation));
 	}
 
 	/**
@@ -109,6 +126,35 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	drawHeaderColor(evaluation: number): void {
 		const colorEvaluation = this.projectService.getEvaluationColor (evaluation);
 		document.getElementById('headerRisk-' + this.id).setAttribute('style', 'background-color: ' + colorEvaluation);
+	}
+
+	/**
+	* Content of a field has been updated.
+	* @param field field identified throwing this event.
+	*/
+	public onChange(field: string) {
+		if (field === 'weight') {
+		}
+	}
+
+	/**
+	* Content of a field has been updated.
+	* @param field field identified throwing this event.
+	*/
+	public onInput(field: string) {
+		/*
+		if (field === 'weight') {
+			this.sliderWeightValue = this.onChangeWeight;
+		}
+		*/
+	}
+
+	/**
+	 * The method is invoked when the slider is moved.
+	 * @param sliderWeight the event emit by the slider.
+	 */
+	onChangeWeight(sliderWeight: MatSliderChange) {
+		this.weight = sliderWeight.value;
 	}
 
 	/**

@@ -22,16 +22,59 @@ div.headerRisk {
     height: 10%;
     top: 0px;
 }
-.mat-grid-tile .mat-figure {
-    align-items: left !important;
-}
 
 div.title {
-    font-size: 14px;
+    position: absolute;
+    right: 10px;
+    bottom: 35px;
+    width: 60%;
+    font-size: 18px;
     font-weight: 600;
-    margin: 0px;
-    padding: 0px;
+    text-align: left;
 }
+
+div.weight {
+    position: absolute;
+    right: 10px;
+    bottom: 60px;
+    width: 60%;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: left;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;   
+}
+
+div.formfieldWeight {
+    width: 30%;
+}
+
+#weight {
+    text-align: right;
+    width: 30px;
+}
+  
+#weight::-webkit-outer-spin-button,
+#weight::-webkit-inner-spin-button {
+    display: none;
+}
+
+
+input.weight {
+    width: 20%;
+}
+
+div.sliderWeight {
+    width: 70%;
+}
+
+.mat-slider-horizontal {
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+
 
 div.tasks, div.tasks-selected {
     position: absolute;

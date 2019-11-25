@@ -89,12 +89,15 @@ export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 		}
 	}
 
-	onChange() {
+	onInput() {
 		if (this.evaluation > 100) {
 			this.evaluation = 100;
 		}
-		this.messengerEvaluationChange.emit(this.evaluation);
 		this.drawAuditArc();
+	}
+
+	onChange() {
+		this.messengerEvaluationChange.emit(this.evaluation);
 	}
 }
 
