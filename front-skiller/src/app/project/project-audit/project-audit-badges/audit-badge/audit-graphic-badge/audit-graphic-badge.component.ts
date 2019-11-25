@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { ProjectService } from 'src/app/service/project.service';
+import { TopicEvaluation } from '../../topic-evaluation';
+import { Constants } from 'src/app/constants';
 
 @Component({
 	selector: 'app-audit-graphic-badge',
@@ -14,6 +16,11 @@ export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 	@Input() index;
 
 	/**
+	 * Topic identifier.
+	 */
+	@Input() id;
+
+	/**
 	 * Quotation given to this category.
 	 */
 	@Input() evaluation: number;
@@ -26,7 +33,7 @@ export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 	/**
 	 * The messenger throws the new evaluation givent by the end-user after each change.
 	 */
-	@Output() messengerEvaluationChange = new EventEmitter<number>();
+	@Output() messengerEvaluationChange = new EventEmitter<TopicEvaluation>();
 
 	/**
 	 * color of the badge
@@ -93,11 +100,12 @@ export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 		if (this.evaluation > 100) {
 			this.evaluation = 100;
 		}
+		this.messengerEvaluationChange.emit(new TopicEvaluation(this.id, this.evaluation, 1));
 		this.drawAuditArc();
 	}
 
 	onChange() {
-		this.messengerEvaluationChange.emit(this.evaluation);
+		this.messengerEvaluationChange.emit(new TopicEvaluation(this.id, this.evaluation, 2));
 	}
 }
 

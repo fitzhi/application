@@ -148,7 +148,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 * @param topicEvaluation the topic evaluation emitted
 	 */
 	onEvaluationChange(topicEvaluation: TopicEvaluation) {
-		if (Constants.DEBUG) {
+		if ((Constants.DEBUG) && (topicEvaluation.typeOfOperation === Constants.CHANGE_BROADCAST)) {
 			console.log (this.topics[topicEvaluation.idTopic], topicEvaluation.value);
 		}
 	}

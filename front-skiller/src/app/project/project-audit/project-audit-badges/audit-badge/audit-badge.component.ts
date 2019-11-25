@@ -113,10 +113,9 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 * a new evaluation of an audit topic.
 	 * @param evalution the evaluation.
 	 */
-	onEvaluationChange(evaluation: number): void {
-		this.drawHeaderColor(evaluation);
-		console.log ('nope');
-		this.messengerEvaluationChange.emit(new TopicEvaluation(this.id, evaluation));
+	onEvaluationChange(topicEvaluation: TopicEvaluation): void {
+		this.drawHeaderColor(topicEvaluation.value);
+		this.messengerEvaluationChange.emit(topicEvaluation);
 	}
 
 	/**

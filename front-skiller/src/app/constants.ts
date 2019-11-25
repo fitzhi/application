@@ -56,7 +56,6 @@ export class Constants {
 	public static PROJECT_IDX_TAB_SONAR = 3;
 	public static PROJECT_IDX_TAB_AUDIT = 4;
 
-
 	/*
 	* Indexes of tab inside the form group STAFF
 	*/
@@ -100,5 +99,8 @@ export class Constants {
 	public static MESSAGE_SUCCESS = 4;
 
 	public static canAdd = true;
+
+	public static INPUT_BROADCAST = 1;
+	public static CHANGE_BROADCAST = 2;
 
 }
