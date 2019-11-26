@@ -30,4 +30,10 @@ div.graphic-non-editable {
 
 .inputEvaluation:focus {
     background-color: white;
+    text-align: center;
+}
+
+.inputEvaluation::-webkit-outer-spin-button,
+.inputEvaluation::-webkit-inner-spin-button {
+    display: none;
 }

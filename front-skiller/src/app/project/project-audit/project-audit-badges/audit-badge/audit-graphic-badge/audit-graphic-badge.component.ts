@@ -97,15 +97,21 @@ export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 	}
 
 	onInput() {
-		if (this.evaluation > 100) {
-			this.evaluation = 100;
+		if (!isNaN(this.evaluation)) {
+			if (this.evaluation > 100) {
+				this.evaluation = 100;
+			}
+			this.messengerEvaluationChange.emit(new TopicEvaluation(this.id, this.evaluation, 1));
+			this.drawAuditArc();
 		}
-		this.messengerEvaluationChange.emit(new TopicEvaluation(this.id, this.evaluation, 1));
-		this.drawAuditArc();
 	}
 
 	onChange() {
-		this.messengerEvaluationChange.emit(new TopicEvaluation(this.id, this.evaluation, 2));
+		if (!isNaN(this.evaluation)) {
+			this.messengerEvaluationChange.emit(new TopicEvaluation(this.id, this.evaluation, 2));
+		} else {
+			this.evaluation = 0;
+		}
 	}
 }
 
