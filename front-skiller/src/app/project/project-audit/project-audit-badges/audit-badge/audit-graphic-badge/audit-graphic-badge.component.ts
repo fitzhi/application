@@ -88,7 +88,7 @@ export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 
 	drawAuditText() {
 		if (!this.editable) {
-			document.getElementById('topic-note-' + this.index).setAttribute('x', '30');
+			document.getElementById('topic-note-' + this.index).setAttribute('x', '40');
 			document.getElementById('topic-note-' + this.index).setAttribute('y', '70');
 		} else {
 			document.getElementById('topic-note-' + this.index).setAttribute('x', '30');
