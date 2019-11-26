@@ -73,7 +73,10 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 					this.referentialService.topics$.subscribe (topics => {
 						this.topics = topics;
 						Object.keys(this.project.audit).forEach(key => {
-							this.auditTopics.push( {id: Number(key), title: this.topics[key]} );
+							this.auditTopics.push(
+								{	id: Number(key),
+									evaluation: (this.project.audit[key].evaluation) ? this.project.audit[key].evaluation : 0,
+									title: this.topics[key]} );
 						});
 						this.auditTopics$.next(this.auditTopics);
 					}));
@@ -108,7 +111,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	}
 
 	/**
-	 * The user has involved, or removed, a topic from his exam.
+	 * The user has involved, or removed, a topic from his audit.
 	 * @param category the given category.
 	 */
 	onCategoryUpdated(category: Topic) {

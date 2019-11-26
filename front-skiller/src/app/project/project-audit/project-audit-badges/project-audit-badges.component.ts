@@ -1,17 +1,24 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TopicEvaluation } from './topic-evaluation';
 import { TopicWeight } from './topic-weight';
+import { Project } from 'src/app/data/project';
+import { BaseComponent } from 'src/app/base/base.component';
 
 @Component({
 	selector: 'app-project-audit-badges',
 	templateUrl: './project-audit-badges.component.html',
 	styleUrls: ['./project-audit-badges.component.css']
 })
-export class ProjectAuditBadgesComponent implements OnInit {
+export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	/**
-	 * The Topics involed for this audit.
+	 * This observable emits the current active project.
+	 */
+	@Input() project$: Observable<Project>;
+
+	/**
+	 * The Topics involved for this audit.
 	 */
 	@Input() auditTopics$: Observable<any>;
 
@@ -30,9 +37,16 @@ export class ProjectAuditBadgesComponent implements OnInit {
 	 */
 	@Output() messengerTopicWeight = new EventEmitter<TopicWeight>();
 
-	constructor() { }
+	/**
+	 * The project retrieved from the `project$` input observable.
+	 */
+	private project: Project;
+
+	constructor() { super(); }
 
 	ngOnInit() {
+		this.subscriptions.add(
+			this.project$.subscribe(project => this.project = project));
 	}
 
 	/**
@@ -60,4 +74,12 @@ export class ProjectAuditBadgesComponent implements OnInit {
 	onWeightChange(topicWeight: TopicWeight) {
 		this.messengerTopicWeight.next(topicWeight);
 	}
+
+	/**
+	* Calling the base class to unsubscribe all subscriptions.
+	*/
+	ngOnDestroy() {
+		super.ngOnDestroy();
+	}
+
 }

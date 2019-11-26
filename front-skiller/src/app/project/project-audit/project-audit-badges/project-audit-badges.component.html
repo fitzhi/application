@@ -1,13 +1,14 @@
 <div id="containerAuditThumbnails">
-    <div *ngFor="let category of (auditTopics$ | async); index as index" 
+    <div *ngFor="let topic of (auditTopics$ | async); index as index" 
         style="padding-left:5px; padding-top:5px">
         <app-audit-badge 
             (messengerWeightChange)="onWeightChange($event)"
             (messengerEvaluationChange)="onEvaluationChange($event)"
             (messengerShowDivAuditTask)="onShowDivAuditTask($event)"
             [index]=index 
-            [id]="category.id"
-            [title]="category.title" >
+            [id]="topic.id"
+            [evaluation]=topic.evaluation
+            [title]="topic.title" >
         </app-audit-badge>
     </div>
 </div>

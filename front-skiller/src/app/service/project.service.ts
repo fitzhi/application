@@ -155,7 +155,7 @@ export class ProjectService extends InternalService {
 	 * @param idTopic the topic identifier
 	 */
 	addAuditTopic(idProject: number, idTopic: number): Observable<Boolean> {
-		return this.handleActionAudit$(idProject, new AuditTopic(idTopic), 'saveTopic');
+		return this.handleActionAudit$(idProject, new AuditTopic(idTopic, 0, 5), 'saveTopic');
 	}
 
 	/**
@@ -164,7 +164,7 @@ export class ProjectService extends InternalService {
 	 * @param idTopic the topic identifier
 	 */
 	removeAuditTopic(idProject: number, idTopic: number): Observable<Boolean> {
-		return this.handleActionAudit$(idProject, new AuditTopic(idTopic), 'removeTopic');
+		return this.handleActionAudit$(idProject, new AuditTopic(idTopic, 0, 5), 'removeTopic');
 	}
 
 	/**

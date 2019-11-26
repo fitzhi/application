@@ -20,8 +20,19 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 */
 	@Input() index;
 
+	/**
+	 * Topic identifier.
+	 */
 	@Input() id;
 
+	/**
+	 * Evaluation given to this subject.
+	 */
+	@Input() evaluation: number;
+
+	/**
+	 * Title of the topic retrieved from the referential.
+	 */
 	@Input() title;
 
 	/**
@@ -40,11 +51,6 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 * that a weight in the global note has been given to this topic.
 	 */
 	@Output() messengerWeightChange = new EventEmitter<TopicWeight>();
-
-	/**
-	 * Evaluation retrieved from the project.
-	 */
-	private evaluation = 100;
 
 	/**
 	 * This `boolean` represents the fact that the panel
