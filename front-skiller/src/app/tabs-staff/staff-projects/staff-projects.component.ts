@@ -23,14 +23,16 @@ import { MatSort } from '@angular/material/sort';
 })
 export class StaffProjectsComponent extends BaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
+	/* tslint:disable: no-trailing-whitespace */
 	/**
- 	* Selected TAB.
+ 	* Selected TAB.  
  	* This observable is fired by the StaffComponent class when the user changes the tab selected.
  	*/
+	/* tslint:enable: no-trailing-whitespace */
 	@Input() selectedTab$;
 
 	/**
-	 * Employee retrieve from StaffComponent access.
+	 * Employee retrieve from `StaffComponent` access.
 	 */
 	private collaborator: Collaborator;
 
@@ -39,16 +41,20 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	 */
 	tagify: Tagify;
 
+	/* tslint:disable: no-trailing-whitespace */
 	/**
-	 * Bound addProject to the current active component.
-	 * The goal of this bind is to access the member variables of this class, such as projet
+	 * Bound `addProject` to the current active component.  
+	 * The goal of this bind is to access the member variables of this class, such as the projet, inside lambda expressions.
 	 */
+	/* tslint:enable: no-trailing-whitespace */
 	private boundAddProject: any;
 
+	/* tslint:disable: no-trailing-whitespace */
 	/**
-	 * Bound removeProject to the current active component.
-	 * The goal of this bind is to access the member variables of this class, such as projet
+	 * Bound `removeProject` to the current active component.  
+	 * The goal of this bind is to access the member variables of this class, such as the projet, inside lambda expressions.
 	 */
+	/* tslint:enable: no-trailing-whitespace */
 	private boundRemoveProject: any;
 
 	/**
@@ -66,7 +72,11 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	 */
 	public displayedColumns: string[] = ['name', 'firstCommit', 'lastCommit', 'numberOfCommits', 'numberOfFiles'];
 
-	numberOfMissions$ = new BehaviorSubject<number>(0);
+	/**
+	 * This `BehaviorSubject` is hosting the number of missions for the current active project.
+	 * This number is displayed on a badge-pill on top of the panal.
+	 */
+	private numberOfMissions$ = new BehaviorSubject<number>(0);
 
 	constructor(
 		private messageService: MessageService,
@@ -80,7 +90,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 
 	}
 
-	ngOnInit() {
+	ngOnInit(): void  {
 		/**
 		 * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
 		 */
@@ -94,8 +104,9 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 
 	/**
 	 * Load the missions for the current active staff member.
+	 * @param missions array of Missions declared within the project.
 	 */
-	loadMissions(missions: Mission[]) {
+	loadMissions(missions: Mission[]): void {
 		this.dataSource = new MatTableDataSource(missions);
 		this.dataSource.data = missions;
 		this.dataSource.sort = this.sort;
@@ -114,7 +125,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 		this.numberOfMissions$.next(missions.length);
 	}
 
-	ngAfterViewInit() {
+	ngAfterViewInit(): void {
 		const input = document.querySelector('textarea[name=projects]');
 		this.tagify = new Tagify (input, {
 			enforceWhitelist : true,
@@ -192,7 +203,11 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	 * This method operates a rollback and reintroduces a project whose deletion has been rejected.
 	 * @param projectName the name to be reintroduced into the tagify componenet
 	 */
-	rollbackRemove(projectName: string) {
+	rollbackRemove(projectName: string): void {
+
+		if (Constants.DEBUG) {
+			console.log ('Rollback the removal of %s', projectName);
+		}
 		this.tagify.off('add', this.boundAddProject);
 		this.tagify.addTags([projectName]);
 		this.tagify.on('add', this.boundAddProject);
@@ -202,10 +217,11 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	 * Unregister a staff member from a project.
 	 * @param event ADD event fired by the tagify component.
 	 */
-	removeProject(event: CustomEvent) {
+	removeProject(event: CustomEvent): void {
 
+		const projectName = event.detail.data.value;
 		if (Constants.DEBUG) {
-			console.log ('Removing the project', event.detail.data.value);
+			console.log ('Removing the project %s', projectName);
 		}
 
 		// This project HAS TO BE registered inside the mission of this collaborator.
@@ -216,16 +232,16 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 			return;
 		}
 
-		const mission = this.collaborator.missions.find (mi => mi.name === event.detail.data.value);
+		const mission = this.collaborator.missions.find (mi => mi.name === projectName);
 		if (!mission) {
-			this.rollbackRemove(event.detail.data.value);
+			this.rollbackRemove(projectName);
 			console.error ('SHOULD NOT PASS HERE : Cannot revoke the project '
 			+ event.detail.data.value + ' from collaborator' + this.collaborator.firstName + ' ' + this.collaborator.lastName);
 			return;
 		}
 		if ((mission.lastCommit) &&  (mission.numberOfCommits > 0)) {
-			this.rollbackRemove(event.detail.data.value);
-			this.messageService.warning('Cannot remove the project ' +  mission.name + ' with declared commits');
+			this.rollbackRemove(projectName);
+			this.messageService.warning('Cannot remove the project ' +  mission.name + ' with detected commits');
 			return;
 		}
 
@@ -247,13 +263,12 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	}
 
 	/**
-	 *  Update a project associated to a staff member. This might be an addition or a removal.
+	 * Update a project associated to a staff member. This might be an addition or a removal.
 	 * @param idStaff the staff member identifier
 	 * @param idProject the project identifier
-	 * @param callback the callback function, which might be staffService.addProject or staffService.removeProject
-	 * @returns TRUE if the operation has succeeded, FALSE otherwise.
+	 * @param callback the callback function, which might be `staffService.addProject` or `staffService.removeProject`
 	 */
-	updateProject(idStaff: number, mission:  Mission, callback: (idStaff: number, idProject:  number) => Observable<BooleanDTO>) {
+	updateProject(idStaff: number, mission:  Mission, callback: (idStaff: number, idProject:  number) => Observable<BooleanDTO>): void {
 		callback(idStaff, mission.idProject)
 		.subscribe (result => {
 			if (!result) {
@@ -270,13 +285,16 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 
 	}
 
+	/* tslint:disable: no-trailing-whitespace */
 	/**
-	 * Re-introduce a missio after a failed remove.
+	 * Re-introduce a mission after a failed remove.  
+	 * __This method is only executed when the back-end returns an internal error__
 	 * @param mission the mission to be re-introduced.
 	 */
-	undoRemoveProject(mission: Mission) {
+	/* tslint:enable: no-trailing-whitespace */
+	undoRemoveProject(mission: Mission): void {
 		if (Constants.DEBUG) {
-			console.log ('Update failed, we re-introduce the project ' + mission.name);
+			console.log ('Update failed, we re-introduce the project %s', mission.name);
 		}
 		this.collaborator.missions.push(mission);
 		this.tagify.addTags([mission.name]);
@@ -285,7 +303,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	/**
 	 * Calling the base class to unsubscribe all subscriptions.
 	 */
-	ngOnDestroy() {
+	ngOnDestroy(): void {
 		super.ngOnDestroy();
 	}
 
