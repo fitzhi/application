@@ -1,6 +1,7 @@
 <div id="audit">
         <div>
                 <app-project-audit-badges
+                (messengerTopicWeight)="onWeightChange($event)"
                 (messengerTopicEvaluation)="onEvaluationChange($event)"
                 (messengerShowDivAuditTask)="onShowDivAuditTask($event)"
                 [auditTopics$]="auditTopics$">

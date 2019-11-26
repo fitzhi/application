@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TopicEvaluation } from './topic-evaluation';
+import { TopicWeight } from './topic-weight';
 
 @Component({
 	selector: 'app-project-audit-badges',
@@ -24,6 +25,11 @@ export class ProjectAuditBadgesComponent implements OnInit {
 	 */
 	@Output() messengerTopicEvaluation = new EventEmitter<TopicEvaluation>();
 
+	/**
+	 * This messenger propagates the signal than a weight has been given to an audit topic.
+	 */
+	@Output() messengerTopicWeight = new EventEmitter<TopicWeight>();
+
 	constructor() { }
 
 	ngOnInit() {
@@ -44,5 +50,14 @@ export class ProjectAuditBadgesComponent implements OnInit {
 	 */
 	onEvaluationChange(topicEvaluation: TopicEvaluation) {
 		this.messengerTopicEvaluation.next(topicEvaluation);
+	}
+
+	/**
+	 * The function catches a signal emited from `app-audit-badge`
+	 * that an weight has been given to a topic
+	 * @param weightEvaluation the topic weight emitted
+	 */
+	onWeightChange(topicWeight: TopicWeight) {
+		this.messengerTopicWeight.next(topicWeight);
 	}
 }

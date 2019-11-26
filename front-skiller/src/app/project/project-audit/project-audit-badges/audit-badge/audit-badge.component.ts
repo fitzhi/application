@@ -6,6 +6,7 @@ import { thresholdFreedmanDiaconis, color, timeHours } from 'd3';
 import { ProjectService } from 'src/app/service/project.service';
 import { MatSliderChange } from '@angular/material/slider';
 import { TopicEvaluation } from '../topic-evaluation';
+import { TopicWeight } from '../topic-weight';
 
 @Component({
 	selector: 'app-audit-badge',
@@ -33,6 +34,12 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 * that an evaluation has been made on this topic.
 	 */
 	@Output() messengerEvaluationChange = new EventEmitter<TopicEvaluation>();
+
+	/**
+	 * This messenger emits a signal to inform the parent component
+	 * that a weight in the global note has been given to this topic.
+	 */
+	@Output() messengerWeightChange = new EventEmitter<TopicWeight>();
 
 	/**
 	 * Evaluation retrieved from the project.
@@ -133,6 +140,8 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	*/
 	public onChange(field: string) {
 		if (field === 'weight') {
+			// 2 for CHANGE Operation
+			this.messengerWeightChange.emit(new TopicEvaluation(this.id, this.weight, 2));
 		}
 	}
 
@@ -141,19 +150,30 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	* @param field field identified throwing this event.
 	*/
 	public onInput(field: string) {
-		/*
 		if (field === 'weight') {
-			this.sliderWeightValue = this.onChangeWeight;
+			// 1 for INPUT Operation
+			this.messengerWeightChange.emit(new TopicEvaluation(this.id, this.weight, 1));
 		}
-		*/
 	}
 
 	/**
 	 * The method is invoked when the slider is moved.
 	 * @param sliderWeight the event emit by the slider.
 	 */
-	onChangeWeight(sliderWeight: MatSliderChange) {
+	onSliderInputWeight(sliderWeight: MatSliderChange) {
 		this.weight = sliderWeight.value;
+			// 1 for INPUT Operation
+			this.messengerWeightChange.emit(new TopicEvaluation(this.id, this.weight, 1));
+	}
+
+	/**
+	 * The method is invoked when the value of the slider has changed.
+	 * @param sliderWeight the event emit by the slider.
+	 */
+	onSliderChangeWeight(sliderWeight: MatSliderChange) {
+		this.weight = sliderWeight.value;
+		// 2 for CHANGE Operation
+		this.messengerWeightChange.emit(new TopicEvaluation(this.id, this.weight, 2));
 	}
 
 	/**

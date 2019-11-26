@@ -8,6 +8,7 @@ import { ReferentialService } from 'src/app/service/referential.service';
 import { TopicProject } from './topic-project';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { TopicEvaluation } from './project-audit-badges/topic-evaluation';
+import { TopicWeight } from './project-audit-badges/topic-weight';
 
 @Component({
 	selector: 'app-project-audit',
@@ -150,6 +151,16 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	onEvaluationChange(topicEvaluation: TopicEvaluation) {
 		if ((Constants.DEBUG) && (topicEvaluation.typeOfOperation === Constants.CHANGE_BROADCAST)) {
 			console.log (this.topics[topicEvaluation.idTopic], topicEvaluation.value);
+		}
+	}
+
+	/**
+	 * The function is informed that a weight has been given to a topic of the audit.
+	 * @param topicEvaluation the topic evaluation emitted
+	 */
+	onWeightChange(topicWeight: TopicWeight) {
+		if ((Constants.DEBUG) && (topicWeight.typeOfOperation === Constants.CHANGE_BROADCAST)) {
+			console.log (this.topics[topicWeight.idTopic], topicWeight.value);
 		}
 	}
 

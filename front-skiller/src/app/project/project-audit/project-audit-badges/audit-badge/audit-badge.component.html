@@ -33,7 +33,9 @@
             </mat-form-field>
         </div>
         <div class="sliderWeight">
-            <mat-slider min="5" max="100" step="1" [value]='weight' (input)="onChangeWeight($event)">
+            <mat-slider min="5" max="100" step="1" [value]='weight' 
+                (input)="onSliderInputWeight($event)"
+                (change)="onSliderChangeWeight($event)">
             </mat-slider>
         </div>
     </div>
