@@ -146,7 +146,10 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 			.on('remove', this.boundRemoveProject);
 	}
 
-	private removeValues() {
+	/**
+	 * Cleanup the tagify component from all tags.
+	 */
+	private removeValues(): void {
 		this.tagify.off('remove', this.boundRemoveProject);
 		this.tagify.removeAllTags();
 		this.tagify.on('remove', this.boundRemoveProject);
@@ -156,7 +159,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	 * Register a staff member into an existing project
 	 * @param event ADD event fired by the tagify component.
 	 */
-	addProject(event: CustomEvent) {
+	addProject(event: CustomEvent): void {
 		if (Constants.DEBUG) {
 			console.log ('Adding the project', event.detail.data.value);
 		}
@@ -186,34 +189,55 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	}
 
 	/**
+	 * This method operates a rollback and reintroduces a project whose deletion has been rejected.
+	 * @param projectName the name to be reintroduced into the tagify componenet
+	 */
+	rollbackRemove(projectName: string) {
+		this.tagify.off('add', this.boundAddProject);
+		this.tagify.addTags([projectName]);
+		this.tagify.on('add', this.boundAddProject);
+	}
+
+	/**
 	 * Unregister a staff member from a project.
 	 * @param event ADD event fired by the tagify component.
 	 */
 	removeProject(event: CustomEvent) {
+
 		if (Constants.DEBUG) {
 			console.log ('Removing the project', event.detail.data.value);
 		}
 
-		// This project HAS TO BE registered inside the project.
-		if ( (this.collaborator.missions === undefined) || (this.collaborator.missions.length === 0)) {
+		// This project HAS TO BE registered inside the mission of this collaborator.
+		if ( (!this.collaborator.missions) || (this.collaborator.missions.length === 0)) {
 			console.error ('SHOULD NOT PASS HERE : ' + this.collaborator.lastName
 			+ ' does not contain any mission. So, we should not be able to remove one');
+			this.rollbackRemove(event.detail.data.value);
 			return;
 		}
 
 		const mission = this.collaborator.missions.find (mi => mi.name === event.detail.data.value);
-		if (mission === undefined) {
-			console.log ('SHOULD NOT PASS HERE : Cannot revoke the project '
+		if (!mission) {
+			this.rollbackRemove(event.detail.data.value);
+			console.error ('SHOULD NOT PASS HERE : Cannot revoke the project '
 			+ event.detail.data.value + ' from collaborator' + this.collaborator.firstName + ' ' + this.collaborator.lastName);
+			return;
+		}
+		if ((mission.lastCommit) &&  (mission.numberOfCommits > 0)) {
+			this.rollbackRemove(event.detail.data.value);
+			this.messageService.warning('Cannot remove the project ' +  mission.name + ' with declared commits');
 			return;
 		}
 
 		const indexOfMission = this.collaborator.missions.indexOf(mission);
 		if (Constants.DEBUG) {
-			console.log ('Index of the mission ' + mission.name, indexOfMission);
+			console.log (
+					'%d is the index of the selected mission %s '
+				+ 	' to be removed from this collaborator\' missions', indexOfMission, mission.name);
 		}
-
 		this.collaborator.missions.splice(indexOfMission, 1);
+		this.numberOfMissions$.next(this.collaborator.missions.length);
+		this.loadMissions(this.collaborator.missions);
 
 		// We have already loaded or saved the collaborator, so we can add each new project as they appear, one by one.
 		if (this.collaborator.idStaff) {
