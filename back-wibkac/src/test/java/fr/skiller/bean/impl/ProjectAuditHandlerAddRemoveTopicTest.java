@@ -55,7 +55,7 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 	public void addNewTopic() throws SkillerException {
 		projectAuditHandler.addTopic(314116, 2);
 		Assert.assertTrue("addNewTopic did not succeed", project.getAudit().containsKey(2));
-		Assert.assertTrue("addNewTopic did not succeed", project.getAudit().get(2).getId() == 2);
+		Assert.assertTrue("addNewTopic did not succeed", project.getAudit().get(2).getIdTopic() == 2);
 		
 	}
 	
@@ -75,7 +75,7 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 		projectAuditHandler.addTopic(314116, 2);
 		AuditTopic auditTopic = projectAuditHandler.getTopic(314116, 2);
 		Assert.assertNotNull(auditTopic);
-		Assert.assertTrue("addNewTopic did not succeed", auditTopic.getId() == 2);
+		Assert.assertTrue("addNewTopic did not succeed", auditTopic.getIdTopic() == 2);
 		
 	}
 

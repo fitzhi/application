@@ -104,7 +104,7 @@ public class ProjectAuditControllerTest {
 
 		AuditTopic auditProject = gson.fromJson(result.getResponse().getContentAsString(), AuditTopic.class);
 		// The topic has been successfully added
-		Assert.assertTrue(auditProject.getId() == ID_TOPIC_1);
+		Assert.assertTrue(auditProject.getIdTopic() == ID_TOPIC_1);
 
 		Assert.assertEquals("5 is the default weight", 5, auditProject.getWeight());
 
@@ -162,7 +162,7 @@ public class ProjectAuditControllerTest {
 
 		AuditTopic auditProject = gson.fromJson(result.getResponse().getContentAsString(), AuditTopic.class);
 		// The topic has been successfully added
-		Assert.assertTrue(auditProject.getId() == ID_TOPIC_2);
+		Assert.assertTrue(auditProject.getIdTopic() == ID_TOPIC_2);
 		
 
 		//

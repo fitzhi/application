@@ -54,11 +54,11 @@ public class ProjectAuditController {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 				"POST command on /project/audit/addTopic for project.id %d and topic.id %d", 
-						param.getIdProject(), param.getAuditTopic().getId()));
+						param.getIdProject(), param.getAuditTopic().getIdTopic()));
 		}
 		
 		try {
-			projectAuditHandler.addTopic(param.getIdProject(), param.getAuditTopic().getId());
+			projectAuditHandler.addTopic(param.getIdProject(), param.getAuditTopic().getIdTopic());
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 		} catch (SkillerException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
@@ -99,11 +99,11 @@ public class ProjectAuditController {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 				"POST command on /project/audit/removeTopic for project.id %d and topic.id %d", 
-						param.getIdProject(), param.getAuditTopic().getId()));
+						param.getIdProject(), param.getAuditTopic().getIdTopic()));
 		}
 		
 		try {
-			projectAuditHandler.removeTopic(param.getIdProject(), param.getAuditTopic().getId(), false);
+			projectAuditHandler.removeTopic(param.getIdProject(), param.getAuditTopic().getIdTopic(), false);
 			
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 			
@@ -123,11 +123,11 @@ public class ProjectAuditController {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 				"POST command on /project/audit/updateEvaluation for project.id %d and topic.id %d", 
-						param.getIdProject(), param.getAuditTopic().getId()));
+						param.getIdProject(), param.getAuditTopic().getIdTopic()));
 		}
 		
 		try {
-			projectAuditHandler.setEvaluation(param.getIdProject(), param.getAuditTopic().getId(), param.getAuditTopic().getEvaluation());
+			projectAuditHandler.setEvaluation(param.getIdProject(), param.getAuditTopic().getIdTopic(), param.getAuditTopic().getEvaluation());
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 		} catch (SkillerException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
@@ -152,7 +152,7 @@ public class ProjectAuditController {
 			
 			List<TopicWeight> weights = new ArrayList<>();
 			for (AuditTopic auditTopic : param.getDataEnvelope()) {
-				weights.add(new TopicWeight(auditTopic.getId(), auditTopic.getWeight()));
+				weights.add(new TopicWeight(auditTopic.getIdTopic(), auditTopic.getWeight()));
 			}
 			
 			projectAuditHandler.setWeights(param.getIdProject(), weights);

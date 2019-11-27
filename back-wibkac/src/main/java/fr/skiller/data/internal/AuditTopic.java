@@ -15,7 +15,7 @@ public @Data class AuditTopic {
 	/**
 	 * Topic identifier involved in the audit.
 	 */
-	int id;
+	int idTopic;
 
 	/**
 	 * Topic audit evaluation given by an expert.
@@ -49,7 +49,7 @@ public @Data class AuditTopic {
 	 * @param weight of topic note inside the global audit evaluation.
 	 */
 	public AuditTopic(int idTopic, int evaluation, int weight) {
-		this.id = idTopic;
+		this.idTopic = idTopic;
 		this.evaluation = evaluation;
 		this.weight = weight;
 	}
