@@ -181,7 +181,7 @@ export class ProjectService extends InternalService {
 
 		const body = {
 			'idProject': idProject,
-			'auditTopic': {'id': auditTopic.id}
+			'auditTopic': {'idTopic': auditTopic.id, 'evaluation': auditTopic.evaluation}
 		};
 
 		return this.httpClient
@@ -541,6 +541,24 @@ export class ProjectService extends InternalService {
 		const body = { idProject: idProject, sonarKey: key,
 			sonarEvaluation: {evaluation: evaluation, totalNumberLinesOfCode: totalNumberLinesOfCode}};
 		return this.httpClient.post<Boolean>(this.backendSetupService.url() + '/project/sonar/saveEvaluation', body, httpOptions);
+	}
+
+	/**
+	* Save the evaluation for a topic involved in the audit.
+	* @param idProject the given project identifier
+	* @param idTopic the topic identifier
+	* @param evaluation the evaluation given for that topic
+	*/
+	saveAuditTopicEvaluation$(idProject: number, idTopic: number, evaluation: number): Observable<Boolean> {
+		if (Constants.DEBUG) {
+			console.groupCollapsed(
+				'Saving the evaluation for the topic identified by %d, within the project identified by %d',
+				idTopic, idProject);
+			console.log ('Evaluation given', evaluation);
+			console.groupEnd();
+		}
+		const auditTopic = new AuditTopic(idTopic, evaluation, null);
+		return this.handleActionAudit$(idProject, auditTopic, 'saveEvaluation');
 	}
 
 	/**

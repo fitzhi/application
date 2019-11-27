@@ -11,11 +11,6 @@ import { Constants } from 'src/app/constants';
 export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 
 	/**
-	 * Index of the badge
-	 */
-	@Input() index;
-
-	/**
 	 * Topic identifier.
 	 */
 	@Input() id;
@@ -46,8 +41,10 @@ export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 	}
 
 	ngAfterViewInit() {
-		this.drawAuditArc();
-		this.drawAuditText();
+		if (this.evaluation) {
+			this.drawAuditArc();
+			this.drawAuditText();
+		}
 	}
 
 	drawAuditArc() {
@@ -81,18 +78,18 @@ export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 		} else {
 			this.color = this.projectService.getEvaluationColor(this.evaluation);
 		}
-		document.getElementById('topic-arc-' + this.index).setAttribute('d', arc(60, 60, 50, -180, endAngleEvaluation));
-		document.getElementById('topic-arc-' + this.index).setAttribute('stroke', this.color);
+		document.getElementById('topic-arc-' + this.id).setAttribute('d', arc(60, 60, 50, -180, endAngleEvaluation));
+		document.getElementById('topic-arc-' + this.id).setAttribute('stroke', this.color);
 
 	}
 
 	drawAuditText() {
 		if (!this.editable) {
-			document.getElementById('topic-note-' + this.index).setAttribute('x', '40');
-			document.getElementById('topic-note-' + this.index).setAttribute('y', '70');
+			document.getElementById('topic-note-' + this.id).setAttribute('x', '40');
+			document.getElementById('topic-note-' + this.id).setAttribute('y', '70');
 		} else {
-			document.getElementById('topic-note-' + this.index).setAttribute('x', '30');
-			document.getElementById('topic-note-' + this.index).setAttribute('y', '40');
+			document.getElementById('topic-note-' + this.id).setAttribute('x', '30');
+			document.getElementById('topic-note-' + this.id).setAttribute('y', '40');
 		}
 	}
 

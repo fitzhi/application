@@ -15,6 +15,11 @@ export class Project {
 	public risk: number;
 
 	/**
+	 * Global evaluation to this project after an audit given by experts.
+	 */
+	public auditEvaluation: number;
+
+	/**
 	 * Array containing the skills required for this project
 	 */
 	public skills: Skill[] = [];

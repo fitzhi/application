@@ -9,6 +9,8 @@ import { TopicProject } from './topic-project';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { TopicEvaluation } from './project-audit-badges/topic-evaluation';
 import { TopicWeight } from './project-audit-badges/topic-weight';
+import { ProjectService } from 'src/app/service/project.service';
+import { MessageService } from 'src/app/message/message.service';
 
 @Component({
 	selector: 'app-project-audit',
@@ -62,6 +64,8 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 
 	constructor(
 		private referentialService: ReferentialService,
+		private projectService: ProjectService,
+		private messageService: MessageService,
 		private cinematicService: CinematicService) { super(); }
 
 	ngOnInit() {
@@ -111,22 +115,39 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	}
 
 	/**
+	 * Divide the weights between all topics.
+	 */
+	private assignWeights(): void {
+		// We mitigate the weight on all topics chosen.
+		let intermediateSum = 0;
+		for (let i = 0; i < this.auditTopics.length - 1; i++) {
+			this.auditTopics[i].weight = Math.floor (100 / this.auditTopics.length);
+			intermediateSum += this.auditTopics[i].weight;
+		}
+		this.auditTopics[this.auditTopics.length - 1].weight = 100 - intermediateSum;
+	}
+
+	/**
 	 * The user has involved, or removed, a topic from his audit.
 	 * @param category the given category.
 	 */
 	onCategoryUpdated(category: Topic) {
+
 		if (Constants.DEBUG) {
 			console.log (
 				((category.select) ? 'Selection' : 'Deselection)' + ' of %s'), category.title);
 		}
 		if (category.select) {
-			this.auditTopics.push({id: category.id, title: category.title});
+			this.auditTopics.push({id: category.id, evaluation: 1, weight: 1, title: category.title});
 		} else {
 			const index = this.auditTopics.findIndex(item => item.id === category.id);
 			if (index === -1) {
 				throw new Error ('Internal erreur. This index is supposed to be > 0');
 			}
 			this.auditTopics.splice(index, 1);
+		}
+		if (this.auditTopics && this.auditTopics.length > 0) {
+			this.assignWeights();
 		}
 		this.auditTopics$.next(this.auditTopics);
 	}
@@ -154,6 +175,16 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	onEvaluationChange(topicEvaluation: TopicEvaluation) {
 		if ((Constants.DEBUG) && (topicEvaluation.typeOfOperation === Constants.CHANGE_BROADCAST)) {
 			console.log (this.topics[topicEvaluation.idTopic], topicEvaluation.value);
+		}
+
+		if (topicEvaluation.typeOfOperation === Constants.CHANGE_BROADCAST) {
+			this.projectService.saveAuditTopicEvaluation$(
+				this.project.id,
+				topicEvaluation.idTopic,
+				topicEvaluation.value).subscribe(doneAndOk => {
+					if (doneAndOk) {
+						this.messageService.info('Evaluation given to ' + this.topics[topicEvaluation.idTopic] + ' has been saved');
+					}});
 		}
 	}
 

@@ -113,11 +113,7 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 			return false;
 		}
 
-		if (!this.project.audit) {
-			return false;
-		}
-
-		if (Object.keys(this.project.audit).length === 0) {
+		if (!this.project.auditEvaluation) {
 			return false;
 		}
 

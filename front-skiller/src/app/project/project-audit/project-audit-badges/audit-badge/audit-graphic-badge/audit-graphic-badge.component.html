@@ -1,15 +1,15 @@
 <div *ngIf="!editable" class="graphic-badge-non-editable">
     <svg viewBox="00 0 120 120" width="70px" height="70px">
-        <path id="topic-arc-{{index}}" fill="transparent" stroke-width="8" />
-        <text id="topic-note-{{index}}" class="evaluation">{{evaluation}}</text>
+        <path id="topic-arc-{{id}}" fill="transparent" stroke-width="8" />
+        <text id="topic-note-{{id}}" class="evaluation">{{evaluation}}</text>
     </svg>
 </div>
 
 <div *ngIf="editable" class="graphic-badge">
     <svg width="120px" height="120px" >
         <g>
-            <path id="topic-arc-{{index}}" fill="transparent" stroke-width="12px"  />
-            <foreignObject id="topic-note-{{index}}"  width="60px" height="40px">
+            <path id="topic-arc-{{id}}" fill="transparent" stroke-width="12px"  />
+            <foreignObject id="topic-note-{{id}}"  width="60px" height="40px">
                 <xhtml:input type="number" (change)="onChange()" (input)="onInput()" [(ngModel)]="evaluation" class="inputEvaluation"/>
             </foreignObject>
         </g>

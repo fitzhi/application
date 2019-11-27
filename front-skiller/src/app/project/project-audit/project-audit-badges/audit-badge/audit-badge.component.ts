@@ -16,19 +16,19 @@ import { TopicWeight } from '../topic-weight';
 export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
-	 * Index of the badge
-	 */
-	@Input() index;
-
-	/**
 	 * Topic identifier.
 	 */
-	@Input() id;
+	@Input() id: number;
 
 	/**
 	 * Evaluation given to this subject.
 	 */
 	@Input() evaluation: number;
+
+	/**
+	 * The weight of this topic in the global evaluation.
+	 */
+	@Input() weight: number;
 
 	/**
 	 * Title of the topic retrieved from the referential.
@@ -58,11 +58,6 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 */
 	private auditTaskFormModeIsOn = false;
 
-	/**
-	 * The weight of this topic in the global evaluation.
-	 */
-	private weight;
-
 	constructor(
 		private cinematicService: CinematicService,
 		private projectService: ProjectService) { super(); }
@@ -71,9 +66,6 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	}
 
 	ngAfterViewInit(): void {
-		if (this.weight) {
-			this.weight = 5;
-		}
 		this.drawHeaderColor(this.evaluation);
 	}
 
@@ -122,7 +114,7 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	}
 
 	/**
-	 * this function is receiving a signal from `app-audit-graphic-badge` when the end-user has given
+	 * This function is receiving a signal from `app-audit-graphic-badge` when the end-user has given
 	 * a new evaluation of an audit topic.
 	 * @param evalution the evaluation.
 	 */
