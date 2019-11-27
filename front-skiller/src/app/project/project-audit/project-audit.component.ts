@@ -78,7 +78,8 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 						this.topics = topics;
 						Object.keys(this.project.audit).forEach(key => {
 							this.auditTopics.push(
-								{	id: Number(key),
+								{	idTopic: Number(key),
+									weight: (this.project.audit[key].weight) ? this.project.audit[key].weight : 5,
 									evaluation: (this.project.audit[key].evaluation) ? this.project.audit[key].evaluation : 0,
 									title: this.topics[key]} );
 						});
