@@ -152,6 +152,10 @@ public class ProjectAuditController {
 			
 			List<TopicWeight> weights = new ArrayList<>();
 			for (AuditTopic auditTopic : param.getDataEnvelope()) {
+				if (log.isDebugEnabled()) {
+					log.debug(String.format(
+						"Saving weight %d for %d", auditTopic.getWeight(), auditTopic.getIdTopic()));
+				}
 				weights.add(new TopicWeight(auditTopic.getIdTopic(), auditTopic.getWeight()));
 			}
 			
