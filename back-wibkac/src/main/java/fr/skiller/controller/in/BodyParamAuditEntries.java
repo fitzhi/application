@@ -10,7 +10,7 @@ import lombok.Data;
  *
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public @Data class BodyParamAuditEntry {
+public @Data class BodyParamAuditEntries {
 
 	/**
 	 * Project identifier
@@ -18,24 +18,25 @@ public @Data class BodyParamAuditEntry {
 	private int idProject;
 	
 	/**
-	 * A topic subject declared in Audit and linked to a Techxhì project
+	 * Array of Audit topics instances. <br/>
+	 * Each instance of {@link AuditTopic} is used has a data envelope, and therefore is not complete. 
 	 */
-	private AuditTopic auditTopic;
+	private AuditTopic[] dataEnvelope;
 	
 	/**
 	 * Empty constructor.
 	 */
-	public BodyParamAuditEntry() {
+	public BodyParamAuditEntries() {
 		// Empty constructor declared for serialization / de-serialization purpose 		
 	}
 
 	/**
 	 * @param idProject the project identifier
-	 * @param auditTopic the audit topic object
+	 * @param dataEnvelope containing an array of Audit topics instances
 	 */
-	public BodyParamAuditEntry(int idProject, AuditTopic auditTopic) {
+	public BodyParamAuditEntries(int idProject, AuditTopic[] dataEnvelope) {
 		this.idProject = idProject;
-		this.auditTopic = auditTopic;
+		this.dataEnvelope = dataEnvelope;
 	}
 	
 }

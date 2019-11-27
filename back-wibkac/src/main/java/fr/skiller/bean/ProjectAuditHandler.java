@@ -1,6 +1,9 @@
 package fr.skiller.bean;
 
+import java.util.List;
+
 import fr.skiller.data.internal.AuditTopic;
+import fr.skiller.data.internal.TopicWeight;
 import fr.skiller.exception.SkillerException;
 
 /**
@@ -22,7 +25,7 @@ public interface ProjectAuditHandler extends DataSaverLifeCycle {
 	void addTopic(int idProject, int idTopic) throws SkillerException;
 	
 	/**
-	 * Remove a topic from the Project audit.
+	 * Remove a topic from the Project audit. 
 	 * @param idProject the project identifier
 	 * @param idTopic the given topic identifier
 	 * @param flagForce flag to force the removal of the topic, <b>event if this topic already contains audit data</b>. 
@@ -39,5 +42,23 @@ public interface ProjectAuditHandler extends DataSaverLifeCycle {
 	 * @throws SkillerException thrown if any problem occurs such as <i>'topic identifier unknown'</i>
 	 */
 	AuditTopic getTopic(int idProject, int idTopic) throws SkillerException;
+	
+	/**
+	 * Set the evaluation attributed by an expert, for an audit topic 
+	 * @param idProject the project identifier
+	 * @param idTopic the given topic identifier
+	 * @param evaluation the audit topic quality evaluation given by the expert.
+	 * @throws SkillerException thrown if any problem occurs such as <i>'topic identifier unknown'</i>
+	 */
+	void setEvaluation(int idProject, int idTopic, int evaluation) throws SkillerException;
+	
+	/**
+	 * Set the weights for all topics in the project.<br/>
+	 * The sum of these weights has to be equal to 100%.
+	 * @param idProject the project identifier
+	 * @param weights the list of {@link TopicWeight}
+	 * @throws SkillerException thrown if any problem occurs such as <i>'topic identifier unknown'</i>
+	 */
+	void setWeights(int idProject, List<TopicWeight> weights) throws SkillerException;
 	
 }

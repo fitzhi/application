@@ -2,6 +2,8 @@ package fr.skiller.controller;
 
 import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
 import static fr.skiller.Error.CODE_PROJECT_TOPIC_UNKNOWN;
+import static fr.skiller.Error.CODE_PROJECT_INVALID_WEIGHTS;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -31,6 +33,7 @@ import com.google.gson.GsonBuilder;
 
 import fr.skiller.Global;
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.controller.in.BodyParamAuditEntries;
 import fr.skiller.controller.in.BodyParamAuditEntry;
 import fr.skiller.controller.util.LocalDateAdapter;
 import fr.skiller.data.internal.AuditTopic;
@@ -102,6 +105,9 @@ public class ProjectAuditControllerTest {
 		AuditTopic auditProject = gson.fromJson(result.getResponse().getContentAsString(), AuditTopic.class);
 		// The topic has been successfully added
 		Assert.assertTrue(auditProject.getId() == ID_TOPIC_1);
+
+		Assert.assertEquals("5 is the default weight", 5, auditProject.getWeight());
+
 	}
 
 	
@@ -126,6 +132,7 @@ public class ProjectAuditControllerTest {
 		// THIS TEST HAS TO BE COMPLETED.
 		
 	}
+	
 	@Test
 	@WithMockUser
 	public void addTopicUnknownProject() throws Exception {
@@ -141,7 +148,8 @@ public class ProjectAuditControllerTest {
 			.andReturn();
 		
 		Assert.assertTrue(String.valueOf(CODE_PROJECT_NOFOUND).equals(result.getResponse().getHeader(Global.BACKEND_RETURN_CODE)));
-	}	
+	}
+	
 	@Test
 	@WithMockUser
 	public void removeTopic() throws Exception {
@@ -183,6 +191,116 @@ public class ProjectAuditControllerTest {
 		Assert.assertTrue(String.valueOf(CODE_PROJECT_TOPIC_UNKNOWN).equals(result.getResponse().getHeader(Global.BACKEND_RETURN_CODE)));
 		
 	}
+	
+	@Test
+	@WithMockUser
+	public void updateEvaluation() throws Exception {
+		
+		//
+		// Update the evaluation of a topic
+		//
+		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
+		bpae.setIdProject(ID_PROJECT);
+		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2, 60, 10));
+	
+		this.mvc.perform(post("/project/audit/saveEvaluation")
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(gson.toJson(bpae)))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(content().string("true"))
+			.andDo(print());
+			
+		//
+		// Testing the fact that the topic has been effectively removed
+		//
+		MvcResult result = this.mvc.perform(get("/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_2))
+				.andExpect(status().isOk())
+				.andDo(print())
+				.andReturn();
+
+		AuditTopic auditProject = gson.fromJson(result.getResponse().getContentAsString(), AuditTopic.class);
+		
+		Assert.assertEquals("Evaluation has been saved", 60, auditProject.getEvaluation());
+		
+	}
+
+	/**
+	 * TEST : The SUM OF THE GIVEN WEIGHT HAS TO BE EQUAL TO 100!!
+	 * @throws Exception
+	 */
+	@Test
+	@WithMockUser
+	public void updateWeightsHasToBeEqualTo100() throws Exception {
+
+		project.getAudit().put(ID_TOPIC_1, new AuditTopic(ID_TOPIC_1));
+		// From that point, the project will have 2 topics declared
+		
+		//
+		// Update the evaluation of a topic
+		//
+		BodyParamAuditEntries bpae = new BodyParamAuditEntries();
+		bpae.setIdProject(ID_PROJECT);
+		bpae.setDataEnvelope(new AuditTopic[2]);
+		bpae.getDataEnvelope()[0] = new AuditTopic(ID_TOPIC_1, 60, 10);
+		bpae.getDataEnvelope()[1] = new AuditTopic(ID_TOPIC_2, 60, 50);
+	
+		//
+		// Cannot save a project with a sum of audit topics weights different to 100.
+		//
+		MvcResult result = this.mvc.perform(post("/project/audit/saveWeights")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(gson.toJson(bpae)))
+				.andExpect(status().isInternalServerError())
+				.andDo(print())
+				.andReturn();
+		
+		Assert.assertTrue(String.valueOf(CODE_PROJECT_INVALID_WEIGHTS)
+				.equals(result.getResponse().getHeader(Global.BACKEND_RETURN_CODE)));
+			
+		
+	}
+
+	@Test
+	@WithMockUser
+	public void updateWeightsNominal() throws Exception {
+
+		project.getAudit().put(ID_TOPIC_1, new AuditTopic(ID_TOPIC_1));
+		// From that point, the project will have 2 topics declared
+		
+		//
+		// Update the evaluation of a topic
+		//
+		BodyParamAuditEntries bpae = new BodyParamAuditEntries();
+		bpae.setIdProject(ID_PROJECT);
+		bpae.setDataEnvelope(new AuditTopic[2]);
+		bpae.getDataEnvelope()[0] = new AuditTopic(ID_TOPIC_1, 60, 40);
+		bpae.getDataEnvelope()[1] = new AuditTopic(ID_TOPIC_2, 60, 60);
+	
+		this.mvc.perform(post("/project/audit/saveWeights")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(gson.toJson(bpae)))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(content().string("true"))
+				.andDo(print());
+		
+		MvcResult result = this.mvc.perform(get("/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_1))
+				.andExpect(status().isOk())
+				.andDo(print())
+				.andReturn();
+		AuditTopic auditProject = gson.fromJson(result.getResponse().getContentAsString(), AuditTopic.class);
+		Assert.assertEquals("Weight has been saved", 40, auditProject.getWeight());
+		
+		result = this.mvc.perform(get("/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_2))
+				.andExpect(status().isOk())
+				.andDo(print())
+				.andReturn();
+		auditProject = gson.fromJson(result.getResponse().getContentAsString(), AuditTopic.class);
+		Assert.assertEquals("Weight has been saved", 60, auditProject.getWeight());
+				
+	}
+	
 	
 	@After
 	public void after() throws SkillerException {

@@ -72,6 +72,9 @@ public class Error {
 	
 	public static final int CODE_PROJECT_TOPIC_UNKNOWN = -1020;
 	public static final String MESSAGE_PROJECT_TOPIC_UNKNOWN = "The topic {0} is not involved in project {1}";
+
+	public static final int CODE_PROJECT_INVALID_WEIGHTS = -1021;
+	public static final String MESSAGE_PROJECT_INVALID_WEIGHTS = "The sum of weights has to be equal to 100";
 	
 	private Error() {
 	}

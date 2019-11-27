@@ -1,26 +1,25 @@
 package fr.skiller.bean.impl;
 
+import static fr.skiller.Error.CODE_PROJECT_INVALID_WEIGHTS;
 import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
-import static fr.skiller.Error.CODE_PROJECT_TOPIC_ALREADY_DECLARED;
 import static fr.skiller.Error.CODE_PROJECT_TOPIC_UNKNOWN;
-
+import static fr.skiller.Error.MESSAGE_PROJECT_INVALID_WEIGHTS;
 import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
-import static fr.skiller.Error.MESSAGE_PROJECT_TOPIC_ALREADY_DECLARED;
 import static fr.skiller.Error.MESSAGE_PROJECT_TOPIC_UNKNOWN;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.itextpdf.text.pdf.PdfStructTreeController.returnType;
 
 import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.ProjectAuditHandler;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.data.internal.AuditTopic;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.TopicWeight;
 import fr.skiller.exception.SkillerException;
 
 /**
@@ -93,5 +92,34 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 		
 		return auditProject;
 	}
-	
+
+	@Override
+	public void setEvaluation(int idProject, int idTopic, int evaluation) throws SkillerException {
+		
+		AuditTopic auditTopic = getTopic(idProject, idTopic);
+
+		synchronized (lockDataUpdated) {
+			auditTopic.setEvaluation(evaluation);
+			this.dataUpdated = true;
+		}
+		
+	}
+
+	@Override
+	public void setWeights(int idProject, List<TopicWeight> weights) throws SkillerException {
+		
+		final int totalWeights = weights.stream().mapToInt(tw -> tw.getWeight()).reduce(0, Integer::sum);
+		if (totalWeights != 100) {
+			throw new SkillerException(CODE_PROJECT_INVALID_WEIGHTS, MESSAGE_PROJECT_INVALID_WEIGHTS);
+		}
+		
+		for (TopicWeight weight : weights) {
+			AuditTopic auditTopic = getTopic(idProject, weight.getIdTopic());
+			synchronized (lockDataUpdated) {
+				auditTopic.setWeight(weight.getWeight());
+				this.dataUpdated = true;
+			}
+		}
+	}
+
 }

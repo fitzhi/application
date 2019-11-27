@@ -3,6 +3,9 @@ package fr.skiller.controller;
 import static fr.skiller.Global.BACKEND_RETURN_CODE;
 import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,8 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.skiller.bean.ProjectAuditHandler;
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.controller.in.BodyParamAuditEntries;
 import fr.skiller.controller.in.BodyParamAuditEntry;
 import fr.skiller.data.internal.AuditTopic;
+import fr.skiller.data.internal.TopicWeight;
 import fr.skiller.exception.SkillerException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -109,5 +114,56 @@ public class ProjectAuditController {
 		}
 		
 	}
+
+	@PostMapping(path="/saveEvaluation")
+	public ResponseEntity<Boolean> saveEvaluation(@RequestBody BodyParamAuditEntry param) {
 		
+		HttpHeaders headers = new HttpHeaders();
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
+				"POST command on /project/audit/updateEvaluation for project.id %d and topic.id %d", 
+						param.getIdProject(), param.getAuditTopic().getId()));
+		}
+		
+		try {
+			projectAuditHandler.setEvaluation(param.getIdProject(), param.getAuditTopic().getId(), param.getAuditTopic().getEvaluation());
+			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
+		} catch (SkillerException se) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
+			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
+			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
+		}
+		
+	}
+
+	@PostMapping(path="/saveWeights")
+	public ResponseEntity<Boolean> saveWeights(@RequestBody BodyParamAuditEntries param) {
+		
+		HttpHeaders headers = new HttpHeaders();
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
+				"POST command on /project/audit/saveWeights for project.id %d", 
+						param.getIdProject()));
+		}
+		
+		try {
+			
+			List<TopicWeight> weights = new ArrayList<>();
+			for (AuditTopic auditTopic : param.getDataEnvelope()) {
+				weights.add(new TopicWeight(auditTopic.getId(), auditTopic.getWeight()));
+			}
+			
+			projectAuditHandler.setWeights(param.getIdProject(), weights);
+			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
+		} catch (SkillerException se) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
+			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
+			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
+		}
+		
+	}
+	
+	
 }

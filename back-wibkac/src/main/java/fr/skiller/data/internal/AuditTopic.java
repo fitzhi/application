@@ -18,6 +18,16 @@ public @Data class AuditTopic {
 	int id;
 
 	/**
+	 * Topic audit evaluation given by an expert.
+	 */
+	int evaluation;
+	
+	/**
+	 * The weight of topic note inside the global audit evaluation.
+	 */
+	int weight;
+	
+	/**
 	 * Empty constructor for <u>serialization</u> / <u>de-serialization</u> purpose
 	 */
 	public AuditTopic() {
@@ -25,11 +35,23 @@ public @Data class AuditTopic {
 	}
 
 	/**
-	 * AuditTopic constructor.
+	 * AuditTopic constructor with some default values (such as the weight equal to <b>5</b>).
 	 * @param key identifier of the sonar project entry.
 	 */
 	public AuditTopic(int idTopic) {
+		this(idTopic, 0, 5);
+	}
+	
+	/**
+	 * AuditTopic constructor.
+	 * @param key identifier of the sonar project entry.
+	 * @param evaluation the audit evaluation given by an expert.
+	 * @param weight of topic note inside the global audit evaluation.
+	 */
+	public AuditTopic(int idTopic, int evaluation, int weight) {
 		this.id = idTopic;
+		this.evaluation = evaluation;
+		this.weight = weight;
 	}
 	
 }
