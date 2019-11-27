@@ -69,7 +69,8 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 					if (doneAndOk) {
 						this.project.audit[topic.id] = new AuditTopic(topic.id, 0, 5);
 						this.messageService.info('The topic \'' + topic.title + '\' is added to the audit');
-				}});
+						this.messengerCategoryUpdated.emit(topic);
+					}});
 		} else {
 			this.projectService
 				.removeAuditTopic(this.project.id, topic.id)
@@ -78,9 +79,9 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 					if (doneAndOk) {
 						delete this.project.audit[topic.id];
 						this.messageService.info('The topic \'' + topic.title + '\' is removed from audit');
-				}});
+						this.messengerCategoryUpdated.emit(topic);
+					}});
 		}
-		this.messengerCategoryUpdated.emit(topic);
 	}
 
 	/**

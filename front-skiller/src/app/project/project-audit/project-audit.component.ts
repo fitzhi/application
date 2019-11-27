@@ -138,7 +138,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 				((category.select) ? 'Selection' : 'Deselection)' + ' of %s'), category.title);
 		}
 		if (category.select) {
-			this.auditTopics.push({id: category.id, evaluation: 1, weight: 1, title: category.title});
+			this.auditTopics.push({idTopic: category.id, evaluation: 1, weight: 1, title: category.title});
 		} else {
 			const index = this.auditTopics.findIndex(item => item.id === category.id);
 			if (index === -1) {
@@ -148,11 +148,25 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 		}
 		if (this.auditTopics && this.auditTopics.length > 0) {
 			this.assignWeights();
+			this.projectService
+					.saveAuditTopicWeights$(this.project.id, this.auditTopics)
+					.subscribe(doneAndOk => {
+						if (doneAndOk) {
+							this.messageService.info('Weights are completly saved');
+						}
+					});
 		}
+
 		this.auditTopics$.next(this.auditTopics);
 	}
 
+	/**
+	 * This function is invoked when `app-project-audit-badges` signals that the end-user tries
+	 * to show or hide the tasks audit form.
+	 * @param idTopic the topic identifier
+	 */
 	onShowDivAuditTask(idTopic: number) {
+
 		if ((!this.auditTaskFormModeIsOn) && (idTopic !== this.cinematicService.idTopicTaskAuditFormSelected)) {
 			this.topic$.next(new TopicProject(this.project.id, idTopic, this.topics[idTopic]));
 			this.auditTaskFormModeIsOn = true;

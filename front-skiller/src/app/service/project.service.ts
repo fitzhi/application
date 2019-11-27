@@ -176,12 +176,12 @@ export class ProjectService extends InternalService {
 	private handleActionAudit$(idProject: number, auditTopic: AuditTopic, action: string): Observable<Boolean> {
 
 		if (Constants.DEBUG) {
-			console.log ('Action ' + action + ' on topic id ' + auditTopic.id + ' for project ID ' + idProject);
+			console.log ('Action ' + action + ' on topic id ' + auditTopic.idTopic + ' for project ID ' + idProject);
 		}
 
 		const body = {
 			'idProject': idProject,
-			'auditTopic': {'idTopic': auditTopic.id, 'evaluation': auditTopic.evaluation}
+			'auditTopic': {'idTopic': auditTopic.idTopic, 'evaluation': auditTopic.evaluation}
 		};
 
 		return this.httpClient
@@ -559,6 +559,23 @@ export class ProjectService extends InternalService {
 		}
 		const auditTopic = new AuditTopic(idTopic, evaluation, null);
 		return this.handleActionAudit$(idProject, auditTopic, 'saveEvaluation');
+	}
+
+	/**
+	* Save the evaluation for a topic involved in the audit.
+	* @param idProject the given project identifier
+	* @param auditTopics the topic identifier
+	*/
+	saveAuditTopicWeights$(idProject: number, auditTopics: AuditTopic[]): Observable<Boolean> {
+		if (Constants.DEBUG) {
+			console.groupCollapsed('Saving the weights for the topic identified by %d', idProject);
+			auditTopics.forEach(element => console.log (element.idTopic, element.weight));
+			console.groupEnd();
+		}
+		const body = { idProject: idProject, dataEnvelope: auditTopics};
+		return this.httpClient
+			.post<Boolean>(this.backendSetupService.url() + '/project/audit/saveWeights', body, httpOptions)
+			.pipe(take(1));
 	}
 
 	/**

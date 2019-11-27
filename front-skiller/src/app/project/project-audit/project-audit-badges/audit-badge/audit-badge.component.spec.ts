@@ -20,7 +20,7 @@ describe('AuditBadgeComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(AuditBadgeComponent);
 		component = fixture.componentInstance;
-		component.index = 1;
+		component.id = 1;
 		fixture.detectChanges();
 	});
 
