@@ -106,7 +106,7 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 	}
 
 	@Override
-	public void setWeights(int idProject, List<TopicWeight> weights) throws SkillerException {
+	public void saveWeights(int idProject, List<TopicWeight> weights) throws SkillerException {
 		
 		final int totalWeights = weights.stream().mapToInt(tw -> tw.getWeight()).reduce(0, Integer::sum);
 		if (totalWeights != 100) {

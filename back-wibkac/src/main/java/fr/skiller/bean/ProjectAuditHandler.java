@@ -59,6 +59,6 @@ public interface ProjectAuditHandler extends DataSaverLifeCycle {
 	 * @param weights the list of {@link TopicWeight}
 	 * @throws SkillerException thrown if any problem occurs such as <i>'topic identifier unknown'</i>
 	 */
-	void setWeights(int idProject, List<TopicWeight> weights) throws SkillerException;
+	void saveWeights(int idProject, List<TopicWeight> weights) throws SkillerException;
 	
 }

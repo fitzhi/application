@@ -159,7 +159,7 @@ public class ProjectAuditController {
 				weights.add(new TopicWeight(auditTopic.getIdTopic(), auditTopic.getWeight()));
 			}
 			
-			projectAuditHandler.setWeights(param.getIdProject(), weights);
+			projectAuditHandler.saveWeights(param.getIdProject(), weights);
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 		} catch (SkillerException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
