@@ -64,15 +64,23 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	profiles: Profile[];
 
 	public profileStaff = new FormGroup({
-		firstName: new FormControl('', [Validators.maxLength(16)]),
-		lastName: new FormControl('', [Validators.required, Validators.maxLength(16)]),
-		nickName: new FormControl('', [Validators.maxLength(16)]),
-		login: new FormControl('', [Validators.required, Validators.maxLength(16)]),
+		firstName: new FormControl('', [Validators.maxLength(16), this.noUselessWhitespaceValidator]),
+		lastName: new FormControl('', [Validators.required, Validators.maxLength(16), this.noUselessWhitespaceValidator]),
+		nickName: new FormControl('', [Validators.maxLength(16), this.noUselessWhitespaceValidator]),
+		login: new FormControl('', [Validators.required, Validators.maxLength(16), this.noUselessWhitespaceValidator]),
 		email: new FormControl('', [Validators.required, Validators.maxLength(32), Validators.email]),
 		profile: new FormControl(null, [Validators.required]),
 		active: new FormControl(1),
 		external: new FormControl(0)
 	});
+
+	public noUselessWhitespaceValidator(control: FormControl) {
+		if (!control.value) {
+			return null;
+		}
+		const hasUselessWhitespace = (control.value.length !== control.value.trim().length);
+		return !hasUselessWhitespace ? null : { 'whitespace': true };
+	}
 
 	constructor(
 		private staffService: StaffService,
@@ -224,6 +232,11 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	 * @param field field identified throwing this event.
 	 */
 	public onChange(field: number) {
+
+		//
+		// We remove uselss blank, which might disturb the lookup feature.
+		//
+
 		if (this.collaborator.idStaff === -1) {
 			return;
 		}

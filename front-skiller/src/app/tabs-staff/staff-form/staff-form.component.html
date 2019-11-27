@@ -12,8 +12,8 @@
                         formControlName="firstName"/> 
                     <label
 						*ngIf="firstName.touched && firstName.invalid" [ngClass]="'alert alert-warning'"
-						style="width: 100%; font-size: 10px;">16 max character for
-						the first name.</label>
+						style="width: 100%; font-size: 10px;">16 max characters for
+						the first name, without useless space.</label>
 				</div>
 				<div class="col-md-6 mb-3">
                     <label for="lastName" class="required">Last name</label> 
@@ -25,7 +25,7 @@
                     <label
 						*ngIf="lastName.touched && lastName.invalid" [ngClass]="'alert alert-warning'"
 						style="width: 100%; font-size: 10px;"> Last name is required
-						with 16 max character.</label>
+						with 16 max characters, without useless space.</label>
 
 				</div>
 			</div>
@@ -44,7 +44,7 @@
                         <label
 							*ngIf="nickName.touched && nickName.invalid" [ngClass]="'alert alert-warning'"
 							style="width: 100%; font-size: 10px;">12 max character for
-							the Pseudo.</label>
+							the Pseudo,  without useless space.</label>
 					</div>
 				</div>
 				<div class="col-md-6 mb-3">
@@ -55,7 +55,7 @@
 						value="" formControlName="login"> <label
 						*ngIf="login.touched && login.invalid" [ngClass]="'alert alert-warning'"
 						style="width: 100%; font-size: 10px;"> login is required
-						with 16 max character.</label>
+						with 16 max character,  without useless space.</label>
 				</div>
 			</div>
 			<div class="row" *ngIf="hasBeenActive()">

@@ -67,7 +67,7 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 				.pipe(take(1))
 				.subscribe(doneAndOk => {
 					if (doneAndOk) {
-						this.project.audit[topic.id] = new AuditTopic(topic.id);
+						this.project.audit[topic.id] = new AuditTopic(topic.id, 0, 5);
 						this.messageService.info('The topic \'' + topic.title + '\' is added to the audit');
 				}});
 		} else {

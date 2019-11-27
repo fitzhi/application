@@ -133,7 +133,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 		});
 
 		// We setup the whitelist of the component
-		// This test of non nullable and non 'undefined-able' is there for Karma testing purpose. 
+		// This test of non nullable and non 'undefined-able' is there for Karma testing purpose.
 		if (this.projectService.allProjects) {
 			this.projectService.allProjects
 				.map(function(project) { return project.name; }).forEach(element => {
