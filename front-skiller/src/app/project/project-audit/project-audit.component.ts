@@ -204,12 +204,27 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	}
 
 	/**
-	 * The function is informed that a weight has been given to a topic of the audit.
+	 * The function is informed that a weight has been attributed to a topic of the audit.
 	 * @param topicEvaluation the topic evaluation emitted
 	 */
 	onWeightChange(topicWeight: TopicWeight) {
 		if ((Constants.DEBUG) && (topicWeight.typeOfOperation === Constants.CHANGE_BROADCAST)) {
 			console.log (this.topics[topicWeight.idTopic], topicWeight.value);
+		}
+		if (topicWeight.typeOfOperation === Constants.CHANGE_BROADCAST) {
+			const auditTopic = this.auditTopics.find (element => element.idTopic === topicWeight.idTopic);
+			auditTopic.weight = topicWeight.value;
+		}
+		const sum = this.auditTopics.reduce((prev, curr) => prev + curr.weight, 0);
+		if (sum !== 100) {
+			this.messageService.warning('Cannot save the weight of ' + topicWeight.value + '%. The sum of weights have to be equal to 100!');
+		} else {
+			this.projectService
+				.saveAuditTopicWeights$(this.project.id, this.auditTopics)
+				.subscribe(doneAndOk => {
+					if (doneAndOk) {
+						this.messageService.success('Audit topic weights for the project ' + this.project.name + ' have been saved!');
+				}});
 		}
 	}
 

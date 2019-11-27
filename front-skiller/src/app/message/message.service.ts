@@ -17,6 +17,8 @@ export class MessageService {
 
 	/*
 	* set a new message
+	* @param gravity the gravity level of the message
+	* @param message the text of the message
 	*/
 	public set(gravity: number, message: string) {
 		this.myMessage.next(new Message(gravity, message));
@@ -24,14 +26,21 @@ export class MessageService {
 	}
 
 	/*
-	* set a new ERROR message
+	* Display a new SUCCESS message
+	*/
+	public success(message: string) {
+		this.set(Constants.MESSAGE_SUCCESS, message);
+	}
+
+	/*
+	* Display a new ERROR message
 	*/
 	public error(message: string) {
 		this.set(Constants.MESSAGE_ERROR, message);
 	}
 
 	/*
-	* display an snack info message.
+	* display an snack warning message.
 	*/
 	public warning(message: string) {
 		this.set(Constants.MESSAGE_WARNING, message);

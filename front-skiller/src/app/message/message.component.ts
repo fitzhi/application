@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MessageService } from '../message/message.service';
 import { Message } from '../message/message';
 import { Constants } from '../constants';
+import { take } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-message',
@@ -41,6 +42,7 @@ export class MessageComponent implements OnInit {
 					this.classContainerMessage = 'rounded warning';
 					break;
 				case Constants.MESSAGE_SUCCESS:
+					console.log ('nope');
 					this.classContainerMessage = 'rounded success';
 					break;
 
