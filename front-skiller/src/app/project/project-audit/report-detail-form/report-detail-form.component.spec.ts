@@ -1,22 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AuditTaskFormComponent } from './audit-task-form.component';
 import { RootTestModule } from 'src/app/root-test/root-test.module';
+import { ReportDetailFormComponent } from './report-detail-form.component';
 
 describe('AuditTaskComponent', () => {
-	let component: AuditTaskFormComponent;
-	let fixture: ComponentFixture<AuditTaskFormComponent>;
+	let component: ReportDetailFormComponent;
+	let fixture: ComponentFixture<ReportDetailFormComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ AuditTaskFormComponent ],
+			declarations: [ ReportDetailFormComponent ],
 			imports: []
 		})
 		.compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(AuditTaskFormComponent);
+		fixture = TestBed.createComponent(ReportDetailFormComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

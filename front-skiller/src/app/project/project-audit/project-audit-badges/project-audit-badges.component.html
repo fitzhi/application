@@ -1,6 +1,5 @@
 <div id="containerAuditThumbnails">
-    <div *ngFor="let topic of (auditTopics$ | async)" 
-        style="padding-left:5px; padding-top:5px">
+    <div *ngFor="let topic of (auditTopics$ | async)" class="containerOneThumbnail">
         <app-audit-badge 
             (messengerWeightChange)="onWeightChange($event)"
             (messengerEvaluationChange)="onEvaluationChange($event)"

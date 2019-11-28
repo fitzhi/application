@@ -4,11 +4,11 @@ import { ProjectAuditBadgesComponent } from './project-audit-badges.component';
 import { Component } from '@angular/core';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { AuditBadgeComponent } from './audit-badge/audit-badge.component';
-import { AuditTaskFormComponent } from '../audit-task-form/audit-task-form.component';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { RootTestModule } from 'src/app/root-test/root-test.module';
 import { AuditGraphicBadgeComponent } from './audit-badge/audit-graphic-badge/audit-graphic-badge.component';
 import { toBase64String } from '@angular/compiler/src/output/source_map';
+import { ReportDetailFormComponent } from '../report-detail-form/report-detail-form.component';
 
 describe('ProjectAuditBadgesComponent', () => {
 	let component: TestHostComponent;
@@ -26,7 +26,7 @@ describe('ProjectAuditBadgesComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ProjectAuditBadgesComponent, TestHostComponent, AuditBadgeComponent,
-				AuditTaskFormComponent, AuditGraphicBadgeComponent],
+				ReportDetailFormComponent, AuditGraphicBadgeComponent],
 			imports: [RootTestModule, MatGridListModule]
 		})
 		.compileComponents();

@@ -4,7 +4,6 @@ import { ProjectAuditComponent } from './project-audit.component';
 import { ProjectAuditBadgesComponent } from './project-audit-badges/project-audit-badges.component';
 import { TableCategoriesComponent } from './table-categories/table-categories.component';
 import { AuditBadgeComponent } from './project-audit-badges/audit-badge/audit-badge.component';
-import { AuditTaskFormComponent } from './audit-task-form/audit-task-form.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { FormsModule } from '@angular/forms';
@@ -14,8 +13,9 @@ import { AuditGraphicBadgeComponent } from './project-audit-badges/audit-badge/a
 import { ReferentialService } from 'src/app/service/referential.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { HttpClientModule } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ReportDetailFormComponent } from './report-detail-form/report-detail-form.component';
 
 describe('ProjectAuditComponent', () => {
 	let component: ProjectAuditComponent;
@@ -24,7 +24,7 @@ describe('ProjectAuditComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ProjectAuditComponent, ProjectAuditBadgesComponent,
-				TableCategoriesComponent, AuditBadgeComponent, AuditTaskFormComponent,
+				TableCategoriesComponent, AuditBadgeComponent, ReportDetailFormComponent,
 				AuditGraphicBadgeComponent,  ],
 			providers: [ReferentialService],
 			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,
@@ -36,7 +36,7 @@ describe('ProjectAuditComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ProjectAuditComponent);
 		component = fixture.componentInstance;
-		component.project$ = new Observable();
+		component.project$ = new BehaviorSubject(null);
 		fixture.detectChanges();
 	});
 

@@ -1,0 +1,16 @@
+<div id="auditTaskForm" *ngIf="topic$ | async">
+    <div class="header">{{topic.title}}</div>
+    <form class="needs-validation" (ngSubmit)="onSubmit()" [formGroup]="profileAuditTask" >
+        <p>
+            <mat-form-field appearance="outline" class="comment">
+                <mat-label>Audit topic</mat-label>
+                <textarea id="comment" name="comment" formControlName="comment" 
+                class="comment" matInput placeholder=
+                "Type here a technical appreciation regarding the '{{topic.title}}' and assign it a weight"></textarea>
+                <mat-hint>2000 caracters max</mat-hint>
+
+            </mat-form-field>
+        </p>
+
+    </form>
+</div>
