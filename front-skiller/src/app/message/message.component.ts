@@ -42,7 +42,6 @@ export class MessageComponent implements OnInit {
 					this.classContainerMessage = 'rounded warning';
 					break;
 				case Constants.MESSAGE_SUCCESS:
-					console.log ('nope');
 					this.classContainerMessage = 'rounded success';
 					break;
 

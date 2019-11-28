@@ -127,6 +127,18 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 		}
 		this.auditTopics[this.auditTopics.length - 1].weight = 100 - intermediateSum;
 	}
+	/**
+	 * Save the new weigths processed, or filled, into the project object container.
+	 */
+	private impactWeightsInProject(): void {
+		this.auditTopics.forEach(auditTopic => {
+			if (!this.project.audit[auditTopic.idTopic]) {
+				console.error('Internal error : ' + auditTopic.idTopic + ' is not retrieved in the project');
+			} else {
+				this.project.audit[auditTopic.idTopic].weight = auditTopic.weight;
+			}
+		});
+	}
 
 	/**
 	 * The user has involved, or removed, a topic from his audit.
@@ -141,7 +153,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 		if (category.select) {
 			this.auditTopics.push({idTopic: category.id, evaluation: 1, weight: 1, title: category.title});
 		} else {
-			const index = this.auditTopics.findIndex(item => item.id === category.id);
+			const index = this.auditTopics.findIndex(item => item.idTopic === category.id);
 			if (index === -1) {
 				throw new Error ('Internal erreur. This index is supposed to be > 0');
 			}
@@ -149,6 +161,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 		}
 		if (this.auditTopics && this.auditTopics.length > 0) {
 			this.assignWeights();
+			this.impactWeightsInProject();
 			this.projectService
 					.saveAuditTopicWeights$(this.project.id, this.auditTopics)
 					.subscribe(doneAndOk => {
@@ -214,6 +227,9 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 		if (topicWeight.typeOfOperation === Constants.CHANGE_BROADCAST) {
 			const auditTopic = this.auditTopics.find (element => element.idTopic === topicWeight.idTopic);
 			auditTopic.weight = topicWeight.value;
+
+			// We update the project
+			this.project.audit[topicWeight.idTopic].weight = topicWeight.value;
 		}
 		const sum = this.auditTopics.reduce((prev, curr) => prev + curr.weight, 0);
 		if (sum !== 100) {
