@@ -11,6 +11,8 @@ import { TopicEvaluation } from './project-audit-badges/topic-evaluation';
 import { TopicWeight } from './project-audit-badges/topic-weight';
 import { ProjectService } from 'src/app/service/project.service';
 import { MessageService } from 'src/app/message/message.service';
+import { AuditChosenDetail } from './project-audit-badges/audit-badge/audit-chosen-detail';
+import { AuditDetail } from 'src/app/data/audit-detail';
 
 @Component({
 	selector: 'app-project-audit',
@@ -178,22 +180,25 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 
 	/**
 	 * This function is invoked when `app-project-audit-badges` signals that the end-user tries
-	 * to show or hide the tasks audit form.
+	 * to show or hide a detail audit form.
 	 * @param idTopic the topic identifier
 	 */
-	onShowDivAuditTask(idTopic: number) {
+	onShowHideAuditDetail(auditChosenDetail: AuditChosenDetail) {
 
-		if ((!this.auditTaskFormModeIsOn) && (idTopic !== this.cinematicService.idTopicTaskAuditFormSelected)) {
-			this.topic$.next(new TopicProject(this.project.id, idTopic, this.topics[idTopic]));
-			this.auditTaskFormModeIsOn = true;
-			this.cinematicService.idTopicTaskAuditFormSelected = idTopic;
-		} else {
-			if (idTopic === this.cinematicService.idTopicTaskAuditFormSelected) {
-				this.auditTaskFormModeIsOn = false;
-				this.cinematicService.idTopicTaskAuditFormSelected = -1;
-			} else {
+		if (auditChosenDetail.detail === AuditDetail.Tasks) {
+			const idTopic = auditChosenDetail.idTopic;
+			if ((!this.auditTaskFormModeIsOn) && (idTopic !== this.cinematicService.idTopicTaskAuditFormSelected)) {
 				this.topic$.next(new TopicProject(this.project.id, idTopic, this.topics[idTopic]));
+				this.auditTaskFormModeIsOn = true;
 				this.cinematicService.idTopicTaskAuditFormSelected = idTopic;
+			} else {
+				if (idTopic === this.cinematicService.idTopicTaskAuditFormSelected) {
+					this.auditTaskFormModeIsOn = false;
+					this.cinematicService.idTopicTaskAuditFormSelected = -1;
+				} else {
+					this.topic$.next(new TopicProject(this.project.id, idTopic, this.topics[idTopic]));
+					this.cinematicService.idTopicTaskAuditFormSelected = idTopic;
+				}
 			}
 		}
 	}

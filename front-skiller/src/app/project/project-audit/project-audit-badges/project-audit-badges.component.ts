@@ -4,6 +4,7 @@ import { TopicEvaluation } from './topic-evaluation';
 import { TopicWeight } from './topic-weight';
 import { Project } from 'src/app/data/project';
 import { BaseComponent } from 'src/app/base/base.component';
+import { AuditChosenDetail } from './audit-badge/audit-chosen-detail';
 
 @Component({
 	selector: 'app-project-audit-badges',
@@ -25,7 +26,7 @@ export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit
 	/**
 	 * This messenger propagates the signal to show/hide the audit form panel
 	 */
-	@Output() messengerShowDivAuditTask = new EventEmitter<number>();
+	@Output() messengerShowHideAuditDetail = new EventEmitter<AuditChosenDetail>();
 
 	/**
 	 * This messenger propagates the signal than an evaluation has been given to an audit topic.
@@ -50,11 +51,12 @@ export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit
 	}
 
 	/**
-	 * The function catches a signal emited from `app-audit-badge` and propagates it.
-	 * @param idTopic the topic for which the audit form is shown or hidden.
+	 * The function is catching a signal emitted from `app-audit-badge` and propagates it.
+	 * @param auditDetail the audit topic detail panel to be shown or hidden.
 	 */
-	onShowDivAuditTask(idTopic: number) {
-		this.messengerShowDivAuditTask.next(idTopic);
+	onShowHideAuditDetail(auditDetail: AuditChosenDetail) {
+		console.log ('onShowHideAuditDetail');
+		this.messengerShowHideAuditDetail.next(auditDetail);
 	}
 
 	/**

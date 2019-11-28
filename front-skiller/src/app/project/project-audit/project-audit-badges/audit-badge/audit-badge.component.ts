@@ -2,11 +2,12 @@ import { Component, OnInit, Input, OnDestroy, EventEmitter, Output, AfterViewIni
 import { Constants } from 'src/app/constants';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { BaseComponent } from 'src/app/base/base.component';
-import { thresholdFreedmanDiaconis, color, timeHours } from 'd3';
 import { ProjectService } from 'src/app/service/project.service';
 import { MatSliderChange } from '@angular/material/slider';
 import { TopicEvaluation } from '../topic-evaluation';
 import { TopicWeight } from '../topic-weight';
+import { AuditChosenDetail } from './audit-chosen-detail';
+import { AuditDetail } from 'src/app/data/audit-detail';
 
 @Component({
 	selector: 'app-audit-badge',
@@ -36,9 +37,9 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	@Input() title;
 
 	/**
-	 * This messenger emits a signal to show/hide the audit form panel
+	 * This messenger emits a signal to show/hide an audit panel detail.
 	 */
-	@Output() messengerShowDivAuditTask = new EventEmitter<number>();
+	@Output() messengerShowHideAuditDetail = new EventEmitter<AuditChosenDetail>();
 
 	/**
 	 * This messenger emits a signal to inform the parent component
@@ -54,9 +55,15 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 
 	/**
 	 * This `boolean` represents the fact that the panel
-	 * in charge of create or update a remark for this audit is visible.
+	 * in charge of adding or removing tasks and todo for this audit is visible.
 	 */
-	private auditTaskFormModeIsOn = false;
+	private auditTasksFormModeIsOn = false;
+
+	/**
+	 * This `boolean` represents the fact that the panel
+	 * in charge of editing the audit-report is visible.
+	 */
+	private auditReportFormModeIsOn = false;
 
 	constructor(
 		private cinematicService: CinematicService,
@@ -89,7 +96,20 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 */
 	/* tslint:enable: no-trailing-whitespace */
 	private classIconTasks(id: number) {
-		const clazz = ((this.cinematicService.idTopicTaskAuditFormSelected === id) && this.auditTaskFormModeIsOn) ? 'tasks-selected' : 'tasks';
+		const clazz = ((this.cinematicService.idTopicTaskAuditFormSelected === id) && this.auditTasksFormModeIsOn) ? 'tasks-selected' : 'tasks';
+		return clazz;
+	}
+
+	/* tslint:disable: no-trailing-whitespace */
+	/**
+	 * Return the __CSS class__ to be active for the tasks icon.  
+	 * This function is called by the DIV, identified by `'report-{{id}}'`, for its preview.
+	 * @param id the topic identifier.
+	 */
+	/* tslint:enable: no-trailing-whitespace */
+	private classIconReport(id: number) {
+		const clazz = ((this.cinematicService.idTopicTaskAuditFormSelected === id)
+			&& this.auditReportFormModeIsOn) ? 'report-selected' : 'report';
 		return clazz;
 	}
 
@@ -108,9 +128,19 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	/**
 	 * This function emits asignal broadcasting that audit-task form should be visible, or hidden.
 	 */
-	private showOrHideAuditTask() {
-		this.auditTaskFormModeIsOn = !this.auditTaskFormModeIsOn;
-		this.messengerShowDivAuditTask.emit(this.id);
+	private showHideAuditTasks() {
+		console.log ('showHideAuditTasks');
+		this.auditTasksFormModeIsOn = !this.auditTasksFormModeIsOn;
+		this.messengerShowHideAuditDetail.emit(new AuditChosenDetail(this.id, AuditDetail.Tasks));
+	}
+
+	/**
+	 * This function emits asignal broadcasting that audit-task form should be visible, or hidden.
+	 */
+	private showHideAuditReport() {
+		console.log ('showHideAuditReport');
+		this.auditReportFormModeIsOn = !this.auditReportFormModeIsOn;
+		this.messengerShowHideAuditDetail.emit(new AuditChosenDetail(this.id, AuditDetail.Report));
 	}
 
 	/**
