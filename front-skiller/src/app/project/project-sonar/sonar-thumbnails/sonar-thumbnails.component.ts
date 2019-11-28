@@ -11,6 +11,7 @@ import { ProjectService } from 'src/app/service/project.service';
 import { MessageService } from 'src/app/message/message.service';
 import { ThumbnailQuotationBadge } from './thumbnail-quotation-badge';
 import { SonarEvaluation } from 'src/app/data/sonar-evaluation';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
 	selector: 'app-sonar-thumbnails',
@@ -22,7 +23,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	/**
 	* The project loaded in the parent component.
 	*/
-	@Input() project$;
+	@Input() project$: BehaviorSubject<Project>;
 
 	/**
 	 * Observable emitting a PanelSwitchEvent

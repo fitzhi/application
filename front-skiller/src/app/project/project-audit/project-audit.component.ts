@@ -19,7 +19,7 @@ import { MessageService } from 'src/app/message/message.service';
 })
 export class ProjectAuditComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
-	@Input() project$;
+	@Input() project$: BehaviorSubject<Project>;
 
 	/**
 	 * This `boolean` control the `[hidden]` property of the div `auditTask`.
@@ -75,6 +75,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 				this.project = project;
 				this.subscriptions.add(
 					this.referentialService.topics$.subscribe (topics => {
+						this.auditTopics = [];
 						this.topics = topics;
 						Object.keys(this.project.audit).forEach(key => {
 							this.auditTopics.push(
@@ -127,6 +128,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 		}
 		this.auditTopics[this.auditTopics.length - 1].weight = 100 - intermediateSum;
 	}
+
 	/**
 	 * Save the new weigths processed, or filled, into the project object container.
 	 */
@@ -211,10 +213,28 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 				topicEvaluation.idTopic,
 				topicEvaluation.value).subscribe(doneAndOk => {
 					if (doneAndOk) {
-						this.messageService.info('Evaluation given to ' + this.topics[topicEvaluation.idTopic] + ' has been saved');
+						this.messageService.success('Evaluation given to ' + this.topics[topicEvaluation.idTopic] + ' has been saved');
+						// Affect the new evaluation given for this topic to the associated item in the Project object.
+						this.updateEvaluationOnTopicProject(topicEvaluation);
+
+						// Update the underlining GLOBAL project evaluation
+						this.projectService.processGlobalAuditEvaluation(this.project);
+
 					}});
 		}
 	}
+
+	/**
+	 * Save the new weigths processed, or filled, into the project object container.
+	 */
+	private updateEvaluationOnTopicProject(topicEvaluation: TopicEvaluation): void {
+		if (!this.project.audit[topicEvaluation.idTopic]) {
+			console.error('Internal error : ' + topicEvaluation.idTopic + ' is not retrieved in the project');
+			return;
+		}
+		this.project.audit[topicEvaluation.idTopic].evaluation = topicEvaluation.value;
+	}
+
 
 	/**
 	 * The function is informed that a weight has been attributed to a topic of the audit.

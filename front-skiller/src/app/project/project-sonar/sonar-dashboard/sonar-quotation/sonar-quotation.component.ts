@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import * as d3 from 'd3';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { PanelSwitchEvent } from '../../sonar-thumbnails/panel-switch-event';
 import { Constants } from 'src/app/constants';
 import { SonarService } from 'src/app/service/sonar.service';
@@ -20,7 +20,7 @@ export class SonarQuotationComponent extends BaseComponent implements OnInit, On
 	/**
 	 * Observable throwing the current project.
 	 */
-	@Input() project$;
+	@Input() project$: BehaviorSubject<Project>;
 
 	/**
 	* Observable emitting a PanelSwitchEvent when

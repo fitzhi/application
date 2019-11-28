@@ -30,7 +30,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	/**
      * The project loaded in the parent component.
      */
-	@Input() project$;
+	@Input() project$: BehaviorSubject<Project>;
 
 	/**
 	 * This component, hosted in a tab pane, use this emitter to inform its parent to change the active pane.

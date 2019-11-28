@@ -12,7 +12,7 @@ import { Constants } from '../../constants';
 import { SkillService } from '../../service/skill.service';
 import { MessageService } from '../../message/message.service';
 import { BaseComponent } from '../../base/base.component';
-import { Observable, of } from 'rxjs';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { SonarService } from 'src/app/service/sonar.service';
 import Tagify from '@yaireo/tagify';
@@ -28,7 +28,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	/**
 	 * The project loaded in the parent component.
 	 */
-	@Input() project$;
+	@Input() project$: BehaviorSubject<Project>;
 
 	/**
 	 * The risk might have changed due to the last dashboard calculation.
@@ -611,7 +611,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * @param tabIndex new tab to activate.
 	 */
 	public tabActivation (tabIndex: number) {
-		console.log ('tabIndex', tabIndex);
 		this.tabActivationEmitter.next(tabIndex);
 	}
 

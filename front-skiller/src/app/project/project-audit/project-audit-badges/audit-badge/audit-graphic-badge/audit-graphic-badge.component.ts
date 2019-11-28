@@ -1,14 +1,16 @@
-import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { ProjectService } from 'src/app/service/project.service';
 import { TopicEvaluation } from '../../topic-evaluation';
-import { Constants } from 'src/app/constants';
+import { Project } from 'src/app/data/project';
+import { BaseComponent } from 'src/app/base/base.component';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
 	selector: 'app-audit-graphic-badge',
 	templateUrl: './audit-graphic-badge.component.html',
 	styleUrls: ['./audit-graphic-badge.component.css']
 })
-export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
+export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	/**
 	 * Topic identifier.
@@ -25,6 +27,13 @@ export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 	 */
 	@Input() editable;
 
+
+	/**
+	 * This observable informs the component __IN NON EDITABLE ONLY__
+	 * that the underlying project has changed and that the badge needs to be updated.
+	 */
+	@Input() project$: BehaviorSubject<Project>;
+
 	/**
 	 * The messenger throws the new evaluation givent by the end-user after each change.
 	 */
@@ -35,15 +44,34 @@ export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 	 */
 	private color;
 
-	constructor(private projectService: ProjectService) { }
+	constructor(private projectService: ProjectService) { super(); }
 
 	ngOnInit() {
+		if (this.project$ && this.editable) {
+			console.error ('SHOULD NOT PASS HERE : Usage of the observable project$ is reserved to the non editable mode');
+		}
 	}
 
 	ngAfterViewInit() {
-		if (this.evaluation) {
+
+		if (this.editable) {
 			this.drawAuditArc();
 			this.drawAuditText();
+		}
+
+		if (!this.editable) {
+			this.project$.subscribe(project => {
+				if (project) {
+					if (project.auditEvaluation) {
+						this.evaluation = project.auditEvaluation;
+						// We release the treatment flow in order to end the creation of the SVG elements
+						setTimeout( () => {
+							this.drawAuditArc();
+							this.drawAuditText();
+						}, 0);
+					}
+				}
+			});
 		}
 	}
 
@@ -78,18 +106,30 @@ export class AuditGraphicBadgeComponent implements OnInit, AfterViewInit {
 		} else {
 			this.color = this.projectService.getEvaluationColor(this.evaluation);
 		}
-		document.getElementById('topic-arc-' + this.id).setAttribute('d', arc(60, 60, 50, -180, endAngleEvaluation));
-		document.getElementById('topic-arc-' + this.id).setAttribute('stroke', this.color);
+		const htmlElement = document.getElementById('topic-arc-' + this.id);
+		if (!htmlElement) {
+			console.error('Cannot reach %s', 'topic-arc-' + this.id);
+		}
+		if (htmlElement) {
+			htmlElement.setAttribute('d', arc(60, 60, 50, -180, endAngleEvaluation));
+			htmlElement.setAttribute('stroke', this.color);
+		}
 
 	}
 
 	drawAuditText() {
+		const htmlElement = document.getElementById('topic-note-' + this.id);
+		if (!htmlElement) {
+			console.error('Cannot reach %s', 'topic-note-' + this.id);
+		}
+
 		if (!this.editable) {
-			document.getElementById('topic-note-' + this.id).setAttribute('x', '40');
-			document.getElementById('topic-note-' + this.id).setAttribute('y', '70');
+			htmlElement.setAttribute('x', '40');
+			htmlElement.setAttribute('y', '70');
+			htmlElement.textContent = '' + this.evaluation;
 		} else {
-			document.getElementById('topic-note-' + this.id).setAttribute('x', '30');
-			document.getElementById('topic-note-' + this.id).setAttribute('y', '40');
+			htmlElement.setAttribute('x', '30');
+			htmlElement.setAttribute('y', '40');
 		}
 	}
 

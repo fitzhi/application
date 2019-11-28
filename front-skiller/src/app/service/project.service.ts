@@ -579,13 +579,33 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
+	 * Process the Audit global evaluation for a project.
+	 * @param project the given project
+	 */
+	processGlobalAuditEvaluation(project: Project): void {
+
+		// Nothing to do.
+		if (!project.audit) {
+			return;
+		}
+
+		let result = 0;
+		Object.keys(project.audit).forEach(key => {
+			result += project.audit[key].evaluation * project.audit[key].weight;
+		});
+		project.auditEvaluation = Math.floor(result / 100);
+		this.dump(project, 'processGlobalAuditEvaluation');
+	}
+
+	/**
 	 * Dump the content of a given project.
 	 * @param project the passed project.
 	 * @param from: Method which made that call
 	 */
-	dump(project: Project, from: string) {
+	dump(project: Project, from: string): void {
 		console.groupCollapsed('Project %d %s from %s',
 			project.id, project.name, from);
+		console.log('Global audit evaluation', project.auditEvaluation);
 		project.sonarProjects.forEach(sonarProject => {
 			if (sonarProject.projectSonarMetricValues) {
 				console.groupCollapsed('Soner project %s', sonarProject.key);

@@ -6,7 +6,7 @@ import { Constants } from 'src/app/constants';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { ProjectService } from 'src/app/service/project.service';
 import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
 import * as d3 from 'd3';
 
@@ -20,7 +20,7 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	/**
 	* The project loaded in the parent component.
 	*/
-	@Input() project$;
+	@Input() project$: BehaviorSubject<Project>;
 
 	/**
 	* Observable emitting a PanelSwitchEvent when

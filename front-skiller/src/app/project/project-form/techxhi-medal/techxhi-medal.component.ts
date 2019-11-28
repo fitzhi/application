@@ -4,6 +4,8 @@ import { Project } from 'src/app/data/project';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
 import { SonarProject } from 'src/app/data/SonarProject';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
 	selector: 'app-techxhi-medal',
@@ -15,7 +17,7 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	/**
 	 * Observable of Project received from the parent Form project.
 	 */
-	@Input() project$;
+	@Input() project$: BehaviorSubject<Project>;
 
 	/**
 	 * the color of the STAFF risk circle
@@ -36,7 +38,14 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	public PROJECT_IDX_TAB_SUNBURST = Constants.PROJECT_IDX_TAB_SUNBURST;
 	public PROJECT_IDX_TAB_AUDIT = Constants.PROJECT_IDX_TAB_AUDIT;
 
-	constructor(private referentialService: ReferentialService) {
+	/**
+	 * Selected tab.
+	 */
+	private selectedTab: number;
+
+	constructor(
+		private referentialService: ReferentialService,
+		private cinematicService: CinematicService) {
 		super();
 	}
 
@@ -47,6 +56,10 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 					this.project = project;
 				}
 			}));
+
+		this.subscriptions.add(
+			this.cinematicService.tabProjectActivated$
+				.subscribe(selectedTab => this.selectedTab = selectedTab ));
 	}
 
 	/**
@@ -109,6 +122,11 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	 * This function is handling the `*ngIf` preview condition of the __Audit__ summary badge.
 	 */
 	auditReady() {
+
+		if (this.selectedTab !== Constants.PROJECT_IDX_TAB_FORM) {
+			return false;
+		}
+
 		if (!this.project) {
 			return false;
 		}

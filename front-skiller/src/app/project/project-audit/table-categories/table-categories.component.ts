@@ -7,6 +7,7 @@ import { take } from 'rxjs/operators';
 import { MessageService } from 'src/app/message/message.service';
 import { Topic } from './topic';
 import { AuditTopic } from 'src/app/data/AuditTopic';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
 	selector: 'app-table-categories',
@@ -15,7 +16,7 @@ import { AuditTopic } from 'src/app/data/AuditTopic';
 })
 export class TableCategoriesComponent extends BaseComponent implements OnInit, OnDestroy {
 
-	@Input() project$;
+	@Input() project$: BehaviorSubject<Project>;
 
 	/**
 	 * We inform the parent component that a category has been selectect or deselected.

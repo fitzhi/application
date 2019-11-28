@@ -135,7 +135,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 		// EITHER we are in creation mode,
 		// OR we load the Project from the back-end...
 		// Anyway, We create an empty project until the subscription is complete
-		if (this.idProject != null) {
+		if (this.idProject) {
 			this.subscriptions.add(
 				this.projectService.allProjectsIsLoaded$.pipe (
 					switchMap( (success: boolean) => {

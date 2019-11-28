@@ -21,7 +21,7 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 	/**
 	* The project loaded in the parent component.
 	*/
-	@Input() project$;
+	@Input() project$: BehaviorSubject<Project>;
 
 	/**
 	 * Observable emitting the panel identifier.

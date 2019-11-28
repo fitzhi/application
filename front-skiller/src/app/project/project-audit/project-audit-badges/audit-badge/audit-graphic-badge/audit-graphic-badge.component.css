@@ -11,6 +11,7 @@ div.graphic-non-editable {
 .evaluation {
     font-size: 38px;
     font-weight: 600;
+    pointer-events: none;
 }
 
 .inputEvaluation {

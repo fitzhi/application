@@ -5,7 +5,7 @@ import { DependenciesDataSource } from './DependenciesDataSource';
 import { InLineEditDialogComponent } from './in-line-edit-dialog/in-line-edit-dialog.component';
 import { ProjectService } from '../../../service/project.service';
 import { take } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { Project } from 'src/app/data/project';
 import { BaseComponent } from 'src/app/base/base.component';
 
@@ -16,7 +16,7 @@ import { BaseComponent } from 'src/app/base/base.component';
 })
 export class TableDependenciesComponent extends BaseComponent implements OnInit {
 
-	@Input() project$: Observable<Project>;
+	@Input() project$: BehaviorSubject<Project>;
 
 	private idProject: number;
 

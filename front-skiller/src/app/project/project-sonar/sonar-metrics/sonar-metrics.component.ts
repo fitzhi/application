@@ -6,7 +6,7 @@ import { ProjectSonarMetric } from 'src/app/data/sonar/project-sonar-metric';
 import { SonarService } from 'src/app/service/sonar.service';
 import { switchMap, map, catchError, take } from 'rxjs/operators';
 import { Project } from 'src/app/data/project';
-import { Observable, EMPTY, of } from 'rxjs';
+import { Observable, EMPTY, of, BehaviorSubject } from 'rxjs';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
 import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value';
@@ -28,7 +28,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	/**
 	* The project loaded in the parent component.
 	*/
-	@Input() project$;
+	@Input() project$: BehaviorSubject<Project>;
 
 	/**
 	* Observable emitting a PanelSwitchEvent when

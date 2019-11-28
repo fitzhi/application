@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { TopicEvaluation } from './topic-evaluation';
 import { TopicWeight } from './topic-weight';
 import { Project } from 'src/app/data/project';
@@ -15,7 +15,7 @@ export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit
 	/**
 	 * This observable emits the current active project.
 	 */
-	@Input() project$: Observable<Project>;
+	@Input() project$: BehaviorSubject<Project>;
 
 	/**
 	 * The Topics involved for this audit.

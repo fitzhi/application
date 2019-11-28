@@ -25,9 +25,9 @@
     </div>
 
     <div class="auditGraphicBadge">
-        </div>
-      
-    <div *ngIf="auditReady()" 
+    </div>
+
+    <div *ngIf="auditReady()"
         id="auditSummaryBadge" 
         (click)="jumpToTab(PROJECT_IDX_TAB_AUDIT)"
         data-toggle="tooltip" data-placement="right" data-html="true"
@@ -35,7 +35,7 @@
             <app-audit-graphic-badge 
                 [editable]=false 
                 [id]=1789
-                [evaluation]=90>
+                [project$]="project$">
     </app-audit-graphic-badge>
 </div>
 </div>
