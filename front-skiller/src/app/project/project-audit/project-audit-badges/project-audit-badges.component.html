@@ -11,8 +11,15 @@
         </app-audit-badge>
     </div>
     <div *ngFor="let auditDetail of (auditDetails$ | async)" class="containerOneThumbnail">
-        <app-report-detail-form
-            [title]="'auditDetail.idTopic'">
-        </app-report-detail-form>
+        <div *ngIf="reportDetailChosen(auditDetail)">
+            <app-report-detail-form
+                [idTopic]="auditDetail.idTopic">
+            </app-report-detail-form>
+        </div>
+        <div *ngIf="tasksDetailChosen(auditDetail)">
+            <app-tasks-detail-form
+                [idTopic]="auditDetail.idTopic">
+            </app-tasks-detail-form>
+        </div>
     </div>
 </div>

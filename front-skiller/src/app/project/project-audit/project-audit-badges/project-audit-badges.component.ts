@@ -5,6 +5,7 @@ import { TopicWeight } from './topic-weight';
 import { Project } from 'src/app/data/project';
 import { BaseComponent } from 'src/app/base/base.component';
 import { AuditChosenDetail } from './audit-badge/audit-chosen-detail';
+import { AuditDetail } from 'src/app/data/audit-detail';
 
 @Component({
 	selector: 'app-project-audit-badges',
@@ -85,6 +86,30 @@ export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit
 	 */
 	onWeightChange(topicWeight: TopicWeight) {
 		this.messengerTopicWeight.next(topicWeight);
+	}
+
+	/* tslint:disable: no-trailing-whitespace */
+	/**
+	 * Return `true` if this choice is a __report__ detail choice.  
+	 * This function is called inside a `*ngIf()` conditionning the component `app-report-detail-form` 
+	 * within the HTML file for `ProjectAuditBadges`
+	 * @param auditChosenDetail the end-user choice
+	 */
+	/* tslint:enable: no-trailing-whitespace */
+	reportDetailChosen(auditChosenDetail: AuditChosenDetail): boolean {
+		return (auditChosenDetail.detail === AuditDetail.Report);
+	}
+
+	/* tslint:disable: no-trailing-whitespace */
+	/**
+	 * Return `true` if this choice is a __taks__ detail choice.  
+	 * This function is called inside a `*ngIf()` conditionning the component `app-tasks-detail-form` 
+	 * within the HTML file for `ProjectAuditBadges`
+	 * @param auditChosenDetail the end-user choice
+	 */
+	/* tslint:enable: no-trailing-whitespace */
+	tasksDetailChosen(auditChosenDetail: AuditChosenDetail): boolean {
+		return (auditChosenDetail.detail === AuditDetail.Tasks);
 	}
 
 	/**

@@ -101,6 +101,7 @@ import { AuditGraphicBadgeComponent } from './project/project-audit/project-audi
 import { TableCategoriesComponent } from './project/project-audit/table-categories/table-categories.component';
 import {MatSliderModule} from '@angular/material/slider';
 import { ReportDetailFormComponent } from './project/project-audit/project-audit-badges/report-detail-form/report-detail-form.component';
+import { TasksDetailFormComponent } from './project/project-audit/project-audit-badges/tasks-detail-form/tasks-detail-form.component';
 
 @NgModule({
 	declarations: [
@@ -156,6 +157,7 @@ import { ReportDetailFormComponent } from './project/project-audit/project-audit
 		AuditGraphicBadgeComponent,
 		TableCategoriesComponent,
 		ReportDetailFormComponent,
+		TasksDetailFormComponent,
 	],
 	entryComponents: [
 		StaffUploadCvComponent,

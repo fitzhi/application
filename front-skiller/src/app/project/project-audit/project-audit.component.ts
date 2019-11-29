@@ -202,10 +202,9 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 			console.log ('adding the detail panel %s for topic %d', auditChosenDetail.detail, auditChosenDetail.idTopic );
 		}
 
-		if (auditChosenDetail.detail === AuditDetail.Report) {
 			this.auditDetails.push(auditChosenDetail);
 			this.auditDetails$.next(this.auditDetails);
-		}
+
 		/*
 		if (auditChosenDetail.detail === AuditDetail.Tasks) {
 			const idTopic = auditChosenDetail.idTopic;
