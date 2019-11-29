@@ -1,0 +1,12 @@
+<div class="auditReportForm">
+    <div class="header">{{getTitle(idTopic)}}</div>
+    <form class="needs-validation" [formGroup]="profileAuditTask">
+        <mat-form-field appearance="outline" class="comment">
+            <mat-label>Audit report</mat-label>
+            <textarea id="comment" name="comment" formControlName="comment" 
+             matInput class="comment" placeholder=
+            "Type here your technical regarding regarding the '{{getTitle(idTopic)}}'"></textarea>
+            <mat-hint>2000 caracters max</mat-hint>
+        </mat-form-field>
+    </form>
+</div>

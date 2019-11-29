@@ -129,7 +129,6 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 * This function emits asignal broadcasting that audit-task form should be visible, or hidden.
 	 */
 	private showHideAuditTasks() {
-		console.log ('showHideAuditTasks');
 		this.auditTasksFormModeIsOn = !this.auditTasksFormModeIsOn;
 		this.messengerShowHideAuditDetail.emit(new AuditChosenDetail(this.id, AuditDetail.Tasks));
 	}
@@ -138,7 +137,6 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 * This function emits asignal broadcasting that audit-task form should be visible, or hidden.
 	 */
 	private showHideAuditReport() {
-		console.log ('showHideAuditReport');
 		this.auditReportFormModeIsOn = !this.auditReportFormModeIsOn;
 		this.messengerShowHideAuditDetail.emit(new AuditChosenDetail(this.id, AuditDetail.Report));
 	}

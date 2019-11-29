@@ -5,7 +5,6 @@ div.audit-thumbnail, div.audit-thumbnail-selected {
     height: 200px;
     border: 1px solid black;
     border-radius: 15px;;
-    /* border-bottom-left-radius: 10%; */
     position: relative;
 }
 

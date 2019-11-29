@@ -44,10 +44,24 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	private auditTopics = [];
 
 	/**
-	 * This subject emits the updated values present in the array `auditTopics`
-	 * to the component `tableCategories`.
+	 * This subject emits the topics selected by the end-user in the component `tableCategories`.
+	 * It is sent to the component `app-project-audit-badges` to generate the corresponding audit thumbnail.
 	 */
-	private auditTopics$ = new BehaviorSubject<any>([]);
+	private auditTopics$ = new BehaviorSubject<any[]>([]);
+
+	/**
+	 * Array of `AuditChosenDetail` involved in the audit.
+	 */
+	private auditDetails: AuditChosenDetail[] = [];
+
+	/* tslint:disable: no-trailing-whitespace */
+	/**
+	 * This subject emits the details called by the end-user from the audit thumbnail.  
+	 * There are 2 kinds of details : __Report__ & __Tasks__ .  
+	 * It is sent to the component `app-project-audit-badges` to generate the corresponding details panel.
+	 */
+	/* tslint:enable: no-trailing-whitespace */
+	private auditDetails$ = new BehaviorSubject<AuditChosenDetail[]>([]);
 
 	private topicsHidden = true;
 
@@ -184,7 +198,15 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 * @param idTopic the topic identifier
 	 */
 	onShowHideAuditDetail(auditChosenDetail: AuditChosenDetail) {
+		if (Constants.DEBUG) {
+			console.log ('adding the detail panel %s for topic %d', auditChosenDetail.detail, auditChosenDetail.idTopic );
+		}
 
+		if (auditChosenDetail.detail === AuditDetail.Report) {
+			this.auditDetails.push(auditChosenDetail);
+			this.auditDetails$.next(this.auditDetails);
+		}
+		/*
 		if (auditChosenDetail.detail === AuditDetail.Tasks) {
 			const idTopic = auditChosenDetail.idTopic;
 			if ((!this.auditTaskFormModeIsOn) && (idTopic !== this.cinematicService.idTopicTaskAuditFormSelected)) {
@@ -201,6 +223,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 				}
 			}
 		}
+		*/
 	}
 
 	/**

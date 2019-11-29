@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { Topic } from '../table-categories/topic';
+import { Topic } from '../../table-categories/topic';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Subject } from 'rxjs';
 import { Constants } from 'src/app/constants';
@@ -13,14 +13,14 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class ReportDetailFormComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	/**
-	 * Observable emitting the current active project/topic.
+	 * The topic identifier.
 	 */
-	@Input() topic$: Subject<Topic>;
+	@Input() idTopic: number;
 
 	/**
-	 * Current active topic received from the observable `topic$`.
+	 * Audit topic whose report will be entered in this form.
 	 */
-	private topic: Topic;
+	@Input() title: string;
 
 	profileAuditTask = new FormGroup({
 		comment: new FormControl('', [Validators.maxLength(2000)])
@@ -29,14 +29,10 @@ export class ReportDetailFormComponent extends BaseComponent implements OnInit, 
 	constructor() { super(); }
 
 	ngOnInit() {
-		this.subscriptions.add(
-			this.topic$.subscribe(topic => {
-				this.topic = topic;
-				if (Constants.DEBUG) {
-					console.log ('Active topic', this.topic.id + ':' + this.topic.title);
-				}
-			})
-		);
+	}
+
+	private getTitle(id: number) {
+		return 'title ' + this.idTopic;
 	}
 
 	/**
@@ -45,6 +41,5 @@ export class ReportDetailFormComponent extends BaseComponent implements OnInit, 
 	ngOnDestroy() {
 		super.ngOnDestroy();
 	}
-
 
 }

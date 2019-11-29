@@ -100,7 +100,7 @@ import { ProjectAuditBadgesComponent } from './project/project-audit/project-aud
 import { AuditGraphicBadgeComponent } from './project/project-audit/project-audit-badges/audit-badge/audit-graphic-badge/audit-graphic-badge.component';
 import { TableCategoriesComponent } from './project/project-audit/table-categories/table-categories.component';
 import {MatSliderModule} from '@angular/material/slider';
-import { ReportDetailFormComponent } from './project/project-audit/report-detail-form/report-detail-form.component';
+import { ReportDetailFormComponent } from './project/project-audit/project-audit-badges/report-detail-form/report-detail-form.component';
 
 @NgModule({
 	declarations: [

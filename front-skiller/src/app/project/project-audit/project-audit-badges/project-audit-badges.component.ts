@@ -20,8 +20,19 @@ export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit
 
 	/**
 	 * The Topics involved for this audit.
+	 *
+	 * The HTML `project-audit-badges` file iterates on the topics array emitted by this observable,
+	 * and inserts an `app-audit-badge` component for each record.
 	 */
-	@Input() auditTopics$: Observable<any>;
+	@Input() auditTopics$: BehaviorSubject<any[]>;
+
+	/**
+	 * The audit details panel displayed on the Audit container.
+	 *
+	 * The HTML `project-audit-badges` file iterates on the Audit details array emitted by this observable,
+	 * and inserts an `app-report-detail-form` component for each record.
+	 */
+	@Input() auditDetails$: BehaviorSubject<AuditChosenDetail[]>;
 
 	/**
 	 * This messenger propagates the signal to show/hide the audit form panel
@@ -55,7 +66,6 @@ export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit
 	 * @param auditDetail the audit topic detail panel to be shown or hidden.
 	 */
 	onShowHideAuditDetail(auditDetail: AuditChosenDetail) {
-		console.log ('onShowHideAuditDetail');
 		this.messengerShowHideAuditDetail.next(auditDetail);
 	}
 

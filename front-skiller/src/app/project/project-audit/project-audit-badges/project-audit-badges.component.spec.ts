@@ -8,7 +8,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { RootTestModule } from 'src/app/root-test/root-test.module';
 import { AuditGraphicBadgeComponent } from './audit-badge/audit-graphic-badge/audit-graphic-badge.component';
 import { toBase64String } from '@angular/compiler/src/output/source_map';
-import { ReportDetailFormComponent } from '../report-detail-form/report-detail-form.component';
+import { ReportDetailFormComponent } from './report-detail-form/report-detail-form.component';
 
 describe('ProjectAuditBadgesComponent', () => {
 	let component: TestHostComponent;

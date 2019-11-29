@@ -15,7 +15,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { HttpClientModule } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ReportDetailFormComponent } from './report-detail-form/report-detail-form.component';
+import { ReportDetailFormComponent } from './project-audit-badges/report-detail-form/report-detail-form.component';
 
 describe('ProjectAuditComponent', () => {
 	let component: ProjectAuditComponent;

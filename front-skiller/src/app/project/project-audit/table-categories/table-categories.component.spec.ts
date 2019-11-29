@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TableCategoriesComponent } from './table-categories.component';
 import { RootTestModule } from 'src/app/root-test/root-test.module';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 describe('TableCategoriesComponent', () => {
 	let component: TableCategoriesComponent;
@@ -19,7 +19,7 @@ describe('TableCategoriesComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(TableCategoriesComponent);
 		component = fixture.componentInstance;
-		component.project$ = new Observable();
+		component.project$ = new BehaviorSubject(null);
 		fixture.detectChanges();
 	});
 

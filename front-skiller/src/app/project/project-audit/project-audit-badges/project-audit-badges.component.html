@@ -10,4 +10,9 @@
             [title]="topic.title" >
         </app-audit-badge>
     </div>
+    <div *ngFor="let auditDetail of (auditDetails$ | async)" class="containerOneThumbnail">
+        <app-report-detail-form
+            [title]="'auditDetail.idTopic'">
+        </app-report-detail-form>
+    </div>
 </div>

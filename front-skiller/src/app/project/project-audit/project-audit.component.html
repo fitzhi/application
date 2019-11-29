@@ -5,6 +5,7 @@
                         (messengerTopicEvaluation)="onEvaluationChange($event)"
                         (messengerShowHideAuditDetail)="onShowHideAuditDetail($event)"
                         [project$]="project$"
+                        [auditDetails$]="auditDetails$"
                         [auditTopics$]="auditTopics$">
                 </app-project-audit-badges>
         </div>
@@ -18,7 +19,9 @@
                         (messengerCategoryUpdated)="onCategoryUpdated($event)">
                 </app-table-categories>
         </div>
+        <!--
         <div class="auditTask" [hidden]="!auditTaskFormModeIsOn">
                 <app-report-detail-form [topic$]="topic$"></app-report-detail-form>
         </div>
+        -->
 </div>

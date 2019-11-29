@@ -48,8 +48,8 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 			this.project$.subscribe(project => {
 				this.project = project;
 				this.auditCategories.forEach(element => {
-					this.dataSource.push (new Topic(
-						(project.audit[element.id]), element.id, element.title));
+					const b: boolean = (project.audit[element.id] !== null);
+					this.dataSource.push (new Topic(b, element.id, element.title));
 				});
 			}));
 	}
