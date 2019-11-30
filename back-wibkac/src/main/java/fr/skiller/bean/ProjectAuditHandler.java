@@ -60,5 +60,13 @@ public interface ProjectAuditHandler extends DataSaverLifeCycle {
 	 * @throws SkillerException thrown if any problem occurs such as <i>'topic identifier unknown'</i>
 	 */
 	void saveWeights(int idProject, List<TopicWeight> weights) throws SkillerException;
-	
+
+	/**
+	 * Process and save the global evaluation given to the project, 
+	 * based on the barycenter of subjects affected by their relative weight
+	 * @param idProject the project identifier
+	 * @throws SkillerException thrown if any problem occurs such as <i>'project identifier unknown'</i>
+	 */
+	void processAndSaveGlobalAuditEvaluation(int idProject) throws SkillerException;
+
 }

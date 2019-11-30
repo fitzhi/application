@@ -122,4 +122,9 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 		}
 	}
 
+	@Override
+	public void processAndSaveGlobalAuditEvaluation(int idProject) throws SkillerException {
+		throw new SkillerRuntimeException("Not implemented yet!");
+	}
+
 }
