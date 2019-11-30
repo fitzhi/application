@@ -6,6 +6,7 @@ import { Project } from 'src/app/data/project';
 import { BaseComponent } from 'src/app/base/base.component';
 import { AuditChosenDetail } from './audit-badge/audit-chosen-detail';
 import { AuditDetail } from 'src/app/data/audit-detail';
+import { ReferentialService } from 'src/app/service/referential.service';
 
 @Component({
 	selector: 'app-project-audit-badges',
@@ -55,9 +56,17 @@ export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit
 	 */
 	private project: Project;
 
-	constructor() { super(); }
+	/**
+	 * The topics legend obtained from tge `referentialService.topics$`.
+	 */
+	private legendTopics: {[id: number]: string};
+
+	constructor(private referentialService: ReferentialService) { super(); }
 
 	ngOnInit() {
+		this.subscriptions.add(
+			this.referentialService.topics$.subscribe(topics => this.legendTopics = topics));
+
 		this.subscriptions.add(
 			this.project$.subscribe(project => this.project = project));
 	}

@@ -36,7 +36,7 @@ export class ReferentialService {
 	/**
 	 * BehaviorSubject containing the list `topics` loaded from the back-end.
 	 */
-	public topics$ = new BehaviorSubject<{[id: number]: string}>([]);
+	public topics$ = new BehaviorSubject<{[id: number]: string}>({});
 
 	/*
 	 * Skills.
