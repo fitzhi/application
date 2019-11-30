@@ -1,0 +1,7 @@
+[
+	{ "id": 0, "title": "General organization" },
+	{ "id": 1, "title": "Technical Design" },
+	{ "id": 2, "title": "Build Process" },
+	{ "id": 3, "title": "General Documentation" },
+	{ "id": 4, "title": "Testability" }
+]
