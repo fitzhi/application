@@ -53,18 +53,6 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 */
 	@Output() messengerWeightChange = new EventEmitter<TopicWeight>();
 
-	/**
-	 * This `boolean` represents the fact that the panel
-	 * in charge of adding or removing tasks and todo for this audit is visible.
-	 */
-	private auditTasksFormModeIsOn = false;
-
-	/**
-	 * This `boolean` represents the fact that the panel
-	 * in charge of editing the audit-report is visible.
-	 */
-	private auditReportFormModeIsOn = false;
-
 	constructor(
 		private cinematicService: CinematicService,
 		private projectService: ProjectService) { super(); }
@@ -96,7 +84,7 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 */
 	/* tslint:enable: no-trailing-whitespace */
 	private classIconTasks(id: number) {
-		const clazz = ((this.cinematicService.idTopicTaskAuditFormSelected === id) && this.auditTasksFormModeIsOn) ? 'tasks-selected' : 'tasks';
+		const clazz = (this.cinematicService.isPanelDetailSelected(this.id, AuditDetail.Tasks)) ? 'tasks-selected' : 'tasks';
 		return clazz;
 	}
 
@@ -108,8 +96,7 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 */
 	/* tslint:enable: no-trailing-whitespace */
 	private classIconReport(id: number) {
-		const clazz = ((this.cinematicService.idTopicTaskAuditFormSelected === id)
-			&& this.auditReportFormModeIsOn) ? 'report-selected' : 'report';
+		const clazz = (this.cinematicService.isPanelDetailSelected(this.id, AuditDetail.Report)) ? 'report-selected' : 'report';
 		return clazz;
 	}
 
@@ -129,7 +116,7 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 * This function emits asignal broadcasting that audit-task form should be visible, or hidden.
 	 */
 	private showHideAuditTasks() {
-		this.auditTasksFormModeIsOn = !this.auditTasksFormModeIsOn;
+		this.cinematicService.auditHistory[this.id].tasksVisible = !this.cinematicService.auditHistory[this.id].tasksVisible;
 		this.messengerShowHideAuditDetail.emit(new AuditChosenDetail(this.id, AuditDetail.Tasks));
 	}
 
@@ -137,7 +124,7 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 * This function emits asignal broadcasting that audit-task form should be visible, or hidden.
 	 */
 	private showHideAuditReport() {
-		this.auditReportFormModeIsOn = !this.auditReportFormModeIsOn;
+		this.cinematicService.auditHistory[this.id].reportVisible = !this.cinematicService.auditHistory[this.id].reportVisible;
 		this.messengerShowHideAuditDetail.emit(new AuditChosenDetail(this.id, AuditDetail.Report));
 	}
 

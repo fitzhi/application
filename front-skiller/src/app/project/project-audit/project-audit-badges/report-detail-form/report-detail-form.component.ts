@@ -31,10 +31,6 @@ export class ReportDetailFormComponent extends BaseComponent implements OnInit, 
 	ngOnInit() {
 	}
 
-	private getTitle(id: number) {
-		return 'title ' + this.idTopic;
-	}
-
 	/**
 	 * Calling the base class to unsubscribe all subscriptions.
 	 */

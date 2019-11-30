@@ -13,6 +13,7 @@ import { ProjectService } from 'src/app/service/project.service';
 import { MessageService } from 'src/app/message/message.service';
 import { AuditChosenDetail } from './project-audit-badges/audit-badge/audit-chosen-detail';
 import { AuditDetail } from 'src/app/data/audit-detail';
+import { AuditDetailsHistory } from 'src/app/service/cinematic/audit-details-history';
 
 @Component({
 	selector: 'app-project-audit',
@@ -89,6 +90,10 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 		this.subscriptions.add(
 			this.project$.subscribe(project => {
 				this.project = project;
+
+				// Initialize the Panel details history.
+				this.initializePanelDetailsHistory();
+
 				this.subscriptions.add(
 					this.referentialService.topics$.subscribe (topics => {
 						this.auditTopics = [];
@@ -124,6 +129,30 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 
 	ngAfterViewInit() {
 	}
+
+	/**
+	 * Initialize the details panels history when loaded a new project.
+	 */
+	private initializePanelDetailsHistory(): void {
+		this.cinematicService.auditHistory = {};
+		Object.keys(this.project.audit).forEach(key => {
+			this.cinematicService.auditHistory[key] = new AuditDetailsHistory();
+		});
+		if (Constants.DEBUG) {
+			this.dumpAuditHistory();
+		}
+	}
+
+	public dumpAuditHistory() {
+		console.groupCollapsed ('Initial details history');
+		Object.keys(this.cinematicService.auditHistory).forEach (
+			key => { console.log ('Topic ' + key,
+				('Tasks panel is ' + ((this.cinematicService.auditHistory[key].tasksVisible) ? 'visible' : 'hidden')) + ', ' +
+				('Report panel is ' + ((this.cinematicService.auditHistory[key].reportVisible) ? 'visible' : 'hidden'))
+			);
+		});
+		console.groupEnd();
+}
 
 	/**
 	 * Setup the categories involved in the manuel audit evaluation.

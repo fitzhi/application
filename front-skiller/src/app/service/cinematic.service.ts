@@ -1,6 +1,8 @@
 import { Constants } from '../constants';
 import { BehaviorSubject } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
+import { AuditDetailsHistory } from './cinematic/audit-details-history';
+import { AuditDetail } from '../data/audit-detail';
 
 class Form {
 
@@ -86,6 +88,26 @@ export class CinematicService {
      * Previous form active
      */
 	public previousForm: Form = new Form(Constants.WELCOME, '/welcome');
+
+	/**
+	 * History of active detail panels (shown or hidden)
+	 */
+	public auditHistory: {[idTopic: number]: AuditDetailsHistory} = {};
+
+	/**
+	 * Returns `true` if the detail panel is visible, `false` otherwise.
+	 * @param idTopic the Topic identifier
+	 * @param auditDetail the type of panel detail
+	 */
+	public isPanelDetailSelected(idTopic: number, auditDetail: AuditDetail) {
+		if (auditDetail === AuditDetail.Report) {
+			return this.auditHistory[idTopic].reportVisible;
+		}
+		if (auditDetail === AuditDetail.Tasks) {
+			return this.auditHistory[idTopic].tasksVisible;
+		}
+		throw new Error('WTF : Should not pass here. Enum is no more what it\'s used to be');
+	}
 
 	/**
       * Set the new form identifier.
