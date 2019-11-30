@@ -8,6 +8,7 @@ import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { take } from 'rxjs/operators';
 import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { SupportedMetric } from '../data/supported-metric';
+import { TopicLegend } from '../data/topic-legend';
 
 @Injectable()
 export class ReferentialService {
@@ -32,23 +33,19 @@ export class ReferentialService {
 	 */
 	public supportedMetrics$ = new BehaviorSubject<string[]>([]);
 
-
-	private topics: { [id: number]: string; } = {
-		'0': 'General organization',
-		'1': 'Technical Design',
-		'2': 'Build Process',
-		'3': 'General Documentation',
-		'4': 'Testability'
-	};
-
-	public topics$ = new BehaviorSubject<{[id: string]: string}>(this.topics);
+	/**
+	 * BehaviorSubject containing the list `topics` loaded from the back-end.
+	 */
+	public topics$ = new BehaviorSubject<{[id: number]: string}>([]);
 
 	/*
 	 * Skills.
 	 */
 	public skills: Skill[] = [];
 
-	constructor(private httpClient: HttpClient, private backendSetupService: BackendSetupService) {
+	constructor(
+		private httpClient: HttpClient,
+		private backendSetupService: BackendSetupService) {
 	}
 
 	/**
@@ -115,6 +112,28 @@ export class ReferentialService {
 					this.supportedMetrics$.next(supported);
 				});
 
+		this.httpClient.get<TopicLegend[]>(this.backendSetupService.url() + '/referential/audit-topics')
+		.pipe(take(1))
+		.subscribe(
+			(topicslegends: TopicLegend[]) => {
+				if (Constants.DEBUG) {
+					console.groupCollapsed('Audit topics : ');
+					topicslegends.forEach(function (topic) {
+						console.log(topic.id + ' ' + topic.title);
+					});
+					console.groupEnd();
+				}
+
+				/**
+				 * List of topic legends registered on the back office.
+				 */
+				const topics: { [id: string]: string; } = {};
+
+				topicslegends.forEach(topic => {
+					topics['' + topic.id] = topic.title;
+				});
+				this.topics$.next(topics);
+			});
 	}
 
 }

@@ -8,6 +8,8 @@ import { MessageService } from 'src/app/message/message.service';
 import { Topic } from './topic';
 import { AuditTopic } from 'src/app/data/AuditTopic';
 import { BehaviorSubject } from 'rxjs';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { ReferentialService } from 'src/app/service/referential.service';
 
 @Component({
 	selector: 'app-table-categories',
@@ -23,33 +25,39 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 	 */
 	@Output() messengerCategoryUpdated = new EventEmitter<Topic>();
 
+	/**
+	 * Project hosted by yhje observable `prohect$`.
+	 */
 	private project: Project;
-
-	private auditCategories = [
-		{ id: 0, title: 'General organization' },
-		{ id: 1, title: 'Technical Design' },
-		{ id: 2, title: 'Build Process' },
-		{ id: 3, title: 'General Documentation' },
-		{ id: 4, title: 'Testability' },
-	];
 
 	public categoryColumns: string[] = ['select', 'title'];
 
 	public dataSource: Topic[] = [];
 
-	private colorRow = 'white';
+	/**
+	 * Possibe subjects of audit loaded the backend cross the `referentialService`.
+	 */
+	private auditTopics: {[id: string]: string};
 
 	constructor(
 		private projectService: ProjectService,
+		private referentialRervice: ReferentialService,
 		private messageService: MessageService) { super(); }
 
 	ngOnInit() {
+
+		this.subscriptions.add(
+			this.referentialRervice.topics$.subscribe(topics =>
+			this.auditTopics = topics
+		));
+
+
 		this.subscriptions.add(
 			this.project$.subscribe(project => {
 				this.project = project;
-				this.auditCategories.forEach(element => {
-					const b: boolean = (project.audit[element.id] !== null);
-					this.dataSource.push (new Topic(b, element.id, element.title));
+				Object.keys(this.auditTopics).forEach(key => {
+					const b = (project.audit[key]) ? true : false;
+					this.dataSource.push (new Topic(b, Number(key), this.auditTopics[key]));
 				});
 			}));
 	}
