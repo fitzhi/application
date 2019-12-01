@@ -91,7 +91,12 @@ public @Data class Project  {
 	 * Map of {@link AuditTopic} associated to this project.
 	 */
 	private Map<Integer, AuditTopic> audit = new HashMap<>();
-			
+	
+	/**
+	 * Global audit evaluation
+	 */
+	private int auditEvaluation;
+	
 	/**
 	 * Level of risk evaluated for the project.
 	 */

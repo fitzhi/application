@@ -21,6 +21,7 @@ import fr.skiller.data.internal.AuditTopic;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.TopicWeight;
 import fr.skiller.exception.SkillerException;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -30,6 +31,7 @@ import fr.skiller.exception.SkillerException;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
+@Slf4j
 @Service
 public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl implements ProjectAuditHandler {
 
@@ -124,7 +126,27 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 
 	@Override
 	public void processAndSaveGlobalAuditEvaluation(int idProject) throws SkillerException {
-		throw new SkillerRuntimeException("Not implemented yet!");
+		
+		final Project project = projectHandler.get(idProject);
+		if (project == null) {
+			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+		}
+		
+		int sum = project.getAudit().values().stream()
+			.map(auditTopic  -> auditTopic.getEvaluation() * auditTopic.getWeight())
+			.mapToInt(i -> i)
+			.sum();
+		
+		final int auditEvaluation = (int) Math.floor(sum/100);
+				
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("System has computed the global audit evaluation %d for the project %s", auditEvaluation, project.getName()));
+		}
+		
+		synchronized (lockDataUpdated) {
+			project.setAuditEvaluation(auditEvaluation);
+			this.dataUpdated = true;
+		}
 	}
 
 }

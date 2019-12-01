@@ -95,7 +95,6 @@ public class ProjectAuditController {
 	public ResponseEntity<Boolean> removeTopic(@RequestBody BodyParamAuditEntry param) {
 		
 		HttpHeaders headers = new HttpHeaders();
-
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 				"POST command on /project/audit/removeTopic for project.id %d and topic.id %d", 
@@ -104,7 +103,7 @@ public class ProjectAuditController {
 		
 		try {
 			projectAuditHandler.removeTopic(param.getIdProject(), param.getAuditTopic().getIdTopic(), false);
-			
+			projectAuditHandler.processAndSaveGlobalAuditEvaluation(param.getIdProject());			
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 			
 		} catch (SkillerException se) {
@@ -128,6 +127,7 @@ public class ProjectAuditController {
 		
 		try {
 			projectAuditHandler.setEvaluation(param.getIdProject(), param.getAuditTopic().getIdTopic(), param.getAuditTopic().getEvaluation());
+			projectAuditHandler.processAndSaveGlobalAuditEvaluation(param.getIdProject());
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 		} catch (SkillerException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
@@ -160,6 +160,7 @@ public class ProjectAuditController {
 			}
 			
 			projectAuditHandler.saveWeights(param.getIdProject(), weights);
+			projectAuditHandler.processAndSaveGlobalAuditEvaluation(param.getIdProject());
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 		} catch (SkillerException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));

@@ -80,6 +80,25 @@ public class ProjectAuditControllerTest {
 		project.setAudit(mapAudit);
 	}
 	
+	/**
+	 * Test the value of the evaluation.
+	 * @param idProject given project
+	 * @param expectedValue expected value.
+	 * @throws Exception
+	 */
+	void testGlobalAuditEvaluation(int idProject, int expectedValue) throws Exception {
+		
+		MvcResult result = this.mvc.perform(get("/project/id/"+ ID_PROJECT))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andDo(print())
+				.andReturn();
+
+		Project project = gson.fromJson(result.getResponse().getContentAsString(), Project.class);
+		
+		Assert.assertEquals(expectedValue + " is the default weight", expectedValue, project.getAuditEvaluation());
+	}
+	
 	@Test
 	@WithMockUser
 	public void addTopic() throws Exception {
@@ -108,6 +127,7 @@ public class ProjectAuditControllerTest {
 
 		Assert.assertEquals("5 is the default weight", 5, auditProject.getWeight());
 
+		testGlobalAuditEvaluation(ID_PROJECT, 0);
 	}
 
 	
@@ -128,9 +148,9 @@ public class ProjectAuditControllerTest {
 			.andDo(print())
 			.andReturn();
 
-		//TODO THE ACTUAL TOPIC, AND ITS UNDERLINING DATA, HAS NOT BEEN REMOVED BY THIS CALL
+		//TODO THE ACTUAL TOPIC, AND ITS UNDERLYING DATA, HAS NOT BEEN REMOVED BY THIS CALL
 		// THIS TEST HAS TO BE COMPLETED.
-		
+		testGlobalAuditEvaluation(ID_PROJECT, 0);
 	}
 	
 	@Test
@@ -141,11 +161,11 @@ public class ProjectAuditControllerTest {
 		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2));
 	
 		MvcResult result = this.mvc.perform(post("/project/audit/saveTopic")
-			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(bpae)))
-			.andExpect(status().isInternalServerError())
-			.andDo(print())
-			.andReturn();
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(gson.toJson(bpae)))
+				.andExpect(status().isInternalServerError())
+				.andDo(print())
+				.andReturn();
 		
 		Assert.assertTrue(String.valueOf(CODE_PROJECT_NOFOUND).equals(result.getResponse().getHeader(Global.BACKEND_RETURN_CODE)));
 	}
@@ -201,7 +221,7 @@ public class ProjectAuditControllerTest {
 		//
 		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
 		bpae.setIdProject(ID_PROJECT);
-		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2, 60, 10));
+		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2, 60, 0));
 	
 		this.mvc.perform(post("/project/audit/saveEvaluation")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -222,7 +242,8 @@ public class ProjectAuditControllerTest {
 		AuditTopic auditProject = gson.fromJson(result.getResponse().getContentAsString(), AuditTopic.class);
 		
 		Assert.assertEquals("Evaluation has been saved", 60, auditProject.getEvaluation());
-		
+
+		testGlobalAuditEvaluation(ID_PROJECT, 3);		
 	}
 
 	/**
