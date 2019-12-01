@@ -12,7 +12,6 @@ import { TopicWeight } from './project-audit-badges/topic-weight';
 import { ProjectService } from 'src/app/service/project.service';
 import { MessageService } from 'src/app/message/message.service';
 import { AuditChosenDetail } from './project-audit-badges/audit-badge/audit-chosen-detail';
-import { AuditDetail } from 'src/app/data/audit-detail';
 import { AuditDetailsHistory } from 'src/app/service/cinematic/audit-details-history';
 
 @Component({
@@ -109,22 +108,24 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 					}));
 				}));
 
+		/* TO_REMOVE
 		this.subscriptions.add(
 			this.cinematicService.auditTopicSelected$.subscribe(idTopic => {
 
-				/**
+				**
 				 * Use case :
 				 * Given,
 				 * this audit-task form is displayed for a given topic,
 				 * and the end-user clicked on another thumbnail body (whithout clicking on the tasks button)
 				 * Then we hide the audit-task form.
-				 */
+				 *
 				if ( (idTopic !== this.cinematicService.idTopicTaskAuditFormSelected)
 					&&  (-1 !== this.cinematicService.idTopicTaskAuditFormSelected)) {
 						this.auditTaskFormModeIsOn = false;
 						this.cinematicService.idTopicTaskAuditFormSelected = -1;
 				}
 		}));
+		*/
 	}
 
 	ngAfterViewInit() {
@@ -198,6 +199,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 				((category.select) ? 'Selection' : 'Deselection)' + ' of %s'), category.title);
 		}
 		if (category.select) {
+			this.cinematicService.auditHistory[category.id] = new AuditDetailsHistory();
 			this.auditTopics.push({idTopic: category.id, evaluation: 1, weight: 1, title: category.title});
 		} else {
 			const index = this.auditTopics.findIndex(item => item.idTopic === category.id);
@@ -205,6 +207,8 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 				throw new Error ('Internal erreur. This index is supposed to be > 0');
 			}
 			this.auditTopics.splice(index, 1);
+			this.cinematicService.auditHistory[category.id] = null;
+			this.removeSecondaryDetailsPanel(category.id, this.auditDetails);
 		}
 		if (this.auditTopics && this.auditTopics.length > 0) {
 			this.assignWeights();
@@ -221,6 +225,15 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 		this.auditTopics$.next(this.auditTopics);
 	}
 
+	private removeSecondaryDetailsPanel(idTopic: number, auditChosenDetail: AuditChosenDetail[]) {
+		const index = auditChosenDetail.findIndex(detail => (detail.idTopic === idTopic));
+		if (index === -1) {
+			return;
+		}
+		auditChosenDetail.splice(index, 1);
+		this.removeSecondaryDetailsPanel(idTopic, auditChosenDetail);
+	}
+
 	/**
 	 * This function is invoked when `app-project-audit-badges` signals that the end-user tries
 	 * to show or hide a detail audit form.
@@ -231,8 +244,18 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 			console.log ('adding the detail panel %s for topic %d', auditChosenDetail.detail, auditChosenDetail.idTopic );
 		}
 
+		if (this.cinematicService.isPanelDetailSelected(auditChosenDetail.idTopic, auditChosenDetail.detail)) {
 			this.auditDetails.push(auditChosenDetail);
 			this.auditDetails$.next(this.auditDetails);
+		} else {
+			const indexForDeletion = this.auditDetails.findIndex(auditDetail => {
+				return auditDetail.deepEqual(auditChosenDetail);
+			});
+			if (indexForDeletion === -1) {
+				throw new Error ('WTF : Should not pass here !');
+			}
+			this.auditDetails.splice(indexForDeletion, 1);
+		}
 
 		/*
 		if (auditChosenDetail.detail === AuditDetail.Tasks) {
