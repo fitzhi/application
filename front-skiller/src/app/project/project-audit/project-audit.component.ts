@@ -107,25 +107,6 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 						this.auditTopics$.next(this.auditTopics);
 					}));
 				}));
-
-		/* TO_REMOVE
-		this.subscriptions.add(
-			this.cinematicService.auditTopicSelected$.subscribe(idTopic => {
-
-				**
-				 * Use case :
-				 * Given,
-				 * this audit-task form is displayed for a given topic,
-				 * and the end-user clicked on another thumbnail body (whithout clicking on the tasks button)
-				 * Then we hide the audit-task form.
-				 *
-				if ( (idTopic !== this.cinematicService.idTopicTaskAuditFormSelected)
-					&&  (-1 !== this.cinematicService.idTopicTaskAuditFormSelected)) {
-						this.auditTaskFormModeIsOn = false;
-						this.cinematicService.idTopicTaskAuditFormSelected = -1;
-				}
-		}));
-		*/
 	}
 
 	ngAfterViewInit() {
@@ -256,25 +237,6 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 			}
 			this.auditDetails.splice(indexForDeletion, 1);
 		}
-
-		/*
-		if (auditChosenDetail.detail === AuditDetail.Tasks) {
-			const idTopic = auditChosenDetail.idTopic;
-			if ((!this.auditTaskFormModeIsOn) && (idTopic !== this.cinematicService.idTopicTaskAuditFormSelected)) {
-				this.topic$.next(new TopicProject(this.project.id, idTopic, this.topics[idTopic]));
-				this.auditTaskFormModeIsOn = true;
-				this.cinematicService.idTopicTaskAuditFormSelected = idTopic;
-			} else {
-				if (idTopic === this.cinematicService.idTopicTaskAuditFormSelected) {
-					this.auditTaskFormModeIsOn = false;
-					this.cinematicService.idTopicTaskAuditFormSelected = -1;
-				} else {
-					this.topic$.next(new TopicProject(this.project.id, idTopic, this.topics[idTopic]));
-					this.cinematicService.idTopicTaskAuditFormSelected = idTopic;
-				}
-			}
-		}
-		*/
 	}
 
 	/**
