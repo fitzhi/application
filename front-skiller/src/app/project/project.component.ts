@@ -143,6 +143,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 					}))
 				.subscribe(
 					(project: Project) => {
+						this.projectService.dump(project, 'projectComponent');
 						this.project$.next(project);
 					},
 					error => {

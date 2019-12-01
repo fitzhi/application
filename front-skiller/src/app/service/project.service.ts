@@ -606,6 +606,9 @@ export class ProjectService extends InternalService {
 		console.groupCollapsed('Project %d %s from %s',
 			project.id, project.name, from);
 		console.log('Global audit evaluation', project.auditEvaluation);
+		Object.keys(project.audit).forEach(key => {
+			console.log ('key: %s evaluation: %d weight: %d', key, project.audit[key].evaluation, project.audit[key].weight);
+		});
 		project.sonarProjects.forEach(sonarProject => {
 			if (sonarProject.projectSonarMetricValues) {
 				console.groupCollapsed('Soner project %s', sonarProject.key);
