@@ -10,7 +10,7 @@
         <g>
             <path id="topic-arc-{{id}}" fill="transparent" stroke-width="12px"  />
             <foreignObject id="topic-note-{{id}}"  width="60px" height="40px">
-                <xhtml:input type="number" (change)="onChange()" (input)="onInput()" [(ngModel)]="evaluation" class="inputEvaluation"/>
+                <xhtml:input id="topic-input-note-{{id}}" type="number" (change)="onChange()" (input)="onInput()" [(ngModel)]="evaluation" class="inputEvaluation"/>
             </foreignObject>
         </g>
     </svg>

@@ -70,7 +70,7 @@ export class TagifyStarsComponent implements AfterViewInit {
 		this.whitelist.forEach(element => this.tagify.settings.whitelist.push(element));
 		this.blacklist.forEach(element => this.tagify.settings.blacklist.push(element));
 		this.tagify.settings.readonly = true;
-		this.tagify.settings.placeholder = 'Nope';
+		this.tagify.settings.placeholder = '';
 
 		this.boundOnClick[0] = this.onClick_0.bind(this);
 		this.boundOnClick[1] = this.onClick_1.bind(this);

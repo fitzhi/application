@@ -20,13 +20,12 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	/**
 	 * Quotation given to this category.
 	 */
-	@Input() evaluation: number;
+	@Input() evaluation;
 
 	/**
 	 * if this boolean is equal to __true__, there will be an input field in the middle of the badge __editable__.
 	 */
 	@Input() editable;
-
 
 	/**
 	 * This observable informs the component __IN NON EDITABLE ONLY__
