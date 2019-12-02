@@ -123,7 +123,7 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 	}
 
 	@Override
-	public void setEvaluation(int idProject, int idTopic, int evaluation) throws SkillerException {
+	public void saveEvaluation(int idProject, int idTopic, int evaluation) throws SkillerException {
 		
 		AuditTopic auditTopic = getTopic(idProject, idTopic);
 
@@ -134,6 +134,17 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 		
 	}
 
+	@Override
+	public void saveReport(int idProject, int idTopic, String executiveSummary) throws SkillerException {
+
+		AuditTopic auditTopic = getTopic(idProject, idTopic);
+
+		synchronized (lockDataUpdated) {
+			auditTopic.setReport(executiveSummary);
+			this.dataUpdated = true;
+		}
+	}
+	
 	@Override
 	public void saveWeights(int idProject, List<TopicWeight> weights) throws SkillerException {
 		
@@ -195,4 +206,5 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 			}
 		}
 	}
+
 }

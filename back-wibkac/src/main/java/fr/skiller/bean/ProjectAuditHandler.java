@@ -50,7 +50,16 @@ public interface ProjectAuditHandler extends DataSaverLifeCycle {
 	 * @param evaluation the audit topic quality evaluation given by the expert.
 	 * @throws SkillerException thrown if any problem occurs such as <i>'topic identifier unknown'</i>
 	 */
-	void setEvaluation(int idProject, int idTopic, int evaluation) throws SkillerException;
+	void saveEvaluation(int idProject, int idTopic, int evaluation) throws SkillerException;
+	
+	/**
+	 * Save the executive summary given to this audit topic 
+	 * @param idProject the project identifier
+	 * @param idTopic the given topic identifier
+	 * @param summaryReport the executive summary given to this audit topic
+	 * @throws SkillerException thrown if any problem occurs such as <i>'topic identifier unknown'</i>
+	 */
+	void saveReport(int idProject, int idTopic, String executiveSummary) throws SkillerException;
 	
 	/**
 	 * Set the weights for all topics in the project.<br/>

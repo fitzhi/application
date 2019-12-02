@@ -28,6 +28,11 @@ public @Data class AuditTopic {
 	int weight;
 	
 	/**
+	 * Text containing the executive summary for the audit.
+	 */
+	String report;
+	
+	/**
 	 * Empty constructor for <u>serialization</u> / <u>de-serialization</u> purpose
 	 */
 	public AuditTopic() {
@@ -39,7 +44,7 @@ public @Data class AuditTopic {
 	 * @param key identifier of the sonar project entry.
 	 */
 	public AuditTopic(int idTopic) {
-		this(idTopic, 0, 5);
+		this(idTopic, 0, 5, null);
 	}
 	
 	/**
@@ -49,9 +54,21 @@ public @Data class AuditTopic {
 	 * @param weight of topic note inside the global audit evaluation.
 	 */
 	public AuditTopic(int idTopic, int evaluation, int weight) {
+		this(idTopic, evaluation, weight, null);
+	}
+	
+	/**
+	 * AuditTopic constructor.
+	 * @param key identifier of the sonar project entry.
+	 * @param evaluation the audit evaluation given by an expert.
+	 * @param weight of topic note inside the global audit evaluation.
+	 * @param report executive summary
+	 */
+	public AuditTopic(int idTopic, int evaluation, int weight, String report) {
 		this.idTopic = idTopic;
 		this.evaluation = evaluation;
 		this.weight = weight;
+		this.report = report;
 	}
 	
 }

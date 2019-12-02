@@ -146,6 +146,33 @@ public class ProjectAuditControllerUpdatingGlobalEvaluationTest {
 
 	@Test
 	@WithMockUser
+	public void updateReport() throws Exception {
+		
+		//
+		// Update the evaluation of a topic
+		//
+		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
+		bpae.setIdProject(ID_PROJECT);
+		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_1, 0, 0, "Test report"));
+	
+		this.mvc.perform(post("/project/audit/saveReport")
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(gson.toJson(bpae)))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(content().string("true"))
+			.andDo(print())
+			.andReturn();
+		
+		Project project = projectHandler.get(ID_PROJECT);
+
+		Assert.assertEquals("The report has to be saved.", "Test report", project.getAudit().get(ID_TOPIC_1).getReport());
+
+		
+	}
+
+	@Test
+	@WithMockUser
 	public void updateWeightsNominal() throws Exception {
 
 		//

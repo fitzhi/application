@@ -121,13 +121,36 @@ public class ProjectAuditController {
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
-				"POST command on /project/audit/updateEvaluation for project.id %d and topic.id %d", 
+				"POST command on /project/audit/saveEvaluation for project.id %d and topic.id %d", 
 						param.getIdProject(), param.getAuditTopic().getIdTopic()));
 		}
 		
 		try {
-			projectAuditHandler.setEvaluation(param.getIdProject(), param.getAuditTopic().getIdTopic(), param.getAuditTopic().getEvaluation());
+			projectAuditHandler.saveEvaluation(param.getIdProject(), param.getAuditTopic().getIdTopic(), param.getAuditTopic().getEvaluation());
 			projectAuditHandler.processAndSaveGlobalAuditEvaluation(param.getIdProject());
+			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
+		} catch (SkillerException se) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
+			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
+			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
+		}
+	}
+	
+	@PostMapping(path="/saveReport")
+	public ResponseEntity<Boolean> saveReport(@RequestBody BodyParamAuditEntry param) {
+		
+		HttpHeaders headers = new HttpHeaders();
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
+				"POST command on /project/audit/saveReport for project.id %d and topic.id %d", 
+						param.getIdProject(), param.getAuditTopic().getIdTopic()));
+		}
+		
+		try {
+			final AuditTopic auditTopic = param.getAuditTopic();
+			projectAuditHandler.saveReport(
+					param.getIdProject(), auditTopic.getIdTopic(), auditTopic.getReport());
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 		} catch (SkillerException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
