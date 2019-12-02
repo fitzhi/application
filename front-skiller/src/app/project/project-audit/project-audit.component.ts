@@ -199,6 +199,12 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 					.subscribe(doneAndOk => {
 						if (doneAndOk) {
 							this.messageService.info('Weights are completly saved');
+
+							// Update the underlying GLOBAL project evaluation
+							this.projectService.processGlobalAuditEvaluation(this.project);
+
+							// We inform every panel that the Project object has changed.
+							this.project$.next(this.project);
 						}
 					});
 		}

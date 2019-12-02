@@ -4,6 +4,8 @@ import { TopicEvaluation } from '../../topic-evaluation';
 import { Project } from 'src/app/data/project';
 import { BaseComponent } from 'src/app/base/base.component';
 import { BehaviorSubject } from 'rxjs';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { Constants } from 'src/app/constants';
 
 @Component({
 	selector: 'app-audit-graphic-badge',
@@ -43,7 +45,9 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	 */
 	private color;
 
-	constructor(private projectService: ProjectService) { super(); }
+	constructor(
+		private projectService: ProjectService,
+		private cinematicService: CinematicService) { super(); }
 
 	ngOnInit() {
 		if (this.project$ && this.editable) {
@@ -59,18 +63,22 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 		}
 
 		if (!this.editable) {
-			this.project$.subscribe(project => {
-				if (project) {
-					if (project.auditEvaluation) {
-						this.evaluation = project.auditEvaluation;
-						// We release the treatment flow in order to end the creation of the SVG elements
-						setTimeout( () => {
-							this.drawAuditArc();
-							this.drawAuditText();
-						}, 0);
-					}
-				}
-			});
+			this.subscriptions.add(
+				this.project$.subscribe(project => {
+					if (project) {
+						this.cinematicService.tabProjectActivated$.subscribe(idxTabForm => {
+							if (idxTabForm === Constants.PROJECT_IDX_TAB_FORM) {
+								if (project.auditEvaluation) {
+									this.evaluation = project.auditEvaluation;
+									// We release the treatment flow in order to end the creation of the SVG elements
+									setTimeout( () => {
+										this.drawAuditArc();
+										this.drawAuditText();
+									}, 0);
+								}
+						}
+					});
+			}}));
 		}
 	}
 
