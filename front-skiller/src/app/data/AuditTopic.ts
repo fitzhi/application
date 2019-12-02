@@ -9,5 +9,6 @@ export class AuditTopic {
 	constructor(
 		public idTopic: number,
 		public evaluation: number,
-		public weight: number) {}
+		public weight: number,
+		public report: string = '') {}
 }

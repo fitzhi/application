@@ -89,8 +89,8 @@ export class ProjectService extends InternalService {
 			console.log('Adding the skill  ' + idSkill + ' for the project whom id is ' + idProject);
 		}
 		const body = { idProject: idProject, idSkill: idSkill };
-		return this.httpClient.
-			post<BooleanDTO>(this.backendSetupService.url() + '/project/skill/add', body, httpOptions)
+		return this.httpClient
+			.post<BooleanDTO>(this.backendSetupService.url() + '/project/skill/add', body, httpOptions)
 			.pipe(take(1));
 	}
 
@@ -133,7 +133,7 @@ export class ProjectService extends InternalService {
 	 * @param sonarProject the sonar project
 	 * @param action the action to be executed on the Sonar projects collection
 	 */
-	private handleActionSonarProject$(idProject: number, sonarProject: SonarProject, action: string): Observable<Boolean> {
+	handleActionSonarProject$(idProject: number, sonarProject: SonarProject, action: string): Observable<Boolean> {
 
 		if (Constants.DEBUG) {
 			console.log ('Action ' + action + ' for a Sonar project ' + sonarProject.name + ' for project ID ' + idProject);
@@ -181,7 +181,11 @@ export class ProjectService extends InternalService {
 
 		const body = {
 			'idProject': idProject,
-			'auditTopic': {'idTopic': auditTopic.idTopic, 'evaluation': auditTopic.evaluation}
+			'auditTopic': {
+				'idTopic': auditTopic.idTopic,
+				'evaluation': auditTopic.evaluation,
+				'weight': auditTopic.weight,
+				'report': auditTopic.report}
 		};
 
 		return this.httpClient
@@ -559,6 +563,24 @@ export class ProjectService extends InternalService {
 		}
 		const auditTopic = new AuditTopic(idTopic, evaluation, null);
 		return this.handleActionAudit$(idProject, auditTopic, 'saveEvaluation');
+	}
+
+	/**
+	* Save the evaluation for a topic involved in the audit.
+	* @param idProject the given project identifier
+	* @param idTopic the topic identifier
+	* @param report the audit report given by the expert
+	*/
+	saveAuditTopicReport$(idProject: number, idTopic: number, report: string): Observable<Boolean> {
+		if (Constants.DEBUG) {
+			console.groupCollapsed(
+				'Saving the audit report for the topic identified by %d, within the project identified by %d',
+				idTopic, idProject);
+			console.log ('Report given', report);
+			console.groupEnd();
+		}
+		const auditTopic = new AuditTopic(idTopic, 0, 0, report);
+		return this.handleActionAudit$(idProject, auditTopic, 'saveReport');
 	}
 
 	/**

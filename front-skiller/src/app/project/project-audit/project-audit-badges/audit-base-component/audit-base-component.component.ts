@@ -13,6 +13,11 @@ export class AuditBaseComponent extends BaseComponent implements OnDestroy, Afte
 
 	private fontAwesome = '';
 
+	/**
+	 * The current active project.
+	 */
+	public project: Project;
+
 	constructor() {
 		super();
 	}
@@ -45,7 +50,7 @@ export class AuditBaseComponent extends BaseComponent implements OnDestroy, Afte
 	ngAfterViewInit(): void {
 		this.subscriptions.add(
 			this.project$.subscribe(project => {
-				console.log ('drawColor');
+				this.project = project;
 				this.drawHeaderColor(project.audit[this.idTopic].evaluation);
 			})
 		);
