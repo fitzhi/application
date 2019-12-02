@@ -51,10 +51,24 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 		
 		// We do not add this topic if it already exists.
 		if (!project.getAudit().containsKey(idTopic)) {		
+			
 			synchronized (lockDataUpdated) {
 				project.getAudit().put(idTopic, new AuditTopic(idTopic));
 				this.dataUpdated = true;
 			}
+
+			/*
+			 * After the addition of the audit, we share the weights between all topics declared
+			 */
+			synchronized (lockDataUpdated) {
+				this.shareWeights(project);
+				this.dataUpdated = true;
+			}
+			
+			/*
+			 * And we process the global evaluation impacted by the new repartition of weights
+			 */
+			processAndSaveGlobalAuditEvaluation(project.getId());
 		}
 	}
 
@@ -73,6 +87,19 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 			project.getAudit().remove(idTopic);
 			this.dataUpdated = true;
 		}
+
+		/*
+		 * After the addition of the audit, we share the weights between all topics declared
+		 */
+		synchronized (lockDataUpdated) {
+			this.shareWeights(project);
+			this.dataUpdated = true;
+		}
+		
+		/*
+		 * And we process the global evaluation impacted by the new repartition of weights
+		 */
+		processAndSaveGlobalAuditEvaluation(project.getId());
 	}
 
 	@Override
@@ -149,4 +176,23 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 		}
 	}
 
+	/**
+	 * Share and save the weights between all audit topics for the given project.
+	 * @param project
+	 * @throws SkillerException
+	 */
+	private void shareWeights(Project project) throws SkillerException {
+		int numberOfTopics = project.getAudit().size();
+		AuditTopic[] topics = new AuditTopic[numberOfTopics];
+		System.arraycopy(project.getAudit().values().toArray(), 0, topics, 0, project.getAudit().size());
+		int rest = 100;
+		for (int i=0; i<topics.length; i++) {
+			if (i == numberOfTopics - 1) {
+				topics[i].setWeight(rest);
+			} else {
+				topics[i].setWeight((int) (Math.floor(100/numberOfTopics)));
+				rest -= topics[i].getWeight();
+			}
+		}
+	}
 }

@@ -38,10 +38,14 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 	
 	private Project project;
 	
+	private int ID_PROJECT = 314116;
 	@Before
 	public void before() throws SkillerException {
-		project = projectHandler.addNewProject(new Project(314116, "PI"));
+		project = projectHandler.addNewProject(new Project(ID_PROJECT, "PI"));
 		project.setAudit(new HashMap<Integer, AuditTopic>());
+		AuditTopic auditTopic = new AuditTopic();
+		auditTopic.setEvaluation(40);
+		auditTopic.setWeight(100);
 		project.getAudit().put(1, new AuditTopic());
 
 	}
@@ -53,10 +57,19 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 
 	@Test
 	public void addNewTopic() throws SkillerException {
-		projectAuditHandler.addTopic(314116, 2);
+		
+		projectAuditHandler.addTopic(ID_PROJECT, 2);
 		Assert.assertTrue("addNewTopic did not succeed", project.getAudit().containsKey(2));
 		Assert.assertTrue("addNewTopic did not succeed", project.getAudit().get(2).getIdTopic() == 2);
+
+		Assert.assertEquals("Weights have to be shared between all topics", 50, project.getAudit().get(1).getWeight());
+		Assert.assertEquals("Weights have to be shared between all topics", 50, project.getAudit().get(2).getWeight());
 		
+		projectAuditHandler.addTopic(ID_PROJECT, 3);
+		Assert.assertEquals("Weights have to be shared between all topics", 33, project.getAudit().get(1).getWeight());
+		Assert.assertEquals("Weights have to be shared between all topics", 33, project.getAudit().get(2).getWeight());
+		Assert.assertEquals("Weights have to be shared between all topics", 34, project.getAudit().get(3).getWeight());
+
 	}
 	
 	@Test(expected = SkillerException.class)
@@ -66,13 +79,13 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 
 	@Test
 	public void removeTopic() throws SkillerException {
-		projectAuditHandler.removeTopic(314116, 1, false);
+		projectAuditHandler.removeTopic(ID_PROJECT, 1, false);
 		Assert.assertFalse("removeTopic did not succeed", project.getAudit().containsKey(1));
 	}
 	
 	@Test
-	public void loadExistingTopic() throws SkillerException {
-		projectAuditHandler.addTopic(314116, 2);
+	public void loadAnExistingTopic() throws SkillerException {
+		projectAuditHandler.addTopic(ID_PROJECT, 2);
 		AuditTopic auditTopic = projectAuditHandler.getTopic(314116, 2);
 		Assert.assertNotNull(auditTopic);
 		Assert.assertTrue("addNewTopic did not succeed", auditTopic.getIdTopic() == 2);
@@ -81,7 +94,7 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 
 	@Test(expected = SkillerException.class)
 	public void loadfailedUnknownTopic() throws SkillerException {
-		projectAuditHandler.getTopic(314116, 666);		
+		projectAuditHandler.getTopic(ID_PROJECT, 666);		
 	}
 	
 }

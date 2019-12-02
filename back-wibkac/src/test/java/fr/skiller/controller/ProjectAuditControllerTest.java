@@ -3,7 +3,8 @@ package fr.skiller.controller;
 import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
 import static fr.skiller.Error.CODE_PROJECT_TOPIC_UNKNOWN;
 import static fr.skiller.Error.CODE_PROJECT_INVALID_WEIGHTS;
-
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -74,9 +75,10 @@ public class ProjectAuditControllerTest {
 	@Before
 	public void before() throws SkillerException {
 		project = projectHandler.get(ID_PROJECT);
-
+		project.setAuditEvaluation(30);
 		Map<Integer, AuditTopic> mapAudit = new HashMap<>();
-		mapAudit.put(ID_TOPIC_2, new AuditTopic(ID_TOPIC_2));
+		AuditTopic at = new AuditTopic(ID_TOPIC_2, 30, 100);
+		mapAudit.put(ID_TOPIC_2, at);
 		project.setAudit(mapAudit);
 	}
 	
@@ -125,9 +127,10 @@ public class ProjectAuditControllerTest {
 		// The topic has been successfully added
 		Assert.assertTrue(auditProject.getIdTopic() == ID_TOPIC_1);
 
-		Assert.assertEquals("5 is the default weight", 5, auditProject.getWeight());
+		Assert.assertEquals("The weight should beshared between 2 topics", 50, auditProject.getWeight());
+		Assert.assertEquals("Evaluation 0 for the new topic", 0, auditProject.getEvaluation());
 
-		testGlobalAuditEvaluation(ID_PROJECT, 0);
+		testGlobalAuditEvaluation(ID_PROJECT, 15);
 	}
 
 	
@@ -148,9 +151,17 @@ public class ProjectAuditControllerTest {
 			.andDo(print())
 			.andReturn();
 
-		//TODO THE ACTUAL TOPIC, AND ITS UNDERLYING DATA, HAS NOT BEEN REMOVED BY THIS CALL
-		// THIS TEST HAS TO BE COMPLETED.
-		testGlobalAuditEvaluation(ID_PROJECT, 0);
+		Project project = projectHandler.get(ID_PROJECT);
+		assertEquals("Only one topic", project.getAudit().size(), 1);
+		assertNotNull(project.getAudit().get(ID_TOPIC_2));
+		// We do not change the original data
+		AuditTopic at = project.getAudit().get(ID_TOPIC_2);
+		Assert.assertEquals("Same evaluation", 30, at.getEvaluation());
+		Assert.assertEquals("Same weight", 100, at.getWeight());
+		
+		// The actual topic and its underlying data have not been overridden by this call 
+		// We keep the same global evaluation.
+		testGlobalAuditEvaluation(ID_PROJECT, 30);
 	}
 	
 	@Test
@@ -243,7 +254,8 @@ public class ProjectAuditControllerTest {
 		
 		Assert.assertEquals("Evaluation has been saved", 60, auditProject.getEvaluation());
 
-		testGlobalAuditEvaluation(ID_PROJECT, 3);		
+		// Global evaluation is also equal to 60 as well because there is only one topic in this audit.
+		testGlobalAuditEvaluation(ID_PROJECT, 60);		
 	}
 
 	/**
@@ -286,7 +298,8 @@ public class ProjectAuditControllerTest {
 	@WithMockUser
 	public void updateWeightsNominal() throws Exception {
 
-		project.getAudit().put(ID_TOPIC_1, new AuditTopic(ID_TOPIC_1));
+		
+		project.getAudit().put(ID_TOPIC_1, new AuditTopic(ID_TOPIC_1, 80, 0));
 		// From that point, the project will have 2 topics declared
 		
 		//
@@ -295,8 +308,8 @@ public class ProjectAuditControllerTest {
 		BodyParamAuditEntries bpae = new BodyParamAuditEntries();
 		bpae.setIdProject(ID_PROJECT);
 		bpae.setDataEnvelope(new AuditTopic[2]);
-		bpae.getDataEnvelope()[0] = new AuditTopic(ID_TOPIC_1, 60, 40);
-		bpae.getDataEnvelope()[1] = new AuditTopic(ID_TOPIC_2, 60, 60);
+		bpae.getDataEnvelope()[0] = new AuditTopic(ID_TOPIC_1, 0, 40);
+		bpae.getDataEnvelope()[1] = new AuditTopic(ID_TOPIC_2, 0, 60);
 	
 		this.mvc.perform(post("/project/audit/saveWeights")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -319,7 +332,16 @@ public class ProjectAuditControllerTest {
 				.andReturn();
 		auditProject = gson.fromJson(result.getResponse().getContentAsString(), AuditTopic.class);
 		Assert.assertEquals("Weight has been saved", 60, auditProject.getWeight());
-				
+	
+		//
+		// 2 Topics :
+		// The 1st : evaluation 30 for a weight of 60
+		// The 2nd : evaluation 80 for a weight of 40
+		//
+		// We expect a global evaluation of 60
+		//
+		this.testGlobalAuditEvaluation(ID_PROJECT, 50);
+		
 	}
 	
 	
