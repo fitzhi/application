@@ -207,6 +207,14 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 							this.project$.next(this.project);
 						}
 					});
+		} else {
+
+			// Update the underlying GLOBAL project evaluation
+			this.projectService.processGlobalAuditEvaluation(this.project);
+
+			// We inform every panel that the Project object has changed.
+			this.project$.next(this.project);
+
 		}
 
 		this.auditTopics$.next(this.auditTopics);
@@ -256,9 +264,8 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 
 		if (topicEvaluation.typeOfOperation === Constants.CHANGE_BROADCAST) {
 			this.projectService.saveAuditTopicEvaluation$(
-				this.project.id,
-				topicEvaluation.idTopic,
-				topicEvaluation.value).subscribe(doneAndOk => {
+					this.project.id, topicEvaluation.idTopic,topicEvaluation.value)
+				.subscribe(doneAndOk => {
 					if (doneAndOk) {
 						this.messageService.success('Evaluation given to ' + this.topics[topicEvaluation.idTopic] + ' has been saved');
 						// Affect the new evaluation given for this topic to the associated item in the Project object.
@@ -267,6 +274,8 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 						// Update the underlining GLOBAL project evaluation
 						this.projectService.processGlobalAuditEvaluation(this.project);
 
+						// We inform every panel that the Project object has changed.
+						this.project$.next(this.project);
 					}});
 		}
 	}

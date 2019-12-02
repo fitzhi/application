@@ -34,7 +34,7 @@ describe('ProjectAuditComponent', () => {
 				AuditGraphicBadgeComponent, TasksDetailFormComponent ],
 			providers: [ReferentialService, CinematicService],
 			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,
-				HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule, MatFormFieldModule, 
+				HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule, MatFormFieldModule,
 				FormsModule, ReactiveFormsModule,
 				MatSliderModule, MatInputModule]
 		})

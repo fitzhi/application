@@ -11,6 +11,8 @@ export class AuditBaseComponent extends BaseComponent implements OnDestroy, Afte
 	public project$: BehaviorSubject<Project>;
 	public projectService: ProjectService;
 
+	private fontAwesome = '';
+
 	constructor() {
 		super();
 	}
@@ -31,11 +33,19 @@ export class AuditBaseComponent extends BaseComponent implements OnDestroy, Afte
 		this.idTopic = idTopic;
 		this.project$ = project$;
 		this.projectService = projectService;
+
+		if (this.headerText === 'header-tasks-') {
+			this.fontAwesome = 'fas fa-tasks';
+		}
+		if (this.headerText === 'header-report-') {
+			this.fontAwesome = 'far fa-file-alt';
+		}
 	}
 
 	ngAfterViewInit(): void {
 		this.subscriptions.add(
 			this.project$.subscribe(project => {
+				console.log ('drawColor');
 				this.drawHeaderColor(project.audit[this.idTopic].evaluation);
 			})
 		);
@@ -47,13 +57,12 @@ export class AuditBaseComponent extends BaseComponent implements OnDestroy, Afte
 	 */
 	drawHeaderColor(evaluation: number): void {
 		const colorEvaluation = this.projectService.getEvaluationColor(evaluation);
-		console.log(document.getElementById(this.headerText + this.idTopic));
 		document.getElementById(this.headerText + this.idTopic)
 			.setAttribute('style', 'background-color: ' + colorEvaluation);
 	}
 
 	public ngOnDestroy() {
-		this.ngOnDestroy();
+		super.ngOnDestroy();
 	}
 
 }

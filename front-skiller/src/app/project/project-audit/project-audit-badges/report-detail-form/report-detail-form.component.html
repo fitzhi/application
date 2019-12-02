@@ -1,5 +1,9 @@
 <div class="auditReportForm">
-    <div id="header-report-{{idTopic}}" class="header">{{title}}</div>
+    <div id="header-report-{{idTopic}}" class="header">
+        <div class="logoHeader"><i class="{{fontAwesome}}" style="font-size: 22px;"></i></div>
+        <div class="saveHeader"><i class="fas fa-save" style="font-size: 24px;"></i></div>
+        <div class="title">{{title}}</div>
+    </div>
     <form class="needs-validation" [formGroup]="profileAuditTask">
         <mat-form-field appearance="outline" class="comment">
             <mat-label>Audit report</mat-label>

@@ -586,6 +586,8 @@ export class ProjectService extends InternalService {
 
 		// Nothing to do.
 		if (!project.audit) {
+			console.log ('nope');
+			project.auditEvaluation = 0;
 			return;
 		}
 
