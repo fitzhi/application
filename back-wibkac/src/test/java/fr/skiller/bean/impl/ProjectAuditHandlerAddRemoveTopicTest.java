@@ -47,6 +47,7 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 		auditTopic.setEvaluation(40);
 		auditTopic.setWeight(100);
 		project.getAudit().put(1, new AuditTopic());
+		project.setAuditEvaluation(40);
 
 	}
 	
@@ -79,8 +80,16 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 
 	@Test
 	public void removeTopic() throws SkillerException {
+		
+		Assert.assertEquals("Evaluation is equal to 0", 40, project.getAuditEvaluation());
+		
 		projectAuditHandler.removeTopic(ID_PROJECT, 1, false);
 		Assert.assertFalse("removeTopic did not succeed", project.getAudit().containsKey(1));
+		
+		Project p = projectHandler.get(ID_PROJECT);
+		Assert.assertEquals("Audit topics collection is empty", 0, project.getAudit().values().size());
+		Assert.assertEquals("Evaluation is equal to 0", 0, project.getAuditEvaluation());
+		
 	}
 	
 	@Test
