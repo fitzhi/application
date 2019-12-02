@@ -1,16 +1,24 @@
-import { Component, OnInit, Input, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
 import { Topic } from '../../table-categories/topic';
 import { BaseComponent } from 'src/app/base/base.component';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { Constants } from 'src/app/constants';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { ProjectService } from 'src/app/service/project.service';
+import { Project } from 'src/app/data/project';
+import { AuditBaseComponent } from '../audit-base-component/audit-base-component.component';
 
 @Component({
 	selector: 'app-report-detail-form',
 	templateUrl: './report-detail-form.component.html',
 	styleUrls: ['./report-detail-form.component.css']
 })
-export class ReportDetailFormComponent extends BaseComponent implements OnInit, OnDestroy {
+export class ReportDetailFormComponent extends AuditBaseComponent implements OnInit, OnDestroy, AfterViewInit {
+
+	/**
+	 * A `BehaviorSubject` containing the current last uptodate project.
+	 */
+	@Input() project$: BehaviorSubject<Project>;
 
 	/**
 	 * The topic identifier.
@@ -22,13 +30,28 @@ export class ReportDetailFormComponent extends BaseComponent implements OnInit, 
 	 */
 	@Input() title: string;
 
+	/**
+	 * Current active project.
+	 */
+	private project: Project;
+
 	profileAuditTask = new FormGroup({
 		comment: new FormControl('', [Validators.maxLength(2000)])
 	});
 
-	constructor() { super(); }
+	constructor(public projectService: ProjectService) {
+		super();
+		this.postCreationInit('header-report-',
+			this.idTopic,
+			this.project$,
+			this.projectService);
+	}
 
-	ngOnInit() {
+	ngOnInit(): void {
+	}
+
+	ngAfterViewInit(): void {
+		super.ngAfterViewInit();
 	}
 
 	/**

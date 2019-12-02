@@ -1,11 +1,20 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { Project } from 'src/app/data/project';
+import { ProjectService } from 'src/app/service/project.service';
+import { AuditBaseComponent } from '../audit-base-component/audit-base-component.component';
 
 @Component({
 	selector: 'app-tasks-detail-form',
 	templateUrl: './tasks-detail-form.component.html',
 	styleUrls: ['./tasks-detail-form.component.css']
 })
-export class TasksDetailFormComponent implements OnInit {
+export class TasksDetailFormComponent extends AuditBaseComponent implements OnInit, OnDestroy, AfterViewInit {
+
+	/**
+	 * A `BehaviorSubject` containing the current last uptodate project.
+	 */
+	@Input() project$: BehaviorSubject<Project>;
 
 	/**
 	 * The topic identifier.
@@ -17,10 +26,27 @@ export class TasksDetailFormComponent implements OnInit {
 	 */
 	@Input() title: string;
 
+	ngAfterViewInit(): void {
+		super.ngAfterViewInit();
+	}
 
-	constructor() { }
+	constructor(public projectService: ProjectService) {
+		super();
+		this.postCreationInit('header-tasks-',
+			this.idTopic,
+			this.project$,
+			this.projectService);
+	}
+
 
 	ngOnInit() {
+	}
+
+	/**
+	 * Calling the base class to unsubscribe all subscriptions.
+	 */
+	ngOnDestroy() {
+		super.ngOnDestroy();
 	}
 
 }
