@@ -1,8 +1,8 @@
 package fr.skiller.controller;
 
+import static fr.skiller.Error.CODE_PROJECT_INVALID_WEIGHTS;
 import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
 import static fr.skiller.Error.CODE_PROJECT_TOPIC_UNKNOWN;
-import static fr.skiller.Error.CODE_PROJECT_INVALID_WEIGHTS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

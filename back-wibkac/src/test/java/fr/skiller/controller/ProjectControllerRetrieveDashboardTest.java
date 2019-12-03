@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import fr.skiller.Global;
 import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.ProjectHandler;
@@ -65,7 +66,7 @@ public class ProjectControllerRetrieveDashboardTest {
 		param.setIdProject(1);
 		
 		Mockito.when(cacheDataHandler.hasCommitRepositoryAvailable(p)).thenReturn(false);
-		Mockito.when(tasks.containsTask(ProjectController.DASHBOARD_GENERATION, "project", 1))
+		Mockito.when(tasks.hasActiveTask(Global.DASHBOARD_GENERATION, "project", 1))
 			.thenReturn(true);
 
 		String jsonInput = gson.toJson(param);

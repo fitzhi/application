@@ -38,6 +38,15 @@ public class Global {
 	 */
 	public static final int REMOTE_FILE_ACCESS = 2;
 
+	/** 
+	 * Operation.
+	 */
+	public static final String DASHBOARD_GENERATION = "dashboardGeneration";
+
+	/**
+	 * Title possible for an operation.
+	 */
+	public static final String PROJECT = "project";
 	
 	private Global() {
 	}

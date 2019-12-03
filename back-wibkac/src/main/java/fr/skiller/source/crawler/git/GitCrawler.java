@@ -10,10 +10,11 @@ import static fr.skiller.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
 import static fr.skiller.Error.MESSAGE_PARSING_SOURCE_CODE;
 import static fr.skiller.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
 import static fr.skiller.Error.SHOULD_NOT_PASS_HERE;
+import static fr.skiller.Global.DASHBOARD_GENERATION;
 import static fr.skiller.Global.INTERNAL_FILE_SEPARATORCHAR;
 import static fr.skiller.Global.LN;
+import static fr.skiller.Global.PROJECT;
 import static fr.skiller.Global.UNKNOWN;
-import static fr.skiller.controller.ProjectController.DASHBOARD_GENERATION;
 import static org.eclipse.jgit.diff.DiffEntry.DEV_NULL;
 
 import java.io.File;
@@ -94,7 +95,7 @@ import fr.skiller.data.source.importance.FileSizeImportance;
 import fr.skiller.data.source.importance.ImportanceCriteria;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.AbstractScannerDataGenerator;
-import fr.skiller.source.crawler.RepoScanner;;
+import fr.skiller.source.crawler.RepoScanner;
 
 /**
  * <p>
@@ -849,8 +850,14 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		try {
 			tasks.addTask(DASHBOARD_GENERATION, "project", project.getId());
 			return generate(project, settings);
+		} catch (SkillerException se) {
+			tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), se.errorCode, se.errorMessage);
+			throw se;
+		} catch (GitAPIException | IOException e) {
+			tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), 666, e.getLocalizedMessage());
+			throw e;
 		} finally {
-			tasks.removeTask(DASHBOARD_GENERATION, "project", project.getId());
+			tasks.completeTask(DASHBOARD_GENERATION, "project", project.getId());
 		}
 	}
 
@@ -858,15 +865,24 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	public RiskDashboard generate(final Project project, final SettingsGeneration cfgGeneration)
 			throws IOException, SkillerException, GitAPIException {
 
+		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), "starting the generation !");
+
 		final ConnectionSettings settings = connectionSettings(project);
 
 		if (!cacheDataHandler.hasCommitRepositoryAvailable(project)) {
-			this.clone(project, settings);
+			try {
+				this.clone(project, settings);
+			} catch (final Exception e) {
+				this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), e.getMessage());
+				throw e;
+			}
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("The project %s is cloned into a temporay directory", project.getName()));
 			}
 		}
 
+		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), "GIT clone successfully done!");
+		
 		// If a cache is detected and available for this project, it will be returned by
 		// this method.
 		// This variable is not final. Might be overridden by the filtering operation
@@ -875,6 +891,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("The repository has been parsed. It contains %d records in the repository", repo.size()));
 		}
+
+		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), "Parsing of the repository complete!");
 
 		// Does the process requires a personalization ?
 		// e.g. filtering on a staff identifier or starting the history crawl from a
@@ -885,6 +903,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 		RiskDashboard data = this.aggregateDashboard(project, repo);
 
+		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), "Data aggregation done !");
+		
 		// We collapse empty directory inside their first sub-directory
 		// the node com & the node google will become one single node com/google
 		if (collapseEmptyDirectory) {
@@ -894,6 +914,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			dataChartHandler.aggregateDataChart(data.riskChartData);
 		}
 
+		
 		// Evaluate the risk for each directory, and sub-directory, in the repository.
 		final List<StatActivity> statsCommit = new ArrayList<>();
 		this.riskSurveyor.evaluateTheRisk(repo, data.riskChartData, statsCommit);
@@ -916,6 +937,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 		// We send back to new risk level to the front-end application.
 		data.setProjectRiskLevel(project.getRisk());
+		
+		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Risk evaluation done !");
 		
 		if (logger.isDebugEnabled()) {
 			if ((data.undefinedContributors != null) && (!data.undefinedContributors.isEmpty())) {

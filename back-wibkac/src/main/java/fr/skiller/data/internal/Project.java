@@ -1,5 +1,8 @@
 package fr.skiller.data.internal;
 
+import static fr.skiller.Global.DIRECT_ACCESS;
+import static fr.skiller.Global.REMOTE_FILE_ACCESS;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,8 +15,6 @@ import fr.skiller.Global;
 import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.ShuffleService;
 import lombok.Data;
-import static fr.skiller.Global.DIRECT_ACCESS;
-import static fr.skiller.Global.REMOTE_FILE_ACCESS;
 
 /**
  * <p>

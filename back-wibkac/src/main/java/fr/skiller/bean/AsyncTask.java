@@ -3,6 +3,7 @@
  */
 package fr.skiller.bean;
 
+import fr.skiller.data.internal.Task;
 import fr.skiller.exception.SkillerException;
 
 /**
@@ -16,8 +17,8 @@ public interface AsyncTask {
 	 * @param operation type of operation recorded
 	 * @param title title related to the id
 	 * @param id identifier of the project
-	 * @throws SkillerException thrown if a problem occurs. 
-	 * The most probable exception is if the task already 
+	 * @throws SkillerException thrown if any problem occurs. 
+	 * <i>The most probable exception is if the task already.</i>
 	 */
 	void addTask (String operation, String title, int id) throws SkillerException;
 
@@ -30,13 +31,63 @@ public interface AsyncTask {
 	void removeTask (String operation, String title, int id);
 	
 	/**
-	 * Test the presence of this operation in the tasks collection.
+	 * Test the presence of a given operation in the tasks collection.
 	 * @param operation type of operation recorded
 	 * @param title title related to the identifier
 	 * @param id identifier of the project
 	 * @return {@code true} if this operation is already present in this collection, {@code false} otherwise
 	 */
 	boolean containsTask(String operation, String title, int id);
+	
+	/**
+	 * Test the presence of an active operation in the tasks collection.
+	 * @param operation type of operation recorded
+	 * @param title title related to the identifier
+	 * @param id identifier of the project
+	 * @return {@code true} if this operation is already active in this collection, {@code false} otherwise
+	 */
+	boolean hasActiveTask(String operation, String title, int id);
+	
+	/**
+	 * Test the presence of a given operation in the tasks collection.
+	 * @param operation type of operation recorded
+	 * @param title title related to the identifier
+	 * @param id the given identifier <i>(might be a project, a staff or anything else)</i>
+	 * @return the task stored for this operation on this project, or {@code null} if none is found
+	 */
+	Task getTask(String operation, String title, int id);
+	
+	/**
+	 * Log a message for a running task.<br/>
+	 * <font color="chocolate">The Log message will obtain an error code equal to -1</font>
+	 * @param operation type of operation concerned
+	 * @param title the title related to the identifier
+	 * @param id the given identifier <i>(which might be a project, a staff or anything else)</i>
+	 * @param message the given log message to log
+	 * @return {@code true} id the log has been successfully recorded, {@code false} otherwise.
+	 */
+	boolean logMessage(String operation, String title, int id, String message);
+	
+	/**
+	 * Log a message for a running task.
+	 * @param operation type of operation concerned
+	 * @param title the title related to the identifier
+	 * @param id the given identifier <i>(which might be a project, a staff or anything else)</i>
+	 * @param errorCode error code associated with this message
+	 * @param message the given log message to log
+	 * @return {@code true} id the log has been successfully recorded, {@code false} otherwise.
+	 */
+	boolean logMessage(String operation, String title, int id, int errorCode, String message);
+	
+	/**
+	 * Complete the current task.
+	 * @param operation type of operation recorded
+	 * @param title title related to the id
+	 * @param id identifier of the entity
+	 * @throws SkillerException thrown if any problem occurs. 
+	 * <i>The most probable exception is that the task does not exist.</i>
+	 */
+	void completeTask (String operation, String title, int id) throws SkillerException;
 	
 	/**
 	 * Trace the content of the collection.

@@ -4,11 +4,12 @@ import lombok.Data;
 
 /**
  * <p>
- * Parameter sent to the controller in order to obtain the sunburst data.
+ * This object is an envelop for parameters sent to the controller in order to obtain the sunburst data.
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public @Data class SettingsGeneration {
+	
 	/**
 	 * Project identifier.
 	 */
@@ -38,7 +39,7 @@ public @Data class SettingsGeneration {
 	}
 
 	/**
-	 * @param idProject       project identifier.
+	 * @param idProject project identifier.
 	 * @param idStaffSelected staff identifier selected.
 	 */
 	public SettingsGeneration(final int idProject, final int idStaffSelected) {

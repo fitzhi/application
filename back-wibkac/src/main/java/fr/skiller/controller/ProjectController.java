@@ -6,6 +6,8 @@ import static fr.skiller.Error.UNKNOWN_PROJECT;
 import static fr.skiller.Error.getStackTrace;
 import static fr.skiller.Global.BACKEND_RETURN_CODE;
 import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
+import static fr.skiller.Global.DASHBOARD_GENERATION;
+import static fr.skiller.Global.PROJECT;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -58,8 +60,6 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/project")
 public class ProjectController {
 
-	private static final String PROJECT = "project";
-
 	@Autowired
 	ProjectHandler projectHandler;
 
@@ -87,11 +87,6 @@ public class ProjectController {
 	 */
 	@Autowired
 	AsyncTask tasks;
-
-	/** 
-	 * Operation.
-	 */
-	public static final String DASHBOARD_GENERATION = "Dashboard generation";
 	
 	/**
 	 * Utility class in charge of loading the project.
@@ -309,7 +304,7 @@ public class ProjectController {
 	
 	
 	/**
-	* Retrieve the activities for a project in an object ready made to be injected into the sunburst chart.
+	* Retrieve the activities for a project in an object ready made to be injected into the Sunburst chart.
 	*/
 	@PostMapping("/sunburst")
 	public ResponseEntity<SunburstDTO> retrieveRiskDashboard(@RequestBody SettingsGeneration settings) {
@@ -336,7 +331,7 @@ public class ProjectController {
 					log.debug ("Tasks present in the tasks collection");
 					log.debug (tasks.trace());
 				}
-				if (tasks.containsTask(DASHBOARD_GENERATION, PROJECT, project.getId())) {
+				if (tasks.hasActiveTask(DASHBOARD_GENERATION, PROJECT, project.getId())) {
 					if (log.isDebugEnabled()) {
 						log.debug("The generation has already been called for the project " 
 								+ project.getName() + ". Please wait !");
@@ -367,7 +362,7 @@ public class ProjectController {
 	/**
 	 * Generate the dashboard.
 	 * @param project the passed project
-	 * @param settings parameters sent to the dashboard generation as staring date, filtered staff member.
+	 * @param settings parameters sent to the dashboard generation such as the starting date, or the filtered staff member.
 	 * @return the generated risks dashboard.
 	 */
 	private ResponseEntity<SunburstDTO> generate (final Project project, final SettingsGeneration settings) {
@@ -385,7 +380,12 @@ public class ProjectController {
 			log.error(getStackTrace(e));
 			return new ResponseEntity<>(new SunburstDTO( UNKNOWN_PROJECT, -1, null, CODE_UNDEFINED, e.getMessage()), new HttpHeaders(), HttpStatus.BAD_REQUEST);			
 		} finally {
-			tasks.removeTask(DASHBOARD_GENERATION, PROJECT, project.getId());
+			try {
+				tasks.completeTask(DASHBOARD_GENERATION, PROJECT, project.getId());
+			} catch (SkillerException e) {
+				log.error(e.errorMessage);
+				e.printStackTrace();
+			}
 		}
 	}
 		

@@ -76,6 +76,9 @@ public class Error {
 	public static final int CODE_PROJECT_INVALID_WEIGHTS = -1021;
 	public static final String MESSAGE_PROJECT_INVALID_WEIGHTS = "The sum of weights has to be equal to 100";
 	
+	public static final int CODE_TASK_NOT_FOUND = -1022;
+	public static final String MESSAGE_TASK_NOT_FOUND = "There is no operation {0} for the project id {1}";
+	
 	private Error() {
 	}
 	

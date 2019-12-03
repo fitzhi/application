@@ -19,10 +19,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import fr.skiller.Error;
 import fr.skiller.bean.ProjectHandler;
-import fr.skiller.controller.in.BodyParamSonarEntry;
-import fr.skiller.controller.in.BodyParamSonarFilesStats;
 import fr.skiller.controller.in.BodyParamProjectSonarEvaluation;
 import fr.skiller.controller.in.BodyParamProjectSonarMetricValues;
+import fr.skiller.controller.in.BodyParamSonarEntry;
+import fr.skiller.controller.in.BodyParamSonarFilesStats;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.SonarProject;
 import fr.skiller.exception.SkillerException;

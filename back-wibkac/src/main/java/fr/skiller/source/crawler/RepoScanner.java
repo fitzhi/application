@@ -187,11 +187,11 @@ public interface RepoScanner {
 	CommitRepository personalizeRepo(CommitRepository globalRepo, SettingsGeneration settings);
 	
 	/**
-	 * Test if risks dashboard have been executed.
+	 * Test if the staff risks dashboard generation has been already executed.
 	 * @param project the selected project
-	 * @return 	{@code true} if the intermediate data are available to complete the dashboard, 
-	 * 			{@code false} if the complete operation is required (Therefore, this operation will be asynchronous).  
-	 * @throws IOException
+	 * @return 	<ul><li>{@code true} if the intermediate data are available to complete the dashboard,</li>
+	 * 			<li>{@code false} if the full operation is required <i><b>(Therefore, this operation will be asynchronous)</b></i>.</li></ul>  
+	 * @throws IOException As we look for the existence of a working file on the file system, this function might return an IOException.
 	 */
 	boolean hasAvailableGeneration(Project project) throws IOException;
 	
