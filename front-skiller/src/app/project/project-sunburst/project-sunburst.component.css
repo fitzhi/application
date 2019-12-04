@@ -113,3 +113,18 @@ button.btn-outline-success {
   margin-left: 30px;
   margin-top: 10px;
 }
+
+div.taskReport {
+  margin-top: 5px;
+  text-align: center;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+div.taskReportOk {
+  color: #28a745;
+}
+
+div.taskReportError {
+  color:red;
+}

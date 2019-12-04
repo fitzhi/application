@@ -16,9 +16,102 @@ import { ProjectStaffService } from '../project-staff-service/project-staff.serv
 import { Filename } from '../../data/filename';
 import { FilenamesDataSource } from './node-detail/filenames-data-source';
 import { ContributorsDataSource } from './node-detail/contributors-data-source';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { Contributor } from '../../data/contributor';
-import { take } from 'rxjs/operators';
+import { take, retryWhen } from 'rxjs/operators';
+import { WebDriverLogger } from 'blocking-proxy/built/lib/webdriver_logger';
+import { Task } from 'src/app/data/task';
+import { TaskLog } from 'src/app/data/task-log';
+
+/**
+ * Internal class in charge of the display of log messages reported by the asynchronous task.
+ */
+class TaskReportManagement {
+
+	/**
+	 * This subject is emetting activity informations received by the method `projectService.loadTaskActivities$`
+	 * The content of this observable is displayed in the `div taskReport`
+	 */
+	taskReport$ = new BehaviorSubject<string>('');
+
+	/**
+	 * This `boolean` is informing 2 `*ngIf` located inside a div of class `taskReport`
+	 * There 2 div are excluding each other.
+	 *  * if `true`, this log message is a successfull message (with a font color in __green__)
+	 *  * if `false`, this is an error message (with a font color in __red__)
+	 */
+	taskOk: boolean;
+
+	/**
+	 * The last number of messages.
+	 * We test if we receive the same collection of messages by simply testing the number of records.
+	 */
+	public taskLogsCount = 0;
+
+	/**
+	 * Number of useless calls.
+	 * (successive calls which return the same number of records).
+	 */
+	public numberOfUselessCall = 0;
+
+	/**
+	 * Starting delay elapse time between each execution of the `intervalActivityLoadReload`
+	 */
+	private DEFAULT_DELAY_INTERVAL = 1000;
+
+	/**
+	 * Starting delay elapse time between each execution of the `intervalActivityLoadReload`
+	 */
+	public adaptativeDelay: number = this.DEFAULT_DELAY_INTERVAL;
+
+	/**
+	 * Dump the content of the task.
+	 * @param task the given task.
+	 */
+	private dump(task: Task) {
+		task.logs.forEach(log => {
+			if (Constants.DEBUG) {
+				console.groupCollapsed('Activities recorded');
+				console.log (log.message);
+				console.groupEnd();
+		}});
+	}
+
+	/**
+	 * Return the latest log message or `null` if there is no new message.
+	 * @param task the task read from the back-end.
+	 */
+	public lastLog(task: Task): TaskLog {
+		//
+		// Operation is completed.
+		// We return the last breath of the task
+		//
+		if (task.complete) {
+			this.taskLogsCount = 0;
+			this.dump(task);
+			return task.lastBreath;
+		}
+		if (task.logs.length !== this.taskLogsCount) {
+			this.taskLogsCount = task.logs.length;
+			// We reinitialize the adaptative delay.
+			this.adaptativeDelay = this.DEFAULT_DELAY_INTERVAL;
+			this.dump(task);
+			//
+			// We return the last recorded log.
+			//
+			return task.logs[task.logs.length - 1];
+		} else {
+			this.numberOfUselessCall++;
+			// After 5 successive useless calls, we increment the adaptativeDelay by the `DEFAULT_DELAY_INTERVAL`.
+			if (this.numberOfUselessCall === 5) {
+				this.numberOfUselessCall = 0;
+				this.adaptativeDelay += this.DEFAULT_DELAY_INTERVAL;
+			}
+			return null;
+		}
+	}
+}
+
 
 @Component({
 	selector: 'app-project-sunburst',
@@ -123,6 +216,23 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	public location$ = new BehaviorSubject('');
 
+	/**
+	 * Subscription active to read the task-activities.
+	 */
+	subscriptionTaskActivities: Subscription;
+
+	/**
+	 * reload interval to display the last log recorded for the asynchronous task.
+	 * This interval will periodicaly call the method `projectService.loadTaskActivities`
+	 */
+	private intervalActivityLoadReload;
+
+
+	/**
+	 * Internal class in charge of the display of log messages reported by the asynchronous task.
+	 */
+	private taskReportManagement = new TaskReportManagement();
+
 	constructor(
 		private cinematicService: CinematicService,
 		private route: ActivatedRoute,
@@ -191,6 +301,36 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		}
 	}
 
+	loadTaskActivities() {
+
+		this.intervalActivityLoadReload = setInterval( () => {
+			return this.projectService
+				.loadTaskActivities$(this.project.id)
+				.pipe( take(1))
+				.subscribe(task => {
+					const log = this.taskReportManagement.lastLog(task);
+					if (log) {
+						this.taskReportManagement.taskReport$.next(log.message);
+						this.taskReportManagement.taskOk = (log.errorCode === 0) ? true : false;
+					}
+				},
+				error => {
+					console.log ('Stop ' + error);
+					setTimeout(() => clearInterval(), 0);
+				});
+		}, this.taskReportManagement.adaptativeDelay);
+	}
+
+	/**
+	 * Clearing the interval.
+	 */
+	private clearInterval() {
+		if (Constants.DEBUG) {
+			console.log ('Halting the intervalActivityLoadReload');
+		}
+		clearInterval(this.intervalActivityLoadReload);
+	}
+
 	/**
      * Load the dashboard data in order to produce the sunburst chart.
      */
@@ -213,24 +353,34 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			});
 		}
 
-		this.projectService.loadDashboardData(this.settings)
-			.pipe(take(1)).subscribe(
+		this.loadTaskActivities();
+		this.projectService.loadDashboardData$(this.settings)
+			.subscribe(
 				response => {
 					this.handleSunburstData(response);
 					if (Constants.DEBUG) {
 						console.log ('The risk of the current project is', response.projectRiskLevel);
 					}
 					this.updateRiskLevel.next(response.projectRiskLevel);
-				}, response => this.handleErrorData(response),
+				},
+				response => {
+					console.log (response);
+					this.handleErrorData(response);
+					this.taskReportManagement.taskReport$.next(response);
+					this.taskReportManagement.taskOk = false;
+					this.clearInterval();
+				},
 				() => {
 					this.hackSunburstStyle();
 					this.tooltipChart();
 					this.setActiveContext (this.CONTEXT.SUNBURST_READY);
+					this.clearInterval();
 				});
 	}
 
 	/**
-    * user click on a a node.
+    * End-user click on a node of a chart.
+	* @param nodeClicked the node which have been clicked
     **/
 	public onNodeClick(nodeClicked: any) {
 		if (nodeClicked) {
@@ -435,8 +585,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				break;
 		}
 	}
+
 	reset() {
-		if (typeof this.project === 'undefined') {
+		if (!this.project) {
 			this.messageService.info('Nothing to reset !');
 			this.idPanelSelected = this.SUNBURST;
 			return;
@@ -446,17 +597,20 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				.pipe(take(1))
 				.subscribe(answer => {
 				if (answer) {
-					this.projectService.resetDashboard(this.settings.idProject)
+					this.setActiveContext (this.CONTEXT.SUNBURST_WAITING);
+					this.loadTaskActivities();
+					this.projectService
+						.resetDashboard(this.settings.idProject)
 						.pipe(take(1))
 						.subscribe(response => {
-						if (response) {
-							this.messageBoxService.exclamation('Operation complete',
-								'Dashboard reinitialization has been requested. The operation might last a while.');
-						} else {
-							this.messageBoxService.exclamation('Operation failed',
-								'The request is not necessary : no dashboard available.');
-						}
-					});
+							if (response) {
+								this.messageBoxService.exclamation('Operation complete',
+									'Dashboard reinitialization has been requested. The operation might last a while.');
+							} else {
+								this.messageBoxService.exclamation('Operation failed',
+									'This request was not necessary : no dashboard available.');
+							}
+						});
 					}
 				this.idPanelSelected = this.SUNBURST;
 			}
@@ -483,15 +637,15 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					? 0 : settings.idStaffSelected;
 			this.settings.startingDate = settings.startingDate;
 			this.generateTitleSunburst();
-			this.projectService.loadDashboardData(this.settings)
-				.pipe(take(1))
+			this.loadTaskActivities();
+			this.projectService.loadDashboardData$(this.settings)
 				.subscribe(
 					response => this.myChart.data(response.sunburstData),
 					response => this.handleErrorData(response),
 					() => {
 						this.hackSunburstStyle();
 						this.tooltipChart();
-					});
+				});
 		});
 	}
 
@@ -536,11 +690,11 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	/**
 	 * Test if the passed context is the current active context.
-	 * There are 4 context possible in this form container
-	 * . sunburst_waiting : the graph representing the risk of staff coverage is currently being build</li>
-	 * . sunburst_ready : the graph is ready to be displayed
-	 * . sunburst_impossible : either lack of connection information, or lack of internet, or something else : the graph cannot be displayed.
-	 * . sunburst_detail_dependencies : the table of libraries detected or declared is available in the container.
+	 * There are 4 context possible in this form container :
+	 * * `sunburst_waiting` : the graph representing the risk of staff coverage is currently being build</li>
+	 * * `sunburst_ready` : the graph is ready to be displayed
+	 * * `sunburst_impossible` : either lack of connection information, or lack of internet, or something else : the graph cannot be displayed.
+	 * * `sunburst_detail_dependencies` : the table of libraries detected or declared is available in the container.
 	 */
 	public isActiveContext(context: number) {
 		return (context === this.activeContext);

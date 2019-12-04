@@ -10,7 +10,7 @@ import { Skill } from '../data/skill';
 import { ContributorsDTO } from '../data/external/contributorsDTO';
 import { SettingsGeneration } from '../data/settingsGeneration';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
-import { take, tap } from 'rxjs/operators';
+import { take, tap, retryWhen, retry } from 'rxjs/operators';
 import { Library } from '../data/library';
 import { BooleanDTO } from '../data/external/booleanDTO';
 import { ReferentialService } from './referential.service';
@@ -23,6 +23,7 @@ import { ResponseComponentMeasures } from '../data/sonar/reponse-component-measu
 import { SonarService } from './sonar.service';
 import { MessageGravity } from '../message/message-gravity';
 import { AuditTopic } from '../data/AuditTopic';
+import { Task } from '../data/task';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -245,10 +246,13 @@ export class ProjectService extends InternalService {
 
 	/**
 	 * Retrieve the Sunburst data, figuring the activity on the source code regarding the passed project.
+	 * @param settings the settings givent to this generation, such as
+	 * * the project identifier (of course)
+	 * * the staff identifier
+	 * * the starting date of test
 	 */
-	loadDashboardData(settings: SettingsGeneration): Observable<any> {
+	loadDashboardData$(settings: SettingsGeneration): Observable<any> {
 		if (Constants.DEBUG) {
-
 			console.log('Retrieving the Sunburst data for the project '
 				+ settings.idProject + ', idStaff '
 				+ settings.idStaffSelected
@@ -259,7 +263,20 @@ export class ProjectService extends InternalService {
 			idProject: settings.idProject, idStaffSelected: settings.idStaffSelected,
 			startingDate: settings.startingDate
 		};
-		return this.httpClient.post<any>(this.backendSetupService.url() + '/project/sunburst', body, httpOptions);
+		return this.httpClient
+			.post<any>(this.backendSetupService.url() + '/project/sunburst', body, httpOptions)
+			.pipe(take(1));
+	}
+
+	/**
+	 * Load the activity records for the dashboard generation.
+	 * @param idProject the project identifier
+	 */
+	loadTaskActivities$(idProject: number): Observable<Task> {
+		return this.httpClient
+			.get<Task>(
+				this.backendSetupService.url() + '/project/tasks/dashboardGeneration/' + idProject,
+				httpOptions);
 	}
 
 	/**
@@ -275,12 +292,12 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	 * Save the ghosts list with their connected data;
+	 * Reset the whole data connected to the dashboard generation.
 	 */
 	resetDashboard(id: number): Observable<string> {
 		const url = this.backendSetupService.url() + '/project/resetDashboard/' + id;
 		if (Constants.DEBUG) {
-			console.log('Reset of the dashboard data on URL ' + url);
+			console.log('Reset the dashboard data on URL ' + url);
 		}
 		return this.httpClient.get<string>(url, httpOptions);
 	}
@@ -608,7 +625,6 @@ export class ProjectService extends InternalService {
 
 		// Nothing to do.
 		if (!project.audit) {
-			console.log ('nope');
 			project.auditEvaluation = 0;
 			return;
 		}
