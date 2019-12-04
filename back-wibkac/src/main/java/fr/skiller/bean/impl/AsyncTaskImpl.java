@@ -80,7 +80,7 @@ public class AsyncTaskImpl implements AsyncTask {
 	
 	@Override
 	public boolean logMessage(String operation, String title, int id, String message) {
-		return logMessage(operation, title, id, -1, message);
+		return logMessage(operation, title, id, 0, message);
 	}
 	
 	@Override

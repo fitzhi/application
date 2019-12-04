@@ -32,7 +32,7 @@ public @Data class TaskLog {
 	 * @param message the log message to be stored.
 	 */
 	public TaskLog(String message) {
-		this(-1, message);
+		this(0, message);
 	}
 	
 	/**
