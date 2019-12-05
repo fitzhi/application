@@ -1,6 +1,6 @@
 export class TaskLog {
 	constructor(
 		public timestamp: number,
-		public errorCode: number,
+		public code: number,
 		public message: string) {}
 }

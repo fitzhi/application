@@ -99,10 +99,10 @@
 						</section>
 					</mat-card-content>
 				</mat-card>
-				<div *ngIf="!taskReportManagement.taskOk" 
+				<div *ngIf="taskReportManagement.taskOk" 
 					class="taskReport taskReportOk">{{taskReportManagement.taskReport$ | async}}
 				</div>
-				<div *ngIf="taskReportManagement.taskOk" 
+				<div *ngIf="!taskReportManagement.taskOk" 
 					class="taskReport taskReportError">{{taskReportManagement.taskReport$ | async}}
 				</div>
 			</div>

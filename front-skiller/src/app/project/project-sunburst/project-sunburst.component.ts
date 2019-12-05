@@ -88,6 +88,7 @@ class TaskReportManagement {
 		//
 		if (task.complete) {
 			this.taskLogsCount = 0;
+			this.numberOfUselessCall = 0;
 			this.dump(task);
 			return task.lastBreath;
 		}
@@ -109,6 +110,14 @@ class TaskReportManagement {
 			}
 			return null;
 		}
+	}
+
+	/**
+	 * Initialization.
+	 */
+	init(): void {
+		this.taskLogsCount = 0;
+		this.numberOfUselessCall = 0;
 	}
 }
 
@@ -302,7 +311,10 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	}
 
 	loadTaskActivities() {
-
+		if (Constants.DEBUG) {
+			console.log ('Starting the adaptative interval with ' + this.taskReportManagement.adaptativeDelay);
+		}
+		this.taskReportManagement.init();
 		this.intervalActivityLoadReload = setInterval( () => {
 			return this.projectService
 				.loadTaskActivities$(this.project.id)
@@ -311,11 +323,23 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					const log = this.taskReportManagement.lastLog(task);
 					if (log) {
 						this.taskReportManagement.taskReport$.next(log.message);
-						this.taskReportManagement.taskOk = (log.errorCode === 0) ? true : false;
+						this.taskReportManagement.taskOk = (log.code === 0) ? true : false;
+					}
+					//
+					// Task is complete without error. We turn-off the waiting div in favor of Sunburst.
+					//
+					if (task.complete && (task.lastBreath.code === 0)) {
+						if (Constants.DEBUG) {
+							console.log ('After completion, we reloadSunburst');
+						}
+						this.setActiveContext (this.CONTEXT.SUNBURST_READY);
+						this.clearInterval();
 					}
 				},
 				error => {
-					console.log ('Stop ' + error);
+					//
+					// In case of error, we the log tracking.
+					//
 					setTimeout(() => clearInterval(), 0);
 				});
 		}, this.taskReportManagement.adaptativeDelay);
@@ -354,6 +378,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		}
 
 		this.loadTaskActivities();
+
 		this.projectService.loadDashboardData$(this.settings)
 			.subscribe(
 				response => {
@@ -364,11 +389,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					this.updateRiskLevel.next(response.projectRiskLevel);
 				},
 				response => {
-					console.log (response);
 					this.handleErrorData(response);
 					this.taskReportManagement.taskReport$.next(response);
 					this.taskReportManagement.taskOk = false;
-					this.clearInterval();
 				},
 				() => {
 					this.hackSunburstStyle();
