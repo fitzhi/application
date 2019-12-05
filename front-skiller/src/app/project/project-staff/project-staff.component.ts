@@ -65,7 +65,12 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 							this.router.url + '/staff' : this.router.url;
 
 						this.cinematicService.setForm(Constants.PROJECT_TAB_STAFF, urlProjectStaffList);
+						/**
+						 * Loading the contributors
+						 */
+						this.loadContributors();
 					}
+
 				}));
 
 	}

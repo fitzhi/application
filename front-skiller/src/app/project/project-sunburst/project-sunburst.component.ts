@@ -55,14 +55,21 @@ class TaskReportManagement {
 	public numberOfUselessCall = 0;
 
 	/**
-	 * Starting delay elapse time between each execution of the `intervalActivityLoadReload`
+	 * Starting delay elapse time between each execution of the `loadTaskActivities`
 	 */
 	private DEFAULT_DELAY_INTERVAL = 1000;
 
 	/**
-	 * Starting delay elapse time between each execution of the `intervalActivityLoadReload`
+	 * Starting delay elapse time between each execution of the `loadTaskActivities`
 	 */
 	public adaptativeDelay: number = this.DEFAULT_DELAY_INTERVAL;
+
+	/**
+	 * This boolean saved the complete-or-not status of the last log retrieved
+	 * from `projectService.loadTaskActivities$`.
+	 * If the task is complete, the timeOut() scheduler installed in loadTaskActivities will be turned off.
+	 */
+	complete = false;
 
 	/**
 	 * Dump the content of the task.
@@ -107,6 +114,9 @@ class TaskReportManagement {
 			if (this.numberOfUselessCall === 5) {
 				this.numberOfUselessCall = 0;
 				this.adaptativeDelay += this.DEFAULT_DELAY_INTERVAL;
+				if (Constants.DEBUG) {
+					console.log ('Adaptative delay has been set to %d', this.adaptativeDelay);
+				}
 			}
 			return null;
 		}
@@ -118,6 +128,7 @@ class TaskReportManagement {
 	init(): void {
 		this.taskLogsCount = 0;
 		this.numberOfUselessCall = 0;
+		this.complete = false;
 	}
 }
 
@@ -223,6 +234,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
      */
 	public contributors = new ContributorsDataSource();
 
+
 	public location$ = new BehaviorSubject('');
 
 	/**
@@ -314,46 +326,47 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		if (Constants.DEBUG) {
 			console.log ('Starting the adaptative interval with ' + this.taskReportManagement.adaptativeDelay);
 		}
-		this.taskReportManagement.init();
-		this.intervalActivityLoadReload = setInterval( () => {
-			return this.projectService
-				.loadTaskActivities$(this.project.id)
-				.pipe( take(1))
-				.subscribe(task => {
-					const log = this.taskReportManagement.lastLog(task);
-					if (log) {
-						this.taskReportManagement.taskReport$.next(log.message);
-						this.taskReportManagement.taskOk = (log.code === 0) ? true : false;
-					}
-					//
-					// Task is complete without error. We turn-off the waiting div in favor of Sunburst.
-					//
-					if (task.complete && (task.lastBreath.code === 0)) {
-						if (Constants.DEBUG) {
-							console.log ('After completion, we reloadSunburst');
-						}
-						this.setActiveContext (this.CONTEXT.SUNBURST_READY);
-						this.clearInterval();
-					}
-				},
-				error => {
-					//
-					// In case of error, we the log tracking.
-					//
-					setTimeout(() => clearInterval(), 0);
-				});
-		}, this.taskReportManagement.adaptativeDelay);
-	}
 
-	/**
-	 * Clearing the interval.
-	 */
-	private clearInterval() {
-		if (Constants.DEBUG) {
-			console.log ('Halting the intervalActivityLoadReload');
+		this.projectService
+			.loadTaskActivities$(this.project.id)
+			.pipe( take(1))
+			.subscribe(task => {
+				this.taskReportManagement.complete = task.complete;
+				const log = this.taskReportManagement.lastLog(task);
+				if (log) {
+					this.taskReportManagement.taskReport$.next(log.message);
+					this.taskReportManagement.taskOk = (log.code === 0) ? true : false;
+				}
+				//
+				// Task is complete without error. We turn-off the waiting div in favor of Sunburst.
+				//
+				if (task.complete && (task.lastBreath.code === 0)) {
+					if (Constants.DEBUG) {
+						console.log ('After completion, we reloadSunburst');
+					}
+					this.setActiveContext (this.CONTEXT.SUNBURST_READY);
+				}
+			},
+			error => {
+				//
+				// In case of error, we stop the log tracking.
+				//
+				if (Constants.DEBUG) {
+					console.groupCollapsed ('We stop loadTaskActivities due to internal error');
+					console.log (error);
+					console.groupEnd();
+				}
+				this.taskReportManagement.complete = true;
+			});
+
+			if (!this.taskReportManagement.complete) {
+				setTimeout(() => this.loadTaskActivities(), this.taskReportManagement.adaptativeDelay);
+			} else {
+				if (Constants.DEBUG) {
+					console.log ('Log tracking has been disabled');
+				}
+			}
 		}
-		clearInterval(this.intervalActivityLoadReload);
-	}
 
 	/**
      * Load the dashboard data in order to produce the sunburst chart.
@@ -362,7 +375,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 		this.idPanelSelected = this.SUNBURST;
 
-		if ((typeof this.project === 'undefined') || (typeof this.project.id === 'undefined')) {
+		if ((!this.project) || (!this.project.id)) {
 			this.setActiveContext (this.CONTEXT.SUNBURST_IMPOSSIBLE);
 			return;
 		} else {
@@ -377,6 +390,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			});
 		}
 
+		this.taskReportManagement.init();
 		this.loadTaskActivities();
 
 		this.projectService.loadDashboardData$(this.settings)
@@ -397,7 +411,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					this.hackSunburstStyle();
 					this.tooltipChart();
 					this.setActiveContext (this.CONTEXT.SUNBURST_READY);
-					this.clearInterval();
+					this.taskReportManagement.complete = true;
 				});
 	}
 
@@ -621,6 +635,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				.subscribe(answer => {
 				if (answer) {
 					this.setActiveContext (this.CONTEXT.SUNBURST_WAITING);
+					this.taskReportManagement.init();
 					this.loadTaskActivities();
 					this.projectService
 						.resetDashboard(this.settings.idProject)
