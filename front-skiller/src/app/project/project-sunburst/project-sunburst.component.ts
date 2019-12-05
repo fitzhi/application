@@ -216,8 +216,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	// Identifier of the panel selected.
 	private idPanelSelected = -1;
 
-	public projectName: string;
-
 	public titleSunburst = '';
 
 	private myChart: Sunburst;
@@ -288,12 +286,13 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					}
 
 					if (Constants.DEBUG) {
-						console.log('Project ' + project.id + ' ' + project.name + ' reveived in sunburst-component');
+						console.log('Project ' + project.id + ' ' + project.name + ' received in sunburst-component');
 					}
+
 					this.project = project;
-					this.projectName = this.project.name;
+					this.settings.idProject = this.project.id;
 					if ((!this.project.urlRepository) || (this.project.urlRepository.length === 0)) {
-						this.messageService.info('No repository URL avalaible !');
+						this.messageService.info('No repository URL available !');
 						this.setActiveContext (this.CONTEXT.SUNBURST_IMPOSSIBLE);
 					}
 			}));
