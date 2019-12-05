@@ -109,9 +109,8 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 		Path path = Paths.get(getCacheFilename(project));
 		 
 		//Use try-with-resource to get auto-closeable buffered writer instance close
-		try (BufferedWriter writer = Files.newBufferedWriter(path))
-		{
-		    writer.write(gson.toJson(repository));
+		try (BufferedWriter writer = Files.newBufferedWriter(path)) {
+		    gson.toJson(repository, writer);
 		}
 	}
 	

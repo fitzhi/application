@@ -768,7 +768,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 		if (logger.isDebugEnabled()) {
 			logger.debug(
-					"Taking account of retrieved contributors from the repository into the project list of participants");
+				"Taking account of retrieved contributors from the repository into the project list of participants");
 		}
 
 		/**
@@ -790,20 +790,17 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			unknownContributors.stream().forEach(logger::info);
 		}
 
+		
 		analysis.getChanges().stream()
 				.forEach(change -> repositoryOfCommit.addCommit(
 						change.getPath(),
 						change.isIdentified() ? change.getIdStaff() : UNKNOWN, 
+						change.getAuthorName(),
 						change.getDateCommit(),
 						change.getImportance()));
 
 
 		// Saving the repository into the cache
-		System.out.println("------------------------");
-		repositoryOfCommit.unknownContributors().forEach(elt -> {
-			System.out.println(elt);
-		});
-		System.out.println("------------------------");
 		cacheDataHandler.saveRepository(project, repositoryOfCommit);
 
 		return repositoryOfCommit;
@@ -1008,7 +1005,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			commits.operations.stream().filter(
 					it -> ((it.idStaff == settings.getIdStaffSelected()) || (settings.getIdStaffSelected() == 0)))
 					.filter(it -> (it.getDateCommit()).isAfter(startingDate))
-					.forEach(item -> personalizedRepo.addCommit(commits.sourcePath, item.idStaff, item.getDateCommit(),
+					.forEach(item -> personalizedRepo.addCommit(commits.sourcePath, item.idStaff, item.getAuthorName(), item.getDateCommit(),
 							commits.getImportance()));
 		}
 		return personalizedRepo;

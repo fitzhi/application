@@ -15,7 +15,7 @@ public class Operations {
 
 	final int idProject;
 	
-	final Map<Integer, Operation> operations = new HashMap<Integer, Operation>();
+	final Map<String, Operation> operations = new HashMap<>();
 
 	/**
 	 * @param idProject project identifier of this collection of commits.
@@ -28,13 +28,16 @@ public class Operations {
 	/**
 	 * Add a commit log in the repository
 	 * @param author Staff member's identifier as the author in charge of the commit
-	 * @param email the author's email
+	 * @param authorName the author's name
 	 * @param dateCommit the date of the commit
 	 */
-	void addCommit (final int author, final LocalDate dateCommit) {
-		Operation operation = operations.get(author);
+	void addCommit (final int idStaff, String authorName, final LocalDate dateCommit) {
+		
+		String key = (idStaff > 0) ? String.valueOf(idStaff) : authorName;
+		
+		Operation operation = operations.get(key);
 		if (operation == null) {
-			operations.put(author, new Operation(author, dateCommit));
+			operations.put(key, new Operation(idStaff, authorName, dateCommit));
 		} else {
 			if (dateCommit.isAfter(operation.getDateCommit())) {
 				operation.setDateCommit(dateCommit);

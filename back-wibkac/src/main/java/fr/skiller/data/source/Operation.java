@@ -2,45 +2,49 @@ package fr.skiller.data.source;
 
 import java.time.LocalDate;
 
+import lombok.Data;
+
 /**
- * <p>Operation occured.</p>
+ * <p>
+ * Operation occurred.
+ * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class Operation {
+public @Data class Operation {
 
 	/**
-	 *identifier of the committer
+	 * Identifier of the committer
 	 */
-	public final int idStaff;
+	public int idStaff;
 	
+	/**
+	 * Author name
+	 */
+	private String authorName;
+
 	/**
 	 * last of date for this commit. 
 	 */
 	private LocalDate dateCommit;
 
 	/**
-	 * @param int idStaff Staff member identifier
-	 * @param dateCommit date of commit
+	 * Empty construction for serialization purpose.
 	 */
-	public Operation(final int idStaff, LocalDate dateCommit) {
+	public Operation() {
+	}
+
+	/**
+	 * Public construction.
+	 * @param idStaff Staff identifier
+	 * @param authorName the author's name
+	 * @param dateCommit the date of commit
+	 */
+	public Operation(int idStaff, String authorName, LocalDate dateCommit) {
 		super();
 		this.idStaff = idStaff;
-		this.setDateCommit(dateCommit);
-	}
-
-	/**
-	 * @return the dateCommit
-	 */
-	public LocalDate getDateCommit() {
-		return dateCommit;
-	}
-
-	/**
-	 * @param dateCommit the dateCommit to set
-	 */
-	public void setDateCommit(LocalDate dateCommit) {
+		this.authorName = authorName;
 		this.dateCommit = dateCommit;
 	}
-
+	
 	
 }

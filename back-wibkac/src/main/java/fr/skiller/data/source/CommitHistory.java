@@ -85,11 +85,12 @@ public class CommitHistory {
 	/**
 	 * Take in account a new commit in the history.
 	 * @param idStaff Staff member's identifier
+	 * @param authorName the author's name
 	 * @param timestamp the time-stamp of this operation
 	 * @return the updated collection
 	 */
-	public List<Operation> handle(final int idStaff, final LocalDate timestamp) {
-		return addOperation (new Operation(idStaff, timestamp));
+	public List<Operation> handle(final int idStaff, String authorName, final LocalDate timestamp) {
+		return addOperation (new Operation(idStaff, authorName, timestamp));
 	}
 	
 	/**

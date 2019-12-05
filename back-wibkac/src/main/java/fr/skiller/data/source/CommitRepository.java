@@ -17,10 +17,11 @@ public interface CommitRepository {
 	 * add a new commit log into the repository.
 	 * @param sourceCodePath the complete source code path 
 	 * @param idStaff staff member's identifier
+	 * @param authorName the author's name
 	 * @param timestamp date of the operation
 	 * @param importance the importance of this source file in the project in a numeric value format
 	 */
-	void addCommit(String sourceCodePath, int idStaff, LocalDate timestamp, long importance);
+	void addCommit(String sourceCodePath, int idStaff, String authorName, LocalDate timestamp, long importance);
 	
 	/**
 	 * <p>
@@ -29,10 +30,11 @@ public interface CommitRepository {
 	 * </p>
 	 * @param sourceCodePath the complete source code path 
 	 * @param idStaff staff member's identifier
+	 * @param authorName the author's name
 	 * @param timestamp date of the operation (without time offset)
 	 * @param importance the importance of this source file in the project in a numeric value format
 	 */
-	void addCommit(String sourceCodePath, int idStaff, Date timestamp, long importance);
+	void addCommit(String sourceCodePath, int idStaff, String authorName, Date timestamp, long importance);
 	
 	/**
 	 * Test the presence of a record for the given source code file

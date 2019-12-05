@@ -44,8 +44,8 @@ public class CacheDataHandlerImplTest {
 	public void creation() throws IOException {
 		Project project = new Project((int) System.currentTimeMillis(), "TEST_SKILLER");
 		CommitRepository repository = new BasicCommitRepository();
-		repository.addCommit("com/test.java", 1, LocalDate.now(), 1);
-		repository.addCommit("fr/test/test.java", 1, LocalDate.now(), 1);
+		repository.addCommit("com/test.java", 1, "theAuthorOfOne", LocalDate.now(), 1);
+		repository.addCommit("fr/test/test.java", 1, "theAuthorOfOne", LocalDate.now(), 1);
 		Assert.assertFalse(cacheDataHandler.hasCommitRepositoryAvailable(project));
 		
 		Set<String> unknowns = new HashSet<>();

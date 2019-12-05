@@ -31,7 +31,7 @@ public class SCMChange {
 	private LocalDate dateCommit;
 
 	/**
-	 * Date of commit.
+	 * Author name
 	 */
 	private String authorName;
 
