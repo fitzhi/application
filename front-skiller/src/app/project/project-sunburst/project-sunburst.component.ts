@@ -22,6 +22,7 @@ import { take, retryWhen } from 'rxjs/operators';
 import { WebDriverLogger } from 'blocking-proxy/built/lib/webdriver_logger';
 import { Task } from 'src/app/data/task';
 import { TaskLog } from 'src/app/data/task-log';
+import { Context } from 'vm';
 
 /**
  * Internal class in charge of the display of log messages reported by the asynchronous task.
@@ -132,6 +133,18 @@ class TaskReportManagement {
 	}
 }
 
+	//
+	// this context is indicating that the sunburst chart is ready to be viewed.
+	//
+	export enum PreviewContext {
+		SUNBURST_READY = 'chart ready',
+		SUNBURST_IMPOSSIBLE = 'chart impossible',
+		SUNBURST_WAITING = 'chart under construction',
+		SUNBURST = 'chart, the chart',
+		SUNBURST_DEPENDENCIES = 'chart dependencies',
+		SUNBURST_LEGEND = 'chart legend',
+		SUNBURST_GHOSTS = 'chart ghost',
+	}
 
 @Component({
 	selector: 'app-project-sunburst',
@@ -175,22 +188,10 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	private settings = new SettingsGeneration(-1, new Date(0).getTime(), 0);
 
 	// Previous context related to the sunburst construction.
-	public lastSunburstContext = 0;
-
+	public lastSunburstContext = '';
 
 	// Active current context
-	public activeContext = 0;
-
-	// this context is indicating that the sunburst chart is ready to be viewed.
-	public CONTEXT = {
-		SUNBURST_READY: 1,
-		SUNBURST_IMPOSSIBLE: 2,
-		SUNBURST_WAITING: 3,
-		SUNBURST_DEPENDENCIES: 4,
-		SUNBURST: 5,
-		SUNBURST_LEGEND: 6,
-		SUNBURST_GHOSTS: 7
-	};
+	public activeContext = '';
 
 	// Waiting images previewed during the chart generation.
 	public sunburstWaitingImage = './assets/img/sunburst-waiting-image.png';
@@ -252,6 +253,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 */
 	private taskReportManagement = new TaskReportManagement();
 
+	public PreviewContext =  PreviewContext;
+
 	constructor(
 		private cinematicService: CinematicService,
 		private route: ActivatedRoute,
@@ -293,7 +296,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					this.settings.idProject = this.project.id;
 					if ((!this.project.urlRepository) || (this.project.urlRepository.length === 0)) {
 						this.messageService.info('No repository URL available !');
-						this.setActiveContext (this.CONTEXT.SUNBURST_IMPOSSIBLE);
+						this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
 					}
 			}));
 		}
@@ -316,15 +319,12 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			if (Constants.DEBUG) {
 				console.log('No project identifier passed to this tab. No data available for preview !');
 			}
-			this.setActiveContext (this.CONTEXT.SUNBURST_IMPOSSIBLE);
+			this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
 			return;
 		}
 	}
 
 	loadTaskActivities() {
-		if (Constants.DEBUG) {
-			console.log ('Starting the adaptative interval with ' + this.taskReportManagement.adaptativeDelay);
-		}
 
 		this.projectService
 			.loadTaskActivities$(this.project.id)
@@ -336,14 +336,16 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					this.taskReportManagement.taskReport$.next(log.message);
 					this.taskReportManagement.taskOk = (log.code === 0) ? true : false;
 				}
-				//
-				// Task is complete without error. We turn-off the waiting div in favor of Sunburst.
-				//
-				if (task.complete && (task.lastBreath.code === 0)) {
-					if (Constants.DEBUG) {
-						console.log ('After completion, we reloadSunburst');
+				if (task.complete) {
+					//
+					// Task is complete without error. We turn-off the waiting div to the mode ready for chart.
+					//
+					if (task.lastBreath.code === 0) {
+						this.setActiveContext (PreviewContext.SUNBURST_READY);
+					} else {
+						// TODO Special something has to be implemented here !
+						// Just need to figure what to do.
 					}
-					this.setActiveContext (this.CONTEXT.SUNBURST_READY);
 				}
 			},
 			error => {
@@ -362,7 +364,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				setTimeout(() => this.loadTaskActivities(), this.taskReportManagement.adaptativeDelay);
 			} else {
 				if (Constants.DEBUG) {
-					console.log ('Log tracking has been disabled');
+					console.log ('Log tracking has been disable');
 				}
 			}
 		}
@@ -375,10 +377,10 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		this.idPanelSelected = this.SUNBURST;
 
 		if ((!this.project) || (!this.project.id)) {
-			this.setActiveContext (this.CONTEXT.SUNBURST_IMPOSSIBLE);
+			this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
 			return;
 		} else {
-			this.setActiveContext (this.CONTEXT.SUNBURST_WAITING);
+			this.setActiveContext (PreviewContext.SUNBURST_WAITING);
 		}
 
 		if (!this.myChart) {
@@ -409,7 +411,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				() => {
 					this.hackSunburstStyle();
 					this.tooltipChart();
-					this.setActiveContext (this.CONTEXT.SUNBURST_READY);
+					this.setActiveContext (PreviewContext.SUNBURST_READY);
 					this.taskReportManagement.complete = true;
 				});
 	}
@@ -594,7 +596,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				break;
 			case this.LEGEND_SUNBURST:
 					this.idPanelSelected = idPanel;
-					this.setActiveContext(this.CONTEXT.SUNBURST_LEGEND);
+					this.setActiveContext(PreviewContext.SUNBURST_LEGEND);
 				break;
 			case this.SETTINGS:
 					this.idPanelSelected = idPanel;
@@ -606,11 +608,11 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					break;
 				}
 				this.idPanelSelected = idPanel;
-				this.setActiveContext(this.CONTEXT.SUNBURST_GHOSTS);
+				this.setActiveContext(PreviewContext.SUNBURST_GHOSTS);
 				break;
 			case this.DEPENDENCIES:
 				this.idPanelSelected = idPanel;
-				this.setActiveContext(this.CONTEXT.SUNBURST_DEPENDENCIES);
+				this.setActiveContext(PreviewContext.SUNBURST_DEPENDENCIES);
 				break;
 			case this.RESET:
 				this.idPanelSelected = idPanel;
@@ -628,21 +630,20 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			this.idPanelSelected = this.SUNBURST;
 			return;
 		}
-		this.messageBoxService.question('Reset the dashboard',
-			'Please confirm the dashboard reinitialization')
-				.pipe(take(1))
-				.subscribe(answer => {
+		this.messageBoxService.question('Reset the dashboard', 'Please confirm the dashboard reinitialization')
+			.pipe(take(1))
+			.subscribe(answer => {
 				if (answer) {
-					this.setActiveContext (this.CONTEXT.SUNBURST_WAITING);
-					this.taskReportManagement.init();
-					this.loadTaskActivities();
 					this.projectService
 						.resetDashboard(this.settings.idProject)
 						.pipe(take(1))
 						.subscribe(response => {
 							if (response) {
-								this.messageBoxService.exclamation('Operation complete',
-									'Dashboard reinitialization has been requested. The operation might last a while.');
+								this.messageBoxService.exclamation('Operation request is saved',
+									'Dashboard reinitialization has been requested. The operation might take a while.');
+									this.setActiveContext (PreviewContext.SUNBURST_WAITING);
+									this.taskReportManagement.init();
+									this.loadTaskActivities();
 							} else {
 								this.messageBoxService.exclamation('Operation failed',
 									'This request was not necessary : no dashboard available.');
@@ -650,8 +651,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 						});
 					}
 				this.idPanelSelected = this.SUNBURST;
-			}
-		);
+			});
 	}
 
 	dialogFilter() {
@@ -708,20 +708,26 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	}
 
 	/**
-	 * Set the new active context insoide the form component.
+	 * Set the new active context inside the form component.
 	 */
-	public setActiveContext(context: number) {
+	public setActiveContext(context: string) {
 
 		if (Constants.DEBUG) {
-			console.log ('New active context ' + context + ' after ' + this.lastSunburstContext);
+			console.log ('New active context \'' + context + '\' after \'' + this.lastSunburstContext + '\'');
 		}
 
-		// We keep away the previous context related to the construction of the sunburst chart.
-		if ( 	(context === this.CONTEXT.SUNBURST_READY)
-			|| (context === this.CONTEXT.SUNBURST_IMPOSSIBLE)
-			|| (context === this.CONTEXT.SUNBURST_WAITING)) {
+		/*
+
+		TODO MUST FIND AN EXPLANATION FOR THIS...
+
+		// We keep away the previous context related to the construction of the Sunburst chart.
+		if ( 	(context === PreviewContext.SUNBURST_READY)
+			|| 	(context === PreviewContext.SUNBURST_IMPOSSIBLE)
+			|| 	(context === PreviewContext.SUNBURST_WAITING)) {
 			this.lastSunburstContext = context;
 		}
+		*/
+		this.lastSunburstContext = this.activeContext;
 		this.activeContext = context;
 	}
 
@@ -733,7 +739,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 * * `sunburst_impossible` : either lack of connection information, or lack of internet, or something else : the graph cannot be displayed.
 	 * * `sunburst_detail_dependencies` : the table of libraries detected or declared is available in the container.
 	 */
-	public isActiveContext(context: number) {
+	public isActiveContext(context: PreviewContext) {
 		return (context === this.activeContext);
 	}
 
