@@ -5,6 +5,8 @@ package fr.skiller.bean.impl;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -45,13 +47,19 @@ public class CacheDataHandlerImplTest {
 		repository.addCommit("com/test.java", 1, LocalDate.now(), 1);
 		repository.addCommit("fr/test/test.java", 1, LocalDate.now(), 1);
 		Assert.assertFalse(cacheDataHandler.hasCommitRepositoryAvailable(project));
-
+		
+		Set<String> unknowns = new HashSet<>();
+		unknowns.add("tintin");
+		repository.setUnknownContributors(unknowns);
 		cacheDataHandler.saveRepository(project, repository);
 		Assert.assertTrue(cacheDataHandler.hasCommitRepositoryAvailable(project));
 		
 		repository = cacheDataHandler.getRepository(project);
 		Assert.assertNotNull(repository);
 		Assert.assertEquals(2, repository.size());
+		Assert.assertEquals(1, repository.unknownContributors().size());
+		Assert.assertEquals("tintin", repository.unknownContributors().toArray()[0]);
+		
 	}
 	
 	

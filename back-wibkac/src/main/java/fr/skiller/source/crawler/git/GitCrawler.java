@@ -610,11 +610,12 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	}
 
 	@Override
-	public CommitRepository parseRepository(final Project project, final ConnectionSettings settings)
-			throws IOException, SkillerException {
-
+	public CommitRepository loadRepositoryFromCacheIfAny(Project project) throws IOException {
+		
+		//
 		// Test if this repository is available in cache.
 		// If this repository exists, return it immediately.
+		//
 		if (cacheDataHandler.hasCommitRepositoryAvailable(project)) {
 			if (logger.isDebugEnabled()) {
 				logger.debug(String.format("Using cache file for project %s", project.getName()));
@@ -622,9 +623,11 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 			CommitRepository repository = cacheDataHandler.getRepository(project);
 
+			//
 			// Since the last parsing of the repository, some developers might have been
 			// declared and are responding now to unknown pseudos.
 			// We cleanup the set.
+			//
 			repository.setUnknownContributors(
 					repository.unknownContributors()
 						.stream()
@@ -632,8 +635,23 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 						.collect(Collectors.toSet()));
 
 			return repository;
+		} else {
+			return null;
 		}
+	}
+	
+	@Override
+	public CommitRepository parseRepository(final Project project, final ConnectionSettings settings)
+			throws IOException, SkillerException {
 
+		//
+		// We load the repository from cache, if any exists. (my method name is just perfect!)
+		//
+		CommitRepository repository = loadRepositoryFromCacheIfAny(project);
+		if (repository != null) {
+			return repository;
+		}
+		
 		if (project.getLocationRepository() == null) {
 			throw new SkillerException(Error.CODE_REPO_MUST_BE_ALREADY_CLONED,
 					Error.MESSAGE_REPO_MUST_BE_ALREADY_CLONED);
@@ -655,17 +673,20 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("loadChanges (%s) returns %d entries", project.getName(), analysis.sizeChanges()));
 		}
-		
+
+		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), String.format("%d changes have been detected on the repository", analysis.sizeChanges()));
+	
 		/**
 		 * We save the directories of the repository.
 		 */
 		dataSaver.saveRepositoryDirectories(project, analysis.getChanges());
 		
 		/**
-		 * For test and debug purpose, we save the changes file on the file system.
+		 * We save the changes file on the file system.
 		 */
 		dataSaver.saveChanges(project, analysis.getChanges());
 
+		
 		/**
 		 * We finalize & cleanup the content of the collection
 		 */
@@ -683,7 +704,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			logger.debug(
 					String.format("filterEligible (%s) returns %d entries", project.getName(), analysis.sizeChanges()));
 		}
+		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), String.format("%d changes are eligible for the analysis", analysis.sizeChanges()));
 
+		
 		// Updating the importance
 		this.updateImportance(project, analysis);
 		
@@ -698,6 +721,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		// which might be contain file like /toto/titi/jquery/src/jquery-internal.js, candidate for being excluded from the analysis.
 		//
 		selectPathDependencies (analysis, dependenciesMarker());
+		
+		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), String.format("Dependencies have been excluded from analysis"));
 		
 		//
 		// We retrieve the root paths of all libraries present in the project (if any) 
@@ -727,6 +752,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		 * We update the staff identifier on each change entry.
 		 */
 		this.updateStaff(project, analysis, unknownContributors);
+
+		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), 
+				String.format("All changes have been assigned to registered staff members"));
 
 		/**
 		 * We save the unknown contributors, into the "ghosts project"
@@ -763,12 +791,19 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		}
 
 		analysis.getChanges().stream()
-				.forEach(change -> repositoryOfCommit.addCommit(change.getPath(),
-						change.isIdentified() ? change.getIdStaff() : UNKNOWN, change.getDateCommit(),
+				.forEach(change -> repositoryOfCommit.addCommit(
+						change.getPath(),
+						change.isIdentified() ? change.getIdStaff() : UNKNOWN, 
+						change.getDateCommit(),
 						change.getImportance()));
 
 
 		// Saving the repository into the cache
+		System.out.println("------------------------");
+		repositoryOfCommit.unknownContributors().forEach(elt -> {
+			System.out.println(elt);
+		});
+		System.out.println("------------------------");
 		cacheDataHandler.saveRepository(project, repositoryOfCommit);
 
 		return repositoryOfCommit;
@@ -865,7 +900,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	public RiskDashboard generate(final Project project, final SettingsGeneration cfgGeneration)
 			throws IOException, SkillerException, GitAPIException {
 
-		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), "starting the generation !");
+		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), "Starting the generation !");
 
 		final ConnectionSettings settings = connectionSettings(project);
 
@@ -881,7 +916,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			}
 		}
 
-		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), "GIT clone successfully done!");
+		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), "Git clone successfully done!");
 		
 		// If a cache is detected and available for this project, it will be returned by
 		// this method.
@@ -1042,7 +1077,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	public void updateStaff(Project project, RepositoryAnalysis analysis, Set<String> unknownContributors) {
 
 		List<String> authors = analysis
-				.getChanges().stream()
+				.getChanges()
+				.stream()
 				.filter(SCMChange::isAuthorIdentified)
 				.map(SCMChange::getAuthorName)
 				.distinct()

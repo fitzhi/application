@@ -25,6 +25,15 @@ import fr.skiller.exception.SkillerException;
  */
 public interface RepoScanner {
 
+	
+	/**
+	 * Load the repository from the internal cache.
+	 * @param project the current active project.
+	 * @return the repository commit entries if a previous parsing has been saved, or {@code null} if none exists.
+	 * @throws IOException thrown if an IO exception occurs when reading the cache file.
+	 */
+	CommitRepository loadRepositoryFromCacheIfAny(Project project) throws IOException;
+
 	/**
 	 * <p>
 	 * <b>Clone</b> or <b>Pull</b> the source code from the remote repository

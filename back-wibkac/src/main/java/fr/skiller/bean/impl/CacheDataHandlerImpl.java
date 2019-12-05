@@ -59,7 +59,7 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	public boolean hasCommitRepositoryAvailable(Project project) throws IOException {
 		Path savedProject = Paths.get(getCacheFilename(project));
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Examining %s", savedProject));
+			log.debug(String.format("Examining %s", savedProject.toFile().getAbsolutePath()));
 		}
 		if (savedProject.toFile().exists()) {
 			FileTime lastModified = Files.getLastModifiedTime(savedProject);

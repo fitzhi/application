@@ -96,7 +96,8 @@ public interface CommitRepository {
 	
 	/**
 	 * @return A set which contains the developers/contributors retrieved in the version control but unrecognized during the parsing process.<br/>
-	 * <p>This set contains : 
+	 * <p>
+	 * This set contains : 
 	 * <ul>
 	 * <li>either unknown developers, who must be declared inside the application (staff Form)</li>
 	 * <li>or particular nicknames setup by current developers.</li>

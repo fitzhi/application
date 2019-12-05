@@ -1,0 +1,36 @@
+{
+	"repo": {
+		"fr/test/test.java": {
+			"sourcePath": "fr/test/test.java",
+			"riskLevel": 0,
+			"importance": 1,
+			"operations": [
+				{
+					"idStaff": 1,
+					"dateCommit": {
+						"year": 2019,
+						"month": 12,
+						"day": 3
+					}
+				}
+			]
+		},
+		"com/test.java": {
+			"sourcePath": "com/test.java",
+			"riskLevel": 0,
+			"importance": 1,
+			"operations": [
+				{
+					"idStaff": 1,
+					"dateCommit": {
+						"year": 2019,
+						"month": 12,
+						"day": 3
+					}
+				}
+			]
+		}
+	},
+	"unknownContributors": [
+	]
+}
