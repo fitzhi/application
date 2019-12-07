@@ -4,6 +4,7 @@ import static fr.skiller.Error.getStackTrace;
 import static fr.skiller.Global.BACKEND_RETURN_CODE;
 import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -22,12 +23,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.skiller.Error;
 import fr.skiller.bean.ProjectDashboardCustomizer;
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.bean.StaffHandler;
 import fr.skiller.controller.util.ProjectLoader;
 import fr.skiller.controller.util.ProjectLoader.MyReference;
 import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -48,6 +52,9 @@ public class ProjectAnalysisController {
 	ProjectDashboardCustomizer dashboardCustomizer;
 
 	@Autowired
+	ProjectDashboardCustomizer projectDashboardCustomizer;
+
+	@Autowired
 	ProjectHandler projectHandler;
 
 	/**
@@ -55,6 +62,12 @@ public class ProjectAnalysisController {
 	 */
 	ProjectLoader projectLoader;
 
+	/**
+	 * Utility class in charge of handling the staff.
+	 */
+	@Autowired
+	StaffHandler staffHandler;
+	
 	/**
 	 * Initialization of the controller post-construction.
 	 */
@@ -143,6 +156,56 @@ public class ProjectAnalysisController {
 			return new ResponseEntity<> (Boolean.FALSE, 
 					new HttpHeaders(), 
 					HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<>(Boolean.TRUE, new HttpHeaders(), HttpStatus.OK);
+	}
+
+	
+	@GetMapping("/onboard/{idProject}/{idStaff}")
+	public ResponseEntity<Boolean> onBoardStaff(@PathVariable int idProject, @PathVariable int idStaff) {
+		
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
+					"POST command on /project/analysis/onboard/%d/%d ", 
+					idProject, idStaff));
+		}
+		
+		HttpHeaders headers = new HttpHeaders();
+
+		try {
+			
+			Staff staff = staffHandler.getStaff(idStaff);
+			if (staff == null) {
+				headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_STAFF_NOFOUND));
+				headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
+				return new ResponseEntity<>(
+						Boolean.FALSE, headers,
+						HttpStatus.NOT_FOUND);			
+			}
+	
+			Project project = projectHandler.get(idProject);
+			if (project == null) {
+				headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
+				headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, idProject));
+				return new ResponseEntity<>(
+						Boolean.FALSE, headers,
+						HttpStatus.NOT_FOUND);			
+			}
+			
+			this.projectDashboardCustomizer.takeInAccountNewStaff(project, staff);
+			 
+		} catch (SkillerException e) {
+				headers.set(BACKEND_RETURN_CODE, String.valueOf(e.errorCode));
+				headers.set(BACKEND_RETURN_MESSAGE, e.errorMessage);
+				
+				if (e.getCause() != null) {
+					log.error(getStackTrace(e.getCause()));					
+				}
+				log.error(getStackTrace(e));
+				
+				return new ResponseEntity<> (Boolean.FALSE, 
+						new HttpHeaders(), 
+						HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<>(Boolean.TRUE, new HttpHeaders(), HttpStatus.OK);
 	}

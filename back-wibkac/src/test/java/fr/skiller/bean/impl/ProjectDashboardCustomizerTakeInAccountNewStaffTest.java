@@ -31,7 +31,6 @@ import fr.skiller.exception.SkillerException;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @TestPropertySource(properties = { "cacheDirRepository=./src/test/resources/cacheDirRepository/", "cache_duration=100000" }) 
-
 public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 
 	@Autowired
@@ -39,7 +38,6 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 
 	@Autowired
 	ProjectHandler projectHandler;
-		
 
 	@Autowired
 	CacheDataHandler cacheDataHandler;

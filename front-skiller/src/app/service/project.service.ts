@@ -24,6 +24,7 @@ import { SonarService } from './sonar.service';
 import { MessageGravity } from '../message/message-gravity';
 import { AuditTopic } from '../data/AuditTopic';
 import { Task } from '../data/task';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -635,6 +636,24 @@ export class ProjectService extends InternalService {
 		});
 		project.auditEvaluation = Math.floor(result / 100);
 		this.dump(project, 'processGlobalAuditEvaluation');
+	}
+
+	/**
+	 * Onboard a staff in the project.
+	 * @param idProject Project identifier
+	 * @param idStaff Staff identifier
+	 */
+	public onBoardStaffInProject(idProject: number, idStaff: number): void {
+		this.httpClient
+			.get<Project>('/project/onboard/' + idProject + '/' + idProject)
+			.pipe(take(1))
+			.subscribe(doneAndOk => {
+				if (doneAndOk) {
+					if (Constants.DEBUG) {
+						console.log ('onBoard staff %d in project %d' + idProject, idStaff);
+					}
+				}
+			});
 	}
 
 	/**

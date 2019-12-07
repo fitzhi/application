@@ -88,7 +88,7 @@ public class Error {
 	 * @param e the exception
 	 * @return the stack trace in {@code String} format
 	 */
-	public static String getStackTrace(final Exception e) {
+	public static String getStackTrace(final Throwable e) {
 		return Arrays.stream(e.getStackTrace())
 	    	.map(StackTraceElement::toString)
 	    	.collect(Collectors.joining("\n"));
