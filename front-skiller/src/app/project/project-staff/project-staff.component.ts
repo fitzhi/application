@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, Input } from '@angular/core';
 import { ProjectService } from '../../service/project.service';
 import { Constants } from '../../constants';
 import { MessageService } from '../../message/message.service';
@@ -9,6 +9,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ProjectStaffService } from '../project-staff-service/project-staff.service';
 import { BaseComponent } from '../../base/base.component';
 import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
+import { BehaviorSubject } from 'rxjs';
+import { Project } from 'src/app/data/project';
+import { thresholdSturges } from 'd3';
 
 @Component({
 	selector: 'app-project-staff',
@@ -17,13 +20,19 @@ import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff
 })
 export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDestroy {
 
+	/**
+	 * Observable emiting the current active project.
+	 */
+	@Input() project$: BehaviorSubject<Project>;
+
+	/**
+	 * Current active project obtained from from `project$`.
+	 */
+	project; Project;
+
 	public dataSource;
 
 	public displayedColumns: string[] = ['fullname', 'active', 'external', 'firstCommit', 'lastCommit', 'numberOfCommits', 'numberOfFiles'];
-
-	public idProject: number;
-
-	public sub: any;
 
 	@ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -40,22 +49,9 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 
 	ngOnInit() {
 		this.subscriptions.add(
-			this.sub = this.route.params.subscribe(params => {
-				if (Constants.DEBUG) {
-					console.log('params[\'id\'] ' + params['id']);
-				}
-				if (params['id'] == null) {
-					this.idProject = null;
-				} else {
-					this.idProject = + params['id']; // (+) converts string 'id' to a number
-					this.loadContributors();
-				}
-			}));
-
-		this.subscriptions.add(
 			this.cinematicService.tabProjectActivated$.subscribe(
 				index => {
-					if (index === Constants.PROJECT_IDX_TAB_STAFF) {
+					if ((this.project) && (index === Constants.PROJECT_IDX_TAB_STAFF)) {
 						// Either we reach this component with this url '/project/:id' and the selection of the tab Staff
 						// Or we reach this component directly with this url '/project/:id/staff'
 						// We notify the cinematicService with the complete url '/project/:id/staff
@@ -65,12 +61,15 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 							this.router.url + '/staff' : this.router.url;
 
 						this.cinematicService.setForm(Constants.PROJECT_TAB_STAFF, urlProjectStaffList);
-						/**
-						 * Loading the contributors
-						 */
-						this.loadContributors();
+						this.subscriptions.add(
+							this.project$.subscribe(project => {
+								this.project = project;
+								//
+								// Loading the contributors
+								//
+								this.loadContributors();
+							}));
 					}
-
 				}));
 
 	}
@@ -80,7 +79,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	 */
 	loadContributors() {
 		this.subscriptions.add(
-			this.projectService.contributors(this.idProject).subscribe(
+			this.projectService.contributors((!this.project) ? this.project.idProject : -1).subscribe(
 				contributorsDTO => {
 					this.dataSource = new MatTableDataSource(contributorsDTO.contributors);
 					this.dataSource.sort = this.sort;
@@ -96,16 +95,16 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 				}, error => {
 					if (error.status === 404) {
 						if (Constants.DEBUG) {
-							console.log('404 : cannot find contributors for the id ' + this.idProject);
+							console.log('404 : cannot find contributors for the id ' + this.project.idProject);
 						}
-						this.messageService.error('Cannot retrieve the contributors for the project identifier ' + this.idProject);
+						this.messageService.error('Cannot retrieve the contributors for the project identifier ' + this.project.idProject);
 					} else {
 						console.error(error);
 					}
 				},
 				() => {
 					if (Constants.DEBUG) {
-						console.log('Loading complete for id ' + this.idProject);
+						console.log('Loading complete for id ' + this.project.idProject);
 					}
 				}));
 	}

@@ -2,7 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Project } from '../data/project';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable, Subject, BehaviorSubject, EMPTY } from 'rxjs';
+import { Observable, Subject, BehaviorSubject, EMPTY, of } from 'rxjs';
 import { InternalService } from '../internal-service';
 
 import { Constants } from '../constants';
@@ -281,10 +281,17 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	 * Retrieve the contributors for a given project
+	 * Retrieve the contributors for a given project.
+	 * If the given project identifier is equal to -1, this function will return an empty observable.
 	 * @param idProject project identifier
 	 */
 	contributors(idProject: number): Observable<ContributorsDTO> {
+
+		console.log ('nope');
+		if (idProject) {
+			return EMPTY;
+		}
+
 		const url = this.backendSetupService.url() + '/project/contributors/' + idProject;
 		if (Constants.DEBUG) {
 			console.log('Retrieve the contributors for the project identifier ' + idProject);

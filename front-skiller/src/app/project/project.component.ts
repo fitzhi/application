@@ -174,9 +174,10 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	}
 
 	/**
-	 * @returns TRUE if the project has an avalaible connection to the source repository.
+	 * @returns `TRUE` if the project has an avalaible connection to the source repository.
 	 */
 	canConnectSourceControl() {
+		// TODO something has to be tested here.
 		return true;
 	}
 }
