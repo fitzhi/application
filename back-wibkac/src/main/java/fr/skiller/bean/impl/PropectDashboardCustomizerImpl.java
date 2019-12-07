@@ -4,13 +4,20 @@
 package fr.skiller.bean.impl;
 
 import static fr.skiller.Global.INTERNAL_FILE_SEPARATORCHAR;
+import static fr.skiller.Error.CODE_IO_EXCEPTION;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -19,13 +26,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectDashboardCustomizer;
+import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.Staff;
+import fr.skiller.data.source.CommitRepository;
+import fr.skiller.data.source.Operation;
 import fr.skiller.exception.SkillerException;
+import fr.skiller.source.crawler.RepoScanner;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * <p>
+ * This bean is in charge of the sun-burst chart customization.<br/>
+ * Operations like excluding inert library paths or on-boarding a collaborator in the project.
+ * </p>
+ * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @Slf4j
@@ -50,7 +68,26 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 	 */
 	@Autowired
 	public DataSaver dataSaver;
-			
+	
+	/**
+	 * For retrieving the repository from the file system.
+	 */
+	@Autowired
+	public RepoScanner repoScanner;
+	
+	/**
+	 * Declared here to operate  {@link StaffHandler#lookup(String)}.
+	 */
+	@Autowired
+	public StaffHandler staffHandler;
+	
+	
+	/**
+	 * Declared here to operate {@link CacheDataHandler#saveRepository}.
+	 */
+	@Autowired
+	CacheDataHandler cacheDataHandler;
+	
 	/**
 	 * Cache which contains the content of the directories paths 
 	 */
@@ -100,6 +137,86 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 		return lookupPathRepository(pathsList, criteria);
 	}
 
+	
+	
+	@Override
+	public void takeInAccountNewStaff(Project project, Staff staff) throws SkillerException {
+
+		try {
+			if (cacheDataHandler.hasCommitRepositoryAvailable(project)) {
+				if (log.isDebugEnabled()) {
+					log.debug(String.format("Using cache file for project %s", project.getName()));
+				}
+
+				CommitRepository repository = cacheDataHandler.getRepository(project);
+			
+				// 
+				if (repository != null) {
+					List<String> candidates = repository.extractMatchingUnknownContributors(staffHandler, staff);
+					for (String candidate : candidates) {
+						if (log.isDebugEnabled()) {
+							log.debug ("Registering the candidate "  + candidate);
+						}
+						repository.onBoardStaff(staffHandler, staff);
+					}
+					cacheDataHandler.saveRepository(project, repository);
+				}
+			}
+		} catch (final IOException ioe) {
+			throw new SkillerException(CODE_IO_EXCEPTION, ioe.getLocalizedMessage(), ioe);
+		}
+	}
+
+	/**
+	 * <p>
+	 * Remove duplicate entries from the collection of operations.<br/>
+	 * Duplicate entries are entries with the same staff identifier and the same date of commit.
+	 * </p>
+	 * @param operations the collection of operations to proceed
+	 */
+	public static void removeDuplicateEntries(List<Operation> operations) {
+		
+		
+		Map<String, Long> counted = operations.stream()
+	            .collect(Collectors.groupingBy(Operation::generateIdDataKey, Collectors.counting()));
+
+		for (String key : counted.keySet()) {
+		
+			int count = counted.get(key).intValue();
+			if (count == 1) {
+				continue;
+			}
+			
+			int posSeparator = key.indexOf("@");
+			int idStaff = Integer.valueOf(key.substring(0, posSeparator));
+			LocalDate localDate = LocalDate.parse(key.substring(posSeparator+1));
+			removeDuplicateEntries(operations, idStaff, localDate, count-1);
+		}
+		
+	
+	}
+
+	/**
+	 * Removing duplicate operations with the same identifier and date of commit.
+	 * @param operations the operations to be cleanup.
+	 * @param idStaff the given staff identifier
+	 * @param dateCommit the given date of commit.
+	 * @param deletionsNumberToDo the number of deletion to do.
+	 */
+	public static void removeDuplicateEntries(List<Operation> operations, int idStaff, LocalDate dateCommit, int deletionsNumberToDo) {
+		int deletionExecuted = 0;
+		Iterator<Operation> iteOperations = operations.iterator();
+		while (iteOperations.hasNext()) {
+			Operation operation = iteOperations.next();
+			if ((operation.getIdStaff() == idStaff) && (operation.getDateCommit().equals(dateCommit))) {
+				iteOperations.remove();
+				if (++deletionExecuted == deletionsNumberToDo) {
+					break;
+				}
+			}
+		}
+	}
+	
 	/**
 	 * <p>Lookup paths matching the passed criteria.</p>
 	 * @param pathsList the complete pathsList of the repository
@@ -117,6 +234,12 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 			.collect(Collectors.toList());
 	}
 	
+	/**
+	 * Extract the end of path starting from the length of the criteria.
+	 * @param path the given path
+	 * @param criteriaLength the length
+	 * @return the extracted patch 
+	 */
 	private String extractPath (String path, int criteriaLength) {
 		int nextSeparatorChar = path.indexOf(INTERNAL_FILE_SEPARATORCHAR, criteriaLength);
 		if (nextSeparatorChar == -1) {

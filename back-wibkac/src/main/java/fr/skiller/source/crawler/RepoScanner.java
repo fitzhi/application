@@ -20,8 +20,10 @@ import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 
 /**
- * @author Fr&eacute;d&eacute;ric VIDAL
+ * <p>
  * Source repository scanner.
+ * </p>
+ * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public interface RepoScanner {
 

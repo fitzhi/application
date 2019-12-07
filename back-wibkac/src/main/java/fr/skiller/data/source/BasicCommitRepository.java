@@ -7,20 +7,33 @@ import static fr.skiller.Global.LN;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import fr.skiller.SkillerRuntimeException;
+import fr.skiller.bean.StaffHandler;
+import fr.skiller.bean.impl.PropectDashboardCustomizerImpl;
+import fr.skiller.data.internal.Staff;
+import fr.skiller.security.CustomAuthenticationProvider;
+
 /**
+ * <p>
  * Repository containing time-stamped commits for the given project.
  * <br/>
  * <i>This is the first & basic implementation for the Commit repository</i>.
+ * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public class BasicCommitRepository implements CommitRepository {
 
+	/**
+	 * Map of commits identified by source code path.
+	 */
 	Map<String, CommitHistory> repo = new HashMap<>();
 	
 	/**
@@ -28,7 +41,7 @@ public class BasicCommitRepository implements CommitRepository {
 	 * but unrecognized during the parsing process.
 	 */
 	Set<String> unknownContributors = new HashSet<>();
-	
+		
 	@Override
 	public void addCommit(String sourceCodePath, int idStaff, String authorName, LocalDate dateCommit, long importance) {
 		
@@ -47,6 +60,27 @@ public class BasicCommitRepository implements CommitRepository {
 		addCommit(sourceCodePath, idStaff, authorName, dateCommit.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), importance);
 	}
 	
+	@Override
+	public void onBoardStaff(StaffHandler staffHandler, Staff staff) {
+		this.getRepository().values().stream().forEach(history -> {
+			history.operations.forEach(operation -> {
+				if (staffHandler.isEligible(staff, operation.getAuthorName())) {
+					if (operation.getIdStaff() == -1) {
+						operation.setIdStaff(staff.getIdStaff());
+					}
+				}
+			});
+		});
+		
+		//
+		// There might be duplicates at a given date with the same Staff identifier. We remove the useless operations.
+		//
+		this.getRepository().values()
+				.stream()
+				.forEach(history -> PropectDashboardCustomizerImpl.removeDuplicateEntries(history.operations));
+		
+	}
+
 	@Override
 	public boolean containsSourceCode(String sourceCodePath) {
 		return repo.containsKey(sourceCodePath);
@@ -89,7 +123,7 @@ public class BasicCommitRepository implements CommitRepository {
 	}
 
 	/**
-	 * Working variable used by method lastCommit
+	 * Working variable used by method {@link #lastCommit(int)}
 	 */
 	private LocalDate lastCommit;
 	
@@ -147,5 +181,30 @@ public class BasicCommitRepository implements CommitRepository {
 	@Override
 	public void setUnknownContributors(Set<String> unknowns) {
 		this.unknownContributors = unknowns;
+	}
+
+	@Override
+	public List<String> extractMatchingUnknownContributors(StaffHandler staffHandler, Staff staff) {
+		List<String> list = new ArrayList<>();
+		for (String contributor : this.unknownContributors()) {
+			if (staffHandler.isEligible(staff, contributor)) {
+				list.add(contributor);
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public void dump() {
+		StringBuilder sb = new StringBuilder();
+		this.repo.values().forEach(history -> {
+			sb.append(history.sourcePath).append(LN);
+			history.operations.stream().forEach((Operation ope) -> {
+				sb.append("\t").append(ope.getIdStaff()).append(" ");
+				sb.append(ope.getAuthorName()).append(" ");
+				sb.append(ope.getDateCommit()).append(LN);
+			});
+		});
+		System.out.println(sb.toString());
 	}
 }

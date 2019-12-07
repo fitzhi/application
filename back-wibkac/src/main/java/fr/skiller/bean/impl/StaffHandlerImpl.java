@@ -161,16 +161,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		return staff;
 	}
 
-	
-	interface StringTransform {
-		/**
-		 * Transform a string into a new transformed one.
-		 * @param input the input stream
-		 * @return the transformed string
-		 */
-		String process(String input);
-	}
-	
+		
 	@Override
 	public Staff lookup(String criteria)  {
 		
@@ -184,6 +175,89 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		}
 		
 		return staff;
+	}
+	
+	@Override
+	public boolean isEligible(Staff staff, String criteria) {
+		if (!isEligible(staff, criteria, input -> (input != null) ? input.toLowerCase() : null)) {
+			return isEligible(staff, criteria, 
+					input -> (input != null) ? Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "").toLowerCase() : null);
+		}
+		return true;
+	}
+	
+	@Override
+	public boolean isEligible(Staff staff, String criteria, StringTransform transform )  {
+		
+		String[] word = criteria.trim().replaceAll(" +", " ").split(" ");
+		
+		switch (word.length) {
+		case 1:
+
+			// Is the criteria equal to the login
+			if (transform.process(word[0]).equals(transform.process(staff.getLogin()))) {
+				return true;
+			}
+			
+			// If the criteria contains only one word, 
+			//      which is NOT a login name,
+			// we assume that this criteria might be the last name
+			if (transform.process(word[0])
+					.equals(transform.process(staff.getLastName()))) {
+				return true;
+			}
+			
+			
+			// If the criteria contains only one word, 
+			//      which is NOT a login name, and NOT a last name 
+			// we assume that this criteria might be the last name
+			if (transform.process(word[0])
+					.equals(transform.process(staff.getFirstName()))) {
+				return true;
+			}
+			
+			return false;
+		case 2:			
+			// If the criteria contains only 2 words, we assume that this criteria is the last name and the first name
+			if (	transform.process(word[0]).equals(transform.process(staff.getLastName()))
+				&&	transform.process(word[1]).equals(transform.process(staff.getFirstName()))) {
+				return true;
+			}
+			
+			// The criteria may be in the form "firstName lastName" or "lastName firstName"
+			if (	transform.process(word[0]).equals(transform.process(staff.getFirstName()))
+				&&	transform.process(word[1]).equals(transform.process(staff.getLastName()))) {
+					return true;
+			}
+			
+			return false;
+		default:
+			//
+			// If the criteria contains multiple words, we assume that this criteria is the full name of the contributor
+			// Either with the firstName + " " + lastName, or the lastName + " " + firstName
+			// We will rotate words inside the criteria 
+			// in order to test any combination of criteria ("John William Doe Senior" -> "William Doe Senior John" --> ...)
+			//
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Rotation of words within the criteria %s and trying a lookup", criteria));
+			}
+			for (int i=0; i<word.length; i++) {
+				
+				List<String> rotatedCriteria = new ArrayList<>();
+				for (int j=0; j<word.length; j++) {
+					rotatedCriteria.add(word[(j+i)%word.length]);
+				}
+				
+				StringBuilder sb = new StringBuilder();
+				rotatedCriteria.stream().forEach(e -> sb.append(e).append(" "));
+				
+				if (transform.process(sb.toString().trim()).equals(transform.process(staff.fullName()))) {
+					return true;
+				}
+			}
+			
+			return false;
+		}
 	}
 	
 	/**

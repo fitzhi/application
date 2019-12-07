@@ -2,8 +2,12 @@ package fr.skiller.data.source;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import fr.skiller.bean.StaffHandler;
+import fr.skiller.data.internal.Staff;
 
 
 /**
@@ -25,7 +29,7 @@ public interface CommitRepository {
 	
 	/**
 	 * <p>
-	 * add a new commit log into the repository.<br/>
+	 * Add a new commit log into the repository.<br/>
 	 * This method calls addCommit with the date only.
 	 * </p>
 	 * @param sourceCodePath the complete source code path 
@@ -35,6 +39,13 @@ public interface CommitRepository {
 	 * @param importance the importance of this source file in the project in a numeric value format
 	 */
 	void addCommit(String sourceCodePath, int idStaff, String authorName, Date timestamp, long importance);
+	
+	/**
+	 * On-board a staff member into the repository to replace unknown contributors.
+	 * @param staffHandler the bean injected to manage the staff.
+	 * @param staff the actual staff member
+	 */
+	void onBoardStaff(StaffHandler staffHandler, Staff staff);
 	
 	/**
 	 * Test the presence of a record for the given source code file
@@ -114,4 +125,19 @@ public interface CommitRepository {
 	 */
 	void setUnknownContributors(Set<String> unknowns);
 	
+	/**
+	 * Extract the unknown contributors who match the staff member.
+	 * @param staffHandler injected bean in charge of the Staff management 
+	 * @param staff the given staff
+	 * @return a list of unknown contributors whit whom the passed staff is matching
+	 */
+	List<String> extractMatchingUnknownContributors(StaffHandler staffHandler, Staff staff);
+	
+
+	/**
+	 * Dump the content of the repository.
+	 */
+	public void dump();
+
 }
+		

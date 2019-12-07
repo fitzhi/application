@@ -6,6 +6,8 @@ package fr.skiller.bean;
 import java.util.List;
 
 import fr.skiller.data.internal.Project;
+import fr.skiller.data.internal.Staff;
+import fr.skiller.data.source.Operation;
 import fr.skiller.exception.SkillerException;
 
 /**
@@ -33,5 +35,20 @@ public interface ProjectDashboardCustomizer {
 	 * @throws SkillerException thrown most probably if an IO Exception occurs when loading the paths.
 	 */
 	List<String> lookupPathRepository(Project project, String criteria) throws SkillerException;
+
+	/**
+	 * <p>
+	 * Take in account a new created staff into the repository collection of a given project.<br/>
+	 * This new user should have been detected before as an unknown contributor.</br>
+	 * The goal of this method is to propagate his creation, if necessary, 
+	 * and to affect his definitive identifier {@code idStaff} 
+	 * into the source code item {@link Operation#idStaff operations}.
+	 * </p>
+	 * @param project the given project
+	 * @param staff the new staff member created
+	 * @throws SkillerException thrown if any problem occurs (such as IOException when reading and parsing the saved repository)
+	 */
+	void takeInAccountNewStaff(Project project, Staff staff) throws SkillerException;
+	
 
 }

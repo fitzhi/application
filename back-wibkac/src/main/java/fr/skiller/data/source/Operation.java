@@ -2,6 +2,8 @@ package fr.skiller.data.source;
 
 import java.time.LocalDate;
 
+import fr.skiller.bean.ProjectDashboardCustomizer;
+import fr.skiller.data.internal.Staff;
 import lombok.Data;
 
 /**
@@ -13,7 +15,14 @@ import lombok.Data;
 public @Data class Operation {
 
 	/**
-	 * Identifier of the committer
+	 * <p>
+	 * Identifier of the committer. 2 values are possible :
+	 * <ul>
+	 * <li>a real {@link Staff#getIdStaff() idStaff} of a registered user.</li>
+	 * <li>-1 if this contributor is unknown for Techxhì, and identified
+	 * only by his GIT {@code authName}.</li>
+	 * </ul>
+	 * </p>
 	 */
 	public int idStaff;
 	
@@ -27,6 +36,7 @@ public @Data class Operation {
 	 */
 	private LocalDate dateCommit;
 
+	
 	/**
 	 * Empty construction for serialization purpose.
 	 */
@@ -46,5 +56,16 @@ public @Data class Operation {
 		this.dateCommit = dateCommit;
 	}
 	
+	/**
+	 * <p>
+	 * Generate a unique identifier base on the {@code idStaff} and the {@code dateCommit}.<br/>
+	 * This method has been implemented at the beginning for the need of 
+	 * {@link ProjectDashboardCustomizer#takeInAccountNewStaff(fr.skiller.data.internal.Project, Staff)}
+	 * </p>
+	 * @return the searched identifier
+	 */
+	public String generateIdDataKey() {
+		return getIdStaff() + "@" + getDateCommit();
+	}
 	
 }

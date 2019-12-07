@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import fr.skiller.bean.impl.StringTransform;
 import fr.skiller.data.internal.Experience;
 import fr.skiller.data.internal.PeopleCountExperienceMap;
 import fr.skiller.data.internal.Project;
@@ -179,5 +180,27 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	  * @return the selected staff or {@code null} if none exists.
 	  */
 	 Staff getStaff(int idStaff);
+	 
+	 /**
+	  * <p>
+	  * Test the eligibility of a staff member to meet a specific criteria. 
+	  * </p>
+	  * @param staff the candidate staff
+	  * @param pattern the given pattern to match. <i>The pattern is in the current release actually </i>
+	  * @return {@code true} if the given staff is matching the passed pattern, {@code false} otherwise. 
+	  */
+	 public boolean isEligible(Staff staff, String pattern);
+		
+	 /**
+	  * <p>
+	  * Test the eligibility of a staff member to meet a specific criteria. 
+	  * </p>
+	  * @param staff the candidate staff
+	  * @param pattern the given pattern to match
+	  * @param transformer the string transformer
+	  * @return {@code true} if the candidate is matching the given pattern, {@code false} otherwise. 
+	  */
+	 public boolean isEligible(Staff staff, String pattern, StringTransform transformer);
+	 
 }
 

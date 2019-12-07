@@ -165,11 +165,7 @@ public class PocConnectionTestByPassable {
  	
  	@Test
 	public void testConnectionRepo() throws Exception {
- /*			
-		if ("Y".equals(System.getProperty("bypass"))) {
-			return;
-		}
- */		
+
   		final Git git = Git.open(new File(prop.path));
 
 		Repository repo = git.getRepository();

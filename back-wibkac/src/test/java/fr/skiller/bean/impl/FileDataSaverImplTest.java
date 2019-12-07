@@ -26,7 +26,6 @@ import fr.skiller.exception.SkillerException;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@AutoConfigureMockMvc
 public class FileDataSaverImplTest {
 
 	@Autowired
