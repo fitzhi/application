@@ -212,6 +212,10 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 					.subscribe(result => {
 						if (result) {
 							this.messageService.success('Staff member ' + staff.firstName + ' ' + staff.lastName + ' saved');
+							if (Constants.DEBUG) {
+								console.log ('Onboarding the staff %d into the project %d', staff.idStaff, this.dataSource.project.id);
+							}
+							this.projectService.onBoardStaffInProject(this.dataSource.project.id,  staff.idStaff);
 						}
 					});
 			});	}

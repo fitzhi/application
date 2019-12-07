@@ -645,12 +645,12 @@ export class ProjectService extends InternalService {
 	 */
 	public onBoardStaffInProject(idProject: number, idStaff: number): void {
 		this.httpClient
-			.get<Project>('/project/onboard/' + idProject + '/' + idProject)
+			.get<Boolean>(this.backendSetupService.url() + '/project/analysis/onboard/' + idProject + '/' + idProject)
 			.pipe(take(1))
 			.subscribe(doneAndOk => {
 				if (doneAndOk) {
 					if (Constants.DEBUG) {
-						console.log ('onBoard staff %d in project %d' + idProject, idStaff);
+						console.log ('onBoard staff %d in project %d', idStaff, idProject);
 					}
 				}
 			});
