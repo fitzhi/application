@@ -65,6 +65,12 @@ public class BasicCommitRepository implements CommitRepository {
 		this.getRepository().values().stream().forEach(history -> {
 			history.operations.forEach(operation -> {
 				if (staffHandler.isEligible(staff, operation.getAuthorName())) {
+					
+					//
+					// This case is possible in case of an on-boarding post creation
+					// Temporary, 2 different developers might be present
+					// The complete rebuilt will later rectify this state
+					//
 					if (operation.getIdStaff() == -1) {
 						operation.setIdStaff(staff.getIdStaff());
 					}
