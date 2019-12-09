@@ -404,6 +404,27 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
+	public void involve(Project project, Contributor contributor) throws SkillerException {
+
+		Staff staff = getStaff().get(contributor.getIdStaff());
+		if (staff == null) {
+			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, contributor.getIdStaff()));
+		}
+		
+		Optional<Mission> oMission = staff.getMissions().stream()
+				.filter(mission -> mission.getIdProject() == project.getId())
+				.findFirst();
+		
+		Mission mission = (oMission.isPresent()) ? oMission.get() : new Mission();
+		mission.setIdProject(project.getId());
+		mission.setFirstCommit(contributor.getFirstCommit());
+		mission.setLastCommit(contributor.getLastCommit());
+		mission.setNumberOfCommits(contributor.getNumberOfCommitsSubmitted());
+		mission.setNumberOfFiles(contributor.getNumberOfFiles());
+		staff.addMission(mission);
+	}
+
+	@Override
 	public List<Contributor> getContributors(int idProject) {
 		List<Mission> missions = getStaff().values()
 			.stream()

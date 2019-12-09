@@ -302,10 +302,13 @@ public class ProjectController {
 		return new ResponseEntity<>(new BooleanDTO(), headers(), HttpStatus.OK);
 	}
 	
-	
 	/**
-	* Retrieve the activities for a project in an object ready made to be injected into the Sunburst chart.
-	*/
+	 * <p>
+	 * Retrieve the activities for a project in an object ready made to be injected into the Sunburst chart.
+	 * </p>
+	 * @param settings settings for the chart generation <i>(such as a filter on date, or a staff member)
+	 * @return the Sunburst chart.
+	 */
 	@PostMapping("/sunburst")
 	public ResponseEntity<SunburstDTO> retrieveRiskDashboard(@RequestBody SettingsGeneration settings) {
 

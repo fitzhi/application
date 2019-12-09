@@ -33,6 +33,7 @@ import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.CommitRepository;
+import fr.skiller.data.source.Contributor;
 import fr.skiller.data.source.Operation;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.RepoScanner;
@@ -136,8 +137,6 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 		
 		return lookupPathRepository(pathsList, criteria);
 	}
-
-	
 	
 	@Override
 	public void takeInAccountNewStaff(Project project, Staff staff) throws SkillerException {
@@ -160,13 +159,19 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 						repository.onBoardStaff(staffHandler, staff);
 					}
 					cacheDataHandler.saveRepository(project, repository);
+					
+					if (log.isDebugEnabled()) {
+						log.debug("Involving the staff " + staff.fullName() + " inside the project " + project.getName());
+					}
+					Contributor contributor = repository.extractContribution(staff);
+					staffHandler.involve(project, contributor);
 				}
 			}
 		} catch (final IOException ioe) {
 			throw new SkillerException(CODE_IO_EXCEPTION, ioe.getLocalizedMessage(), ioe);
 		}
 	}
-
+	
 	/**
 	 * <p>
 	 * Remove duplicate entries from the collection of operations.<br/>
@@ -192,8 +197,6 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 			LocalDate localDate = LocalDate.parse(key.substring(posSeparator+1));
 			removeDuplicateEntries(operations, idStaff, localDate, count-1);
 		}
-		
-	
 	}
 
 	/**

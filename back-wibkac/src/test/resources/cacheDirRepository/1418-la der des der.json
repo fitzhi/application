@@ -1,0 +1,166 @@
+{
+	"repo": {
+		"fr/test/test.java": {
+			"sourcePath": "fr/test/test.java",
+			"riskLevel": 0,
+			"importance": 1,
+			"operations": [
+				{
+					"idStaff": 10001,
+					"authorName": "the 1 o o o one",
+					"dateCommit": {
+						"year": 2019,
+						"month": 12,
+						"day": 6
+					}
+				},
+				{
+					"idStaff": -1,
+					"authorName": "fvidal",
+					"dateCommit": {
+						"year": 2019,
+						"month": 12,
+						"day": 6
+					}
+				},
+				{
+					"idStaff": -1,
+					"authorName": "Frédéric VIDAL",
+					"dateCommit": {
+						"year": 2019,
+						"month": 12,
+						"day": 7
+					}
+				},
+				{
+					"idStaff": -1,
+					"authorName": "fvidal",
+					"dateCommit": {
+						"year": 2019,
+						"month": 12,
+						"day": 7
+					}
+				},
+				{
+					"idStaff": 10001,
+					"authorName": "the 1 o o o one",
+					"dateCommit": {
+						"year": 2019,
+						"month": 11,
+						"day": 6
+					}
+				},
+				{
+					"idStaff": 10001,
+					"authorName": "the 1 o o o one",
+					"dateCommit": {
+						"year": 2019,
+						"month": 11,
+						"day": 3
+					}
+				}
+			]
+		},
+		"com/test.java": {
+			"sourcePath": "com/test.java",
+			"riskLevel": 0,
+			"importance": 1,
+			"operations": [
+				{
+					"idStaff": 1,
+					"authorName": "theAuthorOfOne",
+					"dateCommit": {
+						"year": 2019,
+						"month": 12,
+						"day": 6
+					}
+				},
+				{
+					"idStaff": -1,
+					"authorName": "Frederic VIDAL",
+					"dateCommit": {
+						"year": 2019,
+						"month": 12,
+						"day": 6
+					}
+				},
+				{
+					"idStaff": -1,
+					"authorName": "vidal frederic",
+					"dateCommit": {
+						"year": 2019,
+						"month": 12,
+						"day": 7
+					}
+				}
+			]
+		},
+		"com/package/one/test.java": {
+			"sourcePath": "com/test.java",
+			"riskLevel": 0,
+			"importance": 1,
+			"operations": [
+				{
+					"idStaff": 10001,
+					"authorName": "the 1 o o o one",
+					"dateCommit": {
+						"year": 2019,
+						"month": 12,
+						"day": 1
+					}
+				},
+				{
+					"idStaff": 10001,
+					"authorName": "the 1 o o o one",
+					"dateCommit": {
+						"year": 2019,
+						"month": 12,
+						"day": 2
+					}
+				},
+				{
+					"idStaff": 1,
+					"authorName": "theAuthorOfOne",
+					"dateCommit": {
+						"year": 2019,
+						"month": 12,
+						"day": 6
+					}
+				},
+				{
+					"idStaff": -1,
+					"authorName": "Frederic VIDAL",
+					"dateCommit": {
+						"year": 2019,
+						"month": 12,
+						"day": 6
+					}
+				},
+				{
+					"idStaff": -1,
+					"authorName": "vidal frederic",
+					"dateCommit": {
+						"year": 2019,
+						"month": 12,
+						"day": 7
+					}
+				},
+				{
+					"idStaff": 10001,
+					"authorName": "the 1 o o o one",
+					"dateCommit": {
+						"year": 2019,
+						"month": 11,
+						"day": 21
+					}
+				}
+			]
+		}
+	},
+	"unknownContributors": [
+		"obama",
+		"frvidal",
+		"Mr nobody",
+		"Frédéric VIDAL"
+	]
+}

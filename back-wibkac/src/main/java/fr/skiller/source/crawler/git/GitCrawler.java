@@ -845,19 +845,31 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 	@Override
 	public List<Contributor> gatherContributors(RepositoryAnalysis analysis) {
+		
 		Set<Integer> idContributors = new HashSet<>();
-		analysis.getChanges().stream().map(SCMChange::getIdStaff).filter(idStaff -> idStaff != 0).distinct()
-				.forEach(idContributors::add);
+		//
+		// We gather all staff identifiers in a set.
+		//
+		analysis.getChanges()
+			.stream()
+			.map(SCMChange::getIdStaff)
+			.filter(idStaff -> idStaff != 0)
+			.distinct()
+			.forEach(idContributors::add);
 
 		List<Contributor> contributors = new ArrayList<>();
 		for (int idStaff : idContributors) {
 
-			// The first commit submitted by this staff member
+			//
+			// We process the date of the FIRST commit submitted by this staff member
+			//
 			LocalDate firstCommit = analysis.getChanges().stream().filter(change -> idStaff == change.getIdStaff())
 					.map(SCMChange::getDateCommit).min(Comparator.comparing(LocalDate::toEpochDay))
 					.orElseThrow(() -> new SkillerRuntimeException(SHOULD_NOT_PASS_HERE));
 
-			// The last commit submitted by this staff member
+			//
+			// We process the date of the LAST commit submitted by this staff member
+			//
 			LocalDate lastCommit = analysis.getChanges().stream().filter(change -> idStaff == change.getIdStaff())
 					.map(SCMChange::getDateCommit).max(Comparator.comparing(LocalDate::toEpochDay))
 					.orElseThrow(() -> new SkillerRuntimeException(SHOULD_NOT_PASS_HERE));

@@ -126,7 +126,9 @@ public interface CommitRepository {
 	void setUnknownContributors(Set<String> unknowns);
 	
 	/**
+	 * <p>
 	 * Extract the unknown contributors who match the staff member.
+	 * </p>
 	 * @param staffHandler injected bean in charge of the Staff management 
 	 * @param staff the given staff
 	 * @return a list of unknown contributors whit whom the passed staff is matching
@@ -134,6 +136,13 @@ public interface CommitRepository {
 	List<String> extractMatchingUnknownContributors(StaffHandler staffHandler, Staff staff);
 	
 
+	/**
+	 * Parse & extract the contributor's data for the given staff member.
+	 * @param staff the given staff member.
+	 * @return the contributor object summarizing his participation in the project
+	 */
+	Contributor extractContribution(Staff staff);
+	
 	/**
 	 * Dump the content of the repository.
 	 */

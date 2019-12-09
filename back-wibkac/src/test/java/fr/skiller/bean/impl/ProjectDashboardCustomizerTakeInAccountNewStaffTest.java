@@ -5,6 +5,8 @@ package fr.skiller.bean.impl;
 
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.Optional;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -19,6 +21,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.ProjectDashboardCustomizer;
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.bean.StaffHandler;
+import fr.skiller.data.internal.Mission;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.CommitRepository;
@@ -40,6 +44,9 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 	ProjectHandler projectHandler;
 
 	@Autowired
+	StaffHandler staffHandler;
+
+	@Autowired
 	CacheDataHandler cacheDataHandler;
 	
 	CommitRepository savedRepository;
@@ -53,10 +60,17 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 	@Test
 	public void testOnBoardingNominal() throws SkillerException, IOException {
 		Project project = new Project(1917, "The Red Rev project");
+		
 		Staff staff = new Staff(1, "Frédéric", "VIDAL", "altF4", "fvidal", "frvidal@void.com", "OIM");
+		staffHandler.getStaff().put(1, staff);
+		
 		
 		CommitRepository repository = cacheDataHandler.getRepository(project);
 		repository.dump();
+		
+		// we start with 4 operations
+		Assert.assertEquals(4,
+				repository.getRepository().get("fr/test/test.java").operations.size());
 		
 		customizer.takeInAccountNewStaff(project, staff);
 		
@@ -73,6 +87,18 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 				repository.getRepository().get("com/test.java").operations.get(0).getIdStaff());
 		Assert.assertEquals(1,
 				repository.getRepository().get("com/test.java").operations.get(1).getIdStaff());
+		
+		staff = staffHandler.getStaff(1);
+		Optional<Mission> oMission = 
+				staff.getMissions().stream().filter(mission -> mission.getIdProject() == 1917).findFirst();
+		
+		Mission mission = oMission.get();
+		
+		Assert.assertEquals(2, mission.getNumberOfFiles());
+		Assert.assertEquals(4, mission.getNumberOfCommits());
+		Assert.assertEquals(LocalDate.of(2019, 12, 6), mission.getFirstCommit());
+		Assert.assertEquals(LocalDate.of(2019, 12, 7), mission.getLastCommit());
+		
 	}
 	
 	@After

@@ -210,9 +210,9 @@ public @Data class Staff implements UserDetails {
 	}
 
 	/**
-	 * Update an existing mission based with last statistics loaded from the
-	 * repository.
-	 * 
+	 * <p>
+	 * Update an existing mission based with last statistics loaded from the repository.
+	 * </p>
 	 * @param idProject   project involved in the mission
 	 * @param contributor source contributor updated
 	 */

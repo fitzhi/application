@@ -88,6 +88,35 @@ public class BasicCommitRepository implements CommitRepository {
 	}
 
 	@Override
+	public Contributor extractContribution(Staff staff) {
+		
+		int numberOfCommits = 0;
+		int numberOfFiles = 0;
+		LocalDate lastCommit = LocalDate.MIN; 
+		LocalDate firstCommit = LocalDate.MAX; 
+
+		for (CommitHistory history : repo.values()) {
+			boolean detected = false;
+			for (Operation operation : history.operations) {
+				if ((!detected) && (operation.getIdStaff() == staff.getIdStaff())) {
+					detected = true;
+					numberOfFiles++;
+				}
+				if ((detected)  && (operation.getIdStaff() == staff.getIdStaff())) {
+					numberOfCommits++;
+					if (operation.getDateCommit().isBefore(firstCommit)) {
+						firstCommit = operation.getDateCommit();
+					}
+					if (operation.getDateCommit().isAfter(lastCommit)) {
+						lastCommit = operation.getDateCommit();
+					}
+				}
+			}
+		}
+		return new Contributor(staff.getIdStaff(), firstCommit, lastCommit, numberOfCommits, numberOfFiles);
+	}
+	
+	@Override
 	public boolean containsSourceCode(String sourceCodePath) {
 		return repo.containsKey(sourceCodePath);
 	}
