@@ -102,7 +102,6 @@ import { TableCategoriesComponent } from './project/project-audit/table-categori
 import {MatSliderModule} from '@angular/material/slider';
 import { ReportDetailFormComponent } from './project/project-audit/project-audit-badges/report-detail-form/report-detail-form.component';
 import { TasksDetailFormComponent } from './project/project-audit/project-audit-badges/tasks-detail-form/tasks-detail-form.component';
-import { AuditBaseComponent } from './project/project-audit/project-audit-badges/audit-base-component/audit-base-component.component';
 
 @NgModule({
 	declarations: [

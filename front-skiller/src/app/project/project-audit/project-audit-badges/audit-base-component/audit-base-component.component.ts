@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { OnDestroy, AfterViewInit } from '@angular/core';
 import { BaseComponent } from 'src/app/base/base.component';
 import { BehaviorSubject } from 'rxjs';
 import { Project } from 'src/app/data/project';

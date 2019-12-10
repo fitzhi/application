@@ -18,11 +18,9 @@ import { FilenamesDataSource } from './node-detail/filenames-data-source';
 import { ContributorsDataSource } from './node-detail/contributors-data-source';
 import { BehaviorSubject, Subject, Subscription } from 'rxjs';
 import { Contributor } from '../../data/contributor';
-import { take, retryWhen } from 'rxjs/operators';
-import { WebDriverLogger } from 'blocking-proxy/built/lib/webdriver_logger';
+import { take } from 'rxjs/operators';
 import { Task } from 'src/app/data/task';
 import { TaskLog } from 'src/app/data/task-log';
-import { Context } from 'vm';
 
 /**
  * Internal class in charge of the display of log messages reported by the asynchronous task.

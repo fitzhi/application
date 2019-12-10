@@ -113,6 +113,7 @@ export class ListSkillComponent extends BaseComponent implements OnInit, OnDestr
 		const count_n_star = peopleCountExperience.get(idSkill + '-' + level);
 		return (!count_n_star) ? '' : count_n_star.toString();
 	}
+
 	public listStaff(title: string, level: number) {
 		const criteria = 'skill:' + title + ':' + level;
 		this.tabsStaffListService.addTabResult(criteria, this.skillService.criteria.activeOnly);

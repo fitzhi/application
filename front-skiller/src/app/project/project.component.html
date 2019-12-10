@@ -7,9 +7,11 @@
 		</app-project-form>
 	</mat-tab>
 	<mat-tab [disabled]="!canConnectSourceControl()" label="Staff">
-		<app-project-staff 
-			[project$]="project$">
-		</app-project-staff>
+		<ng-template matTabContent>
+			<app-project-staff 
+				[project$]="project$">
+			</app-project-staff>
+		</ng-template>
 	</mat-tab>
 	<mat-tab [disabled]="!canConnectSourceControl()" label="Staff Coverage">
 		<app-project-sunburst [project$]="project$" (tabActivationEmitter)="tabActivation($event)"

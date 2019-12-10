@@ -11,7 +11,7 @@ import { BaseComponent } from '../../base/base.component';
 import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
 import { BehaviorSubject } from 'rxjs';
 import { Project } from 'src/app/data/project';
-import { thresholdSturges } from 'd3';
+import { take } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-project-staff',
@@ -28,9 +28,11 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	/**
 	 * Current active project obtained from from `project$`.
 	 */
-	project; Project;
+	project: Project;
 
 	public dataSource;
+
+	sub: any;
 
 	public displayedColumns: string[] = ['fullname', 'active', 'external', 'firstCommit', 'lastCommit', 'numberOfCommits', 'numberOfFiles'];
 
@@ -48,6 +50,38 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	ngOnInit() {
+/*
+		this.subscriptions.add(
+			this.sub = this.route.params.subscribe(params => {
+				console.log (this.route.url);
+				if (Constants.DEBUG) {
+					console.log('params[\'id\'] ' + params['id']);
+				}
+				if (params['id'] !== null) {
+					this.projectService
+						.get(params['id'])
+						.pipe(take(1))
+						.subscribe(project => {
+							this.project = project;
+							this.project$.next(this.project);
+						});
+				}
+			}));
+*/
+		this.subscriptions.add(
+			this.project$.subscribe(project => {
+				if (Constants.DEBUG) {
+					console.log ('Project received', project);
+				}
+				//
+				// Loading the contributors
+				//
+				if (project) {
+					this.project = project;
+					this.loadContributors();
+				}
+			}));
+
 		this.subscriptions.add(
 			this.cinematicService.tabProjectActivated$.subscribe(
 				index => {
@@ -61,14 +95,6 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 							this.router.url + '/staff' : this.router.url;
 
 						this.cinematicService.setForm(Constants.PROJECT_TAB_STAFF, urlProjectStaffList);
-						this.subscriptions.add(
-							this.project$.subscribe(project => {
-								this.project = project;
-								//
-								// Loading the contributors
-								//
-								this.loadContributors();
-							}));
 					}
 				}));
 
@@ -78,35 +104,35 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	 * Load the contributors for the current project.
 	 */
 	loadContributors() {
-		this.subscriptions.add(
-			this.projectService.contributors((!this.project) ? this.project.idProject : -1).subscribe(
-				contributorsDTO => {
-					this.dataSource = new MatTableDataSource(contributorsDTO.contributors);
-					this.dataSource.sort = this.sort;
-					this.projectStaffService.contributors = this.dataSource.data;
-					this.subscriptions.add(
-						this.dataSource.connect().subscribe(data => this.projectStaffService.contributors = data));
-					this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: string): string => {
-						if (typeof data[sortHeaderId] === 'string') {
-							return data[sortHeaderId].toLocaleLowerCase();
-						}
-						return data[sortHeaderId];
-					};
-				}, error => {
-					if (error.status === 404) {
-						if (Constants.DEBUG) {
-							console.log('404 : cannot find contributors for the id ' + this.project.idProject);
-						}
-						this.messageService.error('Cannot retrieve the contributors for the project identifier ' + this.project.idProject);
-					} else {
-						console.error(error);
+		this.projectService.contributors((this.project) ? this.project.id : -1)
+			.pipe(take(1))
+			.subscribe(contributorsDTO => {
+				this.dataSource = new MatTableDataSource(contributorsDTO.contributors);
+				this.dataSource.sort = this.sort;
+				this.projectStaffService.contributors = this.dataSource.data;
+				this.subscriptions.add(
+					this.dataSource.connect().subscribe(data => this.projectStaffService.contributors = data));
+				this.dataSource.sortingDataAccessor = (data: any, sortHeaderId: string): string => {
+					if (typeof data[sortHeaderId] === 'string') {
+						return data[sortHeaderId].toLocaleLowerCase();
 					}
-				},
-				() => {
+					return data[sortHeaderId];
+				};
+			}, error => {
+				if (error.status === 404) {
 					if (Constants.DEBUG) {
-						console.log('Loading complete for id ' + this.project.idProject);
+						console.log('404 : cannot find contributors for the id ' + this.project.id);
 					}
-				}));
+					this.messageService.error('Cannot retrieve the contributors for the project identifier ' + this.project.id);
+				} else {
+					console.error(error);
+				}
+			},
+			() => {
+				if (Constants.DEBUG) {
+					console.log('Loading complete for id ' + this.project.id);
+				}
+			});
 	}
 
 	/**

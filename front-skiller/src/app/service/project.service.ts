@@ -225,6 +225,17 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
+	 * Return the found project or `undefined` if none's found
+	 * Search the project associated with the passed identifier within the collection of all projects
+	 * @param idProject the project identifier to search for inside the collection
+	 */
+	getProjectById(idProject: number): Project {
+
+		const project = this.allProjects.find(prj => prj.id === idProject);
+		return project;
+	}
+
+	/**
 	 * Load the project associated to the passed name, if any, from the back-end skiller.
 	 * Will throw a 404 if this name is not retrieved.
 	 * @param projectName the project name to loook for on the backend.
@@ -287,8 +298,7 @@ export class ProjectService extends InternalService {
 	 */
 	contributors(idProject: number): Observable<ContributorsDTO> {
 
-		console.log ('nope');
-		if (idProject) {
+		if (idProject === -1) {
 			return EMPTY;
 		}
 
@@ -652,7 +662,7 @@ export class ProjectService extends InternalService {
 	 */
 	public onBoardStaffInProject(idProject: number, idStaff: number): void {
 		this.httpClient
-			.get<Boolean>(this.backendSetupService.url() + '/project/analysis/onboard/' + idProject + '/' + idProject)
+			.get<Boolean>(this.backendSetupService.url() + '/project/analysis/onboard/' + idProject + '/' + idStaff)
 			.pipe(take(1))
 			.subscribe(doneAndOk => {
 				if (doneAndOk) {
