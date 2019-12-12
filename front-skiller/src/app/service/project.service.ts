@@ -679,8 +679,13 @@ export class ProjectService extends InternalService {
 	 * @param from: Method which made that call
 	 */
 	dump(project: Project, from: string): void {
-		console.groupCollapsed('Project %d %s from %s',
-			project.id, project.name, from);
+
+		if ((!project) || !(project.id)) {
+			console.log (from, 'Project is null dude!');
+			return;
+		}
+
+		console.groupCollapsed(from, 'Project ' + project.id + ' ' + project.name);
 		console.log('Global audit evaluation', project.auditEvaluation);
 		Object.keys(project.audit).forEach(key => {
 			console.log ('key: %s evaluation: %d weight: %d', key, project.audit[key].evaluation, project.audit[key].weight);

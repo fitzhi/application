@@ -289,13 +289,18 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					if (Constants.DEBUG) {
 						console.log('Project ' + project.id + ' ' + project.name + ' received in sunburst-component');
 					}
-
-					this.project = project;
-					this.settings.idProject = this.project.id;
-					if ((!this.project.urlRepository) || (this.project.urlRepository.length === 0)) {
-						this.messageService.info('No repository URL available !');
-						this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
-					}
+					//
+					// We postpone the Project updates to avoid the warning
+					// ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked.
+					//
+					setTimeout(() => {
+						this.project = project;
+						this.settings.idProject = this.project.id;
+						if ((!this.project.urlRepository) || (this.project.urlRepository.length === 0)) {
+							this.messageService.info('No repository URL available !');
+							this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
+						}
+					}, 0);
 			}));
 		}
 

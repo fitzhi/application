@@ -50,24 +50,6 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	ngOnInit() {
-/*
-		this.subscriptions.add(
-			this.sub = this.route.params.subscribe(params => {
-				console.log (this.route.url);
-				if (Constants.DEBUG) {
-					console.log('params[\'id\'] ' + params['id']);
-				}
-				if (params['id'] !== null) {
-					this.projectService
-						.get(params['id'])
-						.pipe(take(1))
-						.subscribe(project => {
-							this.project = project;
-							this.project$.next(this.project);
-						});
-				}
-			}));
-*/
 		this.subscriptions.add(
 			this.project$.subscribe(project => {
 				if (Constants.DEBUG) {

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Library } from '../../../data/library';
 import { DependenciesDataSource } from './DependenciesDataSource';
@@ -14,7 +14,7 @@ import { BaseComponent } from 'src/app/base/base.component';
 	templateUrl: './table-dependencies.component.html',
 	styleUrls: ['./table-dependencies.component.css']
 })
-export class TableDependenciesComponent extends BaseComponent implements OnInit {
+export class TableDependenciesComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	@Input() project$: BehaviorSubject<Project>;
 
@@ -30,6 +30,9 @@ export class TableDependenciesComponent extends BaseComponent implements OnInit 
 
 	ngOnInit() {
 		this.dataSource = new DependenciesDataSource([]);
+	}
+
+	ngAfterViewInit() {
 		if (this.project$) {
 			this.subscriptions.add(
 				this.project$.subscribe(project => {
@@ -40,7 +43,14 @@ export class TableDependenciesComponent extends BaseComponent implements OnInit 
 					}
 
 					this.idProject = project.id;
-					this.dataSource.update(project.libraries);
+					//
+					// We postpone the datasource updates to avoid the warning
+					// ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked.
+					//
+					setTimeout(() => {
+						this.dataSource.update(project.libraries);
+					}, 0);
+
 				}));
 		}
 	}

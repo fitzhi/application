@@ -12,7 +12,7 @@ import { Constants } from '../../constants';
 import { SkillService } from '../../service/skill.service';
 import { MessageService } from '../../message/message.service';
 import { BaseComponent } from '../../base/base.component';
-import { Observable, of, BehaviorSubject } from 'rxjs';
+import { Observable, of, BehaviorSubject, EMPTY, pipe } from 'rxjs';
 import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { SonarService } from 'src/app/service/sonar.service';
 import Tagify from '@yaireo/tagify';
@@ -153,47 +153,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		});
 
 		this.subscriptions.add(
-			this.project$.subscribe((project: Project) => {
-
-				// The behaviorSubject project$ is initialized with a null.
-				if (!project) {
-					return;
-				}
-
-				this.project = project;
-				this.profileProject.get('projectName').setValue(project.name);
-				this.connection_settings = String(this.project.connectionSettings);
-				this.profileProject.get('urlRepository1').setValue(this.project.urlRepository);
-				this.profileProject.get('urlRepository2').setValue(this.project.urlRepository);
-				this.profileProject.get('username').setValue(this.project.username);
-				this.profileProject.get('password').setValue(this.project.password);
-				this.profileProject.get('filename').setValue(this.project.filename);
-
-				setTimeout(() => this.updateDotRiskColor(this.project.risk));
-
-				if (this.project.skills) {
-					this.tagifySkills.addTags(
-						this.project.skills
-						.map(function(skill) { return skill.title; }));
-				}
-
-				this.subscriptions.add(
-					this.sonarProjectsLoaded$().subscribe (doneAndOk => {
-						if (doneAndOk) {
-							if (this.project.sonarProjects) {
-								this.tagifySonarProjects.addTags(
-									this.project.sonarProjects
-									.map(function(sonarProject) { return sonarProject.name; }));
-							}
-						}
-						// Asynchronous update to avoid ExpressionChangedAfterItHasBeenCheckedError
-						setTimeout(() => {
-							this.sonarProjectsLoaded = doneAndOk;
-						}, 0);
-					}));
-				}));
-
-		this.subscriptions.add(
 			this.risk$.subscribe((risk: number) => this.updateDotRiskColor(risk)));
 
 		this.project = new Project();
@@ -202,37 +161,161 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	}
 
 	ngAfterViewInit() {
-		this.subscriptions.add(
-			this.sonarProjectsLoaded$().subscribe (doneAndOk => {
-				if (!doneAndOk && !this.creation) {
-					this.messageService.error('Cannot retrieve the declared applications in Sonar');
-				}
-				// Asynchronous update to avoid ExpressionChangedAfterItHasBeenCheckedError
-				setTimeout(() => {
-					this.sonarProjectsLoaded = doneAndOk;
-				}, 0);
-		}));
-		this.ngAfterViewInitSkills();
+
+		this.ngInitSonarAndTagify$()
+			.pipe(
+				take(1),
+				switchMap(doneAndOk => {
+					if (doneAndOk) {
+						return this.ngInitContentSonarAndTagify$();
+					} else {
+						return of(EMPTY);
+					}
+				}))
+			.pipe(
+				take(1),
+				switchMap(doneAndOk => {
+					return this.project$;
+				}))
+			.subscribe(
+				(project: Project) => {
+					if (Constants.DEBUG) {
+						this.projectService.dump(project, 'ngAfterViewInit');
+					}
+
+					// The behaviorSubject project$ is initialized with a null.
+					if (!project) {
+						return;
+					}
+					//
+					// We postpone the Project updates to avoid the warning
+					// ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked.
+					//
+					setTimeout(() => {
+						this.project = project;
+						this.profileProject.get('projectName').setValue(project.name);
+						this.connection_settings = String(this.project.connectionSettings);
+						this.profileProject.get('urlRepository1').setValue(this.project.urlRepository);
+						this.profileProject.get('urlRepository2').setValue(this.project.urlRepository);
+						this.profileProject.get('username').setValue(this.project.username);
+						this.profileProject.get('password').setValue(this.project.password);
+						this.profileProject.get('filename').setValue(this.project.filename);
+						this.ngInitSonarProjectsDeclaredInProject();
+						this.ngInitSkillsDeclaredInProject();
+
+						if (this.project.risk) {
+							setTimeout (() => this.risk$.next(this.project.risk), 0);
+						}
+					}, 0);
+
+			});
 	}
 
-	ngAfterViewInitSkills() {
-		const input = document.querySelector('textarea[name=skills]');
 
-		this.tagifySkills = new Tagify (input, {
-			enforceWhitelist : true,
-			whitelist        : [],
-			callbacks        : {
-				add    : this.boundAddSkill,  // callback when adding a tag, this callback is bound to the main component, instead of the function.
-				remove : this.boundRemoveSkill   // callback when removing a tag
+	ngInitSonarAndTagify$(): Observable<boolean> {
+
+		let input = document.querySelector('textarea[name=skills]');
+		if (!input) {
+			throw new Error('INTERNAL ERROR : textarea[name=skills] is not found.');
+		}
+		if (!this.tagifySkills) {
+			this.tagifySkills = new Tagify (input, {
+				enforceWhitelist : true,
+				whitelist        : [],
+				callbacks        : {
+					add    : this.boundAddSkill,  // callback when adding a tag, this callback is bound to the main component, instead of the function.
+					remove : this.boundRemoveSkill   // callback when removing a tag
+				}
+			});
+		}
+
+		// If we re-enter in this method, the do not create twice the tagify component.
+		if (!this.tagifySonarProjects) {
+			input = document.querySelector('textarea[name=sonarProjects]');
+			if (!input) {
+				throw new Error('INTERNAL ERROR : textarea[name=sonarProjects] is not found.');
 			}
+
+			this.tagifySonarProjects = new Tagify (input, {
+				enforceWhitelist : true,
+				whitelist        : [],
+				callbacks        : {
+					add    : this.boundAddSonarProject,
+						// callback when adding a tag, this callback is bound to the main component, instead of the function.
+					remove : this.boundRemoveSonarProject
+						// callback when removing a tag
+				}
+			});
+		}
+
+		return of(true);
+	}
+
+	ngInitContentSonarAndTagify$(): Observable<boolean> {
+
+		return this.skillService.allSkills$
+			.pipe(
+				take(1),
+				switchMap (skills => {
+					this.tagifySkills.settings.whitelist = [];
+					skills.map(function(skill) { return skill.title; }).forEach(element => {
+						this.tagifySkills.settings.whitelist.push(element);
+					});
+					if (Constants.DEBUG) {
+						console.log ('Initializing the skills inside the tagify component');
+					}
+					return this.sonarProjectsLoaded$();
+			}), catchError ( (error) => {
+				console.error('Internal error : Skills are not retrieved from back-end', error);
+				return this.sonarProjectsLoaded$();
+			}))
+			.pipe(
+				take(1),
+				switchMap (doneAndOk => {
+					if (!doneAndOk && !this.creation) {
+						this.messageService.error('Cannot retrieve the declared applications in Sonar');
+					}
+					// Asynchronous update to avoid ExpressionChangedAfterItHasBeenCheckedError
+					setTimeout(() => {
+						this.sonarProjectsLoaded = doneAndOk;
+					}, 0);
+					return of(doneAndOk);
+			}));
+	}
+
+	ngInitSonarProjectsDeclaredInProject() {
+
+		this.sonarProjectsLoaded$().pipe(take(1)).subscribe (doneAndOk => {
+			if (doneAndOk) {
+				if (this.project.sonarProjects) {
+					this.tagifySonarProjects.addTags(
+						this.project.sonarProjects
+						.map(function(sonarProject) { return sonarProject.name; }));
+				}
+			}
+			// Asynchronous update to avoid ExpressionChangedAfterItHasBeenCheckedError
+			setTimeout(() => {
+				this.sonarProjectsLoaded = doneAndOk;
+			}, 0);
 		});
 
+	}
+
+	ngInitSkillsDeclaredInProject() {
+
 		this.skillService.allSkills$
+			.pipe(take(1))
 			.subscribe (skills => {
 				this.tagifySkills.settings.whitelist = [];
 				skills.map(function(skill) { return skill.title; }).forEach(element => {
 					this.tagifySkills.settings.whitelist.push(element);
 				});
+
+				if ( (this.project) && (this.project.skills) ) {
+					this.tagifySkills.addTags(
+						this.project.skills
+						.map(function(skill) { return skill.title; }));
+				}
 			});
 	}
 
@@ -284,9 +367,10 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * @param event ADD event fired by the tagify component.
 	 */
 	addSkill(event: CustomEvent) {
+
 		// This skills is already registered for this project.
-		if ( (this.project.skills !== undefined)
-			&& (this.project.skills.find (sk => sk.title === event.detail.data.value) !== undefined)) {
+		if ( (this.project.skills)
+			&& (this.project.skills.find (sk => sk.title === event.detail.data.value))) {
 			return;
 		}
 
@@ -596,7 +680,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	public undirectAccess() {
 		if (!this.project) {
-			return false;
+			return true;
 		}
 		// No choice have been made yet. We are the 2 pannels.
 		if ((typeof this.project.connectionSettings === 'undefined') || (this.project.connectionSettings === 0)) {

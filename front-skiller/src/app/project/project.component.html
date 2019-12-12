@@ -1,10 +1,12 @@
 <mat-tab-group [selectedIndex]="tabIndex" (selectedIndexChange)="selectedIndexChange($event)">
 	<mat-tab label="Project">
-		<app-project-form 
-			[project$]="project$" 
-			[risk$]="risk$"
-			(tabActivationEmitter)="tabActivation($event)">
-		</app-project-form>
+		<ng-template matTabContent>
+			<app-project-form 
+				[project$]="project$" 
+				[risk$]="risk$"
+				(tabActivationEmitter)="tabActivation($event)">
+			</app-project-form>
+		</ng-template>
 	</mat-tab>
 	<mat-tab [disabled]="!canConnectSourceControl()" label="Staff">
 		<ng-template matTabContent>

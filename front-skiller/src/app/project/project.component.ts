@@ -21,7 +21,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	/**
 	 * ## IMPORTANT :
 	 *
-	 *  The observable `project$` cannot be a simple `Subject`
+	 * The observable `project$` cannot be a simple `Subject`
 	 * because the lifecycle of the tabs under the component project is not homogenous.
 	 * Some tab content are eagerly loaded, some other lazy.
 	 *
@@ -74,7 +74,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 
 		this.subscriptions.add(this.route.params.subscribe(params => {
 			if (Constants.DEBUG) {
-				console.log('params[\'id\'] ' + params['id']);
+				console.log('params[\'id\']', params['id']);
 			}
 			if (params['id'] == null) {
 				this.idProject = null;
@@ -88,9 +88,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	 * After init treatment. We load the project.
 	 */
 	ngAfterViewInit() {
-		setTimeout(() => {
-			this.loadProject();
-		});
+		this.loadProject();
 	}
 
 	/**
@@ -136,6 +134,9 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 		// OR we load the Project from the back-end...
 		// Anyway, We create an empty project until the subscription is complete
 		if (this.idProject) {
+			if (Constants.DEBUG) {
+				console.log ('Loading the project');
+			}
 			this.subscriptions.add(
 				this.projectService.allProjectsIsLoaded$.pipe (
 					switchMap( (success: boolean) => {
@@ -163,6 +164,15 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 					})
 				);
 		}
+		/*
+		else {
+			// We are in creation mode.
+			const project = new Project();
+			project.id = -1;
+			this.idProject = -1;
+			this.project$.next(project);
+		}
+		*/
 	}
 
 	/**
