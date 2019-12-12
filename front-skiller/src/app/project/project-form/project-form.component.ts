@@ -288,9 +288,11 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		this.sonarProjectsLoaded$().pipe(take(1)).subscribe (doneAndOk => {
 			if (doneAndOk) {
 				if (this.project.sonarProjects) {
-					this.tagifySonarProjects.addTags(
-						this.project.sonarProjects
-						.map(function(sonarProject) { return sonarProject.name; }));
+					if (this.project.sonarProjects.length > 0) {
+						this.tagifySonarProjects.addTags(
+							this.project.sonarProjects
+							.map(function(sonarProject) { return sonarProject.name; }));
+					}
 				}
 			}
 			// Asynchronous update to avoid ExpressionChangedAfterItHasBeenCheckedError
@@ -306,15 +308,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		this.skillService.allSkills$
 			.pipe(take(1))
 			.subscribe (skills => {
-				this.tagifySkills.settings.whitelist = [];
-				skills.map(function(skill) { return skill.title; }).forEach(element => {
-					this.tagifySkills.settings.whitelist.push(element);
-				});
-
 				if ( (this.project) && (this.project.skills) ) {
-					this.tagifySkills.addTags(
-						this.project.skills
-						.map(function(skill) { return skill.title; }));
+					if (this.project.skills.length > 0) {
+						this.tagifySkills.addTags(
+							this.project.skills
+							.map(function(skill) { return skill.title; }));
+					}
 				}
 			});
 	}
