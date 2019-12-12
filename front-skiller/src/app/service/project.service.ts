@@ -281,6 +281,7 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
+	 * Return an observable emiting the tracking record for the dashboard generation.
 	 * Load the activity records for the dashboard generation.
 	 * @param idProject the project identifier
 	 */

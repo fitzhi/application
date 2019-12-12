@@ -343,16 +343,17 @@ public class ProjectController {
 							new SunburstDTO(project.getId(), project.getRisk(), CODE_MULTIPLE_TASK,
 							"A dashboard generation has already been launched for " + project.getName()), 
 							headers(), 
-							HttpStatus.BAD_REQUEST);
+							HttpStatus.OK);
 				}
 				if (log.isDebugEnabled()) {
 					log.debug("The generation will be processed asynchronously !");
 				}
 				scanner.generateAsync(project, settings);
-				return new ResponseEntity<> (new SunburstDTO(project.getId(), project.getRisk(), null, HttpStatus.CREATED.value(), 
+				return new ResponseEntity<> (new SunburstDTO(project.getId(), project.getRisk(), null, 
+						HttpStatus.CREATED.value(), 
 						"The dashboard generation has been launched. Operation might last a while. Please try later !"), 
 						headers(), 
-						HttpStatus.BAD_REQUEST);
+						HttpStatus.OK);
 			}
 		} catch (Exception e) {
 			log.error(getStackTrace(e));

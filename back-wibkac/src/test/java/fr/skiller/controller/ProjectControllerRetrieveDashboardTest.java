@@ -77,7 +77,7 @@ public class ProjectControllerRetrieveDashboardTest {
 		this.mvc.perform(post("/project/sunburst")
 		.contentType(MediaType.APPLICATION_JSON_UTF8)
 		.content(jsonInput))
-		.andExpect(status().is(HttpStatus.BAD_REQUEST.value()))
+		.andExpect(status().is(HttpStatus.OK.value()))
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 		.andExpect(content().json(gson.toJson(expected)));
 	}

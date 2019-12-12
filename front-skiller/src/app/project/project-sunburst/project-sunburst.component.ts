@@ -21,6 +21,7 @@ import { Contributor } from '../../data/contributor';
 import { take } from 'rxjs/operators';
 import { Task } from 'src/app/data/task';
 import { TaskLog } from 'src/app/data/task-log';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 /**
  * Internal class in charge of the display of log messages reported by the asynchronous task.
@@ -245,6 +246,11 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 */
 	private intervalActivityLoadReload;
 
+	/**
+	 * The chart can be generated synchronously, or asynchronously.
+	 * if `loadDashboardData$` works asynchronously, a reload has to executued before preview.
+	 */
+	private shouldReload = false;
 
 	/**
 	 * Internal class in charge of the display of log messages reported by the asynchronous task.
@@ -313,7 +319,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 							console.log('Tab selected ' + index + ' @ ' + today.getHours()
 								+ ':' + today.getMinutes() + ':' + today.getSeconds());
 						}
-						this.loadSunburst();
+						this.loadSunburst(true);
 					}
 				}
 			));
@@ -331,7 +337,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 		this.projectService
 			.loadTaskActivities$(this.project.id)
-			.pipe( take(1))
+			.pipe(take(1))
 			.subscribe(task => {
 				this.taskReportManagement.complete = task.complete;
 				const log = this.taskReportManagement.lastLog(task);
@@ -346,21 +352,26 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					if (task.lastBreath.code === 0) {
 						this.setActiveContext (PreviewContext.SUNBURST_READY);
 					} else {
-						// TODO Special something has to be implemented here !
-						// Just need to figure what to do.
+						// TODO Special : something has to be implemented here !
+						// Just need to figure out what...
 					}
 				}
 			},
 			error => {
 				//
-				// In case of error, we stop the log tracking.
+				// We allow a 404 error code at the begining of the treatment.
 				//
-				if (Constants.DEBUG) {
-					console.groupCollapsed ('We stop loadTaskActivities due to internal error');
-					console.log (error);
-					console.groupEnd();
+				if (error.status !== 404) {
+					//
+					// In case of error, we stop the log tracking.
+					//
+					if (Constants.DEBUG) {
+						console.groupCollapsed ('We stop loadTaskActivities due to internal error');
+						console.log (error);
+						console.groupEnd();
+					}
+					this.taskReportManagement.complete = true;
 				}
-				this.taskReportManagement.complete = true;
 			});
 
 			if (!this.taskReportManagement.complete) {
@@ -369,13 +380,20 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				if (Constants.DEBUG) {
 					console.log ('Log tracking has been disable');
 				}
+				//
+				// We build the chart Sunburst.
+				//
+				if (this.shouldReload) {
+					setTimeout(() => { this.loadSunburst(false); }, 0);
+				}
 			}
 		}
 
 	/**
      * Load the dashboard data in order to produce the sunburst chart.
+	 * @param silentMode set to `true` if we want a generation without the the tasks reporting panel, `false` otherwise.
      */
-	loadSunburst() {
+	loadSunburst(silentMode: boolean) {
 
 		this.idPanelSelected = this.SUNBURST;
 
@@ -394,28 +412,48 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			});
 		}
 
-		this.taskReportManagement.init();
-		this.loadTaskActivities();
+		if (silentMode) {
+			this.taskReportManagement.init();
+			this.loadTaskActivities();
+		}
 
+		this.shouldReload = false;
 		this.projectService.loadDashboardData$(this.settings)
 			.subscribe(
 				response => {
-					this.handleSunburstData(response);
-					if (Constants.DEBUG) {
-						console.log ('The risk of the current project is', response.projectRiskLevel);
+					switch (response.code) {
+						case 0:
+							this.handleSunburstData(response);
+							if (Constants.DEBUG) {
+								console.log ('The risk of the current project is', response.projectRiskLevel);
+							}
+							this.updateRiskLevel.next(response.projectRiskLevel);
+							this.hackSunburstStyle();
+							this.tooltipChart();
+							this.setActiveContext (PreviewContext.SUNBURST_READY);
+							this.taskReportManagement.complete = true;
+							break;
+						case 201:
+						case -1008:
+							//
+							// The generation has started in asynchronous mode.
+							// We will receive notification, so we do not set taskReportManagement as complete.
+							//
+							this.messageService.warning(response.message);
+							this.shouldReload = true;
+							break;
+						default:
+							console.error('Unknown code message %d for message %s',
+								response.code, response.message);
+							this.messageService.error(response.message);
+							this.taskReportManagement.complete = true;
+							break;
 					}
-					this.updateRiskLevel.next(response.projectRiskLevel);
 				},
-				response => {
-					this.handleErrorData(response);
-					this.taskReportManagement.taskReport$.next(response);
+				responseInError => {
+					this.handleErrorData(responseInError);
+					this.taskReportManagement.taskReport$.next(responseInError);
 					this.taskReportManagement.taskOk = false;
-				},
-				() => {
-					this.hackSunburstStyle();
-					this.tooltipChart();
-					this.setActiveContext (PreviewContext.SUNBURST_READY);
-					this.taskReportManagement.complete = true;
 				});
 	}
 

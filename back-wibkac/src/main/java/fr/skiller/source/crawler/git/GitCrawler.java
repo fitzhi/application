@@ -341,11 +341,19 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				tagOrBranchNames.stream().forEach(logger::debug);
 			}
 			
+			int nbCommit = 0;
+			int nbTotCommit = 0;
 			for ( String tagOrBranchName : tagOrBranchNames) {
 				for (RevCommit commit : git.log().add(repository.resolve(tagOrBranchName)).call()) {
 					allCommits.add(commit);
+					if (++nbCommit == 1000) {
+						nbTotCommit += nbCommit;
+						this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), nbTotCommit + " commits on-boarded!");
+						nbCommit = 0;
+					}
 				}
 			}
+			
 		} catch (final IOException | GitAPIException e) {
 			throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
 		}

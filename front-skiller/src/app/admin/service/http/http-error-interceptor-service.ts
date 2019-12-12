@@ -42,10 +42,9 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 							break;
 						case 404:
 							setTimeout(() => messageService.error('Unreachable URL'), 0);
-							return throwError('The given URL does not exist, or is unreachable !');
+							return throwError(response);
 							break;
 						case 400:
-						case 404:
 						case 500:
 							const return_code = response.headers.get('backend.return_code');
 							if (return_code) {
@@ -67,7 +66,7 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 								}
 							}
 							setTimeout(() => messageService.warning(errorMessage), 0);
-							return throwError(errorMessage);
+							return throwError(response);
 						case 401:
 							if (Constants.DEBUG) {
 								console.log(response.error.error, response.error.error_description);
