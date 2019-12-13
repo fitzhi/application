@@ -384,6 +384,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				// We build the chart Sunburst.
 				//
 				if (this.shouldReload) {
+					this.shouldReload = false;
 					setTimeout(() => { this.loadSunburst(false); }, 0);
 				}
 			}
