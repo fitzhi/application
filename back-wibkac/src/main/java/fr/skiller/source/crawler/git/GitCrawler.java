@@ -327,8 +327,6 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	@Override
 	public RepositoryAnalysis loadChanges(Project project, Repository repository) throws SkillerException {
 
-		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
-
 		List<RevCommit> allCommits = new ArrayList<>();
 		
 		try (Git git = new Git(repository)) {
@@ -372,17 +370,27 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 		ObjectId previous = null;
 
+		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
+
+		int nbFileCommit = 0;
+		int nbTotFileCommit = 0;
 		for (RevCommit commit : allDateAscendingCommits) {
 
 			if (this.logAllCommitRecords) {
 				log(commit); 
+			}
+
+			if (++nbFileCommit == 1000) {
+				nbTotFileCommit += nbFileCommit;
+				this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), nbTotFileCommit + " file changes examined !");
+				nbFileCommit = 0;
 			}
 			
 			if (previous == null) {
 				previous = commit.getTree().getId();
 			} else {
 				ObjectId current = commit.getTree().getId();
-				diff(repository, analysis, commit, previous, current);
+				buildRepositoryAnalysis(repository, analysis, commit, previous, current);
 				previous = current;
 			}
 
@@ -393,18 +401,39 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		return analysis;
 	}
 
-	private void diff(Repository repository, RepositoryAnalysis analysis, RevCommit commit, ObjectId prevObjectId,
+	/**
+	 * <p>
+	 * For a given revision, <br/>
+	 * taking account of its files tree by comparison with the previous state of the repository.<br/>
+	 * To fulfill that purpose, 2 files tree are passed to this method in order to detect 
+	 * <ul>
+	 * <li>the real functional implementation changes made by developers, which really matter</li>
+	 * <li>or, the simple copy, delete or modify file path modifications</li>
+	 * </ul>
+	 * </p>
+	 * @param repository a GIT repository
+	 * @param analysis the repository analysis
+	 * @param commit the commit revision examined 
+	 * @param prevObjectId the <b>PREVIOUS</b> files tree involved 
+	 * @param curObjectId the <b>CURRENT</b> files tree examined.
+	 * @throws SkillerException
+	 */
+	private void buildRepositoryAnalysis(Repository repository, RepositoryAnalysis analysis, RevCommit commit, ObjectId prevObjectId,
 			ObjectId curObjectId) throws SkillerException {
 
 		final RenameDetector renameDetector = new RenameDetector(repository);
 
 		try (ObjectReader reader = repository.newObjectReader()) {
+			
 			CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
 			oldTreeIter.reset(reader, prevObjectId);
+			
 			CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
 			newTreeIter.reset(reader, curObjectId);
 
+			//
 			// finally get the list of changed files
+			//
 			try (Git git = new Git(repository)) {
 				List<DiffEntry> diffs = git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();
 
@@ -682,7 +711,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			logger.debug(String.format("loadChanges (%s) returns %d entries", project.getName(), analysis.sizeChanges()));
 		}
 
-		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), String.format("%d changes have been detected on the repository", analysis.sizeChanges()));
+		tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), String.format("%d changes have been detected on the repository", analysis.sizeChanges()));
 	
 		/**
 		 * We save the directories of the repository.
