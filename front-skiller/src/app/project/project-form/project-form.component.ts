@@ -640,7 +640,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 				this.project$.next(this.project);
 
-				this.messageService.info('Project ' + this.project.name + '  saved !');
+				this.messageService.success('Project ' + this.project.name + '  saved !');
 			});
 	}
 
