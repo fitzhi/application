@@ -98,6 +98,9 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 		Assert.assertEquals(4, mission.getNumberOfCommits());
 		Assert.assertEquals(LocalDate.of(2019, 12, 6), mission.getFirstCommit());
 		Assert.assertEquals(LocalDate.of(2019, 12, 7), mission.getLastCommit());
+		Assert.assertEquals(1917, mission.getIdProject());
+		Assert.assertEquals("The Red Rev project", mission.getName());
+		Assert.assertEquals(1, mission.getIdStaff());
 		
 	}
 	

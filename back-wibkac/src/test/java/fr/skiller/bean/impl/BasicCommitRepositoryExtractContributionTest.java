@@ -48,5 +48,20 @@ public class BasicCommitRepositoryExtractContributionTest {
 		Assert.assertEquals( LocalDate.of(2019, 12, 6), contributor.getLastCommit());
 		
 	}
-	
+
+	@Test
+	public void testNoDataForTheStaff() throws IOException {
+		
+		Project project = new Project(1418, "la der des der");
+		CommitRepository repository = cacheDataHandler.getRepository(project);
+		
+		Staff staff = new Staff(10002, "none MockFirst", "none MOCKLAST", "none the 1 o o o one", "none the 1 o o o one", "mock@void.com", "N/A");
+		
+				
+		Contributor contributor = repository.extractContribution(staff);
+		
+		Assert.assertNull(contributor);
+		
+	}
+
 }

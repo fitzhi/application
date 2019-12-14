@@ -298,7 +298,10 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 						.filter(mission -> mission.getFirstCommit() == null)
 						.findFirst()
 						.ifPresent(mission -> {
-							System.out.println("removing mission " + mission.getIdProject() + " " + mission.getIdStaff());
+							if (log.isDebugEnabled()) {
+								log.debug("removing mission " + mission.getIdProject() 
+									+ " for " + staff.fullName());
+							}
 							staff.getMissions().remove(mission);
 						});
 				}

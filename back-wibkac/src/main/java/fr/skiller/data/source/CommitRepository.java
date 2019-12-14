@@ -139,7 +139,10 @@ public interface CommitRepository {
 	/**
 	 * Parse & extract the contributor's data for the given staff member.
 	 * @param staff the given staff member.
-	 * @return the contributor object summarizing his participation in the project
+	 * @return the contributor object summarizing his participation in the project, 
+	 * {@code null} if not data was found for the given staff member.<br/>
+	 * <font color="darkOrange">In theory, the function should never return a {@code null}, 
+	 * but it appears that this case occurs. So we put a warning to trace this case and track the issue.</font>
 	 */
 	Contributor extractContribution(Staff staff);
 	

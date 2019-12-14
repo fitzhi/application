@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, OnDestroy, Output, EventEmitter, ɵɵcontainerRefreshEnd } from '@angular/core';
 import Sunburst from 'sunburst-chart';
 import { Constants } from '../../constants';
 import { MessageService } from '../../message/message.service';
@@ -384,11 +384,17 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				// We build the chart Sunburst.
 				//
 				if (this.shouldReload) {
-					this.shouldReload = false;
-					setTimeout(() => { this.loadSunburst(false); }, 0);
+					this.refreshChart();
 				}
-			}
 		}
+	}
+
+	/**
+	 * Refresh the Sunburst chart.
+	 */
+	refreshChart() {
+		setTimeout(() => { this.loadSunburst(false); }, 0);
+	}
 
 	/**
      * Load the dashboard data in order to produce the sunburst chart.
@@ -538,14 +544,25 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				break;
 			}
 			case 400: {
+				console.log (response);
 				switch (response.error.code) {
 					case 201:
 						// The generation is not accessible. A dashboard generation is launched asynchronously.
 						this.messageBoxService.exclamation('Operation launched', response.error.message);
 						break;
-					case -999:
+					case -1008:
 						// Operation already been launched.
 						this.messageBoxService.exclamation('Operation already launched', response.error.message);
+						break;
+					case -999:
+						// Operation already been launched.
+						if (!response.error.message) {
+							this.messageBoxService.exclamation('Chart generation failed',
+								'Operation failed for an unknown reason : ' +
+								'You should reset completly the chart generation. (click on the \'trash\' icon)');
+						} else {
+							this.messageBoxService.exclamation('Chart generation failed', response.error.message);
+						}
 						break;
 					default:
 						// We display the error generated on the server
@@ -634,6 +651,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		switch (idPanel) {
 			case this.SUNBURST:
 					this.idPanelSelected = idPanel;
+					this.refreshChart();
 					this.setActiveContext(this.lastSunburstContext);
 				break;
 			case this.LEGEND_SUNBURST:

@@ -4,7 +4,10 @@
 package fr.skiller.data.source;
 
 import static fr.skiller.Global.LN;
+import static fr.skiller.Error.CODE_CONTRIBUTOR_INVALID;
+import static fr.skiller.Error.MESSAGE_CONTRIBUTOR_INVALID;
 
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -19,7 +22,9 @@ import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.bean.impl.PropectDashboardCustomizerImpl;
 import fr.skiller.data.internal.Staff;
+import fr.skiller.exception.SkillerException;
 import fr.skiller.security.CustomAuthenticationProvider;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -29,6 +34,7 @@ import fr.skiller.security.CustomAuthenticationProvider;
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@Slf4j
 public class BasicCommitRepository implements CommitRepository {
 
 	/**
@@ -98,22 +104,33 @@ public class BasicCommitRepository implements CommitRepository {
 		for (CommitHistory history : repo.values()) {
 			boolean detected = false;
 			for (Operation operation : history.operations) {
-				if ((!detected) && (operation.getIdStaff() == staff.getIdStaff())) {
-					detected = true;
-					numberOfFiles++;
-				}
-				if ((detected)  && (operation.getIdStaff() == staff.getIdStaff())) {
-					numberOfCommits++;
-					if (operation.getDateCommit().isBefore(firstCommit)) {
-						firstCommit = operation.getDateCommit();
+				
+				if (operation.getIdStaff() == staff.getIdStaff()) {
+					if (!detected) {
+						detected = true;
+						numberOfFiles++;
 					}
-					if (operation.getDateCommit().isAfter(lastCommit)) {
-						lastCommit = operation.getDateCommit();
+					// No else : the first detected operation has to be taken in account.
+					if (detected) {
+						numberOfCommits++;
+						if (operation.getDateCommit().isBefore(firstCommit)) {
+							firstCommit = operation.getDateCommit();
+						}
+						if (operation.getDateCommit().isAfter(lastCommit)) {
+							lastCommit = operation.getDateCommit();
+						}
 					}
 				}
 			}
 		}
-		return new Contributor(staff.getIdStaff(), firstCommit, lastCommit, numberOfCommits, numberOfFiles);
+		if (numberOfCommits == 0) {
+			if (log.isWarnEnabled()) {
+				log.warn(String.format("Cannot create an empty contributor for the staff member %s", staff.fullName()));
+			}
+		}
+		
+		return (numberOfCommits == 0) ? null :
+				new Contributor(staff.getIdStaff(), firstCommit, lastCommit, numberOfCommits, numberOfFiles);
 	}
 	
 	@Override

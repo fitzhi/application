@@ -310,7 +310,7 @@ public class ProjectController {
 	 * @return the Sunburst chart.
 	 */
 	@PostMapping("/sunburst")
-	public ResponseEntity<SunburstDTO> retrieveRiskDashboard(@RequestBody SettingsGeneration settings) {
+	public ResponseEntity<SunburstDTO> generateChartSunburst(@RequestBody SettingsGeneration settings) {
 
 		if (log.isDebugEnabled()) {
 			log.debug( MessageFormat.format(

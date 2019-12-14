@@ -5,8 +5,11 @@ package fr.skiller.bean.impl;
 
 import static fr.skiller.Global.INTERNAL_FILE_SEPARATORCHAR;
 import static fr.skiller.Error.CODE_IO_EXCEPTION;
+import static fr.skiller.Error.CODE_CONTRIBUTOR_INVALID;
+import static fr.skiller.Error.MESSAGE_CONTRIBUTOR_INVALID;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -164,7 +167,13 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 						log.debug("Involving the staff " + staff.fullName() + " inside the project " + project.getName());
 					}
 					Contributor contributor = repository.extractContribution(staff);
-					staffHandler.involve(project, contributor);
+					if (contributor != null) {
+						staffHandler.involve(project, contributor);
+					} else { 
+						throw new SkillerException (
+							CODE_CONTRIBUTOR_INVALID,
+							MessageFormat.format(MESSAGE_CONTRIBUTOR_INVALID, staff.fullName(), project.getName()));
+					}
 				}
 			}
 		} catch (final IOException ioe) {

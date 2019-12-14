@@ -14,23 +14,29 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Committer;
 import fr.skiller.data.internal.DataChart;
+import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.CommitRepository;
+import fr.skiller.source.crawler.git.GitCrawler;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Abstract class in charge of generating the data collection for the project Sunburst viewer.
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
+@Slf4j
 public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	
 	Random r = new Random();
 	
 	/**
-	 * Service in charge of handling the staff collection.<br/>
-	 * This bean in filled by the upper concrete service<br/>
-	 * {@link fr.skiller.source.crawler.git.TreeWalkGitCrawler#init() GitScanner.init} is the first implementation for Git.
+	 * <p>
+	 * Service in charge of handling the staff collection.
+	 * This bean in set by the upper concrete service
+	 * </p>
+	 * {@link GitCrawler#init() GitScanner.init} is the first implementation for Git.
 	 */
 	protected StaffHandler parentStaffHandler;
 
@@ -56,7 +62,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 
 		
 		List<Committer> ghosts = new ArrayList<>();
-		project.getGhosts().stream().forEach(ghost -> {
+		for (Ghost ghost : project.getGhosts()) {
 			if (ghost.isTechnical()) {
 				ghosts.add (new Committer(ghost.getPseudo(), true));
 			} else {
@@ -67,7 +73,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 					ghosts.add(new Committer(ghost.getPseudo(), false));
 				}
 			}
-		});
+		};
 		
 		if (logger.isDebugEnabled()) {
 			StringBuilder sb = new StringBuilder(LN);

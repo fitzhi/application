@@ -417,6 +417,8 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		Mission mission = (oMission.isPresent()) ? oMission.get() : new Mission();
 		mission.setIdProject(project.getId());
+		mission.setName(project.getName());
+		mission.setIdStaff(staff.getIdStaff());
 		mission.setFirstCommit(contributor.getFirstCommit());
 		mission.setLastCommit(contributor.getLastCommit());
 		mission.setNumberOfCommits(contributor.getNumberOfCommitsSubmitted());
