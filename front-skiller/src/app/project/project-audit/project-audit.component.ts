@@ -13,6 +13,7 @@ import { ProjectService } from 'src/app/service/project.service';
 import { MessageService } from 'src/app/message/message.service';
 import { AuditChosenDetail } from './project-audit-badges/audit-badge/audit-chosen-detail';
 import { AuditDetailsHistory } from 'src/app/service/cinematic/audit-details-history';
+import { ConnectUserComponent } from 'src/app/admin/connect-user/connect-user.component';
 
 @Component({
 	selector: 'app-project-audit',
@@ -264,10 +265,11 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 
 		if (topicEvaluation.typeOfOperation === Constants.CHANGE_BROADCAST) {
 			this.projectService.saveAuditTopicEvaluation$(
-					this.project.id, topicEvaluation.idTopic,topicEvaluation.value)
+					this.project.id, topicEvaluation.idTopic, topicEvaluation.value)
 				.subscribe(doneAndOk => {
 					if (doneAndOk) {
 						this.messageService.success('Evaluation given to ' + this.topics[topicEvaluation.idTopic] + ' has been saved');
+
 						// Affect the new evaluation given for this topic to the associated item in the Project object.
 						this.updateEvaluationOnTopicProject(topicEvaluation);
 
@@ -281,7 +283,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	}
 
 	/**
-	 * Save the new weigths processed, or filled, into the project object container.
+	 * Save this updated evaluation into the project object container.
 	 */
 	private updateEvaluationOnTopicProject(topicEvaluation: TopicEvaluation): void {
 		if (!this.project.audit[topicEvaluation.idTopic]) {
@@ -291,6 +293,24 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 		this.project.audit[topicEvaluation.idTopic].evaluation = topicEvaluation.value;
 	}
 
+	/**
+	 * Save the new weigths processed into the project object container.
+	 */
+	private updateWeightsOnTopicProject(auditTopics: any[]): void {
+
+		console.groupCollapsed('Local update of the weights for %s', this.project.name);
+		auditTopics.forEach (auditTopic => {
+			if (Constants.DEBUG) {
+				console.log ('changing wight from %d to %d for %d',
+					this.project.audit[auditTopic.idTopic].weight,
+					auditTopic.weight,
+					auditTopic.idTopic);
+			}
+			this.project.audit[auditTopic.idTopic].weight = auditTopic.weight;
+		});
+		console.groupEnd();
+
+	}
 
 	/**
 	 * The function is informed that a weight has been attributed to a topic of the audit.
@@ -316,7 +336,11 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 				.subscribe(doneAndOk => {
 					if (doneAndOk) {
 						this.messageService.success('Audit topic weights for the project ' + this.project.name + ' have been saved!');
-				}});
+
+						// Update the underlining GLOBAL project evaluation
+						this.projectService.processGlobalAuditEvaluation(this.project);
+					}
+				});
 		}
 	}
 

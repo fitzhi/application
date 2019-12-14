@@ -164,15 +164,6 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 					})
 				);
 		}
-		/*
-		else {
-			// We are in creation mode.
-			const project = new Project();
-			project.id = -1;
-			this.idProject = -1;
-			this.project$.next(project);
-		}
-		*/
 	}
 
 	/**

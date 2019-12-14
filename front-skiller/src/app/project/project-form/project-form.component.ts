@@ -432,7 +432,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	}
 
 	/**
-	 *  Update a skill inside a project. This might be an addition or a removal.
+	 * Update a skill inside a project. This might be an addition or a removal.
 	 * @param idProject the project identifier
 	 * @param idSkill the skill identifier
 	 * @param callback the callback function, which might be projectService.addSkill or projectService.delSkill
