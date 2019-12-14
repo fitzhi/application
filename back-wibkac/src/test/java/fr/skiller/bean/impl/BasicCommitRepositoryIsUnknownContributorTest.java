@@ -52,6 +52,19 @@ public class BasicCommitRepositoryIsUnknownContributorTest {
 	}
 	
 	@Test
+	public void found2s() {
+		Staff staff = new Staff(1, "Frédéric", "LOGIBEAU", null, "flogibeau","flogibeau@nope.com", "Gaulo-roman");
+		Set<String> set = new HashSet<>();
+		set.add("flogibeau");
+		set.add("Frederic Logibeau");
+		set.add("frederic vidal");
+		set.add("frvidal");
+		commitRepository.setUnknownContributors(set);
+		Assert.assertFalse(commitRepository.extractMatchingUnknownContributors(staffHandler, staff).isEmpty());
+		Assert.assertEquals(2, commitRepository.extractMatchingUnknownContributors(staffHandler, staff).size());
+	}
+	
+	@Test
 	public void notFound() {
 		Staff staff = new Staff(1, "Frédéric", "VIDAL", "frvidal", "frvidal","frvidal@nope.com", "Gaulo-roman");
 		Set<String> set = new HashSet<>();

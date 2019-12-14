@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
- * Repository containing time-stamped commits for the given project.
+ * Repository containing timestamped commits for the given project.
  * <br/>
  * <i>This is the first & basic implementation for the Commit repository</i>.
  * </p>
@@ -246,6 +247,21 @@ public class BasicCommitRepository implements CommitRepository {
 		return list;
 	}
 
+	public void removeGhost(String unknownContributor) {
+		Iterator<String> ite = this. unknownContributors().iterator();
+		while (ite.hasNext()) {
+			String ghost = ite.next();
+			
+			if (unknownContributor.contentEquals(ghost)) {
+				if (log.isDebugEnabled()) {
+					log.debug(String.format("Removing the ghost %s", ghost));
+				}
+				ite.remove();
+				return;
+			}
+		}
+	}
+	
 	@Override
 	public void dump() {
 		StringBuilder sb = new StringBuilder();

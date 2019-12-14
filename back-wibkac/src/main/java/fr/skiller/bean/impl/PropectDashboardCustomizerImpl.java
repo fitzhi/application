@@ -160,7 +160,13 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 							log.debug ("Registering the candidate "  + candidate);
 						}
 						repository.onBoardStaff(staffHandler, staff);
+						repository.removeGhost(candidate);
 					}
+					//
+					// Saving the repository :
+					//  - Unknown contributors who are identifier now, should disappear from the ghosts list
+					//  - The new staff identifier should have been propagated to the associated operations
+					//
 					cacheDataHandler.saveRepository(project, repository);
 					
 					if (log.isDebugEnabled()) {

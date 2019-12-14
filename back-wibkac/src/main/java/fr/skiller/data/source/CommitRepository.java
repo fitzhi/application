@@ -127,14 +127,21 @@ public interface CommitRepository {
 	
 	/**
 	 * <p>
-	 * Extract the unknown contributors who match the staff member.
+	 * Extract the unknown contributors who match the staff member record.
 	 * </p>
-	 * @param staffHandler injected bean in charge of the Staff management 
+	 * @param staffHandler interface in charge of the Staff management, bean passed by the caller service
 	 * @param staff the given staff
-	 * @return a list of unknown contributors whit whom the passed staff is matching
+	 * @return a list of unknown contributors with whom the staff record is matching
 	 */
 	List<String> extractMatchingUnknownContributors(StaffHandler staffHandler, Staff staff);
 	
+	/**
+	 * <p>
+	 * Removing the ghost from the unknown contributors list.
+	 * </p>
+	 * @param unknownContributor the unknown contributor
+	 */
+	void removeGhost(String unknownContributor);
 
 	/**
 	 * Parse & extract the contributor's data for the given staff member.

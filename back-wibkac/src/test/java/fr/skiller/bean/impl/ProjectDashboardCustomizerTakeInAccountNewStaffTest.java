@@ -88,6 +88,9 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 		Assert.assertEquals(1,
 				repository.getRepository().get("com/test.java").operations.get(1).getIdStaff());
 		
+		Assert.assertEquals("The host 'Frédéric VIDAL' is no more a ghost", 0,
+				repository.unknownContributors().stream().filter(ghost -> ghost.equals("Frédéric VIDAL")).count());
+		
 		staff = staffHandler.getStaff(1);
 		Optional<Mission> oMission = 
 				staff.getMissions().stream().filter(mission -> mission.getIdProject() == 1917).findFirst();
