@@ -273,7 +273,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				take(1),
 				switchMap (doneAndOk => {
 					if (!doneAndOk && !this.creation) {
-						this.messageService.error('Cannot retrieve the declared applications in Sonar');
+						this.messageService.warning('Cannot retrieve the declared applications in Sonar');
 					}
 					// Asynchronous update to avoid ExpressionChangedAfterItHasBeenCheckedError
 					setTimeout(() => {
