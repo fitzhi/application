@@ -8,7 +8,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { RootTestModule } from 'src/app/root-test/root-test.module';
 import { AuditGraphicBadgeComponent } from './audit-badge/audit-graphic-badge/audit-graphic-badge.component';
 import { ReportDetailFormComponent } from './report-detail-form/report-detail-form.component';
-import { TasksDetailFormComponent } from './tasks-detail-form/tasks-detail-form.component';
+import { FilesDetailFormComponent } from './files-detail-form/files-detail-form.component';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -44,7 +44,7 @@ describe('ProjectAuditBadgesComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ProjectAuditBadgesComponent, TestHostComponent, AuditBadgeComponent,
-				ReportDetailFormComponent, AuditGraphicBadgeComponent, TasksDetailFormComponent],
+				ReportDetailFormComponent, AuditGraphicBadgeComponent, FilesDetailFormComponent],
 			imports: [RootTestModule, MatGridListModule, MatFormFieldModule,
 				HttpClientTestingModule,
 				FormsModule, MatSliderModule, MatInputModule, ReactiveFormsModule ]

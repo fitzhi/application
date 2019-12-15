@@ -9,7 +9,7 @@ import { AuditBaseComponent } from '../audit-base-component/audit-base-component
 	templateUrl: './tasks-detail-form.component.html',
 	styleUrls: ['./tasks-detail-form.component.css']
 })
-export class TasksDetailFormComponent extends AuditBaseComponent implements OnInit, OnDestroy, AfterViewInit {
+export class FilesDetailFormComponent extends AuditBaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	/**
 	 * A `BehaviorSubject` containing the current last uptodate project.

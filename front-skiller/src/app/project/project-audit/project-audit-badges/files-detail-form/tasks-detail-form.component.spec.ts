@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TasksDetailFormComponent } from './tasks-detail-form.component';
+import { FilesDetailFormComponent } from './files-detail-form.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RootTestModule } from 'src/app/root-test/root-test.module';
 import { Project } from 'src/app/data/project';
@@ -34,7 +34,7 @@ describe('TasksDetailFormComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ TestHostComponent, TasksDetailFormComponent ],
+			declarations: [ TestHostComponent, FilesDetailFormComponent ],
 			imports: [RootTestModule, HttpClientTestingModule]
 
 		})

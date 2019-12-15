@@ -16,7 +16,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReportDetailFormComponent } from './project-audit-badges/report-detail-form/report-detail-form.component';
-import { TasksDetailFormComponent } from './project-audit-badges/tasks-detail-form/tasks-detail-form.component';
+import { FilesDetailFormComponent } from './project-audit-badges/files-detail-form/files-detail-form.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatInputModule } from '@angular/material/input';
@@ -31,7 +31,7 @@ describe('ProjectAuditComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [ ProjectAuditComponent, ProjectAuditBadgesComponent,
 				TableCategoriesComponent, AuditBadgeComponent, ReportDetailFormComponent,
-				AuditGraphicBadgeComponent, TasksDetailFormComponent ],
+				AuditGraphicBadgeComponent, FilesDetailFormComponent ],
 			providers: [ReferentialService, CinematicService],
 			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,
 				HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule, MatFormFieldModule,
