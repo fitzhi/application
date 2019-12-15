@@ -21,8 +21,15 @@ export class DialogLegendSunburstComponent extends BaseComponent implements OnIn
 
 	ngOnInit() {
 		this.subscriptions.add(
-			this.referentialService.legendsLoaded$.subscribe(legends =>
-				this.dataSource = this.referentialService.legends));
+			this.referentialService.referentialLoaded$.subscribe(
+				(doneAndOk: boolean) => {
+					if (doneAndOk) {
+						this.subscriptions.add(
+							this.referentialService.legendsLoaded$.subscribe(
+								legends => this.dataSource = this.referentialService.legends));
+					}
+				}));
+
 	}
 
 	ngOnDestroy() {

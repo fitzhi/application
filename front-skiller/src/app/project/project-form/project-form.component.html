@@ -2,7 +2,7 @@
 	<div id="projectForm" class="container">
 		<form class="needs-validation" [formGroup]="profileProject" (ngSubmit)="onSubmit()">
 			<div class="row">
-				<div class="col-2 globalBadge">
+				<div *ngIf="referentialService.referentialLoaded$ | async" class="col-2 globalBadge">
 					<app-techxhi-medal 
 						[colorOfRisk]="colorOfRisk"
 						[project$]="project$"

@@ -17,6 +17,7 @@ import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { SonarService } from 'src/app/service/sonar.service';
 import Tagify from '@yaireo/tagify';
 import { MessageGravity } from 'src/app/message/message-gravity';
+import { ReferentialService } from 'src/app/service/referential.service';
 
 @Component({
 	selector: 'app-project-form',
@@ -121,6 +122,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	constructor(
 		private cinematicService: CinematicService,
+		private referentialService: ReferentialService,
 		private messageService: MessageService,
 		private skillService: SkillService,
 		private projectService: ProjectService,
@@ -161,6 +163,15 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	}
 
 	ngAfterViewInit() {
+		this.subscriptions.add(
+			this.referentialService.referentialLoaded$.subscribe(
+				(doneAndOk: boolean) => {
+					if (doneAndOk) {
+						this.ngAfterViewInitForm();
+					}}));
+	}
+
+	ngAfterViewInitForm() {
 
 		this.ngInitSonarAndTagify$()
 			.pipe(
@@ -180,7 +191,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			.subscribe(
 				(project: Project) => {
 					if (Constants.DEBUG) {
-						this.projectService.dump(project, 'ngAfterViewInit');
+						this.projectService.dump(project, 'ngAfterViewInitForm');
 					}
 
 					// The behaviorSubject project$ is initialized with a null.
