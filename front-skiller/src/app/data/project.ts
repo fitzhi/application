@@ -5,8 +5,6 @@ import { AuditTopic } from './AuditTopic';
 
 export class Project {
 
-	public id: number;
-	public name: string;
 	public connectionSettings: number;
 	public urlRepository: string;
 	public username: string;
@@ -40,7 +38,9 @@ export class Project {
 	 */
 	public audit: { [id: number]: AuditTopic; } = {};
 
-	constructor() { }
+	constructor(
+		public id: number = 0,
+		public name: string = '') { }
 
 }
 

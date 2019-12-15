@@ -635,9 +635,11 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			project => {
 				this.project = project;
 
-				// If we were in creation (i.e. url = ".../project/"), we leave this mode
+				// If we were in creation (i.e. url = ".../project/"), we leave this mode.
 				this.creation = false;
-
+				// We update the array containing the collection of all projects.
+				this.projectService.updateProjectsCollection(project);
+				// We broadcast the new project state.
 				this.project$.next(this.project);
 
 				this.messageService.success('Project ' + this.project.name + '  saved !');

@@ -72,13 +72,28 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	* Save the project.
+	* Save the project (it might a creation or an update).
+	* @param project the given projet to be saved.
 	*/
 	save(project: Project): Observable<Project> {
 		if (Constants.DEBUG) {
 			console.log(((typeof project.id !== 'undefined') ? 'Saving ' : 'Adding ') + 'project ' + project.name);
 		}
-		return this.httpClient.post<Project>(this.backendSetupService.url() + '/project/save', project, httpOptions);
+		return this.httpClient
+			.post<Project>(this.backendSetupService.url() + '/project/save', project, httpOptions);
+	}
+
+	/**
+	 * Add or update a project inside the collection
+	 * @param project the given project
+	 */
+	updateProjectsCollection(project: Project): void {
+		const index = this.allProjects.findIndex(prj => prj.id === project.id);
+		if (index !== -1) {
+			this.allProjects.splice(index, 1);
+		}
+		this.allProjects.push(project);
+		this.allProjects$.next(this.allProjects);
 	}
 
 	/**

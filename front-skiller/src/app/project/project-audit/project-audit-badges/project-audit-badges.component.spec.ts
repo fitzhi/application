@@ -20,6 +20,7 @@ import { CinematicService } from 'src/app/service/cinematic.service';
 import { AuditDetailsHistory } from 'src/app/service/cinematic/audit-details-history';
 import { RiskLegend } from 'src/app/data/riskLegend';
 import { AuditChosenDetail } from './audit-badge/audit-chosen-detail';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ProjectAuditBadgesComponent', () => {
 	let component: TestHostComponent;
@@ -45,6 +46,7 @@ describe('ProjectAuditBadgesComponent', () => {
 			declarations: [ ProjectAuditBadgesComponent, TestHostComponent, AuditBadgeComponent,
 				ReportDetailFormComponent, AuditGraphicBadgeComponent, TasksDetailFormComponent],
 			imports: [RootTestModule, MatGridListModule, MatFormFieldModule,
+				HttpClientTestingModule,
 				FormsModule, MatSliderModule, MatInputModule, ReactiveFormsModule ]
 		})
 		.compileComponents();
