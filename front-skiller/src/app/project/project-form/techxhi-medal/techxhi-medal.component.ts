@@ -59,7 +59,11 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 
 		this.subscriptions.add(
 			this.cinematicService.tabProjectActivated$
-				.subscribe(selectedTab => this.selectedTab = selectedTab ));
+				.subscribe(selectedTab => {
+					setTimeout(() => {
+						this.selectedTab = selectedTab ;
+					}, 0);
+				}));
 	}
 
 	/**

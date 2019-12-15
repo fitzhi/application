@@ -6,6 +6,7 @@ import { BaseComponent } from 'src/app/base/base.component';
 import { BehaviorSubject } from 'rxjs';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { Constants } from 'src/app/constants';
+import { take } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-audit-graphic-badge',
@@ -58,15 +59,23 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	ngAfterViewInit() {
 
 		if (this.editable) {
+			if (Constants.DEBUG) {
+				console.log ('Displaying the graphic badge in editable mode');
+			}
 			this.drawAuditArc();
 			this.drawAuditText();
 		}
 
 		if (!this.editable) {
+			if (Constants.DEBUG) {
+				console.log ('Displaying the graphic badge in non-editable mode');
+			}
 			this.subscriptions.add(
 				this.project$.subscribe(project => {
 					if (project) {
-						this.cinematicService.tabProjectActivated$.subscribe(idxTabForm => {
+						this.cinematicService.tabProjectActivated$
+						.pipe(take(1))
+						.subscribe(idxTabForm => {
 							if (idxTabForm === Constants.PROJECT_IDX_TAB_FORM) {
 								if (project.auditEvaluation) {
 									this.evaluation = project.auditEvaluation;
