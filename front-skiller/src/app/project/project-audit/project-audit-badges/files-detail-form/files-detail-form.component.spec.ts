@@ -16,10 +16,10 @@ describe('TasksDetailFormComponent', () => {
 
 	@Component({
 		selector: 'app-host-component',
-		template: 	'<app-tasks-detail-form ' +
+		template: 	'<app-files-detail-form ' +
 						'[idTopic]="idTopic" ' +
 						'[project$]="project$" >' +
-					'</app-tasks-detail-form>'
+					'</app-files-detail-form>'
 	})
 	class TestHostComponent {
 		public idTopic = 3;

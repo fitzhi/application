@@ -19,11 +19,11 @@
             </app-report-detail-form>
         </div>
         <div *ngIf="tasksDetailChosen(auditDetail)">
-            <app-tasks-detail-form
+            <app-files-detail-form
                 [project$]="project$"
                 [title]="legendTopics[auditDetail.idTopic]"
                 [idTopic]="auditDetail.idTopic">
-            </app-tasks-detail-form>
+            </app-files-detail-form>
         </div>
     </div>
 </div>

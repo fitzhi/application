@@ -53,7 +53,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 		this.subscriptions.add(
 			this.project$.subscribe(project => {
 				if (Constants.DEBUG) {
-					console.log ('Project received', project);
+					this.projectService.dump(project, 'projectStaffComponent.ngOnInit()');
 				}
 				//
 				// Loading the contributors

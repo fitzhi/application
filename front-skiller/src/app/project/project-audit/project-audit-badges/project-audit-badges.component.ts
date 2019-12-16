@@ -112,7 +112,7 @@ export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit
 	/* tslint:disable: no-trailing-whitespace */
 	/**
 	 * Return `true` if this choice is a __taks__ detail choice.  
-	 * This function is called inside a `*ngIf()` conditionning the component `app-tasks-detail-form` 
+	 * This function is called inside a `*ngIf()` conditionning the component `app-files-detail-form` 
 	 * within the HTML file for `ProjectAuditBadges`
 	 * @param auditChosenDetail the end-user choice
 	 */

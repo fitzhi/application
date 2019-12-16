@@ -5,9 +5,9 @@ import { ProjectService } from 'src/app/service/project.service';
 import { AuditBaseComponent } from '../audit-base-component/audit-base-component.component';
 
 @Component({
-	selector: 'app-tasks-detail-form',
-	templateUrl: './tasks-detail-form.component.html',
-	styleUrls: ['./tasks-detail-form.component.css']
+	selector: 'app-files-detail-form',
+	templateUrl: './files-detail-form.component.html',
+	styleUrls: ['./files-detail-form.component.css']
 })
 export class FilesDetailFormComponent extends AuditBaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
