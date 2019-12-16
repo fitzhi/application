@@ -1,0 +1,16 @@
+<div *ngIf="displayAttachment(id)" class="attachmentFile">
+
+    <button
+        class="btn btn-outline btn-outline-secondary rounded uploadFile"
+        (click)="uploadFile(id)">
+            <i class="fas glyphicon fa-file-upload" style="font-size: 24px;"></i>
+    </button>
+
+    <button
+        class="btn btn-outline btn-outline-secondary rounded downloadFile"
+        (click)="uploadFile(id)"
+        [disabled]="isDisable(id)">
+            &nbsp;
+    </button>
+
+</div>

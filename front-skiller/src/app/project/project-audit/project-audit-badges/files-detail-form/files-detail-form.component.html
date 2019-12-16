@@ -3,4 +3,18 @@
         <div class="logoHeader"><i class="{{fontAwesome}}" style="font-size: 22px;"></i></div>
         <div class="title">{{title}}</div>
     </div>
+    <div class="attachmentFiles">
+        <app-audit-attachment-upload id=0 [attachmentList$]="attachmentList$" class="attachmentFile">
+        </app-audit-attachment-upload>
+
+        <app-audit-attachment-upload id=1 [attachmentList$]="attachmentList$" class="attachmentFile">
+        </app-audit-attachment-upload>
+        
+        <app-audit-attachment-upload id=2 [attachmentList$]="attachmentList$" class="attachmentFile">
+        </app-audit-attachment-upload>
+
+        <app-audit-attachment-upload id=3 [attachmentList$]="attachmentList$" class="attachmentFile">
+        </app-audit-attachment-upload>
+       
+    </div>
 </div>

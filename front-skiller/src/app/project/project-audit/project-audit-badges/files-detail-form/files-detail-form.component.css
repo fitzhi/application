@@ -40,3 +40,8 @@ div.title {
     height: 100px;
 }
 
+div.attachmentFiles {
+    padding: 5px;
+    display: table-cell; 
+    vertical-align: middle;
+}

@@ -1,0 +1,25 @@
+div.attachmentFile {
+    margin: 3px;
+    width: 330px;
+    height: 35px;
+    vertical-align: middle;
+}
+
+button.uploadFile, button.downloadFile{
+    width: 30px;
+    height: 30px;
+    padding-top: 2px;
+    padding-left: 0px;
+    padding-right: 0px;
+    margin-left: 2px;
+    margin-top: 2px;
+}
+
+button.uploadFile:hover {
+    background-color: #28a745;
+    color: white;
+}
+
+button.downloadFile:disabled {
+    border-color: darkgrey;
+}

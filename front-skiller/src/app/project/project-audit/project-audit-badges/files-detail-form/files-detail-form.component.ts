@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Project } from 'src/app/data/project';
 import { ProjectService } from 'src/app/service/project.service';
 import { AuditBaseComponent } from '../audit-base-component/audit-base-component.component';
+import { AttachmentFile } from 'src/app/data/AttachmentFile';
 
 @Component({
 	selector: 'app-files-detail-form',
@@ -22,10 +23,21 @@ export class FilesDetailFormComponent extends AuditBaseComponent implements OnIn
 	@Input() idTopic: number;
 
 	/**
-	 * Audit topic whose tasks & todos will be entered in this form.
+	 * Observable sharing the list of attachment files inside the filesDetailsComponent.
 	 */
-	@Input() title: string;
+	@Input() attachmentList$ = new BehaviorSubject<AttachmentFile[]>([]);
 
+	/**
+	 * List of attachment files.
+	 */
+	public attachmentList: AttachmentFile[] = [];
+
+	ngOnInit() {
+	}
+
+	/**
+	 * AfterViewInit function will call the superclass.
+	 */
 	ngAfterViewInit(): void {
 		super.ngAfterViewInit();
 	}
@@ -36,10 +48,6 @@ export class FilesDetailFormComponent extends AuditBaseComponent implements OnIn
 			this.idTopic,
 			this.project$,
 			this.projectService);
-	}
-
-
-	ngOnInit() {
 	}
 
 	/**
