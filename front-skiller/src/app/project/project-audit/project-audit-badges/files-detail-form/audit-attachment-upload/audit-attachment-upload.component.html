@@ -1,5 +1,5 @@
-<div *ngIf="displayAttachment(id)" class="attachmentFile">
-
+<div *ngIf="isAttachmentRecordAvailable(id)" class="attachmentFile">
+    
     <button
         class="btn btn-outline btn-outline-secondary rounded uploadFile"
         (click)="uploadFile(id)">
@@ -13,6 +13,8 @@
             &nbsp;
     </button>
 
-    <textarea id="comment-{{id}}" class="fileLabel" matInput placeholder="Enter the file label" [(ngModel)]="label"></textarea>
+    <textarea id="comment-{{id}}" class="fileLabel" 
+        matInput placeholder="Enter the file label" 
+        [(ngModel)]="label" (blur)="notifyLabelChange(id)"></textarea>
 
 </div>

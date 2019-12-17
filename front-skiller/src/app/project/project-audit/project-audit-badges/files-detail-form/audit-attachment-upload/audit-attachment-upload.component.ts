@@ -2,6 +2,8 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { interpolatePuRd } from 'd3';
 import { BaseComponent } from 'src/app/base/base.component';
 import { AttachmentFile } from 'src/app/data/AttachmentFile';
+import { Constants } from 'src/app/constants';
+import { Project } from 'src/app/data/project';
 
 @Component({
 	selector: 'app-audit-attachment-upload',
@@ -10,19 +12,29 @@ import { AttachmentFile } from 'src/app/data/AttachmentFile';
 })
 export class AuditAttachmentUploadComponent extends BaseComponent implements OnInit, OnDestroy {
 
+	/**
+	 * The TOPIC identifier (General conception, Build process, documentation...)
+	 */
+	@Input() idTopic: number;
+
+	/**
+	 * The File identifier. There cannot be more than 4 identifiers.
+	 */
 	@Input() id: number;
 
 	/**
-	 * Observable sharing the list of attachment files inside the filesDetailsComponent.
+	 * Observable emitting the current project.
 	 */
-	@Input() attachmentList$;
+	@Input() project$;
 
 	/**
-	 * List of attachment files.
+	 * Current project read from the `project$`observable..
 	 */
-	public attachmentList: AttachmentFile[];
+	private project: Project;
 
-	private label: string;
+	private label: string = 'label';
+
+	private fileName: string = 'fileName';
 
 	constructor() {
 		super();
@@ -30,15 +42,26 @@ export class AuditAttachmentUploadComponent extends BaseComponent implements OnI
 
 	ngOnInit() {
 		this.subscriptions.add(
-			this.attachmentList$.subscribe(attachmentList => this.attachmentList = attachmentList));
+			this.project$
+				.subscribe(project => {
+					if (Constants.DEBUG) {
+						console.log(project);
+						console.groupCollapsed('Receiving attachment files');
+						project.audit[this.idTopic].attachmentList.forEach((element: AttachmentFile) => {
+							console.log(element.fileName, element.label);
+						});
+						console.groupEnd();
+					}
+					this.project = project;
+				}));
 	}
 
 	/**
-	 * Display or not display this DIV.
+	 * return `true` if this hosting DIV should be Displayed.
 	 * @param id curent file identifier within the topic
 	 */
-	displayAttachment(id: number) {
-		return (this.attachmentList.length >= id);
+	isAttachmentRecordAvailable(id: number): boolean {
+		return (this.project.audit[this.idTopic].attachmentList.length >= id);
 	}
 
 	/**
@@ -46,10 +69,19 @@ export class AuditAttachmentUploadComponent extends BaseComponent implements OnI
 	 * @param id curent file identifier within the topic
 	 */
 	uploadFile(id: number) {
-		if (+id === this.attachmentList.length) {
-			console.log ('Upload ' + id);
-			this.attachmentList.push(new AttachmentFile(1, 'nope', 2, this.label));
-			this.attachmentList$.next(this.attachmentList);
+		if (+id === this.project.audit[this.idTopic].attachmentList.length) {
+			if (Constants.DEBUG) {
+				console.log('Adding  the file %s labelled with %s',
+					this.fileName,
+					this.label);
+			}
+			this.project.audit[this.idTopic].attachmentList.push(new AttachmentFile(id, this.fileName, 2, this.label));
+		}
+	}
+
+	notifyLabelChange(id: number): void {
+		if (+id < this.project.audit[this.idTopic].attachmentList.length) {
+			this.project.audit[this.idTopic].attachmentList[id].label = this.label;
 		}
 	}
 

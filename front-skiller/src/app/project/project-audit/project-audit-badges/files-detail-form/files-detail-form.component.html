@@ -4,16 +4,32 @@
         <div class="title">{{title}}</div>
     </div>
     <div class="attachmentFiles">
-        <app-audit-attachment-upload id=0 [attachmentList$]="attachmentList$" class="attachmentFile">
+        <app-audit-attachment-upload 
+            [idTopic]="idTopic"
+            id=0 
+            [project$]="project$" 
+            class="attachmentFile">
         </app-audit-attachment-upload>
 
-        <app-audit-attachment-upload id=1 [attachmentList$]="attachmentList$" class="attachmentFile">
+        <app-audit-attachment-upload 
+            [idTopic]="idTopic"
+            id=1 
+            [project$]="project$" 
+            class="attachmentFile">
         </app-audit-attachment-upload>
         
-        <app-audit-attachment-upload id=2 [attachmentList$]="attachmentList$" class="attachmentFile">
+        <app-audit-attachment-upload 
+            [idTopic]="idTopic"
+            id=2 
+            [project$]="project$" 
+            class="attachmentFile">
         </app-audit-attachment-upload>
 
-        <app-audit-attachment-upload id=3 [attachmentList$]="attachmentList$" class="attachmentFile">
+        <app-audit-attachment-upload 
+            [idTopic]="idTopic"
+            id=3 
+            [project$]="project$" 
+            class="attachmentFile">
         </app-audit-attachment-upload>
        
     </div>

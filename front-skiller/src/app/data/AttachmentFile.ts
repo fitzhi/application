@@ -12,4 +12,5 @@ export class AttachmentFile {
 		public fileName: string,
 		public typeOfFile: number,
 		public label: string) {}
+
 }

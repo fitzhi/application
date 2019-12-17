@@ -7,6 +7,7 @@ import { BaseComponent } from 'src/app/base/base.component';
 import { AuditChosenDetail } from './audit-badge/audit-chosen-detail';
 import { AuditDetail } from 'src/app/data/audit-detail';
 import { ReferentialService } from 'src/app/service/referential.service';
+import { AttachmentFile } from 'src/app/data/AttachmentFile';
 
 @Component({
 	selector: 'app-project-audit-badges',
@@ -60,6 +61,9 @@ export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit
 	 * The topics legend obtained from tge `referentialService.topics$`.
 	 */
 	private legendTopics: {[id: number]: string};
+
+
+	private attachmentList$ = new BehaviorSubject<AttachmentFile[]>([]);
 
 	constructor(private referentialService: ReferentialService) { super(); }
 

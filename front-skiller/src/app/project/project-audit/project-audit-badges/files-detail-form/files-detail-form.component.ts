@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { Project } from 'src/app/data/project';
 import { ProjectService } from 'src/app/service/project.service';
 import { AuditBaseComponent } from '../audit-base-component/audit-base-component.component';
@@ -22,19 +22,11 @@ export class FilesDetailFormComponent extends AuditBaseComponent implements OnIn
 	 */
 	@Input() idTopic: number;
 
-	/**
-	 * Observable sharing the list of attachment files inside the filesDetailsComponent.
-	 */
-	@Input() attachmentList$ = new BehaviorSubject<AttachmentFile[]>([]);
-
-	/**
-	 * List of attachment files.
-	 */
-	public attachmentList: AttachmentFile[] = [];
-
 	ngOnInit() {
 		this.subscriptions.add(
-			this.attachmentList$.subscribe(attachmentList => this.attachmentList = attachmentList));
+			this.project$.subscribe(project => {
+				this.project = project;
+			}));
 	}
 
 	/**
