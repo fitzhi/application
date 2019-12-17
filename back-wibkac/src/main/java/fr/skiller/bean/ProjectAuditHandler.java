@@ -2,6 +2,7 @@ package fr.skiller.bean;
 
 import java.util.List;
 
+import fr.skiller.data.internal.AttachmentFile;
 import fr.skiller.data.internal.AuditTopic;
 import fr.skiller.data.internal.TopicWeight;
 import fr.skiller.exception.SkillerException;
@@ -78,4 +79,21 @@ public interface ProjectAuditHandler extends DataSaverLifeCycle {
 	 */
 	void processAndSaveGlobalAuditEvaluation(int idProject) throws SkillerException;
 
+	/**
+	 * Add or update an attachment to the given topic.
+	 * @param idProject the project identifier
+	 * @param idTopic the topic identifier
+	 * @param attachment the attachment to be added
+	 * @throws SkillerException thrown if any problem occurs such as <i>'Project identifier unknown'</i>
+	 */
+	void updateAttachmentFile(int idProject, int idTopic, AttachmentFile attachment) throws SkillerException;
+
+	/**
+	 * Add or update an attachment to the given topic.
+	 * @param idProject the project identifier
+	 * @param idTopic the topic identifier
+	 * @param idFileIdentifier the attachment file identifier within the topic
+	 * @throws SkillerException thrown if any problem occurs such as <i>'Project identifier unknown'</i>
+	 */
+	void removeAttachmentFile(int idProject, int idTopic, int idFileIdentifier) throws SkillerException;
 }

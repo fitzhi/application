@@ -1,5 +1,8 @@
 package fr.skiller.data.internal;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.Data;
 
 /**
@@ -31,6 +34,11 @@ public @Data class AuditTopic {
 	 * Text containing the executive summary for the audit.
 	 */
 	String report;
+
+	/**
+	 * List of attachment files associated to this topic.
+	 */
+	List<AttachmentFile> attachmentList = new ArrayList<>();
 	
 	/**
 	 * Empty constructor for <u>serialization</u> / <u>de-serialization</u> purpose

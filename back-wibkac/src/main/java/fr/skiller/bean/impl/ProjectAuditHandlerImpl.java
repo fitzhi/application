@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.ProjectAuditHandler;
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.data.internal.AttachmentFile;
 import fr.skiller.data.internal.AuditTopic;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.TopicWeight;
@@ -207,4 +208,31 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 		}
 	}
 
+	@Override
+	public void updateAttachmentFile(int idProject, int idTopic, AttachmentFile attachmentFile) throws SkillerException {
+
+		AuditTopic auditTopic = getTopic(idProject, idTopic);
+		
+		synchronized (lockDataUpdated) {
+			if (attachmentFile.getFileIdentifier() == auditTopic.getAttachmentList().size()) {
+				auditTopic.getAttachmentList().add(attachmentFile);
+			} else {
+				auditTopic.getAttachmentList().remove(attachmentFile.getFileIdentifier());
+				auditTopic.getAttachmentList().add(attachmentFile.getFileIdentifier(),  attachmentFile);
+			}
+			this.dataUpdated = true;
+		}
+	}
+
+	@Override
+	public void removeAttachmentFile(int idProject, int idTopic, int idFileIdentifier) throws SkillerException {
+		
+		AuditTopic auditTopic = getTopic(idProject, idTopic);
+		
+		synchronized (lockDataUpdated) {
+			auditTopic.getAttachmentList().remove(idFileIdentifier);
+			this.dataUpdated = true;
+		}
+	}
+	
 }
