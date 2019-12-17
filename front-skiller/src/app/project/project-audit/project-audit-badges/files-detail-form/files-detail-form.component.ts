@@ -33,6 +33,8 @@ export class FilesDetailFormComponent extends AuditBaseComponent implements OnIn
 	public attachmentList: AttachmentFile[] = [];
 
 	ngOnInit() {
+		this.subscriptions.add(
+			this.attachmentList$.subscribe(attachmentList => this.attachmentList = attachmentList));
 	}
 
 	/**

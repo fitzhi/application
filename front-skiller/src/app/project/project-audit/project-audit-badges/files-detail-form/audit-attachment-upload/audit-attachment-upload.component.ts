@@ -22,6 +22,8 @@ export class AuditAttachmentUploadComponent extends BaseComponent implements OnI
 	 */
 	public attachmentList: AttachmentFile[];
 
+	private label: string;
+
 	constructor() {
 		super();
 	}
@@ -46,7 +48,7 @@ export class AuditAttachmentUploadComponent extends BaseComponent implements OnI
 	uploadFile(id: number) {
 		if (+id === this.attachmentList.length) {
 			console.log ('Upload ' + id);
-			this.attachmentList.push(new AttachmentFile(1, 'nope', 2, 'Word file'));
+			this.attachmentList.push(new AttachmentFile(1, 'nope', 2, this.label));
 			this.attachmentList$.next(this.attachmentList);
 		}
 	}

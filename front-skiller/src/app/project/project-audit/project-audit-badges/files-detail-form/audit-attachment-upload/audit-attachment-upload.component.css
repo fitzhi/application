@@ -1,6 +1,6 @@
 div.attachmentFile {
-    margin: 3px;
-    width: 330px;
+    margin: 0px;
+    width: 350px;
     height: 35px;
     vertical-align: middle;
 }
@@ -22,4 +22,14 @@ button.uploadFile:hover {
 
 button.downloadFile:disabled {
     border-color: darkgrey;
+}
+
+textarea.fileLabel {
+    width: 275px;
+    height: 35px;
+    border: 1px;
+    border-color: lightgray;
+    border-style: solid;
+    border-radius: 5px;
+    margin-left: 5px;;
 }
