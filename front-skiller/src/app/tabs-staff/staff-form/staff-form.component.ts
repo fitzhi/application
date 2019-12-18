@@ -203,7 +203,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 					 */
 					this.tabsStaffListService.actualizeCollaborator(staff);
 					this.staffDataExchangeService.changeCollaborator(staff);
-					this.messageService.info('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
+					this.messageService.success('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
 				});
 	}
 
