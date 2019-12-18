@@ -21,6 +21,7 @@ import fr.skiller.bean.ProjectAuditHandler;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.controller.in.BodyParamAuditEntries;
 import fr.skiller.controller.in.BodyParamAuditEntry;
+import fr.skiller.controller.in.BodyParamProjectAttachmentFile;
 import fr.skiller.data.internal.AuditTopic;
 import fr.skiller.data.internal.TopicWeight;
 import fr.skiller.exception.SkillerException;
@@ -157,7 +158,6 @@ public class ProjectAuditController {
 			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
 		}
-		
 	}
 
 	@PostMapping(path="/saveWeights")
@@ -167,8 +167,7 @@ public class ProjectAuditController {
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
-				"POST command on /project/audit/saveWeights for project.id %d", 
-						param.getIdProject()));
+				"POST command on /project/audit/saveWeights for project.id %d", param.getIdProject()));
 		}
 		
 		try {
@@ -190,8 +189,48 @@ public class ProjectAuditController {
 			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
 		}
-		
 	}
 	
+	
+	@PostMapping(path="/saveAttachmentFile")
+	public ResponseEntity<Boolean> saveAttachmentFile(@RequestBody BodyParamProjectAttachmentFile param) {
+
+		HttpHeaders headers = new HttpHeaders();
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
+				"POST command on /project/audit/saveAttachmentFile for project.id %d, topic.id %d", param.getIdProject(), param.getIdTopic()));
+		}
+		
+		try {
+			projectAuditHandler.updateAttachmentFile (param.getIdProject(), param.getIdTopic(), param.getAttachmentFile());
+			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
+		} catch (SkillerException se) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
+			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
+			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
+		}
+	}
+	
+	@PostMapping(path="/removeAttachmentFile")
+	public ResponseEntity<Boolean> removeAttachmentFile(@RequestBody BodyParamProjectAttachmentFile param) {
+
+		HttpHeaders headers = new HttpHeaders();
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
+				"POST command on /project/audit/removeAttachmentFile for project.id %d, topic.id %d, attachmentFile %d", 
+					param.getIdProject(), param.getIdTopic(), param.getAttachmentFile().getFileIdentifier()));
+		}
+		
+		try {
+			projectAuditHandler.removeAttachmentFile (param.getIdProject(), param.getIdTopic(), param.getAttachmentFile().getFileIdentifier());
+			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
+		} catch (SkillerException se) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
+			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
+			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
+		}
+	}
 	
 }

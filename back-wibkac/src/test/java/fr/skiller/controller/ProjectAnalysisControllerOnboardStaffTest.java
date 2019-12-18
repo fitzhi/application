@@ -1,20 +1,12 @@
 package fr.skiller.controller;
 
-import static fr.skiller.Error.CODE_PROJECT_INVALID_WEIGHTS;
-import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
-import static fr.skiller.Error.CODE_PROJECT_TOPIC_UNKNOWN;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -34,18 +26,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import fr.skiller.Global;
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.StaffHandler;
-import fr.skiller.controller.in.BodyParamAuditEntries;
-import fr.skiller.controller.in.BodyParamAuditEntry;
 import fr.skiller.controller.util.LocalDateAdapter;
-import fr.skiller.data.internal.AuditTopic;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.data.source.CommitRepository;
-import fr.skiller.exception.SkillerException;
 /**
  * <p>
  * Test of the class {@link ProjectAuditController}
