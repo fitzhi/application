@@ -10,9 +10,10 @@ import { HttpRequest } from '@angular/common/http';
 import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { Subject } from 'rxjs';
 import { MAT_DIALOG_DATA, MatDialogConfig } from '@angular/material/dialog';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef } from '@angular/material/dialog';
 import { BaseComponent } from '../../../base/base.component';
 import { BackendSetupService } from '../../../service/backend-setup/backend-setup.service';
+import { FileService } from 'src/app/service/file.service';
 
 @Component({
 	selector: 'app-staff-upload-cv',
@@ -44,6 +45,7 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 
 	constructor(
 		private httpClient: HttpClient,
+		private fileService: FileService,
 		private messageBoxService: MessageBoxService,
 		private dialogRef: MatDialogRef<StaffUploadCvComponent>,
 		private backendSetupService: BackendSetupService,
@@ -59,19 +61,8 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 		if (typeof this.applicationFile === 'undefined') {
 			this.messageBoxService.error('ERROR', 'You must select the application document first !');
 		} else {
-			if (this.checkApplicationFormat()) {
+			if (this.fileService.checkApplicationFormat(this.applicationFile)) {
 				this.upload(this.applicationFile);
-			}
-		}
-	}
-
-	checkApplicationFormat(): boolean {
-		if (this.applicationFile != null) {
-			if (!Constants.APPLICATION_FILE_TYPE_ALLOWED.has(this.applicationFile.type)) {
-				this.messageBoxService.error('ERROR', 'Only the formats .DOC, .DOCS and .PDF are supported !');
-				return false;
-			} else {
-				return true;
 			}
 		}
 	}
@@ -81,9 +72,13 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 		if (Constants.DEBUG) {
 			console.log('Testing checkApplicationFormat for ' + this.applicationFile.type);
 		}
-		this.checkApplicationFormat();
+		this.fileService.checkApplicationFormat(this.applicationFile);
 	}
 
+	/**
+	 * Upload the file.
+	 * @param file the application to upload
+	 */
 	upload(file: File) {
 
 		if (Constants.DEBUG) {

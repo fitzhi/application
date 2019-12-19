@@ -102,8 +102,9 @@ import { TableCategoriesComponent } from './project/project-audit/table-categori
 import {MatSliderModule} from '@angular/material/slider';
 import { ReportDetailFormComponent } from './project/project-audit/project-audit-badges/report-detail-form/report-detail-form.component';
 import { FilesDetailFormComponent } from './project/project-audit/project-audit-badges/files-detail-form/files-detail-form.component';
+import { AuditAttachmentComponent } from './project/project-audit/project-audit-badges/files-detail-form/audit-attachment-upload/audit-attachment.component';
 // tslint:disable-next-line:max-line-length
-import { AuditAttachmentUploadComponent } from './project/project-audit/project-audit-badges/files-detail-form/audit-attachment-upload/audit-attachment-upload.component';
+import { AuditUploadAttachmentComponent } from './project/project-audit/project-audit-badges/files-detail-form/audit-attachment-upload/audit-upload-attachment/audit-upload-attachment.component';
 
 @NgModule({
 	declarations: [
@@ -160,10 +161,12 @@ import { AuditAttachmentUploadComponent } from './project/project-audit/project-
 		TableCategoriesComponent,
 		ReportDetailFormComponent,
 		FilesDetailFormComponent,
-		AuditAttachmentUploadComponent
+		AuditAttachmentComponent,
+		AuditUploadAttachmentComponent
 	],
 	entryComponents: [
 		StaffUploadCvComponent,
+		AuditUploadAttachmentComponent,
 		MessageBoxComponent,
 		DialogFilterComponent,
 		InLineEditDialogComponent

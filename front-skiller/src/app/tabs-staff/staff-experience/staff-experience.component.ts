@@ -290,7 +290,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 					currentExperience.level = level;
 
 					this.logExperiences(this.staff);
-					this.messageService.info(this.staff.firstName + ' ' + this.staff.lastName +
+					this.messageService.success(this.staff.firstName + ' ' + this.staff.lastName +
 					' has updated the skill ' + this.skillService.title(idSkill));
 
 					/**

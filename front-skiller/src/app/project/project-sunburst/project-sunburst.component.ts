@@ -435,6 +435,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 								console.log ('The risk of the current project is', response.projectRiskLevel);
 							}
 							this.updateRiskLevel.next(response.projectRiskLevel);
+							this.project.risk = response.projectRiskLevel;
 							this.hackSunburstStyle();
 							this.tooltipChart();
 							this.setActiveContext (PreviewContext.SUNBURST_READY);

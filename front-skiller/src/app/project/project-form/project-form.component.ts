@@ -155,7 +155,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		});
 
 		this.subscriptions.add(
-			this.risk$.subscribe((risk: number) => this.updateDotRiskColor(risk)));
+			this.risk$.subscribe((risk: number) => {
+				if (Constants.DEBUG) {
+					console.log ('Catching the risk', risk);
+				}
+				this.updateDotRiskColor(risk);
+		}));
 
 		this.project = new Project();
 		this.cinematicService.setForm(Constants.PROJECT_TAB_FORM, this.router.url);
@@ -213,12 +218,8 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 						this.profileProject.get('filename').setValue(this.project.filename);
 						this.ngInitSonarProjectsDeclaredInProject();
 						this.ngInitSkillsDeclaredInProject();
-
-						if (this.project.risk) {
-							setTimeout (() => this.risk$.next(this.project.risk), 0);
-						}
+						this.risk$.next(this.project.risk);
 					}, 0);
-
 			});
 	}
 
@@ -617,6 +618,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	updateDotRiskColor(risk: number) {
 		this.colorOfRisk = this.projectService.getRiskColor(risk);
+		if (Constants.DEBUG) {
+			console.log ('Filling the staff dot with the color', this.colorOfRisk);
+		}
 	}
 
 	/**

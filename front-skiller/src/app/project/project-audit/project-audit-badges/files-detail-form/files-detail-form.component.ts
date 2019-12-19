@@ -15,7 +15,7 @@ export class FilesDetailFormComponent extends AuditBaseComponent implements OnIn
 	/**
 	 * A `BehaviorSubject` containing the current last uptodate project.
 	 */
-	@Input() project$: BehaviorSubject<Project>;
+	@Input() project$;
 
 	/**
 	 * The topic identifier.
@@ -42,6 +42,14 @@ export class FilesDetailFormComponent extends AuditBaseComponent implements OnIn
 			this.idTopic,
 			this.project$,
 			this.projectService);
+	}
+
+	/**
+	 * return `true` if this hosting DIV should be Displayed.
+	 * @param id curent file identifier within the topic
+	 */
+	isAttachmentRecordAvailable(id: number): boolean {
+		return (this.project.audit[this.idTopic].attachmentList.length >= id);
 	}
 
 	/**

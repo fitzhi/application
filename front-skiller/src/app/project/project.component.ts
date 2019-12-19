@@ -30,7 +30,10 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	 */
 	public project$ = new BehaviorSubject<Project>(null);
 
-	public risk$ = new Subject<number>();
+	/**
+	 * We given the risk -1 into the behaviorSubject an empty.
+	 */
+	public risk$ = new BehaviorSubject<number>(-1);
 
 	/**
 	 * Index of the tab selected.

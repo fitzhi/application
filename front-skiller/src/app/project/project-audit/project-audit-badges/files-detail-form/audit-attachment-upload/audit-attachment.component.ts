@@ -1,16 +1,18 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import { interpolatePuRd } from 'd3';
 import { BaseComponent } from 'src/app/base/base.component';
 import { AttachmentFile } from 'src/app/data/AttachmentFile';
 import { Constants } from 'src/app/constants';
 import { Project } from 'src/app/data/project';
+import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
+import { AuditUploadAttachmentComponent } from './audit-upload-attachment/audit-upload-attachment.component';
+import { ProjectService } from 'src/app/service/project.service';
 
 @Component({
-	selector: 'app-audit-attachment-upload',
-	templateUrl: './audit-attachment-upload.component.html',
-	styleUrls: ['./audit-attachment-upload.component.css']
+	selector: 'app-audit-attachment',
+	templateUrl: './audit-attachment.component.html',
+	styleUrls: ['./audit-attachment.component.css']
 })
-export class AuditAttachmentUploadComponent extends BaseComponent implements OnInit, OnDestroy {
+export class AuditAttachmentComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	/**
 	 * The TOPIC identifier (General conception, Build process, documentation...)
@@ -28,7 +30,7 @@ export class AuditAttachmentUploadComponent extends BaseComponent implements OnI
 	@Input() project$;
 
 	/**
-	 * Current project read from the `project$`observable..
+	 * Current project read from the `project$` observable..
 	 */
 	private project: Project;
 
@@ -36,7 +38,9 @@ export class AuditAttachmentUploadComponent extends BaseComponent implements OnI
 
 	private fileName: string = 'fileName';
 
-	constructor() {
+	constructor(
+		private dialog: MatDialog,
+		private projectService: ProjectService) {
 		super();
 	}
 
@@ -44,24 +48,9 @@ export class AuditAttachmentUploadComponent extends BaseComponent implements OnI
 		this.subscriptions.add(
 			this.project$
 				.subscribe(project => {
-					if (Constants.DEBUG) {
-						console.log(project);
-						console.groupCollapsed('Receiving attachment files');
-						project.audit[this.idTopic].attachmentList.forEach((element: AttachmentFile) => {
-							console.log(element.fileName, element.label);
-						});
-						console.groupEnd();
-					}
+					this.projectService.dump(project, 'AuditAttachment.ngOntInit');
 					this.project = project;
 				}));
-	}
-
-	/**
-	 * return `true` if this hosting DIV should be Displayed.
-	 * @param id curent file identifier within the topic
-	 */
-	isAttachmentRecordAvailable(id: number): boolean {
-		return (this.project.audit[this.idTopic].attachmentList.length >= id);
 	}
 
 	/**
@@ -71,11 +60,20 @@ export class AuditAttachmentUploadComponent extends BaseComponent implements OnI
 	uploadFile(id: number) {
 		if (+id === this.project.audit[this.idTopic].attachmentList.length) {
 			if (Constants.DEBUG) {
-				console.log('Adding  the file %s labelled with %s',
+				console.log('Adding  thefile %s labelled with %s',
 					this.fileName,
 					this.label);
 			}
-			this.project.audit[this.idTopic].attachmentList.push(new AttachmentFile(id, this.fileName, 2, this.label));
+			const dialogConfig = new MatDialogConfig();
+			dialogConfig.disableClose = true;
+			dialogConfig.autoFocus = true;
+			dialogConfig.panelClass = 'default-dialog-container-class';
+			dialogConfig.data = null;
+			const dialogReference = this.dialog.open(AuditUploadAttachmentComponent, dialogConfig);
+			this.subscriptions.add(
+				dialogReference.afterClosed().subscribe(fileName => {
+					this.project.audit[this.idTopic].attachmentList.push(new AttachmentFile(id, this.fileName, 2, this.label));
+				}));
 		}
 	}
 

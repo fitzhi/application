@@ -25,6 +25,7 @@ import { MessageGravity } from '../message/message-gravity';
 import { AuditTopic } from '../data/AuditTopic';
 import { Task } from '../data/task';
 import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
+import { AttachmentFile } from '../data/AttachmentFile';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -706,6 +707,8 @@ export class ProjectService extends InternalService {
 		Object.keys(project.audit).forEach(key => {
 			console.log ('key: %s evaluation: %d weight: %d', key, project.audit[key].evaluation, project.audit[key].weight);
 		});
+
+		console.groupCollapsed(project.sonarProjects.length + ' sonar project declared.');
 		project.sonarProjects.forEach(sonarProject => {
 			if (sonarProject.projectSonarMetricValues) {
 				console.groupCollapsed('Soner project %s', sonarProject.key);
@@ -715,6 +718,18 @@ export class ProjectService extends InternalService {
 				console.groupEnd();
 			}
 		});
+		console.groupEnd();
+
+		console.groupCollapsed(Object.keys(project.audit).length + ' audit topics');
+		Object.keys(project.audit).forEach(key => {
+			console.groupCollapsed('Audit topic %s', key);
+			project.audit[key].attachmentList.forEach((element: AttachmentFile) => {
+				console.log(element.fileName, element.label);
+			});
+			console.groupEnd();
+		});
+		console.groupEnd();
+
 		console.groupEnd();
 	}
 }

@@ -1,0 +1,43 @@
+.mat-dialog-title {
+	color: antiquewhite;
+	background-color: #343a40 !important;
+	text-align: center;
+	width: 100%;
+	font-size: 20px;
+	padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 50px;
+    padding-left: 50px;	
+	margin: 0px;
+}
+
+.mat-dialog-content {
+	margin: 10px;
+}
+
+.mat-dialog-actions {
+	margin-bottom: 0px; 
+}
+
+button.actions {
+	padding: 10px;
+	margin-right: 10px;
+	border-radius: 4px;	
+	width: 100px;
+}
+
+.label-file {
+    cursor: pointer;
+    color: #1e6bb8;
+    font-weight: bold;
+	text-decoration: underline;
+}
+
+
+.label-file:hover {
+    color: #25a5c4;
+}
+
+.input-file {
+    display: none;
+}
