@@ -23,7 +23,7 @@ public class CommitHistory {
 	/**
 	 * complete source path.
 	 */
-	public final String sourcePath;
+	public String sourcePath;
 	
 	/**
 	 * Level of risk on this source file. <br/>

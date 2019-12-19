@@ -14,6 +14,13 @@ public interface ShuffleService {
 	String shuffle (final String input);
 
 	/**
+	 * This method is for letters, what scramble eggs is chicken.
+	 * @param input the input string
+	 * @return the resulting rotated input
+	 */
+	String scramble (final String input);
+	
+	/**
 	 * @return <code>true</code> if the back-end is running in shuffle mode.
 	 */
 	boolean isShuffleMode();

@@ -29,12 +29,18 @@ public interface RepoScanner {
 
 	
 	/**
-	 * Load the repository from the internal cache.
+	 * <p>Load the repository from the internal cache.</p>
+	 * <p>
+	 * <font color="coral">
+	 * This method load the repository from cache <b>AND</b> update the ghosts list as well if any new staff member has been created. 
+	 * </font>
+	 * </p>
 	 * @param project the current active project.
 	 * @return the repository commit entries if a previous parsing has been saved, or {@code null} if none exists.
 	 * @throws IOException thrown if an IO exception occurs when reading the cache file.
+	 * @throws SkillerException thrown most probably, if the project ghosts list update failed.
 	 */
-	CommitRepository loadRepositoryFromCacheIfAny(Project project) throws IOException;
+	CommitRepository loadRepositoryFromCacheIfAny(Project project) throws IOException, SkillerException;
 
 	/**
 	 * <p>

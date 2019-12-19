@@ -16,6 +16,8 @@ import fr.skiller.bean.ShuffleService;
 @Service("shuffleMode")
 public class ShuffleServiceImpl implements ShuffleService {
 
+	private final int OFFSET = 14;
+	
 	/**
 	 * Should part of the data be shuffled ?<br/>
 	 * For example, the last name property is a good candidate to be shuffled.  
@@ -43,6 +45,35 @@ public class ShuffleServiceImpl implements ShuffleService {
 				.collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
 				.toString();
 	}
+	
+	@Override
+	public String scramble(String input) {
+		StringBuilder sb = new StringBuilder();
+		String alphabet = "abcdefghijklmopqrstuvwxyzabcdefghijklmopqrstuvwxyz1ABCEDFGHIJKLMNOPQRSTUVWXYXZABCEDFGHIJKLMNOPQRSTUVWXYXZ";
+		for (int i=0; i<input.length(); i++) {
+			char c = input.charAt(i);
+			if (c == ' ') {
+				sb.append(c);
+				continue;
+			}
+			if (c == '-') {
+				sb.append(c);
+				continue;
+			}
+			if (c == '_') {
+				sb.append(c);
+				continue;
+			}
+			if (c == '/') {
+				sb.append(c);
+				continue;
+			}
+			int pos = alphabet.indexOf(c);
+			sb.append(alphabet.charAt(pos+OFFSET));
+		}
+		return sb.toString();
+	}
+	
 	
 	/**
 	 * Scramble the vowels. 

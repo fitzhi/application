@@ -2,6 +2,7 @@ package fr.skiller.source.crawler.git;
 
 import java.io.IOException;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +13,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import fr.skiller.bean.ProjectHandler;
 import fr.skiller.data.internal.Project;
+import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.RepoScanner;
 
 /**
@@ -29,21 +32,29 @@ public class GitCrawlerLoadRepositoryFromCacheIfAnyTest {
 	@Qualifier("GIT")
 	RepoScanner scanner;
 
-	/**
-	 * Active project.
-	 */
-	Project project;
+	@Autowired
+	ProjectHandler projectHandler;
+	
+	@Before
+	public void before() throws Exception {		
+		Project project = new Project(1789, "Revolutionnary project");
+		projectHandler.addNewProject(project);
+	}
 	
 	@Test
-	public void testLoadRepositoryFromExistingCacheIfAnyTest() throws IOException {
-		project = new Project(1789, "Revolutionnary project");
+	public void testLoadRepositoryFromExistingCacheIfAnyTest() throws IOException, SkillerException {
+		Project project = projectHandler.get(1789);
 		Assert.assertNotNull(scanner.loadRepositoryFromCacheIfAny(project));
 	}
 	
 	@Test
-	public void testLoadRepositoryFromNonExistingCacheIfAnyTest() throws IOException {
-		project = new Project(1789, "Unregistered project");
+	public void testLoadRepositoryFromNonExistingCacheIfAnyTest() throws IOException, SkillerException {
+		Project project = new Project(1792, "Unregistered project");
 		Assert.assertNull(scanner.loadRepositoryFromCacheIfAny(project));
 	}
 	
+	@After
+	public void after()throws Exception {
+		projectHandler.getProjects().remove(1789);
+	}
 }

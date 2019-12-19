@@ -647,7 +647,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	}
 
 	@Override
-	public CommitRepository loadRepositoryFromCacheIfAny(Project project) throws IOException {
+	public CommitRepository loadRepositoryFromCacheIfAny(Project project) throws IOException, SkillerException {
 		
 		//
 		// Test if this repository is available in cache.
@@ -662,8 +662,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 			//
 			// Since the last parsing of the repository, some developers might have been
-			// declared and are responding now to unknown pseudos.
-			// We cleanup the set.
+			// declared (or updated), and are matching (or not) to unknown pseudos.
+			// We test each ghost and re-initialize the set.
 			//
 			repository.setUnknownContributors(
 					repository.unknownContributors()
@@ -671,6 +671,12 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 						.filter(pseudo -> (staffHandler.lookup(pseudo) == null)) // Pseudo does not match any staff member
 						.collect(Collectors.toSet()));
 
+			//
+			// We update the ghosts list, in the project with the up-to-date list of of ghosts.
+			//
+			projectHandler.integrateGhosts(project.getId(), repository.unknownContributors());
+				
+				
 			return repository;
 		} else {
 			return null;
@@ -970,7 +976,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		// (date of staff member filtering)
 		CommitRepository repo = this.parseRepository(project, settings);
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("The repository has been parsed. It contains %d records in the repository", repo.size()));
+			logger.debug(String.format("The repository has been parsed. It contains %d records in the repository, and %d ghosts", repo.size(), repo.unknownContributors().size()));
 		}
 
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), "Parsing of the repository complete!");
