@@ -79,7 +79,7 @@ public class StaffHandlerLookupTest {
 	
 	@Test
 	public void testFredericNabillauSansAccent()  {
-		assertThat(staffHandler.lookup("Frederic Nabillau")).isNotNull();
+		assertThat(staffHandler.lookup(FREDERIC_SANS_ACCENT)).isNotNull();
 	}
 	
 	@Test
