@@ -44,6 +44,10 @@ public interface ProjectDashboardCustomizer {
 	 * and to affect his definitive identifier {@code idStaff} 
 	 * into the source code item {@link Operation#idStaff operations}.
 	 * </p>
+	 * <p>
+	 * <font color="chocolate">The default implementation is {@code synchronized} 
+	 * to avoid conflicts when multiple staff member are taken in account simultaneously.</font>
+	 * </p>
 	 * @param project the given project
 	 * @param staff the new staff member created
 	 * @throws SkillerException thrown if any problem occurs (such as IOException when reading and parsing the saved repository)

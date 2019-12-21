@@ -243,4 +243,8 @@ public interface RepoScanner {
 	 */
 	List<String> dependenciesMarker();
 
+	/**
+	 * Display the configuration.
+	 */
+	void displayConfiguration();
 }

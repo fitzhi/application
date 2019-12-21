@@ -98,7 +98,7 @@ public class ProjectControllerMgtTasksTest {
 				.andReturn();
 	
 		Task task = gson.fromJson(result.getResponse().getContentAsString(), Task.class);
-		TaskLog tl = task.getLogs().get(0);
+		TaskLog tl = task.getActivityLogs().get(0);
 		Assert.assertEquals("Task add is nominal", "my message", tl.getMessage());
 	}
 	

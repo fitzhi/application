@@ -87,7 +87,7 @@ public class AsyncTaskImpl implements AsyncTask {
 	public boolean logMessage(String operation, String title, int id, int errorCode, String message) {
 		Task task = getTask(operation, title, id);
 		if (task != null) {
-			task.getLogs().add(new TaskLog(errorCode, message));
+			task.addActivity(new TaskLog(errorCode, message));
 			return true;
 		} else {
 			if (log.isWarnEnabled()) {
@@ -103,19 +103,7 @@ public class AsyncTaskImpl implements AsyncTask {
 		if (task == null) {
 			throw new SkillerException(CODE_TASK_NOT_FOUND, String.format(MESSAGE_TASK_NOT_FOUND, operation, id));
 		}
-		task.setComplete(true);
-	
-		if (!task.getLogs().isEmpty()) {
-			// We sort the logs saved for this task
-			task.getLogs().sort(Comparator.comparing(TaskLog::getLogTime));
-			
-			// We affect the last log for this task
-			task.setLastBreath(task.getLogs().get(task.getLogs().size()-1));
-		
-			// We clear the log
-			task.getLogs().clear();
-		}
-		
+		task.complete();		
 	}
 
 	/**

@@ -139,7 +139,7 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 	}
 	
 	@Override
-	public void takeInAccountNewStaff(Project project, Staff staff) throws SkillerException {
+	public synchronized void takeInAccountNewStaff(Project project, Staff staff) throws SkillerException {
 
 		try {
 			if (cacheDataHandler.hasCommitRepositoryAvailable(project)) {

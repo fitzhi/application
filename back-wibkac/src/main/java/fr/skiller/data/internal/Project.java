@@ -176,7 +176,9 @@ public @Data class Project  {
 	}
 
 	/**
+	 * <p>
 	 * Integrate a new library detected or declared to the list of exclusion paths.
+	 * </p>
 	 * @param library the passed library
 	 */
 	public void add(Library library) {

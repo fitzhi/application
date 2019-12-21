@@ -50,7 +50,7 @@ public class AsyncTaskTest {
 		asyncTask.addTask(OPERATION_OF_TEST, PROJECT, 1);
 		
 		Task t = asyncTask.getTask(OPERATION_OF_TEST, PROJECT, 1);
-		Assert.assertEquals("After fresh start, the log is clear", 0, t.getLogs().size());
+		Assert.assertEquals("After fresh start, the log is clear", 0, t.getActivityLogs().size());
 		Assert.assertTrue(!t.isComplete());
 		Assert.assertNull(t.getLastBreath());
 		
@@ -73,12 +73,12 @@ public class AsyncTaskTest {
 		Task t = asyncTask.getTask(OPERATION_OF_TEST, PROJECT, 1);
 		Assert.assertFalse(t.isComplete());
 		Assert.assertNull(t.getLastBreath());
-		Assert.assertEquals("2 logs message", 2, t.getLogs().size());
+		Assert.assertEquals("2 logs message", 2, t.getActivityLogs().size());
 		
 		// We task is completed, we check the resulting states.
 		asyncTask.completeTask(OPERATION_OF_TEST, PROJECT, 1);
 		t = asyncTask.getTask(OPERATION_OF_TEST, PROJECT, 1);
-		Assert.assertEquals("After completion, the log is clear", 0, t.getLogs().size());
+		Assert.assertEquals("After completion, the log is clear", 0, t.getActivityLogs().size());
 		Assert.assertTrue(t.isComplete());
 		Assert.assertNotNull(t.getLastBreath());
 		Assert.assertEquals("last log inside last breath", 404, t.getLastBreath().getCode());

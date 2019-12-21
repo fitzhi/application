@@ -136,7 +136,7 @@ public class ProjectAnalysisController {
 					idProject));
 		}
 		
-		List<Library> libraries = Arrays.asList(tabLib);
+		List<Library> libraries = new ArrayList<>(Arrays.asList(tabLib));
 		
 		MyReference<ResponseEntity<Boolean>> refResponse = projectLoader.new MyReference<>();
 		Project project = projectLoader.getProject(idProject, Boolean.FALSE, refResponse);

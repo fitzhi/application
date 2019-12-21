@@ -160,6 +160,32 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	@Value("${collapseEmptyDirectory}")
 	private boolean collapseEmptyDirectory;
 
+	
+	/**
+	 * <p>
+	 * This {@code boolean} is setting the fact that the eligibility validation is made 
+	 * <u>prior</u> to the creation of the repository-chart data file, or <u>after</u>.<br/>
+	 * Techxhì is storing intermediate data on a file named "{@link Project#getId()}-{@link Project#getName()}.json".
+	 * </p>
+	 * <p>
+	 * The consequence of this settings is :
+	 * <ul>
+	 * <li>
+	 * if {@code true}, the full global generation will be faster, because data are already filtered. 
+	 * But, if you want to change the pattern of inclusion, on the fly, you will have to regenerate the full chart.
+	 * </li>
+	 * <li>
+	 * If {@code false}, the crawler catch all files in the repository (e.g. the whole repository), 
+	 * before working, or filtering on it.
+	 * The generation will be slower, but the chart will be faster to filter.
+	 * </li>
+	 * </ul>
+	 * <font color="darkGreen"><b>Our recommendation is to setup this property to {@code true}.</b></font>
+	 * </p>
+	 */
+	@Value("${prefilterEligibility}")
+	private boolean prefilterEligibility;
+	
 	/**
 	 * Service in charge of handling the staff collection.
 	 */
@@ -372,25 +398,22 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
 
-		int nbFileCommit = 0;
-		int nbTotFileCommit = 0;
+		//
+		// We initialize the parser speed-meter
+		//
+		ParserVelocity velocity = new ParserVelocity(project.getId(), this.tasks);
+		
 		for (RevCommit commit : allDateAscendingCommits) {
 
 			if (this.logAllCommitRecords) {
 				log(commit); 
-			}
-
-			if (++nbFileCommit == 1000) {
-				nbTotFileCommit += nbFileCommit;
-				this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), nbTotFileCommit + " file changes examined !");
-				nbFileCommit = 0;
 			}
 			
 			if (previous == null) {
 				previous = commit.getTree().getId();
 			} else {
 				ObjectId current = commit.getTree().getId();
-				buildRepositoryAnalysis(repository, analysis, commit, previous, current);
+				buildRepositoryAnalysis(repository, analysis, commit, previous, current, velocity);
 				previous = current;
 			}
 
@@ -398,6 +421,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				logger.debug(String.format("commit '%s' with merge ?", commit.getShortMessage()));
 			}
 		}
+		
+		velocity.finalize();
 		return analysis;
 	}
 
@@ -416,10 +441,11 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	 * @param commit the commit revision examined 
 	 * @param prevObjectId the <b>PREVIOUS</b> files tree involved 
 	 * @param curObjectId the <b>CURRENT</b> files tree examined.
+	 * @param velocity parser velocity to follow up in detail the performance of the application
 	 * @throws SkillerException
 	 */
 	private void buildRepositoryAnalysis(Repository repository, RepositoryAnalysis analysis, RevCommit commit, ObjectId prevObjectId,
-			ObjectId curObjectId) throws SkillerException {
+			ObjectId curObjectId, ParserVelocity velocity) throws SkillerException {
 
 		final RenameDetector renameDetector = new RenameDetector(repository);
 
@@ -445,9 +471,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 					}
 					renameDetector.addAll(diffs);
 					List<DiffEntry> files = renameDetector.compute();
-					processDiffEntries(analysis, commit, files);
+					processDiffEntries(analysis, commit, files, velocity);
 				} else {
-					processDiffEntries(analysis, commit, diffs);
+					processDiffEntries(analysis, commit, diffs, velocity);
 				}
 			}
 		} catch (final Exception e) {
@@ -467,12 +493,22 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	private void processDiffEntries(	
 				RepositoryAnalysis analysis, 
 				RevCommit commit, 
-				List<DiffEntry> diffs) {
+				List<DiffEntry> diffs,
+				ParserVelocity parserVelocity) {
 
 		List<SCMChange> gitChanges = analysis.getChanges();
 		
 		for (DiffEntry de : diffs) {
-						
+			
+			//
+			// If we have configured the crawl with prefiltering of files
+			// AND
+			// this path doesn't match the eligibility pattern, we skip it.
+			//
+			if (this.prefilterEligibility && !this.isEligible(de.getNewPath())) {
+				continue;
+			}
+			
 			if (logger.isDebugEnabled() &&
 				(this.crawlerFilterDebug != null) &&
 					(	"*".contentEquals(this.crawlerFilterDebug)
@@ -516,6 +552,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 						author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), author.getName(),
 						author.getEmailAddress());
 				gitChanges.add(change);
+				parserVelocity.increment();
 				break;
 			default:
 				if (logger.isDebugEnabled()) {
@@ -594,7 +631,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		Iterator<SCMChange> iter = analysis.getChanges().iterator();
 		while (iter.hasNext()) {
 			SCMChange change = iter.next();
-			if (!isElligible(change.getPath())) {
+			if (!isEligible(change.getPath())) {
 				iter.remove();
 			}
 		}
@@ -739,16 +776,15 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 					analysis.sizeChanges()));
 		}
 
-		/**
-		 * We filter the collection on eligible entries (.java; .js...)
-		 */
+		// Entries non filtered
+		int roughEntries = analysis.sizeChanges();
+		
 		this.filterEligible(analysis);
 		if (logger.isDebugEnabled()) {
 			logger.debug(
-					String.format("filterEligible (%s) returns %d entries", project.getName(), analysis.sizeChanges()));
+					String.format("filterEligible (%s) returns %d entries from %d originals", project.getName(), analysis.sizeChanges(), roughEntries));
 		}
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), String.format("%d changes are eligible for the analysis", analysis.sizeChanges()));
-
 		
 		// Updating the importance
 		this.updateImportance(project, analysis);
@@ -874,7 +910,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	 * @param path
 	 * @return True if the path should be included
 	 */
-	boolean isElligible(final String path) {
+	boolean isEligible(final String path) {
 
 		boolean select = true;
 		for (Pattern pattern : patternsInclusionList) {
@@ -1326,6 +1362,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		}
 		return true;
 	}
+	
 	/**
 	 * @return the location repository entry point <br/><i>i.e. the absolute path to the .git file.</i>
 	 */
@@ -1334,4 +1371,11 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			? project.getLocationRepository() + ".git" : project.getLocationRepository() + "/.git";
 	}
 
+	@Override
+	public void displayConfiguration() {
+		logger.info("Display the configuration");
+		logger.info("----------------------------------");
+	}
+
+	
 }
