@@ -20,9 +20,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RepositoryAnalysis;
+import fr.skiller.data.internal.SourceControlChanges;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.RepoScanner;
 import fr.skiller.source.crawler.git.SCMChange;
+import fr.skiller.source.crawler.git.SourceChange;
 
 /**
  * Test the creation of contributors based on stats retrieve in the source repository.
@@ -58,24 +60,37 @@ public class ContributorsCommitRepositoryTest {
     	Project p = new Project(100, "Test");
     	
     	RepositoryAnalysis analysis = new RepositoryAnalysis(p);
-    	List<SCMChange> repo = analysis.getChanges();
-    	
-		repo.add(new SCMChange(String.valueOf(System.nanoTime()), TEST, LocalDate.of(2018, 11, 1), FVIDAL, ""));
-		repo.add(new SCMChange(String.valueOf(System.nanoTime()), TEST, LocalDate.of(2018, 11, 17), FVIDAL, ""));
-		repo.add(new SCMChange(String.valueOf(System.nanoTime()), TEST, LocalDate.of(2018, 11, 23), GLUCAS, ""));
-		repo.add(new SCMChange(String.valueOf(System.nanoTime()), TEST, LocalDate.of(2018, 11, 14), "tintin", ""));
+    	SourceControlChanges repo = analysis.getChanges();
+    			
+    			
+		repo.addChange(TEST, 
+				new SourceChange(String.valueOf(System.nanoTime()), LocalDate.of(2018, 11, 1), FVIDAL, ""));
+		repo.addChange(TEST, 
+				new SourceChange(String.valueOf(System.nanoTime()), LocalDate.of(2018, 11, 17), FVIDAL, ""));
+		repo.addChange(TEST, 
+				new SourceChange(String.valueOf(System.nanoTime()), LocalDate.of(2018, 11, 23), GLUCAS, ""));
+		repo.addChange(TEST, 
+				new SourceChange(String.valueOf(System.nanoTime()), LocalDate.of(2018, 11, 14), "tintin", ""));
 
 
-		repo.add(new SCMChange(String.valueOf(System.nanoTime()), TEST2, LocalDate.of(2018, 11, 2), FVIDAL, ""));
-		repo.add(new SCMChange(String.valueOf(System.nanoTime()), TEST2, LocalDate.of(2018, 11, 2), GLUCAS, ""));
-		repo.add(new SCMChange(String.valueOf(System.nanoTime()), TEST2, LocalDate.of(2018, 11, 23), GLUCAS, ""));
-		repo.add(new SCMChange(String.valueOf(System.nanoTime()), TEST2, LocalDate.of(2018, 11, 14), GLUCAS, ""));
-		repo.add(new SCMChange(String.valueOf(System.nanoTime()), TEST2, LocalDate.of(2018, 11, 1), GLUCAS, ""));
-		repo.add(new SCMChange(String.valueOf(System.nanoTime()), TEST2, LocalDate.of(2018, 11, 10), GLUCAS, ""));
+		repo.addChange(TEST2, 
+				new SourceChange(String.valueOf(System.nanoTime()), LocalDate.of(2018, 11, 2), FVIDAL, ""));
+		repo.addChange(TEST2, 
+				new SourceChange(String.valueOf(System.nanoTime()), LocalDate.of(2018, 11, 2), GLUCAS, ""));
+		repo.addChange(TEST2, 
+				new SourceChange(String.valueOf(System.nanoTime()), LocalDate.of(2018, 11, 23), GLUCAS, ""));
+		repo.addChange(TEST2, 
+				new SourceChange(String.valueOf(System.nanoTime()), LocalDate.of(2018, 11, 14), GLUCAS, ""));
+		repo.addChange(TEST2, 
+				new SourceChange(String.valueOf(System.nanoTime()), LocalDate.of(2018, 11, 1), GLUCAS, ""));
+		repo.addChange(TEST2, 
+				new SourceChange(String.valueOf(System.nanoTime()), LocalDate.of(2018, 11, 10), GLUCAS, ""));
 
-		repo.add(new SCMChange(String.valueOf(System.nanoTime()), TEST2, LocalDate.of(2018, 11, 2), "tintin", ""));
+		repo.addChange(TEST2, 
+				new SourceChange(String.valueOf(System.nanoTime()), LocalDate.of(2018, 11, 2), "tintin", ""));
 		
-		repo.add(new SCMChange(String.valueOf(System.nanoTime()), TEST3, LocalDate.of(2018, 11, 2), "haddock", ""));
+		repo.addChange(TEST3, 
+				new SourceChange(String.valueOf(System.nanoTime()), LocalDate.of(2018, 11, 2), "haddock", ""));
 		
 		Set<String> unknownContributors = new HashSet<>();
 		scanner.updateStaff (p, analysis, unknownContributors);

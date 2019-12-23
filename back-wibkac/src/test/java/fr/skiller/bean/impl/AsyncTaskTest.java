@@ -88,7 +88,6 @@ public class AsyncTaskTest {
 	@Test
 	public void testHasActiveTask() throws SkillerException {
 		Assert.assertFalse(asyncTask.hasActiveTask("ABSOLUTLY NEW OPERATION OF TEST", PROJECT, 1));
-
 		Assert.assertTrue(asyncTask.hasActiveTask(OPERATION_OF_TEST, PROJECT, 1));
 		asyncTask.completeTask(OPERATION_OF_TEST, PROJECT, 1);
 		Assert.assertFalse(asyncTask.hasActiveTask(OPERATION_OF_TEST, PROJECT, 1));

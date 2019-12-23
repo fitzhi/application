@@ -76,7 +76,7 @@ class TaskReportManagement {
 	 * @param task the given task.
 	 */
 	private dump(task: Task) {
-		task.logs.forEach(log => {
+		task.activityLogs.forEach(log => {
 			if (Constants.DEBUG) {
 				console.groupCollapsed('Activities recorded');
 				console.log (log.message);
@@ -99,15 +99,15 @@ class TaskReportManagement {
 			this.dump(task);
 			return task.lastBreath;
 		}
-		if (task.logs.length !== this.taskLogsCount) {
-			this.taskLogsCount = task.logs.length;
+		if (task.activityLogs.length !== this.taskLogsCount) {
+			this.taskLogsCount = task.activityLogs.length;
 			// We reinitialize the adaptative delay.
 			this.adaptativeDelay = this.DEFAULT_DELAY_INTERVAL;
 			this.dump(task);
 			//
 			// We return the last recorded log.
 			//
-			return task.logs[task.logs.length - 1];
+			return task.activityLogs[task.activityLogs.length - 1];
 		} else {
 			this.numberOfUselessCall++;
 			// After 5 successive useless calls, we increment the adaptativeDelay by the `DEFAULT_DELAY_INTERVAL`.

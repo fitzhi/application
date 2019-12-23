@@ -4,8 +4,10 @@
 package fr.skiller.data.internal;
 
 /**
- * <p>External dependency detected or declared in the repository.<br/>
- * All source files within the exclusion directory will be excluded from this analysis.</p>
+ * <p>
+ * External dependency detected or declared in the repository.<br/>
+ * All source files within the exclusion directory will be excluded from this analysis.
+ * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
@@ -21,6 +23,11 @@ public class Library {
 	public Library() {
 	}
 	
+	/**
+	 * Construction of a library.
+	 * @param exclusionDirectory the exclusion directory
+	 * @param type the type of exclusion (declared or detected)
+	 */
 	public Library(String exclusionDirectory, int type) {
 		super();
 		this.exclusionDirectory = exclusionDirectory;

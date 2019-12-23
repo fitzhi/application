@@ -27,10 +27,10 @@ public interface AssessorImportance {
 	 * </i>
 	 * </p>
 	 * @param project the current project actually crawled.
-	 * @param change the given change whose importance has to be evaluated
+	 * @param path the given path whose importance has to be evaluated
 	 * @param criteria the criteria of importance
 	 * @return the evaluated importance
 	 * @throws SkillerException thrown if any exception occurs during the evaluation
 	 */
-	long getImportance(Project project, SCMChange change, ImportanceCriteria criteria) throws SkillerException;
+	long getImportance(Project project, String path, ImportanceCriteria criteria) throws SkillerException;
 }

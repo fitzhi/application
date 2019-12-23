@@ -3,6 +3,7 @@
  */
 package fr.skiller.source.crawler.git;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -74,22 +75,21 @@ public class CrawlerFirstTest {
 				.build();
 
 		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);
-		List<SCMChange> gitChanges = analysis.getChanges();
 
-		assertTrue(gitChanges.stream().map(SCMChange::getPath).noneMatch("moduleA/test.txt"::equals));
-		assertTrue(gitChanges.stream().map(SCMChange::getPath).anyMatch("moduleB/test.txt"::equals));
+		assertFalse(analysis.getPathsAll().contains("moduleA/test.txt"));
+		assertTrue(analysis.getPathsAll().contains("moduleB/test.txt"));
 
-		assertTrue(gitChanges.stream().map(SCMChange::getPath).noneMatch("moduleA/creationInA.txt"::equals));
+		assertFalse(analysis.getPathsAll().contains("moduleA/creationInA.txt"));
 		// This file has been updated and renamed, and therefore not detected as a
 		// rename by the JGIT RenameDetector
-		assertTrue(gitChanges.stream().map(SCMChange::getPath).anyMatch("moduleAchanged/creationInA.txt"::equals));
+		assertTrue(analysis.getPathsAll().contains("moduleAchanged/creationInA.txt"));
 
 		// At this level if a java class move from one package to one another, system
 		// does not detect it
+		assertFalse(
+				analysis.getPathsAll().contains("com/application/packageA/MyClass.java"));
 		assertTrue(
-				gitChanges.stream().map(SCMChange::getPath).noneMatch("com/application/packageA/MyClass.java"::equals));
-		assertTrue(
-				gitChanges.stream().map(SCMChange::getPath).anyMatch("com/application/packageB/MyClass.java"::equals));
+				analysis.getPathsAll().contains("com/application/packageB/MyClass.java"));
 
 	}
 
@@ -107,10 +107,12 @@ public class CrawlerFirstTest {
 		
 		scanner.finalizeListChanges(String.format(DIR_GIT, FIRST_TEST), analysis);
 		
-		assertTrue(analysis.getChanges().stream().map(SCMChange::getPath).noneMatch("moduleA/creationInA.txt"::equals));
+		assertFalse(analysis.getChanges().keySet().contains("moduleA/creationInA.txt"));
+		//
 		// This file has been updated and renamed, and therefore not detected as a
 		// rename by the JGIT RenameDetector
-		assertTrue(analysis.getChanges().stream().map(SCMChange::getPath).anyMatch("moduleAchanged/creationInA.txt"::equals));
+		//
+		assertTrue(analysis.getChanges().keySet().contains("moduleAchanged/creationInA.txt"));
 	}
 
 
@@ -122,7 +124,7 @@ public class CrawlerFirstTest {
 
 		RepositoryAnalysis analysis =  scanner.loadChanges(project, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, FIRST_TEST), analysis);
-		analysis.getChanges().stream().map(SCMChange::getPath).forEach(System.out::println);
+		analysis.getPathsAll().stream().forEach(System.out::println);
 	}
 
 	@Test

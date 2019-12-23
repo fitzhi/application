@@ -39,9 +39,9 @@ import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.ShuffleService;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
+import fr.skiller.data.internal.SourceControlChanges;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
-import fr.skiller.source.crawler.git.SCMChange;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -240,7 +240,7 @@ public class FileDataSaverImpl implements DataSaver {
 	}
 
 	@Override
-	public void saveChanges(Project project, List<SCMChange> changes) throws SkillerException {
+	public void saveChanges(Project project, SourceControlChanges changes) throws SkillerException {
 	
 		createIfNeededDirectorySavedChanges();
 
@@ -257,12 +257,17 @@ public class FileDataSaverImpl implements DataSaver {
 	                CSVWriter.DEFAULT_ESCAPE_CHARACTER,
 	                CSVWriter.DEFAULT_LINE_END)) {
 		        csvWriter.writeNext(new String[] {"Commit", "Path", "Date", "Author", "Email"});
-		        changes.stream().forEach(change -> csvWriter.writeNext(new String[]{
+		        
+		        for (String path : changes.keySet()) {
+		        	changes.getSourceFileHistory(path)
+		        		.getChanges()
+		        		.forEach(change -> csvWriter.writeNext(new String[]{
 		        			change.getCommitId(),
-		        			change.getPath(),
+		        			path,
 		        			change.getDateCommit().toString(),
 		        			change.getAuthorName(),
 		        			change.getAuthorEmail()}));
+		        }
 		    }
         } catch (IOException ioe) {
         	throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
@@ -303,8 +308,14 @@ public class FileDataSaverImpl implements DataSaver {
 	}
 	
 	/**
-	 * <p>Test if the pathname is a directory in the repository.</p>
-	 * @param project the current project whose repository is crawled.
+	 * <p>
+	 * Test <b>on the file system</b> if the given pathname is a directory in the repository.
+	 * </p>
+	 * <p>
+	 * <font color="chocolate">We use java IO API to validate that the given path is effectively a directory.</font>
+	 * </p>
+	 * @param project the current project whose repository is analyzed.
+	 * <i>We use this parameter to retrieve the location of the GIT local repository.</i>
 	 * @param pathname the given pathname
 	 * @return {@code true} if the pathname is a directory.
 	 */
@@ -350,13 +361,11 @@ public class FileDataSaverImpl implements DataSaver {
 	}
 	
 	@Override
-	public void saveRepositoryDirectories(Project project, List<SCMChange> changes) throws SkillerException {
+	public void saveRepositoryDirectories(Project project, SourceControlChanges changes) throws SkillerException {
 
 		final String filename = "pathnames-data/project-" + project.getId() + "-pathnames.txt";
 
-		List<String> directories = changes.stream()
-				.map(SCMChange::getPath)
-				.distinct()
+		List<String> directories = changes.keySet().stream()
 				.map(this::extractDirectory)
 				.distinct()
 				.filter(path -> isDirectory(project, path))

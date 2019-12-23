@@ -8,6 +8,7 @@ import java.util.Map;
 
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
+import fr.skiller.data.internal.SourceControlChanges;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.git.SCMChange;
@@ -56,13 +57,15 @@ public interface DataSaver {
 	void saveSkills(Map<Integer, Skill> staff) throws SkillerException;
 	
 	/**
-	 * <p>Save the SCM changes loaded from the repository for cache & debug purpose.</p>
+	 * <p>
+	 * Save the source control changes loaded from the repository for cache & debug purpose.
+	 * </p>
 	 * <p><i>Due to the DEBUG purpose of this file, the output format will <b>CSV</b></i>.</p>
-	 * @param projet project whose changes have to be serialized in CSV
+	 * @param project project whose changes have to be serialized in CSV
 	 * @param changes changes retrieved from the repository
 	 * @throws SkillerException thrown if an exception occurs during the saving process
 	 */
-	void saveChanges(Project project, List<SCMChange> changes) throws SkillerException;
+	void saveChanges(Project project, SourceControlChanges changes) throws SkillerException;
 
 	/**
 	 * Load the skills <i>(probably for this first release)</i> from the file system
@@ -72,14 +75,19 @@ public interface DataSaver {
 	Map<Integer, Skill> loadSkills() throws SkillerException;
 	
 	/**
-	 * <p>Save the repository directories. 
-	 * <br/>This file is a raw text file with all distinct directories.</p>
-	 * <p>The resulting file will be used by the dependencies eviction form.</p>
+	 * <p>
+	 * Save the repository directories.<br/>
+	 * This file is a raw text file with all distinct directories.
+	 * </p>
+	 * <p>
+	 * The resulting file will be used by the dependencies eviction form 
+	 * <i>(table-dependencies.component in the Angular project)</i>.
+	 * </p>
 	 * @param project the current project
-	 * @param changes the changes retrieved from the repository
+	 * @param changes the history of changes retrieved from the repository
 	 * @throws SkillerException thrown if an exception occurs during the saving process.
 	 */
-	void saveRepositoryDirectories(Project project, List<SCMChange> changes) throws SkillerException;
+	void saveRepositoryDirectories(Project project,SourceControlChanges changes) throws SkillerException;
 	
 	/**
 	 * Load the list of all directory-paths for the repository of the given project.

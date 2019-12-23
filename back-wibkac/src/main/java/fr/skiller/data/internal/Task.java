@@ -73,7 +73,7 @@ public @Data class Task {
 	 */
 	public void complete() {
 		setComplete(true);
-		if (this.activityLogs.isEmpty()) {
+		if (!this.activityLogs.isEmpty()) {
 			// We sort the logs saved for this task
 			this.activityLogs.sort(Comparator.comparing(TaskLog::getLogTime).reversed());
 			

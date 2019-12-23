@@ -100,18 +100,18 @@ public class GitCrawlerNonRelevantDependenciesMgtTest {
 		p.setLocationRepository(new File(".").getCanonicalPath());
 		RepositoryAnalysis analysis = new RepositoryAnalysis(p);
 
-		analysis.addChange( 
-				new SCMChange("1", "src/main/java/fr/skiller/data/source/importance/FileSizeImportance.java", LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( 
-				new SCMChange("2","src/main/java/fr/skiller/data/source/importance/AssessorImportance.java", LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( 
-				new SCMChange("3","src/main/java/fr/skiller/data/source/importance/ImportanceCriteria.java", LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( 
-				new SCMChange("4","src/main/java/fr/skiller/data/source/CommitHistory.java", LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( 
-				new SCMChange("5","src/main/java/fr/skiller/data/source/CommitRepository.java", LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( 
-				new SCMChange("6","src/main/java/fr/skiller/data/source/operation.java", LocalDate.now(), "fvi", "fvi@void.com") );
+		analysis.addChange( "src/main/java/fr/skiller/data/source/importance/FileSizeImportance.java",
+				new SourceChange("1",  LocalDate.now(), "fvi", "fvi@void.com") );
+		analysis.addChange( "src/main/java/fr/skiller/data/source/importance/AssessorImportance.java",
+				new SourceChange("2", LocalDate.now(), "fvi", "fvi@void.com") );
+		analysis.addChange( "src/main/java/fr/skiller/data/source/importance/ImportanceCriteria.java",
+				new SourceChange("3", LocalDate.now(), "fvi", "fvi@void.com") );
+		analysis.addChange( "src/main/java/fr/skiller/data/source/CommitHistory.java",
+				new SourceChange("4",  LocalDate.now(), "fvi", "fvi@void.com") );
+		analysis.addChange( "src/main/java/fr/skiller/data/source/CommitRepository.java",
+				new SourceChange("5", LocalDate.now(), "fvi", "fvi@void.com") );
+		analysis.addChange( "src/main/java/fr/skiller/data/source/operation.java",
+				new SourceChange("6",  LocalDate.now(), "fvi", "fvi@void.com") );
 		
 		analysis.getPathsAdded().add("src/main/java/fr/skiller/data/source/importance/FileSizeImportance.java");
 		analysis.getPathsAdded().add("src/main/java/fr/skiller/data/source/importance/AssessorImportance.java");
@@ -131,14 +131,14 @@ public class GitCrawlerNonRelevantDependenciesMgtTest {
 		p.setLocationRepository(new File(".").getCanonicalPath());
 		RepositoryAnalysis analysis = new RepositoryAnalysis(p);
 		
-		analysis.addChange( 
-				new SCMChange("1", SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_A_JAVA, LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( 
-				new SCMChange("2", SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_B_JAVA, LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( 
-				new SCMChange("3", SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_ASSET_C_JAVA, LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( 
-				new SCMChange("4", SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_ASSET_D_JAVA, LocalDate.now(), "fvi", "fvi@void.com") );
+		analysis.addChange( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_A_JAVA,
+				new SourceChange("1", LocalDate.now(), "fvi", "fvi@void.com") );
+		analysis.addChange( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_B_JAVA,
+				new SourceChange("2",  LocalDate.now(), "fvi", "fvi@void.com") );
+		analysis.addChange( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_ASSET_C_JAVA,
+				new SourceChange("3",  LocalDate.now(), "fvi", "fvi@void.com") );
+		analysis.addChange( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_ASSET_D_JAVA,
+				new SourceChange("4",  LocalDate.now(), "fvi", "fvi@void.com") );
 		
 		analysis.getPathsAdded().add(SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_A_JAVA);
 		
@@ -156,14 +156,14 @@ public class GitCrawlerNonRelevantDependenciesMgtTest {
 		p.setLocationRepository(new File(".").getCanonicalPath());
 		RepositoryAnalysis analysis = new RepositoryAnalysis(p);
 		
-		analysis.addChange( 
-				new SCMChange("1", SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_A_JAVA, LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( 
-				new SCMChange("2", SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_B_JAVA, LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( 
-				new SCMChange("3", SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_ASSET_C_JAVA, LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( 
-				new SCMChange("4", SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_ASSET_D_JAVA, LocalDate.now(), "fvi", "fvi@void.com") );
+		analysis.addChange( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_A_JAVA,
+				new SourceChange("1", LocalDate.now(), "fvi", "fvi@void.com") );
+		analysis.addChange( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_B_JAVA,
+				new SourceChange("2", LocalDate.now(), "fvi", "fvi@void.com") );
+		analysis.addChange( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_ASSET_C_JAVA,
+				new SourceChange("3", LocalDate.now(), "fvi", "fvi@void.com") );
+		analysis.addChange( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_ASSET_D_JAVA,
+				new SourceChange("4", LocalDate.now(), "fvi", "fvi@void.com") );
 
 		analysis.getPathsAdded().add(SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_A_JAVA);
 		analysis.getPathsAdded().add(SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_B_JAVA);

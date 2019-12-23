@@ -6,6 +6,6 @@ export class Task {
 		public operation: string,
 		public complete: boolean,
 		public title: string,
-		public logs: TaskLog[],
+		public activityLogs: TaskLog[],
 		public lastBreath: TaskLog) { }
 }

@@ -12,7 +12,6 @@ import java.nio.file.Paths;
 
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
-import fr.skiller.source.crawler.git.SCMChange;
 
 /**
  * <p>
@@ -23,9 +22,9 @@ import fr.skiller.source.crawler.git.SCMChange;
 public class FileSizeImportance implements AssessorImportance {
 
 	@Override
-	public long getImportance(Project project, SCMChange change, ImportanceCriteria criteria) throws SkillerException {
+	public long getImportance(Project project, String path, ImportanceCriteria criteria) throws SkillerException {
 		try {
-			return Files.size(Paths.get(project.getLocationRepository() + "/" + change.getPath()));
+			return Files.size(Paths.get(project.getLocationRepository() + "/" + path));
 		} catch (IOException ioe) {
 			throw new SkillerException(CODE_IO_ERROR, MESSAGE_IO_ERROR, ioe);
 		}

@@ -61,6 +61,11 @@ public class Global {
 		return new Date();
 	}
 
+	/**
+	 * Deep cloning of an object by serialization.
+	 * @param object the given object to be cloned
+	 * @return a new deep copy of the passed object
+	 */
 	public static Object deepClone(Object object) {
 		try {
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();

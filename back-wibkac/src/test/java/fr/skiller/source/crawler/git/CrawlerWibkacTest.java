@@ -3,6 +3,7 @@
  */
 package fr.skiller.source.crawler.git;
 
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -74,6 +75,7 @@ public class CrawlerWibkacTest {
 	@Test
 	public void testFilterEligible() throws IOException, SkillerException {
 
+		
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, WIBKAC))).readEnvironment().findGitDir()
 				.build();
@@ -81,12 +83,11 @@ public class CrawlerWibkacTest {
 		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, WIBKAC), analysis);
 		assertTrue(
-				analysis.getChanges().stream().map(SCMChange::getPath).anyMatch("front-skiller/src/assets/img/pdf.png"::equals));
+				analysis.getPathsAll().contains("front-skiller/src/assets/img/pdf.png"));
 
 		scanner.filterEligible(analysis);
 
-		assertTrue(
-				analysis.getChanges().stream().map(SCMChange::getPath).noneMatch("front-skiller/src/assets/img/pdf.png"::equals));
+		assertFalse(analysis.getPathsAll().contains("front-skiller/src/assets/img/pdf.png"));
 
 	}
 
@@ -106,7 +107,7 @@ public class CrawlerWibkacTest {
 		scanner.finalizeListChanges(String.format(DIR_GIT, WIBKAC), analysis);
 		scanner.filterEligible(analysis);
 		scanner.cleanupPaths(analysis);
-		analysis.getChanges().stream().map(SCMChange::getPath).forEach(System.out::println);
+		analysis.getPathsAll().stream().forEach(System.out::println);
 
 	}
 
