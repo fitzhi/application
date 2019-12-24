@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import fr.skiller.bean.Administration;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.data.encryption.DataEncryption;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 /**

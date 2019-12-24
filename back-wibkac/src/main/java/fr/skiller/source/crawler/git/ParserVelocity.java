@@ -56,7 +56,7 @@ public @Data class ParserVelocity {
 		totalAdd++;
 		if (sessionAdd == SESSION_BREAK) {
 			this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  idProject, 
-				String.format("%d changes have been added.", totalAdd));
+				String.format("%d changes have been detected.", totalAdd));
 			sessionAdd = 0;
 		}
 	}

@@ -8,6 +8,7 @@ import static fr.skiller.Error.CODE_SONAR_KEY_NOFOUND;
 import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
 import static fr.skiller.Error.MESSAGE_SONAR_KEY_NOFOUND;
 
+import java.net.ConnectException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -25,6 +26,7 @@ import fr.skiller.bean.DataSaver;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SonarHandler;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.data.encryption.DataEncryption;
 import fr.skiller.data.internal.FilesStats;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Library;
@@ -35,6 +37,7 @@ import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.SonarEvaluation;
 import fr.skiller.data.internal.SonarProject;
 import fr.skiller.data.internal.Staff;
+import fr.skiller.data.source.ConnectionSettings;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 import lombok.extern.slf4j.Slf4j;
@@ -127,6 +130,12 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 	@Override
 	public Project addNewProject(Project project) throws SkillerException {
+		
+		// 
+		// We encrypt the password 
+		//
+		encryptPasswordIfNecessary(project);
+		
 		synchronized (lockDataUpdated) {
 			Map<Integer, Project> theProjects = getProjects();
 			if (project.getId() < 1) {
@@ -138,20 +147,64 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		return project;
 	}
 
+	/**
+	 * If a password has been given to the GIT connection, we encrypt it.
+	 * @param project the current project
+	 * @throws SkillerException thrown certainly if the encryption failed
+	 */
+	private void encryptPasswordIfNecessary(Project project) throws SkillerException {
+		if (project.getConnectionSettings() == 1) {
+			String encryptedPassword = DataEncryption.encryptMessage(project.getPassword());
+			project.setPassword(encryptedPassword);
+		}
+	}
+	
 	@Override
 	public boolean containsProject(int idProject) throws SkillerException {
 		return getProjects().containsKey(idProject);
 	}
 
 	@Override
-	//TODO We have to be more precise on the saving process.
-	// The implementation DELETE and REPLACE seams dangerous.
+	//TODO Need to verify that all fields are effectively update {
 	public void saveProject(Project project) throws SkillerException {
 		if (project.getId() == 0) {
 			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, project.getId()));
 		}
 		synchronized (lockDataUpdated) {
-			getProjects().put(project.getId(), project);
+
+			Project savedProject = get(project.getId());
+			if (savedProject == null) {
+				throw new SkillerRuntimeException(
+						"SHOULD NOT PASS HERE : The project " + project.getId() + " is supposed to exist !");
+			}
+			savedProject.setName(project.getName());
+			savedProject.setConnectionSettings(project.getConnectionSettings());
+			switch (project.getConnectionSettings()) {
+				case 1:
+					savedProject.setConnectionSettings(1);
+					savedProject.setUrlRepository(project.getUrlRepository());
+					savedProject.setUsername(project.getUsername());
+					if (project.getPassword() != null) {
+						String encryptedPassword = DataEncryption.encryptMessage(project.getPassword());
+						savedProject.setPassword(encryptedPassword);						
+					}
+					savedProject.setConnectionSettingsFile(null);
+					break;
+				case 2:
+					savedProject.setConnectionSettings(2);
+					savedProject.setUrlRepository(project.getUrlRepository());
+					savedProject.setUsername(null);
+					savedProject.setPassword(null);
+					savedProject.setConnectionSettingsFile(project.getConnectionSettingsFile());
+					break;
+				default:
+					savedProject.setConnectionSettings(0);
+					savedProject.setUrlRepository(null);
+					savedProject.setUsername(null);
+					savedProject.setPassword(null);
+					savedProject.setConnectionSettingsFile(null);
+					break;
+			}
 			this.dataUpdated = true;
 		}
 	}

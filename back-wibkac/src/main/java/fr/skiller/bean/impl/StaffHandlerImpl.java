@@ -622,6 +622,14 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	public Staff getStaff(int idStaff) {
 		return getStaff().get(idStaff);
 	}
+
+	@Override
+	public void savePassword(Staff staff, String password) {
+		synchronized (lockDataUpdated) {
+			staff.setPassword(password);
+			this.dataUpdated = true;
+		}
+	}
 	
 	
 }

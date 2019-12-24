@@ -91,3 +91,5 @@ back-wibkac/src/test/resources/out_dir/project-777-pathnames.txt
 front-skiller/.scannerwork/
 
 back-wibkac/src/test/resources/out_dir/changes-data/
+
+back-wibkac/src/test/resources/out_dir/pathnames-data/*.txt

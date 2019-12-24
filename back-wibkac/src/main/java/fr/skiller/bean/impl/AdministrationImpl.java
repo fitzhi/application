@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import fr.skiller.bean.Administration;
 import fr.skiller.bean.StaffHandler;
+import fr.skiller.data.encryption.DataEncryption;
 import fr.skiller.data.internal.Staff;
 import fr.skiller.exception.SkillerException;
 import lombok.extern.slf4j.Slf4j;
@@ -93,15 +94,16 @@ public class AdministrationImpl implements Administration {
 		final Staff staff = oStaff.isPresent() ? oStaff.get() : null;
 		
 		/**
-		 * The very first user created is the very first administrative user in Wibkac.
+		 * The very first user created is the very first administrative user in Techxhì.
 		 * Therefore the self registration is obviously allowed
 		 */
 		if (isVeryFirstConnection()) {
+			String encryptedPassword = DataEncryption.encryptMessage(password);
 			if (staff != null) {
-				staff.setPassword(password);
+				staffHandler.savePassword(staff, encryptedPassword);
 				return staff;
 			} else {
-				return staffHandler.addNewStaffMember(new Staff(-1, login, password));
+				return staffHandler.addNewStaffMember(new Staff(-1, login, encryptedPassword));
 			}
 		} 
 
@@ -121,14 +123,25 @@ public class AdministrationImpl implements Administration {
 		}
 	}
 	
+	/**
+	 * Update the encrypted password of a staff member
+	 * @param staff the staff 
+	 * @param password the chosen password.
+	 * @return the Staff updated with his encrypted password.
+	 * @throws SkillerException thrown if any problem occurs
+	 */
 	private Staff updatePassword (final Staff staff, String password) throws SkillerException {
-		// We cannot override an existing user
+		//
+		// We cannot override the password of an existing user.
+		// This is supposed to be the CREATION of a staff member.
+		//
 		if (!staff.isEmpty()) {
 			throw new SkillerException(CODE_LOGIN_ALREADY_EXIST, 
 				MessageFormat.format(MESSAGE_LOGIN_ALREADY_EXIST, 
 				staff.getLogin(), staff.getFirstName(), staff.getLastName()));					
 		} else {
-			staff.setPassword(password);
+			String encryptedPassword = DataEncryption.encryptMessage(password);
+			staffHandler.savePassword(staff, encryptedPassword);
 			return staff;
 		}		
 	}

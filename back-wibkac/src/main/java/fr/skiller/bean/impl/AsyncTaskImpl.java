@@ -30,7 +30,6 @@ public class AsyncTaskImpl implements AsyncTask {
 
 	private final Map<String, Task> tasks = new HashMap<>();
 	
-	
 	@Override
 	public void addTask(String operation, String title, int id) throws SkillerException {
 		

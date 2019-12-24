@@ -78,6 +78,7 @@ import fr.skiller.bean.RiskProcessor;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import fr.skiller.controller.in.SettingsGeneration;
+import fr.skiller.data.encryption.DataEncryption;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Project;
@@ -1090,7 +1091,14 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			ConnectionSettings settings = new ConnectionSettings();
 			settings.setUrl(project.getUrlRepository());
 			settings.setLogin(project.getUsername());
-			settings.setPassword(project.getPassword());
+			try {
+				String clearPassword = DataEncryption.decryptMessage(project.getPassword());
+				settings.setPassword(clearPassword);
+			} catch (final SkillerException se) {
+				System.out.println("project.getPassword() " + project.getPassword());
+				se.getCause().printStackTrace();
+				throw se;
+			}
 			return settings;
 		}
 

@@ -14,7 +14,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import fr.skiller.data.encryption.DataEncryption;
 import fr.skiller.data.source.Contributor;
+import fr.skiller.exception.SkillerException;
 import fr.skiller.security.CustomGrantedAuthority;
 import fr.skiller.service.FileType;
 import lombok.Data;
@@ -246,8 +248,9 @@ public @Data class Staff implements UserDetails {
 	/**
 	 * @return <code>true</code> if the passed password is correct.
 	 */
-	public boolean isValidPassword(String password) {
-		return password.equals(this.password);
+	public boolean isValidPassword(String password) throws SkillerException {
+		String passwordEncrypted = DataEncryption.encryptMessage(password);
+		return passwordEncrypted.equals(this.password);
 	}
 
 

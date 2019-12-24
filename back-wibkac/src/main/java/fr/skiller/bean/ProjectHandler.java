@@ -64,8 +64,9 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	List<Contributor> contributors(int idProject);
 
 	/**
-	 * @param project
-	 *            the passed project
+	 * Add a new project inside the projects referential.<br/>
+	 * If project is not identified (e.g. the {@link Project#getId()} is less than 1), we will generate an ID.
+	 * @param project the passed project
 	 * @return the newly created project
 	 */
 	Project addNewProject(Project project) throws SkillerException;
@@ -79,8 +80,8 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	boolean containsProject(int idProject) throws SkillerException;
 
 	/**
-	 * @param project
-	 *            the new project to save.
+	 * @param project the project to save.
+	 * @throws SkillerException thrown if any saving or encryption error occurs
 	 */
 	void saveProject(Project project) throws SkillerException;
 

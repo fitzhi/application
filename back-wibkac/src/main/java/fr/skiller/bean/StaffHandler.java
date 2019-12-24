@@ -212,6 +212,12 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	  * @return {@code true} if the candidate is matching the given pattern, {@code false} otherwise. 
 	  */
 	 public boolean isEligible(Staff staff, String pattern, StringTransform transformer);
-	 
+	
+	 /**
+	  * Save the <b>encrypted</b> password 
+	  * @param staff the staff whose password has be saved
+	  * @param password the encrypted password
+	  */
+	 public void savePassword(Staff staff, String password);
 }
 

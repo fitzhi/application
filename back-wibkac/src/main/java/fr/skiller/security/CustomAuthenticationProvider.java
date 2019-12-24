@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Staff;
+import fr.skiller.exception.SkillerException;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
@@ -31,12 +32,17 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         
         if (!oStaff.isPresent()) return null;
         
-        if (oStaff.get().isValidPassword(password)) {
-        	List<GrantedAuthority> authorities = new ArrayList<>();
-        	authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-            return new UsernamePasswordAuthenticationToken(
-              name, password, authorities);
-        }
+        try {
+			if (oStaff.get().isValidPassword(password)) {
+				List<GrantedAuthority> authorities = new ArrayList<>();
+				authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+			    return new UsernamePasswordAuthenticationToken(
+			      name, password, authorities);
+			}
+		} catch (SkillerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
         
         return null;
     }
