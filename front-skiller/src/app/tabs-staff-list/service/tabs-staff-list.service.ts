@@ -261,8 +261,8 @@ export class TabsStaffListService {
 				}
 			}
 
-			const firstname = (typeof collab.firstName !== 'undefined') ? collab.firstName : '';
-			const lastname = (typeof collab.lastName !== 'undefined') ? collab.lastName : '';
+			const lastname = (collab.lastName) ? collab.lastName : '';
+			const firstname = (collab.firstName) ? collab.firstName : '';
 			return (
 				((firstname.toLowerCase().indexOf(reminder) > -1)
 					|| (lastname.toLowerCase().indexOf(reminder) > -1))
