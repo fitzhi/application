@@ -339,7 +339,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 * @param Project the current project
 	 */
 	private isChartImpossible(project: Project): boolean {
-		return ((!project.urlRepository) || (project.urlRepository.length === 0));
+		return ((!project) || (!project.urlRepository) || (project.urlRepository.length === 0));
 	}
 
 	loadTaskActivities() {
@@ -660,29 +660,33 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	public show(idPanel: number) {
 		switch (idPanel) {
 			case this.SUNBURST:
-					this.idPanelSelected = idPanel;
-					this.refreshChart();
-					this.setActiveContext(this.lastSunburstContext);
+				this.idPanelSelected = idPanel;
+				this.refreshChart();
+				this.setActiveContext(this.lastSunburstContext);
 				break;
 			case this.LEGEND_SUNBURST:
+				if (!this.isWarningWhenRunning()) {
 					this.idPanelSelected = idPanel;
 					this.setActiveContext(PreviewContext.SUNBURST_LEGEND);
+				}
 				break;
 			case this.SETTINGS:
+				if (!this.isWarningWhenRunning()) {
 					this.idPanelSelected = idPanel;
 					this.dialogFilter();
+				}
 				break;
 			case this.UNKNOWN:
-				if (document.getElementById('chart').childElementCount === 0) {
-					this.messageService.info('Just a second !   Dashboard generation is currently processed.');
-					break;
+				if (!this.isWarningWhenRunning()) {
+					this.idPanelSelected = idPanel;
+					this.setActiveContext(PreviewContext.SUNBURST_GHOSTS);
 				}
-				this.idPanelSelected = idPanel;
-				this.setActiveContext(PreviewContext.SUNBURST_GHOSTS);
 				break;
 			case this.DEPENDENCIES:
-				this.idPanelSelected = idPanel;
-				this.setActiveContext(PreviewContext.SUNBURST_DEPENDENCIES);
+				if (!this.isWarningWhenRunning()) {
+					this.idPanelSelected = idPanel;
+					this.setActiveContext(PreviewContext.SUNBURST_DEPENDENCIES);
+				}
 				break;
 			case this.RESET:
 				this.idPanelSelected = idPanel;
@@ -691,6 +695,18 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			default:
 				this.idPanelSelected = idPanel;
 				break;
+		}
+	}
+
+	/**
+	 * Display a waiting message when processing the chart.
+	 */
+	isWarningWhenRunning(): boolean {
+		if (!document.getElementById('chart')) {
+			this.messageService.info('Just a second ! Dashboard generation is currently processed.');
+			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -781,6 +797,11 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 * Set the new active context inside the form component.
 	 */
 	public setActiveContext(context: string) {
+
+		// Nothing to do.
+		if (context === this.lastSunburstContext) {
+			return;
+		}
 
 		if (Constants.DEBUG) {
 			console.log ('New active context \'' + context + '\' after \'' + this.lastSunburstContext + '\'');

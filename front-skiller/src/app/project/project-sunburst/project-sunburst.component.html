@@ -1,6 +1,6 @@
 <mat-sidenav-container class="component-container" >
 
-    <mat-sidenav mode="side" class="sidenav-toolbar" opened>
+    <mat-sidenav *ngIf="!isActiveContext(PreviewContext.SUNBURST_IMPOSSIBLE)" mode="side" class="sidenav-toolbar" opened>
 
 		<button 
 			id="sunburst"
@@ -70,7 +70,7 @@
 			{{titleSunburst}}  
 		</div>
 
-		<div id="warningSunburstImpossible" [hidden]="!isActiveContext(PreviewContext.SUNBURST_IMPOSSIBLE)">
+		<div id="warningSunburstImpossible" *ngIf="isActiveContext(PreviewContext.SUNBURST_IMPOSSIBLE)">
 			<ul>
 				<li>Either your project does not exist yet. and you have to complete the project, first.</li>
 				<li>Or Techxhì failed to connect with your source control system. Check your connection settings file on your server.</li>
@@ -78,7 +78,7 @@
 			<a href="javascript:;" (click)="jumpToTab (-1)">You need to complete the project form.</a>
         </div>
 
-        <div [hidden]="!isActiveContext(PreviewContext.SUNBURST_READY)">
+        <div *ngIf="isActiveContext(PreviewContext.SUNBURST_READY)">
 			<app-node-detail id="node-details" 
 				[filenames]="filenames" 
 				[contributors]="contributors" 
@@ -86,9 +86,9 @@
 			</app-node-detail>		
 		</div>
 		
-		<div id="chart" class="divPanelOnTop" [hidden]="!isActiveContext(PreviewContext.SUNBURST_READY)"></div>
+		<div id="chart" class="divPanelOnTop" *ngIf="isActiveContext(PreviewContext.SUNBURST_READY)"></div>
 
-		<div class="row" style="width: 100%" [hidden]="!isActiveContext(PreviewContext.SUNBURST_WAITING)">
+		<div class="row" style="width: 100%" *ngIf="isActiveContext(PreviewContext.SUNBURST_WAITING)">
 			<div class="col-md-1"></div>
             <div class="col-md-10 text-left w100">
 				<mat-card style="margin-top:30px">
@@ -109,17 +109,18 @@
 			<div class="col-md-1"></div>
 		</div>
 
-		<div id="panelGhosts" class="row" [hidden]="!isActiveContext(PreviewContext.SUNBURST_GHOSTS)">	
+		<div id="panelGhosts" class="row" *ngIf="isActiveContext(PreviewContext.SUNBURST_GHOSTS)">	
 			<app-project-ghosts [dataSourceGhosts$]="dataSourceGhosts$" ></app-project-ghosts>
 		</div>
 
 		<div class="divPanel row" 
-			[hidden]="!isActiveContext(PreviewContext.SUNBURST_DEPENDENCIES)">		
-			<app-table-dependencies [project$]="project$" class="content-divPanel"  ></app-table-dependencies>
+			*ngIf="isActiveContext(PreviewContext.SUNBURST_DEPENDENCIES)">		
+			<app-table-dependencies [project$]="project$" class="content-divPanel">
+			</app-table-dependencies>
 		</div>
 
 		<div class="divPanelOnTop row" 
-			[hidden]="!isActiveContext(PreviewContext.SUNBURST_LEGEND)">	
+			*ngIf="isActiveContext(PreviewContext.SUNBURST_LEGEND)">	
 			<app-legend-sunburst class="divPanelOnTop"></app-legend-sunburst>
 		</div>
 
