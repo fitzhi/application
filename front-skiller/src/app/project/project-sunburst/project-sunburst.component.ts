@@ -419,7 +419,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		} else {
 			this.setActiveContext (PreviewContext.SUNBURST_WAITING);
 		}
-
+/**
 		if (!this.myChart) {
 			this.myChart = Sunburst();
 			this.myChart.onNodeClick(nodeClicked => {
@@ -427,7 +427,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				this.myChart.focusOnNode(nodeClicked);
 			});
 		}
-
+*/
 		if (silentMode) {
 			this.taskReportManagement.init();
 			this.loadTaskActivities();
@@ -437,18 +437,23 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		this.projectService.loadDashboardData$(this.settings)
 			.subscribe(
 				response => {
+					if (Constants.DEBUG) {
+						console.log ('response', response);
+					}
 					switch (response.code) {
 						case 0:
-							this.handleSunburstData(response);
-							if (Constants.DEBUG) {
-								console.log ('The risk of the current project is', response.projectRiskLevel);
-							}
-							this.updateRiskLevel.next(response.projectRiskLevel);
-							this.project.risk = response.projectRiskLevel;
-							this.hackSunburstStyle();
-							this.tooltipChart();
 							this.setActiveContext (PreviewContext.SUNBURST_READY);
-							this.taskReportManagement.complete = true;
+							setTimeout(() => {
+								this.handleSunburstData(response);
+								if (Constants.DEBUG) {
+									console.log ('The risk of the current project is', response.projectRiskLevel);
+								}
+								this.updateRiskLevel.next(response.projectRiskLevel);
+								this.project.risk = response.projectRiskLevel;
+								this.hackSunburstStyle();
+								this.tooltipChart();
+								this.taskReportManagement.complete = true;
+							}, 0);
 							break;
 						case 201:
 						case -1008:
@@ -524,20 +529,18 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	handleSunburstData(response: any) {
 
-		// Removing the last chart generated from the DOM.
-		const node = document.getElementById('chart');
-		while (node.hasChildNodes()) {
-			node.removeChild(node.lastChild);
-		}
+		this.myChart = Sunburst();
+		this.myChart.onNodeClick(nodeClicked => {
+			this.onNodeClick(nodeClicked);
+			this.myChart.focusOnNode(nodeClicked);
+		});
 
-		if (this.myChart !== null) {
-			this.myChart.data(response.sunburstData).width(500).height(500).label('location').size('importance').color('color')
-				(document.getElementById('chart'));
-			const dataSourceGhosts = new ProjectGhostsDataSource(this.project);
-			// Send the unregistered contributors to the panel list
-			dataSourceGhosts.sendUnknowns(response.ghosts);
-			this.dataSourceGhosts$.next(dataSourceGhosts);
-		}
+		this.myChart.data(response.sunburstData).width(500).height(500).label('location').size('importance').color('color')
+			(document.getElementById('chart'));
+		const dataSourceGhosts = new ProjectGhostsDataSource(this.project);
+		// Send the unregistered contributors to the panel list
+		dataSourceGhosts.sendUnknowns(response.ghosts);
+		this.dataSourceGhosts$.next(dataSourceGhosts);
 
 	}
 
@@ -702,7 +705,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 * Display a waiting message when processing the chart.
 	 */
 	isWarningWhenRunning(): boolean {
-		if (!document.getElementById('chart')) {
+		if (this.isActiveContext(PreviewContext.SUNBURST_WAITING)) {
 			this.messageService.info('Just a second ! Dashboard generation is currently processed.');
 			return true;
 		} else {
@@ -799,7 +802,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	public setActiveContext(context: string) {
 
 		// Nothing to do.
-		if (context === this.lastSunburstContext) {
+		if (context === this.activeContext) {
 			return;
 		}
 
@@ -807,17 +810,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			console.log ('New active context \'' + context + '\' after \'' + this.lastSunburstContext + '\'');
 		}
 
-		/*
-
-		TODO MUST FIND AN EXPLANATION FOR THIS...
-
-		// We keep away the previous context related to the construction of the Sunburst chart.
-		if ( 	(context === PreviewContext.SUNBURST_READY)
-			|| 	(context === PreviewContext.SUNBURST_IMPOSSIBLE)
-			|| 	(context === PreviewContext.SUNBURST_WAITING)) {
-			this.lastSunburstContext = context;
-		}
-		*/
 		this.lastSunburstContext = this.activeContext;
 		this.activeContext = context;
 	}
