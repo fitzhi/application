@@ -302,7 +302,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					setTimeout(() => {
 						this.project = project;
 						this.settings.idProject = this.project.id;
-						if ((!this.project.urlRepository) || (this.project.urlRepository.length === 0)) {
+
+						if (this.isChartImpossible( project)) {
 							this.messageService.info('No repository URL available !');
 							this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
 						}
@@ -319,18 +320,26 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 							console.log('Tab selected ' + index + ' @ ' + today.getHours()
 								+ ':' + today.getMinutes() + ':' + today.getSeconds());
 						}
-						this.loadSunburst(true);
+						if (this.isChartImpossible(this.project)) {
+							if (Constants.DEBUG) {
+								console.log('No project identifier passed to this tab. No data available to preview !');
+							}
+							this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
+						} else {
+							this.loadSunburst(true);
+						}
 					}
 				}
 			));
 
-		if (this.settings.idProject == null) {
-			if (Constants.DEBUG) {
-				console.log('No project identifier passed to this tab. No data available for preview !');
-			}
-			this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
-			return;
-		}
+	}
+
+	/**
+	 * return `true` if it is possible to draw the chart, `false` otherwise.
+	 * @param Project the current project
+	 */
+	private isChartImpossible(project: Project): boolean {
+		return ((!project.urlRepository) || (project.urlRepository.length === 0));
 	}
 
 	loadTaskActivities() {
