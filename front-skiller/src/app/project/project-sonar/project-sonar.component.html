@@ -23,7 +23,10 @@
             NO SONAR PROJECT DECLARED FOR THIS PROJECT
         </div>
     </div>
-    <div *ngIf="!(project)">
-        <H2>PLEASE, CREATE A PROJECT FIRST !</H2>
+    <div class="no-project" *ngIf="!(project$ | async)">
+        <p>
+                Your project does not exist yet. You need to save it, first.
+        </p>
+        <a href="javascript:;" (click)="jumpToTab (-1)">First, Complete the project form.</a>
     </div>
 </mat-sidenav-container>

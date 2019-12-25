@@ -29,3 +29,10 @@ div.auditTask {
     position: fixed;
     border: 1px solid black !important;
 }
+
+div.no-project {
+    background-color: lightgrey;
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid black;
+}

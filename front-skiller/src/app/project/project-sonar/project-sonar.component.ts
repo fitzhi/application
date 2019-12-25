@@ -145,6 +145,14 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	/**
+	 * Change the current active tab.
+	 * @param tabIndex index of tab requested.
+	 */
+	public jumpToTab(tabIndex: number) {
+		this.tabActivationEmitter.next(tabIndex);
+	}
+
+	/**
 	 * Calling the base class to unsubscribe all subscriptions.
 	 */
 	ngOnDestroy() {

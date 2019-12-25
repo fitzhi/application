@@ -14,6 +14,7 @@ import { MessageService } from 'src/app/message/message.service';
 import { AuditChosenDetail } from './project-audit-badges/audit-badge/audit-chosen-detail';
 import { AuditDetailsHistory } from 'src/app/service/cinematic/audit-details-history';
 import { ConnectUserComponent } from 'src/app/admin/connect-user/connect-user.component';
+import { TRANSITION_DURATIONS } from 'ngx-bootstrap/modal/modal-options.class';
 
 @Component({
 	selector: 'app-project-audit',
@@ -23,6 +24,12 @@ import { ConnectUserComponent } from 'src/app/admin/connect-user/connect-user.co
 export class ProjectAuditComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	@Input() project$: BehaviorSubject<Project>;
+
+	/**
+	 * This component, hosted in a tab pane, use this emitter to inform its parent to change the active pane.
+	 * e.g. if the project form is not complete, application will jump to this tab pane.
+	 */
+	@Output() tabActivationEmitter = new EventEmitter<number>();
 
 	/**
 	 * This `boolean` control the `[hidden]` property of the div `auditTask`.
@@ -91,6 +98,10 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 			this.project$.subscribe(project => {
 				this.project = project;
 
+				if (!project) {
+					return;
+				}
+
 				// Initialize the Panel details history.
 				this.initializePanelDetailsHistory();
 
@@ -135,7 +146,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 			);
 		});
 		console.groupEnd();
-}
+	}
 
 	/**
 	 * Setup the categories involved in the manuel audit evaluation.
@@ -342,6 +353,14 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 					}
 				});
 		}
+	}
+
+	/**
+	 * Change the current active tab.
+	 * @param tabIndex index of tab requested.
+	 */
+	public jumpToTab(tabIndex: number) {
+		this.tabActivationEmitter.next(tabIndex);
 	}
 
 	/**

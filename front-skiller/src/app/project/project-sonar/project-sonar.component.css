@@ -31,3 +31,10 @@ H2 {
     text-align: center;
     color: orangered;
 }
+
+div.no-project {
+    background-color: lightgrey;
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid black;
+}

@@ -22,16 +22,19 @@
 	</mat-tab>
 	<mat-tab label="Sonar">
 		<ng-template matTabContent>
-			<app-project-sonar [project$]="project$"
+			<app-project-sonar 
+				[project$]="project$"
 				(updateRiskLevel)="updateRiskLevel($event)" 
-				(throwMessage)="catchMessage($event)">
+				(throwMessage)="catchMessage($event)"
+				(tabActivationEmitter)="tabActivation($event)">
 			</app-project-sonar>
 		</ng-template>
 	</mat-tab>
 	<mat-tab label="Audit">
 		<ng-template matTabContent>
 			<app-project-audit
-				[project$]="project$">
+				[project$]="project$"
+				(tabActivationEmitter)="tabActivation($event)">
 			</app-project-audit>
 		</ng-template>
 	</mat-tab>
