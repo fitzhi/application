@@ -80,18 +80,19 @@ div.sliderWeight {
 
 div.tasks, div.tasks-selected, div.report, div.report-selected {
     position: absolute;
-    top: 20px;
-    padding: 3px;
-    width: 50px;
-    height: 50px;
+    top: 22px;
+    height: 40px;
 }
 
 div.report, div.report-selected {
-    right: 55px;
+    right: 47px;
+    padding: 2px 0px 0px 0px;
+    width: 40px;
     text-align: center;
 }
 
 div.tasks, div.tasks-selected {
+    padding: 2px;
     right: 5px;
 }
 
