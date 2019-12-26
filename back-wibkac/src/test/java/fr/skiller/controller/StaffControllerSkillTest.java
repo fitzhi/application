@@ -39,13 +39,13 @@ import fr.skiller.data.internal.Skill;
 @AutoConfigureMockMvc
 public class StaffControllerSkillTest {
 
-	private static final String STAFF_EXPERIENCES_SAVE = "/staff/experiences/update";
+	private static final String STAFF_EXPERIENCES_SAVE = "/api/staff/experiences/update";
 
-	private static final String STAFF_EXPERIENCES_ADD = "/staff/experiences/add";
+	private static final String STAFF_EXPERIENCES_ADD = "/api/staff/experiences/add";
 	
-	private static final String STAFF_EXPERIENCES_REMOVE = "/staff/experiences/remove";
+	private static final String STAFF_EXPERIENCES_REMOVE = "/api/staff/experiences/remove";
 
-	private static final String STAFF_EXPERIENCES_1 = "/staff/experiences/1";
+	private static final String STAFF_EXPERIENCES_1 = "/api/staff/experiences/1";
 
 	/**
 	 * Initialization of the Google JSON parser.

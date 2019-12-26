@@ -70,7 +70,7 @@ public class ProjectControllerSkillsManagementTest {
 
 		String jsonInput = gson.toJson(ps);
 		
-		this.mvc.perform(post("/project/skill/add")
+		this.mvc.perform(post("/api/project/skill/add")
 		.contentType(MediaType.APPLICATION_JSON_UTF8)
 		.content(jsonInput))
 		.andExpect(status().isOk())
@@ -83,7 +83,7 @@ public class ProjectControllerSkillsManagementTest {
 				.filter(id -> id == 2)
 				.count());
 								
-		this.mvc.perform(post("/project/skill/del")
+		this.mvc.perform(post("/api/project/skill/del")
 		.contentType(MediaType.APPLICATION_JSON_UTF8)
 		.content(jsonInput))
 		.andExpect(status().isOk())

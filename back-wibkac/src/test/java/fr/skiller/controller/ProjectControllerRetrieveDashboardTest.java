@@ -74,7 +74,7 @@ public class ProjectControllerRetrieveDashboardTest {
 		SunburstDTO expected = new SunburstDTO(1, -1, fr.skiller.Error.CODE_MULTIPLE_TASK,
 				"A dashboard generation has already been launched for TEST 1");
 		
-		this.mvc.perform(post("/project/sunburst")
+		this.mvc.perform(post("/api/project/sunburst")
 		.contentType(MediaType.APPLICATION_JSON_UTF8)
 		.content(jsonInput))
 		.andExpect(status().is(HttpStatus.OK.value()))

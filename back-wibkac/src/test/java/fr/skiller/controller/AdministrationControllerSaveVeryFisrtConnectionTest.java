@@ -43,15 +43,15 @@ public class AdministrationControllerSaveVeryFisrtConnectionTest {
 	@Test
 	public void saveVeryFirstConnection() throws Exception {
 
-		this.mvc.perform(get("/admin/isVeryFirstConnection"))
+		this.mvc.perform(get("/api/admin/isVeryFirstConnection"))
 		.andExpect(status().isOk())
 		.andExpect(content().string(CoreMatchers.containsString("true")));
 
-		this.mvc.perform(get("/admin/saveVeryFirstConnection"))
+		this.mvc.perform(get("/api/admin/saveVeryFirstConnection"))
 		.andExpect(status().isOk())
 		.andExpect(content().string(CoreMatchers.containsString("true")));
 
-		this.mvc.perform(get("/admin/isVeryFirstConnection"))
+		this.mvc.perform(get("/api/admin/isVeryFirstConnection"))
 		.andExpect(status().isOk())
 		.andExpect(content().string(CoreMatchers.containsString("false")));
 	}

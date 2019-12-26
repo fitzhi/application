@@ -89,7 +89,7 @@ public class ProjectSonarControllerSaveMetricValuesTest {
 		list.add(new ProjectSonarMetricValue("bugs3", 20, 17));
 		bppsmv.setMetricValues(list);
 	
-		MvcResult result = this.mvc.perform(post("/project/sonar/saveMetricValues")
+		MvcResult result = this.mvc.perform(post("/api/project/sonar/saveMetricValues")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(bppsmv)))
 				.andExpect(status().isOk())
@@ -100,7 +100,7 @@ public class ProjectSonarControllerSaveMetricValuesTest {
 		Boolean b = gson.fromJson(result.getResponse().getContentAsString(), Boolean.class);
 		Assert.assertTrue(b);
 
-		result = this.mvc.perform(get("/project/id/" + ID_PROJECT))
+		result = this.mvc.perform(get("/api/project/id/" + ID_PROJECT))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())

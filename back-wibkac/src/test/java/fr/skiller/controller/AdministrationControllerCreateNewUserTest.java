@@ -89,7 +89,7 @@ public class AdministrationControllerCreateNewUserTest {
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("Crew size %d", crewSize));
 		}
-		this.mvc.perform(get("/admin/veryFirstUser") // NOSONAR
+		this.mvc.perform(get("/api/admin/veryFirstUser") // NOSONAR
 				.param(LOGIN, "adminForTest").param(PASS_WORD, "passForTest")).andExpect(status().isOk())
 				.andExpect(jsonPath(CST_STAFF_ID_STAFF, is(0)))
 				.andExpect(jsonPath(CST_CODE, is(CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED)));
@@ -103,7 +103,7 @@ public class AdministrationControllerCreateNewUserTest {
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("Crew size %d", crewSize));
 		}
-		this.mvc.perform(get("/admin/newUser").param(LOGIN, "user").param(PASS_WORD, pass)
+		this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "user").param(PASS_WORD, pass)
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + TokenLoader.obtainAccessMockToken(mvc)))
 				.andExpect(status().isOk()).andExpect(jsonPath(CST_STAFF_ID_STAFF, is(0)))
 				.andExpect(jsonPath(CST_CODE, is(CODE_CANNOT_SELF_CREATE_USER)));
@@ -114,7 +114,7 @@ public class AdministrationControllerCreateNewUserTest {
 		Staff s = new Staff(777, "frvidal", "pass");
 		s.setLastName("VIDAL");
 		this.staffHandler.addNewStaffMember(s);
-		this.mvc.perform(get("/admin/newUser").param(LOGIN, "frvidal").param(PASS_WORD, pass)
+		this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "frvidal").param(PASS_WORD, pass)
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + TokenLoader.obtainAccessMockToken(mvc)))
 				.andExpect(status().isOk()).andExpect(jsonPath(CST_CODE, is(CODE_LOGIN_ALREADY_EXIST)))
 				.andExpect(jsonPath(CST_STAFF_ID_STAFF, is(0)));

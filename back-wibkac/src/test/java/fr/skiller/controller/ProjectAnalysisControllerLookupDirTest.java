@@ -69,7 +69,7 @@ public class ProjectAnalysisControllerLookupDirTest {
 	    params.add("idProject", "9999");
 	    params.add("criteria", "a"); 
 	    
-		mvc.perform(get("/project/analysis/lib-dir/lookup")
+		mvc.perform(get("/api/project/analysis/lib-dir/lookup")
 		    .params(params)
 		    .accept("application/json;charset=UTF-8"))
 		    .andExpect(status().isOk())

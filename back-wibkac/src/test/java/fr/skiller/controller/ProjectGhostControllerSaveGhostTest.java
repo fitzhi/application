@@ -79,7 +79,7 @@ public class ProjectGhostControllerSaveGhostTest {
 		bug.setPseudo("pseudoUnlinked");
 		bug.setIdStaff(1);
 	
-		MvcResult result = this.mvc.perform(get("/staff/1"))
+		MvcResult result = this.mvc.perform(get("/api/staff/1"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -91,7 +91,7 @@ public class ProjectGhostControllerSaveGhostTest {
 		Assert.assertFalse(
 				staff.getMissions().stream().anyMatch(mission -> mission.getIdProject() == ID_PROJECT));
 		
-		this.mvc.perform(post("/project/ghost/save")
+		this.mvc.perform(post("/api/project/ghost/save")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(bug)))
 			.andExpect(status().isOk())
@@ -99,7 +99,7 @@ public class ProjectGhostControllerSaveGhostTest {
 			.andExpect(content().string("true"))
 			.andDo(print());
 
-		result = this.mvc.perform(get("/staff/1"))
+		result = this.mvc.perform(get("/api/staff/1"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())

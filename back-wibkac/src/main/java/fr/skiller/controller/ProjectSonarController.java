@@ -39,7 +39,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RestController
-@RequestMapping("/project/sonar")
+@RequestMapping("/api/project/sonar")
 public class ProjectSonarController {
 
 	@Autowired

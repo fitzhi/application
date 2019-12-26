@@ -36,9 +36,9 @@ import fr.skiller.exception.SkillerException;
 @AutoConfigureMockMvc
 public class StaffControllerProjectTest {
 
-	private static final String STAFF_PROJECT_ADD = "/staff/project/add";
+	private static final String STAFF_PROJECT_ADD = "/api/staff/project/add";
 
-	private static final String STAFF_PROJECTS_2 = "/staff/projects/2";
+	private static final String STAFF_PROJECTS_2 = "/api/staff/projects/2";
 
 	private static final int ID_PROJECT_1235 = 1235;
 	private static final String PROJECT_1235 = "TEST_1235";
@@ -79,7 +79,7 @@ public class StaffControllerProjectTest {
 				.andExpect(content().json(gson.toJson(missions)));
 		
 		body = "{ \"idStaff\": 2, \"idProject\": 1235 }";
-		this.mvc.perform(post("/staff/project/del")
+		this.mvc.perform(post("/api/staff/project/del")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(body))
 			.andExpect(status().isOk());

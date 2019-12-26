@@ -68,7 +68,7 @@ public class ProjectAnalysisControllerSaveLibDirTest {
 		
 		String jsonInput = gson.toJson(continents);
 		
-		this.mvc.perform(post("/project/analysis/lib-dir/save/9999")
+		this.mvc.perform(post("/api/project/analysis/lib-dir/save/9999")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(jsonInput))
 			.andExpect(status().isOk())

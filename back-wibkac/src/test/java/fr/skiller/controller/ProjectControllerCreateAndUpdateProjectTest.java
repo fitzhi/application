@@ -57,7 +57,7 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 		
 		System.out.println(gson.toJson(newProject));
 		
-		this.mvc.perform(post("/project/save")
+		this.mvc.perform(post("/api/project/save")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(newProject)))
 				.andExpect(status().isOk())
@@ -77,7 +77,7 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 		//
 		SonarProject entry = new SonarProject("otherId", "other name");
 		BodyParamSonarEntry bpse = new BodyParamSonarEntry(id, entry);
-		this.mvc.perform(post("/project/sonar/saveEntry")
+		this.mvc.perform(post("/api/project/sonar/saveEntry")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(bpse)))
 				.andExpect(status().isOk())
@@ -99,7 +99,7 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 		//
 		entry = new SonarProject("otherId", "new other name");
 		bpse = new BodyParamSonarEntry(id, entry);
-		this.mvc.perform(post("/project/sonar/removeEntry")
+		this.mvc.perform(post("/api/project/sonar/removeEntry")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(bpse)))
 				.andExpect(status().isOk())

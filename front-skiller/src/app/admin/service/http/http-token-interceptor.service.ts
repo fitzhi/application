@@ -36,11 +36,11 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 			return next.handle(req);
 		}
 
-		if (req.url.includes('/referential/')
-			|| req.url.includes('/skill/all')
-			|| req.url.includes('/admin/isVeryFirstConnection')
-			|| req.url.includes('/admin/veryFirstUser')
-			|| req.url.includes('/admin/register')
+		if (req.url.includes('/api/referential/')
+			|| req.url.includes('/api/skill/all')
+			|| req.url.includes('/api/admin/isVeryFirstConnection')
+			|| req.url.includes('/api/admin/veryFirstUser')
+			|| req.url.includes('/api/admin/register')
 			|| req.url.includes('/oauth/token')) {
 			return next.handle(req);
 		}

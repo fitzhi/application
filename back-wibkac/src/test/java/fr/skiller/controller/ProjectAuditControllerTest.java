@@ -90,7 +90,7 @@ public class ProjectAuditControllerTest {
 	 */
 	void testGlobalAuditEvaluation(int idProject, int expectedValue) throws Exception {
 		
-		MvcResult result = this.mvc.perform(get("/project/id/"+ ID_PROJECT))
+		MvcResult result = this.mvc.perform(get("/api/project/id/"+ ID_PROJECT))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -109,7 +109,7 @@ public class ProjectAuditControllerTest {
 		bpae.setIdProject(ID_PROJECT);
 		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_1));
 	
-		this.mvc.perform(post("/project/audit/saveTopic")
+		this.mvc.perform(post("/api/project/audit/saveTopic")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(bpae)))
 			.andExpect(status().isOk())
@@ -117,7 +117,7 @@ public class ProjectAuditControllerTest {
 			.andExpect(content().string("true"))
 			.andDo(print());
 
-		MvcResult result = this.mvc.perform(get("/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_1))
+		MvcResult result = this.mvc.perform(get("/api/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_1))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -142,7 +142,7 @@ public class ProjectAuditControllerTest {
 		bpae.setIdProject(ID_PROJECT);
 		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2));
 	
-		this.mvc.perform(post("/project/audit/saveTopic")
+		this.mvc.perform(post("/api/project/audit/saveTopic")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(bpae)))
 			.andExpect(status().isOk())
@@ -171,7 +171,7 @@ public class ProjectAuditControllerTest {
 		bpae.setIdProject(666);
 		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2));
 	
-		MvcResult result = this.mvc.perform(post("/project/audit/saveTopic")
+		MvcResult result = this.mvc.perform(post("/api/project/audit/saveTopic")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(bpae)))
 				.andExpect(status().isInternalServerError())
@@ -185,7 +185,7 @@ public class ProjectAuditControllerTest {
 	@WithMockUser
 	public void removeTopic() throws Exception {
 		
-		MvcResult result = this.mvc.perform(get("/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_2))
+		MvcResult result = this.mvc.perform(get("/api/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_2))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -203,7 +203,7 @@ public class ProjectAuditControllerTest {
 		bpae.setIdProject(ID_PROJECT);
 		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2));
 	
-		this.mvc.perform(post("/project/audit/removeTopic")
+		this.mvc.perform(post("/api/project/audit/removeTopic")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(bpae)))
 			.andExpect(status().isOk())
@@ -214,7 +214,7 @@ public class ProjectAuditControllerTest {
 		//
 		// Testing the fact that the topic has been effectively removed
 		//
-		result = this.mvc.perform(get("/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_2))
+		result = this.mvc.perform(get("/api/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_2))
 				.andExpect(status().isInternalServerError())
 				.andDo(print())
 				.andReturn();
@@ -234,7 +234,7 @@ public class ProjectAuditControllerTest {
 		bpae.setIdProject(ID_PROJECT);
 		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2, 60, 0));
 	
-		this.mvc.perform(post("/project/audit/saveEvaluation")
+		this.mvc.perform(post("/api/project/audit/saveEvaluation")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(bpae)))
 			.andExpect(status().isOk())
@@ -245,7 +245,7 @@ public class ProjectAuditControllerTest {
 		//
 		// Testing the fact that the topic has been effectively removed
 		//
-		MvcResult result = this.mvc.perform(get("/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_2))
+		MvcResult result = this.mvc.perform(get("/api/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_2))
 				.andExpect(status().isOk())
 				.andDo(print())
 				.andReturn();
@@ -281,7 +281,7 @@ public class ProjectAuditControllerTest {
 		//
 		// Cannot save a project with a sum of audit topics weights different to 100.
 		//
-		MvcResult result = this.mvc.perform(post("/project/audit/saveWeights")
+		MvcResult result = this.mvc.perform(post("/api/project/audit/saveWeights")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(bpae)))
 				.andExpect(status().isInternalServerError())
@@ -311,7 +311,7 @@ public class ProjectAuditControllerTest {
 		bpae.getDataEnvelope()[0] = new AuditTopic(ID_TOPIC_1, 0, 40);
 		bpae.getDataEnvelope()[1] = new AuditTopic(ID_TOPIC_2, 0, 60);
 	
-		this.mvc.perform(post("/project/audit/saveWeights")
+		this.mvc.perform(post("/api/project/audit/saveWeights")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(bpae)))
 				.andExpect(status().isOk())
@@ -319,14 +319,14 @@ public class ProjectAuditControllerTest {
 				.andExpect(content().string("true"))
 				.andDo(print());
 		
-		MvcResult result = this.mvc.perform(get("/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_1))
+		MvcResult result = this.mvc.perform(get("/api/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_1))
 				.andExpect(status().isOk())
 				.andDo(print())
 				.andReturn();
 		AuditTopic auditProject = gson.fromJson(result.getResponse().getContentAsString(), AuditTopic.class);
 		Assert.assertEquals("Weight has been saved", 40, auditProject.getWeight());
 		
-		result = this.mvc.perform(get("/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_2))
+		result = this.mvc.perform(get("/api/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_2))
 				.andExpect(status().isOk())
 				.andDo(print())
 				.andReturn();

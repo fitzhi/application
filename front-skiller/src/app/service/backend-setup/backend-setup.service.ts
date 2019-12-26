@@ -10,7 +10,7 @@ export class BackendSetupService {
 	/**
      * Default URL for a local directory.
      */
-	public defaultUrl = 'http://localhost:8080';
+	public defaultUrl = 'http://localhost:8080/api';
 
 	constructor(private  httpClient: HttpClient) {
 	}

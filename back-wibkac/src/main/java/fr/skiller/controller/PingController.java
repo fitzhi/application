@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/api/test")
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL Controller for Ping purpose
  */

@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RestController
-@RequestMapping("/project/ghost")
+@RequestMapping("/api/project/ghost")
 public class ProjectGhostController {
 
 

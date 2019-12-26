@@ -82,7 +82,7 @@ public class ProjectGhostControllerTest {
 	@Test
 	@WithMockUser
 	public void test() throws Exception {
-		MvcResult result = this.mvc.perform(get("/staff/2"))
+		MvcResult result = this.mvc.perform(get("/api/staff/2"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -101,7 +101,7 @@ public class ProjectGhostControllerTest {
 		bug.setIdStaff(-1);
 		bug.setTechnical(true);
 	
-		this.mvc.perform(post("/project/ghost/save")
+		this.mvc.perform(post("/api/project/ghost/save")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(bug)))
 			.andExpect(status().isOk())
@@ -109,12 +109,12 @@ public class ProjectGhostControllerTest {
 			.andExpect(content().string("true"))
 			.andDo(print());
 
-		this.mvc.perform(get("/project/id/"+ ID_PROJECT))
+		this.mvc.perform(get("/api/project/id/"+ ID_PROJECT))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print());
 
-		result = this.mvc.perform(get("/staff/2"))
+		result = this.mvc.perform(get("/api/staff/2"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())

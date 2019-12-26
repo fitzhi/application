@@ -91,7 +91,7 @@ public class ProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
 	 */
 	Project getProject(int idProject) throws Exception {
 		
-		MvcResult result = this.mvc.perform(get("/project/id/"+ ID_PROJECT))
+		MvcResult result = this.mvc.perform(get("/api/project/id/"+ ID_PROJECT))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -114,7 +114,7 @@ public class ProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
 		bppaf.setIdTopic(ID_TOPIC_1);
 		bppaf.setAttachmentFile(new AttachmentFile(0, "given fileName", "given fileLabel", 7));
 	
-		this.mvc.perform(post("/project/audit/saveAttachmentFile")
+		this.mvc.perform(post("/api/project/audit/saveAttachmentFile")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(bppaf)))
 			.andExpect(status().isOk())
@@ -146,7 +146,7 @@ public class ProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
 		bppaf.setIdTopic(ID_TOPIC_1);
 		bppaf.setAttachmentFile(new AttachmentFile(1, "testingFileName", "testingFileLabel", 7));
 	
-		this.mvc.perform(post("/project/audit/saveAttachmentFile")
+		this.mvc.perform(post("/api/project/audit/saveAttachmentFile")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(bppaf)))
 			.andExpect(status().isOk())
@@ -176,7 +176,7 @@ public class ProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
 		bppaf.setIdTopic(ID_TOPIC_1);
 		bppaf.setAttachmentFile(new AttachmentFile(1, "tobeRemoved", "toBeRemoved", 7));
 	
-		this.mvc.perform(post("/project/audit/removeAttachmentFile")
+		this.mvc.perform(post("/api/project/audit/removeAttachmentFile")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(bppaf)))
 			.andExpect(status().isOk())

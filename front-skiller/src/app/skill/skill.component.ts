@@ -11,110 +11,110 @@ import { SkillService } from '../service/skill.service';
 import { BaseComponent } from '../base/base.component';
 
 @Component({
-  selector: 'app-skill',
-  templateUrl: './skill.component.html',
-  styleUrls: ['./skill.component.css']
+	selector: 'app-skill',
+	templateUrl: './skill.component.html',
+	styleUrls: ['./skill.component.css']
 })
 export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 
-  private skill: Skill;
+	private skill: Skill;
 
-  profileSkill = new FormGroup({
-    title: new FormControl('', [Validators.required])
-  });
+	profileSkill = new FormGroup({
+		title: new FormControl('', [Validators.required])
+	});
 
-  /**
-   * Id parameter received if any;
-   */
-  private id: number;
+	/**
+	 * Id parameter received if any;
+	 */
+	private id: number;
 
-  constructor(
-    private cinematicService: CinematicService,
-    private route: ActivatedRoute,
-    private skillService: SkillService,
-    private listSkillService: ListSkillService,
-    private messageService: MessageService,
-    private router: Router) {
-      super();
-     }
+	constructor(
+		private cinematicService: CinematicService,
+		private route: ActivatedRoute,
+		private skillService: SkillService,
+		private listSkillService: ListSkillService,
+		private messageService: MessageService,
+		private router: Router) {
+		super();
+	}
 
-  ngOnInit() {
-    this.subscriptions.add(
-      this.route.params.subscribe(params => {
-        if (Constants.DEBUG) {
-          console.log('params[\'id\'] ' + params['id']);
-        }
-        if (params['id'] == null) {
-          this.id = null;
-        } else {
-          this.id = + params['id']; // (+) converts string 'id' to a number
-        }
+	ngOnInit() {
+		this.subscriptions.add(
+			this.route.params.subscribe(params => {
+				if (Constants.DEBUG) {
+					console.log('params[\'id\'] ' + params['id']);
+				}
+				if (params['id'] == null) {
+					this.id = null;
+				} else {
+					this.id = + params['id']; // (+) converts string 'id' to a number
+				}
 
-        // Either we are in creation mode, or we load the collaborator from the back-end...
-        // We create an empty collaborator until the subscription is complete
-        this.skill = new Skill();
-        if (this.id != null) {
-          this.subscriptions.add(
-            this.listSkillService.getSkill(this.id).subscribe(
-              (skill: Skill) => {
-                this.skill = skill;
-                this.profileSkill.get('title').setValue(skill.title);
-              },
-              error => {
-                if (error.status === 404) {
-                  if (Constants.DEBUG) {
-                    console.log('404 : cannot find a skill for the id ' + this.id);
-                  }
-                  this.messageService.error('There is no skill for id ' + this.id);
-                  this.skill = new Skill();
-                } else {
-                  console.error(error.message);
-                }
-              },
-              () => {
-                if (this.skill.id === 0) {
-                  console.log('No skill found for the id ' + this.id);
-                }
-                if (Constants.DEBUG) {
-                  console.log('Loading comlete for id ' + this.id);
-                }
-              }
-            ));
-        }
-      }));
-    this.cinematicService.setForm(Constants.SKILLS_CRUD, this.router.url);
-  }
+				// Either we are in creation mode, or we load the collaborator from the back-end...
+				// We create an empty collaborator until the subscription is complete
+				this.skill = new Skill();
+				if (this.id != null) {
+					this.subscriptions.add(
+						this.listSkillService.getSkill(this.id).subscribe(
+							(skill: Skill) => {
+								this.skill = skill;
+								this.profileSkill.get('title').setValue(skill.title);
+							},
+							error => {
+								if (error.status === 404) {
+									if (Constants.DEBUG) {
+										console.log('404 : cannot find a skill for the id ' + this.id);
+									}
+									this.messageService.error('There is no skill for id ' + this.id);
+									this.skill = new Skill();
+								} else {
+									console.error(error.message);
+								}
+							},
+							() => {
+								if (this.skill.id === 0) {
+									console.log('No skill found for the id ' + this.id);
+								}
+								if (Constants.DEBUG) {
+									console.log('Loading comlete for id ' + this.id);
+								}
+							}
+						));
+				}
+			}));
+		this.cinematicService.setForm(Constants.SKILLS_CRUD, this.router.url);
+	}
 
-  /**
-   * Submit the change. The SKILL will be created, or updated. succesfully.
-   */
-  onSubmit() {
-    this.skill.title = this.profileSkill.get('title').value;
-    if (Constants.DEBUG) {
-      console.log('saving the skill ' + this.skill.title + ' with id ' + this.skill.id);
-    }
-    this.subscriptions.add(
-      this.skillService.save(this.skill).subscribe(
-        skill => {
-          this.messageService.info('The skill ' + skill.title + ' has been succesfully saved !');
-          this.skill = new Skill();
-          this.id = null;
-          this.profileSkill.get('title').setValue(this.skill.title);
-        },
-        error => console.error (error),
-        () => this.skillService.loadSkills()));
-  }
+	/**
+	 * Submit the change. The SKILL will be created, or updated. succesfully.
+	 */
+	onSubmit() {
+		this.skill.title = this.profileSkill.get('title').value;
+		if (Constants.DEBUG) {
+			console.log('saving the skill ' + this.skill.title + ' with id ' + this.skill.id);
+		}
+		this.subscriptions.add(
+			this.skillService.save(this.skill).subscribe(
+				skill => {
+					this.messageService.info('The skill ' + skill.title + ' has been succesfully saved !');
+					this.skill = new Skill();
+					this.id = null;
+					this.profileSkill.get('title').setValue(this.skill.title);
+				},
+				error => console.error(error),
+				() => this.skillService.loadSkills()));
+	}
 
-  get title(): any {
-    return this.profileSkill.get('title');
-  }
+	get title(): any {
+		return this.profileSkill.get('title');
+	}
 
-  /**
-   * Calling the base class to unsubscribe all subscriptions.
-   */
-  ngOnDestroy() {
-    super.ngOnDestroy();
-  }
+	/**
+	 * Calling the base class to unsubscribe all subscriptions.
+	 */
+	ngOnDestroy() {
+		super.ngOnDestroy();
+	}
 
 
 }

@@ -76,7 +76,7 @@ public class AdministrationSelfRegisteringDisallowedTest {
 	    params.add("login", TEST_USER);
 	    params.add("password", "test-pass"); // NOSONAR
 
-	    mvc.perform(get("/admin/register")
+	    mvc.perform(get("/api/admin/register")
 	        .params(params)
 	        .accept("application/json;charset=UTF-8"))
 	        .andExpect(status().isOk())

@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/test")
+@RequestMapping("/api/test")
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  * Controller for testing purpose

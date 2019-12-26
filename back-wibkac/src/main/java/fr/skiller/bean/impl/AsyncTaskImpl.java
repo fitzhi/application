@@ -6,7 +6,6 @@ import static fr.skiller.Error.MESSAGE_MULTIPLE_TASK;
 import static fr.skiller.Error.MESSAGE_TASK_NOT_FOUND;
 import static fr.skiller.Global.LN;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 

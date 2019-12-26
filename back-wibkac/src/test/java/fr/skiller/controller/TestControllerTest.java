@@ -40,7 +40,7 @@ public class TestControllerTest {
 	@Test
 	@WithMockUser
 	public void testVerySimplePostString() throws Exception {
-		String ret = this.mvc.perform(post("/test/post_a_String").content("test")).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();		
+		String ret = this.mvc.perform(post("/api/test/post_a_String").content("test")).andExpect(status().isOk()).andReturn().getResponse().getContentAsString();		
 		assert ("test OK".equals(ret));
 	}
 	
@@ -48,7 +48,7 @@ public class TestControllerTest {
 	@WithMockUser
 	public void testVerySimplePostTest() throws Exception {
 		
-		String ret = this.mvc.perform(post("/test/post_a_Test")
+		String ret = this.mvc.perform(post("/api/test/post_a_Test")
 				.content(gson.toJson( new fr.skiller.data.internal.ForTest("test@")))
 				.contentType(MediaType.APPLICATION_JSON))
 				.andExpect(status().isOk())

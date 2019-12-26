@@ -66,7 +66,7 @@ public class StaffControllerSpecialPasswordTest {
 	@WithMockUser
 	public void doNotTransportThePassword() throws Exception  {
 		this.mvc.perform(get(
-				String.format("/staff/%d", staffs.size())
+				String.format("/api/staff/%d", staffs.size())
 				))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))

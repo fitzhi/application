@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RestController
-@RequestMapping("/project/audit")
+@RequestMapping("/api/project/audit")
 public class ProjectAuditController {
 
 	@Autowired

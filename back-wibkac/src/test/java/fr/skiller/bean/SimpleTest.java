@@ -31,7 +31,7 @@ public class SimpleTest {
 
 		String s = "{\"test\":\"test de frederic\"}";
 
-		this.mvc.perform(post("/test/post_a_Test")
+		this.mvc.perform(post("/api/test/post_a_Test")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(s))
 				.andExpect(status().isOk())

@@ -35,14 +35,14 @@ public class LoginTest {
 	
 	@Test
 	public void accessUnauthorizedWithoutToken() throws Exception {
-	    mvc.perform(get("/test/ping"))
+	    mvc.perform(get("/api/test/ping"))
 	      .andExpect(status().isUnauthorized());
 	}
 
 	@Test
 	public void accessWithToken() throws Exception {
 	    String accessToken = obtainAccessMockToken(mvc);
-	    mvc.perform(get("/test/ping")
+	    mvc.perform(get("/api/test/ping")
 	    	.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
 	    	.andExpect(status().isOk())
 	    	.andExpect(content().contentType(MediaType.TEXT_HTML))

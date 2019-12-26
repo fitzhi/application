@@ -437,9 +437,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		this.projectService.loadDashboardData$(this.settings)
 			.subscribe(
 				response => {
-					if (Constants.DEBUG) {
-						console.log ('response', response);
-					}
 					switch (response.code) {
 						case 0:
 							this.setActiveContext (PreviewContext.SUNBURST_READY);

@@ -33,7 +33,7 @@ import fr.skiller.data.internal.Staff;
 @AutoConfigureMockMvc
 public class StaffControllerSaveStaffMemberTest {
 
-	private static final String STAFF_SAVE = "/staff/save";
+	private static final String STAFF_SAVE = "/api/staff/save";
 
 	/**
 	 * Initialization of the Google JSON parser.

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import fr.skiller.data.internal.Mission;
 
 @RestController
-@RequestMapping("/globzhi")
+@RequestMapping("/api/globzhi")
 public class HelloController {
 
 	

@@ -49,7 +49,7 @@ public class ProjectControllerReadProjectTest {
 		Project p = projectHandler.get(1);
 		Assert.assertNotNull(p);
 
-		this.mvc.perform(get("/project/id/1")
+		this.mvc.perform(get("/api/project/id/1")
 		.content(""))
 		.andExpect(status().isOk())
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -60,7 +60,7 @@ public class ProjectControllerReadProjectTest {
 	@WithMockUser
 	public void addReadUnknownProject() throws Exception {
 
-		this.mvc.perform(get("/project/id/666")
+		this.mvc.perform(get("/api/project/id/666")
 		.content(""))
 		.andExpect(status().is(HttpStatus.NOT_FOUND.value()))
 		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));

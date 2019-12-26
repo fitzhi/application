@@ -78,7 +78,7 @@ public class AdministrationControllerVeryFirstUserTest {
 	@Test
 	public void creationVeryFirstUserOK() throws Exception {
 				
-		MockHttpServletResponse response = this.mvc.perform(get("/admin/veryFirstUser") //NOSONAR
+		MockHttpServletResponse response = this.mvc.perform(get("/api/admin/veryFirstUser") //NOSONAR
 					.param(LOGIN, "adminForTest") 
 					.param(PASS_WORD, "passForTest"))  
 				.andExpect(status().isOk())

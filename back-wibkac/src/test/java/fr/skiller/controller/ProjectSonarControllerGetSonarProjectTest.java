@@ -75,7 +75,7 @@ public class ProjectSonarControllerGetSonarProjectTest {
 	@WithMockUser
 	public void test() throws Exception {
 	
-		MvcResult result = this.mvc.perform(get("/project/sonar/load/1/key-sonar-1"))
+		MvcResult result = this.mvc.perform(get("/api/project/sonar/load/1/key-sonar-1"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())

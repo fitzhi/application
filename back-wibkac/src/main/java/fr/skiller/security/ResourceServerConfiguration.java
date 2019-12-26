@@ -25,19 +25,19 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 		.antMatchers(
 				
 				// For development only.
-				 "/staff/**", 
-				 "/skill/**", 
-				 "/project/**", 
-				 "/project/sonar/**", 
-				 "/test/post_a_Test",
-				 "/admin/settings",
+				 "/api/staff/**", 
+				 "/api/skill/**", 
+				 "/api/project/**", 
+				 "/api/project/sonar/**", 
+				 "/api/test/post_a_Test",
+				 "/api/admin/settings",
 				
-				"/admin/isVeryFirstConnection", 
-				"/admin/saveVeryFirstConnection", 
-				"/admin/veryFirstUser",
-				"/admin/register",
-	//DEV			"/skill/all",
-				"/referential/**").permitAll()
+				"/api/admin/isVeryFirstConnection", 
+				"/api/admin/saveVeryFirstConnection", 
+				"/api/admin/veryFirstUser",
+				"/api/admin/register",
+	//DEV			"/api/skill/all",
+				"/api/referential/**").permitAll()
 		.antMatchers("/**").access("hasRole('USER')")
 		.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
 	}

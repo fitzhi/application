@@ -30,7 +30,7 @@ import fr.skiller.exception.SkillerException;
  * @author Fr&eacute;d&eacute;ric VIDAL Controller for Ping purpose
  */
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/api/admin")
 public class AdminController {
 
 	/**

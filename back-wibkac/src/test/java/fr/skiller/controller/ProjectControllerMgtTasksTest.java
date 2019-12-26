@@ -77,7 +77,7 @@ public class ProjectControllerMgtTasksTest {
 	@Test
 	public void testReadTaskNotFound() throws Exception {
 		
-		MvcResult result = this.mvc.perform(get("/project/tasks/fakeOperation/1789"))
+		MvcResult result = this.mvc.perform(get("/api/project/tasks/fakeOperation/1789"))
 				.andExpect(status().isNotFound())
 				.andDo(print())
 				.andReturn();
@@ -91,7 +91,7 @@ public class ProjectControllerMgtTasksTest {
 	@Test
 	public void testReadTaskNominal() throws Exception {
 		
-		MvcResult result = this.mvc.perform(get("/project/tasks/nopeOperation/1789"))
+		MvcResult result = this.mvc.perform(get("/api/project/tasks/nopeOperation/1789"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())

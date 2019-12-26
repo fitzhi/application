@@ -33,7 +33,7 @@ public class StaffControllerSerializationTest {
 	@Test
 	@WithMockUser
 	public void test() throws Exception {
-		this.mvc.perform(post("/staff/save")
+		this.mvc.perform(post("/api/staff/save")
 				.header(HttpHeaders.CONTENT_TYPE, "application/json")
 				.content(STAFF))
 				.andExpect(status().isOk());

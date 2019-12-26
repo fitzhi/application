@@ -66,7 +66,7 @@ public class FileUploadIntegrationTests {
 	@WithMockUser
 	public void shouldUploadFile() throws Exception {
 
-		ClassPathResource resource = new ClassPathResource("/uploadTest/testupload.txt");
+		ClassPathResource resource = new ClassPathResource("/api/uploadTest/testupload.txt");
 		String content = convertStreamToString(resource.getInputStream());
 		MockMultipartFile multipartFile = new MockMultipartFile("file", "test.txt", "text/plain", content.getBytes());
 		this.mvc.perform(fileUpload("/api/upload/do").file(multipartFile)).andExpect(status().isFound())
@@ -78,7 +78,7 @@ public class FileUploadIntegrationTests {
 	@Test
 	@WithMockUser
 	public void shouldDownloadFile() throws Exception {
-		ClassPathResource resource = new ClassPathResource("/uploadTest/testupload.txt");
+		ClassPathResource resource = new ClassPathResource("/api/uploadTest/testupload.txt");
 		given(this.storageService.loadAsResource("testupload.txt")).willReturn(resource);
 
 		HttpHeaders headers = new HttpHeaders();

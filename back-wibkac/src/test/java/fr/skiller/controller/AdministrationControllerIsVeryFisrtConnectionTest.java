@@ -43,7 +43,7 @@ public class AdministrationControllerIsVeryFisrtConnectionTest {
 	
 	@Test
 	public void isFirstConnection() throws Exception {
-		this.mvc.perform(get("/admin/isVeryFirstConnection"))
+		this.mvc.perform(get("/api/admin/isVeryFirstConnection"))
 		.andExpect(status().isOk())
 		.andExpect(content().string(CoreMatchers.containsString("true")));
 	}
@@ -56,7 +56,7 @@ public class AdministrationControllerIsVeryFisrtConnectionTest {
 			Assert.fail("connection.txt already exists");
 		}
 
-		this.mvc.perform(get("/admin/isVeryFirstConnection"))
+		this.mvc.perform(get("/api/admin/isVeryFirstConnection"))
 		.andExpect(status().isOk())
 		.andExpect(content().string(CoreMatchers.containsString("false")));
 	}

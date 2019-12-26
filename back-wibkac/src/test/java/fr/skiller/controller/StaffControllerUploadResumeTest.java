@@ -100,7 +100,7 @@ public class StaffControllerUploadResumeTest {
 		map.add("type", FileType.FILE_TYPE_DOC.getValue());
 		
 		ResponseEntity<ResumeDTO> response = this.restTemplate
-				.exchange("/staff/api/uploadCV", HttpMethod.POST, new HttpEntity<>(map, headers),
+				.exchange("/api/staff/api/uploadCV", HttpMethod.POST, new HttpEntity<>(map, headers),
 				ResumeDTO.class);
 
 		assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);

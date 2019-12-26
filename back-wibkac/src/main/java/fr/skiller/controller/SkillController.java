@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/skill")
+@RequestMapping("/api/skill")
 public class SkillController {
 
 	@Autowired

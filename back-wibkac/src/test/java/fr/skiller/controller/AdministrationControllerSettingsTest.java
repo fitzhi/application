@@ -36,7 +36,7 @@ public class AdministrationControllerSettingsTest {
 	@Test
 	@WithMockUser
 	public void getSettings() throws Exception {
-	    mvc.perform(get("/admin/settings")
+	    mvc.perform(get("/api/admin/settings")
 	        .accept("application/json;charset=UTF-8"))
 	        .andExpect(status().isOk())
 	        .andExpect(content().contentType("application/json;charset=UTF-8"))

@@ -38,7 +38,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RestController
-@RequestMapping("/project/tasks")
+@RequestMapping("/api/project/tasks")
 public class ProjectTasksController {
 
 	@Autowired

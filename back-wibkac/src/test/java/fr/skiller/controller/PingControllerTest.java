@@ -37,7 +37,7 @@ public class PingControllerTest {
 	public void pingGet() throws Exception {
 
 		this.mockMvc
-				.perform(get("/test/ping")
+				.perform(get("/api/test/ping")
 						.header(HttpHeaders.AUTHORIZATION,
 						"Bearer " + TokenLoader.obtainAccessMockToken(mockMvc))
 						)
@@ -49,7 +49,7 @@ public class PingControllerTest {
 	@Test
 	public void pingPost() throws Exception {
 		this.mockMvc
-				.perform(post("/test/pong")
+				.perform(post("/api/test/pong")
 						.header(HttpHeaders.AUTHORIZATION,
 						"Bearer " + TokenLoader.obtainAccessMockToken(mockMvc))
 						)

@@ -76,7 +76,7 @@ public class ProjectAuditControllerUpdatingGlobalEvaluationTest {
 	 */
 	void testGlobalAuditEvaluation(int idProject, int expectedValue) throws Exception {
 		
-		MvcResult result = this.mvc.perform(get("/project/id/"+ ID_PROJECT))
+		MvcResult result = this.mvc.perform(get("/api/project/id/"+ ID_PROJECT))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -109,7 +109,7 @@ public class ProjectAuditControllerUpdatingGlobalEvaluationTest {
 		bpae.setIdProject(666);
 		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2, 60, 0));
 	
-		MvcResult result = this.mvc.perform(post("/project/audit/saveEvaluation")
+		MvcResult result = this.mvc.perform(post("/api/project/audit/saveEvaluation")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(bpae)))
 			.andExpect(status().isInternalServerError())
@@ -130,7 +130,7 @@ public class ProjectAuditControllerUpdatingGlobalEvaluationTest {
 		bpae.setIdProject(ID_PROJECT);
 		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2, 60, 0));
 	
-		this.mvc.perform(post("/project/audit/saveEvaluation")
+		this.mvc.perform(post("/api/project/audit/saveEvaluation")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(bpae)))
 			.andExpect(status().isOk())
@@ -152,7 +152,7 @@ public class ProjectAuditControllerUpdatingGlobalEvaluationTest {
 		bpae.setIdProject(ID_PROJECT);
 		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_1, 0, 0, "Test report"));
 	
-		this.mvc.perform(post("/project/audit/saveReport")
+		this.mvc.perform(post("/api/project/audit/saveReport")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(bpae)))
 			.andExpect(status().isOk())
@@ -181,7 +181,7 @@ public class ProjectAuditControllerUpdatingGlobalEvaluationTest {
 		bpae.getDataEnvelope()[0] = new AuditTopic(ID_TOPIC_1, 0, 10);
 		bpae.getDataEnvelope()[1] = new AuditTopic(ID_TOPIC_2, 0, 90);
 	
-		this.mvc.perform(post("/project/audit/saveWeights")
+		this.mvc.perform(post("/api/project/audit/saveWeights")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(bpae)))
 				.andExpect(status().isOk())
