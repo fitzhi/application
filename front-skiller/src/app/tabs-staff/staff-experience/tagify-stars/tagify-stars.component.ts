@@ -134,8 +134,11 @@ export class TagifyStarsComponent implements AfterViewInit {
 		// This test of non nullable and non 'undefined-able' is there for Karma testing purpose.
 		if (this.additionalValues$) {
 			this.additionalValues$.subscribe(addedValues => {
-				this.addValues(addedValues);
-				this.updateEventHandlerStars(addedValues);
+				// We add this test to avoid an empty-warning in the component.
+				if (addedValues.length > 0) {
+					this.addValues(addedValues);
+					this.updateEventHandlerStars(addedValues);
+				}
 			});
 		}
 
@@ -143,8 +146,11 @@ export class TagifyStarsComponent implements AfterViewInit {
 		if (this.values$) {
 			this.values$.subscribe(values => {
 					this.removeValues();
-					this.addValues(values);
-					this.updateEventHandlerStars(values);
+					// We add this test to avoid an empty-warning in the component.
+					if (values.length > 0) {
+						this.addValues(values);
+						this.updateEventHandlerStars(values);
+					}
 				});
 		}
 

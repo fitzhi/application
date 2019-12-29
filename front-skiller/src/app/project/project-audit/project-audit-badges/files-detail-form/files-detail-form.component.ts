@@ -4,6 +4,7 @@ import { Project } from 'src/app/data/project';
 import { ProjectService } from 'src/app/service/project.service';
 import { AuditBaseComponent } from '../audit-base-component/audit-base-component.component';
 import { AttachmentFile } from 'src/app/data/AttachmentFile';
+import { ReferentialService } from 'src/app/service/referential.service';
 
 @Component({
 	selector: 'app-files-detail-form',
@@ -22,11 +23,14 @@ export class FilesDetailFormComponent extends AuditBaseComponent implements OnIn
 	 */
 	@Input() idTopic: number;
 
+	/**
+	 * Title of the badge sent by the parent component.
+	 */
+	@Input() title: string;
+
 	ngOnInit() {
 		this.subscriptions.add(
-			this.project$.subscribe(project => {
-				this.project = project;
-			}));
+			this.project$.subscribe(project => this.project = project));
 	}
 
 	/**
@@ -36,7 +40,8 @@ export class FilesDetailFormComponent extends AuditBaseComponent implements OnIn
 		super.ngAfterViewInit();
 	}
 
-	constructor(public projectService: ProjectService) {
+	constructor(
+		public projectService: ProjectService) {
 		super();
 		this.postCreationInit('header-tasks-',
 			this.idTopic,

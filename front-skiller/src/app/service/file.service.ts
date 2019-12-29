@@ -10,6 +10,11 @@ import { MessageBoxService } from '../message-box/service/message-box.service';
 })
 export class FileService {
 
+	/**
+	 * Location of images inside Techchì.
+	 */
+	private IMAGES_DIR = './assets/img/';
+
 	constructor(private messageBoxService: MessageBoxService) {
 	}
 
@@ -25,6 +30,24 @@ export class FileService {
 			} else {
 				return true;
 			}
+		}
+	}
+
+	/**
+	 * Return the logo associated to the type of application.
+	 * The logo returned will be displayed in a `download` button.
+	 * @param typeOfApplication the type of application (DOC, DOCX, PDF...)
+	 */
+	getAssociatedIcon(typeOfApplication: number) {
+		switch (typeOfApplication) {
+			case Constants.FILE_TYPE_DOC:
+			case Constants.FILE_TYPE_DOCX:
+				return this.IMAGES_DIR + 'word.png';
+			case Constants.FILE_TYPE_PDF:
+				return this.IMAGES_DIR + 'pdf.png';
+			default:
+				console.error('Shoud not pass here : unknown type of application' + typeOfApplication);
+				return 'none';
 		}
 	}
 }

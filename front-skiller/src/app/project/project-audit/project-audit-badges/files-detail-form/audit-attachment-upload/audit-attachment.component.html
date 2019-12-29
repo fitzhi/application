@@ -8,9 +8,14 @@
 
     <button
         class="btn btn-outline btn-outline-secondary rounded downloadFile"
-        (click)="uploadFile(id)"
+        mdbTooltip="Download the attached document related to this audit" placement="bottom"
+        (click)="downloadFile(id)"
         [disabled]="isDisable(id)">
-            &nbsp;
+            <img 
+                mdbTooltip="Download the attached document related to this audit" placement="bottom"
+                *ngIf="relatedApplicationIcon != null"
+                class="relatedApplicationIcon"
+                [src]="relatedApplicationIcon" />
     </button>
 
     <textarea id="comment-{{id}}" class="fileLabel" 
