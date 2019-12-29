@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import fr.skiller.SkillerRuntimeException;
@@ -30,6 +31,7 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 	SkillHandler skillHandler;
 
 	@Autowired
+	@Qualifier("Application")
 	StorageService storageService;
 
 	Logger logger = LoggerFactory.getLogger(ApplicationFileSkillsScannerService.class.getCanonicalName());

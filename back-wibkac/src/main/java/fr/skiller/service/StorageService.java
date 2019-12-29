@@ -8,8 +8,11 @@ import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * @author Fr&eacute;d&eacute;ric VIDAL
+ * <p>
  * File system storage service.
+ * </p>
+ * 
+ * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public interface StorageService {
 	
@@ -20,9 +23,10 @@ public interface StorageService {
 
     /**
      * Store a file inside the uploading directory.
-     * @param file the file
+     * @param file the input file uploaded by the user
+     * @param destination the path of the destination file
      */
-    void store(MultipartFile file);
+    void store(MultipartFile file, String destination);
 
     /**
      * @return all files located from starting location, in a <code>stream</code> of <code>Path</code>
@@ -51,14 +55,14 @@ public interface StorageService {
 	/**
 	 * @param fileName the TXT file to be read
 	 * @return the content of the file
-	 * @throws IOException
+	 * @throws IOException if any IO exception occurs
 	 */
 	String readFileTXT(String fileName) throws IOException;
 	
 	/**
 	 * @param fileName the DOC file to be read
 	 * @return the content of the file
-	 * @throws IOException
+	 * @throws IOException if any IO exception occurs
 	 */
 	String readFileDOC(String fileName) throws IOException;
 

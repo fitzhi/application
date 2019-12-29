@@ -37,7 +37,6 @@ import fr.skiller.data.internal.Skill;
 import fr.skiller.data.internal.SonarEvaluation;
 import fr.skiller.data.internal.SonarProject;
 import fr.skiller.data.internal.Staff;
-import fr.skiller.data.source.ConnectionSettings;
 import fr.skiller.data.source.Contributor;
 import fr.skiller.exception.SkillerException;
 import lombok.extern.slf4j.Slf4j;

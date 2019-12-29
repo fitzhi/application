@@ -72,7 +72,7 @@ public class FileUploadIntegrationTests {
 		this.mvc.perform(fileUpload("/api/upload/do").file(multipartFile)).andExpect(status().isFound())
 				.andExpect(header().string("Location", "/"));
 
-		then(storageService).should().store(any(MultipartFile.class));
+		then(storageService).should().store(any(MultipartFile.class), "test.txt");
 	}
 
 	@Test

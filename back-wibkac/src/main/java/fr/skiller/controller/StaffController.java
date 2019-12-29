@@ -21,6 +21,7 @@ import java.util.function.Predicate;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -82,7 +83,11 @@ public class StaffController {
 	@Autowired
 	SkillHandler skillHandler;
 
+	/**
+	 * Storage service dedicated to upload/download the staff applications.
+	 */
 	@Autowired
+	@Qualifier("Application")
     StorageService storageService;
 
 	@Autowired
@@ -382,7 +387,13 @@ public class StaffController {
 		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 	}
 	
-
+	/**
+	 * Upload the application of a staff member on a server.
+	 * @param file the application
+	 * @param id the staff identifier
+	 * @param type the type of file (WORD, PDF...)
+	 * @return the resume parsed from the uploaded file.
+	 */
 	@PostMapping("/api/uploadCV")
 	public ResponseEntity<ResumeDTO> uploadApplicationFile(
 			@RequestParam("file") MultipartFile file, 
@@ -395,20 +406,20 @@ public class StaffController {
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("uploading %s for staff identifer %d of type %s", filename, id, type));
+			log.debug(String.format("Uploading %s for staff identifer %d of type %s", filename, id, type));
 		}
 
 		FileType typeOfApplication = FileType.valueOf(type);
 		
-		storageService.store(file);
-
 		final Staff staff = staffHandler.getStaff().get(id);
 		assert (staff != null);
+
+		storageService.store(file, buildFileName(staff, filename));
 
 		staff.updateApplication(filename, typeOfApplication);
 		
 		try {
-			final Resume exp = resumeParserService.extract(filename, typeOfApplication);
+			final Resume exp = resumeParserService.extract(buildFileName(staff, filename), typeOfApplication);
 			ResumeDTO resumeDTO = new ResumeDTO();
 			exp.data().forEach(item -> resumeDTO.experience.add(
 					new ResumeSkill(item.getIdSkill(), 
@@ -421,12 +432,27 @@ public class StaffController {
 			return new ResponseEntity<>(resumeDTO, headers, HttpStatus.OK);
 		} catch (SkillerException e) {
 			return new ResponseEntity<>(
-					new ResumeDTO(-1, e.getMessage()), 
-					headers, 
-					HttpStatus.INTERNAL_SERVER_ERROR);
+				new ResumeDTO(-1, e.getMessage()), 
+				headers, 
+				HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
+	/**
+	 * <p>
+	 * Build the local filename associated to the staff.<br/>
+	 * We build a local filename to avoid duplicated entries in the upload directory.
+	 * </p>
+	 * @param staff the given staff
+	 * @param filename the local filename on the user desktop
+	 * @return a <u>unique</u> filename to store the application.
+	 */
+	private String buildFileName(Staff staff, String filename) {
+		return staff.getIdStaff() + "-" + filename;
+	}
+	
+	
+	
 	@GetMapping(value = "{id}/application")
 	public ResponseEntity<Resource> downloadApplicationFile(
 		    @PathVariable("id") int id, 
@@ -443,7 +469,7 @@ public class StaffController {
 		}
 		
 		// Load file as Resource
-		Resource resource = storageService.loadAsResource(staff.getApplication());
+		Resource resource = storageService.loadAsResource(buildFileName(staff, staff.getApplication()));
 
         // Try to determine file's content type
 		final String contentType;
@@ -541,6 +567,7 @@ public class StaffController {
 	
 			staffHandler.addMission(param.getIdStaff(), param.getIdProject(), project.getName());
 			responseEntity = new ResponseEntity<>(new BooleanDTO(), headers, HttpStatus.OK);
+			
 			return responseEntity;
 		} catch (final SkillerException se) {
 			return new ResponseEntity<>(

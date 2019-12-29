@@ -6,6 +6,7 @@ package fr.skiller;
 import java.util.concurrent.Executor;
 
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -17,14 +18,15 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import fr.skiller.service.StorageService;
-import fr.skiller.service.impl.storageservice.StorageProperties;
+import fr.skiller.service.impl.storageservice.ApplicationStorageProperties;
+import fr.skiller.service.impl.storageservice.AuditAttachmentStorageProperties;
 import fr.skiller.source.crawler.git.GitCrawler;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL Starting class for the application
  */
 @SpringBootApplication
-@EnableConfigurationProperties(StorageProperties.class)
+@EnableConfigurationProperties({ApplicationStorageProperties.class, AuditAttachmentStorageProperties.class})
 @EnableScheduling
 @EnableAsync
 public class Application {
@@ -63,10 +65,13 @@ public class Application {
 	}
 
 	@Bean
-    CommandLineRunner init(StorageService storageService) {
+    CommandLineRunner init(
+    		@Qualifier("Application") StorageService storageServiceApplication,
+    		@Qualifier("Attachment") StorageService storageServiceAttachment) {
         return (args) -> {
         	LoggerFactory.getLogger(BACKEND_TECHXHI).info("StorageService initialization");
-            storageService.init();
+        	storageServiceApplication.init();
+        	storageServiceAttachment.init();
           	
             LoggerFactory.getLogger(BACKEND_TECHXHI).info("Source code crawling settings : ");
             LoggerFactory.getLogger(BACKEND_TECHXHI).info("--------------------------------");

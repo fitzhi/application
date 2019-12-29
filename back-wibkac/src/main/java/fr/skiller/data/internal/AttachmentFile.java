@@ -1,8 +1,6 @@
 package fr.skiller.data.internal;
 
-import java.util.List;
-import java.util.Map;
-
+import fr.skiller.service.FileType;
 import lombok.Data;
 
 /**
@@ -33,7 +31,7 @@ public @Data class AttachmentFile {
 	/**
 	 * Type of file (Word, PDF...)
 	 */
-	private int typeOfFile;
+	private FileType typeOfFile;
 	
 	/**
 	 * Public empty constructor for serialization purpose.
@@ -44,10 +42,20 @@ public @Data class AttachmentFile {
 	 * Attachment file construction.
 	 * @param fileIdentifier File identifier of the attachment inside an audit topic.
 	 * @param fileName File name of the attachment file.
+	 * @param typeOfFile Type of file (Word, PDF...)
+	 */
+	public AttachmentFile(int fileIdentifier, String fileName, FileType typeOfFile) {
+		this(fileIdentifier, fileName, "", typeOfFile);
+	}
+	
+	/**
+	 * Attachment file construction.
+	 * @param fileIdentifier File identifier of the attachment inside an audit topic.
+	 * @param fileName File name of the attachment file.
 	 * @param fileLabel Label of the filename.
 	 * @param typeOfFile Type of file (Word, PDF...)
 	 */
-	public AttachmentFile(int fileIdentifier, String fileName, String fileLabel, int typeOfFile) {
+	public AttachmentFile(int fileIdentifier, String fileName, String fileLabel, FileType typeOfFile) {
 		this.fileIdentifier = fileIdentifier;
 		this.fileName = fileName;
 		this.fileLabel = fileLabel;

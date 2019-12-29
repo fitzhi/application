@@ -3,15 +3,18 @@ package fr.skiller.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonValue;
+import com.google.gson.annotations.SerializedName;
+
 /**
- * 
+ * File type saved
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public enum FileType {
-	FILE_TYPE_PDF (0),
-	FILE_TYPE_DOCX (1),
-	FILE_TYPE_DOC (2),
-	FILE_TYPE_TXT (3);
+	@SerializedName("0") FILE_TYPE_PDF (0), // SerializedName is used to save this enum as an number value
+	@SerializedName("1") FILE_TYPE_DOCX (1),
+	@SerializedName("2") FILE_TYPE_DOC (2),
+	@SerializedName("3") FILE_TYPE_TXT (3);
 
 	
 	private int value;
@@ -34,8 +37,11 @@ public enum FileType {
 	}
 	
 	/**
-	 * @return the value of the <code>enum</code>.
+	 * @return the value of this <code>enum</code>.<br/>
+	 * The annotation <b>{@code JsonValue}</b> is there to inform {@code Jackson 2.1.2} used by spring 
+	 * that this value represents the {@code enum} during serialization.
 	 */
+	@JsonValue
 	public int getValue() {
 		return value;
 	}

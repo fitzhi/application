@@ -5,10 +5,13 @@ package fr.skiller.controller;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,6 +42,8 @@ import fr.skiller.data.internal.ResumeSkillIdentifier;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.security.TokenLoader;
 import fr.skiller.service.FileType;
+import fr.skiller.service.impl.storageservice.ApplicationStorageProperties;
+import fr.skiller.service.impl.storageservice.AuditAttachmentStorageProperties;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -65,6 +70,9 @@ public class StaffControllerUploadResumeTest {
 	
 	@Autowired
 	MockMvc mvc;
+
+	@Autowired
+	ApplicationStorageProperties storageProperties;
 
 	@Before 
 	public void before()  {
@@ -103,7 +111,6 @@ public class StaffControllerUploadResumeTest {
 				.exchange("/api/staff/api/uploadCV", HttpMethod.POST, new HttpEntity<>(map, headers),
 				ResumeDTO.class);
 
-		assertThat(response.getStatusCode()).isEqualByComparingTo(HttpStatus.OK);
 		List<ResumeSkillIdentifier> resultList = new ArrayList<>();
 		
 		response.getBody().experience.stream()
@@ -128,6 +135,14 @@ public class StaffControllerUploadResumeTest {
 		.filter(item -> getIdSkill("Python") == item.getIdSkill())
 		.forEach(resultList::add);
 		assertThat(resultList.isEmpty()).as("Python is NOT present in the CV").isTrue();
+		
+		//
+		// The file is correctly uploaded
+		//
+		File file = new File (storageProperties.getLocation() + 
+				String.format("/%d-ET_201709.doc", 1));
+		assertThat(file.exists());
+		assertThat(file.delete());		
 	}
 	
 	private int getIdSkill (final String title) {
@@ -138,6 +153,15 @@ public class StaffControllerUploadResumeTest {
 			return optSkill.get().getId();
 		} else {
 			throw new SkillerRuntimeException("Should not pass here for " + title + " !");
+		}
+	}
+	
+	@After
+	public void after() {
+		File file = new File (storageProperties.getLocation() + 
+				String.format("/%d-ET_201709.doc", 1));
+		if (file.exists()) {
+			file.delete();		
 		}
 	}
 }

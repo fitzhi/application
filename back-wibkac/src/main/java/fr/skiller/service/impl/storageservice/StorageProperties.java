@@ -1,19 +1,23 @@
 package fr.skiller.service.impl.storageservice;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-
-@ConfigurationProperties("storage")
-public class StorageProperties {
+public abstract class StorageProperties {
 
     /**
      * Folder location for storing files
      */
-    private String location = "upload-dir";
+    public String location = "upload-dir";
 
+    /**
+     * @return the location for the uploading directory.
+     */
     public String getLocation() {
         return location;
     }
 
+    /**
+     * Set the location for the uploading operation.
+     * @param location new location of upload
+     */
     public void setLocation(String location) {
         this.location = location;
     }

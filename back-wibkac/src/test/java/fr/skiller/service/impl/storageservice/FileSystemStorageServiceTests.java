@@ -34,7 +34,7 @@ public class FileSystemStorageServiceTests {
 
     private static final String HELLO_WORLD = "Hello World";
 	private static final String FOO_TXT = "foo.txt";
-	private StorageProperties properties = new StorageProperties();
+	private StorageProperties properties = new ApplicationStorageProperties();
     private FileSystemStorageService service;
 
     @Before
@@ -53,20 +53,20 @@ public class FileSystemStorageServiceTests {
     @Test
     public void saveAndLoad() {
         service.store(new MockMultipartFile("foo", FOO_TXT, MediaType.TEXT_PLAIN_VALUE,
-                HELLO_WORLD.getBytes()));
+                HELLO_WORLD.getBytes()), FOO_TXT);
         assertThat(service.load(FOO_TXT)).exists();
     }
 
     @Test(expected = StorageException.class)
     public void saveNotPermitted() {
         service.store(new MockMultipartFile("foo", "../foo.txt",
-                MediaType.TEXT_PLAIN_VALUE, HELLO_WORLD.getBytes()));
+                MediaType.TEXT_PLAIN_VALUE, HELLO_WORLD.getBytes()), FOO_TXT);
     }
 
     @Test
     public void savePermitted() {
         service.store(new MockMultipartFile("foo", "bar/../foo.txt",
-                MediaType.TEXT_PLAIN_VALUE, HELLO_WORLD.getBytes()));
+                MediaType.TEXT_PLAIN_VALUE, HELLO_WORLD.getBytes()), FOO_TXT);
     }
 
 }
