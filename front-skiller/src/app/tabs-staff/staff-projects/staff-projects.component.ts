@@ -146,9 +146,12 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 			this.staffDataExchangeService.collaborator$.subscribe(
 				(collab: Collaborator) => {
 					this.removeValues();
-					this.tagify.addTags(
-						this.collaborator.missions.
-						map(function(mission) { return mission.name; }));
+					// We add this test to avoid an empty-warning inside the component
+					if (this.collaborator.missions.length > 0) {
+						this.tagify.addTags(
+							this.collaborator.missions.
+							map(function(mission) { return mission.name; }));
+					}
 				}));
 
 		// We register the listener for the tagify-textarea.

@@ -19,6 +19,7 @@ import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { INTERNAL_SERVER_ERROR} from 'http-status-codes';
 import { take } from 'rxjs/operators';
 import { DeclaredExperience } from 'src/app/data/declared-experience';
+import { FileService } from 'src/app/service/file.service';
 
 @Component({
 	selector: 'app-staff-experience',
@@ -79,6 +80,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 		private staffDataExchangeService: StaffDataExchangeService,
 		private tabsStaffListService: TabsStaffListService,
 		private staffService: StaffService,
+		private fileService: FileService,
 		private messageService: MessageService,
 		private dialog: MatDialog,
 		private skillService: SkillService) {
@@ -108,7 +110,10 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 						this.staff.experiences.forEach(experience => {
 							values.push(new TagStar(experience.title, experience.level - 1));
 						});
-						this.values$.next(values);
+						// The test is there to avoid an empty-warning from the tagoify component
+						if (values.length > 0) {
+							this.values$.next(values);
+						}
 						this.readOnly$.next(!this.staff.idStaff || !this.staff.active);
 					}, 0);
 
@@ -119,22 +124,9 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 					this.skillService.allSkills.forEach (
 						skill => this.whitelist.push(skill.title)
 					);
-
-					switch (this.staff.typeOfApplication) {
-						case Constants.FILE_TYPE_DOC:
-						case Constants.FILE_TYPE_DOCX:
-							{
-								this.image_downloadCV = this.images_dir + this.image_winword;
-								break;
-							}
-						case Constants.FILE_TYPE_PDF:
-							{
-								this.image_downloadCV = this.images_dir + this.image_pdf;
-								break;
-							}
-					}
-				})
-		);
+					this.image_downloadCV = this.fileService.getAssociatedIcon(this.staff.typeOfApplication);
+				}
+		));
 	}
 
 	/**

@@ -6,6 +6,19 @@ import { Project } from 'src/app/data/project';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { AuditUploadAttachmentComponent } from './audit-upload-attachment/audit-upload-attachment.component';
 import { ProjectService } from 'src/app/service/project.service';
+import { FileService } from 'src/app/service/file.service';
+
+/**
+ * Class of parameters for the upload attachment dialogBox.
+ */
+export class AuditAttachment  {
+	constructor(
+		public idProject: number,
+		public idTopic: number,
+		public filename: string = '',
+		public type: number = -1) {}
+}
+
 
 @Component({
 	selector: 'app-audit-attachment',
@@ -36,10 +49,14 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 
 	private label: string = 'label';
 
-	private fileName: string = 'fileName';
+	/**
+	 * Label associated to the type of applicaton.
+	 */
+	private relatedApplicationIcon: string;
 
 	constructor(
 		private dialog: MatDialog,
+		private fileService: FileService,
 		private projectService: ProjectService) {
 		super();
 	}
@@ -50,6 +67,11 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 				.subscribe(project => {
 					this.projectService.dump(project, 'AuditAttachment.ngOntInit');
 					this.project = project;
+					const auditTopic = this.project.audit[this.idTopic].attachmentList[this.id];
+					// A file has already been uploaded
+					if ((auditTopic) && (auditTopic.fileName)) {
+						this.relatedApplicationIcon = this.fileService.getAssociatedIcon(auditTopic.typeOfFile);
+					}
 				}));
 	}
 
@@ -59,20 +81,22 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 	 */
 	uploadFile(id: number) {
 		if (+id === this.project.audit[this.idTopic].attachmentList.length) {
-			if (Constants.DEBUG) {
-				console.log('Adding  thefile %s labelled with %s',
-					this.fileName,
-					this.label);
-			}
 			const dialogConfig = new MatDialogConfig();
 			dialogConfig.disableClose = true;
 			dialogConfig.autoFocus = true;
 			dialogConfig.panelClass = 'default-dialog-container-class';
-			dialogConfig.data = null;
+			dialogConfig.data = new AuditAttachment(this.project.id, this.idTopic);
 			const dialogReference = this.dialog.open(AuditUploadAttachmentComponent, dialogConfig);
 			this.subscriptions.add(
-				dialogReference.afterClosed().subscribe(fileName => {
-					this.project.audit[this.idTopic].attachmentList.push(new AttachmentFile(id, this.fileName, 2, this.label));
+				dialogReference.afterClosed().subscribe( (auditAttachment: AuditAttachment)  => {
+					if (auditAttachment) {
+						if (Constants.DEBUG) {
+							console.log('Adding the file %s labelled with %s', auditAttachment.filename, this.label);
+						}
+						this.project.audit[this.idTopic].attachmentList.push(
+							new AttachmentFile(id, auditAttachment.filename, auditAttachment.type, this.label));
+						this.projectService.dump(this.project, 'uploadFile');
+					}
 				}));
 		}
 	}
@@ -88,7 +112,11 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 	 * @param id curent file identifier within the topic
 	 */
 	isDisable(id: number): boolean {
-		return true;
+		const auditTopic = this.project.audit[this.idTopic].attachmentList[this.id];
+		if ((!auditTopic) || (!auditTopic.fileName)) {
+			return true;
+		}
+		return false;
 	}
 
 	/**
