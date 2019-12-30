@@ -2,14 +2,22 @@ package fr.skiller.controller;
 
 import static fr.skiller.Global.BACKEND_RETURN_CODE;
 import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
+import static fr.skiller.Error.CODE_CANNOT_RETRIEVE_ATTACHMENTFILE;
+import static fr.skiller.Error.LIB_CANNOT_RETRIEVE_ATTACHMENTFILE;
 
+
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +36,7 @@ import fr.skiller.controller.in.BodyParamAuditEntry;
 import fr.skiller.controller.in.BodyParamProjectAttachmentFile;
 import fr.skiller.data.internal.AttachmentFile;
 import fr.skiller.data.internal.AuditTopic;
+import fr.skiller.data.internal.Staff;
 import fr.skiller.data.internal.TopicWeight;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.service.FileType;
@@ -237,6 +246,7 @@ public class ProjectAuditController {
 		
 		try {
 			projectAuditHandler.removeAttachmentFile (param.getIdProject(), param.getIdTopic(), param.getAttachmentFile().getFileIdentifier());
+			
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 		} catch (SkillerException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
@@ -275,7 +285,7 @@ public class ProjectAuditController {
 		try {
 			AuditTopic auditProject = projectAuditHandler.getTopic(idProject, idTopic);
 			
-			storageService.store(file, buildFileName(idProject, idTopic, filename));
+			storageService.store(file, projectAuditHandler.buildAttachmentFileName(idProject, idTopic, filename));
 
 			projectAuditHandler.updateAttachmentFile(
 				idProject, 
@@ -292,14 +302,50 @@ public class ProjectAuditController {
 	}
 	
 	/**
-	 * Build the <b>unique</b> filename to store the attachment file on server.
-	 * @param idProject the project identifier
-	 * @param idTopic the topic identifier
-	 * @param filename the original and local filename from the end-user desktop
-	 * @return the <b>unique</b> filename to store the attachment file
+	 * Download an attachment file from the audit. 
+	 * @param id the staff identifier
+	 * @param request type type of request
+	 * @return the file resource
 	 */
-	private String buildFileName(int idProject, int idTopic, String filename) {
-		return idProject + "-" + idTopic + "-" + filename;
+	@GetMapping(value = "/downloadAttachment/{idProject}/{idTopic}/{idFile}")
+	public ResponseEntity<Resource> downloadAttachmentFile(
+		    @PathVariable("idProject") int idProject, 
+		    @PathVariable("idTopic") int idTopic, 
+		    @PathVariable("idFile") int idFile, 
+		    HttpServletRequest request) {
+
+		HttpHeaders headers = new HttpHeaders();
+
+		try {
+			final AuditTopic auditTopic = projectAuditHandler.getTopic(idProject, idTopic);
+
+			AttachmentFile attachment = auditTopic.getAttachmentList().get(idFile);
+			if (attachment == null) {
+				throw new SkillerException (
+						CODE_CANNOT_RETRIEVE_ATTACHMENTFILE,
+						MessageFormat.format(LIB_CANNOT_RETRIEVE_ATTACHMENTFILE, idProject, idTopic, idFile));
+			}
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Downloading file %s for the project/topic %d/%d"), attachment.getFileName(), idProject, idTopic);
+			}
+			
+			//
+			// Load file as a Resource
+			//
+			Resource resource = storageService.loadAsResource(projectAuditHandler.buildAttachmentFileName(idProject, idTopic, attachment.getFileName()));
+
+			String contentType = storageService.getContentType(attachment.getTypeOfFile());
+
+	        return ResponseEntity.ok()
+	                .contentType(MediaType.parseMediaType(contentType))
+	                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+	                .body(resource);
+	        
+		} catch (SkillerException se) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
+			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
+			return new ResponseEntity<>(null, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
+		}
 	}
 	
 }

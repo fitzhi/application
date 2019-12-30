@@ -1,5 +1,10 @@
 package fr.skiller.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.io.File;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -20,6 +25,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -31,6 +37,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.ProjectHandler;
+import fr.skiller.controller.in.BodyParamProjectAttachmentFile;
 import fr.skiller.controller.util.LocalDateAdapter;
 import fr.skiller.data.internal.AttachmentFile;
 import fr.skiller.data.internal.AuditTopic;
@@ -48,7 +55,7 @@ import fr.skiller.service.impl.storageservice.AuditAttachmentStorageProperties;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class ProjectAuditControllerUploadAttachmentFileTest {
+public class ProjectAuditControllerUploadRemoveAttachmentFileTest {
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -71,9 +78,13 @@ public class ProjectAuditControllerUploadAttachmentFileTest {
 	@Autowired
 	AuditAttachmentStorageProperties storageProperties;
 	
-	private final String UPLOAD_FILENAME_DOCX = "/auditAttachments/audit.docx";
+	private final static String UPLOAD_PATHNAME_DOCX = "/auditAttachments/audit.docx";
+
+	private final static String UPLOAD_FILENAME_DOCX = "audit.docx";
+
+	private final static String UPLOAD_PATHNAME_PDF = "/auditAttachments/audit.pdf";
 	
-	private final String UPLOAD_FILENAME_PDF = "/auditAttachments/audit.pdf";
+	private final static String UPLOAD_FILENAME_PDF = "audit.pdf";
 	
 	private final int ID_PROJECT = 1;
 
@@ -92,31 +103,7 @@ public class ProjectAuditControllerUploadAttachmentFileTest {
 		
 	}
 	
-	@Test
-	@WithMockUser
-	public void testAddFirstAttachment() throws Exception {
-		
-		uploadfile(UPLOAD_FILENAME_DOCX, FileType.FILE_TYPE_DOCX.getValue());
-		
-		//
-		// The file is correctly uploaded
-		//
-		File attachment = new File (storageProperties.getLocation() + 
-				String.format("/%d-%d-audit.docx", ID_PROJECT, ID_TOPIC_1));
-		Assert.assertTrue(attachment.exists());
-		Assert.assertTrue(attachment.delete());
-		
-		//
-		// The attachment is well recorded in the project audit
-		//
-		Project project = projectHandler.get(ID_PROJECT);
-		List<AttachmentFile> attachments = project.getAudit().get(ID_TOPIC_1).getAttachmentList();
-		Assert.assertEquals(1, attachments.size());
-		Assert.assertEquals("audit.docx", attachments.get(0).getFileName());
-		Assert.assertEquals(FileType.FILE_TYPE_DOCX.getValue(), attachments.get(0).getTypeOfFile().getValue());
-	}
-
-	private void uploadfile(String filename, int fileType) {
+	private void uploadFile(String filename, int fileType) {
 		ClassPathResource resource = new ClassPathResource(filename);
 		HttpHeaders headers = new HttpHeaders();
 
@@ -136,32 +123,67 @@ public class ProjectAuditControllerUploadAttachmentFileTest {
 		Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
 	}
 	
+	private void removeFirstAttachmentFile(String filename) throws Exception {
+
+		BodyParamProjectAttachmentFile bppaf = new BodyParamProjectAttachmentFile();
+		bppaf.setIdProject(ID_PROJECT);
+		bppaf.setIdTopic(ID_TOPIC_1);
+		bppaf.setAttachmentFile(new AttachmentFile(0, filename, FileType.FILE_TYPE_DOCX, "file to be removed"));
+	
+		this.mvc.perform(post("/api/project/audit/removeAttachmentFile")
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(gson.toJson(bppaf)))
+			.andExpect(status().isOk())
+			.andExpect(content().string("true"))
+			.andDo(print())
+			.andReturn();
+		
+	}
+	
 	@Test
 	@WithMockUser
-	public void testAddSecondAttachment() throws Exception {
+	public void testAddFirstAttachment() throws Exception {
 		
-		uploadfile(UPLOAD_FILENAME_DOCX, FileType.FILE_TYPE_DOCX.getValue());
-		uploadfile(UPLOAD_FILENAME_PDF, FileType.FILE_TYPE_PDF.getValue());
-
+		uploadFile(UPLOAD_PATHNAME_DOCX, FileType.FILE_TYPE_DOCX.getValue());
+		
 		//
 		// The file is correctly uploaded
 		//
 		File attachment = new File (storageProperties.getLocation() + 
-				String.format("/%d-%d-audit.pdf", ID_PROJECT, ID_TOPIC_1));
+				String.format("/%d-%d-audit.docx", ID_PROJECT, ID_TOPIC_1));
 		Assert.assertTrue(attachment.exists());
-		Assert.assertTrue(attachment.delete());
-		
-		//
-		// The attachment is well recorded in the project audit
-		//
-		Project project = projectHandler.get(ID_PROJECT);
-		List<AttachmentFile> attachments = project.getAudit().get(ID_TOPIC_1).getAttachmentList();
-		Assert.assertEquals(2, attachments.size());
-		Assert.assertEquals("audit.docx", attachments.get(0).getFileName());
-		Assert.assertEquals("audit.pdf", attachments.get(1).getFileName());
-		Assert.assertEquals(FileType.FILE_TYPE_DOCX.getValue(), attachments.get(0).getTypeOfFile().getValue());
-		Assert.assertEquals(FileType.FILE_TYPE_PDF.getValue(), attachments.get(1).getTypeOfFile().getValue());
+
+		removeFirstAttachmentFile(UPLOAD_FILENAME_DOCX);
+		Assert.assertFalse(attachment.exists());
 	}
+	
+	@Test
+	@WithMockUser
+	public void testAddSecondAttachment() throws Exception {
+		
+		uploadFile(UPLOAD_PATHNAME_DOCX, FileType.FILE_TYPE_DOCX.getValue());
+		uploadFile(UPLOAD_PATHNAME_PDF, FileType.FILE_TYPE_PDF.getValue());
+
+		//
+		// The file is correctly uploaded
+		//
+		File attachmentDOCX = new File (storageProperties.getLocation() + 
+				String.format("/%d-%d-audit.docx", ID_PROJECT, ID_TOPIC_1));
+		File attachmentPDF = new File (storageProperties.getLocation() + 
+				String.format("/%d-%d-audit.pdf", ID_PROJECT, ID_TOPIC_1));
+		Assert.assertTrue(attachmentDOCX.exists());
+		Assert.assertTrue(attachmentPDF.exists());
+	
+		removeFirstAttachmentFile(UPLOAD_FILENAME_DOCX);
+		Assert.assertFalse(attachmentDOCX.exists());
+		Assert.assertTrue(attachmentPDF.exists());
+		
+		removeFirstAttachmentFile(UPLOAD_FILENAME_PDF);
+		Assert.assertFalse(attachmentDOCX.exists());
+		Assert.assertFalse(attachmentPDF.exists());
+		
+	}
+	
 	
 	@After
 	public void after() throws SkillerException {

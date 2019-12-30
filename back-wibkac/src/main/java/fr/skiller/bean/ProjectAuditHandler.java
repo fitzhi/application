@@ -96,4 +96,14 @@ public interface ProjectAuditHandler extends DataSaverLifeCycle {
 	 * @throws SkillerException thrown if any problem occurs such as <i>'Project identifier unknown'</i>
 	 */
 	void removeAttachmentFile(int idProject, int idTopic, int idFileIdentifier) throws SkillerException;
+
+	/**
+	 * Build the <b>unique</b> filename to store the attachment file on server.
+	 * @param idProject the project identifier
+	 * @param idTopic the topic identifier
+	 * @param filename the original and local filename from the end-user desktop
+	 * @return the <b>unique</b> filename to store the attachment file
+	 */
+	String buildAttachmentFileName(int idProject, int idTopic, String filename);
+	
 }

@@ -1,8 +1,10 @@
 package fr.skiller.bean.impl;
 
+import static fr.skiller.Error.CODE_CANNOT_RETRIEVE_ATTACHMENTFILE;
 import static fr.skiller.Error.CODE_PROJECT_INVALID_WEIGHTS;
 import static fr.skiller.Error.CODE_PROJECT_NOFOUND;
 import static fr.skiller.Error.CODE_PROJECT_TOPIC_UNKNOWN;
+import static fr.skiller.Error.LIB_CANNOT_RETRIEVE_ATTACHMENTFILE;
 import static fr.skiller.Error.MESSAGE_PROJECT_INVALID_WEIGHTS;
 import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
 import static fr.skiller.Error.MESSAGE_PROJECT_TOPIC_UNKNOWN;
@@ -12,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import fr.skiller.SkillerRuntimeException;
@@ -22,6 +25,7 @@ import fr.skiller.data.internal.AuditTopic;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.TopicWeight;
 import fr.skiller.exception.SkillerException;
+import fr.skiller.service.StorageService;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -38,6 +42,13 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 
 	@Autowired
 	ProjectHandler projectHandler;
+	
+	/**
+	 * Storage service dedicated to upload/download the audit attachments.
+	 */
+	@Autowired
+	@Qualifier("Attachment")
+    StorageService storageService;
 	
 	@Override
 	public void addTopic(int idProject, int idTopic) throws SkillerException {
@@ -228,11 +239,23 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 	public void removeAttachmentFile(int idProject, int idTopic, int idFileIdentifier) throws SkillerException {
 		
 		AuditTopic auditTopic = getTopic(idProject, idTopic);
+		AttachmentFile af = auditTopic.getAttachmentList().get(idFileIdentifier);
+		if (af == null) {
+			throw new SkillerException (
+					CODE_CANNOT_RETRIEVE_ATTACHMENTFILE,
+					MessageFormat.format(LIB_CANNOT_RETRIEVE_ATTACHMENTFILE, idProject, idTopic, idFileIdentifier));
+		}
+		storageService.removeFile(buildAttachmentFileName(idProject, idTopic, af.getFileName()));
 		
 		synchronized (lockDataUpdated) {
 			auditTopic.getAttachmentList().remove(idFileIdentifier);
 			this.dataUpdated = true;
 		}
 	}
-	
+
+	@Override
+	public String buildAttachmentFileName(int idProject, int idTopic, String filename) {
+		return idProject + "-" + idTopic + "-" + filename;
+	}
+
 }

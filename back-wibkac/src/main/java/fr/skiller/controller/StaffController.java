@@ -452,7 +452,12 @@ public class StaffController {
 	}
 	
 	
-	
+	/**
+	 * Download the staff member application. 
+	 * @param id the staff identifier
+	 * @param request type type of request
+	 * @return the file resource
+	 */
 	@GetMapping(value = "{id}/application")
 	public ResponseEntity<Resource> downloadApplicationFile(
 		    @PathVariable("id") int id, 
@@ -471,26 +476,7 @@ public class StaffController {
 		// Load file as Resource
 		Resource resource = storageService.loadAsResource(buildFileName(staff, staff.getApplication()));
 
-        // Try to determine file's content type
-		final String contentType;
-		FileType type = FileType.valueOf(staff.getTypeOfApplication());
-		switch (type) {
-		case FILE_TYPE_TXT:
-			contentType = "text/html;charset=UTF-8";
-			break;
-		case FILE_TYPE_DOC:
-			contentType ="application/msword";
-			break;
-		case FILE_TYPE_DOCX:
-			contentType ="application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-			break;
-		case FILE_TYPE_PDF:
-			contentType ="application/pdf";
-			break;
-		default:
-			contentType = "application/octet-stream";
-			break;
-		}
+		String contentType = storageService.getContentType(FileType.valueOf(staff.getTypeOfApplication()));
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("%s %s", staff.getApplication(), contentType));
 		}

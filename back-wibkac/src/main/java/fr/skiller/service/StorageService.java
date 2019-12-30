@@ -86,4 +86,18 @@ public interface StorageService {
 	 * @throws IOException exception occurs when reading the file system
 	 */
 	long getfileLength(String filename) throws IOException;
+	
+	/**
+	 * @param typeOfFile the type of file (DOC, DOCX, PDF...)
+	 * @return the content type related to this type of file.
+	 */
+	String getContentType(FileType typeOfFile);
+
+	/**
+	 * Remove a file from the <b>server upload</b> directory.<br/>
+	 * This method wont throw an exception if an error occurs during the deletion. The file might not exist for instance.
+	 * @param filename the given filename to be deleted
+	 * @return {@code true} if the deletion succeeds, {@code false} otherwise
+	 */
+	boolean removeFile(String filename);
 }

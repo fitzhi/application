@@ -1,5 +1,10 @@
 package fr.skiller.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import java.io.File;
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -20,10 +25,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
@@ -48,7 +55,7 @@ import fr.skiller.service.impl.storageservice.AuditAttachmentStorageProperties;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
-public class ProjectAuditControllerUploadAttachmentFileTest {
+public class ProjectAuditControllerDownloadAttachmentFileTest {
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -71,9 +78,9 @@ public class ProjectAuditControllerUploadAttachmentFileTest {
 	@Autowired
 	AuditAttachmentStorageProperties storageProperties;
 	
-	private final String UPLOAD_FILENAME_DOCX = "/auditAttachments/audit.docx";
+	private final static String UPLOAD_PATHNAME_PDF = "/auditAttachments/audit.pdf";
 	
-	private final String UPLOAD_FILENAME_PDF = "/auditAttachments/audit.pdf";
+	private final static String UPLOAD_FILENAME_PDF = "audit.pdf";
 	
 	private final int ID_PROJECT = 1;
 
@@ -92,31 +99,7 @@ public class ProjectAuditControllerUploadAttachmentFileTest {
 		
 	}
 	
-	@Test
-	@WithMockUser
-	public void testAddFirstAttachment() throws Exception {
-		
-		uploadfile(UPLOAD_FILENAME_DOCX, FileType.FILE_TYPE_DOCX.getValue());
-		
-		//
-		// The file is correctly uploaded
-		//
-		File attachment = new File (storageProperties.getLocation() + 
-				String.format("/%d-%d-audit.docx", ID_PROJECT, ID_TOPIC_1));
-		Assert.assertTrue(attachment.exists());
-		Assert.assertTrue(attachment.delete());
-		
-		//
-		// The attachment is well recorded in the project audit
-		//
-		Project project = projectHandler.get(ID_PROJECT);
-		List<AttachmentFile> attachments = project.getAudit().get(ID_TOPIC_1).getAttachmentList();
-		Assert.assertEquals(1, attachments.size());
-		Assert.assertEquals("audit.docx", attachments.get(0).getFileName());
-		Assert.assertEquals(FileType.FILE_TYPE_DOCX.getValue(), attachments.get(0).getTypeOfFile().getValue());
-	}
-
-	private void uploadfile(String filename, int fileType) {
+	private void uploadFile(String filename, int fileType) {
 		ClassPathResource resource = new ClassPathResource(filename);
 		HttpHeaders headers = new HttpHeaders();
 
@@ -138,30 +121,21 @@ public class ProjectAuditControllerUploadAttachmentFileTest {
 	
 	@Test
 	@WithMockUser
-	public void testAddSecondAttachment() throws Exception {
+	public void testDownloadAttachment() throws Exception {
 		
-		uploadfile(UPLOAD_FILENAME_DOCX, FileType.FILE_TYPE_DOCX.getValue());
-		uploadfile(UPLOAD_FILENAME_PDF, FileType.FILE_TYPE_PDF.getValue());
-
-		//
-		// The file is correctly uploaded
-		//
-		File attachment = new File (storageProperties.getLocation() + 
-				String.format("/%d-%d-audit.pdf", ID_PROJECT, ID_TOPIC_1));
-		Assert.assertTrue(attachment.exists());
-		Assert.assertTrue(attachment.delete());
+		uploadFile(UPLOAD_PATHNAME_PDF, FileType.FILE_TYPE_PDF.getValue());
+	
+		MvcResult result = this.mvc.perform(get(
+			String.format("/api/project/audit/downloadAttachment/%d/%d/%d", ID_PROJECT, ID_TOPIC_1, 0)))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/pdf"))
+				.andDo(print())
+				.andReturn();
 		
-		//
-		// The attachment is well recorded in the project audit
-		//
-		Project project = projectHandler.get(ID_PROJECT);
-		List<AttachmentFile> attachments = project.getAudit().get(ID_TOPIC_1).getAttachmentList();
-		Assert.assertEquals(2, attachments.size());
-		Assert.assertEquals("audit.docx", attachments.get(0).getFileName());
-		Assert.assertEquals("audit.pdf", attachments.get(1).getFileName());
-		Assert.assertEquals(FileType.FILE_TYPE_DOCX.getValue(), attachments.get(0).getTypeOfFile().getValue());
-		Assert.assertEquals(FileType.FILE_TYPE_PDF.getValue(), attachments.get(1).getTypeOfFile().getValue());
+		Assert.assertTrue(result.getResponse().getOutputStream().isReady());	
 	}
+
+	
 	
 	@After
 	public void after() throws SkillerException {

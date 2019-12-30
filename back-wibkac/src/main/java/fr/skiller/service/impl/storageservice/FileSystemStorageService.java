@@ -28,8 +28,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
+import fr.skiller.service.FileType;
 import fr.skiller.service.StorageService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class FileSystemStorageService implements StorageService {
 
 	/**
@@ -192,6 +195,34 @@ public class FileSystemStorageService implements StorageService {
 		return new File(this.rootLocation.resolve(filename).toString()).length();
 	}
 
+	@Override
+	public String getContentType(FileType typeOfFile) {
+        // Try to determine file's content type
+		final String contentType;
+		switch (typeOfFile) {
+			case FILE_TYPE_TXT:
+				contentType = "text/html;charset=UTF-8";
+				break;
+			case FILE_TYPE_DOC:
+				contentType ="application/msword";
+				break;
+			case FILE_TYPE_DOCX:
+				contentType ="application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+				break;
+			case FILE_TYPE_PDF:
+				contentType ="application/pdf";
+				break;
+			default:
+				contentType = "application/octet-stream";
+				break;
+		}
+		return contentType;
+	}
+
+	@Override
+	public boolean removeFile(String filename) {
+		return this.rootLocation.resolve(filename).toFile().delete();
+	}
     
 }
 
