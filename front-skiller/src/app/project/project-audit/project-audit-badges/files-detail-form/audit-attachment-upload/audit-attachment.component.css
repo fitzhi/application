@@ -1,49 +1,35 @@
 div.attachmentFile {
-    margin: 0px;
-    width: 350px;
-    height: 35px;
+    margin: 5px;
+    display: table-cell;
     vertical-align: middle;
 }
 
-button.uploadFile {
-    width: 30px;
-    height: 30px;
-    padding-top: 2px;
-    padding-left: 0px;
-    padding-right: 0px;
-    margin-left: 2px;
-    margin-top: 2px;
-}
-
-button.downloadFile {
-    width: 30px;
-    height: 30px;
-    padding: 0px;
-    margin-left: 2px;
-    margin-top: 2px;
-}
-
-img.relatedApplicationIcon {
+button.managerFile {
     width: 25px;
     height: 30px;
+    padding: 0px;
+    padding: 0px;
+    border-style: none;
+    align-items : center;
+    vertical-align: middle;
 }
 
-button.uploadFile:hover {
+button.managerFile:hover {
     background-color: #28a745;
     color: white;
     border-color: #28a745;
 }
 
-button.downloadFile:disabled {
-    border-color: darkgrey;
-}
-
-textarea.fileLabel {
-    width: 275px;
+input.fileLabel {
+    width: 290px;
     height: 35px;
     border: 1px;
     border-color: lightgray;
     border-style: solid;
     border-radius: 5px;
     margin-left: 5px;;
+}
+
+input.fileLabel:focus {
+    border-color: #28a745;
 }

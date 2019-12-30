@@ -50,4 +50,23 @@ export class FileService {
 				return 'none';
 		}
 	}
+
+	/**
+	 * Return the logo associated to the type of application.
+	 * The logo returned will be displayed in a `download` button.
+	 * @param typeOfApplication the type of application (DOC, DOCX, PDF...)
+	 */
+	getAssociatedAwesomeFont(typeOfApplication: number) {
+		switch (typeOfApplication) {
+			case Constants.FILE_TYPE_DOC:
+			case Constants.FILE_TYPE_DOCX:
+				return 'fas fa-file-word';
+			case Constants.FILE_TYPE_PDF:
+				return 'fas fa-file-pdf';
+			default:
+				console.error('Shoud not pass here : unknown type of application' + typeOfApplication);
+				return 'fas fa-exclamation';
+		}
+	}
+
 }

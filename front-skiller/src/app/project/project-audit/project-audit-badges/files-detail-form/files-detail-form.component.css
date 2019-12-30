@@ -41,7 +41,8 @@ div.title {
 }
 
 div.attachmentFiles {
-    padding: 3px;
+    padding-top: 5px;
     display: table-cell; 
     vertical-align: middle;
 }
+

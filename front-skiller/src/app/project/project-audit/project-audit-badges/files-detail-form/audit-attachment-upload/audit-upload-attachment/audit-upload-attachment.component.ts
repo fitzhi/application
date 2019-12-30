@@ -83,6 +83,7 @@ export class AuditUploadAttachmentComponent extends BaseComponent implements OnI
 		formData.append('file', file, file.name);
 		formData.append('idProject', <string><any>this.attachment.idProject);
 		formData.append('idTopic', <string><any>this.attachment.idTopic);
+		formData.append('label', <string><any>this.attachment.label);
 		formData.append('type', <string><any>Constants.APPLICATION_FILE_TYPE_ALLOWED.get(this.attachmentFile.type));
 
 		// create a HTTP-post request and pass the form
