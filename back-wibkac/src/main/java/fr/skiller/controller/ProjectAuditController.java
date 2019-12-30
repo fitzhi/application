@@ -258,7 +258,8 @@ public class ProjectAuditController {
 			@RequestParam("file") MultipartFile file, 
 			@RequestParam("idProject") int idProject, 
 			@RequestParam("idTopic") int idTopic, 
-			@RequestParam("type") int type) {
+			@RequestParam("type") int type,
+			@RequestParam("label") String label) {
 
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -279,7 +280,7 @@ public class ProjectAuditController {
 			projectAuditHandler.updateAttachmentFile(
 				idProject, 
 				idTopic, 
-				new AttachmentFile(auditProject.getAttachmentList().size(), filename, typeOfApplication));
+				new AttachmentFile(auditProject.getAttachmentList().size(), filename, typeOfApplication, label));
 		
 			return new ResponseEntity<>(true, headers, HttpStatus.OK);
 		} catch (SkillerException e) {

@@ -112,7 +112,7 @@ public class ProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
 		BodyParamProjectAttachmentFile bppaf = new BodyParamProjectAttachmentFile();
 		bppaf.setIdProject(ID_PROJECT);
 		bppaf.setIdTopic(ID_TOPIC_1);
-		bppaf.setAttachmentFile(new AttachmentFile(0, "given fileName", "given fileLabel", FileType.valueOf(3)));
+		bppaf.setAttachmentFile(new AttachmentFile(0, "given fileName", FileType.valueOf(3), "given fileLabel"));
 	
 		this.mvc.perform(post("/api/project/audit/saveAttachmentFile")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -125,7 +125,7 @@ public class ProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
 		Project project = this.getProject(ID_PROJECT);
 		Assert.assertEquals(1, project.getAudit().get(ID_TOPIC_1).getAttachmentList().size());
 		Assert.assertEquals("given fileName", project.getAudit().get(ID_TOPIC_1).getAttachmentList().get(0).getFileName());
-		Assert.assertEquals("given fileLabel", project.getAudit().get(ID_TOPIC_1).getAttachmentList().get(0).getFileLabel());
+		Assert.assertEquals("given fileLabel", project.getAudit().get(ID_TOPIC_1).getAttachmentList().get(0).getLabel());
 		Assert.assertEquals(3, project.getAudit().get(ID_TOPIC_1).getAttachmentList().get(0).getTypeOfFile().getValue());
 	}
 	
@@ -134,9 +134,9 @@ public class ProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
 	public void processAuditProjectSaveMiddleAttachmentFile() throws Exception {
 		
 		
-		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, new AttachmentFile(0, "theFileName", "theLabel", FileType.valueOf(0)));		
-		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, new AttachmentFile(1, "stupidFileName.doc", "stupid label", FileType.valueOf(0)));		
-		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, new AttachmentFile(2, "lastFileName.doc", "last label", FileType.valueOf(0)));		
+		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, new AttachmentFile(0, "theFileName", FileType.valueOf(0), "theLabel"));		
+		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, new AttachmentFile(1, "stupidFileName.doc", FileType.valueOf(0), "stupid label"));		
+		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, new AttachmentFile(2, "lastFileName.doc", FileType.valueOf(0), "last label"));		
 
 		//
 		// Update an attachment in the middle of the list
@@ -144,7 +144,7 @@ public class ProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
 		BodyParamProjectAttachmentFile bppaf = new BodyParamProjectAttachmentFile();
 		bppaf.setIdProject(ID_PROJECT);
 		bppaf.setIdTopic(ID_TOPIC_1);
-		bppaf.setAttachmentFile(new AttachmentFile(1, "testingFileName", "testingFileLabel", FileType.valueOf(3)));
+		bppaf.setAttachmentFile(new AttachmentFile(1, "testingFileName", FileType.valueOf(3), "testingFileLabel"));
 	
 		this.mvc.perform(post("/api/project/audit/saveAttachmentFile")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -157,16 +157,16 @@ public class ProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
 		Project project = this.getProject(ID_PROJECT);
 		Assert.assertEquals(3, project.getAudit().get(ID_TOPIC_1).getAttachmentList().size());
 		Assert.assertEquals("testingFileName", project.getAudit().get(ID_TOPIC_1).getAttachmentList().get(1).getFileName());
-		Assert.assertEquals("testingFileLabel", project.getAudit().get(ID_TOPIC_1).getAttachmentList().get(1).getFileLabel());
+		Assert.assertEquals("testingFileLabel", project.getAudit().get(ID_TOPIC_1).getAttachmentList().get(1).getLabel());
 		Assert.assertEquals(3, project.getAudit().get(ID_TOPIC_1).getAttachmentList().get(1).getTypeOfFile().getValue());
 	}
 	
 	@Test
 	@WithMockUser
 	public void processAuditProjectRemoveAttachmentFile() throws Exception {
-		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, new AttachmentFile(0, "theFileName", "theLabel", FileType.valueOf(0)));		
-		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, new AttachmentFile(1, "stupidFileName.doc", "stupid label", FileType.valueOf(0)));		
-		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, new AttachmentFile(2, "lastFileName.doc", "last label", FileType.valueOf(0)));		
+		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, new AttachmentFile(0, "theFileName", FileType.valueOf(0), "theLabel"));		
+		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, new AttachmentFile(1, "stupidFileName.doc", FileType.valueOf(0), "stupid label"));		
+		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, new AttachmentFile(2, "lastFileName.doc", FileType.valueOf(0), "last label"));		
 
 		//
 		// remove an attachment in the middle of the list
@@ -174,7 +174,7 @@ public class ProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
 		BodyParamProjectAttachmentFile bppaf = new BodyParamProjectAttachmentFile();
 		bppaf.setIdProject(ID_PROJECT);
 		bppaf.setIdTopic(ID_TOPIC_1);
-		bppaf.setAttachmentFile(new AttachmentFile(1, "tobeRemoved", "toBeRemoved", FileType.valueOf(1)));
+		bppaf.setAttachmentFile(new AttachmentFile(1, "tobeRemoved", FileType.valueOf(1), "toBeRemoved"));
 	
 		this.mvc.perform(post("/api/project/audit/removeAttachmentFile")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)

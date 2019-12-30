@@ -26,7 +26,7 @@ public @Data class AttachmentFile {
 	/**
 	 * Label of the filename.
 	 */
-	private String fileLabel;
+	private String label;
 	
 	/**
 	 * Type of file (Word, PDF...)
@@ -45,20 +45,20 @@ public @Data class AttachmentFile {
 	 * @param typeOfFile Type of file (Word, PDF...)
 	 */
 	public AttachmentFile(int fileIdentifier, String fileName, FileType typeOfFile) {
-		this(fileIdentifier, fileName, "", typeOfFile);
+		this(fileIdentifier, fileName, typeOfFile, "");
 	}
 	
 	/**
 	 * Attachment file construction.
 	 * @param fileIdentifier File identifier of the attachment inside an audit topic.
 	 * @param fileName File name of the attachment file.
-	 * @param fileLabel Label of the filename.
 	 * @param typeOfFile Type of file (Word, PDF...)
+	 * @param label Label of the filename.
 	 */
-	public AttachmentFile(int fileIdentifier, String fileName, String fileLabel, FileType typeOfFile) {
+	public AttachmentFile(int fileIdentifier, String fileName, FileType typeOfFile, String label) {
 		this.fileIdentifier = fileIdentifier;
 		this.fileName = fileName;
-		this.fileLabel = fileLabel;
+		this.label = label;
 		this.typeOfFile = typeOfFile;
 	}
 }

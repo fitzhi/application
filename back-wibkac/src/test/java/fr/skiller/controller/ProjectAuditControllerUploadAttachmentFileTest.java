@@ -124,6 +124,7 @@ public class ProjectAuditControllerUploadAttachmentFileTest {
 		map.add("file", resource);
 		map.add("idProject", ID_PROJECT);
 		map.add("idTopic", ID_TOPIC_1);
+		map.add("label", String.format("testing label for %s", filename));
 		map.add("type", fileType);
 		
 		ResponseEntity<Boolean> response = this.restTemplate

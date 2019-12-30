@@ -68,10 +68,10 @@ public class ProjectAuditHandlerRemoveAttachmentFileTest {
 		AuditTopic at = projectAuditHandler.getTopic(ID_PROJECT, 1);
 		Assert.assertEquals("Attachment list is empty", 0, at.getAttachmentList().size());
 		
-		projectAuditHandler.updateAttachmentFile(ID_PROJECT, 1, new AttachmentFile(0, "theFileName", "theLabel", FileType.valueOf(0)));		
+		projectAuditHandler.updateAttachmentFile(ID_PROJECT, 1, new AttachmentFile(0, "theFileName", FileType.valueOf(0), "theLabel"));		
 		Assert.assertEquals("Attachment list is NO MORE empty", 1, at.getAttachmentList().size());
 		Assert.assertEquals("theFileName", at.getAttachmentList().get(0).getFileName());
-		Assert.assertEquals("theLabel", at.getAttachmentList().get(0).getFileLabel());	
+		Assert.assertEquals("theLabel", at.getAttachmentList().get(0).getLabel());	
 		
 		projectAuditHandler.removeAttachmentFile(ID_PROJECT, 1, 0);		
 		Assert.assertEquals("Attachment list is empty", 0, at.getAttachmentList().size());
@@ -82,25 +82,25 @@ public class ProjectAuditHandlerRemoveAttachmentFileTest {
 		AuditTopic at = projectAuditHandler.getTopic(ID_PROJECT, 1);
 		Assert.assertEquals("Attachment list is empty", 0, at.getAttachmentList().size());
 		
-		projectAuditHandler.updateAttachmentFile(ID_PROJECT, 1, new AttachmentFile(0, "theFileName", "theLabel", FileType.valueOf(0)));		
+		projectAuditHandler.updateAttachmentFile(ID_PROJECT, 1, new AttachmentFile(0, "theFileName", FileType.valueOf(0), "theLabel"));		
 		Assert.assertEquals("Attachment list is NO MORE empty", 1, at.getAttachmentList().size());
 		Assert.assertEquals("theFileName", at.getAttachmentList().get(0).getFileName());
-		Assert.assertEquals("theLabel", at.getAttachmentList().get(0).getFileLabel());	
+		Assert.assertEquals("theLabel", at.getAttachmentList().get(0).getLabel());	
 		
-		projectAuditHandler.updateAttachmentFile(ID_PROJECT, 1, new AttachmentFile(1, "stupidFileName.doc", "stupid label", FileType.valueOf(0)));		
+		projectAuditHandler.updateAttachmentFile(ID_PROJECT, 1, new AttachmentFile(1, "stupidFileName.doc", FileType.valueOf(0), "stupid label"));		
 		Assert.assertEquals("2 attachment files", 2, at.getAttachmentList().size());
 		Assert.assertEquals("stupidFileName.doc", at.getAttachmentList().get(1).getFileName());
-		Assert.assertEquals("stupid label", at.getAttachmentList().get(1).getFileLabel());	
+		Assert.assertEquals("stupid label", at.getAttachmentList().get(1).getLabel());	
 
-		projectAuditHandler.updateAttachmentFile(ID_PROJECT, 1, new AttachmentFile(2, "lastFileName.doc", "last label", FileType.valueOf(0)));		
+		projectAuditHandler.updateAttachmentFile(ID_PROJECT, 1, new AttachmentFile(2, "lastFileName.doc", FileType.valueOf(0), "last label"));		
 		Assert.assertEquals("3 attachment files", 3, at.getAttachmentList().size());
 		Assert.assertEquals("lastFileName.doc", at.getAttachmentList().get(2).getFileName());
-		Assert.assertEquals("last label", at.getAttachmentList().get(2).getFileLabel());	
+		Assert.assertEquals("last label", at.getAttachmentList().get(2).getLabel());	
 		
 		projectAuditHandler.removeAttachmentFile(ID_PROJECT, 1, 1);		
 		Assert.assertEquals("2 attachment files", 2, at.getAttachmentList().size());
 		Assert.assertEquals("lastFileName.doc", at.getAttachmentList().get(1).getFileName());
-		Assert.assertEquals("last label", at.getAttachmentList().get(1).getFileLabel());	
+		Assert.assertEquals("last label", at.getAttachmentList().get(1).getLabel());	
 	}
 	
 	@After
