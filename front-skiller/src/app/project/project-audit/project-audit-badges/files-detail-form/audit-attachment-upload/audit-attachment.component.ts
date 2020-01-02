@@ -7,7 +7,8 @@ import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { AuditUploadAttachmentComponent } from './audit-upload-attachment/audit-upload-attachment.component';
 import { ProjectService } from 'src/app/service/project.service';
 import { FileService } from 'src/app/service/file.service';
-import { AuditTopic } from 'src/app/data/AuditTopic';
+import { MessageService } from 'src/app/message/message.service';
+import { AuditAttachmentService } from '../service/audit-attachment.service';
 
 /**
  * Class of parameters for the upload attachment dialogBox.
@@ -45,16 +46,16 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 	@Input() project$;
 
 	/**
+	 * attachmentFile : the associated attachment file
+	 */
+	@Input() attachmentFile;
+
+	/**
 	 * Current project read from the `project$` observable..
 	 */
 	private project: Project;
 
-	/**
-	 * Actual attachmentFile
-	 */
-	private attachmentFile: AttachmentFile;
-
-	private label: string;
+	private label = '';
 
 	/**
 	 * This `boolean` setup if we are in upload mode (or in delete mode).
@@ -69,24 +70,25 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 	constructor(
 		private dialog: MatDialog,
 		private fileService: FileService,
+		private messageService: MessageService,
+		private auditAttachmentService: AuditAttachmentService,
 		private projectService: ProjectService) {
 		super();
 	}
 
 	ngOnInit() {
 		this.subscriptions.add(
-			this.project$
-				.subscribe(project => {
-					this.projectService.dump(project, 'AuditAttachment.ngOntInit');
-					this.project = project;
-					this.attachmentFile = this.project.audit[this.idTopic].attachmentList[this.id];
-					// A file has already been uploaded
-					if ((this.attachmentFile) && (this.attachmentFile.fileName)) {
-						this.relatedApplicationIcon = this.fileService.getAssociatedIcon(this.attachmentFile.typeOfFile);
-						this.label = this.project.audit[this.idTopic].attachmentList[this.id].label;
-						this.modeUpload = false;
-					}
-				}));
+			this.project$.subscribe(project => this.project = project));
+
+		// A file has already been uploaded
+		if ((this.attachmentFile) && (this.attachmentFile.fileName)) {
+			this.relatedApplicationIcon = this.fileService.getAssociatedIcon(this.attachmentFile.typeOfFile);
+			this.label = this.attachmentFile.label;
+			this.modeUpload = false;
+		} else {
+			this.label = '';
+			this.modeUpload = true;
+		}
 	}
 
 	/**
@@ -94,25 +96,46 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 	 * @param id curent file identifier within the topic
 	 */
 	uploadFile(id: number) {
-		if (+id === this.project.audit[this.idTopic].attachmentList.length) {
-			const dialogConfig = new MatDialogConfig();
-			dialogConfig.disableClose = true;
-			dialogConfig.autoFocus = true;
-			dialogConfig.panelClass = 'default-dialog-container-class';
-			dialogConfig.data = new AuditAttachment(this.project.id, this.idTopic, '', -1, this.label);
-			const dialogReference = this.dialog.open(AuditUploadAttachmentComponent, dialogConfig);
-			this.subscriptions.add(
-				dialogReference.afterClosed().subscribe( (auditAttachment: AuditAttachment)  => {
-					if (auditAttachment) {
-						if (Constants.DEBUG) {
-							console.log('Adding the file %s labelled with %s', auditAttachment.filename, this.label);
-						}
-						this.project.audit[this.idTopic].attachmentList.push(
-							new AttachmentFile(id, auditAttachment.filename, auditAttachment.type, this.label));
-						this.projectService.dump(this.project, 'uploadFile');
+		const dialogConfig = new MatDialogConfig();
+		dialogConfig.disableClose = true;
+		dialogConfig.autoFocus = true;
+		dialogConfig.panelClass = 'default-dialog-container-class';
+		dialogConfig.data = new AuditAttachment(this.project.id, this.idTopic, '', -1, this.label);
+		const dialogReference = this.dialog.open(AuditUploadAttachmentComponent, dialogConfig);
+		this.subscriptions.add(
+			dialogReference.afterClosed().subscribe((auditAttachment: AuditAttachment)  => {
+				if (auditAttachment) {
+					if (Constants.DEBUG) {
+						console.log('Adding the file %s labelled with %s', auditAttachment.filename, this.label);
 					}
-				}));
-		}
+					this.auditAttachmentService.emitAddUpdAttachmentFile(
+						new AttachmentFile(id, auditAttachment.filename, auditAttachment.type, this.label));
+					this.projectService.dump(this.project, 'uploadFile');
+				}
+		}));
+	}
+
+	/**
+	 * Download the audit file from the backend.
+	 * @param idFile the file identifier inside this topic
+	 */
+	downloadFile() {
+		this.projectService.downloadAuditAttachment(this.project.id, this.idTopic, this.attachmentFile);
+	}
+
+	/**
+	 * Download the audit file from the backend.
+	 * @param idFile the file identifier inside this topic
+	 */
+	deleteFile() {
+		this.projectService.deleteAuditAttachment(this.project.id, this.idTopic, this.attachmentFile)
+			.subscribe(doneAndOk => {
+				if (doneAndOk) {
+					this.messageService.success('The file \'' + this.attachmentFile.fileName + '\' has been removed from system.');
+					this.auditAttachmentService.emitRemoveAttachmentFile(this.id);
+					this.projectService.dump(this.project, 'uploadFile');
+				}
+			});
 	}
 
 	/**

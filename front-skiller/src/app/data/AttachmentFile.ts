@@ -9,8 +9,8 @@ export class AttachmentFile {
 	 */
 	constructor(
 		public idFile: number,
-		public fileName: string,
-		public typeOfFile: number,
-		public label: string) {}
+		public fileName: string = null,
+		public typeOfFile?: number,
+		public label?: string) {}
 
 }

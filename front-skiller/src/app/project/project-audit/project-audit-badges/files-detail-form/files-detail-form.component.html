@@ -4,33 +4,12 @@
         <div class="title">{{title}}</div>
     </div>
     <div class="attachmentFiles">
-        <app-audit-attachment 
-            *ngIf="isAttachmentRecordAvailable(0)"
-            [idTopic]="idTopic"
-            id=0 
-            [project$]="project$" >
-        </app-audit-attachment>
-
-        <app-audit-attachment 
-            *ngIf="isAttachmentRecordAvailable(1)"
-            [idTopic]="idTopic"
-            id=1 
-            [project$]="project$" >
-        </app-audit-attachment>
-        
-        <app-audit-attachment 
-            *ngIf="isAttachmentRecordAvailable(2)"
-            [idTopic]="idTopic"
-            id=2 
-            [project$]="project$" >
-        </app-audit-attachment>
-
-        <app-audit-attachment 
-            *ngIf="isAttachmentRecordAvailable(3)"
-            [idTopic]="idTopic"
-            id=3 
-            [project$]="project$" >
-        </app-audit-attachment>
-       
-    </div>
+        <div *ngFor="let attachmentFile of (auditAttachmentService.attachmentFile$ | async);index as idFile">
+            <app-audit-attachment 
+                [idTopic]="idTopic"
+                [attachmentFile]="attachmentFile"
+                [id]=idFile 
+                [project$]="project$" >
+            </app-audit-attachment>
+        </div>
 </div>

@@ -8,14 +8,14 @@
 
     <button *ngIf="!modeUpload"
         class="btn btn-outline-secondary managerFile"
-        (click)="deleteFile(id)">
+        (click)="deleteFile()">
             <i class="fas fa-trash" style="font-size: 26px"></i>
     </button>
 
-    <button
+    <button *ngIf="!modeUpload"
         class="btn btn-outline-secondary managerFile"
         mdbTooltip="Download the attached document related to this audit" placement="bottom"
-        (click)="downloadFile(id)"
+        (click)="downloadFile()"
         [disabled]="isDisable(id)">
         <i [ngClass]="classFile()" style="font-size: 26px"></i>
     </button>

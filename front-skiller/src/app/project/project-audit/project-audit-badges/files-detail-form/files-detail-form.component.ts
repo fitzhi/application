@@ -1,10 +1,11 @@
 import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
 import { Project } from 'src/app/data/project';
 import { ProjectService } from 'src/app/service/project.service';
 import { AuditBaseComponent } from '../audit-base-component/audit-base-component.component';
 import { AttachmentFile } from 'src/app/data/AttachmentFile';
 import { ReferentialService } from 'src/app/service/referential.service';
+import { AuditAttachment } from './audit-attachment-upload/audit-attachment.component';
+import { AuditAttachmentService } from './service/audit-attachment.service';
 
 @Component({
 	selector: 'app-files-detail-form',
@@ -30,7 +31,14 @@ export class FilesDetailFormComponent extends AuditBaseComponent implements OnIn
 
 	ngOnInit() {
 		this.subscriptions.add(
-			this.project$.subscribe(project => this.project = project));
+			this.project$.subscribe((project: Project) => {
+				this.project = project;
+				if (project.audit[this.idTopic]) {
+					this.auditAttachmentService.emitAttachmentFiles(project.audit[this.idTopic].attachmentList);
+				} else {
+					this.auditAttachmentService.emitAttachmentFiles([]);
+				}
+		}));
 	}
 
 	/**
@@ -41,20 +49,13 @@ export class FilesDetailFormComponent extends AuditBaseComponent implements OnIn
 	}
 
 	constructor(
-		public projectService: ProjectService) {
+		public projectService: ProjectService,
+		public auditAttachmentService: AuditAttachmentService) {
 		super();
 		this.postCreationInit('header-tasks-',
 			this.idTopic,
 			this.project$,
 			this.projectService);
-	}
-
-	/**
-	 * return `true` if this hosting DIV should be Displayed.
-	 * @param id curent file identifier within the topic
-	 */
-	isAttachmentRecordAvailable(id: number): boolean {
-		return (this.project.audit[this.idTopic].attachmentList.length >= id);
 	}
 
 	/**

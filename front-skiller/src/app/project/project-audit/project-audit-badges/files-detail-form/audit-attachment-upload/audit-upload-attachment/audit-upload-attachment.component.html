@@ -6,15 +6,19 @@
 		Only format <strong>DOC</strong>, <strong>DOCX</strong> and <strong>PDF</strong>
 		are supported.
 	</p>
-	<label for="file" class="label-file">Select the file to
-		upload...</label> 
+	<label for="file" class="label-file">Select the file to upload...</label> 
 	<input id="file" name="file" class="input-file" type="file"
 		(change)="fileEvent($event)" /> 
-	<span *ngIf="applicationFile">{{attachmentFile.name}}</span> 
-	<br />
+	
+	<span *ngIf="attachmentFile">
+		{{attachmentFile.filenName}}
+	</span> 
+	
+	<br/>
 	<mat-progress-bar *ngIf="progress" mode="determinate"
 		[value]="progress | async"></mat-progress-bar> </mat-dialog-content>
-	<mat-dialog-actions align="center">
+
+	<mat-dialog-actions>
 		<button mat-button class="actions" mat-dialog-close>Cancel</button>
 		<button class="actions" type="submit">Ok</button>
 	</mat-dialog-actions>

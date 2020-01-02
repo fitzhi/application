@@ -26,6 +26,7 @@ import { AuditTopic } from '../data/AuditTopic';
 import { Task } from '../data/task';
 import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 import { AttachmentFile } from '../data/AttachmentFile';
+import { FileService } from './file.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -45,6 +46,7 @@ export class ProjectService extends InternalService {
 	constructor(
 		private httpClient: HttpClient,
 		private referentialService: ReferentialService,
+		private fileService: FileService,
 		private messageService: MessageService,
 		private backendSetupService: BackendSetupService) {
 			super();
@@ -689,6 +691,50 @@ export class ProjectService extends InternalService {
 				}
 			});
 	}
+
+	/**
+     * GET : Download an attachment file previously uploaded.
+	 * @param idProject the current project identifier
+	 * @param idTopic the current topic identifier
+	 * @param attachmentFile the given attachmentFile
+     */
+	downloadAuditAttachment(idProject: number, idTopic: number, attachmentFile: AttachmentFile) {
+
+		if (!attachmentFile.fileName) {
+			return;
+		}
+		if (Constants.DEBUG) {
+			console.log('Download the audit attachment file : ' + attachmentFile.fileName);
+		}
+
+		this.fileService.downloadFile(
+			attachmentFile.fileName,
+			this.backendSetupService.url() +
+			'/project/audit/attachmentFile/' + idProject + '/' + idTopic + '/' + attachmentFile.idFile );
+	}
+
+	/**
+     * Delete an attachment file
+	 * @param idProject the current project identifier
+	 * @param idTopic the current topic identifier
+	 * @param attachmentFile the attachmentFile to be deleted
+     */
+	deleteAuditAttachment(idProject: number, idTopic: number, attachmentFile: AttachmentFile) {
+
+		if (!attachmentFile.fileName) {
+			return;
+		}
+		if (Constants.DEBUG) {
+			console.log('Delete the audit attachment file : ' + attachmentFile.fileName);
+		}
+
+		const body = { idProject: idProject, idTopic: idTopic, attachmentFile: {idFile: attachmentFile.idFile}};
+		return this.httpClient
+			.post<Boolean>(this.backendSetupService.url() + '/project/audit/removeAttachmentFile', body, httpOptions)
+			.pipe(take(1));
+
+	}
+
 
 	/**
 	 * Dump the content of a given project.
