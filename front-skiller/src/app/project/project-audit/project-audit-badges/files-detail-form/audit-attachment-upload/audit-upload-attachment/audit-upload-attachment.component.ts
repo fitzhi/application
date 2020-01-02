@@ -107,7 +107,7 @@ export class AuditUploadAttachmentComponent extends BaseComponent implements OnI
 						if (Constants.DEBUG) {
 							console.log ('Upload done for file ' + this.attachmentFile.name + ' of type ' + this.attachmentFile.type);
 						}
-						this.attachment.filename = file.name.match(/[ -_\w]+[.][\w]+$/i)[0];
+						this.attachment.filename = this.fileService.extractFilename(file.name); 
 						this.attachment.type = Constants.APPLICATION_FILE_TYPE_ALLOWED.get(this.attachmentFile.type);
 					}
 					// Close the progress-stream if we get an answer form the API

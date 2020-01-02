@@ -76,6 +76,7 @@ import { BackendSetupService } from '../service/backend-setup/backend-setup.serv
 import { QuotationBadgeComponent } from '../project/project-sonar/sonar-dashboard/sonar-quotation/quotation-badge/quotation-badge.component';
 import { TechxhiMedalComponent } from '../project/project-form/techxhi-medal/techxhi-medal.component';
 import { TableCategoriesComponent } from '../project/project-audit/table-categories/table-categories.component';
+import { FileService } from '../service/file.service';
 // tslint:disable-next-line:max-line-length
 
 @NgModule({
@@ -133,6 +134,7 @@ import { TableCategoriesComponent } from '../project/project-audit/table-categor
 		ProjectStaffService,
 		TabsStaffListService,
 		BackendSetupService,
+		FileService,
 		{ provide: MAT_DIALOG_DATA, useValue: {} },
 		{ provide: MatDialogRef, useValue: {} }
 	],

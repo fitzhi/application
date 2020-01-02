@@ -17,9 +17,25 @@ export class FileService {
 	 */
 	private IMAGES_DIR = './assets/img/';
 
+	/**
+	 * Type of local OS.
+	 */
+	osGlobals = { isWin: false, isOsX: false, isNix: false };
+
 	constructor(
 		private messageBoxService: MessageBoxService,
 		private http: HttpClient) {
+
+		const appVer = navigator.appVersion;
+		if  (appVer.indexOf('Win') !== -1) {
+			this.osGlobals.isWin = true;
+		} else if (appVer.indexOf('Mac') !== -1) {
+			this.osGlobals.isOsX = true;
+			} else if (appVer.indexOf('X11') !== -1)   {
+				this.osGlobals.isNix = true;
+			} else if (appVer.indexOf('Linux') !== -1) {
+				this.osGlobals.isNix = true;
+		}
 	}
 
 	/**
@@ -99,5 +115,29 @@ export class FileService {
 		saveAs(blob, filename);
 	}
 
+	/**
+	 * Extract and return the filename from the complete pathname
+	 * @param pathname the complete pathname
+	 */
+	public extractFilename(pathname: string): string {
+		const pathParts: string[] = pathname.split(this.getPathSeparator());
+		return pathParts[pathParts.length - 1];
+	}
 
+	/**
+	 * Return the local path separator depending the local OS (Windows '\', or Unix, OsX '/')
+	 */
+	private getPathSeparator() {
+
+		if (this.osGlobals.isWin) {
+			return '\\';
+		}
+
+		if (this.osGlobals.isOsX || this.osGlobals.isNix) {
+			return '/';
+		}
+
+		// default to *nix system.
+		return '/';
+	}
 }
