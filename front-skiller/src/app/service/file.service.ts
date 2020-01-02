@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Constants } from '../constants';
 import { MessageBoxService } from '../message-box/service/message-box.service';
+import { HttpHeaders, HttpClient } from '@angular/common/http';
+import { saveAs } from 'file-saver';
 
 /**
  * This class is providing upload or download services.
@@ -15,16 +17,18 @@ export class FileService {
 	 */
 	private IMAGES_DIR = './assets/img/';
 
-	constructor(private messageBoxService: MessageBoxService) {
+	constructor(
+		private messageBoxService: MessageBoxService,
+		private http: HttpClient) {
 	}
 
 	/**
 	 * Returns `true` if the given file is of a valid type (DOC, DOCX or PDF)
-	 * @param applicationFile the passed file
+	 * @param file the passed file
 	 */
-	checkApplicationFormat(applicationFile: File): boolean {
-		if (applicationFile) {
-			if (!Constants.APPLICATION_FILE_TYPE_ALLOWED.has(applicationFile.type)) {
+	checkApplicationFormat(file: File): boolean {
+		if (file) {
+			if (!Constants.APPLICATION_FILE_TYPE_ALLOWED.has(file.type)) {
 				this.messageBoxService.error('ERROR', 'Only the formats .DOC, .DOCS and .PDF are supported !');
 				return false;
 			} else {
@@ -68,5 +72,32 @@ export class FileService {
 				return 'fas fa-exclamation';
 		}
 	}
+
+	/**
+	 * Download a file from the backend server.
+	 * @param filename the filename to localy save.
+	 * @param url the url in charge of the transmission of data.
+	 */
+	public downloadFile(filename: string, url: string) {
+		const headers = new HttpHeaders();
+		headers.set('Accept', 'application/msword');
+
+		this.http.get(url, { headers: headers, responseType: 'blob' })
+			.subscribe(data => {
+				this.saveToFileSystem(data, filename, 'application/octet-stream');
+			});
+	}
+
+	/**
+     * Save the application file on the the file system.
+	 * @param data content of the file
+	 * @param filename name of the file to store on local
+	 * @param typeOfFile type of file (DOC, DOCX, PDF...)
+     */
+	private saveToFileSystem(data, filename, typeOfFile) {
+		const blob = new Blob([data], { type: typeOfFile });
+		saveAs(blob, filename);
+	}
+
 
 }

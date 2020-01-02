@@ -14,6 +14,7 @@ import { saveAs } from 'file-saver';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { take } from 'rxjs/operators';
 import { BooleanDTO } from '../data/external/booleanDTO';
+import { FileService } from './file.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json', 'observe': 'response' })
@@ -31,6 +32,7 @@ export class StaffService {
 
 	constructor(
 		private http: HttpClient,
+		private fileService: FileService,
 		private backendSetupService: BackendSetupService) {
 	}
 
@@ -203,7 +205,8 @@ export class StaffService {
 	}
 
 	/**
-     * GET : Download the application file for the passed staff member.
+     * GET : Download the application file of a staff member.
+	 * @param the given staff member whose application has to be retrieved
      */
 	downloadApplication(staff: Collaborator) {
 		if ((staff.application === null) || (staff.application.length === 0)) {
@@ -214,25 +217,10 @@ export class StaffService {
 				+ staff.application + ' for ' + staff.firstName + ' ' + staff.lastName);
 		}
 
-		const headers = new HttpHeaders();
-		headers.set('Accept', 'application/msword');
-
-		this.http.get(this.backendSetupService.url() + '/staff' + '/' + staff.idStaff + '/application',
-			{ headers: headers, responseType: 'blob' })
-			.subscribe(data => {
-				this.saveToFileSystem(data, staff.application, 'application/octet-stream');
-			});
-
+		this.fileService.downloadFile(
+			staff.application,
+			this.backendSetupService.url() + '/staff' + '/' + staff.idStaff + '/application');
 	}
-
-	/**
-     * Save the application file on the the file system.
-     */
-	private saveToFileSystem(data, filename, typeOfFile) {
-		const blob = new Blob([data], { type: typeOfFile });
-		saveAs(blob, filename);
-	}
-
 
 	/**
      * Retrieving the sum of staff members aggregated by skill & level (i.e. experience)
