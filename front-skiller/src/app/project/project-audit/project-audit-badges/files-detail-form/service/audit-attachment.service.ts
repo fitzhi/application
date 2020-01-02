@@ -80,8 +80,15 @@ export class AuditAttachmentService {
 	 * Add the upload trailer : an empty attachment which permits the end-user to upload a new File.
 	 */
 	private addUploadtrailer(): void {
-		if ( 	(this._attachmentFiles.length === 0) ||
-				((this._attachmentFiles.length < 4) && (this._attachmentFiles[length].fileName))) {
+		const length = this._attachmentFiles.length;
+		//
+		// We add an upload trailer
+		// - if we're beginning with an empty list of attachments
+		// - If we've to add one if none exists yet.
+		//
+		if ( 	  (length === 0) ||
+				( (length < 4) && (this._attachmentFiles[length - 1].fileName))
+			) {
 			if (Constants.DEBUG) {
 				console.log ('After adding Upload trailer', this._attachmentFiles);
 			}
