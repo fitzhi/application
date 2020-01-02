@@ -249,6 +249,11 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 		
 		synchronized (lockDataUpdated) {
 			auditTopic.getAttachmentList().remove(idFileIdentifier);
+			
+			// Renumbering of idFiles
+			for (int idFile = idFileIdentifier; idFile < auditTopic.getAttachmentList().size(); idFile++) {
+				auditTopic.getAttachmentList().get(idFile).setIdFile(idFile);
+			}
 			this.dataUpdated = true;
 		}
 	}
