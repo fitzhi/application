@@ -41,3 +41,18 @@ button.actions {
 .input-file {
     display: none;
 }
+
+p.filenameSuccess {
+	font-weight: 700;
+	color: #28a745;
+}
+
+p.filenameError {
+	font-weight: 700;
+	color: red;
+}
+
+.mat-dialog-actions {
+	justify-content: center;
+}
+

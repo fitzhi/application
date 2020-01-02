@@ -32,6 +32,11 @@ export class AuditUploadAttachmentComponent extends BaseComponent implements OnI
 	progression = new Subject<number>();
 	progress = this.progression.asObservable();
 
+	/**
+	 * this `boolean` is setting that this file is valid for uploading.
+	 */
+	private validFile = false;
+
 	constructor(
 		private fileService: FileService,
 		private dialogRef: MatDialogRef<AuditAttachmentComponent>,
@@ -58,7 +63,8 @@ export class AuditUploadAttachmentComponent extends BaseComponent implements OnI
 		if (Constants.DEBUG) {
 			console.log('Testing checkAttachmentFormat for ' + this.attachmentFile.type);
 		}
-		this.fileService.checkApplicationFormat(this.attachmentFile);
+		this.validFile = this.fileService.checkApplicationFormat(this.attachmentFile);
+		console.log (this.classFilename());
 	}
 
 	/**
@@ -123,6 +129,15 @@ export class AuditUploadAttachmentComponent extends BaseComponent implements OnI
 					// If the upload failed, we return null.
 					this.dialogRef.close(null);
 				}));
+	}
+
+	/**
+	 * Return the classname formating the paragraph displaying the filename.
+	 * - green : the file is valid for uploading (type and size)
+	 * - red : the file is invalid for upload
+	 */
+	private classFilename(): string {
+		return (this.validFile) ? 'filenameSuccess' : 'filenameError';
 	}
 
 	/**

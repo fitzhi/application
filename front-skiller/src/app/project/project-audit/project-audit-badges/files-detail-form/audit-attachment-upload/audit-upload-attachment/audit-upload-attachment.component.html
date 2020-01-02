@@ -10,15 +10,14 @@
 	<input id="file" name="file" class="input-file" type="file"
 		(change)="fileEvent($event)" /> 
 	
-	<span *ngIf="attachmentFile">
-		{{attachmentFile.filenName}}
-	</span> 
-	
-	<br/>
+	<p *ngIf="attachmentFile" [ngClass]="classFilename()">
+		{{attachmentFile.name}}
+	</p>
+
 	<mat-progress-bar *ngIf="progress" mode="determinate"
 		[value]="progress | async"></mat-progress-bar> </mat-dialog-content>
 
-	<mat-dialog-actions>
+	<mat-dialog-actions >
 		<button mat-button class="actions" mat-dialog-close>Cancel</button>
 		<button class="actions" type="submit">Ok</button>
 	</mat-dialog-actions>
