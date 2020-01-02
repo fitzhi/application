@@ -225,11 +225,11 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 		AuditTopic auditTopic = getTopic(idProject, idTopic);
 		
 		synchronized (lockDataUpdated) {
-			if (attachmentFile.getFileIdentifier() == auditTopic.getAttachmentList().size()) {
+			if (attachmentFile.getIdFile() == auditTopic.getAttachmentList().size()) {
 				auditTopic.getAttachmentList().add(attachmentFile);
 			} else {
-				auditTopic.getAttachmentList().remove(attachmentFile.getFileIdentifier());
-				auditTopic.getAttachmentList().add(attachmentFile.getFileIdentifier(),  attachmentFile);
+				auditTopic.getAttachmentList().remove(attachmentFile.getIdFile());
+				auditTopic.getAttachmentList().add(attachmentFile.getIdFile(),  attachmentFile);
 			}
 			this.dataUpdated = true;
 		}

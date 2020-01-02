@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.File;
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.junit.After;
@@ -25,7 +24,6 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -39,7 +37,6 @@ import com.google.gson.GsonBuilder;
 
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.controller.util.LocalDateAdapter;
-import fr.skiller.data.internal.AttachmentFile;
 import fr.skiller.data.internal.AuditTopic;
 import fr.skiller.data.internal.Project;
 import fr.skiller.exception.SkillerException;
@@ -126,7 +123,7 @@ public class ProjectAuditControllerDownloadAttachmentFileTest {
 		uploadFile(UPLOAD_PATHNAME_PDF, FileType.FILE_TYPE_PDF.getValue());
 	
 		MvcResult result = this.mvc.perform(get(
-			String.format("/api/project/audit/downloadAttachment/%d/%d/%d", ID_PROJECT, ID_TOPIC_1, 0)))
+			String.format("/api/project/audit/attachmentFile/%d/%d/%d", ID_PROJECT, ID_TOPIC_1, 0)))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("application/pdf"))
 				.andDo(print())
@@ -141,7 +138,6 @@ public class ProjectAuditControllerDownloadAttachmentFileTest {
 	public void after() throws SkillerException {
 		Project project = projectHandler.get(ID_PROJECT);
 		project.getAudit().clear();
-
 		
 		File attachment = new File (storageProperties.getLocation() + 
 				String.format("/%d-%d-audit.docx", ID_PROJECT, ID_TOPIC_1));

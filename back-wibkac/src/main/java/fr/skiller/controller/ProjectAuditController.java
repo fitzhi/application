@@ -241,11 +241,11 @@ public class ProjectAuditController {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 				"POST command on /project/audit/removeAttachmentFile for project.id %d, topic.id %d, attachmentFile %d", 
-					param.getIdProject(), param.getIdTopic(), param.getAttachmentFile().getFileIdentifier()));
+					param.getIdProject(), param.getIdTopic(), param.getAttachmentFile().getIdFile()));
 		}
 		
 		try {
-			projectAuditHandler.removeAttachmentFile (param.getIdProject(), param.getIdTopic(), param.getAttachmentFile().getFileIdentifier());
+			projectAuditHandler.removeAttachmentFile (param.getIdProject(), param.getIdTopic(), param.getAttachmentFile().getIdFile());
 			
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 		} catch (SkillerException se) {
@@ -287,6 +287,9 @@ public class ProjectAuditController {
 			
 			storageService.store(file, projectAuditHandler.buildAttachmentFileName(idProject, idTopic, filename));
 
+			if ((label == null) || (label.length() == 0)) {
+				label = filename;
+			}
 			projectAuditHandler.updateAttachmentFile(
 				idProject, 
 				idTopic, 
@@ -307,7 +310,7 @@ public class ProjectAuditController {
 	 * @param request type type of request
 	 * @return the file resource
 	 */
-	@GetMapping(value = "/downloadAttachment/{idProject}/{idTopic}/{idFile}")
+	@GetMapping(value = "/attachmentFile/{idProject}/{idTopic}/{idFile}")
 	public ResponseEntity<Resource> downloadAttachmentFile(
 		    @PathVariable("idProject") int idProject, 
 		    @PathVariable("idTopic") int idTopic, 
@@ -326,7 +329,7 @@ public class ProjectAuditController {
 						MessageFormat.format(LIB_CANNOT_RETRIEVE_ATTACHMENTFILE, idProject, idTopic, idFile));
 			}
 			if (log.isDebugEnabled()) {
-				log.debug(String.format("Downloading file %s for the project/topic %d/%d"), attachment.getFileName(), idProject, idTopic);
+				log.debug(String.format("Downloading file %s for the project/topic %d/%d", attachment.getFileName(), idProject, idTopic));
 			}
 			
 			//
