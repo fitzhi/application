@@ -15,4 +15,3 @@ mvn clean package
 cp target/wibkac.jar ../deploy/backend-wibkac/wibkac.jar
 cp -R data ../deploy/
 cd ..
-
