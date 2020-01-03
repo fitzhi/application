@@ -53,6 +53,9 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.transport.FetchConnection;
+import org.eclipse.jgit.transport.Transport;
+import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.slf4j.Logger;
@@ -944,19 +947,30 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 	@Override
 	@Async
-	public RiskDashboard generateAsync(final Project project, final SettingsGeneration settings)
-			throws SkillerException, GitAPIException, IOException {
+	public RiskDashboard generateAsync(final Project project, final SettingsGeneration settings) {
+		boolean failed = false;
 		try {
 			tasks.addTask(DASHBOARD_GENERATION, "project", project.getId());
 			return generate(project, settings);
 		} catch (SkillerException se) {
 			tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), se.errorCode, se.errorMessage);
-			throw se;
+			failed = true;
+			return null;
 		} catch (GitAPIException | IOException e) {
 			tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), 666, e.getLocalizedMessage());
-			throw e;
+			failed = true;
+			return null;
 		} finally {
-			tasks.completeTask(DASHBOARD_GENERATION, "project", project.getId());
+			try {
+				if (!failed) {
+					tasks.completeTask(DASHBOARD_GENERATION, "project", project.getId());
+				} else {
+					tasks.completeTaskOnError(DASHBOARD_GENERATION, "project", project.getId());					
+				}
+			} catch (SkillerException e) {
+				e.printStackTrace();
+				logger.error(e.getLocalizedMessage());
+			}
 		}
 	}
 
@@ -972,7 +986,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			try {
 				this.clone(project, settings);
 			} catch (final Exception e) {
-				this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), e.getMessage());
+				if (logger.isDebugEnabled()) {
+					logger.debug("GIT clone failed", e);
+				}
 				throw e;
 			}
 			if (logger.isDebugEnabled()) {
@@ -1092,7 +1108,12 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			settings.setUrl(project.getUrlRepository());
 			settings.setLogin(project.getUsername());
 			try {
-				String clearPassword = DataEncryption.decryptMessage(project.getPassword());
+				final String clearPassword;
+				if ((project.getPassword() == null) || (project.getPassword().length() == 0)) {
+					clearPassword = null;
+				} else {
+					clearPassword = DataEncryption.decryptMessage(project.getPassword());
+				}
 				settings.setPassword(clearPassword);
 			} catch (final SkillerException se) {
 				System.out.println("project.getPassword() " + project.getPassword());
@@ -1129,10 +1150,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			}
 			return settings;
 		}
-
-		throw new SkillerException(CODE_UNEXPECTED_VALUE_PARAMETER,
-				"[Project : " + project.getName() + "] " + MessageFormat.format(MESSAGE_UNEXPECTED_VALUE_PARAMETER,
-						"project.connection_Settings", project.getConnectionSettings()));
+		throw new SkillerException(CODE_UNEXPECTED_VALUE_PARAMETER, MESSAGE_UNEXPECTED_VALUE_PARAMETER);
 	}
 
 	@Override
@@ -1288,6 +1306,22 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		}
 	}
 		
+	@Override
+	public boolean testConnection(Project project) {
+		try {
+			ConnectionSettings settings = connectionSettings(project);
+			URIish uri = new URIish( project.getUrlRepository() );
+			Transport transport = Transport.open( uri );
+			transport.setCredentialsProvider(
+					new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()));
+			FetchConnection connection = transport.openFetch();
+			return true;
+		} catch (final Exception e) {
+			logger.error(String.format("testConnection failed for ", project.getName()), e);
+			return false;
+		}
+	}
+
 	private boolean containFilesOnlyAdded(final RepositoryAnalysis analysis, File dependency)  throws IOException {
 		
 		File[] children = dependency.listFiles();

@@ -242,6 +242,25 @@ public class ProjectController {
 	}
 		
 	/**
+	 * Test the connection settings for a given project.
+	 * @param idProject the project identifier
+	 * @return {@code true} if the 
+	 */
+	@GetMapping(value="/test/{idProject}")
+	public ResponseEntity<Boolean> test(@PathVariable("idProject") int idProject) {
+		final HttpHeaders headers = headers();
+		try {
+			final Project project = projectHandler.get(idProject);
+			boolean connected = this.scanner.testConnection(project);
+			return new ResponseEntity<>(connected, headers, HttpStatus.OK);			
+		} catch (SkillerException e) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(e.errorCode));
+			headers.set(BACKEND_RETURN_MESSAGE, e.getMessage());
+			return new ResponseEntity<>(false, headers, HttpStatus.NOT_FOUND);
+		}
+	}
+	
+	/**
 	 * <p>Add a new skill required for a project.</p>
 	 * @param projectSkill the body of the post containing an instance of ParamProjectSkill in JSON format
 	 * @see ProjectController.BodyParamProjectSkill
@@ -371,7 +390,7 @@ public class ProjectController {
 	 */
 	private ResponseEntity<SunburstDTO> generate (final Project project, final SettingsGeneration settings) {
 		try {
-			tasks.addTask( DASHBOARD_GENERATION, PROJECT, project.getId());
+			tasks.addTask(DASHBOARD_GENERATION, PROJECT, project.getId());
 			RiskDashboard data = scanner.generate(project, settings);
 			if (shuffleService.isShuffleMode()) {
 				if (log.isInfoEnabled()) {
@@ -447,9 +466,7 @@ public class ProjectController {
 		try {
 			projectHandler.saveLocationRepository(idProject, null);
 			String response = cacheDataHandler.removeRepository(project) ? "1" : "0";
-			if ("1".equals(response)) {
-				scanner.generateAsync(project, new SettingsGeneration(project.getId()));
-			}
+			scanner.generateAsync(project, new SettingsGeneration(project.getId()));
 			return new ResponseEntity<>( 
 					response,
 					new HttpHeaders(), 

@@ -95,13 +95,33 @@ public class AsyncTaskImpl implements AsyncTask {
 		}		
 	}
 	
-	@Override
-	public void completeTask(String operation, String title, int id) throws SkillerException {
+	/**
+	 * Complete task with or without error, called by
+	 * <ul>
+	 * <li>
+	 * {@link #completeTask(String, String, int)}
+	 * </li>
+	 * <li>
+	 * {@link #completeTaskOnError(String, String, int)}
+	 * </li>
+	 * </ul>
+	 */
+	private void completeTask(String operation, String title, int id, boolean successful) throws SkillerException {
 		Task task = getTask(operation, title, id);
 		if (task == null) {
 			throw new SkillerException(CODE_TASK_NOT_FOUND, String.format(MESSAGE_TASK_NOT_FOUND, operation, id));
 		}
-		task.complete();		
+		task.complete(successful);				
+	}
+	
+	@Override
+	public void completeTask(String operation, String title, int id) throws SkillerException {
+		this.completeTask(operation, title, id, true);
+	}
+
+	@Override
+	public void completeTaskOnError(String operation, String title, int id) throws SkillerException {
+		this.completeTask(operation, title, id, false);
 	}
 
 	/**

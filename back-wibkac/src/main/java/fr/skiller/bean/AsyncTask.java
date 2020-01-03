@@ -80,7 +80,7 @@ public interface AsyncTask {
 	boolean logMessage(String operation, String title, int id, int errorCode, String message);
 	
 	/**
-	 * Complete the current task.
+	 * Complete the current task without error.
 	 * @param operation type of operation recorded
 	 * @param title title related to the id
 	 * @param id identifier of the entity
@@ -88,6 +88,16 @@ public interface AsyncTask {
 	 * <i>The most probable exception is that the task does not exist.</i>
 	 */
 	void completeTask (String operation, String title, int id) throws SkillerException;
+	
+	/**
+	 * Complete the current task <font color="red">ON AN ERROR</font>
+	 * @param operation type of operation recorded
+	 * @param title title related to the id
+	 * @param id identifier of the entity
+	 * @throws SkillerException thrown if any problem occurs. 
+	 * <i>The most probable exception is that the task does not exist.</i>
+	 */
+	void completeTaskOnError (String operation, String title, int id) throws SkillerException;
 	
 	/**
 	 * Trace the content of the collection.

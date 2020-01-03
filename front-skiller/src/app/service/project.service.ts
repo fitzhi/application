@@ -340,6 +340,17 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
+	 * Test a connection to GIT on server, in order to validate the connection settings.
+	 */
+	testConnection(id: number): Observable<boolean> {
+		const url = this.backendSetupService.url() + '/project/test/' + id;
+		if (Constants.DEBUG) {
+			console.log('Testing the connection settings on URL ' + url);
+		}
+		return this.httpClient.get<boolean>(url, httpOptions);
+	}
+
+	/**
 	 * Retrieve the directories starting with 'criteria'.
 	 * @param idProject the identifier of the project
 	 * @param criteria the searched criteria

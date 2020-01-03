@@ -43,6 +43,13 @@ public interface RepoScanner {
 	CommitRepository loadRepositoryFromCacheIfAny(Project project) throws IOException, SkillerException;
 
 	/**
+	 * Test if the connection to the SCM will succeed with the actual settings
+	 * @param project the current project
+	 * @return {@code true} if the connection has succeeded, {@code false} otherwise
+	 */
+	boolean testConnection(Project project);
+	
+	/**
 	 * <p>
 	 * <b>Clone</b> or <b>Pull</b> the source code from the remote repository
 	 * </p>
@@ -189,11 +196,8 @@ public interface RepoScanner {
 	 * <li>or filtered for a staff member.</li>
 	 * </ul>
 	 * @return the project risk dashboard 
-	 * @throws SkillerException thrown if any application or network error occurs during the treatment.
-	 * @throws GitAPIException thrown if any application or network error occurs during the treatment.
-	 * @throws IOException thrown if any application or network error occurs during the treatment.
 	 */
-	RiskDashboard generateAsync(Project project, SettingsGeneration settings) throws SkillerException, GitAPIException, IOException;
+	RiskDashboard generateAsync(Project project, SettingsGeneration settings);
 	
 	/**
 	 * Personalize the commit repository on a particular staff member.

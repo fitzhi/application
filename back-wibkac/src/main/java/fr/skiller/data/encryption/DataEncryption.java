@@ -15,7 +15,7 @@ import fr.skiller.exception.SkillerException;
 
 /**
  * <p>
- * Bean in charge of encrypt, decrypt the password.
+ * Class in charge of encrypt, decrypt the password.
  * </p>
  *
  * @author Fr&eacute;d&eacute;ric VIDAL

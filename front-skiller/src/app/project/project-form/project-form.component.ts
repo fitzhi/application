@@ -209,6 +209,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					//
 					setTimeout(() => {
 						this.project = project;
+						this.testConnectionSettings();
 						this.profileProject.get('projectName').setValue(project.name);
 						this.connection_settings = String(this.project.connectionSettings);
 						this.profileProject.get('urlRepository1').setValue(this.project.urlRepository);
@@ -658,9 +659,25 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				this.project$.next(this.project);
 
 				this.messageService.success('Project ' + this.project.name + '  saved !');
+
+				this.testConnectionSettings();
 			});
 	}
 
+	/**
+	 * Test the connection settings.
+	 */
+	private testConnectionSettings() {
+		this.projectService
+			.testConnection(this.project.id)
+			.pipe(take(1))
+			.subscribe((doneAndOk: boolean) => {
+				if (!doneAndOk) {
+					this.messageService.warning('Connection to GIT failed : Check your settings!');
+				}
+			});
+
+	}
 	public onConnectionSettingsChange(val: string) {
 		this.project.connectionSettings = +val;
 		switch (this.project.connectionSettings) {
