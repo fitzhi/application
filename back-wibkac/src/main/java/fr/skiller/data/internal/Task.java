@@ -41,6 +41,18 @@ public @Data class Task {
 	 * {@code true} if the task has been successfully completed, {@code false} otherwise.
 	 */
 	boolean complete;
+
+	/**
+	 * <ul>
+	 * <li>
+	 * {@code true} if the task has been completed <font color="red">WITH AN EXCEPTION</font>
+	 * </li>
+	 * <li>
+	 * {@code false} otherwise.
+	 * </li>
+	 * </ul>
+	 */
+	boolean completeOnError = false;
 	
 	/**
 	 * List of logs recorded by the asynchronous application.
@@ -69,10 +81,12 @@ public @Data class Task {
 	/**
 	 * <p>
 	 * The task is Complete.
-	 * </pd
+	 * </p>
+	 * @param successfuly {@code TRUE} if the task has been successfully completed, {@code FALSE} if an exception has been thrown
 	 */
-	public void complete() {
+	public void complete(boolean successfuly) {
 		setComplete(true);
+		setCompleteOnError(!successfuly);
 		if (!this.activityLogs.isEmpty()) {
 			// We sort the logs saved for this task
 			this.activityLogs.sort(Comparator.comparing(TaskLog::getLogTime).reversed());

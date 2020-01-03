@@ -16,12 +16,13 @@ import { ProjectStaffService } from '../project-staff-service/project-staff.serv
 import { Filename } from '../../data/filename';
 import { FilenamesDataSource } from './node-detail/filenames-data-source';
 import { ContributorsDataSource } from './node-detail/contributors-data-source';
-import { BehaviorSubject, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription, interval } from 'rxjs';
 import { Contributor } from '../../data/contributor';
 import { take } from 'rxjs/operators';
 import { Task } from 'src/app/data/task';
 import { TaskLog } from 'src/app/data/task-log';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { InteractivityChecker } from '@angular/cdk/a11y';
 
 /**
  * Internal class in charge of the display of log messages reported by the asynchronous task.
@@ -40,7 +41,7 @@ class TaskReportManagement {
 	 *  * if `true`, this log message is a successfull message (with a font color in __green__)
 	 *  * if `false`, this is an error message (with a font color in __red__)
 	 */
-	taskOk: boolean;
+	taskOk = true;
 
 	/**
 	 * The last number of messages.
@@ -72,6 +73,11 @@ class TaskReportManagement {
 	complete = false;
 
 	/**
+	 * This `boolean` keeps the fact that the treatment ended with an error
+	 */
+	completeOnError = false;
+
+	/**
 	 * Dump the content of the task.
 	 * @param task the given task.
 	 */
@@ -91,9 +97,11 @@ class TaskReportManagement {
 	public lastLog(task: Task): TaskLog {
 		//
 		// Operation is completed.
-		// We return the last breath of the task
+		// We return the last breath of the task.
 		//
 		if (task.complete) {
+			this.completeOnError = task.completeOnError;
+			this.complete = task.complete;
 			this.taskLogsCount = 0;
 			this.numberOfUselessCall = 0;
 			this.dump(task);
@@ -129,6 +137,8 @@ class TaskReportManagement {
 		this.taskLogsCount = 0;
 		this.numberOfUselessCall = 0;
 		this.complete = false;
+		this.completeOnError = false;
+		this.taskOk = true;
 	}
 }
 
@@ -326,7 +336,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 							}
 							this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
 						} else {
-							this.loadSunburst(true);
+							this.loadSunburst();
 						}
 					}
 				}
@@ -349,21 +359,37 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			.pipe(take(1))
 			.subscribe(task => {
 				this.taskReportManagement.complete = task.complete;
-				const log = this.taskReportManagement.lastLog(task);
-				if (log) {
-					this.taskReportManagement.taskReport$.next(log.message);
-					this.taskReportManagement.taskOk = (log.code === 0) ? true : false;
+				// The treatment did not end properly
+				if (task.completeOnError) {
+					if (Constants.DEBUG) {
+						console.log ('Generation ended with the error', task.lastBreath.message);
+					}
+					this.messageService.error(task.lastBreath.message);
+					this.taskReportManagement.taskReport$.next(task.lastBreath.message);
+					this.taskReportManagement.taskOk = false;
+				} else {
+					const log = this.taskReportManagement.lastLog(task);
+					if (log) {
+						this.taskReportManagement.taskReport$.next(log.message);
+						// An error might be displayed without interrupting the application
+						this.taskReportManagement.taskOk = (log.code === 0) ? true : false;
+					}
 				}
 				if (task.complete) {
 					//
 					// Task is complete without error. We turn-off the waiting div to the mode ready for chart.
 					//
-					if (task.lastBreath.code === 0) {
+					if ((task.lastBreath.code === 0)  && (!task.completeOnError)) {
+						if (this.activeContext !== PreviewContext.SUNBURST_READY) {
+							this.refreshChart();
+						}
 						this.setActiveContext (PreviewContext.SUNBURST_READY);
 					} else {
 						// TODO Special : something has to be implemented here !
 						// Just need to figure out what...
 					}
+				} else {
+					setTimeout(() => this.loadTaskActivities(), this.taskReportManagement.adaptativeDelay);
 				}
 			},
 			error => {
@@ -380,36 +406,25 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 						console.groupEnd();
 					}
 					this.taskReportManagement.complete = true;
+					this.taskReportManagement.completeOnError = true;
+					this.taskReportManagement.taskReport$.next(error.message);
+					this.taskReportManagement.taskOk = false;
 				}
 			});
-
-			if (!this.taskReportManagement.complete) {
-				setTimeout(() => this.loadTaskActivities(), this.taskReportManagement.adaptativeDelay);
-			} else {
-				if (Constants.DEBUG) {
-					console.log ('Log tracking has been disable');
-				}
-				//
-				// We build the chart Sunburst.
-				//
-				if (this.shouldReload) {
-					this.refreshChart();
-				}
-		}
 	}
 
 	/**
 	 * Refresh the Sunburst chart.
 	 */
 	refreshChart() {
-		setTimeout(() => { this.loadSunburst(false); }, 0);
+		setTimeout(() => { this.loadSunburst(true); }, 0);
 	}
 
 	/**
      * Load the dashboard data in order to produce the sunburst chart.
 	 * @param silentMode set to `true` if we want a generation without the the tasks reporting panel, `false` otherwise.
      */
-	loadSunburst(silentMode: boolean) {
+	loadSunburst(silentMode = false) {
 
 		this.idPanelSelected = this.SUNBURST;
 
@@ -419,16 +434,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		} else {
 			this.setActiveContext (PreviewContext.SUNBURST_WAITING);
 		}
-/**
-		if (!this.myChart) {
-			this.myChart = Sunburst();
-			this.myChart.onNodeClick(nodeClicked => {
-				this.onNodeClick(nodeClicked);
-				this.myChart.focusOnNode(nodeClicked);
-			});
-		}
-*/
-		if (silentMode) {
+
+		if (!silentMode) {
 			this.taskReportManagement.init();
 			this.loadTaskActivities();
 		}
@@ -471,7 +478,11 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				},
 				responseInError => {
 					this.handleErrorData(responseInError);
-					this.taskReportManagement.taskReport$.next(responseInError);
+					if ((responseInError.error) && (responseInError.error.message)) {
+						this.taskReportManagement.taskReport$.next(responseInError.error.message);
+					} else {
+						this.taskReportManagement.taskReport$.next('Unexpected error !');
+					}
 					this.taskReportManagement.taskOk = false;
 				});
 	}
@@ -543,7 +554,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	handleErrorData(response: any) {
 		if (Constants.DEBUG) {
-			console.log('Response returned while retrieving the sunburst data for the project identfier ' +
+			console.log('Response returned while retrieving the sunburst data for the project identifier ' +
 				this.settings.idProject);
 		}
 		switch (response.status) {
@@ -554,7 +565,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				break;
 			}
 			case 400: {
-				console.log (response);
+				if (Constants.DEBUG) {
+					console.log ('Response received', response);
+				}
 				switch (response.error.code) {
 					case 201:
 						// The generation is not accessible. A dashboard generation is launched asynchronously.
@@ -661,6 +674,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		switch (idPanel) {
 			case this.SUNBURST:
 				this.idPanelSelected = idPanel;
+				console.log ('refreshChart()');
 				this.refreshChart();
 				this.setActiveContext(this.lastSunburstContext);
 				break;
@@ -724,16 +738,14 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 						.resetDashboard(this.settings.idProject)
 						.pipe(take(1))
 						.subscribe(response => {
-							if (response) {
-								this.messageBoxService.exclamation('Operation request is saved',
-									'Dashboard reinitialization has been requested. The operation might take a while.');
-									this.setActiveContext (PreviewContext.SUNBURST_WAITING);
-									this.taskReportManagement.init();
-									this.loadTaskActivities();
-							} else {
-								this.messageBoxService.exclamation('Operation failed',
-									'This request was not necessary : no dashboard available.');
+							if ((!response) && (Constants.DEBUG)) {
+									console.log ('This request was not necessary : no dashboard available.');
 							}
+							this.messageBoxService.exclamation('Request saved',
+								'Dashboard reinitialization has been requested. The operation might take a while.');
+								this.setActiveContext (PreviewContext.SUNBURST_WAITING);
+								this.taskReportManagement.init();
+								this.loadTaskActivities();
 						});
 					}
 				this.idPanelSelected = this.SUNBURST;

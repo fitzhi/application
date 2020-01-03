@@ -19,6 +19,6 @@
 
 	<mat-dialog-actions >
 		<button mat-button class="actions" mat-dialog-close>Cancel</button>
-		<button class="actions" type="submit">Ok</button>
+		<button class="actions" type="submit" [disabled]="!validFile">Ok</button>
 	</mat-dialog-actions>
 </form>

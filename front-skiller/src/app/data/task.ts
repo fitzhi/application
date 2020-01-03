@@ -5,6 +5,7 @@ export class Task {
 		public id: number,
 		public operation: string,
 		public complete: boolean,
+		public completeOnError: boolean,
 		public title: string,
 		public activityLogs: TaskLog[],
 		public lastBreath: TaskLog) { }

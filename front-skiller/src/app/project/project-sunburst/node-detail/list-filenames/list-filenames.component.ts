@@ -22,7 +22,7 @@ export class ListFilenamesComponent extends BaseComponent implements OnInit, OnD
 			if (this.filenames) {
 				this.subscriptions.add(
 					this.filenames.filenamesSubject.subscribe((elements: Filename[]) => {
-						if ((elements !== null) && (elements.length > 0)) {
+						if ((elements) && (elements.length > 0)) {
 							console.groupCollapsed('Filenames');
 							elements.forEach(element => console.log  (element.filename));
 							console.groupEnd();

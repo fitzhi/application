@@ -34,6 +34,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	PROJECT_TAB_FORM = Constants.PROJECT_TAB_FORM;
 	PROJECT_TAB_STAFF = Constants.PROJECT_TAB_STAFF;
 	PROJECT_SEARCH = Constants.PROJECT_SEARCH;
+	TABS_STAFF_LIST = Constants.TABS_STAFF_LIST;
 
 	/**
      * Type of entity currently active.
@@ -213,6 +214,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 				break;
 			case this.SKILLS_SEARCH:
 			case this.PROJECT_SEARCH:
+			case this.TABS_STAFF_LIST:
 				break;
 			default:
 				console.error('Unattempted editedEntity', Constants.CONTEXT[this.editedEntity]);
