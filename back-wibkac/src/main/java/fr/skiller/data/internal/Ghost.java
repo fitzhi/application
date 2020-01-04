@@ -1,4 +1,6 @@
 package fr.skiller.data.internal;
+import java.io.Serializable;
+
 import lombok.Data;
 
 /**
@@ -15,7 +17,12 @@ import lombok.Data;
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public @Data class Ghost {
+public @Data class Ghost implements Serializable {
+
+	/**
+	 * serialVersionUID for serialization purpose.
+	 */
+	private static final long serialVersionUID = -2461869054149715543L;
 
 	public static final int NULL = -1;
 	

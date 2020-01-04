@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,7 +23,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -43,7 +41,6 @@ import fr.skiller.data.internal.Skill;
 import fr.skiller.security.TokenLoader;
 import fr.skiller.service.FileType;
 import fr.skiller.service.impl.storageservice.ApplicationStorageProperties;
-import fr.skiller.service.impl.storageservice.AuditAttachmentStorageProperties;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

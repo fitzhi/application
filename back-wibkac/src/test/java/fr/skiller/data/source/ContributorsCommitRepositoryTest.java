@@ -23,7 +23,6 @@ import fr.skiller.data.internal.RepositoryAnalysis;
 import fr.skiller.data.internal.SourceControlChanges;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.RepoScanner;
-import fr.skiller.source.crawler.git.SCMChange;
 import fr.skiller.source.crawler.git.SourceChange;
 
 /**

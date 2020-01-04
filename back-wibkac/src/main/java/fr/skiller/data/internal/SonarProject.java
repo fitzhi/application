@@ -1,5 +1,6 @@
 package fr.skiller.data.internal;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +14,12 @@ import lombok.Data;
  * @author Frédéric VIDAL
  *
  */
-public @Data class SonarProject {
+public @Data class SonarProject implements Serializable {
+
+	/**
+	 * serialVersionUID for serialization purpose.
+	 */
+	private static final long serialVersionUID = 8077478013478822836L;
 
 	/**
 	 * Key of a Sonar entry

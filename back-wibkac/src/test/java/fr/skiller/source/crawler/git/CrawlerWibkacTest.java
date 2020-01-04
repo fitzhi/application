@@ -75,7 +75,6 @@ public class CrawlerWibkacTest {
 	@Test
 	public void testFilterEligible() throws IOException, SkillerException {
 
-		
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, WIBKAC))).readEnvironment().findGitDir()
 				.build();
@@ -83,11 +82,11 @@ public class CrawlerWibkacTest {
 		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, WIBKAC), analysis);
 		assertTrue(
-				analysis.getPathsAll().contains("front-skiller/src/assets/img/pdf.png"));
+				analysis.getPathsAll().contains("front-skiller/src/assets/img/zhi.png"));
 
 		scanner.filterEligible(analysis);
 
-		assertFalse(analysis.getPathsAll().contains("front-skiller/src/assets/img/pdf.png"));
+		assertFalse(analysis.getPathsAll().contains("front-skiller/src/assets/img/zhi.png"));
 
 	}
 

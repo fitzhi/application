@@ -1,5 +1,7 @@
 package fr.skiller.data.internal;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
 /**
@@ -20,7 +22,12 @@ import lombok.Data;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public @Data class ProjectSonarMetricValue {
+public @Data class ProjectSonarMetricValue implements Serializable {
+
+	/**
+	 * serialVersionUID for serialization purpose.s
+	 */
+	private static final long serialVersionUID = -7490734232699346295L;
 
 	/**
 	 * Key of the metric

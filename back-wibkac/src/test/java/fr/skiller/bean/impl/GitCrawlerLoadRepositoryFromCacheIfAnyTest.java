@@ -2,6 +2,10 @@ package fr.skiller.bean.impl;
 
 import java.io.IOException;
 
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,11 +20,6 @@ import fr.skiller.data.source.CommitRepository;
 import fr.skiller.exception.SkillerException;
 import fr.skiller.source.crawler.RepoScanner;
 import fr.skiller.source.crawler.git.GitCrawler;
-
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 /**
  * 

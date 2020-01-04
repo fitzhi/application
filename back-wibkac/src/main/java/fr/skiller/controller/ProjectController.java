@@ -8,6 +8,7 @@ import static fr.skiller.Global.BACKEND_RETURN_CODE;
 import static fr.skiller.Global.BACKEND_RETURN_MESSAGE;
 import static fr.skiller.Global.DASHBOARD_GENERATION;
 import static fr.skiller.Global.PROJECT;
+import static fr.skiller.Global.deepClone;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -108,7 +109,10 @@ public class ProjectController {
 		try {
 			Optional<Project> result = projectHandler.lookup(projectName);
 			if (result.isPresent()) {
-				responseEntity = new ResponseEntity<>(new ProjectDTO(result.get()), headers(), HttpStatus.OK);
+				Project project = (Project) deepClone(result.get());
+				project.setPassword(null);
+				responseEntity = new ResponseEntity<>(
+						new ProjectDTO(buildProjectWithoutPassword(result.get())), headers(), HttpStatus.OK);
 			} else {
 				responseEntity = new ResponseEntity<>(
 						new ProjectDTO(new Project(), 404, "There is no project with the name " + projectName), 
@@ -133,16 +137,17 @@ public class ProjectController {
 	 * @param idProject the searched project identifier
 	 * @return the HTTP Response with the retrieved project, or an empty one if the query failed.
 	 */
-	@GetMapping(value = "/id/{idParam}")
-	public ResponseEntity<Project> read(@PathVariable("idParam") int idProject) {
+	@GetMapping(value = "/id/{idProject}")
+	public ResponseEntity<Project> read(@PathVariable("idProject") int idProject) {
 
 		MyReference<ResponseEntity<Project>> refResponse = projectLoader.new MyReference<>();
 		final Project searchProject = projectLoader.getProject(idProject, new Project(), refResponse);
 		if (refResponse.getResponse() != null) {
 			return refResponse.getResponse();
 		}
-		
-		ResponseEntity<Project> response = new ResponseEntity<>(searchProject, headers(), HttpStatus.OK);
+
+		ResponseEntity<Project> response = new ResponseEntity<>(
+				buildProjectWithoutPassword(searchProject), headers(), HttpStatus.OK);
 		if (log.isDebugEnabled()) {
 			log.debug(
 					String.format("Project corresponding to the id %d has returned %s", 
@@ -179,14 +184,17 @@ public class ProjectController {
 					log.info("The projects collection is beeing shuffled for confidentiality purpose");
 				}
 				projects.stream().forEach(project -> {
-					final Project clone = new Project(project);
+					final Project clone = buildProjectWithoutPassword(project);
 					clone.setName(shuffleService.shuffle(clone.getName()));
 					clone.setUsername(shuffleService.shuffle(clone.getUsername()));
 					clone.setUrlRepository(shuffleService.shuffle(clone.getName()));
 					responseProjects.add(clone);
 				});
 			} else {
-				responseProjects = projects;
+				responseProjects = new ArrayList<>();
+				for (Project project : projects) {
+					responseProjects.add(buildProjectWithoutPassword(project));			
+				}
 			}
 			
 			if (log.isDebugEnabled()) {
@@ -446,6 +454,18 @@ public class ProjectController {
 		});
 		
 		return new ResponseEntity<>(projectContributorDTO, new HttpHeaders(), HttpStatus.OK);
+	}
+	
+	/**
+	 * Remove the password of the project.<br/>
+	 * <i>The project has to be clone to avoid the deletion</i> 
+	 * @param project the given project
+	 * @return a cloned project without password
+	 */
+	private Project buildProjectWithoutPassword (Project project) {
+		Project clone = (Project) deepClone(project);
+		clone.setPassword(null);
+		return clone;
 	}
 	
 	/**

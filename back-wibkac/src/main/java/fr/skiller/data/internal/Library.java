@@ -3,6 +3,8 @@
  */
 package fr.skiller.data.internal;
 
+import java.io.Serializable;
+
 /**
  * <p>
  * External dependency detected or declared in the repository.<br/>
@@ -11,8 +13,13 @@ package fr.skiller.data.internal;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public class Library {
+public class Library implements Serializable {
 	
+	/**
+	 * serialVersionUID for serialization purpose.
+	 */
+	private static final long serialVersionUID = -8743432269387069365L;
+
 	private String exclusionDirectory;
 	
 	private int type;

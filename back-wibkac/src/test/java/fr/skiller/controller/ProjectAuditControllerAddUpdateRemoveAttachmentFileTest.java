@@ -27,7 +27,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import fr.skiller.Global;
 import fr.skiller.bean.ProjectAuditHandler;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.controller.in.BodyParamProjectAttachmentFile;

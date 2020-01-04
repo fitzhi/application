@@ -1,5 +1,7 @@
 package fr.skiller.data.internal;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
 /**
@@ -10,7 +12,12 @@ import lombok.Data;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public @Data class FilesStats {
+public @Data class FilesStats implements Serializable {
+
+	/**
+	 * serialVersionUID for serialization purpose.
+	 */
+	private static final long serialVersionUID = 6937126988922326182L;
 
 	private String language;
 	

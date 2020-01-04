@@ -8,7 +8,6 @@ import static fr.skiller.Error.CODE_SONAR_KEY_NOFOUND;
 import static fr.skiller.Error.MESSAGE_PROJECT_NOFOUND;
 import static fr.skiller.Error.MESSAGE_SONAR_KEY_NOFOUND;
 
-import java.net.ConnectException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;

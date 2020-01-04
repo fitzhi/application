@@ -1,8 +1,5 @@
 package fr.skiller.data.encryption;
 
-import java.nio.charset.Charset;
-import java.util.Base64;
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.slf4j.Logger;

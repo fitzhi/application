@@ -1,5 +1,7 @@
 package fr.skiller.data.internal;
 
+import java.io.Serializable;
+
 import fr.skiller.service.FileType;
 import lombok.Data;
 
@@ -11,7 +13,12 @@ import lombok.Data;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public @Data class AttachmentFile {
+public @Data class AttachmentFile implements Serializable {
+
+	/**
+	 * serialVersionUID for serialization purpose.
+	 */
+	private static final long serialVersionUID = -1458774237695106604L;
 
 	/**
 	 * File identifier of the attachment inside an audit topic.

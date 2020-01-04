@@ -3,6 +3,7 @@ package fr.skiller.data.internal;
 import static fr.skiller.Global.DIRECT_ACCESS;
 import static fr.skiller.Global.REMOTE_FILE_ACCESS;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +23,12 @@ import lombok.Data;
  * </p> 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public @Data class Project  {
+public @Data class Project implements Serializable {
+
+	/**
+	 * serialVersionUID for serialization
+	 */
+	private static final long serialVersionUID = 4167131827487544764L;
 
 	/**
 	 * The project identifier

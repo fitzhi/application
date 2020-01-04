@@ -1,8 +1,15 @@
 package fr.skiller.data.internal;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
-public @Data class Skill {
+public @Data class Skill implements Serializable {
+
+	/**
+	 * serialVersionUID
+	 */
+	private static final long serialVersionUID = 1549084879092445214L;
 
 	private int id = 0;
 	

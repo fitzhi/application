@@ -1,5 +1,6 @@
 package fr.skiller.data.internal;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +14,13 @@ import lombok.Data;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public @Data class AuditTopic {
+public @Data class AuditTopic implements Serializable {
 	
+	/**
+	 * serialVersionUID for serialization purpose.
+	 */
+	private static final long serialVersionUID = -2060545843809958388L;
+
 	/**
 	 * Topic identifier involved in the audit.
 	 */
