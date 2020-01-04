@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import fr.skiller.Global;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.data.encryption.DataEncryption;
 import fr.skiller.data.internal.Project;
@@ -116,21 +117,26 @@ public class ProjectControllerDoNotTransportPasswordTest {
 		Project project = gson.fromJson(result.getResponse().getContentAsString(), Project.class);
 		Assert.assertNull(project.getPassword());
 
+		
 		this.mvc.perform(post("/api/project/save")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(project)))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+		
 		project = projectHandler.get(ID_PROJECT);
 		String password = DataEncryption.decryptMessage(project.getPassword());
 		Assert.assertEquals("password", password);
 		
+		project = (Project) Global.deepClone(project);
 		project.setPassword("newPassword");
 		this.mvc.perform(post("/api/project/save")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(project)))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+		
+		project = projectHandler.get(ID_PROJECT);
 		password = DataEncryption.decryptMessage(project.getPassword());
 		Assert.assertEquals("newPassword", password);
 	}

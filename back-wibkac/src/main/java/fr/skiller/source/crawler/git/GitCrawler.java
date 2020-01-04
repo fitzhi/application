@@ -1314,10 +1314,12 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			Transport transport = Transport.open( uri );
 			transport.setCredentialsProvider(
 					new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()));
-			FetchConnection connection = transport.openFetch();
+			transport.openFetch();
 			return true;
 		} catch (final Exception e) {
-			logger.error(String.format("testConnection failed for ", project.getName()), e);
+			if (logger.isDebugEnabled()) {
+				logger.debug(String.format("testConnection('%s') failed !", project.getName()), e);
+			}
 			return false;
 		}
 	}
@@ -1327,7 +1329,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		File[] children = dependency.listFiles();
 		
 		if (logger.isDebugEnabled()) {
-			logger.debug (String.format(" Project local repository %s",  analysis.getProject().getLocationRepository()));
+			logger.debug (String.format("Project local repository %s",  analysis.getProject().getLocationRepository()));
 		}
 		
 		for (File child : children) {
@@ -1344,8 +1346,10 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			testing = testing.replace(File.separatorChar, INTERNAL_FILE_SEPARATORCHAR);
 			
 			
-			//  First, the file has to be captured by the crawler.
-			// We avoid all files which do not match the filter criteria (.java, .js, ...)
+			//
+			// First, the file has to be caught by the crawler.
+			// (We avoid all files which do not match the filter criteria (.java, .js, ...))
+			//
 			if (!analysis.containsFile(testing)) {
 				continue;
 			}
