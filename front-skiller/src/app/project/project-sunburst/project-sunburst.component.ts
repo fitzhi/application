@@ -575,7 +575,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 						break;
 					case -1008:
 						// Operation already been launched.
-						this.messageBoxService.exclamation('Operation already launched', response.error.message);
+						this.messageService.info(response.error.message);
 						break;
 					case -999:
 						// Operation already been launched.
@@ -584,7 +584,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 								'Operation failed for an unknown reason : ' +
 								'You should reset completly the chart generation. (click on the \'trash\' icon)');
 						} else {
-							this.messageBoxService.exclamation('Chart generation failed', response.error.message);
+							this.messageService.info(response.error.message);
 						}
 						break;
 					default:
