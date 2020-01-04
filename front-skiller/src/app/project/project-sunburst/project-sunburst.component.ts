@@ -674,7 +674,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		switch (idPanel) {
 			case this.SUNBURST:
 				this.idPanelSelected = idPanel;
-				console.log ('refreshChart()');
 				this.refreshChart();
 				this.setActiveContext(this.lastSunburstContext);
 				break;
