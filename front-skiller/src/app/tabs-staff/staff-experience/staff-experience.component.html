@@ -6,7 +6,16 @@
 					alt="upload the application" 
 					title="Upload the application file"
 					[src]="image_upLoadCV"/>
-			</a>		
+			</a>
+			<button *ngIf="image_downloadCV != null"
+				class="btn btn-outline-secondary managerFile"
+				mdbTooltip="Download the registered application for this staff member" placement="bottom"
+				alt="download the application" 
+				title="Download the registered application for this staff member"				
+				(click)="download()">
+				<i [ngClass]="classFile()"></i>
+			</button>
+<!--				
 			<a [routerLink]="" id="downloadCV" (click)="download()" *ngIf="image_downloadCV != null">
 				<img *ngIf="staff.application != null" 
 					id="image_downloadCV" 
@@ -14,6 +23,7 @@
 					title="Download the registered application for this staff member"
 					[src]="image_downloadCV"/>
 			</a>
+-->
 		</div>
 		<div>		
 			<span class="text-muted">Skills&nbsp;</span>

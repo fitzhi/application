@@ -23,6 +23,25 @@ div.skill_card {
 	height: 45px;
 }
 
+button.managerFile {
+	width: 40px;
+	height: 40px;
+    padding: 0px;
+    padding: 0px;
+    border-style: none;
+    align-items : center;
+    vertical-align: middle;
+}
+
+button.managerFile:hover {
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+
+.downloadIcon {
+    font-size: 36px;
+}
 
 #upLoadCV {
 /* remove for Sonar    display: flex; */
@@ -35,24 +54,8 @@ div.skill_card {
     background-color: lightGrey;
 }
 
-#image_downloadCV {
-	width: 40px;
-	height: 40px;
-}
-
-#downloadCV {
-/*    display: flex; */
-    border-radius: 25%;
-    text-decoration: none;
-    display: inline-block;
-}
-
-#downloadCV:hover {
-    background-color: lightGrey;
-}
 
 #headerSkills {
-/*    display: flex; */
     display: inline-block;
     padding: 10px;
 }

@@ -179,6 +179,9 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 		return (this.staff.dateInactive != null);
 	}
 
+	/**
+	 * Upload the application file.
+	 */
 	upload() {
 		if (this.isAlreadyDeactived()) {
 			this.messageService.error(this.staff.firstName + ' ' + this.staff.lastName + ' is desactivated!');
@@ -371,6 +374,16 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 					this.tabsStaffListService.actualizeCollaborator(this.staff);
 				}
 			});
+	}
+
+	/**
+	 * Return the class file
+	 */
+	classFile(): string {
+		return 'downloadIcon ' +
+				((this.staff.application) ?
+			this.fileService.getAssociatedAwesomeFont(this.staff.typeOfApplication)
+			: '');
 	}
 
 	ngOnDestroy() {

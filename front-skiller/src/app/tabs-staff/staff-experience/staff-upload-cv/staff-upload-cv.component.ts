@@ -115,7 +115,7 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 						console.groupEnd();
 					}
 
-					this.staff.application = file.name.match(/[-_\w]+[.][\w]+$/i)[0];
+					this.staff.application = this.fileService.extractFilename(file.name);
 					this.staff.typeOfApplication = Constants.APPLICATION_FILE_TYPE_ALLOWED.get(this.applicationFile.type);
 
 					// Close the progress-stream if we get an answer form the API
@@ -125,8 +125,14 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 					this.dialogRef.close(response.experience);
 				}
 			},
-				responseInError =>
-					this.messageBoxService.error('Uploading error !', responseInError)));
+				responseInError => {
+					if ( (responseInError.error) && (responseInError.error.message)) {
+						this.messageBoxService.error('Uploading error !', responseInError.error.message);
+					} else {
+						this.messageBoxService.error('Uploading error !', 'An error occurs when uploading the application file');
+					}
+					this.dialogRef.close([]);
+				}));
 	}
 
 	/**
