@@ -10,11 +10,17 @@ export class ProjectStaffService {
 	/**
 	 * List of contributors involved in a project.
 	 */
-	public contributors: Contributor[];
+	public contributors: Contributor[] = [];
 
 	public id = Constants.UNKNOWN;
 
 	constructor() { }
+
+	public dumpContributors(): void {
+		console.groupCollapsed('Project conributors retrieved');
+		console.log(...this.contributors);
+		console.groupEnd();
+	}
 
 	/**
 	 * Return the NEXT staff's identifier from the project staff list.

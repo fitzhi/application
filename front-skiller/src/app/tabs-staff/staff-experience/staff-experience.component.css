@@ -34,9 +34,9 @@ button.managerFile {
 }
 
 button.managerFile:hover {
-    background-color: #28a745;
+    background-color: var(--color-selected);
     color: white;
-    border-color: #28a745;
+    border-color: var(--color-selected);
 }
 
 .downloadIcon {

@@ -3,6 +3,9 @@
 @import './buttons.css';
 @import './mat-tab-label.css';
 
+:root {
+  --color-selected: #28a745; 
+}
 html {
   position: relative;
   min-height: 100%;

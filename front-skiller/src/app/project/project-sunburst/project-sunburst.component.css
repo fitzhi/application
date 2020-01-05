@@ -83,7 +83,7 @@ mat-sidenav-content {
 }
 
 button.btn-outline-success {
-    background-color: #28a745;
+    background-color: var(--color-selected);
     color: white;
 }
 
@@ -122,7 +122,7 @@ div.taskReport {
 }
 
 div.taskReportOk {
-  color: #28a745;
+  color: var(--color-selected);
 }
 
 div.taskReportError {

@@ -44,7 +44,7 @@ button.actions {
 
 p.filenameSuccess {
 	font-weight: 700;
-	color: #28a745;
+	color: var(--color-selected);
 }
 
 p.filenameError {

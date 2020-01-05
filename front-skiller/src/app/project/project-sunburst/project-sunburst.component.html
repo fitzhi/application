@@ -78,7 +78,9 @@
 			<a href="javascript:;" (click)="jumpToTab (-1)">You need to complete the project form.</a>
         </div>
 
-        <div *ngIf="isActiveContext(PreviewContext.SUNBURST_READY)">
+		<!-- We do not use *ngIf because the dataSource needs to be created immediatly with their host component -->
+		<!-- If not, the tables are not synchronized with the selected package, and always empty. -->
+        <div [hidden]="!isActiveContext(PreviewContext.SUNBURST_READY)">
 			<app-node-detail id="node-details" 
 				[filenames]="filenames" 
 				[contributors]="contributors" 

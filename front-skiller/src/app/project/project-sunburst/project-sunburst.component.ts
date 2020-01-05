@@ -16,13 +16,13 @@ import { ProjectStaffService } from '../project-staff-service/project-staff.serv
 import { Filename } from '../../data/filename';
 import { FilenamesDataSource } from './node-detail/filenames-data-source';
 import { ContributorsDataSource } from './node-detail/contributors-data-source';
-import { BehaviorSubject, Subject, Subscription, interval } from 'rxjs';
+import { BehaviorSubject, Subject, Subscription, interval, Observable, of, EMPTY } from 'rxjs';
 import { Contributor } from '../../data/contributor';
-import { take } from 'rxjs/operators';
+import { take, switchMap } from 'rxjs/operators';
 import { Task } from 'src/app/data/task';
 import { TaskLog } from 'src/app/data/task-log';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { InteractivityChecker } from '@angular/cdk/a11y';
+import { MatTableDataSource } from '@angular/material/table';
+import { ContributorsDTO } from 'src/app/data/external/contributorsDTO';
 
 /**
  * Internal class in charge of the display of log messages reported by the asynchronous task.
@@ -182,7 +182,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	/**
 	 * This datasource of ghosts will be pass and listen in the project-ghosts-component, and table-project-componeet.
 	 */
-	public dataSourceGhosts$ = new Subject<ProjectGhostsDataSource>();
+	public dataSourceGhosts$ = new BehaviorSubject<MatTableDataSource<unknown>>(new MatTableDataSource<unknown>([]));
 
 	public PROJECT_IDX_TAB_FORM = Constants.PROJECT_IDX_TAB_FORM;
 
@@ -235,6 +235,11 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
      * Theses classnames are shared with the NodeDetail component when the user click on a slice.
      */
 	public filenames = new FilenamesDataSource();
+
+	/**
+	* `BehaviorSubject` which emits the filenames datasource.
+ 	*/
+	// public filenames$ = new BehaviorSubject<FilenamesDataSource>(new FilenamesDataSource());
 
 	/**
      * List of contributors.
@@ -336,7 +341,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 							}
 							this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
 						} else {
-							this.loadSunburst();
+							this.loadDataChart();
 						}
 					}
 				}
@@ -417,14 +422,47 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 * Refresh the Sunburst chart.
 	 */
 	refreshChart() {
-		setTimeout(() => { this.loadSunburst(true); }, 0);
+		setTimeout(() => { this.loadDataChart(true); }, 0);
+	}
+
+
+	loadData$(): Observable<any> {
+		return this.loadContributors$().pipe(
+			take(1),
+			switchMap((doneAndOk: boolean) => {
+				if (doneAndOk) {
+					return this.loadChart$();
+				} else {
+					return of(EMPTY);
+				}
+			}));
+	}
+
+	/**
+	 * Return `true` when the loading is complete.
+	 * Load the contributors of the project
+	 */
+	loadContributors$(): Observable<boolean> {
+		return this.projectService.contributors(this.project.id).pipe(
+			take(1),
+			switchMap((contributorsDTO: ContributorsDTO) => {
+				this.projectStaffService.contributors.push(...contributorsDTO.contributors);
+				if (Constants.DEBUG) {
+					this.projectStaffService.dumpContributors();
+				}
+				return of(true);
+			}));
+	}
+
+	loadChart$() {
+		return this.projectService.loadDashboardData$(this.settings);
 	}
 
 	/**
      * Load the dashboard data in order to produce the sunburst chart.
 	 * @param silentMode set to `true` if we want a generation without the the tasks reporting panel, `false` otherwise.
      */
-	loadSunburst(silentMode = false) {
+	loadDataChart(silentMode = false) {
 
 		this.idPanelSelected = this.SUNBURST;
 
@@ -441,7 +479,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		}
 
 		this.shouldReload = false;
-		this.projectService.loadDashboardData$(this.settings)
+		this.loadData$()
 			.subscribe(
 				response => {
 					switch (response.code) {
@@ -494,7 +532,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	public onNodeClick(nodeClicked: any) {
 		if (nodeClicked) {
 			this.location$.next(nodeClicked.location);
-			if (nodeClicked.classnames !== null) {
+			if (nodeClicked.classnames) {
 				if (Constants.DEBUG) {
 					console.groupCollapsed('Filenames : ');
 					nodeClicked.classnames.forEach(element => {
@@ -507,25 +545,36 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				nodeClicked.classnames.forEach(element => {
 					filenames.push(new Filename(element.filename, element.lastCommit));
 				});
-				this.filenames.sendClassnames(filenames);
+				this.filenames.setClassnames(filenames);
 
 				const contributors = new Set<Contributor>();
 				nodeClicked.classnames.forEach(file => {
-					if ( (file.idStaffs) && (file.idStaffs > 0) ) {
-						file.idStaffs.forEach(element => {
-							contributors.add(this.findContributor(element));
+					if ( (file.idStaffs) && (file.idStaffs.length > 0) ) {
+						file.idStaffs.filter(idStaff => idStaff !== -1).forEach(idStaff => {
+							contributors.add(this.findContributor(idStaff));
 						});
 					}
 				});
+				if (Constants.DEBUG) {
+					console.groupCollapsed('Contributors : ');
+					console.log (...contributors);
+					console.groupEnd();
+				}
 				this.contributors.sendContributors(Array.from(contributors));
-
 			} else {
-				this.filenames.sendClassnames([]);
+				if (Constants.DEBUG) {
+					console.log('Content of filenames & contibutors have been reset.');
+				}
+				this.filenames.setClassnames([]);
 				this.contributors.sendContributors([]);
 			}
 		}
 	}
 
+	/**
+	 * Search for a contributor with the same identifier as the given one
+	 * @param idStaff the searched staff identifier
+	 */
 	findContributor(idStaff: number): Contributor {
 		const foundContributor = this.projectStaffService.contributors
 			.find(contributor => contributor.idStaff === idStaff);
@@ -543,8 +592,14 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			this.myChart.focusOnNode(nodeClicked);
 		});
 
-		this.myChart.data(response.sunburstData).width(500).height(500).label('location').size('importance').color('color')
+		this.myChart.data(response.sunburstData)
+			.width(500)
+			.height(500)
+			.label('location')
+			.size('importance')
+			.color('color')
 			(document.getElementById('chart'));
+
 		const dataSourceGhosts = new ProjectGhostsDataSource(this.project);
 		// Send the unregistered contributors to the panel list
 		dataSourceGhosts.sendUnknowns(response.ghosts);

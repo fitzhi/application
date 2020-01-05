@@ -97,7 +97,7 @@ div.tasks, div.tasks-selected {
 }
 
 div.tasks-selected, div.tasks:hover, div.report-selected, div.report:hover {
-    color: #28a745;
+    color: var(--color-selected);
     border: 1px solid grey;
 }
 

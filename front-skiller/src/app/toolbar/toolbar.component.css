@@ -7,7 +7,7 @@ div.buttons button, div {
 }
 
 button.btn-outline-success {
-    background-color: #28a745;
+    background-color: var(--color-selected);
     color: white;
 }
 
@@ -37,7 +37,7 @@ button.search {
 }
 
 button.search:active {
-    background-color: #28a745;
+    background-color: var(--color-selected);
     color: white;
 }
 

@@ -5,38 +5,39 @@ import { Filename } from '../../../data/filename';
 
 export class FilenamesDataSource implements DataSource<Filename> {
 
-	public filenamesSubject = new BehaviorSubject<Filename[]>([]);
-	public loadingSubject = new BehaviorSubject<boolean>(false);
+	public filenamesSubject$ = new BehaviorSubject<Filename[]>([]);
 
-	public loading$ = this.loadingSubject.asObservable();
+	public loadingSubject$ = new BehaviorSubject<boolean>(false);
+
+	public loading$ = this.loadingSubject$.asObservable();
 
 	/**
 	 * Connect this datasource to the list
 	 */
 	connect(collectionViewer: CollectionViewer): Observable<Filename[]> {
-		return this.filenamesSubject.asObservable();
+		return this.filenamesSubject$.asObservable();
 	}
 
 	/**
 	 * Disconnect this datasource to the list
 	 */
 	disconnect(collectionViewer: CollectionViewer): void {
-		this.filenamesSubject.complete();
-		this.loadingSubject.complete();
+		this.filenamesSubject$.complete();
+		this.loadingSubject$.complete();
 	}
 
 	/**
-	 * Send the loaded data from the backend.
-	 * @param unknowns list of unregistered contributors.
+	 * Set the classnames list.
+	 * @param classnames list of classnames detected in the selected package.
 	 */
-	sendClassnames(selClassnames: Filename[]): void {
-		this.loadingSubject.next(true);
+	setClassnames(classnames: Filename[]): void {
+		this.loadingSubject$.next(true);
 		const filenames = [];
-		selClassnames.forEach(function (entry) {
+		classnames.forEach(function (entry) {
 			const cls = new Filename(entry.filename, entry.lastCommit);
 			filenames.push(cls);
 		});
-		this.filenamesSubject.next(filenames);
+		this.filenamesSubject$.next(filenames);
 	}
 
 	public constructor() {}
