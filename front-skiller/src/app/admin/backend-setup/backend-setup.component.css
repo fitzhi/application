@@ -49,7 +49,7 @@
 }
 
 .invalidMessage {
-    color: darkred;
+    color: var(--color-error);
     font-size: 18px;
 }
 

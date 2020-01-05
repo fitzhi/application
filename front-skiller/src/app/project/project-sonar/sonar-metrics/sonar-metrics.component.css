@@ -38,5 +38,5 @@ pre.explanation {
 }
 
 .invalid-field {
-    color: red;
+    color: var(--color-error);
 }

@@ -22,7 +22,7 @@
 }
 
 .actionRemove:hover  {
-	color: red;
+	color: var(--color-error);
 	background-color: whitesmoke;
 }
 

@@ -49,7 +49,7 @@ p.filenameSuccess {
 
 p.filenameError {
 	font-weight: 700;
-	color: red;
+	color: var(--color-error);
 }
 
 .mat-dialog-actions {

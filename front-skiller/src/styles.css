@@ -5,7 +5,9 @@
 
 :root {
   --color-selected: #28a745; 
+  --color-error: darkred;
 }
+
 html {
   position: relative;
   min-height: 100%;

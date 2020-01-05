@@ -91,7 +91,7 @@ button.btn-outline-success {
 	margin: 20px;
 	padding: 10px;
 	background-color: whitesmoke;
-	color: red;
+	color: var(--color-error);
 }
 
 .divPanel {
@@ -126,5 +126,5 @@ div.taskReportOk {
 }
 
 div.taskReportError {
-  color:red;
+  color: var(--color-error);
 }
