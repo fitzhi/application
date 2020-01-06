@@ -1,0 +1,8 @@
+<div class="pie-container">
+    <div class="pieBackground"></div>
+    <div *ngFor="let slice of (slices$|async); index as idSlice">
+        <div class="slice_{{idSlice}} hold">
+            <div class="pie"></div>
+        </div>
+    </div>
+</div>

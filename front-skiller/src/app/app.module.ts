@@ -102,9 +102,11 @@ import { TableCategoriesComponent } from './project/project-audit/table-categori
 import {MatSliderModule} from '@angular/material/slider';
 import { ReportDetailFormComponent } from './project/project-audit/project-audit-badges/report-detail-form/report-detail-form.component';
 import { FilesDetailFormComponent } from './project/project-audit/project-audit-badges/files-detail-form/files-detail-form.component';
+// tslint:disable-next-line:max-line-length
 import { AuditAttachmentComponent } from './project/project-audit/project-audit-badges/files-detail-form/audit-attachment-upload/audit-attachment.component';
 // tslint:disable-next-line:max-line-length
 import { AuditUploadAttachmentComponent } from './project/project-audit/project-audit-badges/files-detail-form/audit-attachment-upload/audit-upload-attachment/audit-upload-attachment.component';
+import { PieDashboardComponent } from './welcome/pie-dashboard/pie-dashboard.component';
 
 @NgModule({
 	declarations: [
@@ -162,7 +164,8 @@ import { AuditUploadAttachmentComponent } from './project/project-audit/project-
 		ReportDetailFormComponent,
 		FilesDetailFormComponent,
 		AuditAttachmentComponent,
-		AuditUploadAttachmentComponent
+		AuditUploadAttachmentComponent,
+		PieDashboardComponent
 	],
 	entryComponents: [
 		StaffUploadCvComponent,

@@ -3,6 +3,8 @@ import { BackendSetupService } from '../service/backend-setup/backend-setup.serv
 import { AuthService } from '../admin/service/auth/auth.service';
 import { StaffListService } from '../staff-list-service/staff-list.service';
 import { Collaborator } from '../data/collaborator';
+import { Slice } from './pie-dashboard/slice';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
 	selector: 'app-welcome',
@@ -24,26 +26,29 @@ export class WelcomeComponent implements OnInit {
      */
 	firstLaunch = false;
 
-	private allStaff: Collaborator[] = [];
+	/**
+	 * Observable emetting the configuration of the pie.
+	 */
+	private slices$ = new BehaviorSubject<Slice[]>([]);
 
 	constructor(
 		private backendSetupService: BackendSetupService,
-		private staffListService: StaffListService,
 		private authService: AuthService) {
 		this.firstLaunch = !this.backendSetupService.hasSavedAnUrl();
 	}
 
 	ngOnInit() {
-		this.allStaff = this.staffListService.allStaff;
+		this.slices$.next([new Slice()]);
 	}
 
 	/**
-     * @returns TRUE if the connection is requested.
+     * Return `TRUE` if the connection is requested.
+	 *
      * There are 2 possible reasons for that :
-     * 1) This is the first connection on WibKac
-     * 2) The user is not connected for this session
+     * - This is the first connection on WibKac
+     * - The user is not connected for this session
      */
-	connectionIsNeeded() {
+	connectionIsNeeded(): boolean {
 		return (!this.authService.isConnected() && !this.firstLaunch);
 	}
 
