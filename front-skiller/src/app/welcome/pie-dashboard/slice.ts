@@ -1,4 +1,8 @@
 export class Slice {
+
 	constructor(
-		private id = 1) {}
+		public id: number,
+		public offset = 0,
+		public angle: number,
+		public color: string) {}
 }
