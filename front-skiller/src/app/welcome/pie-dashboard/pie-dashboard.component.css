@@ -1,54 +1,10 @@
 div {
-    --pie-height: 400px;
+    --pie-height: 500px;
     --pie-width: var(--pie-height);
-    --pie-diameter: 200px;
+    --pie-diameter: 500px;
 }
 
-.pieContainer {
-    height: var(--pie-height);
-    width: var(--pie-width);
-    position: relative;
-    margin: 50px auto;
+.mainDashboard {
+    width: 100%;
+    height: 100%;
 }
-  
-.pieBackground {
-    position: absolute;
-    width: var(--pie-width);
-    height: var(--pie-height);
-    border-radius: 100%;
-    box-shadow: 0px 0px 8px rgba(0,0,0,0.5);
-    -moz-box-shadow: -1px 1px 3px #000;
-    -webkit-box-shadow: -1px 1px 3px #000;
-    -o-box-shadow: -1px 1px 3px #000;
-} 
-
-.pie {
-    transition: all 1s;
-    position: absolute;
-    width: var(--pie-width);
-    height: var(--pie-height);
-    border-radius: 100%;
-    clip: rect(0px, var(--pie-diameter), var(--pie-height), 0px);
-}
-
-.hold {
-    position: absolute;
-    width: var(--pie-width);
-    height: var(--pie-height);
-    border-radius: 100%;
-    clip: rect(0px, var(--pie-width), var(--pie-height), var(--pie-diameter));
-}
-
-  /*
-  .innerCircle {
-    position: absolute;
-    width: 120px;
-    height: 120px;
-    background-color: #444;
-    border-radius: 100%;
-    top: 15px;
-    left: 15px; 
-    box-shadow: 0px 0px 8px rgba(0,0,0,0.5) inset;
-    color: white;
-  }
-  */

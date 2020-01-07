@@ -37,11 +37,9 @@ export class WelcomeComponent implements OnInit {
 
 	ngOnInit() {
 		const slices: Slice[] = [];
-		slices.push(new Slice(0, 0, 30, 'darkblue'));
-		slices.push(new Slice(1, 30, 90, 'orange'));
-		slices.push(new Slice(2, 120, 90, 'blue'));
-		slices.push(new Slice(3, 210, 100, 'green'));
-		slices.push(new Slice(4, 310, 50, 'red'));
+		slices.push(new Slice(0, 0, 120, 'green'));
+		slices.push(new Slice(1, 120, 120, 'orange'));
+		slices.push(new Slice(2, 240, 120, 'red'));
 		this.slices$.next(slices);
 	}
 

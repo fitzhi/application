@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, AfterViewInit, Input, AfterContentInit, ViewEncapsulation } from '@angular/core';
+import { Component, AfterViewInit, Input, ViewEncapsulation, OnInit } from '@angular/core';
 import * as D3 from 'd3';
 import {Slice} from '../slice';
 import { BehaviorSubject } from 'rxjs';
@@ -13,11 +13,22 @@ import { tap } from 'rxjs/operators';
 })
 export class PieChartComponent implements AfterViewInit {
 
+	/**
+	 * Radius of the Pie.
+	 */
+	@Input() radius: number;
+
+	/**
+	 * Observable emitting the slices of the pie.
+	 */
 	@Input() slices$: BehaviorSubject<Slice[]>;
 
+	/**
+	 * D3 Arc generator.
+	 */
 	arcGenerator: D3.Arc<any, D3.DefaultArcObject>;
 
-	constructor() { }
+	constructor() {}
 
 	ngAfterViewInit() {
 		this.arcGenerator = D3.arc().cornerRadius(4).padAngle(.01).padRadius(100);
@@ -55,11 +66,12 @@ export class PieChartComponent implements AfterViewInit {
 			startAngle: (slice.offset * 2 * Math.PI) / 360,
 			endAngle: ((slice.offset + slice.angle) * 2 * Math.PI) / 360,
 			innerRadius: 5,
-			outerRadius: 100
+			outerRadius: this.radius
 		});
 
 		D3.select('#pieSlice' + slice.id)
 			.append('path')
+			.attr('transform', 'translate(' + this.radius + ',' + this.radius + ')')
 			.attr('fill', slice.color)
 			.attr('class', 'slice')
 			.attr('d', pathData);

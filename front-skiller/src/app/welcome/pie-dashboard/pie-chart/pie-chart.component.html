@@ -1,12 +1,6 @@
 <div class="containerSVG">
-    <svg style="width:400px; height: 400px">
-        <g *ngFor="let slice of (slices$ | async); index as idSlice" 
-            id="pieSlice{{idSlice}}" transform="translate(200, 200)">
+    <svg class="pie">
+        <g *ngFor="let slice of (slices$ | async); index as idSlice" id="pieSlice{{idSlice}}">
         </g>
     </svg>
-</div>
-<div>
-    <p *ngFor="let slice of (slices$ | async); index as idSlice">
-        {{slice.id}}
-    </p>
 </div>

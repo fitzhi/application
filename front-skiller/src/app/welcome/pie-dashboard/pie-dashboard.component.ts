@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, AfterViewInit, AfterContentInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Slice } from './slice';
-import { Constants } from 'src/app/constants';
 import * as d3 from 'd3';
 
 @Component({
@@ -13,7 +12,13 @@ export class PieDashboardComponent implements OnInit {
 
 	@Input() slices$: BehaviorSubject<Slice[]>;
 
-	constructor() { }
+	/**
+	 * Radius of the first pie.
+	 */
+	private radius = 200;
+
+	constructor() {
+	}
 
 	ngOnInit() {
 	}
