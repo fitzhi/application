@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BackendSetupService } from '../service/backend-setup/backend-setup.service';
 import { AuthService } from '../admin/service/auth/auth.service';
-import { StaffListService } from '../staff-list-service/staff-list.service';
-import { Collaborator } from '../data/collaborator';
 import { Slice } from './pie-dashboard/slice';
 import { BehaviorSubject } from 'rxjs';
 
@@ -39,11 +37,11 @@ export class WelcomeComponent implements OnInit {
 
 	ngOnInit() {
 		const slices: Slice[] = [];
-		slices.push(new Slice(0, 0, 30, 'pink'));
+		slices.push(new Slice(0, 0, 30, 'darkblue'));
 		slices.push(new Slice(1, 30, 90, 'orange'));
 		slices.push(new Slice(2, 120, 90, 'blue'));
 		slices.push(new Slice(3, 210, 100, 'green'));
-		slices.push(new Slice(4, 310, 50, 'transparent'));
+		slices.push(new Slice(4, 310, 50, 'red'));
 		this.slices$.next(slices);
 	}
 

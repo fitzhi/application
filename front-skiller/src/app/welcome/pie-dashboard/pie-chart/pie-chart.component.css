@@ -1,0 +1,12 @@
+.containerSVG {
+    width: 400px;
+    height: 400px;
+}
+
+.slice {
+    fill-opacity: 0.5;
+}
+
+.slice:hover {
+    fill-opacity: 1;
+}
