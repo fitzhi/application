@@ -107,7 +107,7 @@ import { AuditAttachmentComponent } from './project/project-audit/project-audit-
 // tslint:disable-next-line:max-line-length
 import { AuditUploadAttachmentComponent } from './project/project-audit/project-audit-badges/files-detail-form/audit-attachment-upload/audit-upload-attachment/audit-upload-attachment.component';
 import { PieDashboardComponent } from './welcome/pie-dashboard/pie-dashboard.component';
-import { PieChartComponent } from './welcome/pie-chart/pie-chart.component';
+import { PieChartComponent } from './welcome/pie-dashboard/pie-chart/pie-chart.component';
 
 @NgModule({
 	declarations: [
