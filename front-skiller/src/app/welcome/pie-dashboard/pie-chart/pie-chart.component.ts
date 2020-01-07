@@ -4,8 +4,6 @@ import {Slice} from '../slice';
 import { BehaviorSubject } from 'rxjs';
 import { Constants } from 'src/app/constants';
 import { tap } from 'rxjs/operators';
-import { ThrowStmt } from '@angular/compiler';
-import { MAT_SLIDER_VALUE_ACCESSOR } from '@angular/material/slider';
 
 @Component({
 	selector: 'app-pie-chart',
@@ -13,7 +11,7 @@ import { MAT_SLIDER_VALUE_ACCESSOR } from '@angular/material/slider';
 	encapsulation: ViewEncapsulation.None,
 	styleUrls: ['./pie-chart.component.css']
 })
-export class PieChartComponent implements AfterContentInit {
+export class PieChartComponent implements AfterViewInit {
 
 	@Input() slices$: BehaviorSubject<Slice[]>;
 
@@ -21,7 +19,7 @@ export class PieChartComponent implements AfterContentInit {
 
 	constructor() { }
 
-	ngAfterContentInit() {
+	ngAfterViewInit() {
 		this.arcGenerator = D3.arc().cornerRadius(4).padAngle(.01).padRadius(100);
 		if (Constants.DEBUG) {
 			this.slices$
