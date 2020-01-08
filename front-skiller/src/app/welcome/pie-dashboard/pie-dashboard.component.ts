@@ -15,7 +15,7 @@ export class PieDashboardComponent implements OnInit {
 	/**
 	 * Radius of the first pie.
 	 */
-	private radius = 200;
+	private radius = 150;
 
 	constructor() {
 	}

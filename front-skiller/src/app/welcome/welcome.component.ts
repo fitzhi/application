@@ -3,6 +3,7 @@ import { BackendSetupService } from '../service/backend-setup/backend-setup.serv
 import { AuthService } from '../admin/service/auth/auth.service';
 import { Slice } from './pie-dashboard/slice';
 import { BehaviorSubject } from 'rxjs';
+import { TypeSlice } from './pie-dashboard/type-slice';
 
 @Component({
 	selector: 'app-welcome',
@@ -37,9 +38,9 @@ export class WelcomeComponent implements OnInit {
 
 	ngOnInit() {
 		const slices: Slice[] = [];
-		slices.push(new Slice(0, 0, 120, 'green'));
-		slices.push(new Slice(1, 120, 120, 'orange'));
-		slices.push(new Slice(2, 240, 120, 'red'));
+		slices.push(new Slice(0, TypeSlice.Sonar, 0, 120, 'green'));
+		slices.push(new Slice(1, TypeSlice.Audit, 120, 120, 'orange'));
+		slices.push(new Slice(2, TypeSlice.Staff, 240, 120, 'red'));
 		this.slices$.next(slices);
 	}
 
