@@ -13,17 +13,33 @@
             </marker>
         </defs>
 
-
         <g *ngFor="let slice of (slices$ | async); index as idSlice" id="pieSlice{{idSlice}}">
         </g>
         <!-- Legends around the pie. -->
         <g>
-            <path id="arcSonar" stroke="lightGrey"  fill="none" stroke-width="2" d="M 203 25 a175,175 0 0,1 160,255" 
+            <path id="arcSonar" stroke="lightGrey"  fill="none" stroke-width="2" d="M 203 30 A175,175 0 0,1 350,280" 
                 marker-start="url(#arrow)" marker-end="url(#arrow)"></path>
-            <path id="arcStaff" stroke="lightGrey" fill="none" stroke-width="2" d="M 197 25 a175,175 0 0,0 -160,255" 
+            <text id="textSonar" dy="-5" class="text" >
+                <textPath alignment-baseline="top" text-anchor="middle" startOffset="50%" xlink:href="#arcSonar">
+                    Sonar evaluation 
+                </textPath>
+            </text>
+
+            <path id="arcStaff" stroke="lightGrey" fill="none" stroke-width="2" d="M 50 280 A175,175 0 0,1 197,30" 
                 marker-start="url(#arrow)" marker-end="url(#arrow)"></path>
-            <path id="arcAudit" stroke="lightGrey" fill="none" stroke-width="2" d="M 42 285 a175,175 0 0,0 320,0" 
+            <text id="textStaff" dy="-5" class="text"  >
+                <textPath text-anchor="middle" startOffset="50%" xlink:href="#arcStaff">
+                    Staff risk 
+                </textPath>
+            </text>
+
+            <path id="arcAudit" stroke="lightGrey" fill="none" stroke-width="2" d="M 52 285 A175,175 0 0,0 350,285" 
                 marker-start="url(#arrow)" marker-end="url(#arrow)"></path>
+            <text id="textAudit" dy="20" class="text">
+                <textPath text-anchor="middle" startOffset="50%" xlink:href="#arcAudit">
+                    Audit appraisal
+                </textPath>
+            </text>
         </g>
 <!--        <g id="arcSonar"></g> -->
     </svg>

@@ -23,3 +23,12 @@
     stroke: grey;
 }
 
+.text {
+    fill: lightGrey;
+    font-size: 24px;
+}
+
+.text-active {
+    fill: black;
+    font-size: 22px;
+}

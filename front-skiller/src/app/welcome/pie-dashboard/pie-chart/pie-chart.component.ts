@@ -34,6 +34,11 @@ export class PieChartComponent implements AfterViewInit {
 	 */
 	private arcs = ['#arcSonar', '#arcStaff', '#arcAudit'];
 
+	/**
+	 * Array of Text identifiers.
+	 */
+	private texts = ['#textSonar', '#textStaff', '#textAudit'];
+
 	constructor() {}
 
 	ngAfterViewInit() {
@@ -104,15 +109,19 @@ export class PieChartComponent implements AfterViewInit {
 	 */
 	onSliceMouseOver(slice: Slice): void {
 		this.inactiveArcs();
+		this.inactiveTexts();
 		switch (slice.type) {
 			case TypeSlice.Sonar:
 				this.activeArc('#arcSonar');
+				this.activeText('#textSonar');
 				break;
 			case TypeSlice.Audit:
 				this.activeArc('#arcAudit');
+				this.activeText('#textAudit');
 				break;
 			case TypeSlice.Staff:
 				this.activeArc('#arcStaff');
+				this.activeText('#textStaff');
 				break;
 		}
 	}
@@ -122,6 +131,13 @@ export class PieChartComponent implements AfterViewInit {
 	 */
 	private inactiveArcs(): void {
 		this.arcs.forEach(arc => this.inactiveArc(arc));
+	}
+
+	/**
+	 * **Inactive** all present arcs in the HTML file.
+	 */
+	private inactiveTexts(): void {
+		this.texts.forEach(text => this.inactiveText(text));
 	}
 
 	/**
@@ -141,6 +157,22 @@ export class PieChartComponent implements AfterViewInit {
 	}
 
 	/**
+	 * **Inactive** the given tooltip arc.
+	 * @param idText HTML tooltip TEXT identifier
+	 */
+	private inactiveText(idText: string): void {
+		this.setupTooltipText(idText, false);
+	}
+
+	/**
+	 * **Active** the given tooltip arc.
+	 * @param idText HTML tooltip TEXT identifier
+	 */
+	private activeText(idText: string): void {
+		this.setupTooltipText(idText, true);
+	}
+
+	/**
 	 * Setup the color of a tooltip arc depending on its status of active, or inactive
 	 * @param idArc HTML tooltip arc identifier
 	 * @param active the active status
@@ -150,5 +182,15 @@ export class PieChartComponent implements AfterViewInit {
 		.attr('stroke', (active ? 'black' : 'lightGrey'))
 		.attr('marker-start', 'url(#arrow' + (active ? 'Active' : '') + ')')
 		.attr('marker-end', 'url(#arrow' + (active ? 'Active' : '') + ')');
+	}
+
+	/**
+	 * Setup the color of a text depending on its status of active, or inactive
+	 * @param idArc HTML tooltip text identifier
+	 * @param active the active status
+	 */
+	private setupTooltipText(idText: string, active: boolean) {
+		D3.select(idText)
+			.attr('class', (active ? 'text-active' : 'text'));
 	}
 }
