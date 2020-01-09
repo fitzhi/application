@@ -10,7 +10,7 @@
             [title]="topic.title" >
         </app-audit-badge>
     </div>
-    <div ="let auditDetail of (auditDetails$ | async)" class="containerOneThumbnail">
+    <div *ngFor="let auditDetail of (auditDetails$ | async)" class="containerOneThumbnail">
         <div *ngIf="reportDetailChosen(auditDetail)">
             <app-report-detail-form
                 [project$]="project$"
