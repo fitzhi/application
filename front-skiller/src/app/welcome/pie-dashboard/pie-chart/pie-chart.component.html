@@ -13,10 +13,10 @@
             </marker>
         </defs>
 
-        <g *ngFor="let slice of (slices$ | async); index as idSlice" id="pieSlice{{idSlice}}">
+        <g *ngFor="let slice of (slices$ | async); index as idSlice" id="pieSlice-{{pie}}-{{idSlice}}">
         </g>
         <!-- Legends around the pie. -->
-        <g>
+        <g *ngIf="active">
             <path id="arcSonar" stroke="lightGrey"  fill="none" stroke-width="2" d="M 203 30 A175,175 0 0,1 350,280" 
                 marker-start="url(#arrow)" marker-end="url(#arrow)"></path>
             <text id="textSonar" dy="-5" class="text" >
@@ -41,6 +41,5 @@
                 </textPath>
             </text>
         </g>
-<!--        <g id="arcSonar"></g> -->
     </svg>
 </div>

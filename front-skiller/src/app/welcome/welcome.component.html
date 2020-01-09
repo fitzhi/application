@@ -4,12 +4,10 @@
 
 <p></p>
 
-<div id="setup" *ngIf="connectionIsNeeded()">
-    <app-connect-user></app-connect-user>
-</div>
+    <div id="setup" *ngIf="connectionIsNeeded()">
+        <app-connect-user></app-connect-user>
+    </div>
 
-<div class="pieDashboard">
-    <app-pie-dashboard
-        [slices$]="slices$">
-   </app-pie-dashboard>
+<div class="mainDashboard">
+    <app-pie-dashboard [slices$]="slices$"></app-pie-dashboard>
 </div>

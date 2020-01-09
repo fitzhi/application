@@ -1,6 +1,30 @@
 <div class="mainDashboard"> 
-    <app-pie-chart
-        [radius]="radius"
-        [slices$]="slices$">
-    </app-pie-chart>
+    <div class="actualDashboard">
+        <app-pie-chart
+            [radius]=150
+            [active]="true"
+            [pie]=1
+            [slices$]="slices$">
+        </app-pie-chart>
+    </div>
+    <div class="formerDashboard">
+        <p class="text">Last month results</p>
+        <app-pie-chart
+            [radius]=180
+            [active]=false
+            [pie]=2
+            [slices$]="slices$">
+        </app-pie-chart>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <p class="text">Last year results</p>
+        <app-pie-chart
+            [radius]=180
+            [active]=false
+            [pie]=3
+            [slices$]="slices$">
+        </app-pie-chart>
+    </div>
 </div>

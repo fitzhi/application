@@ -12,12 +12,24 @@ import { TypeSlice } from '../type-slice';
 	encapsulation: ViewEncapsulation.None,
 	styleUrls: ['./pie-chart.component.css']
 })
-export class PieChartComponent implements AfterViewInit {
+export class PieChartComponent implements OnInit, AfterViewInit {
 
 	/**
 	 * Radius of the Pie.
 	 */
 	@Input() radius: number;
+
+	/**
+	 * Pie number : There might be multiple pies displayed on the dashboard. This number is identifying each one.
+	 */
+	@Input() pie: number;
+
+	/**
+	 * active : One pie might be active for the mouse events.
+	 *
+	 * __There can only be one active on the same dashboard.__
+	 */
+	@Input() active: boolean;
 
 	/**
 	 * Observable emitting the slices of the pie.
@@ -41,6 +53,9 @@ export class PieChartComponent implements AfterViewInit {
 
 	constructor() {}
 
+	ngOnInit() {
+	}
+
 	ngAfterViewInit() {
 		this.arcGenerator = D3.arc().cornerRadius(4).padAngle(.01).padRadius(100);
 		if (Constants.DEBUG) {
@@ -53,7 +68,6 @@ export class PieChartComponent implements AfterViewInit {
 					}
 				})).subscribe (slices => {
 					this.generatePie(...slices);
-					// this.generateArcsLegend();
 				});
 		}
 	}
@@ -81,16 +95,25 @@ export class PieChartComponent implements AfterViewInit {
 			outerRadius: this.radius
 		});
 
-		D3.select('#pieSlice' + slice.id)
+		D3.select(this.svgPieSliceID(slice.id))
 			.append('path')
 			.attr('transform', 'translate(200,200)')
 			.attr('fill', slice.color)
 			.attr('class', 'slice')
 			.attr('d', pathData);
 
-		D3.select('#pieSlice' + slice.id)
-			.on('click', function() { this.onSliceClick(slice); }.bind(this))
-			.on('mouseover', function() { this.onSliceMouseOver(slice); }.bind(this));
+			if (this.active) {
+				D3.select(this.svgPieSliceID(slice.id))
+					.on('click', function() { this.onSliceClick(slice); }.bind(this))
+					.on('mouseover', function() { this.onSliceMouseOver(slice); }.bind(this));
+			}
+	}
+
+	/**
+	 * Return the SVG pie slice identifier.
+	 */
+	private svgPieSliceID(idSlice: number) {
+		return '#pieSlice-' + this.pie + '-' + idSlice;
 	}
 
 	/**
@@ -193,4 +216,9 @@ export class PieChartComponent implements AfterViewInit {
 		D3.select(idText)
 			.attr('class', (active ? 'text-active' : 'text'));
 	}
+
+	test() {
+		return '#arcAudit-' + this.pie;
+	}
+
 }
