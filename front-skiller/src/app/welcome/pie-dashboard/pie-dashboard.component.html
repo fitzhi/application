@@ -1,30 +1,46 @@
 <div class="mainDashboard"> 
-    <div class="actualDashboard">
-        <app-pie-chart
-            [radius]=150
-            [active]="true"
-            [pie]=1
-            [slices$]="slices$">
-        </app-pie-chart>
-    </div>
-    <div class="formerDashboard">
-        <p class="text">Last month results</p>
-        <app-pie-chart
-            [radius]=180
-            [active]=false
-            [pie]=2
-            [slices$]="slices$">
-        </app-pie-chart>
-        <br/>
-        <br/>
-        <br/>
-        <br/>
-        <p class="text">Last year results</p>
-        <app-pie-chart
-            [radius]=180
-            [active]=false
-            [pie]=3
-            [slices$]="slices$">
-        </app-pie-chart>
-    </div>
+
+    <mat-grid-list cols="4" width="100%" rowHeight="250px">
+        <mat-grid-tile [colspan]="1" [rowspan]="1">
+            <div class="formerDashboard">
+                <p class="text">Last year result</p>
+                <app-pie-chart
+                    [radius]=180
+                    [active]=false
+                    [pie]=2
+                    [slices$]="slices$">
+                </app-pie-chart>
+            </div>
+        </mat-grid-tile>
+
+        <mat-grid-tile [colspan]="2" [rowspan]="2">
+            <div class="actualDashboard">
+                <app-pie-chart
+                    [radius]=150
+                    [active]=true
+                    [pie]=1
+                    [slices$]="slices$">
+                </app-pie-chart>
+            </div>
+        </mat-grid-tile>
+        
+        <mat-grid-tile [colspan]="1" [rowspan]="2">
+            <div class="actualDashboard">
+                Area reserved for hosting the list of projects.
+            </div>
+        </mat-grid-tile>
+
+        <mat-grid-tile [colspan]="1" [rowspan]="1">
+            <div class="formerDashboard">
+                <p class="text">Last month result</p>
+                <app-pie-chart
+                    [radius]=180
+                    [active]=false
+                    [pie]=3
+                    [slices$]="slices$">
+                </app-pie-chart>
+            </div>
+        </mat-grid-tile>
+    </mat-grid-list>
+
 </div>

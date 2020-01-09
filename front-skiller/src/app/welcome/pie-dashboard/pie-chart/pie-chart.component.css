@@ -8,12 +8,16 @@
     height: 100%;
 }
 
-.slice {
+.slice-active {
     fill-opacity: 0.5;
 }
 
-.slice:hover {
+.slice-active:hover {
     fill-opacity: 0.9;
+}
+
+.slice-inactive {
+    fill-opacity: 0.4;
 }
 
 .slice:active {

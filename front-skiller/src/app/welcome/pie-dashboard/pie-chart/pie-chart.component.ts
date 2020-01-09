@@ -99,7 +99,7 @@ export class PieChartComponent implements OnInit, AfterViewInit {
 			.append('path')
 			.attr('transform', 'translate(200,200)')
 			.attr('fill', slice.color)
-			.attr('class', 'slice')
+			.attr('class', (this.active ? 'slice-active' : 'slice-inactive'))
 			.attr('d', pathData);
 
 			if (this.active) {
