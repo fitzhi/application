@@ -1051,7 +1051,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		this.riskSurveyor.evaluateProjectRisk(project, data.riskChartData);
 
 		// We send back to new risk level to the front-end application.
-		data.setProjectRiskLevel(project.getRisk());
+		data.setProjectRiskLevel(project.getStaffEvaluation());
 		
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Risk evaluation done !");
 		

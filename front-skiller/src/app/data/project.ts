@@ -10,7 +10,11 @@ export class Project {
 	public username: string;
 	public password: string;
 	public filename: string;
-	public risk: number;
+
+	/**
+	 * Staff risk evaluation to this project.
+	 */
+	public staffEvaluation: number;
 
 	/**
 	 * Global evaluation to this project after an audit given by experts.

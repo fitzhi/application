@@ -105,9 +105,9 @@ public @Data class Project implements Serializable {
 	private int auditEvaluation;
 	
 	/**
-	 * Level of risk evaluated for the project.
+	 * Staff evaluation, representing the percentage of active developers able to maintain the project.
 	 */
-	private int risk = -1;
+	private int staffEvaluation = -1;
 	
 	/**
 	 * Empty constructor.

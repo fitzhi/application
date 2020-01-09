@@ -237,13 +237,13 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public void saveRisk(Project project, int risk) {
+	public void saveRisk(Project project, int staffEvaluation) {
 		
 		if (log.isInfoEnabled()) {
-			log.info(String.format("The project %s has now, the level of risk %d", project.getName(), risk));
+			log.info(String.format("The project %s has now, the level of risk %d", project.getName(), staffEvaluation));
 		}
 		synchronized (lockDataUpdated) {
-			project.setRisk(risk);
+			project.setStaffEvaluation(staffEvaluation);
 			this.dataUpdated = true;
 		}
 	}

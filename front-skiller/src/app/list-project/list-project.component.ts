@@ -64,7 +64,7 @@ export class ListProjectComponent implements OnInit {
 					case 'name':
 						return item.name.toLocaleLowerCase();
 					case 'risk':
-						return item.risk;
+						return item.staffEvaluation;
 					case 'lastCommitter':
 						return this.retrieveLastCommit(item.id).fullname();
 					case 'lastCommit':

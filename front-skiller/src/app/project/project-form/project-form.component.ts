@@ -219,7 +219,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 						this.profileProject.get('filename').setValue(this.project.filename);
 						this.ngInitSonarProjectsDeclaredInProject();
 						this.ngInitSkillsDeclaredInProject();
-						this.risk$.next(this.project.risk);
+						this.risk$.next(this.project.staffEvaluation);
 					}, 0);
 			});
 	}

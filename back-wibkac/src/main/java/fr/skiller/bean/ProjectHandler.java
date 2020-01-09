@@ -117,11 +117,11 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	void saveLocationRepository (int idProject, String location) throws SkillerException;
 	
 	/**
-	 * <p>Save the risk evaluated for this project.</p>
+	 * <p>Save the staff evaluation processed for this project.</p>
 	 * @param project the given project.
-	 * @param risk the calculated risk to set.
+	 * @param staffEvaluation the calculated risk to set.
 	 */
-	void saveRisk(Project project, int risk);
+	void saveRisk(Project project, int staffEvaluation);
 
 	/**
 	 * <p>Add the passed Skill inside the project.</p>

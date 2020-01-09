@@ -2,10 +2,10 @@
   <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
 
     <ng-container matColumnDef="risk">
-      <th id="risk" mat-header-cell *matHeaderCellDef mat-sort-header>Risk</th>
+      <th id="risk" mat-header-cell *matHeaderCellDef mat-sort-header>Staff risk</th>
       <td mat-cell *matCellDef="let row">
         <svg height="20" width="20">
-          <circle cx="10" cy="10" r="10" [ngStyle]="styleOfTheDot(row.risk)" />
+          <circle cx="10" cy="10" r="10" [ngStyle]="styleOfTheDot(row.staffEvaluation)" />
         </svg>
       </td>
     </ng-container>
