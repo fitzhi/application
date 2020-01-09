@@ -2,6 +2,7 @@ import { Component, Input, OnInit, AfterViewInit, AfterContentInit, ViewEncapsul
 import { BehaviorSubject } from 'rxjs';
 import { Slice } from './slice';
 import * as d3 from 'd3';
+import { PieDashboardService } from './service/pie-dashboard.service';
 
 @Component({
 	selector: 'app-pie-dashboard',
@@ -10,12 +11,16 @@ import * as d3 from 'd3';
 })
 export class PieDashboardComponent implements OnInit {
 
-	@Input() slices$: BehaviorSubject<Slice[]>;
+	/**
+	 * Observable emetting the configuration of the pie.
+	 */
+	private slices$ = new BehaviorSubject<Slice[]>([]);
 
-	constructor() {
+	constructor(private pieDashboardService: PieDashboardService) {
 	}
 
 	ngOnInit() {
+		this.slices$.next(this.pieDashboardService.generatePieSlices([]));
 	}
 
 }

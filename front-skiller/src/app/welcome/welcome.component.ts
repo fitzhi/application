@@ -25,11 +25,6 @@ export class WelcomeComponent implements OnInit {
      */
 	firstLaunch = false;
 
-	/**
-	 * Observable emetting the configuration of the pie.
-	 */
-	private slices$ = new BehaviorSubject<Slice[]>([]);
-
 	constructor(
 		private backendSetupService: BackendSetupService,
 		private authService: AuthService) {
@@ -37,11 +32,6 @@ export class WelcomeComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		const slices: Slice[] = [];
-		slices.push(new Slice(0, TypeSlice.Sonar, 0, 120, 'green'));
-		slices.push(new Slice(1, TypeSlice.Audit, 120, 120, 'orange'));
-		slices.push(new Slice(2, TypeSlice.Staff, 240, 120, 'red'));
-		this.slices$.next(slices);
 	}
 
 	/**
