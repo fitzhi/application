@@ -197,7 +197,7 @@ export class SonarService extends InternalService {
 			.pipe(
 				switchMap((settings: Settings) => {
 					return this.httpClient
-						.get(settings.urlSonar + '/api/server/version',
+						.get(settings.urlSonar[1] + '/api/server/version',
 							{ responseType: 'text' as 'json' })
 						.pipe(
 							map((version: string) => {
@@ -216,13 +216,13 @@ export class SonarService extends InternalService {
 			.subscribe(
 				(data: any) => {
 					this.sonarVersion = data.version;
-					this.urlSonar = data.settings.urlSonar;
+					this.urlSonar = data.settings.urlSonar[1];
 					this.sonarOn = data.sonarOn;
 					this.sonarIsAccessible$.next(this.sonarOn);
 					if (this.sonarOn) {
-						console.log('Sonar version ' + data.version + ' installed at the URL ' + data.settings.urlSonar);
+						console.log('Sonar version ' + data.version + ' installed at the URL ' + data.settings.urlSonar[1]);
 					} else {
-						console.log('Sonar is OFFLINE  at the URL ' + data.settings.urlSonar);
+						console.log('Sonar is OFFLINE  at the URL ' + data.settings.urlSonar[1]);
 					}
 				},
 				error => console.log(error)

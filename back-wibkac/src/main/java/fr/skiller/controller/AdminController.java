@@ -34,7 +34,7 @@ import fr.skiller.exception.SkillerException;
 public class AdminController {
 
 	/**
-	 * URL of the Sonar server accessible from the user browser.
+	 * URLs of the Sonar servers accessible from the user browser.
 	 */
 	@Value("${urlSonar}")
 	private String urlSonar;
