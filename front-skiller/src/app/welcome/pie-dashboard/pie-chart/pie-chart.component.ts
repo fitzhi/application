@@ -1,18 +1,19 @@
-import { Component, AfterViewInit, Input, ViewEncapsulation, OnInit } from '@angular/core';
+import { Component, AfterViewInit, Input, ViewEncapsulation, OnInit, AfterContentInit } from '@angular/core';
 import * as D3 from 'd3';
 import {Slice} from '../slice';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of, Observable } from 'rxjs';
 import { Constants } from 'src/app/constants';
-import { tap } from 'rxjs/operators';
+import { tap, switchMap } from 'rxjs/operators';
 import { TypeSlice } from '../type-slice';
+import { BaseComponent } from 'src/app/base/base.component';
 
 @Component({
 	selector: 'app-pie-chart',
 	templateUrl: './pie-chart.component.html',
-	encapsulation: ViewEncapsulation.None,
+	encapsulation: ViewEncapsulation.Emulated,
 	styleUrls: ['./pie-chart.component.css']
 })
-export class PieChartComponent implements OnInit, AfterViewInit {
+export class PieChartComponent extends BaseComponent implements OnInit, AfterViewInit {
 
 	/**
 	 * Radius of the Pie.
@@ -51,25 +52,24 @@ export class PieChartComponent implements OnInit, AfterViewInit {
 	 */
 	private texts = ['#textSonar', '#textStaff', '#textAudit'];
 
-	constructor() {}
+	constructor() { super(); }
 
 	ngOnInit() {
 	}
 
 	ngAfterViewInit() {
 		this.arcGenerator = D3.arc().cornerRadius(4).padAngle(.01).padRadius(100);
-		if (Constants.DEBUG) {
-			this.slices$
-				.pipe(tap(slices => {
-					if (Constants.DEBUG) {
-						console.groupCollapsed ('slices received');
-						console.log(...slices);
-						console.groupEnd();
-					}
-				})).subscribe (slices => {
-					this.generatePie(...slices);
-				});
-		}
+		this.slices$
+			.pipe(tap(slices => {
+				if (Constants.DEBUG) {
+					console.groupCollapsed ('slices received');
+					console.log(...slices);
+					console.groupEnd();
+				}
+			})).
+			subscribe((slices => {
+				this.generatePie(...slices);
+			}));
 	}
 
 	/**
@@ -99,7 +99,6 @@ export class PieChartComponent implements OnInit, AfterViewInit {
 			.append('path')
 			.attr('transform', 'translate(200,200)')
 			.attr('fill', slice.color)
-			.attr('class', (this.active ? 'slice-active' : 'slice-inactive'))
 			.attr('d', pathData);
 
 			if (this.active) {

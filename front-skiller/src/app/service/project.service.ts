@@ -746,6 +746,45 @@ export class ProjectService extends InternalService {
 
 	}
 
+	/**
+	 * Return the global mean __Sonar__ evaluation processed for all Sonar projects
+	 * declared in the techzhì project.
+	 * @param project the given project
+	 */
+	public calculateSonarEvaluation(project: Project): number {
+
+		let globalSonarEvaluation = 0;
+		if (!project) {
+			return 0;
+		}
+
+		if ((project.sonarProjects) && (project.sonarProjects.length > 0) && this.allSonarProjectsEvaluated(project)) {
+			let totalEvalution = 0;
+			let totalNumerberLinesOfCode = 0;
+			project.sonarProjects.forEach(sonarProject => {
+				totalEvalution += sonarProject.sonarEvaluation.evaluation * sonarProject.sonarEvaluation.totalNumberLinesOfCode;
+				totalNumerberLinesOfCode += sonarProject.sonarEvaluation.totalNumberLinesOfCode;
+			});
+			globalSonarEvaluation = Math.round(totalEvalution / totalNumerberLinesOfCode);
+		}
+
+		return globalSonarEvaluation;
+	}
+
+	/**
+	 * Return `true` if all sonar projects declared in this projet, have been evaluated, false otherwise.
+	 * @param project the current project
+	 */
+	allSonarProjectsEvaluated(project: Project) {
+		let complete = true;
+		project.sonarProjects.forEach(sonarP => {
+			if (complete && (!sonarP.sonarEvaluation)) {
+				complete = false;
+			}
+		});
+		return complete;
+	}
+
 
 	/**
 	 * Dump the content of a given project.

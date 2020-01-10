@@ -9,5 +9,5 @@ export class Slice {
 		public angle: number,
 		public color: string,
 		public activated = false,
-		public selcted = false) {}
+		public selected = false) {}
 }

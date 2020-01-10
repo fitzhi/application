@@ -2,7 +2,7 @@
 
     <mat-grid-list cols="4" width="100%" rowHeight="250px">
         <mat-grid-tile [colspan]="1" [rowspan]="1">
-            <div class="formerDashboard">
+            <div *ngIf="projectService.allProjectsIsLoaded$|async" class="formerDashboard">
                 <p class="text">Last year result</p>
                 <app-pie-chart
                     [radius]=180
@@ -14,7 +14,7 @@
         </mat-grid-tile>
 
         <mat-grid-tile [colspan]="2" [rowspan]="2">
-            <div class="actualDashboard">
+            <div *ngIf="projectService.allProjectsIsLoaded$|async" class="actualDashboard">
                 <app-pie-chart
                     [radius]=150
                     [active]=true
@@ -31,7 +31,7 @@
         </mat-grid-tile>
 
         <mat-grid-tile [colspan]="1" [rowspan]="1">
-            <div class="formerDashboard">
+            <div *ngIf="projectService.allProjectsIsLoaded$|async" class="formerDashboard">
                 <p class="text">Last month result</p>
                 <app-pie-chart
                     [radius]=180
@@ -41,6 +41,7 @@
                 </app-pie-chart>
             </div>
         </mat-grid-tile>
+
     </mat-grid-list>
 
 </div>

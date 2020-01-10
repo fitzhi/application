@@ -6,6 +6,7 @@ import { Constants } from 'src/app/constants';
 import { SonarProject } from 'src/app/data/SonarProject';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { BehaviorSubject } from 'rxjs';
+import { ProjectService } from 'src/app/service/project.service';
 
 @Component({
 	selector: 'app-techxhi-medal',
@@ -45,6 +46,7 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 
 	constructor(
 		private referentialService: ReferentialService,
+		private projectService: ProjectService,
 		private cinematicService: CinematicService) {
 		super();
 	}
@@ -71,38 +73,7 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	 * declared in the techzhì project.
 	 */
 	globalSonarEvaluation() {
-
-		let globalSonarEvaluation = 0;
-		if (!this.project) {
-			return 0;
-		}
-
-		if ((this.project.sonarProjects) && this.allSonarProjectsEvaluated(this.project)) {
-			let totalEvalution = 0;
-			let totalNumerberLinesOfCode = 0;
-			this.project.sonarProjects.forEach(sonarProject => {
-				totalEvalution += sonarProject.sonarEvaluation.evaluation * sonarProject.sonarEvaluation.totalNumberLinesOfCode;
-				totalNumerberLinesOfCode += sonarProject.sonarEvaluation.totalNumberLinesOfCode;
-			});
-			globalSonarEvaluation = Math.round(totalEvalution / totalNumerberLinesOfCode);
-		}
-
-		return globalSonarEvaluation;
-	}
-
-
-	/**
-	 * Return `true` if all sonar projects declared in this projet, have been evaluated, false otherwise.
-	 * @param project the current project
-	 */
-	allSonarProjectsEvaluated(project: Project) {
-		let complete = true;
-		project.sonarProjects.forEach(sonarP => {
-			if (complete && (!sonarP.sonarEvaluation)) {
-				complete = false;
-			}
-		});
-		return complete;
+		return this.projectService.calculateSonarEvaluation(this.project);
 	}
 
 	/**

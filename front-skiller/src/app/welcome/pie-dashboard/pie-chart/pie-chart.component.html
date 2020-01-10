@@ -13,8 +13,16 @@
             </marker>
         </defs>
 
-        <g *ngFor="let slice of (slices$ | async); index as idSlice" id="pieSlice-{{pie}}-{{idSlice}}">
-        </g>
+        <svg *ngIf="active">
+            <g *ngFor="let slice of (slices$ | async); index as idSlice" class="slice-active" id="pieSlice-{{pie}}-{{idSlice}}">
+            </g>
+        </svg>
+        <svg *ngIf="!active">
+            <g *ngFor="let slice of (slices$ | async); index as idSlice" class="slice-inactive" id="pieSlice-{{pie}}-{{idSlice}}">
+            </g>
+        </svg>
+
+
         <!-- Legends around the pie. -->
         <g *ngIf="active">
             <path id="arcSonar" stroke="lightGrey"  fill="none" stroke-width="2" d="M 203 30 A175,175 0 0,1 350,280" 
