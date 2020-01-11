@@ -20,6 +20,16 @@ export class PieDashboardComponent extends BaseComponent implements OnInit {
 	 */
 	private slices$ = new BehaviorSubject<Slice[]>([]);
 
+	/**
+	 * Observable emetting the configuration of the pie.
+	 */
+	private slicesLastYear$ = new BehaviorSubject<Slice[]>([]);
+
+	/**
+	 * Observable emetting the configuration of the pie.
+	 */
+	private slicesLastMonth$ = new BehaviorSubject<Slice[]>([]);
+
 	constructor(
 		private projectService: ProjectService,
 		private pieDashboardService: PieDashboardService) {

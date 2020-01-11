@@ -5,6 +5,7 @@ div {
 }
 
 .mainDashboard {
+    margin-left: 10px;
     width: 100%;
     height: 600px;
 }
@@ -19,7 +20,27 @@ div.formerDashboard {
     height: 150px;
 }
 
-P.text {
-    font-size: 18px;
-    margin: 0;
+div.camera {
+    width: 100%;
+    margin: 20px auto;
+    text-align: center;
+    font-size: 22px;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: lightgrey;
+    padding: 20px;
+}
+
+.camera {
+    color: lightgrey;
+}
+
+i.camera {
+    font-size: 60px;
+}
+
+p.camera {
+    font-size: 22px;
+    text-align: center;
 }

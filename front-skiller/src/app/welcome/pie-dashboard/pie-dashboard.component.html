@@ -2,14 +2,20 @@
 
     <mat-grid-list cols="4" width="100%" rowHeight="250px">
         <mat-grid-tile [colspan]="1" [rowspan]="1">
-            <div *ngIf="projectService.allProjectsIsLoaded$|async" class="formerDashboard">
-                <p class="text">Last year result</p>
+            <div *ngIf="(projectService.allProjectsIsLoaded$|async) && (slidesLastYear$|async)" 
+                    class="formerDashboard">
+                <p class="text">Last year snapshot</p>
                 <app-pie-chart
                     [radius]=180
                     [active]=false
                     [pie]=2
                     [slices$]="slices$">
                 </app-pie-chart>
+            </div>
+            <div class="camera">
+                Last year snapshot<br/>
+                <i class="fas fa-camera camera"></i>
+                <p class="camera">NO DATA AVAILABLE</p>
             </div>
         </mat-grid-tile>
 
@@ -31,7 +37,7 @@
         </mat-grid-tile>
 
         <mat-grid-tile [colspan]="1" [rowspan]="1">
-            <div *ngIf="projectService.allProjectsIsLoaded$|async" class="formerDashboard">
+            <div *ngIf="(projectService.allProjectsIsLoaded$|async) && (slidesLastMonth$|async)" class="formerDashboard">
                 <p class="text">Last month result</p>
                 <app-pie-chart
                     [radius]=180
@@ -39,6 +45,11 @@
                     [pie]=3
                     [slices$]="slices$">
                 </app-pie-chart>
+            </div>
+            <div class="camera">
+                Last month snapshot<br/>
+                <i class="fas fa-camera camera"></i>
+                <p class="camera">NO DATA AVAILABLE</p>
             </div>
         </mat-grid-tile>
 
