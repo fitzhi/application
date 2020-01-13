@@ -32,6 +32,11 @@ export class Project {
 	public libraries: Library[] = [];
 
 	/**
+	 * URL of the Sonar server used to validate this project.
+	 */
+	public urlSonarServer = 'http://localhost:9000';
+
+	/**
 	 * Array containing the list of Sonar projects associated to this project.
 	 */
 	public sonarProjects: SonarProject[] = [];

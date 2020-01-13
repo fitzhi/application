@@ -13,6 +13,8 @@ import { AuthService } from './admin/service/auth/auth.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { SonarService } from './service/sonar.service';
 import { MessageService } from './message/message.service';
+import { SonarServer } from './service/sonar-server';
+import { HttpClient } from '@angular/common/http';
 
 declare var $: any;
 
@@ -56,6 +58,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 	constructor(
 		private cinematicService: CinematicService,
 		private sonarService: SonarService,
+		private httpClient: HttpClient,
 		private authService: AuthService,
 		private tabsStaffListService: TabsStaffListService,
 		private skillService: SkillService,
@@ -77,19 +80,10 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 		/**
          * Loading the referentials.
          */
+		// TODO The Sonar servers array should be stored in the referentialL.
+		this.sonarService.loadSonarsVersion();
 		this.referentialService.loadAllReferentials();
-		this.sonarService.loadSonarVersion();
-		this.subscriptions.add(
-		this.sonarService.sonarIsAccessible$
-			.subscribe(accessible => {
-				if (accessible) {
-					this.sonarService.loadProjects();
-					this.sonarService.loadSonarSupportedMetrics();
-				} else {
-					this.messageService.warning('Warning : Sonar is offline or unreachable!');
-				}
-			})
-		);
+		this.sonarService.loadSonarMetrics();
 	}
 
 	/**

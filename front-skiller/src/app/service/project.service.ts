@@ -53,7 +53,7 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-   	* Load the global list of ALL collaborators, working for the company.
+   	* Load the global list of ALL projects, working for the company.
    	*/
 	loadProjects() {
 		if (Constants.DEBUG) {
@@ -553,6 +553,7 @@ export class ProjectService extends InternalService {
 			messageErrorEmitter: EventEmitter<MessageGravity>) {
 
 		sonarService.loadSonarComponentMeasures$(
+				project,
 				sonarKey,
 				metricValues.map(psmv => psmv.key))
 			.subscribe((measures: ResponseComponentMeasures) => {

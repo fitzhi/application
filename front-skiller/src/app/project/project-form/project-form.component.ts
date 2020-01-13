@@ -137,10 +137,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		this.boundAddSonarProject = this.addSonarProject.bind(this);
 		this.boundRemoveSonarProject = this.removeSonarProject.bind(this);
 
-		this.subscriptions.add(
-			this.sonarService.sonarIsAccessible$.subscribe
-				(sonarIsAccessible => this.sonarIsAccessible = sonarIsAccessible)
-		);
 	}
 
 	ngOnInit() {
@@ -203,6 +199,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					if (!project) {
 						return;
 					}
+
+					this.subscriptions.add(
+						this.sonarService.sonarIsAccessible$(this.project$).subscribe
+							(sonarIsAccessible => this.sonarIsAccessible = sonarIsAccessible)
+					);
+
 					//
 					// We postpone the Project updates to avoid the warning
 					// ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked.
@@ -332,7 +334,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	}
 
 	/**
-	 * Load the accessible Sonar projects declared on the Sonar project.
+	 * Load the accessible Sonar projects declared on the Sonar server.
 	 * The returned observable emits a TRUE if the loading has been successful.
 	 */
 	sonarProjectsLoaded$(): Observable<boolean> {
@@ -353,7 +355,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			});
 		}
 
-		return this.sonarService.allSonarProjects$
+		return this.sonarService.allSonarProjects$(this.project)
 			.pipe (
 				map (sonarProjects => {
 					if (Constants.DEBUG) {
@@ -369,9 +371,13 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					.forEach(element => {
 						this.tagifySonarProjects.settings.whitelist.push(element);
 					});
+
 					return true;
 				}),
-				catchError(err =>  of(false)));
+				catchError(err =>  {
+					console.error (err);
+					return of(false);
+				}));
 	}
 
 	/**
@@ -520,7 +526,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			return;
 		}
 
-		const sonarComponent = this.sonarService.search (event.detail.data.value);
+		const sonarComponent = this.sonarService.search (this.project, event.detail.data.value);
 		if (!sonarComponent) {
 			console.log ('SEVERE ERROR : This Sonar project is unknown.', event.detail.data.value);
 			return;

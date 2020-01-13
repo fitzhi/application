@@ -99,25 +99,25 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 			const quotation = this.sonarService.evaluateSonarProject(this.project, sonarProject.key);
 			const risk = (quotation === 100) ? 0 : (10 - Math.ceil(quotation / 10));
 			this.sonarService
-			.loadTotalNumberLinesOfCode$(sonarProject.key)
-			.subscribe (totalNumberLinesOfCode => {
-				sonarProject.sonarEvaluation = new SonarEvaluation(quotation, totalNumberLinesOfCode);
-				this.projectService.saveSonarEvaluation(
-					this.project.id, sonarProject.key, quotation, totalNumberLinesOfCode)
-					.subscribe(doneAndOk => {
-						if (doneAndOk) {
-							this.messageService.info('Saving the quotation for project ' + sonarProject.name);
-						} else {
-							this.messageService.error('Error when saving the quotation for project ' + sonarProject.name);
-						}
+				.loadTotalNumberLinesOfCode$(this.project, sonarProject.key)
+				.subscribe (totalNumberLinesOfCode => {
+					sonarProject.sonarEvaluation = new SonarEvaluation(quotation, totalNumberLinesOfCode);
+					this.projectService.saveSonarEvaluation(
+						this.project.id, sonarProject.key, quotation, totalNumberLinesOfCode)
+						.subscribe(doneAndOk => {
+							if (doneAndOk) {
+								this.messageService.info('Saving the quotation for project ' + sonarProject.name);
+							} else {
+								this.messageService.error('Error when saving the quotation for project ' + sonarProject.name);
+							}
+						});
+					this.evaluations.set (sonarProject.key,
+							new ThumbnailQuotationBadge(
+								quotation,
+								this.projectService.getRiskColor(risk),
+								totalNumberLinesOfCode,
+								'Lines of code'));
 					});
-				this.evaluations.set (sonarProject.key,
-						new ThumbnailQuotationBadge(
-							quotation,
-							this.projectService.getRiskColor(risk),
-							totalNumberLinesOfCode,
-							'Lines of code'));
-				});
 		});
 	}
 
@@ -132,7 +132,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 				}
 			}));
 		this.subscriptions.add(
-			this.sonarService.sonarIsAccessible$.subscribe( connected => {
+			this.sonarService.sonarIsAccessible$(this.project$).subscribe( connected => {
 				if (connected) {
 					this.project.sonarProjects.forEach (
 						sonarP => this.retrieveAndUpdateFilesSummary(sonarP));
@@ -144,7 +144,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	 * @param keyComponentSonar : the component key
 	 */
 	retrieveAndUpdateFilesSummary(componentSonar: SonarProject) {
-		this.sonarService.loadFiles(componentSonar.key).subscribe( filesCount => {
+		this.sonarService.loadFiles(this.project, componentSonar.key).subscribe( filesCount => {
 			componentSonar.projectFilesStats = this.keepTop3TypesOfFile(filesCount);
 			if (Constants.DEBUG) {
 				console.groupCollapsed('Top 3 languages for Sonar project %s', componentSonar.key);

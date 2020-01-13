@@ -90,6 +90,11 @@ public @Data class Project implements Serializable {
 	private List<Library> libraries = new ArrayList<>();
 	
 	/**
+	 * URL of the Sonar server hosting the Sonar projects related to this project
+	 */
+	private String urlSonarServer = "http://localhost:9000";
+	
+	/**
 	 * List of Sonar projects associated to this project.
 	 */
 	private List<SonarProject> sonarProjects = new ArrayList<>();

@@ -84,22 +84,25 @@ export class SonarQuotationComponent extends BaseComponent implements OnInit, On
 			throw new Error ('Cannot retrieve the Sonar project ' + keySonar + ' for project ' + this.project.name);
 		}
 
-		sonarProject.projectSonarMetricValues.forEach( metricValue => {
+		const sonarServer = this.sonarService.getSonarServer(this.project);
+		if (sonarServer) {
+			sonarProject.projectSonarMetricValues.forEach( metricValue => {
 
-			const emptyProject = new Project();
-			emptyProject.sonarProjects = [];
-			const sonar = new SonarProject();
-			sonar.key = keySonar;
-			sonar.projectSonarMetricValues = [];
-			sonar.projectSonarMetricValues.push(metricValue);
-			emptyProject.sonarProjects.push (sonar);
+				const emptyProject = new Project();
+				emptyProject.sonarProjects = [];
+				const sonar = new SonarProject();
+				sonar.key = keySonar;
+				sonar.projectSonarMetricValues = [];
+				sonar.projectSonarMetricValues.push(metricValue);
+				emptyProject.sonarProjects.push (sonar);
 
-			this.evaluations.push(
-				new BadgeQuotation(
-					this.sonarService.getMetricTitle (metricValue.key),
-					this.sonarService.evaluateSonarProject(emptyProject, keySonar),
-					metricValue.weight));
-			});
+				this.evaluations.push(
+					new BadgeQuotation(
+						sonarServer.getMetricTitle (metricValue.key),
+						this.sonarService.evaluateSonarProject(emptyProject, keySonar),
+						metricValue.weight));
+				});
+		}
 	}
 
 	/**

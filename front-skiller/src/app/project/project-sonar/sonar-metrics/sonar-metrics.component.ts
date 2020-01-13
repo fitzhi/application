@@ -85,7 +85,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	ngOnInit() {
 
 		this.subscriptions.add(
-			this.sonarService.sonarIsAccessible$.subscribe(isSonarAccessible => {
+			this.sonarService.sonarIsAccessible$(this.project$).subscribe(isSonarAccessible => {
 					this.isSonarAccessible = isSonarAccessible;
 		}));
 
@@ -99,7 +99,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 
 		this.subscriptions.add(
 			this.loadMetrics$().subscribe ((data: ProjectSonarMetric[]) => {
-				this.sonarService.setProjectSonarMetrics(data);
+				this.sonarService.getSonarServer(this.project).setProjectSonarMetrics(data);
 				this.initDataSource(data);
 			}));
 
@@ -142,12 +142,17 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 
 	private loadMetrics$(): Observable<ProjectSonarMetric[]> {
 
-		// We have saved the first array of ProjectSonarMetric for caching purpose
-		if (this.sonarService.projectSonarMetrics.length > 0) {
-			return of(this.sonarService.projectSonarMetrics);
+		const sonarServer = this.sonarService.getSonarServer(this.project);
+		if (!sonarServer) {
+			return of(null);
 		}
 
-		return this.sonarService.sonarMetrics$.pipe(
+		// We have saved the first array of ProjectSonarMetric for caching purpose
+		if (sonarServer.projectSonarMetrics.length > 0) {
+			return of(sonarServer.projectSonarMetrics);
+		}
+
+		return sonarServer.sonarMetrics$.pipe(
 			map (metrics => {
 				const projectSonarMetrics: ProjectSonarMetric[] = [];
 				metrics.forEach( metric => {

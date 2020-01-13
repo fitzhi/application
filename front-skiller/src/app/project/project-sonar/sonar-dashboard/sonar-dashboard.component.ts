@@ -74,16 +74,19 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 			this.project$.subscribe((project: Project) => this.project = project));
 
 		this.subscriptions.add(
-			this.sonarService.sonarIsAccessible$.subscribe(isSonarAccessible => {
+			this.sonarService.sonarIsAccessible$(this.project$).subscribe(isSonarAccessible => {
 				if (isSonarAccessible) {
 					this.isSonarAccessible = isSonarAccessible;
-					const version = parseFloat(this.sonarService.sonarVersion.substring(0, 3));
-					this.isSonarVersion71x = (version > 7.1);
-					if (Constants.DEBUG) {
-						if (this.isSonarVersion71x) {
-							console.log('Sonar version 7.1x');
-						} else {
-							console.log('Sonar version < 7.x');
+					const sonarServer = this.sonarService.getSonarServer(this.project);
+					if (sonarServer) {
+						const version = parseFloat(sonarServer.sonarVersion.substring(0, 3));
+						this.isSonarVersion71x = (version > 7.1);
+						if (Constants.DEBUG) {
+							if (this.isSonarVersion71x) {
+								console.log('Sonar version 7.1x');
+							} else {
+								console.log('Sonar version < 7.x');
+							}
 						}
 					}
 				}
@@ -100,7 +103,8 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 				if (this.project && (panelSwitchEvent.keySonar) ) {
 					this.sonarKey = panelSwitchEvent.keySonar;
 					this.safeBadge = [];
-					if (this.sonarService.projectSonarMetrics) {
+					const sonarServer = this.sonarService.getSonarServer(this.project);
+					if (sonarServer && sonarServer.projectSonarMetrics) {
 						this.loadBadge(0);
 					}
 				}
@@ -113,17 +117,22 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	 * @param badgeNumero the numero of badge
 	 */
 	loadBadge(badgeNumero: number) {
-		if (badgeNumero === this.sonarService.projectSonarMetrics.length) {
+		const sonarServer = this.sonarService.getSonarServer(this.project);
+		if ((sonarServer) && (badgeNumero === sonarServer.projectSonarMetrics.length)) {
 			this.safeBadge$.next(this.safeBadge);
 			return;
 		}
 		this.subscriptions.add(
 			this.sonarService
-				.loadBadge(this.sonarKey, this.sonarService.projectSonarMetrics[badgeNumero].key)
+				.loadBadge(this.project, this.sonarKey, sonarServer.projectSonarMetrics[badgeNumero].key)
 				.subscribe(svg => {
-					this.safeBadge.push(this.sanitize.bypassSecurityTrustHtml(svg));
-					this.safeBadgeLength = this.safeBadge.length;
-					this.loadBadge(badgeNumero + 1);
+					if (svg) {
+						this.safeBadge.push(this.sanitize.bypassSecurityTrustHtml(svg));
+						this.safeBadgeLength = this.safeBadge.length;
+						this.loadBadge(badgeNumero + 1);
+					} else {
+						throw new Error('INTERNAL ERROR : loadBadge did not generate a badge.');
+					}
 				}));
 	}
 
