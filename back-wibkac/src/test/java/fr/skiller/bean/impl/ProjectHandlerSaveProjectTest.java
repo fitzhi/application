@@ -55,6 +55,7 @@ public class ProjectHandlerSaveProjectTest {
 		project.setPassword("pass_nope");
 		
 		project = new Project (1789, "French revolution");
+		project.setUrlSonarServer("https://url.ofASonarServer");
 		project.setConnectionSettings(1);
 		project.setUsername("frvidal");
 		project.setPassword("mypass");
@@ -62,6 +63,7 @@ public class ProjectHandlerSaveProjectTest {
 		projectHandler.saveProject(project);
 		project = projectHandler.get(1789);
 		Assert.assertTrue("French revolution".equals(project.getName()));
+		Assert.assertEquals("https://url.ofASonarServer", project.getUrlSonarServer());
 		Assert.assertEquals(1, project.getConnectionSettings());
 		Assert.assertEquals("frvidal", project.getUsername());
 		Assert.assertNotNull(project.getPassword());
@@ -77,6 +79,7 @@ public class ProjectHandlerSaveProjectTest {
 		project.setPassword("pass_nope");
 		
 		project = new Project (1789, "French revolution");
+		project.setUrlSonarServer("https://url.ofASonarServer");
 		project.setConnectionSettings(0);
 		project.setUsername("frvidal");
 		project.setPassword("mypass");
@@ -84,6 +87,7 @@ public class ProjectHandlerSaveProjectTest {
 		projectHandler.saveProject(project);
 		project = projectHandler.get(1789);
 		Assert.assertTrue("French revolution".equals(project.getName()));
+		Assert.assertEquals("https://url.ofASonarServer", project.getUrlSonarServer());
 		Assert.assertEquals(0, project.getConnectionSettings());
 		Assert.assertNull(project.getUsername());
 		Assert.assertNull(project.getPassword());

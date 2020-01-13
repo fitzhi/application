@@ -50,6 +50,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	profileProject = new FormGroup({
 		projectName: new FormControl(''),
+		urlSonarServer: new FormControl(''),
 		urlRepository1: new FormControl(''),
 		urlRepository2: new FormControl(''),
 		username: new FormControl(''),
@@ -211,14 +212,18 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					//
 					setTimeout(() => {
 						this.project = project;
-						this.testConnectionSettings();
 						this.profileProject.get('projectName').setValue(project.name);
+						this.profileProject.get('urlSonarServer').setValue(project.urlSonarServer);
 						this.connection_settings = String(this.project.connectionSettings);
 						this.profileProject.get('urlRepository1').setValue(this.project.urlRepository);
 						this.profileProject.get('urlRepository2').setValue(this.project.urlRepository);
 						this.profileProject.get('username').setValue(this.project.username);
 						this.profileProject.get('password').setValue(this.project.password);
 						this.profileProject.get('filename').setValue(this.project.filename);
+						// If a username has been setup, we test the connection.
+						if ((this.project.username) && (this.project.username.length > 0)) {
+							this.testConnectionSettings();
+						}
 						this.ngInitSonarProjectsDeclaredInProject();
 						this.ngInitSkillsDeclaredInProject();
 						this.risk$.next(this.project.staffEvaluation);
@@ -262,7 +267,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				}
 			});
 		}
-
 		return of(true);
 	}
 
@@ -355,6 +359,13 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			});
 		}
 
+		/**
+		 * No Sonar server declared -> No project available.
+		 */
+		if (!this.project.urlSonarServer) {
+			return of(false);
+		}
+
 		return this.sonarService.allSonarProjects$(this.project)
 			.pipe (
 				map (sonarProjects => {
@@ -378,6 +389,34 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					console.error (err);
 					return of(false);
 				}));
+	}
+
+	/**
+	 * **End-user has change the Sonar servers selection.** Two possibilities :
+	 * - either selected a new Sonar server
+	 * - deselected the current one
+	 * @param $event the event propagated from the HTML `select` element
+	 */
+	onUrlSonarServerChange($event) {
+		const urlSonarServer = this.profileProject.get('urlSonarServer').value;
+		if (urlSonarServer !== this.project.urlSonarServer) {
+			if (Constants.DEBUG) {
+				console.log ('Sonar URL has changed from %s to %s',
+					(this.project.urlSonarServer) ? this.project.urlSonarServer : 'none',
+					urlSonarServer);
+			}
+			this.projectService.saveSonarUrl$(this.project.id, urlSonarServer)
+				.subscribe(doneAndOk => {
+					if (doneAndOk) {
+						this.messageService.success('Saved the URL ' + urlSonarServer + ' for the project ' + this.project.name);
+						this.project.urlSonarServer = urlSonarServer;
+						this.project.sonarProjects = [];
+						this.project$.next(this.project);
+					} else {
+						this.messageService.error('Failed to save the URL ' + urlSonarServer + ' for the project ' + this.project.name);
+					}
+				});
+		}
 	}
 
 	/**
@@ -610,7 +649,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		}
 		this.project.sonarProjects.splice(indexOfSonarProject, 1);
 
-		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
+		// We have already loaded or saved the project, so we can add each new Sonar project as they appear, one by one.
 		if (this.project.id) {
 			this.updateSonarProject(this.project.id, sonarProject, this.projectService.delSonarProject.bind(this.projectService));
 		}
@@ -635,6 +674,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	onSubmit() {
 		this.project.name = this.profileProject.get('projectName').value;
+		this.project.urlSonarServer = this.profileProject.get('urlSonarServer').value;
 		switch (this.project.connectionSettings) {
 			case this.DIRECT_ACCESS:
 				this.project.urlRepository = this.profileProject.get('urlRepository1').value;

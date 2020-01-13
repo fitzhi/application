@@ -829,4 +829,20 @@ export class ProjectService extends InternalService {
 
 		console.groupEnd();
 	}
+
+	/**
+	 * This function is proceeding 2 tasks :
+	 *
+	 * - It saves the Sonar URL associated with the project with the given identifier
+	 * - It returns an `observable<Boolean>` representing the completion, or not, of the remote operation
+	 * @param idProject the project identifier
+	 * @param urlSonarServer the URL of the Sonar server
+	 */
+	public saveSonarUrl$(idProject: number, urlSonarServer: string): Observable<Boolean> {
+		const body = { idProject: idProject, urlSonarServer: urlSonarServer};
+		return this.httpClient
+			.post<Boolean>(this.backendSetupService.url() + '/project/sonar/saveUrl', body, httpOptions)
+			.pipe(take(1));
+	}
+
 }

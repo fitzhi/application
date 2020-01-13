@@ -242,5 +242,11 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 */
 	void saveSonarEvaluation (Project project, String sonarProjectKey, SonarEvaluation sonarEvaluation)
 		throws SkillerException;
-	
+
+	/**
+	 * Saved the new/first URL of Sonar server to be linked to the given project.
+	 * @param project the given project
+	 * @param newUrlSonarServer the URL of the Sonar server to be taken in account
+	 */
+	void saveUrlSonarServer(Project project, String newUrlSonarServer);
 }

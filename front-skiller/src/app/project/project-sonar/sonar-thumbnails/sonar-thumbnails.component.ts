@@ -249,6 +249,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 			'js': 'JavaScript',
 			'xml': 'XML',
 			'c#': 'C#',
+			'cs': 'C#',
 		};
 		return labels[key];
 	}

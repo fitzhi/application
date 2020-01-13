@@ -21,6 +21,7 @@ import fr.skiller.Error;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.controller.in.BodyParamProjectSonarEvaluation;
 import fr.skiller.controller.in.BodyParamProjectSonarMetricValues;
+import fr.skiller.controller.in.BodyParamProjectSonarServer;
 import fr.skiller.controller.in.BodyParamSonarEntry;
 import fr.skiller.controller.in.BodyParamSonarFilesStats;
 import fr.skiller.data.internal.Project;
@@ -52,7 +53,7 @@ public class ProjectSonarController {
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
-					"POST command on /project/sonar/addEntry for project : %d", param.getIdProject()));
+					"POST command on /api/project/sonar/addEntry for project : %d", param.getIdProject()));
 		}
 		
 		try {
@@ -112,7 +113,7 @@ public class ProjectSonarController {
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
-				"POST command on /project/sonar/removeEntry for project : %s %s", 
+				"POST command on /api/project/sonar/removeEntry for project : %s %s", 
 				param.getIdProject(), param.getSonarProject().getName()));
 		}
 		
@@ -136,7 +137,7 @@ public class ProjectSonarController {
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
-				"POST command on /project/sonar/file-stats for project : %s %s", 
+				"POST command on /api/project/sonar/file-stats for project : %s %s", 
 				param.getIdProject(), param.getSonarProjectKey()));
 		}
 		
@@ -164,7 +165,7 @@ public class ProjectSonarController {
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
-				"POST command on /project/sonar/saveEvaluation for project : %s %s", 
+				"POST command on /api/project/sonar/saveEvaluation for project : %s %s", 
 				param.getIdProject(), param.getSonarKey()));
 		}
 		
@@ -194,13 +195,16 @@ public class ProjectSonarController {
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
-				"POST command on /project/sonar/saveMetricValues for project : %s %s", 
+				"POST command on /api/project/sonar/saveMetricValues for project : %s %s", 
 				param.getIdProject(), param.getSonarKey()));
 		}
 		
 		Project project = null;
 		try {
 			project = projectHandler.get(param.getIdProject());
+			if (project == null) {
+				throw new SkillerException(Error.CODE_PROJECT_NOFOUND, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
+			}
 		} catch (SkillerException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
 			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
@@ -215,9 +219,33 @@ public class ProjectSonarController {
 			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
 		}
-			
-		
 	}
 	
+	@PostMapping(path="/saveUrl")
+	public ResponseEntity<Boolean> saveUrlSonarServer(@RequestBody BodyParamProjectSonarServer param) {
+		
+		HttpHeaders headers = new HttpHeaders();
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
+				"POST command on /api/project/sonar/saveUrl for ID Project %d & url %s", 
+				param.getIdProject(), param.getUrlSonarServer()));
+		}
+		
+		try {
+			Project project = projectHandler.get(param.getIdProject());
+			if (project == null) {
+				throw new SkillerException(Error.CODE_PROJECT_NOFOUND, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
+			}
+			projectHandler.saveUrlSonarServer(project, param.getUrlSonarServer()); 
+			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
+			
+		} catch (SkillerException se) {
+			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
+			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
+			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
+		}
+		
+	}
 	
 }

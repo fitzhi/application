@@ -92,7 +92,7 @@ public @Data class Project implements Serializable {
 	/**
 	 * URL of the Sonar server hosting the Sonar projects related to this project
 	 */
-	private String urlSonarServer = "http://localhost:9000";
+	private String urlSonarServer;
 	
 	/**
 	 * List of Sonar projects associated to this project.

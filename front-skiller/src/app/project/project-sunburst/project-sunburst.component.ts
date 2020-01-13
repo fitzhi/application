@@ -123,7 +123,7 @@ class TaskReportManagement {
 				this.numberOfUselessCall = 0;
 				this.adaptativeDelay += this.DEFAULT_DELAY_INTERVAL;
 				if (Constants.DEBUG) {
-					console.log ('Adaptative delay has been set to %d', this.adaptativeDelay);
+					console.log ('Adaptative delay has been raised to %d', this.adaptativeDelay);
 				}
 			}
 			return null;

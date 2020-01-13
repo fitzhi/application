@@ -176,6 +176,11 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 						"SHOULD NOT PASS HERE : The project " + project.getId() + " is supposed to exist !");
 			}
 			savedProject.setName(project.getName());
+			savedProject.setUrlSonarServer(project.getUrlSonarServer());
+			if ((project.getUrlSonarServer() == null) || ("".equals(project.getUrlSonarServer()))) {
+				savedProject.setSonarProjects(new ArrayList<SonarProject>());
+			}
+			
 			savedProject.setConnectionSettings(project.getConnectionSettings());
 			switch (project.getConnectionSettings()) {
 				case 1:
@@ -550,6 +555,17 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			this.dataUpdated = true;
 		}
 		
+	}
+
+	@Override
+	public void saveUrlSonarServer(Project project, String newUrlSonarServer)  {
+		synchronized (lockDataUpdated) {
+			if ((newUrlSonarServer == null) || "".equals(newUrlSonarServer) || !newUrlSonarServer.equals(project.getUrlSonarServer())) {
+				project.setSonarProjects(new ArrayList<SonarProject>());
+			}
+			project.setUrlSonarServer(newUrlSonarServer);
+			this.dataUpdated = true;
+		}
 	}
 
 }

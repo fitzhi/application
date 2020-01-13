@@ -24,6 +24,21 @@
 							</div>
 						</div>
 
+						<div class="row field">
+							<label for="urlSonarServer" >Sonar server</label> 
+							<select name="label" id="urlSonarServer" (change)="onUrlSonarServerChange($event)"
+								formControlName="urlSonarServer" class="custom-select d-block w-100">
+								<option></option>
+								<option *ngFor="let sonarServer of sonarService.sonarServers">{{sonarServer.urlSonar}}</option>
+							</select> 
+							<!--
+							<label *ngIf="urlSonarServer.touched && urlSonarServer.invalid" [ngClass]="'alert alert-warning'"
+								style="width: 100%; font-size: 10px;"> 
+								Please, select a URL Sonar server for this project if any.
+							</label>
+							-->
+						</div>
+			
 						<div class="row field" [hidden]="!sonarProjectsLoaded || creation">
 							<div class="col-12 insideField">
 								<label class="labelSkills" for="sonarProjects">Sonar projects</label>
