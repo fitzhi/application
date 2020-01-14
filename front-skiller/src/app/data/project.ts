@@ -34,7 +34,7 @@ export class Project {
 	/**
 	 * URL of the Sonar server used to validate this project.
 	 */
-	public urlSonarServer = 'http://localhost:9000';
+	public urlSonarServer;
 
 	/**
 	 * Array containing the list of Sonar projects associated to this project.

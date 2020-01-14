@@ -9,6 +9,7 @@ import { take, switchMap } from 'rxjs/operators';
 import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { SupportedMetric } from '../data/supported-metric';
 import { TopicLegend } from '../data/topic-legend';
+import { DeclaredSonarServer } from '../data/declared-sonar-server';
 
 @Injectable()
 export class ReferentialService {
@@ -37,6 +38,16 @@ export class ReferentialService {
 	 * BehaviorSubject containing the list `topics` loaded from the back-end.
 	 */
 	public topics$ = new BehaviorSubject<{[id: number]: string}>({});
+
+	/**
+	 * BehaviorSubject containing the list of declared SonarServer available in the infrastructure.
+	 *
+	 * In the application, you have
+	 * - **DECLARED** Sonar servers (Class `DeclaredSonarServer`), which are servers expected to te accessible in the infrastructure
+	 * - **ACTIVE AND DECLARED** Sonar servers (Class `SonarServer`) which are linked to the projects
+	 * (and of course, planned to be available in the infrastrucure)
+	 */
+	public sonarServers$ = new BehaviorSubject<DeclaredSonarServer[]>([]);
 
 	/**
 	 * This observable informs the application that all referrential data are loaded.
@@ -101,36 +112,51 @@ export class ReferentialService {
 						}
 						this.legendsLoaded$.next(true);
 						legends.forEach(legend => this.legends.push(legend));
-						return this.httpClient.get<SupportedMetric[]>
-							(this.backendSetupService.url() + '/referential/supported-metrics');
+						return this.httpClient.get<DeclaredSonarServer[]>
+							(this.backendSetupService.url() + '/referential/sonar-servers');
 					}))
-			.pipe(
-				take(1),
-				switchMap(
-					(metrics: SupportedMetric[]) => {
+				.pipe(
+					take(1),
+					switchMap(
+						(sonarServers: DeclaredSonarServer[]) => {
+							if (Constants.DEBUG) {
+								console.groupCollapsed('Sonar servers declared : ');
+								sonarServers.forEach(server => console.log(server.urlSonarServer));
+								console.groupEnd();
+							}
+							const declaredSonarServers: DeclaredSonarServer[] = [];
+							declaredSonarServers.push(...sonarServers);
+							this.sonarServers$.next(declaredSonarServers);
+							return this.httpClient.get<SupportedMetric[]>
+								(this.backendSetupService.url() + '/referential/supported-metrics');
+						}))
+				.pipe(
+					take(1),
+					switchMap(
+						(metrics: SupportedMetric[]) => {
+							if (Constants.DEBUG) {
+								console.groupCollapsed('Supported metrics : ');
+								metrics.forEach(metric => console.log(metric.key));
+								console.groupEnd();
+							}
+							const supported: string[] = [];
+							metrics.forEach( metric => {
+								supported.push(metric.key);
+							});
+							this.supportedMetrics$.next(supported);
+							return this.httpClient.get<TopicLegend[]>
+								(this.backendSetupService.url() + '/referential/audit-topics');
+						}))
+				.pipe(take(1))
+				.subscribe(
+					(topicslegends: TopicLegend[]) => {
 						if (Constants.DEBUG) {
-							console.groupCollapsed('Supported metrics : ');
-							metrics.forEach(metric => console.log(metric.key));
+							console.groupCollapsed('Audit topics : ');
+							topicslegends.forEach(function (topic) {
+								console.log(topic.id + ' ' + topic.title);
+							});
 							console.groupEnd();
 						}
-						const supported: string[] = [];
-						metrics.forEach( metric => {
-							supported.push(metric.key);
-						});
-						this.supportedMetrics$.next(supported);
-						return this.httpClient.get<TopicLegend[]>
-							(this.backendSetupService.url() + '/referential/audit-topics');
-					}))
-			.pipe(take(1))
-			.subscribe(
-				(topicslegends: TopicLegend[]) => {
-					if (Constants.DEBUG) {
-						console.groupCollapsed('Audit topics : ');
-						topicslegends.forEach(function (topic) {
-							console.log(topic.id + ' ' + topic.title);
-						});
-						console.groupEnd();
-					}
 
 				/**
 				 * List of topic legends registered on the back office.

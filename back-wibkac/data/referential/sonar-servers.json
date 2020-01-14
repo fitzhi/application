@@ -1,0 +1,4 @@
+[
+	{ "urlSonarServer": "http://localhost:9000" },
+	{ "urlSonarServer": "https://sonar.bordeaux.sqli.com/" }
+]

@@ -17,10 +17,11 @@ import { ReferentialService } from './referential.service';
 import { ProjectSonarMetric } from '../data/sonar/project-sonar-metric';
 import { Project } from '../data/project';
 import { ProjectService } from './project.service';
-import { SonarServer } from './sonar-server';
+import { SonarServer } from '../data/sonar-server';
 import { MessageService } from '../message/message.service';
 import { SupportedMetric } from '../data/supported-metric';
 import { RegisterUserComponent } from '../admin/register-user/register-user.component';
+import { DeclaredSonarServer } from '../data/declared-sonar-server';
 
 @Injectable({
 	providedIn: 'root'
@@ -31,6 +32,11 @@ export class SonarService extends InternalService {
 	 * List of Sonar declared inside the application
 	 */
 	sonarServers: SonarServer[] = [];
+
+	/**
+	 * This `behaviorSubject` informs the system that the array of sonarServers is loaded.
+	 */
+	sonarServersLoaded$ = new BehaviorSubject<boolean>(false);
 
 	public CALCULATION_RULES = {
 		'bugs':
@@ -91,15 +97,25 @@ export class SonarService extends InternalService {
 		super();
 	}
 
+	/**
+	 * Load the Sonar versions of all Sonar servers.
+	 */
 	loadSonarsVersion() {
-		this.httpClient
-			.get(this.backendSetupService.url() + '/admin/settings')
-			.subscribe((settings: Settings) => {
-				settings.urlSonar.forEach (url => this.initSonarServer(url));
+		this.referentialService.sonarServers$.pipe(take(1))
+			.subscribe((declaredSonarServers: DeclaredSonarServer[]) => {
+				declaredSonarServers.forEach (declaredSonarServer =>
+					this.initSonarServer(declaredSonarServer.urlSonarServer, declaredSonarServers.length));
 			});
 	}
 
-	private initSonarServer(urlSonar: string) {
+	/**
+	 * Initialize the `SonarServer` for future usage.
+	 * @param urlSonar the URL of the Sonar server
+	 * @param numberOfSonarServer the total number of Sonar servers declared in the system.
+	 *
+	 * ***We pass this number in order to detect when all server will be loaded***
+	 */
+	private initSonarServer(urlSonar: string, numberOfSonarServers: number) {
 		if (Constants.DEBUG) {
 			console.log ('initSonarServer(\'%s\')', urlSonar);
 		}
@@ -123,8 +139,7 @@ export class SonarService extends InternalService {
 				)
 			.subscribe(
 				(data: any) => {
-					const sonarServer =
-						new SonarServer(data.version, data.settings, data.sonarOn);
+					const sonarServer = new SonarServer(data.version, data.settings, data.sonarOn);
 					sonarServer.loadProjects(this.httpClient);
 					sonarServer.sonarIsAccessible$.next(sonarServer.sonarOn);
 					if (sonarServer.sonarOn) {
@@ -132,9 +147,13 @@ export class SonarService extends InternalService {
 					} else {
 						console.log('Sonar is OFFLINE  at the URL ' + sonarServer.urlSonar);
 					}
+
 					this.sonarServers.push(sonarServer);
+					if (this.sonarServers.length ===  numberOfSonarServers) {
+						this.sonarServersLoaded$.next(true);
+					}
 				},
-				error => console.log(error)
+				error => console.error(error)
 			);
 	}
 
@@ -179,6 +198,7 @@ export class SonarService extends InternalService {
 	 * @param project the passed project
 	 */
 	getSonarServer(project: Project): SonarServer {
+
 		const sonarServer = this.sonarServers.find(sonar => sonar.urlSonar === project.urlSonarServer );
 		if (!sonarServer) {
 			console.error('Did not retrieve the Sonar server %s associated with the project %s', project.urlSonarServer, project.name);
@@ -221,7 +241,7 @@ export class SonarService extends InternalService {
 	 * @param project the current active project
 	 */
 	public sonarIsAccessible$(project: Project): Observable<boolean> {
-		if (!project)  {
+		if ((!project)  || (!project.urlSonarServer)) {
 			return of(false);
 		}
 		const sonarServer = this.getSonarServer(project);

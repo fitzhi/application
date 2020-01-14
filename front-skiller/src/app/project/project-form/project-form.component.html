@@ -29,7 +29,7 @@
 							<select name="label" id="urlSonarServer" (change)="onUrlSonarServerChange($event)"
 								formControlName="urlSonarServer" class="custom-select d-block w-100">
 								<option></option>
-								<option *ngFor="let sonarServer of sonarService.sonarServers">{{sonarServer.urlSonar}}</option>
+								<option *ngFor="let sonarServer of referentialService.sonarServers$|async">{{sonarServer.urlSonarServer}}</option>
 							</select> 
 							<!--
 							<label *ngIf="urlSonarServer.touched && urlSonarServer.invalid" [ngClass]="'alert alert-warning'"

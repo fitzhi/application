@@ -202,8 +202,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					}
 
 					this.subscriptions.add(
-						this.sonarService.sonarIsAccessible$(project).subscribe
-							(sonarIsAccessible => this.sonarIsAccessible = sonarIsAccessible)
+						this.referentialService.referentialLoaded$
+							.pipe(switchMap((doneAndOk) => {
+								return (doneAndOk) ? this.sonarService.sonarServersLoaded$ : EMPTY; }))
+							.pipe(switchMap((doneAndOk) => {
+								return (doneAndOk) ? this.sonarService.sonarIsAccessible$(project) : EMPTY; }))
+							.subscribe (sonarIsAccessible => this.sonarIsAccessible = sonarIsAccessible)
 					);
 
 					//
@@ -398,6 +402,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * @param $event the event propagated from the HTML `select` element
 	 */
 	onUrlSonarServerChange($event) {
+
+		// The project has not already been saved. We cannot update an existing record.
+		if (this.project.id === 0) {
+			return;
+		}
+
 		const urlSonarServer = this.profileProject.get('urlSonarServer').value;
 		if (urlSonarServer !== this.project.urlSonarServer) {
 			if (Constants.DEBUG) {

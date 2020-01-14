@@ -13,8 +13,10 @@ import { AuthService } from './admin/service/auth/auth.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { SonarService } from './service/sonar.service';
 import { MessageService } from './message/message.service';
-import { SonarServer } from './service/sonar-server';
+import { SonarServer } from './data/sonar-server';
 import { HttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
+import { CompileTemplateMetadata } from '@angular/compiler';
 
 declare var $: any;
 

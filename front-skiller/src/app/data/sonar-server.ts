@@ -1,17 +1,17 @@
 import { BehaviorSubject, Observable, of } from 'rxjs';
-import { Metric } from '../data/sonar/metric';
+import { Metric } from './sonar/metric';
 import { take, switchMap, tap, catchError } from 'rxjs/operators';
-import { ResponseComponentMeasures } from '../data/sonar/reponse-component-measures';
+import { ResponseComponentMeasures } from './sonar/reponse-component-measures';
 import { HttpParams, HttpClient } from '@angular/common/http';
 import { Constants } from '../constants';
-import { Metrics } from '../data/sonar/metrics';
-import { Components } from '../data/sonar/components';
-import { Component } from '../data/sonar/component';
-import { ILanguageCount } from './ILanguageCount';
-import { ComponentTree } from '../data/sonar/component-tree';
-import { ProjectSonarMetric } from '../data/sonar/project-sonar-metric';
-import { Project } from '../data/project';
-import { SonarProject } from '../data/SonarProject';
+import { Metrics } from './sonar/metrics';
+import { Components } from './sonar/components';
+import { Component } from './sonar/component';
+import { ILanguageCount } from '../service/ILanguageCount';
+import { ComponentTree } from './sonar/component-tree';
+import { ProjectSonarMetric } from './sonar/project-sonar-metric';
+import { Project } from './project';
+import { SonarProject } from './SonarProject';
 
 /**
  * This class represents a Sonar server available in the infrastructure.

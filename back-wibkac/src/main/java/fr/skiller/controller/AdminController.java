@@ -33,11 +33,6 @@ import fr.skiller.exception.SkillerException;
 @RequestMapping("/api/admin")
 public class AdminController {
 
-	/**
-	 * URLs of the Sonar servers accessible from the user browser.
-	 */
-	@Value("${urlSonar}")
-	private String urlSonar;
 
 	@Autowired
 	private Administration administration;
@@ -175,20 +170,6 @@ public class AdminController {
 		
 	}
 	
-	/**
-	 * <p>
-	 * <font color="orange">
-	 * This is the first implementation of this method, 
-	 * with a default behavior hard-coded. 
-	 * </font>
-	 * </p>
-	 * @return the global settings of the application
-	 */
-	@GetMapping("/settings")
-	public ResponseEntity<Settings> settings() {
-		return new ResponseEntity<>(new Settings(urlSonar), headers(), HttpStatus.OK);
-	}
-
 	/**
 	 * @return a generated header.
 	 */
