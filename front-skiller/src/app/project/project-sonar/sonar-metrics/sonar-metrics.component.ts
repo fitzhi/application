@@ -85,22 +85,23 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	ngOnInit() {
 
 		this.subscriptions.add(
-			this.sonarService.sonarIsAccessible$(this.project$).subscribe(isSonarAccessible => {
-					this.isSonarAccessible = isSonarAccessible;
-		}));
-
-		this.subscriptions.add(
-			this.project$.subscribe(project => {
-				if (!project) {
-					return;
-				}
-				this.project = project;
-			}));
-
-		this.subscriptions.add(
-			this.loadMetrics$().subscribe ((data: ProjectSonarMetric[]) => {
-				this.sonarService.getSonarServer(this.project).setProjectSonarMetrics(data);
-				this.initDataSource(data);
+			this.project$
+				.pipe(
+					switchMap( (project: Project) => {
+						if (!project) {
+							return EMPTY;
+						}
+						this.project = project;
+						return this.sonarService.sonarIsAccessible$(project);
+					}))
+				.pipe(
+					switchMap(isSonarAccessible => {
+						this.isSonarAccessible = isSonarAccessible;
+						return  (this.isSonarAccessible) ? this.loadMetrics$() : EMPTY;
+					}))
+				.subscribe ((data: ProjectSonarMetric[]) => {
+					this.sonarService.getSonarServer(this.project).setProjectSonarMetrics(data);
+					this.initDataSource(data);
 			}));
 
 		this.subscriptions.add(

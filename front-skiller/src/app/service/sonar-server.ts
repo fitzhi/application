@@ -55,15 +55,11 @@ export class SonarServer {
 	projectSonarMetrics: ProjectSonarMetric[] = [];
 
 	/**
-	 * Load the supported metrics of this Sonar server.
+	 * Load the supported metrics of this Sonar server, which are supported by the application.
 	 * @param httpClient HTTP client for retrieving data from the Sonar server.
-	 * @param supportedMetrics Array of Sonar metrics supported by techxhì.
+	 * @param applicationSupportedMetrics Array of Sonar metrics supported by techxhì.
 	 */
-	loadSonarSupportedMetrics(httpClient: HttpClient, supportedMetrics: string[]) {
-		this.loadSonarMetrics(httpClient, supportedMetrics);
-	}
-
-	loadSonarMetrics(httpClient: HttpClient, supported: string[]) {
+	loadSonarSupportedMetrics(httpClient: HttpClient, applicationSupportedMetrics: string[]) {
 		httpClient.get<Metrics>(this.urlSonar + '/api/metrics/search?ps=500')
 			.pipe(
 				tap(
@@ -78,7 +74,7 @@ export class SonarServer {
 			.subscribe(metrics => {
 				const sonarMetrics: Metric[] = [];
 				metrics.metrics.forEach(element => {
-					if (supported.includes(element.key)) {
+					if (applicationSupportedMetrics.includes(element.key)) {
 						sonarMetrics.push(element);
 					}
 				});

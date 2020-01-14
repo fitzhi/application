@@ -132,7 +132,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 				}
 			}));
 		this.subscriptions.add(
-			this.sonarService.sonarIsAccessible$(this.project$).subscribe( connected => {
+			this.sonarService.sonarIsAccessible$(this.project).subscribe( connected => {
 				if (connected) {
 					this.project.sonarProjects.forEach (
 						sonarP => this.retrieveAndUpdateFilesSummary(sonarP));

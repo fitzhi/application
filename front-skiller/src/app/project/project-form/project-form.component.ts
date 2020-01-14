@@ -202,7 +202,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					}
 
 					this.subscriptions.add(
-						this.sonarService.sonarIsAccessible$(this.project$).subscribe
+						this.sonarService.sonarIsAccessible$(project).subscribe
 							(sonarIsAccessible => this.sonarIsAccessible = sonarIsAccessible)
 					);
 

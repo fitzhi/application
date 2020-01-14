@@ -74,7 +74,7 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 			this.project$.subscribe((project: Project) => this.project = project));
 
 		this.subscriptions.add(
-			this.sonarService.sonarIsAccessible$(this.project$).subscribe(isSonarAccessible => {
+			this.sonarService.sonarIsAccessible$(this.project).subscribe(isSonarAccessible => {
 				if (isSonarAccessible) {
 					this.isSonarAccessible = isSonarAccessible;
 					const sonarServer = this.sonarService.getSonarServer(this.project);

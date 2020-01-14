@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Settings } from '../data/settings';
-import { switchMap, map, catchError, take, tap, retry } from 'rxjs/operators';
+import { switchMap, map, catchError, take, tap, retry, takeUntil } from 'rxjs/operators';
 import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { InternalService } from '../internal-service';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
@@ -144,20 +144,28 @@ export class SonarService extends InternalService {
 	 * ___This operation will be executed when all referential data will be loaded.___
 	 */
 	public loadSonarMetrics() {
+
+		/**
+		 * This observable will emirt `true` when the metrics will be loaded.
+		 */
+		const metricsLoaded$ = new Subject<boolean>();
+
 		this.referentialService.referentialLoaded$
-			.pipe(take(1),
-			switchMap(
-				(doneAndOk: boolean) => {
-					if (doneAndOk) {
-						return this.referentialService.supportedMetrics$;
-					} else {
-						return EMPTY;
-					}
-				}))
+			.pipe(
+				takeUntil(metricsLoaded$),
+				switchMap(
+					(doneAndOk: boolean) => {
+						if (doneAndOk) {
+							return this.referentialService.supportedMetrics$;
+						} else {
+							return EMPTY;
+						}
+					}))
 			.subscribe((supportedMetrics) => {
 				this.sonarServers.forEach(sonarServer => {
 					if (sonarServer.sonarOn) {
 						sonarServer.loadSonarSupportedMetrics(this.httpClient, supportedMetrics);
+						metricsLoaded$.next(true);
 					} else {
 						console.warn('Cannot validate supported metrics for %s', sonarServer.urlSonar);
 					}
@@ -210,18 +218,14 @@ export class SonarService extends InternalService {
 
 	/**
 	 * Return a `behaviorSubject` informing the application if Sonar server is available and accessible.
-	 * @param project$ a `behaviorSubject` emetting the current active project
+	 * @param project the current active project
 	 */
-	public sonarIsAccessible$(project$: BehaviorSubject<Project>): Observable<boolean> {
-		return project$.pipe(
-			switchMap((project: Project) => {
-				if (!project) {
-					return of(false);
-				}
-				const sonarServer = this.getSonarServer(project);
-				return (!sonarServer) ? of(false) : sonarServer.sonarIsAccessible$;
-			}));
-
+	public sonarIsAccessible$(project: Project): Observable<boolean> {
+		if (!project)  {
+			return of(false);
+		}
+		const sonarServer = this.getSonarServer(project);
+		return (!sonarServer) ? of(false) : sonarServer.sonarIsAccessible$;
 	}
 
 	/**
