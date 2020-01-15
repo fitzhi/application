@@ -55,9 +55,9 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 		this.subscriptions.add(
 			this.project$.subscribe((project: Project) => {
 				if (project) {
-//					setTimeout(() => {
+					setTimeout(() => {
 						this.project = project;
-//					}, 0);
+					}, 0);
 				}
 			}));
 
