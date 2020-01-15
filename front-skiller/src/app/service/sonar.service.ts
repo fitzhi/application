@@ -101,7 +101,7 @@ export class SonarService extends InternalService {
 	 * Load the Sonar versions of all Sonar servers.
 	 */
 	loadSonarsVersion() {
-		this.referentialService.sonarServers$.pipe(take(1))
+		this.referentialService.sonarServers$
 			.subscribe((declaredSonarServers: DeclaredSonarServer[]) => {
 				declaredSonarServers.forEach (declaredSonarServer =>
 					this.initSonarServer(declaredSonarServer.urlSonarServer, declaredSonarServers.length));
