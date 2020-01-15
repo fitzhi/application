@@ -77,15 +77,6 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 
 	ngOnInit() {
 
-		const sub = of ([1, 2], [3, 5]).pipe (switchMap((is: number[]) => of (...is)))
-		.subscribe({
-			next: j => console.log (j),
-			complete: () => {
-				console.log ('complete');
-				setTimeout(() => { sub.unsubscribe(); }, 0);
-			}});
-
-
 		localStorage.removeItem('access_token');
 		localStorage.removeItem('refresh_token');
 

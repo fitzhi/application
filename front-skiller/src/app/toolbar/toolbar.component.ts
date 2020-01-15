@@ -130,6 +130,12 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 			}));
 	}
 
+	/**
+     * @return true if the WELCOME button has been selected by the end-user.
+     */
+	isDashboardActive() {
+		return (this.editedEntity === Constants.WELCOME);
+	}
 
 	/**
      * @return true if the STAFF button has been selected by the end-user.
@@ -173,7 +179,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
      * Inform the toolbar that the user has choosed an entity to be edited (Staff, Skill, Project)
      */
 	mode(editedEntity: number) {
-
+		console.log ('nope');
 		if (this.editedEntity !== editedEntity) {
 
 			this.editedEntity = editedEntity;
@@ -252,6 +258,14 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	switchToStaff() {
 		this.masterDetail = false;
 		this.mode(Constants.DEVELOPERS_CRUD);
+	}
+
+	/**
+	 * End-user returns back to the main introducing dashboard.
+	 */
+	switchToDashboard() {
+		this.masterDetail = false;
+		this.mode(Constants.WELCOME);
 	}
 
 	/**

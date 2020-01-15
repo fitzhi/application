@@ -94,6 +94,13 @@
                     <i class="fas fa-search"></i>
                 </button>
             </div>
+            <button 
+                class="btn rounded" 
+                [routerLink]="['/welcome']"
+                (click)="switchToDashboard()"
+                [ngClass]="{'btn-outline-success' : isDashboardActive(), 'btn-outline-secondary': !isDashboardActive()}" >
+                <i class="fas fa-tachometer-alt"></i>
+            </button>
         </div>
     </nav>
 </div>
