@@ -204,7 +204,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					this.subscriptions.add(
 						this.referentialService.referentialLoaded$
 							.pipe(switchMap((doneAndOk) => {
-								return (doneAndOk) ? this.sonarService.sonarServersLoaded$ : EMPTY; }))
+								return (doneAndOk) ? this.sonarService.allSonarServersLoaded$ : EMPTY; }))
 							.pipe(switchMap((doneAndOk) => {
 								return (doneAndOk) ? this.sonarService.sonarIsAccessible$(project) : EMPTY; }))
 							.subscribe (sonarIsAccessible => this.sonarIsAccessible = sonarIsAccessible)

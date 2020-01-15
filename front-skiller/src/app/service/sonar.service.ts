@@ -36,7 +36,7 @@ export class SonarService extends InternalService {
 	/**
 	 * This `behaviorSubject` informs the system that the array of sonarServers is loaded.
 	 */
-	sonarServersLoaded$ = new BehaviorSubject<boolean>(false);
+	allSonarServersLoaded$ = new BehaviorSubject<boolean>(false);
 
 	public CALCULATION_RULES = {
 		'bugs':
@@ -92,69 +92,56 @@ export class SonarService extends InternalService {
 	constructor(
 		private httpClient: HttpClient,
 		private projectService: ProjectService,
-		private referentialService: ReferentialService,
-		private backendSetupService: BackendSetupService) {
+		private referentialService: ReferentialService) {
 		super();
 	}
 
 	/**
-	 * Load the Sonar versions of all Sonar servers.
+	 * Load the Sonar versions of ALL Sonar servers.
 	 */
 	loadSonarsVersion() {
 		this.referentialService.sonarServers$
-			.subscribe((declaredSonarServers: DeclaredSonarServer[]) => {
-				declaredSonarServers.forEach (declaredSonarServer =>
-					this.initSonarServer(declaredSonarServer.urlSonarServer, declaredSonarServers.length));
+			.pipe(switchMap( (declaredSonarServers: DeclaredSonarServer[]) => of(...declaredSonarServers)))
+			.subscribe({
+				next: declaredSonarServer => this.initSonarServer(declaredSonarServer.urlSonarServer),
+				complete: () => this.allSonarServersLoaded$.next(true)
 			});
+
 	}
 
 	/**
-	 * Initialize the `SonarServer` for future usage.
+	 * Initialize the `SonarServer` object for future usage, and tests its avaibility by retrieving its version.
 	 * @param urlSonar the URL of the Sonar server
-	 * @param numberOfSonarServer the total number of Sonar servers declared in the system.
-	 *
-	 * ***We pass this number in order to detect when all server will be loaded***
 	 */
-	private initSonarServer(urlSonar: string, numberOfSonarServers: number) {
+	private initSonarServer(urlSonar: string) {
 		if (Constants.DEBUG) {
 			console.log ('initSonarServer(\'%s\')', urlSonar);
 		}
-		this.httpClient
-			.get(urlSonar + '/api/server/version',
-				{ responseType: 'text' as 'json' })
-			.pipe(
-					map((version: string) => {
-						return {
-							settings: urlSonar,
-							sonarOn: true,
-							version: version
-						};
+		const subscription = this.httpClient
+			.get(urlSonar + '/api/server/version', { responseType: 'text' as 'json' })
+				.pipe(
+					switchMap((version: string) => {
+						const sonarServer = new SonarServer(version, urlSonar, true);
+						this.sonarServers.push(sonarServer);
+						console.log('Sonar version ' + sonarServer.sonarVersion + ' installed at the URL ' + sonarServer.urlSonar);
+						sonarServer.loadProjects(this.httpClient);
+						return of({sonarServer: sonarServer, accessible: true});
 					}),
 					catchError((error) => {
 						if (Constants.DEBUG) {
-							console.log('error', error);
+							console.groupCollapsed ('Connection failed with the Sonar server %s', urlSonar);
+							console.log('Error catched', error);
+							console.groupEnd();
 						}
-						return of({ settings: urlSonar, sonarOn: false, version: '' });
-					})
-				)
-			.subscribe(
-				(data: any) => {
-					const sonarServer = new SonarServer(data.version, data.settings, data.sonarOn);
-					sonarServer.loadProjects(this.httpClient);
-					sonarServer.sonarIsAccessible$.next(sonarServer.sonarOn);
-					if (sonarServer.sonarOn) {
-						console.log('Sonar version ' + sonarServer.sonarVersion + ' installed at the URL ' + sonarServer.urlSonar);
-					} else {
-						console.log('Sonar is OFFLINE  at the URL ' + sonarServer.urlSonar);
-					}
-
-					this.sonarServers.push(sonarServer);
-					if (this.sonarServers.length ===  numberOfSonarServers) {
-						this.sonarServersLoaded$.next(true);
-					}
-				},
-				error => console.error(error)
-			);
+						console.log('Sonar is OFFLINE  at the URL ' + urlSonar);
+						const sonarServer = new SonarServer('', urlSonar, false);
+						this.sonarServers.push(sonarServer);
+						return of({sonarServer: sonarServer, accessible: false});
+					}))
+				.subscribe({
+					next: result => result.sonarServer.sonarIsAccessible$.next(result.accessible),
+					complete: () => setTimeout(() => { subscription.unsubscribe(); } , 0)
+				});
 	}
 
 	/**
