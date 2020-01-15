@@ -89,6 +89,7 @@ export class SonarQuotationComponent extends BaseComponent implements OnInit, On
 			sonarProject.projectSonarMetricValues.forEach( metricValue => {
 
 				const emptyProject = new Project();
+				emptyProject.urlSonarServer = this.project.urlSonarServer;
 				emptyProject.sonarProjects = [];
 				const sonar = new SonarProject();
 				sonar.key = keySonar;
