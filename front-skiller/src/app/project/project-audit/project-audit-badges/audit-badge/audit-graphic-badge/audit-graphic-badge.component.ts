@@ -42,6 +42,16 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	@Input() project: Project;
 
 	/**
+	 * Width of the badge
+	 */
+	@Input() width: number;
+
+	/**
+	 * Height of the badge
+	 */
+	@Input() height: number;
+
+	/**
 	 * The messenger throws the new evaluation givent by the end-user after each change.
 	 */
 	@Output() messengerEvaluationChange = new EventEmitter<TopicEvaluation>();
@@ -51,6 +61,11 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	 */
 	private color;
 
+	/**
+	 * Size of the badge
+	 */
+	styleSize: string;
+
 	constructor(
 		private projectService: ProjectService,
 		private cinematicService: CinematicService) { super(); }
@@ -59,6 +74,7 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 		if (((this.project$) || (this.project)) && this.editable) {
 			console.error ('SHOULD NOT PASS HERE : Usage of the observable project$ or the object project is reserved to the non editable mode');
 		}
+		this.styleSize = 'width:' + this.width + 'px;height:' + this.height + 'px';
 	}
 
 	ngAfterViewInit() {

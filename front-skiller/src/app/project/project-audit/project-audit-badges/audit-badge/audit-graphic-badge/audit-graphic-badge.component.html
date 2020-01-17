@@ -1,19 +1,19 @@
-<div *ngIf="(!editable && project$)" class="graphic-badge-non-editable">
-    <svg viewBox="0 0 120 120" width="70px" height="70px">
+<div *ngIf="(!editable && project$)">
+    <svg viewBox="0 0 120 120" (style)="styleSize" >
         <path id="topic-arc-{{id}}" fill="transparent" stroke-width="8" />
         <text id="topic-note-{{id}}" class="evaluation"></text>
     </svg>
 </div>
 
-<div *ngIf="(!editable && project)" class="graphic-badge-non-editable">
-    <svg viewBox="0 0 120 120" width="40px" height="40px">
+<div *ngIf="(!editable && project)">
+    <svg viewBox="0 0 120 120" (style)="styleSize">
         <path id="topic-arc-{{id}}" fill="transparent" stroke-width="8" />
         <text id="topic-note-{{id}}" class="evaluation"></text>
     </svg>
 </div>
 
-<div *ngIf="editable" class="graphic-badge">
-    <svg width="120px" height="120px" >
+<div *ngIf="editable" class="graphic-badge" (style)="styleSize">
+    <svg>
         <g>
             <path id="topic-arc-{{id}}" fill="transparent" stroke-width="12px"  />
             <foreignObject id="topic-note-{{id}}"  width="60px" height="40px">
