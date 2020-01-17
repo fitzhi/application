@@ -9,6 +9,7 @@ import { MatSort } from '@angular/material/sort';
 import { ProjectService } from '../service/project.service';
 import { StaffListService } from '../staff-list-service/staff-list.service';
 import { Commit } from '../data/commit';
+import { of } from 'rxjs';
 
 @Component({
 	selector: 'app-list-project',
@@ -32,7 +33,7 @@ export class ListProjectComponent implements OnInit {
 	 */
 	@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
-	public editableColumns: string[] = ['risk', 'name', 'lastCommit', 'lastCommitter'];
+	public editableColumns: string[] = ['staffEvaluation', 'auditEvaluation', 'name', 'lastCommit', 'lastCommitter'];
 
 	/**
 	 * The project identifier associated to the cached commit declared below.
@@ -43,7 +44,6 @@ export class ListProjectComponent implements OnInit {
 	 * Commit saved in order to avoid multiple crawling seach in staff collection.
 	 */
 	commitCached: Commit;
-
 
 	constructor(
 		private staffListService: StaffListService,
@@ -63,9 +63,11 @@ export class ListProjectComponent implements OnInit {
 				switch (property) {
 					case 'name':
 						return item.name.toLocaleLowerCase();
-					case 'risk':
+					case 'staffEvaluation':
 						return item.staffEvaluation;
-					case 'lastCommitter':
+					case 'auditEvaluation':
+						return item.auditEvaluation;
+						case 'lastCommitter':
 						return this.retrieveLastCommit(item.id).fullname();
 					case 'lastCommit':
 						return this.retrieveLastCommit(item.id).dateCommit;
@@ -104,5 +106,9 @@ export class ListProjectComponent implements OnInit {
 		this.commitCached = this.staffListService.retrieveLastCommit(idProject);
 		this.idProjectCached = idProject;
 		return this.commitCached;
+	}
+
+	emitProject$(project: Project) {
+		return of(project);
 	}
 }

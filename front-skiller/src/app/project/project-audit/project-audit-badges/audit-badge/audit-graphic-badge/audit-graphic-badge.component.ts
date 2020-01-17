@@ -37,6 +37,11 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	@Input() project$: BehaviorSubject<Project>;
 
 	/**
+	 * This project is passed to the the component __IN NON EDITABLE ONLY__
+	 */
+	@Input() project: Project;
+
+	/**
 	 * The messenger throws the new evaluation givent by the end-user after each change.
 	 */
 	@Output() messengerEvaluationChange = new EventEmitter<TopicEvaluation>();
@@ -51,8 +56,8 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 		private cinematicService: CinematicService) { super(); }
 
 	ngOnInit() {
-		if (this.project$ && this.editable) {
-			console.error ('SHOULD NOT PASS HERE : Usage of the observable project$ is reserved to the non editable mode');
+		if (((this.project$) || (this.project)) && this.editable) {
+			console.error ('SHOULD NOT PASS HERE : Usage of the observable project$ or the object project is reserved to the non editable mode');
 		}
 	}
 
@@ -70,25 +75,35 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 			if (Constants.DEBUG) {
 				console.log ('Displaying the graphic badge in non-editable mode');
 			}
-			this.subscriptions.add(
-				this.project$.subscribe(project => {
-					if (project) {
-						this.cinematicService.tabProjectActivated$
-						.pipe(take(1))
-						.subscribe(idxTabForm => {
-							if (idxTabForm === Constants.PROJECT_IDX_TAB_FORM) {
-								if (project.auditEvaluation) {
-									this.evaluation = project.auditEvaluation;
-									// We release the treatment flow in order to end the creation of the SVG elements
-									setTimeout( () => {
-										this.drawAuditArc();
-										this.drawAuditText();
-									}, 0);
-								}
+			if (this.project) {
+				this.drawNonEditableBadge(this.project);
+			} else {
+				this.subscriptions.add(
+					this.project$.subscribe(project => {
+						if (project) {
+							this.drawNonEditableBadge(project);
 						}
-					});
-			}}));
+					})
+				);
+			}
 		}
+	}
+
+	private drawNonEditableBadge (project: Project) {
+		this.cinematicService.tabProjectActivated$
+			.pipe(take(1))
+			.subscribe(idxTabForm => {
+				if (idxTabForm === Constants.PROJECT_IDX_TAB_FORM) {
+					if (project.auditEvaluation) {
+						this.evaluation = project.auditEvaluation;
+						// We release the treatment flow in order to end the creation of the SVG elements
+						setTimeout( () => {
+							this.drawAuditArc();
+							this.drawAuditText();
+						}, 0);
+					}
+				}
+			});
 	}
 
 	drawAuditArc() {

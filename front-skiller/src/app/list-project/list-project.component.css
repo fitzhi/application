@@ -1,5 +1,11 @@
-:host >>> th#risk > .mat-sort-header-container  {
+:host >>> th#staffEvaluation > .mat-sort-header-container  {
     color: darkblue;
+    min-width: 50px;
+}
+
+:host >>> th#auditEvaluation > .mat-sort-header-container  {
+    color: darkblue;
+    min-width: 50px;
 }
 
 :host >>> th#name > .mat-sort-header-container  {
@@ -18,7 +24,7 @@
 }
 
 .row_any  {
-    height: 40px;
+    height: 45px;
 }
 
 #hostProjectsTable {

@@ -1,12 +1,23 @@
 <div id="hostProjectsTable">
   <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
 
-    <ng-container matColumnDef="risk">
-      <th id="risk" mat-header-cell *matHeaderCellDef mat-sort-header>Staff risk</th>
+    <ng-container matColumnDef="staffEvaluation">
+      <th id="staffEvaluation" mat-header-cell *matHeaderCellDef mat-sort-header>Staff</th>
       <td mat-cell *matCellDef="let row">
-        <svg height="20" width="20">
-          <circle cx="10" cy="10" r="10" [ngStyle]="styleOfTheDot(row.staffEvaluation)" />
+        <svg height="30" width="30">
+          <circle cx="15" cy="15" r="15" [ngStyle]="styleOfTheDot(row.staffEvaluation)" />
         </svg>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="auditEvaluation">
+      <th id="auditEvaluation" mat-header-cell *matHeaderCellDef mat-sort-header>Audit</th>
+      <td mat-cell *matCellDef="let row">
+        <app-audit-graphic-badge 
+            [editable]=false 
+            [id]=row.id
+            [project]="row">
+        </app-audit-graphic-badge>
       </td>
     </ng-container>
 
