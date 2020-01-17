@@ -24,8 +24,8 @@ export class PieDashboardComponent extends BaseComponent implements OnInit {
 
 	ngOnInit() {
 		this.projectService.allProjects$
-			.subscribe((projects: Project[]) => {
-				this.pieDashboardService.generatePieSlices(projects);
+			.subscribe({
+				next: projects => this.pieDashboardService.generatePieSlices(projects)
 			});
 	}
 

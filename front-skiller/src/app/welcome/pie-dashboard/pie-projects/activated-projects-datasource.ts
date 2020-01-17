@@ -3,6 +3,7 @@ import { Project } from 'src/app/data/project';
 import { Observable } from 'rxjs';
 import { CollectionViewer } from '@angular/cdk/collections';
 import { PieDashboardService } from '../service/pie-dashboard.service';
+import { Constants } from 'src/app/constants';
 
 export class ActivatedProjectsDatasSource implements DataSource<Project> {
 
@@ -13,7 +14,6 @@ export class ActivatedProjectsDatasSource implements DataSource<Project> {
 	}
 
 	disconnect(collectionViewer: CollectionViewer): void {
-		this.pieDashboardService.projectsActivated$.complete();
 	}
 
 }

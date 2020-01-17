@@ -32,6 +32,11 @@ export class PieDashboardService {
 	public projectsHeaderColor$ = new BehaviorSubject<string>('white');
 
 	/**
+	 * Projects header title depending on the slice activated.
+	 */
+	public projectsHeaderTitle$ = new BehaviorSubject<string>('Projects');
+
+	/**
 	 * Observable emetting the __last year__ archived `slices$` of the pie.
 	 */
 	public slicesLastYear$ = new BehaviorSubject<Slice[]>([]);
@@ -158,8 +163,21 @@ export class PieDashboardService {
 	 * @param slice the slice activated by the mouse.
 	 */
 	public onSliceMouseOver(slice: Slice) {
+		console.log ('none');
 		this.projectsActivated$.next(slice.projects);
 		this.projectsHeaderColor$.next(slice.color);
+		let projectsTitle: string;
+		switch (slice.type) {
+			case TypeSlice.Audit:
+				projectsTitle = 'Audit : projects evaluated';
+				break;
+			case TypeSlice.Sonar:
+				projectsTitle = 'Sonar : projects evaluated';
+				break;
+			case TypeSlice.Staff:
+				projectsTitle = 'Staff : projects evaluated';
+				break;
+		}
+		this.projectsHeaderTitle$.next(projectsTitle);
 	}
-
 }

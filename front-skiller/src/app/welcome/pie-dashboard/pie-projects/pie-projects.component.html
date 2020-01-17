@@ -2,7 +2,9 @@
   
     <!-- Name Column -->
     <ng-container matColumnDef="name">
-      <th mat-header-cell *matHeaderCellDef [ngStyle]= "{'background-color': colorHeader}"> Name </th>
+      <th mat-header-cell *matHeaderCellDef [ngStyle]= "{'background-color': colorHeader}">
+          {{pieDashboardService.projectsHeaderTitle$|async}}
+      </th>
       <td mat-cell *matCellDef="let project" class="row-pie-projects"> {{project.name}} </td>
     </ng-container>
     

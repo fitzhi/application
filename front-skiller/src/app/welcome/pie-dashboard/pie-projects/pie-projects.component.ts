@@ -31,7 +31,6 @@ export class PieProjectsComponent extends BaseComponent implements OnInit, OnDes
 
 	constructor(public pieDashboardService: PieDashboardService) {
 		super();
-		this.dataSource = new ActivatedProjectsDatasSource(this.pieDashboardService);
 
 		// Set the color of the colum header depending on the activated slice.
 		this.subscriptions.add(
@@ -44,7 +43,10 @@ export class PieProjectsComponent extends BaseComponent implements OnInit, OnDes
 	}
 
 	ngOnInit() {
-		this.pieDashboardService.projectsActivated$.subscribe(ps => ps.forEach (p => console.log(p.name)));
+		this.dataSource = new ActivatedProjectsDatasSource(this.pieDashboardService);
+		this.subscriptions.add(
+			this.pieDashboardService.projectsActivated$
+				.subscribe(ps => ps.forEach (p => console.log(p.name))));
 	}
 
 	ngOnDestroy() {
