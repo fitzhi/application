@@ -10,22 +10,26 @@
       </td>
     </ng-container>
 
+    <ng-container matColumnDef="sonarEvaluation">
+      <th id="sonarEvaluation" mat-header-cell *matHeaderCellDef mat-sort-header>Sonar</th>
+      <td mat-cell *matCellDef="let row">
+        <app-quotation-badge height="70" width="70" [index]=row.id [thumbnail]=false [medal]=true
+          [title]="'evaluation.title'" [weight]=100 [evaluation]="projectService.calculateSonarEvaluation(row)">
+        </app-quotation-badge>
+      </td>
+    </ng-container>
+
     <ng-container matColumnDef="auditEvaluation">
       <th id="auditEvaluation" mat-header-cell *matHeaderCellDef mat-sort-header>Audit</th>
       <td mat-cell *matCellDef="let row">
-        <app-audit-graphic-badge 
-            [editable]=false 
-            [width]=40
-            [height]=40
-            [id]=row.id
-            [project]="row">
+        <app-audit-graphic-badge [editable]=false [width]=40 [height]=40 [id]=row.id [project]="row">
         </app-audit-graphic-badge>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="name">
       <th id="name" mat-header-cell *matHeaderCellDef mat-sort-header>Project</th>
-      <td mat-cell *matCellDef="let row">
+      <td mat-cell *matCellDef="let row" style="padding-left: 10px;">
         <a [routerLink]="['/project', row.id]">{{row.name}}</a>
       </td>
     </ng-container>

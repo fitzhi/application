@@ -3,6 +3,11 @@
     min-width: 50px;
 }
 
+:host >>> th#sonarEvaluation > .mat-sort-header-container  {
+    color: darkblue;
+    min-width: 50px;
+}
+
 :host >>> th#auditEvaluation > .mat-sort-header-container  {
     color: darkblue;
     min-width: 50px;
@@ -11,6 +16,7 @@
 :host >>> th#name > .mat-sort-header-container  {
     color: darkblue;
     min-width: 300px;
+    padding-left: 10px;
 }
 
 :host >>> th#lastCommit > .mat-sort-header-container  {

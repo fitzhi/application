@@ -33,7 +33,7 @@ export class ListProjectComponent implements OnInit {
 	 */
 	@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
-	public editableColumns: string[] = ['staffEvaluation', 'auditEvaluation', 'name', 'lastCommit', 'lastCommitter'];
+	public editableColumns: string[] = ['staffEvaluation', 'sonarEvaluation', 'auditEvaluation', 'name', 'lastCommit', 'lastCommitter'];
 
 	/**
 	 * The project identifier associated to the cached commit declared below.
@@ -65,9 +65,11 @@ export class ListProjectComponent implements OnInit {
 						return item.name.toLocaleLowerCase();
 					case 'staffEvaluation':
 						return item.staffEvaluation;
+					case 'sonarEvaluation':
+						return this.projectService.calculateSonarEvaluation(item);
 					case 'auditEvaluation':
 						return item.auditEvaluation;
-						case 'lastCommitter':
+					case 'lastCommitter':
 						return this.retrieveLastCommit(item.id).fullname();
 					case 'lastCommit':
 						return this.retrieveLastCommit(item.id).dateCommit;
