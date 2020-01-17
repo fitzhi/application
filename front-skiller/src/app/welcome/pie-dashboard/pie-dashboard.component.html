@@ -8,8 +8,7 @@
                 <app-pie-chart
                     [radius]=180
                     [active]=false
-                    [pie]=2
-                    [slices$]="slices$">
+                    [pie]=2>
                 </app-pie-chart>
             </div>
             <div class="camera">
@@ -24,15 +23,14 @@
                 <app-pie-chart
                     [radius]=150
                     [active]=true
-                    [pie]=1
-                    [slices$]="slices$">
+                    [pie]=1>
                 </app-pie-chart>
             </div>
         </mat-grid-tile>
         
         <mat-grid-tile [colspan]="1" [rowspan]="2">
-            <div class="actualDashboard">
-                Area reserved for hosting the list of projects.
+            <div class="pie-projects">
+                <app-pie-projects></app-pie-projects>
             </div>
         </mat-grid-tile>
 
@@ -42,8 +40,7 @@
                 <app-pie-chart
                     [radius]=180
                     [active]=false
-                    [pie]=3
-                    [slices$]="slices$">
+                    [pie]=3>
                 </app-pie-chart>
             </div>
             <div class="camera">

@@ -108,6 +108,7 @@ import { AuditAttachmentComponent } from './project/project-audit/project-audit-
 import { AuditUploadAttachmentComponent } from './project/project-audit/project-audit-badges/files-detail-form/audit-attachment-upload/audit-upload-attachment/audit-upload-attachment.component';
 import { PieDashboardComponent } from './welcome/pie-dashboard/pie-dashboard.component';
 import { PieChartComponent } from './welcome/pie-dashboard/pie-chart/pie-chart.component';
+import { PieProjectsComponent } from './welcome/pie-dashboard/pie-projects/pie-projects.component';
 
 @NgModule({
 	declarations: [
@@ -168,6 +169,7 @@ import { PieChartComponent } from './welcome/pie-dashboard/pie-chart/pie-chart.c
 		AuditUploadAttachmentComponent,
 		PieDashboardComponent,
 		PieChartComponent,
+		PieProjectsComponent,
 	],
 	entryComponents: [
 		StaffUploadCvComponent,

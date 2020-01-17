@@ -6,6 +6,7 @@ import { Constants } from 'src/app/constants';
 import { tap, switchMap } from 'rxjs/operators';
 import { TypeSlice } from '../type-slice';
 import { BaseComponent } from 'src/app/base/base.component';
+import { PieDashboardService } from '../service/pie-dashboard.service';
 
 @Component({
 	selector: 'app-pie-chart',
@@ -33,11 +34,6 @@ export class PieChartComponent extends BaseComponent implements OnInit, AfterVie
 	@Input() active: boolean;
 
 	/**
-	 * Observable emitting the slices of the pie.
-	 */
-	@Input() slices$: BehaviorSubject<Slice[]>;
-
-	/**
 	 * D3 Arc generator.
 	 */
 	arcGenerator: D3.Arc<any, D3.DefaultArcObject>;
@@ -52,14 +48,16 @@ export class PieChartComponent extends BaseComponent implements OnInit, AfterVie
 	 */
 	private texts = ['#textSonar', '#textStaff', '#textAudit'];
 
-	constructor() { super(); }
+	constructor(private pieDashboardService: PieDashboardService) {
+		super();
+	}
 
 	ngOnInit() {
 	}
 
 	ngAfterViewInit() {
 		this.arcGenerator = D3.arc().cornerRadius(4).padAngle(.01).padRadius(100);
-		this.slices$
+		this.pieDashboardService.slices$
 			.pipe(tap(slices => {
 				if (Constants.DEBUG) {
 					console.groupCollapsed ('slices received');
@@ -68,7 +66,9 @@ export class PieChartComponent extends BaseComponent implements OnInit, AfterVie
 				}
 			})).
 			subscribe((slices => {
-				this.generatePie(...slices);
+				setTimeout(() => {
+					this.generatePie(...slices);
+				}, 0);
 			}));
 	}
 
@@ -134,6 +134,7 @@ export class PieChartComponent extends BaseComponent implements OnInit, AfterVie
 		this.inactiveTexts();
 		switch (slice.type) {
 			case TypeSlice.Sonar:
+				this.pieDashboardService.onSliceMouseOver(slice);
 				this.activeArc('#arcSonar');
 				this.activeText('#textSonar');
 				break;
@@ -214,10 +215,6 @@ export class PieChartComponent extends BaseComponent implements OnInit, AfterVie
 	private setupTooltipText(idText: string, active: boolean) {
 		D3.select(idText)
 			.attr('class', (active ? 'text-active' : 'text'));
-	}
-
-	test() {
-		return '#arcAudit-' + this.pie;
 	}
 
 }

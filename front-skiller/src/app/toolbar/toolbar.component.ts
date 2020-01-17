@@ -179,7 +179,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
      * Inform the toolbar that the user has choosed an entity to be edited (Staff, Skill, Project)
      */
 	mode(editedEntity: number) {
-		console.log ('nope');
+
 		if (this.editedEntity !== editedEntity) {
 
 			this.editedEntity = editedEntity;

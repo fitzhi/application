@@ -7,6 +7,7 @@ import { ReferentialService } from 'src/app/service/referential.service';
 import { BaseComponent } from 'src/app/base/base.component';
 import { switchMap } from 'rxjs/operators';
 import { ProjectService } from 'src/app/service/project.service';
+import { Project } from 'src/app/data/project';
 
 @Component({
 	selector: 'app-pie-dashboard',
@@ -15,21 +16,6 @@ import { ProjectService } from 'src/app/service/project.service';
 })
 export class PieDashboardComponent extends BaseComponent implements OnInit {
 
-	/**
-	 * Observable emetting the configuration of the pie.
-	 */
-	private slices$ = new BehaviorSubject<Slice[]>([]);
-
-	/**
-	 * Observable emetting the configuration of the pie.
-	 */
-	private slicesLastYear$ = new BehaviorSubject<Slice[]>([]);
-
-	/**
-	 * Observable emetting the configuration of the pie.
-	 */
-	private slicesLastMonth$ = new BehaviorSubject<Slice[]>([]);
-
 	constructor(
 		private projectService: ProjectService,
 		private pieDashboardService: PieDashboardService) {
@@ -37,11 +23,10 @@ export class PieDashboardComponent extends BaseComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.projectService.allProjectsIsLoaded$
-		.subscribe((doneAndOk: boolean) => {
-			if (doneAndOk) {
-				this.slices$.next(this.pieDashboardService.generatePieSlices(this.projectService.allProjects));
-			}});
+		this.projectService.allProjects$
+			.subscribe((projects: Project[]) => {
+				this.pieDashboardService.generatePieSlices(projects);
+			});
 	}
 
 }

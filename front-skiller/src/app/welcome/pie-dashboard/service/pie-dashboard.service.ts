@@ -4,6 +4,7 @@ import { Slice } from '../slice';
 import { TypeSlice } from '../type-slice';
 import { ProjectService } from 'src/app/service/project.service';
 import { Constants } from 'src/app/constants';
+import { Subject, BehaviorSubject } from 'rxjs';
 
 /**
  * This service is in charge of the generation of the slices.
@@ -16,10 +17,30 @@ export class PieDashboardService {
 	constructor(private projectService: ProjectService) { }
 
 	/**
+	 * `BehaviorSubject` emetting the distributions of projects within slices in the pie.
+	 */
+	public slices$ = new BehaviorSubject<Slice[]>([]);
+
+	/**
+	 * Projects activated when the mouse pointer flies over a slice.
+	 */
+	public projectsActivated$ = new BehaviorSubject<Project[]>([]);
+
+	/**
+	 * Observable emetting the __last year__ archived `slices$` of the pie.
+	 */
+	public slicesLastYear$ = new BehaviorSubject<Slice[]>([]);
+
+	/**
+	 * Observable emetting the __last month__ archived `slices$` of the pie.
+	 */
+	public slicesLastMonth$ = new BehaviorSubject<Slice[]>([]);
+
+	/**
 	 * Generate the slices building the summary dashboard for an array of projects.
 	 * @param projects array of projects (in reality, it will be an array with **ALL** projects)
 	 */
-	public generatePieSlices (projects: Project[]): Slice[] {
+	public generatePieSlices (projects: Project[]) {
 
 		const greyProjects: Map<TypeSlice, Project[]> = new Map([
 			[TypeSlice.Staff, []], [TypeSlice.Audit, []], [TypeSlice.Sonar, []]]);
@@ -81,14 +102,15 @@ export class PieDashboardService {
 		this.evaluateSlices(slices, TypeSlice.Sonar, greenProjects, orangeProjects, redProjects, greyProjects);
 		this.evaluateSlices(slices, TypeSlice.Audit, greenProjects, orangeProjects, redProjects, greyProjects);
 		this.evaluateSlices(slices, TypeSlice.Staff, greenProjects, orangeProjects, redProjects, greyProjects);
-		return slices;
 
+		this.slices$.next(slices);
 	}
 
 	/**
 	 * Process the Pie slice
-	 * @param type type of slice
-	 * @param ...projects 4 maps of projects ___in a specific order___.
+	 * @param slices the slice
+	 * @param typeSlice type of slice
+	 * @param projects 4 maps of projects ___in a specific order___
 	 * - the 'green' projects
 	 * - the 'orange' projects
 	 * - the 'red' projects
@@ -103,10 +125,10 @@ export class PieDashboardService {
 
 		const step = 120 / (green + orange + red + grey);
 
-		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * green, 'green'));
-		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * orange, 'orange'));
-		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * red, 'red'));
-		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * grey, 'grey'));
+		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * green, 'green', projects[0].get(type)));
+		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * orange, 'orange', projects[1].get(type)));
+		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * red, 'red', projects[2].get(type)));
+		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * grey, 'grey', projects[3].get(type)));
 	}
 
 	/**
@@ -126,5 +148,12 @@ export class PieDashboardService {
 		return map.get(type).length;
 	}
 
+	/**
+	 * The mouse pointer has moved on a slice.
+	 * @param slice the slice activated by the mouse.
+	 */
+	public onSliceMouseOver(slice: Slice) {
+		this.projectsActivated$.next(slice.projects);
+	}
 
 }

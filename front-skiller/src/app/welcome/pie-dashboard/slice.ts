@@ -1,4 +1,5 @@
 import {TypeSlice} from './type-slice';
+import { Project } from 'src/app/data/project';
 
 export class Slice {
 
@@ -8,6 +9,7 @@ export class Slice {
 		public offset = 0,
 		public angle: number,
 		public color: string,
+		public projects: Project[],
 		public activated = false,
 		public selected = false) {}
 }
