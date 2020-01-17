@@ -132,9 +132,9 @@ export class PieChartComponent extends BaseComponent implements OnInit, AfterVie
 	onSliceMouseOver(slice: Slice): void {
 		this.inactiveArcs();
 		this.inactiveTexts();
+		this.pieDashboardService.onSliceMouseOver(slice);
 		switch (slice.type) {
 			case TypeSlice.Sonar:
-				this.pieDashboardService.onSliceMouseOver(slice);
 				this.activeArc('#arcSonar');
 				this.activeText('#textSonar');
 				break;
