@@ -216,8 +216,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	/**
-	 * Test if the current metric is selected.
-	 * @return TRUE if the passed Sonar metric has been elected for the analysis
+	 * Return TRUE if the passed Sonar metric has been elected for the analysis
 	 * @param metric current Sonar metric
 	 */
 	private isAMetricSelected(metric: ProjectSonarMetric): boolean {
