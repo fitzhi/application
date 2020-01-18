@@ -1,5 +1,8 @@
 <mat-tab-group [selectedIndex]="tabIndex" (selectedIndexChange)="selectedIndexChange($event)">
-	<mat-tab label="Project">
+	<mat-tab>
+		<ng-template mat-tab-label>
+			<i class="fas glyphicon fa-users-cog logoTabLabel"></i>&nbsp;&nbsp;Project
+		</ng-template>
 		<ng-template matTabContent>
 			<app-project-form 
 				[project$]="project$" 
@@ -8,19 +11,28 @@
 			</app-project-form>
 		</ng-template>
 	</mat-tab>
-	<mat-tab [disabled]="!canConnectSourceControl()" label="Staff">
+	<mat-tab [disabled]="!canConnectSourceControl()">
+		<ng-template mat-tab-label>
+			<i class="fas glyphicon fa-user-graduate logoTabLabel"></i>&nbsp;&nbsp;Staff
+		</ng-template>
 		<ng-template matTabContent>
 			<app-project-staff 
 				[project$]="project$">
 			</app-project-staff>
 		</ng-template>
 	</mat-tab>
-	<mat-tab [disabled]="!canConnectSourceControl()" label="Staff Coverage">
+	<mat-tab [disabled]="!canConnectSourceControl()">
+		<ng-template mat-tab-label>
+			<i class="fab fa-github-alt logoTabLabel"></i>&nbsp;&nbsp;Git
+		</ng-template>
 		<app-project-sunburst [project$]="project$" (tabActivationEmitter)="tabActivation($event)"
 			(updateRiskLevel)="updateRiskLevel($event)">
 		</app-project-sunburst>
 	</mat-tab>
 	<mat-tab label="Sonar">
+		<ng-template mat-tab-label>
+			<img src="./assets/img/sonar.png" alt="Sonar" class="logoTabLabel"/>&nbsp;&nbsp;Audit
+		</ng-template>
 		<ng-template matTabContent>
 			<app-project-sonar 
 				[project$]="project$"
@@ -31,6 +43,9 @@
 		</ng-template>
 	</mat-tab>
 	<mat-tab label="Audit">
+		<ng-template mat-tab-label>
+			<i class="fas fa-brain logoTabLabel"></i>&nbsp;&nbsp;Audit
+		</ng-template>
 		<ng-template matTabContent>
 			<app-project-audit
 				[project$]="project$"
