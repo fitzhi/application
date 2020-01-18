@@ -52,12 +52,13 @@
     background-repeat: no-repeat;    
     border: 1px solid back;
 }
+
 .class-sonar-inactivated {
-    background-image: url('../../../../assets/img/sonar.png');
+    background-image: url('/assets/img/sonar.png');
 }
 
 .class-sonar-activated {
-    background-image: url('../../../../assets/img/sonar-selected.png');
+    background-image: url('/assets/img/sonar-selected.png');
 }
 
 #sonar, #settings {
