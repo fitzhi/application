@@ -15,7 +15,7 @@ import { SonarService } from './service/sonar.service';
 import { MessageService } from './message/message.service';
 import { SonarServer } from './data/sonar-server';
 import { HttpClient } from '@angular/common/http';
-import { of } from 'rxjs';
+import { of, Subject, observable, Observable } from 'rxjs';
 import { CompileTemplateMetadata } from '@angular/compiler';
 import { switchMap, map, mergeMap } from 'rxjs/operators';
 
@@ -77,8 +77,6 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 
 	ngOnInit() {
 
-		localStorage.removeItem('access_token');
-		localStorage.removeItem('refresh_token');
 
 		/**
          * Loading the referentials.

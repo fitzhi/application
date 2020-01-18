@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, AfterViewInit, AfterContentInit, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, AfterViewInit, AfterContentInit, ViewEncapsulation, OnDestroy } from '@angular/core';
 import { BehaviorSubject, EMPTY } from 'rxjs';
 import { Slice } from './slice';
 import * as d3 from 'd3';
@@ -14,7 +14,7 @@ import { Project } from 'src/app/data/project';
 	templateUrl: './pie-dashboard.component.html',
 	styleUrls: ['./pie-dashboard.component.css']
 })
-export class PieDashboardComponent extends BaseComponent implements OnInit {
+export class PieDashboardComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	constructor(
 		private projectService: ProjectService,
@@ -22,11 +22,25 @@ export class PieDashboardComponent extends BaseComponent implements OnInit {
 			super();
 	}
 
+	/**
+	 * Initialization.
+	 */
 	ngOnInit() {
-		this.projectService.allProjects$
-			.subscribe({
-				next: projects => this.pieDashboardService.generatePieSlices(projects)
-			});
+		this.subscriptions.add(
+			this.projectService.allProjectsIsLoaded$.subscribe ({
+				next: loadAndOk => {
+					if (loadAndOk) {
+						this.pieDashboardService.generatePieSlices(this.projectService.allProjects);
+					}
+				},
+			}));
+	}
+
+	/**
+	* Calling the base class to unsubscribe all subscriptions.
+	*/
+	ngOnDestroy() {
+		super.ngOnDestroy();
 	}
 
 }

@@ -163,7 +163,7 @@ export class PieDashboardService {
 	 * @param slice the slice activated by the mouse.
 	 */
 	public onSliceMouseOver(slice: Slice) {
-		console.log ('none');
+
 		this.projectsActivated$.next(slice.projects);
 		this.projectsHeaderColor$.next(slice.color);
 		let projectsTitle: string;

@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, Input, ViewEncapsulation, OnInit, AfterContentInit } from '@angular/core';
+import { Component, AfterViewInit, Input, ViewEncapsulation, OnInit, AfterContentInit, OnDestroy } from '@angular/core';
 import * as D3 from 'd3';
 import {Slice} from '../slice';
 import { BehaviorSubject, of, Observable } from 'rxjs';
@@ -14,7 +14,7 @@ import { PieDashboardService } from '../service/pie-dashboard.service';
 	encapsulation: ViewEncapsulation.Emulated,
 	styleUrls: ['./pie-chart.component.css']
 })
-export class PieChartComponent extends BaseComponent implements OnInit, AfterViewInit {
+export class PieChartComponent extends BaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	/**
 	 * Radius of the Pie.
@@ -57,19 +57,20 @@ export class PieChartComponent extends BaseComponent implements OnInit, AfterVie
 
 	ngAfterViewInit() {
 		this.arcGenerator = D3.arc().cornerRadius(4).padAngle(.01).padRadius(100);
-		this.pieDashboardService.slices$
-			.pipe(tap(slices => {
-				if (Constants.DEBUG) {
-					console.groupCollapsed ('slices received');
-					console.log(...slices);
-					console.groupEnd();
-				}
-			})).
-			subscribe((slices => {
-				setTimeout(() => {
-					this.generatePie(...slices);
-				}, 0);
-			}));
+		this.subscriptions.add(
+			this.pieDashboardService.slices$
+				.pipe(tap(slices => {
+					if (Constants.DEBUG) {
+						console.groupCollapsed ('slices received');
+						console.log(...slices);
+						console.groupEnd();
+					}
+				})).
+				subscribe((slices => {
+					setTimeout(() => {
+						this.generatePie(...slices);
+					}, 0);
+				})));
 	}
 
 	/**
@@ -215,6 +216,13 @@ export class PieChartComponent extends BaseComponent implements OnInit, AfterVie
 	private setupTooltipText(idText: string, active: boolean) {
 		D3.select(idText)
 			.attr('class', (active ? 'text-active' : 'text'));
+	}
+
+	/**
+	* Calling the base class to unsubscribe all subscriptions.
+	*/
+	ngOnDestroy() {
+		super.ngOnDestroy();
 	}
 
 }
