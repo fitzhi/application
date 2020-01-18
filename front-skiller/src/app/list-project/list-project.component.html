@@ -1,18 +1,18 @@
 <div id="hostProjectsTable">
-  <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
+  <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8" matSort width="100%">
 
     <ng-container matColumnDef="staffEvaluation">
       <th id="staffEvaluation" mat-header-cell *matHeaderCellDef mat-sort-header>Staff</th>
       <td mat-cell *matCellDef="let row">
-        <svg height="30" width="30">
-          <circle cx="15" cy="15" r="15" [ngStyle]="styleOfTheDot(row.staffEvaluation)" />
+        <svg height="48" width="48">
+          <circle cx="24" cy="24" r="24" [ngStyle]="styleOfTheDot(row.staffEvaluation)" />
         </svg>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="sonarEvaluation">
       <th id="sonarEvaluation" mat-header-cell *matHeaderCellDef mat-sort-header>Sonar</th>
-      <td mat-cell *matCellDef="let row">
+      <td mat-cell *matCellDef="let row" style="width: 70px; height: 70px">
         <app-quotation-badge height="70" width="70" [index]=row.id [thumbnail]=false [medal]=true
           [title]="'evaluation.title'" [weight]=100 [evaluation]="projectService.calculateSonarEvaluation(row)">
         </app-quotation-badge>
@@ -29,8 +29,15 @@
 
     <ng-container matColumnDef="name">
       <th id="name" mat-header-cell *matHeaderCellDef mat-sort-header>Project</th>
-      <td mat-cell *matCellDef="let row" style="padding-left: 10px;">
+      <td mat-cell *matCellDef="let row" class="name">
         <a [routerLink]="['/project', row.id]">{{row.name}}</a>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="techno">
+      <th id="techno" mat-header-cell *matHeaderCellDef mat-sort-header>Main technology</th>
+      <td mat-cell *matCellDef="let row" style="padding-left: 10px;">
+        <a [routerLink]="['/project', row.id]"></a>
       </td>
     </ng-container>
 

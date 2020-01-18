@@ -33,7 +33,8 @@ export class ListProjectComponent implements OnInit {
 	 */
 	@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
-	public editableColumns: string[] = ['staffEvaluation', 'sonarEvaluation', 'auditEvaluation', 'name', 'lastCommit', 'lastCommitter'];
+	public editableColumns: string[] =
+			['staffEvaluation', 'sonarEvaluation', 'auditEvaluation', 'name', 'techno', 'lastCommit', 'lastCommitter'];
 
 	/**
 	 * The project identifier associated to the cached commit declared below.
