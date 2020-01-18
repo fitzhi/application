@@ -64,7 +64,7 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	/**
 	 * Size of the badge
 	 */
-	styleSize: string;
+	styleSize: any;
 
 	constructor(
 		private projectService: ProjectService,
@@ -74,7 +74,7 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 		if (((this.project$) || (this.project)) && this.editable) {
 			console.error ('SHOULD NOT PASS HERE : Usage of the observable project$ or the object project is reserved to the non editable mode');
 		}
-		this.styleSize = 'width:' + this.width + 'px;height:' + this.height + 'px';
+		this.styleSize = { 'width': this.width + 'px',  'height': + this.height + 'px' };
 	}
 
 	ngAfterViewInit() {

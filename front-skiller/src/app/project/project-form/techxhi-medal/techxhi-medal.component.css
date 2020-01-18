@@ -9,12 +9,16 @@ div.qualityRectangle {
 }
 
 #sonarSummaryBadge, #staffSummaryBadge, #auditSummaryBadge {
-	margin-left: 5px;
-	margin-right: 5px;
+	margin: 0 auto;
 }
 
 #sonarSummaryBadge:hover, #staffSummaryBadge:hover, #auditSummaryBadge:hover {
 	border-radius: 10%;
 	background-color: white;
     border: 1px solid lightgray;
+}
+
+#auditSummaryBadge {
+	width: 99%;
+	height: 70px;
 }

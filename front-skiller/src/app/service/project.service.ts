@@ -39,8 +39,6 @@ export class ProjectService extends InternalService {
 
 	allProjects: Project[];
 
-	allProjects$ = new Subject<Project[]>();
-
 	allProjectsIsLoaded$ = new BehaviorSubject<Boolean>(false);
 
 	constructor(
@@ -69,7 +67,6 @@ export class ProjectService extends InternalService {
 					console.groupEnd();
 				}
 				this.allProjects = projects;
-				this.allProjects$.next(projects);
 				this.allProjectsIsLoaded$.next(true);
 			});
 	}
@@ -91,12 +88,8 @@ export class ProjectService extends InternalService {
 	 * @param project the given project
 	 */
 	updateProjectsCollection(project: Project): void {
-		const index = this.allProjects.findIndex(prj => prj.id === project.id);
-		if (index !== -1) {
-			this.allProjects.splice(index, 1);
-		}
+		this.allProjects = this.allProjects.filter(prj => prj.id !== project.id);
 		this.allProjects.push(project);
-		this.allProjects$.next(this.allProjects);
 	}
 
 	/**
