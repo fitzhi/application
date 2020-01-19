@@ -34,7 +34,7 @@ import com.google.gson.reflect.TypeToken;
 import com.opencsv.CSVWriter;
 
 import fr.skiller.Global;
-import fr.skiller.bean.DataSaver;
+import fr.skiller.bean.DataHandler;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.ShuffleService;
 import fr.skiller.data.internal.Project;
@@ -51,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Service
-public class FileDataSaverImpl implements DataSaver {
+public class FileDataHandlerImpl implements DataHandler {
 
 	/**
 	 * Are we in shuffle-mode? In that scenario, the saving process will be

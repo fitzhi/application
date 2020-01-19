@@ -53,7 +53,6 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.eclipse.jgit.transport.FetchConnection;
 import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -74,7 +73,7 @@ import fr.skiller.SkillerRuntimeException;
 import fr.skiller.bean.AsyncTask;
 import fr.skiller.bean.CacheDataHandler;
 import fr.skiller.bean.DataChartHandler;
-import fr.skiller.bean.DataSaver;
+import fr.skiller.bean.DataHandler;
 import fr.skiller.bean.ProjectDashboardCustomizer;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.RiskProcessor;
@@ -82,6 +81,7 @@ import fr.skiller.bean.StaffHandler;
 import fr.skiller.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import fr.skiller.controller.in.SettingsGeneration;
 import fr.skiller.data.encryption.DataEncryption;
+import fr.skiller.data.internal.Ecosystem;
 import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Library;
 import fr.skiller.data.internal.Project;
@@ -98,8 +98,10 @@ import fr.skiller.data.source.importance.AssessorImportance;
 import fr.skiller.data.source.importance.FileSizeImportance;
 import fr.skiller.data.source.importance.ImportanceCriteria;
 import fr.skiller.exception.SkillerException;
-import fr.skiller.source.crawler.AbstractScannerDataGenerator;
+import fr.skiller.source.crawler.EcosystemAnalyzer;
 import fr.skiller.source.crawler.RepoScanner;
+import fr.skiller.source.crawler.impl.AbstractScannerDataGenerator;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -109,6 +111,7 @@ import fr.skiller.source.crawler.RepoScanner;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @Service("GIT")
+@Slf4j
 public class GitCrawler extends AbstractScannerDataGenerator implements RepoScanner {
 
 	/**
@@ -141,11 +144,6 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	 * List of file patterns, to be included, or excluded, from the parsing process
 	 */
 	private List<Pattern> patternsInclusionList;
-
-	/**
-	 * The logger for the GitScanner.
-	 */
-	final Logger logger = LoggerFactory.getLogger(GitCrawler.class.getCanonicalName());
 
 	/**
 	 * A tree representing a class like <code>fr.common.my-package.MyClass"</code>
@@ -237,13 +235,19 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	DataChartHandler dataChartHandler;
 
 	@Autowired
-	DataSaver dataSaver;
+	DataHandler dataSaver;
 
 	/**
 	 * Filter in charge to filter some debugging information.<br/>
 	 * This string is updated with the system property <code>crawler.filter.debug</code>.<br/>
 	 */
 	String crawlerFilterDebug;
+	
+	/**
+	 * Bean in charge of analyzing the repository to retrieve the ecosystem.
+	 */
+	@Autowired
+	EcosystemAnalyzer ecosystemAnalyzer;
 	
 	/**
 	 * Initialization of the Google JSON parser.
@@ -263,9 +267,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		patternsInclusionList = Arrays.asList(patternsInclusion.split(";")).stream().map(Pattern::compile)
 				.collect(Collectors.toList());
 
-		if (logger.isDebugEnabled()) {
-			logger.debug("Pattern INCLUSION loaded from the file application.properties : ");
-			patternsInclusionList.stream().forEach(p -> logger.debug(p.pattern()));
+		if (log.isDebugEnabled()) {
+			log.debug("Pattern INCLUSION loaded from the file application.properties : ");
+			patternsInclusionList.stream().forEach(p -> log.debug(p.pattern()));
 		}
 
 		// We "Spring-way" injected staff manager handle into the super class.
@@ -275,8 +279,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		
 		 this.crawlerFilterDebug = System.getProperty("crawler.filter.debug");
 		 
-		 if ( (logger.isDebugEnabled()) && (this.crawlerFilterDebug != null) ) {
-			 logger.debug(String.format("Debugging filter %s", this.crawlerFilterDebug));
+		 if ( (log.isDebugEnabled()) && (this.crawlerFilterDebug != null) ) {
+			 log.debug(String.format("Debugging filter %s", this.crawlerFilterDebug));
 		 }
 	}
 
@@ -294,8 +298,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			execClone = true;
 		} else {
 			path = Paths.get(project.getLocationRepository());
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("Pulling the repository %s inside the PREVIOUS path %s", settings.getUrl(),
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Pulling the repository %s inside the PREVIOUS path %s", settings.getUrl(),
 						path.toAbsolutePath()));
 			}
 
@@ -312,19 +316,19 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 					.setCredentialsProvider(
 							new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()))
 					.setProgressMonitor(new CustomProgressMonitor()).call();
-			if (logger.isDebugEnabled()) {
-				logger.debug("Clone done & succcessful !");
+			if (log.isDebugEnabled()) {
+				log.debug("Clone done & succcessful !");
 			}
 		} else {
 			
 			try (Git git = Git.open(Paths.get(getLocalDotGitFile(project)).toFile())) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Pull?");
+				if (log.isDebugEnabled()) {
+					log.debug("Pull?");
 				}
 				git.pull().setProgressMonitor(new CustomProgressMonitor());
 			} 
-			if (logger.isDebugEnabled()) {
-				logger.debug("Pull done & succcessful !");
+			if (log.isDebugEnabled()) {
+				log.debug("Pull done & succcessful !");
 			}
 		}
 
@@ -347,8 +351,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		// Creating a temporary local path where the remote project repository will be
 		// cloned.
 		Path path = Files.createTempDirectory("skiller_jgit_" + project.getName() + "_");
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Cloning the repository %s inside the CREATED path %s", settings.getUrl(),
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Cloning the repository %s inside the CREATED path %s", settings.getUrl(),
 					path.toAbsolutePath()));
 		}
 		return path;
@@ -364,9 +368,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			List<String> tagOrBranchNames = git.branchList().call().stream()
 				.map(Ref::getName).collect(Collectors.toList());
 			
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("Branch or tag names analyzed for %s", repository.getDirectory()));
-				tagOrBranchNames.stream().forEach(logger::debug);
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Branch or tag names analyzed for %s", repository.getDirectory()));
+				tagOrBranchNames.stream().forEach(log::debug);
 			}
 			
 			int nbCommit = 0;
@@ -386,8 +390,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
 		}
 
-		if (logger.isInfoEnabled()) {
-			logger.info(String.format("Retrieving %d on the repository %s", allCommits.size(),
+		if (log.isInfoEnabled()) {
+			log.info(String.format("Retrieving %d on the repository %s", allCommits.size(),
 					repository.getDirectory().getAbsoluteFile()));
 		}
 
@@ -421,8 +425,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				previous = current;
 			}
 
-			if ((logger.isDebugEnabled()) && (commit.getParentCount() >= 2)) {
-				logger.debug(String.format("commit '%s' with merge ?", commit.getShortMessage()));
+			if ((log.isDebugEnabled()) && (commit.getParentCount() >= 2)) {
+				log.debug(String.format("commit '%s' with merge ?", commit.getShortMessage()));
 			}
 		}
 		
@@ -469,8 +473,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 				// Might be a rename with specific action
 				if (isRenamePossible(diffs)) {
-					if (logger.isDebugEnabled()) {
-						logger.debug(
+					if (log.isDebugEnabled()) {
+						log.debug(
 								String.format("commit '%s' is treated as a 'rename' commit", commit.getShortMessage()));
 					}
 					renameDetector.addAll(diffs);
@@ -511,18 +515,18 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				continue;
 			}
 			
-			if (logger.isDebugEnabled() &&
+			if (log.isDebugEnabled() &&
 				(this.crawlerFilterDebug != null) &&
 					(	"*".contentEquals(this.crawlerFilterDebug)
 						|| 	( (de.getNewPath() != null) && (de.getNewPath().contains(this.crawlerFilterDebug)))
 						|| 	( (de.getOldPath() != null) && (de.getOldPath().contains(this.crawlerFilterDebug))))) {
-				logger.debug(String.format("%s %s %s", de.getChangeType(), de.getOldPath(), de.getNewPath()));
+				log.debug(String.format("%s %s %s", de.getChangeType(), de.getOldPath(), de.getNewPath()));
 			}
 			
 			switch (de.getChangeType()) {
 			case RENAME:
-				if (logger.isDebugEnabled()) {
-					logger.debug(String.format("%s is renammed into %s", de.getOldPath(), de.getNewPath()));
+				if (log.isDebugEnabled()) {
+					log.debug(String.format("%s is renammed into %s", de.getOldPath(), de.getNewPath()));
 				}
 				analysis.renameFilePath(de.getNewPath(), de.getOldPath());
 				break;
@@ -561,8 +565,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				parserVelocity.increment();
 				break;
 			default:
-				if (logger.isDebugEnabled()) {
-					logger.debug(String.format("Unexpected type of change %s %s %s", de.getChangeType(),
+				if (log.isDebugEnabled()) {
+					log.debug(String.format("Unexpected type of change %s %s %s", de.getChangeType(),
 							de.getOldPath(), de.getNewPath()));
 				}
 				break;
@@ -591,8 +595,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	@Override
 	public void finalizeListChanges(String sourceLocation, RepositoryAnalysis analysis) throws IOException {
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(
+		if (log.isDebugEnabled()) {
+			log.debug(
 					String.format("Finalizing the changes collection with the repository location %s", sourceLocation));
 		}
 		
@@ -601,13 +605,13 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		 * Are all files in the repository referenced in the list of change ? 
 		 * They should be all present.
 		 */
-		if (logger.isDebugEnabled()) {
-			logger.debug("List of ghost files");
+		if (log.isDebugEnabled()) {
+			log.debug("List of ghost files");
 			List<String> content;
 			try (Stream<Path> stream = Files.find(Paths.get(sourceLocation), 999, (p, bfa) -> bfa.isRegularFile())) {
 				content = stream.map(Path::toString).map(s -> s.substring(sourceLocation.length()-1))
 						.collect(Collectors.toList());
-				content.stream().filter(s -> !analysis.containsFile(s)).forEach(logger::debug);
+				content.stream().filter(s -> !analysis.containsFile(s)).forEach(log::debug);
 			}
 		};
 
@@ -679,8 +683,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		// If this repository exists, return it immediately.
 		//
 		if (cacheDataHandler.hasCommitRepositoryAvailable(project)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("Using cache file for project %s", project.getName()));
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Using cache file for project %s", project.getName()));
 			}
 
 			CommitRepository repository = cacheDataHandler.getRepository(project);
@@ -738,8 +742,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		 * We load all raw changes declared in the given repository
 		 */
 		RepositoryAnalysis analysis = this.loadChanges(project, repo);
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("loadChanges (%s) returns %d entries", project.getName(), analysis.numberOfChanges()));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("loadChanges (%s) returns %d entries", project.getName(), analysis.numberOfChanges()));
 		}
 
 		tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), String.format("%d changes have been detected on the repository", analysis.numberOfChanges()));
@@ -758,8 +762,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		 * We finalize & cleanup the content of the collection
 		 */
 		this.finalizeListChanges(project.getLocationRepository() + "/", analysis);
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("finalizeListChanges (%s) returns %d entries", project.getName(),
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("finalizeListChanges (%s) returns %d entries", project.getName(),
 					analysis.numberOfChanges()));
 		}
 
@@ -767,8 +771,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		int roughEntries = analysis.numberOfChanges();
 		
 		this.filterEligible(analysis);
-		if (logger.isDebugEnabled()) {
-			logger.debug(
+		if (log.isDebugEnabled()) {
+			log.debug(
 					String.format("filterEligible (%s) returns %d entries from %d originals", project.getName(), analysis.numberOfChanges(), roughEntries));
 		}
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), String.format("%d changes are eligible for the analysis", analysis.numberOfChanges()));
@@ -789,6 +793,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		selectPathDependencies (analysis, dependenciesMarker());
 		
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), String.format("Dependencies have been excluded from analysis"));
+		
 		
 		//
 		// We retrieve the root paths of all libraries present in the project (if any) 
@@ -819,9 +824,6 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		 */
 		this.updateStaff(project, analysis, unknownContributors);
 
-		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), 
-				String.format("All changes have been assigned to registered staff members"));
-
 		/**
 		 * We save the unknown contributors, into the "ghosts project"
 		 */
@@ -830,10 +832,10 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		/**
 		 * Retrieve the list of contributors involved in the project.
 		 */
-		List<Contributor> contributors = this.gatherContributors(analysis);
+		List<Contributor> contributors = analysis.gatherContributors();
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(
+		if (log.isDebugEnabled()) {
+			log.debug(
 				"Taking account of retrieved contributors from the repository into the project list of participants");
 		}
 
@@ -841,19 +843,27 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		 * Update the staff team missions with the contributors.
 		 */
 		staffHandler.involve(project, contributors);
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("%d contributors retrieved : ", contributors.size()));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("%d contributors retrieved : ", contributors.size()));
 			contributors.stream().forEach(contributor -> {
 				String fullname = staffHandler.getFullname(contributor.getIdStaff());
-				logger.debug(String.format("%d %s", contributor.getIdStaff(),
+				log.debug(String.format("%d %s", contributor.getIdStaff(),
 						(fullname != null) ? fullname : "unknown"));
 			});
 		}
 
+		List<Ecosystem> ecosystems = ecosystemAnalyzer.detectEcosystems(new ArrayList<String>(analysis.getPathsModified()));
+		if (log.isDebugEnabled()) {
+			log.debug("List of ecosystems detected");
+			ecosystems.stream().map(Ecosystem::getTitle).forEach(log::debug);
+		}
+		List<Integer> ids = ecosystems.stream().map(Ecosystem::getId).collect(Collectors.toList());
+		projectHandler.saveEcosystems(project, ids);
+		
 		// Displaying results...
-		if (logger.isInfoEnabled() && (!unknownContributors.isEmpty())) {
-			logger.info(String.format("Unknown contributors for project %s", analysis.getProject().getName()));
-			unknownContributors.stream().forEach(logger::info);
+		if (log.isInfoEnabled() && (!unknownContributors.isEmpty())) {
+			log.info(String.format("Unknown contributors for project %s", analysis.getProject().getName()));
+			unknownContributors.stream().forEach(log::info);
 		}
 		
 		//
@@ -876,14 +886,14 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	 */
 
 	private void log(RevCommit commit) {
-		if (logger.isDebugEnabled()) {
+		if (log.isDebugEnabled()) {
 			PersonIdent author = commit.getAuthorIdent();
 			StringBuilder sb = new StringBuilder();
 			sb.append(Global.LN).append("shortMessage : " + commit.getShortMessage()).append(Global.LN)
 					.append("id : " + author.getEmailAddress()).append(Global.LN).append("date : " + author.getWhen())
 					.append(Global.LN).append("authorIdent.name : " + author.getName()).append(Global.LN)
 					.append(Global.LN);
-			logger.debug(sb.toString());
+			log.debug(sb.toString());
 		}
 
 	}
@@ -904,45 +914,6 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			}
 		}
 		return select;
-	}
-
-	@Override
-	public List<Contributor> gatherContributors(RepositoryAnalysis analysis) {
-		
-		//
-		// We gather all staff identifiers in a set.
-		//
-		Set<Integer> idContributors = analysis.contributors();
-
-		List<Contributor> contributors = new ArrayList<>();
-		for (int idStaff : idContributors) {
-
-			//
-			// We process the date of the FIRST commit submitted by this staff member
-			//
-			LocalDate firstCommit = analysis.retrieveFirstCommit(idStaff);
-			
-			//
-			// We process the date of the LAST commit submitted by this staff member
-			//
-			LocalDate lastCommit = analysis.retrieveLastCommit(idStaff);
-
-			//
-			// Number of commits submitted by this given staff member
-			//
-			int numberOfCommits = analysis.numberOfCommits(idStaff);
-
-			//
-			// Number of files touched by this given staff member
-			//
-			int numberOfFiles = analysis.numberOfFiles(idStaff);
-			
-
-			contributors
-					.add(new Contributor(idStaff, firstCommit, lastCommit, numberOfCommits, numberOfFiles));
-		}
-
-		return contributors;
 	}
 
 	@Override
@@ -969,7 +940,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				}
 			} catch (SkillerException e) {
 				e.printStackTrace();
-				logger.error(e.getLocalizedMessage());
+				log.error(e.getLocalizedMessage());
 			}
 		}
 	}
@@ -986,13 +957,13 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			try {
 				this.clone(project, settings);
 			} catch (final Exception e) {
-				if (logger.isDebugEnabled()) {
-					logger.debug("GIT clone failed", e);
+				if (log.isDebugEnabled()) {
+					log.debug("GIT clone failed", e);
 				}
 				throw e;
 			}
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("The project %s is cloned into a temporay directory", project.getName()));
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("The project %s is cloned into a temporay directory", project.getName()));
 			}
 		}
 
@@ -1003,8 +974,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		// This variable is not final. Might be overridden by the filtering operation
 		// (date of staff member filtering)
 		CommitRepository repo = this.parseRepository(project, settings);
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("The repository has been parsed. It contains %d records in the repository, and %d ghosts", repo.size(), repo.unknownContributors().size()));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("The repository has been parsed. It contains %d records in the repository, and %d ghosts", repo.size(), repo.unknownContributors().size()));
 		}
 
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), "Parsing of the repository complete!");
@@ -1023,8 +994,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		// We collapse empty directory inside their first sub-directory
 		// the node com & the node google will become one single node com/google
 		if (collapseEmptyDirectory) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("Aggregating empty directories in the chart");
+			if (log.isDebugEnabled()) {
+				log.debug("Aggregating empty directories in the chart");
 			}
 			dataChartHandler.aggregateDataChart(data.riskChartData);
 		}
@@ -1055,12 +1026,12 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Risk evaluation done !");
 		
-		if (logger.isDebugEnabled()) {
+		if (log.isDebugEnabled()) {
 			if ((data.undefinedContributors != null) && (!data.undefinedContributors.isEmpty())) {
 				StringBuilder sb = new StringBuilder();
 				sb.append("Unknown contributors detected during the dashboard generation").append(LN);
 				data.undefinedContributors.stream().forEach(ukwn -> sb.append(ukwn.getPseudo()).append(LN));
-				logger.debug(sb.toString());
+				log.debug(sb.toString());
 			}
 
 			if ((project.getGhosts() != null) && (!project.getGhosts().isEmpty())) {
@@ -1068,7 +1039,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				sb.append("Registered ghosts in the project record :").append(LN);
 				project.getGhosts().stream().forEach(g -> sb.append(g.getPseudo()).append(" : ").append(g.getIdStaff())
 						.append("/").append(g.isTechnical()).append(LN));
-				logger.debug(sb.toString());
+				log.debug(sb.toString());
 			}
 		}
 		return data;
@@ -1079,8 +1050,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		final LocalDate startingDate = new Date(settings.getStartingDate()).toInstant().atZone(ZoneId.systemDefault())
 				.toLocalDate();
 
-		if (logger.isDebugEnabled()) {
-			logger.debug(MessageFormat.format("Filtering the repositiory for id:{0}, and starting date:{1}",
+		if (log.isDebugEnabled()) {
+			log.debug(MessageFormat.format("Filtering the repositiory for id:{0}, and starting date:{1}",
 					settings.getIdStaffSelected(), startingDate));
 		}
 		CommitRepository personalizedRepo = new BasicCommitRepository();
@@ -1145,8 +1116,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 						MessageFormat.format(MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND, fileProperties), ioe);
 			}
 
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("GIT remote URL %s with user %s", settings.getUrl(), settings.getLogin()));
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("GIT remote URL %s with user %s", settings.getUrl(), settings.getLogin()));
 			}
 			return settings;
 		}
@@ -1156,8 +1127,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	@Override
 	public boolean hasAvailableGeneration(Project project) throws IOException {
 		boolean result = cacheDataHandler.hasCommitRepositoryAvailable(project);
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("hasAvailableGeneration(%d)? : %s", project.getId(), result));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("hasAvailableGeneration(%d)? : %s", project.getId(), result));
 		}
 		return result;
 	}
@@ -1198,8 +1169,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 						}
 					}
 					if (staff == null) {
-						if (logger.isDebugEnabled()) {
-							logger.debug(String.format("No staff found for the criteria %s", author));
+						if (log.isDebugEnabled()) {
+							log.debug(String.format("No staff found for the criteria %s", author));
 						}
 						unknownContributors.add(author);
 					} else {
@@ -1210,6 +1181,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 					}
 
 				});
+
+		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), 
+				String.format("All changes have been assigned to registered staff members"));
 
 	}
 
@@ -1260,25 +1234,25 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				}
 			}
 		}
-		if (logger.isDebugEnabled()) {
-			logger.debug("Dependencies path");
-			analysis.getPathsCandidate().stream().forEach(logger::debug); 
+		if (log.isDebugEnabled()) {
+			log.debug("Dependencies path");
+			analysis.getPathsCandidate().stream().forEach(log::debug); 
 		}
 	}
 
 	@Override
 	public void retrieveRootPath(RepositoryAnalysis analysis) throws IOException {
 		
-		if ( logger.isDebugEnabled() && (this.crawlerFilterDebug != null)) {
-			logger.debug("Added files only list");
+		if ( log.isDebugEnabled() && (this.crawlerFilterDebug != null)) {
+			log.debug("Added files only list");
 			if ("*".equals(this.crawlerFilterDebug)) {
-				analysis.getPathsAdded().stream().forEach(logger::debug);
+				analysis.getPathsAdded().stream().forEach(log::debug);
 			} else {
 				analysis
 				.getPathsAdded()
 				.stream()
 				.filter(p -> p.indexOf(this.crawlerFilterDebug) != -1)
-				.forEach(logger::debug);
+				.forEach(log::debug);
 			}
 		}
 		
@@ -1291,18 +1265,18 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 			if (containFilesOnlyAdded(analysis, new File(absolutePath))) {
 				analysis.getProject().add( new Library(pathname, Global.LIBRARY_DETECTED));
-				if (logger.isDebugEnabled()) {
-					logger.debug (String.format("Handling %s as a dependency", pathname));
+				if (log.isDebugEnabled()) {
+					log.debug (String.format("Handling %s as a dependency", pathname));
 				}
 			}
 		}
-		if (logger.isInfoEnabled()) {
-			logger.info("Libraries detected in the repository :");
+		if (log.isInfoEnabled()) {
+			log.info("Libraries detected in the repository :");
 			analysis.getProject().getLibraries()
 				.stream()
 				.filter(lib -> lib.getType() == Global.LIBRARY_DETECTED)
 				.map(Library::getExclusionDirectory)
-				.forEach(logger::info);
+				.forEach(log::info);
 		}
 	}
 		
@@ -1317,8 +1291,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			transport.openFetch();
 			return true;
 		} catch (final Exception e) {
-			if (logger.isDebugEnabled()) {
-				logger.debug(String.format("testConnection('%s') failed !", project.getName()), e);
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("testConnection('%s') failed !", project.getName()), e);
 			}
 			return false;
 		}
@@ -1328,13 +1302,13 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		
 		File[] children = dependency.listFiles();
 		
-		if (logger.isDebugEnabled()) {
-			logger.debug (String.format("Project local repository %s",  analysis.getProject().getLocationRepository()));
+		if (log.isDebugEnabled()) {
+			log.debug (String.format("Project local repository %s",  analysis.getProject().getLocationRepository()));
 		}
 		
 		for (File child : children) {
-			if (logger.isDebugEnabled()) {
-				logger.debug (String.format("Examining %s", child.getCanonicalPath()));
+			if (log.isDebugEnabled()) {
+				log.debug (String.format("Examining %s", child.getCanonicalPath()));
 			}
 			
 			if (child.isDirectory()) {
@@ -1356,8 +1330,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			
 			if (!analysis.getPathsAdded()
 					.contains(testing)) {
-				if (logger.isDebugEnabled()) {
-					logger.debug(String.format("%s has evicted the dependency %s", 
+				if (log.isDebugEnabled()) {
+					log.debug(String.format("%s has evicted the dependency %s", 
 							child.getCanonicalPath(), dependency.getCanonicalPath()));
 				}
 				return false;
@@ -1376,8 +1350,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 	@Override
 	public void displayConfiguration() {
-		logger.info("Display the configuration");
-		logger.info("----------------------------------");
+		log.info("Display the configuration");
+		log.info("----------------------------------");
 	}
 
 	

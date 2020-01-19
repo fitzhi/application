@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import fr.skiller.SkillerRuntimeException;
-import fr.skiller.bean.DataSaver;
+import fr.skiller.bean.DataHandler;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SonarHandler;
 import fr.skiller.bean.StaffHandler;
@@ -63,7 +63,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	 * For retrieving data from the persistent repository.
 	 */
 	@Autowired
-	public DataSaver dataSaver;
+	public DataHandler dataSaver;
 			
 	/**
 	 * Bean in charge of handling connected Sonar server.
@@ -568,4 +568,12 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		}
 	}
 
+	@Override
+	public void saveEcosystems(Project project, List<Integer> ecosystems) {
+		synchronized (lockDataUpdated) {
+			project.setEcosystems(ecosystems);
+			this.dataUpdated = true;
+		}
+	}
+	
 }

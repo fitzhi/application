@@ -249,4 +249,13 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @param newUrlSonarServer the URL of the Sonar server to be taken in account
 	 */
 	void saveUrlSonarServer(Project project, String newUrlSonarServer);
+	
+	/**
+	 * Save the ecosystems detected inside the project
+	 * @param project the given project
+	 * @param ecosystems the list of ecosystem-identifiers
+	 */
+	void saveEcosystems(Project project, List<Integer> ecosystems);
+	
+	
 }

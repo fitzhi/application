@@ -27,7 +27,6 @@ import fr.skiller.exception.SkillerException;
  */
 public interface RepoScanner {
 
-	
 	/**
 	 * <p>Load the repository from the internal cache.</p>
 	 * <p>
@@ -138,13 +137,6 @@ public interface RepoScanner {
 	 */
 	void updateImportance(Project project, RepositoryAnalysis analysis) throws SkillerException;	
 	
-	/**
-	 * Gather the identified contributors with their personal stats.
-	 * @param analysis the repository analysis.
-	 * @return the list of contributors involved in the repository
-	 */
-	List<Contributor> gatherContributors(RepositoryAnalysis analysis);
-
 	/**
 	 * <p>
 	 * Parse the repository <u>already</u> cloned on the file system.<br/>

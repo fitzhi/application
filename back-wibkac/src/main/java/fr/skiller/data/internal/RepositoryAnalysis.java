@@ -3,6 +3,7 @@ package fr.skiller.data.internal;
 import static fr.skiller.Error.SHOULD_NOT_PASS_HERE;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 import fr.skiller.SkillerRuntimeException;
 import fr.skiller.data.source.BasicCommitRepository;
 import fr.skiller.data.source.CommitRepository;
+import fr.skiller.data.source.Contributor;
 import fr.skiller.source.crawler.git.SourceChange;
 import fr.skiller.source.crawler.git.SourceFileHistory;
 
@@ -43,7 +45,7 @@ public class RepositoryAnalysis {
 	
 	/**
 	 * List of paths detected as having been ONLY ADDED in the history of the repository.<br/>
-	 * These files might be external dependencies files, non relevant for audit.  
+	 * These files might be external dependencies files, i.e. non relevant for audit.  
 	 */
 	private final Set<String> pathsAdded = new HashSet<>();
 	
@@ -111,7 +113,7 @@ public class RepositoryAnalysis {
 	}
 	
 	/**
-	 * <b>Why do we keep a set of paths modified ?</b><br/>
+	 * <p><big><b>Why do we keep a set of paths modified ?</b></big></p>
 	 * We keep the paths which have been modified in order to retrieve by subtraction from the complete list, 
 	 * the paths which only have be added without modification. <br/>
 	 * The resulting list will contain good candidates for external dependencies, irrelevant for the analysis.
@@ -354,4 +356,54 @@ public class RepositoryAnalysis {
 		}
 		this.changes.mapChanges.get(path).setImportance(importance);
 	}
+
+	
+	/**
+	 * Gather the identified contributors with their personal statistics, such as
+	 * <ul>
+	 * <li>the date of their first & last commit</li>
+	 * <li>the number of files impacted</li>
+	 * <li>the number of commits submitted</li>
+	 * </ul>
+	 * @return the list of contributors involved in the repository
+	 */
+	public List<Contributor> gatherContributors() {
+		
+		//
+		// We gather all staff identifiers in a set.
+		//
+		Set<Integer> idContributors = this.contributors();
+
+		List<Contributor> contributors = new ArrayList<>();
+		for (int idStaff : idContributors) {
+
+			//
+			// We process the date of the FIRST commit submitted by this staff member
+			//
+			LocalDate firstCommit = retrieveFirstCommit(idStaff);
+			
+			//
+			// We process the date of the LAST commit submitted by this staff member
+			//
+			LocalDate lastCommit = retrieveLastCommit(idStaff);
+
+			//
+			// Number of commits submitted by this given staff member
+			//
+			int numberOfCommits = numberOfCommits(idStaff);
+
+			//
+			// Number of files touched by this given staff member
+			//
+			int numberOfFiles = numberOfFiles(idStaff);
+			
+
+			contributors
+					.add(new Contributor(idStaff, firstCommit, lastCommit, numberOfCommits, numberOfFiles));
+		}
+
+		return contributors;
+		
+	}
+
 }

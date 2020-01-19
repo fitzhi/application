@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import fr.skiller.SkillerRuntimeException;
-import fr.skiller.bean.DataSaver;
+import fr.skiller.bean.DataHandler;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.exception.SkillerException;
@@ -37,7 +37,7 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	 * Data access interface.
 	 */
 	@Autowired
-	DataSaver dataSaver;
+	DataHandler dataSaver;
 
 	@Override
 	public Map<Integer, Skill> getSkills() {

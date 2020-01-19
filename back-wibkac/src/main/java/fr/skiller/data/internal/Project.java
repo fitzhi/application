@@ -6,8 +6,10 @@ import static fr.skiller.Global.REMOTE_FILE_ACCESS;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Generated;
@@ -113,6 +115,11 @@ public @Data class Project implements Serializable {
 	 * Staff evaluation, representing the percentage of active developers able to maintain the project.
 	 */
 	private int staffEvaluation = -1;
+	
+	/**
+	 * "ordered" list by weight of ecosystems detected on the repository by either this application, or Sonar
+	 */
+	private List<Integer> ecosystems = new ArrayList<>();
 	
 	/**
 	 * Empty constructor.

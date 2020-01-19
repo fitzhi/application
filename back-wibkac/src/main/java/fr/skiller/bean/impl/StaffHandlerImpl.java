@@ -26,7 +26,7 @@ import com.google.gson.GsonBuilder;
 
 import fr.skiller.Error;
 import fr.skiller.SkillerRuntimeException;
-import fr.skiller.bean.DataSaver;
+import fr.skiller.bean.DataHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Experience;
 import fr.skiller.data.internal.Mission;
@@ -67,7 +67,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	 * Bean in charge of saving/loading data.
 	 */
 	@Autowired
-	DataSaver dataSaver;
+	DataHandler dataSaver;
 		
 	@Override
 	public void init() {

@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import fr.skiller.bean.CacheDataHandler;
-import fr.skiller.bean.DataSaver;
+import fr.skiller.bean.DataHandler;
 import fr.skiller.bean.ProjectDashboardCustomizer;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Project;
@@ -68,7 +68,7 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 	 * For retrieving data from the persistent repository.
 	 */
 	@Autowired
-	public DataSaver dataSaver;
+	public DataHandler dataSaver;
 	
 	/**
 	 * For retrieving the repository from the file system.

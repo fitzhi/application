@@ -1,4 +1,4 @@
-package fr.skiller.source.crawler;
+package fr.skiller.source.crawler.impl;
 
 import static fr.skiller.Global.INTERNAL_FILE_SEPARATOR;
 import static fr.skiller.Global.LN;
@@ -18,6 +18,7 @@ import fr.skiller.data.internal.Ghost;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.RiskDashboard;
 import fr.skiller.data.source.CommitRepository;
+import fr.skiller.source.crawler.RepoScanner;
 import fr.skiller.source.crawler.git.GitCrawler;
 import lombok.extern.slf4j.Slf4j;
 
@@ -29,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	
-	Random r = new Random();
+	private Random r = new Random();
 	
 	/**
 	 * <p>
@@ -46,9 +47,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	 * {@link fr.skiller.source.crawler.git.TreeWalkGitCrawler#init() GitScanner.init} is the first implementation for Git.
 	 */
 	protected ProjectHandler parentProjectHandler;
-	
-	private Logger logger = LoggerFactory.getLogger(AbstractScannerDataGenerator.class.getCanonicalName());
-	
+		
 	@Override
 	public RiskDashboard aggregateDashboard(final Project project, final CommitRepository commitRepo) {
 		DataChart root = new DataChart("root");
@@ -75,10 +74,10 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 			}
 		};
 		
-		if (logger.isDebugEnabled()) {
+		if (log.isDebugEnabled()) {
 			StringBuilder sb = new StringBuilder(LN);
 			ghosts.stream().forEach(g -> sb.append(g).append(LN));
-			logger.debug(sb.toString());
+			log.debug(sb.toString());
 		}
 		return new RiskDashboard(root, ghosts);
 	}

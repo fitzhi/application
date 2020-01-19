@@ -17,7 +17,7 @@ import fr.skiller.source.crawler.git.SCMChange;
  * Interface in charge of saving & loading data.
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public interface DataSaver {
+public interface DataHandler {
 
 	/**
 	 * Save projects on a persistent media
@@ -87,7 +87,7 @@ public interface DataSaver {
 	 * @param changes the history of changes retrieved from the repository
 	 * @throws SkillerException thrown if an exception occurs during the saving process.
 	 */
-	void saveRepositoryDirectories(Project project,SourceControlChanges changes) throws SkillerException;
+	void saveRepositoryDirectories(Project project, SourceControlChanges changes) throws SkillerException;
 	
 	/**
 	 * Load the list of all directory-paths for the repository of the given project.

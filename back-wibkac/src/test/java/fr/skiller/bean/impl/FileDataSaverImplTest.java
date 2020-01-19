@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import fr.skiller.bean.DataSaver;
+import fr.skiller.bean.DataHandler;
 import fr.skiller.data.internal.Project;
 import fr.skiller.data.internal.Skill;
 import fr.skiller.exception.SkillerException;
@@ -28,7 +28,7 @@ import fr.skiller.exception.SkillerException;
 public class FileDataSaverImplTest {
 
 	@Autowired
-	DataSaver dataSaver;
+	DataHandler dataSaver;
 	
 	@Test
 	public void saveProjects() throws SkillerException {

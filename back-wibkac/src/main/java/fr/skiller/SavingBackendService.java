@@ -6,7 +6,7 @@ package fr.skiller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import fr.skiller.bean.DataSaver;
+import fr.skiller.bean.DataHandler;
 import fr.skiller.bean.ProjectHandler;
 import fr.skiller.bean.SkillHandler;
 import fr.skiller.bean.StaffHandler;
@@ -40,7 +40,7 @@ public class SavingBackendService {
 	 * Service in charge of saving/loading data
 	 */
 	@Autowired
-	DataSaver dataSaver;
+	DataHandler dataSaver;
 	
 	@Scheduled(fixedRateString="${dataSaver.timeDelay}")
     public void work() {

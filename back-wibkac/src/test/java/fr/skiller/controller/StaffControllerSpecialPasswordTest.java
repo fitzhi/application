@@ -22,7 +22,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import fr.skiller.bean.DataSaver;
+import fr.skiller.bean.DataHandler;
 import fr.skiller.bean.StaffHandler;
 import fr.skiller.data.internal.Staff;
 
@@ -46,7 +46,7 @@ public class StaffControllerSpecialPasswordTest {
 	 * Class in charge of the staff collection.
 	 */
 	@Autowired
-	DataSaver dataSaver;
+	DataHandler dataSaver;
 
 	@Autowired
 	private MockMvc mvc;

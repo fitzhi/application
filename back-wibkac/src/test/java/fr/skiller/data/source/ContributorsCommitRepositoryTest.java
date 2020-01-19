@@ -61,7 +61,6 @@ public class ContributorsCommitRepositoryTest {
     	RepositoryAnalysis analysis = new RepositoryAnalysis(p);
     	SourceControlChanges repo = analysis.getChanges();
     			
-    			
 		repo.addChange(TEST, 
 				new SourceChange(String.valueOf(System.nanoTime()), LocalDate.of(2018, 11, 1), FVIDAL, ""));
 		repo.addChange(TEST, 
@@ -70,7 +69,6 @@ public class ContributorsCommitRepositoryTest {
 				new SourceChange(String.valueOf(System.nanoTime()), LocalDate.of(2018, 11, 23), GLUCAS, ""));
 		repo.addChange(TEST, 
 				new SourceChange(String.valueOf(System.nanoTime()), LocalDate.of(2018, 11, 14), "tintin", ""));
-
 
 		repo.addChange(TEST2, 
 				new SourceChange(String.valueOf(System.nanoTime()), LocalDate.of(2018, 11, 2), FVIDAL, ""));
@@ -93,7 +91,7 @@ public class ContributorsCommitRepositoryTest {
 		
 		Set<String> unknownContributors = new HashSet<>();
 		scanner.updateStaff (p, analysis, unknownContributors);
-    	contributors = scanner.gatherContributors(analysis);
+    	contributors = analysis.gatherContributors();
     }
     
     @Test
