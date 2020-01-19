@@ -47,6 +47,11 @@ export class Project {
 	 */
 	public audit: { [id: number]: AuditTopic; } = {};
 
+	/**
+	 * Array of ecosystem identifiers detected in this project.
+	 */
+	public ecosystems: number[] = [];
+
 	constructor(
 		public id: number = 0,
 		public name: string = '') { }

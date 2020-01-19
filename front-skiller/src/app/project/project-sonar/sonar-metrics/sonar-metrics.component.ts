@@ -138,7 +138,9 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	 * ngAfterViewInit.
 	 */
 	ngAfterViewInit() {
-		this.dataSource.paginator = this.paginator;
+		if (this.dataSource) {
+			this.dataSource.paginator = this.paginator;
+		}
 	}
 
 	private loadMetrics$(): Observable<ProjectSonarMetric[]> {

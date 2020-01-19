@@ -10,6 +10,7 @@ import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { SupportedMetric } from '../data/supported-metric';
 import { TopicLegend } from '../data/topic-legend';
 import { DeclaredSonarServer } from '../data/declared-sonar-server';
+import { Ecosystem } from '../data/ecosystem';
 
 @Injectable()
 export class ReferentialService {
@@ -23,6 +24,11 @@ export class ReferentialService {
 	 * Legend of the sunburst chart.
 	 */
 	public legends: RiskLegend[] = [];
+
+	/**
+	 * Ecosystems declared inside the application.
+	 */
+	ecosystems: Ecosystem[];
 
 	/*
 	 * Observable emiting the completion of the legends loading of the sunburst chart.
@@ -127,6 +133,19 @@ export class ReferentialService {
 							const declaredSonarServers: DeclaredSonarServer[] = [];
 							declaredSonarServers.push(...sonarServers);
 							this.sonarServers$.next(declaredSonarServers);
+							return this.httpClient.get<Ecosystem[]>
+								(this.backendSetupService.url() + '/referential/ecosystem');
+						}))
+				.pipe(
+					take(1),
+					switchMap(
+						(ecosystems: Ecosystem[]) => {
+							if (Constants.DEBUG) {
+								console.groupCollapsed('Ecosystems declared inside the system : ');
+								ecosystems.forEach(ecosystem => console.log(ecosystem.title));
+								console.groupEnd();
+							}
+							this.ecosystems = ecosystems;
 							return this.httpClient.get<SupportedMetric[]>
 								(this.backendSetupService.url() + '/referential/supported-metrics');
 						}))

@@ -35,10 +35,13 @@
     </ng-container>
 
     <ng-container matColumnDef="techno">
-      <th id="techno" mat-header-cell *matHeaderCellDef mat-sort-header>Main technology</th>
+      <th id="techno" mat-header-cell *matHeaderCellDef>Ecosystem</th>
       <td mat-cell *matCellDef="let row" style="padding-left: 10px;">
-        <a [routerLink]="['/project', row.id]"></a>
-      </td>
+        <div *ngFor="let ecosystem of projectService.retrieveEcosystems(row)" class="awesomeTitle">
+          <span *ngIf="ecosystem.awesomeTitle"><i class="{{ecosystem.awesomeTitle}} awesomeTitle"></i></span>
+          <span *ngIf="!ecosystem.awesomeTitle">{{ecosystem.title}}</span>
+        </div>
+    </td>
     </ng-container>
 
     <ng-container matColumnDef="lastCommit">

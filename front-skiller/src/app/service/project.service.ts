@@ -27,6 +27,7 @@ import { Task } from '../data/task';
 import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 import { AttachmentFile } from '../data/AttachmentFile';
 import { FileService } from './file.service';
+import { Ecosystem } from '../data/ecosystem';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -838,4 +839,20 @@ export class ProjectService extends InternalService {
 			.pipe(take(1));
 	}
 
+	/**
+	 * Return the array of ecosystems detected inside the given project.
+	 * @param project the given project
+	 */
+	public retrieveEcosystems(project: Project): Ecosystem[] {
+		const ecosystems: Ecosystem[] = [];
+		project.ecosystems.forEach(idEcosystem => {
+			const ecosystem = this.referentialService.ecosystems.find(ecosys => ecosys.id === idEcosystem);
+			if (ecosystem) {
+				ecosystems.push(ecosystem);
+			} else {
+				console.error('Internal error (contact the administrator) : there is no ecosystem with id %d', idEcosystem);
+			}
+		});
+		return ecosystems;
+	}
 }

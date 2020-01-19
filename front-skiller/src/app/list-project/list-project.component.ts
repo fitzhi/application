@@ -111,7 +111,4 @@ export class ListProjectComponent implements OnInit {
 		return this.commitCached;
 	}
 
-	emitProject$(project: Project) {
-		return of(project);
-	}
 }

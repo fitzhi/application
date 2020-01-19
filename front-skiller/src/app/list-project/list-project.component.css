@@ -42,3 +42,11 @@
 td.name {
     padding-left: 10px;
 }
+
+div.awesomeTitle {
+    float: left;
+    padding: 3px;
+}
+i.awesomeTitle {
+    font-size: 28px;
+}
