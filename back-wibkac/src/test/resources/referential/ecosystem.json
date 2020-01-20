@@ -1,6 +1,8 @@
 [
 	{ "id": 0, "title": "Java", "awesomeTitle": "fab fa-java", "pattern": ".java$" },
-	{ "id": 1, "title": ".Net", "awesometitle": "fab fa-microsoft", "pattern": ".cs$" },
+	{ "id": 1, "title": ".Net", "awesomeTitle": "fab fa-microsoft", "pattern": ".cs$" },
 	{ "id": 2, "title": "Angular", "awesomeTitle": "fab fa-angular", "pattern": ".ts$" },
-	{ "id": 3, "title": "Javascript", "awesomeTitle": "fab fa-js", "pattern": ".js$" }
+	{ "id": 3, "title": "Javascript", "awesomeTitle": "fab fa-js", "pattern": ".js$" },	
+	{ "id": 4, "title": "Python", "awesomeTitle": "fab fa-python", "pattern": ".py$" },
+	{ "id": 5, "title": "PHP", "awesomeTitle": "fab fa-php", "pattern": ".php$" }
 ]
