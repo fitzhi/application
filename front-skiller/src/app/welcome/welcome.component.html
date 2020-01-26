@@ -2,11 +2,9 @@
     <app-starting-setup></app-starting-setup>
 </div>
 
-<p></p>
-
-    <div id="setup" *ngIf="connectionIsNeeded()">
-        <app-connect-user></app-connect-user>
-    </div>
+<div id="setup" *ngIf="connectionIsNeeded()">
+    <app-connect-user></app-connect-user>
+</div>
 
 <div class="mainDashboard">
     <app-pie-dashboard></app-pie-dashboard>
