@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -852,7 +853,14 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			});
 		}
 
-		List<Ecosystem> ecosystems = ecosystemAnalyzer.detectEcosystems(new ArrayList<String>(analysis.getPathsModified()));
+		//
+		// To identify the ecosystem, all files are taken in account. 
+		//
+		Set<String> allPaths = new HashSet<>();
+		allPaths.addAll(analysis.getPathsModified());
+		allPaths.addAll(analysis.getPathsAdded());
+		List<Ecosystem> ecosystems = ecosystemAnalyzer.detectEcosystems(new ArrayList<String>(allPaths));
+		
 		if (log.isDebugEnabled()) {
 			log.debug("List of ecosystems detected");
 			ecosystems.stream().map(Ecosystem::getTitle).forEach(log::debug);

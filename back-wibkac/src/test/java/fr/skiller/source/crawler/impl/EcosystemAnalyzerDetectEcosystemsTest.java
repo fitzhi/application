@@ -40,7 +40,17 @@ public class EcosystemAnalyzerDetectEcosystemsTest {
 		List<Ecosystem> ecosystems = ecosystemAnalyzer.detectEcosystems(pathnames);
 		Assert.assertEquals(2, ecosystems.size());
 		Assert.assertEquals("TypeScript detected", 2, ecosystems.get(0).getId());
-		Assert.assertEquals("Java detected",0, ecosystems.get(1).getId());
-		
+		Assert.assertEquals("Java detected",0, ecosystems.get(1).getId());		
+	}
+
+	@Test
+	public void testPHP() throws SkillerException {
+		List<String> pathnames = new ArrayList<>();
+		pathnames.add("/application/Classes/AbstractException.php");
+		pathnames.add("/application/Classes/GroupGile.php");
+		pathnames.add("unused.json");
+		List<Ecosystem> ecosystems = ecosystemAnalyzer.detectEcosystems(pathnames);
+		Assert.assertEquals(1, ecosystems.size());
+		Assert.assertEquals("PHP detected", 5, ecosystems.get(0).getId());
 	}
 }

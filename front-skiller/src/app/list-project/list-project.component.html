@@ -13,9 +13,11 @@
     <ng-container matColumnDef="sonarEvaluation">
       <th id="sonarEvaluation" mat-header-cell *matHeaderCellDef mat-sort-header>Sonar</th>
       <td mat-cell *matCellDef="let row" style="width: 70px; height: 70px">
-        <app-quotation-badge height="70" width="70" [index]=row.id [thumbnail]=false [medal]=true
-          [title]="'evaluation.title'" [weight]=100 [evaluation]="projectService.calculateSonarEvaluation(row)">
-        </app-quotation-badge>
+        <div *ngIf="projectService.calculateSonarEvaluation(row) > 0">
+          <app-quotation-badge height="70" width="70" [index]=row.id [thumbnail]=false [medal]=true
+            [title]="'evaluation.title'" [weight]=100 [evaluation]="projectService.calculateSonarEvaluation(row)">
+          </app-quotation-badge>
+        </div>
       </td>
     </ng-container>
 

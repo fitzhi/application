@@ -31,6 +31,6 @@ public class EcosystemAnalyzerLoadEcosystemsTest {
 	@Test
 	public void test() throws SkillerException {
 		Map<Integer, Ecosystem> ecosystems = ecosystemAnalyzer.loadEcosystems();
-		Assert.assertEquals(4, ecosystems.size());
+		Assert.assertEquals(9, ecosystems.size());
 	}
 }
