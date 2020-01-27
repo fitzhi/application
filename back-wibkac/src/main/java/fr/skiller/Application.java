@@ -75,9 +75,10 @@ public class Application {
           	
             LoggerFactory.getLogger(BACKEND_TECHXHI).info("Source code crawling settings : ");
             LoggerFactory.getLogger(BACKEND_TECHXHI).info("--------------------------------");
-            LoggerFactory.getLogger(BACKEND_TECHXHI).info("\tFiles pattern embarked in the evaluation : ");
+            LoggerFactory.getLogger(BACKEND_TECHXHI).info("Most of the settings below are configured inside the file 'applications.properties', which is just aside of tixhì.jar.");
+            LoggerFactory.getLogger(BACKEND_TECHXHI).info("\tFiles pattern on-boarded in the evaluation : ");
             LoggerFactory.getLogger(BACKEND_TECHXHI).info("\t" + patternsInclusion);
-            LoggerFactory.getLogger(BACKEND_TECHXHI).info("\tExternal directories excluded from the evaluation : ");
+            LoggerFactory.getLogger(BACKEND_TECHXHI).info("\tExternal directories which are excluded from the evaluation : ");
 	        LoggerFactory.getLogger(BACKEND_TECHXHI).info("\t" + dependenciesMarker);
             LoggerFactory.getLogger(BACKEND_TECHXHI).info("\t" + ((collapseEmptyDirectory) ? "Directories should be collapsed" : "Directories should NOT be collaped"));
             LoggerFactory.getLogger(BACKEND_TECHXHI).info("\t" + ((prefilterEligibility) ? "File eligibility is PREfiltered" : "File eligibility id POSTfiltered"));

@@ -2,5 +2,5 @@ echo "starting backend wibkac"
 echo "-----------------------"
 echo "" 
 
-deploy/backend-wibkac/wibkac.jar
+sh deploy/backend-tixhì/tixhì.jar
 

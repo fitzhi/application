@@ -42,10 +42,12 @@ git clone https://github.com/frvidal/first-test
 rm -Rf wibkac
 git clone https://github.com/frvidal/wibkac
 cd ..
-mkdir -pv $dir/backend-wibkac
+mkdir -pv $dir/backend-tixhì
 cd back-wibkac
-mvn clean package
-cp target/wibkac.jar ../$dir/backend-wibkac/wibkac.jar
+mvn clean install
+cp target/tixhì.jar ../$dir/backend-tixhì/tixhì.jar
+cp target/application.properties ../$dir/backend-tixhì/application.properties
+cp target/logback-spring.xml ../$dir/backend-tixhì/logback-spring.xml
 
 if [ $force = "Y" ]
 then 
@@ -53,3 +55,5 @@ cp -R data ../$dir
 fi
 
 cd ..
+
+echo "--- end ---"

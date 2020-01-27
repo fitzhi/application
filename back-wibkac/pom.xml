@@ -17,7 +17,6 @@
 		<springsecurityoauth2.version>2.3.6.RELEASE</springsecurityoauth2.version>
 		<jstl.version>1.2</jstl.version>
 		<junit.version>4.12</junit.version>
-		<logback.version>1.2.3</logback.version>
 		<jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
 		<opennlp.version>1.9.0</opennlp.version>
 		<poi.version>4.0.0</poi.version>
@@ -57,12 +56,6 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>jcl-over-slf4j</artifactId>
 			<version>${jcl-over-slf4j.version}</version>
-		</dependency>
-
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>${logback.version}</version>
 		</dependency>
 
 		<dependency>
@@ -239,9 +232,20 @@
 	</dependencies>
 
 	<build>
-		<finalName>wibkac</finalName>
+		<finalName>tixhì</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
+		<resources>
+		  <resource>
+			<directory>${basedir}/src/main/resources</directory>
+			<filtering>false</filtering>
+		    <excludes>
+		      <exclude>application.properties</exclude>
+		      <exclude>logback.xml</exclude>
+		      <exclude>logback-spring.xml</exclude>
+		    </excludes>
+		  </resource>
+		</resources>					
 
 		<plugins>
 			<!-- Eclipse project -->
@@ -267,7 +271,7 @@
 					<source>${jdk.version}</source>
 					<target>${jdk.version}</target>
 					<encoding>${project.build.sourceEncoding}</encoding>
-				</configuration>
+				</configuration>	
 			</plugin>
 
 			<!-- For Maven Tomcat Plugin -->
@@ -307,6 +311,32 @@
 				</configuration>
 			</plugin>
 
+			<plugin>
+	            <artifactId>maven-resources-plugin</artifactId>
+	            <version>3.1.0</version>
+	            <executions>
+	                <execution>
+	                    <id>copy-resource-one</id>
+	                    <phase>install</phase>
+	                    <goals>
+	                        <goal>copy-resources</goal>
+	                    </goals>
+	
+	                    <configuration>
+	                        <outputDirectory>${basedir}/target</outputDirectory>
+	                        <resources>
+	                            <resource>
+	                                <directory>${basedir}/src/main/resources</directory>
+	                                <includes>
+	                                    <include>application.properties</include>
+	                                    <include>logback-spring.xml</include>
+	                                </includes>
+	                            </resource>
+	                        </resources>
+	                    </configuration>
+	                </execution>
+	           </executions>
+	        </plugin>
 		</plugins>
 
 	</build>
