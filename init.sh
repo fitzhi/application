@@ -1,2 +1,2 @@
-./install.sh -f Y -d deploy
+./install.sh -f Y -d deploy -t Y
 

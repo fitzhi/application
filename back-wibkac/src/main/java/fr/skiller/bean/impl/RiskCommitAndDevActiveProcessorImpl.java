@@ -90,27 +90,41 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 
 		final Map<Integer, RiskLegend> explanations = new HashMap<>();
 
-		explanations.put(0, new RiskLegend(0, "darkGreen",
+		//
+		// Setting the color of risks.
+		//
+		String[] colors = new String[11];
+		colors[0] = "green";
+		for (int i=1; i<=9; i++) {
+			colors[i] = "#" 
+				+ String.format("%X", (int) (i*255/10)) 
+				+ String.format("%X", (int) (255-i*255/10)) 
+				+ "00";
+		}
+		colors[10] = "red";
+		
+		
+		explanations.put(0, new RiskLegend(0, "#00FF00",
 				"commits have been submitted by active developers. Perfect level of proficiency on this project"));
-		explanations.put(1, new RiskLegend(1, "ForestGreen",
+		explanations.put(1, new RiskLegend(1, colors[1],
 				"At least, 90% of the commits have been submitted by active developers."));
-		explanations.put(2, new RiskLegend(2, "limeGreen",
+		explanations.put(2, new RiskLegend(2, colors[2],
 				"At least, 80% of the commits have been submitted by active developers."));
 		explanations.put(3,
-				new RiskLegend(3, "lime", "At least, 70% of the commits have been submitted by active developers."));
-		explanations.put(4, new RiskLegend(4, "lightGreen",
+				new RiskLegend(3, colors[3], "At least, 70% of the commits have been submitted by active developers."));
+		explanations.put(4, new RiskLegend(4, colors[4],
 				"At least, 60% of the commits have been submitted by active developers."));
 		explanations.put(5,
-				new RiskLegend(5, "yellow", "At least, 50% of the commits have been submitted by active developers."));
+				new RiskLegend(5, colors[5], "At least, 50% of the commits have been submitted by active developers."));
 		explanations.put(6,
-				new RiskLegend(6, "orange", "At least, 40% of the commits have been submitted by active developers."));
-		explanations.put(7, new RiskLegend(7, "darkOrange",
+				new RiskLegend(6, colors[6], "At least, 40% of the commits have been submitted by active developers."));
+		explanations.put(7, new RiskLegend(7, colors[7],
 				"At least, 30% of the commits have been submitted by active developers."));
-		explanations.put(8, new RiskLegend(8, "lightCoral",
+		explanations.put(8, new RiskLegend(8, colors[8],
 				"At least, 20% of the commits have been submitted by active developers."));
 		explanations.put(9,
-				new RiskLegend(9, "crimson", "At least, 10% of the commits have been submitted by active developers."));
-		explanations.put(10, new RiskLegend(10, "darkRed",
+				new RiskLegend(9, colors[9], "At least, 10% of the commits have been submitted by active developers."));
+		explanations.put(10, new RiskLegend(10, colors[10],
 				"commits have been proceeded by INACTIVE developers. Everyone is newbie on this project."));
 
 		return explanations;
