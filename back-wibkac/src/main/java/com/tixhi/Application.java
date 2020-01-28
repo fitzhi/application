@@ -1,0 +1,102 @@
+/**
+ * 
+ */
+package com.tixhi;
+
+import java.util.concurrent.Executor;
+
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import com.tixhi.service.StorageService;
+import com.tixhi.service.impl.storageservice.ApplicationStorageProperties;
+import com.tixhi.service.impl.storageservice.AuditAttachmentStorageProperties;
+import com.tixhi.source.crawler.git.GitCrawler;
+
+/**
+ * @author Fr&eacute;d&eacute;ric VIDAL Starting class for the application
+ */
+@SpringBootApplication
+@EnableConfigurationProperties({ApplicationStorageProperties.class, AuditAttachmentStorageProperties.class})
+@EnableScheduling
+@EnableAsync
+public class Application {
+
+	
+	/**
+	 * @see {@link GitCrawler#patternsInclusion}
+	 */
+	@Value("${patternsInclusion}")
+	private String patternsInclusion;
+
+	/**
+	 * @see {@link GitCrawler#dependenciesMarker}
+	 */
+	@Value("${dependenciesMarker}")
+	private String dependenciesMarker;
+	
+	
+	/**
+	 * @see {@link GitCrawler#collapseEmptyDirectory}
+	 */
+	@Value("${collapseEmptyDirectory}")
+	private boolean collapseEmptyDirectory;
+	
+	/**
+	 * @see {@link GitCrawler#prefilterEligibility}
+	 */
+	@Value("${prefilterEligibility}")
+	private boolean prefilterEligibility;
+	
+	private final static String BACKEND_TECHXHI = "Backend techxhi";
+	
+	public static void main(String[] args) {
+		LoggerFactory.getLogger(BACKEND_TECHXHI).info("Starting");
+		SpringApplication.run(Application.class, args);
+	}
+
+	@Bean
+    CommandLineRunner init(
+    		@Qualifier("Application") StorageService storageServiceApplication,
+    		@Qualifier("Attachment") StorageService storageServiceAttachment) {
+        return (args) -> {
+        	LoggerFactory.getLogger(BACKEND_TECHXHI).info("StorageService initialization");
+        	storageServiceApplication.init();
+        	storageServiceAttachment.init();
+          	
+            LoggerFactory.getLogger(BACKEND_TECHXHI).info("Source code crawling settings : ");
+            LoggerFactory.getLogger(BACKEND_TECHXHI).info("--------------------------------");
+            LoggerFactory.getLogger(BACKEND_TECHXHI).info("Most of the settings below are configured inside the file 'applications.properties', which is just aside of tixhì.jar.");
+            LoggerFactory.getLogger(BACKEND_TECHXHI).info("\tFiles pattern on-boarded in the evaluation : ");
+            LoggerFactory.getLogger(BACKEND_TECHXHI).info("\t" + patternsInclusion);
+            LoggerFactory.getLogger(BACKEND_TECHXHI).info("\tExternal directories which are excluded from the evaluation : ");
+	        LoggerFactory.getLogger(BACKEND_TECHXHI).info("\t" + dependenciesMarker);
+            LoggerFactory.getLogger(BACKEND_TECHXHI).info("\t" + ((collapseEmptyDirectory) ? "Directories should be collapsed" : "Directories should NOT be collaped"));
+            LoggerFactory.getLogger(BACKEND_TECHXHI).info("\t" + ((prefilterEligibility) ? "File eligibility is PREfiltered" : "File eligibility id POSTfiltered"));
+        };
+    }
+	
+    @Bean
+    public SavingBackendService task() {
+        return new SavingBackendService();
+    }
+
+    @Bean
+    public Executor taskExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        executor.setCorePoolSize(2);
+        executor.setMaxPoolSize(2);
+        executor.setQueueCapacity(500);
+        executor.setThreadNamePrefix("SCMParser-");
+        executor.initialize();
+        return executor;
+    }}
