@@ -57,10 +57,8 @@ public class Application {
 	@Value("${prefilterEligibility}")
 	private boolean prefilterEligibility;
 	
-	private final static String BACKEND_TECHXHI = "Backend techxhi";
-	
 	public static void main(String[] args) {
-		LoggerFactory.getLogger(BACKEND_TECHXHI).info("Starting");
+		LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Starting Backend 质 Tizhì");
 		SpringApplication.run(Application.class, args);
 	}
 
@@ -69,19 +67,19 @@ public class Application {
     		@Qualifier("Application") StorageService storageServiceApplication,
     		@Qualifier("Attachment") StorageService storageServiceAttachment) {
         return (args) -> {
-        	LoggerFactory.getLogger(BACKEND_TECHXHI).info("StorageService initialization");
+        	LoggerFactory.getLogger(Application.class.getCanonicalName()).info("StorageService initialization");
         	storageServiceApplication.init();
         	storageServiceAttachment.init();
           	
-            LoggerFactory.getLogger(BACKEND_TECHXHI).info("Source code crawling settings : ");
-            LoggerFactory.getLogger(BACKEND_TECHXHI).info("--------------------------------");
-            LoggerFactory.getLogger(BACKEND_TECHXHI).info("Most of the settings below are configured inside the file 'applications.properties', which is just aside of tixhì.jar.");
-            LoggerFactory.getLogger(BACKEND_TECHXHI).info("\tFiles pattern on-boarded in the evaluation : ");
-            LoggerFactory.getLogger(BACKEND_TECHXHI).info("\t" + patternsInclusion);
-            LoggerFactory.getLogger(BACKEND_TECHXHI).info("\tExternal directories which are excluded from the evaluation : ");
-	        LoggerFactory.getLogger(BACKEND_TECHXHI).info("\t" + dependenciesMarker);
-            LoggerFactory.getLogger(BACKEND_TECHXHI).info("\t" + ((collapseEmptyDirectory) ? "Directories should be collapsed" : "Directories should NOT be collaped"));
-            LoggerFactory.getLogger(BACKEND_TECHXHI).info("\t" + ((prefilterEligibility) ? "File eligibility is PREfiltered" : "File eligibility id POSTfiltered"));
+            LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Source code crawling settings : ");
+            LoggerFactory.getLogger(Application.class.getCanonicalName()).info("--------------------------------");
+            LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Most of the settings below are configured inside the file 'applications.properties', which is just aside of tixhì.jar.");
+            LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tFiles pattern on-boarded in the evaluation : ");
+            LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\t" + patternsInclusion);
+            LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tExternal directories which are excluded from the evaluation : ");
+	        LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\t" + dependenciesMarker);
+            LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\t" + ((collapseEmptyDirectory) ? "Directories should be collapsed" : "Directories should NOT be collaped"));
+            LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\t" + ((prefilterEligibility) ? "File eligibility is PREfiltered" : "File eligibility id POSTfiltered"));
         };
     }
 	

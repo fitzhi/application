@@ -6,6 +6,9 @@
 :root {
   --color-selected: #28a745; 
   --color-error: darkred;
+
+  /* Height of the top toolbar */
+  --toolbar-height: 65px;
 }
 
 html {

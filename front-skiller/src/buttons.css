@@ -31,9 +31,9 @@ button.okButtonValid  {
 
 button.btn-outline-secondary {
     background-color: white;
-  }
+}
   
-  button.btn-outline-success {
+button.btn-outline-success {
+    background-color: var(--color-selected);
     color: white;
-  }
-  
+}

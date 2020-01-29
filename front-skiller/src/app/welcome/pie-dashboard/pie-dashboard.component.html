@@ -1,55 +1,89 @@
-<div class="mainDashboard"> 
+<div class="vertical-nav" id="sidebar">
+    
+    <button class="btn rounded currentMinimized"
+        [ngClass]="{
+            'btn-outline-success' : isSelected(selection.currentSummary), 
+            'btn-outline-secondary': !isSelected(selection.currentSummary)}" 
+        (click)="switchTo(selection.currentSummary)">
+        <app-pie-chart
+                [radius]=150
+                [active]=false
+                [pie]=pieIdentifier.currentMinimized>
+        </app-pie-chart>
+    </button>
 
-    <mat-grid-list cols="4" width="100%" rowHeight="250px">
-        <mat-grid-tile [colspan]="1" [rowspan]="1">
-            <div *ngIf="(projectService.allProjectsIsLoaded$|async) && (slidesLastYear$|async)" 
-                    class="formerDashboard">
-                <p class="text">Last year snapshot</p>
-                <app-pie-chart
-                    [radius]=180
-                    [active]=false
-                    [pie]=2>
-                </app-pie-chart>
-            </div>
-            <div class="camera">
-                Last year snapshot<br/>
-                <i class="fas fa-camera camera"></i>
-                <p class="camera">NO DATA AVAILABLE</p>
-            </div>
-        </mat-grid-tile>
+    <button class="btn rounded lastMonthMinimized"
+        [ngClass]="{
+            'btn-outline-success' : isSelected(selection.lastMonthSummary), 
+            'btn-outline-secondary': !isSelected(selection.lastMonthSummary)}" 
+        (click)="switchTo(selection.lastMonthSummary)">
+        <p>Last month</p>
+        <i class="fas fa-camera"></i>
+    </button>
 
-        <mat-grid-tile [colspan]="2" [rowspan]="2">
-            <div *ngIf="projectService.allProjectsIsLoaded$|async" class="actualDashboard">
-                <app-pie-chart
-                    [radius]=150
-                    [active]=true
-                    [pie]=1>
-                </app-pie-chart>
-            </div>
-        </mat-grid-tile>
-        
-        <mat-grid-tile [colspan]="1" [rowspan]="2">
-            <div class="pie-projects">
-                <app-pie-projects></app-pie-projects>
-            </div>
-        </mat-grid-tile>
+    <button class="btn rounded lastYearMinimized"
+        [ngClass]="{
+            'btn-outline-success' : isSelected(selection.lastYearSummary), 
+            'btn-outline-secondary': !isSelected(selection.lastYearSummary)}" 
+        (click)="switchTo(selection.lastYearSummary)">
+        <p>Last year</p>
+        <i class="fas fa-camera"></i>
+    </button>
 
-        <mat-grid-tile [colspan]="1" [rowspan]="1">
-            <div *ngIf="(projectService.allProjectsIsLoaded$|async) && (slidesLastMonth$|async)" class="formerDashboard">
-                <p class="text">Last month result</p>
-                <app-pie-chart
-                    [radius]=180
-                    [active]=false
-                    [pie]=3>
-                </app-pie-chart>
-            </div>
-            <div class="camera">
-                Last month snapshot<br/>
-                <i class="fas fa-camera camera"></i>
-                <p class="camera">NO DATA AVAILABLE</p>
-            </div>
-        </mat-grid-tile>
+</div>
 
-    </mat-grid-list>
+<div class="mainDashboard page-content"> 
+
+    <div class="dashboard" *ngIf="isSelected(selection.lastYearSummary)">
+        <div *ngIf="(projectService.allProjectsIsLoaded$|async) && (slidesLastYear$|async)" 
+                class="formerDashboard">
+            <p class="text">Last year snapshot</p>
+            <app-pie-chart
+                [radius]=180
+                [active]=false
+                [pie]=pieIdentifier.lastYear>
+            </app-pie-chart>
+        </div>
+        <div class="camera">
+            Last year snapshot<br/>
+            <i class="fas fa-camera camera"></i>
+            <p class="camera">NO DATA AVAILABLE</p>
+        </div>
+    </div>
+
+
+    <div class="dashboard" *ngIf="isSelected(selection.lastMonthSummary)">
+        <div *ngIf="(projectService.allProjectsIsLoaded$|async) && (slidesLastMonth$|async)" class="formerDashboard">
+            <p class="text">Last month result</p>
+            <app-pie-chart
+                [radius]=180
+                [active]=false
+                [pie]=pieIdentifier.lastMonth>
+            </app-pie-chart>
+        </div>
+        <div class="camera">
+            Last month snapshot<br/>
+            <i class="fas fa-camera camera"></i>
+            <p class="camera">NO DATA AVAILABLE</p>
+        </div>
+    </div>
+    
+    <div id="logo" *ngIf="isSelected(selection.none)">质</div>
+
+    <div  class="dashboard" *ngIf="isSelected(selection.currentSummary)">
+
+        <div *ngIf="(projectService.allProjectsIsLoaded$|async)" class="pie">
+            <app-pie-chart
+                [radius]=200
+                [active]=true
+                [pie]=pieIdentifier.current>
+            </app-pie-chart>
+        </div>
+
+        <div class="pie-projects">
+            <app-pie-projects></app-pie-projects>
+        </div>
+
+    </div>
 
 </div>

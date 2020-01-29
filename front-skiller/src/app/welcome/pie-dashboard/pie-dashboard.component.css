@@ -2,26 +2,86 @@ div {
     --pie-height: 500px;
     --pie-width: var(--pie-height);
     --pie-diameter: 500px;
+
+    /* width of the sidebar */
+    --sidebar-width: 70px;
+    --sidebar-button-width: 60px;
+    --sidebar-button-height: 60px;
 }
 
 .mainDashboard {
-    margin-left: 10px;
-    width: 100%;
-    height: 600px;
+    width: calc(100% - var(--sidebar-width));
+    margin-left: var(--sidebar-width);
+    line-height: 1;
+    transition: all 0.4s;
 }
 
-div.actualDashboard {
-    width: 400px;
-    height: 400px;
+.camera {
+    color: lightgrey;
 }
 
-div.formerDashboard {
-    width: 150px;
-    height: 150px;
+p.camera {
+    font-size: 22px;
+    text-align: center;
+}
+
+div.pie {
+    position: absolute;
+    margin-top: 10px;
+    left: 200px;
+    width: 500px;
+    height: 500px;    
+}
+
+div.pie-projects {
+    position: absolute;
+    right: 0px;  
+    width: 200px;
+    height: 100%;
+}
+
+#logo {
+    font-size: 420px;
+    background: -webkit-linear-gradient(var(--color-selected), var(--color-error));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-align: center;
+}
+
+button.lastYearMinimized, button.lastMonthMinimized, button.currentMinimized {
+    width: var(--sidebar-button-width);
+    height: var(--sidebar-button-height);
+    left: 5px;
+    position: absolute;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+button.lastYearMinimized P, button.lastMonthMinimized P {
+    margin-bottom: 0;
+    font-size: 8px;
+}
+
+button.lastYearMinimized I, button.lastMonthMinimized I, button.currentMinimized I {
+    font-size: 34px;
+}
+
+button.lastYearMinimized {
+    bottom: 5px;
+}
+
+button.lastMonthMinimized {
+    bottom: 70px;
+}
+
+button.currentMinimized {
+    bottom: 140px;
 }
 
 div.camera {
-    width: 100%;
+    width: 300px;
     margin: 20px auto;
     text-align: center;
     font-size: 22px;
@@ -32,19 +92,19 @@ div.camera {
     padding: 20px;
 }
 
-.camera {
-    color: lightgrey;
-}
-
 i.camera {
     font-size: 60px;
 }
 
-p.camera {
-    font-size: 22px;
-    text-align: center;
+.vertical-nav {
+    min-width: var(--sidebar-width);
+    width: var(--sidebar-width);
+    min-height: calc(100% - var(--toolbar-height));
+    height: calc(100% - var(--toolbar-height));
+    position: fixed;
+    top:  var(--toolbar-height);
+    left: 0;
+    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s;
 }
-.pie-projects {
-    width: 100%;
-    height: 100%;
-}
+  

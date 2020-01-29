@@ -1,5 +1,10 @@
-div.myToolbar {
+div.toolbar {
     margin:0px;
+}
+
+nav.toolbar {
+    min-height: var(--toolbar-height);
+    height: var(--toolbar-height);
 }
 
 div.buttons button, div {

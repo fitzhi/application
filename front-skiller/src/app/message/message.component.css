@@ -16,7 +16,7 @@
 }
 
 .error {
-    background-color: crimson;
+    background-color: var(--color-error);
 }
 
 .success {
