@@ -14,6 +14,13 @@ import { Subject, BehaviorSubject } from 'rxjs';
 })
 export class PieDashboardService {
 
+	public subject = {
+		none: 0,
+		staff: 1,
+		sonar: 2,
+		project: 3
+	};
+
 	constructor(private projectService: ProjectService) { }
 
 	/**
@@ -32,9 +39,9 @@ export class PieDashboardService {
 	public projectsHeaderColor$ = new BehaviorSubject<string>('white');
 
 	/**
-	 * Projects header title depending on the slice activated.
+	 * Subject highlighted.
 	 */
-	public projectsHeaderTitle$ = new BehaviorSubject<string>('Projects');
+	public projectsSubject$ = new BehaviorSubject<number>(0);
 
 	/**
 	 * Observable emetting the __last year__ archived `slices$` of the pie.
@@ -166,18 +173,6 @@ export class PieDashboardService {
 
 		this.projectsActivated$.next(slice.projects);
 		this.projectsHeaderColor$.next(slice.color);
-		let projectsTitle: string;
-		switch (slice.type) {
-			case TypeSlice.Audit:
-				projectsTitle = 'Audit : projects evaluated';
-				break;
-			case TypeSlice.Sonar:
-				projectsTitle = 'Sonar : projects evaluated';
-				break;
-			case TypeSlice.Staff:
-				projectsTitle = 'Staff : projects evaluated';
-				break;
-		}
-		this.projectsHeaderTitle$.next(projectsTitle);
+		this.projectsSubject$.next(slice.type);
 	}
 }

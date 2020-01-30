@@ -1,9 +1,17 @@
 div.app-container {
   position: absolute;
-  top: 0;
+  top: var(--toolbar-height);
   left: 0;
   right: 0;
   bottom: 0;
+}
+
+div.app-toolbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100;
 }
 
 div.panel.panel-primary {

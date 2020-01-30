@@ -1,8 +1,5 @@
 
-
-
-<div class="app-container">
-
+<div class="app-toolbar">
     <app-toolbar  
         class="toolbar"
         [hidden]="!isConnected()"
@@ -10,6 +7,8 @@
         (messengerCriteria)="onRequestQuery($event)"
         (messengerActiveOnly)="onChangeActiveOnly($event)">
     </app-toolbar>
+</div>
+<div class="app-container">
 
 	<div class="panel panel-primary">
 		<div class="panel-body">
