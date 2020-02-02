@@ -61,7 +61,7 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 			.subscribe({
 				next: doneAndOk => {
 					if (doneAndOk) {
-						this.globalSonarEvaluation = this.projectService.calculateSonarEvaluation();
+						this.globalSonarEvaluation = this.projectService.calculateSonarEvaluation(this.projectService.project);
 						this.displayAuditBadge = this.ProcessDisplayAuditBadge();
 					}
 				}

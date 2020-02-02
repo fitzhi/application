@@ -282,9 +282,6 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 
 						// Update the underlining GLOBAL project evaluation
 						this.projectService.processGlobalAuditEvaluation();
-
-						// We inform every panel that the Project object has changed.
-						this.projectService.projectLoaded$.next(true);
 					}});
 		}
 	}

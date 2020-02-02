@@ -71,11 +71,11 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	}
 
 	ngAfterViewInit() {
-
 		if (this.editable) {
 			if (Constants.DEBUG) {
 				console.log ('Displaying the graphic badge in editable mode');
 			}
+
 			// 1) The project has to be loaded.
 			this.projectService.projectLoaded$
 				.pipe(take(1))
@@ -101,6 +101,7 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 					this.projectService.projectLoaded$.subscribe({
 						next: doneAndOk => {
 							if (doneAndOk) {
+								this.evaluation = this.projectService.project.auditEvaluation;
 								this.drawNonEditableBadge(this.projectService.project);
 							}
 						}
@@ -112,35 +113,6 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	private drawNonEditableBadge (project: Project) {
 		this.drawAuditArc();
 		this.drawAuditText();
-/*
-		this.referentialService.referentialLoaded$.subscribe({
-			next: doneAndOk => {
-				if (doneAndOk) {
-					setTimeout( () => {
-					}, 0);
-				}
-			}
-		});
-
-		/*
-		this.cinematicService.tabProjectActivated$
-			.pipe(take(1))
-			.subscribe(idxTabForm => {
-				if (idxTabForm === Constants.PROJECT_IDX_TAB_FORM) {
-					if (project.auditEvaluation) {
-						this.evaluation = project.auditEvaluation;
-						// 1) The referential data has to be loaded (because we will the risks during the drawing)
-						// 2) We release the treatment flow in order to end the creation of the SVG elements
-						this.referentialService.referentialLoaded$
-							.pipe(take(1))
-							.subscribe ({
-								next: doneAndOk => {
-								}
-							});
-					}
-				}
-			});
-			*/
 	}
 
 	drawAuditArc() {

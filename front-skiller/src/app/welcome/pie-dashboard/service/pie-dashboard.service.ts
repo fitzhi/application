@@ -95,7 +95,7 @@ export class PieDashboardService {
 					greenProjects.get(TypeSlice.Audit).push(project);
 			}
 
-			const sonarEvaluation = this.projectService.calculateSonarEvaluation();
+			const sonarEvaluation = this.projectService.calculateSonarEvaluation(this.projectService.project);
 			if (sonarEvaluation === 0) {
 					greyProjects.get(TypeSlice.Sonar).push(project);
 				} else if (sonarEvaluation <= 30) {

@@ -108,6 +108,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	errorEmitter: EventEmitter<MessageGravity> = new EventEmitter<MessageGravity>();
 
+	private THIS_TAB = Constants.PROJECT_IDX_TAB_FORM;
 
 	constructor(
 		private cinematicService: CinematicService,

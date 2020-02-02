@@ -86,7 +86,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
      */
 	listenOnContext() {
 		this.subscriptions.add(
-			this.cinematicService.currentActiveForm.subscribe(context => {
+			this.cinematicService.currentActiveForm$.subscribe(context => {
 				if (Constants.DEBUG) {
 					console.log('Active context', Constants.CONTEXT[context.formIdentifier]);
 				}

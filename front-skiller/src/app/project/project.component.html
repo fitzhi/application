@@ -3,10 +3,12 @@
 		<ng-template mat-tab-label>
 			<i class="fas glyphicon fa-users-cog logoTabLabel"></i>&nbsp;&nbsp;Project
 		</ng-template>
-		<app-project-form 
-			[risk$]="risk$"
-			(tabActivationEmitter)="tabActivation($event)">
-		</app-project-form>
+		<ng-template matTabContent>
+			<app-project-form 
+				[risk$]="risk$"
+				(tabActivationEmitter)="tabActivation($event)">
+			</app-project-form>
+		</ng-template>
 	</mat-tab>
 	<mat-tab [disabled]="!canConnectSourceControl()">
 		<ng-template mat-tab-label>

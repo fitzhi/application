@@ -36,7 +36,7 @@ export class CinematicService {
 	/**
      * Identifier of the select form on stage on the SPA.
      */
-	public currentActiveForm = new BehaviorSubject<Form>(new Form(Constants.WELCOME, 'Welcome'));
+	public currentActiveForm$ = new BehaviorSubject<Form>(new Form(Constants.WELCOME, 'Welcome'));
 
 	/**
       * Current collaborator's identifier previewed on the form.
@@ -114,11 +114,11 @@ export class CinematicService {
 		/**
          * We do not change the active form.
          */
-		if (formIdentifier === this.currentActiveForm.getValue().formIdentifier) {
+		if (formIdentifier === this.currentActiveForm$.getValue().formIdentifier) {
 			return;
 		}
 
-		this.previousForm = this.currentActiveForm.getValue();
+		this.previousForm = this.currentActiveForm$.getValue();
 
 		if (Constants.DEBUG) {
 			this.previousForm.trace();
@@ -127,7 +127,7 @@ export class CinematicService {
 		/**
         * Fire the event. Has to be at the end of the method.
         */
-		this.currentActiveForm.next(new Form(formIdentifier, url));
+		this.currentActiveForm$.next(new Form(formIdentifier, url));
 	}
 
 	/**
