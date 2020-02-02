@@ -95,17 +95,25 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 		// Setting the color of risks.
 		//
 		String[] colors = new String[11];
-		colors[0] = "green";
-		for (int i=1; i<=9; i++) {
-			colors[i] = "#" 
-				+ String.format("%X", (int) (i*255/10)) 
-				+ String.format("%X", (int) (255-i*255/10)) 
-				+ "00";
+		// 28 -> 139
+		// 183 -> 0
+		// 69 -> 0
+		for (int i=0; i<=10; i++) {
+			
+			String red = String.format("%X", (int) (28 + (139-28)*i/10));
+			red = (red.length() == 1) ? ("0" + red) : red;
+			
+			String green = String.format("%X", (int) (183 - 183*i/10));
+			green = (green.length() == 1) ? ("0" + green) : green;
+			
+			String blue = String.format("%X", (int) (69 - 69*i/10));
+			blue = (blue.length() == 1) ? ("0" + blue) : blue;
+			
+			colors[i] = "#" + red + green + blue;
 		}
-		colors[10] = "red";
 		
 		
-		explanations.put(0, new RiskLegend(0, "#00FF00",
+		explanations.put(0, new RiskLegend(0, colors[0],
 				"commits have been submitted by active developers. Perfect level of proficiency on this project"));
 		explanations.put(1, new RiskLegend(1, colors[1],
 				"At least, 90% of the commits have been submitted by active developers."));

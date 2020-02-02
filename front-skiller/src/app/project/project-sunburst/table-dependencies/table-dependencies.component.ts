@@ -16,8 +16,6 @@ import { BaseComponent } from 'src/app/base/base.component';
 })
 export class TableDependenciesComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
-	@Input() project$: BehaviorSubject<Project>;
-
 	private idProject: number;
 
 	public dataSource: DependenciesDataSource;
@@ -33,26 +31,20 @@ export class TableDependenciesComponent extends BaseComponent implements OnInit,
 	}
 
 	ngAfterViewInit() {
-		if (this.project$) {
-			this.subscriptions.add(
-				this.project$.subscribe(project => {
-
-					// The behaviorSubject project$ is initialized with a null.
-					if (!project) {
-						return;
-					}
-
-					this.idProject = project.id;
+		this.projectService.projectLoaded$.subscribe({
+			next: doneAndOk => {
+				if (doneAndOk) {
+					this.idProject = this.projectService.project.id;
 					//
 					// We postpone the datasource updates to avoid the warning
 					// ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked.
 					//
 					setTimeout(() => {
-						this.dataSource.update(project.libraries);
+						this.dataSource.update(this.projectService.project.libraries);
 					}, 0);
-
-				}));
-		}
+				}
+			}
+		});
 	}
 
 	editDependency(library: Library) {

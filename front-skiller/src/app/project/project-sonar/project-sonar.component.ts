@@ -10,6 +10,7 @@ import { Project } from 'src/app/data/project';
 import { MessageGravity } from 'src/app/message/message-gravity';
 import { Message } from 'src/app/message/message';
 import { MessageService } from 'src/app/message/message.service';
+import { ProjectService } from 'src/app/service/project.service';
 
 @Component({
 	selector: 'app-project-sonar',
@@ -17,11 +18,6 @@ import { MessageService } from 'src/app/message/message.service';
 	styleUrls: ['./project-sonar.component.css']
 })
 export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDestroy {
-
-	/**
-	* The project loaded in the parent component.
-	*/
-	@Input() project$: BehaviorSubject<Project>;
 
 	/**
 	 * Observable emitting the panel identifier.
@@ -55,25 +51,16 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 	// By default we begin with the panel SONAR
 	private idPanelSelected = 1;
 
-	/**
-	 * Current project.
-	 */
-	private project: Project;
-
 	private SETTINGS = Constants.PROJECT_SONAR_PANEL.SETTINGS;
 	private SONAR = Constants.PROJECT_SONAR_PANEL.SONAR;
 	private NONE = Constants.PROJECT_SONAR_PANEL.NONE;
 
 	constructor(
+		private projectService: ProjectService,
 		private cinematicService: CinematicService) { super(); }
 
 
 	ngOnInit() {
-
-		this.subscriptions.add(
-			this.project$.subscribe(project => {
-				this.project = project;
-			}));
 
 		this.subscriptions.add(
 			this.panelSwitchTransmitter$.subscribe((
@@ -88,15 +75,15 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 			this.cinematicService.tabProjectActivated$.subscribe(tabSelected => {
 				if (tabSelected === Constants.PROJECT_IDX_TAB_SONAR) {
 					if (Constants.DEBUG) {
-						if (!this.project) {
+						if (!this.projectService.project) {
 							console.log ('Sonar dashboard Activated');
 						} else {
-							console.log ('Sonar dashboard Activated for project %s', this.project.name);
+							console.log ('Sonar dashboard Activated for project %s', this.projectService.project.name);
 						}
 					}
 
 					// If there is no (more) SonarProject, we cleanup the child containers.
-					if (this.project && this.project.sonarProjects.length === 0) {
+					if (this.projectService.project && this.projectService.project.sonarProjects.length === 0) {
 						// We send a null as SonarKey to force the initialization of the children data (such as i.e. the metrics dataSource)
 						this.panelSwitchTransmitter$.next(
 							new PanelSwitchEvent(
@@ -104,18 +91,18 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 								null));
 					}
 
-					if (this.project && this.project.sonarProjects.length > 0) {
+					if (this.projectService.project && this.projectService.project.sonarProjects.length > 0) {
 						if (Constants.DEBUG) {
 							console.log ('By default, we starts on the %s dashboard with %s.',
 								Constants.TITLE_PANELS[this.SETTINGS],
-								this.project.sonarProjects[0].key);
+								this.projectService.project.sonarProjects[0].key);
 						}
 
 						setTimeout(() => {
 							this.panelSwitchTransmitter$.next(
 								new PanelSwitchEvent(
 									this.SETTINGS,
-									this.project.sonarProjects[0].key));
+									this.projectService.project.sonarProjects[0].key));
 						}, 0);
 					}
 

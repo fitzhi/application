@@ -7,6 +7,7 @@ import { SonarProject } from 'src/app/data/SonarProject';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { BehaviorSubject } from 'rxjs';
 import { ProjectService } from 'src/app/service/project.service';
+import { take } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-techxhi-medal',
@@ -14,11 +15,6 @@ import { ProjectService } from 'src/app/service/project.service';
 	styleUrls: ['./techxhi-medal.component.css']
 })
 export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDestroy {
-
-	/**
-	 * Observable of Project received from the parent Form project.
-	 */
-	@Input() project$: BehaviorSubject<Project>;
 
 	/**
 	 * the color of the STAFF risk circle
@@ -30,11 +26,6 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	 */
 	@Output() tabActivationEmitter = new EventEmitter<number>();
 
-	/**
-	 * Current active project.
-	 */
-	project: Project;
-
 	public PROJECT_IDX_TAB_SONAR = Constants.PROJECT_IDX_TAB_SONAR;
 	public PROJECT_IDX_TAB_SUNBURST = Constants.PROJECT_IDX_TAB_SUNBURST;
 	public PROJECT_IDX_TAB_AUDIT = Constants.PROJECT_IDX_TAB_AUDIT;
@@ -44,6 +35,19 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	 */
 	private selectedTab: number;
 
+	/**
+	 * Global evaluation given to this project :
+	 *
+	 * the global mean __Sonar__ evaluation processed for all Sonar projects
+	 * declared in the Fitzhì project.
+	 */
+	private globalSonarEvaluation = -1;
+
+	/**
+	 * This boolean agregates the conditions required for displaying the audit badge.
+	 */
+	private displayAuditBadge = false;
+
 	constructor(
 		private referentialService: ReferentialService,
 		private projectService: ProjectService,
@@ -52,15 +56,16 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	ngOnInit() {
-		this.subscriptions.add(
-			this.project$.subscribe((project: Project) => {
-				if (project) {
-					setTimeout(() => {
-						this.project = project;
-					}, 0);
+		this.projectService.projectLoaded$
+			.pipe(take(1))
+			.subscribe({
+				next: doneAndOk => {
+					if (doneAndOk) {
+						this.globalSonarEvaluation = this.projectService.calculateSonarEvaluation();
+						this.displayAuditBadge = this.ProcessDisplayAuditBadge();
+					}
 				}
-			}));
-
+			});
 		this.subscriptions.add(
 			this.cinematicService.tabProjectActivated$
 				.subscribe(selectedTab => {
@@ -68,14 +73,6 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 						this.selectedTab = selectedTab ;
 					}, 0);
 				}));
-	}
-
-	/**
-	 * Return the global mean __Sonar__ evaluation processed for all Sonar projects
-	 * declared in the techzhì project.
-	 */
-	globalSonarEvaluation() {
-		return this.projectService.calculateSonarEvaluation(this.project);
 	}
 
 	/**
@@ -96,19 +93,15 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 
 
 	/**
-	 * This function is handling the `*ngIf` preview condition of the __Audit__ summary badge.
+	 * This function is processing the `*ngIf` preview condition of the __Audit__ summary badge.
 	 */
-	auditReady() {
+	ProcessDisplayAuditBadge(): boolean {
 
-		if (this.selectedTab !== Constants.PROJECT_IDX_TAB_FORM) {
+		if (!this.projectService.project) {
 			return false;
 		}
 
-		if (!this.project) {
-			return false;
-		}
-
-		if (!this.project.auditEvaluation) {
+		if (!this.projectService.project.auditEvaluation) {
 			return false;
 		}
 
@@ -119,20 +112,20 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	 * This function is handling the `*ngIf` preview condition of the __Sonar__ summary badge.
 	 */
 	sonarReady() {
-		if (!this.project) {
+		if (!this.projectService.project) {
 			return false;
 		}
 
-		if (!this.project.sonarProjects) {
+		if (!this.projectService.project.sonarProjects) {
 			return false;
 		}
 
-		if (this.project.sonarProjects.length === 0) {
+		if (this.projectService.project.sonarProjects.length === 0) {
 			return false;
 		}
 
 		let preview = true;
-		this.project.sonarProjects.forEach(sonarProject => {
+		this.projectService.project.sonarProjects.forEach(sonarProject => {
 			if ((!sonarProject.sonarEvaluation) && preview) {
 				preview = false;
 			}

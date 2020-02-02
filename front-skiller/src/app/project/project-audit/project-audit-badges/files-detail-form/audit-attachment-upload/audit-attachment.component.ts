@@ -41,19 +41,9 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 	@Input() id: number;
 
 	/**
-	 * Observable emitting the current project.
-	 */
-	@Input() project$;
-
-	/**
 	 * attachmentFile : the associated attachment file
 	 */
 	@Input() attachmentFile;
-
-	/**
-	 * Current project read from the `project$` observable..
-	 */
-	private project: Project;
 
 	private label = '';
 
@@ -77,8 +67,6 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 	}
 
 	ngOnInit() {
-		this.subscriptions.add(
-			this.project$.subscribe(project => this.project = project));
 
 		// A file has already been uploaded
 		if ((this.attachmentFile) && (this.attachmentFile.fileName)) {
@@ -100,7 +88,7 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 		dialogConfig.disableClose = true;
 		dialogConfig.autoFocus = true;
 		dialogConfig.panelClass = 'default-dialog-container-class';
-		dialogConfig.data = new AuditAttachment(this.project.id, this.idTopic, '', -1, this.label);
+		dialogConfig.data = new AuditAttachment(this.projectService.project.id, this.idTopic, '', -1, this.label);
 		const dialogReference = this.dialog.open(AuditUploadAttachmentComponent, dialogConfig);
 		this.subscriptions.add(
 			dialogReference.afterClosed().subscribe((auditAttachment: AuditAttachment)  => {
@@ -110,7 +98,7 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 					}
 					this.auditAttachmentService.emitAddUpdAttachmentFile(
 						new AttachmentFile(id, auditAttachment.filename, auditAttachment.type, this.label));
-					this.projectService.dump(this.project, 'uploadFile');
+					this.projectService.dump(this.projectService.project, 'uploadFile');
 				}
 		}));
 	}
@@ -120,7 +108,7 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 	 * @param idFile the file identifier inside this topic
 	 */
 	downloadFile() {
-		this.projectService.downloadAuditAttachment(this.project.id, this.idTopic, this.attachmentFile);
+		this.projectService.downloadAuditAttachment(this.projectService.project.id, this.idTopic, this.attachmentFile);
 	}
 
 	/**
@@ -128,12 +116,12 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 	 * @param idFile the file identifier inside this topic
 	 */
 	deleteFile() {
-		this.projectService.deleteAuditAttachment(this.project.id, this.idTopic, this.attachmentFile)
+		this.projectService.deleteAuditAttachment(this.projectService.project.id, this.idTopic, this.attachmentFile)
 			.subscribe(doneAndOk => {
 				if (doneAndOk) {
 					this.messageService.success('The file \'' + this.attachmentFile.fileName + '\' has been removed from system.');
 					this.auditAttachmentService.emitRemoveAttachmentFile(this.id);
-					this.projectService.dump(this.project, 'uploadFile');
+					this.projectService.dump(this.projectService.project, 'uploadFile');
 				}
 			});
 	}
@@ -143,8 +131,8 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 	 * @param id current file identifier
 	 */
 	notifyLabelChange(id: number): void {
-		if (+id < this.project.audit[this.idTopic].attachmentList.length) {
-			this.project.audit[this.idTopic].attachmentList[id].label = this.label;
+		if (+id < this.projectService.project.audit[this.idTopic].attachmentList.length) {
+			this.projectService.project.audit[this.idTopic].attachmentList[id].label = this.label;
 		}
 	}
 
@@ -153,7 +141,7 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 	 * @param id curent file identifier within the topic
 	 */
 	isDisable(id: number): boolean {
-		const auditTopic = this.project.audit[this.idTopic].attachmentList[this.id];
+		const auditTopic = this.projectService.project.audit[this.idTopic].attachmentList[this.id];
 		if ((!auditTopic) || (!auditTopic.fileName)) {
 			return true;
 		}

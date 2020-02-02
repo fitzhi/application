@@ -1,5 +1,5 @@
 <div *ngIf="allEvaluationsCompleted()" id="containerDashboard">
-    <div *ngFor="let sonarProject of project.sonarProjects; index as index" 
+    <div *ngFor="let sonarProject of projectService.project.sonarProjects; index as index" 
         (click)="switchSonarContext(NONE, sonarProject.key)"
         [ngClass]="classForSonarProjectSummary(sonarProject.key)">
         <div    

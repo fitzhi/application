@@ -13,14 +13,12 @@
     <div *ngFor="let auditDetail of (auditDetails$ | async)" class="containerOneThumbnail">
         <div *ngIf="reportDetailChosen(auditDetail)">
             <app-report-detail-form
-                [project$]="project$"
                 [title]="legendTopics[auditDetail.idTopic]"
                 [idTopic]="auditDetail.idTopic">
             </app-report-detail-form>
         </div>
         <div *ngIf="tasksDetailChosen(auditDetail)">
             <app-files-detail-form
-                [project$]="project$"
                 [title]="legendTopics[auditDetail.idTopic]"
                 [idTopic]="auditDetail.idTopic">
             </app-files-detail-form>

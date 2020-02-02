@@ -8,6 +8,8 @@ import { AuditChosenDetail } from './audit-badge/audit-chosen-detail';
 import { AuditDetail } from 'src/app/data/audit-detail';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { AttachmentFile } from 'src/app/data/AttachmentFile';
+import { ProjectService } from 'src/app/service/project.service';
+import { CinematicService } from 'src/app/service/cinematic.service';
 
 @Component({
 	selector: 'app-project-audit-badges',
@@ -15,11 +17,6 @@ import { AttachmentFile } from 'src/app/data/AttachmentFile';
 	styleUrls: ['./project-audit-badges.component.css']
 })
 export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit, OnDestroy {
-
-	/**
-	 * This observable emits the current active project.
-	 */
-	@Input() project$: BehaviorSubject<Project>;
 
 	/**
 	 * The Topics involved for this audit.
@@ -53,25 +50,20 @@ export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit
 	@Output() messengerTopicWeight = new EventEmitter<TopicWeight>();
 
 	/**
-	 * The project retrieved from the `project$` input observable.
-	 */
-	private project: Project;
-
-	/**
 	 * The topics legend obtained from the `referentialService.topics$`.
 	 */
 	private legendTopics: {[id: number]: string};
 
 	private attachmentList$ = new BehaviorSubject<AttachmentFile[]>([]);
 
-	constructor(private referentialService: ReferentialService) { super(); }
+	constructor(
+		private projectService: ProjectService,
+		private cinematicService: CinematicService,
+		private referentialService: ReferentialService) { super(); }
 
 	ngOnInit() {
 		this.subscriptions.add(
 			this.referentialService.topics$.subscribe(topics => this.legendTopics = topics));
-
-		this.subscriptions.add(
-			this.project$.subscribe(project => this.project = project));
 	}
 
 	/**

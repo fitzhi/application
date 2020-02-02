@@ -38,18 +38,12 @@ export class PieProjectsComponent extends BaseComponent implements OnInit, OnDes
 		// Set the color of the colum header depending on the activated slice.
 		this.subscriptions.add(
 			this.pieDashboardService.projectsHeaderColor$.subscribe(color =>  {
-				if (Constants.DEBUG) {
-					console.log ('Updating the header color to %s', color);
-				}
 				this.colorHeader = color;
 			}));
 	}
 
 	ngOnInit() {
 		this.dataSource = new ActivatedProjectsDatasSource(this.pieDashboardService);
-		this.subscriptions.add(
-			this.pieDashboardService.projectsActivated$
-				.subscribe(ps => ps.forEach (p => console.log(p.name))));
 	}
 
 	ngOnDestroy() {

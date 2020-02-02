@@ -7,6 +7,7 @@ import { BehaviorSubject } from 'rxjs';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { Constants } from 'src/app/constants';
 import { take } from 'rxjs/operators';
+import { ReferentialService } from 'src/app/service/referential.service';
 
 @Component({
 	selector: 'app-audit-graphic-badge',
@@ -29,12 +30,6 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	 * if this boolean is equal to __true__, there will be an input field in the middle of the badge __editable__.
 	 */
 	@Input() editable;
-
-	/**
-	 * This observable informs the component __IN NON EDITABLE ONLY__
-	 * that the underlying project has changed and that the badge needs to be updated.
-	 */
-	@Input() project$: BehaviorSubject<Project>;
 
 	/**
 	 * This project is passed to the the component __IN NON EDITABLE ONLY__
@@ -68,12 +63,10 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 
 	constructor(
 		private projectService: ProjectService,
+		private referentialService: ReferentialService,
 		private cinematicService: CinematicService) { super(); }
 
 	ngOnInit() {
-		if (((this.project$) || (this.project)) && this.editable) {
-			console.error ('SHOULD NOT PASS HERE : Usage of the observable project$ or the object project is reserved to the non editable mode');
-		}
 		this.styleSize = { 'width': this.width + 'px',  'height': + this.height + 'px' };
 	}
 
@@ -83,8 +76,17 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 			if (Constants.DEBUG) {
 				console.log ('Displaying the graphic badge in editable mode');
 			}
-			this.drawAuditArc();
-			this.drawAuditText();
+			// 1) The project has to be loaded.
+			this.projectService.projectLoaded$
+				.pipe(take(1))
+				.subscribe ({
+					next: doneAndOk => {
+						if (doneAndOk) {
+							this.drawAuditArc();
+							this.drawAuditText();
+						}
+					}
+				});
 		}
 
 		if (!this.editable) {
@@ -92,34 +94,53 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 				console.log ('Displaying the graphic badge in non-editable mode');
 			}
 			if (this.project) {
+				this.evaluation = this.project.auditEvaluation;
 				this.drawNonEditableBadge(this.project);
 			} else {
 				this.subscriptions.add(
-					this.project$.subscribe(project => {
-						if (project) {
-							this.drawNonEditableBadge(project);
+					this.projectService.projectLoaded$.subscribe({
+						next: doneAndOk => {
+							if (doneAndOk) {
+								this.drawNonEditableBadge(this.projectService.project);
+							}
 						}
-					})
-				);
+					}));
 			}
 		}
 	}
 
 	private drawNonEditableBadge (project: Project) {
+		this.drawAuditArc();
+		this.drawAuditText();
+/*
+		this.referentialService.referentialLoaded$.subscribe({
+			next: doneAndOk => {
+				if (doneAndOk) {
+					setTimeout( () => {
+					}, 0);
+				}
+			}
+		});
+
+		/*
 		this.cinematicService.tabProjectActivated$
 			.pipe(take(1))
 			.subscribe(idxTabForm => {
 				if (idxTabForm === Constants.PROJECT_IDX_TAB_FORM) {
 					if (project.auditEvaluation) {
 						this.evaluation = project.auditEvaluation;
-						// We release the treatment flow in order to end the creation of the SVG elements
-						setTimeout( () => {
-							this.drawAuditArc();
-							this.drawAuditText();
-						}, 0);
+						// 1) The referential data has to be loaded (because we will the risks during the drawing)
+						// 2) We release the treatment flow in order to end the creation of the SVG elements
+						this.referentialService.referentialLoaded$
+							.pipe(take(1))
+							.subscribe ({
+								next: doneAndOk => {
+								}
+							});
 					}
 				}
 			});
+			*/
 	}
 
 	drawAuditArc() {

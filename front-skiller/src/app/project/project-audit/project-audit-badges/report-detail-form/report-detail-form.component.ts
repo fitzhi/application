@@ -15,11 +15,6 @@ import { take } from 'rxjs/operators';
 export class ReportDetailFormComponent extends AuditBaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	/**
-	 * A `BehaviorSubject` containing the current last uptodate project.
-	 */
-	@Input() project$: BehaviorSubject<Project>;
-
-	/**
 	 * The topic identifier.
 	 */
 	@Input() idTopic: number;
@@ -36,24 +31,16 @@ export class ReportDetailFormComponent extends AuditBaseComponent implements OnI
 	constructor(
 		public projectService: ProjectService,
 		public messageService: MessageService) {
-		super();
-		this.postCreationInit('header-report-',
-			this.idTopic,
-			this.project$,
-			this.projectService);
+		super('header-report-', projectService);
 	}
 
 	ngOnInit(): void {
+		this.setIdTopic(this.idTopic);
+		this.profileAuditReport.get('comment').setValue(this.projectService.project.audit[this.idTopic].report);
 	}
 
 	ngAfterViewInit(): void {
 		super.ngAfterViewInit();
-		this.subscriptions.add(
-			this.project$.subscribe(project => {
-				setTimeout(() => {
-					this.profileAuditReport.get('comment').setValue(project.audit[this.idTopic].report);
-				}, 0);
-		}));
 	}
 
 	/**
@@ -65,11 +52,11 @@ export class ReportDetailFormComponent extends AuditBaseComponent implements OnI
 			this.messageService.warning('Summary report cannot exceed 2000 cars.');
 			return;
 		}
-		this.projectService.saveAuditTopicReport$(this.project.id, this.idTopic, report)
+		this.projectService.saveAuditTopicReport$(this.idTopic, report)
 			.subscribe(doneAndOk => {
 				if (doneAndOk) {
 					this.messageService.success('The summary report for \'' + this.title + '\' successfully saved!');
-					this.project.audit[this.idTopic].report = report;
+					this.projectService.project.audit[this.idTopic].report = report;
 				}
 			});
 

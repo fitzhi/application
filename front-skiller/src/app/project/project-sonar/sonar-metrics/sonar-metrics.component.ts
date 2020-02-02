@@ -26,11 +26,6 @@ import { connectableObservableDescriptor } from 'rxjs/internal/observable/Connec
 export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	/**
-	* The project loaded in the parent component.
-	*/
-	@Input() project$: BehaviorSubject<Project>;
-
-	/**
 	* Observable emitting a PanelSwitchEvent when
 	* another Sonar project is selected or
 	* another panel is selected
@@ -47,11 +42,6 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	 * Is The Sonar server accessible ?
 	 */
 	private isSonarAccessible = false;
-
-	/**
-	 * Current active project.
-	 */
-	private project: Project;
 
 	/**
 	 * The datasource that contains the filtered projects;
@@ -85,22 +75,17 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	ngOnInit() {
 
 		this.subscriptions.add(
-			this.project$
+			this.projectService.projectLoaded$
 				.pipe(
-					switchMap( (project: Project) => {
-						if (!project) {
-							return EMPTY;
-						}
-						this.project = project;
-						return this.sonarService.sonarIsAccessible$(project);
-					}))
-				.pipe(
+					switchMap( doneAndOk => {
+						return (doneAndOk) ? this.sonarService.sonarIsAccessible$(this.projectService.project) : EMPTY;
+					}),
 					switchMap(isSonarAccessible => {
 						this.isSonarAccessible = isSonarAccessible;
 						return  (this.isSonarAccessible) ? this.loadMetrics$() : EMPTY;
 					}))
 				.subscribe ((data: ProjectSonarMetric[]) => {
-					this.sonarService.getSonarServer(this.project).setProjectSonarMetrics(data);
+					this.sonarService.getSonarServer(this.projectService.project).setProjectSonarMetrics(data);
 					this.initDataSource(data);
 			}));
 
@@ -116,7 +101,13 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 					}
 					return;
 				}
-				if (this.project && (panelSwitchEvent.keySonar.length > 0) ) {
+				if (!this.isSonarAccessible) {
+					if (Constants.DEBUG) {
+						console.log ('Sonar cannot be reach. Nothing to update.');
+					}
+					return;
+				}
+				if (this.projectService.project && (panelSwitchEvent.keySonar.length > 0) ) {
 					this.sonarKey = panelSwitchEvent.keySonar;
 					this.dataSource.data.forEach(element => {
 						const weight = this.getWeightOfSonarProjectMetric(element.key);
@@ -145,7 +136,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 
 	private loadMetrics$(): Observable<ProjectSonarMetric[]> {
 
-		const sonarServer = this.sonarService.getSonarServer(this.project);
+		const sonarServer = this.sonarService.getSonarServer(this.projectService.project);
 		if (!sonarServer) {
 			return of(null);
 		}
@@ -176,7 +167,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	 * @returns the searched weight, or null if no weight has been setup for the given metric
 	 */
 	getWeightOfSonarProjectMetric (metricKey: string): number {
-		const metricValue = this.projectService.getProjectSonarMetricValue(this.project, this.sonarKey, metricKey);
+		const metricValue = this.projectService.getProjectSonarMetricValue(this.projectService.project, this.sonarKey, metricKey);
 		return (metricValue) ? metricValue.weight : undefined;
 	}
 
@@ -185,7 +176,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	 * @returns the Sonar note, or null if no data has been retrieved for the given metric
 	 */
 	getValueOfSonarProjectMetric (metricKey: string): number {
-		const metricValue = this.projectService.getProjectSonarMetricValue(this.project, this.sonarKey, metricKey);
+		const metricValue = this.projectService.getProjectSonarMetricValue(this.projectService.project, this.sonarKey, metricKey);
 		return (metricValue) ? metricValue.value : undefined;
 	}
 
@@ -246,7 +237,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 				new MessageGravity(Constants.MESSAGE_WARNING,
 				'Distribution of metrics cannot be saved unless the sum reach 100%'));
 		} else {
-			const sonarProject = this.projectService.getSonarProject(this.project, this.sonarKey);
+			const sonarProject = this.projectService.getSonarProject(this.projectService.project, this.sonarKey);
 			sonarProject.projectSonarMetricValues = [];
 			this.dataSource.data.forEach(psm => {
 				if (psm.weight > 0) {
@@ -260,7 +251,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 			});
 			this.projectService.loadAndSaveEvaluations(
 				this.sonarService,
-				this.project,
+				this.projectService.project,
 				sonarProject.key,
 				sonarProject.projectSonarMetricValues,
 				this.throwMessage);

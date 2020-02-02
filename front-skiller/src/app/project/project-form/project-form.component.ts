@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnDestroy, AfterViewInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, AfterViewInit, EventEmitter, Output, AfterContentInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { take, map, catchError, switchMap } from 'rxjs/operators';
@@ -27,11 +27,6 @@ import { ReferentialService } from 'src/app/service/referential.service';
 export class ProjectFormComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
-	 * The project loaded in the parent component.
-	 */
-	@Input() project$: BehaviorSubject<Project>;
-
-	/**
 	 * The risk might have changed due to the last dashboard calculation.
 	 */
 	@Input() risk$;
@@ -40,8 +35,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * This component, hosted in a tab pane, use this emitter to inform its parent to change the active pane.
 	 */
 	@Output() tabActivationEmitter = new EventEmitter<number>();
-
-	public project: Project;
 
 	public DIRECT_ACCESS = 1;
 	public REMOTE_FILE_ACCESS = 2;
@@ -100,11 +93,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	private boundRemoveSonarProject: any;
 
 	/**
-	 * Is Sonar accessibke ?
-	 */
-	private sonarIsAccessible = false;
-
-	/**
 	 * Are we creating a new project ? or are we updating an existing one ?
 	 */
 	private creation = false;
@@ -123,12 +111,11 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	constructor(
 		private cinematicService: CinematicService,
-		private referentialService: ReferentialService,
 		private messageService: MessageService,
+		private referentialService: ReferentialService,
 		private skillService: SkillService,
 		private projectService: ProjectService,
 		private sonarService: SonarService,
-		private route: ActivatedRoute,
 		private router: Router) {
 		super();
 
@@ -142,14 +129,15 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	ngOnInit() {
 
-		this.route.params.pipe(take(1)).subscribe(params => {
-			if (params['id'] == null) {
-				if (Constants.DEBUG) {
-					console.log('No project ID is given. We are in creation mode');
+		this.subscriptions.add(this.projectService.projectLoaded$
+			.subscribe({
+				next: loaded => {
+					if (loaded) {
+						this.loadForm();
+					}
 				}
-				this.creation = true;
 			}
-		});
+		));
 
 		this.subscriptions.add(
 			this.risk$.subscribe((risk: number) => {
@@ -159,82 +147,68 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				this.updateDotRiskColor(risk);
 		}));
 
-		this.project = new Project();
 		this.cinematicService.setForm(Constants.PROJECT_TAB_FORM, this.router.url);
 
 	}
 
 	ngAfterViewInit() {
-		this.subscriptions.add(
-			this.referentialService.referentialLoaded$.subscribe(
-				(doneAndOk: boolean) => {
-					if (doneAndOk) {
+		this.subscriptions.add(this.projectService.projectLoaded$
+			.subscribe({
+				next: loaded => {
+					if (loaded) {
 						this.ngAfterViewInitForm();
-					}}));
+						this.ngAfterViewInitSonarProjectsDeclaredInProject();
+						this.ngAfterViewInitSkillsDeclaredInProject();
+					}
+				}
+			}));
 	}
 
+	/**
+	 * This function create 2 JavasScript objects inside the form
+	 * - the **Skill** Tagify component `tagifySkills`.
+	 * - The **Sonar** Tagify component `tagifySonarProjects`.
+	 *
+	 * and after their creation, it fills the list or available data.
+	 */
 	ngAfterViewInitForm() {
 
-		this.ngInitSonarAndTagify$()
-			.pipe(
-				take(1),
-				switchMap(doneAndOk => {
-					if (doneAndOk) {
-						return this.ngInitContentSonarAndTagify$();
-					} else {
-						return of(EMPTY);
-					}
-				}))
-			.pipe(
-				take(1),
-				switchMap(doneAndOk => {
-					return this.project$;
-				}))
-			.subscribe(
-				(project: Project) => {
-					if (Constants.DEBUG) {
-						this.projectService.dump(project, 'ngAfterViewInitForm');
-					}
-
-					// The behaviorSubject project$ is initialized with a null.
-					if (!project) {
-						return;
-					}
-
-					this.subscriptions.add(
-						this.referentialService.referentialLoaded$
-							.pipe(switchMap((doneAndOk) => {
-								return (doneAndOk) ? this.sonarService.allSonarServersLoaded$ : EMPTY; }))
-							.pipe(switchMap((doneAndOk) => {
-								return (doneAndOk) ? this.sonarService.sonarIsAccessible$(project) : EMPTY; }))
-							.subscribe (sonarIsAccessible => this.sonarIsAccessible = sonarIsAccessible)
-					);
-
-					//
-					// We postpone the Project updates to avoid the warning
-					// ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked.
-					//
-					setTimeout(() => {
-						this.project = project;
-						this.profileProject.get('projectName').setValue(project.name);
-						this.profileProject.get('urlSonarServer').setValue(project.urlSonarServer);
-						this.connection_settings = String(this.project.connectionSettings);
-						this.profileProject.get('urlRepository1').setValue(this.project.urlRepository);
-						this.profileProject.get('urlRepository2').setValue(this.project.urlRepository);
-						this.profileProject.get('username').setValue(this.project.username);
-						this.profileProject.get('password').setValue(this.project.password);
-						this.profileProject.get('filename').setValue(this.project.filename);
-						// If a username has been setup, we test the connection.
-						if ((this.project.username) && (this.project.username.length > 0)) {
-							this.testConnectionSettings();
-						}
-						this.ngInitSonarProjectsDeclaredInProject();
-						this.ngInitSkillsDeclaredInProject();
-						this.risk$.next(this.project.staffEvaluation);
-					}, 0);
-			});
+		this.ngInitSonarAndTagify$().pipe(take(1),
+			switchMap(doneAndOk => {
+				if (doneAndOk) {
+					return this.ngInitContentSonarAndTagify$();
+				} else {
+					return of(EMPTY);
+				}
+			}))
+		.subscribe({
+			next: doneAndOk => {
+				if ((doneAndOk) && (Constants.DEBUG)) {
+					console.log ('ngAfterViewInitForm completed without error');
+				}
+			}
+		});
 	}
 
+	loadForm() {
+		if (Constants.DEBUG) {
+			console.log ('Loading the project data inside the form');
+		}
+		const project = this.projectService.project;
+		this.profileProject.get('projectName').setValue(project.name);
+		this.profileProject.get('urlSonarServer').setValue(project.urlSonarServer);
+		this.connection_settings = String(project.connectionSettings);
+		this.profileProject.get('urlRepository1').setValue(project.urlRepository);
+		this.profileProject.get('urlRepository2').setValue(project.urlRepository);
+		this.profileProject.get('username').setValue(project.username);
+		this.profileProject.get('password').setValue(project.password);
+		this.profileProject.get('filename').setValue(project.filename);
+		// If a username has been setup, we test the connection.
+		if ((project.username) && (project.username.length > 0)) {
+			this.testConnectionSettings();
+		}
+		this.risk$.next(project.staffEvaluation);
+	}
 
 	ngInitSonarAndTagify$(): Observable<boolean> {
 
@@ -306,14 +280,14 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			}));
 	}
 
-	ngInitSonarProjectsDeclaredInProject() {
+	ngAfterViewInitSonarProjectsDeclaredInProject() {
 
 		this.sonarProjectsLoaded$().pipe(take(1)).subscribe (doneAndOk => {
 			if (doneAndOk) {
-				if (this.project.sonarProjects) {
-					if (this.project.sonarProjects.length > 0) {
+				if (this.projectService.project.sonarProjects) {
+					if (this.projectService.project.sonarProjects.length > 0) {
 						this.tagifySonarProjects.addTags(
-							this.project.sonarProjects
+							this.projectService.project.sonarProjects
 							.map(function(sonarProject) { return sonarProject.name; }));
 					}
 				}
@@ -326,15 +300,15 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	}
 
-	ngInitSkillsDeclaredInProject() {
+	ngAfterViewInitSkillsDeclaredInProject() {
 
 		this.skillService.allSkills$
 			.pipe(take(1))
 			.subscribe (skills => {
-				if ( (this.project) && (this.project.skills) ) {
-					if (this.project.skills.length > 0) {
+				if (this.projectService.project.skills) {
+					if (this.projectService.project.skills.length > 0) {
 						this.tagifySkills.addTags(
-							this.project.skills
+							this.projectService.project.skills
 							.map(function(skill) { return skill.title; }));
 					}
 				}
@@ -366,11 +340,11 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		/**
 		 * No Sonar server declared -> No project available.
 		 */
-		if (!this.project.urlSonarServer) {
+		if (!this.projectService.project.urlSonarServer) {
 			return of(false);
 		}
 
-		return this.sonarService.allSonarProjects$(this.project)
+		return this.sonarService.allSonarProjects$(this.projectService.project)
 			.pipe (
 				map (sonarProjects => {
 					if (Constants.DEBUG) {
@@ -404,26 +378,26 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	onUrlSonarServerChange($event) {
 
 		// The project has not already been saved. We cannot update an existing record.
-		if (this.project.id === 0) {
+		if (this.projectService.project.id === 0) {
 			return;
 		}
 
 		const urlSonarServer = this.profileProject.get('urlSonarServer').value;
-		if (urlSonarServer !== this.project.urlSonarServer) {
+		if (urlSonarServer !== this.projectService.project.urlSonarServer) {
 			if (Constants.DEBUG) {
 				console.log ('Sonar URL has changed from %s to %s',
-					(this.project.urlSonarServer) ? this.project.urlSonarServer : 'none',
+					(this.projectService.project.urlSonarServer) ? this.projectService.project.urlSonarServer : 'none',
 					urlSonarServer);
 			}
-			this.projectService.saveSonarUrl$(this.project.id, urlSonarServer)
+			this.projectService.saveSonarUrl$(this.projectService.project.id, urlSonarServer)
 				.subscribe(doneAndOk => {
 					if (doneAndOk) {
-						this.messageService.success('Saved the URL ' + urlSonarServer + ' for the project ' + this.project.name);
-						this.project.urlSonarServer = urlSonarServer;
-						this.project.sonarProjects = [];
-						this.project$.next(this.project);
+						this.messageService.success('Saved the URL ' + urlSonarServer + ' for the project ' + this.projectService.project.name);
+						this.projectService.project.urlSonarServer = urlSonarServer;
+						this.projectService.project.sonarProjects = [];
+						this.projectService.projectLoaded$.next(true);
 					} else {
-						this.messageService.error('Failed to save the URL ' + urlSonarServer + ' for the project ' + this.project.name);
+						this.messageService.error('Failed to save the URL ' + urlSonarServer + ' for the project ' + this.projectService.project.name);
 					}
 				});
 		}
@@ -436,8 +410,8 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	addSkill(event: CustomEvent) {
 
 		// This skills is already registered for this project.
-		if ( (this.project.skills)
-			&& (this.project.skills.find (sk => sk.title === event.detail.data.value))) {
+		if ( (this.projectService.project.skills)
+			&& (this.projectService.project.skills.find (sk => sk.title === event.detail.data.value))) {
 			return;
 		}
 
@@ -451,11 +425,11 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			return;
 		}
 
-		this.project.skills.push(skill);
+		this.projectService.project.skills.push(skill);
 
 		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
-		if (this.project.id) {
-			this.updateSkill(this.project.id, skill.id, this.projectService.addSkill.bind(this.projectService));
+		if (this.projectService.project.id) {
+			this.updateSkill(this.projectService.project.id, skill.id, this.projectService.addSkill.bind(this.projectService));
 		}
 
 		// Log the resulting collection.
@@ -472,27 +446,27 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		}
 
 		// This skill HAS TO BE registered inside the project.
-		if ( (!this.project.skills) || (this.project.skills.length === 0)) {
-			console.log ('SHOULD NOT PASS HERE : ' + this.project.name
+		if ( (!this.projectService.project.skills) || (this.projectService.project.skills.length === 0)) {
+			console.log ('SHOULD NOT PASS HERE : ' + this.projectService.project.name
 			+ ' does not contain any skill. So, we should not be able to remove one');
 		}
 
-		const skill = this.project.skills.find (sk => sk.title === event.detail.data.value);
+		const skill = this.projectService.project.skills.find (sk => sk.title === event.detail.data.value);
 		if (skill === undefined) {
 			console.log ('SHOULD NOT PASS HERE : Cannot remove the skill '
-			+ event.detail.data.value + ' from project ' + this.project.name);
+			+ event.detail.data.value + ' from project ' + this.projectService.project.name);
 			return;
 		}
 
-		const indexOfSkill = this.project.skills.indexOf(skill);
+		const indexOfSkill = this.projectService.project.skills.indexOf(skill);
 		if (Constants.DEBUG) {
 			console.log ('Index of the skill ' + skill.title, indexOfSkill);
 		}
-		this.project.skills.splice(indexOfSkill, 1);
+		this.projectService.project.skills.splice(indexOfSkill, 1);
 
 		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
-		if (this.project.id) {
-			this.updateSkill(this.project.id, skill.id, this.projectService.delSkill.bind(this.projectService));
+		if (this.projectService.project.id) {
+			this.updateSkill(this.projectService.project.id, skill.id, this.projectService.delSkill.bind(this.projectService));
 		}
 
 		// Log the resulting collection.
@@ -553,9 +527,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	logProjectSkills() {
 		if (Constants.DEBUG) {
-			console.log (this.project.skills);
-			console.groupCollapsed ('list of skills for project ' + this.project.name);
-			this.project.skills.forEach(sk => console.log (sk.id + ' ' +  sk.title));
+			console.log (this.projectService.project.skills);
+			console.groupCollapsed ('list of skills for project ' + this.projectService.project.name);
+			this.projectService.project.skills.forEach(sk => console.log (sk.id + ' ' +  sk.title));
 			console.groupEnd();
 		}
 	}
@@ -570,12 +544,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		}
 
 		// This sonar project is already associated tp this project.
-		if ( (this.project.sonarProjects)
-			&& (this.project.sonarProjects.find (sp => sp.name === event.detail.data.value))) {
+		if ( (this.projectService.project.sonarProjects)
+			&& (this.projectService.project.sonarProjects.find (sp => sp.name === event.detail.data.value))) {
 			return;
 		}
 
-		const sonarComponent = this.sonarService.search (this.project, event.detail.data.value);
+		const sonarComponent = this.sonarService.search (this.projectService.project, event.detail.data.value);
 		if (!sonarComponent) {
 			console.log ('SEVERE ERROR : This Sonar project is unknown.', event.detail.data.value);
 			return;
@@ -586,15 +560,15 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		sonarProject.projectFilesStats = [];
 
 		// For compatibility reason with the previsous version.
-		if (!this.project.sonarProjects) {
-			this.project.sonarProjects = [];
+		if (!this.projectService.project.sonarProjects) {
+			this.projectService.project.sonarProjects = [];
 		}
 
-		this.project.sonarProjects.push(sonarProject);
+		this.projectService.project.sonarProjects.push(sonarProject);
 
 		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
-		if (this.project.id) {
-			this.updateSonarProject(this.project.id, sonarProject,
+		if (this.projectService.project.id) {
+			this.updateSonarProject(this.projectService.project.id, sonarProject,
 				this.projectService.addSonarProject.bind(this.projectService),
 				this.reloadSonarProjectMetrics.bind(this));
 		}
@@ -605,18 +579,18 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	reloadSonarProjectMetrics(idProject: number, sonarProject: SonarProject) {
 		this.projectService
-			.loadSonarProject(this.project, sonarProject.key)
+			.loadSonarProject(this.projectService.project, sonarProject.key)
 			.pipe(take(1))
 			.subscribe((sp: SonarProject) => {
 				sonarProject.projectSonarMetricValues = sp.projectSonarMetricValues;
 
 				this.projectService.loadAndSaveEvaluations(
 					this.sonarService,
-					this.project,
+					this.projectService.project,
 					sp.key,
 					sp.projectSonarMetricValues,
 					this.errorEmitter);
-				this.projectService.dump(this.project, 'addSonarProject');
+				this.projectService.dump(this.projectService.project, 'addSonarProject');
 			});
 	}
 
@@ -625,8 +599,8 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	logProjectSonarProjects() {
 		if (Constants.DEBUG) {
-			console.groupCollapsed ('list of sonar projects for project ' + this.project.name);
-			this.project.sonarProjects.forEach(sp => console.log (sp.key + ' ' +  sp.name));
+			console.groupCollapsed ('list of sonar projects for project ' + this.projectService.project.name);
+			this.projectService.project.sonarProjects.forEach(sp => console.log (sp.key + ' ' +  sp.name));
 			console.groupEnd();
 		}
 	}
@@ -641,27 +615,27 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		}
 
 		// This Sonar project HAS TO BE registered inside the project.
-		if ( (!this.project.sonarProjects) || (this.project.sonarProjects.length === 0)) {
-			console.log ('SHOULD NOT PASS HERE : ' + this.project.name
+		if ( (!this.projectService.project.sonarProjects) || (this.projectService.project.sonarProjects.length === 0)) {
+			console.log ('SHOULD NOT PASS HERE : ' + this.projectService.project.name
 			+ ' does not contain any Sonar project. So, we should not be able to remove one of them');
 		}
 
-		const sonarProject = this.project.sonarProjects.find (sp => sp.name === event.detail.data.value);
+		const sonarProject = this.projectService.project.sonarProjects.find (sp => sp.name === event.detail.data.value);
 		if (!sonarProject) {
 			console.log ('SHOULD NOT PASS HERE : Cannot remove the Sonar project '
-			+ event.detail.data.value + ' from project ' + this.project.name);
+			+ event.detail.data.value + ' from project ' + this.projectService.project.name);
 			return;
 		}
 
-		const indexOfSonarProject = this.project.sonarProjects.indexOf(sonarProject);
+		const indexOfSonarProject = this.projectService.project.sonarProjects.indexOf(sonarProject);
 		if (Constants.DEBUG) {
 			console.log ('Index of the Sonar project ' + sonarProject.name, indexOfSonarProject);
 		}
-		this.project.sonarProjects.splice(indexOfSonarProject, 1);
+		this.projectService.project.sonarProjects.splice(indexOfSonarProject, 1);
 
 		// We have already loaded or saved the project, so we can add each new Sonar project as they appear, one by one.
-		if (this.project.id) {
-			this.updateSonarProject(this.project.id, sonarProject, this.projectService.delSonarProject.bind(this.projectService));
+		if (this.projectService.project.id) {
+			this.updateSonarProject(this.projectService.project.id, sonarProject, this.projectService.delSonarProject.bind(this.projectService));
 		}
 
 		// Log the resulting collection.
@@ -683,38 +657,38 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * Submit the change. The project will be created, or updated.
 	 */
 	onSubmit() {
-		this.project.name = this.profileProject.get('projectName').value;
-		this.project.urlSonarServer = this.profileProject.get('urlSonarServer').value;
-		switch (this.project.connectionSettings) {
+		this.projectService.project.name = this.profileProject.get('projectName').value;
+		this.projectService.project.urlSonarServer = this.profileProject.get('urlSonarServer').value;
+		switch (this.projectService.project.connectionSettings) {
 			case this.DIRECT_ACCESS:
-				this.project.urlRepository = this.profileProject.get('urlRepository1').value;
-				this.project.username = this.profileProject.get('username').value;
-				this.project.password = this.profileProject.get('password').value;
-				this.project.filename = '';
+				this.projectService.project.urlRepository = this.profileProject.get('urlRepository1').value;
+				this.projectService.project.username = this.profileProject.get('username').value;
+				this.projectService.project.password = this.profileProject.get('password').value;
+				this.projectService.project.filename = '';
 				break;
 			case this.REMOTE_FILE_ACCESS:
-				this.project.urlRepository = this.profileProject.get('urlRepository2').value;
-				this.project.username = '';
-				this.project.password = '';
-				this.project.filename = this.profileProject.get('filename').value;
+				this.projectService.project.urlRepository = this.profileProject.get('urlRepository2').value;
+				this.projectService.project.username = '';
+				this.projectService.project.password = '';
+				this.projectService.project.filename = this.profileProject.get('filename').value;
 				break;
 		}
 		if (Constants.DEBUG) {
 			console.log('Saving the project ');
-			console.log(this.project);
+			console.log(this.projectService.project);
 		}
-		this.projectService.save(this.project).pipe(take(1)).subscribe(
+		this.projectService.save(this.projectService.project).pipe(take(1)).subscribe(
 			project => {
-				this.project = project;
+				this.projectService.project = project;
 
 				// If we were in creation (i.e. url = ".../project/"), we leave this mode.
 				this.creation = false;
 				// We update the array containing the collection of all projects.
 				this.projectService.updateProjectsCollection(project);
-				// We broadcast the new project state.
-				this.project$.next(this.project);
+				// We broadcast the fact that a project has been found.
+				this.projectService.projectLoaded$.next(true);
 
-				this.messageService.success('Project ' + this.project.name + '  saved !');
+				this.messageService.success('Project ' + this.projectService.project.name + '  saved !');
 
 				this.testConnectionSettings();
 			});
@@ -725,7 +699,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	private testConnectionSettings() {
 		this.projectService
-			.testConnection(this.project.id)
+			.testConnection(this.projectService.project.id)
 			.pipe(take(1))
 			.subscribe((doneAndOk: boolean) => {
 				if (!doneAndOk) {
@@ -735,8 +709,8 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	}
 	public onConnectionSettingsChange(val: string) {
-		this.project.connectionSettings = +val;
-		switch (this.project.connectionSettings) {
+		this.projectService.project.connectionSettings = +val;
+		switch (this.projectService.project.connectionSettings) {
 			case this.DIRECT_ACCESS:
 				this.profileProject.get('filename').setValue('');
 				this.profileProject.get('urlRepository1').setValue(this.profileProject.get('urlRepository2').value);
@@ -753,29 +727,29 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * Did the user select the direct access connection settings (user/password).
 	 */
 	public directAccess() {
-		if (!this.project) {
+		if (!this.projectService.project) {
 			return true;
 		}
 
 		// No choice have been made yet. We are the 2 pannels.
-		if ((typeof this.project.connectionSettings === 'undefined') || (this.project.connectionSettings === 0)) {
+		if ((typeof this.projectService.project.connectionSettings === 'undefined') || (this.projectService.project.connectionSettings === 0)) {
 			return true;
 		}
-		return (this.project.connectionSettings === this.DIRECT_ACCESS);
+		return (this.projectService.project.connectionSettings === this.DIRECT_ACCESS);
 	}
 
 	/**
 	 * Did the user select the undirect access. Indicating a remote file containing the connection settings.
 	 */
 	public undirectAccess() {
-		if (!this.project) {
+		if (!this.projectService.project) {
 			return true;
 		}
 		// No choice have been made yet. We are the 2 pannels.
-		if ((typeof this.project.connectionSettings === 'undefined') || (this.project.connectionSettings === 0)) {
+		if ((typeof this.projectService.project.connectionSettings === 'undefined') || (this.projectService.project.connectionSettings === 0)) {
 			return true;
 		}
-		return (this.project.connectionSettings === this.REMOTE_FILE_ACCESS);
+		return (this.projectService.project.connectionSettings === this.REMOTE_FILE_ACCESS);
 	}
 
 

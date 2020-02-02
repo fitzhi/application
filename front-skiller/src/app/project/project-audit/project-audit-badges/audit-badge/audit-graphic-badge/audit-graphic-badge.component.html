@@ -1,18 +1,21 @@
-<div *ngIf="(!editable && project$)">
+<!-- 
+<div *ngIf="(!editable && (projectService.projectLoaded$|async))">
     <svg viewBox="0 0 120 120" [ngStyle]="styleSize" >
         <path id="topic-arc-{{id}}" fill="transparent" stroke-width="8" />
         <text id="topic-note-{{id}}" class="evaluation"></text>
     </svg>
 </div>
+-->
 
-<div *ngIf="(!editable && project)">
+<div *ngIf="(!editable)">
     <svg viewBox="0 0 120 120" [ngStyle]="styleSize">
         <path id="topic-arc-{{id}}" fill="transparent" stroke-width="8" />
         <text id="topic-note-{{id}}" class="evaluation"></text>
     </svg>
 </div>
 
-<div *ngIf="editable" class="graphic-badge" (style)="styleSize">
+<div *ngIf="(editable && (projectService.projectLoaded$|async))"
+        class="graphic-badge" (style)="styleSize">
     <svg>
         <g>
             <path id="topic-arc-{{id}}" fill="transparent" stroke-width="12px"  />

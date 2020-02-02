@@ -6,39 +6,18 @@ import { ProjectService } from 'src/app/service/project.service';
 
 export class AuditBaseComponent extends BaseComponent implements OnDestroy, AfterViewInit {
 
-	public headerText: string;
+	/**
+	 * Topic identifier.
+	 */
 	public idTopic: number;
-	public project$: BehaviorSubject<Project>;
-	public projectService: ProjectService;
 
+	/**
+	 * Font awesome.
+	 */
 	private fontAwesome = '';
 
-	/**
-	 * The current active project.
-	 */
-	public project: Project;
-
-	constructor() {
+	constructor(public headerText: string, public projectService: ProjectService) {
 		super();
-	}
-
-	/**
-	 * Post creation initialization
-	 * @param headerText the static header defined for this detail
-	 * @param idTopic the topic identifier
-	 * @param project$ the Project observable
-	 * @param projectService the projectService
-	 */
-	postCreationInit(
-			headerText: string,
-			idTopic: number,
-			project$: BehaviorSubject<Project>,
-			projectService: ProjectService): void {
-		this.headerText = headerText;
-		this.idTopic = idTopic;
-		this.project$ = project$;
-		this.projectService = projectService;
-
 		if (this.headerText === 'header-tasks-') {
 			this.fontAwesome = 'fas fa-tasks';
 		}
@@ -47,13 +26,16 @@ export class AuditBaseComponent extends BaseComponent implements OnDestroy, Afte
 		}
 	}
 
+	/**
+	 * Set the topic identifier
+	 * @param idTopic the topic identifier
+	 */
+	setIdTopic(idTopic: number): void {
+		this.idTopic = idTopic;
+	}
+
 	ngAfterViewInit(): void {
-		this.subscriptions.add(
-			this.project$.subscribe(project => {
-				this.project = project;
-				this.drawHeaderColor(project.audit[this.idTopic].evaluation);
-			})
-		);
+		this.drawHeaderColor(this.projectService.project.audit[this.idTopic].evaluation);
 	}
 
 	/**

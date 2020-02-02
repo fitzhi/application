@@ -2,7 +2,7 @@
 
     <div id="headerRisk-{{id}}" class="headerRisk"></div>
 
-    <div class="auditGraphicBadge">
+    <div class="auditGraphicBadge" *ngIf="(projectService.projectLoaded$|async) ">
         <app-audit-graphic-badge 
             (messengerEvaluationChange)="onEvaluationChange($event)" 
             [editable]=true 

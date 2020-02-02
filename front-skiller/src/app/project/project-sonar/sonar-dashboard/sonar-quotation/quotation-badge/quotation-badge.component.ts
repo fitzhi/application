@@ -49,6 +49,10 @@ export class QuotationBadgeComponent implements AfterViewInit {
 	constructor(private projectService: ProjectService) { }
 
 	ngAfterViewInit() {
+		// If there is nothing to compute, because we do not have the required data for the Fitzhì medal.
+		if (this.medal && this.evaluation === -1) {
+			return;
+		}
 		setTimeout(() => {
 			this.drawBadge();
 		}, 0);
@@ -88,7 +92,7 @@ export class QuotationBadgeComponent implements AfterViewInit {
 		document.getElementById('arc3-' + this.index).setAttribute('d', arc(20, 55, 56, 30, 60));
 	}
 
-		/**
+	/**
 	 * @param quotation evaluation processed for the selected Sonar project
 	 * @returns thee classnames to draw the Sonar-liked arcs
 	 */

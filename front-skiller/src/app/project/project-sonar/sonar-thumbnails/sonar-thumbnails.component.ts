@@ -21,11 +21,6 @@ import { BehaviorSubject } from 'rxjs';
 export class SonarThumbnailsComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	/**
-	* The project loaded in the parent component.
-	*/
-	@Input() project$: BehaviorSubject<Project>;
-
-	/**
 	 * Observable emitting a PanelSwitchEvent
 	 * when the user switch to another Sonar project or a new panel.
 	 */
@@ -40,8 +35,6 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	 * Key of the Sonar project summary.
 	 */
 	private keySummarySelected = '';
-
-	private project = new Project();
 
 	private languageCounts: SonarThumbnailsComponent.LanguageCount;
 
@@ -66,15 +59,18 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	ngOnInit() {
 
 		this.subscriptions.add(
-			this.project$.subscribe(project => {
-				this.evaluations.clear();
-				this.project = project;
-				if (this.project.sonarProjects.length > 0) {
-					this.idPanelSelected = this.SONAR;
-					this.keySummarySelected = this.project.sonarProjects[0].key;
-					this.updateDisplayConsolidationBadge();
+			this.projectService.projectLoaded$.subscribe({
+				next: doneAndOk => {
+					if (doneAndOk) {
+						this.evaluations.clear();
+						if (this.projectService.project.sonarProjects.length > 0) {
+							this.idPanelSelected = this.SONAR;
+							this.keySummarySelected = this.projectService.project.sonarProjects[0].key;
+							this.updateDisplayConsolidationBadge();
+						}
+						this.loadFilesNumber();
+					}
 				}
-				this.loadFilesNumber();
 			}));
 
 		this.subscriptions.add(
@@ -95,15 +91,15 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	 * Update the Sonar badge on each thumbnail.
 	 */
 	updateDisplayConsolidationBadge() {
-		this.project.sonarProjects.forEach (sonarProject => {
-			const quotation = this.sonarService.evaluateSonarProject(this.project, sonarProject.key);
+		this.projectService.project.sonarProjects.forEach (sonarProject => {
+			const quotation = this.sonarService.evaluateSonarProject(this.projectService.project, sonarProject.key);
 			const risk = (quotation === 100) ? 0 : (10 - Math.ceil(quotation / 10));
 			this.sonarService
-				.loadTotalNumberLinesOfCode$(this.project, sonarProject.key)
+				.loadTotalNumberLinesOfCode$(this.projectService.project, sonarProject.key)
 				.subscribe (totalNumberLinesOfCode => {
 					sonarProject.sonarEvaluation = new SonarEvaluation(quotation, totalNumberLinesOfCode);
 					this.projectService.saveSonarEvaluation(
-						this.project.id, sonarProject.key, quotation, totalNumberLinesOfCode)
+						this.projectService.project.id, sonarProject.key, quotation, totalNumberLinesOfCode)
 						.subscribe(doneAndOk => {
 							if (doneAndOk) {
 								this.messageService.info('Saving the quotation for project ' + sonarProject.name);
@@ -123,7 +119,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 
 	loadFilesNumber() {
 		this.subscriptions.add(
-			this.project.sonarProjects.forEach((sonar: SonarProject) => {
+			this.projectService.project.sonarProjects.forEach((sonar: SonarProject) => {
 				this.languageFilesNumber.set(sonar.key, sonar.projectFilesStats);
 				if (Constants.DEBUG) {
 					console.groupCollapsed('Files statistics for the Sonar instance %s.', sonar.key);
@@ -132,9 +128,9 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 				}
 			}));
 		this.subscriptions.add(
-			this.sonarService.sonarIsAccessible$(this.project).subscribe( connected => {
+			this.sonarService.sonarIsAccessible$(this.projectService.project).subscribe( connected => {
 				if (connected) {
-					this.project.sonarProjects.forEach (
+					this.projectService.project.sonarProjects.forEach (
 						sonarP => this.retrieveAndUpdateFilesSummary(sonarP));
 				}
 			}));
@@ -144,7 +140,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	 * @param keyComponentSonar : the component key
 	 */
 	retrieveAndUpdateFilesSummary(componentSonar: SonarProject) {
-		this.sonarService.loadFiles(this.project, componentSonar.key).subscribe( filesCount => {
+		this.sonarService.loadFiles(this.projectService.project, componentSonar.key).subscribe( filesCount => {
 			componentSonar.projectFilesStats = this.keepTop3TypesOfFile(filesCount);
 			if (Constants.DEBUG) {
 				console.groupCollapsed('Top 3 languages for Sonar project %s', componentSonar.key);
@@ -156,7 +152,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 			this.languageFilesNumber.set(componentSonar.key, componentSonar.projectFilesStats);
 			this.subscriptions.add(
 				this.projectService
-					.saveFilesStats(this.project.id, componentSonar.key, componentSonar.projectFilesStats)
+					.saveFilesStats(this.projectService.project.id, componentSonar.key, componentSonar.projectFilesStats)
 					.subscribe(doneAndOk => {
 						if (doneAndOk) {
 							this.messageService.info('Saving Files source statistics for the key ' + componentSonar.key);
@@ -262,10 +258,10 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	 * when the evaluations map has the same size than the Sonar project.
 	 */
 	allEvaluationsCompleted(): boolean {
-		if (!this.project) {
+		if (!this.projectService.project) {
 			return false;
 		}
-		return (this.evaluations.size === this.project.sonarProjects.length);
+		return (this.evaluations.size === this.projectService.project.sonarProjects.length);
 	}
 
 	/**

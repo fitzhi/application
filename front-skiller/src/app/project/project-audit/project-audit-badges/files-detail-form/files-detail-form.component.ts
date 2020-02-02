@@ -15,11 +15,6 @@ import { AuditAttachmentService } from './service/audit-attachment.service';
 export class FilesDetailFormComponent extends AuditBaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	/**
-	 * A `BehaviorSubject` containing the current last uptodate project.
-	 */
-	@Input() project$;
-
-	/**
 	 * The topic identifier.
 	 */
 	@Input() idTopic: number;
@@ -29,16 +24,20 @@ export class FilesDetailFormComponent extends AuditBaseComponent implements OnIn
 	 */
 	@Input() title: string;
 
+
+	constructor(
+		public projectService: ProjectService,
+		public auditAttachmentService: AuditAttachmentService) {
+		super('header-tasks-', projectService);
+	}
+
 	ngOnInit() {
-		this.subscriptions.add(
-			this.project$.subscribe((project: Project) => {
-				this.project = project;
-				if (project.audit[this.idTopic]) {
-					this.auditAttachmentService.emitAttachmentFiles(project.audit[this.idTopic].attachmentList);
-				} else {
-					this.auditAttachmentService.emitAttachmentFiles([]);
-				}
-		}));
+		this.setIdTopic(this.idTopic);
+		if (this.projectService.project.audit[this.idTopic]) {
+			this.auditAttachmentService.emitAttachmentFiles(this.projectService.project.audit[this.idTopic].attachmentList);
+		} else {
+			this.auditAttachmentService.emitAttachmentFiles([]);
+		}
 	}
 
 	/**
@@ -46,16 +45,6 @@ export class FilesDetailFormComponent extends AuditBaseComponent implements OnIn
 	 */
 	ngAfterViewInit(): void {
 		super.ngAfterViewInit();
-	}
-
-	constructor(
-		public projectService: ProjectService,
-		public auditAttachmentService: AuditAttachmentService) {
-		super();
-		this.postCreationInit('header-tasks-',
-			this.idTopic,
-			this.project$,
-			this.projectService);
 	}
 
 	/**

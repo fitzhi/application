@@ -38,9 +38,31 @@ const httpOptions = {
 })
 export class ProjectService extends InternalService {
 
+	/**
+	 * `BehaviorSubject` signaling to the application that a project has been loaded and ready to used.
+	 */
+	public projectLoaded$ = new BehaviorSubject<boolean>(false);
+
+	/**
+	 * Current project.
+	 */
+	public project: Project;
+
+	/**
+	 * The Sonar server declared for this project is accessible.
+	 */
+	public sonarIsAccessible = false;
+
+	/**
+	 * `BehaviorSubject` signaling that all projects have been loaded.
+	 */
+	allProjectsIsLoaded$ = new BehaviorSubject<Boolean>(false);
+
+	/**
+	 * Array containing all projects retrieved from Fitzhì backend.
+	 */
 	allProjects: Project[];
 
-	allProjectsIsLoaded$ = new BehaviorSubject<Boolean>(false);
 
 	constructor(
 		private httpClient: HttpClient,
@@ -164,21 +186,19 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	 * Add a topic to the audit.
-	 * @param idProject the project identifier
+	 * Add a topic to the audit in the current project.
 	 * @param idTopic the topic identifier
 	 */
-	addAuditTopic(idProject: number, idTopic: number): Observable<Boolean> {
-		return this.handleActionAudit$(idProject, new AuditTopic(idTopic, 0, 5), 'saveTopic');
+	addAuditTopic(idTopic: number): Observable<Boolean> {
+		return this.handleActionAudit$(this.project.id, new AuditTopic(idTopic, 0, 5), 'saveTopic');
 	}
 
 	/**
-	 * Remove a topic from the audit.
-	 * @param idProject the project identifier
+	 * Remove a topic from the audit in the current project.
 	 * @param idTopic the topic identifier
 	 */
-	removeAuditTopic(idProject: number, idTopic: number): Observable<Boolean> {
-		return this.handleActionAudit$(idProject, new AuditTopic(idTopic, 0, 5), 'removeTopic');
+	removeAuditTopic(idTopic: number): Observable<Boolean> {
+		return this.handleActionAudit$(this.project.id, new AuditTopic(idTopic, 0, 5), 'removeTopic');
 	}
 
 	/**
@@ -627,20 +647,19 @@ export class ProjectService extends InternalService {
 
 	/**
 	* Save the evaluation for a topic involved in the audit.
-	* @param idProject the given project identifier
 	* @param idTopic the topic identifier
 	* @param report the audit report given by the expert
 	*/
-	saveAuditTopicReport$(idProject: number, idTopic: number, report: string): Observable<Boolean> {
+	saveAuditTopicReport$(idTopic: number, report: string): Observable<Boolean> {
 		if (Constants.DEBUG) {
 			console.groupCollapsed(
 				'Saving the audit report for the topic identified by %d, within the project identified by %d',
-				idTopic, idProject);
+				idTopic, this.project.id);
 			console.log ('Report given', report);
 			console.groupEnd();
 		}
 		const auditTopic = new AuditTopic(idTopic, 0, 0, report);
-		return this.handleActionAudit$(idProject, auditTopic, 'saveReport');
+		return this.handleActionAudit$(this.project.id, auditTopic, 'saveReport');
 	}
 
 	/**
@@ -662,22 +681,21 @@ export class ProjectService extends InternalService {
 
 	/**
 	 * Process the Audit global evaluation for a project.
-	 * @param project the given project
 	 */
-	processGlobalAuditEvaluation(project: Project): void {
+	processGlobalAuditEvaluation(): void {
 
 		// Nothing to do.
-		if (!project.audit) {
-			project.auditEvaluation = 0;
+		if (!this.project.audit) {
+			this.project.auditEvaluation = 0;
 			return;
 		}
 
 		let result = 0;
-		Object.keys(project.audit).forEach(key => {
-			result += project.audit[key].evaluation * project.audit[key].weight;
+		Object.keys(this.project.audit).forEach(key => {
+			result += this.project.audit[key].evaluation * this.project.audit[key].weight;
 		});
-		project.auditEvaluation = Math.floor(result / 100);
-		this.dump(project, 'processGlobalAuditEvaluation');
+		this.project.auditEvaluation = Math.floor(result / 100);
+		this.dump(this.project, 'processGlobalAuditEvaluation');
 	}
 
 	/**
@@ -744,23 +762,24 @@ export class ProjectService extends InternalService {
 	/**
 	 * Return the global mean __Sonar__ evaluation processed for all Sonar projects
 	 * declared in the techzhì project.
-	 * @param project the given project
 	 */
-	public calculateSonarEvaluation(project: Project): number {
+	public calculateSonarEvaluation(): number {
 
 		let globalSonarEvaluation = 0;
-		if (!project) {
-			return 0;
-		}
 
-		if ((project.sonarProjects) && (project.sonarProjects.length > 0) && this.allSonarProjectsEvaluated(project)) {
+		if ((this.project.sonarProjects) && (this.project.sonarProjects.length > 0) && this.allSonarProjectsEvaluated()) {
 			let totalEvalution = 0;
-			let totalNumerberLinesOfCode = 0;
-			project.sonarProjects.forEach(sonarProject => {
+			let totalNumberLinesOfCode = 0;
+			this.project.sonarProjects.forEach(sonarProject => {
 				totalEvalution += sonarProject.sonarEvaluation.evaluation * sonarProject.sonarEvaluation.totalNumberLinesOfCode;
-				totalNumerberLinesOfCode += sonarProject.sonarEvaluation.totalNumberLinesOfCode;
+				totalNumberLinesOfCode += sonarProject.sonarEvaluation.totalNumberLinesOfCode;
 			});
-			globalSonarEvaluation = Math.round(totalEvalution / totalNumerberLinesOfCode);
+
+			// If we did not gather (for any reason) the total number of lines of code from Sonar, we cannot have an evaluation
+			if (totalNumberLinesOfCode === 0) {
+				return -1;
+			}
+			globalSonarEvaluation = Math.round(totalEvalution / totalNumberLinesOfCode);
 		}
 
 		return globalSonarEvaluation;
@@ -768,11 +787,10 @@ export class ProjectService extends InternalService {
 
 	/**
 	 * Return `true` if all sonar projects declared in this projet, have been evaluated, false otherwise.
-	 * @param project the current project
 	 */
-	allSonarProjectsEvaluated(project: Project) {
+	allSonarProjectsEvaluated() {
 		let complete = true;
-		project.sonarProjects.forEach(sonarP => {
+		this.project.sonarProjects.forEach(sonarP => {
 			if (complete && (!sonarP.sonarEvaluation)) {
 				complete = false;
 			}

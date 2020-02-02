@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { CinematicService } from '../service/cinematic.service';
 import { Constants } from '../constants';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subject, BehaviorSubject } from 'rxjs';
+import { Subject, BehaviorSubject, EMPTY } from 'rxjs';
 import { Project } from '../data/project';
 import { ListProjectsService } from '../list-projects-service/list-projects.service';
 import { MessageService } from '../message/message.service';
@@ -10,6 +10,8 @@ import { BaseComponent } from '../base/base.component';
 import { ProjectService } from '../service/project.service';
 import { switchMap, take } from 'rxjs/operators';
 import { MessageGravity } from '../message/message-gravity';
+import { ReferentialService } from '../service/referential.service';
+import { SonarService } from '../service/sonar.service';
 
 @Component({
 	selector: 'app-project',
@@ -17,18 +19,6 @@ import { MessageGravity } from '../message/message-gravity';
 	styleUrls: ['./project.component.css']
 })
 export class ProjectComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
-
-	/**
-	 * ## IMPORTANT :
-	 *
-	 * The observable `project$` cannot be a simple `Subject`
-	 * because the lifecycle of the tabs under the component project is not homogenous.
-	 * Some tab content are eagerly loaded, some other lazy.
-	 *
-	 * We need to use a persistant observable whenever the tab is already created, or not.
-	 *
-	 */
-	public project$ = new BehaviorSubject<Project>(null);
 
 	/**
 	 * We given the risk -1 into the behaviorSubject an empty.
@@ -45,12 +35,17 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	 */
 	public idProject: number;
 
+	/**
+	 * Title of the tabs.
+	 */
 	private TAB_TITLE = ['Project', 'Staff list', 'Staff coverage', 'Sonar', 'Audit'];
 
 	constructor(
 		private cinematicService: CinematicService,
+		private referentialService: ReferentialService,
 		private route: ActivatedRoute,
 		private messageService: MessageService,
+		private sonarService: SonarService,
 		private listProjectsService: ListProjectsService,
 		private projectService: ProjectService,
 		private router: Router) {
@@ -75,23 +70,28 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 			}
 		}
 
-		this.subscriptions.add(this.route.params.subscribe(params => {
-			if (Constants.DEBUG) {
-				console.log('params[\'id\']', params['id']);
-			}
-			if (params['id'] == null) {
-				this.idProject = null;
-			} else {
-				this.idProject = + params['id']; // (+) converts string 'id' to a number
-			}
-		}));
+		this.subscriptions.add(
+			this.referentialService.referentialLoaded$.pipe(
+				switchMap(doneAndOk => {
+					return (doneAndOk) ? this.route.params : EMPTY;
+				}))
+				.subscribe(params => {
+					if (Constants.DEBUG) {
+						console.log('Project identifier given', params['id']);
+					}
+					if (params['id'] == null) {
+						this.idProject = null;
+					} else {
+						this.idProject = + params['id']; // (+) converts string 'id' to a number
+						this.loadProject();
+					}
+				}));
 	}
 
 	/**
 	 * After init treatment. We load the project.
 	 */
 	ngAfterViewInit() {
-		this.loadProject();
 	}
 
 	/**
@@ -133,24 +133,41 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	 * Loading the project from the back-end.
 	 */
 	loadProject() {
-		// EITHER we are in creation mode,
-		// OR we load the Project from the back-end...
-		// Anyway, We create an empty project until the subscription is complete
-		if (this.idProject) {
-			if (Constants.DEBUG) {
-				console.log ('Loading the project');
-			}
-			this.subscriptions.add(
-				this.projectService.allProjectsIsLoaded$.pipe (
-					switchMap( (success: boolean) => {
-						return this.listProjectsService.getProject(this.idProject).pipe(take(1));
-					}))
-				.subscribe(
-					(project: Project) => {
-						this.projectService.dump(project, 'projectComponent');
-						this.project$.next(project);
+
+		this.subscriptions.add(
+			//
+			// We load all Fitzhì projects registered in the backend.
+			//
+			this.projectService.allProjectsIsLoaded$.pipe (
+				//
+				// We test and load all Sonar servers declared in the back-end.
+				//
+				switchMap((doneAndOk: boolean) => {
+					return this.sonarService.allSonarServersLoaded$;
+				}),
+				//
+				// We retrieve the project with the given ID.
+				//
+				switchMap( (success: boolean) => {
+					return this.listProjectsService.getProject$(this.idProject);
+				}),
+				//
+				// We test if the Sonar server declared for this project (if any) is available
+				//
+				switchMap(project => {
+					this.projectService.project = project;
+					this.projectService.dump(project, 'projectComponent');
+					return this.sonarService.sonarIsAccessible$(this.projectService.project);
+				}))
+				//
+				// We inform all tabs of the identifier project with the subject projectService.projectLoaded$
+				//
+				.subscribe ({
+					next: sonarIsAccessible => {
+						this.projectService.sonarIsAccessible = sonarIsAccessible;
+						this.projectService.projectLoaded$.next(true);
 					},
-					error => {
+					error: error => {
 						if (error.status === 404) {
 							if (Constants.DEBUG) {
 								console.log('404 : cannot find a project for the id ' + this.idProject);
@@ -158,15 +175,14 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 							this.messageService.error('There is no project for id ' + this.idProject);
 						} else {
 							console.error(error.message);
-						}
-					},
-					() => {
+						}},
+					complete: () => {
 						if (Constants.DEBUG) {
 							console.log('Loading complete for id ' + this.idProject);
 						}
-					})
-				);
-		}
+						this.messageService.success(this.projectService.project.name + ' is found');
+					}
+				}));
 	}
 
 	/**

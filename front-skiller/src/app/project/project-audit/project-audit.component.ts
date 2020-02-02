@@ -1,6 +1,6 @@
 import { Component, OnInit, AfterViewInit, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
 import { Topic } from './table-categories/topic';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, EMPTY } from 'rxjs';
 import { Constants } from 'src/app/constants';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Project } from 'src/app/data/project';
@@ -15,6 +15,7 @@ import { AuditChosenDetail } from './project-audit-badges/audit-badge/audit-chos
 import { AuditDetailsHistory } from 'src/app/service/cinematic/audit-details-history';
 import { ConnectUserComponent } from 'src/app/admin/connect-user/connect-user.component';
 import { TRANSITION_DURATIONS } from 'ngx-bootstrap/modal/modal-options.class';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-project-audit',
@@ -22,8 +23,6 @@ import { TRANSITION_DURATIONS } from 'ngx-bootstrap/modal/modal-options.class';
 	styleUrls: ['./project-audit.component.css']
 })
 export class ProjectAuditComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
-
-	@Input() project$: BehaviorSubject<Project>;
 
 	/**
 	 * This component, hosted in a tab pane, use this emitter to inform its parent to change the active pane.
@@ -35,11 +34,6 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 * This `boolean` control the `[hidden]` property of the div `auditTask`.
 	 */
 	private showDivAuditTask = false;
-
-	/**
-	 * The project loaded the input observable.
-	 */
-	private project: Project;
 
 	/**
 	 * Array of topics available in our referential.
@@ -95,30 +89,17 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	ngOnInit() {
 
 		this.subscriptions.add(
-			this.project$.subscribe(project => {
-				this.project = project;
-
-				if (!project) {
-					return;
+			this.projectService.projectLoaded$.pipe(switchMap(
+				doneAndOk => (doneAndOk) ? this.referentialService.topics$ : EMPTY
+			))
+			.subscribe({
+				next: topics => {
+					// Initialize the Panel details history.
+					this.initializePanelDetailsHistory();
+					this.topics = topics;
+					this.initializeAuditTopic();
 				}
-
-				// Initialize the Panel details history.
-				this.initializePanelDetailsHistory();
-
-				this.subscriptions.add(
-					this.referentialService.topics$.subscribe (topics => {
-						this.auditTopics = [];
-						this.topics = topics;
-						Object.keys(this.project.audit).forEach(key => {
-							this.auditTopics.push(
-								{	idTopic: Number(key),
-									weight: (this.project.audit[key].weight) ? this.project.audit[key].weight : 5,
-									evaluation: (this.project.audit[key].evaluation) ? this.project.audit[key].evaluation : 0,
-									title: this.topics[key]} );
-						});
-						this.auditTopics$.next(this.auditTopics);
-					}));
-				}));
+			}));
 	}
 
 	ngAfterViewInit() {
@@ -129,12 +110,27 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 */
 	private initializePanelDetailsHistory(): void {
 		this.cinematicService.auditHistory = {};
-		Object.keys(this.project.audit).forEach(key => {
+		Object.keys(this.projectService.project.audit).forEach(key => {
 			this.cinematicService.auditHistory[key] = new AuditDetailsHistory();
 		});
 		if (Constants.DEBUG) {
 			this.dumpAuditHistory();
 		}
+	}
+
+	/**
+	 * Initializing the array of topics to be displayed on the webpage.
+	 */
+	initializeAuditTopic() {
+		this.auditTopics = [];
+		Object.keys(this.projectService.project.audit).forEach(key => {
+			this.auditTopics.push(
+				{	idTopic: Number(key),
+					weight: (this.projectService.project.audit[key].weight) ? this.projectService.project.audit[key].weight : 5,
+					evaluation: (this.projectService.project.audit[key].evaluation) ? this.projectService.project.audit[key].evaluation : 0,
+					title: this.topics[key]} );
+		});
+		this.auditTopics$.next(this.auditTopics);
 	}
 
 	public dumpAuditHistory() {
@@ -173,10 +169,10 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 */
 	private impactWeightsInProject(): void {
 		this.auditTopics.forEach(auditTopic => {
-			if (!this.project.audit[auditTopic.idTopic]) {
+			if (!this.projectService.project.audit[auditTopic.idTopic]) {
 				console.error('Internal error : ' + auditTopic.idTopic + ' is not retrieved in the project');
 			} else {
-				this.project.audit[auditTopic.idTopic].weight = auditTopic.weight;
+				this.projectService.project.audit[auditTopic.idTopic].weight = auditTopic.weight;
 			}
 		});
 	}
@@ -207,25 +203,25 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 			this.assignWeights();
 			this.impactWeightsInProject();
 			this.projectService
-					.saveAuditTopicWeights$(this.project.id, this.auditTopics)
+					.saveAuditTopicWeights$(this.projectService.project.id, this.auditTopics)
 					.subscribe(doneAndOk => {
 						if (doneAndOk) {
 							this.messageService.info('Weights are completly saved');
 
 							// Update the underlying GLOBAL project evaluation
-							this.projectService.processGlobalAuditEvaluation(this.project);
+							this.projectService.processGlobalAuditEvaluation();
 
 							// We inform every panel that the Project object has changed.
-							this.project$.next(this.project);
+							this.projectService.projectLoaded$.next(true);
 						}
 					});
 		} else {
 
 			// Update the underlying GLOBAL project evaluation
-			this.projectService.processGlobalAuditEvaluation(this.project);
+			this.projectService.processGlobalAuditEvaluation();
 
 			// We inform every panel that the Project object has changed.
-			this.project$.next(this.project);
+			this.projectService.projectLoaded$.next(true);
 
 		}
 
@@ -276,7 +272,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 
 		if (topicEvaluation.typeOfOperation === Constants.CHANGE_BROADCAST) {
 			this.projectService.saveAuditTopicEvaluation$(
-					this.project.id, topicEvaluation.idTopic, topicEvaluation.value)
+					this.projectService.project.id, topicEvaluation.idTopic, topicEvaluation.value)
 				.subscribe(doneAndOk => {
 					if (doneAndOk) {
 						this.messageService.success('Evaluation given to ' + this.topics[topicEvaluation.idTopic] + ' has been saved');
@@ -285,10 +281,10 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 						this.updateEvaluationOnTopicProject(topicEvaluation);
 
 						// Update the underlining GLOBAL project evaluation
-						this.projectService.processGlobalAuditEvaluation(this.project);
+						this.projectService.processGlobalAuditEvaluation();
 
 						// We inform every panel that the Project object has changed.
-						this.project$.next(this.project);
+						this.projectService.projectLoaded$.next(true);
 					}});
 		}
 	}
@@ -297,11 +293,11 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 * Save this updated evaluation into the project object container.
 	 */
 	private updateEvaluationOnTopicProject(topicEvaluation: TopicEvaluation): void {
-		if (!this.project.audit[topicEvaluation.idTopic]) {
+		if (!this.projectService.project.audit[topicEvaluation.idTopic]) {
 			console.error('Internal error : ' + topicEvaluation.idTopic + ' is not retrieved in the project');
 			return;
 		}
-		this.project.audit[topicEvaluation.idTopic].evaluation = topicEvaluation.value;
+		this.projectService.project.audit[topicEvaluation.idTopic].evaluation = topicEvaluation.value;
 	}
 
 	/**
@@ -309,15 +305,15 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 */
 	private updateWeightsOnTopicProject(auditTopics: any[]): void {
 
-		console.groupCollapsed('Local update of the weights for %s', this.project.name);
+		console.groupCollapsed('Local update of the weights for %s', this.projectService.project.name);
 		auditTopics.forEach (auditTopic => {
 			if (Constants.DEBUG) {
 				console.log ('changing wight from %d to %d for %d',
-					this.project.audit[auditTopic.idTopic].weight,
+					this.projectService.project.audit[auditTopic.idTopic].weight,
 					auditTopic.weight,
 					auditTopic.idTopic);
 			}
-			this.project.audit[auditTopic.idTopic].weight = auditTopic.weight;
+			this.projectService.project.audit[auditTopic.idTopic].weight = auditTopic.weight;
 		});
 		console.groupEnd();
 
@@ -336,20 +332,20 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 			auditTopic.weight = topicWeight.value;
 
 			// We update the project
-			this.project.audit[topicWeight.idTopic].weight = topicWeight.value;
+			this.projectService.project.audit[topicWeight.idTopic].weight = topicWeight.value;
 		}
 		const sum = this.auditTopics.reduce((prev, curr) => prev + curr.weight, 0);
 		if (sum !== 100) {
 			this.messageService.warning('Cannot save the weight of ' + topicWeight.value + '%. The sum of weights have to be equal to 100!');
 		} else {
 			this.projectService
-				.saveAuditTopicWeights$(this.project.id, this.auditTopics)
+				.saveAuditTopicWeights$(this.projectService.project.id, this.auditTopics)
 				.subscribe(doneAndOk => {
 					if (doneAndOk) {
-						this.messageService.success('Audit topic weights for the project ' + this.project.name + ' have been saved!');
+						this.messageService.success('Audit topic weights for the project ' + this.projectService.project.name + ' have been saved!');
 
 						// Update the underlining GLOBAL project evaluation
-						this.projectService.processGlobalAuditEvaluation(this.project);
+						this.projectService.processGlobalAuditEvaluation();
 					}
 				});
 		}

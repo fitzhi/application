@@ -163,11 +163,6 @@ class TaskReportManagement {
 export class ProjectSunburstComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
-     * The project loaded in the parent component.
-     */
-	@Input() project$: BehaviorSubject<Project>;
-
-	/**
 	 * This component, hosted in a tab pane, use this emitter to inform its parent to change the active pane.
 	 * e.g. if the project form is not complete, application will jump to this tab pane.
 	 */
@@ -185,11 +180,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	public dataSourceGhosts$ = new BehaviorSubject<MatTableDataSource<unknown>>(new MatTableDataSource<unknown>([]));
 
 	public PROJECT_IDX_TAB_FORM = Constants.PROJECT_IDX_TAB_FORM;
-
-	/**
-    * Project loaded on the parent component.
-    */
-	private project: Project;
 
 	/**
      * Parameters passed to the generation method on the back-end.
@@ -298,33 +288,30 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			}
 		});
 
-		if (this.project$) {
-			this.subscriptions.add(
-				this.project$.subscribe((project: Project) => {
-
-					// The behaviorSubject project$ is initialized with a null.
-					if (!project) {
-						return;
-					}
-
-					if (Constants.DEBUG) {
-						console.log('Project ' + project.id + ' ' + project.name + ' received in sunburst-component');
-					}
-					//
-					// We postpone the Project updates to avoid the warning
-					// ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked.
-					//
-					setTimeout(() => {
-						this.project = project;
-						this.settings.idProject = this.project.id;
-
-						if (this.isChartImpossible( project)) {
-							this.messageService.info('No repository URL available !');
-							this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
+		this.subscriptions.add(
+			this.projectService.projectLoaded$.subscribe({
+				next: doneAndOk => {
+					if (doneAndOk) {
+						if (Constants.DEBUG) {
+							console.log('Project %s %s received in sunburst-component',
+								this.projectService.project.id,
+								this.projectService.project.name);
 						}
-					}, 0);
+						//
+						// We postpone the Project updates to avoid the warning
+						// ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked.
+						//
+						setTimeout(() => {
+							this.settings.idProject = this.projectService.project.id;
+
+							if (this.isChartImpossible(this.projectService.project)) {
+								this.messageService.info('No repository URL available !');
+								this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
+							}
+						}, 0);
+					}
+				}
 			}));
-		}
 
 		this.subscriptions.add(
 			this.cinematicService.tabProjectActivated$.subscribe(
@@ -335,7 +322,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 							console.log('Tab selected ' + index + ' @ ' + today.getHours()
 								+ ':' + today.getMinutes() + ':' + today.getSeconds());
 						}
-						if (this.isChartImpossible(this.project)) {
+						if (this.isChartImpossible(this.projectService.project)) {
 							if (Constants.DEBUG) {
 								console.log('No project identifier passed to this tab. No data available to preview !');
 							}
@@ -360,7 +347,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	loadTaskActivities() {
 
 		this.projectService
-			.loadTaskActivities$(this.project.id)
+			.loadTaskActivities$(this.projectService.project.id)
 			.pipe(take(1))
 			.subscribe(task => {
 				this.taskReportManagement.complete = task.complete;
@@ -443,7 +430,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 * Load the contributors of the project
 	 */
 	loadContributors$(): Observable<boolean> {
-		return this.projectService.contributors(this.project.id).pipe(
+		return this.projectService.contributors(this.projectService.project.id).pipe(
 			take(1),
 			switchMap((contributorsDTO: ContributorsDTO) => {
 				this.projectStaffService.contributors.push(...contributorsDTO.contributors);
@@ -466,7 +453,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 		this.idPanelSelected = this.SUNBURST;
 
-		if ((!this.project) || (!this.project.id)) {
+		if ((!this.projectService.project) || (!this.projectService.project.id)) {
 			this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
 			return;
 		} else {
@@ -491,7 +478,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 									console.log ('The risk of the current project is', response.projectRiskLevel);
 								}
 								this.updateRiskLevel.next(response.projectRiskLevel);
-								this.project.staffEvaluation = response.projectRiskLevel;
+								this.projectService.project.staffEvaluation = response.projectRiskLevel;
 								this.hackSunburstStyle();
 								this.tooltipChart();
 								this.taskReportManagement.complete = true;
@@ -600,7 +587,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			.color('color')
 			(document.getElementById('chart'));
 
-		const dataSourceGhosts = new ProjectGhostsDataSource(this.project);
+		const dataSourceGhosts = new ProjectGhostsDataSource(this.projectService.project);
 		// Send the unregistered contributors to the panel list
 		dataSourceGhosts.sendUnknowns(response.ghosts);
 		this.dataSourceGhosts$.next(dataSourceGhosts);
@@ -779,7 +766,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	}
 
 	reset() {
-		if (!this.project) {
+		if (!this.projectService.project) {
 			this.messageService.info('Nothing to reset !');
 			this.idPanelSelected = this.SUNBURST;
 			return;
@@ -807,7 +794,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	}
 
 	dialogFilter() {
-		if (typeof this.project === 'undefined') {
+		if (!this.projectService.project) {
 			this.messageService.info('Nothing to filter !');
 			this.idPanelSelected = this.SUNBURST;
 			return;

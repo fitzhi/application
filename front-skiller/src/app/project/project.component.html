@@ -3,29 +3,22 @@
 		<ng-template mat-tab-label>
 			<i class="fas glyphicon fa-users-cog logoTabLabel"></i>&nbsp;&nbsp;Project
 		</ng-template>
-		<ng-template matTabContent>
-			<app-project-form 
-				[project$]="project$" 
-				[risk$]="risk$"
-				(tabActivationEmitter)="tabActivation($event)">
-			</app-project-form>
-		</ng-template>
+		<app-project-form 
+			[risk$]="risk$"
+			(tabActivationEmitter)="tabActivation($event)">
+		</app-project-form>
 	</mat-tab>
 	<mat-tab [disabled]="!canConnectSourceControl()">
 		<ng-template mat-tab-label>
 			<i class="fas glyphicon fa-user-graduate logoTabLabel"></i>&nbsp;&nbsp;Staff
 		</ng-template>
-		<ng-template matTabContent>
-			<app-project-staff 
-				[project$]="project$">
-			</app-project-staff>
-		</ng-template>
+		<app-project-staff></app-project-staff> 
 	</mat-tab>
 	<mat-tab [disabled]="!canConnectSourceControl()">
 		<ng-template mat-tab-label>
 			<i class="fab fa-github-alt logoTabLabel"></i>&nbsp;&nbsp;Git
 		</ng-template>
-		<app-project-sunburst [project$]="project$" (tabActivationEmitter)="tabActivation($event)"
+		<app-project-sunburst (tabActivationEmitter)="tabActivation($event)"
 			(updateRiskLevel)="updateRiskLevel($event)">
 		</app-project-sunburst>
 	</mat-tab>
@@ -33,14 +26,11 @@
 		<ng-template mat-tab-label>
 			<img src="./assets/img/sonar-grey.png" alt="Sonar" class="logoTabLabel"/>&nbsp;&nbsp;Sonar
 		</ng-template>
-		<ng-template matTabContent>
-			<app-project-sonar 
-				[project$]="project$"
-				(updateRiskLevel)="updateRiskLevel($event)" 
-				(throwMessage)="catchMessage($event)"
-				(tabActivationEmitter)="tabActivation($event)">
-			</app-project-sonar>
-		</ng-template>
+		<app-project-sonar 
+			(updateRiskLevel)="updateRiskLevel($event)" 
+			(throwMessage)="catchMessage($event)"
+			(tabActivationEmitter)="tabActivation($event)">
+		</app-project-sonar>
 	</mat-tab>
 	<mat-tab label="Audit">
 		<ng-template mat-tab-label>
@@ -48,7 +38,6 @@
 		</ng-template>
 		<ng-template matTabContent>
 			<app-project-audit
-				[project$]="project$"
 				(tabActivationEmitter)="tabActivation($event)">
 			</app-project-audit>
 		</ng-template>

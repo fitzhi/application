@@ -57,3 +57,12 @@ P.badgeLinesOfCode{
 #quotationBadge {
     margin-bottom: 5px;
 }
+
+div.empty {
+    margin: 0;
+    width: 100px;
+    min-width: 100px;
+    height: 70px;
+    min-height: 70px;
+    background-color: transparent;
+}

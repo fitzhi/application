@@ -1,5 +1,5 @@
 <div class="qualityRectangle">
-    <div *ngIf="(project$ | async)" 
+    <div *ngIf="(projectService.projectLoaded$|async)" 
         id="staffSummaryBadge" 
         (click)="jumpToTab(PROJECT_IDX_TAB_SUNBURST)"
         data-toggle="tooltip" data-placement="right" data-html="true"
@@ -9,7 +9,7 @@
         </svg>
     </div>
 
-    <div *ngIf="(referentialService.legendsLoaded$ | async) && sonarReady()" 
+    <div *ngIf="((projectService.projectLoaded$|async) && sonarReady())" 
         id="sonarSummaryBadge"
         (click)="jumpToTab(PROJECT_IDX_TAB_SONAR)"
         data-toggle="tooltip" data-placement="right" data-html="true"
@@ -20,24 +20,24 @@
             [medal]=true
             [title]="'evaluation.title'" 
             [weight]=100
-            [evaluation]="globalSonarEvaluation()">
+            [evaluation]="globalSonarEvaluation">
         </app-quotation-badge>
     </div>
 
     <div class="auditGraphicBadge">
     </div>
 
-    <div *ngIf="auditReady()"
+    <div *ngIf="(projectService.projectLoaded$|async) && displayAuditBadge"
         id="auditSummaryBadge" 
         (click)="jumpToTab(PROJECT_IDX_TAB_AUDIT)"
         data-toggle="tooltip" data-placement="right" data-html="true"
         title="This color represents the level of technical risk for this project">
             <app-audit-graphic-badge 
                 [editable]=false 
+                [project]=projectService.project
                 [id]=1789
                 [width]=65
-                [height]=65
-                [project$]="project$">
+                [height]=65>
             </app-audit-graphic-badge>
     </div>
     

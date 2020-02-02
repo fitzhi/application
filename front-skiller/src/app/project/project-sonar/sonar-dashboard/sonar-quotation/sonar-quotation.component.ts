@@ -18,21 +18,11 @@ import { SonarProject } from 'src/app/data/SonarProject';
 export class SonarQuotationComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	/**
-	 * Observable throwing the current project.
-	 */
-	@Input() project$: BehaviorSubject<Project>;
-
-	/**
 	* Observable emitting a PanelSwitchEvent when
 	* another Sonar project is selected or
 	* another panel is selected
 	*/
 	@Input() panelSwitchTransmitter$: Subject<PanelSwitchEvent>;
-
-	/**
-	 * Project loaded and received by the host component.
-	 */
-	private project: Project;
 
 	/**
 	 * Array of Project evaluations.
@@ -51,15 +41,12 @@ export class SonarQuotationComponent extends BaseComponent implements OnInit, On
 	ngOnInit() {
 
 		this.subscriptions.add(
-			this.project$.subscribe(project => this.project = project));
-
-		this.subscriptions.add(
 			this.panelSwitchTransmitter$.subscribe(
 				panelSwitchEvent => {
 					if (panelSwitchEvent.idPanel === Constants.PROJECT_SONAR_PANEL.SONAR) {
 						this.evaluations = [];
 						// Project should have been already loaded for this component.
-						if (this.project) {
+						if (this.projectService.project) {
 							this.evaluateProject(panelSwitchEvent.keySonar);
 						}
 					}
@@ -76,20 +63,20 @@ export class SonarQuotationComponent extends BaseComponent implements OnInit, On
 		this.evaluations.push(
 			new BadgeQuotation(
 				'Global quotation',
-				this.sonarService.evaluateSonarProject(this.project, keySonar),
+				this.sonarService.evaluateSonarProject(this.projectService.project, keySonar),
 				100));
 
-		const sonarProject = this.projectService.getSonarProject(this.project, keySonar);
+		const sonarProject = this.projectService.getSonarProject(this.projectService.project, keySonar);
 		if (!sonarProject) {
-			throw new Error ('Cannot retrieve the Sonar project ' + keySonar + ' for project ' + this.project.name);
+			throw new Error ('Cannot retrieve the Sonar project ' + keySonar + ' for project ' + this.projectService.project.name);
 		}
 
-		const sonarServer = this.sonarService.getSonarServer(this.project);
+		const sonarServer = this.sonarService.getSonarServer(this.projectService.project);
 		if (sonarServer) {
 			sonarProject.projectSonarMetricValues.forEach( metricValue => {
 
 				const emptyProject = new Project();
-				emptyProject.urlSonarServer = this.project.urlSonarServer;
+				emptyProject.urlSonarServer = this.projectService.project.urlSonarServer;
 				emptyProject.sonarProjects = [];
 				const sonar = new SonarProject();
 				sonar.key = keySonar;

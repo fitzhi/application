@@ -46,7 +46,7 @@ export class ListProjectsService  {
 	/**
 	 * Return the project associated with this id in cache first, anf if not found, direct on the server
 	 */
-	getProject(id: number): Observable<Project> {
+	getProject$(id: number): Observable<Project> {
 
 		if (!this.projectService.allProjects) {
 			this.messageService.info('Please wait until the loading of projects is complete!');

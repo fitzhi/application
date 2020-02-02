@@ -20,16 +20,6 @@ import { take } from 'rxjs/operators';
 })
 export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDestroy {
 
-	/**
-	 * Observable emiting the current active project.
-	 */
-	@Input() project$: BehaviorSubject<Project>;
-
-	/**
-	 * Current active project obtained from from `project$`.
-	 */
-	project: Project;
-
 	public dataSource;
 
 	sub: any;
@@ -51,23 +41,21 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 
 	ngOnInit() {
 		this.subscriptions.add(
-			this.project$.subscribe(project => {
-				if (Constants.DEBUG) {
-					this.projectService.dump(project, 'projectStaffComponent.ngOnInit()');
-				}
-				//
-				// Loading the contributors
-				//
-				if (project) {
-					this.project = project;
-					this.loadContributors();
+			this.projectService.projectLoaded$.subscribe({
+				next: doneAndOk => {
+					if (Constants.DEBUG) {
+						this.projectService.dump(this.projectService.project, 'projectStaffComponent.ngOnInit()');
+					}
+					if (doneAndOk) {
+						this.loadContributors();
+					}
 				}
 			}));
 
 		this.subscriptions.add(
 			this.cinematicService.tabProjectActivated$.subscribe(
 				index => {
-					if ((this.project) && (index === Constants.PROJECT_IDX_TAB_STAFF)) {
+					if ((this.projectService.project) && (index === Constants.PROJECT_IDX_TAB_STAFF)) {
 						// Either we reach this component with this url '/project/:id' and the selection of the tab Staff
 						// Or we reach this component directly with this url '/project/:id/staff'
 						// We notify the cinematicService with the complete url '/project/:id/staff
@@ -86,7 +74,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	 * Load the contributors for the current project.
 	 */
 	loadContributors() {
-		this.projectService.contributors((this.project) ? this.project.id : -1)
+		this.projectService.contributors((this.projectService.project) ? this.projectService.project.id : -1)
 			.pipe(take(1))
 			.subscribe(contributorsDTO => {
 				this.dataSource = new MatTableDataSource(contributorsDTO.contributors);
@@ -103,16 +91,16 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 			}, error => {
 				if (error.status === 404) {
 					if (Constants.DEBUG) {
-						console.log('404 : cannot find contributors for the id ' + this.project.id);
+						console.log('404 : cannot find contributors for the id ' + this.projectService.project.id);
 					}
-					this.messageService.error('Cannot retrieve the contributors for the project identifier ' + this.project.id);
+					this.messageService.error('Cannot retrieve the contributors for the project identifier ' + this.projectService.project.id);
 				} else {
 					console.error(error);
 				}
 			},
 			() => {
 				if (Constants.DEBUG) {
-					console.log('Loading complete for id ' + this.project.id);
+					console.log('Loading complete for id ' + this.projectService.project.id);
 				}
 			});
 	}

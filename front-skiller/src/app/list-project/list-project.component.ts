@@ -67,7 +67,7 @@ export class ListProjectComponent implements OnInit {
 					case 'staffEvaluation':
 						return item.staffEvaluation;
 					case 'sonarEvaluation':
-						return this.projectService.calculateSonarEvaluation(item);
+						return this.projectService.calculateSonarEvaluation();
 					case 'auditEvaluation':
 						return item.auditEvaluation;
 					case 'lastCommitter':

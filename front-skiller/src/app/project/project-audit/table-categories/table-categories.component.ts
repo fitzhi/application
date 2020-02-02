@@ -18,17 +18,10 @@ import { ReferentialService } from 'src/app/service/referential.service';
 })
 export class TableCategoriesComponent extends BaseComponent implements OnInit, OnDestroy {
 
-	@Input() project$: BehaviorSubject<Project>;
-
 	/**
 	 * We inform the parent component that a category has been selectect or deselected.
 	 */
 	@Output() messengerCategoryUpdated = new EventEmitter<Topic>();
-
-	/**
-	 * Project hosted by yhje observable `prohect$`.
-	 */
-	private project: Project;
 
 	public categoryColumns: string[] = ['select', 'title'];
 
@@ -53,12 +46,15 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 
 
 		this.subscriptions.add(
-			this.project$.subscribe(project => {
-				this.project = project;
-				Object.keys(this.auditTopics).forEach(key => {
-					const b = (project.audit[key]) ? true : false;
-					this.dataSource.push (new Topic(b, Number(key), this.auditTopics[key]));
-				});
+			this.projectService.projectLoaded$.subscribe({
+				next: doneAndOk => {
+					if (doneAndOk) {
+						Object.keys(this.auditTopics).forEach(key => {
+							const b = (this.projectService.project.audit[key]) ? true : false;
+							this.dataSource.push (new Topic(b, Number(key), this.auditTopics[key]));
+						});
+					}
+				}
 			}));
 	}
 
@@ -72,21 +68,21 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 		}
 		if (topic.select) {
 			this.projectService
-				.addAuditTopic(this.project.id, topic.id)
+				.addAuditTopic(topic.id)
 				.pipe(take(1))
 				.subscribe(doneAndOk => {
 					if (doneAndOk) {
-						this.project.audit[topic.id] = new AuditTopic(topic.id, 0, 5);
+						this.projectService.project.audit[topic.id] = new AuditTopic(topic.id, 0, 5);
 						this.messageService.info('The topic \'' + topic.title + '\' is added to the audit');
 						this.messengerCategoryUpdated.emit(topic);
 					}});
 		} else {
 			this.projectService
-				.removeAuditTopic(this.project.id, topic.id)
+				.removeAuditTopic(topic.id)
 				.pipe(take(1))
 				.subscribe(doneAndOk => {
 					if (doneAndOk) {
-						delete this.project.audit[topic.id];
+						delete this.projectService.project.audit[topic.id];
 						this.messageService.info('The topic \'' + topic.title + '\' is removed from audit');
 						this.messengerCategoryUpdated.emit(topic);
 					}});

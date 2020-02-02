@@ -1,20 +1,17 @@
 <mat-sidenav-container class="component-container">
-    <div *ngIf="(project)" class="contentProjectSonar">
+    <div *ngIf="(projectService.projectLoaded$|async)" class="contentProjectSonar">
         <div id="panelSonarThumbnails">
             <app-sonar-thumbnails 
-                [project$]="project$" 
                 [panelSwitchTransmitter$]="panelSwitchTransmitter$">
             </app-sonar-thumbnails>
         </div>
         <div id="panelSonar" [hidden]="!isPanelActive(SONAR)">
             <app-sonar-dashboard 
-                [project$]="project$"
                 [panelSwitchTransmitter$]="panelSwitchTransmitter$">
             </app-sonar-dashboard>
         </div>
         <div id="panelSettings" [hidden]="!isPanelActive(SETTINGS)">
             <app-sonar-metrics 
-                [project$]="project$"               
                 [panelSwitchTransmitter$]="panelSwitchTransmitter$"
                 (throwMessage)="catchMessage($event)">
             </app-sonar-metrics>
@@ -23,7 +20,7 @@
             NO SONAR PROJECT DECLARED FOR THIS PROJECT
         </div>
     </div>
-    <div class="no-project" *ngIf="!(project$ | async)">
+    <div class="no-project" *ngIf="!(projectService.projectLoaded$|async)">
         <p>
                 Your project does not exist yet. You need to save it, first.
         </p>

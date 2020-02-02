@@ -18,21 +18,11 @@ import * as d3 from 'd3';
 export class SonarDashboardComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	/**
-	* The project loaded in the parent component.
-	*/
-	@Input() project$: BehaviorSubject<Project>;
-
-	/**
 	* Observable emitting a PanelSwitchEvent when
 	* another Sonar project is selected or
 	* another panel is selected
 	*/
 	@Input() panelSwitchTransmitter$: Subject<PanelSwitchEvent>;
-
-	/**
-	 * The current project loaded.
-	 */
-	private project: Project;
 
 	constructor(
 		private sanitize: DomSanitizer,
@@ -71,13 +61,10 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	ngOnInit() {
 
 		this.subscriptions.add(
-			this.project$.subscribe((project: Project) => this.project = project));
-
-		this.subscriptions.add(
-			this.sonarService.sonarIsAccessible$(this.project).subscribe(isSonarAccessible => {
+			this.sonarService.sonarIsAccessible$(this.projectService.project).subscribe(isSonarAccessible => {
 				if (isSonarAccessible) {
 					this.isSonarAccessible = isSonarAccessible;
-					const sonarServer = this.sonarService.getSonarServer(this.project);
+					const sonarServer = this.sonarService.getSonarServer(this.projectService.project);
 					if (sonarServer) {
 						const version = parseFloat(sonarServer.sonarVersion.substring(0, 3));
 						this.isSonarVersion71x = (version > 7.1);
@@ -100,10 +87,10 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 					}
 					return;
 				}
-				if (this.project && (panelSwitchEvent.keySonar) ) {
+				if (this.projectService.project && (panelSwitchEvent.keySonar) ) {
 					this.sonarKey = panelSwitchEvent.keySonar;
 					this.safeBadge = [];
-					const sonarServer = this.sonarService.getSonarServer(this.project);
+					const sonarServer = this.sonarService.getSonarServer(this.projectService.project);
 					if (sonarServer && sonarServer.projectSonarMetrics) {
 						this.loadBadge(0);
 					}
@@ -117,14 +104,14 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	 * @param badgeNumero the numero of badge
 	 */
 	loadBadge(badgeNumero: number) {
-		const sonarServer = this.sonarService.getSonarServer(this.project);
+		const sonarServer = this.sonarService.getSonarServer(this.projectService.project);
 		if ((sonarServer) && (badgeNumero === sonarServer.projectSonarMetrics.length)) {
 			this.safeBadge$.next(this.safeBadge);
 			return;
 		}
 		this.subscriptions.add(
 			this.sonarService
-				.loadBadge(this.project, this.sonarKey, sonarServer.projectSonarMetrics[badgeNumero].key)
+				.loadBadge(this.projectService.project, this.sonarKey, sonarServer.projectSonarMetrics[badgeNumero].key)
 				.subscribe(svg => {
 					if (svg) {
 						this.safeBadge.push(this.sanitize.bypassSecurityTrustHtml(svg));

@@ -8,6 +8,8 @@ import { TopicEvaluation } from '../topic-evaluation';
 import { TopicWeight } from '../topic-weight';
 import { AuditChosenDetail } from './audit-chosen-detail';
 import { AuditDetail } from 'src/app/data/audit-detail';
+import { ReferentialService } from 'src/app/service/referential.service';
+import { take } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-audit-badge',
@@ -55,13 +57,23 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 
 	constructor(
 		private cinematicService: CinematicService,
+		private referentialService: ReferentialService,
 		private projectService: ProjectService) { super(); }
 
 	ngOnInit(): void {
 	}
 
 	ngAfterViewInit(): void {
-		this.drawHeaderColor(this.evaluation);
+		// 1) The referential data has to be loaded (because we'll use the risks color retrieved from the back-end during the drawing)
+		this.referentialService.referentialLoaded$
+			.pipe(take(1))
+			.subscribe ({
+				next: doneAndOk => {
+					if (doneAndOk) {
+						this.drawHeaderColor(this.evaluation);
+					}
+				}
+			});
 	}
 
 	/* tslint:disable: no-trailing-whitespace */
