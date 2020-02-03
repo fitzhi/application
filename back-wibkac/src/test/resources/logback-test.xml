@@ -12,17 +12,17 @@
 		<appender-ref ref="STDOUT" />
 	</root>
 
-	<logger name="com.tixhi.controller" additivity="false">
+	<logger name="com.fitzhi.controller" additivity="false">
 		<level value="WARN" />
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="com.tixhi.source.crawler.git" additivity="false">
+	<logger name="com.fitzhi.source.crawler.git" additivity="false">
 		<level value="WARN" />
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="com.tixhi.data.encryption" additivity="false">
+	<logger name="com.fitzhi.data.encryption" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
