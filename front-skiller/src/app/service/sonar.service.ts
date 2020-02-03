@@ -181,7 +181,7 @@ export class SonarService extends InternalService {
 	}
 
 	/**
-	 * Retreieve the `SonarServer` associated to the given project
+	 * Retrieve the `SonarServer` associated to the given project
 	 * @param project the passed project
 	 */
 	getSonarServer(project: Project): SonarServer {

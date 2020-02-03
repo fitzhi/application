@@ -10,21 +10,25 @@ import { ReferentialService } from 'src/app/service/referential.service';
 import { BehaviorSubject } from 'rxjs';
 import { Project } from 'src/app/data/project';
 import { Component } from '@angular/core';
+import { ProjectService } from 'src/app/service/project.service';
+import { MatDialogModule } from '@angular/material/dialog';
+import { AuditTopic } from 'src/app/data/AuditTopic';
+import { RiskLegend } from 'src/app/data/riskLegend';
 
 describe('ReportDetailFormComponent', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
+	let projectService: ProjectService;
+	let referentialService: ReferentialService;
 
 	@Component({
 		selector: 'app-host-component',
 		template: 	'<app-report-detail-form ' +
-						'[project$]="project$" ' +
 						'[idTopic]="1" ' +
 						'[title]="\'Title for topic 1\'" >' +
 					'</app-report-detail-form>'
 	})
 	class TestHostComponent {
-		public project$ = new BehaviorSubject<Project>(new Project(1, 'Testing project'));
 	}
 
 	beforeEach(async(() => {
@@ -33,7 +37,7 @@ describe('ReportDetailFormComponent', () => {
 			providers: [ReferentialService],
 			imports: [MatFormFieldModule, FormsModule, ReactiveFormsModule,
 				HttpClientTestingModule,
-				MatInputModule, BrowserAnimationsModule]
+				MatInputModule, BrowserAnimationsModule, MatDialogModule]
 		})
 		.compileComponents();
 	}));
@@ -41,6 +45,13 @@ describe('ReportDetailFormComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
+		projectService = TestBed.get(ProjectService);
+		projectService.project = new Project(1, 'Testing project');
+		projectService.project.audit['1'] = new AuditTopic(1, 100, 100, 'This is a perfect topic', []);
+		projectService.projectLoaded$.next(true);
+
+		referentialService = TestBed.get(ReferentialService);
+		referentialService.legends.push(new RiskLegend(0, 'lightBlue', 'blue like the sky today'));
 		fixture.detectChanges();
 	});
 

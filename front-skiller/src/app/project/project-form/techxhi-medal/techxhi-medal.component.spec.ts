@@ -16,6 +16,7 @@ describe('TechxhiMedalComponent', () => {
 	let component: TechxhiMedalComponent;
 	let fixture: ComponentFixture<TechxhiMedalComponent>;
 	let referentialService: ReferentialService;
+	let projectService: ProjectService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -29,6 +30,7 @@ describe('TechxhiMedalComponent', () => {
 		fixture = TestBed.createComponent(TechxhiMedalComponent);
 		component = fixture.componentInstance;
 		referentialService = TestBed.get(ReferentialService);
+		projectService = TestBed.get(ProjectService);
 
 		referentialService.legendsLoaded$ = new BehaviorSubject<boolean>(false);
 		// We create a mock of legends, which is not always used in the unit test.
@@ -41,8 +43,8 @@ describe('TechxhiMedalComponent', () => {
 			referentialService.legends.push(rl);
 		}
 
-
-		component.project$ = new BehaviorSubject<Project>(new Project());
+		projectService.project = new Project();
+		projectService.projectLoaded$ = new BehaviorSubject<boolean>(true);
 		component.colorOfRisk = 'none';
 		fixture.detectChanges();
 	});
@@ -68,7 +70,8 @@ describe('TechxhiMedalComponent', () => {
 
 		referentialService.legendsLoaded$.next(true);
 		const p1 = new Project();
-		component.project$.next(p1);
+		projectService.project = p1;
+		projectService.projectLoaded$.next(true);
 		fixture.detectChanges();
 		expect(field('#sonarSummaryBadge')).toBeNull();
 
@@ -86,14 +89,15 @@ describe('TechxhiMedalComponent', () => {
 		}
 
 		referentialService.legendsLoaded$.next(true);
-		component.project$.next(null);
+		projectService.projectLoaded$.next(false);
 		fixture.detectChanges();
 
 		expect(field('#sonarSummaryBadge')).toBeNull();
 		expect(field('#staffSummaryBadge')).toBeNull();
 		expect(field('#auditSummaryBadge')).toBeNull();
 
-		component.project$.next(new Project());
+		projectService.project = new Project();
+		projectService.projectLoaded$.next(true);
 		expect(field('#sonarSummaryBadge')).toBeDefined();
 		expect(field('#staffSummaryBadge')).toBeDefined();
 		expect(field('#auditSummaryBadge')).toBeDefined();
@@ -118,11 +122,12 @@ describe('TechxhiMedalComponent', () => {
 		sp2.sonarEvaluation = new SonarEvaluation(20, 3000);
 		project.sonarProjects.push(sp2);
 
-		component.project$.next(project);
+		projectService.project = project;
+		projectService.projectLoaded$.next(true);
 		fixture.detectChanges();
 		expect(field('#sonarSummaryBadge')).toBeDefined();
 
-		expect(component.globalSonarEvaluation() === 28).toBeTruthy();
+		expect(projectService.calculateSonarEvaluation(projectService.project) === 28).toBeTruthy();
 	});
 
 });

@@ -78,6 +78,11 @@ import { TechxhiMedalComponent } from '../project/project-form/techxhi-medal/tec
 import { TableCategoriesComponent } from '../project/project-audit/table-categories/table-categories.component';
 import { FileService } from '../service/file.service';
 // tslint:disable-next-line:max-line-length
+import { AuditAttachmentComponent } from '../project/project-audit/project-audit-badges/files-detail-form/audit-attachment-upload/audit-attachment.component';
+// tslint:disable-next-line:max-line-length
+import { AuditUploadAttachmentComponent } from '../project/project-audit/project-audit-badges/files-detail-form/audit-attachment-upload/audit-upload-attachment/audit-upload-attachment.component';
+import { FilesDetailFormComponent } from '../project/project-audit/project-audit-badges/files-detail-form/files-detail-form.component';
+// tslint:disable-next-line:max-line-length
 
 @NgModule({
 	declarations: [
@@ -127,6 +132,7 @@ import { FileService } from '../service/file.service';
 		QuotationBadgeComponent,
 		TechxhiMedalComponent,
 		TableCategoriesComponent,
+		AuditUploadAttachmentComponent
 	],
 	providers: [
 		ReferentialService,

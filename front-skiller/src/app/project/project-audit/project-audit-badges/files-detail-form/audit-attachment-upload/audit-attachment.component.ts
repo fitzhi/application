@@ -45,7 +45,10 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 	 */
 	@Input() attachmentFile;
 
-	private label = '';
+	/**
+	 * File label.
+	 */
+	label = '';
 
 	/**
 	 * This `boolean` setup if we are in upload mode (or in delete mode).

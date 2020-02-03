@@ -22,21 +22,25 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatInputModule } from '@angular/material/input';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { Project } from 'src/app/data/project';
+import { ProjectService } from 'src/app/service/project.service';
+import { AuditAttachmentComponent } from './project-audit-badges/files-detail-form/audit-attachment-upload/audit-attachment.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 describe('ProjectAuditComponent', () => {
 	let component: ProjectAuditComponent;
 	let fixture: ComponentFixture<ProjectAuditComponent>;
+	let projectService: ProjectService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ProjectAuditComponent, ProjectAuditBadgesComponent,
 				TableCategoriesComponent, AuditBadgeComponent, ReportDetailFormComponent,
-				AuditGraphicBadgeComponent, FilesDetailFormComponent ],
+				AuditGraphicBadgeComponent, FilesDetailFormComponent, AuditAttachmentComponent],
 			providers: [ReferentialService, CinematicService],
 			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,
 				HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule, MatFormFieldModule,
 				FormsModule, ReactiveFormsModule,
-				MatSliderModule, MatInputModule]
+				MatSliderModule, MatInputModule, MatDialogModule]
 		})
 		.compileComponents();
 	}));
@@ -48,11 +52,13 @@ describe('ProjectAuditComponent', () => {
 		project.id = 1789;
 		project.name = 'Revolutionnary project';
 		project.audit = {};
-		component.project$ = new BehaviorSubject(project);
+		projectService = TestBed.get(ProjectService);
+		projectService.project = project;
+		projectService.projectLoaded$ = new BehaviorSubject(true);
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it('should be createed withourt any error', () => {
 		expect(component).toBeTruthy();
 	});
 });

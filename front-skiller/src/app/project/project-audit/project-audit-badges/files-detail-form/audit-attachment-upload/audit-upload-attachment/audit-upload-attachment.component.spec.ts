@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AuditUploadAttachmentComponent } from './audit-upload-attachment.component';
+import { RootTestModule } from 'src/app/root-test/root-test.module';
 
 describe('AuditUploadAttachmentComponent', () => {
 	let component: AuditUploadAttachmentComponent;
@@ -8,7 +9,9 @@ describe('AuditUploadAttachmentComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ AuditUploadAttachmentComponent ]
+			declarations: [  ],
+			imports: [ RootTestModule]
+
 		})
 		.compileComponents();
 	}));

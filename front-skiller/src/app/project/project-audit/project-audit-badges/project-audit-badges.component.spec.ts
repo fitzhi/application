@@ -21,16 +21,18 @@ import { AuditDetailsHistory } from 'src/app/service/cinematic/audit-details-his
 import { RiskLegend } from 'src/app/data/riskLegend';
 import { AuditChosenDetail } from './audit-badge/audit-chosen-detail';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ProjectService } from 'src/app/service/project.service';
+import { AuditAttachmentComponent } from './files-detail-form/audit-attachment-upload/audit-attachment.component';
 
 describe('ProjectAuditBadgesComponent', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
 	let topics = [];
+	let projectService: ProjectService;
 
 	@Component({
 		selector: 'app-host-component',
 		template: 	'<app-project-audit-badges ' +
-						'[project$]="project$" ' +
 						'[auditTopics$]="auditTopics$"' +
 						'[auditDetails$]="auditDetails$">' +
 					'</app-project-audit-badges>'
@@ -38,13 +40,12 @@ describe('ProjectAuditBadgesComponent', () => {
 	class TestHostComponent {
 		public auditTopics$ = new BehaviorSubject<any>([]);
 		public auditDetails$ = new BehaviorSubject<AuditChosenDetail[]>([]);
-		public project$ = new BehaviorSubject<Project>(null);
 	}
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ProjectAuditBadgesComponent, TestHostComponent, AuditBadgeComponent,
-				ReportDetailFormComponent, AuditGraphicBadgeComponent, FilesDetailFormComponent],
+				ReportDetailFormComponent, AuditGraphicBadgeComponent, FilesDetailFormComponent, AuditAttachmentComponent],
 			imports: [RootTestModule, MatGridListModule, MatFormFieldModule,
 				HttpClientTestingModule,
 				FormsModule, MatSliderModule, MatInputModule, ReactiveFormsModule ]
@@ -55,6 +56,7 @@ describe('ProjectAuditBadgesComponent', () => {
 
 	beforeEach(() => {
 		const referentialService: ReferentialService = TestBed.get(ReferentialService);
+		projectService = TestBed.get(ProjectService);
 		const risk2 = new RiskLegend();
 		risk2.level = 2;
 		risk2.color = 'violet';
@@ -79,7 +81,8 @@ describe('ProjectAuditBadgesComponent', () => {
 		project.id = 1889;
 		project.name = 'Revolutionnary project';
 		project.audit[3] = new AuditTopic(3, 50, 100);
-		component.project$.next(project);
+		projectService.project = project;
+		projectService.projectLoaded$.next(true);
 
 		fixture.detectChanges();
 	});

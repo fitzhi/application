@@ -6,11 +6,13 @@ import { Project } from 'src/app/data/project';
 import { PanelSwitchEvent } from '../../sonar-thumbnails/panel-switch-event';
 import { SonarQuotationComponent } from './sonar-quotation.component';
 import { Constants } from 'src/app/constants';
+import { ProjectService } from 'src/app/service/project.service';
 
 describe('SonarQuotationComponent', () => {
 
 	let component: SonarQuotationComponent;
 	let fixture: ComponentFixture<SonarQuotationComponent>;
+	let projectService: ProjectService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -26,7 +28,8 @@ describe('SonarQuotationComponent', () => {
 		component = fixture.componentInstance;
 		const project = new Project();
 		project.sonarProjects = [];
-		component.project$ = new BehaviorSubject<Project>(project);
+		projectService = TestBed.get(ProjectService);
+		projectService.projectLoaded$.next(true);
 		const pse = new PanelSwitchEvent( Constants.PROJECT_SONAR_PANEL.SONAR, 'void');
 		component.panelSwitchTransmitter$ = new Subject<PanelSwitchEvent>();
 		component.panelSwitchTransmitter$.next(pse);
