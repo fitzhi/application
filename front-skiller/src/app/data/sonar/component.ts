@@ -1,5 +1,5 @@
 /**
- * Techxhì component, not the Angular one.
+ * Fitzhì component, not the Angular one.
  */
 export class Component {
 	organisation: string;

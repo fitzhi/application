@@ -57,7 +57,7 @@ export class SonarServer {
 	/**
 	 * Load the supported metrics of this Sonar server, which are supported by the application.
 	 * @param httpClient HTTP client for retrieving data from the Sonar server.
-	 * @param applicationSupportedMetrics Array of Sonar metrics supported by techxhì.
+	 * @param applicationSupportedMetrics Array of Sonar metrics supported by Fitzhì.
 	 */
 	loadSonarSupportedMetrics(httpClient: HttpClient, applicationSupportedMetrics: string[]) {
 		httpClient.get<Metrics>(this.urlSonar + '/api/metrics/search?ps=500')

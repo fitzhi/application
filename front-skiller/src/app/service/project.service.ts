@@ -164,7 +164,7 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	 * Execute an operation on the Sonar projects of a Techxhì project
+	 * Execute an operation on the Sonar projects of a Fitzhì project
 	 * @param idProject the project identifier
 	 * @param sonarProject the sonar project
 	 * @param action the action to be executed on the Sonar projects collection
@@ -202,7 +202,7 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	 * Execute an operation on the audit of a Techxhì project
+	 * Execute an operation on the audit of a Fitzhì project
 	 * @param idProject the project identifier
 	 * @param auditTopic the given auditTopic to be taken in account
 	 * @param action the action to be executed on the audit collection

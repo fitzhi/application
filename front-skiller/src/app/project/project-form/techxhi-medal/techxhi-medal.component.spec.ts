@@ -49,7 +49,7 @@ describe('TechxhiMedalComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('Techxhì should not display the Sonar summary badge without color legends loaded', () => {
+	it('Fitzhì should not display the Sonar summary badge without color legends loaded', () => {
 		expect(component).toBeTruthy();
 
 		function field(id: string): HTMLInputElement {
@@ -63,7 +63,7 @@ describe('TechxhiMedalComponent', () => {
 
 	});
 
-	it('Techxhì should not display the Sonnar summary badge without any associated Sonar project', () => {
+	it('Fitzhì should not display the Sonnar summary badge without any associated Sonar project', () => {
 		function field(id: string): HTMLInputElement {
 			return (fixture.nativeElement.querySelector(id) as HTMLInputElement);
 		}
@@ -82,7 +82,7 @@ describe('TechxhiMedalComponent', () => {
 		expect(field('#sonarSummaryBadge')).toBeDefined();
 	});
 
-	it('Techxhì should not display the summary badges without a project loaded', () => {
+	it('Fitzhì should not display the summary badges without a project loaded', () => {
 
 		function field(id: string): HTMLInputElement {
 			return (fixture.nativeElement.querySelector(id) as HTMLInputElement);

@@ -196,7 +196,7 @@ export class SonarService extends InternalService {
 
 	/**
 	 * Load the measures evaluated for a component.
-	 * @param project Techxhì project.
+	 * @param project Fitzhì project.
 	 * @param key the key of the evaluated Sonar project
 	 * @param metrics list of metrics to be evaluated
 	 */

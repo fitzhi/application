@@ -74,7 +74,7 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 	}
 
 	/**
-	 * This function generates the Techxhì(TM) summary pie (C).
+	 * This function generates the Fitzhì(TM) summary pie (C).
 	 * @param slice the given slice with its parameters *(such as angle, color...)*
 	 */
 	private generatePie(...slices: Slice[]) {
