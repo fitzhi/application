@@ -3,11 +3,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
 	http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.wibkac</groupId>
-	<artifactId>wibkac</artifactId>
+	<groupId>com.fitzhi</groupId>
+	<artifactId>fitzhi</artifactId>
 	<packaging>jar</packaging>
 	<version>0.1-SNAPSHOT</version>
-	<name>Backend wibkac</name>
+	<name>Backend Fitzhì</name>
 	<url>http://maven.apache.org</url>
 	<properties>
 		<jdk.version>1.8</jdk.version>
@@ -232,7 +232,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>tixhì</finalName>
+		<finalName>fitzhi</finalName>
 		<sourceDirectory>src/main/java</sourceDirectory>
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 		<resources>

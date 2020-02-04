@@ -29,13 +29,13 @@ echo " The setup will erase & override previous installation if the FORCE mode i
 
 if [ $test = "Y" ]
 then 
-echo "   1) Building and testing the Tixhì back-end"
+echo "   1) Building and testing the fitzhi back-end"
 else 
-echo "   1) Building the Tixhì back-end"
+echo "   1) Building the fitzhi back-end"
 fi
 
-echo "   2) Testing the Tixhì back-end"
-echo "   3) Deploy the spring-boot Tixhì back-end"
+echo "   2) Testing the fitzhi back-end"
+echo "   3) Deploy the spring-boot fitzhi back-end"
 if [ $force = "Y" ]
 then 
 echo "   4) Copy the initial data"
@@ -55,8 +55,8 @@ git clone https://github.com/frvidal/wibkac
 cd ..
 fi
 
-mkdir -pv $dir/backend-tixhì
-cd back-wibkac
+mkdir -pv $dir/backend-fitzhi
+cd back-fitzhi
 
 if [ $test = "Y" ]
 then 
@@ -65,9 +65,9 @@ else
 mvn clean install -Dmaven.test.skip=true
 fi
 
-cp target/tixhì.jar ../$dir/backend-tixhì/tixhì.jar
-cp target/application.properties ../$dir/backend-tixhì/application.properties
-cp target/logback-spring.xml ../$dir/backend-tixhì/logback-spring.xml
+cp target/fitzhi.jar ../$dir/backend-fitzhi/fitzhi.jar
+cp target/application.properties ../$dir/backend-fitzhi/application.properties
+cp target/logback-spring.xml ../$dir/backend-fitzhi/logback-spring.xml
 
 if [ $force = "Y" ]
 then 
