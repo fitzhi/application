@@ -58,7 +58,7 @@ public class Application {
 	private boolean prefilterEligibility;
 	
 	public static void main(String[] args) {
-		LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Starting Backend 质 Tizhì");
+		LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Starting Backend 质 Fitzhì");
 		SpringApplication.run(Application.class, args);
 	}
 

@@ -24,7 +24,7 @@ do
    esac
 done
 
-echo "Initializing the Techxhì backend"
+echo "Initializing the Fitzhì backend"
 echo " The setup will erase & override previous installation if the FORCE mode is on"
 
 if [ $test = "Y" ]
