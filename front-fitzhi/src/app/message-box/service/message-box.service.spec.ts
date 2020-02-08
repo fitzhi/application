@@ -1,11 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
 import { MessageBoxService } from './message-box.service';
-import { RootTestModule } from 'src/app/root-test/root-test.module';
+import { MatDialogModule } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('MessageBoxService', () => {
 	beforeEach(() => TestBed.configureTestingModule({
-		imports: [RootTestModule]
+		providers: [MessageBoxService],
+		imports: [MatDialogModule, BrowserAnimationsModule]
 	}));
 
 	it('should be created', () => {

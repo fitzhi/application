@@ -144,7 +144,7 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 					(data: BooleanDTO) => {
 						const veryFirstConnectionIsRegistered = data.result;
 						if (Constants.DEBUG && veryFirstConnectionIsRegistered) {
-							console.log('The very first connection is registered into Wibkac');
+							console.log('The very first connection is registered into fitzhì');
 						}
 						this.completed[3] = true;
 						this.staff = $event;

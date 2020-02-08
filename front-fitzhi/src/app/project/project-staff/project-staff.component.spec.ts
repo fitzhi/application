@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
 
 import { ProjectStaffComponent } from './project-staff.component';
 import { Component } from '@angular/core';
@@ -13,6 +13,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { RouterModule } from '@angular/router';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { InitTest } from 'src/app/test/init-test';
 
 describe('ProjectStaffComponent', () => {
 	let component: TestHostComponent;
@@ -27,13 +28,15 @@ describe('ProjectStaffComponent', () => {
 	}
 
 	beforeEach(async(() => {
-		TestBed.configureTestingModule({
-			declarations: [ TestHostComponent, ProjectStaffComponent ],
-			imports: [MatTableModule, MatPaginatorModule, MatSortModule, HttpClientTestingModule, MatDialogModule,
-				RouterModule.forRoot([]), BrowserAnimationsModule],
-			providers: [ReferentialService, CinematicService]
-		})
-		.compileComponents();
+		const testConf: TestModuleMetadata  =  {
+			declarations: [TestHostComponent, ProjectStaffComponent ],
+			providers: [],
+			imports: []
+		};
+		InitTest.addImports(testConf.imports);
+		InitTest.addProviders(testConf.providers);
+		TestBed.configureTestingModule(testConf).compileComponents();
+
 	}));
 
 	beforeEach(() => {

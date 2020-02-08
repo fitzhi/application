@@ -13,15 +13,15 @@ import { TypeSlice } from './pie-dashboard/type-slice';
 export class WelcomeComponent implements OnInit {
 
 	/**
-     * Is this the VERY fist launch into WIBKAC ?
-     * We speak about the FIRST user connecting for the FIRST time into Wibkac ?
+     * Is this the VERY fist launch into fitzhì ?
+     * We speak about the FIRST user connecting for the FIRST time into fitzhì ?
      */
 	veryFirstLaunch = false;
 
 	/**
-     * Is this the FIRST launch into WIBKAC ?
+     * Is this the FIRST launch into fitzhì ?
      * This is not the FIRST user, but this is the first time a user is trtying to connect
-     * from this desktop/browser insoide Wibkac.
+     * from this desktop/browser insoide fitzhì.
      */
 	firstLaunch = false;
 
@@ -38,7 +38,7 @@ export class WelcomeComponent implements OnInit {
      * Return `TRUE` if the connection is requested.
 	 *
      * There are 2 possible reasons for that :
-     * - This is the first connection on WibKac
+     * - This is the first connection on fitzhì
      * - The user is not connected for this session
      */
 	connectionIsNeeded(): boolean {

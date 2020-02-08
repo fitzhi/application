@@ -7,7 +7,7 @@ export class Constants {
 	/**
 	  * DEBUG Mode for development purpose
 	  */
-	public static DEBUG = true;
+	public static DEBUG = false;
 
 	/**
 	 * Value for Unknown object;

@@ -2,11 +2,24 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BackendSetupComponent } from './backend-setup.component';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
-import { RootTestModule } from 'src/app/root-test/root-test.module';
 import { DebugElement } from '@angular/core';
 import { of } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReferentialService } from 'src/app/service/referential.service';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('BackendSetupComponent', () => {
 	let component: BackendSetupComponent;
@@ -15,8 +28,11 @@ describe('BackendSetupComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ ],
-			imports: [RootTestModule]
+			declarations: [BackendSetupComponent],
+			providers: [ReferentialService, CinematicService],
+			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,
+				HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule, MatFormFieldModule,
+				ReactiveFormsModule, MatSliderModule, MatInputModule, MatDialogModule]
 		})
 		.compileComponents();
 	}));

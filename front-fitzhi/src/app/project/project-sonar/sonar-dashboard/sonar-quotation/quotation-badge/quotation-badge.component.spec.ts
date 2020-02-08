@@ -1,19 +1,26 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
 
 import { QuotationBadgeComponent } from './quotation-badge.component';
-import { RootTestModule } from 'src/app/root-test/root-test.module';
 import { ProjectService } from 'src/app/service/project.service';
+import { ReferentialService } from 'src/app/service/referential.service';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatDialogModule } from '@angular/material/dialog';
+import { InitTest } from 'src/app/test/init-test';
 
-describe('QuotationBadgeComponent', () => {
+describe(' QuotationBadgeComponent', () => {
 	let component: QuotationBadgeComponent;
 	let fixture: ComponentFixture<QuotationBadgeComponent>;
 
 	beforeEach(async(() => {
-		TestBed.configureTestingModule({
-			declarations: [],
-			imports: [RootTestModule]
-		})
-			.compileComponents();
+		const testConf: TestModuleMetadata =  {
+			declarations: [QuotationBadgeComponent],
+			providers: [],
+			imports: []
+		};
+		InitTest.addImports(testConf.imports);
+		InitTest.addProviders(testConf.providers);
+		TestBed.configureTestingModule(testConf).compileComponents();
 	}));
 
 	beforeEach(() => {

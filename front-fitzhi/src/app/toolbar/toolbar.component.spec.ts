@@ -1,18 +1,22 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
 
 import { ToolbarComponent } from './toolbar.component';
-import { RootTestModule } from '../root-test/root-test.module';
+import { StaffFormComponent } from '../tabs-staff/staff-form/staff-form.component';
+import { InitTest } from '../test/init-test';
 
 describe('ToolbarComponent', () => {
 	let component: ToolbarComponent;
 	let fixture: ComponentFixture<ToolbarComponent>;
 
 	beforeEach(async(() => {
-		TestBed.configureTestingModule({
-			declarations: [  ],
-			imports: [RootTestModule]
-		})
-		.compileComponents();
+		const testConf: TestModuleMetadata =  {
+			declarations: [ToolbarComponent],
+			providers: [],
+			imports: []
+		};
+		InitTest.addImports(testConf.imports);
+		InitTest.addProviders(testConf.providers);
+		TestBed.configureTestingModule(testConf).compileComponents();
 	}));
 
 	beforeEach(() => {

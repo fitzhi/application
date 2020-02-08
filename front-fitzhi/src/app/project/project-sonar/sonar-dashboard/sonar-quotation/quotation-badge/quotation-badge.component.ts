@@ -87,10 +87,25 @@ export class QuotationBadgeComponent implements AfterViewInit {
 			return d.join(' ');
 		};
 
-		document.getElementById('arc1-' + this.index).setAttribute('d', arc(20, 55, 40, 0, 90));
+		let element = document.getElementById('arc1-' + this.index);
+		if (!element) {
+			throw new Error('INTERNAL ERROR : Cannot retrieve arc1-' + this.index);
+		}
+		element.setAttribute('d', arc(20, 55, 40, 0, 90));
+
+		element = document.getElementById('arc2-' + this.index);
+		if (!element) {
+			throw new Error('INTERNAL ERROR Cannot retrieve arc2-' + this.index);
+		}
 		document.getElementById('arc2-' + this.index).setAttribute('d', arc(20, 55, 48, 15, 75));
+
+		element = document.getElementById('arc3-' + this.index);
+		if (!element) {
+			throw new Error('INTERNAL ERROR Cannot retrieve arc3-' + this.index);
+		}
 		document.getElementById('arc3-' + this.index).setAttribute('d', arc(20, 55, 56, 30, 60));
 	}
+
 
 	/**
 	 * @param quotation evaluation processed for the selected Sonar project

@@ -1,18 +1,20 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
 
 import { ListContributorsComponent } from './list-contributors.component';
-import { RootTestModule } from 'src/app/root-test/root-test.module';
+import { MatTableModule } from '@angular/material/table';
+import { InitTest } from 'src/app/test/init-test';
 
 describe('ListContributorsComponent', () => {
 	let component: ListContributorsComponent;
 	let fixture: ComponentFixture<ListContributorsComponent>;
 
 	beforeEach(async(() => {
-		TestBed.configureTestingModule({
-			declarations: [ ],
-			imports: [RootTestModule]
-		})
-		.compileComponents();
+		const testConf: TestModuleMetadata =  {
+			declarations: [ListContributorsComponent],
+			imports: []
+		};
+		InitTest.addImports(testConf.imports);
+		TestBed.configureTestingModule(testConf).compileComponents();
 	}));
 
 	beforeEach(() => {

@@ -1,6 +1,18 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
 import { ListFilenamesComponent } from './list-filenames.component';
-import { RootTestModule } from 'src/app/root-test/root-test.module';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule, MatOptionModule } from '@angular/material/core';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDialogModule } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { InitTest } from 'src/app/test/init-test';
 
 
 describe('ListFilenamesComponent', () => {
@@ -8,11 +20,12 @@ describe('ListFilenamesComponent', () => {
 	let fixture: ComponentFixture<ListFilenamesComponent>;
 
 	beforeEach(async(() => {
-		TestBed.configureTestingModule({
-			declarations: [],
-			imports: [RootTestModule]
-		})
-		.compileComponents();
+		const testConf: TestModuleMetadata =  {
+			declarations: [ListFilenamesComponent],
+			imports: []
+		};
+		InitTest.addImports(testConf.imports);
+		TestBed.configureTestingModule(testConf).compileComponents();
 	}));
 
 	beforeEach(() => {

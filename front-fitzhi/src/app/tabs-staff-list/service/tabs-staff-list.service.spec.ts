@@ -1,12 +1,20 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, TestModuleMetadata } from '@angular/core/testing';
 
 import { TabsStaffListService } from './tabs-staff-list.service';
-import { RootTestModule } from 'src/app/root-test/root-test.module';
+import { InitTest } from 'src/app/test/init-test';
 
 describe('TabsStaffListService', () => {
-	beforeEach(() => TestBed.configureTestingModule({
-		imports: [RootTestModule]
-	}));
+
+	beforeEach(() => {
+		const testConf: TestModuleMetadata =  {
+				declarations: [],
+				providers: [],
+				imports: []
+			};
+			InitTest.addImports(testConf.imports);
+			InitTest.addProviders(testConf.providers);
+			TestBed.configureTestingModule(testConf).compileComponents();
+	});
 
 	it('should be created', () => {
 		const service: TabsStaffListService = TestBed.get(TabsStaffListService);

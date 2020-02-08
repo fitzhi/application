@@ -1,10 +1,18 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TableCategoriesComponent } from './table-categories.component';
-import { RootTestModule } from 'src/app/root-test/root-test.module';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Project } from 'src/app/data/project';
 import { ProjectService } from 'src/app/service/project.service';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
+import { ReferentialService } from 'src/app/service/referential.service';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatDialogModule } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('TableCategoriesComponent', () => {
 	let component: TableCategoriesComponent;
@@ -13,8 +21,10 @@ describe('TableCategoriesComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [  ],
-			imports: [RootTestModule]
+			providers: [ReferentialService, CinematicService],
+			declarations: [ TableCategoriesComponent ],
+			imports: [MatTableModule, MatPaginatorModule, MatCheckboxModule, FormsModule, HttpClientTestingModule,
+				MatDialogModule, BrowserAnimationsModule]
 		})
 		.compileComponents();
 	}));

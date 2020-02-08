@@ -2,7 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { FilesDetailFormComponent } from './files-detail-form.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RootTestModule } from 'src/app/root-test/root-test.module';
 import { Project } from 'src/app/data/project';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Component } from '@angular/core';

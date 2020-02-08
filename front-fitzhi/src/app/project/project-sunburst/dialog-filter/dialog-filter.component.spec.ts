@@ -1,20 +1,33 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
 
 import { DialogFilterComponent } from './dialog-filter.component';
-import { RootTestModule } from 'src/app/root-test/root-test.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatOptionModule, MatNativeDateModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatInputModule } from '@angular/material/input';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { InitTest } from 'src/app/test/init-test';
 
 describe('DialogFilterComponent', () => {
+
 	let component: DialogFilterComponent;
 	let fixture: ComponentFixture<DialogFilterComponent>;
 
 	beforeEach(async(() => {
-		TestBed.configureTestingModule({
-			declarations: [  ],
-			imports: [
-				RootTestModule,
-			]
-		})
-		.compileComponents();
+		const testConf: TestModuleMetadata =  {
+			declarations: [DialogFilterComponent],
+			providers: [
+				{ provide: MatDialogRef, useValue: {}},
+				{ provide: MAT_DIALOG_DATA, useValue: {} },
+			],
+			imports: []
+		};
+		InitTest.addImports(testConf.imports);
+		InitTest.addProviders(testConf.providers);
+		TestBed.configureTestingModule(testConf).compileComponents();
 	}));
 
 	beforeEach(() => {

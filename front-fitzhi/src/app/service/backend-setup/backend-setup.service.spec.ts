@@ -1,11 +1,12 @@
 import { TestBed } from '@angular/core/testing';
 
 import { BackendSetupService } from './backend-setup.service';
-import { RootTestModule } from 'src/app/root-test/root-test.module';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('BackendSetupService', () => {
 	beforeEach(() => TestBed.configureTestingModule({
-		imports: [RootTestModule]
+		providers: [BackendSetupService],
+		imports: [HttpClientTestingModule],
 	}));
 
 	it('should be created', () => {

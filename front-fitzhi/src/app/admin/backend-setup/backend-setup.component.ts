@@ -32,7 +32,7 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
 	BUTTON_INVALID_URL = 3;
 
 	/**
-     * This boolean is equal to <code>true</code> if we are in the very fist call to Wibkac.
+     * This boolean is equal to <code>true</code> if we are in the very fist call to fitzhì.
      * Specific setup forms should be filled to complete this startup procedure.
      */
 	veryFirstConnection = false;
@@ -72,7 +72,7 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
 				data => {
 					this.veryFirstConnection = (data === 'true');
 					if (Constants.DEBUG && this.veryFirstConnection) {
-						console.log('This is the very first connection into Wibkac');
+						console.log('This is the very first connection into fitzhì');
 					}
 					this.currentState = this.BUTTON_VALID_URL;
 					this.messageService.info('This URL is valid. Let\'s go ahead !');

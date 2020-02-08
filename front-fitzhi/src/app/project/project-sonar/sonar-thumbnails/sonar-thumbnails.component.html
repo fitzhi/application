@@ -34,7 +34,7 @@
                 </mat-grid-tile>
                 <mat-grid-tile [colspan]="2" [rowspan]="2">
                     <app-quotation-badge
-                        [index]= "'-' + sonarProject.key + index"
+                        [index]= "sonarProject.key + '-' + index"
                         [thumbnail]=true
                         [medal]=false
                         [totalNumberLinesOfCode]="evaluations.get(sonarProject.key).totalNumberLinesOfCode"

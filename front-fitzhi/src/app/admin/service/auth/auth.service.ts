@@ -30,7 +30,7 @@ export class AuthService extends InternalService {
 
 		let headers: HttpHeaders = new HttpHeaders();
 		headers = headers.append('Content-Type', 'application/x-www-urlencoded');
-		headers = headers.append('Authorization', 'Basic ' + btoa('wibkac-trusted-client' + ':secret'));
+		headers = headers.append('Authorization', 'Basic ' + btoa('fitzhì-trusted-client' + ':secret'));
 
 		const params = new HttpParams()
 			.set('username', username)
@@ -96,7 +96,7 @@ export class AuthService extends InternalService {
 
 		let headers: HttpHeaders = new HttpHeaders();
 		headers = headers.append('Content-Type', 'application/x-www-urlencoded');
-		headers = headers.append('Authorization', 'Basic ' + btoa('wibkac-trusted-client' + ':secret'));
+		headers = headers.append('Authorization', 'Basic ' + btoa('fitzhì-trusted-client' + ':secret'));
 
 		let access_token = 'empty';
 

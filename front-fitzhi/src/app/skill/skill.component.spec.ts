@@ -1,18 +1,22 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
 
 import { SkillComponent } from './skill.component';
-import { RootTestModule } from '../root-test/root-test.module';
+import { InitTest } from '../test/init-test';
+import { RouterModule } from '@angular/router';
 
 describe('SkillComponent', () => {
 	let component: SkillComponent;
 	let fixture: ComponentFixture<SkillComponent>;
 
 	beforeEach(async(() => {
-		TestBed.configureTestingModule({
-			declarations: [ ],
-			imports: [RootTestModule]
-		})
-		.compileComponents();
+		const testConf: TestModuleMetadata =  {
+			declarations: [SkillComponent],
+			providers: [],
+			imports: []
+		};
+		InitTest.addImports(testConf.imports);
+		InitTest.addProviders(testConf.providers);
+		TestBed.configureTestingModule(testConf).compileComponents();
 	}));
 
 	beforeEach(() => {

@@ -5,7 +5,6 @@ import { Component } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AuditBadgeComponent } from './audit-badge/audit-badge.component';
 import { MatGridListModule } from '@angular/material/grid-list';
-import { RootTestModule } from 'src/app/root-test/root-test.module';
 import { AuditGraphicBadgeComponent } from './audit-badge/audit-graphic-badge/audit-graphic-badge.component';
 import { ReportDetailFormComponent } from './report-detail-form/report-detail-form.component';
 import { FilesDetailFormComponent } from './files-detail-form/files-detail-form.component';
@@ -23,6 +22,8 @@ import { AuditChosenDetail } from './audit-badge/audit-chosen-detail';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ProjectService } from 'src/app/service/project.service';
 import { AuditAttachmentComponent } from './files-detail-form/audit-attachment-upload/audit-attachment.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ProjectAuditBadgesComponent', () => {
 	let component: TestHostComponent;
@@ -46,9 +47,11 @@ describe('ProjectAuditBadgesComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [ ProjectAuditBadgesComponent, TestHostComponent, AuditBadgeComponent,
 				ReportDetailFormComponent, AuditGraphicBadgeComponent, FilesDetailFormComponent, AuditAttachmentComponent],
-			imports: [RootTestModule, MatGridListModule, MatFormFieldModule,
+			providers: [ReferentialService, CinematicService],
+			imports: [MatGridListModule, MatFormFieldModule,
 				HttpClientTestingModule,
-				FormsModule, MatSliderModule, MatInputModule, ReactiveFormsModule ]
+				FormsModule, MatSliderModule, MatInputModule, ReactiveFormsModule,
+				MatDialogModule, BrowserAnimationsModule ]
 		})
 		.compileComponents();
 	}));

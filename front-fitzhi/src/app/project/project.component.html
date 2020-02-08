@@ -28,11 +28,13 @@
 		<ng-template mat-tab-label>
 			<img src="./assets/img/sonar-grey.png" alt="Sonar" class="logoTabLabel"/>&nbsp;&nbsp;Sonar
 		</ng-template>
-		<app-project-sonar 
-			(updateRiskLevel)="updateRiskLevel($event)" 
-			(throwMessage)="catchMessage($event)"
-			(tabActivationEmitter)="tabActivation($event)">
-		</app-project-sonar>
+		<ng-template matTabContent>
+			<app-project-sonar 
+				(updateRiskLevel)="updateRiskLevel($event)" 
+				(throwMessage)="catchMessage($event)"
+				(tabActivationEmitter)="tabActivation($event)">
+			</app-project-sonar>
+		</ng-template>
 	</mat-tab>
 	<mat-tab label="Audit">
 		<ng-template mat-tab-label>

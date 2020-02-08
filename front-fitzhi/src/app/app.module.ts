@@ -170,6 +170,7 @@ import { PieProjectsComponent } from './welcome/pie-dashboard/pie-projects/pie-p
 		PieDashboardComponent,
 		PieChartComponent,
 		PieProjectsComponent,
+		TagifyStarsComponent
 	],
 	entryComponents: [
 		StaffUploadCvComponent,

@@ -161,7 +161,11 @@ export class TagifyStarsComponent implements AfterViewInit {
 				this.readOnly = readOnly;
 
 				const tagInput = document.getElementById('tag-input');
-				tagInput.contentEditable = readOnly ? 'false' : 'true';
+				if (tagInput) {
+					tagInput.contentEditable = readOnly ? 'false' : 'true';
+				} else {
+					console.error('INTERNAL ERROR : tag-input not found');
+				}
 
 				document.querySelectorAll('.tagify__tag__removeBtn').forEach(elt =>
 					elt.setAttribute('style', (readOnly ? 'visibility:hidden' : 'visibility:visible'))

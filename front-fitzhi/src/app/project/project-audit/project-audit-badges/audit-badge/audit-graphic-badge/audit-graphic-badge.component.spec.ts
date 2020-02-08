@@ -1,11 +1,23 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AuditGraphicBadgeComponent } from './audit-graphic-badge.component';
-import { RootTestModule } from 'src/app/root-test/root-test.module';
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RiskLegend } from 'src/app/data/riskLegend';
 import { ReferentialService } from 'src/app/service/referential.service';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule } from '@angular/material/dialog';
+import { HttpClientModule } from '@angular/common/http';
+import { MatTableModule } from '@angular/material/table';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 describe('AuditGraphicBadgeComponent', () => {
 	let component: TestHostComponent;
@@ -22,7 +34,12 @@ describe('AuditGraphicBadgeComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [TestHostComponent, AuditGraphicBadgeComponent],
-			imports: [RootTestModule, FormsModule]
+			providers: [ReferentialService, CinematicService],
+			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,
+				HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule, MatFormFieldModule,
+				ReactiveFormsModule, MatSliderModule, MatInputModule, MatDialogModule,
+				RouterTestingModule.withRoutes([])]
+
 		})
 			.compileComponents();
 	}));

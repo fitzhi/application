@@ -5,7 +5,19 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { RouterTestingModule } from '@angular/router/testing';
-import { RootTestModule } from 'src/app/root-test/root-test.module';
+import { ReferentialService } from 'src/app/service/referential.service';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatTableModule } from '@angular/material/table';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSliderModule } from '@angular/material/slider';
+import { MatInputModule } from '@angular/material/input';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 describe('StartingSetupComponent', () => {
@@ -14,13 +26,13 @@ describe('StartingSetupComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [  ],
+			declarations: [StartingSetupComponent],
 			schemas: [ NO_ERRORS_SCHEMA ],
-			imports: [
-				RootTestModule,
-				RouterTestingModule.withRoutes([]),
-				HttpClientTestingModule
-			]
+			providers: [ReferentialService, CinematicService],
+			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,
+				HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule, MatFormFieldModule,
+				ReactiveFormsModule, MatSliderModule, MatInputModule, MatDialogModule,
+				RouterTestingModule.withRoutes([])]
 		})
 		.compileComponents();
 	}));

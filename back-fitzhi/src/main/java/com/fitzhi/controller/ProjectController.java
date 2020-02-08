@@ -400,6 +400,14 @@ public class ProjectController {
 	private ResponseEntity<SunburstDTO> generate (final Project project, final SettingsGeneration settings) {
 		try {
 			tasks.addTask(DASHBOARD_GENERATION, PROJECT, project.getId());
+		} catch (final Exception e) {
+			return new ResponseEntity<>(
+				new SunburstDTO(project.getId(), project.getStaffEvaluation(), CODE_MULTIPLE_TASK,
+				"A dashboard generation has already been launched for " + project.getName()), 
+				headers(), 
+				HttpStatus.OK);
+		}
+		try {
 			RiskDashboard data = scanner.generate(project, settings);
 			if (shuffleService.isShuffleMode()) {
 				if (log.isInfoEnabled()) {

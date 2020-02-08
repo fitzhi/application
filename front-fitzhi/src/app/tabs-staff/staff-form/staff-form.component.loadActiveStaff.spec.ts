@@ -1,7 +1,6 @@
-import { async, ComponentFixture, TestBed, tick } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, TestModuleMetadata } from '@angular/core/testing';
 
 import { StaffFormComponent } from './staff-form.component';
-import { RootTestModule } from 'src/app/root-test/root-test.module';
 import { NoPreloading } from '@angular/router';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { Profile } from '../../data/profile';
@@ -9,17 +8,22 @@ import { format } from 'url';
 import { StaffComponent } from '../staff.component';
 import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
 import { Collaborator } from 'src/app/data/collaborator';
+import { InitTest } from 'src/app/test/init-test';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('StaffFormComponent', () => {
 	let component: StaffFormComponent;
 	let fixture: ComponentFixture<StaffFormComponent>;
 
 	beforeEach(async(() => {
-		TestBed.configureTestingModule({
-			declarations: [ ],
-			imports: [RootTestModule]
-		})
-		.compileComponents();
+		const testConf: TestModuleMetadata =  {
+			declarations: [StaffFormComponent],
+			providers: [],
+			imports: [RouterTestingModule.withRoutes([])]
+		};
+		InitTest.addImports(testConf.imports);
+		InitTest.addProviders(testConf.providers);
+		TestBed.configureTestingModule(testConf).compileComponents();
 	}));
 
 	beforeEach(() => {

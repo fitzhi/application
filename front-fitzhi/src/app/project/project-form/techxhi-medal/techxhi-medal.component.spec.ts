@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TechxhiMedalComponent } from './techxhi-medal.component';
-import { RootTestModule } from 'src/app/root-test/root-test.module';
 import { ProjectService } from 'src/app/service/project.service';
 import { Project } from 'src/app/data/project';
 import { BehaviorSubject } from 'rxjs';
@@ -11,6 +10,13 @@ import { SonarProject } from 'src/app/data/SonarProject';
 import { SonarEvaluation } from 'src/app/data/sonar-evaluation';
 import { RiskLegend } from 'src/app/data/riskLegend';
 import { MatGridList, MatGridListModule } from '@angular/material/grid-list';
+import { QuotationBadgeComponent } from '../../project-sonar/sonar-dashboard/sonar-quotation/quotation-badge/quotation-badge.component';
+// tslint:disable-next-line:max-line-length
+import { AuditGraphicBadgeComponent } from '../../project-audit/project-audit-badges/audit-badge/audit-graphic-badge/audit-graphic-badge.component';
+import { FormsModule } from '@angular/forms';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('TechxhiMedalComponent', () => {
 	let component: TechxhiMedalComponent;
@@ -20,8 +26,9 @@ describe('TechxhiMedalComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ ],
-			imports: [RootTestModule]
+			declarations: [TechxhiMedalComponent, QuotationBadgeComponent, AuditGraphicBadgeComponent],
+			providers: [ReferentialService, CinematicService],
+			imports: [FormsModule, HttpClientTestingModule, MatDialogModule]
 		})
 		.compileComponents();
 	}));

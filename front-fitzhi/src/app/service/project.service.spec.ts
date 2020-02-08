@@ -1,7 +1,8 @@
-import { TestBed } from '@angular/core/testing';
-import { RootTestModule } from '../root-test/root-test.module';
+import { TestBed, TestModuleMetadata } from '@angular/core/testing';
 import { Project } from '../data/project';
 import { ProjectService } from './project.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { InitTest } from '../test/init-test';
 
 
 describe('ProjectService', () => {
@@ -16,9 +17,16 @@ describe('ProjectService', () => {
 	}
 
 
-	beforeEach(() => TestBed.configureTestingModule({
-		imports: [RootTestModule]
-	}));
+	beforeEach(() => {
+		const testConf: TestModuleMetadata =  {
+			declarations: [],
+			providers: [],
+			imports: []
+		};
+		InitTest.addImports(testConf.imports);
+		InitTest.addProviders(testConf.providers);
+		TestBed.configureTestingModule(testConf).compileComponents();
+	});
 
 	it('should be created', () => {
 		const service: ProjectService = TestBed.get(ProjectService);

@@ -4,7 +4,6 @@ import { AuthGuardService } from './auth-guard.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 import { RouterTestingModule } from '@angular/router/testing';
-import { RootTestModule } from 'src/app/root-test/root-test.module';
 
 
 describe('AuthGuardService', () => {
@@ -14,7 +13,6 @@ describe('AuthGuardService', () => {
 		imports: [
 			HttpClientTestingModule,
 			RouterTestingModule.withRoutes([]),
-			RootTestModule
 		]
 }));
 

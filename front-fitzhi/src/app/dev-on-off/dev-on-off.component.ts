@@ -24,9 +24,12 @@ export class DevOnOffComponent implements OnInit {
 		if ((!dev) || (dev === '0')) {
 			this.devOnOff = this.devON;
 			localStorage.setItem('dev', '1');
+			// We activate the logging behavior.
+			Constants.DEBUG = true;
 		} else {
 			this.devOnOff = this.devOFF;
 			localStorage.setItem('dev', '0');
+			Constants.DEBUG = false;
 		}
 	}
 

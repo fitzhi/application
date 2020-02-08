@@ -1,17 +1,25 @@
-import { TestBed, inject } from '@angular/core/testing';
+import { TestBed, inject, TestModuleMetadata, async } from '@angular/core/testing';
 
 import { StaffListService } from './staff-list.service';
-import { RootTestModule } from '../root-test/root-test.module';
+import { InitTest } from '../test/init-test';
 
 describe('ListStaffService', () => {
-	beforeEach(() => {
-		TestBed.configureTestingModule({
+
+	beforeEach(async(() => {
+		const testConf: TestModuleMetadata =  {
+			declarations: [],
 			providers: [],
-			imports: [RootTestModule]
-		});
-	});
+			imports: []
+		};
+		InitTest.addImports(testConf.imports);
+		InitTest.addProviders(testConf.providers);
+		TestBed.configureTestingModule(testConf).compileComponents();
+	}));
 
 	it('should be created', inject([StaffListService], (service: StaffListService) => {
 		expect(service).toBeTruthy();
 	}));
+
 });
+
+

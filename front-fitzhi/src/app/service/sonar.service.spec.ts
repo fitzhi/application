@@ -1,10 +1,13 @@
-import { TestBed, async } from '@angular/core/testing';
-import { RootTestModule } from '../root-test/root-test.module';
+import { TestBed, async, TestModuleMetadata } from '@angular/core/testing';
 import { SonarService } from './sonar.service';
 import { Project } from '../data/project';
 import { SonarProject } from '../data/SonarProject';
 import { ProjectSonarMetricValue } from '../data/project-sonar-metric-value';
 import { SonarServer } from '../data/sonar-server';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ReferentialService } from './referential.service';
+import { CinematicService } from './cinematic.service';
+import { InitTest } from '../test/init-test';
 
 
 describe('SonarService', () => {
@@ -30,9 +33,18 @@ describe('SonarService', () => {
 	}
 
 
-	beforeEach(async() => TestBed.configureTestingModule({
-		imports: [RootTestModule]
-	}));
+	beforeEach(async() => {
+
+		const testConf: TestModuleMetadata =  {
+			declarations: [],
+			providers: [],
+			imports: []
+		};
+		InitTest.addImports(testConf.imports);
+		InitTest.addProviders(testConf.providers);
+		TestBed.configureTestingModule(testConf).compileComponents();
+
+	});
 
 	beforeEach(() => {
 		sonarService = TestBed.get(SonarService);

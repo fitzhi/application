@@ -1,7 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DialogLegendSunburstComponent } from './legend-sunburst.component';
-import { RootTestModule } from 'src/app/root-test/root-test.module';
+import { FormsModule } from '@angular/forms';
+import { MatTableModule } from '@angular/material/table';
+import { ReferentialService } from 'src/app/service/referential.service';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('DialogLegendSunburstComponent', () => {
 	let component: DialogLegendSunburstComponent;
@@ -9,8 +13,9 @@ describe('DialogLegendSunburstComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [],
-			imports: [RootTestModule]
+			declarations: [DialogLegendSunburstComponent],
+			providers: [ReferentialService, CinematicService],
+			imports: [FormsModule, MatTableModule, HttpClientTestingModule]
 		})
 			.compileComponents();
 	}));
