@@ -1,5 +1,5 @@
 
-import { throwError as observableThrowError, Observable, BehaviorSubject } from 'rxjs';
+import { throwError as observableThrowError, Observable, BehaviorSubject, EMPTY } from 'rxjs';
 
 import { take, filter, catchError, switchMap, finalize } from 'rxjs/operators';
 import { Injectable, Injector } from '@angular/core';
@@ -7,6 +7,7 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpSentEvent, HttpHeaderRes
 import { HttpProgressEvent, HttpResponse, HttpUserEvent, HttpErrorResponse } from '@angular/common/http';
 
 import { AuthService } from '../auth/auth.service';
+import { MessageService } from 'src/app/message/message.service';
 
 @Injectable()
 export class HttpTokenInterceptorService implements HttpInterceptor {
@@ -14,7 +15,9 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 	isRefreshingToken = false;
 	tokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
-	constructor(private injector: Injector) { }
+	constructor(
+		private injector: Injector, 
+		private messageService: MessageService) { }
 
 	addToken(req: HttpRequest<any>, token: string): HttpRequest<any> {
 		if (typeof token !== 'undefined') {
@@ -40,9 +43,23 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 			|| req.url.includes('/api/skill/all')
 			|| req.url.includes('/api/admin/isVeryFirstConnection')
 			|| req.url.includes('/api/admin/veryFirstUser')
-			|| req.url.includes('/api/admin/register')
-			|| req.url.includes('/oauth/token')) {
+			|| req.url.includes('/api/admin/register')) {
 			return next.handle(req);
+		}
+
+		if (req.url.includes('/oauth/token')) {
+			return next.handle(req).pipe(catchError(error => {
+				if (error instanceof HttpErrorResponse) {
+					switch ((<HttpErrorResponse>error).status) {
+						case 401:
+							this.messageService.error('User/password invalid');
+							return EMPTY;
+							break;
+						}
+				}
+				console.log ('connection error', error);
+				return observableThrowError(error);
+			}));
 		}
 
 		return next.handle(this.addToken(req, authService.getAccessToken())).pipe(

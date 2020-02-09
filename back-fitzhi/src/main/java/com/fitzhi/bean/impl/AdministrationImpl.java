@@ -42,9 +42,9 @@ public class AdministrationImpl implements Administration {
 	private String rootLocation;
 
 	/**
-	 * Does Tixhì allow self registration ?
+	 * Does Fitzhì allow self registration ?
 	 * <ul>
-	 * <li>Either, everyone can create his own user, by simply connecting to the Tixhì URL</li>
+	 * <li>Either, everyone can create his own user, by simply connecting to the Fitzhì URL</li>
 	 * <li>Or a login must be already registered for the new user in the staff collection.</li>
 	 * </ul>
 	 */
@@ -94,12 +94,13 @@ public class AdministrationImpl implements Administration {
 		Optional<Staff> oStaff = staffHandler.findStaffWithLogin(login);
 		final Staff staff = oStaff.isPresent() ? oStaff.get() : null;
 		
+		final String encryptedPassword = DataEncryption.encryptMessage(password);
+		
 		/**
-		 * The very first user created is the very first administrative user in Techxhì.
+		 * The very first user created is the very first administrative user in Fitzhì.
 		 * Therefore the self registration is obviously allowed
 		 */
 		if (isVeryFirstConnection()) {
-			String encryptedPassword = DataEncryption.encryptMessage(password);
 			if (staff != null) {
 				staffHandler.savePassword(staff, encryptedPassword);
 				return staff;
@@ -110,16 +111,16 @@ public class AdministrationImpl implements Administration {
 
 		if (this.allowSelfRegistration)  {
 			if (staff == null) {
-				return staffHandler.addNewStaffMember(new Staff(-1, login, password));				
+				return staffHandler.addNewStaffMember(new Staff(-1, login, encryptedPassword));				
 			} else {
-				return updatePassword (staff, password);
+				return updatePassword (staff, encryptedPassword);
 			}
 		} else {
 			if (staff == null) {
 				throw new SkillerException(CODE_CANNOT_SELF_CREATE_USER, 
 						MESSAGE_CANNOT_SELF_CREATE_USER);
 			} else {
-				return updatePassword (staff, password);
+				return updatePassword (staff, encryptedPassword);
 			}
 		}
 	}
@@ -152,6 +153,10 @@ public class AdministrationImpl implements Administration {
 		
 		Staff staff = staffHandler.findStaffWithLogin(login)
 				.orElseThrow(() -> new SkillerException(CODE_INVALID_LOGIN_PASSWORD, MESSAGE_INVALID_LOGIN_PASSWORD));
+		
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("login found %s", staff.fullName()));
+		}
 		
 		if (!staff.isValidPassword(password)) {
 			throw new SkillerException(CODE_INVALID_LOGIN_PASSWORD, MESSAGE_INVALID_LOGIN_PASSWORD);

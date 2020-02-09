@@ -34,7 +34,6 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	
 	@Autowired
 	public void globalUserDetails(AuthenticationManagerBuilder auth) throws Exception {
-
 		auth.authenticationProvider(authenticationProvider);
 	}
 
@@ -42,7 +41,6 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable().anonymous().disable().authorizeRequests().antMatchers("/oauth/token").permitAll()
 				.anyRequest().authenticated();
-
 	}
 
 	@Override

@@ -12,31 +12,29 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.controller.ProjectController;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
 @Service
+@Slf4j
 public class CustomUserDetailsService implements UserDetailsService {
-
-	/**
-	 * The logger.
-	 */
-	private Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class.getCanonicalName());
 
 	@Autowired
 	StaffHandler staffHandler;
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("loadUserByUsername(%s)", username));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("loadUserByUsername(%s)", username));
 		}
 		return staffHandler.findStaffWithLogin(username).orElseThrow(
 				() -> new UsernameNotFoundException(String.format("'%s' not found in Staff", username)));
 		
 	}
-
 
 }

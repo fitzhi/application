@@ -45,7 +45,7 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	@Value("${refreshTokenDuration}")
 	private int refreshTokenDuration;
 
-	public static final String TRUSTED_CLIENT_USERNAME = "wibkac-trusted-client";
+	public static final String TRUSTED_CLIENT_USERNAME = "fitzhi-trusted-client";
 	
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {

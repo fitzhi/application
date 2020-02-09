@@ -42,6 +42,5 @@ public class DataEncryptionTest {
 		Assert.assertTrue("test message".equals(data));
 	}	
 
-
 }
 

@@ -67,21 +67,23 @@ export class ConnectUserComponent implements OnInit {
 	onSubmit() {
 		const username: string = this.connectionGroup.get('username').value;
 		const password: string = this.connectionGroup.get('password').value;
-		this.authService.connect(username, password)
-			.subscribe(connectionStatus => {
-					this.messengerUserConnected.emit(connectionStatus);
-					/**
-					 * If the connection has succeeded, we load the projects.
-					 */
-					if (connectionStatus) {
-						this.projectService.loadProjects();
-						this.staffListService.loadStaff();
-					}
+		this.authService.connect(username, password).subscribe({
 
-					if (this.directLogin) {
-						this.router.navigate(['/welcome'], {});
-					}
-				});
+			next: connectionStatus => {
+				this.messengerUserConnected.emit(connectionStatus);
+				/**
+				 * If the connection has succeeded, we load the projects.
+				 */
+				if (connectionStatus) {
+					this.projectService.loadProjects();
+					this.staffListService.loadStaff();
+				}
+
+				if (this.directLogin) {
+					this.router.navigate(['/welcome'], {});
+				}
+			}
+		});
 	}
 
 	get username(): any {

@@ -33,7 +33,6 @@ import com.fitzhi.exception.SkillerException;
 @RequestMapping("/api/admin")
 public class AdminController {
 
-
 	@Autowired
 	private Administration administration;
 

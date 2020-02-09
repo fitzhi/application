@@ -1,4 +1,4 @@
-echo "starting backend wibkac"
+echo "starting backend Fitzhi"
 echo "-----------------------"
 echo "" 
 

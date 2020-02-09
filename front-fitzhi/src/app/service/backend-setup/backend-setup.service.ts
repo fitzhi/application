@@ -10,10 +10,9 @@ export class BackendSetupService {
 	/**
      * Default URL for a local directory.
      */
-	public defaultUrl = 'http://localhost:8080/api';
+	public defaultUrl = 'http://localhost:8080';
 
-	constructor(private  httpClient: HttpClient) {
-	}
+	constructor(private  httpClient: HttpClient) {}
 
 	/**
      * A URL has already been saved in the localstorage.
@@ -26,7 +25,7 @@ export class BackendSetupService {
      * @return the back-end URL
      */
 	public url() {
-		return localStorage.getItem('backendUrl');
+		return localStorage.getItem('backendUrl') + '/api';
 	}
 
 	/**
@@ -49,6 +48,6 @@ export class BackendSetupService {
 	 */
 	public isVeryFirstConnection(urlCandidate: string): Observable<string> {
 		return this.httpClient.get<string>(
-			urlCandidate + '/admin/isVeryFirstConnection', { responseType: 'text' as 'json' });
+			urlCandidate + '/api/admin/isVeryFirstConnection', { responseType: 'text' as 'json' });
 	}
 }

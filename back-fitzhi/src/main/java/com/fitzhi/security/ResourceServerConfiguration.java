@@ -1,5 +1,6 @@
 package com.fitzhi.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -13,6 +14,12 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
 	private static final String RESOURCE_ID = "my_rest_api";
 
+	/**
+	 * cache directory for intermediate files representing the repositories.
+	 */
+	@Value("${development.unplugged.security}")
+	private String developmentUnpluggedSecurity;
+	
 	@Override
 	public void configure(ResourceServerSecurityConfigurer resources) {
 		resources.resourceId(RESOURCE_ID).stateless(false);
@@ -20,11 +27,9 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
-		http.
-		authorizeRequests()
-		.antMatchers(
-				
-				// For development only.
+
+		if ("1".equals(developmentUnpluggedSecurity)) {
+			http.authorizeRequests().antMatchers(
 				 "/api/staff/**", 
 				 "/api/skill/**", 
 				 "/api/project/**", 
@@ -36,10 +41,20 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				"/api/admin/saveVeryFirstConnection", 
 				"/api/admin/veryFirstUser",
 				"/api/admin/register",
-	//DEV			"/api/skill/all",
 				"/api/referential/**").permitAll()
-		.antMatchers("/**").access("hasRole('USER')")
-		.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
+				.antMatchers("/**").access("hasRole('USER')")
+				.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
+		} else {
+			http.authorizeRequests().antMatchers(
+				"/api/admin/isVeryFirstConnection", 
+				"/api/admin/saveVeryFirstConnection", 
+				"/api/admin/veryFirstUser",
+				"/api/admin/register",
+				 "/api/skill/all", 
+				"/api/referential/**").permitAll()
+				.antMatchers("/**").access("hasRole('USER')")
+				.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
+		}
 	}
-
+	
 }
