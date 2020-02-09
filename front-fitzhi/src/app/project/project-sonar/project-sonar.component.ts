@@ -56,7 +56,7 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 	private NONE = Constants.PROJECT_SONAR_PANEL.NONE;
 
 	constructor(
-		private projectService: ProjectService,
+		public projectService: ProjectService,
 		private cinematicService: CinematicService) { super(); }
 
 

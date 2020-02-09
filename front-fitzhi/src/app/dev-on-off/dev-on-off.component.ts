@@ -12,7 +12,7 @@ export class DevOnOffComponent implements OnInit {
 
 	private devOFF = 'I was in Development mode. Now I am in Production mode !';
 
-	private devOnOff = ' ';
+	public devOnOff = ' ';
 
 	constructor() { }
 

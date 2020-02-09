@@ -57,7 +57,7 @@ export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit
 	private attachmentList$ = new BehaviorSubject<AttachmentFile[]>([]);
 
 	constructor(
-		private projectService: ProjectService,
+		public projectService: ProjectService,
 		private cinematicService: CinematicService,
 		private referentialService: ReferentialService) { super(); }
 

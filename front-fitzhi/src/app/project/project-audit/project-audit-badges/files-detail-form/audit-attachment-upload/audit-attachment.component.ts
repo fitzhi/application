@@ -53,7 +53,7 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 	/**
 	 * This `boolean` setup if we are in upload mode (or in delete mode).
 	 */
-	private modeUpload = true;
+	public modeUpload = true;
 
 	/**
 	 * Label associated to the type of applicaton.

@@ -30,12 +30,12 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
 	/**
 	 * Selected TAB. This observable is fired by the StaffComponent class when the user changes the tab selected.
 	 */
-	private selectedTab$ = new Subject();
+	public selectedTab$ = new Subject();
 
 	constructor(
-		private cinematicService: CinematicService,
+		public cinematicService: CinematicService,
 		private route: ActivatedRoute,
-		private staffListService: StaffListService,
+		public staffListService: StaffListService,
 		private messageService: MessageService,
 		private staffDataExchangeService: StaffDataExchangeService,
 		private router: Router) {

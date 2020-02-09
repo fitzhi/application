@@ -83,7 +83,6 @@ import { HttpTokenInterceptorService } from './admin/service/http/http-token-int
 import { CiaoComponent } from './ciao/ciao.component';
 import { TableDependenciesComponent } from './project/project-sunburst/table-dependencies/table-dependencies.component';
 import { InLineEditDialogComponent } from './project/project-sunburst/table-dependencies/in-line-edit-dialog/in-line-edit-dialog.component';
-import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 import { ProjectAuditComponent } from './project/project-audit/project-audit.component';
 import { DevOnOffComponent } from './dev-on-off/dev-on-off.component';
 import { ProjectSonarComponent } from './project/project-sonar/project-sonar.component';
@@ -109,6 +108,7 @@ import { AuditUploadAttachmentComponent } from './project/project-audit/project-
 import { PieDashboardComponent } from './welcome/pie-dashboard/pie-dashboard.component';
 import { PieChartComponent } from './welcome/pie-dashboard/pie-chart/pie-chart.component';
 import { PieProjectsComponent } from './welcome/pie-dashboard/pie-projects/pie-projects.component';
+import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 
 @NgModule({
 	declarations: [
@@ -170,7 +170,6 @@ import { PieProjectsComponent } from './welcome/pie-dashboard/pie-projects/pie-p
 		PieDashboardComponent,
 		PieChartComponent,
 		PieProjectsComponent,
-		TagifyStarsComponent
 	],
 	entryComponents: [
 		StaffUploadCvComponent,

@@ -81,10 +81,10 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	public topic$ = new Subject<TopicProject>();
 
 	constructor(
-		private referentialService: ReferentialService,
-		private projectService: ProjectService,
-		private messageService: MessageService,
-		private cinematicService: CinematicService) { super(); }
+		public referentialService: ReferentialService,
+		public projectService: ProjectService,
+		public messageService: MessageService,
+		public cinematicService: CinematicService) { super(); }
 
 	ngOnInit() {
 

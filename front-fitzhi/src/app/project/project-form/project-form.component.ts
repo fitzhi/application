@@ -95,13 +95,13 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	/**
 	 * Are we creating a new project ? or are we updating an existing one ?
 	 */
-	private creation = false;
+	public creation = false;
 
 	/**
 	 * This boolean caracterize the fact that the Sonar server is reachable.
 	 * We can add Sonar project to this internal project.
 	 */
-	private sonarProjectsLoaded = false;
+	public sonarProjectsLoaded = false;
 
 	/**
 	 * This event emitter will throw an error if the method.
@@ -113,10 +113,10 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	constructor(
 		private cinematicService: CinematicService,
 		private messageService: MessageService,
-		private referentialService: ReferentialService,
-		private skillService: SkillService,
-		private projectService: ProjectService,
-		private sonarService: SonarService,
+		public referentialService: ReferentialService,
+		public skillService: SkillService,
+		public projectService: ProjectService,
+		public sonarService: SonarService,
 		private router: Router) {
 		super();
 

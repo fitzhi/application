@@ -46,12 +46,12 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	/**
 	 * This boolean agregates the conditions required for displaying the audit badge.
 	 */
-	private displayAuditBadge = false;
+	public displayAuditBadge = false;
 
 	constructor(
-		private referentialService: ReferentialService,
-		private projectService: ProjectService,
-		private cinematicService: CinematicService) {
+		public referentialService: ReferentialService,
+		public projectService: ProjectService,
+		public cinematicService: CinematicService) {
 		super();
 	}
 

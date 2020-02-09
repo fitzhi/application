@@ -29,12 +29,12 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 		private projectService: ProjectService,
 		private sonarService: SonarService) { super(); }
 
-	private isSonarAccessible = false;
+	public isSonarAccessible = false;
 
 	/**
 	 * Equal to TRUE if the current Sonar version is 7.x or higher
 	 */
-	private isSonarVersion71x = false;
+	public isSonarVersion71x = false;
 
 	/**
 	 * Key of the current selected Sonar project.

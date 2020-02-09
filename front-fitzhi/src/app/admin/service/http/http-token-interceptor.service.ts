@@ -52,7 +52,7 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 				if (error instanceof HttpErrorResponse) {
 					switch ((<HttpErrorResponse>error).status) {
 						case 401:
-							this.messageService.error('User/password invalid');
+							this.messageService.error('User/password invalid.');
 							return EMPTY;
 							break;
 						}

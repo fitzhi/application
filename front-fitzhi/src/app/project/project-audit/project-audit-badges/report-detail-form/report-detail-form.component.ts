@@ -60,7 +60,6 @@ export class ReportDetailFormComponent extends AuditBaseComponent implements OnI
 				}
 			});
 
-
 	}
 
 	/**

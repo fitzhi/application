@@ -58,7 +58,7 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	constructor(
 		private cinematicService: CinematicService,
 		private referentialService: ReferentialService,
-		private projectService: ProjectService) { super(); }
+		public projectService: ProjectService) { super(); }
 
 	ngOnInit(): void {
 	}
@@ -83,7 +83,7 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 * @param id the topic identifier.
 	 */
 	/* tslint:enable: no-trailing-whitespace */
-	private classTopic(id: number) {
+	public classTopic(id: number) {
 		const clazz = (this.cinematicService.idTopicSelected === id) ? 'audit-thumbnail-selected' : 'audit-thumbnail';
 		return clazz;
 	}
@@ -95,7 +95,7 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 * @param id the topic identifier.
 	 */
 	/* tslint:enable: no-trailing-whitespace */
-	private classIconTasks(id: number) {
+	public classIconTasks(id: number) {
 		const clazz = (this.cinematicService.isPanelDetailSelected(this.id, AuditDetail.Tasks)) ? 'tasks-selected' : 'tasks';
 		return clazz;
 	}
@@ -107,7 +107,7 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 * @param id the topic identifier.
 	 */
 	/* tslint:enable: no-trailing-whitespace */
-	private classIconReport(id: number) {
+	public classIconReport(id: number) {
 		const clazz = (this.cinematicService.isPanelDetailSelected(this.id, AuditDetail.Report)) ? 'report-selected' : 'report';
 		return clazz;
 	}
@@ -127,7 +127,7 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	/**
 	 * This function emits asignal broadcasting that audit-task form should be visible, or hidden.
 	 */
-	private showHideAuditTasks() {
+	public showHideAuditTasks() {
 		this.cinematicService.auditHistory[this.id].tasksVisible = !this.cinematicService.auditHistory[this.id].tasksVisible;
 		this.messengerShowHideAuditDetail.emit(new AuditChosenDetail(this.id, AuditDetail.Tasks));
 	}
@@ -135,7 +135,7 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	/**
 	 * This function emits asignal broadcasting that audit-task form should be visible, or hidden.
 	 */
-	private showHideAuditReport() {
+	public showHideAuditReport() {
 		this.cinematicService.auditHistory[this.id].reportVisible = !this.cinematicService.auditHistory[this.id].reportVisible;
 		this.messengerShowHideAuditDetail.emit(new AuditChosenDetail(this.id, AuditDetail.Report));
 	}

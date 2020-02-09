@@ -34,7 +34,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	/**
 	 * Employee retrieve from `StaffComponent` access.
 	 */
-	private collaborator: Collaborator;
+	public collaborator: Collaborator;
 
 	/**
 	 * JS object handling the projects component.
@@ -76,7 +76,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	 * This `BehaviorSubject` is hosting the number of missions for the current active project.
 	 * This number is displayed on a badge-pill on top of the panal.
 	 */
-	private numberOfMissions$ = new BehaviorSubject<number>(0);
+	public numberOfMissions$ = new BehaviorSubject<number>(0);
 
 	constructor(
 		private messageService: MessageService,

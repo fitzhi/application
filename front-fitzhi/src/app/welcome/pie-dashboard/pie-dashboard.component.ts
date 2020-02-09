@@ -13,7 +13,7 @@ export class PieDashboardComponent extends BaseComponent implements OnInit, OnDe
 	/**
 	 * Available buttons.
 	 */
-	private selection  = {
+	public selection  = {
 		none: 0,
 		lastMonthSummary: 1,
 		lastYearSummary: 2,
@@ -23,9 +23,9 @@ export class PieDashboardComponent extends BaseComponent implements OnInit, OnDe
 	/**
 	 * Selected button
 	 */
-	private selected = this.selection.none;
+	public selected = this.selection.none;
 
-	private pieIdentifier = {
+	public pieIdentifier = {
 		lastMonth: 1,
 		lastYear: 2,
 		current: 3,
@@ -35,8 +35,8 @@ export class PieDashboardComponent extends BaseComponent implements OnInit, OnDe
 	};
 
 	constructor(
-		private projectService: ProjectService,
-		private pieDashboardService: PieDashboardService) {
+		public projectService: ProjectService,
+		public pieDashboardService: PieDashboardService) {
 			super();
 	}
 

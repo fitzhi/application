@@ -27,7 +27,7 @@ export class SonarQuotationComponent extends BaseComponent implements OnInit, On
 	/**
 	 * Array of Project evaluations.
 	 */
-	private evaluations: BadgeQuotation[] = [];
+	public evaluations: BadgeQuotation[] = [];
 
 	/**
 	 * Title of the quotation badge

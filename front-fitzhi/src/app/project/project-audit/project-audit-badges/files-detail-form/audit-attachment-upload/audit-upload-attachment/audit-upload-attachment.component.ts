@@ -35,7 +35,7 @@ export class AuditUploadAttachmentComponent extends BaseComponent implements OnI
 	/**
 	 * this `boolean` is setting that this file is valid for uploading.
 	 */
-	private validFile = false;
+	public validFile = false;
 
 	constructor(
 		private fileService: FileService,
@@ -70,7 +70,7 @@ export class AuditUploadAttachmentComponent extends BaseComponent implements OnI
 	/**
 	 * End-user asks for the upload.
 	 */
-	private submit(): void {
+	public submit(): void {
 		this.upload(this.attachmentFile);
 	}
 

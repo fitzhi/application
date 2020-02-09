@@ -14,7 +14,7 @@ export class AuditBaseComponent extends BaseComponent implements OnDestroy, Afte
 	/**
 	 * Font awesome.
 	 */
-	private fontAwesome = '';
+	public fontAwesome = '';
 
 	constructor(public headerText: string, public projectService: ProjectService) {
 		super();

@@ -1,6 +1,5 @@
 import { Constants } from '../../constants';
 import { Collaborator } from '../../data/collaborator';
-import { StaffDTO } from '../../data/external/staffDTO';
 import { MessageService } from '../../message/message.service';
 import { SkillService } from '../../service/skill.service';
 import { StaffService } from '../../service/staff.service';
@@ -12,14 +11,11 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { BaseComponent } from '../../base/base.component';
 import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
 import { TagStar } from '../staff-form/tag-star';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { Experience } from 'src/app/data/experience';
-import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { INTERNAL_SERVER_ERROR} from 'http-status-codes';
-import { take } from 'rxjs/operators';
-import { DeclaredExperience } from 'src/app/data/declared-experience';
 import { FileService } from 'src/app/service/file.service';
+import { Subject } from 'rxjs';
+import { DeclaredExperience } from 'src/app/data/declared-experience';
+import { take } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-staff-experience',

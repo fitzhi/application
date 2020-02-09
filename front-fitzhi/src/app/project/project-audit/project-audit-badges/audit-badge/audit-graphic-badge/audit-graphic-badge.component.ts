@@ -62,7 +62,7 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	styleSize: any;
 
 	constructor(
-		private projectService: ProjectService,
+		public projectService: ProjectService,
 		private referentialService: ReferentialService,
 		private cinematicService: CinematicService) { super(); }
 

@@ -41,7 +41,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	/**
 	 * Is The Sonar server accessible ?
 	 */
-	private isSonarAccessible = false;
+	public isSonarAccessible = false;
 
 	/**
 	 * The datasource that contains the filtered projects;
