@@ -179,12 +179,12 @@ import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars
 		InLineEditDialogComponent
 	],
 	imports: [
-		BrowserModule,
-		AppRoutingModule,
 		BsDropdownModule.forRoot(),
 		TooltipModule.forRoot(),
 		ModalModule.forRoot(),
-		NgbModule.forRoot(),
+		BrowserModule,
+		AppRoutingModule,
+		NgbModule,
 		FormsModule,
 		HttpClientModule,
 		ReactiveFormsModule,
