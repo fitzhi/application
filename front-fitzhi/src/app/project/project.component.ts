@@ -156,7 +156,9 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 				//
 				switchMap(project => {
 					this.projectService.project = project;
-					this.projectService.dump(project, 'projectComponent');
+					if (Constants.DEBUG) {
+						this.projectService.dump(project, 'projectComponent');
+					}
 					return this.sonarService.sonarIsAccessible$(this.projectService.project);
 				}))
 				//
