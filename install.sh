@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Setup here the path of maven
-alias mvn=/usr/local/maven/bin/mvn
+# alias mvn=/usr/local/maven/bin/mvn
 
 helpFunction()
 {
