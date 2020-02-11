@@ -50,9 +50,9 @@ mkdir -pv git_repo_for_test
 cd git_repo_for_test
 rm -Rf first-test
 git clone https://github.com/frvidal/first-test 
-rm -Rf wibkac
-git clone https://github.com/frvidal/wibkac
-cd ..
+#rm -Rf wibkac
+#git clone https://github.com/frvidal/wibkac
+#cd ..
 fi
 
 mkdir -pv $dir/backend-fitzhi
