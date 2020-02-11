@@ -52,7 +52,7 @@ rm -Rf first-test
 git clone https://github.com/frvidal/first-test 
 #rm -Rf wibkac
 #git clone https://github.com/frvidal/wibkac
-#cd ..
+cd ..
 fi
 
 mkdir -pv $dir/backend-fitzhi
