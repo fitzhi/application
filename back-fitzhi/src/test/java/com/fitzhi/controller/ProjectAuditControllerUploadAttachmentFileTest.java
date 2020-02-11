@@ -38,6 +38,7 @@ import com.fitzhi.service.FileType;
 import com.fitzhi.service.impl.storageservice.AuditAttachmentStorageProperties;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
 /**
  * <p>
  * Test of the class {@link ProjectAuditController}
@@ -93,7 +94,6 @@ public class ProjectAuditControllerUploadAttachmentFileTest {
 	}
 	
 	@Test
-	@WithMockUser
 	public void testAddFirstAttachment() throws Exception {
 		
 		uploadfile(UPLOAD_FILENAME_DOCX, FileType.FILE_TYPE_DOCX.getValue());
