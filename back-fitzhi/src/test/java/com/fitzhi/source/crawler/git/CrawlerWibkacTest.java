@@ -39,7 +39,7 @@ import com.fitzhi.source.crawler.RepoScanner;
 @TestPropertySource(properties = { "prefilterEligibility=false" }) 
 public class CrawlerWibkacTest {
 
-	private static final String WIBKAC = "wibkac";
+	private static final String FITZHI = "application";
 
 	private static final String DIR_GIT = "../git_repo_for_test/%s/";
 
@@ -64,7 +64,7 @@ public class CrawlerWibkacTest {
 	
 	@Before
 	public void before() {
-		project = new Project(1000, WIBKAC);
+		project = new Project(1000, FITZHI);
 	}
 	
 	/**
@@ -76,17 +76,17 @@ public class CrawlerWibkacTest {
 	public void testFilterEligible() throws IOException, SkillerException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
-		repository = builder.setGitDir(new File(String.format(FILE_GIT, WIBKAC))).readEnvironment().findGitDir()
+		repository = builder.setGitDir(new File(String.format(FILE_GIT, FITZHI))).readEnvironment().findGitDir()
 				.build();
 
 		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);
-		scanner.finalizeListChanges(String.format(DIR_GIT, WIBKAC), analysis);
+		scanner.finalizeListChanges(String.format(DIR_GIT, FITZHI), analysis);
 		assertTrue(
-				analysis.getPathsAll().contains("front-skiller/src/assets/img/zhi.png"));
+				analysis.getPathsAll().contains("front-fitzhi/src/assets/img/zhi.png"));
 
 		scanner.filterEligible(analysis);
 
-		assertFalse(analysis.getPathsAll().contains("front-skiller/src/assets/img/zhi.png"));
+		assertFalse(analysis.getPathsAll().contains("front-fitzhi/src/assets/img/zhi.png"));
 
 	}
 
@@ -99,11 +99,11 @@ public class CrawlerWibkacTest {
 	public void testCleanupPaths() throws IOException, SkillerException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
-		repository = builder.setGitDir(new File(String.format(FILE_GIT, WIBKAC))).readEnvironment().findGitDir()
+		repository = builder.setGitDir(new File(String.format(FILE_GIT, FITZHI))).readEnvironment().findGitDir()
 				.build();
 
 		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);
-		scanner.finalizeListChanges(String.format(DIR_GIT, WIBKAC), analysis);
+		scanner.finalizeListChanges(String.format(DIR_GIT, FITZHI), analysis);
 		scanner.filterEligible(analysis);
 		scanner.cleanupPaths(analysis);
 		analysis.getPathsAll().stream().forEach(System.out::println);
@@ -119,7 +119,7 @@ public class CrawlerWibkacTest {
 	public void testSaveChanges() throws IOException, SkillerException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
-		repository = builder.setGitDir(new File(String.format(FILE_GIT, WIBKAC))).readEnvironment().findGitDir()
+		repository = builder.setGitDir(new File(String.format(FILE_GIT, FITZHI))).readEnvironment().findGitDir()
 				.build();
 
 		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);
@@ -136,20 +136,20 @@ public class CrawlerWibkacTest {
 	public void testsaveSCMPath() throws IOException, SkillerException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
-		repository = builder.setGitDir(new File(String.format(FILE_GIT, WIBKAC))).readEnvironment().findGitDir()
+		repository = builder.setGitDir(new File(String.format(FILE_GIT, FITZHI))).readEnvironment().findGitDir()
 				.build();
 
 		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);
 
 		Project p = new Project(777, "test");
-		p.setLocationRepository(new File(String.format(FILE_GIT, WIBKAC)).getAbsolutePath());
+		p.setLocationRepository(new File(String.format(FILE_GIT, FITZHI)).getAbsolutePath());
 		dataSaver.saveRepositoryDirectories(p, analysis.getChanges());
 	}
 
 	@Test
 	public void testParseRepository() throws IOException, SkillerException {
 		Project prj = new Project (777, "vegeo");
-		prj.setLocationRepository(String.format(DIR_GIT, WIBKAC));
+		prj.setLocationRepository(String.format(DIR_GIT, FITZHI));
 		projectHandler.addNewProject(prj);
 		scanner.parseRepository(prj, new ConnectionSettings());
 	}

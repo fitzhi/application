@@ -28,7 +28,7 @@ import com.fitzhi.data.source.CommitRepository;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@TestPropertySource(properties = { "cacheDirRepository=./src/test/resources/cacheDirRepository/", "cache_duration=100000" }) 
+@TestPropertySource(properties = { "cache.working.dir=./src/test/resources/cacheDirRepository/", "cache_duration=100000" }) 
 public class DataPreparation {
 
 	@Autowired

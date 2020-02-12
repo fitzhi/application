@@ -1,7 +1,5 @@
 #!/bin/sh
 
-# Setup here the path of maven
-alias mvn=/usr/local/maven/bin/mvn
 
 helpFunction()
 {
@@ -51,7 +49,7 @@ cd git_repo_for_test
 rm -Rf first-test
 git clone https://github.com/frvidal/first-test 
 rm -Rf wibkac
-git clone https://github.com/frvidal/wibkac
+git clone https://github.com/fitzhi/application
 cd ..
 fi
 
