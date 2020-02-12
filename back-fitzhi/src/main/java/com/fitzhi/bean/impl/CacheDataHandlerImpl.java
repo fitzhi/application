@@ -36,7 +36,7 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	/**
 	 * cache directory for intermediate files representing the repositories.
 	 */
-	@Value("${cacheDirRepository}")
+	@Value("${cache.working.dir}")
 	private String cacheDirRepository;
 
 	/**
@@ -107,7 +107,8 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 
 		//Get the repository path
 		Path path = Paths.get(getCacheFilename(project));
-		 
+		System.out.println(path.toAbsolutePath()); 
+		
 		//Use try-with-resource to get auto-closeable buffered writer instance close
 		try (BufferedWriter writer = Files.newBufferedWriter(path)) {
 		    gson.toJson(repository, writer);
@@ -131,7 +132,17 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	 * @return the cache filename for the passed project
 	 */
 	private String getCacheFilename(final Project project) {
-		return cacheDirRepository+project.getId()+"-"+project.getName()+".json";
+		Path rootLocation = Paths.get(cacheDirRepository);
+		final File destination = rootLocation.resolve("").toFile();
+		// If the destination directory does not exist, we create it
+		if (!destination.exists()) {
+			try {
+				destination.mkdir();
+			} catch (final SecurityException se) {
+				throw new SkillerRuntimeException(se);
+			}
+		}
+		return rootLocation.resolve(project.getId()+"-"+project.getName()+".json").toFile().getAbsolutePath();
 	}
 	
 }

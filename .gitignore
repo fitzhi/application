@@ -92,3 +92,5 @@ front-fitzhi/.scannerwork/
 back-fitzhi/src/test/resources/out_dir/changes-data/
 
 back-fitzhi/src/test/resources/out_dir/pathnames-data/*.txt
+
+back-fitzhi/upload-dir/
