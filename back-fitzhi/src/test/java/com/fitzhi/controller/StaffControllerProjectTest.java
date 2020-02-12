@@ -55,7 +55,7 @@ public class StaffControllerProjectTest {
 	
 	@Before 
 	public void before() throws SkillerException {
-		projectHandler.getProjects().put(ID_PROJECT_1235, new Project(ID_PROJECT_1235, PROJECT_1235));
+		projectHandler. getProjects().put(ID_PROJECT_1235, new Project(ID_PROJECT_1235, PROJECT_1235));
 	}
 	
 	@Test
