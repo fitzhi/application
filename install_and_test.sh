@@ -1,4 +1,4 @@
-export locale LANG=C.UTF-8
+export LANG=C.UTF-8
 apt-get update
 apt-get -y install maven
 apt-get -y install default-jdk

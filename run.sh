@@ -1,6 +1,8 @@
-echo "starting backend Fitzhi"
+#!/bin/sh
+
+echo "Starting backend Fitzhi"
 echo "-----------------------"
 echo "" 
 
-sh deploy/backend-fitzhi/fitzhi.jar
+deploy/backend-fitzhi/fitzhi.jar
 
