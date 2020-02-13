@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -75,6 +76,7 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 	 * For retrieving the repository from the file system.
 	 */
 	@Autowired
+	@Qualifier("GIT")
 	public RepoScanner repoScanner;
 	
 	/**
