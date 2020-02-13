@@ -25,6 +25,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import com.fitzhi.bean.CacheDataHandler;
@@ -37,7 +38,6 @@ import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.data.source.Operation;
 import com.fitzhi.exception.SkillerException;
-import com.fitzhi.source.crawler.RepoScanner;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -71,13 +71,6 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 	 */
 	@Autowired
 	public DataHandler dataSaver;
-	
-	/**
-	 * For retrieving the repository from the file system.
-	 */
-	@Autowired
-	@Qualifier("GIT")
-	public RepoScanner repoScanner;
 	
 	/**
 	 * Declared here to operate  {@link StaffHandler#lookup(String)}.
