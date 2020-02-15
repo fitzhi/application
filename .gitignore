@@ -69,8 +69,6 @@ back-fitzhi/TIGF-567_Import_flux_tetra-program.adoc
 
 back-fitzhi/src/test/resources/repository-settings/properties-KAFKA.json
 
-back-fitzhi/src/test/resources/repository-settings/properties-fitzhi.json
-
 back-fitzhi/src/test/resources/repository-settings/properties-VEGEO.json
 
 git_repo_for_test
