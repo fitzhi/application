@@ -26,6 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fitzhi.bean.DataChartHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.RiskProcessor;
 import com.fitzhi.bean.StaffHandler;
@@ -39,6 +40,8 @@ import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.RepoScanner;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import junit.framework.Assert;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -62,6 +65,9 @@ public class GitScannerTest {
 	
 	@Autowired
 	ProjectHandler projectHandler;
+
+	@Autowired
+	DataChartHandler dataChartHandler;
 	
 	/**
 	 * Source control parser.
@@ -82,14 +88,12 @@ public class GitScannerTest {
 
 		Gson gson = new GsonBuilder().create();
 		
-		String fileProperties = versionControlConnectionSettings + "/properties-SKILLER.json";		
+		String fileProperties = versionControlConnectionSettings + "/properties-FITZHI.json";		
 
 		File file = new File(fileProperties);
 		
-		// This test is only available on the PIC of wibkac
-		if (!file.exists()) {
-			return;
-		}
+		// This test is only available on the PIC of Fitzhì
+		assertThat (!file.exists());
 
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("connection settings pathname %s", file.getAbsolutePath()));
@@ -125,19 +129,6 @@ public class GitScannerTest {
         
 		RiskDashboard data = scanner.aggregateDashboard(project, repo);
 		
-		if (logger.isDebugEnabled()) {
-			staffHandler.getContributors(2)
-				.stream()
-				.filter(contributor -> contributor.getIdStaff() != UNKNOWN)
-				.forEach(contributor -> {
-					Staff staff = staffHandler.getStaff().get(contributor.getIdStaff());
-					if (staff == null) {
-						logger.debug(String.format("Do not retrieve the staff with the id %d", contributor.getIdStaff()));
-					} else {
-						logger.debug(String.format("%s %s", staff.getLogin(), staff.isActive()));
-					}
-				});
-		}
 		// Evaluate the risk for each directory, and sub-directory, in the repository.
 		final List<StatActivity> stats = new ArrayList<>();
 		riskProcessor.evaluateTheRisk(repo, data.riskChartData, stats);
@@ -147,7 +138,10 @@ public class GitScannerTest {
 		if (logger.isDebugEnabled()) {
 			logger.debug(dump.toString());
 		}
-       
+		
+		dataChartHandler.aggregateDataChart(data.riskChartData);
+		
+		scanner.aggregateDashboard(project, repo);
 	}
 	
 	@After

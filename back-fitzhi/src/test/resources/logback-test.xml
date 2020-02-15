@@ -22,10 +22,11 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="com.fitzhi.data.encryption" additivity="false">
+	<logger name="com.fitzhi.source.crawler.git" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
+
 
 
 </configuration>

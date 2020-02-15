@@ -67,10 +67,15 @@ public class FileDataHandlerImpl implements DataHandler {
 	private String saveDir;
 
 	/**
-	 * Directory to save the changes file.s
+	 * Directory where the GIT change records are saved.
 	 */
 	private final String SAVED_CHANGES = "changes-data";
 
+	/**
+	 * Directory where the pathnames file is detected on GIT.
+	 */
+	private final String PATHNAMES = "pathnames-data";
+	
 	/**
 	 * Initialization of the Google JSON parser.
 	 */
@@ -226,12 +231,12 @@ public class FileDataHandlerImpl implements DataHandler {
 		}
 	}
 
-	private void createIfNeededDirectorySavedChanges() throws SkillerException { 
+	private void createIfNeededDirectory(String dir) throws SkillerException { 
 
-		Path dir = rootLocation.resolve(SAVED_CHANGES);
-		if (Files.notExists(dir)) {
+		Path path = rootLocation.resolve(dir);
+		if (Files.notExists(path)) {
 			try {
-				Files.createDirectories(dir);
+				Files.createDirectories(path);
 			} catch (Exception e) {
 				throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, SAVED_CHANGES), e);
 			}
@@ -241,8 +246,11 @@ public class FileDataHandlerImpl implements DataHandler {
 
 	@Override
 	public void saveChanges(Project project, SourceControlChanges changes) throws SkillerException {
-	
-		createIfNeededDirectorySavedChanges();
+
+		//
+		// As the method-name explains, we create the directory.
+		//
+		createIfNeededDirectory(SAVED_CHANGES);
 
 		final String filename = SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getName() + "-changes.csv";
 		
@@ -365,9 +373,14 @@ public class FileDataHandlerImpl implements DataHandler {
 	
 	@Override
 	public void saveRepositoryDirectories(Project project, SourceControlChanges changes) throws SkillerException {
-
-		final String filename = "pathnames-data/project-" + project.getId() + "-pathnames.txt";
-
+		
+		//
+		// As the method-name explains, we create the directory.
+		//
+		createIfNeededDirectory(PATHNAMES);
+		
+		String filename = this.buildDirectoryPathnames(project);
+		
 		List<String> directories = changes.keySet().stream()
 				.map(this::extractDirectory)
 				.distinct()
@@ -391,13 +404,13 @@ public class FileDataHandlerImpl implements DataHandler {
         }
 	}
 
-
 	@Override
 	public List<String> loadRepositoryDirectories(Project project) throws SkillerException {
 		
-		final String filename = "pathnames-data/project-" + project.getId() + "-pathnames.txt";
+		String filename = this.buildDirectoryPathnames(project);
+		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Loading the paths file %s", rootLocation.resolve(filename)));
+			log.debug(String.format("Loading the paths file %s", rootLocation.resolve(filename).toAbsolutePath()));
 		}
 
 		File file = rootLocation.resolve(filename).toFile();
@@ -406,8 +419,19 @@ public class FileDataHandlerImpl implements DataHandler {
 			return br.lines().collect(Collectors.toList());
         } catch (IOException ioe) {
         	throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
-        }
-		
+        }		
+	}
+
+	/**
+	 * Building the pathnames file path
+	 * @param project the current project
+	 * @return the expected path
+	 */
+	private String buildDirectoryPathnames(Project project) {
+		return String.format("%s/%d-%s-pathnames.txt", 
+			PATHNAMES,
+			project.getId(),
+			project.getName());
 	}
 
 
