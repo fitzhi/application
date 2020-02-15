@@ -372,19 +372,20 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			});
 		}
 
-		/**
-		 * No Sonar server declared -> No project available.
-		 */
-		if (!this.projectService.project.urlSonarServer) {
-			return of(false);
-		}
-
-		return this.sonarService.allSonarProjects$(this.projectService.project)
+		return this.projectService.projectLoaded$
+			.pipe(switchMap(
+				doneAndOk => {
+					return (doneAndOk) ?
+						this.sonarService.allSonarProjects$(this.projectService.project) :
+						EMPTY;
+				}))
 			.pipe (
-				map (sonarProjects => {
+				tap(sonarProjects => {
 					if (Constants.DEBUG) {
 						console.log ('Receiving ' + sonarProjects.length + ' Sonar projects');
 					}
+				}),
+				map (sonarProjects => {
 
 					if (sonarProjects.length === 0) {
 						return false;
@@ -692,6 +693,10 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * Submit the change. The project will be created, or updated.
 	 */
 	onSubmit() {
+		// We create a new project is necessary.
+		if (!this.projectService.project) {
+			this.projectService.project = new Project();
+		}
 		this.projectService.project.name = this.profileProject.get('projectName').value;
 		this.projectService.project.urlSonarServer = this.profileProject.get('urlSonarServer').value;
 		switch (this.projectService.project.connectionSettings) {
