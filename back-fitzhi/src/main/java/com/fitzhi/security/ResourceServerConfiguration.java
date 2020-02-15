@@ -51,7 +51,8 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				"/api/admin/saveVeryFirstConnection", 
 				"/api/admin/veryFirstUser",
 				"/api/admin/register",
-				 "/api/skill/all", 
+				"/api/test/ping",
+				"/api/skill/all", 
 				"/api/referential/**").permitAll()
 				.antMatchers("/**").access("hasRole('USER')")
 				.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
