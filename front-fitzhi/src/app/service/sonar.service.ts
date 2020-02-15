@@ -181,7 +181,7 @@ export class SonarService extends InternalService {
 	}
 
 	/**
-	 * Retrieve the `SonarServer` associated to the given project
+	 * Retrieve the `SonarServer` associated with the given project
 	 * @param project the passed project
 	 */
 	getSonarServer(project: Project): SonarServer {
@@ -236,7 +236,8 @@ export class SonarService extends InternalService {
 	}
 
 	/**
-	 * This function emtis all projects declared on Sonar associated to the given project.
+	 * This function emtis all **Sonar** projects declared on Sonar associated with the Fitzhì project.
+	 * 
 	 */
 	public allSonarProjects$(project: Project):  Observable<Component[]> {
 		const sonarServer = this.getSonarServer(project);
