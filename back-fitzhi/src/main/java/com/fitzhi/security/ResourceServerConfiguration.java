@@ -52,6 +52,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				"/api/admin/veryFirstUser",
 				"/api/admin/register",
 				"/api/test/ping",
+				"/api/project/all", 
 				"/api/skill/all", 
 				"/api/referential/**").permitAll()
 				.antMatchers("/**").access("hasRole('USER')")
