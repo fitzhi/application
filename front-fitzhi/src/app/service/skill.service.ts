@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Skill } from '../data/skill';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { InternalService } from '../internal-service';
 
 import { Constants } from '../constants';
 import { ListCriteria } from '../data/listCriteria';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
-import { take } from 'rxjs/operators';
+import { take, tap } from 'rxjs/operators';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -19,9 +19,10 @@ const httpOptions = {
 export class SkillService extends InternalService {
 
 	/*
-	 * skills
+	 * Are skills loaded or not ?
 	 */
-	public allSkills$  = new BehaviorSubject<Skill[]>([]);
+	private _allSkillsLoaded$  = new BehaviorSubject<boolean>(false);
+	public allSkillsLoaded$  = this._allSkillsLoaded$.asObservable();
 
 	/*
 	 * list of skills filtered.
@@ -53,7 +54,6 @@ export class SkillService extends InternalService {
 			this.loadSkills();
 		}
 
-		this.allSkills$.subscribe(sks => this.allSkills = sks);
 	}
 
 	/**
@@ -64,11 +64,10 @@ export class SkillService extends InternalService {
 		if (Constants.DEBUG) {
 			this.log('Fetching all skills on URL ' + this.backendSetupService.url() + '/skill' + '/all');
 		}
-		const subSkills = this.httpClient
+		this.httpClient
 			.get<Skill[]>(this.backendSetupService.url() + '/skill' + '/all')
-			.pipe(take(1))
-			.subscribe(
-				skills => {
+			.pipe(
+				tap(skills => {
 					if (Constants.DEBUG) {
 						console.groupCollapsed('Skills registered : ');
 						skills.forEach(function (skill) {
@@ -76,9 +75,21 @@ export class SkillService extends InternalService {
 						});
 						console.groupEnd();
 					}
-					this.allSkills$.next(skills);
-				},
-				error => console.log(error));
+				}),
+				take(1))
+			.subscribe( {
+				next: skills => this.setAllSkills(skills),
+				error: error => console.log(error)
+			});
+	}
+
+	/**
+	 * Set the array containing all skills.
+	 * @param skills the complete list of skills
+	 */
+	private setAllSkills(skills: Skill[]) {
+		this.allSkills = skills;
+		this._allSkillsLoaded$.next(true);
 	}
 
 	/**

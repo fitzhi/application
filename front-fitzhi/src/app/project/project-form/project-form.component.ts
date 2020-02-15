@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnDestroy, AfterViewInit, EventEmitter, Output, AfterContentInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { take, map, catchError, switchMap } from 'rxjs/operators';
+import { take, map, catchError, switchMap, tap } from 'rxjs/operators';
 
 import { ProjectService } from '../../service/project.service';
 import { CinematicService } from '../../service/cinematic.service';
@@ -18,6 +18,7 @@ import { SonarService } from 'src/app/service/sonar.service';
 import Tagify from '@yaireo/tagify';
 import { MessageGravity } from 'src/app/message/message-gravity';
 import { ReferentialService } from 'src/app/service/referential.service';
+import { Skill } from 'src/app/data/skill';
 
 @Component({
 	selector: 'app-project-form',
@@ -153,17 +154,31 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	}
 
 	ngAfterViewInit() {
+		this.subscriptions.add(
+			this.referentialService.referentialLoaded$.subscribe({
+				next: doneAndOk => {
+					if (doneAndOk) {
+						this.ngAfterViewInitForm();
+					} else {
+						this.messageService.error('Referentials cannot be loaded!');
+					}
+				}
+		}));
+
 		this.subscriptions.add(this.projectService.projectLoaded$
 			.subscribe({
 				next: loaded => {
 					if (loaded) {
-						this.ngAfterViewInitForm();
 						this.ngAfterViewInitSonarProjectsDeclaredInProject();
 						this.ngAfterViewInitSkillsDeclaredInProject();
+					} else {
+						this.messageService.error('Error while loading the project!');
 					}
 				}
 			}));
 	}
+
+
 
 	/**
 	 * This function create 2 JavasScript objects inside the form
@@ -251,22 +266,22 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	ngInitContentSonarAndTagify$(): Observable<boolean> {
 
-		return this.skillService.allSkills$
+		return this.allSkills$()
 			.pipe(
 				take(1),
-				switchMap (skills => {
-					this.tagifySkills.settings.whitelist = [];
-					skills.map(function(skill) { return skill.title; }).forEach(element => {
-						this.tagifySkills.settings.whitelist.push(element);
-					});
+				tap(() => {
 					if (Constants.DEBUG) {
 						console.log ('Initializing the skills inside the tagify component');
 					}
+				}),
+				switchMap (skills => {
+					this.initComponentTagifySkills(skills);
 					return this.sonarProjectsLoaded$();
-			}), catchError ( (error) => {
-				console.error('Internal error : Skills are not retrieved from back-end', error);
-				return this.sonarProjectsLoaded$();
-			}))
+				}),
+				catchError ( (error) => {
+					console.error('Internal error : Skills are not retrieved from back-end', error);
+					return this.sonarProjectsLoaded$();
+				}))
 			.pipe(
 				take(1),
 				switchMap (doneAndOk => {
@@ -302,9 +317,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	}
 
 	ngAfterViewInitSkillsDeclaredInProject() {
-
-		this.skillService.allSkills$
-			.pipe(take(1))
+		this.subscriptions.add(this.allSkills$()
 			.subscribe (skills => {
 				if (this.projectService.project.skills) {
 					if (this.projectService.project.skills.length > 0) {
@@ -313,7 +326,28 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 							.map(function(skill) { return skill.title; }));
 					}
 				}
-			});
+			}));
+	}
+
+	/**
+	 * Return an observable emitting an array containing all skills declared inside the applicaton.
+	 */
+	private allSkills$(): Observable<Skill[]> {
+		return this.skillService.allSkillsLoaded$
+			.pipe( switchMap(doneAndOk => {
+				return doneAndOk ? of(this.skillService.allSkills) : EMPTY;
+			}));
+	}
+
+	/**
+	 * Initialize the tagify component with an array of skills.
+	 * @param skills array of Skill.
+	 */
+	private initComponentTagifySkills(skills: Skill[]) {
+		this.tagifySkills.settings.whitelist = [];
+		skills.map(function(skill) { return skill.title; }).forEach(element => {
+			this.tagifySkills.settings.whitelist.push(element);
+		});
 	}
 
 	/**
