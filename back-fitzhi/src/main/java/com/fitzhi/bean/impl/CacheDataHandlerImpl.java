@@ -107,7 +107,6 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 
 		//Get the repository path
 		Path path = Paths.get(getCacheFilename(project));
-		System.out.println(path.toAbsolutePath()); 
 		
 		//Use try-with-resource to get auto-closeable buffered writer instance close
 		try (BufferedWriter writer = Files.newBufferedWriter(path)) {

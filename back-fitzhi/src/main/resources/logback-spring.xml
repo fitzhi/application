@@ -53,30 +53,9 @@
 		<appender-ref ref="Console" />
 	</logger>
 
-	<logger name="com.fitzhi.bean.impl.ProjectHandlerImpl" additivity="false">
+	<logger name="com.fitzhi.bean.impl" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="Console" />
 	</logger>
 
-	<logger name="com.fitzhi.bean.impl.FileDataSaverImpl" additivity="false">
-		<level value="DEBUG" />
-		<appender-ref ref="Console" />
-	</logger>
-
-	<logger name="com.fitzhi.bean.impl.CacheDataHandlerImpl" additivity="false">
-		<level value="DEBUG" />
-		<appender-ref ref="Console" />
-	</logger>
-
-	<logger name="com.fitzhi.controller" additivity="false">
-		<level value="DEBUG" />
-		<appender-ref ref="Console" />
-	</logger>
-    
-	<logger name="com.fitzhi.security" additivity="false">
-		<level value="WARN" />
-		<appender-ref ref="Console" />
-	</logger>
- 
- 
 </configuration>

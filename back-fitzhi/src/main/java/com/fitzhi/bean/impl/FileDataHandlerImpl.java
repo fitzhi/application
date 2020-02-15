@@ -301,6 +301,9 @@ public class FileDataHandlerImpl implements DataHandler {
 				Files.delete(path);
 			}
 			Path newPath = Files.createFile(path);
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("new path %s is created", newPath.toAbsolutePath()));
+			}
 			return newPath.toFile();
 	    } catch (IOException ioe) {
 	    	throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, path.toFile().getAbsolutePath()), ioe);
@@ -373,7 +376,7 @@ public class FileDataHandlerImpl implements DataHandler {
 				.collect(Collectors.toList());
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Saving paths file %s", rootLocation.resolve(filename)));
+			log.debug(String.format("Saving paths file %s", rootLocation.resolve(filename).toAbsolutePath()));
 		}		
 		
 		File file = createResetOrCreateFile(filename);
