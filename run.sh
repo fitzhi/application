@@ -4,5 +4,5 @@ echo "Starting backend Fitzhi"
 echo "-----------------------"
 echo "" 
 
-deploy/backend-fitzhi/fitzhi.jar
+./deploy/backend-fitzhi/fitzhi.jar
 
