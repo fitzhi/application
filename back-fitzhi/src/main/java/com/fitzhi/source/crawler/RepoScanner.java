@@ -95,7 +95,7 @@ public interface RepoScanner {
 	 * </p>
 	 * @param analysis the repository analysis.
 	 */
-	public void filterEligible(RepositoryAnalysis analysis);
+	void filterEligible(RepositoryAnalysis analysis);
 
 	/**
 	 * <p>
@@ -113,7 +113,7 @@ public interface RepoScanner {
 	 * @param project the current project
 	 * @param analysis the repository analysis.
 	 */
-	public void removeNonRelevantDirectories(Project project, RepositoryAnalysis analysis);
+	void removeNonRelevantDirectories(Project project, RepositoryAnalysis analysis);
 	
 	/**
 	 * <p>
