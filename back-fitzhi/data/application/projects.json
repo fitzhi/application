@@ -1,7 +1,7 @@
 {
     "1": {
         "id": 1,
-        "name": "Testing project",
+        "name": "Empty project without repository",
         "connection_settings": 0,
         "urlRepository": "",
         "skills": [],
@@ -9,17 +9,11 @@
     },
     "2": {
         "id": 2,
-        "name": "Skiller",
+        "name": "Fitzhi",
         "connection_settings": 2,
-        "urlRepository": "https://github.com/frvidal/skiller",
-        "username": "",
-        "password": "",
-        "filename": "skiller-gitlab.json",
-        "skills": [],
-        "ghosts": [{
-            "pseudo": "frvidal",
-            "idStaff": 1,
-            "technical": false
-        }]
+        "urlRepository": "https://github.com/fitzhi/application",
+        "username": "anonymous",
+   /*     "password": "empty", */
+        "skills": []
     }
 }
