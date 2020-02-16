@@ -188,7 +188,9 @@ export class SonarService extends InternalService {
 
 		const sonarServer = this.sonarServers.find(sonar => sonar.urlSonar === project.urlSonarServer );
 		if (!sonarServer) {
-			console.error('Did not retrieve the Sonar server %s associated with the project %s', project.urlSonarServer, project.name);
+			if (Constants.DEBUG) {
+				console.log('Did not retrieve the Sonar server %s associated with the project %s', project.urlSonarServer, project.name);
+			}
 			return undefined;
 		}
 		return sonarServer;

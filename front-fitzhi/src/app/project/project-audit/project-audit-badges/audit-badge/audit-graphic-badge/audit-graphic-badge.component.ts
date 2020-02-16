@@ -94,20 +94,32 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 				console.log ('Displaying the graphic badge in non-editable mode');
 			}
 			if (this.project) {
-				this.evaluation = this.project.auditEvaluation;
-				this.drawNonEditableBadge(this.project);
+				this.drawBadge(this.project);
 			} else {
 				this.subscriptions.add(
 					this.projectService.projectLoaded$.subscribe({
 						next: doneAndOk => {
 							if (doneAndOk) {
-								this.evaluation = this.projectService.project.auditEvaluation;
-								this.drawNonEditableBadge(this.projectService.project);
+								this.drawBadge(this.projectService.project);
 							}
 						}
 					}));
 			}
 		}
+	}
+
+	/**
+	 * Draw the badge for the given project.
+	 * @param project the given project
+	 */
+	drawBadge(project: Project) {
+		//
+		// We postpone the update to avoir an ExpressionChangedAfterItHasBeenCheckedError Warning
+		//
+		setTimeout(() => {
+			this.evaluation = project.auditEvaluation;
+			this.drawNonEditableBadge(project);
+		}, 0);
 	}
 
 	private drawNonEditableBadge (project: Project) {
