@@ -203,6 +203,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 					 */
 					this.tabsStaffListService.actualizeCollaborator(staff);
 					this.staffDataExchangeService.changeCollaborator(staff);
+
 					this.messageService.success('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
 				});
 	}
@@ -236,7 +237,6 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		//
 		// We remove uselss blank, which might disturb the lookup feature.
 		//
-
 		if (this.collaborator.idStaff === -1) {
 			return;
 		}
@@ -246,7 +246,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		const newLastName = this.profileStaff.get('lastName').value;
 		const oldLastName = this.collaborator.lastName;
 
-		// The staff member was desactivated. Ans the user wants to reactivate him.
+		// The staff member was desactivated. And the user wants to reactivate him.
 		if (field === this.IS_ACTIVE) {
 			if (this.profileStaff.get('active').value) {
 				if (Constants.DEBUG) {
@@ -265,6 +265,15 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 			console.log ('Firstname', newFirstName + '->' + oldFirstName);
 			console.log ('Lastname', newLastName + '->' + oldLastName);
 			console.groupEnd();
+		}
+
+		//
+		// Some staff might have been created only with their login.
+		// The first user in the application is a godd example
+		// So we last test is not necessary if the first & the last name are empty.
+		//
+		if ((!oldFirstName) && (!oldLastName)) {
+			return;
 		}
 
 		if ( (newFirstName !== oldFirstName) && (newLastName !== oldLastName) ) {
