@@ -2,7 +2,7 @@
     "1": {
         "id": 1,
         "name": "Empty project without repository",
-        "connection_settings": 0,
+        "connectionSettings": 0,
         "urlRepository": "",
         "skills": [],
         "ghosts": []
@@ -10,10 +10,10 @@
     "2": {
         "id": 2,
         "name": "Fitzhi",
-        "connection_settings": 2,
+        "connectionSettings": 1,
         "urlRepository": "https://github.com/fitzhi/application",
         "username": "anonymous",
-   /*     "password": "empty", */
+        "password": "",
         "skills": []
     }
 }
