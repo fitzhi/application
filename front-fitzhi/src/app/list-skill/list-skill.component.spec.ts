@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ListSkillComponent } from './list-skill.component';
-import { ListProjectsService } from '../list-projects-service/list-projects.service';
+import { ListProjectsService } from '../list-project/list-projects-service/list-projects.service';
 import { ReferentialService } from '../service/referential.service';
 import { CinematicService } from '../service/cinematic.service';
 import { MatTableModule } from '@angular/material/table';

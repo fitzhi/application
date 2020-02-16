@@ -1,8 +1,8 @@
 import { TestBed, inject } from '@angular/core/testing';
 
 import { ListProjectsService } from './list-projects.service';
-import { ReferentialService } from '../service/referential.service';
-import { CinematicService } from '../service/cinematic.service';
+import { ReferentialService } from '../../service/referential.service';
+import { CinematicService } from '../../service/cinematic.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';

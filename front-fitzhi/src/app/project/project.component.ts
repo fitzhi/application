@@ -4,7 +4,7 @@ import { Constants } from '../constants';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subject, BehaviorSubject, EMPTY } from 'rxjs';
 import { Project } from '../data/project';
-import { ListProjectsService } from '../list-projects-service/list-projects.service';
+import { ListProjectsService } from '../list-project/list-projects-service/list-projects.service';
 import { MessageService } from '../message/message.service';
 import { BaseComponent } from '../base/base.component';
 import { ProjectService } from '../service/project.service';

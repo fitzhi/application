@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {Constants} from '../constants';
 import {Project} from '../data/project';
-import { ListProjectsService } from '../list-projects-service/list-projects.service';
+import { ListProjectsService } from './list-projects-service/list-projects.service';
 import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
