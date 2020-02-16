@@ -802,18 +802,18 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	}
 
 	/**
-	* Calling the base class to unsubscribe all subscriptions.
-	*/
-	ngOnDestroy() {
-		super.ngOnDestroy();
-	}
-
-	/**
      * Class of the button corresponding to the 3 possible states of the "Ok" button.
      */
 	classOkButton() {
 		return (this.profileProject.invalid) ?
 			'okButton okButtonInvalid' : 'okButton okButtonValid';
+	}
+
+	/**
+	* Calling the base class to unsubscribe all subscriptions.
+	*/
+	ngOnDestroy() {
+		super.ngOnDestroy();
 	}
 
 }
