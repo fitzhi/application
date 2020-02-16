@@ -26,7 +26,8 @@ export class StaffListService {
 	 * Constructor.
 	 * @param staffService service un charge of accessing the backend to retrive the staff members.
 	 */
-	constructor(private staffService: StaffService) {
+	constructor(
+		private staffService: StaffService) {
 	}
 
 	/**
@@ -34,15 +35,17 @@ export class StaffListService {
 	 */
 	loadStaff() {
 		this.staffService.getAll()
-			.pipe(take(1))
+			.pipe(
+				take(1),
+				tap(staff => {
+					if (Constants.DEBUG) {
+						console.groupCollapsed(this.allStaff.length + ' staff members loaded');
+						this.allStaff.forEach (item => console.log(item.idStaff + ' ' + item.firstName + ' ' + item.lastName));
+						console.groupEnd();
+					}
+				}))
 			.subscribe(staff => {
-				this.allStaff = [];
-				staff.forEach(entry => this.allStaff.push(entry));
-				if (Constants.DEBUG) {
-					console.groupCollapsed(this.allStaff.length + ' staff members loaded');
-					this.allStaff.forEach (item => console.log(item.idStaff + ' ' + item.firstName + ' ' + item.lastName));
-					console.groupEnd();
-				}
+				this.allStaff = staff;
 				this.allStaff$.next(this.allStaff);
 			});
 	}
@@ -77,6 +80,27 @@ export class StaffListService {
 					}
 				}));
 		}
+	}
+
+	/**
+	 * Update the staff collection with a new or update staff data filled in the form-staff component.
+	 * @param staff the given staff
+	 */
+	setFormStaff(staff: Collaborator) {
+		const collaborator = this.allStaff.find(collab => (staff.idStaff === collab.idStaff));
+		if (!collaborator) {
+			this.allStaff.push(staff);
+			return;
+		}
+		collaborator.firstName = staff.firstName;
+		collaborator.lastName = staff.lastName;
+		collaborator.nickName = staff.nickName;
+		collaborator.login = staff.login;
+		collaborator.email = staff.email;
+		collaborator.level = staff.level;
+		collaborator.active = staff.active;
+		collaborator.dateInactive = staff.dateInactive;
+		collaborator.external = staff.external;
 	}
 
 	/**

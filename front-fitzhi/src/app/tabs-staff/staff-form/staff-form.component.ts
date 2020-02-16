@@ -16,6 +16,7 @@ import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff
 import { take } from 'rxjs/operators';
 import { MessageBoxService } from 'src/app/message-box/service/message-box.service';
 import { Mission } from 'src/app/data/mission';
+import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
 
 
 @Component({
@@ -90,6 +91,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		private referentialService: ReferentialService,
 		private staffDataExchangeService: StaffDataExchangeService,
 		private tabsStaffListService: TabsStaffListService,
+		private staffListService: StaffListService,
 		private router: Router) {
 		super();
 	}
@@ -198,11 +200,13 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 					this.collaborator = staff;
 					this.messengerStaffUpdated.emit(staff);
 
-					/**
-					 * If this staff member exists in pre-existing list of collaborators. We actualize the content.
-					 */
+					//
+					// If this staff member exists in pre-existing list of collaborators. We actualize the content.
+					//
 					this.tabsStaffListService.actualizeCollaborator(staff);
 					this.staffDataExchangeService.changeCollaborator(staff);
+
+					this.staffListService.setFormStaff(staff);
 
 					this.messageService.success('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
 				});
