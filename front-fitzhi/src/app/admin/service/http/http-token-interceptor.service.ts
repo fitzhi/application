@@ -8,6 +8,7 @@ import { HttpProgressEvent, HttpResponse, HttpUserEvent, HttpErrorResponse } fro
 
 import { AuthService } from '../auth/auth.service';
 import { MessageService } from 'src/app/message/message.service';
+import { ReferentialService } from 'src/app/service/referential.service';
 
 @Injectable()
 export class HttpTokenInterceptorService implements HttpInterceptor {
@@ -16,7 +17,7 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 	tokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
 	constructor(
-		private injector: Injector, 
+		private injector: Injector,
 		private messageService: MessageService) { }
 
 	addToken(req: HttpRequest<any>, token: string): HttpRequest<any> {
@@ -38,12 +39,18 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 		if (localStorage.getItem('dev') === '1') {
 			return next.handle(req);
 		}
-
-		if (req.url.includes('/api/referential/')
+		if 	(req.url.includes('/api/referential/')
 			|| req.url.includes('/api/skill/all')
 			|| req.url.includes('/api/admin/isVeryFirstConnection')
 			|| req.url.includes('/api/admin/veryFirstUser')
-			|| req.url.includes('/api/admin/register')) {
+			|| req.url.includes('/api/admin/register')
+			// Sonar URL
+			|| req.url.includes('/api/components/search')
+			|| req.url.includes('/api/components/tree')
+			|| req.url.includes('/api/metrics/search')
+			|| req.url.includes('/api/measures/component')
+			|| req.url.includes('/api/project_badges/measure')
+			|| req.url.includes('/api/server/version')) {
 			return next.handle(req);
 		}
 
