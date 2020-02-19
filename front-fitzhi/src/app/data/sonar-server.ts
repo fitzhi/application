@@ -94,6 +94,9 @@ export class SonarServer {
 	 * @param metrics list of metrics to be evaluated
 	 */
 	loadSonarComponentMeasures$(httpClient: HttpClient, key: string, metrics: string[]): Observable<ResponseComponentMeasures> {
+		if (Constants.DEBUG) {
+			console.log('Loading mesures for Sonar project %s', key);
+		}
 		const params = new HttpParams().set('component', key).set('metricKeys', metrics.join(','));
 		const apiMesures = '/api/measures/component';
 		return httpClient
