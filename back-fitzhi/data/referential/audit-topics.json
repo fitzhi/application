@@ -1,7 +1,10 @@
 [
 	{ "id": 0, "title": "General organization" },
 	{ "id": 1, "title": "Technical Design" },
-	{ "id": 2, "title": "Build Process" },
-	{ "id": 3, "title": "General Documentation" },
-	{ "id": 4, "title": "Testability" }
+	{ "id": 2, "title": "Data organization & design" },
+	{ "id": 3, "title": "Build Process" },
+	{ "id": 4, "title": "Virtualization" },
+	{ "id": 5, "title": "Performance behavior" },
+	{ "id": 6, "title": "General Documentation" },
+	{ "id": 7, "title": "Testability" }
 ]
