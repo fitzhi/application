@@ -117,6 +117,7 @@ export class SonarService extends InternalService {
 		if (Constants.DEBUG) {
 			console.log ('initSonarServer(\'%s\')', urlSonar);
 		}
+
 		const subscription = this.httpClient
 			.get(urlSonar + '/api/server/version', { responseType: 'text' as 'json' })
 				.pipe(
@@ -145,7 +146,7 @@ export class SonarService extends InternalService {
 	}
 
 	/**
-	 * Load & validate the supported metrics by the Sonar server & Techxhi.
+	 * Load & validate the supported metrics by the Sonar server & Fitzhì.
 	 *
 	 * ___This operation will be executed when all referential data will be loaded.___
 	 */

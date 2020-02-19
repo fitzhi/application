@@ -212,7 +212,10 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		}
 		const project = this.projectService.project;
 		this.profileProject.get('projectName').setValue(project.name);
-		this.profileProject.get('urlSonarServer').setValue(project.urlSonarServer);
+		// We postpone this 'setValue' to give time to the 'SELECT' html object to fill its content.
+		setTimeout(() => {
+			this.profileProject.get('urlSonarServer').setValue(project.urlSonarServer);
+		}, 0);
 		this.connection_settings = String(project.connectionSettings);
 		this.profileProject.get('urlRepository1').setValue(project.urlRepository);
 		this.profileProject.get('urlRepository2').setValue(project.urlRepository);
@@ -595,14 +598,15 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		sonarProject.name = sonarComponent.name;
 		sonarProject.projectFilesStats = [];
 
-		// For compatibility reason with the previsous version.
+		// For compatibility reason with the previous version.
 		if (!this.projectService.project.sonarProjects) {
 			this.projectService.project.sonarProjects = [];
 		}
 
 		this.projectService.project.sonarProjects.push(sonarProject);
 
-		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
+		// We have already loaded or saved the project,
+		// so we can add each new Sonar project as they appear, one by one.
 		if (this.projectService.project.id) {
 			this.updateSonarProject(this.projectService.project.id, sonarProject,
 				this.projectService.addSonarProject.bind(this.projectService),
