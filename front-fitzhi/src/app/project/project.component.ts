@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { CinematicService } from '../service/cinematic.service';
 import { Constants } from '../constants';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subject, BehaviorSubject, EMPTY } from 'rxjs';
+import { BehaviorSubject, EMPTY } from 'rxjs';
 import { Project } from '../data/project';
 import { ListProjectsService } from '../list-project/list-projects-service/list-projects.service';
 import { MessageService } from '../message/message.service';
@@ -56,9 +56,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	 * Initialization treatment.
 	 */
 	ngOnInit() {
-		if (Constants.DEBUG) {
-			console.log('Current url ' + this.router.url);
-		}
+
 		if (this.router.url === '/project') {
 			this.cinematicService.setForm(Constants.PROJECT_TAB_FORM, this.router.url);
 		}
@@ -71,21 +69,19 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 		}
 
 		this.subscriptions.add(
-			this.referentialService.referentialLoaded$.pipe(
-				switchMap(doneAndOk => {
-					return (doneAndOk) ? this.route.params : EMPTY;
-				}))
-				.subscribe(params => {
-					if (Constants.DEBUG) {
-						console.log('Project identifier given', params['id']);
+			this.referentialService.referentialLoaded$.pipe(take(1)).subscribe({
+				next: doneAndOk =>  {
+					if (doneAndOk) {
+						this.idProject = this.projectService.parseUrl(this.router.url);
+						if (!this.idProject) {
+							this.projectService.createEmptyProject();
+						} else {
+							this.loadProject();
+						}
 					}
-					if (params['id'] == null) {
-						this.idProject = null;
-					} else {
-						this.idProject = + params['id']; // (+) converts string 'id' to a number
-						this.loadProject();
-					}
-				}));
+
+				}
+			}));
 	}
 
 	/**

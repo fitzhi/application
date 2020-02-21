@@ -49,4 +49,9 @@ describe('ProjectService', () => {
 
 	});
 
+	it('testing the method projectService.parserUrl', () => {
+		const service: ProjectService = TestBed.get(ProjectService);
+		expect(undefined).toEqual(service.parseUrl('/project'));
+		expect(33).toEqual(service.parseUrl('/project/33'));
+	});
 });

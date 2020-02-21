@@ -95,6 +95,25 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
+	 * Parse and return the given project identifier, or `undefined` if none was found.
+	 * @param url the url which sent the user in the project's area
+	 */
+	parseUrl(url: string): number {
+		if (url === '/project') {
+			return undefined;
+		} else {
+			return Number(url.substr('/project/'.length));
+		}
+	}
+
+	/**
+	 * Create an empty project
+	 */
+	createEmptyProject() {
+		this.project = new Project();
+	}
+
+	/**
 	* Save the project (it might a creation or an update).
 	* @param project the given projet to be saved.
 	*/
