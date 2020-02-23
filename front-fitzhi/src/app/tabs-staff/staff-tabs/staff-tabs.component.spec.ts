@@ -6,20 +6,35 @@ import { InitTest } from 'src/app/test/init-test';
 import { StaffProjectsComponent } from '../staff-projects/staff-projects.component';
 import { StaffExperienceComponent } from '../staff-experience/staff-experience.component';
 import { TagifyStarsComponent } from '../staff-experience/tagify-stars/tagify-stars.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTableModule } from '@angular/material/table';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ReferentialService } from 'src/app/service/referential.service';
+import { HttpClientModule } from '@angular/common/http';
+import { MatDialogModule } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-describe('StaffTabsComponent', () => {
+describe('StaffTabsComponent : ', () => {
 	let component: StaffTabsComponent;
 	let fixture: ComponentFixture<StaffTabsComponent>;
 
 	beforeEach(async(() => {
-		const testConf: TestModuleMetadata =  {
-			declarations: [StaffTabsComponent, StaffProjectsComponent, StaffExperienceComponent, TagifyStarsComponent],
-			providers: [],
-			imports: []
-		};
-		InitTest.addImports(testConf.imports);
-		InitTest.addProviders(testConf.providers);
-		TestBed.configureTestingModule(testConf).compileComponents();
+
+		TestBed.configureTestingModule({
+			declarations: [
+				StaffTabsComponent,
+				StaffProjectsComponent,
+				StaffExperienceComponent,
+				TagifyStarsComponent],
+			providers: [ReferentialService],
+			imports: [MatTabsModule,
+				MatDialogModule,
+				MatTableModule,
+				BrowserAnimationsModule,
+				RouterTestingModule.withRoutes([]),
+				HttpClientModule]
+		})
+		.compileComponents();
 	}));
 
 	beforeEach(() => {

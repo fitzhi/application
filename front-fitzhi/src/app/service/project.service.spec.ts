@@ -49,9 +49,19 @@ describe('ProjectService', () => {
 
 	});
 
-	it('testing the method projectService.parserUrl', () => {
+	it('testing the method projectService.parserUrl(\'/project/(number)\')', () => {
 		const service: ProjectService = TestBed.get(ProjectService);
 		expect(undefined).toEqual(service.parseUrl('/project'));
 		expect(33).toEqual(service.parseUrl('/project/33'));
+	});
+
+	it('testing the method projectService.parserUrl(\'/project/33/staff\')', () => {
+		const service: ProjectService = TestBed.get(ProjectService);
+		expect(33).toEqual(service.parseUrl('/project/33/staff'));
+	});
+
+	it('testing the method projectService.parserUrl(\'/project/1/staff\')', () => {
+		const service: ProjectService = TestBed.get(ProjectService);
+		expect(1).toEqual(service.parseUrl('/project/1/staff'));
 	});
 });

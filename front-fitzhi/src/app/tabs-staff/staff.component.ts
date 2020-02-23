@@ -65,7 +65,7 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
 			/*
 			 * By default, you cannot add a project/skill for an unregistered developer.
 			 */
-			document.querySelector('body').style.cssText = '--actions-button-visible: hidden';
+			documen.querySelector('body').style.cssText = '--actions-button-visible: hidden';
 			if (this.idStaff != null) {
 				this.staffListService.getCollaborator(this.idStaff).subscribe(
 					(collab: Collaborator) => {

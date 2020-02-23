@@ -1,8 +1,7 @@
 import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
-
 import { ToolbarComponent } from './toolbar.component';
-import { StaffFormComponent } from '../tabs-staff/staff-form/staff-form.component';
 import { InitTest } from '../test/init-test';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('ToolbarComponent', () => {
 	let component: ToolbarComponent;
@@ -12,7 +11,7 @@ describe('ToolbarComponent', () => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [ToolbarComponent],
 			providers: [],
-			imports: []
+			imports: [RouterTestingModule.withRoutes([])]
 		};
 		InitTest.addImports(testConf.imports);
 		InitTest.addProviders(testConf.providers);

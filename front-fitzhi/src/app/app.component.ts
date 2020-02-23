@@ -76,8 +76,6 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 	}
 
 	ngOnInit() {
-
-
 		/**
          * Loading the referentials.
          */

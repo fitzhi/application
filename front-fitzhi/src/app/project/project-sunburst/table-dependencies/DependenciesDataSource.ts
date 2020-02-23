@@ -16,7 +16,7 @@ export class DependenciesDataSource extends MatTableDataSource<Library> {
 
 	/**
 	 * Update the datasource with new data.
-	 * @param libraries the new libraries to be displayed
+	 * @param libraries the new libraries to be displayed.
 	 */
 	update(libraries: Library[]) {
 		this.libraries = libraries;

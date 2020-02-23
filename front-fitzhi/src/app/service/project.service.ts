@@ -96,13 +96,27 @@ export class ProjectService extends InternalService {
 
 	/**
 	 * Parse and return the given project identifier, or `undefined` if none was found.
+	 *
+	 * 2 kinds of URL can be passed to this function
+	 * * .../project/(number)
+	 * * .../project/(number)/staff
+	 *
+	 * The function has to return the given (number).
 	 * @param url the url which sent the user in the project's area
 	 */
 	parseUrl(url: string): number {
 		if (url === '/project') {
 			return undefined;
 		} else {
-			return Number(url.substr('/project/'.length));
+
+			//
+			// Position of '/staff' in the given URL, if any.
+			//
+			const posStaff = url.indexOf('/staff');
+			return (posStaff === -1) ?
+				Number(url.substr('/project/'.length)) :
+				Number(url.substr('/project/'.length, posStaff - '/project/'.length));
+
 		}
 	}
 

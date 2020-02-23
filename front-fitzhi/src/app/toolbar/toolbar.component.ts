@@ -74,9 +74,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 
 
 	ngOnInit() {
-
 		this.listenOnContext();
-
 		this.listenOnCollaboratorDisplayed();
 	}
 
@@ -157,8 +155,8 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	isProjectActive() {
 		return (
 					(this.editedEntity === this.PROJECT_TAB_FORM)
-				|| (this.editedEntity === Constants.PROJECT_TAB_STAFF)
-				|| (this.editedEntity === Constants.PROJECT_SEARCH));
+				|| 	(this.editedEntity === Constants.PROJECT_TAB_STAFF)
+				|| 	(this.editedEntity === Constants.PROJECT_SEARCH));
 	}
 
 	/**
