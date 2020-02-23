@@ -1,3 +1,4 @@
+import { isDevMode } from '@angular/core';
 
 /**
  * Constants file
@@ -7,7 +8,7 @@ export class Constants {
 	/**
 	  * DEBUG Mode for development purpose
 	  */
-	public static DEBUG = true;
+	public static DEBUG = isDevMode();
 
 	/**
 	 * Value for Unknown object;
