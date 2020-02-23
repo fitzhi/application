@@ -108,7 +108,6 @@ export class ProjectService extends InternalService {
 		if (url === '/project') {
 			return undefined;
 		} else {
-
 			//
 			// Position of '/staff' in the given URL, if any.
 			//

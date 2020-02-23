@@ -103,12 +103,15 @@ export class CinematicService {
 	}
 
 	/**
-      * Set the new form identifier.
-      * We memorize the previous active form.
-      * We need to keep that information behind, in order to detect master/detail sequences behind each list/form couples
-      * The navigation toolbar on the top left corner, need to know if we reach the for
-      * either from the natural URL, or the jump link from the list
-     */
+    * Set the new form identifier.
+	*
+    * We memorize at the same time the previous active form.
+    * We need to save that information, in order to detect master/detail sequences behind each list/form couples
+    * The navigation toolbar on the top left corner, need to know if we reach that point
+	*
+    * * either from the natural URL
+	* * or the jump link from the list
+    */
 	setForm(formIdentifier: number, url: string) {
 
 		/**
