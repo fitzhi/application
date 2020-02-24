@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy, Input } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, Input, AfterContentInit } from '@angular/core';
 import { ProjectService } from '../../service/project.service';
 import { Constants } from '../../constants';
 import { MessageService } from '../../message/message.service';
@@ -21,17 +21,15 @@ import { traceOn } from 'src/app/global';
 	templateUrl: './project-staff.component.html',
 	styleUrls: ['./project-staff.component.css']
 })
-export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDestroy {
+export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDestroy, AfterContentInit {
 
 	public dataSource: MatTableDataSource<Contributor>;
 
-	sub: any;
-
 	public displayedColumns: string[] = ['fullname', 'active', 'external', 'firstCommit', 'lastCommit', 'numberOfCommits', 'numberOfFiles'];
 
-	@ViewChild(MatSort, { static: true }) sort: MatSort;
+	@ViewChild(MatSort, { static: false }) sort: MatSort;
 
-	@ViewChild(MatTable, { static: true }) table: MatTable<any>;
+	@ViewChild(MatTable, { static: false }) table: MatTable<any>;
 
 	constructor(
 		private projectService: ProjectService,
@@ -66,7 +64,9 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 						this.cinematicService.setForm(Constants.PROJECT_TAB_STAFF, urlProjectStaffList);
 					}
 				}));
+	}
 
+	ngAfterContentInit() {
 		this.subscriptions.add(
 			this.cinematicService.tabProjectActivated$.pipe(
 				//
@@ -118,6 +118,8 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	 * @param contributorsDTO container of contributors retrieved from the back-end.
 	 */
 	manageDataSource(contributorsDTO: ContributorsDTO) {
+
+		console.log (contributorsDTO);
 
 		if (!this.dataSource) {
 			this.dataSource = new MatTableDataSource(contributorsDTO.contributors);

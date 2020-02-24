@@ -1,6 +1,6 @@
 <div id="divDeveloppers">
 
-  <mat-table #table [dataSource]="dataSource" class="mat-elevation-z8" matSort matTable>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort matTable>
 
     <ng-container matColumnDef="fullname">
       <th id="fullname" mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
@@ -57,7 +57,7 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row_any"></tr>
 
-  </mat-table>
+  </table>
 
 </div>
 

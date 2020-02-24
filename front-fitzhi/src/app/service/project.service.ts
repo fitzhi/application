@@ -364,13 +364,14 @@ export class ProjectService extends InternalService {
 	 */
 	contributors(idProject: number): Observable<ContributorsDTO> {
 
+		console.log ('nope');
 		if (idProject === -1) {
 			return EMPTY;
 		}
 
 		const url = this.backendSetupService.url() + '/project/contributors/' + idProject;
 		if (traceOn()) {
-			console.log('Retrieve the contributors for the project identifier ' + idProject);
+			console.log('Retrieve the contributors for the project identifier %d @ url %s', idProject, url);
 		}
 		return this.httpClient.get<ContributorsDTO>(url);
 	}

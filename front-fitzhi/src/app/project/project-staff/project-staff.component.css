@@ -38,15 +38,10 @@
     color: darkblue;
 }
 
-table {
-    width: 100%;
-    height: 100%;
-}
-
 #divDeveloppers {
     padding-top: 20px;
-    padding-right: 50px;
-    padding-left: 50px;
+    width: fit-content;
+    margin: auto;
 }
 
 .row_any  {

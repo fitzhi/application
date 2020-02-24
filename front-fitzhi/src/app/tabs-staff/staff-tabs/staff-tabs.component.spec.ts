@@ -14,7 +14,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-describe('StaffTabsComponent : ', () => {
+describe('StaffTabsComponent :', () => {
 	let component: StaffTabsComponent;
 	let fixture: ComponentFixture<StaffTabsComponent>;
 
@@ -45,5 +45,9 @@ describe('StaffTabsComponent : ', () => {
 
 	it('should create', () => {
 		expect(component).toBeTruthy();
+	});
+
+	afterEach(() => {
+		fixture.destroy();
 	});
 });
