@@ -9,6 +9,7 @@ import { HttpProgressEvent, HttpResponse, HttpUserEvent, HttpErrorResponse } fro
 import { AuthService } from '../auth/auth.service';
 import { MessageService } from 'src/app/message/message.service';
 import { ReferentialService } from 'src/app/service/referential.service';
+import { Constants } from 'src/app/constants';
 
 @Injectable()
 export class HttpTokenInterceptorService implements HttpInterceptor {
@@ -31,7 +32,7 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 	intercept(req: HttpRequest<any>, next: HttpHandler):
 		Observable<HttpSentEvent | HttpHeaderResponse | HttpProgressEvent | HttpResponse<any> | HttpUserEvent<any>> {
 
-			const authService = this.injector.get(AuthService);
+		const authService = this.injector.get(AuthService);
 
 		/**
 		 * FOR DEVELOPMENT PURPOSE ONLY we deactivate the security control.

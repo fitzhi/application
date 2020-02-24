@@ -23,7 +23,7 @@ export class AuthService extends InternalService {
 
 	public connect(username: string, password: string): Observable<boolean> {
 
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Trying a connection with user/pass ' + username + ':' + password
 				+ ' on url ' + this.backendSetupService.url() + '/oauth/token');
 		}
@@ -43,7 +43,7 @@ export class AuthService extends InternalService {
 				take(1),
 				switchMap(
 					token => {
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							console.groupCollapsed('Identifity retrieved : ');
 							console.log('access_token', token.access_token);
 							console.log('refresh_token', token.refresh_token);
@@ -59,7 +59,7 @@ export class AuthService extends InternalService {
 					catchError(
 						error => {
 							console.log ('error   !!!', error);
-							if (Constants.DEBUG) {
+							if (traceOn()) {
 								if (typeof error !== 'undefined') {
 									console.log ('error', error);
 								}
@@ -85,19 +85,23 @@ export class AuthService extends InternalService {
 		return localStorage.getItem('access_token');
 	}
 
+	/**
+	 * Return an `*observable*` emitting the new access token.
+	 * Refresh the access token.
+	 */
 	refreshToken(): Observable<string> {
 		/*
             The call that goes in here will use the existing refresh token to call
             a method on the oAuth server (usually called refreshToken) to get a new
             authorization token for the API calls.
         */
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('refresh current token', localStorage.getItem('access_token'));
 		}
 
 		let headers: HttpHeaders = new HttpHeaders();
 		headers = headers.append('Content-Type', 'application/x-www-urlencoded');
-		headers = headers.append('Authorization', 'Basic ' + btoa('fitzhì-trusted-client' + ':secret'));
+		headers = headers.append('Authorization', 'Basic ' + btoa('fitzhi-trusted-client' + ':secret'));
 
 		let access_token = 'empty';
 
@@ -111,7 +115,7 @@ export class AuthService extends InternalService {
 			.pipe(
 				take(1),
 				switchMap(token => {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.groupCollapsed('Identifity retrieved : ');
 						console.log('access_token', token.access_token);
 						console.log('refresh_token', token.refresh_token);
