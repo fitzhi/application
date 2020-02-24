@@ -12,6 +12,7 @@ import { ComponentTree } from './sonar/component-tree';
 import { ProjectSonarMetric } from './sonar/project-sonar-metric';
 import { Project } from './project';
 import { SonarProject } from './SonarProject';
+import { traceOn } from '../global';
 
 /**
  * This class represents a Sonar server available in the infrastructure.

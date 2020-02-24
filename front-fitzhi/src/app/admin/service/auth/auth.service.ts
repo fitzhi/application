@@ -6,6 +6,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { take, switchMap, catchError } from 'rxjs/operators';
 import { Token } from './token';
 import { Observable, of } from 'rxjs';
+import { traceOn } from 'src/app/global';
 
 @Injectable({
 	providedIn: 'root'
