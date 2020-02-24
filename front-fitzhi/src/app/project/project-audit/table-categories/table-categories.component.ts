@@ -10,6 +10,7 @@ import { AuditTopic } from 'src/app/data/AuditTopic';
 import { BehaviorSubject } from 'rxjs';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ReferentialService } from 'src/app/service/referential.service';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-table-categories',
@@ -63,7 +64,7 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 	 * @param topic the given topic
 	 */
 	updateTopic(topic: Topic) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log (topic.title, (topic.select) ? 'is selected' : 'is deselected');
 		}
 		if (topic.select) {

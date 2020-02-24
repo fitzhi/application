@@ -11,6 +11,7 @@ import { SkillService } from 'src/app/service/skill.service';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-starting-setup',
@@ -60,7 +61,7 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
      * Setup the fact that this is the very first connection.
      */
 	onChangeVeryFirstConnection($event: boolean) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('veryFirstConnecion :', $event);
 		}
 
@@ -82,7 +83,7 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
      */
 	setRegisteredUser($event: number) {
 
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('idStaff created :', $event);
 		}
 		// Operation has been cancelled.
@@ -104,7 +105,7 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 	 * Skip the setup process and proceed the connection.
 	 */
 	skipAndConnect($event: number) {
-		if ( Constants.DEBUG) {
+		if ( traceOn()) {
 			console.log ('Skip and connect (' + $event + ')');
 		}
 		if ($event) {
@@ -124,7 +125,7 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 		} else {
 			this.completed[2] = false;
 			this.completed[3] = false;
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log('Connection failed. Invalid User/Password');
 			}
 		}
@@ -134,7 +135,7 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
      * Catch the complete staff entity, updated by the staff-form.
      */
 	setStaffUpdatedForUser($event: Collaborator) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('staff updated for :', $event.lastName);
 		}
 
@@ -143,7 +144,7 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 				.subscribe(
 					(data: BooleanDTO) => {
 						const veryFirstConnectionIsRegistered = data.result;
-						if (Constants.DEBUG && veryFirstConnectionIsRegistered) {
+						if (traceOn() && veryFirstConnectionIsRegistered) {
 							console.log('The very first connection is registered into fitzhì');
 						}
 						this.completed[3] = true;
@@ -153,7 +154,7 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 						}, 0);
 					},
 					(error: BooleanDTO) => {
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							console.log('Connection error ', error);
 						}
 					}));

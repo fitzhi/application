@@ -14,6 +14,7 @@ import { Project } from 'src/app/data/project';
 import { take, switchMap } from 'rxjs/operators';
 import { ContributorsDTO } from 'src/app/data/external/contributorsDTO';
 import { Contributor } from 'src/app/data/contributor';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-project-staff',
@@ -59,7 +60,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 						//
 						const urlProjectStaffList = (this.router.url.indexOf('/staff') === -1) ?
 							this.router.url + '/staff' : this.router.url;
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							console.log ('urlProjectStaffList', urlProjectStaffList);
 						}
 						this.cinematicService.setForm(Constants.PROJECT_TAB_STAFF, urlProjectStaffList);
@@ -76,7 +77,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 						this.projectService.projectLoaded$ : EMPTY;
 				})).subscribe({
 					next: doneAndOk => {
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							this.projectService.dump(this.projectService.project, 'projectStaffComponent.ngOnInit()');
 						}
 						if (doneAndOk) {
@@ -96,7 +97,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 				next: contributorsDTO => this.manageDataSource(contributorsDTO),
 				error: error => {
 					if (error.status === 404) {
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							console.log('404 : cannot find contributors for the id ' + this.projectService.project.id);
 						}
 						this.messageService.error('Cannot retrieve the contributors for the project identifier ' + this.projectService.project.id);
@@ -105,7 +106,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 					}
 				},
 				complete: () => {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log('Loading complete for id ' + this.projectService.project.id);
 					}
 				}

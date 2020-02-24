@@ -19,6 +19,7 @@ import Tagify from '@yaireo/tagify';
 import { MessageGravity } from 'src/app/message/message-gravity';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { Skill } from 'src/app/data/skill';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-project-form',
@@ -143,7 +144,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 		this.subscriptions.add(
 			this.risk$.subscribe((risk: number) => {
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.log ('Catching the risk', risk);
 				}
 				this.updateDotRiskColor(risk);
@@ -199,7 +200,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			}))
 		.subscribe({
 			next: doneAndOk => {
-				if ((doneAndOk) && (Constants.DEBUG)) {
+				if ((doneAndOk) && (traceOn())) {
 					console.log ('ngAfterViewInitForm completed without error');
 				}
 			}
@@ -207,7 +208,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	}
 
 	loadForm() {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Loading the project data inside the form');
 		}
 		const project = this.projectService.project;
@@ -273,7 +274,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			.pipe(
 				take(1),
 				tap(() => {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log ('Initializing the skills inside the tagify component');
 					}
 				}),
@@ -384,7 +385,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				}))
 			.pipe (
 				tap(sonarProjects => {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log ('Receiving ' + sonarProjects.length + ' Sonar projects');
 					}
 				}),
@@ -423,7 +424,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 		const urlSonarServer = this.profileProject.get('urlSonarServer').value;
 		if (urlSonarServer !== this.projectService.project.urlSonarServer) {
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log ('Sonar URL has changed from %s to %s',
 					(this.projectService.project.urlSonarServer) ? this.projectService.project.urlSonarServer : 'none',
 					urlSonarServer);
@@ -454,7 +455,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			return;
 		}
 
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Adding the skill', event.detail.data.value);
 		}
 
@@ -480,7 +481,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * @param event ADD event fired by the tagify component.
 	 */
 	removeSkill(event: CustomEvent) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Removing the skill', event.detail.data.value);
 		}
 
@@ -498,7 +499,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		}
 
 		const indexOfSkill = this.projectService.project.skills.indexOf(skill);
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Index of the skill ' + skill.title, indexOfSkill);
 		}
 		this.projectService.project.skills.splice(indexOfSkill, 1);
@@ -527,7 +528,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			}
 		},
 		response_in_error => {
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log('Error ' + response_in_error.error.code + ' ' + response_in_error.error.message);
 			}
 			this.messageService.error(response_in_error.error.message);
@@ -555,7 +556,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			}
 		},
 		response_in_error => {
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log('Error ' + response_in_error);
 			}
 		});
@@ -565,7 +566,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * Log the skills of the current project in DEBUG mode.
 	 */
 	logProjectSkills() {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log (this.projectService.project.skills);
 			console.groupCollapsed ('list of skills for project ' + this.projectService.project.name);
 			this.projectService.project.skills.forEach(sk => console.log (sk.id + ' ' +  sk.title));
@@ -578,7 +579,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * @param event ADD event fired by the tagify component.
 	 */
 	addSonarProject(event: CustomEvent) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Adding the Sonar project entry', event.detail.data.value);
 		}
 
@@ -638,7 +639,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * Log the skills of the current project in DEBUG mode.
 	 */
 	logProjectSonarProjects() {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.groupCollapsed ('list of sonar projects for project ' + this.projectService.project.name);
 			this.projectService.project.sonarProjects.forEach(sp => console.log (sp.key + ' ' +  sp.name));
 			console.groupEnd();
@@ -650,7 +651,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * @param event ADD event fired by the tagify component.
 	 */
 	removeSonarProject(event: CustomEvent) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Removing the Sonar project', event.detail.data.value);
 		}
 
@@ -668,7 +669,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		}
 
 		const indexOfSonarProject = this.projectService.project.sonarProjects.indexOf(sonarProject);
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Index of the Sonar project ' + sonarProject.name, indexOfSonarProject);
 		}
 		this.projectService.project.sonarProjects.splice(indexOfSonarProject, 1);
@@ -688,7 +689,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	updateDotRiskColor(risk: number) {
 		this.colorOfRisk = this.projectService.getRiskColor(risk);
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Filling the staff dot with the color', this.colorOfRisk);
 		}
 	}
@@ -717,7 +718,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				this.projectService.project.filename = this.profileProject.get('filename').value;
 				break;
 		}
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Saving the project ');
 			console.log(this.projectService.project);
 		}

@@ -6,6 +6,7 @@ import { Constants } from '../../constants';
 import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
 import { MessageService } from 'src/app/message/message.service';
 import { take } from 'rxjs/operators';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-backend-setup',
@@ -62,7 +63,7 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
      */
 	onSubmit() {
 		const urlCandidate = this.backendSetupForm.get('url').value;
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Testing the URL', urlCandidate);
 		}
 		this.backendSetupService.isVeryFirstConnection(urlCandidate)
@@ -70,7 +71,7 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
 			.subscribe(
 				data => {
 					this.veryFirstConnection = (data === 'true');
-					if (Constants.DEBUG && this.veryFirstConnection) {
+					if (traceOn() && this.veryFirstConnection) {
 						console.log('This is the very first connection into fitzhì');
 					}
 					this.currentState = this.BUTTON_VALID_URL;
@@ -79,7 +80,7 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
 					this.messengerVeryFirstConnection.emit(this.veryFirstConnection);
 				},
 				error => {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log('Connection error', error);
 					}
 					this.currentState = this.BUTTON_INVALID_URL;

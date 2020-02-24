@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 import { Observable, of, Subject, BehaviorSubject } from 'rxjs';
 import { tap, take, delay } from 'rxjs/operators';
 import { Commit } from '../data/commit';
+import { traceOn } from '../global';
 
 @Injectable({
 	providedIn: 'root'
@@ -38,7 +39,7 @@ export class StaffListService {
 			.pipe(
 				take(1),
 				tap(staff => {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.groupCollapsed(this.allStaff.length + ' staff members loaded');
 						this.allStaff.forEach (item => console.log(item.idStaff + ' ' + item.firstName + ' ' + item.lastName));
 						console.groupEnd();
@@ -65,12 +66,12 @@ export class StaffListService {
 		} else {
 			// The collaborator's id is not, or no more, available in the cache
 			// We try a direct access
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log('Direct access for : ' + id);
 			}
 			return this.staffService.get(id).pipe(tap(
 				(collab: Collaborator) => {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log('Direct access for : ' + id);
 						if (typeof collab !== 'undefined') {
 							console.log('Staff member found : ' + collab.firstName + ' ' + collab.lastName);

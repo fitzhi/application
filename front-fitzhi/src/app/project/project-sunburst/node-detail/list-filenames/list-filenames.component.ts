@@ -3,6 +3,7 @@ import { Constants } from '../../../../constants';
 import { BaseComponent } from '../../../../base/base.component';
 import { Filename } from 'src/app/data/filename';
 import { FilenamesDataSource } from '../filenames-data-source';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-list-filenames',
@@ -18,7 +19,7 @@ export class ListFilenamesComponent extends BaseComponent implements OnInit, OnD
 	constructor() { super(); }
 
 	ngOnInit() {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			if (this.filenames) {
 				this.subscriptions.add(
 					this.filenames.filenamesSubject$.subscribe((elements: Filename[]) => {

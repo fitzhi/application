@@ -16,6 +16,7 @@ import { FileService } from 'src/app/service/file.service';
 import { Subject } from 'rxjs';
 import { DeclaredExperience } from 'src/app/data/declared-experience';
 import { take } from 'rxjs/operators';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-staff-experience',
@@ -95,7 +96,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 			this.staffDataExchangeService.collaborator$
 				.subscribe((collabRetrieved: Collaborator) => {
 					this.staff = collabRetrieved;
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log ('staff member loaded', this.staff.firstName + ' ' + this.staff.lastName);
 					}
 					// We transfert the experience into the array originalValues
@@ -129,7 +130,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
      * Refresh the skills content after an update.
      */
 	reloadExperiences(idStaff: number): void {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Refreshing experiences for the staff\'s id ' + idStaff);
 		}
 		this.subscriptions.add(
@@ -161,7 +162,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 	 * @param staff the given staff member
 	 */
 	private logExperiences(staff: Collaborator) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.groupCollapsed('Skills registered for ' + this.staff.lastName);
 			this.staff.experiences.forEach (exp => console.log (exp.title));
 			console.groupEnd();
@@ -195,7 +196,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 				const newExperiences = experiences.filter(function(experience) {
 					return (this.staff.experiences.findIndex(exp => exp.id === experience.idSkill) === -1);
 				}.bind(this));
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.groupCollapsed(newExperiences.length + ' NEW experiences detected : ');
 					newExperiences.forEach(element => console.log (element.title));
 					console.groupEnd();
@@ -217,7 +218,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 			.pipe(take(1))
 			.subscribe(
 				staffDTO => {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.groupCollapsed('Registred skills for the staff member '						+ staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName);
 							staffDTO.staff.experiences.forEach(
 								element => console.log (this.skillService.title(element.id)));
@@ -229,7 +230,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 				},
 				response => {
 						if (response.status === INTERNAL_SERVER_ERROR) {
-							if (Constants.DEBUG) {
+							if (traceOn()) {
 								console.log('500 : Error returned ' + response.error.message);
 							}
 							this.messageService.error(response.error.code + ' : ' + response.error.message);
@@ -244,7 +245,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
      * Download the application file for this staff member is any.
      */
 	download() {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Downloading the application filename '
 				+ this.staff.application
 				+ ' for '
@@ -320,7 +321,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 				}
 			},
 			response_error => {
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.log('Error', response_error);
 				}
 				this.reloadExperiences(this.staff.idStaff);
@@ -330,7 +331,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 	}
 
 	onAddTagEvent(tagStar: TagStar) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Add event for ' + tagStar.tag + ' ' + tagStar.star);
 		}
 		if (this.checkStaffMemberExist()) {
@@ -340,7 +341,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 	}
 
 	onEditTagEvent(tagStar: TagStar) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Edit event for ' + tagStar.tag + ' ' + tagStar.star);
 		}
 		if (this.checkStaffMemberExist()) {
@@ -350,7 +351,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 	}
 
 	onRemoveTagEvent(tag: string) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Remove event for ' + tag);
 		}
 		const idSkill = this.skillService.id(tag);

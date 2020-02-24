@@ -7,6 +7,7 @@ import { StaffListContext } from '../../data/staff-list-context';
 import { MessageService } from '../../message/message.service';
 import { SkillService } from '../../service/skill.service';
 import { ListCriteria } from '../../data/listCriteria';
+import { traceOn } from 'src/app/global';
 
 @Injectable({
 	providedIn: 'root'
@@ -45,7 +46,7 @@ export class TabsStaffListService {
 		private messageService: MessageService) {
 
 		this.search$.subscribe(criterias => {
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log('Adding criterias ' + criterias.criteria);
 			}
 
@@ -124,7 +125,7 @@ export class TabsStaffListService {
 		if (this.staffListContexts.has(key)) {
 			const context = this.staffListContexts.get(key);
 			if (context.staffSelected.length > 0) {
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.log('Using cache for key ' + key + ' ' + context.staffSelected.length + ' records');
 				}
 				setTimeout(() => {
@@ -164,7 +165,7 @@ export class TabsStaffListService {
 			reminderExtracted = (pos_end_skills === -1) ?
 				criteria.substr(0, pos_start_skills) :
 				criteria.substr(0, pos_start_skills - 1) + criteria.substr(pos_end_skills + 1);
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log('reminderCriteria(' + criteria + ') = ' + reminderExtracted);
 			}
 			reminderIsAlreadyKnown = true;
@@ -185,7 +186,7 @@ export class TabsStaffListService {
 			const criteriaSkills = extractCriteriaSkills();
 			if (criteriaSkills.length > 0) {
 				const skills = criteriaSkills.split(',');
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.groupCollapsed('Skills candidate ');
 					skills.forEach(skill => console.log(skill));
 					console.groupEnd();
@@ -220,7 +221,7 @@ export class TabsStaffListService {
 						criteriasUnknown.push(skill);
 					}
 				});
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.groupCollapsed('id of skills candidate');
 					skillsFilter.forEach(id => console.log(id));
 					console.groupEnd();
@@ -280,14 +281,14 @@ export class TabsStaffListService {
 		},
 			error => outerThis.messageService.error(error),
 			() => {
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.log('The staff collection is containing now ' + collaborator.length + ' records');
 					console.groupCollapsed('Staff members found : ');
 					collaborator.forEach(collab => console.log(collab.firstName + ' ' + collab.lastName));
 					console.groupEnd();
 				}
 				if (this.staffListContexts.has(key)) {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log('Saving collaborators for key ' + key);
 					}
 					this.staffListContexts.get(key).store(collaborator);
@@ -302,7 +303,7 @@ export class TabsStaffListService {
      */
 	public removeHistory(key: string) {
 		this.staffListContexts.delete(key);
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.groupCollapsed('Remaining tabs');
 			this.staffListContexts.forEach(criterias => console.log(criterias.criteria));
 			console.groupEnd();
@@ -318,7 +319,7 @@ export class TabsStaffListService {
 		const context = this.staffListContexts.get(this.activeKey);
 
 		const index = context.staffSelected.findIndex(collab => collab.idStaff === id);
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Current index : ' + index + ' for ' + this.activeKey);
 			console.log('List size : ' + context.staffSelected.length);
 		}
@@ -354,7 +355,7 @@ export class TabsStaffListService {
 		this.staffListContexts.forEach((staffListContext: StaffListContext, tabKey: string) => {
 			staffListContext.staffSelected.forEach(staff => {
 				if (staff.idStaff === collaborator.idStaff) {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log('Actualizing the collaborator with '
 							+ collaborator.idStaff + ' inside the list for tab ', tabKey);
 					}

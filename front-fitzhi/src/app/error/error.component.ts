@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Constants } from '../constants';
 import { ActivatedRoute } from '@angular/router';
 import { BaseComponent } from '../base/base.component';
+import { traceOn } from '../global';
 
 @Component({
 	selector: 'app-error',
@@ -18,7 +19,7 @@ export class ErrorComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.subscriptions.add(this.route.queryParams.subscribe(params => {
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log('params[\'error\'] ' + params['error']);
 			}
 			if (params['error'] == null) {

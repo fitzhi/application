@@ -5,6 +5,7 @@ import { Contributor } from '../../../data/contributor';
 import { MatDialogRef } from '@angular/material/dialog';
 import { SettingsGeneration } from '../../../data/settingsGeneration';
 import { FormGroup, FormControl } from '@angular/forms';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-dialog-filter',
@@ -25,7 +26,7 @@ export class DialogFilterComponent implements OnInit {
 		private dialogRef: MatDialogRef<DialogFilterComponent>) { }
 
 	ngOnInit() {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			if (this.projectStaffService.contributors) {
 				console.groupCollapsed('Contributors list');
 				this.projectStaffService.contributors.forEach(entry => {
@@ -53,7 +54,7 @@ export class DialogFilterComponent implements OnInit {
 		const startingDate = (this.filters.get('startingDate').value === '')
 			? new Date(0) : this.filters.get('startingDate').value;
 		const idStaffSelected = this.filters.get('idStaffSelected').value;
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('idStaffSelected ' + idStaffSelected + ' / startingDate : ' + startingDate);
 		}
 		const settings = new SettingsGeneration(0, startingDate.getTime(), idStaffSelected);

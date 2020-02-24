@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Constants } from '../constants';
+import { traceOn } from '../global';
+import { environment } from 'src/environments/environment';
 
 @Component({
 	selector: 'app-dev-on-off',
@@ -17,7 +19,7 @@ export class DevOnOffComponent implements OnInit {
 	constructor() { }
 
 	ngOnInit() {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log (localStorage.getItem('dev'));
 		}
 		const dev = localStorage.getItem('dev');
@@ -25,11 +27,11 @@ export class DevOnOffComponent implements OnInit {
 			this.devOnOff = this.devON;
 			localStorage.setItem('dev', '1');
 			// We activate the logging behavior.
-			Constants.DEBUG = true;
+			environment.debug = true;
 		} else {
 			this.devOnOff = this.devOFF;
 			localStorage.setItem('dev', '0');
-			Constants.DEBUG = false;
+			environment.debug = false;
 		}
 	}
 

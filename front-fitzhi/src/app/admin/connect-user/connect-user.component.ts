@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Constants } from 'src/app/constants';
 import { ProjectService } from 'src/app/service/project.service';
 import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-connect-user',
@@ -55,7 +56,7 @@ export class ConnectUserComponent implements OnInit {
      * Cancel the installation.
      */
 	onCancel() {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('onCancel');
 		}
 		this.router.navigate(['/ciao']);

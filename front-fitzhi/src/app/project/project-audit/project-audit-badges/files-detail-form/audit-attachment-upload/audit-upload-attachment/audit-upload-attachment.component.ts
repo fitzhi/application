@@ -8,6 +8,7 @@ import { Constants } from 'src/app/constants';
 import { MessageBoxService } from 'src/app/message-box/service/message-box.service';
 import { HttpRequest, HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Subject } from 'rxjs';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-audit-upload-attachment',
@@ -60,7 +61,7 @@ export class AuditUploadAttachmentComponent extends BaseComponent implements OnI
 	 */
 	public fileEvent($event) {
 		this.attachmentFile = $event.target.files[0];
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Testing checkAttachmentFormat for ' + this.attachmentFile.type);
 		}
 		this.validFile = this.fileService.checkApplicationFormat(this.attachmentFile);
@@ -80,7 +81,7 @@ export class AuditUploadAttachmentComponent extends BaseComponent implements OnI
 	 */
 	upload(file: File) {
 
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Uploading the file ' + this.attachmentFile.name);
 		}
 
@@ -110,10 +111,10 @@ export class AuditUploadAttachmentComponent extends BaseComponent implements OnI
 				} else if (event instanceof HttpResponse) {
 					const doneAndOk = <Boolean>event.body;
 					if (doneAndOk) {
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							console.log ('Upload done for file ' + this.attachmentFile.name + ' of type ' + this.attachmentFile.type);
 						}
-						this.attachment.filename = this.fileService.extractFilename(file.name); 
+						this.attachment.filename = this.fileService.extractFilename(file.name);
 						this.attachment.type = Constants.APPLICATION_FILE_TYPE_ALLOWED.get(this.attachmentFile.type);
 					}
 					// Close the progress-stream if we get an answer form the API

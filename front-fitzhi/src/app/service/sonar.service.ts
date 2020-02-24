@@ -22,6 +22,7 @@ import { MessageService } from '../message/message.service';
 import { SupportedMetric } from '../data/supported-metric';
 import { RegisterUserComponent } from '../admin/register-user/register-user.component';
 import { DeclaredSonarServer } from '../data/declared-sonar-server';
+import { traceOn } from '../global';
 
 @Injectable({
 	providedIn: 'root'
@@ -114,7 +115,7 @@ export class SonarService extends InternalService {
 	 * @param urlSonar the URL of the Sonar server
 	 */
 	private initSonarServer(urlSonar: string) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('initSonarServer(\'%s\')', urlSonar);
 		}
 
@@ -129,7 +130,7 @@ export class SonarService extends InternalService {
 						return of({sonarServer: sonarServer, accessible: true});
 					}),
 					catchError((error) => {
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							console.groupCollapsed ('Connection failed with the Sonar server %s', urlSonar);
 							console.log('Error catched', error);
 							console.groupEnd();
@@ -189,7 +190,7 @@ export class SonarService extends InternalService {
 
 		const sonarServer = this.sonarServers.find(sonar => sonar.urlSonar === project.urlSonarServer );
 		if (!sonarServer) {
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log('Did not retrieve the Sonar server %s associated with the project %s', project.urlSonarServer, project.name);
 			}
 			return undefined;
@@ -240,7 +241,6 @@ export class SonarService extends InternalService {
 
 	/**
 	 * This function emtis all **Sonar** projects declared on Sonar associated with the Fitzhì project.
-	 * 
 	 */
 	public allSonarProjects$(project: Project):  Observable<Component[]> {
 		const sonarServer = this.getSonarServer(project);

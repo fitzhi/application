@@ -4,6 +4,7 @@ import { Constants } from '../constants';
 import { ProjectStaffService } from '../project/project-staff-service/project-staff.service';
 import { CinematicService } from '../service/cinematic.service';
 import { TabsStaffListService } from '../tabs-staff-list/service/tabs-staff-list.service';
+import { traceOn } from '../global';
 
 @Component({
 	selector: 'app-toolbar',
@@ -85,7 +86,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	listenOnContext() {
 		this.subscriptions.add(
 			this.cinematicService.currentActiveForm$.subscribe(context => {
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.log('Active context', Constants.CONTEXT[context.formIdentifier]);
 				}
 				if (context.formIdentifier === Constants.DEVELOPERS_CRUD) {
@@ -104,7 +105,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	listenOnCollaboratorDisplayed() {
 		this.subscriptions.add(
 			this.cinematicService.newCollaboratorDisplayEmitted$.subscribe(id => {
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.log ('Former form identifier (Where do we come from?)',
 					this.cinematicService.getFormerFormIdentifier());
 				}
@@ -118,7 +119,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 						this.nextId = this.projectStaffService.nextIdStaff(id);
 						break;
 				}
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.groupCollapsed('Cinematic buttons');
 					console.log('ID active in the form ' + id);
 					console.log('ID for button "Previous" ' + this.previousId);
@@ -188,7 +189,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 
 			this.messengerFormActive.emit(this.editedEntity);
 
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log('Actual mode', Constants.CONTEXT[this.editedEntity]);
 			}
 		}
@@ -208,7 +209,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 				break;
 			case this.SKILLS_CRUD:
 				this.messengerFormActive.emit(Constants.SKILLS_SEARCH);
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.log ('Complete search as default search');
 				}
 				setTimeout(() => {

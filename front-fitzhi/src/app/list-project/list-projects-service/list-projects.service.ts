@@ -5,6 +5,7 @@ import {Injectable, OnInit} from '@angular/core';
 import {Observable, of, BehaviorSubject, throwError, empty, EMPTY} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import { MessageService } from '../../message/message.service';
+import { traceOn } from 'src/app/global';
 
 @Injectable({
 	providedIn: 'root'
@@ -60,12 +61,12 @@ export class ListProjectsService  {
 		} else {
 			// The project's id is not, or no more, available in the cache.
 			// We try a direct access
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log('Direct access for : ' + id);
 			}
 			return this.projectService.get(id).pipe(tap(
 				(project: Project) => {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log('Direct access for : ' + id);
 						if (typeof project !== 'undefined') {
 							console.log('Project found : ' + project.name);

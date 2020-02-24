@@ -3,6 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 import { AuditDetailsHistory } from './cinematic/audit-details-history';
 import { AuditDetail } from '../data/audit-detail';
+import { traceOn } from '../global';
 
 class Form {
 
@@ -25,7 +26,7 @@ class Form {
 	}
 
 	public trace() {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Form Identifier ' + Constants.CONTEXT[this.formIdentifier] + ' for url ' + this.url);
 		}
 	}
@@ -123,7 +124,7 @@ export class CinematicService {
 
 		this.previousForm = this.currentActiveForm$.getValue();
 
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			this.previousForm.trace();
 		}
 

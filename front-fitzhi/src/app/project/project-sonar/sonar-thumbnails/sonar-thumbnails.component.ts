@@ -12,6 +12,7 @@ import { MessageService } from 'src/app/message/message.service';
 import { ThumbnailQuotationBadge } from './thumbnail-quotation-badge';
 import { SonarEvaluation } from 'src/app/data/sonar-evaluation';
 import { BehaviorSubject } from 'rxjs';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-sonar-thumbnails',
@@ -77,7 +78,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 			this.panelSwitchTransmitter$.subscribe( (panelSwitchEvent: PanelSwitchEvent) => {
 				this.updateDisplayConsolidationBadge();
 				if (!panelSwitchEvent.keySonar) {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log ('No Sonar project declared!');
 					}
 				} else {
@@ -121,7 +122,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 		this.subscriptions.add(
 			this.projectService.project.sonarProjects.forEach((sonar: SonarProject) => {
 				this.languageFilesNumber.set(sonar.key, sonar.projectFilesStats);
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.groupCollapsed('Files statistics for the Sonar instance %s.', sonar.key);
 					sonar.projectFilesStats.forEach(fs => console.log (fs.language, fs.numberOfFiles));
 					console.groupEnd();
@@ -142,7 +143,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	retrieveAndUpdateFilesSummary(componentSonar: SonarProject) {
 		this.sonarService.loadFiles(this.projectService.project, componentSonar.key).subscribe( filesCount => {
 			componentSonar.projectFilesStats = this.keepTop3TypesOfFile(filesCount);
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.groupCollapsed('Top 3 languages for Sonar project %s', componentSonar.key);
 				componentSonar.projectFilesStats.forEach(counting => {
 					console.log (counting.language, counting.numberOfFiles);
@@ -205,7 +206,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 			return;
 		}
 
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Displaying ' + Constants.TITLE_PANELS[idPanel] + ' for the ' + key);
 		}
 

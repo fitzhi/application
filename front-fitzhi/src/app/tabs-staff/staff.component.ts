@@ -9,6 +9,7 @@ import { CinematicService } from '../service/cinematic.service';
 import { MessageService } from '../message/message.service';
 import { BaseComponent } from '../base/base.component';
 import { Subject, BehaviorSubject } from 'rxjs';
+import { traceOn } from '../global';
 
 @Component({
 	selector: 'app-staff',
@@ -44,7 +45,7 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.subscriptions.add(this.route.params.subscribe(params => {
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log('params[\'id\'] ' + params['id']);
 			}
 			if (params['id'] == null) {
@@ -81,7 +82,7 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
 					},
 					error => {
 						if (error.status === 404) {
-							if (Constants.DEBUG) {
+							if (traceOn()) {
 								console.log('404 : cannot found a collaborator for the id ' + this.idStaff);
 							}
 							this.messageService.error('There is no staff member for id ' + this.idStaff);
@@ -98,7 +99,7 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
 						if (this.collaborator.idStaff === 0) {
 							console.log('No collaborator found for the id ' + this.idStaff);
 						}
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							console.log('Loading complete for id ' + this.idStaff, this.collaborator);
 						}
 					}
@@ -113,7 +114,7 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
 	 * @param selectedIndex the selected tab index
 	 */
 	selectedIndexChange(selectedIndex: number) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Index of selected tab', selectedIndex);
 		}
 		this.selectedTab$.next(selectedIndex);

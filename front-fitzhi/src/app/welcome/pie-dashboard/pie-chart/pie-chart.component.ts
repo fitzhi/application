@@ -7,6 +7,7 @@ import { tap, switchMap } from 'rxjs/operators';
 import { TypeSlice } from '../type-slice';
 import { BaseComponent } from 'src/app/base/base.component';
 import { PieDashboardService } from '../service/pie-dashboard.service';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-pie-chart',
@@ -60,7 +61,7 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 		this.subscriptions.add(
 			this.pieDashboardService.slices$
 				.pipe(tap(slices => {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.groupCollapsed ('slices received');
 						console.log(...slices);
 						console.groupEnd();
@@ -121,7 +122,7 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 	 * @param idSlice Slice identifier
 	 */
 	onSliceClick(slice: Slice): void {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('onSliceClick(%d)', slice.id);
 		}
 	}

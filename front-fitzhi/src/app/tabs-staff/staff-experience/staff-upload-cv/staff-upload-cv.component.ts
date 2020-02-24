@@ -14,6 +14,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { BaseComponent } from '../../../base/base.component';
 import { BackendSetupService } from '../../../service/backend-setup/backend-setup.service';
 import { FileService } from 'src/app/service/file.service';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-staff-upload-cv',
@@ -69,7 +70,7 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 
 	public fileEvent($event) {
 		this.applicationFile = $event.target.files[0];
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Testing checkApplicationFormat for ' + this.applicationFile.type);
 		}
 		this.fileService.checkApplicationFormat(this.applicationFile);
@@ -81,7 +82,7 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 	 */
 	upload(file: File) {
 
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Uploading the file ' + this.applicationFile.name);
 		}
 
@@ -109,7 +110,7 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 				} else if (event instanceof HttpResponse) {
 					const response = <DeclaredExperienceDTO>event.body;
 					this.declaredExperience = response.experience;
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.groupCollapsed(this.declaredExperience.length + ' experiences detected : ');
 						response.experience.forEach(element => console.log (element.title));
 						console.groupEnd();

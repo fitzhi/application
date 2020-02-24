@@ -3,6 +3,7 @@ import { Unknown } from '../../../data/unknown';
 import { MatTableDataSource } from '@angular/material/table';
 import { Constants } from '../../../constants';
 import { Collaborator } from 'src/app/data/collaborator';
+import { traceOn } from 'src/app/global';
 
 export class ProjectGhostsDataSource extends MatTableDataSource<Unknown> {
 
@@ -39,7 +40,7 @@ export class ProjectGhostsDataSource extends MatTableDataSource<Unknown> {
 			ghosts.push(g);
 		});
 		this.data = ghosts;
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.groupCollapsed	(ghosts.length + ' ghosts identified');
 			ghosts.forEach(g => {
 				console.log (g.pseudo, (g.technical ? 'technical' : g.idStaff));

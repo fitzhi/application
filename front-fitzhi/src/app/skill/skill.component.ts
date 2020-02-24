@@ -9,6 +9,7 @@ import { CinematicService } from '../service/cinematic.service';
 import { ListSkillService } from '../list-skill-service/list-skill.service';
 import { SkillService } from '../service/skill.service';
 import { BaseComponent } from '../base/base.component';
+import { traceOn } from '../global';
 
 @Component({
 	selector: 'app-skill',
@@ -41,7 +42,7 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 	ngOnInit() {
 		this.subscriptions.add(
 			this.route.params.subscribe(params => {
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.log('params[\'id\'] ' + params['id']);
 				}
 				if (params['id'] == null) {
@@ -62,7 +63,7 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 							},
 							error => {
 								if (error.status === 404) {
-									if (Constants.DEBUG) {
+									if (traceOn()) {
 										console.log('404 : cannot find a skill for the id ' + this.id);
 									}
 									this.messageService.error('There is no skill for id ' + this.id);
@@ -75,7 +76,7 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 								if (this.skill.id === 0) {
 									console.log('No skill found for the id ' + this.id);
 								}
-								if (Constants.DEBUG) {
+								if (traceOn()) {
 									console.log('Loading comlete for id ' + this.id);
 								}
 							}
@@ -90,7 +91,7 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 	 */
 	onSubmit() {
 		this.skill.title = this.profileSkill.get('title').value;
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('saving the skill ' + this.skill.title + ' with id ' + this.skill.id);
 		}
 		this.subscriptions.add(

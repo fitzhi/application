@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Contributor } from '../../data/contributor';
 import { Constants } from '../../constants';
+import { traceOn } from 'src/app/global';
 
 @Injectable({
 	providedIn: 'root'
@@ -27,7 +28,7 @@ export class ProjectStaffService {
 	 */
 	nextIdStaff(id: number): number {
 		const index = this.contributors.findIndex(contributor => contributor.idStaff === id);
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Current index : ' + index);
 			console.log('Staff team collection size : ' + this.contributors.length);
 		}

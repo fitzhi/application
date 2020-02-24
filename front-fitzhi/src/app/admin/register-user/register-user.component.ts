@@ -8,6 +8,7 @@ import { MessageService } from 'src/app/message/message.service';
 import { StaffDataExchangeService } from 'src/app/tabs-staff/service/staff-data-exchange.service';
 import { MessageBoxService } from 'src/app/message-box/service/message-box.service';
 import { StaffService } from 'src/app/service/staff.service';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-register-user',
@@ -91,7 +92,7 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 
 		const username: string = this.connectionGroup.get('username').value;
 		const password: string = this.connectionGroup.get('password').value;
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log( (this.veryFirstConnection ? 'Very first connection' : 'New user connection')
 			+ ' Create new user for username/pass', username + '/' + password);
 		}
@@ -104,7 +105,7 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 				.subscribe(
 					response => {
 						if (response.code === 0) {
-							if (Constants.DEBUG) {
+							if (traceOn()) {
 								console.log('Empty staff created with id ' + response.staff.idStaff);
 							}
 							this.staffDataExchangeService.changeCollaborator(response.staff);
@@ -116,7 +117,7 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 					error => {
 						// We will restart the setup installation for the beginning
 						this.backendSetupService.removeUrl();
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							console.log('Connection error ', error);
 						}
 					}));

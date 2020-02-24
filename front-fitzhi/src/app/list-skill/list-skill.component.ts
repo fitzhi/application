@@ -11,6 +11,7 @@ import { TabsStaffListService } from '../tabs-staff-list/service/tabs-staff-list
 import { SkillCountExperiences } from './skill-count-experiences/skill.count.experiences';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
+import { traceOn } from '../global';
 
 
 @Component({
@@ -92,7 +93,7 @@ export class ListSkillComponent extends BaseComponent implements OnInit, OnDestr
 				this.dataSource.sort = this.sort;
 				this.subscriptions.add(
 					this.dataSource.connect().subscribe(data => this.experiences = data));
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.groupCollapsed ('Skills counting');
 					this.experiences.forEach(element => {
 						console.log (element.title,
@@ -119,7 +120,7 @@ export class ListSkillComponent extends BaseComponent implements OnInit, OnDestr
 		this.tabsStaffListService.addTabResult(criteria, this.skillService.criteria.activeOnly);
 		const key = this.tabsStaffListService.key(new ListCriteria(criteria, this.skillService.criteria.activeOnly));
 		this.tabsStaffListService.activeKey = key;
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Criteria used ' + criteria + ' for key ' + key);
 		}
 		this.router.navigate(['/searchUser/'], {});

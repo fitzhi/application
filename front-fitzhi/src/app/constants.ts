@@ -1,5 +1,5 @@
 import { isDevMode } from '@angular/core';
-
+import { environment } from '../environments/environment';
 /**
  * Constants file
  */
@@ -8,7 +8,7 @@ export class Constants {
 	/**
 	  * DEBUG Mode for development purpose
 	  */
-	public static DEBUG = isDevMode();
+	public static DEBUG = environment.debug;
 
 	/**
 	 * Value for Unknown object;

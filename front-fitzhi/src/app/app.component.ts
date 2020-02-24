@@ -13,11 +13,8 @@ import { AuthService } from './admin/service/auth/auth.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { SonarService } from './service/sonar.service';
 import { MessageService } from './message/message.service';
-import { SonarServer } from './data/sonar-server';
 import { HttpClient } from '@angular/common/http';
-import { of, Subject, observable, Observable } from 'rxjs';
-import { CompileTemplateMetadata } from '@angular/compiler';
-import { switchMap, map, mergeMap } from 'rxjs/operators';
+import { traceOn } from './global';
 
 declare var $: any;
 
@@ -92,7 +89,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 		switch (this.activeContext) {
 			case Constants.TABS_STAFF_LIST:
 			case Constants.DEVELOPERS_SEARCH:
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.log(
 						'Searching ' + (this.activeOnly ? 'only active ' : 'all ')
 						+ 'staff members for the search criteria ' + this.criteria + '');
@@ -102,7 +99,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 				}
 				break;
 			case Constants.SKILLS_SEARCH: {
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.log('Reloading skills for search criteria ' + this.criteria);
 				}
 				this.skillService.filterSkills(new ListCriteria(this.criteria, this.activeOnly));
@@ -110,7 +107,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 				break;
 			}
 			case Constants.PROJECT_SEARCH: {
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.log('Reloading project for search criteria ' + this.criteria);
 				}
 				this.listProjectsService.reloadProjects(this.criteria);
@@ -161,7 +158,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
      */
 	onChangeForm($event: number) {
 		this.activeContext = $event;
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Changing to mode', Constants.CONTEXT[$event]);
 		}
 		if (this.activeContext === Constants.BACK_TO_LIST) {
@@ -192,7 +189,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
      */
 	onChangeActiveOnly($event: boolean) {
 		this.activeOnly = $event;
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			if (this.activeOnly) {
 				console.log('Filter only active records');
 			} else {
@@ -205,7 +202,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
      * The end-user has requested a query based on the passed criteria.
      */
 	onRequestQuery($event: string) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Request of a query on criteria', $event);
 		}
 		this.criteria = $event;

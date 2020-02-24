@@ -10,6 +10,7 @@ import { AuditChosenDetail } from './audit-chosen-detail';
 import { AuditDetail } from 'src/app/data/audit-detail';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { take } from 'rxjs/operators';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-audit-badge',
@@ -117,7 +118,7 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 * @param id the new current active topic identifier
 	 */
 	switchTopic(id: number) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('switching to ' + id + ' ' + this.title);
 		}
 		this.cinematicService.auditTopicSelected$.next(id);

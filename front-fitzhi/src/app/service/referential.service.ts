@@ -11,6 +11,7 @@ import { SupportedMetric } from '../data/supported-metric';
 import { TopicLegend } from '../data/topic-legend';
 import { DeclaredSonarServer } from '../data/declared-sonar-server';
 import { Ecosystem } from '../data/ecosystem';
+import { traceOn } from '../global';
 
 @Injectable()
 export class ReferentialService {
@@ -76,7 +77,7 @@ export class ReferentialService {
 	 */
 	public loadAllReferentials(): void {
 
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			if (!this.backendSetupService.hasSavedAnUrl()) {
 				console.log('First start of application. Referentials loading is postponed.');
 				return;
@@ -94,7 +95,7 @@ export class ReferentialService {
 				take(1),
 				switchMap(
 					(profiles: Profile[]) => {
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							console.groupCollapsed('Staff profiles : ');
 							profiles.forEach(function (profile) {
 								console.log(profile.code + ' ' + profile.title);
@@ -109,7 +110,7 @@ export class ReferentialService {
 				take(1),
 				switchMap(
 					(legends: RiskLegend[]) => {
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							console.groupCollapsed('Risk legends : ');
 							legends.forEach(function (legend) {
 								console.log(legend.level + ' ' + legend.color + ' ' + legend.description);
@@ -125,7 +126,7 @@ export class ReferentialService {
 					take(1),
 					switchMap(
 						(sonarServers: DeclaredSonarServer[]) => {
-							if (Constants.DEBUG) {
+							if (traceOn()) {
 								console.groupCollapsed('Sonar servers declared : ');
 								sonarServers.forEach(server => console.log(server.urlSonarServer));
 								console.groupEnd();
@@ -140,7 +141,7 @@ export class ReferentialService {
 					take(1),
 					switchMap(
 						(ecosystems: Ecosystem[]) => {
-							if (Constants.DEBUG) {
+							if (traceOn()) {
 								console.groupCollapsed('Ecosystems declared inside the system : ');
 								ecosystems.forEach(ecosystem => console.log(ecosystem.title));
 								console.groupEnd();
@@ -153,7 +154,7 @@ export class ReferentialService {
 					take(1),
 					switchMap(
 						(metrics: SupportedMetric[]) => {
-							if (Constants.DEBUG) {
+							if (traceOn()) {
 								console.groupCollapsed('Supported metrics : ');
 								metrics.forEach(metric => console.log(metric.key));
 								console.groupEnd();
@@ -169,7 +170,7 @@ export class ReferentialService {
 				.pipe(take(1))
 				.subscribe(
 					(topicslegends: TopicLegend[]) => {
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							console.groupCollapsed('Audit topics : ');
 							topicslegends.forEach(function (topic) {
 								console.log(topic.id + ' ' + topic.title);

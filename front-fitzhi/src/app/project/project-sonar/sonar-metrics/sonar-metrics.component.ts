@@ -17,6 +17,7 @@ import { MessageGravity } from 'src/app/message/message-gravity';
 import { ResponseComponentMeasures } from 'src/app/data/sonar/reponse-component-measures';
 import { MessageService } from 'src/app/message/message.service';
 import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-sonar-metrics',
@@ -92,17 +93,17 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 		this.subscriptions.add(
 			this.panelSwitchTransmitter$.subscribe(
 					(panelSwitchEvent: PanelSwitchEvent)  => {
-				if ( (Constants.DEBUG) && (panelSwitchEvent.idPanel === Constants.PROJECT_SONAR_PANEL.SETTINGS) ) {
+				if ( (traceOn()) && (panelSwitchEvent.idPanel === Constants.PROJECT_SONAR_PANEL.SETTINGS) ) {
 					console.log('Updating the metrics for the Sonar project %s', panelSwitchEvent.keySonar);
 				}
 				if (!panelSwitchEvent.keySonar) {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log ('No Sonar project declared. We reinitialize the dataSource');
 					}
 					return;
 				}
 				if (!this.isSonarAccessible) {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log ('Sonar cannot be reach. Nothing to update.');
 					}
 					return;
@@ -185,7 +186,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	 * @param projectSonarMetrics the array of metrics as origine of the dataSource
 	 */
 	private initDataSource(projectSonarMetrics: ProjectSonarMetric[]) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.groupCollapsed(projectSonarMetrics.length + ' records in projectSonarMetrics');
 			projectSonarMetrics.forEach(projectSonarMetric => {
 				console.log(projectSonarMetric.key, projectSonarMetric.name);

@@ -15,6 +15,7 @@ import { Observable, Subject, BehaviorSubject } from 'rxjs';
 import { TableGhostsComponent } from 'src/app/project/project-sunburst/project-ghosts/table-ghosts/table-ghosts.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-staff-projects',
@@ -119,7 +120,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 			return data[sortHeaderId];
 		};
 
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Missions loaded', missions.length);
 		}
 		this.numberOfMissions$.next(missions.length);
@@ -174,7 +175,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	 * @param event ADD event fired by the tagify component.
 	 */
 	addProject(event: CustomEvent): void {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Adding the project', event.detail.data.value);
 		}
 
@@ -208,7 +209,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	 */
 	rollbackRemove(projectName: string): void {
 
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Rollback the removal of %s', projectName);
 		}
 		this.tagify.off('add', this.boundAddProject);
@@ -223,7 +224,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	removeProject(event: CustomEvent): void {
 
 		const projectName = event.detail.data.value;
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Removing the project %s', projectName);
 		}
 
@@ -249,7 +250,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 		}
 
 		const indexOfMission = this.collaborator.missions.indexOf(mission);
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log (
 					'%d is the index of the selected mission %s '
 				+ 	' to be removed from this collaborator\' missions', indexOfMission, mission.name);
@@ -280,7 +281,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 			}
 		},
 		response_in_error => {
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log('Error ', response_in_error);
 			}
 			this.undoRemoveProject(mission);
@@ -296,7 +297,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	 */
 	/* tslint:enable: no-trailing-whitespace */
 	undoRemoveProject(mission: Mission): void {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Update failed, we re-introduce the project %s', mission.name);
 		}
 		this.collaborator.missions.push(mission);

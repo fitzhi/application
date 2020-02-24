@@ -16,6 +16,7 @@ import { AuditDetailsHistory } from 'src/app/service/cinematic/audit-details-his
 import { ConnectUserComponent } from 'src/app/admin/connect-user/connect-user.component';
 import { TRANSITION_DURATIONS } from 'ngx-bootstrap/modal/modal-options.class';
 import { switchMap } from 'rxjs/operators';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-project-audit',
@@ -113,7 +114,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 		Object.keys(this.projectService.project.audit).forEach(key => {
 			this.cinematicService.auditHistory[key] = new AuditDetailsHistory();
 		});
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			this.dumpAuditHistory();
 		}
 	}
@@ -183,7 +184,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 */
 	onCategoryUpdated(category: Topic) {
 
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log (
 				((category.select) ? 'Selection' : 'Deselection)' + ' of %s'), category.title);
 		}
@@ -243,7 +244,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 * @param idTopic the topic identifier
 	 */
 	onShowHideAuditDetail(auditChosenDetail: AuditChosenDetail) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('adding the detail panel %s for topic %d', auditChosenDetail.detail, auditChosenDetail.idTopic );
 		}
 
@@ -266,7 +267,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 * @param topicEvaluation the topic evaluation emitted
 	 */
 	onEvaluationChange(topicEvaluation: TopicEvaluation) {
-		if ((Constants.DEBUG) && (topicEvaluation.typeOfOperation === Constants.CHANGE_BROADCAST)) {
+		if ((traceOn()) && (topicEvaluation.typeOfOperation === Constants.CHANGE_BROADCAST)) {
 			console.log (this.topics[topicEvaluation.idTopic], topicEvaluation.value);
 		}
 
@@ -304,7 +305,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 
 		console.groupCollapsed('Local update of the weights for %s', this.projectService.project.name);
 		auditTopics.forEach (auditTopic => {
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log ('changing wight from %d to %d for %d',
 					this.projectService.project.audit[auditTopic.idTopic].weight,
 					auditTopic.weight,
@@ -321,7 +322,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 * @param topicEvaluation the topic evaluation emitted
 	 */
 	onWeightChange(topicWeight: TopicWeight) {
-		if ((Constants.DEBUG) && (topicWeight.typeOfOperation === Constants.CHANGE_BROADCAST)) {
+		if ((traceOn()) && (topicWeight.typeOfOperation === Constants.CHANGE_BROADCAST)) {
 			console.log (this.topics[topicWeight.idTopic], topicWeight.value);
 		}
 		if (topicWeight.typeOfOperation === Constants.CHANGE_BROADCAST) {

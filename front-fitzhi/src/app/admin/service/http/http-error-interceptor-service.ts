@@ -5,6 +5,7 @@ import { Injectable, Injector } from '@angular/core';
 import { MessageService } from '../../../message/message.service';
 import { Constants } from '../../../constants';
 import { Router } from '@angular/router';
+import { traceOn } from 'src/app/global';
 
 @Injectable({ providedIn: 'root' })
 export class HttpErrorInterceptorService implements HttpInterceptor {
@@ -49,14 +50,14 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 							const return_code = response.headers.get('backend.return_code');
 							if (return_code) {
 								const return_message = response.headers.get('backend.return_message');
-								if (Constants.DEBUG) {
+								if (traceOn()) {
 									console.log('Error ' + response.status
 										+ ' with back-end error code/message '
 										+ return_code + '/' + return_message);
 								}
 								errorMessage = return_message;
 							} else {
-								if (Constants.DEBUG) {
+								if (traceOn()) {
 									console.log('Error ' + response.status + ' ' + response.message);
 								}
 								if ( (response.error !== null) &&  (response.error !== undefined) ) {
@@ -68,7 +69,7 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 							setTimeout(() => messageService.warning(errorMessage), 0);
 							return throwError(response);
 						case 401:
-							if (Constants.DEBUG) {
+							if (traceOn()) {
 								console.log(response.error.error, response.error.error_description);
 							}
 							if (response.error.error === 'unauthorized') {
@@ -84,11 +85,11 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 							}
 							break;
 						default:
-							if (Constants.DEBUG) {
+							if (traceOn()) {
 								console.log(response);
 							}
 							if (response) {
-								if (Constants.DEBUG) {
+								if (traceOn()) {
 									console.log('Error ' + response.status + ' ' + response.message);
 								}
 								errorMessage = response.message + ' (' + response.status + ')';

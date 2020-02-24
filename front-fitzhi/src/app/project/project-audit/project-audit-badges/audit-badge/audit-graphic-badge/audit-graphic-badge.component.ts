@@ -8,6 +8,7 @@ import { CinematicService } from 'src/app/service/cinematic.service';
 import { Constants } from 'src/app/constants';
 import { take } from 'rxjs/operators';
 import { ReferentialService } from 'src/app/service/referential.service';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-audit-graphic-badge',
@@ -72,7 +73,7 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 
 	ngAfterViewInit() {
 		if (this.editable) {
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log ('Displaying the graphic badge in editable mode');
 			}
 
@@ -90,7 +91,7 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 		}
 
 		if (!this.editable) {
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log ('Displaying the graphic badge in non-editable mode');
 			}
 			if (this.project) {

@@ -10,6 +10,7 @@ import { ProjectService } from '../service/project.service';
 import { StaffListService } from '../staff-list-service/staff-list.service';
 import { Commit } from '../data/commit';
 import { of } from 'rxjs';
+import { traceOn } from '../global';
 
 @Component({
 	selector: 'app-list-project',
@@ -91,7 +92,7 @@ export class ListProjectComponent implements OnInit {
 	}
 
 	public search(source: string): void {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Searching a project');
 		}
 	}

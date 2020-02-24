@@ -4,6 +4,7 @@ import {SkillService} from '../service/skill.service';
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
+import { traceOn } from '../global';
 
 @Injectable({
 	providedIn: 'root'
@@ -41,7 +42,7 @@ export class ListSkillService {
 	 * Cleanup the list of skills involved in our service center.
 	 */
 	cleanUpSkills() {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			if (this.theSkills == null) {
 				console.log('INTERNAL ERROR : collection theSkill SHOULD NOT BE NULL, dude !');
 			} else {
@@ -66,12 +67,12 @@ export class ListSkillService {
 		} else {
 			// The collaborator's id is not, or no more, available in the cache
 			// We try a direct access
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log('Direct access for : ' + id);
 			}
 			return this.skillService.get(id).pipe(tap(
 				(skill: Skill) => {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log('Direct access for : ' + id);
 						if (typeof skill !== 'undefined') {
 							console.log('Skill found : ' + skill.title);

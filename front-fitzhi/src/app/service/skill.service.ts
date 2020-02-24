@@ -8,6 +8,7 @@ import { Constants } from '../constants';
 import { ListCriteria } from '../data/listCriteria';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { take, tap } from 'rxjs/operators';
+import { traceOn } from '../global';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -47,7 +48,7 @@ export class SkillService extends InternalService {
 
 	constructor(private httpClient: HttpClient, private backendSetupService: BackendSetupService) {
 		super();
-		if (Constants.DEBUG && !this.backendSetupService.hasSavedAnUrl()) {
+		if (traceOn() && !this.backendSetupService.hasSavedAnUrl()) {
 			console.log('Skills loading is postponed due to the lack of backend URL.');
 		}
 		if (this.backendSetupService.hasSavedAnUrl()) {
@@ -61,14 +62,14 @@ export class SkillService extends InternalService {
 	 */
 	loadSkills() {
 
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			this.log('Fetching all skills on URL ' + this.backendSetupService.url() + '/skill' + '/all');
 		}
 		this.httpClient
 			.get<Skill[]>(this.backendSetupService.url() + '/skill' + '/all')
 			.pipe(
 				tap(skills => {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.groupCollapsed('Skills registered : ');
 						skills.forEach(function (skill) {
 							console.log(skill.id + ' ' + skill.title);
@@ -96,7 +97,7 @@ export class SkillService extends InternalService {
 	* Save the skill
 	*/
 	save(skill: Skill): Observable<Skill> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log((typeof skill.id !== 'undefined') ? 'Saving ' : 'Adding' + ' skill ' + skill.title);
 		}
 		return this.httpClient.post<Skill>(this.backendSetupService.url() + '/skill' + '/save', skill, httpOptions);
@@ -131,7 +132,7 @@ export class SkillService extends InternalService {
 	 */
 	get(id: number): Observable<Skill> {
 		const url = this.backendSetupService.url() + '/skill' + '/' + id;
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Fetching the skill ' + id + ' on the address ' + url);
 		}
 		return this.httpClient.get<Skill>(url);
@@ -143,7 +144,7 @@ export class SkillService extends InternalService {
 	 */
 	lookup(skillTitle: string): Observable<Skill> {
 		const url = this.backendSetupService.url() + '/name/' + skillTitle;
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Fetching the skill title ' + skillTitle + ' on the address ' + url);
 		}
 		return this.httpClient.get<Skill>(url);
@@ -168,7 +169,7 @@ export class SkillService extends InternalService {
 	 */
 	filterSkills(criteria: ListCriteria) {
 
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Filtering the skills for the criteria', criteria);
 		}
 		this.criteria = criteria;
@@ -179,7 +180,7 @@ export class SkillService extends InternalService {
 				filteredSkills.push(skill);
 			}
 		});
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.groupCollapsed('Emitting the skills');
 			filteredSkills.forEach (skill => {
 				console.log (skill.id, skill.title);

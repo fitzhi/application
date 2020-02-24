@@ -2,6 +2,7 @@ import { Collaborator } from './collaborator';
 import { ListCriteria } from './listCriteria';
 import { MatSortable } from '@angular/material/sort';
 import { Constants } from '../constants';
+import { traceOn } from '../global';
 
 class SortingContext {
 	id: string;
@@ -45,7 +46,7 @@ export class StaffListContext {
 	 * @returns TRUE if a sort request has been executed.
 	 */
 	public isSorted(): boolean {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('For key "' + this.criteria + '" , the method isSorted() returns ' +
 				(this.sortingContext.id !== null));
 		}

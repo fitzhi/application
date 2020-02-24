@@ -64,7 +64,7 @@ export class SonarServer {
 			.pipe(
 				tap(
 					metrics => {
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							console.groupCollapsed(metrics.metrics.length + ' (all) metrics available on Sonar');
 							metrics.metrics.forEach(metric => console.log(metric.key, metric.name));
 							console.groupEnd();
@@ -78,7 +78,7 @@ export class SonarServer {
 						sonarMetrics.push(element);
 					}
 				});
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.groupCollapsed(sonarMetrics.length + ' supported metrics by the application');
 					sonarMetrics.forEach(metric => console.log(metric.key, metric.name));
 					console.groupEnd();
@@ -94,7 +94,7 @@ export class SonarServer {
 	 * @param metrics list of metrics to be evaluated
 	 */
 	loadSonarComponentMeasures$(httpClient: HttpClient, key: string, metrics: string[]): Observable<ResponseComponentMeasures> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Loading mesures for Sonar project %s', key);
 		}
 		const params = new HttpParams().set('component', key).set('metricKeys', metrics.join(','));
@@ -103,7 +103,7 @@ export class SonarServer {
 			.get<ResponseComponentMeasures>(this.urlSonar + apiMesures, { params: params })
 			.pipe(
 				tap(response => {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.groupCollapsed(response.component.measures.length + ' measures obtained for component ' + response.component.key);
 						response.component.measures.forEach(measure => console.log(measure.metric, measure.value));
 						console.groupEnd();
@@ -133,7 +133,7 @@ export class SonarServer {
 	 */
 	loadProjects(httpClient: HttpClient) {
 		this.loadComponents(httpClient, 'TRK').subscribe(components => {
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.groupCollapsed(components.components.length + ' components retrieved.');
 				components.components.forEach(component => console.log(component.name, component.key));
 				console.groupEnd();
@@ -191,7 +191,7 @@ export class SonarServer {
 			.get<ComponentTree>(this.urlSonar + '/api/components/tree', { params: params })
 			.pipe(
 				tap((response: ComponentTree) => {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.groupCollapsed(response.components.length + ' FIL components retrieved');
 						response.components.forEach(
 							component => console.log(component.language + ' ' + component.name));
@@ -207,7 +207,7 @@ export class SonarServer {
 							languageCounts[element.language]++;
 						}
 					});
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.groupCollapsed(key + ' files summary');
 						Object.entries(languageCounts).forEach(([language, count]) => {
 							console.log(language, count);

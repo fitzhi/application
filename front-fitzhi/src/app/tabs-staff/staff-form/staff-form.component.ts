@@ -17,6 +17,7 @@ import { take } from 'rxjs/operators';
 import { MessageBoxService } from 'src/app/message-box/service/message-box.service';
 import { Mission } from 'src/app/data/mission';
 import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
+import { traceOn } from 'src/app/global';
 
 
 @Component({
@@ -98,7 +99,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 
 	ngOnInit() {
 
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Current staff member id ' + this.idStaff);
 		}
 		if (!this.idStaff) {
@@ -110,7 +111,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 			this.subscriptions.add(
 				this.staffDataExchangeService.collaborator$
 					.subscribe((employee: Collaborator) => {
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							console.log('Employee loaded ' + employee.idStaff);
 						}
 						this.collaborator = employee;
@@ -180,7 +181,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
     * The Submit Button has been activated
     */
 	onSubmit(): void {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Saving data for the collaborator below');
 			console.log(this.collaborator);
 		}
@@ -253,7 +254,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		// The staff member was desactivated. And the user wants to reactivate him.
 		if (field === this.IS_ACTIVE) {
 			if (this.profileStaff.get('active').value) {
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.log ('The end-user wants to reactivate %s %s', oldFirstName, oldLastName);
 				}
 				this.collaborator.active = true;
@@ -263,7 +264,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 			return;
 		}
 
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.groupCollapsed('Staff member is moving');
 			console.log ('Field', field);
 			console.log ('Firstname', newFirstName + '->' + oldFirstName);

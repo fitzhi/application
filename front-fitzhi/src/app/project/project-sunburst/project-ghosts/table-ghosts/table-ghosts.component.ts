@@ -11,6 +11,7 @@ import { take, throwIfEmpty } from 'rxjs/operators';
 import { MessageService } from 'src/app/message/message.service';
 import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
 import { ProjectService } from 'src/app/service/project.service';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-table-ghosts',
@@ -62,7 +63,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 			if (this.dataSourceGhosts$) {
 				this.subscriptions.add(
 					this.dataSourceGhosts$.subscribe((dataSource: ProjectGhostsDataSource) => {
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							console.log('Project ' + dataSource.project.id + ' ' + dataSource.project.name + ' reveived in the table of ghosts component');
 						}
 						this.dataSource = dataSource;
@@ -185,7 +186,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	}
 
 	addStaff(ghost: Unknown) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.groupCollapsed ('Creation of the the staff member');
 			console.log ('Firstname', ghost.firstname);
 			console.log ('Lastname', ghost.lastname);
@@ -212,7 +213,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 					.subscribe(result => {
 						if (result) {
 							this.messageService.success('Staff member ' + staff.firstName + ' ' + staff.lastName + ' saved');
-							if (Constants.DEBUG) {
+							if (traceOn()) {
 								console.log ('Onboarding the staff %d into the project %d', staff.idStaff, this.dataSource.project.id);
 							}
 							this.projectService.onBoardStaffInProject(this.dataSource.project.id,  staff.idStaff);

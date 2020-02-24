@@ -23,6 +23,7 @@ import { Task } from 'src/app/data/task';
 import { TaskLog } from 'src/app/data/task-log';
 import { MatTableDataSource } from '@angular/material/table';
 import { ContributorsDTO } from 'src/app/data/external/contributorsDTO';
+import { traceOn } from 'src/app/global';
 
 /**
  * Internal class in charge of the display of log messages reported by the asynchronous task.
@@ -83,7 +84,7 @@ class TaskReportManagement {
 	 */
 	private dump(task: Task) {
 		task.activityLogs.forEach(log => {
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.groupCollapsed('Activities recorded');
 				console.log (log.message);
 				console.groupEnd();
@@ -122,7 +123,7 @@ class TaskReportManagement {
 			if (this.numberOfUselessCall === 5) {
 				this.numberOfUselessCall = 0;
 				this.adaptativeDelay += this.DEFAULT_DELAY_INTERVAL;
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.log ('Adaptative delay has been raised to %d', this.adaptativeDelay);
 				}
 			}
@@ -278,7 +279,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	ngOnInit() {
 
 		this.route.params.pipe(take(1)).subscribe(params => {
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log('params[\'id\'] ' + params['id']);
 			}
 			if (params['id'] == null) {
@@ -292,7 +293,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			this.projectService.projectLoaded$.subscribe({
 				next: doneAndOk => {
 					if (doneAndOk) {
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							console.log('Project %s %s received in sunburst-component',
 								this.projectService.project.id,
 								this.projectService.project.name);
@@ -317,13 +318,13 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			this.cinematicService.tabProjectActivated$.subscribe(
 				index => {
 					if (index === Constants.PROJECT_IDX_TAB_SUNBURST) {
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							const today = new Date();
 							console.log('Tab selected ' + index + ' @ ' + today.getHours()
 								+ ':' + today.getMinutes() + ':' + today.getSeconds());
 						}
 						if (this.isChartImpossible(this.projectService.project)) {
-							if (Constants.DEBUG) {
+							if (traceOn()) {
 								console.log('No project identifier passed to this tab. No data available to preview !');
 							}
 							this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
@@ -353,7 +354,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				this.taskReportManagement.complete = task.complete;
 				// The treatment did not end properly
 				if (task.completeOnError) {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log ('Generation ended with the error', task.lastBreath.message);
 					}
 					this.messageService.error(task.lastBreath.message);
@@ -392,7 +393,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					//
 					// In case of error, we stop the log tracking.
 					//
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.groupCollapsed ('We stop loadTaskActivities due to internal error');
 						console.log (error);
 						console.groupEnd();
@@ -434,7 +435,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			take(1),
 			switchMap((contributorsDTO: ContributorsDTO) => {
 				this.projectStaffService.contributors.push(...contributorsDTO.contributors);
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					this.projectStaffService.dumpContributors();
 				}
 				return of(true);
@@ -474,7 +475,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 							this.setActiveContext (PreviewContext.SUNBURST_READY);
 							setTimeout(() => {
 								this.handleSunburstData(response);
-								if (Constants.DEBUG) {
+								if (traceOn()) {
 									console.log ('The risk of the current project is', response.projectRiskLevel);
 								}
 								this.updateRiskLevel.next(response.projectRiskLevel);
@@ -520,7 +521,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		if (nodeClicked) {
 			this.location$.next(nodeClicked.location);
 			if (nodeClicked.classnames) {
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.groupCollapsed('Filenames : ');
 					nodeClicked.classnames.forEach(element => {
 						console.log(element.filename + ' ' + element.lastCommit);
@@ -542,14 +543,14 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 						});
 					}
 				});
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.groupCollapsed('Contributors : ');
 					console.log (...contributors);
 					console.groupEnd();
 				}
 				this.contributors.sendContributors(Array.from(contributors));
 			} else {
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.log('Content of filenames & contibutors have been reset.');
 				}
 				this.filenames.setClassnames([]);
@@ -595,7 +596,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	}
 
 	handleErrorData(response: any) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Response returned while retrieving the sunburst data for the project identifier ' +
 				this.settings.idProject);
 		}
@@ -607,7 +608,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				break;
 			}
 			case 400: {
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.log ('Response received', response);
 				}
 				switch (response.error.code) {
@@ -779,7 +780,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 						.resetDashboard(this.settings.idProject)
 						.pipe(take(1))
 						.subscribe(response => {
-							if ((!response) && (Constants.DEBUG)) {
+							if ((!response) && (traceOn())) {
 									console.log ('This request was not necessary : no dashboard available.');
 							}
 							this.messageBoxService.exclamation('Request saved',
@@ -856,7 +857,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			return;
 		}
 
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('New active context \'' + context + '\' after \'' + this.lastSunburstContext + '\'');
 		}
 

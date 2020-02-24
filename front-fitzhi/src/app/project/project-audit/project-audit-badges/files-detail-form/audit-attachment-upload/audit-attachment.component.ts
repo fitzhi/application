@@ -9,6 +9,7 @@ import { ProjectService } from 'src/app/service/project.service';
 import { FileService } from 'src/app/service/file.service';
 import { MessageService } from 'src/app/message/message.service';
 import { AuditAttachmentService } from '../service/audit-attachment.service';
+import { traceOn } from 'src/app/global';
 
 /**
  * Class of parameters for the upload attachment dialogBox.
@@ -96,7 +97,7 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 		this.subscriptions.add(
 			dialogReference.afterClosed().subscribe((auditAttachment: AuditAttachment)  => {
 				if (auditAttachment) {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log('Adding the file %s labelled with %s', auditAttachment.filename, this.label);
 					}
 					this.auditAttachmentService.emitAddUpdAttachmentFile(

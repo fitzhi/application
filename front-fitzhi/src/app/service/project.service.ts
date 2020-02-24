@@ -28,6 +28,7 @@ import { connectableObservableDescriptor } from 'rxjs/internal/observable/Connec
 import { AttachmentFile } from '../data/AttachmentFile';
 import { FileService } from './file.service';
 import { Ecosystem } from '../data/ecosystem';
+import { traceOn } from '../global';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -77,14 +78,14 @@ export class ProjectService extends InternalService {
    	* Load the global list of ALL projects, working for the company.
    	*/
 	loadProjects() {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			this.log('Fetching the projects on URL ' + this.backendSetupService.url() + '/project/all');
 		}
 		this.httpClient
 			.get<Project[]>(this.backendSetupService.url() + '/project/all')
 			.pipe(take(1))
 			.subscribe(projects => {
-				if (Constants.DEBUG) {
+				if (traceOn()) {
 					console.groupCollapsed('Projects retrieved');
 					projects.forEach (project => console.log (project.name));
 					console.groupEnd();
@@ -131,7 +132,7 @@ export class ProjectService extends InternalService {
 	* @param project the given projet to be saved.
 	*/
 	save(project: Project): Observable<Project> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log(((typeof project.id !== 'undefined') ? 'Saving ' : 'Adding ') + 'project ' + project.name);
 		}
 		return this.httpClient
@@ -153,7 +154,7 @@ export class ProjectService extends InternalService {
 	* @param idSkill the skill identifier
 	*/
 	addSkill(idProject: number, idSkill: number): Observable<BooleanDTO> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Adding the skill  ' + idSkill + ' for the project whom id is ' + idProject);
 		}
 		const body = { idProject: idProject, idSkill: idSkill };
@@ -168,7 +169,7 @@ export class ProjectService extends InternalService {
 	 * @param idSkill the skill identifier
 	 */
 	delSkill(idProject: number, idSkill: number): Observable<BooleanDTO> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Remove a the skill with ID ' + idSkill + ' from the project with ID ' + idProject);
 		}
 		const body = { idProject: idProject, idSkill: idSkill };
@@ -203,7 +204,7 @@ export class ProjectService extends InternalService {
 	 */
 	handleActionSonarProject$(idProject: number, sonarProject: SonarProject, action: string): Observable<Boolean> {
 
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Action ' + action + ' for a Sonar project ' + sonarProject.name + ' for project ID ' + idProject);
 		}
 
@@ -241,7 +242,7 @@ export class ProjectService extends InternalService {
 	 */
 	private handleActionAudit$(idProject: number, auditTopic: AuditTopic, action: string): Observable<Boolean> {
 
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Action ' + action + ' on topic id ' + auditTopic.idTopic + ' for project ID ' + idProject);
 		}
 
@@ -271,7 +272,7 @@ export class ProjectService extends InternalService {
 	 */
 	get(id: number): Observable<Project> {
 		const url = this.backendSetupService.url() + '/project/id/' + id;
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Fetching the project ' + id + ' on the address ' + url);
 		}
 		return this.httpClient.get<Project>(url);
@@ -314,7 +315,7 @@ export class ProjectService extends InternalService {
 		// If we do not find the project in the global collection of projects,
 		// we try our chance in the backend.
 		const url = this.backendSetupService.url() + '/project/name/' + projectName;
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Fetching the project name ' + projectName + ' on the address ' + url);
 		}
 		return this.httpClient.get<Project>(url);
@@ -328,7 +329,7 @@ export class ProjectService extends InternalService {
 	 * * the starting date of test
 	 */
 	loadDashboardData$(settings: SettingsGeneration): Observable<any> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Retrieving the Sunburst data for the project '
 				+ settings.idProject + ', idStaff '
 				+ settings.idStaffSelected
@@ -368,7 +369,7 @@ export class ProjectService extends InternalService {
 		}
 
 		const url = this.backendSetupService.url() + '/project/contributors/' + idProject;
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Retrieve the contributors for the project identifier ' + idProject);
 		}
 		return this.httpClient.get<ContributorsDTO>(url);
@@ -379,7 +380,7 @@ export class ProjectService extends InternalService {
 	 */
 	resetDashboard(id: number): Observable<string> {
 		const url = this.backendSetupService.url() + '/project/resetDashboard/' + id;
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Reset the dashboard data on URL ' + url);
 		}
 		return this.httpClient.get<string>(url, httpOptions);
@@ -390,7 +391,7 @@ export class ProjectService extends InternalService {
 	 */
 	testConnection(id: number): Observable<boolean> {
 		const url = this.backendSetupService.url() + '/project/test/' + id;
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Testing the connection settings on URL ' + url);
 		}
 		return this.httpClient.get<boolean>(url, httpOptions);
@@ -416,7 +417,7 @@ export class ProjectService extends InternalService {
 	 * @param libraries the libraries directories
 	 */
 	libDirSave(idProject: number, libraries: Library[]) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.groupCollapsed('Saving libraries', libraries);
 			libraries.forEach(lib => console.log (lib.exclusionDirectory));
 			console.groupEnd();
@@ -441,7 +442,7 @@ export class ProjectService extends InternalService {
 	* @param technical: TRUE if the ghost is in fact a technical user used for administration operations
 	*/
 	updateGhost(idProject: number, pseudo: string, idRelatedStaff: number, technical: boolean): Observable<Boolean> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.groupCollapsed('Updating a ghost');
 			console.log ('idProject', idProject);
 			console.log ('pseudo', pseudo);
@@ -459,7 +460,7 @@ export class ProjectService extends InternalService {
 	* @param pseudo the pseudo used by a ghost to proceed a commit
 	*/
 	removeGhost(idProject: number, pseudo: string): Observable<Boolean> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.groupCollapsed('Removing a ghost');
 			console.log ('idProject', idProject);
 			console.log ('pseudo', pseudo);
@@ -506,7 +507,7 @@ export class ProjectService extends InternalService {
 	* @param filesStats the language file statistics retrieved from the Sonar instance.
 	*/
 	saveFilesStats(idProject: number, key: string, filesStats: FilesStats[]): Observable<Boolean> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.groupCollapsed('Save the files stats');
 			console.log ('idProject', idProject);
 			console.log ('key', key);
@@ -524,7 +525,7 @@ export class ProjectService extends InternalService {
 	* @param filesStats the language file statistics retrieved from the Sonar instance.
 	*/
 	saveMetricValues(idProject: number, key: string, metricValues: ProjectSonarMetricValue[]): Observable<Boolean> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.groupCollapsed('Save the metric values for Sonar entry %s project identifier %d', key, idProject);
 			metricValues.forEach(mv => console.log ('Saving %s %d %d', mv.key, mv.weight, mv.value));
 			console.groupEnd();
@@ -553,7 +554,7 @@ export class ProjectService extends InternalService {
 			this.backendSetupService.url() + '/project/sonar/load/' + project.id + '/' + sonarKey, httpOptions)
 			.pipe(tap(
 				(sonarProject: SonarProject) => {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.groupCollapsed ('Sonar project', sonarProject.key);
 						sonarProject.projectSonarMetricValues.forEach(metricValues => {
 							console.log (metricValues.key, metricValues.weight);
@@ -668,7 +669,7 @@ export class ProjectService extends InternalService {
 	* @param totalNumberLinesofCode the number of lines of code detected for this Sonar project
 	*/
 	saveSonarEvaluation(idProject: number, key: string, evaluation: number, totalNumberLinesOfCode: number): Observable<Boolean> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.groupCollapsed('Saving the evaluation for Sonar entry %s project identifier %d', key, idProject);
 			console.log ('Evaluation obtained', evaluation);
 			console.log ('Total number of lines of code', totalNumberLinesOfCode);
@@ -686,7 +687,7 @@ export class ProjectService extends InternalService {
 	* @param evaluation the evaluation given for that topic
 	*/
 	saveAuditTopicEvaluation$(idProject: number, idTopic: number, evaluation: number): Observable<Boolean> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.groupCollapsed(
 				'Saving the evaluation for the topic identified by %d, within the project identified by %d',
 				idTopic, idProject);
@@ -703,7 +704,7 @@ export class ProjectService extends InternalService {
 	* @param report the audit report given by the expert
 	*/
 	saveAuditTopicReport$(idTopic: number, report: string): Observable<Boolean> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.groupCollapsed(
 				'Saving the audit report for the topic identified by %d, within the project identified by %d',
 				idTopic, this.project.id);
@@ -720,7 +721,7 @@ export class ProjectService extends InternalService {
 	* @param auditTopics the topic identifier
 	*/
 	saveAuditTopicWeights$(idProject: number, auditTopics: AuditTopic[]): Observable<Boolean> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.groupCollapsed('Saving the weights for the topic identified by %d', idProject);
 			auditTopics.forEach(element => console.log (element.idTopic, element.weight));
 			console.groupEnd();
@@ -761,7 +762,7 @@ export class ProjectService extends InternalService {
 			.pipe(take(1))
 			.subscribe(doneAndOk => {
 				if (doneAndOk) {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log ('onBoard staff %d in project %d', idStaff, idProject);
 					}
 				}
@@ -779,7 +780,7 @@ export class ProjectService extends InternalService {
 		if (!attachmentFile.fileName) {
 			return;
 		}
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Download the audit attachment file : ' + attachmentFile.fileName);
 		}
 
@@ -800,7 +801,7 @@ export class ProjectService extends InternalService {
 		if (!attachmentFile.fileName) {
 			return;
 		}
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Delete the audit attachment file : ' + attachmentFile.fileName);
 		}
 

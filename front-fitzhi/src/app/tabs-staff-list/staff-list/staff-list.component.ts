@@ -11,6 +11,7 @@ import { Experience } from '../../data/experience';
 import { ListCriteria } from '../../data/listCriteria';
 import { SkillService } from '../../service/skill.service';
 import { Collaborator } from 'src/app/data/collaborator';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-staff-list',
@@ -43,7 +44,7 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 	}
 
 	ngOnInit() {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Searching staff members for criteria:' + this.criteria + ', activeOnly:' + this.activeOnly);
 		}
 

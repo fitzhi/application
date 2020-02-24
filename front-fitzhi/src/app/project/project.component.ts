@@ -12,6 +12,7 @@ import { switchMap, take } from 'rxjs/operators';
 import { MessageGravity } from '../message/message-gravity';
 import { ReferentialService } from '../service/referential.service';
 import { SonarService } from '../service/sonar.service';
+import { traceOn } from '../global';
 
 @Component({
 	selector: 'app-project',
@@ -63,7 +64,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 
 		if (this.router.url.indexOf('/staff') !== -1) {
 			this.tabIndex = 1;
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.log('Index selected ' + this.tabIndex + ' to display the project staff list');
 			}
 		}
@@ -94,7 +95,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	 * Reload the the project record.
 	 */
 	updateRiskLevel(riskLevel: number) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Update the project risk level to ', riskLevel);
 		}
 		this.risk$.next(riskLevel);
@@ -104,7 +105,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	 * User has changed the selected tab.
 	 */
 	public selectedIndexChange(selectedIndex: number): void {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Tab "' + this.TAB_TITLE[selectedIndex] + '" selected.');
 		}
 		if (this.tabIndex !== selectedIndex) {
@@ -120,7 +121,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	 */
 	public tabActivation (tabIndex: number) {
 		this.tabIndex = tabIndex;
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log ('Selected index', this.TAB_TITLE[this.tabIndex]);
 		}
 	}
@@ -152,7 +153,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 				//
 				switchMap(project => {
 					this.projectService.project = project;
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						this.projectService.dump(project, 'projectComponent');
 					}
 					return this.sonarService.sonarIsAccessible$(this.projectService.project);
@@ -167,7 +168,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 					},
 					error: error => {
 						if (error.status === 404) {
-							if (Constants.DEBUG) {
+							if (traceOn()) {
 								console.log('404 : cannot find a project for the id ' + this.idProject);
 							}
 							this.messageService.error('There is no project for id ' + this.idProject);
@@ -175,7 +176,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 							console.error(error.message);
 						}},
 					complete: () => {
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							console.log('Loading complete for id ' + this.idProject);
 						}
 						this.messageService.success(this.projectService.project.name + ' is found');

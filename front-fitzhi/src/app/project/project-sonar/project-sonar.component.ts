@@ -11,6 +11,7 @@ import { MessageGravity } from 'src/app/message/message-gravity';
 import { Message } from 'src/app/message/message';
 import { MessageService } from 'src/app/message/message.service';
 import { ProjectService } from 'src/app/service/project.service';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-project-sonar',
@@ -65,7 +66,7 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 		this.subscriptions.add(
 			this.panelSwitchTransmitter$.subscribe((
 				panelSwitchEvent: PanelSwitchEvent) => {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log ('Being informed that the panel %s has been selected', Constants.TITLE_PANELS[panelSwitchEvent.idPanel]);
 					}
 					this.idPanelSelected = panelSwitchEvent.idPanel;
@@ -74,7 +75,7 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 		this.subscriptions.add(
 			this.cinematicService.tabProjectActivated$.subscribe(tabSelected => {
 				if (tabSelected === Constants.PROJECT_IDX_TAB_SONAR) {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						if (!this.projectService.project) {
 							console.log ('Sonar dashboard Activated');
 						} else {
@@ -92,7 +93,7 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 					}
 
 					if (this.projectService.project && this.projectService.project.sonarProjects.length > 0) {
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							console.log ('By default, we starts on the %s dashboard with %s.',
 								Constants.TITLE_PANELS[this.SETTINGS],
 								this.projectService.project.sonarProjects[0].key);

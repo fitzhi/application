@@ -15,6 +15,7 @@ import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { take } from 'rxjs/operators';
 import { BooleanDTO } from '../data/external/booleanDTO';
 import { FileService } from './file.service';
+import { traceOn } from '../global';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json', 'observe': 'response' })
@@ -40,7 +41,7 @@ export class StaffService {
      * Return the global list of ALL collaborators, working for the company.
      */
 	getAll(): Observable<Collaborator[]> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Fetching the collaborators');
 		}
 		return this.http.get<Collaborator[]>(this.backendSetupService.url() + '/staff' + '/all');
@@ -51,7 +52,7 @@ export class StaffService {
      */
 	get(id: number): Observable<Collaborator> {
 		const url = this.backendSetupService.url() + '/staff' + '/' + id;
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Fetching the collaborator ' + id + ' on the address ' + url);
 		}
 		return this.http.get<Collaborator>(url);
@@ -61,7 +62,7 @@ export class StaffService {
      * POST: update or add a new collaborator to the server
      */
 	save(collaborator: Collaborator): Observable<Collaborator> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Saving the collaborator with id ' + collaborator.idStaff);
 		}
 
@@ -86,7 +87,7 @@ export class StaffService {
 	 * @returns an observable emetting the staff record updated or an empty staff if any error occurs.
      */
 	addProject(idStaff: number, idProject: number): Observable<BooleanDTO> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Adding the collaborator with the id : ' + idStaff + ' into the project id ' + idProject);
 		}
 		const body = { idStaff: idStaff, idProject: idProject };
@@ -101,7 +102,7 @@ export class StaffService {
 	 * @returns an observable emetting the staff record updated or an empty staff if any error occurs.
      */
 	removeProject(idStaff: number, idProject: number): Observable<StaffDTO> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Removing the collaborator with id : ' + idStaff + ' from project with id ' + idProject);
 		}
 		const body = { idStaff: idStaff, idProject: idProject };
@@ -126,7 +127,7 @@ export class StaffService {
      * POST: Add an asset to a staff member defined by its name
      */
 	addExperienceByItsTitle(idStaff: number, skillTitle: string, level: number): Observable<StaffDTO> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Adding the skill  ' + skillTitle + ' for the staff member whom id is ' + idStaff);
 		}
 		const body = { idStaff: idStaff, newSkillTitle: skillTitle, level: level };
@@ -137,7 +138,7 @@ export class StaffService {
      * POST: Add the relevant declared experiences (certainly retrieved from the resume)
      */
 	addDeclaredExperience(idStaff: number, skills: DeclaredExperience[]): Observable<StaffDTO> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Adding ' + skills.length + ' experiences to the staff Id  ' + idStaff);
 		}
 		const body = { idStaff: idStaff, skills: skills };
@@ -148,7 +149,7 @@ export class StaffService {
      * POST: Revoke an experience from a staff member.
      */
 	revokeExperience(idStaff: number, idSkill: number): Observable<StaffDTO> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Revoking the experence ' + idSkill + ' from the collaborator application');
 		}
 		const body = { idStaff: idStaff, idSkill: idSkill };
@@ -159,7 +160,7 @@ export class StaffService {
      * POST: Revoke an experience from a staff member.
      */
 	removeExperience(idStaff: number, idSkill: number): Observable<Boolean> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Revoking the experence ' + idSkill + ' from the collaborator ' + idStaff);
 		}
 		const body = { idStaff: idStaff, idSkill: idSkill };
@@ -172,7 +173,7 @@ export class StaffService {
      * POST Method: Add an experience to a staff member.
      */
 	addExperience({ idStaff, idSkill, level }: { idStaff: number; idSkill: number; level: number; }): Observable<Boolean> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Adding the skill  ' + idSkill + ' to the staff member whom id is ' + idStaff);
 		}
 		const body = { idStaff: idStaff, idSkill: idSkill, level: level };
@@ -184,7 +185,7 @@ export class StaffService {
      * POST Method: Add an experience to a staff member.
      */
 	updateExperienceLevel({ idStaff, idSkill, level }: { idStaff: number; idSkill: number; level: number; }): Observable<Boolean> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Adding the skill  ' + idSkill + ' to the staff member whom id is ' + idStaff);
 		}
 		const body = { idStaff: idStaff, idSkill: idSkill, level: level };
@@ -196,7 +197,7 @@ export class StaffService {
      * POST: Change the experience defined by its title, or its level for a developer.
      */
 	changeExperience(idStaff: number, formerSkillTitle: string, newSkillTitle: string, level: number): Observable<StaffDTO> {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Change the skill for the collaborator with id : '
 				+ idStaff + ' from ' + formerSkillTitle + ' to ' + newSkillTitle);
 		}
@@ -212,7 +213,7 @@ export class StaffService {
 		if ((staff.application === null) || (staff.application.length === 0)) {
 			return;
 		}
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('Download the application file : '
 				+ staff.application + ' for ' + staff.firstName + ' ' + staff.lastName);
 		}
@@ -227,7 +228,7 @@ export class StaffService {
      * @param activeOnly : Only active employees count into the aggregation.
      */
 	countAll_groupBy_experience(activeOnly: boolean) {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			console.log('countAll_groupBy_experience loading aggegations count from the server');
 		}
 		this.http.get<any>(this.backendSetupService.url() + '/staff' + '/countGroupByExperiences'
@@ -243,7 +244,7 @@ export class StaffService {
 							value = entry[1] as string;
 							peopleCountExperience.set(key, parseInt(value, 0));
 						});
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							console.groupCollapsed('peopleCountExperience');
 							peopleCountExperience.forEach((key, value) => {
 								console.log (key, value);
@@ -254,7 +255,7 @@ export class StaffService {
 				},
 				error => console.log(error),
 				() => {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log('peopleCountExperience is completly loaded');
 					}
 				}

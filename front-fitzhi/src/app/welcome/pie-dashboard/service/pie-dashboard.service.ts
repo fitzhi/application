@@ -5,6 +5,7 @@ import { TypeSlice } from '../type-slice';
 import { ProjectService } from 'src/app/service/project.service';
 import { Constants } from 'src/app/constants';
 import { Subject, BehaviorSubject } from 'rxjs';
+import { traceOn } from 'src/app/global';
 
 /**
  * This service is in charge of the generation of the slices.
@@ -106,7 +107,7 @@ export class PieDashboardService {
 					redProjects.get(TypeSlice.Sonar).push(project);
 			}
 
-			if (Constants.DEBUG) {
+			if (traceOn()) {
 				console.groupCollapsed ('Project %s evaluations :', project.name);
 				console.log ('Sonar evaluation %d', sonarEvaluation);
 				console.log ('Audit evaluation %d', project.auditEvaluation);

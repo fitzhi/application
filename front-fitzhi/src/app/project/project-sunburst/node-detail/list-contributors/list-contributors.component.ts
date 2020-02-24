@@ -2,6 +2,7 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { Constants } from '../../../../constants';
 import { BaseComponent } from '../../../../base/base.component';
 import { ContributorsDataSource } from '../contributors-data-source';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-list-contributors',
@@ -17,7 +18,7 @@ export class ListContributorsComponent extends BaseComponent implements OnInit, 
 	constructor() { super(); }
 
 	ngOnInit() {
-		if (Constants.DEBUG) {
+		if (traceOn()) {
 			if (this.contributors) {
 				this.subscriptions.add(
 					this.contributors.committersSubject.subscribe(elements => {

@@ -9,6 +9,7 @@ import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value
 import { Subject, BehaviorSubject } from 'rxjs';
 import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
 import * as d3 from 'd3';
+import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-sonar-dashboard',
@@ -68,7 +69,7 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 					if (sonarServer) {
 						const version = parseFloat(sonarServer.sonarVersion.substring(0, 3));
 						this.isSonarVersion71x = (version > 7.1);
-						if (Constants.DEBUG) {
+						if (traceOn()) {
 							if (this.isSonarVersion71x) {
 								console.log('Sonar version 7.1x');
 							} else {
@@ -82,7 +83,7 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 		this.subscriptions.add(
 			this.panelSwitchTransmitter$.subscribe((panelSwitchEvent: PanelSwitchEvent) => {
 				if (!panelSwitchEvent.keySonar) {
-					if (Constants.DEBUG) {
+					if (traceOn()) {
 						console.log ('No Sonar project declared.');
 					}
 					return;
