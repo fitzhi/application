@@ -3,6 +3,10 @@
   padding-left: 5px;
 }
 
+.mat-header-row {
+  visibility: collapse;
+}
+
 .td-description {
   width: fit-content;
   padding-right: 2px;
@@ -19,4 +23,5 @@
 
 .tableLegends {
   width: 700px;
+  margin-top: 5px;
 }
