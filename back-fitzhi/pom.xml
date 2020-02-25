@@ -25,6 +25,7 @@
 		<jsonpath.version>2.4.0</jsonpath.version>
 		<cglib.version>3.2.10</cglib.version>
 		<jgit.version>5.4.0.201906121030-r</jgit.version>
+		<springfox.version>2.9.2</springfox.version>
 		<bypass>N</bypass>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -229,6 +230,19 @@
 		<!-- END OF WORKAROUND -->
 		<!-- **************************************************************** -->
 
+
+		<!-- Swagger installation -->
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${springfox.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${springfox.version}</version>
+		</dependency>
+		
 	</dependencies>
 
 	<build>

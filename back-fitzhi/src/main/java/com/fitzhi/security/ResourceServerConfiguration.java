@@ -30,13 +30,16 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
 		if ("1".equals(developmentUnpluggedSecurity)) {
 			http.authorizeRequests().antMatchers(
-				 "/api/staff/**", 
-				 "/api/skill/**", 
-				 "/api/project/**", 
-				 "/api/project/audit/**", 
-				 "/api/project/sonar/**", 
-				 "/api/test/post_a_Test",
-				 "/api/admin/settings",
+				"/api/staff/**", 
+				"/api/skill/**", 
+				"/api/project/**", 
+				"/api/project/audit/**", 
+				"/api/project/sonar/**", 
+				"/api/test/post_a_Test",
+				"/api/admin/settings",	
+
+				// We allow the the springfox-swagger url to be accessible
+				"/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**",
 				
 				"/api/admin/isVeryFirstConnection", 
 				"/api/admin/saveVeryFirstConnection", 
@@ -47,6 +50,9 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
 		} else {
 			http.authorizeRequests().antMatchers(
+				// We allow the the springfox-swagger url to be accessible
+				"/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**",
+					
 				"/api/admin/isVeryFirstConnection", 
 				"/api/admin/saveVeryFirstConnection", 
 				"/api/admin/veryFirstUser",
