@@ -40,7 +40,7 @@
 								</textarea>
 							</div>
 						</div>
-						<div class="row field" *ngIf="projectService.projectLoaded$|async" [hidden]="sonarProjectsLoaded || creation">
+						<div class="row field" *ngIf="projectService.projectLoaded$|async" [hidden]="sonarProjectsLoaded || creation || !projectService.project.urlSonarServer">
 							<div class="col-12 insideField">
 								<p class="error">Cannot reach the Sonar server on the URL {{projectService.project.urlSonarServer}}.</p>
 							</div>
