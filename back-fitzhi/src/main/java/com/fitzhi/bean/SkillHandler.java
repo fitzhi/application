@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.fitzhi.data.internal.Skill;
+import com.fitzhi.data.internal.SkillDetectorType;
 import com.fitzhi.exception.SkillerException;
 
 /**
@@ -48,4 +49,9 @@ public interface SkillHandler extends DataSaverLifeCycle {
 	  */
 	 Skill getSkill(int idSkill) throws SkillerException;
 
+	 /**
+	  * @return the map containing the detector types.
+	  * @throws SkillerException thrown if any exception occurs. Most probably an IOException.
+	  */
+	 Map<Integer, String> detectorTypes() throws SkillerException;
 }

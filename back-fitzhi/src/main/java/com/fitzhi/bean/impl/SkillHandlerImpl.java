@@ -17,6 +17,7 @@ import com.fitzhi.SkillerRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.data.internal.Skill;
+import com.fitzhi.data.internal.SkillDetectorType;
 import com.fitzhi.exception.SkillerException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -106,4 +107,9 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		return skill;
 	}
 
+	@Override
+	public Map<Integer, String> detectorTypes() throws SkillerException {
+		return SkillDetectorType.getDetectorTypes();
+	}
+	
 }

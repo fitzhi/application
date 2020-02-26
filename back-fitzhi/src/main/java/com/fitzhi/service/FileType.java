@@ -21,7 +21,6 @@ public enum FileType {
 
 	private static Map<Integer, FileType> map = new HashMap<>();
 	
-
     static {
         for (FileType fileType : FileType.values()) {
             map.put(fileType.value, fileType);

@@ -977,10 +977,10 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), "Git clone successfully done!");
 		
-		// If a cache is detected and available for this project, it will be returned by
-		// this method.
-		// This variable is not final. Might be overridden by the filtering operation
-		// (date of staff member filtering)
+		//
+		// If a cache is detected and available for this project, it will be returned this method.
+		// This variable is not final. Might be overridden by the filtering operation (date of staff member filtering)
+		//
 		CommitRepository repo = this.parseRepository(project, settings);
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("The repository has been parsed. It contains %d records in the repository, and %d ghosts", repo.size(), repo.unknownContributors().size()));
@@ -988,9 +988,10 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), "Parsing of the repository complete!");
 
+		//
 		// Does the process requires a personalization ?
-		// e.g. filtering on a staff identifier or starting the history crawl from a
-		// starting date
+		// e.g. filtering on a staff identifier or processing the history crawl from a starting date
+		//
 		if (cfgGeneration.requiresPersonalization()) {
 			repo = personalizeRepo(repo, cfgGeneration);
 		}

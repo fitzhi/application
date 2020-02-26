@@ -94,7 +94,7 @@ public class SkillController {
 	 * @return the (new) skill updated 
 	 */
 	@PostMapping("/save")
-	public ResponseEntity<Skill> add(@RequestBody Skill skill) {
+	public ResponseEntity<Skill> save(@RequestBody Skill skill) {
 
 		final ResponseEntity<Skill> responseEntity;
 		final HttpHeaders headers = new HttpHeaders();
@@ -107,9 +107,9 @@ public class SkillController {
 			if (!skillHandler.containsSkill(skill.getId())) {
 				responseEntity = new ResponseEntity<>(skill, headers, HttpStatus.NOT_FOUND);
 				headers.add(BACKEND_RETURN_CODE, "O");
-				responseEntity.getHeaders().set(BACKEND_RETURN_MESSAGE,
+				headers.set(BACKEND_RETURN_MESSAGE,
 						"There is no skill associated to the id " + skill.getId());
-				responseEntity.getHeaders().setContentType(MediaType.APPLICATION_JSON_UTF8);
+				headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 			} else {
 				try {
 					skillHandler.saveSkill(skill);

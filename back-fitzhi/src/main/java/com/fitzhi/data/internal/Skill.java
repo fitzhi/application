@@ -14,14 +14,34 @@ public @Data class Skill implements Serializable {
 	private int id = 0;
 	
 	private String title = "";
-	
+
+	private SkillDetectionPattern detectionPattern;
+
+	/**
+	 * Empty constructor for serialization purpose.
+	 */
 	public Skill() {
 	}
 	
+	/**
+	 * Public construction of a Skill without detectionPattern.
+	 * @param id The unique identifier of this skill
+	 * @param title the title of this skill
+	 */
 	public Skill(int id, String title) {
+		this(id, title, null);
+	}
+	/**
+	 * Public construction of a Skill
+	 * @param id The skill identifier
+	 * @param title the title of this skill
+	 * @param detectionPattern detection pattern for this skill in the repository
+	 */
+	public Skill(int id, String title, SkillDetectionPattern detectionPattern) {
 		super();
 		this.id = id;
 		this.title = title;
+		this.detectionPattern = detectionPattern;
 	}
 
 	
