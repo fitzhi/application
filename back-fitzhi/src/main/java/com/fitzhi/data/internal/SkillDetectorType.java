@@ -19,7 +19,8 @@ public enum SkillDetectorType {
 	//
 	// SerializedName is used to save this enum as an number value
 	//
-	@SerializedName("0") FILENAME_DETECTOR_TYPE (0, "Filename filter pattern such as .java$"); 
+	@SerializedName("0") FILENAME_DETECTOR_TYPE (0, "Filename filter pattern such as .java$"), 
+	@SerializedName("1") PACKAGE_JSON_DETECTOR_TYPE (1, "Dependency detection in the package.json file"); 
 	
 	private int value;
     

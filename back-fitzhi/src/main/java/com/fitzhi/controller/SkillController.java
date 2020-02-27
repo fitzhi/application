@@ -5,6 +5,8 @@ import static com.fitzhi.Global.BACKEND_RETURN_CODE;
 import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fitzhi.bean.SkillHandler;
+import com.fitzhi.data.external.ProjectDTO;
 import com.fitzhi.data.external.SkillDTO;
+import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.exception.SkillerException;
 
@@ -125,5 +129,26 @@ public class SkillController {
 			log.debug(String.format("POST command on /skill/save returns the body %s", responseEntity.getBody()));
 		}
 		return responseEntity;
+	}
+	
+	/**
+	 * @return the map of skills detection templates
+	 */
+	@GetMapping("/detection-templates")
+	public ResponseEntity<Map<Integer, String>> detectionTemplate() {
+		final ResponseEntity<Map<Integer, String>> responseEntity;
+		final HttpHeaders headers = new HttpHeaders();
+		try {
+			Map<Integer, String> mapDetectionTemplates = this.skillHandler.detectorTypes();
+			responseEntity = new ResponseEntity<>(mapDetectionTemplates, headers, HttpStatus.OK);
+			headers.add("backend.return_code", "1");
+			return responseEntity;
+		} catch (final SkillerException e) {
+			log.error(getStackTrace(e));
+			return new ResponseEntity<>(
+				new HashMap<Integer, String>(), 
+				headers, 
+				HttpStatus.BAD_REQUEST);
+		}
 	}
 }
