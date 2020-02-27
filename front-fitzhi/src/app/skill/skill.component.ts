@@ -20,9 +20,10 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	private skill: Skill;
 
-	profileSkill = new FormGroup({
-		title: new FormControl('', [Validators.required])
-	});
+	/**
+	 * Skill form declaration.
+	 */
+	profileSkill: FormGroup;
 
 	/**
 	 * Id parameter received if any;
@@ -37,6 +38,11 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 		private messageService: MessageService,
 		private router: Router) {
 		super();
+		this.profileSkill = new FormGroup({
+			title: new FormControl('', [Validators.required]),
+			detectionType: new FormControl(''),
+			pattern: new FormControl('', [this.patternValidator.bind(this)])
+		});
 	}
 
 	ngOnInit() {
@@ -108,6 +114,39 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	get title(): any {
 		return this.profileSkill.get('title');
+	}
+
+	get detectionType(): any {
+		return this.profileSkill.get('detectionType');
+	}
+
+	get pattern(): any {
+		return this.profileSkill.get('pattern');
+	}
+
+	/**
+	 * Returns `true` if the enduser has selected a type of Skill detection, and there for has to enter a pattern, `false` otherwise.
+	 */
+	detectionTypeSelected(): boolean {
+		return (this.profileSkill.get('detectionType').value);
+	}
+
+	onDetectionModelChange($event) {
+		console.log ($event);
+	}
+
+	/**
+	 * This function is a validator for the field `pattern`.
+	 * @param control the control `pattern`
+	 */
+	public patternValidator(control: FormControl) {
+		if (!this.profileSkill) {
+			return null;
+		}
+		if ((this.profileSkill.get('detectionType').value) && (!control.value)) {
+			return { 'error': 'Pattern is required'};
+		}
+		return null;
 	}
 
 	/**
