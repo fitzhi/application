@@ -10,6 +10,8 @@ import { ListSkillService } from '../list-skill-service/list-skill.service';
 import { SkillService } from '../service/skill.service';
 import { BaseComponent } from '../base/base.component';
 import { traceOn } from '../global';
+import { DetectionTemplate } from '../data/detection-template';
+import { isNumber } from 'util';
 
 @Component({
 	selector: 'app-skill',
@@ -38,11 +40,17 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 		private messageService: MessageService,
 		private router: Router) {
 		super();
+
 		this.profileSkill = new FormGroup({
 			title: new FormControl('', [Validators.required]),
 			detectionType: new FormControl(''),
 			pattern: new FormControl('', [this.patternValidator.bind(this)])
 		});
+
+		this.skillService.detectionTemplates$().subscribe (rep => {
+			this.skillService.detectionTemplatesLoaded$.next(true);
+		});
+
 	}
 
 	ngOnInit() {
@@ -62,10 +70,14 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 				this.skill = new Skill();
 				if (this.id != null) {
 					this.subscriptions.add(
-						this.listSkillService.getSkill(this.id).subscribe(
+						this.listSkillService.getSkill$(this.id).subscribe(
 							(skill: Skill) => {
 								this.skill = skill;
 								this.profileSkill.get('title').setValue(skill.title);
+								if (skill.detectionTemplate) {
+									this.profileSkill.get('detectionType').setValue(skill.detectionTemplate.detectionType);
+									this.profileSkill.get('pattern').setValue(skill.detectionTemplate.pattern);
+								}
 							},
 							error => {
 								if (error.status === 404) {
@@ -96,20 +108,18 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 	 * Submit the change. The SKILL will be created, or updated. succesfully.
 	 */
 	onSubmit() {
-		this.skill.title = this.profileSkill.get('title').value;
+		this.skillService.fillSkill(this.skill, this.profileSkill);
 		if (traceOn()) {
 			console.log('saving the skill ' + this.skill.title + ' with id ' + this.skill.id);
 		}
-		this.subscriptions.add(
-			this.skillService.save(this.skill).subscribe(
-				skill => {
-					this.messageService.info('The skill ' + skill.title + ' has been succesfully saved !');
-					this.skill = new Skill();
-					this.id = null;
-					this.profileSkill.get('title').setValue(this.skill.title);
-				},
-				error => console.error(error),
-				() => this.skillService.loadSkills()));
+		this.skillService.save$(this.skill).subscribe({
+			next: skill => {
+				this.messageService.info('The skill ' + skill.title + ' has been succesfully saved !');
+				this.skill = skill;
+			},
+			error: error => console.error(error),
+			complete: () => this.skillService.loadSkills()
+		});
 	}
 
 	get title(): any {
@@ -128,11 +138,7 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 	 * Returns `true` if the enduser has selected a type of Skill detection, and there for has to enter a pattern, `false` otherwise.
 	 */
 	detectionTypeSelected(): boolean {
-		return (this.profileSkill.get('detectionType').value);
-	}
-
-	onDetectionModelChange($event) {
-		console.log ($event);
+		return (isNumber(this.profileSkill.get('detectionType').value));
 	}
 
 	/**
@@ -143,7 +149,7 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 		if (!this.profileSkill) {
 			return null;
 		}
-		if ((this.profileSkill.get('detectionType').value) && (!control.value)) {
+		if ((isNumber(this.profileSkill.get('detectionType').value)) && (!control.value)) {
 			return { 'error': 'Pattern is required'};
 		}
 		return null;

@@ -103,7 +103,7 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 	}
 
 	/**
-	 * Return the class for the row preview depending on the involvement, of not, of this toppic inside the audit.
+	 * Return the class for the row preview depending on the involvement, of not, of this topic inside the audit.
 	 * @param select a boolean representing the fact that a topic has been selected
 	 */
 	class_select_deselect(select: boolean): string {

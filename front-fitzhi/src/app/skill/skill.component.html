@@ -1,6 +1,6 @@
-<div class="container">
+<div class="container" *ngIf="skillService.detectionTemplatesLoaded$|async">
   <form class="needs-validation" [formGroup]="profileSkill" (ngSubmit)="onSubmit()">
-    <div class="row field">
+    <div class="row">
       <h2>Skill Form</h2>
     </div>
     <div class="row field col-6">
@@ -13,13 +13,13 @@
     </div>
 
     <div class="skill-detection col-7">
-      <div class="row field col-11">
+      <div class="row col-11">
         <label for="detectionType">Select the skill detection template</label>
         <select name="detectionType" id="detectionType" (change)="onDetectionModelChange($event)"
           formControlName="detectionType" class="custom-select d-block w-100">
           <option></option>
-          <option>One</option>
-          <option>Two</option>
+          <option *ngFor="let template of skillService.detectionTemplates$()|async" 
+              [ngValue]="template.detectionType">{{template.pattern}}</option>
         </select>
       </div>
       <div class="row field col-11" *ngIf="detectionTypeSelected()">

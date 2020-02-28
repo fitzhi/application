@@ -55,7 +55,7 @@ export class ListSkillService {
 	/**
 	 * Return the skill associated with this id.
 	 */
-	getSkill(id: number): Observable<Skill> {
+	getSkill$(id: number): Observable<Skill> {
 
 		let foundSkill: Skill = null;
 		foundSkill = this.theSkills.find(skill => skill.id === id);

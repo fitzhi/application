@@ -1,14 +1,17 @@
 import { Injectable } from '@angular/core';
 import { Skill } from '../data/skill';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject, Subject } from 'rxjs';
+import { Observable, BehaviorSubject, Subject, of } from 'rxjs';
 import { InternalService } from '../internal-service';
 
 import { Constants } from '../constants';
 import { ListCriteria } from '../data/listCriteria';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
-import { take, tap } from 'rxjs/operators';
+import { take, tap, map, switchMap } from 'rxjs/operators';
 import { traceOn } from '../global';
+import { DetectionTemplate } from '../data/detection-template';
+import { FormGroup } from '@angular/forms';
+import { isNumber } from 'util';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -46,6 +49,13 @@ export class SkillService extends InternalService {
 	 */
 	criteria: ListCriteria;
 
+	/**
+	 * Array of `DetectionTemplate`.
+	 */
+	private detectionTemplates: DetectionTemplate[];
+
+	public detectionTemplatesLoaded$ = new BehaviorSubject(false);
+
 	constructor(private httpClient: HttpClient, private backendSetupService: BackendSetupService) {
 		super();
 		if (traceOn() && !this.backendSetupService.hasSavedAnUrl()) {
@@ -54,7 +64,6 @@ export class SkillService extends InternalService {
 		if (this.backendSetupService.hasSavedAnUrl()) {
 			this.loadSkills();
 		}
-
 	}
 
 	/**
@@ -94,25 +103,24 @@ export class SkillService extends InternalService {
 	}
 
 	/**
-	* Save the skill
+	* Save the given skill and return the new skill.
+	* @param skill the skill to be saved
 	*/
-	save(skill: Skill): Observable<Skill> {
+	save$(skill: Skill): Observable<Skill> {
 		if (traceOn()) {
-			console.log((typeof skill.id !== 'undefined') ? 'Saving ' : 'Adding' + ' skill ' + skill.title);
+			console.log((skill.id) ? 'Saving ' : 'Adding' + ' skill ' + skill.title);
 		}
-		return this.httpClient.post<Skill>(this.backendSetupService.url() + '/skill' + '/save', skill, httpOptions);
+		return this.httpClient
+			.post<Skill>(this.backendSetupService.url() + '/skill' + '/save', skill, httpOptions)
+			.pipe(take(1));
 	}
 
 	/**
 	 * @returns the title associated to the passed skill identifier
 	 */
 	title(idSkill: number) {
-		const found = this.allSkills.find(skill => skill.id === idSkill);
-		if (typeof found === 'undefined') {
-			return 'ERR : no title for id ' + idSkill;
-		} else {
-			return found.title;
-		}
+		const foundSkill = this.allSkills.find(skill => skill.id === idSkill);
+		return (foundSkill) ? ('ERR : no title for id ' + idSkill) : foundSkill.title;
 	}
 
 	/**
@@ -189,4 +197,45 @@ export class SkillService extends InternalService {
 		}
 		this.filteredSkills$.next(filteredSkills);
 	}
+
+	detectionTemplates$(): Observable<DetectionTemplate[]> {
+		if (this.detectionTemplates) {
+			return of(this.detectionTemplates);
+		}
+
+		this.detectionTemplates = [];
+		const url = this.backendSetupService.url() + '/skill/detection-templates';
+		return this.httpClient.get<{ [key: string]: string; }>(url)
+			.pipe(
+				tap(response => {
+					Object.keys(response).forEach(key => {
+						this.detectionTemplates.push(new DetectionTemplate(Number(key), response[key]));
+					});
+				}),
+				switchMap(rep => of(this.detectionTemplates)));
+	}
+
+	/**
+	 * Fill the given skill with the data entered
+	 * @param skill the fill to be updated with the data entered in the form
+	 * @param formGroupSkill the SKILL formGroup
+	 */
+	fillSkill(skill: Skill, formGroupSkill: FormGroup) {
+		skill.title = formGroupSkill.get('title').value;
+		let detectionTemplate: DetectionTemplate;
+		//
+		// Either the user didn't choose a template of detection and the detectionType is empty
+		// or the user choose a template, and the detection type is a numeric
+		//
+		if (!isNumber(formGroupSkill.get('detectionType').value)) {
+			detectionTemplate = null;
+		} else {
+			detectionTemplate = new DetectionTemplate(
+				formGroupSkill.get('detectionType').value,
+				formGroupSkill.get('pattern').value
+			);
+		}
+		skill.detectionTemplate = detectionTemplate;
+	}
+
 }
