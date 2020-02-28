@@ -18,7 +18,7 @@ import lombok.Data;
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public @Data class SkillDetectionPattern {
+public @Data class SkillDetectionTemplate {
 	
 	private SkillDetectorType detectionType;
 	
@@ -27,7 +27,7 @@ public @Data class SkillDetectionPattern {
 	/**
 	 * Public EMPTY construction for serialization purpose
 	 */
-	public SkillDetectionPattern() {
+	public SkillDetectionTemplate() {
 	}
 	
 	/**
@@ -35,7 +35,7 @@ public @Data class SkillDetectionPattern {
 	 * @param detectionType the type of detection
 	 * @param pattern the pattern provided for this type of detection
 	 */
-	public SkillDetectionPattern(SkillDetectorType detectionType, String pattern) {
+	public SkillDetectionTemplate(SkillDetectorType detectionType, String pattern) {
 		super();
 		this.detectionType = detectionType;
 		this.pattern = pattern;

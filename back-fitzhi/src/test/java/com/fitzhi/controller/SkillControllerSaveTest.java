@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.data.internal.Skill;
-import com.fitzhi.data.internal.SkillDetectionPattern;
+import com.fitzhi.data.internal.SkillDetectionTemplate;
 import com.fitzhi.data.internal.SkillDetectorType;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -71,7 +71,7 @@ public class SkillControllerSaveTest {
 	public void saveNewSkill() throws Exception {
 
 		Skill skill = new Skill(0, "skill",
-				new SkillDetectionPattern(SkillDetectorType.FILENAME_DETECTOR_TYPE, "*.skill$"));
+				new SkillDetectionTemplate(SkillDetectorType.FILENAME_DETECTOR_TYPE, "*.skill$"));
 		MvcResult result = this.mvc
 				.perform(post(SKILL_SAVE).contentType(MediaType.APPLICATION_JSON_UTF8).content(gson.toJson(skill)))
 				.andExpect(status().isOk()).andReturn();
@@ -82,8 +82,8 @@ public class SkillControllerSaveTest {
 		Assert.assertTrue(this.skillHandler.containsSkill(countSkills + 1));
 		Assert.assertEquals("skill", retSkill.getTitle());
 		Assert.assertEquals(SkillDetectorType.FILENAME_DETECTOR_TYPE,
-				retSkill.getDetectionPattern().getDetectionType());
-		Assert.assertEquals("*.skill$", retSkill.getDetectionPattern().getPattern());
+				retSkill.getDetectionTemplate().getDetectionType());
+		Assert.assertEquals("*.skill$", retSkill.getDetectionTemplate().getPattern());
 	}
 
 	@Test
@@ -96,7 +96,7 @@ public class SkillControllerSaveTest {
 
 		Skill retSkill = gson.fromJson(result.getResponse().getContentAsString(), Skill.class);
 		Assert.assertEquals(countSkills + 1, retSkill.getId());
-		Assert.assertNull(retSkill.getDetectionPattern());
+		Assert.assertNull(retSkill.getDetectionTemplate());
 	}
 
 	@Test
@@ -110,7 +110,7 @@ public class SkillControllerSaveTest {
 
 		Skill skill2 = gson.fromJson(result.getResponse().getContentAsString(), Skill.class);
 		skill2.setTitle("skill");
-		skill2.setDetectionPattern(new SkillDetectionPattern(SkillDetectorType.FILENAME_DETECTOR_TYPE, "*.skill$"));
+		skill2.setDetectionTemplate(new SkillDetectionTemplate(SkillDetectorType.FILENAME_DETECTOR_TYPE, "*.skill$"));
 
 		result = this.mvc
 				.perform(post(SKILL_SAVE).contentType(MediaType.APPLICATION_JSON_UTF8).content(gson.toJson(skill2)))
@@ -119,9 +119,9 @@ public class SkillControllerSaveTest {
 
 		Assert.assertEquals(countSkills + 1, skill3.getId());
 		Assert.assertEquals("skill", skill3.getTitle());
-		Assert.assertNotNull(skill3.getDetectionPattern());
-		Assert.assertEquals(SkillDetectorType.FILENAME_DETECTOR_TYPE, skill3.getDetectionPattern().getDetectionType());
-		Assert.assertEquals("*.skill$", skill3.getDetectionPattern().getPattern());
+		Assert.assertNotNull(skill3.getDetectionTemplate());
+		Assert.assertEquals(SkillDetectorType.FILENAME_DETECTOR_TYPE, skill3.getDetectionTemplate().getDetectionType());
+		Assert.assertEquals("*.skill$", skill3.getDetectionTemplate().getPattern());
 
 	}
 

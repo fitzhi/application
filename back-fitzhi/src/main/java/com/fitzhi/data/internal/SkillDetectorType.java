@@ -11,7 +11,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * <p>
  * Type of skill detector.<br/>
- * This <code>enum</code> is used by {@link SkillDetectionPattern}
+ * This <code>enum</code> is used by {@link SkillDetectionTemplate}
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
@@ -19,7 +19,7 @@ public enum SkillDetectorType {
 	//
 	// SerializedName is used to save this enum as an number value
 	//
-	@SerializedName("0") FILENAME_DETECTOR_TYPE (0, "Filename filter pattern such as .java$"), 
+	@SerializedName("0") FILENAME_DETECTOR_TYPE (0, "Filename filter pattern"), 
 	@SerializedName("1") PACKAGE_JSON_DETECTOR_TYPE (1, "Dependency detection in the package.json file"); 
 	
 	private int value;
