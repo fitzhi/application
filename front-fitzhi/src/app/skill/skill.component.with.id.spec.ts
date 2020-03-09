@@ -109,7 +109,7 @@ describe('SkillComponent', () => {
 		expect(patternNative).toBeDefined();
 		expect('my personal pattern').toEqual(patternNative.value);
 		expect('my personal pattern').toEqual(component.profileSkill.get('pattern').value);
-		
+
 	}));
 
 });

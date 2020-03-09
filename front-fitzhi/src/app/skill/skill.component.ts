@@ -46,8 +46,8 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 		this.profileSkill = new FormGroup({
 			title: new FormControl('', [Validators.required]),
 			detectionType: new FormControl(''),
-			pattern: new FormControl('', [this.patternValidator.bind(this)])
-		});
+			pattern: new FormControl('')
+		}, { validators: this.patternValidator.bind(this) });
 
 		this.skillService.detectionTemplates$().subscribe (rep => {
 			this.skillService.detectionTemplatesLoaded$.next(true);
@@ -139,6 +139,10 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 	 * @param $event the event figuring that the detection template has changed.
 	 */
 	onDetectionTemplateChange($event) {
+		if (!this.skill.detectionTemplate) {
+			this.profileSkill.get('pattern').setValue('');
+			return;
+		}
 		const type = this.profileSkill.get('detectionType').value;
 		if (!isNumeric(type) || (type !== this.skill.detectionTemplate.detectionType)) {
 			this.profileSkill.get('pattern').setValue('');
@@ -153,9 +157,13 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 		if (!this.profileSkill) {
 			return null;
 		}
-		if ((isNumber(this.profileSkill.get('detectionType').value)) && (!control.value)) {
-			return { 'error': 'Pattern is required'};
+		
+		const detectionType: string = this.profileSkill.get('detectionType').value;
+		const pattern: string = this.profileSkill.get('pattern').value;
+		if (isNumeric(detectionType) && (!pattern)) {
+			return { 'error': 'Pattern is required if your have selected a detection template'};
 		}
+
 		return null;
 	}
 

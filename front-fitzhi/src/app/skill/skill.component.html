@@ -26,7 +26,7 @@
         <label for="pattern">Associated panel </label>
         <input type="text" class="form-control required" id="pattern" name="pattern" placeholder="File pattern (Required)"
           formControlName="pattern" />
-        <label *ngIf="pattern.invalid" [ngClass]="'alert alert-warning'" style="width: 100%; font-size: 10px;">
+        <label *ngIf="profileSkill.invalid" [ngClass]="'alert alert-warning'" style="width: 100%; font-size: 10px;">
           This field is required if you have selected a template.<br/>
           Please enter the associated pattern for the chosen template.<br/>
           '.java$'' might be a valid for the field pattern.
