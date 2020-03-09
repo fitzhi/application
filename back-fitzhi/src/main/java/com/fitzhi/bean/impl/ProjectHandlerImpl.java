@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 import com.fitzhi.SkillerRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.bean.SonarHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.encryption.DataEncryption;
@@ -36,6 +37,8 @@ import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SonarEvaluation;
 import com.fitzhi.data.internal.SonarProject;
 import com.fitzhi.data.internal.Staff;
+import com.fitzhi.data.source.CommitHistory;
+import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.SkillerException;
 
@@ -575,6 +578,21 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			project.setEcosystems(ecosystems);
 			this.dataUpdated = true;
 		}
+	}
+
+	@Autowired 
+	SkillHandler skillHandler;
+	
+	@Override
+	public void updateSkills(Project project, List<CommitHistory> entries) {
+		try {
+			//TODO FVI This line is for testing purpose.
+			this.addSkill(project, skillHandler.getSkill(1));
+		} catch (SkillerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
 	}
 	
 }

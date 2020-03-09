@@ -14,6 +14,8 @@ import com.fitzhi.data.internal.ProjectSonarMetricValue;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SonarEvaluation;
 import com.fitzhi.data.internal.SonarProject;
+import com.fitzhi.data.source.CommitHistory;
+import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.SkillerException;
 
@@ -257,5 +259,10 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 */
 	void saveEcosystems(Project project, List<Integer> ecosystems);
 	
-	
+	/**
+	 * Update the skills of the project based on the commit detected on the repository 
+	 * @param Project project the given project
+	 * @param repository the list of entries
+	 */
+	void updateSkills(Project project, List<CommitHistory> entries);
 }

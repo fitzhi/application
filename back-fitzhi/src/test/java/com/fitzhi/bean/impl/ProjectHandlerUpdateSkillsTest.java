@@ -1,0 +1,74 @@
+/**
+ * 
+ */
+package com.fitzhi.bean.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.bean.SkillHandler;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.source.CommitHistory;
+import com.fitzhi.exception.SkillerException;
+
+/**
+ * This class tests the method {@link ProjectHandler#updateSkills(java.util.List)}
+ * @author Frederic VIDAL
+ */
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class ProjectHandlerUpdateSkillsTest {
+
+	List<CommitHistory> repo;
+	
+	Project project;
+	
+	@Autowired
+	ProjectHandler projectHandler;
+	
+	@Autowired
+	SkillHandler skillHandler;
+	
+	@Before
+	public void before() throws SkillerException {
+		
+		//
+		// We are adding code files with a Java file within it.
+		// We expect to retrieve the Java skill
+		//
+		CommitHistory java = new CommitHistory("fr/test/nana/blablabla.java", 0); 
+		CommitHistory php = new CommitHistory("fr/test/nana.php", 0); 
+		CommitHistory ts = new CommitHistory("fr/test/angul.ts", 0); 
+		
+		repo = new ArrayList<CommitHistory>();
+		repo.add(java);
+		repo.add(php);
+		repo.add(ts);
+		
+		project = new Project(1789, "my testing project");
+		projectHandler.addNewProject(project);
+		
+	}
+	
+	@Test
+	public void addANonExistentSkill() throws SkillerException {
+		projectHandler.updateSkills(project, repo);
+		Assert.assertEquals(1, projectHandler.get(1789).getSkills().get(0).getId());
+		
+	}
+	
+	@After
+	public void after() throws SkillerException {
+		projectHandler.getProjects().remove(1789);
+	}
+}
