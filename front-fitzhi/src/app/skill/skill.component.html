@@ -15,15 +15,15 @@
     <div class="skill-detection col-7">
       <div class="row col-11">
         <label for="detectionType">Select the skill detection template</label>
-        <select name="detectionType" id="detectionType" (change)="onDetectionModelChange($event)"
-          formControlName="detectionType" class="custom-select d-block w-100">
+        <select name="detectionType" id="detectionType" (change)="onDetectionTemplateChange($event)"
+          formControlName="detectionType" class="custom-select d-block w-100 detectionType">
           <option></option>
           <option *ngFor="let template of skillService.detectionTemplates$()|async" 
               [ngValue]="template.detectionType">{{template.pattern}}</option>
         </select>
       </div>
-      <div class="row field col-11" *ngIf="detectionTypeSelected()">
-        <label for="pattern">Associated panel</label>
+      <div class="row field col-11 pattern">
+        <label for="pattern">Associated panel </label>
         <input type="text" class="form-control required" id="pattern" name="pattern" placeholder="File pattern (Required)"
           formControlName="pattern" />
         <label *ngIf="pattern.invalid" [ngClass]="'alert alert-warning'" style="width: 100%; font-size: 10px;">

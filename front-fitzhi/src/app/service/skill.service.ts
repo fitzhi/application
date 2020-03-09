@@ -198,7 +198,7 @@ export class SkillService extends InternalService {
 		this.filteredSkills$.next(filteredSkills);
 	}
 
-	detectionTemplates$(): Observable<DetectionTemplate[]> {
+	public detectionTemplates$(): Observable<DetectionTemplate[]> {
 		if (this.detectionTemplates) {
 			return of(this.detectionTemplates);
 		}

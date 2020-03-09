@@ -12,6 +12,8 @@ import { BaseComponent } from '../base/base.component';
 import { traceOn } from '../global';
 import { DetectionTemplate } from '../data/detection-template';
 import { isNumber } from 'util';
+import { isNumeric } from 'rxjs/util/isNumeric';
+import { Observable, of, BehaviorSubject } from 'rxjs';
 
 @Component({
 	selector: 'app-skill',
@@ -20,7 +22,7 @@ import { isNumber } from 'util';
 })
 export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 
-	private skill: Skill;
+	skill: Skill;
 
 	/**
 	 * Skill form declaration.
@@ -64,7 +66,6 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 				} else {
 					this.id = + params['id']; // (+) converts string 'id' to a number
 				}
-
 				// Either we are in creation mode, or we load the collaborator from the back-end...
 				// We create an empty collaborator until the subscription is complete
 				this.skill = new Skill();
@@ -135,10 +136,13 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Returns `true` if the enduser has selected a type of Skill detection, and there for has to enter a pattern, `false` otherwise.
+	 * @param $event the event figuring that the detection template has changed.
 	 */
-	detectionTypeSelected(): boolean {
-		return (isNumber(this.profileSkill.get('detectionType').value));
+	onDetectionTemplateChange($event) {
+		const type = this.profileSkill.get('detectionType').value;
+		if (!isNumeric(type) || (type !== this.skill.detectionTemplate.detectionType)) {
+			this.profileSkill.get('pattern').setValue('');
+		}
 	}
 
 	/**
