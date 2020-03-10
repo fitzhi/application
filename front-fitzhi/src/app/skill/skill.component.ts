@@ -49,8 +49,8 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 			pattern: new FormControl('')
 		}, { validators: this.patternValidator.bind(this) });
 
-		this.skillService.detectionTemplates$().subscribe (rep => {
-			this.skillService.detectionTemplatesLoaded$.next(true);
+		this.skillService.detectionTemplates$().subscribe ({
+			next: rep => this.skillService.detectionTemplatesLoaded$.next(true)
 		});
 
 	}
@@ -157,11 +157,11 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 		if (!this.profileSkill) {
 			return null;
 		}
-		
+
 		const detectionType: string = this.profileSkill.get('detectionType').value;
 		const pattern: string = this.profileSkill.get('pattern').value;
 		if (isNumeric(detectionType) && (!pattern)) {
-			return { 'error': 'Pattern is required if your have selected a detection template'};
+			return { 'patternRequired': true};
 		}
 
 		return null;
