@@ -14,7 +14,7 @@
 
     <div class="skill-detection col-7">
       <div class="row col-11">
-        <label for="detectionType">Select the skill detection template</label>
+        <label for="detectionType">Choose the detection template (if any), to detect this skill inside the projects.</label>
         <select name="detectionType" id="detectionType" (change)="onDetectionTemplateChange($event)"
           formControlName="detectionType" class="custom-select d-block w-100 detectionType">
           <option></option>
@@ -23,13 +23,14 @@
         </select>
       </div>
       <div class="row field col-11 pattern">
-        <label for="pattern">Associated panel </label>
+        <label for="pattern">Associated pattern</label>
         <input type="text" class="form-control required" id="pattern" name="pattern" placeholder="File pattern (Required)"
           formControlName="pattern" />
-        <label *ngIf="profileSkill.invalid" [ngClass]="'alert alert-warning'" style="width: 100%; font-size: 10px;">
+        <label *ngIf="profileSkill.errors?.patternRequired" [ngClass]="'alert alert-warning'" style="width: 100%; font-size: 10px;">
           This field is required if you have selected a template.<br/>
-          Please enter the associated pattern for the chosen template.<br/>
-          '.java$'' might be a valid for the field pattern.
+          You have to enter the associated pattern for the chosen template.<br/>
+          For example, if you have selected 'Filename detection template' for skill selection,
+          you might have to type '.java$'' as a valid pattern.
         </label>
       </div>
     </div>
