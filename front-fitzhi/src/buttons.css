@@ -5,6 +5,11 @@ button.okButton, button.cancelButton {
     outline: 0;
 }
 
+button.okButton {
+    height: 96px;
+    width: 96px;
+}
+
 button.cancelButton {
     background-image: url( "./assets/img/cancel.png" );
 }

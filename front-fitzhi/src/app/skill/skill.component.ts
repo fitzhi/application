@@ -168,6 +168,15 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 	}
 
 	/**
+     * Class of the button corresponding to the 3 possible states of the "Ok" button.
+     */
+	classOkButton() {
+		return (this.profileSkill.invalid) ?
+			'okButton okButtonInvalid' : 'okButton okButtonValid';
+	}
+
+
+	/**
 	 * Calling the base class to unsubscribe all subscriptions.
 	 */
 	ngOnDestroy() {

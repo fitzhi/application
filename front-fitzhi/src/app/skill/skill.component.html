@@ -35,9 +35,18 @@
       </div>
     </div>
 
-    <hr class="mb-4 col-4">
-    <button class="btn btn-primary btn-lg btn-block col-4" 
-      type="submit" 
-      [disabled]="!profileSkill.valid">Submit</button>
+    <div class="row col-md-12">
+      <div class="col-md-5"></div>
+      <div class="col-md-2">
+        <hr />
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-5"></div>
+      <div class="col-md-2">
+        <button [ngClass]="classOkButton()" [disabled]="(profileSkill && !profileSkill.valid)" type="submit"></button>
+      </div>
+    </div>
+
   </form>
 </div>
