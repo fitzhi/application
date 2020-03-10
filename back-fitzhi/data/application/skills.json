@@ -1,71 +1,99 @@
 {
     "1": {
         "id": 1,
-        "title": "C#"
+        "title": "Java",
+        "detectionTemplate": {
+            "detectionType": "0",
+            "pattern": ".java$"
+        }
     },
     "2": {
         "id": 2,
-        "title": "Spring"
+        "title": "C#",
+        "detectionTemplate": {
+            "detectionType": "0",
+            "pattern": ".cs$"
+        }
     },
     "3": {
         "id": 3,
-        "title": ".Net"
+        "title": "Spring"
     },
     "4": {
         "id": 4,
-        "title": "Java"
+        "title": ".Net"
     },
     "5": {
         "id": 5,
-        "title": "PHP"
+        "title": "PHP",
+        "detectionTemplate": {
+            "detectionType": "0",
+            "pattern": ".php$"
+        }
     },
     "6": {
         "id": 6,
-        "title": "Python"
+        "title": "Python",
+        "detectionTemplate": {
+            "detectionType": "0",
+            "pattern": ".py$"
+        }
     },
     "7": {
         "id": 7,
-        "title": "C++"
+        "title": "C++",
+        "detectionTemplate": {
+            "detectionType": "0",
+            "pattern": ".cpp$"
+        }
     },
     "8": {
         "id": 8,
-        "title": "Typescript"
+        "title": "Typescript",
+        "detectionTemplate": {
+            "detectionType": "0",
+            "pattern": ".ts$"
+        }
     },
     "9": {
         "id": 9,
-        "title": "C#"
+        "title": "Oracle"
     },
     "10": {
         "id": 10,
-        "title": "Oracle"
+        "title": "MQSeries"
     },
     "11": {
         "id": 11,
-        "title": "MQSeries"
+        "title": "JSF"
     },
     "12": {
         "id": 12,
-        "title": "JSF"
+        "title": "JavaScript",
+        "detectionTemplate": {
+            "detectionType": "0",
+            "pattern": ".js$"
+        }
     },
     "13": {
         "id": 13,
-        "title": "JavaScript"
+        "title": "Kafka"
     },
     "14": {
         "id": 14,
-        "title": "TypeScript"
+        "title": "WebSphere"
     },
     "15": {
         "id": 15,
-        "title": "WebSphere"
+        "title": "Tomcat"
     },
     "16": {
         "id": 16,
-        "title": "WebLogic"
+        "title": "Angular JS"
     },
     "17": {
         "id": 17,
-        "title": "Tomcat"
+        "title": "WebLogic"
     },
     "18": {
         "id": 18,
@@ -73,18 +101,6 @@
     },
     "19": {
         "id": 19,
-        "title": "Kafka"
-    },
-    "20": {
-        "id": 20,
         "title": "Hadoop"
-    },
-    "21": {
-        "id": 21,
-        "title": "Angular TS"
-    },
-    "22": {
-        "id": 22,
-        "title": "Angular JS"
     }
 }
