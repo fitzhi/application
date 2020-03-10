@@ -12,7 +12,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.fitzhi.bean.impl.PropectDashboardCustomizerImpl;
 import com.fitzhi.data.source.Operation;
 
 /**

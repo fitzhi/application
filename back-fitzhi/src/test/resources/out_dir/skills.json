@@ -1,1 +1,14 @@
-{"1":{"id":1,"title":"Java"},"2":{"id":2,"title":".NET"}}
+{
+	"1": {
+		"id": 1,
+		"title": "Java",
+        "detectionTemplate": {
+            "detectionType": "0",
+            "pattern": ".java$"
+        }
+	},
+	"2": {
+		"id": 2,
+		"title": ".NET"
+	}
+}

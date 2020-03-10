@@ -7,8 +7,14 @@ import static com.fitzhi.Error.CODE_SKILL_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_SKILL_NOFOUND;
 
 import java.text.MessageFormat;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,6 +24,7 @@ import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SkillDetectorType;
+import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.exception.SkillerException;
 
 import lombok.extern.slf4j.Slf4j;
@@ -111,5 +118,53 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	public Map<Integer, String> detectorTypes() throws SkillerException {
 		return SkillDetectorType.getDetectorTypes();
 	}
+
+	@Override
+	public Set<Skill> extractSkills(String rootPath, List<CommitHistory> entries) throws SkillerException {
+
+		Set<Skill> candidateSkills = getSkills().values().stream()
+			.filter(skill -> skill.getDetectionTemplate() != null)
+			.collect(Collectors.toSet());
+		
+		Set<Skill> extractedSkills = new HashSet<Skill>();
+	
+		for (Skill skill : candidateSkills) {
+			for (CommitHistory entry : entries) {
+				if (isSkillDetected(skill, entry.sourcePath)) {
+					extractedSkills.add(skill);
+					break;
+				}
+			}			
+		}
+		
+		return extractedSkills;
+	}
+
+	/**
+	 * Test if the passed skill is detected through this file.
+	 * @param skill the skill candidate to be searched
+	 * @param sourcePath the path of a source file 
+	 * @return {@code true} if this skill is detected, {@code false} otherwise
+	 */
+	private boolean isSkillDetected(Skill skill, String sourcePath) {
+		switch (skill.getDetectionTemplate().getDetectionType()) {
+		case FILENAME_DETECTOR_TYPE:
+			return checkFilenamePattern(sourcePath, skill.getDetectionTemplate().getPattern());
+		case PACKAGE_JSON_DETECTOR_TYPE:
+			throw new SkillerRuntimeException("Not implemented yet!");
+		}
+		throw new SkillerRuntimeException("Should not pass here!");
+	}
+	
+	/**
+	 * Check if the given source pathname verifies the given pattern
+	 * @param sourcePath the source pathname
+	 * @param pattern the pattern to be verified
+	 * @return {@code true} if this skill is detected, {@code false} otherwise
+	 */
+	private boolean checkFilenamePattern(String sourcePath, String pattern) {
+		Matcher matcher = Pattern.compile(pattern).matcher(sourcePath);
+		return (matcher.find());		
+	}	
 	
 }

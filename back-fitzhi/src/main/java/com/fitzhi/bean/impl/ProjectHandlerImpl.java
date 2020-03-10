@@ -38,7 +38,6 @@ import com.fitzhi.data.internal.SonarEvaluation;
 import com.fitzhi.data.internal.SonarProject;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.CommitHistory;
-import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.SkillerException;
 
@@ -74,6 +73,12 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	 */
 	@Autowired
 	public SonarHandler sonarHandler;
+	
+	/**
+	 * Bean in charge of handling the skills server.
+	 */
+	@Autowired 
+	SkillHandler skillHandler;
 	
 	/**
 	 * @return the Project collection.
@@ -580,19 +585,27 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		}
 	}
 
-	@Autowired 
-	SkillHandler skillHandler;
-	
 	@Override
 	public void updateSkills(Project project, List<CommitHistory> entries) {
 		try {
-			//TODO FVI This line is for testing purpose.
-			this.addSkill(project, skillHandler.getSkill(1));
+			
+			Set<Skill> detectedSkills = this.skillHandler.extractSkills(project.getLocationRepository(), entries);
+			
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("detected skills for project %s", project.getName()));
+				detectedSkills.stream().map(Skill::getTitle).forEach(log::debug);
+			}
+			
+			// We filter the skill that are not already declared inside this project.
+			detectedSkills
+				.stream()
+				.filter(skill -> !project.getSkills().contains(skill))
+				.forEach(skill -> this.addSkill(project, skill));
+
 		} catch (SkillerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-			
 	}
+
 	
 }

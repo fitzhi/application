@@ -1,7 +1,6 @@
 package com.fitzhi.controller.in;
 
 import com.fitzhi.controller.ProjectSonarController;
-import com.fitzhi.data.internal.SonarProject;
 
 import lombok.Data;
 

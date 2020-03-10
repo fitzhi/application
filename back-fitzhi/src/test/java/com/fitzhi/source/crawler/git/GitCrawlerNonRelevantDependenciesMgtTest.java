@@ -18,7 +18,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.source.crawler.RepoScanner;
-import com.fitzhi.source.crawler.git.SourceChange;
 
 /**
  * Management of dependencies test.

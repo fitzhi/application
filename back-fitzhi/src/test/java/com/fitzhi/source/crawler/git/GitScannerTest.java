@@ -2,7 +2,6 @@
  * 
  */
 package com.fitzhi.source.crawler.git;
-import static com.fitzhi.Global.UNKNOWN;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
@@ -33,15 +32,12 @@ import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RiskDashboard;
-import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.ConnectionSettings;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.RepoScanner;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import junit.framework.Assert;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

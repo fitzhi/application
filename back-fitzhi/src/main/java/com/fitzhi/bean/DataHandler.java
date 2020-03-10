@@ -11,7 +11,6 @@ import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.SkillerException;
-import com.fitzhi.source.crawler.git.SCMChange;
 
 /**
  * Interface in charge of saving & loading data.

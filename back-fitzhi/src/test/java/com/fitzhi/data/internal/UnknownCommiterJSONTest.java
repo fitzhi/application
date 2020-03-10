@@ -6,7 +6,6 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.fitzhi.data.internal.Unknown;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

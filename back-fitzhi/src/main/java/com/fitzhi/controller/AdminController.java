@@ -22,7 +22,6 @@ import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.external.BooleanDTO;
 import com.fitzhi.data.external.StaffDTO;
-import com.fitzhi.data.internal.Settings;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.SkillerException;
 

@@ -18,7 +18,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.controller.ProjectController;
 import com.fitzhi.controller.in.BodyParamSonarEntry;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Skill;

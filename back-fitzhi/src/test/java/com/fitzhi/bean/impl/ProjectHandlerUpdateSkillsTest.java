@@ -63,6 +63,7 @@ public class ProjectHandlerUpdateSkillsTest {
 	@Test
 	public void addANonExistentSkill() throws SkillerException {
 		projectHandler.updateSkills(project, repo);
+		Assert.assertFalse(projectHandler.get(1789).getSkills().isEmpty());
 		Assert.assertEquals(1, projectHandler.get(1789).getSkills().get(0).getId());
 		
 	}

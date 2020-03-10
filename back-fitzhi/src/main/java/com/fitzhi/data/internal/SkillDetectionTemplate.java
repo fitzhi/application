@@ -3,6 +3,8 @@
  */
 package com.fitzhi.data.internal;
 
+import java.io.Serializable;
+
 import lombok.Data;
 
 /**
@@ -18,8 +20,13 @@ import lombok.Data;
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public @Data class SkillDetectionTemplate {
+public @Data class SkillDetectionTemplate implements Serializable {
 	
+	/**
+	 * serialVersionUID as usual.
+	 */
+	private static final long serialVersionUID = -5754125817307425316L;
+
 	private SkillDetectorType detectionType;
 	
 	private String pattern;

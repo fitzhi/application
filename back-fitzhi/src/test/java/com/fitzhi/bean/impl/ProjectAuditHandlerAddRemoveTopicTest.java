@@ -13,7 +13,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.ProjectAuditHandler;
 import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.bean.impl.ProjectAuditHandlerImpl;
 import com.fitzhi.data.internal.AuditTopic;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.SkillerException;

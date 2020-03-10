@@ -15,7 +15,6 @@ import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SonarEvaluation;
 import com.fitzhi.data.internal.SonarProject;
 import com.fitzhi.data.source.CommitHistory;
-import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.SkillerException;
 
@@ -263,6 +262,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * Update the skills of the project based on the commit detected on the repository 
 	 * @param Project project the given project
 	 * @param repository the list of entries
+	 * @throws SkillerException thrown if any exception occurs during the treatment
 	 */
-	void updateSkills(Project project, List<CommitHistory> entries);
+	void updateSkills(Project project, List<CommitHistory> entries) throws SkillerException;
 }

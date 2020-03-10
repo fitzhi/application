@@ -13,8 +13,6 @@ import com.fitzhi.data.internal.Library;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.source.crawler.RepoScanner;
-import com.fitzhi.source.crawler.git.GitCrawler;
-import com.fitzhi.source.crawler.git.SourceChange;
 
 /**
  * <p>

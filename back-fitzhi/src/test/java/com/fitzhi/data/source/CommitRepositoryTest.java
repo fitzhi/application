@@ -7,9 +7,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.fitzhi.data.source.BasicCommitRepository;
-import com.fitzhi.data.source.CommitRepository;
-
 public class CommitRepositoryTest {
 
 	CommitRepository commitRepository;

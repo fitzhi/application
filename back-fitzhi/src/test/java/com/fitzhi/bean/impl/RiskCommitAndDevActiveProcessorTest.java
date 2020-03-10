@@ -23,7 +23,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.RiskProcessor;
 import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.bean.impl.RiskCommitAndDevActiveProcessorImpl;
 import com.fitzhi.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RiskDashboard;

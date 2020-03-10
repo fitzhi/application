@@ -11,8 +11,6 @@ import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
 import com.fitzhi.data.internal.AuditTopic;
-import com.fitzhi.data.internal.Skill;
-import com.fitzhi.data.internal.SkillDetectionTemplate;
 import com.fitzhi.data.internal.SkillDetectorType;
 import com.fitzhi.data.internal.Staff;
 import com.google.gson.Gson;

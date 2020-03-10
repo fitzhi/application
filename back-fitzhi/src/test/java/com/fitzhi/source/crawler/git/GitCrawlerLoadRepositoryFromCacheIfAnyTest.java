@@ -17,7 +17,6 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.RepoScanner;
-import com.fitzhi.source.crawler.git.GitCrawler;
 
 /**
  * Test of the method {@link GitCrawler#loadRepositoryFromCacheIfAny(com.fitzhi.data.internal.Project)}

@@ -58,8 +58,6 @@ import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -986,8 +984,14 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			log.debug(String.format("The repository has been parsed. It contains %d records in the repository, and %d ghosts", repo.size(), repo.unknownContributors().size()));
 		}
 
+		
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), "Parsing of the repository complete!");
 
+		//
+		// The project is updated with the detected skills in the repository (if any) 
+		//
+		this.projectHandler.updateSkills(project, new ArrayList<CommitHistory>(repo.getRepository().values()));
+		
 		//
 		// Does the process requires a personalization ?
 		// e.g. filtering on a staff identifier or processing the history crawl from a starting date

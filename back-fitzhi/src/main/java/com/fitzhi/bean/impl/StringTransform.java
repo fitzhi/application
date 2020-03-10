@@ -5,7 +5,7 @@ import com.fitzhi.bean.StaffHandler;
 /**
  * 
  * <p>
- * Utility interface to be used with the {@link StaffHandler#isElligible(fr.skiller.data.internal.Staff, String, StringTransform)}
+ * Utility interface to be used with the {@link StaffHandler#isEligible(fr.skiller.data.internal.Staff, String, StringTransform)}
  * </p>
  *
  * @author Fr&eacute;d&eacute;ric VIDAL

@@ -2,7 +2,6 @@ package com.fitzhi.data.source.importance;
 
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.SkillerException;
-import com.fitzhi.source.crawler.git.SCMChange;
 
 /**
  * <p>

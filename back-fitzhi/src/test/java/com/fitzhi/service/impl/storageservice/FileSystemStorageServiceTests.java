@@ -24,11 +24,6 @@ import org.junit.Test;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 
-import com.fitzhi.service.impl.storageservice.ApplicationStorageProperties;
-import com.fitzhi.service.impl.storageservice.FileSystemStorageService;
-import com.fitzhi.service.impl.storageservice.StorageException;
-import com.fitzhi.service.impl.storageservice.StorageProperties;
-
 /**
  * <p>Tests of the FileSystemStorageService.</p>
  * <i>(based on the spring documentation)</i>

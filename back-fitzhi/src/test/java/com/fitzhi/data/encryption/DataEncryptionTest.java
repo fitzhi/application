@@ -5,8 +5,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fitzhi.data.encryption.DataEncryption;
-
 /**
  * <p>
  * Test of the 2 methods :

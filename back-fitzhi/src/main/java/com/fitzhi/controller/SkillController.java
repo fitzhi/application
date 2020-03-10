@@ -22,9 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fitzhi.bean.SkillHandler;
-import com.fitzhi.data.external.ProjectDTO;
 import com.fitzhi.data.external.SkillDTO;
-import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.exception.SkillerException;
 

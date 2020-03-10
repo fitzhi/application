@@ -15,8 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fitzhi.data.internal.Resume;
 import com.fitzhi.data.internal.ResumeSkillIdentifier;
 import com.fitzhi.exception.SkillerException;
-import com.fitzhi.service.FileType;
-import com.fitzhi.service.ResumeParserService;
 
 /**
  * <p>Tests on the skills parser</p>

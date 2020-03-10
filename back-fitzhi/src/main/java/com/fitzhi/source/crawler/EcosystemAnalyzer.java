@@ -2,7 +2,6 @@ package com.fitzhi.source.crawler;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.fitzhi.data.internal.Ecosystem;
 import com.fitzhi.exception.SkillerException;

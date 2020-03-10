@@ -8,27 +8,20 @@ import java.io.FileReader;
 import java.lang.reflect.Type;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fitzhi.data.internal.Ecosystem;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
 import com.google.gson.Gson;

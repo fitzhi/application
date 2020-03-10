@@ -16,7 +16,6 @@ import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.RiskDashboard;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.ConnectionSettings;
-import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.SkillerException;
 
 /**

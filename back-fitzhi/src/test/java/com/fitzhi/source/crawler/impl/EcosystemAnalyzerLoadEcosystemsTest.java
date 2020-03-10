@@ -1,6 +1,5 @@
 package com.fitzhi.source.crawler.impl;
 
-import java.util.List;
 import java.util.Map;
 
 import org.junit.Assert;

@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.bean.impl.StringTransform;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.SkillerException;
 
