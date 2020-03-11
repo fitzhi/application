@@ -98,15 +98,6 @@ public interface RepoScanner {
 
 	/**
 	 * <p>
-	 * Cleanup the pathnames of the changes collection.<br/>
-	 * e.g. <code>/src/main/java/java/util/List.java</code> will be treated like <code>java/util/List.java</code>
-	 * </p>
-	 * @param analysis the repository analysis.
-	 */
-	void cleanupPaths(RepositoryAnalysis analysis);
-	
-	/**
-	 * <p>
 	 * This method remove the non relevant directories from the crawl.
 	 * </p>
 	 * @param project the current project

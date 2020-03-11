@@ -23,6 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.DataChartHandler;
 import com.fitzhi.bean.DataHandler;
+import com.fitzhi.bean.ProjectDashboardCustomizer;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
@@ -58,6 +59,9 @@ public class CrawlerWibkacTest {
 	@Autowired
 	DataChartHandler dataChartHandler;
 
+	@Autowired
+	ProjectDashboardCustomizer projectDashboardCustomizer;
+	
 	private Repository repository;
 
 	private Project project;
@@ -105,7 +109,7 @@ public class CrawlerWibkacTest {
 		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, FITZHI), analysis);
 		scanner.filterEligible(analysis);
-		scanner.cleanupPaths(analysis);
+		analysis.cleanupPaths(projectDashboardCustomizer);
 		analysis.getPathsAll().stream().forEach(System.out::println);
 
 	}

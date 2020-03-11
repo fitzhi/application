@@ -645,23 +645,6 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	}
 
 	@Override
-	public void cleanupPaths(RepositoryAnalysis analysis) {
-		
-		Map<String, SourceFileHistory> cleanPathChanges = new HashMap<>();
-		
-		analysis
-			.getChanges()
-			.entrySet()
-			.stream()
-			.forEach(entry -> cleanPathChanges.put(
-				projectDashboardCustomizer.cleanupPath(entry.getKey()), 
-				entry.getValue())
-			);
-		
-		analysis.setChanges(new SourceControlChanges(cleanPathChanges));
-	}
-
-	@Override
 	public void removeNonRelevantDirectories(Project project, RepositoryAnalysis analysis) {	
 		project.getLibraries().stream().forEach(dep -> {
 			Iterator<String> iteratorFilePath = analysis.iteratorFilePath();
@@ -793,7 +776,6 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), String.format("Dependencies have been excluded from analysis"));
 		
-		
 		//
 		// We retrieve the root paths of all libraries present in the project (if any) 
 		// The resulting list is saved in the project object.
@@ -805,10 +787,11 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		 */
 		this.removeNonRelevantDirectories(project, analysis);
 		
+		
 		/**
 		 * We cleanup the pathnames each location (e.g. "src/main/java" is removed)
 		 */
-		this.cleanupPaths(analysis);
+		// analysis.cleanupPaths(projectDashboardCustomizer);
 
 		
 		repositoryOfCommit = new BasicCommitRepository();
@@ -850,7 +833,39 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 						(fullname != null) ? fullname : "unknown"));
 			});
 		}
+		// Displaying results...
+		if (log.isInfoEnabled() && (!unknownContributors.isEmpty())) {
+			log.info(String.format("Unknown contributors for project %s", analysis.getProject().getName()));
+			unknownContributors.stream().forEach(log::info);
+		}
 
+		//
+		// We detect the ecosystem in the analysis and we save them in the project.
+		//
+		this.updateProjectEcosystem(project, analysis);
+		
+		//
+		// Transfer the analysis data in the result file.
+		//
+		analysis.transferRepository(repositoryOfCommit);
+		
+		//
+		// Saving the repository into the cache
+		//
+		cacheDataHandler.saveRepository(project, repositoryOfCommit);
+
+		return repositoryOfCommit;
+	}
+
+	/**
+	 * <p>
+	 * Update the Project ecosystem.
+	 * </p>
+	 * @param project the given project
+	 * @param analysis the repository analysis
+	 * @throws SkillerException thrown if any exception occurs
+	 */
+	private void updateProjectEcosystem(Project project, RepositoryAnalysis analysis) throws SkillerException {
 		//
 		// To identify the ecosystem, all files are taken in account. 
 		//
@@ -866,25 +881,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		List<Integer> ids = ecosystems.stream().map(Ecosystem::getId).collect(Collectors.toList());
 		projectHandler.saveEcosystems(project, ids);
 		
-		// Displaying results...
-		if (log.isInfoEnabled() && (!unknownContributors.isEmpty())) {
-			log.info(String.format("Unknown contributors for project %s", analysis.getProject().getName()));
-			unknownContributors.stream().forEach(log::info);
-		}
-		
-		//
-		// Loading the repository in the result file.
-		//
-		analysis.loadRepository(repositoryOfCommit);
-		
-		//
-		// Saving the repository into the cache
-		//
-		cacheDataHandler.saveRepository(project, repositoryOfCommit);
-
-		return repositoryOfCommit;
 	}
-
+	
 	/**
 	 * Log a commit record in debug mode.
 	 * 

@@ -260,8 +260,8 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	
 	/**
 	 * Update the skills of the project based on the commit detected on the repository 
-	 * @param Project project the given project
-	 * @param repository the list of entries
+	 * @param project the given project the given project
+	 * @param entries the list of entries of {@link CommitHistory commits}
 	 * @throws SkillerException thrown if any exception occurs during the treatment
 	 */
 	void updateSkills(Project project, List<CommitHistory> entries) throws SkillerException;

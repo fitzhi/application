@@ -5,13 +5,16 @@ import static com.fitzhi.Error.SHOULD_NOT_PASS_HERE;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.bean.ProjectDashboardCustomizer;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.source.crawler.git.SourceChange;
@@ -19,9 +22,13 @@ import com.fitzhi.source.crawler.git.SourceFileHistory;
 
 /**
  * <p> 
- * The class hosts the information gather from the analysis of the repository.<br/>
- * 
- * 
+ * The class hosts the intermediate data gathered from the analysis of the repository.<br/>
+ * Multiple sets are updated and available in this container :
+ * <ul>
+ * <li>{@link SourceControlChanges list of changes} retrieved from the repository.</i>
+ * <li>list of paths detected as having been modified in the history of the repository.</i>
+ * <li>list of paths detected as having been ONLY ADDED in the history of the repository.</li>
+ * </ul>
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
@@ -221,15 +228,17 @@ public class RepositoryAnalysis {
 	}
 	
 	/**
-	 * <p>Transfer the changes collection into the commitRepositoty</p>
-	 * <P>
-	 * The changes map is saving the activity in a flat mode, 
-	 * when commitRepository is saving it, in a hierarchical way (in a file system manner).
+	 * <p>
+	 * Transfer the changes collection into the commitRepository
 	 * </p>
-	 * @param commitRepository
+	 * <P>
+	 * The changes map is saving the commits activity into a flat mode, 
+	 * when the resulting commitRepository is saving it into a hierarchical way (in a file system manner).
+	 * </p>
+	 * @param commitRepository the analysis data
 	 */
 	
-	public void loadRepository (CommitRepository commitRepository) {
+	public void transferRepository (CommitRepository commitRepository) {
 		// We iterate on the file recorded
 		changes.mapChanges.keySet().stream().forEach(path -> {
 			// We iterate on changes detected on each file.
@@ -403,6 +412,30 @@ public class RepositoryAnalysis {
 
 		return contributors;
 		
+	}
+
+	
+	/**
+	 * <p>
+	 * Cleanup the pathnames of the changes collection.<br/>
+	 * e.g. <code>/src/main/java/java/util/List.java</code> will be treated like <code>java/util/List.java</code>
+	 * </p>
+	 * @param analysis the repository analysis.
+	 */
+	public void cleanupPaths(ProjectDashboardCustomizer projectDashboardCustomizer) {
+		
+		Map<String, SourceFileHistory> cleanPathChanges = new HashMap<>();
+		
+		this
+			.getChanges()
+			.entrySet()
+			.stream()
+			.forEach(entry -> cleanPathChanges.put(
+				projectDashboardCustomizer.cleanupPath(entry.getKey()), 
+				entry.getValue())
+			);
+		
+		this.setChanges(new SourceControlChanges(cleanPathChanges));
 	}
 
 }
