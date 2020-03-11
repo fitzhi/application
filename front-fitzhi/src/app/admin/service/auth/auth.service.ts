@@ -112,7 +112,7 @@ export class AuthService extends InternalService {
 			.set('grant_type', 'refresh_token');
 
 		return this.httpClient.post<Token>(
-			this.backendSetupService.url() + '/oauth/token', '', { headers: headers, params: params })
+			localStorage.getItem('backendUrl') + '/oauth/token', '', { headers: headers, params: params })
 			.pipe(
 				take(1),
 				switchMap(token => {
