@@ -72,21 +72,9 @@ public class StaffControllerUploadResumeTest {
 
 	@Before 
 	public void before()  {
-		if (!skillHandler.containsSkill(1)) {
-			skillHandler.addNewSkill(new Skill(1, "Java"));
-		}
-		if (!skillHandler.containsSkill(2)) {
-			skillHandler.addNewSkill(new Skill(2, ".NET"));
-		}
-		if (!skillHandler.containsSkill(3)) {
-			skillHandler.addNewSkill(new Skill(3, "C#"));
-		}
-		if (!skillHandler.containsSkill(4)) {
-			skillHandler.addNewSkill(new Skill(4, "Spring"));
-		}
-		if (!skillHandler.containsSkill(5)) {
-			skillHandler.addNewSkill(new Skill(5, "Python"));
-		}
+		skillHandler.addNewSkill(new Skill(4, "C#"));
+		skillHandler.addNewSkill(new Skill(5, "Spring"));
+		skillHandler.addNewSkill(new Skill(6, "Python"));
 	}
 
 	@Test
@@ -154,6 +142,11 @@ public class StaffControllerUploadResumeTest {
 	
 	@After
 	public void after() {
+		
+		skillHandler.getSkills().remove(4);
+		skillHandler.getSkills().remove(5);
+		skillHandler.getSkills().remove(6);
+		
 		File file = new File (storageProperties.getLocation() + 
 				String.format("/%d-ET_201709.doc", 1));
 		if (file.exists()) {

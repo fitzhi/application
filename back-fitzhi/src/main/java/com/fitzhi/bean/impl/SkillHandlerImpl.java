@@ -3,10 +3,17 @@
  */
 package com.fitzhi.bean.impl;
 
+import static com.fitzhi.Error.CODE_IO_ERROR;
 import static com.fitzhi.Error.CODE_SKILL_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import static com.fitzhi.Error.MESSAGE_SKILL_NOFOUND;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.lang.reflect.Type;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -22,10 +29,12 @@ import org.springframework.stereotype.Component;
 import com.fitzhi.SkillerRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.SkillHandler;
+import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SkillDetectorType;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.exception.SkillerException;
+import com.google.gson.reflect.TypeToken;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -130,7 +139,7 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	
 		for (Skill skill : candidateSkills) {
 			for (CommitHistory entry : entries) {
-				if (isSkillDetected(skill, entry.sourcePath)) {
+				if (isSkillDetected(skill, rootPath, entry.sourcePath)) {
 					extractedSkills.add(skill);
 					break;
 				}
@@ -142,16 +151,18 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 
 	/**
 	 * Test if the passed skill is detected through this file.
-	 * @param skill the skill candidate to be searched
+	 * @param skill the skill candidate to be detected
+	 * @param rootPath the rootPath where the repository has been cloned
 	 * @param sourcePath the path of a source file 
 	 * @return {@code true} if this skill is detected, {@code false} otherwise
+	 * @throws SkillerException exception thrown if any problem occurs (most probably an IOException)
 	 */
-	private boolean isSkillDetected(Skill skill, String sourcePath) {
+	private boolean isSkillDetected(Skill skill, String rootPath, String sourcePath) throws SkillerException {
 		switch (skill.getDetectionTemplate().getDetectionType()) {
 		case FILENAME_DETECTOR_TYPE:
 			return checkFilenamePattern(sourcePath, skill.getDetectionTemplate().getPattern());
 		case PACKAGE_JSON_DETECTOR_TYPE:
-			throw new SkillerRuntimeException("Not implemented yet!");
+			return checkPackageJsonPattern(rootPath, sourcePath, skill.getDetectionTemplate().getPattern());
 		}
 		throw new SkillerRuntimeException("Should not pass here!");
 	}
@@ -165,6 +176,29 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	private boolean checkFilenamePattern(String sourcePath, String pattern) {
 		Matcher matcher = Pattern.compile(pattern).matcher(sourcePath);
 		return (matcher.find());		
+	}	
+
+	/**
+	 * Check if the given source pathname verifies the given pattern
+	 * @param rootPath the rootPath where the repository has been cloned
+	 * @param sourcePath the source pathname
+	 * @param dependency the pattern to be verified
+	 * @return {@code true} if this skill is detected, {@code false} otherwise
+	 * @throws SkillerException exception thrown if any problem occurs (most probably an IOException)
+	 */
+	private boolean checkPackageJsonPattern(String rootPath, String sourcePath, String dependency) throws SkillerException {
+		
+		if (sourcePath.indexOf("package.json") == -1) {
+			return false;
+		}
+		
+		File file = new File(rootPath+sourcePath);
+		try (FileReader reader = new FileReader(file)) {
+			BufferedReader br = new BufferedReader(reader);
+			return br.lines().anyMatch(line -> (line.indexOf(dependency) != -1));
+		} catch (final Exception e) {
+			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, file.getAbsoluteFile()), e);
+		}
 	}	
 	
 }

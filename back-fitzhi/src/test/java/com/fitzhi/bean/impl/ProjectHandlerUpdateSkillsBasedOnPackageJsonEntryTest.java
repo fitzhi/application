@@ -4,7 +4,9 @@
 package com.fitzhi.bean.impl;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -18,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.exception.SkillerException;
 
@@ -27,8 +30,12 @@ import com.fitzhi.exception.SkillerException;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ProjectHandlerUpdateSkillsTest {
+public class ProjectHandlerUpdateSkillsBasedOnPackageJsonEntryTest {
 
+	
+	private final int JAVA = 1;
+	private final int ANGULAR = 3;
+	
 	List<CommitHistory> repo;
 	
 	Project project;
@@ -48,24 +55,31 @@ public class ProjectHandlerUpdateSkillsTest {
 		//
 		CommitHistory java = new CommitHistory("/src/main/java/com/fitzhi/controller/PingController.java", 0); 
 		CommitHistory php = new CommitHistory("/src/main/resources/other-sources-for-testing-purpose/sample.php", 0); 
-		CommitHistory ts = new CommitHistory("../front-fitzhi/src/app/app.module.ts", 0); 
+		CommitHistory packageJson = new CommitHistory("/../front-fitzhi/package.json", 0); 
 		
 		repo = new ArrayList<CommitHistory>();
 		repo.add(java);
 		repo.add(php);
-		repo.add(ts);
+		repo.add(packageJson);
 		
 		project = new Project(1789, "my testing project");
 		project.setLocationRepository(".");
+
 		projectHandler.addNewProject(project);
 		
 	}
 	
 	@Test
 	public void addANonExistentSkill() throws SkillerException {
+
 		projectHandler.updateSkills(project, repo);
 		Assert.assertFalse(projectHandler.get(1789).getSkills().isEmpty());
-		Assert.assertEquals(1, projectHandler.get(1789).getSkills().get(0).getId());
+		Assert.assertEquals(2, projectHandler.get(1789).getSkills().size());
+		
+		Set<Integer> ids = new HashSet<>();
+		projectHandler.get(1789).getSkills().stream().map(Skill::getId).forEach(ids::add);
+		Assert.assertTrue("Java is detected", ids.contains(JAVA));
+		Assert.assertTrue("Angular is detected", ids.contains(ANGULAR));
 		
 	}
 	

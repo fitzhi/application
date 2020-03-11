@@ -27,7 +27,7 @@ import com.fitzhi.exception.SkillerException;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ProjectHandlerUpdateSkillsTest {
+public class ProjectHandlerUpdateSkillsBasedOnFilenameDetectionTest {
 
 	List<CommitHistory> repo;
 	

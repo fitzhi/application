@@ -10,5 +10,13 @@
 	"2": {
 		"id": 2,
 		"title": ".NET"
+	},
+	"3": {
+		"id": 3,
+		"title": "Angular",
+        "detectionTemplate": {
+            "detectionType": "1",
+            "pattern": "\"@angular/core\""
+        }
 	}
 }

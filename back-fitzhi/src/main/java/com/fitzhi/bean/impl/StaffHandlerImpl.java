@@ -493,7 +493,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, staff.getIdStaff()));
 		}
 		
-		// The login is unique for each Tixhì user
+		// The login is unique for each Fixhì user
 		Optional<Staff> emp = findStaffWithLogin(staff.getLogin());
 		if ( (emp.isPresent()) && (emp.get().getIdStaff() != staff.getIdStaff()) && (emp.get().getLogin().equals(staff.getLogin()))) {
 			if (log.isDebugEnabled()) {

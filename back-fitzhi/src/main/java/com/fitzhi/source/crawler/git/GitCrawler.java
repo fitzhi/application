@@ -793,27 +793,69 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		 */
 		// analysis.cleanupPaths(projectDashboardCustomizer);
 
-		
+		//
+		// Set of unknown contributors who have work on this repository.
+		//
+		final Set<String> unknownContributors = new HashSet<String>();
+
+		//
+		// Handling the staff aspect from the project.
+		//
+		this.handlingProjectStaffAndGhost(project, analysis, unknownContributors);
+
+		//
+		// We detect the ecosystem in the analysis and we save them in the project.
+		//
+		this.updateProjectEcosystem(project, analysis);
+		 
+		//
+		// Create a repository. 
+		//
 		repositoryOfCommit = new BasicCommitRepository();
 
-		/**
-		 * Set of unknown contributors who have work on this repository.
-		 */
-		final Set<String> unknownContributors = repositoryOfCommit.unknownContributors();
+		//
+		// Transfer the analysis data in the result file.
+		//
+		analysis.transferRepository(repositoryOfCommit);
+		
+		//
+		// We update the unknown contributors.
+		//
+		repositoryOfCommit.setUnknownContributors(unknownContributors);
+		
+		//
+		// Saving the repository into the cache
+		//
+		cacheDataHandler.saveRepository(project, repositoryOfCommit);
 
-		/**
-		 * We update the staff identifier on each change entry.
-		 */
+		return repositoryOfCommit;
+	}
+
+	
+	/**
+	 * <p>
+	 * This method is managing the staff or the ghost detected in the repository.
+	 * </p>
+	 * @param project the given project
+	 * @param analysis the analysis processed on this project
+	 * @param unknownContributors set of unknown contributors
+	 * @throws SkillerException thrown if any exception occurs
+	 */
+	private void handlingProjectStaffAndGhost(Project project, RepositoryAnalysis analysis, Set<String> unknownContributors) throws SkillerException {
+		
+		//
+		// We update the staff identifier on each change entry.
+		//
 		this.updateStaff(project, analysis, unknownContributors);
 
-		/**
-		 * We save the unknown contributors, into the "ghosts project"
-		 */
+		//
+		// We save the unknown contributors, into the "ghosts project" collection.
+		//
 		projectHandler.integrateGhosts(project.getId(), unknownContributors);
 		
-		/**
-		 * Retrieve the list of contributors involved in the project.
-		 */
+		//
+		// Retrieve the list of contributors involved in the project.
+		//
 		List<Contributor> contributors = analysis.gatherContributors();
 
 		if (log.isDebugEnabled()) {
@@ -821,9 +863,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				"Taking account of retrieved contributors from the repository into the project list of participants");
 		}
 
-		/**
-		 * Update the staff team missions with the contributors.
-		 */
+		//
+		// Update the staff team missions with the contributors.
+		//
 		staffHandler.involve(project, contributors);
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("%d contributors retrieved : ", contributors.size()));
@@ -833,28 +875,13 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 						(fullname != null) ? fullname : "unknown"));
 			});
 		}
+		
 		// Displaying results...
 		if (log.isInfoEnabled() && (!unknownContributors.isEmpty())) {
 			log.info(String.format("Unknown contributors for project %s", analysis.getProject().getName()));
 			unknownContributors.stream().forEach(log::info);
 		}
-
-		//
-		// We detect the ecosystem in the analysis and we save them in the project.
-		//
-		this.updateProjectEcosystem(project, analysis);
 		
-		//
-		// Transfer the analysis data in the result file.
-		//
-		analysis.transferRepository(repositoryOfCommit);
-		
-		//
-		// Saving the repository into the cache
-		//
-		cacheDataHandler.saveRepository(project, repositoryOfCommit);
-
-		return repositoryOfCommit;
 	}
 
 	/**
@@ -982,7 +1009,6 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			log.debug(String.format("The repository has been parsed. It contains %d records in the repository, and %d ghosts", repo.size(), repo.unknownContributors().size()));
 		}
 
-		
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), "Parsing of the repository complete!");
 
 		//
@@ -1010,7 +1036,6 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			}
 			dataChartHandler.aggregateDataChart(data.riskChartData);
 		}
-
 		
 		// Evaluate the risk for each directory, and sub-directory, in the repository.
 		final List<StatActivity> statsCommit = new ArrayList<>();
