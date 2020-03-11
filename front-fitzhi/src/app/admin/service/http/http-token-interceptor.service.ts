@@ -3,13 +3,15 @@ import { throwError as observableThrowError, Observable, BehaviorSubject, EMPTY 
 
 import { take, filter, catchError, switchMap, finalize } from 'rxjs/operators';
 import { Injectable, Injector } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpSentEvent, HttpHeaderResponse } from '@angular/common/http';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpSentEvent, HttpHeaderResponse, HttpEvent } from '@angular/common/http';
 import { HttpProgressEvent, HttpResponse, HttpUserEvent, HttpErrorResponse } from '@angular/common/http';
 
 import { AuthService } from '../auth/auth.service';
 import { MessageService } from 'src/app/message/message.service';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { Constants } from 'src/app/constants';
+import { traceOn } from 'src/app/global';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class HttpTokenInterceptorService implements HttpInterceptor {
@@ -19,6 +21,7 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 
 	constructor(
 		private injector: Injector,
+		private router: Router,
 		private messageService: MessageService) { }
 
 	addToken(req: HttpRequest<any>, token: string): HttpRequest<any> {
@@ -65,7 +68,9 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 							break;
 						}
 				}
-				console.log ('connection error', error);
+				if (traceOn()) {
+					console.log ('Connection error', error);
+				}
 				return observableThrowError(error);
 			}));
 		}
@@ -136,6 +141,7 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 
 	logoutUser() {
 		// Route to the login page (implementation up to you)
+		this.router.navigate(['/welcome'], {});
 		return observableThrowError('');
 	}
 }
