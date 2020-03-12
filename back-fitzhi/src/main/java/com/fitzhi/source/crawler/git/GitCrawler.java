@@ -311,10 +311,20 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			}
 		}
 		if (execClone) {
-			Git.cloneRepository().setDirectory(path.toAbsolutePath().toFile()).setURI(settings.getUrl())
+			if (settings.isPublicRepository()) {
+				Git.cloneRepository()
+					.setDirectory(path.toAbsolutePath().toFile())
+					.setURI(settings.getUrl())
+					.setProgressMonitor(new CustomProgressMonitor()).call();				
+			} else {
+				Git.cloneRepository()
+					.setDirectory(path.toAbsolutePath().toFile())
+					.setURI(settings.getUrl())
 					.setCredentialsProvider(
-							new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()))
+						new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()))
 					.setProgressMonitor(new CustomProgressMonitor()).call();
+				
+			}
 			if (log.isDebugEnabled()) {
 				log.debug("Clone done & succcessful !");
 			}
@@ -1102,15 +1112,24 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	}
 
 	/**
+	 * <p>
 	 * Load the connection settings for the given project.
-	 * 
+	 * </p>
 	 * @param project the passed project
 	 * @return the connection settings.
 	 * @throws SkillerException thrown certainly if an IO exception occurs
 	 */
 	private ConnectionSettings connectionSettings(final Project project) throws SkillerException {
 
-		if (project.isDirectAccess()) {
+		
+		if (project.isNoUserPasswordAccess()) {
+			ConnectionSettings settings = new ConnectionSettings();
+			settings.setUrl(project.getUrlRepository());
+			settings.setPublicRepository(true);
+			return settings;
+		}
+		
+		if (project.isUserPasswordAccess()) {
 			ConnectionSettings settings = new ConnectionSettings();
 			settings.setUrl(project.getUrlRepository());
 			settings.setLogin(project.getUsername());
@@ -1130,7 +1149,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			return settings;
 		}
 
-		if (project.isIndirectAccess()) {
+		if (project.isRemoteFileAccess()) {
 			final String fileProperties = pathConnectionSettings + project.getConnectionSettingsFile();
 			File f = new File(fileProperties);
 			if (!f.exists()) {

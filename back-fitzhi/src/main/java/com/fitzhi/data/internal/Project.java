@@ -1,6 +1,7 @@
 package com.fitzhi.data.internal;
 
 import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
+import static com.fitzhi.Global.NO_USER_PASSWORD_ACCESS;
 import static com.fitzhi.Global.REMOTE_FILE_ACCESS;
 
 import java.io.Serializable;
@@ -180,7 +181,15 @@ public @Data class Project implements Serializable {
 	 * @return {@code true} if the project is setup with a direct access to the version control repository 
 	 * <i>(the Project self-contains connection parameters)</i>
 	 */
-	public boolean isDirectAccess() {
+	public boolean isNoUserPasswordAccess() {
+		return (connectionSettings == NO_USER_PASSWORD_ACCESS);
+	}
+	
+	/**
+	 * @return {@code true} if the project is setup with a direct access to the version control repository 
+	 * <i>(the Project self-contains connection parameters)</i>
+	 */
+	public boolean isUserPasswordAccess() {
 		return (connectionSettings == USER_PASSWORD_ACCESS);
 	}
 	
@@ -188,7 +197,7 @@ public @Data class Project implements Serializable {
 	 * @return {@code true} if the project is setup with an indirect access to the version control repository 
 	 * <i>(Application must retrieve the connection parameters on a property file)</i>
 	 */
-	public boolean isIndirectAccess() {
+	public boolean isRemoteFileAccess() {
 		return (connectionSettings == REMOTE_FILE_ACCESS);
 	}
 
