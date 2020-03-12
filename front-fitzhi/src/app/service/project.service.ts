@@ -487,6 +487,7 @@ export class ProjectService extends InternalService {
 	 * @param risk the risk evaluated for ths project. A risk is a number between 0 an 10.
 	 */
 	getRiskColor(risk: number): string {
+
 		switch (risk) {
 			case -1:
 				return 'whiteSmoke';
@@ -496,7 +497,8 @@ export class ProjectService extends InternalService {
 				if (riskLegend) {
 					return riskLegend.color;
 				} else {
-					throw new Error('Unknown risk level ' + risk);
+					console.error('Unknown risk level', risk);
+					return 'whiteSmoke';
 				}
 			}
 	}

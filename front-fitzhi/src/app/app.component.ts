@@ -102,8 +102,15 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 				if (traceOn()) {
 					console.log('Reloading skills for search criteria ' + this.criteria);
 				}
-				this.skillService.filterSkills(new ListCriteria(this.criteria, this.activeOnly));
-				this.staffService.countAll_groupBy_experience(this.activeOnly);
+				this.subscriptions.add(
+					this.skillService.allSkillsLoaded$.subscribe({
+						next: doneAndOk => {
+							if (doneAndOk) {
+								this.skillService.filterSkills(new ListCriteria(this.criteria, this.activeOnly));
+								this.staffService.countAll_groupBy_experience(this.activeOnly);
+							}
+						}
+				}));
 				break;
 			}
 			case Constants.PROJECT_SEARCH: {
