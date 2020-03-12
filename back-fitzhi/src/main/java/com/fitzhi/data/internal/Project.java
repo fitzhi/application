@@ -1,6 +1,6 @@
 package com.fitzhi.data.internal;
 
-import static com.fitzhi.Global.DIRECT_ACCESS;
+import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
 import static com.fitzhi.Global.REMOTE_FILE_ACCESS;
 
 import java.io.Serializable;
@@ -181,7 +181,7 @@ public @Data class Project implements Serializable {
 	 * <i>(the Project self-contains connection parameters)</i>
 	 */
 	public boolean isDirectAccess() {
-		return (connectionSettings == DIRECT_ACCESS);
+		return (connectionSettings == USER_PASSWORD_ACCESS);
 	}
 	
 	/**

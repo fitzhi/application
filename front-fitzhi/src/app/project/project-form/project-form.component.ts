@@ -38,8 +38,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	@Output() tabActivationEmitter = new EventEmitter<number>();
 
-	public DIRECT_ACCESS = 1;
+	public USER_PASSWORD_ACCESS = 1;
 	public REMOTE_FILE_ACCESS = 2;
+	public NO_USER_PASSWORD_ACCESS = 3;
 
 	public colorOfRisk = 'transparent';
 
@@ -705,7 +706,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		this.projectService.project.name = this.profileProject.get('projectName').value;
 		this.projectService.project.urlSonarServer = this.profileProject.get('urlSonarServer').value;
 		switch (this.projectService.project.connectionSettings) {
-			case this.DIRECT_ACCESS:
+			case this.USER_PASSWORD_ACCESS:
 				this.projectService.project.urlRepository = this.profileProject.get('urlRepository1').value;
 				this.projectService.project.username = this.profileProject.get('username').value;
 				this.projectService.project.password = this.profileProject.get('password').value;
@@ -756,7 +757,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	public onConnectionSettingsChange(val: string) {
 		this.projectService.project.connectionSettings = +val;
 		switch (this.projectService.project.connectionSettings) {
-			case this.DIRECT_ACCESS:
+			case this.USER_PASSWORD_ACCESS:
 				this.profileProject.get('filename').setValue('');
 				this.profileProject.get('urlRepository1').setValue(this.profileProject.get('urlRepository2').value);
 				break;
@@ -771,28 +772,43 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	/**
 	 * Did the user select the direct access connection settings (user/password).
 	 */
-	public directAccess() {
+	public noUserPasswordAccess() {
 		if (!this.projectService.project) {
-			return true;
+			return false;
 		}
 
 		// No choice have been made yet. We are the 2 pannels.
 		if ((typeof this.projectService.project.connectionSettings === 'undefined') || (this.projectService.project.connectionSettings === 0)) {
-			return true;
+			return false;
 		}
-		return (this.projectService.project.connectionSettings === this.DIRECT_ACCESS);
+		return (this.projectService.project.connectionSettings === this.NO_USER_PASSWORD_ACCESS);
+	}
+
+	/**
+	 * Did the user select the direct access connection settings (user/password).
+	 */
+	public userPasswordAccess() {
+		if (!this.projectService.project) {
+			return false;
+		}
+
+		// No choice have been made yet. We are the 2 pannels.
+		if ((typeof this.projectService.project.connectionSettings === 'undefined') || (this.projectService.project.connectionSettings === 0)) {
+			return false;
+		}
+		return (this.projectService.project.connectionSettings === this.USER_PASSWORD_ACCESS);
 	}
 
 	/**
 	 * Did the user select the undirect access. Indicating a remote file containing the connection settings.
 	 */
-	public undirectAccess() {
+	public remoteFileAccess() {
 		if (!this.projectService.project) {
-			return true;
+			return false;
 		}
 		// No choice have been made yet. We are the 2 pannels.
 		if ((typeof this.projectService.project.connectionSettings === 'undefined') || (this.projectService.project.connectionSettings === 0)) {
-			return true;
+			return false;
 		}
 		return (this.projectService.project.connectionSettings === this.REMOTE_FILE_ACCESS);
 	}

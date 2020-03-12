@@ -1319,12 +1319,25 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	@Override
 	public boolean testConnection(Project project) {
 		try {
-			ConnectionSettings settings = connectionSettings(project);
-			URIish uri = new URIish( project.getUrlRepository() );
-			Transport transport = Transport.open( uri );
-			transport.setCredentialsProvider(
-					new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()));
-			transport.openFetch();
+			
+			switch (project.getConnectionSettings()) {
+			case Global.USER_PASSWORD_ACCESS:
+			case Global.REMOTE_FILE_ACCESS: {
+					ConnectionSettings settings = connectionSettings(project);
+					URIish uri = new URIish(project.getUrlRepository());
+					Transport transport = Transport.open(uri);
+					transport.setCredentialsProvider(
+							new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()));
+					transport.openFetch();
+				}
+				break;
+			case Global.NO_USER_PASSWORD_ACCESS: {
+					URIish uri = new URIish(project.getUrlRepository());
+					Transport transport = Transport.open(uri);
+					transport.openFetch();
+				}
+				break;				
+			}
 			return true;
 		} catch (final Exception e) {
 			if (log.isDebugEnabled()) {

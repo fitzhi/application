@@ -17,6 +17,11 @@ div.connection {
     margin-bottom: 5px;
 }
 
+label.labelConnection {
+    margin-top: 5px;
+    margin-bottom: 0px;
+}
+
 span.welcome {
     font-size: 26px;
     font-weight: 500;
@@ -36,3 +41,4 @@ label.warning-text {
     font-size: 12px;
     width: 100%;
 }
+

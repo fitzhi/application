@@ -1,6 +1,6 @@
 package com.fitzhi.controller;
 
-import static com.fitzhi.Global.DIRECT_ACCESS;
+import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -55,7 +55,7 @@ public class ProjectControllerDoNotTransportPasswordTest {
 	public void before() throws SkillerException {
 		Project p = new Project(ID_PROJECT, "testingProject");
 		p.setPassword("password");
-		p.setConnectionSettings(DIRECT_ACCESS);
+		p.setConnectionSettings(USER_PASSWORD_ACCESS);
 		projectHandler.addNewProject(p);
 	}
 	

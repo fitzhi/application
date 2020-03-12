@@ -3,14 +3,12 @@
 }
 
 div.connection_settings {
-	border-width:0,1em;
- 	border-style:solid;
-	border-color:lightgrey;
-	padding: 1em;
+	background-color:whitesmoke;
 }
 
 div.buttons_toggle {
 	padding: 1em;
+	margin-right: 5px;
 }
 
 .lab_and_row_repository {
@@ -86,8 +84,21 @@ div.insideField {
 }
 
 div.globalBadge {
-	margin-left: 0px;
 	margin-right: 0px;
 	padding-left: 10px;
 	padding-right: 10px;
+}
+
+div.user-password {
+	margin-left: 30px;
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+
+div.label-user-password {
+	padding-right: 0;
+}
+
+label.label-user-password {
+	margin-bottom: 0px;
 }

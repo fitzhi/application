@@ -52,54 +52,86 @@
 			<div class="row">
 				<div class="col-1"></div>
 				<div class="col-11" class="buttons_toggle">
-					<label for="connection_settings">Version control connection settings : &nbsp;&nbsp;</label>
+					<label for="connection_settings">&nbsp;Version control connection settings : &nbsp;&nbsp;</label>
 					<mat-button-toggle-group #group="matButtonToggleGroup" name="connection_settings"
 						[value]="connection_settings" (change)="onConnectionSettingsChange(group.value)"
 						style="padding:0.1em;">
-						<mat-button-toggle value="1">Direct User/Password</mat-button-toggle>
-						<mat-button-toggle value="2">Using a remote File</mat-button-toggle>
+						<mat-button-toggle value="1">User/Password</mat-button-toggle>
+						<mat-button-toggle value="2">Remote File</mat-button-toggle>
+						<mat-button-toggle value="3">Public</mat-button-toggle>
 					</mat-button-toggle-group>
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row" *ngIf="noUserPasswordAccess()">
 				<div class="col-1"></div>
-				<div class="col-11 connection_settings" [hidden]="undirectAccess()">
-					Direct settings : <br />
+				<div class="col-11 connection_settings">
+					No User/Password settings : <br />
+					<div class="explanation_access">
+						You just need to fill the repository URL. 
+						No authentication information is required inside Fitzhì.  
+						<ul>
+							<li>Either your repository is public (from the backend host)</li>
+							<li>Or a public/private key pair has been setup with your GIT repository</li>
+						</ul>
+					</div>
+					<div class="d-flex  align-items-center flex-row">
+						<label for="urlRepository1">Repository&nbsp;&nbsp;</label>
+						<input type="text" class="form-control" id="urlRepository1" name="urlRepository1"
+							placeholder="Repository URL" value="" formControlName="urlRepository1" />
+					</div>
+					<br/>
+				</div>
+			</div>
+
+			<div class="row" *ngIf="userPasswordAccess()">
+				<div class="col-1"></div>
+				<div class="col-11 connection_settings">
+					Direct User/Password settings : <br />
 					<div class="explanation_access">
 						You can update the version control url and the couple of user/password required for
 						connection.<br />
 						Be Aware that all these informations will be updated on the record of this project, and later on
 						the file system.
 					</div>
-					<div class="d-flex  align-items-center flex-row lab_and_row_repository">
+					<div class="d-flex  align-items-center flex-row">
 						<label for="urlRepository1">Repository&nbsp;&nbsp;</label>
 						<input type="text" class="form-control" id="urlRepository1" name="urlRepository1"
 							placeholder="Repository URL" value="" formControlName="urlRepository1" />
 					</div>
 
-					<div class="d-flex align-items-center flex-row lab_and_row_user_password">
-						<label for="user">Username&nbsp;:&nbsp;</label>
-						<input type="text" class="form-control" id="username" name="username" placeholder="Username"
-							value="" formControlName="username" />
-					</div>
+					<div class="user-password col-9">
+						<div class="d-flex align-items-center flex-row lab_and_row_user_password">
+							<div class="col-3">
+								<label for="user" class="label-user-password">Username : </label>
+							</div>
+							<div class="col-6">
+								<input type="text" class="form-control" id="username" name="username" placeholder="Username"
+									value="" formControlName="username" />
+							</div>
+						</div>
 
-					<div class="d-flex align-items-center flex-row lab_and_row_user_password">
-						<label for="urlRepository">Password&nbsp;:&nbsp;</label>
-						<input type="password" class="form-control" id="password" name="password"
-							placeholder="Repository URL" value="" autocomplete="off" formControlName="password" />
+						<div class="d-flex align-items-center flex-row lab_and_row_user_password">
+							<div class="col-3">
+								<label for="urlRepository" class="label-user-password">Password : </label>
+							</div>
+							<div class="col-6">
+								<input type="password" class="form-control" id="password" name="password"
+									placeholder="Repository URL" value="" autocomplete="off" formControlName="password" />
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row" *ngIf="remoteFileAccess()">
 				<div class="col-1"></div>
-				<div class="connection_settings col-11" [hidden]="directAccess()">
+				<div class="connection_settings col-11">
 					Indirect settings : <br />
 					<div class="explanation_access">
 						You can avoid to store the <u>highly critical</u> user/password couple of your version control
 						system on each <strong>Project</strong> record, by setting the filename of a property file
-						installed on the remote server.<br />
+						installed on the remote server <i>Even if the password will be encrypted.</i>.<br />
 						This file has to be installed in the directory customized behind the global setting
 						<code>versionControl.ConnectionSettings</code>.<br />
 						Each of those files must contain 2 properties : <br />
