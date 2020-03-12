@@ -18,7 +18,7 @@ export class ProjectStaffService {
 	constructor() { }
 
 	public dumpContributors(): void {
-		console.groupCollapsed('Project conributors retrieved');
+		console.groupCollapsed('Project contributors retrieved');
 		console.log(...this.contributors);
 		console.groupEnd();
 	}
