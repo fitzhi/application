@@ -586,25 +586,21 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public void updateSkills(Project project, List<CommitHistory> entries) {
-		try {
+	public void updateSkills(Project project, List<CommitHistory> entries) throws SkillerException {
 			
-			Set<Skill> detectedSkills = this.skillHandler.extractSkills(project.getLocationRepository(), entries);
-			
-			if (log.isDebugEnabled()) {
-				log.debug(String.format("detected skills for project %s", project.getName()));
-				detectedSkills.stream().map(Skill::getTitle).forEach(log::debug);
-			}
-			
-			// We filter the skill that are not already declared inside this project.
-			detectedSkills
-				.stream()
-				.filter(skill -> !project.getSkills().contains(skill))
-				.forEach(skill -> this.addSkill(project, skill));
-
-		} catch (SkillerException e) {
-			e.printStackTrace();
+		Set<Skill> detectedSkills = this.skillHandler.extractSkills(project.getLocationRepository(), entries);
+		
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("detected skills for project %s", project.getName()));
+			detectedSkills.stream().map(Skill::getTitle).forEach(log::debug);
 		}
+		
+		// We filter the skill that are not already declared inside this project.
+		detectedSkills
+			.stream()
+			.filter(skill -> !project.getSkills().contains(skill))
+			.forEach(skill -> this.addSkill(project, skill));
+
 	}
 
 	

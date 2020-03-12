@@ -47,13 +47,7 @@
  	<root level="INFO">
 		<appender-ref ref="Console" />
 	</root>
-
-	<logger name="com.fitzhi.source.crawler.git" additivity="false">
-		<level value="DEBUG" />
-		<appender-ref ref="Console" />
-	</logger>
-
-	<logger name="com.fitzhi.bean.impl" additivity="false">
+	<logger name="com.fitzhi.bean.impl.SkillHandlerImpl" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="Console" />
 	</logger>

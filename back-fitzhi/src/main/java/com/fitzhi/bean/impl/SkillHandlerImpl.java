@@ -187,17 +187,22 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	 * @throws SkillerException exception thrown if any problem occurs (most probably an IOException)
 	 */
 	private boolean checkPackageJsonPattern(String rootPath, String sourcePath, String dependency) throws SkillerException {
-		
-		if (sourcePath.indexOf("package.json") == -1) {
-			return false;
-		}
-		
-		File file = new File(rootPath+sourcePath);
-		try (FileReader reader = new FileReader(file)) {
-			BufferedReader br = new BufferedReader(reader);
-			return br.lines().anyMatch(line -> (line.indexOf(dependency) != -1));
-		} catch (final Exception e) {
-			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, file.getAbsoluteFile()), e);
+	
+		try {
+			if (sourcePath.indexOf("package.json") == -1) {
+				return false;
+			}
+			
+			File file = new File(rootPath + "/" + sourcePath);
+			try (FileReader reader = new FileReader(file)) {
+				BufferedReader br = new BufferedReader(reader);
+				return br.lines().anyMatch(line -> (line.indexOf(dependency) != -1));
+			} catch (final Exception e) {
+				throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, file.getAbsoluteFile()), e);
+			}
+		} catch (final SkillerException e) {
+			e.printStackTrace();
+			throw e;
 		}
 	}	
 	

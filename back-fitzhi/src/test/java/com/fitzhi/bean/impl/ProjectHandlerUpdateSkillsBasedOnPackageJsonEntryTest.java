@@ -53,9 +53,9 @@ public class ProjectHandlerUpdateSkillsBasedOnPackageJsonEntryTest {
 		// We are adding code files with a Java file within it.
 		// We expect to retrieve the Java skill
 		//
-		CommitHistory java = new CommitHistory("/src/main/java/com/fitzhi/controller/PingController.java", 0); 
-		CommitHistory php = new CommitHistory("/src/main/resources/other-sources-for-testing-purpose/sample.php", 0); 
-		CommitHistory packageJson = new CommitHistory("/../front-fitzhi/package.json", 0); 
+		CommitHistory java = new CommitHistory("src/main/java/com/fitzhi/controller/PingController.java", 0); 
+		CommitHistory php = new CommitHistory("src/test/resources/other-sources-for-testing-purpose/sample.php", 0); 
+		CommitHistory packageJson = new CommitHistory("../front-fitzhi/package.json", 0); 
 		
 		repo = new ArrayList<CommitHistory>();
 		repo.add(java);
