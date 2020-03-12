@@ -45,7 +45,7 @@ public class JsonTest extends TestCase {
 		Gson g = new Gson();
 		String detectors = g.toJson(
 					SkillDetectorType.getDetectorTypes());
-		Assert.assertEquals("{\"0\":\"Filename filter pattern\",\"1\":\"Dependency detection in the package.json file\"}", detectors);
+		Assert.assertEquals("{\"0\":\"Filename filter pattern\",\"1\":\"Dependency detection in the package.json file\",\"2\":\"Dependency detection in the pom.xml file\"}", detectors);
 	}
 		
 }

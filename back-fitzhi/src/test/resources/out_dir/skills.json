@@ -18,5 +18,13 @@
             "detectionType": "1",
             "pattern": "\"@angular/core\""
         }
+	},
+	"4": {
+		"id": 4,
+		"title": "Spring core",
+        "detectionTemplate": {
+            "detectionType": "2",
+            "pattern": "<artifactId>spring-core</artifactId>"
+        }
 	}
 }

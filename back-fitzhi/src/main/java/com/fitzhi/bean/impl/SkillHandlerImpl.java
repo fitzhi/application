@@ -11,9 +11,7 @@ import static com.fitzhi.Error.MESSAGE_SKILL_NOFOUND;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.lang.reflect.Type;
 import java.text.MessageFormat;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -29,12 +27,10 @@ import org.springframework.stereotype.Component;
 import com.fitzhi.SkillerRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.SkillHandler;
-import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SkillDetectorType;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.exception.SkillerException;
-import com.google.gson.reflect.TypeToken;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -162,7 +158,9 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		case FILENAME_DETECTOR_TYPE:
 			return checkFilenamePattern(sourcePath, skill.getDetectionTemplate().getPattern());
 		case PACKAGE_JSON_DETECTOR_TYPE:
-			return checkPackageJsonPattern(rootPath, sourcePath, skill.getDetectionTemplate().getPattern());
+			return checkFilePattern("package.json", rootPath, sourcePath, skill.getDetectionTemplate().getPattern());
+		case POM_XML_DETECTOR_TYPE:
+			return checkFilePattern("pom.xml", rootPath, sourcePath, skill.getDetectionTemplate().getPattern());
 		}
 		throw new SkillerRuntimeException("Should not pass here!");
 	}
@@ -179,17 +177,18 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}	
 
 	/**
-	 * Check if the given source pathname verifies the given pattern
+	 * Check if the given source pathname verifies the given pattern.
+	 * @param filenameDependencies Marker filename for dependencies (it might be {@code package.json}, or {@code pom.xml})
 	 * @param rootPath the rootPath where the repository has been cloned
 	 * @param sourcePath the source pathname
 	 * @param dependency the pattern to be verified
 	 * @return {@code true} if this skill is detected, {@code false} otherwise
 	 * @throws SkillerException exception thrown if any problem occurs (most probably an IOException)
 	 */
-	private boolean checkPackageJsonPattern(String rootPath, String sourcePath, String dependency) throws SkillerException {
+	private boolean checkFilePattern(String filenameDependencies, String rootPath, String sourcePath, String dependency) throws SkillerException {
 	
 		try {
-			if (sourcePath.indexOf("package.json") == -1) {
+			if (sourcePath.indexOf(filenameDependencies) == -1) {
 				return false;
 			}
 			

@@ -17,7 +17,11 @@
     },
     "3": {
         "id": 3,
-        "title": "Spring"
+        "title": "Spring core",
+        "detectionTemplate": {
+            "detectionType": "2",
+            "pattern": "<artifactId>spring-core</artifactId>"
+        }
     },
     "4": {
         "id": 4,
@@ -97,10 +101,38 @@
     },
     "18": {
         "id": 18,
-        "title": "Angular"
+        "title": "Angular",
+        "detectionTemplate": {
+            "detectionType": "1",
+            "pattern": "@angular/core"
+        }
     },
     "19": {
         "id": 19,
+        "title": "React",
+        "detectionTemplate": {
+            "detectionType": "1",
+            "pattern": "\"react\":"
+        }
+    },
+    "20": {
+        "id": 20,
         "title": "Hadoop"
+    },
+    "21": {
+        "id": 21,
+        "title": "Maven",
+        "detectionTemplate": {
+            "detectionType": "0",
+            "pattern": "pom.xml$"
+        }
+    },
+    "22": {
+        "id": 22,
+        "title": "Spring boot",
+        "detectionTemplate": {
+            "detectionType": "2",
+            "pattern": "<artifactId>spring-boot</artifactId>"
+        }
     }
 }
