@@ -8,6 +8,10 @@ import static com.fitzhi.Error.CODE_SONAR_KEY_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_SONAR_KEY_NOFOUND;
 
+import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
+import static com.fitzhi.Global.REMOTE_FILE_ACCESS;
+import static com.fitzhi.Global.NO_USER_PASSWORD_ACCESS;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -20,6 +24,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fitzhi.Global;
 import com.fitzhi.SkillerRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
@@ -192,8 +197,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			
 			savedProject.setConnectionSettings(project.getConnectionSettings());
 			switch (project.getConnectionSettings()) {
-				case 1:
-					savedProject.setConnectionSettings(1);
+				case USER_PASSWORD_ACCESS:
+					savedProject.setConnectionSettings(USER_PASSWORD_ACCESS);
 					savedProject.setUrlRepository(project.getUrlRepository());
 					savedProject.setUsername(project.getUsername());
 					if (project.getPassword() != null) {
@@ -202,8 +207,15 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 					}
 					savedProject.setConnectionSettingsFile(null);
 					break;
-				case 2:
-					savedProject.setConnectionSettings(2);
+				case REMOTE_FILE_ACCESS:
+					savedProject.setConnectionSettings(REMOTE_FILE_ACCESS);
+					savedProject.setUrlRepository(project.getUrlRepository());
+					savedProject.setUsername(null);
+					savedProject.setPassword(null);
+					savedProject.setConnectionSettingsFile(project.getConnectionSettingsFile());
+					break;
+				case NO_USER_PASSWORD_ACCESS:
+					savedProject.setConnectionSettings(NO_USER_PASSWORD_ACCESS);
 					savedProject.setUrlRepository(project.getUrlRepository());
 					savedProject.setUsername(null);
 					savedProject.setPassword(null);

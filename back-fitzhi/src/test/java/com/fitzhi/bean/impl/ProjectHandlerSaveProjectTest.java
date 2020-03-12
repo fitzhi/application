@@ -12,6 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
+import static com.fitzhi.Global.REMOTE_FILE_ACCESS;
+import static com.fitzhi.Global.NO_USER_PASSWORD_ACCESS;
+
+
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.SkillerException;
@@ -50,13 +55,13 @@ public class ProjectHandlerSaveProjectTest {
 	public void testUsernamePassword() throws SkillerException {
 
 		Project project = projectHandler.get(1789);
-		project.setConnectionSettings(1);
+		project.setConnectionSettings(USER_PASSWORD_ACCESS);
 		project.setUsername("user_nope");
 		project.setPassword("pass_nope");
 		
 		project = new Project (1789, "French revolution");
 		project.setUrlSonarServer("https://url.ofASonarServer");
-		project.setConnectionSettings(1);
+		project.setConnectionSettings(USER_PASSWORD_ACCESS);
 		project.setUsername("frvidal");
 		project.setPassword("mypass");
 
@@ -64,7 +69,7 @@ public class ProjectHandlerSaveProjectTest {
 		project = projectHandler.get(1789);
 		Assert.assertTrue("French revolution".equals(project.getName()));
 		Assert.assertEquals("https://url.ofASonarServer", project.getUrlSonarServer());
-		Assert.assertEquals(1, project.getConnectionSettings());
+		Assert.assertEquals(USER_PASSWORD_ACCESS, project.getConnectionSettings());
 		Assert.assertEquals("frvidal", project.getUsername());
 		Assert.assertNotNull(project.getPassword());
 		Assert.assertNull(project.getConnectionSettingsFile());
@@ -74,21 +79,19 @@ public class ProjectHandlerSaveProjectTest {
 	public void testConnectionSettingsBackTo0() throws SkillerException {
 
 		Project project = projectHandler.get(1789);
-		project.setConnectionSettings(1);
+		project.setConnectionSettings(USER_PASSWORD_ACCESS);
+		project.setUrlSonarServer("https://url.ofASonarServer");
 		project.setUsername("user_nope");
 		project.setPassword("pass_nope");
 		
 		project = new Project (1789, "French revolution");
-		project.setUrlSonarServer("https://url.ofASonarServer");
 		project.setConnectionSettings(0);
-		project.setUsername("frvidal");
-		project.setPassword("mypass");
 
 		projectHandler.saveProject(project);
 		project = projectHandler.get(1789);
 		Assert.assertTrue("French revolution".equals(project.getName()));
-		Assert.assertEquals("https://url.ofASonarServer", project.getUrlSonarServer());
 		Assert.assertEquals(0, project.getConnectionSettings());
+		Assert.assertNull(project.getUrlSonarServer());
 		Assert.assertNull(project.getUsername());
 		Assert.assertNull(project.getPassword());
 		Assert.assertNull(project.getConnectionSettingsFile());
@@ -102,7 +105,7 @@ public class ProjectHandlerSaveProjectTest {
 		project.setPassword("pass_nope");
 		
 		project = new Project (1789, "French revolution");
-		project.setConnectionSettings(2);
+		project.setConnectionSettings(REMOTE_FILE_ACCESS);
 		project.setUsername("frvidal");
 		project.setPassword("");
 		project.setConnectionSettingsFile("myfile");
@@ -110,10 +113,28 @@ public class ProjectHandlerSaveProjectTest {
 		projectHandler.saveProject(project);
 		project = projectHandler.get(1789);
 		Assert.assertTrue("French revolution".equals(project.getName()));
-		Assert.assertEquals(2, project.getConnectionSettings());
+		Assert.assertEquals(REMOTE_FILE_ACCESS, project.getConnectionSettings());
 		Assert.assertNull(project.getUsername());
 		Assert.assertNull(project.getPassword());
 		Assert.assertEquals("myfile", project.getConnectionSettingsFile());
+	}	
+
+	@Test
+	public void testConnectionSettingsPublic() throws SkillerException {
+		Project project = projectHandler.get(1789);
+		project.setConnectionSettings(1);
+		project.setUsername("user_nope");
+		project.setPassword("pass_nope");
+		
+		project = new Project (1789, "French revolution");
+		project.setConnectionSettings(NO_USER_PASSWORD_ACCESS);
+
+		projectHandler.saveProject(project);
+		project = projectHandler.get(1789);
+		Assert.assertTrue("French revolution".equals(project.getName()));
+		Assert.assertEquals(NO_USER_PASSWORD_ACCESS, project.getConnectionSettings());
+		Assert.assertNull(project.getUsername());
+		Assert.assertNull(project.getPassword());
 	}	
 	
 	@After
