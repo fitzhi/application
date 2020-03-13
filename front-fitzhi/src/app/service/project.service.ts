@@ -362,9 +362,8 @@ export class ProjectService extends InternalService {
 	 * If the given project identifier is equal to -1, this function will return an empty observable.
 	 * @param idProject project identifier
 	 */
-	contributors(idProject: number): Observable<ContributorsDTO> {
+	contributors$(idProject: number): Observable<ContributorsDTO> {
 
-		console.log ('nope');
 		if (idProject === -1) {
 			return EMPTY;
 		}

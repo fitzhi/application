@@ -17,16 +17,6 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="com.fitzhi.source.crawler.git" additivity="false">
-		<level value="WARN" />
-		<appender-ref ref="STDOUT" />
-	</logger>
-
-	<logger name="com.fitzhi.source.crawler.git" additivity="false">
-		<level value="DEBUG" />
-		<appender-ref ref="STDOUT" />
-	</logger>
-
 
 
 </configuration>

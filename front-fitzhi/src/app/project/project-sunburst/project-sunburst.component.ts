@@ -312,8 +312,13 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 						}, 0);
 					}
 				}
-			}));
+		}));
+	}
 
+	/**
+     * After creation treatment.
+     */
+	ngAfterViewInit() {
 		this.subscriptions.add(
 			this.cinematicService.tabProjectActivated$.subscribe(
 				index => {
@@ -334,7 +339,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					}
 				}
 			));
-
 	}
 
 	/**
@@ -431,9 +435,10 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 * Load the contributors of the project
 	 */
 	loadContributors$(): Observable<boolean> {
-		return this.projectService.contributors(this.projectService.project.id).pipe(
+		return this.projectService.contributors$(this.projectService.project.id).pipe(
 			take(1),
 			switchMap((contributorsDTO: ContributorsDTO) => {
+				this.projectStaffService.contributors = [];
 				this.projectStaffService.contributors.push(...contributorsDTO.contributors);
 				if (traceOn()) {
 					this.projectStaffService.dumpContributors();
@@ -468,6 +473,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 		this.shouldReload = false;
 		this.loadData$()
+			.pipe(take(1))
 			.subscribe(
 				response => {
 					switch (response.code) {
@@ -653,12 +659,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				return 'No commit here!';
 			}
 		});
-	}
-
-	/**
-     * After creation treatment.
-     */
-	ngAfterViewInit() {
 	}
 
 	/*

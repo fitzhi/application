@@ -91,7 +91,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	 * Load the contributors for the current project.
 	 */
 	loadContributors() {
-		this.projectService.contributors((this.projectService.project) ? this.projectService.project.id : -1)
+		this.projectService.contributors$((this.projectService.project) ? this.projectService.project.id : -1)
 			.pipe(take(1))
 			.subscribe({
 				next: contributorsDTO => this.manageDataSource(contributorsDTO),
@@ -118,8 +118,6 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	 * @param contributorsDTO container of contributors retrieved from the back-end.
 	 */
 	manageDataSource(contributorsDTO: ContributorsDTO) {
-
-		console.log (contributorsDTO);
 
 		if (!this.dataSource) {
 			this.dataSource = new MatTableDataSource(contributorsDTO.contributors);
