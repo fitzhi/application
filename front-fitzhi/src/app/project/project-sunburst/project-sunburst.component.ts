@@ -265,6 +265,11 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	public PreviewContext =  PreviewContext;
 
+	/**
+	 * The listener has to be started.
+	 */
+	public listen$ = new Subject<boolean>();
+
 	constructor(
 		private cinematicService: CinematicService,
 		private route: ActivatedRoute,
@@ -458,6 +463,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	loadDataChart(silentMode = false) {
 
 		this.idPanelSelected = this.SUNBURST;
+
+		this.listen$.next(true);
 
 		if ((!this.projectService.project) || (!this.projectService.project.id)) {
 			this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);

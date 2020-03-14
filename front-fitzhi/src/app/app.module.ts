@@ -109,6 +109,8 @@ import { PieDashboardComponent } from './welcome/pie-dashboard/pie-dashboard.com
 import { PieChartComponent } from './welcome/pie-dashboard/pie-chart/pie-chart.component';
 import { PieProjectsComponent } from './welcome/pie-dashboard/pie-projects/pie-projects.component';
 import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
+import { SSEWatcherComponent } from './project/project-sunburst/ssewatcher/ssewatcher.component';
+import { SseListenerService } from './service/sse-listener.service';
 
 @NgModule({
 	declarations: [
@@ -170,6 +172,7 @@ import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars
 		PieDashboardComponent,
 		PieChartComponent,
 		PieProjectsComponent,
+		SSEWatcherComponent,
 	],
 	entryComponents: [
 		StaffUploadCvComponent,
@@ -216,6 +219,7 @@ import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars
 		CinematicService,
 		StaffService,
 		ReferentialService,
+		SseListenerService,
 		AuthGuardService,
 		{
 			provide: HTTP_INTERCEPTORS,
