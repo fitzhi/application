@@ -100,20 +100,18 @@ public class ProjectTasksController {
 		}
 	}
 
-	ActivityLog actiLog = null;
-	
 	@GetMapping(value = "/stream/{operation}/{id}", produces= {MediaType.TEXT_EVENT_STREAM_VALUE})
 	public Flux<ActivityLog> emitTaskLog(@PathVariable("operation") String operation, @PathVariable("id") int idProject) {
 		// return this.logReport.currentLog(operation, PROJECT, idProject).log("com.fitzhi.controller", Level.DEBUG, SignalType.ON_NEXT);
 	    
 		// Simulate data streaming every 1 second.
         return Flux.interval(Duration.ofMillis(1000))
-        		.takeUntil(l -> ((actiLog != null) && actiLog.isComplete()))
         		.map(l -> {
-        			actiLog =  this.logReport.currentLog(operation, PROJECT, idProject);
+        			final ActivityLog actiLog =  this.logReport.currentLog(operation, PROJECT, idProject);
         			return actiLog;
         		})
+        		.takeUntil((ActivityLog actiLog) -> actiLog.isComplete())
         		.log();
 	}
-	
+
 }

@@ -60,7 +60,7 @@ export class SSEWatcherComponent extends BaseComponent implements OnInit, OnDest
 
 		const completeUrl = this.backendSetupService.url() + this.url + this.projectService.project.id;
 		if (traceOn()) {
-			console.log('starting to listen events from %s', completeUrl);
+			console.log('starting to listen events @ ' + this.url + this.projectService.project.id);
 		}
 		const eventSource = new EventSource(completeUrl);
 
@@ -117,7 +117,11 @@ export class SSEWatcherComponent extends BaseComponent implements OnInit, OnDest
 	 */
 	closeEventSource() {
 		if (this.eventSource) {
+			if (traceOn()) {
+				console.log('Ending to listen events @ ' + this.url + this.projectService.project.id);
+			}
 			this.eventSource.close();
+			this.eventSource = null;
 		}
 	}
 
