@@ -101,12 +101,6 @@
 						</section>
 					</mat-card-content>
 				</mat-card>
-				<div *ngIf="taskReportManagement.taskOk" 
-					class="taskReport taskReportOk">{{taskReportManagement.taskReport$ | async}}
-				</div>
-				<div *ngIf="!taskReportManagement.taskOk" 
-					class="taskReport taskReportError">{{taskReportManagement.taskReport$ | async}}
-				</div>
 				<app-ssewatcher [listenEventsFromServer$]="listenEventsFromServer$" url="/project/tasks/stream/dashboardGeneration/"></app-ssewatcher>
 			</div>
 			<div class="col-md-1"></div>

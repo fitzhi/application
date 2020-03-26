@@ -5,6 +5,8 @@ import { traceOn } from 'src/app/global';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { ActivityLog } from 'src/app/data/activity-log';
+import { registerLocaleData } from '@angular/common';
+import { MessageService } from 'src/app/message/message.service';
 
 /**
 * This component will listen the events from a given Server.
@@ -38,6 +40,7 @@ export class SSEWatcherComponent extends BaseComponent implements OnInit, OnDest
 
 	constructor(
 		private backendSetupService: BackendSetupService,
+		private messageService: MessageService,
 		private zone: NgZone,
 		private projectService: ProjectService) { super(); }
 
@@ -64,33 +67,67 @@ export class SSEWatcherComponent extends BaseComponent implements OnInit, OnDest
 		}
 		const eventSource = new EventSource(completeUrl);
 
-		eventSource.onmessage = (sse: MessageEvent) => {
-			const activityLog: ActivityLog = new ActivityLog(JSON.parse(sse.data));
-			// We need to execute the work INSIDE the Angular zone.
-			if (traceOn()) {
-				console.log('Event message : ', activityLog.message);
-			}
-			this.zone.run(() => this.event$.next(activityLog));
-		};
+		eventSource.onmessage = (event: MessageEvent) => this.handleEvent(event);
 
 		// from now, we chocke the error emitted by the eventSource
-		eventSource.onerror = err => {
-			if (traceOn()) {
-				console.error('Error emitted', err);
-			}
-		};
+		eventSource.onerror = (error: Event) => this.handleError(error);
 
 		return eventSource;
+	}
+
+	/**
+	 * Handle a nominal event received.
+	 * @param messageEvent the nominal **messageEvent**.
+	 */
+	handleEvent(messageEvent: MessageEvent) {
+		const activityLog: ActivityLog = new ActivityLog(JSON.parse(messageEvent.data));
+		// We need to execute the work INSIDE the Angular zone.
+		if (traceOn()) {
+			console.log('Event message : ', activityLog.message);
+		}
+		this.zone.run(() => {
+			if (activityLog.isKo()) {
+				this.messageService.error(activityLog.message);
+				if (activityLog.completeOnError) {
+					this.closeEventSource();
+				}
+			}
+			if (activityLog.isOk()) {
+				if (activityLog.complete) {
+					this.messageService.info(activityLog.message);
+					this.closeEventSource();
+				} else {
+					this.event$.next(activityLog);
+				}
+			}
+		});
+	}
+
+	/**
+	 * Handle an **ERROR** event received
+	 * @param error the **event** on ERROR received.
+	 */
+	handleError(error: Event) {
+		if (traceOn()) {
+			console.log('Error emitted', error);
+		}
+		this.closeEventSource();
+	}
+
+	/**
+	 * Close the EventSource.
+	 */
+	closeEventSource() {
+		if (this.eventSource) {
+			this.eventSource.close();
+		}
 	}
 
 	/**
 	* Calling the base class to unsubscribe all subscriptions.
 	*/
 	ngOnDestroy() {
-		if (this.eventSource) {
-			this.eventSource.close();
-		}
+		this.closeEventSource();
 		super.ngOnDestroy();
 	}
-
 }
