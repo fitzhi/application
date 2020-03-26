@@ -1,11 +1,8 @@
 package com.fitzhi.controller;
 
-import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -15,10 +12,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import javax.servlet.AsyncListener;
-
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,18 +20,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockAsyncContext;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.Task;
-import com.fitzhi.data.internal.TaskLog;
 import com.fitzhi.exception.SkillerException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -76,13 +66,22 @@ public class ProjectTaskControllerSSESendTest {
 			
 	private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
 	
+	StringWriter writer = new StringWriter();
+	
 	@Before
 	public void before() throws SkillerException {
 		Project p = new Project (ID_PROJECT, "Revolutionnary project");
 		projectHandler.addNewProject(p);
 		asyncTask.addTask("nopeOperation", "mockProject", ID_PROJECT);
-		asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my message");
+		asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my first message");
 		
+	    executorService.schedule(new Runnable() {
+	        @Override
+	        public void run() {
+				asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my second message");
+	        }
+	    }, 2, TimeUnit.SECONDS);
+
 	    executorService.schedule(new Runnable() {
 	        @Override
 	        public void run() {
@@ -93,28 +92,53 @@ public class ProjectTaskControllerSSESendTest {
 					e.printStackTrace();
 				}
 	        }
-	    }, 2, TimeUnit.SECONDS);
+	    }, 3, TimeUnit.SECONDS);
 		
 		
 	}
 
+	
+	
 	/**
 	 * Controller is sending data to a mock front.
 	 * @throws Exception
 	 */
 	@Test
 	@WithMockUser
-	public void testReadTaskNotFound() throws Exception {
-	
-		StringWriter writer = new StringWriter();
+	public void tesStreamTasksLog() throws Exception {
 		
-		mvc.perform(get("/api/project/tasks/stream/nopeOperation/1789").contentType(MediaType.ALL))
+		mvc.perform(get("/api/project/tasks/stream/nopeOperation/1789")
+			.contentType(MediaType.TEXT_EVENT_STREAM_VALUE)
+			.accept(MediaType.TEXT_EVENT_STREAM_VALUE))
 			.andDo(print())
+//			.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
         	.andExpect(status().isOk())
-        	.andExpect(request().asyncStarted())
-        	.andExpect(request().asyncResult(nullValue()))
-        	.andExpect(header().string("Content-Type", MediaType.TEXT_EVENT_STREAM_VALUE + ";charset=UTF-8"))
-        	.andDo(print(writer));
+        	.andExpect(request().asyncStarted());
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 	}
 	
 	

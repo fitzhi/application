@@ -6,6 +6,8 @@ package com.fitzhi.data.internal;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 
 /**
@@ -40,11 +42,13 @@ public @Data class Mission implements Serializable {
 	/**
 	 * Date of the first commit.
 	 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate firstCommit;
 
 	/**
 	 * Date of the latest commit.
 	 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	private LocalDate lastCommit;
 	
 	/**

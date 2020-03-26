@@ -1,3 +1,5 @@
-<div class="container-message">
-    <p>{{data$|async}}</p>
+<div *ngIf="(event$ | async); let evt; else loading">
+    <div *ngIf="evt.isOk()" class="taskReport taskReportOk">{{evt.message}}</div>
+    <div *ngIf="evt.isKo()" class="taskReport taskReportError">{{evt.message}}</div>
 </div>
+<ng-template #loading>Waiting...</ng-template>

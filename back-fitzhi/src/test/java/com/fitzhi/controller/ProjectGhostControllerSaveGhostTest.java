@@ -44,8 +44,6 @@ import com.google.gson.GsonBuilder;
 @AutoConfigureMockMvc
 public class ProjectGhostControllerSaveGhostTest {
 
-//	private final Logger logger = LoggerFactory.getLogger(ProjectGhostControllerTest.class.getCanonicalName());
-
 	/**
 	 * Initialization of the Google JSON parser.
 	 */
@@ -83,6 +81,7 @@ public class ProjectGhostControllerSaveGhostTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
 				.andReturn();
+		System.out.println(result.getResponse().getContentAsString());
 		Staff staff = gson.fromJson(result.getResponse().getContentAsString(), Staff.class);
 		//
 		// THIS PROJECT IS NOT ALREADY DECLARED FOR THIS STAFF MEMBER

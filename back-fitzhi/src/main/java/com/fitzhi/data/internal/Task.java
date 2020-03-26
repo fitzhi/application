@@ -1,22 +1,30 @@
 package com.fitzhi.data.internal;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import com.fitzhi.data.external.ActivityLog;
 
 import lombok.Data;
 
 /**
  * <p>
- * Each task instance is representing a technical task running asynchronously in the JVM.
+ * Each task instance is representing a technical task running asynchronously inside the Spring container.
  * </p>
  *
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
 
-public @Data class Task {
+public @Data class Task implements Serializable {
 	
+	/**
+	 * serialVersionUID for {@code serializable} purpose.
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/**
 	 * Maximum number of logs to keep in the history collection.
 	 */
@@ -88,15 +96,30 @@ public @Data class Task {
 		setComplete(true);
 		setCompleteOnError(!successfuly);
 		if (!this.activityLogs.isEmpty()) {
-			// We sort the logs saved for this task
-			this.activityLogs.sort(Comparator.comparing(TaskLog::getLogTime).reversed());
-			
+
 			// We affect the last log for this task
-			setLastBreath(activityLogs.get(0));
+			setLastBreath(latestLog());
 		
 			// We clear the log
 			activityLogs.clear();
 		}
 	}
 
+	/**
+	 * @return the latest log 
+	 */
+	//TODO the latest log has to be stored in the task container and not periodically computed.
+	TaskLog latestLog() {
+		this.activityLogs.sort(Comparator.comparing(TaskLog::getLogTime).reversed());
+		return activityLogs.get(0);
+	}
+	
+	/**
+	 * @return the latest log of this task in an {@link ActivityLog} format.
+	 */
+	public ActivityLog buildLastestLog() {
+		TaskLog log = latestLog();
+		ActivityLog activityLog = new ActivityLog(log.code, log.message, log.logTime, complete, completeOnError);
+		return activityLog;
+	}
 }

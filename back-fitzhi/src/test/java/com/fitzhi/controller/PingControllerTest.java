@@ -9,6 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.hamcrest.CoreMatchers;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,10 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import com.fitzhi.security.TokenLoader;
 
@@ -57,4 +60,18 @@ public class PingControllerTest {
 				.andExpect(content().string(CoreMatchers.containsString("ping")));
 	}
 
+	/**
+	 * The goal of this test is the serialization of LocalDate with Jackson.
+	 * @throws Exception
+	 */
+	@Test
+	public void pingSerializedDate() throws Exception {
+
+		this.mockMvc
+				.perform(get("/api/test/buildDate")
+				.header(HttpHeaders.AUTHORIZATION, "Bearer " + TokenLoader.obtainAccessMockToken(mockMvc)))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+				.andExpect(content().string("{\"localDate\":\"2020-03-16\"}"));
+	}
 }

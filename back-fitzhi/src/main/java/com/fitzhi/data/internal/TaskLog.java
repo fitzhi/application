@@ -18,7 +18,7 @@ public @Data class TaskLog {
 	long logTime;
 
 	/**
-	 * The error code.
+	 * The error code thrown by the treatment, or 0 if there is no error.
 	 */
 	int code;
 

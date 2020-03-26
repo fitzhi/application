@@ -1,5 +1,14 @@
-div.container-message {
-    width: 100%;
-    height: 50px;
-    background-color: yellow;
-}
+div.taskReport {
+    margin-top: 5px;
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+  }
+  
+  div.taskReportOk {
+    color: var(--color-selected);
+  }
+  
+  div.taskReportError {
+    color: var(--color-error);
+  }

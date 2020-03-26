@@ -110,7 +110,6 @@ import { PieChartComponent } from './welcome/pie-dashboard/pie-chart/pie-chart.c
 import { PieProjectsComponent } from './welcome/pie-dashboard/pie-projects/pie-projects.component';
 import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 import { SSEWatcherComponent } from './project/project-sunburst/ssewatcher/ssewatcher.component';
-import { SseListenerService } from './service/sse-listener.service';
 
 @NgModule({
 	declarations: [
@@ -219,7 +218,6 @@ import { SseListenerService } from './service/sse-listener.service';
 		CinematicService,
 		StaffService,
 		ReferentialService,
-		SseListenerService,
 		AuthGuardService,
 		{
 			provide: HTTP_INTERCEPTORS,

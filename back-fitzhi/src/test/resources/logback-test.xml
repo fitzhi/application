@@ -12,11 +12,19 @@
 		<appender-ref ref="STDOUT" />
 	</root>
 
+	<logger name="com.fitzhi.FitzhiWebMvcConfigurer" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
 	<logger name="com.fitzhi.controller" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-
+	<logger name="com.fitzhi.service.sse" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
 
 </configuration>

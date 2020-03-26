@@ -268,7 +268,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	/**
 	 * The listener has to be started.
 	 */
-	public listen$ = new Subject<boolean>();
+	public listenEventsFromServer$ = new BehaviorSubject<boolean>(false);
 
 	constructor(
 		private cinematicService: CinematicService,
@@ -464,13 +464,14 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 		this.idPanelSelected = this.SUNBURST;
 
-		this.listen$.next(true);
-
 		if ((!this.projectService.project) || (!this.projectService.project.id)) {
 			this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
 			return;
 		} else {
+			// We display the waiting panel
 			this.setActiveContext (PreviewContext.SUNBURST_WAITING);
+			// We starting to listen the events produced by the server
+			this.listenEventsFromServer$.next(true);
 		}
 
 		if (!silentMode) {

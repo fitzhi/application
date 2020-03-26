@@ -67,6 +67,7 @@ public class AsyncTaskImpl implements AsyncTask {
 	@Override
 	public Task getTask(String operation, String title, int id) {
 		Task t = new Task(operation, title, id);
+		
 		return tasks.get(genKey(t));
 	}
 	

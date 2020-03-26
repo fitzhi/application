@@ -9,31 +9,28 @@ import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
 import static com.fitzhi.Global.PROJECT;
 
 import java.text.MessageFormat;
-import java.time.LocalTime;
-import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicReference;
+import java.time.Duration;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
-import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.SseEventBuilder;
 
 import com.fitzhi.Global;
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.data.internal.Staff;
+import com.fitzhi.data.external.ActivityLog;
 import com.fitzhi.data.internal.Task;
 import com.fitzhi.exception.SkillerException;
+import com.fitzhi.service.sse.ReactiveLogReport;
 
 import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
 
 /**
  * 
@@ -58,6 +55,9 @@ public class ProjectTasksController {
 	 */
 	@Autowired
 	AsyncTask tasks;
+	
+	@Autowired
+	ReactiveLogReport logReport;
 	
 	/**
 	 * Read, and return the active task for a project
@@ -100,34 +100,20 @@ public class ProjectTasksController {
 		}
 	}
 
-	@GetMapping("/stream/{operation}/{id}")
-	public SseEmitter emitTaskLog(@PathVariable("operation") String operation, @PathVariable("id") int idProject) {
-		AtomicReference<Boolean> complete = new AtomicReference<>(false);
-	    SseEmitter emitter = new SseEmitter();
-	    ExecutorService sseMvcExecutor = Executors.newFixedThreadPool(10);
-	    sseMvcExecutor.execute(() -> {
-	        try {
-	        	if (log.isDebugEnabled()) {
-	        		log.debug("Start streaming tasks report for project %d", idProject);
-	        	}
-	            for (int i = 0; !complete.get(); i++) {
-	    			Task task = tasks.getTask(operation, PROJECT, idProject);
-	                SseEventBuilder event = SseEmitter.event()
-	                  .data(task)
-	                  .id(String.valueOf(i))
-	                  .name("task-p-" + idProject);
-	                emitter.send(event);
-	                Thread.sleep(1000);
-	                complete.set(task.isComplete());
-	            }
-	        	if (log.isDebugEnabled()) {
-	        		log.debug("Completing the streaming tasks report for project %d", idProject);
-	        	}
-	        	emitter.complete();
-	        } catch (Exception ex) {
-	            emitter.completeWithError(ex);
-	        }
-	    });
-	    return emitter;
-	}	
+	ActivityLog actiLog = null;
+	
+	@GetMapping(value = "/stream/{operation}/{id}", produces= {MediaType.TEXT_EVENT_STREAM_VALUE})
+	public Flux<ActivityLog> emitTaskLog(@PathVariable("operation") String operation, @PathVariable("id") int idProject) {
+		// return this.logReport.currentLog(operation, PROJECT, idProject).log("com.fitzhi.controller", Level.DEBUG, SignalType.ON_NEXT);
+	    
+		// Simulate data streaming every 1 second.
+        return Flux.interval(Duration.ofMillis(1000))
+        		.takeUntil(l -> ((actiLog != null) && actiLog.isComplete()))
+        		.map(l -> {
+        			actiLog =  this.logReport.currentLog(operation, PROJECT, idProject);
+        			return actiLog;
+        		})
+        		.log();
+	}
+	
 }

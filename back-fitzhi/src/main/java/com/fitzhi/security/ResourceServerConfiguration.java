@@ -33,13 +33,17 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				"/api/staff/**", 
 				"/api/skill/**", 
 				"/api/project/**", 
+				"/api/project/tasks/stream/**", 
 				"/api/project/audit/**", 
 				"/api/project/sonar/**", 
 				"/api/test/post_a_Test",
 				"/api/admin/settings",	
 
 				// We allow the the springfox-swagger url to be accessible
-				"/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**",
+				"/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**", 
+				
+				// Server side event streaming is allowed
+				"/api/project/tasks/stream/**",
 				
 				"/api/admin/isVeryFirstConnection", 
 				"/api/admin/saveVeryFirstConnection", 
@@ -52,6 +56,12 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 			http.authorizeRequests().antMatchers(
 				// We allow the the springfox-swagger url to be accessible
 				"/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**",
+
+				// Server side event streaming is allowed
+				"/api/project/tasks/stream/**",
+
+				//TODO REMOVE
+				"/api/project/tasks/**",
 					
 				"/api/admin/isVeryFirstConnection", 
 				"/api/admin/saveVeryFirstConnection", 
