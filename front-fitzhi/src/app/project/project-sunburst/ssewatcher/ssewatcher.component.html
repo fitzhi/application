@@ -1,5 +1,15 @@
 <div *ngIf="(event$ | async); let evt; else loading">
     <div *ngIf="evt.isOk()" class="taskReport taskReportOk">{{evt.message}}</div>
+    <div *ngIf="evt.isCompleteOk()" class="reloadAfterCompletion">
+        <div class="inner-reloadAfterCompletion">
+            <button
+                class="btn btn-outline-secondary reloadAfterCompletion rounded"
+                (click)="refreshChart()">
+                <i class="fas fa-chart-pie font-awesome-settings"></i>
+            </button>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;Reload</span>
+        </div>
+    </div>
     <div *ngIf="evt.isKo()" class="taskReport taskReportError">{{evt.message}}</div>
 </div>
 <ng-template #loading>Waiting...</ng-template>

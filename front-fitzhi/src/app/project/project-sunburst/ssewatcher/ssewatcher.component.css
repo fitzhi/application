@@ -3,12 +3,32 @@ div.taskReport {
     text-align: center;
     font-size: 22px;
     font-weight: 600;
-  }
+}
   
-  div.taskReportOk {
+div.taskReportOk {
     color: var(--color-selected);
-  }
+}
   
-  div.taskReportError {
+div.taskReportError {
     color: var(--color-error);
-  }
+}
+
+div.reloadAfterCompletion {
+    display: flex;
+    justify-content: center;
+}
+
+div.inner-reloadAfterCompletion {
+    display: flex;
+    display:flex;
+    flex-direction:column;
+    justify-content: center;
+}
+
+button.reloadAfterCompletion {
+    font-size: 64px;
+}
+
+span.reloadAfterCompletion {
+    font-size: 12px;
+}

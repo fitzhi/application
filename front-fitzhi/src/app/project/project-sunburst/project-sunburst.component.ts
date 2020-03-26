@@ -24,6 +24,7 @@ import { TaskLog } from 'src/app/data/task-log';
 import { MatTableDataSource } from '@angular/material/table';
 import { ContributorsDTO } from 'src/app/data/external/contributorsDTO';
 import { traceOn } from 'src/app/global';
+import { SunburstCinematicService } from './service/sunburst-cinematic.service';
 
 
 //
@@ -143,13 +144,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	public PreviewContext =  PreviewContext;
 
-	/**
-	 * The listener has to be started.
-	 */
-	public listenEventsFromServer$ = new BehaviorSubject<boolean>(false);
-
 	constructor(
 		private cinematicService: CinematicService,
+		private sunburstCinematicService: SunburstCinematicService,
 		private route: ActivatedRoute,
 		private messageService: MessageService,
 		private projectStaffService: ProjectStaffService,
@@ -196,6 +193,17 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					}
 				}
 		}));
+
+		// The child in charge of listening the events can force the chart refresh.
+		this.subscriptions.add(
+			this.sunburstCinematicService.refreshChart$.subscribe({
+				next: forceRefresh => {
+					if (forceRefresh) {
+						this.show(this.SUNBURST);
+					}
+				}
+			})
+		);
 	}
 
 	/**
@@ -237,9 +245,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 * Refresh the Sunburst chart.
 	 */
 	refreshChart() {
-		setTimeout(() => { this.loadDataChart(true); }, 0);
+		setTimeout(() => { this.loadDataChart(); }, 0);
 	}
-
 
 	loadData$(): Observable<any> {
 		return this.loadContributors$().pipe(
@@ -276,9 +283,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	/**
      * Load the dashboard data in order to produce the sunburst chart.
-	 * @param silentMode set to `true` if we want a generation without the the tasks reporting panel, `false` otherwise.
      */
-	loadDataChart(silentMode = false) {
+	loadDataChart() {
 
 		this.idPanelSelected = this.SUNBURST;
 
@@ -289,7 +295,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			// We display the waiting panel
 			this.setActiveContext (PreviewContext.SUNBURST_WAITING);
 			// We starting to listen the events produced by the server
-			this.listenEventsFromServer$.next(true);
+			this.sunburstCinematicService.listenEventsFromServer$.next(true);
 		}
 
 		this.shouldReload = false;

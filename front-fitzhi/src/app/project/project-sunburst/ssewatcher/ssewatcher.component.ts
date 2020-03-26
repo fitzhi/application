@@ -7,6 +7,7 @@ import { ProjectService } from 'src/app/service/project.service';
 import { ActivityLog } from 'src/app/data/activity-log';
 import { registerLocaleData } from '@angular/common';
 import { MessageService } from 'src/app/message/message.service';
+import { SunburstCinematicService } from '../service/sunburst-cinematic.service';
 
 /**
 * This component will listen the events from a given Server.
@@ -24,11 +25,6 @@ export class SSEWatcherComponent extends BaseComponent implements OnInit, OnDest
 	@Input() url: string;
 
 	/**
-	 * This `observable` will emit a `TRUE` to start the listening of server side events.
-	 */
-	@Input() listenEventsFromServer$ = new Subject<boolean>();
-
-	/**
 	 * event$.
 	 */
 	private event$ = new Subject<ActivityLog>();
@@ -40,13 +36,14 @@ export class SSEWatcherComponent extends BaseComponent implements OnInit, OnDest
 
 	constructor(
 		private backendSetupService: BackendSetupService,
+		private sunburstCinematicService: SunburstCinematicService,
 		private messageService: MessageService,
 		private zone: NgZone,
 		private projectService: ProjectService) { super(); }
 
 	ngOnInit() {
 		this.subscriptions.add(
-			this.listenEventsFromServer$.subscribe({
+			this.sunburstCinematicService.listenEventsFromServer$.subscribe({
 				next: doneAndOk => {
 					if (doneAndOk) {
 						this.eventSource = this.listenServer();
@@ -94,6 +91,7 @@ export class SSEWatcherComponent extends BaseComponent implements OnInit, OnDest
 			}
 			if (activityLog.isOk()) {
 				if (activityLog.complete) {
+					this.event$.next(activityLog);
 					this.messageService.info(activityLog.message);
 					this.closeEventSource();
 				} else {
@@ -121,6 +119,13 @@ export class SSEWatcherComponent extends BaseComponent implements OnInit, OnDest
 		if (this.eventSource) {
 			this.eventSource.close();
 		}
+	}
+
+	/**
+	 * Refresh the Sunburst chart.
+	 */
+	refreshChart() {
+		this.sunburstCinematicService.refreshChart$.next(true);
 	}
 
 	/**
