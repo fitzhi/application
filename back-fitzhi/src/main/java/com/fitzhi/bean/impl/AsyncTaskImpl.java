@@ -36,11 +36,12 @@ public class AsyncTaskImpl implements AsyncTask {
 		Task t = new Task(operation, title, id);
 		
 		Task record = tasks.get(genKey(t));
-		if ((record != null) && !record.isComplete()) {
+		if ((record != null) && !record.isComplete() && !record.isCompleteOnError()) {
 			throw new SkillerException(CODE_MULTIPLE_TASK, MESSAGE_MULTIPLE_TASK);
 		}
 		
 		t.setComplete(false);
+		t.setCompleteOnError(false);
 		t.setLastBreath(null);
 		tasks.put(genKey(t), t);
 	}

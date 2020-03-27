@@ -100,17 +100,26 @@ public class ProjectTasksController {
 		}
 	}
 
+	/**
+	 * Emit distinct {@link ActivityLog} every second.
+	 * @param operation the current underlying operation
+	 * @param idProject the project identifier
+	 * @return a flux of {@link ActivityLog}
+	 */
 	@GetMapping(value = "/stream/{operation}/{id}", produces= {MediaType.TEXT_EVENT_STREAM_VALUE})
 	public Flux<ActivityLog> emitTaskLog(@PathVariable("operation") String operation, @PathVariable("id") int idProject) {
-		// return this.logReport.currentLog(operation, PROJECT, idProject).log("com.fitzhi.controller", Level.DEBUG, SignalType.ON_NEXT);
 	    
+		//
 		// Simulate data streaming every 1 second.
+		//
         return Flux.interval(Duration.ofMillis(1000))
         		.map(l -> {
         			final ActivityLog actiLog =  this.logReport.currentLog(operation, PROJECT, idProject);
         			return actiLog;
         		})
+        		.distinctUntilChanged()
         		.takeUntil((ActivityLog actiLog) -> actiLog.isComplete())
+        		.doOnComplete(() -> {this.tasks.removeTask(operation, PROJECT, idProject);})
         		.log();
 	}
 

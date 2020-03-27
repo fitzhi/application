@@ -10,7 +10,7 @@ import lombok.Data;
 
 /**
  * <p>
- * This class is used to inform the front of the progression of the treatment.
+ * This class is regularly passed to the front-end in order to inform of the progression of the treatment.
  * </p> 
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
@@ -117,7 +117,6 @@ public @Data class ActivityLog  {
 		return "ActivityLog [code=" + code + ", message=" + message + ", logTime=" + logTime + ", complete=" + complete
 				+ ", completeOnError=" + completeOnError + "]";
 	}
-
 
 	
 }
