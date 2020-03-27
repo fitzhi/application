@@ -7,7 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.StringWriter;
-import java.time.LocalDate;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -26,11 +25,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.SkillerException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * <p>
@@ -45,12 +41,6 @@ import com.google.gson.GsonBuilder;
 @AutoConfigureMockMvc
 public class ProjectTaskControllerSSESendTest {
 
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	Gson gson = new GsonBuilder()
-		      .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe()).create();
-
 	@Autowired
 	private MockMvc mvc;
 
@@ -60,6 +50,9 @@ public class ProjectTaskControllerSSESendTest {
 	@Autowired
 	AsyncTask asyncTask;
 	
+	/**
+	 * PROJECT IDENTIFIER
+	 */
 	final int ID_PROJECT = 1789;
 
 	private String MARK_END_OF_OPERATION = "end of operation";
@@ -80,7 +73,7 @@ public class ProjectTaskControllerSSESendTest {
 	        public void run() {
 				asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my second message");
 	        }
-	    }, 2, TimeUnit.SECONDS);
+	    }, 500, TimeUnit.MILLISECONDS);
 
 	    executorService.schedule(new Runnable() {
 	        @Override
@@ -92,8 +85,7 @@ public class ProjectTaskControllerSSESendTest {
 					e.printStackTrace();
 				}
 	        }
-	    }, 3, TimeUnit.SECONDS);
-		
+	    }, 1, TimeUnit.SECONDS);
 		
 	}
 
@@ -111,33 +103,9 @@ public class ProjectTaskControllerSSESendTest {
 			.contentType(MediaType.TEXT_EVENT_STREAM_VALUE)
 			.accept(MediaType.TEXT_EVENT_STREAM_VALUE))
 			.andDo(print())
-//			.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
+			.andExpect(content().contentType(MediaType.TEXT_EVENT_STREAM_VALUE + ";charset=UTF-8"))
         	.andExpect(status().isOk())
         	.andExpect(request().asyncStarted());
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 	}
 	

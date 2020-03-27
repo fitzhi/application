@@ -41,8 +41,19 @@ public @Data class TaskLog {
 	 * @param message the log message to be stored.
 	 */
 	public TaskLog(int code, String message) {
+		this(code, message, System.currentTimeMillis());
+	}
+	
+	/**
+	 * Public build with a logTime set to <code> System.currentTimeMillis()</code>
+	 * @param code optional code associated to this message. <i>This code will be mainly used to keep the error code.</i>
+	 * @param message the log message to be stored.
+	 * @param logTime the time when the event occurs
+	 */
+	public TaskLog(int code, String message, long logTime) {
 		this.message = message;
 		this.code = code;
-		this.logTime = System.currentTimeMillis();
+		this.logTime = logTime;
 	}
+
 }

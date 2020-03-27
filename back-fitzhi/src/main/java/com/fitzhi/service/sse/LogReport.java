@@ -2,15 +2,16 @@ package com.fitzhi.service.sse;
 
 import com.fitzhi.data.external.ActivityLog;
 
+import reactor.core.publisher.Flux;
+
 public interface LogReport {
 
 	/**
-	 * Return a log of activity for an asynchronous task.
-	 * @param operation type of operation recorded
-	 * @param title title related to the identifier
-	 * @param id the given identifier <i>(might be a project, a staff or anything else)</i>
-	 * @return a task report or {@code null} if the task has completed
+	 * Emit distinct {@link ActivityLog} every second.
+	 * @param operation the current underlying operation
+	 * @param idProject the project identifier
+	 * @return a {@link Flux} of {@link ActivityLog}
 	 */
-	public ActivityLog currentLog(String operation, String title, int id);
-
+	Flux<ActivityLog> sunburstGenerationLogNext(String operation, int idProject);
+	
 }

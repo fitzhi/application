@@ -16,6 +16,7 @@
 		<spring-boot.version>2.1.13.RELEASE</spring-boot.version>
 		<spring-oauth.version>2.3.6.RELEASE</spring-oauth.version>
 		<springsecurityoauth2.version>2.3.6.RELEASE</springsecurityoauth2.version>
+		<spring-reactor-test.version>3.3.4.RELEASE</spring-reactor-test.version>
 		<jstl.version>1.2</jstl.version>
 		<junit.version>4.12</junit.version>
 		<jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
@@ -118,6 +119,13 @@
 			<scope>test</scope>
 		</dependency>
 
+		<dependency>
+		    <groupId>io.projectreactor</groupId>
+		    <artifactId>reactor-test</artifactId>
+		    <version>${spring-reactor-test.version}</version>
+		    <scope>test</scope>
+		</dependency>
+		
 		<!-- Google gson parser https://mvnrepository.com/artifact/com.google.code.gson/gson -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>

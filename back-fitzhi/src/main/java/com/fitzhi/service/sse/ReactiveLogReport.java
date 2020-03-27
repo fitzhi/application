@@ -13,7 +13,6 @@ import com.fitzhi.data.internal.Task;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 @Repository
 @Slf4j
@@ -36,22 +35,43 @@ public class ReactiveLogReport implements LogReport {
 	String title;
 	
 	/**
-	 * The identifier
+	 * The entity identifier, most probably the project.
 	 */
 	int id;
 	
-	int i = 0;
-	
 	/**
-	 * Return a task.
+	 * Return a log of activity for an asynchronous task.
 	 * @param operation type of operation recorded
 	 * @param title title related to the identifier
 	 * @param id the given identifier <i>(might be a project, a staff or anything else)</i>
 	 * @return a task report or {@code null} if the task has completed
 	 */
-	@Override
-	public ActivityLog currentLog(String operation, String title, int id) {
+	private ActivityLog currentLog(String operation, String title, int id) {
 		final Task task = tasks.getTask(operation, PROJECT, id);
 		return (!task.isComplete()) ? task.buildLastestLog() : new ActivityLog(task.getLastBreath(), true);
 	}
+
+	@Override
+	public Flux<ActivityLog> sunburstGenerationLogNext(String operation, int idProject) {
+	    
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Activating logs listening for operation %s of project %d", operation, idProject));
+		}
+		//
+		// Simulate data streaming every 1 second.
+		//
+        return Flux.interval(Duration.ofMillis(1000))
+        		.map(l -> {
+        			final ActivityLog actiLog =  this.currentLog(operation, PROJECT, idProject);
+        			if (log.isDebugEnabled()) {
+        				log.debug(String.format("Sending log %s", actiLog.toString()));
+        			}
+        			return actiLog;
+        		})
+        		.distinctUntilChanged()
+        		.takeUntil((ActivityLog actiLog) -> actiLog.isComplete())
+        		.doOnComplete(() -> {this.tasks.removeTask(operation, PROJECT, idProject);})
+        		.log();
+	}
+
 }
