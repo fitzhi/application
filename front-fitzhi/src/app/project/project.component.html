@@ -20,9 +20,11 @@
 		<ng-template mat-tab-label>
 			<i class="fab fa-github-alt logoTabLabel"></i>&nbsp;&nbsp;Git
 		</ng-template>
-		<app-project-sunburst (tabActivationEmitter)="tabActivation($event)"
-			(updateRiskLevel)="updateRiskLevel($event)">
-		</app-project-sunburst>
+		<ng-template matTabContent>
+			<app-project-sunburst (tabActivationEmitter)="tabActivation($event)"
+				(updateRiskLevel)="updateRiskLevel($event)">
+			</app-project-sunburst>
+		</ng-template>
 	</mat-tab>
 	<mat-tab label="Sonar">
 		<ng-template mat-tab-label>
