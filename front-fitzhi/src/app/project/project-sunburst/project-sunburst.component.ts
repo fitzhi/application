@@ -603,6 +603,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 									console.log ('This request was not necessary : no dashboard available.');
 							}
 							this.messageService.info('Dashboard reinitialization has been requested. The operation might take a while.');
+							this.setActiveContext (PreviewContext.SUNBURST_WAITING);
 						});
 					}
 				this.idPanelSelected = this.SUNBURST;
