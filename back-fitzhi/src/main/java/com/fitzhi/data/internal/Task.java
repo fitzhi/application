@@ -73,6 +73,11 @@ public @Data class Task implements Serializable {
 	TaskLog lastBreath;
 
 	/**
+	 * Latest log stored.
+	 */
+	TaskLog lastestLog;
+	
+	/**
 	 * <p>
 	 * Record a task log in this tasks history.
 	 * </p>
@@ -83,6 +88,7 @@ public @Data class Task implements Serializable {
 			activityLogs.sort(Comparator.comparing(TaskLog::getLogTime));
 			activityLogs.remove(0);
 		}
+		this.lastestLog = taskLog;
 		activityLogs.add(taskLog);
 	}
 	
@@ -98,7 +104,7 @@ public @Data class Task implements Serializable {
 		if (!this.activityLogs.isEmpty()) {
 
 			// We affect the last log for this task
-			setLastBreath(latestLog());
+			setLastBreath(this.getLastestLog());
 		
 			// We clear the log
 			activityLogs.clear();
@@ -106,19 +112,10 @@ public @Data class Task implements Serializable {
 	}
 
 	/**
-	 * @return the latest log 
-	 */
-	//TODO the latest log has to be stored in the task container and not periodically computed.
-	TaskLog latestLog() {
-		this.activityLogs.sort(Comparator.comparing(TaskLog::getLogTime).reversed());
-		return activityLogs.get(0);
-	}
-	
-	/**
 	 * @return the latest log of this task in an {@link ActivityLog} format.
 	 */
 	public ActivityLog buildLastestLog() {
-		TaskLog log = latestLog();
+		TaskLog log = this.getLastestLog();
 		ActivityLog activityLog = new ActivityLog(log.code, log.message, log.logTime, complete, completeOnError);
 		return activityLog;
 	}
