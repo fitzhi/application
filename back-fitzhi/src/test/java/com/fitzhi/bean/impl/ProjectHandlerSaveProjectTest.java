@@ -3,6 +3,10 @@
  */
 package com.fitzhi.bean.impl;
 
+import static com.fitzhi.Global.NO_USER_PASSWORD_ACCESS;
+import static com.fitzhi.Global.REMOTE_FILE_ACCESS;
+import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -11,11 +15,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
-import static com.fitzhi.Global.REMOTE_FILE_ACCESS;
-import static com.fitzhi.Global.NO_USER_PASSWORD_ACCESS;
-
 
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;

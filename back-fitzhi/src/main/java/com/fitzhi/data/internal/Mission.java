@@ -5,6 +5,8 @@ package com.fitzhi.data.internal;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -61,6 +63,11 @@ public @Data class Mission implements Serializable {
 	 */
 	private int numberOfFiles;
 
+	/**
+	 * Map of {@long StaffActivitySkill} representing activity of a developer during his mission, indexed by skill identifier.
+	 */
+	private Map<Integer, StaffActivitySkill> staffActivitySkill = new HashMap<>();	
+	
 	/**
 	 * Empty constructor for (de)serialization usage.
 	 */

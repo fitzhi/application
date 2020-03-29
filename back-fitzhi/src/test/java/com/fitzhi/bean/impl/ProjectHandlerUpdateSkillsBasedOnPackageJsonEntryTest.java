@@ -34,7 +34,7 @@ public class ProjectHandlerUpdateSkillsBasedOnPackageJsonEntryTest {
 
 	
 	private final int JAVA = 1;
-	private final int ANGULAR = 3;
+	private final int ANGULAR = 4;
 	
 	List<CommitHistory> repo;
 	

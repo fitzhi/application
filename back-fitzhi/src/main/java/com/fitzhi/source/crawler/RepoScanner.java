@@ -14,8 +14,11 @@ import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.RiskDashboard;
+import com.fitzhi.data.internal.SourceControlChanges;
+import com.fitzhi.data.internal.StaffActivitySkill;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.ConnectionSettings;
+import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.SkillerException;
 
 /**
@@ -224,6 +227,20 @@ public interface RepoScanner {
 	 */
 	void retrieveRootPath (RepositoryAnalysis analysis) throws IOException;
 
+	/**
+	 * <p>
+	 * Collect the activity for each contributor by skill.
+	 * </p>
+	 * <p>
+	 * Each contributor aside of his global statistics has a list of {@link StaffActivitySkill} figuring the activity of a developer on each skill.
+	 * This list is also used to update the skills detected for a developer.
+	 * </p>
+	 * @param contributors the list a valid contributors whose activities have to be updated.
+	 * @param changes the history of changes detected in the repository
+	 * @param pathSourceFileNames the set of source filename
+	 */
+	void gatherContributorsActivitySkill(List<Contributor> contributors, SourceControlChanges changes, Set<String> pathSourceFileNames);
+	
 	/**
 	 * @return the list of markers of dependencies such as {@code jquery}, {@code bootstrap}...
 	 */

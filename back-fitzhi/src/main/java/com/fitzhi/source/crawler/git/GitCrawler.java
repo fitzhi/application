@@ -73,6 +73,7 @@ import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectDashboardCustomizer;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.RiskProcessor;
+import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import com.fitzhi.controller.in.SettingsGeneration;
@@ -198,6 +199,13 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	@Autowired
 	ProjectHandler projectHandler;
 
+
+	/**
+	 * Service in charge of handling the skills.
+	 */
+	@Autowired
+	SkillHandler skillHandler;
+	
 	/**
 	 * Service in charge of caching the parsed repository.
 	 */
@@ -269,11 +277,6 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			log.debug("Pattern INCLUSION loaded from the file application.properties : ");
 			patternsInclusionList.stream().forEach(p -> log.debug(p.pattern()));
 		}
-
-		// We "Spring-way" injected staff manager handle into the super class.
-		super.parentStaffHandler = staffHandler;
-		super.parentProjectHandler = projectHandler;
-		
 		
 		 this.crawlerFilterDebug = System.getProperty("crawler.filter.debug");
 		 
@@ -282,6 +285,22 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		 }
 	}
 
+	@Override
+	protected ProjectHandler projectHandler() { 
+		return this.projectHandler;
+	}
+	
+	@Override
+	protected StaffHandler staffHandler() { 
+		return this.staffHandler;
+	}
+	
+	
+	@Override
+	protected SkillHandler skillHandler() { 
+		return this.skillHandler;
+	}
+	
 	@Override
 	public void clone(final Project project, ConnectionSettings settings)
 			throws IOException, GitAPIException, SkillerException {
@@ -715,6 +734,10 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			return repository;
 		}
 		
+		//
+		// The repository has not been loaded from cache, but it looks like that The directory where the repository has been cloned.
+		// 
+		//
 		if (project.getLocationRepository() == null) {
 			throw new SkillerException(Error.CODE_REPO_MUST_BE_ALREADY_CLONED,
 					Error.MESSAGE_REPO_MUST_BE_ALREADY_CLONED);
@@ -729,9 +752,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				.findGitDir()
 				.build();
 		
-		/**
-		 * We load all raw changes declared in the given repository
-		 */
+		//
+		// We load all raw changes declared in the given repository.
+		//
 		RepositoryAnalysis analysis = this.loadChanges(project, repo);
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("loadChanges (%s) returns %d entries", project.getName(), analysis.numberOfChanges()));
@@ -771,9 +794,11 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		// Updating the importance
 		this.updateImportance(project, analysis);
 		
+		//
 		// Retrieve directories candidate for being exclude from the analysis 
 		// The resulting set contains only source files without a commit history of modification.
 		// They have only be added.
+		//
 		analysis.extractCandidateForDependencies();
 	
 		//
@@ -796,10 +821,10 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		 */
 		this.removeNonRelevantDirectories(project, analysis);
 		
-		
 		/**
 		 * We cleanup the pathnames each location (e.g. "src/main/java" is removed)
 		 */
+		//FIXME Should-we keep this cleaning ?
 		// analysis.cleanupPaths(projectDashboardCustomizer);
 
 		//
@@ -843,7 +868,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	
 	/**
 	 * <p>
-	 * This method is managing the staff or the ghost detected in the repository.
+	 * This method is taking in account the staff, or the ghost, who has contributed in the repository.
 	 * </p>
 	 * @param project the given project
 	 * @param analysis the analysis processed on this project
@@ -858,38 +883,24 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		this.updateStaff(project, analysis, unknownContributors);
 
 		//
-		// We save the unknown contributors, into the "ghosts project" collection.
+		// We save the unknown contributors into the "contributing ghosts" collection.
 		//
 		projectHandler.integrateGhosts(project.getId(), unknownContributors);
-		
+				
 		//
-		// Retrieve the list of contributors involved in the project.
+		// Retrieving the list of contributors involved in the project.
 		//
 		List<Contributor> contributors = analysis.gatherContributors();
 
-		if (log.isDebugEnabled()) {
-			log.debug(
-				"Taking account of retrieved contributors from the repository into the project list of participants");
-		}
+		//
+		// Updating each contributor with his activities by skill.
+		//
+		this.gatherContributorsActivitySkill(contributors, analysis.getChanges(), analysis.getPathsModified());
 
 		//
 		// Update the staff team missions with the contributors.
 		//
 		staffHandler.involve(project, contributors);
-		if (log.isDebugEnabled()) {
-			log.debug(String.format("%d contributors retrieved : ", contributors.size()));
-			contributors.stream().forEach(contributor -> {
-				String fullname = staffHandler.getFullname(contributor.getIdStaff());
-				log.debug(String.format("%d %s", contributor.getIdStaff(),
-						(fullname != null) ? fullname : "unknown"));
-			});
-		}
-		
-		// Displaying results...
-		if (log.isInfoEnabled() && (!unknownContributors.isEmpty())) {
-			log.info(String.format("Unknown contributors for project %s", analysis.getProject().getName()));
-			unknownContributors.stream().forEach(log::info);
-		}
 		
 	}
 
@@ -903,7 +914,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	 */
 	private void updateProjectEcosystem(Project project, RepositoryAnalysis analysis) throws SkillerException {
 		//
-		// To identify the ecosystem, all files are taken in account. 
+		// To identify the eco-system, all files are taken in account. 
 		//
 		Set<String> allPaths = new HashSet<>();
 		allPaths.addAll(analysis.getPathsModified());

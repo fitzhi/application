@@ -25,9 +25,9 @@ import com.fitzhi.source.crawler.git.SourceFileHistory;
  * The class hosts the intermediate data gathered from the analysis of the repository.<br/>
  * Multiple sets are updated and available in this container :
  * <ul>
- * <li>{@link SourceControlChanges list of changes} retrieved from the repository.</i>
- * <li>list of paths detected as having been modified in the history of the repository.</i>
- * <li>list of paths detected as having been ONLY ADDED in the history of the repository.</li>
+ * <li>{@link RepositoryAnalysis#changes} of {@link SourceControlChanges}, list of changes detected in the repository.</i>
+ * <li>{@link RepositoryAnalysis#pathsModified }, list of paths detected as having been modified in the history of the repository.</i>
+ * <li>{@link RepositoryAnalysis#pathsAdded }, list of paths detected as having been ONLY ADDED in the history of the repository.</li>
  * </ul>
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -96,7 +96,7 @@ public class RepositoryAnalysis {
 	 * @return the number of file
 	 */
 	public int numberOfChanges() {
-		return changes.mapChanges.values()
+		return changes.getChanges().values()
 			.stream()
 			.mapToInt(history -> history.getChanges().size())
 			.sum();
@@ -179,7 +179,7 @@ public class RepositoryAnalysis {
 	 * @return an iterator scanning the set of file paths which is indexing the repository history.
 	 */
 	public Iterator<String> iteratorFilePath() {
-		return changes.mapChanges.keySet().iterator();
+		return changes.getChanges().keySet().iterator();
 	}
 	
 	/**
@@ -199,7 +199,7 @@ public class RepositoryAnalysis {
 	 * @param oldPath    the old file path
 	 */
 	public void renameFilePath(String newPath, String oldPath) {
-		SourceFileHistory history =  this.changes.mapChanges.get(oldPath);
+		SourceFileHistory history =  this.changes.getChanges().get(oldPath);
 
 		//
 		// We do not throw an exception if the oldPath does not exist.
@@ -210,8 +210,8 @@ public class RepositoryAnalysis {
 		// 
 		
 		if (history != null) {
-			this.changes.mapChanges.remove(oldPath);
-			this.changes.mapChanges.put(newPath, history);
+			this.changes.getChanges().remove(oldPath);
+			this.changes.getChanges().put(newPath, history);
 		}
 	}
 
@@ -224,7 +224,7 @@ public class RepositoryAnalysis {
 	 * @param path    the file path to delete
 	 */
 	public void removeFilePath(String path) {
-		this.changes.mapChanges.remove(path);
+		this.changes.getChanges().remove(path);
 	}
 	
 	/**
@@ -240,15 +240,15 @@ public class RepositoryAnalysis {
 	
 	public void transferRepository (CommitRepository commitRepository) {
 		// We iterate on the file recorded
-		changes.mapChanges.keySet().stream().forEach(path -> {
+		changes.getChanges().keySet().stream().forEach(path -> {
 			// We iterate on changes detected on each file.
-			changes.mapChanges.get(path).getChanges().stream().forEach(change -> {
+			changes.getChanges().get(path).getChanges().stream().forEach(change -> {
 				commitRepository.addCommit(
 						path,
 						change.isIdentified() ? change.getIdStaff() : com.fitzhi.Global.UNKNOWN, 
 						change.getAuthorName(),
 						change.getDateCommit(),
-						changes.mapChanges.get(path).getImportance());
+						changes.getChanges().get(path).getImportance());
 			});
 		});
 	}
@@ -259,7 +259,7 @@ public class RepositoryAnalysis {
 	 * @return the list of registered contributors involved in the project
 	 */
 	public Set<Integer> contributors() {
-		return changes.mapChanges.values()
+		return changes.getChanges().values()
 			.stream()
 			.flatMap(history -> history.getChanges().stream())
 			.map(SourceChange::getIdStaff)
@@ -274,7 +274,7 @@ public class RepositoryAnalysis {
 	 * @return the list of contributors involved in the project
 	 */
 	public List<String> authors() {
-		return changes.mapChanges.values()
+		return changes.getChanges().values()
 			.stream()
 			.flatMap(history -> history.getChanges().stream())
 			.filter(SourceChange::isAuthorIdentified)
@@ -289,7 +289,7 @@ public class RepositoryAnalysis {
 	 * @param idStaff the staff identifier
 	 */
 	public void updateStaff(String authorName, int idStaff) {
-		changes.mapChanges.values()
+		changes.getChanges().values()
 			.stream()
 			.flatMap(history -> history.getChanges().stream())
 			.filter(sc -> authorName.equals(sc.getAuthorName()))
@@ -297,15 +297,25 @@ public class RepositoryAnalysis {
 	}
 	
 	/**
-	 * Crawl within the history the retrieve the <b>FIRST</b> commit of a staff member
-	 * @param idStaff the staff member identifier
-	 * @return
+	 * Collect and filter the project global changes for a given staff member
+	 * @param idStaff the staff identifier
+	 * @return the list of changes for a staff member
 	 */
-	public LocalDate retrieveFirstCommit(int idStaff) {
-		return changes.mapChanges.values()
+	public List<SourceChange> getPersonalChange(int idStaff) {
+		return changes.getChanges().values()
 				.stream()
 				.flatMap(history -> history.getChanges().stream())				
 				.filter(change -> idStaff == change.getIdStaff())
+				.collect(Collectors.toList());
+	}
+	
+	/**
+	 * Crawl within the changes history in order the retrieve the <b>FIRST</b> commit of a staff member
+ 	 * @param changes a list of changes through which to collect the first commit.
+	 * @return the first commit 
+	 */
+	public LocalDate retrieveFirstCommit(List<SourceChange> changes) {
+		return changes.stream()
 				.map(SourceChange::getDateCommit)
 				.min(Comparator.comparing(LocalDate::toEpochDay))
 				.orElseThrow(() -> new SkillerRuntimeException(SHOULD_NOT_PASS_HERE));
@@ -313,15 +323,12 @@ public class RepositoryAnalysis {
 	}
 
 	/**
-	 * Crawl within the history the retrieve the <b>LAST</b> commit of a staff member
-	 * @param idStaff the staff member identifier
-	 * @return
+	 * Crawl within the changes history in order the retrieve the <b>LAST</b> commit of a staff member
+	 * @param changes a list of changes through which to collect the <b>LAST</b> commit.
+	 * @return the last commit 
 	 */
-	public LocalDate retrieveLastCommit(int idStaff) {
-		return changes.mapChanges.values()
-				.stream()
-				.flatMap(history -> history.getChanges().stream())				
-				.filter(change -> idStaff == change.getIdStaff())
+	public LocalDate retrieveLastCommit(List<SourceChange> changes) {
+		return changes.stream()
 				.map(SourceChange::getDateCommit)
 				.max(Comparator.comparing(LocalDate::toEpochDay))
 				.orElseThrow(() -> new SkillerRuntimeException(SHOULD_NOT_PASS_HERE));
@@ -329,14 +336,11 @@ public class RepositoryAnalysis {
 
 
 	/**
-	 * @param idStaff the staff identifier
+	 * @param changes a stream of changes through which to c.
 	 * @return the number of commits submitted by a staff member
 	 */
-	public int numberOfCommits(int idStaff) {
-		return (int) changes.mapChanges.values()
-				.stream()
-				.flatMap(history -> history.getChanges().stream())				
-				.filter(change -> idStaff == change.getIdStaff())
+	public int numberOfCommits(List<SourceChange> changes) {
+		return (int) changes.stream()
 				.map(SourceChange::getCommitId)
 				.distinct()
 				.count();
@@ -344,10 +348,11 @@ public class RepositoryAnalysis {
 	
 	/**
 	 * @param idStaff the staff identifier
-	 * @return the number of files modified by a staff member
+	 * @return the number of files <b>modified</b> by a staff member
 	 */
 	public int numberOfFiles(int idStaff) {
-		return (int) changes.mapChanges.keySet()
+		// We crawl within the "mapChanges" and not within the changes because we want to aggregate the number of files MODIFIED.
+		return (int) changes.getChanges().keySet()
 				.stream()
 				.filter(path -> changes.getSourceFileHistory(path).isInvolved(idStaff))	
 				.count();
@@ -359,10 +364,10 @@ public class RepositoryAnalysis {
 	 * @param importance the new file to be set
 	 */
 	public void setFileImportance(String path, int importance) {
-		if (!this.changes.mapChanges.containsKey(path)) {
+		if (!this.changes.getChanges().containsKey(path)) {
 			throw new SkillerRuntimeException("SHOULD NOT PASS HERE : an entry should exist for key " + path);
 		}
-		this.changes.mapChanges.get(path).setImportance(importance);
+		this.changes.getChanges().get(path).setImportance(importance);
 	}
 
 	
@@ -386,25 +391,29 @@ public class RepositoryAnalysis {
 		for (int idStaff : idContributors) {
 
 			//
+			// We filter the changes data for a given staff member
+			//
+			List<SourceChange> personalChanges = this.getPersonalChange(idStaff);
+			
+			//
 			// We process the date of the FIRST commit submitted by this staff member
 			//
-			LocalDate firstCommit = retrieveFirstCommit(idStaff);
+			LocalDate firstCommit = retrieveFirstCommit(personalChanges);
 			
 			//
 			// We process the date of the LAST commit submitted by this staff member
 			//
-			LocalDate lastCommit = retrieveLastCommit(idStaff);
+			LocalDate lastCommit = retrieveLastCommit(personalChanges);
 
 			//
 			// Number of commits submitted by this given staff member
 			//
-			int numberOfCommits = numberOfCommits(idStaff);
+			int numberOfCommits = numberOfCommits(personalChanges);
 
 			//
 			// Number of files touched by this given staff member
 			//
 			int numberOfFiles = numberOfFiles(idStaff);
-			
 
 			contributors
 					.add(new Contributor(idStaff, firstCommit, lastCommit, numberOfCommits, numberOfFiles));

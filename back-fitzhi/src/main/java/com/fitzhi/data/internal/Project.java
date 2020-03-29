@@ -1,8 +1,8 @@
 package com.fitzhi.data.internal;
 
-import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
 import static com.fitzhi.Global.NO_USER_PASSWORD_ACCESS;
 import static com.fitzhi.Global.REMOTE_FILE_ACCESS;
+import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
 
 import java.io.Serializable;
 import java.util.ArrayList;

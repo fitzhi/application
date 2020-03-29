@@ -34,7 +34,7 @@ public class ProjectHandlerUpdateSkillsBasedOnPomXmlEntryTest {
 
 	
 	private final int JAVA = 1;
-	private final int SPRING_CORE = 4;
+	private final int SPRING_CORE = 5;
 	
 	List<CommitHistory> repo;
 	
@@ -78,8 +78,8 @@ public class ProjectHandlerUpdateSkillsBasedOnPomXmlEntryTest {
 		
 		Set<Integer> ids = new HashSet<>();
 		projectHandler.get(1789).getSkills().stream().map(Skill::getId).forEach(ids::add);
-		Assert.assertTrue("Java is detected", ids.contains(JAVA));
-		Assert.assertTrue("Spring core is detected", ids.contains(SPRING_CORE));
+		Assert.assertTrue("Java should be detected", ids.contains(JAVA));
+		Assert.assertTrue("Spring core should be detected", ids.contains(SPRING_CORE));
 		
 	}
 	

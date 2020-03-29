@@ -9,18 +9,26 @@
 	},
 	"2": {
 		"id": 2,
-		"title": ".NET"
+		"title": "TypeScript",
+        "detectionTemplate": {
+            "detectionType": "0",
+            "pattern": ".ts$"
+        }
 	},
 	"3": {
 		"id": 3,
+		"title": ".NET"
+	},
+	"4": {
+		"id": 4,
 		"title": "Angular",
         "detectionTemplate": {
             "detectionType": "1",
             "pattern": "\"@angular/core\""
         }
 	},
-	"4": {
-		"id": 4,
+	"5": {
+		"id": 5,
 		"title": "Spring core",
         "detectionTemplate": {
             "detectionType": "2",

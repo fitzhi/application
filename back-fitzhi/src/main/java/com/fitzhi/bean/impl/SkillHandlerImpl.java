@@ -165,6 +165,20 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		throw new SkillerRuntimeException("Should not pass here!");
 	}
 	
+	@Override
+	public boolean isSkillDetectedWithFilename(Skill skill, String sourcePath) {
+		
+		if (skill.getDetectionTemplate() == null) {
+			return false;
+		}
+		switch (skill.getDetectionTemplate().getDetectionType()) {
+			case FILENAME_DETECTOR_TYPE:
+				return checkFilenamePattern(sourcePath, skill.getDetectionTemplate().getPattern());
+			default: 
+				return false;
+		}
+	}
+
 	/**
 	 * Check if the given source pathname verifies the given pattern
 	 * @param sourcePath the source pathname

@@ -69,6 +69,12 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	@Autowired
 	DataHandler dataSaver;
 		
+	/**
+	 * the Staff handling service.
+	 */
+	@Autowired
+	StaffHandler staffHandler;
+	
 	@Override
 	public void init() {
 		theStaff = null;
@@ -401,6 +407,15 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				}
 			}			
 		});
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("%d contributors retrieved : ", contributors.size()));
+			contributors.stream().forEach(contributor -> {
+				String fullname = staffHandler.getFullname(contributor.getIdStaff());
+				log.debug(String.format("%d %s", contributor.getIdStaff(),
+						(fullname != null) ? fullname : "unknown"));
+			});
+		}
+	
 	}
 
 	@Override

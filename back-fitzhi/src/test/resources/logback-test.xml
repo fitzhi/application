@@ -22,7 +22,7 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="com.fitzhi.service.sse" additivity="false">
+	<logger name="com.fitzhi.source.crawler.impl.AbstractScannerDataGenerator" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>

@@ -48,15 +48,37 @@ public @Data class SourceChange {
 	 * @param dateCommit Date of the commit 
 	 * @param authorName author's name
 	 * @param authorEmail author's email
+	 * @param idStaff staff identifier
 	 */
-	public SourceChange(String commitId, LocalDate dateCommit, String authorName, String authorEmail) {
+	public SourceChange(String commitId, LocalDate dateCommit, String authorName, String authorEmail, int idStaff) {
 		super();
 		this.commitId = commitId;
 		this.dateCommit = dateCommit;
 		this.authorName = authorName;
 		this.authorEmail = authorEmail;
+		this.idStaff = idStaff;
 	}
 
+	/**
+	 * Constructor.
+	 * @param commitId commit identifier
+	 * @param dateCommit Date of the commit 
+	 * @param authorName author's name
+	 * @param authorEmail author's email
+	 * @param idStaff staff identifier
+	 */
+	public SourceChange(String commitId, LocalDate dateCommit, String authorName, String authorEmail) {
+		this(commitId, dateCommit, authorName, authorEmail, 0);
+	}
+	/**
+	 * Constructor.
+	 * @param dateCommit Date of the commit 
+	 * @param idStaff staff identifier
+	 */
+	public SourceChange(LocalDate dateCommit, int idStaff) {
+		this("", dateCommit, "", "", idStaff);
+	}
+	
 	/**
 	 * @return <code>true</code> if the change is identified (i.e. the staff identifier is known)
 	 */

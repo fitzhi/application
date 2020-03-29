@@ -7,10 +7,9 @@ import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.CODE_SONAR_KEY_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_SONAR_KEY_NOFOUND;
-
-import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
-import static com.fitzhi.Global.REMOTE_FILE_ACCESS;
 import static com.fitzhi.Global.NO_USER_PASSWORD_ACCESS;
+import static com.fitzhi.Global.REMOTE_FILE_ACCESS;
+import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.fitzhi.Global;
 import com.fitzhi.SkillerRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
@@ -424,15 +422,16 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public void integrateGhosts(int idProject, Set<String> pseudos) throws SkillerException {
+	public void integrateGhosts(int idProject, Set<String> unknownPseudos) throws SkillerException {
 
 		Project project = get(idProject);
 		
-		List<Ghost> ghosts = project.getGhosts().stream()
+		List<Ghost> ghosts = project.getGhosts()
+			.stream()
 			.filter (ghost ->  (ghost.getIdStaff() > 0) || (ghost.isTechnical()) )
 			.collect(Collectors.toList());
 		
-		for (String pseudo : pseudos) {
+		for (String pseudo : unknownPseudos) {
 			if (!ghosts.stream().anyMatch(ghost -> pseudo.equals(ghost.getPseudo()))) {
 				ghosts.add(new Ghost(pseudo, false));
 			}
@@ -441,6 +440,12 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		synchronized (lockDataUpdated) {
 			project.setGhosts(ghosts);
 			this.dataUpdated = true;
+		}
+		
+		// We list on INFO Level the ghosts contributing to the project
+		if (log.isInfoEnabled() && (!ghosts.isEmpty())) {
+			log.info(String.format("Ghost contributors for project %s", project.getName()));
+			unknownPseudos.stream().forEach(log::info);
 		}
 	}
 
@@ -614,6 +619,5 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			.forEach(skill -> this.addSkill(project, skill));
 
 	}
-
 	
 }

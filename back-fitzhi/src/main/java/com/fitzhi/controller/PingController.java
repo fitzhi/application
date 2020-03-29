@@ -1,7 +1,5 @@
 package com.fitzhi.controller;
 
-import java.time.LocalDate;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,12 +7,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fitzhi.controller.sample.LocalDateContainer;
-import com.fitzhi.controller.util.LocalDateAdapter;
-import com.fitzhi.data.internal.Staff;
 
 @RestController
 @RequestMapping("/api/test")
@@ -30,9 +25,6 @@ public class PingController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		LocalDateContainer ldc = new LocalDateContainer(2020, 3, 16);
-//		Staff staff = new Staff();
-//		staff.setIdStaff(1);
-//		staff.setNickName("nickName");
 		return new ResponseEntity<>(
 				ldc, 
 				headers, 

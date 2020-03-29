@@ -9,6 +9,8 @@ import java.util.Set;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.fitzhi.source.crawler.git.SourceFileHistory;
 
+import lombok.Data;
+
 /**
  * <p>
  * Object containing all source control changes detected in the Source repository.
@@ -17,12 +19,12 @@ import com.fitzhi.source.crawler.git.SourceFileHistory;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
-public class SourceControlChanges {
+public @Data class SourceControlChanges {
 
 	/**
 	 * Map of all changes detected on the repository, indexed by file path.
 	 */
-	Map<String, SourceFileHistory> mapChanges;
+	private Map<String, SourceFileHistory> changes;
 	
 	
 	/**
@@ -37,7 +39,7 @@ public class SourceControlChanges {
 	 * @param mapChanges the history of changes for all files retrieved from the repository.
 	 */
 	public SourceControlChanges(Map<String, SourceFileHistory> mapChanges) {
-		this.mapChanges = mapChanges;
+		this.changes = mapChanges;
 	}
 	
 	/**
@@ -47,10 +49,10 @@ public class SourceControlChanges {
 	 * @return {@code true} (as specified by {@link Collection#add  Collection.add})
 	 */
 	public boolean addChange(final String fullPath, SourceChange change) {
-		if (!mapChanges.containsKey(fullPath)) {
-			mapChanges.put(fullPath, new SourceFileHistory());
+		if (!changes.containsKey(fullPath)) {
+			changes.put(fullPath, new SourceFileHistory());
 		}
-		return mapChanges.get(fullPath).getChanges().add(change);
+		return changes.get(fullPath).getChanges().add(change);
 	}
 
 	/**
@@ -58,7 +60,7 @@ public class SourceControlChanges {
 	 * @see {@link Map#keySet()}
 	 */
 	public Set<String> keySet() {
-		return mapChanges.keySet();
+		return changes.keySet();
 	}
 
 	/**
@@ -67,7 +69,7 @@ public class SourceControlChanges {
 	 * @return {@code true} id the given path is present in the changes collection
 	 */
 	public boolean containsFilePath(String filePath) {
-		return mapChanges.containsKey(filePath);
+		return changes.containsKey(filePath);
 	}
 
 	/**
@@ -75,7 +77,7 @@ public class SourceControlChanges {
 	 * @see java.util.Map#entrySet()
 	 */
 	public Set<Entry<String, SourceFileHistory>> entrySet() {
-		return mapChanges.entrySet();
+		return changes.entrySet();
 	}
 	
 	/**
@@ -83,7 +85,7 @@ public class SourceControlChanges {
 	 * @return the source file history associated of the given path.
 	 */
 	public SourceFileHistory  getSourceFileHistory(String path) {
-		return mapChanges.get(path);
+		return changes.get(path);
 	}
 
 	/**
@@ -93,7 +95,7 @@ public class SourceControlChanges {
 	 * @see java.util.Map#remove(java.lang.Object)
 	 */
 	public SourceFileHistory remove(Object key) {
-		return mapChanges.remove(key);
+		return changes.remove(key);
 	}
 	
 }
