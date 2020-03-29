@@ -31,6 +31,7 @@ import com.fitzhi.data.internal.PeopleCountExperienceMap;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ResumeSkill;
 import com.fitzhi.data.internal.Staff;
+import com.fitzhi.data.internal.StaffActivitySkill;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.SkillerException;
 import com.google.gson.Gson;
@@ -378,7 +379,8 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	@Override
 	public void involve(Project project, List<Contributor> contributors) throws SkillerException {
 		
-		contributors.stream().forEach(contributor -> {
+		
+		for (Contributor contributor : contributors) {
 			if (contributor.getIdStaff() != UNKNOWN) {
 				Staff staff = getStaff().get(contributor.getIdStaff());
 				if (staff == null) {
@@ -399,14 +401,18 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 								contributor.getFirstCommit(), 
 								contributor.getLastCommit(), 
 								contributor.getNumberOfCommitsSubmitted(), 
-								contributor.getNumberOfFiles());
+								contributor.getNumberOfFiles(),
+								contributor.getStaffActivitySkill());
 					synchronized (lockDataUpdated) {
 						staff.addMission(mission);
 						this.dataUpdated = true;
 					}
 				}
-			}			
-		});
+			}
+			
+			// We update the skills for this contributor.
+			staffHandler.inferSkillsFromMissions(contributor.getIdStaff());
+		};
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("%d contributors retrieved : ", contributors.size()));
 			contributors.stream().forEach(contributor -> {
@@ -415,7 +421,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 						(fullname != null) ? fullname : "unknown"));
 			});
 		}
-	
+		
 	}
 
 	@Override
@@ -645,6 +651,39 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			this.dataUpdated = true;
 		}
 	}
-	
+
+	@Override
+	public void inferSkillsFromMissions(int idStaff) throws SkillerException {
+
+		Staff staff = getStaff().get(idStaff);
+		if (staff == null) {
+			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
+		}
+
+		List<StaffActivitySkill> activity = 
+				staff.getMissions().stream()
+				.flatMap(mission -> mission.getStaffActivitySkill().values().stream())
+				.collect(Collectors.toList());
+
+		//
+		// Internal check
+		//
+		if (activity.stream().anyMatch(sas -> sas.getIdStaff() != idStaff)) {
+			throw new SkillerRuntimeException(
+					String.format("INTERNAL ERROR : %d has to be the unique staff identifier in all his StaffActivitySkill", idStaff));
+		}
+		
+		Map<Integer, Integer> skills = activity.stream().collect(
+                Collectors.groupingBy(StaffActivitySkill::getIdSkill, Collectors.summingInt(StaffActivitySkill::getNumberOfChanges)));
+
+		for (int idSkill : skills.keySet()) {
+			if (staff.getExperience(idSkill) == null) {
+				if (log.isDebugEnabled()) {
+					log.debug(String.format("Adding the skill %d to the developer %s", idSkill, staff.fullName()));
+				}
+				staff.getExperiences().add(new Experience(idSkill, 1));
+			}
+		}
+	}
 	
 }

@@ -219,5 +219,12 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	  * @param password the encrypted password
 	  */
 	 public void savePassword(Staff staff, String password);
+	 
+	 /**
+	  * Infer the skills for a developer based on his mission and their metrics.
+	  * @param idStaff the staff identifier
+	  * @throws SkillerException
+	  */
+	 void inferSkillsFromMissions(int idStaff) throws SkillerException;
 }
 

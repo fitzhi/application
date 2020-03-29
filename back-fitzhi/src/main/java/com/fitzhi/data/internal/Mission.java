@@ -64,7 +64,7 @@ public @Data class Mission implements Serializable {
 	private int numberOfFiles;
 
 	/**
-	 * Map of {@long StaffActivitySkill} representing activity of a developer during his mission, indexed by skill identifier.
+	 * Map of {@link StaffActivitySkill} representing activity of a developer during his mission, indexed by skill identifier.
 	 */
 	private Map<Integer, StaffActivitySkill> staffActivitySkill = new HashMap<>();	
 	
@@ -91,6 +91,34 @@ public @Data class Mission implements Serializable {
 		this.firstCommit = firstCommit;
 		this.numberOfCommits = numberOfCommits;
 		this.numberOfFiles = numberOfFiles;
+	}
+	
+	/**
+	 * @param idStaff staff identifier
+	 * @param idProject the identifier of the project
+	 * @param name the name of the project
+	 * @param lastCommit the date/time of the last commit
+	 * @param firstCommit the date/time of the last commit
+	 * @param numberOfCommits the number of commits submitted
+	 * @param numberOfFiles the number of files
+	 * @param staffActivitySkill a Map of {@link StaffActivitySkill} representing activity of a developer during his mission, indexed by skill identifier.
+	 */
+	public Mission(final int idStaff, 
+			final int idProject, 
+			String name, 
+			LocalDate firstCommit, 
+			LocalDate lastCommit, 
+			final int numberOfCommits, 
+			final int numberOfFiles,
+			Map<Integer, StaffActivitySkill> staffActivitySkill) {
+		this.idStaff = idStaff;
+		this.idProject = idProject;
+		this.name = name;
+		this.lastCommit = lastCommit;
+		this.firstCommit = firstCommit;
+		this.numberOfCommits = numberOfCommits;
+		this.numberOfFiles = numberOfFiles;
+		this.staffActivitySkill = staffActivitySkill;
 	}
 	
 	/**

@@ -229,6 +229,7 @@ public @Data class Staff implements UserDetails {
 			missionSelected.setLastCommit(contributor.getLastCommit());
 			missionSelected.setNumberOfCommits(contributor.getNumberOfCommitsSubmitted());
 			missionSelected.setNumberOfFiles(contributor.getNumberOfFiles());
+			missionSelected.setStaffActivitySkill(contributor.getStaffActivitySkill());
 		} else {
 			Logger logger = LoggerFactory.getLogger(Staff.class.getCanonicalName());
 			if (logger.isErrorEnabled()) {

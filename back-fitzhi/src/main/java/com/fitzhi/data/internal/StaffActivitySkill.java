@@ -86,4 +86,11 @@ public @Data class StaffActivitySkill implements Serializable {
 			}
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "StaffActivitySkill [idStaff=" + idStaff + ", idSkill=" + idSkill + ", firstCommit=" + firstCommit
+				+ ", lastCommit=" + lastCommit + ", numberOfChanges=" + numberOfChanges + "]";
+	}
+	
 }
