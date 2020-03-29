@@ -12,4 +12,4 @@
     </div>
     <div *ngIf="evt.isKo()" class="taskReport taskReportError">{{evt.message}}</div>
 </div>
-<ng-template #loading>Waiting...</ng-template>
+<ng-template #loading><div class="taskReport taskReportOk">Waiting...</div></ng-template>
