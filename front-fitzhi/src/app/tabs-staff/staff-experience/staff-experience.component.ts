@@ -93,37 +93,45 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
          * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
          */
 		this.subscriptions.add(
-			this.staffDataExchangeService.collaborator$
-				.subscribe((collabRetrieved: Collaborator) => {
-					this.staff = collabRetrieved;
-					if (traceOn()) {
-						console.log ('staff member loaded', this.staff.firstName + ' ' + this.staff.lastName);
+			this.staffDataExchangeService.collaboratorLoaded$.subscribe({
+				next: doneAndOk => {
+					if (doneAndOk) {
+						this.takeInAccountCollaborator();
 					}
-					// We transfert the experience into the array originalValues
-					// in order to be displayed into the tagify-stars component
-					// We subtract 1 from the level because the array in TagifyStars is numbered from 0 to 4
-					setTimeout(() => {
-						const values: TagStar[] = [];
-						this.staff.experiences.forEach(experience => {
-							values.push(new TagStar(experience.title, experience.level - 1));
-						});
-						// The test is there to avoid an empty-warning from the tagoify component
-						if (values.length > 0) {
-							this.values$.next(values);
-						}
-						this.readOnly$.next(!this.staff.idStaff || !this.staff.active);
-					}, 0);
-
-					// The title of the skill is not propagated by the server. We filled this property "live" on the desktop
-					this.staff.experiences.forEach(exp => exp.title = this.skillService.title(exp.id));
-
-					// We transfert all available skills into the whitelist of the tagify-stars component
-					this.skillService.allSkills.forEach (
-						skill => this.whitelist.push(skill.title)
-					);
-					this.image_downloadCV = this.fileService.getAssociatedIcon(this.staff.typeOfApplication);
 				}
-		));
+			}));
+	}
+
+	private takeInAccountCollaborator() {
+		this.staff = this.staffDataExchangeService.collaborator;
+		if (traceOn()) {
+			console.log ('staff member loaded', this.staff.firstName + ' ' + this.staff.lastName);
+		}
+		//
+		// We transfert the experience into the array originalValues
+		// in order to be displayed into the tagify-stars component
+		// We subtract 1 from the level because the array in TagifyStars is numbered from 0 to 4
+		//
+		setTimeout(() => {
+			const values: TagStar[] = [];
+			this.staff.experiences.forEach(experience => {
+				values.push(new TagStar(experience.title, experience.level - 1));
+			});
+			// The test is there to avoid an empty-warning from the tagoify component
+			if (values.length > 0) {
+				this.values$.next(values);
+			}
+			this.readOnly$.next(!this.staff.idStaff || !this.staff.active);
+		}, 0);
+
+		// The title of the skill is not propagated by the server. We filled this property "live" on the desktop
+		this.staff.experiences.forEach(exp => exp.title = this.skillService.title(exp.id));
+
+		// We transfert all available skills into the whitelist of the tagify-stars component
+		this.skillService.allSkills.forEach (
+			skill => this.whitelist.push(skill.title)
+		);
+		this.image_downloadCV = this.fileService.getAssociatedIcon(this.staff.typeOfApplication);
 	}
 
 	/**

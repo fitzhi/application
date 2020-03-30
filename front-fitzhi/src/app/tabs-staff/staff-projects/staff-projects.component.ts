@@ -92,15 +92,18 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	}
 
 	ngOnInit(): void  {
-		/**
-		 * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
-		 */
+		//
+		// We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
+		//
 		this.subscriptions.add(
-			this.staffDataExchangeService.collaborator$
-				.subscribe((collabRetrieved: Collaborator) => {
-					this.collaborator = collabRetrieved;
-					this.loadMissions(this.collaborator.missions);
-				}));
+			this.staffDataExchangeService.collaboratorLoaded$.subscribe({
+				next: doneAndOk => {
+					if (doneAndOk) {
+						this.collaborator = this.staffDataExchangeService.collaborator;
+						this.loadMissions(this.collaborator.missions);
+					}
+				}
+			}));
 	}
 
 	/**
@@ -144,21 +147,29 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 
 		// We add the already attached project into the tagify-textarea component.
 		this.subscriptions.add(
-			this.staffDataExchangeService.collaborator$.subscribe(
-				(collab: Collaborator) => {
-					this.removeValues();
-					// We add this test to avoid an empty-warning inside the component
-					if (this.collaborator.missions.length > 0) {
-						this.tagify.addTags(
-							this.collaborator.missions.
-							map(function(mission) { return mission.name; }));
+			this.staffDataExchangeService.collaboratorLoaded$.subscribe({
+				next: doneAndOk => {
+					if (doneAndOk) {
+						this.takeInAccountCollaborator();
 					}
-				}));
+				}
+			}));
 
 		// We register the listener for the tagify-textarea.
 		this.tagify
 			.on('add', this.boundAddProject)
 			.on('remove', this.boundRemoveProject);
+	}
+
+	takeInAccountCollaborator() {
+		this.collaborator = this.staffDataExchangeService.collaborator;
+		this.removeValues();
+		// We add this test to avoid an empty-warning inside the component
+		if (this.collaborator.missions.length > 0) {
+			this.tagify.addTags(
+				this.collaborator.missions.
+				map(function(mission) { return mission.name; }));
+		}
 	}
 
 	/**

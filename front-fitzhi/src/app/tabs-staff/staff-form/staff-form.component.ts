@@ -102,59 +102,68 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		if (traceOn()) {
 			console.log('Current staff member id ' + this.idStaff);
 		}
-		if (!this.idStaff) {
-			this.initStaff()
-;		} else {
-			/**
-             * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
-             */
-			this.subscriptions.add(
-				this.staffDataExchangeService.collaborator$
-					.subscribe((employee: Collaborator) => {
-						if (traceOn()) {
-							console.log('Employee loaded ' + employee.idStaff);
-						}
-						this.collaborator = employee;
-						this.profileStaff.get('firstName').setValue(this.collaborator.firstName);
-						this.profileStaff.get('lastName').setValue(this.collaborator.lastName);
-						this.profileStaff.get('nickName').setValue(this.collaborator.nickName);
-						this.profileStaff.get('login').setValue(this.collaborator.login);
-						this.profileStaff.get('email').setValue(this.collaborator.email);
-						this.profileStaff.get('profile').setValue(this.collaborator.level);
-						this.profileStaff.get('active').setValue(this.collaborator.active);
-						if (this.collaborator.active) {
-							if (this.collaborator.idStaff === null) {
-								this.label_isActive = 'will be considered in activity as long as this box is checked ';
-							} else {
-								if (this.collaborator.lastName === null) {
-									this.label_isActive =
-										'This collaborator is still in activity. Uncheck this box to inform of his leave.';
-								} else {
-									this.label_isActive =
-										((this.collaborator.firstName === null) ? '' : this.collaborator.firstName)
-										+ ' ' + this.collaborator.lastName
-										+ ' is still in activity. Uncheck this box to inform of his leave.';
-								}
-							}
-							// There is no READONLY attribute in the SELECT widget.
-							// We need to enable this field within the code and not in HTML like the rest of the form.
-							this.profileStaff.get('profile').enable();
-							this.profileStaff.get('external').enable();
-						} else {
-							this.label_isActive = this.collaborator.firstName + ' ' +
-								this.collaborator.lastName + ' in no more in activity since ';
-							this.label_dateInactive = this.collaborator.dateInactive;
-							// There is no READONLY attribute in the SELECT widget.
-							// We need to disable this field within the code and not in HTML like the rest of the form.
-							this.profileStaff.get('profile').disable();
-							this.profileStaff.get('external').disable();
-						}
-						this.profileStaff.get('external').setValue(this.collaborator.external);
-						this.cinematicService.setForm(Constants.DEVELOPERS_CRUD, this.router.url);
-					}));
-		}
+		/**
+		 * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
+		 */
+		this.subscriptions.add(
+			this.staffDataExchangeService.collaboratorLoaded$.subscribe({
+				next: doneAndOk => {
+					if (doneAndOk) {
+						this.takeInAccountCollaborator(this.staffDataExchangeService.collaborator);
+					} else {
+						this.initStaff();
+					}
+				}
+			}));
 
 		this.profiles = this.referentialService.profiles;
+	}
+
+	/*
+	 * Taking in account a collaborator loaded from the server.
+	 * @param collaborator the current active collaborator.
+	 */
+	takeInAccountCollaborator (collaborator: Collaborator) {
+		if (traceOn()) {
+			console.log('Employee loaded ' + collaborator.idStaff);
+		}
+		this.collaborator = collaborator;
+		this.profileStaff.get('firstName').setValue(this.collaborator.firstName);
+		this.profileStaff.get('lastName').setValue(this.collaborator.lastName);
+		this.profileStaff.get('nickName').setValue(this.collaborator.nickName);
+		this.profileStaff.get('login').setValue(this.collaborator.login);
+		this.profileStaff.get('email').setValue(this.collaborator.email);
+		this.profileStaff.get('profile').setValue(this.collaborator.level);
+		this.profileStaff.get('active').setValue(this.collaborator.active);
+		if (this.collaborator.active) {
+			if (this.collaborator.idStaff === null) {
+				this.label_isActive = 'will be considered in activity as long as this box is checked ';
+			} else {
+				if (this.collaborator.lastName === null) {
+					this.label_isActive =
+						'This collaborator is still in activity. Uncheck this box to inform of his leave.';
+				} else {
+					this.label_isActive =
+						((this.collaborator.firstName === null) ? '' : this.collaborator.firstName)
+						+ ' ' + this.collaborator.lastName
+						+ ' is still in activity. Uncheck this box to inform of his leave.';
+				}
+			}
+			// There is no READONLY attribute in the SELECT widget.
+			// We need to enable this field within the code and not in HTML like the rest of the form.
+			this.profileStaff.get('profile').enable();
+			this.profileStaff.get('external').enable();
+		} else {
+			this.label_isActive = this.collaborator.firstName + ' ' +
+				this.collaborator.lastName + ' in no more in activity since ';
+			this.label_dateInactive = this.collaborator.dateInactive;
+			// There is no READONLY attribute in the SELECT widget.
+			// We need to disable this field within the code and not in HTML like the rest of the form.
+			this.profileStaff.get('profile').disable();
+			this.profileStaff.get('external').disable();
+		}
+		this.profileStaff.get('external').setValue(this.collaborator.external);
+		this.cinematicService.setForm(Constants.DEVELOPERS_CRUD, this.router.url);
 	}
 
 	/**

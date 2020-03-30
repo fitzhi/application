@@ -1,28 +1,29 @@
 import { Collaborator } from '../../data/collaborator';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
+import { traceOn } from 'src/app/global';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class StaffDataExchangeService {
 
-	private collaboratorSource = new BehaviorSubject(
-		{
-			idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
-			active: true, dateInactive: null,
-			missions: [], experiences: []
-		});
+	public collaboratorLoaded$ = new BehaviorSubject<boolean>(false);
 
-	collaborator$ = this.collaboratorSource.asObservable();
+	public collaborator: Collaborator;
 
 	constructor() { }
 
 	/**
-     * A new collaborator has been loaded and data has to be shared.
-     */
+	 * A new collaborator has been loaded and data has to be shared.
+	 * @param collaborator current collaborator
+	 */
 	changeCollaborator(collaborator: Collaborator) {
-		this.collaboratorSource.next(collaborator);
+		if (traceOn()) {
+			console.log('collaborator switch from ' + ((this.collaborator) ? this.collaborator.lastName : 'empty') + ' to ' + collaborator.lastName);
+		}
+		this.collaborator = collaborator;
+		this.collaboratorLoaded$.next(true);
 	}
 
 }
