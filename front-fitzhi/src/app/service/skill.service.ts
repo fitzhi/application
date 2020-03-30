@@ -120,7 +120,7 @@ export class SkillService extends InternalService {
 	 */
 	title(idSkill: number) {
 		const foundSkill = this.allSkills.find(skill => skill.id === idSkill);
-		return (foundSkill) ? ('ERR : no title for id ' + idSkill) : foundSkill.title;
+		return (foundSkill) ?  foundSkill.title : ('ERR : no title for id ' + idSkill);
 	}
 
 	/**
