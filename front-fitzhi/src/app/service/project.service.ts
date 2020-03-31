@@ -29,6 +29,7 @@ import { AttachmentFile } from '../data/AttachmentFile';
 import { FileService } from './file.service';
 import { Ecosystem } from '../data/ecosystem';
 import { traceOn } from '../global';
+import { SunburstCinematicService } from '../project/project-sunburst/service/sunburst-cinematic.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -70,6 +71,7 @@ export class ProjectService extends InternalService {
 		private referentialService: ReferentialService,
 		private fileService: FileService,
 		private messageService: MessageService,
+		private sunburstCinematicService: SunburstCinematicService,
 		private backendSetupService: BackendSetupService) {
 			super();
 	}
@@ -383,6 +385,7 @@ export class ProjectService extends InternalService {
 		if (traceOn()) {
 			console.log('Reset the dashboard data on URL ' + url);
 		}
+		this.sunburstCinematicService.listenEventsFromServer$.next(true);
 		return this.httpClient.get<string>(url, httpOptions);
 	}
 

@@ -25,6 +25,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ContributorsDTO } from 'src/app/data/external/contributorsDTO';
 import { traceOn } from 'src/app/global';
 import { SunburstCinematicService } from './service/sunburst-cinematic.service';
+import { SunburstCacheService } from './service/sunburst-cache.service';
 
 
 //
@@ -152,6 +153,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		private projectStaffService: ProjectStaffService,
 		private messageBoxService: MessageBoxService,
 		private dialog: MatDialog,
+		private cacheService: SunburstCacheService,
 		private projectService: ProjectService) {
 			super();
 	}
@@ -225,7 +227,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 							}
 							this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
 						} else {
-							this.loadDataChart();
+							setTimeout( () => this.loadDataChart(), 0);
 						}
 					}
 				}
@@ -253,7 +255,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			take(1),
 			switchMap((doneAndOk: boolean) => {
 				if (doneAndOk) {
-					return this.loadChart$();
+					return this.projectService.loadDashboardData$(this.settings);
 				} else {
 					return of(EMPTY);
 				}
@@ -277,9 +279,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			}));
 	}
 
-	loadChart$() {
-		return this.projectService.loadDashboardData$(this.settings);
-	}
 
 	/**
      * Load the dashboard data in order to produce the sunburst chart.
@@ -287,6 +286,15 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	loadDataChart() {
 
 		this.idPanelSelected = this.SUNBURST;
+
+		//
+		// We use the cache if an entry is present
+		//
+		if (this.cacheService.hasResponse()) {
+			this.setActiveContext (PreviewContext.SUNBURST_READY);
+			setTimeout(() => this.generateChart(this.cacheService.getReponse()), 0);
+			return;
+		}
 
 		if ((!this.projectService.project) || (!this.projectService.project.id)) {
 			this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
@@ -307,14 +315,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 						case 0:
 							this.setActiveContext (PreviewContext.SUNBURST_READY);
 							setTimeout(() => {
-								this.handleSunburstData(response);
-								if (traceOn()) {
-									console.log ('The risk of the current project is', response.projectRiskLevel);
-								}
-								this.updateRiskLevel.next(response.projectRiskLevel);
-								this.projectService.project.staffEvaluation = response.projectRiskLevel;
-								this.hackSunburstStyle();
-								this.tooltipChart();
+								this.cacheService.saveResponse(response);
+								this.generateChart(response);
 							}, 0);
 							break;
 						case 201:
@@ -336,6 +338,21 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				responseInError => {
 					this.handleErrorData(responseInError);
 				});
+	}
+
+	/**
+	 * Generation of the chart based from the data received.
+	 * @param response the HTTP response of the server
+	 */
+	generateChart(response: any) {
+		if (traceOn()) {
+			console.log ('The risk of the current project is', response.projectRiskLevel);
+		}
+		this.handleSunburstData(response);
+		this.updateRiskLevel.next(response.projectRiskLevel);
+		this.projectService.project.staffEvaluation = response.projectRiskLevel;
+		this.hackSunburstStyle();
+		this.tooltipChart();
 	}
 
 	/**
@@ -595,6 +612,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			.pipe(take(1))
 			.subscribe(answer => {
 				if (answer) {
+					this.cacheService.clearReponse();
 					this.projectService
 						.resetDashboard(this.settings.idProject)
 						.pipe(take(1))

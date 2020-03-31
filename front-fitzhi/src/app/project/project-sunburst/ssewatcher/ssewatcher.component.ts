@@ -5,7 +5,6 @@ import { traceOn } from 'src/app/global';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { ActivityLog } from 'src/app/data/activity-log';
-import { registerLocaleData } from '@angular/common';
 import { MessageService } from 'src/app/message/message.service';
 import { SunburstCinematicService } from '../service/sunburst-cinematic.service';
 
@@ -46,6 +45,10 @@ export class SSEWatcherComponent extends BaseComponent implements OnInit, OnDest
 			this.sunburstCinematicService.listenEventsFromServer$.subscribe({
 				next: doneAndOk => {
 					if (doneAndOk) {
+						// We do not allow to open simultaneouly more than ONE server events listener.
+						if ((this.eventSource) && (this.eventSource.readyState === EventSource.OPEN)) {
+							this.closeEventSource();
+						}
 						this.eventSource = this.listenServer();
 					}
 			}}));
