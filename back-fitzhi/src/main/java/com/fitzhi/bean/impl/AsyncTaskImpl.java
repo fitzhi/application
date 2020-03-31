@@ -6,6 +6,7 @@ import static com.fitzhi.Error.MESSAGE_MULTIPLE_TASK;
 import static com.fitzhi.Error.MESSAGE_TASK_NOT_FOUND;
 import static com.fitzhi.Global.LN;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,9 +45,6 @@ public class AsyncTaskImpl implements AsyncTask {
 		t.setComplete(false);
 		t.setCompleteOnError(false);
 		t.setLastBreath(null);
-		
-//		TaskLog startingLog = new TaskLog("Starting");
-//		t.addActivity(startingLog);
 		
 		tasks.put(genKey(t), t);
 	}
@@ -116,9 +114,12 @@ public class AsyncTaskImpl implements AsyncTask {
 	private void completeTask(String operation, String title, int id, boolean successful) throws SkillerException {
 		Task task = getTask(operation, title, id);
 		if (task == null) {
-			throw new SkillerException(CODE_TASK_NOT_FOUND, String.format(MESSAGE_TASK_NOT_FOUND, operation, id));
+			if (log.isDebugEnabled()) {
+				log.debug(MessageFormat.format(MESSAGE_TASK_NOT_FOUND, operation, id));
+			}
+		} else {
+			task.complete(successful);				
 		}
-		task.complete(successful);				
 	}
 	
 	@Override
