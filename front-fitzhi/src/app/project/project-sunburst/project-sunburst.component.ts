@@ -19,8 +19,6 @@ import { ContributorsDataSource } from './node-detail/contributors-data-source';
 import { BehaviorSubject, Subject, Subscription, interval, Observable, of, EMPTY } from 'rxjs';
 import { Contributor } from '../../data/contributor';
 import { take, switchMap } from 'rxjs/operators';
-import { Task } from 'src/app/data/task';
-import { TaskLog } from 'src/app/data/task-log';
 import { MatTableDataSource } from '@angular/material/table';
 import { ContributorsDTO } from 'src/app/data/external/contributorsDTO';
 import { traceOn } from 'src/app/global';
@@ -416,11 +414,13 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	handleSunburstData(response: any) {
 
-		this.myChart = Sunburst();
-		this.myChart.onNodeClick(nodeClicked => {
-			this.onNodeClick(nodeClicked);
-			this.myChart.focusOnNode(nodeClicked);
-		});
+		if (!this.myChart) {
+			this.myChart = Sunburst();
+			this.myChart.onNodeClick(nodeClicked => {
+				this.onNodeClick(nodeClicked);
+				this.myChart.focusOnNode(nodeClicked);
+			});
+		}
 
 		this.myChart.data(response.sunburstData)
 			.width(500)
