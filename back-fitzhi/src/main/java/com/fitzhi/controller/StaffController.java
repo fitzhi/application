@@ -9,6 +9,7 @@ import static com.fitzhi.Global.BACKEND_RETURN_CODE;
 import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
 
 import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -241,7 +242,7 @@ public class StaffController {
 			// We create an already inactive user. 
 			// That kind of user is supposed to be created from the ghost table form
 			if ( !input.isActive() && (input.getDateInactive() == null)) {
-				input.setDateInactive(Global.now());
+				input.setDateInactive(LocalDate.now());
 			}
 			
 			staffHandler.addNewStaffMember(input);
@@ -255,7 +256,7 @@ public class StaffController {
 				responseEntity = new ResponseEntity<>(input, headers, HttpStatus.NOT_FOUND);
 			} else {
 				if ((!input.isActive()) && (updatedStaff.isActive())) {
-					input.setDateInactive(Global.now());
+					input.setDateInactive(LocalDate.now());
 				}
 				try {
 					staffHandler.saveStaffMember(input);

@@ -49,6 +49,11 @@
 	</root>
 
 	<logger name="com.fitzhi.service.sse" additivity="false">
+		<level value="INFO" />
+		<appender-ref ref="Console" />
+	</logger>
+
+	<logger name="com.fitzhi.source.crawler.git" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="Console" />
 	</logger>

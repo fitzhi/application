@@ -14,8 +14,10 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -162,11 +164,11 @@ public class ProjectController {
 	 * @return the experience of a developer as list of skills.
 	 */
 	@GetMapping(value="/skills/{idProject}")
-	public ResponseEntity<List<Skill>> get(final @PathVariable("idProject") int idProject) {
+	public ResponseEntity<Set<Skill>> get(final @PathVariable("idProject") int idProject) {
 		
-		MyReference<ResponseEntity<List<Skill>>> refResponse = projectLoader.new MyReference<>();
+		MyReference<ResponseEntity<Set<Skill>>> refResponse = projectLoader.new MyReference<>();
 
-		final Project project = projectLoader.getProject(idProject, new ArrayList<Skill>(), refResponse);
+		final Project project = projectLoader.getProject(idProject, new HashSet<Skill>(), refResponse);
 		return  (refResponse.getResponse() != null) ? refResponse.getResponse() : 
 			new ResponseEntity<>(project.getSkills(), headers(), HttpStatus.OK);
 	}	

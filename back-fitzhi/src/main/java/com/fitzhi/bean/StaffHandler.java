@@ -226,5 +226,11 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	  * @throws SkillerException
 	  */
 	 void inferSkillsFromMissions(int idStaff) throws SkillerException;
+	 
+	 /**
+	  * Update the activity state.
+	  * @param staff the current staff whose status must be set. 
+	  */
+	 void updateActiveState(Staff staff);
 }
 

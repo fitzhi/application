@@ -3,6 +3,7 @@ package com.fitzhi.service.sse;
 import static com.fitzhi.Global.PROJECT;
 
 import java.time.Duration;
+import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -48,6 +49,10 @@ public class ReactiveLogReport implements LogReport {
 	 */
 	private ActivityLog currentLog(String operation, String title, int id) {
 		final Task task = tasks.getTask(operation, PROJECT, id);
+		if (task == null) {
+			return new ActivityLog(0, String.format("Initialization for %s for %s : %d", operation, title, id), 
+					LocalDate.MIN.toEpochDay(), false, false);
+		}
 		return (!task.isComplete()) ? task.buildLastestLog() : new ActivityLog(task.getLastBreath(), true);
 	}
 
@@ -68,7 +73,7 @@ public class ReactiveLogReport implements LogReport {
         			}
         			return actiLog;
         		})
-        		.distinctUntilChanged()
+        		.distinctUntilChanged(ActivityLog::hashCode)
         		.takeUntil((ActivityLog actiLog) -> actiLog.isComplete())
         		.doOnComplete(() -> {this.tasks.removeTask(operation, PROJECT, idProject);})
         		.log();

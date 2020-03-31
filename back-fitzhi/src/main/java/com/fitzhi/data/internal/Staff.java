@@ -3,6 +3,7 @@
  */
 package com.fitzhi.data.internal;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -14,6 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fitzhi.bean.impl.StaffHandlerImpl;
 import com.fitzhi.data.encryption.DataEncryption;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.SkillerException;
@@ -46,14 +49,25 @@ public @Data class Staff implements UserDetails {
 	private String email;
 	private String level;
 	private String password;
+	
+	
 	/**
-	 * Staff member is still active or remove from the staff list.
+	 * Staff member is still active or remove from the active staff list.<br/>
+	 * This state is processed based on the activity of the developer since {@link StaffHandlerImpl#inactivityDelay} days,
+	 * <font color="blue">unless the {@link Staff#forceActiveState} is set to {@code true}.</font>
 	 */
 	private boolean active = true;
+	
 	/**
-	 * Date of the exit.
+	 * This boolean is used to activate, or deactivate a developer whatever is his activity.
 	 */
-	private Date dateInactive;
+	private boolean forceActiveState = false;
+	
+	/**
+	 * Date of the exit <i>(most probably the date of the last commit)</i>.
+	 */
+	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+	private LocalDate dateInactive;
 
 	/**
 	 * application filename & type (Word, PDF...)

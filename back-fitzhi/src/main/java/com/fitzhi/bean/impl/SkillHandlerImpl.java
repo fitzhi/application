@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.fitzhi.SkillerRuntimeException;
@@ -205,7 +206,6 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			if (sourcePath.indexOf(filenameDependencies) == -1) {
 				return false;
 			}
-			
 			File file = new File(rootPath + "/" + sourcePath);
 			try (FileReader reader = new FileReader(file)) {
 				BufferedReader br = new BufferedReader(reader);

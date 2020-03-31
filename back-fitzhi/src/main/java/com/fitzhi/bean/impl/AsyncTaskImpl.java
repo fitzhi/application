@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.fitzhi.bean.AsyncTask;
+import com.fitzhi.data.external.ActivityLog;
 import com.fitzhi.data.internal.Task;
 import com.fitzhi.data.internal.TaskLog;
 import com.fitzhi.exception.SkillerException;
@@ -43,6 +44,10 @@ public class AsyncTaskImpl implements AsyncTask {
 		t.setComplete(false);
 		t.setCompleteOnError(false);
 		t.setLastBreath(null);
+		
+//		TaskLog startingLog = new TaskLog("Starting");
+//		t.addActivity(startingLog);
+		
 		tasks.put(genKey(t), t);
 	}
 
@@ -68,7 +73,6 @@ public class AsyncTaskImpl implements AsyncTask {
 	@Override
 	public Task getTask(String operation, String title, int id) {
 		Task t = new Task(operation, title, id);
-		
 		return tasks.get(genKey(t));
 	}
 	

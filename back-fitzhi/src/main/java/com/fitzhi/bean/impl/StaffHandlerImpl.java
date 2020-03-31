@@ -4,13 +4,16 @@ import static com.fitzhi.Error.CODE_LOGIN_ALREADY_EXIST;
 import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_LOGIN_ALREADY_EXIST;
 import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
+import static com.fitzhi.Error.SHOULD_NOT_PASS_HERE;
 import static com.fitzhi.Global.UNKNOWN;
 
 import java.text.MessageFormat;
 import java.text.Normalizer;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -19,6 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.fitzhi.Error;
@@ -71,10 +75,10 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	DataHandler dataSaver;
 		
 	/**
-	 * the Staff handling service.
+	 * Number of days of inactivity before inactivation of a staff member.
 	 */
-	@Autowired
-	StaffHandler staffHandler;
+	@Value("${staffHandler.inactivity.delay}")
+	private int inactivityDelay;	
 	
 	@Override
 	public void init() {
@@ -408,15 +412,18 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 						this.dataUpdated = true;
 					}
 				}
+				
+				// We update the skills for this contributor.
+				this.inferSkillsFromMissions(contributor.getIdStaff());
+
+				// We update his active or inactive state.
+				this.updateActiveState(staff);
 			}
-			
-			// We update the skills for this contributor.
-			staffHandler.inferSkillsFromMissions(contributor.getIdStaff());
 		};
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("%d contributors retrieved : ", contributors.size()));
 			contributors.stream().forEach(contributor -> {
-				String fullname = staffHandler.getFullname(contributor.getIdStaff());
+				String fullname = this.getFullname(contributor.getIdStaff());
 				log.debug(String.format("%d %s", contributor.getIdStaff(),
 						(fullname != null) ? fullname : "unknown"));
 			});
@@ -652,6 +659,14 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		}
 	}
 
+	
+	private List<StaffActivitySkill> activity(Staff staff) {
+		return staff.getMissions().stream()
+		.flatMap(mission -> mission.getStaffActivitySkill().values().stream())
+		.collect(Collectors.toList());
+		
+	}
+	
 	@Override
 	public void inferSkillsFromMissions(int idStaff) throws SkillerException {
 
@@ -660,10 +675,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 
-		List<StaffActivitySkill> activity = 
-				staff.getMissions().stream()
-				.flatMap(mission -> mission.getStaffActivitySkill().values().stream())
-				.collect(Collectors.toList());
+		List<StaffActivitySkill> activity = activity(staff);
 
 		//
 		// Internal check
@@ -682,6 +694,41 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 					log.debug(String.format("Adding the skill %d to the developer %s", idSkill, staff.fullName()));
 				}
 				staff.getExperiences().add(new Experience(idSkill, 1));
+			}
+		}
+	}
+
+	@Override
+	public void updateActiveState(Staff staff) {
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Set the activity state to %b for %s", true, staff.fullName()));
+		}
+		// Nothing to process if the user chooses a manual activity state
+		if (staff.isForceActiveState()) {
+			return;
+		}
+
+		List<StaffActivitySkill> activity = activity(staff);
+
+		// No activity at all, we consider this staff member as a new one, so therefore active.
+		if (activity.isEmpty()) {
+			staff.setActive(true);
+			staff.setDateInactive(null);				
+			return;
+		}
+		
+		LocalDate latestCommit = activity.stream()
+				.map(StaffActivitySkill::getLastCommit)
+				.max(Comparator.comparing(LocalDate::toEpochDay))
+				.orElseThrow(() -> new SkillerRuntimeException(SHOULD_NOT_PASS_HERE));
+
+		synchronized (lockDataUpdated) {
+			if (LocalDate.now().minusDays(inactivityDelay).isAfter(latestCommit)) {
+				staff.setActive(false);
+				staff.setDateInactive(latestCommit);
+			} else {
+				staff.setActive(true);
+				staff.setDateInactive(null);				
 			}
 		}
 	}

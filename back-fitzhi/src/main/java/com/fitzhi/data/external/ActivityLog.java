@@ -50,12 +50,11 @@ public @Data class ActivityLog  {
 	boolean completeOnError = false;
 	
 	/**
-	 * 
-	 * @param code the 
-	 * @param message
-	 * @param logTime
-	 * @param complete
-	 * @param completeOnError
+	 * @param code the code of error associated to this message
+	 * @param message the message
+	 * @param logTime the data/time when this log has been recorded
+	 * @param complete {@code true} if the treatment is completed.
+	 * @param completeOnError{@code false} if the treatment is completed.
 	 */
 	public ActivityLog(int code, String message, long logTime, boolean complete, boolean completeOnError) {
 		super();

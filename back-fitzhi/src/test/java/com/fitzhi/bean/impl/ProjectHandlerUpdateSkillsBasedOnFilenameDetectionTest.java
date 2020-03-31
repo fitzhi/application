@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.exception.SkillerException;
 
@@ -65,8 +66,9 @@ public class ProjectHandlerUpdateSkillsBasedOnFilenameDetectionTest {
 	public void addANonExistentSkill() throws SkillerException {
 		projectHandler.updateSkills(project, repo);
 		Assert.assertFalse(projectHandler.get(1789).getSkills().isEmpty());
-		Assert.assertEquals(1, projectHandler.get(1789).getSkills().get(0).getId());
-		
+		Skill[] skills = new Skill[0];
+		Skill[] resultingSkills = projectHandler.get(1789).getSkills().toArray(skills);
+		Assert.assertEquals(2, resultingSkills.length);
 	}
 	
 	@After

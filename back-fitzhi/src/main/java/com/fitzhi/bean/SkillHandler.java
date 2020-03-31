@@ -83,5 +83,6 @@ public interface SkillHandler extends DataSaverLifeCycle {
 	 * @throws SkillerException exception thrown if any problem occurs (most probably an IOException)
 	 */
 	boolean isSkillDetectedWithFilename(Skill skill, String sourcePath);
-	 
+
+	
 }

@@ -64,10 +64,6 @@ public class Global {
 	 */
 	public static final int UNKNOWN = -1;
 
-	public static Date now() {
-		return new Date();
-	}
-
 	/**
 	 * Deep cloning of an object by serialization.
 	 * @param object the given object to be cloned

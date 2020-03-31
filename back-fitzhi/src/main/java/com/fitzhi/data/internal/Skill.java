@@ -91,5 +91,6 @@ public @Data class Skill implements Serializable {
 		return result;
 	}
 
+
 	
 }

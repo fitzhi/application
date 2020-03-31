@@ -275,12 +275,12 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Override
 	public void addSkill(Project project, Skill skill) {
 		
-		if (log.isInfoEnabled()) {
-			log.info(String.format("The project %s has declared the skill %s in its scope", 
-					project.getName(), skill.getTitle()));
-		}
 		synchronized (lockDataUpdated) {
 			if (!project.getSkills().contains(skill)) {
+				if (log.isDebugEnabled()) {
+					log.debug(String.format("The project '%s' has declared the skill '%s' in its scope", 
+							project.getName(), skill.getTitle()));
+				}
 				project.getSkills().add(skill);
 			}
 			this.dataUpdated = true;
