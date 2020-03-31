@@ -302,6 +302,11 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	}
 	
 	@Override
+	protected AsyncTask tasks() { 
+		return this.tasks;
+	}
+	
+	@Override
 	public void clone(final Project project, ConnectionSettings settings)
 			throws IOException, GitAPIException, SkillerException {
 
@@ -760,7 +765,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			log.debug(String.format("loadChanges (%s) returns %d entries", project.getName(), analysis.numberOfChanges()));
 		}
 
-		tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), String.format("%d changes have been detected on the repository", analysis.numberOfChanges()));
+		tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), MessageFormat.format("{0} changes have been detected on the repository", analysis.numberOfChanges()));
 	
 		/**
 		 * We save the directories of the repository.

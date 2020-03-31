@@ -1,14 +1,18 @@
 package com.fitzhi.source.crawler.impl;
 
+import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.INTERNAL_FILE_SEPARATOR;
 import static com.fitzhi.Global.LN;
+import static com.fitzhi.Global.PROJECT;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 
+import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.bean.StaffHandler;
@@ -20,6 +24,7 @@ import com.fitzhi.data.internal.RiskDashboard;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.StaffActivitySkill;
+import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.source.crawler.RepoScanner;
@@ -55,7 +60,16 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	 * We retrieve the {@link ProjectHandler} interface from the upper-class which has been injected in the Spring-way..
 	 */
 	protected abstract ProjectHandler projectHandler();
-		
+	
+	/**
+	 * <p>
+	 * Service in charge of handling the asynchonous task.
+	 * This bean in set by the upper concrete service.
+	 * </p>
+	 * We retrieve the {@link AsyncTask} interface from the upper-class which has been injected in the Spring-way..
+	 */
+	protected abstract AsyncTask tasks();
+
 	/**
 	 * <p>
 	 * Service in charge of handling the skill collection.
@@ -67,15 +81,23 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	
 	@Override
 	public RiskDashboard aggregateDashboard(final Project project, final CommitRepository commitRepo) {
+		int ind = 0;
+		int tot_ind = 0;
+		final int STEP = 1000;
+		
 		DataChart root = new DataChart("root");
-		commitRepo.getRepository().values().stream().forEach(
-				commit -> 
-				root.injectFile(root, 
-						commit.sourcePath.split(INTERNAL_FILE_SEPARATOR), 
-						commit.getImportance(), 
-						commit.evaluateDateLastestCommit(),
-						commit.committers()));
-
+		for (CommitHistory commit : commitRepo.getRepository().values()) {
+			if (+ind == STEP) {
+				tot_ind += ind;
+				ind = 0;
+				this.tasks().logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), MessageFormat.format("{0} commits agregated", tot_ind));
+			}
+			root.injectFile(root, 
+					commit.sourcePath.split(INTERNAL_FILE_SEPARATOR), 
+					commit.getImportance(), 
+					commit.evaluateDateLastestCommit(),
+					commit.committers());
+		}
 		
 		List<Committer> ghosts = new ArrayList<>();
 		for (Ghost ghost : project.getGhosts()) {
