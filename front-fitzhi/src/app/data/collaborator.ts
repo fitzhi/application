@@ -10,6 +10,7 @@ export class Collaborator {
 	public login: string;
 	public email: string;
 	public level: string;
+	public forceActiveState: boolean;
 	public active: boolean;
 	public dateInactive: Date;
 	public application: string;

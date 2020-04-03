@@ -29,21 +29,6 @@ public class FitzhiWebMvcConfigurer implements WebMvcConfigurer {
 	@Value("${allowedOrigins}")
 	private String allowedOrigins;
 
-/*	
-	@Override
-    public void configureMessageConverters(
-      List<HttpMessageConverter<?>> converters) {
-     
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
-		converter.getSupportedMediaTypes().forEach(type -> System.out.println(type));
-		
-		List<MediaType> types = new ArrayList<>();
-		types.add(MediaType.TEXT_EVENT_STREAM);
-		converter.setSupportedMediaTypes(types);
-		
-		converters.add(converter);
-    }
-*/
 	
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {

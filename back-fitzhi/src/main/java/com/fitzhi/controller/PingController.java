@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fitzhi.controller.sample.LocalDateContainer;
+import com.fitzhi.exception.SkillerException;
 
 @RestController
 @RequestMapping("/api/test")
@@ -52,4 +53,8 @@ public class PingController {
 				HttpStatus.OK);
 	}
 
+	@GetMapping("/exception")
+	public ResponseEntity<String> exception() throws SkillerException {		
+		throw new SkillerException(1789, "Error message");
+	}
 }

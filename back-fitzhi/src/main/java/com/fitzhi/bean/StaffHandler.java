@@ -194,6 +194,15 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 
 	 /**
 	  * <p>
+	  * Test the existence of a staff member.
+	  * </p>
+	  * @param idStaff the staff identifier.
+	  * @return {@code true} if there is no staff with the given id, {@code false} otherwise.
+	  */
+	 boolean hasStaff(int idStaff);
+	 
+	 /**
+	  * <p>
 	  * Test the eligibility of a staff member to meet a specific criteria. 
 	  * </p>
 	  * @param staff the candidate staff
@@ -228,9 +237,22 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 void inferSkillsFromMissions(int idStaff) throws SkillerException;
 	 
 	 /**
-	  * Update the activity state.
-	  * @param staff the current staff whose status must be set. 
+	  * Update the active status based on the history of missions executed by the given staff member.
+	  * @param staff the given developer whose {@code active} status must be switch on, or off.
 	  */
 	 void updateActiveState(Staff staff);
+	 
+	 /**
+	  * </p>
+	  * <b>Force</b> the value of the activity state for a developer.
+	  * </p>
+	  * <p>A the opposite of the method {@link StaffHandler#updateActiveState(Staff) updateActiveState} which updates the {@code active} field
+	  * based on the activity of this staff member, <b>and on this activity only</b>,
+	  * this method forces this value by an end-user decision.
+	  * @param staff the given staff member whose active status has to be switch on, or off.
+	  */
+	 void forceSwitchActiveState(Staff staff);
+	 
+	 
 }
 

@@ -104,4 +104,8 @@ export class Constants {
 	public static INPUT_BROADCAST = 1;
 	public static CHANGE_BROADCAST = 2;
 
+	public static INTERNAL_ERROR = 500;
+
+	public static BACKEND_RETURN_CODE = 'backend.return_code';
+	public static BACKEND_RETURN_MESSAGE = 'backend.return_message';
 }

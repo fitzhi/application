@@ -515,27 +515,44 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public void saveStaffMember(Staff staff) throws SkillerException {
+	public void saveStaffMember(Staff input) throws SkillerException {
 
-		if (staff.getIdStaff() == 0) {
-			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, staff.getIdStaff()));
+		Staff updStaff = getStaff(input.getIdStaff());
+		if (input.getIdStaff() == 0) {
+			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, input.getIdStaff()));
 		}
 		
-		// The login is unique for each Fixhì user
-		Optional<Staff> emp = findStaffWithLogin(staff.getLogin());
-		if ( (emp.isPresent()) && (emp.get().getIdStaff() != staff.getIdStaff()) && (emp.get().getLogin().equals(staff.getLogin()))) {
+		//
+		// The login is unique for each Fitxhì user.
+		// If we find a staff member with the same login and a different identifier, we throw an exception.
+		//
+		Optional<Staff> emp = findStaffWithLogin(input.getLogin());
+		if ( (emp.isPresent()) && (emp.get().getIdStaff() != input.getIdStaff()) && (emp.get().getLogin().equals(input.getLogin()))) {
 			if (log.isDebugEnabled()) {
 				log.debug(String.format(
-						"the employee %d %s gets the same login %s as %d %s" , 
-						staff.getIdStaff(), staff.fullName(),
-						staff.getLogin(),
+						"the employee %d %s has the same login %s than %d %s" , 
+						input.getIdStaff(), input.fullName(),
+						input.getLogin(),
 						emp.get().getIdStaff(), emp.get().fullName()));
 			}
-			throw new SkillerException(CODE_LOGIN_ALREADY_EXIST, MessageFormat.format(MESSAGE_LOGIN_ALREADY_EXIST, staff.getLogin(), emp.get().getFirstName(), emp.get().getLastName()));			
+			throw new SkillerException(CODE_LOGIN_ALREADY_EXIST, MessageFormat.format(MESSAGE_LOGIN_ALREADY_EXIST, input.getLogin(), emp.get().getFirstName(), emp.get().getLastName()));			
 		}
 		
+		updStaff.setFirstName(input.getFirstName());
+		updStaff.setLastName(input.getLastName());
+		updStaff.setNickName(input.getNickName());
+		updStaff.setLogin(input.getLogin());
+		updStaff.setEmail(input.getEmail());
+		updStaff.setLevel(input.getLevel());
+		updStaff.setForceActiveState(input.isForceActiveState());
+		if ((input.isForceActiveState())) {
+			updStaff.setActive(input.isActive());
+			updStaff.setDateInactive((!input.isActive()) ? LocalDate.now() : null);
+		}
+		updStaff.setExternal(input.isExternal());
+		
 		synchronized (lockDataUpdated) {
-			getStaff().put(staff.getIdStaff(), staff);
+			getStaff().put(updStaff.getIdStaff(), updStaff);
 			this.dataUpdated = true;
 		}
 	}
@@ -651,6 +668,12 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		return getStaff().get(idStaff);
 	}
 
+	
+	@Override
+	public boolean hasStaff(int idStaff) {
+		return getStaff().containsKey(idStaff);
+	}
+	
 	@Override
 	public void savePassword(Staff staff, String password) {
 		synchronized (lockDataUpdated) {
@@ -701,7 +724,10 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	@Override
 	public void updateActiveState(Staff staff) {
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Set the activity state to %b for %s", true, staff.fullName()));
+			log.debug(String.format(
+				"%s the activity state for %s", 
+				(staff.isActive() ? "Unset" : "Set"),
+				staff.fullName()));
 		}
 		// Nothing to process if the user chooses a manual activity state
 		if (staff.isForceActiveState()) {
@@ -729,6 +755,19 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			} else {
 				staff.setActive(true);
 				staff.setDateInactive(null);				
+			}
+		}
+	}
+
+	@Override
+	public void forceSwitchActiveState(Staff staff) {
+		synchronized (lockDataUpdated) {
+			if (staff.isActive()) {
+				staff.setActive(false);
+				staff.setDateInactive(LocalDate.now());
+			} else {
+				staff.setActive(true);
+				staff.setDateInactive(null);
 			}
 		}
 	}

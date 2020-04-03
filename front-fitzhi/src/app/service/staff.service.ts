@@ -16,6 +16,7 @@ import { take } from 'rxjs/operators';
 import { BooleanDTO } from '../data/external/booleanDTO';
 import { FileService } from './file.service';
 import { traceOn } from '../global';
+import { MessageService } from '../message/message.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json', 'observe': 'response' })
@@ -34,6 +35,7 @@ export class StaffService {
 	constructor(
 		private http: HttpClient,
 		private fileService: FileService,
+		private messageService: MessageService,
 		private backendSetupService: BackendSetupService) {
 	}
 
@@ -60,6 +62,7 @@ export class StaffService {
 
 	/**
      * POST: update or add a new collaborator to the server
+	 * @param collaborator the given collaborator
      */
 	save(collaborator: Collaborator): Observable<Collaborator> {
 		if (traceOn()) {
@@ -67,6 +70,33 @@ export class StaffService {
 		}
 
 		return this.http.post<Collaborator>(this.backendSetupService.url() + '/staff' + '/save', collaborator, httpOptions);
+	}
+
+	/**
+     * Activate or inactivate a staff member.
+	 * @param idStaff the staff identifier to (de)activate
+     */
+	switchActiveState(collaborator: Collaborator) {
+		if (traceOn()) {
+			console.log(
+				'Switching the active status for the collaborator with id %d to %s',
+				collaborator.idStaff,
+				(collaborator.active) ? 'active' : 'inactive');
+		}
+
+		this.http.get<Boolean>(
+			this.backendSetupService.url() + '/staff/switchActiveState/' + collaborator.idStaff,
+			httpOptions).
+			pipe(take(1)).
+			subscribe({
+				next: doneAndOk => {
+					if (doneAndOk) {
+						this.messageService.success('Active state updated');
+					} else {
+						console.error('INTERNAL ERROR : Should not pass here!');
+					}
+				}
+			});
 	}
 
 	/**

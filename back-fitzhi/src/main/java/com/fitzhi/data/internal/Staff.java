@@ -50,6 +50,10 @@ public @Data class Staff implements UserDetails {
 	private String level;
 	private String password;
 	
+	/**
+	 * This boolean is set to {@code true} if the {@link Staff#active} state should be <b>manually</b> activated or not.
+	 */
+	private boolean forceActiveState = false;
 	
 	/**
 	 * Staff member is still active or remove from the active staff list.<br/>
@@ -57,12 +61,7 @@ public @Data class Staff implements UserDetails {
 	 * <font color="blue">unless the {@link Staff#forceActiveState} is set to {@code true}.</font>
 	 */
 	private boolean active = true;
-	
-	/**
-	 * This boolean is used to activate, or deactivate a developer whatever is his activity.
-	 */
-	private boolean forceActiveState = false;
-	
+		
 	/**
 	 * Date of the exit <i>(most probably the date of the last commit)</i>.
 	 */
@@ -70,7 +69,7 @@ public @Data class Staff implements UserDetails {
 	private LocalDate dateInactive;
 
 	/**
-	 * application filename & type (Word, PDF...)
+	 * Staff member application filename & type (Word, PDF...)
 	 */
 	private String application;
 	private int typeOfApplication;

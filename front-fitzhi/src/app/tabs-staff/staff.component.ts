@@ -57,8 +57,8 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
 			// Either we are in creation mode, or we load the collaborator from the back-end...
 			// We create an empty collaborator until the subscription is complete
 			this.collaborator = {
-				idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
-				active: true, dateInactive: null, application: null, typeOfApplication: null, external: false,
+				idStaff: -1, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
+				forceActiveState: false, active: true, dateInactive: null, application: null, typeOfApplication: null, external: false,
 				missions: [], experiences: []
 			};
 			this.staffDataExchangeService.changeCollaborator(this.collaborator);
@@ -87,8 +87,8 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
 							}
 							this.messageService.error('There is no staff member for id ' + this.idStaff);
 							this.collaborator = {
-								idStaff: null, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
-								active: true, dateInactive: null, application: null, typeOfApplication: null, external: false,
+								idStaff: -1, firstName: null, lastName: null, nickName: null, login: null, email: null, level: null,
+								forceActiveState: false, active: true, dateInactive: null, application: null, typeOfApplication: null, external: false,
 								missions: [], experiences: []
 							};
 						} else {

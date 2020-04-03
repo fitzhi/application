@@ -6,6 +6,7 @@ import { MessageService } from '../../../message/message.service';
 import { Constants } from '../../../constants';
 import { Router } from '@angular/router';
 import { traceOn } from 'src/app/global';
+import { ApiError } from 'src/app/data/api-error';
 
 @Injectable({ providedIn: 'root' })
 export class HttpErrorInterceptorService implements HttpInterceptor {
@@ -26,6 +27,19 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 					if (!navigator.onLine) {
 						errorMessage = 'No Internet Connection available !';
 						setTimeout(() => messageService.warning(errorMessage), 0);
+						return throwError(errorMessage);
+					}
+
+					if ((response.error) && response.error.hasOwnProperty('flagApiError')) {
+						// Server side error
+						const apiError = response.error;
+						errorMessage = 'Error: ' + apiError.message;
+						setTimeout(() => messageService.error(errorMessage), 0);
+						if (traceOn()) {
+							console.groupCollapsed ('Error stacktrace');
+							console.log(apiError.debugMessage);
+							console.groupEnd();
+						}
 						return throwError(errorMessage);
 					}
 

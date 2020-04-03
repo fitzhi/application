@@ -1,7 +1,6 @@
 package com.fitzhi.bean.impl;
 
 import static com.fitzhi.Error.CODE_MULTIPLE_TASK;
-import static com.fitzhi.Error.CODE_TASK_NOT_FOUND;
 import static com.fitzhi.Error.MESSAGE_MULTIPLE_TASK;
 import static com.fitzhi.Error.MESSAGE_TASK_NOT_FOUND;
 import static com.fitzhi.Global.LN;
@@ -14,7 +13,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import com.fitzhi.bean.AsyncTask;
-import com.fitzhi.data.external.ActivityLog;
 import com.fitzhi.data.internal.Task;
 import com.fitzhi.data.internal.TaskLog;
 import com.fitzhi.exception.SkillerException;
@@ -22,7 +20,9 @@ import com.fitzhi.exception.SkillerException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * <p>
  * Bean in charge of the collection containing all the active tasks.
+ * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @Slf4j

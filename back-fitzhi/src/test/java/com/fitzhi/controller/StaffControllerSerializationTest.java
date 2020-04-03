@@ -30,7 +30,7 @@ import com.fitzhi.data.internal.Staff;
 @AutoConfigureMockMvc
 public class StaffControllerSerializationTest {
 
-	String STAFF = "{\"idStaff\":56,\"firstName\":\"Eric\",\"lastName\":\"CHANAL\",\"nickName\":null,\"login\":\"AdminCarto\",\"email\":\"echanal@void.fr\",\"level\":\"ET 2\",\"password\":null,\"active\":true,\"dateInactive\":null,\"application\":null,\"typeOfApplication\":0,\"external\":false,\"missions\":[{\"idStaff\":56,\"idProject\":2,\"name\":\"VEGEO\",\"firstCommit\":\"2016-05-31\",\"lastCommit\":\"2017-03-16\",\"numberOfCommits\":18,\"numberOfFiles\":81}],\"experiences\":[],\"authorities\":[{\"authority\":\"ROLE_USER\"}],\"empty\":false,\"accountNonExpired\":true,\"accountNonLocked\":true,\"credentialsNonExpired\":true,\"enabled\":true,\"username\":\"AdminCarto\"}";
+	String STAFF = "{\"idStaff\":56,\"firstName\":\"Eric\",\"lastName\":\"CHANAL\",\"nickName\":null,\"login\":\"echanal\",\"email\":\"echanal@void.fr\",\"level\":\"ET 2\",\"password\":null,\"forceActiveState\":false,\"active\":true,\"dateInactive\":null,\"application\":null,\"typeOfApplication\":0,\"external\":false,\"missions\":[],\"experiences\":[],\"authorities\":[{\"authority\":\"ROLE_USER\"}],\"empty\":false,\"accountNonExpired\":true,\"accountNonLocked\":true,\"credentialsNonExpired\":true,\"enabled\":true,\"username\":\"AdminCarto\"}";
 
 	@Autowired
 	private MockMvc mvc;
@@ -55,9 +55,7 @@ public class StaffControllerSerializationTest {
 		Staff staff = staffHandler.getStaff(56); 
 		Assert.assertEquals(staff.getLastName(), "CHANAL");
 		Assert.assertEquals(staff.getFirstName(), "Eric");
-		Assert.assertEquals(staff.getMissions().size(), 1);
-		Assert.assertEquals(staff.getMissions().get(0).getIdProject(), 2);
-		Assert.assertEquals(staff.getMissions().get(0).getIdStaff(), 56);
+		Assert.assertEquals(staff.getLogin(), "echanal");
 		
 	}
 	

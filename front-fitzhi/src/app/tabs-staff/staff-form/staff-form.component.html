@@ -20,7 +20,8 @@
                     <input type="text"
 						class="form-control required" id="lastName" name="lastName"
 						(change)="onChange(LAST_NAME)"
-						[readonly]="isAlreadyDesactivated()" placeholder="Enter the last name"
+						[readonly]="isAlreadyDesactivated()" 
+						placeholder="Enter the last name"
                         value="" formControlName="lastName"/> 
                     <label
 						*ngIf="lastName.touched && lastName.invalid" [ngClass]="'alert alert-warning'"
@@ -85,18 +86,22 @@
 					profile for this staff member.</label>
 			</div>
 
-			<div class="mb-3">
-				<label>
-					<input 
-						type="checkbox" 
-						id="active" 
-						name="active" 
-						formControlName="active"
-						(change)="onChange(IS_ACTIVE)"/>
-					{{label_isActive}} {{label_dateInactive | date : 'longDate'}} 
-					<span [hidden]="!isAlreadyDesactivated()"><br/>&nbsp;&nbsp;&nbsp;&nbsp;Recheck this checkbox to reactivate this staff member</span>
-
-				</label>
+			<div class="mb-3 forceActiveState">
+				<div>
+					<mat-checkbox 
+						id="forceActiveState" name="forceActiveState" formControlName="forceActiveState" 
+						(change)="onChange(FORCEACTIVESTATE)">
+						Click this checkbox if you want to be able to force the 'active' state manually.
+					</mat-checkbox>
+				</div>
+				<div class="active">
+					<mat-checkbox 
+						id="active" name="active" formControlName="active" 
+						(change)="onChange(IS_ACTIVE)">
+						{{label_isActive}} {{label_dateInactive | date : 'longDate'}} 
+					</mat-checkbox>
+					<span [hidden]="!isAlreadyDesactivated()"><br/>&nbsp;&nbsp;Recheck this checkbox to reactivate this staff member</span>
+				</div>
 			</div>
 
 			<div class="mb-3">

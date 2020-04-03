@@ -36,7 +36,6 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				"/api/project/tasks/stream/**", 
 				"/api/project/audit/**", 
 				"/api/project/sonar/**", 
-				"/api/test/post_a_Test",
 				"/api/admin/settings",	
 
 				// We allow the the springfox-swagger url to be accessible

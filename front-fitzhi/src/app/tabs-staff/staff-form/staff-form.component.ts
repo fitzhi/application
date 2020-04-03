@@ -18,6 +18,7 @@ import { MessageBoxService } from 'src/app/message-box/service/message-box.servi
 import { Mission } from 'src/app/data/mission';
 import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
 import { traceOn } from 'src/app/global';
+import { CustomErrorHandler } from 'src/app/custom-error-handler';
 
 
 @Component({
@@ -38,6 +39,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	FIRST_NAME = 1;
 	LAST_NAME = 2;
 	IS_ACTIVE = 3;
+	FORCEACTIVESTATE = 4;
 
 	/**
      * This messenger is there to be used in one case : if the parent component is the INSTALLATION SETUP.
@@ -72,7 +74,8 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		login: new FormControl('', [Validators.required, Validators.maxLength(16), this.noUselessWhitespaceValidator]),
 		email: new FormControl('', [Validators.required, Validators.maxLength(32), Validators.email]),
 		profile: new FormControl(null, [Validators.required]),
-		active: new FormControl(1),
+		forceActiveState: new FormControl(),
+		active: new FormControl({value: 1, disabled: true}),
 		external: new FormControl(0)
 	});
 
@@ -134,7 +137,19 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		this.profileStaff.get('login').setValue(this.collaborator.login);
 		this.profileStaff.get('email').setValue(this.collaborator.email);
 		this.profileStaff.get('profile').setValue(this.collaborator.level);
+		this.profileStaff.get('forceActiveState').setValue(this.collaborator.forceActiveState);
+		this.enableActiveCheckbox();
 		this.profileStaff.get('active').setValue(this.collaborator.active);
+		this.displayActiveOrInactiveLabels();
+		this.enableDisableWidgets();
+		this.profileStaff.get('external').setValue(this.collaborator.external);
+		this.cinematicService.setForm(Constants.DEVELOPERS_CRUD, this.router.url);
+	}
+
+	/**
+	 * This method fills the label explaining the active/inactive status.
+	 */
+	displayActiveOrInactiveLabels() {
 		if (this.collaborator.active) {
 			if (this.collaborator.idStaff === null) {
 				this.label_isActive = 'will be considered in activity as long as this box is checked ';
@@ -149,21 +164,28 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 						+ ' is still in activity. Uncheck this box to inform of his leave.';
 				}
 			}
-			// There is no READONLY attribute in the SELECT widget.
-			// We need to enable this field within the code and not in HTML like the rest of the form.
-			this.profileStaff.get('profile').enable();
-			this.profileStaff.get('external').enable();
+			this.label_dateInactive = null;
 		} else {
 			this.label_isActive = this.collaborator.firstName + ' ' +
 				this.collaborator.lastName + ' in no more in activity since ';
 			this.label_dateInactive = this.collaborator.dateInactive;
-			// There is no READONLY attribute in the SELECT widget.
-			// We need to disable this field within the code and not in HTML like the rest of the form.
+		}
+	}
+
+	/**
+	 * Enable of Disable some widgets.
+	 *
+	 * There is no READONLY attribute in the SELECT widget.
+	 * We need to enable this field within the code and not in HTML like the rest of the form.
+	 */
+	enableDisableWidgets() {
+		if (this.collaborator.active) {
+			this.profileStaff.get('profile').enable();
+			this.profileStaff.get('external').enable();
+		} else {
 			this.profileStaff.get('profile').disable();
 			this.profileStaff.get('external').disable();
 		}
-		this.profileStaff.get('external').setValue(this.collaborator.external);
-		this.cinematicService.setForm(Constants.DEVELOPERS_CRUD, this.router.url);
 	}
 
 	/**
@@ -172,7 +194,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	initStaff() {
 		this.collaborator = {
 			idStaff: -1, firstName: '', lastName: '', nickName: '', login: '', email: '', level: '',
-			dateInactive: null, application: null, typeOfApplication: null, active: true, external: true,
+			dateInactive: null, application: null, typeOfApplication: null, forceActiveState: false, active: true, external: true,
 			experiences: [], missions: []
 		};
 		this.profileStaff.get('firstName').setValue('');
@@ -181,6 +203,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		this.profileStaff.get('login').setValue('');
 		this.profileStaff.get('email').setValue('');
 		this.profileStaff.get('profile').setValue('');
+		this.profileStaff.get('forceActiveState').setValue(false);
 		this.profileStaff.get('active').setValue(true);
 		this.label_isActive = 'will be considered in activity as long as this box is checked ';
 		this.profileStaff.get('external').setValue(false);
@@ -201,25 +224,33 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		this.collaborator.email = this.profileStaff.get('email').value;
 		this.collaborator.level = this.profileStaff.get('profile').value;
 		this.collaborator.active = this.profileStaff.get('active').value;
+		this.collaborator.forceActiveState = this.profileStaff.get('forceActiveState').value;
 		this.collaborator.external = this.profileStaff.get('external').value;
 
 		this.staffService.save(this.collaborator)
 			.pipe(take(1))
-			.subscribe(
-				staff => {
-					this.collaborator = staff;
-					this.messengerStaffUpdated.emit(staff);
+			.subscribe({
+				next: staff => this.afterSaveDone(staff)
+			});
+	}
 
-					//
-					// If this staff member exists in pre-existing list of collaborators. We actualize the content.
-					//
-					this.tabsStaffListService.actualizeCollaborator(staff);
-					this.staffDataExchangeService.changeCollaborator(staff);
+	/**
+	 * Operations to be executed after the collaborator has been saved.
+	 * @param staff the staff member
+	 */
+	afterSaveDone(staff: Collaborator) {
+		this.collaborator = staff;
+		this.messengerStaffUpdated.emit(staff);
 
-					this.staffListService.setFormStaff(staff);
+		//
+		// If this staff member exists in pre-existing list of collaborators. We actualize the content.
+		//
+		this.tabsStaffListService.actualizeCollaborator(staff);
+		this.staffDataExchangeService.changeCollaborator(staff);
 
-					this.messageService.success('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
-				});
+		this.staffListService.setFormStaff(staff);
+
+		this.messageService.success('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
 	}
 
 	/**
@@ -262,14 +293,33 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 
 		// The staff member was desactivated. And the user wants to reactivate him.
 		if (field === this.IS_ACTIVE) {
-			if (this.profileStaff.get('active').value) {
-				if (traceOn()) {
-					console.log ('The end-user wants to reactivate %s %s', oldFirstName, oldLastName);
-				}
-				this.collaborator.active = true;
-				this.profileStaff.get('active').setValue(true);
-				this.collaborator.dateInactive = null;
+			if (traceOn()) {
+				console.log ('The end-user wants to %s %s %s',
+					((this.profileStaff.get('active').value) ? 'activate' : ' inactivate'),
+					oldFirstName, oldLastName);
 			}
+			if (this.profileStaff.get('active').value) {
+				this.collaborator.active = true;
+				this.collaborator.dateInactive = null;
+			} else {
+				this.collaborator.active = false;
+				this.collaborator.dateInactive = new Date();
+			}
+			this.displayActiveOrInactiveLabels();
+			this.enableDisableWidgets();
+			//
+			// Updating the collaborator.
+			//
+			this.staffService.switchActiveState(this.collaborator);
+			return;
+		}
+		// User has selected a manuel update for the field 'active'.
+		if (field === this.FORCEACTIVESTATE) {
+			this.collaborator.forceActiveState = !this.collaborator.forceActiveState;
+			if (traceOn()) {
+				console.log ('Manuel force to ' + this.collaborator.forceActiveState);
+			}
+			this.enableActiveCheckbox();
 			return;
 		}
 
@@ -310,17 +360,25 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	}
 
 	/**
-	 * Evaluate if the current collaborator is registered as active inside the Zhistem.
-	 * @returns TRUE if the collaborator has an active mission.
+	 * Enable or disabke the Active checkbox.
 	 */
-	hasBeenActive(): boolean {
-		const activeMission = this.collaborator.missions
-			.find(mission => mission.lastCommit);
-		return (activeMission !== undefined);
+	enableActiveCheckbox() {
+		if (this.collaborator.forceActiveState) {
+			this.profileStaff.get('active').enable();
+		} else {
+			this.profileStaff.get('active').disable();
+		}
 	}
 
 	/**
-	 * @returns the last mission executed by this collaborator, as declared in his mission list.
+	 * Returns **TRUE** if the collaborator has an active mission.
+	 */
+	hasBeenActive(): boolean {
+		return (this.collaborator.missions.length > 0);
+	}
+
+	/**
+	 * Returns the last mission executed by this collaborator, as declared in his mission list.
 	 */
 	lastMission(): Mission {
 		const missions = this.collaborator.missions
@@ -353,6 +411,14 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 
 	get email(): any {
 		return this.profileStaff.get('email');
+	}
+
+	get forceActiveState(): any {
+		return this.profileStaff.get('forceActiveState');
+	}
+
+	get active(): any {
+		return this.profileStaff.get('active');
 	}
 
 	get external(): any {

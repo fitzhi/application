@@ -16,3 +16,12 @@
 P.lastActivity {
 	margin-left: 15px;
 }
+
+div.active {
+	margin-left: 10px;
+}
+
+div.forceActiveState {
+	background-color: whitesmoke; 
+	padding: 20px;
+}
