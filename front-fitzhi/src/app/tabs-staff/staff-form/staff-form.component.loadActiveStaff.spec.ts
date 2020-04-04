@@ -1,13 +1,9 @@
 import { async, ComponentFixture, TestBed, tick, TestModuleMetadata } from '@angular/core/testing';
 
 import { StaffFormComponent } from './staff-form.component';
-import { NoPreloading } from '@angular/router';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { Profile } from '../../data/profile';
-import { format } from 'url';
-import { StaffComponent } from '../staff.component';
 import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
-import { Collaborator } from 'src/app/data/collaborator';
 import { InitTest } from 'src/app/test/init-test';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -44,7 +40,7 @@ describe('StaffFormComponent', () => {
 				idStaff: 2019, firstName: 'Joe', lastName: 'DALTON',
 				nickName: 'joe', login: 'jdalton',
 				email: 'jdalton@gmail.com', level: 'one Code',
-				active: true, dateInactive: null,
+				forceActiveState: true, active: true, dateInactive: null,
 				missions: [], experiences: []
 			}
 		);
@@ -85,8 +81,11 @@ describe('StaffFormComponent', () => {
 		expect(field('#profile').value).toEqual('one Code');
 		expect(field('#profile').readOnly).toBeFalsy();
 
-		expect(field('#active').checked).toBeTruthy();
-		expect(field('#active').readOnly).toBeFalsy();
+		expect(field('#forceActiveState-input').checked).toBeTruthy();
+		expect(field('#forceActiveState-input').readOnly).toBeFalsy();
+
+		expect(field('#active-input').checked).toBeTruthy();
+		expect(field('#active-input').readOnly).toBeFalsy();
 
 		expect(field('#external').checked).toBeFalsy();
 		expect(field('#external').readOnly).toBeFalsy();

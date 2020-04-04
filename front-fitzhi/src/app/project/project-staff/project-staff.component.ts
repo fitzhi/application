@@ -9,8 +9,7 @@ import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { ProjectStaffService } from '../project-staff-service/project-staff.service';
 import { BaseComponent } from '../../base/base.component';
 import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
-import { BehaviorSubject, EMPTY } from 'rxjs';
-import { Project } from 'src/app/data/project';
+import { EMPTY } from 'rxjs';
 import { take, switchMap } from 'rxjs/operators';
 import { ContributorsDTO } from 'src/app/data/external/contributorsDTO';
 import { Contributor } from 'src/app/data/contributor';
@@ -43,6 +42,8 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	ngOnInit() {
+
+		console.log ('nope');
 
 		this.subscriptions.add(
 			this.cinematicService.tabProjectActivated$.subscribe(
@@ -119,6 +120,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	 */
 	manageDataSource(contributorsDTO: ContributorsDTO) {
 
+		console.log ('nope');
 		if (!this.dataSource) {
 			this.dataSource = new MatTableDataSource(contributorsDTO.contributors);
 			this.dataSource.sort = this.sort;

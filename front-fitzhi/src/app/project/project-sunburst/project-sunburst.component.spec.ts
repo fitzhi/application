@@ -11,6 +11,7 @@ import { ListFilenamesComponent } from './node-detail/list-filenames/list-filena
 import { ListContributorsComponent } from './node-detail/list-contributors/list-contributors.component';
 import { TableGhostsComponent } from './project-ghosts/table-ghosts/table-ghosts.component';
 import { RouterTestingModule } from '@angular/router/testing';
+import { SSEWatcherComponent } from './ssewatcher/ssewatcher.component';
 
 describe('ProjectSunburstComponent', () => {
 	let component: ProjectSunburstComponent;
@@ -20,7 +21,7 @@ describe('ProjectSunburstComponent', () => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [ProjectSunburstComponent, NodeDetailComponent,
 				ProjectGhostsComponent, TableDependenciesComponent, DialogLegendSunburstComponent,
-				ListFilenamesComponent, ListContributorsComponent, TableGhostsComponent],
+				ListFilenamesComponent, ListContributorsComponent, TableGhostsComponent, SSEWatcherComponent],
 			providers: [],
 			imports: [MatSidenavModule, MatCardModule, RouterTestingModule.withRoutes([])]
 		};

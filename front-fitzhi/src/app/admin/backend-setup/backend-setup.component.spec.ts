@@ -43,6 +43,11 @@ describe('BackendSetupComponent', () => {
 		debugElement = fixture.debugElement;
 	});
 
+	afterEach(() => {
+		localStorage.setItem('backendUrl', 'http://localhost:8080');
+		fixture.destroy();
+	});
+
 	it('id created without error', () => {
 		expect(component).toBeTruthy();
 	});
@@ -58,9 +63,9 @@ describe('BackendSetupComponent', () => {
 	});
 
 	it('Setup the backend URL server saved in the localStorage', () => {
-		localStorage.setItem('backendUrl', 'saved://url:8000');
+		localStorage.setItem('backendUrl', 'saved://url:8080');
 		fixture.detectChanges();
-		expect('saved://url:8000/api').toEqual(field('#url').value);
+		expect('saved://url:8080/api').toEqual(field('#url').value);
 	});
 
 	it('Submit a VALID url for the very first connection', () => {

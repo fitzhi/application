@@ -13,6 +13,8 @@ import { ReferentialService } from 'src/app/service/referential.service';
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
+import { Collaborator } from 'src/app/data/collaborator';
 
 describe('StaffTabsComponent :', () => {
 	let component: StaffTabsComponent;
@@ -40,6 +42,16 @@ describe('StaffTabsComponent :', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(StaffTabsComponent);
 		component = fixture.componentInstance;
+
+		const staffDataExchangeService = TestBed.get(StaffDataExchangeService);
+		staffDataExchangeService.collaborator = new Collaborator();
+		staffDataExchangeService.collaborator.idStaff = 10;
+		staffDataExchangeService.collaborator.firstName = 'Kylian';
+		staffDataExchangeService.collaborator.lastName = 'Mbappe';
+		staffDataExchangeService.collaborator.missions = [];
+		staffDataExchangeService.collaborator.experiences = [];
+		staffDataExchangeService.collaboratorLoaded$.next(true);
+
 		fixture.detectChanges();
 	});
 

@@ -366,6 +366,7 @@ export class ProjectService extends InternalService {
 	 */
 	contributors$(idProject: number): Observable<ContributorsDTO> {
 
+		console.log ('nope');
 		if (idProject === -1) {
 			return EMPTY;
 		}

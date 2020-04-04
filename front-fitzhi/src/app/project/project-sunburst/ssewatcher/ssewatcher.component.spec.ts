@@ -1,25 +1,31 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SSEWatcherComponent } from './ssewatcher.component';
+import { ReferentialService } from 'src/app/service/referential.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 
 describe('SSEWatcherComponent', () => {
-  let component: SSEWatcherComponent;
-  let fixture: ComponentFixture<SSEWatcherComponent>;
+	let component: SSEWatcherComponent;
+	let fixture: ComponentFixture<SSEWatcherComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ SSEWatcherComponent ]
-    })
-    .compileComponents();
-  }));
+	beforeEach(async(() => {
+		TestBed.configureTestingModule({
+			declarations: [ SSEWatcherComponent ],
+			imports: [HttpClientTestingModule, MatDialogModule],
+			providers: [ReferentialService],
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(SSEWatcherComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+		})
+		.compileComponents();
+	}));
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+	beforeEach(() => {
+		fixture = TestBed.createComponent(SSEWatcherComponent);
+		component = fixture.componentInstance;
+		fixture.detectChanges();
+	});
+
+	it('should create', () => {
+		expect(component).toBeTruthy();
+	});
 });

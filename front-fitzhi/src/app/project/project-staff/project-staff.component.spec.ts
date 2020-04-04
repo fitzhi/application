@@ -7,15 +7,17 @@ import { CinematicService } from 'src/app/service/cinematic.service';
 import { InitTest } from 'src/app/test/init-test';
 import { ProjectService } from 'src/app/service/project.service';
 import { Constants } from 'src/app/constants';
-import { HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 
 describe('ProjectStaffComponent', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
 	let httpMock: HttpTestingController;
+	let backendSetupService: BackendSetupService;
 
 	const mockContributorDTO = {
 		contributors: [
@@ -61,14 +63,12 @@ describe('ProjectStaffComponent', () => {
 	beforeEach(async(() => {
 		const testConf: TestModuleMetadata  =  {
 			declarations: [TestHostComponent, ProjectStaffComponent ],
-			providers: [CinematicService, ProjectService],
-			imports: [MatTableModule, MatPaginatorModule, MatSortModule]
+			providers: [CinematicService, ProjectService, BackendSetupService],
+			imports: [MatTableModule, MatPaginatorModule, MatSortModule, HttpClientTestingModule]
 		};
-
 		InitTest.addImports(testConf.imports);
 		InitTest.addProviders(testConf.providers);
 		TestBed.configureTestingModule(testConf).compileComponents();
-
 	}));
 
 	beforeEach(() => {
@@ -79,6 +79,9 @@ describe('ProjectStaffComponent', () => {
 		const req = httpMock.expectOne('http://localhost:8080/api/skill/all');
 		expect(req.request.method).toBe('GET');
 		req.flush(mockSkills);
+
+		backendSetupService = TestBed.get(BackendSetupService);
+		backendSetupService.saveUrl('http://localhost:8080');
 
 		fixture.detectChanges();
 	});
