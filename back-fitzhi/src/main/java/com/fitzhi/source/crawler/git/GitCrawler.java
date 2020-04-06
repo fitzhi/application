@@ -365,8 +365,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		}
 
 		// Saving the local repository location
-		projectHandler.saveLocationRepository(project.getId(), path.toFile().getCanonicalPath());
-
+		String locationRepository = path.toFile().getCanonicalPath();
+		projectHandler.saveLocationRepository(project.getId(), locationRepository);
+		project.setLocationRepository(locationRepository);
 	}
 
 	/**
@@ -1031,7 +1032,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		//
 		CommitRepository repo = this.parseRepository(project, settings);
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("The repository has been parsed. It contains %d records in the repository, and %d ghosts", repo.size(), repo.unknownContributors().size()));
+			log.debug(String.format("The repository has been parsed. It contains %d records in the repository, and %d ghosts", 
+					repo.size(), repo.unknownContributors().size()));
 		}
 
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), "Parsing of the repository complete!");

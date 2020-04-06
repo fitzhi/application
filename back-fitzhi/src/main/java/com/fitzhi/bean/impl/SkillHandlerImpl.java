@@ -22,12 +22,12 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.fitzhi.SkillerRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.SkillHandler;
+import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SkillDetectorType;
 import com.fitzhi.data.source.CommitHistory;
@@ -126,18 +126,24 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public Set<Skill> extractSkills(String rootPath, List<CommitHistory> entries) throws SkillerException {
+	public Set<ProjectSkill> extractSkills(String rootPath, List<CommitHistory> entries) throws SkillerException {
 
 		Set<Skill> candidateSkills = getSkills().values().stream()
 			.filter(skill -> skill.getDetectionTemplate() != null)
 			.collect(Collectors.toSet());
+		if (log.isDebugEnabled()) {
+			candidateSkills.stream().map(Skill::getTitle).forEach(log::debug);
+		}
 		
-		Set<Skill> extractedSkills = new HashSet<Skill>();
+		Set<ProjectSkill> extractedSkills = new HashSet<>();
 	
 		for (Skill skill : candidateSkills) {
 			for (CommitHistory entry : entries) {
 				if (isSkillDetected(skill, rootPath, entry.sourcePath)) {
-					extractedSkills.add(skill);
+					if (log.isDebugEnabled()) {
+						log.debug(String.format("Detecting the skill %s in the project", skill.getTitle()));
+					}
+					extractedSkills.add(new ProjectSkill(skill.getId()));
 					break;
 				}
 			}			

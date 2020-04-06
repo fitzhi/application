@@ -22,6 +22,7 @@ import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.controller.in.BodyParamProjectSkill;
 import com.fitzhi.data.external.BooleanDTO;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.Skill;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -70,29 +71,24 @@ public class ProjectControllerSkillsManagementTest {
 		String jsonInput = gson.toJson(ps);
 		
 		this.mvc.perform(post("/api/project/skill/add")
-		.contentType(MediaType.APPLICATION_JSON_UTF8)
-		.content(jsonInput))
-		.andExpect(status().isOk())
-		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-		.andExpect(content().json(gson.toJson(new BooleanDTO())));
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(jsonInput))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(content().json(gson.toJson(new BooleanDTO())));
 		
 		Project p = projectHandler.get(1);
-		Assert.assertEquals("Project 1 has one skill width id 2", 1, 
-			p.getSkills().stream().map(Skill::getId)
-				.filter(id -> id == 2)
-				.count());
-								
+		Assert.assertEquals("Project 1 has one skill", 1, p.getSkills().size());
+		Assert.assertTrue("Project 1 has one skill with id 2", p.getSkills().contains(new ProjectSkill(2)));
+		
 		this.mvc.perform(post("/api/project/skill/del")
-		.contentType(MediaType.APPLICATION_JSON_UTF8)
-		.content(jsonInput))
-		.andExpect(status().isOk())
-		.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-		.andExpect(content().json(gson.toJson(new BooleanDTO())));
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(jsonInput))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(content().json(gson.toJson(new BooleanDTO())));
 
-		Assert.assertEquals("Project 1 has not anymore the skill 2 declared within its", 0, 
-				p.getSkills().stream().map(Skill::getId)
-					.filter(id -> id == 2)
-					.count());
+		Assert.assertTrue("Project 1 has not anymore any skill declared", p.getSkills().isEmpty());
 	}
 	
 }

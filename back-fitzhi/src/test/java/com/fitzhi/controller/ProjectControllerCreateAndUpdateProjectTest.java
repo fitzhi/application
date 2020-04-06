@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.in.BodyParamSonarEntry;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SonarProject;
 import com.google.gson.Gson;
@@ -53,7 +54,7 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 	public void test() throws Exception {
 
 		Project newProject = new Project(-1, "name of the project");
-		newProject.getSkills().add(new Skill(1, "title of skill"));
+		newProject.getSkills().add(new ProjectSkill(1));
 		newProject.getSonarProjects().add(new SonarProject("idProjectSonar", "name of project"));
 		
 		System.out.println(gson.toJson(newProject));

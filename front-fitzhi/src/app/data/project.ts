@@ -1,7 +1,7 @@
-import { Skill } from './skill';
 import { Library } from './library';
 import { SonarProject } from './SonarProject';
 import { AuditTopic } from './AuditTopic';
+import { ProjectSkill } from './project-skill';
 
 export class Project {
 
@@ -24,7 +24,7 @@ export class Project {
 	/**
 	 * Array containing the skills required for this project
 	 */
-	public skills: Skill[] = [];
+	public skills: ProjectSkill[] = [];
 
 	/**
 	 * Array of dependeny paths (detected or declared) for this project.

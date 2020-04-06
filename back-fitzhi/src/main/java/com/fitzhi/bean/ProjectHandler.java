@@ -10,6 +10,7 @@ import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SonarEvaluation;
@@ -111,7 +112,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	/**
 	 * <p>Save the path location where the remote branch(master) has been cloned/pulled</p>
 	 * @param idProject the project identifier
-	 * @param pathLocation the path location
+	 * @param location the path location
 	 * @throws SkillerException thrown if any problem, 
 	 * most probably either an {@link IOException} or the <i>project does not exist</i>.
 	 */
@@ -129,7 +130,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @param project the given project.
 	 * @param skill the passed new skill to add in the project.
 	 */
-	void addSkill(Project project, Skill skill);
+	void addSkill(Project project, ProjectSkill skill);
 
 	/**
 	 * <p>Remove a skill from the scope of a project.</p>

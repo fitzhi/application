@@ -18,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.exception.SkillerException;
@@ -70,12 +71,12 @@ public class ProjectHandlerUpdateSkillsTest {
 	public void addANonExistentSkill() throws SkillerException {
 		projectHandler.updateSkills(project, repo);
 		Assert.assertFalse(projectHandler.get(1789).getSkills().isEmpty());
-		Skill[] skills = new Skill[0];
-		Skill[] resultingSkills = projectHandler.get(1789).getSkills().toArray(skills);
+		ProjectSkill[] skills = new ProjectSkill[0];
+		ProjectSkill[] resultingSkills = projectHandler.get(1789).getSkills().toArray(skills);
 		Assert.assertEquals(2, resultingSkills.length);
 	
-		projectHandler.get(1789).getSkills().stream().anyMatch(skill -> skill.getId() == ID_JAVA);
-		projectHandler.get(1789).getSkills().stream().anyMatch(skill -> skill.getId() == ID_TS);
+		Assert.assertTrue(projectHandler.get(1789).getSkills().contains(new ProjectSkill(ID_JAVA)));
+		Assert.assertTrue(projectHandler.get(1789).getSkills().contains(new ProjectSkill(ID_TS)));
 	}
 	
 	@After

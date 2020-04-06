@@ -116,9 +116,9 @@ export class SkillService extends InternalService {
 	}
 
 	/**
-	 * @returns the title associated to the passed skill identifier
+	 * Return the title associated to the passed skill identifier
 	 */
-	title(idSkill: number) {
+	public title(idSkill: number) {
 		const foundSkill = this.allSkills.find(skill => skill.id === idSkill);
 		return (foundSkill) ?  foundSkill.title : ('ERR : no title for id ' + idSkill);
 	}
@@ -126,7 +126,7 @@ export class SkillService extends InternalService {
 	/**
 	 * @returns the ID associated to the passed skill title.
 	 */
-	id(title: string): number {
+	public id(title: string): number {
 		const found = this.allSkills.find(skill => skill.title === title);
 		if (!found) {
 			return -1;

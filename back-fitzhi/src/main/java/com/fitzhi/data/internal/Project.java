@@ -78,7 +78,7 @@ public @Data class Project implements Serializable {
 	/**
 	 * List of skills required for this project.
 	 */
-	private Set<Skill> skills = new HashSet<>();
+	private Set<ProjectSkill> skills = new HashSet<>();
 	
 	/**
 	 * List of committer {@link com.fitzhi.data.internal.Ghost ghosts} identified.<br/>
@@ -149,7 +149,7 @@ public @Data class Project implements Serializable {
 
 	@Generated ("eclipse")
 	private Project(int id, String name, int connectionSettings, String urlRepository, String locationRepository,
-			String username, String password, String filename, Set<Skill> skills, List<Ghost> ghosts, String connectionSettingsFile) {
+			String username, String password, String filename, Set<ProjectSkill> skills, List<Ghost> ghosts, String connectionSettingsFile) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -171,12 +171,16 @@ public @Data class Project implements Serializable {
 	 * @param project the project instance to be copied.
 	 */
 	public Project(Project project) {
-		this (project.id, project.name, project.connectionSettings, 
+		this (project.id, 
+				project.name, 
+				project.connectionSettings, 
 				project.urlRepository, 
 				project.locationRepository,
 				project.username, project.password, 
 				project.connectionSettingsFile, 
-				project.skills, project.ghosts, project.connectionSettingsFile);
+				project.skills, 
+				project.ghosts, 
+				project.connectionSettingsFile);
 	}
 	
 	/**

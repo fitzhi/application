@@ -3,6 +3,8 @@ package com.fitzhi.controller;
 import static com.fitzhi.Error.CODE_MULTIPLE_TASK;
 import static com.fitzhi.Error.CODE_UNDEFINED;
 import static com.fitzhi.Error.UNKNOWN_PROJECT;
+import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.getStackTrace;
 import static com.fitzhi.Global.BACKEND_RETURN_CODE;
 import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
@@ -34,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fitzhi.Error;
 import com.fitzhi.SkillerRuntimeException;
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.CacheDataHandler;
@@ -50,6 +53,7 @@ import com.fitzhi.data.external.ProjectContributorDTO;
 import com.fitzhi.data.external.ProjectDTO;
 import com.fitzhi.data.external.SunburstDTO;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.RiskDashboard;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.Staff;
@@ -162,15 +166,17 @@ public class ProjectController {
 	/**
 	 * @param idProject the project identifier
 	 * @return the experience of a developer as list of skills.
+	 * @throws SkillerException exception thrown if any problem occurs, most probably if the project does not exist for the given identifier.
 	 */
 	@GetMapping(value="/skills/{idProject}")
-	public ResponseEntity<Set<Skill>> get(final @PathVariable("idProject") int idProject) {
+	public ResponseEntity<Set<ProjectSkill>> get(final @PathVariable("idProject") int idProject) throws SkillerException {
 		
-		MyReference<ResponseEntity<Set<Skill>>> refResponse = projectLoader.new MyReference<>();
-
-		final Project project = projectLoader.getProject(idProject, new HashSet<Skill>(), refResponse);
-		return  (refResponse.getResponse() != null) ? refResponse.getResponse() : 
-			new ResponseEntity<>(project.getSkills(), headers(), HttpStatus.OK);
+		Project project = projectHandler.get(idProject);
+		if (project == null) {
+			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+		}
+		
+		return new ResponseEntity<>(project.getSkills(), headers(), HttpStatus.OK);
 	}	
 	
 	@GetMapping("/all")
@@ -282,7 +288,7 @@ public class ProjectController {
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
-					"POST command on /project/skill/add with params idProject:%d, idSkill:%d", 
+					"POST command on /project/skill/add with params idProject: %d, idSkill: %d", 
 					projectSkill.getIdProject(), projectSkill.getIdSkill()));
 		}
 		
@@ -294,7 +300,7 @@ public class ProjectController {
 		
 		try {
 			Skill skill = this.skillHandler.getSkill(projectSkill.getIdSkill());
-			this.projectHandler.addSkill(project, skill);	
+			this.projectHandler.addSkill(project, new ProjectSkill(skill.getId()));	
 			return new ResponseEntity<BooleanDTO>(new BooleanDTO(), headers(), HttpStatus.OK);
 		} catch (final SkillerException ske) {
 			if (log.isDebugEnabled()) {

@@ -35,6 +35,7 @@ import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SonarEvaluation;
@@ -273,13 +274,13 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 	
 	@Override
-	public void addSkill(Project project, Skill skill) {
+	public void addSkill(Project project, ProjectSkill skill) {
 		
 		synchronized (lockDataUpdated) {
 			if (!project.getSkills().contains(skill)) {
 				if (log.isDebugEnabled()) {
-					log.debug(String.format("The project '%s' has declared the skill '%s' in its scope", 
-							project.getName(), skill.getTitle()));
+					log.debug(String.format("The project '%s' has declared the skill with id '%d' in its scope", 
+							project.getName(), skill.getIdSkill()));
 				}
 				project.getSkills().add(skill);
 			}
@@ -291,18 +292,12 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	public void removeSkill(Project project, int idSkill) {
 		
 		if (log.isInfoEnabled()) {
-			log.info(String.format("The project %s will loose the skill with id %d from its scope", 
+			log.info(String.format("The project %s will loose the skill with id '%d' from its scope", 
 					project.getName(), idSkill));
 		}
 
 		synchronized (lockDataUpdated) {
-			Optional<Skill> oSkill = project.getSkills()
-					.stream()
-					.filter(exp -> (exp.getId() == idSkill) )
-					.findFirst();
-			if (oSkill.isPresent()) {
-				project.getSkills().remove(oSkill.get());
-			}
+			project.getSkills().remove(new ProjectSkill(idSkill));
 			this.dataUpdated = true;
 		}
 	}
@@ -605,18 +600,21 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Override
 	public void updateSkills(Project project, List<CommitHistory> entries) throws SkillerException {
 			
-		Set<Skill> detectedSkills = this.skillHandler.extractSkills(project.getLocationRepository(), entries);
+		Set<ProjectSkill> detectedSkills = this.skillHandler.extractSkills(project.getLocationRepository(), entries);
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("detected skills for project %s", project.getName()));
-			detectedSkills.stream().map(Skill::getTitle).forEach(log::debug);
+			for (ProjectSkill detectedSkill : detectedSkills) {
+				log.debug(skillHandler.getSkill(detectedSkill.getIdSkill()).getTitle());
+			}
 		}
 		
 		// We filter the skill that are not already declared inside this project.
-		detectedSkills
-			.stream()
-			.filter(skill -> !project.getSkills().contains(skill))
-			.forEach(skill -> this.addSkill(project, skill));
+		for (ProjectSkill projectSkill : detectedSkills) {
+			if (!project.getSkills().contains(projectSkill)) {
+				this.addSkill(project, projectSkill);
+			}
+		}
 
 	}
 	

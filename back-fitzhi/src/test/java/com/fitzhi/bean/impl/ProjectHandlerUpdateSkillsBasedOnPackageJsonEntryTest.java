@@ -20,6 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.exception.SkillerException;
@@ -77,7 +78,7 @@ public class ProjectHandlerUpdateSkillsBasedOnPackageJsonEntryTest {
 		Assert.assertEquals(2, projectHandler.get(1789).getSkills().size());
 		
 		Set<Integer> ids = new HashSet<>();
-		projectHandler.get(1789).getSkills().stream().map(Skill::getId).forEach(ids::add);
+		projectHandler.get(1789).getSkills().stream().map(ProjectSkill::getIdSkill).forEach(ids::add);
 		Assert.assertTrue("Java is detected", ids.contains(JAVA));
 		Assert.assertTrue("Angular is detected", ids.contains(ANGULAR));
 		

@@ -20,6 +20,7 @@ import { MessageGravity } from 'src/app/message/message-gravity';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { Skill } from 'src/app/data/skill';
 import { traceOn } from 'src/app/global';
+import { ProjectSkill } from '../../data/project-skill';
 
 @Component({
 	selector: 'app-project-form',
@@ -326,7 +327,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					if (this.projectService.project.skills.length > 0) {
 						this.tagifySkills.addTags(
 							this.projectService.project.skills
-							.map(function(skill) { return skill.title; }));
+							.map(skill => this.skillService.title(skill.idSkill)));
 					}
 				}
 			}));
@@ -450,7 +451,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 		// This skills is already registered for this project.
 		if ( (this.projectService.project.skills)
-			&& (this.projectService.project.skills.find (sk => sk.title === event.detail.data.value))) {
+			&& (this.projectService.project.skills.find (sk => this.skillService.title(sk.idSkill) === event.detail.data.value))) {
 			return;
 		}
 
@@ -464,7 +465,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			return;
 		}
 
-		this.projectService.project.skills.push(skill);
+		this.projectService.project.skills.push(new ProjectSkill(skill.id, 0));
 
 		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
 		if (this.projectService.project.id) {
@@ -490,7 +491,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			+ ' does not contain any skill. So, we should not be able to remove one');
 		}
 
-		const skill = this.projectService.project.skills.find (sk => sk.title === event.detail.data.value);
+		const skill = this.projectService.project.skills.find (sk => this.skillService.title(sk.idSkill) === event.detail.data.value);
 		if (skill === undefined) {
 			console.log ('SHOULD NOT PASS HERE : Cannot remove the skill '
 			+ event.detail.data.value + ' from project ' + this.projectService.project.name);
@@ -499,13 +500,13 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 		const indexOfSkill = this.projectService.project.skills.indexOf(skill);
 		if (traceOn()) {
-			console.log ('Index of the skill ' + skill.title, indexOfSkill);
+			console.log ('Index of the skill ' + this.skillService.title(skill.idSkill), indexOfSkill);
 		}
 		this.projectService.project.skills.splice(indexOfSkill, 1);
 
 		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
 		if (this.projectService.project.id) {
-			this.updateSkill(this.projectService.project.id, skill.id, this.projectService.delSkill.bind(this.projectService));
+			this.updateSkill(this.projectService.project.id, skill.idSkill, this.projectService.delSkill.bind(this.projectService));
 		}
 
 		// Log the resulting collection.
@@ -568,7 +569,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		if (traceOn()) {
 			console.log (this.projectService.project.skills);
 			console.groupCollapsed ('list of skills for project ' + this.projectService.project.name);
-			this.projectService.project.skills.forEach(sk => console.log (sk.id + ' ' +  sk.title));
+			this.projectService.project.skills.forEach(sk => console.log (sk.idSkill + ' ' +  this.skillService.title(sk.idSkill)));
 			console.groupEnd();
 		}
 	}

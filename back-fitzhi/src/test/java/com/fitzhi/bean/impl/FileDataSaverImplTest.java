@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.exception.SkillerException;
 
@@ -36,8 +37,8 @@ public class FileDataSaverImplTest {
 		projects.put(1, new Project(1, "TEST 1"));
 		Project p = new Project(2, "TEST 2");
 		projects.put(2, p);
-		p.setSkills(new HashSet<Skill>());
-		p.getSkills().add(new Skill(1, "JAVA"));
+		p.setSkills(new HashSet<ProjectSkill>());
+		p.getSkills().add(new ProjectSkill(1));
 		projects.put(3, new Project(3, "TEST 3"));
 		dataSaver.saveProjects(projects);
 		
@@ -48,11 +49,10 @@ public class FileDataSaverImplTest {
 		Assert.assertEquals(2, projects.get(2).getId());
 		Assert.assertEquals("TEST 2", projects.get(2).getName());
 		Assert.assertEquals(1, projects.get(2).getSkills().size());
-		Skill[] skills = new Skill[0];
+		ProjectSkill[] skills = new ProjectSkill[0];
 		
-		Skill skill = projects.get(2).getSkills().toArray(skills)[0];
+		ProjectSkill skill = projects.get(2).getSkills().toArray(skills)[0];
 		
-		Assert.assertEquals(1, skill.getId());
-		Assert.assertEquals("JAVA", skill.getTitle());
+		Assert.assertEquals(1, skill.getIdSkill());
 	}
 }
