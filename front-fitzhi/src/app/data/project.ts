@@ -22,9 +22,16 @@ export class Project {
 	public auditEvaluation: number;
 
 	/**
-	 * Array containing the skills required for this project
+	 * This object is only used to retrieve the data from the server.
+	 *
+	 * Immediatly after the reception of data, the content will be transferred to **mapSkills**
 	 */
-	public skills: ProjectSkill[] = [];
+	public skills: { [id: number]: ProjectSkill; } = {};
+
+	/**
+	 * Map containing the skills required for this project
+	 */
+	public mapSkills = new Map<number, ProjectSkill>();
 
 	/**
 	 * Array of dependeny paths (detected or declared) for this project.

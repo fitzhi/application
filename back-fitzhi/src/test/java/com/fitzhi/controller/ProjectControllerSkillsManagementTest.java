@@ -22,7 +22,6 @@ import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.controller.in.BodyParamProjectSkill;
 import com.fitzhi.data.external.BooleanDTO;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.Skill;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -79,7 +78,7 @@ public class ProjectControllerSkillsManagementTest {
 		
 		Project p = projectHandler.get(1);
 		Assert.assertEquals("Project 1 has one skill", 1, p.getSkills().size());
-		Assert.assertTrue("Project 1 has one skill with id 2", p.getSkills().contains(new ProjectSkill(2)));
+		Assert.assertTrue("Project 1 has one skill with id 2", p.getSkills().containsKey(2));
 		
 		this.mvc.perform(post("/api/project/skill/del")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)

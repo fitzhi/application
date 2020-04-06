@@ -4,7 +4,6 @@
 package com.fitzhi.bean.impl;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 import org.junit.Assert;
@@ -17,7 +16,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSkill;
-import com.fitzhi.data.internal.Skill;
 import com.fitzhi.exception.SkillerException;
 
 /**
@@ -37,8 +35,8 @@ public class FileDataSaverImplTest {
 		projects.put(1, new Project(1, "TEST 1"));
 		Project p = new Project(2, "TEST 2");
 		projects.put(2, p);
-		p.setSkills(new HashSet<ProjectSkill>());
-		p.getSkills().add(new ProjectSkill(1));
+		p.setSkills(new HashMap<Integer, ProjectSkill>());
+		p.getSkills().put(1, new ProjectSkill(1));
 		projects.put(3, new Project(3, "TEST 3"));
 		dataSaver.saveProjects(projects);
 		
@@ -48,11 +46,7 @@ public class FileDataSaverImplTest {
 		Assert.assertEquals("TEST 1", projects.get(1).getName());
 		Assert.assertEquals(2, projects.get(2).getId());
 		Assert.assertEquals("TEST 2", projects.get(2).getName());
-		Assert.assertEquals(1, projects.get(2).getSkills().size());
-		ProjectSkill[] skills = new ProjectSkill[0];
-		
-		ProjectSkill skill = projects.get(2).getSkills().toArray(skills)[0];
-		
-		Assert.assertEquals(1, skill.getIdSkill());
+		Assert.assertEquals(1, projects.get(2).getSkills().size());		
+		Assert.assertTrue(projects.get(2).getSkills().containsKey(1));
 	}
 }

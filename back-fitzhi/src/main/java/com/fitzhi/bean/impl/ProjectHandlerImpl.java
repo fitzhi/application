@@ -37,7 +37,6 @@ import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
-import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SonarEvaluation;
 import com.fitzhi.data.internal.SonarProject;
 import com.fitzhi.data.internal.Staff;
@@ -277,12 +276,12 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	public void addSkill(Project project, ProjectSkill skill) {
 		
 		synchronized (lockDataUpdated) {
-			if (!project.getSkills().contains(skill)) {
+			if (!project.getSkills().containsKey(skill.getIdSkill())) {
 				if (log.isDebugEnabled()) {
 					log.debug(String.format("The project '%s' has declared the skill with id '%d' in its scope", 
 							project.getName(), skill.getIdSkill()));
 				}
-				project.getSkills().add(skill);
+				project.getSkills().put(skill.getIdSkill(), skill);
 			}
 			this.dataUpdated = true;
 		}
@@ -297,7 +296,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		}
 
 		synchronized (lockDataUpdated) {
-			project.getSkills().remove(new ProjectSkill(idSkill));
+			project.getSkills().remove(idSkill);
 			this.dataUpdated = true;
 		}
 	}
@@ -611,7 +610,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		
 		// We filter the skill that are not already declared inside this project.
 		for (ProjectSkill projectSkill : detectedSkills) {
-			if (!project.getSkills().contains(projectSkill)) {
+			if (!project.getSkills().containsKey(projectSkill.getIdSkill())) {
 				this.addSkill(project, projectSkill);
 			}
 		}

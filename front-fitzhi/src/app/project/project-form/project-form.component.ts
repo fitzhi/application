@@ -323,11 +323,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	ngAfterViewInitSkillsDeclaredInProject() {
 		this.subscriptions.add(this.allSkills$()
 			.subscribe (skills => {
-				if (this.projectService.project.skills) {
-					if (this.projectService.project.skills.length > 0) {
-						this.tagifySkills.addTags(
-							this.projectService.project.skills
-							.map(skill => this.skillService.title(skill.idSkill)));
+				if (this.projectService.project.mapSkills) {
+					for (const [idSkill, profilSkill] of this.projectService.project.mapSkills) {
+						this.tagifySkills.addTags(this.skillService.title(idSkill));
 					}
 				}
 			}));
@@ -449,9 +447,13 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	addSkill(event: CustomEvent) {
 
+		const idSkill = this.skillService.id(event.detail.data.value);
+		if (idSkill === -1) {
+			console.log ('SEVERE ERROR : Unregistered skill', event.detail.data.value);
+		}
+
 		// This skills is already registered for this project.
-		if ( (this.projectService.project.skills)
-			&& (this.projectService.project.skills.find (sk => this.skillService.title(sk.idSkill) === event.detail.data.value))) {
+		if (this.projectService.project.mapSkills.has(idSkill)) {
 			return;
 		}
 
@@ -459,17 +461,11 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			console.log ('Adding the skill', event.detail.data.value);
 		}
 
-		const skill = this.skillService.search (event.detail.data.value);
-		if (skill === undefined) {
-			console.log ('SEVERE ERROR : Unregistered skill', event.detail.data.value);
-			return;
-		}
-
-		this.projectService.project.skills.push(new ProjectSkill(skill.id, 0));
+		this.projectService.project.mapSkills.set(idSkill, new ProjectSkill(idSkill, 0));
 
 		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
 		if (this.projectService.project.id) {
-			this.updateSkill(this.projectService.project.id, skill.id, this.projectService.addSkill.bind(this.projectService));
+			this.updateSkill(this.projectService.project.id, idSkill, this.projectService.addSkill.bind(this.projectService));
 		}
 
 		// Log the resulting collection.
@@ -481,32 +477,29 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * @param event ADD event fired by the tagify component.
 	 */
 	removeSkill(event: CustomEvent) {
+
+		const idSkill = this.skillService.id(event.detail.data.value);
+		if (idSkill === -1) {
+			console.log ('SEVERE ERROR : Unknown skill %s', event.detail.data.value);
+		}
+
+		// This skills is NOT already registered for this project.
+		if (!this.projectService.project.mapSkills.has(idSkill)) {
+			console.log ('SEVERE ERROR : Unregistered skill %s for the project %s',
+				event.detail.data.value,
+				this.projectService.project.name);
+			return;
+		}
+
 		if (traceOn()) {
 			console.log ('Removing the skill', event.detail.data.value);
 		}
 
-		// This skill HAS TO BE registered inside the project.
-		if ( (!this.projectService.project.skills) || (this.projectService.project.skills.length === 0)) {
-			console.log ('SHOULD NOT PASS HERE : ' + this.projectService.project.name
-			+ ' does not contain any skill. So, we should not be able to remove one');
-		}
+		this.projectService.project.mapSkills.delete(idSkill);
 
-		const skill = this.projectService.project.skills.find (sk => this.skillService.title(sk.idSkill) === event.detail.data.value);
-		if (skill === undefined) {
-			console.log ('SHOULD NOT PASS HERE : Cannot remove the skill '
-			+ event.detail.data.value + ' from project ' + this.projectService.project.name);
-			return;
-		}
-
-		const indexOfSkill = this.projectService.project.skills.indexOf(skill);
-		if (traceOn()) {
-			console.log ('Index of the skill ' + this.skillService.title(skill.idSkill), indexOfSkill);
-		}
-		this.projectService.project.skills.splice(indexOfSkill, 1);
-
-		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
+		// We have already loaded or saved the project, so we can remove each new skill one by one.
 		if (this.projectService.project.id) {
-			this.updateSkill(this.projectService.project.id, skill.idSkill, this.projectService.delSkill.bind(this.projectService));
+			this.updateSkill(this.projectService.project.id, idSkill, this.projectService.delSkill.bind(this.projectService));
 		}
 
 		// Log the resulting collection.
@@ -567,9 +560,10 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	logProjectSkills() {
 		if (traceOn()) {
-			console.log (this.projectService.project.skills);
 			console.groupCollapsed ('list of skills for project ' + this.projectService.project.name);
-			this.projectService.project.skills.forEach(sk => console.log (sk.idSkill + ' ' +  this.skillService.title(sk.idSkill)));
+			for (const [idSkill, profilSkill] of this.projectService.project.mapSkills) {
+				console.log (idSkill, this.skillService.title(idSkill));
+			}
 			console.groupEnd();
 		}
 	}
@@ -725,8 +719,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				break;
 			}
 		if (traceOn()) {
-			console.log('Saving the project ');
+			console.groupCollapsed('Saving the project');
 			console.log(this.projectService.project);
+			console.groupEnd();
 		}
 		this.projectService.save(this.projectService.project).pipe(take(1)).subscribe(
 			project => {

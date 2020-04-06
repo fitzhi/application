@@ -4,7 +4,7 @@
         "name": "Empty project without repository",
         "connectionSettings": 0,
         "urlRepository": "",
-        "skills": [],
+        "skills": {},
         "ghosts": []
     },
     "2": {
@@ -14,6 +14,6 @@
         "urlRepository": "https://github.com/fitzhi/application",
         "username": "",
         "password": "",
-        "skills": []
+        "skills": {}
     }
 }

@@ -43,8 +43,6 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 
 	ngOnInit() {
 
-		console.log ('nope');
-
 		this.subscriptions.add(
 			this.cinematicService.tabProjectActivated$.subscribe(
 				index => {
@@ -119,8 +117,6 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	 * @param contributorsDTO container of contributors retrieved from the back-end.
 	 */
 	manageDataSource(contributorsDTO: ContributorsDTO) {
-
-		console.log ('nope');
 		if (!this.dataSource) {
 			this.dataSource = new MatTableDataSource(contributorsDTO.contributors);
 			this.dataSource.sort = this.sort;
@@ -137,7 +133,6 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 			this.dataSource.data = contributorsDTO.contributors;
 			this.table.renderRows();
 		}
-
 	}
 
 	/**

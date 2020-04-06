@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { Project } from './project';
 import { Skill } from './skill';
+import { ProjectSkill } from './project-skill';
 
 
 describe('Testing the simple Project object', () => {
@@ -12,12 +13,13 @@ describe('Testing the simple Project object', () => {
 	it('Should be created', () => {
 		const project = new Project();
 		expect(project).toBeTruthy();
-		expect(project.skills).toBeDefined();
-		const skill = new Skill();
-		skill.id = 1;
-		skill.title = 'my Title';
-		project.skills.push(skill);
-		expect(project.skills.length).toBe(1);
+
+		expect(project.mapSkills).toBeDefined();
+
+		const projectSkill = new ProjectSkill(1, 0);
+		project.mapSkills.set(1, projectSkill);
+
+		expect(project.mapSkills.size).toBe(1);
 	});
 
 });

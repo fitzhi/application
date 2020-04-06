@@ -4,9 +4,7 @@
 package com.fitzhi.bean.impl;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -20,8 +18,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.ProjectSkill;
-import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.exception.SkillerException;
 
@@ -77,10 +73,8 @@ public class ProjectHandlerUpdateSkillsBasedOnPomXmlEntryTest {
 		Assert.assertFalse(projectHandler.get(1789).getSkills().isEmpty());
 		Assert.assertEquals(2, projectHandler.get(1789).getSkills().size());
 		
-		Set<Integer> ids = new HashSet<>();
-		projectHandler.get(1789).getSkills().stream().map(ProjectSkill::getIdSkill).forEach(ids::add);
-		Assert.assertTrue("Java should be detected", ids.contains(JAVA));
-		Assert.assertTrue("Spring core should be detected", ids.contains(SPRING_CORE));
+		Assert.assertTrue("Java should be detected", projectHandler.get(1789).getSkills().containsKey(JAVA));
+		Assert.assertTrue("Spring core should be detected", projectHandler.get(1789).getSkills().containsKey(SPRING_CORE));
 		
 	}
 	

@@ -2,7 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Project } from '../data/project';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable, Subject, BehaviorSubject, EMPTY, of } from 'rxjs';
+import { Observable, BehaviorSubject, EMPTY} from 'rxjs';
 import { InternalService } from '../internal-service';
 
 import { Constants } from '../constants';
@@ -16,7 +16,6 @@ import { BooleanDTO } from '../data/external/booleanDTO';
 import { ReferentialService } from './referential.service';
 import { SonarProject } from '../data/SonarProject';
 import { FilesStats } from '../data/sonar/FilesStats';
-import { Component } from '@angular/compiler/src/core';
 import { ProjectSonarMetricValue } from '../data/project-sonar-metric-value';
 import { MessageService } from '../message/message.service';
 import { ResponseComponentMeasures } from '../data/sonar/reponse-component-measures';
@@ -24,12 +23,13 @@ import { SonarService } from './sonar.service';
 import { MessageGravity } from '../message/message-gravity';
 import { AuditTopic } from '../data/AuditTopic';
 import { Task } from '../data/task';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 import { AttachmentFile } from '../data/AttachmentFile';
 import { FileService } from './file.service';
 import { Ecosystem } from '../data/ecosystem';
 import { traceOn } from '../global';
 import { SunburstCinematicService } from '../project/project-sunburst/service/sunburst-cinematic.service';
+import { ProjectSkill } from '../data/project-skill';
+import { SkillService } from './skill.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -69,6 +69,7 @@ export class ProjectService extends InternalService {
 	constructor(
 		private httpClient: HttpClient,
 		private referentialService: ReferentialService,
+		private skillService: SkillService,
 		private fileService: FileService,
 		private messageService: MessageService,
 		private sunburstCinematicService: SunburstCinematicService,
@@ -286,7 +287,6 @@ export class ProjectService extends InternalService {
 	 * @returns the found project or undefined if none's found
 	 */
 	getProject(projectName: string): Project {
-
 		const project = this.allProjects.find(prj => prj.name === projectName);
 		return project;
 	}
@@ -345,6 +345,19 @@ export class ProjectService extends InternalService {
 		return this.httpClient
 			.post<any>(this.backendSetupService.url() + '/project/sunburst', body, httpOptions)
 			.pipe(take(1));
+	}
+
+	/**
+	 * Loading the **Map<number, ProjectSkill>** based on what we have read from the server.
+	 */
+	public loadMapSkills() {
+		console.log ('nope');
+		this.project.mapSkills = new Map<number, ProjectSkill>();
+		Object.keys(this.project.skills).forEach(id => {
+			this.project.mapSkills.set(
+				Number(id),
+				this.project.skills[id]);
+		});
 	}
 
 	/**
@@ -878,6 +891,12 @@ export class ProjectService extends InternalService {
 		Object.keys(project.audit).forEach(key => {
 			console.log ('key: %s evaluation: %d weight: %d', key, project.audit[key].evaluation, project.audit[key].weight);
 		});
+
+		console.groupCollapsed(project.mapSkills.size + ' skills declared.');
+		for (const [k, v] of project.mapSkills) {
+			console.log (k, this.skillService.title(k));
+		}
+		console.groupEnd();
 
 		console.groupCollapsed(project.sonarProjects.length + ' sonar project declared.');
 		project.sonarProjects.forEach(sonarProject => {

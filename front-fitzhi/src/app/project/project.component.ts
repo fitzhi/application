@@ -152,7 +152,9 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 				// We test if the Sonar server declared for this project (if any) is available
 				//
 				switchMap(project => {
+					console.log ('nope');
 					this.projectService.project = project;
+					this.projectService.loadMapSkills();
 					if (traceOn()) {
 						this.projectService.dump(project, 'projectComponent');
 					}

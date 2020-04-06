@@ -7,10 +7,8 @@ import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Generated;
@@ -76,9 +74,9 @@ public @Data class Project implements Serializable {
 	private String connectionSettingsFile;
 	
 	/**
-	 * List of skills required for this project.
+	 * Map of ProjectSkill indexed by {@code idSkill} detected or declared for this project.
 	 */
-	private Set<ProjectSkill> skills = new HashSet<>();
+	private Map<Integer, ProjectSkill> skills = new HashMap<>();
 	
 	/**
 	 * List of committer {@link com.fitzhi.data.internal.Ghost ghosts} identified.<br/>
@@ -149,7 +147,7 @@ public @Data class Project implements Serializable {
 
 	@Generated ("eclipse")
 	private Project(int id, String name, int connectionSettings, String urlRepository, String locationRepository,
-			String username, String password, String filename, Set<ProjectSkill> skills, List<Ghost> ghosts, String connectionSettingsFile) {
+			String username, String password, String filename, Map<Integer, ProjectSkill> skills, List<Ghost> ghosts, String connectionSettingsFile) {
 		super();
 		this.id = id;
 		this.name = name;

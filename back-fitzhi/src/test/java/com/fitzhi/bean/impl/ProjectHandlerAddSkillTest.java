@@ -3,9 +3,6 @@
  */
 package com.fitzhi.bean.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -16,11 +13,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSkill;
-import com.fitzhi.data.internal.Skill;
-import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.exception.SkillerException;
 
 /**
@@ -45,8 +39,7 @@ public class ProjectHandlerAddSkillTest {
 	@Test
 	public void addExistingProjectSkill() throws SkillerException {
 		projectHandler.addSkill(project, new ProjectSkill(1, 1));
-		ProjectSkill[] projectSkills = new ProjectSkill[0];
-		ProjectSkill ps = project.getSkills().toArray(projectSkills)[0];
+		ProjectSkill ps = project.getSkills().get(1);
 		Assert.assertEquals(10, ps.getNumberOfFiles());
 	}
 	

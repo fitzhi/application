@@ -1,10 +1,10 @@
 package com.fitzhi.controller;
 
 import static com.fitzhi.Error.CODE_MULTIPLE_TASK;
-import static com.fitzhi.Error.CODE_UNDEFINED;
-import static com.fitzhi.Error.UNKNOWN_PROJECT;
 import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
+import static com.fitzhi.Error.CODE_UNDEFINED;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
+import static com.fitzhi.Error.UNKNOWN_PROJECT;
 import static com.fitzhi.Error.getStackTrace;
 import static com.fitzhi.Global.BACKEND_RETURN_CODE;
 import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
@@ -16,10 +16,8 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -36,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fitzhi.Error;
 import com.fitzhi.SkillerRuntimeException;
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.CacheDataHandler;
@@ -169,14 +166,14 @@ public class ProjectController {
 	 * @throws SkillerException exception thrown if any problem occurs, most probably if the project does not exist for the given identifier.
 	 */
 	@GetMapping(value="/skills/{idProject}")
-	public ResponseEntity<Set<ProjectSkill>> get(final @PathVariable("idProject") int idProject) throws SkillerException {
+	public ResponseEntity<Collection<ProjectSkill>> get(final @PathVariable("idProject") int idProject) throws SkillerException {
 		
 		Project project = projectHandler.get(idProject);
 		if (project == null) {
 			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 		
-		return new ResponseEntity<>(project.getSkills(), headers(), HttpStatus.OK);
+		return new ResponseEntity<>(project.getSkills().values(), headers(), HttpStatus.OK);
 	}	
 	
 	@GetMapping("/all")
