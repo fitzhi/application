@@ -10,9 +10,9 @@
     "2": {
         "id": 2,
         "name": "Fitzhi",
-        "connectionSettings": 1,
+        "connectionSettings": 3,
         "urlRepository": "https://github.com/fitzhi/application",
-        "username": "anonymous",
+        "username": "",
         "password": "",
         "skills": []
     }
