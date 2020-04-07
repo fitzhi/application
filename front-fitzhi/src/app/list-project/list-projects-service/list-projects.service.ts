@@ -46,17 +46,18 @@ export class ListProjectsService  {
 
 	/**
 	 * Return the project associated with this id in cache first, anf if not found, direct on the server
+	 * @param id the project identifier
 	 */
 	getProject$(id: number): Observable<Project> {
 
 		if (!this.projectService.allProjects) {
-			this.messageService.info('Please wait until the loading of projects is complete!');
+			this.messageService.info('Please wait until all projects have been loaded!');
 			return EMPTY;
 		}
 		let foundProject: Project = null;
 		foundProject = this.projectService.allProjects.find(project => project.id === id);
 
-		if (typeof foundProject !== 'undefined') {
+		if (foundProject) {
 			return of(foundProject);
 		} else {
 			// The project's id is not, or no more, available in the cache.
@@ -68,7 +69,7 @@ export class ListProjectsService  {
 				(project: Project) => {
 					if (traceOn()) {
 						console.log('Direct access for : ' + id);
-						if (typeof project !== 'undefined') {
+						if (project) {
 							console.log('Project found : ' + project.name);
 						} else {
 							console.log('No project found for id ' + id);

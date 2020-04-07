@@ -435,6 +435,11 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		dataSourceGhosts.sendUnknowns(response.ghosts);
 		this.dataSourceGhosts$.next(dataSourceGhosts);
 
+		//
+		// We update the underlying project in the projects array
+		// because the Sunburst generation has probably updated the skills involved in the project.
+		//
+		this.projectService.actualizeProject(this.projectService.project.id);
 	}
 
 	handleErrorData(response: any) {

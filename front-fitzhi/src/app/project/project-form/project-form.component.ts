@@ -510,21 +510,25 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * Update a skill inside a project. This might be an addition or a removal.
 	 * @param idProject the project identifier
 	 * @param idSkill the skill identifier
-	 * @param callback the callback function, which might be projectService.addSkill or projectService.delSkill
+	 * @param callback the callback function, which might be **projectService.addSkill** or **projectService.delSkill**
 	 */
 	updateSkill(idProject: number, idSkill:  number,
 		callback: (idProject: number, idSkill:  number) => Observable<BooleanDTO>) {
 		callback(idProject, idSkill)
-		.subscribe (result => {
-			if (!result) {
-				this.messageService.error (result.message);
+		.subscribe ({
+			next: result => {
+				if (!result) {
+					this.messageService.error (result.message);
+				} else {
+					this.projectService.actualizeProject(idProject);
+				}
+			},
+			error: responseInError => {
+				if (traceOn()) {
+					console.log('Error ' + responseInError.error.code + ' ' + responseInError.error.message);
+				}
+				this.messageService.error(responseInError.error.message);
 			}
-		},
-		response_in_error => {
-			if (traceOn()) {
-				console.log('Error ' + response_in_error.error.code + ' ' + response_in_error.error.message);
-			}
-			this.messageService.error(response_in_error.error.message);
 		});
 	}
 
@@ -723,15 +727,23 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			console.log(this.projectService.project);
 			console.groupEnd();
 		}
-		this.projectService.save(this.projectService.project).pipe(take(1)).subscribe(
-			project => {
+		this.projectService.save(this.projectService.project).pipe(take(1))
+			.subscribe(project => {
 				this.projectService.project = project;
 
+				//
 				// If we were in creation (i.e. url = ".../project/"), we leave this mode.
+				//
 				this.creation = false;
+
+				//
 				// We update the array containing the collection of all projects.
-				this.projectService.updateProjectsCollection(project);
+				//
+				this.projectService.actualizeProject(project.id);
+
+				//
 				// We broadcast the fact that a project has been found.
+				//
 				this.projectService.projectLoaded$.next(true);
 
 				this.messageService.success('Project ' + this.projectService.project.name + '  saved !');

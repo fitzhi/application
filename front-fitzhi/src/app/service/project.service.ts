@@ -99,6 +99,30 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
+	 * Actualize a single project in the projects array.
+	 * @param idProject the project identifier to actualize
+	 */
+	public actualizeProject(idProject: number) {
+		if (traceOn()) {
+			this.log('Actualizing the project width URL ' + this.backendSetupService.url() + '/project/id/' + idProject);
+		}
+		this.httpClient
+			.get<Project>(this.backendSetupService.url() + '/project/id/' + idProject)
+			.pipe(take(1))
+			.subscribe({
+				next: project => {
+					const actualProject = this.allProjects.find(prj => prj.id === idProject);
+					//
+					// Updating the skills updated on the server.
+					//
+					actualProject.skills = project.skills;
+					this.loadMapSkills(actualProject);
+					this.dump(actualProject, '');
+				}
+			});
+	}
+
+	/**
 	 * Parse and return the given project identifier, or `undefined` if none was found.
 	 *
 	 * 2 kinds of URL can be passed to this function
@@ -140,15 +164,6 @@ export class ProjectService extends InternalService {
 		}
 		return this.httpClient
 			.post<Project>(this.backendSetupService.url() + '/project/save', project, httpOptions);
-	}
-
-	/**
-	 * Add or update a project inside the collection
-	 * @param project the given project
-	 */
-	updateProjectsCollection(project: Project): void {
-		this.allProjects = this.allProjects.filter(prj => prj.id !== project.id);
-		this.allProjects.push(project);
 	}
 
 	/**
@@ -349,14 +364,12 @@ export class ProjectService extends InternalService {
 
 	/**
 	 * Loading the **Map<number, ProjectSkill>** based on what we have read from the server.
+	 * @param project project whose mapSkills have to be updated.
 	 */
-	public loadMapSkills() {
-		console.log ('nope');
-		this.project.mapSkills = new Map<number, ProjectSkill>();
-		Object.keys(this.project.skills).forEach(id => {
-			this.project.mapSkills.set(
-				Number(id),
-				this.project.skills[id]);
+	public loadMapSkills(project: Project) {
+		project.mapSkills = new Map<number, ProjectSkill>();
+		Object.keys(project.skills).forEach(id => {
+			project.mapSkills.set(Number(id), project.skills[id]);
 		});
 	}
 
@@ -379,7 +392,6 @@ export class ProjectService extends InternalService {
 	 */
 	contributors$(idProject: number): Observable<ContributorsDTO> {
 
-		console.log ('nope');
 		if (idProject === -1) {
 			return EMPTY;
 		}
@@ -892,11 +904,13 @@ export class ProjectService extends InternalService {
 			console.log ('key: %s evaluation: %d weight: %d', key, project.audit[key].evaluation, project.audit[key].weight);
 		});
 
-		console.groupCollapsed(project.mapSkills.size + ' skills declared.');
-		for (const [k, v] of project.mapSkills) {
-			console.log (k, this.skillService.title(k));
+		if (project.mapSkills) {
+			console.groupCollapsed(project.mapSkills.size + ' skills declared.');
+			for (const [k, v] of project.mapSkills) {
+				console.log (k, this.skillService.title(k));
+			}
+			console.groupEnd();
 		}
-		console.groupEnd();
 
 		console.groupCollapsed(project.sonarProjects.length + ' sonar project declared.');
 		project.sonarProjects.forEach(sonarProject => {
