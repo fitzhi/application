@@ -115,9 +115,14 @@ export class ProjectService extends InternalService {
 					//
 					// Updating the skills updated on the server.
 					//
-					actualProject.skills = project.skills;
-					this.loadMapSkills(actualProject);
-					this.dump(actualProject, '');
+					if (actualProject) {
+						actualProject.skills = project.skills;
+						this.loadMapSkills(actualProject);
+						this.dump(actualProject, '');
+					} else {
+						// It's a new project, we add it to the list.
+						this.allProjects.push(project);
+					}
 				}
 			});
 	}
