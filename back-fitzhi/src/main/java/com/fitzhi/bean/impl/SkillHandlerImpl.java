@@ -11,7 +11,9 @@ import static com.fitzhi.Error.MESSAGE_SKILL_NOFOUND;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.text.MessageFormat;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -126,7 +128,7 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public Set<ProjectSkill> extractSkills(String rootPath, List<CommitHistory> entries) throws SkillerException {
+	public Map<Integer, ProjectSkill> extractSkills(String rootPath, List<CommitHistory> entries) throws SkillerException {
 
 		Set<Skill> candidateSkills = getSkills().values().stream()
 			.filter(skill -> skill.getDetectionTemplate() != null)
@@ -135,16 +137,21 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			candidateSkills.stream().map(Skill::getTitle).forEach(log::debug);
 		}
 		
-		Set<ProjectSkill> extractedSkills = new HashSet<>();
+		Map<Integer, ProjectSkill> extractedSkills = new HashMap<>();
 	
 		for (Skill skill : candidateSkills) {
 			for (CommitHistory entry : entries) {
 				if (isSkillDetected(skill, rootPath, entry.sourcePath)) {
-					if (log.isDebugEnabled()) {
-						log.debug(String.format("Detecting the skill %s in the project", skill.getTitle()));
+					ProjectSkill projectSkill = extractedSkills.get(skill.getId());
+					if (projectSkill == null) {
+						if (log.isDebugEnabled()) {
+							log.debug(String.format("The skill %s has been detected in the project", skill.getTitle()));
+						}
+						extractedSkills.put(skill.getId(), new ProjectSkill(skill.getId(), 1, fileSize(rootPath, entry.sourcePath)));
+					} else {
+						projectSkill.incNumberOfFiles();
+						projectSkill.addFileSize(fileSize(rootPath, entry.sourcePath));
 					}
-					extractedSkills.add(new ProjectSkill(skill.getId()));
-					break;
 				}
 			}			
 		}
@@ -152,6 +159,19 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		return extractedSkills;
 	}
 
+	private long fileSize (String rootPath, String sourcePath) {
+		try {
+			File file = new File(rootPath + File.separatorChar + sourcePath);
+			return file.length();
+		} catch (final Exception e) {
+			if (log.isDebugEnabled()) {
+				log.debug(e.getMessage(), e);
+			}
+			// A file not found is considered as an empty file size. 
+			return 0;
+		}
+	}
+	
 	/**
 	 * Test if the passed skill is detected through this file.
 	 * @param skill the skill candidate to be detected
@@ -212,7 +232,7 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			if (sourcePath.indexOf(filenameDependencies) == -1) {
 				return false;
 			}
-			File file = new File(rootPath + "/" + sourcePath);
+			File file = new File(rootPath + File.separatorChar + sourcePath);
 			try (FileReader reader = new FileReader(file)) {
 				BufferedReader br = new BufferedReader(reader);
 				return br.lines().anyMatch(line -> (line.indexOf(dependency) != -1));

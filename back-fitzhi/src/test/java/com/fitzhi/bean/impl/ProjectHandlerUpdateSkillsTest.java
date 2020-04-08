@@ -3,6 +3,7 @@
  */
 package com.fitzhi.bean.impl;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +43,9 @@ public class ProjectHandlerUpdateSkillsTest {
 	final int ID_JAVA = 1;
 	
 	final int ID_TS = 2;
+
+	long sizeJavaProject = 0;
+	long sizeJavaPing = 0;
 	
 	@Before
 	public void before() throws SkillerException {
@@ -50,12 +54,18 @@ public class ProjectHandlerUpdateSkillsTest {
 		// We are adding code files with a Java file within it.
 		// We expect to retrieve the Java skill
 		//
-		CommitHistory java = new CommitHistory("src/main/java/com/fitzhi/controller/PingController.java", 0); 
+		CommitHistory javaPing = new CommitHistory("src/main/java/com/fitzhi/controller/PingController.java", 0); 
+		sizeJavaProject = new File(javaPing.getSourcePath()).length();
+		
+		CommitHistory javaProject = new CommitHistory("src/main/java/com/fitzhi/controller/ProjectController.java", 0); 
+		sizeJavaPing = new File(javaProject.getSourcePath()).length();
+		
 		CommitHistory php = new CommitHistory("src/test/resources/other-sources-for-testing-purpose/sample.php", 0); 
 		CommitHistory ts = new CommitHistory("../front-fitzhi/src/app/app.module.ts", 0); 
 		
 		repo = new ArrayList<CommitHistory>();
-		repo.add(java);
+		repo.add(javaPing);
+		repo.add(javaProject);
 		repo.add(php);
 		repo.add(ts);
 		
@@ -72,6 +82,9 @@ public class ProjectHandlerUpdateSkillsTest {
 		Assert.assertEquals(2, projectHandler.get(1789).getSkills().size());
 	
 		Assert.assertTrue(projectHandler.get(1789).getSkills().containsKey(ID_JAVA));
+		Assert.assertEquals(2, projectHandler.get(1789).getSkills().get(ID_JAVA).getNumberOfFiles());
+		Assert.assertEquals(sizeJavaProject + sizeJavaPing, projectHandler.get(1789).getSkills().get(ID_JAVA).getTotalFilesSize());
+		
 		Assert.assertTrue(projectHandler.get(1789).getSkills().containsKey(ID_TS));
 	}
 	

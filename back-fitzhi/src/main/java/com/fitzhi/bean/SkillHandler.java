@@ -3,7 +3,6 @@ package com.fitzhi.bean;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.Skill;
@@ -63,10 +62,10 @@ public interface SkillHandler extends DataSaverLifeCycle {
 	  * Extract the skills detected in the GIT repository of a project.
 	  * @param rootPath local path where the project repository has been cloned
 	  * @param entries history of {@link CommitHistory commits} aggregated for this repository 
-	  * @return a set a {@link ProjectSkill skills} detected in the repository
+	  * @return a map a {@link ProjectSkill skills} detected in the repository & indexed by skill identifier 
 	  * @throws SkillerException if any exception occurs, <i>most probably an IOException</i>
 	  */
-	 Set<ProjectSkill> extractSkills(String rootPath, List<CommitHistory> entries) throws SkillerException;
+	 Map<Integer, ProjectSkill> extractSkills(String rootPath, List<CommitHistory> entries) throws SkillerException;
 
 	/**
 	 * <p>

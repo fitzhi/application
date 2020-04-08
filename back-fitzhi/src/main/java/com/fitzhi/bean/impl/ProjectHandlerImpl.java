@@ -287,6 +287,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		}
 	}
 
+	
 	@Override
 	public void removeSkill(Project project, int idSkill) {
 		
@@ -598,23 +599,37 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 	@Override
 	public void updateSkills(Project project, List<CommitHistory> entries) throws SkillerException {
-			
-		Set<ProjectSkill> detectedSkills = this.skillHandler.extractSkills(project.getLocationRepository(), entries);
+		
+		this.resetProjectSkillsMetrics(project);
+		
+		Map<Integer, ProjectSkill> detectedSkills = this.skillHandler.extractSkills(project.getLocationRepository(), entries);
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("detected skills for project %s", project.getName()));
-			for (ProjectSkill detectedSkill : detectedSkills) {
+			for (ProjectSkill detectedSkill : detectedSkills.values()) {
 				log.debug(skillHandler.getSkill(detectedSkill.getIdSkill()).getTitle());
 			}
 		}
 		
-		// We filter the skill that are not already declared inside this project.
-		for (ProjectSkill projectSkill : detectedSkills) {
-			if (!project.getSkills().containsKey(projectSkill.getIdSkill())) {
-				this.addSkill(project, projectSkill);
+		// We Update the skills for the given project.
+		synchronized (lockDataUpdated) {
+			for (ProjectSkill projectSkill : detectedSkills.values()) {
+				ProjectSkill existingProjectSkill = project.getSkills().get(projectSkill.getIdSkill());
+				if (existingProjectSkill == null) {
+					project.getSkills().put(projectSkill.getIdSkill(), projectSkill);
+				} else  {
+					existingProjectSkill.setNumberOfFiles(projectSkill.getNumberOfFiles());
+					existingProjectSkill.setTotalFilesSize(projectSkill.getTotalFilesSize());
+				}
 			}
+			this.dataUpdated = true;
 		}
 
 	}
-	
+
+	@Override
+	public void resetProjectSkillsMetrics(Project project) {
+		project.getSkills().values().stream().forEach(skill -> skill.setNumberOfFiles(0));
+	}
+
 }

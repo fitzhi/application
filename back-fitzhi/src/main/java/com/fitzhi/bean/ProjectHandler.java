@@ -265,4 +265,16 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @throws SkillerException thrown if any exception occurs during the treatment
 	 */
 	void updateSkills(Project project, List<CommitHistory> entries) throws SkillerException;
+	
+	/**
+	 * <p>
+	 * Reset the metrics attached to the skills of a given project
+	 * </p>
+	 * <p><i>
+	 * This method is most probably used  at the beginning of {@link #updateSkills(Project, List)}.
+	 * </i></p>
+	 * @param project the given project the given project
+	 */
+	void resetProjectSkillsMetrics(Project project);
+	
 }

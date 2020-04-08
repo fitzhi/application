@@ -33,12 +33,12 @@ public class ProjectHandlerAddSkillTest {
 	@Before
 	public void before() throws SkillerException {
 		project = new Project(1789, "my testing project");
-		projectHandler.addSkill(project, new ProjectSkill(1, 10));
+		projectHandler.addSkill(project, new ProjectSkill(1, 10, 0));
 	}
 	
 	@Test
 	public void addExistingProjectSkill() throws SkillerException {
-		projectHandler.addSkill(project, new ProjectSkill(1, 1));
+		projectHandler.addSkill(project, new ProjectSkill(1, 1, 0));
 		ProjectSkill ps = project.getSkills().get(1);
 		Assert.assertEquals(10, ps.getNumberOfFiles());
 	}
