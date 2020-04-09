@@ -76,10 +76,6 @@ describe('ProjectStaffComponent', () => {
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
 
-		const req = httpMock.expectOne('http://localhost:8080/api/skill/all');
-		expect(req.request.method).toBe('GET');
-		req.flush(mockSkills);
-
 		backendSetupService = TestBed.get(BackendSetupService);
 		backendSetupService.saveUrl('http://localhost:8080');
 
@@ -117,17 +113,22 @@ describe('ProjectStaffComponent', () => {
 		projectService.project = new Project(1789, 'the revolutionary project');
 		projectService.projectLoaded$.next(true);
 
-		const req = httpMock.expectOne('http://localhost:8080/api/project/contributors/1789');
+		let req = httpMock.expectOne('http://localhost:8080/api/project/contributors/1789');
 		expect(req.request.method).toBe('GET');
 		req.flush(mockContributorDTO);
 
 		expect(component.projectStaffComponent.dataSource).toBeDefined();
 		expect(2).toEqual(component.projectStaffComponent.dataSource.data.length);
 		fixture.detectChanges();
+
+		req = httpMock.expectOne('http://localhost:8080/api/skill/all');
+		expect(req.request.method).toBe('GET');
+		req.flush(mockSkills);
+
+		httpMock.verify();
 	});
 
 	afterEach(() => {
-		httpMock.verify();
 	});
 
 

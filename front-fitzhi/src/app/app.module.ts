@@ -110,6 +110,8 @@ import { PieChartComponent } from './welcome/pie-dashboard/pie-chart/pie-chart.c
 import { PieProjectsComponent } from './welcome/pie-dashboard/pie-projects/pie-projects.component';
 import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 import { SSEWatcherComponent } from './project/project-sunburst/ssewatcher/ssewatcher.component';
+import { TreemapComponent } from './welcome/pie-dashboard/treemap/treemap.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
 	declarations: [
@@ -172,6 +174,7 @@ import { SSEWatcherComponent } from './project/project-sunburst/ssewatcher/ssewa
 		PieChartComponent,
 		PieProjectsComponent,
 		SSEWatcherComponent,
+		TreemapComponent,
 	],
 	entryComponents: [
 		StaffUploadCvComponent,
@@ -213,6 +216,7 @@ import { SSEWatcherComponent } from './project/project-sunburst/ssewatcher/ssewa
 		MatIconModule,
 		MatAutocompleteModule,
 		MatSliderModule,
+		NgxChartsModule
 	],
 	providers: [
 		CinematicService,

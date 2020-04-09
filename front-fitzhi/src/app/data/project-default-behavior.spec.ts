@@ -16,7 +16,7 @@ describe('Testing the simple Project object', () => {
 
 		expect(project.mapSkills).toBeDefined();
 
-		const projectSkill = new ProjectSkill(1, 0);
+		const projectSkill = new ProjectSkill(1, 0, 0);
 		project.mapSkills.set(1, projectSkill);
 
 		expect(project.mapSkills.size).toBe(1);

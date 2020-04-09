@@ -1,11 +1,14 @@
 import { TestBed, TestModuleMetadata } from '@angular/core/testing';
 import { Project } from '../data/project';
 import { ProjectService } from './project.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
 import { InitTest } from '../test/init-test';
+import { BackendSetupService } from './backend-setup/backend-setup.service';
 
 
 describe('ProjectService', () => {
+	let httpMock: HttpTestingController;
+	let backendSetupService: BackendSetupService;
 
 	function createProject(id: number, name: string): Project {
 		const project = new Project();
@@ -16,6 +19,23 @@ describe('ProjectService', () => {
 		return project;
 	}
 
+	const mockProject2 = {
+		id: 2,
+		name: 'Two',
+		skills: {'1': {'idSkill': 1, 'numberOfFiles': 302, 'totalFilesSize': 981519 }}
+	};
+
+	const mockProject3 = {
+		id: 3,
+		name: 'Three',
+	};
+
+	const mockSkills = [
+		{
+			id: 1,
+			fullname: 'Java'
+		}
+	];
 
 	beforeEach(() => {
 		const testConf: TestModuleMetadata =  {
@@ -26,27 +46,14 @@ describe('ProjectService', () => {
 		InitTest.addImports(testConf.imports);
 		InitTest.addProviders(testConf.providers);
 		TestBed.configureTestingModule(testConf).compileComponents();
+
+		httpMock = TestBed.get(HttpTestingController);
+
 	});
 
 	it('should be created', () => {
 		const service: ProjectService = TestBed.get(ProjectService);
 		expect(service).toBeTruthy();
-	});
-
-	it('testing the method projectService.updateProjectsCollections', () => {
-		const service: ProjectService = TestBed.get(ProjectService);
-		service.allProjects = [];
-		service.allProjects.push(createProject(1, 'one'));
-		service.allProjects.push(createProject(2, 'two'));
-		expect(2).toEqual(service.allProjects.length);
-
-		service.updateProjectsCollection(createProject(3, 'four'));
-		expect(3).toEqual(service.allProjects.length);
-
-		service.updateProjectsCollection(createProject(3, 'three'));
-		expect(3).toEqual(service.allProjects.length);
-		expect('three').toEqual(service.allProjects[2].name);
-
 	});
 
 	it('testing the method projectService.parserUrl(\'/project/(number)\')', () => {

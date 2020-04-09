@@ -104,8 +104,9 @@ export class ProjectService extends InternalService {
 	 */
 	public actualizeProject(idProject: number) {
 		if (traceOn()) {
-			this.log('Actualizing the project width URL ' + this.backendSetupService.url() + '/project/id/' + idProject);
+			this.log('Actualizing the project with URL ' + this.backendSetupService.url() + '/project/id/' + idProject);
 		}
+		console.log ('this.backendSetupService.url()', this.backendSetupService.url() + '/project/id/' + idProject);
 		this.httpClient
 			.get<Project>(this.backendSetupService.url() + '/project/id/' + idProject)
 			.pipe(take(1))
@@ -113,17 +114,20 @@ export class ProjectService extends InternalService {
 				next: project => {
 					const actualProject = this.allProjects.find(prj => prj.id === idProject);
 					//
-					// Updating the skills updated on the server.
+					// Update the skills updated on the server on an actual project
+					// Or add a new one in the list
 					//
 					if (actualProject) {
 						actualProject.skills = project.skills;
 						this.loadMapSkills(actualProject);
 						this.dump(actualProject, '');
 					} else {
-						// It's a new project, we add it to the list.
+						this.loadMapSkills(project);
 						this.allProjects.push(project);
+						this.dump(project, '');
 					}
-				}
+				},
+				error: error => console.error ('FVI error', error)
 			});
 	}
 
@@ -422,9 +426,10 @@ export class ProjectService extends InternalService {
 
 	/**
 	 * Test a connection to GIT on server, in order to validate the connection settings.
+	 * @param idProject project whose connection settings has to be tested
 	 */
-	testConnection(id: number): Observable<boolean> {
-		const url = this.backendSetupService.url() + '/project/test/' + id;
+	testConnection(idProject: number): Observable<boolean> {
+		const url = this.backendSetupService.url() + '/project/test/' + idProject;
 		if (traceOn()) {
 			console.log('Testing the connection settings on URL ' + url);
 		}
@@ -904,10 +909,15 @@ export class ProjectService extends InternalService {
 		}
 
 		console.groupCollapsed(from, 'Project ' + project.id + ' ' + project.name);
-		console.log('Global audit evaluation', project.auditEvaluation);
-		Object.keys(project.audit).forEach(key => {
-			console.log ('key: %s evaluation: %d weight: %d', key, project.audit[key].evaluation, project.audit[key].weight);
-		});
+		console.groupCollapsed('Global audit evaluation', project.auditEvaluation);
+		if (project.audit) {
+			Object.keys(project.audit).forEach(key => {
+				console.log ('key: %s evaluation: %d weight: %d', key, project.audit[key].evaluation, project.audit[key].weight);
+			});
+		} else {
+			console.log ('project.audit is null');
+		}
+		console.groupEnd();
 
 		if (project.mapSkills) {
 			console.groupCollapsed(project.mapSkills.size + ' skills declared.');
@@ -915,29 +925,39 @@ export class ProjectService extends InternalService {
 				console.log (k, this.skillService.title(k));
 			}
 			console.groupEnd();
+		} else {
+			console.log ('project.mapSkills is null');
 		}
 
-		console.groupCollapsed(project.sonarProjects.length + ' sonar project declared.');
-		project.sonarProjects.forEach(sonarProject => {
-			if (sonarProject.projectSonarMetricValues) {
-				console.groupCollapsed('Soner project %s', sonarProject.key);
-				sonarProject.projectSonarMetricValues.forEach(metricValue =>
-					console.log (metricValue.key, 'w' + metricValue.weight + ' v:' + metricValue.value)
-				);
-				console.groupEnd();
-			}
-		});
-		console.groupEnd();
-
-		console.groupCollapsed(Object.keys(project.audit).length + ' audit topics');
-		Object.keys(project.audit).forEach(key => {
-			console.groupCollapsed('Audit topic %s', key);
-			project.audit[key].attachmentList.forEach((element: AttachmentFile) => {
-				console.log(element.fileName, element.label);
+		if (project.sonarProjects) {
+			console.groupCollapsed(project.sonarProjects.length + ' sonar project declared.');
+			project.sonarProjects.forEach(sonarProject => {
+				if (sonarProject.projectSonarMetricValues) {
+					console.groupCollapsed('Soner project %s', sonarProject.key);
+					sonarProject.projectSonarMetricValues.forEach(metricValue =>
+						console.log (metricValue.key, 'w' + metricValue.weight + ' v:' + metricValue.value)
+					);
+					console.groupEnd();
+				}
 			});
 			console.groupEnd();
-		});
-		console.groupEnd();
+		} else {
+			console.log ('project.sonarProjects is null');
+		}
+
+		if (project.audit) {
+			console.groupCollapsed(Object.keys(project.audit).length + ' audit topics');
+			Object.keys(project.audit).forEach(key => {
+				console.groupCollapsed('Audit topic %s', key);
+				project.audit[key].attachmentList.forEach((element: AttachmentFile) => {
+					console.log(element.fileName, element.label);
+				});
+				console.groupEnd();
+			});
+			console.groupEnd();
+		} else {
+			console.log ('project.audit is null');
+		}
 
 		console.groupEnd();
 	}

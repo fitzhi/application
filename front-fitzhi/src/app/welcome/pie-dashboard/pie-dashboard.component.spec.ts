@@ -9,6 +9,9 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { MatDialogModule } from '@angular/material/dialog';
+import { TreemapComponent } from './treemap/treemap.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('PieDashboardComponent', () => {
 	let component: PieDashboardComponent;
@@ -16,8 +19,9 @@ describe('PieDashboardComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ PieDashboardComponent, PieChartComponent, PieProjectsComponent ],
-			imports: [MatTableModule, MatSortModule, MatPaginatorModule, HttpClientTestingModule, MatDialogModule],
+			declarations: [ PieDashboardComponent, PieChartComponent, PieProjectsComponent, TreemapComponent ],
+			imports: [MatTableModule, MatSortModule, MatPaginatorModule, HttpClientTestingModule, MatDialogModule, 
+				NgxChartsModule, BrowserAnimationsModule],
 			providers: [ReferentialService]
 
 		})
