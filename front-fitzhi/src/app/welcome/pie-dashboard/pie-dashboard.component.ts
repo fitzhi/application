@@ -35,7 +35,7 @@ export class PieDashboardComponent extends BaseComponent implements OnInit, OnDe
 	};
 
 
-	viewTreeMap = [400, 400];
+	public viewTreeMap = [600, 400];
 
 	constructor(
 		public projectService: ProjectService,

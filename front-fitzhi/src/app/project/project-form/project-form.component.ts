@@ -461,7 +461,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			console.log ('Adding the skill', event.detail.data.value);
 		}
 
-		this.projectService.project.mapSkills.set(idSkill, new ProjectSkill(idSkill, 0));
+		this.projectService.project.mapSkills.set(idSkill, new ProjectSkill(idSkill, 0, 0));
 
 		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
 		if (this.projectService.project.id) {
