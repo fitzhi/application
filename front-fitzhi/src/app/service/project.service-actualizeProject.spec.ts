@@ -53,8 +53,8 @@ describe('ProjectService', () => {
 
 	beforeEach(async () => {
 		const testConf: TestModuleMetadata =  {
-			declarations: [], 
-			providers: [ProjectService, 
+			declarations: [],
+			providers: [ProjectService,
 				ReferentialService, SkillService, FileService, MessageService, SunburstCinematicService, BackendSetupService],
 			imports: [HttpClientTestingModule, HttpClientModule, MatDialogModule]
 		};

@@ -12,6 +12,11 @@ export class Project {
 	public filename: string;
 
 	/**
+	 * This **boolean** indicates that this project has be involved in all analysis.
+	 */
+	public active = true;
+
+	/**
 	 * Staff risk evaluation to this project.
 	 */
 	public staffEvaluation: number;

@@ -3,6 +3,7 @@ import { Experience } from './experience';
 
 
 export class Collaborator {
+
 	public idStaff: number;
 	public firstName: string;
 	public lastName: string;
