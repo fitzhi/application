@@ -2,20 +2,12 @@ import { Injectable } from '@angular/core';
 import { SkillService } from '../skill.service';
 import { ProjectService } from '../project.service';
 import { SkillProjectsAggregation } from './skill-projects-aggregration';
-import { ProjectSkill } from 'src/app/data/project-skill';
 import { Project } from 'src/app/data/project';
 import {StaffListService} from '../../staff-list-service/staff-list.service';
-import * as _ from 'lodash';
 import { Collaborator } from 'src/app/data/collaborator';
 import { Experience } from 'src/app/data/experience';
-import { StaffSkills } from 'src/app/data/staff-skills';
-import { FilesStats } from 'src/app/data/sonar/FilesStats';
-import { TreeMapSlice } from 'src/app/data/tree-map-slice';
-
-enum StatTypes {
-	NumberOfFiles = 1,
-	FilesSize = 2,
-}
+import { StatTypes } from './stat-types';
+import * as _ from 'lodash';
 
 /**
  * This service is in charge of the calculation for global staff & skill analysis.
@@ -102,8 +94,9 @@ export class DashboardService {
 	 * @param includeExternal if it's **true**, all staff members are included in the analysis, otherwise only interns
 	 * @param minimumLevel the minimum level required to be included in the analysis. if the level is equal to 1, all levels (*) are involved
 	 */
-	public processSkillDistribution(includeExternal: boolean, minimumLevel: number, statTypes: StatTypes) {
+	public processSkillDistribution(includeExternal: boolean, minimumLevel: number, statTypes: StatTypes): any[] {
 
+		console.log ('nope');
 		const aggregationProjects = this.aggregateProjectsBySkills();
 
 		if (statTypes === StatTypes.FilesSize) {
@@ -147,12 +140,22 @@ export class DashboardService {
 		const aggregateData = this.aggregateRestOfData(sortedRepo);
 
 		const tiles  = [];
-		aggregateData.forEach(projectAggregation =>
-			tiles.push({name: 'skill ' +  projectAggregation.idSkill, value: projectAggregation.sumTotalFilesSize})
-		);
+		aggregateData.forEach(projectAggregation => {
+			const title = this.skillService.title(Number(projectAggregation.idSkill));
+			tiles.push({name: title, value: projectAggregation.sumTotalFilesSize});
+		});
 		return tiles;
 	}
 
-	processSkillDistributionNumberOfFiles(entries: SkillProjectsAggregation[]) {
+	processSkillDistributionNumberOfFiles(aggregationProjects: SkillProjectsAggregation[]) {
+		const sortedRepo = _.sortBy(aggregationProjects, 'sumNumberOfFiles');
+		const aggregateData = this.aggregateRestOfData(sortedRepo);
+
+		const tiles  = [];
+		aggregateData.forEach(projectAggregation => {
+			const title = this.skillService.title(Number(projectAggregation.idSkill));
+			tiles.push({name: title, value: projectAggregation.sumTotalFilesSize});
+		});
+		return tiles;
 	}
 }

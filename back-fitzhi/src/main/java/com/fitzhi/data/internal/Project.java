@@ -43,6 +43,11 @@ public @Data class Project implements Serializable {
 	private String name;
 	
 	/**
+	 * If this property is equal to {@code true}, this project has to be taken in account in the analysis.
+	 */	
+	private boolean active = true;
+	
+	/**
 	 * The connection settings model.
 	 * 2 models exist : either the direct (URL/user/pass), or the indirect (URL/remote file)
 	 */

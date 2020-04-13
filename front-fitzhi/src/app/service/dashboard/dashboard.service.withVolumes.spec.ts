@@ -12,6 +12,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { StaffService } from '../staff.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReferentialService } from '../referential.service';
+import { StatTypes } from './stat-types';
 
 describe('DashboardService', () => {
 
@@ -88,11 +89,24 @@ describe('DashboardService', () => {
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({});
+
+		const projectService: ProjectService = TestBed.get(ProjectService);
+		expect(projectService).toBeDefined();
+		projectService.allProjects = createProjects();
+
+		const skillService: SkillService = TestBed.get(SkillService);
+		expect(skillService).toBeDefined();
+		skillService.allSkills = [];
+		skillService.allSkills.push(new Skill(5, 'Java'));
+		skillService.allSkills.push(new Skill(9, 'Typescript'));
 	});
 
-	it('dashboardService should be defined.', () => {
+	it('dashboardService.processSkillDistribution testing with volumes.', () => {
 		const service: DashboardService = TestBed.get(DashboardService);
 		expect(service).toBeDefined();
+
+		const tiles = service.processSkillDistribution(true, 1, StatTypes.FilesSize);
+		console.log (tiles);
 	});
 
 });

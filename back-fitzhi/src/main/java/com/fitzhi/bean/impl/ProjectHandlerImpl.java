@@ -188,6 +188,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 						"SHOULD NOT PASS HERE : The project " + project.getId() + " is supposed to exist !");
 			}
 			savedProject.setName(project.getName());
+			savedProject.setActive(project.isActive());
 			savedProject.setUrlSonarServer(project.getUrlSonarServer());
 			if ((project.getUrlSonarServer() == null) || ("".equals(project.getUrlSonarServer()))) {
 				savedProject.setSonarProjects(new ArrayList<SonarProject>());

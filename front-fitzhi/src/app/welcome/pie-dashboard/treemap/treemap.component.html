@@ -1,9 +1,11 @@
-<ngx-charts-tree-map
-  [view]="viewTreeMap"
-  [scheme]="colorScheme"
-  [results]="single"
-  [gradient]="gradient"
-  [animations]="animations"
-  [labelFormatting]="labelFormatting"
-  (select)="onSelect($event)">
-</ngx-charts-tree-map>
+<div *ngIf="(distribution)">
+  <ngx-charts-tree-map
+    [view]="viewTreeMap"
+    [scheme]="colorScheme"
+    [results]="distribution"
+    [gradient]="gradient"
+    [animations]="animations"
+    [labelFormatting]="labelFormatting"
+    (select)="onSelect($event)">
+  </ngx-charts-tree-map>
+</div>

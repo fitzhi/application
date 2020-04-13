@@ -93,6 +93,7 @@ export class ProjectService extends InternalService {
 					projects.forEach (project => console.log (project.name));
 					console.groupEnd();
 				}
+				projects.forEach(project => this.loadMapSkills(project));
 				this.allProjects = projects;
 				this.allProjectsIsLoaded$.next(true);
 			});
