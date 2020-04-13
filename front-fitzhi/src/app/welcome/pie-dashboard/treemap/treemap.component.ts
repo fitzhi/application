@@ -13,7 +13,6 @@ import { BaseComponent } from 'src/app/base/base.component';
 })
 export class TreemapComponent extends BaseComponent implements OnInit, OnDestroy {
 
-
 	distribution: any[];
 
 	@Input() view: any[];

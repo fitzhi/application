@@ -96,7 +96,6 @@ export class DashboardService {
 	 */
 	public processSkillDistribution(includeExternal: boolean, minimumLevel: number, statTypes: StatTypes): any[] {
 
-		console.log ('nope');
 		const aggregationProjects = this.aggregateProjectsBySkills();
 
 		if (statTypes === StatTypes.FilesSize) {
@@ -136,7 +135,7 @@ export class DashboardService {
 
 	processSkillDistributionFilesSize(aggregationProjects: SkillProjectsAggregation[]) {
 
-		const sortedRepo = _.sortBy(aggregationProjects, 'sumTotalFilesSize');
+		const sortedRepo = _.sortBy(aggregationProjects, [ function(o) { return -o.sumTotalFilesSize; }]);
 		const aggregateData = this.aggregateRestOfData(sortedRepo);
 
 		const tiles  = [];

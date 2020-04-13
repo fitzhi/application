@@ -32,8 +32,9 @@
 
 </div>
 
-<div class="treemap">
-    <app-treemap view="viewTreeMap">
+<div class="treemap" *ngIf="projectService.allProjectsIsLoaded$|async">
+    <app-treemap 
+        view="viewTreeMap">
     </app-treemap>
 </div>
 
