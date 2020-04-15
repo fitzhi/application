@@ -49,7 +49,7 @@ div.pie-projects {
     text-align: center;
 }
 
-button.lastYearMinimized, button.lastMonthMinimized, button.currentMinimized {
+button.lastYearMinimized, button.lastMonthMinimized, button.currentMinimized, button.treeMap {
     width: var(--sidebar-button-width);
     height: var(--sidebar-button-height);
     left: 5px;
@@ -78,6 +78,10 @@ button.lastMonthMinimized {
 
 button.currentMinimized {
     bottom: 140px;
+}
+
+button.treeMap {
+    bottom: 210px;
 }
 
 div.camera {

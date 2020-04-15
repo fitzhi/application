@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PieDashboardComponent } from './pie-dashboard.component';
+import { PieDashboardComponent } from './fitzhi-dashboard.component';
 import { PieChartComponent } from './pie-chart/pie-chart.component';
 import { PieProjectsComponent } from './pie-projects/pie-projects.component';
 import { MatTableModule } from '@angular/material/table';

@@ -1,5 +1,4 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
-import {single} from './data';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { StatTypes } from 'src/app/service/dashboard/stat-types';
 import { traceOn } from 'src/app/global';

@@ -4,9 +4,9 @@ import { BaseComponent } from 'src/app/base/base.component';
 import { ProjectService } from 'src/app/service/project.service';
 
 @Component({
-	selector: 'app-pie-dashboard',
-	templateUrl: './pie-dashboard.component.html',
-	styleUrls: ['./pie-dashboard.component.css']
+	selector: 'app-fitzhi-dashboard',
+	templateUrl: './fitzhi-dashboard.component.html',
+	styleUrls: ['./fitzhi-dashboard.component.css']
 })
 export class PieDashboardComponent extends BaseComponent implements OnInit, OnDestroy {
 
@@ -17,7 +17,8 @@ export class PieDashboardComponent extends BaseComponent implements OnInit, OnDe
 		none: 0,
 		lastMonthSummary: 1,
 		lastYearSummary: 2,
-		currentSummary: 3
+		currentSummary: 3,
+		treeMapSummary: 4
 	};
 
 	/**

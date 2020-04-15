@@ -105,12 +105,12 @@ import { FilesDetailFormComponent } from './project/project-audit/project-audit-
 import { AuditAttachmentComponent } from './project/project-audit/project-audit-badges/files-detail-form/audit-attachment-upload/audit-attachment.component';
 // tslint:disable-next-line:max-line-length
 import { AuditUploadAttachmentComponent } from './project/project-audit/project-audit-badges/files-detail-form/audit-attachment-upload/audit-upload-attachment/audit-upload-attachment.component';
-import { PieDashboardComponent } from './welcome/pie-dashboard/pie-dashboard.component';
-import { PieChartComponent } from './welcome/pie-dashboard/pie-chart/pie-chart.component';
-import { PieProjectsComponent } from './welcome/pie-dashboard/pie-projects/pie-projects.component';
+import { PieDashboardComponent } from './welcome/fitzhi-dashboard/fitzhi-dashboard.component';
+import { PieChartComponent } from './welcome/fitzhi-dashboard/pie-chart/pie-chart.component';
+import { PieProjectsComponent } from './welcome/fitzhi-dashboard/pie-projects/pie-projects.component';
 import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 import { SSEWatcherComponent } from './project/project-sunburst/ssewatcher/ssewatcher.component';
-import { TreemapComponent } from './welcome/pie-dashboard/treemap/treemap.component';
+import { TreemapComponent } from './welcome/fitzhi-dashboard/treemap/treemap.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({

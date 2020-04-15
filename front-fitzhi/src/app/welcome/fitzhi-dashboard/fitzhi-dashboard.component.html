@@ -1,5 +1,19 @@
 <div class="vertical-nav" id="sidebar">
     
+    <button class="btn rounded treeMap"
+        [ngClass]="{
+            'btn-outline-success' : isSelected(selection.mapTreeSummary), 
+            'btn-outline-secondary': !isSelected(selection.mapTreeSummary)}" 
+            (click)="switchTo(selection.mapTreeSummary)">
+        <svg>
+            <rect x="3" y="3" width="27" height="30" fill="#28a745" />
+            <rect x="30" y="3" width="26" height="13" fill="darkRed" />
+            <rect x="30" y="16" width="26" height="17" fill="lightGreen" />
+            <rect x="3" y="33" width="40" height="20" fill="orange" />
+            <rect x="42" y="33" width="14" height="20" fill="red" />
+        </svg>
+    </button>
+    
     <button class="btn rounded currentMinimized"
         [ngClass]="{
             'btn-outline-success' : isSelected(selection.currentSummary), 
@@ -32,14 +46,12 @@
 
 </div>
 
-<div class="treemap" *ngIf="projectService.allProjectsIsLoaded$|async">
-    <app-treemap 
-        view="viewTreeMap">
-    </app-treemap>
-</div>
-
 <div class="mainDashboard page-content"> 
 
+    <div class="treemap" *ngIf="(projectService.allProjectsIsLoaded$|async) && (isSelected(selection.mapTreeSummary))">
+        <app-treemap></app-treemap>
+    </div>
+    
     <div class="dashboard" *ngIf="isSelected(selection.lastYearSummary)">
         <div *ngIf="(projectService.allProjectsIsLoaded$|async) && (slidesLastYear$|async)" 
                 class="formerDashboard">
