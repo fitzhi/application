@@ -108,4 +108,19 @@ export class Constants {
 
 	public static BACKEND_RETURN_CODE = 'backend.return_code';
 	public static BACKEND_RETURN_MESSAGE = 'backend.return_message';
+
+	public static COLORS = [
+	//	'#1CB745',
+		'#27A53F',
+		'#329338',
+		'#3D8131',
+		'#486E2A',
+		'#535C23',
+		'#5EA1AC',
+		'#693715',
+		'#74250E',
+		'#7F1307',
+		'#B00000'
+	];
+
 }

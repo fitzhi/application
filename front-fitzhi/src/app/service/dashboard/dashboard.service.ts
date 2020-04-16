@@ -135,13 +135,16 @@ export class DashboardService {
 
 	processSkillDistributionFilesSize(aggregationProjects: SkillProjectsAggregation[]) {
 
+		const sumAllTotalFilesSize = _.sumBy(aggregationProjects, 'sumTotalFilesSize');
+
 		const sortedRepo = _.sortBy(aggregationProjects, [ function(o) { return -o.sumTotalFilesSize; }]);
 		const aggregateData = this.aggregateRestOfData(sortedRepo);
 
 		const tiles  = [];
 		aggregateData.forEach(projectAggregation => {
 			const title = this.skillService.title(Number(projectAggregation.idSkill));
-			tiles.push({name: title, value: projectAggregation.sumTotalFilesSize});
+			const size = (projectAggregation.sumTotalFilesSize * 100 / sumAllTotalFilesSize);
+			tiles.push({name: title, value: size});
 		});
 		return tiles;
 	}

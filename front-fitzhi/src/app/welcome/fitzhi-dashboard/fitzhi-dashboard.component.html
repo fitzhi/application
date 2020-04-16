@@ -5,12 +5,16 @@
             'btn-outline-success' : isSelected(selection.mapTreeSummary), 
             'btn-outline-secondary': !isSelected(selection.mapTreeSummary)}" 
             (click)="switchTo(selection.mapTreeSummary)">
-        <svg>
-            <rect x="3" y="3" width="27" height="30" fill="#28a745" />
-            <rect x="30" y="3" width="26" height="13" fill="darkRed" />
-            <rect x="30" y="16" width="26" height="17" fill="lightGreen" />
-            <rect x="3" y="33" width="40" height="20" fill="orange" />
-            <rect x="42" y="33" width="14" height="20" fill="red" />
+        <svg class="treeMapButton">
+            <rect x="6" y="6" class="rectTreeMap" style="fill:#27A53F" />
+            <rect x="21" y="6" class="rectTreeMap" style="fill:#329338" />
+            <rect x="36" y="6" class="rectTreeMap" style="fill:#3D8131"  />
+            <rect x="6" y="21" class="rectTreeMap" style="fill:#486E2A" />
+            <rect x="21" y="21" class="rectTreeMap" style="fill:#535C23" />
+            <rect x="36" y="21" class="rectTreeMap" style="fill:#5E4A1C"  />
+            <rect x="6" y="36" class="rectTreeMap" style="fill:#74250E" />
+            <rect x="21" y="36" class="rectTreeMap" style="fill:#7F1307" />
+            <rect x="36" y="36" class="rectTreeMap" style="fill:#8B0000"  />
         </svg>
     </button>
     
@@ -49,10 +53,14 @@
 <div class="mainDashboard page-content"> 
 
     <div class="treemap" *ngIf="(projectService.allProjectsIsLoaded$|async) && (isSelected(selection.mapTreeSummary))">
+        <div class="headerTreeMap">
+            <div class="entry-HeaderTreeMap">External (O/N</div>
+            <div class="entry-HeaderTreeMap">Minimum level</div>                
+        </div>
         <app-treemap></app-treemap>
     </div>
     
-    <div class="dashboard" *ngIf="isSelected(selection.lastYearSummary)">
+    <div *ngIf="isSelected(selection.lastYearSummary)">
         <div *ngIf="(projectService.allProjectsIsLoaded$|async) && (slidesLastYear$|async)" 
                 class="formerDashboard">
             <p class="text">Last year snapshot</p>
@@ -90,7 +98,7 @@
 
     <div  class="dashboard" *ngIf="isSelected(selection.currentSummary)">
 
-        <div *ngIf="(projectService.allProjectsIsLoaded$|async)" class="pie">
+        <div *ngIf="(projectService.allProjectsIsLoaded$|async)" class="pie pie-in-container">
             <app-pie-chart
                 [radius]=200
                 [active]=true

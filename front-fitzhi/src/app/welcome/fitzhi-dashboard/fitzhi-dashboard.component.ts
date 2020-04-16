@@ -2,6 +2,7 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { PieDashboardService } from './service/pie-dashboard.service';
 import { BaseComponent } from 'src/app/base/base.component';
 import { ProjectService } from 'src/app/service/project.service';
+import { Constants } from 'src/app/constants';
 
 @Component({
 	selector: 'app-fitzhi-dashboard',
@@ -37,6 +38,8 @@ export class PieDashboardComponent extends BaseComponent implements OnInit, OnDe
 
 
 	public viewTreeMap = [600, 400];
+
+	public colors = Constants.COLORS;
 
 	constructor(
 		public projectService: ProjectService,
@@ -83,5 +86,9 @@ export class PieDashboardComponent extends BaseComponent implements OnInit, OnDe
 	 */
 	isSelected(selection: number): boolean {
 		return (selection === this.selected);
+	}
+
+	rectColor(index: Number) {
+		return 
 	}
 }

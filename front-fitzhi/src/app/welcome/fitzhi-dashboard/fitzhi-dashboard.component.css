@@ -33,6 +33,12 @@ div.pie {
     height: 500px;    
 }
 
+div.pie-in-container {
+    margin-left: 200px;
+    margin-top: 100px;
+}
+
+
 div.pie-projects {
     position: absolute;
     right: 0px;  
@@ -113,8 +119,35 @@ i.camera {
 }
 
 div.treemap {
-    margin-left: 100px;
+    margin: auto;
     width: 600px;
     height: 400px;
-    background-color: whitesmoke;
+    margin-top: 100px;
+}
+
+div.headerTreeMap {
+    margin: auto;
+    margin-left: 10px;
+    width: 580px;
+    height: 40px; 
+    border: 1px solid black;
+    display: inline-flex;
+    align-items: center;
+}
+
+div.entry-HeaderTreeMap {
+    margin-right: 20px;
+    margin-left: 20px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+svg.treeMapButton {
+    width: 60px;
+    height: 60px;
+}
+
+rect.rectTreeMap {
+    width: 15px;
+    height: 15px;
 }
