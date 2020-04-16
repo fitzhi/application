@@ -1159,7 +1159,6 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				}
 				settings.setPassword(clearPassword);
 			} catch (final SkillerException se) {
-				System.out.println("project.getPassword() " + project.getPassword());
 				se.getCause().printStackTrace();
 				throw se;
 			}
