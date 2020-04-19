@@ -13,14 +13,14 @@ import { TreemapComponent } from './treemap/treemap.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-describe('PieDashboardComponent', () => {
+describe('FitzhiDashboardComponent', () => {
 	let component: PieDashboardComponent;
 	let fixture: ComponentFixture<PieDashboardComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ PieDashboardComponent, PieChartComponent, PieProjectsComponent, TreemapComponent ],
-			imports: [MatTableModule, MatSortModule, MatPaginatorModule, HttpClientTestingModule, MatDialogModule, 
+			imports: [MatTableModule, MatSortModule, MatPaginatorModule, HttpClientTestingModule, MatDialogModule,
 				NgxChartsModule, BrowserAnimationsModule],
 			providers: [ReferentialService]
 

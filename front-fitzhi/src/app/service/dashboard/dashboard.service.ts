@@ -8,6 +8,7 @@ import { Collaborator } from 'src/app/data/collaborator';
 import { Experience } from 'src/app/data/experience';
 import { StatTypes } from './stat-types';
 import * as _ from 'lodash';
+import { traceOn } from 'src/app/global';
 
 /**
  * This service is in charge of the calculation for global staff & skill analysis.
@@ -18,6 +19,25 @@ import * as _ from 'lodash';
 export class DashboardService {
 
 	static MAX_NUMBER_SKILLS_IN_DIAGRAM = 10;
+
+
+	static OPTIMAL_NUMBER_OF_STAFF_PER_1_K_OF_CODE = 1;
+
+
+	static red (index: number): string {
+		const s = Math.round(28 + ((139 - 28) * index) / 10).toString(16).toUpperCase();
+		return (s.length === 1) ? '0' + s : s;
+	}
+
+	static green (index: number) {
+		const s = Math.round((183 - (183 * index) / 10)).toString(16).toUpperCase();
+		return (s.length === 1) ? '0' + s : s;
+	}
+
+	static blue (index: number) {
+		const s = Math.round((69 - (69 * index) / 10)).toString(16).toUpperCase();
+		return (s.length === 1) ? '0' + s : s;
+	}
 
 	constructor(
 		private skillService: SkillService,
@@ -96,13 +116,17 @@ export class DashboardService {
 	 */
 	public processSkillDistribution(includeExternal: boolean, minimumLevel: number, statTypes: StatTypes): any[] {
 
+		// Count the number of projects group by skills;
 		const aggregationProjects = this.aggregateProjectsBySkills();
 
+		// Calculate the number of staff group by skills
+		const aggregationStaff = this.countStaffBySkills(includeExternal, minimumLevel);
+
 		if (statTypes === StatTypes.FilesSize) {
-			return this.processSkillDistributionFilesSize(aggregationProjects);
+			return this.processSkillDistributionFilesSize(aggregationProjects, aggregationStaff);
 		}
 		if (statTypes === StatTypes.NumberOfFiles) {
-			return this.processSkillDistributionNumberOfFiles(aggregationProjects);
+			return this.processSkillDistributionNumberOfFiles(aggregationProjects, aggregationStaff);
 		}
 		throw new Error('Unknown type of statistics ' + statTypes);
 	}
@@ -133,23 +157,36 @@ export class DashboardService {
 		return entries;
 	}
 
-	processSkillDistributionFilesSize(aggregationProjects: SkillProjectsAggregation[]) {
+	processSkillDistributionFilesSize(aggregationProjects: SkillProjectsAggregation[], aggregationStaff: any) {
 
 		const sumAllTotalFilesSize = _.sumBy(aggregationProjects, 'sumTotalFilesSize');
+		if (traceOn()) {
+			console.log ('sumAllTotalFilesSize', sumAllTotalFilesSize);
+		}
+
 
 		const sortedRepo = _.sortBy(aggregationProjects, [ function(o) { return -o.sumTotalFilesSize; }]);
 		const aggregateData = this.aggregateRestOfData(sortedRepo);
 
 		const tiles  = [];
-		aggregateData.forEach(projectAggregation => {
+
+		aggregateData.forEach (projectAggregation => {
 			const title = this.skillService.title(Number(projectAggregation.idSkill));
-			const size = (projectAggregation.sumTotalFilesSize * 100 / sumAllTotalFilesSize);
-			tiles.push({name: title, value: size});
+			const size = Math.round((projectAggregation.sumTotalFilesSize * 100 / sumAllTotalFilesSize));
+			const color = this.colorTile(projectAggregation.sumTotalFilesSize, aggregationStaff[projectAggregation.idSkill]);
+			tiles.push({name: title, value: size, color: color});
 		});
+
+		if (traceOn()) {
+			console.groupCollapsed('%d staff tiles', tiles.length);
+			tiles.forEach(tile => console.log (tile.name, 'size : ' + tile.size + ' & color : ' + tile.color));
+			console.groupEnd();
+		}
+
 		return tiles;
 	}
 
-	processSkillDistributionNumberOfFiles(aggregationProjects: SkillProjectsAggregation[]) {
+	processSkillDistributionNumberOfFiles(aggregationProjects: SkillProjectsAggregation[], aggregationStaff: any) {
 		const sortedRepo = _.sortBy(aggregationProjects, 'sumNumberOfFiles');
 		const aggregateData = this.aggregateRestOfData(sortedRepo);
 
@@ -160,4 +197,23 @@ export class DashboardService {
 		});
 		return tiles;
 	}
+
+	/**
+	 * Calculate and return the color of a tile.
+	 *
+	 * This color figures the number of active developers available for this skill
+	 * @param sumTotalFilesSize the total files size in this skill
+	 * @param countStaff the number of staff members with this
+	 */
+	colorTile(sumTotalFilesSize: number, countStaff: any): string {
+		const rate = 1 - countStaff / (sumTotalFilesSize * DashboardService.OPTIMAL_NUMBER_OF_STAFF_PER_1_K_OF_CODE / 1000);
+		const indexColor = Math.round(rate * 10);
+		const color = '#' + DashboardService.red(indexColor) + DashboardService.green(indexColor) + DashboardService.blue(indexColor);
+		if (traceOn()) {
+			console.log('Calculated rate for %d %d : %d producing the index %d', sumTotalFilesSize, countStaff, rate, indexColor);
+		}
+		return color;
+	}
+
 }
+

@@ -18,6 +18,7 @@ describe('DashboardService', () => {
 			aggregations.push(new SkillProjectsAggregation(String(i), 0, (i % 3) * 100 + 50));
 		}
 		aggregations.push(new SkillProjectsAggregation('10', 0, 1000));
+
 		return aggregations;
 	}
 
@@ -48,13 +49,13 @@ describe('DashboardService', () => {
 		const service: DashboardService = TestBed.get(DashboardService);
 		expect(service).toBeDefined();
 
-		const tiles = service.processSkillDistributionFilesSize(generateSkillProjectsAggregation());
+		const tiles = service.processSkillDistributionFilesSize(generateSkillProjectsAggregation(), {});
 
 		expect(10).toEqual(tiles.length);
-		expect(true).toBeDefined(tiles[9].name);
-		expect(true).toBeDefined(tiles[9].value);
-		expect(1000).toEqual(tiles[9].value);
-		expect('java').toEqual(tiles[9].name);
+		expect(true).toBeDefined(tiles[0].name);
+		expect(true).toBeDefined(tiles[0].value);
+		expect(43).toEqual(tiles[0].value);
+		expect('java').toEqual(tiles[0].name);
 	});
 
 
