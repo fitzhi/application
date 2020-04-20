@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.data.encryption.DataEncryption;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.SkillerException;
 
@@ -71,6 +72,10 @@ public class ProjectHandlerSaveProjectTest {
 		Assert.assertEquals(USER_PASSWORD_ACCESS, project.getConnectionSettings());
 		Assert.assertEquals("frvidal", project.getUsername());
 		Assert.assertNotNull(project.getPassword());
+		
+		String encryptedPassword = DataEncryption.encryptMessage("mypass");
+		Assert.assertEquals(encryptedPassword, project.getPassword());
+		
 		Assert.assertNull(project.getConnectionSettingsFile());
 	}
 
