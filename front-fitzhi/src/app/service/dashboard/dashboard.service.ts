@@ -21,7 +21,7 @@ export class DashboardService {
 	static MAX_NUMBER_SKILLS_IN_DIAGRAM = 10;
 
 
-	static OPTIMAL_NUMBER_OF_STAFF_PER_1_K_OF_CODE = 1;
+	static OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE = 1;
 
 
 	static red (index: number): string {
@@ -102,9 +102,13 @@ export class DashboardService {
 		// Count the number of staff member group by skills
 		const aggregation = _.countBy(staffExperiences, skill);
 
-		Object.keys(aggregation).forEach(key => {
-			console.log (key, aggregation[key]);
-		});
+		if (traceOn()) {
+			console.groupCollapsed('count all staff group by skill');
+			Object.keys(aggregation).forEach(key => {
+				console.log (this.skillService.title(Number(key)), aggregation[key]);
+			});
+			console.groupEnd();
+		}
 
 		return aggregation;
 	}
@@ -173,13 +177,19 @@ export class DashboardService {
 		aggregateData.forEach (projectAggregation => {
 			const title = this.skillService.title(Number(projectAggregation.idSkill));
 			const size = Math.round((projectAggregation.sumTotalFilesSize * 100 / sumAllTotalFilesSize));
-			const color = this.colorTile(projectAggregation.sumTotalFilesSize, aggregationStaff[projectAggregation.idSkill]);
-			tiles.push({name: title, value: size, color: color});
+			//
+			// The skill proves to have file with signifant sizes
+			//
+			const staffCount = (aggregationStaff[projectAggregation.idSkill]) ? aggregationStaff[projectAggregation.idSkill] : 0;
+			if (size > 0) {
+				const color = this.colorTile(projectAggregation.sumTotalFilesSize, staffCount);
+				tiles.push({name: title, value: size, color: color});
+			}
 		});
 
 		if (traceOn()) {
 			console.groupCollapsed('%d staff tiles', tiles.length);
-			tiles.forEach(tile => console.log (tile.name, 'size : ' + tile.size + ' & color : ' + tile.color));
+			tiles.forEach(tile => console.log (tile.name, 'size : ' + tile.value + ' & color : ' + tile.color));
 			console.groupEnd();
 		}
 
@@ -206,12 +216,17 @@ export class DashboardService {
 	 * @param countStaff the number of staff members with this
 	 */
 	colorTile(sumTotalFilesSize: number, countStaff: any): string {
-		const rate = 1 - countStaff / (sumTotalFilesSize * DashboardService.OPTIMAL_NUMBER_OF_STAFF_PER_1_K_OF_CODE / 1000);
+		// The rate might be negative if we exceed the perfection. The response is NO.
+		const rate = Math.max(
+			1 - countStaff / (sumTotalFilesSize * DashboardService.OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE / 1000000), 0);
 		const indexColor = Math.round(rate * 10);
 		const color = '#' + DashboardService.red(indexColor) + DashboardService.green(indexColor) + DashboardService.blue(indexColor);
-		if (traceOn()) {
-			console.log('Calculated rate for %d %d : %d producing the index %d', sumTotalFilesSize, countStaff, rate, indexColor);
-		}
+
+//
+// These lines are commented, too chatty...
+// 		if (traceOn()) {
+// 			console.log('Calculated rate for %d %d : %d producing the index %d', sumTotalFilesSize, countStaff, rate, indexColor);
+// 		}
 		return color;
 	}
 

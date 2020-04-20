@@ -21,7 +21,7 @@ export class TreemapComponent extends BaseComponent implements OnInit, OnDestroy
 	animations = true;
 
 	colorScheme = {
-		domain: ['#5AA454', '#E44D25', '#CFC0BB', '#7aa3e5', '#a8385d', '#aae3f5']
+		domain: []
 	};
 
 	constructor(
@@ -36,6 +36,7 @@ export class TreemapComponent extends BaseComponent implements OnInit, OnDestroy
 				next: doneAndOk => {
 					if (doneAndOk) {
 						this.distribution = this.dashboardService.processSkillDistribution(true, 1, StatTypes.FilesSize);
+						this.distribution.forEach(data => this.colorScheme.domain.push(data.color));
 						if (traceOn()) {
 							console.groupCollapsed('Skills distribution');
 							this.distribution.forEach(skillData =>

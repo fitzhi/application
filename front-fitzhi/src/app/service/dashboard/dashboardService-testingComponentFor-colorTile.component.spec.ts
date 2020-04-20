@@ -22,18 +22,21 @@ describe('DashboardService.colorTile testing', () => {
 					'<tr>' +
 					'<td>' +
 						'<div *ngFor="let color of colorTiles; index as i" ' +
-						'style="width: 50px; height:50px;" [style.background-color]=color></div>' +
+							'style="width: 50px; height:50px;" [style.background-color]=color></div>' +
 					'</td>' +
 					'<td>' +
 						'<div *ngFor="let legend of dataRiskLegends" ' +
-						'style="width: 50px; height:50px;" [style.background-color]=legend.color></div>' +
+							'style="width: 50px; height:50px;" [style.background-color]=legend.color></div>' +
 					'</td>' +
 					'</tr>' +
-					'</table>'
+					'</table><br/>' +
+					'<table><tr><td>The processed color if we exceed the perfection : </td>' +
+					'<td><div style="width: 50px; height:50px" [style.background-color]=color></div></td></tr>'
 	})
 	class TestHostComponent {
 		public colorTiles = [];
 		public dataRiskLegends: RiskLegend[];
+		public color = 'blue';
 	}
 
 	beforeEach(async(() => {
@@ -53,17 +56,25 @@ describe('DashboardService.colorTile testing', () => {
 		component = fixture.componentInstance;
 
 		for (let i = 10; i >= 0; i--) {
-			const color = dashboardService.colorTile(10000, i);
+			const color = dashboardService.colorTile(10000000, i);
 			component.colorTiles.push(color);
 		}
 		component.dataRiskLegends = dataRiskLegends;
 		fixture.detectChanges();
 
+	});
+
+	it('Execute the creation with a comparison with the legends loaded from the referential', () => {
+		expect(component).toBeTruthy();
 		expect(component.colorTiles[0]).toEqual(dataRiskLegends[0].color);
 		expect(component.colorTiles[10]).toEqual(dataRiskLegends[10].color);
 	});
 
-	it('should create', () => {
+	it('Execute a test if we exceed the perfection', () => {
 		expect(component).toBeTruthy();
+		component.color = dashboardService.colorTile(DashboardService.OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE, 2);
+		fixture.detectChanges();
+		expect('#1CB745').toEqual(component.color);
 	});
+
 });

@@ -10,6 +10,7 @@ import { StaffService } from '../staff.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReferentialService } from '../referential.service';
 import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
+import { Skill } from 'src/app/data/skill';
 describe('DashboardService', () => {
 
 	beforeEach(async () => {
@@ -47,6 +48,7 @@ describe('DashboardService', () => {
 			staff.external = (ind === 3);
 
 			staff.experiences = [];
+
 			staff.experiences.push(new Experience(1, 'skill 1', 1));
 			staff.experiences.push(new Experience(2, 'skill zwei', 2));
 			if (ind < 3) {
@@ -58,6 +60,13 @@ describe('DashboardService', () => {
 
 		const staffListService: StaffListService = TestBed.get(StaffListService);
 		staffListService.allStaff = createAllStaffForDev();
+
+		const skillService: SkillService = TestBed.get(SkillService);
+		skillService.allSkills = [];
+		skillService.allSkills.push(new Skill(1, 'skill 1'));
+		skillService.allSkills.push(new Skill(2, 'skill zwei'));
+		skillService.allSkills.push(new Skill(4, 'skill four'));
+
 	});
 
 	it('"dashboardService.countStaffBySkills()" for ALL staff members & ALL levels (for development purpose)',
