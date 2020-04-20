@@ -192,8 +192,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			savedProject.setUrlSonarServer(project.getUrlSonarServer());
 			if ((project.getUrlSonarServer() == null) || ("".equals(project.getUrlSonarServer()))) {
 				savedProject.setSonarProjects(new ArrayList<SonarProject>());
-			}
-			
+			}			
 			savedProject.setConnectionSettings(project.getConnectionSettings());
 			switch (project.getConnectionSettings()) {
 				case USER_PASSWORD_ACCESS:
