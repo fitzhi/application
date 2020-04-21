@@ -9,7 +9,7 @@ import { Constants } from 'src/app/constants';
 	templateUrl: './fitzhi-dashboard.component.html',
 	styleUrls: ['./fitzhi-dashboard.component.css']
 })
-export class PieDashboardComponent extends BaseComponent implements OnInit, OnDestroy {
+export class FitzhiDashboardComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	/**
 	 * Available buttons.

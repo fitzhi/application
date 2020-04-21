@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { PieDashboardComponent } from './fitzhi-dashboard.component';
+import { FitzhiDashboardComponent } from './fitzhi-dashboard.component';
 import { PieChartComponent } from './pie-chart/pie-chart.component';
 import { PieProjectsComponent } from './pie-projects/pie-projects.component';
 import { MatTableModule } from '@angular/material/table';
@@ -14,14 +14,16 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TreemapHeaderComponent } from './treemap/treemap-header/treemap-header.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { TagifyStarsComponent } from './../../tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 
 describe('FitzhiDashboardComponent', () => {
-	let component: PieDashboardComponent;
-	let fixture: ComponentFixture<PieDashboardComponent>;
+	let component: FitzhiDashboardComponent;
+	let fixture: ComponentFixture<FitzhiDashboardComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ PieDashboardComponent, PieChartComponent, PieProjectsComponent, TreemapComponent, TreemapHeaderComponent ],
+			declarations: [ FitzhiDashboardComponent, PieChartComponent, PieProjectsComponent, TagifyStarsComponent,
+				TreemapComponent, TreemapHeaderComponent ],
 			imports: [MatTableModule, MatSortModule, MatPaginatorModule, HttpClientTestingModule, MatDialogModule,
 				NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule],
 			providers: [ReferentialService]
@@ -31,7 +33,7 @@ describe('FitzhiDashboardComponent', () => {
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(PieDashboardComponent);
+		fixture = TestBed.createComponent(FitzhiDashboardComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

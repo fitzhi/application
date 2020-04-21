@@ -28,7 +28,6 @@ import { ListProjectComponent } from './list-project/list-project.component';
 import { ReferentialService } from './service/referential.service';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { StaffTabsComponent } from './tabs-staff/staff-tabs/staff-tabs.component';
 import { StaffFormComponent } from './tabs-staff/staff-form/staff-form.component';
 import { StaffProjectsComponent } from './tabs-staff/staff-projects/staff-projects.component';
 import { StaffExperienceComponent } from './tabs-staff/staff-experience/staff-experience.component';
@@ -105,7 +104,7 @@ import { FilesDetailFormComponent } from './project/project-audit/project-audit-
 import { AuditAttachmentComponent } from './project/project-audit/project-audit-badges/files-detail-form/audit-attachment-upload/audit-attachment.component';
 // tslint:disable-next-line:max-line-length
 import { AuditUploadAttachmentComponent } from './project/project-audit/project-audit-badges/files-detail-form/audit-attachment-upload/audit-upload-attachment/audit-upload-attachment.component';
-import { PieDashboardComponent } from './welcome/fitzhi-dashboard/fitzhi-dashboard.component';
+import { FitzhiDashboardComponent } from './welcome/fitzhi-dashboard/fitzhi-dashboard.component';
 import { PieChartComponent } from './welcome/fitzhi-dashboard/pie-chart/pie-chart.component';
 import { PieProjectsComponent } from './welcome/fitzhi-dashboard/pie-projects/pie-projects.component';
 import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
@@ -125,7 +124,6 @@ import { TreemapHeaderComponent } from './welcome/fitzhi-dashboard/treemap/treem
 		ErrorComponent,
 		ProjectFormComponent,
 		ListProjectComponent,
-		StaffTabsComponent,
 		StaffFormComponent,
 		StaffProjectsComponent,
 		StaffExperienceComponent,
@@ -171,7 +169,7 @@ import { TreemapHeaderComponent } from './welcome/fitzhi-dashboard/treemap/treem
 		FilesDetailFormComponent,
 		AuditAttachmentComponent,
 		AuditUploadAttachmentComponent,
-		PieDashboardComponent,
+		FitzhiDashboardComponent,
 		PieChartComponent,
 		PieProjectsComponent,
 		SSEWatcherComponent,

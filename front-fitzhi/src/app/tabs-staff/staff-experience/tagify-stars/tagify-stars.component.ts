@@ -24,7 +24,7 @@ export class TagifyStarsComponent implements AfterViewInit, OnDestroy {
 	/**
 	 * The backlist of tags
 	 */
-	@Input() blacklist;
+	@Input() blacklist = [];
 
 	/**
 	 * First values to put inside the component.
@@ -84,7 +84,7 @@ export class TagifyStarsComponent implements AfterViewInit, OnDestroy {
 	ngAfterViewInit() {
 
 		this.input = document.getElementById('tagify-stars');
-console.log ('nope');
+
 		this.tagify = new Tagify(this.input, {
 			enforceWhitelist: true,
 			placeholder: this.placeholder,
