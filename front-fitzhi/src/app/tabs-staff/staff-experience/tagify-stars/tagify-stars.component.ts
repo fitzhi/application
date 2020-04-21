@@ -84,7 +84,7 @@ export class TagifyStarsComponent implements AfterViewInit, OnDestroy {
 	ngAfterViewInit() {
 
 		this.input = document.getElementById('tagify-stars');
-
+console.log ('nope');
 		this.tagify = new Tagify(this.input, {
 			enforceWhitelist: true,
 			placeholder: this.placeholder,
@@ -134,7 +134,7 @@ export class TagifyStarsComponent implements AfterViewInit, OnDestroy {
 
 		// Chainable event listeners
 		this.tagify.on('add', this.boundOnAddTag)
-			.on('remove', this.onRemoveTag.bind(this))
+			.on('remove', this.boundOnRemoveTag)
 			.on('click', this.onTagClick.bind(this));
 
 		this.updateEventHandlerStars(this.originalValues);
@@ -267,7 +267,6 @@ export class TagifyStarsComponent implements AfterViewInit, OnDestroy {
 	 * @param e the associated tag
 	 */
 	onRemoveTag(e: CustomEvent) {
-
 		for (let i = 0; i < 5; i++) {
 			const id = this.idStar(e.detail.data.value, i);
 			if (document.getElementById(id)) {
@@ -277,7 +276,11 @@ export class TagifyStarsComponent implements AfterViewInit, OnDestroy {
 		this.removeTagEvent.emit(e.detail.data.value);
 	}
 
-	onTagClick(e: CustomEvent) {
+	/**
+	 * This method's handling the user click on a tag.
+	 * @param event the event fired
+	 */
+	onTagClick(event: CustomEvent) {
 
 		//
 		// If we are in a readonly mode, we cancel the edition.
@@ -286,7 +289,7 @@ export class TagifyStarsComponent implements AfterViewInit, OnDestroy {
 			return;
 		}
 
-		const tag = e.detail.data.value;
+		const tag = event.detail.data.value;
 		for (let i = 0; i <= this.star; i++) {
 			this.setColor(tag, i, this.colorON);
 		}
