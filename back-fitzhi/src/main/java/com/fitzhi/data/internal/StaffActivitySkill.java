@@ -43,16 +43,13 @@ public @Data class StaffActivitySkill implements Serializable {
 	 */
 	private int numberOfChanges = 0;
 
-	
 	/**
-	 * Increment the number of changes submitted for this skill
-	 * @return the new changes count
-	 */
-	public int incChange() {
-		return ++numberOfChanges;
+	* Empty constructor for serialization purpose.
+	*/
+	public StaffActivitySkill() {
+		
 	}
-
-
+	
 	/**
 	 * Public construction
 	 * @param idSkill the Skill identifier
@@ -71,6 +68,14 @@ public @Data class StaffActivitySkill implements Serializable {
 		this.numberOfChanges = numberOfChanges;
 	}
 	
+	/**
+	 * Increment the number of changes submitted for this skill
+	 * @return the new changes count
+	 */
+	public int incChange() {
+		return ++numberOfChanges;
+	}
+
 	/**
 	 * <p>
 	 * Take in account a date of commit.
@@ -92,5 +97,5 @@ public @Data class StaffActivitySkill implements Serializable {
 		return "StaffActivitySkill [idStaff=" + idStaff + ", idSkill=" + idSkill + ", firstCommit=" + firstCommit
 				+ ", lastCommit=" + lastCommit + ", numberOfChanges=" + numberOfChanges + "]";
 	}
-	
+
 }
