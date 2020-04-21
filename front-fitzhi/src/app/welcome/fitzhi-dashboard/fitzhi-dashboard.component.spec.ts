@@ -9,9 +9,11 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { MatDialogModule } from '@angular/material/dialog';
-import { TreemapComponent } from './treemap/treemap.component';
+import { TreemapComponent } from './treemap/treemap-graph/treemap.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { TreemapHeaderComponent } from './treemap/treemap-header/treemap-header.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 describe('FitzhiDashboardComponent', () => {
 	let component: PieDashboardComponent;
@@ -19,9 +21,9 @@ describe('FitzhiDashboardComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ PieDashboardComponent, PieChartComponent, PieProjectsComponent, TreemapComponent ],
+			declarations: [ PieDashboardComponent, PieChartComponent, PieProjectsComponent, TreemapComponent, TreemapHeaderComponent ],
 			imports: [MatTableModule, MatSortModule, MatPaginatorModule, HttpClientTestingModule, MatDialogModule,
-				NgxChartsModule, BrowserAnimationsModule],
+				NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule],
 			providers: [ReferentialService]
 
 		})

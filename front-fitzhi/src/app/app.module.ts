@@ -110,8 +110,9 @@ import { PieChartComponent } from './welcome/fitzhi-dashboard/pie-chart/pie-char
 import { PieProjectsComponent } from './welcome/fitzhi-dashboard/pie-projects/pie-projects.component';
 import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 import { SSEWatcherComponent } from './project/project-sunburst/ssewatcher/ssewatcher.component';
-import { TreemapComponent } from './welcome/fitzhi-dashboard/treemap/treemap.component';
+import { TreemapComponent } from './welcome/fitzhi-dashboard/treemap/treemap-graph/treemap.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { TreemapHeaderComponent } from './welcome/fitzhi-dashboard/treemap/treemap-header/treemap-header.component';
 
 @NgModule({
 	declarations: [
@@ -175,6 +176,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 		PieProjectsComponent,
 		SSEWatcherComponent,
 		TreemapComponent,
+		TreemapHeaderComponent
 	],
 	entryComponents: [
 		StaffUploadCvComponent,

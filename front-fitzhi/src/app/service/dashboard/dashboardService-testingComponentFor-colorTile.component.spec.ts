@@ -56,7 +56,7 @@ describe('DashboardService.colorTile testing', () => {
 		component = fixture.componentInstance;
 
 		for (let i = 10; i >= 0; i--) {
-			const color = dashboardService.colorTile(10000000, i);
+			const color = dashboardService.colorTile(10000000, i * 3);
 			component.colorTiles.push(color);
 		}
 		component.dataRiskLegends = dataRiskLegends;

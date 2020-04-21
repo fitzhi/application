@@ -125,23 +125,6 @@ div.treemap {
     margin-top: 100px;
 }
 
-div.headerTreeMap {
-    margin: auto;
-    margin-left: 10px;
-    width: 580px;
-    height: 40px; 
-    border: 1px solid black;
-    display: inline-flex;
-    align-items: center;
-}
-
-div.entry-HeaderTreeMap {
-    margin-right: 20px;
-    margin-left: 20px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
 svg.treeMapButton {
     width: 60px;
     height: 60px;

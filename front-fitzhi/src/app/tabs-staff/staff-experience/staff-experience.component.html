@@ -15,15 +15,6 @@
 				(click)="download()">
 				<i [ngClass]="classFile()"></i>
 			</button>
-<!--				
-			<a [routerLink]="" id="downloadCV" (click)="download()" *ngIf="image_downloadCV != null">
-				<img *ngIf="staff.application != null" 
-					id="image_downloadCV" 
-					alt="download the application" 
-					title="Download the registered application for this staff member"
-					[src]="image_downloadCV"/>
-			</a>
--->
 		</div>
 		<div>		
 			<span class="text-muted">Skills&nbsp;</span>
@@ -40,7 +31,7 @@
 			[originalValues]="originalValues"
 			[additionalValues$]="additionalValues$"
 			[values$]="values$"
-			[readOnly$]="readOnly$"
+			[editableState$]="editableState$"
 			(addTagEvent)="onAddTagEvent($event)"
 			(editTagEvent)="onEditTagEvent($event)"
 			(removeTagEvent)="onRemoveTagEvent($event)"

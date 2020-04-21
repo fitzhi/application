@@ -55,7 +55,6 @@ describe('DashboardService', () => {
 		const projectService: ProjectService = TestBed.get(ProjectService);
 		projectService.allProjects = createProjectsForDev();
 
-		console.log ('nope');
 		const aggregateData = service.aggregateProjectsBySkills();
 		console.groupCollapsed('Aggragate data');
 		aggregateData.forEach(element => {

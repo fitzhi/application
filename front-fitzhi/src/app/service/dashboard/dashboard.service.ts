@@ -20,9 +20,7 @@ export class DashboardService {
 
 	static MAX_NUMBER_SKILLS_IN_DIAGRAM = 10;
 
-
-	static OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE = 1;
-
+	static OPTIMAL_NUMBER_OF_STAFF_PER_1000_K_OF_CODE = 3;
 
 	static red (index: number): string {
 		const s = Math.round(28 + ((139 - 28) * index) / 10).toString(16).toUpperCase();
@@ -167,8 +165,6 @@ export class DashboardService {
 		if (traceOn()) {
 			console.log ('sumAllTotalFilesSize', sumAllTotalFilesSize);
 		}
-
-
 		const sortedRepo = _.sortBy(aggregationProjects, [ function(o) { return -o.sumTotalFilesSize; }]);
 		const aggregateData = this.aggregateRestOfData(sortedRepo);
 

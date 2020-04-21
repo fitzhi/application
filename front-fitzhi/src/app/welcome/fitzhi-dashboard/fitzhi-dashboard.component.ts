@@ -59,6 +59,7 @@ export class PieDashboardComponent extends BaseComponent implements OnInit, OnDe
 					}
 				},
 			}));
+
 	}
 
 	/**
@@ -88,7 +89,4 @@ export class PieDashboardComponent extends BaseComponent implements OnInit, OnDe
 		return (selection === this.selected);
 	}
 
-	rectColor(index: Number) {
-		return 
-	}
 }

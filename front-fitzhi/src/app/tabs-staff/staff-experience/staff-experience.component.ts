@@ -17,6 +17,7 @@ import { Subject } from 'rxjs';
 import { DeclaredExperience } from 'src/app/data/declared-experience';
 import { take } from 'rxjs/operators';
 import { traceOn } from 'src/app/global';
+import { TagifyEditableState } from './tagify-stars/tagify-editable-state';
 
 @Component({
 	selector: 'app-staff-experience',
@@ -71,7 +72,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 	/**
 	 * If this this staff member is inactive, the tag stars component should be inactive readonly.
 	 */
-	public readOnly$ = new Subject<boolean>();
+	public editableState$ = new Subject<TagifyEditableState>();
 
 	constructor(
 		private staffDataExchangeService: StaffDataExchangeService,
@@ -87,7 +88,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 	ngOnInit() {
 
 		if (!this.staff) {
-			setTimeout(() => this.readOnly$.next(true), 0);
+			setTimeout(() => this.editableState$.next(TagifyEditableState.READ_ONLY), 0);
 		}
 		/***
          * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
@@ -121,7 +122,13 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 			if (values.length > 0) {
 				this.values$.next(values);
 			}
-			this.readOnly$.next(!this.staff.idStaff || !this.staff.active);
+
+			if (!this.staff.idStaff || !this.staff.active) {
+				this.editableState$.next(TagifyEditableState.READ_ONLY);
+			} else {
+				this.editableState$.next(TagifyEditableState.ALL_ALLOWED);
+			}
+
 		}, 0);
 
 		// The title of the skill is not propagated by the server. We filled this property "live" on the desktop
