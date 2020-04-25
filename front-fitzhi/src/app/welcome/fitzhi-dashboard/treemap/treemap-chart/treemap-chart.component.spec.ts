@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TreemapComponent } from './treemap.component';
+import { TreemapChartComponent } from './treemap-chart.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -10,20 +10,20 @@ import { ProjectService } from 'src/app/service/project.service';
 import { ReferentialService } from 'src/app/service/referential.service';
 
 describe('TreemapComponent', () => {
-	let component: TreemapComponent;
-	let fixture: ComponentFixture<TreemapComponent>;
+	let component: TreemapChartComponent;
+	let fixture: ComponentFixture<TreemapChartComponent>;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			imports: [NgxChartsModule, BrowserAnimationsModule, HttpClientTestingModule, MatDialogModule],
-			declarations: [ TreemapComponent ],
+			declarations: [ TreemapChartComponent ],
 			providers: [DashboardService, ProjectService, ReferentialService]
 		})
 		.compileComponents();
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(TreemapComponent);
+		fixture = TestBed.createComponent(TreemapChartComponent);
 		component = fixture.componentInstance;
 		component.distribution =  [
 			{

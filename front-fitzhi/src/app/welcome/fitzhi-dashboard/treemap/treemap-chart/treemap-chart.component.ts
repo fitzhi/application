@@ -8,10 +8,10 @@ import { TreemapService } from '../service/treemap.service';
 
 @Component({
 	selector: 'app-treemap',
-	templateUrl: './treemap.component.html',
-	styleUrls: ['./treemap.component.css']
+	templateUrl: './treemap-chart.component.html',
+	styleUrls: ['./treemap-chart.component.css']
 })
-export class TreemapComponent extends BaseComponent implements OnInit, OnDestroy {
+export class TreemapChartComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	distribution: any[];
 
