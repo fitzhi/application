@@ -6,6 +6,7 @@ import { thresholdSturges } from 'd3';
 import { traceOn } from 'src/app/global';
 import { TagifyEditableState } from 'src/app/tabs-staff/staff-experience/tagify-stars/tagify-editable-state';
 import { TagifyStarsComponent } from 'src/app/tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
+import { TreemapService } from '../service/treemap.service';
 
 @Component({
 	selector: 'app-treemap-header',
@@ -48,9 +49,10 @@ export class TreemapHeaderComponent implements OnInit {
 		external: false
 	};
 
-	constructor() {
+	constructor(private treeMapService: TreemapService) {
 		this.treeMapFilter.external = (localStorage.getItem('external') === '1');
 	}
+
 	ngOnInit(): void {
 		const label = 'Minimal level :';
 		this.whitelist.push(label);

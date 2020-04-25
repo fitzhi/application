@@ -4,6 +4,7 @@ import { StatTypes } from 'src/app/service/dashboard/stat-types';
 import { traceOn } from 'src/app/global';
 import { ProjectService } from 'src/app/service/project.service';
 import { BaseComponent } from 'src/app/base/base.component';
+import { TreemapService } from '../service/treemap.service';
 
 @Component({
 	selector: 'app-treemap',
@@ -26,6 +27,7 @@ export class TreemapComponent extends BaseComponent implements OnInit, OnDestroy
 
 	constructor(
 		public dashboardService: DashboardService,
+		public treeMapService: TreemapService,
 		public projectService: ProjectService) {
 		super();
 	}
