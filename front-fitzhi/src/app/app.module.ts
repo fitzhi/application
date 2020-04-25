@@ -112,6 +112,7 @@ import { SSEWatcherComponent } from './project/project-sunburst/ssewatcher/ssewa
 import { TreemapChartComponent } from './welcome/fitzhi-dashboard/treemap/treemap-chart/treemap-chart.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { TreemapHeaderComponent } from './welcome/fitzhi-dashboard/treemap/treemap-header/treemap-header.component';
+import { TreemapComponent } from './welcome/fitzhi-dashboard/treemap/treemap-container/treemap.component';
 
 @NgModule({
 	declarations: [
@@ -173,9 +174,9 @@ import { TreemapHeaderComponent } from './welcome/fitzhi-dashboard/treemap/treem
 		PieChartComponent,
 		PieProjectsComponent,
 		SSEWatcherComponent,
-		TreemapChart
-		Component,
-		TreemapHeaderComponent
+		TreemapChartComponent,
+		TreemapHeaderComponent,
+		TreemapComponent
 	],
 	entryComponents: [
 		StaffUploadCvComponent,

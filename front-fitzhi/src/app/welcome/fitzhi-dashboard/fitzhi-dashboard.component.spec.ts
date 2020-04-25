@@ -15,6 +15,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TreemapHeaderComponent } from './treemap/treemap-header/treemap-header.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TagifyStarsComponent } from './../../tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
+import { TreemapComponent } from './treemap/treemap-container/treemap.component';
 
 describe('FitzhiDashboardComponent', () => {
 	let component: FitzhiDashboardComponent;
@@ -23,7 +24,7 @@ describe('FitzhiDashboardComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ FitzhiDashboardComponent, PieChartComponent, PieProjectsComponent, TagifyStarsComponent,
-				TreemapChartComponent, TreemapHeaderComponent ],
+				TreemapChartComponent, TreemapHeaderComponent, TreemapChartComponent, TreemapComponent ],
 			imports: [MatTableModule, MatSortModule, MatPaginatorModule, HttpClientTestingModule, MatDialogModule,
 				NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule],
 			providers: [ReferentialService]

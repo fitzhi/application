@@ -53,10 +53,7 @@
 <div class="mainDashboard page-content"> 
 
     <div class="treemap" *ngIf="(projectService.allProjectsIsLoaded$|async) && (isSelected(selection.mapTreeSummary))">
-        <div>
-            <app-treemap-header></app-treemap-header>
-            <app-treemap></app-treemap>
-        </div>
+        <app-treemap></app-treemap>
     </div>
     
     <div *ngIf="isSelected(selection.lastYearSummary)">

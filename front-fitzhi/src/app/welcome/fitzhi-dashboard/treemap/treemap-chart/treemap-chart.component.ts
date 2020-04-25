@@ -7,7 +7,7 @@ import { BaseComponent } from 'src/app/base/base.component';
 import { TreemapService } from '../service/treemap.service';
 
 @Component({
-	selector: 'app-treemap',
+	selector: 'app-treemap-chart',
 	templateUrl: './treemap-chart.component.html',
 	styleUrls: ['./treemap-chart.component.css']
 })
