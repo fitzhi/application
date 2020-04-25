@@ -109,7 +109,7 @@ import { PieChartComponent } from './welcome/fitzhi-dashboard/pie-chart/pie-char
 import { PieProjectsComponent } from './welcome/fitzhi-dashboard/pie-projects/pie-projects.component';
 import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 import { SSEWatcherComponent } from './project/project-sunburst/ssewatcher/ssewatcher.component';
-import { TreemapComponent } from './welcome/fitzhi-dashboard/treemap/treemap-chart/treemap-chart.component';
+import { TreemapChartComponent } from './welcome/fitzhi-dashboard/treemap/treemap-chart/treemap-chart.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { TreemapHeaderComponent } from './welcome/fitzhi-dashboard/treemap/treemap-header/treemap-header.component';
 
@@ -173,7 +173,8 @@ import { TreemapHeaderComponent } from './welcome/fitzhi-dashboard/treemap/treem
 		PieChartComponent,
 		PieProjectsComponent,
 		SSEWatcherComponent,
-		TreemapComponent,
+		TreemapChart
+		Component,
 		TreemapHeaderComponent
 	],
 	entryComponents: [
