@@ -1,6 +1,9 @@
 <div class="headerTreeMap">
     <nav class="navbar navbar-light bg-light headerTreeMap">
-        <mat-checkbox (change)="onChangeExternal()" class="external-checkbox">External</mat-checkbox>
+		<mat-checkbox (change)="onChangeExternal()" class="external-checkbox" 
+			[checked]="treeMapService.treemapFilter.external">
+			External
+		</mat-checkbox>
         <app-tagify-stars 
 			[whitelist]="whitelist" 
 			[blacklist]="blacklist"

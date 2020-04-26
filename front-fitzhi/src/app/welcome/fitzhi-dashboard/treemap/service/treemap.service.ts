@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { TreemapFilter } from './treemapFilter';
+import { TreemapFilter as filter } from './treemapFilter';
 import { TagStar } from 'src/app/tabs-staff/staff-form/tag-star';
 /**
  * Service in charge the cinematic exchange between the tremap-chart & the treemap-header.
@@ -15,15 +15,14 @@ export class TreemapService {
 	/**
 	 * Filter necessaries to process the chart.
 	 */
-	treemapFilter: TreemapFilter = {external: true, level: 0};
+	public treemapFilter: filter = {external: true, level: 0};
 
 	/**
-	 * This observable indicates that the user wants to filter the treemap chart with external staff members, or not.
+	 * This observable indicates that the user has updated the filter.
 	 *
-	 * - if **true**, the external developers will take part in the scope of the chart.
-	 * - if **false**, _ONLY internal_ developers will take part in the chart.
+	 * The treemap has to be redrawn.
 	 */
-	public filter$ = new BehaviorSubject<TreemapFilter>(this.treemapFilter);
+	public filterUpdated$ = new BehaviorSubject<boolean>(true);
 
 	/**
 	 * Build and return the filter tag of the component.

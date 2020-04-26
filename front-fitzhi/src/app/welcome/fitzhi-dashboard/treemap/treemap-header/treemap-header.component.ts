@@ -45,10 +45,14 @@ export class TreemapHeaderComponent implements OnInit {
 	 */
 	public editableState$ = new Subject<TagifyEditableState>();
 
-	constructor(private treeMapService: TreemapService) {}
+	constructor(private treeMapService: TreemapService) {
+		this.treeMapService.treemapFilter.external = (localStorage.getItem('external') === '1');
+		if (traceOn()) {
+			console.log (this.treeMapService.treemapFilter.external ? 'with externals' : 'only internals');
+		}
+	}
 
 	ngOnInit(): void {
-		this.treeMapService.treemapFilter.external = (localStorage.getItem('external') === '1');
 		const label = TreemapService.TAG_LABEL;
 		this.whitelist.push(label);
 		this.originalValues.push(this.treeMapService.buildTag());
@@ -59,6 +63,7 @@ export class TreemapHeaderComponent implements OnInit {
 	onChangeExternal() {
 		this.treeMapService.treemapFilter.external = !this.treeMapService.treemapFilter.external;
 		localStorage.setItem('external', (this.treeMapService.treemapFilter.external ? '1' : '0'));
+		this.treeMapService.filterUpdated$.next(true);
 	}
 
 	onAddTagEvent(tagStar: TagStar) {
@@ -71,13 +76,12 @@ export class TreemapHeaderComponent implements OnInit {
 		if (traceOn()) {
 			console.log ('Edit event for ' + tagStar.tag + ' ' + tagStar.star);
 		}
-		this.values$.next([this.treeMapService.buildTag()]);
+		this.treeMapService.treemapFilter.level = tagStar.star;
+		this.treeMapService.filterUpdated$.next(true);
 	}
 
 	onRemoveTagEvent(tag: string) {
-		if (traceOn()) {
-			console.log ('Remove tag ' + tag);
-		}
+		throw Error('SHOULD NOT PASS HERE !');
 	}
 
 }

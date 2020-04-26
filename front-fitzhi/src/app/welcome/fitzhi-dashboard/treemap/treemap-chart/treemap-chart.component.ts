@@ -7,6 +7,7 @@ import { BaseComponent } from 'src/app/base/base.component';
 import { TreemapService } from '../service/treemap.service';
 import { switchMap } from 'rxjs/operators';
 import { EMPTY } from 'rxjs';
+import { TreemapFilter } from '../service/treemapFilter';
 
 @Component({
 	selector: 'app-treemap-chart',
@@ -36,29 +37,27 @@ export class TreemapChartComponent extends BaseComponent implements OnInit, OnDe
 
 	ngOnInit() {
 		this.subscriptions.add(
-			this.projectService.allProjectsIsLoaded$.subscribe({
-				next: doneAndOk => {
-					if (doneAndOk) {
-					}
-				}
-		}));
-
-		this.subscriptions.add(
 			this.projectService.allProjectsIsLoaded$
-				.pipe(switchMap(doneAndOk => doneAndOk ? this.treeMapService.filter$ : EMPTY))
+				.pipe(switchMap(doneAndOk => doneAndOk ? this.treeMapService.filterUpdated$ : EMPTY))
 				.subscribe({
-					next: filter => {
-						if (traceOn()) {
-							console.log ('Reload after the change of the external filter');
+					next: updated => {
+						if (updated) {
+							if (traceOn()) {
+								console.log ('Reloading after the detecion of a change in the filters');
+							}
+							this.loadDistribution(this.treeMapService.treemapFilter);
 						}
-						this.loadDistribution(filter.external, filter.level);
 					}
 				}));
 
 	}
 
-	loadDistribution (external: boolean, minimumLevel: number) {
-		this.distribution = this.dashboardService.processSkillDistribution(external, minimumLevel, StatTypes.FilesSize);
+	loadDistribution (filter: TreemapFilter) {
+		// Within the tag-star component the evaluation extends from 0 to 4.
+		// For a staff member, the level in a skill extends from 1 to 5.
+		// We add 1 to the filter
+		this.distribution = this.dashboardService.processSkillDistribution(filter.external, filter.level + 1, StatTypes.FilesSize);
+		this.colorScheme.domain = [];
 		this.distribution.forEach(data => this.colorScheme.domain.push(data.color));
 		if (traceOn()) {
 			console.groupCollapsed('Skills distribution');
