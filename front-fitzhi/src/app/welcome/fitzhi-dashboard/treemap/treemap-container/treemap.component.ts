@@ -10,10 +10,6 @@ import { TreemapHeaderComponent } from '../treemap-header/treemap-header.compone
 })
 export class TreemapComponent implements OnInit {
 
-	@ViewChild (TreemapChartComponent, {static: false}) treemapChartComponent: TreemapChartComponent;
-
-	@ViewChild (TreemapHeaderComponent, {static: false}) treemapHeaderComponent: TreemapHeaderComponent;
-
 	constructor(private projectService: ProjectService) { }
 
 	ngOnInit() {
