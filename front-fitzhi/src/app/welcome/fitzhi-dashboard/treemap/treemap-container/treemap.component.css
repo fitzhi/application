@@ -1,0 +1,9 @@
+div.host {
+    display: inline-flex;
+}
+
+div.legend {
+    width: 200px;
+    background-color: whitesmoke;
+    margin-bottom: 10px;
+}

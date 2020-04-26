@@ -13,7 +13,6 @@ import { TreemapService } from '../service/treemap.service';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { SkillService } from 'src/app/service/skill.service';
 
 describe('TreemapComponent container', () => {
 	let component: TreemapComponent;
@@ -63,4 +62,5 @@ describe('TreemapComponent container', () => {
 		fixture.detectChanges();
 		expect(component).toBeTruthy();
 	});
+
 });

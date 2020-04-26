@@ -25,4 +25,6 @@ describe('TreemapHeaderComponent', () => {
 	it('should create', () => {
 		expect(component).toBeTruthy();
 	});
+
+
 });
