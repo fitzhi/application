@@ -45,12 +45,8 @@ export class TreemapHeaderComponent implements OnInit {
 	 */
 	public editableState$ = new Subject<TagifyEditableState>();
 
-	public treeMapFilter = {
-		external: false
-	};
-
 	constructor(private treeMapService: TreemapService) {
-		this.treeMapFilter.external = (localStorage.getItem('external') === '1');
+		this.treeMapService.treeMapFilter.external = (localStorage.getItem('external') === '1');
 	}
 
 	ngOnInit(): void {
@@ -61,9 +57,8 @@ export class TreemapHeaderComponent implements OnInit {
 	}
 
 	onChangeExternal() {
-		let external = (localStorage.getItem('external') === '1');
-		external = !external;
-		localStorage.setItem('external', (external ? '1' : '0'));
+		this.treeMapService.treeMapFilter.external = !this.treeMapService.treeMapFilter.external;
+		localStorage.setItem('external', (this.treeMapService.treeMapFilter.external ? '1' : '0'));
 	}
 
 	onAddTagEvent(tagStar: TagStar) {
