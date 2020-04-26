@@ -45,20 +45,20 @@ export class TreemapHeaderComponent implements OnInit {
 	 */
 	public editableState$ = new Subject<TagifyEditableState>();
 
-	constructor(private treeMapService: TreemapService) {
-		this.treeMapService.treeMapFilter.external = (localStorage.getItem('external') === '1');
-	}
+	constructor(private treeMapService: TreemapService) {}
 
 	ngOnInit(): void {
-		const label = 'Minimal level :';
+		this.treeMapService.treemapFilter.external = (localStorage.getItem('external') === '1');
+		const label = TreemapService.TAG_LABEL;
 		this.whitelist.push(label);
-		this.originalValues.push(new TagStar(label, 0));
+		this.originalValues.push(this.treeMapService.buildTag());
+
 		setTimeout(() => this.editableState$.next(TagifyEditableState.STARS_ALLOWED), 0);
 	}
 
 	onChangeExternal() {
-		this.treeMapService.treeMapFilter.external = !this.treeMapService.treeMapFilter.external;
-		localStorage.setItem('external', (this.treeMapService.treeMapFilter.external ? '1' : '0'));
+		this.treeMapService.treemapFilter.external = !this.treeMapService.treemapFilter.external;
+		localStorage.setItem('external', (this.treeMapService.treemapFilter.external ? '1' : '0'));
 	}
 
 	onAddTagEvent(tagStar: TagStar) {
@@ -71,6 +71,7 @@ export class TreemapHeaderComponent implements OnInit {
 		if (traceOn()) {
 			console.log ('Edit event for ' + tagStar.tag + ' ' + tagStar.star);
 		}
+		this.values$.next([this.treeMapService.buildTag()]);
 	}
 
 	onRemoveTagEvent(tag: string) {
