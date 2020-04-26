@@ -3,7 +3,26 @@ div.host {
 }
 
 div.legend {
-    width: 200px;
-    background-color: whitesmoke;
+    width: 100px;
+    background: transparent;
     margin-bottom: 10px;
+    display: inline-flex;
+}
+
+div.gradient {
+    background: -webkit-linear-gradient(var(--color-selected), var(--color-error));
+    margin-top: 75px;
+    margin-left: 5px;
+    width: 10px;
+    height: 380px;
+}
+
+div.high {
+    margin-left: 5px;
+    margin-top: 65px;
+}
+
+div.low {
+    margin-left: 5px;
+    margin-top: 360px;
 }
