@@ -26,7 +26,7 @@ export class TabsStaffListComponent extends BaseComponent implements OnInit, OnD
 	selected: number;
 
 	constructor(
-		private tabsStaffListComponent: TabsStaffListService,
+		private tabsStaffListService: TabsStaffListService,
 		private cinematicService: CinematicService,
 		private router: Router) { super(); }
 
@@ -34,9 +34,9 @@ export class TabsStaffListComponent extends BaseComponent implements OnInit, OnD
 		this.cinematicService.setForm(Constants.TABS_STAFF_LIST, this.router.url);
 
 		this.subscriptions.add(
-			this.tabsStaffListComponent.search$.subscribe(envelope => {
+			this.tabsStaffListService.search$.subscribe(envelope => {
 				setTimeout(() => {
-					this.tabKeys.push(this.tabsStaffListComponent.key(envelope));
+					this.tabKeys.push(this.tabsStaffListService.key(envelope));
 					this.add(envelope.criteria);
 				}, 0);
 			}));
@@ -49,25 +49,25 @@ export class TabsStaffListComponent extends BaseComponent implements OnInit, OnD
 	 * This method will be called during the ngOnInit process to retrieve the search context.
 	 */
 	public reloadHistory() {
-		this.tabsStaffListComponent.staffListContexts.forEach(criterias => {
-			this.tabKeys.push(this.tabsStaffListComponent.key(criterias));
+		this.tabsStaffListService.staffListContexts.forEach(criterias => {
+			this.tabKeys.push(this.tabsStaffListService.key(criterias));
 			this.add(criterias.criteria);
 		});
-		this.selected = this.tabsStaffListComponent.activeTab;
+		this.selected = this.tabsStaffListService.activeTab;
 	}
 
 	/**
 	 * Criteria passed to each new tab.
 	 */
 	criteria(index: number) {
-		return this.tabsStaffListComponent.staffListContexts.get(this.tabKeys[index]).criteria;
+		return this.tabsStaffListService.staffListContexts.get(this.tabKeys[index]).criteria;
 	}
 
 	/**
 	 * activeOnly activeOnly filter passed to each new tab.
 	 */
 	activeOnly(index: number) {
-		return this.tabsStaffListComponent.staffListContexts.get(this.tabKeys[index]).activeOnly;
+		return this.tabsStaffListService.staffListContexts.get(this.tabKeys[index]).activeOnly;
 	}
 
 	public add(title: string) {
@@ -80,8 +80,8 @@ export class TabsStaffListComponent extends BaseComponent implements OnInit, OnD
 	 * @param activeTab the index of the new activated tab
 	 */
 	public select(activeTab: number) {
-		this.tabsStaffListComponent.activeTab = activeTab;
-		this.tabsStaffListComponent.activeKey = this.tabKeys[activeTab];
+		this.tabsStaffListService.activeTab = activeTab;
+		this.tabsStaffListService.activeKey = this.tabKeys[activeTab];
 	}
 
 	/**
@@ -92,7 +92,7 @@ export class TabsStaffListComponent extends BaseComponent implements OnInit, OnD
 		const key = this.tabKeys[index];
 		this.tabs.splice(index, 1);
 		this.tabKeys.splice(index, 1);
-		this.tabsStaffListComponent.removeHistory(key);
+		this.tabsStaffListService.removeHistory(key);
 	}
 
 	/**

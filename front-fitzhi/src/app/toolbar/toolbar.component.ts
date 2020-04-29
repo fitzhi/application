@@ -14,19 +14,19 @@ import { traceOn } from '../global';
 export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	/**
-     * We'll send to the parent component (AppComponent) the selected form to be displayed
-     */
+	 * We'll send to the parent component (AppComponent) the selected form to be displayed
+	 */
 	@Output() messengerFormActive = new EventEmitter<number>();
 
 	/**
-     * This messenger is used to inform the parent component the search criteria.
-     */
+	 * This messenger is used to inform the parent component the search criteria.
+	 */
 	@Output() messengerCriteria = new EventEmitter<string>();
 
 	/**
-     * This messenger is used to inform the parent component
-     * that the user prefers to filter on the active data, or not (including therefore the whole history).
-     */
+	 * This messenger is used to inform the parent component
+	 * that the user prefers to filter on the active data, or not (including therefore the whole history).
+	 */
 	@Output() messengerActiveOnly = new EventEmitter<boolean>();
 
 	DEVELOPERS_CRUD = Constants.DEVELOPERS_CRUD;
@@ -38,34 +38,34 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	TABS_STAFF_LIST = Constants.TABS_STAFF_LIST;
 
 	/**
-     * Type of entity currently active.
-     */
+	 * Type of entity currently active.
+	 */
 	private editedEntity = 0;
 
 	/**
-     * Should we filter the data on active records only ?
-     * By default, we se to TRUE this criteria.
-     */
+	 * Should we filter the data on active records only ?
+	 * By default, we se to TRUE this criteria.
+	 */
 	activeOnly = true;
 
 	/**
-     * Requested criteria entered on the search field.
-     */
+	 * Requested criteria entered on the search field.
+	 */
 	criteria: string;
 
 	/**
-    * Master/Detail mode ON. The goBack() and goFoward() buttons are visible
-    */
+	* Master/Detail mode ON. The goBack() and goFoward() buttons are visible
+	*/
 	masterDetail: boolean;
 
 	/**
-     * Previous identifier to be displayed if the user clicked on the PREV button
-     */
+	 * Previous identifier to be displayed if the user clicked on the PREV button
+	 */
 	previousId: number;
 
 	/**
-     * Next identifier to be displayed if the user clicked on the NEXT button
-     */
+	 * Next identifier to be displayed if the user clicked on the NEXT button
+	 */
 	nextId: number;
 
 	constructor(
@@ -80,9 +80,9 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	}
 
 	/**
-     * We listen each change of context in the application,
-     * to properly handle the state of the master/detail boolean.
-     */
+	 * We listen each change of context in the application,
+	 * to properly handle the state of the master/detail boolean.
+	 */
 	listenOnContext() {
 		this.subscriptions.add(
 			this.cinematicService.currentActiveForm$.subscribe(context => {
@@ -99,9 +99,9 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	}
 
 	/**
-     * We listen each change of collaborator displayed,
-     * to handle properly the state of the PREV and NEXT buttons.
-     */
+	 * We listen each change of collaborator displayed,
+	 * to handle properly the state of the PREV and NEXT buttons.
+	 */
 	listenOnCollaboratorDisplayed() {
 		this.subscriptions.add(
 			this.cinematicService.newCollaboratorDisplayEmitted$.subscribe(id => {
@@ -110,6 +110,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 					this.cinematicService.getFormerFormIdentifier());
 				}
 				switch (this.cinematicService.getFormerFormIdentifier()) {
+					case Constants.DEVELOPERS_CRUD:
 					case Constants.TABS_STAFF_LIST:
 						this.previousId = this.tabsStaffListService.previousCollaboratorId(id);
 						this.nextId = this.tabsStaffListService.nextCollaboratorId(id);
@@ -130,29 +131,29 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	}
 
 	/**
-     * @return true if the WELCOME button has been selected by the end-user.
-     */
+	 * @return true if the WELCOME button has been selected by the end-user.
+	 */
 	isDashboardActive() {
 		return (this.editedEntity === Constants.WELCOME);
 	}
 
 	/**
-     * @return true if the STAFF button has been selected by the end-user.
-     */
+	 * @return true if the STAFF button has been selected by the end-user.
+	 */
 	isStaffActive() {
 		return ((this.editedEntity === this.DEVELOPERS_CRUD) || (this.editedEntity === Constants.TABS_STAFF_LIST));
 	}
 
 	/**
-     * @return true if the SKILL button has been selected by the end-user.
-     */
+	 * @return true if the SKILL button has been selected by the end-user.
+	 */
 	isSkillActive() {
 		return ((this.editedEntity === this.SKILLS_CRUD) || (this.editedEntity === Constants.SKILLS_SEARCH));
 	}
 
 	/**
-     * @return true if the PROJECT button has been selected by the end-user.
-     */
+	 * @return true if the PROJECT button has been selected by the end-user.
+	 */
 	isProjectActive() {
 		return (
 					(this.editedEntity === this.PROJECT_TAB_FORM)
@@ -161,22 +162,22 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	}
 
 	/**
-     * @return true if there is no entity selected by the end-user.
-     * Presumably, we just enter in the application.
-     */
+	 * @return true if there is no entity selected by the end-user.
+	 * Presumably, we just enter in the application.
+	 */
 	nothingActive() {
 		return (this.editedEntity === 0);
 	}
 	/**
-     * Master/Detail mode ON. The goBack() and goFoward() buttons are visible
-     */
+	 * Master/Detail mode ON. The goBack() and goFoward() buttons are visible
+	 */
 	isInMasterDetail() {
 		return this.masterDetail;
 	}
 
 	/**
-     * Inform the toolbar that the user has choosed an entity to be edited (Staff, Skill, Project)
-     */
+	 * Inform the toolbar that the user has choosed an entity to be edited (Staff, Skill, Project)
+	 */
 	mode(editedEntity: number) {
 
 		if (this.editedEntity !== editedEntity) {
@@ -196,8 +197,8 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	}
 
 	/**
-     * The user has entered inside the criteria field in order to proceed a search-request.
-     */
+	 * The user has entered inside the criteria field in order to proceed a search-request.
+	 */
 	searching() {
 		switch (this.editedEntity) {
 			case this.DEVELOPERS_CRUD:
@@ -228,8 +229,8 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	}
 
 	/**
-     * Launch a query based on the requested criteria, if, at least, one caracter is present on the search field.
-     */
+	 * Launch a query based on the requested criteria, if, at least, one caracter is present on the search field.
+	 */
 	query() {
 		if (this.criteria) {
 			this.messengerCriteria.emit(this.criteria);
@@ -237,23 +238,23 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	}
 
 	/**
-     * Display the list behind the master/detail preview.
-     */
+	 * Display the list behind the master/detail preview.
+	 */
 	list() {
 		this.messengerFormActive.emit(Constants.BACK_TO_LIST);
 	}
 
 	/**
-     * Pre-filter the data previewed on those who are still active, or take everything in account (with the complete history)
-     */
+	 * Pre-filter the data previewed on those who are still active, or take everything in account (with the complete history)
+	 */
 	switchActiveOnly() {
 		this.activeOnly = !this.activeOnly;
 		this.messengerActiveOnly.emit(this.activeOnly);
 	}
 
 	/**
-     * The user has clicked on the "Staff" member
-     */
+	 * The user has clicked on the "Staff" member
+	 */
 	switchToStaff() {
 		this.masterDetail = false;
 		this.mode(Constants.DEVELOPERS_CRUD);
@@ -268,9 +269,10 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	}
 
 	/**
-     * All subscriptions are closed in the BaseComponent
-     */
+	 * All subscriptions are closed in the BaseComponent
+	 */
 	public ngOnDestroy() {
 		super.ngOnDestroy();
 	}
+
 }

@@ -78,7 +78,7 @@
             <div class="inner-addon left-addon">
                 <i class="fas glyphicon" 
                     [ngClass]="{'fa-user-graduate' : isStaffActive(), 'fa-graduation-cap' : isSkillActive(), 'fa-users-cog' : isProjectActive()}"></i>
-                <input 
+                  <input 
                     [(ngModel)]="criteria"
                     [disabled]="nothingActive()"
                     type="search" 

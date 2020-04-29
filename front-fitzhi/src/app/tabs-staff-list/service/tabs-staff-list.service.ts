@@ -122,6 +122,9 @@ export class TabsStaffListService {
 			}
 		}
 
+		//
+		// If this search has already been executed, we load it from the cache
+		//
 		if (this.staffListContexts.has(key)) {
 			const context = this.staffListContexts.get(key);
 			if (context.staffSelected.length > 0) {
@@ -129,7 +132,7 @@ export class TabsStaffListService {
 					console.log('Using cache for key ' + key + ' ' + context.staffSelected.length + ' records');
 				}
 				setTimeout(() => {
-					context.staffSelected.forEach(c => collaborator.push(c));
+					collaborator.push(...context.staffSelected);
 					collaborator$.next(collaborator);
 				}, 0);
 				return collaborator$;

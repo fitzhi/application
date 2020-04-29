@@ -12,8 +12,6 @@ import { ListCriteria } from './data/listCriteria';
 import { AuthService } from './admin/service/auth/auth.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { SonarService } from './service/sonar.service';
-import { MessageService } from './message/message.service';
-import { HttpClient } from '@angular/common/http';
 import { traceOn } from './global';
 
 declare var $: any;
@@ -58,7 +56,6 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 	constructor(
 		private cinematicService: CinematicService,
 		private sonarService: SonarService,
-		private httpClient: HttpClient,
 		private authService: AuthService,
 		private tabsStaffListService: TabsStaffListService,
 		private skillService: SkillService,
@@ -66,7 +63,6 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 		private referentialService: ReferentialService,
 		private staffService: StaffService,
 		private projectService: ProjectService,
-		private messageService: MessageService,
 		private router: Router) {
 
 		super();
@@ -76,7 +72,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 		/**
          * Loading the referentials.
          */
-		// TODO The Sonar servers array should be stored in the referentialL.
+		// TODO The Sonar servers array should be stored in the referential.
 		this.sonarService.loadSonarsVersion();
 		this.referentialService.loadAllReferentials();
 		this.sonarService.loadSonarMetrics();
