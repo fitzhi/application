@@ -7,6 +7,8 @@
   --color-selected: #28a745; 
   --color-error: darkred;
 
+  --color-help: lightYellow;
+  
   /* Height of the top toolbar */
   --toolbar-height: 65px;
 }

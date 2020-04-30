@@ -1,9 +1,13 @@
+div.container {
+    width: 700px;
+}
+
 div.host {
     display: inline-flex;
 }
 
 div.legend {
-    width: 100px;
+    width: 50px;
     background: transparent;
     margin-bottom: 10px;
     display: inline-flex;
@@ -25,4 +29,12 @@ div.high {
 div.low {
     margin-left: 5px;
     margin-top: 360px;
+}
+
+div.help {
+    background-color: var(--color-help);
+    border: 1px solid black;
+    min-height: 100px;
+    width:100%;
+    border-radius: 5px;
 }

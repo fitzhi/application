@@ -1,13 +1,18 @@
-<div class="host" *ngIf="projectService.allProjectsIsLoaded$|async">
-    <div>
-        <app-treemap-header></app-treemap-header>
-        <app-treemap-chart></app-treemap-chart>
-    </div>
-    <div class="legend">
-        <div class="gradient"></div>
+<div class="container" *ngIf="projectService.allProjectsIsLoaded$|async">
+    <div class="host">
         <div>
-            <div class="high">Optimum</div>
-            <div class="low">Worst</div>
+            <app-treemap-header></app-treemap-header>
+            <app-treemap-chart></app-treemap-chart>
         </div>
+        <div class="legend">
+            <div class="gradient"></div>
+            <div>
+                <div class="high">+</div>
+                <div class="low">-</div>
+            </div>
+        </div>
+    </div>
+    <div class="help">
+        Some explanations here!
     </div>
 </div>

@@ -16,8 +16,8 @@ button.remove:hover {
     top: 0px;
     right: 5px;
     left: 5px;
-    background-color: lightyellow;
-    border: 1px solid black !important;
+    background-color: var(--color-help);
+    border: 1px solid black;
 }
 
 span.criteria {

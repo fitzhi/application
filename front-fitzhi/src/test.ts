@@ -16,6 +16,6 @@ getTestBed().initTestEnvironment(
 );
 // Then we find all the tests.
 // const context = require.context('./', true, /\.spec\.ts$/);
-const context = require.context('./', true,  /tabs-staff-list\.component\.spec\.ts$/);
+const context = require.context('./', true,  /treemap\.component\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);

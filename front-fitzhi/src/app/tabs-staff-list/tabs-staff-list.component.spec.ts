@@ -7,7 +7,6 @@ import { ListCriteria } from '../data/listCriteria';
 import { StaffListContext } from '../data/staff-list-context';
 import { TabsStaffListService } from './service/tabs-staff-list.service';
 import { By } from '@angular/platform-browser';
-import { ExpectedConditions } from 'protractor';
 
 describe('TabsStaffListComponent', () => {
 	let component: TabsStaffListComponent;
