@@ -22,6 +22,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.source.Contributor;
+import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.RepoScanner;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.fitzhi.source.crawler.git.SourceFileHistory;
@@ -126,7 +127,7 @@ public class AbstractScannerDataGeneratorGatherContributorsActivitySkillTest {
 	}
 	
 	@Test
-	public void test() {
+	public void test() throws SkillerException {
 		scanner.gatherContributorsActivitySkill(contributors, sourceControlChanges, pathSourceFileNames);
 		Contributor contributor = contributors.get(0);
 		Assert.assertEquals(ID_1, contributor.getIdStaff());

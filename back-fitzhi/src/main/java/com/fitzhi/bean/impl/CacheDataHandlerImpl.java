@@ -57,7 +57,7 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	
 	@Override
 	public boolean hasCommitRepositoryAvailable(Project project) throws IOException {
-		Path savedProject = Paths.get(getCacheFilename(project));
+		Path savedProject = Paths.get(getCacheFilename(project), ".git");
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Examining %s", savedProject.toFile().getAbsolutePath()));
 		}

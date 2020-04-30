@@ -238,8 +238,9 @@ public interface RepoScanner {
 	 * @param contributors the list a valid contributors whose activities have to be updated.
 	 * @param changes the history of changes detected in the repository
 	 * @param pathSourceFileNames the set of source filename
+	 * @throws SkillerException thrown if any problem occurs
 	 */
-	void gatherContributorsActivitySkill(List<Contributor> contributors, SourceControlChanges changes, Set<String> pathSourceFileNames);
+	void gatherContributorsActivitySkill(List<Contributor> contributors, SourceControlChanges changes, Set<String> pathSourceFileNames) throws SkillerException;
 	
 	/**
 	 * @return the list of markers of dependencies such as {@code jquery}, {@code bootstrap}...
