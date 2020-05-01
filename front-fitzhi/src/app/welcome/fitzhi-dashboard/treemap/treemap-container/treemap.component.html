@@ -1,18 +1,26 @@
 <div class="container" *ngIf="projectService.allProjectsIsLoaded$|async">
-    <div class="host">
-        <div>
-            <app-treemap-header></app-treemap-header>
-            <app-treemap-chart></app-treemap-chart>
-        </div>
-        <div class="legend">
-            <div class="gradient"></div>
-            <div>
-                <div class="high">+</div>
-                <div class="low">-</div>
-            </div>
-        </div>
-    </div>
-    <div class="help">
-        Some explanations here!
-    </div>
+	<div class="host">
+		<div>
+			<app-treemap-header></app-treemap-header>
+			<app-treemap-chart></app-treemap-chart>
+		</div>
+		<div class="legend">
+			<div class="gradient"></div>
+			<div>
+				<div class="high">+</div>
+				<div class="low">-</div>
+			</div>
+		</div>
+	</div>
+	<div class="help">
+		<i class="fas fa-info info"></i>
+		<p class="help">
+			This chart represents all skills in proportion to their weight in the registered portfolio 
+			and assigned a color corresponding to the "staffing" risk on these skills.
+		</p>
+		<ul>
+			<li><span class="good">A "skill tile" of this color has enough developers to maintain the associated projects.</span></li>
+			<li><span class="bad">On the contrary, this color proves a lack of developers</span></li>
+		</ul>
+	</div>
 </div>

@@ -15,7 +15,7 @@ div.legend {
 
 div.gradient {
     background: -webkit-linear-gradient(var(--color-selected), var(--color-error));
-    margin-top: 75px;
+    margin-top: 78px;
     margin-left: 5px;
     width: 10px;
     height: 380px;
@@ -23,12 +23,16 @@ div.gradient {
 
 div.high {
     margin-left: 5px;
-    margin-top: 65px;
+    margin-top: 70px;
+    font-size: x-large;
+    font-weight: 700;
 }
 
 div.low {
     margin-left: 5px;
-    margin-top: 360px;
+    margin-top: 340px;
+    font-size: x-large;
+    font-weight: 700;
 }
 
 div.help {
@@ -37,4 +41,27 @@ div.help {
     min-height: 100px;
     width:100%;
     border-radius: 5px;
+}
+
+i.info {
+    margin-top: 3px;    
+    margin-left: 98%;
+    position: static;
+    color: var(--color-selected);
+    font-size: larger;
+}
+
+p.help {
+    position: static;
+    margin-top: -15px;    
+    margin-left: 10px;   
+    margin-right: 20px; 
+}
+
+span.good {
+    color: var(--color-selected);
+}
+
+span.bad {
+    color: var(--color-error);
 }
