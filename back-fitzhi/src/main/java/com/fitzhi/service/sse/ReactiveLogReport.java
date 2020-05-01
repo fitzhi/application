@@ -50,8 +50,8 @@ public class ReactiveLogReport implements LogReport {
 	private ActivityLog currentLog(String operation, String title, int id) {
 		final Task task = tasks.getTask(operation, PROJECT, id);
 		if (task == null) {
-			return new ActivityLog(0, String.format("Initialization for %s for %s : %d", operation, title, id), 
-					LocalDate.MIN.toEpochDay(), false, false);
+			return new ActivityLog(0, String.format("End for %s for %s : %d", operation, title, id), 
+					LocalDate.MIN.toEpochDay(), true, false);
 		}
 		return (!task.isComplete()) ? task.buildLastestLog() : new ActivityLog(task.getLastBreath(), true);
 	}
