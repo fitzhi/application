@@ -555,6 +555,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
     * @param idPanel Panel identifier
     */
 	public show(idPanel: number) {
+		this.sunburstCinematicService.initActivatedButton();
 		switch (idPanel) {
 			case this.SUNBURST:
 				this.idPanelSelected = idPanel;
@@ -721,6 +722,14 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 */
 	public jumpToTab(tabIndex: number) {
 		this.tabActivationEmitter.next(tabIndex);
+	}
+
+	mouseEnter(activeButton: number) {
+		this.sunburstCinematicService.activatedButton = activeButton;
+	}
+
+	mouseLeave() {
+		this.sunburstCinematicService.initActivatedButton();
 	}
 
 	/**

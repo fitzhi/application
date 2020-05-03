@@ -12,6 +12,11 @@ import { ListContributorsComponent } from './node-detail/list-contributors/list-
 import { TableGhostsComponent } from './project-ghosts/table-ghosts/table-ghosts.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SSEWatcherComponent } from './ssewatcher/ssewatcher.component';
+import { ProjectService } from 'src/app/service/project.service';
+import { Project } from 'src/app/data/project';
+import { MessageBoxComponent } from 'src/app/message-box/dialog/message-box.component';
+import { SunburstCinematicService } from './service/sunburst-cinematic.service';
+import { NgxPopper } from 'angular-popper';
 
 describe('ProjectSunburstComponent', () => {
 	let component: ProjectSunburstComponent;
@@ -21,9 +26,9 @@ describe('ProjectSunburstComponent', () => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [ProjectSunburstComponent, NodeDetailComponent,
 				ProjectGhostsComponent, TableDependenciesComponent, DialogLegendSunburstComponent,
-				ListFilenamesComponent, ListContributorsComponent, TableGhostsComponent, SSEWatcherComponent],
+				ListFilenamesComponent, ListContributorsComponent, TableGhostsComponent, SSEWatcherComponent, MessageBoxComponent],
 			providers: [],
-			imports: [MatSidenavModule, MatCardModule, RouterTestingModule.withRoutes([])]
+			imports: [MatSidenavModule, MatCardModule, NgxPopper, RouterTestingModule.withRoutes([])]
 		};
 		InitTest.addImports(testConf.imports);
 		InitTest.addProviders(testConf.providers);
@@ -37,6 +42,9 @@ describe('ProjectSunburstComponent', () => {
 	});
 
 	it('should create', () => {
+		const sunburstCinematicService = TestBed.get(SunburstCinematicService);
+		sunburstCinematicService.active = component.UNKNOWN;
+		fixture.detectChanges();
 		expect(component).toBeTruthy();
 	});
 });

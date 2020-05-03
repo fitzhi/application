@@ -1,4 +1,4 @@
-<div id="hostProjectsTable">
+<div id="hostProjectsTable" *ngIf="referentialService.referentialLoaded$|async">
   <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8" matSort width="100%">
 
     <ng-container matColumnDef="staffEvaluation">

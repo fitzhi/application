@@ -113,6 +113,7 @@ import { TreemapChartComponent } from './welcome/fitzhi-dashboard/treemap/treema
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { TreemapHeaderComponent } from './welcome/fitzhi-dashboard/treemap/treemap-header/treemap-header.component';
 import { TreemapComponent } from './welcome/fitzhi-dashboard/treemap/treemap-container/treemap.component';
+import { NgxPopper } from 'angular-popper';
 
 @NgModule({
 	declarations: [
@@ -218,7 +219,8 @@ import { TreemapComponent } from './welcome/fitzhi-dashboard/treemap/treemap-con
 		MatIconModule,
 		MatAutocompleteModule,
 		MatSliderModule,
-		NgxChartsModule
+		NgxChartsModule,
+		NgxPopper,
 	],
 	providers: [
 		CinematicService,

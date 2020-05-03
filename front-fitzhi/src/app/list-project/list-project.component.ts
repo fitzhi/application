@@ -11,6 +11,7 @@ import { StaffListService } from '../staff-list-service/staff-list.service';
 import { Commit } from '../data/commit';
 import { of } from 'rxjs';
 import { traceOn } from '../global';
+import { ReferentialService } from '../service/referential.service';
 
 @Component({
 	selector: 'app-list-project',
@@ -49,6 +50,7 @@ export class ListProjectComponent implements OnInit {
 
 	constructor(
 		private staffListService: StaffListService,
+		private referentialService: ReferentialService,
 		private projectService: ProjectService,
 		private listProjectsService: ListProjectsService,
 		private router: Router) {}
