@@ -57,7 +57,7 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	
 	@Override
 	public boolean hasCommitRepositoryAvailable(Project project) throws IOException {
-		Path savedProject = Paths.get(getCacheFilename(project), ".git");
+		Path savedProject = Paths.get(getCacheFilename(project));
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Examining %s", savedProject.toFile().getAbsolutePath()));
 		}
@@ -113,7 +113,6 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 		    gson.toJson(repository, writer);
 		}
 	}
-	
 	
 	@Override
 	public boolean removeRepository(final Project project) throws IOException {

@@ -1011,6 +1011,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		final ConnectionSettings settings = connectionSettings(project);
 
 		if (!cacheDataHandler.hasCommitRepositoryAvailable(project)) {
+			projectHandler.initLocationRepository(project.getId());
 			try {
 				this.clone(project, settings);
 			} catch (final Exception e) {

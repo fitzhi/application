@@ -3,6 +3,7 @@
  */
 package com.fitzhi.bean.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -62,5 +63,11 @@ public class CacheDataHandlerImplTest {
 		
 	}
 	
+	@Test
+	public void testNonExistingLocationRepository() throws Exception {
+		Project project = new Project((int) System.currentTimeMillis(), "Project without local repository");
+		project.setLocationRepository("/non-existing");
+		Assert.assertFalse(cacheDataHandler.hasCommitRepositoryAvailable(project));
+	}
 		
 }

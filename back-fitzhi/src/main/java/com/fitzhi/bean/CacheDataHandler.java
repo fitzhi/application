@@ -29,9 +29,11 @@ public interface CacheDataHandler {
 	CommitRepository getRepository (Project project) throws IOException;
 	
 	/**
-	 * Save the repository on the file system<br/>
+	 * <p>
+	 * Save the commit-repository on the file system
+	 * </p>
 	 * @param project the current project
-	 * @param repository the repository associated to the project
+	 * @param repository the repository issued from this project
 	 * @throws IOException if an IOException occurs
 	 */
 	void saveRepository (Project project, CommitRepository repository) throws IOException;

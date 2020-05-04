@@ -259,6 +259,15 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			this.dataUpdated = true;
 		}
 	}
+	
+	@Override
+	public void initLocationRepository(int idProject) throws SkillerException {
+		Project project = get(idProject);
+		synchronized (lockDataUpdated) {
+			project.setLocationRepository(null);
+			this.dataUpdated = true;
+		}
+	}
 
 	@Override
 	public void saveRisk(Project project, int staffEvaluation) {

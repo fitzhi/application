@@ -109,13 +109,23 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	Ghost getGhost(Project project, String pseudo);
 
 	/**
-	 * <p>Save the path location where the remote branch(master) has been cloned/pulled</p>
+	 * <p>
+	 * Save the path location where the remote branch(master) has been cloned/pulled
+	 * </p>
 	 * @param idProject the project identifier
 	 * @param location the path location
-	 * @throws SkillerException thrown if any problem, 
-	 * most probably either an {@link IOException} or the <i>project does not exist</i>.
+	 * @throws SkillerException thrown if any problem, most probably either an {@link IOException} or the <i>project does not exist</i>.
 	 */
 	void saveLocationRepository (int idProject, String location) throws SkillerException;
+	
+	/**
+	 * <p>
+	 * Initialize the path location.
+	 * </p>
+	 * @param idProject the project identifier
+	 * @throws SkillerException thrown if any problem, most probably either an {@link IOException} or the <i>project does not exist</i>.
+	 */
+	void initLocationRepository (int idProject) throws SkillerException;
 	
 	/**
 	 * <p>Save the staff evaluation processed for this project.</p>
