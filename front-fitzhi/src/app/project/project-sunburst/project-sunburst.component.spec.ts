@@ -42,9 +42,36 @@ describe('ProjectSunburstComponent', () => {
 	});
 
 	it('should create', () => {
-		const sunburstCinematicService = TestBed.get(SunburstCinematicService);
-		sunburstCinematicService.active = component.UNKNOWN;
-		fixture.detectChanges();
+		setTimeout(() => {
+			const sunburstCinematicService = TestBed.get(SunburstCinematicService);
+			sunburstCinematicService.activatedButton = component.UNKNOWN;
+			fixture.detectChanges();
+		}, 100);
+		setTimeout(() => {
+			const sunburstCinematicService = TestBed.get(SunburstCinematicService);
+			sunburstCinematicService.activatedButton = component.DEPENDENCIES;
+			fixture.detectChanges();
+		}, 400);
+		setTimeout(() => {
+			const sunburstCinematicService = TestBed.get(SunburstCinematicService);
+			sunburstCinematicService.activatedButton = component.RESET;
+			fixture.detectChanges();
+		}, 200);
+		setTimeout(() => {
+			const sunburstCinematicService = TestBed.get(SunburstCinematicService);
+			sunburstCinematicService.activatedButton = component.SETTINGS;
+			fixture.detectChanges();
+		}, 250);
+		setTimeout(() => {
+			const sunburstCinematicService = TestBed.get(SunburstCinematicService);
+			sunburstCinematicService.activatedButton = component.LEGEND_SUNBURST;
+			fixture.detectChanges();
+		}, 300);
+		setTimeout(() => {
+			const sunburstCinematicService = TestBed.get(SunburstCinematicService);
+			sunburstCinematicService.activatedButton = component.SUNBURST;
+			fixture.detectChanges();
+		}, 350);
 		expect(component).toBeTruthy();
 	});
 });

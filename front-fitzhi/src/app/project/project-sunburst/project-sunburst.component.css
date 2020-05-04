@@ -137,11 +137,26 @@ div.help {
   width: 500px;
 }
 
+h4.help-title {
+  color: var(--color-selected);
+}
+
+p.help, u.help {
+  margin-bottom: 5px;
+}
+
+div.help-content {
+  text-align: left;
+}
+
 :host >>> div.angular-popper {
   background: lightyellow;
-  width: 550px;
+  width: 520px;
   left: -35px !important; 
+  z-index: 100;
+  font-size: smaller;
 }
+
 
 :host >>> div.angular-popper__arrow {
   background: lightyellow;
