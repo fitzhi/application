@@ -11,6 +11,8 @@ import static com.fitzhi.Global.NO_USER_PASSWORD_ACCESS;
 import static com.fitzhi.Global.REMOTE_FILE_ACCESS;
 import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -263,12 +265,17 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Override
 	public void initLocationRepository(int idProject) throws SkillerException {
 		Project project = get(idProject);
+		this.initLocationRepository(project);
+	}
+
+	@Override
+	public void initLocationRepository(Project project) {
 		synchronized (lockDataUpdated) {
 			project.setLocationRepository(null);
 			this.dataUpdated = true;
 		}
-	}
 
+	}
 	@Override
 	public void saveRisk(Project project, int staffEvaluation) {
 		
@@ -641,4 +648,18 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		project.getSkills().values().stream().forEach(skill -> skill.setNumberOfFiles(0));
 	}
 
+	@Override
+	public boolean hasValidRepository(Project project) {
+		
+		if (project.getLocationRepository() == null) {
+			return false;
+		}
+		
+		Path repo = Paths.get(project.getLocationRepository(), ".git");
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Examining if %s exists", repo.toFile().getAbsolutePath()));
+		}
+		return (repo.toFile().exists());
+	}
+	
 }

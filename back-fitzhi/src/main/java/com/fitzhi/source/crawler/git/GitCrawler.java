@@ -1010,8 +1010,10 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 		final ConnectionSettings settings = connectionSettings(project);
 
-		if (!cacheDataHandler.hasCommitRepositoryAvailable(project)) {
-			projectHandler.initLocationRepository(project.getId());
+		
+		
+		if (!projectHandler.hasValidRepository(project)) {
+			projectHandler.initLocationRepository(project);
 			try {
 				this.clone(project, settings);
 			} catch (final Exception e) {
@@ -1025,6 +1027,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			}
 		}
 
+		
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), "Git clone successfully done!");
 		
 		//

@@ -122,6 +122,14 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * <p>
 	 * Initialize the path location.
 	 * </p>
+	 * @param project project which path location has be initialized
+	 */
+	void initLocationRepository (Project project) throws SkillerException;
+	
+	/**
+	 * <p>
+	 * Initialize the path location.
+	 * </p>
 	 * @param idProject the project identifier
 	 * @throws SkillerException thrown if any problem, most probably either an {@link IOException} or the <i>project does not exist</i>.
 	 */
@@ -287,4 +295,11 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 */
 	void resetProjectSkillsMetrics(Project project);
 	
+	/**
+	 * <p>
+	 * Test if the path location declared in the project is still valid.
+	 * </p>
+	 * @return {@code true} if the path location declared inside the project is valid.
+	 */
+	boolean hasValidRepository(Project project);
 }
