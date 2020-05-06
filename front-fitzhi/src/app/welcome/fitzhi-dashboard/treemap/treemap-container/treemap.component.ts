@@ -10,7 +10,7 @@ import { TreemapHeaderComponent } from '../treemap-header/treemap-header.compone
 })
 export class TreemapComponent implements OnInit {
 
-	constructor(private projectService: ProjectService) { }
+	constructor(public projectService: ProjectService) { }
 
 	ngOnInit() {
 	}

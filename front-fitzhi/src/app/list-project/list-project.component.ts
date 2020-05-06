@@ -50,7 +50,7 @@ export class ListProjectComponent implements OnInit {
 
 	constructor(
 		private staffListService: StaffListService,
-		private referentialService: ReferentialService,
+		public referentialService: ReferentialService,
 		private projectService: ProjectService,
 		private listProjectsService: ListProjectsService,
 		private router: Router) {}

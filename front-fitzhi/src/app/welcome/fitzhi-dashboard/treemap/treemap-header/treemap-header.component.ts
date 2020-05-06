@@ -45,7 +45,7 @@ export class TreemapHeaderComponent implements OnInit {
 	 */
 	public editableState$ = new Subject<TagifyEditableState>();
 
-	constructor(private treeMapService: TreemapService) {
+	constructor(public treeMapService: TreemapService) {
 		this.treeMapService.treemapFilter.external = (localStorage.getItem('external') === '1');
 		if (traceOn()) {
 			console.log (this.treeMapService.treemapFilter.external ? 'with externals' : 'only internals');

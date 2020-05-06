@@ -37,7 +37,7 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 	constructor(
 		private cinematicService: CinematicService,
 		private route: ActivatedRoute,
-		private skillService: SkillService,
+		public skillService: SkillService,
 		private listSkillService: ListSkillService,
 		private messageService: MessageService,
 		private router: Router) {

@@ -145,7 +145,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	constructor(
 		private cinematicService: CinematicService,
-		private sunburstCinematicService: SunburstCinematicService,
+		public sunburstCinematicService: SunburstCinematicService,
 		private route: ActivatedRoute,
 		private messageService: MessageService,
 		private projectStaffService: ProjectStaffService,

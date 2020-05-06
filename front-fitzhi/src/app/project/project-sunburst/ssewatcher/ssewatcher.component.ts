@@ -26,7 +26,7 @@ export class SSEWatcherComponent extends BaseComponent implements OnInit, OnDest
 	/**
 	 * event$.
 	 */
-	private event$ = new Subject<ActivityLog>();
+	public event$ = new Subject<ActivityLog>();
 
 	/**
 	 * The sources of the log events sent by the server.
