@@ -102,7 +102,10 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 					}
 					this.auditAttachmentService.emitAddUpdAttachmentFile(
 						new AttachmentFile(id, auditAttachment.filename, auditAttachment.type, this.label));
-					this.projectService.dump(this.projectService.project, 'uploadFile');
+					this.projectService.loadMapSkills(this.projectService.project);
+					if (traceOn()) {
+						this.projectService.dump(this.projectService.project, 'uploadFile');
+					}
 				}
 		}));
 	}
@@ -125,7 +128,9 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 				if (doneAndOk) {
 					this.messageService.success('The file \'' + this.attachmentFile.fileName + '\' has been removed from system.');
 					this.auditAttachmentService.emitRemoveAttachmentFile(this.id);
-					this.projectService.dump(this.projectService.project, 'uploadFile');
+					if (traceOn()) {
+						this.projectService.dump(this.projectService.project, 'uploadFile');
+					}
 				}
 			});
 	}

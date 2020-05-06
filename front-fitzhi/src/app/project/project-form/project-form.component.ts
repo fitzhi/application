@@ -629,7 +629,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					sp.key,
 					sp.projectSonarMetricValues,
 					this.errorEmitter);
-				this.projectService.dump(this.projectService.project, 'addSonarProject');
+				if (traceOn()) {
+					this.projectService.dump(this.projectService.project, 'addSonarProject');
+				}
 			});
 	}
 
