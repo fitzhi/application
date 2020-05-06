@@ -18,21 +18,23 @@ div.gradient {
     margin-top: 78px;
     margin-left: 5px;
     width: 10px;
-    height: 380px;
+    height: 375px;
 }
 
-div.high {
+p.sign {
     margin-left: 5px;
+    font-size: xx-large;
+    font-weight: 700;
+}
+
+p.high {
     margin-top: 70px;
-    font-size: x-large;
-    font-weight: 700;
+    color: var(--color-success);
 }
 
-div.low {
-    margin-left: 5px;
-    margin-top: 340px;
-    font-size: x-large;
-    font-weight: 700;
+p.low {
+    margin-top: 325px;
+    color: var(--color-error);
 }
 
 div.help {
@@ -47,7 +49,7 @@ i.info {
     margin-top: 3px;    
     margin-left: 98%;
     position: static;
-    color: var(--color-selected);
+    color: var(--color-success);
     font-size: larger;
 }
 
@@ -58,10 +60,12 @@ p.help {
     margin-right: 20px; 
 }
 
-span.good {
-    color: var(--color-selected);
+li.good {
+    color: var(--color-success);
+    margin-bottom: 5px;
 }
 
-span.bad {
+li.bad {
     color: var(--color-error);
+    margin-bottom: 5px;
 }
