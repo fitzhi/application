@@ -1,9 +1,21 @@
-div.projects_card {
-    padding:10px;
-    margin-left: 50px;
-    margin-top: 20px;
-    min-width: 500px;
-    max-width: 800px;
+div.staff-projects-container {
+    width: 800px;
+    margin: 0 auto;
+}
+
+div.staff-projects-container h4 {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+div.staff-projects-container div.project {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+div.staff-projects-container div.tableMissions {
+    min-width: 700px;
+    margin: 10px auto;
 }
 
 :host >>> th#name > .mat-sort-header-container  {
@@ -16,7 +28,6 @@ div.projects_card {
     justify-content: flex-end;
     color: darkblue
 }
-
 
 :host >>> th#numberOfFiles > .mat-sort-header-container  {
     display: flex;
@@ -36,11 +47,6 @@ div.projects_card {
     color: darkblue 
 }
 
-.tableMissions {
-    margin-top: 30px;
-    margin-left: 0px;
-}
-
 .col_numeric, .col_date {
     height: 2em;
 }
@@ -56,5 +62,5 @@ div.projects_card {
 }
 
 .col_name {
-    width : 285px;
+    width : 300px;
 }

@@ -1,9 +1,13 @@
-<div class="projects_card project">
-	<h4 class="d-flex justify-content-between align-items-center">
+<div class="staff-projects-container project">
+	
+	<h4 *ngIf="(this.collaborator.lastName)" class="d-flex justify-content-between align-items-center">
 		<span class="text-muted">{{this.collaborator.firstName}} {{this.collaborator.lastName}} : Projects card</span> 
 		<span class="badge badge-secondary badge-pill">{{numberOfMissions$ | async}}</span>
 	</h4>
-			
+	<h4 *ngIf="!(this.collaborator.lastName)" class="d-flex justify-content-between align-items-center">
+		<i>First create the staff member...</i>
+	</h4>
+
 	<div class="row project">
 		<div class="col-12">
 			<textarea id="projects" name="projects" placeholder="Type the first letters of the project"></textarea>
@@ -14,7 +18,7 @@
 		<table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8" matSort>
 
 			<ng-container matColumnDef="name">
-				<th id="name" mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+				<th id="name" class="col_name" mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
 				<td mat-cell class="col_name" *matCellDef="let mission">
 					{{mission.name}}
 				</td>

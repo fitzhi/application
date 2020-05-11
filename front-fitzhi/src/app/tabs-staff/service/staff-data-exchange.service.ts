@@ -16,7 +16,7 @@ export class StaffDataExchangeService {
 
 	/**
 	 * A new collaborator has been loaded and data has to be shared.
-	 * @param collaborator current collaborator
+	 * @param collaborator the new collaborator loaded
 	 */
 	changeCollaborator(collaborator: Collaborator) {
 		if (traceOn()) {

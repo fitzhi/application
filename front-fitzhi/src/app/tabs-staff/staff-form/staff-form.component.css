@@ -2,10 +2,9 @@
 	font-weight: 600;
 }
 
-
-#staffDiv {
-	margin-left: 50px;
-	margin-top: 10px;
+div.staff-container-form {
+	width: 50%;
+	margin: 0 auto;
 }
 
 #staffForm {
