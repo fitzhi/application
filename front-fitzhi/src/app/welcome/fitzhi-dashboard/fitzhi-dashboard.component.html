@@ -94,7 +94,7 @@
 
     <div  class="dashboard" *ngIf="isSelected(selection.currentSummary)">
 
-        <div *ngIf="(projectService.allProjectsIsLoaded$|async)" class="pie pie-in-container">
+        <div *ngIf="(projectService.allProjectsIsLoaded$|async)" class="pie">
             <app-pie-chart
                 [radius]=200
                 [active]=true

@@ -21,6 +21,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -79,6 +81,13 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	 */
 	@Value("${staffHandler.inactivity.delay}")
 	private int inactivityDelay;	
+	
+	@PostConstruct
+	public void postConstruct() {
+		if (log.isInfoEnabled()) {
+			log.info(String.format("Inactivity delay setup for Fitzhì : %d", inactivityDelay));
+		}
+	}
 	
 	@Override
 	public void init() {
