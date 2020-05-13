@@ -56,7 +56,7 @@
         <app-treemap></app-treemap>
     </div>
     
-    <div *ngIf="isSelected(selection.lastYearSummary)">
+    <div class="dashboard" *ngIf="isSelected(selection.lastYearSummary)">
         <div *ngIf="(projectService.allProjectsIsLoaded$|async) && (slidesLastYear$|async)" 
                 class="formerDashboard">
             <p class="text">Last year snapshot</p>

@@ -48,7 +48,8 @@ div.pie-projects {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 
-    margin: 100px auto;
+    margin: 40vh auto;
+    transform: translateY(-50%);
     width: 400px;
 }
  
@@ -86,6 +87,12 @@ button.currentMinimized {
 
 button.treeMap {
     bottom: 210px;
+}
+
+div.dashboard {
+    width: 300px;
+    margin: 40vh auto;
+    transform: translateY(-50%); 
 }
 
 div.camera {
