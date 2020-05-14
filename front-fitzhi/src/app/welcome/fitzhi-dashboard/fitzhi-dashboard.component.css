@@ -89,15 +89,10 @@ button.treeMap {
     bottom: 210px;
 }
 
-div.dashboard {
-    width: 300px;
-    margin: 40vh auto;
-    transform: translateY(-50%); 
-}
-
 div.camera {
     width: 300px;
-    margin: 20px auto;
+    margin: 40vh auto;
+    transform: translateY(-50%);
     text-align: center;
     font-size: 22px;
     border-radius: 5px;
@@ -105,6 +100,7 @@ div.camera {
     border-width: 1px;
     border-color: lightgrey;
     padding: 20px;
+
 }
 
 i.camera {

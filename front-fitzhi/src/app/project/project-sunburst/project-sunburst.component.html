@@ -96,13 +96,13 @@
 			<app-project-ghosts [dataSourceGhosts$]="dataSourceGhosts$"></app-project-ghosts>
 		</div>
 
-		<div class="divPanel row" *ngIf="isActiveContext(PreviewContext.SUNBURST_DEPENDENCIES)">
+		<div class="divPanelOnTop row" *ngIf="isActiveContext(PreviewContext.SUNBURST_DEPENDENCIES)">
 			<app-table-dependencies class="content-divPanel">
 			</app-table-dependencies>
 		</div>
 
 		<div class="divPanelOnTop row" *ngIf="isActiveContext(PreviewContext.SUNBURST_LEGEND)">
-			<app-legend-sunburst class="divPanelOnTop"></app-legend-sunburst>
+			<app-legend-sunburst></app-legend-sunburst>
 		</div>
 
 		<angular-popper placement="left" target="#sunburst" [show]="sunburstCinematicService.isButtonActive(SUNBURST)">

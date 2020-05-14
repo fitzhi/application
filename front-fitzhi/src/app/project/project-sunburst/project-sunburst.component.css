@@ -94,18 +94,14 @@ button.btn-outline-success {
 	color: var(--color-error);
 }
 
-.divPanel {
-	width: 100%;
-	height: 100%;
-	background-color: whitesmoke;
+.divPanelOnTop {
+  margin: 40vh auto;
+  transform: translateY(-50%);
+  width: fit-content;
 }
 
 .content-divPanel {
   margin: 50px auto;
-}
-
-.divPanelOnTop {
-  margin: 0px auto;
 }
 
 #panelGhosts {
