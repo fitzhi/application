@@ -146,6 +146,16 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 				// 
 				if (repository != null) {
 					List<String> candidates = repository.extractMatchingUnknownContributors(staffHandler, staff);
+					
+					if (candidates.size() == 0) {
+						if (log.isDebugEnabled()) {
+							log.debug(String.format("Cannot retrieve a candidate for %s", staff.fullName()) );
+						}
+						throw new SkillerException (
+							CODE_CONTRIBUTOR_INVALID,
+							MessageFormat.format(MESSAGE_CONTRIBUTOR_INVALID, staff.fullName(), project.getName()));
+					}
+					
 					for (String candidate : candidates) {
 						if (log.isDebugEnabled()) {
 							log.debug ("Registering the candidate "  + candidate);
@@ -169,7 +179,7 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 					} else { 
 						throw new SkillerException (
 							CODE_CONTRIBUTOR_INVALID,
-							MessageFormat.format(MESSAGE_CONTRIBUTOR_INVALID, staff.fullName(), project.getName()));
+							MessageFormat.format(MESSAGE_CONTRIBUTOR_INVALID, staff.fullName(), staff.getLogin(), project.getName()));
 					}
 				}
 			}
