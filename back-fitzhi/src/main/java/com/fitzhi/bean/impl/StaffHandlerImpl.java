@@ -208,17 +208,20 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	
 	@Override
 	public boolean isEligible(Staff staff, String criteria, StringTransform transform )  {
+				
+		String smartCriteria = criteria.trim().replaceAll(" +", " ");
 		
-		String[] word = criteria.trim().replaceAll(" +", " ").split(" ");
+		// Is the criteria equal to the login ?
+		if (transform.process(smartCriteria).equals(transform.process(staff.getLogin()))) {
+			return true;
+		}
+		
+		
+		String[] word = smartCriteria.split(" ");
 		
 		switch (word.length) {
 		case 1:
 
-			// Is the criteria equal to the login
-			if (transform.process(word[0]).equals(transform.process(staff.getLogin()))) {
-				return true;
-			}
-			
 			// If the criteria contains only one word, 
 			//      which is NOT a login name,
 			// we assume that this criteria might be the last name
@@ -237,7 +240,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			}
 			
 			return false;
-		case 2:			
+		case 2:	
 			// If the criteria contains only 2 words, we assume that this criteria is the last name and the first name
 			if (	transform.process(word[0]).equals(transform.process(staff.getLastName()))
 				&&	transform.process(word[1]).equals(transform.process(staff.getFirstName()))) {

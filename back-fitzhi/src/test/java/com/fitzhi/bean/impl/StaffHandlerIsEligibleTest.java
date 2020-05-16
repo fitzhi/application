@@ -87,5 +87,14 @@ public class StaffHandlerIsEligibleTest {
 		Assert.assertTrue(staffHandler.isEligible(staff, "frederic vidal"));
 		Assert.assertFalse(staffHandler.isEligible(staff, "frederic nope"));
 	}
+
+	@Test
+	public void testIsEligibleForALoginWithTwoWords() throws SkillerException {
+		Staff staff = new Staff(1, "Frederic", "VIDAL", "frvidal", "Diogènes VLAID","frvidal@nope.com", "Gaulo-roman");
+		Assert.assertTrue(staffHandler.isEligible(staff, "Diogenes VLAID"));
+		Assert.assertTrue(staffHandler.isEligible(staff, "diogènes vlaid"));
+		Assert.assertTrue(staffHandler.isEligible(staff, "  Diogènes Vlaid  "));
+		Assert.assertFalse(staffHandler.isEligible(staff, "VLAID Diogènes"));
+	}
 	
 }
