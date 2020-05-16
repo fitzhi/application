@@ -3,11 +3,15 @@
  */
 package com.fitzhi.data.source;
 
+import static com.fitzhi.Global.DASHBOARD_GENERATION;
+import static com.fitzhi.Global.PROJECT;
+
 import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
@@ -52,11 +57,14 @@ public class ContributorsCommitRepositoryTest {
 	@Autowired
 	StaffHandler staffHandler;
 	
+	@Autowired
+	AsyncTask asyncTask;
 	
     @Before
-    public void before() {
+    public void before() throws SkillerException {
     	
     	Project p = new Project(100, "Test");
+    	asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 100);
     	
     	RepositoryAnalysis analysis = new RepositoryAnalysis(p);
     	SourceControlChanges repo = analysis.getChanges();
@@ -151,4 +159,9 @@ public class ContributorsCommitRepositoryTest {
     			.orElseThrow(SkillerException::new); 	
 		Assert.assertEquals(1, haddock.getNumberOfFiles());
 	}
+    
+    @After
+    public void after() {
+    	asyncTask.removeTask(DASHBOARD_GENERATION, PROJECT, 100);
+    }
 }

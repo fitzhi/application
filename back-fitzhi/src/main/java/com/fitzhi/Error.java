@@ -80,7 +80,7 @@ public class Error {
 	public static final String MESSAGE_TASK_NOT_FOUND = "There is no operation {0} for the project id {1}";
 	
 	public static final int CODE_CONTRIBUTOR_INVALID = -1023;
-	public static final String MESSAGE_CONTRIBUTOR_INVALID = "Contributor cannot be created for the staff member %s inside the project %s";
+	public static final String MESSAGE_CONTRIBUTOR_INVALID = "Contributor cannot be created for the staff member %s with login %s inside the project %s";
 	
 	public static final int CODE_IO_EXCEPTION = -1024;
 	

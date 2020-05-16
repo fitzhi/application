@@ -3,6 +3,8 @@
  */
 package com.fitzhi.source.crawler.git;
 
+import static com.fitzhi.Global.DASHBOARD_GENERATION;
+import static com.fitzhi.Global.PROJECT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -22,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.DataChartHandler;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
@@ -57,13 +60,17 @@ public class CrawlerFirstTest {
 	@Autowired
 	DataChartHandler dataChartHandler;
 
+	@Autowired
+	AsyncTask asyncTask;
+
 	private Repository repository;
 
 	private Project project;
 	
 	@Before
-	public void before() {
+	public void before() throws SkillerException {
 		project = new Project(1000, FIRST_TEST);
+    	asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 1000);
 	}
 	
 	@Test
@@ -139,5 +146,6 @@ public class CrawlerFirstTest {
 		if (repository != null) {
 			repository.close();
 		}
+    	asyncTask.removeTask(DASHBOARD_GENERATION, PROJECT, 1000);
 	}
 }

@@ -103,7 +103,7 @@ public class ReactiveLogReportSunburstGenerationLogNextTest {
 			    .expectComplete()
 			    .verify(Duration.ofSeconds(5));
 	}
-
+	
 	@After
 	public void after() throws SkillerException {
 		projectHandler.getProjects().remove(ID_PROJECT);

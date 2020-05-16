@@ -1,12 +1,17 @@
 package com.fitzhi.source.crawler.git;
 
+import static com.fitzhi.Global.DASHBOARD_GENERATION;
+import static com.fitzhi.Global.PROJECT;
+
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,8 +20,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
+import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.RepoScanner;
 
 /**
@@ -36,11 +43,21 @@ public class GitCrawlerNonRelevantDependenciesMgtTest {
 	@Autowired
 	@Qualifier("GIT")
 	RepoScanner scanner;
+
+	@Autowired
+	AsyncTask asyncTask;
+	
+	Project p;
+	
+	@Before
+	public void before() throws SkillerException {
+		p = new Project(1000, "test");
+    	asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 1000);
+	}
 	
 	@Test
 	public void testExtractPathDependencies() throws IOException {
 		
-		Project p = new Project(1000, "test");
 		p.setLocationRepository(new File(".").getCanonicalPath());
 		RepositoryAnalysis analysis = new RepositoryAnalysis(p);
 		
@@ -96,7 +113,6 @@ public class GitCrawlerNonRelevantDependenciesMgtTest {
 
 	@Test
 	public void testRetrieveRootPath1() throws IOException {
-		Project p = new Project(1000, "test");
 		p.setLocationRepository(new File(".").getCanonicalPath());
 		RepositoryAnalysis analysis = new RepositoryAnalysis(p);
 
@@ -127,7 +143,6 @@ public class GitCrawlerNonRelevantDependenciesMgtTest {
 	
 	@Test
 	public void testRetrieveRootPath2() throws IOException {
-		Project p = new Project(1000, "test");
 		p.setLocationRepository(new File(".").getCanonicalPath());
 		RepositoryAnalysis analysis = new RepositoryAnalysis(p);
 		
@@ -175,4 +190,10 @@ public class GitCrawlerNonRelevantDependenciesMgtTest {
 		Assert.assertEquals(1, p.getLibraries().size());
 		
 	}
+	
+	@After
+	public void after() {
+    	asyncTask.removeTask(DASHBOARD_GENERATION, PROJECT, 1000);
+	}
+	
 }

@@ -94,7 +94,7 @@ public class AsyncTaskImpl implements AsyncTask {
 			return true;
 		} else {
 			if (log.isWarnEnabled()) {
-				log.warn(String.format("No more task '%s' for id %d", title, id));
+				log.warn("logMessage failed", new Exception(String.format("No more task '%s' for id %d", title, id)));
 			}
 			return false;
 		}		

@@ -3,6 +3,8 @@
  */
 package com.fitzhi.source.crawler.git;
 
+import static com.fitzhi.Global.DASHBOARD_GENERATION;
+import static com.fitzhi.Global.PROJECT;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -21,6 +23,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.DataChartHandler;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectDashboardCustomizer;
@@ -61,14 +64,18 @@ public class CrawlerWibkacTest {
 
 	@Autowired
 	ProjectDashboardCustomizer projectDashboardCustomizer;
+
+	@Autowired
+	AsyncTask asyncTask;
 	
 	private Repository repository;
 
 	private Project project;
 	
 	@Before
-	public void before() {
+	public void before() throws SkillerException {
 		project = new Project(1000, FITZHI);
+    	asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 1000);
 	}
 	
 	/**
@@ -127,8 +134,9 @@ public class CrawlerWibkacTest {
 				.build();
 
 		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);
-
-		dataSaver.saveChanges(new Project(777, "test"), analysis.getChanges());
+		Project p = new Project(777, "test");
+		
+		dataSaver.saveChanges(p, analysis.getChanges());
 	}
 
 	/**
@@ -147,12 +155,14 @@ public class CrawlerWibkacTest {
 
 		Project p = new Project(777, "test");
 		p.setLocationRepository(new File(String.format(FILE_GIT, FITZHI)).getAbsolutePath());
+    	asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 777);
 		dataSaver.saveRepositoryDirectories(p, analysis.getChanges());
 	}
 
 	@Test
 	public void testParseRepository() throws IOException, SkillerException {
 		Project prj = new Project (777, "vegeo");
+	   	asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 777);
 		prj.setLocationRepository(String.format(DIR_GIT, FITZHI));
 		projectHandler.addNewProject(prj);
 		scanner.parseRepository(prj, new ConnectionSettings());
@@ -163,5 +173,7 @@ public class CrawlerWibkacTest {
 		if (repository != null) {
 			repository.close();
 		}
+    	asyncTask.removeTask(DASHBOARD_GENERATION, PROJECT, 1000);
+    	asyncTask.removeTask(DASHBOARD_GENERATION, PROJECT, 777);
 	}
 }
