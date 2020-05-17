@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.service.StorageService;
 import com.fitzhi.service.impl.storageservice.ApplicationStorageProperties;
 import com.fitzhi.service.impl.storageservice.AuditAttachmentStorageProperties;
@@ -54,6 +55,13 @@ public class Application {
 	@Value("${prefilterEligibility}")
 	private boolean prefilterEligibility;
 	
+	/**
+	 * Number of days of inactivity before inactivation of a staff member.
+	 * @see StaffHandler#processActiveStatus
+	 */
+	@Value("${staffHandler.inactivity.delay}")
+	private int inactivityDelay;	
+	
 	public static void main(String[] args) {
 		LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Starting Backend 质 Fitzhì");
 		SpringApplication.run(Application.class, args);
@@ -73,6 +81,7 @@ public class Application {
             LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Most of the settings below are configured inside the file 'applications.properties', which is just aside of tixhì.jar.");
             LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tFiles pattern on-boarded in the evaluation : ");
             LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\t" + patternsInclusion);
+            LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\t" + "Inactivity delay : " + this.inactivityDelay);
             LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tExternal directories which are excluded from the evaluation : ");
 	        LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\t" + dependenciesMarker);
             LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\t" + ((collapseEmptyDirectory) ? "Directories should be collapsed" : "Directories should NOT be collaped"));
