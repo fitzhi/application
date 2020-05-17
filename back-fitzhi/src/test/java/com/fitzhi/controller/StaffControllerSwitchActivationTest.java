@@ -34,7 +34,7 @@ import com.google.gson.GsonBuilder;
 @AutoConfigureMockMvc
 public class StaffControllerSwitchActivationTest {
 
-	private static final String STAFF_SWITCH_ACTIVATION = "/api/staff/switchActiveState/";
+	private static final String STAFF_SWITCH_ACTIVATION = "/api/staff/forceActiveStatus/";
 
 
 	/**

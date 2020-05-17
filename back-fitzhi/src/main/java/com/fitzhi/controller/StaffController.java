@@ -214,10 +214,10 @@ public class StaffController {
 	}
 
 	/**
-	 * <b>Switch</b> the active status of a developer<br/>
+	 * Switch the 'active' status of a developer<br/>
 	 * <ul>
 	 * <li>
-	 * If the developer is active, it will become inactive.
+	 * If the given developer is active, it will become inactive.
 	 * </li>
 	 * <li>
 	 * If inactive, it will be switched to active.
@@ -226,8 +226,9 @@ public class StaffController {
 	 * @param idStaff the identifier of the staff member to activate, or deactivate.
 	 * @return {@code true} ALWAYS. Either the application return {@code true}, or an exception is thrown.
 	 * @throws SkillerException thrown if any exception occurs during the treatment, most probably if there is no staff member for the given id.
+	 * @see #processActiveStatus(int)
 	 */
-	@GetMapping("/switchActiveState/{idStaff}")
+	@GetMapping("/forceActiveStatus/{idStaff}")
 	public ResponseEntity<Boolean> switchActiveState(@PathVariable("idStaff") int idStaff) throws SkillerException {
 		
 		final Staff staff = staffHandler.getStaff(idStaff);
@@ -235,11 +236,41 @@ public class StaffController {
 			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 	
-		this.staffHandler.forceSwitchActiveState(staff);
+		this.staffHandler.forceActiveStatus(staff);
+		
+		return new ResponseEntity<>(true, new HttpHeaders(), HttpStatus.OK);
+	}
+
+	/**
+	 * <p>
+	 * Update the active status of a developer.
+	 * </p>
+	 * <p>
+	 * This URL is invoked when the end-user decides that the 'active' state should be automatically processed.<br/>
+	 * Therefore, the application scan the activity of the given staff member to check their latest commit with the global parameter {@code staffHandler.inactivity.delay}
+	 * </p>
+	 * @param idStaff the identifier of the staff member to activate, or deactivate.
+	 * @return the updated staff
+	 * @throws SkillerException thrown if any exception occurs during the treatment, most probably if there is no staff member for the given id.
+	 * @see #switchActiveState(int)
+	 */
+	@GetMapping("/processActiveStatus/{idStaff}")
+	public ResponseEntity<Staff> processActiveStatus(@PathVariable("idStaff") int idStaff) throws SkillerException {
+		
+		final Staff staff = staffHandler.getStaff(idStaff);
+		if (staff == null) {
+			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
+		}
+		
+		// We process the active status, therefore we property forceActiveStatus should be set to False.
+		staff.setForceActiveState(false);
+		
+		this.staffHandler.processActiveStatus(staff);
 		
 		HttpHeaders headers = new HttpHeaders();
-		return new ResponseEntity<>(true, headers, HttpStatus.OK);
+		return new ResponseEntity<>(staff, headers, HttpStatus.OK);
 	}
+
 	
 	@PostMapping("/save")
 	public ResponseEntity<Staff> save(@RequestBody Staff input) throws SkillerException {
@@ -275,7 +306,9 @@ public class StaffController {
 
 
 	/**
-	 * Add an experience to a staff member
+	 * <p>
+	 * Add an {@link Experience experience} to a staff member.
+	 * </p>
 	 * @param param
 	 *            the body of the post containing an instance of {@link StaffController.ParamStaffSkill}
 	 *            in JSON format

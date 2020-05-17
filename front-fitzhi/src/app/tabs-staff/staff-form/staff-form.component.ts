@@ -310,12 +310,17 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 			//
 			// Updating the collaborator.
 			//
-			this.staffService.switchActiveState(this.collaborator);
+			this.staffService.switchActiveStatus(this.collaborator);
 			return;
 		}
+
 		// User has selected a manuel update for the field 'active'.
 		if (field === this.FORCEACTIVESTATE) {
 			this.collaborator.forceActiveState = !this.collaborator.forceActiveState;
+			// If we do not force any more the 'active' state of staff member, then we have to compute it.
+			if (!this.collaborator.forceActiveState) {
+				this.staffService.processActiveStatus(this.collaborator);
+			}
 			if (traceOn()) {
 				console.log ('Manuel force to ' + this.collaborator.forceActiveState);
 			}

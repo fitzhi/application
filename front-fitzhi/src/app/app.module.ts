@@ -114,6 +114,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { TreemapHeaderComponent } from './welcome/fitzhi-dashboard/treemap/treemap-header/treemap-header.component';
 import { TreemapComponent } from './welcome/fitzhi-dashboard/treemap/treemap-container/treemap.component';
 import { NgxPopper } from 'angular-popper';
+import { StaffDataExchangeService } from './tabs-staff/service/staff-data-exchange.service';
 
 @NgModule({
 	declarations: [
@@ -225,6 +226,7 @@ import { NgxPopper } from 'angular-popper';
 	providers: [
 		CinematicService,
 		StaffService,
+		StaffDataExchangeService,
 		ReferentialService,
 		AuthGuardService,
 		{

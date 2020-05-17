@@ -429,7 +429,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				this.inferSkillsFromMissions(contributor.getIdStaff());
 
 				// We update his active or inactive state.
-				this.updateActiveState(staff);
+				this.processActiveStatus(staff);
 			}
 		};
 		if (log.isDebugEnabled()) {
@@ -734,13 +734,12 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public void updateActiveState(Staff staff) {
+	public void processActiveStatus(Staff staff) {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
-				"%s the activity state for %s", 
-				(staff.isActive() ? "Unset" : "Set"),
-				staff.fullName()));
+				"Processing the active status for %s", staff.fullName()));
 		}
+		
 		// Nothing to process if the user chooses a manual activity state
 		if (staff.isForceActiveState()) {
 			return;
@@ -772,7 +771,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public void forceSwitchActiveState(Staff staff) {
+	public void forceActiveStatus(Staff staff) {
 		synchronized (lockDataUpdated) {
 			if (staff.isActive()) {
 				staff.setActive(false);

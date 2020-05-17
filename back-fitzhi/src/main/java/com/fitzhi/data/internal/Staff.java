@@ -55,7 +55,7 @@ public @Data class Staff implements UserDetails {
 	private boolean forceActiveState = false;
 	
 	/**
-	 * Staff member is still active or remove from the active staff list.<br/>
+	 * <p>Staff member is still active or remove from the active staff list.</p>
 	 * This state is processed based on the activity of the developer since {@link StaffHandlerImpl#inactivityDelay} days,
 	 * <font color="blue">unless the {@link Staff#forceActiveState} is set to {@code true}.</font>
 	 */

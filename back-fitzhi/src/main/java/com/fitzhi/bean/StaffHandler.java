@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.fitzhi.bean.impl.StringTransform;
+import com.fitzhi.controller.StaffController;
 import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.PeopleCountExperienceMap;
 import com.fitzhi.data.internal.Project;
@@ -237,21 +238,31 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 void inferSkillsFromMissions(int idStaff) throws SkillerException;
 	 
 	 /**
-	  * Update the active status based on the history of missions executed by the given staff member.
+	  * <p>
+	  * Process & Update the active status based on the history of missions executed by the given staff member.
+	  * </p>
+	  * <p>
+	  * This method will update some properties from the given staff object, and mark the object as <i>"candidate for being serialized on file-system"</i>. 
+	  * </p>
+	  * @see DataHandler#saveStaff(Map)
+	  * @see StaffController#processActiveStatus(int)
+	  * @see #forceActiveStatus(Staff)
 	  * @param staff the given developer whose {@code active} status must be switch on, or off.
 	  */
-	 void updateActiveState(Staff staff);
+	 void processActiveStatus(Staff staff);
 	 
 	 /**
 	  * </p>
 	  * <b>Force</b> the value of the activity state for a developer.
 	  * </p>
-	  * <p>A the opposite of the method {@link StaffHandler#updateActiveState(Staff) updateActiveState} which updates the {@code active} field
-	  * based on the activity of this staff member, <b>and on this activity only</b>,
+	  * <p>In opposition to the method {@link StaffHandler#processActiveStatus(Staff) processActiveStatus} which processes & updates the {@code active} field
+	  * based on the activity of this staff member, and <b>on his activity only</b>,
 	  * this method forces this value by an end-user decision.
+	  * </p>
+	  * @see #processActiveStatus(Staff)
 	  * @param staff the given staff member whose active status has to be switch on, or off.
 	  */
-	 void forceSwitchActiveState(Staff staff);
+	 void forceActiveStatus(Staff staff);
 	 
 	 
 }

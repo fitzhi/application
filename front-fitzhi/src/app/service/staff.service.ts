@@ -5,17 +5,16 @@ import { Collaborator } from '../data/collaborator';
 import { Project } from '../data/project';
 import { StaffDTO } from '../data/external/staffDTO';
 
-import { Constants } from '../constants';
 import { DeclaredExperience } from '../data/declared-experience';
 import { Experience } from '../data/experience';
 import { Observable, Subject } from 'rxjs';
 
-import { saveAs } from 'file-saver';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { take } from 'rxjs/operators';
 import { BooleanDTO } from '../data/external/booleanDTO';
 import { FileService } from './file.service';
 import { traceOn } from '../global';
+import { StaffDataExchangeService } from '../tabs-staff/service/staff-data-exchange.service';
 import { MessageService } from '../message/message.service';
 
 const httpOptions = {
@@ -36,6 +35,7 @@ export class StaffService {
 		private http: HttpClient,
 		private fileService: FileService,
 		private messageService: MessageService,
+		private staffDataExchangeService: StaffDataExchangeService,
 		private backendSetupService: BackendSetupService) {
 	}
 
@@ -74,18 +74,21 @@ export class StaffService {
 
 	/**
      * Activate or inactivate a staff member.
+	 *
+	 * This (de-)activation is based on an end-user choise, in opposition to the method **processActiveStatus**
+	 * which processes the state for the staf member, based on his Git activity.
 	 * @param idStaff the staff identifier to (de)activate
      */
-	switchActiveState(collaborator: Collaborator) {
+	switchActiveStatus(collaborator: Collaborator) {
 		if (traceOn()) {
-			console.log(
+			console.log (
 				'Switching the active status for the collaborator with id %d to %s',
 				collaborator.idStaff,
 				(collaborator.active) ? 'active' : 'inactive');
 		}
 
-		this.http.get<Boolean>(
-			this.backendSetupService.url() + '/staff/switchActiveState/' + collaborator.idStaff,
+		this.http.get<boolean>(
+			this.backendSetupService.url() + '/staff/forceActiveStatus/' + collaborator.idStaff,
 			httpOptions).
 			pipe(take(1)).
 			subscribe({
@@ -95,6 +98,33 @@ export class StaffService {
 					} else {
 						console.error('INTERNAL ERROR : Should not pass here!');
 					}
+				}
+			});
+	}
+
+	/**
+     * Activate or inactivate a staff member.
+	 * @param idStaff the staff identifier to (de)activate
+     */
+	processActiveStatus(collaborator: Collaborator) {
+		if (traceOn()) {
+			console.log(
+				'Processing the activity-state for the collaborator %s (id: %d)',
+				collaborator.firstName + ' ' + collaborator.lastName, collaborator.idStaff);
+		}
+
+		this.http.get<Collaborator>(
+			this.backendSetupService.url() + '/staff/processActiveStatus/' + collaborator.idStaff,
+			httpOptions).
+			pipe(take(1)).
+			subscribe({
+				next: staff => {
+					if (traceOn()) {
+						console.log ('%s is now', staff.lastName, staff.active);
+					}
+					this.staffDataExchangeService.collaborator.active = staff.active;
+					this.staffDataExchangeService.collaborator.dateInactive = staff.dateInactive;
+					this.staffDataExchangeService.collaboratorLoaded$.next(true);
 				}
 			});
 	}

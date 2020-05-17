@@ -24,7 +24,7 @@ import com.fitzhi.data.internal.StaffActivitySkill;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @TestPropertySource(properties = { "staffHandler.inactivity.delay=10" })
-public class StaffHandlerUpdateActiveStateTest {
+public class StaffHandlerProcessActiveStatusTest {
 
 	@Autowired
 	private StaffHandler staffHandler;
@@ -57,7 +57,7 @@ public class StaffHandlerUpdateActiveStateTest {
 	
 	@Test
 	public void testActivateStaff() {
-		staffHandler.updateActiveState(staff);
+		staffHandler.processActiveStatus(staff);
 		Assert.assertTrue("Staff is active", staff.isActive());
 	
 	}
@@ -66,7 +66,7 @@ public class StaffHandlerUpdateActiveStateTest {
 	public void testReactivateStaff() {
 		staff.setActive(false);
 		staff.setDateInactive(LocalDate.of(2020, 01, 01));
-		staffHandler.updateActiveState(staff);
+		staffHandler.processActiveStatus(staff);
 		Assert.assertTrue("Staff is active", staff.isActive());
 		Assert.assertNull("Starting date of inactivity", staff.getDateInactive());
 	
@@ -82,7 +82,7 @@ public class StaffHandlerUpdateActiveStateTest {
 		}
 		
 		staff.setActive(true);
-		staffHandler.updateActiveState(staff);
+		staffHandler.processActiveStatus(staff);
 		Assert.assertFalse("Staff is active", staff.isActive());
 		Assert.assertEquals("Starting date of inactivity", LocalDate.now().minusDays(NUMBER_OF_DAYS+10), staff.getDateInactive());
 	}
@@ -98,7 +98,7 @@ public class StaffHandlerUpdateActiveStateTest {
 		
 		staff.setActive(true);
 		staff.setForceActiveState(true);
-		staffHandler.updateActiveState(staff);
+		staffHandler.processActiveStatus(staff);
 
 		Assert.assertTrue("Staff is active", staff.isActive());
 		Assert.assertNull("Starting date of inactivity", staff.getDateInactive());
