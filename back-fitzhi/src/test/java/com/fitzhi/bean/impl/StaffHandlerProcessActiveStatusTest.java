@@ -15,7 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.data.internal.StaffActivitySkill;
 
 /**
  * Class in charge of testing the method {@link StaffHandler#updateActiveState}.
@@ -41,17 +40,11 @@ public class StaffHandlerProcessActiveStatusTest {
 	@Before
 	public void before() {
 		staff = new Staff(1789, "firstName", "lastName", "nickName", "login", "email", "level");
-		Mission m = new Mission(ID_STAFF, 1789, "Revolution");
-		staff.addMission(m);
-		m.getStaffActivitySkill()
-			.put(ID_SKILL_JAVA, new StaffActivitySkill(ID_SKILL_JAVA, ID_STAFF, LocalDate.of(2019, 1, 1), LocalDate.of(2019, 12, 24), 1000));
-		
-		m = new Mission(ID_STAFF, 1805, "Austerlitz");		
-		staff.addMission(m);
-		m.getStaffActivitySkill()
-			.put(ID_SKILL_TS, new StaffActivitySkill(ID_SKILL_TS, ID_STAFF, LocalDate.of(2019, 1, 1), LocalDate.of(2019, 12, 24), 2000));
-		m.getStaffActivitySkill()
-			.put(ID_SKILL_JAVA, new StaffActivitySkill(ID_SKILL_JAVA, ID_STAFF, LocalDate.of(2019, 1, 1), LocalDate.now().minusDays(NUMBER_OF_DAYS), 2000));
+		Mission m1 = new Mission(ID_STAFF, 1789, "Revolution", LocalDate.of(2010, 5, 1), LocalDate.of(2011, 1, 10), 100, 100);
+		staff.addMission(m1);
+		Mission m2 = new Mission(ID_STAFF, 1805, "Austerlitz", LocalDate.of(2019, 1, 1), LocalDate.now().minusDays(5), 100, 100);
+		staff.addMission(m2);
+
 		
 	}
 	
@@ -59,7 +52,7 @@ public class StaffHandlerProcessActiveStatusTest {
 	public void testActivateStaff() {
 		staffHandler.processActiveStatus(staff);
 		Assert.assertTrue("Staff is active", staff.isActive());
-	
+		Assert.assertNull(staff.getDateInactive());
 	}
 
 	@Test
@@ -78,7 +71,7 @@ public class StaffHandlerProcessActiveStatusTest {
 		// We force the last date of commit to be older that staffHandler.inactivity.delay
 		Optional<Mission> oMission = staff.getMissions().stream().filter(mission -> mission.getIdProject() == 1805).findFirst();
 		if (oMission.isPresent()) {
-			oMission.get().getStaffActivitySkill().get(ID_SKILL_JAVA).setLastCommit(LocalDate.now().minusDays(NUMBER_OF_DAYS+10));
+			oMission.get().setLastCommit(LocalDate.now().minusDays(NUMBER_OF_DAYS+10));
 		}
 		
 		staff.setActive(true);
@@ -93,7 +86,7 @@ public class StaffHandlerProcessActiveStatusTest {
 		// We force the last date of commit to be older that staffHandler.inactivity.delay
 		Optional<Mission> oMission = staff.getMissions().stream().filter(mission -> mission.getIdProject() == 1805).findFirst();
 		if (oMission.isPresent()) {
-			oMission.get().getStaffActivitySkill().get(ID_SKILL_JAVA).setLastCommit(LocalDate.now().minusDays(NUMBER_OF_DAYS+10));
+			oMission.get().setLastCommit(LocalDate.now().minusDays(NUMBER_OF_DAYS+10));
 		}
 		
 		staff.setActive(true);

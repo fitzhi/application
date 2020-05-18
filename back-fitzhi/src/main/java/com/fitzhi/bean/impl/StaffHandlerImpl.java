@@ -199,9 +199,10 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	
 	@Override
 	public boolean isEligible(Staff staff, String criteria) {
-		if (!isEligible(staff, criteria, input -> (input != null) ? input.toLowerCase() : null)) {
+		if (!isEligible(staff, criteria, input -> (input != null) ? 
+				input.replaceAll(" +", " ").replace("-", " ").trim().toLowerCase() : null)) {
 			return isEligible(staff, criteria, 
-					input -> (input != null) ? Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "").toLowerCase() : null);
+					input -> (input != null) ? Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "").replaceAll(" +", " ").replace("-", " ").trim().toLowerCase() : null);
 		}
 		return true;
 	}
@@ -209,7 +210,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	@Override
 	public boolean isEligible(Staff staff, String criteria, StringTransform transform )  {
 				
-		String smartCriteria = criteria.trim().replaceAll(" +", " ");
+		String smartCriteria = transform.process(criteria);
 		
 		// Is the criteria equal to the login ?
 		if (transform.process(smartCriteria).equals(transform.process(staff.getLogin()))) {
@@ -273,8 +274,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				
 				StringBuilder sb = new StringBuilder();
 				rotatedCriteria.stream().forEach(e -> sb.append(e).append(" "));
-				
-				if (transform.process(sb.toString().trim()).equals(transform.process(staff.fullName()))) {
+				if (transform.process(sb.toString()).equals(transform.process(staff.fullName()))) {
 					return true;
 				}
 			}
@@ -745,17 +745,15 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			return;
 		}
 
-		List<StaffActivitySkill> activity = activity(staff);
-
 		// No activity at all, we consider this staff member as a new one, so therefore active.
-		if (activity.isEmpty()) {
+		if ((staff.getMissions() == null) || (staff.getMissions().isEmpty())) {
 			staff.setActive(true);
 			staff.setDateInactive(null);				
 			return;
 		}
 		
-		LocalDate latestCommit = activity.stream()
-				.map(StaffActivitySkill::getLastCommit)
+		LocalDate latestCommit = staff.getMissions().stream()
+				.map(Mission::getLastCommit)
 				.max(Comparator.comparing(LocalDate::toEpochDay))
 				.orElseThrow(() -> new SkillerRuntimeException(SHOULD_NOT_PASS_HERE));
 

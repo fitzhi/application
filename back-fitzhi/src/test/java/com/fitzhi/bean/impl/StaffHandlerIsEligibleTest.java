@@ -97,4 +97,13 @@ public class StaffHandlerIsEligibleTest {
 		Assert.assertFalse(staffHandler.isEligible(staff, "VLAID Diogènes"));
 	}
 	
+	@Test
+	public void testIsEligibleComposedFirstname() throws SkillerException {
+		Staff staff = new Staff(1, "Jean-Paul", "TWO", "jptwo", "jptwo","jptwo@nope.com", "Gaulo-roman");
+		Assert.assertTrue(staffHandler.isEligible(staff, "jptwo"));
+		Assert.assertTrue(staffHandler.isEligible(staff, "Two Jean Paul"));
+		Assert.assertTrue(staffHandler.isEligible(staff, "Two Jean-Paul"));
+		Assert.assertTrue(staffHandler.isEligible(staff, "Jean-Paul TWO"));		
+		Assert.assertFalse(staffHandler.isEligible(staff, "Jean-Paul THREE"));		
+	}	
 }

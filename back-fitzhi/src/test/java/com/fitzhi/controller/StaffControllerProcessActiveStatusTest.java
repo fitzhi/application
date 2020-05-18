@@ -1,8 +1,6 @@
 package com.fitzhi.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -16,18 +14,16 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.controller.util.LocalDateAdapter;
-import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.Mission;
-import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Staff;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -43,6 +39,7 @@ import com.google.gson.GsonBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestPropertySource(properties = { "staffHandler.inactivity.delay=10" })
 public class StaffControllerProcessActiveStatusTest {
 
 	private final String STAFF_PROCESS_ACTIVE_STATUS = "/api/staff/processActiveStatus/%d";
@@ -70,7 +67,7 @@ public class StaffControllerProcessActiveStatusTest {
 		staff.setDateInactive(null);
 		staffHandler.getStaff().put(777, staff);
 		staff.addMission(
-				new Mission(ID_STAFF, ID_PROJECT, "Void", LocalDate.of(2017, 01, 01), LocalDate.of(2020, 01, 01), 100, 100));
+				new Mission(ID_STAFF, ID_PROJECT, "Void", LocalDate.of(2017, 01, 01), LocalDate.now().minusDays(5), 100, 100));
 		Assert.assertTrue ("staff is registered", staffHandler.hasStaff(777));
 		
 	}
