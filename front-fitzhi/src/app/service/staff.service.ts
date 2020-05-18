@@ -120,7 +120,7 @@ export class StaffService {
 			subscribe({
 				next: staff => {
 					if (traceOn()) {
-						console.log ('%s is now', staff.lastName, staff.active);
+						console.log ('%s is now %s', staff.lastName, staff.active ? 'active' : 'inactive');
 					}
 					this.staffDataExchangeService.collaborator.active = staff.active;
 					this.staffDataExchangeService.collaborator.dateInactive = staff.dateInactive;
