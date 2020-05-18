@@ -1,60 +1,61 @@
 <div class="toolbar bg-light">
     <nav class="navbar navbar-light form-inline toolbar">
+        <div>
+            <div class="btn-group form-inline buttons header_navigation_master_detail" [hidden]="!isInMasterDetail()">
 
-        <div class="btn-group form-inline buttons header_navigation_master_detail" [hidden]="!isInMasterDetail()">
+                <button 
+                    class="btn btn-outline-secondary rounded" 
+                    (click)="list()">
+                    <i class="fas glyphicon fa-list-alt"></i>
+                </button>
 
-            <button 
-                class="btn btn-outline-secondary rounded" 
-                (click)="list()">
-                <i class="fas glyphicon fa-list-alt"></i>
-            </button>
+                <button 
+                    [routerLink]="['/user', previousId]"
+                    class="btn btn-outline-secondary rounded" 
+                    [disabled]="(previousId === undefined)">
+                    <i class="fas glyphicon fa-caret-left"></i>
+                </button>
 
-            <button 
-                [routerLink]="['/user', previousId]"
-                class="btn btn-outline-secondary rounded" 
-                [disabled]="(previousId === undefined)">
-                <i class="fas glyphicon fa-caret-left"></i>
-            </button>
+                <button 
+                    [routerLink]="['/user', nextId]"
+                    class="btn btn-outline-secondary rounded" 
+                    [disabled]="(nextId === undefined)">
+                    <i class="fas glyphicon fa-caret-right"></i>
+                </button>
 
-            <button 
-                [routerLink]="['/user', nextId]"
-                class="btn btn-outline-secondary rounded" 
-                [disabled]="(nextId === undefined)">
-                <i class="fas glyphicon fa-caret-right"></i>
-            </button>
+            </div>
 
- 		</div>
-
-        <!--
-        
-            Buttons of entity selection.
-            On what are we working ? Staff, Skill, Project
-        
-        -->
-        <div class="btn-group form-inline buttons" role="group" aria-label="Toolbar with button groups">
-            <button 
-                class="btn rounded" 
-                [routerLink]="['/user']"
-                [ngClass]="{'btn-outline-success' : isStaffActive(), 'btn-outline-secondary': !isStaffActive()}" 
-                (click)="switchToStaff()">
-                <i class="fas glyphicon fa-user-graduate"></i> Staff
-            </button>
-            <button 
-                class="btn rounded" 
-                [routerLink]="['/project']"
-                [ngClass]="{'btn-outline-success' : isProjectActive(), 'btn-outline-secondary': !isProjectActive()}"
-                (click)="mode(PROJECT_TAB_FORM)">
-                <i class="fas glyphicon fa-users-cog"></i> Project
-            </button>
-            <button 
-                class="btn rounded" 
-                [routerLink]="['/skill']"
-                [ngClass]="{'btn-outline-success' : isSkillActive(), 'btn-outline-secondary': !isSkillActive()}"
-                (click)="mode(SKILLS_CRUD)">
-                <i class="fas glyphicon fa-graduation-cap"></i> Skill
-            </button>
+            <!--
+            
+                Buttons of entity selection.
+                On what are we working ? Staff, Skill, Project
+            
+            -->
+            <div class="btn-group form-inline buttons" role="group" aria-label="Toolbar with button groups">
+                <button 
+                    class="btn rounded" 
+                    [routerLink]="['/user']"
+                    [ngClass]="{'btn-outline-success' : isStaffActive(), 'btn-outline-secondary': !isStaffActive()}" 
+                    (click)="switchToStaff()">
+                    <i class="fas glyphicon fa-user-graduate"></i> Staff
+                </button>
+                <button 
+                    class="btn rounded" 
+                    [routerLink]="['/project']"
+                    [ngClass]="{'btn-outline-success' : isProjectActive(), 'btn-outline-secondary': !isProjectActive()}"
+                    (click)="mode(PROJECT_TAB_FORM)">
+                    <i class="fas glyphicon fa-users-cog"></i> Project
+                </button>
+                <button 
+                    class="btn rounded" 
+                    [routerLink]="['/skill']"
+                    [ngClass]="{'btn-outline-success' : isSkillActive(), 'btn-outline-secondary': !isSkillActive()}"
+                    (click)="mode(SKILLS_CRUD)">
+                    <i class="fas glyphicon fa-graduation-cap"></i> Skill
+                </button>
+            </div>
         </div>
-
+        
         <!--
 
             Block in charge of the search-criteria
