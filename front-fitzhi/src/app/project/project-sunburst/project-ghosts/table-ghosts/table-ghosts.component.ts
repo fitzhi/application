@@ -7,11 +7,12 @@ import { ProjectGhostsDataSource } from 'src/app/project/project-sunburst/projec
 import { MatPaginator } from '@angular/material/paginator';
 import { Collaborator } from 'src/app/data/collaborator';
 import { StaffService } from 'src/app/service/staff.service';
-import { take, throwIfEmpty } from 'rxjs/operators';
+import { take, throwIfEmpty, switchMap } from 'rxjs/operators';
 import { MessageService } from 'src/app/message/message.service';
 import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { traceOn } from 'src/app/global';
+import { MessageBoxService } from 'src/app/message-box/service/message-box.service';
 
 @Component({
 	selector: 'app-table-ghosts',
@@ -54,6 +55,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 		private staffService: StaffService,
 		private projectService: ProjectService,
 		private staffListService: StaffListService,
+		private messageBoxService: MessageBoxService,
 		private messageService: MessageService) {
 		super();
 	}
@@ -195,6 +197,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 			console.log ('external', ghost.external);
 			console.groupEnd();
 		}
+
 		const collaborator = new Collaborator();
 		collaborator.idStaff = -1;
 		collaborator.firstName = ghost.firstname;
@@ -202,24 +205,36 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 		collaborator.login = ghost.pseudo;
 		collaborator.active = ghost.active;
 		collaborator.external = ghost.external;
-		this.staffService.save(collaborator)
-			.pipe(take(1))
-			.subscribe(staff => {
+
+		const similarStaff = this.staffListService.lookupSimilarStaff(collaborator);
+		if (similarStaff) {
+			this.messageBoxService.exclamation('Information',
+				'<p>The application has detected a very similar collaborator, already registered for your pseudo :</p>' +
+				'<p><b>' + similarStaff.firstName + ' ' + similarStaff.lastName + '</b>'
+					+ ' has already been declared in the staff list.' +
+					'<br/>He/she has been linked with the Github login : <b>' + similarStaff.login + '</b></p>' +
+				'<p><i>You should link this login with the pseudo.</i></p>');
+			return;
+		}
+		this.staffService.save$(collaborator).pipe(
+			take(1),
+			switchMap( (staff: Collaborator) => {
 				ghost.staffRecorded = true;
 				this.dataSource.removePseudo(ghost.pseudo);
-				this.projectService
-					.removeGhost(this.dataSource.project.id, ghost.pseudo)
-					.pipe(take(1))
-					.subscribe(result => {
-						if (result) {
-							this.messageService.success('Staff member ' + staff.firstName + ' ' + staff.lastName + ' saved');
-							if (traceOn()) {
-								console.log ('Onboarding the staff %d into the project %d', staff.idStaff, this.dataSource.project.id);
-							}
-							this.projectService.onBoardStaffInProject(this.dataSource.project.id,  staff.idStaff);
+				return this.projectService.removeGhost$(this.dataSource.project.id, ghost.pseudo);
+			}))
+			.subscribe({
+				next: result => {
+					if (result) {
+						this.messageService.success('Staff member ' + collaborator.firstName + ' ' + collaborator.lastName + ' saved.');
+						if (traceOn()) {
+							console.log ('Onboarding the staff %d into the project %d', collaborator.idStaff, this.dataSource.project.id);
 						}
-					});
-			});	}
+						this.projectService.onBoardStaffInProject(this.dataSource.project.id,  collaborator.idStaff);
+					}
+				}
+		});
+	}
 
 	handleRelatedLogin(ghost: Unknown) {
 

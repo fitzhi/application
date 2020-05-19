@@ -133,4 +133,21 @@ export class StaffListService {
 			});
 		return latest;
 	}
+
+
+	/**
+	 * Lookup for a staff member similar to the given one.
+	 *
+	 * This method is used to create twice the same developer
+	 *
+	 * @param staff a collaborator to retrieve with the actual team declared in the company.
+	 */
+	lookupSimilarStaff(staff: Collaborator): Collaborator {
+		return this.allStaff
+			.filter(collab => (collab.lastName))
+			.find(collab =>
+				(collab.firstName.toLowerCase() === staff.firstName.toLowerCase()) &&
+				(collab.lastName.toLowerCase() === staff.lastName.toLowerCase()));
+
+	}
 }

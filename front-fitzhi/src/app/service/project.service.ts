@@ -499,7 +499,7 @@ export class ProjectService extends InternalService {
 	* @param idProject the given project identifier
 	* @param pseudo the pseudo used by a ghost to proceed a commit
 	*/
-	removeGhost(idProject: number, pseudo: string): Observable<Boolean> {
+	removeGhost$(idProject: number, pseudo: string): Observable<Boolean> {
 		if (traceOn()) {
 			console.groupCollapsed('Removing a ghost');
 			console.log ('idProject', idProject);

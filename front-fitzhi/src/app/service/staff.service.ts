@@ -61,10 +61,12 @@ export class StaffService {
 	}
 
 	/**
-     * POST: update or add a new collaborator to the server
-	 * @param collaborator the given collaborator
+     * Update, _or add_, a new collaborator as a staff member, with a **POST** Verb.
+	 *
+	 * This method is returning an observable emitting the freshly updated _(or created)_ staff member.
+	 * @param collaborator the given collaborator to be saved
      */
-	save(collaborator: Collaborator): Observable<Collaborator> {
+	save$(collaborator: Collaborator): Observable<Collaborator> {
 		if (traceOn()) {
 			console.log('Saving the collaborator with id ' + collaborator.idStaff);
 		}

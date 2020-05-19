@@ -227,7 +227,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		this.collaborator.forceActiveState = this.profileStaff.get('forceActiveState').value;
 		this.collaborator.external = this.profileStaff.get('external').value;
 
-		this.staffService.save(this.collaborator)
+		this.staffService.save$(this.collaborator)
 			.pipe(take(1))
 			.subscribe({
 				next: staff => this.afterSaveDone(staff)
