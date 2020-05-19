@@ -21,13 +21,11 @@ describe('TabsStaffListComponent', () => {
 		InitTest.addImports(testConf.imports);
 		InitTest.addProviders(testConf.providers);
 		TestBed.configureTestingModule(testConf).compileComponents();
-	}));
 
-	beforeEach(() => {
 		fixture = TestBed.createComponent(TabsStaffListComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
-	});
+	}));
 
 	it('Only the help container should be visible when any tab is created', () => {
 		expect(component).toBeTruthy();
