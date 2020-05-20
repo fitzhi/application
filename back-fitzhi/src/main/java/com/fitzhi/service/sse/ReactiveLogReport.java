@@ -76,7 +76,7 @@ public class ReactiveLogReport implements LogReport {
         		.distinctUntilChanged(ActivityLog::hashCode)
         		.takeUntil((ActivityLog actiLog) -> actiLog.isComplete() || actiLog.isCompleteOnError())
         		.doOnComplete(() -> {this.tasks.removeTask(operation, PROJECT, idProject);})
-        		.doOnCancel(() -> {this.tasks.removeTask(operation, PROJECT, idProject);})
+ //       		.doOnCancel(() -> {this.tasks.removeTask(operation, PROJECT, idProject);})
         		.log();
 	}
 
