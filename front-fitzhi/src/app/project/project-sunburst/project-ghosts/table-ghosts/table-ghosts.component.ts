@@ -216,24 +216,21 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 				<p><i>You should link this login with the pseudo.</i></p>`);
 			return;
 		}
-		this.staffService.save$(collaborator).pipe(
-			take(1),
-			switchMap( (staff: Collaborator) => {
-				ghost.staffRecorded = true;
-				this.dataSource.removePseudo(ghost.pseudo);
-				return this.projectService.removeGhost$(this.dataSource.project.id, ghost.pseudo);
-			}))
+
+		this.staffService.save$(collaborator)
+			.pipe(take(1))
 			.subscribe({
-				next: result => {
-					if (result) {
-						this.messageService.success('Staff member ' + collaborator.firstName + ' ' + collaborator.lastName + ' saved.');
-						if (traceOn()) {
-							console.log ('Onboarding the staff %d into the project %d', collaborator.idStaff, this.dataSource.project.id);
-						}
-						this.projectService.onBoardStaffInProject(this.dataSource.project.id,  collaborator.idStaff);
+				next: (staff: Collaborator) => {
+					collaborator.idStaff = staff.idStaff;
+					ghost.staffRecorded = true;
+					this.dataSource.removePseudo(ghost.pseudo);
+					this.messageService.success('Staff member ' + staff.firstName + ' ' + staff.lastName + ' saved.');
+					if (traceOn()) {
+						console.log ('Onboarding the staff %d into the project %d', staff.idStaff, this.dataSource.project.id);
 					}
+					this.projectService.onBoardStaffInProject(this.dataSource.project.id,  staff.idStaff);
 				}
-		});
+			});
 	}
 
 	handleRelatedLogin(ghost: Unknown) {

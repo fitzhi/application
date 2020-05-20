@@ -794,7 +794,7 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	 * Onboard a staff in the project.
+	 * Onboard a developer in the given project.
 	 * @param idProject Project identifier
 	 * @param idStaff Staff identifier
 	 */
@@ -802,13 +802,15 @@ export class ProjectService extends InternalService {
 		this.httpClient
 			.get<Boolean>(this.backendSetupService.url() + '/project/analysis/onboard/' + idProject + '/' + idStaff)
 			.pipe(take(1))
-			.subscribe(doneAndOk => {
-				if (doneAndOk) {
-					if (traceOn()) {
-						console.log ('onBoard staff %d in project %d', idStaff, idProject);
+			.subscribe({
+				next: doneAndOk => {
+					if (doneAndOk) {
+						if (traceOn()) {
+							console.log ('onBoard staff %d in project %d', idStaff, idProject);
+						}
 					}
 				}
-			});
+		});
 	}
 
 	/**

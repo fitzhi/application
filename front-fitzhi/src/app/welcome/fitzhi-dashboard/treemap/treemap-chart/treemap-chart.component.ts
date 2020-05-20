@@ -69,11 +69,13 @@ export class TreemapChartComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	onSelect(event) {
-		console.log(event);
+		if (traceOn()) {
+			console.log(event);
+		}
 	}
 
-	labelFormatting(c) {
-		return `${(c.label)}`;
+	labelFormatting(tile) {
+		return `${(tile.label)}`;
 	}
 
 	ngOnDestroy() {

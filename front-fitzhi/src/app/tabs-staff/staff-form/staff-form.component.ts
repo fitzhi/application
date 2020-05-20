@@ -230,7 +230,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		this.staffService.save$(this.collaborator)
 			.pipe(take(1))
 			.subscribe({
-				next: staff => this.afterSaveDone(staff)
+				next: staff => this.afterSavingStaffDone(staff)
 			});
 	}
 
@@ -238,7 +238,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	 * Operations to be executed after the collaborator has been saved.
 	 * @param staff the staff member
 	 */
-	afterSaveDone(staff: Collaborator) {
+	afterSavingStaffDone(staff: Collaborator) {
 		this.collaborator = staff;
 		this.messengerStaffUpdated.emit(staff);
 
