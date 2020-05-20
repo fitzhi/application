@@ -51,7 +51,7 @@ public class ProjectGhostController {
 		HttpHeaders headers = new HttpHeaders();
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("POST command on /project/ghosts/save for project : %d", param.getIdProject()));
+			log.debug(String.format("POST command on /api/project/ghost/save for project : %d", param.getIdProject()));
 		}
 		
 		try {

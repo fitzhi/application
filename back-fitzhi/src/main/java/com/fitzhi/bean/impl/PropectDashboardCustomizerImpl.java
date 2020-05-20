@@ -182,6 +182,10 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 							MessageFormat.format(MESSAGE_CONTRIBUTOR_INVALID, staff.fullName(), staff.getLogin(), project.getName()));
 					}
 				}
+			} else {
+				if (log.isDebugEnabled()) {
+					log.debug (String.format("Project %s has no repository available.", project.getName()));
+				}
 			}
 		} catch (final IOException ioe) {
 			throw new SkillerException(CODE_IO_EXCEPTION, ioe.getLocalizedMessage(), ioe);

@@ -1,5 +1,9 @@
 package com.fitzhi.controller;
 
+import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
+import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.getStackTrace;
 import static com.fitzhi.Global.BACKEND_RETURN_CODE;
 import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
@@ -163,7 +167,7 @@ public class ProjectAnalysisController {
 
 	
 	@GetMapping("/onboard/{idProject}/{idStaff}")
-	public ResponseEntity<Boolean> onBoardStaff(@PathVariable int idProject, @PathVariable int idStaff) {
+	public ResponseEntity<Boolean> onBoardStaff(@PathVariable int idProject, @PathVariable int idStaff) throws SkillerException {
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
@@ -171,43 +175,18 @@ public class ProjectAnalysisController {
 					idProject, idStaff));
 		}
 		
-		HttpHeaders headers = new HttpHeaders();
-
-		try {
-			
-			Staff staff = staffHandler.getStaff(idStaff);
-			if (staff == null) {
-				headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_STAFF_NOFOUND));
-				headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
-				return new ResponseEntity<>(
-						Boolean.FALSE, headers,
-						HttpStatus.NOT_FOUND);			
-			}
-	
-			Project project = projectHandler.get(idProject);
-			if (project == null) {
-				headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
-				headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, idProject));
-				return new ResponseEntity<>(
-						Boolean.FALSE, headers,
-						HttpStatus.NOT_FOUND);			
-			}
-			
-			this.projectDashboardCustomizer.takeInAccountNewStaff(project, staff);
-			 
-		} catch (SkillerException e) {
-				headers.set(BACKEND_RETURN_CODE, String.valueOf(e.errorCode));
-				headers.set(BACKEND_RETURN_MESSAGE, e.errorMessage);
-				
-				if (e.getCause() != null) {
-					log.error(getStackTrace(e.getCause()));					
-				}
-				log.error(getStackTrace(e));
-				
-				return new ResponseEntity<> (Boolean.FALSE, 
-						new HttpHeaders(), 
-						HttpStatus.BAD_REQUEST);
+		Staff staff = staffHandler.getStaff(idStaff);		
+		if (staff == null) {
+			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
 		}
+
+		Project project = projectHandler.get(idProject);
+		if (project == null) {
+			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+		}
+		
+		this.projectDashboardCustomizer.takeInAccountNewStaff(project, staff);
+			 
 		return new ResponseEntity<>(Boolean.TRUE, new HttpHeaders(), HttpStatus.OK);
 	}
 }
