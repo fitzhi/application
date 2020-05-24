@@ -59,7 +59,7 @@
 						with 16 max character,  without useless space.</label>
 				</div>
 			</div>
-			<div class="row" *ngIf="hasBeenActive()">
+			<div class="row" *ngIf="hasBeenActive() && (lastMission())">
 				<p class="lastActivity">Last activity recorded : {{lastMission().lastCommit | date:'mediumDate'}} on {{lastMission().name}}</p>
 			</div>
 			<div class="mb-3">

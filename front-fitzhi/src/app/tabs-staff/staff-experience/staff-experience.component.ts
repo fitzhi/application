@@ -285,7 +285,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 			idStaff: this.staff.idStaff,
 			idSkill: idSkill,
 			level: level})
-			.subscribe( (ret: Boolean) => {
+			.subscribe( (ret: boolean) => {
 				if (ret) {
 					/**
 					 * If this staff member exists in pre-existing list of collaborators. We actualize the content.
@@ -314,7 +314,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 			idStaff: this.staff.idStaff,
 			idSkill: idSkill,
 			level: levelSkill})
-			.subscribe( (ret: Boolean) => {
+			.subscribe( (ret: boolean) => {
 				if (ret) {
 					/**
 					 * If this staff member exists in pre-existing list of collaborators. We actualize the content.
@@ -371,7 +371,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 		}
 		const idSkill = this.skillService.id(tag);
 		this.staffService.removeExperience(this.staff.idStaff, idSkill).subscribe(
-			(ret: Boolean) => {
+			(ret: boolean) => {
 				if (ret) {
 					this.messageService.info(this.staff.firstName + ' ' +
 						this.staff.lastName + ' has no more the skill ' + tag);

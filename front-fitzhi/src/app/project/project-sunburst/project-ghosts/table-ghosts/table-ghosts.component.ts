@@ -210,9 +210,9 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 		if (similarStaff) {
 			this.messageBoxService.exclamation('Information',
 				`<p>The application has detected a very similar collaborator, already registered for your pseudo :</p>
-				<p><b>${similarStaff.firstName} ${similarStaff.lastName}</b>
+				<p><strong>${similarStaff.firstName} ${similarStaff.lastName}</strong>
 				has already been declared in the staff list.
-				<br/>He/she has been linked with the Github login : <b>${similarStaff.login}</b></p>
+				<br/>He/she has been linked with the Github login : <strong>${similarStaff.login}</strong></p>
 				<p><i>You should link this login with the pseudo.</i></p>`);
 			return;
 		}
@@ -235,9 +235,20 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 
 	handleRelatedLogin(ghost: Unknown) {
 
-		const selectedStaff = this.allStaff.filter(s => (s.login.toLowerCase() === ghost.login));
+		const selectedStaff = this.allStaff.filter(s => (s.login.toLowerCase().indexOf(ghost.login.toLowerCase()) === 0) );
+		if (traceOn()) {
+			if (selectedStaff) {
+				console.groupCollapsed('selected staff correspoding to %s', ghost.login);
+				selectedStaff.forEach(staff => console.log (staff.firstName + ' ' + staff.lastName + ' & login : ' + staff.login));
+				console.groupEnd();
+			} else {
+				console.log ('No staff is corresponding to the ghost login ' + ghost);
+			}
+		}
+
 		if (selectedStaff.length === 1) {
 			ghost.staffRelated = selectedStaff[0];
+			ghost.login = selectedStaff[0].login;
 			ghost.idStaff = ghost.staffRelated.idStaff;
 			this.projectService.updateGhost (
 				this.dataSource.project.id,
@@ -268,6 +279,8 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 				});
 			}
 			ghost.idStaff = -1;
+			ghost.firstname = '';
+			ghost.lastname = '';
 			return false;
 		}
 	}

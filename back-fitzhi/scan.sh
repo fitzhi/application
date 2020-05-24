@@ -1,6 +1,7 @@
 scanner -X \
-  -Dsonar.projectKey=FRONT_SKILLER \
-  -Dsonar.sources=. \
+  -Dsonar.projectKey=BACK_FITZHI \
+  -Dsonar.sources=./src/main/java \
+  -Dsonar.java.binaries=./target/classes \
   -Dsonar.host.url=http://localhost:9000 \
   -Dsonar.login=admin \
   -Dsonar.password=admin 

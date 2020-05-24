@@ -6,21 +6,21 @@
                 <button 
                     class="btn btn-outline-secondary rounded" 
                     (click)="list()">
-                    <i class="fas glyphicon fa-list-alt"></i>
+                    <em class="fas glyphicon fa-list-alt"></em>
                 </button>
 
                 <button 
                     [routerLink]="['/user', previousId]"
                     class="btn btn-outline-secondary rounded" 
                     [disabled]="(previousId === undefined)">
-                    <i class="fas glyphicon fa-caret-left"></i>
+                    <em class="fas glyphicon fa-caret-left"></em>
                 </button>
 
                 <button 
                     [routerLink]="['/user', nextId]"
                     class="btn btn-outline-secondary rounded" 
                     [disabled]="(nextId === undefined)">
-                    <i class="fas glyphicon fa-caret-right"></i>
+                    <em class="fas glyphicon fa-caret-right"></em>
                 </button>
 
             </div>
@@ -37,21 +37,21 @@
                     [routerLink]="['/user']"
                     [ngClass]="{'btn-outline-success' : isStaffActive(), 'btn-outline-secondary': !isStaffActive()}" 
                     (click)="switchToStaff()">
-                    <i class="fas glyphicon fa-user-graduate"></i> Staff
+                    <em class="fas glyphicon fa-user-graduate"></em> Staff
                 </button>
                 <button 
                     class="btn rounded" 
                     [routerLink]="['/project']"
                     [ngClass]="{'btn-outline-success' : isProjectActive(), 'btn-outline-secondary': !isProjectActive()}"
                     (click)="mode(PROJECT_TAB_FORM)">
-                    <i class="fas glyphicon fa-users-cog"></i> Project
+                    <em class="fas glyphicon fa-users-cog"></em> Project
                 </button>
                 <button 
                     class="btn rounded" 
                     [routerLink]="['/skill']"
                     [ngClass]="{'btn-outline-success' : isSkillActive(), 'btn-outline-secondary': !isSkillActive()}"
                     (click)="mode(SKILLS_CRUD)">
-                    <i class="fas glyphicon fa-graduation-cap"></i> Skill
+                    <em class="fas glyphicon fa-graduation-cap"></em> Skill
                 </button>
             </div>
         </div>
@@ -67,18 +67,18 @@
                 [disabled]="nothingActive()"
                 [hidden]="!activeOnly"
                 (click)="switchActiveOnly()">
-                <i class="far glyphicon fa-check-square"></i> Active
+                <em class="far glyphicon fa-check-square"></em> Active
             </button>
             <button 
                 class="btn rounded btn-outline-secondary" 
                 [disabled]="nothingActive()"
                 [hidden]="activeOnly"
                 (click)="switchActiveOnly()">
-                <i class="far glyphicon fa-square"></i> All
+                <em class="far glyphicon fa-square"></em> All
             </button>
             <div class="inner-addon left-addon">
-                <i class="fas glyphicon" 
-                    [ngClass]="{'fa-user-graduate' : isStaffActive(), 'fa-graduation-cap' : isSkillActive(), 'fa-users-cog' : isProjectActive()}"></i>
+                <em class="fas glyphicon" 
+                    [ngClass]="{'fa-user-graduate' : isStaffActive(), 'fa-graduation-cap' : isSkillActive(), 'fa-users-cog' : isProjectActive()}"></em>
                   <input 
                     [(ngModel)]="criteria"
                     [disabled]="nothingActive()"
@@ -91,7 +91,7 @@
                     [disabled]="nothingActive()"
                     class="btn btn-outline btn-outline-secondary rounded search" 
                     (click)="query()" >
-                    <i class="fas fa-search"></i>
+                    <em class="fas fa-search"></em>
                 </button>
             </div>
             <button 
@@ -99,7 +99,7 @@
                 [routerLink]="['/welcome']"
                 (click)="switchToDashboard()"
                 [ngClass]="{'btn-outline-success' : isDashboardActive(), 'btn-outline-secondary': !isDashboardActive()}" >
-                <i class="fas fa-tachometer-alt"></i>
+                <em class="fas fa-tachometer-alt"></em>
             </button>
         </div>
     </nav>

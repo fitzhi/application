@@ -221,12 +221,12 @@ export class StaffService {
 	/**
      * POST: Revoke an experience from a staff member.
      */
-	removeExperience(idStaff: number, idSkill: number): Observable<Boolean> {
+	removeExperience(idStaff: number, idSkill: number): Observable<boolean> {
 		if (traceOn()) {
 			console.log('Revoking the experence ' + idSkill + ' from the collaborator ' + idStaff);
 		}
 		const body = { idStaff: idStaff, idSkill: idSkill };
-		return this.http.post<Boolean>
+		return this.http.post<boolean>
 			(this.backendSetupService.url() + '/staff' + '/experiences/remove', body, httpOptions)
 			.pipe(take(1));
 	}
@@ -234,24 +234,24 @@ export class StaffService {
 	/**
      * POST Method: Add an experience to a staff member.
      */
-	addExperience({ idStaff, idSkill, level }: { idStaff: number; idSkill: number; level: number; }): Observable<Boolean> {
+	addExperience({ idStaff, idSkill, level }: { idStaff: number; idSkill: number; level: number; }): Observable<boolean> {
 		if (traceOn()) {
 			console.log('Adding the skill  ' + idSkill + ' to the staff member whom id is ' + idStaff);
 		}
 		const body = { idStaff: idStaff, idSkill: idSkill, level: level };
-		return this.http.post<Boolean>(this.backendSetupService.url() + '/staff' + '/experiences/add', body, httpOptions)
+		return this.http.post<boolean>(this.backendSetupService.url() + '/staff' + '/experiences/add', body, httpOptions)
 			.pipe(take(1));
 	}
 
 	/**
      * POST Method: Add an experience to a staff member.
      */
-	updateExperienceLevel({ idStaff, idSkill, level }: { idStaff: number; idSkill: number; level: number; }): Observable<Boolean> {
+	updateExperienceLevel({ idStaff, idSkill, level }: { idStaff: number; idSkill: number; level: number; }): Observable<boolean> {
 		if (traceOn()) {
 			console.log('Adding the skill  ' + idSkill + ' to the staff member whom id is ' + idStaff);
 		}
 		const body = { idStaff: idStaff, idSkill: idSkill, level: level };
-		return this.http.post<Boolean>(this.backendSetupService.url() + '/staff' + '/experiences/update', body, httpOptions)
+		return this.http.post<boolean>(this.backendSetupService.url() + '/staff' + '/experiences/update', body, httpOptions)
 			.pipe(take(1));
 	}
 

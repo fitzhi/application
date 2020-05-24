@@ -58,7 +58,7 @@ export class ProjectService extends InternalService {
 	/**
 	 * `BehaviorSubject` signaling that all projects have been loaded.
 	 */
-	allProjectsIsLoaded$ = new BehaviorSubject<Boolean>(false);
+	allProjectsIsLoaded$ = new BehaviorSubject<boolean>(false);
 
 	/**
 	 * Array containing all projects retrieved from Fitzhì backend.
@@ -211,7 +211,7 @@ export class ProjectService extends InternalService {
 	 * @param idProject the project identifier
 	 * @param sonarProject the sonar project
 	 */
-	addSonarProject(idProject: number, sonarProject: SonarProject): Observable<Boolean> {
+	addSonarProject(idProject: number, sonarProject: SonarProject): Observable<boolean> {
 		return this.handleActionSonarProject$(idProject, sonarProject, 'saveEntry');
 	}
 
@@ -230,7 +230,7 @@ export class ProjectService extends InternalService {
 	 * @param sonarProject the sonar project
 	 * @param action the action to be executed on the Sonar projects collection
 	 */
-	handleActionSonarProject$(idProject: number, sonarProject: SonarProject, action: string): Observable<Boolean> {
+	handleActionSonarProject$(idProject: number, sonarProject: SonarProject, action: string): Observable<boolean> {
 
 		if (traceOn()) {
 			console.log ('Action ' + action + ' for a Sonar project ' + sonarProject.name + ' for project ID ' + idProject);
@@ -242,7 +242,7 @@ export class ProjectService extends InternalService {
 		};
 
 		return this.httpClient
-			.post<Boolean>(this.backendSetupService.url() + '/project/sonar/' + action, body, httpOptions)
+			.post<boolean>(this.backendSetupService.url() + '/project/sonar/' + action, body, httpOptions)
 			.pipe(take(1));
 	}
 
@@ -250,7 +250,7 @@ export class ProjectService extends InternalService {
 	 * Add a topic to the audit in the current project.
 	 * @param idTopic the topic identifier
 	 */
-	addAuditTopic(idTopic: number): Observable<Boolean> {
+	addAuditTopic(idTopic: number): Observable<boolean> {
 		return this.handleActionAudit$(this.project.id, new AuditTopic(idTopic, 0, 5), 'saveTopic');
 	}
 
@@ -258,7 +258,7 @@ export class ProjectService extends InternalService {
 	 * Remove a topic from the audit in the current project.
 	 * @param idTopic the topic identifier
 	 */
-	removeAuditTopic(idTopic: number): Observable<Boolean> {
+	removeAuditTopic(idTopic: number): Observable<boolean> {
 		return this.handleActionAudit$(this.project.id, new AuditTopic(idTopic, 0, 5), 'removeTopic');
 	}
 
@@ -268,7 +268,7 @@ export class ProjectService extends InternalService {
 	 * @param auditTopic the given auditTopic to be taken in account
 	 * @param action the action to be executed on the audit collection
 	 */
-	private handleActionAudit$(idProject: number, auditTopic: AuditTopic, action: string): Observable<Boolean> {
+	private handleActionAudit$(idProject: number, auditTopic: AuditTopic, action: string): Observable<boolean> {
 
 		if (traceOn()) {
 			console.log ('Action ' + action + ' on topic id ' + auditTopic.idTopic + ' for project ID ' + idProject);
@@ -284,7 +284,7 @@ export class ProjectService extends InternalService {
 		};
 
 		return this.httpClient
-			.post<Boolean>(this.backendSetupService.url() + '/project/audit/' + action, body, httpOptions)
+			.post<boolean>(this.backendSetupService.url() + '/project/audit/' + action, body, httpOptions)
 			.pipe(take(1));
 	}
 
@@ -465,7 +465,7 @@ export class ProjectService extends InternalService {
 		const url = this.backendSetupService.url()
 			+ '/project/analysis/lib-dir/save/' + idProject;
 		return this.httpClient
-			.post<Boolean>(url, libraries, httpOptions)
+			.post<boolean>(url, libraries, httpOptions)
 			.pipe(take(1))
 			.subscribe(doneAndOk => {
 				if (doneAndOk) {
@@ -481,7 +481,7 @@ export class ProjectService extends InternalService {
 	* @param idRelatedStaff a staff identifier if the ghost has to be related to him, or -1 if this pseudo is related to no one.
 	* @param technical: TRUE if the ghost is in fact a technical user used for administration operations
 	*/
-	updateGhost(idProject: number, pseudo: string, idRelatedStaff: number, technical: boolean): Observable<Boolean> {
+	updateGhost(idProject: number, pseudo: string, idRelatedStaff: number, technical: boolean): Observable<boolean> {
 		if (traceOn()) {
 			console.groupCollapsed('Updating a ghost');
 			console.log ('idProject', idProject);
@@ -491,7 +491,7 @@ export class ProjectService extends InternalService {
 			console.groupEnd();
 		}
 		const body = { idProject: idProject, pseudo: pseudo, idStaff: idRelatedStaff, technical: technical };
-		return this.httpClient.post<Boolean>(this.backendSetupService.url() + '/project/ghost/save', body, httpOptions);
+		return this.httpClient.post<boolean>(this.backendSetupService.url() + '/project/ghost/save', body, httpOptions);
 	}
 
 	/**
@@ -499,7 +499,7 @@ export class ProjectService extends InternalService {
 	* @param idProject the given project identifier
 	* @param pseudo the pseudo used by a ghost to proceed a commit
 	*/
-	removeGhost$(idProject: number, pseudo: string): Observable<Boolean> {
+	removeGhost$(idProject: number, pseudo: string): Observable<boolean> {
 		if (traceOn()) {
 			console.groupCollapsed('Removing a ghost');
 			console.log ('idProject', idProject);
@@ -507,7 +507,7 @@ export class ProjectService extends InternalService {
 			console.groupEnd();
 		}
 		const body = { idProject: idProject, pseudo: pseudo };
-		return this.httpClient.post<Boolean>(this.backendSetupService.url() + '/project/ghost/remove', body, httpOptions);
+		return this.httpClient.post<boolean>(this.backendSetupService.url() + '/project/ghost/remove', body, httpOptions);
 	}
 
 	/**
@@ -548,7 +548,7 @@ export class ProjectService extends InternalService {
 	* @param key the Sonar key from where the stats are coming from
 	* @param filesStats the language file statistics retrieved from the Sonar instance.
 	*/
-	saveFilesStats(idProject: number, key: string, filesStats: FilesStats[]): Observable<Boolean> {
+	saveFilesStats(idProject: number, key: string, filesStats: FilesStats[]): Observable<boolean> {
 		if (traceOn()) {
 			console.groupCollapsed('Save the files stats');
 			console.log ('idProject', idProject);
@@ -557,7 +557,7 @@ export class ProjectService extends InternalService {
 			console.groupEnd();
 		}
 		const body = { idProject: idProject, sonarProjectKey: key, filesStats: filesStats };
-		return this.httpClient.post<Boolean>(this.backendSetupService.url() + '/project/sonar/files-stats', body, httpOptions);
+		return this.httpClient.post<boolean>(this.backendSetupService.url() + '/project/sonar/files-stats', body, httpOptions);
 	}
 
 	/**
@@ -573,7 +573,7 @@ export class ProjectService extends InternalService {
 			console.groupEnd();
 		}
 		const body = { idProject: idProject, sonarKey: key, metricValues: metricValues };
-		return this.httpClient.post<Boolean>(this.backendSetupService.url() + '/project/sonar/saveMetricValues', body, httpOptions);
+		return this.httpClient.post<boolean>(this.backendSetupService.url() + '/project/sonar/saveMetricValues', body, httpOptions);
 	}
 
 	/**
@@ -582,7 +582,7 @@ export class ProjectService extends InternalService {
 	 * @param sonarKey the key of the Sonar project.
 	 * @returns the Sonar project for the given key
 	 */
-	getSonarProject(project: Project, sonarKey: String): SonarProject {
+	getSonarProject(project: Project, sonarKey: string): SonarProject {
 		return project.sonarProjects.find(sonarP => (sonarKey === sonarP.key));
 	}
 
@@ -613,7 +613,7 @@ export class ProjectService extends InternalService {
 	 * @param sonarKey the key of the Sonar project.
 	 * @returns the Sonar metric record for the given metric key
 	 */
-	getProjectSonarMetricValue(project: Project, sonarKey: String, metricKey): ProjectSonarMetricValue {
+	getProjectSonarMetricValue(project: Project, sonarKey: string, metricKey: string): ProjectSonarMetricValue {
 		const sonarProject = this.getSonarProject(project, sonarKey);
 		if (sonarProject) {
 			return sonarProject.projectSonarMetricValues.find(
@@ -728,7 +728,7 @@ export class ProjectService extends InternalService {
 	* @param idTopic the topic identifier
 	* @param evaluation the evaluation given for that topic
 	*/
-	saveAuditTopicEvaluation$(idProject: number, idTopic: number, evaluation: number): Observable<Boolean> {
+	saveAuditTopicEvaluation$(idProject: number, idTopic: number, evaluation: number): Observable<boolean> {
 		if (traceOn()) {
 			console.groupCollapsed(
 				'Saving the evaluation for the topic identified by %d, within the project identified by %d',
@@ -745,7 +745,7 @@ export class ProjectService extends InternalService {
 	* @param idTopic the topic identifier
 	* @param report the audit report given by the expert
 	*/
-	saveAuditTopicReport$(idTopic: number, report: string): Observable<Boolean> {
+	saveAuditTopicReport$(idTopic: number, report: string): Observable<boolean> {
 		if (traceOn()) {
 			console.groupCollapsed(
 				'Saving the audit report for the topic identified by %d, within the project identified by %d',
@@ -762,7 +762,7 @@ export class ProjectService extends InternalService {
 	* @param idProject the given project identifier
 	* @param auditTopics the topic identifier
 	*/
-	saveAuditTopicWeights$(idProject: number, auditTopics: AuditTopic[]): Observable<Boolean> {
+	saveAuditTopicWeights$(idProject: number, auditTopics: AuditTopic[]): Observable<boolean> {
 		if (traceOn()) {
 			console.groupCollapsed('Saving the weights for the topic identified by %d', idProject);
 			auditTopics.forEach(element => console.log (element.idTopic, element.weight));
@@ -770,7 +770,7 @@ export class ProjectService extends InternalService {
 		}
 		const body = { idProject: idProject, dataEnvelope: auditTopics};
 		return this.httpClient
-			.post<Boolean>(this.backendSetupService.url() + '/project/audit/saveWeights', body, httpOptions)
+			.post<boolean>(this.backendSetupService.url() + '/project/audit/saveWeights', body, httpOptions)
 			.pipe(take(1));
 	}
 
@@ -800,7 +800,7 @@ export class ProjectService extends InternalService {
 	 */
 	public onBoardStaffInProject(idProject: number, idStaff: number): void {
 		this.httpClient
-			.get<Boolean>(this.backendSetupService.url() + '/project/analysis/onboard/' + idProject + '/' + idStaff)
+			.get<boolean>(this.backendSetupService.url() + '/project/analysis/onboard/' + idProject + '/' + idStaff)
 			.pipe(take(1))
 			.subscribe({
 				next: doneAndOk => {
@@ -851,7 +851,7 @@ export class ProjectService extends InternalService {
 
 		const body = { idProject: idProject, idTopic: idTopic, attachmentFile: {idFile: attachmentFile.idFile}};
 		return this.httpClient
-			.post<Boolean>(this.backendSetupService.url() + '/project/audit/removeAttachmentFile', body, httpOptions)
+			.post<boolean>(this.backendSetupService.url() + '/project/audit/removeAttachmentFile', body, httpOptions)
 			.pipe(take(1));
 
 	}
@@ -969,14 +969,14 @@ export class ProjectService extends InternalService {
 	 * This function is proceeding 2 tasks :
 	 *
 	 * - It saves the Sonar URL associated with the project with the given identifier
-	 * - It returns an `observable<Boolean>` representing the completion, or not, of the remote operation
+	 * - It returns an `observable<boolean>` representing the completion, or not, of the remote operation
 	 * @param idProject the project identifier
 	 * @param urlSonarServer the URL of the Sonar server
 	 */
-	public saveSonarUrl$(idProject: number, urlSonarServer: string): Observable<Boolean> {
+	public saveSonarUrl$(idProject: number, urlSonarServer: string): Observable<boolean> {
 		const body = { idProject: idProject, urlSonarServer: urlSonarServer};
 		return this.httpClient
-			.post<Boolean>(this.backendSetupService.url() + '/project/sonar/saveUrl', body, httpOptions)
+			.post<boolean>(this.backendSetupService.url() + '/project/sonar/saveUrl', body, httpOptions)
 			.pipe(take(1));
 	}
 

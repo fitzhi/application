@@ -163,7 +163,7 @@ export class SkillService extends InternalService {
 	 * @param title the given title of the skill (as e.g. 'Java')
 	 * @return either undefined if found none, or the first one AND THE ONLY ONE with the same title.
 	 */
-	search(title: String) {
+	search(title: string) {
 		if (this.allSkills.length === 0) {
 			console.error('the array containing all skills is empty');
 			return undefined;

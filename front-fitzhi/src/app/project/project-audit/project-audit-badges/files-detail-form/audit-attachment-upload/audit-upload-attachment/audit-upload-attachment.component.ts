@@ -109,7 +109,7 @@ export class AuditUploadAttachmentComponent extends BaseComponent implements OnI
 					// pass the percentage into the progress-stream
 					this.progression.next(percentDone);
 				} else if (event instanceof HttpResponse) {
-					const doneAndOk = <Boolean>event.body;
+					const doneAndOk = <boolean>event.body;
 					if (doneAndOk) {
 						if (traceOn()) {
 							console.log ('Upload done for file ' + this.attachmentFile.name + ' of type ' + this.attachmentFile.type);

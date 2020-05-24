@@ -51,7 +51,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	/**
 	 * Inform the parent component, e.g. the staff component that we must switch the context to an empty collaborator.
 	 */
-	@Output() messengerInit = new EventEmitter<Boolean>();
+	@Output() messengerInit = new EventEmitter<boolean>();
 
 
 	private collaborator: Collaborator;
@@ -387,7 +387,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	 */
 	lastMission(): Mission {
 		const missions = this.collaborator.missions
-			.filter(mission => mission.lastCommit)
+			.filter(mission => (mission.lastCommit))
 			.sort( (mission1, mission2) => {
 				return (new Date(mission2.lastCommit).getTime() - new Date(mission1.lastCommit).getTime());
 			});

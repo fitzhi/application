@@ -3,13 +3,13 @@
     <button *ngIf="modeUpload"
         class="btn btn-outline-secondary  managerFile"
         (click)="uploadFile(id)">
-            <i class="fas glyphicon fa-file-upload" style="font-size: 26px"></i>
+            <em class="fas glyphicon fa-file-upload" style="font-size: 26px"></em>
     </button>
 
     <button *ngIf="!modeUpload"
         class="btn btn-outline-secondary managerFile"
         (click)="deleteFile()">
-            <i class="fas fa-trash" style="font-size: 26px"></i>
+            <em class="fas fa-trash" style="font-size: 26px"></em>
     </button>
 
     <button *ngIf="!modeUpload"
@@ -17,7 +17,7 @@
         mdbTooltip="Download the attached document related to this audit" placement="bottom"
         (click)="downloadFile()"
         [disabled]="isDisable(id)">
-        <i [ngClass]="classFile()" style="font-size: 26px"></i>
+        <em [ngClass]="classFile()" style="font-size: 26px"></em>
     </button>
 
     <input type="text" id="comment-{{id}}" class="fileLabel" 

@@ -119,15 +119,14 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	}
 
 	loadFilesNumber() {
-		this.subscriptions.add(
-			this.projectService.project.sonarProjects.forEach((sonar: SonarProject) => {
-				this.languageFilesNumber.set(sonar.key, sonar.projectFilesStats);
-				if (traceOn()) {
-					console.groupCollapsed('Files statistics for the Sonar instance %s.', sonar.key);
-					sonar.projectFilesStats.forEach(fs => console.log (fs.language, fs.numberOfFiles));
-					console.groupEnd();
-				}
-			}));
+		this.projectService.project.sonarProjects.forEach((sonar: SonarProject) => {
+			this.languageFilesNumber.set(sonar.key, sonar.projectFilesStats);
+			if (traceOn()) {
+				console.groupCollapsed('Files statistics for the Sonar instance %s.', sonar.key);
+				sonar.projectFilesStats.forEach(fs => console.log (fs.language, fs.numberOfFiles));
+				console.groupEnd();
+			}
+		});
 		this.subscriptions.add(
 			this.sonarService.sonarIsAccessible$(this.projectService.project).subscribe( connected => {
 				if (connected) {

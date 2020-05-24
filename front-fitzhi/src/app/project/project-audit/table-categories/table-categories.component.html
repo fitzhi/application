@@ -1,7 +1,7 @@
 <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8 tableCategories">
 
     <ng-container matColumnDef="select">
-        <th id="select" mat-header-cell *matHeaderCellDef><i class="far glyphicon fa-check-square"></i></th>
+        <th id="select" mat-header-cell *matHeaderCellDef><em class="far glyphicon fa-check-square"></em></th>
         <td mat-cell class="td-select {{class_select_deselect(row.select)}}"
             *matCellDef="let row; let i = index;">
             <mat-checkbox id="select-{{i}}" 

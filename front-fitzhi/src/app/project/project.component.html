@@ -1,7 +1,7 @@
 <mat-tab-group [selectedIndex]="tabIndex" (selectedIndexChange)="selectedIndexChange($event)">
 	<mat-tab>
 		<ng-template mat-tab-label>
-			<i class="fas glyphicon fa-users-cog logoTabLabel"></i>&nbsp;&nbsp;Project
+			<em class="fas glyphicon fa-users-cog logoTabLabel"></em>&nbsp;&nbsp;Project
 		</ng-template>
 		<ng-template matTabContent>
 			<app-project-form 
@@ -12,13 +12,13 @@
 	</mat-tab>
 	<mat-tab [disabled]="!canConnectSourceControl()">
 		<ng-template mat-tab-label>
-			<i class="fas glyphicon fa-user-graduate logoTabLabel"></i>&nbsp;&nbsp;Staff
+			<em class="fas glyphicon fa-user-graduate logoTabLabel"></em>&nbsp;&nbsp;Staff
 		</ng-template>
 		<app-project-staff></app-project-staff> 
 	</mat-tab>
 	<mat-tab [disabled]="!canConnectSourceControl()">
 		<ng-template mat-tab-label>
-			<i class="fab fa-github-alt logoTabLabel"></i>&nbsp;&nbsp;Git
+			<em class="fab fa-github-alt logoTabLabel"></em>&nbsp;&nbsp;Git
 		</ng-template>
 		<ng-template matTabContent>
 			<app-project-sunburst (tabActivationEmitter)="tabActivation($event)"
@@ -40,7 +40,7 @@
 	</mat-tab>
 	<mat-tab label="Audit">
 		<ng-template mat-tab-label>
-			<i class="fas fa-brain logoTabLabel"></i>&nbsp;&nbsp;Audit
+			<em class="fas fa-brain logoTabLabel"></em>&nbsp;&nbsp;Audit
 		</ng-template>
 		<ng-template matTabContent>
 			<app-project-audit

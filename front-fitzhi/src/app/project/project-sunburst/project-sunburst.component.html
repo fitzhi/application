@@ -7,7 +7,7 @@
 			[ngClass]="{'btn-outline-success' : buttonActivated(SUNBURST), 'btn-outline-secondary': !buttonActivated(SUNBURST)}"
 			[disabled]="buttonActivated(SUNBURST)" (mouseenter)="mouseEnter(SUNBURST)" (mouseleave)="mouseLeave()"
 			(click)="show(SUNBURST)">
-			<i class="fas fa-chart-pie font-awesome-settings"></i>
+			<em class="fas fa-chart-pie font-awesome-settings"></em>
 		</button>
 
 		<button id="legend" data-toggle="tooltip" data-placement="right"
@@ -15,7 +15,7 @@
 			[ngClass]="{'btn-outline-success' : buttonActivated(LEGEND_SUNBURST), 'btn-outline-secondary': !buttonActivated(LEGEND_SUNBURST)}"
 			[disabled]="buttonActivated(LEGEND_SUNBURST)" (mouseenter)="mouseEnter(LEGEND_SUNBURST)"
 			(mouseleave)="mouseLeave()" (click)="show(LEGEND_SUNBURST)">
-			<i class="fas fa-question-circle font-awesome-settings"></i>
+			<em class="fas fa-question-circle font-awesome-settings"></em>
 		</button>
 
 		<button id="settings" data-toggle="tooltip" data-placement="right"
@@ -23,7 +23,7 @@
 			[ngClass]="{'btn-outline-success' : buttonActivated(SETTINGS), 'btn-outline-secondary': !buttonActivated(SETTINGS)}"
 			[disabled]="buttonActivated(SETTINGS)" (mouseenter)="mouseEnter(SETTINGS)" (mouseleave)="mouseLeave()"
 			(click)="show(SETTINGS)">
-			<i class="fas fa-sliders-h font-awesome-settings"></i>
+			<em class="fas fa-sliders-h font-awesome-settings"></em>
 		</button>
 
 		<button id="unknown" data-toggle="tooltip" data-placement="right"
@@ -31,21 +31,21 @@
 			[ngClass]="{'btn-outline-success' : buttonActivated(UNKNOWN), 'btn-outline-secondary': !buttonActivated(UNKNOWN)}"
 			[disabled]="buttonActivated(UNKNOWN)" (mouseenter)="mouseEnter(UNKNOWN)" (mouseleave)="mouseLeave()"
 			(click)="show(UNKNOWN)">
-			<i class="fas fa-ghost font-awesome-settings"></i>
+			<em class="fas fa-ghost font-awesome-settings"></em>
 		</button>
 
 		<button id="dependencies" class="btn btn-outline-secondary rounded"
 			[ngClass]="{'btn-outline-success' : buttonActivated(DEPENDENCIES), 'btn-outline-secondary': !buttonActivated(DEPENDENCIES)}"
 			[disabled]="buttonActivated(DEPENDENCIES)" (mouseenter)="mouseEnter(DEPENDENCIES)"
 			(mouseleave)="mouseLeave()" (click)="show(DEPENDENCIES)">
-			<i class="fab fa-elementor font-awesome-settings"></i>
+			<em class="fab fa-elementor font-awesome-settings"></em>
 		</button>
 
 		<button id="reset" class="btn btn-outline-secondary rounded"
 			[ngClass]="{'btn-outline-success' : buttonActivated(RESET), 'btn-outline-secondary': !buttonActivated(RESET)}"
 			[disabled]="buttonActivated(RESET)" (mouseenter)="mouseEnter(RESET)" (mouseleave)="mouseLeave()"
 			(click)="show(RESET)">
-			<i class="fas fa-trash-alt font-awesome-settings"></i>
+			<em class="fas fa-trash-alt font-awesome-settings"></em>
 		</button>
 
 	</mat-sidenav>
@@ -140,7 +140,7 @@
 							Filter the chart from a specific date.
 						</li>
 					</ul>
-					<i>The chart will be regenerated.</i>
+					<em>The chart will be regenerated.</em>
 				</div>
 			</div>
 		</angular-popper>
@@ -153,7 +153,7 @@
 						This panel allows you to edit the identified, or declared, dependencies in your project
 					</p>
 					<p class="help">
-						Dependencies are source files from third parties whose maintenance is not the responsibility of the project team <i>(libraries such as jquery or bootstrap for example).</i><br/>
+						Dependencies are source files from third parties whose maintenance is not the responsibility of the project team <em>(libraries such as jquery or bootstrap for example).</em><br/>
 						These libraries should be excluded from the analysis.<br/>
 						They can be 
 					</p>

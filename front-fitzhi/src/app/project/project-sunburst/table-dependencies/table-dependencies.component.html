@@ -10,20 +10,20 @@
 	<ng-container matColumnDef="type">
       <th id="typeDependencyHeader" mat-header-cell *matHeaderCellDef> Detected </th>
       <td class="typeDependency" *matCellDef="let dependency">
-          <i *ngIf="dependency.type===1" class="far fa-check-square"></i>
-          <i *ngIf="dependency.type===2" class="far fa-square"></i>
+          <em *ngIf="dependency.type===1" class="far fa-check-square"></em>
+          <em *ngIf="dependency.type===2" class="far fa-square"></em>
       </td>
     </ng-container>
 
   <ng-container matColumnDef="actionsColumn">
     <mat-header-cell *matHeaderCellDef>
-      <button class="actionAdd actionButton btn btn-outline-secondary rounded" (click)="dataSource.createNew()"><i class="fa fa-plus mat-icon"></i></button>
+      <button class="actionAdd actionButton btn btn-outline-secondary rounded" (click)="dataSource.createNew()"><em class="fa fa-plus mat-icon"></em></button>
     </mat-header-cell>
     <mat-cell *matCellDef="let dependency">
 	  <button 
 		  class="actionRemove actionButton btn btn-outline-secondary rounded" 
 		  focusable="false" (click)="removeDependency(dependency)">
-            <i class="fa fa-times mat-icon"></i>
+            <em class="fa fa-times mat-icon"></em>
           </button>
     </mat-cell>
   </ng-container>
