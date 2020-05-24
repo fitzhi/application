@@ -463,7 +463,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			}
 		}
 		
-		velocity.finalize();
+		velocity.complete();
+		
 		return analysis;
 	}
 

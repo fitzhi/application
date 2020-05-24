@@ -188,7 +188,7 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 			.mapToInt(i -> i)
 			.sum();
 		
-		final int auditEvaluation = (int) Math.floor(sum/100);
+		final int auditEvaluation = (int) Math.floor( (double) sum/100);
 				
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("System has computed the global audit evaluation %d for the project %s", auditEvaluation, project.getName()));
@@ -214,7 +214,7 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 			if (i == numberOfTopics - 1) {
 				topics[i].setWeight(rest);
 			} else {
-				topics[i].setWeight((int) (Math.floor(100/numberOfTopics)));
+				topics[i].setWeight((int) (Math.floor(100/ (double) numberOfTopics)));
 				rest -= topics[i].getWeight();
 			}
 		}

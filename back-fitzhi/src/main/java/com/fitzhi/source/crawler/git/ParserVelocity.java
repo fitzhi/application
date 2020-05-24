@@ -65,7 +65,7 @@ public @Data class ParserVelocity {
 	/**
 	 * Finalize the measure taken for this evaluation session.
 	 */
-	public void finalize() {
+	public void complete() {
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  idProject, 
 				String.format("Changes file is complete : %d changes  record.", totalAdd));		
 		totalAdd = 0;

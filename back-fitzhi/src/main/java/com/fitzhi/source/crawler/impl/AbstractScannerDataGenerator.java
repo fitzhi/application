@@ -88,7 +88,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 		
 		DataChart root = new DataChart("root");
 		for (CommitHistory commit : commitRepo.getRepository().values()) {
-			if (+ind == STEP) {
+			if (++ind == STEP) {
 				tot_ind += ind;
 				ind = 0;
 				this.tasks().logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), MessageFormat.format("{0} commits agregated", tot_ind));
