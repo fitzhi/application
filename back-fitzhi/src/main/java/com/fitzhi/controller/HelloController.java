@@ -4,6 +4,7 @@ import java.time.LocalDate;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,7 +38,6 @@ public class HelloController {
 		System.out.println("getMission()");
 		Mission m = new Mission(1, 2, "TEST");
 		m.setFirstCommit(LocalDate.of(2019, 10, 9));
-		System.out.println("m " + m);
 		return new ResponseEntity<Mission>(m, HttpStatus.OK);
 	}
 

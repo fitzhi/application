@@ -78,7 +78,7 @@ public class Application {
           	
             LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Source code crawling settings : ");
             LoggerFactory.getLogger(Application.class.getCanonicalName()).info("--------------------------------");
-            LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Most of the settings below are configured inside the file 'applications.properties', which is just aside of tixhì.jar.");
+            LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Most of the settings below are configured inside the file 'applications.properties', which is just aside of Fitzhì.jar.");
             LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\tFiles pattern on-boarded in the evaluation : ");
             LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\t" + patternsInclusion);
             LoggerFactory.getLogger(Application.class.getCanonicalName()).info("\t" + "Inactivity delay : " + this.inactivityDelay);
