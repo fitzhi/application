@@ -49,8 +49,10 @@ import com.fitzhi.exception.SkillerException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * <p>
+ * This class is the implementation of the ProjectHandler and is in charge of handling the projects in Fitzhì&copy;.
+ * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 @Slf4j
 @Component
@@ -86,8 +88,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	SkillHandler skillHandler;
 	
 	/**
-	 * @return the Project collection.
-	 * @throws SkillerException 
+	 * @return the <strong>Project</strong> collection.
+	 * @throws SkillerException exception thrown most probably if an {@link IOException} occurs during the de-serialization process.
 	 */
 	@Override
 	public Map<Integer, Project> getProjects() throws SkillerException {
@@ -234,6 +236,15 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 	
 	
+	@Override
+	public void removeProject(int idProject) throws SkillerException {
+		Map<Integer, Project> projects = getProjects();
+		synchronized (lockDataUpdated) {
+			projects.remove(idProject);
+			this.dataUpdated = true;
+		}
+	}
+
 	@Override
 	public List<Library> saveLibraries(int idProject, List<Library> libraries) throws SkillerException {
 		Project prj = this.get(idProject);

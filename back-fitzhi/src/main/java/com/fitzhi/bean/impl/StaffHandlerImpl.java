@@ -780,5 +780,10 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			}
 		}
 	}
+
+	@Override
+	public boolean isProjectReferenced(int idProject) {
+		return false;
+	}
 	
 }

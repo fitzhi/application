@@ -264,6 +264,15 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	  */
 	 void forceActiveStatus(Staff staff);
 	 
+	 /**
+	  * <p>
+	  * This method returns <strong>{@code false}</strong> if there is at least one mission with a reference to this project, otherwise <strong>{@code true}</strong>.
+	  * </p>
+	  * @param idProject the project identifier
+	  * @return <strong>{@code true}</strong> if it's a brand new project for all staff crew.
+	  * @see Project#isEmpty()
+	  */
+	 boolean isProjectReferenced(int idProject);
 	 
 }
 

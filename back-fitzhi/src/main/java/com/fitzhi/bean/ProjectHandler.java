@@ -87,6 +87,13 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	void saveProject(Project project) throws SkillerException;
 
 	/**
+	 * Remove the given project from the collection.
+	 * @param project the project identifier
+	 * @throws SkillerException exception thrown if any problem occurs, most probably an {@link IOException}. 
+	 */
+	void removeProject(int idProject) throws SkillerException;
+	
+	/**
 	 * Save the list of library detected or declared inside the project.
 	 * @param idProject the identifier of the project
 	 * @param libraries the list of library

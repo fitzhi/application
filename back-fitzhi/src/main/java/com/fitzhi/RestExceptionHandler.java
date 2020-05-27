@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.exception.SkillerException;
 
 /**
@@ -30,4 +31,9 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 				HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
+	@ExceptionHandler(NotFoundException.class)
+	protected ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
+		return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, ex.errorCode,  ex.errorMessage, ex),
+				HttpStatus.NOT_FOUND);
+	}
 }

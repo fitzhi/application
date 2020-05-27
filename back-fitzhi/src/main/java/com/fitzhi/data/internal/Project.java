@@ -16,6 +16,7 @@ import javax.annotation.Generated;
 import com.fitzhi.Global;
 import com.fitzhi.SkillerRuntimeException;
 import com.fitzhi.bean.ShuffleService;
+import com.fitzhi.bean.StaffHandler;
 
 import lombok.Data;
 
@@ -257,5 +258,47 @@ public @Data class Project implements Serializable {
 			this.sonarProjects = new ArrayList<SonarProject>();
 		}
 		return this.sonarProjects;
+	}
+	
+	/**
+	 * <strong>A project is empty if</strong>
+	 * <ul>
+	 * <li>its skills set is empty</li>
+	 * <li>its Sonar projects set is empty</li>
+	 * <li>its audit evaluations set is empty</li>
+	 * <li>its ghosts list is empty</li>
+	 * <li>its dependencies (libraries) list is empty</li>
+	 * <li>the repository location is empty</li>
+	 * </ul>
+	 * <p>
+	 * <font color="red">
+	 * <strong>WARNING</strong> : To be absolutely and completely empty, the reference of this project {@code idProject} 
+	 * has not to be involved in a mission for any staff member.
+	 * </font>
+	 * </p>
+	 * @return {@code true} if the project is empty, otherwise {@code false}
+	 * @see StaffHandler#isProjectReferenced(int)
+	 */
+	public boolean isEmpty() {
+		if (!skills.isEmpty()) {
+			return false;
+		}
+		if (!sonarProjects.isEmpty()) {
+			return false;
+		}
+		if (!audit.isEmpty()) {
+			return false;
+		}
+		if (!ghosts.isEmpty()) {
+			return false;
+		}
+		if (!libraries.isEmpty()) {
+			return false;
+		}
+		if ((locationRepository != null) && (locationRepository.length() > 0)) {
+			return false;
+		}
+		return true;
+		
 	}
 }

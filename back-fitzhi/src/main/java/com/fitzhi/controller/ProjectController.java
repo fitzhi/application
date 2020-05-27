@@ -1,5 +1,7 @@
 package com.fitzhi.controller;
 
+import static com.fitzhi.Error.CODE_PROJECT_IS_NOT_EMPTY;
+import static com.fitzhi.Error.MESSAGE_PROJECT_IS_NOT_EMPTY;
 import static com.fitzhi.Error.CODE_MULTIPLE_TASK;
 import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.CODE_UNDEFINED;
@@ -27,13 +29,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -58,9 +60,9 @@ import com.fitzhi.data.internal.RiskDashboard;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.Contributor;
+import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.RepoScanner;
-import com.microsoft.schemas.office.x2006.encryption.CTKeyEncryptor.Uri;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -138,6 +140,40 @@ public class ProjectController {
 					headers(), 
 					HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	/**
+	 * Delete the project corresponding to the identifier id
+	 * @param idProject the searched project identifier
+	 * @return the HTTP Response with the retrieved project, or an empty one if the query failed.
+	 */
+	@DeleteMapping(value = "/{idProject}")
+	public ResponseEntity<Object> removeProject(@PathVariable("idProject") int idProject) throws NotFoundException, SkillerException {
+		Project project = projectHandler.get(idProject);
+		if (project == null) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+		}
+		
+		if (!project.isEmpty()) {
+			throw new SkillerException(CODE_PROJECT_IS_NOT_EMPTY, MessageFormat.format(MESSAGE_PROJECT_IS_NOT_EMPTY, project.getName()));
+		}
+		
+		if (staffHandler.isProjectReferenced(idProject)) {
+			throw new SkillerException(CODE_PROJECT_IS_NOT_EMPTY, MessageFormat.format(MESSAGE_PROJECT_IS_NOT_EMPTY, project.getName()));
+		}
+		
+		projectHandler.removeProject(project.getId());
+
+		return new ResponseEntity<>(null, headers(), HttpStatus.OK);
+	}
+
+	/**
+	 * We do not allow to remove all projects
+	 * @return the HTTP Response with the retrieved project, or an empty one if the query failed.
+	 */
+	@DeleteMapping()
+	public ResponseEntity<Object> removeAllProjects() throws SkillerException {		
+		return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
 	}
 	
 	/**
