@@ -44,6 +44,7 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 			return next.handle(req);
 		}
 		if 	(req.url.includes('/api/referential/')
+
 			|| req.url.includes('/api/skill/all')
 			|| req.url.includes('/api/admin/isVeryFirstConnection')
 			|| req.url.includes('/api/admin/veryFirstUser')

@@ -2,6 +2,7 @@ import { Library } from './library';
 import { SonarProject } from './SonarProject';
 import { AuditTopic } from './AuditTopic';
 import { ProjectSkill } from './project-skill';
+import { Constants } from '../constants';
 
 export class Project {
 
@@ -65,7 +66,7 @@ export class Project {
 	public ecosystems: number[] = [];
 
 	constructor(
-		public id: number = 0,
+		public id: number = Constants.UNKNOWN,
 		public name: string = '') { }
 
 }

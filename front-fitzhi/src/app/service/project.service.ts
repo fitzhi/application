@@ -10,7 +10,7 @@ import { Skill } from '../data/skill';
 import { ContributorsDTO } from '../data/external/contributorsDTO';
 import { SettingsGeneration } from '../data/settingsGeneration';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
-import { take, tap, retryWhen, retry } from 'rxjs/operators';
+import { take, tap, retryWhen, retry, flatMap, switchMap } from 'rxjs/operators';
 import { Library } from '../data/library';
 import { BooleanDTO } from '../data/external/booleanDTO';
 import { ReferentialService } from './referential.service';
@@ -107,7 +107,6 @@ export class ProjectService extends InternalService {
 		if (traceOn()) {
 			this.log('Actualizing the project with URL ' + this.backendSetupService.url() + '/project/id/' + idProject);
 		}
-		console.log ('this.backendSetupService.url()', this.backendSetupService.url() + '/project/id/' + idProject);
 		this.httpClient
 			.get<Project>(this.backendSetupService.url() + '/project/id/' + idProject)
 			.pipe(take(1))
@@ -165,15 +164,28 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	* Save the project (it might a creation or an update).
+	* Save the given project (it might a creation, or an update).
 	* @param project the given projet to be saved.
 	*/
 	save(project: Project): Observable<Project> {
 		if (traceOn()) {
-			console.log(((typeof project.id !== 'undefined') ? 'Saving ' : 'Adding ') + 'project ' + project.name);
+			console.log( ((project.id === Constants.UNKNOWN)  ? 'Creating ' : 'Updating ') + 'project ' + project.name);
 		}
-		return this.httpClient
-			.post<Project>(this.backendSetupService.url() + '/project/save', project, httpOptions);
+		if ((project.id) || (project.id === Constants.UNKNOWN)) {
+			return this.httpClient.post(this.backendSetupService.url() + '/project', project, {observe: 'response'})
+				.pipe(
+					take(1),
+					switchMap(response => {
+						const location = response.headers.get('Location');
+						if (traceOn()) {
+							console.log ('Project created successfully, location returned %s', location);
+						}
+						return (location) ? this.httpClient.get<Project>(location) : EMPTY;
+				}));
+		} else {
+			return this.httpClient
+				.post<Project>(this.backendSetupService.url() + '/project/save', project, httpOptions);
+		}
 	}
 
 	/**

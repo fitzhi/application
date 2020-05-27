@@ -43,7 +43,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				
 				// Server side event streaming is allowed
 				"/api/project/tasks/stream/**",
-				
+
 				"/api/admin/isVeryFirstConnection", 
 				"/api/admin/saveVeryFirstConnection", 
 				"/api/admin/veryFirstUser",
@@ -61,7 +61,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 
 				//TODO REMOVE
 				"/api/project/tasks/**",
-					
+
 				"/api/admin/isVeryFirstConnection", 
 				"/api/admin/saveVeryFirstConnection", 
 				"/api/admin/veryFirstUser",

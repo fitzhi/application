@@ -40,8 +40,7 @@ public class FitzhiWebMvcConfigurer implements WebMvcConfigurer {
 			log.warn("-----------------------------------");
 		}
 		registry.addMapping("/**")
-			.allowedOrigins(allowedOrigins)
-			.exposedHeaders(Global.BACKEND_RETURN_CODE, Global.BACKEND_RETURN_MESSAGE);
+			.allowedOrigins(allowedOrigins);
 	}
 	
 }

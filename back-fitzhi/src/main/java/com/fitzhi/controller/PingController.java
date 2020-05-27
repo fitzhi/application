@@ -42,7 +42,7 @@ public class PingController {
 				headers, 
 				HttpStatus.OK);
 	}
-
+	
 	@PostMapping("/pong")
 	public ResponseEntity<String> postWelcome()  {		
 		HttpHeaders headers = new HttpHeaders();

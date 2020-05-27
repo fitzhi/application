@@ -33,6 +33,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import com.fitzhi.SkillerRuntimeException;
 import com.fitzhi.bean.AsyncTask;
@@ -57,6 +60,7 @@ import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.RepoScanner;
+import com.microsoft.schemas.office.x2006.encryption.CTKeyEncryptor.Uri;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -213,6 +217,27 @@ public class ProjectController {
 			return new ArrayList<Project>();
 		}
 
+	}
+	
+	/**
+	 * This method creates a new project.
+	 * @param project the project to be created
+	 * @return a ResponseEntity with the location containing the URI of the newly created project
+	 */
+	@PostMapping("")
+	public ResponseEntity<Void> create(UriComponentsBuilder builder, @RequestBody Project project) throws SkillerException {
+		final HttpHeaders headers = headers();
+		if (projectHandler.containsProject(project.getId())) {
+			return new ResponseEntity<Void>(null, headers, HttpStatus.CONFLICT);
+		}
+		project.setId(UNKNOWN_PROJECT);
+		project = projectHandler.addNewProject(project);
+		
+		UriComponents uriComponents = 
+		        builder.path("/api/project/id/{id}").buildAndExpand(project.getId());
+
+		return ResponseEntity.created(uriComponents.toUri()).build();		
+		
 	}
 	
 	/**

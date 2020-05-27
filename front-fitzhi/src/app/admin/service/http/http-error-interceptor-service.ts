@@ -3,10 +3,8 @@ import { HttpHandler, HttpEvent, HttpErrorResponse, HttpRequest, HttpInterceptor
 import { Observable, throwError } from 'rxjs';
 import { Injectable, Injector } from '@angular/core';
 import { MessageService } from '../../../message/message.service';
-import { Constants } from '../../../constants';
 import { Router } from '@angular/router';
 import { traceOn } from 'src/app/global';
-import { ApiError } from 'src/app/data/api-error';
 
 @Injectable({ providedIn: 'root' })
 export class HttpErrorInterceptorService implements HttpInterceptor {
