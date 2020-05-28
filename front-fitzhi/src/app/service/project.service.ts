@@ -30,6 +30,7 @@ import { traceOn } from '../global';
 import { SunburstCinematicService } from '../project/project-sunburst/service/sunburst-cinematic.service';
 import { ProjectSkill } from '../data/project-skill';
 import { SkillService } from './skill.service';
+import { StaffService } from './staff.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -65,10 +66,10 @@ export class ProjectService extends InternalService {
 	 */
 	allProjects: Project[];
 
-
 	constructor(
 		private httpClient: HttpClient,
 		private referentialService: ReferentialService,
+		private staffService: StaffService,
 		private skillService: SkillService,
 		private fileService: FileService,
 		private messageService: MessageService,
@@ -1007,5 +1008,44 @@ export class ProjectService extends InternalService {
 			}
 		});
 		return ecosystems;
+	}
+
+	/**
+	 * Test if the project is completely empty, and therefore can be fully remove from the portfolio.
+	 *
+	 * This function is mirroring 2 methods implemented in Java
+	 *
+	 * - _Project.isEmpty()_
+	 * - _StaffHandler.isProjectReferenced(idProject)_  **Not implemenetd yet in Typescript !**
+	 *
+	 * 2 options are possible :
+	 *
+	 * * **Remove** : Physically remove the project from the portfolio.
+	 * * **Inactivate** : Inactivate a project for the analysis.
+	 *
+	 */
+	public isProjectEmpty() {
+
+		if (this.project.urlRepository !== null) {
+			return false;
+		}
+
+		if (this.project.mapSkills.size > 0) {
+			return false;
+		}
+		if (this.project.sonarProjects.length > 0) {
+			return false;
+		}
+		if (Object.keys(this.project.audit).length > 0) {
+			return false;
+		}
+		if (this.project.libraries.length > 0) {
+			return false;
+		}
+		if (this.project.ecosystems.length > 0) {
+			return false;
+		}
+
+		return true;
 	}
 }

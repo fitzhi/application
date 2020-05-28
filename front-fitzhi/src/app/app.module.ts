@@ -115,6 +115,8 @@ import { TreemapHeaderComponent } from './welcome/fitzhi-dashboard/treemap/treem
 import { TreemapComponent } from './welcome/fitzhi-dashboard/treemap/treemap-container/treemap.component';
 import { NgxPopper } from 'angular-popper';
 import { StaffDataExchangeService } from './tabs-staff/service/staff-data-exchange.service';
+import { ProjectRemoveComponent } from './project/project-remove/project-remove.component';
+import { ProjectInactivateComponent } from './project/project-inactivate/project-inactivate.component';
 
 @NgModule({
 	declarations: [
@@ -178,7 +180,9 @@ import { StaffDataExchangeService } from './tabs-staff/service/staff-data-exchan
 		SSEWatcherComponent,
 		TreemapChartComponent,
 		TreemapHeaderComponent,
-		TreemapComponent
+		TreemapComponent,
+		ProjectRemoveComponent,
+		ProjectInactivateComponent
 	],
 	entryComponents: [
 		StaffUploadCvComponent,
