@@ -783,7 +783,12 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 
 	@Override
 	public boolean isProjectReferenced(int idProject) {
-		return false;
+		return this.getStaff().values().stream()
+			.flatMap(staff -> staff.getMissions().stream())
+			.filter(mission -> (mission.getIdProject() == idProject))
+			.findAny()
+			.isPresent(); 
 	}
+
 	
 }

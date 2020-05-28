@@ -25,7 +25,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.controller.in.BodyParamSonarEntry;
+import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.SonarProject;
@@ -56,6 +58,9 @@ public class ProjectControllerRemoveProjectTest {
 	@Autowired
 	private ProjectHandler projectHandler;
 
+	@Autowired
+	private StaffHandler staffHandler;
+	
 	@Before
 	public void before() throws Exception {
 		Project project1789 = new Project(1789, "revolutionary project");
@@ -76,10 +81,25 @@ public class ProjectControllerRemoveProjectTest {
 	
 	@Test
 	@WithMockUser
-	public void testRemoveNonEmptyProject() throws Exception {	
+	public void testRemoveProjectWithSkills() throws Exception {	
 		projectHandler.get(1789).getSkills().put(1, new ProjectSkill(1));
 		this.mvc.perform(delete("/api/project/" + 1789)).andExpect(status().isInternalServerError());		
 	}
+	
+	@Test
+	@WithMockUser
+	public void testRemoveProjectWithLocation() throws Exception {	
+		projectHandler.get(1789).setLocationRepository("locationRepository");
+		this.mvc.perform(delete("/api/project/" + 1789)).andExpect(status().isInternalServerError());		
+	}
+	
+	@Test
+	@WithMockUser
+	public void testRemoveProjectReferencedInStaff() throws Exception {	
+		staffHandler.getStaff(1).addMission(new Mission(1, 1789, "revolutionary project"));
+		this.mvc.perform(delete("/api/project/" + 1789)).andExpect(status().isInternalServerError());		
+	}
+	
 	@Test
 	@WithMockUser
 	public void testRemoveAllProjects() throws Exception {	
@@ -89,6 +109,7 @@ public class ProjectControllerRemoveProjectTest {
 	@After
 	public void after() throws Exception {
 		projectHandler.getProjects().remove(1789);
+		staffHandler.getStaff(1).getMissions().remove(new Mission(1, 1789, "revolutionary project"));
 	}
 	
 }
