@@ -1048,4 +1048,11 @@ export class ProjectService extends InternalService {
 
 		return true;
 	}
+
+	/**
+	 * Return the title of the tab to activate, or inactivate the project.
+	 */
+	public tabTitleInactivate() {
+		return (this.project.active) ? 'Inactivate' : 'Reactivate';
+	}
 }

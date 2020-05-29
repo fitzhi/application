@@ -39,7 +39,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	/**
 	 * Title of the tabs.
 	 */
-	private TAB_TITLE = ['Project', 'Staff list', 'Staff coverage', 'Sonar', 'Audit'];
+	private TAB_TITLE = ['Project', 'Staff list', 'Staff coverage', 'Sonar', 'Audit', 'Remove'];
 
 	constructor(
 		private cinematicService: CinematicService,
