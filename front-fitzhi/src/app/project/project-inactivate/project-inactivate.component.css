@@ -1,0 +1,40 @@
+div.project-inactivate, div.project-reactivate {
+    width: fit-content;
+    margin: 50px auto;
+    background-color: whitesmoke;
+    display:inline-grid;
+} 
+
+div.text-project {
+    margin: 30px;
+    grid-column-start: 1;
+    grid-column-end: 3;
+} 
+
+
+div.action-project {
+    padding: 10px;
+    grid-column-start: 4;
+    grid-column-end: 4;
+    display:table-cell;
+    vertical-align:middle; 
+    height: fit-content;
+}
+
+div.action-project button {
+    width: 100px;
+    height: 100px;
+    margin-top: 5px;
+    padding: 0px;
+}
+
+div.action-project button:hover {
+	color: white;
+    background-color: var(--color-success);
+}
+
+div.action-project em {
+    font-size: 80px;
+}
+
+

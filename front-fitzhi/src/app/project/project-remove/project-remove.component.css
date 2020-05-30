@@ -1,0 +1,42 @@
+div.project-remove {
+    width: fit-content;
+    margin: 50px auto;
+    background-color: whitesmoke;
+    display:inline-grid;
+} 
+
+div.text-project-remove {
+    margin: 10px;
+    grid-column-start: 1;
+    grid-column-end: 3;
+} 
+
+div.text-project-remove p.warning {
+    margin: 10px;
+    color: var(--color-warning)
+} 
+
+div.action-project-remove {
+    padding: 10px;
+    grid-column-start: 4;
+    grid-column-end: 4;
+    display:table-cell;
+    vertical-align:middle; 
+    height: fit-content;
+}
+
+div.action-project-remove button {
+    width: 100px;
+    height: 100px;
+    margin-top: 30px;
+    padding: 0px;
+}
+
+div.action-project-remove button:hover {
+	color: white;
+    background-color: var(--color-success);
+}
+
+div.action-project-remove em {
+    font-size: 70px;
+}

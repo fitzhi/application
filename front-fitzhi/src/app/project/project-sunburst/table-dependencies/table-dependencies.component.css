@@ -32,7 +32,7 @@
 }
 
 .actionAdd:hover  {
-	color: green;
+	color: var(--color-success);
 	background-color: whitesmoke;
 }
 

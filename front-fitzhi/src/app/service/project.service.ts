@@ -1055,4 +1055,103 @@ export class ProjectService extends InternalService {
 	public tabTitleInactivate() {
 		return (this.project.active) ? 'Inactivate' : 'Reactivate';
 	}
+
+	/**
+	 * This function will remove the actual project loaded in **this.project**
+	 */
+	public removeProject(): void {
+		if (!this.project) {
+			throw new Error ('WTF : Should not pass here !');
+		}
+		if (traceOn()) {
+			console.log ('Removing the project %d %s', this.project.id, this.project.name);
+		}
+
+		this.httpClient
+			.delete<object>(this.backendSetupService.url() + '/project/' + this.project.id)
+			.pipe(take(1))
+			.subscribe({
+				next: () => {
+					if (traceOn()) {
+						console.log ('Project %s has beeen successfully removed');
+					}
+					// We remove the selected Project from the projects set
+					const indexToDelete = this.allProjects.findIndex(prj => (this.project.id === prj.id));
+					if (indexToDelete === -1) {
+						throw new Error ('WTF : Should not pass here !');
+					}
+					this.allProjects.splice(indexToDelete, 1);
+					// We reinitialize the forms.
+					this.project = new Project();
+					this.projectLoaded$.next(true);
+				}
+			});
+	}
+
+	/**
+	 * This function will inactivate the actual project loaded in **this.project**
+	 */
+	public inactivateProject(): void {
+		if (!this.project) {
+			throw new Error ('WTF : Should not pass here !');
+		}
+		if (traceOn()) {
+			console.log ('Inactivating the project %d %s', this.project.id, this.project.name);
+		}
+
+		this.httpClient
+			.post<object>(this.backendSetupService.url() + '/inactivate/project/' + this.project.id, {})
+			.pipe(take(1))
+			.subscribe({
+				next: () => {
+					if (traceOn()) {
+						console.log ('Project %s has beeen successfully inactivated.');
+					}
+					// We inactivate the project
+					this.project = this.retrieveProject(this.project.id);
+					this.project.active = false;
+					this.projectLoaded$.next(true);
+				}
+			});
+	}
+
+	/**
+	 * This function will inactivate the actual project loaded in **this.project**
+	 */
+	public reactivateProject(): void {
+		if (!this.project) {
+			throw new Error ('WTF : Should not pass here !');
+		}
+		if (traceOn()) {
+			console.log ('Reactivating the project %d %s', this.project.id, this.project.name);
+		}
+
+		this.httpClient
+			.post<object>(this.backendSetupService.url() + '/reactivate/project/' + this.project.id, {})
+			.pipe(take(1))
+			.subscribe({
+				next: () => {
+					if (traceOn()) {
+						console.log ('Project %s has beeen successfully reactivated.');
+					}
+					// We re-activate the project
+					this.project = this.retrieveProject(this.project.id);
+					this.project.active = true;
+					this.projectLoaded$.next(true);
+				}
+			});
+	}
+
+	/**
+	 * Retrieve the project from the set of projects.
+	 * @param idProject the project identifier
+	 */
+	retrieveProject(idProject: number): Project {
+		const index = this.allProjects.findIndex(prj => (this.project.id === prj.id));
+		if (index === -1) {
+			throw new Error ('WTF : Should not pass here !');
+		}
+		return this.allProjects[index];
+	}
+
 }
