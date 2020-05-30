@@ -651,7 +651,26 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			}
 			this.dataUpdated = true;
 		}
+	}
 
+	@Override
+	public void inactivateProject(Project project) {
+
+		synchronized (lockDataUpdated) {
+			project.setActive(false);
+			this.dataUpdated = true;
+		}
+		
+	}
+
+	@Override
+	public void reactivateProject(Project project) {
+
+		synchronized (lockDataUpdated) {
+			project.setActive(true);
+			this.dataUpdated = true;
+		}
+		
 	}
 
 	@Override

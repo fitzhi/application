@@ -83,7 +83,7 @@ describe('ProjectInactivateComponent', () => {
 		fixture.detectChanges();
 		expect(component).toBeTruthy();
 
-		const postInactivate = httpTestingController.expectOne('URL_OF_SERVER/api/inactivate/project/1066');
+		const postInactivate = httpTestingController.expectOne('URL_OF_SERVER/api/rpc/inactivation/project/1066');
 		expect(postInactivate.request.method).toEqual('POST');
 		postInactivate.flush(null);
 
@@ -103,7 +103,7 @@ describe('ProjectInactivateComponent', () => {
 		fixture.detectChanges();
 		expect(component).toBeTruthy();
 
-		const postInactivate = httpTestingController.expectOne('URL_OF_SERVER/api/reactivate/project/1066');
+		const postInactivate = httpTestingController.expectOne('URL_OF_SERVER/api/rpc/reactivation/project/1066');
 		expect(postInactivate.request.method).toEqual('POST');
 		postInactivate.flush(null);
 

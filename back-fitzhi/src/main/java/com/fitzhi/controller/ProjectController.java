@@ -168,6 +168,40 @@ public class ProjectController {
 	}
 
 	/**
+	 * <strong>Inactivation</strong> the project corresponding to the identifier id
+	 * @param idProject the given project identifier
+	 * @return an <strong>empty</strong> {@code HTTP} response.
+	 */
+	@PostMapping(value = "/rpc/inactivation/{idProject}")
+	public ResponseEntity<Object> inactivateProject(@PathVariable("idProject") int idProject) throws NotFoundException, SkillerException {
+		Project project = projectHandler.get(idProject);
+		if (project == null) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+		}
+				
+		projectHandler.inactivateProject(project);
+
+		return new ResponseEntity<>(null, headers(), HttpStatus.OK);
+	}
+
+	/**
+	 * <strong>Reactivation</strong> the project corresponding to the identifier id
+	 * @param idProject the given project identifier
+	 * @return an <strong>empty</strong> {@code HTTP} response.
+	 */
+	@PostMapping(value = "/rpc/reactivation/{idProject}")
+	public ResponseEntity<Object> reactivateProject(@PathVariable("idProject") int idProject) throws NotFoundException, SkillerException {
+		Project project = projectHandler.get(idProject);
+		if (project == null) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+		}
+				
+		projectHandler.reactivateProject(project);
+
+		return new ResponseEntity<>(null, headers(), HttpStatus.OK);
+	}
+	
+	/**
 	 * We do not allow to remove all projects
 	 * @return the HTTP Response with the retrieved project, or an empty one if the query failed.
 	 */

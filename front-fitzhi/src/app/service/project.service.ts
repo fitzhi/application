@@ -1100,7 +1100,7 @@ export class ProjectService extends InternalService {
 		}
 
 		this.httpClient
-			.post<object>(this.backendSetupService.url() + '/inactivate/project/' + this.project.id, {})
+			.post<object>(this.backendSetupService.url() + '/rpc/inactivation/project/' + this.project.id, {})
 			.pipe(take(1))
 			.subscribe({
 				next: () => {
@@ -1127,7 +1127,7 @@ export class ProjectService extends InternalService {
 		}
 
 		this.httpClient
-			.post<object>(this.backendSetupService.url() + '/reactivate/project/' + this.project.id, {})
+			.post<object>(this.backendSetupService.url() + '/rpc/reactivation/project/' + this.project.id, {})
 			.pipe(take(1))
 			.subscribe({
 				next: () => {
