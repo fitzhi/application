@@ -1,9 +1,18 @@
-div.project-inactivate, div.project-reactivate {
+div.container-project-inactivate-or-reactivate {
     width: fit-content;
     margin: 50px auto;
+}
+
+div.project-inactivate, div.project-reactivate {
     background-color: whitesmoke;
     display:inline-grid;
 } 
+
+div.container-project-form {
+	width: 1000px;
+	margin: 0 auto;
+}
+
 
 div.text-project {
     margin: 30px;

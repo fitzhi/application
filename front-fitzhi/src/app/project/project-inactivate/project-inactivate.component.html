@@ -1,34 +1,36 @@
-<div class="project-inactivate" *ngIf="projectService.project.active">
+<div class="container-project-inactivate-or-reactivate">
+    <div class="project-inactivate" *ngIf="projectService.project.active">
 
-    <div class="text-project">
-        <p>
-            You cannot remove this project from the portfolio, but you can <strong>inactivate</strong> it.<br/>
-            For information, an inactive project
-        </p>
-        <ul> 
-            <li>is <strong>LOCKED AND READ ONLY</strong>.</li>
-            <li>is not more taken in account in all global analysis.</li>
-        </ul>
+        <div class="text-project">
+            <p>
+                You cannot remove this project from the portfolio, but you can <strong>inactivate</strong> it.<br/>
+                For information, an inactive project :
+            </p>
+            <ul> 
+                <li>is <strong>LOCKED, AND READ ONLY</strong>.</li>
+                <li>is no more taken in account in all global analysis.</li>
+            </ul>
+        </div>
+        <div class="action-project">
+            <button 
+                class="btn rounded btn-outline-secondary" 
+                (click)="projectService.inactivateProject()">
+                <em class="fas fa-lock"></em>
+            </button>
+        </div>
     </div>
-    <div class="action-project">
-        <button 
-            class="btn rounded btn-outline-secondary" 
-            (click)="projectService.inactivateProject()">
-            <em class="fas fa-lock"></em>
-        </button>
-    </div>
-</div>
-<div class="project-reactivate" *ngIf="!projectService.project.active">
-    <div class="text-project">
-        <p>
-            You can reactivate this project and be able to modify its content.
-        </p>
-    </div>
-    <div class="action-project">
-        <button 
-            class="btn rounded btn-outline-secondary" 
-            (click)="projectService.reactivateProject()">
-            <em class="fas fa-unlock"></em>
-        </button>
+    <div class="project-reactivate" *ngIf="!projectService.project.active">
+        <div class="text-project">
+            <p>
+                You can reactivate this project and be able to modify its content.
+            </p>
+        </div>
+        <div class="action-project">
+            <button 
+                class="btn rounded btn-outline-secondary" 
+                (click)="projectService.reactivateProject()">
+                <em class="fas fa-unlock"></em>
+            </button>
+        </div>
     </div>
 </div>

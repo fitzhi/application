@@ -1,6 +1,9 @@
-div.project-remove {
+div.container-project-remove {
     width: fit-content;
     margin: 50px auto;
+} 
+
+div.project-remove {
     background-color: whitesmoke;
     display:inline-grid;
 } 
