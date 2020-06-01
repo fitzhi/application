@@ -724,29 +724,39 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			console.log(this.projectService.project);
 			console.groupEnd();
 		}
-		this.projectService.save(this.projectService.project).pipe(take(1))
-			.subscribe(project => {
-				this.projectService.project = project;
 
-				//
-				// If we were in creation (i.e. url = ".../project/"), we leave this mode.
-				//
-				this.creation = false;
+		if ((this.projectService.project.id) && (this.projectService.project.id !== Constants.UNKNOWN)) {
+			this.projectService.updateCurrentProject();
+		}
+		if ((!this.projectService.project.id) || (this.projectService.project.id === Constants.UNKNOWN)) {
+			this.projectService.createNewProject()
+				.pipe(take(1))
+				.subscribe(project => {
+					this.projectService.project = project;
+					if (!project.mapSkills) {
+						project.mapSkills = new Map<number, ProjectSkill>();
+					}
+					//
+					// If we were in creation (i.e. url = ".../project/"), we leave this mode.
+					//
+					this.creation = false;
 
-				//
-				// We update the array containing the collection of all projects.
-				//
-				this.projectService.actualizeProject(project.id);
+					//
+					// We update the array containing the collection of all projects.
+					//
+					this.projectService.actualizeProject(project.id);
 
-				//
-				// We broadcast the fact that a project has been found.
-				//
-				this.projectService.projectLoaded$.next(true);
+					//
+					// We broadcast the fact that a project has been found.
+					//
+					this.projectService.projectLoaded$.next(true);
 
-				this.messageService.success('Project ' + this.projectService.project.name + '  saved !');
+					this.messageService.success('Project ' + this.projectService.project.name + '  saved !');
 
-				this.testConnectionSettings();
-			});
+					this.testConnectionSettings();
+				});
+		}
+
 	}
 
 	/**

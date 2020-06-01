@@ -2,7 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Project } from '../data/project';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable, BehaviorSubject, EMPTY} from 'rxjs';
+import { Observable, BehaviorSubject, EMPTY, of} from 'rxjs';
 import { InternalService } from '../internal-service';
 
 import { Constants } from '../constants';
@@ -26,7 +26,7 @@ import { Task } from '../data/task';
 import { AttachmentFile } from '../data/AttachmentFile';
 import { FileService } from './file.service';
 import { Ecosystem } from '../data/ecosystem';
-import { traceOn } from '../global';
+import { traceOn, HttpCodes } from '../global';
 import { SunburstCinematicService } from '../project/project-sunburst/service/sunburst-cinematic.service';
 import { ProjectSkill } from '../data/project-skill';
 import { SkillService } from './skill.service';
@@ -166,28 +166,54 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	* Save the given project (it might a creation, or an update).
-	* @param project the given projet to be saved.
+	* Create a new project from the active one.
 	*/
-	save(project: Project): Observable<Project> {
+	createNewProject (): Observable<Project> {
 		if (traceOn()) {
-			console.log( ((project.id === Constants.UNKNOWN)  ? 'Creating ' : 'Updating ') + 'project ' + project.name);
+			console.log( 'Creating the project %s', this.project.name);
 		}
-		if ((project.id) || (project.id === Constants.UNKNOWN)) {
-			return this.httpClient.post(this.backendSetupService.url() + '/project', project, {observe: 'response'})
-				.pipe(
-					take(1),
-					switchMap(response => {
-						const location = response.headers.get('Location');
-						if (traceOn()) {
-							console.log ('Project created successfully, location returned %s', location);
-						}
-						return (location) ? this.httpClient.get<Project>(location) : EMPTY;
-				}));
-		} else {
-			return this.httpClient
-				.post<Project>(this.backendSetupService.url() + '/project/save', project, httpOptions);
+		return this.httpClient.post(this.backendSetupService.url() + '/project', this.project, {observe: 'response'})
+			.pipe(
+				take(1),
+				switchMap(response => {
+					const location = response.headers.get('Location');
+					if (traceOn()) {
+						console.log ('Project created successfully, location returned %s', location);
+					}
+					return (location) ? this.httpClient.get<Project>(location) : EMPTY;
+		}));
+	}
+
+	/**
+	* Updating the current project
+	*/
+	updateCurrentProject () {
+		if (traceOn()) {
+			console.log( 'Updating the project %s', this.project.name);
 		}
+		this.httpClient
+			.put<Project>(this.backendSetupService.url() + '/project/' + this.project.id, this.project,  {observe: 'response'})
+			.subscribe({
+				next: response => {
+					if (response.status === HttpCodes.noContent) {
+						this.messageService.success('Project successfully updated!');
+					} else {
+						console.log ('WTF : Should not pass here!');
+					}
+				},
+				error: responseInError => {
+					switch (responseInError.status) {
+						case HttpCodes.methodNotAllowed:
+							this.messageService.error('You are not allowed to modify this project');
+							break;
+						case  HttpCodes.notFound:
+							this.messageService.error('This project has most probably been removed by another user');
+							break;
+						default:
+							console.error ('WTF : Should not pass here!');
+					}
+				}
+			});
 	}
 
 	/**

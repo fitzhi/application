@@ -27,7 +27,7 @@ export class Constants {
 		Constants.LEVEL_Senior,
 		Constants.LEVEL_Junior,
 		Constants.LEVEL_Beginner];
-
+		
 	/**
 	  * Form identifiers active
 	  */

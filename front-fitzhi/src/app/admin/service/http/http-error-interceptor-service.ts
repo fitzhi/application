@@ -4,7 +4,8 @@ import { Observable, throwError } from 'rxjs';
 import { Injectable, Injector } from '@angular/core';
 import { MessageService } from '../../../message/message.service';
 import { Router } from '@angular/router';
-import { traceOn } from 'src/app/global';
+import { traceOn, HttpCodes } from 'src/app/global';
+import { BrowserStack } from 'protractor/built/driverProviders';
 
 @Injectable({ providedIn: 'root' })
 export class HttpErrorInterceptorService implements HttpInterceptor {
@@ -53,8 +54,13 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 							setTimeout(() => messageService.error('Server is down or unreachable!'), 0);
 							return throwError('Server is down or unreachable!');
 							break;
-						case 404:
-							setTimeout(() => messageService.error('Unreachable URL'), 0);
+						case HttpCodes.notFound:
+							if (traceOn()) {
+								console.log ('Unreachable URL');
+							}
+							return throwError(response);
+							break;
+						case HttpCodes.methodNotAllowed:
 							return throwError(response);
 							break;
 						case 400:
