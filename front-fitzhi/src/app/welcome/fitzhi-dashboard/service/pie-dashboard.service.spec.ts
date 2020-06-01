@@ -4,11 +4,12 @@ import { PieDashboardService } from './pie-dashboard.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { MatDialogModule } from '@angular/material/dialog';
+import { CinematicService } from 'src/app/service/cinematic.service';
 
 describe('PieDashboardService', () => {
 	beforeEach(() => TestBed.configureTestingModule({
 		imports: [ HttpClientTestingModule, MatDialogModule ],
-		providers: [ReferentialService]
+		providers: [ReferentialService, CinematicService]
 	}));
 
 	it('should be created', () => {

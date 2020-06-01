@@ -21,11 +21,6 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	 */
 	@Input() colorOfRisk: string;
 
-	/**
-	 * This component, hosted in a tab pane, use this emitter to inform its parent to change the active pane.
-	 */
-	@Output() tabActivationEmitter = new EventEmitter<number>();
-
 	public PROJECT_IDX_TAB_SONAR = Constants.PROJECT_IDX_TAB_SONAR;
 	public PROJECT_IDX_TAB_SUNBURST = Constants.PROJECT_IDX_TAB_SUNBURST;
 	public PROJECT_IDX_TAB_AUDIT = Constants.PROJECT_IDX_TAB_AUDIT;
@@ -80,7 +75,7 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	 * @param tabIndex index of tab requested.
 	 */
 	public jumpToTab(tabIndex: number) {
-		this.tabActivationEmitter.next(tabIndex);
+		this.cinematicService.projectTabIndex = tabIndex;
 	}
 
 

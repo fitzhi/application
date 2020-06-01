@@ -14,6 +14,7 @@ import { ProjectService } from 'src/app/service/project.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AuditTopic } from 'src/app/data/AuditTopic';
 import { RiskLegend } from 'src/app/data/riskLegend';
+import { CinematicService } from 'src/app/service/cinematic.service';
 
 describe('ReportDetailFormComponent', () => {
 	let component: TestHostComponent;
@@ -34,7 +35,7 @@ describe('ReportDetailFormComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ReportDetailFormComponent, TestHostComponent ],
-			providers: [ReferentialService],
+			providers: [ReferentialService, CinematicService],
 			imports: [MatFormFieldModule, FormsModule, ReactiveFormsModule,
 				HttpClientTestingModule,
 				MatInputModule, BrowserAnimationsModule, MatDialogModule]

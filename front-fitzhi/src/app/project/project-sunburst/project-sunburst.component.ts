@@ -47,12 +47,6 @@ export enum PreviewContext {
 export class ProjectSunburstComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
-	 * This component, hosted in a tab pane, use this emitter to inform its parent to change the active pane.
-	 * e.g. if the project form is not complete, application will jump to this tab pane.
-	 */
-	@Output() tabActivationEmitter = new EventEmitter<number>();
-
-	/**
 	 * This event is fired if the sunburst is processed to inform the form component that the project might have changed.
 	 * At least, the level of risk has changed.
 	 */
@@ -721,7 +715,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 * @param tabIndex index of tab requested.
 	 */
 	public jumpToTab(tabIndex: number) {
-		this.tabActivationEmitter.next(tabIndex);
+		this.cinematicService.projectTabIndex = tabIndex;
 	}
 
 	mouseEnter(activeButton: number) {

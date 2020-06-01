@@ -4,6 +4,7 @@ import { SSEWatcherComponent } from './ssewatcher.component';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
+import { CinematicService } from 'src/app/service/cinematic.service';
 
 describe('SSEWatcherComponent', () => {
 	let component: SSEWatcherComponent;
@@ -13,7 +14,7 @@ describe('SSEWatcherComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [ SSEWatcherComponent ],
 			imports: [HttpClientTestingModule, MatDialogModule],
-			providers: [ReferentialService],
+			providers: [ReferentialService, CinematicService],
 
 		})
 		.compileComponents();

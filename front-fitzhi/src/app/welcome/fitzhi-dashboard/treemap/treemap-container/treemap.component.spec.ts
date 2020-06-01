@@ -13,6 +13,7 @@ import { TreemapService } from '../service/treemap.service';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CinematicService } from 'src/app/service/cinematic.service';
 
 describe('TreemapComponent container', () => {
 	let component: TreemapComponent;
@@ -40,7 +41,7 @@ describe('TreemapComponent container', () => {
 		TestBed.configureTestingModule({
 			declarations: [ TreemapComponent, TreemapChartComponent, TreemapHeaderComponent,
 				TagifyStarsComponent ],
-			providers: [ReferentialService, DashboardService, TreemapService, ProjectService],
+			providers: [ReferentialService, DashboardService, TreemapService, ProjectService, CinematicService],
 			imports: [NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule, MatDialogModule, HttpClientTestingModule]
 		})
 		.compileComponents();

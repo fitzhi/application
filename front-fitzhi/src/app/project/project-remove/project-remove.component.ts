@@ -8,20 +8,9 @@ import { ProjectService } from 'src/app/service/project.service';
 })
 export class ProjectRemoveComponent implements OnInit {
 
-	/**
-	 * This component, hosted in a tab pane, is using this emitter to inform its parent to change the active pane.
-	 */
-	@Output() tabActivationEmitter = new EventEmitter<number>();
-
 	constructor(private projectService: ProjectService) { }
 
 	ngOnInit() {
 	}
 
-	/**
-	 * The end-
-	 */
-	public removeProject() {
-
-	}
 }

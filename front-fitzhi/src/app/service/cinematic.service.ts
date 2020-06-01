@@ -77,6 +77,10 @@ export class CinematicService {
      */
 	public tabProjectActivated$ = new BehaviorSubject<number>(Constants.PROJECT_IDX_TAB_FORM);
 
+	/**
+	 * Index of the current selected tab in the Project forms set.
+	 */
+	public projectTabIndex: number;
 
 	/**
      * Previous form active

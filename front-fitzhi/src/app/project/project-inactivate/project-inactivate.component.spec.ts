@@ -8,6 +8,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { Project } from 'src/app/data/project';
 import { By } from '@angular/platform-browser';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
+import { CinematicService } from 'src/app/service/cinematic.service';
 
 describe('ProjectInactivateComponent', () => {
 	let component: ProjectInactivateComponent;
@@ -19,7 +20,7 @@ describe('ProjectInactivateComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ProjectInactivateComponent ],
-			providers: [ProjectService, ReferentialService, BackendSetupService],
+			providers: [ProjectService, ReferentialService, BackendSetupService, CinematicService],
 			imports: [ HttpClientTestingModule, MatDialogModule ]
 
 		})
@@ -83,7 +84,7 @@ describe('ProjectInactivateComponent', () => {
 		fixture.detectChanges();
 		expect(component).toBeTruthy();
 
-		const postInactivate = httpTestingController.expectOne('URL_OF_SERVER/api/rpc/inactivation/project/1066');
+		const postInactivate = httpTestingController.expectOne('URL_OF_SERVER/api/project/rpc/inactivation/1066');
 		expect(postInactivate.request.method).toEqual('POST');
 		postInactivate.flush(null);
 
@@ -103,7 +104,7 @@ describe('ProjectInactivateComponent', () => {
 		fixture.detectChanges();
 		expect(component).toBeTruthy();
 
-		const postInactivate = httpTestingController.expectOne('URL_OF_SERVER/api/rpc/reactivation/project/1066');
+		const postInactivate = httpTestingController.expectOne('URL_OF_SERVER/api/project/rpc/reactivation/1066');
 		expect(postInactivate.request.method).toEqual('POST');
 		postInactivate.flush(null);
 

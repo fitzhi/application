@@ -26,12 +26,6 @@ import { traceOn } from 'src/app/global';
 export class ProjectAuditComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
-	 * This component, hosted in a tab pane, use this emitter to inform its parent to change the active pane.
-	 * e.g. if the project form is not complete, application will jump to this tab pane.
-	 */
-	@Output() tabActivationEmitter = new EventEmitter<number>();
-
-	/**
 	 * This `boolean` control the `[hidden]` property of the div `auditTask`.
 	 */
 	private showDivAuditTask = false;
@@ -354,7 +348,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 * @param tabIndex index of tab requested.
 	 */
 	public jumpToTab(tabIndex: number) {
-		this.tabActivationEmitter.next(tabIndex);
+		this.cinematicService.projectTabIndex = tabIndex;
 	}
 
 	/**

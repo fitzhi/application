@@ -12,6 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { RiskLegend } from 'src/app/data/riskLegend';
+import { CinematicService } from 'src/app/service/cinematic.service';
 
 describe('TasksDetailFormComponent', () => {
 	let component: TestHostComponent;
@@ -38,7 +39,7 @@ describe('TasksDetailFormComponent', () => {
 			declarations: [ TestHostComponent, FilesDetailFormComponent, AuditAttachmentComponent ],
 			imports: [FormsModule, HttpClientTestingModule, MatDialogModule],
 			providers: [
-				ReferentialService
+				ReferentialService, CinematicService
 			]
 		})
 		.compileComponents();

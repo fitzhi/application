@@ -8,6 +8,7 @@ import { StaffService } from '../staff.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReferentialService } from '../referential.service';
 import { SkillProjectsAggregation } from './skill-projects-aggregration';
+import { CinematicService } from '../cinematic.service';
 describe('DashboardService', () => {
 
 	function generateSkillProjectsAggregation(): SkillProjectsAggregation[] {
@@ -21,7 +22,7 @@ describe('DashboardService', () => {
 	beforeEach(async () => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [],
-			providers: [ProjectService, SkillService, StaffService, ReferentialService, DashboardService],
+			providers: [ProjectService, SkillService, StaffService, ReferentialService, DashboardService, CinematicService],
 			imports: [HttpClientTestingModule, MatDialogModule]
 		};
 		TestBed.configureTestingModule(testConf).compileComponents();

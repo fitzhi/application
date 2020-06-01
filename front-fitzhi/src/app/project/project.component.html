@@ -1,13 +1,10 @@
-<mat-tab-group [selectedIndex]="tabIndex" (selectedIndexChange)="selectedIndexChange($event)">
+<mat-tab-group [selectedIndex]="cinematicService.projectTabIndex" (selectedIndexChange)="selectedIndexChange($event)">
 	<mat-tab>
 		<ng-template mat-tab-label>
 			<em class="fas glyphicon fa-users-cog logoTabLabel"></em>&nbsp;&nbsp;Project
 		</ng-template>
 		<ng-template matTabContent>
-			<app-project-form 
-				[risk$]="risk$"
-				(tabActivationEmitter)="tabActivation($event)">
-			</app-project-form>
+			<app-project-form [risk$]="risk$"></app-project-form>
 		</ng-template>
 	</mat-tab>
 	<mat-tab [disabled]="!canConnectSourceControl()">
@@ -21,7 +18,7 @@
 			<em class="fab fa-github-alt logoTabLabel"></em>&nbsp;&nbsp;Git
 		</ng-template>
 		<ng-template matTabContent>
-			<app-project-sunburst (tabActivationEmitter)="tabActivation($event)"
+			<app-project-sunburst 
 				(updateRiskLevel)="updateRiskLevel($event)">
 			</app-project-sunburst>
 		</ng-template>
@@ -43,9 +40,7 @@
 			<em class="fas fa-brain logoTabLabel"></em>&nbsp;&nbsp;Audit
 		</ng-template>
 		<ng-template matTabContent>
-			<app-project-audit
-				(tabActivationEmitter)="tabActivation($event)">
-			</app-project-audit>
+			<app-project-audit></app-project-audit>
 		</ng-template>
 	</mat-tab>
 

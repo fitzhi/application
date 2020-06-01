@@ -27,11 +27,6 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	public risk$ = new BehaviorSubject<number>(-1);
 
 	/**
-	 * Index of the tab selected.
-	 */
-	public tabIndex = 0;
-
-	/**
 	 * Project identifier.
 	 */
 	public idProject: number;
@@ -63,9 +58,9 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 		}
 
 		if (this.router.url.indexOf('/staff') !== -1) {
-			this.tabIndex = 1;
+			this.cinematicService.projectTabIndex = 1;
 			if (traceOn()) {
-				console.log('Index selected ' + this.tabIndex + ' to display the project staff list');
+				console.log('Index selected ' + this.cinematicService.projectTabIndex + ' to display the project staff list');
 			}
 		}
 
@@ -108,8 +103,8 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 		if (traceOn()) {
 			console.log('Tab "' + this.TAB_TITLE[selectedIndex] + '" selected.');
 		}
-		if (this.tabIndex !== selectedIndex) {
-			this.tabIndex = selectedIndex;
+		if (this.cinematicService.projectTabIndex !== selectedIndex) {
+			this.cinematicService.projectTabIndex = selectedIndex;
 		}
 		this.cinematicService.setProjectTab(selectedIndex);
 	}
@@ -120,9 +115,9 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	 * @param tabIndex new tab to activate.
 	 */
 	public tabActivation (tabIndex: number) {
-		this.tabIndex = tabIndex;
+		this.cinematicService.projectTabIndex = tabIndex;
 		if (traceOn()) {
-			console.log ('Selected index', this.TAB_TITLE[this.tabIndex]);
+			console.log ('Selected index', this.TAB_TITLE[this.cinematicService.projectTabIndex]);
 		}
 	}
 

@@ -13,6 +13,7 @@ import { StaffService } from '../staff.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReferentialService } from '../referential.service';
 import { StatTypes } from './stat-types';
+import { CinematicService } from '../cinematic.service';
 
 describe('DashboardService', () => {
 
@@ -81,7 +82,7 @@ describe('DashboardService', () => {
 	beforeEach(async () => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [],
-			providers: [ProjectService, SkillService, StaffService, ReferentialService, DashboardService],
+			providers: [ProjectService, SkillService, StaffService, ReferentialService, DashboardService, CinematicService],
 			imports: [HttpClientTestingModule, MatDialogModule]
 		};
 		TestBed.configureTestingModule(testConf).compileComponents();

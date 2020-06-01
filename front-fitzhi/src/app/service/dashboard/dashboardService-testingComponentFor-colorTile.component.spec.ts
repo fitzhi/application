@@ -10,6 +10,7 @@ import { StaffListService } from 'src/app/staff-list-service/staff-list.service'
 import { ProjectService } from '../project.service';
 import {dataRiskLegends} from './data-riskLegends';
 import { RiskLegend } from 'src/app/data/riskLegend';
+import { CinematicService } from '../cinematic.service';
 
 describe('DashboardService.colorTile testing', () => {
 	let component: TestHostComponent;
@@ -43,7 +44,7 @@ describe('DashboardService.colorTile testing', () => {
 		TestBed.configureTestingModule({
 			declarations: [TestHostComponent],
 			imports: [HttpClientTestingModule, MatDialogModule],
-			providers: [DashboardService, ReferentialService, SkillService, StaffListService, ProjectService]
+			providers: [DashboardService, ReferentialService, SkillService, StaffListService, ProjectService, CinematicService]
 		})
 		.compileComponents();
 	}));

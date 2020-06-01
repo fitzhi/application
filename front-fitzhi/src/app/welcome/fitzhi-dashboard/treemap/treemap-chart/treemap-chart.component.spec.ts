@@ -8,6 +8,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { ReferentialService } from 'src/app/service/referential.service';
+import { CinematicService } from 'src/app/service/cinematic.service';
 
 describe('TreemapComponent', () => {
 	let component: TreemapChartComponent;
@@ -17,7 +18,7 @@ describe('TreemapComponent', () => {
 		TestBed.configureTestingModule({
 			imports: [NgxChartsModule, BrowserAnimationsModule, HttpClientTestingModule, MatDialogModule],
 			declarations: [ TreemapChartComponent ],
-			providers: [DashboardService, ProjectService, ReferentialService]
+			providers: [DashboardService, ProjectService, ReferentialService, CinematicService]
 		})
 		.compileComponents();
 	}));

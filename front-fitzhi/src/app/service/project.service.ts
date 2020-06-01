@@ -31,6 +31,7 @@ import { SunburstCinematicService } from '../project/project-sunburst/service/su
 import { ProjectSkill } from '../data/project-skill';
 import { SkillService } from './skill.service';
 import { StaffService } from './staff.service';
+import { CinematicService } from './cinematic.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -69,7 +70,7 @@ export class ProjectService extends InternalService {
 	constructor(
 		private httpClient: HttpClient,
 		private referentialService: ReferentialService,
-		private staffService: StaffService,
+		private cinematicService: CinematicService,
 		private skillService: SkillService,
 		private fileService: FileService,
 		private messageService: MessageService,
@@ -1084,6 +1085,7 @@ export class ProjectService extends InternalService {
 					// We reinitialize the forms.
 					this.project = new Project();
 					this.projectLoaded$.next(true);
+					this.cinematicService.projectTabIndex = Constants.PROJECT_IDX_TAB_FORM;
 				}
 			});
 	}
@@ -1105,12 +1107,13 @@ export class ProjectService extends InternalService {
 			.subscribe({
 				next: () => {
 					if (traceOn()) {
-						console.log ('Project %s has beeen successfully inactivated.');
+						console.log ('Project %s has been successfully inactivated.', this.project.name);
 					}
 					// We inactivate the project
 					this.project = this.retrieveProject(this.project.id);
 					this.project.active = false;
 					this.projectLoaded$.next(true);
+					this.cinematicService.projectTabIndex = Constants.PROJECT_IDX_TAB_FORM;
 				}
 			});
 	}
@@ -1132,12 +1135,13 @@ export class ProjectService extends InternalService {
 			.subscribe({
 				next: () => {
 					if (traceOn()) {
-						console.log ('Project %s has beeen successfully reactivated.');
+						console.log ('Project %s has been successfully reactivated.', this.project.name);
 					}
 					// We re-activate the project
 					this.project = this.retrieveProject(this.project.id);
 					this.project.active = true;
 					this.projectLoaded$.next(true);
+					this.cinematicService.projectTabIndex = Constants.PROJECT_IDX_TAB_FORM;
 				}
 			});
 	}

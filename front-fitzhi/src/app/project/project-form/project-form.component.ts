@@ -34,11 +34,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	@Input() risk$;
 
-	/**
-	 * This component, hosted in a tab pane, use this emitter to inform its parent to change the active pane.
-	 */
-	@Output() tabActivationEmitter = new EventEmitter<number>();
-
 	public USER_PASSWORD_ACCESS = 1;
 	public REMOTE_FILE_ACCESS = 2;
 	public NO_USER_PASSWORD_ACCESS = 3;
@@ -831,15 +826,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			return false;
 		}
 		return (this.projectService.project.connectionSettings === this.REMOTE_FILE_ACCESS);
-	}
-
-
-	/**
-	 * This method receives the nex tab to activate from here.
-	 * @param tabIndex new tab to activate.
-	 */
-	public tabActivation (tabIndex: number) {
-		this.tabActivationEmitter.next(tabIndex);
 	}
 
 	/**

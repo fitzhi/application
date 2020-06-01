@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReferentialService } from 'src/app/service/referential.service';
+import { CinematicService } from 'src/app/service/cinematic.service';
 
 describe('AuditAttachmentComponent', () => {
 	let component: TestHostComponent;
@@ -25,7 +26,7 @@ describe('AuditAttachmentComponent', () => {
 			declarations: [ AuditAttachmentComponent, TestHostComponent ],
 			imports: [FormsModule, MatDialogModule, HttpClientTestingModule, MatDialogModule],
 			providers: [
-				ReferentialService
+				ReferentialService, CinematicService
 			]
 		})
 		.compileComponents();

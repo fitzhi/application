@@ -11,6 +11,7 @@ import { SunburstCinematicService } from '../project/project-sunburst/service/su
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
 import { Skill } from '../data/skill';
+import { CinematicService } from './cinematic.service';
 
 
 describe('ProjectService', () => {
@@ -55,7 +56,7 @@ describe('ProjectService', () => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [],
 			providers: [ProjectService,
-				ReferentialService, SkillService, FileService, MessageService, SunburstCinematicService, BackendSetupService],
+				ReferentialService, SkillService, FileService, MessageService, SunburstCinematicService, BackendSetupService, CinematicService],
 			imports: [HttpClientTestingModule, HttpClientModule, MatDialogModule]
 		};
 		TestBed.configureTestingModule(testConf).compileComponents();

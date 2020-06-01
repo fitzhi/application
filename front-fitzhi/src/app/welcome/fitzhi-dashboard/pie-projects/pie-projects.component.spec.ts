@@ -6,6 +6,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogModule } from '@angular/material/dialog';
+import { CinematicService } from 'src/app/service/cinematic.service';
 
 describe('PieProjectsComponent', () => {
 	let component: PieProjectsComponent;
@@ -15,7 +16,7 @@ describe('PieProjectsComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [ PieProjectsComponent ],
 			imports: [MatTableModule, HttpClientTestingModule, RouterTestingModule, MatDialogModule],
-			providers: [ReferentialService]
+			providers: [ReferentialService, CinematicService]
 		})
 		.compileComponents();
 	}));

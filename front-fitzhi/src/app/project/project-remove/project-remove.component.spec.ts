@@ -7,6 +7,7 @@ import { ReferentialService } from 'src/app/service/referential.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { Project } from 'src/app/data/project';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
+import { CinematicService } from 'src/app/service/cinematic.service';
 
 describe('ProjectRemoveComponent', () => {
 	let component: ProjectRemoveComponent;
@@ -17,7 +18,7 @@ describe('ProjectRemoveComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ProjectRemoveComponent ],
-			providers: [ProjectService, ReferentialService],
+			providers: [ProjectService, ReferentialService, CinematicService],
 			imports: [ HttpClientTestingModule, MatDialogModule ]
 		})
 		.compileComponents();
