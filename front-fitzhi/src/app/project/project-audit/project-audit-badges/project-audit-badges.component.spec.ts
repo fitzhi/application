@@ -82,7 +82,7 @@ describe('ProjectAuditBadgesComponent', () => {
 
 		const project = new Project();
 		project.id = 1889;
-		project.name = 'Revolutionnary project';
+		project.name = 'Revolutionary project';
 		project.audit[3] = new AuditTopic(3, 50, 100);
 		projectService.project = project;
 		projectService.projectLoaded$.next(true);

@@ -50,7 +50,7 @@ describe('ProjectAuditComponent', () => {
 		component = fixture.componentInstance;
 		const project = new Project();
 		project.id = 1789;
-		project.name = 'Revolutionnary project';
+		project.name = 'Revolutionary project';
 		project.audit = {};
 		projectService = TestBed.get(ProjectService);
 		projectService.project = project;
@@ -58,7 +58,7 @@ describe('ProjectAuditComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should be createed withourt any error', () => {
+	it('should be created without any error', () => {
 		expect(component).toBeTruthy();
 	});
 });

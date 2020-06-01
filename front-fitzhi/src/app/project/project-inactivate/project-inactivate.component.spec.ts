@@ -121,7 +121,6 @@ describe('ProjectInactivateComponent', () => {
 	}
 
 	afterEach(() => {
-
 		httpTestingController.verify();
 		backendSetupService.saveUrl(null);
 	});

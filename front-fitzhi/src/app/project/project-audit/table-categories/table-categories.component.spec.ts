@@ -35,7 +35,7 @@ describe('TableCategoriesComponent', () => {
 		projectService = TestBed.get(ProjectService);
 		const project = new Project();
 		project.id = 1789;
-		project.name = 'Revolutionnary project';
+		project.name = 'Revolutionary project';
 		project.audit = {};
 		projectService.projectLoaded$.next(false);
 		fixture.detectChanges();
