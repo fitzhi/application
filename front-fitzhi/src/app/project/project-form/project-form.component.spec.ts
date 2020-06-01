@@ -77,7 +77,7 @@ describe('ProjectFormComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should be created without any error', () => {
+	it('Should be created without error', () => {
 		expect(component).toBeTruthy();
 	});
 
