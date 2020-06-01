@@ -91,7 +91,7 @@ public class Error {
 	public static final String LIB_CANNOT_RETRIEVE_ATTACHMENTFILE = "Cannot retrieve the attachmentFile n°{2} for the project/topic {0}/{1}";
 	
 	public static final int CODE_PROJECT_IS_NOT_EMPTY = -1026;
-	public static final String MESSAGE_PROJECT_IS_NOT_EMPTY = "Thr project {0} is not empty and cannot be removed";
+	public static final String MESSAGE_PROJECT_IS_NOT_EMPTY = "The project {0} is not empty and cannot be removed";
 	
 	private Error() {
 	}

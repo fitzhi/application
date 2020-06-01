@@ -3,6 +3,7 @@ package com.fitzhi.controller;
 import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -108,7 +109,7 @@ public class ProjectControllerDoNotTransportPasswordTest {
 	@WithMockUser
 	public void doNotLoosePassword() throws Exception {
 
-		MvcResult result = this.mvc.perform(get("/api/project/id/"+ ID_PROJECT))
+		MvcResult result = this.mvc.perform(get("/api/project/id/" + ID_PROJECT))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -117,11 +118,10 @@ public class ProjectControllerDoNotTransportPasswordTest {
 		Assert.assertNull(project.getPassword());
 
 		
-		this.mvc.perform(post("/api/project/save")
+		this.mvc.perform(put("/api/project/" + ID_PROJECT)
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(project)))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+				.andExpect(status().isNoContent());
 		
 		project = projectHandler.get(ID_PROJECT);
 		String password = DataEncryption.decryptMessage(project.getPassword());
@@ -129,11 +129,10 @@ public class ProjectControllerDoNotTransportPasswordTest {
 		
 		project = (Project) Global.deepClone(project);
 		project.setPassword("newPassword");
-		this.mvc.perform(post("/api/project/save")
+		this.mvc.perform(put("/api/project/" + ID_PROJECT)
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(project)))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+				.andExpect(status().isNoContent());
 		
 		project = projectHandler.get(ID_PROJECT);
 		password = DataEncryption.decryptMessage(project.getPassword());

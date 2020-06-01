@@ -23,6 +23,7 @@ import java.util.Optional;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.xmlbeans.impl.jam.xml.TunnelledException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -33,12 +34,14 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fitzhi.FitzhiWebMvcConfigurer;
 import com.fitzhi.SkillerRuntimeException;
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.CacheDataHandler;
@@ -311,43 +314,30 @@ public class ProjectController {
 	}
 	
 	/**
-	 * Add or Update the given project.
-	 * @param project the passed project
+	 * Update the project identified by the given {@link Project#getId() idProject}
+	 * @param project the project object is passed in the body of the Put Medhod.
 	 * @return the updated or the just new project created
 	 */
-	@PostMapping("/save")
-	public ResponseEntity<Project> save(@RequestBody Project project) {
-
-		final ResponseEntity<Project> responseEntity;
-		final HttpHeaders headers = headers();
-		try {
-			if (project.getId() <= 0) {
-				project = projectHandler.addNewProject(project);
-				headers.add(BACKEND_RETURN_CODE, "1");
-				responseEntity = new ResponseEntity<>(project, headers, HttpStatus.OK);
-			} else {
-				if (!projectHandler.containsProject(project.getId())) {
-					responseEntity = new ResponseEntity<>(project, headers, HttpStatus.NOT_FOUND);
-					headers.add(BACKEND_RETURN_CODE, "O");
-					headers.set(BACKEND_RETURN_MESSAGE,
-							"There is no Project associated to the id " + project.getId());
-				} else {
-					projectHandler.saveProject(project);
-					responseEntity = new ResponseEntity<>(project, headers, HttpStatus.OK);
-					headers.add(BACKEND_RETURN_CODE, "1");
-				}
-			}
-			if (log.isDebugEnabled()) {
-				log.debug(String.format("POST command on /project/save returns the body %s", responseEntity.getBody()));
-			}
-			return responseEntity;
-		} catch (final SkillerException e) {
-			log.error(getStackTrace(e));
-			return new ResponseEntity<>(
-					new Project(), 
-					headers(), 
-					HttpStatus.BAD_REQUEST);
+	@PutMapping("/{idProject}")
+	public ResponseEntity<Object> updateProject(@PathVariable("idProject") int idProject, @RequestBody Project project) throws NotFoundException, SkillerException {
+		
+		if (idProject != project.getId()) {
+			throw new SkillerRuntimeException("WTF : SHOULD NOT PASS HERE!");
 		}
+
+		if (!projectHandler.containsProject(idProject)) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+		}
+
+		// You cannot anymore update an INACTIVE project
+		if (!project.isActive()) {
+			return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
+		}
+		
+		projectHandler.saveProject(project);
+		
+		return ResponseEntity.noContent().build();
+		
 	}
 		
 	/**
