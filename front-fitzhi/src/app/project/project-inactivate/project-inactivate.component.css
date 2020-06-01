@@ -4,7 +4,7 @@ div.container-project-inactivate-or-reactivate {
 }
 
 div.project-inactivate, div.project-reactivate {
-    background-color: whitesmoke;
+    background-color: transparent;
     display:inline-grid;
 } 
 
@@ -20,6 +20,9 @@ div.text-project {
     grid-column-end: 3;
 } 
 
+div.project-reactivate div.text-project {
+    font-size: larger;
+} 
 
 div.action-project {
     padding: 10px;
@@ -33,7 +36,7 @@ div.action-project {
 div.action-project button {
     width: 100px;
     height: 100px;
-    margin-top: 5px;
+    margin-top: 20px;
     padding: 0px;
 }
 

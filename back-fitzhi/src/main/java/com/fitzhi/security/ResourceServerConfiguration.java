@@ -33,6 +33,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				"/api/staff/**", 
 				"/api/skill/**", 
 				"/api/project/**", 
+
 				"/api/project/tasks/stream/**", 
 				"/api/project/audit/**", 
 				"/api/project/sonar/**", 

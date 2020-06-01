@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, OnDestroy, AfterViewInit, EventEmitter, Output, AfterContentInit } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { take, map, catchError, switchMap, tap } from 'rxjs/operators';
 
 import { ProjectService } from '../../service/project.service';

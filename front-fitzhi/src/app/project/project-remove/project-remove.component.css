@@ -4,7 +4,7 @@ div.container-project-remove {
 } 
 
 div.project-remove {
-    background-color: whitesmoke;
+    background-color: transparent;
     display:inline-grid;
 } 
 
@@ -16,6 +16,7 @@ div.text-project-remove {
 
 div.text-project-remove p.warning {
     margin: 10px;
+    font-size: larger;
     color: var(--color-warning)
 } 
 
@@ -31,7 +32,7 @@ div.action-project-remove {
 div.action-project-remove button {
     width: 100px;
     height: 100px;
-    margin-top: 30px;
+    margin-top: 25px;
     padding: 0px;
 }
 
