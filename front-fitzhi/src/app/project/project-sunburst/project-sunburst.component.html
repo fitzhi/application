@@ -66,6 +66,10 @@
 			<a href="javascript:;" (click)="jumpToTab (-1)">You need to complete the project form.</a>
 		</div>
 
+		<div id="warningProjectReadonly" *ngIf="isActiveContext(PreviewContext.SUNBURST_PROJECT_READONLY)">
+			<p>This project is readonly</p>
+		</div>
+
 		<!-- We do not use *ngIf because the dataSource needs to be created immediatly with their host component -->
 		<!-- If not, the tables are not synchronized with the selected package, and always empty. -->
 		<div [hidden]="!isActiveContext(PreviewContext.SUNBURST_READY)">

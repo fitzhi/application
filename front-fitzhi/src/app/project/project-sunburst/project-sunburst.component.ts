@@ -37,6 +37,7 @@ export enum PreviewContext {
 	SUNBURST_DEPENDENCIES = 'chart dependencies',
 	SUNBURST_LEGEND = 'chart legend',
 	SUNBURST_GHOSTS = 'chart ghost',
+	SUNBURST_PROJECT_READONLY = 'project readonly',
 }
 
 @Component({
@@ -172,6 +173,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 								this.projectService.project.id,
 								this.projectService.project.name);
 						}
+/*
 						//
 						// We postpone the Project updates to avoid the warning
 						// ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked.
@@ -184,6 +186,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 								this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
 							}
 						}, 0);
+*/
 					}
 				}
 		}));
@@ -213,13 +216,19 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 							console.log('Tab selected ' + index + ' @ ' + today.getHours()
 								+ ':' + today.getMinutes() + ':' + today.getSeconds());
 						}
-						if (this.isChartImpossible(this.projectService.project)) {
-							if (traceOn()) {
-								console.log('No project identifier passed to this tab. No data available to preview !');
-							}
-							this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
+						this.settings.idProject = this.projectService.project.id;
+						if (!this.projectService.project.active) {
+							this.messageService.info('This project is readonly. The Sunburst chart cannot be evaluated anymore.');
+							this.setActiveContext (PreviewContext.SUNBURST_PROJECT_READONLY);
 						} else {
-							setTimeout( () => this.loadDataChart(), 0);
+							if (this.isChartImpossible(this.projectService.project)) {
+								if (traceOn()) {
+									console.log('No project identifier passed to this tab. No data available to preview !');
+								}
+								this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
+							} else {
+								setTimeout( () => this.loadDataChart(), 0);
+							}
 						}
 					}
 				}
@@ -677,7 +686,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
     * @param idPanel panel identifier
     **/
 	public buttonActivated(idPanel: number) {
-		return (idPanel === this.idPanelSelected);
+		return !this.projectService.project.active || (idPanel === this.idPanelSelected);
 	}
 
 	/**
@@ -704,6 +713,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 * * `sunburst_waiting` : the graph representing the risk of staff coverage is currently being build</li>
 	 * * `sunburst_ready` : the graph is ready to be displayed
 	 * * `sunburst_impossible` : either lack of connection information, or lack of internet, or something else : the graph cannot be displayed.
+	 * * `sunburst_project_readonly` : This project has been inactivated, and therefore is readonly.
 	 * * `sunburst_detail_dependencies` : the table of libraries detected or declared is available in the container.
 	 */
 	public isActiveContext(context: PreviewContext) {

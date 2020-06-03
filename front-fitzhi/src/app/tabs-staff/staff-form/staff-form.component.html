@@ -77,7 +77,8 @@
                 </label>
 			</div>
 			<div class="mb-3">
-				<label for="profile" class="required">Profile</label> <select name="label" id="profile"
+				<label for="profile" class="required">Profile</label> 
+				<select name="label" id="profile"
 					formControlName="profile" class="custom-select d-block w-100">
 					<option *ngFor="let level of profiles" [value]="level.code">{{level.title}}</option>
                 </select> 

@@ -42,7 +42,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	profileProject = new FormGroup({
 		projectName: new FormControl(''),
-		urlSonarServer: new FormControl(''),
+		urlSonarServer: new FormControl({ value : '', disabled: !this.projectService.project.active }),
 		urlRepository: new FormControl(''),
 		username: new FormControl(''),
 		password: new FormControl(''),

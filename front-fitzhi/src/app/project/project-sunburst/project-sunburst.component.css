@@ -94,6 +94,15 @@ button.btn-outline-success {
 	color: var(--color-error);
 }
 
+#warningProjectReadonly {
+	margin: 20px;
+	padding: 10px;
+  background-color: whitesmoke;
+  font-size: 30px;
+  text-align: center;
+	color: var(--color-error);
+}
+
 .divPanelOnTop {
   margin: 40vh auto;
   transform: translateY(-50%);

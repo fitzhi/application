@@ -12,21 +12,22 @@
 					<div class="container">
 						<div class="row field">
 							<label class="required labelProject" for="project">Project information</label>
-							<input type="text" class="form-control required" id="projectName" name="projectName"
+							<input type="text" class="form-control required" id="projectName" name="projectName" 
+								[readonly]="!projectService.project.active"
 								placeholder="Project name (Required)" value="" required formControlName="projectName" />
 						</div>
 
 						<div class="row field">
 							<div class="col-12 insideField">
 								<label class="labelSkills" for="skills">Skills involved</label>
-								<textarea id="skills" name="skills" placeholder="Type your skills"></textarea>
+								<textarea id="skills" name="skills" placeholder="Type your skills" [readonly]="!projectService.project.active"></textarea>
 							</div>
 						</div>
 
 						<div class="row field">
 							<label for="urlSonarServer" >Sonar server</label> 
 							<select name="label" id="urlSonarServer" (change)="onUrlSonarServerChange($event)"
-								formControlName="urlSonarServer" class="custom-select d-block w-100">
+									formControlName="urlSonarServer" class="custom-select d-block w-100">
 								<option></option>
 								<option *ngFor="let sonarServer of referentialService.sonarServers$|async">{{sonarServer.urlSonarServer}}</option>
 							</select> 
@@ -36,12 +37,12 @@
 							<div class="col-12 insideField">
 								<label class="labelSkills" for="sonarProjects">Sonar projects</label>
 								<textarea id="sonarProjects" name="sonarProjects"
+									[readonly]="!projectService.project.active"
 									placeholder="Type a Sonar project associated to this project">
 								</textarea>
 							</div>
 						</div>
-						<div class="row field" 
-								*ngIf="projectService.projectLoaded$|async" 
+						<div class="row field" *ngIf="projectService.projectLoaded$|async" 
 								[hidden]="sonarProjectsLoaded || creation || !projectService.project.urlSonarServer">
 							<div class="col-12 insideField">
 								<p class="error">Cannot reach the Sonar server on the URL {{projectService.project.urlSonarServer}}.</p>
@@ -51,7 +52,7 @@
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row" *ngIf="projectService.project.active">
 				<div class="col-1"></div>
 				<div class="col-11" class="buttons_toggle">
 					<label for="connection_settings">&nbsp;Version control connection settings : &nbsp;&nbsp;</label>
@@ -80,6 +81,7 @@
 					<div class="d-flex  align-items-center flex-row">
 						<label for="urlRepository">Repository&nbsp;&nbsp;</label>
 						<input type="text" class="form-control" id="urlRepository" name="urlRepository"
+							[readonly]="!projectService.project.active"
 							placeholder="Repository URL" value="" formControlName="urlRepository" />
 					</div>
 					<br/>
@@ -99,6 +101,7 @@
 					<div class="d-flex  align-items-center flex-row">
 						<label for="urlRepository">Repository&nbsp;&nbsp;</label>
 						<input type="text" class="form-control" id="urlRepository" name="urlRepository"
+							[readonly]="!projectService.project.active"
 							placeholder="Repository URL" value="" formControlName="urlRepository" />
 					</div>
 
@@ -109,6 +112,7 @@
 							</div>
 							<div class="col-6">
 								<input type="text" class="form-control" id="username" name="username" placeholder="Username"
+									[readonly]="!projectService.project.active"
 									value="" formControlName="username" />
 							</div>
 						</div>
@@ -119,6 +123,7 @@
 							</div>
 							<div class="col-6">
 								<input type="password" class="form-control" id="password" name="password"
+									[readonly]="!projectService.project.active"
 									placeholder="Password" value="" autocomplete="off" formControlName="password" />
 							</div>
 						</div>
@@ -143,12 +148,14 @@
 					<div class="d-flex  align-items-center flex-row lab_and_row_repository">
 						<label for="urlRepository">Repository&nbsp;:&nbsp;</label>
 						<input type="text" class="form-control" id="urlRepository" name="urlRepository"
+							[readonly]="!projectService.project.active"
 							placeholder="Repository URL" value="" formControlName="urlRepository" />
 					</div>
 
 					<div class="d-flex  align-items-center flex-row lab_and_row_repository">
 						<label>File&nbsp;name&nbsp;:&nbsp;</label>
 						<input type="text" class="form-control" id="filename" name="filename" placeholder="Remote filename"
+							[readonly]="!projectService.project.active"
 							value="" formControlName="filename" />
 					</div>
 				</div>
@@ -163,7 +170,9 @@
 			<div class="row col-md-12">
 				<div class="col-md-9"></div>
 				<div class="col-md-3">
-					<button id="buttonOk" [ngClass]="classOkButton()" [disabled]="!profileProject.valid" type="submit"></button>
+					<button id="buttonOk" [ngClass]="classOkButton()" 
+						[disabled]="!profileProject.valid || !projectService.project.active" type="submit">
+					</button>
 				</div>
 			</div>
 		</form>
