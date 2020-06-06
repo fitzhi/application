@@ -7,6 +7,7 @@ import { ProjectService } from 'src/app/service/project.service';
 import { ActivityLog } from 'src/app/data/activity-log';
 import { MessageService } from 'src/app/message/message.service';
 import { SunburstCinematicService } from '../service/sunburst-cinematic.service';
+import { FindValueOperator } from 'rxjs/internal/operators/find';
 
 /**
 * This component will listen the events from a given Server.
