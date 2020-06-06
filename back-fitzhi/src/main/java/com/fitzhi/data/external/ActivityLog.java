@@ -18,6 +18,11 @@ import lombok.Data;
 public @Data class ActivityLog  {
 
 	/**
+	 * Entity identifier, most probably the project identifier. 
+	 */
+	int id;
+	
+	/**
 	 * the time-stamp of the event.
 	 */
 	private long logTime;
@@ -50,14 +55,16 @@ public @Data class ActivityLog  {
 	boolean completeOnError = false;
 	
 	/**
+	 * @param id an entity identifier (in this first release, it's a project identifier)
 	 * @param code the code of error associated to this message
 	 * @param message the message
 	 * @param logTime the data/time when this log has been recorded
 	 * @param complete {@code true} if the treatment is completed.
 	 * @param completeOnError{@code false} if the treatment is completed.
 	 */
-	public ActivityLog(int code, String message, long logTime, boolean complete, boolean completeOnError) {
+	public ActivityLog(int id, int code, String message, long logTime, boolean complete, boolean completeOnError) {
 		super();
+		this.id = id;
 		this.code = code;
 		this.message = message;
 		this.logTime = logTime;
@@ -66,17 +73,19 @@ public @Data class ActivityLog  {
 	}
 
 	/**
+	 * @param id an entity identifier (in this first release, it's a project identifier)
 	 * @param taskLog the log message inside a {@link Task}
 	 * @param complete {@code true} if the task is completed, {@code false} otherwise
 	 */
-	public ActivityLog(TaskLog taskLog, boolean complete) {
+	public ActivityLog(int id, TaskLog taskLog, boolean complete) {
 		super();
+		this.id = id;
 		this.code = taskLog.getCode();
 		this.message = taskLog.getMessage();
 		this.logTime = taskLog.getLogTime();
 		this.complete = complete;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -89,6 +98,10 @@ public @Data class ActivityLog  {
 		if (code != other.code)
 			return false;
 		if (complete != other.complete)
+			return false;
+		if (completeOnError != other.completeOnError)
+			return false;
+		if (id != other.id)
 			return false;
 		if (logTime != other.logTime)
 			return false;
@@ -106,6 +119,8 @@ public @Data class ActivityLog  {
 		int result = 1;
 		result = prime * result + code;
 		result = prime * result + (complete ? 1231 : 1237);
+		result = prime * result + (completeOnError ? 1231 : 1237);
+		result = prime * result + id;
 		result = prime * result + (int) (logTime ^ (logTime >>> 32));
 		result = prime * result + ((message == null) ? 0 : message.hashCode());
 		return result;
@@ -113,10 +128,10 @@ public @Data class ActivityLog  {
 
 	@Override
 	public String toString() {
-		return "ActivityLog [code=" + code + ", message=" + message + ", logTime=" + logTime + ", complete=" + complete
-				+ ", completeOnError=" + completeOnError + "]";
+		return "ActivityLog [id=" + id + ", code=" + code + ", message=" + message + ", logTime=" + logTime
+				+ ", complete=" + complete + ", completeOnError=" + completeOnError + "]";
 	}
-
+	
 	
 }
 

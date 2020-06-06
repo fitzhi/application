@@ -24,6 +24,7 @@ import lombok.Data;
  * <p>
  * This class represents a project in the application.
  * </p> 
+ * <img style="width:400px" SRC="https://fitzhi.com/class-diagram-project.png"></img>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public @Data class Project implements Serializable {

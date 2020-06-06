@@ -752,15 +752,21 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			return;
 		}
 		
-		LocalDate latestCommit = staff.getMissions().stream()
-				.map(Mission::getLastCommit)
-				.max(Comparator.comparing(LocalDate::toEpochDay))
-				.orElseThrow(() -> new SkillerRuntimeException(SHOULD_NOT_PASS_HERE));
-
+		Optional<LocalDate> optionalLatestCommit = staff.getMissions()
+				.stream()
+					.map(Mission::getLastCommit)
+					.filter(Objects::nonNull)
+					.max(Comparator.comparing(LocalDate::toEpochDay));
+		
+		// No update possible, because there is no date of commit recorded in the missions.
+		if (!optionalLatestCommit.isPresent()) {
+			return;
+		}
+		
 		synchronized (lockDataUpdated) {
-			if (LocalDate.now().minusDays(inactivityDelay).isAfter(latestCommit)) {
+			if (LocalDate.now().minusDays(inactivityDelay).isAfter(optionalLatestCommit.get())) {
 				staff.setActive(false);
-				staff.setDateInactive(latestCommit);
+				staff.setDateInactive(optionalLatestCommit.get());
 			} else {
 				staff.setActive(true);
 				staff.setDateInactive(null);				

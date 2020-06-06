@@ -4,9 +4,11 @@
 package com.fitzhi.source.crawler.git;
 
 import static com.fitzhi.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
+import static com.fitzhi.Error.CODE_IO_ERROR;
 import static com.fitzhi.Error.CODE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
 import static com.fitzhi.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import static com.fitzhi.Error.MESSAGE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
@@ -15,8 +17,10 @@ import static com.fitzhi.Global.LN;
 import static com.fitzhi.Global.PROJECT;
 import static org.eclipse.jgit.diff.DiffEntry.DEV_NULL;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -424,7 +428,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		}
 
 		if (log.isInfoEnabled()) {
-			log.info(String.format("Retrieving %d on the repository %s", allCommits.size(),
+			log.info(String.format("Retrieving %d commits on the repository %s", allCommits.size(),
 					repository.getDirectory().getAbsoluteFile()));
 		}
 
@@ -742,8 +746,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		}
 		
 		//
-		// The repository has not been loaded from cache, but it looks like that The directory where the repository has been cloned.
-		// 
+		// The repository has not been loaded from cache, 
+		// but it looks like that the directory where the repository has been cloned is declared
 		//
 		if (project.getLocationRepository() == null) {
 			throw new SkillerException(Error.CODE_REPO_MUST_BE_ALREADY_CLONED,
@@ -986,6 +990,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			failed = true;
 			return null;
 		} catch (GitAPIException | IOException e) {
+			log.error(e.getMessage());
 			tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), 666, e.getLocalizedMessage());
 			failed = true;
 			return null;
@@ -997,7 +1002,6 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 					tasks.completeTaskOnError(DASHBOARD_GENERATION, "project", project.getId());					
 				}
 			} catch (SkillerException e) {
-				e.printStackTrace();
 				log.error(e.getLocalizedMessage());
 			}
 		}

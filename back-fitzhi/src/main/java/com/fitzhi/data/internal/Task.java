@@ -108,15 +108,16 @@ public @Data class Task implements Serializable {
 		
 			// We clear the log
 			activityLogs.clear();
-		}
+		};
 	}
 
 	/**
+	 * @param idProject the project identifier
 	 * @return the latest log of this task in an {@link ActivityLog} format.
 	 */
-	public ActivityLog buildLastestLog() {
+	public ActivityLog buildLastestLog(int idProject) {
 		TaskLog log = this.getLastestLog();
-		ActivityLog activityLog = new ActivityLog(log.code, log.message, log.logTime, complete, completeOnError);
+		ActivityLog activityLog = new ActivityLog(idProject, log.code, log.message, log.logTime, complete, completeOnError);
 		return activityLog;
 	}
 }

@@ -68,9 +68,9 @@ public class ReactiveLogReportSunburstGenerationLogNextTest {
 		asyncTask.addTask("nopeOperation", PROJECT, ID_PROJECT);
 		asyncTask.logMessage("nopeOperation", PROJECT, ID_PROJECT, "my first message");
 		this.eraseTime();
-		this.activityLog1 = new ActivityLog(new TaskLog(0, "my first message", 0), false);
-		this.activityLog2 = new ActivityLog(new TaskLog(0, "my second message", 0), false);
-		this.activityLogEnd = new ActivityLog(new TaskLog(0, "my second message", 0), true);
+		this.activityLog1 = new ActivityLog(ID_PROJECT, new TaskLog( 0, "my first message", 0), false);
+		this.activityLog2 = new ActivityLog(ID_PROJECT, new TaskLog(0, "my second message", 0), false);
+		this.activityLogEnd = new ActivityLog(ID_PROJECT, new TaskLog(0, "my second message", 0), true);
 		
 	    executorService.schedule(new Runnable() {
 	        @Override

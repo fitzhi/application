@@ -25,9 +25,12 @@ import com.fitzhi.service.FileType;
 import lombok.Data;
 
 /**
+ * <p>
  * A staff member in the company (most probably a developer).<br/>
  * This object represents also the login/pass associated to each collaborator
  * inside the company.
+ * </p>
+ * <img style="width:400px" SRC="https://fitzhi.com/class-diagram-staff.png"></img>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */

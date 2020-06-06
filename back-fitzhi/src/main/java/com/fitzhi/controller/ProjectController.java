@@ -447,32 +447,34 @@ public class ProjectController {
 		try {
 			if (scanner.hasAvailableGeneration(project)) {
 				return generate(project, settings);
-			} else {
+			} 
+			
+			if (log.isDebugEnabled()) {
+				log.debug ("Tasks present in the tasks collection");
+				log.debug (tasks.trace());
+			}
+			
+			if (tasks.hasActiveTask(DASHBOARD_GENERATION, PROJECT, project.getId())) {
 				if (log.isDebugEnabled()) {
-					log.debug ("Tasks present in the tasks collection");
-					log.debug (tasks.trace());
+					log.debug("The generation has already been called for the project " 
+							+ project.getName() + ". Please wait !");
 				}
-				if (tasks.hasActiveTask(DASHBOARD_GENERATION, PROJECT, project.getId())) {
-					if (log.isDebugEnabled()) {
-						log.debug("The generation has already been called for the project " 
-								+ project.getName() + ". Please wait !");
-					}
-					return new ResponseEntity<> (
-							new SunburstDTO(project.getId(), project.getStaffEvaluation(), CODE_MULTIPLE_TASK,
-							"A dashboard generation has already been launched for " + project.getName()), 
-							headers(), 
-							HttpStatus.OK);
-				}
-				if (log.isDebugEnabled()) {
-					log.debug("The generation will be processed asynchronously !");
-				}
-				scanner.generateAsync(project, settings);
-				return new ResponseEntity<> (new SunburstDTO(project.getId(), project.getStaffEvaluation(), null, 
-						HttpStatus.CREATED.value(), 
-						"The dashboard generation has been launched. Operation might last a while. Please try later !"), 
+				return new ResponseEntity<> (
+						new SunburstDTO(project.getId(), project.getStaffEvaluation(), CODE_MULTIPLE_TASK,
+						"A dashboard generation has already been launched for " + project.getName()), 
 						headers(), 
 						HttpStatus.OK);
 			}
+			
+			if (log.isDebugEnabled()) {
+				log.debug("The generation will be processed asynchronously !");
+			}
+			scanner.generateAsync(project, settings);
+			return new ResponseEntity<> (new SunburstDTO(project.getId(), project.getStaffEvaluation(), null, 
+					HttpStatus.CREATED.value(), 
+					"The dashboard generation has been launched. Operation might last a while. Please try later !"), 
+					headers(), 
+					HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(getStackTrace(e));
 			return new ResponseEntity<> (new SunburstDTO(project.getId(), project.getStaffEvaluation(), null, -1, e.getMessage()), 
