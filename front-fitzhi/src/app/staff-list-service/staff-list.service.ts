@@ -146,8 +146,8 @@ export class StaffListService {
 		return this.allStaff
 			.filter(collab => (collab.lastName))
 			.find(collab =>
-				(collab.firstName.toLowerCase() === staff.firstName.toLowerCase()) &&
-				(collab.lastName.toLowerCase() === staff.lastName.toLowerCase()));
+				(collab.firstName.replace('-', ' ').toLowerCase() === staff.firstName.toLowerCase()) &&
+				(collab.lastName.replace('-', ' ').toLowerCase() === staff.lastName.toLowerCase()));
 
 	}
 }
