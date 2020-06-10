@@ -37,13 +37,13 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	private TAB_TITLE = ['Project', 'Staff list', 'Staff coverage', 'Sonar', 'Audit', 'Remove'];
 
 	constructor(
-		private cinematicService: CinematicService,
+		public cinematicService: CinematicService,
 		private referentialService: ReferentialService,
 		private route: ActivatedRoute,
 		private messageService: MessageService,
 		private sonarService: SonarService,
 		private listProjectsService: ListProjectsService,
-		private projectService: ProjectService,
+		public projectService: ProjectService,
 		private router: Router) {
 		super();
 	}

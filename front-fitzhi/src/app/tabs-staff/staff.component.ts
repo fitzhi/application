@@ -38,9 +38,9 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
 		public cinematicService: CinematicService,
 		private route: ActivatedRoute,
 		public staffListService: StaffListService,
-		private messageService: MessageService,
-    private staffDataExchangeService: StaffDataExchangeService,
-    private staffService: StaffService,
+		public messageService: MessageService,
+		public staffDataExchangeService: StaffDataExchangeService,
+		public staffService: StaffService,
 		private router: Router) {
 		super();
 	}
@@ -56,10 +56,10 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
 				this.idStaff = + params['id']; // (+) converts string 'id' to a number
 			}
 
-      // Either we are in creation mode, or we load the collaborator from the back-end...
-    	// We create an empty collaborator until the subscription is complete
-      this.collaborator = this.staffService.emptyStaff();
-      
+			// Either we are in creation mode, or we load the collaborator from the back-end...
+			// We create an empty collaborator until the subscription is complete
+			this.collaborator = this.staffService.emptyStaff();
+
 			this.staffDataExchangeService.changeCollaborator(this.collaborator);
 
 			/*

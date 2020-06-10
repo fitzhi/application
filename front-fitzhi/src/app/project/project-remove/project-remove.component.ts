@@ -8,7 +8,7 @@ import { ProjectService } from 'src/app/service/project.service';
 })
 export class ProjectRemoveComponent implements OnInit {
 
-	constructor(private projectService: ProjectService) { }
+	constructor(public projectService: ProjectService) { }
 
 	ngOnInit() {
 	}
