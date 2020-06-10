@@ -69,9 +69,19 @@ public class BasicCommitRepository implements CommitRepository {
 				if (staffHandler.isEligible(staff, operation.getAuthorName())) {
 					
 					//
-					// This case is possible in case of an on-boarding post creation
-					// Temporary, 2 different developers might be present
-					// The complete rebuilt will later rectify this state
+					// This case is possible in case of an on-boarding of an already registered staff member
+					// 
+					// The record of a staff member might be modified and therefore might match the author name of an operation
+					// The sequence might be :
+					// Hypothesis
+					//   1) The developer John DOO is linked to dew operations identifier by the author trace "John DOO"
+					//   2) This developer John DOO has the login attribute "John DOO" in the staff collection
+					//   3) There are some records associated to a ghost named "jdoo"
+					//
+					//   4) End-user change the login of John Doo to "jdoo"
+					//   5) We on-board the ghosts once again and John DOO might appear twice the same day on the same source file.
+					// 
+					// We will remove useless duplicated operation-records later.
 					//
 					if (operation.getIdStaff() == -1) {
 						operation.setIdStaff(staff.getIdStaff());

@@ -196,6 +196,15 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 
 	/**
 	 * <p>
+	 * When deleting a staff member, we have to detach him (if necessary) from ALL ghosts present in ALL projects.
+	 * </p>
+	 * @param staff identifier
+	 * @throws SkillerException thrown if problem occurs
+	 */
+	void detachStaffMemberFromGhostsOfAllProjects(int idStaff) throws SkillerException;
+	
+	/**
+	 * <p>
 	 * Set the technical status of a {@link com.fitzhi.data.internal.Ghost ghost}.
 	 * </p>
 	 * @param project the given project

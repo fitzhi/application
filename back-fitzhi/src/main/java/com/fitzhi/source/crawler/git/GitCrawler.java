@@ -4,11 +4,9 @@
 package com.fitzhi.source.crawler.git;
 
 import static com.fitzhi.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
-import static com.fitzhi.Error.CODE_IO_ERROR;
 import static com.fitzhi.Error.CODE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
 import static com.fitzhi.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
-import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import static com.fitzhi.Error.MESSAGE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
@@ -17,10 +15,8 @@ import static com.fitzhi.Global.LN;
 import static com.fitzhi.Global.PROJECT;
 import static org.eclipse.jgit.diff.DiffEntry.DEV_NULL;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

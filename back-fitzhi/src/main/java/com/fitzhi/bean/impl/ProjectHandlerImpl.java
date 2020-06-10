@@ -11,6 +11,7 @@ import static com.fitzhi.Global.NO_USER_PASSWORD_ACCESS;
 import static com.fitzhi.Global.REMOTE_FILE_ACCESS;
 import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
@@ -441,6 +442,21 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		throw new SkillerRuntimeException(
 				String.format("%s does not exist anymore in the project %s (id: %d)",
 						pseudo, project.getName(), project.getId()));
+	}
+
+	
+	@Override
+	public void detachStaffMemberFromGhostsOfAllProjects(int idStaff) throws SkillerException {
+		
+		List<Ghost> ghosts = this.getProjects().values().stream()
+			.flatMap(p -> p.getGhosts().stream())
+			.filter(ghost -> (ghost.getIdStaff() == idStaff))
+			.collect(Collectors.toList());
+			
+		synchronized (lockDataUpdated) {
+			ghosts.stream().forEach(ghost -> ghost.setIdStaff(-1));
+			this.dataUpdated = true;			
+		}
 	}
 
 	@Override

@@ -134,7 +134,6 @@ export class StaffListService {
 		return latest;
 	}
 
-
 	/**
 	 * Lookup for a staff member similar to the given one.
 	 *
@@ -150,4 +149,13 @@ export class StaffListService {
 				(collab.lastName.replace('-', ' ').toLowerCase() === staff.lastName.toLowerCase()));
 
 	}
+
+	/**
+	 * Return the index of the associated collaborator with the given id.
+	 * @param idStaff the staff identifier
+	 */
+	findIndex(idStaff: number) {
+		return this.allStaff.findIndex(staff => (staff.idStaff === idStaff));
+	}
+
 }

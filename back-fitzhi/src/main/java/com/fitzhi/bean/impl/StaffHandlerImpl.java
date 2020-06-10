@@ -4,7 +4,6 @@ import static com.fitzhi.Error.CODE_LOGIN_ALREADY_EXIST;
 import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_LOGIN_ALREADY_EXIST;
 import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
-import static com.fitzhi.Error.SHOULD_NOT_PASS_HERE;
 import static com.fitzhi.Global.UNKNOWN;
 
 import java.text.MessageFormat;
@@ -514,7 +513,9 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	public Staff addNewStaffMember(final Staff staff)  {
 		synchronized (lockDataUpdated) {
 			Map<Integer, Staff> company = getStaff();
-			staff.setIdStaff(company.size() + 1);
+			if (staff.getIdStaff() <= 0) {				
+				staff.setIdStaff(company.size() + 1);
+			}
 			company.put(staff.getIdStaff(), staff);
 			this.dataUpdated = true;
 		}
@@ -566,6 +567,15 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		synchronized (lockDataUpdated) {
 			getStaff().put(updStaff.getIdStaff(), updStaff);
 			this.dataUpdated = true;
+		}
+	}
+
+	@Override
+	public Staff removeStaff(int idStaff) {
+		synchronized (lockDataUpdated) {
+			Staff staff = getStaff().remove(idStaff);
+			this.dataUpdated = true;
+			return staff;
 		}
 	}
 

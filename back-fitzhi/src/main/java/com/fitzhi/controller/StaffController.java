@@ -27,6 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -53,6 +54,7 @@ import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Resume;
 import com.fitzhi.data.internal.ResumeSkill;
 import com.fitzhi.data.internal.Staff;
+import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.service.FileType;
 import com.fitzhi.service.ResumeParserService;
@@ -304,6 +306,31 @@ public class StaffController {
 		return new ResponseEntity<>(input, headers, HttpStatus.OK);
 	}
 
+	/**
+	 * Delete the staff member corresponding to the identifier.
+	 * @param idStaff the Staff member identifier candidate for deletion
+	 * @return an empty HTTP response after the deletion.
+	 */
+	@DeleteMapping(value = "/{idStaff}")
+	public ResponseEntity<Object> removeStaff(@PathVariable("idStaff") int idStaff) throws NotFoundException, SkillerException {
+		Staff staff = staffHandler.getStaff(idStaff);
+		if (staff == null) {
+			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
+		}
+		
+		staffHandler.removeStaff(idStaff);
+
+		return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.OK);
+	}
+	
+	/**
+	 * We do not allow to remove all staff members
+	 * @return an empty HTTP Response because this method is not allowed.
+	 */
+	@DeleteMapping()
+	public ResponseEntity<Object> removeAllStaff() throws SkillerException {		
+		return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
+	}
 
 	/**
 	 * <p>

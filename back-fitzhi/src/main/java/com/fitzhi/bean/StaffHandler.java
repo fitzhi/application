@@ -39,6 +39,13 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 */
 	Staff put (final int idStaff, final Staff staff);
 	
+	/**
+	 * Remove a a staff member from the personal.
+	 * @param isStaff : identifier of the employee to be deleted.
+	 * @return the staff member just deleted, or {@code null} if none exists.
+	 */
+	Staff removeStaff (final int idStaff);
+	
 	 /**
 	  * @param active <code>true</code> Only active developers are taking account, <code>false</code> all developers are included. 
 	  * @return the number of developers group by skills registered into a Map.

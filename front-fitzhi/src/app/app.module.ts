@@ -117,6 +117,7 @@ import { NgxPopper } from 'angular-popper';
 import { StaffDataExchangeService } from './tabs-staff/service/staff-data-exchange.service';
 import { ProjectRemoveComponent } from './project/project-remove/project-remove.component';
 import { ProjectInactivateComponent } from './project/project-inactivate/project-inactivate.component';
+import { StaffRemoveComponent } from './tabs-staff/staff-remove/staff-remove.component';
 
 @NgModule({
 	declarations: [
@@ -182,7 +183,8 @@ import { ProjectInactivateComponent } from './project/project-inactivate/project
 		TreemapHeaderComponent,
 		TreemapComponent,
 		ProjectRemoveComponent,
-		ProjectInactivateComponent
+		ProjectInactivateComponent,
+		StaffRemoveComponent
 	],
 	entryComponents: [
 		StaffUploadCvComponent,

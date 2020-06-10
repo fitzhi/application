@@ -100,6 +100,7 @@ public class StaffHandlerIsEligibleTest {
 	@Test
 	public void testIsEligibleComposedFirstname() throws SkillerException {
 		Staff staff = new Staff(1, "Jean-Paul", "TWO", "jptwo", "jptwo","jptwo@nope.com", "Gaulo-roman");
+		staff.setActive(false);
 		Assert.assertTrue(staffHandler.isEligible(staff, "jptwo"));
 		Assert.assertTrue(staffHandler.isEligible(staff, "Two Jean Paul"));
 		Assert.assertTrue(staffHandler.isEligible(staff, "Two Jean-Paul"));

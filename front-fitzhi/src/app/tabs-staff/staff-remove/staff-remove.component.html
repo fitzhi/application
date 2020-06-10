@@ -1,0 +1,16 @@
+<div class="container-staff-remove">
+    <div class="staff-remove">
+        <div class="text-staff-remove">
+            <p>This Staff member can be removed.<br/>
+              All projects involving {{staffDataExchangeService.collaborator.firstName}} {{staffDataExchangeService.collaborator.lastName}} will be detached.
+            </p>
+        </div>
+        <div class="action-staff-remove">
+            <button 
+                class="btn rounded btn-outline-secondary" 
+                (click)="removeStaff()">
+                <em class="fas fa-trash-alt"></em>
+            </button>
+        </div>
+    </div>
+</div>

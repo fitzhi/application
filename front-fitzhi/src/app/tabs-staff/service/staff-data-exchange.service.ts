@@ -26,4 +26,10 @@ export class StaffDataExchangeService {
 		this.collaboratorLoaded$.next(true);
 	}
 
+	/**
+	 * Return **true** if this class is hosting an existing collaborator, and not an empty one.
+	 */
+	hostExistingCollaborator() {
+		return ((this.collaborator) && (this.collaborator.idStaff > 0));
+	}
 }
