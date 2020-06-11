@@ -495,7 +495,8 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	public boolean isActive(int idStaff)  {
 		Staff staff = getStaff().get(idStaff);
 		if (staff == null) {
-			throw new SkillerRuntimeException("SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
+			log.error ("SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
+			return false;
 		}
 		return staff.isActive();
 	}
