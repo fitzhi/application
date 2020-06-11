@@ -75,7 +75,6 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 							this.loadProject();
 						}
 					}
-
 				}
 			}));
 	}

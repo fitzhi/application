@@ -28,10 +28,11 @@ describe('ProjectFormComponent', () => {
 	@Component({
 		selector: 'app-project-component',
 		template: 	'<app-project-form ' +
-						'[risk$]="risk$" >' +
+						'[risk$]="risk$" *ngIf="(projectService.project)">' +
 					'</app-project-form>'
 	})
 	class TestHostComponent {
+		constructor(public projectService: ProjectService) {}
 		public risk$ = new BehaviorSubject<number>(1);
 	}
 
