@@ -134,26 +134,6 @@ div.taskReportError {
   color: var(--color-error);
 }
 
-div.help {
-  background-color: var(--color-help);
-  background: var(--color-help);
-  margin: 0;
-  padding: 0;
-  width: 500px;
-}
-
-h4.help-title {
-  color: var(--color-selected);
-}
-
-p.help, u.help {
-  margin-bottom: 5px;
-}
-
-div.help-content {
-  text-align: left;
-}
-
 :host >>> div.angular-popper {
   background: lightyellow;
   width: 520px;

@@ -1,9 +1,10 @@
 <div class="vertical-nav" id="sidebar">
     
-    <button class="btn rounded treeMap"
+    <button id="treeMap" class="btn rounded treeMap"
         [ngClass]="{
             'btn-outline-success' : isSelected(selection.treeMapSummary), 
             'btn-outline-secondary': !isSelected(selection.treeMapSummary)}" 
+            (mouseenter)="popupHelper.mouseEnter(selection.treeMap)" (mouseleave)="popupHelper.mouseLeave()"
             (click)="switchTo(selection.treeMapSummary)">
         <svg class="treeMapButton">
             <rect x="6" y="6" class="rectTreeMap" style="fill:#27A53F" />
@@ -17,12 +18,25 @@
             <rect x="36" y="36" class="rectTreeMap" style="fill:#8B0000"  />
         </svg>
     </button>
-    
-    <button class="btn rounded currentMinimized"
+
+    <angular-popper placement="left" target="#treeMap" *ngIf="popupHelper.isButtonActivated(selection.treeMap)">
+      <div content class="help">
+        <h4 class="help-title">Display staff risk</h4>
+        <div class="help-content">
+          <p>
+            Display the staff risk !
+          </p>
+        </div>
+      </div>
+    </angular-popper>        
+
+    <button id="currentSummary" class="btn rounded currentMinimized"
         [ngClass]="{
             'btn-outline-success' : isSelected(selection.currentSummary), 
             'btn-outline-secondary': !isSelected(selection.currentSummary)}" 
-        (click)="switchTo(selection.currentSummary)">
+          (mouseenter)="popupHelper.mouseEnter(selection.currentSummary)" 
+          (mouseleave)="popupHelper.mouseLeave()"
+          (click)="switchTo(selection.currentSummary)">
         <app-pie-chart
                 [radius]=150
                 [active]=false
@@ -30,6 +44,22 @@
         </app-pie-chart>
     </button>
 
+    <angular-popper placement="left" target="#currentSummary" *ngIf="popupHelper.isButtonActivated(selection.currentSummary)">
+      <div content class="help">
+        <h4 class="help-title">Display Pie dashboard</h4>
+        <div class="help-content">
+          <p>
+            This sector diagram seeks to summarize on a single diagram, the quality of the portfolio on the 3 dimensions handled by Fitzhì :
+          </p>
+          <ul>
+            <li>the Staff coverage</li>
+            <li>the Code quality</li>
+            <li>the global design</li>
+          </ul>
+        </div>
+      </div>
+    </angular-popper>        
+   
     <button class="btn rounded lastMonthMinimized"
         [ngClass]="{
             'btn-outline-success' : isSelected(selection.lastMonthSummary), 

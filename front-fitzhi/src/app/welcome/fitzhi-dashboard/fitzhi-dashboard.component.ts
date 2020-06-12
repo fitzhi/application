@@ -3,6 +3,8 @@ import { PieDashboardService } from './service/pie-dashboard.service';
 import { BaseComponent } from 'src/app/base/base.component';
 import { ProjectService } from 'src/app/service/project.service';
 import { Constants } from 'src/app/constants';
+import { selection } from './selection';
+import { FitzhiDashboardPopupHelper } from './fitzhi-dashboard-popup-helper';
 
 @Component({
 	selector: 'app-fitzhi-dashboard',
@@ -11,19 +13,10 @@ import { Constants } from 'src/app/constants';
 })
 export class FitzhiDashboardComponent extends BaseComponent implements OnInit, OnDestroy {
 
-	/**
-	 * Available buttons.
-	 */
-	public selection  = {
-		none: 0,
-		lastMonthSummary: 1,
-		lastYearSummary: 2,
-		currentSummary: 3,
-		treeMapSummary: 4
-	};
+	public selection = selection;
 
 	/**
-	 * Selected button
+	 * Selected button. End-user has clicked on it.
 	 */
 	public selected = this.selection.none;
 
@@ -36,6 +29,10 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 		currentMinimized: 6
 	};
 
+	/**
+	 * Helper handler the display or not of the poppup.
+	 */
+	public popupHelper = new FitzhiDashboardPopupHelper();
 
 	public viewTreeMap = [600, 400];
 

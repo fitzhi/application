@@ -2,6 +2,8 @@
 @import '@fortawesome/fontawesome-free/css/all.css';
 @import './buttons.css';
 @import './mat-tab-label.css';
+@import './app-css/PopupHelper.css';
+
 
 :root {
   --color-selected: #28a745; 
