@@ -24,7 +24,12 @@
         <h4 class="help-title">Display staff risk</h4>
         <div class="help-content">
           <p>
-            Display the staff risk !
+            This Treemap chart represents the skills coverage of your portfolio.
+            It compares the volume of code registered by your applications, and the active teams available, and able to maintain them.
+            <br/>
+          </p>
+          <p>
+            This chart is answering the question : <i>Is my IT staff sufficient to maintain my portfolio ?</i>
           </p>
         </div>
       </div>
@@ -49,35 +54,69 @@
         <h4 class="help-title">Display Pie dashboard</h4>
         <div class="help-content">
           <p>
-            This sector diagram seeks to summarize on a single diagram, the quality of the portfolio on the 3 dimensions handled by Fitzhì :
+            This sector diagram summarizes on a single PIE, the quality of the portfolio on the 3 metrics :
           </p>
           <ul>
-            <li>the Staff coverage</li>
-            <li>the Code quality</li>
-            <li>the global design</li>
+            <li><b>the Staff coverage, </b><i>the coverage of developers who are still active, and have worked on your applications.</i></li>
+            <li><b>the Code quality, </b> <i>the distribution of the average Sonar scores given to your applications.</i></li>
+            <li><b>the global design </b> <i>the appraisal on your projects given by yours/ours experts. It's the human point of view on projects.</i></li>
           </ul>
         </div>
       </div>
     </angular-popper>        
    
-    <button class="btn rounded lastMonthMinimized"
+    <button id="lastMonthSummary" class="btn rounded lastMonthMinimized"
         [ngClass]="{
             'btn-outline-success' : isSelected(selection.lastMonthSummary), 
             'btn-outline-secondary': !isSelected(selection.lastMonthSummary)}" 
-        (click)="switchTo(selection.lastMonthSummary)">
-        <p>Last month</p>
+          (mouseenter)="popupHelper.mouseEnter(selection.lastMonthSummary)" 
+          (mouseleave)="popupHelper.mouseLeave()"
+          (click)="switchTo(selection.lastMonthSummary)">
+      <p>Last month</p>
         <em class="fas fa-camera"></em>
     </button>
 
-    <button class="btn rounded lastYearMinimized"
+    <angular-popper placement="left" target="#lastMonthSummary" *ngIf="popupHelper.isButtonActivated(selection.lastMonthSummary)">
+      <div content class="help">
+        <h4 class="help-title">Summary dashboard for last month</h4>
+        <div class="help-content">
+          <p>
+            You must monitor your IT assets over time. Here, you'll find a snapshot of your portfolio for last month.
+          </p>
+          <p>
+            As you don't have any history in Fitzhi yet, no snapshot from last month is available.<br/>
+            <i>Good for us. We don't have yet developed this feature!</i>
+          </p>
+        </div>
+      </div>
+    </angular-popper>        
+
+    <button id="lastYearSummary" class="btn rounded lastYearMinimized"
         [ngClass]="{
             'btn-outline-success' : isSelected(selection.lastYearSummary), 
             'btn-outline-secondary': !isSelected(selection.lastYearSummary)}" 
-        (click)="switchTo(selection.lastYearSummary)">
+            (mouseenter)="popupHelper.mouseEnter(selection.lastYearSummary)" 
+            (mouseleave)="popupHelper.mouseLeave()"
+          (click)="switchTo(selection.lastYearSummary)">
         <p>Last year</p>
         <em class="fas fa-camera"></em>
     </button>
 
+    <angular-popper placement="left" target="#lastYearSummary" *ngIf="popupHelper.isButtonActivated(selection.lastYearSummary)">
+      <div content class="help">
+        <h4 class="help-title">Summary dashboard for last year</h4>
+        <div class="help-content">
+          <p>
+            You must monitor your IT assets over time. Here, you'll find a snapshot of your portfolio for last year.
+          </p>
+          <p>
+            As you don't have any history in Fitzhi yet, no snapshot from last year is available.<br/>
+            <i>Good for us. We don't have yet developed this feature!</i>
+          </p>
+        </div>
+      </div>
+    </angular-popper>        
+   
 </div>
 
 <div class="mainDashboard page-content"> 
@@ -98,7 +137,7 @@
         </div>
         <div class="camera">
             Last year snapshot<br/>
-            <em class="fas fa-camera camera"></em>
+            <em class="fas fa-camera camera large-fas"></em>
             <p class="camera">NO DATA AVAILABLE</p>
         </div>
     </div>
@@ -115,7 +154,7 @@
         </div>
         <div class="camera">
             Last month snapshot<br/>
-            <em class="fas fa-camera camera"></em>
+            <em class="fas fa-camera camera large-fas"></em>
             <p class="camera">NO DATA AVAILABLE</p>
         </div>
     </div>

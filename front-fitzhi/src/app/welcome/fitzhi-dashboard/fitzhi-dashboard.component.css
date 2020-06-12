@@ -149,3 +149,11 @@ rect.rectTreeMap {
   background: lightyellow;
   border-color: lightgrey;
 }
+
+em.fas {
+  font-size: xx-large;
+}
+
+em.large-fas {
+  font-size: 80px;
+}
