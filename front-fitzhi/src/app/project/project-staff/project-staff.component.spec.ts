@@ -57,7 +57,7 @@ describe('ProjectStaffComponent', () => {
 	})
 	class TestHostComponent {
 
-		@ViewChild(ProjectStaffComponent, {static: false}) projectStaffComponent: ProjectStaffComponent;
+		@ViewChild(ProjectStaffComponent) projectStaffComponent: ProjectStaffComponent;
 	}
 
 	beforeEach(async(() => {

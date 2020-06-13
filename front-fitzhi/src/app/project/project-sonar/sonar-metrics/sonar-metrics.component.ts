@@ -57,7 +57,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	/**
 	 * The paginator of the ghosts data source.
 	 */
-	@ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+	@ViewChild(MatPaginator) paginator: MatPaginator;
 
 	/**
 	 * Key of the current selected Sonar project.
@@ -73,6 +73,14 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 		super();
 	}
 
+	logMetrics() {
+		if (traceOn()) {
+			this.sonarService.loadSonarComponentMeasures$(new Project(), null, []).subscribe({
+				next: response => {}
+			});
+		}
+	}
+
 	ngOnInit() {
 
 		this.subscriptions.add(
@@ -86,6 +94,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 						return  (this.isSonarAccessible) ? this.loadMetrics$() : EMPTY;
 					}))
 				.subscribe ((data: ProjectSonarMetric[]) => {
+					this.logMetrics();
 					this.sonarService.getSonarServer(this.projectService.project).setProjectSonarMetrics(data);
 					this.initDataSource(data);
 			}));

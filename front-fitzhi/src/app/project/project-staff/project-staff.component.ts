@@ -26,9 +26,9 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 
 	public displayedColumns: string[] = ['fullname', 'active', 'external', 'firstCommit', 'lastCommit', 'numberOfCommits', 'numberOfFiles'];
 
-	@ViewChild(MatSort, { static: false }) sort: MatSort;
+	@ViewChild(MatSort) sort: MatSort;
 
-	@ViewChild(MatTable, { static: false }) table: MatTable<any>;
+	@ViewChild(MatTable) table: MatTable<any>;
 
 	constructor(
 		private projectService: ProjectService,

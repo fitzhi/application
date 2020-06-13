@@ -204,7 +204,11 @@ export class SonarService extends InternalService {
 	 * @param key the key of the evaluated Sonar project
 	 * @param metrics list of metrics to be evaluated
 	 */
-	loadSonarComponentMeasures$(project: Project, key: string, metrics: string[]): Observable<ResponseComponentMeasures> {
+	public loadSonarComponentMeasures$(project: Project, key: string, metrics: string[]): Observable<ResponseComponentMeasures> {
+    if (!key) {
+			return EMPTY;
+    }
+
 		const sonarServer = this.getSonarServer(project);
 		if (!sonarServer) {
 			return EMPTY;

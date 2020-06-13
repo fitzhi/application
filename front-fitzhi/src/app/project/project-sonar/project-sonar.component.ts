@@ -40,7 +40,7 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 	/**
 	 * The Sonar Thumnbails composant hosted on the top of the dashboard
 	 */
-	@ViewChild(SonarThumbnailsComponent, {static: false}) thumbNails: SonarThumbnailsComponent;
+	@ViewChild(SonarThumbnailsComponent) thumbNails: SonarThumbnailsComponent;
 
 	// Identifier of the panel selected.
 	// By default we begin with the panel SONAR
@@ -76,6 +76,7 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 							console.log ('Sonar dashboard Activated for project %s', this.projectService.project.name);
 						}
 					}
+
 
 					// If there is no (more) SonarProject, we cleanup the child containers.
 					if (this.projectService.project && this.projectService.project.sonarProjects.length === 0) {
