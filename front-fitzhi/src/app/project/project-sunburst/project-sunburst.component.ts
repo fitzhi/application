@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input, OnDestroy, Output, EventEmitter, ɵɵcontainerRefreshEnd } from '@angular/core';
+import { Component, OnInit, AfterViewInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import Sunburst from 'sunburst-chart';
 import { Constants } from '../../constants';
 import { MessageService } from '../../message/message.service';
@@ -97,7 +97,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	public titleSunburst = '';
 
-	private myChart: Sunburst;
+	private myChart: any;
 
 	/**
      * List of filenames located in a directory of the repository
