@@ -29,7 +29,6 @@ div.pie {
     width: 700px;
     height: 700px;
     margin: 30px auto;
-/*    transform: translateY(-50%);  */
 }
 
 div.pie-projects {
@@ -86,6 +85,12 @@ button.currentMinimized {
 
 button.treeMap {
     bottom: 210px;
+}
+
+button.currentMinimized  div.pie-minimized {
+  width: 55px;
+  height: 55px;
+  margin: 0 auto;
 }
 
 div.camera {
