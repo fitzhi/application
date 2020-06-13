@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -30,7 +31,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
          
         Optional<Staff> oStaff = staffHandler.findStaffWithLogin(name);
         
-        if (!oStaff.isPresent()) return null;
+        if (!oStaff.isPresent()) {
+        	throw new BadCredentialsException(String.format("Invalid login %s", name));
+        }
         
         try {
 			if (oStaff.get().isValidPassword(password)) {
@@ -38,9 +41,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 				authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 			    return new UsernamePasswordAuthenticationToken(
 			      name, password, authorities);
+			} else {
+				throw new BadCredentialsException(String.format("Invalid login/password for %s", name));
 			}
 		} catch (SkillerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
         
