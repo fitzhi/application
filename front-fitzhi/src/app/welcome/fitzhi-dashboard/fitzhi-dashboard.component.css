@@ -26,11 +26,10 @@ p.camera {
 }
 
 div.pie {
-    margin: 50vh auto;
-    width: 400px;
-    height: 400px;
-    margin-top: 50vh; 
-    transform: translateY(-50%); 
+    width: 700px;
+    height: 700px;
+    margin: 30px auto;
+/*    transform: translateY(-50%);  */
 }
 
 div.pie-projects {
@@ -143,7 +142,6 @@ rect.rectTreeMap {
   z-index: 100;
   font-size: smaller;
 }
-
 
 :host >>> div.angular-popper__arrow {
   background: lightyellow;

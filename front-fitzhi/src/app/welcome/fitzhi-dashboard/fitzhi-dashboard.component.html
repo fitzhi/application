@@ -42,11 +42,13 @@
           (mouseenter)="popupHelper.mouseEnter(selection.currentSummary)" 
           (mouseleave)="popupHelper.mouseLeave()"
           (click)="switchTo(selection.currentSummary)">
-        <app-pie-chart
-                [radius]=150
-                [active]=false
-                [pie]=pieIdentifier.currentMinimized>
-        </app-pie-chart>
+          <div width="60px" height="60px">
+            <app-pie-chart
+                    [radius]=200
+                    [active]=false
+                    [pie]=pieIdentifier.currentMinimized>
+            </app-pie-chart>
+        </div>
     </button>
 
     <angular-popper placement="left" target="#currentSummary" *ngIf="popupHelper.isButtonActivated(selection.currentSummary)">
