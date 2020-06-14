@@ -2,10 +2,10 @@
     
     <button id="treeMap" class="btn rounded treeMap"
         [ngClass]="{
-            'btn-outline-success' : isSelected(selection.treeMapSummary), 
-            'btn-outline-secondary': !isSelected(selection.treeMapSummary)}" 
+            'btn-outline-success' : isSelected(selection.treeMap), 
+            'btn-outline-secondary': !isSelected(selection.treeMap)}" 
             (mouseenter)="popupHelper.mouseEnter(selection.treeMap)" (mouseleave)="popupHelper.mouseLeave()"
-            (click)="switchTo(selection.treeMapSummary)">
+            (click)="switchTo(selection.treeMap)">
         <svg class="treeMapButton">
             <rect x="6" y="6" class="rectTreeMap" style="fill:#27A53F" />
             <rect x="21" y="6" class="rectTreeMap" style="fill:#329338" />
@@ -123,7 +123,7 @@
 
 <div class="mainDashboard page-content"> 
 
-    <div class="treemap" *ngIf="(projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapSummary))">
+    <div class="treemap" *ngIf="(projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMap))">
         <app-treemap></app-treemap>
     </div>
     
