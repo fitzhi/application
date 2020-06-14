@@ -68,7 +68,8 @@ export class PieDashboardService {
 			[TypeSlice.Staff, []], [TypeSlice.Audit, []], [TypeSlice.Sonar, []]]);
 		const orangeProjects: Map<TypeSlice, Project[]> = new Map([
 			[TypeSlice.Staff, []], [TypeSlice.Audit, []], [TypeSlice.Sonar, []]]);
-		projects.forEach(project => {
+
+		projects.filter(project => project.active).forEach(project => {
 
 			/**
 			 * Distribution of projects on the staffEvaluation criteria
