@@ -47,7 +47,7 @@ describe('SonarService', () => {
 	});
 
 	beforeEach(() => {
-		sonarService = TestBed.get(SonarService);
+		sonarService = TestBed.inject(SonarService);
 		expect(sonarService).toBeTruthy();
 		sonarService.sonarServers.push(new SonarServer('1.0.TEST', URL_SONAR));
 	});
@@ -207,7 +207,7 @@ describe('SonarService', () => {
 	});
 
 	it('Reproduction of a bug. What\'s going on with the default weigths without metrics retrieved', () => {
-		const service: SonarService = TestBed.get(SonarService);
+		const service: SonarService = TestBed.inject(SonarService);
 
 		const project = createProjectWithMetric('bugs', 40, 0);
 		// The 3 next metrics will be ignored.
