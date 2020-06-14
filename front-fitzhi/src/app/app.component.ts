@@ -111,9 +111,9 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 			}
 			case Constants.PROJECT_SEARCH: {
 				if (traceOn()) {
-					console.log('Reloading project for search criteria ' + this.criteria);
+					console.log('Reloading %s projects for search criteria %s', (this.activeOnly ? 'active' : ''), this.criteria);
 				}
-				this.listProjectsService.reloadProjects(this.criteria);
+				this.listProjectsService.reloadProjects(this.criteria, this.activeOnly);
 				break;
 			}
 		}

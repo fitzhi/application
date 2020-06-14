@@ -21,12 +21,21 @@ export class ListProjectsService  {
 	/**
 	* Filter the projects for the passed criteria.
 	* @param myCriteria criteria typed by the end-user
+	* @param activeOnly filtering, or not, on **active** projects.
 	*/
-	reloadProjects(myCriteria: string) {
+	reloadProjects(myCriteria: string, activeOnly: boolean) {
+
+		const elligibleProjects = (activeOnly) ?
+			this.projectService.allProjects.filter(project => (project.active)) :
+			this.projectService.allProjects;
+
+		if (traceOn()) {
+			console.log ('number of elligible projects %d', elligibleProjects.length);
+		}
 
 		// '*' is a wildcard for all projects.
 		if (myCriteria === '*') {
-			this.filteredProjects$.next(this.projectService.allProjects);
+			this.filteredProjects$.next(elligibleProjects);
 			return;
 		}
 
@@ -36,7 +45,7 @@ export class ListProjectsService  {
 			return (myCriteria == null) ?
 				true : (project.name.toLowerCase().indexOf(myCriteria.toLowerCase()) > -1);
 		}
-		projects.push(...this.projectService.allProjects.filter(testCriteria));
+		projects.push(...elligibleProjects.filter(testCriteria));
 
 		/**
 		 * We throw the resulting collection.
