@@ -12,7 +12,6 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { SkillComponent } from './skill/skill.component';
-import { ListSkillComponent } from './list-skill/list-skill.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 
 import { CinematicService } from './service/cinematic.service';
@@ -24,7 +23,7 @@ import { MessageComponent } from './message/message.component';
 import { ErrorComponent } from './error/error.component';
 
 import { ProjectFormComponent } from './project/project-form/project-form.component';
-import { ListProjectComponent } from './list-project/list-project.component';
+import { ListProjectComponent } from './project/list-project/list-project.component';
 import { ReferentialService } from './service/referential.service';
 
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -118,6 +117,7 @@ import { StaffDataExchangeService } from './tabs-staff/service/staff-data-exchan
 import { ProjectRemoveComponent } from './project/project-remove/project-remove.component';
 import { ProjectInactivateComponent } from './project/project-inactivate/project-inactivate.component';
 import { StaffRemoveComponent } from './tabs-staff/staff-remove/staff-remove.component';
+import { ListSkillComponent } from './skill/list-skill/list-skill.component';
 
 @NgModule({
 	declarations: [

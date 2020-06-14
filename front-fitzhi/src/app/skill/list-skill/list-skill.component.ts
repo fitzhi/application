@@ -1,17 +1,17 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
-import { BaseComponent } from '../base/base.component';
-import { Constants } from '../constants';
-import { ListCriteria } from '../data/listCriteria';
-import { CinematicService } from '../service/cinematic.service';
-import { SkillService } from '../service/skill.service';
-import { StaffService } from '../service/staff.service';
-import { TabsStaffListService } from '../tabs-staff-list/service/tabs-staff-list.service';
-import { SkillCountExperiences } from './skill-count-experiences/skill.count.experiences';
+import { BaseComponent } from '../../base/base.component';
+import { Constants } from '../../constants';
+import { ListCriteria } from '../../data/listCriteria';
+import { CinematicService } from '../../service/cinematic.service';
+import { SkillService } from '../../service/skill.service';
+import { StaffService } from '../../service/staff.service';
+import { TabsStaffListService } from '../../tabs-staff-list/service/tabs-staff-list.service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { traceOn } from '../global';
+import { traceOn } from '../../global';
+import { SkillCountExperiences } from './skill.count.experiences';
 
 
 @Component({

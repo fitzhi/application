@@ -1,10 +1,10 @@
-import {Constants} from '../constants';
-import {Skill} from '../data/skill';
-import {SkillService} from '../service/skill.service';
+import {Constants} from '../../constants';
+import {Skill} from '../../data/skill';
+import {SkillService} from '../../service/skill.service';
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
-import { traceOn } from '../global';
+import { traceOn } from '../../global';
 
 @Injectable({
 	providedIn: 'root'

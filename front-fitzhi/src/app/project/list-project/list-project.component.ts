@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {Constants} from '../constants';
-import {Project} from '../data/project';
+import {Constants} from '../../constants';
+import {Project} from '../../data/project';
 import { ListProjectsService } from './list-projects-service/list-projects.service';
 import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { ProjectService } from '../service/project.service';
-import { StaffListService } from '../staff-list-service/staff-list.service';
-import { Commit } from '../data/commit';
+import { ProjectService } from '../../service/project.service';
+import { StaffListService } from '../../staff-list-service/staff-list.service';
+import { Commit } from '../../data/commit';
 import { of } from 'rxjs';
-import { traceOn } from '../global';
-import { ReferentialService } from '../service/referential.service';
+import { traceOn } from '../../global';
+import { ReferentialService } from '../../service/referential.service';
 
 @Component({
 	selector: 'app-list-project',

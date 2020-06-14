@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { CinematicService } from './service/cinematic.service';
 import { Constants } from './constants';
-import { ListProjectsService } from './list-project/list-projects-service/list-projects.service';
+import { ListProjectsService } from './project/list-project/list-projects-service/list-projects.service';
 import { ReferentialService } from './service/referential.service';
 import { StaffService } from './service/staff.service';
 import { Router } from '@angular/router';

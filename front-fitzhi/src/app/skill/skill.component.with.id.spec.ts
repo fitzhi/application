@@ -4,7 +4,7 @@ import { SkillComponent } from './skill.component';
 import { InitTest } from '../test/init-test';
 import { of } from 'rxjs';
 import { SkillService } from '../service/skill.service';
-import { ListSkillService } from '../list-skill-service/list-skill.service';
+import { ListSkillService } from './list-skill-service/list-skill.service';
 import { Skill } from '../data/skill';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DebugElement } from '@angular/core';

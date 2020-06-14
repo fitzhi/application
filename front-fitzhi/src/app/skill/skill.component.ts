@@ -6,7 +6,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 
 import { MessageService } from '../message/message.service';
 import { CinematicService } from '../service/cinematic.service';
-import { ListSkillService } from '../list-skill-service/list-skill.service';
+import { ListSkillService } from './list-skill-service/list-skill.service';
 import { SkillService } from '../service/skill.service';
 import { BaseComponent } from '../base/base.component';
 import { traceOn } from '../global';

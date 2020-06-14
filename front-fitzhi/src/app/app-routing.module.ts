@@ -2,10 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { SkillComponent } from './skill/skill.component';
-import { ListSkillComponent } from './list-skill/list-skill.component';
+import { ListSkillComponent } from './skill/list-skill/list-skill.component';
 import { ProjectComponent } from './project/project.component';
 import { ProjectSunburstComponent } from './project/project-sunburst/project-sunburst.component';
-import { ListProjectComponent } from './list-project/list-project.component';
+import { ListProjectComponent } from './project/list-project/list-project.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { StaffComponent } from './tabs-staff/staff.component';
 import { ErrorComponent } from './error/error.component';
