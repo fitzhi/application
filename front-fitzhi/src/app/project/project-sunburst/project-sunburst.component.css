@@ -104,8 +104,7 @@ button.btn-outline-success {
 }
 
 .divPanelOnTop {
-  margin: 40vh auto;
-  transform: translateY(-50%);
+  margin: 50px auto;
   width: fit-content;
 }
 
