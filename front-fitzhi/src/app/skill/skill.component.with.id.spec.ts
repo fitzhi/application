@@ -38,8 +38,8 @@ describe('SkillComponent', () => {
 		fixture = TestBed.createComponent(SkillComponent);
 		component = fixture.componentInstance;
 
-		const listSkillService = TestBed.get(ListSkillService);
-		const skillService = TestBed.get(SkillService);
+		const listSkillService = TestBed.inject(ListSkillService);
+		const skillService = TestBed.inject(SkillService);
 		skill = new Skill(1, 'First skill');
 		const skills = [];
 		skills.push(skill);

@@ -58,8 +58,8 @@ describe('ProjectAuditBadgesComponent', () => {
 
 
 	beforeEach(() => {
-		const referentialService: ReferentialService = TestBed.get(ReferentialService);
-		projectService = TestBed.get(ProjectService);
+		const referentialService: ReferentialService = TestBed.inject(ReferentialService);
+		projectService = TestBed.inject(ProjectService);
 		const risk2 = new RiskLegend();
 		risk2.level = 2;
 		risk2.color = 'violet';
