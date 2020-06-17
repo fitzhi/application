@@ -23,13 +23,28 @@ describe('PieChartComponent', () => {
 
 	@Component({
 		selector: 'app-host-component',
-		template: `<div style="width:400px;height:400px;background-color:whiteSmoke">
-										<app-pie-chart
-											[radius]=150
-											[pie]=3
-											[active]=true>
-										</app-pie-chart>
-								</div>`
+		template: `<table>
+									<tr>
+										<td>
+											<div style="width:400px;height:400px;background-color:whiteSmoke">
+													<app-pie-chart
+														[radius]=150
+														[pie]=3
+														[active]=true>
+													</app-pie-chart>
+											</div>
+										</td>
+										<td>
+											<div style="width:300px;height:300px;background-color:transparent">
+												<app-pie-chart
+													[radius]=100
+													[pie]=4
+													[active]=false>
+												</app-pie-chart>
+											</div>
+										</td>
+									</tr>
+								</table>`
 	})
 	class TestHostComponent {
 	}
@@ -58,7 +73,7 @@ describe('PieChartComponent', () => {
 				{
 					id: 1,
 					type: TypeSlice.Sonar,
-					angle: 45,
+					angle: 20,
 					color: 'orange',
 					offset: 45,
 					activated: false,
@@ -68,13 +83,24 @@ describe('PieChartComponent', () => {
 				{
 					id: 2,
 					type: TypeSlice.Sonar,
-					angle: 45,
+					angle: 10,
 					color: 'red',
-					offset: 90,
+					offset: 65,
+					activated: false,
+					selected: false,
+					projects: []
+				},
+				{
+					id: 3,
+					type: TypeSlice.Sonar,
+					angle: 100,
+					color: 'lightBlue',
+					offset: 75,
 					activated: false,
 					selected: false,
 					projects: []
 				}
+
 			]);
 /*
 			const listSkillService = TestBed.inject(ListSkillService);

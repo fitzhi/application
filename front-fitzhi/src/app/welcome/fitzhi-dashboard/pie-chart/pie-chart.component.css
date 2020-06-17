@@ -1,8 +1,6 @@
 #containerSVG {
     width: 100%;
     height: 100%;
-    min-width: 100px;
-    min-height: 100px;
 }
 
 .pie {
@@ -30,4 +28,8 @@
 .text-active {
     fill: black;
     font-size: 22px;
+}
+
+.percentage {
+  fill:white;
 }

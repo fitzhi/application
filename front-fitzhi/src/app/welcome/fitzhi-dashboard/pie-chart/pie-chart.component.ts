@@ -90,7 +90,9 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 	 */
 	private generatePieSlice (slice: Slice): void {
 
-		const pathData = this.arcGenerator({
+		const idPathText = () =>  'text-' + this.pie + '-' + slice.id;
+
+		const pathSlice = this.arcGenerator({
 			startAngle: (slice.offset * 2 * Math.PI) / 360,
 			endAngle: ((slice.offset + slice.angle) * 2 * Math.PI) / 360,
 			innerRadius: 5,
@@ -101,9 +103,31 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 			.append('path')
 			.attr('transform', 'translate(200,200)')
 			.attr('fill', slice.color)
-			.attr('d', pathData);
+			.attr('d', pathSlice);
 
 			if (this.active) {
+
+				const pathText = this.arcGenerator({
+					startAngle: (slice.offset * 2 * Math.PI) / 360,
+					endAngle: ((slice.offset + slice.angle) * 2 * Math.PI) / 360,
+					innerRadius: 2 * this.radius / 3,
+					outerRadius: 2 * this.radius / 3
+				});
+
+				D3.select(this.svgPieSliceID(slice.id))
+				.append('path')
+				.attr('id', idPathText())
+				.attr('d', pathText);
+
+				D3.select(this.svgPieSliceID(slice.id))
+					.append('text')
+					.attr('transform', 'translate(200,200)')
+					.append('textPath')
+					.attr('xlink:href', '#' + idPathText())
+					.attr('startOffset', '10%')
+					.attr('fill', 'white')
+					.html(slice.angle + '%');
+
 				D3.select(this.svgPieSliceID(slice.id))
 					.on('click', function() { this.onSliceClick(slice); }.bind(this))
 					.on('mouseover', function() { this.onSliceMouseOver(slice); }.bind(this));
