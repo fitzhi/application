@@ -33,3 +33,13 @@
 .percentage {
   fill:white;
 }
+
+.host-logo {
+  width: 30px;
+  height: 30px;
+}
+
+em.logo {
+  font-size: 24px;
+  color: grey;
+}

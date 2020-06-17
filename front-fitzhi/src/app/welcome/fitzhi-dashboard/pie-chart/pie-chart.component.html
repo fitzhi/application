@@ -1,5 +1,5 @@
 <div id="containerSVG">
-    <svg class="pie" viewBox="0 0 400 400">
+    <svg class="pie" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
         <defs>
             <marker id="arrow" refX="8" refY="5" viewBox="0 0 10 10"
                 markerUnits="strokeWidth" markerWidth="8" markerHeight="6"
@@ -12,6 +12,20 @@
                 <path d="M 0 0 L 10 5 L 0 10 z"  fill="context-stroke"/>
             </marker>
         </defs>
+
+        <foreignObject *ngIf="active" class="host-logo" x="20px" y="80px">
+          <xhtml:div>
+            <em class="fas glyphicon fa-user-graduate logo"></em>
+          </xhtml:div>
+        </foreignObject>            
+
+        <image *ngIf="active" xlink:href="./assets/img/sonar-grey.png" x="355px" y="85px" height="35" width="35" />
+ 
+        <foreignObject *ngIf="active" class="host-logo" x="235px" y="365px">
+          <xhtml:div>
+            <em class="fas fa-brain logo"></em>
+          </xhtml:div>
+        </foreignObject>
 
         <svg *ngIf="active">
           <g *ngFor="let slice of (pieDashboardService.slices$ | async); index as idSlice" class="slice-active" id="pieSlice-{{pie}}-{{idSlice}}">

@@ -49,6 +49,11 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 	 */
 	private texts = ['#textSonar', '#textStaff', '#textAudit'];
 
+	/**
+	 * Angle minimum required to display the label.
+	 */
+	private ANGLE_MINIMUM_FOR_LABEL = 15;
+
 	constructor(private pieDashboardService: PieDashboardService) {
 		super();
 	}
@@ -107,24 +112,27 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 
 			if (this.active) {
 
-				const pathText = this.arcGenerator({
-					startAngle: (slice.offset * 2 * Math.PI) / 360,
-					endAngle: ((slice.offset + slice.angle) * 2 * Math.PI) / 360,
-					innerRadius: 2 * this.radius / 3,
-					outerRadius: 2 * this.radius / 3
-				});
+				if (slice.angle > this.ANGLE_MINIMUM_FOR_LABEL) {
 
-				D3.select(this.svgPieSliceID(slice.id))
-				.append('path')
-				.attr('id', idPathText())
-				.attr('d', pathText);
+					const pathText = this.arcGenerator({
+						startAngle: (slice.offset * 2 * Math.PI) / 360,
+						endAngle: ((slice.offset + slice.angle) * 2 * Math.PI) / 360,
+						innerRadius: 2 * this.radius / 3,
+						outerRadius: 2 * this.radius / 3
+					});
+
+					D3.select(this.svgPieSliceID(slice.id))
+					.append('path')
+					.attr('id', idPathText())
+					.attr('d', pathText);
+				}
 
 				D3.select(this.svgPieSliceID(slice.id))
 					.append('text')
 					.attr('transform', 'translate(200,200)')
 					.append('textPath')
 					.attr('xlink:href', '#' + idPathText())
-					.attr('startOffset', '10%')
+					.attr('startOffset', (slice.angle * 0.23) + '%')
 					.attr('fill', 'white')
 					.html(slice.angle + '%');
 

@@ -93,8 +93,8 @@ describe('PieChartComponent', () => {
 				{
 					id: 3,
 					type: TypeSlice.Sonar,
-					angle: 100,
-					color: 'lightBlue',
+					angle: 99,
+					color: 'blue',
 					offset: 75,
 					activated: false,
 					selected: false,
@@ -102,16 +102,7 @@ describe('PieChartComponent', () => {
 				}
 
 			]);
-/*
-			const listSkillService = TestBed.inject(ListSkillService);
-			const skillService = TestBed.inject(SkillService);
-			const skill = new Skill(1, 'First skill');
-			const skills = [];
-			skills.push(skill);
-			const spyGetSkills = spyOn(listSkillService, 'getSkills').and.returnValue(skills);
-			const getSkill = spyOn(listSkillService, 'getSkill$').and.returnValue(of(skill));
-*/
-		}));
+	}));
 
 	beforeEach(() => {
 		fixture = TestBed.createComponent(TestHostComponent);
