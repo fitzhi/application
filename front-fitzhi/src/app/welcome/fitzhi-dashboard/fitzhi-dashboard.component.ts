@@ -72,18 +72,18 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 
 	/**
 	 * Switch to a summary.
-	 * @param selection the new Selected button
+	 * @param clickedselection the new Selected button
 	 */
-	switchTo(selection: number) {
-		this.selected = selection;
+	switchTo(clickedselection: number) {
+		this.selected = clickedselection;
 	}
 
 	/**
 	 * Return `true` if the given selection is selected.
-	 * @param selection the new selection
+	 * @param clickedSelection the new selection
 	 */
-	isSelected(selection: number): boolean {
-		return (selection === this.selected);
+	isSelected(clickedSelection: number): boolean {
+		return (clickedSelection === this.selected);
 	}
 
 }

@@ -1,7 +1,7 @@
 div {
-    --pie-height: 500px;
+    --pie-height: 400px;
     --pie-width: var(--pie-height);
-    --pie-diameter: 500px;
+    --pie-diameter: 400px;
 
     /* width of the sidebar */
     --sidebar-width: 70px;
