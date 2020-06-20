@@ -163,7 +163,7 @@
     
     <div id="logo" *ngIf="isSelected(selection.none)">质</div>
 
-    <div  class="dashboard" *ngIf="isSelected(selection.currentSummary) && (projectService.allProjectsIsLoaded$|async)">
+    <div  class="dashboard-pie" *ngIf="isSelected(selection.currentSummary) && (projectService.allProjectsIsLoaded$|async)">
 
       <div class="pie-legend">
         <app-pie-legend></app-pie-legend>

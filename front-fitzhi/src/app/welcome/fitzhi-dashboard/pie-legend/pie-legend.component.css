@@ -1,13 +1,24 @@
 div.main {
-  background-color: lightgray;
-  width: 200px;
-  height: 500px;
-  margin-top: 50px;
-  margin-left: 50px;
+  width: 100%;
+  height: 100%;
+  margin-top: 10px;
+  margin-left: 10px;
+  text-align: justify;
+  text-justify: distribute;
+}
+
+div.main p {
+  margin-left: 20px;
+  margin-top: 10px;;
+  text-align: justify;
+  text-justify: inter-word;
 }
 
 div.logo {
-  margin-top: 20px;
-  margin-left: 10px;
+  padding-top: 10px;
+  padding-left: 10px;
 }
 
+em.logo {
+  font-size: 24px;
+}
