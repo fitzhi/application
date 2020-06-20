@@ -1,0 +1,13 @@
+div.main {
+  background-color: lightgray;
+  width: 200px;
+  height: 500px;
+  margin-top: 50px;
+  margin-left: 50px;
+}
+
+div.logo {
+  margin-top: 20px;
+  margin-left: 10px;
+}
+

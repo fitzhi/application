@@ -3,9 +3,8 @@ import { Project } from 'src/app/data/project';
 import { Slice } from '../slice';
 import { TypeSlice } from '../type-slice';
 import { ProjectService } from 'src/app/service/project.service';
-import { Constants } from 'src/app/constants';
-import { Subject, BehaviorSubject } from 'rxjs';
 import { traceOn } from 'src/app/global';
+import { BehaviorSubject } from 'rxjs';
 
 /**
  * This service is in charge of the generation of the slices.
@@ -14,13 +13,6 @@ import { traceOn } from 'src/app/global';
 	providedIn: 'root'
 })
 export class PieDashboardService {
-
-	public subject = {
-		none: 0,
-		staff: 1,
-		sonar: 2,
-		project: 3
-	};
 
 	constructor(private projectService: ProjectService) { }
 
@@ -42,7 +34,7 @@ export class PieDashboardService {
 	/**
 	 * Subject highlighted.
 	 */
-	public projectsSubject$ = new BehaviorSubject<number>(0);
+	public projectSubject$ = new BehaviorSubject<number>(0);
 
 	/**
 	 * Observable emetting the __last year__ archived `slices$` of the pie.
@@ -175,6 +167,6 @@ export class PieDashboardService {
 
 		this.projectsActivated$.next(slice.projects);
 		this.projectsHeaderColor$.next(slice.color);
-		this.projectsSubject$.next(slice.type);
+		this.projectSubject$.next(slice.type);
 	}
 }

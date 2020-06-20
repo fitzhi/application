@@ -118,6 +118,8 @@ import { ProjectRemoveComponent } from './project/project-remove/project-remove.
 import { ProjectInactivateComponent } from './project/project-inactivate/project-inactivate.component';
 import { StaffRemoveComponent } from './tabs-staff/staff-remove/staff-remove.component';
 import { ListSkillComponent } from './skill/list-skill/list-skill.component';
+import { PieLegendComponent } from './welcome/fitzhi-dashboard/pie-legend/pie-legend.component';
+import { PieDashboardService } from './welcome/fitzhi-dashboard/service/pie-dashboard.service';
 
 @NgModule({
 	declarations: [
@@ -184,7 +186,8 @@ import { ListSkillComponent } from './skill/list-skill/list-skill.component';
 		TreemapComponent,
 		ProjectRemoveComponent,
 		ProjectInactivateComponent,
-		StaffRemoveComponent
+		StaffRemoveComponent,
+		PieLegendComponent
 	],
 	entryComponents: [
 		StaffUploadCvComponent,
@@ -234,6 +237,7 @@ import { ListSkillComponent } from './skill/list-skill/list-skill.component';
 		StaffService,
 		StaffDataExchangeService,
 		ReferentialService,
+		PieDashboardService,
 		AuthGuardService,
 		{
 			provide: HTTP_INTERCEPTORS,
@@ -252,9 +256,9 @@ import { ListSkillComponent } from './skill/list-skill/list-skill.component';
 	bootstrap: [AppComponent]
 })
 /*    {
-      provide: ErrorHandler,
-      useClass: ErrorsHandler,
-    }
+			provide: ErrorHandler,
+			useClass: ErrorsHandler,
+		}
  */
 export class AppModule {
 	constructor() {

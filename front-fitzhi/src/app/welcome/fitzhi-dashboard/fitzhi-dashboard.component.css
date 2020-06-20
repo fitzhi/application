@@ -16,6 +16,10 @@ div {
     transition: all 0.4s;
 }
 
+.dashboard {
+  display: flex;
+}
+
 .camera {
     color: lightgrey;
 }

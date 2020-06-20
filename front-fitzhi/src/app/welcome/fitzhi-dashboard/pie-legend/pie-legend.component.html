@@ -1,0 +1,14 @@
+<div class="main">
+  
+  <div class="logo" *ngIf="((pieDashboardService.projectSubject$|async) === typeSlice.Staff)">
+    <em class="fas glyphicon fa-user-graduate logo"></em>
+  </div>
+
+  <div class="logo" *ngIf="((pieDashboardService.projectSubject$|async) === typeSlice.Sonar)">
+    <img src="./assets/img/sonar-grey.png" height="35" width="35" />
+  </div>
+
+  <div class="logo" *ngIf="((pieDashboardService.projectSubject$|async) === typeSlice.Audit)">
+    <em class="fas fa-brain logo"></em>
+  </div>
+</div>

@@ -30,7 +30,7 @@ export class PieProjectsComponent extends BaseComponent implements OnInit, OnDes
 	 */
 	colorHeader: string;
 
-	TypeSlice = TypeSlice;
+	typeSlice = TypeSlice;
 
 	constructor(public pieDashboardService: PieDashboardService) {
 		super();

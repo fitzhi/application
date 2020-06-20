@@ -21,6 +21,8 @@ import { selection } from './selection';
 import { TypeSlice } from './type-slice';
 import { PieDashboardService } from './service/pie-dashboard.service';
 import { ProjectService } from 'src/app/service/project.service';
+import { Project } from 'src/app/data/project';
+import { PieLegendComponent } from './pie-legend/pie-legend.component';
 
 describe('FitzhiDashboardComponent', () => {
 	let component: FitzhiDashboardComponent;
@@ -30,28 +32,36 @@ describe('FitzhiDashboardComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ FitzhiDashboardComponent, PieChartComponent, PieProjectsComponent, TagifyStarsComponent,
-				TreemapChartComponent, TreemapHeaderComponent, TreemapChartComponent, TreemapComponent ],
+				TreemapChartComponent, TreemapHeaderComponent, TreemapChartComponent, TreemapComponent, PieLegendComponent ],
 			imports: [MatTableModule, MatSortModule, MatPaginatorModule, HttpClientTestingModule, MatDialogModule,
 				NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule],
-			providers: [ReferentialService, CinematicService]
+			providers: [ReferentialService, CinematicService, PieDashboardService]
 
 		})
 		.compileComponents();
 
+		const projectService = TestBed.inject(ProjectService);
+		projectService.allProjects = [];
+		projectService.allProjects.push(new Project(1515, 'Marignan'));
+		projectService.allProjects.push(new Project(1789, 'Revolutionary project'));
+
 		pieDashboardService = TestBed.inject(PieDashboardService);
-		pieDashboardService.slices$.next(
-			[
-				{
-					id: 0,
-					type: TypeSlice.Sonar,
-					angle: 45,
-					color: 'green',
-					offset: 0,
-					activated: false,
-					selected: false,
-					projects: []
-				},
-				{
+
+		const slices = [];
+		const slice =	{
+				id: 0,
+				type: TypeSlice.Sonar,
+				angle: 45,
+				color: 'green',
+				offset: 0,
+				activated: false,
+				selected: false,
+				projects: []
+			};
+		slice.projects.push(...projectService.allProjects);
+		slices.push(slice);
+		slices.push (
+			{
 					id: 1,
 					type: TypeSlice.Sonar,
 					angle: 20,
@@ -60,30 +70,33 @@ describe('FitzhiDashboardComponent', () => {
 					activated: false,
 					selected: false,
 					projects: []
-				},
-				{
-					id: 2,
-					type: TypeSlice.Sonar,
-					angle: 10,
-					color: 'red',
-					offset: 65,
-					activated: false,
-					selected: false,
-					projects: []
-				},
-				{
-					id: 3,
-					type: TypeSlice.Sonar,
-					angle: 99,
-					color: 'blue',
-					offset: 75,
-					activated: false,
-					selected: false,
-					projects: []
-				}
-			]);
-/*
-*/
+			}
+		);
+		slices.push (
+			{
+				id: 2,
+				type: TypeSlice.Sonar,
+				angle: 10,
+				color: 'red',
+				offset: 65,
+				activated: false,
+				selected: false,
+				projects: []
+			});
+		slices.push (
+			{
+				id: 3,
+				type: TypeSlice.Staff,
+				angle: 99,
+				color: 'blue',
+				offset: 75,
+				activated: false,
+				selected: false,
+				projects: []
+			}
+		);
+		pieDashboardService.slices$.next(slices);
+
 	}));
 
 	beforeEach(() => {
@@ -93,6 +106,9 @@ describe('FitzhiDashboardComponent', () => {
 		const projectService = TestBed.inject(ProjectService);
 		const spy = spyOn(pieDashboardService, 'generatePieSlices').and.returnValue();
 		projectService.allProjectsIsLoaded$.next(true);
+		projectService.allProjects = [];
+		projectService.allProjects.push(new Project(1515, 'Marignan'));
+		projectService.allProjects.push(new Project(1789, 'Revolutionary project'));
 		fixture.detectChanges();
 	});
 

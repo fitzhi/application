@@ -100,7 +100,6 @@ describe('PieChartComponent', () => {
 					selected: false,
 					projects: []
 				}
-
 			]);
 	}));
 
