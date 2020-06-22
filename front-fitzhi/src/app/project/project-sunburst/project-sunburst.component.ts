@@ -1,14 +1,14 @@
 import { Component, OnInit, AfterViewInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import Sunburst from 'sunburst-chart';
 import { Constants } from '../../constants';
-import { MessageService } from '../../message/message.service';
+import { MessageService } from '../../interaction/message/message.service';
 import { ProjectService } from '../../service/project.service';
 import { ActivatedRoute } from '@angular/router';
 import { CinematicService } from '../../service/cinematic.service';
 import { Project } from '../../data/project';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { ProjectGhostsDataSource } from './project-ghosts/project-ghosts-data-source';
-import { MessageBoxService } from '../../message-box/service/message-box.service';
+import { MessageBoxService } from '../../interaction/message-box/service/message-box.service';
 import { DialogFilterComponent } from './dialog-filter/dialog-filter.component';
 import { BaseComponent } from '../../base/base.component';
 import { SettingsGeneration } from '../../data/settingsGeneration';

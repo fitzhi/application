@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Constants } from '../constants';
-import { MessageBoxService } from '../message-box/service/message-box.service';
+import { MessageBoxService } from '../interaction/message-box/service/message-box.service';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { saveAs } from 'file-saver';
 

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
-import { MessageService } from '../message/message.service';
-import { Message } from '../message/message';
-import { Constants } from '../constants';
+import { MessageService } from './message.service';
+import { Message } from './message';
+import { Constants } from '../../constants';
 import { take } from 'rxjs/operators';
 
 @Component({

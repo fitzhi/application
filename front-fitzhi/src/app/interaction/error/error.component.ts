@@ -1,8 +1,8 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Constants } from '../constants';
+import { Constants } from '../../constants';
 import { ActivatedRoute } from '@angular/router';
-import { BaseComponent } from '../base/base.component';
-import { traceOn } from '../global';
+import { BaseComponent } from '../../base/base.component';
+import { traceOn } from '../../global';
 
 @Component({
 	selector: 'app-error',

@@ -6,7 +6,7 @@ import { Constants } from '../constants';
 import { StaffListService } from '../staff-list-service/staff-list.service';
 import { StaffDataExchangeService } from './service/staff-data-exchange.service';
 import { CinematicService } from '../service/cinematic.service';
-import { MessageService } from '../message/message.service';
+import { MessageService } from '../interaction/message/message.service';
 import { BaseComponent } from '../base/base.component';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { traceOn } from '../global';

@@ -9,6 +9,7 @@ import { ProjectService } from 'src/app/service/project.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { Slice } from '../slice';
+import { LevelStaffRisk } from '../level-staff-risk';
 
 describe('PieLegendComponent', () => {
 	let component: PieLegendComponent;
@@ -34,6 +35,7 @@ describe('PieLegendComponent', () => {
 				type: TypeSlice.Staff,
 				offset: 0,
 				angle: 45,
+				levelStaffRisk: LevelStaffRisk.low,
 				color: 'green',
 				projects: [],
 				activated: false,
@@ -52,6 +54,7 @@ describe('PieLegendComponent', () => {
 					type: TypeSlice.Sonar,
 					offset: 0,
 					angle: 45,
+					levelStaffRisk: LevelStaffRisk.low,
 					color: 'green',
 					projects: [],
 					activated: false,
@@ -67,6 +70,7 @@ describe('PieLegendComponent', () => {
 					type: TypeSlice.Audit,
 					offset: 0,
 					angle: 45,
+					levelStaffRisk: LevelStaffRisk.low,
 					color: 'green',
 					projects: [],
 					activated: false,

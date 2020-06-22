@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
 import { ToolbarComponent } from './toolbar.component';
-import { InitTest } from '../test/init-test';
+import { InitTest } from '../../test/init-test';
 import { RouterTestingModule } from '@angular/router/testing';
-import { CinematicService } from '../service/cinematic.service';
-import { Constants } from '../constants';
+import { CinematicService } from '../../service/cinematic.service';
+import { Constants } from '../../constants';
 import { Component, AfterViewInit } from '@angular/core';
 
 declare var $: any;

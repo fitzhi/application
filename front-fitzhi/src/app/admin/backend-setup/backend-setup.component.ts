@@ -4,7 +4,7 @@ import { BaseComponent } from '../../base/base.component';
 import { HttpClient } from '@angular/common/http';
 import { Constants } from '../../constants';
 import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
-import { MessageService } from 'src/app/message/message.service';
+import { MessageService } from 'src/app/interaction/message/message.service';
 import { take } from 'rxjs/operators';
 import { traceOn } from 'src/app/global';
 

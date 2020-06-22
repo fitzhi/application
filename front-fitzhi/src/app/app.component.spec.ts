@@ -1,6 +1,6 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { ToolbarComponent } from './toolbar/toolbar.component';
+import { ToolbarComponent } from './interaction/toolbar/toolbar.component';
 
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -17,7 +17,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
-import { MessageComponent } from './message/message.component';
+import { MessageComponent } from './interaction/message/message.component';
 
 describe('AppComponent', () => {
 	beforeEach(async(() => {

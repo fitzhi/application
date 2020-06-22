@@ -8,7 +8,7 @@ import { SonarService } from 'src/app/service/sonar.service';
 import { ILanguageCount } from 'src/app/service/ILanguageCount';
 import { FilesStats } from 'src/app/data/sonar/FilesStats';
 import { ProjectService } from 'src/app/service/project.service';
-import { MessageService } from 'src/app/message/message.service';
+import { MessageService } from 'src/app/interaction/message/message.service';
 import { ThumbnailQuotationBadge } from './thumbnail-quotation-badge';
 import { SonarEvaluation } from 'src/app/data/sonar-evaluation';
 import { BehaviorSubject } from 'rxjs';

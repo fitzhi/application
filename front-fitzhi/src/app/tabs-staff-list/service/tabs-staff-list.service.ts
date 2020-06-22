@@ -4,7 +4,7 @@ import { Collaborator } from '../../data/collaborator';
 import { StaffService } from '../../service/staff.service';
 import { Constants } from '../../constants';
 import { StaffListContext } from '../../data/staff-list-context';
-import { MessageService } from '../../message/message.service';
+import { MessageService } from '../../interaction/message/message.service';
 import { SkillService } from '../../service/skill.service';
 import { ListCriteria } from '../../data/listCriteria';
 import { traceOn } from 'src/app/global';

@@ -2,8 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ErrorComponent } from './error.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { ReferentialService } from '../service/referential.service';
-import { CinematicService } from '../service/cinematic.service';
+import { ReferentialService } from '../../service/referential.service';
+import { CinematicService } from '../../service/cinematic.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';

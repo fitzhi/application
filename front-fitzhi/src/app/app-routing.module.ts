@@ -8,14 +8,14 @@ import { ProjectSunburstComponent } from './project/project-sunburst/project-sun
 import { ListProjectComponent } from './project/list-project/list-project.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { StaffComponent } from './tabs-staff/staff.component';
-import { ErrorComponent } from './error/error.component';
+import { ErrorComponent } from './interaction/error/error.component';
 import { ProjectStaffComponent } from './project/project-staff/project-staff.component';
 import { TabsStaffListComponent } from './tabs-staff-list/tabs-staff-list.component';
 import { AuthGuardService } from './admin/security/auth-guard.service';
 import { StaffFormComponent } from './tabs-staff/staff-form/staff-form.component';
 import { ConnectUserComponent } from './admin/connect-user/connect-user.component';
-import { CiaoComponent } from './ciao/ciao.component';
-import { DevOnOffComponent } from './dev-on-off/dev-on-off.component';
+import { CiaoComponent } from './admin/ciao/ciao.component';
+import { DevOnOffComponent } from './admin/dev-on-off/dev-on-off.component';
 
 const routes: Routes = [
 	{ path: '', redirectTo: '/welcome', pathMatch: 'full' },

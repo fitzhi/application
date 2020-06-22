@@ -4,9 +4,9 @@ import { BaseComponent } from '../../base/base.component';
 import { MustMatch } from 'src/app/service/mustmatch';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { Constants } from 'src/app/constants';
-import { MessageService } from 'src/app/message/message.service';
+import { MessageService } from 'src/app/interaction/message/message.service';
 import { StaffDataExchangeService } from 'src/app/tabs-staff/service/staff-data-exchange.service';
-import { MessageBoxService } from 'src/app/message-box/service/message-box.service';
+import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { StaffService } from 'src/app/service/staff.service';
 import { traceOn } from 'src/app/global';
 

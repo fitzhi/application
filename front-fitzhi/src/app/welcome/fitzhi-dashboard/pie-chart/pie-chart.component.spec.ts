@@ -15,6 +15,7 @@ import { SkillService } from 'src/app/service/skill.service';
 import { Skill } from 'src/app/data/skill';
 import { of, BehaviorSubject } from 'rxjs';
 import { AuditChosenDetail } from 'src/app/project/project-audit/project-audit-badges/audit-badge/audit-chosen-detail';
+import { LevelStaffRisk } from '../level-staff-risk';
 
 describe('PieChartComponent', () => {
 	let component: TestHostComponent;
@@ -64,6 +65,7 @@ describe('PieChartComponent', () => {
 					id: 0,
 					type: TypeSlice.Sonar,
 					angle: 45,
+					levelStaffRisk: LevelStaffRisk.low,
 					color: 'green',
 					offset: 0,
 					activated: false,
@@ -74,6 +76,7 @@ describe('PieChartComponent', () => {
 					id: 1,
 					type: TypeSlice.Sonar,
 					angle: 20,
+					levelStaffRisk: LevelStaffRisk.medium,
 					color: 'orange',
 					offset: 45,
 					activated: false,
@@ -84,6 +87,7 @@ describe('PieChartComponent', () => {
 					id: 2,
 					type: TypeSlice.Sonar,
 					angle: 10,
+					levelStaffRisk: LevelStaffRisk.high,
 					color: 'red',
 					offset: 65,
 					activated: false,
@@ -94,6 +98,7 @@ describe('PieChartComponent', () => {
 					id: 3,
 					type: TypeSlice.Sonar,
 					angle: 99,
+					levelStaffRisk: LevelStaffRisk.low,
 					color: 'blue',
 					offset: 75,
 					activated: false,

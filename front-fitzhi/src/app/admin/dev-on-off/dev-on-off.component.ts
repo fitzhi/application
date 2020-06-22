@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Constants } from '../constants';
-import { traceOn } from '../global';
+import { Constants } from '../../constants';
+import { traceOn } from '../../global';
 import { environment } from 'src/environments/environment';
 
 @Component({

@@ -7,9 +7,9 @@ import { PanelSwitchEvent } from './sonar-thumbnails/panel-switch-event';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { SonarThumbnailsComponent } from './sonar-thumbnails/sonar-thumbnails.component';
 import { Project } from 'src/app/data/project';
-import { MessageGravity } from 'src/app/message/message-gravity';
-import { Message } from 'src/app/message/message';
-import { MessageService } from 'src/app/message/message.service';
+import { MessageGravity } from 'src/app/interaction/message/message-gravity';
+import { Message } from 'src/app/interaction/message/message';
+import { MessageService } from 'src/app/interaction/message/message.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { traceOn } from 'src/app/global';
 

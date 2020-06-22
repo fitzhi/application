@@ -2,7 +2,7 @@ import { Constants } from '../../../constants';
 import { Collaborator } from '../../../data/collaborator';
 import { DeclaredExperience } from '../../../data/declared-experience';
 import { DeclaredExperienceDTO } from '../../../data/external/declaredExperienceDTO';
-import { MessageBoxService } from '../../../message-box/service/message-box.service';
+import { MessageBoxService } from '../../../interaction/message-box/service/message-box.service';
 import { HttpClient } from '@angular/common/http';
 import { HttpResponse } from '@angular/common/http';
 import { HttpEventType } from '@angular/common/http';

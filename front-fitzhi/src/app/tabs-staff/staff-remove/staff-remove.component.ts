@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
 import { StaffService } from 'src/app/service/staff.service';
-import { MessageService } from 'src/app/message/message.service';
+import { MessageService } from 'src/app/interaction/message/message.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
 import { Constants } from 'src/app/constants';

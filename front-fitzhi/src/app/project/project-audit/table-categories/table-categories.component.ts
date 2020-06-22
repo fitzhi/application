@@ -4,7 +4,7 @@ import { ProjectService } from 'src/app/service/project.service';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Project } from 'src/app/data/project';
 import { take } from 'rxjs/operators';
-import { MessageService } from 'src/app/message/message.service';
+import { MessageService } from 'src/app/interaction/message/message.service';
 import { Topic } from './topic';
 import { AuditTopic } from 'src/app/data/AuditTopic';
 import { BehaviorSubject } from 'rxjs';

@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, OnDestroy, Input, AfterContentInit } from '@angular/core';
 import { ProjectService } from '../../service/project.service';
 import { Constants } from '../../constants';
-import { MessageService } from '../../message/message.service';
+import { MessageService } from '../../interaction/message/message.service';
 import { CinematicService } from '../../service/cinematic.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSort } from '@angular/material/sort';

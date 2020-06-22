@@ -6,7 +6,7 @@ import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { ReferentialService } from './referential.service';
 import { SkillService } from './skill.service';
 import { FileService } from './file.service';
-import { MessageService } from '../message/message.service';
+import { MessageService } from '../interaction/message/message.service';
 import { SunburstCinematicService } from '../project/project-sunburst/service/sunburst-cinematic.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';

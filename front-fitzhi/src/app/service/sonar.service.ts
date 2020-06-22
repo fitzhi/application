@@ -18,7 +18,7 @@ import { ProjectSonarMetric } from '../data/sonar/project-sonar-metric';
 import { Project } from '../data/project';
 import { ProjectService } from './project.service';
 import { SonarServer } from '../data/sonar-server';
-import { MessageService } from '../message/message.service';
+import { MessageService } from '../interaction/message/message.service';
 import { SupportedMetric } from '../data/supported-metric';
 import { RegisterUserComponent } from '../admin/register-user/register-user.component';
 import { DeclaredSonarServer } from '../data/declared-sonar-server';

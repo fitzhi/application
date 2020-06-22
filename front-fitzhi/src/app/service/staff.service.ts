@@ -15,7 +15,7 @@ import { BooleanDTO } from '../data/external/booleanDTO';
 import { FileService } from './file.service';
 import { traceOn } from '../global';
 import { StaffDataExchangeService } from '../tabs-staff/service/staff-data-exchange.service';
-import { MessageService } from '../message/message.service';
+import { MessageService } from '../interaction/message/message.service';
 import { StaffListService } from '../staff-list-service/staff-list.service';
 import { Constants } from '../constants';
 import { CinematicService } from './cinematic.service';

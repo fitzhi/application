@@ -10,6 +10,7 @@ import { CinematicService } from 'src/app/service/cinematic.service';
 import { Component } from '@angular/core';
 import { PieDashboardService } from '../service/pie-dashboard.service';
 import { TypeSlice } from '../type-slice';
+import { LevelStaffRisk } from '../level-staff-risk';
 
 describe('PieChartComponent with only One Slice', () => {
 	let component: TestHostComponent;
@@ -24,8 +25,8 @@ describe('PieChartComponent with only One Slice', () => {
 											<div style="width:400px;height:400px;background-color:whiteSmoke">
 													<app-pie-chart
 														[radius]=150
-                            [pie]=7
-                            [filteredSlice]=3
+														[pie]=7
+														[filteredSlice]=3
 														[active]=false>
 													</app-pie-chart>
 											</div>
@@ -60,6 +61,7 @@ describe('PieChartComponent with only One Slice', () => {
 					id: 0,
 					type: TypeSlice.Sonar,
 					angle: 45,
+					levelStaffRisk: LevelStaffRisk.low,
 					color: 'green',
 					offset: 0,
 					activated: false,
@@ -70,6 +72,7 @@ describe('PieChartComponent with only One Slice', () => {
 					id: 1,
 					type: TypeSlice.Sonar,
 					angle: 20,
+					levelStaffRisk: LevelStaffRisk.medium,
 					color: 'orange',
 					offset: 45,
 					activated: false,
@@ -80,6 +83,7 @@ describe('PieChartComponent with only One Slice', () => {
 					id: 2,
 					type: TypeSlice.Sonar,
 					angle: 10,
+					levelStaffRisk: LevelStaffRisk.high,
 					color: 'red',
 					offset: 65,
 					activated: false,
@@ -90,6 +94,7 @@ describe('PieChartComponent with only One Slice', () => {
 					id: 3,
 					type: TypeSlice.Sonar,
 					angle: 99,
+					levelStaffRisk: LevelStaffRisk.low,
 					color: 'blue',
 					offset: 75,
 					activated: false,

@@ -4,7 +4,7 @@ import { ProjectGhostsDataSource } from './project-ghosts-data-source';
 import { ProjectService } from '../../../service/project.service';
 import { PseudoList } from '../../../data/PseudoList';
 import { Constants } from '../../../constants';
-import { MessageService } from '../../../message/message.service';
+import { MessageService } from '../../../interaction/message/message.service';
 import { BaseComponent } from '../../../base/base.component';
 import { Project } from 'src/app/data/project';
 

@@ -1,5 +1,5 @@
 import { ErrorHandler, Injectable, Injector } from '@angular/core';
-import { MessageService } from './message/message.service';
+import { MessageService } from './interaction/message/message.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Constants } from './constants';
 import { Router } from '@angular/router';

@@ -1,10 +1,10 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { BaseComponent } from '../base/base.component';
-import { Constants } from '../constants';
-import { ProjectStaffService } from '../project/project-staff-service/project-staff.service';
-import { CinematicService } from '../service/cinematic.service';
-import { TabsStaffListService } from '../tabs-staff-list/service/tabs-staff-list.service';
-import { traceOn } from '../global';
+import { BaseComponent } from '../../base/base.component';
+import { Constants } from '../../constants';
+import { ProjectStaffService } from '../../project/project-staff-service/project-staff.service';
+import { CinematicService } from '../../service/cinematic.service';
+import { TabsStaffListService } from '../../tabs-staff-list/service/tabs-staff-list.service';
+import { traceOn } from '../../global';
 
 @Component({
 	selector: 'app-toolbar',

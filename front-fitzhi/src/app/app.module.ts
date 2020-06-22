@@ -18,9 +18,9 @@ import { CinematicService } from './service/cinematic.service';
 import { StaffComponent } from './tabs-staff/staff.component';
 
 import { StaffService } from './service/staff.service';
-import { MessageComponent } from './message/message.component';
+import { MessageComponent } from './interaction/message/message.component';
 
-import { ErrorComponent } from './error/error.component';
+import { ErrorComponent } from './interaction/error/error.component';
 
 import { ProjectFormComponent } from './project/project-form/project-form.component';
 import { ListProjectComponent } from './project/list-project/list-project.component';
@@ -50,7 +50,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTabsModule } from '@angular/material/tabs';
-import { MessageBoxComponent } from './message-box/dialog/message-box.component';
+import { MessageBoxComponent } from './interaction/message-box/dialog/message-box.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { ProjectComponent } from './project/project.component';
@@ -73,16 +73,16 @@ import { StaffListComponent } from './tabs-staff-list/staff-list/staff-list.comp
 import { BackendSetupComponent } from './admin/backend-setup/backend-setup.component';
 import { RegisterUserComponent } from './admin/register-user/register-user.component';
 import { StartingSetupComponent } from './admin/starting-setup/starting-setup.component';
-import { ToolbarComponent } from './toolbar/toolbar.component';
+import { ToolbarComponent } from './interaction/toolbar/toolbar.component';
 import { ConnectUserComponent } from './admin/connect-user/connect-user.component';
 import { AuthGuardService } from './admin/security/auth-guard.service';
 import { HttpErrorInterceptorService } from './admin/service/http/http-error-interceptor-service';
 import { HttpTokenInterceptorService } from './admin/service/http/http-token-interceptor.service';
-import { CiaoComponent } from './ciao/ciao.component';
+import { CiaoComponent } from './admin/ciao/ciao.component';
 import { TableDependenciesComponent } from './project/project-sunburst/table-dependencies/table-dependencies.component';
 import { InLineEditDialogComponent } from './project/project-sunburst/table-dependencies/in-line-edit-dialog/in-line-edit-dialog.component';
 import { ProjectAuditComponent } from './project/project-audit/project-audit.component';
-import { DevOnOffComponent } from './dev-on-off/dev-on-off.component';
+import { DevOnOffComponent } from './admin/dev-on-off/dev-on-off.component';
 import { ProjectSonarComponent } from './project/project-sonar/project-sonar.component';
 import { SonarMetricsComponent } from './project/project-sonar/sonar-metrics/sonar-metrics.component';
 import { SonarDashboardComponent } from './project/project-sonar/sonar-dashboard/sonar-dashboard.component';

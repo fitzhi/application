@@ -7,7 +7,7 @@ import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { AuditUploadAttachmentComponent } from './audit-upload-attachment/audit-upload-attachment.component';
 import { ProjectService } from 'src/app/service/project.service';
 import { FileService } from 'src/app/service/file.service';
-import { MessageService } from 'src/app/message/message.service';
+import { MessageService } from 'src/app/interaction/message/message.service';
 import { AuditAttachmentService } from '../service/audit-attachment.service';
 import { traceOn } from 'src/app/global';
 

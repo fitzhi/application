@@ -7,7 +7,7 @@ import { HttpInterceptor, HttpRequest, HttpHandler, HttpSentEvent, HttpHeaderRes
 import { HttpProgressEvent, HttpResponse, HttpUserEvent, HttpErrorResponse } from '@angular/common/http';
 
 import { AuthService } from '../auth/auth.service';
-import { MessageService } from 'src/app/message/message.service';
+import { MessageService } from 'src/app/interaction/message/message.service';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { Constants } from 'src/app/constants';
 import { traceOn } from 'src/app/global';

@@ -13,9 +13,9 @@ import { ProjectSonarMetricValue } from 'src/app/data/project-sonar-metric-value
 import { ProjectService } from 'src/app/service/project.service';
 import { PanelSwitchEvent } from '../sonar-thumbnails/panel-switch-event';
 import { ElementSchemaRegistry } from '@angular/compiler';
-import { MessageGravity } from 'src/app/message/message-gravity';
+import { MessageGravity } from 'src/app/interaction/message/message-gravity';
 import { ResponseComponentMeasures } from 'src/app/data/sonar/reponse-component-measures';
-import { MessageService } from 'src/app/message/message.service';
+import { MessageService } from 'src/app/interaction/message/message.service';
 import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 import { traceOn } from 'src/app/global';
 

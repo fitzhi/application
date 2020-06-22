@@ -4,7 +4,7 @@ import { Skill } from '../data/skill';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 
-import { MessageService } from '../message/message.service';
+import { MessageService } from '../interaction/message/message.service';
 import { CinematicService } from '../service/cinematic.service';
 import { ListSkillService } from './list-skill-service/list-skill.service';
 import { SkillService } from '../service/skill.service';

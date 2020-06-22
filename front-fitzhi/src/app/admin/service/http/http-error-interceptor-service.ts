@@ -2,7 +2,7 @@ import { retry, catchError } from 'rxjs/operators';
 import { HttpHandler, HttpEvent, HttpErrorResponse, HttpRequest, HttpInterceptor } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { Injectable, Injector } from '@angular/core';
-import { MessageService } from '../../../message/message.service';
+import { MessageService } from '../../../interaction/message/message.service';
 import { Router } from '@angular/router';
 import { traceOn, HttpCodes } from 'src/app/global';
 import { BrowserStack } from 'protractor/built/driverProviders';

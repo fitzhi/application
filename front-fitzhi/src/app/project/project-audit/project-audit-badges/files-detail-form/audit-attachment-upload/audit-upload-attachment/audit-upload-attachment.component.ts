@@ -5,7 +5,7 @@ import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup
 import { AuditAttachmentComponent, AuditAttachment } from '../audit-attachment.component';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
-import { MessageBoxService } from 'src/app/message-box/service/message-box.service';
+import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { HttpRequest, HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { traceOn } from 'src/app/global';

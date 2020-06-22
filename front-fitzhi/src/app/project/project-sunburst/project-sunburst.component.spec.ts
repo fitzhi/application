@@ -14,7 +14,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { SSEWatcherComponent } from './ssewatcher/ssewatcher.component';
 import { ProjectService } from 'src/app/service/project.service';
 import { Project } from 'src/app/data/project';
-import { MessageBoxComponent } from 'src/app/message-box/dialog/message-box.component';
+import { MessageBoxComponent } from 'src/app/interaction/message-box/dialog/message-box.component';
 import { SunburstCinematicService } from './service/sunburst-cinematic.service';
 import { NgxPopper } from 'angular-popper';
 

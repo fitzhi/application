@@ -4,7 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ProjectService } from 'src/app/service/project.service';
 import { Project } from 'src/app/data/project';
 import { AuditBaseComponent } from '../audit-base-component/audit-base-component.component';
-import { MessageService } from 'src/app/message/message.service';
+import { MessageService } from 'src/app/interaction/message/message.service';
 import { take } from 'rxjs/operators';
 
 @Component({

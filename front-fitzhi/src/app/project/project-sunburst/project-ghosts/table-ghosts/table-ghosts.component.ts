@@ -8,11 +8,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { Collaborator } from 'src/app/data/collaborator';
 import { StaffService } from 'src/app/service/staff.service';
 import { take, throwIfEmpty, switchMap } from 'rxjs/operators';
-import { MessageService } from 'src/app/message/message.service';
+import { MessageService } from 'src/app/interaction/message/message.service';
 import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { traceOn } from 'src/app/global';
-import { MessageBoxService } from 'src/app/message-box/service/message-box.service';
+import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 
 @Component({
 	selector: 'app-table-ghosts',

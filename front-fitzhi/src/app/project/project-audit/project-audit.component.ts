@@ -10,7 +10,7 @@ import { CinematicService } from 'src/app/service/cinematic.service';
 import { TopicEvaluation } from './project-audit-badges/topic-evaluation';
 import { TopicWeight } from './project-audit-badges/topic-weight';
 import { ProjectService } from 'src/app/service/project.service';
-import { MessageService } from 'src/app/message/message.service';
+import { MessageService } from 'src/app/interaction/message/message.service';
 import { AuditChosenDetail } from './project-audit-badges/audit-badge/audit-chosen-detail';
 import { AuditDetailsHistory } from 'src/app/service/cinematic/audit-details-history';
 import { ConnectUserComponent } from 'src/app/admin/connect-user/connect-user.component';

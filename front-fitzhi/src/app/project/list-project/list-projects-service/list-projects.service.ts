@@ -4,7 +4,7 @@ import { ProjectService } from '../../../service/project.service';
 import {Injectable, OnInit} from '@angular/core';
 import {Observable, of, BehaviorSubject, throwError, empty, EMPTY} from 'rxjs';
 import {tap} from 'rxjs/operators';
-import { MessageService } from '../../../message/message.service';
+import { MessageService } from '../../../interaction/message/message.service';
 import { traceOn } from 'src/app/global';
 
 @Injectable({
