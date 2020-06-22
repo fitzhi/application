@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PieDashboardService } from '../service/pie-dashboard.service';
 import { TypeSlice } from '../type-slice';
+import { LevelStaffRisk } from '../level-staff-risk';
+import { Slice } from '../slice';
 
 @Component({
 	selector: 'app-pie-legend',
@@ -9,19 +11,50 @@ import { TypeSlice } from '../type-slice';
 })
 export class PieLegendComponent implements OnInit {
 
+	/**
+	 * The type of slice
+	 */
 	public typeSlice = TypeSlice;
 
 	/**
-	 * Identifier of the activated slice.
+	 * The level of risk
 	 */
-	public activatedId = -1;
+	public levelStaffRisk = LevelStaffRisk;
+
+	/**
+	 * The slide activated
+	 */
+	public activatedSlice: Slice;
+
+	/**
+	 * Label for the level of risk.
+	 */
+	public labelLevelOfRisk;
 
 	constructor(public pieDashboardService: PieDashboardService) { }
 
 	ngOnInit(): void {
 		this.pieDashboardService.sliceActivated$.subscribe({
-				next: slice => this.activatedId = slice.id
+				next: slice => {
+					this.activatedSlice = slice;
+					this.labelLevelOfRisk = this.levelOfRisk();
+				}
 		});
 	}
 
+	/**
+	 * Return an explicit level of risk.
+	 */
+	levelOfRisk() {
+		switch (this.activatedSlice.levelStaffRisk) {
+			case LevelStaffRisk.undefined:
+				return 'undefined';
+			case LevelStaffRisk.high:
+				return 'high';
+			case LevelStaffRisk.medium:
+				return 'medium';
+			case LevelStaffRisk.low:
+				return 'low';
+			}
+	}
 }

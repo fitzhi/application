@@ -5,11 +5,31 @@
   </div>
 
   <div *ngIf="((pieDashboardService.sliceActivated$|async).type === typeSlice.Staff)">
-    <p>Explanation for staff</p>
+    <div *ngIf="(activatedSlice.levelStaffRisk !== levelStaffRisk.undefined); else elseBlock">
+      <p>
+        {{activatedSlice.projects.length}} project(s) with a {{ labelLevelOfRisk }} level of Staff.
+      </p>
+    </div>
+    <ng-template #elseBlock>
+      <p>
+        {{activatedSlice.projects.length}} projects have not been analysed by the Fitzhì crawler.<br/>
+        <em>Did you setup the Git connection settings for these applications?</em>
+      </p>
+    </ng-template>
   </div>
 
   <div class="logo" *ngIf="((pieDashboardService.sliceActivated$|async).type === typeSlice.Sonar)">
     <img src="./assets/img/sonar-grey.png" height="35" width="35" />
+    <div *ngIf="(activatedSlice.levelStaffRisk !== levelStaffRisk.undefined); else elseBlock">
+      <p>
+        {{activatedSlice.projects.length}} project(s) with a {{ labelLevelOfRisk }} level with Sonar.
+      </p>
+    </div>
+    <ng-template #elseBlock>
+      <p>
+        {{activatedSlice.projects.length}} project(s) are not declared on the Sonar server(s).
+      </p>
+    </ng-template>
   </div>
 
   <div class="logo" *ngIf="((pieDashboardService.sliceActivated$|async).type === typeSlice.Audit)">
@@ -17,13 +37,22 @@
   </div>
 
   <div *ngIf="((pieDashboardService.sliceActivated$|async).type === typeSlice.Audit)">
-    <p>Explanation for audit</p>
+    <div *ngIf="(activatedSlice.levelStaffRisk !== levelStaffRisk.undefined); else elseBlock">
+      <p>
+        {{activatedSlice.projects.length}} projects with a {{ labelLevelOfRisk }} level from the technical point of view.
+      </p>
+    </div>
+    <ng-template #elseBlock>
+      <p>
+        {{activatedSlice.projects.length}} project(s) have been appraised by experts.
+      </p>
+    </ng-template>
   </div>
 
-  <div *ngIf="(activatedId !== -1)" class="slice">
+  <div *ngIf="(activatedSlice.id !== -1)" class="slice">
     <app-pie-chart
       [radius]=200
-      [filteredSlice]=activatedId
+      [filteredSlice]=activatedSlice.id
       [active]=false
       [pie]=7>
     </app-pie-chart>

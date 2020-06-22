@@ -6,6 +6,7 @@ import { ProjectService } from 'src/app/service/project.service';
 import { traceOn } from 'src/app/global';
 import { BehaviorSubject } from 'rxjs';
 import {EMPTY_SLICE} from '../empty-slice';
+import { LevelStaffRisk } from '../level-staff-risk';
 /**
  * This service is in charge of the generation of the slices.
  */
@@ -126,10 +127,14 @@ export class PieDashboardService {
 
 		const step = 120 / (green + orange + red + grey);
 
-		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * green, 'green', projects[0].get(type)));
-		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * orange, 'orange', projects[1].get(type)));
-		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * red, 'red', projects[2].get(type)));
-		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * grey, 'grey', projects[3].get(type)));
+		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * green, LevelStaffRisk.low,
+				'green', projects[0].get(type)));
+		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * orange, LevelStaffRisk.medium,
+				'orange', projects[1].get(type)));
+		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * red, LevelStaffRisk.high,
+				'red', projects[2].get(type)));
+		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * grey, LevelStaffRisk.undefined,
+				'grey', projects[3].get(type)));
 	}
 
 	/**
