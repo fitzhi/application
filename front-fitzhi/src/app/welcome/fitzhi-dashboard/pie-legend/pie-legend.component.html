@@ -1,23 +1,32 @@
 <div class="main">
   
-  <div class="logo" *ngIf="((pieDashboardService.projectSubject$|async) === typeSlice.Staff)">
+  <div class="logo" *ngIf="((pieDashboardService.sliceActivated$|async).type === typeSlice.Staff)">
     <em class="fas glyphicon fa-user-graduate logo"></em>
   </div>
 
-  <div *ngIf="((pieDashboardService.projectSubject$|async) === typeSlice.Staff)">
+  <div *ngIf="((pieDashboardService.sliceActivated$|async).type === typeSlice.Staff)">
     <p>Explanation for staff</p>
   </div>
 
-  <div class="logo" *ngIf="((pieDashboardService.projectSubject$|async) === typeSlice.Sonar)">
+  <div class="logo" *ngIf="((pieDashboardService.sliceActivated$|async).type === typeSlice.Sonar)">
     <img src="./assets/img/sonar-grey.png" height="35" width="35" />
   </div>
 
-  <div class="logo" *ngIf="((pieDashboardService.projectSubject$|async) === typeSlice.Audit)">
+  <div class="logo" *ngIf="((pieDashboardService.sliceActivated$|async).type === typeSlice.Audit)">
     <em class="fas fa-brain logo"></em>
   </div>
 
-  <div *ngIf="((pieDashboardService.projectSubject$|async) === typeSlice.Audit)">
+  <div *ngIf="((pieDashboardService.sliceActivated$|async).type === typeSlice.Audit)">
     <p>Explanation for audit</p>
+  </div>
+
+  <div *ngIf="(activatedId !== -1)" class="slice">
+    <app-pie-chart
+      [radius]=200
+      [filteredSlice]=activatedId
+      [active]=false
+      [pie]=7>
+    </app-pie-chart>
   </div>
 
 </div>

@@ -5,7 +5,7 @@ import { TypeSlice } from '../type-slice';
 import { ProjectService } from 'src/app/service/project.service';
 import { traceOn } from 'src/app/global';
 import { BehaviorSubject } from 'rxjs';
-
+import {EMPTY_SLICE} from '../empty-slice';
 /**
  * This service is in charge of the generation of the slices.
  */
@@ -22,19 +22,9 @@ export class PieDashboardService {
 	public slices$ = new BehaviorSubject<Slice[]>([]);
 
 	/**
-	 * Projects activated when the mouse pointer flies over a slice.
+	 * Slice activated with the mouse pointer.
 	 */
-	public projectsActivated$ = new BehaviorSubject<Project[]>([]);
-
-	/**
-	 * Projects header color depending on the slice activated.
-	 */
-	public projectsHeaderColor$ = new BehaviorSubject<string>('white');
-
-	/**
-	 * Subject highlighted.
-	 */
-	public projectSubject$ = new BehaviorSubject<number>(0);
+	public sliceActivated$ = new BehaviorSubject<Slice>(EMPTY_SLICE);
 
 	/**
 	 * Observable emetting the __last year__ archived `slices$` of the pie.
@@ -164,9 +154,12 @@ export class PieDashboardService {
 	 * @param slice the slice activated by the mouse.
 	 */
 	public onSliceMouseOver(slice: Slice) {
-
-		this.projectsActivated$.next(slice.projects);
-		this.projectsHeaderColor$.next(slice.color);
-		this.projectSubject$.next(slice.type);
+		if (traceOn()) {
+			console.log ('onSliceMouseOver(%d)', slice.type);
+		}
+		this.sliceActivated$.next(EMPTY_SLICE);
+		setTimeout(() => {
+			this.sliceActivated$.next(slice);
+		}, 0);
 	}
 }

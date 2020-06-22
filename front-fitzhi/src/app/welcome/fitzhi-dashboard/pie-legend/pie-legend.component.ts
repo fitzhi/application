@@ -11,9 +11,17 @@ export class PieLegendComponent implements OnInit {
 
 	public typeSlice = TypeSlice;
 
+	/**
+	 * Identifier of the activated slice.
+	 */
+	public activatedId = -1;
+
 	constructor(public pieDashboardService: PieDashboardService) { }
 
 	ngOnInit(): void {
+		this.pieDashboardService.sliceActivated$.subscribe({
+				next: slice => this.activatedId = slice.id
+		});
 	}
 
 }

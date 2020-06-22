@@ -3,16 +3,16 @@
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef [ngStyle]= "{'background-color': colorHeader}">
-          <div *ngIf="(pieDashboardService.projectsSubject$|async) === typeSlice.Staff">
+          <div *ngIf="(pieDashboardService.sliceActivated$|async).id === typeSlice.Staff">
             Staff
           </div>
-          <div *ngIf="(pieDashboardService.projectsSubject$|async) === typeSlice.Sonar">
+          <div *ngIf="(pieDashboardService.sliceActivated$|async).id === typeSlice.Sonar">
             Sonar
           </div>
-          <div *ngIf="(pieDashboardService.projectsSubject$|async) === typeSlice.Audit">
+          <div *ngIf="(pieDashboardService.sliceActivated$|async).id === typeSlice.Audit">
             Audit
           </div>
-          <div *ngIf="(pieDashboardService.projectsSubject$|async) === typeSlice.None">
+          <div *ngIf="(pieDashboardService.sliceActivated$|async).id === typeSlice.None">
             None
           </div>
       </th>

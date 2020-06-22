@@ -35,6 +35,13 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 	@Input() active: boolean;
 
 	/**
+	 * filteredSlice : index of slice the be displayed.
+	 *
+	 * _If this index is greater than -1, then the pie will display one **ONE** slice, otherwise the **WHOLE** pie will drawn._
+	 */
+	@Input() filteredSlice  = -1;
+
+	/**
 	 * D3 Arc generator.
 	 */
 	arcGenerator: D3.Arc<any, D3.DefaultArcObject>;
@@ -59,6 +66,9 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 	}
 
 	ngOnInit() {
+		if (traceOn()) {
+			console.log ('Filtered slice %d for identifier %d', this.filteredSlice, this.pie);
+		}
 	}
 
 	ngAfterViewInit() {
@@ -67,7 +77,7 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 			this.pieDashboardService.slices$
 				.pipe(tap(slices => {
 					if (traceOn()) {
-						console.groupCollapsed ('slices received');
+						console.groupCollapsed ('slices received for pie %d', this.pie);
 						console.log(...slices);
 						console.groupEnd();
 					}
@@ -85,7 +95,10 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 	 */
 	private generatePie(...slices: Slice[]) {
 		slices.forEach(slice => {
-			this.generatePieSlice (slice);
+			// Either we generate and draw the whole pie, or we just draw one slide with the given index
+			if ((this.filteredSlice === -1) || (slice.id === this.filteredSlice)) {
+				this.generatePieSlice (slice);
+			}
 		});
 	}
 

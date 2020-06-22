@@ -13,7 +13,7 @@ describe('PieDashboardService', () => {
 	}));
 
 	it('should be created', () => {
-		const service: PieDashboardService = TestBed.get(PieDashboardService);
+		const service: PieDashboardService = TestBed.inject(PieDashboardService);
 		expect(service).toBeTruthy();
 	});
 });
