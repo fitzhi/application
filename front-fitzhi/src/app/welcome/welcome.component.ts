@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BackendSetupService } from '../service/backend-setup/backend-setup.service';
 import { AuthService } from '../admin/service/auth/auth.service';
-import { Slice } from './fitzhi-dashboard/slice';
-import { BehaviorSubject } from 'rxjs';
-import { TypeSlice } from './fitzhi-dashboard/type-slice';
 
 @Component({
 	selector: 'app-welcome',
