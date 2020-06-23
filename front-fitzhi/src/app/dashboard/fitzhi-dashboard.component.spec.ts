@@ -14,7 +14,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TreemapHeaderComponent } from './treemap/treemap-header/treemap-header.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { TagifyStarsComponent } from '../../tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
+import { TagifyStarsComponent } from '../tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 import { TreemapComponent } from './treemap/treemap-container/treemap.component';
 import { CinematicService } from 'src/app/service/cinematic.service';
 

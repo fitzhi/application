@@ -103,23 +103,23 @@ import { FilesDetailFormComponent } from './project/project-audit/project-audit-
 import { AuditAttachmentComponent } from './project/project-audit/project-audit-badges/files-detail-form/audit-attachment-upload/audit-attachment.component';
 // tslint:disable-next-line:max-line-length
 import { AuditUploadAttachmentComponent } from './project/project-audit/project-audit-badges/files-detail-form/audit-attachment-upload/audit-upload-attachment/audit-upload-attachment.component';
-import { FitzhiDashboardComponent } from './welcome/fitzhi-dashboard/fitzhi-dashboard.component';
-import { PieChartComponent } from './welcome/fitzhi-dashboard/pie-chart/pie-chart.component';
-import { PieProjectsComponent } from './welcome/fitzhi-dashboard/pie-projects/pie-projects.component';
+import { FitzhiDashboardComponent } from './dashboard/fitzhi-dashboard.component';
+import { PieChartComponent } from './dashboard/pie-chart/pie-chart.component';
+import { PieProjectsComponent } from './dashboard/pie-projects/pie-projects.component';
 import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 import { SSEWatcherComponent } from './project/project-sunburst/ssewatcher/ssewatcher.component';
-import { TreemapChartComponent } from './welcome/fitzhi-dashboard/treemap/treemap-chart/treemap-chart.component';
+import { TreemapChartComponent } from './dashboard/treemap/treemap-chart/treemap-chart.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { TreemapHeaderComponent } from './welcome/fitzhi-dashboard/treemap/treemap-header/treemap-header.component';
-import { TreemapComponent } from './welcome/fitzhi-dashboard/treemap/treemap-container/treemap.component';
+import { TreemapHeaderComponent } from './dashboard/treemap/treemap-header/treemap-header.component';
+import { TreemapComponent } from './dashboard/treemap/treemap-container/treemap.component';
 import { NgxPopper } from 'angular-popper';
 import { StaffDataExchangeService } from './tabs-staff/service/staff-data-exchange.service';
 import { ProjectRemoveComponent } from './project/project-remove/project-remove.component';
 import { ProjectInactivateComponent } from './project/project-inactivate/project-inactivate.component';
 import { StaffRemoveComponent } from './tabs-staff/staff-remove/staff-remove.component';
 import { ListSkillComponent } from './skill/list-skill/list-skill.component';
-import { PieLegendComponent } from './welcome/fitzhi-dashboard/pie-legend/pie-legend.component';
-import { PieDashboardService } from './welcome/fitzhi-dashboard/service/pie-dashboard.service';
+import { PieLegendComponent } from './dashboard/pie-legend/pie-legend.component';
+import { PieDashboardService } from './dashboard/service/pie-dashboard.service';
 
 @NgModule({
 	declarations: [
