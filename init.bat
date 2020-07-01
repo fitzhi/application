@@ -10,10 +10,10 @@ rmdir /Q /s wibkac
 git clone https://github.com/frvidal/wibkac
 cd ..
 mkdir deploy
-mkdir deploy\backend-wibkac
-cd back-wibkac
+mkdir deploy\backend-fitzhi
+cd back-fitzhi
 mvn package -DargLine="-Dfile.separator=/"
-cp target\wibkac.jar ..\deploy\backend-wibkac\wibkac.jar
+cp target\fitzhi.jar ..\deploy\backend-fitzhi\fitzhi.jar
 cp -R data ..\deploy\data
 cd ..
 
