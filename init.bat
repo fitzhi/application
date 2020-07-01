@@ -9,9 +9,10 @@ git clone https://github.com/frvidal/first-test
 rmdir /Q /s wibkac
 git clone https://github.com/frvidal/wibkac
 cd ..
-mkdir -pv deploy/backend-wibkac
+mkdir deploy
+mkdir deploy\backend-wibkac
 cd back-wibkac
-mvn package
+mvn package -DargLine="-Dfile.separator=/"
 cp target\wibkac.jar ..\deploy\backend-wibkac\wibkac.jar
 cp -R data ..\deploy\data
 cd ..
