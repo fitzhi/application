@@ -7,9 +7,11 @@ import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Type;
@@ -187,10 +189,10 @@ public class FileDataHandlerImpl implements DataHandler {
 
 		Map<Integer, Staff> theStaff = new HashMap<>();
 
-		try (FileReader fr = new FileReader(rootLocation.resolve(filename).toFile())) {
+		try (InputStreamReader isr = new InputStreamReader(new FileInputStream(rootLocation.resolve(filename).toFile()), "UTF-8")) {
 			Type listStaffType = new TypeToken<HashMap<Integer, Staff>>() {
 			}.getType();
-			theStaff = gson.fromJson(fr, listStaffType);
+			theStaff = gson.fromJson(isr, listStaffType);
 		} catch (final Exception e) {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, rootLocation.resolve(filename).toFile().getAbsoluteFile()), e);
 		}
