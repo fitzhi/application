@@ -45,7 +45,7 @@ public class CrawlerWibkacTest {
 
 	private static final String FITZHI = "application";
 
-	private static final String DIR_GIT = "../git_repo_for_test/%s/";
+	private static final String DIR_GIT = ".." + File.separator + "git_repo_for_test" + File.separator + "%s" + File.separator;
 
 	private static final String FILE_GIT = DIR_GIT + ".git";
 
