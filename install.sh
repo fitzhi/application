@@ -58,9 +58,9 @@ cd back-fitzhi
 
 if [ $test = "Y" ]
 then 
-mvn clean install
+mvn clean install -DargLine="-Dfile_separator=/"
 else 
-mvn clean install -Dmaven.test.skip=true
+mvn clean install -Dmaven.test.skip=true -DargLine="-Dfile_separator=/"
 fi
 
 cp target/fitzhi.jar ../$dir/backend-fitzhi/fitzhi.jar

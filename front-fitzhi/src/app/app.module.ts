@@ -120,6 +120,7 @@ import { StaffRemoveComponent } from './tabs-staff/staff-remove/staff-remove.com
 import { ListSkillComponent } from './skill/list-skill/list-skill.component';
 import { PieLegendComponent } from './dashboard/pie-legend/pie-legend.component';
 import { PieDashboardService } from './dashboard/service/pie-dashboard.service';
+import {DynamicPieChartModule} from 'dynamic-pie-chart';
 
 @NgModule({
 	declarations: [
@@ -231,6 +232,7 @@ import { PieDashboardService } from './dashboard/service/pie-dashboard.service';
 		MatSliderModule,
 		NgxChartsModule,
 		NgxPopper,
+		DynamicPieChartModule,
 	],
 	providers: [
 		CinematicService,

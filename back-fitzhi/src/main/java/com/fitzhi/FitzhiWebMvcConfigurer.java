@@ -4,7 +4,9 @@
 package com.fitzhi;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -29,6 +31,20 @@ public class FitzhiWebMvcConfigurer implements WebMvcConfigurer {
 	@Value("${allowedOrigins}")
 	private String allowedOrigins;
 
+	
+	/**
+	 * <p>
+	 * In order to resolve <code>${...}</code> placeholders in <bean> definitions or <code>@Value</code> annotations using properties from a PropertySource, 
+	 * one must register a <code>PropertySourcesPlaceholderConfigurer</code>.<br/> 
+	 * This happens automatically when using <context:property-placeholder> in XML, but must be explicitly registered using a static code>@Bean</code> method 
+	 * when using <code>@Configuration</code> classes. 
+	 * </p>
+	 * @return an instance of PropertySourcesPlaceholderConfigurer
+	 */
+	@Bean
+	public static PropertySourcesPlaceholderConfigurer propertiesResolver() {
+	    return new PropertySourcesPlaceholderConfigurer();
+	}
 	
 	@Override
 	public void addCorsMappings(CorsRegistry registry) {

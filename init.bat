@@ -12,7 +12,7 @@ cd ..
 mkdir deploy
 mkdir deploy\backend-fitzhi
 cd back-fitzhi
-mvn package -DargLine="-Dfile.separator=/"
+mvn package -DargLine="-Dfile_separator=\"
 cp target\fitzhi.jar ..\deploy\backend-fitzhi\fitzhi.jar
 cp -R data ..\deploy\data
 cd ..

@@ -17,10 +17,15 @@ import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.CommitRepository;
 
 @RunWith(SpringRunner.class)
+
 @SpringBootTest
 @TestPropertySource(properties = { 
-		"file.separator=/",
-		"cache.working.dir=./src/test/resources/cacheDirRepository/", 
+		"cache.working.dir=" + "." +
+				"${file_separator}" + "src" +
+				"${file_separator}" + "test" +
+				"${file_separator}" + "resources" +
+				"${file_separator}" + "cacheDirRepository" +
+				"${file_separator}", 
 		"cache_duration=100000" }) 
 public class BasicCommitRepositoryOnBoardStaffTest {
 
