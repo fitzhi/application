@@ -42,7 +42,12 @@ import com.google.gson.GsonBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@TestPropertySource(properties = { "cache.working.dir=./src/test/resources/cacheDirRepository/", "cache_duration=100000" }) 
+@TestPropertySource(properties = { "cache.working.dir=." + 
+		"${file_separator}" + "src" +
+		"${file_separator}" + "test" +
+		"${file_separator}" + "resources" +
+		"${file_separator}" + "cacheDirRepository" +
+		"${file_separator}", "cache_duration=100000" }) 
 public class ProjectAnalysisControllerOnboardStaffTest {
 
 
