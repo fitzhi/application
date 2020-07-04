@@ -12,7 +12,8 @@ cd ..
 mkdir deploy\backend-fitzhi
 cd back-fitzhi
 mvn package -DargLine="-Dfile_separator=\\ -Dfile.encoding=\"UTF-8\" -Dsun.jnu.encoding=\"UTF-8\""
-cp target\fitzhi.jar ..\deploy\backend-fitzhi\fitzhi.jar
-cp -R data ..\deploy\data
+copy .\target\fitzhi.jar ..\deploy\backend-fitzhi\fitzhi.jar
+copy .\target\application.properties ..\deploy\backend-fitzhi\application.properties
+copy .\target\logback-spring.xml ..\deploy\backend-fitzhi\logback-spring.xml
 cd ..
 
