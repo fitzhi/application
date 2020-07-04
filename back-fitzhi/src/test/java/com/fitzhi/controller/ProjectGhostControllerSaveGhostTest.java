@@ -63,7 +63,6 @@ public class ProjectGhostControllerSaveGhostTest {
 	@Before
 	public void before() throws SkillerException {
 		project = projectHandler.get(ID_PROJECT);
-		project.getGhosts().clear();
 		project.getGhosts().add(new Ghost("pseudoUnlinked", false));
 		project.getGhosts().add(new Ghost("pseudoLinked", 2, false));
 		

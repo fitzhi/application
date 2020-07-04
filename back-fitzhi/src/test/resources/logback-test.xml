@@ -32,5 +32,9 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
+	<logger name="com.fitzhi.source.crawler.git.CrawlerWibkacTest" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
 
 </configuration>

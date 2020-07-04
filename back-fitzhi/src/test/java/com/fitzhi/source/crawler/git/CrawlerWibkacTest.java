@@ -28,11 +28,15 @@ import com.fitzhi.bean.DataChartHandler;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectDashboardCustomizer;
 import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.bean.impl.SonarHandlerImpl;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.source.ConnectionSettings;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.RepoScanner;
+
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -41,6 +45,7 @@ import com.fitzhi.source.crawler.RepoScanner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @TestPropertySource(properties = { "prefilterEligibility=false" }) 
+@Slf4j
 public class CrawlerWibkacTest {
 
 	private static final String FITZHI = "application";
@@ -87,11 +92,21 @@ public class CrawlerWibkacTest {
 	public void testFilterEligible() throws IOException, SkillerException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Repository location", new File(String.format(FILE_GIT, FITZHI)).getAbsolutePath()));
+		}
+		
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, FITZHI))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);
+		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);		
 		scanner.finalizeListChanges(String.format(DIR_GIT, FITZHI), analysis);
+		
+		if (log.isDebugEnabled()) {
+			log.debug("analysis.getPathsAll() content : ");
+			analysis.getPathsAll().stream().forEach(log::debug);
+		}
+		
 		assertTrue(
 				analysis.getPathsAll().contains("front-fitzhi/src/assets/img/zhi.png"));
 

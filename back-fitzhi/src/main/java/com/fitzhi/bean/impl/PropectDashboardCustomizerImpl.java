@@ -153,7 +153,7 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 						}
 						throw new SkillerException (
 							CODE_CONTRIBUTOR_INVALID,
-							MessageFormat.format(MESSAGE_CONTRIBUTOR_INVALID, staff.fullName(), project.getName()));
+							MessageFormat.format(MESSAGE_CONTRIBUTOR_INVALID, staff.fullName(), staff.getLogin(), project.getName()));
 					}
 					
 					for (String candidate : candidates) {
