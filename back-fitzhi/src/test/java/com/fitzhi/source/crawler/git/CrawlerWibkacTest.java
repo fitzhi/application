@@ -93,7 +93,7 @@ public class CrawlerWibkacTest {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Repository location", new File(String.format(FILE_GIT, FITZHI)).getAbsolutePath()));
+			log.debug(String.format("Repository location %s", new File(String.format(FILE_GIT, FITZHI)).getAbsolutePath()));
 		}
 		
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, FITZHI))).readEnvironment().findGitDir()

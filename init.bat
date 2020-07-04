@@ -6,8 +6,8 @@ mkdir -pv git_repo_for_test
 cd git_repo_for_test
 rmdir /Q /s first-test
 git clone https://github.com/frvidal/first-test 
-rmdir /Q /s wibkac
-git clone https://github.com/frvidal/wibkac
+rmdir /Q /s application
+git clone https://github.com/fitzhi/application
 cd ..
 mkdir deploy\backend-fitzhi
 cd back-fitzhi
