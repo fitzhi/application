@@ -11,7 +11,7 @@ git clone https://github.com/frvidal/wibkac
 cd ..
 mkdir deploy\backend-fitzhi
 cd back-fitzhi
-mvn package -DargLine="-Dfile_separator=\\"
+mvn package -DargLine="-Dfile_separator=\\ -Dfile.encoding=\"UTF-8\" -Dsun.jnu.encoding=\"UTF-8\""
 cp target\fitzhi.jar ..\deploy\backend-fitzhi\fitzhi.jar
 cp -R data ..\deploy\data
 cd ..

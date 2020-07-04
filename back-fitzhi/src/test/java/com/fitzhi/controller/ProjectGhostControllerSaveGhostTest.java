@@ -63,6 +63,7 @@ public class ProjectGhostControllerSaveGhostTest {
 	@Before
 	public void before() throws SkillerException {
 		project = projectHandler.get(ID_PROJECT);
+		project.getGhosts().clear();
 		project.getGhosts().add(new Ghost("pseudoUnlinked", false));
 		project.getGhosts().add(new Ghost("pseudoLinked", 2, false));
 		
@@ -81,7 +82,7 @@ public class ProjectGhostControllerSaveGhostTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
 				.andReturn();
-		System.out.println(result.getResponse().getContentAsString());
+
 		Staff staff = gson.fromJson(result.getResponse().getContentAsString(), Staff.class);
 		//
 		// THIS PROJECT IS NOT ALREADY DECLARED FOR THIS STAFF MEMBER
