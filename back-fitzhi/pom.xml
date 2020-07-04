@@ -267,7 +267,7 @@
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 		<resources>
 		  <resource>
-			<directory>${basedir}/src/main/resources</directory>
+			<directory>${basedir}${file.separator}src${file.separator}main${file.separator}resources</directory>
 			<filtering>false</filtering>
 		    <excludes>
 		      <exclude>application.properties</exclude>
@@ -353,10 +353,10 @@
 	                    </goals>
 	
 	                    <configuration>
-	                        <outputDirectory>${basedir}/target</outputDirectory>
+	                        <outputDirectory>${basedir}${file.separator}target</outputDirectory>
 	                        <resources>
 	                            <resource>
-	                                <directory>${basedir}/src/main/resources</directory>
+	                                <directory>${basedir}${file.separator}src${file.separator}main${file.separator}resources</directory>
 	                                <includes>
 	                                    <include>application.properties</include>
 	                                    <include>logback-spring.xml</include>
