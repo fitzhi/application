@@ -97,7 +97,7 @@ public class ProjectControllerRemoveProjectTest {
 	@After
 	public void after() throws Exception {
 		projectHandler.getProjects().remove(1789);
-		staffHandler.getStaff(1).getMissions().remove(new Mission(1, 1789, "revolutionary project"));
+		staffHandler.getStaff(1).getMissions().clear();
 	}
 	
 }
