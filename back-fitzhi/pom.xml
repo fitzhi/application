@@ -353,7 +353,7 @@
 	                    </goals>
 	
 	                    <configuration>
-	                        <outputDirectory>${basedir}${file.separator}target</outputDirectory>
+	                        <outputDirectory>${basedir}/target</outputDirectory>
 	                        <resources>
 	                            <resource>
 	                                <directory>${basedir}${file.separator}src${file.separator}main${file.separator}resources</directory>
