@@ -15,5 +15,6 @@ mvn package -DargLine="-Dfile_separator=\\ -Dfile.encoding=\"UTF-8\" -Dsun.jnu.e
 copy .\target\fitzhi.jar ..\deploy\backend-fitzhi\fitzhi.jar
 copy .\target\application.properties ..\deploy\backend-fitzhi\application.properties
 copy .\target\logback-spring.xml ..\deploy\backend-fitzhi\logback-spring.xml
+copy data ..\deploy\
 cd ..
 
