@@ -267,7 +267,7 @@
 		<testSourceDirectory>src/test/java</testSourceDirectory>
 		<resources>
 		  <resource>
-			<directory>${basedir}${file.separator}src${file.separator}main${file.separator}resources</directory>
+			<directory>${basedir}/src/main/resources</directory>
 			<filtering>false</filtering>
 		    <excludes>
 		      <exclude>application.properties</exclude>
