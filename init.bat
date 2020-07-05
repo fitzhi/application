@@ -16,9 +16,9 @@ call mvn install -DargLine="-Dfile_separator=\\ -Dfile.encoding=\"UTF-8\" -Dsun.
 echo ""
 echo "Building back-end Fitzhi"
 echo "------------------------"
-xcopy .\target\fitzhi.jar ..\deploy\backend-fitzhi\fitzhi.jar
-xcopy .\target\application.properties ..\deploy\backend-fitzhi\application.properties
-xcopy .\target\logback-spring.xml ..\deploy\backend-fitzhi\logback-spring.xml
+copy .\target\fitzhi.jar ..\deploy\backend-fitzhi\fitzhi.jar
+copy .\target\application.properties ..\deploy\backend-fitzhi\application.properties
+copy .\target\logback-spring.xml ..\deploy\backend-fitzhi\logback-spring.xml
 xcopy /E /I data ..\deploy\data
 cd ..
 
