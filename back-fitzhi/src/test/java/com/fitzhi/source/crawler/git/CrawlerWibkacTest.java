@@ -28,14 +28,12 @@ import com.fitzhi.bean.DataChartHandler;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectDashboardCustomizer;
 import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.bean.impl.SonarHandlerImpl;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.source.ConnectionSettings;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.RepoScanner;
 
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 
 /**
