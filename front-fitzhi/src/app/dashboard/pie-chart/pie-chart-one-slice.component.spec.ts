@@ -9,7 +9,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { Component } from '@angular/core';
 import { PieDashboardService } from '../service/pie-dashboard.service';
-import { TypeSlice } from '../type-slice';
+import { AnalysisTypeSlice } from '../analysis-type-slice';
 import { LevelStaffRisk } from '../level-staff-risk';
 
 describe('PieChartComponent with only One Slice', () => {
@@ -59,47 +59,43 @@ describe('PieChartComponent with only One Slice', () => {
 			[
 				{
 					id: 0,
-					type: TypeSlice.Sonar,
+					type: AnalysisTypeSlice.Sonar,
 					angle: 45,
-					levelStaffRisk: LevelStaffRisk.low,
 					color: 'green',
 					offset: 0,
 					activated: false,
 					selected: false,
-					projects: []
+					contents: []
 				},
 				{
 					id: 1,
-					type: TypeSlice.Sonar,
+					type: AnalysisTypeSlice.Sonar,
 					angle: 20,
-					levelStaffRisk: LevelStaffRisk.medium,
 					color: 'orange',
 					offset: 45,
 					activated: false,
 					selected: false,
-					projects: []
+					contents: []
 				},
 				{
 					id: 2,
-					type: TypeSlice.Sonar,
+					type: AnalysisTypeSlice.Sonar,
 					angle: 10,
-					levelStaffRisk: LevelStaffRisk.high,
 					color: 'red',
 					offset: 65,
 					activated: false,
 					selected: false,
-					projects: []
+					contents: []
 				},
 				{
 					id: 3,
-					type: TypeSlice.Sonar,
+					type: AnalysisTypeSlice.Sonar,
 					angle: 99,
-					levelStaffRisk: LevelStaffRisk.low,
 					color: 'blue',
 					offset: 75,
 					activated: false,
 					selected: false,
-					projects: []
+					contents: []
 				}
 			]);
 	}));

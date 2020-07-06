@@ -1,13 +1,12 @@
 import { Component, AfterViewInit, Input, ViewEncapsulation, OnInit, AfterContentInit, OnDestroy } from '@angular/core';
-import * as D3 from 'd3';
-import {Slice} from '../slice';
+import {Slice} from 'dynamic-pie-chart';
 import { BehaviorSubject, of, Observable } from 'rxjs';
-import { Constants } from 'src/app/constants';
-import { tap, switchMap } from 'rxjs/operators';
-import { TypeSlice } from '../type-slice';
+import { tap } from 'rxjs/operators';
 import { BaseComponent } from 'src/app/base/base.component';
 import { PieDashboardService } from '../service/pie-dashboard.service';
 import { traceOn } from 'src/app/global';
+import { TypeSlice } from 'dynamic-pie-chart';
+
 
 @Component({
 	selector: 'app-pie-chart',
@@ -35,44 +34,34 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 	@Input() active: boolean;
 
 	/**
-	 * filteredSlice : index of slice the be displayed.
-	 *
-	 * _If this index is greater than -1, then the pie will display one **ONE** slice, otherwise the **WHOLE** pie will drawn._
+	 * legend : One pie might have a legend around its pie.
 	 */
-	@Input() filteredSlice  = -1;
+	@Input() legend: boolean;
 
 	/**
-	 * D3 Arc generator.
+	 * Observable emitting an array of slices.
 	 */
-	arcGenerator: D3.Arc<any, D3.DefaultArcObject>;
+	public slices$ = new BehaviorSubject<Slice[]>([]);
 
 	/**
-	 * Array of Arc identifiers.
-	 */
-	private arcs = ['#arcSonar', '#arcStaff', '#arcAudit'];
-
-	/**
-	 * Array of Text identifiers.
-	 */
-	private texts = ['#textSonar', '#textStaff', '#textAudit'];
-
-	/**
-	 * Angle minimum required to display the label.
-	 */
-	private ANGLE_MINIMUM_FOR_LABEL = 15;
+     * Observable emitting an array of types of slice used to display the legend associated with each type of slice.
+     */
+	public typeSlices$ = new BehaviorSubject<TypeSlice[]>([]);
 
 	constructor(private pieDashboardService: PieDashboardService) {
 		super();
+		const typeSlices = [];
+		typeSlices.push(new TypeSlice(0, 'Sonar'));
+		typeSlices.push(new TypeSlice(1, 'Staff'));
+		typeSlices.push(new TypeSlice(2, 'Audit'));
+		typeSlices.push(new TypeSlice(3, 'None'));
+		this.typeSlices$.next(typeSlices);
 	}
 
 	ngOnInit() {
-		if (traceOn()) {
-			console.log ('Filtered slice %d for identifier %d', this.filteredSlice, this.pie);
-		}
 	}
 
 	ngAfterViewInit() {
-		this.arcGenerator = D3.arc().cornerRadius(4).padAngle(.01).padRadius(100);
 		this.subscriptions.add(
 			this.pieDashboardService.slices$
 				.pipe(tap(slices => {
@@ -83,185 +72,30 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 					}
 				})).
 				subscribe((slices => {
-					setTimeout(() => {
-						this.generatePie(...slices);
-					}, 0);
+					slices.forEach(slice => slice.offset = 0);
+					this.slices$.next(slices);
 				})));
 	}
 
 	/**
-	 * This function generates the Fitzhì(TM) summary pie (C).
-	 * @param slice the given slice with its parameters *(such as angle, color...)*
+	 * Thrown when a slice is **selected**.
+	 * @param slice the selected slice
 	 */
-	private generatePie(...slices: Slice[]) {
-		slices.forEach(slice => {
-			// Either we generate and draw the whole pie, or we just draw one slide with the given index
-			if ((this.filteredSlice === -1) || (slice.id === this.filteredSlice)) {
-				this.generatePieSlice (slice);
-			}
-		});
-	}
-
-	/**
-	 * This function generates the SVG arc figuring a slice.
-	 * @param slice the given slice with its parameters *(such as angle, color...)*
-	 */
-	private generatePieSlice (slice: Slice): void {
-
-		const idPathText = () =>  'text-' + this.pie + '-' + slice.id;
-
-		const pathSlice = this.arcGenerator({
-			startAngle: (slice.offset * 2 * Math.PI) / 360,
-			endAngle: ((slice.offset + slice.angle) * 2 * Math.PI) / 360,
-			innerRadius: 5,
-			outerRadius: this.radius
-		});
-
-		D3.select(this.svgPieSliceID(slice.id))
-			.append('path')
-			.attr('transform', 'translate(200,200)')
-			.attr('fill', slice.color)
-			.attr('d', pathSlice);
-
-			if (this.active) {
-
-				if (slice.angle > this.ANGLE_MINIMUM_FOR_LABEL) {
-
-					const pathText = this.arcGenerator({
-						startAngle: (slice.offset * 2 * Math.PI) / 360,
-						endAngle: ((slice.offset + slice.angle) * 2 * Math.PI) / 360,
-						innerRadius: 2 * this.radius / 3,
-						outerRadius: 2 * this.radius / 3
-					});
-
-					D3.select(this.svgPieSliceID(slice.id))
-					.append('path')
-					.attr('id', idPathText())
-					.attr('d', pathText);
-				}
-
-				D3.select(this.svgPieSliceID(slice.id))
-					.append('text')
-					.attr('transform', 'translate(200,200)')
-					.append('textPath')
-					.attr('xlink:href', '#' + idPathText())
-					.attr('startOffset', (slice.angle * 0.23) + '%')
-					.attr('fill', 'white')
-					.html(slice.angle + '%');
-
-				D3.select(this.svgPieSliceID(slice.id))
-					.on('click', function() { this.onSliceClick(slice); }.bind(this))
-					.on('mouseover', function() { this.onSliceMouseOver(slice); }.bind(this));
-			}
-	}
-
-	/**
-	 * Return the SVG pie slice identifier.
-	 */
-	private svgPieSliceID(idSlice: number) {
-		return '#pieSlice-' + this.pie + '-' + idSlice;
-	}
-
-	/**
-	 * This function is invoked when the end-user selects a slice.
-	 * @param idSlice Slice identifier
-	 */
-	onSliceClick(slice: Slice): void {
+	public sliceSelection(slice: Slice) {
 		if (traceOn()) {
-			console.log ('onSliceClick(%d)', slice.id);
+			console.log ('sliceSelection(%d)', slice.id);
 		}
 	}
 
 	/**
-	 * This function is invoked when the mouse pointer is located up on the given slice.
-	 * @param slice the slice highlighted by the end-user mouse.
+	 * Thrown when a slice is **activated**.
+	 * @param slice the selected slice
 	 */
-	onSliceMouseOver(slice: Slice): void {
-		this.inactiveArcs();
-		this.inactiveTexts();
+	public sliceActivation(slice: Slice) {
+		if (traceOn()) {
+			console.log ('sliceActivation(%d)', slice.id);
+		}
 		this.pieDashboardService.onSliceMouseOver(slice);
-		switch (slice.type) {
-			case TypeSlice.Sonar:
-				this.activeArc('#arcSonar');
-				this.activeText('#textSonar');
-				break;
-			case TypeSlice.Audit:
-				this.activeArc('#arcAudit');
-				this.activeText('#textAudit');
-				break;
-			case TypeSlice.Staff:
-				this.activeArc('#arcStaff');
-				this.activeText('#textStaff');
-				break;
-		}
-	}
-
-	/**
-	 * **Inactive** all present arcs in the HTML file.
-	 */
-	private inactiveArcs(): void {
-		this.arcs.forEach(arc => this.inactiveArc(arc));
-	}
-
-	/**
-	 * **Inactive** all present arcs in the HTML file.
-	 */
-	private inactiveTexts(): void {
-		this.texts.forEach(text => this.inactiveText(text));
-	}
-
-	/**
-	 * **Inactive** the given tooltip arc.
-	 * @param idArc HTML tooltip arc identifier
-	 */
-	private inactiveArc(idArc: string): void {
-		this.setupTooltipArc(idArc, false);
-	}
-
-	/**
-	 * **Active** the given tooltip arc.
-	 * @param idArc HTML tooltip arc identifier
-	 */
-	private activeArc(idArc: string): void {
-		this.setupTooltipArc(idArc, true);
-	}
-
-	/**
-	 * **Inactive** the given tooltip arc.
-	 * @param idText HTML tooltip TEXT identifier
-	 */
-	private inactiveText(idText: string): void {
-		this.setupTooltipText(idText, false);
-	}
-
-	/**
-	 * **Active** the given tooltip arc.
-	 * @param idText HTML tooltip TEXT identifier
-	 */
-	private activeText(idText: string): void {
-		this.setupTooltipText(idText, true);
-	}
-
-	/**
-	 * Setup the color of a tooltip arc depending on its status of active, or inactive
-	 * @param idArc HTML tooltip arc identifier
-	 * @param active the active status
-	 */
-	private setupTooltipArc(idArc: string, active: boolean) {
-		D3.select(idArc)
-		.attr('stroke', (active ? 'black' : 'lightGrey'))
-		.attr('marker-start', 'url(#arrow' + (active ? 'Active' : '') + ')')
-		.attr('marker-end', 'url(#arrow' + (active ? 'Active' : '') + ')');
-	}
-
-	/**
-	 * Setup the color of a text depending on its status of active, or inactive
-	 * @param idArc HTML tooltip text identifier
-	 * @param active the active status
-	 */
-	private setupTooltipText(idText: string, active: boolean) {
-		D3.select(idText)
-			.attr('class', (active ? 'text-active' : 'text'));
 	}
 
 	/**

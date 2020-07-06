@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { PieDashboardService } from '../service/pie-dashboard.service';
-import { TypeSlice } from '../type-slice';
+import { AnalysisTypeSlice } from '../analysis-type-slice';
 import { LevelStaffRisk } from '../level-staff-risk';
-import { Slice } from '../slice';
+import { Slice } from 'dynamic-pie-chart';
 
 @Component({
 	selector: 'app-pie-legend',
@@ -14,7 +14,7 @@ export class PieLegendComponent implements OnInit {
 	/**
 	 * The type of slice
 	 */
-	public typeSlice = TypeSlice;
+	public typeSlice = AnalysisTypeSlice;
 
 	/**
 	 * The level of risk
@@ -46,6 +46,7 @@ export class PieLegendComponent implements OnInit {
 	 * Return an explicit level of risk.
 	 */
 	levelOfRisk() {
+		/*
 		switch (this.activatedSlice.levelStaffRisk) {
 			case LevelStaffRisk.undefined:
 				return 'undefined';
@@ -56,5 +57,6 @@ export class PieLegendComponent implements OnInit {
 			case LevelStaffRisk.low:
 				return 'low';
 			}
+		*/
 	}
 }

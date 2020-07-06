@@ -1,4 +1,4 @@
-export enum TypeSlice {
+export enum AnalysisTypeSlice {
 	Sonar = 0,
 	Staff = 1,
 	Audit = 2,

@@ -4,16 +4,16 @@ import { Observable, EMPTY, of } from 'rxjs';
 import { CollectionViewer } from '@angular/cdk/collections';
 import { PieDashboardService } from '../service/pie-dashboard.service';
 import { switchMap } from 'rxjs/operators';
-import { Slice } from '../slice';
+import { Slice } from 'dynamic-pie-chart';
 
 export class ActivatedProjectsDatasSource implements DataSource<Project> {
 
 	constructor(public pieDashboardService: PieDashboardService) {}
 
-	connect(collectionViewer: CollectionViewer): Observable<Project[]> {
+	connect(collectionViewer: CollectionViewer): Observable<any[]> {
 		return this.pieDashboardService.sliceActivated$.
 				pipe(
-					switchMap((slice: Slice) => of(slice.projects))
+					switchMap((slice: Slice) => of(slice.contents))
 				);
 	}
 

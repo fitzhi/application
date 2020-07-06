@@ -18,7 +18,7 @@ import { TagifyStarsComponent } from '../tabs-staff/staff-experience/tagify-star
 import { TreemapComponent } from './treemap/treemap-container/treemap.component';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { selection } from './selection';
-import { TypeSlice } from './type-slice';
+import { AnalysisTypeSlice } from './analysis-type-slice';
 import { PieDashboardService } from './service/pie-dashboard.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { Project } from 'src/app/data/project';
@@ -50,7 +50,7 @@ describe('FitzhiDashboardComponent', () => {
 		const slices = [];
 		const slice =	{
 				id: 0,
-				type: TypeSlice.Sonar,
+				type: AnalysisTypeSlice.Sonar,
 				angle: 45,
 				color: 'green',
 				offset: 0,
@@ -63,7 +63,7 @@ describe('FitzhiDashboardComponent', () => {
 		slices.push (
 			{
 					id: 1,
-					type: TypeSlice.Sonar,
+					type: AnalysisTypeSlice.Sonar,
 					angle: 20,
 					color: 'orange',
 					offset: 45,
@@ -75,7 +75,7 @@ describe('FitzhiDashboardComponent', () => {
 		slices.push (
 			{
 				id: 2,
-				type: TypeSlice.Sonar,
+				type: AnalysisTypeSlice.Sonar,
 				angle: 10,
 				color: 'red',
 				offset: 65,
@@ -86,7 +86,7 @@ describe('FitzhiDashboardComponent', () => {
 		slices.push (
 			{
 				id: 3,
-				type: TypeSlice.Staff,
+				type: AnalysisTypeSlice.Staff,
 				angle: 99,
 				color: 'blue',
 				offset: 75,

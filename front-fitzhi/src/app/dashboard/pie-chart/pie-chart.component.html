@@ -1,18 +1,8 @@
 <div id="containerSVG">
     <lib-dynamic-pie-chart
-    [pie]=1
-    [radius]=150
-    [active]=true
-    [legend]=legend
-    [slices$]=slices$
-    [typeSlices$]=typeSlices$
-    (selected)="sliceSelection($event)" 
-    (activated)="sliceActivation($event)">
-</lib-dynamic-pie-chart>
-    <lib-dynamic-pie-chart
-        [pie]=1
-        [radius]=150
-        [active]=true
+        [pie]=pie
+        [radius]=radius
+        [active]=active
         [legend]=legend
         [slices$]=slices$
         [typeSlices$]=typeSlices$

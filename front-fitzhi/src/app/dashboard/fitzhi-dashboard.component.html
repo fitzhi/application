@@ -134,6 +134,7 @@
             <app-pie-chart
                 [radius]=180
                 [active]=false
+                [legend]=false
                 [pie]=pieIdentifier.lastYear>
             </app-pie-chart>
         </div>
@@ -151,6 +152,7 @@
             <app-pie-chart
                 [radius]=180
                 [active]=false
+                [legend]=false
                 [pie]=pieIdentifier.lastMonth>
             </app-pie-chart>
         </div>
@@ -163,7 +165,7 @@
     
     <div id="logo" *ngIf="isSelected(selection.none)">质</div>
 
-    <div  class="dashboard-pie" *ngIf="isSelected(selection.currentSummary) && (projectService.allProjectsIsLoaded$|async)">
+    <div class="dashboard-pie" *ngIf="isSelected(selection.currentSummary) && (projectService.allProjectsIsLoaded$|async)">
 
       <div class="pie-legend">
         <app-pie-legend></app-pie-legend>
@@ -173,6 +175,7 @@
             <app-pie-chart
                 [radius]=150
                 [active]=true
+                [legend]=true
                 [pie]=pieIdentifier.current>
             </app-pie-chart>
         </div>

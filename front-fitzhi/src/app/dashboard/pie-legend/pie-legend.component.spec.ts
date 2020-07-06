@@ -2,13 +2,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PieLegendComponent } from './pie-legend.component';
 import { PieDashboardService } from '../service/pie-dashboard.service';
-import { TypeSlice } from '../type-slice';
+import { AnalysisTypeSlice } from '../analysis-type-slice';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { MatDialogModule } from '@angular/material/dialog';
-import { Slice } from '../slice';
+import { Slice } from 'dynamic-pie-chart';
 import { LevelStaffRisk } from '../level-staff-risk';
 
 describe('PieLegendComponent', () => {
@@ -32,12 +32,11 @@ describe('PieLegendComponent', () => {
 		pieDashboardService.sliceActivated$.next(
 			{
 				id: 1,
-				type: TypeSlice.Staff,
+				type: AnalysisTypeSlice.Staff,
 				offset: 0,
 				angle: 45,
-				levelStaffRisk: LevelStaffRisk.low,
 				color: 'green',
-				projects: [],
+				contents: [],
 				activated: false,
 				selected: false
 			});
@@ -51,12 +50,11 @@ describe('PieLegendComponent', () => {
 			pieDashboardService.sliceActivated$.next(
 				{
 					id: 1,
-					type: TypeSlice.Sonar,
+					type: AnalysisTypeSlice.Sonar,
 					offset: 0,
 					angle: 45,
-					levelStaffRisk: LevelStaffRisk.low,
 					color: 'green',
-					projects: [],
+					contents: [],
 					activated: false,
 					selected: false
 				});
@@ -67,12 +65,11 @@ describe('PieLegendComponent', () => {
 			pieDashboardService.sliceActivated$.next(
 				{
 					id: 1,
-					type: TypeSlice.Audit,
+					type: AnalysisTypeSlice.Audit,
 					offset: 0,
 					angle: 45,
-					levelStaffRisk: LevelStaffRisk.low,
 					color: 'green',
-					projects: [],
+					contents: [],
 					activated: false,
 					selected: false
 				});

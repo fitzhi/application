@@ -2,6 +2,10 @@
 
 
 helpFunction()
+
+
+
+
 {
    echo ""
    echo "Usage: $0 [-f Y/N] [-d inst_dir] [-?]"

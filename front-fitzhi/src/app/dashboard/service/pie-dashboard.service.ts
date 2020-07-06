@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Project } from 'src/app/data/project';
-import { Slice } from '../slice';
-import { TypeSlice } from '../type-slice';
+import { Slice } from 'dynamic-pie-chart';
 import { ProjectService } from 'src/app/service/project.service';
 import { traceOn } from 'src/app/global';
 import { BehaviorSubject } from 'rxjs';
 import {EMPTY_SLICE} from '../empty-slice';
 import { LevelStaffRisk } from '../level-staff-risk';
+import { TypeSlice } from 'dynamic-pie-chart';
+import { AnalysisTypeSlice } from '../analysis-type-slice';
 /**
  * This service is in charge of the generation of the slices.
  */
@@ -43,14 +44,14 @@ export class PieDashboardService {
 	 */
 	public generatePieSlices (projects: Project[]) {
 
-		const greyProjects: Map<TypeSlice, Project[]> = new Map([
-			[TypeSlice.Staff, []], [TypeSlice.Audit, []], [TypeSlice.Sonar, []]]);
-		const greenProjects: Map<TypeSlice, Project[]> = new Map([
-			[TypeSlice.Staff, []], [TypeSlice.Audit, []], [TypeSlice.Sonar, []]]);
-		const redProjects: Map<TypeSlice, Project[]> = new Map([
-			[TypeSlice.Staff, []], [TypeSlice.Audit, []], [TypeSlice.Sonar, []]]);
-		const orangeProjects: Map<TypeSlice, Project[]> = new Map([
-			[TypeSlice.Staff, []], [TypeSlice.Audit, []], [TypeSlice.Sonar, []]]);
+		const greyProjects: Map<AnalysisTypeSlice, Project[]> = new Map([
+			[AnalysisTypeSlice.Staff, []], [AnalysisTypeSlice.Audit, []], [AnalysisTypeSlice.Sonar, []]]);
+		const greenProjects: Map<AnalysisTypeSlice, Project[]> = new Map([
+			[AnalysisTypeSlice.Staff, []], [AnalysisTypeSlice.Audit, []], [AnalysisTypeSlice.Sonar, []]]);
+		const redProjects: Map<AnalysisTypeSlice, Project[]> = new Map([
+			[AnalysisTypeSlice.Staff, []], [AnalysisTypeSlice.Audit, []], [AnalysisTypeSlice.Sonar, []]]);
+		const orangeProjects: Map<AnalysisTypeSlice, Project[]> = new Map([
+			[AnalysisTypeSlice.Staff, []], [AnalysisTypeSlice.Audit, []], [AnalysisTypeSlice.Sonar, []]]);
 
 		projects.filter(project => project.active).forEach(project => {
 
@@ -58,37 +59,37 @@ export class PieDashboardService {
 			 * Distribution of projects on the staffEvaluation criteria
 			 */
 			if (project.staffEvaluation === -1) {
-				greyProjects.get(TypeSlice.Staff).push(project);
+				greyProjects.get(AnalysisTypeSlice.Staff).push(project);
 			} else if (project.staffEvaluation <= 3) {
-					greenProjects.get(TypeSlice.Staff).push(project);
+					greenProjects.get(AnalysisTypeSlice.Staff).push(project);
 				} else if (project.staffEvaluation <= 6) {
-					orangeProjects.get(TypeSlice.Staff).push(project);
+					orangeProjects.get(AnalysisTypeSlice.Staff).push(project);
 				} else {
-					redProjects.get(TypeSlice.Staff).push(project);
+					redProjects.get(AnalysisTypeSlice.Staff).push(project);
 			}
 
 			/**
 			 * Distribution of projects on the staff Evaluation criteria
 			 */
 			if (Object.keys(project.audit).length === 0) {
-				greyProjects.get(TypeSlice.Audit).push(project);
+				greyProjects.get(AnalysisTypeSlice.Audit).push(project);
 			} else if (project.auditEvaluation <= 30) {
-					redProjects.get(TypeSlice.Audit).push(project);
+					redProjects.get(AnalysisTypeSlice.Audit).push(project);
 				} else if (project.auditEvaluation <= 60) {
-					orangeProjects.get(TypeSlice.Audit).push(project);
+					orangeProjects.get(AnalysisTypeSlice.Audit).push(project);
 				} else {
-					greenProjects.get(TypeSlice.Audit).push(project);
+					greenProjects.get(AnalysisTypeSlice.Audit).push(project);
 			}
 
 			const sonarEvaluation = this.projectService.calculateSonarEvaluation(project);
 			if (sonarEvaluation === 0) {
-					greyProjects.get(TypeSlice.Sonar).push(project);
+					greyProjects.get(AnalysisTypeSlice.Sonar).push(project);
 				} else if (sonarEvaluation <= 30) {
-					greenProjects.get(TypeSlice.Sonar).push(project);
+					greenProjects.get(AnalysisTypeSlice.Sonar).push(project);
 				} else if (sonarEvaluation <= 60) {
-					orangeProjects.get(TypeSlice.Sonar).push(project);
+					orangeProjects.get(AnalysisTypeSlice.Sonar).push(project);
 				} else {
-					redProjects.get(TypeSlice.Sonar).push(project);
+					redProjects.get(AnalysisTypeSlice.Sonar).push(project);
 			}
 
 			if (traceOn()) {
@@ -101,9 +102,9 @@ export class PieDashboardService {
 		});
 
 		const slices: Slice[] = [];
-		this.evaluateSlices(slices, TypeSlice.Sonar, greenProjects, orangeProjects, redProjects, greyProjects);
-		this.evaluateSlices(slices, TypeSlice.Audit, greenProjects, orangeProjects, redProjects, greyProjects);
-		this.evaluateSlices(slices, TypeSlice.Staff, greenProjects, orangeProjects, redProjects, greyProjects);
+		this.evaluateSlices(slices, AnalysisTypeSlice.Sonar, greenProjects, orangeProjects, redProjects, greyProjects);
+		this.evaluateSlices(slices, AnalysisTypeSlice.Audit, greenProjects, orangeProjects, redProjects, greyProjects);
+		this.evaluateSlices(slices, AnalysisTypeSlice.Staff, greenProjects, orangeProjects, redProjects, greyProjects);
 
 		this.slices$.next(slices);
 	}
@@ -119,21 +120,23 @@ export class PieDashboardService {
 	 * - the 'grey' projects
 	 */
 
-	private evaluateSlices(slices: Slice[], type: TypeSlice, ...projects: Map<TypeSlice, Project[]>[])  {
+	private evaluateSlices(slices: Slice[], type: AnalysisTypeSlice, ...projects: Map<AnalysisTypeSlice, Project[]>[])  {
 		const green = this.count(type, projects[0]);
 		const orange = this.count(type, projects[1]);
 		const red = this.count(type, projects[2]);
 		const grey = this.count(type, projects[3]);
 
+		// A step figures the 'step' of a project in a third of a pie.
+		// We process here below the division of 120 degrees by all projects
 		const step = 120 / (green + orange + red + grey);
 
-		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * green, LevelStaffRisk.low,
+		slices.push(new Slice(slices.length, type,  step * green, this.nextOffset(slices),
 				'green', projects[0].get(type)));
-		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * orange, LevelStaffRisk.medium,
+		slices.push(new Slice(slices.length, type,  step * orange, this.nextOffset(slices),
 				'orange', projects[1].get(type)));
-		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * red, LevelStaffRisk.high,
+		slices.push(new Slice(slices.length, type, step * red, this.nextOffset(slices),
 				'red', projects[2].get(type)));
-		slices.push(new Slice(slices.length, type, this.nextOffset(slices), step * grey, LevelStaffRisk.undefined,
+		slices.push(new Slice(slices.length, type, step * grey, this.nextOffset(slices),
 				'grey', projects[3].get(type)));
 	}
 
@@ -150,7 +153,7 @@ export class PieDashboardService {
 	 * @param type the type of slice (`Staff`, `Audit`, or `Sonar`)
 	 * @param map the given map of projects.
 	 */
-	private count(type: TypeSlice, map: Map<TypeSlice, Project[]>) {
+	private count(type: AnalysisTypeSlice, map: Map<AnalysisTypeSlice, Project[]>) {
 		return map.get(type).length;
 	}
 
