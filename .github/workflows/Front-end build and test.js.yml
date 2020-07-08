@@ -13,7 +13,9 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
+    env:
+      working-directory: ./front-fitzhi
+    
     strategy:
       matrix:
         node-version: [10.x, 12.x, 14.x]
@@ -25,7 +27,6 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
     - run: set -e
-    - run: cd front-fitzhi
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
