@@ -39,14 +39,25 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 	@Input() legend: boolean;
 
 	/**
-	 * Observable emitting an array of slices.
+	 * filteredId : slice identifier to be filtered. Only this slice will be drawn.
+	 */
+	@Input() filteredId = -1;
+
+	/**
+	 * BehaviorSubject emitting an array of slices.
 	 */
 	public slices$ = new BehaviorSubject<Slice[]>([]);
 
 	/**
-     * Observable emitting an array of types of slice used to display the legend associated with each type of slice.
+     * BehaviorSubject emitting an array of types of slice used to display the legend associated with each type of slice.
      */
 	public typeSlices$ = new BehaviorSubject<TypeSlice[]>([]);
+
+	/**
+     * BehaviorSubject emitting an array of slice identifiers.
+     */
+	public filteredIds$ = new BehaviorSubject<number[]>([]);
+
 
 	constructor(private pieDashboardService: PieDashboardService) {
 		super();
@@ -72,6 +83,13 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 					}
 				})).
 				subscribe((slices => {
+					if (this.filteredId !== -1) {
+						const ids = [];
+						ids.push(this.filteredId);
+						this.filteredIds$.next(ids);
+					} else {
+						this.filteredIds$.next([]);
+					}
 					slices.forEach(slice => slice.offset = 0);
 					this.slices$.next(slices);
 				})));

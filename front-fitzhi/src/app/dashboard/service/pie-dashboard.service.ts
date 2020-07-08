@@ -6,7 +6,6 @@ import { traceOn } from 'src/app/global';
 import { BehaviorSubject } from 'rxjs';
 import {EMPTY_SLICE} from '../empty-slice';
 import { LevelStaffRisk } from '../level-staff-risk';
-import { TypeSlice } from 'dynamic-pie-chart';
 import { AnalysisTypeSlice } from '../analysis-type-slice';
 /**
  * This service is in charge of the generation of the slices.
@@ -131,13 +130,13 @@ export class PieDashboardService {
 		const step = 120 / (green + orange + red + grey);
 
 		slices.push(new Slice(slices.length, type,  step * green, this.nextOffset(slices),
-				'green', projects[0].get(type)));
+				'green', projects[0].get(type), false, false, LevelStaffRisk.low));
 		slices.push(new Slice(slices.length, type,  step * orange, this.nextOffset(slices),
-				'orange', projects[1].get(type)));
+				'orange', projects[1].get(type), false, false, LevelStaffRisk.medium));
 		slices.push(new Slice(slices.length, type, step * red, this.nextOffset(slices),
-				'red', projects[2].get(type)));
+				'red', projects[2].get(type), false, false, LevelStaffRisk.high));
 		slices.push(new Slice(slices.length, type, step * grey, this.nextOffset(slices),
-				'grey', projects[3].get(type)));
+				'grey', projects[3].get(type), false, false, LevelStaffRisk.undefined));
 	}
 
 	/**

@@ -4,8 +4,9 @@ export const EMPTY_SLICE = {
 		offset: 0,
 		angle: 0,
 		color: 'transparent',
-		contents: [],
 		activated: false,
 		selected: false,
+		children: [],
+		data: 0
 };
 

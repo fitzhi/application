@@ -13,7 +13,7 @@ export class ActivatedProjectsDatasSource implements DataSource<Project> {
 	connect(collectionViewer: CollectionViewer): Observable<any[]> {
 		return this.pieDashboardService.sliceActivated$.
 				pipe(
-					switchMap((slice: Slice) => of(slice.contents))
+					switchMap((slice: Slice) => of(slice.children))
 				);
 	}
 
