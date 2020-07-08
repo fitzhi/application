@@ -65,7 +65,8 @@ describe('PieChartComponent with only One Slice', () => {
 					offset: 0,
 					activated: false,
 					selected: false,
-					contents: []
+					children: [],
+					data: LevelStaffRisk.low,
 				},
 				{
 					id: 1,
@@ -75,7 +76,8 @@ describe('PieChartComponent with only One Slice', () => {
 					offset: 45,
 					activated: false,
 					selected: false,
-					contents: []
+					children: [],
+					data: LevelStaffRisk.medium,
 				},
 				{
 					id: 2,
@@ -85,7 +87,8 @@ describe('PieChartComponent with only One Slice', () => {
 					offset: 65,
 					activated: false,
 					selected: false,
-					contents: []
+					children: [],
+					data: LevelStaffRisk.high,
 				},
 				{
 					id: 3,
@@ -95,7 +98,8 @@ describe('PieChartComponent with only One Slice', () => {
 					offset: 75,
 					activated: false,
 					selected: false,
-					contents: []
+					children: [],
+					data: LevelStaffRisk.undefined,
 				}
 			]);
 	}));

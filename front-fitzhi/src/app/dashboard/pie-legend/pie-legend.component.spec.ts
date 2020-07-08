@@ -8,7 +8,6 @@ import { ReferentialService } from 'src/app/service/referential.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { MatDialogModule } from '@angular/material/dialog';
-import { Slice } from 'dynamic-pie-chart';
 import { LevelStaffRisk } from '../level-staff-risk';
 
 describe('PieLegendComponent', () => {
@@ -36,7 +35,8 @@ describe('PieLegendComponent', () => {
 				offset: 0,
 				angle: 45,
 				color: 'green',
-				contents: [],
+				children: [],
+				data: LevelStaffRisk.low,
 				activated: false,
 				selected: false
 			});
@@ -54,7 +54,8 @@ describe('PieLegendComponent', () => {
 					offset: 0,
 					angle: 45,
 					color: 'green',
-					contents: [],
+					children: [],
+					data: LevelStaffRisk.low,
 					activated: false,
 					selected: false
 				});
@@ -69,7 +70,8 @@ describe('PieLegendComponent', () => {
 					offset: 0,
 					angle: 45,
 					color: 'green',
-					contents: [],
+					children: [],
+					data: LevelStaffRisk.low,
 					activated: false,
 					selected: false
 				});
