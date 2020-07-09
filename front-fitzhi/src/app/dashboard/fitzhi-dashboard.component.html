@@ -128,7 +128,7 @@
     </div>
     
     <div class="dashboard" *ngIf="isSelected(selection.lastYearSummary)">
-        <div *ngIf="(projectService.allProjectsIsLoaded$|async) && (slidesLastYear$|async)" 
+        <div *ngIf="(projectService.allProjectsIsLoaded$|async) && (pieDashboardService.slicesLastYear$|async)" 
                 class="formerDashboard">
             <p class="text">Last year snapshot</p>
             <app-pie-chart
@@ -147,7 +147,7 @@
 
 
     <div class="dashboard" *ngIf="isSelected(selection.lastMonthSummary)">
-        <div *ngIf="(projectService.allProjectsIsLoaded$|async) && (slidesLastMonth$|async)" class="formerDashboard">
+        <div *ngIf="(projectService.allProjectsIsLoaded$|async) && (pieDashboardService.slicesLastMonth$|async)" class="formerDashboard">
             <p class="text">Last month result</p>
             <app-pie-chart
                 [radius]=180

@@ -36,7 +36,7 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	 * the global mean __Sonar__ evaluation processed for all Sonar projects
 	 * declared in the Fitzhì project.
 	 */
-	private globalSonarEvaluation = -1;
+	public globalSonarEvaluation = -1;
 
 	/**
 	 * This boolean agregates the conditions required for displaying the audit badge.

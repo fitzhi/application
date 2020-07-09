@@ -137,7 +137,7 @@ export class AuditUploadAttachmentComponent extends BaseComponent implements OnI
 	 * - green : the file is valid for uploading (type and size)
 	 * - red : the file is invalid for upload
 	 */
-	private classFilename(): string {
+	public classFilename(): string {
 		return (this.validFile) ? 'filenameSuccess' : 'filenameError';
 	}
 

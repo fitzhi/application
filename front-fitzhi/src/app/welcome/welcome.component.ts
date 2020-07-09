@@ -24,7 +24,7 @@ export class WelcomeComponent implements OnInit {
 
 	constructor(
 		private backendSetupService: BackendSetupService,
-		private authService: AuthService) {
+		public authService: AuthService) {
 		this.firstLaunch = !this.backendSetupService.hasSavedAnUrl();
 	}
 

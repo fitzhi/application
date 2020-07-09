@@ -52,7 +52,7 @@ export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit
 	/**
 	 * The topics legend obtained from the `referentialService.topics$`.
 	 */
-	private legendTopics: {[id: number]: string};
+	public legendTopics: {[id: number]: string};
 
 	private attachmentList$ = new BehaviorSubject<AttachmentFile[]>([]);
 

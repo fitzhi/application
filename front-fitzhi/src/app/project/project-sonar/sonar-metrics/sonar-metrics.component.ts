@@ -222,7 +222,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	 * Return TRUE if the passed Sonar metric has been elected for the analysis
 	 * @param metric current Sonar metric
 	 */
-	private isAMetricSelected(metric: ProjectSonarMetric): boolean {
+	public isAMetricSelected(metric: ProjectSonarMetric): boolean {
 		return metric.selected;
 	}
 
@@ -230,7 +230,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	 * User a selected a metric for his Sonar analysis.
 	 * @param metric current Sonar metric
 	 */
-	private changeSelected(metric: ProjectSonarMetric) {
+	public changeSelected(metric: ProjectSonarMetric) {
 		if (metric.selected) {
 			metric.weight = 0;
 		}
@@ -240,7 +240,7 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 	 * User a selected a metric for his Sonar analysis.
 	 * @param metric current Sonar metric
 	 */
-	private changeWeight(metric: ProjectSonarMetric) {
+	public changeWeight(metric: ProjectSonarMetric) {
 		const sum = this.dataSource.data.map(met => met.weight).reduce ( (w1, w2) => w1 + w2, 0);
 		if (sum !== 100) {
 			this.throwMessage.next(

@@ -847,6 +847,17 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	}
 
 	/**
+	 * This method receives the new tab to activate from e.g. the sunburst tab pane child
+	 * (but it won't be the only one).
+	 * @param tabIndex new tab to activate.
+	 */
+	public tabActivation (tabIndex: number) {
+		if (traceOn()) {
+			console.log ('Selected index', Constants.TAB_TITLE[tabIndex]);
+		}
+	}
+
+	/**
 	* Calling the base class to unsubscribe all subscriptions.
 	*/
 	ngOnDestroy() {

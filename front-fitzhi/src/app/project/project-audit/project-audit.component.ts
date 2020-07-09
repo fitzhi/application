@@ -44,7 +44,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 * This subject emits the topics selected by the end-user in the component `tableCategories`.
 	 * It is sent to the component `app-project-audit-badges` to generate the corresponding audit thumbnail.
 	 */
-	private auditTopics$ = new BehaviorSubject<any[]>([]);
+	auditTopics$ = new BehaviorSubject<any[]>([]);
 
 	/**
 	 * Array of `AuditChosenDetail` involved in the audit.
@@ -58,9 +58,9 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	 * It is sent to the component `app-project-audit-badges` to generate the corresponding details panel.
 	 */
 	/* tslint:enable: no-trailing-whitespace */
-	private auditDetails$ = new BehaviorSubject<AuditChosenDetail[]>([]);
+	auditDetails$ = new BehaviorSubject<AuditChosenDetail[]>([]);
 
-	private topicsHidden = true;
+	topicsHidden = true;
 
 	/**
 	 * This `boolean` represents the fact that the panel

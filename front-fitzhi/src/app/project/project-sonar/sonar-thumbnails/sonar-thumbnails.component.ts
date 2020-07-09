@@ -39,20 +39,20 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 
 	private languageCounts: SonarThumbnailsComponent.LanguageCount;
 
-	public SETTINGS = Constants.PROJECT_SONAR_PANEL.SETTINGS;
-	public SONAR = Constants.PROJECT_SONAR_PANEL.SONAR;
-	public NONE = Constants.PROJECT_SONAR_PANEL.NONE;
+	SETTINGS = Constants.PROJECT_SONAR_PANEL.SETTINGS;
+	SONAR = Constants.PROJECT_SONAR_PANEL.SONAR;
+	NONE = Constants.PROJECT_SONAR_PANEL.NONE;
 
 	public languageFilesNumber = new Map<string, FilesStats[]>();
 
 	/**
 	 * Map containting the evaluations for each Sonar project.
 	 */
-	private evaluations = new Map<string, ThumbnailQuotationBadge>();
+	evaluations = new Map<string, ThumbnailQuotationBadge>();
 
 	constructor(
 		private sonarService: SonarService,
-		private projectService: ProjectService,
+		public projectService: ProjectService,
 		private messageService: MessageService) {
 		super();
 	}

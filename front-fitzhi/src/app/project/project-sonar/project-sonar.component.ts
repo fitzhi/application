@@ -46,9 +46,9 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 	// By default we begin with the panel SONAR
 	private idPanelSelected = 1;
 
-	private SETTINGS = Constants.PROJECT_SONAR_PANEL.SETTINGS;
-	private SONAR = Constants.PROJECT_SONAR_PANEL.SONAR;
-	private NONE = Constants.PROJECT_SONAR_PANEL.NONE;
+	SETTINGS = Constants.PROJECT_SONAR_PANEL.SETTINGS;
+	SONAR = Constants.PROJECT_SONAR_PANEL.SONAR;
+	NONE = Constants.PROJECT_SONAR_PANEL.NONE;
 
 	constructor(
 		public projectService: ProjectService,

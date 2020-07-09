@@ -51,7 +51,7 @@ export class ListProjectComponent implements OnInit {
 	constructor(
 		private staffListService: StaffListService,
 		public referentialService: ReferentialService,
-		private projectService: ProjectService,
+		public projectService: ProjectService,
 		private listProjectsService: ListProjectsService,
 		private router: Router) {}
 

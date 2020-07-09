@@ -31,11 +31,6 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	 */
 	public idProject: number;
 
-	/**
-	 * Title of the tabs.
-	 */
-	private TAB_TITLE = ['Project', 'Staff list', 'Staff coverage', 'Sonar', 'Audit', 'Remove'];
-
 	constructor(
 		public cinematicService: CinematicService,
 		private referentialService: ReferentialService,
@@ -100,7 +95,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	 */
 	public selectedIndexChange(selectedIndex: number): void {
 		if (traceOn()) {
-			console.log('Tab "' + this.TAB_TITLE[selectedIndex] + '" selected.');
+			console.log('Tab "' + Constants.TAB_TITLE[selectedIndex] + '" selected.');
 		}
 		if (this.cinematicService.projectTabIndex !== selectedIndex) {
 			this.cinematicService.projectTabIndex = selectedIndex;
@@ -116,7 +111,7 @@ export class ProjectComponent extends BaseComponent implements OnInit, AfterView
 	public tabActivation (tabIndex: number) {
 		this.cinematicService.projectTabIndex = tabIndex;
 		if (traceOn()) {
-			console.log ('Selected index', this.TAB_TITLE[this.cinematicService.projectTabIndex]);
+			console.log ('Selected index', Constants.TAB_TITLE[this.cinematicService.projectTabIndex]);
 		}
 	}
 

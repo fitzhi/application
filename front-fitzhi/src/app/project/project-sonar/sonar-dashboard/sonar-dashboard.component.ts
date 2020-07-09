@@ -55,7 +55,7 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	/**
 	 * Observable to this array.
 	 */
-	private safeBadge$ = new Subject<SafeHtml[]>();
+	public safeBadge$ = new Subject<SafeHtml[]>();
 
 	safeBadgeLength = 0;
 

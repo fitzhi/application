@@ -6,6 +6,7 @@ import { ActivatedProjectsDatasSource } from './activated-projects-datasource';
 import { BaseComponent } from 'src/app/base/base.component';
 import { TypeSlice } from 'dynamic-pie-chart';
 import { Slice } from 'dynamic-pie-chart';
+import { AnalysisTypeSlice } from '../analysis-type-slice';
 
 
 @Component({
@@ -30,7 +31,7 @@ export class PieProjectsComponent extends BaseComponent implements OnInit, OnDes
 	 */
 	colorHeader: string;
 
-	typeSlice = TypeSlice;
+	typeSlice = AnalysisTypeSlice;
 
 	constructor(public pieDashboardService: PieDashboardService) {
 		super();

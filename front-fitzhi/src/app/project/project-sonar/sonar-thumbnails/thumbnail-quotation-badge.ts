@@ -1,7 +1,7 @@
 export class ThumbnailQuotationBadge {
 	public constructor(
-		private quotation: number,
-		private color: string,
-		private totalNumberLinesOfCode: number,
-		private titleLinesOfCode: string) {}
+		public quotation: number,
+		public color: string,
+		public totalNumberLinesOfCode: number,
+		public titleLinesOfCode: string) {}
 }
