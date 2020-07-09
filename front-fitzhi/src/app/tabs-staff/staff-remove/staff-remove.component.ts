@@ -6,6 +6,7 @@ import { CinematicService } from 'src/app/service/cinematic.service';
 import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
 import { Constants } from 'src/app/constants';
 import { Collaborator } from 'src/app/data/collaborator';
+import { EMPTY, BehaviorSubject } from 'rxjs';
 
 @Component({
 	selector: 'app-staff-remove',
@@ -18,7 +19,7 @@ export class StaffRemoveComponent implements OnInit {
 	 * Selected TAB.
 	 * This observable is fired by the StaffComponent class when the user changes the tab selected.
 	 */
-	@Input() selectedTab$;
+	@Input() selectedTab$ = new BehaviorSubject<number>(0);
 
 	constructor(
 			public staffDataExchangeService: StaffDataExchangeService,

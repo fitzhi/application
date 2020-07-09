@@ -33,18 +33,18 @@ describe('StaffRemoveComponent', () => {
 		fixture = TestBed.createComponent(StaffRemoveComponent);
 		component = fixture.componentInstance;
 
-		staffService = TestBed.get(StaffService);
-		staffDataExchangeService = TestBed.get(StaffDataExchangeService);
+		staffService = TestBed.inject(StaffService);
+		staffDataExchangeService = TestBed.inject(StaffDataExchangeService);
 		staffDataExchangeService.collaborator = staffService.emptyStaff();
 		staffDataExchangeService.collaborator.firstName = 'Frédéric';
 		staffDataExchangeService.collaborator.lastName = 'VIDAL';
 		staffDataExchangeService.collaborator.idStaff = 1964;
 
-		httpTestingController = TestBed.get(HttpTestingController);
-		backendSetupService = TestBed.get(BackendSetupService);
+		httpTestingController = TestBed.inject(HttpTestingController);
+		backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('URL_OF_SERVER');
 
-		staffListService = TestBed.get(StaffListService);
+		staffListService = TestBed.inject(StaffListService);
 		staffListService.allStaff = [];
 		staffListService.allStaff.push(createCollaborator(1));
 		staffListService.allStaff.push(staffDataExchangeService.collaborator);
