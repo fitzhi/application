@@ -24,7 +24,7 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Maven
-      run: mvn --version
-      run: mvn clean package -DargLine="-Dfile_separator=/" -Dmaven.test.skip=true
-      run: mvn install -DargLine="-Dfile_separator=/"
+    - run: mvn --version
+    - run: mvn clean package -DargLine="-Dfile_separator=/" -Dmaven.test.skip=true
+    - run: mvn install -DargLine="-Dfile_separator=/"
 
