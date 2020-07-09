@@ -69,18 +69,23 @@ describe('ProjectStaffComponent', () => {
 		InitTest.addImports(testConf.imports);
 		InitTest.addProviders(testConf.providers);
 		TestBed.configureTestingModule(testConf).compileComponents();
+
+		console.log ('beforeEach(async(()...');
 	}));
 
 	beforeEach(() => {
-		httpMock = TestBed.get(HttpTestingController);
+		httpMock = TestBed.inject(HttpTestingController);
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
 
-		backendSetupService = TestBed.get(BackendSetupService);
+		backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('http://localhost:8080');
 
+		console.log ('beforeEach(async(()...');
 		fixture.detectChanges();
 	});
+
+
 
 	it('We should create', () => {
 		expect(component).toBeTruthy();
@@ -91,14 +96,14 @@ describe('ProjectStaffComponent', () => {
 	});
 
 	it('We do not create the dataSource as long as the application did not load a project', () => {
-		const cinematicService = TestBed.get(CinematicService);
+		const cinematicService = TestBed.inject(CinematicService);
 		cinematicService.tabProjectActivated$.next(Constants.PROJECT_IDX_TAB_STAFF);
 		fixture.detectChanges();
 		expect(component.projectStaffComponent.dataSource).toBeUndefined();
 	});
 
 	it('We do not create the dataSource as long as the application did not load a project', () => {
-		const cinematicService = TestBed.get(CinematicService);
+		const cinematicService = TestBed.inject(CinematicService);
 		cinematicService.tabProjectActivated$.next(Constants.PROJECT_IDX_TAB_STAFF);
 
 		fixture.detectChanges();
@@ -106,10 +111,10 @@ describe('ProjectStaffComponent', () => {
 	});
 
 	it('We create the dataSource when the project has been loaded, and when the dedicated tab has been clicked', () => {
-		const cinematicService = TestBed.get(CinematicService);
+		const cinematicService = TestBed.inject(CinematicService);
 		cinematicService.tabProjectActivated$.next(Constants.PROJECT_IDX_TAB_STAFF);
 
-		const projectService = TestBed.get(ProjectService);
+		const projectService = TestBed.inject(ProjectService);
 		projectService.project = new Project(1789, 'the revolutionary project');
 		projectService.projectLoaded$.next(true);
 
