@@ -29,4 +29,5 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
+    - name: Test with Maven
     - run: mvn test -DargLine="-Dfile_separator=/"
