@@ -313,12 +313,10 @@
 
 			<plugin>
 			    <artifactId>maven-war-plugin</artifactId>
-			    <configuration>
-			        <failOnMissingWebXml>false</failOnMissingWebXml>
-			    </configuration>
+				<version>3.1.0</version>
 			</plugin>
-			<plugin>
 			
+			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
