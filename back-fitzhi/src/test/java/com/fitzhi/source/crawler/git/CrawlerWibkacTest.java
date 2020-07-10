@@ -101,7 +101,7 @@ public class CrawlerWibkacTest {
 		scanner.finalizeListChanges(String.format(DIR_GIT, FITZHI), analysis);
 		
 		if (log.isDebugEnabled()) {
-			log.debug("analysis.getPathsAll() content : ");
+			log.debug(String.format("Analysis.getPathsAll() content %d paths : ", analysis.getPathsAll().size()));
 			analysis.getPathsAll().stream().forEach(log::debug);
 		}
 		
