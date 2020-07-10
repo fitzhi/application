@@ -31,7 +31,7 @@ jobs:
     - uses: actions/checkout@v2
       with: 
         name: frvidal/first-test
-        path: "../git_repo_for_test"
+        path: ./git_repo_for_test
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
