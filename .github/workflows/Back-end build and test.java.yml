@@ -31,7 +31,7 @@ jobs:
         path: ./git_repo_for_test/application
     - uses: actions/checkout@v2
       with: 
-        name: frvidal/first-test
+        repository: frvidal/first-test
         path: ./git_repo_for_test/first-test
     - name: list the content of the testing repositories
       run: |
