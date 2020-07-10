@@ -19,6 +19,13 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+    - uses: actions/checkout@v2
+      with: 
+        path: "../git_repo_for_test"
+    - uses: actions/checkout@v2
+      with: 
+        name: frvidal/first-test
+        path: "../git_repo_for_test"
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
