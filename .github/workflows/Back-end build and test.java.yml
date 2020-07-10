@@ -25,6 +25,7 @@ jobs:
       run: |
            cd ../git_repo_for_test
            pwd
+           cd ../back-fitzhi
     - uses: actions/checkout@v2
       with: 
         path: ./git_repo_for_test
