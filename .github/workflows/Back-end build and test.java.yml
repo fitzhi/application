@@ -27,7 +27,7 @@ jobs:
            pwd
     - uses: actions/checkout@v2
       with: 
-        path: ../git_repo_for_test
+        path: ./git_repo_for_test
     - uses: actions/checkout@v2
       with: 
         name: frvidal/first-test
