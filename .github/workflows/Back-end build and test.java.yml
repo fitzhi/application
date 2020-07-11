@@ -47,4 +47,4 @@ jobs:
     - name: Build with Maven
       run: mvn clean package -Dmaven.test.skip=true
     - name: Test with maven
-      run: mvn install -DargLine="-Dfile_separator=/"
+      run: mvn install
