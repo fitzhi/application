@@ -1,11 +1,6 @@
 #!/bin/sh
 
-
 helpFunction()
-
-
-
-
 {
    echo ""
    echo "Usage: $0 [-f Y/N] [-d inst_dir] [-?]"
@@ -62,9 +57,9 @@ cd back-fitzhi
 
 if [ $test = "Y" ]
 then 
-mvn clean install -DargLine="-Dfile_separator=/"
+mvn clean install
 else 
-mvn clean install -Dmaven.test.skip=true -DargLine="-Dfile_separator=/"
+mvn clean install -Dmaven.test.skip=true
 fi
 
 cp target/fitzhi.jar ../$dir/backend-fitzhi/fitzhi.jar
