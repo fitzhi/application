@@ -4,7 +4,9 @@
 package com.fitzhi.bean.impl;
 
 
+import java.io.File;
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -15,6 +17,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.util.TestPropertyValues;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -33,16 +39,27 @@ import com.fitzhi.exception.SkillerException;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
+@ContextConfiguration(initializers = ProjectDashboardCustomizerTakeInAccountNewStaffTest.Initializer.class)
 @SpringBootTest
-@TestPropertySource(properties = { "cache.working.dir=." + 
-										"${file_separator}" + "src" +
-										"${file_separator}" + "test" + 
-										"${file_separator}" + "resources" + 
-										"${file_separator}" + "cacheDirRepository" + 
-										"${file_separator}", 
-									"cache_duration=100000" }) 
+@TestPropertySource(properties = { "cache_duration=100000" }) 
 public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 
+	
+	/**
+	 * This initializer is there to setup the {@code cache.working.dir} with the appropriate path for the OS environment.
+	 * @author Fr&eacute;d&eacute;ric VIDAL
+	 */
+	static class Initializer implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+
+		@Override
+		public void initialize(
+				ConfigurableApplicationContext configurableApplicationContext) {
+			TestPropertyValues.of(
+					"cache.working.dir=" +  MessageFormat.format(".{0}src{0}test{0}resources{0}cacheDirRepository{0}", File.separator))
+					.applyTo(configurableApplicationContext.getEnvironment());
+		}
+	}
+	
 	@Autowired
 	ProjectDashboardCustomizer customizer;
 

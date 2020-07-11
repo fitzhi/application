@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -44,6 +45,7 @@ public class FileUploadIntegrationTests {
 	private TestRestTemplate restTemplate;
 
 	@MockBean
+	@Qualifier("Application")
 	private StorageService storageService;
 
 	@LocalServerPort
@@ -66,19 +68,21 @@ public class FileUploadIntegrationTests {
 	@WithMockUser
 	public void shouldUploadFile() throws Exception {
 
-		ClassPathResource resource = new ClassPathResource("/api/uploadTest/testupload.txt");
+		ClassPathResource resource = new ClassPathResource("/uploadTest/testupload.txt");
 		String content = convertStreamToString(resource.getInputStream());
+		
 		MockMultipartFile multipartFile = new MockMultipartFile("file", "test.txt", "text/plain", content.getBytes());
+		
 		this.mvc.perform(fileUpload("/api/upload/do").file(multipartFile)).andExpect(status().isFound())
 				.andExpect(header().string("Location", "/"));
 
-		then(storageService).should().store(any(MultipartFile.class), "test.txt");
+		then(storageService).should().store(multipartFile, "test.txt");
 	}
 
 	@Test
 	@WithMockUser
 	public void shouldDownloadFile() throws Exception {
-		ClassPathResource resource = new ClassPathResource("/api/uploadTest/testupload.txt");
+		ClassPathResource resource = new ClassPathResource("/uploadTest/testupload.txt");
 		given(this.storageService.loadAsResource("testupload.txt")).willReturn(resource);
 
 		HttpHeaders headers = new HttpHeaders();

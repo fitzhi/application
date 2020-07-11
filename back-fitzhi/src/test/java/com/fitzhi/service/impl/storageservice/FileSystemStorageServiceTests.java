@@ -57,10 +57,13 @@ public class FileSystemStorageServiceTests {
         assertThat(service.load(FOO_TXT)).exists();
     }
 
+    /**
+     * We refuse to store a file with a relative path.
+     */
     @Test(expected = StorageException.class)
     public void saveNotPermitted() {
         service.store(new MockMultipartFile("foo", "../foo.txt",
-                MediaType.TEXT_PLAIN_VALUE, HELLO_WORLD.getBytes()), FOO_TXT);
+                MediaType.TEXT_PLAIN_VALUE, HELLO_WORLD.getBytes()), "../" + FOO_TXT);
     }
 
     @Test
