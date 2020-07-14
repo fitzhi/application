@@ -22,19 +22,16 @@ jobs:
     - name: "create directories for the repositories"
       run: |
             mkdir ../git_repo_for_test
-            mkdir ../git_repo_for_test/first-test
-            mkdir ../git_repo_for_test/application
             ls ../git_repo_for_test
     - name: Download the first_test repository
       run: |
             echo "Cloning the first-test repository" 
-            cd ../git_repo_for_test/first-test
-            pwd
+            cd ../git_repo_for_test/
             git clone https://github.com/frvidal/first-test
-            cd ../application
-            pwd
+            ls first-test
             echo "Cloning the application repository" 
             git clone https://github.com/fitzhi/application
+            ls application
     - name: list the content of the testing repositories
       run: |
            pwd
