@@ -1,4 +1,4 @@
-# This workflow will build a Java project with Maven.
+# This workflow will build a Java project with Maven
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
 name: Java CI with Maven
@@ -19,12 +19,16 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: "create git_repo_for_test directory"
-      run: mkdir ../git_repo_for_test
+    - name: "create directories for the repositories"
+      run: |
+            mkdir ../git_repo_for_test
+            mkdir ../git_repo_for_test/first-test
+            mkdir ../git_repo_for_test/application
     - name: Download the first_test repository
       run: |
-            cd ../git_repo_for_test
+            cd ../git_repo_for_test/first-test
             git clone https://github.com/frvidal/first-test
+            cd ../application
             git clone https://github.com/fitzhi/application
     - name: list the content of the testing repositories
       run: |
