@@ -37,7 +37,11 @@ jobs:
             git clone https://github.com/fitzhi/application
     - name: list the content of the testing repositories
       run: |
-           cd ../..
+           pwd
+           cd ..
+           pwd
+           cd ..
+           pwd
            ls 
            echo "first-test : "
            ls -Rl ./first-test
