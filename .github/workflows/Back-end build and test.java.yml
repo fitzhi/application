@@ -29,9 +29,11 @@ jobs:
       run: |
             echo "Cloning the first-test repository" 
             cd ../git_repo_for_test/first-test
+            pwd
             git clone https://github.com/frvidal/first-test
             cd ../application
-            echo "Cloning the applicatio repository" 
+            pwd
+            echo "Cloning the application repository" 
             git clone https://github.com/fitzhi/application
     - name: list the content of the testing repositories
       run: |
