@@ -1,5 +1,6 @@
 package com.fitzhi.service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,8 +9,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.core.io.Resource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.data.internal.Resume;
@@ -35,9 +38,21 @@ public class ResumeParserServiceTests {
 	Resume experienceTxt;
 	List<Integer> referenceTxtSkills;
 	
+	@Value("classpath:applications_files/ET_201709_UTF8.txt")
+	Resource resourceFileTxt;
+	
+	@Value("classpath:applications_files/ET_201709.doc")
+	Resource resourceFileDoc;
+	
+	@Value("classpath:applications_files/ET_201709.docx")
+	Resource resourceFileDocx;
+
+	@Value("classpath:applications_files/ET_201709.pdf")
+	Resource resourceFilePdf;
+	
 	@Before
-	public void init() throws SkillerException {
-		final String file_txt = getClass().getResource("/applications_files/ET_201709_UTF8.txt").getFile();
+	public void init() throws SkillerException, IOException {
+		final String file_txt = resourceFileTxt.getFile().getAbsolutePath();
 		experienceTxt = parser.extract(file_txt, FileType.FILE_TYPE_TXT);
 		referenceTxtSkills = experienceTxt.data().stream()
 				.map(ResumeSkillIdentifier::getIdSkill).collect(Collectors.toList());
@@ -49,8 +64,8 @@ public class ResumeParserServiceTests {
 	}
 	
 	@Test
-	public void parsingDOC() throws SkillerException {
-		final String file_doc = getClass().getResource("/applications_files/ET_201709.doc").getFile();
+	public void parsingDOC() throws SkillerException, IOException {
+		final String file_doc = resourceFileDoc.getFile().getAbsolutePath();
 		Resume experienceDoc = parser.extract(file_doc, FileType.FILE_TYPE_DOC);
 		List<Integer> referenceDocSkills =experienceDoc.data().stream()
 				.map(ResumeSkillIdentifier::getIdSkill).collect(Collectors.toList());
@@ -58,8 +73,8 @@ public class ResumeParserServiceTests {
 	}
 
 	@Test
-	public void parsingDOCX() throws SkillerException {
-		final String file_docx = getClass().getResource("/applications_files/ET_201709.docx").getFile();
+	public void parsingDOCX() throws SkillerException, IOException {
+		final String file_docx = resourceFileDocx.getFile().getAbsolutePath();
 		Resume experienceDocx = parser.extract(file_docx, FileType.FILE_TYPE_DOCX);
 		List<Integer> referenceDocxSkills =experienceDocx.data().stream()
 				.map(ResumeSkillIdentifier::getIdSkill).collect(Collectors.toList());
@@ -67,8 +82,8 @@ public class ResumeParserServiceTests {
 	}
 
 	@Test
-	public void parsingPDF() throws SkillerException {
-		final String file_pdf = getClass().getResource("/applications_files/ET_201709.pdf").getFile();
+	public void parsingPDF() throws SkillerException, IOException {
+		final String file_pdf = resourceFilePdf.getFile().getAbsolutePath();
 		Resume experiencePdf = parser.extract(file_pdf, FileType.FILE_TYPE_PDF);
 		// We loosed certainly some few skills during the convert into PDF, but the main skills are still present.
 		Assert.assertTrue(experiencePdf.data().toArray().length +  " != 2", experiencePdf.data().toArray().length == 2);
