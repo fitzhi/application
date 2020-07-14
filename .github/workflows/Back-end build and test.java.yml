@@ -34,12 +34,7 @@ jobs:
             ls application
     - name: list the content of the testing repositories
       run: |
-           pwd
-           cd ..
-           pwd
-           cd ..
-           pwd
-           ls 
+           cd ../git_repo_for_test
            echo "first-test : "
            ls -Rl ./first-test
            echo "application :  "
