@@ -361,7 +361,7 @@
 							<outputDirectory>${basedir}/target</outputDirectory>
 							<resources>
 								<resource>
-									<directory>${basedir}${file.separator}src${file.separator}main${file.separator}resources</directory>
+									<directory>${basedir}/src/main/resources</directory>
 									<includes>
 										<include>application.properties</include>
 										<include>logback-spring.xml</include>
