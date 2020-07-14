@@ -69,7 +69,8 @@ describe('ProjectStaffComponent', () => {
 		InitTest.addImports(testConf.imports);
 		InitTest.addProviders(testConf.providers);
 		TestBed.configureTestingModule(testConf).compileComponents();
-
+		backendSetupService = TestBed.inject(BackendSetupService);
+		backendSetupService.saveUrl('http://localhost:8080');
 		console.log ('beforeEach(async(()...');
 	}));
 
@@ -77,12 +78,8 @@ describe('ProjectStaffComponent', () => {
 		httpMock = TestBed.inject(HttpTestingController);
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
-
-		backendSetupService = TestBed.inject(BackendSetupService);
-		backendSetupService.saveUrl('http://localhost:8080');
-
-		console.log ('beforeEach(async(()...');
 		fixture.detectChanges();
+		console.log ('beforeEach(sync(()...');
 	});
 
 
