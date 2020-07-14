@@ -12,7 +12,7 @@ cd ..
 mkdir deploy\backend-fitzhi
 mkdir deploy\data
 cd back-fitzhi
-call mvn install -DargLine="-Dfile_separator=\\ -Dfile.encoding=\"UTF-8\" -Dsun.jnu.encoding=\"UTF-8\""
+call mvn install
 echo ""
 echo "Building back-end Fitzhi"
 echo "------------------------"
