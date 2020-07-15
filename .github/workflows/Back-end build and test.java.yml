@@ -38,6 +38,6 @@ jobs:
       with:
         java-version: 1.8
     - name: Build with Maven
-      run: mvn clean package -Dmaven.test.skip=true
+      run: mvn clean package -DskipTests
     - name: Test with maven
       run: mvn install
