@@ -94,10 +94,14 @@ public class AdministrationImpl implements Administration {
 	@Override
 	public Staff createNewUser(String login, String password) throws SkillerException {
 
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("createNewUser('%s','%s')", login, password));
+		}
 		Optional<Staff> oStaff = staffHandler.findStaffWithLogin(login);
 		final Staff staff = oStaff.isPresent() ? oStaff.get() : null;
 		if (log.isDebugEnabled()) {
-			log.debug (String.format("Staff found %s", (staff != null) ? staff.fullName() : "(none)"));
+			log.debug (String.format("Staff found %s", ((staff != null) ? staff.fullName() : "(none)") ));
+			System.out.println(staff);
 		}
 		final String encryptedPassword = DataEncryption.encryptMessage(password);
 		
