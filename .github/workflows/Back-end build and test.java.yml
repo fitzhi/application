@@ -11,8 +11,10 @@ on:
 
 jobs:
   build:
-
-    runs-on: [ubuntu, macos-latest]
+    runs-on: ${{ matrix.os }}
+    strategy:
+        matrix:
+            os: [ubuntu-latest, macOS-latest]
     defaults:
       run:
         working-directory: ./back-fitzhi
