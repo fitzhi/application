@@ -12,6 +12,7 @@
 		<appender-ref ref="STDOUT" />
 	</root>
 
+<!-- 
 	<logger name="com.fitzhi.bean.impl.AdministrationImpl" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
@@ -21,7 +22,7 @@
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
-
+-->
 
 <!-- Parking for my logging. 
 
