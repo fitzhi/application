@@ -64,7 +64,7 @@ public class AdministrationCreateUserIfIsNotVeryFirstConnectionDoesNotAllowSelfR
 		final Path firstConnection = root.resolve("connection.txt");
         System.out.println(firstConnection.toAbsolutePath());
 		if ( (!firstConnection.toFile().createNewFile()) && (logger.isErrorEnabled())) {
-			logger.error("Creation of " + firstConnection.toAbsolutePath()  +" failed");
+			logger.error("Creation of " + firstConnection.toAbsolutePath()  +" failed.");
 		}		
 	}
 		
