@@ -61,10 +61,9 @@ public class AdministrationCreateUserIfIsNotVeryFirstConnectionDoesNotAllowSelfR
 	public void before() throws IOException {
         final Path root = Paths.get(rootLocation);
 		final Path firstConnection = root.resolve("connection.txt");
-		if ( (!firstConnection.toFile().createNewFile()) && (logger.isDebugEnabled())) {
-				logger.debug("Creation of connection.tx failedt");
-		}
-		
+		if ( (!firstConnection.toFile().createNewFile()) && (logger.isErrorEnabled())) {
+			logger.error("Creation of " + firstConnection.toAbsolutePath()  +" failed");
+		}		
 	}
 		
 	@Test
