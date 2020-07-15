@@ -66,6 +66,10 @@ public class AdministrationImpl implements Administration {
 	public boolean isVeryFirstConnection() {
         final Path root = Paths.get(rootLocation);
 		final Path firstConnection = root.resolve(FIRST_CONNECTION_FILE);
+		if (log.isDebugEnabled()) {
+			log.debug(firstConnection.toAbsolutePath() + " exists ? : " + firstConnection.toFile().exists());
+			log.debug("firstConnection.toFile() " + firstConnection.toFile().getAbsolutePath());
+		}	
 		return !firstConnection.toFile().exists();
 	}
 
