@@ -67,8 +67,7 @@ public class AdministrationImpl implements Administration {
         final Path root = Paths.get(rootLocation);
 		final Path firstConnection = root.resolve(FIRST_CONNECTION_FILE);
 		if (log.isDebugEnabled()) {
-			log.debug(firstConnection.toAbsolutePath() + " exists ? : " + firstConnection.toFile().exists());
-			log.debug("firstConnection.toFile() " + firstConnection.toFile().getAbsolutePath());
+			log.debug(String.format ("%s exists ? %b", firstConnection.toAbsolutePath(), firstConnection.toFile().exists()));
 		}	
 		return !firstConnection.toFile().exists();
 	}
@@ -97,7 +96,9 @@ public class AdministrationImpl implements Administration {
 
 		Optional<Staff> oStaff = staffHandler.findStaffWithLogin(login);
 		final Staff staff = oStaff.isPresent() ? oStaff.get() : null;
-		
+		if (log.isDebugEnabled()) {
+			log.debug (String.format("Staff found %s", (staff != null) ? staff.fullName() : "(none)"));
+		}
 		final String encryptedPassword = DataEncryption.encryptMessage(password);
 		
 		/**
@@ -105,6 +106,9 @@ public class AdministrationImpl implements Administration {
 		 * Therefore the self registration is obviously allowed
 		 */
 		if (isVeryFirstConnection()) {
+			if (log.isDebugEnabled()) {
+				log.debug (String.format("This is the very first connection in Fitzhi)"));
+			}
 			if (staff != null) {
 				staffHandler.savePassword(staff, encryptedPassword);
 				return staff;
@@ -114,6 +118,9 @@ public class AdministrationImpl implements Administration {
 		} 
 
 		if (this.allowSelfRegistration)  {
+			if (log.isDebugEnabled()) {
+				log.debug ("So we allow the self-registration for new users; and hackers... (brrr! Dangerous !)");
+			}			
 			if (staff == null) {
 				return staffHandler.addNewStaffMember(new Staff(-1, login, encryptedPassword));				
 			} else {
