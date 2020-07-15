@@ -91,7 +91,9 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 						this.filteredIds$.next([]);
 					}
 					slices.forEach(slice => slice.offset = 0);
-					this.slices$.next(slices);
+					setTimeout(() => {
+						this.slices$.next(slices);
+					}, 0);
 				})));
 	}
 
