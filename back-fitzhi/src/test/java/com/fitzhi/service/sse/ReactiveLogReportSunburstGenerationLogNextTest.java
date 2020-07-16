@@ -101,7 +101,7 @@ public class ReactiveLogReportSunburstGenerationLogNextTest {
 			    .expectNext(this.activityLog2)
 			    .expectNext(this.activityLogEnd)
 			    .expectComplete()
-			    .verify(Duration.ofSeconds(5));
+			    .verify(Duration.ofSeconds(10));
 	}
 	
 	@After
