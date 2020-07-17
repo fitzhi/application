@@ -81,7 +81,6 @@ public class ProjectTaskControllerSSESendTest {
 	        	try {
 					asyncTask.completeTask("nopeOperation", MARK_END_OF_OPERATION, ID_PROJECT);
 				} catch (SkillerException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 	        }

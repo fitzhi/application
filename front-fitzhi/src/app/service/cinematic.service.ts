@@ -4,7 +4,7 @@ import { Subject } from 'rxjs/Subject';
 import { AuditDetailsHistory } from './cinematic/audit-details-history';
 import { AuditDetail } from '../data/audit-detail';
 import { traceOn } from '../global';
-import { Injectable } from "@angular/core";
+import { Injectable } from '@angular/core';
 
 class Form {
 

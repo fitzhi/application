@@ -37,7 +37,7 @@ public class StaffControllerSaveStaffMemberTest {
 
 	private final String STAFF_SAVE = "/api/staff/save";
 
-	private final int ID_JAVA = 1;;
+	private final int ID_JAVA = 1;
 	
 	/**
 	 * Initialization of the Google JSON parser.

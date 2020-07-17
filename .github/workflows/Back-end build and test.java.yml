@@ -1,4 +1,4 @@
-# This workflow will build a Java project with Maven
+# This workflow will build a Java project with Maven.
 # For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
 
 name: Java CI with Maven
@@ -26,11 +26,11 @@ jobs:
             ls ../git_repo_for_test
     - name: Download the first_test repository
       run: |
-            echo "Cloning the first-test repository" 
+            echo "Cloning the first-test repository"
             cd ../git_repo_for_test/
             git clone https://github.com/frvidal/first-test
             ls first-test
-            echo "Cloning the application repository" 
+            echo "Cloning the application repository"
             git clone https://github.com/fitzhi/application
             ls application
     - name: Set up JDK 1.8
