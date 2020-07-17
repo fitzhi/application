@@ -1,5 +1,6 @@
 import { isDevMode } from '@angular/core';
 import { environment } from '../environments/environment';
+
 /**
  * Constants file
  */
@@ -44,9 +45,7 @@ export class Constants {
 	public static BACK_TO_LIST = 10;
 
 
-	public static CONTEXT: string[] = ['WELCOME', 'SKILLS_SEARCH', 'SKILLS_CRUD', 'DEVELOPERS_SEARCH',
-		'DEVELOPERS_CRUD', 'PROJECT_SEARCH', 'PROJECT_TABS_HOST', 'PROJECT_TAB_FORM', 'PROJECT_TAB_STAFF', 'TABS_STAFF_LIST',
-		'BACK_TO_LIST'];
+	public static CONTEXT: string[] = ['WELCOME', 'SKILLS_SEARCH', 'SKILLS_CRUD', 'DEVELOPERS_SEARCH', 'DEVELOPERS_CRUD', 'PROJECT_SEARCH', 'PROJECT_TABS_HOST', 'PROJECT_TAB_FORM', 'PROJECT_TAB_STAFF', 'TABS_STAFF_LIST', 'BACK_TO_LIST'];
 
 	/*
 	* Indexes of tab inside the form group Project
@@ -91,8 +90,8 @@ export class Constants {
 	public static OK = 1;
 
 	/**
-	 * Type of errors
-	 */
+	* Type of errors
+	*/
 	public static MESSAGE_VOID = 0;
 	public static MESSAGE_ERROR = 1;
 	public static MESSAGE_INFO = 2;
