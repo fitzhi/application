@@ -8,7 +8,7 @@
     padding-bottom: 10px;
     padding-right: 50px;
     padding-left: 50px;	
-	margin: 0px;
+	margin: 0;
 }
 
 .mat-dialog-content {
@@ -16,7 +16,7 @@
 }
 
 .mat-dialog-actions {
-	margin-bottom: 0px; 
+	margin-bottom: 0; 
 }
 
 button.actions {

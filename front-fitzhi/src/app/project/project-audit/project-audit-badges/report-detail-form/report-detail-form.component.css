@@ -30,7 +30,7 @@ div.saveHeader {
     position: absolute;
     left: 36px;
     color: white;
-    margin: 0px;
+    margin: 0;
 }
 
 div.saveHeader:hover {

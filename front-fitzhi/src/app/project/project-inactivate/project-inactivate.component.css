@@ -37,7 +37,7 @@ div.action-project button {
     width: 100px;
     height: 100px;
     margin-top: 20px;
-    padding: 0px;
+    padding: 0;
 }
 
 div.action-project button:hover {

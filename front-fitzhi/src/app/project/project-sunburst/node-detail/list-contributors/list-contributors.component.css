@@ -1,12 +1,12 @@
 .mat-header-cell {
     color: darkblue;
     justify-content: left;
-    padding-left: 0px;
+    padding-left: 0;
 }
 
 :host >>> th#fullname  > .mat-header-cell  {
     display: flex;
-    padding-left: 0px;
+    padding-left: 0;
 
 }
 

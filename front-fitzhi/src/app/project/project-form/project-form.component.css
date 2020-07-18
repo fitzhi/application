@@ -42,20 +42,20 @@ div.explanation_access {
 }
 
 .container {
-	margin: 0px;
-	padding-left: 0px;
+	margin: 0;
+	padding-left: 0;
 	text-align: left;
 	max-width: 800px;
 }
 
 div.fields_host {
-	margin-left: 0px;
+	margin-left: 0;
 	padding: 0;
 }
 
 #projectForm {
 	margin-top: 10px;
-	padding: 0px;
+	padding: 0;
 }
 
 div.field {
@@ -84,12 +84,12 @@ p.error {
 }
 
 div.insideField {
-	padding-left: 0px; 
+	padding-left: 0; 
 	padding-top: 5px;
 }
 
 div.globalBadge {
-	margin-right: 0px;
+	margin-right: 0;
 	padding-left: 10px;
 	padding-right: 10px;
 }
@@ -105,5 +105,5 @@ div.label-user-password {
 }
 
 label.label-user-password {
-	margin-bottom: 0px;
+	margin-bottom: 0;
 }

@@ -13,7 +13,7 @@ button.remove:hover {
     padding: 5px;
     min-height: 100px;
     position: absolute;
-    top: 0px;
+    top: 0;
     right: 5px;
     left: 5px;
     background-color: var(--color-help);

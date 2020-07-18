@@ -32,7 +32,7 @@ p.camera {
 }
 
 div.pie-legend {
-  margin-top: 0px;
+  margin-top: 0;
 }
 
 div.pie {
@@ -44,8 +44,8 @@ div.pie {
 
 div.pie-projects {
     position: absolute;
-    top: 0px;
-    right: 0px;  
+    top: 0;
+    right: 0;  
     min-width: 200px;
     height: 100%;
   }

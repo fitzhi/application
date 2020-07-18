@@ -33,7 +33,7 @@ div.action-project-remove button {
     width: 100px;
     height: 100px;
     margin-top: 25px;
-    padding: 0px;
+    padding: 0;
 }
 
 div.action-project-remove button:hover {

@@ -1,13 +1,13 @@
 #audit {
-    margin-top: 0px;
+    margin-top: 0;
     height: 800px;
     position: relative;
 }
 
 #auditSetup {
     position: absolute;
-    right: 0px;
-    top: 0px;
+    right: 0;
+    top: 0;
 }
 
 #setupCategories {

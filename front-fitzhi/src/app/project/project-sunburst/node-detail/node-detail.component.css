@@ -6,5 +6,5 @@
 }
 
 :host >>> div.mat-expansion-panel-body  {
-    padding: 0px;
+    padding: 0;
 }
