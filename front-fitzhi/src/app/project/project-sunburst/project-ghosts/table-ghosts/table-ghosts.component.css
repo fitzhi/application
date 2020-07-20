@@ -1,20 +1,20 @@
 :host >>> th#pseudo > .mat-sort-header-container {
   display: flex;
   color: darkblue;
-  height: 2em;  
+  height: 2em;
 }
 
 :host >>> th#login > .mat-sort-header-container {
   display: flex;
   color: darkblue;
-  height: 2em;  
+  height: 2em;
   margin-left: 1em;
 }
 
 :host >>> th#fullName > .mat-sort-header-container {
   display: flex;
   color: darkblue;
-  height: 2em;  
+  height: 2em;
   margin-left: 1em;
 }
 
@@ -93,14 +93,14 @@
 }
 
 #addStaff {
-  border: none; 
+  border: none;
   background-color: transparent;
 }
 
 #addStaff:hover:enabled {
-  border: none; 
+  border: none;
   background-color: green;
   color: white;
   border-radius: 10px;
-  padding: 4px 6px 4px 6px; 
+  padding: 4px 6px 4px 6px;
 }

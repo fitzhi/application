@@ -50,7 +50,7 @@
 
 .row_any:hover {
     height: 2em;
-    border: 1px solid gray; 
+    border: 1px solid gray;
     color: blue;
     cursor: pointer;
 }
@@ -65,11 +65,11 @@
 }
 
 .col_date {
-    text-align:center;   
+    text-align:center;
 }
 
 .col_image {
-    text-align:center;   
+    text-align:center;
     margin-top: 15px;
     align-content: center;
 }
