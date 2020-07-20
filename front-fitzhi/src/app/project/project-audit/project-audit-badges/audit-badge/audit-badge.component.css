@@ -47,7 +47,7 @@ div.weight {
     text-align: left;
     display: flex;
     flex-wrap: wrap;
-    align-items: flex-end;   
+    align-items: flex-end;
 }
 
 div.formfieldWeight {

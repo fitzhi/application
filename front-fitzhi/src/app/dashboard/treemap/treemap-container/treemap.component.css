@@ -46,7 +46,7 @@ div.help {
 }
 
 i.info {
-    margin-top: 3px;    
+    margin-top: 3px;
     margin-left: 98%;
     position: static;
     color: var(--color-success);
@@ -55,9 +55,9 @@ i.info {
 
 p.help {
     position: static;
-    margin-top: -15px;    
-    margin-left: 10px;   
-    margin-right: 20px; 
+    margin-top: -15px;
+    margin-left: 10px;
+    margin-right: 20px;
 }
 
 li.good {

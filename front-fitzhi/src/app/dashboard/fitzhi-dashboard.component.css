@@ -45,7 +45,7 @@ div.pie {
 div.pie-projects {
     position: absolute;
     top: 0;
-    right: 0;  
+    right: 0;
     min-width: 200px;
     height: 100%;
   }
@@ -154,7 +154,7 @@ rect.rectTreeMap {
 :host >>> div.angular-popper {
   background: lightyellow;
   width: 520px;
-  left: 5px !important; 
+  left: 5px !important;
   z-index: 100;
   font-size: smaller;
 }

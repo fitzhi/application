@@ -23,7 +23,7 @@ div.action-staff-remove {
     grid-column-start: 4;
     grid-column-end: 4;
     display:table-cell;
-    vertical-align:middle; 
+    vertical-align:middle;
     height: fit-content;
 }
 

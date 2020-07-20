@@ -18,8 +18,8 @@ input {
 }
 
 div.labelConnection {
-    display: flex; 
-    justify-content: flex-end; 
+    display: flex;
+    justify-content: flex-end;
     padding-right: 10px;
 }
 
@@ -35,7 +35,7 @@ label.labelConnection {
 	font-weight: 600;
 }
 .alert {
-    width: 100%; 
+    width: 100%;
     font-size: 10px;
 }
 p.important {

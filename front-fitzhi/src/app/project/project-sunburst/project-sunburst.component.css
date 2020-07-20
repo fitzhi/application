@@ -136,7 +136,7 @@ div.taskReportError {
 :host >>> div.angular-popper {
   background: lightyellow;
   width: 520px;
-  left: -35px !important; 
+  left: -35px !important;
   z-index: 100;
   font-size: smaller;
 }

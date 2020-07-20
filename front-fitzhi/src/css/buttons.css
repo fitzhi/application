@@ -1,6 +1,6 @@
 button.okButton, button.cancelButton {
     background-size: contain;
-    background-repeat: no-repeat;    
+    background-repeat: no-repeat;   
     border: none;
     outline: 0;
 }

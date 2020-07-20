@@ -48,7 +48,7 @@ button.managerFile:hover {
 }
 
 #upLoadCV {
-/* remove for Sonar    display: flex; */
+/* remove for Sonar    display: flex;*/
     border-radius: 25%;
     text-decoration: none;
     display: inline-block;

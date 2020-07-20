@@ -80,11 +80,11 @@ div.field {
 p.error {
 	color: brown;
 	font-weight: 500;
-	padding: 10px 10px 10px 20px; /* top right bottom left */
+	padding: 10px 10px 10px 20px;/* top right bottom left */
 }
 
 div.insideField {
-	padding-left: 0; 
+	padding-left: 0;
 	padding-top: 5px;
 }
 
