@@ -27,7 +27,7 @@ input.fileLabel {
     border-color: lightgray;
     border-style: solid;
     border-radius: 5px;
-    margin-left: 5px;;
+    margin-left: 5px;
 }
 
 input.fileLabel:focus {
