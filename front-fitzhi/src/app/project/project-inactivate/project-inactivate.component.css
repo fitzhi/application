@@ -13,7 +13,6 @@ div.container-project-form {
 	margin: 0 auto;
 }
 
-
 div.text-project {
     margin: 30px;
     grid-column-start: 1;
@@ -22,7 +21,7 @@ div.text-project {
 
 div.project-reactivate div.text-project {
     font-size: larger;
-} 
+}
 
 div.action-project {
     padding: 10px;
@@ -48,5 +47,3 @@ div.action-project button:hover {
 div.action-project em {
     font-size: 80px;
 }
-
-
