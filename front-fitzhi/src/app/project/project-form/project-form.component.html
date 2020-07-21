@@ -66,7 +66,7 @@
 				</div>
 			</div>
 
-			<div class="row" *ngIf="noUserPasswordAccess()">
+			<div class="row connection-panel" *ngIf="noUserPasswordAccess()">
 				<div class="col-1"></div>
 				<div class="col-11 connection_settings">
 					No User/Password settings : <br />
@@ -88,7 +88,7 @@
 				</div>
 			</div>
 
-			<div class="row" *ngIf="userPasswordAccess()">
+			<div class="row connection-panel" *ngIf="userPasswordAccess()">
 				<div class="col-1"></div>
 				<div class="col-11 connection_settings">
 					Direct User/Password settings : <br />
@@ -131,7 +131,7 @@
 				</div>
 			</div>
 
-			<div class="row" *ngIf="remoteFileAccess()">
+			<div class="row connection-panel" *ngIf="remoteFileAccess()">
 				<div class="col-1"></div>
 				<div class="connection_settings col-11">
 					Indirect settings : <br />

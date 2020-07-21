@@ -8,7 +8,7 @@ div.container-project-form {
 }
 
 div.connection_settings {
-	background-color:whitesmoke;
+	background-color:transparent;
 }
 
 div.buttons_toggle {
@@ -106,4 +106,9 @@ div.label-user-password {
 
 label.label-user-password {
 	margin-bottom: 0;
+	width: max-content;
+}
+
+div.connection-panel {
+	margin-left: 50px;
 }
