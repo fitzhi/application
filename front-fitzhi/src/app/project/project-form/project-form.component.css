@@ -9,11 +9,15 @@ div.container-project-form {
 
 div.connection_settings {
 	background-color:transparent;
+	border-left-color: grey;
+	border-left-width: 1px;
+	border-left-style: solid;
 }
 
 div.buttons_toggle {
 	padding: 1em;
 	margin-right: 5px;
+	display:flex;
 }
 
 .lab_and_row_repository {
@@ -111,4 +115,17 @@ label.label-user-password {
 
 div.connection-panel {
 	margin-left: 50px;
+}
+
+
+div.buttons_toggle button, div.buttons_toggle button:hover {
+	border-radius: 50%;
+    border-style: solid;
+    border-width: 1px;
+	border-color: lightgray;
+	background-color: transparent;
+	padding-left: 10px;
+	padding-right: 10px;
+	margin: 5px;
+	font-size: 27px;
 }

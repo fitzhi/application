@@ -55,7 +55,9 @@
 			<div class="row" *ngIf="projectService.project.active">
 				<div class="col-1"></div>
 				<div class="col-11" class="buttons_toggle">
-					<label for="connection_settings">&nbsp;Version control connection settings : &nbsp;&nbsp;</label>
+					<button>
+						<em class="fab fa-github-alt"></em>
+					</button>
 					<mat-button-toggle-group #group="matButtonToggleGroup" name="connection_settings"
 						[value]="connection_settings" (change)="onConnectionSettingsChange(group.value)"
 						style="padding:0.1em;">
