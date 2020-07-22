@@ -11,7 +11,7 @@
 				<div class="col-10 fields_host">
 					<div class="container">
 						<div class="row field">
-							<label class="required labelProject" for="project">Project information</label>
+							<label class="required labelProject" for="project">Project</label>
 							<input type="text" class="form-control required" id="projectName" name="projectName" 
 								[readonly]="!projectService.project.active"
 								placeholder="Project name (Required)" value="" required formControlName="projectName" />
@@ -23,35 +23,66 @@
 								<textarea id="skills" name="skills" placeholder="Type your skills" [readonly]="!projectService.project.active"></textarea>
 							</div>
 						</div>
-
-						<div class="row field">
-							<label for="urlSonarServer" >Sonar server</label> 
-							<select name="label" id="urlSonarServer" (change)="onUrlSonarServerChange($event)"
-									formControlName="urlSonarServer" class="custom-select d-block w-100">
-								<option></option>
-								<option *ngFor="let sonarServer of referentialService.sonarServers$|async">{{sonarServer.urlSonarServer}}</option>
-							</select> 
-						</div>
-			
-						<div class="row field" [hidden]="!sonarProjectsLoaded || creation">
-							<div class="col-12 insideField">
-								<label class="labelSkills" for="sonarProjects">Sonar projects</label>
-								<textarea id="sonarProjects" name="sonarProjects"
-									[readonly]="!projectService.project.active"
-									placeholder="Type a Sonar project associated to this project">
-								</textarea>
-							</div>
-						</div>
-						<div class="row field" *ngIf="projectService.projectLoaded$|async" 
-								[hidden]="sonarProjectsLoaded || creation || !projectService.project.urlSonarServer">
-							<div class="col-12 insideField">
-								<p class="error">Cannot reach the Sonar server on the URL {{projectService.project.urlSonarServer}}.</p>
-							</div>
-						</div>
 					</div>
 				</div>
 			</div>
 
+			<!-- --------------------------------------------------------------------------------------------------------------------
+
+													QUALITY TOOL SONAR OR CODEFACTOR.IO
+
+			------------------------------------------------------------------------------------------------------------------------- -->
+			<div class="row qualitySolution" *ngIf="projectService.project.active">
+				<mat-button-toggle-group 
+					#group="matButtonToggleGroup" 
+					name="code_quality_solution"
+					(change)="onQualitySolutionChange(group.value)"
+					style="padding:3px;">
+					<mat-button-toggle value="{{SONAR}}"><img src="./assets/img/sonar.png" alt="Sonar" class="logoTabLabel"/></mat-button-toggle>
+					<mat-button-toggle value="{{CODEFACTOR}}"><img src="./assets/img/codeFactor.io.png" alt="codeFactor.io" class="logoTabLabel"/></mat-button-toggle>
+				</mat-button-toggle-group>
+			</div>
+
+			<div class="sonarSolution" [hidden]="((code_quality_solution$|async) === 2)">
+				<div class="row field sonar">
+					<label for="urlSonarServer" >Sonar server</label> 
+					<select name="label" id="urlSonarServer" (change)="onUrlSonarServerChange($event)"
+							formControlName="urlSonarServer" class="custom-select d-block w-100">
+						<option></option>
+						<option *ngFor="let sonarServer of referentialService.sonarServers$|async">{{sonarServer.urlSonarServer}}</option>
+					</select>
+				</div>
+
+				<div class="row field" [hidden]="!sonarProjectsLoaded || creation">
+					<div class="col-12 insideField">
+						<label class="labelSkills" for="sonarProjects">Sonar projects</label>
+						<textarea id="sonarProjects" name="sonarProjects"
+							[readonly]="!projectService.project.active"
+							placeholder="Type a Sonar project associated to this project">
+						</textarea>
+					</div>
+				</div>
+
+				<div class="row field" *ngIf="projectService.projectLoaded$|async" 
+						[hidden]="sonarProjectsLoaded || creation || !projectService.project.urlSonarServer">
+					<div class="col-12 insideField">
+						<p class="error">Cannot reach the Sonar server on the URL {{projectService.project.urlSonarServer}}.</p>
+					</div>
+				</div>
+			</div>
+
+
+			<div class="codeFactorSolution" [hidden]="((code_quality_solution$|async) === 1)">
+				<div class="row field codeFactor">
+					CODE FACTOR PANEL
+				</div>
+			</div>
+
+			<!-- --------------------------------------------------------------------------------------------------------------------
+
+																CONNECTION SETTINGS
+
+			------------------------------------------------------------------------------------------------------------------------- -->
 			<div class="row" *ngIf="projectService.project.active">
 				<div class="col-1"></div>
 				<div class="col-11" class="buttons_toggle">

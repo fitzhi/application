@@ -129,3 +129,23 @@ div.buttons_toggle button, div.buttons_toggle button:hover {
 	margin: 5px;
 	font-size: 27px;
 }
+
+div.sonar, div.codeFactor {
+	margin-top: 10p;
+}
+
+img.logoTabLabel {
+	width: 28px;
+}
+
+div.qualitySolution {
+	margin-left: 80px;
+}
+
+div.sonarSolution, div.codeFactorSolution {
+	margin-top: 10px;
+	margin-left: 110px;
+	border-left-color: grey;
+	border-left-width: 1px;
+	border-left-style: solid;
+}

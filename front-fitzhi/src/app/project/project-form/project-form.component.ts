@@ -38,6 +38,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	public REMOTE_FILE_ACCESS = 2;
 	public NO_USER_PASSWORD_ACCESS = 3;
 
+	public SONAR = 1;
+	public CODEFACTOR = 2;
+
 	public colorOfRisk = 'transparent';
 
 	profileProject = new FormGroup({
@@ -65,6 +68,11 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	* Member variable linked to the connection settings toggle.
 	*/
 	public connection_settings: string;
+
+	/**
+	* Member variable linked to the quality solution toggle.
+	*/
+	public code_quality_solution$ = new BehaviorSubject<number>(this.SONAR);
 
 	/**
 	 * Bound addSkill to the current active component.
@@ -123,7 +131,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 		this.boundAddSonarProject = this.addSonarProject.bind(this);
 		this.boundRemoveSonarProject = this.removeSonarProject.bind(this);
-
 	}
 
 	ngOnInit() {
@@ -434,6 +441,16 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					}
 				});
 		}
+	}
+
+	/**
+	 * @param $event End-user has selected a quality solution.
+	 */
+	onQualitySolutionChange($event) {
+		if (traceOn()) {
+			console.log ('onQualitySolutionChange', $event);
+		}
+		this.code_quality_solution$.next(Number($event));
 	}
 
 	/**
