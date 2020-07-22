@@ -7,7 +7,7 @@
 	padding-top: 20px;
     padding-bottom: 10px;
     padding-right: 20px;
-    padding-left: 20px;	
+    padding-left: 20px;
 	margin: 0;
 }
 
@@ -23,13 +23,14 @@
 button.actions {
 	padding: 0.5em;
 	margin-right: 1em;
-	border-radius: 4px;	
+	border-radius: 4px;
 }
 
 #startingDate {
 	left: 2em;
 	width: 13em;
 }
+
 #idStaffSelected {
 	left: 1em;
 	width: 13em;

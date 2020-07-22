@@ -7,7 +7,7 @@
 	padding-top: 10px;
     padding-bottom: 10px;
     padding-right: 50px;
-    padding-left: 50px;	
+    padding-left: 50px;
 	margin: 0;
 }
 
@@ -22,7 +22,7 @@
 button.actions {
 	padding: 10px;
 	margin-right: 10px;
-	border-radius: 4px;	
+	border-radius: 4px;
 	width: 100px;
 }
 
@@ -32,7 +32,6 @@ button.actions {
     font-weight: bold;
 	text-decoration: underline;
 }
-
 
 .label-file:hover {
     color: #25a5c4;

@@ -1,22 +1,22 @@
 div.container-staff-remove {
     width: fit-content;
     margin: 50px auto;
-} 
+}
 
 div.staff-remove {
     background-color: transparent;
     display:inline-grid;
-} 
+}
 
 div.text-staff-remove {
     margin: 10px;
     grid-column-start: 1;
     grid-column-end: 3;
-} 
+}
 
 div.text-staff-remove P {
     margin-top: 30px;
-} 
+}
 
 div.action-staff-remove {
     padding: 10px;

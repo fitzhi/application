@@ -7,7 +7,7 @@
 	padding-top: 10px;
     padding-bottom: 10px;
     padding-right: 50px;
-    padding-left: 50px;	
+    padding-left: 50px;
 	margin: 0;
 }
 
@@ -33,7 +33,6 @@ button.actions {
 	text-decoration: underline;
 }
 
-
 .label-file:hover {
     color: #25a5c4;
 }
@@ -55,4 +54,3 @@ p.filenameError {
 .mat-dialog-actions {
 	justify-content: center;
 }
-
