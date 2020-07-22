@@ -3,6 +3,8 @@
  */
 package com.fitzhi.data.external;
 
+import javax.annotation.Generated;
+
 import com.fitzhi.data.internal.Task;
 import com.fitzhi.data.internal.TaskLog;
 
@@ -12,8 +14,14 @@ import lombok.Data;
  * <p>
  * This class is regularly passed to the front-end in order to inform of the progression of the treatment.
  * </p> 
+ * <p>
+ * <font color="chocolate">
+ * Be aware that the {@code equals} function has been overridden. The member variable {@code logTime} has been evicted from the comparison. <br/>
+ * This tweak has been implemented for testing reason... :-(
+ * </font>
+ * </p>
+ * 
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 public @Data class ActivityLog  {
 
@@ -86,7 +94,15 @@ public @Data class ActivityLog  {
 		this.complete = complete;
 	}
 
+
 	@Override
+	public String toString() {
+		return "ActivityLog [id=" + id + ", code=" + code + ", message=" + message + ", logTime=" + logTime
+				+ ", complete=" + complete + ", completeOnError=" + completeOnError + "]";
+	}
+
+	@Override
+	@Generated ("eclipse")
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
@@ -103,8 +119,6 @@ public @Data class ActivityLog  {
 			return false;
 		if (id != other.id)
 			return false;
-		if (logTime != other.logTime)
-			return false;
 		if (message == null) {
 			if (other.message != null)
 				return false;
@@ -114,6 +128,7 @@ public @Data class ActivityLog  {
 	}
 
 	@Override
+	@Generated ("eclipse")
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
@@ -121,15 +136,8 @@ public @Data class ActivityLog  {
 		result = prime * result + (complete ? 1231 : 1237);
 		result = prime * result + (completeOnError ? 1231 : 1237);
 		result = prime * result + id;
-		result = prime * result + (int) (logTime ^ (logTime >>> 32));
 		result = prime * result + ((message == null) ? 0 : message.hashCode());
 		return result;
-	}
-
-	@Override
-	public String toString() {
-		return "ActivityLog [id=" + id + ", code=" + code + ", message=" + message + ", logTime=" + logTime
-				+ ", complete=" + complete + ", completeOnError=" + completeOnError + "]";
 	}
 	
 	
