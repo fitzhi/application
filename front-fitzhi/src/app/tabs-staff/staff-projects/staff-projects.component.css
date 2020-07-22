@@ -44,7 +44,7 @@ div.staff-projects-container div.tableMissions {
 :host >>> th#lastCommit > .mat-sort-header-container  {
     display: flex;
     justify-content: center;
-    color: darkblue 
+    color: darkblue;
 }
 
 .col_numeric, .col_date {

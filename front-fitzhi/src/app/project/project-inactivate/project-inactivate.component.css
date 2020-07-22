@@ -6,7 +6,7 @@ div.container-project-inactivate-or-reactivate {
 div.project-inactivate, div.project-reactivate {
     background-color: transparent;
     display:inline-grid;
-} 
+}
 
 div.container-project-form {
 	width: 1000px;
@@ -17,7 +17,7 @@ div.text-project {
     margin: 30px;
     grid-column-start: 1;
     grid-column-end: 3;
-} 
+}
 
 div.project-reactivate div.text-project {
     font-size: larger;
