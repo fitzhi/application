@@ -1,24 +1,24 @@
 div.container-project-remove {
     width: fit-content;
     margin: 50px auto;
-} 
+}
 
 div.project-remove {
     background-color: transparent;
     display:inline-grid;
-} 
+}
 
 div.text-project-remove {
     margin: 10px;
     grid-column-start: 1;
     grid-column-end: 3;
-} 
+}
 
 div.text-project-remove p.warning {
     margin: 10px;
     font-size: larger;
     color: var(--color-warning)
-} 
+}
 
 div.action-project-remove {
     padding: 10px;
