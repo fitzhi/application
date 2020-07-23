@@ -129,15 +129,16 @@ export class PieDashboardService {
 		// We process here below the division of 120 degrees by all projects
 		const step = 120 / (green + orange + red + grey);
 
-		slices.push(new Slice(slices.length, type,  step * green, this.nextOffset(slices),
+		slices.push(new Slice(slices.length, type,  Math.round(step * green), this.nextOffset(slices),
 				'green', projects[0].get(type), false, false, LevelStaffRisk.low));
-		slices.push(new Slice(slices.length, type,  step * orange, this.nextOffset(slices),
+		slices.push(new Slice(slices.length, type,  Math.round(step * orange), this.nextOffset(slices),
 				'orange', projects[1].get(type), false, false, LevelStaffRisk.medium));
-		slices.push(new Slice(slices.length, type, step * red, this.nextOffset(slices),
+		slices.push(new Slice(slices.length, type, Math.round(step * red), this.nextOffset(slices),
 				'red', projects[2].get(type), false, false, LevelStaffRisk.high));
-		slices.push(new Slice(slices.length, type, step * grey, this.nextOffset(slices),
+		slices.push(new Slice(slices.length, type, Math.round(step * grey), this.nextOffset(slices),
 				'grey', projects[3].get(type), false, false, LevelStaffRisk.undefined));
 	}
+
 
 	/**
 	 * Next available offset.
