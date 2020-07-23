@@ -17,12 +17,25 @@ import { FormsModule } from '@angular/forms';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
+import { Component, ViewChild } from '@angular/core';
 
 describe('TechxhiMedalComponent', () => {
-	let component: TechxhiMedalComponent;
-	let fixture: ComponentFixture<TechxhiMedalComponent>;
 	let referentialService: ReferentialService;
 	let projectService: ProjectService;
+	let component: TestHostComponent;
+	let fixture: ComponentFixture<TestHostComponent>;
+
+	@Component({
+		selector: 'app-host-component',
+		template:
+				`<div style="background-color: red; width: 100px; height: 200px;">
+					<app-techxhi-medal [colorOfRisk]="none">
+					</app-techxhi-medal>
+				</div>`
+	})
+	class TestHostComponent {
+		@ViewChild(TechxhiMedalComponent) techxhiMedalComponent: TechxhiMedalComponent;
+	}
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -34,10 +47,10 @@ describe('TechxhiMedalComponent', () => {
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(TechxhiMedalComponent);
+		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
-		referentialService = TestBed.get(ReferentialService);
-		projectService = TestBed.get(ProjectService);
+		referentialService = TestBed.inject(ReferentialService);
+		projectService = TestBed.inject(ProjectService);
 
 		referentialService.legendsLoaded$ = new BehaviorSubject<boolean>(false);
 		// We create a mock of legends, which is not always used in the unit test.
@@ -52,7 +65,7 @@ describe('TechxhiMedalComponent', () => {
 
 		projectService.project = new Project();
 		projectService.projectLoaded$ = new BehaviorSubject<boolean>(true);
-		component.colorOfRisk = 'none';
+
 		fixture.detectChanges();
 	});
 
@@ -137,4 +150,9 @@ describe('TechxhiMedalComponent', () => {
 		expect(projectService.calculateSonarEvaluation(projectService.project) === 28).toBeTruthy();
 	});
 
+	it('Displaying the medal.', () => {
+	});
+
 });
+
+
