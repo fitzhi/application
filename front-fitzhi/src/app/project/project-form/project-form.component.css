@@ -17,6 +17,7 @@ div.connection_settings {
 div.buttons_toggle {
 	padding: 1em;
 	margin-right: 5px;
+	margin-top: 20px;
 	display:flex;
 }
 
