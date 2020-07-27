@@ -48,6 +48,11 @@
 					</mat-button-toggle-group>
 				</div>
 
+				<div class="buttons_toggle" *ngIf="!projectService.project.active">
+					<button [disabled]="true">
+						<img src="./assets/img/sonar.png" alt="Sonar" class="logoTabLabel"/>
+					</button>
+				</div>
 				<div class="sonarSolution" [hidden]="((code_quality_solution$|async) === 2)">
 					<div class="field sonar">
 						<label for="urlSonarServer" >Sonar server</label> 
@@ -96,6 +101,11 @@
 																	CONNECTION SETTINGS
 
 				------------------------------------------------------------------------------------------------------------------------- -->
+				<div class="buttons_toggle" *ngIf="!projectService.project.active">
+					<button [disabled]="true">
+						<em class="fab fa-github-alt"></em>
+					</button>
+				</div>
 				<div class="buttons_toggle" *ngIf="projectService.project.active">
 					<button>
 						<em class="fab fa-github-alt"></em>

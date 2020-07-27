@@ -88,7 +88,7 @@ describe('TechxhiMedalComponent', () => {
 
 		project.auditEvaluation = 20;
 
-		project.urlCodeFactorIO = 'https://www.codefactor.io/repository/github/fitzhi/application/badge/master?style=plastic';
+		project.urlCodeFactorIO = 'https://www.codefactor.io/repository/github/fitzhi/application';
 
 		projectService = TestBed.inject(ProjectService);
 		projectService.project = project;

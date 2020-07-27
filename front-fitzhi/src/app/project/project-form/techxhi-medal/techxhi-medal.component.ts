@@ -1,13 +1,10 @@
 import { Component, OnInit, Input, AfterViewInit, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { ReferentialService } from 'src/app/service/referential.service';
-import { Project } from 'src/app/data/project';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
-import { SonarProject } from 'src/app/data/SonarProject';
-import { CinematicService } from 'src/app/service/cinematic.service';
-import { BehaviorSubject } from 'rxjs';
-import { ProjectService } from 'src/app/service/project.service';
 import { take } from 'rxjs/operators';
+import { ProjectService } from 'src/app/service/project.service';
+import { CinematicService } from 'src/app/service/cinematic.service';
 
 @Component({
 	selector: 'app-techxhi-medal',
@@ -90,7 +87,6 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	 * This function is processing the `*ngIf` preview condition of the __Audit__ summary badge.
 	 */
 	processDisplayAuditBadge(): boolean {
-		console.log ('ProcessDisplayAuditBadge()');
 
 		if (!this.projectService.project) {
 			return false;
@@ -133,11 +129,12 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	 * This function is handling the `*ngIf` preview condition of the __codeFactor.io__ summary badge.
 	 */
 	sonarCodeFactorReady() {
-		console.log (this.projectService.project);
-		console.log(this.projectService.project.urlCodeFactorIO);
 		return (this.projectService.project) && (this.projectService.project.urlCodeFactorIO);
 	}
 
+	urlCodeFactorIO() {
+		return this.projectService.project.urlCodeFactorIO + '/badge/master?style=plastic';
+	}
 	/**
 	* Calling the base class to unsubscribe all subscriptions.
 	*/

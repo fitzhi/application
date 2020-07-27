@@ -862,7 +862,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
      * Class of the button corresponding to the 3 possible states of the "Ok" button.
      */
 	classOkButton() {
-		return (this.profileProject.invalid) ?
+		return ((this.profileProject.invalid) || (!this.projectService.project.active)) ?
 			'okButton okButtonInvalid' : 'okButton okButtonValid';
 	}
 
