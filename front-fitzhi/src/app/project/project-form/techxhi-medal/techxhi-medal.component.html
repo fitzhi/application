@@ -27,7 +27,9 @@
 
 
     <div id="codeFactorSummaryBadge" *ngIf="((projectService.projectLoaded$|async) && sonarCodeFactorReady())">
-        <img [src]="urlCodeFactorIO()"/>
+        <a href="{{projectService.project.urlCodeFactorIO}}" target="_blank">
+            <img [src]="urlCodeFactorIO()"/>
+        </a>
     </div>
 
     <div class="auditGraphicBadge">

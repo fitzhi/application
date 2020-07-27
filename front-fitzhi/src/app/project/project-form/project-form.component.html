@@ -85,7 +85,9 @@
 				<div *ngIf="!projectService.project.active">
 					<div class="buttons_toggle">
 						<button [disabled]="true">
-							<img src="./assets/img/codeFactor.io.png" alt="code Factor" class="logoTabLabel"/>
+							<a href="{{projectService.project.urlCodeFactorIO}}">
+								<img src="./assets/img/codeFactor.io.png" alt="code Factor" class="logoTabLabel"/>
+							</a>
 						</button>
 					</div>
 					<div class="codeFactorSolution">
