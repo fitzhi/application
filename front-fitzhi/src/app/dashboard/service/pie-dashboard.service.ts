@@ -128,10 +128,10 @@ export class PieDashboardService {
 
 		function textFontSize(sliceValue: number):  string {
 			if (sliceValue < 20) {
-				return '13px';
+				return '12px';
 			}
 			if (sliceValue < 50) {
-				return '16px';
+				return '15px';
 			}
 			return '18px';
 		}
