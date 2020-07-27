@@ -82,6 +82,25 @@
 				</div>
 
 
+				<div *ngIf="!projectService.project.active">
+					<div class="buttons_toggle">
+						<button [disabled]="true">
+							<img src="./assets/img/codeFactor.io.png" alt="code Factor" class="logoTabLabel"/>
+						</button>
+					</div>
+					<div class="codeFactorSolution">
+						<div class="field codeFactor">
+							<label class="labelCodeFactor" for="project">Code factor</label>
+							<input type="text" 
+							class="form-control" 
+							id="urlCodeFactorIO" 
+							name="urlCodeFactorIO" 
+							[readonly]="!projectService.project.active"
+							formControlName="urlCodeFactorIO" />
+						</div>
+					</div>
+				</div>
+
 				<div class="codeFactorSolution" [hidden]="((code_quality_solution$|async) === 1)">
 					<div class="field codeFactor">
 						<label class="labelCodeFactor" for="project">Code factor</label>
