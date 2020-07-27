@@ -46,6 +46,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	profileProject = new FormGroup({
 		projectName: new FormControl(''),
 		urlSonarServer: new FormControl({ value : '', disabled: !this.projectService.project.active }),
+		urlCodeFactorIO: new FormControl({ value : '', disabled: !this.projectService.project.active }),
 		urlRepository: new FormControl(''),
 		username: new FormControl(''),
 		password: new FormControl(''),
@@ -216,6 +217,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		}
 		const project = this.projectService.project;
 		this.profileProject.get('projectName').setValue(project.name);
+		this.profileProject.get('urlCodeFactorIO').setValue(project.urlCodeFactorIO);
 		// We postpone this 'setValue' to give time to the 'SELECT' html object to fill its content.
 		setTimeout(() => {
 			this.profileProject.get('urlSonarServer').setValue(project.urlSonarServer);
@@ -716,6 +718,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		}
 		this.projectService.project.name = this.profileProject.get('projectName').value;
 		this.projectService.project.urlSonarServer = this.profileProject.get('urlSonarServer').value;
+		this.projectService.project.urlCodeFactorIO = this.profileProject.get('urlCodeFactorIO').value;
 		switch (this.projectService.project.connectionSettings) {
 			case this.USER_PASSWORD_ACCESS:
 				this.projectService.project.urlRepository = this.profileProject.get('urlRepository').value;

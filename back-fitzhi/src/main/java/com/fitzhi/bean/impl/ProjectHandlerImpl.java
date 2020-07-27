@@ -195,6 +195,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			savedProject.setName(project.getName());
 			savedProject.setActive(project.isActive());
 			savedProject.setUrlSonarServer(project.getUrlSonarServer());
+			savedProject.setUrlCodeFactorIO((project.getUrlCodeFactorIO()));
 			if ((project.getUrlSonarServer() == null) || ("".equals(project.getUrlSonarServer()))) {
 				savedProject.setSonarProjects(new ArrayList<SonarProject>());
 			}			

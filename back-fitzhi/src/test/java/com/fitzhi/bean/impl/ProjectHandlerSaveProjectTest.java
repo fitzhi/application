@@ -61,6 +61,7 @@ public class ProjectHandlerSaveProjectTest {
 		
 		project = new Project (1789, "French revolution");
 		project.setUrlSonarServer("https://url.ofASonarServer");
+		project.setUrlCodeFactorIO("https://url.ofCodeFactor.io");
 		project.setConnectionSettings(USER_PASSWORD_ACCESS);
 		project.setUsername("frvidal");
 		project.setPassword("mypass");
@@ -69,6 +70,7 @@ public class ProjectHandlerSaveProjectTest {
 		project = projectHandler.get(1789);
 		Assert.assertTrue("French revolution".equals(project.getName()));
 		Assert.assertEquals("https://url.ofASonarServer", project.getUrlSonarServer());
+		Assert.assertEquals("https://url.ofCodeFactor.io", project.getUrlCodeFactorIO());
 		Assert.assertEquals(USER_PASSWORD_ACCESS, project.getConnectionSettings());
 		Assert.assertEquals("frvidal", project.getUsername());
 		Assert.assertNotNull(project.getPassword());

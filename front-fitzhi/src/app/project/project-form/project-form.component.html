@@ -78,8 +78,16 @@
 
 
 				<div class="codeFactorSolution" [hidden]="((code_quality_solution$|async) === 1)">
-					<div class="row field codeFactor">
-						CODE FACTOR PANEL
+					<div class="field codeFactor">
+						<label class="labelCodeFactor" for="project">Code factor</label>
+						<input type="text" 
+							class="form-control" 
+							id="urlCodeFactorIO" 
+							name="urlCodeFactorIO" 
+							[readonly]="!projectService.project.active"
+							placeholder="url inside the codeFactor.io" 
+							value="" 
+							formControlName="urlCodeFactorIO" />
 					</div>
 				</div>
 
