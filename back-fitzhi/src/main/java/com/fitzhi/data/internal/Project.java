@@ -98,6 +98,12 @@ public @Data class Project implements Serializable {
 	 */
 	private List<Library> libraries = new ArrayList<>();
 	
+	
+	/**
+	 * URL of the codefactor.io dashboard for your project.
+	 */
+	private String urlCodeFactorIO;
+
 	/**
 	 * URL of the Sonar server hosting the Sonar projects related to this project
 	 */
