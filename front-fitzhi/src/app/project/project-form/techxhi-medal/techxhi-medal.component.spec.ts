@@ -28,7 +28,7 @@ describe('TechxhiMedalComponent', () => {
 	@Component({
 		selector: 'app-host-component',
 		template:
-				`<div style="background-color: red; width: 100px; height: 200px;">
+				`<div style="background-color: lightGrey; width: 100px; height: 200px;">
 					<app-techxhi-medal [colorOfRisk]="none">
 					</app-techxhi-medal>
 				</div>`
@@ -148,9 +148,6 @@ describe('TechxhiMedalComponent', () => {
 		expect(field('#sonarSummaryBadge')).toBeDefined();
 
 		expect(projectService.calculateSonarEvaluation(projectService.project) === 28).toBeTruthy();
-	});
-
-	it('Displaying the medal.', () => {
 	});
 
 });

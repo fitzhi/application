@@ -47,17 +47,19 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 		public referentialService: ReferentialService,
 		public projectService: ProjectService,
 		public cinematicService: CinematicService) {
-		super();
+			super();
+			console.log('constructor...');
 	}
 
 	ngOnInit() {
+		console.log('ngOnInit()');
 		this.projectService.projectLoaded$
 			.pipe(take(1))
 			.subscribe({
 				next: doneAndOk => {
 					if (doneAndOk) {
 						this.globalSonarEvaluation = this.projectService.calculateSonarEvaluation(this.projectService.project);
-						this.displayAuditBadge = this.ProcessDisplayAuditBadge();
+						this.displayAuditBadge = this.processDisplayAuditBadge();
 					}
 				}
 			});
@@ -90,7 +92,8 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	/**
 	 * This function is processing the `*ngIf` preview condition of the __Audit__ summary badge.
 	 */
-	ProcessDisplayAuditBadge(): boolean {
+	processDisplayAuditBadge(): boolean {
+		console.log ('ProcessDisplayAuditBadge()');
 
 		if (!this.projectService.project) {
 			return false;
@@ -107,6 +110,7 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	 * This function is handling the `*ngIf` preview condition of the __Sonar__ summary badge.
 	 */
 	sonarReady() {
+		console.log ('sonarReady()');
 		if (!this.projectService.project) {
 			return false;
 		}
