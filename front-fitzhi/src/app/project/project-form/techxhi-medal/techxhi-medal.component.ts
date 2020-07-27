@@ -48,7 +48,6 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 		public projectService: ProjectService,
 		public cinematicService: CinematicService) {
 			super();
-			console.log('constructor...');
 	}
 
 	ngOnInit() {
@@ -80,14 +79,12 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 		this.cinematicService.projectTabIndex = tabIndex;
 	}
 
-
 	/**
 	 * @returns the color figuring the risk evaluation for this project.
 	 */
 	styleDot () {
 		return { 'fill': this.colorOfRisk };
 	}
-
 
 	/**
 	 * This function is processing the `*ngIf` preview condition of the __Audit__ summary badge.
@@ -110,7 +107,7 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	 * This function is handling the `*ngIf` preview condition of the __Sonar__ summary badge.
 	 */
 	sonarReady() {
-		console.log ('sonarReady()');
+
 		if (!this.projectService.project) {
 			return false;
 		}
@@ -132,6 +129,14 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 		return preview;
 	}
 
+	/**
+	 * This function is handling the `*ngIf` preview condition of the __codeFactor.io__ summary badge.
+	 */
+	sonarCodeFactorReady() {
+		console.log (this.projectService.project);
+		console.log(this.projectService.project.urlCodeFactorIO);
+		return (this.projectService.project) && (this.projectService.project.urlCodeFactorIO);
+	}
 
 	/**
 	* Calling the base class to unsubscribe all subscriptions.

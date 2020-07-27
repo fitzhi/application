@@ -25,6 +25,11 @@
         </app-quotation-badge>
     </div>
 
+
+    <div id="codeFactorSummaryBadge" *ngIf="((projectService.projectLoaded$|async) && sonarCodeFactorReady())">
+        <img src="{{projectService.project.urlCodeFactorIO}}"/>
+    </div>
+
     <div class="auditGraphicBadge">
     </div>
 

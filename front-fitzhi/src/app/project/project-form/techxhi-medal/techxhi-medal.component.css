@@ -1,5 +1,6 @@
 div.qualityRectangle {
 	min-height: 230px;
+	height: fit-content;
 	width: 110px;
 	background-color: whitesmoke;
 	text-align: center ;
@@ -7,22 +8,31 @@ div.qualityRectangle {
     border: 2px solid lightgray;
 }
 
-#sonarSummaryBadge, #staffSummaryBadge, #auditSummaryBadge {
-	margin: 0 auto;
+
+#staffSummaryBadge {
+	margin: 20px auto 5px auto;
 }
 
 #sonarSummaryBadge {
 	width: 100px;
 	height: 80px;
+	margin: 5px auto 10px auto;
 }
 
-#sonarSummaryBadge:hover, #staffSummaryBadge:hover, #auditSummaryBadge:hover {
+
+#sonarSummaryBadge:hover, #staffSummaryBadge:hover, #auditSummaryBadge:hover, #codeFactorSummaryBadge:hover {
 	border-radius: 10%;
 	background-color: white;
     border: 1px solid lightgray;
 }
 
 #auditSummaryBadge {
-	width: 99%;
 	height: 70px;
+	margin-bottom: 10px;
+	margin: 10px auto;
+}
+
+#codeFactorSummaryBadge {
+	padding-top: 25px;
+	padding-bottom: 25px;
 }

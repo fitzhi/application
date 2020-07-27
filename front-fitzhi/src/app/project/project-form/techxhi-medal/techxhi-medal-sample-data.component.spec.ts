@@ -29,7 +29,6 @@ describe('TechxhiMedalComponent', () => {
 		selector: 'app-host-component',
 		template:
 				`<div style="width: 400px; height: 400px; background-color: lightGrey">
-					Nupe
 					<app-techxhi-medal [colorOfRisk]="colorOfRisk" (tabActivationEmitter)="tabActivation($event)">
 					</app-techxhi-medal>
 				</div>`
@@ -79,6 +78,17 @@ describe('TechxhiMedalComponent', () => {
 		project.id = 1789;
 		project.name = 'Revolutionary project';
 		project.audit = {};
+
+		project.sonarProjects = [];
+		const sonarProjectOne =  new SonarProject();
+		sonarProjectOne.key = '1';
+		sonarProjectOne.name = 'One';
+		sonarProjectOne.sonarEvaluation = new SonarEvaluation(50, 3000);
+		project.sonarProjects.push(sonarProjectOne);
+
+		project.auditEvaluation = 20;
+
+		project.urlCodeFactorIO = 'https://www.codefactor.io/repository/github/fitzhi/application/badge/master?style=plastic';
 
 		projectService = TestBed.inject(ProjectService);
 		projectService.project = project;
