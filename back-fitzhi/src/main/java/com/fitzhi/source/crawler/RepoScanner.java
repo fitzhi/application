@@ -4,6 +4,7 @@
 package com.fitzhi.source.crawler;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
@@ -20,6 +21,7 @@ import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.ConnectionSettings;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.SkillerException;
+import com.fitzhi.source.crawler.git.GitCrawler;
 
 /**
  * <p>
@@ -49,6 +51,25 @@ public interface RepoScanner {
 	 * @return {@code true} if the connection has succeeded, {@code false} otherwise
 	 */
 	boolean testConnection(Project project);
+	
+	
+	/**
+	 * <p>
+	 * Create a directory which will be the destination of the clone process.
+	 * <br/>
+	 * <font color="darkGreen" size="4">
+	 * The first implementation in {@link GitCrawler} will use the {@code temp directory}  of the filesystem.
+	 * </font>
+	 * </p>
+	 * 
+	 * @param project  the actual project
+	 * @param settings the connection settings <i>(these settings are given for
+	 *                 trace only support)</i>
+	 * @throws IOException an IO oops ! occurs. Too bad!
+	 * @return the resulting path
+	 */
+	Path createDirectoryAsCloneDestination(Project project, ConnectionSettings settings) throws IOException;
+	
 	
 	/**
 	 * <p>

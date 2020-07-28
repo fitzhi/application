@@ -314,7 +314,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 
 		Path path;
 		if (project.getLocationRepository() == null) {
-			path = createDirectoryAsCloneDestination(project, settings);
+			path = this.createDirectoryAsCloneDestination(project, settings);
 			execClone = true;
 		} else {
 			path = Paths.get(project.getLocationRepository());
@@ -334,11 +334,14 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		if (execClone) {
 			if (settings.isPublicRepository()) {
 				Git.cloneRepository().setDirectory(path.toAbsolutePath().toFile()).setURI(settings.getUrl())
-						.setProgressMonitor(new CustomProgressMonitor()).call();
+					.setBranch(project.getBranchName())
+					.setProgressMonitor(new CustomProgressMonitor())
+					.call();
 			} else {
 				Git.cloneRepository().setDirectory(path.toAbsolutePath().toFile()).setURI(settings.getUrl())
 						.setCredentialsProvider(
 								new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()))
+						.setBranch(project.getBranchName())
 						.setProgressMonitor(new CustomProgressMonitor()).call();
 
 			}
@@ -348,13 +351,19 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		} else {
 
 			try (Git git = Git.open(Paths.get(getLocalDotGitFile(project)).toFile())) {
+				
 				if (log.isDebugEnabled()) {
-					log.debug("Pull?");
+					log.debug("We fetch first the local repository");
+				}
+				git.fetch().setProgressMonitor(new CustomProgressMonitor());
+				
+				if (log.isDebugEnabled()) {
+					log.debug("And then we pull it");
 				}
 				git.pull().setProgressMonitor(new CustomProgressMonitor());
 			}
 			if (log.isDebugEnabled()) {
-				log.debug("Pull done & succcessful !");
+				log.debug("Local repository succcessfully updated !");
 			}
 		}
 
@@ -364,19 +373,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		project.setLocationRepository(locationRepository);
 	}
 
-	/**
-	 * Create a directory in the temp directory as a destination of the clone
-	 * process.
-	 * 
-	 * @param project  the actual project
-	 * @param settings the connection settings <i>(these settings are given for
-	 *                 trace only support)</i>
-	 * @return the resulting path
-	 * @throws IOException an IO oops ! occurs. Too bad!
-	 */
-	private Path createDirectoryAsCloneDestination(Project project, ConnectionSettings settings) throws IOException {
-		// Creating a temporary local path where the remote project repository will be
-		// cloned.
+	@Override
+	public Path createDirectoryAsCloneDestination(Project project, ConnectionSettings settings) throws IOException {
+		// Create a temporary local path where the remote project repository will be cloned.
 		Path path = Files.createTempDirectory("skiller_jgit_" + project.getName() + "_");
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Cloning the repository %s inside the CREATED path %s", settings.getUrl(),
@@ -1019,7 +1018,8 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		final ConnectionSettings settings = connectionSettings(project);
 
 		if (!projectHandler.hasValidRepository(project)) {
-			projectHandler.initLocationRepository(project);
+			// FVI : I do not initialize anymore the local repository in order to PULL only the repository when necessary.
+			// projectHandler.initLocationRepository(project);
 			try {
 				this.clone(project, settings);
 			} catch (final Exception e) {
