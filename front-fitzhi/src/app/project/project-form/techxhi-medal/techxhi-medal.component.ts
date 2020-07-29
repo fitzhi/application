@@ -133,7 +133,7 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	urlCodeFactorIO() {
-		return this.projectService.project.urlCodeFactorIO + '/badge/master?style=plastic';
+		return this.projectService.urlCodeFactorIO();
 	}
 	/**
 	* Calling the base class to unsubscribe all subscriptions.

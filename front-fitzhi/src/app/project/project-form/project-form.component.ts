@@ -21,6 +21,8 @@ import { ReferentialService } from 'src/app/service/referential.service';
 import { Skill } from 'src/app/data/skill';
 import { traceOn } from 'src/app/global';
 import { ProjectSkill } from '../../data/project-skill';
+import { trace } from 'console';
+import { utils } from 'protractor';
 
 @Component({
 	selector: 'app-project-form',
@@ -116,6 +118,11 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	errorEmitter: EventEmitter<MessageGravity> = new EventEmitter<MessageGravity>();
 
 	private THIS_TAB = Constants.PROJECT_IDX_TAB_FORM;
+
+	/**
+	 * This __behaviorSubject__ is emtting a **true** if the given codeFactor.io is unreachable.
+	 */
+	urlCodeFactorIOUnreachable$ = new BehaviorSubject<Boolean>(false);
 
 	constructor(
 		private cinematicService: CinematicService,
@@ -302,6 +309,26 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					}, 0);
 					return of(doneAndOk);
 			}));
+	}
+
+	/**
+	 * This method is called when the user quits the codeFactor.io url input after a change.
+	 */
+	public onCodeFactorUrlChange() {
+		if (traceOn()) {
+			console.log ('Testing the url', this.profileProject.get('urlCodeFactorIO').value);
+		}
+		this.projectService.project.urlCodeFactorIO  = this.profileProject.get('urlCodeFactorIO').value;
+		if ((this.projectService.project.urlCodeFactorIO) || (this.projectService.project.urlCodeFactorIO.length === 0)) {
+			this.urlCodeFactorIOUnreachable$.next(false);
+		}
+		this.projectService
+			.testConnectionCodeFactorIO$()
+			.subscribe({
+				next: doneAndOk => {
+					this.urlCodeFactorIOUnreachable$.next (!doneAndOk);
+				}
+			});
 	}
 
 	ngAfterViewInitSonarProjectsDeclaredInProject() {

@@ -76,7 +76,7 @@
 					<div class="row field" *ngIf="projectService.projectLoaded$|async" 
 							[hidden]="sonarProjectsLoaded || creation || !projectService.project.urlSonarServer">
 						<div class="col-12 insideField">
-							<p class="error">Cannot reach the Sonar server on the URL {{projectService.project.urlSonarServer}}.</p>
+							<p class="error">Cannot reach the Sonar server at URL {{projectService.project.urlSonarServer}}.</p>
 						</div>
 					</div>
 				</div>
@@ -107,11 +107,15 @@
 						<input type="text" 
 							class="form-control" 
 							id="urlCodeFactorIO" 
-							name="urlCodeFactorIO" 
+							name="urlCodeFactorIO"
+							(change)="onCodeFactorUrlChange()"
 							[readonly]="!projectService.project.active"
 							placeholder="url representing this project in the codeFactor.io" 
 							value="" 
 							formControlName="urlCodeFactorIO" />
+					</div>
+					<div class="insideField" *ngIf="urlCodeFactorIOUnreachable$|async">
+						<p class="error">Cannot reach the codeFactor.io server at URL {{projectService.project.urlCodeFactorIO}}.</p>
 					</div>
 				</div>
 
