@@ -22,7 +22,6 @@ import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.BasicCommitRepository;
 import com.fitzhi.data.source.CommitRepository;
-import com.fitzhi.data.source.ConnectionSettings;
 import com.fitzhi.source.crawler.RepoScanner;
 
 /**
@@ -80,7 +79,7 @@ public class GitScannerCleanupUnknownPseudosTest {
 		Mockito.when(cacheDataHandler.hasCommitRepositoryAvailable(project)).thenReturn(true);
 		Mockito.when(cacheDataHandler.getRepository(project)).thenReturn(repo);
 
-		CommitRepository repoCleaned = gitScanner.parseRepository(project, new ConnectionSettings());
+		CommitRepository repoCleaned = gitScanner.parseRepository(project);
 		Assert.assertEquals(repoCleaned.unknownContributors().size(), 2);
 	}
 	

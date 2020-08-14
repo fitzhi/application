@@ -10,7 +10,7 @@ import { Skill } from '../data/skill';
 import { ContributorsDTO } from '../data/external/contributorsDTO';
 import { SettingsGeneration } from '../data/settingsGeneration';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
-import { take, tap, retryWhen, retry, flatMap, switchMap } from 'rxjs/operators';
+import { take, tap, retryWhen, retry, flatMap, switchMap, catchError } from 'rxjs/operators';
 import { Library } from '../data/library';
 import { BooleanDTO } from '../data/external/booleanDTO';
 import { ReferentialService } from './referential.service';
@@ -475,6 +475,34 @@ export class ProjectService extends InternalService {
 			console.log('Testing the connection settings on URL ' + url);
 		}
 		return this.httpClient.get<boolean>(url, httpOptions);
+	}
+
+	/**
+	 * Test if the given url is valid, or not.
+	 * @param urlCodeFactor URL of the codeFactor.io project
+	 */
+	testConnectionCodeFactorIO$(): Observable<Boolean> {
+		return this.httpClient
+			.get<boolean>(this.urlCodeFactorIO(), { observe: 'response' })
+			.pipe(
+				take(1),
+				switchMap(
+					response => {
+						console.log (response);
+						return of(true);
+					}),
+				catchError((e) => {
+					console.log (e);
+					return of(false);
+				}
+			));
+	}
+
+	/**
+	 * Return the url pointing out to the codeFactor.io badge.
+	 */
+	urlCodeFactorIO() {
+		return this.project.urlCodeFactorIO + '/badge/master?style=plastic';
 	}
 
 	/**

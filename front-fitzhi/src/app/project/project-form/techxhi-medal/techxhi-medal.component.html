@@ -1,5 +1,5 @@
 <div class="qualityRectangle">
-    
+
     <div *ngIf="(projectService.projectLoaded$|async)" 
         id="staffSummaryBadge" 
         (click)="jumpToTab(PROJECT_IDX_TAB_SUNBURST)"
@@ -23,6 +23,13 @@
             [weight]=100
             [evaluation]="globalSonarEvaluation">
         </app-quotation-badge>
+    </div>
+
+
+    <div id="codeFactorSummaryBadge" *ngIf="((projectService.projectLoaded$|async) && sonarCodeFactorReady())">
+        <a href="{{projectService.project.urlCodeFactorIO}}" target="_blank">
+            <img [src]="urlCodeFactorIO()"/>
+        </a>
     </div>
 
     <div class="auditGraphicBadge">

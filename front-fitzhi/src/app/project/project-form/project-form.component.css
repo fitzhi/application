@@ -3,6 +3,14 @@ div.container-project-form {
 	margin: 0 auto;
 }
 
+div.container {
+	display: inline-flex;
+}
+
+div.projectForm {
+	min-width: 800px;
+}
+
 .required {
 	font-weight: 600;
 }
@@ -12,11 +20,12 @@ div.connection_settings {
 	border-left-color: grey;
 	border-left-width: 1px;
 	border-left-style: solid;
+	margin-top: 10px;
 }
 
 div.buttons_toggle {
-	padding: 1em;
 	margin-right: 5px;
+	margin-top: 20px;
 	display:flex;
 }
 
@@ -45,25 +54,13 @@ div.explanation_access {
 	font-weight: 600;
 }
 
-.container {
-	margin: 0;
-	padding-left: 0;
-	text-align: left;
-	max-width: 800px;
+div.skills {
+	margin-top: 20px;
 }
 
 div.fields_host {
 	margin-left: 0;
 	padding: 0;
-}
-
-#projectForm {
-	margin-top: 10px;
-	padding: 0;
-}
-
-div.field {
-	margin-left: 5px;
 }
 
 .labelProject {
@@ -74,11 +71,11 @@ div.field {
 
 .labelSkills {
 	font-size: 15px;
-	margin-bottom: 2px;
+	margin-top: 5px;
 }
 
-#skills {
-	width: 100%;
+div.icon-and-label-skills {
+	display: inline-flex;
 }
 
 p.error {
@@ -87,15 +84,12 @@ p.error {
 	padding: 10px 10px 10px 20px;/* top right bottom left */
 }
 
-div.insideField {
-	padding-left: 0;
-	padding-top: 5px;
-}
-
 div.globalBadge {
-	margin-right: 0;
-	padding-left: 10px;
+	margin-top: 10px;
+	margin-right: 10px;
+	padding-left: 0;
 	padding-right: 10px;
+	min-width: 100px;
 }
 
 div.user-password {
@@ -114,9 +108,18 @@ label.label-user-password {
 }
 
 div.connection-panel {
-	margin-left: 50px;
+	margin-left: 30px;
 }
 
+div.icon-and-label-skills {
+	border-radius: 50%;
+    border-style: solid;
+    border-width: 1px;
+	border-color: lightgray;
+	margin-left: 10px;
+	width: 50px;
+	height: 50px;
+}
 
 div.buttons_toggle button, div.buttons_toggle button:hover {
 	border-radius: 50%;
@@ -126,6 +129,30 @@ div.buttons_toggle button, div.buttons_toggle button:hover {
 	background-color: transparent;
 	padding-left: 10px;
 	padding-right: 10px;
-	margin: 5px;
+	margin: 0px 10px 0px 5px;
 	font-size: 27px;
+}
+
+.mat-button-toggle-label-content {
+	margin-top: 5px;
+}
+div.sonar, div.codeFactor {
+	margin-top: 10p;
+	margin-left: 5px;
+}
+
+img.logoTabLabel {
+	width: 28px;
+}
+
+div.qualitySolution {
+	margin-top: 20px;
+}
+
+div.sonarSolution, div.codeFactorSolution, div.textarea-skills {
+	margin-top: 10px;
+	margin-left: 30px;
+	border-left-color: grey;
+	border-left-width: 1px;
+	border-left-style: solid;
 }

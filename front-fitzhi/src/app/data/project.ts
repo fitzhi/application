@@ -45,6 +45,11 @@ export class Project {
 	public libraries: Library[] = [];
 
 	/**
+	 * URL of the codefactor.io dashboard for your project.
+	 */
+	public urlCodeFactorIO;
+
+	/**
 	 * URL of the Sonar server used to validate this project.
 	 */
 	public urlSonarServer;

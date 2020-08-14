@@ -2,12 +2,14 @@ echo ""
 echo "Building back-end Fitzhi"
 echo "------------------------"
 echo ""
-mkdir -pv git_repo_for_test
+mkdir git_repo_for_test
 cd git_repo_for_test
 rmdir /Q /s first-test
 git clone https://github.com/frvidal/first-test 
 rmdir /Q /s application
 git clone https://github.com/fitzhi/application
+rmdir /Q /s mock-repo-with-branches-for-dev-and-testing-purposes
+git clone https://github.com/fitzhi/mock-repo-with-branches-for-dev-and-testing-purposes
 cd ..
 mkdir deploy\backend-fitzhi
 mkdir deploy\data

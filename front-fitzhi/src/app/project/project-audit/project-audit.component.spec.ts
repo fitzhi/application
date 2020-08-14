@@ -52,7 +52,7 @@ describe('ProjectAuditComponent', () => {
 		project.id = 1789;
 		project.name = 'Revolutionary project';
 		project.audit = {};
-		projectService = TestBed.get(ProjectService);
+		projectService = TestBed.inject(ProjectService);
 		projectService.project = project;
 		projectService.projectLoaded$ = new BehaviorSubject(true);
 		fixture.detectChanges();

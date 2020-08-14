@@ -120,7 +120,7 @@ public class GitScannerTest {
 		scanner.clone(project, settings);
         assertThat(project.getLocationRepository()).isNotNull();
         
-		final CommitRepository repo = scanner.parseRepository(project, settings);
+		final CommitRepository repo = scanner.parseRepository(project);
         assertThat(repo.size()).isGreaterThan(0);
         
 		RiskDashboard data = scanner.aggregateDashboard(project, repo);
