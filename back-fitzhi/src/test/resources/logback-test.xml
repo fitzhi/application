@@ -24,6 +24,16 @@
 
 <!-- Parking for my logging. 
 
+	<logger name="com.fitzhi.source.crawler.git.GitCrawler" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="com.fitzhi.source.crawler.git.GitCrawler" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
 	<logger name="com.fitzhi.FitzhiWebMvcConfigurer" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />

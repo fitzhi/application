@@ -19,10 +19,15 @@ import java.util.Set;
 import com.fitzhi.Global;
 import com.fitzhi.SkillerRuntimeException;
 
+import org.apache.commons.lang3.StringUtils;
+
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * <p>Sunburst data build from the History of the Source repository with layout information.</p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@Slf4j
 public class DataChart implements Serializable {
 
 	/**
@@ -65,7 +70,7 @@ public class DataChart implements Serializable {
 	 * <i>A 2000 lines Java Class should have a higher importance than  2 small class of 100 lines</i>
 	 * </p>
 	 */        
-    private int importance = 0;
+    private long importance = 0;
     
 	/**
 	 * Array containing the sub-directories of the actual directory.
@@ -116,7 +121,20 @@ public class DataChart implements Serializable {
 	 */
 		// We register the filename in the source files set
 	public void injectFile(final DataChart element, String[] dirAndFilename, final long importance, final LocalDate latestCommit, final int[] committers) {
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(
+				"Injecting %s with important %d", 
+				StringUtils.join(dirAndFilename, "/"),
+				importance));
+		}			
+	
 		if (dirAndFilename.length == 1) {
+			if (log.isDebugEnabled()) {
+				log.debug(String.format(
+					"Adding %s with important %d", 
+					dirAndFilename[0],
+					importance));
+			}			
 			element.addSource(dirAndFilename[0], importance, latestCommit, committers);
 			if ((element.getLastUpdate() == null) || (element.getLastUpdate().isBefore(latestCommit)))  {
 				element.setLastUpdate(latestCommit);
@@ -125,8 +143,9 @@ public class DataChart implements Serializable {
 		}
 		// Recursive call.
 		injectFile( element.addSubDir(new DataChart(dirAndFilename[0])),  
-				Arrays.copyOfRange(dirAndFilename, 1, dirAndFilename.length), importance,
-				latestCommit, committers);
+			Arrays.copyOfRange(dirAndFilename, 1, dirAndFilename.length), importance,
+			latestCommit, 
+			committers);
 	}
 	
 	public void dump(StringBuilder sb, String offset) {
@@ -306,12 +325,13 @@ public class DataChart implements Serializable {
 		this.children = children;
 	}
 	
-	/**
+	/** 
 	 * Aggregate the content of a <code>DataChart</code> instance into this instance.
 	 * @param input the <code>DataChart</code> to be transfered.
 	 */
 	public void aggregate(DataChart input) {
 		this.location = this.location + "/" + input.location;
+		this.importance += input.importance;
 		this.color = input.color;
 		this.lastUpdate = input.lastUpdate;
 		this.numberOfFiles = input.numberOfFiles;

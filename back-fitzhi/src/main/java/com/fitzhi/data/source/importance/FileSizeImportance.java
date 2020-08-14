@@ -9,6 +9,7 @@ import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.text.MessageFormat;
 
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.SkillerException;
@@ -26,7 +27,10 @@ public class FileSizeImportance implements AssessorImportance {
 		try {
 			return Files.size(Paths.get(project.getLocationRepository() + "/" + path));
 		} catch (IOException ioe) {
-			throw new SkillerException(CODE_IO_ERROR, MESSAGE_IO_ERROR, ioe);
+			throw new SkillerException(
+				CODE_IO_ERROR, 
+				MessageFormat.format(MESSAGE_IO_ERROR, Paths.get(project.getLocationRepository() + "/" + path)),
+				ioe);
 		}
 	}
 

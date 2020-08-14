@@ -157,12 +157,11 @@ public interface RepoScanner {
 	 * <b>PREREQUESIT = The repository must have be cloned before</b>
 	 * </p>
 	 * @param project Project whose source code files should be scan in the repository
-	 * @param settings connection settings
 	 * @return the parsed repository 
 	 * @throws IOException thrown if any application or network error occurs.
 	 * @throws SkillerException thrown if any application or network error occurs.
 	 */
-	CommitRepository parseRepository(Project project, ConnectionSettings settings) throws IOException, SkillerException;
+	CommitRepository parseRepository(Project project) throws IOException, SkillerException;
 
 	/**
 	 * <p>Aggregate the history of the repository into the risks dashboard.</p>

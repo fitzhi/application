@@ -26,8 +26,10 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -97,7 +99,6 @@ import com.fitzhi.data.source.importance.FileSizeImportance;
 import com.fitzhi.data.source.importance.ImportanceCriteria;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
-import com.fitzhi.source.crawler.RepoScanner;
 import com.fitzhi.source.crawler.impl.AbstractScannerDataGenerator;
 import com.google.gson.Gson;
 
@@ -112,7 +113,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Service("GIT")
 @Slf4j
-public class GitCrawler extends AbstractScannerDataGenerator implements RepoScanner {
+public class GitCrawler extends AbstractScannerDataGenerator  {
 
 	/**
 	 * Patterns to take account, OR NOT, a file within the parsing process.<br/>
@@ -384,10 +385,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		return path;
 	}
 
-	@Override
-	public RepositoryAnalysis loadChanges(Project project, Repository repository) throws SkillerException {
-
-		List<RevCommit> allCommits = new ArrayList<>();
+	public static Collection<RevCommit> loadCommits(Project project, Repository repository, AsyncTask tasks) throws SkillerException {
+		
+		Map<ObjectId, RevCommit> allCommits = new HashMap<>();
 
 		try (Git git = new Git(repository)) {
 
@@ -398,24 +398,39 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				log.debug(String.format("Branch or tag names analyzed for %s", repository.getDirectory()));
 				tagOrBranchNames.stream().forEach(log::debug);
 			}
-
 			int nbCommit = 0;
 			int nbTotCommit = 0;
 			for (String tagOrBranchName : tagOrBranchNames) {
 				for (RevCommit commit : git.log().add(repository.resolve(tagOrBranchName)).call()) {
-					allCommits.add(commit);
-					if (++nbCommit == 1000) {
-						nbTotCommit += nbCommit;
-						this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
-								nbTotCommit + " commits on-boarded!");
-						nbCommit = 0;
+					if (log.isDebugEnabled()) {
+						log.debug(String.format("Detecting %s", commit.getId()));
+					}
+					if (!allCommits.containsKey(commit.getId())) {
+						if (log.isDebugEnabled()) {
+							log.debug(String.format("Adding %s", commit.getId()));
+						}
+							allCommits.put(commit.getId(), commit);
+						if (++nbCommit == 1000) {
+							nbTotCommit += nbCommit;
+							tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
+									nbTotCommit + " commits on-boarded!");
+							nbCommit = 0;
+						}
 					}
 				}
 			}
 
+			return allCommits.values();
+
 		} catch (final IOException | GitAPIException e) {
 			throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
-		}
+		}	
+	}
+
+	@Override
+	public RepositoryAnalysis loadChanges(Project project, Repository repository) throws SkillerException {
+
+		Collection<RevCommit> allCommits = loadCommits(project, repository, tasks);
 
 		if (log.isInfoEnabled()) {
 			log.info(String.format("Retrieving %d commits on the repository %s", allCommits.size(),
@@ -503,7 +518,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 			//
 			try (Git git = new Git(repository)) {
 				List<DiffEntry> diffs = git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();
-
+				
 				// Might be a rename with specific action
 				if (isRenamePossible(diffs)) {
 					if (log.isDebugEnabled()) {
@@ -580,6 +595,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 				// We first have to test if this file wasn't already taken in account by the
 				// analysis.
 				//
+				
 				if (analysis.containsFile(de.getNewPath())) {
 					analysis.keepPathModified(de.getNewPath());
 				}
@@ -722,7 +738,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 	}
 
 	@Override
-	public CommitRepository parseRepository(final Project project, final ConnectionSettings settings)
+	public CommitRepository parseRepository(final Project project)
 			throws IOException, SkillerException {
 
 		//
@@ -800,7 +816,9 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		// Retrieve directories candidate for being exclude from the analysis
 		// The resulting set contains only source files without a commit history of
 		// modification.
-		// They have only be added.
+		// These files have only be added.
+		//
+		// We will test each entry of the resulting list if it match the possible eviction critéria 
 		//
 		analysis.extractCandidateForDependencies();
 
@@ -1041,7 +1059,7 @@ public class GitCrawler extends AbstractScannerDataGenerator implements RepoScan
 		// This variable is not final. Might be overridden by the filtering operation
 		// (date of staff member filtering)
 		//
-		CommitRepository repo = this.parseRepository(project, settings);
+		CommitRepository repo = this.parseRepository(project);
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 					"The repository has been parsed. It contains %d records in the repository, and %d ghosts",
