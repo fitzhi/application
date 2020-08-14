@@ -40,7 +40,8 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
+ * 
+ * Testing the processing of the importance in DataChart.
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
