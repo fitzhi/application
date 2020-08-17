@@ -121,6 +121,7 @@ import { ListSkillComponent } from './skill/list-skill/list-skill.component';
 import { PieLegendComponent } from './dashboard/pie-legend/pie-legend.component';
 import { PieDashboardService } from './dashboard/service/pie-dashboard.service';
 import {DynamicPieChartModule} from 'dynamic-pie-chart';
+import { BranchComponent } from './project/project-form/branch/branch.component';
 
 @NgModule({
 	declarations: [
@@ -188,7 +189,8 @@ import {DynamicPieChartModule} from 'dynamic-pie-chart';
 		ProjectRemoveComponent,
 		ProjectInactivateComponent,
 		StaffRemoveComponent,
-		PieLegendComponent
+		PieLegendComponent,
+		BranchComponent
 	],
 	entryComponents: [
 		StaffUploadCvComponent,

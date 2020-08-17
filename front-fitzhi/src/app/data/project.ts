@@ -11,6 +11,11 @@ export class Project {
 	public username: string;
 	public password: string;
 	public filename: string;
+	/**
+	 * Branch name selected for the given repository.
+	 * Default is master.
+	 */
+	public branch: string;
 
 	/**
 	 * This **boolean** indicates that this project has be involved in all analysis.

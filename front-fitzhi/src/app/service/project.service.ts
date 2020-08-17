@@ -478,6 +478,29 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
+	 * Load the branches available on GIT for the given project.
+	 */
+	public loadBranches$() {
+
+		// The project is not already created.
+		if (!this.project) {
+			return EMPTY;
+		}
+
+		// The project is not yet associated to a source code repository.
+		if (!this.project.urlRepository) {
+			return EMPTY;
+		}
+
+		const url = this.backendSetupService.url() + '/project/branches/' + this.project.id;
+		if (traceOn()) {
+			console.log('Loading the branches for the URL ' + url);
+		}
+		
+		return this.httpClient.get<any>(url, httpOptions);
+	}
+
+	/**
 	 * Test if the given url is valid, or not.
 	 * @param urlCodeFactor URL of the codeFactor.io project
 	 */
