@@ -263,6 +263,27 @@ public class ProjectController {
 		return new ResponseEntity<>(project.getSkills().values(), headers(), HttpStatus.OK);
 	}
 
+	/**
+	 * Retrieve and return the branches detected on the GIT repository 
+	 * for the given project (identified by its id)
+	 * 
+	 * @param idProject the project identifier
+	 * @return the HTTP Response with an array of branches, or an empty one if the query failed.
+	 */
+	@GetMapping(value = "/branches/{idProject}")
+	public ResponseEntity<String[]> branches(@PathVariable("idProject") int idProject) throws SkillerException {
+
+		Project project = projectHandler.get(idProject);
+		if (project == null) {
+			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+		}
+
+		String[] mockResponse = new String[1];
+		mockResponse[0] = "master";
+
+		return new ResponseEntity<>(mockResponse, headers(), HttpStatus.OK);
+	}
+
 	@GetMapping("/all")
 	public Collection<Project> readAll() {
 		try {

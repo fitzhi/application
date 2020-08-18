@@ -67,6 +67,11 @@ export class ProjectService extends InternalService {
 	 */
 	allProjects: Project[];
 
+	/**
+	 * List of branches detected on the GIT repository.
+	 */
+	public branches$ = new BehaviorSubject<string[]>([]);
+
 	constructor(
 		private httpClient: HttpClient,
 		private referentialService: ReferentialService,
@@ -480,16 +485,16 @@ export class ProjectService extends InternalService {
 	/**
 	 * Load the branches available on GIT for the given project.
 	 */
-	public loadBranches$() {
+	public loadBranches() {
 
 		// The project is not already created.
 		if (!this.project) {
-			return EMPTY;
+			this.branches$.next([]);
 		}
 
 		// The project is not yet associated to a source code repository.
 		if (!this.project.urlRepository) {
-			return EMPTY;
+			this.branches$.next([]);
 		}
 
 		const url = this.backendSetupService.url() + '/project/branches/' + this.project.id;
@@ -497,7 +502,12 @@ export class ProjectService extends InternalService {
 			console.log('Loading the branches for the URL ' + url);
 		}
 		
-		return this.httpClient.get<any>(url, httpOptions);
+		this.httpClient.get<any>(url, httpOptions)
+			.pipe(take(1))
+			.subscribe({
+				next: branches => this.branches$.next(branches)
+			});
+
 	}
 
 	/**

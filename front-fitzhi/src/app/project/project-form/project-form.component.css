@@ -156,3 +156,7 @@ div.sonarSolution, div.codeFactorSolution, div.textarea-skills {
 	border-left-width: 1px;
 	border-left-style: solid;
 }
+
+.label_git_repo {
+	margin-top: 5px;
+}

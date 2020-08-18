@@ -53,8 +53,7 @@ describe('BranchComponent', () => {
   });
 
   it('should be created without error', () => {
-    const branches$ = new BehaviorSubject<string[]>(['master', 'branch-1.0', 'branch-1.1']);
-		const spy = spyOn(projectService, 'loadBranches$').and.returnValue(branches$);
+    projectService.branches$.next(['master', 'branch-1.0', 'branch-1.1']);
     fixture.detectChanges();
 
     expect(component).toBeTruthy();
@@ -65,8 +64,7 @@ describe('BranchComponent', () => {
   });
 
   it('should be readonly if the project is not active', () => {
-    const branches$ = new BehaviorSubject<string[]>(['master', 'branch-1.0', 'branch-1.1']);
-    spy = spyOn(projectService, 'loadBranches$').and.returnValue(branches$);
+    projectService.branches$.next(['master', 'branch-1.0', 'branch-1.1']);
     projectService.project.active = false;      
     fixture.detectChanges();
 
@@ -78,8 +76,7 @@ describe('BranchComponent', () => {
   });
 
   it('should be selected on the actual branch of the project', () => {
-    const branches$ = new BehaviorSubject<string[]>(['master', 'branch-1.0', 'branch-1.1']);
-    spy = spyOn(projectService, 'loadBranches$').and.returnValue(branches$);
+    projectService.branches$.next(['master', 'branch-1.0', 'branch-1.1']);
     projectService.project.branch = 'branch-1.0';      
     fixture.detectChanges();
 

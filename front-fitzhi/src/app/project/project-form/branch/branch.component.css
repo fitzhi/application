@@ -1,7 +1,12 @@
 div.branchSelectContainer {
     padding: 10px;
+    display: flex;
 }
 
 #branch {
     margin-left: 10px;
+}
+
+.label_git_repo {
+	margin-top: 5px;
 }

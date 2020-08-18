@@ -1,11 +1,11 @@
 <div class="branchSelectContainer">
-    <label for="branch" class="required">Branch name</label> 
+    <label for="branch" class="label_git_repo">Branch&nbsp;:&nbsp;</label> 
     <select name="branch" id="branch"
         [disabled]="!projectService.project.active"
         (change)="onBranchChange($event)"
         class="custom-select d-block w-100">
         <option 
-            *ngFor="let branch of (projectService.loadBranches$()|async)" 
+            *ngFor="let branch of (projectService.branches$|async)" 
             [value]="branch"
             [selected]="projectService.project.branch === branch">
             {{branch}}

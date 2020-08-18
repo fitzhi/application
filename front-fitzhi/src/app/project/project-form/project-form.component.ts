@@ -148,6 +148,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				next: loaded => {
 					if (loaded) {
 						this.loadForm();
+						this.projectService.loadBranches();
 					}
 				}
 			}
@@ -839,6 +840,13 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				this.profileProject.get('urlRepository').setValue(this.profileProject.get('urlRepository').value);
 				break;
 			}
+	}
+
+	public onBranchChange(branch: string) {
+		if (traceOn()) {
+			console.log ('New branch has been chosen', branch);
+		}
+		this.projectService.project.branch = branch;
 	}
 
 	/**
