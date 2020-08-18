@@ -85,7 +85,7 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-   	* Load the global list of ALL projects, working for the company.
+   	* Load the global list of ALL projects, started in the organisation.
    	*/
 	loadProjects() {
 		if (traceOn()) {
