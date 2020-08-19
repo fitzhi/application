@@ -27,6 +27,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -384,13 +385,6 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 					path.toAbsolutePath()));
 		}
 		return path;
-	}
-
-	@Override
-	public String[] loadBranches(Project project) {
-		String[] mockResponse = new String[1];
-		mockResponse[0] = "master";
-		return mockResponse;
 	}
 
 	public static Collection<RevCommit> loadCommits(Project project, Repository repository, AsyncTask tasks) throws SkillerException {
@@ -1381,8 +1375,25 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 
 	@Override
 	public boolean testConnection(Project project) {
-		FetchConnection connection = retrieveFetchConnection(project);
+		final FetchConnection connection = retrieveFetchConnection(project);
 		return (connection != null);
+	}
+
+	@Override
+	public Collection<Ref> loadBranches(Project project) {
+		final FetchConnection connection = retrieveFetchConnection(project);
+		if (log.isDebugEnabled()) {
+			if (connection == null) {
+				log.debug(
+					String.format(
+						"Connection failed with teh SCM declared for project %d %s", 
+						project.getId(), 
+						project.getName()));
+			} else {
+				connection.getRefs().forEach(ref -> log.debug(ref.getName()));
+			}
+		}			
+		return (connection != null) ? connection.getRefs() : new ArrayList<Ref>();
 	}
 
 	@Override

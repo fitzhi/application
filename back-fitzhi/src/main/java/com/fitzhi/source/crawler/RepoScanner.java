@@ -5,10 +5,12 @@ package com.fitzhi.source.crawler;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.FetchConnection;
 
@@ -27,6 +29,12 @@ import com.fitzhi.source.crawler.git.GitCrawler;
 /**
  * <p>
  * Source repository scanner.
+ * </p>
+ * <p>
+ * <font color="red">This interface unfortunately has adherence with <b>GIT</b></font>
+ * </p>
+ * <p>
+ * Future releases should unplugged this link.
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
@@ -53,6 +61,14 @@ public interface RepoScanner {
 	 */
 	boolean testConnection(Project project);
 	
+
+	/**
+	 * Load the collection of reference of <b>branches</b> available on the SCM declared for the given project.
+	 * @param project the given project
+	 * @return a collection of GIT Ref.
+	 */
+	Collection<Ref> loadBranches(Project project);
+
 	/**
 	 * Retrieve the connection <i>(in any)</i> to the SCM for the current project settings
 	 * @param project the current project
@@ -105,7 +121,7 @@ public interface RepoScanner {
 
 	/**
 	 * <p>
-	 * Finalize the loading of the changes.<br/>
+	 * Finalize the loading of the changes.<br/>bra
 	 * Useless entries will be removed.
 	 * </P>
 	 * <p><font color="red">
@@ -158,13 +174,6 @@ public interface RepoScanner {
 	 */
 	void updateImportance(Project project, RepositoryAnalysis analysis) throws SkillerException;	
 	
-	/**
-	 * Load the branches visible on the associated source control repository, mot prabably Git.
-	 * @param project the current project
-	 * @return the detected array of branches
-	 */
-	String[] loadBranches(Project project);
-
 	/**
 	 * <p>
 	 * Parse the repository <u>already</u> cloned on the file system.<br/>

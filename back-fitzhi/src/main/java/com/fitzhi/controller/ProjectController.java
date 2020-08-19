@@ -20,9 +20,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import org.eclipse.jgit.lib.Ref;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -278,7 +280,12 @@ public class ProjectController {
 			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 
-		String[] branches = this.scanner.loadBranches(project);
+
+		String[] branches = this.scanner.loadBranches(project)
+								.stream()
+								.map(Ref::getName)
+								.collect(Collectors.toList())
+								.toArray(new String[0]);
 
 		return new ResponseEntity<>(branches, headers(), HttpStatus.OK);
 	}
