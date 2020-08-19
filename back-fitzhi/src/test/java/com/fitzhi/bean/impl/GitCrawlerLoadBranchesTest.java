@@ -12,6 +12,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.fitzhi.Global;
 import com.fitzhi.bean.ProjectHandler;
@@ -56,6 +58,8 @@ public class GitCrawlerLoadBranchesTest {
 			.distinct()
 			.forEach(log::debug);
 		Assert.assertTrue(branches.size() > 0);
+		Set<String> uniqueBranches = branches.stream().map(Ref::getName).collect(Collectors.toSet());
+		Assert.assertTrue(uniqueBranches.contains("refs/heads/master"));
 	}
 	
 	@Test
