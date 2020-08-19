@@ -55,6 +55,7 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.transport.FetchConnection;
 import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
@@ -383,6 +384,13 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 					path.toAbsolutePath()));
 		}
 		return path;
+	}
+
+	@Override
+	public String[] loadBranches(Project project) {
+		String[] mockResponse = new String[1];
+		mockResponse[0] = "master";
+		return mockResponse;
 	}
 
 	public static Collection<RevCommit> loadCommits(Project project, Repository repository, AsyncTask tasks) throws SkillerException {
@@ -1373,35 +1381,38 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 
 	@Override
 	public boolean testConnection(Project project) {
+		FetchConnection connection = retrieveFetchConnection(project);
+		return (connection != null);
+	}
+
+	@Override
+	public FetchConnection retrieveFetchConnection(Project project) {
 		try {
 
 			switch (project.getConnectionSettings()) {
-			case Global.USER_PASSWORD_ACCESS:
-			case Global.REMOTE_FILE_ACCESS: {
-				ConnectionSettings settings = connectionSettings(project);
-				URIish uri = new URIish(project.getUrlRepository());
-				Transport transport = Transport.open(uri);
-				transport.setCredentialsProvider(
-						new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()));
-				transport.openFetch();
+				case Global.USER_PASSWORD_ACCESS:
+				case Global.REMOTE_FILE_ACCESS: {
+						ConnectionSettings settings = connectionSettings(project);
+						URIish uri = new URIish(project.getUrlRepository());
+						Transport transport = Transport.open(uri);
+						transport.setCredentialsProvider(
+								new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()));
+						return transport.openFetch();
+					}
+				case Global.NO_USER_PASSWORD_ACCESS: {
+						URIish uri = new URIish(project.getUrlRepository());
+						Transport transport = Transport.open(uri);
+						return transport.openFetch();
+					}
+				default: {
+					throw new ShouldNotPassHereRuntimeException();
+				}
 			}
-				break;
-			case Global.NO_USER_PASSWORD_ACCESS: {
-				URIish uri = new URIish(project.getUrlRepository());
-				Transport transport = Transport.open(uri);
-				transport.openFetch();
-			}
-				break;
-			default: {
-				throw new ShouldNotPassHereRuntimeException();
-			}
-			}
-			return true;
 		} catch (final Exception e) {
 			if (log.isDebugEnabled()) {
 				log.debug(String.format("testConnection('%s') failed !", project.getName()), e);
 			}
-			return false;
+			return null;
 		}
 	}
 

@@ -278,10 +278,9 @@ public class ProjectController {
 			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 
-		String[] mockResponse = new String[1];
-		mockResponse[0] = "master";
+		String[] branches = this.scanner.loadBranches(project);
 
-		return new ResponseEntity<>(mockResponse, headers(), HttpStatus.OK);
+		return new ResponseEntity<>(branches, headers(), HttpStatus.OK);
 	}
 
 	@GetMapping("/all")
