@@ -56,7 +56,7 @@ public class ProjectControllerUpdateGitSettingsProjectTest {
 		project1789.setActive(true);
 		project1789.setConnectionSettings(Global.NO_USER_PASSWORD_ACCESS);
 		project1789.setUrlRepository("https://github.com/fitzhi/application.git");
-		project1789.setBranchName("release-x.x");
+		project1789.setBranch("release-x.x");
 		projectHandler.addNewProject(project1789);
 	}
 
@@ -65,7 +65,7 @@ public class ProjectControllerUpdateGitSettingsProjectTest {
 	public void test() throws Exception {
 
 		Project project = projectHandler.get(1789);
-		project.setBranchName("master");
+		project.setBranch("master");
 
 		
 		this.mvc.perform(put("/api/project/1789")
@@ -73,7 +73,7 @@ public class ProjectControllerUpdateGitSettingsProjectTest {
 			.content(gson.toJson(project)))
 			.andExpect(status().isNoContent());
 		project = projectHandler.get(1789);
-		Assert.assertEquals("master", project.getBranchName());
+		Assert.assertEquals("master", project.getBranch());
 		
 	}
 

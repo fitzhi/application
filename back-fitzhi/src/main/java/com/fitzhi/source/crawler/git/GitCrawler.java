@@ -337,14 +337,14 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 		if (execClone) {
 			if (settings.isPublicRepository()) {
 				Git.cloneRepository().setDirectory(path.toAbsolutePath().toFile()).setURI(settings.getUrl())
-					.setBranch(project.getBranchName())
+					.setBranch(project.getBranch())
 					.setProgressMonitor(new CustomProgressMonitor())
 					.call();
 			} else {
 				Git.cloneRepository().setDirectory(path.toAbsolutePath().toFile()).setURI(settings.getUrl())
 						.setCredentialsProvider(
 								new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()))
-						.setBranch(project.getBranchName())
+						.setBranch(project.getBranch())
 						.setProgressMonitor(new CustomProgressMonitor()).call();
 
 			}

@@ -58,7 +58,7 @@ public @Data class Project implements Serializable {
 	/**
 	 * The branch name. By default, the master branch is used.
 	 */
-	private String branchName = "master";
+	private String branch;
 	
 	/**
 	 * The repository URL of the project
