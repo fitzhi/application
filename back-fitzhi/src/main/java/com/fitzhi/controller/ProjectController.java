@@ -20,6 +20,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
@@ -280,10 +281,23 @@ public class ProjectController {
 			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 
+		final String REF_HEADS = "refs/heads/";
+
+		Function<String, String> removeHeader  = (String s) -> {
+			if (s.indexOf(REF_HEADS) != 0) {
+				log.error("Unexpected ref name %s", s);
+				return s;
+			}
+			return s.substring(REF_HEADS.length());
+		};
 
 		String[] branches = this.scanner.loadBranches(project)
 								.stream()
+								.map(Ref::getLeaf)
 								.map(Ref::getName)
+								.filter(s -> s.contains(REF_HEADS))
+								.map(removeHeader)
+								.distinct()
 								.collect(Collectors.toList())
 								.toArray(new String[0]);
 

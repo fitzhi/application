@@ -55,6 +55,7 @@ public class GitCrawlerLoadBranchesTest {
 		branches.stream()
 			.map(Ref::getLeaf)
 			.map(Ref::getName)
+			.filter(s -> s.contains("refs/heads/"))
 			.distinct()
 			.forEach(log::debug);
 		Assert.assertTrue(branches.size() > 0);
