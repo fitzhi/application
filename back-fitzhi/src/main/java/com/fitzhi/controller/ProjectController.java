@@ -16,6 +16,7 @@ import static com.fitzhi.Global.deepClone;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -260,7 +261,7 @@ public class ProjectController {
 
 		Project project = projectHandler.get(idProject);
 		if (project == null) {
-			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 
 		return new ResponseEntity<>(project.getSkills().values(), headers(), HttpStatus.OK);
@@ -278,7 +279,7 @@ public class ProjectController {
 
 		Project project = projectHandler.get(idProject);
 		if (project == null) {
-			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 
 		final String REF_HEADS = "refs/heads/";
@@ -291,7 +292,13 @@ public class ProjectController {
 			return s.substring(REF_HEADS.length());
 		};
 
-		String[] branches = this.scanner.loadBranches(project)
+		Collection<Ref> unfiltered_branches = this.scanner.loadBranches(project);
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("%d branches retrieved", unfiltered_branches.size()));
+			unfiltered_branches.stream().map(Ref::getName).forEach(log::debug);;
+		}			
+		
+		String[] branches = unfiltered_branches
 								.stream()
 								.map(Ref::getLeaf)
 								.map(Ref::getName)
@@ -300,7 +307,12 @@ public class ProjectController {
 								.distinct()
 								.collect(Collectors.toList())
 								.toArray(new String[0]);
-
+								
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("%d branches returned", branches.length));
+			Arrays.stream(branches).forEach(log::debug);
+		}			
+						
 		return new ResponseEntity<>(branches, headers(), HttpStatus.OK);
 	}
 
