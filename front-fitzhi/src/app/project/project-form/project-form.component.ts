@@ -807,6 +807,19 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	}
 
+	onUrlRepositoryChange() {
+		if (traceOn()) {
+			console.log(
+				'Leaving the field for the URL repository width value %s, replacing the value %s',
+				this.profileProject.get('urlRepository').value, this.projectService.project.urlRepository);
+		}
+		if (this.profileProject.get('urlRepository').value !== this.projectService.project.urlRepository) {
+			this.projectService.loadBranches();
+			this.messageService.info('Please update your project to retrieve the related branches');
+		}
+		
+	}
+
 	/**
 	 * Test the connection settings.
 	 */

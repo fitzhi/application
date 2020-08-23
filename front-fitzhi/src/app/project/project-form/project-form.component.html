@@ -154,9 +154,15 @@
 						</div>
 						<div class="d-flex  align-items-center flex-row">
 							<label for="urlRepository" class="label_git_repo">Repository&nbsp;:&nbsp;</label>
-							<input type="text" class="form-control" id="urlRepository" name="urlRepository"
+							<input type="text" 
+								class="form-control" 
+								id="urlRepository" 
+								name="urlRepository"
 								[readonly]="!projectService.project.active"
-								placeholder="Repository URL" value="" formControlName="urlRepository" />
+								placeholder="Repository URL" 
+								value="" 
+								formControlName="urlRepository"
+								(blur)="onUrlRepositoryChange()" />
 						</div>
 						<div class="d-flex  align-items-center flex-row lab_and_row_repository">
 							<app-branch-selector (messengerOnBranchChange)="onBranchChange($event)"></app-branch-selector>
