@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { Project } from 'src/app/data/project';
 import { ProjectService } from 'src/app/service/project.service';
@@ -74,6 +74,7 @@ describe('ProjectFormComponent', () => {
 				title: 'Java'
 			}
 		]);
+
 
 		fixture.detectChanges();
 	});

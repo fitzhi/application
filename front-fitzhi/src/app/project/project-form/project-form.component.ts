@@ -148,7 +148,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				next: loaded => {
 					if (loaded) {
 						this.loadForm();
-						this.projectService.loadBranches();
+						if (this.projectService.project.urlRepository) {
+							this.projectService.loadBranches();
+						}
 					}
 				}
 			}
