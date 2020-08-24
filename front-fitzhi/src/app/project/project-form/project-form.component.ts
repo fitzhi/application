@@ -23,6 +23,8 @@ import { traceOn } from 'src/app/global';
 import { ProjectSkill } from '../../data/project-skill';
 import { trace } from 'console';
 import { utils } from 'protractor';
+import { GitService } from 'src/app/service/git/git.service';
+import { Repository } from 'src/app/data/git/repository';
 
 @Component({
 	selector: 'app-project-form',
@@ -130,6 +132,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		public referentialService: ReferentialService,
 		public skillService: SkillService,
 		public projectService: ProjectService,
+		public gitService: GitService,
 		public sonarService: SonarService,
 		private router: Router) {
 		super();
@@ -809,17 +812,58 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	}
 
-	onUrlRepositoryChange() {
+	onUrlRepositoryChange(url: string) {
+
+		console.log ('nope');
+
+		this.profileProject.get('urlRepository').setValue(url);
+
+		// No change, no action.
+		if (url === this.projectService.project.urlRepository) {
+			return;
+		}
+		
+		const apiUrl = this.gitService.generateUrlApiGithub(url);
+		
+		
 		if (traceOn()) {
 			console.log(
-				'Leaving the field for the URL repository width value %s, replacing the value %s',
-				this.profileProject.get('urlRepository').value, this.projectService.project.urlRepository);
+				'Leaving the field for the URL repository with value %s, replacing the value %s',
+				url, this.projectService.project.urlRepository);
 		}
+		
+		this.gitService.connect$(apiUrl)
+			.pipe(
+				take(1),
+				switchMap((repository: Repository) => {
+					if (repository) {
+						return this.gitService.branches$(apiUrl + '/branches', repository.default_branch);
+					} else {
+						//
+						// We cannot access directly the git repository.
+						// We delegate that access to the back-end only important for the analysis
+						this.loadBranchesOnBackend();
+						return EMPTY;
+					}
+				}
+			)).subscribe({
+				next: (branches: string[]) => {
+					if (branches) {
+						this.projectService.branches$.next(branches);
+					} else {
+						// If we cannot retrieve the array of branches,
+						// We delegate that access to the back-end only important for the analysis
+						this.loadBranchesOnBackend();
+					}
+				}
+			});
+	}
+
+	loadBranchesOnBackend() {
 		if (this.profileProject.get('urlRepository').value !== this.projectService.project.urlRepository) {
 			this.projectService.loadBranches();
 			this.messageService.info('Please update your project to retrieve the related branches');
-		}
-		
+		}			
 	}
 
 	/**

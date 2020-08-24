@@ -47,7 +47,7 @@ export class GitService {
    * This function is trying to connect to a GitHub repository with the Rest Rest API 
    * @param url the given API url
    */
-  public connect$(url: string) {
+  public connect$(url: string): Observable<Repository> {
     const headers = new HttpHeaders();
 		headers.set('Accept', this.headerAccept);
     return this.httpClient.get(url, { headers: headers, responseType: 'json' })
@@ -76,6 +76,7 @@ export class GitService {
    * @param defaultBranch the default branch, if (for any reason) the HTTP get failed.
    */
   public branches$(url: string, defaultBranch: string): Observable<string[]> {
+
     const headers = new HttpHeaders();
 		headers.set('Accept', this.headerAccept);
     return this.httpClient.get(url, { headers: headers, responseType: 'json' })
@@ -88,7 +89,7 @@ export class GitService {
         switchMap(
           (branches: Branch[]) => of(branches.map(branch => branch.name).sort(
             function(a, b) {
-              return a.toLocaleLowerCase().localeCompare(b.toLocaleLowerCase())
+              return a.toLowerCase().localeCompare(b.toLowerCase())
             }))),
           catchError(error => {
             if (traceOn()) {

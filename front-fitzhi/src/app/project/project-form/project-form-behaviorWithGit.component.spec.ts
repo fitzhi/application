@@ -17,14 +17,19 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Component } from '@angular/core';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { GitService } from 'src/app/service/git/git.service';
+import { Repository } from 'src/app/data/git/repository';
 import { BranchComponent } from './branch/branch.component';
+import { By } from '@angular/platform-browser';
 
 describe('ProjectFormComponent', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
 	let projectService: ProjectService;
+	let gitService: GitService;
 	let backendSetupService: BackendSetupService;
 	let httpTestingController: HttpTestingController;
+	const NO_USER_PASSWORD_ACCESS = 3;
 
 	@Component({
 		selector: 'app-project-component',
@@ -39,9 +44,9 @@ describe('ProjectFormComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ ProjectFormComponent, TechxhiMedalComponent, QuotationBadgeComponent, AuditGraphicBadgeComponent,
+			declarations: [ProjectFormComponent, TechxhiMedalComponent, QuotationBadgeComponent, AuditGraphicBadgeComponent,
 				TestHostComponent, BranchComponent],
-			providers: [ReferentialService, CinematicService],
+			providers: [ReferentialService, CinematicService, GitService],
 			imports: [
 					MatButtonToggleModule, MatCheckboxModule, HttpClientTestingModule, FormsModule, ReactiveFormsModule,
 					MatDialogModule, RouterTestingModule
@@ -51,6 +56,8 @@ describe('ProjectFormComponent', () => {
 	}));
 
 	beforeEach(() => {
+
+		gitService = TestBed.get(GitService);
 
 		backendSetupService = TestBed.get(BackendSetupService);
 		backendSetupService.saveUrl('URL_OF_SERVER');
@@ -65,6 +72,9 @@ describe('ProjectFormComponent', () => {
 		project.audit = {};
 		projectService = TestBed.get(ProjectService);
 		projectService.project = project;
+		project.urlRepository = null;
+		project.connectionSettings = NO_USER_PASSWORD_ACCESS;
+	
 		projectService.projectLoaded$ = new BehaviorSubject(true);
 
 		// We do not need the handle the skill retrieval.
@@ -75,45 +85,56 @@ describe('ProjectFormComponent', () => {
 				title: 'Java'
 			}
 		]);
-
-
 		fixture.detectChanges();
 	});
 
-	it('Should be created without error', () => {
+	it('Handling the GIT repository for a correct URL :-)', async () => {
+
+		const spyConnect = spyOn(gitService, 'connect$')
+			.and.callThrough()
+			.and.returnValue(of(new Repository()));
+		
+		const spyBranches = spyOn(gitService, 'branches$')
+			.and.callThrough()
+			.and.returnValue(of(['master', 'release']));
+
+		const urlRepositoryInput = fixture.debugElement.query(By.css('#urlRepository'));
+		console.log ('Former url', urlRepositoryInput.nativeElement.value);
+		urlRepositoryInput.triggerEventHandler('blur', 'https://github.com/fitzhi/application' );
+		fixture.detectChanges();
+
+		projectService.branches$.subscribe({
+			next: branches => {
+				expect(branches[0]).toBe('master');
+				expect(branches[1]).toBe('release');
+			}
+		});
+
+	});
+
+	it('Handling the GIT repository for a wrong URL :-(', async(() => {
+
 		expect(component).toBeTruthy();
-	});
 
-	it('Creation of a new project', () => {
-		const spy = spyOn(projectService, 'createNewProject').and.callThrough();
-
-		// We force to a new project.
-		projectService.project.id = -1;
-
+		// We simulate that the URL is wrong.
+		const spyConnect = spyOn(gitService, 'connect$')
+			.and.callThrough()
+			.and.returnValue(of(null));
+		
+		// We should not call the method gitService.branches$
+		const spyBranches = spyOn(gitService, 'branches$')
+			.and.throwError('Should not called branches$');
+	
+		const urlRepositoryInput = fixture.debugElement.query(By.css('#urlRepository'));
+		console.log ('Former url', urlRepositoryInput.nativeElement.value);
+		urlRepositoryInput.triggerEventHandler('blur', 'https://github.com/fitzhi/application');
 		fixture.detectChanges();
-		const button = fixture.debugElement.nativeElement.querySelector('#buttonOk');
-		button.click();
+		
+		const reqBackend = httpTestingController.expectOne('URL_OF_SERVER/api/project/branches/1789');
+		reqBackend.flush(['backend/master']);
 
-		const creationUrl = httpTestingController.expectOne('URL_OF_SERVER/api/project');
-		creationUrl.flush(null);
 
-		fixture.detectChanges();
-		expect(component).toBeTruthy();
-	});
-
-	it('Update of an existing project', () => {
-		const spy = spyOn(projectService, 'updateCurrentProject').and.callThrough();
-
-		fixture.detectChanges();
-		const button = fixture.debugElement.nativeElement.querySelector('#buttonOk');
-		button.click();
-
-		const creationUrl = httpTestingController.expectOne('URL_OF_SERVER/api/project/1789');
-		creationUrl.flush(null);
-
-		fixture.detectChanges();
-		expect(component).toBeTruthy();
-	});
+	}));
 
 	afterEach(() => {
 		httpTestingController.verify();

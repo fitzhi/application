@@ -162,7 +162,7 @@
 								placeholder="Repository URL" 
 								value="" 
 								formControlName="urlRepository"
-								(blur)="onUrlRepositoryChange()" />
+								(blur)="onUrlRepositoryChange($event)" />
 						</div>
 						<div class="d-flex  align-items-center flex-row lab_and_row_repository">
 							<app-branch-selector (messengerOnBranchChange)="onBranchChange($event)"></app-branch-selector>

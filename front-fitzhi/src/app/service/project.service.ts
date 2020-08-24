@@ -487,6 +487,10 @@ export class ProjectService extends InternalService {
 	 */
 	public loadBranches() {
 
+		if (traceOn()) {
+			console.log ('loading the branches...');
+		}
+		
 		// The project is not already created.
 		if (!this.project) {
 			this.branches$.next([]);
