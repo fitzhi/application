@@ -820,14 +820,11 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		if (!url) {
 			return;
 		}
-
-		this.profileProject.get('urlRepository').setValue(url);
-
-		// No change, no action.
-		if (url === this.projectService.project.urlRepository) {
-			return;
+		if (this.profileProject.get('urlRepository') !== url) {
+			this.projectService.branches$.next(['master']);
+			this.profileProject.get('urlRepository').setValue(url);
 		}
-		
+
 		const apiUrl = this.gitService.generateUrlApiGithub(url);
 				
 		if (traceOn()) {
