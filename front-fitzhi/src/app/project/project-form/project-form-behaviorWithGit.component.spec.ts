@@ -72,7 +72,7 @@ describe('ProjectFormComponent', () => {
 		project.audit = {};
 		projectService = TestBed.get(ProjectService);
 		projectService.project = project;
-		project.urlRepository = null;
+		project.urlRepository = '';
 		project.connectionSettings = NO_USER_PASSWORD_ACCESS;
 	
 		projectService.projectLoaded$ = new BehaviorSubject(true);
@@ -100,7 +100,7 @@ describe('ProjectFormComponent', () => {
 
 		const urlRepositoryInput = fixture.debugElement.query(By.css('#urlRepository'));
 		console.log ('Former url', urlRepositoryInput.nativeElement.value);
-		urlRepositoryInput.triggerEventHandler('blur', 'https://github.com/fitzhi/application' );
+		urlRepositoryInput.triggerEventHandler('blur', {target: {value:'https://github.com/fitzhi/application' }} );
 		fixture.detectChanges();
 
 		projectService.branches$.subscribe({
@@ -114,8 +114,6 @@ describe('ProjectFormComponent', () => {
 
 	it('Handling the GIT repository for a wrong URL :-(', async(() => {
 
-		expect(component).toBeTruthy();
-
 		// We simulate that the URL is wrong.
 		const spyConnect = spyOn(gitService, 'connect$')
 			.and.callThrough()
@@ -127,12 +125,13 @@ describe('ProjectFormComponent', () => {
 	
 		const urlRepositoryInput = fixture.debugElement.query(By.css('#urlRepository'));
 		console.log ('Former url', urlRepositoryInput.nativeElement.value);
-		urlRepositoryInput.triggerEventHandler('blur', 'https://github.com/fitzhi/application');
+		urlRepositoryInput.triggerEventHandler('blur', {target: {value:'https://github.com/fitzhi/application'}});
 		fixture.detectChanges();
 		
 		const reqBackend = httpTestingController.expectOne('URL_OF_SERVER/api/project/branches/1789');
 		reqBackend.flush(['backend/master']);
 
+		expect(component).toBeTruthy();
 
 	}));
 

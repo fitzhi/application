@@ -812,9 +812,14 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	}
 
-	onUrlRepositoryChange(url: string) {
+	onUrlRepositoryChange($event: any) {
 
-		console.log ('nope');
+		const url = ($event.target) ? $event.target.value : null;
+
+		// Empty URL, nothing to do
+		if (!url) {
+			return;
+		}
 
 		this.profileProject.get('urlRepository').setValue(url);
 
@@ -824,8 +829,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		}
 		
 		const apiUrl = this.gitService.generateUrlApiGithub(url);
-		
-		
+				
 		if (traceOn()) {
 			console.log(
 				'Leaving the field for the URL repository with value %s, replacing the value %s',
@@ -839,14 +843,21 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					if (repository) {
 						return this.gitService.branches$(apiUrl + '/branches', repository.default_branch);
 					} else {
+						this.messageService.info('Please update your project to retrieve the related branches');
 						//
 						// We cannot access directly the git repository.
 						// We delegate that access to the back-end only important for the analysis
 						this.loadBranchesOnBackend();
 						return EMPTY;
 					}
-				}
-			)).subscribe({
+				}),
+				catchError(error => {
+					if (traceOn()) {
+						console.log('error', error);
+					}
+					return EMPTY;
+				})
+			).subscribe({
 				next: (branches: string[]) => {
 					if (branches) {
 						this.projectService.branches$.next(branches);
@@ -862,7 +873,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	loadBranchesOnBackend() {
 		if (this.profileProject.get('urlRepository').value !== this.projectService.project.urlRepository) {
 			this.projectService.loadBranches();
-			this.messageService.info('Please update your project to retrieve the related branches');
 		}			
 	}
 

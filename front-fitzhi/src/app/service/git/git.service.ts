@@ -6,6 +6,7 @@ import { of, Observable, EMPTY } from 'rxjs';
 import { Repository } from 'src/app/data/git/repository';
 import { Branch } from 'src/app/data/git/branch';
 import { trace } from 'console';
+import { MessageService } from 'src/app/interaction/message/message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,8 @@ export class GitService {
   private headerAccept = 'application/vnd.github.v3+json';
 
   constructor(		
-    private httpClient: HttpClient) { }
+    private httpClient: HttpClient,
+    private messageService: MessageService) { }
 
 
   /**
@@ -34,7 +36,7 @@ export class GitService {
    * 
    * @param httpUrl the HTTP url used to clone the repository.
    */
-  generateUrlApiGithub(httpUrl: string): string {
+  generateUrlApiGithub(httpUrl: String): string {
     const start = httpUrl.toLowerCase().indexOf('github.com') + 'github.com'.length;
     const res = 'https://api.github.com/repos' + httpUrl.substring(start); 
     if (traceOn()) {
@@ -48,6 +50,9 @@ export class GitService {
    * @param url the given API url
    */
   public connect$(url: string): Observable<Repository> {
+
+    console.log ('connect$', url);
+
     const headers = new HttpHeaders();
 		headers.set('Accept', this.headerAccept);
     return this.httpClient.get(url, { headers: headers, responseType: 'json' })
@@ -62,6 +67,13 @@ export class GitService {
           catchError(error => {
             if (traceOn()) {
               console.log ('Error with url ' + url, error)
+            }
+            if (error.status === 404) {
+              if (traceOn()) {
+                console.log('The url ' + url + ' is un recheable from here. It migth be Ok');
+              }
+            } else {
+              setTimeout(() => this.messageService.error('Unattempted error ' + error.status + ' with url ' + url), 0);
             }
             return of(null);
           })
