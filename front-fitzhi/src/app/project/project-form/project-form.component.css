@@ -160,3 +160,17 @@ div.sonarSolution, div.codeFactorSolution, div.textarea-skills {
 .label_git_repo {
 	margin-top: 5px;
 }
+
+div.message-git {
+	background-color: var(--color-help);
+	margin-top: 4px;
+	margin-bottom: 4px;
+	margin-left: 40px;
+	margin-right: 40px;
+	padding-top: 2px;
+	padding-left: 10px;
+}
+div.message-git p {
+	color: var(--color-warning);
+	margin-bottom: 0px;
+}

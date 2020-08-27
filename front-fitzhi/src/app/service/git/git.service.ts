@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { traceOn } from 'src/app/global';
 import { tap, switchMap, catchError, map } from 'rxjs/operators';
-import { of, Observable, EMPTY } from 'rxjs';
+import { of, Observable, EMPTY, BehaviorSubject } from 'rxjs';
 import { Repository } from 'src/app/data/git/repository';
 import { Branch } from 'src/app/data/git/branch';
 import { trace } from 'console';
@@ -13,6 +13,12 @@ import { MessageService } from 'src/app/interaction/message/message.service';
 })
 export class GitService {
 
+  /**
+   * This **behaviorSubject** is handling an assistance message given to the end-user,
+   * in which he's invited to save the project in order to get the git branches 
+   */
+  public assistanceMessageGitBranches$ = new BehaviorSubject<boolean>(false);
+  
   private headerAccept = 'application/vnd.github.v3+json';
 
   constructor(		

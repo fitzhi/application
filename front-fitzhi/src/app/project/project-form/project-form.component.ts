@@ -142,6 +142,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 		this.boundAddSonarProject = this.addSonarProject.bind(this);
 		this.boundRemoveSonarProject = this.removeSonarProject.bind(this);
+
 	}
 
 	ngOnInit() {
@@ -168,6 +169,10 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		}));
 
 		this.cinematicService.setForm(Constants.PROJECT_TAB_FORM, this.router.url);
+
+		// We hide the help message and we clear the list of branches
+		this.projectService.branches$.next([]);
+		this.gitService.assistanceMessageGitBranches$.next(false);
 
 	}
 
@@ -812,6 +817,18 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	}
 
+	/**
+	 * This function is called when end-user change the url of the GIT repository.
+	 * We clear the context.
+	 */
+	clearBranchesContext() {
+		if (traceOn()) {
+			console.log ('Cleaning the GIT branches context');
+		}
+		this.projectService.branches$.next([]);
+		this.gitService.assistanceMessageGitBranches$.next(true);
+	}
+
 	onUrlRepositoryChange($event: any) {
 
 		const url = ($event.target) ? $event.target.value : null;
@@ -833,6 +850,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				url, this.projectService.project.urlRepository);
 		}
 		
+		this.gitService.assistanceMessageGitBranches$.next(false);
 		this.gitService.connect$(apiUrl)
 			.pipe(
 				take(1),
@@ -840,10 +858,10 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					if (repository) {
 						return this.gitService.branches$(apiUrl + '/branches', repository.default_branch);
 					} else {
-						this.messageService.info('Please update your project to retrieve the related branches');
 						//
 						// We cannot access directly the git repository.
 						// We delegate that access to the back-end only important for the analysis
+						//
 						this.loadBranchesOnBackend();
 						return EMPTY;
 					}
@@ -868,6 +886,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	}
 
 	loadBranchesOnBackend() {
+		this.gitService.assistanceMessageGitBranches$.next(true);
 		if (this.profileProject.get('urlRepository').value !== this.projectService.project.urlRepository) {
 			this.projectService.loadBranches();
 		}			
