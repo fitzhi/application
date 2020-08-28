@@ -36,7 +36,8 @@ public class ProjectHandlerSaveProjectTest {
 	
 	@Before
 	public void before() throws SkillerException {
-		projectHandler.addNewProject(new Project (1789, "French revolution"));
+		Project project = new Project (1789, "French revolution");
+		projectHandler.addNewProject(project);
 	}
 	
 	@Test
@@ -145,10 +146,32 @@ public class ProjectHandlerSaveProjectTest {
 		Assert.assertNull(project.getPassword());
 	}	
 	
+	@Test
+	public void testChangeUrlRepository() throws Exception {
+
+		Project projectPrevious = new Project (1789, "French revolution");
+		projectPrevious.setLocationRepository("previous-clone-location");
+		projectPrevious.setUrlRepository("previous-url");
+		projectPrevious.setConnectionSettings(NO_USER_PASSWORD_ACCESS);
+		projectHandler.saveProject(projectPrevious);
+
+		Project project = projectHandler.get(1789);
+		Assert.assertEquals("previous-url", project.getUrlRepository());
+
+		Project projectNew = new Project (1789, "New French revolution");
+		projectNew.setConnectionSettings(NO_USER_PASSWORD_ACCESS);
+		projectNew.setUrlRepository("new-url");
+		projectHandler.saveProject(projectNew);
+
+		project = projectHandler.get(1789);
+		Assert.assertEquals("New French revolution", project.getName());
+		Assert.assertEquals("new-url", project.getUrlRepository());
+		Assert.assertNull(project.getLocationRepository());
+	}
+
 	@After
 	public void after() throws SkillerException {
 		projectHandler.getProjects().remove(1789);
-				
 	}
 	
 }
