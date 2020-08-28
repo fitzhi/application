@@ -195,19 +195,26 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			savedProject.setActive(project.isActive());
 			savedProject.setUrlSonarServer(project.getUrlSonarServer());
 
-			savedProject.setBranch(project.getBranch());
 			savedProject.setUrlCodeFactorIO((project.getUrlCodeFactorIO()));
 			if ((project.getUrlSonarServer() == null) || ("".equals(project.getUrlSonarServer()))) {
 				savedProject.setSonarProjects(new ArrayList<SonarProject>());
 			}			
-
+			
 			// If we change the URL repository, we have to reset the previous clone (if any). 
-			// We force this reconstruction by reseting the clone location repository.
+			// We force this re-construction by reseting the clone location repository.
 			if ( 	(savedProject.getUrlRepository() != null) && 
 					(!savedProject.getUrlRepository().equals(project.getUrlRepository()))) {
-						savedProject.setLocationRepository(null);
+				savedProject.setLocationRepository(null);
 			}
 			
+			// If we change the active branch, we have to reset the previous clone (if any). 
+			// We force this reconstruction by reseting the clone location repository.
+			if ( 	(savedProject.getBranch() != null) && 
+					(!savedProject.getBranch().equals(project.getBranch()))) {
+				savedProject.setLocationRepository(null);
+			}
+			savedProject.setBranch(project.getBranch());
+		
 			savedProject.setConnectionSettings(project.getConnectionSettings());
 			switch (project.getConnectionSettings()) {
 				case USER_PASSWORD_ACCESS:

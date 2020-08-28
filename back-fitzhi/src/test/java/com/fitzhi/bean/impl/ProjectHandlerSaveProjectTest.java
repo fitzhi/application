@@ -169,6 +169,32 @@ public class ProjectHandlerSaveProjectTest {
 		Assert.assertNull(project.getLocationRepository());
 	}
 
+	@Test
+	public void testChangeBranch() throws Exception {
+
+		Project projectPrevious = new Project (1789, "French revolution");
+		projectPrevious.setLocationRepository("clone-location");
+		projectPrevious.setUrlRepository("url");
+		projectPrevious.setConnectionSettings(NO_USER_PASSWORD_ACCESS);
+		projectPrevious.setBranch("old-branch");
+		projectHandler.saveProject(projectPrevious);
+
+		Project project = projectHandler.get(1789);
+		Assert.assertEquals("old-branch", project.getBranch());
+
+		Project projectNew = new Project (1789, "New French revolution");
+		projectNew.setConnectionSettings(NO_USER_PASSWORD_ACCESS);
+		projectNew.setUrlRepository("url");
+		projectNew.setBranch("new-branch");
+		projectHandler.saveProject(projectNew);
+
+		project = projectHandler.get(1789);
+		Assert.assertEquals("New French revolution", project.getName());
+		Assert.assertEquals("url", project.getUrlRepository());
+		Assert.assertEquals("new-branch", project.getBranch());
+		Assert.assertNull(project.getLocationRepository());
+	}
+
 	@After
 	public void after() throws SkillerException {
 		projectHandler.getProjects().remove(1789);
