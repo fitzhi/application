@@ -174,3 +174,8 @@ div.message-git p {
 	color: var(--color-warning);
 	margin-bottom: 0px;
 }
+
+label.alert {
+	width: 100%; 
+	font-size: 10px;
+} 

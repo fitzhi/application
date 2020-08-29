@@ -10,11 +10,22 @@
 			<form class="needs-validation" [formGroup]="profileProject" (ngSubmit)="onSubmit()">
 				<div>
 					<label class="required labelProject" for="project">Project</label>
-					<input type="text" class="form-control required" id="projectName" name="projectName" 
+					<input type="text" 
+						class="form-control required" 
+						id="projectName" 
+						name="projectName" 
 						[readonly]="!projectService.project.active"
-						placeholder="Project name (Required)" value="" required formControlName="projectName" />
+						placeholder="Project name (Required)" 
+						value="" 
+						required 
+						[pattern]="'^[a-zA-Z0-9 \'\-]+$'"
+						formControlName="projectName" />
 				</div>
-
+				<label 
+					*ngIf="projectName.touched && projectName.invalid" 
+					[ngClass]="'alert alert-warning'"> 
+					Project name is accepting only alphabetical characters (a-z A-Z 0-9).
+				</label>
 				<!-- --------------------------------------------------------------------------------------------------------------------
 
 														SKILLS UPDATE
