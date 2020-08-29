@@ -428,6 +428,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		this.myChart.data(response.sunburstData)
 			.width(500)
 			.height(500)
+			.minSliceAngle(2)
 			.label('location')
 			.size('importance')
 			.color('color')
