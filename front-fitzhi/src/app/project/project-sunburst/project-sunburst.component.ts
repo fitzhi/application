@@ -434,9 +434,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			.color('color')
 			(document.getElementById('chart'));
 
-		const dataSourceGhosts = new ProjectGhostsDataSource(this.projectService.project);
-		// Send the unregistered contributors to the panel list
-		dataSourceGhosts.sendUnknowns(response.ghosts);
+		const dataSourceGhosts = new ProjectGhostsDataSource(this.projectService.project, response.ghosts);
 		this.dataSourceGhosts$.next(dataSourceGhosts);
 
 		//

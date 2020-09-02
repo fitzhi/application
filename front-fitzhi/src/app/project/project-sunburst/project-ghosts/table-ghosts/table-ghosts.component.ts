@@ -13,6 +13,7 @@ import { StaffListService } from 'src/app/staff-list-service/staff-list.service'
 import { ProjectService } from 'src/app/service/project.service';
 import { traceOn } from 'src/app/global';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
+import { SunburstCacheService } from '../../service/sunburst-cache.service';
 
 @Component({
 	selector: 'app-table-ghosts',
@@ -55,6 +56,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 		private staffService: StaffService,
 		private projectService: ProjectService,
 		private staffListService: StaffListService,
+		private sunburstCacheService: SunburstCacheService,
 		private messageBoxService: MessageBoxService,
 		private messageService: MessageService) {
 		super();
@@ -74,13 +76,11 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 			}
 		}
 
-		if (this.subscriptions) {
-			if ( (this.staffListService) && (this.staffListService.allStaff$)) {
-				this.subscriptions.add(
-					this.staffListService.allStaff$.subscribe(staff => {
-						this.allStaff = staff;
-				}));
-			}
+		if ((this.staffListService) && (this.staffListService.allStaff$)) {
+			this.subscriptions.add(
+				this.staffListService.allStaff$.subscribe(staff => {
+					this.allStaff = staff;
+			}));
 		}
 	}
 	/**
@@ -170,10 +170,10 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 		if (ghost.technical) {
 			return true;
 		}
-		if (ghost.firstname.length > 0) {
+		if ((ghost.firstname) && (ghost.firstname.length > 0)) {
 			return true;
 		}
-		if (ghost.lastname.length > 0) {
+		if ((ghost.lastname) && (ghost.lastname.length > 0)) {
 			return true;
 		}
 		return false;
@@ -224,6 +224,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 					collaborator.idStaff = staff.idStaff;
 					ghost.staffRecorded = true;
 					this.dataSource.removePseudo(ghost.pseudo);
+					this.sunburstCacheService.clearReponse();
 					this.messageService.success('Staff member ' + staff.firstName + ' ' + staff.lastName + ' saved.');
 					if (traceOn()) {
 						console.log ('Onboarding the staff %d into the project %d', staff.idStaff, this.dataSource.project.id);
