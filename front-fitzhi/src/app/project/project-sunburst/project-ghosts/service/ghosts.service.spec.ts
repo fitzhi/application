@@ -11,17 +11,17 @@ describe('GhostsService', () => {
     service = TestBed.inject(GhostsService);
   });
 
-  it('should transform Frédéric into Frederic', () => {
+  it('tests some combinations with "Frédéric VIDAL"', () => {
 	expect(service).toBeTruthy();
 	expect(service.reduceCharacters('Frédéric')).toBe('frederic')
 	expect(service.reduceCharacters('  Frédéric    VIDAL ')).toBe('frederic vidal')
 	expect(service.reduceCharacters('Frédéric-VIDAL')).toBe('frederic vidal')
   });
 
-/*
-  it('should be handle the staff member Frédéric VIDAL', () => {
-    expect(service).toBeTruthy();
-	const staff: Collaborator = {
+
+  	it('should handle the staff member Frédéric VIDAL', () => {
+		expect(service).toBeTruthy();
+		const staff: Collaborator = {
 		idStaff: 1, firstName: 'Frédéric', lastName: 'VIDAL', login: 'frvidal', nickName: 'frvidal', email: 'frvidal@nope.com',
 		level: 'developer',  active: true, forceActiveState: true, external: false, 
 		missions: [], experiences: [], dateInactive: null, 
@@ -37,7 +37,46 @@ describe('GhostsService', () => {
 		expect(eligibles.length).toBe(2);
 
 	});
-	*/
+
+	it('should handle the staff member Frédéric LOGIBEAU', () => {
+		expect(service).toBeTruthy();
+		const staff: Collaborator = {
+			idStaff: 1, firstName: 'Frédéric', lastName: 'LOGIBEAU', login: 'flogibeau', nickName: 'flogibeau', email: 'flogibeau@nope.com',
+			level: 'developer',  active: true, forceActiveState: true, external: false, 
+			missions: [], experiences: [], dateInactive: null, 
+			application: '', typeOfApplication: 0 
+		};
+
+		const logins = [];
+		logins.push('flogibeau');
+		logins.push('Frederic Logibeau');
+		logins.push('frederic vidal');
+		logins.push('frvidal');
+
+		const eligibles = service.extractMatchingUnknownContributors(logins, staff);
+		expect(eligibles.length).toBe(2);
+
+	});
+	
+	it('should handle the staff member Jean VIDAL', () => {
+		expect(service).toBeTruthy();
+		const staff: Collaborator = {
+			idStaff: 1, firstName: 'Frédéric', lastName: 'VIDAL', login: 'frvidal', nickName: 'frvidal', email: 'frvidal@nope.com',
+			level: 'developer',  active: true, forceActiveState: true, external: false, 
+			missions: [], experiences: [], dateInactive: null, 
+			application: '', typeOfApplication: 0 
+		};
+
+		const logins = [];
+		logins.push('fvidal');
+		logins.push('tintin');
+		logins.push('jean vidal');
+
+		const eligibles = service.extractMatchingUnknownContributors(logins, staff);
+		expect(eligibles.length).toBe(0);
+
+	});
+
 });
 
 

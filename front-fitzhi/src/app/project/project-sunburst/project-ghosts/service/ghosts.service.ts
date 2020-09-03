@@ -25,7 +25,23 @@ export class GhostsService {
    * @param staff the new staff to be evaluated with the remaining collection of logins
    */
   extractMatchingUnknownContributors(logins: string[], staff: Collaborator) {
-    return [];
+
+    const firstName = this.reduceCharacters(staff.firstName);
+    const lastName = this.reduceCharacters(staff.lastName);
+    const login = this.reduceCharacters(staff.login);
+
+    const matchedLogins = [];
+
+    logins.map(candidate => this.reduceCharacters(candidate))
+          .forEach (candidate => {
+              if (   (candidate === login)
+                ||   (candidate === (firstName + ' ' + lastName))
+                ||   (candidate === (lastName + ' ' + firstName))) {
+                  matchedLogins.push(candidate);
+              }
+    });
+
+    return matchedLogins;
   }
 
   /**
