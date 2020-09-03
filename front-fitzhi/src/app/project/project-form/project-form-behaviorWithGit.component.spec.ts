@@ -112,7 +112,7 @@ describe('ProjectFormComponent', () => {
 
 	});
 
-	it('Handling the GIT repository for a wrong URL :-(', async(() => {
+	it('Handling the GIT repository for a wrong URL :-(', () => {
 
 		// We simulate that the URL is wrong.
 		const spyConnect = spyOn(gitService, 'connect$')
@@ -133,7 +133,7 @@ describe('ProjectFormComponent', () => {
 
 		expect(component).toBeTruthy();
 
-	}));
+	});
 
 	afterEach(() => {
 		httpTestingController.verify();
