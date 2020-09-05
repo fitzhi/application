@@ -9,15 +9,12 @@ import { BehaviorSubject } from 'rxjs';
 export class ProjectGhostsDataSource extends MatTableDataSource<Unknown> {
 
 
-	public project: Project;
-
 	/**
      * @param project current project
      * @param ghosts list of unregistered contributors.
      */
-	constructor(project: Project, ghosts: Unknown[]) {
+	constructor(ghosts: Unknown[]) {
 		super(ghosts);
-		this.project = project;
 		if (traceOn()) {
 			console.groupCollapsed	(ghosts.length + ' ghosts identified');
 			ghosts.forEach(g => {
@@ -26,11 +23,6 @@ export class ProjectGhostsDataSource extends MatTableDataSource<Unknown> {
 			console.groupEnd();
 		}
 	}
-/*
-	connect(): BehaviorSubject<Unknown[]> {
-		return this.ghosts$;
-	}
-*/
 	/**
 	 * Update the datasource with new data.
 	 * @param ghosts the new ghosts to be displayed.

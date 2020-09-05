@@ -79,8 +79,8 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 					if (traceOn()) {
 						console.log(
 							'Project %d %s reveived %s in the table of ghosts component',
-							dataSource.project.id,
-							dataSource.project.name,
+							this.projectService.project.id,
+							this.projectService.project.name,
 							dataSource.data.length);
 					}
 					this.dataSource = dataSource;
@@ -113,7 +113,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 
 		}
 		this.projectService.updateGhost (
-			this.dataSource.project.id,
+			this.projectService.project.id,
 			unknown.pseudo,
 			-1,
 			unknown.technical)
@@ -262,9 +262,9 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 					this.sunburstCacheService.clearReponse();
 					this.messageService.success('Staff member ' + staff.firstName + ' ' + staff.lastName + ' saved.');
 					if (traceOn()) {
-						console.log ('Onboarding the staff %d into the project %d', staff.idStaff, this.dataSource.project.id);
+						console.log ('Onboarding the staff %d into the project %d', staff.idStaff, this.projectService.project.id);
 					}
-					this.projectService.onBoardStaffInProject(this.dataSource.project.id,  staff.idStaff);
+					this.projectService.onBoardStaffInProject(this.projectService.project.id,  staff.idStaff);
 				}
 			});
 	}
@@ -291,7 +291,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 			ghost.login = selectedStaff[0].login;
 			ghost.idStaff = ghost.staffRelated.idStaff;
 			this.projectService.updateGhost (
-				this.dataSource.project.id,
+				this.projectService.project.id,
 				ghost.pseudo,
 				ghost.idStaff,
 				false)
@@ -307,7 +307,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 			// If the ghost was already associated, we reset this association
 			if (ghost.idStaff  > 0) {
 				this.projectService.updateGhost (
-					this.dataSource.project.id,
+					this.projectService.project.id,
 					ghost.pseudo,
 					-1,
 					false)

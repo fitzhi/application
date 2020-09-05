@@ -42,7 +42,7 @@ describe('TableGhostsComponent', () => {
 			
 			projectService.project = new Project(1789, 'Revolutionary project');
 
-			this.projectGhostsDataSource = new ProjectGhostsDataSource(projectService.project, 
+			this.projectGhostsDataSource = new ProjectGhostsDataSource(
 				[
 					{
 						idStaff: -1,

@@ -434,7 +434,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			.color('color')
 			(document.getElementById('chart'));
 
-		const dataSourceGhosts = new ProjectGhostsDataSource(this.projectService.project, response.ghosts);
+		const dataSourceGhosts = new ProjectGhostsDataSource(response.ghosts);
 		this.dataSourceGhosts$.next(dataSourceGhosts);
 
 		//
