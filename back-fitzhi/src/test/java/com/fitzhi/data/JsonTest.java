@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
 import com.fitzhi.data.internal.AuditTopic;
+import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.SkillDetectorType;
 import com.fitzhi.data.internal.Staff;
 import com.google.gson.Gson;
@@ -29,6 +30,15 @@ public class JsonTest extends TestCase {
 		
 		Gson g = new Gson();
 		LoggerFactory.getLogger(JsonTest.class).debug(g.toJson(collab)); 
+	}
+
+	@Test
+	public void testSerializeProject() {
+		Project project = new Project(1789, "Revolution");
+		
+		Gson g = new Gson();
+		System.out.println(g.toJson(project));
+		LoggerFactory.getLogger(JsonTest.class).debug(g.toJson(project)); 
 	}
 
 	@Test

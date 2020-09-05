@@ -5,7 +5,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { FormsModule } from '@angular/forms';
 import { InitTest } from 'src/app/test/init-test';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { BehaviorSubject, of } from 'rxjs';
 import { Unknown } from '../../../../data/unknown';
 import { Collaborator } from 'src/app/data/collaborator';
@@ -36,28 +36,14 @@ describe('TableGhostsComponent', () => {
 
 		public projectGhostsDataSource: ProjectGhostsDataSource;
 
-		constructor() {
+		@ViewChild(TableGhostsComponent) tableGhostsComponent: TableGhostsComponent;
+		
+		constructor(projectService: ProjectService) {
 			
-			const project = new Project(1789, 'Revolutionary project');
+			projectService.project = new Project(1789, 'Revolutionary project');
 
-			this.projectGhostsDataSource = new ProjectGhostsDataSource(project, []);
-
-			this.projectGhostsDataSource.update(
+			this.projectGhostsDataSource = new ProjectGhostsDataSource(projectService.project, 
 				[
-					{
-						idStaff: -1,
-						pseudo: 'frvidal',
-						login: '',
-						firstname: '',
-						lastname: '',
-						fullName: '',
-						technical:false,
-						active: false,
-						external: false,
-						action: '',
-						staffRelated: new Collaborator(),
-						staffRecorded: false,				
-					},
 					{
 						idStaff: -1,
 						pseudo: 'chaddock',
@@ -71,7 +57,21 @@ describe('TableGhostsComponent', () => {
 						action: '',
 						staffRelated: new Collaborator(),
 						staffRecorded: false,				
-					}
+					},
+					{
+						idStaff: -1,
+						pseudo: 'frvidal',
+						login: '',
+						firstname: 'f',
+						lastname: 'l',
+						fullName: '',
+						technical:false,
+						active: false,
+						external: false,
+						action: '',
+						staffRelated: new Collaborator(),
+						staffRecorded: false,				
+					},
 				]
 			);
 			this.dataSourceGhosts$ = new BehaviorSubject(this.projectGhostsDataSource);
@@ -95,6 +95,32 @@ describe('TableGhostsComponent', () => {
 		fixture.detectChanges();
 	});
 
+	it('should be dynamic', () => {
+		expect(component).toBeTruthy();
+		component.projectGhostsDataSource.data.push(
+			{
+				idStaff: -1,
+				pseudo: 'mac',
+				login: '',
+				firstname: 'Emmanuel',
+				lastname: 'Macron',
+				fullName: '',
+				technical:false,
+				active: false,
+				external: false,
+				action: '',
+				staffRelated: new Collaborator(),
+				staffRecorded: false,				
+			}
+		)
+		console.log ('Data length', component.projectGhostsDataSource.data.length);
+		component.tableGhostsComponent.renderRows();
+		fixture.detectChanges();
+
+		const buttonNewLine = fixture.debugElement.nativeElement.querySelector('#addStaff-2');
+		expect(buttonNewLine).toBeDefined();
+	});
+
 	it('Create a simple collaborator', () => {
 		expect(component).toBeTruthy();
 
@@ -113,7 +139,15 @@ describe('TableGhostsComponent', () => {
 					level: 'Developper'
 				}));
 
-		
+		const button = fixture.debugElement.nativeElement.querySelector('#addStaff-1');
+		expect(button).toBeDefined();
+		button.click();
+		fixture.detectChanges();
+
+		const buttonDeleted = fixture.debugElement.nativeElement.querySelector('#addStaff-1');
+		expect(buttonDeleted).toBeNull();
+	
 	});
+	
 });
 

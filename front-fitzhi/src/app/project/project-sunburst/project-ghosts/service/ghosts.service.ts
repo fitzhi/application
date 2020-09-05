@@ -1,12 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Collaborator } from 'src/app/data/collaborator';
+import { ProjectGhostsDataSource } from '../project-ghosts-data-source';
+import { traceOn } from 'src/app/global';
+import { StaffFormComponent } from 'src/app/tabs-staff/staff-form/staff-form.component';
+import { Unknown } from 'src/app/data/unknown';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GhostsService {
 
+  public ghosts: Unknown[] = [];
+
   constructor() { }
+
+  /**
+   * Update the array of actual ghosts.
+   * @param ghosts the new list of ghosts
+   */
+  updateGhosts(ghosts: Unknown[]) {
+    this.ghosts = ghosts;
+  }
 
   /**
    * This method is reproducing _in the Angular environment_
@@ -21,10 +35,10 @@ export class GhostsService {
    * If you have a ghost with **Frederic VIDAL** as login, this ghost should be associated with this collaborator.
    * 
    * 
-   * @param logins the array of eligible logins which can be linked with the given staff
+   * @param pseudos the array of eligible pseudos which can be linked with the given staff
    * @param staff the new staff to be evaluated with the remaining collection of logins
    */
-  extractMatchingUnknownContributors(logins: string[], staff: Collaborator) {
+  extractMatchingUnknownContributors(pseudos: string[], staff: Collaborator) {
 
     const firstName = this.reduceCharacters(staff.firstName);
     const lastName = this.reduceCharacters(staff.lastName);
@@ -32,7 +46,7 @@ export class GhostsService {
 
     const matchedLogins = [];
 
-    logins.map(candidate => this.reduceCharacters(candidate))
+    pseudos.map(candidate => this.reduceCharacters(candidate))
           .forEach (candidate => {
               if (   (candidate === login)
                 ||   (candidate === (firstName + ' ' + lastName))
@@ -44,11 +58,27 @@ export class GhostsService {
     return matchedLogins;
   }
 
+	/**
+	 * Remove the alternate ghosts who are linked to the given staff. 
+	 * @param staff the given collaborator
+	 */
+	removeAlternateGhosts(dataSource: ProjectGhostsDataSource, staff: Collaborator) {
+    const pseudos = dataSource.data.map(ghost => ghost.pseudo);
+    const matchingPseudos = this.extractMatchingUnknownContributors(pseudos, staff);
+    return matchingPseudos;
+  }
+    
+
   /**
    * Replace the character with accent with its corresponding character without character.
    * @param str the string to updated.
    */
   reduceCharacters (str: string): string {
+
+    if (!str) {
+      return str;
+    }
+
     var map = {
         ' ' : '-|_',
         'a' : 'á|à|ã|â|À|Á|Ã|Â',

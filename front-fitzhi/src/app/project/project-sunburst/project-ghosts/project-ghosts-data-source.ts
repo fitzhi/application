@@ -9,10 +9,6 @@ import { BehaviorSubject } from 'rxjs';
 export class ProjectGhostsDataSource extends MatTableDataSource<Unknown> {
 
 
-	public ghosts: Unknown[];
-
-	public ghosts$ = new BehaviorSubject<Unknown[]>([]);
-
 	public project: Project;
 
 	/**
@@ -20,7 +16,7 @@ export class ProjectGhostsDataSource extends MatTableDataSource<Unknown> {
      * @param ghosts list of unregistered contributors.
      */
 	constructor(project: Project, ghosts: Unknown[]) {
-		super();
+		super(ghosts);
 		this.project = project;
 		if (traceOn()) {
 			console.groupCollapsed	(ghosts.length + ' ghosts identified');
@@ -29,32 +25,33 @@ export class ProjectGhostsDataSource extends MatTableDataSource<Unknown> {
 			});
 			console.groupEnd();
 		}
-		this.ghosts = ghosts;
-		this.ghosts$.next(this.ghosts);
 	}
-
+/*
 	connect(): BehaviorSubject<Unknown[]> {
 		return this.ghosts$;
 	}
-
+*/
 	/**
 	 * Update the datasource with new data.
 	 * @param ghosts the new ghosts to be displayed.
 	 */
 	update(ghosts: Unknown[]) {
-		this.ghosts = ghosts;
-		this.ghosts$.next(this.ghosts);
+		this.data = ghosts;
 	}
 
 	/**
 	 * @param pseudo remove the ghost associated to the passed pseudo.
 	 */
 	removePseudo (pseudo: string) {
-		const indexPseudo = this.ghosts.findIndex(ghost => pseudo === ghost.pseudo);
+		const indexPseudo = this.data.findIndex(ghost => pseudo === ghost.pseudo);
 		if (indexPseudo === -1) {
-			console.error ('Pseudo ' + pseudo + ' has disappeared from ths ghosts list');
+			console.error ('Pseudo ' + pseudo + ' has disappeared from the ghosts list');
+		} else {
+			if (traceOn()) {
+				console.log('the pseudo %s has been removed @ %d.', pseudo, indexPseudo);
+			}
+			this.data.splice(indexPseudo, 1);
 		}
-		this.ghosts.splice(indexPseudo, 1);
-		this.ghosts$.next(this.ghosts);
 	}
+
 }
