@@ -885,10 +885,21 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			});
 	}
 
+	/**
+	 * We load the branch from the back-end.
+	 * 
+	 * The project has to be already saved first.
+	 */
 	loadBranchesOnBackend() {
-		this.gitService.assistanceMessageGitBranches$.next(true);
-		if (this.profileProject.get('urlRepository').value !== this.projectService.project.urlRepository) {
-			this.projectService.loadBranches();
+		// If this project has alredy been saved (i.e. the project.id > 0)
+		if (this.projectService.project.id === -1) {
+			this.projectService.branches$.next(['master']);
+			this.messageService.info('You need to save first the project, to retrieve all available branches');
+		} else {
+			this.gitService.assistanceMessageGitBranches$.next(true);
+			if (this.profileProject.get('urlRepository').value !== this.projectService.project.urlRepository) {
+				this.projectService.loadBranches();
+			}
 		}
 	}
 
