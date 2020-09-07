@@ -223,7 +223,8 @@
 									<label for="user" class="label-user-password">Username : </label>
 								</div>
 								<div class="col-6">
-									<input type="text" class="form-control" id="username" name="username" placeholder="Username"
+									<input type="text" class="form-control" id="usernameRepository" name="usernameRepository" 
+										placeholder="Username"
 										[readonly]="!projectService.project.active"
 										value="" formControlName="username" />
 								</div>
@@ -234,7 +235,7 @@
 									<label for="urlRepository" class="label-user-password">Password : </label>
 								</div>
 								<div class="col-6">
-									<input type="password" class="form-control" id="password" name="password"
+									<input type="password" class="form-control" id="passwordRepository" name="passwordRepository"
 										[readonly]="!projectService.project.active"
 										placeholder="Password" value="" autocomplete="off" formControlName="password" />
 								</div>

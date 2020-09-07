@@ -52,8 +52,8 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		urlSonarServer: new FormControl({ value: '', disabled: !this.projectService.project.active }),
 		urlCodeFactorIO: new FormControl({ value: '', disabled: !this.projectService.project.active }),
 		urlRepository: new FormControl(''),
-		username: new FormControl(''),
-		password: new FormControl(''),
+		usernameRepository: new FormControl(''),
+		passwordRepository: new FormControl(''),
 		filename: new FormControl('')
 	});
 
@@ -242,8 +242,8 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		}, 0);
 		this.connection_settings = String(project.connectionSettings);
 		this.profileProject.get('urlRepository').setValue(project.urlRepository);
-		this.profileProject.get('username').setValue(project.username);
-		this.profileProject.get('password').setValue(project.password);
+		this.profileProject.get('usernameRepository').setValue(project.username);
+		this.profileProject.get('passwordRepository').setValue(project.password);
 		this.profileProject.get('filename').setValue(project.filename);
 		// If a username has been setup, we test the connection.
 		if ((project.username) && (project.username.length > 0)) {
@@ -760,8 +760,8 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		switch (this.projectService.project.connectionSettings) {
 			case this.USER_PASSWORD_ACCESS:
 				this.projectService.project.urlRepository = this.profileProject.get('urlRepository').value;
-				this.projectService.project.username = this.profileProject.get('username').value;
-				this.projectService.project.password = this.profileProject.get('password').value;
+				this.projectService.project.username = this.profileProject.get('usernameRepository').value;
+				this.projectService.project.password = this.profileProject.get('passwordRepository').value;
 				this.projectService.project.filename = '';
 				break;
 			case this.REMOTE_FILE_ACCESS:
@@ -925,14 +925,14 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				this.profileProject.get('urlRepository').setValue(this.profileProject.get('urlRepository').value);
 				break;
 			case this.REMOTE_FILE_ACCESS:
-				this.profileProject.get('username').setValue('');
-				this.profileProject.get('password').setValue('');
+				this.profileProject.get('usernameRepository').setValue('');
+				this.profileProject.get('passwordRepository').setValue('');
 				this.profileProject.get('urlRepository').setValue(this.profileProject.get('urlRepository').value);
 				break;
 			case this.NO_USER_PASSWORD_ACCESS:
 				this.profileProject.get('filename').setValue('');
-				this.profileProject.get('username').setValue('');
-				this.profileProject.get('password').setValue('');
+				this.profileProject.get('usernameRepository').setValue('');
+				this.profileProject.get('passwordRepository').setValue('');
 				this.profileProject.get('urlRepository').setValue(this.profileProject.get('urlRepository').value);
 				break;
 		}
