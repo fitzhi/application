@@ -240,7 +240,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 * @param Project the current project
 	 */
 	private isChartImpossible(project: Project): boolean {
-		return ((!project) || (!project.urlRepository) || (project.urlRepository.length === 0));
+		return ((!project) || (project.id === -1) || (!project.urlRepository) || (project.urlRepository.length === 0));
 	}
 
 

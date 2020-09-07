@@ -812,6 +812,8 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					this.messageService.success('Project ' + this.projectService.project.name + '  saved !');
 
 					this.testConnectionSettings();
+
+					this.loadBranchesOnBackend();
 				});
 		}
 
@@ -886,7 +888,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	}
 
 	/**
-	 * We load the branch from the back-end.
+	 * We load the branch name from the back-end.
 	 * 
 	 * The project has to be already saved first.
 	 */
@@ -894,11 +896,17 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		// If this project has alredy been saved (i.e. the project.id > 0)
 		if (this.projectService.project.id === -1) {
 			this.projectService.branches$.next(['master']);
-			this.messageService.info('You need to save first the project, to retrieve all available branches');
+			this.messageService.info('You need to save, first, the project, to retrieve all available branches');
 		} else {
-			this.gitService.assistanceMessageGitBranches$.next(true);
-			if (this.profileProject.get('urlRepository').value !== this.projectService.project.urlRepository) {
-				this.projectService.loadBranches();
+			if (this.profileProject.get('urlRepository').value) {
+				this.gitService.assistanceMessageGitBranches$.next(true);
+				if (this.profileProject.get('urlRepository').value !== this.projectService.project.urlRepository) {
+					this.projectService.loadBranches();
+				}
+			} else {
+				if (traceOn()) {
+					console.log ('We do not load the branches when repository url is empty.');
+				}
 			}
 		}
 	}
@@ -926,13 +934,13 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				break;
 			case this.REMOTE_FILE_ACCESS:
 				this.profileProject.get('usernameRepository').setValue('');
-				this.profileProject.get('passwordRepository').setValue('');
+				this.profileProject.get('password').setValue('');
 				this.profileProject.get('urlRepository').setValue(this.profileProject.get('urlRepository').value);
 				break;
 			case this.NO_USER_PASSWORD_ACCESS:
 				this.profileProject.get('filename').setValue('');
-				this.profileProject.get('usernameRepository').setValue('');
-				this.profileProject.get('passwordRepository').setValue('');
+				this.profileProject.get('username').setValue('');
+				this.profileProject.get('password').setValue('');
 				this.profileProject.get('urlRepository').setValue(this.profileProject.get('urlRepository').value);
 				break;
 		}

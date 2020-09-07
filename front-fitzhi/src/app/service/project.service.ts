@@ -488,7 +488,7 @@ export class ProjectService extends InternalService {
 	public loadBranches() {
 
 		if (traceOn()) {
-			console.log ('loading the branches...');
+			console.log ('Loading the branches...');
 		}
 		
 		// The project is not already created.
@@ -518,7 +518,7 @@ export class ProjectService extends InternalService {
 	 * Test if the given url is valid, or not.
 	 * @param urlCodeFactor URL of the codeFactor.io project
 	 */
-	testConnectionCodeFactorIO$(): Observable<Boolean> {
+	public testConnectionCodeFactorIO$(): Observable<Boolean> {
 		return this.httpClient
 			.get<boolean>(this.urlCodeFactorIO(), { observe: 'response' })
 			.pipe(
@@ -529,7 +529,7 @@ export class ProjectService extends InternalService {
 						return of(true);
 					}),
 				catchError((e) => {
-					console.log (e);
+					console.error (e);
 					return of(false);
 				}
 			));

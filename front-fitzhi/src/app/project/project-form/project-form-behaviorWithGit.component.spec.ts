@@ -68,12 +68,13 @@ describe('ProjectFormComponent', () => {
 		component = fixture.componentInstance;
 		const project = new Project();
 		project.id = 1789;
-		project.name = 'Revolutionary project';
 		project.audit = {};
+		project.urlRepository = '';
+		project.name = 'Revolutionary project';
+		project.connectionSettings = NO_USER_PASSWORD_ACCESS;
+
 		projectService = TestBed.get(ProjectService);
 		projectService.project = project;
-		project.urlRepository = '';
-		project.connectionSettings = NO_USER_PASSWORD_ACCESS;
 	
 		projectService.projectLoaded$ = new BehaviorSubject(true);
 
