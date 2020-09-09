@@ -125,18 +125,29 @@ export class PieDashboardService {
 		const red = this.count(type, projects[2]);
 		const grey = this.count(type, projects[3]);
 
+
+		function textFontSize(sliceValue: number):  string {
+			if (sliceValue < 20) {
+				return '12px';
+			}
+			if (sliceValue < 50) {
+				return '15px';
+			}
+			return '18px';
+		}
+
 		// A step figures the 'step' of a project in a third of a pie.
 		// We process here below the division of 120 degrees by all projects
 		const step = 120 / (green + orange + red + grey);
 
-		slices.push(new Slice(slices.length, type,  step * green, this.nextOffset(slices),
-				'green', projects[0].get(type), false, false, LevelStaffRisk.low));
-		slices.push(new Slice(slices.length, type,  step * orange, this.nextOffset(slices),
-				'orange', projects[1].get(type), false, false, LevelStaffRisk.medium));
-		slices.push(new Slice(slices.length, type, step * red, this.nextOffset(slices),
-				'red', projects[2].get(type), false, false, LevelStaffRisk.high));
-		slices.push(new Slice(slices.length, type, step * grey, this.nextOffset(slices),
-				'grey', projects[3].get(type), false, false, LevelStaffRisk.undefined));
+		slices.push(new Slice(slices.length, type,  Math.round(step * green), this.nextOffset(slices),
+				'green', 'black', textFontSize(step * green), projects[0].get(type), false, false, LevelStaffRisk.low));
+		slices.push(new Slice(slices.length, type,  Math.round(step * orange), this.nextOffset(slices),
+				'orange', 'black', textFontSize(step * orange), projects[1].get(type), false, false, LevelStaffRisk.medium));
+		slices.push(new Slice(slices.length, type, Math.round(step * red), this.nextOffset(slices),
+				'red', 'black', textFontSize(step * red), projects[2].get(type), false, false, LevelStaffRisk.high));
+		slices.push(new Slice(slices.length, type, Math.round(step * grey), this.nextOffset(slices),
+				'grey', 'black', textFontSize(step * grey), projects[3].get(type), false, false, LevelStaffRisk.undefined));
 	}
 
 	/**

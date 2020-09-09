@@ -49,13 +49,17 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 			|| req.url.includes('/api/admin/isVeryFirstConnection')
 			|| req.url.includes('/api/admin/veryFirstUser')
 			|| req.url.includes('/api/admin/register')
+			
 			// Sonar URL
 			|| req.url.includes('/api/components/search')
 			|| req.url.includes('/api/components/tree')
 			|| req.url.includes('/api/metrics/search')
 			|| req.url.includes('/api/measures/component')
 			|| req.url.includes('/api/project_badges/measure')
-			|| req.url.includes('/api/server/version')) {
+			|| req.url.includes('/api/server/version')
+			
+			// GitHub URL
+			|| req.url.includes('api.github.com')) {
 			return next.handle(req);
 		}
 

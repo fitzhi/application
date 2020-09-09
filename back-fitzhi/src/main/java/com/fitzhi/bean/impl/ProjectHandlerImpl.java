@@ -180,7 +180,6 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	//TODO Need to verify that all fields are effectively update {
 	public void saveProject(Project project) throws SkillerException {
 		if (project.getId() == 0) {
 			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, project.getId()));
@@ -195,9 +194,27 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			savedProject.setName(project.getName());
 			savedProject.setActive(project.isActive());
 			savedProject.setUrlSonarServer(project.getUrlSonarServer());
+
+			savedProject.setUrlCodeFactorIO((project.getUrlCodeFactorIO()));
 			if ((project.getUrlSonarServer() == null) || ("".equals(project.getUrlSonarServer()))) {
 				savedProject.setSonarProjects(new ArrayList<SonarProject>());
 			}			
+			
+			// If we change the URL repository, we have to reset the previous clone (if any). 
+			// We force this re-construction by reseting the clone location repository.
+			if ( 	(savedProject.getUrlRepository() != null) && 
+					(!savedProject.getUrlRepository().equals(project.getUrlRepository()))) {
+				savedProject.setLocationRepository(null);
+			}
+			
+			// If we change the active branch, we have to reset the previous clone (if any). 
+			// We force this reconstruction by reseting the clone location repository.
+			if ( 	(savedProject.getBranch() != null) && 
+					(!savedProject.getBranch().equals(project.getBranch()))) {
+				savedProject.setLocationRepository(null);
+			}
+			savedProject.setBranch(project.getBranch());
+		
 			savedProject.setConnectionSettings(project.getConnectionSettings());
 			switch (project.getConnectionSettings()) {
 				case USER_PASSWORD_ACCESS:

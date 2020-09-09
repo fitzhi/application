@@ -63,9 +63,10 @@
 		<appender-ref ref="Console" />
 	</logger>
 
-	<logger name="com.fitzhi.controller.ProjectController" additivity="false">
+	<logger name="com.fitzhi.source.crawler.git.GitCrawler" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="Console" />
 	</logger>
+
 
 </configuration>

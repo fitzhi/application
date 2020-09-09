@@ -3,7 +3,7 @@ import { MatSort } from '@angular/material/sort';
 import { Constants } from '../../../../constants';
 import { Unknown } from '../../../../data/unknown';
 import { BaseComponent } from 'src/app/base/base.component';
-import { ProjectGhostsDataSource } from 'src/app/project/project-sunburst/project-ghosts/project-ghosts-data-source';
+import { ProjectGhostsDataSource } from '../project-ghosts-data-source';
 import { MatPaginator } from '@angular/material/paginator';
 import { Collaborator } from 'src/app/data/collaborator';
 import { StaffService } from 'src/app/service/staff.service';
@@ -13,13 +13,18 @@ import { StaffListService } from 'src/app/staff-list-service/staff-list.service'
 import { ProjectService } from 'src/app/service/project.service';
 import { traceOn } from 'src/app/global';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
+import { SunburstCacheService } from '../../service/sunburst-cache.service';
+import { GhostsService } from '../service/ghosts.service';
+import { MatTable } from '@angular/material/table';
+import { Project } from 'src/app/data/project';
+import { trace } from 'console';
 
 @Component({
 	selector: 'app-table-ghosts',
 	templateUrl: './table-ghosts.component.html',
 	styleUrls: ['./table-ghosts.component.css']
 })
-export class TableGhostsComponent extends BaseComponent implements OnInit, OnDestroy {
+export class TableGhostsComponent extends BaseComponent implements OnInit, OnDestroy, AfterViewInit {
 
 	/**
 	 * Datasource observable.
@@ -31,20 +36,25 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	/**
 	 * The undeclared contributors in the repository.
 	 */
-	dataSource: ProjectGhostsDataSource;
+	public dataSource: ProjectGhostsDataSource; // = new ProjectGhostsDataSource([]);
 
 	/**
 	 * The paginator of the ghosts data source.
 	 */
 	@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
-	public editableColumns: string[] = ['pseudo', 'login', 'technical', 'firstname', 'lastname', 'active', 'external', 'creation'];
-	public enhancedColumns: string[] = ['pseudo', 'login', 'fullName', 'technical'];
-
 	/**
 	 * Array will be sortable
 	 */
 	@ViewChild(MatSort, { static: true }) sort: MatSort;
+
+	/**
+	 * The table
+	 */
+	@ViewChild('table', { static: true }) table: MatTable<Unknown>;
+
+	public editableColumns: string[] = ['pseudo', 'login', 'technical', 'firstname', 'lastname', 'active', 'external', 'creation'];
+	public enhancedColumns: string[] = ['pseudo', 'login', 'fullName', 'technical'];
 
 	/**
 	 * List of all developpers existing in the application.
@@ -54,35 +64,39 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	constructor(
 		private staffService: StaffService,
 		private projectService: ProjectService,
+		private ghostsService: GhostsService,
 		private staffListService: StaffListService,
+		private sunburstCacheService: SunburstCacheService,
 		private messageBoxService: MessageBoxService,
 		private messageService: MessageService) {
 		super();
 	}
 
 	ngOnInit() {
-		if (this.dataSourceGhosts$) {
-			if (this.dataSourceGhosts$) {
-				this.subscriptions.add(
-					this.dataSourceGhosts$.subscribe((dataSource: ProjectGhostsDataSource) => {
-						if (traceOn()) {
-							console.log('Project ' + dataSource.project.id + ' ' + dataSource.project.name + ' reveived in the table of ghosts component');
-						}
-						this.dataSource = dataSource;
-						this.dataSource.paginator = this.paginator;
-				}));
-			}
-		}
+		this.subscriptions.add(
+			this.dataSourceGhosts$.subscribe((dataSource: ProjectGhostsDataSource) => {
+				if (traceOn()) {
+					console.log(
+						'Project %d %s reveived %s in the table of ghosts component',
+						this.projectService.project.id,
+						this.projectService.project.name,
+						dataSource.data.length);
+				}
+				this.dataSource = new ProjectGhostsDataSource(dataSource.data);
+			}));
 
-		if (this.subscriptions) {
-			if ( (this.staffListService) && (this.staffListService.allStaff$)) {
-				this.subscriptions.add(
-					this.staffListService.allStaff$.subscribe(staff => {
-						this.allStaff = staff;
-				}));
-			}
+		if (this.staffListService.allStaff$) {
+			this.subscriptions.add(
+				this.staffListService.allStaff$.subscribe(staff => {
+					this.allStaff = staff;
+			}));
 		}
 	}
+
+	ngAfterViewInit() {
+		this.dataSource.paginator = this.paginator;
+	}
+
 	/**
 	 * The check Box for the id "technical" has been checked or unchecked.
 	 */
@@ -97,7 +111,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 
 		}
 		this.projectService.updateGhost (
-			this.dataSource.project.id,
+			this.projectService.project.id,
 			unknown.pseudo,
 			-1,
 			unknown.technical)
@@ -127,7 +141,6 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	}
 
 	/**
-	 * This function is called for each line of the ghosts table.
 	 * Is the user allow to create a new ghost ?
 	 * which means...
 	 * It's not an automatic.
@@ -170,10 +183,10 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 		if (ghost.technical) {
 			return true;
 		}
-		if (ghost.firstname.length > 0) {
+		if ((ghost.firstname) && (ghost.firstname.length > 0)) {
 			return true;
 		}
-		if (ghost.lastname.length > 0) {
+		if ((ghost.lastname) && (ghost.lastname.length > 0)) {
 			return true;
 		}
 		return false;
@@ -190,9 +203,9 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	addStaff(ghost: Unknown) {
 		if (traceOn()) {
 			console.groupCollapsed ('Creation of the the staff member');
+			console.log ('Pseudo', ghost.pseudo);
 			console.log ('Firstname', ghost.firstname);
 			console.log ('Lastname', ghost.lastname);
-			console.log ('Firstname', ghost.login);
 			console.log ('active', ghost.active);
 			console.log ('external', ghost.external);
 			console.groupEnd();
@@ -223,14 +236,39 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 				next: (staff: Collaborator) => {
 					collaborator.idStaff = staff.idStaff;
 					ghost.staffRecorded = true;
+					let pseudos = this.dataSource.data
+						.map(g => g.pseudo)
+						.filter(p => p !== ghost.pseudo);
+					
 					this.dataSource.removePseudo(ghost.pseudo);
+					
+					pseudos = this.ghostsService.extractMatchingUnknownContributors(pseudos, staff);
+					if (traceOn()) {
+						console.groupCollapsed ('Associated %d pseudo(s)', pseudos.length);
+						pseudos.forEach(pseudo => console.log ('pseudo', pseudo));
+						console.groupEnd();
+					}
+					pseudos.forEach(pseudo => {
+						if (traceOn()) {
+							console.log('removePseudo(%s)', ghost.pseudo);
+						}
+						this.dataSource.removePseudo(pseudo)
+					});
+					
+					this.table.renderRows();
+
+					this.sunburstCacheService.clearReponse();
 					this.messageService.success('Staff member ' + staff.firstName + ' ' + staff.lastName + ' saved.');
 					if (traceOn()) {
-						console.log ('Onboarding the staff %d into the project %d', staff.idStaff, this.dataSource.project.id);
+						console.log ('Onboarding the staff %d into the project %d', staff.idStaff, this.projectService.project.id);
 					}
-					this.projectService.onBoardStaffInProject(this.dataSource.project.id,  staff.idStaff);
+					this.projectService.onBoardStaffInProject(this.projectService.project.id,  staff.idStaff);
 				}
 			});
+	}
+
+	renderRows() {
+		this.table.renderRows();
 	}
 
 	handleRelatedLogin(ghost: Unknown) {
@@ -251,7 +289,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 			ghost.login = selectedStaff[0].login;
 			ghost.idStaff = ghost.staffRelated.idStaff;
 			this.projectService.updateGhost (
-				this.dataSource.project.id,
+				this.projectService.project.id,
 				ghost.pseudo,
 				ghost.idStaff,
 				false)
@@ -267,7 +305,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 			// If the ghost was already associated, we reset this association
 			if (ghost.idStaff  > 0) {
 				this.projectService.updateGhost (
-					this.dataSource.project.id,
+					this.projectService.project.id,
 					ghost.pseudo,
 					-1,
 					false)

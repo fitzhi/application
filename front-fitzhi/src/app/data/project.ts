@@ -11,6 +11,11 @@ export class Project {
 	public username: string;
 	public password: string;
 	public filename: string;
+	/**
+	 * Branch name selected for the given repository.
+	 * Default is master.
+	 */
+	public branch: string;
 
 	/**
 	 * This **boolean** indicates that this project has be involved in all analysis.
@@ -43,6 +48,11 @@ export class Project {
 	 * Array of dependeny paths (detected or declared) for this project.
 	 */
 	public libraries: Library[] = [];
+
+	/**
+	 * URL of the codefactor.io dashboard for your project.
+	 */
+	public urlCodeFactorIO;
 
 	/**
 	 * URL of the Sonar server used to validate this project.

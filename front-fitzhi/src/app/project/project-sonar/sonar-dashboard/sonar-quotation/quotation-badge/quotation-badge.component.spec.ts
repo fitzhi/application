@@ -26,7 +26,7 @@ describe(' QuotationBadgeComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(QuotationBadgeComponent);
 
-		const projectService = TestBed.get(ProjectService);
+		const projectService = TestBed.inject(ProjectService);
 		const spy = spyOn(projectService, 'getRiskColor').and.returnValue('blue');
 
 		component = fixture.componentInstance;

@@ -240,7 +240,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	 * @param Project the current project
 	 */
 	private isChartImpossible(project: Project): boolean {
-		return ((!project) || (!project.urlRepository) || (project.urlRepository.length === 0));
+		return ((!project) || (project.id === -1) || (!project.urlRepository) || (project.urlRepository.length === 0));
 	}
 
 
@@ -428,14 +428,13 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		this.myChart.data(response.sunburstData)
 			.width(500)
 			.height(500)
+			.minSliceAngle(2)
 			.label('location')
 			.size('importance')
 			.color('color')
 			(document.getElementById('chart'));
 
-		const dataSourceGhosts = new ProjectGhostsDataSource(this.projectService.project);
-		// Send the unregistered contributors to the panel list
-		dataSourceGhosts.sendUnknowns(response.ghosts);
+		const dataSourceGhosts = new ProjectGhostsDataSource(response.ghosts);
 		this.dataSourceGhosts$.next(dataSourceGhosts);
 
 		//

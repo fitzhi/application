@@ -17,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.source.ConnectionSettings;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.RepoScanner;
 
@@ -54,7 +53,7 @@ public class CrawlerVgo {
 		
 		prj.setLocationRepository(new File(String.format(FILE_GIT, "testParseRepo")).getCanonicalPath());
 		
-		scanner.parseRepository(prj, new ConnectionSettings());
+		scanner.parseRepository(prj);
 	}
 
 }

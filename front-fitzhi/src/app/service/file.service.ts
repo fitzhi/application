@@ -3,6 +3,7 @@ import { Constants } from '../constants';
 import { MessageBoxService } from '../interaction/message-box/service/message-box.service';
 import { HttpHeaders, HttpClient } from '@angular/common/http';
 import { saveAs } from 'file-saver';
+import { traceOn } from '../global';
 
 /**
  * This class is providing upload or download services.
@@ -27,6 +28,9 @@ export class FileService {
 		private http: HttpClient) {
 
 		const appVer = navigator.appVersion;
+		if (traceOn()) {
+			console.log ('appVer', appVer);
+		}
 		if  (appVer.indexOf('Win') !== -1) {
 			this.osGlobals.isWin = true;
 		} else if (appVer.indexOf('Mac') !== -1) {

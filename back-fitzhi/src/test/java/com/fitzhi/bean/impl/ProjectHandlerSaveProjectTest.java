@@ -36,7 +36,8 @@ public class ProjectHandlerSaveProjectTest {
 	
 	@Before
 	public void before() throws SkillerException {
-		projectHandler.addNewProject(new Project (1789, "French revolution"));
+		Project project = new Project (1789, "French revolution");
+		projectHandler.addNewProject(project);
 	}
 	
 	@Test
@@ -61,6 +62,8 @@ public class ProjectHandlerSaveProjectTest {
 		
 		project = new Project (1789, "French revolution");
 		project.setUrlSonarServer("https://url.ofASonarServer");
+		project.setBranch("theBranchName");
+		project.setUrlCodeFactorIO("https://url.ofCodeFactor.io");
 		project.setConnectionSettings(USER_PASSWORD_ACCESS);
 		project.setUsername("frvidal");
 		project.setPassword("mypass");
@@ -69,6 +72,8 @@ public class ProjectHandlerSaveProjectTest {
 		project = projectHandler.get(1789);
 		Assert.assertTrue("French revolution".equals(project.getName()));
 		Assert.assertEquals("https://url.ofASonarServer", project.getUrlSonarServer());
+		Assert.assertEquals("theBranchName", project.getBranch());
+		Assert.assertEquals("https://url.ofCodeFactor.io", project.getUrlCodeFactorIO());
 		Assert.assertEquals(USER_PASSWORD_ACCESS, project.getConnectionSettings());
 		Assert.assertEquals("frvidal", project.getUsername());
 		Assert.assertNotNull(project.getPassword());
@@ -141,10 +146,58 @@ public class ProjectHandlerSaveProjectTest {
 		Assert.assertNull(project.getPassword());
 	}	
 	
+	@Test
+	public void testChangeUrlRepository() throws Exception {
+
+		Project projectPrevious = new Project (1789, "French revolution");
+		projectPrevious.setLocationRepository("previous-clone-location");
+		projectPrevious.setUrlRepository("previous-url");
+		projectPrevious.setConnectionSettings(NO_USER_PASSWORD_ACCESS);
+		projectHandler.saveProject(projectPrevious);
+
+		Project project = projectHandler.get(1789);
+		Assert.assertEquals("previous-url", project.getUrlRepository());
+
+		Project projectNew = new Project (1789, "New French revolution");
+		projectNew.setConnectionSettings(NO_USER_PASSWORD_ACCESS);
+		projectNew.setUrlRepository("new-url");
+		projectHandler.saveProject(projectNew);
+
+		project = projectHandler.get(1789);
+		Assert.assertEquals("New French revolution", project.getName());
+		Assert.assertEquals("new-url", project.getUrlRepository());
+		Assert.assertNull(project.getLocationRepository());
+	}
+
+	@Test
+	public void testChangeBranch() throws Exception {
+
+		Project projectPrevious = new Project (1789, "French revolution");
+		projectPrevious.setLocationRepository("clone-location");
+		projectPrevious.setUrlRepository("url");
+		projectPrevious.setConnectionSettings(NO_USER_PASSWORD_ACCESS);
+		projectPrevious.setBranch("old-branch");
+		projectHandler.saveProject(projectPrevious);
+
+		Project project = projectHandler.get(1789);
+		Assert.assertEquals("old-branch", project.getBranch());
+
+		Project projectNew = new Project (1789, "New French revolution");
+		projectNew.setConnectionSettings(NO_USER_PASSWORD_ACCESS);
+		projectNew.setUrlRepository("url");
+		projectNew.setBranch("new-branch");
+		projectHandler.saveProject(projectNew);
+
+		project = projectHandler.get(1789);
+		Assert.assertEquals("New French revolution", project.getName());
+		Assert.assertEquals("url", project.getUrlRepository());
+		Assert.assertEquals("new-branch", project.getBranch());
+		Assert.assertNull(project.getLocationRepository());
+	}
+
 	@After
 	public void after() throws SkillerException {
 		projectHandler.getProjects().remove(1789);
-				
 	}
 	
 }

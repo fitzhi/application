@@ -16,13 +16,17 @@ import static com.fitzhi.Global.deepClone;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
+import org.eclipse.jgit.lib.Ref;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -257,10 +261,59 @@ public class ProjectController {
 
 		Project project = projectHandler.get(idProject);
 		if (project == null) {
-			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 
 		return new ResponseEntity<>(project.getSkills().values(), headers(), HttpStatus.OK);
+	}
+
+	/**
+	 * Retrieve and return the branches detected on the GIT repository 
+	 * for the given project (identified by its id)
+	 * 
+	 * @param idProject the project identifier
+	 * @return the HTTP Response with an array of branches, or an empty one if the query failed.
+	 */
+	@GetMapping(value = "/branches/{idProject}")
+	public ResponseEntity<String[]> branches(@PathVariable("idProject") int idProject) throws SkillerException {
+
+		Project project = projectHandler.get(idProject);
+		if (project == null) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+		}
+
+		final String REF_HEADS = "refs/heads/";
+
+		Function<String, String> removeHeader  = (String s) -> {
+			if (s.indexOf(REF_HEADS) != 0) {
+				log.error("Unexpected ref name %s", s);
+				return s;
+			}
+			return s.substring(REF_HEADS.length());
+		};
+
+		Collection<Ref> unfiltered_branches = this.scanner.loadBranches(project);
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("%d branches retrieved", unfiltered_branches.size()));
+			unfiltered_branches.stream().map(Ref::getName).forEach(log::debug);;
+		}			
+		
+		String[] branches = unfiltered_branches
+								.stream()
+								.map(Ref::getLeaf)
+								.map(Ref::getName)
+								.filter(s -> s.contains(REF_HEADS))
+								.map(removeHeader)
+								.distinct()
+								.collect(Collectors.toList())
+								.toArray(new String[0]);
+								
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("%d branches returned", branches.length));
+			Arrays.stream(branches).forEach(log::debug);
+		}			
+						
+		return new ResponseEntity<>(branches, headers(), HttpStatus.OK);
 	}
 
 	@GetMapping("/all")

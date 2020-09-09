@@ -11,6 +11,7 @@
         "id": 2,
         "name": "Fitzhi",
         "connectionSettings": 3,
+        "urlCodeFactorIO": "https://www.codefactor.io/repository/github/fitzhi/application",
         "urlRepository": "https://github.com/fitzhi/application",
         "username": "",
         "password": "",

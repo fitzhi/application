@@ -86,7 +86,7 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 		projectAuditHandler.removeTopic(ID_PROJECT, 1, false);
 		Assert.assertFalse("removeTopic did not succeed", project.getAudit().containsKey(1));
 		
-		Project p = projectHandler.get(ID_PROJECT);
+		projectHandler.get(ID_PROJECT);
 		Assert.assertEquals("Audit topics collection is empty", 0, project.getAudit().values().size());
 		Assert.assertEquals("Evaluation is equal to 0", 0, project.getAuditEvaluation());
 		

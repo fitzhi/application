@@ -81,6 +81,7 @@ public class CrawlerWibkacTest {
     	asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 1000);
 	}
 	
+	
 	/**
 	 * Test the method filterElibilible
 	 * 
@@ -178,7 +179,7 @@ public class CrawlerWibkacTest {
 	   	asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 777);
 		prj.setLocationRepository(String.format(DIR_GIT, FITZHI));
 		projectHandler.addNewProject(prj);
-		scanner.parseRepository(prj, new ConnectionSettings());
+		scanner.parseRepository(prj);
 	}
 
 	@After

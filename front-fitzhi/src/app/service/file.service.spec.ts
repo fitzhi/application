@@ -32,7 +32,14 @@ describe('FileService', () => {
 	});
 
 	it('Testing extractFilename() ', () => {
-		const filename = service.extractFilename('./test/mock Fred/Frédéric VIDAL.docx');
+
+		const appVer = navigator.appVersion;
+		console.log ('appVer', appVer);
+		const osDependentFileName =  (appVer.indexOf('Win') === -1) ?
+			'./test/mock Fred/Frédéric VIDAL.docx' : 
+			'.\\test\\mock Fred\\Frédéric VIDAL.docx'; 
+		console.log ('test name for file depending on the os', osDependentFileName);
+		const filename = service.extractFilename(osDependentFileName);
 		expect('Frédéric VIDAL.docx').toEqual(filename);
 	});
 

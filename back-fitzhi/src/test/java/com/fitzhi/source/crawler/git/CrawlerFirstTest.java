@@ -138,7 +138,7 @@ public class CrawlerFirstTest {
 		Project prj = new Project (777, "First test");
 		projectHandler.addNewProject(prj);
 		prj.setLocationRepository(String.format(DIR_GIT, FIRST_TEST));
-		scanner.parseRepository(prj, new ConnectionSettings());
+		scanner.parseRepository(prj);
 	}
 
 	@After

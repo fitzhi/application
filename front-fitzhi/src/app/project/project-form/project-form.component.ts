@@ -21,6 +21,10 @@ import { ReferentialService } from 'src/app/service/referential.service';
 import { Skill } from 'src/app/data/skill';
 import { traceOn } from 'src/app/global';
 import { ProjectSkill } from '../../data/project-skill';
+import { trace } from 'console';
+import { utils } from 'protractor';
+import { GitService } from 'src/app/service/git/git.service';
+import { Repository } from 'src/app/data/git/repository';
 
 @Component({
 	selector: 'app-project-form',
@@ -38,14 +42,18 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	public REMOTE_FILE_ACCESS = 2;
 	public NO_USER_PASSWORD_ACCESS = 3;
 
+	public SONAR = 1;
+	public CODEFACTOR = 2;
+
 	public colorOfRisk = 'transparent';
 
 	profileProject = new FormGroup({
 		projectName: new FormControl(''),
-		urlSonarServer: new FormControl({ value : '', disabled: !this.projectService.project.active }),
+		urlSonarServer: new FormControl({ value: '', disabled: !this.projectService.project.active }),
+		urlCodeFactorIO: new FormControl({ value: '', disabled: !this.projectService.project.active }),
 		urlRepository: new FormControl(''),
-		username: new FormControl(''),
-		password: new FormControl(''),
+		usernameRepository: new FormControl(''),
+		passwordRepository: new FormControl(''),
 		filename: new FormControl('')
 	});
 
@@ -65,6 +73,11 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	* Member variable linked to the connection settings toggle.
 	*/
 	public connection_settings: string;
+
+	/**
+	* Member variable linked to the quality solution toggle.
+	*/
+	public code_quality_solution$ = new BehaviorSubject<number>(this.SONAR);
 
 	/**
 	 * Bound addSkill to the current active component.
@@ -108,12 +121,18 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	private THIS_TAB = Constants.PROJECT_IDX_TAB_FORM;
 
+	/**
+	 * This __behaviorSubject__ is emtting a **true** if the given codeFactor.io is unreachable.
+	 */
+	urlCodeFactorIOUnreachable$ = new BehaviorSubject<Boolean>(false);
+
 	constructor(
 		private cinematicService: CinematicService,
 		private messageService: MessageService,
 		public referentialService: ReferentialService,
 		public skillService: SkillService,
 		public projectService: ProjectService,
+		public gitService: GitService,
 		public sonarService: SonarService,
 		private router: Router) {
 		super();
@@ -133,20 +152,27 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				next: loaded => {
 					if (loaded) {
 						this.loadForm();
+						if (this.projectService.project.urlRepository) {
+							this.projectService.loadBranches();
+						}
 					}
 				}
 			}
-		));
+			));
 
 		this.subscriptions.add(
 			this.risk$.subscribe((risk: number) => {
 				if (traceOn()) {
-					console.log ('Catching the risk', risk);
+					console.log('Catching the risk', risk);
 				}
 				this.updateDotRiskColor(risk);
-		}));
+			}));
 
 		this.cinematicService.setForm(Constants.PROJECT_TAB_FORM, this.router.url);
+
+		// We hide the help message and we clear the list of branches
+		this.projectService.branches$.next([]);
+		this.gitService.assistanceMessageGitBranches$.next(false);
 
 	}
 
@@ -160,7 +186,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 						this.messageService.error('Referentials cannot be loaded!');
 					}
 				}
-		}));
+			}));
 
 		this.subscriptions.add(this.projectService.projectLoaded$
 			.subscribe({
@@ -194,29 +220,30 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					return of(EMPTY);
 				}
 			}))
-		.subscribe({
-			next: doneAndOk => {
-				if ((doneAndOk) && (traceOn())) {
-					console.log ('ngAfterViewInitForm completed without error');
+			.subscribe({
+				next: doneAndOk => {
+					if ((doneAndOk) && (traceOn())) {
+						console.log('ngAfterViewInitForm completed without error');
+					}
 				}
-			}
-		});
+			});
 	}
 
 	loadForm() {
 		if (traceOn()) {
-			console.log ('Loading the project data inside the form');
+			console.log('Loading the project data inside the form');
 		}
 		const project = this.projectService.project;
 		this.profileProject.get('projectName').setValue(project.name);
+		this.profileProject.get('urlCodeFactorIO').setValue(project.urlCodeFactorIO);
 		// We postpone this 'setValue' to give time to the 'SELECT' html object to fill its content.
 		setTimeout(() => {
 			this.profileProject.get('urlSonarServer').setValue(project.urlSonarServer);
 		}, 0);
 		this.connection_settings = String(project.connectionSettings);
 		this.profileProject.get('urlRepository').setValue(project.urlRepository);
-		this.profileProject.get('username').setValue(project.username);
-		this.profileProject.get('password').setValue(project.password);
+		this.profileProject.get('usernameRepository').setValue(project.username);
+		this.profileProject.get('passwordRepository').setValue(project.password);
 		this.profileProject.get('filename').setValue(project.filename);
 		// If a username has been setup, we test the connection.
 		if ((project.username) && (project.username.length > 0)) {
@@ -232,12 +259,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			throw new Error('INTERNAL ERROR : textarea[name=skills] is not found.');
 		}
 		if (!this.tagifySkills) {
-			this.tagifySkills = new Tagify (input, {
-				enforceWhitelist : true,
-				whitelist        : [],
-				callbacks        : {
-					add    : this.boundAddSkill,  // callback when adding a tag, this callback is bound to the main component, instead of the function.
-					remove : this.boundRemoveSkill   // callback when removing a tag
+			this.tagifySkills = new Tagify(input, {
+				enforceWhitelist: true,
+				whitelist: [],
+				callbacks: {
+					add: this.boundAddSkill,  // callback when adding a tag, this callback is bound to the main component, instead of the function.
+					remove: this.boundRemoveSkill   // callback when removing a tag
 				}
 			});
 		}
@@ -249,14 +276,14 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				throw new Error('INTERNAL ERROR : textarea[name=sonarProjects] is not found.');
 			}
 
-			this.tagifySonarProjects = new Tagify (input, {
-				enforceWhitelist : true,
-				whitelist        : [],
-				callbacks        : {
-					add    : this.boundAddSonarProject,
-						// callback when adding a tag, this callback is bound to the main component, instead of the function.
-					remove : this.boundRemoveSonarProject
-						// callback when removing a tag
+			this.tagifySonarProjects = new Tagify(input, {
+				enforceWhitelist: true,
+				whitelist: [],
+				callbacks: {
+					add: this.boundAddSonarProject,
+					// callback when adding a tag, this callback is bound to the main component, instead of the function.
+					remove: this.boundRemoveSonarProject
+					// callback when removing a tag
 				}
 			});
 		}
@@ -270,20 +297,20 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				take(1),
 				tap(() => {
 					if (traceOn()) {
-						console.log ('Initializing the skills inside the tagify component');
+						console.log('Initializing the skills inside the tagify component');
 					}
 				}),
-				switchMap (skills => {
+				switchMap(skills => {
 					this.initComponentTagifySkills(skills);
 					return this.sonarProjectsLoaded$();
 				}),
-				catchError ( (error) => {
+				catchError((error) => {
 					console.error('Internal error : Skills are not retrieved from back-end', error);
 					return this.sonarProjectsLoaded$();
 				}))
 			.pipe(
 				take(1),
-				switchMap (doneAndOk => {
+				switchMap(doneAndOk => {
 					if (!doneAndOk && !this.creation) {
 						this.messageService.warning('Cannot retrieve the declared applications in Sonar');
 					}
@@ -292,18 +319,38 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 						this.sonarProjectsLoaded = doneAndOk;
 					}, 0);
 					return of(doneAndOk);
-			}));
+				}));
+	}
+
+	/**
+	 * This method is called when the user quits the codeFactor.io url input after a change.
+	 */
+	public onCodeFactorUrlChange() {
+		if (traceOn()) {
+			console.log('Testing the url', this.profileProject.get('urlCodeFactorIO').value);
+		}
+		this.projectService.project.urlCodeFactorIO = this.profileProject.get('urlCodeFactorIO').value;
+		if ((this.projectService.project.urlCodeFactorIO) || (this.projectService.project.urlCodeFactorIO.length === 0)) {
+			this.urlCodeFactorIOUnreachable$.next(false);
+		}
+		this.projectService
+			.testConnectionCodeFactorIO$()
+			.subscribe({
+				next: doneAndOk => {
+					this.urlCodeFactorIOUnreachable$.next(!doneAndOk);
+				}
+			});
 	}
 
 	ngAfterViewInitSonarProjectsDeclaredInProject() {
 
-		this.sonarProjectsLoaded$().pipe(take(1)).subscribe (doneAndOk => {
+		this.sonarProjectsLoaded$().pipe(take(1)).subscribe(doneAndOk => {
 			if (doneAndOk) {
 				if (this.projectService.project.sonarProjects) {
 					if (this.projectService.project.sonarProjects.length > 0) {
 						this.tagifySonarProjects.addTags(
 							this.projectService.project.sonarProjects
-							.map(function(sonarProject) { return sonarProject.name; }));
+								.map(function (sonarProject) { return sonarProject.name; }));
 					}
 				}
 			}
@@ -317,7 +364,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	ngAfterViewInitSkillsDeclaredInProject() {
 		this.subscriptions.add(this.allSkills$()
-			.subscribe (skills => {
+			.subscribe(skills => {
 				if (this.projectService.project.mapSkills) {
 					for (const [idSkill, profilSkill] of this.projectService.project.mapSkills) {
 						this.tagifySkills.addTags(this.skillService.title(idSkill));
@@ -331,7 +378,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	private allSkills$(): Observable<Skill[]> {
 		return this.skillService.allSkillsLoaded$
-			.pipe( switchMap(doneAndOk => {
+			.pipe(switchMap(doneAndOk => {
 				return doneAndOk ? of(this.skillService.allSkills) : EMPTY;
 			}));
 	}
@@ -342,7 +389,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	private initComponentTagifySkills(skills: Skill[]) {
 		this.tagifySkills.settings.whitelist = [];
-		skills.map(function(skill) { return skill.title; }).forEach(element => {
+		skills.map(function (skill) { return skill.title; }).forEach(element => {
 			this.tagifySkills.settings.whitelist.push(element);
 		});
 	}
@@ -357,14 +404,14 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		if (!this.tagifySonarProjects) {
 			const input = document.querySelector('textarea[name=sonarProjects]');
 
-			this.tagifySonarProjects = new Tagify (input, {
-				enforceWhitelist : true,
-				whitelist        : [],
-				callbacks        : {
-					add    : this.boundAddSonarProject,
-						// callback when adding a tag, this callback is bound to the main component, instead of the function.
-					remove : this.boundRemoveSonarProject
-						// callback when removing a tag
+			this.tagifySonarProjects = new Tagify(input, {
+				enforceWhitelist: true,
+				whitelist: [],
+				callbacks: {
+					add: this.boundAddSonarProject,
+					// callback when adding a tag, this callback is bound to the main component, instead of the function.
+					remove: this.boundRemoveSonarProject
+					// callback when removing a tag
 				}
 			});
 		}
@@ -376,28 +423,28 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 						this.sonarService.allSonarProjects$(this.projectService.project) :
 						EMPTY;
 				}))
-			.pipe (
+			.pipe(
 				tap(sonarProjects => {
 					if (traceOn()) {
-						console.log ('Receiving ' + sonarProjects.length + ' Sonar projects');
+						console.log('Receiving ' + sonarProjects.length + ' Sonar projects');
 					}
 				}),
-				map (sonarProjects => {
+				map(sonarProjects => {
 
 					if (sonarProjects.length === 0) {
 						return false;
 					}
 
 					this.tagifySonarProjects.settings.whitelist = [];
-					sonarProjects.map(function(sonarProject) { return sonarProject.name; })
-					.forEach(element => {
-						this.tagifySonarProjects.settings.whitelist.push(element);
-					});
+					sonarProjects.map(function (sonarProject) { return sonarProject.name; })
+						.forEach(element => {
+							this.tagifySonarProjects.settings.whitelist.push(element);
+						});
 
 					return true;
 				}),
-				catchError(err =>  {
-					console.error (err);
+				catchError(err => {
+					console.error(err);
 					return of(false);
 				}));
 	}
@@ -418,7 +465,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		const urlSonarServer = this.profileProject.get('urlSonarServer').value;
 		if (urlSonarServer !== this.projectService.project.urlSonarServer) {
 			if (traceOn()) {
-				console.log ('Sonar URL has changed from %s to %s',
+				console.log('Sonar URL has changed from %s to %s',
 					(this.projectService.project.urlSonarServer) ? this.projectService.project.urlSonarServer : 'none',
 					urlSonarServer);
 			}
@@ -437,6 +484,16 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	}
 
 	/**
+	 * @param $event End-user has selected a quality solution.
+	 */
+	onQualitySolutionChange($event) {
+		if (traceOn()) {
+			console.log('onQualitySolutionChange', $event);
+		}
+		this.code_quality_solution$.next(Number($event));
+	}
+
+	/**
 	 * Add a skill inside the project.
 	 * @param event ADD event fired by the tagify component.
 	 */
@@ -444,7 +501,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 		const idSkill = this.skillService.id(event.detail.data.value);
 		if (idSkill === -1) {
-			console.log ('SEVERE ERROR : Unregistered skill', event.detail.data.value);
+			console.log('SEVERE ERROR : Unregistered skill', event.detail.data.value);
 		}
 
 		// This skills is already registered for this project.
@@ -453,7 +510,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		}
 
 		if (traceOn()) {
-			console.log ('Adding the skill', event.detail.data.value);
+			console.log('Adding the skill', event.detail.data.value);
 		}
 
 		this.projectService.project.mapSkills.set(idSkill, new ProjectSkill(idSkill, 0, 0));
@@ -475,19 +532,19 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 		const idSkill = this.skillService.id(event.detail.data.value);
 		if (idSkill === -1) {
-			console.log ('SEVERE ERROR : Unknown skill %s', event.detail.data.value);
+			console.log('SEVERE ERROR : Unknown skill %s', event.detail.data.value);
 		}
 
 		// This skills is NOT already registered for this project.
 		if (!this.projectService.project.mapSkills.has(idSkill)) {
-			console.log ('SEVERE ERROR : Unregistered skill %s for the project %s',
+			console.log('SEVERE ERROR : Unregistered skill %s for the project %s',
 				event.detail.data.value,
 				this.projectService.project.name);
 			return;
 		}
 
 		if (traceOn()) {
-			console.log ('Removing the skill', event.detail.data.value);
+			console.log('Removing the skill', event.detail.data.value);
 		}
 
 		this.projectService.project.mapSkills.delete(idSkill);
@@ -507,24 +564,24 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * @param idSkill the skill identifier
 	 * @param callback the callback function, which might be **projectService.addSkill** or **projectService.delSkill**
 	 */
-	updateSkill(idProject: number, idSkill:  number,
-		callback: (idProject: number, idSkill:  number) => Observable<BooleanDTO>) {
+	updateSkill(idProject: number, idSkill: number,
+		callback: (idProject: number, idSkill: number) => Observable<BooleanDTO>) {
 		callback(idProject, idSkill)
-		.subscribe ({
-			next: result => {
-				if (!result) {
-					this.messageService.error (result.message);
-				} else {
-					this.projectService.actualizeProject(idProject);
+			.subscribe({
+				next: result => {
+					if (!result) {
+						this.messageService.error(result.message);
+					} else {
+						this.projectService.actualizeProject(idProject);
+					}
+				},
+				error: responseInError => {
+					if (traceOn()) {
+						console.log('Error ' + responseInError.error.code + ' ' + responseInError.error.message);
+					}
+					this.messageService.error(responseInError.error.message);
 				}
-			},
-			error: responseInError => {
-				if (traceOn()) {
-					console.log('Error ' + responseInError.error.code + ' ' + responseInError.error.message);
-				}
-				this.messageService.error(responseInError.error.message);
-			}
-		});
+			});
 	}
 
 	/**
@@ -534,24 +591,24 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * @param callback the callback function, which might be projectService.addSonarProject or projectService.delSonarProject
 	 * @param postCallback the post callback function, which will be executed most probably after the callback "projectService.addSonarProject"
 	 */
-	updateSonarProject(idProject: number, sonarProject:  SonarProject,
-		callback: (idProject: number, sonarProject:  SonarProject) => Observable<BooleanDTO>,
-		postCallbackTreatment?: (idProject: number, sonarProject:  SonarProject) => void) {
+	updateSonarProject(idProject: number, sonarProject: SonarProject,
+		callback: (idProject: number, sonarProject: SonarProject) => Observable<BooleanDTO>,
+		postCallbackTreatment?: (idProject: number, sonarProject: SonarProject) => void) {
 		callback(idProject, sonarProject)
-		.subscribe (doneAndOk => {
-			if (!doneAndOk) {
-				this.messageService.error (doneAndOk.message);
-			} else {
-				if (postCallbackTreatment) {
-					postCallbackTreatment(idProject, sonarProject);
+			.subscribe(doneAndOk => {
+				if (!doneAndOk) {
+					this.messageService.error(doneAndOk.message);
+				} else {
+					if (postCallbackTreatment) {
+						postCallbackTreatment(idProject, sonarProject);
+					}
 				}
-			}
-		},
-		response_in_error => {
-			if (traceOn()) {
-				console.log('Error ' + response_in_error);
-			}
-		});
+			},
+				response_in_error => {
+					if (traceOn()) {
+						console.log('Error ' + response_in_error);
+					}
+				});
 	}
 
 	/**
@@ -559,9 +616,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	logProjectSkills() {
 		if (traceOn()) {
-			console.groupCollapsed ('list of skills for project ' + this.projectService.project.name);
+			console.groupCollapsed('list of skills for project ' + this.projectService.project.name);
 			for (const [idSkill, profilSkill] of this.projectService.project.mapSkills) {
-				console.log (idSkill, this.skillService.title(idSkill));
+				console.log(idSkill, this.skillService.title(idSkill));
 			}
 			console.groupEnd();
 		}
@@ -573,18 +630,18 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	addSonarProject(event: CustomEvent) {
 		if (traceOn()) {
-			console.log ('Adding the Sonar project entry', event.detail.data.value);
+			console.log('Adding the Sonar project entry', event.detail.data.value);
 		}
 
 		// This sonar project is already associated tp this project.
-		if ( (this.projectService.project.sonarProjects)
-			&& (this.projectService.project.sonarProjects.find (sp => sp.name === event.detail.data.value))) {
+		if ((this.projectService.project.sonarProjects)
+			&& (this.projectService.project.sonarProjects.find(sp => sp.name === event.detail.data.value))) {
 			return;
 		}
 
-		const sonarComponent = this.sonarService.search (this.projectService.project, event.detail.data.value);
+		const sonarComponent = this.sonarService.search(this.projectService.project, event.detail.data.value);
 		if (!sonarComponent) {
-			console.log ('SEVERE ERROR : This Sonar project is unknown.', event.detail.data.value);
+			console.log('SEVERE ERROR : This Sonar project is unknown.', event.detail.data.value);
 			return;
 		}
 		const sonarProject = new SonarProject();
@@ -635,8 +692,8 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	logProjectSonarProjects() {
 		if (traceOn()) {
-			console.groupCollapsed ('list of sonar projects for project ' + this.projectService.project.name);
-			this.projectService.project.sonarProjects.forEach(sp => console.log (sp.key + ' ' +  sp.name));
+			console.groupCollapsed('list of sonar projects for project ' + this.projectService.project.name);
+			this.projectService.project.sonarProjects.forEach(sp => console.log(sp.key + ' ' + sp.name));
 			console.groupEnd();
 		}
 	}
@@ -647,25 +704,25 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	removeSonarProject(event: CustomEvent) {
 		if (traceOn()) {
-			console.log ('Removing the Sonar project', event.detail.data.value);
+			console.log('Removing the Sonar project', event.detail.data.value);
 		}
 
 		// This Sonar project HAS TO BE registered inside the project.
-		if ( (!this.projectService.project.sonarProjects) || (this.projectService.project.sonarProjects.length === 0)) {
-			console.log ('SHOULD NOT PASS HERE : ' + this.projectService.project.name
-			+ ' does not contain any Sonar project. So, we should not be able to remove one of them');
+		if ((!this.projectService.project.sonarProjects) || (this.projectService.project.sonarProjects.length === 0)) {
+			console.log('SHOULD NOT PASS HERE : ' + this.projectService.project.name
+				+ ' does not contain any Sonar project. So, we should not be able to remove one of them');
 		}
 
-		const sonarProject = this.projectService.project.sonarProjects.find (sp => sp.name === event.detail.data.value);
+		const sonarProject = this.projectService.project.sonarProjects.find(sp => sp.name === event.detail.data.value);
 		if (!sonarProject) {
-			console.log ('SHOULD NOT PASS HERE : Cannot remove the Sonar project '
-			+ event.detail.data.value + ' from project ' + this.projectService.project.name);
+			console.log('SHOULD NOT PASS HERE : Cannot remove the Sonar project '
+				+ event.detail.data.value + ' from project ' + this.projectService.project.name);
 			return;
 		}
 
 		const indexOfSonarProject = this.projectService.project.sonarProjects.indexOf(sonarProject);
 		if (traceOn()) {
-			console.log ('Index of the Sonar project ' + sonarProject.name, indexOfSonarProject);
+			console.log('Index of the Sonar project ' + sonarProject.name, indexOfSonarProject);
 		}
 		this.projectService.project.sonarProjects.splice(indexOfSonarProject, 1);
 
@@ -685,7 +742,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	updateDotRiskColor(risk: number) {
 		this.colorOfRisk = this.projectService.getRiskColor(risk);
 		if (traceOn()) {
-			console.log ('Filling the staff dot with the color', this.colorOfRisk);
+			console.log('Filling the staff dot with the color', this.colorOfRisk);
 		}
 	}
 
@@ -699,11 +756,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		}
 		this.projectService.project.name = this.profileProject.get('projectName').value;
 		this.projectService.project.urlSonarServer = this.profileProject.get('urlSonarServer').value;
+		this.projectService.project.urlCodeFactorIO = this.profileProject.get('urlCodeFactorIO').value;
 		switch (this.projectService.project.connectionSettings) {
 			case this.USER_PASSWORD_ACCESS:
 				this.projectService.project.urlRepository = this.profileProject.get('urlRepository').value;
-				this.projectService.project.username = this.profileProject.get('username').value;
-				this.projectService.project.password = this.profileProject.get('password').value;
+				this.projectService.project.username = this.profileProject.get('usernameRepository').value;
+				this.projectService.project.password = this.profileProject.get('passwordRepository').value;
 				this.projectService.project.filename = '';
 				break;
 			case this.REMOTE_FILE_ACCESS:
@@ -718,7 +776,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				this.projectService.project.password = '';
 				this.projectService.project.filename = '';
 				break;
-			}
+		}
 		if (traceOn()) {
 			console.groupCollapsed('Saving the project');
 			console.log(this.projectService.project);
@@ -754,9 +812,103 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					this.messageService.success('Project ' + this.projectService.project.name + '  saved !');
 
 					this.testConnectionSettings();
+
+					this.loadBranchesOnBackend();
 				});
 		}
 
+	}
+
+	/**
+	 * This function is called when end-user change the url of the GIT repository.
+	 * We clear the context.
+	 */
+	clearBranchesContext() {
+		if (traceOn()) {
+			console.log('Cleaning the GIT branches context');
+		}
+		this.projectService.branches$.next([]);
+		this.gitService.assistanceMessageGitBranches$.next(true);
+	}
+
+	onUrlRepositoryChange($event: any) {
+
+		const url = ($event.target) ? $event.target.value : null;
+
+		// Empty URL, nothing to do
+		if (!url) {
+			return;
+		}
+		if (this.profileProject.get('urlRepository') !== url) {
+			this.projectService.branches$.next(['master']);
+			this.profileProject.get('urlRepository').setValue(url);
+		}
+
+		const apiUrl = this.gitService.generateUrlApiGithub(url);
+
+		if (traceOn()) {
+			console.log(
+				'Leaving the field for the URL repository with value %s, replacing the value %s',
+				url, this.projectService.project.urlRepository);
+		}
+
+		this.gitService.assistanceMessageGitBranches$.next(false);
+		this.gitService.connect$(apiUrl)
+			.pipe(
+				take(1),
+				switchMap((repository: Repository) => {
+					if (repository) {
+						return this.gitService.branches$(apiUrl + '/branches', repository.default_branch);
+					} else {
+						//
+						// We cannot access directly the git repository.
+						// We delegate that access to the back-end only important for the analysis
+						//
+						this.loadBranchesOnBackend();
+						return EMPTY;
+					}
+				}),
+				catchError(error => {
+					if (traceOn()) {
+						console.log('error', error);
+					}
+					return EMPTY;
+				})
+			).subscribe({
+				next: (branches: string[]) => {
+					if (branches) {
+						this.projectService.branches$.next(branches);
+					} else {
+						// If we cannot retrieve the array of branches,
+						// We delegate that access to the back-end only important for the analysis
+						this.loadBranchesOnBackend();
+					}
+				}
+			});
+	}
+
+	/**
+	 * We load the branch name from the back-end.
+	 * 
+	 * The project has to be already saved first.
+	 */
+	loadBranchesOnBackend() {
+		// If this project has alredy been saved (i.e. the project.id > 0)
+		if (this.projectService.project.id === -1) {
+			this.projectService.branches$.next(['master']);
+			this.messageService.info('You need to save, first, the project, to retrieve all available branches');
+		} else {
+			if (this.profileProject.get('urlRepository').value) {
+				this.gitService.assistanceMessageGitBranches$.next(true);
+				if (this.profileProject.get('urlRepository').value !== this.projectService.project.urlRepository) {
+					this.projectService.loadBranches();
+				}
+			} else {
+				if (traceOn()) {
+					console.log ('We do not load the branches when repository url is empty.');
+				}
+			}
+		}
 	}
 
 	/**
@@ -781,7 +933,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				this.profileProject.get('urlRepository').setValue(this.profileProject.get('urlRepository').value);
 				break;
 			case this.REMOTE_FILE_ACCESS:
-				this.profileProject.get('username').setValue('');
+				this.profileProject.get('usernameRepository').setValue('');
 				this.profileProject.get('password').setValue('');
 				this.profileProject.get('urlRepository').setValue(this.profileProject.get('urlRepository').value);
 				break;
@@ -791,7 +943,14 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				this.profileProject.get('password').setValue('');
 				this.profileProject.get('urlRepository').setValue(this.profileProject.get('urlRepository').value);
 				break;
-			}
+		}
+	}
+
+	public onBranchChange(branch: string) {
+		if (traceOn()) {
+			console.log('New branch has been chosen', branch);
+		}
+		this.projectService.project.branch = branch;
 	}
 
 	/**
@@ -842,7 +1001,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
      * Class of the button corresponding to the 3 possible states of the "Ok" button.
      */
 	classOkButton() {
-		return (this.profileProject.invalid) ?
+		return ((this.profileProject.invalid) || (!this.projectService.project.active)) ?
 			'okButton okButtonInvalid' : 'okButton okButtonValid';
 	}
 
@@ -851,10 +1010,14 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * (but it won't be the only one).
 	 * @param tabIndex new tab to activate.
 	 */
-	public tabActivation (tabIndex: number) {
+	public tabActivation(tabIndex: number) {
 		if (traceOn()) {
-			console.log ('Selected index', Constants.TAB_TITLE[tabIndex]);
+			console.log('Selected index', Constants.TAB_TITLE[tabIndex]);
 		}
+	}
+
+	get projectName(): any {
+		return this.profileProject.get('projectName');
 	}
 
 	/**

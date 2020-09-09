@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, of } from 'rxjs';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { Project } from 'src/app/data/project';
 import { ProjectService } from 'src/app/service/project.service';
@@ -17,6 +17,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Component } from '@angular/core';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { BranchComponent } from './branch/branch.component';
 
 describe('ProjectFormComponent', () => {
 	let component: TestHostComponent;
@@ -39,7 +40,7 @@ describe('ProjectFormComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ProjectFormComponent, TechxhiMedalComponent, QuotationBadgeComponent, AuditGraphicBadgeComponent,
-				TestHostComponent],
+				TestHostComponent, BranchComponent],
 			providers: [ReferentialService, CinematicService],
 			imports: [
 					MatButtonToggleModule, MatCheckboxModule, HttpClientTestingModule, FormsModule, ReactiveFormsModule,
@@ -74,6 +75,7 @@ describe('ProjectFormComponent', () => {
 				title: 'Java'
 			}
 		]);
+
 
 		fixture.detectChanges();
 	});

@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.Generated;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fitzhi.Global;
 import com.fitzhi.SkillerRuntimeException;
 import com.fitzhi.bean.ShuffleService;
@@ -54,6 +55,11 @@ public @Data class Project implements Serializable {
 	 * 2 models exist : either the direct (URL/user/pass), or the indirect (URL/remote file)
 	 */
 	private int connectionSettings;
+	
+	/**
+	 * The branch name. By default, the master branch is used.
+	 */
+	private String branch;
 	
 	/**
 	 * The repository URL of the project
@@ -98,6 +104,11 @@ public @Data class Project implements Serializable {
 	 */
 	private List<Library> libraries = new ArrayList<>();
 	
+	/**
+	 * URL of the codefactor.io dashboard for your project.
+	 */
+	private String urlCodeFactorIO;
+
 	/**
 	 * URL of the Sonar server hosting the Sonar projects related to this project
 	 */
@@ -192,6 +203,7 @@ public @Data class Project implements Serializable {
 	 * @return {@code true} if the project is setup with a direct access to the version control repository 
 	 * <i>(the Project self-contains connection parameters)</i>
 	 */
+	@JsonIgnore
 	public boolean isNoUserPasswordAccess() {
 		return (connectionSettings == NO_USER_PASSWORD_ACCESS);
 	}
@@ -200,6 +212,7 @@ public @Data class Project implements Serializable {
 	 * @return {@code true} if the project is setup with a direct access to the version control repository 
 	 * <i>(the Project self-contains connection parameters)</i>
 	 */
+	@JsonIgnore
 	public boolean isUserPasswordAccess() {
 		return (connectionSettings == USER_PASSWORD_ACCESS);
 	}
@@ -208,6 +221,7 @@ public @Data class Project implements Serializable {
 	 * @return {@code true} if the project is setup with an indirect access to the version control repository 
 	 * <i>(Application must retrieve the connection parameters on a property file)</i>
 	 */
+	@JsonIgnore
 	public boolean isRemoteFileAccess() {
 		return (connectionSettings == REMOTE_FILE_ACCESS);
 	}
@@ -280,6 +294,7 @@ public @Data class Project implements Serializable {
 	 * @return {@code true} if the project is empty, otherwise {@code false}
 	 * @see StaffHandler#isProjectReferenced(int)
 	 */
+	@JsonIgnore
 	public boolean isEmpty() {
 		if (!skills.isEmpty()) {
 			return false;

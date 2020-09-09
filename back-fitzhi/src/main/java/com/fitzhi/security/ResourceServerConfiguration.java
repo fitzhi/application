@@ -71,7 +71,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				"/api/project/all", 
 				"/api/skill/all", 
 				"/api/referential/**").permitAll()
-				.antMatchers("/**").access("hasRole('USER')")
+				.antMatchers("/**/**").access("hasRole('USER')")
 				.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
 		}
 	}

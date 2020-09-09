@@ -4,11 +4,15 @@
 package com.fitzhi.source.crawler;
 
 import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.transport.FetchConnection;
 
 import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.data.internal.Project;
@@ -20,10 +24,17 @@ import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.ConnectionSettings;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.SkillerException;
+import com.fitzhi.source.crawler.git.GitCrawler;
 
 /**
  * <p>
  * Source repository scanner.
+ * </p>
+ * <p>
+ * <font color="red">This interface unfortunately has adherence with <b>GIT</b></font>
+ * </p>
+ * <p>
+ * Future releases should unplugged this link.
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
@@ -49,6 +60,39 @@ public interface RepoScanner {
 	 * @return {@code true} if the connection has succeeded, {@code false} otherwise
 	 */
 	boolean testConnection(Project project);
+	
+
+	/**
+	 * Load the collection of reference of <b>branches</b> available on the SCM declared for the given project.
+	 * @param project the given project
+	 * @return a collection of GIT Ref.
+	 */
+	Collection<Ref> loadBranches(Project project);
+
+	/**
+	 * Retrieve the connection <i>(in any)</i> to the SCM for the current project settings
+	 * @param project the current project
+	 * @return the fetchConnection object representing the connection to the remote server, or {@code null} if connection fails.
+	 */
+	FetchConnection retrieveFetchConnection(Project project);
+	
+	/**
+	 * <p>
+	 * Create a directory which will be the destination of the clone process.
+	 * <br/>
+	 * <font color="darkGreen" size="4">
+	 * The first implementation in {@link GitCrawler} will use the {@code temp directory}  of the filesystem.
+	 * </font>
+	 * </p>
+	 * 
+	 * @param project  the actual project
+	 * @param settings the connection settings <i>(these settings are given for
+	 *                 trace only support)</i>
+	 * @throws IOException an IO oops ! occurs. Too bad!
+	 * @return the resulting path
+	 */
+	Path createDirectoryAsCloneDestination(Project project, ConnectionSettings settings) throws IOException;
+	
 	
 	/**
 	 * <p>
@@ -77,7 +121,7 @@ public interface RepoScanner {
 
 	/**
 	 * <p>
-	 * Finalize the loading of the changes.<br/>
+	 * Finalize the loading of the changes.<br/>bra
 	 * Useless entries will be removed.
 	 * </P>
 	 * <p><font color="red">
@@ -136,12 +180,11 @@ public interface RepoScanner {
 	 * <b>PREREQUESIT = The repository must have be cloned before</b>
 	 * </p>
 	 * @param project Project whose source code files should be scan in the repository
-	 * @param settings connection settings
 	 * @return the parsed repository 
 	 * @throws IOException thrown if any application or network error occurs.
 	 * @throws SkillerException thrown if any application or network error occurs.
 	 */
-	CommitRepository parseRepository(Project project, ConnectionSettings settings) throws IOException, SkillerException;
+	CommitRepository parseRepository(Project project) throws IOException, SkillerException;
 
 	/**
 	 * <p>Aggregate the history of the repository into the risks dashboard.</p>

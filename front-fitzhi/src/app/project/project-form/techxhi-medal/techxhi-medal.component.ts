@@ -1,13 +1,10 @@
 import { Component, OnInit, Input, AfterViewInit, OnDestroy, EventEmitter, Output } from '@angular/core';
 import { ReferentialService } from 'src/app/service/referential.service';
-import { Project } from 'src/app/data/project';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
-import { SonarProject } from 'src/app/data/SonarProject';
-import { CinematicService } from 'src/app/service/cinematic.service';
-import { BehaviorSubject } from 'rxjs';
-import { ProjectService } from 'src/app/service/project.service';
 import { take } from 'rxjs/operators';
+import { ProjectService } from 'src/app/service/project.service';
+import { CinematicService } from 'src/app/service/cinematic.service';
 
 @Component({
 	selector: 'app-techxhi-medal',
@@ -47,17 +44,18 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 		public referentialService: ReferentialService,
 		public projectService: ProjectService,
 		public cinematicService: CinematicService) {
-		super();
+			super();
 	}
 
 	ngOnInit() {
+		console.log('ngOnInit()');
 		this.projectService.projectLoaded$
 			.pipe(take(1))
 			.subscribe({
 				next: doneAndOk => {
 					if (doneAndOk) {
 						this.globalSonarEvaluation = this.projectService.calculateSonarEvaluation(this.projectService.project);
-						this.displayAuditBadge = this.ProcessDisplayAuditBadge();
+						this.displayAuditBadge = this.processDisplayAuditBadge();
 					}
 				}
 			});
@@ -78,7 +76,6 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 		this.cinematicService.projectTabIndex = tabIndex;
 	}
 
-
 	/**
 	 * @returns the color figuring the risk evaluation for this project.
 	 */
@@ -86,11 +83,10 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 		return { 'fill': this.colorOfRisk };
 	}
 
-
 	/**
 	 * This function is processing the `*ngIf` preview condition of the __Audit__ summary badge.
 	 */
-	ProcessDisplayAuditBadge(): boolean {
+	processDisplayAuditBadge(): boolean {
 
 		if (!this.projectService.project) {
 			return false;
@@ -107,6 +103,7 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	 * This function is handling the `*ngIf` preview condition of the __Sonar__ summary badge.
 	 */
 	sonarReady() {
+
 		if (!this.projectService.project) {
 			return false;
 		}
@@ -128,7 +125,16 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 		return preview;
 	}
 
+	/**
+	 * This function is handling the `*ngIf` preview condition of the __codeFactor.io__ summary badge.
+	 */
+	sonarCodeFactorReady() {
+		return (this.projectService.project) && (this.projectService.project.urlCodeFactorIO);
+	}
 
+	urlCodeFactorIO() {
+		return this.projectService.urlCodeFactorIO();
+	}
 	/**
 	* Calling the base class to unsubscribe all subscriptions.
 	*/

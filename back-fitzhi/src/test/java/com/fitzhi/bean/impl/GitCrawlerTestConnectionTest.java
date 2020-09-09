@@ -57,5 +57,4 @@ public class GitCrawlerTestConnectionTest {
 		Assert.assertFalse(scanner.testConnection(project));
 	}
 	
-
 }
