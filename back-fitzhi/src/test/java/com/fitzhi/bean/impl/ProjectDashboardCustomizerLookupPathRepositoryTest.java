@@ -38,6 +38,7 @@ public class ProjectDashboardCustomizerLookupPathRepositoryTest {
 	@Before
 	public void before() throws SkillerException {
 		project = new Project(9999, "Project 9999");
+		project.setBranch("master");
 		paths = dataSaver.loadRepositoryDirectories(project);
 	}
 	
