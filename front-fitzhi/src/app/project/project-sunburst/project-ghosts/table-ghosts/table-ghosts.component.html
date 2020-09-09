@@ -1,4 +1,4 @@
-<mat-table #table [dataSource]="dataSource.data" class="mat-elevation-z8 tableGhosts" matSort>
+<mat-table #table [dataSource]="dataSource" class="mat-elevation-z8 tableGhosts" matSort>
 
   <ng-container matColumnDef="pseudo">
     <th id="pseudo" mat-header-cell *matHeaderCellDef mat-sort-header>Pseudo</th>
@@ -96,4 +96,9 @@
   <tr mat-row class="td-ghost" *matRowDef="let row; columns: editableColumns;"></tr>
 </mat-table>
 
-<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+<mat-paginator 
+  #paginator 
+  [pageSize]="5" 
+  [pageSizeOptions]="[5, 10, 20]" 
+  showFirstLastButtons>
+</mat-paginator>

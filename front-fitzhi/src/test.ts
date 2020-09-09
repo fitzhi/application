@@ -18,5 +18,6 @@ getTestBed().initTestEnvironment(
 const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /git\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /project-form-behaviorWithGit\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /table-ghosts-paginatorBehavior\.component\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);

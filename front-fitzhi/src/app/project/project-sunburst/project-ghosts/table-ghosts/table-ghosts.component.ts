@@ -17,6 +17,7 @@ import { SunburstCacheService } from '../../service/sunburst-cache.service';
 import { GhostsService } from '../service/ghosts.service';
 import { MatTable } from '@angular/material/table';
 import { Project } from 'src/app/data/project';
+import { trace } from 'console';
 
 @Component({
 	selector: 'app-table-ghosts',
@@ -35,7 +36,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	/**
 	 * The undeclared contributors in the repository.
 	 */
-	public dataSource: ProjectGhostsDataSource; // = new ProjectGhostsDataSource(new Project(), []);
+	public dataSource: ProjectGhostsDataSource; // = new ProjectGhostsDataSource([]);
 
 	/**
 	 * The paginator of the ghosts data source.
@@ -72,22 +73,19 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	}
 
 	ngOnInit() {
-
-		if (this.dataSourceGhosts$) {
-			this.subscriptions.add(
-				this.dataSourceGhosts$.subscribe((dataSource: ProjectGhostsDataSource) => {
-					if (traceOn()) {
-						console.log(
-							'Project %d %s reveived %s in the table of ghosts component',
-							this.projectService.project.id,
-							this.projectService.project.name,
-							dataSource.data.length);
-					}
-					this.dataSource = dataSource;
+		this.subscriptions.add(
+			this.dataSourceGhosts$.subscribe((dataSource: ProjectGhostsDataSource) => {
+				if (traceOn()) {
+					console.log(
+						'Project %d %s reveived %s in the table of ghosts component',
+						this.projectService.project.id,
+						this.projectService.project.name,
+						dataSource.data.length);
+				}
+				this.dataSource = new ProjectGhostsDataSource(dataSource.data);
 			}));
-		}
 
-		if ((this.staffListService) && (this.staffListService.allStaff$)) {
+		if (this.staffListService.allStaff$) {
 			this.subscriptions.add(
 				this.staffListService.allStaff$.subscribe(staff => {
 					this.allStaff = staff;
