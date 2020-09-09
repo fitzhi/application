@@ -430,10 +430,11 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * @return the expected path
 	 */
 	private String buildDirectoryPathnames(Project project) {
-		return String.format("%s/%d-%s-pathnames.txt", 
+		return String.format("%s/%d-%s-%s-pathnames.txt", 
 			PATHNAMES,
 			project.getId(),
-			project.getName());
+			project.getName(),
+			project.getBranch());
 	}
 
 
