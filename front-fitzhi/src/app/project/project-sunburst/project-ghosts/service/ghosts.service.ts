@@ -46,11 +46,11 @@ export class GhostsService {
 
     const matchedLogins = [];
 
-    pseudos.map(candidate => this.reduceCharacters(candidate))
-          .forEach (candidate => {
-              if (   (candidate === login)
-                ||   (candidate === (firstName + ' ' + lastName))
-                ||   (candidate === (lastName + ' ' + firstName))) {
+    pseudos.forEach (candidate => {
+              const eligible = this.reduceCharacters(candidate);
+              if (   (eligible === login)
+                ||   (eligible === (firstName + ' ' + lastName))
+                ||   (eligible === (lastName + ' ' + firstName))) {
                   matchedLogins.push(candidate);
               }
     });
