@@ -69,9 +69,6 @@ public class ProjectAuditControllerRemoveThirdAttachmentFileTest {
 	
 	@Autowired
 	private ProjectHandler projectHandler;
-	
-	@Autowired
-	private ProjectAuditController projectAuditController;
 
 	@Autowired
 	AuditAttachmentStorageProperties storageProperties;
