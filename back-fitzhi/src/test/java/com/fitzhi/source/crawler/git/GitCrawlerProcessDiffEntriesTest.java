@@ -11,6 +11,16 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import com.fitzhi.Global;
+import com.fitzhi.bean.AsyncTask;
+import com.fitzhi.bean.DataChartHandler;
+import com.fitzhi.bean.DataHandler;
+import com.fitzhi.bean.ProjectDashboardCustomizer;
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.RepositoryAnalysis;
+import com.fitzhi.source.crawler.RepoScanner;
+
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
@@ -22,7 +32,6 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
 import org.junit.After;
 import org.junit.Assert;
@@ -34,19 +43,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.fitzhi.Global;
-import com.fitzhi.bean.AsyncTask;
-import com.fitzhi.bean.DataChartHandler;
-import com.fitzhi.bean.DataHandler;
-import com.fitzhi.bean.ProjectDashboardCustomizer;
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.RepositoryAnalysis;
-import com.fitzhi.data.source.ConnectionSettings;
-import com.fitzhi.exception.SkillerException;
-import com.fitzhi.source.crawler.RepoScanner;
-import com.jcraft.jsch.Logger;
 
 import lombok.extern.slf4j.Slf4j;
 

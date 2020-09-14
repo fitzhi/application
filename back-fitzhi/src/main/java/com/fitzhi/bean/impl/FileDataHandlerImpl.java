@@ -35,6 +35,7 @@ import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
@@ -47,7 +48,9 @@ import com.opencsv.CSVWriter;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * <p>Implementation of DataSaver on the file system.</p>
+ * <p>
+ * Implementation of DataSaver on the file system.
+ * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
@@ -77,7 +80,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * Directory where the pathnames file is detected on GIT.
 	 */
 	private final String PATHNAMES = "pathnames-data";
-	
+
 	/**
 	 * Initialization of the Google JSON parser.
 	 */
@@ -93,9 +96,9 @@ public class FileDataHandlerImpl implements DataHandler {
 
 	@PostConstruct
 	private void init() {
-        this.rootLocation = Paths.get(saveDir);
+		this.rootLocation = Paths.get(saveDir);
 	}
-	
+
 	@Override
 	public void saveProjects(Map<Integer, Project> projects) throws SkillerException {
 
@@ -135,7 +138,6 @@ public class FileDataHandlerImpl implements DataHandler {
 
 		Map<Integer, Project> projects = new HashMap<>();
 
-
 		try (FileReader fr = new FileReader(rootLocation.resolve(filename).toFile())) {
 			Type listProjectsType = new TypeToken<HashMap<Integer, Project>>() {
 			}.getType();
@@ -151,7 +153,7 @@ public class FileDataHandlerImpl implements DataHandler {
 					.forEach(project -> sb.append(project.getId()).append(" ").append(project.getName()).append(", "));
 			log.debug(sb.toString());
 		}
-		
+
 		return projects;
 	}
 
@@ -170,8 +172,8 @@ public class FileDataHandlerImpl implements DataHandler {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Saving %d staff members into file %s.", company.size(), filename));
 			final StringBuilder sb = new StringBuilder();
-			company.values().stream()
-					.forEach(staff -> sb.append(staff.getIdStaff()).append(" ").append(staff.getLastName()).append(", "));
+			company.values().stream().forEach(
+					staff -> sb.append(staff.getIdStaff()).append(" ").append(staff.getLastName()).append(", "));
 			log.debug(sb.toString());
 		}
 
@@ -189,19 +191,22 @@ public class FileDataHandlerImpl implements DataHandler {
 
 		Map<Integer, Staff> theStaff = new HashMap<>();
 
-		try (InputStreamReader isr = new InputStreamReader(new FileInputStream(rootLocation.resolve(filename).toFile()), "UTF-8")) {
+		try (InputStreamReader isr = new InputStreamReader(new FileInputStream(rootLocation.resolve(filename).toFile()),
+				"UTF-8")) {
 			Type listStaffType = new TypeToken<HashMap<Integer, Staff>>() {
 			}.getType();
 			theStaff = gson.fromJson(isr, listStaffType);
 		} catch (final Exception e) {
-			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, rootLocation.resolve(filename).toFile().getAbsoluteFile()), e);
+			throw new SkillerException(CODE_IO_ERROR,
+					MessageFormat.format(MESSAGE_IO_ERROR, rootLocation.resolve(filename).toFile().getAbsoluteFile()),
+					e);
 		}
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Loading %d staff members from file %s.", theStaff.size(), filename));
 			final StringBuilder sb = new StringBuilder();
-			theStaff.values().stream()
-					.forEach(staff -> sb.append(staff.getIdStaff()).append(" ").append(staff.getLastName()).append(", "));
+			theStaff.values().stream().forEach(
+					staff -> sb.append(staff.getIdStaff()).append(" ").append(staff.getLastName()).append(", "));
 			log.debug(sb.toString());
 		}
 		return theStaff;
@@ -222,7 +227,8 @@ public class FileDataHandlerImpl implements DataHandler {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Saving %d skills into file %s.", skills.size(), filename));
 			final StringBuilder sb = new StringBuilder();
-			skills.values().stream().forEach(skill -> sb.append(skill.getId()).append(" ").append(skill.getTitle()).append(", "));
+			skills.values().stream()
+					.forEach(skill -> sb.append(skill.getId()).append(" ").append(skill.getTitle()).append(", "));
 			log.debug(sb.toString());
 		}
 
@@ -233,7 +239,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		}
 	}
 
-	private void createIfNeededDirectory(String dir) throws SkillerException { 
+	private void createIfNeededDirectory(String dir) throws SkillerException {
 
 		Path path = rootLocation.resolve(dir);
 		if (Files.notExists(path)) {
@@ -255,42 +261,35 @@ public class FileDataHandlerImpl implements DataHandler {
 		createIfNeededDirectory(SAVED_CHANGES);
 
 		final String filename = SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getName() + "-changes.csv";
-		
+
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Saving file %s", rootLocation.resolve(filename)));
 		}
 		try (Writer writer = new FileWriter(rootLocation.resolve(filename).toFile())) {
 
-	        try (CSVWriter csvWriter = new CSVWriter(writer,
-	                ';',
-	                CSVWriter.DEFAULT_QUOTE_CHARACTER,
-	                CSVWriter.DEFAULT_ESCAPE_CHARACTER,
-	                CSVWriter.DEFAULT_LINE_END)) {
-		        csvWriter.writeNext(new String[] {"Commit", "Path", "Date", "Author", "Email", "diff"});
-		        
-		        for (String path : changes.keySet()) {
-		        	changes.getSourceFileHistory(path)
-		        		.getChanges()
-		        		.forEach(change -> csvWriter.writeNext(new String[]{
-		        			change.getCommitId(),
-		        			path,
-		        			change.getDateCommit().toString(),
-		        			change.getAuthorName(),
+			try (CSVWriter csvWriter = new CSVWriter(writer, ';', CSVWriter.DEFAULT_QUOTE_CHARACTER,
+					CSVWriter.DEFAULT_ESCAPE_CHARACTER, CSVWriter.DEFAULT_LINE_END)) {
+				csvWriter.writeNext(new String[] { "Commit", "Path", "Date", "Author", "Email", "diff" });
+
+				for (String path : changes.keySet()) {
+					changes.getSourceFileHistory(path).getChanges().forEach(change -> csvWriter.writeNext(new String[] {
+							change.getCommitId(), path, change.getDateCommit().toString(), change.getAuthorName(),
 							change.getAuthorEmail(),
-							String.valueOf(change.getDiff().getLinesAdded() - change.getDiff().getLinesDeleted())}));
-		        }
-		    }
-        } catch (IOException ioe) {
-        	throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
-        }
+							String.valueOf(change.getDiff().getLinesAdded() - change.getDiff().getLinesDeleted()) }));
+				}
+			}
+		} catch (IOException ioe) {
+			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
+		}
 	}
-	
+
 	/**
-	 * Extract the directory path from the file path. 
+	 * Extract the directory path from the file path.
+	 * 
 	 * @param pathFilename path filename
 	 * @return the path of the directory
 	 */
-	private String extractDirectory (String pathFilename) {
+	private String extractDirectory(String pathFilename) {
 		int lastIndexOf = pathFilename.lastIndexOf('/');
 		if (lastIndexOf == -1) {
 			return pathFilename;
@@ -301,11 +300,12 @@ public class FileDataHandlerImpl implements DataHandler {
 
 	/**
 	 * Reset or create a new file
+	 * 
 	 * @param filename the current filename
 	 * @return a new file
 	 * @throws SkillerException
 	 */
-	private File createResetOrCreateFile (String filename) throws SkillerException {
+	private File createResetOrCreateFile(String filename) throws SkillerException {
 		Path path = rootLocation.resolve(filename);
 		try {
 			if (path.toFile().exists()) {
@@ -316,32 +316,39 @@ public class FileDataHandlerImpl implements DataHandler {
 				log.debug(String.format("new path %s is created", newPath.toAbsolutePath()));
 			}
 			return newPath.toFile();
-	    } catch (IOException ioe) {
-	    	throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, path.toFile().getAbsolutePath()), ioe);
-	    }
+		} catch (IOException ioe) {
+			throw new SkillerException(CODE_IO_ERROR,
+					MessageFormat.format(MESSAGE_IO_ERROR, path.toFile().getAbsolutePath()), ioe);
+		}
 	}
-	
+
 	/**
 	 * <p>
-	 * Test <b>on the file system</b> if the given pathname is a directory in the repository.
+	 * Test <b>on the file system</b> if the given pathname is a directory in the
+	 * repository.
 	 * </p>
 	 * <p>
-	 * <font color="chocolate">We use java IO API to validate that the given path is effectively a directory.</font>
+	 * <font color="chocolate">We use java IO API to validate that the given path is
+	 * effectively a directory.</font>
 	 * </p>
-	 * @param project the current project whose repository is analyzed.
-	 * <i>We use this parameter to retrieve the location of the GIT local repository.</i>
+	 * 
+	 * @param project  the current project whose repository is analyzed. <i>We use
+	 *                 this parameter to retrieve the location of the GIT local
+	 *                 repository.</i>
 	 * @param pathname the given pathname
 	 * @return {@code true} if the pathname is a directory.
 	 */
-	private boolean isDirectory (final Project project, final String pathname) {
-		
+	private boolean isDirectory(final Project project, final String pathname) {
+
 		if (pathname.indexOf(INTERNAL_FILE_SEPARATORCHAR) != -1) {
-				return true;
+			return true;
 		}
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Examining if %s is a directory", project.getLocationRepository() + INTERNAL_FILE_SEPARATORCHAR + pathname));
+			log.debug(String.format("Examining if %s is a directory",
+					project.getLocationRepository() + INTERNAL_FILE_SEPARATORCHAR + pathname));
 		}
-		return Paths.get(project.getLocationRepository() + INTERNAL_FILE_SEPARATORCHAR + pathname).toFile().isDirectory();
+		return Paths.get(project.getLocationRepository() + INTERNAL_FILE_SEPARATORCHAR + pathname).toFile()
+				.isDirectory();
 	}
 
 	@Override
@@ -368,50 +375,47 @@ public class FileDataHandlerImpl implements DataHandler {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Loading %d skills from file %s.", skills.size(), filename));
 			final StringBuilder sb = new StringBuilder();
-			skills.values().stream().forEach(skill -> sb.append(skill.getId()).append(" ").append(skill.getTitle()).append(", "));
+			skills.values().stream()
+					.forEach(skill -> sb.append(skill.getId()).append(" ").append(skill.getTitle()).append(", "));
 			log.debug(sb.toString());
 		}
 		return skills;
 	}
-	
+
 	@Override
 	public void saveRepositoryDirectories(Project project, SourceControlChanges changes) throws SkillerException {
-		
+
 		//
 		// As the method-name explains, we create the directory.
 		//
 		createIfNeededDirectory(PATHNAMES);
-		
+
 		String filename = this.buildDirectoryPathnames(project);
-		
-		List<String> directories = changes.keySet().stream()
-				.map(this::extractDirectory)
-				.distinct()
-				.filter(path -> isDirectory(project, path))
-				.sorted()
-				.collect(Collectors.toList());
+
+		List<String> directories = changes.keySet().stream().map(this::extractDirectory).distinct()
+				.filter(path -> isDirectory(project, path)).sorted().collect(Collectors.toList());
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Saving paths file %s", rootLocation.resolve(filename).toAbsolutePath()));
-		}		
-		
+		}
+
 		File file = createResetOrCreateFile(filename);
-		
+
 		try (Writer writer = new FileWriter(file)) {
 			for (String dir : directories) {
 				writer.write(dir);
 				writer.write(Global.LN);
 			}
-        } catch (IOException ioe) {
-        	throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
-        }
+		} catch (IOException ioe) {
+			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
+		}
 	}
 
 	@Override
 	public List<String> loadRepositoryDirectories(Project project) throws SkillerException {
-		
+
 		String filename = this.buildDirectoryPathnames(project);
-		
+
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Loading the paths file %s", rootLocation.resolve(filename).toAbsolutePath()));
 		}
@@ -420,22 +424,33 @@ public class FileDataHandlerImpl implements DataHandler {
 		try (Reader reader = new FileReader(file)) {
 			BufferedReader br = new BufferedReader(reader);
 			return br.lines().collect(Collectors.toList());
-        } catch (IOException ioe) {
-        	throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
-        }		
+		} catch (IOException ioe) {
+			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
+		}
 	}
 
 	/**
 	 * Building the pathnames file path
+	 * 
 	 * @param project the current project
 	 * @return the expected path
 	 */
 	private String buildDirectoryPathnames(Project project) {
-		return String.format("%s/%d-%s-%s-pathnames.txt", 
-			PATHNAMES,
-			project.getId(),
-			project.getName(),
-			project.getBranch());
+		return String.format("%s/%d-%s-%s-pathnames.txt", PATHNAMES, project.getId(), project.getName(),
+				project.getBranch());
+	}
+
+	@Override
+	public List<ProjectLayer> generateProjectLayers(Project project, SourceControlChanges changes)
+			throws SkillerException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void saveProjectLayers(List<ProjectLayer> layers) throws SkillerException {
+		// TODO Auto-generated method stub
+
 	}
 
 
