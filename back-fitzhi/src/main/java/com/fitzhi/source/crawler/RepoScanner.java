@@ -10,8 +10,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.errors.CorruptObjectException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.FetchConnection;
 
 import com.fitzhi.controller.in.SettingsGeneration;
@@ -25,13 +29,14 @@ import com.fitzhi.data.source.ConnectionSettings;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.git.GitCrawler;
+import com.fitzhi.source.crawler.git.ParserVelocity;
 
 /**
  * <p>
  * Source repository scanner.
  * </p>
  * <p>
- * <font color="red">This interface unfortunately has adherence with <b>GIT</b></font>
+ * <font color="red">This interface unfortunately has an adherence with <b>GIT</b></font>
  * </p>
  * <p>
  * Future releases should unplugged this link.
@@ -185,6 +190,25 @@ public interface RepoScanner {
 	 * @throws SkillerException thrown if any application or network error occurs.
 	 */
 	CommitRepository parseRepository(Project project) throws IOException, SkillerException;
+
+	/**
+	 * <p>
+	 * Take in account the list of files impacted by a commit.
+	 * </p>
+	 * 
+	 * @param analysis the analysis container. 
+	 * This container hosts the complete list of changes detected during the crawling repository
+	 * @param commit     the actual commit evaluated
+	 * @param diffs      the list of difference between this current commit and the
+	 *                   previous one
+	 * @param diffFormater Difference formatter which will be used to count the number of added, and deleted, lines
+	 * @param parserVelocity tracker which is following the velocity of the parser 
+	 * @throws IOException thrown if any IO exception occurs
+	 * @throws CorruptObjectException throws of if the Git object is corrupted, which is an internal severe error
+	 */
+	void processDiffEntries(RepositoryAnalysis analysis, RevCommit commit, List<DiffEntry> diffs,
+			DiffFormatter diffFormatter, ParserVelocity parserVelocity) throws IOException, CorruptObjectException;
+
 
 	/**
 	 * <p>Aggregate the history of the repository into the risks dashboard.</p>

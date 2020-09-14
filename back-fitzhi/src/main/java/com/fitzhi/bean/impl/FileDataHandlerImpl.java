@@ -266,7 +266,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	                CSVWriter.DEFAULT_QUOTE_CHARACTER,
 	                CSVWriter.DEFAULT_ESCAPE_CHARACTER,
 	                CSVWriter.DEFAULT_LINE_END)) {
-		        csvWriter.writeNext(new String[] {"Commit", "Path", "Date", "Author", "Email"});
+		        csvWriter.writeNext(new String[] {"Commit", "Path", "Date", "Author", "Email", "diff"});
 		        
 		        for (String path : changes.keySet()) {
 		        	changes.getSourceFileHistory(path)
@@ -276,7 +276,8 @@ public class FileDataHandlerImpl implements DataHandler {
 		        			path,
 		        			change.getDateCommit().toString(),
 		        			change.getAuthorName(),
-		        			change.getAuthorEmail()}));
+							change.getAuthorEmail(),
+							String.valueOf(change.getDiff().getLinesAdded() - change.getDiff().getLinesDeleted())}));
 		        }
 		    }
         } catch (IOException ioe) {

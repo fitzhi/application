@@ -27,7 +27,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,7 +46,11 @@ import javax.annotation.PostConstruct;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.Edit;
+import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.diff.DiffEntry.ChangeType;
+import org.eclipse.jgit.errors.CorruptObjectException;
 import org.eclipse.jgit.diff.RenameDetector;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
@@ -61,6 +64,7 @@ import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.eclipse.jgit.util.io.DisabledOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -103,6 +107,7 @@ import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
 import com.fitzhi.source.crawler.impl.AbstractScannerDataGenerator;
 import com.google.gson.Gson;
+import com.fitzhi.data.internal.SourceCodeDiffChange;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -485,14 +490,13 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 	 * taking account of its files tree by comparison with the previous state of the
 	 * repository.<br/>
 	 * To fulfill that purpose, 2 files tree are passed to this method in order to
-	 * detect
+	 * detect :
 	 * <ul>
-	 * <li>the real functional implementation changes made by developers, which
-	 * really matter</li>
+	 * <li>either, the real implementation changes done by developers, <b>the changes that really matter</b></li>
 	 * <li>or, the simple copy, delete or modify file path modifications</li>
 	 * </ul>
+	 * <br/>
 	 * </p>
-	 * 
 	 * @param repository   a GIT repository
 	 * @param analysis     the repository analysis
 	 * @param commit       the commit revision examined
@@ -500,7 +504,7 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 	 * @param curObjectId  the <b>CURRENT</b> files tree examined.
 	 * @param velocity     parser velocity to follow up in detail the performance of
 	 *                     the application
-	 * @throws SkillerException
+	 * @throws SkillerException thrown if any exception occurs
 	 */
 	private void buildRepositoryAnalysis(Repository repository, RepositoryAnalysis analysis, RevCommit commit,
 			ObjectId prevObjectId, ObjectId curObjectId, ParserVelocity velocity) throws SkillerException {
@@ -515,6 +519,11 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 			CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
 			newTreeIter.reset(reader, curObjectId);
 
+			DiffFormatter diffFormater = new DiffFormatter(DisabledOutputStream.INSTANCE);
+			diffFormater.setRepository(repository);
+			diffFormater.setDiffComparator(RawTextComparator.DEFAULT);
+			diffFormater.setDetectRenames(true);
+	
 			//
 			// finally get the list of changed files
 			//
@@ -529,9 +538,9 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 					}
 					renameDetector.addAll(diffs);
 					List<DiffEntry> files = renameDetector.compute();
-					processDiffEntries(analysis, commit, files, velocity);
+					processDiffEntries(analysis, commit, files, diffFormater, velocity);
 				} else {
-					processDiffEntries(analysis, commit, diffs, velocity);
+					processDiffEntries(analysis, commit, diffs, diffFormater, velocity);
 				}
 			}
 		} catch (final Exception e) {
@@ -539,17 +548,9 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 		}
 	}
 
-	/**
-	 * Take in account the list of files impacted by a commit
-	 * 
-	 * @param gitChanges the complete list of changes detected in the studying
-	 *                   repository
-	 * @param commit     the actual commit evaluated
-	 * @param diffs      the list of difference between this current commit and the
-	 *                   previous one
-	 */
-	private void processDiffEntries(RepositoryAnalysis analysis, RevCommit commit, List<DiffEntry> diffs,
-			ParserVelocity parserVelocity) {
+	@Override
+	public void processDiffEntries(RepositoryAnalysis analysis, RevCommit commit, List<DiffEntry> diffs,
+			DiffFormatter diffFormater, ParserVelocity parserVelocity) throws IOException, CorruptObjectException{
 
 		for (DiffEntry de : diffs) {
 
@@ -567,6 +568,7 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 							|| ((de.getNewPath() != null) && (de.getNewPath().contains(this.crawlerFilterDebug)))
 							|| ((de.getOldPath() != null) && (de.getOldPath().contains(this.crawlerFilterDebug))))) {
 				log.debug(String.format("%s %s %s", de.getChangeType(), de.getOldPath(), de.getNewPath()));
+				log.debug(String.format("DiffAttribute key %s value %s", de.getDiffAttribute().getKey(), de.getDiffAttribute().getValue()));
 			}
 
 			switch (de.getChangeType()) {
@@ -602,11 +604,15 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 					analysis.keepPathModified(de.getNewPath());
 				}
 			case ADD:
+				SourceCodeDiffChange diff = this.diffFile(de, diffFormater);
 				PersonIdent author = commit.getAuthorIdent();
-				analysis.addChange(de.getNewPath(),
-						new SourceChange(commit.getId().toString(),
-								author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-								author.getName(), author.getEmailAddress()));
+				analysis.takeChangeInAccount(de.getNewPath(),
+						new SourceChange(
+							commit.getId().toString(),
+							author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+							author.getName(),
+							author.getEmailAddress(),
+							diff));
 				parserVelocity.increment();
 				break;
 			default:
@@ -617,6 +623,16 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 				break;
 			}
 		}
+	}
+
+	private SourceCodeDiffChange diffFile(DiffEntry diffEntry, DiffFormatter diffFormater) throws IOException, CorruptObjectException{
+		int linesDeleted = 0;
+		int linesAdded = 0;
+		for (Edit edit : diffFormater.toFileHeader(diffEntry).toEditList()) {
+			linesDeleted += edit.getEndA() - edit.getBeginA();
+			linesAdded += edit.getEndB() - edit.getBeginB();
+		}            
+		return new SourceCodeDiffChange(diffEntry.getNewPath(), linesDeleted, linesAdded);
 	}
 
 	/**
