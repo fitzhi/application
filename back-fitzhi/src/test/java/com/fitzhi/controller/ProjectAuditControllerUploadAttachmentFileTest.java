@@ -66,9 +66,6 @@ public class ProjectAuditControllerUploadAttachmentFileTest {
 	private ProjectHandler projectHandler;
 	
 	@Autowired
-	private ProjectAuditController projectAuditController;
-
-	@Autowired
 	AuditAttachmentStorageProperties storageProperties;
 	
 	private final String UPLOAD_FILENAME_DOCX = "/auditAttachments/audit.docx";

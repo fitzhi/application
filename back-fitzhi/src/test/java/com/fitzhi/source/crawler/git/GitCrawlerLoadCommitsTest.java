@@ -6,7 +6,16 @@ package com.fitzhi.source.crawler.git;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.List;
+
+import com.fitzhi.bean.AsyncTask;
+import com.fitzhi.bean.DataChartHandler;
+import com.fitzhi.bean.DataHandler;
+import com.fitzhi.bean.ProjectDashboardCustomizer;
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.Task;
+import com.fitzhi.exception.SkillerException;
+import com.fitzhi.source.crawler.RepoScanner;
 
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -21,16 +30,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.fitzhi.bean.AsyncTask;
-import com.fitzhi.bean.DataChartHandler;
-import com.fitzhi.bean.DataHandler;
-import com.fitzhi.bean.ProjectDashboardCustomizer;
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.Task;
-import com.fitzhi.exception.SkillerException;
-import com.fitzhi.source.crawler.RepoScanner;
 
 import lombok.extern.slf4j.Slf4j;
 

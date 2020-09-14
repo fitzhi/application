@@ -11,6 +11,15 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.io.IOException;
 
+import com.fitzhi.bean.AsyncTask;
+import com.fitzhi.bean.DataChartHandler;
+import com.fitzhi.bean.DataHandler;
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.RepositoryAnalysis;
+import com.fitzhi.exception.SkillerException;
+import com.fitzhi.source.crawler.RepoScanner;
+
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
@@ -23,16 +32,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.fitzhi.bean.AsyncTask;
-import com.fitzhi.bean.DataChartHandler;
-import com.fitzhi.bean.DataHandler;
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.RepositoryAnalysis;
-import com.fitzhi.data.source.ConnectionSettings;
-import com.fitzhi.exception.SkillerException;
-import com.fitzhi.source.crawler.RepoScanner;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

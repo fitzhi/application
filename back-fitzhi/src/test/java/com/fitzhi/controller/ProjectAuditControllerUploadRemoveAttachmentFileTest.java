@@ -71,9 +71,6 @@ public class ProjectAuditControllerUploadRemoveAttachmentFileTest {
 	private ProjectHandler projectHandler;
 	
 	@Autowired
-	private ProjectAuditController projectAuditController;
-
-	@Autowired
 	AuditAttachmentStorageProperties storageProperties;
 	
 	private final static String UPLOAD_PATHNAME_DOCX = "/auditAttachments/audit.docx";
