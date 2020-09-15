@@ -441,13 +441,6 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	@Override
-	public List<ProjectLayer> generateProjectLayers(Project project, SourceControlChanges changes)
-			throws SkillerException {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
 	public void saveProjectLayers(List<ProjectLayer> layers) throws SkillerException {
 		// TODO Auto-generated method stub
 

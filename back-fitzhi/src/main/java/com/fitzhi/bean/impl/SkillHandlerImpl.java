@@ -36,8 +36,10 @@ import com.fitzhi.exception.SkillerException;
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * <p>
+ * Main (an currently single) implementation in charge of the skills management
+ * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 @Slf4j
 @Component

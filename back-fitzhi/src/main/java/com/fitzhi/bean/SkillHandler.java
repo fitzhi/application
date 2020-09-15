@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.fitzhi.bean.impl.SkillHandlerImpl;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SkillDetectorType;
@@ -11,9 +12,12 @@ import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.exception.SkillerException;
 
 /**
- * 
+ * <p>
+ * This interface is a bean interface. Its role is to handle the skills registered in Fitzhì.
+ * <br/>
+ * The main Bean is {@link SkillHandlerImpl}
+ * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 public interface SkillHandler extends DataSaverLifeCycle {
 
@@ -84,5 +88,4 @@ public interface SkillHandler extends DataSaverLifeCycle {
 	 */
 	boolean isSkillDetectedWithFilename(Skill skill, String sourcePath);
 
-	
 }
