@@ -41,6 +41,18 @@ public @Data class ProjectLayer {
      * @param year the year of the layer
      * @param week the week in the year of the layer.
      * @param lines the number of lines
+     * @param idStaff uniquer staff identifier
+     */
+    public ProjectLayer(int idProject, int year, int week, int lines, int idStaff) {
+        this(idProject, year, week, lines, new int[]{idStaff});
+    }
+    
+    /**
+     * Complete constructor.
+     * @param idProject the project identifier
+     * @param year the year of the layer
+     * @param week the week in the year of the layer.
+     * @param lines the number of lines
      * @param idStaffs array of staff identifiers.
      */
     public ProjectLayer(int idProject, int year, int week, int lines, int[] idStaffs) {

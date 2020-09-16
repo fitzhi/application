@@ -114,6 +114,14 @@ public @Data class SourceChange {
 		return (authorName != null);
 	}
 
+	/**
+	 * @return the number of lines concerned this change.
+	 */
+	public int lines() {
+		return (this.diff == null) ? 0 : this.diff.getLinesAdded() - this.diff.getLinesDeleted();
+
+	}
+
 	@Override
 	public String toString() {
 		return "SourceChange [authorEmail=" + authorEmail + ", authorName=" + authorName + ", commitId=" + commitId

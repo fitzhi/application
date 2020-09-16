@@ -24,8 +24,7 @@ public interface SkylineProcessor {
 	 * </p>
 	 * @param project project whose changes have to be serialized in CSV
 	 * @param changes changes retrieved from the repository
-	 * @throws SkillerException thrown if an exception occurs during the saving process
 	 */
-	List<ProjectLayer> generateProjectLayers(Project project, SourceControlChanges changes) throws SkillerException;
+	List<ProjectLayer> generateProjectLayers(Project project, SourceControlChanges changes);
     
 }
