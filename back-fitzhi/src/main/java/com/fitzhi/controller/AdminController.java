@@ -166,14 +166,5 @@ public class AdminController {
 			return new ResponseEntity<>(new StaffDTO(new Staff(), ske.errorCode, ske.errorMessage), headers, HttpStatus.OK);
 		}
 		
-	}
-	
-	/**
-	 * @return a generated header.
-	 */
-	private HttpHeaders headers() {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		return headers;
-	}
+	}	
 }

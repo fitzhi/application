@@ -10,6 +10,16 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.controller.util.LocalDateAdapter;
+import com.fitzhi.data.internal.AuditTopic;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.exception.SkillerException;
+import com.fitzhi.service.FileType;
+import com.fitzhi.service.impl.storageservice.AuditAttachmentStorageProperties;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -31,16 +41,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.controller.util.LocalDateAdapter;
-import com.fitzhi.data.internal.AuditTopic;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
-import com.fitzhi.service.FileType;
-import com.fitzhi.service.impl.storageservice.AuditAttachmentStorageProperties;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 /**
  * <p>
  * Test of the class {@link ProjectAuditController}
@@ -69,14 +69,9 @@ public class ProjectAuditControllerDownloadAttachmentFileTest {
 	private ProjectHandler projectHandler;
 	
 	@Autowired
-	private ProjectAuditController projectAuditController;
-
-	@Autowired
 	AuditAttachmentStorageProperties storageProperties;
 	
 	private final static String UPLOAD_PATHNAME_PDF = "/auditAttachments/audit.pdf";
-	
-	private final static String UPLOAD_FILENAME_PDF = "audit.pdf";
 	
 	private final int ID_PROJECT = 1;
 
