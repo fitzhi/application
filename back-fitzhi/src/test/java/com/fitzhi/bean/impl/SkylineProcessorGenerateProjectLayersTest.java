@@ -31,7 +31,7 @@ public class SkylineProcessorGenerateProjectLayersTest {
     SkylineProcessor skylineProcessor;
     
     @Test
-    public void test() {
+    public void testOneSingleChange() {
         Project project = new Project(1789, "The revolutionary project");
         SourceControlChanges changes = new SourceControlChanges();
         changes.addChange("one", new SourceChange(
@@ -48,6 +48,115 @@ public class SkylineProcessorGenerateProjectLayersTest {
         Assert.assertEquals(2020, layers.get(0).getYear());
         Assert.assertEquals(1, layers.get(0).getWeek());
         Assert.assertEquals(5, layers.get(0).getLines());
+    }
+
+    @Test
+    public void testTwoChangesSameWeek() {
+        Project project = new Project(1789, "The revolutionary project");
+        SourceControlChanges changes = new SourceControlChanges();
+        changes.addChange("one", new SourceChange(
+            "commit", 
+            LocalDate.of(2020, 01, 02),
+            "authorName",
+            "authorEmail",
+            1,
+            new SourceCodeDiffChange("one", 5, 10) ));
+        changes.addChange("one", new SourceChange(
+            "commit", 
+            LocalDate.of(2020, 01, 03),
+            "authorName",
+            "authorEmail",
+            1,
+            new SourceCodeDiffChange("two", 2, 4) ));
+    
+        List<ProjectLayer> layers = skylineProcessor.generateProjectLayers(project, changes);
+        Assert.assertEquals(1, layers.size());
+        Assert.assertEquals(1789, layers.get(0).getIdProject());
+        Assert.assertEquals(2020, layers.get(0).getYear());
+        Assert.assertEquals(1, layers.get(0).getWeek());
+        Assert.assertEquals(7, layers.get(0).getLines());
 
     }
+
+    @Test
+    public void testTwoWeek() {
+        Project project = new Project(1789, "The revolutionary project");
+        SourceControlChanges changes = new SourceControlChanges();
+        changes.addChange("one", new SourceChange(
+            "commit", 
+            LocalDate.of(2020, 01, 02),
+            "authorName",
+            "authorEmail",
+            1,
+            new SourceCodeDiffChange("one", 5, 10) ));
+        changes.addChange("one", new SourceChange(
+            "commit", 
+            LocalDate.of(2020, 01, 03),
+            "authorName",
+            "authorEmail",
+            1,
+            new SourceCodeDiffChange("two", 2, 4) ));
+        changes.addChange("one", new SourceChange(
+            "commit", 
+            LocalDate.of(2020, 01, 8),
+            "authorName",
+            "authorEmail",
+            1,
+            new SourceCodeDiffChange("two", 2, 4) ));
+        
+        List<ProjectLayer> layers = skylineProcessor.generateProjectLayers(project, changes);
+        Assert.assertEquals(2, layers.size());
+        Assert.assertEquals(1789, layers.get(0).getIdProject());
+        Assert.assertEquals(2020, layers.get(0).getYear());
+
+        Assert.assertEquals(1, layers.get(0).getWeek());
+        Assert.assertEquals(7, layers.get(0).getLines());
+
+        Assert.assertEquals(2, layers.get(1).getWeek());
+        Assert.assertEquals(2, layers.get(1).getLines());
+
+    }
+
+    @Test
+    public void testTwoWeeksTwoStaff() {
+        Project project = new Project(1789, "The revolutionary project");
+        SourceControlChanges changes = new SourceControlChanges();
+        changes.addChange("one", new SourceChange(
+            "commit", 
+            LocalDate.of(2020, 01, 02),
+            "authorName",
+            "authorEmail",
+            1,
+            new SourceCodeDiffChange("one", 5, 10) ));
+        changes.addChange("one", new SourceChange(
+            "commit", 
+            LocalDate.of(2020, 01, 03),
+            "authorName",
+            "authorEmail",
+            2,
+            new SourceCodeDiffChange("two", 2, 4) ));
+        changes.addChange("one", new SourceChange(
+            "commit", 
+            LocalDate.of(2020, 01, 8),
+            "authorName",
+            "authorEmail",
+            1,
+            new SourceCodeDiffChange("two", 2, 4) ));
+        
+        List<ProjectLayer> layers = skylineProcessor.generateProjectLayers(project, changes);
+        Assert.assertEquals(2, layers.size());
+        Assert.assertEquals(1789, layers.get(0).getIdProject());
+        Assert.assertEquals(2020, layers.get(0).getYear());
+
+        Assert.assertEquals(1, layers.get(0).getWeek());
+        Assert.assertEquals(7, layers.get(0).getLines());
+        Assert.assertEquals(1, layers.get(0).getIdStaffs().get(0).intValue());
+        Assert.assertEquals(2, layers.get(0).getIdStaffs().get(1).intValue());
+
+        Assert.assertEquals(2, layers.get(1).getWeek());
+        Assert.assertEquals(2, layers.get(1).getLines());
+        Assert.assertEquals(1, layers.get(1).getIdStaffs().get(0).intValue());
+
+    }
+
 }

@@ -3,6 +3,7 @@ package com.fitzhi.bean.impl;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.function.Function;
@@ -92,8 +93,6 @@ public class SkylineProcessorImpl implements SkylineProcessor {
     @Override
     public List<ProjectLayer> generateProjectLayers(Project project, SourceControlChanges changes)  {
 
-        final List<ProjectLayer> layers = new ArrayList<>();
-
         // Tis temporalField is used to retrieve the week number of the date into the year
         // This object we be used in the object below
         final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear(); 
@@ -105,6 +104,7 @@ public class SkylineProcessorImpl implements SkylineProcessor {
                 sourceChange.getIdStaff()) ;
         };
 
+        final List<ProjectLayer> working_layers = new ArrayList<>();
         changes.getChanges().values().stream()
             .flatMap(hist -> hist.getChanges().stream())
             .collect(Collectors.toList())
@@ -112,8 +112,27 @@ public class SkylineProcessorImpl implements SkylineProcessor {
             .collect(Collectors.groupingBy(layerIdentifier, Collectors.summingInt(SourceChange::lines)))
             .forEach( (layer, lines) -> {
                 ProjectLayer projectLayer = new ProjectLayer(project.getId(), layer.year, layer.week, lines, layer.idStaff);
-                layers.add(projectLayer);
+                working_layers.add(projectLayer);
             });
+
+        Collections.sort(working_layers);
+
+        final List<ProjectLayer> layers = new ArrayList<>();
+        ProjectLayer layer = null;
+        for (ProjectLayer wlayer : working_layers) {
+            if (layer == null) {
+                layer = wlayer;
+                continue;
+            } 
+            if (layer.isSameWeek(wlayer)) {
+                layer.setLines(layer.getLines() + wlayer.getLines());
+                layer.getIdStaffs().add(wlayer.getIdStaffs().get(0));
+            } else {
+                layers.add(layer);
+                layer = wlayer;
+           }
+        }
+        layers.add(layer);
 
         return layers;
     }

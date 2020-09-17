@@ -5,7 +5,6 @@ import java.util.List;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.SourceControlChanges;
-import com.fitzhi.exception.SkillerException;
 
 /**
  * <p>
