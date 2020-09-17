@@ -28,8 +28,9 @@ import com.fitzhi.exception.SkillerException;
 import reactor.test.StepVerifier;
 
 /**
+ * <p>
  * Test of method {@link ReactiveLogReport#sunburstGenerationLogNext(String, int)}
- * 
+ * </p>
  * @author Frederic VIDAL
  */
 @RunWith(SpringRunner.class)
