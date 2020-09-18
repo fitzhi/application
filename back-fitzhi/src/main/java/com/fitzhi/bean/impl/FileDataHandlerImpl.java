@@ -313,8 +313,7 @@ public class FileDataHandlerImpl implements DataHandler {
 			log.debug(String.format("Loading file %s", rootLocation.resolve(filename)));
 		}
 
-		try (Reader filereader = new FileReader(
-			rootLocation.resolve(filename).toFile(), StandardCharsets.UTF_8 )) {
+		try (Reader filereader = new FileReader(rootLocation.resolve(filename).toFile() )) {
 			
 			CSVParser parser = new CSVParserBuilder().withSeparator(';').build();
 
