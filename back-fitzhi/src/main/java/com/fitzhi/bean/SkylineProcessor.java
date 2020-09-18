@@ -25,5 +25,16 @@ public interface SkylineProcessor {
 	 * @param changes changes retrieved from the repository
 	 */
 	List<ProjectLayer> generateProjectLayers(Project project, SourceControlChanges changes);
-    
+	
+
+	/**
+	 * <p>
+	 * Retrieve and actualize the staff involved in the code changes.
+	 * </p>
+	 * @param project given project of the associated changes
+	 * @param changes changes retrieved from the repository
+	 */
+	void actualizeStaff(Project project, SourceControlChanges changes);
+
+
 }

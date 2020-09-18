@@ -53,7 +53,6 @@ public class DataHandlerLoadChangesTest {
         Assert.assertEquals(-1, sc.getIdStaff());
         Assert.assertEquals(1, sc.lines());
 
-
         scf = scc.getChanges().get("package/three.java");
         Assert.assertNotNull(scf);
         sc = scf.getChanges().get(0);

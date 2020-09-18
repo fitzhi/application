@@ -48,7 +48,7 @@ public class SkylineProcessorImpl implements SkylineProcessor {
             this.week = week;
             this.idStaff = idStaff;
         }
-        
+
         @Override
         public int hashCode() {
             final int prime = 31;
@@ -91,29 +91,26 @@ public class SkylineProcessorImpl implements SkylineProcessor {
     }
 
     @Override
-    public List<ProjectLayer> generateProjectLayers(Project project, SourceControlChanges changes)  {
+    public List<ProjectLayer> generateProjectLayers(Project project, SourceControlChanges changes) {
 
-        // Tis temporalField is used to retrieve the week number of the date into the year
+        // Tis temporalField is used to retrieve the week number of the date into the
+        // year
         // This object we be used in the object below
-        final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear(); 
+        final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
 
-        final Function<SourceChange, Layer> layerIdentifier =  (SourceChange sourceChange) -> {
-            return new Layer(
-                sourceChange.getDateCommit().getYear(), 
-                sourceChange.getDateCommit().get(woy),
-                sourceChange.getIdStaff()) ;
+        final Function<SourceChange, Layer> layerIdentifier = (SourceChange sourceChange) -> {
+            return new Layer(sourceChange.getDateCommit().getYear(), sourceChange.getDateCommit().get(woy),
+                    sourceChange.getIdStaff());
         };
 
         final List<ProjectLayer> working_layers = new ArrayList<>();
-        changes.getChanges().values().stream()
-            .flatMap(hist -> hist.getChanges().stream())
-            .collect(Collectors.toList())
-            .stream()
-            .collect(Collectors.groupingBy(layerIdentifier, Collectors.summingInt(SourceChange::lines)))
-            .forEach( (layer, lines) -> {
-                ProjectLayer projectLayer = new ProjectLayer(project.getId(), layer.year, layer.week, lines, layer.idStaff);
-                working_layers.add(projectLayer);
-            });
+        changes.getChanges().values().stream().flatMap(hist -> hist.getChanges().stream()).collect(Collectors.toList())
+                .stream().collect(Collectors.groupingBy(layerIdentifier, Collectors.summingInt(SourceChange::lines)))
+                .forEach((layer, lines) -> {
+                    ProjectLayer projectLayer = new ProjectLayer(project.getId(), layer.year, layer.week, lines,
+                            layer.idStaff);
+                    working_layers.add(projectLayer);
+                });
 
         Collections.sort(working_layers);
 
@@ -123,18 +120,24 @@ public class SkylineProcessorImpl implements SkylineProcessor {
             if (layer == null) {
                 layer = wlayer;
                 continue;
-            } 
+            }
             if (layer.isSameWeek(wlayer)) {
                 layer.setLines(layer.getLines() + wlayer.getLines());
                 layer.getIdStaffs().add(wlayer.getIdStaffs().get(0));
             } else {
                 layers.add(layer);
                 layer = wlayer;
-           }
+            }
         }
         layers.add(layer);
 
         return layers;
+    }
+
+    @Override
+    public void actualizeStaff(Project project, SourceControlChanges changes) {
+        // TODO Auto-generated method stub
+
     }
     
 }
