@@ -15,10 +15,12 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
 import java.lang.reflect.Type;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,12 +39,18 @@ import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.Skill;
+import com.fitzhi.data.internal.SourceCodeDiffChange;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.SkillerException;
+import com.fitzhi.source.crawler.git.SourceChange;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.opencsv.CSVParser;
+import com.opencsv.CSVParserBuilder;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
 
 import lombok.extern.slf4j.Slf4j;
@@ -252,6 +260,15 @@ public class FileDataHandlerImpl implements DataHandler {
 
 	}
 
+	/**
+	 * Generate the changes.csv filename for loading and saving the {@link SourceControlChanges} container. 
+	 * @param project the given project
+	 * @return the filename to be used.
+	 */
+	private String genereChangesCsvFilename(Project project) {
+		return SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getName() + "-changes.csv";
+	}
+
 	@Override
 	public void saveChanges(Project project, SourceControlChanges changes) throws SkillerException {
 
@@ -260,7 +277,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		//
 		createIfNeededDirectory(SAVED_CHANGES);
 
-		final String filename = SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getName() + "-changes.csv";
+		final String filename = genereChangesCsvFilename(project);
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Saving file %s", rootLocation.resolve(filename)));
@@ -273,7 +290,9 @@ public class FileDataHandlerImpl implements DataHandler {
 
 				for (String path : changes.keySet()) {
 					changes.getSourceFileHistory(path).getChanges().forEach(change -> csvWriter.writeNext(new String[] {
-							change.getCommitId(), path, change.getDateCommit().toString(), change.getAuthorName(),
+							change.getCommitId(), path, 
+							change.getDateCommit().toString(), 
+							change.getAuthorName(),
 							change.getAuthorEmail(),
 							String.valueOf(change.getDiff().getLinesAdded() - change.getDiff().getLinesDeleted()) }));
 				}
@@ -281,6 +300,47 @@ public class FileDataHandlerImpl implements DataHandler {
 		} catch (IOException ioe) {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
 		}
+	}
+
+	@Override
+	public SourceControlChanges loadChanges(Project project) throws SkillerException {
+
+		SourceControlChanges result = new SourceControlChanges();
+		
+		final String filename = genereChangesCsvFilename(project);
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Loading file %s", rootLocation.resolve(filename)));
+		}
+
+		try (Reader filereader = new FileReader(
+			rootLocation.resolve(filename).toFile(), StandardCharsets.UTF_8 )) {
+			
+			CSVParser parser = new CSVParserBuilder().withSeparator(';').build();
+
+			try (CSVReader csvReader = new CSVReaderBuilder(filereader). withCSVParser(parser).withSkipLines(1).build()) {
+
+				String[] nextRecord; 
+	
+				while ((nextRecord = csvReader.readNext()) != null) { 
+					String commitId = nextRecord[0];
+					String sourceFilename = nextRecord[1];
+					String date = nextRecord[2];
+					String authorName = nextRecord[3];
+					String authorEmail = nextRecord[4];
+					String lines = nextRecord[5];
+				
+					result.addChange(
+						sourceFilename,
+						new SourceChange(commitId, LocalDate.parse(date), authorName, authorEmail, -1, new SourceCodeDiffChange(sourceFilename, 0, Integer.valueOf(lines))));
+				} 
+			}
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
+		}
+
+		return result;
 	}
 
 	/**
