@@ -4,8 +4,10 @@ import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -143,11 +145,17 @@ public class SkylineProcessorImpl implements SkylineProcessor {
 
     @Override
     public void actualizeStaff(Project project, SourceControlChanges changes) {
+        final Map<String, Integer> cache = new  HashMap<>();
         changes.getChanges().values().stream()
             .flatMap( (SourceFileHistory sfh) -> sfh.getChanges().stream())
             .forEach((SourceChange sc) -> {
                 final Staff staff = staffHandler.lookup(sc.getAuthorName());
-                sc.setIdStaff((staff != null) ?  staff.getIdStaff() : -1);
+                if (cache.containsKey(sc.getAuthorName())) {
+                    sc.setIdStaff(cache.get(sc.getAuthorName()).intValue());
+                } else {
+                    sc.setIdStaff((staff != null) ?  staff.getIdStaff() : -1);
+                    cache.put(sc.getAuthorName(), sc.getIdStaff());
+                }
             });
     }
     
