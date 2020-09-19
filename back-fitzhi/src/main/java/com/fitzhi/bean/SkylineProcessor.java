@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.exception.SkillerException;
@@ -48,16 +49,18 @@ public interface SkylineProcessor {
 	 * to the generation {@link #generateProjectBuilding(List) generateProjectBuilding}
 	 * </p>
 	 * @param project given project of the associated changes
+	 * @return the Project-building
 	 * @throws SkillerException thrown if any problem occurs, most probably an {@link IOException} when loading the data.
 	 */
-	void generateProjectBuilding(Project project) throws SkillerException;
+	ProjectBuilding generateProjectBuilding(Project project) throws SkillerException;
 
 	/**
 	 * <p>
 	 * Generate the history of the Project building in the projects skyline.
 	 * </p>
+	 * @return the Project-building
 	 * @param layers list of the project layers
 	 */
-	void generateProjectBuilding(List<ProjectLayer> layers);
+	ProjectBuilding generateProjectBuilding(List<ProjectLayer> layers);
 
 }

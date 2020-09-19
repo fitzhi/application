@@ -15,6 +15,7 @@ import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
@@ -167,18 +168,19 @@ public class SkylineProcessorImpl implements SkylineProcessor {
     }
 
     @Override
-    public void generateProjectBuilding(Project project) throws SkillerException {
+    public ProjectBuilding generateProjectBuilding(Project project) throws SkillerException {
 
         List<ProjectLayer> layers = dataHandler.loadSkylineLayers(project);
         if (log.isDebugEnabled()) {
             log.debug (String.format("Loading %d layers for the project %d", layers.size(), project.getName()));
         }
 
-        generateProjectBuilding(layers);
+        return generateProjectBuilding(layers);
     }
 
     @Override
-    public void generateProjectBuilding(List<ProjectLayer> layers) {
+    public ProjectBuilding generateProjectBuilding(List<ProjectLayer> layers) {
+        return new ProjectBuilding();
     }
   
    
