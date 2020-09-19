@@ -5,12 +5,7 @@ import com.fitzhi.data.internal.Experience;
 /**
  * <p>
  * This class is used as a Data Transfer Object between the spring boot
- * application and the Angular front.
- * </p>
- * <p>
- * <i>FIXME one day : I did not find a way to use HTTP headers for transferring
- * additional information <b>in the POST request</b>. So these data are embedded
- * in the data transfer object.</i>
+ * server and the Angular front client.
  * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
