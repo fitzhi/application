@@ -1,10 +1,13 @@
 package com.fitzhi.bean;
 
+import java.io.IOError;
+import java.io.IOException;
 import java.util.List;
 
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.SourceControlChanges;
+import com.fitzhi.exception.SkillerException;
 
 /**
  * <p>
@@ -36,5 +39,25 @@ public interface SkylineProcessor {
 	 */
 	void actualizeStaff(Project project, SourceControlChanges changes);
 
+	/**
+	 * <p>
+	 * Generate the history of the Project building in the projects skyline. 
+	 * </p>
+	 * <P>
+	 * This method loads the {@link ProjectLayer project layers} from the filesystem and delegates the generation 
+	 * to the generation {@link #generateProjectBuilding(List) generateProjectBuilding}
+	 * </p>
+	 * @param project given project of the associated changes
+	 * @throws SkillerException thrown if any problem occurs, most probably an {@link IOException} when loading the data.
+	 */
+	void generateProjectBuilding(Project project) throws SkillerException;
+
+	/**
+	 * <p>
+	 * Generate the history of the Project building in the projects skyline.
+	 * </p>
+	 * @param layers list of the project layers
+	 */
+	void generateProjectBuilding(List<ProjectLayer> layers);
 
 }

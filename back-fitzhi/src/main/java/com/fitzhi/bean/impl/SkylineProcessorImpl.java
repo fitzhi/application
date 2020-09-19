@@ -11,17 +11,21 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
+import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.fitzhi.source.crawler.git.SourceFileHistory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
@@ -32,11 +36,15 @@ import org.springframework.stereotype.Service;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @Service
+@Slf4j
 public class SkylineProcessorImpl implements SkylineProcessor {
 
     @Autowired
     private StaffHandler staffHandler;
 
+    @Autowired
+    private DataHandler dataHandler;
+   
     class Layer {
 
         /**
@@ -145,18 +153,33 @@ public class SkylineProcessorImpl implements SkylineProcessor {
 
     @Override
     public void actualizeStaff(Project project, SourceControlChanges changes) {
-        final Map<String, Integer> cache = new  HashMap<>();
-        changes.getChanges().values().stream()
-            .flatMap( (SourceFileHistory sfh) -> sfh.getChanges().stream())
-            .forEach((SourceChange sc) -> {
-                final Staff staff = staffHandler.lookup(sc.getAuthorName());
-                if (cache.containsKey(sc.getAuthorName())) {
-                    sc.setIdStaff(cache.get(sc.getAuthorName()).intValue());
-                } else {
-                    sc.setIdStaff((staff != null) ?  staff.getIdStaff() : -1);
-                    cache.put(sc.getAuthorName(), sc.getIdStaff());
-                }
-            });
+        final Map<String, Integer> cache = new HashMap<>();
+        changes.getChanges().values().stream().flatMap((SourceFileHistory sfh) -> sfh.getChanges().stream())
+                .forEach((SourceChange sc) -> {
+                    final Staff staff = staffHandler.lookup(sc.getAuthorName());
+                    if (cache.containsKey(sc.getAuthorName())) {
+                        sc.setIdStaff(cache.get(sc.getAuthorName()).intValue());
+                    } else {
+                        sc.setIdStaff((staff != null) ? staff.getIdStaff() : -1);
+                        cache.put(sc.getAuthorName(), sc.getIdStaff());
+                    }
+                });
     }
-    
+
+    @Override
+    public void generateProjectBuilding(Project project) throws SkillerException {
+
+        List<ProjectLayer> layers = dataHandler.loadSkylineLayers(project);
+        if (log.isDebugEnabled()) {
+            log.debug (String.format("Loading %d layers for the project %d", layers.size(), project.getName()));
+        }
+
+        generateProjectBuilding(layers);
+    }
+
+    @Override
+    public void generateProjectBuilding(List<ProjectLayer> layers) {
+    }
+  
+   
 }
