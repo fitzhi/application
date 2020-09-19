@@ -96,7 +96,7 @@ public interface DataHandler {
 	 * @return the list of skyline layers reader to be uploaded on the filesystem..
 	 * @throws SkillerException thrown if an exception occurs during the loading process, mot probably an {@link java.io.IOException}
 	 */
-	List<ProjectLayer> loadSkylineLayers(Project project, List<ProjectLayer> layers) throws SkillerException;
+	List<ProjectLayer> loadSkylineLayers(Project project) throws SkillerException;
 
 	/**
 	 * Load the skills <i>(probably for this first release)</i> from the file system

@@ -20,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.fitzhi.bean.DataChartHandler;
 import com.fitzhi.data.internal.DataChart;
 
@@ -30,13 +32,12 @@ import com.fitzhi.data.internal.DataChart;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Slf4j
 public class DataChartHandlerTest {
 
 	@Autowired
 	DataChartHandler dataChartHandler;
 	
-	private Logger logger = LoggerFactory.getLogger(DataChartHandlerTest.class.getCanonicalName());
-
 	@Test
 	public void testAggregateDatachart()  {
 		DataChart root = new DataChart("root");
@@ -116,7 +117,7 @@ public class DataChartHandlerTest {
 	     return ois.readObject();
 	   }
 	   catch (Exception e) {
-	     logger.error("error", e);
+	     log.error("error", e);
 	     return null;
 	   }
 	 }

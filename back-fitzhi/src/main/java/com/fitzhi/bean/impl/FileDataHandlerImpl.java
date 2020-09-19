@@ -20,6 +20,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -267,7 +268,18 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * @return the filename to be used.
 	 */
 	private String genereChangesCsvFilename(Project project) {
-		return SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getName() + "-changes.csv";
+		return SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-changes.csv";
+	}
+
+	/**
+	 * Generate the prohect-layers.json filename for loading and saving the
+	 * {@link ProjectLayer Project layers} list.
+	 * 
+	 * @param project the given project
+	 * @return the filename to be used.
+	 */
+	private String genereProjectLayersJsonFilename(Project project) {
+		return SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-project-layers.json";
 	}
 
 	@Override
@@ -499,13 +511,47 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	@Override
-	public List<ProjectLayer> loadSkylineLayers(Project project, List<ProjectLayer> layers) throws SkillerException {
-		return null;
+	public List<ProjectLayer> loadSkylineLayers(Project project) throws SkillerException {
+
+		List<ProjectLayer> layers;
+
+		final String filename = genereProjectLayersJsonFilename(project);
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Loading file %s", rootLocation.resolve(filename)));
+		}
+
+		try (FileReader fr = new FileReader(rootLocation.resolve(filename).toFile())) {
+			
+			Type typeListProjectLayer = new TypeToken<List<ProjectLayer>>() {}.getType();
+			layers =gson.fromJson(fr, typeListProjectLayer);
+			if (layers == null) {
+				// If this layers list is still null, without IOException, it means that the file empty
+				layers = new ArrayList<ProjectLayer>();
+			}
+			return layers;
+		} catch (final Exception e) {
+			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+		}
 	}
 
 	@Override
 	public void saveSkylineLayers(Project project, List<ProjectLayer> layers) throws SkillerException {
+		//
+		// As the method-name explains, we create the directory.
+		//
+		createIfNeededDirectory(SAVED_CHANGES);
+
+		final String filename = genereProjectLayersJsonFilename(project);
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Saving file %s", rootLocation.resolve(filename)));
+		}
+
+		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
+			fw.write(gson.toJson(layers));
+		} catch (final Exception e) {
+			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+		}
 	}
-
-
 }
