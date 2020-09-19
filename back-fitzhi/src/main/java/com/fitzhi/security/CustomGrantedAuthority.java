@@ -16,7 +16,7 @@ import org.springframework.security.core.GrantedAuthority;
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class CustomGrantedAuthority implements GrantedAuthority, Serializable {
+public class CustomGrantedAuthority implements GrantedAuthority {
 
 	/**
 	 * For serialization purpose.

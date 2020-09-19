@@ -29,7 +29,7 @@ public interface SkylineProcessor {
 
 	/**
 	 * <p>
-	 * Retrieve and actualize the staff involved in the code changes.
+	 * Retrieve and actualize the staff team involved in the changes retrieved in the repository.
 	 * </p>
 	 * @param project given project of the associated changes
 	 * @param changes changes retrieved from the repository

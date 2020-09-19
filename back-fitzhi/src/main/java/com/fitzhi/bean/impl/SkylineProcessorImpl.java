@@ -10,11 +10,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.fitzhi.bean.SkylineProcessor;
+import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.SourceControlChanges;
+import com.fitzhi.data.internal.Staff;
 import com.fitzhi.source.crawler.git.SourceChange;
+import com.fitzhi.source.crawler.git.SourceFileHistory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -27,6 +31,9 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class SkylineProcessorImpl implements SkylineProcessor {
+
+    @Autowired
+    private StaffHandler staffHandler;
 
     class Layer {
 
@@ -136,8 +143,12 @@ public class SkylineProcessorImpl implements SkylineProcessor {
 
     @Override
     public void actualizeStaff(Project project, SourceControlChanges changes) {
-        // TODO Auto-generated method stub
-
+        changes.getChanges().values().stream()
+            .flatMap( (SourceFileHistory sfh) -> sfh.getChanges().stream())
+            .forEach((SourceChange sc) -> {
+                final Staff staff = staffHandler.lookup(sc.getAuthorName());
+                sc.setIdStaff((staff != null) ?  staff.getIdStaff() : -1);
+            });
     }
     
 }
