@@ -260,7 +260,9 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	/**
-	 * Generate the changes.csv filename for loading and saving the {@link SourceControlChanges} container. 
+	 * Generate the changes.csv filename for loading and saving the
+	 * {@link SourceControlChanges} container.
+	 * 
 	 * @param project the given project
 	 * @return the filename to be used.
 	 */
@@ -289,9 +291,7 @@ public class FileDataHandlerImpl implements DataHandler {
 
 				for (String path : changes.keySet()) {
 					changes.getSourceFileHistory(path).getChanges().forEach(change -> csvWriter.writeNext(new String[] {
-							change.getCommitId(), path, 
-							change.getDateCommit().toString(), 
-							change.getAuthorName(),
+							change.getCommitId(), path, change.getDateCommit().toString(), change.getAuthorName(),
 							change.getAuthorEmail(),
 							String.valueOf(change.getDiff().getLinesAdded() - change.getDiff().getLinesDeleted()) }));
 				}
@@ -305,33 +305,33 @@ public class FileDataHandlerImpl implements DataHandler {
 	public SourceControlChanges loadChanges(Project project) throws SkillerException {
 
 		SourceControlChanges result = new SourceControlChanges();
-		
+
 		final String filename = genereChangesCsvFilename(project);
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Loading file %s", rootLocation.resolve(filename)));
 		}
 
-		try (Reader filereader = new FileReader(rootLocation.resolve(filename).toFile() )) {
-			
+		try (Reader filereader = new FileReader(rootLocation.resolve(filename).toFile())) {
+
 			CSVParser parser = new CSVParserBuilder().withSeparator(';').build();
 
-			try (CSVReader csvReader = new CSVReaderBuilder(filereader). withCSVParser(parser).withSkipLines(1).build()) {
+			try (CSVReader csvReader = new CSVReaderBuilder(filereader).withCSVParser(parser).withSkipLines(1)
+					.build()) {
 
-				String[] nextRecord; 
-	
-				while ((nextRecord = csvReader.readNext()) != null) { 
+				String[] nextRecord;
+
+				while ((nextRecord = csvReader.readNext()) != null) {
 					String commitId = nextRecord[0];
 					String sourceFilename = nextRecord[1];
 					String date = nextRecord[2];
 					String authorName = nextRecord[3];
 					String authorEmail = nextRecord[4];
 					String lines = nextRecord[5];
-				
-					result.addChange(
-						sourceFilename,
-						new SourceChange(commitId, LocalDate.parse(date), authorName, authorEmail, -1, new SourceCodeDiffChange(sourceFilename, 0, Integer.valueOf(lines))));
-				} 
+
+					result.addChange(sourceFilename, new SourceChange(commitId, LocalDate.parse(date), authorName,
+							authorEmail, -1, new SourceCodeDiffChange(sourceFilename, 0, Integer.valueOf(lines))));
+				}
 			}
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -499,9 +499,12 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	@Override
-	public void saveProjectLayers(List<ProjectLayer> layers) throws SkillerException {
-		// TODO Auto-generated method stub
+	public List<ProjectLayer> loadSkylineLayers(Project project, List<ProjectLayer> layers) throws SkillerException {
+		return null;
+	}
 
+	@Override
+	public void saveSkylineLayers(Project project, List<ProjectLayer> layers) throws SkillerException {
 	}
 
 
