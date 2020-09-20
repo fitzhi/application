@@ -112,9 +112,7 @@ public class SkylineProcessorImpl implements SkylineProcessor {
     @Override
     public ProjectLayers generateProjectLayers(Project project, SourceControlChanges changes) {
 
-        // Tis temporalField is used to retrieve the week number of the date into the
-        // year
-        // This object we be used in the object below
+        // Tis temporalField is used to retrieve the week number of the date into the year
         final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
 
         final Function<SourceChange, Layer> layerIdentifier = (SourceChange sourceChange) -> {
