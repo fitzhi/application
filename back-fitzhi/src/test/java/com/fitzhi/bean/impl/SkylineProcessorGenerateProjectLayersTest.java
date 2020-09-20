@@ -1,11 +1,10 @@
 package com.fitzhi.bean.impl;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.ProjectLayer;
+import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.SourceCodeDiffChange;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.source.crawler.git.SourceChange;
@@ -42,12 +41,12 @@ public class SkylineProcessorGenerateProjectLayersTest {
             1,
             new SourceCodeDiffChange("one", 5, 10) ));
 
-        List<ProjectLayer> layers = skylineProcessor.generateProjectLayers(project, changes);
-        Assert.assertEquals(1, layers.size());
-        Assert.assertEquals(1789, layers.get(0).getIdProject());
-        Assert.assertEquals(2020, layers.get(0).getYear());
-        Assert.assertEquals(1, layers.get(0).getWeek());
-        Assert.assertEquals(5, layers.get(0).getLines());
+        ProjectLayers layers = skylineProcessor.generateProjectLayers(project, changes);
+        Assert.assertEquals(1, layers.getLayers().size());
+        Assert.assertEquals(1789, layers.getLayers().get(0).getIdProject());
+        Assert.assertEquals(2020, layers.getLayers().get(0).getYear());
+        Assert.assertEquals(1, layers.getLayers().get(0).getWeek());
+        Assert.assertEquals(5, layers.getLayers().get(0).getLines());
     }
 
     @Test
@@ -69,12 +68,12 @@ public class SkylineProcessorGenerateProjectLayersTest {
             1,
             new SourceCodeDiffChange("two", 2, 4) ));
     
-        List<ProjectLayer> layers = skylineProcessor.generateProjectLayers(project, changes);
-        Assert.assertEquals(1, layers.size());
-        Assert.assertEquals(1789, layers.get(0).getIdProject());
-        Assert.assertEquals(2020, layers.get(0).getYear());
-        Assert.assertEquals(1, layers.get(0).getWeek());
-        Assert.assertEquals(7, layers.get(0).getLines());
+        ProjectLayers layers = skylineProcessor.generateProjectLayers(project, changes);
+        Assert.assertEquals(1, layers.getLayers().size());
+        Assert.assertEquals(1789, layers.getLayers().get(0).getIdProject());
+        Assert.assertEquals(2020, layers.getLayers().get(0).getYear());
+        Assert.assertEquals(1, layers.getLayers().get(0).getWeek());
+        Assert.assertEquals(7, layers.getLayers().get(0).getLines());
 
     }
 
@@ -104,16 +103,16 @@ public class SkylineProcessorGenerateProjectLayersTest {
             1,
             new SourceCodeDiffChange("two", 2, 4) ));
         
-        List<ProjectLayer> layers = skylineProcessor.generateProjectLayers(project, changes);
-        Assert.assertEquals(2, layers.size());
-        Assert.assertEquals(1789, layers.get(0).getIdProject());
-        Assert.assertEquals(2020, layers.get(0).getYear());
+        ProjectLayers layers = skylineProcessor.generateProjectLayers(project, changes);
+        Assert.assertEquals(2, layers.getLayers().size());
+        Assert.assertEquals(1789, layers.getLayers().get(0).getIdProject());
+        Assert.assertEquals(2020, layers.getLayers().get(0).getYear());
 
-        Assert.assertEquals(1, layers.get(0).getWeek());
-        Assert.assertEquals(7, layers.get(0).getLines());
+        Assert.assertEquals(1, layers.getLayers().get(0).getWeek());
+        Assert.assertEquals(7, layers.getLayers().get(0).getLines());
 
-        Assert.assertEquals(2, layers.get(1).getWeek());
-        Assert.assertEquals(2, layers.get(1).getLines());
+        Assert.assertEquals(2, layers.getLayers().get(1).getWeek());
+        Assert.assertEquals(2, layers.getLayers().get(1).getLines());
 
     }
 
@@ -143,19 +142,19 @@ public class SkylineProcessorGenerateProjectLayersTest {
             1,
             new SourceCodeDiffChange("two", 2, 4) ));
         
-        List<ProjectLayer> layers = skylineProcessor.generateProjectLayers(project, changes);
-        Assert.assertEquals(2, layers.size());
-        Assert.assertEquals(1789, layers.get(0).getIdProject());
-        Assert.assertEquals(2020, layers.get(0).getYear());
+        ProjectLayers layers = skylineProcessor.generateProjectLayers(project, changes);
+        Assert.assertEquals(2, layers.getLayers().size());
+        Assert.assertEquals(1789, layers.getLayers().get(0).getIdProject());
+        Assert.assertEquals(2020, layers.getLayers().get(0).getYear());
 
-        Assert.assertEquals(1, layers.get(0).getWeek());
-        Assert.assertEquals(7, layers.get(0).getLines());
-        Assert.assertEquals(1, layers.get(0).getIdStaffs().get(0).intValue());
-        Assert.assertEquals(2, layers.get(0).getIdStaffs().get(1).intValue());
+        Assert.assertEquals(1, layers.getLayers().get(0).getWeek());
+        Assert.assertEquals(7, layers.getLayers().get(0).getLines());
+        Assert.assertEquals(1, layers.getLayers().get(0).getIdStaffs().get(0).intValue());
+        Assert.assertEquals(2, layers.getLayers().get(0).getIdStaffs().get(1).intValue());
 
-        Assert.assertEquals(2, layers.get(1).getWeek());
-        Assert.assertEquals(2, layers.get(1).getLines());
-        Assert.assertEquals(1, layers.get(1).getIdStaffs().get(0).intValue());
+        Assert.assertEquals(2, layers.getLayers().get(1).getWeek());
+        Assert.assertEquals(2, layers.getLayers().get(1).getLines());
+        Assert.assertEquals(1, layers.getLayers().get(1).getIdStaffs().get(0).intValue());
 
     }
 

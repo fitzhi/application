@@ -3,8 +3,6 @@
  */
 package com.fitzhi.security;
 
-import java.io.Serializable;
-
 import javax.annotation.Generated;
 
 import org.springframework.security.core.GrantedAuthority;

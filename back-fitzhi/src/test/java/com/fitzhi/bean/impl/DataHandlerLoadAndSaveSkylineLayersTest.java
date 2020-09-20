@@ -7,6 +7,7 @@ import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectLayer;
+import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.exception.SkillerException;
 
 import org.junit.After;
@@ -59,17 +60,17 @@ public class DataHandlerLoadAndSaveSkylineLayersTest {
         layers.add(p);
         layers.add(new ProjectLayer(1214, 2020, 20, 30, 2));
         layers.add(new ProjectLayer(1214, 2020, 21, 44, 1));        
-        dataHandler.saveSkylineLayers(projectHandler.get(1214), layers);
+        dataHandler.saveSkylineLayers(projectHandler.get(1214), new ProjectLayers(layers));
 
-        List<ProjectLayer> pl = dataHandler.loadSkylineLayers(projectHandler.get(1214));
-        Assert.assertEquals(3, pl.size());
-        Assert.assertEquals(1214, pl.get(0).getIdProject());
-        Assert.assertEquals(2020, pl.get(0).getYear());
-        Assert.assertEquals(20, pl.get(0).getWeek());
-        Assert.assertEquals(10, pl.get(0).getLines());
+        ProjectLayers pl = dataHandler.loadSkylineLayers(projectHandler.get(1214));
+        Assert.assertEquals(3, pl.getLayers().size());
+        Assert.assertEquals(1214, pl.getLayers().get(0).getIdProject());
+        Assert.assertEquals(2020, pl.getLayers().get(0).getYear());
+        Assert.assertEquals(20, pl.getLayers().get(0).getWeek());
+        Assert.assertEquals(10, pl.getLayers().get(0).getLines());
 
-        Assert.assertEquals(1214, pl.get(2).getIdProject());
-        Assert.assertEquals(44, pl.get(2).getLines());
+        Assert.assertEquals(1214, pl.getLayers().get(2).getIdProject());
+        Assert.assertEquals(44, pl.getLayers().get(2).getLines());
     }
 
     @After

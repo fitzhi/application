@@ -34,6 +34,7 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectLayer;
+import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceCodeDiffChange;
 import com.fitzhi.data.internal.SourceControlChanges;
@@ -511,9 +512,9 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	@Override
-	public List<ProjectLayer> loadSkylineLayers(Project project) throws SkillerException {
+	public ProjectLayers loadSkylineLayers(Project project) throws SkillerException {
 
-		List<ProjectLayer> layers;
+		final ProjectLayers containerLayers = new ProjectLayers();
 
 		final String filename = genereProjectLayersJsonFilename(project);
 
@@ -524,19 +525,19 @@ public class FileDataHandlerImpl implements DataHandler {
 		try (FileReader fr = new FileReader(rootLocation.resolve(filename).toFile())) {
 			
 			Type typeListProjectLayer = new TypeToken<List<ProjectLayer>>() {}.getType();
-			layers =gson.fromJson(fr, typeListProjectLayer);
-			if (layers == null) {
+			containerLayers.setLayers(gson.fromJson(fr, typeListProjectLayer));
+			if (containerLayers.getLayers() == null) {
 				// If this layers list is still null, without IOException, it means that the file empty
-				layers = new ArrayList<ProjectLayer>();
+				containerLayers.setLayers( new ArrayList<ProjectLayer>());
 			}
-			return layers;
+			return containerLayers;
 		} catch (final Exception e) {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		}
 	}
 
 	@Override
-	public void saveSkylineLayers(Project project, List<ProjectLayer> layers) throws SkillerException {
+	public void saveSkylineLayers(Project project, ProjectLayers layers) throws SkillerException {
 		//
 		// As the method-name explains, we create the directory.
 		//
@@ -549,7 +550,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		}
 
 		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
-			fw.write(gson.toJson(layers));
+			fw.write(gson.toJson(layers.getLayers()));
 		} catch (final Exception e) {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		}

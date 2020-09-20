@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.ProjectLayer;
+import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
@@ -81,10 +81,10 @@ public interface DataHandler {
 	 * These data will be used when generating the skyline.
 	 * </p>
 	 * @param project project whose skyline layers have to be serialized in CSV
-	 * @param layers the skyline layers to be saved on the file system.
+	 * @param layers the container of skyline project layers to be saved on the file system.
 	 * @throws SkillerException thrown if an exception occurs during the loading process, mot probably an {@link java.io.IOException}
 	 */
-	 void saveSkylineLayers(Project project, List<ProjectLayer> layers) throws SkillerException;
+	 void saveSkylineLayers(Project project, ProjectLayers layers) throws SkillerException;
 
 	/**
 	 * <p>
@@ -96,7 +96,7 @@ public interface DataHandler {
 	 * @return the list of skyline layers reader to be uploaded on the filesystem..
 	 * @throws SkillerException thrown if an exception occurs during the loading process, mot probably an {@link java.io.IOException}
 	 */
-	List<ProjectLayer> loadSkylineLayers(Project project) throws SkillerException;
+	ProjectLayers loadSkylineLayers(Project project) throws SkillerException;
 
 	/**
 	 * Load the skills <i>(probably for this first release)</i> from the file system

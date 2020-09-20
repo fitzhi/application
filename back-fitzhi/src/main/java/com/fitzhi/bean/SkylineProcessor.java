@@ -1,12 +1,12 @@
 package com.fitzhi.bean;
 
-import java.io.IOError;
 import java.io.IOException;
 import java.util.List;
 
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectLayer;
+import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.exception.SkillerException;
 
@@ -27,8 +27,9 @@ public interface SkylineProcessor {
 	 * </p>
 	 * @param project project whose changes have to be serialized in CSV
 	 * @param changes changes retrieved from the repository
+	 * @return the project layers
 	 */
-	List<ProjectLayer> generateProjectLayers(Project project, SourceControlChanges changes);
+	ProjectLayers generateProjectLayers(Project project, SourceControlChanges changes);
 	
 
 	/**
@@ -59,8 +60,8 @@ public interface SkylineProcessor {
 	 * Generate the history of the Project building in the projects skyline.
 	 * </p>
 	 * @return the Project-building
-	 * @param layers list of the project layers
+	 * @param layers the container of the project layers
 	 */
-	ProjectBuilding generateProjectBuilding(List<ProjectLayer> layers);
+	ProjectBuilding generateProjectBuilding(ProjectLayers layers);
 
 }

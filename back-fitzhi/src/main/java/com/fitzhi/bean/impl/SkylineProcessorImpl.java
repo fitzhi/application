@@ -17,6 +17,7 @@ import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectLayer;
+import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.SkillerException;
@@ -109,7 +110,7 @@ public class SkylineProcessorImpl implements SkylineProcessor {
     }
 
     @Override
-    public List<ProjectLayer> generateProjectLayers(Project project, SourceControlChanges changes) {
+    public ProjectLayers generateProjectLayers(Project project, SourceControlChanges changes) {
 
         // Tis temporalField is used to retrieve the week number of the date into the
         // year
@@ -149,7 +150,7 @@ public class SkylineProcessorImpl implements SkylineProcessor {
         }
         layers.add(layer);
 
-        return layers;
+        return new ProjectLayers(layers);
     }
 
     @Override
@@ -170,16 +171,16 @@ public class SkylineProcessorImpl implements SkylineProcessor {
     @Override
     public ProjectBuilding generateProjectBuilding(Project project) throws SkillerException {
 
-        List<ProjectLayer> layers = dataHandler.loadSkylineLayers(project);
+        ProjectLayers layers = dataHandler.loadSkylineLayers(project);
         if (log.isDebugEnabled()) {
-            log.debug (String.format("Loading %d layers for the project %d", layers.size(), project.getName()));
+            log.debug (String.format("Loading %d layers for the project %d", layers.getLayers().size(), project.getName()));
         }
 
         return generateProjectBuilding(layers);
     }
 
     @Override
-    public ProjectBuilding generateProjectBuilding(List<ProjectLayer> layers) {
+    public ProjectBuilding generateProjectBuilding(ProjectLayers layers) {
         return new ProjectBuilding();
     }
   
