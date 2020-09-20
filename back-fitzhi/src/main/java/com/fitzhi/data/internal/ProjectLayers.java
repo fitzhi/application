@@ -1,6 +1,5 @@
 package com.fitzhi.data.internal;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,7 +17,7 @@ public @Data class ProjectLayers {
     private List<ProjectLayer> layers = new ArrayList<>();
 
     /**
-     * Public construction of the container
+     * Public construction of the container.
      */
     public ProjectLayers() {
     }
@@ -29,20 +28,6 @@ public @Data class ProjectLayers {
      */
     public ProjectLayers(List<ProjectLayer> layers) {
         this.layers = layers;
-    }
-
-	/**
-	 * Initialize the project Building of the building. 
-	 */
-	public ProjectBuilding ProjectBuilding() {
-
-
-
-
-        LocalDate localDate = LocalDate.of(year, 2, 1)
-        .with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, weekNumber)
-        .with(ChronoField.DAY_OF_WEEK, DayOfWeek.SUNDAY.getValue());
-        return LocalDate.now();
     }
 
 }
