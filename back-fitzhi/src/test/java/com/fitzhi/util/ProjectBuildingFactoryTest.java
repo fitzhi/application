@@ -20,7 +20,12 @@ public class ProjectBuildingFactoryTest {
         pl.getLayers().add(new ProjectLayer(1789, 2019, 2, 10, 1));
         ProjectBuilding pb = ProjectBuildingFactory.getInstance(project, pl);
         Assert.assertNotNull(pb);
+
+        Assert.assertNotNull(pb.getBuilding().containsKey(pb.yearWeek(2019, 2)));
+        Assert.assertNotNull(pb.getBuilding().containsKey(pb.yearWeek(2020, 2)));
+                
+        int delta =  (int) ChronoUnit.WEEKS.between(LocalDate.of(2019, 1, 8), LocalDate.now()) + 1;
+        Assert.assertEquals(delta, pb.getBuilding().keySet().size());
         
-        // ChronoUnit.WEEKS.between(LocalDate.of(2019, 1, 8), LocalDate.now());
     }
 }

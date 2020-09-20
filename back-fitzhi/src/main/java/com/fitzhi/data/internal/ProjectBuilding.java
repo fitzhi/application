@@ -11,10 +11,10 @@ import lombok.Data;
  * </p> 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class ProjectBuilding {
+public @Data class ProjectBuilding {
 
     /**
-     * This class
+     * This class contains a key for the building.
      */
     public @Data class YearWeek {
 
@@ -31,6 +31,7 @@ public class ProjectBuilding {
          * @param week the week
          */
         public YearWeek(int idProject, int year, int week) {
+            this.idProject = idProject;
             this.year = year;
             this.week = week;
         }
@@ -39,7 +40,12 @@ public class ProjectBuilding {
     /**
      * The building which is a timestamped layering of development activities.
      */
-    public Map<YearWeek, ProjectFloor> building = new HashMap<>();
+    private Map<YearWeek, ProjectFloor> building = new HashMap<>();
+
+    /**
+     * Current project identifier.
+     */
+    private int idProject;
 
     /**
      * Initialize a week in the year.
@@ -48,6 +54,19 @@ public class ProjectBuilding {
      * @param week the week
      */
     public void initWeek (int idProject, int year, int week) {
+        this.idProject = idProject;
         building.put(new YearWeek(idProject, year, week), new ProjectFloor(idProject, year, week, 0, 0));
+    }
+
+    /**
+     * <p>
+     * Instanciate a new {@link YearWeek}
+     * </p>
+     * @param year the given year
+     * @param week the given week
+     * @return a new instance of {@link YearWeek}
+     */
+    public YearWeek yearWeek(int year, int week) {
+        return new YearWeek(idProject, year, week);
     }
 }
