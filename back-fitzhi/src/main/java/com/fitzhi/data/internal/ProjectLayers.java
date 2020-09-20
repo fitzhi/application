@@ -32,9 +32,16 @@ public @Data class ProjectLayers {
     }
 
 	/**
-	 * Starting week of the building. 
+	 * Initialize the project Building of the building. 
 	 */
-	LocalDate startingWeekProjectBuilding() {
+	public ProjectBuilding ProjectBuilding() {
+
+
+
+
+        LocalDate localDate = LocalDate.of(year, 2, 1)
+        .with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, weekNumber)
+        .with(ChronoField.DAY_OF_WEEK, DayOfWeek.SUNDAY.getValue());
         return LocalDate.now();
     }
 
