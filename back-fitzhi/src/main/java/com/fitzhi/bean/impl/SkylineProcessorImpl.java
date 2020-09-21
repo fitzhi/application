@@ -175,7 +175,7 @@ public class SkylineProcessorImpl implements SkylineProcessor {
             log.debug (String.format("Loading %d layers for the project %d", layers.getLayers().size(), project.getName()));
         }
 
-        return generateProjectBuilding(project layers);
+        return generateProjectBuilding(project, layers);
     }
 
     @Override
