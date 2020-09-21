@@ -11,6 +11,10 @@ import com.fitzhi.data.internal.ProjectLayers;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * Testing the method {@link ProjectBuildingFactory#getInstance(Project, ProjectLayers)}
+ * @author Fr&eacute;d&eacute;ric VIDAL
+ */
 public class ProjectBuildingFactoryTest {
 
     @Test

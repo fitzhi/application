@@ -16,7 +16,6 @@ import com.fitzhi.data.internal.Staff;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
