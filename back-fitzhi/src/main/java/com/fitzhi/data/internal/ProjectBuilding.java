@@ -60,6 +60,24 @@ public @Data class ProjectBuilding {
 
     /**
      * <p>
+     * This method might throw a {@link RuntimeException} if the project doest not exist.  
+     * </p>
+     * @param year the given year
+     * @param week the given week
+     * @return the floor for the given year and week
+     */
+    public ProjectFloor getProjectFloor(int year, int week) {
+        
+        ProjectFloor floor = building.get(yearWeek(year, week));
+        if (floor == null) {
+            throw new RuntimeException(String.format("Cannot retrieve the floor (%d;%d) in project %d", year, week, idProject));
+        }
+        return floor;
+    }
+
+
+    /**
+     * <p>
      * Instanciate a new {@link YearWeek}
      * </p>
      * @param year the given year

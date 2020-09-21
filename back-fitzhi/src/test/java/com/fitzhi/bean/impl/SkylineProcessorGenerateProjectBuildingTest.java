@@ -2,11 +2,14 @@ package com.fitzhi.bean.impl;
 
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.SkylineProcessor;
+import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
+import com.fitzhi.data.internal.ProjectFloor;
 import com.fitzhi.exception.SkillerException;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,12 +41,62 @@ public class SkylineProcessorGenerateProjectBuildingTest {
     @Autowired
     DataHandler dataHandler;
    
+    @Autowired
+    StaffHandler staffHandler;
+
+    @Before
+    public void before() {
+    }
+
     @Test
     public void testGenerateBuildingForAGivenProject() throws SkillerException {
 
+        staffHandler.getStaff(1).setActive(true);
+        staffHandler.getStaff(2).setActive(false);
+
         Project project = new Project(1515, "Marignan !");
-        ProjectBuilding pb = this.skylineProcessor.generateProjectBuilding(project);        
-        Assert.assertNotNull(pb);
-        
+        ProjectBuilding building = this.skylineProcessor.generateProjectBuilding(project);        
+        Assert.assertNotNull(building);
+        ProjectFloor floor = building.getProjectFloor(2020, 20);
+        Assert.assertEquals(10, floor.getNumberOfLinesByActiveDevelopers());
+        Assert.assertEquals(30, floor.getNumberOfLinesByInactiveDevelopers());
+        floor = building.getProjectFloor(2020, 21);
+        Assert.assertEquals(44, floor.getNumberOfLinesByActiveDevelopers());
+
     }
+
+    @Test
+    public void anotherTestGenerateBuildingForAGivenProject() throws SkillerException {
+
+        staffHandler.getStaff(1).setActive(true);
+        staffHandler.getStaff(2).setActive(true);
+
+        Project project = new Project(1515, "Marignan !");
+        ProjectBuilding building = this.skylineProcessor.generateProjectBuilding(project);        
+        Assert.assertNotNull(building);
+        ProjectFloor floor = building.getProjectFloor(2020, 20);
+        Assert.assertEquals(40, floor.getNumberOfLinesByActiveDevelopers());
+        Assert.assertEquals(0, floor.getNumberOfLinesByInactiveDevelopers());
+        floor = building.getProjectFloor(2020, 21);
+        Assert.assertEquals(44, floor.getNumberOfLinesByActiveDevelopers());
+
+    }
+
+    @Test
+    public void oneAnotherTestGenerateBuildingForAGivenProject() throws SkillerException {
+
+        staffHandler.getStaff(1).setActive(false);
+        staffHandler.getStaff(2).setActive(false);
+
+        Project project = new Project(1515, "Marignan !");
+        ProjectBuilding building = this.skylineProcessor.generateProjectBuilding(project);        
+        Assert.assertNotNull(building);
+        ProjectFloor floor = building.getProjectFloor(2020, 20);
+        Assert.assertEquals(0, floor.getNumberOfLinesByActiveDevelopers());
+        Assert.assertEquals(40, floor.getNumberOfLinesByInactiveDevelopers());
+        floor = building.getProjectFloor(2020, 21);
+        Assert.assertEquals(44, floor.getNumberOfLinesByInactiveDevelopers());
+
+    }
+
 }

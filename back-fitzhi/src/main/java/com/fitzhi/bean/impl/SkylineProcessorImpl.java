@@ -16,6 +16,7 @@ import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
+import com.fitzhi.data.internal.ProjectFloor;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.SourceControlChanges;
@@ -162,11 +163,26 @@ public class SkylineProcessorImpl implements SkylineProcessor {
 
     @Override
     public ProjectBuilding generateProjectBuilding(Project project, ProjectLayers layers) {
-        ProjectBuilding pb = ProjectBuildingFactory.getInstance(project, layers);
-        layers.getLayers().forEach(layer -> {
-            // layer.getClass()
+        ProjectBuilding building = ProjectBuildingFactory.getInstance(project, layers);
+
+        layers.getLayers().stream().forEach(layer -> {
+            if (layer.getIdStaff() == -1) {
+                ProjectFloor floor = building.getProjectFloor(layer.getYear(), layer.getWeek());
+                floor.addNumberOfLinesByInactiveDevelopers(layer.getLines());
+            } else {
+                ProjectFloor floor = building.getProjectFloor(layer.getYear(), layer.getWeek());
+                Staff staff = staffHandler.getStaff(layer.getIdStaff());
+                if (staff == null) {
+                    throw new RuntimeException(String.format("Identifier %d is not found in the staff members", layer.getIdStaff()));
+                }
+                if (staff.isActive()) {
+                    floor.addNumberOfLinesByActiveDevelopers(layer.getLines());
+                } else {
+                    floor.addNumberOfLinesByInactiveDevelopers(layer.getLines());
+                }
+            }
         });
-        return pb;
+        return building;
     }
   
    
