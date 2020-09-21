@@ -44,10 +44,6 @@ public class SkylineProcessorGenerateProjectBuildingTest {
     @Autowired
     StaffHandler staffHandler;
 
-    @Before
-    public void before() {
-    }
-
     @Test
     public void testGenerateBuildingForAGivenProject() throws SkillerException {
 
@@ -62,7 +58,6 @@ public class SkylineProcessorGenerateProjectBuildingTest {
         Assert.assertEquals(30, floor.getNumberOfLinesByInactiveDevelopers());
         floor = building.getProjectFloor(2020, 21);
         Assert.assertEquals(44, floor.getNumberOfLinesByActiveDevelopers());
-
     }
 
     @Test
@@ -79,7 +74,6 @@ public class SkylineProcessorGenerateProjectBuildingTest {
         Assert.assertEquals(0, floor.getNumberOfLinesByInactiveDevelopers());
         floor = building.getProjectFloor(2020, 21);
         Assert.assertEquals(44, floor.getNumberOfLinesByActiveDevelopers());
-
     }
 
     @Test
@@ -96,7 +90,6 @@ public class SkylineProcessorGenerateProjectBuildingTest {
         Assert.assertEquals(40, floor.getNumberOfLinesByInactiveDevelopers());
         floor = building.getProjectFloor(2020, 21);
         Assert.assertEquals(44, floor.getNumberOfLinesByInactiveDevelopers());
-
     }
 
 }
