@@ -1,9 +1,5 @@
 package com.fitzhi.data.internal;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import lombok.Data;
 
 /**
@@ -36,9 +32,9 @@ public @Data class ProjectLayer implements Comparable<ProjectLayer> {
     private int lines;
 
     /**
-     * Array of staff identifiers.
+     * Staff identifier.
      */
-    private List<Integer> idStaffs = new ArrayList<>();
+    private int idStaff;
 
     /**
      * Complete constructor.
@@ -47,27 +43,14 @@ public @Data class ProjectLayer implements Comparable<ProjectLayer> {
      * @param year      the year of the layer
      * @param week      the week in the year of the layer.
      * @param lines     the number of lines
-     * @param idStaff   uniquer staff identifier
+     * @param idStaff   uniquer Staff identifier
      */
     public ProjectLayer(int idProject, int year, int week, int lines, int idStaff) {
-        this(idProject, year, week, lines, new Integer[] { idStaff });
-    }
-
-    /**
-     * Complete constructor.
-     * 
-     * @param idProject the project identifier
-     * @param year      the year of the layer
-     * @param week      the week in the year of the layer.
-     * @param lines     the number of lines
-     * @param idStaffs  array of staff identifiers.
-     */
-    public ProjectLayer(int idProject, int year, int week, int lines, Integer[] idStaffs) {
         this.idProject = idProject;
         this.year = year;
         this.week = week;
         this.lines = lines;
-        this.idStaffs = new ArrayList<Integer>(Arrays.asList(idStaffs));
+        this.idStaff = idStaff;
     }
 
     /**
@@ -87,8 +70,7 @@ public @Data class ProjectLayer implements Comparable<ProjectLayer> {
         if (diff != 0) {
             return diff;
         }
-        // The comparison is limited to the first element in the staff list.
-        diff = getIdStaffs().get(0) - pl.getIdStaffs().get(0);
+        diff = idStaff - pl.getIdStaff();
         return diff; 
     }
 

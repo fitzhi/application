@@ -121,34 +121,16 @@ public class SkylineProcessorImpl implements SkylineProcessor {
                     sourceChange.getIdStaff());
         };
 
-        final List<ProjectLayer> working_layers = new ArrayList<>();
+        final List<ProjectLayer> layers = new ArrayList<>();
         changes.getChanges().values().stream().flatMap(hist -> hist.getChanges().stream()).collect(Collectors.toList())
                 .stream().collect(Collectors.groupingBy(layerIdentifier, Collectors.summingInt(SourceChange::lines)))
                 .forEach((layer, lines) -> {
                     ProjectLayer projectLayer = new ProjectLayer(project.getId(), layer.year, layer.week, lines,
                             layer.idStaff);
-                    working_layers.add(projectLayer);
+                    layers.add(projectLayer);
                 });
 
-        Collections.sort(working_layers);
-
-        final List<ProjectLayer> layers = new ArrayList<>();
-        ProjectLayer layer = null;
-        for (ProjectLayer wlayer : working_layers) {
-            if (layer == null) {
-                layer = wlayer;
-                continue;
-            }
-            if (layer.isSameWeek(wlayer)) {
-                layer.setLines(layer.getLines() + wlayer.getLines());
-                layer.getIdStaffs().add(wlayer.getIdStaffs().get(0));
-            } else {
-                layers.add(layer);
-                layer = wlayer;
-            }
-        }
-        layers.add(layer);
-
+        Collections.sort(layers);
         return new ProjectLayers(layers);
     }
 
@@ -181,7 +163,9 @@ public class SkylineProcessorImpl implements SkylineProcessor {
     @Override
     public ProjectBuilding generateProjectBuilding(Project project, ProjectLayers layers) {
         ProjectBuilding pb = ProjectBuildingFactory.getInstance(project, layers);
-
+        layers.getLayers().forEach(layer -> {
+            // layer.getClass()
+        });
         return pb;
     }
   

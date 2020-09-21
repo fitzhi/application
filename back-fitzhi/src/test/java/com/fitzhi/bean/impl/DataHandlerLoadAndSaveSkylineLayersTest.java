@@ -55,8 +55,6 @@ public class DataHandlerLoadAndSaveSkylineLayersTest {
         List<ProjectLayer> layers = new ArrayList<>(); 
         
         ProjectLayer p = new ProjectLayer(1214, 2020, 20, 10, 1);
-        p.getIdStaffs().add(2);
-        p.getIdStaffs().add(3);
         layers.add(p);
         layers.add(new ProjectLayer(1214, 2020, 20, 30, 2));
         layers.add(new ProjectLayer(1214, 2020, 21, 44, 1));        
