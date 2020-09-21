@@ -14,7 +14,7 @@ cd ..
 mkdir deploy\backend-fitzhi
 mkdir deploy\data
 cd back-fitzhi
-call mvn install
+call mvn clean install
 echo ""
 echo "Building back-end Fitzhi"
 echo "------------------------"
