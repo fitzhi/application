@@ -23,6 +23,7 @@ import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.fitzhi.source.crawler.git.SourceFileHistory;
+import com.fitzhi.util.ProjectBuildingFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -174,12 +175,14 @@ public class SkylineProcessorImpl implements SkylineProcessor {
             log.debug (String.format("Loading %d layers for the project %d", layers.getLayers().size(), project.getName()));
         }
 
-        return generateProjectBuilding(layers);
+        return generateProjectBuilding(project layers);
     }
 
     @Override
-    public ProjectBuilding generateProjectBuilding(ProjectLayers layers) {
-        return new ProjectBuilding();
+    public ProjectBuilding generateProjectBuilding(Project project, ProjectLayers layers) {
+        ProjectBuilding pb = ProjectBuildingFactory.getInstance(project, layers);
+
+        return pb;
     }
   
    

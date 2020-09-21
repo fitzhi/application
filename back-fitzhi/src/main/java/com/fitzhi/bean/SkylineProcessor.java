@@ -49,7 +49,7 @@ public interface SkylineProcessor {
 	 * This method loads the {@link ProjectLayer project layers} from the filesystem and delegates the generation 
 	 * to the generation {@link #generateProjectBuilding(List) generateProjectBuilding}
 	 * </p>
-	 * @param project given project of the associated changes
+	 * @param project the given project of the associated changes
 	 * @return the Project-building
 	 * @throws SkillerException thrown if any problem occurs, most probably an {@link IOException} when loading the data.
 	 */
@@ -59,9 +59,10 @@ public interface SkylineProcessor {
 	 * <p>
 	 * Generate the history of the Project building in the projects skyline.
 	 * </p>
-	 * @return the Project-building
+	 * @param project the project whose building has to be generated.
 	 * @param layers the container of the project layers
+	 * @return the Project-building
 	 */
-	ProjectBuilding generateProjectBuilding(ProjectLayers layers);
+	ProjectBuilding generateProjectBuilding(Project project, ProjectLayers layers);
 
 }
