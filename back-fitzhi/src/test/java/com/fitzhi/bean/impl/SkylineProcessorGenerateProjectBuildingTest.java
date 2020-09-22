@@ -43,6 +43,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class SkylineProcessorGenerateProjectBuildingTest {
 
+    static{
+        Locale.setDefault(Locale.UK);
+    }
+    
     @Autowired
     SkylineProcessor skylineProcessor;
 
