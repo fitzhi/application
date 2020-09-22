@@ -177,7 +177,6 @@ public class SkylineProcessorImpl implements SkylineProcessor {
             if (layer.getIdStaff() == -1) {
                 building.addInactiveLines(layer.getLines(), layer.getYear(), layer.getWeek());
             } else {
-                ProjectFloor floor = building.getProjectFloor(layer.getYear(), layer.getWeek());
                 Staff staff = staffHandler.getStaff(layer.getIdStaff());
                 if (staff == null) {
                     throw new RuntimeException(String.format("Identifier %d is not found in the staff members", layer.getIdStaff()));
