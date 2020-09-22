@@ -32,16 +32,16 @@ public @Data class ProjectFloor {
      * @param idProject the project identifier
      * @param year the year of the floor
      * @param week the week of the floor
-     * @param numberOfLinesByActiveDevelopers the number of lines developed by active developers during that period
-     * @param numberOfLinesByInactiveDevelopers the number of lines developed by inactive developers during that period
+     * @param linesActiveDevelopers the number of lines developed by active developers during that period
+     * @param linesInactiveDevelopers the number of lines developed by inactive developers during that period
      */
-    public ProjectFloor(int idProject, int year, int week, int numberOfLinesByActiveDevelopers,
-            int numberOfLinesByInactiveDevelopers) {
+    public ProjectFloor(int idProject, int year, int week, int linesActiveDevelopers,
+            int linesInactiveDevelopers) {
         this.idProject = idProject;
         this.year = year;
         this.week = week;
-        this.linesActiveDevelopers = numberOfLinesByActiveDevelopers;
-        this.linesInactiveDevelopers = numberOfLinesByInactiveDevelopers;
+        this.linesActiveDevelopers = linesActiveDevelopers;
+        this.linesInactiveDevelopers = linesInactiveDevelopers;
     }
 
     /**

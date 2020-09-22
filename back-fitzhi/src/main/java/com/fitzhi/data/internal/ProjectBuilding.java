@@ -68,6 +68,18 @@ public @Data class ProjectBuilding {
     }
 
     /**
+     * Initialize a week in the year.
+     * @param idProject the project identifier
+     * @param year the year
+     * @param week the week
+     * @param linesActiveDevelopers the number of lines developed by ACTIVE developers
+     * @param linesInactiveDevelopers the number of lines developed by INACTIVE developers
+     */
+    public void initWeek (int idProject, int year, int week, int linesActiveDevelopers, int linesInactiveDevelopers) {
+        this.idProject = idProject;
+        building.put(new YearWeek(idProject, year, week), new ProjectFloor(idProject, year, week, linesActiveDevelopers, linesInactiveDevelopers));
+    }
+    /**
      * <p>
      * This method might throw a {@link RuntimeException} if the project doest not exist.  
      * </p>

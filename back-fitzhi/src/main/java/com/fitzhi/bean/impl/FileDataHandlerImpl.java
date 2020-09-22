@@ -34,12 +34,14 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
+import com.fitzhi.data.internal.ProjectFloor;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceCodeDiffChange;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
+import com.fitzhi.data.internal.ProjectBuilding.YearWeek;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.google.gson.Gson;
@@ -269,7 +271,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * @param project the given project
 	 * @return the filename to be used.
 	 */
-	private String genereChangesCsvFilename(Project project) {
+	private String generateChangesCsvFilename(Project project) {
 		return SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-changes.csv";
 	}
 
@@ -280,7 +282,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * @param project the given project
 	 * @return the filename to be used.
 	 */
-	private String genereProjectLayersJsonFilename(Project project) {
+	private String generateProjectLayersJsonFilename(Project project) {
 		return SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-project-layers.json";
 	}
 
@@ -292,7 +294,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		//
 		createIfNeededDirectory(SAVED_CHANGES);
 
-		final String filename = genereChangesCsvFilename(project);
+		final String filename = generateChangesCsvFilename(project);
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Saving file %s", rootLocation.resolve(filename)));
@@ -320,7 +322,7 @@ public class FileDataHandlerImpl implements DataHandler {
 
 		SourceControlChanges result = new SourceControlChanges();
 
-		final String filename = genereChangesCsvFilename(project);
+		final String filename = generateChangesCsvFilename(project);
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Loading file %s", rootLocation.resolve(filename)));
@@ -517,7 +519,7 @@ public class FileDataHandlerImpl implements DataHandler {
 
 		final ProjectLayers containerLayers = new ProjectLayers();
 
-		final String filename = genereProjectLayersJsonFilename(project);
+		final String filename = generateProjectLayersJsonFilename(project);
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Loading file %s", rootLocation.resolve(filename)));
@@ -546,7 +548,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		//
 		createIfNeededDirectory(SAVED_CHANGES);
 
-		final String filename = genereProjectLayersJsonFilename(project);
+		final String filename = generateProjectLayersJsonFilename(project);
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Saving file %s", rootLocation.resolve(filename)));
@@ -559,13 +561,65 @@ public class FileDataHandlerImpl implements DataHandler {
 		}
 	}
 
+	/**
+	 * Generate the project-building.json filename for loading and saving the
+	 * {@link ProjectBuilding Project building} container.
+	 * 
+	 * @param project the given project
+	 * @return the filename to be used.
+	 */
+	private String generateProjectBuildingJsonFilename(Project project) {
+		return SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-project-building.json";
+	}
+
 	@Override
 	public ProjectBuilding loadProjectBuilding(Project project) throws SkillerException {
-		return null;
+
+		final ProjectBuilding building = new ProjectBuilding();
+
+		final String filename = generateProjectBuildingJsonFilename(project);
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Loading file %s", rootLocation.resolve(filename)));
+		}
+
+		try (FileReader fr = new FileReader(rootLocation.resolve(filename).toFile())) {
+
+			Type typeListProjectFloor = new TypeToken<List<ProjectFloor>>() {
+			}.getType();
+			List<ProjectFloor> floors = gson.fromJson(fr, typeListProjectFloor);
+			if (floors == null) {
+				// If this building list is still null, without IOException, it means that the file is empty.
+				building.setBuilding(new HashMap<YearWeek, ProjectFloor>());
+			} else {
+				floors.stream().forEach(floor -> {
+					building.initWeek(floor.getIdProject(), floor.getYear(), floor.getWeek(), floor.getLinesActiveDevelopers(), floor.getLinesInactiveDevelopers());
+				});
+			}	
+			return building;
+		} catch (final Exception e) {
+			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+		}
 	}
 
 	@Override
 	public void saveProjectBuilding(Project project, ProjectBuilding building) throws SkillerException {
+		//
+		// As the method-name explains, we create the directory.
+		//
+		createIfNeededDirectory(SAVED_CHANGES);
+
+		final String filename = generateProjectBuildingJsonFilename(project);
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Saving file %s", rootLocation.resolve(filename)));
+		}
+
+		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
+			fw.write(gson.toJson(building.getBuilding().values()));
+		} catch (final Exception e) {
+			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+		}
 	}
 	
 }
