@@ -33,6 +33,7 @@ import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.Skill;
@@ -523,12 +524,14 @@ public class FileDataHandlerImpl implements DataHandler {
 		}
 
 		try (FileReader fr = new FileReader(rootLocation.resolve(filename).toFile())) {
-			
-			Type typeListProjectLayer = new TypeToken<List<ProjectLayer>>() {}.getType();
+
+			Type typeListProjectLayer = new TypeToken<List<ProjectLayer>>() {
+			}.getType();
 			containerLayers.setLayers(gson.fromJson(fr, typeListProjectLayer));
 			if (containerLayers.getLayers() == null) {
-				// If this layers list is still null, without IOException, it means that the file empty
-				containerLayers.setLayers( new ArrayList<ProjectLayer>());
+				// If this layers list is still null, without IOException, it means that the
+				// file empty
+				containerLayers.setLayers(new ArrayList<ProjectLayer>());
 			}
 			return containerLayers;
 		} catch (final Exception e) {
@@ -555,4 +558,14 @@ public class FileDataHandlerImpl implements DataHandler {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		}
 	}
+
+	@Override
+	public ProjectBuilding loadProjectBuilding(Project project) throws SkillerException {
+		return null;
+	}
+
+	@Override
+	public void saveProjectBuilding(Project project, ProjectBuilding building) throws SkillerException {
+	}
+	
 }
