@@ -16,7 +16,6 @@ import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
-import com.fitzhi.data.internal.ProjectFloor;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.SourceControlChanges;
