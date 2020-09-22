@@ -17,9 +17,15 @@ public @Data class ProjectFloor {
 
     private int week;
     
-    private int numberOfLinesByActiveDevelopers;
+    /**
+     * Number of lines developed by ACTIVE developers.
+     */
+    private int linesActiveDevelopers;
 
-    private int numberOfLinesByInactiveDevelopers;
+    /**
+     * Number of lines developed by INACTIVE developers.
+     */
+    private int linesInactiveDevelopers;
 
     /**
      * Public construction of a floor.
@@ -34,23 +40,23 @@ public @Data class ProjectFloor {
         this.idProject = idProject;
         this.year = year;
         this.week = week;
-        this.numberOfLinesByActiveDevelopers = numberOfLinesByActiveDevelopers;
-        this.numberOfLinesByInactiveDevelopers = numberOfLinesByInactiveDevelopers;
+        this.linesActiveDevelopers = numberOfLinesByActiveDevelopers;
+        this.linesInactiveDevelopers = numberOfLinesByInactiveDevelopers;
     }
 
     /**
      * Add a number of lines developed by active developers
-     * @param numberOfLinesByActiveDevelopers the number of lines
+     * @param linesActiveDevelopers the number of lines
      */
-    public void addNumberOfLinesByActiveDevelopers(int numberOfLinesByActiveDevelopers) {
-        this.numberOfLinesByActiveDevelopers += numberOfLinesByActiveDevelopers;
+    public void addLinesActiveDevelopers(int linesActiveDevelopers) {
+        this.linesActiveDevelopers += linesActiveDevelopers;
     }
 
     /**
      * Add a number of lines developed by INactive developers
-     * @param numberOfLinesByInactiveDevelopers the number of lines
+     * @param linesInactiveDevelopers the number of lines
      */
-    public void addNumberOfLinesByInactiveDevelopers(int numberOfLinesByInactiveDevelopers) {
-        this.numberOfLinesByInactiveDevelopers += numberOfLinesByInactiveDevelopers;
+    public void addLinesInactiveDevelopers(int linesInactiveDevelopers) {
+        this.linesInactiveDevelopers += linesInactiveDevelopers;
     }
 }

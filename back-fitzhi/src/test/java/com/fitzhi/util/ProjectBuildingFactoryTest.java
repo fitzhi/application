@@ -2,6 +2,9 @@ package com.fitzhi.util;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
+import java.util.Locale;
 
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
@@ -30,6 +33,10 @@ public class ProjectBuildingFactoryTest {
                 
         int delta =  (int) ChronoUnit.WEEKS.between(LocalDate.of(2019, 1, 8), LocalDate.now()) + 1;
         Assert.assertEquals(delta, pb.getBuilding().keySet().size());
+   
+        // This temporalField is used to retrieve the week number of the date into the year
+        final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
+        Assert.assertNotNull(pb.yearWeek(LocalDate.now().getYear(), LocalDate.now().get(woy)));
         
     }
 }

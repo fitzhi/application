@@ -59,7 +59,7 @@ public class ProjectBuildingFactory {
             log.debug(String.format("Approximative start of date for the project %s", starting));
         }
 
-        // Tis temporalField is used to retrieve the week number of the date into the year
+        // This temporalField is used to retrieve the week number of the date into the year
         final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
 
         ProjectBuilding building = new ProjectBuilding();

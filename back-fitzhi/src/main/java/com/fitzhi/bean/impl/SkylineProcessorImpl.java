@@ -114,7 +114,7 @@ public class SkylineProcessorImpl implements SkylineProcessor {
     @Override
     public ProjectLayers generateProjectLayers(Project project, SourceControlChanges changes) {
 
-        // Tis temporalField is used to retrieve the week number of the date into the year
+        // This temporalField is used to retrieve the week number of the date into the year
         final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
 
         final Function<SourceChange, Layer> layerIdentifier = (SourceChange sourceChange) -> {
@@ -155,7 +155,7 @@ public class SkylineProcessorImpl implements SkylineProcessor {
 
         ProjectLayers layers = dataHandler.loadSkylineLayers(project);
         if (log.isDebugEnabled()) {
-            log.debug (String.format("Loading %d layers for the project %d", layers.getLayers().size(), project.getName()));
+            log.debug (String.format("Loading %d layers for the project %s", layers.getLayers().size(), project.getName()));
         }
 
         return generateProjectBuilding(project, layers);
@@ -163,12 +163,19 @@ public class SkylineProcessorImpl implements SkylineProcessor {
 
     @Override
     public ProjectBuilding generateProjectBuilding(Project project, ProjectLayers layers) {
+
         ProjectBuilding building = ProjectBuildingFactory.getInstance(project, layers);
+
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("the building has %d floors", building.getBuilding().size()));
+        }
+
+        // This temporalField is used to retrieve the week number of the date into the year
+        final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
 
         layers.getLayers().stream().forEach(layer -> {
             if (layer.getIdStaff() == -1) {
-                ProjectFloor floor = building.getProjectFloor(layer.getYear(), layer.getWeek());
-                floor.addNumberOfLinesByInactiveDevelopers(layer.getLines());
+                building.addInactiveLines(layer.getLines(), layer.getYear(), layer.getWeek());
             } else {
                 ProjectFloor floor = building.getProjectFloor(layer.getYear(), layer.getWeek());
                 Staff staff = staffHandler.getStaff(layer.getIdStaff());
@@ -176,14 +183,19 @@ public class SkylineProcessorImpl implements SkylineProcessor {
                     throw new RuntimeException(String.format("Identifier %d is not found in the staff members", layer.getIdStaff()));
                 }
                 if (staff.isActive()) {
-                    floor.addNumberOfLinesByActiveDevelopers(layer.getLines());
+                    building.addActiveOrInactiveLines(
+                        layer.getLines(), 
+                        layer.getYear(), layer.getWeek(), 
+                        Integer.MAX_VALUE, Integer.MAX_VALUE);
                 } else {
-                    floor.addNumberOfLinesByInactiveDevelopers(layer.getLines());
+                    building.addActiveOrInactiveLines(
+                        layer.getLines(), 
+                        layer.getYear(), layer.getWeek(), 
+                        staff.getDateInactive().getYear(), staff.getDateInactive().get(woy));
                 }
             }
         });
         return building;
     }
   
-   
 }
