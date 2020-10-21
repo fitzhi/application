@@ -131,12 +131,18 @@ describe('TableGhostsComponent', () => {
 					idStaff: 1964,
 					pseudo: 'frvidal',
 					login: 'frvidal',
-					firstname: 'Frédéric',
-					lastname: 'VIDAL',
+					firstName: 'Frédéric',
+					lastName: 'VIDAL',
 					nickName: 'frvidal',
 					fullName: 'Frédéric VIDAL',
 					email: 'frederic.vidal@fitzhi.com',
-					level: 'Developper'
+					level: 'Developper',
+					external: false,
+					forceActiveState: false,
+					active: true,
+					dateInactive: null,
+					experiences: [],
+					missions: []
 				}));
 
 		const button = fixture.debugElement.nativeElement.querySelector('#addStaff-1');

@@ -14,8 +14,8 @@ export class Collaborator {
 	public forceActiveState: boolean;
 	public active: boolean;
 	public dateInactive: Date;
-	public application: string;
-	public typeOfApplication: number;
+	public application?: string;
+	public typeOfApplication?: number;
 
 	/**
 	 * Equal to true is this staff member is external to the company.

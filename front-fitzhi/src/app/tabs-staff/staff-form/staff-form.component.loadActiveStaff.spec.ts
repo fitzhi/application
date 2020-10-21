@@ -41,6 +41,7 @@ describe('StaffFormComponent', () => {
 				nickName: 'joe', login: 'jdalton',
 				email: 'jdalton@gmail.com', level: 'one Code',
 				forceActiveState: true, active: true, dateInactive: null,
+				external: false,
 				missions: [], experiences: []
 			}
 		);

@@ -5,33 +5,7 @@ import { AuditDetailsHistory } from './cinematic/audit-details-history';
 import { AuditDetail } from '../data/audit-detail';
 import { traceOn } from '../global';
 import { Injectable } from '@angular/core';
-
-class Form {
-
-	/**
-	 * Active form identifier.
-	 */
-	public formIdentifier = -1;
-
-	/**
-	 * url activated for this form.
-	 */
-	public url: string;
-
-	/**
-	 * Constructor
-	 */
-	constructor(formIdentifier: number, url: string) {
-		this.formIdentifier = formIdentifier;
-		this.url = url;
-	}
-
-	public trace() {
-		if (traceOn()) {
-			console.log('Form Identifier ' + Constants.CONTEXT[this.formIdentifier] + ' for url ' + this.url);
-		}
-	}
-}
+import { Form } from './Form';
 
 @Injectable()
 export class CinematicService {
@@ -42,7 +16,7 @@ export class CinematicService {
 	public currentActiveForm$ = new BehaviorSubject<Form>(new Form(Constants.WELCOME, 'Welcome'));
 
 	/**
-	  * Current collaborator's identifier previewed on the form.
+	  * Current collaborator's identifier previewed on the form. 
 	  */
 	public emitActualCollaboratorDisplay = new Subject<number>();
 

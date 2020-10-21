@@ -34,11 +34,11 @@ describe('ProjectFormComponent', () => {
 	@Component({
 		selector: 'app-project-component',
 		template: 	'<app-project-form ' +
-						'[risk$]="risk$" *ngIf="(projectService.project)">' +
+						'[risk$]="risk$" *ngIf="(prjService.project)">' +
 					'</app-project-form>'
 	})
 	class TestHostComponent {
-		constructor() {}
+		constructor(public prjService: ProjectService) {}
 		public risk$ = new BehaviorSubject<number>(1);
 	}
 
@@ -46,7 +46,7 @@ describe('ProjectFormComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [ProjectFormComponent, TechxhiMedalComponent, QuotationBadgeComponent, AuditGraphicBadgeComponent,
 				TestHostComponent, BranchComponent],
-			providers: [ReferentialService, CinematicService, GitService],
+			providers: [ReferentialService, CinematicService, GitService, ProjectService],
 			imports: [
 					MatButtonToggleModule, MatCheckboxModule, HttpClientTestingModule, FormsModule, ReactiveFormsModule,
 					MatDialogModule, RouterTestingModule
