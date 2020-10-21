@@ -41,25 +41,25 @@ describe('ProjectSunburstComponent with data', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(ProjectSunburstComponent);
 		component = fixture.componentInstance;
-		
+
 	});
-	
+
 	it('drawing the chart', () => {
-		
+
 		component.activeContext = PreviewContext.SUNBURST_READY;
 		fixture.detectChanges();
 
-		setTimeout(() => {			
+		setTimeout(() => {
 			const projectService = TestBed.inject(ProjectService);
 			projectService.project = new Project(1789, 'Revolutionnary project');
 			projectService.project.active = true;
 			projectService.projectLoaded$.next(true);
-			
+
 			const sunburstCacheService = TestBed.inject(SunburstCacheService);
 			sunburstCacheService.saveResponse(data);
 
 			const sunburstCinematicService = TestBed.inject(SunburstCinematicService);
-			sunburstCinematicService.refreshChart$.next(true);	
+			sunburstCinematicService.refreshChart$.next(true);
 		}, 0);
 
 		expect(component).toBeTruthy();

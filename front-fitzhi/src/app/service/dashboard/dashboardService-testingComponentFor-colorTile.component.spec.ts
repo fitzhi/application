@@ -50,7 +50,7 @@ describe('DashboardService.colorTile testing', () => {
 	}));
 
 	beforeEach(() => {
-		dashboardService = TestBed.get(DashboardService);
+		dashboardService = TestBed.inject(DashboardService);
 		expect(dashboardService).toBeDefined();
 
 		fixture = TestBed.createComponent(TestHostComponent);

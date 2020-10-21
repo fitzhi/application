@@ -45,7 +45,7 @@ describe('AuditGraphicBadgeComponent', () => {
 	}));
 
 	beforeEach(() => {
-		const referentialService: ReferentialService = TestBed.get(ReferentialService);
+		const referentialService: ReferentialService = TestBed.inject(ReferentialService);
 		const risk = new RiskLegend();
 		risk.level = 5;
 		risk.color = 'blue';

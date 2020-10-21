@@ -52,10 +52,10 @@ describe('ProjectFormComponent', () => {
 
 	beforeEach(() => {
 
-		backendSetupService = TestBed.get(BackendSetupService);
+		backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('URL_OF_SERVER');
 
-		httpTestingController = TestBed.get(HttpTestingController);
+		httpTestingController = TestBed.inject(HttpTestingController);
 
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
@@ -63,7 +63,7 @@ describe('ProjectFormComponent', () => {
 		project.id = 1789;
 		project.name = 'Revolutionary project';
 		project.audit = {};
-		projectService = TestBed.get(ProjectService);
+		projectService = TestBed.inject(ProjectService);
 		projectService.project = project;
 		projectService.projectLoaded$ = new BehaviorSubject(true);
 

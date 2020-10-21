@@ -36,7 +36,7 @@ describe('ToolbarComponent', () => {
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
 
-		const cinematicService = TestBed.get(CinematicService);
+		const cinematicService = TestBed.inject(CinematicService);
 		cinematicService.currentActiveForm$.next (Constants.TABS_STAFF_LIST);
 
 		fixture.detectChanges();

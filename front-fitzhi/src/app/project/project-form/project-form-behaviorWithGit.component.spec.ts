@@ -57,12 +57,12 @@ describe('ProjectFormComponent', () => {
 
 	beforeEach(() => {
 
-		gitService = TestBed.get(GitService);
+		gitService = TestBed.inject(GitService);
 
-		backendSetupService = TestBed.get(BackendSetupService);
+		backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('URL_OF_SERVER');
 
-		httpTestingController = TestBed.get(HttpTestingController);
+		httpTestingController = TestBed.inject(HttpTestingController);
 
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
@@ -73,9 +73,9 @@ describe('ProjectFormComponent', () => {
 		project.name = 'Revolutionary project';
 		project.connectionSettings = NO_USER_PASSWORD_ACCESS;
 
-		projectService = TestBed.get(ProjectService);
+		projectService = TestBed.inject(ProjectService);
 		projectService.project = project;
-	
+
 		projectService.projectLoaded$ = new BehaviorSubject(true);
 
 		// We do not need the handle the skill retrieval.
@@ -94,14 +94,14 @@ describe('ProjectFormComponent', () => {
 		const spyConnect = spyOn(gitService, 'connect$')
 			.and.callThrough()
 			.and.returnValue(of(new Repository()));
-		
+
 		const spyBranches = spyOn(gitService, 'branches$')
 			.and.callThrough()
 			.and.returnValue(of(['master', 'release']));
 
 		const urlRepositoryInput = fixture.debugElement.query(By.css('#urlRepository'));
 		console.log ('Former url', urlRepositoryInput.nativeElement.value);
-		urlRepositoryInput.triggerEventHandler('blur', {target: {value:'https://github.com/fitzhi/application' }} );
+		urlRepositoryInput.triggerEventHandler('blur', {target: {value: 'https://github.com/fitzhi/application' }} );
 		fixture.detectChanges();
 
 		projectService.branches$.subscribe({
@@ -119,16 +119,16 @@ describe('ProjectFormComponent', () => {
 		const spyConnect = spyOn(gitService, 'connect$')
 			.and.callThrough()
 			.and.returnValue(of(null));
-		
+
 		// We should not call the method gitService.branches$
 		const spyBranches = spyOn(gitService, 'branches$')
 			.and.throwError('Should not called branches$');
-	
+
 		const urlRepositoryInput = fixture.debugElement.query(By.css('#urlRepository'));
 		console.log ('Former url', urlRepositoryInput.nativeElement.value);
-		urlRepositoryInput.triggerEventHandler('blur', {target: {value:'https://github.com/fitzhi/application'}});
+		urlRepositoryInput.triggerEventHandler('blur', {target: {value: 'https://github.com/fitzhi/application'}});
 		fixture.detectChanges();
-		
+
 		const reqBackend = httpTestingController.expectOne('URL_OF_SERVER/api/project/branches/1789');
 		reqBackend.flush(['backend/master']);
 

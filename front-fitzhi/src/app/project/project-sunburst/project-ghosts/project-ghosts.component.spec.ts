@@ -19,7 +19,7 @@ describe('ProjectGhostsComponent', () => {
 
 	@Component({
 		selector: 'app-host-component',
-		template: 
+		template:
 			`
 			<div style="width:80%;height:50%">
 				<app-project-ghosts [dataSourceGhosts$]="dataSourceGhosts$">
@@ -34,12 +34,12 @@ describe('ProjectGhostsComponent', () => {
 		public projectGhostsDataSource: ProjectGhostsDataSource;
 
 		@ViewChild(ProjectGhostsComponent) projectGhostsComponent: ProjectGhostsComponent;
-		
+
 		constructor(projectService: ProjectService) {
-			
+
 			projectService.project = new Project(1789, 'Revolutionary project');
 
-			this.projectGhostsDataSource = new ProjectGhostsDataSource( 
+			this.projectGhostsDataSource = new ProjectGhostsDataSource(
 				[
 					{
 						idStaff: -1,
@@ -48,12 +48,12 @@ describe('ProjectGhostsComponent', () => {
 						firstname: 'Captain',
 						lastname: 'Haddock',
 						fullName: '',
-						technical:false,
+						technical: false,
 						active: false,
 						external: false,
 						action: '',
 						staffRelated: new Collaborator(),
-						staffRecorded: false,				
+						staffRecorded: false,
 					},
 					{
 						idStaff: -1,
@@ -62,12 +62,12 @@ describe('ProjectGhostsComponent', () => {
 						firstname: 'f',
 						lastname: 'l',
 						fullName: '',
-						technical:false,
+						technical: false,
 						active: false,
 						external: false,
 						action: '',
 						staffRelated: new Collaborator(),
-						staffRecorded: false,				
+						staffRecorded: false,
 					},
 				]
 			);

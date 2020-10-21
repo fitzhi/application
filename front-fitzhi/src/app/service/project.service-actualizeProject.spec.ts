@@ -63,19 +63,19 @@ describe('ProjectService', () => {
 	});
 
 	beforeEach(() => {
-		backendSetupService = TestBed.get(BackendSetupService);
+		backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('http://localhost:8080');
 
-		const skillService = TestBed.get(SkillService);
+		const skillService = TestBed.inject(SkillService);
 		skillService.allSkills = [];
 		skillService.allSkills.push(new Skill(1, 'java'));
 
-		projectService = TestBed.get(ProjectService);
+		projectService = TestBed.inject(ProjectService);
 		projectService.allProjects = [];
 		projectService.allProjects.push(createProject(1, 'one'));
 		projectService.allProjects.push(createProject(2, 'two'));
 		expect(2).toEqual(projectService.allProjects.length);
-		httpMock = TestBed.get(HttpTestingController);
+		httpMock = TestBed.inject(HttpTestingController);
 
 	});
 

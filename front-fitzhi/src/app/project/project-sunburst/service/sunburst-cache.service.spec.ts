@@ -14,7 +14,7 @@ describe('SunburstCacheService', () => {
 	}));
 
 	it('should be created', () => {
-		const service: SunburstCacheService = TestBed.get(SunburstCacheService);
+		const service: SunburstCacheService = TestBed.inject(SunburstCacheService);
 		expect(service).toBeTruthy();
 	});
 });

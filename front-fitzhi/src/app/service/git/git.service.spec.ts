@@ -17,7 +17,7 @@ describe('GitService', () => {
 		TestBed.configureTestingModule(testConf).compileComponents();
 
 	});
- 
+
   beforeEach(() => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(GitService);
@@ -71,7 +71,7 @@ describe('GitService', () => {
           expect(branches[3]).toBe('release-1.2');
           expect(branches[4]).toBe('Simple-starting-forms');
         }
-      })
+      });
   }));
 
   it('Testing default behavior of branches(...) with the url is wrong.', async( () => {
@@ -82,7 +82,7 @@ describe('GitService', () => {
           expect(branches.length).toBe(1);
           expect(branches[0]).toBe('master');
         }
-      })
+      });
   }));
 
 });

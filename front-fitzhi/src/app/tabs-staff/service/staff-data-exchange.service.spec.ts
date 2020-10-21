@@ -6,7 +6,7 @@ describe('StaffDataExchangeService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: StaffDataExchangeService = TestBed.get(StaffDataExchangeService);
+    const service: StaffDataExchangeService = TestBed.inject(StaffDataExchangeService);
     expect(service).toBeTruthy();
   });
 });

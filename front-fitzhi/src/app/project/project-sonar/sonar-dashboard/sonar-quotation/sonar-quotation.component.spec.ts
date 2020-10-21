@@ -34,7 +34,7 @@ describe('SonarQuotationComponent', () => {
 		component = fixture.componentInstance;
 		const project = new Project();
 		project.sonarProjects = [];
-		projectService = TestBed.get(ProjectService);
+		projectService = TestBed.inject(ProjectService);
 		projectService.projectLoaded$.next(true);
 		const pse = new PanelSwitchEvent( Constants.PROJECT_SONAR_PANEL.SONAR, 'void');
 		component.panelSwitchTransmitter$ = new Subject<PanelSwitchEvent>();

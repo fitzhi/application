@@ -492,7 +492,7 @@ export class ProjectService extends InternalService {
 		if (traceOn()) {
 			console.log ('Loading the branches...');
 		}
-		
+
 		// The project is not already created.
 		if (!this.project) {
 			this.branches$.next([]);
@@ -507,7 +507,7 @@ export class ProjectService extends InternalService {
 		if (traceOn()) {
 			console.log('Loading the branches for the URL ' + url);
 		}
-		
+
 		this.httpClient.get<any>(url, httpOptions)
 			.pipe(take(1))
 			.subscribe({

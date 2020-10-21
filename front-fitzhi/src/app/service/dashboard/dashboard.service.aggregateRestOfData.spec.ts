@@ -37,7 +37,7 @@ describe('DashboardService', () => {
 
 	it('"dashboardService.aggregateRestOfData() " for an array whose length is below the limit', () => {
 
-		const service: DashboardService = TestBed.get(DashboardService);
+		const service: DashboardService = TestBed.inject(DashboardService);
 		expect(service).toBeDefined();
 
 		const aggregations = generateSkillProjectsAggregation();
@@ -52,7 +52,7 @@ describe('DashboardService', () => {
 	});
 
 	it('"dashboardService.aggregateRestOfData() " for an array whose length is upper than the limit', () => {
-		const service: DashboardService = TestBed.get(DashboardService);
+		const service: DashboardService = TestBed.inject(DashboardService);
 		expect(service).toBeDefined();
 		const aggregations = generateSkillProjectsAggregation();
 

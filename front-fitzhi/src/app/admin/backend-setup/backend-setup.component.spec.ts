@@ -73,7 +73,7 @@ describe('BackendSetupComponent', () => {
 		fixture.detectChanges();
 		expect('http://localhost:8080').toEqual(field('#url').value);
 
-		const backendSetupService = TestBed.get(BackendSetupService);
+		const backendSetupService = TestBed.inject(BackendSetupService);
 		const spy = spyOn(backendSetupService, 'isVeryFirstConnection').and.returnValue(of('true'));
 
 		expect(field('#submitButton').getAttribute('class')).toEqual('urlEdition');
@@ -99,7 +99,7 @@ describe('BackendSetupComponent', () => {
 		fixture.detectChanges();
 		expect('http://localhost:8080').toEqual(field('#url').value);
 
-		const backendSetupService = TestBed.get(BackendSetupService);
+		const backendSetupService = TestBed.inject(BackendSetupService);
 		const spy = spyOn(backendSetupService, 'isVeryFirstConnection')
 			.and.returnValue(Observable.throw({code: 500, message: 'Error message'}));
 

@@ -25,7 +25,7 @@ describe('DashboardService', () => {
 	beforeEach(() => TestBed.configureTestingModule({}));
 
 	it('should be created', () => {
-		const service: DashboardService = TestBed.get(DashboardService);
+		const service: DashboardService = TestBed.inject(DashboardService);
 		expect(service).toBeDefined();
 	});
 
@@ -50,10 +50,10 @@ describe('DashboardService', () => {
 			return project;
 		}
 
-		const service: DashboardService = TestBed.get(DashboardService);
+		const service: DashboardService = TestBed.inject(DashboardService);
 		expect(service).toBeDefined();
 
-		const projectService: ProjectService = TestBed.get(ProjectService);
+		const projectService: ProjectService = TestBed.inject(ProjectService);
 		projectService.allProjects = createProjectsForDev();
 
 		const aggregateData = service.aggregateProjectsBySkills();

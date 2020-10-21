@@ -42,7 +42,7 @@ export class AuditAttachmentService {
 	 */
 	public emitAddUpdAttachmentFile(attachmentFile: AttachmentFile): void {
 		// If no label has been provided for the file, we use the filename as label.
-		if ((!attachmentFile.label) || (attachmentFile.label.length === 0)){
+		if ((!attachmentFile.label) || (attachmentFile.label.length === 0)) {
 			if (traceOn()) {
 				console.log ('Setting the label to %s', attachmentFile.fileName);
 			}

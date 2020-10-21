@@ -13,9 +13,9 @@ describe('GhostsService', () => {
 
   it('tests some combinations with "Frédéric VIDAL"', () => {
 	expect(service).toBeTruthy();
-	expect(service.reduceCharacters('Frédéric')).toBe('frederic')
-	expect(service.reduceCharacters('  Frédéric    VIDAL ')).toBe('frederic vidal')
-	expect(service.reduceCharacters('Frédéric-VIDAL')).toBe('frederic vidal')
+	expect(service.reduceCharacters('Frédéric')).toBe('frederic');
+	expect(service.reduceCharacters('  Frédéric    VIDAL ')).toBe('frederic vidal');
+	expect(service.reduceCharacters('Frédéric-VIDAL')).toBe('frederic vidal');
   });
 
 
@@ -23,8 +23,8 @@ describe('GhostsService', () => {
 		expect(service).toBeTruthy();
 		const staff: Collaborator = {
 		idStaff: 1, firstName: 'Frédéric', lastName: 'VIDAL', login: 'frvidal', nickName: 'frvidal', email: 'frvidal@nope.com',
-		level: 'developer',  active: true, forceActiveState: true, external: false, 
-		missions: [], experiences: [], dateInactive: null, 
+		level: 'developer',  active: true, forceActiveState: true, external: false,
+		missions: [], experiences: [], dateInactive: null,
 		application: '', typeOfApplication: 0 };
 
 		const logins = [];
@@ -42,9 +42,9 @@ describe('GhostsService', () => {
 		expect(service).toBeTruthy();
 		const staff: Collaborator = {
 			idStaff: 1, firstName: 'Frédéric', lastName: 'LOGIBEAU', login: 'flogibeau', nickName: 'flogibeau', email: 'flogibeau@nope.com',
-			level: 'developer',  active: true, forceActiveState: true, external: false, 
-			missions: [], experiences: [], dateInactive: null, 
-			application: '', typeOfApplication: 0 
+			level: 'developer',  active: true, forceActiveState: true, external: false,
+			missions: [], experiences: [], dateInactive: null,
+			application: '', typeOfApplication: 0
 		};
 
 		const logins = [];
@@ -62,9 +62,9 @@ describe('GhostsService', () => {
 		expect(service).toBeTruthy();
 		const staff: Collaborator = {
 			idStaff: 1, firstName: 'Frédéric', lastName: 'POMMIER', login: 'fpommier', nickName: 'fpommier', email: 'fpommier@nope.com',
-			level: 'developer',  active: true, forceActiveState: true, external: false, 
-			missions: [], experiences: [], dateInactive: null, 
-			application: '', typeOfApplication: 0 
+			level: 'developer',  active: true, forceActiveState: true, external: false,
+			missions: [], experiences: [], dateInactive: null,
+			application: '', typeOfApplication: 0
 		};
 
 		const logins = [];
@@ -80,14 +80,14 @@ describe('GhostsService', () => {
 		expect(eligibles[2]).toBe('frederic pommier');
 		expect(eligibles[3]).toBe('fpommier');
 	});
-	
+
 	it('should handle the staff member Jean VIDAL', () => {
 		expect(service).toBeTruthy();
 		const staff: Collaborator = {
 			idStaff: 1, firstName: 'Frédéric', lastName: 'VIDAL', login: 'frvidal', nickName: 'frvidal', email: 'frvidal@nope.com',
-			level: 'developer',  active: true, forceActiveState: true, external: false, 
-			missions: [], experiences: [], dateInactive: null, 
-			application: '', typeOfApplication: 0 
+			level: 'developer',  active: true, forceActiveState: true, external: false,
+			missions: [], experiences: [], dateInactive: null,
+			application: '', typeOfApplication: 0
 		};
 
 		const logins = [];

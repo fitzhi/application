@@ -15,20 +15,20 @@ export class GitService {
 
   /**
    * This **behaviorSubject** is handling an assistance message given to the end-user,
-   * in which he's invited to save the project in order to get the git branches 
+scann   * in which he's invited to save the project in order to get the git branches
    */
   public assistanceMessageGitBranches$ = new BehaviorSubject<boolean>(false);
-  
+
   private headerAccept = 'application/vnd.github.v3+json';
 
-  constructor(		
+  constructor(
     private httpClient: HttpClient,
     private messageService: MessageService) { }
 
 
   /**
    * Return **true** if the given url is a Github URL.
-   * @param url the HTTP url given by the end user 
+   * @param url the HTTP url given by the end user
    */
   isGithubUrl(url: string): boolean {
     return url.toLowerCase().indexOf('github.com') != -1;
@@ -36,23 +36,23 @@ export class GitService {
 
   /**
    * Generate & return the url associated to the given HTTP url to access GitHub with its REST API.
-   * 
-   * For instance, the given URL 'https://github.com/fitzhi/application' 
+   *
+   * For instance, the given URL 'https://github.com/fitzhi/application'
    * will produce 'https://api.github.com/repos/fitzhi/application'
-   * 
+   *
    * @param httpUrl the HTTP url used to clone the repository.
    */
   generateUrlApiGithub(httpUrl: String): string {
     const start = httpUrl.toLowerCase().indexOf('github.com') + 'github.com'.length;
-    const res = 'https://api.github.com/repos' + httpUrl.substring(start); 
+    const res = 'https://api.github.com/repos' + httpUrl.substring(start);
     if (traceOn()) {
-      console.log ('generateUrlApiGithub(%s)=%s', httpUrl, res)
+      console.log ('generateUrlApiGithub(%s)=%s', httpUrl, res);
     }
     return res;
   }
 
   /**
-   * This function is trying to connect to a GitHub repository with the Rest Rest API 
+   * This function is trying to connect to a GitHub repository with the Rest Rest API
    * @param url the given API url
    */
   public connect$(url: string): Observable<Repository> {
@@ -72,7 +72,7 @@ export class GitService {
           (repo: Repository) => of(repo)),
           catchError(error => {
             if (traceOn()) {
-              console.log ('Error with url ' + url, error)
+              console.log ('Error with url ' + url, error);
             }
             if (error.status === 404) {
               if (traceOn()) {
@@ -84,12 +84,12 @@ export class GitService {
             return of(null);
           })
         );
-   
+
   }
 
   /**
    * This function is returning all branches declared for this user.
-   * 
+   *
    * @param url an access URL through the GitHub API to retrieved the current branches.
    * @param defaultBranch the default branch, if (for any reason) the HTTP get failed.
    */
@@ -107,13 +107,13 @@ export class GitService {
         switchMap(
           (branches: Branch[]) => of(branches.map(branch => branch.name).sort(
             function(a, b) {
-              return a.toLowerCase().localeCompare(b.toLowerCase())
+              return a.toLowerCase().localeCompare(b.toLowerCase());
             }))),
           catchError(error => {
             if (traceOn()) {
               console.log('Get the error when retrieving the branches', error);
             }
-            return of([defaultBranch])
+            return of([defaultBranch]);
           })
     );
   }

@@ -17,7 +17,7 @@ describe('TabsStaffListService', () => {
 	});
 
 	it('should be created', () => {
-		const service: TabsStaffListService = TestBed.get(TabsStaffListService);
+		const service: TabsStaffListService = TestBed.inject(TabsStaffListService);
 		expect(service).toBeTruthy();
 	});
 });

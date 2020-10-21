@@ -24,7 +24,7 @@ describe('StaffProjectsComponent', () => {
 		fixture = TestBed.createComponent(StaffProjectsComponent);
 		component = fixture.componentInstance;
 
-		const staffDataExchangeService = TestBed.get(StaffDataExchangeService);
+		const staffDataExchangeService = TestBed.inject(StaffDataExchangeService);
 		staffDataExchangeService.collaborator = new Collaborator();
 		staffDataExchangeService.collaborator.idStaff = 10;
 		staffDataExchangeService.collaborator.firstName = 'Kylian';

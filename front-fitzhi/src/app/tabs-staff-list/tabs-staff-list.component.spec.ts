@@ -35,7 +35,7 @@ describe('TabsStaffListComponent', () => {
 	it('The creation of a tab hides the help container', () => {
 		component.tabKeys.push('title');
 		component.tabs.push('title');
-		const tabsStaffListService = TestBed.get(TabsStaffListService);
+		const tabsStaffListService = TestBed.inject(TabsStaffListService);
 		tabsStaffListService.staffListContexts.set('title', new StaffListContext(new ListCriteria('criteria', false)));
 		fixture.detectChanges();
 		console.log (fixture.debugElement.query(By.css('#help-search')));

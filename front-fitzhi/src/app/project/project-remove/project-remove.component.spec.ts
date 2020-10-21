@@ -26,9 +26,9 @@ describe('ProjectRemoveComponent', () => {
 
 	beforeEach(() => {
 
-		httpTestingController = TestBed.get(HttpTestingController);
+		httpTestingController = TestBed.inject(HttpTestingController);
 
-		backendSetupService = TestBed.get(BackendSetupService);
+		backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('URL_OF_SERVER');
 
 		fixture = TestBed.createComponent(ProjectRemoveComponent);
@@ -44,7 +44,7 @@ describe('ProjectRemoveComponent', () => {
 
 	it('should call projectService.removeProject when the button Remove is clicked', () => {
 
-		const projectService = TestBed.get(ProjectService);
+		const projectService = TestBed.inject(ProjectService);
 		projectService.allProjects = [];
 		expect(projectService.allProjects.length).toEqual(0);
 

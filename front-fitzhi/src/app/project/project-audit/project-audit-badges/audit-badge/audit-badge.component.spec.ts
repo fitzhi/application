@@ -31,9 +31,9 @@ describe('AuditBadgeComponent', () => {
 	}));
 
 	beforeEach(() => {
-		const cinematicService: CinematicService = TestBed.get(CinematicService);
+		const cinematicService: CinematicService = TestBed.inject(CinematicService);
 		cinematicService.auditHistory[1] = new AuditDetailsHistory();
-		const referentialService: ReferentialService = TestBed.get(ReferentialService);
+		const referentialService: ReferentialService = TestBed.inject(ReferentialService);
 		const risk = new RiskLegend();
 		risk.level = 5;
 		risk.color = 'blue';

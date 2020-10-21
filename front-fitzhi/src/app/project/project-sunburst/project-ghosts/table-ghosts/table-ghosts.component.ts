@@ -239,9 +239,9 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 					let pseudos = this.dataSource.data
 						.map(g => g.pseudo)
 						.filter(p => p !== ghost.pseudo);
-					
+
 					this.dataSource.removePseudo(ghost.pseudo);
-					
+
 					pseudos = this.ghostsService.extractMatchingUnknownContributors(pseudos, staff);
 					if (traceOn()) {
 						console.groupCollapsed ('Associated %d pseudo(s)', pseudos.length);
@@ -252,9 +252,9 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 						if (traceOn()) {
 							console.log('removePseudo(%s)', ghost.pseudo);
 						}
-						this.dataSource.removePseudo(pseudo)
+						this.dataSource.removePseudo(pseudo);
 					});
-					
+
 					this.table.renderRows();
 
 					this.sunburstCacheService.clearReponse();

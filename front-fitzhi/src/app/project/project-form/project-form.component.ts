@@ -889,7 +889,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	/**
 	 * We load the branch name from the back-end.
-	 * 
+	 *
 	 * The project has to be already saved first.
 	 */
 	loadBranchesOnBackend() {

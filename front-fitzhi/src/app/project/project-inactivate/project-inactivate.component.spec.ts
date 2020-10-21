@@ -29,15 +29,15 @@ describe('ProjectInactivateComponent', () => {
 
 	beforeEach(() => {
 
-		backendSetupService = TestBed.get(BackendSetupService);
+		backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('URL_OF_SERVER');
 
 		fixture = TestBed.createComponent(ProjectInactivateComponent);
 		component = fixture.componentInstance;
 
-		httpTestingController = TestBed.get(HttpTestingController);
+		httpTestingController = TestBed.inject(HttpTestingController);
 
-		projectService = TestBed.get(ProjectService);
+		projectService = TestBed.inject(ProjectService);
 		projectService.project = new Project(1066, 'Hasting');
 		projectService.allProjects = [];
 		projectService.allProjects.push(projectService.project);

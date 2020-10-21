@@ -54,10 +54,10 @@ describe('TreemapComponent container', () => {
 	});
 
 	it('should create', () => {
-		const dashboardService = TestBed.get(DashboardService);
+		const dashboardService = TestBed.inject(DashboardService);
 		const spy = spyOn(dashboardService, 'processSkillDistribution').and.returnValue(MOCK_DISTRIBUTIONS);
 
-		const projectService = TestBed.get(ProjectService);
+		const projectService = TestBed.inject(ProjectService);
 		projectService.allProjectsIsLoaded$.next(true);
 
 		fixture.detectChanges();

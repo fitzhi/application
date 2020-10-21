@@ -18,10 +18,10 @@ describe('BranchComponent', () => {
   let fixture: ComponentFixture<TestHostComponent>;
   let projectService: ProjectService;
   let spy: any;
-  
+
   @Component({
     selector: 'app-host-component',
-    template: 	
+    template:
       '<div style="padding: 20px; margin: 20px;">' +
         '<app-branch-selector ' +
             '(messengerOnBranchChange)="onBranchChange($event)" >' +
@@ -58,37 +58,37 @@ describe('BranchComponent', () => {
 
     expect(component).toBeTruthy();
 
-    const branch = field('#branch'); 
+    const branch = field('#branch');
     expect(branch).toBeTruthy();
     expect(branch.disabled).toBeFalse();
   });
 
   it('should be readonly if the project is not active', () => {
     projectService.branches$.next(['master', 'branch-1.0', 'branch-1.1']);
-    projectService.project.active = false;      
+    projectService.project.active = false;
     fixture.detectChanges();
 
     expect(component).toBeTruthy();
 
     expect(field('#branch')).toBeTruthy();
-    const branch = field('#branch'); 
+    const branch = field('#branch');
     expect(branch.disabled).toBeTrue();
   });
 
   it('should be selected on the actual branch of the project', () => {
     projectService.branches$.next(['master', 'branch-1.0', 'branch-1.1']);
-    projectService.project.branch = 'branch-1.0';      
+    projectService.project.branch = 'branch-1.0';
     fixture.detectChanges();
 
     expect(component).toBeTruthy();
 
-    const branch = field('#branch'); 
+    const branch = field('#branch');
     expect(branch).toBeTruthy();
     expect(branch.disabled).toBeFalse();
-    let option = fixture.debugElement.queryAll(By.css('option'))[1];
+    const option = fixture.debugElement.queryAll(By.css('option'))[1];
 		expect(option).toBeDefined();
     expect(option.nativeElement.selected).toBe(true);
-    
+
 
   });
 

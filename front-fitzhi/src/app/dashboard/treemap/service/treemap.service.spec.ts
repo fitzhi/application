@@ -6,7 +6,7 @@ describe('TreemapService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: TreemapService = TestBed.get(TreemapService);
+    const service: TreemapService = TestBed.inject(TreemapService);
     expect(service).toBeTruthy();
   });
 });
