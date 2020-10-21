@@ -3,12 +3,10 @@ import { Project } from '../data/project';
 import { ProjectService } from './project.service';
 import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
 import { InitTest } from '../test/init-test';
-import { BackendSetupService } from './backend-setup/backend-setup.service';
 
 
 describe('ProjectService', () => {
 	let httpMock: HttpTestingController;
-	let backendSetupService: BackendSetupService;
 
 	function createProject(id: number, name: string): Project {
 		const project = new Project();

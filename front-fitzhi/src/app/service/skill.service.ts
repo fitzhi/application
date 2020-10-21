@@ -227,7 +227,7 @@ export class SkillService extends InternalService {
 		// Either the user didn't choose a template of detection and the detectionType is empty
 		// or the user choose a template, and the detection type is a numeric
 		//
-		if (!isNumber(formGroupSkill.get('detectionType').value)) {
+		if (typeof formGroupSkill.get('detectionType').value === 'number') {
 			detectionTemplate = null;
 		} else {
 			detectionTemplate = new DetectionTemplate(

@@ -33,7 +33,7 @@ describe('ProjectFormComponent', () => {
 					'</app-project-form>'
 	})
 	class TestHostComponent {
-		constructor(public projectService: ProjectService) {}
+		constructor() {}
 		public risk$ = new BehaviorSubject<number>(1);
 	}
 

@@ -4,6 +4,6 @@
  */
 export class Branch {
 
-    constructor(public name: string) {}
+	constructor(public name: string) {}
 
 }

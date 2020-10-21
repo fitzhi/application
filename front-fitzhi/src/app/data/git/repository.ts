@@ -6,14 +6,14 @@
  */
 export class Repository {
 
-    /**
-     * Name of the repository
-     */
-    name: string;
+	/**
+	 * Name of the repository
+	 */
+	name: string;
 
-    /**
-     * Default branch
-     */
-    default_branch: string;
+	/**
+	 * Default branch
+	 */
+	default_branch: string;
 
 }

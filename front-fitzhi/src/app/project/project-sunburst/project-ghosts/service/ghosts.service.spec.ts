@@ -4,28 +4,29 @@ import { GhostsService } from './ghosts.service';
 import { Collaborator } from 'src/app/data/collaborator';
 
 describe('GhostsService', () => {
-  let service: GhostsService;
+	let service: GhostsService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(GhostsService);
-  });
+	beforeEach(() => {
+		TestBed.configureTestingModule({});
+		service = TestBed.inject(GhostsService);
+	});
 
-  it('tests some combinations with "Frédéric VIDAL"', () => {
-	expect(service).toBeTruthy();
-	expect(service.reduceCharacters('Frédéric')).toBe('frederic');
-	expect(service.reduceCharacters('  Frédéric    VIDAL ')).toBe('frederic vidal');
-	expect(service.reduceCharacters('Frédéric-VIDAL')).toBe('frederic vidal');
-  });
+	it('tests some combinations with "Frédéric VIDAL"', () => {
+		expect(service).toBeTruthy();
+		expect(service.reduceCharacters('Frédéric')).toBe('frederic');
+		expect(service.reduceCharacters('  Frédéric    VIDAL ')).toBe('frederic vidal');
+		expect(service.reduceCharacters('Frédéric-VIDAL')).toBe('frederic vidal');
+	});
 
 
-  	it('should handle the staff member Frédéric VIDAL', () => {
+	it('should handle the staff member Frédéric VIDAL', () => {
 		expect(service).toBeTruthy();
 		const staff: Collaborator = {
-		idStaff: 1, firstName: 'Frédéric', lastName: 'VIDAL', login: 'frvidal', nickName: 'frvidal', email: 'frvidal@nope.com',
-		level: 'developer',  active: true, forceActiveState: true, external: false,
-		missions: [], experiences: [], dateInactive: null,
-		application: '', typeOfApplication: 0 };
+			idStaff: 1, firstName: 'Frédéric', lastName: 'VIDAL', login: 'frvidal', nickName: 'frvidal', email: 'frvidal@nope.com',
+			level: 'developer', active: true, forceActiveState: true, external: false,
+			missions: [], experiences: [], dateInactive: null,
+			application: '', typeOfApplication: 0
+		};
 
 		const logins = [];
 		logins.push('milou');
@@ -42,7 +43,7 @@ describe('GhostsService', () => {
 		expect(service).toBeTruthy();
 		const staff: Collaborator = {
 			idStaff: 1, firstName: 'Frédéric', lastName: 'LOGIBEAU', login: 'flogibeau', nickName: 'flogibeau', email: 'flogibeau@nope.com',
-			level: 'developer',  active: true, forceActiveState: true, external: false,
+			level: 'developer', active: true, forceActiveState: true, external: false,
 			missions: [], experiences: [], dateInactive: null,
 			application: '', typeOfApplication: 0
 		};
@@ -62,7 +63,7 @@ describe('GhostsService', () => {
 		expect(service).toBeTruthy();
 		const staff: Collaborator = {
 			idStaff: 1, firstName: 'Frédéric', lastName: 'POMMIER', login: 'fpommier', nickName: 'fpommier', email: 'fpommier@nope.com',
-			level: 'developer',  active: true, forceActiveState: true, external: false,
+			level: 'developer', active: true, forceActiveState: true, external: false,
 			missions: [], experiences: [], dateInactive: null,
 			application: '', typeOfApplication: 0
 		};
@@ -85,7 +86,7 @@ describe('GhostsService', () => {
 		expect(service).toBeTruthy();
 		const staff: Collaborator = {
 			idStaff: 1, firstName: 'Frédéric', lastName: 'VIDAL', login: 'frvidal', nickName: 'frvidal', email: 'frvidal@nope.com',
-			level: 'developer',  active: true, forceActiveState: true, external: false,
+			level: 'developer', active: true, forceActiveState: true, external: false,
 			missions: [], experiences: [], dateInactive: null,
 			application: '', typeOfApplication: 0
 		};

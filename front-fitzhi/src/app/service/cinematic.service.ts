@@ -9,18 +9,18 @@ import { Injectable } from '@angular/core';
 class Form {
 
 	/**
-     * Active form identifier.
-     */
+	 * Active form identifier.
+	 */
 	public formIdentifier = -1;
 
 	/**
-     * url activated for this form.
-     */
+	 * url activated for this form.
+	 */
 	public url: string;
 
 	/**
-     * Constructor
-     */
+	 * Constructor
+	 */
 	constructor(formIdentifier: number, url: string) {
 		this.formIdentifier = formIdentifier;
 		this.url = url;
@@ -37,23 +37,23 @@ class Form {
 export class CinematicService {
 
 	/**
-     * Identifier of the select form on stage on the SPA.
-     */
+	 * Identifier of the select form on stage on the SPA.
+	 */
 	public currentActiveForm$ = new BehaviorSubject<Form>(new Form(Constants.WELCOME, 'Welcome'));
 
 	/**
-      * Current collaborator's identifier previewed on the form.
-      */
+	  * Current collaborator's identifier previewed on the form.
+	  */
 	public emitActualCollaboratorDisplay = new Subject<number>();
 
 	/**
-     * Observable associated with the current collaborator previewed.
-     */
+	 * Observable associated with the current collaborator previewed.
+	 */
 	newCollaboratorDisplayEmitted$ = this.emitActualCollaboratorDisplay.asObservable();
 
 	/**
-     * This `BehaviorSubject` broadcasts the selection of an audit thumbnail by the end-user.
-     */
+	 * This `BehaviorSubject` broadcasts the selection of an audit thumbnail by the end-user.
+	 */
 	public auditTopicSelected$ = new BehaviorSubject<number>(-1);
 
 	/**
@@ -65,7 +65,7 @@ export class CinematicService {
 	public idTopicSelected = -1;
 
 	/**
-     * This subject informs on the selected tab in the projects Tab Group container.
+	 * This subject informs on the selected tab in the projects Tab Group container.
 	 * Each-time the end-user clicks on a tab, this BehaviorSubject emits an identifier corresponding to the tab selected.
 	 *
 	 * This identifier can be :
@@ -76,7 +76,7 @@ export class CinematicService {
 	 *  - `PROJECT_IDX_TAB_SONAR` for the Sonar dashboard
 	 *  - `PROJECT_IDX_TAB_AUDIT` for the Audit dashboard
 	 *
-     */
+	 */
 	public tabProjectActivated$ = new BehaviorSubject<number>(Constants.PROJECT_IDX_TAB_FORM);
 
 	/**
@@ -85,14 +85,14 @@ export class CinematicService {
 	public projectTabIndex: number;
 
 	/**
-     * Previous form active
-     */
+	 * Previous form active
+	 */
 	public previousForm: Form = new Form(Constants.WELCOME, '/welcome');
 
 	/**
 	 * History of active detail panels (shown or hidden)
 	 */
-	public auditHistory: {[idTopic: number]: AuditDetailsHistory} = {};
+	public auditHistory: { [idTopic: number]: AuditDetailsHistory } = {};
 
 	/**
 	 * Returns `true` if the detail panel is visible, `false` otherwise.
@@ -110,20 +110,20 @@ export class CinematicService {
 	}
 
 	/**
-    * Set the new form identifier.
+	* Set the new form identifier.
 	*
-    * We memorize at the same time the previous active form.
-    * We need to save that information, in order to detect master/detail sequences behind each list/form couples
-    * The navigation toolbar on the top left corner, need to know if we reach that point
+	* We memorize at the same time the previous active form.
+	* We need to save that information, in order to detect master/detail sequences behind each list/form couples
+	* The navigation toolbar on the top left corner, need to know if we reach that point
 	*
-    * * either from the natural URL
+	* * either from the natural URL
 	* * or the jump link from the list
-    */
+	*/
 	setForm(formIdentifier: number, url: string) {
 
 		/**
-         * We do not change the active form.
-         */
+		 * We do not change the active form.
+		 */
 		if (formIdentifier === this.currentActiveForm$.getValue().formIdentifier) {
 			return;
 		}
@@ -135,21 +135,21 @@ export class CinematicService {
 		}
 
 		/**
-        * Fire the event. Has to be at the end of the method.
-        */
+		* Fire the event. Has to be at the end of the method.
+		*/
 		this.currentActiveForm$.next(new Form(formIdentifier, url));
 	}
 
 	/**
-     * @return The former Form identifier
-     */
+	 * @return The former Form identifier
+	 */
 	getFormerFormIdentifier() {
 		return this.previousForm.formIdentifier;
 	}
 
 	/**
-     * Fire the event that the tab index has changed.
-     */
+	 * Fire the event that the tab index has changed.
+	 */
 	setProjectTab(tab: number) {
 		this.tabProjectActivated$.next(tab);
 	}

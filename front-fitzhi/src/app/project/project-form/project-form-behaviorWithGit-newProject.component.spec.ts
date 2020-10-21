@@ -38,7 +38,7 @@ describe('ProjectFormComponent', () => {
 					'</app-project-form>'
 	})
 	class TestHostComponent {
-		constructor(public projectService: ProjectService) {}
+		constructor() {}
 		public risk$ = new BehaviorSubject<number>(1);
 	}
 
@@ -108,7 +108,6 @@ describe('ProjectFormComponent', () => {
 
 		// const reqBackend = httpTestingController.expectNone('URL_OF_SERVER/api/project/branches/1789');
 
-		const projectService = TestBed.inject(ProjectService);
 		projectService.branches$.subscribe({
 			next: b => {
 				expect(b.length).toBe(1);

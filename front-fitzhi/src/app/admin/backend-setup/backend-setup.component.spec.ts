@@ -3,9 +3,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { BackendSetupComponent } from './backend-setup.component';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { DebugElement } from '@angular/core';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/throw';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ReferentialService } from 'src/app/service/referential.service';
@@ -101,7 +100,7 @@ describe('BackendSetupComponent', () => {
 
 		const backendSetupService = TestBed.inject(BackendSetupService);
 		const spy = spyOn(backendSetupService, 'isVeryFirstConnection')
-			.and.returnValue(Observable.throw({code: 500, message: 'Error message'}));
+			.and.returnValue(throwError({code: 500, message: 'Error message'}));
 
 		expect(field('#submitButton').getAttribute('class')).toEqual('urlEdition');
 		component.onSubmit();
