@@ -18,7 +18,7 @@
 		<springsecurityoauth2.version>2.3.6.RELEASE</springsecurityoauth2.version>
 		<spring-reactor-test.version>3.3.4.RELEASE</spring-reactor-test.version>
 		<jstl.version>1.2</jstl.version>
-		<junit.version>4.12</junit.version>
+		<junit.version>4.13.1</junit.version>
 		<jcl-over-slf4j.version>1.7.25</jcl-over-slf4j.version>
 		<opennlp.version>1.9.0</opennlp.version>
 		<poi.version>4.0.0</poi.version>
