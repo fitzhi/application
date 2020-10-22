@@ -147,7 +147,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		private messageBoxService: MessageBoxService,
 		private dialog: MatDialog,
 		private cacheService: SunburstCacheService,
-		private projectService: ProjectService) {
+		public projectService: ProjectService) {
 			super();
 	}
 
