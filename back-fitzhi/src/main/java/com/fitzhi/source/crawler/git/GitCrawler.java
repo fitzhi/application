@@ -1421,15 +1421,17 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 				case Global.REMOTE_FILE_ACCESS: {
 						ConnectionSettings settings = connectionSettings(project);
 						URIish uri = new URIish(project.getUrlRepository());
-						Transport transport = Transport.open(uri);
-						transport.setCredentialsProvider(
-								new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()));
-						return transport.openFetch();
+						try (Transport transport = Transport.open(uri)) {
+							transport.setCredentialsProvider(
+									new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()));
+							return transport.openFetch();
+						}
 					}
 				case Global.NO_USER_PASSWORD_ACCESS: {
 						URIish uri = new URIish(project.getUrlRepository());
-						Transport transport = Transport.open(uri);
-						return transport.openFetch();
+						try (Transport transport = Transport.open(uri)) {
+							return transport.openFetch();
+						}
 					}
 				default: {
 					throw new ShouldNotPassHereRuntimeException();

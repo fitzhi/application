@@ -139,15 +139,17 @@ public class FileSystemStorageService implements StorageService {
 	public String readFileDOC(final String fileName) throws IOException {
     	if (log.isDebugEnabled()) {
     		log.debug(String.format("readFileDOC (%s)", this.rootLocation.resolve(fileName)));
-    	}
-		FileInputStream in = new FileInputStream(this.rootLocation.resolve(fileName).toString());
-		HWPFDocument doc = new HWPFDocument(in);
-		String content = doc.getDocumentText();
-		doc.close();
-    	if (log.isDebugEnabled()) {
-    		log.debug(String.format("readFileDOC returns %s characters.", content.length()));
-    	}
-		return content;
+		}
+		
+		try ( FileInputStream in = new FileInputStream(this.rootLocation.resolve(fileName).toString())) {
+			HWPFDocument doc = new HWPFDocument(in);
+			String content = doc.getDocumentText();
+			doc.close();
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("readFileDOC returns %s characters.", content.length()));
+			}
+			return content;
+		}		
 	}
 
     @Override

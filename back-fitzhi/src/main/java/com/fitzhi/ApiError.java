@@ -103,17 +103,17 @@ public @Data class ApiError {
 
 	private String extrapolateStackTrace(Throwable ex) {
 	    Throwable e = ex;
-	    String trace = e.toString() + "\n";
+	    StringBuilder trace =  new StringBuilder(e.toString()).append("\n");
 	    for (StackTraceElement e1 : e.getStackTrace()) {
-	        trace += "\t at " + e1.toString() + "\n";
+	        trace.append("\t at ").append(e1.toString()).append("\n");
 	    }
 	    while (e.getCause() != null) {
 	        e = e.getCause();
-	        trace += "Cause by: " + e.toString() + "\n";
+	        trace.append("Cause by: ").append(e.toString()).append("\n");
 	        for (StackTraceElement e1 : e.getStackTrace()) {
-	            trace += "\t at " + e1.toString() + "\n";
+	            trace.append("\t at ").append(e1.toString()).append("\n");
 	        }
 	    }
-	    return trace;
+	    return trace.toString();
 	}	
 }

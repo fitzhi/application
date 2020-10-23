@@ -161,7 +161,9 @@ public class StaffController {
 				Staff staff = responseEntity.getBody();
 				log.debug(String.format(
 						"looking for id %d in the Staff collection returns %s %s",
-						idStaff, staff.getFirstName(), staff.getLastName()));
+						idStaff, 
+						(staff != null) ? staff.getFirstName() : "null", 
+						(staff != null) ? staff.getLastName()  : "null"));
 			}
 		} else {
 			headers.set(BACKEND_RETURN_CODE, "O");
@@ -185,14 +187,20 @@ public class StaffController {
 	public ResponseEntity<List<Mission>> readProjects(@PathVariable("idStaff") int idStaff) throws SkillerException {
 
 		ResponseEntity<Staff> responseEntityStaffMember = read(idStaff);
+		final Staff staff = responseEntityStaffMember.getBody();
+		if (staff == null) {
+			throw new SkillerException(
+				CODE_STAFF_NOFOUND, 
+				MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
+		}
 
 		// Adding the name of project.
-		for (Mission mission : responseEntityStaffMember.getBody().getMissions()) {
+		for (Mission mission : staff.getMissions()) {
 				mission.setName(projectHandler.get(mission.getIdProject()).getName());
 		}
 		
 		ResponseEntity<List<Mission>> re = new ResponseEntity<>(
-				responseEntityStaffMember.getBody().getMissions(), 
+				staff.getMissions(), 
 				responseEntityStaffMember.getHeaders(),
 				responseEntityStaffMember.getStatusCode());
 		return re;
@@ -208,9 +216,13 @@ public class StaffController {
 	public ResponseEntity<List<Experience>> readExperiences(@PathVariable("idStaff") int idStaff) {
 
 		ResponseEntity<Staff> responseEntityStaffMember = read(idStaff);
+		final Staff staff = responseEntityStaffMember.getBody();
+		if (staff == null) {
+			throw new RuntimeException("getBody() Should not be null");
+		}
 
 		return new ResponseEntity<>(
-				responseEntityStaffMember.getBody().getExperiences(), 
+				staff.getExperiences(), 
 				responseEntityStaffMember.getHeaders(),
 				responseEntityStaffMember.getStatusCode());
 	}

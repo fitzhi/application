@@ -36,11 +36,11 @@ public class DataEncryption {
 	public static String encryptMessage(String data) throws SkillerException {
 		
 		try {
-            Cipher cipher = Cipher.getInstance("AES");
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             
             // rebuild key using SecretKeySpec
             if (originalKey == null) {
-            	originalKey = new SecretKeySpec(Arrays.copyOf(decodedKey, 16), "AES");
+            	originalKey = new SecretKeySpec(Arrays.copyOf(decodedKey, 16), "AES/GCM/NoPadding");
             }
             cipher.init(Cipher.ENCRYPT_MODE, originalKey);
             byte[] cipherText = cipher.doFinal(data.getBytes("UTF-8"));
@@ -60,10 +60,10 @@ public class DataEncryption {
 	public static String decryptMessage(String encryptedData) throws SkillerException  {
 
         try {
-            Cipher cipher = Cipher.getInstance("AES");
+            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
             // Build key using SecretKeySpec
             if (originalKey == null) {
-            	originalKey = new SecretKeySpec(Arrays.copyOf(decodedKey, 16), "AES");
+            	originalKey = new SecretKeySpec(Arrays.copyOf(decodedKey, 16), "AES/GCM/NoPadding");
             }
             cipher.init(Cipher.DECRYPT_MODE, originalKey);
             byte[] cipherText = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
