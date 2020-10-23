@@ -28,6 +28,11 @@ public class DataEncryption {
 	private static SecretKey originalKey = null;
 	
 	/**
+	 * Security transformation
+	 */
+	private final static String TRANSFORMATION = "AES"; // Good one for Sonar : "AES/GCM/NoPadding";
+
+	/**
 	 * <b>ENCRYPT</b> a message
 	 * @param data the data to encrypt (actually password only are encrypted)
 	 * @return the data encrypted 
@@ -36,11 +41,11 @@ public class DataEncryption {
 	public static String encryptMessage(String data) throws SkillerException {
 		
 		try {
-            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            Cipher cipher = Cipher.getInstance("");
             
             // rebuild key using SecretKeySpec
             if (originalKey == null) {
-            	originalKey = new SecretKeySpec(Arrays.copyOf(decodedKey, 16), "AES/GCM/NoPadding");
+            	originalKey = new SecretKeySpec(Arrays.copyOf(decodedKey, 16), TRANSFORMATION);
             }
             cipher.init(Cipher.ENCRYPT_MODE, originalKey);
             byte[] cipherText = cipher.doFinal(data.getBytes("UTF-8"));
@@ -60,10 +65,10 @@ public class DataEncryption {
 	public static String decryptMessage(String encryptedData) throws SkillerException  {
 
         try {
-            Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             // Build key using SecretKeySpec
             if (originalKey == null) {
-            	originalKey = new SecretKeySpec(Arrays.copyOf(decodedKey, 16), "AES/GCM/NoPadding");
+            	originalKey = new SecretKeySpec(Arrays.copyOf(decodedKey, 16), TRANSFORMATION);
             }
             cipher.init(Cipher.DECRYPT_MODE, originalKey);
             byte[] cipherText = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
