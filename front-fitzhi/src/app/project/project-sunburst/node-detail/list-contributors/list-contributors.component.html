@@ -1,8 +1,10 @@
-<table mat-table #table  [dataSource]="contributors" class="mat-elevation-z8 tableLegends">
+<table mat-table #table [dataSource]="contributors" class="mat-elevation-z8 tableLegends">
+  <caption>List of contributors involved inside this project</caption>
 
   <ng-container matColumnDef="fullname">
     <th id="fullname" mat-header-cell *matHeaderCellDef>Fullname</th>
-    <td class="col_date {{class_active_inactive(contributor.active)}}" mat-cell *matCellDef="let contributor">{{contributor.fullname}}</td>
+    <td class="col_date {{class_active_inactive(contributor.active)}}" mat-cell *matCellDef="let contributor">
+      {{contributor.fullname}}</td>
   </ng-container>
 
   <ng-container matColumnDef="active">
