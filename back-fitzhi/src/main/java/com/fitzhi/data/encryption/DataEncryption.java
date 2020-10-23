@@ -41,7 +41,7 @@ public class DataEncryption {
 	public static String encryptMessage(String data) throws SkillerException {
 		
 		try {
-            Cipher cipher = Cipher.getInstance("");
+            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             
             // rebuild key using SecretKeySpec
             if (originalKey == null) {
