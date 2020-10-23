@@ -226,7 +226,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 				<p><strong>${similarStaff.firstName} ${similarStaff.lastName}</strong>
 				has already been declared in the staff list.
 				<br/>He/she has been linked with the Github login : <strong>${similarStaff.login}</strong></p>
-				<p><i>You should link this login with the pseudo.</i></p>`);
+				<p><em>You should link this login with the pseudo.</em></p>`);
 			return;
 		}
 
