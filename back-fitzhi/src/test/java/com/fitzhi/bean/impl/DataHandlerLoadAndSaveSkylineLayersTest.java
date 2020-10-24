@@ -58,7 +58,7 @@ public class DataHandlerLoadAndSaveSkylineLayersTest {
         layers.add(p);
         layers.add(new ProjectLayer(1214, 2020, 20, 30, 2));
         layers.add(new ProjectLayer(1214, 2020, 21, 44, 1));        
-        dataHandler.saveSkylineLayers(projectHandler.get(1214), new ProjectLayers(layers));
+        dataHandler.saveSkylineLayers(projectHandler.get(1214), new ProjectLayers(projectHandler.get(1214), layers));
 
         ProjectLayers pl = dataHandler.loadSkylineLayers(projectHandler.get(1214));
         Assert.assertEquals(3, pl.getLayers().size());

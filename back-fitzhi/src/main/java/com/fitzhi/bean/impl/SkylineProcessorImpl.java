@@ -131,7 +131,7 @@ public class SkylineProcessorImpl implements SkylineProcessor {
                 });
 
         Collections.sort(layers);
-        return new ProjectLayers(layers);
+        return new ProjectLayers(project, layers);
     }
 
     @Override
@@ -147,17 +147,6 @@ public class SkylineProcessorImpl implements SkylineProcessor {
                         cache.put(sc.getAuthorName(), sc.getIdStaff());
                     }
                 });
-    }
-
-    @Override
-    public ProjectBuilding generateProjectBuilding(Project project) throws SkillerException {
-
-        ProjectLayers layers = dataHandler.loadSkylineLayers(project);
-        if (log.isDebugEnabled()) {
-            log.debug (String.format("Loading %d layers for the project %s", layers.getLayers().size(), project.getName()));
-        }
-
-        return generateProjectBuilding(project, layers);
     }
 
     @Override
@@ -195,5 +184,21 @@ public class SkylineProcessorImpl implements SkylineProcessor {
         });
         return building;
     }
-  
+
+    @Override
+    public ProjectBuilding generateProjectBuilding(Project project) throws SkillerException {
+
+        ProjectLayers layers = dataHandler.loadSkylineLayers(project);
+        if (log.isDebugEnabled()) {
+            log.debug (String.format("Loading %d layers for the project %s", 
+                layers.getLayers().size(), project.getName()));
+        }
+
+        return generateProjectBuilding(project, layers);
+    }
+
+    @Override
+    public void completeProjectLayers(ProjectLayers projectLayers) {
+    }
+
 }

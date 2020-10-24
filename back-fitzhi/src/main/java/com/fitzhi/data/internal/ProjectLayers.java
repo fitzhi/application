@@ -14,19 +14,28 @@ import lombok.Data;
  */
 public @Data class ProjectLayers {
     
-    private List<ProjectLayer> layers = new ArrayList<>();
+    private List<ProjectLayer> layers;
+
+    /**
+     * The project.
+     */
+    private Project project;
 
     /**
      * Public construction of the container.
+     * @param project the project of the layers
      */
-    public ProjectLayers() {
+    public ProjectLayers(Project project) {
+        this (project, new ArrayList<>());
     }
 
     /**
      * Construction of this layers container
+     * @param project the project of the layers
      * @param layers the list of Project layers
      */
-    public ProjectLayers(List<ProjectLayer> layers) {
+    public ProjectLayers(Project project, List<ProjectLayer> layers) {
+        this.project = project;
         this.layers = layers;
     }
 

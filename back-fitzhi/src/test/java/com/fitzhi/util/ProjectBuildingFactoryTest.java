@@ -25,7 +25,7 @@ public class ProjectBuildingFactoryTest {
     @Test
     public void testGetInstance() {
         Project project = new Project(1789, "Revolution");
-        ProjectLayers pl = new ProjectLayers();
+        ProjectLayers pl = new ProjectLayers(project);
         pl.getLayers().add(new ProjectLayer(1789, 2019, 2, 10, 1));
         ProjectBuilding pb = ProjectBuildingFactory.getInstance(project, pl);
         Assert.assertNotNull(pb);

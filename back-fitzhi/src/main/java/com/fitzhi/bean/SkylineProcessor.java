@@ -21,7 +21,7 @@ public interface SkylineProcessor {
     
 	/**
 	 * <p>
-	 * generate the build layers of the given project.
+InjectInject	 * generate the Build layers of the given project.
 	 * </br>
 	 * Each layer represents the size of the project, day by day.
 	 * </p>
@@ -31,6 +31,11 @@ public interface SkylineProcessor {
 	 */
 	ProjectLayers generateProjectLayers(Project project, SourceControlChanges changes);
 	
+	/**
+	 * <p>Complete the project layers until the actual date.</p>
+	 * @param projectLayers the container of project layers
+	 */
+	public void completeProjectLayers(ProjectLayers projectLayers);
 
 	/**
 	 * <p>
@@ -45,7 +50,7 @@ public interface SkylineProcessor {
 	 * <p>
 	 * Generate the history of the Project building in the projects skyline. 
 	 * </p>
-	 * <P>
+	 * <p>
 	 * This method loads the {@link ProjectLayer project layers} from the filesystem and delegates the generation 
 	 * to the generation {@link #generateProjectBuilding(List) generateProjectBuilding}
 	 * </p>
@@ -56,9 +61,7 @@ public interface SkylineProcessor {
 	ProjectBuilding generateProjectBuilding(Project project) throws SkillerException;
 
 	/**
-	 * <p>
-	 * Generate the history of the Project building in the projects skyline.
-	 * </p>
+	 * <p>Generate the history of the Project building in the projects skyline.</p>
 	 * @param project the project whose building has to be generated.
 	 * @param layers the container of the project layers
 	 * @return the Project-building

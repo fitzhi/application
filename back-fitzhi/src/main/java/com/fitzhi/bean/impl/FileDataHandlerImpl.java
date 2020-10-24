@@ -517,7 +517,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	@Override
 	public ProjectLayers loadSkylineLayers(Project project) throws SkillerException {
 
-		final ProjectLayers containerLayers = new ProjectLayers();
+		final ProjectLayers containerLayers = new ProjectLayers(project);
 
 		final String filename = generateProjectLayersJsonFilename(project);
 
