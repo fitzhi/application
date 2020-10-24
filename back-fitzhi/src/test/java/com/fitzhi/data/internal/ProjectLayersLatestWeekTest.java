@@ -28,6 +28,6 @@ public class ProjectLayersLatestWeekTest {
         pl.getLayers().add(new ProjectLayer(1, 2019, 23, 45, 1));
         assertEquals(pl.LatestWeek().getYear(), 2020);
         assertEquals(pl.LatestWeek().getWeek(), 3);
-        assertEquals(pl.LatestWeek().getIdProject(), 2);
+        assertEquals(pl.LatestWeek().getIdProject(), 1);
     }
 }
