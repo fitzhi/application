@@ -12,10 +12,6 @@ import org.slf4j.LoggerFactory;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public class ProjectLayersLatestWeekTest {
-    /**
-     * The logger for the SunburstDataTest class.
-     */
-    Logger logger = LoggerFactory.getLogger(SunburstDataTest.class.getCanonicalName());
 
     /**
      * Simple test of {@code latestWeek()}
