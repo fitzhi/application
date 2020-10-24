@@ -199,6 +199,7 @@ public class SkylineProcessorImpl implements SkylineProcessor {
 
     @Override
     public void completeProjectLayers(ProjectLayers projectLayers) {
+
     }
 
 }

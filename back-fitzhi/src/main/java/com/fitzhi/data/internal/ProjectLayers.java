@@ -3,6 +3,8 @@ package com.fitzhi.data.internal;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fitzhi.data.internal.ProjectBuilding.YearWeek;
+
 import lombok.Data;
 
 /**
@@ -37,6 +39,19 @@ public @Data class ProjectLayers {
     public ProjectLayers(Project project, List<ProjectLayer> layers) {
         this.project = project;
         this.layers = layers;
+    }
+
+    /**
+     * Return the latest week recorded in the layers collection. 
+     */
+    public YearWeek LatestWeek() {
+        int max = this.layers.stream()
+            .mapToInt(layer -> layer.getYear()*100 + layer.getWeek())
+            .reduce(0, Integer::max);
+
+        ProjectBuilding pb = new ProjectBuilding();
+        pb.setIdProject(project.getId());
+        return pb.yearWeek(Math.floorDiv(max, 100), max - Math.floorDiv(max, 100)*100);
     }
 
 }
