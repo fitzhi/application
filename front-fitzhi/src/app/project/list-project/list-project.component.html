@@ -1,5 +1,6 @@
 <div id="hostProjectsTable" *ngIf="referentialService.referentialLoaded$|async">
   <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8" matSort width="100%">
+    <caption>List of projects corresponding to the given parameters</caption>
 
     <ng-container matColumnDef="staffEvaluation">
       <th id="staffEvaluation" mat-header-cell *matHeaderCellDef mat-sort-header>Staff</th>
