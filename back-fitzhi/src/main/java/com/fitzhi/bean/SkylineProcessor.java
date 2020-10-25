@@ -21,7 +21,7 @@ public interface SkylineProcessor {
     
 	/**
 	 * <p>
-InjectInject	 * generate the Build layers of the given project.
+	 * Generate the Build layers of the given project.
 	 * </br>
 	 * Each layer represents the size of the project, day by day.
 	 * </p>

@@ -1,8 +1,13 @@
 package com.fitzhi.bean.impl;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAdjusters;
 import java.time.temporal.TemporalField;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -20,6 +25,7 @@ import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
+import com.fitzhi.data.internal.ProjectBuilding.YearWeek;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.fitzhi.source.crawler.git.SourceFileHistory;
@@ -200,6 +206,43 @@ public class SkylineProcessorImpl implements SkylineProcessor {
     @Override
     public void completeProjectLayers(ProjectLayers projectLayers) {
 
+        final YearWeek latestWeek = projectLayers.LatestWeek();
+        if (log.isDebugEnabled()) {
+            log.debug(String.format(
+                "Last week for project %s : %d/%d", 
+                projectLayers.getProject().getName(),
+                latestWeek.getWeek(),
+                latestWeek.getYear()));
+        }
+
+        // This temporalField is used to retrieve the week number of the date into the year.
+        final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
+
+        final List<ProjectLayer> latestLayers = projectLayers.filterOnWeek(latestWeek);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, latestWeek.getYear());
+        calendar.set(Calendar.WEEK_OF_YEAR, latestWeek.getWeek());
+        LocalDate date = calendar.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        date.with(TemporalAdjusters.next(DayOfWeek.THURSDAY));        
+        date = date.plusDays(7);
+        
+        final LocalDate dateCurrentWeek = LocalDate.now();
+        while (date.isBefore(dateCurrentWeek) || date.equals(dateCurrentWeek)) {
+            for (ProjectLayer layer : latestLayers) {
+                final int year = date.getYear();
+                final int week = date.get(woy);
+                projectLayers.getLayers().add(new ProjectLayer(layer.getIdProject(), year, week, 0, layer.getIdStaff()));
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format(
+                        "Adding an empty activity for the staff id %d in the project %s for week %d/%d", 
+                        layer.getIdStaff(),
+                        projectLayers.getProject().getName(),
+                        week,
+                        year));
+                }
+            }
+            date = date.plusDays(7);
+        }
     }
 
 }

@@ -79,6 +79,12 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
+ 	<logger name="com.fitzhi.bean.impl.SkylineProcessorImpl" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
 -->
+
 
 </configuration>
