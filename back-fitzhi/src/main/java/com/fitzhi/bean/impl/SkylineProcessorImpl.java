@@ -223,7 +223,7 @@ public class SkylineProcessorImpl implements SkylineProcessor {
         calendar.set(Calendar.YEAR, latestWeek.getYear());
         calendar.set(Calendar.WEEK_OF_YEAR, latestWeek.getWeek());
         LocalDate date = calendar.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        date.with(TemporalAdjusters.next(DayOfWeek.THURSDAY));        
+        date = date.with(TemporalAdjusters.next(DayOfWeek.THURSDAY));        
         date = date.plusDays(7);
         
         final LocalDate dateCurrentWeek = LocalDate.now();

@@ -3,8 +3,6 @@ package com.fitzhi.data.internal;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Testing the method {@link ProjectLayers#LatestWeek()}
