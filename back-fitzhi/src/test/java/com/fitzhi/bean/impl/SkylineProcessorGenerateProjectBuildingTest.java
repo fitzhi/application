@@ -87,8 +87,7 @@ public class SkylineProcessorGenerateProjectBuildingTest {
         Assert.assertEquals(0, floor.getLinesActiveDevelopers());
         Assert.assertEquals(10, floor.getLinesInactiveDevelopers());
 
-        int actualWeek = LocalDate.now().get(woy);
-        floor = building.getProjectFloor(2020, actualWeek);
+        floor = building.getProjectFloor(2020, 43);
         Assert.assertEquals(0, floor.getLinesActiveDevelopers());
         Assert.assertEquals(10, floor.getLinesInactiveDevelopers());
 
@@ -122,8 +121,7 @@ public class SkylineProcessorGenerateProjectBuildingTest {
         Assert.assertEquals(54, floor.getLinesActiveDevelopers());
         Assert.assertEquals(30, floor.getLinesInactiveDevelopers());
 
-        int actualWeek = LocalDate.now().get(woy);
-        floor = building.getProjectFloor(2020, actualWeek);
+        floor = building.getProjectFloor(2020, 43);
         Assert.assertEquals(54, floor.getLinesActiveDevelopers());
         Assert.assertEquals(30, floor.getLinesInactiveDevelopers());
 
@@ -150,8 +148,7 @@ public class SkylineProcessorGenerateProjectBuildingTest {
         Assert.assertEquals(84, floor.getLinesActiveDevelopers());
         Assert.assertEquals(0, floor.getLinesInactiveDevelopers());
 
-        int actualWeek = LocalDate.now().get(woy);
-        floor = building.getProjectFloor(2020, actualWeek);
+        floor = building.getProjectFloor(2020, 43);
         Assert.assertEquals(84, floor.getLinesActiveDevelopers());
         Assert.assertEquals(0, floor.getLinesInactiveDevelopers());
 
@@ -200,8 +197,7 @@ public class SkylineProcessorGenerateProjectBuildingTest {
         Assert.assertEquals(0, floor.getLinesActiveDevelopers());
         Assert.assertEquals(84, floor.getLinesInactiveDevelopers());
 
-        int actualWeek = LocalDate.now().get(woy);
-        floor = building.getProjectFloor(2020, actualWeek);
+        floor = building.getProjectFloor(2020, 43);
         Assert.assertEquals(0, floor.getLinesActiveDevelopers());
         Assert.assertEquals(84, floor.getLinesInactiveDevelopers());
 

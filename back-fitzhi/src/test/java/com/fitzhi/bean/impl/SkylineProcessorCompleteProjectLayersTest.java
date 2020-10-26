@@ -53,7 +53,10 @@ public class SkylineProcessorCompleteProjectLayersTest {
         final int week = LocalDate.now().get(woy);
         ProjectBuilding pb = new ProjectBuilding();
         pb.setIdProject(1796);
-        final List<ProjectLayer> layers = projectLayers.filterOnWeek(pb.yearWeek(year, week));
+        List<ProjectLayer> layers = projectLayers.filterOnWeek(pb.yearWeek(year, week));
+        if (layers.size() == 0) {
+            layers = projectLayers.filterOnWeek(pb.yearWeek(year, week-1));
+        } 
         Assert.assertEquals(2, layers.size());
         Assert.assertEquals(layers.get(0).getIdStaff(), 1);
         Assert.assertEquals(layers.get(0).getLines(), 0);
