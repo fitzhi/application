@@ -32,6 +32,11 @@ public class DataEncryption {
 	 */
 	private final static String TRANSFORMATION = "AES"; // Good one for Sonar : "AES/GCM/NoPadding";
 
+	//TODO AES is not a safe transformation. A keystore has to be installed. See UnpluggedDataEncryption.
+	private static Cipher getCipher() throws Exception {
+		return Cipher.getInstance(TRANSFORMATION); //NOSONAR
+	}
+
 	/**
 	 * <b>ENCRYPT</b> a message
 	 * @param data the data to encrypt (actually password only are encrypted)
@@ -41,14 +46,17 @@ public class DataEncryption {
 	public static String encryptMessage(String data) throws SkillerException {
 		
 		try {
-            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+
+			Cipher cipher = getCipher();
             
             // rebuild key using SecretKeySpec
             if (originalKey == null) {
             	originalKey = new SecretKeySpec(Arrays.copyOf(decodedKey, 16), TRANSFORMATION);
             }
-            cipher.init(Cipher.ENCRYPT_MODE, originalKey);
-            byte[] cipherText = cipher.doFinal(data.getBytes("UTF-8"));
+
+			cipher.init(Cipher.ENCRYPT_MODE, originalKey);
+			byte[] cipherText = cipher.doFinal(data.getBytes());
+			
             return Base64.getEncoder().encodeToString(cipherText);
 		} catch (final Exception e) {
 			throw new SkillerException(CODE_ENCRYPTION_FAILED, 
@@ -65,12 +73,15 @@ public class DataEncryption {
 	public static String decryptMessage(String encryptedData) throws SkillerException  {
 
         try {
-            Cipher cipher = Cipher.getInstance(TRANSFORMATION);
-            // Build key using SecretKeySpec
+
+			Cipher cipher = getCipher();
+
+			// Build key using SecretKeySpec
             if (originalKey == null) {
             	originalKey = new SecretKeySpec(Arrays.copyOf(decodedKey, 16), TRANSFORMATION);
             }
-            cipher.init(Cipher.DECRYPT_MODE, originalKey);
+
+			cipher.init(Cipher.DECRYPT_MODE, originalKey);
             byte[] cipherText = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
             
             return new String(cipherText);
@@ -80,5 +91,4 @@ public class DataEncryption {
 					MessageFormat.format(MESSAGE_ENCRYPTION_FAILED, e.getLocalizedMessage()), e);
 		}
 	}
-
 }
