@@ -1,5 +1,7 @@
-<table mat-table #table [dataSource]="contributors" class="mat-elevation-z8 tableLegends">
-  <caption>List of contributors involved inside this project</caption>
+<table mat-table #table 
+  [dataSource]="contributors" 
+  class="mat-elevation-z8 tableLegends"
+  aria-label="List of contributors involved in this project">
 
   <ng-container matColumnDef="fullname">
     <th id="fullname" mat-header-cell *matHeaderCellDef>Fullname</th>

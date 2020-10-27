@@ -1,6 +1,8 @@
 <div id="ProjectSonarMetricsDiv" *ngIf="isSonarAccessible">
-   <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8 projectSonarMetricsDiv-content" matSort>
-        <caption>List of metrics available on Sonar</caption>
+   <table mat-table #table 
+        [dataSource]="dataSource" 
+        class="mat-elevation-z8 projectSonarMetricsDiv-content" matSort
+        aria-label="List of metrics available on Sonar">
         
         <ng-container matColumnDef="name">
             <th id="name" mat-header-cell *matHeaderCellDef mat-sort-header>Metric</th>
