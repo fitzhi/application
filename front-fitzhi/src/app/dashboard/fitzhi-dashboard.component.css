@@ -59,7 +59,9 @@ div.pie-projects {
 
     margin: 40vh auto;
     transform: translateY(-50%);
-    width: 400px;
+    
+    width: 450px;
+    height: 450px;
 }
  
 
