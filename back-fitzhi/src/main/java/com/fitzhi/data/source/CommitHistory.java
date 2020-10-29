@@ -23,7 +23,7 @@ public class CommitHistory {
 	/**
 	 * complete source path.
 	 */
-	public String sourcePath;
+	private String sourcePath;
 	
 	/**
 	 * Level of risk on this source file. <br/>
@@ -56,6 +56,13 @@ public class CommitHistory {
 	 */
 	public String getSourcePath() {
 		return sourcePath;
+	}
+
+	/**
+	 * @param sourcePath Set the sourcePath
+	 */
+	public void setSourcePath(String sourcePath) {
+		this.sourcePath = sourcePath;
 	}
 
 	/**

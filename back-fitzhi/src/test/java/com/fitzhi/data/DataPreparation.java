@@ -51,7 +51,7 @@ public class DataPreparation {
 			String shuffleKey = shuffleService.scramble(key);
 			CommitHistory history = repository.getRepository().get(key);
 			System.out.println(key + " -> " + shuffleKey);
-			history.sourcePath = shuffleKey;
+			history.setSourcePath(shuffleKey);
 			history.operations.forEach(action -> {
 				action.setAuthorName(shuffleService.scramble(action.getAuthorName()));
 			});

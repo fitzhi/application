@@ -63,7 +63,7 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 		private final long countCommitsByActiveDevelopers;
 
 
-		private RiskCommitAndDevActiveProcessorImpl getOuterType() {
+		RiskCommitAndDevActiveProcessorImpl getOuterType() {
 			return RiskCommitAndDevActiveProcessorImpl.this;
 		}
 

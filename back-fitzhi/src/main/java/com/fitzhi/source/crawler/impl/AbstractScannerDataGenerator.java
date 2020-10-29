@@ -94,7 +94,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 				this.tasks().logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), MessageFormat.format("{0} commits agregated", tot_ind));
 			}
 			root.injectFile(root, 
-					commit.sourcePath.split(INTERNAL_FILE_SEPARATOR), 
+					commit.getSourcePath().split(INTERNAL_FILE_SEPARATOR), 
 					commit.getImportance(), 
 					commit.evaluateDateLastestCommit(),
 					commit.committers());

@@ -1171,7 +1171,7 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 			commits.operations.stream().filter(
 					it -> ((it.idStaff == settings.getIdStaffSelected()) || (settings.getIdStaffSelected() == 0)))
 					.filter(it -> (it.getDateCommit()).isAfter(startingDate))
-					.forEach(item -> personalizedRepo.addCommit(commits.sourcePath, item.idStaff, item.getAuthorName(),
+					.forEach(item -> personalizedRepo.addCommit(commits.getSourcePath(), item.idStaff, item.getAuthorName(),
 							item.getDateCommit(), commits.getImportance()));
 		}
 		return personalizedRepo;

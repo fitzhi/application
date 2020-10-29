@@ -159,7 +159,7 @@ public class BasicCommitRepository implements CommitRepository {
 		final StringBuilder sb = new StringBuilder();
 		repo.values().stream().forEach(history -> {
 			history.operations.stream().forEach(
-					operation -> sb.append(history.sourcePath)
+					operation -> sb.append(history.getSourcePath())
 					.append(";")
 					.append(operation.idStaff)
 					.append(";")
@@ -271,7 +271,7 @@ public class BasicCommitRepository implements CommitRepository {
 	public void dump() {
 		StringBuilder sb = new StringBuilder();
 		this.repo.values().forEach(history -> {
-			sb.append(history.sourcePath).append(LN);
+			sb.append(history.getSourcePath()).append(LN);
 			history.operations.stream().forEach((Operation ope) -> {
 				sb.append("\t").append(ope.getIdStaff()).append(" ");
 				sb.append(ope.getAuthorName()).append(" ");

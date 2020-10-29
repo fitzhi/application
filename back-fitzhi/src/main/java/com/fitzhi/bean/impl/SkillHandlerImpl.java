@@ -141,16 +141,16 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	
 		for (Skill skill : candidateSkills) {
 			for (CommitHistory entry : entries) {
-				if (isSkillDetected(skill, rootPath, entry.sourcePath)) {
+				if (isSkillDetected(skill, rootPath, entry.getSourcePath())) {
 					ProjectSkill projectSkill = extractedSkills.get(skill.getId());
 					if (projectSkill == null) {
 						if (log.isDebugEnabled()) {
 							log.debug(String.format("The skill %s has been detected in the project", skill.getTitle()));
 						}
-						extractedSkills.put(skill.getId(), new ProjectSkill(skill.getId(), 1, fileSize(rootPath, entry.sourcePath)));
+						extractedSkills.put(skill.getId(), new ProjectSkill(skill.getId(), 1, fileSize(rootPath, entry.getSourcePath())));
 					} else {
 						projectSkill.incNumberOfFiles();
-						projectSkill.addFileSize(fileSize(rootPath, entry.sourcePath));
+						projectSkill.addFileSize(fileSize(rootPath, entry.getSourcePath()));
 					}
 				}
 			}			
