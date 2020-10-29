@@ -34,6 +34,7 @@ import com.fitzhi.util.ProjectBuildingFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -54,20 +55,21 @@ public class SkylineProcessorImpl implements SkylineProcessor {
     @Autowired
     private DataHandler dataHandler;
    
+    @Data
     class Layer {
 
         /**
          * The year
          */
-        public int year;
+        private int year;
         /**
          * The week
          */
-        public int week;
+        private int week;
         /**
          * The idStaff
          */
-        public int idStaff;
+        private int idStaff;
 
         public Layer(int year, int week, int idStaff) {
             this.year = year;

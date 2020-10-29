@@ -86,12 +86,12 @@ public class FileDataHandlerImpl implements DataHandler {
 	/**
 	 * Directory where the GIT change records are saved.
 	 */
-	private final String SAVED_CHANGES = "changes-data";
+	private final String savedChanges = "changes-data";
 
 	/**
 	 * Directory where the pathnames file is detected on GIT.
 	 */
-	private final String PATHNAMES = "pathnames-data";
+	private final String pathNames = "pathnames-data";
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -258,7 +258,7 @@ public class FileDataHandlerImpl implements DataHandler {
 			try {
 				Files.createDirectories(path);
 			} catch (Exception e) {
-				throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, SAVED_CHANGES), e);
+				throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, savedChanges), e);
 			}
 		}
 
@@ -272,7 +272,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * @return the filename to be used.
 	 */
 	private String generateChangesCsvFilename(Project project) {
-		return SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-changes.csv";
+		return savedChanges + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-changes.csv";
 	}
 
 	/**
@@ -283,7 +283,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * @return the filename to be used.
 	 */
 	private String generateProjectLayersJsonFilename(Project project) {
-		return SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-project-layers.json";
+		return savedChanges + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-project-layers.json";
 	}
 
 	@Override
@@ -292,7 +292,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		//
 		// As the method-name explains, we create the directory.
 		//
-		createIfNeededDirectory(SAVED_CHANGES);
+		createIfNeededDirectory(savedChanges);
 
 		final String filename = generateChangesCsvFilename(project);
 
@@ -462,7 +462,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		//
 		// As the method-name explains, we create the directory.
 		//
-		createIfNeededDirectory(PATHNAMES);
+		createIfNeededDirectory(pathNames);
 
 		String filename = this.buildDirectoryPathnames(project);
 
@@ -510,7 +510,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * @return the expected path
 	 */
 	private String buildDirectoryPathnames(Project project) {
-		return String.format("%s/%d-%s-%s-pathnames.txt", PATHNAMES, project.getId(), project.getName(),
+		return String.format("%s/%d-%s-%s-pathnames.txt", pathNames, project.getId(), project.getName(),
 				project.getBranch());
 	}
 
@@ -546,7 +546,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		//
 		// As the method-name explains, we create the directory.
 		//
-		createIfNeededDirectory(SAVED_CHANGES);
+		createIfNeededDirectory(savedChanges);
 
 		final String filename = generateProjectLayersJsonFilename(project);
 
@@ -569,7 +569,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * @return the filename to be used.
 	 */
 	private String generateProjectBuildingJsonFilename(Project project) {
-		return SAVED_CHANGES + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-project-building.json";
+		return savedChanges + INTERNAL_FILE_SEPARATORCHAR + project.getId() + "-project-building.json";
 	}
 
 	@Override
@@ -607,7 +607,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		//
 		// As the method-name explains, we create the directory.
 		//
-		createIfNeededDirectory(SAVED_CHANGES);
+		createIfNeededDirectory(savedChanges);
 
 		final String filename = generateProjectBuildingJsonFilename(project);
 

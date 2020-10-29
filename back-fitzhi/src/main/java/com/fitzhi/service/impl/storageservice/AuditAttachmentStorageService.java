@@ -16,7 +16,7 @@ import com.fitzhi.service.StorageService;
  */
 @Service
 @Qualifier("Attachment")
-public class AuditAttachmentStorageService extends FileSystemStorageService implements StorageService {
+public class AuditAttachmentStorageService extends FileSystemStorageService  {
 
     @Autowired
     public AuditAttachmentStorageService(AuditAttachmentStorageProperties properties) {
