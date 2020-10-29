@@ -23,6 +23,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
@@ -39,6 +41,7 @@ import com.fitzhi.exception.SkillerException;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@Slf4j
 public class ProjectTaskControllerSSESendTest {
 
 	@Autowired
@@ -81,7 +84,7 @@ public class ProjectTaskControllerSSESendTest {
 	        	try {
 					asyncTask.completeTask("nopeOperation", MARK_END_OF_OPERATION, ID_PROJECT);
 				} catch (SkillerException e) {
-					e.printStackTrace();
+					log.error("Internal error", e);
 				}
 	        }
 	    }, 1, TimeUnit.SECONDS);

@@ -240,7 +240,7 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, file.getAbsoluteFile()), e);
 			}
 		} catch (final SkillerException e) {
-			e.printStackTrace();
+			log.error("Internal error", e);
 			throw e;
 		}
 	}	

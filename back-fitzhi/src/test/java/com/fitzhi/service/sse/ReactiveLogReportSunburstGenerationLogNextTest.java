@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.external.ActivityLog;
@@ -35,6 +37,7 @@ import reactor.test.StepVerifier;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Slf4j
 public class ReactiveLogReportSunburstGenerationLogNextTest {
 
 	/**
@@ -89,7 +92,7 @@ public class ReactiveLogReportSunburstGenerationLogNextTest {
 					asyncTask.completeTask("nopeOperation", MARK_END_OF_OPERATION, ID_PROJECT);
 					ReactiveLogReportSunburstGenerationLogNextTest.this.eraseTime();				
 				} catch (SkillerException e) {
-					e.printStackTrace();
+					log.error("Internal error", e);
 				}
 	        }
 	    }, 4, TimeUnit.SECONDS);

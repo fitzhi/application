@@ -350,7 +350,7 @@ public class FileDataHandlerImpl implements DataHandler {
 				}
 			}
 		} catch (IOException ioe) {
-			ioe.printStackTrace();
+			log.error("Internal error", ioe);
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
 		}
 

@@ -164,7 +164,7 @@ public class GitCrawlerProcessDiffEntriesTest {
             try {
                 test(rw, df, commitId, sbLog);
             } catch (final Exception e) {
-                e.printStackTrace();
+                log.error("Internal error", e);
             }
             if (log.isDebugEnabled()) {
                 log.debug(sbLog.toString());
@@ -195,7 +195,7 @@ public class GitCrawlerProcessDiffEntriesTest {
                 }            
                 sbLog.append(diff.getNewPath()).append(" ").append(linesDeleted).append(" ").append(linesAdded).append(Global.LN);
             } catch (final Exception e) {
-                e.printStackTrace();
+                log.error("Internal error", e);
             }
         });
 
