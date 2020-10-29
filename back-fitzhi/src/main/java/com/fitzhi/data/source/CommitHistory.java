@@ -106,7 +106,7 @@ public class CommitHistory {
 	 * @return the date of commit, or <code>Null</code> if none exists.
 	 */
 	public LocalDate getDateCommit(final int idStaff) {
-		Optional<Operation> opt = operations.stream().filter(ope -> ope.idStaff == idStaff).findFirst();
+		Optional<Operation> opt = operations.stream().filter(ope -> ope.getIdStaff() == idStaff).findFirst();
 		if (opt.isPresent()) {
 			return opt.get().getDateCommit();
 		} else {
@@ -133,7 +133,7 @@ public class CommitHistory {
 	 */
 	public int[] committers() {
 		return operations.stream()
-				.map(operation->operation.idStaff)
+				.map(operation->operation.getIdStaff())
 				.distinct()
 				.mapToInt(Number::intValue)
 			    .toArray();
@@ -155,8 +155,8 @@ public class CommitHistory {
 	public long countCommitsByActiveDevelopers(final StaffHandler staffHandler) {
 		return operations
 				.stream()
-				.filter(ope -> ope.idStaff != UNKNOWN)
-				.mapToInt(ope->ope.idStaff)
+				.filter(ope -> ope.getIdStaff() != UNKNOWN)
+				.mapToInt(ope->ope.getIdStaff())
 				.filter (staffHandler::isActive)
 				.count();
 	}
@@ -168,8 +168,8 @@ public class CommitHistory {
 	public long countDistinctDevelopers() {
 		return operations
 			.stream()
-			.filter(ope -> ope.idStaff != UNKNOWN)
-			.mapToInt(ope->ope.idStaff)
+			.filter(ope -> ope.getIdStaff() != UNKNOWN)
+			.mapToInt(ope->ope.getIdStaff())
 			.distinct()
 			.count();
 	}
@@ -182,8 +182,8 @@ public class CommitHistory {
 	public long countDistinctActiveDevelopers(final StaffHandler staffHandler) {
 		return operations
 			.stream()
-			.filter(ope -> ope.idStaff != UNKNOWN)
-			.mapToInt(ope->ope.idStaff)
+			.filter(ope -> ope.getIdStaff() != UNKNOWN)
+			.mapToInt(ope->ope.getIdStaff())
 			.distinct()
 			.filter (staffHandler::isActive)
 			.count();
@@ -201,7 +201,7 @@ public class CommitHistory {
 		if (!lastOpe.isPresent()) {
 			throw new SkillerRuntimeException("SEVERE INTERNAL ERROR : Should not pass here!");
 		}
-		return lastOpe.get().idStaff;
+		return lastOpe.get().getIdStaff();
 	}
 	
 	/**
@@ -209,7 +209,7 @@ public class CommitHistory {
 	 * @return {@code true} if the passed developer has worked on this file, {@code false} otherwise
 	 */
 	public boolean hasWorkedOnThisFile (int idStaff) {
-		return operations.stream().filter(ope -> ope.idStaff == idStaff).findAny().isPresent();
+		return operations.stream().filter(ope -> ope.getIdStaff() == idStaff).findAny().isPresent();
 	}
 	
 }

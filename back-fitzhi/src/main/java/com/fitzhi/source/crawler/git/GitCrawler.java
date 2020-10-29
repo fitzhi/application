@@ -1169,9 +1169,9 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 		CommitRepository personalizedRepo = new BasicCommitRepository();
 		for (CommitHistory commits : globalRepo.getRepository().values()) {
 			commits.operations.stream().filter(
-					it -> ((it.idStaff == settings.getIdStaffSelected()) || (settings.getIdStaffSelected() == 0)))
+					it -> ((it.getIdStaff() == settings.getIdStaffSelected()) || (settings.getIdStaffSelected() == 0)))
 					.filter(it -> (it.getDateCommit()).isAfter(startingDate))
-					.forEach(item -> personalizedRepo.addCommit(commits.getSourcePath(), item.idStaff, item.getAuthorName(),
+					.forEach(item -> personalizedRepo.addCommit(commits.getSourcePath(), item.getIdStaff(), item.getAuthorName(),
 							item.getDateCommit(), commits.getImportance()));
 		}
 		return personalizedRepo;

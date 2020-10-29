@@ -25,7 +25,7 @@ public @Data class Operation {
 	 * </ul>
 	 * </p>
 	 */
-	public int idStaff;
+	private int idStaff;
 	
 	/**
 	 * Author name

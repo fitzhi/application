@@ -161,7 +161,7 @@ public class BasicCommitRepository implements CommitRepository {
 			history.operations.stream().forEach(
 					operation -> sb.append(history.getSourcePath())
 					.append(";")
-					.append(operation.idStaff)
+					.append(operation.getIdStaff())
 					.append(";")
 					.append(operation.getDateCommit())
 					.append(LN)
@@ -190,7 +190,7 @@ public class BasicCommitRepository implements CommitRepository {
 		lastCommit = LocalDate.MIN; 
 		this.repo.values().stream().forEach(history -> 
 			history.operations.stream()
-			.filter(ope -> (ope.idStaff == idStaff)).forEach(ope -> {
+			.filter(ope -> (ope.getIdStaff() == idStaff)).forEach(ope -> {
 				if (ope.getDateCommit().isAfter (lastCommit)) {
 					lastCommit = ope.getDateCommit();
 				}
@@ -203,7 +203,7 @@ public class BasicCommitRepository implements CommitRepository {
 		lastCommit = LocalDate.MAX; 
 		this.repo.values().stream().forEach(history -> 
 			history.operations.stream()
-			.filter(ope -> (ope.idStaff == idStaff)).forEach(ope -> {
+			.filter(ope -> (ope.getIdStaff() == idStaff)).forEach(ope -> {
 				if (ope.getDateCommit().isBefore(lastCommit)) {
 					lastCommit = ope.getDateCommit();
 				}
@@ -216,7 +216,7 @@ public class BasicCommitRepository implements CommitRepository {
 		return (int) this.repo.values().stream()
 				.mapToLong( 
 					 history -> history.operations.stream()
-					.filter(ope -> (ope.idStaff == idStaff))
+					.filter(ope -> (ope.getIdStaff() == idStaff))
 					.count())
 				.asDoubleStream()
 				.sum();
