@@ -1208,7 +1208,7 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 				}
 				settings.setPassword(clearPassword);
 			} catch (final SkillerException se) {
-				se.getCause().printStackTrace();
+				log.error("Cause", se.getCause());
 				throw se;
 			}
 			return settings;
