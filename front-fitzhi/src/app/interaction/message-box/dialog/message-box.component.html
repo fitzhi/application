@@ -1,6 +1,8 @@
 <h2 mat-dialog-title>{{data.title}}</h2>
 <mat-dialog-content>
 	<table summary="Message content">
+		<th style="visibility: hidden;" scope="col"></th>
+		<th style="visibility: hidden;" scope="col"></th>
 		<tr>
 			<td>
 				<div [innerHTML]="data.message"></div>

@@ -5,7 +5,9 @@
   
   <!-- Name Column -->
   <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef [ngStyle]= "{'background-color': colorHeader}">
+    <th mat-header-cell *matHeaderCellDef 
+      [ngStyle]= "{'background-color': colorHeader}" 
+      scope="col">
         <div *ngIf="(pieDashboardService.sliceActivated$|async).id === typeSlice.Staff">
           Staff
         </div>
