@@ -20,7 +20,6 @@ div.reloadAfterCompletion {
 
 div.inner-reloadAfterCompletion {
     display: flex;
-    display:flex;
     flex-direction:column;
     justify-content: center;
 }
