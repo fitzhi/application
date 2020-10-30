@@ -14,10 +14,13 @@ import java.util.Optional;
 import com.fitzhi.SkillerRuntimeException;
 import com.fitzhi.bean.StaffHandler;
 
+import lombok.Data;
+
 /**
  * History of operations of a source element.
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@Data
 public class CommitHistory {
 	
 	/**
@@ -29,7 +32,7 @@ public class CommitHistory {
 	 * Level of risk on this source file. <br/>
 	 * This risk is evaluate by {@link com.fitzhi.source.crawler.RepoScanner#evaluateTheRisk(CommitRepository)}
 	 */
-	int riskLevel;
+	private int riskLevel;
 	
 	/**
 	 * A numeric value representing the importance of the source file impacted by the change.
@@ -48,34 +51,6 @@ public class CommitHistory {
 	 */
 	public CommitHistory(String sourcePath, long importance) {
 		this.sourcePath = sourcePath;
-		this.importance = importance;
-	}
-
-	/**
-	 * @return the sourcePath
-	 */
-	public String getSourcePath() {
-		return sourcePath;
-	}
-
-	/**
-	 * @param sourcePath Set the sourcePath
-	 */
-	public void setSourcePath(String sourcePath) {
-		this.sourcePath = sourcePath;
-	}
-
-	/**
-	 * @return the importance
-	 */
-	public long getImportance() {
-		return importance;
-	}
-
-	/**
-	 * @param importance the importance to set
-	 */
-	public void setImportance(long importance) {
 		this.importance = importance;
 	}
 
@@ -169,7 +144,7 @@ public class CommitHistory {
 		return operations
 			.stream()
 			.filter(ope -> ope.getIdStaff() != UNKNOWN)
-			.mapToInt(ope->ope.getIdStaff())
+			.mapToInt(Operation::getIdStaff)
 			.distinct()
 			.count();
 	}
@@ -183,7 +158,7 @@ public class CommitHistory {
 		return operations
 			.stream()
 			.filter(ope -> ope.getIdStaff() != UNKNOWN)
-			.mapToInt(ope->ope.getIdStaff())
+			.mapToInt(Operation::getIdStaff)
 			.distinct()
 			.filter (staffHandler::isActive)
 			.count();
