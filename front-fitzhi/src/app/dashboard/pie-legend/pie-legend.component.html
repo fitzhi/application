@@ -19,7 +19,7 @@
   </div>
 
   <div class="logo" *ngIf="((pieDashboardService.sliceActivated$|async).type === typeSlice.Sonar)">
-    <img src="./assets/img/sonar-grey.png" height="35" width="35" />
+    <img src="./assets/img/sonar-grey.png" height="35" width="35" alt="Sonar logo"/>
     <div *ngIf="(activatedSlice.data !== typeSlice.undefined); else elseBlock">
       <p>
         {{activatedSlice.children.length}} project(s) with a {{ labelLevelOfRisk }} level with Sonar.

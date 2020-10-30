@@ -46,7 +46,7 @@
                 <mat-grid-tile [colspan]="1" [rowspan]="2">
                 </mat-grid-tile>
                 <mat-grid-tile [colspan]="3" [rowspan]="2">
-                    <table aria-label="List of development language detected on the repository">
+                    <table summary="List of development language detected on the repository">
                         <tr *ngFor="let languageCount of languageFilesNumber.get(sonarProject.key)">
                             <td class="table-counting language">{{labelOfLanguage(languageCount.language)}}</td>
                             <td class="table-counting fileNumber">{{languageCount.numberOfFiles}}</td>
