@@ -1,16 +1,20 @@
 <div id="staffList">
 
-  <table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8" (matSortChange)="sortData($event)" matSort>
+  <table mat-table #table matSort
+      [dataSource]="dataSource" 
+      class="mat-elevation-z8" 
+      (matSortChange)="sortData($event)"
+      summary="List of staff members" >
 
     <ng-container matColumnDef="firstName lastName">
-      <th id="fullName" mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+      <th id="fullName" mat-header-cell *matHeaderCellDef mat-sort-header scope="col"> Name </th>
       <td mat-cell class="col_string {{class_active_inactive(collaborator.active)}}" *matCellDef="let collaborator" (click)="routeStaff(collaborator.idStaff)">
         {{collaborator.firstName}} {{collaborator.lastName}}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="level">
-      <th id="level" mat-header-cell *matHeaderCellDef mat-sort-header>Level</th>
+      <th id="level" mat-header-cell *matHeaderCellDef mat-sort-header  scope="col">Level</th>
       <td mat-cell class="col_string {{class_active_inactive(collaborator.active)}}" 
         *matCellDef="let collaborator" (click)="routeStaff(collaborator.idStaff)">
         {{title(collaborator.level)}}
@@ -18,7 +22,7 @@
     </ng-container>
 
     <ng-container matColumnDef="skills">
-      <th id="skills" mat-header-cell *matHeaderCellDef mat-sort-header>Main skills</th>
+      <th id="skills" mat-header-cell *matHeaderCellDef mat-sort-header scope="col">Main skills</th>
       <td mat-cell class="col_string {{class_active_inactive(collaborator.active)}}" 
         *matCellDef="let collaborator" (click)="routeStaff(collaborator.idStaff)">
         {{skills(collaborator.experiences)}}
@@ -26,7 +30,7 @@
     </ng-container>
 
     <ng-container matColumnDef="active">
-      <th id="isActive" mat-header-cell *matHeaderCellDef mat-sort-header>Active</th>
+      <th id="isActive" mat-header-cell *matHeaderCellDef mat-sort-header scope="col">Active</th>
       <td mat-cell class="col_image {{class_active_inactive(collaborator.active)}}" 
         *matCellDef="let collaborator" (click)="routeStaff(collaborator.idStaff)">
         <img with="15" height="15" src="/assets/img/check-{{collaborator.active}}.png" alt="active status"  />
@@ -34,7 +38,7 @@
     </ng-container>
 
     <ng-container matColumnDef="external">
-      <th id="external" mat-header-cell *matHeaderCellDef mat-sort-header>External</th>
+      <th id="external" mat-header-cell *matHeaderCellDef mat-sort-header scope="col">External</th>
       <td mat-cell class="col_image {{class_active_inactive(collaborator.active)}}" 
         *matCellDef="let collaborator" (click)="routeStaff(collaborator.idStaff)">
         <img with="15" height="15" alt="external status" src="/assets/img/check-{{collaborator.external}}.png" />

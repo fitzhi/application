@@ -1,4 +1,7 @@
-<table mat-table #table [dataSource]="filenames" class="mat-elevation-z8 tableLegends">
+<table mat-table #table 
+    [dataSource]="filenames" 
+    class="mat-elevation-z8 tableLegends"
+    summary="List of filenames">
 
   <ng-container matColumnDef="filename">
     <th id="filename" mat-header-cell *matHeaderCellDef>filename</th>

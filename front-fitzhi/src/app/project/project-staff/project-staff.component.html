@@ -1,6 +1,10 @@
 <div id="divDeveloppers">
 
-  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8" matSort matTable style="width: 1000px">
+  <table mat-table 
+      [dataSource]="dataSource" 
+      class="mat-elevation-z8" matSort matTable 
+      style="width: 1000px"
+      summary="List of developers involved in the project">
 
     <ng-container matColumnDef="fullname">
       <th id="fullname" mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
