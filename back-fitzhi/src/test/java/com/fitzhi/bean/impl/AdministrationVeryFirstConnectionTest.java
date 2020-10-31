@@ -9,6 +9,9 @@ import static org.junit.Assume.assumeTrue;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import com.fitzhi.bean.Administration;
+import com.fitzhi.exception.SkillerException;
+
 import org.assertj.core.util.Files;
 import org.junit.After;
 import org.junit.Assert;
@@ -18,9 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.fitzhi.bean.Administration;
-import com.fitzhi.exception.SkillerException;
 /**
  * Test the administration bean.
  * 
