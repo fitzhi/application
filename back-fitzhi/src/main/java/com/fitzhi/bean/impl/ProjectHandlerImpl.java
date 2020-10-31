@@ -256,9 +256,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	
 	@Override
 	public void removeProject(int idProject) throws SkillerException {
-		Map<Integer, Project> projects = getProjects();
 		synchronized (lockDataUpdated) {
-			projects.remove(idProject);
+			getProjects().remove(idProject);
 			this.dataUpdated = true;
 		}
 	}

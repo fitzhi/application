@@ -71,6 +71,11 @@ import lombok.extern.slf4j.Slf4j;
 public class FileDataHandlerImpl implements DataHandler {
 
 	/**
+	 * Logging constant
+	 */
+	private static final String SAVING_FILE_S = "Saving file %s";
+
+	/**
 	 * Are we in shuffle-mode? In that scenario, the saving process will be
 	 * unplugged.
 	 */
@@ -297,7 +302,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		final String filename = generateChangesCsvFilename(project);
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Saving file %s", rootLocation.resolve(filename)));
+			log.debug(String.format(SAVING_FILE_S, rootLocation.resolve(filename)));
 		}
 		try (Writer writer = new FileWriter(rootLocation.resolve(filename).toFile())) {
 
@@ -551,7 +556,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		final String filename = generateProjectLayersJsonFilename(project);
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Saving file %s", rootLocation.resolve(filename)));
+			log.debug(String.format(SAVING_FILE_S, rootLocation.resolve(filename)));
 		}
 
 		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
@@ -592,9 +597,13 @@ public class FileDataHandlerImpl implements DataHandler {
 				// If this building list is still null, without IOException, it means that the file is empty.
 				building.setBuilding(new HashMap<YearWeek, ProjectFloor>());
 			} else {
-				floors.stream().forEach(floor -> {
-					building.initWeek(floor.getIdProject(), floor.getYear(), floor.getWeek(), floor.getLinesActiveDevelopers(), floor.getLinesInactiveDevelopers());
-				});
+				floors.stream().forEach(floor ->
+					building.initWeek(
+					floor.getIdProject(), 
+					floor.getYear(), floor.getWeek(),
+					floor.getLinesActiveDevelopers(), 
+					floor.getLinesInactiveDevelopers())
+				);
 			}	
 			return building;
 		} catch (final Exception e) {
@@ -612,7 +621,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		final String filename = generateProjectBuildingJsonFilename(project);
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Saving file %s", rootLocation.resolve(filename)));
+			log.debug(String.format(SAVING_FILE_S, rootLocation.resolve(filename)));
 		}
 
 		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
