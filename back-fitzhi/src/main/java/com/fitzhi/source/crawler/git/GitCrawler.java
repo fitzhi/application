@@ -43,15 +43,55 @@ import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
+import com.fitzhi.Error;
+import com.fitzhi.Global;
+import com.fitzhi.ShouldNotPassHereRuntimeException;
+import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.bean.AsyncTask;
+import com.fitzhi.bean.CacheDataHandler;
+import com.fitzhi.bean.DataChartHandler;
+import com.fitzhi.bean.DataHandler;
+import com.fitzhi.bean.ProjectDashboardCustomizer;
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.bean.RiskProcessor;
+import com.fitzhi.bean.SkillHandler;
+import com.fitzhi.bean.SkylineProcessor;
+import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
+import com.fitzhi.controller.in.SettingsGeneration;
+import com.fitzhi.data.encryption.DataEncryption;
+import com.fitzhi.data.internal.Ecosystem;
+import com.fitzhi.data.internal.Ghost;
+import com.fitzhi.data.internal.Library;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectLayers;
+import com.fitzhi.data.internal.RepositoryAnalysis;
+import com.fitzhi.data.internal.RiskDashboard;
+import com.fitzhi.data.internal.SourceCodeDiffChange;
+import com.fitzhi.data.internal.SourceControlChanges;
+import com.fitzhi.data.internal.Staff;
+import com.fitzhi.data.source.BasicCommitRepository;
+import com.fitzhi.data.source.CommitHistory;
+import com.fitzhi.data.source.CommitRepository;
+import com.fitzhi.data.source.ConnectionSettings;
+import com.fitzhi.data.source.Contributor;
+import com.fitzhi.data.source.importance.AssessorImportance;
+import com.fitzhi.data.source.importance.FileSizeImportance;
+import com.fitzhi.data.source.importance.ImportanceCriteria;
+import com.fitzhi.exception.SkillerException;
+import com.fitzhi.source.crawler.EcosystemAnalyzer;
+import com.fitzhi.source.crawler.impl.AbstractScannerDataGenerator;
+import com.google.gson.Gson;
+
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.Edit;
 import org.eclipse.jgit.diff.RawTextComparator;
-import org.eclipse.jgit.diff.DiffEntry.ChangeType;
-import org.eclipse.jgit.errors.CorruptObjectException;
 import org.eclipse.jgit.diff.RenameDetector;
+import org.eclipse.jgit.errors.CorruptObjectException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.PersonIdent;
@@ -70,44 +110,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
-import com.fitzhi.Error;
-import com.fitzhi.Global;
-import com.fitzhi.ShouldNotPassHereRuntimeException;
-import com.fitzhi.SkillerRuntimeException;
-import com.fitzhi.bean.AsyncTask;
-import com.fitzhi.bean.CacheDataHandler;
-import com.fitzhi.bean.DataChartHandler;
-import com.fitzhi.bean.DataHandler;
-import com.fitzhi.bean.ProjectDashboardCustomizer;
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.bean.RiskProcessor;
-import com.fitzhi.bean.SkillHandler;
-import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
-import com.fitzhi.controller.in.SettingsGeneration;
-import com.fitzhi.data.encryption.DataEncryption;
-import com.fitzhi.data.internal.Ecosystem;
-import com.fitzhi.data.internal.Ghost;
-import com.fitzhi.data.internal.Library;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.RepositoryAnalysis;
-import com.fitzhi.data.internal.RiskDashboard;
-import com.fitzhi.data.internal.SourceControlChanges;
-import com.fitzhi.data.internal.Staff;
-import com.fitzhi.data.source.BasicCommitRepository;
-import com.fitzhi.data.source.CommitHistory;
-import com.fitzhi.data.source.CommitRepository;
-import com.fitzhi.data.source.ConnectionSettings;
-import com.fitzhi.data.source.Contributor;
-import com.fitzhi.data.source.importance.AssessorImportance;
-import com.fitzhi.data.source.importance.FileSizeImportance;
-import com.fitzhi.data.source.importance.ImportanceCriteria;
-import com.fitzhi.exception.SkillerException;
-import com.fitzhi.source.crawler.EcosystemAnalyzer;
-import com.fitzhi.source.crawler.impl.AbstractScannerDataGenerator;
-import com.google.gson.Gson;
-import com.fitzhi.data.internal.SourceCodeDiffChange;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -243,11 +245,23 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 	@Value("${Sunburst.fillTheHoles}")
 	private boolean fillTheHoles;
 
+	/**
+	 * Spring service in charge of the data chart generation and management.
+	 */
 	@Autowired
 	DataChartHandler dataChartHandler;
 
+	/**
+	 * Spring service in charge of saving the working data on the server filesystem.
+	 */
 	@Autowired
 	DataHandler dataSaver;
+
+	/**
+	 * Service Spring in charge of the generation of the skyline
+	 */
+	@Autowired
+	SkylineProcessor skylineProcessor;
 
 	/**
 	 * Filter in charge to filter some debugging information.<br/>
@@ -807,7 +821,10 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 		 */
 		dataSaver.saveChanges(project, analysis.getChanges());
 
-		/**
+		// We generate & save the skyline history for this project
+		this.generateAndSaveSkyline(project, analysis);
+
+ 		/**
 		 * We finalize & cleanup the content of the collection
 		 */
 		this.finalizeListChanges(project.getLocationRepository() + "/", analysis);
@@ -861,17 +878,6 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 		 * We remove the non relevant directories from the crawler analysis
 		 */
 		this.removeNonRelevantDirectories(project, analysis);
-
-		/**
-		 * We cleanup the pathnames each location (e.g. "src/main/java" is removed)
-		 */
-		
-		// FVI : 
-		// I consider that this cleanupPaths methods is not more necessary.
-		// But I still keep the calling statement because I prefer to be prudent with me.
-		//
-		// analysis.cleanupPaths(projectDashboardCustomizer);
-		//
 		
 		//
 		// Set of unknown contributors who have work on this repository.
@@ -909,6 +915,20 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 		cacheDataHandler.saveRepository(project, repositoryOfCommit);
 
 		return repositoryOfCommit;
+	}
+
+	/**
+	 * This private method is call by [@link #parseRepository(Project)}
+	 * @param project the current project
+	 * @param analysis the given analysis processed on this project 
+	 */
+	private void generateAndSaveSkyline(Project project, RepositoryAnalysis analysis) throws SkillerException {
+		ProjectLayers projectLayers = skylineProcessor.generateProjectLayers(project, analysis.getChanges());
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("The project %s has generated %d layers", project.getName(), projectLayers.getLayers().size()));
+		}
+
+		dataSaver.saveSkylineLayers(project, projectLayers);
 	}
 
 	/**

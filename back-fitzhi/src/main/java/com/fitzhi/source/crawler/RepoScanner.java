@@ -98,7 +98,6 @@ public interface RepoScanner {
 	 */
 	Path createDirectoryAsCloneDestination(Project project, ConnectionSettings settings) throws IOException;
 	
-	
 	/**
 	 * <p>
 	 * <b>Clone</b> or <b>Pull</b> the source code from the remote repository
