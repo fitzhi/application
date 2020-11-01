@@ -151,6 +151,7 @@ public class CrawlerFirstTest {
 	@Test
 	public void testNominalParseRepository() throws IOException, SkillerException, GitAPIException {
 		Project prj = new Project (777, "First test");
+		when(skylineProcessor.generateProjectLayers(any(), any())).thenReturn(new ProjectLayers(prj));
 		projectHandler.addNewProject(prj);
 		prj.setLocationRepository(String.format(DIR_GIT, FIRST_TEST));
 		scanner.parseRepository(prj);
