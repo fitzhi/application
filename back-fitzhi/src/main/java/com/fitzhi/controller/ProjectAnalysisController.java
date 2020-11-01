@@ -18,6 +18,7 @@ import javax.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,11 +30,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fitzhi.bean.ProjectDashboardCustomizer;
 import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.controller.util.ProjectLoader;
 import com.fitzhi.controller.util.ProjectLoader.MyReference;
 import com.fitzhi.data.internal.Library;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.Skyline;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.SkillerException;
 
@@ -72,6 +75,12 @@ public class ProjectAnalysisController {
 	@Autowired
 	StaffHandler staffHandler;
 	
+	/**
+	 * Service in charge of the generation of the rising skyline data.
+	 */
+	@Autowired
+	SkylineProcessor skylineProcessor;
+
 	/**
 	 * Initialization of the controller post-construction.
 	 */
@@ -157,7 +166,8 @@ public class ProjectAnalysisController {
 		 this.projectHandler.saveLibraries(idProject, libraries);
 		} catch (Exception e) {
 			log.error(getStackTrace(e));
-			return new ResponseEntity<> (Boolean.FALSE, 
+			return new ResponseEntity<> (
+					Boolean.FALSE, 
 					new HttpHeaders(), 
 					HttpStatus.BAD_REQUEST);
 		}
@@ -169,9 +179,7 @@ public class ProjectAnalysisController {
 	public ResponseEntity<Boolean> onBoardStaff(@PathVariable int idProject, @PathVariable int idStaff) throws SkillerException {
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format(
-					"POST command on /project/analysis/onboard/%d/%d ", 
-					idProject, idStaff));
+			log.debug(String.format("GET command on /onboard/%d/%d ", idProject, idStaff));
 		}
 		
 		Staff staff = staffHandler.getStaff(idStaff);		
@@ -188,4 +196,24 @@ public class ProjectAnalysisController {
 			 
 		return new ResponseEntity<>(Boolean.TRUE, new HttpHeaders(), HttpStatus.OK);
 	}
+
+	@GetMapping("/skyline")
+	public ResponseEntity<Skyline> skyline() throws SkillerException {
+
+		if (log.isDebugEnabled()) {
+			log.debug("GET command /skykine");
+		}
+
+		Skyline skyline = skylineProcessor.generateSkyline();
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Returning a skykine of %d entries", skyline.getSkyline().size()));
+		}
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType (MediaType.APPLICATION_JSON_UTF8);
+
+		return new ResponseEntity<>(skyline, headers, HttpStatus.OK);
+
+	}
+
 }

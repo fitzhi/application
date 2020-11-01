@@ -29,6 +29,13 @@ public class ProjectBuildingFactory {
      */
     public static ProjectBuilding getInstance(Project project, ProjectLayers layers) {
 
+        // If the layer is empty, return an empty ProjectBuiding
+        if (layers.getLayers().isEmpty()) {
+            ProjectBuilding pb = new ProjectBuilding();
+            pb.setIdProject(project.getId());
+            return pb;
+        }
+
         // The year when the project has started.
         AtomicInteger startingYear = new AtomicInteger();
 
@@ -50,7 +57,10 @@ public class ProjectBuildingFactory {
         });
 
         if (log.isDebugEnabled()) {
-            log.debug(String.format("The project has started week %d in year %d", startingWeekInStartingYear.get(), startingYear.get()));
+            log.debug(String.format(
+                "The project has started week %d in year %d", 
+                startingWeekInStartingYear.get(),
+                startingYear.get()));
         }
         LocalDate starting = LocalDate.of(startingYear.get(), 2, 1)
             .with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, startingWeekInStartingYear.get())
