@@ -1,5 +1,16 @@
 <div class="vertical-nav" id="sidebar">
-    
+ 
+  <button id="skyline" class="btn rounded skyline"
+    [ngClass]="{
+        'btn-outline-success' : isSelected(selection.skyline), 
+        'btn-outline-secondary': !isSelected(selection.skyline)}" 
+        (mouseenter)="popupHelper.mouseEnter(selection.skyline)" (mouseleave)="popupHelper.mouseLeave()"
+        (click)="switchTo(selection.skyline)">
+    <svg class="treeMapButton">
+        <rect x="6" y="6" class="rectSkyline" style="fill:#27A53F" />
+    </svg>
+  </button>
+
     <button id="treeMap" class="btn rounded treeMap"
         [ngClass]="{
             'btn-outline-success' : isSelected(selection.treeMap), 
@@ -186,4 +197,7 @@
 
     </div>
 
+    <div *ngIf="isSelected(selection.skyline) && (projectService.allProjectsIsLoaded$|async)">
+      <fitzhi-skyline></fitzhi-skyline>
+    </div>
 </div>

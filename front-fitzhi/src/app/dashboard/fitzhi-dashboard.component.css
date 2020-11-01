@@ -65,7 +65,7 @@ div.pie-projects {
 }
  
 
-button.lastYearMinimized, button.lastMonthMinimized, button.currentMinimized, button.treeMap {
+button.lastYearMinimized, button.lastMonthMinimized, button.currentMinimized, button.treeMap, button.skyline {
     width: var(--sidebar-button-width);
     height: var(--sidebar-button-height);
     left: 5px;
@@ -94,6 +94,10 @@ button.lastMonthMinimized {
 
 button.currentMinimized {
     bottom: 140px;
+}
+
+button.skyline {
+    bottom: 280px;
 }
 
 button.treeMap {

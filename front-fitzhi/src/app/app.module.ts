@@ -122,6 +122,7 @@ import { PieLegendComponent } from './dashboard/pie-legend/pie-legend.component'
 import { PieDashboardService } from './dashboard/service/pie-dashboard.service';
 import {DynamicPieChartModule} from 'dynamic-pie-chart';
 import { BranchComponent } from './project/project-form/branch/branch.component';
+import { SkylineComponent } from './dashboard/skyline/component/skyline.component';
 
 @NgModule({
 	declarations: [
@@ -190,7 +191,8 @@ import { BranchComponent } from './project/project-form/branch/branch.component'
 		ProjectInactivateComponent,
 		StaffRemoveComponent,
 		PieLegendComponent,
-		BranchComponent
+		BranchComponent,
+		SkylineComponent
 	],
 	entryComponents: [
 		StaffUploadCvComponent,
