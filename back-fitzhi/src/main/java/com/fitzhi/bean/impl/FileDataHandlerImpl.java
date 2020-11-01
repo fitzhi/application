@@ -34,6 +34,7 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
+import com.fitzhi.data.internal.ProjectBuilding.YearWeek;
 import com.fitzhi.data.internal.ProjectFloor;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
@@ -41,7 +42,6 @@ import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceCodeDiffChange;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.data.internal.ProjectBuilding.YearWeek;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.google.gson.Gson;
@@ -630,5 +630,11 @@ public class FileDataHandlerImpl implements DataHandler {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		}
 	}
-	
+
+	@Override
+	public boolean hasSavedSkylineLayers(Project project) {
+		final String filename = generateProjectLayersJsonFilename(project);
+		Path path = rootLocation.resolve(filename);
+		return Files.exists(path);
+	}
 }

@@ -17,15 +17,17 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.fitzhi.bean.DataHandler;
+import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
+import com.fitzhi.data.internal.ProjectBuilding.YearWeek;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
+import com.fitzhi.data.internal.Skyline;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.data.internal.ProjectBuilding.YearWeek;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.fitzhi.source.crawler.git.SourceFileHistory;
@@ -54,7 +56,10 @@ public class SkylineProcessorImpl implements SkylineProcessor {
 
     @Autowired
     private DataHandler dataHandler;
-   
+
+    @Autowired
+    private ProjectHandler projectHandler;
+
     @Data
     class Layer {
 
@@ -121,7 +126,8 @@ public class SkylineProcessorImpl implements SkylineProcessor {
     @Override
     public ProjectLayers generateProjectLayers(Project project, SourceControlChanges changes) {
 
-        // This temporalField is used to retrieve the week number of the date into the year
+        // This temporalField is used to retrieve the week number of the date into the
+        // year
         final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
 
         final Function<SourceChange, Layer> layerIdentifier = (SourceChange sourceChange) -> {
@@ -166,7 +172,8 @@ public class SkylineProcessorImpl implements SkylineProcessor {
             log.debug(String.format("the building has %d floors", building.getBuilding().size()));
         }
 
-        // This temporalField is used to retrieve the week number of the date into the year
+        // This temporalField is used to retrieve the week number of the date into the
+        // year
         final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
 
         layers.getLayers().stream().forEach(layer -> {
@@ -175,18 +182,15 @@ public class SkylineProcessorImpl implements SkylineProcessor {
             } else {
                 Staff staff = staffHandler.getStaff(layer.getIdStaff());
                 if (staff == null) {
-                    throw new RuntimeException(String.format("Identifier %d is not found in the staff members", layer.getIdStaff()));
+                    throw new RuntimeException(
+                            String.format("Identifier %d is not found in the staff members", layer.getIdStaff()));
                 }
                 if (staff.isActive()) {
-                    building.addActiveOrInactiveLines(
-                        layer.getLines(), 
-                        layer.getYear(), layer.getWeek(), 
-                        Integer.MAX_VALUE, Integer.MAX_VALUE);
+                    building.addActiveOrInactiveLines(layer.getLines(), layer.getYear(), layer.getWeek(),
+                            Integer.MAX_VALUE, Integer.MAX_VALUE);
                 } else {
-                    building.addActiveOrInactiveLines(
-                        layer.getLines(), 
-                        layer.getYear(), layer.getWeek(), 
-                        staff.getDateInactive().getYear(), staff.getDateInactive().get(woy));
+                    building.addActiveOrInactiveLines(layer.getLines(), layer.getYear(), layer.getWeek(),
+                            staff.getDateInactive().getYear(), staff.getDateInactive().get(woy));
                 }
             }
         });
@@ -196,10 +200,15 @@ public class SkylineProcessorImpl implements SkylineProcessor {
     @Override
     public ProjectBuilding generateProjectBuilding(Project project) throws SkillerException {
 
+        // If no skyline have been already saved, we return an empty building.
+        if (!dataHandler.hasSavedSkylineLayers(project)) {
+            return new ProjectBuilding();
+        }
+
         ProjectLayers layers = dataHandler.loadSkylineLayers(project);
         if (log.isDebugEnabled()) {
-            log.debug (String.format("Loading %d layers for the project %s", 
-                layers.getLayers().size(), project.getName()));
+            log.debug(String.format("Loading %d layers for the project %s", layers.getLayers().size(),
+                    project.getName()));
         }
 
         return generateProjectBuilding(project, layers);
@@ -210,14 +219,12 @@ public class SkylineProcessorImpl implements SkylineProcessor {
 
         final YearWeek latestWeek = projectLayers.LatestWeek();
         if (log.isDebugEnabled()) {
-            log.debug(String.format(
-                "Last week for project %s : %d/%d", 
-                projectLayers.getProject().getName(),
-                latestWeek.getWeek(),
-                latestWeek.getYear()));
+            log.debug(String.format("Last week for project %s : %d/%d", projectLayers.getProject().getName(),
+                    latestWeek.getWeek(), latestWeek.getYear()));
         }
 
-        // This temporalField is used to retrieve the week number of the date into the year.
+        // This temporalField is used to retrieve the week number of the date into the
+        // year.
         final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
 
         final List<ProjectLayer> latestLayers = projectLayers.filterOnWeek(latestWeek);
@@ -225,26 +232,43 @@ public class SkylineProcessorImpl implements SkylineProcessor {
         calendar.set(Calendar.YEAR, latestWeek.getYear());
         calendar.set(Calendar.WEEK_OF_YEAR, latestWeek.getWeek());
         LocalDate date = calendar.getTime().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-        date = date.with(TemporalAdjusters.next(DayOfWeek.THURSDAY));        
+        date = date.with(TemporalAdjusters.next(DayOfWeek.THURSDAY));
         date = date.plusDays(7);
-        
+
         final LocalDate dateCurrentWeek = LocalDate.now();
         while (date.isBefore(dateCurrentWeek) || date.equals(dateCurrentWeek)) {
             for (ProjectLayer layer : latestLayers) {
                 final int year = date.getYear();
                 final int week = date.get(woy);
-                projectLayers.getLayers().add(new ProjectLayer(layer.getIdProject(), year, week, 0, layer.getIdStaff()));
+                projectLayers.getLayers()
+                        .add(new ProjectLayer(layer.getIdProject(), year, week, 0, layer.getIdStaff()));
                 if (log.isDebugEnabled()) {
                     log.debug(String.format(
-                        "Adding an empty activity for the staff id %d in the project %s for week %d/%d", 
-                        layer.getIdStaff(),
-                        projectLayers.getProject().getName(),
-                        week,
-                        year));
+                            "Adding an empty activity for the staff id %d in the project %s for week %d/%d",
+                            layer.getIdStaff(), projectLayers.getProject().getName(), week, year));
                 }
             }
             date = date.plusDays(7);
         }
     }
 
+    @Override
+    public Skyline generateSkyline() throws SkillerException {
+
+        List<Project> projects = projectHandler.getProjects().values().stream().filter(Project::isActive).collect(Collectors.toList());
+        return generateSkyline(projects);
+     }
+
+    @Override
+    public Skyline generateSkyline(List<Project> projects) throws SkillerException  {
+        final Skyline skyline = new Skyline();
+
+        for (Project project : projects) {
+            if (dataHandler.hasSavedSkylineLayers(project)) {
+                ProjectBuilding pb = generateProjectBuilding(project);
+                skyline.addBuilding(pb);
+            }
+        }
+        return skyline;
+    }    
 }

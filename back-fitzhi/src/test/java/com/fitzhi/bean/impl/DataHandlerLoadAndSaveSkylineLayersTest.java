@@ -50,6 +50,12 @@ public class DataHandlerLoadAndSaveSkylineLayersTest {
     }
 
     @Test
+    public void testHasSavedSkylineLayers() throws SkillerException {
+        boolean exist = dataHandler.hasSavedSkylineLayers(new Project(1789, "Revolution"));
+        Assert.assertFalse("dataHandler.hasSavedSkylineLayers returns FALSE for new project", exist);
+    }
+
+    @Test
     public void testSavingSkylineLayers() throws SkillerException {
 
         List<ProjectLayer> layers = new ArrayList<>(); 
@@ -59,6 +65,10 @@ public class DataHandlerLoadAndSaveSkylineLayersTest {
         layers.add(new ProjectLayer(1214, 2020, 20, 30, 2));
         layers.add(new ProjectLayer(1214, 2020, 21, 44, 1));        
         dataHandler.saveSkylineLayers(projectHandler.get(1214), new ProjectLayers(projectHandler.get(1214), layers));
+
+        Assert.assertTrue(
+                "dataHandler.hasSavedSkylineLayers returns TRUE for saved project", 
+                dataHandler.hasSavedSkylineLayers(projectHandler.get(1214)));
 
         ProjectLayers pl = dataHandler.loadSkylineLayers(projectHandler.get(1214));
         Assert.assertEquals(3, pl.getLayers().size());

@@ -7,6 +7,7 @@ import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
+import com.fitzhi.data.internal.Skyline;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.exception.SkillerException;
 
@@ -68,4 +69,26 @@ public interface SkylineProcessor {
 	 */
 	ProjectBuilding generateProjectBuilding(Project project, ProjectLayers layers);
 
+	/**
+	 * <p>
+	 * Generate and return the skyline corresponding to the whole array of declared projects inside Fitzhi.
+	 * </p>
+	 * <p>
+	 * <em>Only the <strong>active</strong> projects are included.</em>
+	 * </p>
+	 * @param projects active projects declared in the application
+	 * @return the restulting skyline
+	 * @throws SkillerException thrown if any exception occurs.
+	 */
+	Skyline generateSkyline() throws SkillerException;
+	
+	/**
+	 * <p>
+	 * Generate and return the skyline corresponding to the given array of projects.
+	 * </p>
+	 * @param projects the list of projects to include in the skyline
+	 * @return the resulting skyline
+	 * @throws SkillerException thrown if any exception occurs.
+	 */
+	Skyline generateSkyline(List<Project> projects) throws SkillerException;
 }
