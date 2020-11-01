@@ -77,7 +77,6 @@ public class ProjectAnalysisControllerSkyline2Test {
 	public void testCallSkyline() throws Exception {
 
 		Skyline skyline = new Skyline();
-		final Project project = new Project(1805, "Austerlitz");
 		skyline.getSkyline().add(new ProjectFloor(1805, 2020, 11, 0, 0));
 
 		when(skylineProcessor.generateSkyline()).thenReturn(skyline);
