@@ -425,6 +425,10 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			});
 		}
 
+		if (!document.getElementById('chart')) {
+			console.error('chart is not present');
+		}
+
 		this.myChart.data(response.sunburstData)
 			.width(500)
 			.height(500)
