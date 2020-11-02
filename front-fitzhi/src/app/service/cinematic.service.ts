@@ -16,7 +16,7 @@ export class CinematicService {
 	public currentActiveForm$ = new BehaviorSubject<Form>(new Form(Constants.WELCOME, 'Welcome'));
 
 	/**
-	  * Current collaborator's identifier previewed on the form. 
+	  * Current collaborator's identifier previewed on the form.
 	  */
 	public emitActualCollaboratorDisplay = new Subject<number>();
 
