@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { ControlledRisingSkylineService } from 'controlled-rising-skyline';
+import { Building } from 'rising-skyline';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'fitzhi-skyline',
@@ -7,9 +10,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SkylineComponent implements OnInit {
 
-  constructor() { }
+  public risingSkylineHistory$ = new BehaviorSubject<Building[]>([]);
+  
+  constructor(private controlledRisingSkylineService:  ControlledRisingSkylineService) { }
 
   ngOnInit(): void {
+    this.controlledRisingSkylineService.randomSkylineHistory(this.risingSkylineHistory$);
   }
 
 }
