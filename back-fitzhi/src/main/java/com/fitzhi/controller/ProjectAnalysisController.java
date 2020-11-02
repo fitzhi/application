@@ -197,23 +197,4 @@ public class ProjectAnalysisController {
 		return new ResponseEntity<>(Boolean.TRUE, new HttpHeaders(), HttpStatus.OK);
 	}
 
-	@GetMapping("/skyline")
-	public ResponseEntity<Skyline> skyline() throws SkillerException {
-
-		if (log.isDebugEnabled()) {
-			log.debug("GET command /skykine");
-		}
-
-		Skyline skyline = skylineProcessor.generateSkyline();
-		if (log.isDebugEnabled()) {
-			log.debug(String.format("Returning a skykine of %d entries", skyline.getSkyline().size()));
-		}
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType (MediaType.APPLICATION_JSON_UTF8);
-
-		return new ResponseEntity<>(skyline, headers, HttpStatus.OK);
-
-	}
-
 }

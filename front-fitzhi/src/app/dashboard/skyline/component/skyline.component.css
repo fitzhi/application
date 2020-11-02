@@ -1,5 +1,4 @@
-#hostSkyline {
-    width: 1200px;
-    height: fit-content;
-    margin: 10px auto;
+#host-controlled-rising-skyline {
+    margin: 10px auto; 
+    width: fit-content;
 }
