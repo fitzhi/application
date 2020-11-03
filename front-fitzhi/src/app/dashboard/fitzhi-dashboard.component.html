@@ -196,8 +196,7 @@
         </div>
 
     </div>
-
-    <div *ngIf="isSelected(selection.skyline) && (projectService.allProjectsIsLoaded$|async)">
+    <div id="container-skyline" *ngIf="isSelected(selection.skyline) && (skylineService.skylineLoaded$|async) ">
       <app-skyline></app-skyline>
     </div>
 </div>

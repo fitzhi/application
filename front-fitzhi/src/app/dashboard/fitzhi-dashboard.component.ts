@@ -5,6 +5,7 @@ import { ProjectService } from 'src/app/service/project.service';
 import { Constants } from 'src/app/constants';
 import { selection } from './selection';
 import { FitzhiDashboardPopupHelper } from './fitzhi-dashboard-popup-helper';
+import { SkylineService } from './skyline/service/skyline.service';
 
 @Component({
 	selector: 'app-fitzhi-dashboard',
@@ -40,6 +41,7 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 
 	constructor(
 		public projectService: ProjectService,
+		public skylineService: SkylineService,
 		public pieDashboardService: PieDashboardService) {
 			super();
 	}

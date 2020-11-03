@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Skyline } from 'src/app/data/Skyline';
 import { traceOn } from 'src/app/global';
@@ -13,6 +14,10 @@ const httpOptions = {
 })
 export class SkylineService {
 
+	/**
+	 * Ths skyline is loaded.
+	 */
+	public skylineLoaded$ = new BehaviorSubject<boolean>(false);
 
 	constructor(private httpClient: HttpClient) { }
 
