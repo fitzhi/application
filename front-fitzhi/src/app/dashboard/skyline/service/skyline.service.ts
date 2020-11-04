@@ -1,8 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { take } from 'rxjs/operators';
-import { Skyline } from 'src/app/data/Skyline';
+import { Building } from 'rising-skyline';
+import { BehaviorSubject, Observable, of } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
+import { Skyline } from 'src/app/data/skyline';
 import { traceOn } from 'src/app/global';
 
 const httpOptions = {
@@ -19,18 +20,25 @@ export class SkylineService {
 	 */
 	public skylineLoaded$ = new BehaviorSubject<boolean>(false);
 
+	private skyline$ = new  BehaviorSubject<Building[]>([]);
+
 	constructor(private httpClient: HttpClient) { }
 
-	loadSkykine() {
-		return this.httpClient.get<Skyline>(localStorage.getItem('backendUrl') + '/api/skyline', httpOptions)
-			.pipe(take(1))
-			.subscribe({
-				next: skyline => {
+	/**
+	 * Load the skyline from the Fitzhì backend.
+	 * @returns an observable of buildings
+	 */
+	public loadSkykine$(): Observable<Building[]> {
+		return this.httpClient
+			.get<Skyline>(localStorage.getItem('backendUrl') + '/api/skyline', httpOptions)
+			.pipe(
+				take(1),
+				switchMap( skyline => {
 					if (traceOn()) {
-						console.log ('Receibing skykine', skyline);
+						console.log ('Receiving skykine', skyline);
 					}
-				}
-			});
+					return this.skyline$;
+				}));
 	}
 
 }

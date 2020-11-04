@@ -1,4 +1,5 @@
 import { DatePipe } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SkylineComponent } from './skyline.component';
@@ -10,7 +11,8 @@ describe('SkylineComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ SkylineComponent ],
-			providers: [DatePipe]
+			providers: [DatePipe],
+			imports: [HttpClientTestingModule]
 		})
 		.compileComponents();
 	}));

@@ -134,7 +134,7 @@
 
 <div class="mainDashboard page-content"> 
 
-    <div class="treemap" *ngIf="(projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMap))">
+    <div id="container-treemap" *ngIf="(projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMap))">
         <app-treemap></app-treemap>
     </div>
     

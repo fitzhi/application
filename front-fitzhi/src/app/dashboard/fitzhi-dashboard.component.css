@@ -140,7 +140,7 @@ i.camera {
     transition: all 0.4s;
 }
 
-div.treemap {
+#container-treemap {
     margin: auto;
     width: 600px;
     height: 400px;
