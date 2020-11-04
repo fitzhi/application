@@ -177,13 +177,13 @@ public class SkylineProcessorImpl implements SkylineProcessor {
         final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
 
         layers.getLayers().stream().forEach(layer -> {
-            if (layer.getIdStaff() == -1) {
+            if (layer.getIdStaff() <= 0) {
                 building.addInactiveLines(layer.getLines(), layer.getYear(), layer.getWeek());
             } else {
                 Staff staff = staffHandler.getStaff(layer.getIdStaff());
                 if (staff == null) {
                     throw new RuntimeException(
-                            String.format("Identifier %d is not found in the staff members", layer.getIdStaff()));
+                            String.format("Identifier %d is not found in the staff members, but present in Project %s", layer.getIdStaff(), project.getName()));
                 }
                 if (staff.isActive()) {
                     building.addActiveOrInactiveLines(layer.getLines(), layer.getYear(), layer.getWeek(),
