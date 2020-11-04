@@ -6,7 +6,7 @@ import { Constants } from 'src/app/constants';
 import { selection } from './selection';
 import { FitzhiDashboardPopupHelper } from './fitzhi-dashboard-popup-helper';
 import { SkylineService } from './skyline/service/skyline.service';
-import { Building } from 'rising-skyline';
+import { Building, SkylineComponent } from 'rising-skyline';
 
 @Component({
 	selector: 'app-fitzhi-dashboard',
@@ -61,7 +61,7 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 			}));
 
 		this.subscriptions.add(
-			this.skylineService.loadSkykine$().subscribe({
+			this.skylineService.loadSkyline$().subscribe({
 			next: skyline => {
 				const building: Building[] = [];
 				this.skylineService.skylineLoaded$.next(true);

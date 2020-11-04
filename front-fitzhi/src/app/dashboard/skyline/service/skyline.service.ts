@@ -28,7 +28,7 @@ export class SkylineService {
 	 * Load the skyline from the Fitzhì backend.
 	 * @returns an observable of buildings
 	 */
-	public loadSkykine$(): Observable<Building[]> {
+	public loadSkyline$(): Observable<Building[]> {
 		return this.httpClient
 			.get<Skyline>(localStorage.getItem('backendUrl') + '/api/skyline', httpOptions)
 			.pipe(
@@ -37,6 +37,7 @@ export class SkylineService {
 					if (traceOn()) {
 						console.log ('Receiving skykine', skyline);
 					}
+					console.log (skyline.floors[0]);
 					return this.skyline$;
 				}));
 	}
