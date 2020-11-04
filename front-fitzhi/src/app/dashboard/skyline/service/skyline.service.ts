@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Building } from 'rising-skyline';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
-import { Skyline } from 'src/app/data/skyline';
+import { SkylineAnimation } from 'src/app/data/skyline-animation';
 import { traceOn } from 'src/app/global';
 
 const httpOptions = {
@@ -30,7 +30,7 @@ export class SkylineService {
 	 */
 	public loadSkyline$(): Observable<Building[]> {
 		return this.httpClient
-			.get<Skyline>(localStorage.getItem('backendUrl') + '/api/skyline', httpOptions)
+			.get<SkylineAnimation>(localStorage.getItem('backendUrl') + '/api/skyline', httpOptions)
 			.pipe(
 				take(1),
 				switchMap( skyline => {

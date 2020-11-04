@@ -1,5 +1,5 @@
 import { ProjectFloor } from './project-floor';
 
-export class Skyline {
+export class SkylineAnimation {
     public floors: ProjectFloor[];   
 }
