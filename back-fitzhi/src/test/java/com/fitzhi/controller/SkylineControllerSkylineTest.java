@@ -79,7 +79,7 @@ public class SkylineControllerSkylineTest {
 			.andReturn();
 		Skyline skyline = gson.fromJson(result.getResponse().getContentAsString(), Skyline.class);
 		Assert.assertFalse(skyline.isEmpty());
-		Set<Integer> projectIdentifiers = skyline.getSkyline()
+		Set<Integer> projectIdentifiers = skyline.getFloors()
 			.stream()
 			.map(ProjectFloor::getIdProject)
 			.distinct()

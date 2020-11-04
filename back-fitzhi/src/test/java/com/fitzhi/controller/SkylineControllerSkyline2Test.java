@@ -77,7 +77,7 @@ public class SkylineControllerSkyline2Test {
 	public void testCallSkyline() throws Exception {
 
 		Skyline skyline = new Skyline();
-		skyline.getSkyline().add(new ProjectFloor(1805, 2020, 11, 0, 0));
+		skyline.getFloors().add(new ProjectFloor(1805, 2020, 11, 0, 0));
 
 		when(skylineProcessor.generateSkyline()).thenReturn(skyline);
 
@@ -88,7 +88,7 @@ public class SkylineControllerSkyline2Test {
 			.contentType("application/json;charset=UTF-8"))
 			.andReturn();
 		skyline = gson.fromJson(result.getResponse().getContentAsString(), Skyline.class);
-		Assert.assertEquals(1, skyline.getSkyline().size());
+		Assert.assertEquals(1, skyline.getFloors().size());
 		
 		Mockito.verify(skylineProcessor, times(1)).generateSkyline();
 	}

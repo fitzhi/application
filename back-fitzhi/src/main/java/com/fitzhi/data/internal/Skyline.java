@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public @Data class Skyline {
 
-    private List<ProjectFloor> skyline = new ArrayList<>();
+    private List<ProjectFloor> floors = new ArrayList<>();
 
     /**
      * Adding the history of a skyline in the rising skyline.
@@ -33,7 +33,7 @@ public @Data class Skyline {
                     building.size(), 
                     projectBuilding.getIdProject()));
             }
-            skyline.addAll(building);
+            floors.addAll(building);
         } 
     }
 
@@ -41,6 +41,6 @@ public @Data class Skyline {
      * @return {@code true} id the skyline is empty, {@code false} otherwise. 
      */
     public boolean isEmpty() {
-        return skyline.isEmpty();
+        return floors.isEmpty();
     }
 }
