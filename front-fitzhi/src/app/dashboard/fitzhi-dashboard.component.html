@@ -196,7 +196,11 @@
         </div>
 
     </div>
+
     <div id="container-skyline" *ngIf="isSelected(selection.skyline) && (skylineService.skylineLoaded$|async) ">
-      <app-skyline></app-skyline>
+      <app-skyline 
+        [width]=skylineDimension.width 
+        [height]=skylineDimension.height>
+      </app-skyline>
     </div>
 </div>

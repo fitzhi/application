@@ -8,12 +8,12 @@ export class ProjectFloor {
     /**
      * The year of this floor.
      */
-    private year: number;
+    public year: number;
 
     /**
      * The week of this floor.
      */
-    private week: number;
+    public week: number;
     
     /**
      * Number of lines developed by ACTIVE developers.

@@ -1,12 +1,12 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { PieDashboardService } from './service/pie-dashboard.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { switchMap, take } from 'rxjs/operators';
 import { BaseComponent } from 'src/app/base/base.component';
-import { ProjectService } from 'src/app/service/project.service';
 import { Constants } from 'src/app/constants';
-import { selection } from './selection';
+import { ProjectService } from 'src/app/service/project.service';
 import { FitzhiDashboardPopupHelper } from './fitzhi-dashboard-popup-helper';
+import { selection } from './selection';
+import { PieDashboardService } from './service/pie-dashboard.service';
 import { SkylineService } from './skyline/service/skyline.service';
-import { Building, SkylineComponent } from 'rising-skyline';
 
 @Component({
 	selector: 'app-fitzhi-dashboard',
@@ -40,6 +40,14 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 
 	public colors = Constants.COLORS;
 
+	/**
+	 * Dimension of the Skyline
+	 */
+	skylineDimension = {
+		width: 1200,
+		height: 370,
+	};
+
 	constructor(
 		public projectService: ProjectService,
 		public skylineService: SkylineService,
@@ -61,11 +69,14 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 			}));
 
 		this.subscriptions.add(
-			this.skylineService.loadSkyline$().subscribe({
-			next: skyline => {
-				const building: Building[] = [];
-				this.skylineService.skylineLoaded$.next(true);
-			}
+			this.skylineService
+				.loadSkyline$(this.skylineDimension.width, this.skylineDimension.height)
+				.pipe(take(1))
+				.subscribe({
+					next: skyline => {
+						this.skylineService.loadSkyline$(this.skylineDimension.width, this.skylineDimension.height)						
+						this.skylineService.skylineLoaded$.next(true);
+				}
 		}));
 
 	}
