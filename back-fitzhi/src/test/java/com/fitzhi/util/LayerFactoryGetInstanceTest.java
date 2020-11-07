@@ -3,6 +3,7 @@ package com.fitzhi.util;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
+FIimport java.util.Locale;
 
 import com.fitzhi.data.internal.Layer;
 import com.fitzhi.source.crawler.git.SourceChange;
@@ -16,6 +17,10 @@ import org.junit.Test;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public class LayerFactoryGetInstanceTest {
+
+    static{
+        Locale.setDefault(Locale.FRANCE);
+    }
 
     Calendar calendar = Calendar.getInstance();
     
