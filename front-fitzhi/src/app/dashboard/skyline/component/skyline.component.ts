@@ -24,7 +24,7 @@ export class SkylineComponent implements OnInit {
 	public risingSkylineHistory$ = new BehaviorSubject<Building[]>([]);
 
 	constructor(
-		private skylineService: SkylineService,
+		public skylineService: SkylineService,
 		private controlledRisingSkylineService:  ControlledRisingSkylineService) { }
 
 	ngOnInit(): void {
