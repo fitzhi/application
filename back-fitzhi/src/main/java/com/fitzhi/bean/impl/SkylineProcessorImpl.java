@@ -20,6 +20,8 @@ import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.LayerFactory;
+import com.fitzhi.data.internal.Layer;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectBuilding.YearWeek;
@@ -36,7 +38,6 @@ import com.fitzhi.util.ProjectBuildingFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -60,87 +61,30 @@ public class SkylineProcessorImpl implements SkylineProcessor {
     @Autowired
     private ProjectHandler projectHandler;
 
-    @Data
-    class Layer {
-
-        /**
-         * The year
-         */
-        private int year;
-        /**
-         * The week
-         */
-        private int week;
-        /**
-         * The idStaff
-         */
-        private int idStaff;
-
-        public Layer(int year, int week, int idStaff) {
-            this.year = year;
-            this.week = week;
-            this.idStaff = idStaff;
-        }
-
-        @Override
-        public int hashCode() {
-            final int prime = 31;
-            int result = 1;
-            result = prime * result + getEnclosingInstance().hashCode();
-            result = prime * result + idStaff;
-            result = prime * result + week;
-            result = prime * result + year;
-            return result;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj)
-                return true;
-            if (obj == null)
-                return false;
-            if (getClass() != obj.getClass())
-                return false;
-            Layer other = (Layer) obj;
-            if (!getEnclosingInstance().equals(other.getEnclosingInstance()))
-                return false;
-            if (idStaff != other.idStaff)
-                return false;
-            if (week != other.week)
-                return false;
-            if (year != other.year)
-                return false;
-            return true;
-        }
-
-        private SkylineProcessorImpl getEnclosingInstance() {
-            return SkylineProcessorImpl.this;
-        }
-
-    }
 
     interface LayerIdentifier {
         Layer processLayer(SourceChange sourceChange);
     }
 
+    
     @Override
     public ProjectLayers generateProjectLayers(Project project, SourceControlChanges changes) {
 
-        // This temporalField is used to retrieve the week number of the date into the
-        // year
-        final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
 
         final Function<SourceChange, Layer> layerIdentifier = (SourceChange sourceChange) -> {
-            return new Layer(sourceChange.getDateCommit().getYear(), sourceChange.getDateCommit().get(woy),
-                    sourceChange.getIdStaff());
+            return LayerFactory.getInstance(sourceChange);
         };
 
         final List<ProjectLayer> layers = new ArrayList<>();
-        changes.getChanges().values().stream().flatMap(hist -> hist.getChanges().stream()).collect(Collectors.toList())
-                .stream().collect(Collectors.groupingBy(layerIdentifier, Collectors.summingInt(SourceChange::lines)))
+        changes.getChanges().values()
+                
+                .stream().flatMap(hist -> hist.getChanges().stream()).collect(Collectors.toList())
+                
+                .stream()
+                .collect(Collectors.groupingBy(layerIdentifier, Collectors.summingInt(SourceChange::lines)))
                 .forEach((layer, lines) -> {
-                    ProjectLayer projectLayer = new ProjectLayer(project.getId(), layer.year, layer.week, lines,
-                            layer.idStaff);
+                    ProjectLayer projectLayer = new ProjectLayer(project.getId(), layer.getYear(), layer.getWeek(), lines,
+                            layer.getIdStaff());
                     layers.add(projectLayer);
                 });
 
