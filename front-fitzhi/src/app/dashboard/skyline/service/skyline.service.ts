@@ -29,7 +29,7 @@ export class SkylineService {
 	/**
 	 * Thes skyline to be drawn.
 	 */
-	private skyline$ = new  BehaviorSubject<Building[]>([]);
+	public skyline$ = new  BehaviorSubject<Building[]>([]);
 
 	constructor(private httpClient: HttpClient) { }
 
