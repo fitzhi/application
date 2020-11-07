@@ -52,8 +52,9 @@ export class SkylineService {
 					}
 					const skylineToDraw = this.generateSkylineToDraw(skyline, width, height);
 					if (traceOn()) {
+						skylineToDraw.sort((a, b) => a.year * 100 + a.week - b.year * 100 - b.week);
 						console.groupCollapsed('Skyline ready to be drawn');
-						console.table(skylineToDraw.sort((a, b) => a.year * 100 + a.week - b.year * 100 - b.week));
+						console.table(skylineToDraw);
 						console.groupEnd();
 					}
 					this.skyline$.next(skylineToDraw);
