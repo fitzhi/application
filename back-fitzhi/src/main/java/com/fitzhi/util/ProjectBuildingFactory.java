@@ -71,10 +71,12 @@ public class ProjectBuildingFactory {
 
         // This temporalField is used to retrieve the week number of the date into the year
         final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
+        // The associated year.
+        final TemporalField yowoy = WeekFields.of(Locale.getDefault()).weekBasedYear();
 
         ProjectBuilding building = new ProjectBuilding();
         for (LocalDate date = starting; date.isBefore(LocalDate.now()); date = date.plusWeeks(1)) {
-            building.initWeek(project.getId(), date.getYear(), date.get(woy));
+            building.initWeek(project.getId(), date.get(yowoy), date.get(woy));
         }
 
         return building;

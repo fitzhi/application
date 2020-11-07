@@ -20,7 +20,6 @@ import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.data.LayerFactory;
 import com.fitzhi.data.internal.Layer;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
@@ -33,6 +32,7 @@ import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.fitzhi.source.crawler.git.SourceFileHistory;
+import com.fitzhi.util.LayerFactory;
 import com.fitzhi.util.ProjectBuildingFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,9 +116,11 @@ public class SkylineProcessorImpl implements SkylineProcessor {
             log.debug(String.format("the building has %d floors", building.getBuilding().size()));
         }
 
-        // This temporalField is used to retrieve the week number of the date into the
-        // year
+        // This temporalField is used to retrieve the week number of the date into the year
         final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
+
+        // This one retrieves the associated year.
+        final TemporalField yowoy = WeekFields.of(Locale.getDefault()).weekBasedYear();
 
         layers.getLayers().stream().forEach(layer -> {
             if (layer.getIdStaff() <= 0) {
@@ -134,7 +136,7 @@ public class SkylineProcessorImpl implements SkylineProcessor {
                             Integer.MAX_VALUE, Integer.MAX_VALUE);
                 } else {
                     building.addActiveOrInactiveLines(layer.getLines(), layer.getYear(), layer.getWeek(),
-                            staff.getDateInactive().getYear(), staff.getDateInactive().get(woy));
+                            staff.getDateInactive().get(yowoy), staff.getDateInactive().get(woy));
                 }
             }
         });
@@ -167,9 +169,10 @@ public class SkylineProcessorImpl implements SkylineProcessor {
                     latestWeek.getWeek(), latestWeek.getYear()));
         }
 
-        // This temporalField is used to retrieve the week number of the date into the
-        // year.
+        // This temporalField is used to retrieve the week number of the date into the year.
         final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
+        // This one retrieves the associated year.
+        final TemporalField yowoy = WeekFields.of(Locale.getDefault()).weekBasedYear();
 
         final List<ProjectLayer> latestLayers = projectLayers.filterOnWeek(latestWeek);
         Calendar calendar = Calendar.getInstance();
@@ -182,7 +185,7 @@ public class SkylineProcessorImpl implements SkylineProcessor {
         final LocalDate dateCurrentWeek = LocalDate.now();
         while (date.isBefore(dateCurrentWeek) || date.equals(dateCurrentWeek)) {
             for (ProjectLayer layer : latestLayers) {
-                final int year = date.getYear();
+                final int year = date.get(yowoy);
                 final int week = date.get(woy);
                 projectLayers.getLayers()
                         .add(new ProjectLayer(layer.getIdProject(), year, week, 0, layer.getIdStaff()));

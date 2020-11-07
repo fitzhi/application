@@ -79,21 +79,38 @@ public @Data class ProjectBuilding {
         this.idProject = idProject;
         building.put(new YearWeek(idProject, year, week), new ProjectFloor(idProject, year, week, linesActiveDevelopers, linesInactiveDevelopers));
     }
-    /**
+
+     /**
+     * <p> null
+     * This method might throw a {@link RuntimeException} if the floor doest not exist.  
+     * </p>
      * <p>
-     * This method might throw a {@link RuntimeException} if the project doest not exist.  
+     * You can use the method {@link #hasFloor(int, int)} to check if the floor exists.
      * </p>
      * @param year the given year
      * @param week the given week
      * @return the floor for the given year and week
      */
-    public ProjectFloor getProjectFloor(int year, int week) {
+    public ProjectFloor getFloor(int year, int week) {
         
         ProjectFloor floor = building.get(yearWeek(year, week));
         if (floor == null) {
             throw new RuntimeException(String.format("Cannot retrieve the floor (%d;%d) in project %d", year, week, idProject));
         }
         return floor;
+    }
+   
+    /**
+     * <p>
+     * This method is checking if a floor exist from the given week..  
+     * </p>
+     * @param year the given year
+     * @param week the given week
+     * @return {@code true} if a floor exists, {@code false} otherwise
+     */
+    public boolean hasFloor(int year, int week) {
+        ProjectFloor floor = building.get(yearWeek(year, week));
+        return (floor != null);
     }
 
     /**
@@ -118,7 +135,7 @@ public @Data class ProjectBuilding {
      * </p>
      * 
      * @param lines the number of lines.
-     * @param startingYear <i>starting year</i> for taking in account this number of lines
+     * @param startingYear <i>starting year</i> for taking  in account this number of lines
      * @param startingWeek <i>starting week</i> for taking in account this number of lines
      */
     public void addInactiveLines(int lines, int startingYear, int startingWeek) {
@@ -134,8 +151,11 @@ public @Data class ProjectBuilding {
         // This temporalField is used to retrieve the week number of the date into the year
         final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
 
+        // The corresponding year
+        final TemporalField yowoy = WeekFields.of(Locale.getDefault()).weekBasedYear();
+
         for (LocalDate date = startingDate; date.isBefore(LocalDate.now()); date = date.plusWeeks(1)) {
-            ProjectFloor floor = getProjectFloor(date.getYear(), date.get(woy));
+            ProjectFloor floor = getFloor(date.get(yowoy), date.get(woy));
             floor.addLinesInactiveDevelopers(lines);
         }
     }
@@ -174,7 +194,7 @@ public @Data class ProjectBuilding {
         final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
 
         for (LocalDate date = startingDate; date.isBefore(LocalDate.now()); date = date.plusWeeks(1)) {
-            ProjectFloor floor = getProjectFloor(date.getYear(), date.get(woy));
+            ProjectFloor floor = getFloor(date.getYear(), date.get(woy));
             if (date.isAfter(endingDate)) {
                 floor.addLinesInactiveDevelopers(lines);
             } else {

@@ -75,19 +75,19 @@ public class SkylineProcessorGenerateProjectBuildingTest {
         ProjectBuilding building = this.skylineProcessor.generateProjectBuilding(project);        
         Assert.assertNotNull(building);
         
-        ProjectFloor floor = building.getProjectFloor(2020, 20);
+        ProjectFloor floor = building.getFloor(2020, 20);
         Assert.assertEquals(10, floor.getLinesActiveDevelopers());
         Assert.assertEquals(0, floor.getLinesInactiveDevelopers());
 
-        floor = building.getProjectFloor(2020, 35);
+        floor = building.getFloor(2020, 35);
         Assert.assertEquals(10, floor.getLinesActiveDevelopers());
         Assert.assertEquals(0, floor.getLinesInactiveDevelopers());
 
-        floor = building.getProjectFloor(2020, 36);
+        floor = building.getFloor(2020, 36);
         Assert.assertEquals(0, floor.getLinesActiveDevelopers());
         Assert.assertEquals(10, floor.getLinesInactiveDevelopers());
 
-        floor = building.getProjectFloor(2020, 43);
+        floor = building.getFloor(2020, 43);
         Assert.assertEquals(0, floor.getLinesActiveDevelopers());
         Assert.assertEquals(10, floor.getLinesInactiveDevelopers());
 
@@ -109,19 +109,19 @@ public class SkylineProcessorGenerateProjectBuildingTest {
         Project project = new Project(1515, "Marignan !");
         ProjectBuilding building = this.skylineProcessor.generateProjectBuilding(project);        
         Assert.assertNotNull(building);
-        ProjectFloor floor = building.getProjectFloor(2020, 20);
+        ProjectFloor floor = building.getFloor(2020, 20);
         Assert.assertEquals(40, floor.getLinesActiveDevelopers());
         Assert.assertEquals(0, floor.getLinesInactiveDevelopers());
 
-        floor = building.getProjectFloor(2020, 25);
+        floor = building.getFloor(2020, 25);
         Assert.assertEquals(84, floor.getLinesActiveDevelopers());
         Assert.assertEquals(0, floor.getLinesInactiveDevelopers());
 
-        floor = building.getProjectFloor(2020, 36);
+        floor = building.getFloor(2020, 36);
         Assert.assertEquals(54, floor.getLinesActiveDevelopers());
         Assert.assertEquals(30, floor.getLinesInactiveDevelopers());
 
-        floor = building.getProjectFloor(2020, 43);
+        floor = building.getFloor(2020, 43);
         Assert.assertEquals(54, floor.getLinesActiveDevelopers());
         Assert.assertEquals(30, floor.getLinesInactiveDevelopers());
 
@@ -136,19 +136,19 @@ public class SkylineProcessorGenerateProjectBuildingTest {
         Project project = new Project(1515, "Marignan !");
         ProjectBuilding building = this.skylineProcessor.generateProjectBuilding(project);        
         Assert.assertNotNull(building);
-        ProjectFloor floor = building.getProjectFloor(2020, 20);
+        ProjectFloor floor = building.getFloor(2020, 20);
         Assert.assertEquals(40, floor.getLinesActiveDevelopers());
         Assert.assertEquals(0, floor.getLinesInactiveDevelopers());
 
-        floor = building.getProjectFloor(2020, 24);
+        floor = building.getFloor(2020, 24);
         Assert.assertEquals(40, floor.getLinesActiveDevelopers());
         Assert.assertEquals(0, floor.getLinesInactiveDevelopers());
 
-        floor = building.getProjectFloor(2020, 25);
+        floor = building.getFloor(2020, 25);
         Assert.assertEquals(84, floor.getLinesActiveDevelopers());
         Assert.assertEquals(0, floor.getLinesInactiveDevelopers());
 
-        floor = building.getProjectFloor(2020, 43);
+        floor = building.getFloor(2020, 43);
         Assert.assertEquals(84, floor.getLinesActiveDevelopers());
         Assert.assertEquals(0, floor.getLinesInactiveDevelopers());
 
@@ -173,31 +173,31 @@ public class SkylineProcessorGenerateProjectBuildingTest {
         ProjectBuilding building = this.skylineProcessor.generateProjectBuilding(project);        
         Assert.assertNotNull(building);
         
-        ProjectFloor floor = building.getProjectFloor(2020, 20);
+        ProjectFloor floor = building.getFloor(2020, 20);
         Assert.assertEquals(40, floor.getLinesActiveDevelopers());
         Assert.assertEquals(0, floor.getLinesInactiveDevelopers());
 
-        floor = building.getProjectFloor(2020, 25);
+        floor = building.getFloor(2020, 25);
         Assert.assertEquals(84, floor.getLinesActiveDevelopers());
         Assert.assertEquals(0, floor.getLinesInactiveDevelopers());
 
-        floor = building.getProjectFloor(2020, 29);
+        floor = building.getFloor(2020, 29);
         Assert.assertEquals(84, floor.getLinesActiveDevelopers());
         Assert.assertEquals(0, floor.getLinesInactiveDevelopers());
 
-        floor = building.getProjectFloor(2020, 30);
+        floor = building.getFloor(2020, 30);
         Assert.assertEquals(30, floor.getLinesActiveDevelopers());
         Assert.assertEquals(54, floor.getLinesInactiveDevelopers());
 
-        floor = building.getProjectFloor(2020, 33);
+        floor = building.getFloor(2020, 33);
         Assert.assertEquals(30, floor.getLinesActiveDevelopers());
         Assert.assertEquals(54, floor.getLinesInactiveDevelopers());
 
-        floor = building.getProjectFloor(2020, 34);
+        floor = building.getFloor(2020, 34);
         Assert.assertEquals(0, floor.getLinesActiveDevelopers());
         Assert.assertEquals(84, floor.getLinesInactiveDevelopers());
 
-        floor = building.getProjectFloor(2020, 43);
+        floor = building.getFloor(2020, 43);
         Assert.assertEquals(0, floor.getLinesActiveDevelopers());
         Assert.assertEquals(84, floor.getLinesInactiveDevelopers());
 

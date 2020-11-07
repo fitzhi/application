@@ -1,10 +1,10 @@
-package com.fitzhi.data.internal;
+package com.fitzhi.util;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Calendar;
 
-import com.fitzhi.data.LayerFactory;
+import com.fitzhi.data.internal.Layer;
 import com.fitzhi.source.crawler.git.SourceChange;
 
 import org.junit.Assert;
