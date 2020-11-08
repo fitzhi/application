@@ -6,6 +6,7 @@ import { switchMap, take } from 'rxjs/operators';
 import { ProjectFloor } from 'src/app/data/project-floor';
 import { SkylineAnimation } from 'src/app/data/skyline-animation';
 import { traceOn } from 'src/app/global';
+import { ProjectService } from 'src/app/service/project.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -31,7 +32,9 @@ export class SkylineService {
 	 */
 	public skyline$ = new  BehaviorSubject<Building[]>([]);
 
-	constructor(private httpClient: HttpClient) { }
+	constructor(
+		private httpClient: HttpClient,
+		private projectService: ProjectService) { }
 
 	/**
 	 * Load the skyline from the Fitzhì backend.
@@ -70,13 +73,16 @@ export class SkylineService {
 	 */
 	public generateSkylineToDraw(skyline: SkylineAnimation, width: number, height: number): Building[] {
 		const maxNumberOfLines = this.evaluateMaxNumberOfLines(skyline.floors);
-		const heightOneLine = (height * 0.8) / maxNumberOfLines;
+		const heightOneLine = height / maxNumberOfLines;
 		if (traceOn()) {
+			console.log ('The height of the skykine container is', height);
 			console.log ('The height of one line is', heightOneLine);
 		}
 		let i = 0;
 		const skylineToDraw = [];
+
 		skyline.floors.forEach(element => {
+			const project = this.projectService.getProjectById(element.idProject);
 			skylineToDraw.push(
 				new Building(
 					element.idProject,
@@ -84,8 +90,8 @@ export class SkylineService {
 					element.week,
 					this.defaultWidth,
 					Math.floor (heightOneLine * (element.linesActiveDevelopers + element.linesInactiveDevelopers)),
-					Math.floor(10 * (element.linesActiveDevelopers / (element.linesActiveDevelopers + element.linesInactiveDevelopers))),
-					'title ' + i
+					100 - Math.floor(100 * element.linesActiveDevelopers / (element.linesActiveDevelopers + element.linesInactiveDevelopers)),
+					(project) ? project.name : 'undefined'
 				)
 			)
 		});

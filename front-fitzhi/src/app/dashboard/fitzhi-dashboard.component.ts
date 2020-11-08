@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ControlledRisingSkylineService } from 'controlled-rising-skyline';
 import { switchMap, take } from 'rxjs/operators';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
@@ -41,6 +42,11 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	public colors = Constants.COLORS;
 
 	/**
+	 * Height of the control panel below the skyline
+	 */
+	private heughtControlPanel = 50;
+
+	/**
 	 * Dimension of the Skyline
 	 */
 	skylineDimension = {
@@ -51,6 +57,7 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	constructor(
 		public projectService: ProjectService,
 		public skylineService: SkylineService,
+		public controlledRisingSkylineService: ControlledRisingSkylineService,
 		public pieDashboardService: PieDashboardService) {
 			super();
 	}
@@ -74,11 +81,17 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 				.pipe(take(1))
 				.subscribe({
 					next: skyline => {
-						this.skylineService.loadSkyline$(this.skylineDimension.width, this.skylineDimension.height)						
+						// this.controlledRisingSkylineService.randomSkylineHistory(this.skylineService.skyline$);
+						this.skylineService.loadSkyline$(this.skylineDimension.width, this.skylineDimension.height - this.heughtControlPanel)						
 						this.skylineService.skylineLoaded$.next(true);
 				}
 		}));
 
+		this.skylineService.skyline$.subscribe({
+			next: skyline => {
+				console.table(skyline);
+			}
+		})
 	}
 
 	/**
