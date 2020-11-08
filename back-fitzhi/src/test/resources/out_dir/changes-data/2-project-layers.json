@@ -1,0 +1,758 @@
+[
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 23,
+        "lines": 967,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 24,
+        "lines": 123,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 25,
+        "lines": 56,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 26,
+        "lines": 213,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 28,
+        "lines": 122,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 29,
+        "lines": 269,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 30,
+        "lines": 603,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 31,
+        "lines": 919,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 32,
+        "lines": 792,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 33,
+        "lines": 135,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 34,
+        "lines": 75,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 35,
+        "lines": 501,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 36,
+        "lines": 1126,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 37,
+        "lines": 563,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 38,
+        "lines": 266,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 39,
+        "lines": 702,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 40,
+        "lines": 1210,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 41,
+        "lines": 315,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 42,
+        "lines": 1036,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 46,
+        "lines": 94,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 49,
+        "lines": 566,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 50,
+        "lines": 9373,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2018,
+        "week": 52,
+        "lines": 1093,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 1,
+        "lines": 1394,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 2,
+        "lines": 2184,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 3,
+        "lines": 775,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 4,
+        "lines": 822,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 5,
+        "lines": 1645,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 6,
+        "lines": 1228,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 7,
+        "lines": 874,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 8,
+        "lines": 847,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 10,
+        "lines": 380,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 11,
+        "lines": 573,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 12,
+        "lines": 334,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 13,
+        "lines": 55,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 14,
+        "lines": 1343,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 15,
+        "lines": 619,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 16,
+        "lines": 1144,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 17,
+        "lines": 739,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 18,
+        "lines": 660,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 23,
+        "lines": 2196,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 24,
+        "lines": 790,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 25,
+        "lines": 1784,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 26,
+        "lines": 686,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 27,
+        "lines": 278,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 29,
+        "lines": 990,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 30,
+        "lines": 102,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 31,
+        "lines": 1255,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 32,
+        "lines": 480,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 33,
+        "lines": 867,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 34,
+        "lines": 3634,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 35,
+        "lines": 311,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 36,
+        "lines": 1562,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 37,
+        "lines": -322,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 38,
+        "lines": 1342,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 39,
+        "lines": 845,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 40,
+        "lines": 358,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 41,
+        "lines": 257,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 42,
+        "lines": 388,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 43,
+        "lines": 1125,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 44,
+        "lines": 550,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 45,
+        "lines": 470,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 46,
+        "lines": 1807,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 47,
+        "lines": 821,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 48,
+        "lines": 1739,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 49,
+        "lines": 2281,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 50,
+        "lines": 705,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 51,
+        "lines": 1527,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2019,
+        "week": 52,
+        "lines": 1535,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 1,
+        "lines": 1532,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 2,
+        "lines": 521,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 3,
+        "lines": 1328,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 4,
+        "lines": 18,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 5,
+        "lines": 58,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 6,
+        "lines": 539,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 7,
+        "lines": 167,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 8,
+        "lines": 133,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 9,
+        "lines": 780,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 11,
+        "lines": 1110,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 13,
+        "lines": 1267,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 14,
+        "lines": 893,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 15,
+        "lines": 1184,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 16,
+        "lines": 340,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 17,
+        "lines": 625,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 18,
+        "lines": 249,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 19,
+        "lines": 157,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 20,
+        "lines": 292,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 21,
+        "lines": 57,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 22,
+        "lines": 1213,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 23,
+        "lines": 323,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 24,
+        "lines": 684,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 25,
+        "lines": 418,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 26,
+        "lines": 278,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 27,
+        "lines": 4,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 28,
+        "lines": -33,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 29,
+        "lines": 51,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 30,
+        "lines": 169,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 31,
+        "lines": 358,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 33,
+        "lines": 503,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 34,
+        "lines": 884,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 35,
+        "lines": 365,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 36,
+        "lines": 586,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 37,
+        "lines": 255,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 38,
+        "lines": 1484,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 39,
+        "lines": 461,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 43,
+        "lines": 272,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 44,
+        "lines": 787,
+        "idStaff": 0
+    },
+    {
+        "idProject": 2,
+        "year": 2020,
+        "week": 45,
+        "lines": 440,
+        "idStaff": 0
+    }
+]

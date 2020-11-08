@@ -4,7 +4,8 @@
 	{ "id": 2, "title": "Data organization & design" },
 	{ "id": 3, "title": "Build Process" },
 	{ "id": 4, "title": "Virtualization" },
-	{ "id": 5, "title": "Performance behavior" },
-	{ "id": 6, "title": "General Documentation" },
-	{ "id": 7, "title": "Testability" }
+	{ "id": 5, "title": "Performance" },
+	{ "id": 6, "title": "Security" },
+	{ "id": 7, "title": "General Documentation" },
+	{ "id": 8, "title": "Testability" }
 ]
