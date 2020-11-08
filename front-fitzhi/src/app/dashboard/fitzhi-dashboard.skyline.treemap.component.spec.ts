@@ -25,6 +25,7 @@ import { PieDashboardService } from './service/pie-dashboard.service';
 import { TreemapService } from './treemap/service/treemap.service';
 import { DashboardService } from '../service/dashboard/dashboard.service';
 import { DynamicPieChartModule } from 'dynamic-pie-chart';
+import { DatePipe } from '@angular/common';
 
 
 describe('FitzhiDashboardComponent initialization', () => {
@@ -57,7 +58,7 @@ describe('FitzhiDashboardComponent initialization', () => {
 				TreemapChartComponent, TreemapHeaderComponent, TreemapChartComponent, TreemapComponent ],
 			imports: [MatTableModule, MatSortModule, MatPaginatorModule, HttpClientTestingModule, MatDialogModule,
 				NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule, DynamicPieChartModule],
-			providers: [ReferentialService, CinematicService, SkylineService]
+			providers: [ReferentialService, CinematicService, SkylineService, DatePipe]
 
 		})
 		.compileComponents();
