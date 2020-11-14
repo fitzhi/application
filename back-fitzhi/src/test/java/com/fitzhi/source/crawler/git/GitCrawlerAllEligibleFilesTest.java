@@ -51,9 +51,10 @@ public class GitCrawlerAllEligibleFilesTest {
             allFiles.stream().forEach(log::debug);
         }
         Assert.assertEquals(4, allFiles.size());
-        Assert.assertTrue(allFiles.contains("src\\main\\java\\two\\FileTwo.java"));
-        Assert.assertTrue(allFiles.contains("src\\main\\java\\two\\lib\\Externalib.java"));
-        Assert.assertTrue(allFiles.contains("src\\main\\java\\two\\AnotherFileTwo.java"));
+        Assert.assertTrue(allFiles.contains(
+            "src" + File.separator + "main" + File.separator + "java" + File.separator + "two" + File.separator + "FileTwo.java"));
+        Assert.assertTrue(allFiles.contains("src" + File.separator + "main" + File.separator + "java" + File.separator + "two" + File.separator + "lib" + File.separator + "Externalib.java"));
+        Assert.assertTrue(allFiles.contains("src" + File.separator + "main" + File.separator + "java" + File.separator + "two" + File.separator + "AnotherFileTwo.java"));
         Assert.assertTrue(allFiles.contains("README.md"));
 
     }
