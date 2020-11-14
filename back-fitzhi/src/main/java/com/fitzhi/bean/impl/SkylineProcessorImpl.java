@@ -17,10 +17,12 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.fitzhi.bean.DataHandler;
+import com.fitzhi.bean.ProjectDashboardCustomizer;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Layer;
+import com.fitzhi.data.internal.Library;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectBuilding.YearWeek;
@@ -61,26 +63,48 @@ public class SkylineProcessorImpl implements SkylineProcessor {
     @Autowired
     private ProjectHandler projectHandler;
 
+    @Autowired
+    ProjectDashboardCustomizer projectDashboardCustomizer;
 
     interface LayerIdentifier {
         Layer processLayer(SourceChange sourceChange);
     }
 
-    
-    @Override
-    public ProjectLayers generateProjectLayers(Project project, SourceControlChanges changes) {
+    private boolean isExternalLibrary (String filePath, List<Library> externalLibraries) {
 
+
+        String fileCleanPath = projectDashboardCustomizer.cleanupPath("/" + filePath);
+        if (fileCleanPath.charAt(0) == '/') {
+            fileCleanPath = fileCleanPath.substring(1);
+        }
+
+        for (Library lib : externalLibraries) {
+            String libPath = lib.getExclusionDirectory();
+            if (fileCleanPath.length() < libPath.length()) {
+                continue;
+            }
+            if (libPath.equals(fileCleanPath.substring(0, libPath.length()))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public ProjectLayers generateProjectLayers(Project project, SourceControlChanges changes) throws SkillerException {
 
         final Function<SourceChange, Layer> layerIdentifier = (SourceChange sourceChange) -> {
             return LayerFactory.getInstance(sourceChange);
         };
 
         final List<ProjectLayer> layers = new ArrayList<>();
-        changes.getChanges().values()
+        changes.getChanges().entrySet().stream()
                 
-                .stream().flatMap(hist -> hist.getChanges().stream()).collect(Collectors.toList())
+                .filter(entry -> !isExternalLibrary(entry.getKey(), project.getLibraries()))
+                .map(entry -> entry.getValue())
+
+                .flatMap(hist -> hist.getChanges().stream())
                 
-                .stream()
                 .collect(Collectors.groupingBy(layerIdentifier, Collectors.summingInt(SourceChange::lines)))
                 .forEach((layer, lines) -> {
                     ProjectLayer projectLayer = new ProjectLayer(project.getId(), layer.getYear(), layer.getWeek(), lines,

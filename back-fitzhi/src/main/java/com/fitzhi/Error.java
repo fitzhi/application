@@ -20,7 +20,7 @@ public class Error {
 	public static final int UNKNOWN_PROJECT = -1;
 			
 	public static final int CODE_IO_ERROR = -1003;
-	public static final String MESSAGE_IO_ERROR = "IO Error with file {0}";
+	public static final String MESSAGE_IO_ERROR = "IO Error with file or dir {0}";
 
 	public static final int CODE_SKILL_NOFOUND = -1004;
 	public static final String MESSAGE_SKILL_NOFOUND = "There is no skill for the identifier {0}";
@@ -53,7 +53,7 @@ public class Error {
 	public static final String MESSAGE_CANNOT_SELF_CREATE_USER = "You cannot create your own user. Please contact your administrator"; 
 
 	public static final int CODE_PARSING_SOURCE_CODE = -1014;
-	public static final String MESSAGE_PARSING_SOURCE_CODE = "an error occurs when parsing the source code on server."; 
+	public static final String MESSAGE_PARSING_SOURCE_CODE = "an error occurs when parsing the source code ."; 
 
 	public static final int CODE_MISSION_NOFOUND = -1015;
 	public static final String MESSAGE_MISSION_NOFOUND = "There is no mission for the staff identifier {0} and project identifier {1}";

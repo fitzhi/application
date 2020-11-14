@@ -82,7 +82,7 @@ public class DataChartHandlerTest {
 		
 		StringBuilder sb = new StringBuilder();
 		root.dump(sb, "");
-		System.out.println(sb);
+		log.debug(sb.toString());
 	}
 	
 	@Test

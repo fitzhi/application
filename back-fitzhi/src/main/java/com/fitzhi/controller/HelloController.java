@@ -34,7 +34,6 @@ public class HelloController {
 
 	@GetMapping("/mission")
 	public ResponseEntity<Mission> getMission() {
-		System.out.println("getMission()");
 		Mission m = new Mission(1, 2, "TEST");
 		m.setFirstCommit(LocalDate.of(2019, 10, 9));
 		return new ResponseEntity<Mission>(m, HttpStatus.OK);

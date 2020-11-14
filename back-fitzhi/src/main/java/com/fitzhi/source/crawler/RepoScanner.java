@@ -317,4 +317,29 @@ public interface RepoScanner {
 	 * Display the configuration.
 	 */
 	void displayConfiguration();
+
+	/**
+	 * <p>
+	 * load all Source files located in the repository directory.
+	 * </p>
+	 * <p>
+	 * The resulting array will be filtered on an eligible filter. 
+	 * <em>Only source files will be selected</em> 
+	 * </p>
+	 * @param project the current project
+	 * @return the complete set of files, or an empty set if none exists. 
+	 * @throws SkillerException thrown if any problem occurs, most probably an IOException
+	 */
+	Set<String> allEligibleFiles(Project project) throws SkillerException;
+	
+	/**
+	 * <p>
+	 * This method scans the local repository and returns the list of commits where the file has been modified, <b>and ALSO RENAMED as well</b>.
+	 * </p>
+	 * @param project the current projett
+	 * @param repository the project repository
+	 * @param filePath the file Path
+	 */
+	List<RevCommit> fileGitHistory(Project project, Repository repository, String filepath) throws SkillerException;
+
 }

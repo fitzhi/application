@@ -5,6 +5,9 @@ import java.util.Locale;
 
 import org.junit.Test;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class SimpleTest {
     
     @Test
@@ -14,10 +17,10 @@ public class SimpleTest {
             System.out.println(local);
         }
         */
-        System.out.println(Locale.getDefault());
+        log.debug(Locale.getDefault().toString());
         Calendar calendar = Calendar.getInstance(Locale.getDefault());
         calendar.set(Calendar.YEAR, 2019);
         calendar.set(Calendar.WEEK_OF_YEAR, 10);
-        System.out.println(calendar.getTime());
+        log.debug(calendar.getTime().toString());
     }
 }

@@ -46,7 +46,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@TestPropertySource(properties = { "patternsInclusion=.*." }) 
+@TestPropertySource(properties = { "patternsInclusion=.*." , "prefilterEligibility=true" }) 
 public class CrawlerFirstTest {
 
 	private static final String FIRST_TEST = "first-test/";
@@ -79,7 +79,11 @@ public class CrawlerFirstTest {
 	@Before
 	public void before() throws SkillerException {
 		project = new Project(1000, FIRST_TEST);
-    	asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 1000);
+
+		asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 1000);
+		asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 777);
+
+		project.setLocationRepository(new File(String.format(DIR_GIT, FIRST_TEST)).getAbsolutePath());
 	}
 	
 	@Test
@@ -180,5 +184,6 @@ public class CrawlerFirstTest {
 			repository.close();
 		}
     	asyncTask.removeTask(DASHBOARD_GENERATION, PROJECT, 1000);
+    	asyncTask.removeTask(DASHBOARD_GENERATION, PROJECT, 777);
 	}
 }

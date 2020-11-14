@@ -128,13 +128,14 @@ public class GitCrawlerProcessDiffEntriesTest {
 
         RevCommit commit = rw.parseCommit(repository.resolve("c05bbbd5c2ec19d354b2bcd7ab1f737b31624d6a")); 
         RevCommit parent = rw.parseCommit(commit.getParent(0).getId());
-        System.out.println(parent.getId());
         List<DiffEntry>  diffs = df.scan(parent.getTree(), commit.getTree());
 
         final RepositoryAnalysis analysis = new RepositoryAnalysis(project);
         Assert.assertTrue("no file recorded", analysis.getPathsAll().isEmpty());
         scanner.processDiffEntries(analysis, commit, diffs, df, velocity);
-        analysis.getPathsAll().stream().forEach(s -> System.out.println(s));
+        if (log.isDebugEnabled()) {
+            analysis.getPathsAll().stream().forEach(s -> log.debug(s));
+        }
         Assert.assertEquals("no file recorded", 3, analysis.getPathsAll().size());
     }
 

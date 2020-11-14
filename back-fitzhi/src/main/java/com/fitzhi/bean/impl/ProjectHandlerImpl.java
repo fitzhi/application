@@ -406,7 +406,6 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				
 				Staff staff = staffHandler.getStaff(oGhost.get().getIdStaff());
 				if ((staff != null) && (technical)) {
-					System.out.println("removing mission " + staff.getMissions().size());
 					staff.getMissions().stream()
 						.filter(mission -> mission.getIdProject() == project.getId())
 						.filter(mission -> mission.getFirstCommit() == null)
@@ -664,7 +663,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		Map<Integer, ProjectSkill> detectedSkills = this.skillHandler.extractSkills(project.getLocationRepository(), entries);
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("detected skills for project %s", project.getName()));
+			log.debug(String.format("Detected skills for project %s", project.getName()));
 			for (ProjectSkill detectedSkill : detectedSkills.values()) {
 				log.debug(skillHandler.getSkill(detectedSkill.getIdSkill()).getTitle());
 			}

@@ -3,6 +3,14 @@
  */
 package com.fitzhi.source.crawler.git;
 
+import com.fitzhi.bean.CacheDataHandler;
+import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.Staff;
+import com.fitzhi.data.source.BasicCommitRepository;
+import com.fitzhi.data.source.CommitRepository;
+import com.fitzhi.source.crawler.RepoScanner;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,13 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.fitzhi.bean.CacheDataHandler;
-import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.Staff;
-import com.fitzhi.data.source.BasicCommitRepository;
-import com.fitzhi.data.source.CommitRepository;
-import com.fitzhi.source.crawler.RepoScanner;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -30,6 +32,7 @@ import com.fitzhi.source.crawler.RepoScanner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Slf4j
 public class GitScannerCleanupUnknownPseudosTest {
 
 	
@@ -63,7 +66,9 @@ public class GitScannerCleanupUnknownPseudosTest {
 	
 	@Test
 	public void test() {
-		staffHandler.getStaff().values().stream().forEach(staff -> System.out.println (staff.getLastName()));
+		if (log.isDebugEnabled()) {
+			staffHandler.getStaff().values().stream().forEach(staff -> log.debug (staff.getLastName()));
+		}
 		Staff staff = staffHandler.lookup("Frédéric VIDAL");
 		logger.debug(staff.toString());
 		Assert.assertNotNull(staffHandler.lookup("Frédéric VIDAL"));	

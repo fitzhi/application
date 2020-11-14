@@ -155,7 +155,12 @@ public interface DataHandler {
 	void saveRepositoryDirectories(Project project, SourceControlChanges changes) throws SkillerException;
 	
 	/**
+	 * <p
 	 * Load the list of all directory-paths for the repository of the given project.
+	 * <p>
+	 * <p>
+	 * All of these directories host external libraries, which have to be evicted from the audit. 
+	 * </p>
 	 * @param project the given project
 	 * @return the resulting paths list
 	 * @throws SkillerException thrown if an exception occurs during the loading process.

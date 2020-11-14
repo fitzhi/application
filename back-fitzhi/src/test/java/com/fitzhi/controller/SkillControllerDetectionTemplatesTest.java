@@ -17,6 +17,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -30,6 +32,7 @@ import com.google.gson.reflect.TypeToken;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@Slf4j
 public class SkillControllerDetectionTemplatesTest {
 
 	private static final String SKILL_DETECTION_TEMPLATES = "/api/skill/detection-templates";
@@ -52,9 +55,11 @@ public class SkillControllerDetectionTemplatesTest {
 			.andReturn();
 		Type templatesType = new TypeToken<Map<Integer, String>>(){}.getType();
 		Map<Integer, String> templates = gson.fromJson(result.getResponse().getContentAsString(), templatesType);
-		templates.keySet().stream().forEach(key -> {
-			System.out.println(key + ' ' + templates.get(key));
-		});
+		if (log.isDebugEnabled()) {
+			templates.keySet().stream().forEach(key -> {
+				log.debug(key + ' ' + templates.get(key));
+			});
+		}
 	}
 	
 }

@@ -1,19 +1,27 @@
 package com.fitzhi.bean.impl;
 
-import java.time.LocalDate;
+import static org.mockito.ArgumentMatchers.any;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.SourceCodeDiffChange;
 import com.fitzhi.data.internal.SourceControlChanges;
+import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.git.SourceChange;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
@@ -29,8 +37,16 @@ public class SkylineProcessorGenerateProjectLayersTest {
 	@Autowired
     SkylineProcessor skylineProcessor;
     
+    @MockBean
+    DataHandler dataHandler;
+
+    @Before
+    public void before() throws SkillerException {
+		Mockito.when(dataHandler.loadRepositoryDirectories(any())).thenReturn(new ArrayList<String>());        
+    }
+
     @Test
-    public void testOneSingleChange() {
+    public void testOneSingleChange() throws SkillerException {
         Project project = new Project(1789, "The revolutionary project");
         SourceControlChanges changes = new SourceControlChanges();
         changes.addChange("one", new SourceChange(
@@ -50,7 +66,7 @@ public class SkylineProcessorGenerateProjectLayersTest {
     }
 
     @Test
-    public void testTwoChangesSameWeek() {
+    public void testTwoChangesSameWeek() throws SkillerException {
         Project project = new Project(1789, "The revolutionary project");
         SourceControlChanges changes = new SourceControlChanges();
         changes.addChange("one", new SourceChange(
@@ -78,7 +94,7 @@ public class SkylineProcessorGenerateProjectLayersTest {
     }
 
     @Test
-    public void testTwoWeek() {
+    public void testTwoWeek() throws SkillerException {
         Project project = new Project(1789, "The revolutionary project");
         SourceControlChanges changes = new SourceControlChanges();
         changes.addChange("one", new SourceChange(
@@ -117,7 +133,7 @@ public class SkylineProcessorGenerateProjectLayersTest {
     }
 
     @Test
-    public void testTwoWeeksTwoStaff() {
+    public void testTwoWeeksTwoStaff() throws SkillerException {
         Project project = new Project(1789, "The revolutionary project");
         SourceControlChanges changes = new SourceControlChanges();
         changes.addChange("one", new SourceChange(

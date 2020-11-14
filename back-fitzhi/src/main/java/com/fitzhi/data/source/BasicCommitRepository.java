@@ -278,6 +278,6 @@ public class BasicCommitRepository implements CommitRepository {
 				sb.append(ope.getDateCommit()).append(LN);
 			});
 		});
-		System.out.println(sb.toString());
+		log.debug(sb.toString());
 	}
 }

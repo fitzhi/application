@@ -1,11 +1,12 @@
+/**
+ * 
+ */
 package com.fitzhi.source.crawler.git;
 
 import static com.fitzhi.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
-import static com.fitzhi.Error.CODE_IO_ERROR;
 import static com.fitzhi.Error.CODE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
 import static com.fitzhi.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
-import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import static com.fitzhi.Error.MESSAGE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
@@ -89,31 +90,25 @@ import org.eclipse.jgit.diff.DiffEntry.ChangeType;
 import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.diff.Edit;
 import org.eclipse.jgit.diff.RawTextComparator;
+import org.eclipse.jgit.diff.RenameDetector;
 import org.eclipse.jgit.errors.CorruptObjectException;
-import org.eclipse.jgit.lib.Config;
-import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.FollowFilter;
-import org.eclipse.jgit.revwalk.RenameCallback;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.FetchConnection;
 import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.URIish;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
-import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.util.io.DisabledOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -124,9 +119,8 @@ import lombok.extern.slf4j.Slf4j;
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-@Service("GIT")
 @Slf4j
-public class GitCrawler extends AbstractScannerDataGenerator {
+public class GitCrawlerDeprecated extends AbstractScannerDataGenerator {
 
 	/**
 	 * Patterns to take account, OR NOT, a file within the parsing process.<br/>
@@ -286,9 +280,14 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	Gson gson = new Gson();
 
 	/**
+	 * Array of commit identifiers for testing and development purpose.
+	 */
+	private String[] commitIdentifiers = null;
+
+	/**
 	 * GitScanner constructor.
 	 */
-	public GitCrawler() {
+	public GitCrawlerDeprecated() {
 		// This constructor is an empty one.
 	}
 
@@ -451,201 +450,150 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		}
 	}
 
-
-	@Override
-	public Set<String> allEligibleFiles(Project project) throws SkillerException {
-
-		Path start = Paths.get(project.getLocationRepository());
-		Set<String> allFiles;
-		try (Stream<Path> stream = Files.walk(start, Integer.MAX_VALUE)) {
-		    allFiles = stream
-				.map(String::valueOf)
-				.map(Paths::get)
-				.filter(p -> !p.toFile().isDirectory())
-				.map(start::relativize)
-				.map(Path::toString)
-		        .sorted()
-		        .collect(Collectors.toSet());
-		} catch (IOException ioe) {
-			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, project.getLocationRepository()), ioe);
-		}
-
-		//
-		// If we have configured the crawl with prefiltering of files AND
-		// this path doesn't match the eligibility pattern, we skip it.
-		//
-		Set<String> files = (this.prefilterEligibility)
-			? allFiles.stream().filter(this::isEligible).collect(Collectors.toSet())
-			: allFiles;
-
-		return files;
-	}
-
-
-	private static class DiffCollector extends RenameCallback {
-		List<DiffEntry> diffs = new ArrayList<DiffEntry>();
-	
-		@Override
-		public void renamed(DiffEntry diff) {
-			diffs.add(diff);
-		}
-	}
-	
-	private DiffCollector diffCollector;
-	
-	@Override
-	public List<RevCommit> fileGitHistory(Project project, Repository repository, String filePath) throws SkillerException {
-
-		if (log.isDebugEnabled()) {
-			log.debug(String.format("Retrieving the GIT history of %s", filePath));
-		}
-		Config config = repository.getConfig();
-		config.setBoolean("diff", null, "renames", true);
-
-		List<RevCommit> commits = new ArrayList<>();
-	
-		try (RevWalk rw = new RevWalk(repository)) {
-			diffCollector = new DiffCollector();
-
-			org.eclipse.jgit.diff.DiffConfig dc = config.get(org.eclipse.jgit.diff.DiffConfig.KEY);
-			
-			FollowFilter followFilter =
-						FollowFilter.create(filePath.replace("\\", "/"), dc);
-			followFilter.setRenameCallback(diffCollector);
-			rw.setTreeFilter(followFilter);
-
-			try {
-				rw.markStart(rw.parseCommit(repository.resolve(Constants.HEAD)));
-			} catch (final Exception e) {
-				throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
-			}
-
-			for (RevCommit c : rw) {
-				commits.add(c);
-			}
-		}
-		return commits;
-	}
-
 	@Override
 	public RepositoryAnalysis loadChanges(Project project, Repository repository) throws SkillerException {
 
-		Set<String> allEligibleFiles = this.allEligibleFiles(project);
-		
-		if (log.isDebugEnabled()) {
-			StringBuilder sb = new StringBuilder();
-			for (String file : allEligibleFiles) {
-				sb.append(file).append(LN);
-				fileGitHistory(project, repository, file)
-					.stream()
-					.forEach(c -> sb.append("\t").append(c.getShortMessage()).append(LN));
-			}
-			log.debug(sb.toString());
-		}
+		Collection<RevCommit> allCommits = loadCommits(project, repository, tasks);
 
 		if (log.isInfoEnabled()) {
-			log.info(String.format("Retrieving %d files on the repository %s", 
-					allEligibleFiles.size(),
+			log.info(String.format("Retrieving %d commits on the repository %s", allCommits.size(),
 					repository.getDirectory().getAbsoluteFile()));
 		}
 
-		try (Git git = new Git(repository) ) {
+		final Comparator<RevCommit> dateCommitComparator = (RevCommit revCommit1, RevCommit revCommit2) -> {
+			return revCommit1.getCommitterIdent().getWhen().compareTo(revCommit2.getCommitterIdent().getWhen());
+		};
 
-			final Comparator<RevCommit> dateCommitComparator = (RevCommit revCommit1, RevCommit revCommit2) -> {
-				return revCommit1.getCommitterIdent().getWhen().compareTo(revCommit2.getCommitterIdent().getWhen());
-			};
+		List<RevCommit> allDateAscendingCommits = allCommits.stream().sorted(dateCommitComparator)
+				.collect(Collectors.toList());
 
-			//
-			// We initialize the analysis container.
-			//
-			RepositoryAnalysis analysis = new RepositoryAnalysis(project);
+		//
+		// For testing purpose, we filter the crawling process to a specific set of commits.
+		//
+		if (commitIdentifiers != null) {
+			final Set<String> ids = new HashSet<String>(Arrays.asList(commitIdentifiers));
+			allDateAscendingCommits = allDateAscendingCommits.stream()
+				.filter (commit -> ids.contains(commit.getId().toString()))
+				.collect(Collectors.toList());
+			if (log.isInfoEnabled()) {
+				log.info(String.format("FOR DEBUGGING PURPOSE we have the history to %d commuts", allDateAscendingCommits.size()));
+			}
+		}
 
-			//
-			// We initialize the parser speed-meter.
-			//
-			ParserVelocity velocity = new ParserVelocity(project.getId(), this.tasks);
+		ObjectId previous = null;
+
+		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
+
+		//
+		// We initialize the parser speed-meter
+		//
+		ParserVelocity velocity = new ParserVelocity(project.getId(), this.tasks);
+
+		for (RevCommit commit : allDateAscendingCommits) {
+
+			if (this.logAllCommitRecords) {
+				log(commit);
+			}
+
+			if (previous == null) {
+				previous = commit.getTree().getId();
+			} else {
+				ObjectId current = commit.getTree().getId();
+				buildRepositoryAnalysis(repository, analysis, commit, previous, current, velocity);
+				previous = current;
+			}
+
+			if ((log.isDebugEnabled()) && (commit.getParentCount() >= 2)) {
+				log.debug(String.format("commit '%s' with merge ?", commit.getShortMessage()));
+			}
+		}
+
+		velocity.complete();
+
+		return analysis;
+	}
+
+	/**
+	 * <p>
+	 * For a given revision, <br/>
+	 * taking account of its files tree by comparison with the previous state of the
+	 * repository.<br/>
+	 * To fulfill that purpose, 2 files tree are passed to this method in order to
+	 * detect :
+	 * <ul>
+	 * <li>either, the real implementation changes done by developers, <b>the
+	 * changes that really matter</b></li>
+	 * <li>or, the simple copy, delete or modify file path modifications</li>
+	 * </ul>
+	 * <br/>
+	 * </p>
+	 * 
+	 * @param repository   a GIT repository
+	 * @param analysis     the repository analysis
+	 * @param commit       the commit revision examined
+	 * @param prevObjectId the <b>PREVIOUS</b> files tree involved
+	 * @param curObjectId  the <b>CURRENT</b> files tree examined.
+	 * @param velocity     parser velocity to follow up in detail the performance of
+	 *                     the application
+	 * @throws SkillerException thrown if any exception occurs
+	 */
+	private void buildRepositoryAnalysis(Repository repository, RepositoryAnalysis analysis, RevCommit commit,
+			ObjectId prevObjectId, ObjectId curObjectId, ParserVelocity velocity) throws SkillerException {
+		
+
+		final RenameDetector renameDetector = new RenameDetector(repository);
+
+		try (ObjectReader reader = repository.newObjectReader()) {
+
+			CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+			oldTreeIter.reset(reader, prevObjectId);
+
+			CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+			newTreeIter.reset(reader, curObjectId);
 
 			DiffFormatter diffFormater = new DiffFormatter(DisabledOutputStream.INSTANCE);
 			diffFormater.setRepository(repository);
 			diffFormater.setDiffComparator(RawTextComparator.DEFAULT);
 			diffFormater.setDetectRenames(true);
-			
-			final Map<String, ObjectId> cacheCommits = new HashMap<String, ObjectId>();
-			
-			for (String file : allEligibleFiles) {
 
-				List<RevCommit> commits = this.fileGitHistory(project, repository, file);
-				
-				List<RevCommit> chronoCommits = commits.stream()
-					.sorted(dateCommitComparator)
-					.collect(Collectors.toList());
-				
-				for (RevCommit commit : chronoCommits) {
-					
-					try (ObjectReader reader = repository.newObjectReader()) {
+			//
+			// finally get the list of changed files
+			//
+			try (Git git = new Git(repository)) {
+				List<DiffEntry> diffs = git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();
 
-						ObjectId previousId = this.previousTreeId(repository, commit, cacheCommits);
-						if (previousId == null) {
-							break;
-						}
-
-						CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
-						oldTreeIter.reset(reader, previousId);
-						
-						CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
-						newTreeIter.reset(reader, commit.getTree().getId());
-						
-						List<DiffEntry> diffs = git.diff()
-							.setNewTree(newTreeIter)
-							.setOldTree(oldTreeIter)
-							.setPathFilter(PathFilter.create(file.replace("\\", "/"))).call();
-						
-						processDiffEntries(analysis, commit, diffs, diffFormater, velocity);
-						
-					} catch (final Exception e) {
-						throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
+				// Might be a rename with specific action
+				if (isRenamePossible(diffs)) {
+					if (log.isDebugEnabled()) {
+						log.debug(
+								String.format("commit '%s' is treated as a 'rename' commit", commit.getShortMessage()));
 					}
+					renameDetector.addAll(diffs);
+					List<DiffEntry> files = renameDetector.compute();
+					processDiffEntries(analysis, commit, files, diffFormater, velocity);
+				} else {
+					processDiffEntries(analysis, commit, diffs, diffFormater, velocity);
 				}
 			}
-
-			velocity.complete();
-			
-			return analysis;
+		} catch (final Exception e) {
+			throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
 		}
 	}
-	
-	private ObjectId previousTreeId(Repository repository, RevCommit commit, Map<String, ObjectId> cacheCommits) throws Exception {
-
-		int one = commit.getId().toString().indexOf(" ", 0) + 1;
-		int two = commit.getId().toString().indexOf(" ", one);
-		String hash = commit.getId().toString().substring(one, two);
-
-		if (cacheCommits.containsKey(hash)) {
-			return cacheCommits.get(hash);
-		}
-
-		ObjectId oldCommitId = repository.resolve(hash + "^1");
-		// We are at the bottom of the history, we move forward to the next file
-		if (oldCommitId == null) {
-			return null;
-		}
-
-		RevCommit previousCommit;
-		try (RevWalk revWalk = new RevWalk(repository)) {
-			previousCommit = revWalk.parseCommit(repository.resolve(oldCommitId.getName()));
-		}
-
-		cacheCommits.put(hash, previousCommit.getTree().getId());
-
-		return previousCommit.getTree().getId();
-	}
-
 
 	@Override
 	public void processDiffEntries(RepositoryAnalysis analysis, RevCommit commit, List<DiffEntry> diffs,
 			DiffFormatter diffFormater, ParserVelocity parserVelocity) throws IOException, CorruptObjectException {
 
 		for (DiffEntry de : diffs) {
+
+			//
+			// If we have configured the crawl with prefiltering of files
+			// AND
+			// this path doesn't match the eligibility pattern, we skip it.
+			//
+			if (this.prefilterEligibility && !this.isEligible(de.getNewPath())) {
+				continue;
+			}
 
 			if (log.isDebugEnabled() && (this.crawlerFilterDebug != null)
 					&& ("*".contentEquals(this.crawlerFilterDebug)
@@ -744,10 +692,8 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		PersonIdent author = commit.getAuthorIdent();
 		analysis.takeChangeInAccount(de.getNewPath(),
 				new SourceChange(commit.getId().toString(),
-						author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), 
-						author.getName(),
-						author.getEmailAddress(), 
-						diff));
+						author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), author.getName(),
+						author.getEmailAddress(), diff));
 		parserVelocity.increment();
 	}
 
@@ -1109,7 +1055,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * @param commit the given commit
 	 */
 
-	public void log(RevCommit commit) {
+	private void log(RevCommit commit) {
 		if (log.isDebugEnabled()) {
 			PersonIdent author = commit.getAuthorIdent();
 			StringBuilder sb = new StringBuilder();
@@ -1622,6 +1568,16 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	public void displayConfiguration() {
 		log.info("Display the configuration");
 		log.info("----------------------------------");
+	}
+
+	@Override
+	public Set<String> allEligibleFiles(Project project) throws SkillerException {
+		return null;
+	}
+
+	@Override
+	public List<RevCommit> fileGitHistory(Project project, Repository repository, String filepath) throws SkillerException {
+		return null;
 	}
 
 }

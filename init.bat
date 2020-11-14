@@ -10,6 +10,8 @@ rmdir /Q /s application
 git clone https://github.com/fitzhi/application
 rmdir /Q /s mock-repo-with-branches-for-dev-and-testing-purposes
 git clone https://github.com/fitzhi/mock-repo-with-branches-for-dev-and-testing-purposes
+rmdir /Q /s repo-test-number-of-lines
+git clone https://github.com/fitzhi/repo-test-number-of-lines
 cd ..
 mkdir deploy\backend-fitzhi
 mkdir deploy\data

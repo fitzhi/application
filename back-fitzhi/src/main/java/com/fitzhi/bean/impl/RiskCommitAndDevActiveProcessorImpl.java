@@ -283,7 +283,6 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 						logger.error(String.format("Searching %s in", searchedFile));
 						repository.getRepository().keySet().stream().forEach(f -> logger.error(f));
 					}
-					System.out.println(source.getFilename());
 					throw new SkillerRuntimeException( String.format("%s not found! (base dir %s, sunB location %s, source filename %s)", searchedFile, baseDir, sunburstData.getLocation(), source.getFilename()));
 				}
 

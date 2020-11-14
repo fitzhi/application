@@ -6,6 +6,12 @@ package com.fitzhi.bean.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.bean.SkillHandler;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.source.CommitHistory;
+import com.fitzhi.exception.SkillerException;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -14,12 +20,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.bean.SkillHandler;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.source.CommitHistory;
-import com.fitzhi.exception.SkillerException;
 
 /**
  * This class tests the method {@link ProjectHandler#updateSkills(java.util.List)}
@@ -58,7 +58,6 @@ public class ProjectHandlerUpdateSkillsBasedOnFilenameDetectionTest {
 		project = new Project(1789, "my testing project");
 		project.setLocationRepository(".");
 		projectHandler.addNewProject(project);
-		
 	}
 	
 	@Test
