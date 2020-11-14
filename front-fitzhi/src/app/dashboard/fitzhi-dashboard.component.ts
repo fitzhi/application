@@ -87,11 +87,6 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 				}
 		}));
 
-		this.skylineService.skyline$.subscribe({
-			next: skyline => {
-				console.table(skyline);
-			}
-		})
 	}
 
 	/**
