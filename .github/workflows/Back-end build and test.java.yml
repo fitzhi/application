@@ -36,6 +36,9 @@ jobs:
             echo "Cloning the Mocking & test application"
             git clone https://github.com/fitzhi/mock-repo-with-branches-for-dev-and-testing-purposes
             ls mock-repo-with-branches-for-dev-and-testing-purposes
+            echo "Cloning the repo-test-number-of-lines application"
+            git clone https://github.com/fitzhi/repo-test-number-of-lines
+            ls repo-test-number-of-lines
     - name: Set up JDK 1.8
       uses: actions/setup-java@v1
       with:
