@@ -1,4 +1,4 @@
-div.icon {
+#iconSkyline {
     display: inline-flex;
     width: var(--skyline-icon-width);
     height: var(--skyline-icon-height);
@@ -8,8 +8,8 @@ div.icon {
     border-radius: 5px;
 }
 
-div.icon:hover {
-    background-color: var(--color-selected);
+#iconSkyline:hover {
+    background-color: Grey;
 }
 
 div.building {

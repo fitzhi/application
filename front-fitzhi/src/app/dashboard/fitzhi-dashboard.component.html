@@ -8,13 +8,26 @@
         (click)="switchTo(selection.skyline)">
       </button>
     -->
-    <div class="skyline-icon">
+    <div class="skyline-icon"
+      (mouseenter)="popupHelper.mouseEnter(selection.skyline)" 
+      (mouseleave)="popupHelper.mouseLeave()">
       <app-skyline-icon 
         width="60px" 
         height="60px" 
         (onClick)="switchTo(selection.skyline)">
       </app-skyline-icon>
     </div>
+
+    <angular-popper placement="left" target="#currentSummary" *ngIf="popupHelper.isButtonActivated(selection.skyline)">
+      <div content class="help">
+        <h4 class="help-title">Display Skyline history</h4>
+        <div class="help-content">
+          <p>
+            Nope
+          </p>
+        </div>
+      </div>
+    </angular-popper>        
 
     <button id="treeMap" class="btn rounded treeMap"
         [ngClass]="{

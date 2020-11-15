@@ -3,11 +3,10 @@ import { traceOn } from 'src/app/global';
 
 @Component({
   selector: 'app-skyline-icon',
-
   templateUrl: './skyline-icon.component.html',
   styleUrls: ['./skyline-icon.component.css']
 })
-export class SkylineIconComponent implements OnInit, AfterViewInit {
+export class SkylineIconComponent implements OnInit {
 
   /**
    * Width of the skyline icon
@@ -28,12 +27,7 @@ export class SkylineIconComponent implements OnInit, AfterViewInit {
 
   constructor() { }
 
-  ngAfterViewInit(): void {
-    console.log('ngAfterViewInit.');
-  }
-
   ngOnInit(): void {
-    console.log ('Creation');
   }
 
   public click() {
