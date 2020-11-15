@@ -498,7 +498,9 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		// We list on INFO Level the ghosts contributing to the project
 		if (log.isInfoEnabled() && (!ghosts.isEmpty())) {
 			log.info(String.format("Ghost contributors for project %s", project.getName()));
-			unknownPseudos.stream().forEach(log::info);
+			StringBuilder sb = new StringBuilder();
+			unknownPseudos.stream().forEach(sb::append);
+			log.info(sb.toString());
 		}
 	}
 
