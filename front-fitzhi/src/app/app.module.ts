@@ -116,6 +116,7 @@ import { StaffProjectsComponent } from './tabs-staff/staff-projects/staff-projec
 import { StaffRemoveComponent } from './tabs-staff/staff-remove/staff-remove.component';
 import { StaffComponent } from './tabs-staff/staff.component';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { SkylineIconComponent } from './dashboard/skyline/skyline-icon/skyline-icon.component';
 
 
 
@@ -193,7 +194,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
 		StaffRemoveComponent,
 		PieLegendComponent,
 		BranchComponent,
-		SkylineComponent
+		SkylineComponent,
+		SkylineIconComponent
 	],
 	entryComponents: [
 		StaffUploadCvComponent,

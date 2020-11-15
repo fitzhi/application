@@ -64,8 +64,13 @@ div.pie-projects {
     height: 450px;
 }
  
+div.styline-icon {
+    width: var(--sidebar-button-width);
+    height: var(--sidebar-button-height);
+}
 
-button.lastYearMinimized, button.lastMonthMinimized, button.currentMinimized, button.treeMap, button.skyline {
+
+button.lastYearMinimized, button.lastMonthMinimized, button.currentMinimized, button.treeMap, div.styline-icon {
     width: var(--sidebar-button-width);
     height: var(--sidebar-button-height);
     left: 5px;
@@ -96,8 +101,10 @@ button.currentMinimized {
     bottom: 140px;
 }
 
-button.skyline {
+div.skyline-icon {
     bottom: 280px;
+    position: absolute;
+    margin-left: 3px;
 }
 
 button.treeMap {

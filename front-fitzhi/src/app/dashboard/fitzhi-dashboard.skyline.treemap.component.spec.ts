@@ -26,7 +26,8 @@ import { TreemapService } from './treemap/service/treemap.service';
 import { DashboardService } from '../service/dashboard/dashboard.service';
 import { DynamicPieChartModule } from 'dynamic-pie-chart';
 import { DatePipe } from '@angular/common';
-
+import { SkylineIconComponent } from './skyline/skyline-icon/skyline-icon.component';
+import { SkylineComponent } from 'rising-skyline';
 
 describe('FitzhiDashboardComponent initialization', () => {
 	let component: FitzhiDashboardComponent;
@@ -54,7 +55,8 @@ describe('FitzhiDashboardComponent initialization', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ FitzhiDashboardComponent, PieChartComponent, PieProjectsComponent, TagifyStarsComponent,
+			declarations: [ FitzhiDashboardComponent, PieChartComponent, PieProjectsComponent, 
+				TagifyStarsComponent, SkylineIconComponent, SkylineComponent, 
 				TreemapChartComponent, TreemapHeaderComponent, TreemapChartComponent, TreemapComponent ],
 			imports: [MatTableModule, MatSortModule, MatPaginatorModule, HttpClientTestingModule, MatDialogModule,
 				NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule, DynamicPieChartModule],
@@ -94,25 +96,26 @@ describe('FitzhiDashboardComponent initialization', () => {
 	});
 
 	it('The button for Skyline is clicked', fakeAsync(() => {
-		let btn = fixture.debugElement.query(By.css('#skyline'));
-		btn.triggerEventHandler('click', null);
+		let skyline = fixture.debugElement.query(By.css('#iconSkyline'));
+		console.log (skyline);
+		skyline.triggerEventHandler('click', null);
 		tick(); // simulates the passage of time until all pending asynchronous activities finish
 		fixture.detectChanges();
 		expect(document.getElementById('container-skyline')).toBeDefined();
 		expect(document.getElementById('host-treemap')).toBeNull();
-		expect(document.getElementById('logo')).toBeNull();		
+		expect(document.getElementById('logo')).toBeNull();
 	}));
 
 	it('The method switchTo is invoked when the button for Skyline is clicked', fakeAsync(() => {
 		expect(document.getElementById('container-skyline')).toBeNull();
 		const onClickMock = spyOn(component, 'switchTo');
-		fixture.debugElement.query(By.css('#skyline')).triggerEventHandler('click', null);
+		fixture.debugElement.query(By.css('#iconSkyline')).triggerEventHandler('click', null);
 		expect(onClickMock).toHaveBeenCalled();
 	}));
 
 	it('The button for Skyline is clicked, BUT THE SKYLINE IS NOT YET LOADED', fakeAsync(() => {
 		skylineService.skylineLoaded$.next(false);
-		let btn = fixture.debugElement.query(By.css('#skyline'));
+		let btn = fixture.debugElement.query(By.css('#iconSkyline'));
 		btn.triggerEventHandler('click', null);
 		tick(); 
 		fixture.detectChanges();
