@@ -1,29 +1,22 @@
 <div class="vertical-nav" id="sidebar">
- <!--
-  <button id="skyline" class="btn rounded skyline"
-    [ngClass]="{
-        'btn-outline-success' : isSelected(selection.skyline), 
-        'btn-outline-secondary': !isSelected(selection.skyline)}" 
-        (mouseenter)="popupHelper.mouseEnter(selection.skyline)" (mouseleave)="popupHelper.mouseLeave()"
-        (click)="switchTo(selection.skyline)">
-      </button>
-    -->
-    <div class="skyline-icon"
+
+  <div id="skyline" class="skyline-icon"
       (mouseenter)="popupHelper.mouseEnter(selection.skyline)" 
       (mouseleave)="popupHelper.mouseLeave()">
-      <app-skyline-icon 
-        width="60px" 
-        height="60px" 
+      <app-skyline-icon
+        [selected$]=skylineSelected$ 
+        [width]="'60px'" 
+        [height]="'60px'" 
         (onClick)="switchTo(selection.skyline)">
       </app-skyline-icon>
     </div>
 
-    <angular-popper placement="left" target="#currentSummary" *ngIf="popupHelper.isButtonActivated(selection.skyline)">
+    <angular-popper placement="left" target="#skyline" *ngIf="popupHelper.isButtonActivated(selection.skyline)">
       <div content class="help">
         <h4 class="help-title">Display Skyline history</h4>
         <div class="help-content">
           <p>
-            Nope
+            The history of your projects will be displayed in an animated way.  
           </p>
         </div>
       </div>

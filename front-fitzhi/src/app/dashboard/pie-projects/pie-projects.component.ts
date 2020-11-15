@@ -4,8 +4,6 @@ import { DataSource } from '@angular/cdk/table';
 import { Project } from 'src/app/data/project';
 import { ActivatedProjectsDatasSource } from './activated-projects-datasource';
 import { BaseComponent } from 'src/app/base/base.component';
-import { TypeSlice } from 'dynamic-pie-chart';
-import { Slice } from 'dynamic-pie-chart';
 import { AnalysisTypeSlice } from '../analysis-type-slice';
 
 

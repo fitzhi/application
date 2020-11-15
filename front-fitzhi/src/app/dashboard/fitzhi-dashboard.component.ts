@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ControlledRisingSkylineService } from 'controlled-rising-skyline';
+import { BehaviorSubject } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
@@ -44,7 +45,7 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	/**
 	 * Height of the control panel below the skyline
 	 */
-	private heughtControlPanel = 50;
+	private heightControlPanel = 50;
 
 	/**
 	 * Dimension of the Skyline
@@ -53,6 +54,11 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 		width: 1200,
 		height: 370,
 	};
+
+	/**
+	 * BehaviorSubject which emits a **TRUE** if the user clicks on the Skyline icon
+	 */
+	public skylineSelected$ = new BehaviorSubject<boolean>(false);
 
 	constructor(
 		public projectService: ProjectService,
@@ -82,7 +88,7 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 				.subscribe({
 					next: skyline => {
 						// this.controlledRisingSkylineService.randomSkylineHistory(this.skylineService.skyline$);
-						this.skylineService.loadSkyline$(this.skylineDimension.width, this.skylineDimension.height - this.heughtControlPanel)						
+						this.skylineService.loadSkyline$(this.skylineDimension.width, this.skylineDimension.height - this.heightControlPanel)						
 						this.skylineService.skylineLoaded$.next(true);
 				}
 		}));
@@ -106,6 +112,7 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	 */
 	switchTo(clickedselection: number) {
 		this.selected = clickedselection;
+		this.skylineSelected$.next((this.selected === selection.skyline))
 	}
 
 	/**

@@ -8,6 +8,10 @@
     border-radius: 5px;
 }
 
+div.selected {
+    background-color: var(--color-selected)
+}
+
 #iconSkyline:hover {
     background-color: Grey;
 }

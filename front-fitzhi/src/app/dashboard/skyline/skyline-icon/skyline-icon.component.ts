@@ -1,4 +1,6 @@
-import { AfterViewInit, Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { BaseComponent } from 'src/app/base/base.component';
 import { traceOn } from 'src/app/global';
 
 @Component({
@@ -6,7 +8,7 @@ import { traceOn } from 'src/app/global';
   templateUrl: './skyline-icon.component.html',
   styleUrls: ['./skyline-icon.component.css']
 })
-export class SkylineIconComponent implements OnInit {
+export class SkylineIconComponent extends BaseComponent implements OnInit {
 
   /**
    * Width of the skyline icon
@@ -25,15 +27,42 @@ export class SkylineIconComponent implements OnInit {
    */
 	@Output() onClick = new EventEmitter<number>();
 
-  constructor() { }
+  /**
+   * An observable which informs this component that the user has clicked on it 
+   */
+  @Input() selected$ = new BehaviorSubject<boolean>(false);
+
+  /**
+   * This class name whil marks the fact that the icon has selected, not not.  
+   */
+  public classSelected = "";
+  
+
+  constructor() { super(); }
 
   ngOnInit(): void {
+    this.subscriptions.add(
+      this.selected$.subscribe({
+        next: selected => {
+          this.classSelected = (selected) ? 'selected' : '';
+      }}));
   }
 
+  /**
+   * The user has clicked on the component.
+   */
   public click() {
     if (traceOn()) {
       console.log ('Clicking on the Skyline icon');
     }
     this.onClick.emit(1);
   }
+
+	/**
+	 * Removing useless subscriptions.
+	 */
+	ngOnDestroy() {
+		super.ngOnDestroy();
+	}
+
 }

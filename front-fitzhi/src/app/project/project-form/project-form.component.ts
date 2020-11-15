@@ -21,8 +21,6 @@ import { ReferentialService } from 'src/app/service/referential.service';
 import { Skill } from 'src/app/data/skill';
 import { traceOn } from 'src/app/global';
 import { ProjectSkill } from '../../data/project-skill';
-import { trace } from 'console';
-import { utils } from 'protractor';
 import { GitService } from 'src/app/service/git/git.service';
 import { Repository } from 'src/app/data/git/repository';
 
