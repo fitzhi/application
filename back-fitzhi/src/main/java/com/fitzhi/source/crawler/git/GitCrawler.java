@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -412,6 +411,8 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	public GitDataspace loadGitDataspace(Project project, Repository repository)
 			throws SkillerException {
 
+		throw new SkillerRuntimeException("Should not pass here");
+		/*
 		final GitDataspace gitCache = new GitDataspace(project.getId());
 
 		try (Git git = new Git(repository)) {
@@ -450,6 +451,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		} catch (final IOException | GitAPIException e) {
 			throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
 		}
+		*/
 	}
 
 
@@ -531,6 +533,9 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	@Override
 	public RepositoryAnalysis loadChanges(Project project, Repository repository) throws SkillerException {
 
+
+		final GitDataspace dataspace = new GitDataspace(project.getId());
+
 		Set<String> allEligibleFiles = this.allEligibleFiles(project);
 		
 		if (log.isDebugEnabled()) {
@@ -571,8 +576,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			diffFormater.setDiffComparator(RawTextComparator.DEFAULT);
 			diffFormater.setDetectRenames(true);
 			
-			final Map<String, ObjectId> cacheCommits = new HashMap<String, ObjectId>();
-			
 			for (String file : allEligibleFiles) {
 
 				List<RevCommit> commits = this.fileGitHistory(project, repository, file);
@@ -585,7 +588,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 					
 					try (ObjectReader reader = repository.newObjectReader()) {
 
-						ObjectId previousId = this.previousTreeId(repository, commit, cacheCommits);
+						ObjectId previousId = this.previousTreeId(repository, commit, dataspace);
 						if (previousId == null) {
 							break;
 						}
@@ -615,14 +618,14 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		}
 	}
 	
-	private ObjectId previousTreeId(Repository repository, RevCommit commit, Map<String, ObjectId> cacheCommits) throws Exception {
+	private ObjectId previousTreeId(Repository repository, RevCommit commit, GitDataspace dataspace) throws Exception {
 
 		int one = commit.getId().toString().indexOf(" ", 0) + 1;
 		int two = commit.getId().toString().indexOf(" ", one);
 		String hash = commit.getId().toString().substring(one, two);
 
-		if (cacheCommits.containsKey(hash)) {
-			return cacheCommits.get(hash);
+		if (dataspace.containsKey(hash)) {
+			return dataspace.getTree(hash);
 		}
 
 		ObjectId oldCommitId = repository.resolve(hash + "^1");
@@ -636,7 +639,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			previousCommit = revWalk.parseCommit(repository.resolve(oldCommitId.getName()));
 		}
 
-		cacheCommits.put(hash, previousCommit.getTree().getId());
+		dataspace.addTree(hash, previousCommit.getTree().getId());
 
 		return previousCommit.getTree().getId();
 	}

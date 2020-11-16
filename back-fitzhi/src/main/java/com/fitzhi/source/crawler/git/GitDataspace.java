@@ -1,11 +1,9 @@
 package com.fitzhi.source.crawler.git;
 
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.revwalk.RevCommit;
 
 import lombok.Data;
 
@@ -20,7 +18,11 @@ public @Data class GitDataspace {
 
     private int idProject;
 
-    Map<ObjectId, RevCommit> allCommits = new HashMap<>();
+    /**
+     * This map associates hash reference to its commit tree ObjectId  
+     */
+    final Map<String, ObjectId> cacheTrees = new HashMap<String, ObjectId>();
+			
 
     /**
      * Build an instance of cache.
@@ -31,26 +33,31 @@ public @Data class GitDataspace {
     }
 
     /**
-     * Test the presence of a GIT reference in the cache.
-     * @param id the GIT object reference identifier
+     * Test the presence of a GIT tree reference in the cache.
+     * @param id the GIT tree reference identifier
      * @return {@code true} if the reference has already been stored in the cache, {@code false} otherwise. 
      */
-    public boolean containsKey(ObjectId id) {
-        return allCommits.containsKey(id);
+    public boolean containsKey(String id) {
+        return cacheTrees.containsKey(id);
     }
 
     /**
-     * Refister a Commit entry in the cache
-     * @param commit the Commit to be referenced.
+     * Register a commit tree entry into the cache
+     * @param id the tree hashed identifier 
+     * @param tree the tree reference.
      */
-    public void addCommit(RevCommit commit) {
-        allCommits.put(commit.getId(), commit);
+    public void addTree(String id, ObjectId tree) {
+        cacheTrees.put(id, tree);
     }
 
     /**
-     * @return the collection of commits registered in the cache.
+     * Return the commit tree reference, stored into the cache.
+     * @param id the tree identifier
+     * @return the associated tree reference, or {@code null} if none exists.
+     * @see {@link Map#get(Object)}
      */
-    public Collection<RevCommit> registeredCommits() {
-        return allCommits.values();
+    public ObjectId getTree(String id) {
+        return cacheTrees.get(id);
     }
+
 }
