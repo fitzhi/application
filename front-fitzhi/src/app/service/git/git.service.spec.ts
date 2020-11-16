@@ -62,7 +62,7 @@ describe('GitService', () => {
   it('Testing branches(...) with the Fitzhi GITHUB url.', async( () => {
     expect(service).toBeTruthy();
     service.branches$('https://api.github.com/repos/fitzhi/application/branches', 'master')
-      .subscribe(
+      .subscribe({
         next: branches => {
           expect(branches[0]).toBe('initialization');
           expect(branches[1]).toBe('master');
