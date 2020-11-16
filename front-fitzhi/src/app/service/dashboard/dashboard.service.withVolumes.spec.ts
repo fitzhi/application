@@ -91,11 +91,11 @@ describe('DashboardService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({});
 
-		const projectService: ProjectService = TestBed.get(ProjectService);
+		const projectService: ProjectService = TestBed.inject(ProjectService);
 		expect(projectService).toBeDefined();
 		projectService.allProjects = createProjects();
 
-		const skillService: SkillService = TestBed.get(SkillService);
+		const skillService: SkillService = TestBed.inject(SkillService);
 		expect(skillService).toBeDefined();
 		skillService.allSkills = [];
 		skillService.allSkills.push(new Skill(5, 'Java'));
@@ -103,7 +103,7 @@ describe('DashboardService', () => {
 	});
 
 	it('dashboardService.processSkillDistribution testing with volumes.', () => {
-		const service: DashboardService = TestBed.get(DashboardService);
+		const service: DashboardService = TestBed.inject(DashboardService);
 		expect(service).toBeDefined();
 
 		const tiles = service.processSkillDistribution(true, 1, StatTypes.FilesSize);

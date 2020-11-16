@@ -69,7 +69,7 @@ describe('ProjectAuditBadgesComponent', () => {
 		risk5.color = 'lightBlue';
 		referentialService.legends.push (risk5);
 
-		const cinematicService: CinematicService = TestBed.get(CinematicService);
+		const cinematicService: CinematicService = TestBed.inject(CinematicService);
 		cinematicService.auditHistory[1] = new AuditDetailsHistory();
 		cinematicService.auditHistory[2] = new AuditDetailsHistory();
 

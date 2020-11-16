@@ -256,9 +256,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	
 	@Override
 	public void removeProject(int idProject) throws SkillerException {
-		Map<Integer, Project> projects = getProjects();
 		synchronized (lockDataUpdated) {
-			projects.remove(idProject);
+			getProjects().remove(idProject);
 			this.dataUpdated = true;
 		}
 	}
@@ -407,7 +406,6 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				
 				Staff staff = staffHandler.getStaff(oGhost.get().getIdStaff());
 				if ((staff != null) && (technical)) {
-					System.out.println("removing mission " + staff.getMissions().size());
 					staff.getMissions().stream()
 						.filter(mission -> mission.getIdProject() == project.getId())
 						.filter(mission -> mission.getFirstCommit() == null)
@@ -500,7 +498,9 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		// We list on INFO Level the ghosts contributing to the project
 		if (log.isInfoEnabled() && (!ghosts.isEmpty())) {
 			log.info(String.format("Ghost contributors for project %s", project.getName()));
-			unknownPseudos.stream().forEach(log::info);
+			StringBuilder sb = new StringBuilder();
+			unknownPseudos.stream().forEach(sb::append);
+			log.info(sb.toString());
 		}
 	}
 
@@ -665,7 +665,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		Map<Integer, ProjectSkill> detectedSkills = this.skillHandler.extractSkills(project.getLocationRepository(), entries);
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("detected skills for project %s", project.getName()));
+			log.debug(String.format("Detected skills for project %s", project.getName()));
 			for (ProjectSkill detectedSkill : detectedSkills.values()) {
 				log.debug(skillHandler.getSkill(detectedSkill.getIdSkill()).getTitle());
 			}

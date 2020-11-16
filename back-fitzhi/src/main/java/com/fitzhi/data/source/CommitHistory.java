@@ -14,22 +14,25 @@ import java.util.Optional;
 import com.fitzhi.SkillerRuntimeException;
 import com.fitzhi.bean.StaffHandler;
 
+import lombok.Data;
+
 /**
  * History of operations of a source element.
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@Data
 public class CommitHistory {
 	
 	/**
 	 * complete source path.
 	 */
-	public String sourcePath;
+	private String sourcePath;
 	
 	/**
 	 * Level of risk on this source file. <br/>
 	 * This risk is evaluate by {@link com.fitzhi.source.crawler.RepoScanner#evaluateTheRisk(CommitRepository)}
 	 */
-	int riskLevel;
+	private int riskLevel;
 	
 	/**
 	 * A numeric value representing the importance of the source file impacted by the change.
@@ -48,27 +51,6 @@ public class CommitHistory {
 	 */
 	public CommitHistory(String sourcePath, long importance) {
 		this.sourcePath = sourcePath;
-		this.importance = importance;
-	}
-
-	/**
-	 * @return the sourcePath
-	 */
-	public String getSourcePath() {
-		return sourcePath;
-	}
-
-	/**
-	 * @return the importance
-	 */
-	public long getImportance() {
-		return importance;
-	}
-
-	/**
-	 * @param importance the importance to set
-	 */
-	public void setImportance(long importance) {
 		this.importance = importance;
 	}
 
@@ -99,7 +81,7 @@ public class CommitHistory {
 	 * @return the date of commit, or <code>Null</code> if none exists.
 	 */
 	public LocalDate getDateCommit(final int idStaff) {
-		Optional<Operation> opt = operations.stream().filter(ope -> ope.idStaff == idStaff).findFirst();
+		Optional<Operation> opt = operations.stream().filter(ope -> ope.getIdStaff() == idStaff).findFirst();
 		if (opt.isPresent()) {
 			return opt.get().getDateCommit();
 		} else {
@@ -126,7 +108,7 @@ public class CommitHistory {
 	 */
 	public int[] committers() {
 		return operations.stream()
-				.map(operation->operation.idStaff)
+				.map(operation->operation.getIdStaff())
 				.distinct()
 				.mapToInt(Number::intValue)
 			    .toArray();
@@ -148,8 +130,8 @@ public class CommitHistory {
 	public long countCommitsByActiveDevelopers(final StaffHandler staffHandler) {
 		return operations
 				.stream()
-				.filter(ope -> ope.idStaff != UNKNOWN)
-				.mapToInt(ope->ope.idStaff)
+				.filter(ope -> ope.getIdStaff() != UNKNOWN)
+				.mapToInt(ope->ope.getIdStaff())
 				.filter (staffHandler::isActive)
 				.count();
 	}
@@ -161,8 +143,8 @@ public class CommitHistory {
 	public long countDistinctDevelopers() {
 		return operations
 			.stream()
-			.filter(ope -> ope.idStaff != UNKNOWN)
-			.mapToInt(ope->ope.idStaff)
+			.filter(ope -> ope.getIdStaff() != UNKNOWN)
+			.mapToInt(Operation::getIdStaff)
 			.distinct()
 			.count();
 	}
@@ -175,8 +157,8 @@ public class CommitHistory {
 	public long countDistinctActiveDevelopers(final StaffHandler staffHandler) {
 		return operations
 			.stream()
-			.filter(ope -> ope.idStaff != UNKNOWN)
-			.mapToInt(ope->ope.idStaff)
+			.filter(ope -> ope.getIdStaff() != UNKNOWN)
+			.mapToInt(Operation::getIdStaff)
 			.distinct()
 			.filter (staffHandler::isActive)
 			.count();
@@ -194,7 +176,7 @@ public class CommitHistory {
 		if (!lastOpe.isPresent()) {
 			throw new SkillerRuntimeException("SEVERE INTERNAL ERROR : Should not pass here!");
 		}
-		return lastOpe.get().idStaff;
+		return lastOpe.get().getIdStaff();
 	}
 	
 	/**
@@ -202,7 +184,7 @@ public class CommitHistory {
 	 * @return {@code true} if the passed developer has worked on this file, {@code false} otherwise
 	 */
 	public boolean hasWorkedOnThisFile (int idStaff) {
-		return operations.stream().filter(ope -> ope.idStaff == idStaff).findAny().isPresent();
+		return operations.stream().filter(ope -> ope.getIdStaff() == idStaff).findAny().isPresent();
 	}
 	
 }

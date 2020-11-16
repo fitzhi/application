@@ -27,7 +27,7 @@ describe('StaffFormComponent', () => {
 		fixture = TestBed.createComponent(StaffFormComponent);
 		component = fixture.componentInstance;
 
-		const referentialService = TestBed.get(ReferentialService);
+		const referentialService = TestBed.inject(ReferentialService);
 		referentialService.profiles = [];
 		referentialService.profiles.push (new Profile('one Code', 'labelOfCode for One'));
 		referentialService.profiles.push (new Profile('code nope', 'another labelOfCode'));

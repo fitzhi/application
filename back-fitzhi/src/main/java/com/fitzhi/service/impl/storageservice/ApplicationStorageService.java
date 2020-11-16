@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.fitzhi.service.StorageService;
-
 /**
  * <p>
  * Implementation of a storage service for staff member applications
@@ -16,7 +14,7 @@ import com.fitzhi.service.StorageService;
  */
 @Service
 @Qualifier("Application")
-public class ApplicationStorageService extends FileSystemStorageService implements StorageService {
+public class ApplicationStorageService extends FileSystemStorageService  {
 
     @Autowired
     public ApplicationStorageService(ApplicationStorageProperties properties) {

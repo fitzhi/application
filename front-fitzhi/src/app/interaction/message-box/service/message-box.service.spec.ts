@@ -11,7 +11,7 @@ describe('MessageBoxService', () => {
 	}));
 
 	it('should be created', () => {
-		const service: MessageBoxService = TestBed.get(MessageBoxService);
+		const service: MessageBoxService = TestBed.inject(MessageBoxService);
 		expect(service).toBeTruthy();
 	});
 });

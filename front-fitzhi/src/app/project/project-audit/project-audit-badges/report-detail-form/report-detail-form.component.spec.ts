@@ -46,12 +46,12 @@ describe('ReportDetailFormComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
-		projectService = TestBed.get(ProjectService);
+		projectService = TestBed.inject(ProjectService);
 		projectService.project = new Project(1, 'Testing project');
 		projectService.project.audit['1'] = new AuditTopic(1, 100, 100, 'This is a perfect topic', []);
 		projectService.projectLoaded$.next(true);
 
-		referentialService = TestBed.get(ReferentialService);
+		referentialService = TestBed.inject(ReferentialService);
 		referentialService.legends.push(new RiskLegend(0, 'lightBlue', 'blue like the sky today'));
 		fixture.detectChanges();
 	});

@@ -15,13 +15,16 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import com.fitzhi.bean.Administration;
+import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.Staff;
+import com.fitzhi.security.TokenLoader;
+
 import org.assertj.core.util.Files;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -31,10 +34,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import com.fitzhi.bean.Administration;
-import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.data.internal.Staff;
-import com.fitzhi.security.TokenLoader;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -43,6 +43,7 @@ import com.fitzhi.security.TokenLoader;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@Slf4j
 @TestPropertySource(properties = { "allowSelfRegistration=false" })
 public class AdministrationControllerCreateNewUserTest {
 
@@ -71,14 +72,12 @@ public class AdministrationControllerCreateNewUserTest {
 	@Autowired
 	public Administration administration;
 
-	Logger logger = LoggerFactory.getLogger(AdministrationControllerCreateNewUserTest.class.getCanonicalName());
-
 	@Before
 	public void before() throws IOException {
 		final Path root = Paths.get(rootLocation);
 		final Path firstConnection = root.resolve("connection.txt");
-		if ((!firstConnection.toFile().createNewFile()) && (logger.isDebugEnabled())) {
-			logger.debug("Creation of connection.tx failedt");
+		if ((!firstConnection.toFile().createNewFile()) && (log.isDebugEnabled())) {
+			log.debug("Creation of connection.tx failedt");
 		}
 
 	}
@@ -86,8 +85,8 @@ public class AdministrationControllerCreateNewUserTest {
 	@Test
 	public void creationVeryFirstUserKO() throws Exception {
 		int crewSize = staffHandler.getStaff().size();
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Crew size %d", crewSize));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Crew size %d", crewSize));
 		}
 		this.mvc.perform(get("/api/admin/veryFirstUser") // NOSONAR
 				.param(LOGIN, "adminForTest").param(PASS_WORD, "passForTest")).andExpect(status().isOk())
@@ -100,8 +99,8 @@ public class AdministrationControllerCreateNewUserTest {
 	public void creationNewUser() throws Exception {
 
 		int crewSize = staffHandler.getStaff().size();
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("Crew size %d", crewSize));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Crew size %d", crewSize));
 		}
 		this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "user").param(PASS_WORD, pass)
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + TokenLoader.obtainAccessMockToken(mvc)))

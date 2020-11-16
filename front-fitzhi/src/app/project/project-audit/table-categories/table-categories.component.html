@@ -1,4 +1,7 @@
-<table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8 tableCategories">
+<table mat-table #table 
+    [dataSource]="dataSource"
+    class="mat-elevation-z8 tableCategories"
+    summary="table of Audit possible categories">
 
     <ng-container matColumnDef="select">
         <th id="select" mat-header-cell *matHeaderCellDef><em class="far glyphicon fa-check-square"></em></th>

@@ -23,6 +23,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
@@ -37,6 +39,7 @@ import com.fitzhi.exception.SkillerException;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(properties = { "allowSelfRegistration=false" }) 
+@Slf4j
 public class AdministrationCreateUserIfIsNotVeryFirstConnectionDoesNotAllowSelfRegistrationTest {
 
 	private static final String MY_LOGIN = "UNREGISTERED";
@@ -60,9 +63,9 @@ public class AdministrationCreateUserIfIsNotVeryFirstConnectionDoesNotAllowSelfR
 	@Before
 	public void before() throws IOException {
         final Path root = Paths.get(rootLocation);
-        System.out.println(root.toAbsolutePath());
+        log.debug(root.toAbsolutePath().toString());
 		final Path firstConnection = root.resolve("connection.txt");
-        System.out.println(firstConnection.toAbsolutePath());
+        log.debug(firstConnection.toAbsolutePath().toString());
 		if ( (!firstConnection.toFile().createNewFile()) && (logger.isErrorEnabled())) {
 			logger.error("Creation of " + firstConnection.toAbsolutePath()  +" failed.");
 		}		

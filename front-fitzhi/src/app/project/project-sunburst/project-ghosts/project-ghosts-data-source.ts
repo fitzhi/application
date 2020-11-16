@@ -10,9 +10,9 @@ export class ProjectGhostsDataSource extends MatTableDataSource<Unknown> {
 
 	/**
 	 * An array containing all ghosts
-	 * 
-	 * **For some Angular curious reasons, we need to preserve a local array containing the ghosts, 
-	 * instead of using directly the internal data property of MatTableDataSource, 
+	 *
+	 * **For some Angular curious reasons, we need to preserve a local array containing the ghosts,
+	 * instead of using directly the internal data property of MatTableDataSource,
 	 * IN ORDER TO have a workable PAGINATOR behavior with a DYNAMIC data.**
 	 */
 	public ghosts: Unknown[];

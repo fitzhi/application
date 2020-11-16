@@ -5,7 +5,7 @@ public abstract class StorageProperties {
     /**
      * Folder location for storing files
      */
-    public String location = "upload-dir";
+    private String location = "upload-dir";
 
     /**
      * @return the location for the uploading directory.

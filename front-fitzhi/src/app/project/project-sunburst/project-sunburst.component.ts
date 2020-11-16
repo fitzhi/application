@@ -147,7 +147,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		private messageBoxService: MessageBoxService,
 		private dialog: MatDialog,
 		private cacheService: SunburstCacheService,
-		private projectService: ProjectService) {
+		public projectService: ProjectService) {
 			super();
 	}
 
@@ -425,23 +425,29 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			});
 		}
 
-		this.myChart.data(response.sunburstData)
-			.width(500)
-			.height(500)
-			.minSliceAngle(2)
-			.label('location')
-			.size('importance')
-			.color('color')
-			(document.getElementById('chart'));
+		// This test is a hack necessary for the tests suite.
+		if (!document.getElementById('chart')) {
+			console.error('Chart is not present in the HTML layout');
+		} else {
+			this.myChart.data(response.sunburstData)
+				.width(500)
+				.height(500)
+				.minSliceAngle(2)
+				.label('location')
+				.size('importance')
+				.color('color')
+				(document.getElementById('chart'));
+	
+			const dataSourceGhosts = new ProjectGhostsDataSource(response.ghosts);
+			this.dataSourceGhosts$.next(dataSourceGhosts);
+	
+			//
+			// We update the underlying project in the projects array
+			// because the Sunburst generation has probably updated the skills involved in the project.
+			//
+			this.projectService.actualizeProject(this.projectService.project.id);
+		}
 
-		const dataSourceGhosts = new ProjectGhostsDataSource(response.ghosts);
-		this.dataSourceGhosts$.next(dataSourceGhosts);
-
-		//
-		// We update the underlying project in the projects array
-		// because the Sunburst generation has probably updated the skills involved in the project.
-		//
-		this.projectService.actualizeProject(this.projectService.project.id);
 	}
 
 	handleErrorData(response: any) {

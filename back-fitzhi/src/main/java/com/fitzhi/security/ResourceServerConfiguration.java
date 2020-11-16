@@ -32,18 +32,18 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 			http.authorizeRequests().antMatchers(
 				"/api/staff/**", 
 				"/api/skill/**", 
-				"/api/project/**", 
-
-				"/api/project/tasks/stream/**", 
+				
+				// Server side event streaming is allowed
+				"/api/project/tasks/stream/**",
 				"/api/project/audit/**", 
 				"/api/project/sonar/**", 
+				"/api/project/**", 
+				
 				"/api/admin/settings",	
 
 				// We allow the the springfox-swagger url to be accessible
 				"/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**", 
 				
-				// Server side event streaming is allowed
-				"/api/project/tasks/stream/**",
 
 				"/api/admin/isVeryFirstConnection", 
 				"/api/admin/saveVeryFirstConnection", 

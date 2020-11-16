@@ -48,7 +48,7 @@ div.pie-projects {
     right: 0;
     min-width: 200px;
     height: 100%;
-  }
+}
 
 #logo {
     font-size: 420px;
@@ -59,11 +59,18 @@ div.pie-projects {
 
     margin: 40vh auto;
     transform: translateY(-50%);
-    width: 400px;
+    
+    width: 450px;
+    height: 450px;
 }
  
+div.styline-icon {
+    width: var(--sidebar-button-width);
+    height: var(--sidebar-button-height);
+}
 
-button.lastYearMinimized, button.lastMonthMinimized, button.currentMinimized, button.treeMap {
+
+button.lastYearMinimized, button.lastMonthMinimized, button.currentMinimized, button.treeMap, div.styline-icon {
     width: var(--sidebar-button-width);
     height: var(--sidebar-button-height);
     left: 5px;
@@ -92,6 +99,12 @@ button.lastMonthMinimized {
 
 button.currentMinimized {
     bottom: 140px;
+}
+
+div.skyline-icon {
+    bottom: 280px;
+    position: absolute;
+    margin-left: 5px;
 }
 
 button.treeMap {
@@ -134,7 +147,7 @@ i.camera {
     transition: all 0.4s;
 }
 
-div.treemap {
+#container-treemap {
     margin: auto;
     width: 600px;
     height: 400px;

@@ -1,4 +1,7 @@
-<table mat-table #table [dataSource]="dataSource" class="mat-elevation-z8 tableLegends">
+<table mat-table #table 
+  [dataSource]="dataSource" 
+  class="mat-elevation-z8 tableLegends"
+  summary="Legend for the colors of the Sunburst chart">
   
   <ng-container matColumnDef="color">
     <th id="color" mat-header-cell *matHeaderCellDef>Color</th>

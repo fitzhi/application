@@ -34,11 +34,6 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="com.fitzhi.source.crawler.git.GitCrawler" additivity="false">
-		<level value="DEBUG" />
-		<appender-ref ref="STDOUT" />
-	</logger>
-
 	<logger name="com.fitzhi.FitzhiWebMvcConfigurer" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
@@ -68,5 +63,31 @@
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
- -->
+
+	<logger name="com.fitzhi.data.internal.ProjectBuilding" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+	<logger name="com.fitzhi.bean.impl.SkylineProcessorImpl" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+ 	<logger name="com.fitzhi.bean.impl.SkylineProcessorGenerateProjectBuildingTest" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+ 	<logger name="com.fitzhi.bean.impl.SkylineProcessorImpl" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+
+ 	<logger name="com.fitzhi.bean.impl.SkylineProcessorImpl" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+-->
+
 </configuration>

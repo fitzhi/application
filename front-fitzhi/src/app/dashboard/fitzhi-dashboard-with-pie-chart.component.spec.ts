@@ -23,6 +23,7 @@ import { PieDashboardService } from './service/pie-dashboard.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { Project } from 'src/app/data/project';
 import { PieLegendComponent } from './pie-legend/pie-legend.component';
+import { DatePipe } from '@angular/common';
 
 describe('FitzhiDashboardComponent', () => {
 	let component: FitzhiDashboardComponent;
@@ -35,7 +36,7 @@ describe('FitzhiDashboardComponent', () => {
 				TreemapChartComponent, TreemapHeaderComponent, TreemapChartComponent, TreemapComponent, PieLegendComponent ],
 			imports: [MatTableModule, MatSortModule, MatPaginatorModule, HttpClientTestingModule, MatDialogModule,
 				NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule],
-			providers: [ReferentialService, CinematicService, PieDashboardService]
+			providers: [ReferentialService, CinematicService, PieDashboardService, DatePipe]
 
 		})
 		.compileComponents();

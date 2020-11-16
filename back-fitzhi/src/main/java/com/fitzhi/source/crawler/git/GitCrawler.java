@@ -1,12 +1,11 @@
-/**
- * 
- */
 package com.fitzhi.source.crawler.git;
 
 import static com.fitzhi.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
+import static com.fitzhi.Error.CODE_IO_ERROR;
 import static com.fitzhi.Error.CODE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
 import static com.fitzhi.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import static com.fitzhi.Error.MESSAGE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
@@ -27,7 +26,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -44,29 +42,6 @@ import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.DiffEntry.ChangeType;
-import org.eclipse.jgit.diff.RenameDetector;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.ObjectReader;
-import org.eclipse.jgit.lib.PersonIdent;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
-import org.eclipse.jgit.transport.FetchConnection;
-import org.eclipse.jgit.transport.Transport;
-import org.eclipse.jgit.transport.URIish;
-import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
-import org.eclipse.jgit.treewalk.CanonicalTreeParser;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
-
 import com.fitzhi.Error;
 import com.fitzhi.Global;
 import com.fitzhi.ShouldNotPassHereRuntimeException;
@@ -79,6 +54,7 @@ import com.fitzhi.bean.ProjectDashboardCustomizer;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.RiskProcessor;
 import com.fitzhi.bean.SkillHandler;
+import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import com.fitzhi.controller.in.SettingsGeneration;
@@ -87,8 +63,10 @@ import com.fitzhi.data.internal.Ecosystem;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.RiskDashboard;
+import com.fitzhi.data.internal.SourceCodeDiffChange;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.BasicCommitRepository;
@@ -104,6 +82,39 @@ import com.fitzhi.source.crawler.EcosystemAnalyzer;
 import com.fitzhi.source.crawler.impl.AbstractScannerDataGenerator;
 import com.google.gson.Gson;
 
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffEntry.ChangeType;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.diff.Edit;
+import org.eclipse.jgit.diff.RawTextComparator;
+import org.eclipse.jgit.errors.CorruptObjectException;
+import org.eclipse.jgit.lib.Config;
+import org.eclipse.jgit.lib.Constants;
+import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.FollowFilter;
+import org.eclipse.jgit.revwalk.RenameCallback;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
+import org.eclipse.jgit.transport.FetchConnection;
+import org.eclipse.jgit.transport.Transport;
+import org.eclipse.jgit.transport.URIish;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.eclipse.jgit.treewalk.filter.PathFilter;
+import org.eclipse.jgit.util.io.DisabledOutputStream;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -115,7 +126,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Service("GIT")
 @Slf4j
-public class GitCrawler extends AbstractScannerDataGenerator  {
+public class GitCrawler extends AbstractScannerDataGenerator {
 
 	/**
 	 * Patterns to take account, OR NOT, a file within the parsing process.<br/>
@@ -238,11 +249,23 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 	@Value("${Sunburst.fillTheHoles}")
 	private boolean fillTheHoles;
 
+	/**
+	 * Spring service in charge of the data chart generation and management.
+	 */
 	@Autowired
 	DataChartHandler dataChartHandler;
 
+	/**
+	 * Spring service in charge of saving the working data on the server filesystem.
+	 */
 	@Autowired
 	DataHandler dataSaver;
+
+	/**
+	 * Service Spring in charge of the generation of the skyline
+	 */
+	@Autowired
+	SkylineProcessor skylineProcessor;
 
 	/**
 	 * Filter in charge to filter some debugging information.<br/>
@@ -337,15 +360,12 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 		if (execClone) {
 			if (settings.isPublicRepository()) {
 				Git.cloneRepository().setDirectory(path.toAbsolutePath().toFile()).setURI(settings.getUrl())
-					.setBranch(project.getBranch())
-					.setProgressMonitor(new CustomProgressMonitor())
-					.call();
+						.setBranch(project.getBranch()).setProgressMonitor(new CustomProgressMonitor()).call();
 			} else {
 				Git.cloneRepository().setDirectory(path.toAbsolutePath().toFile()).setURI(settings.getUrl())
 						.setCredentialsProvider(
 								new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()))
-						.setBranch(project.getBranch())
-						.setProgressMonitor(new CustomProgressMonitor()).call();
+						.setBranch(project.getBranch()).setProgressMonitor(new CustomProgressMonitor()).call();
 
 			}
 			if (log.isDebugEnabled()) {
@@ -354,12 +374,12 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 		} else {
 
 			try (Git git = Git.open(Paths.get(getLocalDotGitFile(project)).toFile())) {
-				
+
 				if (log.isDebugEnabled()) {
 					log.debug("We fetch first the local repository");
 				}
 				git.fetch().setProgressMonitor(new CustomProgressMonitor());
-				
+
 				if (log.isDebugEnabled()) {
 					log.debug("And then we pull it");
 				}
@@ -378,7 +398,8 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 
 	@Override
 	public Path createDirectoryAsCloneDestination(Project project, ConnectionSettings settings) throws IOException {
-		// Create a temporary local path where the remote project repository will be cloned.
+		// Create a temporary local path where the remote project repository will be
+		// cloned.
 		Path path = Files.createTempDirectory("skiller_jgit_" + project.getName() + "_");
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Cloning the repository %s inside the CREATED path %s", settings.getUrl(),
@@ -387,8 +408,9 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 		return path;
 	}
 
-	public static Collection<RevCommit> loadCommits(Project project, Repository repository, AsyncTask tasks) throws SkillerException {
-		
+	public static Collection<RevCommit> loadCommits(Project project, Repository repository, AsyncTask tasks)
+			throws SkillerException {
+
 		Map<ObjectId, RevCommit> allCommits = new HashMap<>();
 
 		try (Git git = new Git(repository)) {
@@ -411,7 +433,7 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 						if (log.isDebugEnabled()) {
 							log.debug(String.format("Adding %s", commit.getId()));
 						}
-							allCommits.put(commit.getId(), commit);
+						allCommits.put(commit.getId(), commit);
 						if (++nbCommit == 1000) {
 							nbTotCommit += nbCommit;
 							tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
@@ -426,197 +448,307 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 
 		} catch (final IOException | GitAPIException e) {
 			throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
-		}	
+		}
+	}
+
+
+	@Override
+	public Set<String> allEligibleFiles(Project project) throws SkillerException {
+
+		Path start = Paths.get(project.getLocationRepository());
+		Set<String> allFiles;
+		try (Stream<Path> stream = Files.walk(start, Integer.MAX_VALUE)) {
+		    allFiles = stream
+				.map(String::valueOf)
+				.map(Paths::get)
+				.filter(p -> !p.toFile().isDirectory())
+				.map(start::relativize)
+				.map(Path::toString)
+		        .sorted()
+		        .collect(Collectors.toSet());
+		} catch (IOException ioe) {
+			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, project.getLocationRepository()), ioe);
+		}
+
+		//
+		// If we have configured the crawl with prefiltering of files AND
+		// this path doesn't match the eligibility pattern, we skip it.
+		//
+		Set<String> files = (this.prefilterEligibility)
+			? allFiles.stream().filter(this::isEligible).collect(Collectors.toSet())
+			: allFiles;
+
+		return files;
+	}
+
+
+	private static class DiffCollector extends RenameCallback {
+		List<DiffEntry> diffs = new ArrayList<DiffEntry>();
+	
+		@Override
+		public void renamed(DiffEntry diff) {
+			diffs.add(diff);
+		}
+	}
+	
+	private DiffCollector diffCollector;
+	
+	@Override
+	public List<RevCommit> fileGitHistory(Project project, Repository repository, String filePath) throws SkillerException {
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Retrieving the GIT history of %s", filePath));
+		}
+		Config config = repository.getConfig();
+		config.setBoolean("diff", null, "renames", true);
+
+		List<RevCommit> commits = new ArrayList<>();
+	
+		try (RevWalk rw = new RevWalk(repository)) {
+			diffCollector = new DiffCollector();
+
+			org.eclipse.jgit.diff.DiffConfig dc = config.get(org.eclipse.jgit.diff.DiffConfig.KEY);
+			
+			FollowFilter followFilter =
+						FollowFilter.create(filePath.replace("\\", "/"), dc);
+			followFilter.setRenameCallback(diffCollector);
+			rw.setTreeFilter(followFilter);
+
+			try {
+				rw.markStart(rw.parseCommit(repository.resolve(Constants.HEAD)));
+			} catch (final Exception e) {
+				throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
+			}
+
+			for (RevCommit c : rw) {
+				commits.add(c);
+			}
+		}
+		return commits;
 	}
 
 	@Override
 	public RepositoryAnalysis loadChanges(Project project, Repository repository) throws SkillerException {
 
-		Collection<RevCommit> allCommits = loadCommits(project, repository, tasks);
+		Set<String> allEligibleFiles = this.allEligibleFiles(project);
+		
+		if (log.isDebugEnabled()) {
+			StringBuilder sb = new StringBuilder();
+			for (String file : allEligibleFiles) {
+				sb.append(file).append(LN);
+				fileGitHistory(project, repository, file)
+					.stream()
+					.forEach(c -> sb.append("\t").append(c.getShortMessage()).append(LN));
+			}
+			log.debug(sb.toString());
+		}
 
 		if (log.isInfoEnabled()) {
-			log.info(String.format("Retrieving %d commits on the repository %s", allCommits.size(),
+			log.info(String.format("Retrieving %d files on the repository %s", 
+					allEligibleFiles.size(),
 					repository.getDirectory().getAbsoluteFile()));
 		}
 
-		final Comparator<RevCommit> dateCommitComparator = (RevCommit revCommit1, RevCommit revCommit2) -> {
-			return revCommit1.getCommitterIdent().getWhen().compareTo(revCommit2.getCommitterIdent().getWhen());
-		};
+		try (Git git = new Git(repository) ) {
 
-		List<RevCommit> allDateAscendingCommits = allCommits.stream().sorted(dateCommitComparator)
-				.collect(Collectors.toList());
-
-		ObjectId previous = null;
-
-		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
-
-		//
-		// We initialize the parser speed-meter
-		//
-		ParserVelocity velocity = new ParserVelocity(project.getId(), this.tasks);
-
-		for (RevCommit commit : allDateAscendingCommits) {
-
-			if (this.logAllCommitRecords) {
-				log(commit);
-			}
-
-			if (previous == null) {
-				previous = commit.getTree().getId();
-			} else {
-				ObjectId current = commit.getTree().getId();
-				buildRepositoryAnalysis(repository, analysis, commit, previous, current, velocity);
-				previous = current;
-			}
-
-			if ((log.isDebugEnabled()) && (commit.getParentCount() >= 2)) {
-				log.debug(String.format("commit '%s' with merge ?", commit.getShortMessage()));
-			}
-		}
-
-		velocity.complete();
-
-		return analysis;
-	}
-
-	/**
-	 * <p>
-	 * For a given revision, <br/>
-	 * taking account of its files tree by comparison with the previous state of the
-	 * repository.<br/>
-	 * To fulfill that purpose, 2 files tree are passed to this method in order to
-	 * detect
-	 * <ul>
-	 * <li>the real functional implementation changes made by developers, which
-	 * really matter</li>
-	 * <li>or, the simple copy, delete or modify file path modifications</li>
-	 * </ul>
-	 * </p>
-	 * 
-	 * @param repository   a GIT repository
-	 * @param analysis     the repository analysis
-	 * @param commit       the commit revision examined
-	 * @param prevObjectId the <b>PREVIOUS</b> files tree involved
-	 * @param curObjectId  the <b>CURRENT</b> files tree examined.
-	 * @param velocity     parser velocity to follow up in detail the performance of
-	 *                     the application
-	 * @throws SkillerException
-	 */
-	private void buildRepositoryAnalysis(Repository repository, RepositoryAnalysis analysis, RevCommit commit,
-			ObjectId prevObjectId, ObjectId curObjectId, ParserVelocity velocity) throws SkillerException {
-
-		final RenameDetector renameDetector = new RenameDetector(repository);
-
-		try (ObjectReader reader = repository.newObjectReader()) {
-
-			CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
-			oldTreeIter.reset(reader, prevObjectId);
-
-			CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
-			newTreeIter.reset(reader, curObjectId);
+			final Comparator<RevCommit> dateCommitComparator = (RevCommit revCommit1, RevCommit revCommit2) -> {
+				return revCommit1.getCommitterIdent().getWhen().compareTo(revCommit2.getCommitterIdent().getWhen());
+			};
 
 			//
-			// finally get the list of changed files
+			// We initialize the analysis container.
 			//
-			try (Git git = new Git(repository)) {
-				List<DiffEntry> diffs = git.diff().setNewTree(newTreeIter).setOldTree(oldTreeIter).call();
+			RepositoryAnalysis analysis = new RepositoryAnalysis(project);
+
+			//
+			// We initialize the parser speed-meter.
+			//
+			ParserVelocity velocity = new ParserVelocity(project.getId(), this.tasks);
+
+			DiffFormatter diffFormater = new DiffFormatter(DisabledOutputStream.INSTANCE);
+			diffFormater.setRepository(repository);
+			diffFormater.setDiffComparator(RawTextComparator.DEFAULT);
+			diffFormater.setDetectRenames(true);
+			
+			final Map<String, ObjectId> cacheCommits = new HashMap<String, ObjectId>();
+			
+			for (String file : allEligibleFiles) {
+
+				List<RevCommit> commits = this.fileGitHistory(project, repository, file);
 				
-				// Might be a rename with specific action
-				if (isRenamePossible(diffs)) {
-					if (log.isDebugEnabled()) {
-						log.debug(
-								String.format("commit '%s' is treated as a 'rename' commit", commit.getShortMessage()));
+				List<RevCommit> chronoCommits = commits.stream()
+					.sorted(dateCommitComparator)
+					.collect(Collectors.toList());
+				
+				for (RevCommit commit : chronoCommits) {
+					
+					try (ObjectReader reader = repository.newObjectReader()) {
+
+						ObjectId previousId = this.previousTreeId(repository, commit, cacheCommits);
+						if (previousId == null) {
+							break;
+						}
+
+						CanonicalTreeParser oldTreeIter = new CanonicalTreeParser();
+						oldTreeIter.reset(reader, previousId);
+						
+						CanonicalTreeParser newTreeIter = new CanonicalTreeParser();
+						newTreeIter.reset(reader, commit.getTree().getId());
+						
+						List<DiffEntry> diffs = git.diff()
+							.setNewTree(newTreeIter)
+							.setOldTree(oldTreeIter)
+							.setPathFilter(PathFilter.create(file.replace("\\", "/"))).call();
+						
+						processDiffEntries(analysis, commit, diffs, diffFormater, velocity);
+						
+					} catch (final Exception e) {
+						throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
 					}
-					renameDetector.addAll(diffs);
-					List<DiffEntry> files = renameDetector.compute();
-					processDiffEntries(analysis, commit, files, velocity);
-				} else {
-					processDiffEntries(analysis, commit, diffs, velocity);
 				}
 			}
-		} catch (final Exception e) {
-			throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);
+
+			velocity.complete();
+			
+			return analysis;
 		}
 	}
+	
+	private ObjectId previousTreeId(Repository repository, RevCommit commit, Map<String, ObjectId> cacheCommits) throws Exception {
 
-	/**
-	 * Take in account the list of files impacted by a commit
-	 * 
-	 * @param gitChanges the complete list of changes detected in the studying
-	 *                   repository
-	 * @param commit     the actual commit evaluated
-	 * @param diffs      the list of difference between this current commit and the
-	 *                   previous one
-	 */
-	private void processDiffEntries(RepositoryAnalysis analysis, RevCommit commit, List<DiffEntry> diffs,
-			ParserVelocity parserVelocity) {
+		int one = commit.getId().toString().indexOf(" ", 0) + 1;
+		int two = commit.getId().toString().indexOf(" ", one);
+		String hash = commit.getId().toString().substring(one, two);
+
+		if (cacheCommits.containsKey(hash)) {
+			return cacheCommits.get(hash);
+		}
+
+		ObjectId oldCommitId = repository.resolve(hash + "^1");
+		// We are at the bottom of the history, we move forward to the next file
+		if (oldCommitId == null) {
+			return null;
+		}
+
+		RevCommit previousCommit;
+		try (RevWalk revWalk = new RevWalk(repository)) {
+			previousCommit = revWalk.parseCommit(repository.resolve(oldCommitId.getName()));
+		}
+
+		cacheCommits.put(hash, previousCommit.getTree().getId());
+
+		return previousCommit.getTree().getId();
+	}
+
+
+	@Override
+	public void processDiffEntries(RepositoryAnalysis analysis, RevCommit commit, List<DiffEntry> diffs,
+			DiffFormatter diffFormater, ParserVelocity parserVelocity) throws IOException, CorruptObjectException {
 
 		for (DiffEntry de : diffs) {
-
-			//
-			// If we have configured the crawl with prefiltering of files
-			// AND
-			// this path doesn't match the eligibility pattern, we skip it.
-			//
-			if (this.prefilterEligibility && !this.isEligible(de.getNewPath())) {
-				continue;
-			}
 
 			if (log.isDebugEnabled() && (this.crawlerFilterDebug != null)
 					&& ("*".contentEquals(this.crawlerFilterDebug)
 							|| ((de.getNewPath() != null) && (de.getNewPath().contains(this.crawlerFilterDebug)))
 							|| ((de.getOldPath() != null) && (de.getOldPath().contains(this.crawlerFilterDebug))))) {
 				log.debug(String.format("%s %s %s", de.getChangeType(), de.getOldPath(), de.getNewPath()));
+				log.debug(String.format("DiffAttribute key %s value %s", de.getDiffAttribute().getKey(),
+						de.getDiffAttribute().getValue()));
 			}
 
 			switch (de.getChangeType()) {
-			case RENAME:
-				if (log.isDebugEnabled()) {
-					log.debug(String.format("%s is renammed into %s", de.getOldPath(), de.getNewPath()));
-				}
-				analysis.renameFilePath(de.getNewPath(), de.getOldPath());
-				break;
-			case DELETE:
-				if (DEV_NULL.equals(de.getNewPath())) {
-					analysis.removeFilePath(de.getOldPath());
-				} else {
-					throw new SkillerRuntimeException(String.format("%s REQUIRES TO BE NULL", de.getNewPath()));
-				}
-				break;
-			case COPY:
-				//
-				// We assume that the COPY change is connected to MERGE operations
-				// Therefore the author of the merge is useless for the scope of this
-				// application
-				// This committer did not touch the content of the source
-				//
-				break;
-			case MODIFY: // NOSONAR
-				//
-				// A MODIFY tag might be an ADD.
-				// We first have to test if this file wasn't already taken in account by the
-				// analysis.
-				//
-				
-				if (analysis.containsFile(de.getNewPath())) {
-					analysis.keepPathModified(de.getNewPath());
-				}
-			case ADD:
-				PersonIdent author = commit.getAuthorIdent();
-				analysis.addChange(de.getNewPath(),
-						new SourceChange(commit.getId().toString(),
-								author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-								author.getName(), author.getEmailAddress()));
-				parserVelocity.increment();
-				break;
-			default:
-				if (log.isDebugEnabled()) {
-					log.debug(String.format("Unexpected type of change %s %s %s", de.getChangeType(), de.getOldPath(),
-							de.getNewPath()));
-				}
-				break;
+				case RENAME:
+					if (log.isDebugEnabled()) {
+						log.debug(String.format("%s is renammed into %s", de.getOldPath(), de.getNewPath()));
+					}
+					//
+					// We rename the previous history records with the new name
+					//
+					analysis.renameFilePath(de.getNewPath(), de.getOldPath());
+
+					addHistoryRecord(analysis, commit, de, diffFormater, parserVelocity);
+					break;
+				case DELETE:
+					if (DEV_NULL.equals(de.getNewPath())) {
+						analysis.removeFilePath(de.getOldPath());
+					} else {
+						throw new SkillerRuntimeException(String.format("%s REQUIRES TO BE NULL", de.getNewPath()));
+					}
+					break;
+				case COPY:
+					//
+					// We assume that the COPY change is connected to MERGE operations
+					// Therefore the author of the merge is useless for the scope of this
+					// application
+					// This committer did not touch the content of the source
+					//
+					break;
+				case MODIFY: // NOSONAR
+					//
+					// A MODIFY tag might be an ADD.
+					// We first have to test if this file wasn't already taken in account by the
+					// analysis.
+					//
+
+					if (analysis.containsFile(de.getNewPath())) {
+						analysis.keepPathModified(de.getNewPath());
+					}
+				case ADD:
+					addHistoryRecord(analysis, commit, de, diffFormater, parserVelocity);
+					/*
+					 * SourceCodeDiffChange diff = this.diffFile(de, diffFormater); PersonIdent
+					 * author = commit.getAuthorIdent();
+					 * analysis.takeChangeInAccount(de.getNewPath(), new SourceChange(
+					 * commit.getId().toString(),
+					 * author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+					 * author.getName(), author.getEmailAddress(), diff));
+					 * parserVelocity.increment();
+					 */
+					break;
+				default:
+					if (log.isDebugEnabled()) {
+						log.debug(String.format("Unexpected type of change %s %s %s", de.getChangeType(),
+								de.getOldPath(), de.getNewPath()));
+					}
+					break;
 			}
 		}
+	}
+
+	private SourceCodeDiffChange diffFile(DiffEntry diffEntry, DiffFormatter diffFormater)
+			throws IOException, CorruptObjectException {
+		int linesDeleted = 0;
+		int linesAdded = 0;
+		for (Edit edit : diffFormater.toFileHeader(diffEntry).toEditList()) {
+			linesDeleted += edit.getEndA() - edit.getBeginA();
+			linesAdded += edit.getEndB() - edit.getBeginB();
+		}
+		return new SourceCodeDiffChange(diffEntry.getNewPath(), linesDeleted, linesAdded);
+	}
+
+	/**
+	 * Take accound of a change
+	 * 
+	 * @param analysis       the active change container
+	 * @param commit         the current commit
+	 * @param de             the current diff entry.
+	 * @param diffFormat     the Difference formater
+	 * @param parserVelocity the parser velocity tracer
+	 */
+	private void addHistoryRecord(RepositoryAnalysis analysis, RevCommit commit, DiffEntry de,
+			DiffFormatter diffFormater, ParserVelocity parserVelocity) throws IOException {
+		//
+		// We log a new history records with the modified lines
+		//
+		SourceCodeDiffChange diff = this.diffFile(de, diffFormater);
+		PersonIdent author = commit.getAuthorIdent();
+		analysis.takeChangeInAccount(de.getNewPath(),
+				new SourceChange(commit.getId().toString(),
+						author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), 
+						author.getName(),
+						author.getEmailAddress(), 
+						diff));
+		parserVelocity.increment();
 	}
 
 	/**
@@ -740,8 +872,7 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 	}
 
 	@Override
-	public CommitRepository parseRepository(final Project project)
-			throws IOException, SkillerException {
+	public CommitRepository parseRepository(final Project project) throws IOException, SkillerException {
 
 		//
 		// We load the repository from cache, if any exists. (my method name is just
@@ -791,6 +922,9 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 		 */
 		dataSaver.saveChanges(project, analysis.getChanges());
 
+		// We generate & save the skyline history for this project
+		this.generateAndSaveSkyline(project, analysis);
+
 		/**
 		 * We finalize & cleanup the content of the collection
 		 */
@@ -820,7 +954,8 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 		// modification.
 		// These files have only be added.
 		//
-		// We will test each entry of the resulting list if it match the possible eviction critéria 
+		// We will test each entry of the resulting list if it match the possible
+		// eviction critéria
 		//
 		analysis.extractCandidateForDependencies();
 
@@ -846,17 +981,6 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 		 */
 		this.removeNonRelevantDirectories(project, analysis);
 
-		/**
-		 * We cleanup the pathnames each location (e.g. "src/main/java" is removed)
-		 */
-		
-		// FVI : 
-		// I consider that this cleanupPaths methods is not more necessary.
-		// But I still keep the calling statement because I prefer to be prudent with me.
-		//
-		// analysis.cleanupPaths(projectDashboardCustomizer);
-		//
-		
 		//
 		// Set of unknown contributors who have work on this repository.
 		//
@@ -893,6 +1017,22 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 		cacheDataHandler.saveRepository(project, repositoryOfCommit);
 
 		return repositoryOfCommit;
+	}
+
+	/**
+	 * This private method is call by [@link #parseRepository(Project)}
+	 * 
+	 * @param project  the current project
+	 * @param analysis the given analysis processed on this project
+	 */
+	private void generateAndSaveSkyline(Project project, RepositoryAnalysis analysis) throws SkillerException {
+		ProjectLayers projectLayers = skylineProcessor.generateProjectLayers(project, analysis.getChanges());
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("The project %s has generated %d layers", project.getName(),
+					projectLayers.getLayers().size()));
+		}
+
+		dataSaver.saveSkylineLayers(project, projectLayers);
 	}
 
 	/**
@@ -969,7 +1109,7 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 	 * @param commit the given commit
 	 */
 
-	private void log(RevCommit commit) {
+	public void log(RevCommit commit) {
 		if (log.isDebugEnabled()) {
 			PersonIdent author = commit.getAuthorIdent();
 			StringBuilder sb = new StringBuilder();
@@ -1038,7 +1178,8 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 		final ConnectionSettings settings = connectionSettings(project);
 
 		if (!projectHandler.hasValidRepository(project)) {
-			// FVI : I do not initialize anymore the local repository in order to PULL only the repository when necessary.
+			// FVI : I do not initialize anymore the local repository in order to PULL only
+			// the repository when necessary.
 			// projectHandler.initLocationRepository(project);
 			try {
 				this.clone(project, settings);
@@ -1153,10 +1294,10 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 		CommitRepository personalizedRepo = new BasicCommitRepository();
 		for (CommitHistory commits : globalRepo.getRepository().values()) {
 			commits.operations.stream().filter(
-					it -> ((it.idStaff == settings.getIdStaffSelected()) || (settings.getIdStaffSelected() == 0)))
+					it -> ((it.getIdStaff() == settings.getIdStaffSelected()) || (settings.getIdStaffSelected() == 0)))
 					.filter(it -> (it.getDateCommit()).isAfter(startingDate))
-					.forEach(item -> personalizedRepo.addCommit(commits.sourcePath, item.idStaff, item.getAuthorName(),
-							item.getDateCommit(), commits.getImportance()));
+					.forEach(item -> personalizedRepo.addCommit(commits.getSourcePath(), item.getIdStaff(),
+							item.getAuthorName(), item.getDateCommit(), commits.getImportance()));
 		}
 		return personalizedRepo;
 	}
@@ -1192,7 +1333,7 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 				}
 				settings.setPassword(clearPassword);
 			} catch (final SkillerException se) {
-				se.getCause().printStackTrace();
+				log.error("Cause", se.getCause());
 				throw se;
 			}
 			return settings;
@@ -1384,15 +1525,12 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 		final FetchConnection connection = retrieveFetchConnection(project);
 		if (log.isDebugEnabled()) {
 			if (connection == null) {
-				log.debug(
-					String.format(
-						"Connection failed with teh SCM declared for project %d %s", 
-						project.getId(), 
+				log.debug(String.format("Connection failed with teh SCM declared for project %d %s", project.getId(),
 						project.getName()));
 			} else {
 				connection.getRefs().forEach(ref -> log.debug(ref.getName()));
 			}
-		}			
+		}
 		return (connection != null) ? connection.getRefs() : new ArrayList<Ref>();
 	}
 
@@ -1403,18 +1541,20 @@ public class GitCrawler extends AbstractScannerDataGenerator  {
 			switch (project.getConnectionSettings()) {
 				case Global.USER_PASSWORD_ACCESS:
 				case Global.REMOTE_FILE_ACCESS: {
-						ConnectionSettings settings = connectionSettings(project);
-						URIish uri = new URIish(project.getUrlRepository());
-						Transport transport = Transport.open(uri);
+					ConnectionSettings settings = connectionSettings(project);
+					URIish uri = new URIish(project.getUrlRepository());
+					try (Transport transport = Transport.open(uri)) {
 						transport.setCredentialsProvider(
 								new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()));
 						return transport.openFetch();
 					}
+				}
 				case Global.NO_USER_PASSWORD_ACCESS: {
-						URIish uri = new URIish(project.getUrlRepository());
-						Transport transport = Transport.open(uri);
+					URIish uri = new URIish(project.getUrlRepository());
+					try (Transport transport = Transport.open(uri)) {
 						return transport.openFetch();
 					}
+				}
 				default: {
 					throw new ShouldNotPassHereRuntimeException();
 				}

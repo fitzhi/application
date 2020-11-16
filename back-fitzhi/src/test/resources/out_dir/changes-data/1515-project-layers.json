@@ -1,0 +1,23 @@
+[
+    {
+        "idProject": 1515,
+        "year": 2020,
+        "week": 20,
+        "lines": 10,
+        "idStaff": 1
+    },
+    {
+        "idProject": 1515,
+        "year": 2020,
+        "week": 20,
+        "lines": 30,
+        "idStaff": 2
+    },
+    {
+        "idProject": 1214,
+        "year": 2020,
+        "week": 25,
+        "lines": 44,
+        "idStaff": 1
+    }
+]

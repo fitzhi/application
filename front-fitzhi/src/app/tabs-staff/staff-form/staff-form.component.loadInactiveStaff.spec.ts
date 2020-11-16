@@ -6,6 +6,7 @@ import { Profile } from '../../data/profile';
 import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
 import { InitTest } from 'src/app/test/init-test';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Collaborator } from 'src/app/data/collaborator';
 
 describe('StaffFormComponent', () => {
 	let component: StaffFormComponent;
@@ -27,12 +28,12 @@ describe('StaffFormComponent', () => {
 		fixture = TestBed.createComponent(StaffFormComponent);
 		component = fixture.componentInstance;
 
-		const referentialService = TestBed.get(ReferentialService);
+		const referentialService = TestBed.inject(ReferentialService);
 		referentialService.profiles = [];
 		referentialService.profiles.push (new Profile('one Code', 'labelOfCode for One'));
 		referentialService.profiles.push (new Profile('code nope', 'another labelOfCode'));
 
-		const staffDataExchangeService = TestBed.get(StaffDataExchangeService);
+		const staffDataExchangeService = TestBed.inject(StaffDataExchangeService);
 		component.idStaff = 2019;
 
 		staffDataExchangeService.changeCollaborator(
@@ -40,7 +41,8 @@ describe('StaffFormComponent', () => {
 				idStaff: 2019, firstName: 'Joe', lastName: 'DALTON',
 				nickName: 'joe', login: 'jdalton',
 				email: 'jdalton@gmail.com', level: 'one Code',
-				active: false, dateInactive: '2019-11-01',
+				active: false, dateInactive: new Date('2019-11-01'),
+				forceActiveState: false, external: false,
 				missions: [], experiences: []
 			}
 		);

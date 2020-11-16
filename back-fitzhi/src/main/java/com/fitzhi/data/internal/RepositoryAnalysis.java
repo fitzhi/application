@@ -150,13 +150,13 @@ public class RepositoryAnalysis {
 	}
 	
 	/**
-	 * Add a change in the collection.
+AddingA	 * Add a change into the collection.
 	 * @param fullPath the complete path of the source file
 	 * @param change the activity change .
 	 * @return <code>boolean</code> if this collection changed as a result of the call
 	 * @see java.util.List#add(java.lang.Object)
 	 */
-	public boolean addChange(String fullPath, SourceChange change) {
+	public boolean takeChangeInAccount(String fullPath, SourceChange change) {
 		return changes.addChange(fullPath, change);
 	}
 
@@ -199,6 +199,7 @@ public class RepositoryAnalysis {
 	 * @param oldPath    the old file path
 	 */
 	public void renameFilePath(String newPath, String oldPath) {
+
 		SourceFileHistory history =  this.changes.getChanges().get(oldPath);
 
 		//

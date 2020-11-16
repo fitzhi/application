@@ -35,7 +35,7 @@ describe('DashboardService', () => {
 	beforeEach(() => {
 		TestBed.configureTestingModule({});
 
-		const skillService: SkillService = TestBed.get(SkillService);
+		const skillService: SkillService = TestBed.inject(SkillService);
 		expect(skillService).toBeDefined();
 		skillService.allSkills = [];
 		for (let i = 0; i < DashboardService.MAX_NUMBER_SKILLS_IN_DIAGRAM - 1; i++) {
@@ -47,7 +47,7 @@ describe('DashboardService', () => {
 
 	it('"dashboardService.processSkillDistributionFilesSize()" : generates the diagram with tiles', () => {
 
-		const service: DashboardService = TestBed.get(DashboardService);
+		const service: DashboardService = TestBed.inject(DashboardService);
 		expect(service).toBeDefined();
 
 		const tiles = service.processSkillDistributionFilesSize(generateSkillProjectsAggregation(), {});

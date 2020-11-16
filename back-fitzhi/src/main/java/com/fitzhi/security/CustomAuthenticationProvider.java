@@ -13,11 +13,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.SkillerException;
 
 @Component
+@Slf4j
 public class CustomAuthenticationProvider implements AuthenticationProvider {
  
 	@Autowired
@@ -45,7 +48,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 				throw new BadCredentialsException(String.format("Invalid login/password for %s", name));
 			}
 		} catch (SkillerException e) {
-			e.printStackTrace();
+			log.error("Internal error", e);
 		}
         
         return null;

@@ -3,8 +3,6 @@
  */
 package com.fitzhi.security;
 
-import java.io.Serializable;
-
 import javax.annotation.Generated;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -16,7 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class CustomGrantedAuthority implements GrantedAuthority, Serializable {
+public class CustomGrantedAuthority implements GrantedAuthority {
 
 	/**
 	 * For serialization purpose.

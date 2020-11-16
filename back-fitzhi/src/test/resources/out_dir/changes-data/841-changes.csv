@@ -1,0 +1,7 @@
+Commit;Path;Date;Author;Email;diff
+"commit d7bfe172af2f6434cbccda6dfbe83c67a73d0bfa 1493795225 ----sp";"/abcde/fghijk/VersionService.java";"2017-05-27";"mdod";"mnedjar@nope.com";"26"
+"commit 5e5b7b31999397b1a2e64f73eb13a67fd26f7439 1494851751 ----sp";"/abcde/fghij/VersionService2.java";"2017-05-29";"VIDAL Frederic";"pfo@nope.com";"9"
+"commit de8ab3de2c39b6e07bb8fdf1979cfff034220983 1495632158 ----sp";"/abcde/fghij/VersionService.java";"2017-04-27";"Joe DALTON";"jdal@nope.com";"9"
+"commit 880bc63cf93640667f62a8f9b19c0bcb8017746a 1416851488 ----sp";"/abcde/fghijk/VersionService.java";"2016-05-27";"lschmoder";"lschmieder@localhost";"85"
+"commit 69ae7e4f2d76c1c813de09045893a73155e1a3ad 1417797509 ----sp";"/abcde/fghijk/VersionService.java";"2015-05-27";"lschmoder";"lschmieder@localhost";"0"
+"commit 786456b14c3be3b0060afa79957e0b12f6805d13 1429722099 ----sp";"/abcde/fghijk/VersionService.java";"2014-05-27";"capix";"capix@localhost";"34"

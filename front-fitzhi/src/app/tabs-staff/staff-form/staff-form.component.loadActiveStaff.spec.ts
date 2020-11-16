@@ -27,12 +27,12 @@ describe('StaffFormComponent', () => {
 		fixture = TestBed.createComponent(StaffFormComponent);
 		component = fixture.componentInstance;
 
-		const referentialService = TestBed.get(ReferentialService);
+		const referentialService = TestBed.inject(ReferentialService);
 		referentialService.profiles = [];
 		referentialService.profiles.push (new Profile('one Code', 'labelOfCode for One'));
 		referentialService.profiles.push (new Profile('code nope', 'another labelOfCode'));
 
-		const staffDataExchangeService = TestBed.get(StaffDataExchangeService);
+		const staffDataExchangeService = TestBed.inject(StaffDataExchangeService);
 		component.idStaff = 2019;
 
 		staffDataExchangeService.changeCollaborator(
@@ -41,6 +41,7 @@ describe('StaffFormComponent', () => {
 				nickName: 'joe', login: 'jdalton',
 				email: 'jdalton@gmail.com', level: 'one Code',
 				forceActiveState: true, active: true, dateInactive: null,
+				external: false,
 				missions: [], experiences: []
 			}
 		);

@@ -116,17 +116,17 @@ public class GitCrawlerNonRelevantDependenciesMgtTest {
 		p.setLocationRepository(new File(".").getCanonicalPath());
 		RepositoryAnalysis analysis = new RepositoryAnalysis(p);
 
-		analysis.addChange( "src/main/java/com/fitzhi/data/source/importance/FileSizeImportance.java",
+		analysis.takeChangeInAccount( "src/main/java/com/fitzhi/data/source/importance/FileSizeImportance.java",
 				new SourceChange("1",  LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( "src/main/java/com/fitzhi/data/source/importance/AssessorImportance.java",
+		analysis.takeChangeInAccount( "src/main/java/com/fitzhi/data/source/importance/AssessorImportance.java",
 				new SourceChange("2", LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( "src/main/java/com/fitzhi/data/source/importance/ImportanceCriteria.java",
+		analysis.takeChangeInAccount( "src/main/java/com/fitzhi/data/source/importance/ImportanceCriteria.java",
 				new SourceChange("3", LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( "src/main/java/com/fitzhi/data/source/CommitHistory.java",
+		analysis.takeChangeInAccount( "src/main/java/com/fitzhi/data/source/CommitHistory.java",
 				new SourceChange("4",  LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( "src/main/java/com/fitzhi/data/source/CommitRepository.java",
+		analysis.takeChangeInAccount( "src/main/java/com/fitzhi/data/source/CommitRepository.java",
 				new SourceChange("5", LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( "src/main/java/com/fitzhi/data/source/operation.java",
+		analysis.takeChangeInAccount( "src/main/java/com/fitzhi/data/source/operation.java",
 				new SourceChange("6",  LocalDate.now(), "fvi", "fvi@void.com") );
 		
 		analysis.getPathsAdded().add("src/main/java/com/fitzhi/data/source/importance/FileSizeImportance.java");
@@ -146,13 +146,13 @@ public class GitCrawlerNonRelevantDependenciesMgtTest {
 		p.setLocationRepository(new File(".").getCanonicalPath());
 		RepositoryAnalysis analysis = new RepositoryAnalysis(p);
 		
-		analysis.addChange( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_A_JAVA,
+		analysis.takeChangeInAccount( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_A_JAVA,
 				new SourceChange("1", LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_B_JAVA,
+		analysis.takeChangeInAccount( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_B_JAVA,
 				new SourceChange("2",  LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_ASSET_C_JAVA,
+		analysis.takeChangeInAccount( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_ASSET_C_JAVA,
 				new SourceChange("3",  LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_ASSET_D_JAVA,
+		analysis.takeChangeInAccount( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_ASSET_D_JAVA,
 				new SourceChange("4",  LocalDate.now(), "fvi", "fvi@void.com") );
 		
 		analysis.getPathsAdded().add(SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_A_JAVA);
@@ -171,13 +171,13 @@ public class GitCrawlerNonRelevantDependenciesMgtTest {
 		p.setLocationRepository(new File(".").getCanonicalPath());
 		RepositoryAnalysis analysis = new RepositoryAnalysis(p);
 		
-		analysis.addChange( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_A_JAVA,
+		analysis.takeChangeInAccount( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_A_JAVA,
 				new SourceChange("1", LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_B_JAVA,
+		analysis.takeChangeInAccount( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_B_JAVA,
 				new SourceChange("2", LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_ASSET_C_JAVA,
+		analysis.takeChangeInAccount( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_ASSET_C_JAVA,
 				new SourceChange("3", LocalDate.now(), "fvi", "fvi@void.com") );
-		analysis.addChange( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_ASSET_D_JAVA,
+		analysis.takeChangeInAccount( SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_ASSET_D_JAVA,
 				new SourceChange("4", LocalDate.now(), "fvi", "fvi@void.com") );
 
 		analysis.getPathsAdded().add(SRC_TEST_JAVA_COM_SAMPLE_SOURCE_DEPENDENCY_A_JAVA);

@@ -12,7 +12,7 @@ describe('BackendSetupService', () => {
 			imports: [HttpClientTestingModule]
 			})
 		.compileComponents();
-		service = TestBed.get(BackendSetupService);
+		service = TestBed.inject(BackendSetupService);
 	}));
 
 	it('should be created', () => {

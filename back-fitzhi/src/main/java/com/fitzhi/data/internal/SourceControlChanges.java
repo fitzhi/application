@@ -26,7 +26,6 @@ public @Data class SourceControlChanges {
 	 */
 	private Map<String, SourceFileHistory> changes;
 	
-	
 	/**
 	 * Empty constructor without parameters.
 	 */

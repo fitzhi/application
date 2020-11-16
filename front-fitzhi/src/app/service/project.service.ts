@@ -32,6 +32,7 @@ import { ProjectSkill } from '../data/project-skill';
 import { SkillService } from './skill.service';
 import { StaffService } from './staff.service';
 import { CinematicService } from './cinematic.service';
+import { GitService } from './git/git.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -79,6 +80,7 @@ export class ProjectService extends InternalService {
 		private skillService: SkillService,
 		private fileService: FileService,
 		private messageService: MessageService,
+		private gitService: GitService,
 		private sunburstCinematicService: SunburstCinematicService,
 		private backendSetupService: BackendSetupService) {
 			super();
@@ -490,7 +492,7 @@ export class ProjectService extends InternalService {
 		if (traceOn()) {
 			console.log ('Loading the branches...');
 		}
-		
+
 		// The project is not already created.
 		if (!this.project) {
 			this.branches$.next([]);
@@ -505,11 +507,14 @@ export class ProjectService extends InternalService {
 		if (traceOn()) {
 			console.log('Loading the branches for the URL ' + url);
 		}
-		
+
 		this.httpClient.get<any>(url, httpOptions)
 			.pipe(take(1))
 			.subscribe({
-				next: branches => this.branches$.next(branches)
+				next: branches => {
+					this.branches$.next(branches);
+					this.gitService.assistanceMessageGitBranches$.next(false);
+				}
 			});
 
 	}

@@ -17,11 +17,13 @@ import com.fitzhi.data.internal.Staff;
 import com.google.gson.Gson;
 
 import junit.framework.TestCase;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
+@Slf4j
 public class JsonTest extends TestCase {
 	
 	@Test
@@ -37,7 +39,9 @@ public class JsonTest extends TestCase {
 		Project project = new Project(1789, "Revolution");
 		
 		Gson g = new Gson();
-		System.out.println(g.toJson(project));
+		if (log.isDebugEnabled()) {
+			log.debug(g.toJson(project));
+		}
 		LoggerFactory.getLogger(JsonTest.class).debug(g.toJson(project)); 
 	}
 
@@ -46,8 +50,9 @@ public class JsonTest extends TestCase {
 		Map<Integer, AuditTopic> audit = new HashMap<>();
 		audit.put(1, new AuditTopic(1));
 		Gson g = new Gson();
-		System.out.println(g.toJson(audit)); 
-			
+		if (log.isDebugEnabled()) {
+			log.debug(g.toJson(audit)); 
+		}			
 	}
 
 	@Test

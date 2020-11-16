@@ -1,0 +1,1 @@
+docker exec -it fitzhi-sonarqube /bin/bash

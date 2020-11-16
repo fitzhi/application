@@ -9,7 +9,7 @@ export class FitzhiDashboardPopupHelper {
 
 	/**
 	 * Selected button. End-user has moved the curcor on it.
-	 * 
+	 *
 	 * We uese this property to handle the help bubble display.
 	 */
 	public activated = this.selection.none;

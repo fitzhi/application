@@ -36,8 +36,8 @@ describe('RegisterUserComponent', () => {
 
 	beforeEach(() => {
 		// Inject the http service and test controller for each test
-		httpClient = TestBed.get(HttpClient);
-		httpTestingController = TestBed.get(HttpTestingController);
+		httpClient = TestBed.inject(HttpClient);
+		httpTestingController = TestBed.inject(HttpTestingController);
 
 		fixture = TestBed.createComponent(RegisterUserComponent);
 		component = fixture.componentInstance;

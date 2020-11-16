@@ -4,15 +4,18 @@ import java.lang.reflect.Method;
 
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class AsyncExceptionHandler implements AsyncUncaughtExceptionHandler {
 
     @Override
     public void handleUncaughtException(Throwable throwable, Method method, Object... obj) {
 
-        System.out.println("Exception Cause - " + throwable.getMessage());
-        System.out.println("Method name - " + method.getName());
+        log.error(throwable.getMessage());
+        log.error("Method name - %s", method.getName());
         for (Object param : obj) {
-            System.out.println("Parameter value - " + param);
+            log.error("Parameter value - %s", param);
         }
     }
 }

@@ -48,8 +48,8 @@ describe('TasksDetailFormComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
-		projectService = TestBed.get(ProjectService);
-		referentialService = TestBed.get(ReferentialService);
+		projectService = TestBed.inject(ProjectService);
+		referentialService = TestBed.inject(ReferentialService);
 		referentialService.legends.push(new RiskLegend(5, 'green', 'Numero 5, like Chanel'));
 		projectService.project = new Project(1, 'test');
 		projectService.project.auditEvaluation = 50;

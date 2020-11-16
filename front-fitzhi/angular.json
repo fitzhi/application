@@ -104,9 +104,8 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "tsconfig.fitzhi.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json"
+              "tsconfig.app.json",
+              "tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

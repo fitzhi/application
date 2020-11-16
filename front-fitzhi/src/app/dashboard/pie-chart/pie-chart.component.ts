@@ -78,7 +78,7 @@ export class PieChartComponent extends BaseComponent implements OnInit, OnDestro
 				.pipe(tap(slices => {
 					if (traceOn()) {
 						console.groupCollapsed ('slices received for pie %d', this.pie);
-						console.log(...slices);
+						console.table(slices);
 						console.groupEnd();
 					}
 				})).

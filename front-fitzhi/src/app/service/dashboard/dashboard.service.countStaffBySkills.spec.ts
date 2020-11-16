@@ -59,10 +59,10 @@ describe('DashboardService', () => {
 			return staff;
 		}
 
-		const staffListService: StaffListService = TestBed.get(StaffListService);
+		const staffListService: StaffListService = TestBed.inject(StaffListService);
 		staffListService.allStaff = createAllStaffForDev();
 
-		const skillService: SkillService = TestBed.get(SkillService);
+		const skillService: SkillService = TestBed.inject(SkillService);
 		skillService.allSkills = [];
 		skillService.allSkills.push(new Skill(1, 'skill 1'));
 		skillService.allSkills.push(new Skill(2, 'skill zwei'));
@@ -73,7 +73,7 @@ describe('DashboardService', () => {
 	it('"dashboardService.countStaffBySkills()" for ALL staff members & ALL levels (for development purpose)',
 		() => {
 
-		const service: DashboardService = TestBed.get(DashboardService);
+		const service: DashboardService = TestBed.inject(DashboardService);
 		expect(service).toBeDefined();
 
 		const aggregateData = service.countStaffBySkills(true, 1);
@@ -88,7 +88,7 @@ describe('DashboardService', () => {
 	it('"dashboardService.countStaffBySkills()" for INTERN staff members & ALL levels (for development purpose)',
 		() => {
 
-		const service: DashboardService = TestBed.get(DashboardService);
+		const service: DashboardService = TestBed.inject(DashboardService);
 		expect(service).toBeDefined();
 
 		const aggregateData = service.countStaffBySkills(false, 1);

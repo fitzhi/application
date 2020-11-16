@@ -23,11 +23,11 @@ describe('FileService', () => {
 	});
 
 	beforeEach(() => {
-		service = TestBed.get(FileService);
+		service = TestBed.inject(FileService);
 	});
 
 	it('FileService should be correctly created', () => {
-		service = TestBed.get(FileService);
+		service = TestBed.inject(FileService);
 		expect(service).toBeTruthy();
 	});
 
@@ -36,8 +36,8 @@ describe('FileService', () => {
 		const appVer = navigator.appVersion;
 		console.log ('appVer', appVer);
 		const osDependentFileName =  (appVer.indexOf('Win') === -1) ?
-			'./test/mock Fred/Frédéric VIDAL.docx' : 
-			'.\\test\\mock Fred\\Frédéric VIDAL.docx'; 
+			'./test/mock Fred/Frédéric VIDAL.docx' :
+			'.\\test\\mock Fred\\Frédéric VIDAL.docx';
 		console.log ('test name for file depending on the os', osDependentFileName);
 		const filename = service.extractFilename(osDependentFileName);
 		expect('Frédéric VIDAL.docx').toEqual(filename);

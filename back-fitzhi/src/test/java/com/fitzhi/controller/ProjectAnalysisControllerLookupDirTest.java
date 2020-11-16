@@ -51,6 +51,7 @@ public class ProjectAnalysisControllerLookupDirTest {
 	@Before
 	public void before() throws SkillerException {
 		project = new Project(9999, "Project 9999");
+		project.setBranch("master");
 		projectHandler.addNewProject(project);
 	}
 	

@@ -53,6 +53,13 @@
                     (click)="mode(SKILLS_CRUD)">
                     <em class="fas glyphicon fa-graduation-cap"></em> Skill
                 </button>
+                <button 
+                    class="btn rounded" 
+                    [routerLink]="['/welcome']"
+                    (click)="switchToDashboard()"
+                    [ngClass]="{'btn-outline-success' : isDashboardActive(), 'btn-outline-secondary': !isDashboardActive()}" >
+                    <em class="fas fa-tachometer-alt"></em> Dashboard
+                </button>
             </div>
         </div>
         
@@ -94,13 +101,6 @@
                     <em class="fas fa-search"></em>
                 </button>
             </div>
-            <button 
-                class="btn rounded" 
-                [routerLink]="['/welcome']"
-                (click)="switchToDashboard()"
-                [ngClass]="{'btn-outline-success' : isDashboardActive(), 'btn-outline-secondary': !isDashboardActive()}" >
-                <em class="fas fa-tachometer-alt"></em>
-            </button>
         </div>
     </nav>
 </div>

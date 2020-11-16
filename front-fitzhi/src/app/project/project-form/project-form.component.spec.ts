@@ -29,11 +29,11 @@ describe('ProjectFormComponent', () => {
 	@Component({
 		selector: 'app-project-component',
 		template: 	'<app-project-form ' +
-						'[risk$]="risk$" *ngIf="(projectService.project)">' +
+						'[risk$]="risk$" *ngIf="(prjService.project)">' +
 					'</app-project-form>'
 	})
 	class TestHostComponent {
-		constructor(public projectService: ProjectService) {}
+		constructor(public prjService: ProjectService) {}
 		public risk$ = new BehaviorSubject<number>(1);
 	}
 
@@ -41,7 +41,7 @@ describe('ProjectFormComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [ ProjectFormComponent, TechxhiMedalComponent, QuotationBadgeComponent, AuditGraphicBadgeComponent,
 				TestHostComponent, BranchComponent],
-			providers: [ReferentialService, CinematicService],
+			providers: [ReferentialService, CinematicService, ProjectService],
 			imports: [
 					MatButtonToggleModule, MatCheckboxModule, HttpClientTestingModule, FormsModule, ReactiveFormsModule,
 					MatDialogModule, RouterTestingModule
@@ -52,10 +52,10 @@ describe('ProjectFormComponent', () => {
 
 	beforeEach(() => {
 
-		backendSetupService = TestBed.get(BackendSetupService);
+		backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('URL_OF_SERVER');
 
-		httpTestingController = TestBed.get(HttpTestingController);
+		httpTestingController = TestBed.inject(HttpTestingController);
 
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
@@ -63,7 +63,7 @@ describe('ProjectFormComponent', () => {
 		project.id = 1789;
 		project.name = 'Revolutionary project';
 		project.audit = {};
-		projectService = TestBed.get(ProjectService);
+		projectService = TestBed.inject(ProjectService);
 		projectService.project = project;
 		projectService.projectLoaded$ = new BehaviorSubject(true);
 

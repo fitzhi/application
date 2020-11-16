@@ -226,7 +226,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 				<p><strong>${similarStaff.firstName} ${similarStaff.lastName}</strong>
 				has already been declared in the staff list.
 				<br/>He/she has been linked with the Github login : <strong>${similarStaff.login}</strong></p>
-				<p><i>You should link this login with the pseudo.</i></p>`);
+				<p><em>You should link this login with the pseudo.</em></p>`);
 			return;
 		}
 
@@ -239,9 +239,9 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 					let pseudos = this.dataSource.data
 						.map(g => g.pseudo)
 						.filter(p => p !== ghost.pseudo);
-					
+
 					this.dataSource.removePseudo(ghost.pseudo);
-					
+
 					pseudos = this.ghostsService.extractMatchingUnknownContributors(pseudos, staff);
 					if (traceOn()) {
 						console.groupCollapsed ('Associated %d pseudo(s)', pseudos.length);
@@ -252,9 +252,9 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 						if (traceOn()) {
 							console.log('removePseudo(%s)', ghost.pseudo);
 						}
-						this.dataSource.removePseudo(pseudo)
+						this.dataSource.removePseudo(pseudo);
 					});
-					
+
 					this.table.renderRows();
 
 					this.sunburstCacheService.clearReponse();

@@ -17,6 +17,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TagifyStarsComponent } from '../tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 import { TreemapComponent } from './treemap/treemap-container/treemap.component';
 import { CinematicService } from 'src/app/service/cinematic.service';
+import { DatePipe } from '@angular/common';
 
 describe('FitzhiDashboardComponent', () => {
 	let component: FitzhiDashboardComponent;
@@ -28,7 +29,7 @@ describe('FitzhiDashboardComponent', () => {
 				TreemapChartComponent, TreemapHeaderComponent, TreemapChartComponent, TreemapComponent ],
 			imports: [MatTableModule, MatSortModule, MatPaginatorModule, HttpClientTestingModule, MatDialogModule,
 				NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule],
-			providers: [ReferentialService, CinematicService]
+			providers: [ReferentialService, CinematicService, DatePipe]
 
 		})
 		.compileComponents();

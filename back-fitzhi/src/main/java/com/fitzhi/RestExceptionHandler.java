@@ -27,13 +27,13 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(SkillerException.class)
 	protected ResponseEntity<Object> handleSkillerException(SkillerException ex) {
-		return new ResponseEntity<Object>(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.errorCode,  ex.errorMessage, ex),
+		return new ResponseEntity<>(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.errorCode,  ex.errorMessage, ex),
 				HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@ExceptionHandler(NotFoundException.class)
 	protected ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
-		return new ResponseEntity<Object>(new ApiError(HttpStatus.NOT_FOUND, ex.errorCode,  ex.errorMessage, ex),
+		return new ResponseEntity<>(new ApiError(HttpStatus.NOT_FOUND, ex.errorCode,  ex.errorMessage, ex),
 				HttpStatus.NOT_FOUND);
 	}
 }

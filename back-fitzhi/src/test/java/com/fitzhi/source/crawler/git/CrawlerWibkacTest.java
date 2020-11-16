@@ -1,15 +1,20 @@
-/**
- * 
- */
 package com.fitzhi.source.crawler.git;
 
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.PROJECT;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
+
+import com.fitzhi.bean.AsyncTask;
+import com.fitzhi.bean.DataChartHandler;
+import com.fitzhi.bean.DataHandler;
+import com.fitzhi.bean.ProjectDashboardCustomizer;
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.RepositoryAnalysis;
+import com.fitzhi.exception.SkillerException;
+import com.fitzhi.source.crawler.RepoScanner;
 
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
@@ -23,30 +28,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.fitzhi.bean.AsyncTask;
-import com.fitzhi.bean.DataChartHandler;
-import com.fitzhi.bean.DataHandler;
-import com.fitzhi.bean.ProjectDashboardCustomizer;
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.RepositoryAnalysis;
-import com.fitzhi.data.source.ConnectionSettings;
-import com.fitzhi.exception.SkillerException;
-import com.fitzhi.source.crawler.RepoScanner;
-
-import lombok.extern.slf4j.Slf4j;
-
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@TestPropertySource(properties = { "prefilterEligibility=false" }) 
-@Slf4j
+@TestPropertySource(properties = { "prefilterEligibility=true" }) 
 public class CrawlerWibkacTest {
 
-	private static final String FITZHI = "application";
+	private static final String FITZHI = "first-test";
 
 	private static final String DIR_GIT = ".." + File.separator + "git_repo_for_test" + File.separator + "%s" + File.separator;
 
@@ -79,62 +70,9 @@ public class CrawlerWibkacTest {
 	public void before() throws SkillerException {
 		project = new Project(1000, FITZHI);
     	asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 1000);
+		project.setLocationRepository(new File(String.format(DIR_GIT, FITZHI)).getAbsolutePath());
 	}
 	
-	
-	/**
-	 * Test the method filterElibilible
-	 * 
-	 * @throws IOException
-	 */
-	@Test
-	public void testFilterEligible() throws IOException, SkillerException {
-
-		FileRepositoryBuilder builder = new FileRepositoryBuilder();
-		if (log.isDebugEnabled()) {
-			log.debug(String.format("Repository location %s", new File(String.format(FILE_GIT, FITZHI)).getAbsolutePath()));
-		}
-		
-		repository = builder.setGitDir(new File(String.format(FILE_GIT, FITZHI))).readEnvironment().findGitDir()
-				.build();
-
-		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);		
-		scanner.finalizeListChanges(String.format(DIR_GIT, FITZHI), analysis);
-		
-		if (log.isDebugEnabled()) {
-			log.debug(String.format("Analysis.getPathsAll() content %d paths : ", analysis.getPathsAll().size()));
-			analysis.getPathsAll().stream().forEach(log::debug);
-		}
-		
-		assertTrue(
-				analysis.getPathsAll().contains("front-fitzhi/src/assets/img/zhi.png"));
-
-		scanner.filterEligible(analysis);
-
-		assertFalse(analysis.getPathsAll().contains("front-fitzhi/src/assets/img/zhi.png"));
-
-	}
-
-	/**
-	 * Test the method filterElibilible
-	 * 
-	 * @throws IOException
-	 */
-	@Test
-	public void testCleanupPaths() throws IOException, SkillerException {
-
-		FileRepositoryBuilder builder = new FileRepositoryBuilder();
-		repository = builder.setGitDir(new File(String.format(FILE_GIT, FITZHI))).readEnvironment().findGitDir()
-				.build();
-
-		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);
-		scanner.finalizeListChanges(String.format(DIR_GIT, FITZHI), analysis);
-		scanner.filterEligible(analysis);
-		analysis.cleanupPaths(projectDashboardCustomizer);
-		analysis.getPathsAll().stream().forEach(System.out::println);
-
-	}
-
 	/**
 	 * Test the method dataHandler.saveChanges
 	 * 
@@ -153,41 +91,11 @@ public class CrawlerWibkacTest {
 		dataSaver.saveChanges(p, analysis.getChanges());
 	}
 
-	/**
-	 * Test the method dataHandler.saveSCMPath
-	 * 
-	 * @throws IOException
-	 */
-	@Test
-	public void testsaveSCMPath() throws IOException, SkillerException {
-
-		FileRepositoryBuilder builder = new FileRepositoryBuilder();
-		repository = builder.setGitDir(new File(String.format(FILE_GIT, FITZHI))).readEnvironment().findGitDir()
-				.build();
-
-		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);
-
-		Project p = new Project(777, "test");
-		p.setLocationRepository(new File(String.format(FILE_GIT, FITZHI)).getAbsolutePath());
-    	asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 777);
-		dataSaver.saveRepositoryDirectories(p, analysis.getChanges());
-	}
-
-	@Test
-	public void testParseRepository() throws IOException, SkillerException {
-		Project prj = new Project (777, "vegeo");
-	   	asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 777);
-		prj.setLocationRepository(String.format(DIR_GIT, FITZHI));
-		projectHandler.addNewProject(prj);
-		scanner.parseRepository(prj);
-	}
-
 	@After
 	public void after() {
 		if (repository != null) {
 			repository.close();
 		}
     	asyncTask.removeTask(DASHBOARD_GENERATION, PROJECT, 1000);
-    	asyncTask.removeTask(DASHBOARD_GENERATION, PROJECT, 777);
 	}
 }

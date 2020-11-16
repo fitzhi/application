@@ -82,7 +82,7 @@ public class ProjectControllerMgtTasksTest {
 				.andExpect(status().isNotFound())
 				.andDo(print())
 				.andReturn();
-	
+		Assert.assertNotNull(result);
 	}
 	
 	/**

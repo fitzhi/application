@@ -11,17 +11,17 @@ import java.time.LocalDate;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.fitzhi.bean.DataChartHandler;
+import com.fitzhi.data.internal.DataChart;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.fitzhi.bean.DataChartHandler;
-import com.fitzhi.data.internal.DataChart;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>We test here the class <code>DataChartHandlerImpl</code>.
@@ -30,13 +30,12 @@ import com.fitzhi.data.internal.DataChart;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Slf4j
 public class DataChartHandlerTest {
 
 	@Autowired
 	DataChartHandler dataChartHandler;
 	
-	private Logger logger = LoggerFactory.getLogger(DataChartHandlerTest.class.getCanonicalName());
-
 	@Test
 	public void testAggregateDatachart()  {
 		DataChart root = new DataChart("root");
@@ -83,7 +82,7 @@ public class DataChartHandlerTest {
 		
 		StringBuilder sb = new StringBuilder();
 		root.dump(sb, "");
-		System.out.println(sb);
+		log.debug(sb.toString());
 	}
 	
 	@Test
@@ -116,7 +115,7 @@ public class DataChartHandlerTest {
 	     return ois.readObject();
 	   }
 	   catch (Exception e) {
-	     logger.error("error", e);
+	     log.error("error", e);
 	     return null;
 	   }
 	 }

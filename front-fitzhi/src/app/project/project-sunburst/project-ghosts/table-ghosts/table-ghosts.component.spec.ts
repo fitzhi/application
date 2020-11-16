@@ -21,7 +21,7 @@ describe('TableGhostsComponent', () => {
 
 	@Component({
 		selector: 'app-host-component',
-		template: 
+		template:
 			`
 			<p>Ghosts list</p>
 			<div style="width:80%;height:50%">
@@ -37,9 +37,9 @@ describe('TableGhostsComponent', () => {
 		public projectGhostsDataSource: ProjectGhostsDataSource;
 
 		@ViewChild(TableGhostsComponent) tableGhostsComponent: TableGhostsComponent;
-		
+
 		constructor(projectService: ProjectService) {
-			
+
 			projectService.project = new Project(1789, 'Revolutionary project');
 
 			this.projectGhostsDataSource = new ProjectGhostsDataSource(
@@ -51,12 +51,12 @@ describe('TableGhostsComponent', () => {
 						firstname: 'Captain',
 						lastname: 'Haddock',
 						fullName: '',
-						technical:false,
+						technical: false,
 						active: false,
 						external: false,
 						action: '',
 						staffRelated: new Collaborator(),
-						staffRecorded: false,				
+						staffRecorded: false,
 					},
 					{
 						idStaff: -1,
@@ -65,12 +65,12 @@ describe('TableGhostsComponent', () => {
 						firstname: 'f',
 						lastname: 'l',
 						fullName: '',
-						technical:false,
+						technical: false,
 						active: false,
 						external: false,
 						action: '',
 						staffRelated: new Collaborator(),
-						staffRecorded: false,				
+						staffRecorded: false,
 					},
 				]
 			);
@@ -105,14 +105,14 @@ describe('TableGhostsComponent', () => {
 				firstname: 'Emmanuel',
 				lastname: 'Macron',
 				fullName: '',
-				technical:false,
+				technical: false,
 				active: false,
 				external: false,
 				action: '',
 				staffRelated: new Collaborator(),
-				staffRecorded: false,				
+				staffRecorded: false,
 			}
-		)
+		);
 		console.log ('Data length', component.projectGhostsDataSource.data.length);
 		component.tableGhostsComponent.renderRows();
 		fixture.detectChanges();
@@ -124,19 +124,25 @@ describe('TableGhostsComponent', () => {
 	it('Create a simple collaborator', () => {
 		expect(component).toBeTruthy();
 
-		const staffService = TestBed.get(StaffService);
+		const staffService = TestBed.inject(StaffService);
 		const spy = spyOn(staffService, 'save$')
 			.and.returnValue(of(
 				{
 					idStaff: 1964,
 					pseudo: 'frvidal',
 					login: 'frvidal',
-					firstname: 'Frédéric',
-					lastname: 'VIDAL',
+					firstName: 'Frédéric',
+					lastName: 'VIDAL',
 					nickName: 'frvidal',
 					fullName: 'Frédéric VIDAL',
 					email: 'frederic.vidal@fitzhi.com',
-					level: 'Developper'
+					level: 'Developper',
+					external: false,
+					forceActiveState: false,
+					active: true,
+					dateInactive: null,
+					experiences: [],
+					missions: []
 				}));
 
 		const button = fixture.debugElement.nativeElement.querySelector('#addStaff-1');
@@ -146,8 +152,8 @@ describe('TableGhostsComponent', () => {
 
 		const buttonDeleted = fixture.debugElement.nativeElement.querySelector('#addStaff-1');
 		expect(buttonDeleted).toBeNull();
-	
+
 	});
-	
+
 });
 

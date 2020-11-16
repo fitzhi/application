@@ -82,8 +82,6 @@ describe('ProjectStaffComponent', () => {
 		console.log ('beforeEach(sync(()...');
 	});
 
-
-
 	it('We should create', () => {
 		expect(component).toBeTruthy();
 	});
@@ -128,9 +126,6 @@ describe('ProjectStaffComponent', () => {
 		req.flush(mockSkills);
 
 		httpMock.verify();
-	});
-
-	afterEach(() => {
 	});
 
 

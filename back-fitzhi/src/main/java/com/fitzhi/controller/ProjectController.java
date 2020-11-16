@@ -592,8 +592,7 @@ public class ProjectController {
 			try {
 				tasks.completeTask(DASHBOARD_GENERATION, PROJECT, project.getId());
 			} catch (SkillerException e) {
-				log.error(e.errorMessage);
-				e.printStackTrace();
+				log.error("Internal error", e);
 			}
 		}
 	}

@@ -72,6 +72,7 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 		}
 		return false;
 	}
+	
 	/**
 	 * Delete the passed path or throw a runtime exception is the deletion fails.
 	 * @param path the passed path

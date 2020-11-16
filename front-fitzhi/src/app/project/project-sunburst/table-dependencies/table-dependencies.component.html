@@ -1,4 +1,7 @@
-<table mat-table #table [dataSource]="dataSource" class="tblLibraries mat-elevation-z8 ">
+<table mat-table #table 
+  [dataSource]="dataSource" 
+    class="tblLibraries mat-elevation-z8 "
+    summary="The list of libraries present or detected in the project">
 
    <ng-container matColumnDef="path">
       <th id="pathDependencyHeader" mat-header-cell *matHeaderCellDef> Full path for the dependency </th>

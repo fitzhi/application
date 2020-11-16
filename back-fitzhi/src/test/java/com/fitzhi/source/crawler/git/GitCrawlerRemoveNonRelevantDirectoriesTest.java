@@ -36,10 +36,10 @@ public class GitCrawlerRemoveNonRelevantDirectoriesTest {
 		project.add(new Library("jquery", Global.LIBRARY_DETECTED));
 		project.add(new Library("docs", Global.LIBRARY_DECLARED));
 		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
-		analysis.addChange("one", new SourceChange("commitId", null, "authorName", "authorEmail"));
-		analysis.addChange("two", new SourceChange("commitId", null, "authorName", "authorEmail"));
-		analysis.addChange("test/my/jquery/nope/arg.js", new SourceChange("commitId", null, "authorName", "authorEmail"));
-		analysis.addChange("three", new SourceChange("commitId", null, "authorName", "authorEmail"));
+		analysis.takeChangeInAccount("one", new SourceChange("commitId", null, "authorName", "authorEmail"));
+		analysis.takeChangeInAccount("two", new SourceChange("commitId", null, "authorName", "authorEmail"));
+		analysis.takeChangeInAccount("test/my/jquery/nope/arg.js", new SourceChange("commitId", null, "authorName", "authorEmail"));
+		analysis.takeChangeInAccount("three", new SourceChange("commitId", null, "authorName", "authorEmail"));
 		repoScanner.removeNonRelevantDirectories(project, analysis);
 		Assert.assertTrue("jquery has be ne deleted", analysis.numberOfFiles()== 3);
 	}

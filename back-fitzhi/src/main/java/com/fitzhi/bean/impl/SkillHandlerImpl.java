@@ -21,9 +21,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.fitzhi.SkillerRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.SkillHandler;
@@ -33,11 +30,16 @@ import com.fitzhi.data.internal.SkillDetectorType;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.exception.SkillerException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import lombok.extern.slf4j.Slf4j;
 
 /**
+ * <p>
+ * Main (an currently single) implementation in charge of the skills management
+ * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 @Slf4j
 @Component
@@ -139,16 +141,16 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	
 		for (Skill skill : candidateSkills) {
 			for (CommitHistory entry : entries) {
-				if (isSkillDetected(skill, rootPath, entry.sourcePath)) {
+				if (isSkillDetected(skill, rootPath, entry.getSourcePath())) {
 					ProjectSkill projectSkill = extractedSkills.get(skill.getId());
 					if (projectSkill == null) {
 						if (log.isDebugEnabled()) {
 							log.debug(String.format("The skill %s has been detected in the project", skill.getTitle()));
 						}
-						extractedSkills.put(skill.getId(), new ProjectSkill(skill.getId(), 1, fileSize(rootPath, entry.sourcePath)));
+						extractedSkills.put(skill.getId(), new ProjectSkill(skill.getId(), 1, fileSize(rootPath, entry.getSourcePath())));
 					} else {
 						projectSkill.incNumberOfFiles();
-						projectSkill.addFileSize(fileSize(rootPath, entry.sourcePath));
+						projectSkill.addFileSize(fileSize(rootPath, entry.getSourcePath()));
 					}
 				}
 			}			
@@ -238,7 +240,7 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, file.getAbsoluteFile()), e);
 			}
 		} catch (final SkillerException e) {
-			e.printStackTrace();
+			log.error("Internal error", e);
 			throw e;
 		}
 	}	

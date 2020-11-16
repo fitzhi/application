@@ -21,7 +21,7 @@ describe('TableGhostsComponent', () => {
 
 	@Component({
 		selector: 'app-host-component',
-		template: 
+		template:
 			`
 			<p>Ghosts list</p>
 			<div style="width:80%;height:50%">
@@ -37,11 +37,11 @@ describe('TableGhostsComponent', () => {
 		public projectGhostsDataSource: ProjectGhostsDataSource;
 
 		@ViewChild(TableGhostsComponent) tableGhostsComponent: TableGhostsComponent;
-		
+
 		public ghosts: Unknown[];
 
 		constructor(projectService: ProjectService) {
-			
+
 			projectService.project = new Project(1789, 'Revolutionary project');
 
 			this.ghosts = 				[
@@ -52,12 +52,12 @@ describe('TableGhostsComponent', () => {
 					firstname: 'One',
 					lastname: 'One',
 					fullName: '',
-					technical:false,
+					technical: false,
 					active: false,
 					external: false,
 					action: '',
 					staffRelated: new Collaborator(),
-					staffRecorded: false,				
+					staffRecorded: false,
 				},
 				{
 					idStaff: -1,
@@ -66,12 +66,12 @@ describe('TableGhostsComponent', () => {
 					firstname: 'two',
 					lastname: 'Two',
 					fullName: '',
-					technical:false,
+					technical: false,
 					active: false,
 					external: false,
 					action: '',
 					staffRelated: new Collaborator(),
-					staffRecorded: false,				
+					staffRecorded: false,
 				},
 				{
 					idStaff: -1,
@@ -80,12 +80,12 @@ describe('TableGhostsComponent', () => {
 					firstname: 'three',
 					lastname: 'Three',
 					fullName: '',
-					technical:false,
+					technical: false,
 					active: false,
 					external: false,
 					action: '',
 					staffRelated: new Collaborator(),
-					staffRecorded: false,				
+					staffRecorded: false,
 				},
 				{
 					idStaff: -1,
@@ -94,12 +94,12 @@ describe('TableGhostsComponent', () => {
 					firstname: 'four',
 					lastname: 'Four',
 					fullName: '',
-					technical:false,
+					technical: false,
 					active: false,
 					external: false,
 					action: '',
 					staffRelated: new Collaborator(),
-					staffRecorded: false,				
+					staffRecorded: false,
 				},
 				{
 					idStaff: -1,
@@ -108,12 +108,12 @@ describe('TableGhostsComponent', () => {
 					firstname: 'five',
 					lastname: 'Five',
 					fullName: '',
-					technical:false,
+					technical: false,
 					active: false,
 					external: false,
 					action: '',
 					staffRelated: new Collaborator(),
-					staffRecorded: false,				
+					staffRecorded: false,
 				},
 				{
 					idStaff: -1,
@@ -122,12 +122,12 @@ describe('TableGhostsComponent', () => {
 					firstname: 'six',
 					lastname: 'Six',
 					fullName: '',
-					technical:false,
+					technical: false,
 					active: false,
 					external: false,
 					action: '',
 					staffRelated: new Collaborator(),
-					staffRecorded: false,				
+					staffRecorded: false,
 				},
 				{
 					idStaff: -1,
@@ -136,12 +136,12 @@ describe('TableGhostsComponent', () => {
 					firstname: 'seven',
 					lastname: 'Sevent',
 					fullName: '',
-					technical:false,
+					technical: false,
 					active: false,
 					external: false,
 					action: '',
 					staffRelated: new Collaborator(),
-					staffRecorded: false,				
+					staffRecorded: false,
 				},
 				{
 					idStaff: -1,
@@ -150,12 +150,12 @@ describe('TableGhostsComponent', () => {
 					firstname: 'heigth',
 					lastname: 'Height',
 					fullName: '',
-					technical:false,
+					technical: false,
 					active: false,
 					external: false,
 					action: '',
 					staffRelated: new Collaborator(),
-					staffRecorded: false,				
+					staffRecorded: false,
 				},
 			];
 
@@ -194,19 +194,25 @@ describe('TableGhostsComponent', () => {
 		expect(buttonAbsent).toBeNull();
 
 
-		const staffService = TestBed.get(StaffService);
+		const staffService = TestBed.inject(StaffService);
 		const spy = spyOn(staffService, 'save$')
 			.and.returnValue(of(
 				{
 					idStaff: 1964,
 					pseudo: 'frvidal',
 					login: 'frvidal',
-					firstname: 'Frédéric',
-					lastname: 'VIDAL',
+					firstName: 'Frédéric',
+					lastName: 'VIDAL',
 					nickName: 'frvidal',
 					fullName: 'Frédéric VIDAL',
 					email: 'frederic.vidal@fitzhi.com',
-					level: 'Developper'
+					level: 'Developper',
+					forceActiveState: false,
+					external: false,
+					active:  true,
+					dateInactive: null,
+					experiences: [],
+					missions: []
 				}));
 
 		buttonLine3.click();
@@ -223,9 +229,9 @@ describe('TableGhostsComponent', () => {
 				expect(o.value).toBe('six');
 			}
 		}
-	
+
 	});
 
-	
+
 });
 

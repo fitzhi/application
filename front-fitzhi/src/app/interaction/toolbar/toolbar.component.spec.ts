@@ -5,6 +5,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { CinematicService } from '../../service/cinematic.service';
 import { Constants } from '../../constants';
 import { Component, AfterViewInit } from '@angular/core';
+import { Form } from 'src/app/service/Form';
 
 declare var $: any;
 
@@ -36,8 +37,8 @@ describe('ToolbarComponent', () => {
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
 
-		const cinematicService = TestBed.get(CinematicService);
-		cinematicService.currentActiveForm$.next (Constants.TABS_STAFF_LIST);
+		const cinematicService = TestBed.inject(CinematicService);
+		cinematicService.currentActiveForm$.next (new Form(Constants.TABS_STAFF_LIST, 'Staff list'));
 
 		fixture.detectChanges();
 	});

@@ -94,7 +94,7 @@ public class RiskCommitAndDevProcessorMeanTheRiskTest {
 		comRep.getRepository().values().stream().forEach(
 				commit -> 
 				data.injectFile(data, 
-						commit.sourcePath.split(INTERNAL_FILE_SEPARATOR), 
+						commit.getSourcePath().split(INTERNAL_FILE_SEPARATOR), 
 						1,
 						commit.evaluateDateLastestCommit(),
 						commit.committers()));
