@@ -408,10 +408,11 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		return path;
 	}
 
-	public static Collection<RevCommit> loadCommits(Project project, Repository repository, AsyncTask tasks)
+	@Override
+	public GitDataspace loadGitDataspace(Project project, Repository repository)
 			throws SkillerException {
 
-		Map<ObjectId, RevCommit> allCommits = new HashMap<>();
+		final GitDataspace gitCache = new GitDataspace(project.getId());
 
 		try (Git git = new Git(repository)) {
 
@@ -429,11 +430,11 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 					if (log.isDebugEnabled()) {
 						log.debug(String.format("Detecting %s", commit.getId()));
 					}
-					if (!allCommits.containsKey(commit.getId())) {
+					if (!gitCache.containsKey(commit.getId())) {
 						if (log.isDebugEnabled()) {
 							log.debug(String.format("Adding %s", commit.getId()));
 						}
-						allCommits.put(commit.getId(), commit);
+						gitCache.addCommit(commit);
 						if (++nbCommit == 1000) {
 							nbTotCommit += nbCommit;
 							tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
@@ -444,7 +445,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 				}
 			}
 
-			return allCommits.values();
+			return gitCache;
 
 		} catch (final IOException | GitAPIException e) {
 			throw new SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e);

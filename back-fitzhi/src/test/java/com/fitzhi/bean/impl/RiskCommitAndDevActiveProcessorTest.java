@@ -3,22 +3,10 @@
  */
 package com.fitzhi.bean.impl;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.RiskProcessor;
@@ -31,6 +19,16 @@ import com.fitzhi.data.source.BasicCommitRepository;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.RepoScanner;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 /**
  * Testing the class {@link RiskCommitAndDevActiveProcessorImpl}
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -129,7 +127,7 @@ public class RiskCommitAndDevActiveProcessorTest {
 		
 		Collections.sort(stats, (StatActivity sa1, StatActivity sa2) -> sa1.getFilename().compareTo(sa2.getFilename()));
 		Collections.sort(expected, (StatActivity sa1, StatActivity sa2) -> sa1.getFilename().compareTo(sa2.getFilename()));
-		assertThat(stats, is(expected));
+		Assert.assertArrayEquals(expected.toArray(), stats.toArray());
 	}
 	
 	@Test
@@ -157,7 +155,7 @@ public class RiskCommitAndDevActiveProcessorTest {
 		
 		Collections.sort(stats, (StatActivity sa1, StatActivity sa2) -> sa1.getFilename().compareTo(sa2.getFilename()));
 		Collections.sort(expected, (StatActivity sa1, StatActivity sa2) -> sa1.getFilename().compareTo(sa2.getFilename()));
-		assertThat(stats, is(expected));
+		Assert.assertArrayEquals(expected.toArray(), stats.toArray());
 	}
 
 	@Test
