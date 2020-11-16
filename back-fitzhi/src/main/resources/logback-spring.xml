@@ -41,17 +41,18 @@
     <!-- LOG "com.baeldung*" at TRACE level -->
     <logger name="com.baeldung" level="trace" additivity="false">
         <appender-ref ref="RollingFile" />
-        <appender-ref ref="Console" />
     </logger>
  
  	<root level="INFO">
 		<appender-ref ref="Console" />
 	</root>
-<!--
-	<logger name="com.fitzhi.service.sse" additivity="false">
+
+	<logger name="com.fitzhi.service.sse.ReactiveLogReport" additivity="false">
 		<level value="INFO" />
-		<appender-ref ref="Console" />
+        <appender-ref ref="RollingFile" />
 	</logger>
+    
+<!--
 
 	<logger name="com.fitzhi.bean.impl.PropectDashboardCustomizerImpl" additivity="false">
 		<level value="DEBUG" />

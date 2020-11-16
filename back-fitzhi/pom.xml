@@ -6,7 +6,7 @@
 	<groupId>com.fitzhi</groupId>
 	<artifactId>fitzhi</artifactId>
 	<packaging>jar</packaging>
-	<version>1.2-SNAPSHOT</version>
+	<version>1.2</version>
 	<name>Backend Fitzhì</name>
 	<url>http://maven.apache.org</url>
 	<properties>
