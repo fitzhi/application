@@ -76,9 +76,10 @@ public class ProjectControllerBranchesTest {
 			.andReturn();
 
 		String[] branches = gson.fromJson(result.getResponse().getContentAsString(), String[].class);
-		Assert.assertEquals("5 active branches are expected", 5, branches.length);
+		Assert.assertEquals("5 active branches are expected", 6, branches.length);
 		Assert.assertTrue("The master branch is expected to be here", Arrays.stream(branches).anyMatch(b -> b.equals("master")));
 		Assert.assertTrue("The release 1-1 is expected to be here", Arrays.stream(branches).anyMatch(b -> b.equals("release-1-1")));
+		Assert.assertTrue("The release 1-3 is expected to be here", Arrays.stream(branches).anyMatch(b -> b.equals("release-1.3")));
 	}
 	
 	@After
