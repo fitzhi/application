@@ -12,12 +12,17 @@
 		<appender-ref ref="STDOUT" />
 	</root>
 
-	<logger name="com.fitzhi.controller.ProjectController" additivity="false">
+	<logger name="com.fitzhi.source.crawler.git.GitCrawler" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
 
 <!-- Parking for my logging. 
+
+	<logger name="com.fitzhi.source.crawler.git" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
 
 	<logger name="com.fitzhi.controller.ProjectController" additivity="false">
 		<level value="DEBUG" />

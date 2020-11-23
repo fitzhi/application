@@ -9,6 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffEntry;
 import org.eclipse.jgit.diff.DiffFormatter;
@@ -198,16 +199,15 @@ public interface RepoScanner {
 	 * 
 	 * @param analysis the analysis container. 
 	 * This container hosts the complete list of changes detected during the crawling repository
-	 * @param commit     the actual commit evaluated
-	 * @param diffs      the list of difference between this current commit and the
-	 *                   previous one
+	 * @param commit the actual commit revision evaluated
+	 * @param finalFilePathname the final file pathname as it appears now, on the local repository
+	 * @param de the Diff entry to be taken in account for the pathname
 	 * @param diffFormater Difference formatter which will be used to count the number of added, and deleted, lines
 	 * @param parserVelocity tracker which is following the velocity of the parser 
-	 * @throws IOException thrown if any IO exception occurs
-	 * @throws CorruptObjectException throws of if the Git object is corrupted, which is an internal severe error
+	 * @throws SkillerException throw if any problem occurs, most probably an {@link IOException} or an {@link CorruptObjectException}
 	 */
-	void processDiffEntries(RepositoryAnalysis analysis, RevCommit commit, List<DiffEntry> diffs,
-			DiffFormatter diffFormatter, ParserVelocity parserVelocity) throws IOException, CorruptObjectException;
+	void processDiffEntries(RepositoryAnalysis analysis, RevCommit commit, String finalFilePathname,
+			DiffEntry de, DiffFormatter diffFormatter, ParserVelocity parserVelocity) throws SkillerException;
 
 
 	/**
@@ -355,5 +355,23 @@ public interface RepoScanner {
 	 */
 	GitDataspace loadGitDataspace(Project project, Repository repository)
 			throws SkillerException;
+
+	/**
+	 * retrieve the first commit registered for the given repository.
+	 * @param the "porcelain" API to interact with the git repository
+	 * @return the first commit
+	 */
+	RevCommit initialCommit(Git git) throws SkillerException;
+
+	/**
+	 * Retrrieve the DIFF entry for a specific file between 2 commit revisions
+	 * @param pathname the pathname curently analyzed, which will be filtered for the comparaison 
+	 * @param repository the GIT repository
+	 * @param from the commit revision <b>FROM</b> where the diff delta has to be processed
+	 * @param to the commit revision <b>TO</b> where the diff delta has to be processed
+	 * @return the searched entry or {@code null} if none's found 
+	 * @throws SkillerException thrown if any exeption occurs, most probably a GIT or IO exception
+	 */
+	DiffEntry retrieveDiffEntry(String pathname, Repository repository, RevCommit from, RevCommit to) throws SkillerException;
 
 }

@@ -286,9 +286,10 @@ public class RepoTestNumberOfLinesGitCrawlerTest {
 
 		RepositoryAnalysis analysis =  scanner.loadChanges(project, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, TESTING_REPOSITORY), analysis);
+		Assert.assertTrue("Only the read me file is present", analysis.getChanges().keySet().contains("README.md"));
 
 		ProjectLayers pl = skylineProcessor.generateProjectLayers(project, analysis.getChanges());
-		Assert.assertEquals(0, pl.getLayers().size());
+		Assert.assertEquals(1, pl.getLayers().size());
 	}
 
 	private void resetToStep(int step) throws Exception {

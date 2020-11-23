@@ -84,14 +84,17 @@ public class Error {
 	
 	public static final int CODE_IO_EXCEPTION = -1024;
 	
-	public static final int CODE_ENCRYPTION_FAILED = -1024;
+	public static final int CODE_ENCRYPTION_FAILED = -1025;
 	public static final String MESSAGE_ENCRYPTION_FAILED = "Internal error : En(De)cryption failed ! Error message : {0}";
 	
-	public static final int CODE_CANNOT_RETRIEVE_ATTACHMENTFILE = -1025;
+	public static final int CODE_CANNOT_RETRIEVE_ATTACHMENTFILE = -1026;
 	public static final String LIB_CANNOT_RETRIEVE_ATTACHMENTFILE = "Cannot retrieve the attachmentFile n°{2} for the project/topic {0}/{1}";
 	
-	public static final int CODE_PROJECT_IS_NOT_EMPTY = -1026;
+	public static final int CODE_PROJECT_IS_NOT_EMPTY = -1027;
 	public static final String MESSAGE_PROJECT_IS_NOT_EMPTY = "The project {0} is not empty and cannot be removed";
+	
+	public static final int CODE_PROJECT_CANNOT_RETRIEVE_INITIAL_COMMIT = -1028;
+	public static final String MESSAGE_PROJECT_CANNOT_RETRIEVE_INITIAL_COMMIT = "Cannot retrieve in the local repository the initial commit for project {0}";
 	
 	private Error() {
 	}

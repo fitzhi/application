@@ -116,13 +116,13 @@ public class GitCrawlerProcessDiffEntriesTest {
     private int linesAdded = 0;
     private int linesDeleted = 0;
 
-    	/**
+    /**
 	 * This test is simply display the diff resume for the while repository.
 	 * 
 	 * @throws IOException
 	 */
 	@Test
-	public void testProcessDiffEntries() throws IOException, GitAPIException {
+	public void testProcessDiffEntries() throws Exception {
 
 		ParserVelocity velocity = new ParserVelocity(project.getId(), this.asyncTask);
 
@@ -132,11 +132,13 @@ public class GitCrawlerProcessDiffEntriesTest {
 
         final RepositoryAnalysis analysis = new RepositoryAnalysis(project);
         Assert.assertTrue("no file recorded", analysis.getPathsAll().isEmpty());
-        scanner.processDiffEntries(analysis, commit, diffs, df, velocity);
+        DiffEntry de = diffs.get(0);
+        log.debug(String.format("Working with %s", de.getNewPath()));
+        scanner.processDiffEntries(analysis, commit, "README.md", de, df, velocity);
         if (log.isDebugEnabled()) {
             analysis.getPathsAll().stream().forEach(s -> log.debug(s));
         }
-        Assert.assertEquals("no file recorded", 3, analysis.getPathsAll().size());
+        Assert.assertEquals("no file recorded", 1, analysis.getPathsAll().size());
     }
 
 	/**
