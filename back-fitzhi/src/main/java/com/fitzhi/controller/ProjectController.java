@@ -644,8 +644,9 @@ public class ProjectController {
 	}
 
 	/**
+	 * Reset the current dashboard and start a new generation.
 	 * @param idProject the project identifier
-	 * @return the contributors who have been involved in the project
+	 * @return a single character String, containing the code "{@code 1}" if the removal of the repository succeeds,  "{@code 0}" otherwise.
 	 */
 	@GetMapping(value = "/resetDashboard/{idProject}")
 	public ResponseEntity<String> resetDashboard(final @PathVariable("idProject") int idProject) {

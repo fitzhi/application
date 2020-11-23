@@ -9,16 +9,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.DiffFormatter;
-import org.eclipse.jgit.errors.CorruptObjectException;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.transport.FetchConnection;
-
 import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
@@ -30,8 +20,17 @@ import com.fitzhi.data.source.ConnectionSettings;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.git.GitCrawler;
-import com.fitzhi.source.crawler.git.GitDataspace;
 import com.fitzhi.source.crawler.git.ParserVelocity;
+
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.errors.CorruptObjectException;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.transport.FetchConnection;
 
 /**
  * <p>
@@ -107,7 +106,6 @@ public interface RepoScanner {
 	 * @param project Project whose source code files should be scan in the repository
 	 * @param settings connection settings
 	 * @throws IOException thrown if any application or network error occurs.
-	 * @throws GitAPIException thrown if any application or network error occurs.
 	 * @throws GitAPIException thrown if any application or network error occurs.
 	 * @throws SkillerException will be thrown by only
 	 * {@link com.fitzhi.bean.ProjectHandler#saveLocationRepository } 
@@ -342,19 +340,6 @@ public interface RepoScanner {
 	 * @param filePath the file Path
 	 */
 	List<RevCommit> fileGitHistory(Project project, Repository repository, String filepath) throws SkillerException;
-
-
-	/**
-	 * <p>
-	 * Load the Git dataspace of the given project
-	 * </p>
-	 * @param project the concerned project
-	 * @param repository the local GIT repository related to the project
-	 * @return a container hosting the commits detected
-	 * @throws SkillerException thrown if any problmem occurs, mot prabably some Git processing exceptions
-	 */
-	GitDataspace loadGitDataspace(Project project, Repository repository)
-			throws SkillerException;
 
 	/**
 	 * retrieve the first commit registered for the given repository.

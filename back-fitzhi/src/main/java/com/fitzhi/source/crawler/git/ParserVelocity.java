@@ -47,12 +47,12 @@ public @Data class ParserVelocity {
 	/**
 	 * Total time spent in method {@link GitCrawler#fileGitHistory(com.fitzhi.data.internal.Project, org.eclipse.jgit.lib.Repository, String) fileGitHistory} in ms
 	 */
-	private int totalDurationInFileGitHistory = 0;
+	private long totalDurationInFileGitHistory = 0;
 
 	/**
 	 * Total time spent in method {@link GitCrawler#retrieveDiffEntry(String, org.eclipse.jgit.lib.Repository, org.eclipse.jgit.revwalk.RevCommit, org.eclipse.jgit.revwalk.RevCommit) retrieveDiffEntry} in ms
 	 */
-	private int totalDurationInRetrieveDiffEntry = 0;
+	private long totalDurationInRetrieveDiffEntry = 0;
 
 	/**
 	 * Build the parserVelocity for the given project
@@ -90,7 +90,7 @@ public @Data class ParserVelocity {
 	 * </p>
 	 * @param durationInRetrieveDiffEntry the duration to call
 	 */
-	public void logDurationInRetrieveDiffEntry (int durationInRetrieveDiffEntry) {
+	public void logDurationInRetrieveDiffEntry (long durationInRetrieveDiffEntry) {
 		this.totalDurationInRetrieveDiffEntry += durationInRetrieveDiffEntry;
 	}
 
@@ -100,7 +100,7 @@ public @Data class ParserVelocity {
 	 * </p>
 	 * @param durationInFileGitHistory the duration to log
 	 */
-	public void logDurationInFileGitHistory (int durationInFileGitHistory) {
+	public void logDurationInFileGitHistory (long durationInFileGitHistory) {
 		this.totalDurationInFileGitHistory += durationInFileGitHistory;
 	}
 
@@ -108,7 +108,8 @@ public @Data class ParserVelocity {
 	/**
 	 * Display the velocity results. 
 	 */
-	public void displayResults() {
+	public void logReport() {
+		log.info(String.format("Project numero %d", this.idProject));
 		log.info(String.format("Duration in fileGitHistory %d", this.totalDurationInFileGitHistory));
 		log.info(String.format("Duration in retrieveDiffEntry %d", this.totalDurationInRetrieveDiffEntry));
 	}

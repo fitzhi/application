@@ -94,7 +94,6 @@ import org.eclipse.jgit.diff.RawTextComparator;
 import org.eclipse.jgit.errors.CorruptObjectException;
 import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.Constants;
-import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
@@ -337,8 +336,8 @@ public class GitCrawler extends AbstractScannerDataGenerator {
     public void clone(final Project project, ConnectionSettings settings)
             throws IOException, GitAPIException, SkillerException {
 
-        // Will we execute a git.clone() or a git.pull().
-        // if TRUE, this will be a clone
+        // Will we execute a git.clone() or a git.pull() ?
+        // This boolean will decide. If TRUE, this will be a clone
         boolean execClone;
 
         Path path;
@@ -361,6 +360,9 @@ public class GitCrawler extends AbstractScannerDataGenerator {
             }
         }
         if (execClone) {
+            if (log.isInfoEnabled()) {
+                log.info(String.format("Git clone of project %s", project.getName()));
+            }
             if (settings.isPublicRepository()) {
                 Git.cloneRepository().setDirectory(path.toAbsolutePath().toFile()).setURI(settings.getUrl())
                         .setBranch(project.getBranch()).setProgressMonitor(new CustomProgressMonitor()).call();
@@ -377,6 +379,10 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         } else {
 
             try (Git git = Git.open(Paths.get(getLocalDotGitFile(project)).toFile())) {
+
+                if (log.isInfoEnabled()) {
+                    log.info(String.format("Git pull of project %s", project.getName()));
+                }
 
                 if (log.isDebugEnabled()) {
                     log.debug("We fetch first the local repository");
@@ -409,39 +415,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                     path.toAbsolutePath()));
         }
         return path;
-    }
-
-    @Override
-    public GitDataspace loadGitDataspace(Project project, Repository repository) throws SkillerException {
-
-        throw new SkillerRuntimeException("Should not pass here");
-        /*
-         * final GitDataspace gitCache = new GitDataspace(project.getId());
-         * 
-         * try (Git git = new Git(repository)) {
-         * 
-         * List<String> tagOrBranchNames =
-         * git.branchList().call().stream().map(Ref::getName)
-         * .collect(Collectors.toList());
-         * 
-         * if (log.isDebugEnabled()) {
-         * log.debug(String.format("Branch or tag names analyzed for %s",
-         * repository.getDirectory())); tagOrBranchNames.stream().forEach(log::debug); }
-         * int nbCommit = 0; int nbTotCommit = 0; for (String tagOrBranchName :
-         * tagOrBranchNames) { for (RevCommit commit :
-         * git.log().add(repository.resolve(tagOrBranchName)).call()) { if
-         * (log.isDebugEnabled()) { log.debug(String.format("Detecting %s",
-         * commit.getId())); } if (!gitCache.containsKey(commit.getId())) { if
-         * (log.isDebugEnabled()) { log.debug(String.format("Adding %s",
-         * commit.getId())); } gitCache.addCommit(commit); if (++nbCommit == 1000) {
-         * nbTotCommit += nbCommit; tasks.logMessage(DASHBOARD_GENERATION, PROJECT,
-         * project.getId(), nbTotCommit + " commits on-boarded!"); nbCommit = 0; } } } }
-         * 
-         * return gitCache;
-         * 
-         * } catch (final IOException | GitAPIException e) { throw new
-         * SkillerException(CODE_PARSING_SOURCE_CODE, MESSAGE_PARSING_SOURCE_CODE, e); }
-         */
     }
 
     @Override
@@ -653,12 +626,14 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                     totalNumberOfFiles += numberOfFiles;
                     tasks.logMessage(
                         DASHBOARD_GENERATION, PROJECT, project.getId(),
-                        String.format ("%d files analyzed !", totalNumberOfFiles));
+                        String.format ("%d files have been analyzed !", totalNumberOfFiles));
                         numberOfFiles = 0;
                 }
 
+                long start = System.currentTimeMillis();
                 List<RevCommit> chronoCommits = this.fileGitHistory(project, repository, filePathName);
-                
+                velocity.logDurationInFileGitHistory(System.currentTimeMillis() - start);
+               
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("Working with the filename %s", filePathName));
                     StringBuilder sb = new StringBuilder(Global.LN);
@@ -681,7 +656,9 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                         if (tabCommits[i].getName().equals(firstCommit.getName())) {
                             break;
                         }
+                        start = System.currentTimeMillis();
                         DiffEntry de = this.retrieveDiffEntry(filePathName, repository, previousCommit, tabCommits[i]);
+                        velocity.logDurationInRetrieveDiffEntry(System.currentTimeMillis() - start);
 
                         // We do not want to stop the treatment for (maybe) one single missing entry in the analysis 
                         if (de == null) {
@@ -718,6 +695,8 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                 DASHBOARD_GENERATION, PROJECT, project.getId(),
                 String.format ("All %d files have been analyzed !", allEligibleFiles.size()));
 
+            velocity.logReport();
+
             velocity.complete();
         
             return analysis;
@@ -742,34 +721,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         }
     }
 
-    private ObjectId previousTreeId(Repository repository, RevCommit commit, GitDataspace dataspace) throws Exception {
-
-        int one = commit.getId().toString().indexOf(" ", 0) + 1;
-        int two = commit.getId().toString().indexOf(" ", one);
-        String hash = commit.getId().toString().substring(one, two);
-/*
-        if (dataspace.containsKey(hash)) {
-            return dataspace.getTree(hash);
-        }
-*/
-        ObjectId oldCommitId = repository.resolve(hash + "^1");
-        // We are at the bottom of the history, we move forward to the next file
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Previous commit %s", (oldCommitId == null) ? "null" : oldCommitId.getName()));
-        }
-        if (oldCommitId == null) {
-            return null;
-        }
-
-        RevCommit previousCommit;
-        try (RevWalk revWalk = new RevWalk(repository)) {
-            previousCommit = revWalk.parseCommit(repository.resolve(oldCommitId.getName()));
-        }
-
-//      dataspace.addTree(hash, previousCommit.getTree().getId());
-
-        return previousCommit.getTree().getId();
-    }
 
     @Override
     public void processDiffEntries(RepositoryAnalysis analysis, RevCommit commit, String finalFilePathname,
