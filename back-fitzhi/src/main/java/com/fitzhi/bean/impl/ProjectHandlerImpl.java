@@ -23,9 +23,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
 import com.fitzhi.SkillerRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
@@ -46,6 +43,9 @@ import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.SkillerException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -497,9 +497,9 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		
 		// We list on INFO Level the ghosts contributing to the project
 		if (log.isInfoEnabled() && (!ghosts.isEmpty())) {
-			log.info(String.format("Ghost contributors for project %s", project.getName()));
-			StringBuilder sb = new StringBuilder();
-			unknownPseudos.stream().forEach(sb::append);
+			log.info(String.format("[%d] Ghost contributors for project %s", project.getId(), project.getName()));
+			StringBuilder sb = new StringBuilder(String.format("[%d]", project.getId()));
+			unknownPseudos.stream().forEach(s -> sb.append(s).append(" "));
 			log.info(sb.toString());
 		}
 	}

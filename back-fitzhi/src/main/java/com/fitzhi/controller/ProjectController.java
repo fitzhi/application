@@ -649,18 +649,20 @@ public class ProjectController {
 	 * @return a single character String, containing the code "{@code 1}" if the removal of the repository succeeds,  "{@code 0}" otherwise.
 	 */
 	@GetMapping(value = "/resetDashboard/{idProject}")
-	public ResponseEntity<String> resetDashboard(final @PathVariable("idProject") int idProject) {
+	public ResponseEntity<String> resetDashboard(final @PathVariable("idProject") int idProject) throws NotFoundException, SkillerException {
+		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Removing project with %d", idProject));
 		}
-		MyReference<ResponseEntity<String>> refResponse = projectLoader.new MyReference<>();
-		Project project = projectLoader.getProject(idProject, "", refResponse);
-		if (refResponse.getResponse() != null) {
-			return refResponse.getResponse();
+
+		Project project = projectHandler.get(idProject);
+		if (project == null) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 
 		try {
-			projectHandler.saveLocationRepository(idProject, null);
+			// We do not renitialieze the local repository if the user asks for a RESET 
+			// projectHandler.saveLocationRepository(idProject, null);
 			String response = cacheDataHandler.removeRepository(project) ? "1" : "0";
 			scanner.generateAsync(project, new SettingsGeneration(project.getId()));
 			return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
