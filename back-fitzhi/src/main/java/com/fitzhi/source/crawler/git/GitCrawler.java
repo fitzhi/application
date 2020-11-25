@@ -407,9 +407,9 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
     @Override
     public Path createDirectoryAsCloneDestination(Project project, ConnectionSettings settings) throws IOException {
-        // Create a temporary local path where the remote project repository will be
-        // cloned.
-        Path path = Files.createTempDirectory("skiller_jgit_" + project.getName() + "_");
+        // Create a temporary local path where the remote project repository will be cloned.
+        // Note : For Windows based system, we replace the blank character with an underscore
+        Path path = Files.createTempDirectory("fitzhi_jgit_" + project.getName().replace(" ","_")  + "_");
         if (log.isDebugEnabled()) {
             log.debug(String.format("Cloning the repository %s inside the CREATED path %s", settings.getUrl(),
                     path.toAbsolutePath()));

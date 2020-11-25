@@ -295,7 +295,7 @@ public class ProjectController {
 		Collection<Ref> unfiltered_branches = this.scanner.loadBranches(project);
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("%d branches retrieved", unfiltered_branches.size()));
-			unfiltered_branches.stream().map(Ref::getName).forEach(log::debug);;
+			unfiltered_branches.stream().forEach(ref -> log.debug(ref.getName()));
 		}			
 		
 		String[] branches = unfiltered_branches
@@ -310,7 +310,7 @@ public class ProjectController {
 								
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("%d branches returned", branches.length));
-			Arrays.stream(branches).forEach(log::debug);
+			Arrays.stream(branches).forEach(branch -> log.debug(branch));
 		}			
 						
 		return new ResponseEntity<>(branches, headers(), HttpStatus.OK);
