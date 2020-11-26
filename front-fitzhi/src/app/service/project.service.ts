@@ -511,7 +511,12 @@ export class ProjectService extends InternalService {
 		this.httpClient.get<any>(url, httpOptions)
 			.pipe(take(1))
 			.subscribe({
-				next: branches => {
+				next: (branches: string[]) => {
+					if (traceOn()) {
+						console.groupCollapsed("List of branches for project %s", this.project.name);
+						branches.forEach(branch => console.log (branch));
+						console.groupEnd();
+					}
 					this.branches$.next(branches);
 					this.gitService.assistanceMessageGitBranches$.next(false);
 				}

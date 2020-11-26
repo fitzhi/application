@@ -891,7 +891,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * The project has to be already saved first.
 	 */
 	loadBranchesOnBackend() {
-		// If this project has alredy been saved (i.e. the project.id > 0)
+		// If this project has already been saved (i.e. the project.id > 0)
 		if (this.projectService.project.id === -1) {
 			this.projectService.branches$.next(['master']);
 			this.messageService.info('You need to save, first, the project, to retrieve all available branches');

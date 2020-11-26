@@ -17,6 +17,15 @@ export class BranchComponent implements OnInit {
 	constructor(public projectService: ProjectService) { }
 
 	ngOnInit(): void {
+		this.projectService.branches$.subscribe({
+			next: branches => {
+				if (traceOn()) {
+					console.groupCollapsed ("List of branches received by the BranchComponent");
+					branches.forEach(branch => console.log( branch));
+					console.groupEnd();
+				}		
+			}
+		});
 	}
 
 	/**
