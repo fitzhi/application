@@ -45,13 +45,13 @@ if [ $test = "Y" ]
 then 
 mkdir -pv git_repo_for_test
 cd git_repo_for_test
-rm -Rf first-test
+rm -rf first-test
 git clone https://github.com/frvidal/first-test 
-rm -Rf application
+rm -rf application
 git clone https://github.com/fitzhi/application
-rmdir -Rf mock-repo-with-branches-for-dev-and-testing-purposes
+rmdir -rf mock-repo-with-branches-for-dev-and-testing-purposes
 git clone https://github.com/fitzhi/mock-repo-with-branches-for-dev-and-testing-purposes
-rmdir -Rf repo-test-number-of-lines
+rmdir -rf repo-test-number-of-lines
 git clone https://github.com/fitzhi/repo-test-number-of-lines
 cd ..
 fi
