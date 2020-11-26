@@ -49,10 +49,10 @@ rm -Rf first-test
 git clone https://github.com/frvidal/first-test 
 rm -Rf application
 git clone https://github.com/fitzhi/application
-rm -Rf application
-git clone https://github.com/fitzhi/application
-rmdir /Q /s mock-repo-with-branches-for-dev-and-testing-purposes
+rmdir -Rf mock-repo-with-branches-for-dev-and-testing-purposes
 git clone https://github.com/fitzhi/mock-repo-with-branches-for-dev-and-testing-purposes
+rmdir -Rf repo-test-number-of-lines
+git clone https://github.com/fitzhi/repo-test-number-of-lines
 cd ..
 fi
 
