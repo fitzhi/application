@@ -1,8 +1,7 @@
 
-<div class="app-toolbar">
+<div *ngIf="isConnected() && (installService.installComplete$|async)" class="app-toolbar">
     <app-toolbar  
         class="toolbar"
-        [hidden]="!isConnected()"
         (messengerFormActive)="onChangeForm($event)"
         (messengerCriteria)="onRequestQuery($event)"
         (messengerActiveOnly)="onChangeActiveOnly($event)">

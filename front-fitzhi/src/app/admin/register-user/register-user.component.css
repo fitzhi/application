@@ -45,6 +45,7 @@ p.important {
 .okButton, .cancelButton {
     height: 96px;
     width: 96px;
+    background-color: transparent;
 }
 
 .skip {

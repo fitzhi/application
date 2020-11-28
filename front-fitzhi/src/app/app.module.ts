@@ -118,14 +118,6 @@ import { StaffComponent } from './tabs-staff/staff.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { SkylineIconComponent } from './dashboard/skyline/skyline-icon/skyline-icon.component';
 
-
-
-
-
-
-
-
-
 @NgModule({
 	declarations: [
 		AppComponent,

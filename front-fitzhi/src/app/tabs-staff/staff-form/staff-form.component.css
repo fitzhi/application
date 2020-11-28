@@ -25,3 +25,7 @@ div.forceActiveState {
 	background-color: whitesmoke;
 	padding: 20px;
 }
+
+#ok {
+	background-color: transparent;
+}

@@ -13,6 +13,7 @@ import { AuthService } from './admin/service/auth/auth.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { SonarService } from './service/sonar.service';
 import { traceOn } from './global';
+import { InstallService } from './admin/service/install/install.service';
 
 declare var $: any;
 
@@ -63,6 +64,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 		private referentialService: ReferentialService,
 		private staffService: StaffService,
 		private projectService: ProjectService,
+		public installService: InstallService,
 		private router: Router) {
 
 		super();
