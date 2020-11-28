@@ -6,6 +6,7 @@ import { MessageService } from '../../../interaction/message/message.service';
 import { Router } from '@angular/router';
 import { traceOn, HttpCodes } from 'src/app/global';
 import { BrowserStack } from 'protractor/built/driverProviders';
+import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
 
 @Injectable({ providedIn: 'root' })
 export class HttpErrorInterceptorService implements HttpInterceptor {
@@ -42,12 +43,24 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 						return throwError(errorMessage);
 					}
 
+					if ( (response.error.hasOwnProperty('error')) && (response.error.hasOwnProperty('error_description'))) {
+						if (traceOn()) {
+							console.groupCollapsed('Catching error');
+							console.log ('Error', response.error.error);
+							console.log ('Description', response.error.error_description);
+							console.groupEnd();
+						}
+						setTimeout(() => messageService.error(response.error.error_description), 0);
+						return throwError(response.error.error_description);
+					}
+
 					if (response.error instanceof ErrorEvent) {
 						// client-side error
 						errorMessage = 'Error: ${error.error.message}';
 						setTimeout(() => messageService.error(errorMessage), 0);
 						return throwError(errorMessage);
 					}
+
 
 					switch (response.status) {
 						case 0:
