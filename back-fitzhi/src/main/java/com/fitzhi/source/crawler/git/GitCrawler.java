@@ -1586,8 +1586,9 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         }
         if (log.isInfoEnabled()) {
             log.info("Libraries detected in the repository :");
-            analysis.getProject().getLibraries().stream().filter(lib -> lib.getType() == Global.LIBRARY_DETECTED)
-                    .map(Library::getExclusionDirectory).forEach(log::info);
+            analysis.getProject().getLibraries().stream()
+                    .filter(lib -> lib.getType() == Global.LIBRARY_DETECTED)
+                    .forEach(lib ->  log.info(lib.getExclusionDirectory()));
         }
     }
 
