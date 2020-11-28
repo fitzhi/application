@@ -64,7 +64,7 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 
 					switch (response.status) {
 						case 0:
-							setTimeout(() => messageService.error('Server is down or unreachable!'), 0);
+							setTimeout(() => messageService.warning('Server is down or unreachable!'), 0);
 							return throwError('Server is down or unreachable!');
 							break;
 						case HttpCodes.notFound:
