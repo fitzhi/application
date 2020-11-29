@@ -179,3 +179,7 @@ label.alert {
 	width: 100%; 
 	font-size: 10px;
 } 
+
+#buttonOk {
+	background-color: transparent;
+}
