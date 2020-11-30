@@ -81,7 +81,7 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 	}
 	
 	@Test
-	public void testOnBoardingNominal() throws SkillerException, IOException {
+	public void testOnBoardingNominal() throws SkillerException, IOException, Exception {
 		Project project = new Project(1917, "The Red Rev project");
 		
 		Staff staff = new Staff(1, "Frédéric", "VIDAL", "altF4", "fvidal", "frvidal@void.com", "OIM");
@@ -118,6 +118,9 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 		Optional<Mission> oMission = 
 				staff.getMissions().stream().filter(mission -> mission.getIdProject() == 1917).findFirst();
 		
+		if (!oMission.isPresent()) {
+			throw new Exception("oMission should be not empty.");
+		}
 		Mission mission = oMission.get();
 		
 		Assert.assertEquals(2, mission.getNumberOfFiles());

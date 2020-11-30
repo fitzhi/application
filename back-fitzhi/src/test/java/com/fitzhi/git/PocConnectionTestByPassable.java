@@ -89,10 +89,9 @@ public class PocConnectionTestByPassable {
 			
 			// Writing the new Path.
 			String s = gson.toJson(prop);
-			BufferedWriter bw = new BufferedWriter(
-					new FileWriter(fileProperties));
-			bw.write(s);
-			bw.close();
+			try (BufferedWriter bw = new BufferedWriter(new FileWriter(fileProperties))) {
+				bw.write(s);
+			}
 
 			Git.cloneRepository()
 				.setDirectory(path.toFile())
@@ -212,10 +211,10 @@ public class PocConnectionTestByPassable {
 		}
 		
 		final File out = new File("git-scan.csv");
-		final BufferedWriter writer = new BufferedWriter(new FileWriter(out));
-		writer.write(repositoryOfCommit.extractCSV());
-		writer.flush();
-		writer.close();
+		try (BufferedWriter writer = new BufferedWriter(new FileWriter(out))) {
+			writer.write(repositoryOfCommit.extractCSV());
+			writer.flush();
+		}
 		
 		treeWalk.close();
 		revWalk.close();
