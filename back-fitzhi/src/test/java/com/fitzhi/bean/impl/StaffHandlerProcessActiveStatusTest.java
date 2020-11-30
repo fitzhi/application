@@ -77,7 +77,7 @@ public class StaffHandlerProcessActiveStatusTest {
 		staff.setActive(true);
 		staffHandler.processActiveStatus(staff);
 		Assert.assertFalse("Staff is active", staff.isActive());
-		Assert.assertEquals("Starting date of inactivity", LocalDate.now().minusDays(NUMBER_OF_DAYS+10), staff.getDateInactive());
+		Assert.assertEquals("Starting date of inactivity", LocalDate.now().minusDays((long) NUMBER_OF_DAYS + 10), staff.getDateInactive());
 	}
 
 	@Test
