@@ -1,5 +1,6 @@
 package com.fitzhi.source.crawler.git;
 
+import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -8,6 +9,7 @@ import com.fitzhi.data.source.ConnectionSettings;
 import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.RepoScanner;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,5 +53,12 @@ public class GitCrawlerCreateDirectoryAsClonePermanentDestinationTest {
             log.debug(path.toAbsolutePath().toString());
         }
         Assert.assertTrue("createDirectoryAsCloneDestination returns a directory", Files.isDirectory(path));
+    }
+
+
+    @After
+    public void after() {
+        File fileToDelete = new File("./1789");
+        boolean success = fileToDelete.delete();
     }
 }
