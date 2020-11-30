@@ -32,7 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
-@TestPropertySource(properties = { "gitcrawler.repositories.location=../data/application/repos"}) 
+@TestPropertySource(properties = { "gitcrawler.repositories.location=."}) 
 public class GitCrawlerCreateDirectoryAsClonePermanentDestinationTest {
  
 	@Autowired
@@ -50,7 +50,6 @@ public class GitCrawlerCreateDirectoryAsClonePermanentDestinationTest {
             log.debug(path.toString());
             log.debug(path.toAbsolutePath().toString());
         }
-        System.out.println(path.toAbsolutePath().toString());
         Assert.assertTrue("createDirectoryAsCloneDestination returns a directory", Files.isDirectory(path));
     }
 }
