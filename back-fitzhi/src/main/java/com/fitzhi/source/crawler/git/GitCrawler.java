@@ -2,9 +2,12 @@ package com.fitzhi.source.crawler.git;
 
 import static com.fitzhi.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
 import static com.fitzhi.Error.CODE_IO_ERROR;
+import static com.fitzhi.Error.CODE_IO_EXCEPTION;
 import static com.fitzhi.Error.CODE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.CODE_PROJECT_CANNOT_RETRIEVE_INITIAL_COMMIT;
 import static com.fitzhi.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
+import static com.fitzhi.Error.CODE_CANNOT_CREATE_DIRECTORY;
+import static com.fitzhi.Error.MESSAGE_CANNOT_CREATE_DIRECTORY;
 import static com.fitzhi.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import static com.fitzhi.Error.MESSAGE_PARSING_SOURCE_CODE;
@@ -151,6 +154,27 @@ public class GitCrawler extends AbstractScannerDataGenerator {
      */
     @Value("${dependenciesMarker}")
     private String dependenciesMarker;
+
+    /**
+     * <p>
+     * <i>Optional</i> repositories location.
+     * </p>
+     * <ul>
+     * <Li>
+     * If this member variable is {@code null}, GitCrawler will create a temporary directory.
+     * </li>
+     * <li>
+     * If not, this variable hosts the local destination.
+     * </li>
+     * </ul>
+     */
+    @Value("${gitcrawler.repositories.location:#{null}}")
+    private String reposDir;
+
+    /**
+     * This boolean will be set to {@code true} if the location reposDir exists on file system, and does not need to be create.
+     */
+    private boolean reposDirExist = false;
 
     @Autowired
     ProjectDashboardCustomizer projectDashboardCustomizer;
@@ -342,7 +366,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
         Path path;
         if (project.getLocationRepository() == null) {
-            path = this.createDirectoryAsCloneDestination(project, settings);
+            path = createDirectoryAsCloneDestination(project, settings);
             execClone = true;
         } else {
             path = Paths.get(project.getLocationRepository());
@@ -406,16 +430,72 @@ public class GitCrawler extends AbstractScannerDataGenerator {
     }
 
     @Override
-    public Path createDirectoryAsCloneDestination(Project project, ConnectionSettings settings) throws IOException {
-        // Create a temporary local path where the remote project repository will be cloned.
-        // Note : For Windows based system, we replace the blank character with an underscore
-        Path path = Files.createTempDirectory("fitzhi_jgit_" + project.getName().replace(" ","_")  + "_");
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("Cloning the repository %s inside the CREATED path %s", settings.getUrl(),
-                    path.toAbsolutePath()));
+    public Path createDirectoryAsCloneDestination(Project project, ConnectionSettings settings) throws SkillerException {
+
+        if (reposDir == null) {
+            // Create a temporary local path where the remote project repository will be cloned.
+            // Note : For Windows based system, we replace the blank character with an underscore
+            Path path = mkdirLocalRepo(project);
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Cloning the repository %s inside the CREATED path %s", settings.getUrl(),
+                        path.toAbsolutePath()));
+            }
+            return path;        
+        } else {
+            mkdirReposDirectory();
+            File f =  new File(String.format("%s%s%d", reposDir, File.separator, project.getId()));
+            if (!f.exists()) {
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format("Creation of directory %s", f.getAbsolutePath()));
+                }
+                f.mkdir();
+            }
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Cloning the repository %s inside the CREATED path %s", settings.getUrl(),
+                        f.getPath()));
+            }
+            return f.toPath();
         }
-        return path;
     }
+
+    /**
+     * <p>
+     * Create the directory reposDir.
+     * </p>
+     * @throws SkillerException throw if any exception occurs.
+     */
+    private void mkdirReposDirectory() throws SkillerException {
+        try {
+            if (!reposDirExist) {
+                File f =  new File(reposDir);
+                reposDirExist = f.exists();
+                if (!reposDirExist)  {
+                    if (!f.mkdir()) {
+                        throw new SkillerException(CODE_CANNOT_CREATE_DIRECTORY, MessageFormat.format(MESSAGE_CANNOT_CREATE_DIRECTORY, f.getAbsolutePath()));
+                    } else {
+                        reposDirExist = true;
+                    }
+                }
+            }
+        } catch (final SecurityException se) {
+            throw new SkillerException(CODE_IO_EXCEPTION, se.getLocalizedMessage());
+        }
+    }
+
+    /**
+     * <p>
+     * Create the directory local directory.
+     * </p>
+     * @param project the current project which local repository has to be created
+     * @throws SkillerException throw if any exception occurs.
+     */
+    private Path mkdirLocalRepo(Project project) throws SkillerException {
+        try {
+            return Files.createTempDirectory("fitzhi_jgit_" + project.getName().replace(" ","_")  + "_");
+        } catch (final IOException ioe) {
+            throw new SkillerException(CODE_IO_EXCEPTION, ioe.getLocalizedMessage(), ioe);
+        }
+    }   
 
     @Override
     public Set<String> allEligibleFiles(Project project) throws SkillerException {

@@ -62,6 +62,14 @@ public class Application {
 	@Value("${staffHandler.inactivity.delay}")
 	private int inactivityDelay;	
 	
+    /**
+     * <p>
+     * <i>Optional</i> repositories location.
+     * </p>
+     */
+    @Value("${gitcrawler.repositories.location:#{null}}")
+    private String reposDir;
+
 	public static void main(String[] args) {
 		LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Starting Backend 质 Fitzhì");
 		SpringApplication.run(Application.class, args);
@@ -86,7 +94,10 @@ public class Application {
 	        LoggerFactory.getLogger(Application.class.getCanonicalName()).info(String.format("\t %s", dependenciesMarker));
             LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((collapseEmptyDirectory) ? "\tDirectories should be collapsed" : "\tDirectories should NOT be collaped"));
             LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((prefilterEligibility) ? "\tFile eligibility is PREfiltered" : "\tFile eligibility id POSTfiltered"));
-        };
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((reposDir == null) ? 
+				"\tLocal repositories are hosted in a temporary destination" : String.format("\tLocal repositories are hosted in %s", reposDir)));
+			
+		};
     }
 	
     @Bean

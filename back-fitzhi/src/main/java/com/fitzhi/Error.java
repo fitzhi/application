@@ -96,6 +96,9 @@ public class Error {
 	public static final int CODE_PROJECT_CANNOT_RETRIEVE_INITIAL_COMMIT = -1028;
 	public static final String MESSAGE_PROJECT_CANNOT_RETRIEVE_INITIAL_COMMIT = "Cannot retrieve in the local repository the initial commit for project {0}";
 	
+	public static final int CODE_CANNOT_CREATE_DIRECTORY = -1029;
+	public static final String MESSAGE_CANNOT_CREATE_DIRECTORY = "Cannot create the directory {0}";
+	
 	private Error() {
 	}
 	

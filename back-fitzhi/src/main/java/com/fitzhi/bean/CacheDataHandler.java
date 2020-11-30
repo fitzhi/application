@@ -13,7 +13,9 @@ import com.fitzhi.data.source.CommitRepository;
 public interface CacheDataHandler {
 
 	/**
-	 * Test if previous extraction has already made for this project<br/>
+	 * <p>
+	 * Test if previous analysis has already been made, and saved on the file system, for this project
+	 * </p>
 	 * @param project the current project
 	 * @return {@code true} if a previous extraction for this project is available on the file system, {@code false} otherwise
 	 * @throws IOException if an IOException occurs
@@ -21,7 +23,9 @@ public interface CacheDataHandler {
 	boolean hasCommitRepositoryAvailable (Project project) throws IOException;
 	
 	/**
-	 * Retrieve and parse the project from the file system<br/>
+	 * <p>
+	 * Retrieve and parse the project commit repository from the file system.
+	 * <p>
 	 * @param project the current project
 	 * @return the repository associated to the project
 	 * @throws IOException if an IOException occurs

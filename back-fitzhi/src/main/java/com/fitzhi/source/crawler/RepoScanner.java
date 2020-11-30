@@ -84,20 +84,24 @@ public interface RepoScanner {
 	
 	/**
 	 * <p>
-	 * Create a directory which will be the destination of the clone process.
-	 * <br/>
-	 * <font color="darkGreen" size="4">
-	 * The first implementation in {@link GitCrawler} will use the {@code temp directory}  of the filesystem.
-	 * </font>
+	 * Create the directory which will host the local repository.
+	 * </p>
+	 * 
+	 * <p>
+	 * The current implementation in {@link GitCrawler} will provide 2 solutions :
+	 * <ul>
+	 * <li> a temporary directory if the setting {@code gitcrawler.repositories.location} is empty</i>
+	 * <li>a permanent directory inside the given path given in {@code gitcrawler.repositories.location}</i>
+	 * </ul>
 	 * </p>
 	 * 
 	 * @param project  the actual project
 	 * @param settings the connection settings <i>(these settings are given for
 	 *                 trace only support)</i>
-	 * @throws IOException an IO oops ! occurs. Too bad!
+	 * @throws SkillerException thrown if an IO exception occurs, most probably either {@link IOException}, or {@link SecurityException} 
 	 * @return the resulting path
 	 */
-	Path createDirectoryAsCloneDestination(Project project, ConnectionSettings settings) throws IOException;
+	Path createDirectoryAsCloneDestination(Project project, ConnectionSettings settings) throws SkillerException;
 	
 	/**
 	 * <p>
