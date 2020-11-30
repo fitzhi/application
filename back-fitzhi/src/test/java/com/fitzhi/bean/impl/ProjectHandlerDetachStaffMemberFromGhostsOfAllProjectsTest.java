@@ -58,14 +58,14 @@ public class ProjectHandlerDetachStaffMemberFromGhostsOfAllProjectsTest {
 				.filter(ghost -> ("pseudo-1789 666".equals(ghost.getPseudo())))
 				.findFirst();	
 		
-		Assert.assertEquals (-1, o1789.get().getIdStaff());
+		Assert.assertEquals (-1, o1789.isPresent() ? o1789.get().getIdStaff() : 0);
 
 		Optional<Ghost> o1805 = project1805
 				.getGhosts()
 				.stream()
 				.filter(ghost -> ("pseudo-1805 666".equals(ghost.getPseudo())))
 				.findFirst();	
-		Assert.assertEquals (-1, o1805.get().getIdStaff());
+		Assert.assertEquals (-1, o1805.isPresent() ? o1805.get().getIdStaff() : 0);
 	}
 	
 	@After

@@ -71,7 +71,7 @@ public class StaffHandlerProcessActiveStatusTest {
 		// We force the last date of commit to be older that staffHandler.inactivity.delay
 		Optional<Mission> oMission = staff.getMissions().stream().filter(mission -> mission.getIdProject() == 1805).findFirst();
 		if (oMission.isPresent()) {
-			oMission.get().setLastCommit(LocalDate.now().minusDays(NUMBER_OF_DAYS+10));
+			oMission.get().setLastCommit(LocalDate.now().minusDays((long) NUMBER_OF_DAYS + 10));
 		}
 		
 		staff.setActive(true);
@@ -86,7 +86,7 @@ public class StaffHandlerProcessActiveStatusTest {
 		// We force the last date of commit to be older that staffHandler.inactivity.delay
 		Optional<Mission> oMission = staff.getMissions().stream().filter(mission -> mission.getIdProject() == 1805).findFirst();
 		if (oMission.isPresent()) {
-			oMission.get().setLastCommit(LocalDate.now().minusDays(NUMBER_OF_DAYS+10));
+			oMission.get().setLastCommit(LocalDate.now().minusDays((long) NUMBER_OF_DAYS + 10));
 		}
 		
 		staff.setActive(true);

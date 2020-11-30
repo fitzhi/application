@@ -71,10 +71,10 @@ public class CodeDirJsonTest  {
 		if (logger.isDebugEnabled()) {
 			logger.debug(s);
 		}
-		BufferedWriter bw = new BufferedWriter(
-				new FileWriter(new File(resourcesDirectory.getAbsolutePath() + "/gitdir/gitdir.json")));
-		bw.write(s);
-		bw.close();
+		try (BufferedWriter bw = new BufferedWriter(
+				new FileWriter(new File(resourcesDirectory.getAbsolutePath() + "/gitdir/gitdir.json")))) {
+			bw.write(s);
+		}
 
 		Assert.assertTrue(true);
 	}
