@@ -42,8 +42,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import jdk.internal.jline.internal.Log;
 import lombok.extern.slf4j.Slf4j;
+
 /**
  * <p>
  * Test of the class {@link ProjectAuditController}

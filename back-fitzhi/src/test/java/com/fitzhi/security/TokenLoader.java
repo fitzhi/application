@@ -31,8 +31,7 @@ public class TokenLoader {
 	    params.add(USER, username);
 	    params.add(PSSWORD, password);
 	 
-	    ResultActions result 
-	      = mvc.perform(post("/oauth/token")
+	    ResultActions result = mvc.perform(post("/oauth/token")
 	        .params(params)
 	        .with(httpBasic(TRUSTED_CLIENT_USERNAME, "secret"))
 	        .accept("application/json;charset=UTF-8"))
