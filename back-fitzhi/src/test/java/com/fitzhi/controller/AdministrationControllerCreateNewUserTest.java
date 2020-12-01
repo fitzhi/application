@@ -102,10 +102,14 @@ public class AdministrationControllerCreateNewUserTest {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Crew size %d", crewSize));
 		}
-		this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "user").param(PASS_WORD, pass)
+		//
+		// Sonar is disabled for this line for the useless password security check. 
+		// This fake password is useless for an attacker
+		//
+		this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "user").param(PASS_WORD, pass) 
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + TokenLoader.obtainAccessMockToken(mvc)))
 				.andExpect(status().isOk()).andExpect(jsonPath(CST_STAFF_ID_STAFF, is(0)))
-				.andExpect(jsonPath(CST_CODE, is(CODE_CANNOT_SELF_CREATE_USER)));
+				.andExpect(jsonPath(CST_CODE, is(CODE_CANNOT_SELF_CREATE_USER))); //NOSONAR
 	}
 
 	@Test
@@ -113,10 +117,14 @@ public class AdministrationControllerCreateNewUserTest {
 		Staff s = new Staff(777, "frvidal", "pass");
 		s.setLastName("VIDAL");
 		this.staffHandler.addNewStaffMember(s);
+		//
+		// Sonar is disabled for this line for the useless password security check. 
+		// This fake password is useless for an attacker
+		//
 		this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "frvidal").param(PASS_WORD, pass)
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + TokenLoader.obtainAccessMockToken(mvc)))
 				.andExpect(status().isOk()).andExpect(jsonPath(CST_CODE, is(CODE_LOGIN_ALREADY_EXIST)))
-				.andExpect(jsonPath(CST_STAFF_ID_STAFF, is(0)));
+				.andExpect(jsonPath(CST_STAFF_ID_STAFF, is(0))); //NOSONAR
 
 	}
 

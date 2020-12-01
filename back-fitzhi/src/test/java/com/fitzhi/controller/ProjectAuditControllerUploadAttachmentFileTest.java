@@ -27,6 +27,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.AttachmentFile;
@@ -48,6 +50,7 @@ import com.google.gson.GsonBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@Slf4j
 public class ProjectAuditControllerUploadAttachmentFileTest {
 
 	/**
@@ -168,12 +171,16 @@ public class ProjectAuditControllerUploadAttachmentFileTest {
 		File attachment = new File (storageProperties.getLocation() + 
 				String.format("/%d-%d-audit.docx", ID_PROJECT, ID_TOPIC_1));
 		if (attachment.exists()) {
-			attachment.delete();
+			if (!attachment.delete()) {
+				log.error(String.format("Cannot delete %", attachment.getAbsolutePath()));
+			}
 		}
 		attachment = new File (storageProperties.getLocation() + 
 				String.format("/%d-%d-audit.pdf", ID_PROJECT, ID_TOPIC_1));
 		if (attachment.exists()) {
-			attachment.delete();		
+			if (!attachment.delete()) {
+				log.error(String.format("Cannot delete %", attachment.getAbsolutePath()));
+			}
 		}
 	}
 	

@@ -41,6 +41,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import jdk.internal.jline.internal.Log;
+import lombok.extern.slf4j.Slf4j;
 /**
  * <p>
  * Test of the class {@link ProjectAuditController}
@@ -51,6 +54,7 @@ import org.springframework.util.MultiValueMap;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@Slf4j
 public class ProjectAuditControllerDownloadAttachmentFileTest {
 
 	/**
@@ -136,12 +140,16 @@ public class ProjectAuditControllerDownloadAttachmentFileTest {
 		File attachment = new File (storageProperties.getLocation() + 
 				String.format("/%d-%d-audit.docx", ID_PROJECT, ID_TOPIC_1));
 		if (attachment.exists()) {
-			attachment.delete();
+			if (!attachment.delete()) {
+				log.error(String.format("Cannot delete %", attachment.getAbsolutePath()));
+			}
 		}
 		attachment = new File (storageProperties.getLocation() + 
 				String.format("/%d-%d-audit.pdf", ID_PROJECT, ID_TOPIC_1));
 		if (attachment.exists()) {
-			attachment.delete();		
+			if (!attachment.delete()) {
+				log.error(String.format("Cannot delete %", attachment.getAbsolutePath()));
+			}
 		}
 	}
 	
