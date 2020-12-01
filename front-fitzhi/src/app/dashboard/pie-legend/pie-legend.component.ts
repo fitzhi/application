@@ -45,7 +45,8 @@ export class PieLegendComponent implements OnInit {
 	/**
 	 * Return an explicit level of risk.
 	 */
-	levelOfRisk() {
+	levelOfRisk(): string {
+		return '';
 		/*
 		switch (this.activatedSlice.levelStaffRisk) {
 			case LevelStaffRisk.undefined:
@@ -56,7 +57,7 @@ export class PieLegendComponent implements OnInit {
 				return 'medium';
 			case LevelStaffRisk.low:
 				return 'low';
-			}
+		}
 		*/
 	}
 }

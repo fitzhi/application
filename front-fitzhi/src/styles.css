@@ -14,7 +14,7 @@
   
   /* Height of the top toolbar */
   --toolbar-height: 65px;
-  --bottom-bar-message-height: 4Opx;
+  --bottom-bar-message-height: 40px;
 }
 
 html {
