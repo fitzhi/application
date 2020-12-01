@@ -32,6 +32,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.in.BodyParamProjectAttachmentFile;
 import com.fitzhi.controller.util.LocalDateAdapter;
@@ -53,6 +55,7 @@ import com.google.gson.GsonBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@Slf4j
 public class ProjectAuditControllerRemoveThirdAttachmentFileTest {
 
 	/**
@@ -199,7 +202,9 @@ public class ProjectAuditControllerRemoveThirdAttachmentFileTest {
 	public void after() throws Exception {
 		File dir = new File(storageProperties.getLocation());
 		for (File file : dir.listFiles()) {
-			file.delete();
+			if (!file.delete()) {
+				log.error(String.format("Cannot delete %", file.getAbsolutePath()));
+			}
 		}
 	}
 	

@@ -30,6 +30,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.fitzhi.SkillerRuntimeException;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.data.external.ResumeDTO;
@@ -48,6 +50,7 @@ import com.google.gson.GsonBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@Slf4j
 public class StaffControllerUploadResumeTest {
 
 	/**
@@ -150,7 +153,9 @@ public class StaffControllerUploadResumeTest {
 		File file = new File (storageProperties.getLocation() + 
 				String.format("/%d-ET_201709.doc", 1));
 		if (file.exists()) {
-			file.delete();		
+			if (!file.delete()) {
+				log.error(String.format("Cannot delete %", file.getAbsolutePath()));
+			}
 		}
 	}
 }

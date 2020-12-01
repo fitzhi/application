@@ -1,5 +1,7 @@
 package com.fitzhi.source.crawler.git;
 
+import static com.fitzhi.Error.getStackTrace;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -48,7 +50,7 @@ public class GitCrawlTest {
             rw.markStart(root);
             commit = rw.next();
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error(getStackTrace(e));
         } finally {
             rw.close();
         }

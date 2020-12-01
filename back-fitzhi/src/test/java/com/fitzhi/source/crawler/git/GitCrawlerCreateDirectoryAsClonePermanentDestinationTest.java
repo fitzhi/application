@@ -59,6 +59,8 @@ public class GitCrawlerCreateDirectoryAsClonePermanentDestinationTest {
     @After
     public void after() {
         File fileToDelete = new File("./1789");
-        boolean success = fileToDelete.delete();
+        if (!fileToDelete.delete()) {
+            log.error(String.format("Cannot delete %", fileToDelete.getAbsolutePath()));
+        }
     }
 }

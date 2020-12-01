@@ -103,13 +103,13 @@ public class AdministrationControllerCreateNewUserTest {
 			log.debug(String.format("Crew size %d", crewSize));
 		}
 		//
-		// Sonar is disabled for this line for the useless password security check. 
-		// This fake password is useless for an attacker
+		// We disable this line for Sonar to avoid the useless password security check. 
+		// This fake password is useless for any hacker.
 		//
-		this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "user").param(PASS_WORD, pass) 
+		this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "user").param(PASS_WORD, pass) //NOSONAR 
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + TokenLoader.obtainAccessMockToken(mvc)))
 				.andExpect(status().isOk()).andExpect(jsonPath(CST_STAFF_ID_STAFF, is(0)))
-				.andExpect(jsonPath(CST_CODE, is(CODE_CANNOT_SELF_CREATE_USER))); //NOSONAR
+				.andExpect(jsonPath(CST_CODE, is(CODE_CANNOT_SELF_CREATE_USER)));
 	}
 
 	@Test
@@ -118,13 +118,13 @@ public class AdministrationControllerCreateNewUserTest {
 		s.setLastName("VIDAL");
 		this.staffHandler.addNewStaffMember(s);
 		//
-		// Sonar is disabled for this line for the useless password security check. 
-		// This fake password is useless for an attacker
+		// We disable this line for Sonar to avoid the useless password security check. 
+		// This fake password is useless for any hacker.
 		//
-		this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "frvidal").param(PASS_WORD, pass)
+		this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "frvidal").param(PASS_WORD, pass) //NOSONAR
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + TokenLoader.obtainAccessMockToken(mvc)))
 				.andExpect(status().isOk()).andExpect(jsonPath(CST_CODE, is(CODE_LOGIN_ALREADY_EXIST)))
-				.andExpect(jsonPath(CST_STAFF_ID_STAFF, is(0))); //NOSONAR
+				.andExpect(jsonPath(CST_STAFF_ID_STAFF, is(0)));
 
 	}
 

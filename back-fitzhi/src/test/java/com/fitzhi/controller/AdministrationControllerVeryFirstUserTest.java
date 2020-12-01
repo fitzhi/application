@@ -78,6 +78,10 @@ public class AdministrationControllerVeryFirstUserTest {
 	@Test
 	public void creationVeryFirstUserOK() throws Exception {
 				
+		//
+		// We disable this line for the Sonar analysis to avoid a useless password security check. 
+		// This fake password is useless for any hacker
+		//
 		MockHttpServletResponse response = this.mvc.perform(get("/api/admin/veryFirstUser") //NOSONAR
 					.param(LOGIN, "adminForTest") 
 					.param(PASS_WORD, "passForTest"))  
