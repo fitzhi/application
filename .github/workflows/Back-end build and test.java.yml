@@ -20,6 +20,10 @@ jobs:
         working-directory: ./back-fitzhi
     steps:
     - uses: actions/checkout@v2
+    - name: "Display locale settings"
+      run: |
+            locale
+            locale -a
     - name: "create directories for the repositories"
       run: |
             mkdir ../git_repo_for_test
