@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
+nimport { Component, OnInit, AfterViewInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
 import Sunburst from 'sunburst-chart';
 import { Constants } from '../../constants';
 import { MessageService } from '../../interaction/message/message.service';
@@ -91,6 +91,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	// We want to preview the chart if ready
 	public SUNBURST = 6;
+
+	// After confirmation, we reload the dashboard chart.
+	public RELOAD = 7;
 
 	// Identifier of the panel selected.
 	private idPanelSelected = -1;
@@ -598,6 +601,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					this.setActiveContext(PreviewContext.SUNBURST_DEPENDENCIES);
 				}
 				break;
+			case this.RELOAD:
 			case this.RESET:
 				this.idPanelSelected = idPanel;
 				this.reset();
