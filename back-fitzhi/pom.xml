@@ -287,12 +287,6 @@
 					<downloadJavadocs>false</downloadJavadocs>
 					<!-- Avoid type mvn eclipse:eclipse -Dwtpversion=2.0 -->
 					<wtpversion>2.0</wtpversion>
-
-					<systemPropertyVariables>
-						<user.language>fr</user.language>
-						<user.region>FR</user.region>
-					</systemPropertyVariables>
-
 				</configuration>
 			</plugin>
 
