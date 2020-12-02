@@ -25,13 +25,17 @@ public class LayerFactoryGetInstanceTest {
     
     @Test
     public void testLastWeek() {
+
+        log.info(String.format("Locale %s", Locale.getDefault().toString()));
+
         calendar.set(Calendar.YEAR, 2019);
         calendar.set(Calendar.MONTH, Calendar.DECEMBER);     
         calendar.set(Calendar.DAY_OF_MONTH, 29);
 
-        ZoneId zoneId = ZoneId.of("Europe/Paris");
-        log.info(String.format("Current %s", zoneId.toString()));
-        log.info(String.format("System %s", ZoneId.systemDefault().toString()));
+//        ZoneId zoneId = ZoneId.of("Europe/Paris");
+        ZoneId zoneId = ZoneId.of("Etc/UTC");
+        log.info(String.format("System ZoneId %s", ZoneId.systemDefault().toString()));
+        log.info(String.format("Application ZoneId %s", zoneId.toString()));
         
         LocalDate date = calendar.getTime().toInstant().atZone(zoneId).toLocalDate();
         Layer layer = LayerFactory.getInstance(new SourceChange(date, 1));
