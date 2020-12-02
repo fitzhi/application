@@ -40,6 +40,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
@@ -47,9 +49,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @TestPropertySource(properties = { "patternsInclusion=.*." , "prefilterEligibility=true" }) 
+@Slf4j
 public class CrawlerFirstTest {
 
-	private static final String FIRST_TEST = "first-test/";
+	private static final String FIRST_TEST = "first-test";
 
 	private static final String DIR_GIT = "../git_repo_for_test/%s";
 
@@ -79,6 +82,7 @@ public class CrawlerFirstTest {
 	@Before
 	public void before() throws SkillerException {
 		project = new Project(1000, FIRST_TEST);
+		project.setBranch("master");
 
 		asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 1000);
 		asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 777);
@@ -93,7 +97,7 @@ public class CrawlerFirstTest {
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, FIRST_TEST+"/.git"))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);
+		RepositoryAnalysis analysis = scanner.generateAnalysis(project, repository);
 
 		assertFalse(analysis.getPathsAll().contains("moduleA/test.txt"));
 		assertTrue(analysis.getPathsAll().contains("moduleB/test.txt"));
@@ -122,7 +126,7 @@ public class CrawlerFirstTest {
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, FIRST_TEST + "/.git"))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);
+		RepositoryAnalysis analysis = scanner.generateAnalysis(project, repository);
 		
 		scanner.finalizeListChanges(String.format(DIR_GIT, FIRST_TEST), analysis);
 		
@@ -131,6 +135,11 @@ public class CrawlerFirstTest {
 		// This file has been updated and renamed, and therefore not detected as a
 		// rename by the JGIT RenameDetector
 		//
+		if (log.isDebugEnabled()) {
+			log.debug("Content of the changes set");
+			analysis.getChanges().keySet().stream().forEach(p -> log.debug(p));
+		}
+
 		assertTrue(analysis.getChanges().keySet().contains("moduleAchanged/creationInA.txt"));
 	}
 
@@ -141,7 +150,7 @@ public class CrawlerFirstTest {
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, FIRST_TEST))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis =  scanner.loadChanges(project, repository);
+		RepositoryAnalysis analysis =  scanner.generateAnalysis(project, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, FIRST_TEST), analysis);
 		analysis.getPathsAll().stream().forEach(System.out::println);
 	}

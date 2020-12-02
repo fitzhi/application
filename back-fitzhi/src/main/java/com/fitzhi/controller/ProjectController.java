@@ -644,7 +644,9 @@ public class ProjectController {
 	}
 
 	/**
-	 * Reset the current dashboard and start a new generation.
+	 * <p>
+	 * Reset the current dashboard and start a new Sunburst generation.
+	 * </p>
 	 * @param idProject the project identifier
 	 * @return a single character String, containing the code "{@code 1}" if the removal of the repository succeeds,  "{@code 0}" otherwise.
 	 */

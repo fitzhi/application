@@ -43,7 +43,9 @@ public class RepositoryAnalysis {
 	private SourceControlChanges changes = new SourceControlChanges();
 
 	/**
-	 * List of paths detected as having been modified in the history of the repository.<br/>
+	 * <p>
+	 * List of paths detected as having been modified in the history of the repository.
+	 * </p>
 	 * This list is used to retrieve, by subtraction, i.e. the files never modified, the list of files just <b>added</b>, maybe <u>external files include.</u> 
 	 * These files might be external dependencies, non relevant for audit.  
 	 */

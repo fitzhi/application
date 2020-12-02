@@ -57,7 +57,7 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	
 	@Override
 	public boolean hasCommitRepositoryAvailable(Project project) throws IOException {
-		Path savedProject = Paths.get(getCacheFilename(project));
+		Path savedProject = Paths.get(generateCacheFilename(project));
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Examining %s", savedProject.toFile().getAbsolutePath()));
 		}
@@ -88,18 +88,18 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	@Override
 	public CommitRepository getRepository(Project project) throws IOException {
 		
-		final FileReader fr = new FileReader(new File(getCacheFilename(project)));
+		final FileReader fr = new FileReader(new File(generateCacheFilename(project)));
 
 		CommitRepository repository = new BasicCommitRepository();
 		repository = gson.fromJson(fr, repository.getClass());
 		if (log.isDebugEnabled()) {
-			log.debug("repository of project " 
-					+ project.getName() 
-					+ " retrieved from cache. It contains " 
-					+ repository.size() 
-					+ " entries.");
+			log.debug(String.format(
+				"Repository of project %s  retrieved from the cache. It contains %d entries.", 
+				project.getName(), 
+				repository.size())); 
 		}
 		fr.close();
+
 		return repository;
 	}
 
@@ -107,7 +107,7 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	public void saveRepository(Project project, CommitRepository repository) throws IOException {
 
 		//Get the repository path
-		Path path = Paths.get(getCacheFilename(project));
+		Path path = Paths.get(generateCacheFilename(project));
 		
 		//Use try-with-resource to get auto-closeable buffered writer instance close
 		try (BufferedWriter writer = Files.newBufferedWriter(path)) {
@@ -117,7 +117,10 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	
 	@Override
 	public boolean removeRepository(final Project project) throws IOException {
-		Path cacheFile = Paths.get(getCacheFilename(project));
+		Path cacheFile = Paths.get(generateCacheFilename(project));
+		if (log.isInfoEnabled()) {
+			log.info(String.format("Removing the file %s", cacheFile.getFileName()));
+		}
 		try {
 			Files.delete(cacheFile);
 			return true;
@@ -128,9 +131,13 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	}
 
 	/**
+	 * <p>
+	 * Generate the cache filename.
+	 * </p>
+	 * @param project the current project
 	 * @return the cache filename for the passed project
 	 */
-	private String getCacheFilename(final Project project) {
+	private String generateCacheFilename(final Project project) {
 		Path rootLocation = Paths.get(cacheDirRepository);
 		final File destination = rootLocation.resolve("").toFile();
 		// If the destination directory does not exist, we create it
@@ -141,7 +148,7 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 				throw new SkillerRuntimeException(se);
 			}
 		}
-		return rootLocation.resolve(project.getId()+"-"+project.getName()+".json").toFile().getAbsolutePath();
+		return rootLocation.resolve(String.format("%d.json", project.getId())).toFile().getAbsolutePath();
 	}
 	
 }

@@ -75,7 +75,7 @@ public class RepoTestNumberOfLinesGitCrawlerTest {
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, TESTING_REPOSITORY+ "/.git"))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis =  scanner.loadChanges(project, repository);
+		RepositoryAnalysis analysis =  scanner.generateAnalysis(project, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, TESTING_REPOSITORY), analysis);
 
 		ProjectLayers pl = skylineProcessor.generateProjectLayers(project, analysis.getChanges());
@@ -95,7 +95,7 @@ public class RepoTestNumberOfLinesGitCrawlerTest {
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, TESTING_REPOSITORY+ "/.git"))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis =  scanner.loadChanges(project, repository);
+		RepositoryAnalysis analysis =  scanner.generateAnalysis(project, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, TESTING_REPOSITORY), analysis);
 
 		ProjectLayers pl = skylineProcessor.generateProjectLayers(project, analysis.getChanges());
@@ -117,7 +117,7 @@ public class RepoTestNumberOfLinesGitCrawlerTest {
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, TESTING_REPOSITORY+ "/.git"))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis =  scanner.loadChanges(project, repository);
+		RepositoryAnalysis analysis =  scanner.generateAnalysis(project, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, TESTING_REPOSITORY), analysis);
 
 		ProjectLayers pl = skylineProcessor.generateProjectLayers(project, analysis.getChanges());
@@ -136,7 +136,7 @@ public class RepoTestNumberOfLinesGitCrawlerTest {
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, TESTING_REPOSITORY+ "/.git"))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis =  scanner.loadChanges(project, repository);
+		RepositoryAnalysis analysis =  scanner.generateAnalysis(project, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, TESTING_REPOSITORY), analysis);
 
 		ProjectLayers pl = skylineProcessor.generateProjectLayers(project, analysis.getChanges());
@@ -155,7 +155,7 @@ public class RepoTestNumberOfLinesGitCrawlerTest {
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, TESTING_REPOSITORY+ "/.git"))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis =  scanner.loadChanges(project, repository);
+		RepositoryAnalysis analysis =  scanner.generateAnalysis(project, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, TESTING_REPOSITORY), analysis);
 
 		ProjectLayers pl = skylineProcessor.generateProjectLayers(project, analysis.getChanges());
@@ -174,7 +174,7 @@ public class RepoTestNumberOfLinesGitCrawlerTest {
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, TESTING_REPOSITORY+ "/.git"))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis =  scanner.loadChanges(project, repository);
+		RepositoryAnalysis analysis =  scanner.generateAnalysis(project, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, TESTING_REPOSITORY), analysis);
 
 		ProjectLayers pl = skylineProcessor.generateProjectLayers(project, analysis.getChanges());
@@ -193,7 +193,7 @@ public class RepoTestNumberOfLinesGitCrawlerTest {
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, TESTING_REPOSITORY+ "/.git"))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis =  scanner.loadChanges(project, repository);
+		RepositoryAnalysis analysis =  scanner.generateAnalysis(project, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, TESTING_REPOSITORY), analysis);
 
 		ProjectLayers pl = skylineProcessor.generateProjectLayers(project, analysis.getChanges());
@@ -212,7 +212,7 @@ public class RepoTestNumberOfLinesGitCrawlerTest {
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, TESTING_REPOSITORY+ "/.git"))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis =  scanner.loadChanges(project, repository);
+		RepositoryAnalysis analysis =  scanner.generateAnalysis(project, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, TESTING_REPOSITORY), analysis);
 
 		ProjectLayers pl = skylineProcessor.generateProjectLayers(project, analysis.getChanges());
@@ -231,7 +231,7 @@ public class RepoTestNumberOfLinesGitCrawlerTest {
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, TESTING_REPOSITORY+ "/.git"))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis =  scanner.loadChanges(project, repository);
+		RepositoryAnalysis analysis =  scanner.generateAnalysis(project, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, TESTING_REPOSITORY), analysis);
 
 		ProjectLayers pl = skylineProcessor.generateProjectLayers(project, analysis.getChanges());
@@ -249,7 +249,7 @@ public class RepoTestNumberOfLinesGitCrawlerTest {
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, TESTING_REPOSITORY+ "/.git"))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis =  scanner.loadChanges(project, repository);
+		RepositoryAnalysis analysis =  scanner.generateAnalysis(project, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, TESTING_REPOSITORY), analysis);
 
 		ProjectLayers pl = skylineProcessor.generateProjectLayers(project, analysis.getChanges());
@@ -267,7 +267,7 @@ public class RepoTestNumberOfLinesGitCrawlerTest {
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, TESTING_REPOSITORY+ "/.git"))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis =  scanner.loadChanges(project, repository);
+		RepositoryAnalysis analysis =  scanner.generateAnalysis(project, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, TESTING_REPOSITORY), analysis);
 
 		ProjectLayers pl = skylineProcessor.generateProjectLayers(project, analysis.getChanges());
@@ -284,7 +284,7 @@ public class RepoTestNumberOfLinesGitCrawlerTest {
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, TESTING_REPOSITORY+ "/.git"))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis =  scanner.loadChanges(project, repository);
+		RepositoryAnalysis analysis =  scanner.generateAnalysis(project, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, TESTING_REPOSITORY), analysis);
 		Assert.assertTrue("Only the read me file is present", analysis.getChanges().keySet().contains("README.md"));
 

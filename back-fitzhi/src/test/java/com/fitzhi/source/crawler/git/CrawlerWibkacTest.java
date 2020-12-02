@@ -28,6 +28,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
@@ -35,8 +37,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @TestPropertySource(properties = { "prefilterEligibility=true" }) 
+@Slf4j
 public class CrawlerWibkacTest {
 
+	// private static final String FITZHI = "application";
 	private static final String FITZHI = "first-test";
 
 	private static final String DIR_GIT = ".." + File.separator + "git_repo_for_test" + File.separator + "%s" + File.separator;
@@ -85,10 +89,23 @@ public class CrawlerWibkacTest {
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, FITZHI))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);
+		RepositoryAnalysis analysis = scanner.generateAnalysis(project, repository);
+
+		log.debug(String.format("List of %d all paths", analysis.getPathsAll().size()));
+		analysis.getPathsAll().stream().forEach(path -> log.debug(path));
+
+		log.debug(String.format("List of %d added paths", analysis.getPathsAdded().size()));
+		analysis.getPathsAdded().stream().forEach(path -> log.debug(path));
+
+		log.debug(String.format("List of %d modified paths", analysis.getPathsModified().size()));
+		analysis.getPathsModified().stream().forEach(path -> log.debug(path));
+
+		log.debug(String.format("List of %d candidate paths", analysis.getPathsCandidate().size()));
+		analysis.getPathsCandidate().stream().forEach(path -> log.debug(path));
+
 		Project p = new Project(777, "test");
 		
-		dataSaver.saveChanges(p, analysis.getChanges());
+//		dataSaver.saveChanges(p, analysis.getChanges());
 	}
 
 	@After

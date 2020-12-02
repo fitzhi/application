@@ -646,7 +646,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
     }
 
     @Override
-    public RepositoryAnalysis loadChanges(Project project, Repository repository) throws SkillerException {
+    public RepositoryAnalysis generateAnalysis(Project project, Repository repository) throws SkillerException {
 
         Set<String> allEligibleFiles = this.allEligibleFiles(project);
 
@@ -825,7 +825,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                     // We rename the previous history records with the new name
                     //
                     // analysis.renameFilePath(de.getNewPath(), de.getOldPath());
-
+                    //
                     addHistoryRecord(analysis, commit, finalFilePathname, de, diffFormater, parserVelocity);
                     break;
                 case DELETE:
@@ -849,26 +849,19 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                     // We first have to test if this file wasn't already taken in account by the
                     // analysis.
                     //
-
                     if (analysis.containsFile(de.getNewPath())) {
                         analysis.keepPathModified(de.getNewPath());
                     }
                 case ADD:
                     addHistoryRecord(analysis, commit, finalFilePathname, de, diffFormater, parserVelocity);
-                    /*
-                    * SourceCodeDiffChange diff = this.diffFile(de, diffFormater); PersonIdent
-                    * author = commit.getAuthorIdent();
-                    * analysis.takeChangeInAccount(de.getNewPath(), new SourceChange(
-                    * commit.getId().toString(),
-                    * author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                    * author.getName(), author.getEmailAddress(), diff));
-                    * parserVelocity.increment();
-                    */
                     break;
                 default:
                     if (log.isDebugEnabled()) {
-                        log.debug(String.format("Unexpected type of change %s %s %s", de.getChangeType(), de.getOldPath(),
-                                de.getNewPath()));
+                        log.debug(
+                            String.format("Unexpected type of change %s %s %s",
+                            de.getChangeType(),
+                            de.getOldPath(),
+                            de.getNewPath()));
                     }
                     break;
             }
@@ -938,18 +931,26 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                     String.format("Finalizing the changes collection with the repository location %s", sourceLocation));
         }
 
-        /*
-         * For DEBUG purpose we make a redundant test on the list of changes Are all
-         * files in the repository referenced in the list of change ? They should be all
-         * present.
-         */
+        //
+        // For DEBUG purpose we make a redundant check on the list of changes 
+        // Are all files in the repository referenced in the list of change ? 
+        // They should be all present.
+        //
         if (log.isDebugEnabled()) {
+            // Content of the changes set
+            log.debug("Changes set");
+            analysis.getChanges().keySet().forEach(p -> log.debug(p));
+            // Ghost files without record in the Analyssis report.
             log.debug("List of ghost files");
             List<String> content;
             try (Stream<Path> stream = Files.find(Paths.get(sourceLocation), 999, (p, bfa) -> bfa.isRegularFile())) {
-                content = stream.map(Path::toString).map(s -> s.substring(sourceLocation.length() - 1))
+                content = stream.map(Path::toString)
+                        .map(s -> s.substring(sourceLocation.length() + 1))
+                        .map(s -> s.replace("\\", "/"))
                         .collect(Collectors.toList());
-                content.stream().filter(s -> !s.contains(".git")).filter(s -> !analysis.containsFile(s))
+                content.stream()
+                        .filter(s -> !s.contains(".git"))
+                        .filter(s -> !analysis.containsFile(s))
                         .forEach(log::debug);
             }
         }
@@ -958,7 +959,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         while (iterPath.hasNext()) {
             String filePath = iterPath.next();
             // File does not exist anymore on the repository
-            File f = Paths.get(sourceLocation + filePath).toFile();
+            File f = Paths.get(sourceLocation + "/" + filePath).toFile();
             if (!f.exists()) {
                 iterPath.remove();
             } else {
@@ -1054,13 +1055,16 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         final CommitRepository repositoryOfCommit;
 
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
-        Repository repo = builder.setGitDir(new File(getLocalDotGitFile(project))).readEnvironment().findGitDir()
+        Repository repo = builder.setGitDir(
+            new File(getLocalDotGitFile(project)))
+                .readEnvironment()
+                .findGitDir()
                 .build();
 
         //
         // We load all raw changes declared in the given repository.
         //
-        RepositoryAnalysis analysis = this.loadChanges(project, repo);
+        RepositoryAnalysis analysis = generateAnalysis(project, repo);
         if (log.isDebugEnabled()) {
             log.debug(String.format("loadChanges (%s) returns %d entries", project.getName(),
                     analysis.numberOfChanges()));
@@ -1069,14 +1073,16 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
                 MessageFormat.format("{0} changes have been detected on the repository", analysis.numberOfChanges()));
 
-        /**
-         * We save the directories of the repository.
-         */
+
+        //
+        // We save the directories of the repository. 
+        // These directories will be used to help the end-user when editing the directories to be excluded from the analysis
+        //
         dataSaver.saveRepositoryDirectories(project, analysis.getChanges());
 
-        /**
-         * We save the changes file on the file system.
-         */
+        //
+        // We save the changes file on the file system.
+        //
         dataSaver.saveChanges(project, analysis.getChanges());
 
         // We generate & save the skyline history for this project
@@ -1321,7 +1327,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                     tasks.completeTaskOnError(DASHBOARD_GENERATION, "project", project.getId());
                 }
             } catch (SkillerException e) {
-                log.error(e.getLocalizedMessage());
+                log.error(Error.getStackTrace(e));
             }
         }
     }
@@ -1354,10 +1360,9 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Git clone successfully done!");
 
         //
-        // If a cache is detected and available for this project, it will be returned
-        // this method.
-        // This variable is not final. Might be overridden by the filtering operation
-        // (date of staff member filtering)
+        // If a cache is detected and available for this project, it will be returned by this method.
+        // This variable is not final. It might be overridden by the filtering operation
+        // (either starting from a date of commit, or filtering for a dedicated staff member)
         //
         CommitRepository repo = this.parseRepository(project);
         if (log.isDebugEnabled()) {

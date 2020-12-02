@@ -28,7 +28,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * This class is testing the method
- * {@link GitCrawler#loadChanges(com.fitzhi.data.internal.Project, org.eclipse.jgit.lib.Repository)}
+ * {@link GitCrawler#generateAnalysis(com.fitzhi.data.internal.Project, org.eclipse.jgit.lib.Repository)}
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
@@ -64,7 +64,7 @@ public class GitCrawlerLoadChangesTest {
         project.add(new Library("two/lib", 1));
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		try (Repository repo = builder.setGitDir(new File(project.getLocationRepository() + "/.git")).readEnvironment().findGitDir().build()) {
-            final RepositoryAnalysis analysis = scanner.loadChanges(project, repo);
+            final RepositoryAnalysis analysis = scanner.generateAnalysis(project, repo);
             Assert.assertEquals(4, analysis.numberOfFiles());
         }
     }

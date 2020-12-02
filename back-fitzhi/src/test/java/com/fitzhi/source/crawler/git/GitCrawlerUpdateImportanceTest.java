@@ -108,7 +108,7 @@ public class GitCrawlerUpdateImportanceTest {
 	
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, TEST_PROJECT_ROCROI))).readEnvironment().findGitDir()
 				.build();
-        RepositoryAnalysis analysis = scanner.loadChanges(project, repository);		
+        RepositoryAnalysis analysis = scanner.generateAnalysis(project, repository);		
 
         scanner.updateImportance(project, analysis);
 

@@ -117,7 +117,8 @@ public interface RepoScanner {
 	void clone(Project project, ConnectionSettings settings) throws IOException, GitAPIException, SkillerException;
 
 	/**
-	 * <p>Extract all changes from the repository and generate the commits collection.
+	 * <p>
+	 * Extract all changes from the repository and generate the commits collection analysis.
 	 * <p>
 	 * <b><font color="red">BE CAUTIOUS : This method has an unsatisfying adherence with GIT</font></b>
 	 * </p>
@@ -125,7 +126,7 @@ public interface RepoScanner {
 	 * @return the analysis extracted from the repository. This analysis contains the  collection with all changed detected on the passed repository.
 	 * @throws SkillerException thrown by the crawling operation.
 	 */
-	RepositoryAnalysis loadChanges(Project project, Repository repository) throws SkillerException;
+	RepositoryAnalysis generateAnalysis(Project project, Repository repository) throws SkillerException;
 
 	/**
 	 * <p>
