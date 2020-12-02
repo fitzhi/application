@@ -18,10 +18,6 @@ import org.junit.Test;
  */
 public class LayerFactoryGetInstanceTest {
 
-    static{
-        Locale.setDefault(Locale.FRANCE);
-    }
-
     Calendar calendar = Calendar.getInstance();
     
     @Test
