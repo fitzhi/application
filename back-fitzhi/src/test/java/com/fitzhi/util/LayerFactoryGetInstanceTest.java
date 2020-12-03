@@ -21,6 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class LayerFactoryGetInstanceTest {
 
+    static {
+        Locale.setDefault(new Locale("fr", ));
+    }
+
     Calendar calendar = Calendar.getInstance();
     
     @Test
