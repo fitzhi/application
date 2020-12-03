@@ -26,6 +26,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.Assert;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
@@ -40,10 +42,9 @@ import com.google.gson.GsonBuilder;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(properties = { "shuffleData=1" }) 
+@Slf4j
 
 public class ProjectControllerContributorsInShuffleModeTest {
-
-	private final Logger logger = LoggerFactory.getLogger(ProjectControllerContributorsInShuffleModeTest.class.getCanonicalName());
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -79,8 +80,8 @@ public class ProjectControllerContributorsInShuffleModeTest {
 			.andExpect( jsonPath("$.code").value(0))
 			.andExpect(jsonPath("$.message").isEmpty()).andReturn();
 		
-		if (logger.isDebugEnabled()) {
-			logger.debug (result.getResponse().getContentAsString());
+		if (log.isDebugEnabled()) {
+			log.debug (result.getResponse().getContentAsString());
 		}
 		
 		Assert.doesNotContain(result.getResponse().getContentAsString(), staff.fullName(), "The fullname has to be shuffled");
