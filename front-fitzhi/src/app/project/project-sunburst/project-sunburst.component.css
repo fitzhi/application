@@ -146,3 +146,13 @@ div.taskReportError {
   background: lightyellow;
   border-color: lightgrey;
 }
+
+.application-code {
+  color: blue;
+  font-size: 14px;
+}
+
+.font-awesome-help {
+  font-size: 21px;
+  color: darkgray;
+}

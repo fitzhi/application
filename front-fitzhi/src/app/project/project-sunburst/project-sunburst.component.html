@@ -206,8 +206,21 @@
 				<h4 class="help-title">Reload the chart</h4>
 				<div class="help-content">
 					<p>
-						Reload the chart !
+						This action button requests to reload the chart !<br/>
+						This reload will process the current local repository, located on server. 
+						There will be no <code class="application-code">git.clone()</code>.<br/>
+						But this treatment will take in account :
 					</p>
+					<ul>
+						<li>
+							<em class="fas fa-ghost font-awesome-help"></em>
+							The actual up-to-date ghosts list
+						</li>
+						<li>
+							<em class="fab fa-elementor font-awesome-help"></em>
+							The actual up-to-date dependencies list
+						</li>
+					</ul> 
 				</div>
 			</div>
 		</angular-popper>

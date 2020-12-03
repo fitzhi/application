@@ -461,9 +461,10 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	 * Reset the whole data connected to the dashboard generation.
+	 * **RESET** the whole chart data, connected to the dashboard generation.
+	 * @param id project identifier to **RESET**
 	 */
-	resetDashboard(id: number): Observable<string> {
+	public resetDashboard(id: number): Observable<string> {
 		const url = this.backendSetupService.url() + '/project/resetDashboard/' + id;
 		if (traceOn()) {
 			console.log('Reset the dashboard data on URL ' + url);
@@ -472,6 +473,13 @@ export class ProjectService extends InternalService {
 		return this.httpClient.get<string>(url, httpOptions);
 	}
 
+	/**
+	 * **RELOAD** the chart data.
+	 * @param id project identifier to **RELOAD**
+	 */
+	public reloadDashboard(id: number): Observable<string> {
+		return of("");
+	}
 	/**
 	 * Test a connection to GIT on server, in order to validate the connection settings.
 	 * @param idProject project whose connection settings has to be tested
