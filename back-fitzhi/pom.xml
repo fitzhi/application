@@ -286,7 +286,7 @@
 					<downloadSources>true</downloadSources>
 					<downloadJavadocs>false</downloadJavadocs>
 					<!-- Avoid type mvn eclipse:eclipse -Dwtpversion=2.0 -->
-[BAck]					<wtpversion>2.0</wtpversion>
+					<wtpversion>2.0</wtpversion>
 				</configuration>
 			</plugin>
 
