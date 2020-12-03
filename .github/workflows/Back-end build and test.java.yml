@@ -25,10 +25,10 @@ jobs:
       run: |
           sudo locale-gen fr_FR.UTF-8
           sudo update-locale LANG=fr_FR.UTF-8
-      if: matrix.os == 'ubuntu-latest'
+      if: (matrix.os == 'ubuntu-latest') || (matrix.os == 'macOS-latest')
     - name: "Testing locale settings"
       run: sudo locale
-      if: matrix.os == 'ubuntu-latest'
+      if: (matrix.os == 'ubuntu-latest') || (matrix.os == 'macOS-latest')
     - name: "create directories for the repositories"
       run: |
             mkdir ../git_repo_for_test
