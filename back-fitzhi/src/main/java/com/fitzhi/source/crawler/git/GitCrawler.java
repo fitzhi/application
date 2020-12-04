@@ -644,9 +644,13 @@ public class GitCrawler extends AbstractScannerDataGenerator {
             }
         }
     }
+    @Override
+    public RepositoryAnalysis retrieveRepositoryAnalysis(Project project, Repository repository) throws SkillerException {
+        return generateRepositoryAnalysis(project, repository);
+    }
 
     @Override
-    public RepositoryAnalysis generateAnalysis(Project project, Repository repository) throws SkillerException {
+    public RepositoryAnalysis generateRepositoryAnalysis(Project project, Repository repository) throws SkillerException {
 
         Set<String> allEligibleFiles = this.allEligibleFiles(project);
 
@@ -1064,7 +1068,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         //
         // We load all raw changes declared in the given repository.
         //
-        RepositoryAnalysis analysis = generateAnalysis(project, repo);
+        RepositoryAnalysis analysis = generateRepositoryAnalysis(project, repo);
         if (log.isDebugEnabled()) {
             log.debug(String.format("loadChanges (%s) returns %d entries", project.getName(),
                     analysis.numberOfChanges()));

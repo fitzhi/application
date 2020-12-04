@@ -122,11 +122,30 @@ public interface RepoScanner {
 	 * <p>
 	 * <b><font color="red">BE CAUTIOUS : This method has an unsatisfying adherence with GIT</font></b>
 	 * </p>
+	 * @param project the given project 
 	 * @param repository the <b><font color="red">GIT</font></b> repository.
-	 * @return the analysis extracted from the repository. This analysis contains the  collection with all changed detected on the passed repository.
+	 * @return the {@link RepositoryAnalysis analysis} extracted from the repository. 
+	 * <p>This analysis contains the  collection of all changes detected on the passed repository.</p>
 	 * @throws SkillerException thrown by the crawling operation.
 	 */
-	RepositoryAnalysis generateAnalysis(Project project, Repository repository) throws SkillerException;
+	RepositoryAnalysis generateRepositoryAnalysis(Project project, Repository repository) throws SkillerException;
+
+	/**
+	 * <p>
+	 * Retrieve the commits collection analysis processed for the local repository of the given project.
+	 * </p>
+	 * <ul>
+	 * <li>Either this method will load the generated data from the file system</li>
+	 * <li>Or this method will generate the analysis data</li>
+	 * </ul>
+	 * &nbsp;
+	 * @param project the given project 
+	 * @param repository the <b><font color="red">GIT</font></b> repository.
+	 * @return the {@link RepositoryAnalysis analysis} extracted from the repository. 
+	 * <p>This analysis contains the  collection of all changes detected on the passed repository.</p>
+	 * @throws SkillerException thrown by the crawling operation.
+	 */
+	RepositoryAnalysis retrieveRepositoryAnalysis(Project project, Repository repository) throws SkillerException;
 
 	/**
 	 * <p>
