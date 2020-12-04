@@ -602,7 +602,16 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				}
 				break;
 			case this.RELOAD:
+				if (traceOn()) {
+					console.log ('Request for a reload');
+				}
+				this.idPanelSelected = idPanel;
+				this.reload();
+				break;
 			case this.RESET:
+				if (traceOn()) {
+					console.log ('Request for a reset');
+				}
 				this.idPanelSelected = idPanel;
 				this.reset();
 				break;
@@ -624,6 +633,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		}
 	}
 
+	/**
+	 * This function will erase all intermediate data and reload the chart.
+	 */
 	reset() {
 		if (!this.projectService.project) {
 			this.messageService.info('Nothing to reset !');
@@ -648,6 +660,36 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					}
 				this.idPanelSelected = this.SUNBURST;
 			});
+	}
+
+	/**
+	 * This function will reload the chart.
+	 */
+	reload() {
+		if (!this.projectService.project) {
+			this.messageService.info('Nothing to reload !');
+			this.idPanelSelected = this.SUNBURST;
+			return;
+		}
+		this.messageBoxService.question('Reload the dashboard', 'Please confirm your request')
+			.pipe(take(1))
+			.subscribe(answer => {
+				if (answer) {
+					this.cacheService.clearReponse();
+					this.projectService
+						.reloadDashboard(this.settings.idProject)
+						.pipe(take(1))
+						.subscribe(response => {
+							if ((!response) && (traceOn())) {
+									console.log ('This request was not necessary : no dashboard available.');
+							}
+							this.messageService.info('Dashboard reload has been requested. The operation might take a while.');
+							this.setActiveContext (PreviewContext.SUNBURST_WAITING);
+						});
+					}
+				this.idPanelSelected = this.SUNBURST;
+			});
+	
 	}
 
 	dialogFilter() {
