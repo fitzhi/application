@@ -14,6 +14,7 @@ import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.PROJECT;
 import static com.fitzhi.Global.deepClone;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -648,10 +649,52 @@ public class ProjectController {
 	 * Reset the current dashboard and start a new Sunburst generation.
 	 * </p>
 	 * @param idProject the project identifier
-	 * @return a single character String, containing the code "{@code 1}" if the removal of the repository succeeds,  "{@code 0}" otherwise.
+	 * @return a single String character containing the code 
+	 * <ul>
+	 * <li>"{@code 1}" if the removal of the repository succeeds,</li>  
+	 * <li>"{@code 0}" otherwise</li>.
+	 * </ul>
+	 * @throws NotFoundException if the project does not exist. 
+	 * @throws SkillerException if the any problem occurs, most probably an {@link IOException}
 	 */
 	@GetMapping(value = "/resetDashboard/{idProject}")
 	public ResponseEntity<String> resetDashboard(final @PathVariable("idProject") int idProject) throws NotFoundException, SkillerException {
+		
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Removing project with %d", idProject));
+		}
+
+		Project project = projectHandler.get(idProject);
+		if (project == null) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+		}
+
+		try {
+			// We do not renitialieze the local repository if the user asks for a RESET 
+			String response = cacheDataHandler.removeRepository(project) ? "1" : "0";
+			scanner.generateAsync(project, new SettingsGeneration(project.getId()));
+			return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
+		} catch (Exception e) {
+			log.error(getStackTrace(e));
+			return new ResponseEntity<>(e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		}
+	}
+
+	/**
+	 * <p>
+	 * Reload the current dashboard and start a new Sunburst generation.
+	 * </p>
+	 * @param idProject the project identifier
+	 * @return a single String character containing the code 
+	 * <ul>
+	 * <li>"{@code 1}" if the removal of the repository succeeds,</li>  
+	 * <li>"{@code 0}" otherwise</li>.
+	 * </ul>
+	 * @throws NotFoundException if the project does not exist. 
+	 * @throws SkillerException if the any problem occurs, most probably an {@link IOException}
+	 */
+	@GetMapping(value = "/reloadDashboard/{idProject}")
+	public ResponseEntity<String> reloadDashboard(final @PathVariable("idProject") int idProject) throws NotFoundException, SkillerException {
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Removing project with %d", idProject));
