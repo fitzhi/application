@@ -154,5 +154,5 @@ div.taskReportError {
 
 .font-awesome-help {
   font-size: 21px;
-  color: darkgray;
+  color: var(--color-selected);
 }
