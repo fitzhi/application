@@ -654,7 +654,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 							if ((!response) && (traceOn())) {
 									console.log ('This request was not necessary : no dashboard available.');
 							}
-							this.messageService.info('Dashboard reinitialization has been requested. The operation might take a while.');
+							this.messageService.info('Dashboard reinitialization was just requested. The operation might last a while.');
 							this.setActiveContext (PreviewContext.SUNBURST_WAITING);
 						});
 					}
