@@ -566,11 +566,13 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
     * @param idPanel Panel identifier
     */
 	public show(idPanel: number) {
+		
 		// If the project is inactive, these buttons are inactive.
 		if (!this.projectService.project.active) {
 			return;
 		}
 		this.sunburstCinematicService.initActivatedButton();
+		
 		switch (idPanel) {
 			case this.SUNBURST:
 				this.idPanelSelected = idPanel;
