@@ -89,8 +89,9 @@ public class CrawlerWibkacTest {
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, FITZHI))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis = scanner.generateRepositoryAnalysis(project, repository);
-
+		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
+		scanner.fillRepositoryAnalysis(project, analysis, repository);
+		
 		log.debug(String.format("List of %d all paths", analysis.getPathsAll().size()));
 		analysis.getPathsAll().stream().forEach(path -> log.debug(path));
 
@@ -103,8 +104,7 @@ public class CrawlerWibkacTest {
 		log.debug(String.format("List of %d candidate paths", analysis.getPathsCandidate().size()));
 		analysis.getPathsCandidate().stream().forEach(path -> log.debug(path));
 
-		Project p = new Project(777, "test");
-		
+//		Project p = new Project(777, "test");		
 //		dataSaver.saveChanges(p, analysis.getChanges());
 	}
 

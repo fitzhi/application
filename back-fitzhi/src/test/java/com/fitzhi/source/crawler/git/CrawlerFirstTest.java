@@ -97,7 +97,8 @@ public class CrawlerFirstTest {
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, FIRST_TEST+"/.git"))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis = scanner.generateRepositoryAnalysis(project, repository);
+		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
+		scanner.fillRepositoryAnalysis(project, analysis, repository);
 
 		assertFalse(analysis.getPathsAll().contains("moduleA/test.txt"));
 		assertTrue(analysis.getPathsAll().contains("moduleB/test.txt"));
@@ -126,7 +127,8 @@ public class CrawlerFirstTest {
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, FIRST_TEST + "/.git"))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis = scanner.generateRepositoryAnalysis(project, repository);
+		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
+		scanner.fillRepositoryAnalysis(project, analysis, repository);
 		
 		scanner.finalizeListChanges(String.format(DIR_GIT, FIRST_TEST), analysis);
 		
@@ -150,7 +152,8 @@ public class CrawlerFirstTest {
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, FIRST_TEST))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis =  scanner.generateRepositoryAnalysis(project, repository);
+		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
+		scanner.fillRepositoryAnalysis(project, analysis, repository);
 		scanner.finalizeListChanges(String.format(DIR_GIT, FIRST_TEST), analysis);
 		analysis.getPathsAll().stream().forEach(System.out::println);
 	}

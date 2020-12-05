@@ -646,11 +646,22 @@ public class GitCrawler extends AbstractScannerDataGenerator {
     }
     @Override
     public RepositoryAnalysis retrieveRepositoryAnalysis(Project project, Repository repository) throws SkillerException {
-        return generateRepositoryAnalysis(project, repository);
+
+        RepositoryAnalysis analysis = dataSaver.loadRepositoryAnalysis(project);
+        if (analysis == null) {
+            analysis = new RepositoryAnalysis(project);
+        }
+        
+        fillRepositoryAnalysis(project, analysis, repository);
+
+        dataSaver.saveRepositoryAnalysis(project, analysis);
+
+        return analysis;
+
     }
 
     @Override
-    public RepositoryAnalysis generateRepositoryAnalysis(Project project, Repository repository) throws SkillerException {
+    public void fillRepositoryAnalysis(Project project, RepositoryAnalysis analysis, Repository repository) throws SkillerException {
 
         Set<String> allEligibleFiles = this.allEligibleFiles(project);
 
@@ -674,10 +685,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         }
 
         try (Git git = new Git(repository)) {
-            //
-            // We initialize the analysis container.
-            //
-            RepositoryAnalysis analysis = new RepositoryAnalysis(project);
 
             //
             // We initialize the parser speed-meter.
@@ -782,8 +789,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
             velocity.logReport();
 
             velocity.complete();
-        
-            return analysis;
+       
         }
     }
 
@@ -1065,10 +1071,11 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                 .findGitDir()
                 .build();
 
+
         //
-        // We load all raw changes declared in the given repository.
+        // load or generate all raw changes declared in the given repository.
         //
-        RepositoryAnalysis analysis = generateRepositoryAnalysis(project, repo);
+        RepositoryAnalysis analysis = retrieveRepositoryAnalysis(project, repo);
         if (log.isDebugEnabled()) {
             log.debug(String.format("loadChanges (%s) returns %d entries", project.getName(),
                     analysis.numberOfChanges()));
@@ -1076,18 +1083,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
         tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
                 MessageFormat.format("{0} changes have been detected on the repository", analysis.numberOfChanges()));
-
-
-        //
-        // We save the directories of the repository. 
-        // These directories will be used to help the end-user when editing the directories to be excluded from the analysis
-        //
-        dataSaver.saveRepositoryDirectories(project, analysis.getChanges());
-
-        //
-        // We save the changes file on the file system.
-        //
-        dataSaver.saveChanges(project, analysis.getChanges());
 
         // We generate & save the skyline history for this project
         this.generateAndSaveSkyline(project, analysis);

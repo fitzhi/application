@@ -118,17 +118,16 @@ public interface RepoScanner {
 
 	/**
 	 * <p>
-	 * Extract all changes from the repository and generate the commits collection analysis.
+	 * Parse all changes from the repository history and generate (or update) the commits collection analysis.
 	 * <p>
 	 * <b><font color="red">BE CAUTIOUS : This method has an unsatisfying adherence with GIT</font></b>
 	 * </p>
 	 * @param project the given project 
+	 * @param analysis the analysis container to complete. This analysis hosts the  collection of all changes detected on the passed repository.
 	 * @param repository the <b><font color="red">GIT</font></b> repository.
-	 * @return the {@link RepositoryAnalysis analysis} extracted from the repository. 
-	 * <p>This analysis contains the  collection of all changes detected on the passed repository.</p>
 	 * @throws SkillerException thrown by the crawling operation.
 	 */
-	RepositoryAnalysis generateRepositoryAnalysis(Project project, Repository repository) throws SkillerException;
+	void fillRepositoryAnalysis(Project project, RepositoryAnalysis analysis,  Repository repository) throws SkillerException;
 
 	/**
 	 * <p>

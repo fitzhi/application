@@ -64,7 +64,8 @@ public class GitCrawlerLoadChangesTest {
         project.add(new Library("two/lib", 1));
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		try (Repository repo = builder.setGitDir(new File(project.getLocationRepository() + "/.git")).readEnvironment().findGitDir().build()) {
-            final RepositoryAnalysis analysis = scanner.generateRepositoryAnalysis(project, repo);
+            RepositoryAnalysis analysis = new RepositoryAnalysis(project);
+            scanner.fillRepositoryAnalysis(project, analysis, repo);
             Assert.assertEquals(4, analysis.numberOfFiles());
         }
     }

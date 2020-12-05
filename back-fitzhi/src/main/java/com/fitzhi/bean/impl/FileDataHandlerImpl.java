@@ -38,6 +38,7 @@ import com.fitzhi.data.internal.ProjectBuilding.YearWeek;
 import com.fitzhi.data.internal.ProjectFloor;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
+import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceCodeDiffChange;
 import com.fitzhi.data.internal.SourceControlChanges;
@@ -594,17 +595,13 @@ public class FileDataHandlerImpl implements DataHandler {
 			}.getType();
 			List<ProjectFloor> floors = gson.fromJson(fr, typeListProjectFloor);
 			if (floors == null) {
-				// If this building list is still null, without IOException, it means that the file is empty.
+				// If this building list is still null, without IOException, it means that the
+				// file is empty.
 				building.setBuilding(new HashMap<YearWeek, ProjectFloor>());
 			} else {
-				floors.stream().forEach(floor ->
-					building.initWeek(
-					floor.getIdProject(), 
-					floor.getYear(), floor.getWeek(),
-					floor.getLinesActiveDevelopers(), 
-					floor.getLinesInactiveDevelopers())
-				);
-			}	
+				floors.stream().forEach(floor -> building.initWeek(floor.getIdProject(), floor.getYear(),
+						floor.getWeek(), floor.getLinesActiveDevelopers(), floor.getLinesInactiveDevelopers()));
+			}
 			return building;
 		} catch (final Exception e) {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
@@ -636,5 +633,25 @@ public class FileDataHandlerImpl implements DataHandler {
 		final String filename = generateProjectLayersJsonFilename(project);
 		Path path = rootLocation.resolve(filename);
 		return Files.exists(path);
+	}
+
+	@Override
+	public void saveRepositoryAnalysis(Project project, RepositoryAnalysis analysis) throws SkillerException {
+		
+		//
+        // We save the directories of the repository. 
+        // These directories will be used to help the end-user when editing the directories to be excluded from the analysis
+        //
+		this.saveChanges(project, analysis.getChanges());
+
+        //
+        // We save the changes file on the file system.
+        //
+		this.saveRepositoryDirectories(project, analysis.getChanges());
+	}
+
+	@Override
+	public RepositoryAnalysis loadRepositoryAnalysis(Project project) throws SkillerException {
+		return null;
 	}
 }

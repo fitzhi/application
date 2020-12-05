@@ -3,12 +3,14 @@
  */
 package com.fitzhi.bean;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectLayers;
+import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
@@ -42,7 +44,6 @@ public interface DataHandler {
 	 */
 	void saveStaff(Map<Integer, Staff> staff) throws SkillerException;
 	
-	
 	/**
 	 * Load the staff members from a persistent media
 	 * @return the staff
@@ -57,6 +58,28 @@ public interface DataHandler {
 	 */
 	void saveSkills(Map<Integer, Skill> staff) throws SkillerException;
 	
+	/**
+	 * <p>
+	 * Save the analysis on file system in {@code CSV} format.
+	 * </p>
+	 * <p><i>Due to DEBUG purpose, the output format will be <b>{@code CSV}</b></i>.</p>
+	 * @param project project whose repository analysis has to be serialized
+	 * @param analysis the analysis to serialize on file system.
+	 * @throws SkillerException thrown if an exception occurs during the saving process, most probably an {@link IOException}.
+	 */
+	void saveRepositoryAnalysis(Project project, RepositoryAnalysis analysis) throws SkillerException;
+
+	/**
+	 * <p>
+	 * Load the analysis from file system.
+	 * </p>
+	 * @param project project whose changes have to be serialized in CSV
+	 * @return the {@link RepositoryAnalysis analysis} if found, or {@code null} if none exists on file system.
+	 * @throws SkillerException thrown if an exception occurs during the loading process, most probably an {@link IOException}
+	 */
+	RepositoryAnalysis loadRepositoryAnalysis(Project project) throws SkillerException;
+
+
 	/**
 	 * <p>
 	 * Save the source control changes loaded from the repository for cache & debug purpose.
