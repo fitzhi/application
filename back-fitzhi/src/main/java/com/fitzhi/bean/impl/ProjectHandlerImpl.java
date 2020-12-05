@@ -213,7 +213,12 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 					(!savedProject.getBranch().equals(project.getBranch()))) {
 				savedProject.setLocationRepository(null);
 			}
-			savedProject.setBranch(project.getBranch());
+			// Default branch name is "master" if none is given
+			if ((project.getUrlRepository() != null) && (project.getBranch() == null)) {
+				savedProject.setBranch("master");
+			} else {
+				savedProject.setBranch(project.getBranch());
+			}
 		
 			savedProject.setConnectionSettings(project.getConnectionSettings());
 			switch (project.getConnectionSettings()) {

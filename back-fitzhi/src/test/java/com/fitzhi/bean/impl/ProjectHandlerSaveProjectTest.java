@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.bean.impl;
 
 import static com.fitzhi.Global.NO_USER_PASSWORD_ACCESS;
@@ -23,7 +20,7 @@ import com.fitzhi.exception.SkillerException;
 
 /**
  * <p>
- * Test the method {@link ProjectHandler#associateStaffToGhost(com.fitzhi.data.internal.Project, String, int) ProjectHandler.associateStaffToGhost}
+ * Testing the method {@link ProjectHandler#saveProject(Project)}
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
@@ -193,6 +190,37 @@ public class ProjectHandlerSaveProjectTest {
 		Assert.assertEquals("url", project.getUrlRepository());
 		Assert.assertEquals("new-branch", project.getBranch());
 		Assert.assertNull(project.getLocationRepository());
+	}
+
+	@Test
+	public void testBranchDefaultValueIsNullIfUrlRepositoryIsNull() throws SkillerException {
+		Project project = new Project (1789, "French revolution");
+		project.setUrlRepository(null);
+		projectHandler.saveProject(project);
+
+		project = projectHandler.get(1789);
+		Assert.assertNull("project.getBranch()", project.getBranch());
+	}
+
+	@Test
+	public void testBranchDefaultValueIsMasterIfUrlRepositoryIsNotNull() throws SkillerException {
+		Project project = new Project (1789, "French revolution");
+		project.setUrlRepository("url");
+		projectHandler.saveProject(project);
+
+		project = projectHandler.get(1789);
+		Assert.assertEquals("project.getBranch()", "master", project.getBranch());
+	}
+
+	@Test
+	public void testDoNotForceBranchNameIfUrlRepositoryIsNotNull() throws SkillerException {
+		Project project = new Project (1789, "French revolution");
+		project.setUrlRepository("url");
+		project.setBranch("branch");
+		projectHandler.saveProject(project);
+
+		project = projectHandler.get(1789);
+		Assert.assertEquals("project.getBranch()", "branch", project.getBranch());
 	}
 
 	@After
