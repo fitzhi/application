@@ -95,7 +95,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	private final String savedChanges = "changes-data";
 
 	/**
-	 * Directory where the pathnames file is detected on GIT.
+	 * Directory where the different pathnames file are stored. 
 	 */
 	private final String pathNames = "pathnames-data";
 
@@ -379,11 +379,13 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	/**
+	 * <p>
 	 * Reset or create a new file
+	 * </p>
 	 * 
 	 * @param filename the current filename
 	 * @return a new file
-	 * @throws SkillerException
+	 * @throws SkillerException thrown if any problem occurs, most probably an {@link IOException}
 	 */
 	private File createResetOrCreateFile(String filename) throws SkillerException {
 		Path path = rootLocation.resolve(filename);
@@ -466,7 +468,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	public void saveRepositoryDirectories(Project project, SourceControlChanges changes) throws SkillerException {
 
 		//
-		// As the method-name explains, we create the directory.
+		// As the method-name explains, we create the directory which will hoist the file.
 		//
 		createIfNeededDirectory(pathNames);
 
@@ -479,16 +481,28 @@ public class FileDataHandlerImpl implements DataHandler {
 			log.debug(String.format("Saving paths file %s", rootLocation.resolve(filename).toAbsolutePath()));
 		}
 
-		File file = createResetOrCreateFile(filename);
+		saveTxtFile(filename, directories);
+	}
+
+	/**
+	 * Save a list of String into the given filename
+	 * @param filename the filename to save the TXT file.
+	 * @param lines the lines to be store on filesystem 
+	 * @throws SkillerException
+	 */
+	private void saveTxtFile(String filename, List<String> lines) throws SkillerException {
+
+		final File file = createResetOrCreateFile(filename);
 
 		try (Writer writer = new FileWriter(file)) {
-			for (String dir : directories) {
-				writer.write(dir);
+			for (String line : lines) {
+				writer.write(line);
 				writer.write(Global.LN);
 			}
 		} catch (IOException ioe) {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
 		}
+
 	}
 
 	@Override
@@ -645,7 +659,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		this.saveChanges(project, analysis.getChanges());
 
         //
-        // We save the changes file on the file system.
+        // We save the directories list extracted from the changes.
         //
 		this.saveRepositoryDirectories(project, analysis.getChanges());
 	}

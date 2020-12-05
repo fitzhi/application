@@ -79,7 +79,6 @@ public interface DataHandler {
 	 */
 	RepositoryAnalysis loadRepositoryAnalysis(Project project) throws SkillerException;
 
-
 	/**
 	 * <p>
 	 * Save the source control changes loaded from the repository for cache & debug purpose.
