@@ -38,6 +38,7 @@ public class DataHandlerSaveRepositoryDirectoriesTest {
 	public void testsaveSCMPath() throws SkillerException {
 
 		Project project = new Project(777, "test");
+		project.setBranch("master");
 		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
 		analysis.getChanges().addChange("/src/main/java/Test.java", new SourceChange(LocalDate.now(), 1));
 		dataHandler.saveRepositoryDirectories(project, analysis.getChanges());

@@ -36,8 +36,8 @@ public class LayerFactoryGetInstanceTest {
         calendar.set(Calendar.MONTH, Calendar.DECEMBER);     
         calendar.set(Calendar.DAY_OF_MONTH, 29);
 
-//        ZoneId zoneId = ZoneId.of("Europe/Paris");
-        ZoneId zoneId = ZoneId.of("Etc/UTC");
+        ZoneId zoneId = ZoneId.of("Europe/Paris");
+//        ZoneId zoneId = ZoneId.of("Etc/UTC");
         log.info(String.format("System ZoneId %s", ZoneId.systemDefault().toString()));
         log.info(String.format("Application ZoneId %s", zoneId.toString()));
         

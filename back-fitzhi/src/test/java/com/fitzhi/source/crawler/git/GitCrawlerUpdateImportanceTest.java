@@ -83,6 +83,7 @@ public class GitCrawlerUpdateImportanceTest {
 	@Before
 	public void before() throws SkillerException {
 		project = new Project(1643, TEST_PROJECT_ROCROI);
+		project.setBranch("master");
 		projectHandler.addNewProject(project);
 		project.setLocationRepository(String.format(DIR_GIT, TEST_PROJECT_ROCROI));
 		project.setGhosts(new ArrayList<Ghost>());

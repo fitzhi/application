@@ -99,6 +99,9 @@ public class Error {
 	public static final int CODE_CANNOT_CREATE_DIRECTORY = -1029;
 	public static final String MESSAGE_CANNOT_CREATE_DIRECTORY = "Cannot create the directory {0}";
 	
+	public static final int CODE_FILE_DOES_NOT_EXIST = -1030;
+	public static final String MESSAGE_FILE_DOES_NOT_EXIST = "File does not exist {0}";
+
 	private Error() {
 	}
 	

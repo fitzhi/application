@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectLayers;
@@ -177,11 +178,12 @@ public interface DataHandler {
 	void saveRepositoryDirectories(Project project, SourceControlChanges changes) throws SkillerException;
 	
 	/**
-	 * <p
-	 * Load the list of all directory-paths for the repository of the given project.
+	 * <p>
+	 * Extract the list with all directories loaded the local repository for the given project.
 	 * <p>
 	 * <p>
-	 * All of these directories host external libraries, which have to be evicted from the audit. 
+	 * Each of these directories might host external libraries, and therefore should be excluded from the analysis. 
+	 * This list is used when selecting these external paths. 
 	 * </p>
 	 * @param project the given project
 	 * @return the resulting paths list
@@ -189,4 +191,13 @@ public interface DataHandler {
 	 */
 	List<String> loadRepositoryDirectories (Project project) throws SkillerException;
 	
+	/**
+	 * Generate the file path for pathnames of a given type of {@link PathType path}
+	 * 
+	 * @param project the current project
+	 * @param pathsType type of paths which will be saved on file system  
+	 * @return the generated pathname to be used to store the data
+	 */
+	String generatePathnamesFile(Project project, PathsType pathsType);
+
 }

@@ -3,6 +3,8 @@ package com.fitzhi.bean.impl;
 import static com.fitzhi.Error.CODE_IO_ERROR;
 import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
+import static com.fitzhi.Error.CODE_FILE_DOES_NOT_EXIST;
+import static com.fitzhi.Error.MESSAGE_FILE_DOES_NOT_EXIST;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -53,12 +55,14 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
+import static com.fitzhi.Error.getStackTrace;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
+
 
 /**
  * <p>
@@ -71,6 +75,26 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class FileDataHandlerImpl implements DataHandler {
 
+	/**
+	 * <p>Type of path</p>
+	 * <p>
+	 * Application stores different types of paths on filesystem in order to re-gerenerate a consistent {@link RepositoryAnalysis}
+	 * </p>
+	 */
+	public enum PathsType {    
+		PATHS_ALL("pathsAll"), PATHS_MODIFIED("pathsModified"), PATHS_CANDIDATE("pathsCandidate"), PATHS_ADDED("pathsAdded");
+
+		String typeOfPath;
+
+		private PathsType(String typeOfPath) {  
+			this.typeOfPath = typeOfPath ;  
+		}
+
+		public String getTypeOfPath() {
+			return this.typeOfPath;
+		}		
+	}
+	
 	/**
 	 * Logging constant
 	 */
@@ -384,7 +408,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * </p>
 	 * 
 	 * @param filename the current filename
-	 * @return a new file
+	 * @return a generateed filename to be used
 	 * @throws SkillerException thrown if any problem occurs, most probably an {@link IOException}
 	 */
 	private File createResetOrCreateFile(String filename) throws SkillerException {
@@ -472,16 +496,32 @@ public class FileDataHandlerImpl implements DataHandler {
 		//
 		createIfNeededDirectory(pathNames);
 
-		String filename = this.buildDirectoryPathnames(project);
-
 		List<String> directories = changes.keySet().stream().map(this::extractDirectory).distinct()
 				.filter(path -> isDirectory(project, path)).sorted().collect(Collectors.toList());
+
+		savePaths(project, directories, PathsType.PATHS_ALL);
+	}
+
+
+	/**
+	 * <p>
+	 * Saving paths on File System. The goal is to store the states of the {@link RepositoryAnalysis} on file system.
+	 * </p>.
+	 * @param project the current projet whose these specific paths should be saved 
+	 * @param paths a list of paths to be saved 
+	 * @param pathsType the type of Paths
+	 * @throws SkillerException thrown if any problem occurs, most probably an {@link IOException}
+	 */
+	private void savePaths(Project project, List<String> paths, PathsType pathsType) throws SkillerException {
+
+		String filename = this.generatePathnamesFile(project, pathsType);
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Saving paths file %s", rootLocation.resolve(filename).toAbsolutePath()));
 		}
 
-		saveTxtFile(filename, directories);
+		saveTxtFile(filename, paths);
+
 	}
 
 	/**
@@ -491,6 +531,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * @throws SkillerException
 	 */
 	private void saveTxtFile(String filename, List<String> lines) throws SkillerException {
+
 
 		final File file = createResetOrCreateFile(filename);
 
@@ -508,30 +549,34 @@ public class FileDataHandlerImpl implements DataHandler {
 	@Override
 	public List<String> loadRepositoryDirectories(Project project) throws SkillerException {
 
-		String filename = this.buildDirectoryPathnames(project);
+		String filename = this.generatePathnamesFile(project, PathsType.PATHS_ALL);
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Loading the paths file %s", rootLocation.resolve(filename).toAbsolutePath()));
 		}
 
 		File file = rootLocation.resolve(filename).toFile();
+		if (!file.exists()) {
+			log.error(MessageFormat.format(MESSAGE_FILE_DOES_NOT_EXIST, filename));
+			throw new SkillerException(CODE_FILE_DOES_NOT_EXIST, MessageFormat.format(MESSAGE_FILE_DOES_NOT_EXIST, filename));
+		}
 		try (Reader reader = new FileReader(file)) {
 			BufferedReader br = new BufferedReader(reader);
 			return br.lines().collect(Collectors.toList());
 		} catch (IOException ioe) {
+			log.error(getStackTrace(ioe));
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
 		}
 	}
 
-	/**
-	 * Building the pathnames file path
-	 * 
-	 * @param project the current project
-	 * @return the expected path
-	 */
-	private String buildDirectoryPathnames(Project project) {
-		return String.format("%s/%d-%s-%s-pathnames.txt", pathNames, project.getId(), project.getName(),
-				project.getBranch());
+	@Override
+	public String generatePathnamesFile(Project project, PathsType pathsType) {
+		return String.format(
+				"%s/%d-%s-%s-%s.txt", pathNames, 
+				project.getId(), 
+				project.getName().replace(" ", "_"),
+				project.getBranch().replace(" ", "_"),
+				pathsType.getTypeOfPath());
 	}
 
 	@Override

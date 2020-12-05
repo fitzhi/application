@@ -167,6 +167,7 @@ public class CrawlerFirstTest {
 	@Test
 	public void testNominalParseRepository() throws IOException, SkillerException, GitAPIException {
 		Project prj = new Project (777, "First test");
+		prj.setBranch("master");
 		when(skylineProcessor.generateProjectLayers(any(), any())).thenReturn(new ProjectLayers(prj));
 		projectHandler.addNewProject(prj);
 		prj.setLocationRepository(String.format(DIR_GIT, FIRST_TEST));
@@ -179,7 +180,7 @@ public class CrawlerFirstTest {
 	@Test
 	public void testParseRepositoryIsCallingGenerateProjectLayers() throws Exception {
 		Project prj = new Project (777, "First test");
-	
+		prj.setBranch("master");
 		when(skylineProcessor.generateProjectLayers(any(), any())).thenReturn(new ProjectLayers(prj));
 		
 		prj.setLocationRepository(String.format(DIR_GIT, FIRST_TEST));
