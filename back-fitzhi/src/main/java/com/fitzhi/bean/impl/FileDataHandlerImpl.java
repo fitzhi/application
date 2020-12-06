@@ -572,9 +572,8 @@ public class FileDataHandlerImpl implements DataHandler {
 	@Override
 	public String generatePathnamesFile(Project project, PathsType pathsType) {
 		return String.format(
-				"%s/%d-%s-%s-%s.txt", pathNames, 
+				"%s/%d-%s-%s.txt", pathNames, 
 				project.getId(), 
-				project.getName().replace(" ", "_"),
 				project.getBranch().replace(" ", "_"),
 				pathsType.getTypeOfPath());
 	}
@@ -707,6 +706,21 @@ public class FileDataHandlerImpl implements DataHandler {
         // We save the directories list extracted from the changes.
         //
 		this.saveRepositoryDirectories(project, analysis.getChanges());
+
+		//
+		// Saving the set attached to the ADDED paths in the analysis
+		//
+		this.savePaths(project, new ArrayList<String>(analysis.getPathsAdded()), PathsType.PATHS_ADDED);
+
+		//
+		// Saving the set attached to the MODIFIED paths in the analysis
+		//
+		this.savePaths(project, new ArrayList<String>(analysis.getPathsModified()), PathsType.PATHS_MODIFIED);
+
+		//
+		// Saving the set attached to the MODIFIED CANDIDATE in the analysis
+		//
+		this.savePaths(project, new ArrayList<String>(analysis.getPathsCandidate()), PathsType.PATHS_CANDIDATE);
 	}
 
 	@Override

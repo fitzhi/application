@@ -35,7 +35,7 @@ public class DataHandlerGeneratePathnamesFileTest {
 
         String filename = dataHandler.generatePathnamesFile(p, PathsType.PATHS_ALL);
         log.debug(String.format("Filename %s", filename));
-        Assert.assertEquals("pathnames-data/1789-TheFrenchRevolution-branchName-pathsAll.txt", filename);
+        Assert.assertEquals("pathnames-data/1789-branchName-pathsAll.txt", filename);
     }
 
     @Test
@@ -46,7 +46,7 @@ public class DataHandlerGeneratePathnamesFileTest {
 
         String filename = dataHandler.generatePathnamesFile(p, PathsType.PATHS_ALL);
         log.debug(String.format("Filename %s", filename));
-        Assert.assertEquals("pathnames-data/1789-The_French_Revolution-branch_name-pathsAll.txt", filename);
+        Assert.assertEquals("pathnames-data/1789-branch_name-pathsAll.txt", filename);
     }
 
 }

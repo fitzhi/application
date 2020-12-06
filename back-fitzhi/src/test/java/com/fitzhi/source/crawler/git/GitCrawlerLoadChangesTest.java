@@ -60,6 +60,7 @@ public class GitCrawlerLoadChangesTest {
     @Test
     public void testLoadChangesWithProjectRepoTestNumberOfLines() throws IOException, SkillerException {
         Project project = new Project (1809, "Wagram");
+        project.setBranch("master");
         project.setLocationRepository(new File(String.format(REPO_DIR, TESTING_PROJECT)).getAbsolutePath());
         project.add(new Library("two/lib", 1));
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
