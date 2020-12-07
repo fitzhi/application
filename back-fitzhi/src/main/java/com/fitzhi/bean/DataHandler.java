@@ -90,6 +90,19 @@ public interface DataHandler {
 	 * @throws SkillerException thrown if an exception occurs during the saving process
 	 */
 	void saveChanges(Project project, SourceControlChanges changes) throws SkillerException;
+;
+
+	/**
+	 * <p>
+	 * Save a collection of paths on File System. The main goal for this method, is to store the states of the {@link RepositoryAnalysis analysis container}  on file system.
+	 * </p>.
+	 * @param project the current projet for which these paths should be saved. 
+	 * @param paths a list of paths to be saved. 
+	 * @param pathsType the {@link com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType kind of path} .
+	 * @see PathsType
+	 * @throws SkillerException thrown if any problem occurs, most probably an {@link IOException}
+	 */
+	void savePaths(Project project, List<String> paths, PathsType pathsType) throws SkillerException;
 
 	/**
 	 * <p>

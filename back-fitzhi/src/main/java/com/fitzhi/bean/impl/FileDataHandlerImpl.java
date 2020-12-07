@@ -510,17 +510,8 @@ public class FileDataHandlerImpl implements DataHandler {
 		savePaths(project, directories, PathsType.PATHS_ALL);
 	}
 
-
-	/**
-	 * <p>
-	 * Saving paths on File System. The goal is to store the states of the {@link RepositoryAnalysis} on file system.
-	 * </p>.
-	 * @param project the current projet whose these specific paths should be saved 
-	 * @param paths a list of paths to be saved 
-	 * @param pathsType the type of Paths
-	 * @throws SkillerException thrown if any problem occurs, most probably an {@link IOException}
-	 */
-	private void savePaths(Project project, List<String> paths, PathsType pathsType) throws SkillerException {
+	@Override
+	public void savePaths(Project project, List<String> paths, PathsType pathsType) throws SkillerException {
 
 		String filename = this.generatePathnamesFile(project, pathsType);
 
@@ -529,7 +520,6 @@ public class FileDataHandlerImpl implements DataHandler {
 		}
 
 		saveTxtFile(filename, paths);
-
 	}
 
 	/**
@@ -539,7 +529,6 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * @throws SkillerException
 	 */
 	private void saveTxtFile(String filename, List<String> lines) throws SkillerException {
-
 
 		final File file = createResetOrCreateFile(filename);
 
