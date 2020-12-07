@@ -20,6 +20,8 @@ import com.fitzhi.data.source.Contributor;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.fitzhi.source.crawler.git.SourceFileHistory;
 
+import lombok.Data;
+
 /**
  * <p> 
  * The class hosts the intermediate data gathered from the analysis of the repository.<br/>
@@ -33,6 +35,7 @@ import com.fitzhi.source.crawler.git.SourceFileHistory;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
+@Data
 public class RepositoryAnalysis {
 
 	final Project project;
@@ -49,18 +52,18 @@ public class RepositoryAnalysis {
 	 * This list is used to retrieve, by subtraction, i.e. the files never modified, the list of files just <b>added</b>, maybe <u>external files include.</u> 
 	 * These files might be external dependencies, non relevant for audit.  
 	 */
-	private final Set<String> pathsModified = new HashSet<>();
+	private Set<String> pathsModified = new HashSet<>();
 	
 	/**
 	 * List of paths detected as having been ONLY ADDED in the history of the repository.<br/>
 	 * These files might be external dependencies files, i.e. non relevant for audit.  
 	 */
-	private final Set<String> pathsAdded = new HashSet<>();
+	private Set<String> pathsAdded = new HashSet<>();
 	
 	/**
 	 * Path candidates possibly non relevant for the analysis.
 	 */
-	private final Set<String> pathsCandidate = new HashSet<>();
+	private Set<String> pathsCandidate = new HashSet<>();
 	
 	/**
 	 * @param project current project analyzed

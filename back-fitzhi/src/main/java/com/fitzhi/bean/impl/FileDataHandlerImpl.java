@@ -24,6 +24,7 @@ import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -758,8 +759,32 @@ public class FileDataHandlerImpl implements DataHandler {
 	@Override
 	public RepositoryAnalysis loadRepositoryAnalysis(Project project) throws SkillerException {
 
-		SourceControlChanges changes = this.loadChanges(project);
+		SourceControlChanges changes = loadChanges(project);
+		if (changes == null) {
+			return null;
+		}
 
-		return null;
+		List<String> pathsAdded = loadPaths(project, PathsType.PATHS_ADDED);
+		if (pathsAdded == null) {
+			return null;
+		}
+
+		List<String> pathsModified = loadPaths(project, PathsType.PATHS_MODIFIED);
+		if (pathsModified == null) {
+			return null;
+		}
+
+		List<String> pathsCandidate = loadPaths(project, PathsType.PATHS_CANDIDATE);
+		if (pathsCandidate == null) {
+			return null;
+		}
+
+		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
+		analysis.setChanges(changes);
+		analysis.setPathsAdded(new HashSet<String>(pathsAdded));
+		analysis.setPathsModified(new HashSet<String>(pathsModified));
+		analysis.setPathsCandidate(new HashSet<String>(pathsCandidate));
+		return analysis;
 	}
+	
 }
