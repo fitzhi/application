@@ -100,9 +100,25 @@ public interface DataHandler {
 	 * @param paths a list of paths to be saved. 
 	 * @param pathsType the {@link com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType kind of path} .
 	 * @see PathsType
+	 * @see #loadPaths(Project, PathsType)
 	 * @throws SkillerException thrown if any problem occurs, most probably an {@link IOException}
 	 */
 	void savePaths(Project project, List<String> paths, PathsType pathsType) throws SkillerException;
+
+	/**
+	 * <p>
+	 * Load the corresponding collection of paths saved previously on the File System. 
+	 * The main goal for this method, is to store the states of the {@link RepositoryAnalysis analysis container}  on file system.
+	 * </p>.
+	 * @param project the current projet for which these paths should be saved. 
+	 * @param pathsType the {@link com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType kind of path} .
+	 * @return the loaded paths retrieved on file system, or {@code null} if none exists.
+	 * @see PathsType
+	 * @see #savePaths(Project, List, PathsType)
+	 * @throws SkillerException thrown if any problem occurs, most probably an {@link IOException}
+	 */
+	List<String> loadPaths(Project project, PathsType pathsType) throws SkillerException;
+
 
 	/**
 	 * <p>

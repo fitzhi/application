@@ -436,6 +436,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		}
 	}
 
+
 	/**
 	 * <p>
 	 * Test <b>on the file system</b> if the given pathname is a directory in the
@@ -522,6 +523,19 @@ public class FileDataHandlerImpl implements DataHandler {
 		saveTxtFile(filename, paths);
 	}
 
+	@Override
+	public List<String> loadPaths(Project project, PathsType pathsType) throws SkillerException {
+
+		String filename = this.generatePathnamesFile(project, pathsType);
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Saving paths file %s", rootLocation.resolve(filename).toAbsolutePath()));
+		}
+
+		return loadTxtFile(filename);
+	}
+
+
 	/**
 	 * Save a list of String into the given filename
 	 * @param filename the filename to save the TXT file.
@@ -537,6 +551,27 @@ public class FileDataHandlerImpl implements DataHandler {
 				writer.write(line);
 				writer.write(Global.LN);
 			}
+		} catch (IOException ioe) {
+			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
+		}
+	}
+
+	/**
+	 * Load the content of the given filename in a list of {@code String} format.
+	 * @param filename the filename which content has to be loaded.
+	 * @return the content of the file in {@code String} format, or {@code null} if none exists. 
+	 * @throws SkillerException if any problems occurs, most probably an {@link IOException}
+	 */
+	private List<String> loadTxtFile(String filename) throws SkillerException {
+
+		Path path = rootLocation.resolve(filename);
+		if (!path.toFile().exists()) {
+			return null;
+		}
+
+		try (Reader reader = new FileReader(path.toFile())) {
+			BufferedReader br = new BufferedReader(reader);
+			return br.lines().collect(Collectors.toList());
 		} catch (IOException ioe) {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
 		}
