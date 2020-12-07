@@ -54,8 +54,10 @@ public class DataHandlerLoadRepositoryAnalysisTest {
 
         // Saving the analysis
         log.debug(String.format("Loading project %s", project.getName()));
-        RepositoryAnalysis loadedAnalysis = dataHandler.loadRepositoryAnalysis(project);
+        dataHandler.saveRepositoryAnalysis(project, analysis);
 
+        RepositoryAnalysis loadedAnalysis = dataHandler.loadRepositoryAnalysis(project);
+        Assert.assertNotNull("loadedAnalysis is not null", loadedAnalysis);
         Assert.assertNotNull("loadedAnalysis.getChanges() is not null", loadedAnalysis.getChanges());
         Assert.assertEquals("Changes file must contain 2 records", 2, loadedAnalysis.getChanges().keySet().size());
         Assert.assertEquals("Added paths file must contain 2 records", 2, loadedAnalysis.getPathsAdded().size());
