@@ -92,10 +92,12 @@ public interface DataHandler {
 	void saveChanges(Project project, SourceControlChanges changes) throws SkillerException;
 
 	/**
+	 * <p>
 	 * Load the changes stored in a CSV file.
+	 * </p>
 	 * @param project the current active project
-	 * @return the container of all changes
-	 * @throws SkillerException thrown if an exception occurs during the loading process, mot probably an {@link java.io.IOException}
+	 * @return the container of all commits changes, or {@code null} if the changes file does not exist
+	 * @throws SkillerException thrown if an exception occurs during the loading process, most probably an {@link java.io.IOException}
 	 */
 	SourceControlChanges loadChanges(Project project) throws SkillerException;
 

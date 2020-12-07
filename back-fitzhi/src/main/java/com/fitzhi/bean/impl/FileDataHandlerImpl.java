@@ -354,11 +354,19 @@ public class FileDataHandlerImpl implements DataHandler {
 
 		final String filename = generateChangesCsvFilename(project);
 
+		File file = rootLocation.resolve(filename).toFile();
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Loading file %s", rootLocation.resolve(filename)));
+			log.debug(String.format("Loading file %s", file.getAbsolutePath()));
 		}
 
-		try (Reader filereader = new FileReader(rootLocation.resolve(filename).toFile())) {
+		if (!file.exists()) {
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("But, the file %s does not exist", file.getAbsolutePath()));
+			}
+			return null;
+		}
+
+		try (Reader filereader = new FileReader(file)) {
 
 			CSVParser parser = new CSVParserBuilder().withSeparator(';').build();
 
@@ -725,6 +733,9 @@ public class FileDataHandlerImpl implements DataHandler {
 
 	@Override
 	public RepositoryAnalysis loadRepositoryAnalysis(Project project) throws SkillerException {
+
+		SourceControlChanges changes = this.loadChanges(project);
+
 		return null;
 	}
 }

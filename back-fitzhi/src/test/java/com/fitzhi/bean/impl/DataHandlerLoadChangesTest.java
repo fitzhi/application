@@ -66,4 +66,12 @@ public class DataHandlerLoadChangesTest {
        
     }
 
+    /**
+     * loadChanges returns {@code NULL} if the changes file does exist.
+     */
+    @Test
+    public void LoadChangesReturnNull() throws SkillerException {
+        final Project p = new Project(1939, "Bad year");
+        Assert.assertNull("loadChanges returns {@code NULL} if the changes file does exist", dataHandler.loadChanges(p));
+    }
 }
