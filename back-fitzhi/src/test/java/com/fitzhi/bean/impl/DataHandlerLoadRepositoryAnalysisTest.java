@@ -53,7 +53,7 @@ public class DataHandlerLoadRepositoryAnalysisTest {
         analysis.getPathsCandidate().add("candidate Two");
 
         // Saving the analysis
-        log.debug(String.format("Saving project %s", project.getName()));
+        log.debug(String.format("Loading project %s", project.getName()));
         RepositoryAnalysis loadedAnalysis = dataHandler.loadRepositoryAnalysis(project);
 
         Assert.assertEquals("Changes file must contain 2 records", 2, loadedAnalysis.getChanges().getChanges().size());
