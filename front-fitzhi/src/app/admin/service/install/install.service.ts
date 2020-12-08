@@ -24,5 +24,6 @@ export class InstallService {
   	public installComplete() {
 		localStorage.setItem("installation", "1");
 		this.installComplete$.next(true);
-  	}
+	  }
+
 }

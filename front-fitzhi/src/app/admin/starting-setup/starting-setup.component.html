@@ -3,7 +3,7 @@
 <mat-step [completed]="completed[0]">
     <ng-template matStepLabel>Register the server</ng-template>
     <app-backend-setup (messengerVeryFirstConnection)="onChangeVeryFirstConnection($event)"></app-backend-setup>
-  </mat-step>
+  </mat-step> 
 
   <mat-step [completed]="completed[1]">
     <ng-template matStepLabel>{{labelUser}}</ng-template>

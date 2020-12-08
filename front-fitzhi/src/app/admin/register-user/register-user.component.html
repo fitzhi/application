@@ -87,7 +87,7 @@
             <div class="row">
                 <div class="col-md-8"></div>
                 <div class="col-md-2">
-                    <button class="cancelButton" type="button" alt="cancel this operation" (click)="onCancel()"></button>
+                    <button id="cancelButton" class="cancelButton" type="button" alt="cancel this operation" (click)="onCancel()"></button>
                 </div>
                 <div class="col-md-2">
                     <button id="okButton" [ngClass]="classOkButton()" type="submit" [disabled]="connectionGroup.invalid"></button>
