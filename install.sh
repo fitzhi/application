@@ -49,9 +49,9 @@ rm -rf first-test
 git clone https://github.com/frvidal/first-test 
 rm -rf application
 git clone https://github.com/fitzhi/application
-rmdir -rf mock-repo-with-branches-for-dev-and-testing-purposes
+rm -rf mock-repo-with-branches-for-dev-and-testing-purposes
 git clone https://github.com/fitzhi/mock-repo-with-branches-for-dev-and-testing-purposes
-rmdir -rf repo-test-number-of-lines
+rm -rf repo-test-number-of-lines
 git clone https://github.com/fitzhi/repo-test-number-of-lines
 cd ..
 fi
