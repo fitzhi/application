@@ -81,7 +81,7 @@ describe('RegisterUserComponent', () => {
 		expect(localStorage.getItem('installation')).toBe('1');
 	});
 
-	it('Should activate the button if the user & password fields are correctly .', () => {
+	it('Should activate the button Ok, if the user & password fields are correctly .', () => {
 
 		const spy = spyOn(installService, 'installComplete').and.callThrough();
 
