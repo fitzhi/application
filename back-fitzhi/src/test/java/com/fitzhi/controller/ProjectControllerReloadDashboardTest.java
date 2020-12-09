@@ -78,6 +78,7 @@ public class ProjectControllerReloadDashboardTest {
 		this.mvc.perform(get("/api/project/reloadDashboard/1789")).andExpect(status().isOk());
 		Mockito.verify(cacheDataHandler, times(1)).removeRepository(any());
 		Assert.assertNotNull("The location repository should NOT be reset", projectHandler.get(1789).getLocationRepository());
+		Assert.assertEquals("myLocationRepository", projectHandler.get(1789).getLocationRepository());
 	}
 
 }
