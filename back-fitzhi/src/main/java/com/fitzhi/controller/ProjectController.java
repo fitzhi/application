@@ -670,7 +670,8 @@ public class ProjectController {
 		}
 
 		try {
-			// We do not renitialieze the local repository if the user asks for a RESET 
+			// We do renitialieze the local repository if the user asks for a RESET 
+			projectHandler.saveLocationRepository(idProject, null);
 			String response = cacheDataHandler.removeRepository(project) ? "1" : "0";
 			scanner.generateAsync(project, new SettingsGeneration(project.getId()));
 			return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
