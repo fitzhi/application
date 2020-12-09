@@ -1690,7 +1690,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         final FetchConnection connection = retrieveFetchConnection(project);
         if (log.isDebugEnabled()) {
             if (connection == null) {
-                log.debug(String.format("Connection failed with teh SCM declared for project %d %s", project.getId(),
+                log.debug(String.format("Connection failed with the SCM declared for project %d %s", project.getId(),
                         project.getName()));
             } else {
                 connection.getRefs().forEach(ref -> log.debug(ref.getName()));

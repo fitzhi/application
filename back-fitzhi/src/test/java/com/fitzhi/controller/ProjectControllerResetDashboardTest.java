@@ -74,7 +74,7 @@ public class ProjectControllerResetDashboardTest {
         when(cacheDataHandler.removeRepository(any())).thenReturn(true);
         when(repoScanner.generateAsync(any(), any())).thenReturn(null);
 		this.mvc.perform(get("/api/project/resetDashboard/1789")).andExpect(status().isOk());
-		Assert.assertNull("The revolutionary project", projectHandler.get(1789).getLocationRepository());
+		Assert.assertNull("The location repository should be reset", projectHandler.get(1789).getLocationRepository());
 	}
 
 }

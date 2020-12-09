@@ -13,6 +13,7 @@ import com.fitzhi.source.crawler.RepoScanner;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,6 +60,7 @@ public class ProjectControllerReloadDashboardTest {
 	@Before
 	public void before() throws Exception {
 		Project project1789 = new Project(1789, "revolutionary project");
+		project1789.setLocationRepository("myLocationRepository");
 		projectHandler.addNewProject(project1789);
 	}
 	
@@ -75,6 +77,7 @@ public class ProjectControllerReloadDashboardTest {
         when(repoScanner.generateAsync(any(), any())).thenReturn(null);
 		this.mvc.perform(get("/api/project/reloadDashboard/1789")).andExpect(status().isOk());
 		Mockito.verify(cacheDataHandler, times(1)).removeRepository(any());
+		Assert.assertNotNull("The location repository should NOT be reset", projectHandler.get(1789).getLocationRepository());
 	}
 
 }
