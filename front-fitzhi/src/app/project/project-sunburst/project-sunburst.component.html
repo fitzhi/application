@@ -152,7 +152,7 @@
 							Filter the chart from a specific date.
 						</li>
 					</ul>
-					<em>The chart will be regenerated.</em>
+					<em class="caution">Caution : The chart will be regenerated.</em>
 				</div>
 			</div>
 		</angular-popper>
@@ -194,7 +194,7 @@
 							to associate an existing collaborator with each ghost
 						</li>
 						<li>
-							or create a new collaborator
+							to create a new collaborator
 						</li>
 					</ul>
 				</div>
@@ -206,21 +206,16 @@
 				<h4 class="help-title">Reload the chart</h4>
 				<div class="help-content">
 					<p>
-						This action button requests to reload the chart !<br/>
-						This reload will process the current local repository, located on server. 
-						There will be no <code class="application-code">git.clone()</code>.<br/>
-						But this treatment will take in account :
+						This button requests to reload the chart !<br/>
+						The current chart is stored in the session section of the local storage.<br/>
+						Reload will regenerate this chart.
+						It will process the current local repository, as it is, on server.
+						There will be no complete regeneration, no <code class="application-code">git.clone()</code>.<br/>
 					</p>
-					<ul>
-						<li>
-							<em class="fas fa-ghost font-awesome-help"></em>
-							The actual up-to-date ghosts list
-						</li>
-						<li>
-							<em class="fab fa-elementor font-awesome-help"></em>
-							The actual up-to-date dependencies list
-						</li>
-					</ul> 
+					<p>
+						The operation will take in account the current ghosts list.
+						<em class="fas fa-ghost font-awesome-help"></em> : If your update your ghosts list, this chart might change.
+					</p> 
 				</div>
 			</div>
 		</angular-popper>
@@ -230,12 +225,12 @@
 				<h4 class="help-title">Reset the chart</h4>
 				<div class="help-content">
 					<p>
-						Be aware that this operation will :
+						<span class="caution">Be aware that this operation will :</span>
 					</p>
 					<ul>
-						<li>Cleanup all intermediate raw data files located on server</li>
+						<li>Cleanup all intermediate data files stored on server</li>
 						<li>Launch a new asynchronous generation !</li>
-						<li>Might probably last a while.</li>
+						<li>Might probably last a while...</li>
 					</ul>
 				</div>
 			</div>

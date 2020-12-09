@@ -1352,11 +1352,14 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                 throw e;
             }
             if (log.isDebugEnabled()) {
-                log.debug(String.format("The project %s is cloned into a temporay directory", project.getName()));
+                log.debug(String.format("The project %s is cloned into the temporay directory %s", project.getName(), project.getLocationRepository()));
             }
+
+            this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Git clone successfully done!");
+        } else {
+            this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Re-using the local repository ");
         }
 
-        this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Git clone successfully done!");
 
         //
         // If a cache is detected and available for this project, it will be returned by this method.

@@ -45,7 +45,8 @@ public class GitCrawlerAllEligibleFilesTest {
     public void testAllEligibleFilesWithProjectRepoTestNumberOfLines() throws SkillerException {
         Project project = new Project (1809, "Wagram");
         project.setLocationRepository(new File(String.format(REPO_DIR, TESTING_PROJECT)).getAbsolutePath());
- 
+        project.setBranch("master");
+
         Set<String> allFiles = scanner.allEligibleFiles(project);
         if (log.isDebugEnabled()) {
             allFiles.stream().forEach(log::debug);
@@ -66,6 +67,7 @@ public class GitCrawlerAllEligibleFilesTest {
     public void testInvalidPath() throws SkillerException {
         Project project = new Project (1809, "Wagram");
         project.setLocationRepository("invalid path");
+        project.setBranch("master");
         scanner.allEligibleFiles(project);
    }
    

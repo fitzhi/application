@@ -12,8 +12,15 @@
 		<appender-ref ref="STDOUT" />
 	</root>
 
+
+
 <!-- Parking for my logging. 
 
+	<logger name="com.fitzhi.bean.impl" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
+	
 	<logger name="com.fitzhi.source.crawler.git" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />

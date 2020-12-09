@@ -24,6 +24,7 @@ import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -354,11 +355,19 @@ public class FileDataHandlerImpl implements DataHandler {
 
 		final String filename = generateChangesCsvFilename(project);
 
+		File file = rootLocation.resolve(filename).toFile();
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Loading file %s", rootLocation.resolve(filename)));
+			log.debug(String.format("Loading file %s", file.getAbsolutePath()));
 		}
 
-		try (Reader filereader = new FileReader(rootLocation.resolve(filename).toFile())) {
+		if (!file.exists()) {
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("But, the file %s does not exist", file.getAbsolutePath()));
+			}
+			return null;
+		}
+
+		try (Reader filereader = new FileReader(file)) {
 
 			CSVParser parser = new CSVParserBuilder().withSeparator(';').build();
 
@@ -427,6 +436,7 @@ public class FileDataHandlerImpl implements DataHandler {
 					MessageFormat.format(MESSAGE_IO_ERROR, path.toFile().getAbsolutePath()), ioe);
 		}
 	}
+
 
 	/**
 	 * <p>
@@ -502,17 +512,8 @@ public class FileDataHandlerImpl implements DataHandler {
 		savePaths(project, directories, PathsType.PATHS_ALL);
 	}
 
-
-	/**
-	 * <p>
-	 * Saving paths on File System. The goal is to store the states of the {@link RepositoryAnalysis} on file system.
-	 * </p>.
-	 * @param project the current projet whose these specific paths should be saved 
-	 * @param paths a list of paths to be saved 
-	 * @param pathsType the type of Paths
-	 * @throws SkillerException thrown if any problem occurs, most probably an {@link IOException}
-	 */
-	private void savePaths(Project project, List<String> paths, PathsType pathsType) throws SkillerException {
+	@Override
+	public void savePaths(Project project, List<String> paths, PathsType pathsType) throws SkillerException {
 
 		String filename = this.generatePathnamesFile(project, pathsType);
 
@@ -521,8 +522,20 @@ public class FileDataHandlerImpl implements DataHandler {
 		}
 
 		saveTxtFile(filename, paths);
-
 	}
+
+	@Override
+	public List<String> loadPaths(Project project, PathsType pathsType) throws SkillerException {
+
+		String filename = this.generatePathnamesFile(project, pathsType);
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Saving paths file %s", rootLocation.resolve(filename).toAbsolutePath()));
+		}
+
+		return loadTxtFile(filename);
+	}
+
 
 	/**
 	 * Save a list of String into the given filename
@@ -532,7 +545,6 @@ public class FileDataHandlerImpl implements DataHandler {
 	 */
 	private void saveTxtFile(String filename, List<String> lines) throws SkillerException {
 
-
 		final File file = createResetOrCreateFile(filename);
 
 		try (Writer writer = new FileWriter(file)) {
@@ -540,6 +552,27 @@ public class FileDataHandlerImpl implements DataHandler {
 				writer.write(line);
 				writer.write(Global.LN);
 			}
+		} catch (IOException ioe) {
+			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
+		}
+	}
+
+	/**
+	 * Load the content of the given filename in a list of {@code String} format.
+	 * @param filename the filename which content has to be loaded.
+	 * @return the content of the file in {@code String} format, or {@code null} if none exists. 
+	 * @throws SkillerException if any problems occurs, most probably an {@link IOException}
+	 */
+	private List<String> loadTxtFile(String filename) throws SkillerException {
+
+		Path path = rootLocation.resolve(filename);
+		if (!path.toFile().exists()) {
+			return null;
+		}
+
+		try (Reader reader = new FileReader(path.toFile())) {
+			BufferedReader br = new BufferedReader(reader);
+			return br.lines().collect(Collectors.toList());
 		} catch (IOException ioe) {
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
 		}
@@ -572,9 +605,8 @@ public class FileDataHandlerImpl implements DataHandler {
 	@Override
 	public String generatePathnamesFile(Project project, PathsType pathsType) {
 		return String.format(
-				"%s/%d-%s-%s-%s.txt", pathNames, 
+				"%s/%d-%s-%s.txt", pathNames, 
 				project.getId(), 
-				project.getName().replace(" ", "_"),
 				project.getBranch().replace(" ", "_"),
 				pathsType.getTypeOfPath());
 	}
@@ -707,10 +739,52 @@ public class FileDataHandlerImpl implements DataHandler {
         // We save the directories list extracted from the changes.
         //
 		this.saveRepositoryDirectories(project, analysis.getChanges());
+
+		//
+		// Saving the set attached to the ADDED paths in the analysis
+		//
+		this.savePaths(project, new ArrayList<String>(analysis.getPathsAdded()), PathsType.PATHS_ADDED);
+
+		//
+		// Saving the set attached to the MODIFIED paths in the analysis
+		//
+		this.savePaths(project, new ArrayList<String>(analysis.getPathsModified()), PathsType.PATHS_MODIFIED);
+
+		//
+		// Saving the set attached to the MODIFIED CANDIDATE in the analysis
+		//
+		this.savePaths(project, new ArrayList<String>(analysis.getPathsCandidate()), PathsType.PATHS_CANDIDATE);
 	}
 
 	@Override
 	public RepositoryAnalysis loadRepositoryAnalysis(Project project) throws SkillerException {
-		return null;
+
+		SourceControlChanges changes = loadChanges(project);
+		if (changes == null) {
+			return null;
+		}
+
+		List<String> pathsAdded = loadPaths(project, PathsType.PATHS_ADDED);
+		if (pathsAdded == null) {
+			return null;
+		}
+
+		List<String> pathsModified = loadPaths(project, PathsType.PATHS_MODIFIED);
+		if (pathsModified == null) {
+			return null;
+		}
+
+		List<String> pathsCandidate = loadPaths(project, PathsType.PATHS_CANDIDATE);
+		if (pathsCandidate == null) {
+			return null;
+		}
+
+		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
+		analysis.setChanges(changes);
+		analysis.setPathsAdded(new HashSet<String>(pathsAdded));
+		analysis.setPathsModified(new HashSet<String>(pathsModified));
+		analysis.setPathsCandidate(new HashSet<String>(pathsCandidate));
+		return analysis;
 	}
+	
 }
