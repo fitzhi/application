@@ -156,3 +156,9 @@ div.taskReportError {
   font-size: 21px;
   color: var(--color-selected);
 }
+
+.caution {
+  color: var(--color-warning);
+  font-weight: bolder;
+  font-size: larger;
+}
