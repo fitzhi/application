@@ -157,7 +157,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
     /**
      * <p>
-     * <i>Optional</i> repositories location.
+     * <em>Optional</em> repositories location.
      * </p>
      * <ul>
      * <Li>
@@ -192,7 +192,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
      * <li>one for <code><b>common</b></code></li>
      * <li>one for <code><b>my-package</b></code></li>
      * </ul>
-     * <b>BURT</b> Possibly, there is no source files present in
+     * <b>BUT</b> Possibly, there is no source files present in
      * <code><b>fr</b></code>. So instead of keeping 2 levels of hierarchy (with an
      * empty one), it would be easier to aggregate the 2 directories into the
      * resulting one : <code>fr.my-package</code>

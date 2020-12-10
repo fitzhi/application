@@ -344,6 +344,7 @@ public class FileDataHandlerImpl implements DataHandler {
 				}
 			}
 		} catch (IOException ioe) {
+			log.error(getStackTrace(ioe));
 			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
 		}
 	}
@@ -437,7 +438,6 @@ public class FileDataHandlerImpl implements DataHandler {
 		}
 	}
 
-
 	/**
 	 * <p>
 	 * Test <b>on the file system</b> if the given pathname is a directory in the
@@ -448,13 +448,12 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * effectively a directory.</font>
 	 * </p>
 	 * 
-	 * @param project  the current project whose repository is analyzed. <i>We use
-	 *                 this parameter to retrieve the location of the GIT local
-	 *                 repository.</i>
+	 * @param project  the current project whose repository is analyzed.
+	 * <em>We use this parameter to retrieve the location of the GIT local repository.</em>
 	 * @param pathname the given pathname
-	 * @return {@code true} if the pathname is a directory.
+	 * @return {@code true} if the pathname is a directory, {@code false} otherwise 
 	 */
-	private boolean isDirectory(final Project project, final String pathname) {
+	private boolean isDirectory(final Project project, final String pathname)  {
 
 		if (pathname.indexOf(INTERNAL_FILE_SEPARATORCHAR) != -1) {
 			return true;
@@ -463,8 +462,14 @@ public class FileDataHandlerImpl implements DataHandler {
 			log.debug(String.format("Examining if %s is a directory",
 					project.getLocationRepository() + INTERNAL_FILE_SEPARATORCHAR + pathname));
 		}
-		return Paths.get(project.getLocationRepository() + INTERNAL_FILE_SEPARATORCHAR + pathname).toFile()
-				.isDirectory();
+		try {
+			return Paths.get(project.getLocationRepository() + INTERNAL_FILE_SEPARATORCHAR + pathname)
+					.toFile()
+					.isDirectory();
+		} catch (final Exception e) {
+			log.error(getStackTrace(e));
+			return false;
+		}
 	}
 
 	@Override
@@ -506,8 +511,12 @@ public class FileDataHandlerImpl implements DataHandler {
 		//
 		createIfNeededDirectory(pathNames);
 
-		List<String> directories = changes.keySet().stream().map(this::extractDirectory).distinct()
-				.filter(path -> isDirectory(project, path)).sorted().collect(Collectors.toList());
+		List<String> directories = changes.keySet().stream()
+				.map(this::extractDirectory)
+				.distinct()
+				.filter(path -> isDirectory(project, path))
+				.sorted()
+				.collect(Collectors.toList());
 
 		savePaths(project, directories, PathsType.PATHS_ALL);
 	}
