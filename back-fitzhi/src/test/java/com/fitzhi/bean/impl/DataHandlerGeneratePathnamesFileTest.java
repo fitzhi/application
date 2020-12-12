@@ -3,6 +3,7 @@ package com.fitzhi.bean.impl;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.exception.SkillerException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -28,7 +29,7 @@ public class DataHandlerGeneratePathnamesFileTest {
     DataHandler dataHandler;
 
     @Test
-    public void testSimpleProject() {
+    public void testSimpleProject() throws SkillerException {
 
         final Project p = new Project(1789, "TheFrenchRevolution");
         p.setBranch("branchName");
@@ -39,7 +40,7 @@ public class DataHandlerGeneratePathnamesFileTest {
     }
 
     @Test
-    public void testSimpleProjectWithBlanks() {
+    public void testSimpleProjectWithBlanks() throws SkillerException {
 
         final Project p = new Project(1789, "The French Revolution");
         p.setBranch("branch name");
@@ -47,6 +48,18 @@ public class DataHandlerGeneratePathnamesFileTest {
         String filename = dataHandler.generatePathnamesFile(p, PathsType.PATHS_ALL);
         log.debug(String.format("Filename %s", filename));
         Assert.assertEquals("pathnames-data/1789-branch_name-pathsAll.txt", filename);
+    }
+
+
+    /**
+     * If the project has no branch name set, generatePathnamesFile should sthrow an SkillerException.
+     * @throws SkillerException
+     */
+    @Test(expected=SkillerException.class)
+    public void testBranchNameIsMandatory() throws SkillerException {
+        final Project p = new Project(1789, "The French Revolution");
+        // method should trow a SkillerException.
+        dataHandler.generatePathnamesFile(p, PathsType.PATHS_ALL);
     }
 
 }

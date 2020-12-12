@@ -5,6 +5,8 @@ import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
 import static com.fitzhi.Error.CODE_FILE_DOES_NOT_EXIST;
 import static com.fitzhi.Error.MESSAGE_FILE_DOES_NOT_EXIST;
+import static com.fitzhi.Error.CODE_BRANCH_IS_MISSING_IN_PROJECT;
+import static com.fitzhi.Error.MESSAGE_BRANCH_IS_MISSING_IN_PROJECT;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -612,7 +614,13 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	@Override
-	public String generatePathnamesFile(Project project, PathsType pathsType) {
+	public String generatePathnamesFile(Project project, PathsType pathsType) throws SkillerException {
+
+		// To prevent a NullException in generatePathnamesFile
+		if (project.getBranch() == null) {
+			throw new SkillerException(CODE_BRANCH_IS_MISSING_IN_PROJECT, MessageFormat.format(MESSAGE_BRANCH_IS_MISSING_IN_PROJECT, project.getId(), project.getName()));
+		}
+
 		return String.format(
 				"%s/%d-%s-%s.txt", pathNames, 
 				project.getId(), 

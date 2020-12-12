@@ -516,6 +516,13 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         // If we have configured the crawl with prefiltering of files AND
         // this path doesn't match the eligibility pattern, we skip it.
         //
+        if (log.isDebugEnabled()) {
+            log.debug ((this.prefilterEligibility) ? "Prefiltering the files" : "No file prefiltetring");
+            if (this.prefilterEligibility) {
+                log.debug ("Patterns list");
+                patternsInclusionList.stream().forEach(pattern -> log.debug(pattern.toString()));
+            }
+        }     
         Set<String> files = (this.prefilterEligibility)
                 ? allFiles.stream().filter(this::isEligible).collect(Collectors.toSet())
                 : allFiles;

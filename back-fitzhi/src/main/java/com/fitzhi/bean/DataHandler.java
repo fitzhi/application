@@ -228,7 +228,8 @@ public interface DataHandler {
 	 * @param project the current project
 	 * @param pathsType type of paths which will be saved on file system  
 	 * @return the generated pathname to be used to store the data
+	 * @throws SkillerException thrown if any problem occurs, most probably the branch name is empty. 
 	 */
-	String generatePathnamesFile(Project project, PathsType pathsType);
+	String generatePathnamesFile(Project project, PathsType pathsType) throws SkillerException;
 
 }

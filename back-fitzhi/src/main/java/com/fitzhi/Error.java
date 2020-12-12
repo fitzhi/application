@@ -102,6 +102,9 @@ public class Error {
 	public static final int CODE_FILE_DOES_NOT_EXIST = -1030;
 	public static final String MESSAGE_FILE_DOES_NOT_EXIST = "File does not exist {0}";
 
+	public static final int CODE_BRANCH_IS_MISSING_IN_PROJECT = -1031;
+	public static final String MESSAGE_BRANCH_IS_MISSING_IN_PROJECT = "Branch name is missing in project {0} {1}";
+
 	private Error() {
 	}
 	
