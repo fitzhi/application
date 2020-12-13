@@ -14,10 +14,31 @@ import { RiskLegend } from 'src/app/data/riskLegend';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Component } from '@angular/core';
 
 describe('AuditBadgeComponent', () => {
-	let component: AuditBadgeComponent;
-	let fixture: ComponentFixture<AuditBadgeComponent>;
+	let component: TestHostComponent;
+	let fixture: ComponentFixture<TestHostComponent>;
+
+	@Component({
+		selector: 'app-host-component',
+		template: `<div style="width: 400px; height: 400px; margin: 20px; background-color: lightYellow">
+						
+						<app-audit-badge
+							[id]="id"				
+							[evaluation]="evaluation"	
+							[weight]="weight"
+							[title]="title">
+						</app-audit-badge>
+
+					</div>`
+	})
+	class TestHostComponent {
+		id = 1;
+		evaluation = 0;
+		weight = 100;
+		title = 'the Title';
+	}
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
@@ -38,15 +59,14 @@ describe('AuditBadgeComponent', () => {
 		risk.level = 5;
 		risk.color = 'blue';
 		referentialService.legends.push (risk);
-
-		fixture = TestBed.createComponent(AuditBadgeComponent);
+		referentialService.referentialLoaded$.next(true);
+		
+		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
-		component.id = 1;
-		component.evaluation = 50;
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it('should create correctly the audit-badge Component', () => {
 		expect(component).toBeTruthy();
 	});
 });
