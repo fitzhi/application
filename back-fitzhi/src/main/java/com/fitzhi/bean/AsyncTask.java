@@ -64,9 +64,10 @@ public interface AsyncTask {
 	 * @param title the title related to the identifier
 	 * @param id the given identifier <i>(which might be a project, a staff or anything else)</i>
 	 * @param message the given log message to log
+	 * @param progressionPercentage percentage of progression in the current operation
 	 * @return {@code true} id the log has been successfully recorded, {@code false} otherwise.
 	 */
-	boolean logMessage(String operation, String title, int id, String message);
+	boolean logMessage(String operation, String title, int id, String message, int progressionPercentage);
 	
 	/**
 	 * Log a message for a running task.
@@ -75,9 +76,10 @@ public interface AsyncTask {
 	 * @param id the given identifier <i>(which might be a project, a staff or anything else)</i>
 	 * @param errorCode error code associated with this message
 	 * @param message the given log message to log
+	 * @param progressionPercentage percentage of progression in the current operation
 	 * @return {@code true} id the log has been successfully recorded, {@code false} otherwise.
 	 */
-	boolean logMessage(String operation, String title, int id, int errorCode, String message);
+	boolean logMessage(String operation, String title, int id, int errorCode, String message, int progressionPercentage);
 	
 	/**
 	 * Complete the current task without error.

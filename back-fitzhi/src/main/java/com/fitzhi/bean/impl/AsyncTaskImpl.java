@@ -4,6 +4,7 @@ import static com.fitzhi.Error.CODE_MULTIPLE_TASK;
 import static com.fitzhi.Error.MESSAGE_MULTIPLE_TASK;
 import static com.fitzhi.Error.MESSAGE_TASK_NOT_FOUND;
 import static com.fitzhi.Global.LN;
+import static com.fitzhi.Global.NO_PROGRESSION;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -82,15 +83,18 @@ public class AsyncTaskImpl implements AsyncTask {
 	}
 	
 	@Override
-	public boolean logMessage(String operation, String title, int id, String message) {
-		return logMessage(operation, title, id, 0, message);
+	public boolean logMessage(String operation, String title, int id, String message, int progressionPercentage) {
+		return logMessage(operation, title, id, 0, message, progressionPercentage);
 	}
 	
 	@Override
-	public boolean logMessage(String operation, String title, int id, int errorCode, String message) {
+	public boolean logMessage(String operation, String title, int id, int errorCode, String message, int progressionPercentage) {
 		Task task = getTask(operation, title, id);
 		if (task != null) {
-			task.addActivity(new TaskLog(errorCode, message));
+			if (progressionPercentage != NO_PROGRESSION) {
+				task.setCurrentProgressionPercentage(progressionPercentage);
+			}
+			task.addActivity(new TaskLog(errorCode, message, task.getCurrentProgressionPercentage()));
 			return true;
 		} else {
 			if (log.isWarnEnabled()) {

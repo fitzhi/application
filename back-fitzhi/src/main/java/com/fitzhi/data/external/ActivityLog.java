@@ -36,6 +36,11 @@ public @Data class ActivityLog  {
 	private long logTime;
 
 	/**
+	 * The progression of the treatment (in percentage).
+	 */
+	private int progressionPercentage;
+
+	/**
 	 * The error code thrown by the treatment, or 0 if there is no error.
 	 */
 	private int code;
@@ -66,15 +71,17 @@ public @Data class ActivityLog  {
 	 * @param id an entity identifier (in this first release, it's a project identifier)
 	 * @param code the code of error associated to this message
 	 * @param message the message
+     * @param progressionPercentage the percentage of progression of the treatment
 	 * @param logTime the data/time when this log has been recorded
 	 * @param complete {@code true} if the treatment is completed.
 	 * @param completeOnError{@code false} if the treatment is completed.
 	 */
-	public ActivityLog(int id, int code, String message, long logTime, boolean complete, boolean completeOnError) {
+	public ActivityLog(int id, int code, String message, int progressionPercentage, long logTime, boolean complete, boolean completeOnError) {
 		super();
 		this.id = id;
 		this.code = code;
 		this.message = message;
+		this.progressionPercentage = progressionPercentage;
 		this.logTime = logTime;
 		this.complete = complete;
 		this.completeOnError = completeOnError;
@@ -92,12 +99,15 @@ public @Data class ActivityLog  {
 		this.message = taskLog.getMessage();
 		this.logTime = taskLog.getLogTime();
 		this.complete = complete;
+		if (this.complete) {
+			this.progressionPercentage = 100;
+		}
 	}
 
 
 	@Override
 	public String toString() {
-		return "ActivityLog [id=" + id + ", code=" + code + ", message=" + message + ", logTime=" + logTime
+		return "ActivityLog [id=" + id + ", code=" + code + ", message=" + message+ ", progressionPercentage=" + progressionPercentage + ", logTime=" + logTime
 				+ ", complete=" + complete + ", completeOnError=" + completeOnError + "]";
 	}
 
@@ -111,6 +121,8 @@ public @Data class ActivityLog  {
 		if (getClass() != obj.getClass())
 			return false;
 		ActivityLog other = (ActivityLog) obj;
+		if (progressionPercentage != other.progressionPercentage)
+			return false;
 		if (code != other.code)
 			return false;
 		if (complete != other.complete)
@@ -133,6 +145,7 @@ public @Data class ActivityLog  {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + code;
+		result = prime * result + progressionPercentage;
 		result = prime * result + (complete ? 1231 : 1237);
 		result = prime * result + (completeOnError ? 1231 : 1237);
 		result = prime * result + id;

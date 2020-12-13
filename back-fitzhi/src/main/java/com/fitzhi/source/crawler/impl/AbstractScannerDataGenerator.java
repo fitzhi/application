@@ -4,6 +4,7 @@ import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.INTERNAL_FILE_SEPARATOR;
 import static com.fitzhi.Global.LN;
 import static com.fitzhi.Global.PROJECT;
+import static com.fitzhi.Global.NO_PROGRESSION;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -91,7 +92,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 			if (++ind == STEP) {
 				tot_ind += ind;
 				ind = 0;
-				this.tasks().logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), MessageFormat.format("{0} commits agregated", tot_ind));
+				this.tasks().logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), MessageFormat.format("{0} commits agregated", tot_ind), NO_PROGRESSION);
 			}
 			root.injectFile(root, 
 					commit.getSourcePath().split(INTERNAL_FILE_SEPARATOR), 

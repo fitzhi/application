@@ -69,12 +69,12 @@ public class ProjectTaskControllerSSESendTest {
 		Project p = new Project (ID_PROJECT, "Revolutionnary project");
 		projectHandler.addNewProject(p);
 		asyncTask.addTask("nopeOperation", "mockProject", ID_PROJECT);
-		asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my first message");
+		asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my first message", 0);
 		
 	    executorService.schedule(new Runnable() {
 	        @Override
 	        public void run() {
-				asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my second message");
+				asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my second message", 0);
 	        }
 	    }, 500, TimeUnit.MILLISECONDS);
 

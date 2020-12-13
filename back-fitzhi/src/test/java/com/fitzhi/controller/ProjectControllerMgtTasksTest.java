@@ -66,7 +66,7 @@ public class ProjectControllerMgtTasksTest {
 		Project p = new Project (ID_PROJECT, "Revolutionnary project");
 		projectHandler.addNewProject(p);
 		asyncTask.addTask("nopeOperation", "mockProject", ID_PROJECT);
-		asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my message");
+		asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my message", 0);
 		
 	}
 

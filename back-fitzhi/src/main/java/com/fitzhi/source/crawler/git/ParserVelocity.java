@@ -2,6 +2,7 @@ package com.fitzhi.source.crawler.git;
 
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.PROJECT;
+import static com.fitzhi.Global.NO_PROGRESSION;
 
 import com.fitzhi.bean.AsyncTask;
 
@@ -69,7 +70,7 @@ public @Data class ParserVelocity {
 		totalAdd++;
 		if (sessionAdd == SESSION_BREAK) {
 			this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  idProject, 
-				String.format("%d changes have been detected.", totalAdd));
+				String.format("%d changes have been detected.", totalAdd), NO_PROGRESSION);
 			sessionAdd = 0;
 		}
 	}
@@ -79,7 +80,7 @@ public @Data class ParserVelocity {
 	 */
 	public void complete() {
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  idProject, 
-				String.format("Changes file is complete : %d changes  record.", totalAdd));		
+				String.format("Changes file is complete : %d changes  record.", totalAdd), NO_PROGRESSION);		
 		totalAdd = 0;
 		sessionAdd = 0;
 	}

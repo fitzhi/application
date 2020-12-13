@@ -1,14 +1,7 @@
 package com.fitzhi.bean.impl;
 
-
-import static com.fitzhi.Global.PROJECT;
-import static com.fitzhi.Global.DASHBOARD_GENERATION;
-
-import java.io.File;
-import java.io.IOException;
 import java.time.LocalDate;
 
-import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
@@ -16,8 +9,6 @@ import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.RepoScanner;
 import com.fitzhi.source.crawler.git.SourceChange;
 
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

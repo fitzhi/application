@@ -41,9 +41,9 @@ public class AsyncTaskTest {
 	@Test
 	public void testAddTaskAfterFormerCompletion() throws InterruptedException, SkillerException {
 		// We log 2 messages
-		asyncTask.logMessage(OPERATION_OF_TEST, PROJECT, 1, "first Message");
+		asyncTask.logMessage(OPERATION_OF_TEST, PROJECT, 1, "first Message", 0);
 		Thread.sleep(2);
-		asyncTask.logMessage(OPERATION_OF_TEST, PROJECT, 1, 404, "Not found Message");
+		asyncTask.logMessage(OPERATION_OF_TEST, PROJECT, 1, 404, "Not found Message", 0);
 		
 		asyncTask.completeTask(OPERATION_OF_TEST, PROJECT, 1);
 
@@ -65,9 +65,9 @@ public class AsyncTaskTest {
 	public void testAddAndCompleteTheTask() throws InterruptedException, SkillerException  {
 		
 		// We log 2 messages
-		asyncTask.logMessage(OPERATION_OF_TEST, PROJECT, 1, "first Message");
+		asyncTask.logMessage(OPERATION_OF_TEST, PROJECT, 1, "first Message", 0);
 		Thread.sleep(2);
-		asyncTask.logMessage(OPERATION_OF_TEST, PROJECT, 1, 404, "Not found Message");
+		asyncTask.logMessage(OPERATION_OF_TEST, PROJECT, 1, 404, "Not found Message", 0);
 		
 		// We control the fact that this task is active
 		Task t = asyncTask.getTask(OPERATION_OF_TEST, PROJECT, 1);

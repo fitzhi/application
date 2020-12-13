@@ -41,6 +41,11 @@ public @Data class Task implements Serializable {
 	final String title;
 	
 	/**
+	 * Progression percenrtage.
+	 */
+	private int currentProgressionPercentage = 0;
+
+	/**
 	 * Identifier. It might be a project, a staff, a skill...
 	 */
 	final int id;	
@@ -117,7 +122,7 @@ public @Data class Task implements Serializable {
 	 */
 	public ActivityLog buildLastestLog(int idProject) {
 		TaskLog log = this.getLastestLog();
-		ActivityLog activityLog = new ActivityLog(idProject, log.code, log.message, log.logTime, complete, completeOnError);
+		ActivityLog activityLog = new ActivityLog(idProject, log.code, log.message, log.getProgressionPercentage(), log.logTime, complete, completeOnError);
 		return activityLog;
 	}
 }

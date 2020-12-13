@@ -18,6 +18,8 @@ import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
 import static com.fitzhi.Global.LN;
 import static com.fitzhi.Global.PROJECT;
+import static com.fitzhi.Global.NO_PROGRESSION;
+
 import static org.eclipse.jgit.diff.DiffEntry.DEV_NULL;
 
 import java.io.File;
@@ -673,7 +675,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         Set<String> allEligibleFiles = this.allEligibleFiles(project);
 
         tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
-                String.format("%d files in queue for analysis !", allEligibleFiles.size()));
+                String.format("%d files in queue for analysis !", allEligibleFiles.size()), 30);
         int numberOfFiles = 0;
 
         if (log.isDebugEnabled()) {
@@ -722,9 +724,15 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                 numberOfFiles++;
                 if ((numberOfFiles % 1000) == 0) {
                     totalNumberOfFiles += numberOfFiles;
+                    double d = numberOfFiles * 0.7 / totalNumberOfFiles;
+                    int progression = (int) Math.floor( d );
+                    if (log.isDebugEnabled()) {
+                        log.debug (String.format("(%d * 0.7) / %d gives the progression %d", numberOfFiles, totalNumberOfFiles, progression));
+                    }
                     tasks.logMessage(
                         DASHBOARD_GENERATION, PROJECT, project.getId(),
-                        String.format ("%d files have been analyzed !", totalNumberOfFiles));
+                        String.format ("%d files have been analyzed !", totalNumberOfFiles),
+                        90);
                         numberOfFiles = 0;
                 }
 
@@ -791,7 +799,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
             tasks.logMessage(
                 DASHBOARD_GENERATION, PROJECT, project.getId(),
-                String.format ("All %d files have been analyzed !", allEligibleFiles.size()));
+                String.format ("All %d files have been analyzed !", allEligibleFiles.size()), 100);
 
             velocity.logReport();
 
@@ -1089,7 +1097,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         }
 
         tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
-                MessageFormat.format("{0} changes have been detected on the repository", analysis.numberOfChanges()));
+                MessageFormat.format("{0} changes have been detected on the repository", analysis.numberOfChanges()), NO_PROGRESSION);
 
         // We generate & save the skyline history for this project
         this.generateAndSaveSkyline(project, analysis);
@@ -1112,7 +1120,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                     analysis.numberOfChanges(), roughEntries));
         }
         this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
-                String.format("%d changes are eligible for the analysis", analysis.numberOfChanges()));
+                String.format("%d changes are eligible for the analysis", analysis.numberOfChanges()), NO_PROGRESSION);
 
         // Updating the importance
         this.updateImportance(project, analysis);
@@ -1137,7 +1145,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         selectPathDependencies(analysis, dependenciesMarker());
 
         this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
-                String.format("Dependencies have been excluded from analysis"));
+                String.format("Dependencies have been excluded from analysis"), NO_PROGRESSION);
 
         //
         // We retrieve the root paths of all libraries present in the project (if any)
@@ -1317,12 +1325,12 @@ public class GitCrawler extends AbstractScannerDataGenerator {
             tasks.addTask(DASHBOARD_GENERATION, "project", project.getId());
             return generate(project, settings);
         } catch (SkillerException se) {
-            tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), se.errorCode, se.errorMessage);
+            tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), se.errorCode, se.errorMessage, NO_PROGRESSION);
             failed = true;
             return null;
         } catch (GitAPIException | IOException e) {
             log.error(e.getMessage());
-            tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), 666, e.getLocalizedMessage());
+            tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), 666, e.getLocalizedMessage(), NO_PROGRESSION);
             failed = true;
             return null;
         } finally {
@@ -1342,7 +1350,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
     public RiskDashboard generate(final Project project, final SettingsGeneration cfgGeneration)
             throws IOException, SkillerException, GitAPIException {
 
-        this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Starting the generation !");
+        this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Starting the generation !", NO_PROGRESSION);
 
         final ConnectionSettings settings = connectionSettings(project);
 
@@ -1362,9 +1370,9 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                 log.debug(String.format("The project %s is cloned into the temporay directory %s", project.getName(), project.getLocationRepository()));
             }
 
-            this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Git clone successfully done!");
+            this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Git clone successfully done!", 10);
         } else {
-            this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Re-using the local repository ");
+            this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Re-using the local repository!", 10);
         }
 
 
@@ -1380,7 +1388,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                     repo.size(), repo.unknownContributors().size()));
         }
 
-        this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Parsing of the repository complete!");
+        this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Parsing of the repository complete!", NO_PROGRESSION);
 
         //
         // The project is updated with the detected skills in the repository (if any)
@@ -1398,7 +1406,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
         RiskDashboard data = this.aggregateDashboard(project, repo);
 
-        this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Data aggregation done !");
+        this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Data aggregation done !", NO_PROGRESSION);
 
         // We collapse empty directory inside their first sub-directory
         // the node com & the node google will become one single node com/google
@@ -1432,7 +1440,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         // We send back to new risk level to the front-end application.
         data.setProjectRiskLevel(project.getStaffEvaluation());
 
-        this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Risk evaluation done !");
+        this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Risk evaluation done !", NO_PROGRESSION);
 
         if (log.isDebugEnabled()) {
             if ((data.undefinedContributors != null) && (!data.undefinedContributors.isEmpty())) {
@@ -1597,7 +1605,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                 });
 
         this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
-                String.format("All changes have been assigned to registered staff members"));
+                String.format("All changes have been assigned to registered staff members"), NO_PROGRESSION);
 
     }
 
