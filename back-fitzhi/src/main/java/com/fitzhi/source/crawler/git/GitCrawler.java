@@ -34,6 +34,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -369,6 +370,11 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         Path path;
         if (project.getLocationRepository() == null) {
             path = createDirectoryAsCloneDestination(project, settings);
+            // We remove the destination directory if any.
+            removeCloneDir(path);
+            if (log.isInfoEnabled()) {
+                log.info(String.format("The directory %s has been removed", path.toAbsolutePath().toString()));
+            }
             execClone = true;
         } else {
             path = Paths.get(project.getLocationRepository());
@@ -429,6 +435,18 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         String locationRepository = path.toFile().getCanonicalPath();
         projectHandler.saveLocationRepository(project.getId(), locationRepository);
         project.setLocationRepository(locationRepository);
+    }
+
+    /**
+     * This method will remove recurcively the content of a non empty directory.
+     * @param path the path of the directory to be removed
+     * @throws IOException thrown if any IO exception occurs
+     */
+    static void removeCloneDir(Path path) throws IOException {
+        Files.walk(path)
+            .sorted(Comparator.reverseOrder())
+            .map(Path::toFile)
+            .forEach(File::delete);
     }
 
     @Override
