@@ -2,17 +2,6 @@
   z-index: 500;
 }
 
-.sunburst-progress-bar {
-	display: flex;
-  	align-content: center;
-  	align-items: center;
-  	height: 60px;
-}
-
-.text-progress-bar {
-	margin-left: 10px;
-}
-
 .component-container {
   height: 100%;
 }

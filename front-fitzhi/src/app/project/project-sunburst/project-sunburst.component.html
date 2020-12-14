@@ -89,19 +89,11 @@
 		<div id="chart" class="divPanelOnTop" *ngIf="isActiveContext(PreviewContext.SUNBURST_READY)"></div>
 
 		<div class="row" style="width: 100%" *ngIf="isActiveContext(PreviewContext.SUNBURST_WAITING)">
-			<div class="col-md-1"></div>
-			<div class="col-md-10 text-left w100">
-				<mat-card style="margin-top:30px">
-					<mat-card-content>
-						<h4 class="text-progress-bar">Chart on preparation. Please wait !</h4>
-						<section class="sunburst-progress-bar">
-							<mat-progress-bar color="warn" mode="indeterminate"></mat-progress-bar>
-						</section>
-					</mat-card-content>
-				</mat-card>
-				<app-ssewatcher url="/project/tasks/stream/dashboardGeneration/"></app-ssewatcher>
+			<div class="col-md-2"></div>
+			<div class="col-md-8">
+				<app-chart-in-progress></app-chart-in-progress>
 			</div>
-			<div class="col-md-1"></div>
+			<div class="col-md-2"></div>
 		</div>
 
 		<div id="panelGhosts" class="row" *ngIf="isActiveContext(PreviewContext.SUNBURST_GHOSTS)">

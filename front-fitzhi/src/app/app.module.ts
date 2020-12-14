@@ -117,6 +117,7 @@ import { StaffRemoveComponent } from './tabs-staff/staff-remove/staff-remove.com
 import { StaffComponent } from './tabs-staff/staff.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { SkylineIconComponent } from './dashboard/skyline/skyline-icon/skyline-icon.component';
+import { ChartInProgressComponent } from './project/project-sunburst/chart-in-progress/chart-in-progress.component';
 
 @NgModule({
 	declarations: [
@@ -187,7 +188,8 @@ import { SkylineIconComponent } from './dashboard/skyline/skyline-icon/skyline-i
 		PieLegendComponent,
 		BranchComponent,
 		SkylineComponent,
-		SkylineIconComponent
+		SkylineIconComponent,
+		ChartInProgressComponent
 	],
 	entryComponents: [
 		StaffUploadCvComponent,
