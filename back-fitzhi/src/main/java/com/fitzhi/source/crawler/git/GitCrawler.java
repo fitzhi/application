@@ -722,17 +722,13 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
                 
                 numberOfFiles++;
-                if ((numberOfFiles % 1000) == 0) {
+                if ((numberOfFiles % 100) == 0) {
                     totalNumberOfFiles += numberOfFiles;
-                    double d = numberOfFiles * 0.7 / totalNumberOfFiles;
-                    int progression = (int) Math.floor( d );
-                    if (log.isDebugEnabled()) {
-                        log.debug (String.format("(%d * 0.7) / %d gives the progression %d", numberOfFiles, totalNumberOfFiles, progression));
-                    }
+                    int progressionPercentage = progressionPercentage(totalNumberOfFiles, allEligibleFiles.size());
                     tasks.logMessage(
                         DASHBOARD_GENERATION, PROJECT, project.getId(),
                         String.format ("%d files have been analyzed !", totalNumberOfFiles),
-                        90);
+                        progressionPercentage);
                         numberOfFiles = 0;
                 }
 
@@ -806,6 +802,22 @@ public class GitCrawler extends AbstractScannerDataGenerator {
             velocity.complete();
        
         }
+    }
+
+    /**
+     * Process the percentage of progression
+     * @param numberOfFiles the current number of files alerady treated
+     * @param totalNumberOfFiles the total number of files to be treated
+     * @return the percentage
+     */
+    static int progressionPercentage(int numberOfFiles, int totalNumberOfFiles) {
+        final int OFFSET = 30;
+        double d = OFFSET + numberOfFiles * (100 - OFFSET) / totalNumberOfFiles;
+        int progression = (int) Math.floor( d );
+        if (log.isDebugEnabled()) {
+            log.debug (String.format("(%d * 0.7) / %d gives the progression %d", numberOfFiles, totalNumberOfFiles, progression));
+        }
+        return progression;
     }
 
     @Override
