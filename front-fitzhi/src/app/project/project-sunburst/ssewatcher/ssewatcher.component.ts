@@ -84,7 +84,7 @@ export class SSEWatcherComponent extends BaseComponent implements OnInit, OnDest
 		const activityLog: ActivityLog = new ActivityLog(JSON.parse(messageEvent.data));
 		// We need to execute the work INSIDE the Angular zone.
 		if (traceOn()) {
-			console.log('Event message : ', activityLog.message);
+			console.log('Event message : %s, progression %d', activityLog.message, activityLog.progressionPercentage);
 		}
 		this.zone.run(() => {
 			if (activityLog.isKo()) {
