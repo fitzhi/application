@@ -2,7 +2,7 @@
     <mat-card-content>
         <h4 class="text-progress-bar">Chart on preparation. Please wait !</h4>
         <section class="sunburst-progress-bar">
-            <mat-progress-bar color="warn" mode="indeterminate"></mat-progress-bar>
+            <mat-progress-bar color="warn" mode="determinate" [value]="progressionPercentage"></mat-progress-bar>
         </section>
     </mat-card-content>
 </mat-card>

@@ -1,4 +1,4 @@
-<div *ngIf="(event$ | async); let evt; else loading">
+<div *ngIf="(ssewatcherService.event$ | async); let evt; else loading">
     <div *ngIf="evt.isOk()" class="taskReport taskReportOk">{{evt.message}}</div>
     <div *ngIf="evt.isCompleteOk()" class="reloadAfterCompletion">
         <div class="inner-reloadAfterCompletion">
