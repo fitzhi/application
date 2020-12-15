@@ -167,33 +167,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			}
 		});
 
-		this.subscriptions.add(
-			this.projectService.projectLoaded$.subscribe({
-				next: doneAndOk => {
-					if (doneAndOk) {
-						if (traceOn()) {
-							console.log('Project %s %s received in sunburst-component',
-								this.projectService.project.id,
-								this.projectService.project.name);
-						}
-/*
-						//
-						// We postpone the Project updates to avoid the warning
-						// ExpressionChangedAfterItHasBeenCheckedError: Expression has changed after it was checked.
-						//
-						setTimeout(() => {
-							this.settings.idProject = this.projectService.project.id;
-
-							if (this.isChartImpossible(this.projectService.project)) {
-								this.messageService.info('No repository URL available !');
-								this.setActiveContext (PreviewContext.SUNBURST_IMPOSSIBLE);
-							}
-						}, 0);
-*/
-					}
-				}
-		}));
-
 		// The child in charge of listening the events can force the chart refresh.
 		this.subscriptions.add(
 			this.sunburstCinematicService.refreshChart$.subscribe({
