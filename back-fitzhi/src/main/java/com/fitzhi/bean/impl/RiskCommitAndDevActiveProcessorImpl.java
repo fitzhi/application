@@ -361,9 +361,7 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 		double sumRiskLevelTimesImportance = dataTree.sum(RISKLEVEL_TIMES_IMPORTANCE);
 		int projectRisk = (int) (sumRiskLevelTimesImportance / sumImportance);
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format(
-					"Project %s has risk %d ", 
-					project.getName(), projectRisk));
+			logger.debug(String.format("Project %s has risk %d ", project.getName(), projectRisk));
 		}
 		this.projectHandler.saveRisk(project, projectRisk);
 	}

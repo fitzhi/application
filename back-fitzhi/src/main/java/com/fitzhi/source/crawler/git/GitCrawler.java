@@ -1390,9 +1390,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         final ConnectionSettings settings = connectionSettings(project);
 
         if (!projectHandler.hasValidRepository(project)) {
-            // FVI : I do not initialize anymore the local repository in order to PULL only
-            // the repository when necessary.
-            // projectHandler.initLocationRepository(project);
             try {
                 this.clone(project, settings);
             } catch (final Exception e) {

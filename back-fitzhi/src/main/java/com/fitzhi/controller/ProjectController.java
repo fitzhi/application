@@ -550,7 +550,8 @@ public class ProjectController {
 			return new ResponseEntity<>(new SunburstDTO(project.getId(), project.getStaffEvaluation(), null,
 					HttpStatus.CREATED.value(),
 					"The dashboard generation has been launched. Operation might last a while. Please try later !"),
-					headers(), HttpStatus.OK);
+					headers(),
+					HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(getStackTrace(e));
 			return new ResponseEntity<>(
