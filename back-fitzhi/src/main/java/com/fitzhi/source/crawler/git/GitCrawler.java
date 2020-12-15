@@ -396,17 +396,24 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                 log.info(String.format("Git clone of project %s", project.getName()));
             }
             if (settings.isPublicRepository()) {
-                Git.cloneRepository().setDirectory(path.toAbsolutePath().toFile()).setURI(settings.getUrl())
-                        .setBranch(project.getBranch()).setProgressMonitor(new CustomProgressMonitor()).call();
+                Git git = Git.cloneRepository()
+                    .setDirectory(path.toAbsolutePath().toFile()).setURI(settings.getUrl())
+                    .setBranch(project.getBranch())
+                    .setProgressMonitor(new CustomProgressMonitor())
+                    .call();
+                git.close();
             } else {
-                Git.cloneRepository().setDirectory(path.toAbsolutePath().toFile()).setURI(settings.getUrl())
-                        .setCredentialsProvider(
-                                new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()))
-                        .setBranch(project.getBranch()).setProgressMonitor(new CustomProgressMonitor()).call();
-
+                Git git = Git.cloneRepository()
+                    .setDirectory(path.toAbsolutePath().toFile()).setURI(settings.getUrl())
+                    .setCredentialsProvider(
+                            new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()))
+                    .setBranch(project.getBranch())
+                    .setProgressMonitor(new CustomProgressMonitor())
+                    .call();
+                git.close();
             }
             if (log.isDebugEnabled()) {
-                log.debug("Clone done & succcessful !");
+                log.debug("Clone complete & succcessful !");
             }
         } else {
 
@@ -1110,120 +1117,118 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         final CommitRepository repositoryOfCommit;
 
         FileRepositoryBuilder builder = new FileRepositoryBuilder();
-        Repository repo = builder.setGitDir(
-            new File(getLocalDotGitFile(project)))
-                .readEnvironment()
-                .findGitDir()
-                .build();
 
+        try (Repository repo = builder.setGitDir(
+            new File(getLocalDotGitFile(project))).readEnvironment().findGitDir().build()) {
 
-        //
-        // load or generate all raw changes declared in the given repository.
-        //
-        RepositoryAnalysis analysis = retrieveRepositoryAnalysis(project, repo);
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("loadChanges (%s) returns %d entries", project.getName(),
-                    analysis.numberOfChanges()));
+            //
+            // load or generate all raw changes declared in the given repository.
+            //
+            RepositoryAnalysis analysis = retrieveRepositoryAnalysis(project, repo);
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("loadChanges (%s) returns %d entries", project.getName(),
+                        analysis.numberOfChanges()));
+            }
+
+            tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
+                    MessageFormat.format("{0} changes have been detected on the repository", analysis.numberOfChanges()), NO_PROGRESSION);
+
+            // We generate & save the skyline history for this project
+            this.generateAndSaveSkyline(project, analysis);
+
+            /**
+             * We finalize & cleanup the content of the collection
+             */
+            this.finalizeListChanges(project.getLocationRepository() + "/", analysis);
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("finalizeListChanges (%s) returns %d entries", project.getName(),
+                        analysis.numberOfChanges()));
+            }
+
+            // Entries non filtered
+            int roughEntries = analysis.numberOfChanges();
+
+            this.filterEligible(analysis);
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("filterEligible (%s) returns %d entries from %d originals", project.getName(),
+                        analysis.numberOfChanges(), roughEntries));
+            }
+            this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
+                    String.format("%d changes are eligible for the analysis", analysis.numberOfChanges()), NO_PROGRESSION);
+
+            // Updating the importance
+            this.updateImportance(project, analysis);
+
+            //
+            // Retrieve directories candidate for being exclude from the analysis
+            // The resulting set contains only source files without a commit history of
+            // modification.
+            // These files have only be added.
+            //
+            // We will test each entry of the resulting list if it match the possible
+            // eviction critéria
+            //
+            analysis.extractCandidateForDependencies();
+
+            //
+            // We filter the candidates with a dependency marker such as "jquery".
+            // The analysis container has a collection of path (pathsCandidate)
+            // which might be contain file like /toto/titi/jquery/src/jquery-internal.js,
+            // candidate for being excluded from the analysis.
+            //
+            selectPathDependencies(analysis, dependenciesMarker());
+
+            this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
+                    String.format("Dependencies have been excluded from analysis"), NO_PROGRESSION);
+
+            //
+            // We retrieve the root paths of all libraries present in the project (if any)
+            // The resulting list is saved in the project object.
+            //
+            this.retrieveRootPath(analysis);
+
+            /**
+             * We remove the non relevant directories from the crawler analysis
+             */
+            this.removeNonRelevantDirectories(project, analysis);
+
+            //
+            // Set of unknown contributors who have work on this repository.
+            //
+            final Set<String> unknownContributors = new HashSet<String>();
+
+            //
+            // Handling the staff aspect from the project.
+            //
+            this.handlingProjectStaffAndGhost(project, analysis, unknownContributors);
+
+            //
+            // We detect the ecosystem in the analysis and we save them in the project.
+            //
+            this.updateProjectEcosystem(project, analysis);
+
+            //
+            // Create a repository.
+            //
+            repositoryOfCommit = new BasicCommitRepository();
+
+            //
+            // Transfer the analysis data in the result file.
+            //
+            analysis.transferRepository(repositoryOfCommit);
+
+            //
+            // We update the unknown contributors.
+            //
+            repositoryOfCommit.setUnknownContributors(unknownContributors);
+
+            //
+            // Saving the repository into the cache
+            //
+            cacheDataHandler.saveRepository(project, repositoryOfCommit);
+
+            return repositoryOfCommit;
         }
-
-        tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
-                MessageFormat.format("{0} changes have been detected on the repository", analysis.numberOfChanges()), NO_PROGRESSION);
-
-        // We generate & save the skyline history for this project
-        this.generateAndSaveSkyline(project, analysis);
-
-        /**
-         * We finalize & cleanup the content of the collection
-         */
-        this.finalizeListChanges(project.getLocationRepository() + "/", analysis);
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("finalizeListChanges (%s) returns %d entries", project.getName(),
-                    analysis.numberOfChanges()));
-        }
-
-        // Entries non filtered
-        int roughEntries = analysis.numberOfChanges();
-
-        this.filterEligible(analysis);
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("filterEligible (%s) returns %d entries from %d originals", project.getName(),
-                    analysis.numberOfChanges(), roughEntries));
-        }
-        this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
-                String.format("%d changes are eligible for the analysis", analysis.numberOfChanges()), NO_PROGRESSION);
-
-        // Updating the importance
-        this.updateImportance(project, analysis);
-
-        //
-        // Retrieve directories candidate for being exclude from the analysis
-        // The resulting set contains only source files without a commit history of
-        // modification.
-        // These files have only be added.
-        //
-        // We will test each entry of the resulting list if it match the possible
-        // eviction critéria
-        //
-        analysis.extractCandidateForDependencies();
-
-        //
-        // We filter the candidates with a dependency marker such as "jquery".
-        // The analysis container has a collection of path (pathsCandidate)
-        // which might be contain file like /toto/titi/jquery/src/jquery-internal.js,
-        // candidate for being excluded from the analysis.
-        //
-        selectPathDependencies(analysis, dependenciesMarker());
-
-        this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
-                String.format("Dependencies have been excluded from analysis"), NO_PROGRESSION);
-
-        //
-        // We retrieve the root paths of all libraries present in the project (if any)
-        // The resulting list is saved in the project object.
-        //
-        this.retrieveRootPath(analysis);
-
-        /**
-         * We remove the non relevant directories from the crawler analysis
-         */
-        this.removeNonRelevantDirectories(project, analysis);
-
-        //
-        // Set of unknown contributors who have work on this repository.
-        //
-        final Set<String> unknownContributors = new HashSet<String>();
-
-        //
-        // Handling the staff aspect from the project.
-        //
-        this.handlingProjectStaffAndGhost(project, analysis, unknownContributors);
-
-        //
-        // We detect the ecosystem in the analysis and we save them in the project.
-        //
-        this.updateProjectEcosystem(project, analysis);
-
-        //
-        // Create a repository.
-        //
-        repositoryOfCommit = new BasicCommitRepository();
-
-        //
-        // Transfer the analysis data in the result file.
-        //
-        analysis.transferRepository(repositoryOfCommit);
-
-        //
-        // We update the unknown contributors.
-        //
-        repositoryOfCommit.setUnknownContributors(unknownContributors);
-
-        //
-        // Saving the repository into the cache
-        //
-        cacheDataHandler.saveRepository(project, repositoryOfCommit);
-
-        return repositoryOfCommit;
     }
 
     /**
