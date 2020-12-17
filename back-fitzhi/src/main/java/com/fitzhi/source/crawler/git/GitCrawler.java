@@ -1031,6 +1031,12 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                 }
             }
         }
+
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("finalizeListChanges (%s) returns %d entries", analysis.getProject().getName(),
+                    analysis.numberOfChanges()));
+        }
+
     }
 
     @Override
@@ -1039,6 +1045,17 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         analysis.setChanges(new SourceControlChanges(
                 analysis.getChanges().entrySet().stream().filter(map -> isEligible(map.getKey()))
                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue))));
+
+        // Entries non filtered
+        int roughEntries = analysis.numberOfChanges();
+
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("filterEligible (%s) returns %d entries from %d originals", analysis.getProject().getName(),
+                    analysis.numberOfChanges(), roughEntries));
+        }
+
+        this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, analysis.getProject().getId(),
+                String.format("%d changes in the GIT repository are eligible for analysis", analysis.numberOfChanges()), NO_PROGRESSION);
 
     }
 
@@ -1133,28 +1150,11 @@ public class GitCrawler extends AbstractScannerDataGenerator {
             tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
                     MessageFormat.format("{0} changes have been detected on the repository", analysis.numberOfChanges()), NO_PROGRESSION);
 
-            // We generate & save the skyline history for this project
-            this.generateAndSaveSkyline(project, analysis);
-
-            /**
-             * We finalize & cleanup the content of the collection
-             */
+            // We finalize & cleanup the content of the collection
             this.finalizeListChanges(project.getLocationRepository() + "/", analysis);
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("finalizeListChanges (%s) returns %d entries", project.getName(),
-                        analysis.numberOfChanges()));
-            }
 
-            // Entries non filtered
-            int roughEntries = analysis.numberOfChanges();
-
+            // Filter the changes to the eligible pathnames only.
             this.filterEligible(analysis);
-            if (log.isDebugEnabled()) {
-                log.debug(String.format("filterEligible (%s) returns %d entries from %d originals", project.getName(),
-                        analysis.numberOfChanges(), roughEntries));
-            }
-            this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
-                    String.format("%d changes are eligible for the analysis", analysis.numberOfChanges()), NO_PROGRESSION);
 
             // Updating the importance
             this.updateImportance(project, analysis);
@@ -1178,8 +1178,10 @@ public class GitCrawler extends AbstractScannerDataGenerator {
             //
             selectPathDependencies(analysis, dependenciesMarker());
 
-            this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
-                    String.format("Dependencies have been excluded from analysis"), NO_PROGRESSION);
+            this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,
+                    project.getId(),
+                    "Dependencies have been excluded from analysis", 
+                    NO_PROGRESSION);
 
             //
             // We retrieve the root paths of all libraries present in the project (if any)
@@ -1187,44 +1189,33 @@ public class GitCrawler extends AbstractScannerDataGenerator {
             //
             this.retrieveRootPath(analysis);
 
-            /**
-             * We remove the non relevant directories from the crawler analysis
-             */
+            //
+            // We remove the non relevant directories from the crawler analysis
+            //
             this.removeNonRelevantDirectories(project, analysis);
 
-            //
             // Set of unknown contributors who have work on this repository.
-            //
             final Set<String> unknownContributors = new HashSet<String>();
 
-            //
             // Handling the staff aspect from the project.
-            //
             this.handlingProjectStaffAndGhost(project, analysis, unknownContributors);
 
-            //
             // We detect the ecosystem in the analysis and we save them in the project.
-            //
             this.updateProjectEcosystem(project, analysis);
 
-            //
             // Create a repository.
-            //
             repositoryOfCommit = new BasicCommitRepository();
 
-            //
             // Transfer the analysis data in the result file.
-            //
             analysis.transferRepository(repositoryOfCommit);
 
-            //
-            // We update the unknown contributors.
-            //
+            // We update the ghosts contributors.
             repositoryOfCommit.setUnknownContributors(unknownContributors);
 
-            //
+            // We generate & save the skyline history for this project.
+            this.generateAndSaveSkyline(project, analysis);
+
             // Saving the repository into the cache
-            //
             cacheDataHandler.saveRepository(project, repositoryOfCommit);
 
             return repositoryOfCommit;
@@ -1235,7 +1226,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
      * This private method is call by [@link #parseRepository(Project)}
      * 
      * @param project  the current project
-     * @param analysis the given analysis processed on this project
+     * @param analysis the given analysis processed by this project
      */
     private void generateAndSaveSkyline(Project project, RepositoryAnalysis analysis) throws SkillerException {
         ProjectLayers projectLayers = skylineProcessor.generateProjectLayers(project, analysis.getChanges());

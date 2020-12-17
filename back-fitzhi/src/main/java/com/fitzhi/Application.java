@@ -14,6 +14,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import java.util.Locale;
+
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.service.StorageService;
 import com.fitzhi.service.impl.storageservice.ApplicationStorageProperties;
@@ -96,6 +98,7 @@ public class Application {
             LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((prefilterEligibility) ? "\tFile eligibility is PREfiltered" : "\tFile eligibility id POSTfiltered"));
 			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((reposDir == null) ? 
 				"\tLocal repositories are hosted in a temporary destination" : String.format("\tLocal repositories are hosted in %s", reposDir)));
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(String.format("\tLocale : %s", Locale.getDefault().toString()));
 			
 		};
     }

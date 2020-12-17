@@ -147,6 +147,11 @@ public class SkylineProcessorImpl implements SkylineProcessor {
         final TemporalField yowoy = WeekFields.of(Locale.getDefault()).weekBasedYear();
 
         layers.getLayers().stream().forEach(layer -> {
+
+            if (log.isDebugEnabled()) {
+                log.debug (String.format("Project %d layer week/year %d/%d", project.getId(), layer.getWeek(), layer.getYear()));
+            }
+
             if (layer.getIdStaff() <= 0) {
                 building.addInactiveLines(layer.getLines(), layer.getYear(), layer.getWeek());
             } else {

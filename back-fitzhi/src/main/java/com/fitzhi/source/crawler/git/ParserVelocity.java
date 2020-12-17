@@ -65,12 +65,16 @@ public @Data class ParserVelocity {
 		this.tasks = tasks;
 	}
 	
+	/**
+	 * Increment the variable {@link #sessionAdd} which aggregates the number of changes processed by the analyzer.  
+	 */
 	public void increment() {
 		sessionAdd++;
 		totalAdd++;
 		if (sessionAdd == SESSION_BREAK) {
 			this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  idProject, 
-				String.format("%d changes have been detected.", totalAdd), NO_PROGRESSION);
+				String.format("%d changes in the GIT repository have been processed.", totalAdd), 
+				NO_PROGRESSION);
 			sessionAdd = 0;
 		}
 	}
@@ -80,7 +84,7 @@ public @Data class ParserVelocity {
 	 */
 	public void complete() {
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT,  idProject, 
-				String.format("Changes file is complete : %d changes  record.", totalAdd), NO_PROGRESSION);		
+				String.format("Changes file is complete : %d changes record.", totalAdd), NO_PROGRESSION);		
 		totalAdd = 0;
 		sessionAdd = 0;
 	}
