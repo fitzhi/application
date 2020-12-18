@@ -4,7 +4,7 @@
 package com.fitzhi.bean;
 
 import com.fitzhi.data.internal.Task;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -17,10 +17,10 @@ public interface AsyncTask {
 	 * @param operation type of operation recorded
 	 * @param title title related to the id
 	 * @param id identifier of the project
-	 * @throws SkillerException thrown if any problem occurs. 
+	 * @throws ApplicationException thrown if any problem occurs. 
 	 * <i>The most probable exception is if the task already.</i>
 	 */
-	void addTask (String operation, String title, int id) throws SkillerException;
+	void addTask (String operation, String title, int id) throws ApplicationException;
 
 	/**
 	 * Remove a task in the asynchronous active tasks collection.
@@ -86,20 +86,20 @@ public interface AsyncTask {
 	 * @param operation type of operation recorded
 	 * @param title title related to the id
 	 * @param id identifier of the entity
-	 * @throws SkillerException thrown if any problem occurs. 
+	 * @throws ApplicationException thrown if any problem occurs. 
 	 * <i>The most probable exception is that the task does not exist.</i>
 	 */
-	void completeTask (String operation, String title, int id) throws SkillerException;
+	void completeTask (String operation, String title, int id) throws ApplicationException;
 	
 	/**
 	 * Complete the current task <font color="red">ON AN ERROR</font>
 	 * @param operation type of operation recorded
 	 * @param title title related to the id
 	 * @param id identifier of the entity
-	 * @throws SkillerException thrown if any problem occurs. 
+	 * @throws ApplicationException thrown if any problem occurs. 
 	 * <i>The most probable exception is that the task does not exist.</i>
 	 */
-	void completeTaskOnError (String operation, String title, int id) throws SkillerException;
+	void completeTaskOnError (String operation, String title, int id) throws ApplicationException;
 	
 	/**
 	 * Trace the content of the collection.

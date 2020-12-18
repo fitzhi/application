@@ -3,7 +3,7 @@ package com.fitzhi.bean.impl;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -29,7 +29,7 @@ public class DataHandlerGeneratePathnamesFileTest {
     DataHandler dataHandler;
 
     @Test
-    public void testSimpleProject() throws SkillerException {
+    public void testSimpleProject() throws ApplicationException {
 
         final Project p = new Project(1789, "TheFrenchRevolution");
         p.setBranch("branchName");
@@ -40,7 +40,7 @@ public class DataHandlerGeneratePathnamesFileTest {
     }
 
     @Test
-    public void testSimpleProjectWithBlanks() throws SkillerException {
+    public void testSimpleProjectWithBlanks() throws ApplicationException {
 
         final Project p = new Project(1789, "The French Revolution");
         p.setBranch("branch name");
@@ -52,13 +52,13 @@ public class DataHandlerGeneratePathnamesFileTest {
 
 
     /**
-     * If the project has no branch name set, generatePathnamesFile should sthrow an SkillerException.
-     * @throws SkillerException
+     * If the project has no branch name set, generatePathnamesFile should sthrow an {@link ApplicationException}.
+     * @throws ApplicationException
      */
-    @Test(expected=SkillerException.class)
-    public void testBranchNameIsMandatory() throws SkillerException {
+    @Test(expected=ApplicationException.class)
+    public void testBranchNameIsMandatory() throws ApplicationException {
         final Project p = new Project(1789, "The French Revolution");
-        // method should trow a SkillerException.
+        // method should trow a ApplicationException.
         dataHandler.generatePathnamesFile(p, PathsType.PATHS_ALL);
     }
 

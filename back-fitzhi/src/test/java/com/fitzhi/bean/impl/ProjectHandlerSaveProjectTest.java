@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.encryption.DataEncryption;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
@@ -32,13 +32,13 @@ public class ProjectHandlerSaveProjectTest {
 	ProjectHandler projectHandler;
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		Project project = new Project (1789, "French revolution");
 		projectHandler.addNewProject(project);
 	}
 	
 	@Test
-	public void testName() throws SkillerException {
+	public void testName() throws ApplicationException {
 		Project project = new Project (1789, "The great revolution");
 		projectHandler.saveProject(new Project (1789, "The great revolution"));
 		project = projectHandler.get(1789);
@@ -50,7 +50,7 @@ public class ProjectHandlerSaveProjectTest {
 	}
 
 	@Test
-	public void testUsernamePassword() throws SkillerException {
+	public void testUsernamePassword() throws ApplicationException {
 
 		Project project = projectHandler.get(1789);
 		project.setConnectionSettings(USER_PASSWORD_ACCESS);
@@ -82,7 +82,7 @@ public class ProjectHandlerSaveProjectTest {
 	}
 
 	@Test
-	public void testConnectionSettingsBackTo0() throws SkillerException {
+	public void testConnectionSettingsBackTo0() throws ApplicationException {
 
 		Project project = projectHandler.get(1789);
 		project.setConnectionSettings(USER_PASSWORD_ACCESS);
@@ -104,7 +104,7 @@ public class ProjectHandlerSaveProjectTest {
 	}
 	
 	@Test
-	public void testConnectionSettingsFile() throws SkillerException {
+	public void testConnectionSettingsFile() throws ApplicationException {
 		Project project = projectHandler.get(1789);
 		project.setConnectionSettings(1);
 		project.setUsername("user_nope");
@@ -126,7 +126,7 @@ public class ProjectHandlerSaveProjectTest {
 	}	
 
 	@Test
-	public void testConnectionSettingsPublic() throws SkillerException {
+	public void testConnectionSettingsPublic() throws ApplicationException {
 		Project project = projectHandler.get(1789);
 		project.setConnectionSettings(1);
 		project.setUsername("user_nope");
@@ -193,7 +193,7 @@ public class ProjectHandlerSaveProjectTest {
 	}
 
 	@Test
-	public void testBranchDefaultValueIsNullIfUrlRepositoryIsNull() throws SkillerException {
+	public void testBranchDefaultValueIsNullIfUrlRepositoryIsNull() throws ApplicationException {
 		Project project = new Project (1789, "French revolution");
 		project.setUrlRepository(null);
 		projectHandler.saveProject(project);
@@ -203,7 +203,7 @@ public class ProjectHandlerSaveProjectTest {
 	}
 
 	@Test
-	public void testBranchDefaultValueIsMasterIfUrlRepositoryIsNotNull() throws SkillerException {
+	public void testBranchDefaultValueIsMasterIfUrlRepositoryIsNotNull() throws ApplicationException {
 		Project project = new Project (1789, "French revolution");
 		project.setUrlRepository("url");
 		projectHandler.saveProject(project);
@@ -213,7 +213,7 @@ public class ProjectHandlerSaveProjectTest {
 	}
 
 	@Test
-	public void testDoNotForceBranchNameIfUrlRepositoryIsNotNull() throws SkillerException {
+	public void testDoNotForceBranchNameIfUrlRepositoryIsNotNull() throws ApplicationException {
 		Project project = new Project (1789, "French revolution");
 		project.setUrlRepository("url");
 		project.setBranch("branch");
@@ -224,7 +224,7 @@ public class ProjectHandlerSaveProjectTest {
 	}
 
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.getProjects().remove(1789);
 	}
 	

@@ -26,7 +26,7 @@ import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.SourceControlChanges;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 import com.fitzhi.source.crawler.git.SourceChange;
 
@@ -61,7 +61,7 @@ public class ContributorsCommitRepositoryTest {
 	AsyncTask asyncTask;
 	
     @Before
-    public void before() throws SkillerException {
+    public void before() throws ApplicationException {
     	
     	Project p = new Project(100, "Test");
     	asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 100);
@@ -103,60 +103,60 @@ public class ContributorsCommitRepositoryTest {
     }
     
     @Test
-	public void numberOfCommits() throws SkillerException {
+	public void numberOfCommits() throws ApplicationException {
     	
     	Contributor frvidal = contributors.stream()
     			.filter(cont -> cont.getIdStaff() == 1)
     			.findFirst()
-    			.orElseThrow(SkillerException::new); 	
+    			.orElseThrow(ApplicationException::new); 	
 		Assert.assertEquals(3, frvidal.getNumberOfCommitsSubmitted());
 
 	 	Contributor glucas = contributors.stream()
     			.filter(cont -> cont.getIdStaff() == 2)
     			.findFirst()
-    			.orElseThrow(SkillerException::new);   
+    			.orElseThrow(ApplicationException::new);   
 		Assert.assertEquals(6, glucas.getNumberOfCommitsSubmitted());
 		
 	 	Contributor tintin = contributors.stream()
     			.filter(cont -> cont.getIdStaff() == 3)
     			.findFirst()
-    			.orElseThrow(SkillerException::new);   
+    			.orElseThrow(ApplicationException::new);   
 		Assert.assertEquals(2, tintin.getNumberOfCommitsSubmitted());
 	}
 
     @Test
-	public void lastCommit() throws SkillerException {
+	public void lastCommit() throws ApplicationException {
     	Contributor frvidal = contributors.stream()
     			.filter(cont -> cont.getIdStaff() == 1)
     			.findFirst()
-    			.orElseThrow(SkillerException::new); 	
+    			.orElseThrow(ApplicationException::new); 	
 		Assert.assertEquals(LocalDate.of(2018, 11, 17), frvidal.getLastCommit());
 		
 	 	Contributor glucas = contributors.stream()
     			.filter(cont -> cont.getIdStaff() == 2)
     			.findFirst()
-    			.orElseThrow(SkillerException::new);   
+    			.orElseThrow(ApplicationException::new);   
 		Assert.assertEquals(LocalDate.of(2018, 11, 23), glucas.getLastCommit());
 		
 	 	Contributor tintin = contributors.stream()
     			.filter(cont -> cont.getIdStaff() == 3)
     			.findFirst()
-    			.orElseThrow(SkillerException::new);   
+    			.orElseThrow(ApplicationException::new);   
 		Assert.assertEquals(LocalDate.of(2018, 11, 14), tintin.getLastCommit());
 	}
     
     @Test
-	public void numberOfFiles() throws SkillerException {
+	public void numberOfFiles() throws ApplicationException {
     	Contributor frvidal = contributors.stream()
     			.filter(cont -> cont.getIdStaff() == 1)
     			.findFirst()
-    			.orElseThrow(SkillerException::new); 	
+    			.orElseThrow(ApplicationException::new); 	
 		Assert.assertEquals(2, frvidal.getNumberOfFiles());
 		
     	Contributor haddock = contributors.stream()
     			.filter(cont -> cont.getIdStaff() == 4)
     			.findFirst()
-    			.orElseThrow(SkillerException::new); 	
+    			.orElseThrow(ApplicationException::new); 	
 		Assert.assertEquals(1, haddock.getNumberOfFiles());
 	}
     

@@ -18,7 +18,7 @@ import com.fitzhi.data.internal.StaffActivitySkill;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.ConnectionSettings;
 import com.fitzhi.data.source.Contributor;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.git.GitCrawler;
 import com.fitzhi.source.crawler.git.ParserVelocity;
 
@@ -56,9 +56,9 @@ public interface RepoScanner {
 	 * @param project the current active project.
 	 * @return the repository commit entries if a previous parsing has been saved, or {@code null} if none exists.
 	 * @throws IOException thrown if an IO exception occurs when reading the cache file.
-	 * @throws SkillerException thrown most probably, if the project ghosts list update failed.
+	 * @throws ApplicationException thrown most probably, if the project ghosts list update failed.
 	 */
-	CommitRepository loadRepositoryFromCacheIfAny(Project project) throws IOException, SkillerException;
+	CommitRepository loadRepositoryFromCacheIfAny(Project project) throws IOException, ApplicationException;
 
 	/**
 	 * Test if the connection to the SCM will succeed with the actual settings
@@ -98,10 +98,10 @@ public interface RepoScanner {
 	 * @param project  the actual project
 	 * @param settings the connection settings <i>(these settings are given for
 	 *                 trace only support)</i>
-	 * @throws SkillerException thrown if an IO exception occurs, most probably either {@link IOException}, or {@link SecurityException} 
+	 * @throws ApplicationException thrown if an IO exception occurs, most probably either {@link IOException}, or {@link SecurityException} 
 	 * @return the resulting path
 	 */
-	Path createDirectoryAsCloneDestination(Project project, ConnectionSettings settings) throws SkillerException;
+	Path createDirectoryAsCloneDestination(Project project, ConnectionSettings settings) throws ApplicationException;
 	
 	/**
 	 * <p>
@@ -111,10 +111,10 @@ public interface RepoScanner {
 	 * @param settings connection settings
 	 * @throws IOException thrown if any application or network error occurs.
 	 * @throws GitAPIException thrown if any application or network error occurs.
-	 * @throws SkillerException will be thrown by only
+	 * @throws ApplicationException will be thrown by only
 	 * {@link com.fitzhi.bean.ProjectHandler#saveLocationRepository } 
 	 */
-	void clone(Project project, ConnectionSettings settings) throws IOException, GitAPIException, SkillerException;
+	void clone(Project project, ConnectionSettings settings) throws IOException, GitAPIException, ApplicationException;
 
 	/**
 	 * <p>
@@ -125,9 +125,9 @@ public interface RepoScanner {
 	 * @param project the given project 
 	 * @param analysis the analysis container to complete. This analysis hosts the  collection of all changes detected on the passed repository.
 	 * @param repository the <b><font color="red">GIT</font></b> repository.
-	 * @throws SkillerException thrown by the crawling operation.
+	 * @throws ApplicationException thrown by the crawling operation.
 	 */
-	void fillRepositoryAnalysis(Project project, RepositoryAnalysis analysis,  Repository repository) throws SkillerException;
+	void fillRepositoryAnalysis(Project project, RepositoryAnalysis analysis,  Repository repository) throws ApplicationException;
 
 	/**
 	 * <p>
@@ -142,9 +142,9 @@ public interface RepoScanner {
 	 * @param repository the <b><font color="red">GIT</font></b> repository.
 	 * @return the {@link RepositoryAnalysis analysis} extracted from the repository. 
 	 * <p>This analysis contains the  collection of all changes detected on the passed repository.</p>
-	 * @throws SkillerException thrown by the crawling operation.
+	 * @throws ApplicationException thrown by the crawling operation.
 	 */
-	RepositoryAnalysis retrieveRepositoryAnalysis(Project project, Repository repository) throws SkillerException;
+	RepositoryAnalysis retrieveRepositoryAnalysis(Project project, Repository repository) throws ApplicationException;
 
 	/**
 	 * <p>
@@ -197,9 +197,9 @@ public interface RepoScanner {
 	 * </p>
 	 * @param project the current project
 	 * @param analysis the repository analysis.
-	 * @throws SkillerException thrown if any exceptions occurs.
+	 * @throws ApplicationException thrown if any exceptions occurs.
 	 */
-	void updateImportance(Project project, RepositoryAnalysis analysis) throws SkillerException;	
+	void updateImportance(Project project, RepositoryAnalysis analysis) throws ApplicationException;	
 	
 	/**
 	 * <p>
@@ -209,9 +209,9 @@ public interface RepoScanner {
 	 * @param project Project whose source code files should be scan in the repository
 	 * @return the parsed repository 
 	 * @throws IOException thrown if any application or network error occurs.
-	 * @throws SkillerException thrown if any application or network error occurs.
+	 * @throws ApplicationException thrown if any application or network error occurs.
 	 */
-	CommitRepository parseRepository(Project project) throws IOException, SkillerException;
+	CommitRepository parseRepository(Project project) throws IOException, ApplicationException;
 
 	/**
 	 * <p>
@@ -225,10 +225,10 @@ public interface RepoScanner {
 	 * @param de the Diff entry to be taken in account for the pathname
 	 * @param diffFormater Difference formatter which will be used to count the number of added, and deleted, lines
 	 * @param parserVelocity tracker which is following the velocity of the parser 
-	 * @throws SkillerException throw if any problem occurs, most probably an {@link IOException} or an {@link CorruptObjectException}
+	 * @throws ApplicationException throw if any problem occurs, most probably an {@link IOException} or an {@link CorruptObjectException}
 	 */
 	void processDiffEntries(RepositoryAnalysis analysis, RevCommit commit, String finalFilePathname,
-			DiffEntry de, DiffFormatter diffFormatter, ParserVelocity parserVelocity) throws SkillerException;
+			DiffEntry de, DiffFormatter diffFormatter, ParserVelocity parserVelocity) throws ApplicationException;
 
 
 	/**
@@ -253,10 +253,10 @@ public interface RepoScanner {
 	 * </ul>
 	 * @return the project risk dashboard 
 	 * @throws IOException thrown if any application or network error occurs during the treatment.
-	 * @throws SkillerException thrown if any application or network error occurs during the treatment.
+	 * @throws ApplicationException thrown if any application or network error occurs during the treatment.
 	 * @throws GitAPIException thrown if any application or network error occurs during the treatment.
 	 */
-	RiskDashboard generate(Project project, SettingsGeneration settings) throws IOException, SkillerException, GitAPIException;
+	RiskDashboard generate(Project project, SettingsGeneration settings) throws IOException, ApplicationException, GitAPIException;
 
 	/**
 	 * This method is an ASYNCHRONOUS wrapper from the method {@link #generate(Project)}
@@ -326,9 +326,9 @@ public interface RepoScanner {
 	 * @param contributors the list a valid contributors whose activities have to be updated.
 	 * @param changes the history of changes detected in the repository
 	 * @param pathSourceFileNames the set of source filename
-	 * @throws SkillerException thrown if any problem occurs
+	 * @throws ApplicationException thrown if any problem occurs
 	 */
-	void gatherContributorsActivitySkill(List<Contributor> contributors, SourceControlChanges changes, Set<String> pathSourceFileNames) throws SkillerException;
+	void gatherContributorsActivitySkill(List<Contributor> contributors, SourceControlChanges changes, Set<String> pathSourceFileNames) throws ApplicationException;
 	
 	/**
 	 * @return the list of markers of dependencies such as {@code jquery}, {@code bootstrap}...
@@ -350,9 +350,9 @@ public interface RepoScanner {
 	 * </p>
 	 * @param project the current project
 	 * @return the complete set of files, or an empty set if none exists. 
-	 * @throws SkillerException thrown if any problem occurs, most probably an IOException
+	 * @throws ApplicationException thrown if any problem occurs, most probably an IOException
 	 */
-	Set<String> allEligibleFiles(Project project) throws SkillerException;
+	Set<String> allEligibleFiles(Project project) throws ApplicationException;
 	
 	/**
 	 * <p>
@@ -362,14 +362,14 @@ public interface RepoScanner {
 	 * @param repository the project repository
 	 * @param filePath the file Path
 	 */
-	List<RevCommit> fileGitHistory(Project project, Repository repository, String filepath) throws SkillerException;
+	List<RevCommit> fileGitHistory(Project project, Repository repository, String filepath) throws ApplicationException;
 
 	/**
 	 * retrieve the first commit registered for the given repository.
 	 * @param the "porcelain" API to interact with the git repository
 	 * @return the first commit
 	 */
-	RevCommit initialCommit(Git git) throws SkillerException;
+	RevCommit initialCommit(Git git) throws ApplicationException;
 
 	/**
 	 * Retrrieve the DIFF entry for a specific file between 2 commit revisions
@@ -378,8 +378,8 @@ public interface RepoScanner {
 	 * @param from the commit revision <b>FROM</b> where the diff delta has to be processed
 	 * @param to the commit revision <b>TO</b> where the diff delta has to be processed
 	 * @return the searched entry or {@code null} if none's found 
-	 * @throws SkillerException thrown if any exeption occurs, most probably a GIT or IO exception
+	 * @throws ApplicationException thrown if any exeption occurs, most probably a GIT or IO exception
 	 */
-	DiffEntry retrieveDiffEntry(String pathname, Repository repository, RevCommit from, RevCommit to) throws SkillerException;
+	DiffEntry retrieveDiffEntry(String pathname, Repository repository, RevCommit from, RevCommit to) throws ApplicationException;
 
 }

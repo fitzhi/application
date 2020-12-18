@@ -11,7 +11,7 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
@@ -41,9 +41,9 @@ public class DataEncryption {
 	 * <b>ENCRYPT</b> a message
 	 * @param data the data to encrypt (actually password only are encrypted)
 	 * @return the data encrypted 
-	 * @throws SkillerException thrown if the encryption fails
+	 * @throws ApplicationException thrown if the encryption fails
 	 */
-	public static String encryptMessage(String data) throws SkillerException {
+	public static String encryptMessage(String data) throws ApplicationException {
 		
 		try {
 
@@ -59,7 +59,7 @@ public class DataEncryption {
 			
             return Base64.getEncoder().encodeToString(cipherText);
 		} catch (final Exception e) {
-			throw new SkillerException(CODE_ENCRYPTION_FAILED, 
+			throw new ApplicationException(CODE_ENCRYPTION_FAILED, 
 					MessageFormat.format(MESSAGE_ENCRYPTION_FAILED, e.getLocalizedMessage()), e);
 		}
 	}
@@ -68,9 +68,9 @@ public class DataEncryption {
 	 * <b>DECRYPT</b> a message
 	 * @param encryptedData the encrypted data
 	 * @return the data de-crypted 
-	 * @throws SkillerException thrown if the encryption fails
+	 * @throws ApplicationException thrown if the encryption fails
 	 */
-	public static String decryptMessage(String encryptedData) throws SkillerException  {
+	public static String decryptMessage(String encryptedData) throws ApplicationException  {
 
         try {
 
@@ -87,7 +87,7 @@ public class DataEncryption {
             return new String(cipherText);
 
         } catch (final Exception e) {
-			throw new SkillerException(CODE_ENCRYPTION_FAILED, 
+			throw new ApplicationException(CODE_ENCRYPTION_FAILED, 
 					MessageFormat.format(MESSAGE_ENCRYPTION_FAILED, e.getLocalizedMessage()), e);
 		}
 	}

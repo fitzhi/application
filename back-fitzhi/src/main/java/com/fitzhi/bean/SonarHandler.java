@@ -3,7 +3,7 @@ package com.fitzhi.bean;
 import java.util.List;
 
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
@@ -21,7 +21,7 @@ public interface SonarHandler {
 	 * </p>
 	 *  
 	 * @return the resulting list or {@code null} if an error occurs.
-	 * @throws SkillerException exception thrown if any problem occurs
+	 * @throws ApplicationException exception thrown if any problem occurs
 	 */
-	List<ProjectSonarMetricValue> getDefaultProjectSonarMetrics() throws SkillerException;
+	List<ProjectSonarMetricValue> getDefaultProjectSonarMetrics() throws ApplicationException;
 }

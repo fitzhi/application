@@ -12,7 +12,7 @@ import java.nio.file.Paths;
 import java.text.MessageFormat;
 
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
@@ -23,11 +23,11 @@ import com.fitzhi.exception.SkillerException;
 public class FileSizeImportance implements AssessorImportance {
 
 	@Override
-	public long getImportance(Project project, String path, ImportanceCriteria criteria) throws SkillerException {
+	public long getImportance(Project project, String path, ImportanceCriteria criteria) throws ApplicationException {
 		try {
 			return Files.size(Paths.get(project.getLocationRepository() + "/" + path));
 		} catch (IOException ioe) {
-			throw new SkillerException(
+			throw new ApplicationException(
 				CODE_IO_ERROR, 
 				MessageFormat.format(MESSAGE_IO_ERROR, Paths.get(project.getLocationRepository() + "/" + path)),
 				ioe);

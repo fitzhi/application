@@ -14,11 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.data.internal.Resume;
 import com.fitzhi.data.internal.Skill;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.service.FileType;
 import com.fitzhi.service.ResumeParserService;
 import com.fitzhi.service.StorageService;
@@ -40,7 +40,7 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 	private static final String CAR_ALLOWED = "abcdefghijklmnopqrstuvwxyz-+#";
 
 	@Override
-	public Resume extract(final String fileName, final FileType typeOfApplication) throws SkillerException {
+	public Resume extract(final String fileName, final FileType typeOfApplication) throws ApplicationException {
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("extracting skills from %s", fileName));
 		}
@@ -55,20 +55,20 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 			case FILE_TYPE_PDF:
 				return extractSkillsfromCVInFormatPDF(fileName);
 			default:
-				throw new SkillerRuntimeException(String.format("Should not pass here for type %s", typeOfApplication.toString()));
+				throw new ApplicationRuntimeException(String.format("Should not pass here for type %s", typeOfApplication.toString()));
 			}
 		} catch (final IOException ioe) {
 			if (logger.isErrorEnabled()) {
 				logger.error(String.format("Error for fileName %s", fileName));
 				logger.error(ioe.getLocalizedMessage());
 			}
-			throw new SkillerException(-1, 
+			throw new ApplicationException(-1, 
 					"IO error occurs when retrieving the skills from the resume."
 					+ "Original error : " + ioe.getLocalizedMessage());
 		}
 	}
 
-	private Resume parseTheApplicationFile(final String[] token) throws SkillerException {
+	private Resume parseTheApplicationFile(final String[] token) throws ApplicationException {
 		Resume resume = new Resume();
 		
 		/**
@@ -90,7 +90,7 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 			}
 		}
 		if (listSkills.isEmpty()) {
-			throw new SkillerException(-1, 
+			throw new ApplicationException(-1, 
 					"No skill has been detected inside the resume. Did-you upload a resume?");
 		}
 		/**
@@ -109,7 +109,7 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 	 * @return
 	 * @throws IOException
 	 */
-	private Resume extractSkillsfromCVInFormatTXT(String filename) throws IOException, SkillerException {
+	private Resume extractSkillsfromCVInFormatTXT(String filename) throws IOException, ApplicationException {
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("extactSkillsfromCV_inFormatTXT for file %s", filename));
 		}
@@ -119,7 +119,7 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 		return parseTheApplicationFile(token);
 	}
 
-	private Resume extractSkillsfromCVInFormatDOCX(final String filename) throws IOException, SkillerException {
+	private Resume extractSkillsfromCVInFormatDOCX(final String filename) throws IOException, ApplicationException {
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("extractSkillsfromCV_inFormatDOCX for file %s", filename));
 		}
@@ -128,7 +128,7 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 		return parseTheApplicationFile(token);
 	}
 
-	private Resume extractSkillsfromCVInFormatDOC(final String filename) throws IOException, SkillerException {
+	private Resume extractSkillsfromCVInFormatDOC(final String filename) throws IOException, ApplicationException {
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("extractSkillsfromCV_inFormatDOC for file %s", filename));
 		}
@@ -137,7 +137,7 @@ public class ApplicationFileSkillsScannerService implements ResumeParserService 
 		return parseTheApplicationFile(token);
 	}
 
-	private Resume extractSkillsfromCVInFormatPDF(final String filename) throws IOException, SkillerException {
+	private Resume extractSkillsfromCVInFormatPDF(final String filename) throws IOException, ApplicationException {
 		if (logger.isDebugEnabled()) {
 			logger.debug(String.format("extractSkillsfromCV_inFormatPDF for file %s", filename));
 		}

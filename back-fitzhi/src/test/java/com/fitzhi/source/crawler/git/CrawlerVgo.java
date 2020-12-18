@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -36,7 +36,7 @@ public class CrawlerVgo {
 	RepoScanner scanner;
 
 	@Test
-	public void testParseRepository() throws IOException, SkillerException, GitAPIException {
+	public void testParseRepository() throws IOException, ApplicationException, GitAPIException {
 		Project prj = new Project (777, "testParseRepo");
 		
 		File f = new File(String.format(FILE_GIT, "testParseRepo"));

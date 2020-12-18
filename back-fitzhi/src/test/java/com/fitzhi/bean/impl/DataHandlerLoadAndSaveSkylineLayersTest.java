@@ -8,7 +8,7 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -44,19 +44,19 @@ public class DataHandlerLoadAndSaveSkylineLayersTest {
 	ProjectHandler projectHandler;
    
     @Before
-    public void before() throws SkillerException {
+    public void before() throws ApplicationException {
         Project project = new Project(1214, "Bouvines");
         projectHandler.getProjects().put(1214, project);
     }
 
     @Test
-    public void testHasSavedSkylineLayers() throws SkillerException {
+    public void testHasSavedSkylineLayers() throws ApplicationException {
         boolean exist = dataHandler.hasSavedSkylineLayers(new Project(1789, "Revolution"));
         Assert.assertFalse("dataHandler.hasSavedSkylineLayers returns FALSE for new project", exist);
     }
 
     @Test
-    public void testSavingSkylineLayers() throws SkillerException {
+    public void testSavingSkylineLayers() throws ApplicationException {
 
         List<ProjectLayer> layers = new ArrayList<>(); 
         
@@ -82,7 +82,7 @@ public class DataHandlerLoadAndSaveSkylineLayersTest {
     }
 
     @After
-    public void after() throws SkillerException {
+    public void after() throws ApplicationException {
         projectHandler.getProjects().remove(1214);
     }
 

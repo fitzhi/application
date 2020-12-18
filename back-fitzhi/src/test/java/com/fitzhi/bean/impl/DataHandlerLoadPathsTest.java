@@ -8,7 +8,7 @@ import java.util.List;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -42,10 +42,10 @@ public class DataHandlerLoadPathsTest {
 
     /**
      * Test that we correctly load the ADDED paths into their dedicated file.
-     * @throws SkillerException
+     * @throws ApplicationException
      */
     @Test
-    public void testLoadAddedPaths() throws SkillerException, IOException {
+    public void testLoadAddedPaths() throws ApplicationException, IOException {
         List<String> paths = new ArrayList<>();
         paths.add("one");
         paths.add("two");
@@ -61,10 +61,10 @@ public class DataHandlerLoadPathsTest {
 
     /**
      * Test that we correctly save the MODIFIED paths into their dedicated file.
-     * @throws SkillerException
+     * @throws ApplicationException
      */
     @Test
-    public void testLoadModifiedPaths() throws SkillerException, IOException {
+    public void testLoadModifiedPaths() throws ApplicationException, IOException {
         List<String> paths = new ArrayList<>();
         paths.add("three");
         paths.add("four");
@@ -80,10 +80,10 @@ public class DataHandlerLoadPathsTest {
 
     /**
      * Test that we correctly save the CANDIDATE paths into their dedicated file.
-     * @throws SkillerException
+     * @throws ApplicationException
      */
     @Test
-    public void testLoadCandidatePaths() throws SkillerException, IOException {
+    public void testLoadCandidatePaths() throws ApplicationException, IOException {
         List<String> paths = new ArrayList<>();
         paths.add("five");
         paths.add("six");
@@ -98,10 +98,10 @@ public class DataHandlerLoadPathsTest {
 
     /**
      * Test that we correctly save all paths into their dedicated file.
-     * @throws SkillerException
+     * @throws ApplicationException
      */
     @Test
-    public void testLoadAllPaths() throws SkillerException, IOException {
+    public void testLoadAllPaths() throws ApplicationException, IOException {
         List<String> paths = new ArrayList<>();
         paths.add("ten");
         paths.add("eleven");

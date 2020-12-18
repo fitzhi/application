@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.data.internal.Task;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * Testing the class AsyncTaskImpl
@@ -29,17 +29,17 @@ public class AsyncTaskTest {
 	AsyncTask asyncTask;
 
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		asyncTask.addTask(OPERATION_OF_TEST, PROJECT, 1);		
 	}
 	
-	@Test (expected = SkillerException.class)
-	public void test2TasksAdd() throws SkillerException {
+	@Test (expected = ApplicationException.class)
+	public void test2TasksAdd() throws ApplicationException {
 		asyncTask.addTask(OPERATION_OF_TEST, PROJECT, 1);
 	}
 	
 	@Test
-	public void testAddTaskAfterFormerCompletion() throws InterruptedException, SkillerException {
+	public void testAddTaskAfterFormerCompletion() throws InterruptedException, ApplicationException {
 		// We log 2 messages
 		asyncTask.logMessage(OPERATION_OF_TEST, PROJECT, 1, "first Message", 0);
 		Thread.sleep(2);
@@ -62,7 +62,7 @@ public class AsyncTaskTest {
 	}
 
 	@Test
-	public void testAddAndCompleteTheTask() throws InterruptedException, SkillerException  {
+	public void testAddAndCompleteTheTask() throws InterruptedException, ApplicationException  {
 		
 		// We log 2 messages
 		asyncTask.logMessage(OPERATION_OF_TEST, PROJECT, 1, "first Message", 0);
@@ -86,7 +86,7 @@ public class AsyncTaskTest {
 	}
 
 	@Test
-	public void testHasActiveTask() throws SkillerException {
+	public void testHasActiveTask() throws ApplicationException {
 		Assert.assertFalse(asyncTask.hasActiveTask("ABSOLUTLY NEW OPERATION OF TEST", PROJECT, 1));
 		Assert.assertTrue(asyncTask.hasActiveTask(OPERATION_OF_TEST, PROJECT, 1));
 		asyncTask.completeTask(OPERATION_OF_TEST, PROJECT, 1);

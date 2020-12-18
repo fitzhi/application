@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.fitzhi.bean.SonarHandler;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -60,7 +60,7 @@ public class SonarHandlerImpl implements SonarHandler {
 	private List<ProjectSonarMetricValue> defaultMetrics = null;
 		
 	@Override
-	public List<ProjectSonarMetricValue> getDefaultProjectSonarMetrics() throws SkillerException {
+	public List<ProjectSonarMetricValue> getDefaultProjectSonarMetrics() throws ApplicationException {
 		if (defaultMetrics == null) {
 			defaultMetrics = new ArrayList<ProjectSonarMetricValue>();
 			String fileMetricsContent = loadDefaultMetrics();
@@ -80,7 +80,7 @@ public class SonarHandlerImpl implements SonarHandler {
 	}
 
 	@SuppressWarnings("unused")
-	private String loadDefaultMetrics() throws SkillerException {
+	private String loadDefaultMetrics() throws ApplicationException {
 		File refFile = null;
 		try {
 			refFile = new File (referentialDir+supportedMetricsFile); 
@@ -88,7 +88,7 @@ public class SonarHandlerImpl implements SonarHandler {
 				log.debug(String.format("Trying to load the file %s", refFile.getAbsolutePath()));
 			}
 			if (!refFile.exists()) {
-				throw new SkillerException(CODE_FILE_REFERENTIAL_NOFOUND, MessageFormat.format(MESSAGE_FILE_REFERENTIAL_NOFOUND, refFile.getAbsolutePath()));
+				throw new ApplicationException(CODE_FILE_REFERENTIAL_NOFOUND, MessageFormat.format(MESSAGE_FILE_REFERENTIAL_NOFOUND, refFile.getAbsolutePath()));
 			} 
 			try (BufferedReader br = new BufferedReader(new FileReader(refFile))) {
 				StringBuilder response = br.lines().collect(StringBuilder::new, StringBuilder::append, StringBuilder::append);
@@ -99,7 +99,7 @@ public class SonarHandlerImpl implements SonarHandler {
 				final String errorMessage = "INTERNAL ERROR with file " + refFile.getAbsolutePath() + ".json : " + ioe.getMessage();
 				log.error(errorMessage);
 
-				throw new SkillerException(CODE_IO_ERROR, errorMessage);
+				throw new ApplicationException(CODE_IO_ERROR, errorMessage);
 			}
 		} 
 		return "Supposed to be unused code";

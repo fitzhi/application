@@ -13,7 +13,7 @@ import com.fitzhi.bean.ProjectDashboardCustomizer;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 
 import org.eclipse.jgit.lib.Repository;
@@ -71,7 +71,7 @@ public class CrawlerWibkacTest {
 	private Project project;
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		project = new Project(1000, FITZHI);
     	asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 1000);
 		project.setLocationRepository(new File(String.format(DIR_GIT, FITZHI)).getAbsolutePath());
@@ -83,7 +83,7 @@ public class CrawlerWibkacTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testSaveChanges() throws IOException, SkillerException {
+	public void testSaveChanges() throws IOException, ApplicationException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, FITZHI))).readEnvironment().findGitDir()

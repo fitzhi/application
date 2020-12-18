@@ -9,7 +9,7 @@ import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SkillDetectorType;
 import com.fitzhi.data.source.CommitHistory;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
@@ -44,32 +44,32 @@ public interface SkillHandler extends DataSaverLifeCycle {
 
 	 /**
 	  * @param skill the new skill
-	  * @throws SkillerException exception occurs
+	  * @throws ApplicationException exception occurs
 	  */
-	 void saveSkill(Skill skill) throws SkillerException;
+	 void saveSkill(Skill skill) throws ApplicationException;
 	
 	 /**
 	  * <p>Retrieve the skill corresponding to the passed identifier</p>
 	  * @param idSkill the search skill identifier.
 	  * @return the skill found.
-	  * @throws SkillerException thrown if the passed id does not exist.
+	  * @throws ApplicationException thrown if the passed id does not exist.
 	  */
-	 Skill getSkill(int idSkill) throws SkillerException;
+	 Skill getSkill(int idSkill) throws ApplicationException;
 
 	 /**
 	  * @return the map containing the detector types.
-	  * @throws SkillerException thrown if any exception occurs. Most probably an IOException.
+	  * @throws ApplicationException thrown if any exception occurs. Most probably an IOException.
 	  */
-	 Map<Integer, String> detectorTypes() throws SkillerException;
+	 Map<Integer, String> detectorTypes() throws ApplicationException;
 	 
 	 /**
 	  * Extract the skills detected in the GIT repository of a project.
 	  * @param rootPath local path where the project repository has been cloned
 	  * @param entries history of {@link CommitHistory commits} aggregated for this repository 
 	  * @return a map a {@link ProjectSkill skills} detected in the repository & indexed by skill identifier 
-	  * @throws SkillerException if any exception occurs, <i>most probably an IOException</i>
+	  * @throws ApplicationException if any exception occurs, <i>most probably an IOException</i>
 	  */
-	 Map<Integer, ProjectSkill> extractSkills(String rootPath, List<CommitHistory> entries) throws SkillerException;
+	 Map<Integer, ProjectSkill> extractSkills(String rootPath, List<CommitHistory> entries) throws ApplicationException;
 
 	/**
 	 * <p>
@@ -84,7 +84,7 @@ public interface SkillHandler extends DataSaverLifeCycle {
 	 * @param skill the skill candidate to be detected
 	 * @param sourcePath the path of a source file 
 	 * @return {@code true} if this skill is detected, {@code false} otherwise
-	 * @throws SkillerException exception thrown if any problem occurs (most probably an IOException)
+	 * @throws ApplicationException exception thrown if any problem occurs (most probably an IOException)
 	 */
 	boolean isSkillDetectedWithFilename(Skill skill, String sourcePath);
 

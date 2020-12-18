@@ -17,7 +17,7 @@ import com.fitzhi.data.internal.RiskDashboard;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.BasicCommitRepository;
 import com.fitzhi.data.source.CommitRepository;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 
 import org.junit.After;
@@ -68,7 +68,7 @@ public class RiskCommitAndDevActiveProcessorTest {
 	Project prj;
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		comRep = new BasicCommitRepository();
 		
 		first = (Staff) staffHandler.getStaff().values().toArray()[0];
@@ -176,7 +176,7 @@ public class RiskCommitAndDevActiveProcessorTest {
 	}
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.getProjects().remove(8021964);
 	}
 	

@@ -12,7 +12,7 @@ import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ResumeSkill;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.Contributor;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * Interface in charge of handling the staff collection.
@@ -57,9 +57,9 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * @param idStaff the identifier for this staff member
 	 * @param skills the skills detected
 	 * @return the updated Staff
-	 * @throws SkillerException Thrown if any error occurs during the treatment
+	 * @throws ApplicationException Thrown if any error occurs during the treatment
 	 */
-	Staff addExperiences (int idStaff, ResumeSkill[] skills) throws SkillerException ;
+	Staff addExperiences (int idStaff, ResumeSkill[] skills) throws ApplicationException ;
 	
 	/**
 	 * Lookup for staff members responding to a polymorphous criteria.<br/>
@@ -86,9 +86,9 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * </p>
 	 * @param project the current project
 	 * @param contributors the list of contributors retrieved from the repository
-	 * @throws SkillerException thrown if any problem occurs 
+	 * @throws ApplicationException thrown if any problem occurs 
 	 */
-	void involve(Project project, List<Contributor> contributors) throws SkillerException;
+	void involve(Project project, List<Contributor> contributors) throws ApplicationException;
 	
 	/**
 	 * <p>
@@ -97,9 +97,9 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * </p>
 	 * @param project the current project
 	 * @param contributor the contributor data representing the contribution of a staff member in a project.
-	 * @throws SkillerException thrown if any problem occurs 
+	 * @throws ApplicationException thrown if any problem occurs 
 	 */
-	void involve(Project project, Contributor contributor) throws SkillerException;
+	void involve(Project project, Contributor contributor) throws ApplicationException;
 	
 	/**
 	 * <p>
@@ -131,13 +131,13 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 /**
 	  * <p>Control and save the given staff.</p>
 	  * @param staff the staff member to be updated.
-	  * @throws SkillerException thrown if an exception occurs such as for instance
+	  * @throws ApplicationException thrown if an exception occurs such as for instance
 	  * <ul>
 	  * <li>This given staff does not yet exist (idStaff=0)</li>
 	  * <li>The same login already in the workforce.</li>
 	  * </ul>
 	  */
-	 void saveStaffMember(Staff staff) throws SkillerException;
+	 void saveStaffMember(Staff staff) throws ApplicationException;
 
 	 /**
 	  * <p>Search a staff, if any, who has his login equal to the passed one.</p>
@@ -240,9 +240,9 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 /**
 	  * Infer the skills for a developer based on his mission and their metrics.
 	  * @param idStaff the staff identifier
-	  * @throws SkillerException
+	  * @throws ApplicationException
 	  */
-	 void inferSkillsFromMissions(int idStaff) throws SkillerException;
+	 void inferSkillsFromMissions(int idStaff) throws ApplicationException;
 	 
 	 /**
 	  * <p>

@@ -36,7 +36,7 @@ import com.fitzhi.controller.in.BodyParamAuditEntry;
 import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.AuditTopic;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 /**
@@ -72,7 +72,7 @@ public class ProjectAuditControllerTest {
 	final int ID_TOPIC_2 = 2; // We add this topic in the testing project
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		project = projectHandler.get(ID_PROJECT);
 		project.setAuditEvaluation(30);
 		Map<Integer, AuditTopic> mapAudit = new HashMap<>();
@@ -345,7 +345,7 @@ public class ProjectAuditControllerTest {
 	
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		project = projectHandler.get(ID_PROJECT);
 		project.getAudit().clear();
 				

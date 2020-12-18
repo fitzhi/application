@@ -34,7 +34,7 @@ import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RiskDashboard;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.ConnectionSettings;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -80,7 +80,7 @@ public class GitScannerTest {
 	RiskProcessor riskProcessor;
 
 	@Before
-	public void before() throws IOException, SkillerException {
+	public void before() throws IOException, ApplicationException {
 
 		Gson gson = new GsonBuilder().create();
 		
@@ -113,7 +113,7 @@ public class GitScannerTest {
 	}
 	
 	// @Test
-	public void cloneAndParseRepo() throws IOException, SkillerException, GitAPIException {
+	public void cloneAndParseRepo() throws IOException, ApplicationException, GitAPIException {
 
 		Project project = projectHandler.get(2);
 		
@@ -141,7 +141,7 @@ public class GitScannerTest {
 	}
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.get(2).setLocationRepository(null);		
 	}
 }

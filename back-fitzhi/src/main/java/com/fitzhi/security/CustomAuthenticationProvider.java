@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 @Component
 @Slf4j
@@ -47,7 +47,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 			} else {
 				throw new BadCredentialsException(String.format("Invalid login/password for %s", name));
 			}
-		} catch (SkillerException e) {
+		} catch (ApplicationException e) {
 			log.error("Internal error", e);
 		}
         

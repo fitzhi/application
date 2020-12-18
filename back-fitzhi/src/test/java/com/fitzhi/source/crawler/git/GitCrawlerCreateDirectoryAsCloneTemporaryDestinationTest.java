@@ -5,7 +5,7 @@ import java.nio.file.Path;
 
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.ConnectionSettings;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 
 import org.junit.Assert;
@@ -41,7 +41,7 @@ public class GitCrawlerCreateDirectoryAsCloneTemporaryDestinationTest {
      * Testing using a temporary folder as a destination of the local repository.
      */
     @Test
-    public void testTemporary() throws SkillerException {
+    public void testTemporary() throws ApplicationException {
         Project project = new Project(1789, "The french revolution");
         Path path = scanner.createDirectoryAsCloneDestination(project, new ConnectionSettings());
         if (log.isDebugEnabled()) {

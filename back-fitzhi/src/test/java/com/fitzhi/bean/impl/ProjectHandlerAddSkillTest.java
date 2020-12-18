@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSkill;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * This class tests the method {@link ProjectHandler#addSkill(Project, ProjectSkill)}
@@ -31,20 +31,20 @@ public class ProjectHandlerAddSkillTest {
 	ProjectHandler projectHandler;
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		project = new Project(1789, "my testing project");
 		projectHandler.addSkill(project, new ProjectSkill(1, 10, 0));
 	}
 	
 	@Test
-	public void addExistingProjectSkill() throws SkillerException {
+	public void addExistingProjectSkill() throws ApplicationException {
 		projectHandler.addSkill(project, new ProjectSkill(1, 1, 0));
 		ProjectSkill ps = project.getSkills().get(1);
 		Assert.assertEquals(10, ps.getNumberOfFiles());
 	}
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.getProjects().remove(1789);
 	}
 }

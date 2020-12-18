@@ -24,7 +24,7 @@ import com.fitzhi.controller.util.ProjectLoader.MyReference;
 import com.fitzhi.data.internal.Library;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -95,7 +95,7 @@ public class ProjectAnalysisController {
 	@GetMapping(value = "/lib-dir/lookup")
 	public ResponseEntity<List<String>> libDir(
 			final @RequestParam("idProject") int idProject,
-			final @RequestParam("criteria") String criteria) throws SkillerException {
+			final @RequestParam("criteria") String criteria) throws ApplicationException {
 
 		MyReference<ResponseEntity<List<String>>> refResponse = projectLoader.new MyReference<>();
 
@@ -120,7 +120,7 @@ public class ProjectAnalysisController {
 
 			return new ResponseEntity<>(paths, new HttpHeaders(), HttpStatus.OK);
 
-		} catch (final SkillerException e) {
+		} catch (final ApplicationException e) {
 
 			log.error(getStackTrace(e));
 
@@ -174,7 +174,7 @@ public class ProjectAnalysisController {
 
 	
 	@GetMapping("/onboard/{idProject}/{idStaff}")
-	public ResponseEntity<Boolean> onBoardStaff(@PathVariable int idProject, @PathVariable int idStaff) throws SkillerException {
+	public ResponseEntity<Boolean> onBoardStaff(@PathVariable int idProject, @PathVariable int idStaff) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("GET command on /onboard/%d/%d ", idProject, idStaff));
@@ -182,12 +182,12 @@ public class ProjectAnalysisController {
 		
 		Staff staff = staffHandler.getStaff(idStaff);		
 		if (staff == null) {
-			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
+			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 
 		Project project = projectHandler.get(idProject);
 		if (project == null) {
-			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+			throw new ApplicationException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 		
 		this.projectDashboardCustomizer.takeInAccountNewStaff(project, staff);

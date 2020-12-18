@@ -32,7 +32,7 @@ import org.springframework.util.MultiValueMap;
 
 import lombok.extern.slf4j.Slf4j;
 
-import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.data.external.ResumeDTO;
 import com.fitzhi.data.internal.ResumeSkillIdentifier;
@@ -139,7 +139,7 @@ public class StaffControllerUploadResumeTest {
 		if (optSkill.isPresent()) {
 			return optSkill.get().getId();
 		} else {
-			throw new SkillerRuntimeException("Should not pass here for " + title + " !");
+			throw new ApplicationRuntimeException("Should not pass here for " + title + " !");
 		}
 	}
 	

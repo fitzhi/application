@@ -6,7 +6,7 @@ import java.util.List;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.git.SourceChange;
 
 import org.junit.Assert;
@@ -32,10 +32,10 @@ public class DataHandlerSaveRepositoryDirectoriesTest {
 	/**
 	 * Test the method {@link DataHandler#saveSCMPath}
 	 * 
-	 * @throws SkillerException
+	 * @throws ApplicationException
 	 */
 	@Test
-	public void testsaveSCMPath() throws SkillerException {
+	public void testsaveSCMPath() throws ApplicationException {
 
 		Project project = new Project(777, "test");
 		project.setBranch("master");

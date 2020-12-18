@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.git.SourceChange;
 
 import org.junit.Assert;
@@ -34,7 +34,7 @@ public class DataHandlerSaveRepositoryAnalysisTest {
     DataHandler dataHandler;
 
     @Test
-    public void test() throws SkillerException {
+    public void test() throws ApplicationException {
         Project project = new Project(1796, "Castiglione");
         project.setBranch("master");
         RepositoryAnalysis analysis = new RepositoryAnalysis(project);

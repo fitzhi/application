@@ -17,7 +17,7 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.AttachmentFile;
 import com.fitzhi.data.internal.AuditTopic;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.service.FileType;
 
 /**
@@ -43,7 +43,7 @@ public class ProjectAuditHandlerRemoveAttachmentFileTest {
 	
 	private int ID_PROJECT = 314116;
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		project = projectHandler.addNewProject(new Project(ID_PROJECT, "PI"));
 		project.setAudit(new HashMap<Integer, AuditTopic>());
 		AuditTopic auditTopic = new AuditTopic();
@@ -53,18 +53,18 @@ public class ProjectAuditHandlerRemoveAttachmentFileTest {
 
 	}
 	
-	@Test(expected = SkillerException.class)
-	public void AttachmentFileOnUnknownProject() throws SkillerException {
+	@Test(expected = ApplicationException.class)
+	public void AttachmentFileOnUnknownProject() throws ApplicationException {
 		projectAuditHandler.removeAttachmentFile(666, 1, 0);
 	}
 
-	@Test(expected = SkillerException.class)
-	public void removeAttachmentFileOnUnknownTopic() throws SkillerException {
+	@Test(expected = ApplicationException.class)
+	public void removeAttachmentFileOnUnknownTopic() throws ApplicationException {
 		projectAuditHandler.removeAttachmentFile(ID_PROJECT, -1002, 0);
 	}
 	
 	@Test
-	public void removeAttachmentFile() throws SkillerException {
+	public void removeAttachmentFile() throws ApplicationException {
 		AuditTopic at = projectAuditHandler.getTopic(ID_PROJECT, 1);
 		Assert.assertEquals("Attachment list is empty", 0, at.getAttachmentList().size());
 		
@@ -78,7 +78,7 @@ public class ProjectAuditHandlerRemoveAttachmentFileTest {
 	}
 	
 	@Test
-	public void removeSecondAttachmentFile() throws SkillerException {
+	public void removeSecondAttachmentFile() throws ApplicationException {
 		AuditTopic at = projectAuditHandler.getTopic(ID_PROJECT, 1);
 		Assert.assertEquals("Attachment list is empty", 0, at.getAttachmentList().size());
 		
@@ -104,7 +104,7 @@ public class ProjectAuditHandlerRemoveAttachmentFileTest {
 	}
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.getProjects().remove(ID_PROJECT);	
 	}
 	

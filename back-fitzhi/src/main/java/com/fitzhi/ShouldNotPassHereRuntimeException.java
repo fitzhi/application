@@ -9,7 +9,7 @@ package com.fitzhi;
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class ShouldNotPassHereRuntimeException extends SkillerRuntimeException {
+public class ShouldNotPassHereRuntimeException extends ApplicationRuntimeException {
 
 	/**
 	 * serialVersionUID as usual.

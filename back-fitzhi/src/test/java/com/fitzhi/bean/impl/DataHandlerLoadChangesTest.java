@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.SourceControlChanges;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.fitzhi.source.crawler.git.SourceFileHistory;
 
@@ -39,7 +39,7 @@ public class DataHandlerLoadChangesTest {
     }
 
 	@Test
-	public void loadChanges() throws SkillerException {
+	public void loadChanges() throws ApplicationException {
         SourceControlChanges scc = this.dataHandler.loadChanges(project);
         Assert.assertEquals(3, scc.getChanges().size());
         SourceFileHistory scf = scc.getChanges().get("package/one.java");
@@ -70,7 +70,7 @@ public class DataHandlerLoadChangesTest {
      * loadChanges returns {@code NULL} if the changes file does exist.
      */
     @Test
-    public void LoadChangesReturnNull() throws SkillerException {
+    public void LoadChangesReturnNull() throws ApplicationException {
         final Project p = new Project(1939, "Bad year");
         Assert.assertNull("loadChanges returns {@code NULL} if the changes file does exist", dataHandler.loadChanges(p));
     }

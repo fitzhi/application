@@ -5,7 +5,7 @@ import java.nio.file.Paths;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.ConnectionSettings;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 
 import org.junit.After;
@@ -39,7 +39,7 @@ public class GitCrawlerCloneTest {
     ProjectHandler projectHandler;
 
     @Before
-    public void before() throws SkillerException {
+    public void before() throws ApplicationException {
         project = new Project(1515, "Marignan");
         projectHandler.addNewProject(project);
     }
@@ -60,7 +60,7 @@ public class GitCrawlerCloneTest {
     }
 
     @After
-    public void after() throws SkillerException {
+    public void after() throws ApplicationException {
         projectHandler.getProjects().remove(1515);
     }
 }

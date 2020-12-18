@@ -15,7 +15,7 @@ import javax.annotation.Generated;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fitzhi.Global;
-import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.bean.StaffHandler;
 
@@ -240,7 +240,7 @@ public @Data class Project implements Serializable {
 			.collect(Collectors.toList());
 		
 		if (libs.size() > 1) {
-			throw new SkillerRuntimeException(String.format("SHOULD NOT PASS HERE (%s)", library.getExclusionDirectory()));
+			throw new ApplicationRuntimeException(String.format("SHOULD NOT PASS HERE (%s)", library.getExclusionDirectory()));
 		}
 		
 		if (libs.isEmpty()) {
@@ -260,7 +260,7 @@ public @Data class Project implements Serializable {
 				previous.setType(Global.LIBRARY_DETECTED);
 				break;
 			default:
-				throw new SkillerRuntimeException("SHOULD NOT PASS HERE");
+				throw new ApplicationRuntimeException("SHOULD NOT PASS HERE");
 		}
 	}
 

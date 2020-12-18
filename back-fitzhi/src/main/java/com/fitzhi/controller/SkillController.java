@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.data.external.SkillDTO;
 import com.fitzhi.data.internal.Skill;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -115,7 +115,7 @@ public class SkillController {
 			} else {
 				try {
 					skillHandler.saveSkill(skill);
-				} catch (SkillerException e) {
+				} catch (ApplicationException e) {
 					log.error(getStackTrace(e));
 					return new ResponseEntity<>(new Skill(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
 				}
@@ -141,7 +141,7 @@ public class SkillController {
 			responseEntity = new ResponseEntity<>(mapDetectionTemplates, headers, HttpStatus.OK);
 			headers.add("backend.return_code", "1");
 			return responseEntity;
-		} catch (final SkillerException e) {
+		} catch (final ApplicationException e) {
 			log.error(getStackTrace(e));
 			return new ResponseEntity<>(
 				new HashMap<Integer, String>(), 

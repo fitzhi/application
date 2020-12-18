@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.RiskProcessor;
 import com.fitzhi.bean.StaffHandler;
@@ -283,7 +283,7 @@ public class RiskCommitAndDevActiveProcessorImpl implements RiskProcessor {
 						logger.error(String.format("Searching %s in", searchedFile));
 						repository.getRepository().keySet().stream().forEach(f -> logger.error(f));
 					}
-					throw new SkillerRuntimeException( String.format("%s not found! (base dir %s, sunB location %s, source filename %s)", searchedFile, baseDir, sunburstData.getLocation(), source.getFilename()));
+					throw new ApplicationRuntimeException( String.format("%s not found! (base dir %s, sunB location %s, source filename %s)", searchedFile, baseDir, sunburstData.getLocation(), source.getFilename()));
 				}
 
 				final CommitHistory activity = repository.getRepository().get(optKey.get());

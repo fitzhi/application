@@ -27,7 +27,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.fitzhi.Error;
-import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Experience;
@@ -38,7 +38,7 @@ import com.fitzhi.data.internal.ResumeSkill;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.internal.StaffActivitySkill;
 import com.fitzhi.data.source.Contributor;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -104,9 +104,9 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		}
 		try {
 			this.theStaff = dataSaver.loadStaff();
-		} catch (final SkillerException e) {
+		} catch (final ApplicationException e) {
 			// Without staff, this application is not viable
-			throw new SkillerRuntimeException(e);
+			throw new ApplicationRuntimeException(e);
 		}
 		return theStaff;
 
@@ -146,10 +146,10 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public Staff addExperiences(int idStaff, ResumeSkill[] skills) throws SkillerException {
+	public Staff addExperiences(int idStaff, ResumeSkill[] skills) throws ApplicationException {
 		Staff staff = getStaff().get(idStaff);
 		if (staff == null) {
-			throw new SkillerException(-1, "There is no staff for the ID " + idStaff);
+			throw new ApplicationException(-1, "There is no staff for the ID " + idStaff);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Working with the staff member " 
@@ -169,7 +169,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			log.debug(String.format("Adding %d new skills", listOfNewSkills.size()));
 		}
 		if (listOfNewSkills.isEmpty()) {
-			throw new SkillerException(-1, 
+			throw new ApplicationException(-1, 
 					"There is no new skill to add for " + staff.getFirstName() + " " + staff.getLastName() +"!");
 		}
 		
@@ -392,14 +392,14 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 	
 	@Override
-	public void involve(Project project, List<Contributor> contributors) throws SkillerException {
+	public void involve(Project project, List<Contributor> contributors) throws ApplicationException {
 		
 		
 		for (Contributor contributor : contributors) {
 			if (contributor.getIdStaff() != UNKNOWN) {
 				Staff staff = getStaff().get(contributor.getIdStaff());
 				if (staff == null) {
-					throw new SkillerRuntimeException("SEVERE ERROR : No staff member corresponding to the id " + contributor.getIdStaff());
+					throw new ApplicationRuntimeException("SEVERE ERROR : No staff member corresponding to the id " + contributor.getIdStaff());
 				}
 				if (staff.isInvolvedInProject(project.getId())) {
 					synchronized (lockDataUpdated) {
@@ -443,11 +443,11 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public void involve(Project project, Contributor contributor) throws SkillerException {
+	public void involve(Project project, Contributor contributor) throws ApplicationException {
 
 		Staff staff = getStaff().get(contributor.getIdStaff());
 		if (staff == null) {
-			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, contributor.getIdStaff()));
+			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, contributor.getIdStaff()));
 		}
 		
 		Optional<Mission> oMission = staff.getMissions().stream()
@@ -529,11 +529,11 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public void saveStaffMember(Staff input) throws SkillerException {
+	public void saveStaffMember(Staff input) throws ApplicationException {
 
 		Staff updStaff = getStaff(input.getIdStaff());
 		if (input.getIdStaff() == 0) {
-			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, input.getIdStaff()));
+			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, input.getIdStaff()));
 		}
 		
 		//
@@ -549,7 +549,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 						input.getLogin(),
 						emp.get().getIdStaff(), emp.get().fullName()));
 			}
-			throw new SkillerException(CODE_LOGIN_ALREADY_EXIST, MessageFormat.format(MESSAGE_LOGIN_ALREADY_EXIST, input.getLogin(), emp.get().getFirstName(), emp.get().getLastName()));			
+			throw new ApplicationException(CODE_LOGIN_ALREADY_EXIST, MessageFormat.format(MESSAGE_LOGIN_ALREADY_EXIST, input.getLogin(), emp.get().getFirstName(), emp.get().getLastName()));			
 		}
 		
 		updStaff.setFirstName(input.getFirstName());
@@ -595,7 +595,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		Staff staff = getStaff().get(idStaff);
 		if (staff == null) {
-			throw new SkillerRuntimeException(
+			throw new ApplicationRuntimeException(
 					"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 		
@@ -616,7 +616,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		Staff staff = getStaff().get(idStaff);
 		if (staff == null) {
-			throw new SkillerRuntimeException(
+			throw new ApplicationRuntimeException(
 					"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 		
@@ -634,7 +634,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		Staff staff = getStaff().get(idStaff);
 		if (staff == null) {
-			throw new SkillerRuntimeException(
+			throw new ApplicationRuntimeException(
 				"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 		
@@ -652,7 +652,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		final Staff staff = getStaff().get(idStaff);
 		if (staff == null) {
-			throw new SkillerRuntimeException(
+			throw new ApplicationRuntimeException(
 				"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 		
@@ -667,7 +667,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 
 		final Staff staff = getStaff().get(idStaff);
 		if (staff == null) {
-			throw new SkillerRuntimeException(
+			throw new ApplicationRuntimeException(
 				"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 		
@@ -677,7 +677,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			.findFirst();
 			
 		if (!oMission.isPresent()) {
-			throw new SkillerRuntimeException(
+			throw new ApplicationRuntimeException(
 					"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_MISSION_NOFOUND, idStaff, idProject));
 		}
 		synchronized (lockDataUpdated) {
@@ -714,11 +714,11 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 	
 	@Override
-	public void inferSkillsFromMissions(int idStaff) throws SkillerException {
+	public void inferSkillsFromMissions(int idStaff) throws ApplicationException {
 
 		Staff staff = getStaff().get(idStaff);
 		if (staff == null) {
-			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
+			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 
 		List<StaffActivitySkill> activity = activity(staff);
@@ -727,7 +727,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		// Internal check
 		//
 		if (activity.stream().anyMatch(sas -> sas.getIdStaff() != idStaff)) {
-			throw new SkillerRuntimeException(
+			throw new ApplicationRuntimeException(
 					String.format("INTERNAL ERROR : %d has to be the unique staff identifier in all his StaffActivitySkill", idStaff));
 		}
 		

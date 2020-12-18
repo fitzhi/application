@@ -31,7 +31,7 @@ import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.AttachmentFile;
 import com.fitzhi.data.internal.AuditTopic;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.service.FileType;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -69,7 +69,7 @@ public class ProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
 	final int ID_TOPIC_2 = 2; 
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		
 		Project project = new Project(ID_PROJECT, "Revolutionary days");
 		
@@ -188,7 +188,7 @@ public class ProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
 	}
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.getProjects().remove(ID_PROJECT);
 	}
 }

@@ -17,7 +17,7 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.CommitRepository;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 import com.fitzhi.source.crawler.git.GitCrawler;
 
@@ -49,7 +49,7 @@ public class GitCrawlerLoadRepositoryFromCacheIfAnyTest {
 	}
 	
 	@Test
-	public void testProjectNope() throws IOException, SkillerException {
+	public void testProjectNope() throws IOException, ApplicationException {
 		Project project = projectHandler.get(4);
 		CommitRepository repository = scanner.loadRepositoryFromCacheIfAny(project);
 		Assert.assertFalse(repository.unknownContributors().isEmpty());

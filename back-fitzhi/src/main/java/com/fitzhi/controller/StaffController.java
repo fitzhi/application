@@ -55,7 +55,7 @@ import com.fitzhi.data.internal.Resume;
 import com.fitzhi.data.internal.ResumeSkill;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.NotFoundException;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.service.FileType;
 import com.fitzhi.service.ResumeParserService;
 import com.fitzhi.service.StorageService;
@@ -184,12 +184,12 @@ public class StaffController {
 	 * @return the list of projects where the staff member is involved
 	 */
 	@GetMapping(value = "/projects/{idStaff}")
-	public ResponseEntity<List<Mission>> readProjects(@PathVariable("idStaff") int idStaff) throws SkillerException {
+	public ResponseEntity<List<Mission>> readProjects(@PathVariable("idStaff") int idStaff) throws ApplicationException {
 
 		ResponseEntity<Staff> responseEntityStaffMember = read(idStaff);
 		final Staff staff = responseEntityStaffMember.getBody();
 		if (staff == null) {
-			throw new SkillerException(
+			throw new ApplicationException(
 				CODE_STAFF_NOFOUND, 
 				MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
 		}
@@ -239,15 +239,15 @@ public class StaffController {
 	 * </ul>
 	 * @param idStaff the identifier of the staff member to activate, or deactivate.
 	 * @return {@code true} ALWAYS. Either the application return {@code true}, or an exception is thrown.
-	 * @throws SkillerException thrown if any exception occurs during the treatment, most probably if there is no staff member for the given id.
+	 * @throws ApplicationException thrown if any exception occurs during the treatment, most probably if there is no staff member for the given id.
 	 * @see #processActiveStatus(int)
 	 */
 	@GetMapping("/forceActiveStatus/{idStaff}")
-	public ResponseEntity<Boolean> switchActiveState(@PathVariable("idStaff") int idStaff) throws SkillerException {
+	public ResponseEntity<Boolean> switchActiveState(@PathVariable("idStaff") int idStaff) throws ApplicationException {
 		
 		final Staff staff = staffHandler.getStaff(idStaff);
 		if (staff == null) {
-			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
+			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 	
 		this.staffHandler.forceActiveStatus(staff);
@@ -265,15 +265,15 @@ public class StaffController {
 	 * </p>
 	 * @param idStaff the identifier of the staff member to activate, or deactivate.
 	 * @return the updated staff
-	 * @throws SkillerException thrown if any exception occurs during the treatment, most probably if there is no staff member for the given id.
+	 * @throws ApplicationException thrown if any exception occurs during the treatment, most probably if there is no staff member for the given id.
 	 * @see #switchActiveState(int)
 	 */
 	@GetMapping("/processActiveStatus/{idStaff}")
-	public ResponseEntity<Staff> processActiveStatus(@PathVariable("idStaff") int idStaff) throws SkillerException {
+	public ResponseEntity<Staff> processActiveStatus(@PathVariable("idStaff") int idStaff) throws ApplicationException {
 		
 		final Staff staff = staffHandler.getStaff(idStaff);
 		if (staff == null) {
-			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
+			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 		
 		// We process the active status, therefore we property forceActiveStatus should be set to False.
@@ -287,7 +287,7 @@ public class StaffController {
 
 	
 	@PostMapping("/save")
-	public ResponseEntity<Staff> save(@RequestBody Staff input) throws SkillerException {
+	public ResponseEntity<Staff> save(@RequestBody Staff input) throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
 			log.debug (String.format("Add or Update the staff.id %d", input.getIdStaff()));
@@ -309,7 +309,7 @@ public class StaffController {
 		} 
 		
 		if (!staffHandler.hasStaff(input.getIdStaff())) {
-			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, input.getIdStaff()));
+			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, input.getIdStaff()));
 		} 
 			
 		staffHandler.saveStaffMember(input);
@@ -324,7 +324,7 @@ public class StaffController {
 	 * @return an empty HTTP response after the deletion.
 	 */
 	@DeleteMapping(value = "/{idStaff}")
-	public ResponseEntity<Object> removeStaff(@PathVariable("idStaff") int idStaff) throws NotFoundException, SkillerException {
+	public ResponseEntity<Object> removeStaff(@PathVariable("idStaff") int idStaff) throws NotFoundException, ApplicationException {
 		Staff staff = staffHandler.getStaff(idStaff);
 		if (staff == null) {
 			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
@@ -340,7 +340,7 @@ public class StaffController {
 	 * @return an empty HTTP Response because this method is not allowed.
 	 */
 	@DeleteMapping()
-	public ResponseEntity<Object> removeAllStaff() throws SkillerException {		
+	public ResponseEntity<Object> removeAllStaff() throws ApplicationException {		
 		return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
 	}
 
@@ -354,7 +354,7 @@ public class StaffController {
 	 * @return
 	 */
 	@PostMapping("/experiences/add")
-	public ResponseEntity<Boolean> addExperience(@RequestBody BodyParamStaffSkill param) throws SkillerException {
+	public ResponseEntity<Boolean> addExperience(@RequestBody BodyParamStaffSkill param) throws ApplicationException {
 
 		HttpHeaders headers = new HttpHeaders();
 		
@@ -366,7 +366,7 @@ public class StaffController {
 
 		final Staff staff = staffHandler.getStaff(param.getIdStaff());
 		if (staff == null) {
-			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, param.getIdStaff()));
+			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, param.getIdStaff()));
 		}
 		
 		
@@ -389,7 +389,7 @@ public class StaffController {
 	 * @return
 	 */
 	@PostMapping("/experiences/remove")
-	public ResponseEntity<Boolean> removeExperience(@RequestBody BodyParamStaffSkill param) throws SkillerException {
+	public ResponseEntity<Boolean> removeExperience(@RequestBody BodyParamStaffSkill param) throws ApplicationException {
 
 		HttpHeaders headers = new HttpHeaders();
 		
@@ -401,7 +401,7 @@ public class StaffController {
 
 		final Staff staff = staffHandler.getStaff(param.getIdStaff());
 		if (staff == null) {
-			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, param.getIdStaff()));
+			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, param.getIdStaff()));
 		} 
 		
 		Experience experience = staff.getExperience(param.getIdSkill());
@@ -419,11 +419,11 @@ public class StaffController {
 	 *            the body of the post containing an instance of ParamStaffSkill
 	 *            in JSON format
 	 * @see StaffController.ParamStaffSkill
-	 * @throws SkillerException thrown if any problem occurs
+	 * @throws ApplicationException thrown if any problem occurs
 	 * @return
 	 */
 	@PostMapping("/experiences/update")
-	public ResponseEntity<Boolean> saveExperience(@RequestBody BodyParamStaffSkill param) throws SkillerException {
+	public ResponseEntity<Boolean> saveExperience(@RequestBody BodyParamStaffSkill param) throws ApplicationException {
 		
 		HttpHeaders headers = new HttpHeaders();		
 		if (log.isDebugEnabled()) {
@@ -434,7 +434,7 @@ public class StaffController {
 
 		final Staff staff = staffHandler.getStaff().get(param.getIdStaff());
 		if (staff == null) {
-			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, param.getIdStaff()));
+			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, param.getIdStaff()));
 		} 
 		
 		
@@ -450,14 +450,14 @@ public class StaffController {
 	 * @param file the application
 	 * @param id the staff identifier
 	 * @param type the type of file (WORD, PDF...)
-	 * @throws SkillerException thrown if any problem occurs
+	 * @throws ApplicationException thrown if any problem occurs
 	 * @return the resume parsed from the uploaded file.
 	 */
 	@PostMapping("/api/uploadCV")
 	public ResponseEntity<ResumeDTO> uploadApplicationFile(
 			@RequestParam("file") MultipartFile file, 
 			@RequestParam("id") int id, 
-			@RequestParam("type") int type) throws SkillerException {
+			@RequestParam("type") int type) throws ApplicationException {
 
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -540,7 +540,7 @@ public class StaffController {
 	}
 		
 	@PostMapping("/api/experiences/resume/save")
-	public ResponseEntity<StaffDTO> saveExperiences(@RequestBody BodyParamResumeSkills param) throws SkillerException {
+	public ResponseEntity<StaffDTO> saveExperiences(@RequestBody BodyParamResumeSkills param) throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Adding %d skills for the staff ID %d", param.getSkills().length, param.getIdStaff()));
@@ -566,7 +566,7 @@ public class StaffController {
 	 * @return
 	 */
 	@PostMapping("/project/add")
-	public ResponseEntity<BooleanDTO> addProject(@RequestBody BodyParamStaffProject param) throws SkillerException {
+	public ResponseEntity<BooleanDTO> addProject(@RequestBody BodyParamStaffProject param) throws ApplicationException {
 
 		HttpHeaders headers = new HttpHeaders();
 		

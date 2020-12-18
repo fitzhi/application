@@ -22,7 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fitzhi.data.internal.Ecosystem;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -60,9 +60,9 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 	
 	/**
 	 * @return the ecosystems declared in the application.
-	 * @throws SkillerException thrown if any problem occurs
+	 * @throws ApplicationException thrown if any problem occurs
 	 */
-	public Map<Integer, Ecosystem> getEcosystems() throws SkillerException {
+	public Map<Integer, Ecosystem> getEcosystems() throws ApplicationException {
 		if (ecosystems == null) {
 			ecosystems = loadEcosystems();
 		}
@@ -70,7 +70,7 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 	}
 	
 	@Override
-	public Map<Integer, Ecosystem> loadEcosystems() throws SkillerException {
+	public Map<Integer, Ecosystem> loadEcosystems() throws ApplicationException {
 
 		final File fileEcosystem = new File (referentialDir + "ecosystem.json"); 
 		if (log.isDebugEnabled()) {
@@ -84,12 +84,12 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 			listEcosystems.forEach(ecosystem -> mapEcosystems.put(ecosystem.getId(), ecosystem));
 			return mapEcosystems;
 		} catch (final Exception e) {
-			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, fileEcosystem.getAbsolutePath()), e);
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, fileEcosystem.getAbsolutePath()), e);
 		}
 	}
 	
 	@Override
-	public List<Ecosystem> detectEcosystems(List<String> pathnames) throws SkillerException {
+	public List<Ecosystem> detectEcosystems(List<String> pathnames) throws ApplicationException {
 		
 		Map<Integer, Ecosystem> ecosystems = loadEcosystems();
 

@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -74,7 +74,7 @@ public class ProjectLoader {
 			if (project == null) {
 				refResponse.response = new ResponseEntity<T>(t, headers, HttpStatus.NOT_FOUND);			
 			} 
-		} catch (final SkillerException e) {
+		} catch (final ApplicationException e) {
 			log.error(getStackTrace(e));
 			refResponse.response = new ResponseEntity<T>(t, headers, HttpStatus.BAD_REQUEST);
 		}

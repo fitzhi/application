@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
@@ -39,7 +39,7 @@ public class ProjectHandlerDetachStaffMemberFromGhostsOfAllProjectsTest {
 	}
 	
 	@Test
-	public void test() throws SkillerException {
+	public void test() throws ApplicationException {
 		Project project1789 = projectHandler.get(1789);
 		project1789.getGhosts().add(new Ghost("pseudo-1789 666", 666, false));
 		project1789.getGhosts().add(new Ghost("pseudo-1789 777", 777, false));

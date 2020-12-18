@@ -26,7 +26,7 @@ import com.fitzhi.controller.in.BodyParamSonarEntry;
 import com.fitzhi.controller.in.BodyParamSonarFilesStats;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.SonarProject;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -63,7 +63,7 @@ public class ProjectSonarController {
 			projectHandler.addSonarEntry(project, param.getSonarProject()); 
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 			
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
 			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
@@ -100,7 +100,7 @@ public class ProjectSonarController {
 				return  new ResponseEntity<>(null, headers, HttpStatus.INTERNAL_SERVER_ERROR);				
 			}
 			
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
 			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, idProject));
 			return new ResponseEntity<>(null, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
@@ -124,7 +124,7 @@ public class ProjectSonarController {
 			projectHandler.removeSonarEntry(project, param.getSonarProject()); 
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 			
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
 			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
@@ -148,7 +148,7 @@ public class ProjectSonarController {
 			projectHandler.saveFilesStats(project, param.getSonarProjectKey(), param.getFilesStats()); 
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 			
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
 			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
@@ -173,7 +173,7 @@ public class ProjectSonarController {
 		Project project = null;
 		try {
 			project = projectHandler.get(param.getIdProject());
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
 			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
@@ -182,7 +182,7 @@ public class ProjectSonarController {
 		try {
 			projectHandler.saveSonarEvaluation(project, param.getSonarKey(), param.getSonarEvaluation()); 
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
 			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
@@ -204,9 +204,9 @@ public class ProjectSonarController {
 		try {
 			project = projectHandler.get(param.getIdProject());
 			if (project == null) {
-				throw new SkillerException(Error.CODE_PROJECT_NOFOUND, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
+				throw new ApplicationException(Error.CODE_PROJECT_NOFOUND, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
 			}
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
 			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
@@ -215,7 +215,7 @@ public class ProjectSonarController {
 		try {
 			projectHandler.saveSonarMetricValues(project, param.getSonarKey(), param.getMetricValues()); 
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
 			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
@@ -236,12 +236,12 @@ public class ProjectSonarController {
 		try {
 			Project project = projectHandler.get(param.getIdProject());
 			if (project == null) {
-				throw new SkillerException(Error.CODE_PROJECT_NOFOUND, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
+				throw new ApplicationException(Error.CODE_PROJECT_NOFOUND, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
 			}
 			projectHandler.saveUrlSonarServer(project, param.getUrlSonarServer()); 
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 			
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
 			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			

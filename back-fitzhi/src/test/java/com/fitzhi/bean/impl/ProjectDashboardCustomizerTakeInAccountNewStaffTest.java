@@ -32,7 +32,7 @@ import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.CommitRepository;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 /**
  * Test the method {@link ProjectDashboardCustomizer#takeInAccountNewStaff(com.fitzhi.data.internal.Project, Staff)}.<br/>
  * 
@@ -81,7 +81,7 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 	}
 	
 	@Test
-	public void testOnBoardingNominal() throws SkillerException, IOException, Exception {
+	public void testOnBoardingNominal() throws ApplicationException, IOException, Exception {
 		Project project = new Project(1917, "The Red Rev project");
 		
 		Staff staff = new Staff(1, "Frédéric", "VIDAL", "altF4", "fvidal", "frvidal@void.com", "OIM");

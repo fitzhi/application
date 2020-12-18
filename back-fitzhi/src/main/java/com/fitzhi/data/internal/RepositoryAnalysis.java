@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.ProjectDashboardCustomizer;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.Contributor;
@@ -324,7 +324,7 @@ AddingA	 * Add a change into the collection.
 		return changes.stream()
 				.map(SourceChange::getDateCommit)
 				.min(Comparator.comparing(LocalDate::toEpochDay))
-				.orElseThrow(() -> new SkillerRuntimeException(SHOULD_NOT_PASS_HERE));
+				.orElseThrow(() -> new ApplicationRuntimeException(SHOULD_NOT_PASS_HERE));
 		
 	}
 
@@ -337,7 +337,7 @@ AddingA	 * Add a change into the collection.
 		return changes.stream()
 				.map(SourceChange::getDateCommit)
 				.max(Comparator.comparing(LocalDate::toEpochDay))
-				.orElseThrow(() -> new SkillerRuntimeException(SHOULD_NOT_PASS_HERE));
+				.orElseThrow(() -> new ApplicationRuntimeException(SHOULD_NOT_PASS_HERE));
 	}
 
 
@@ -371,7 +371,7 @@ AddingA	 * Add a change into the collection.
 	 */
 	public void setFileImportance(String path, int importance) {
 		if (!this.changes.getChanges().containsKey(path)) {
-			throw new SkillerRuntimeException("SHOULD NOT PASS HERE : an entry should exist for key " + path);
+			throw new ApplicationRuntimeException("SHOULD NOT PASS HERE : an entry should exist for key " + path);
 		}
 		this.changes.getChanges().get(path).setImportance(importance);
 	}

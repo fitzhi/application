@@ -1,6 +1,6 @@
 package com.fitzhi.exception;
 
-public class NotFoundException extends SkillerException {
+public class NotFoundException extends ApplicationException {
 
 	/**
 	 * For Serialization purpose.

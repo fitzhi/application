@@ -10,7 +10,7 @@ import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.data.internal.Library;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 
 import org.eclipse.jgit.lib.Repository;
@@ -50,7 +50,7 @@ public class GitCrawlerLoadChangesTest {
     AsyncTask asyncTask;
  
     @Before
-    public void before() throws SkillerException {
+    public void before() throws ApplicationException {
     	asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 1809);
     }
 
@@ -58,7 +58,7 @@ public class GitCrawlerLoadChangesTest {
      * Testing the loadChanges(...) method with the GitHub Project repo-test-number-of-lines
      */
     @Test
-    public void testLoadChangesWithProjectRepoTestNumberOfLines() throws IOException, SkillerException {
+    public void testLoadChangesWithProjectRepoTestNumberOfLines() throws IOException, ApplicationException {
         Project project = new Project (1809, "Wagram");
         project.setBranch("master");
         project.setLocationRepository(new File(String.format(REPO_DIR, TESTING_PROJECT)).getAbsolutePath());

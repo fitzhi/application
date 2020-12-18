@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSkill;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -30,7 +30,7 @@ public class FileDataSaverImplTest {
 	DataHandler dataSaver;
 	
 	@Test
-	public void saveProjects() throws SkillerException {
+	public void saveProjects() throws ApplicationException {
 		Map<Integer, Project> projects = new HashMap<>();
 		projects.put(1, new Project(1, "TEST 1"));
 		Project p = new Project(2, "TEST 2");

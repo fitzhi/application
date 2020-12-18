@@ -36,7 +36,7 @@ import com.fitzhi.controller.in.BodyParamProjectAttachmentFile;
 import com.fitzhi.data.internal.AttachmentFile;
 import com.fitzhi.data.internal.AuditTopic;
 import com.fitzhi.data.internal.TopicWeight;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.service.FileType;
 import com.fitzhi.service.StorageService;
 
@@ -83,7 +83,7 @@ public class ProjectAuditController {
 		try {
 			projectAuditHandler.addTopic(param.getIdProject(), param.getAuditTopic().getIdTopic());
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
 			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
@@ -106,7 +106,7 @@ public class ProjectAuditController {
 		try {
 			AuditTopic auditProject = projectAuditHandler.getTopic(idProject, idTopic);
 			return  new ResponseEntity<>(auditProject, headers, HttpStatus.OK);
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
 			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
 			return new ResponseEntity<>(null, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
@@ -128,7 +128,7 @@ public class ProjectAuditController {
 			projectAuditHandler.processAndSaveGlobalAuditEvaluation(param.getIdProject());			
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
 			
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
 			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
@@ -150,7 +150,7 @@ public class ProjectAuditController {
 			projectAuditHandler.saveEvaluation(param.getIdProject(), param.getAuditTopic().getIdTopic(), param.getAuditTopic().getEvaluation());
 			projectAuditHandler.processAndSaveGlobalAuditEvaluation(param.getIdProject());
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
 			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
@@ -173,7 +173,7 @@ public class ProjectAuditController {
 			projectAuditHandler.saveReport(
 					param.getIdProject(), auditTopic.getIdTopic(), auditTopic.getReport());
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
 			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
@@ -204,7 +204,7 @@ public class ProjectAuditController {
 			projectAuditHandler.saveWeights(param.getIdProject(), weights);
 			projectAuditHandler.processAndSaveGlobalAuditEvaluation(param.getIdProject());
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
 			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
@@ -225,7 +225,7 @@ public class ProjectAuditController {
 		try {
 			projectAuditHandler.updateAttachmentFile (param.getIdProject(), param.getIdTopic(), param.getAttachmentFile());
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
 			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
@@ -247,7 +247,7 @@ public class ProjectAuditController {
 			projectAuditHandler.removeAttachmentFile (param.getIdProject(), param.getIdTopic(), param.getAttachmentFile().getIdFile());
 			
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
 			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
 			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
@@ -295,7 +295,7 @@ public class ProjectAuditController {
 				new AttachmentFile(auditProject.getAttachmentList().size(), filename, typeOfApplication, label));
 		
 			return new ResponseEntity<>(true, headers, HttpStatus.OK);
-		} catch (SkillerException e) {
+		} catch (ApplicationException e) {
 			return new ResponseEntity<>(
 				false, 
 				headers, 
@@ -323,7 +323,7 @@ public class ProjectAuditController {
 
 			AttachmentFile attachment = auditTopic.getAttachmentList().get(idFile);
 			if (attachment == null) {
-				throw new SkillerException (
+				throw new ApplicationException (
 						CODE_CANNOT_RETRIEVE_ATTACHMENTFILE,
 						MessageFormat.format(LIB_CANNOT_RETRIEVE_ATTACHMENTFILE, idProject, idTopic, idFile));
 			}
@@ -343,7 +343,7 @@ public class ProjectAuditController {
 	                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
 	                .body(resource);
 	        
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
 			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
 			return new ResponseEntity<>(null, headers, HttpStatus.INTERNAL_SERVER_ERROR);			

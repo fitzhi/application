@@ -18,7 +18,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fitzhi.bean.impl.StaffHandlerImpl;
 import com.fitzhi.data.encryption.DataEncryption;
 import com.fitzhi.data.source.Contributor;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.security.CustomGrantedAuthority;
 import com.fitzhi.service.FileType;
 
@@ -265,7 +265,7 @@ public @Data class Staff implements UserDetails {
 	/**
 	 * @return <code>true</code> if the passed password is correct.
 	 */
-	public boolean isValidPassword(String password) throws SkillerException {
+	public boolean isValidPassword(String password) throws ApplicationException {
 		String passwordEncrypted = DataEncryption.encryptMessage(password);
 		return passwordEncrypted.equals(this.password);
 	}

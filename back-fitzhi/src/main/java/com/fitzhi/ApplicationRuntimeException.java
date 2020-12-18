@@ -1,9 +1,13 @@
 package com.fitzhi;
 
 /**
+ * <p>
+ * This class is the mother of all internal RuntimeException. 
+ * If the application falls into a invalid critic state, then, the application should halt immediatly
+ * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class SkillerRuntimeException extends  RuntimeException {
+public class ApplicationRuntimeException extends RuntimeException {
 
 	/**
 	 * serialVersionUID.
@@ -14,7 +18,7 @@ public class SkillerRuntimeException extends  RuntimeException {
 	 * Main constructor based on an exception.
 	 * @param e the passed exception
 	 */
-	public SkillerRuntimeException (Exception e) {
+	public ApplicationRuntimeException (Exception e) {
 		super(e);
 	}
 	
@@ -22,7 +26,7 @@ public class SkillerRuntimeException extends  RuntimeException {
 	 * Main constructor based on an exception.
 	 * @param e the passed exception
 	 */
-	public SkillerRuntimeException (String errorMessage) {
+	public ApplicationRuntimeException (String errorMessage) {
 		super(errorMessage);
 	}
 }

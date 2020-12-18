@@ -34,7 +34,7 @@ import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.AttachmentFile;
 import com.fitzhi.data.internal.AuditTopic;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.service.FileType;
 import com.fitzhi.service.impl.storageservice.AuditAttachmentStorageProperties;
 import com.google.gson.Gson;
@@ -81,7 +81,7 @@ public class ProjectAuditControllerUploadAttachmentFileTest {
 	private final int ID_TOPIC_2 = 2; 
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		Project project = projectHandler.get(ID_PROJECT);
 		Map<Integer, AuditTopic> mapAudit = new HashMap<>();
 		AuditTopic at = new AuditTopic(ID_TOPIC_1, 30, 100);
@@ -163,7 +163,7 @@ public class ProjectAuditControllerUploadAttachmentFileTest {
 	}
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		Project project = projectHandler.get(ID_PROJECT);
 		project.getAudit().clear();
 

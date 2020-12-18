@@ -17,14 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.ProjectAuditHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.AttachmentFile;
 import com.fitzhi.data.internal.AuditTopic;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.TopicWeight;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.service.StorageService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -52,10 +52,10 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
     StorageService storageService;
 	
 	@Override
-	public void addTopic(int idProject, int idTopic) throws SkillerException {
+	public void addTopic(int idProject, int idTopic) throws ApplicationException {
 		final Project project = projectHandler.get(idProject);
 		if (project == null) {
-			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+			throw new ApplicationException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 
 		if (project.getAudit() == null) {
@@ -86,14 +86,14 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 	}
 
 	@Override
-	public void removeTopic(int idProject, int idTopic, boolean flagForce) throws SkillerException {
+	public void removeTopic(int idProject, int idTopic, boolean flagForce) throws ApplicationException {
 
 		if (flagForce) {
-			throw new SkillerRuntimeException("The flagForce behavior is not implemented yet!");
+			throw new ApplicationRuntimeException("The flagForce behavior is not implemented yet!");
 		}
 		final Project project = projectHandler.get(idProject);
 		if (project == null) {
-			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+			throw new ApplicationException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 		
 		synchronized (lockDataUpdated) {
@@ -116,27 +116,27 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 	}
 
 	@Override
-	public AuditTopic getTopic(int idProject, int idTopic) throws SkillerException {
+	public AuditTopic getTopic(int idProject, int idTopic) throws ApplicationException {
 
 		final Project project = projectHandler.get(idProject);
 		if (project == null) {
-			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+			throw new ApplicationException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 		
 		if (project.getAudit() == null) {
-			throw new SkillerException(CODE_PROJECT_TOPIC_UNKNOWN, MessageFormat.format(MESSAGE_PROJECT_TOPIC_UNKNOWN, idTopic, project.getName()));
+			throw new ApplicationException(CODE_PROJECT_TOPIC_UNKNOWN, MessageFormat.format(MESSAGE_PROJECT_TOPIC_UNKNOWN, idTopic, project.getName()));
 		}
 		
 		final AuditTopic auditProject = project.getAudit().get(idTopic);
 		if (auditProject == null) {
-			throw new SkillerException(CODE_PROJECT_TOPIC_UNKNOWN, MessageFormat.format(MESSAGE_PROJECT_TOPIC_UNKNOWN, idTopic, project.getName()));
+			throw new ApplicationException(CODE_PROJECT_TOPIC_UNKNOWN, MessageFormat.format(MESSAGE_PROJECT_TOPIC_UNKNOWN, idTopic, project.getName()));
 		}
 		
 		return auditProject;
 	}
 
 	@Override
-	public void saveEvaluation(int idProject, int idTopic, int evaluation) throws SkillerException {
+	public void saveEvaluation(int idProject, int idTopic, int evaluation) throws ApplicationException {
 		
 		AuditTopic auditTopic = getTopic(idProject, idTopic);
 
@@ -148,7 +148,7 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 	}
 
 	@Override
-	public void saveReport(int idProject, int idTopic, String executiveSummary) throws SkillerException {
+	public void saveReport(int idProject, int idTopic, String executiveSummary) throws ApplicationException {
 
 		AuditTopic auditTopic = getTopic(idProject, idTopic);
 
@@ -159,11 +159,11 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 	}
 	
 	@Override
-	public void saveWeights(int idProject, List<TopicWeight> weights) throws SkillerException {
+	public void saveWeights(int idProject, List<TopicWeight> weights) throws ApplicationException {
 		
 		final int totalWeights = weights.stream().mapToInt(tw -> tw.getWeight()).reduce(0, Integer::sum);
 		if (totalWeights != 100) {
-			throw new SkillerException(CODE_PROJECT_INVALID_WEIGHTS, MESSAGE_PROJECT_INVALID_WEIGHTS);
+			throw new ApplicationException(CODE_PROJECT_INVALID_WEIGHTS, MESSAGE_PROJECT_INVALID_WEIGHTS);
 		}
 		
 		for (TopicWeight weight : weights) {
@@ -176,11 +176,11 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 	}
 
 	@Override
-	public void processAndSaveGlobalAuditEvaluation(int idProject) throws SkillerException {
+	public void processAndSaveGlobalAuditEvaluation(int idProject) throws ApplicationException {
 		
 		final Project project = projectHandler.get(idProject);
 		if (project == null) {
-			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+			throw new ApplicationException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 		
 		int sum = project.getAudit().values().stream()
@@ -203,9 +203,9 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 	/**
 	 * Share and save the weights between all audit topics for the given project.
 	 * @param project
-	 * @throws SkillerException
+	 * @throws ApplicationException
 	 */
-	private void shareWeights(Project project) throws SkillerException {
+	private void shareWeights(Project project) throws ApplicationException {
 		int numberOfTopics = project.getAudit().size();
 		AuditTopic[] topics = new AuditTopic[numberOfTopics];
 		System.arraycopy(project.getAudit().values().toArray(), 0, topics, 0, project.getAudit().size());
@@ -221,7 +221,7 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 	}
 
 	@Override
-	public void updateAttachmentFile(int idProject, int idTopic, AttachmentFile attachmentFile) throws SkillerException {
+	public void updateAttachmentFile(int idProject, int idTopic, AttachmentFile attachmentFile) throws ApplicationException {
 
 		AuditTopic auditTopic = getTopic(idProject, idTopic);
 		
@@ -237,12 +237,12 @@ public class ProjectAuditHandlerImpl extends AbstractDataSaverLifeCycleImpl impl
 	}
 
 	@Override
-	public void removeAttachmentFile(int idProject, int idTopic, int idFileIdentifier) throws SkillerException {
+	public void removeAttachmentFile(int idProject, int idTopic, int idFileIdentifier) throws ApplicationException {
 		
 		AuditTopic auditTopic = getTopic(idProject, idTopic);
 		AttachmentFile af = auditTopic.getAttachmentList().get(idFileIdentifier);
 		if (af == null) {
-			throw new SkillerException (
+			throw new ApplicationException (
 					CODE_CANNOT_RETRIEVE_ATTACHMENTFILE,
 					MessageFormat.format(LIB_CANNOT_RETRIEVE_ATTACHMENTFILE, idProject, idTopic, idFileIdentifier));
 		}

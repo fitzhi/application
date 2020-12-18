@@ -22,7 +22,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -54,7 +54,7 @@ public class StaffControllerProjectTest {
 	private ProjectHandler projectHandler;
 	
 	@Before 
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		projectHandler. getProjects().put(ID_PROJECT_1235, new Project(ID_PROJECT_1235, PROJECT_1235));
 	}
 	
@@ -89,7 +89,7 @@ public class StaffControllerProjectTest {
 	}	
 
 	@Before 
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.getProjects().remove(ID_PROJECT_1235);
 	}
 

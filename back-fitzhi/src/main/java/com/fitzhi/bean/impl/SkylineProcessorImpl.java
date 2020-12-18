@@ -31,7 +31,7 @@ import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.Skyline;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.fitzhi.source.crawler.git.SourceFileHistory;
 import com.fitzhi.util.LayerFactory;
@@ -91,7 +91,7 @@ public class SkylineProcessorImpl implements SkylineProcessor {
     }
 
     @Override
-    public ProjectLayers generateProjectLayers(Project project, SourceControlChanges changes) throws SkillerException {
+    public ProjectLayers generateProjectLayers(Project project, SourceControlChanges changes) throws ApplicationException {
 
         final Function<SourceChange, Layer> layerIdentifier = (SourceChange sourceChange) -> {
             return LayerFactory.getInstance(sourceChange);
@@ -173,7 +173,7 @@ public class SkylineProcessorImpl implements SkylineProcessor {
     }
 
     @Override
-    public ProjectBuilding generateProjectBuilding(Project project) throws SkillerException {
+    public ProjectBuilding generateProjectBuilding(Project project) throws ApplicationException {
 
         // If no skyline have been already saved, we return an empty building.
         if (!dataHandler.hasSavedSkylineLayers(project)) {
@@ -229,14 +229,14 @@ public class SkylineProcessorImpl implements SkylineProcessor {
     }
 
     @Override
-    public Skyline generateSkyline() throws SkillerException {
+    public Skyline generateSkyline() throws ApplicationException {
 
         List<Project> projects = projectHandler.getProjects().values().stream().filter(Project::isActive).collect(Collectors.toList());
         return generateSkyline(projects);
      }
 
     @Override
-    public Skyline generateSkyline(List<Project> projects) throws SkillerException  {
+    public Skyline generateSkyline(List<Project> projects) throws ApplicationException  {
         final Skyline skyline = new Skyline();
 
         for (Project project : projects) {

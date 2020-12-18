@@ -28,7 +28,7 @@ import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -61,7 +61,7 @@ public class ProjectGhostControllerSaveGhostTest {
 	final int ID_PROJECT = 1;
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		project = projectHandler.get(ID_PROJECT);
 		project.getGhosts().add(new Ghost("pseudoUnlinked", false));
 		project.getGhosts().add(new Ghost("pseudoLinked", 2, false));
@@ -111,7 +111,7 @@ public class ProjectGhostControllerSaveGhostTest {
 	}
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		project = projectHandler.get(ID_PROJECT);
 		project.getGhosts().clear();
 				

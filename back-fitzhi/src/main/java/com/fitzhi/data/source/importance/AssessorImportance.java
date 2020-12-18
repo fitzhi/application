@@ -1,7 +1,7 @@
 package com.fitzhi.data.source.importance;
 
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
@@ -29,7 +29,7 @@ public interface AssessorImportance {
 	 * @param path the given path whose importance has to be evaluated
 	 * @param criteria the criteria of importance
 	 * @return the evaluated importance
-	 * @throws SkillerException thrown if any exception occurs during the evaluation
+	 * @throws ApplicationException thrown if any exception occurs during the evaluation
 	 */
-	long getImportance(Project project, String path, ImportanceCriteria criteria) throws SkillerException;
+	long getImportance(Project project, String path, ImportanceCriteria criteria) throws ApplicationException;
 }

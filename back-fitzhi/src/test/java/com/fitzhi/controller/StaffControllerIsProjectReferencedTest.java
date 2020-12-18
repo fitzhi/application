@@ -14,7 +14,7 @@ import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 
 /**
@@ -32,7 +32,7 @@ public class StaffControllerIsProjectReferencedTest {
 	private StaffHandler staffHandler;
 	
 	@Before 
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		projectHandler.addNewProject(new Project(1789, "The revolutionary project"));
 		projectHandler.addNewProject(new Project(1805, "Austerlitz"));
 		staffHandler.getStaff().put(10000, 
@@ -61,7 +61,7 @@ public class StaffControllerIsProjectReferencedTest {
 	}	
 	
 	@Before 
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.getProjects().remove(1789);
 		projectHandler.getProjects().remove(1805);
 		staffHandler.getStaff().remove(10000);

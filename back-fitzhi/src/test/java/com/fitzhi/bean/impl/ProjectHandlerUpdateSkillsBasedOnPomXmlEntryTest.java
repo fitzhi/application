@@ -19,7 +19,7 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.CommitHistory;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * This class tests the method {@link ProjectHandler#updateSkills(java.util.List)}
@@ -44,7 +44,7 @@ public class ProjectHandlerUpdateSkillsBasedOnPomXmlEntryTest {
 	SkillHandler skillHandler;
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		
 		//
 		// We are adding code files with a Java file within it.
@@ -67,7 +67,7 @@ public class ProjectHandlerUpdateSkillsBasedOnPomXmlEntryTest {
 	}
 	
 	@Test
-	public void addANonExistentSkill() throws SkillerException {
+	public void addANonExistentSkill() throws ApplicationException {
 
 		projectHandler.updateSkills(project, repo);
 		Assert.assertFalse(projectHandler.get(1789).getSkills().isEmpty());
@@ -79,7 +79,7 @@ public class ProjectHandlerUpdateSkillsBasedOnPomXmlEntryTest {
 	}
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.getProjects().remove(1789);
 	}
 }

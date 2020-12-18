@@ -15,7 +15,7 @@ import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * Interface in charge of saving & loading data.
@@ -26,38 +26,38 @@ public interface DataHandler {
 	/**
 	 * Save projects on a persistent media
 	 * @param projects list of projects
-	 * @throws SkillerException thrown if exception occurs during the saving process
+	 * @throws ApplicationException thrown if exception occurs during the saving process
 	 */
-	void saveProjects(Map<Integer, Project> projects) throws SkillerException;
+	void saveProjects(Map<Integer, Project> projects) throws ApplicationException;
 	
 	
 	/**
 	 * Load the projects from a persistent media
 	 * @return the map of projects
-	 * @throws SkillerException thrown if exception occurs during the saving process
+	 * @throws ApplicationException thrown if exception occurs during the saving process
 	 */
-	Map<Integer, Project> loadProjects() throws SkillerException;
+	Map<Integer, Project> loadProjects() throws ApplicationException;
 
 	/**
 	 * Save the staff on a persistent media
 	 * @param staff list of staff
-	 * @throws SkillerException thrown if exception occurs during the saving process
+	 * @throws ApplicationException thrown if exception occurs during the saving process
 	 */
-	void saveStaff(Map<Integer, Staff> staff) throws SkillerException;
+	void saveStaff(Map<Integer, Staff> staff) throws ApplicationException;
 	
 	/**
 	 * Load the staff members from a persistent media
 	 * @return the staff
-	 * @throws SkillerException thrown if exception occurs during the saving process
+	 * @throws ApplicationException thrown if exception occurs during the saving process
 	 */
-	Map<Integer, Staff> loadStaff() throws SkillerException;
+	Map<Integer, Staff> loadStaff() throws ApplicationException;
 
 	/**
 	 * Save the skills <i>(probably for this first release)</i> on the file system
 	 * @param staff list of staff
-	 * @throws SkillerException thrown if an exception occurs during the saving process
+	 * @throws ApplicationException thrown if an exception occurs during the saving process
 	 */
-	void saveSkills(Map<Integer, Skill> staff) throws SkillerException;
+	void saveSkills(Map<Integer, Skill> staff) throws ApplicationException;
 	
 	/**
 	 * <p>
@@ -66,9 +66,9 @@ public interface DataHandler {
 	 * <p><i>Due to DEBUG purpose, the output format will be <b>{@code CSV}</b></i>.</p>
 	 * @param project project whose repository analysis has to be serialized
 	 * @param analysis the analysis to serialize on file system.
-	 * @throws SkillerException thrown if an exception occurs during the saving process, most probably an {@link IOException}.
+	 * @throws ApplicationException thrown if an exception occurs during the saving process, most probably an {@link IOException}.
 	 */
-	void saveRepositoryAnalysis(Project project, RepositoryAnalysis analysis) throws SkillerException;
+	void saveRepositoryAnalysis(Project project, RepositoryAnalysis analysis) throws ApplicationException;
 
 	/**
 	 * <p>
@@ -76,9 +76,9 @@ public interface DataHandler {
 	 * </p>
 	 * @param project project whose changes have to be serialized in CSV
 	 * @return the {@link RepositoryAnalysis analysis} if found, or {@code null} if none exists on file system.
-	 * @throws SkillerException thrown if an exception occurs during the loading process, most probably an {@link IOException}
+	 * @throws ApplicationException thrown if an exception occurs during the loading process, most probably an {@link IOException}
 	 */
-	RepositoryAnalysis loadRepositoryAnalysis(Project project) throws SkillerException;
+	RepositoryAnalysis loadRepositoryAnalysis(Project project) throws ApplicationException;
 
 	/**
 	 * <p>
@@ -87,9 +87,9 @@ public interface DataHandler {
 	 * <p><i>Due to the DEBUG purpose of this file, the output format will <b>CSV</b></i>.</p>
 	 * @param project project whose changes have to be serialized in CSV
 	 * @param changes changes retrieved from the repository
-	 * @throws SkillerException thrown if an exception occurs during the saving process
+	 * @throws ApplicationException thrown if an exception occurs during the saving process
 	 */
-	void saveChanges(Project project, SourceControlChanges changes) throws SkillerException;
+	void saveChanges(Project project, SourceControlChanges changes) throws ApplicationException;
 ;
 
 	/**
@@ -99,11 +99,11 @@ public interface DataHandler {
 	 * @param project the current projet for which these paths should be saved. 
 	 * @param paths a list of paths to be saved. 
 	 * @param pathsType the {@link com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType kind of path} .
-	 * @throws SkillerException thrown if any problem occurs, most probably an {@link IOException}
+	 * @throws ApplicationException thrown if any problem occurs, most probably an {@link IOException}
 	 * @see #loadPaths(Project, PathsType)
 	 * @see PathsType
 	 */
-	void savePaths(Project project, List<String> paths, PathsType pathsType) throws SkillerException;
+	void savePaths(Project project, List<String> paths, PathsType pathsType) throws ApplicationException;
 
 	/**
 	 * <p>
@@ -115,9 +115,9 @@ public interface DataHandler {
 	 * @return the loaded paths retrieved on file system, or {@code null} if none exists.
 	 * @see PathsType
 	 * @see #savePaths(Project, List, PathsType)
-	 * @throws SkillerException thrown if any problem occurs, most probably an {@link IOException}
+	 * @throws ApplicationException thrown if any problem occurs, most probably an {@link IOException}
 	 */
-	List<String> loadPaths(Project project, PathsType pathsType) throws SkillerException;
+	List<String> loadPaths(Project project, PathsType pathsType) throws ApplicationException;
 
 
 	/**
@@ -126,9 +126,9 @@ public interface DataHandler {
 	 * </p>
 	 * @param project the current active project
 	 * @return the container of all commits changes, or {@code null} if the changes file does not exist
-	 * @throws SkillerException thrown if an exception occurs during the loading process, most probably an {@link java.io.IOException}
+	 * @throws ApplicationException thrown if an exception occurs during the loading process, most probably an {@link java.io.IOException}
 	 */
-	SourceControlChanges loadChanges(Project project) throws SkillerException;
+	SourceControlChanges loadChanges(Project project) throws ApplicationException;
 
 	/**
 	 * <p>
@@ -137,9 +137,9 @@ public interface DataHandler {
 	 * </p>
 	 * @param project project whose skyline layers have to be serialized in CSV
 	 * @param layers the container of skyline project layers to be saved on the file system.
-	 * @throws SkillerException thrown if an exception occurs during the loading process, mot probably an {@link java.io.IOException}
+	 * @throws ApplicationException thrown if an exception occurs during the loading process, mot probably an {@link java.io.IOException}
 	 */
-	 void saveSkylineLayers(Project project, ProjectLayers layers) throws SkillerException;
+	 void saveSkylineLayers(Project project, ProjectLayers layers) throws ApplicationException;
 
 	/**
 	 * <p>
@@ -149,9 +149,9 @@ public interface DataHandler {
 	 * </p>
 	 * @param project project whose skyline layers have to be serialized in CSV
 	 * @return the list of skyline layers reader to be uploaded on the filesystem..
-	 * @throws SkillerException thrown if an exception occurs during the loading process, mot probably an {@link java.io.IOException}
+	 * @throws ApplicationException thrown if an exception occurs during the loading process, mot probably an {@link java.io.IOException}
 	 */
-	ProjectLayers loadSkylineLayers(Project project) throws SkillerException;
+	ProjectLayers loadSkylineLayers(Project project) throws ApplicationException;
 
 	/**
 	 * <p>
@@ -170,9 +170,9 @@ public interface DataHandler {
 	 * </p>
 	 * @param project the project whose building have to be serialized in CSV and saved on the filesytem.
 	 * @param ProjectBuilding the generated building to be saved
-	 * @throws SkillerException thrown if an exception occurs during the loading process, mot probably an {@link java.io.IOException}
+	 * @throws ApplicationException thrown if an exception occurs during the loading process, mot probably an {@link java.io.IOException}
 	 */
-	void saveProjectBuilding(Project project, ProjectBuilding building) throws SkillerException;
+	void saveProjectBuilding(Project project, ProjectBuilding building) throws ApplicationException;
 
 	/**
 	 * <p>
@@ -182,16 +182,16 @@ public interface DataHandler {
 	 * </p>
 	 * @param project project whose building has to be serialized, and saved on the file system.
 	 * @return the Project building
-	 * @throws SkillerException thrown if an exception occurs during the loading process, mot probably an {@link java.io.IOException}
+	 * @throws ApplicationException thrown if an exception occurs during the loading process, mot probably an {@link java.io.IOException}
 	 */
-	ProjectBuilding loadProjectBuilding(Project project) throws SkillerException;
+	ProjectBuilding loadProjectBuilding(Project project) throws ApplicationException;
 
 	/**
 	 * Load the skills <i>(probably for this first release)</i> from the file system
 	 * @return the skills collection, retrieved from the file system
-	 * @throws SkillerException thrown if an exception occurs during the saving process
+	 * @throws ApplicationException thrown if an exception occurs during the saving process
 	 */
-	Map<Integer, Skill> loadSkills() throws SkillerException;
+	Map<Integer, Skill> loadSkills() throws ApplicationException;
 	
 	/**
 	 * <p>
@@ -204,9 +204,9 @@ public interface DataHandler {
 	 * </p>
 	 * @param project the current project
 	 * @param changes the history of changes retrieved from the repository
-	 * @throws SkillerException thrown if an exception occurs during the saving process.
+	 * @throws ApplicationException thrown if an exception occurs during the saving process.
 	 */
-	void saveRepositoryDirectories(Project project, SourceControlChanges changes) throws SkillerException;
+	void saveRepositoryDirectories(Project project, SourceControlChanges changes) throws ApplicationException;
 	
 	/**
 	 * <p>
@@ -218,9 +218,9 @@ public interface DataHandler {
 	 * </p>
 	 * @param project the given project
 	 * @return the resulting paths list
-	 * @throws SkillerException thrown if an exception occurs during the loading process.
+	 * @throws ApplicationException thrown if an exception occurs during the loading process.
 	 */
-	List<String> loadRepositoryDirectories (Project project) throws SkillerException;
+	List<String> loadRepositoryDirectories (Project project) throws ApplicationException;
 	
 	/**
 	 * Generate the file path for pathnames of a given type of {@link PathType path}
@@ -228,8 +228,8 @@ public interface DataHandler {
 	 * @param project the current project
 	 * @param pathsType type of paths which will be saved on file system  
 	 * @return the generated pathname to be used to store the data
-	 * @throws SkillerException thrown if any problem occurs, most probably the branch name is empty. 
+	 * @throws ApplicationException thrown if any problem occurs, most probably the branch name is empty. 
 	 */
-	String generatePathnamesFile(Project project, PathsType pathsType) throws SkillerException;
+	String generatePathnamesFile(Project project, PathsType pathsType) throws ApplicationException;
 
 }

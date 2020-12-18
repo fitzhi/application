@@ -15,7 +15,7 @@ import com.fitzhi.bean.ProjectAuditHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.AuditTopic;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
@@ -39,7 +39,7 @@ public class ProjectAuditHandlerProcessAndSaveGlobalAuditEvaluationTest {
 	private Project project;
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		project = projectHandler.addNewProject(new Project(1789, "Revolutionary project"));
 		project.setAudit(new HashMap<Integer, AuditTopic>());
 		
@@ -55,13 +55,13 @@ public class ProjectAuditHandlerProcessAndSaveGlobalAuditEvaluationTest {
 		
 	}
 	
-	@Test(expected = SkillerException.class)
-	public void processAndSaveGlobalAuditEvaluationOnUnknownProject() throws SkillerException {
+	@Test(expected = ApplicationException.class)
+	public void processAndSaveGlobalAuditEvaluationOnUnknownProject() throws ApplicationException {
 		projectAuditHandler.processAndSaveGlobalAuditEvaluation(666);
 	}
 
 	@Test
-	public void processAndSaveGlobalAuditEvaluationNominal() throws SkillerException {
+	public void processAndSaveGlobalAuditEvaluationNominal() throws ApplicationException {
 		projectAuditHandler.processAndSaveGlobalAuditEvaluation(1789);
 		Assert.assertEquals("Audit evaluation has to be equal to 52", 52, project.getAuditEvaluation());
 	}

@@ -15,7 +15,7 @@ import com.fitzhi.bean.ProjectAuditHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.AuditTopic;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
@@ -40,7 +40,7 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 	
 	private int ID_PROJECT = 314116;
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		project = projectHandler.addNewProject(new Project(ID_PROJECT, "PI"));
 		project.setAudit(new HashMap<Integer, AuditTopic>());
 		AuditTopic auditTopic = new AuditTopic();
@@ -51,13 +51,13 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 
 	}
 	
-	@Test(expected = SkillerException.class)
-	public void addTopicOnUnknownProject() throws SkillerException {
+	@Test(expected = ApplicationException.class)
+	public void addTopicOnUnknownProject() throws ApplicationException {
 		projectAuditHandler.addTopic(666, 1);
 	}
 
 	@Test
-	public void addNewTopic() throws SkillerException {
+	public void addNewTopic() throws ApplicationException {
 		
 		projectAuditHandler.addTopic(ID_PROJECT, 2);
 		Assert.assertTrue("addNewTopic did not succeed", project.getAudit().containsKey(2));
@@ -73,13 +73,13 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 
 	}
 	
-	@Test(expected = SkillerException.class)
-	public void removeTopicOnUnknownProject() throws SkillerException {
+	@Test(expected = ApplicationException.class)
+	public void removeTopicOnUnknownProject() throws ApplicationException {
 		projectAuditHandler.removeTopic(666, 1, false);
 	}
 
 	@Test
-	public void removeTopic() throws SkillerException {
+	public void removeTopic() throws ApplicationException {
 		
 		Assert.assertEquals("Evaluation is equal to 0", 40, project.getAuditEvaluation());
 		
@@ -93,7 +93,7 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 	}
 	
 	@Test
-	public void loadAnExistingTopic() throws SkillerException {
+	public void loadAnExistingTopic() throws ApplicationException {
 		projectAuditHandler.addTopic(ID_PROJECT, 2);
 		AuditTopic auditTopic = projectAuditHandler.getTopic(314116, 2);
 		Assert.assertNotNull(auditTopic);
@@ -101,8 +101,8 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 		
 	}
 
-	@Test(expected = SkillerException.class)
-	public void loadfailedUnknownTopic() throws SkillerException {
+	@Test(expected = ApplicationException.class)
+	public void loadfailedUnknownTopic() throws ApplicationException {
 		projectAuditHandler.getTopic(ID_PROJECT, 666);		
 	}
 	

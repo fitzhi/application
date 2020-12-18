@@ -11,7 +11,7 @@ import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectFloor;
 import com.fitzhi.data.internal.Skyline;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -57,7 +57,7 @@ public class SkylineControllerSkyline2Test {
 	private ProjectHandler projectHandler;
 
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		Project project = new Project(1515, "Marignan");
 		project.setActive(true);
 		projectHandler.addNewProject(project);
@@ -94,7 +94,7 @@ public class SkylineControllerSkyline2Test {
 	}
 
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.removeProject(1214);
 		projectHandler.removeProject(1515);
 	}

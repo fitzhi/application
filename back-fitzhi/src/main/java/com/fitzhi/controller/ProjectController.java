@@ -45,7 +45,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.bean.ProjectHandler;
@@ -67,7 +67,7 @@ import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.NotFoundException;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 
 import lombok.extern.slf4j.Slf4j;
@@ -138,7 +138,7 @@ public class ProjectController {
 				}
 			}
 			return responseEntity;
-		} catch (final SkillerException e) {
+		} catch (final ApplicationException e) {
 			log.error(getStackTrace(e));
 			return new ResponseEntity<>(new ProjectDTO(new Project(), e.errorCode, e.getMessage()), headers(),
 					HttpStatus.BAD_REQUEST);
@@ -154,19 +154,19 @@ public class ProjectController {
 	 */
 	@DeleteMapping(value = "/{idProject}")
 	public ResponseEntity<Object> removeProject(@PathVariable("idProject") int idProject)
-			throws NotFoundException, SkillerException {
+			throws NotFoundException, ApplicationException {
 		Project project = projectHandler.get(idProject);
 		if (project == null) {
 			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 
 		if (!project.isEmpty()) {
-			throw new SkillerException(CODE_PROJECT_IS_NOT_EMPTY,
+			throw new ApplicationException(CODE_PROJECT_IS_NOT_EMPTY,
 					MessageFormat.format(MESSAGE_PROJECT_IS_NOT_EMPTY, project.getName()));
 		}
 
 		if (staffHandler.isProjectReferenced(idProject)) {
-			throw new SkillerException(CODE_PROJECT_IS_NOT_EMPTY,
+			throw new ApplicationException(CODE_PROJECT_IS_NOT_EMPTY,
 					MessageFormat.format(MESSAGE_PROJECT_IS_NOT_EMPTY, project.getName()));
 		}
 
@@ -183,7 +183,7 @@ public class ProjectController {
 	 */
 	@PostMapping(value = "/rpc/inactivation/{idProject}")
 	public ResponseEntity<Object> inactivateProject(@PathVariable("idProject") int idProject)
-			throws NotFoundException, SkillerException {
+			throws NotFoundException, ApplicationException {
 		Project project = projectHandler.get(idProject);
 		if (project == null) {
 			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
@@ -202,7 +202,7 @@ public class ProjectController {
 	 */
 	@PostMapping(value = "/rpc/reactivation/{idProject}")
 	public ResponseEntity<Object> reactivateProject(@PathVariable("idProject") int idProject)
-			throws NotFoundException, SkillerException {
+			throws NotFoundException, ApplicationException {
 		Project project = projectHandler.get(idProject);
 		if (project == null) {
 			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
@@ -220,7 +220,7 @@ public class ProjectController {
 	 *         query failed.
 	 */
 	@DeleteMapping()
-	public ResponseEntity<Object> removeAllProjects() throws SkillerException {
+	public ResponseEntity<Object> removeAllProjects() throws ApplicationException {
 		return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
 	}
 
@@ -252,13 +252,13 @@ public class ProjectController {
 	/**
 	 * @param idProject the project identifier
 	 * @return the experience of a developer as list of skills.
-	 * @throws SkillerException exception thrown if any problem occurs, most
+	 * @throws ApplicationException exception thrown if any problem occurs, most
 	 *                          probably if the project does not exist for the given
 	 *                          identifier.
 	 */
 	@GetMapping(value = "/skills/{idProject}")
 	public ResponseEntity<Collection<ProjectSkill>> get(final @PathVariable("idProject") int idProject)
-			throws SkillerException {
+			throws ApplicationException {
 
 		Project project = projectHandler.get(idProject);
 		if (project == null) {
@@ -276,7 +276,7 @@ public class ProjectController {
 	 * @return the HTTP Response with an array of branches, or an empty one if the query failed.
 	 */
 	@GetMapping(value = "/branches/{idProject}")
-	public ResponseEntity<String[]> branches(@PathVariable("idProject") int idProject) throws SkillerException {
+	public ResponseEntity<String[]> branches(@PathVariable("idProject") int idProject) throws ApplicationException {
 
 		Project project = projectHandler.get(idProject);
 		if (project == null) {
@@ -349,7 +349,7 @@ public class ProjectController {
 			}
 			return responseProjects;
 
-		} catch (final SkillerException e) {
+		} catch (final ApplicationException e) {
 			log.error(getStackTrace(e));
 			return new ArrayList<Project>();
 		}
@@ -365,7 +365,7 @@ public class ProjectController {
 	 */
 	@PostMapping("")
 	public ResponseEntity<Void> create(UriComponentsBuilder builder, @RequestBody Project project)
-			throws SkillerException {
+			throws ApplicationException {
 		final HttpHeaders headers = headers();
 		if (projectHandler.containsProject(project.getId())) {
 			return new ResponseEntity<Void>(null, headers, HttpStatus.CONFLICT);
@@ -387,10 +387,10 @@ public class ProjectController {
 	 */
 	@PutMapping("/{idProject}")
 	public ResponseEntity<Object> updateProject(@PathVariable("idProject") int idProject, @RequestBody Project project)
-			throws NotFoundException, SkillerException {
+			throws NotFoundException, ApplicationException {
 
 		if (idProject != project.getId()) {
-			throw new SkillerRuntimeException("WTF : SHOULD NOT PASS HERE!");
+			throw new ApplicationRuntimeException("WTF : SHOULD NOT PASS HERE!");
 		}
 
 		if (!projectHandler.containsProject(idProject)) {
@@ -421,7 +421,7 @@ public class ProjectController {
 			final Project project = projectHandler.get(idProject);
 			boolean connected = this.scanner.testConnection(project);
 			return new ResponseEntity<>(connected, headers, HttpStatus.OK);
-		} catch (SkillerException e) {
+		} catch (ApplicationException e) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(e.errorCode));
 			headers.set(BACKEND_RETURN_MESSAGE, e.getMessage());
 			return new ResponseEntity<>(false, headers, HttpStatus.NOT_FOUND);
@@ -456,7 +456,7 @@ public class ProjectController {
 			Skill skill = this.skillHandler.getSkill(projectSkill.getIdSkill());
 			this.projectHandler.addSkill(project, new ProjectSkill(skill.getId()));
 			return new ResponseEntity<BooleanDTO>(new BooleanDTO(), headers(), HttpStatus.OK);
-		} catch (final SkillerException ske) {
+		} catch (final ApplicationException ske) {
 			if (log.isDebugEnabled()) {
 				log.debug(String.format("Cannot save the skill %d inside the project %s", projectSkill.getIdSkill(),
 						project.getName()));
@@ -593,7 +593,7 @@ public class ProjectController {
 		} finally {
 			try {
 				tasks.completeTask(DASHBOARD_GENERATION, PROJECT, project.getId());
-			} catch (SkillerException e) {
+			} catch (ApplicationException e) {
 				log.error("Internal error", e);
 			}
 		}
@@ -617,7 +617,7 @@ public class ProjectController {
 		contributors.stream().forEach(contributor -> {
 			final Staff staff = staffHandler.getStaff().get(contributor.getIdStaff());
 			if (staff == null) {
-				throw new SkillerRuntimeException(
+				throw new ApplicationRuntimeException(
 						String.format("No staff member retrieved for the id %d", contributor.getIdStaff()));
 			}
 			projectContributorDTO.addContributor(contributor.getIdStaff(),
@@ -656,10 +656,10 @@ public class ProjectController {
 	 * <li>"{@code 0}" otherwise</li>.
 	 * </ul>
 	 * @throws NotFoundException if the project does not exist. 
-	 * @throws SkillerException if the any problem occurs, most probably an {@link IOException}
+	 * @throws ApplicationException if the any problem occurs, most probably an {@link IOException}
 	 */
 	@GetMapping(value = "/resetDashboard/{idProject}")
-	public ResponseEntity<String> resetDashboard(final @PathVariable("idProject") int idProject) throws NotFoundException, SkillerException {
+	public ResponseEntity<String> resetDashboard(final @PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Removing project with %d", idProject));
@@ -693,10 +693,10 @@ public class ProjectController {
 	 * <li>"{@code 0}" otherwise</li>.
 	 * </ul>
 	 * @throws NotFoundException if the project does not exist. 
-	 * @throws SkillerException if the any problem occurs, most probably an {@link IOException}
+	 * @throws ApplicationException if the any problem occurs, most probably an {@link IOException}
 	 */
 	@GetMapping(value = "/reloadDashboard/{idProject}")
-	public ResponseEntity<String> reloadDashboard(final @PathVariable("idProject") int idProject) throws NotFoundException, SkillerException {
+	public ResponseEntity<String> reloadDashboard(final @PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Removing project with %d", idProject));

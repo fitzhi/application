@@ -20,7 +20,7 @@ import com.fitzhi.controller.in.BodyRemoveGhost;
 import com.fitzhi.controller.in.BodyUpdateGhost;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -74,7 +74,7 @@ public class ProjectGhostController {
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);			
 			
 			
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
 			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
 			return new ResponseEntity<>(
@@ -108,7 +108,7 @@ public class ProjectGhostController {
 			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);			
 			
 			
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
 			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
 			return new ResponseEntity<>(

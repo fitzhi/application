@@ -12,7 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import org.junit.After;
 import org.junit.Before;
@@ -54,7 +54,7 @@ public class AdministrationControllerConnectTest {
 	private static final String PSSWORD = "password";
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		final Staff staff = administration.createNewUser(MY_LOGIN, MY_PSSWORD);
 		this.idStaff = staff.getIdStaff();
 	}

@@ -22,7 +22,7 @@ import org.springframework.util.MultiValueMap;
 
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -49,7 +49,7 @@ public class ProjectAnalysisControllerLookupDirTest {
 
 	Project project;
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		project = new Project(9999, "Project 9999");
 		project.setBranch("master");
 		projectHandler.addNewProject(project);
@@ -78,7 +78,7 @@ public class ProjectAnalysisControllerLookupDirTest {
 	}
 
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.getProjects().remove(9999);
 	}
 	

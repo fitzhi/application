@@ -21,7 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -49,7 +49,7 @@ public class StaffControllerSwitchActivationTest {
 	private StaffHandler staffHandler;
 	
 	@Before 
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		staffHandler.getStaff().put(1789, 
 				new Staff(1789,"Prenom", "Nom", "Surnom" , "UNIQUE_LOGIN", "adresse@mail.com", "DIEU"));
 		Assert.assertTrue ("staff is registered", staffHandler.hasStaff(1789));

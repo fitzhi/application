@@ -16,26 +16,26 @@ import com.fitzhi.data.internal.SonarEvaluation;
 import com.fitzhi.data.internal.SonarProject;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.Contributor;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 public interface ProjectHandler extends DataSaverLifeCycle {
 
 	/**
 	 * @return the complete collection of projects.
-	 * @throws SkillerException
+	 * @throws ApplicationException
 	 *             thrown most probably if an IO exception occurs
 	 */
-	Map<Integer, Project> getProjects() throws SkillerException;
+	Map<Integer, Project> getProjects() throws ApplicationException;
 
 	/**
 	 * Search for a project associated to the passed name.
 	 * 
 	 * @param projectName
-	 * @throws SkillerException
+	 * @throws ApplicationException
 	 *             thrown most probably if an IO exception occurs
 	 * @return
 	 */
-	Optional<Project> lookup(String projectName) throws SkillerException;
+	Optional<Project> lookup(String projectName) throws ApplicationException;
 
 	/**
 	 * Retrieve a project.
@@ -44,10 +44,10 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 *            project identifier
 	 * @return a project present in the projects repository or <code>NULL</code>
 	 *         if none exists for this id
-	 * @throws SkillerException
+	 * @throws ApplicationException
 	 *             thrown most probably if an IO exception occurs
 	 */
-	Project get(int idProject) throws SkillerException;
+	Project get(int idProject) throws ApplicationException;
 
 	/**
 	 * <p>
@@ -70,7 +70,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @param project the passed project
 	 * @return the newly created project
 	 */
-	Project addNewProject(Project project) throws SkillerException;
+	Project addNewProject(Project project) throws ApplicationException;
 
 	/**
 	 * @param idProject
@@ -78,20 +78,20 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @return {@code true} if the project identifier exists, {@code false}
 	 *         otherwise
 	 */
-	boolean containsProject(int idProject) throws SkillerException;
+	boolean containsProject(int idProject) throws ApplicationException;
 
 	/**
 	 * @param project the project to save.
-	 * @throws SkillerException thrown if any saving or encryption error occurs
+	 * @throws ApplicationException thrown if any saving or encryption error occurs
 	 */
-	void saveProject(Project project) throws SkillerException;
+	void saveProject(Project project) throws ApplicationException;
 
 	/**
 	 * Remove the given project from the collection.
 	 * @param project the project identifier
-	 * @throws SkillerException exception thrown if any problem occurs, most probably an {@link IOException}. 
+	 * @throws ApplicationException exception thrown if any problem occurs, most probably an {@link IOException}. 
 	 */
-	void removeProject(int idProject) throws SkillerException;
+	void removeProject(int idProject) throws ApplicationException;
 
 	/**
 	 * <strong>In-activate</strong> the given project in the collection.
@@ -110,9 +110,9 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @param idProject the identifier of the project
 	 * @param libraries the list of library
 	 * @return the former list (if any) 
-	 * @exception SkillerException thrown if any exception occurs (such as project does not exist)
+	 * @exception ApplicationException thrown if any exception occurs (such as project does not exist)
 	 */
-	List<Library> saveLibraries (int idProject, List<Library> libraries) throws SkillerException;
+	List<Library> saveLibraries (int idProject, List<Library> libraries) throws ApplicationException;
 	
 	/**
 	 * Retrieve a ghost in the project, if any.
@@ -133,9 +133,9 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * </p>
 	 * @param idProject the project identifier
 	 * @param location the path location
-	 * @throws SkillerException thrown if any problem, most probably either an {@link IOException} or the <i>project does not exist</i>.
+	 * @throws ApplicationException thrown if any problem, most probably either an {@link IOException} or the <i>project does not exist</i>.
 	 */
-	void saveLocationRepository (int idProject, String location) throws SkillerException;
+	void saveLocationRepository (int idProject, String location) throws ApplicationException;
 	
 	/**
 	 * <p>
@@ -143,16 +143,16 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * </p>
 	 * @param project project which path location has be initialized
 	 */
-	void initLocationRepository (Project project) throws SkillerException;
+	void initLocationRepository (Project project) throws ApplicationException;
 	
 	/**
 	 * <p>
 	 * Initialize the path location.
 	 * </p>
 	 * @param idProject the project identifier
-	 * @throws SkillerException thrown if any problem, most probably either an {@link IOException} or the <i>project does not exist</i>.
+	 * @throws ApplicationException thrown if any problem, most probably either an {@link IOException} or the <i>project does not exist</i>.
 	 */
-	void initLocationRepository (int idProject) throws SkillerException;
+	void initLocationRepository (int idProject) throws ApplicationException;
 	
 	/**
 	 * <p>Save the staff evaluation processed for this project.</p>
@@ -199,9 +199,9 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * When deleting a staff member, we have to detach him (if necessary) from ALL ghosts present in ALL projects.
 	 * </p>
 	 * @param staff identifier
-	 * @throws SkillerException thrown if problem occurs
+	 * @throws ApplicationException thrown if problem occurs
 	 */
-	void detachStaffMemberFromGhostsOfAllProjects(int idStaff) throws SkillerException;
+	void detachStaffMemberFromGhostsOfAllProjects(int idStaff) throws ApplicationException;
 	
 	/**
 	 * <p>
@@ -219,9 +219,9 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * </p>
 	 * @param idProject idProject project identifiers 
 	 * @param pseudos the given list of pseudos retrieved from the repository
-	 * @throws SkillerException thrown if any problem occurs (most probably if the project identifier does not exist)
+	 * @throws ApplicationException thrown if any problem occurs (most probably if the project identifier does not exist)
 	 */
-	void integrateGhosts(int idProject, Set<String> pseudos) throws SkillerException;
+	void integrateGhosts(int idProject, Set<String> pseudos) throws ApplicationException;
 
 	/**
 	 * <p>
@@ -238,9 +238,9 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * </p>
 	 * @param project the given project
 	 * @param sonarEntry the given sonar entry
-	 * @throws SkillerException thrown if any exception occurs during the adding process.
+	 * @throws ApplicationException thrown if any exception occurs during the adding process.
 	 */
-	void addSonarEntry(Project project, SonarProject sonarEntry) throws SkillerException;
+	void addSonarEntry(Project project, SonarProject sonarEntry) throws ApplicationException;
 
 	/**
 	 * <p>
@@ -274,10 +274,10 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @param project the given project.
 	 * @param sonarKey the key of the Sonar project.
 	 * @param metricValues The Sonar metric values/weights for this Sonar project
-	 * @throws SkillerException thrown if any problem occurs.
+	 * @throws ApplicationException thrown if any problem occurs.
 	 */
 	void saveSonarMetricValues (Project project, String sonarProjectKey, List<ProjectSonarMetricValue> metricValues)
-		throws SkillerException;
+		throws ApplicationException;
 
 
 	/**
@@ -285,10 +285,10 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @param project the given project.
 	 * @param sonarKey the key of the Sonar project.
 	 * @param sonarEvaluation the evaluation processed for the Sonar project
-	 * @throws SkillerException thrown if any problem occurs.
+	 * @throws ApplicationException thrown if any problem occurs.
 	 */
 	void saveSonarEvaluation (Project project, String sonarProjectKey, SonarEvaluation sonarEvaluation)
-		throws SkillerException;
+		throws ApplicationException;
 
 	/**
 	 * Saved the new/first URL of Sonar server to be linked to the given project.
@@ -308,9 +308,9 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * Update the skills of the project based on the commit detected on the repository 
 	 * @param project the given project the given project
 	 * @param entries the list of entries of {@link CommitHistory commits}
-	 * @throws SkillerException thrown if any exception occurs during the treatment
+	 * @throws ApplicationException thrown if any exception occurs during the treatment
 	 */
-	void updateSkills(Project project, List<CommitHistory> entries) throws SkillerException;
+	void updateSkills(Project project, List<CommitHistory> entries) throws ApplicationException;
 	
 	/**
 	 * <p>

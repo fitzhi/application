@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.data.internal.Task;
 import com.fitzhi.data.internal.TaskLog;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -34,13 +34,13 @@ public class AsyncTaskImpl implements AsyncTask {
 	private final Map<String, Task> tasks = new HashMap<>();
 	
 	@Override
-	public void addTask(String operation, String title, int id) throws SkillerException {
+	public void addTask(String operation, String title, int id) throws ApplicationException {
 		
 		Task t = new Task(operation, title, id);
 		
 		Task record = tasks.get(genKey(t));
 		if ((record != null) && !record.isComplete() && !record.isCompleteOnError()) {
-			throw new SkillerException(CODE_MULTIPLE_TASK, MESSAGE_MULTIPLE_TASK);
+			throw new ApplicationException(CODE_MULTIPLE_TASK, MESSAGE_MULTIPLE_TASK);
 		}
 		
 		t.setComplete(false);
@@ -115,7 +115,7 @@ public class AsyncTaskImpl implements AsyncTask {
 	 * </li>
 	 * </ul>
 	 */
-	private void completeTask(String operation, String title, int id, boolean successful) throws SkillerException {
+	private void completeTask(String operation, String title, int id, boolean successful) throws ApplicationException {
 		Task task = getTask(operation, title, id);
 		if (task == null) {
 			if (log.isDebugEnabled()) {
@@ -127,12 +127,12 @@ public class AsyncTaskImpl implements AsyncTask {
 	}
 	
 	@Override
-	public void completeTask(String operation, String title, int id) throws SkillerException {
+	public void completeTask(String operation, String title, int id) throws ApplicationException {
 		this.completeTask(operation, title, id, true);
 	}
 
 	@Override
-	public void completeTaskOnError(String operation, String title, int id) throws SkillerException {
+	public void completeTaskOnError(String operation, String title, int id) throws ApplicationException {
 		this.completeTask(operation, title, id, false);
 	}
 

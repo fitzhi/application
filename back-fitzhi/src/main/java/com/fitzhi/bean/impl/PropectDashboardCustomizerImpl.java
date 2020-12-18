@@ -35,7 +35,7 @@ import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.data.source.Operation;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -116,7 +116,7 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 
 	
 	@Override
-	public List<String> lookupPathRepository(Project project, String criteria) throws SkillerException {
+	public List<String> lookupPathRepository(Project project, String criteria) throws ApplicationException {
 				
 		final List<String > pathsList;
 		if (!this.cachePaths.containsKey(project.getId())) {
@@ -133,7 +133,7 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 	}
 	
 	@Override
-	public synchronized void takeInAccountNewStaff(Project project, Staff staff) throws SkillerException {
+	public synchronized void takeInAccountNewStaff(Project project, Staff staff) throws ApplicationException {
 
 		try {
 			if (cacheDataHandler.hasCommitRepositoryAvailable(project)) {
@@ -151,7 +151,7 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 						if (log.isDebugEnabled()) {
 							log.debug(String.format("Cannot retrieve a candidate for %s", staff.fullName()) );
 						}
-						throw new SkillerException (
+						throw new ApplicationException (
 							CODE_CONTRIBUTOR_INVALID,
 							MessageFormat.format(MESSAGE_CONTRIBUTOR_INVALID, staff.fullName(), staff.getLogin(), project.getName()));
 					}
@@ -177,7 +177,7 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 					if (contributor != null) {
 						staffHandler.involve(project, contributor);
 					} else { 
-						throw new SkillerException (
+						throw new ApplicationException (
 							CODE_CONTRIBUTOR_INVALID,
 							MessageFormat.format(MESSAGE_CONTRIBUTOR_INVALID, staff.fullName(), staff.getLogin(), project.getName()));
 					}
@@ -188,7 +188,7 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 				}
 			}
 		} catch (final IOException ioe) {
-			throw new SkillerException(CODE_IO_EXCEPTION, ioe.getLocalizedMessage(), ioe);
+			throw new ApplicationException(CODE_IO_EXCEPTION, ioe.getLocalizedMessage(), ioe);
 		}
 	}
 	

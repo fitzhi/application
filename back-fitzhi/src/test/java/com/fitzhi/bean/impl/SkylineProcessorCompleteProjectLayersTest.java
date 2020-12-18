@@ -11,7 +11,7 @@ import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class SkylineProcessorCompleteProjectLayersTest {
     private final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
     
     @Test
-    public void testTheNominalCompletion() throws SkillerException {
+    public void testTheNominalCompletion() throws ApplicationException {
         Project project = new Project(1796, "Castiglione !");
         final ProjectLayers projectLayers =new ProjectLayers(project);
         projectLayers.getLayers().add(new ProjectLayer(1796, 2020, 1, 10, 1));        

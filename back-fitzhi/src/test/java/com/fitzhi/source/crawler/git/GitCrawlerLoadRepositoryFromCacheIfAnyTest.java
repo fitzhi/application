@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 
 /**
@@ -42,13 +42,13 @@ public class GitCrawlerLoadRepositoryFromCacheIfAnyTest {
 	}
 	
 	@Test
-	public void testLoadRepositoryFromExistingCacheIfAnyTest() throws IOException, SkillerException {
+	public void testLoadRepositoryFromExistingCacheIfAnyTest() throws IOException, ApplicationException {
 		Project project = projectHandler.get(1789);
 		Assert.assertNotNull(scanner.loadRepositoryFromCacheIfAny(project));
 	}
 	
 	@Test
-	public void testLoadRepositoryFromNonExistingCacheIfAnyTest() throws IOException, SkillerException {
+	public void testLoadRepositoryFromNonExistingCacheIfAnyTest() throws IOException, ApplicationException {
 		Project project = new Project(1792, "Unregistered project");
 		Assert.assertNull(scanner.loadRepositoryFromCacheIfAny(project));
 	}

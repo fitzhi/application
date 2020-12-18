@@ -25,7 +25,7 @@ import com.fitzhi.Global;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.encryption.DataEncryption;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -52,7 +52,7 @@ public class ProjectControllerDoNotTransportPasswordTest {
 	private int ID_PROJECT = 1789;
 	
 	@Before 
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		Project p = new Project(ID_PROJECT, "testingProject");
 		p.setPassword("password");
 		p.setConnectionSettings(USER_PASSWORD_ACCESS);
@@ -139,7 +139,7 @@ public class ProjectControllerDoNotTransportPasswordTest {
 	}
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.getProjects().remove(ID_PROJECT);
 	}
 }

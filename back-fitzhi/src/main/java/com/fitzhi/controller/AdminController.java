@@ -10,7 +10,7 @@ import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.external.BooleanDTO;
 import com.fitzhi.data.external.StaffDTO;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +69,7 @@ public class AdminController {
 					new BooleanDTO(), 
 					headers, 
 					HttpStatus.OK);
-		} catch (final SkillerException ske) {
+		} catch (final ApplicationException ske) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(ske.errorCode));
 			headers.set(BACKEND_RETURN_MESSAGE, ske.errorMessage);
 			return new ResponseEntity<>(new BooleanDTO(ske.errorCode, ske.errorMessage), headers, HttpStatus.OK);
@@ -142,7 +142,7 @@ public class AdminController {
 			Staff staff = administration.createNewUser(login, password);
 			headers.add("backend.return_code", "1");
 			return new ResponseEntity<>(new StaffDTO(staff), headers, HttpStatus.OK);
-		} catch (final SkillerException ske) {
+		} catch (final ApplicationException ske) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(ske.errorCode));
 			headers.set(BACKEND_RETURN_MESSAGE, ske.errorMessage);
 			return new ResponseEntity<>(new StaffDTO(new Staff(), ske.errorCode, ske.errorMessage), headers, HttpStatus.OK);
@@ -159,7 +159,7 @@ public class AdminController {
 			Staff staff = administration.connect(login, password);
 			headers.add("backend.return_code", "1");
 			return new ResponseEntity<>(new StaffDTO(staff), headers, HttpStatus.OK);
-		} catch (final SkillerException ske) {
+		} catch (final ApplicationException ske) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(ske.errorCode));
 			headers.set(BACKEND_RETURN_MESSAGE, ske.errorMessage);
 			return new ResponseEntity<>(new StaffDTO(new Staff(), ske.errorCode, ske.errorMessage), headers, HttpStatus.OK);

@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Set;
 
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 
 import org.junit.Assert;
@@ -42,7 +42,7 @@ public class GitCrawlerAllEligibleFilesTest {
      * Testing the GitCrawler.allFiles(...) method with the GitHub Project repo-test-number-of-lines
      */
     @Test
-    public void testAllEligibleFilesWithProjectRepoTestNumberOfLines() throws SkillerException {
+    public void testAllEligibleFilesWithProjectRepoTestNumberOfLines() throws ApplicationException {
         Project project = new Project (1809, "Wagram");
         project.setLocationRepository(new File(String.format(REPO_DIR, TESTING_PROJECT)).getAbsolutePath());
         project.setBranch("master");
@@ -63,8 +63,8 @@ public class GitCrawlerAllEligibleFilesTest {
     /**
      * Testing the GitCrawler.allFiles(...) method with an invalid path.
      */
-    @Test(expected=SkillerException.class)
-    public void testInvalidPath() throws SkillerException {
+    @Test(expected=ApplicationException.class)
+    public void testInvalidPath() throws ApplicationException {
         Project project = new Project (1809, "Wagram");
         project.setLocationRepository("invalid path");
         project.setBranch("master");

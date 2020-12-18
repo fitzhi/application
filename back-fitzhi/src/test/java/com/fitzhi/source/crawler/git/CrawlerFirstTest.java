@@ -22,7 +22,7 @@ import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.RepositoryAnalysis;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -80,7 +80,7 @@ public class CrawlerFirstTest {
 	private Project project;
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		project = new Project(1000, FIRST_TEST);
 		project.setBranch("master");
 
@@ -91,7 +91,7 @@ public class CrawlerFirstTest {
 	}
 	
 	@Test
-	public void loadChangesForFirstTest() throws IOException, SkillerException {
+	public void loadChangesForFirstTest() throws IOException, ApplicationException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, FIRST_TEST+"/.git"))).readEnvironment().findGitDir()
@@ -118,7 +118,7 @@ public class CrawlerFirstTest {
 	}
 
 	@Test
-	public void finalizeListChangesForFirstTest() throws IOException, SkillerException {
+	public void finalizeListChangesForFirstTest() throws IOException, ApplicationException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		
@@ -146,7 +146,7 @@ public class CrawlerFirstTest {
 	}
 
 
-	public void testDebug() throws IOException, SkillerException {
+	public void testDebug() throws IOException, ApplicationException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		repository = builder.setGitDir(new File(String.format(DIR_GIT, FIRST_TEST))).readEnvironment().findGitDir()
@@ -161,11 +161,11 @@ public class CrawlerFirstTest {
 	/**
 	 * This test should end without any exception
 	 * @throws IOException Shit happens in an exception shape
-	 * @throws SkillerException Shit happens in an exception shape
+	 * @throws ApplicationException Shit happens in an exception shape
 	 * @throws GitAPIException Shit happens in an exception shape
 	 */
 	@Test
-	public void testNominalParseRepository() throws IOException, SkillerException, GitAPIException {
+	public void testNominalParseRepository() throws IOException, ApplicationException, GitAPIException {
 		Project prj = new Project (777, "First test");
 		prj.setBranch("master");
 		when(skylineProcessor.generateProjectLayers(any(), any())).thenReturn(new ProjectLayers(prj));

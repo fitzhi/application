@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 
 import com.fitzhi.bean.ProjectDashboardCustomizer;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.git.SourceChange;
 
 import org.junit.Assert;
@@ -32,7 +32,7 @@ public class RepositoryAnalysisCleanupPathsTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testCleanupPaths() throws IOException, SkillerException {
+	public void testCleanupPaths() throws IOException, ApplicationException {
 
 		Project project = new Project(1515, "Marignan");
 		RepositoryAnalysis ra = new RepositoryAnalysis(project);

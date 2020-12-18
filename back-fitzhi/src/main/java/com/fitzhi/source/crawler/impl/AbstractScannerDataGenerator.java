@@ -28,7 +28,7 @@ import com.fitzhi.data.internal.StaffActivitySkill;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.Contributor;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.fitzhi.source.crawler.git.SourceFileHistory;
@@ -137,7 +137,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	}
 
 	@Override
-	public void gatherContributorsActivitySkill(List<Contributor> contributors, SourceControlChanges changes, Set<String> pathSourceFileNames) throws SkillerException {
+	public void gatherContributorsActivitySkill(List<Contributor> contributors, SourceControlChanges changes, Set<String> pathSourceFileNames) throws ApplicationException {
 		for (Skill skill : skillHandler().getSkills().values()) {
 			for(String path : pathSourceFileNames) {
 				if (skillHandler().isSkillDetectedWithFilename(skill, path)) {

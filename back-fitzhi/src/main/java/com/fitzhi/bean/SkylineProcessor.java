@@ -9,7 +9,7 @@ import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.Skyline;
 import com.fitzhi.data.internal.SourceControlChanges;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
@@ -29,9 +29,9 @@ public interface SkylineProcessor {
 	 * @param project project whose changes have to be serialized in CSV
 	 * @param changes changes retrieved from the repository
 	 * @return the project layers
-	 * @throws SkillerException thrown if any exception occurs, most probably an IOException
+	 * @throws ApplicationException thrown if any exception occurs, most probably an IOException
 	 */
-	ProjectLayers generateProjectLayers(Project project, SourceControlChanges changes) throws SkillerException;
+	ProjectLayers generateProjectLayers(Project project, SourceControlChanges changes) throws ApplicationException;
 	
 	/**
 	 * <p>Complete the project layers until the actual date.</p>
@@ -58,9 +58,9 @@ public interface SkylineProcessor {
 	 * </p>
 	 * @param project the given project of the associated changes
 	 * @return the Project-building
-	 * @throws SkillerException thrown if any problem occurs, most probably an {@link IOException} when loading the data.
+	 * @throws ApplicationException thrown if any problem occurs, most probably an {@link IOException} when loading the data.
 	 */
-	ProjectBuilding generateProjectBuilding(Project project) throws SkillerException;
+	ProjectBuilding generateProjectBuilding(Project project) throws ApplicationException;
 
 	/**
 	 * <p>Generate the history of the Project building in the projects skyline.</p>
@@ -79,9 +79,9 @@ public interface SkylineProcessor {
 	 * </p>
 	 * @param projects active projects declared in the application
 	 * @return the restulting skyline
-	 * @throws SkillerException thrown if any exception occurs.
+	 * @throws ApplicationException thrown if any exception occurs.
 	 */
-	Skyline generateSkyline() throws SkillerException;
+	Skyline generateSkyline() throws ApplicationException;
 	
 	/**
 	 * <p>
@@ -89,7 +89,7 @@ public interface SkylineProcessor {
 	 * </p>
 	 * @param projects the list of projects to include in the skyline
 	 * @return the resulting skyline
-	 * @throws SkillerException thrown if any exception occurs.
+	 * @throws ApplicationException thrown if any exception occurs.
 	 */
-	Skyline generateSkyline(List<Project> projects) throws SkillerException;
+	Skyline generateSkyline(List<Project> projects) throws ApplicationException;
 }

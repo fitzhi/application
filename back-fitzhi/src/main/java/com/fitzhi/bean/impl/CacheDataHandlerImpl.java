@@ -15,7 +15,7 @@ import java.nio.file.attribute.FileTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.BasicCommitRepository;
@@ -81,7 +81,7 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 		try {
 		  Files.delete(path);
 		} catch (final Exception e) {
-			throw new SkillerRuntimeException(e);
+			throw new ApplicationRuntimeException(e);
 		}
 	}
 	
@@ -145,7 +145,7 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 			try {
 				destination.mkdir();
 			} catch (final SecurityException se) {
-				throw new SkillerRuntimeException(se);
+				throw new ApplicationRuntimeException(se);
 			}
 		}
 		return rootLocation.resolve(String.format("%d.json", project.getId())).toFile().getAbsolutePath();

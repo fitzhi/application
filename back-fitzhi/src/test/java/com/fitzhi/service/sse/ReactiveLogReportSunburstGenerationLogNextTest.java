@@ -25,7 +25,7 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.external.ActivityLog;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.TaskLog;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import reactor.test.StepVerifier;
 
@@ -66,7 +66,7 @@ public class ReactiveLogReportSunburstGenerationLogNextTest {
 	}
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		Project p = new Project (ID_PROJECT, "Revolutionnary project");
 		projectHandler.addNewProject(p);
 		asyncTask.addTask("nopeOperation", PROJECT, ID_PROJECT);
@@ -91,7 +91,7 @@ public class ReactiveLogReportSunburstGenerationLogNextTest {
 	        	try {
 					asyncTask.completeTask("nopeOperation", MARK_END_OF_OPERATION, ID_PROJECT);
 					ReactiveLogReportSunburstGenerationLogNextTest.this.eraseTime();				
-				} catch (SkillerException e) {
+				} catch (ApplicationException e) {
 					log.error("Internal error", e);
 				}
 	        }
@@ -109,7 +109,7 @@ public class ReactiveLogReportSunburstGenerationLogNextTest {
 	}
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.getProjects().remove(ID_PROJECT);
 		asyncTask.removeTask("nopeOperation", "mockProject", 1789);		
 	}

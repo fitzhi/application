@@ -8,7 +8,7 @@ import java.util.List;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.Operation;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>Interface in charge of customizing the project dashboard.</p>
@@ -32,9 +32,9 @@ public interface ProjectDashboardCustomizer {
 	 * @param project the project in which repository pathnames should be evaluated for the passed search criteria
 	 * @param criteria the search criteria
 	 * @return the list of pathnames matching the criteria
-	 * @throws SkillerException thrown most probably if an IO Exception occurs when loading the paths.
+	 * @throws ApplicationException thrown most probably if an IO Exception occurs when loading the paths.
 	 */
-	List<String> lookupPathRepository(Project project, String criteria) throws SkillerException;
+	List<String> lookupPathRepository(Project project, String criteria) throws ApplicationException;
 
 	/**
 	 * <p>
@@ -50,9 +50,9 @@ public interface ProjectDashboardCustomizer {
 	 * </p>
 	 * @param project the given project
 	 * @param staff the new staff member created
-	 * @throws SkillerException thrown if any problem occurs (such as IOException when reading and parsing the saved repository)
+	 * @throws ApplicationException thrown if any problem occurs (such as IOException when reading and parsing the saved repository)
 	 */
-	void takeInAccountNewStaff(Project project, Staff staff) throws SkillerException;
+	void takeInAccountNewStaff(Project project, Staff staff) throws ApplicationException;
 	
 
 }
