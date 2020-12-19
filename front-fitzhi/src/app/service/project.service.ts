@@ -29,7 +29,7 @@ import { Ecosystem } from '../data/ecosystem';
 import { traceOn, HttpCodes } from '../global';
 import { SunburstCinematicService } from '../project/project-sunburst/service/sunburst-cinematic.service';
 import { ProjectSkill } from '../data/project-skill';
-import { SkillService } from './skill.service';
+import { SkillService } from '../skill/service/skill.service';
 import { StaffService } from './staff.service';
 import { CinematicService } from './cinematic.service';
 import { GitService } from './git/git.service';
@@ -173,7 +173,7 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	* Create a new project from the active one.
+	* Create a new project, read the saved one, and return the project in an observable. 
 	*/
 	createNewProject (): Observable<Project> {
 		if (traceOn()) {
@@ -205,7 +205,7 @@ export class ProjectService extends InternalService {
 					if (response.status === HttpCodes.noContent) {
 						this.messageService.success('Project successfully updated!');
 					} else {
-						console.log ('WTF : Should not pass here!');
+						console.error ('WTF : Should not pass here!');
 					}
 				},
 				error: responseInError => {

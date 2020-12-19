@@ -1,7 +1,7 @@
 import { TestBed, TestModuleMetadata } from '@angular/core/testing';
 
 import { DashboardService } from './dashboard.service';
-import { SkillService } from '../skill.service';
+import { SkillService } from '../../skill/service/skill.service';
 import { Collaborator } from 'src/app/data/collaborator';
 import { Experience } from 'src/app/data/experience';
 import { ProjectService } from '../project.service';

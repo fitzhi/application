@@ -9,7 +9,7 @@ import { CinematicService } from '../../service/cinematic.service';
 import { Project } from '../../data/project';
 import { SonarProject } from '../../data/SonarProject';
 import { Constants } from '../../constants';
-import { SkillService } from '../../service/skill.service';
+import { SkillService } from '../../skill/service/skill.service';
 import { MessageService } from '../../interaction/message/message.service';
 import { BaseComponent } from '../../base/base.component';
 import { Observable, of, BehaviorSubject, EMPTY, pipe } from 'rxjs';

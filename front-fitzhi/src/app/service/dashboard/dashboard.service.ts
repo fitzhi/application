@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SkillService } from '../skill.service';
+import { SkillService } from '../../skill/service/skill.service';
 import { ProjectService } from '../project.service';
 import { SkillProjectsAggregation } from './skill-projects-aggregration';
 import { Project } from 'src/app/data/project';

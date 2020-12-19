@@ -4,7 +4,7 @@ import { ProjectService } from './project.service';
 import { HttpTestingController, HttpClientTestingModule, TestRequest } from '@angular/common/http/testing';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { ReferentialService } from './referential.service';
-import { SkillService } from './skill.service';
+import { SkillService } from '../skill/service/skill.service';
 import { FileService } from './file.service';
 import { MessageService } from '../interaction/message/message.service';
 import { SunburstCinematicService } from '../project/project-sunburst/service/sunburst-cinematic.service';

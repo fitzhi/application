@@ -1,17 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Skill } from '../data/skill';
+import { Skill } from '../../data/skill';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, BehaviorSubject, Subject, of } from 'rxjs';
-import { InternalService } from '../internal-service';
+import { Observable, BehaviorSubject, Subject, of, EMPTY } from 'rxjs';
+import { InternalService } from '../../internal-service';
 
-import { Constants } from '../constants';
-import { ListCriteria } from '../data/listCriteria';
-import { BackendSetupService } from './backend-setup/backend-setup.service';
+import { Constants } from '../../constants';
+import { ListCriteria } from '../../data/listCriteria';
+import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
 import { take, tap, map, switchMap } from 'rxjs/operators';
-import { traceOn } from '../global';
-import { DetectionTemplate } from '../data/detection-template';
+import { HttpCodes, traceOn } from '../../global';
+import { DetectionTemplate } from '../../data/detection-template';
 import { FormGroup } from '@angular/forms';
-import { isNumber } from 'util';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -103,16 +102,56 @@ export class SkillService extends InternalService {
 	}
 
 	/**
-	* Save the given skill and return the new skill.
+	* Update or create the given skill depending on the **skill.id** value.
+	* This function emits an observable with the skill value 
 	* @param skill the skill to be saved
 	*/
-	save$(skill: Skill): Observable<Skill> {
+	public save$(skill: Skill): Observable<Skill> {
 		if (traceOn()) {
-			console.log((skill.id) ? 'Saving ' : 'Adding' + ' skill ' + skill.title);
+			console.log(((skill.id) ? 'Saving' : 'Adding') + ' skill ' + skill.title);
+		}
+		return (skill.id) ? this.updateSkill$(skill) : this.createSkill$(skill);
+	}
+
+	/**
+	 * Send an HTTP Post request to the server in order to create a new skill entry.
+	 * @param skill the new Skill to be created
+	 */
+	createSkill$(skill: Skill): Observable<Skill> {
+		if (traceOn()) {
+			console.log( 'Creating the skill %s', skill.title);
 		}
 		return this.httpClient
-			.post<Skill>(this.backendSetupService.url() + '/skill' + '/save', skill, httpOptions)
-			.pipe(take(1));
+			.post(this.backendSetupService.url() + '/skill', skill, {observe: 'response'})
+			.pipe(
+				take(1),
+				switchMap(response => {
+					const location = response.headers.get('Location');
+					if (traceOn()) {
+						console.log ('Skill created successfully, location returned %s', location);
+					}
+					return (location) ? this.httpClient.get<Skill>(location) : EMPTY;
+		}));
+	}
+
+	/**
+	 * Execute an HTTP PUT to the Web Server in order to update the given skill
+	 * @param skill the skill to be updated
+	 */
+	updateSkill$(skill: Skill): Observable<Skill> {
+		return this.httpClient
+			.put<Skill>(this.backendSetupService.url() + '/skill/' + skill.id, skill, {observe: 'response'})
+			.pipe(
+				take(1),
+				switchMap(
+					response => {
+						if (response.status === HttpCodes.noContent) {
+							return of(skill);
+						} else {
+							throw 'The Skill ' + skill.title + ' has not been updated for an unknown reason.';
+						}
+					}
+			));
 	}
 
 	/**
@@ -221,13 +260,15 @@ export class SkillService extends InternalService {
 	 * @param formGroupSkill the SKILL formGroup
 	 */
 	fillSkill(skill: Skill, formGroupSkill: FormGroup) {
+		
 		skill.title = formGroupSkill.get('title').value;
+
 		let detectionTemplate: DetectionTemplate;
 		//
 		// Either the user didn't choose a template of detection and the detectionType is empty
 		// or the user choose a template, and the detection type is a numeric
 		//
-		if (typeof formGroupSkill.get('detectionType').value === 'number') {
+		if (formGroupSkill.get('detectionType').value.length === 0) {
 			detectionTemplate = null;
 		} else {
 			detectionTemplate = new DetectionTemplate(

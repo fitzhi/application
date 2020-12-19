@@ -7,7 +7,7 @@ import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup
 import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { HttpClient } from '@angular/common/http';
 import { ReferentialService } from 'src/app/service/referential.service';
-import { SkillService } from 'src/app/service/skill.service';
+import { SkillService } from 'src/app/skill/service/skill.service';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';

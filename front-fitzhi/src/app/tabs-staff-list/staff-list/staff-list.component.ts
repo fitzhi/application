@@ -9,7 +9,7 @@ import { Profile } from '../../data/profile';
 import { ReferentialService } from '../../service/referential.service';
 import { Experience } from '../../data/experience';
 import { ListCriteria } from '../../data/listCriteria';
-import { SkillService } from '../../service/skill.service';
+import { SkillService } from '../../skill/service/skill.service';
 import { Collaborator } from 'src/app/data/collaborator';
 import { traceOn } from 'src/app/global';
 

@@ -7,7 +7,7 @@ import { StaffService } from './service/staff.service';
 import { Router } from '@angular/router';
 import { BaseComponent } from './base/base.component';
 import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.service';
-import { SkillService } from './service/skill.service';
+import { SkillService } from './skill/service/skill.service';
 import { ListCriteria } from './data/listCriteria';
 import { AuthService } from './admin/service/auth/auth.service';
 import { ProjectService } from 'src/app/service/project.service';
