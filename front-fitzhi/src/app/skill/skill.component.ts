@@ -120,7 +120,10 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 				this.messageService.info('The skill ' + skill.title + ' has been succesfully saved !');
 				this.skill = skill;
 			},
-			error: error => console.error(error),
+			error: error => {
+				console.error(error);
+				this.messageService.error(error.message);
+			},
 			complete: () => this.skillService.loadSkills()
 		});
 	}
