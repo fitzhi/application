@@ -75,7 +75,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/api/project")
-public class ProjectController {
+public class ProjectController extends BaseRestController {
 
 	@Autowired
 	ProjectHandler projectHandler;
@@ -116,6 +116,61 @@ public class ProjectController {
 	@PostConstruct
 	public void init() {
 		projectLoader = new ProjectLoader(projectHandler);
+	}
+
+	/**
+	 * <p>
+	 * This method creates a new project.
+	 * </p>
+	 * @param project the project to be created
+	 * @return a ResponseEntity with just the location containing the URI of the newly
+	 *         created project
+	 */
+	@PostMapping("")
+	public ResponseEntity<Void> create(UriComponentsBuilder builder, @RequestBody Project project)
+			throws ApplicationException {
+
+		if (projectHandler.containsProject(project.getId())) {
+			return new ResponseEntity<Void>(null, headers(), HttpStatus.CONFLICT);
+		}
+		
+		project.setId(UNKNOWN_PROJECT);
+		project = projectHandler.addNewProject(project);
+
+		UriComponents uriComponents = builder.path("/api/project/id/{id}").buildAndExpand(project.getId());
+
+		return ResponseEntity.created(uriComponents.toUri()).build();
+	}
+
+	/**
+	 * <p>
+	 * Update the project identified by the given {@link Project#getId() idProject}
+	 * </p>
+	 * @param idProject the project identifier. The projet identifier is hosted in the URL in accordance with the Rest naming conventions
+	 * @param project the project to update. This project is hosted inside the body of the {@code PUT} Medhod.
+	 * @return an empty content for an update request
+	 */
+	@PutMapping("/{idProject}")
+	public ResponseEntity<Void> updateProject(@PathVariable("idProject") int idProject, @RequestBody Project project)
+			throws NotFoundException, ApplicationException {
+
+		if (idProject != project.getId()) {
+			throw new ApplicationRuntimeException("WTF : SHOULD NOT PASS HERE!");
+		}
+
+		if (!projectHandler.containsProject(idProject)) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+		}
+
+		// You cannot anymore update an INACTIVE project
+		if (!project.isActive()) {
+			return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
+		}
+
+		projectHandler.saveProject(project);
+
+		return ResponseEntity.noContent().build();
+
 	}
 
 	@GetMapping(path = "/name/{projectName}")
@@ -356,57 +411,6 @@ public class ProjectController {
 
 	}
 
-	/**
-	 * This method creates a new project.
-	 * 
-	 * @param project the project to be created
-	 * @return a ResponseEntity with the location containing the URI of the newly
-	 *         created project
-	 */
-	@PostMapping("")
-	public ResponseEntity<Void> create(UriComponentsBuilder builder, @RequestBody Project project)
-			throws ApplicationException {
-		final HttpHeaders headers = headers();
-		if (projectHandler.containsProject(project.getId())) {
-			return new ResponseEntity<Void>(null, headers, HttpStatus.CONFLICT);
-		}
-		project.setId(UNKNOWN_PROJECT);
-		project = projectHandler.addNewProject(project);
-
-		UriComponents uriComponents = builder.path("/api/project/id/{id}").buildAndExpand(project.getId());
-
-		return ResponseEntity.created(uriComponents.toUri()).build();
-
-	}
-
-	/**
-	 * Update the project identified by the given {@link Project#getId() idProject}
-	 * 
-	 * @param project the project object is passed in the body of the Put Medhod.
-	 * @return the updated or the just new project created
-	 */
-	@PutMapping("/{idProject}")
-	public ResponseEntity<Object> updateProject(@PathVariable("idProject") int idProject, @RequestBody Project project)
-			throws NotFoundException, ApplicationException {
-
-		if (idProject != project.getId()) {
-			throw new ApplicationRuntimeException("WTF : SHOULD NOT PASS HERE!");
-		}
-
-		if (!projectHandler.containsProject(idProject)) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
-
-		// You cannot anymore update an INACTIVE project
-		if (!project.isActive()) {
-			return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
-		}
-
-		projectHandler.saveProject(project);
-
-		return ResponseEntity.noContent().build();
-
-	}
 
 	/**
 	 * Test the connection settings for a given project.
@@ -730,12 +734,4 @@ public class ProjectController {
 		return new ResponseEntity<>(new ProjectDTO(project, code, message), headers(), HttpStatus.BAD_REQUEST);
 	}
 
-	/**
-	 * @return a generated HTTP Headers for the response
-	 */
-	private HttpHeaders headers() {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		return headers;
-	}
 }

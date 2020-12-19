@@ -43,8 +43,8 @@ public interface SkillHandler extends DataSaverLifeCycle {
 	 boolean containsSkill(int idSkill);
 
 	 /**
-	  * @param skill the new skill
-	  * @throws ApplicationException exception occurs
+	  * @param skill the skill object to update.
+	  * @throws ApplicationException thrown if any problem occurs during the operation. Most probably this might be an {@link IOException}
 	  */
 	 void saveSkill(Skill skill) throws ApplicationException;
 	
