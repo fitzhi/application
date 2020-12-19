@@ -127,12 +127,11 @@ public class SkillControllerSaveTest {
 	public void saveNewSkillWithoutDetectionPattern() throws Exception {
 
 		Skill skill = new Skill(0, "empty Skill");
-
 		//
 		// WE CREATE A NEW SKILL.
 		// The controller should return the CREATED (201) status and the location of the new entry
 		//
-		MvcResult result = this.mvc.perform(post("/api/skill/")
+		MvcResult result = this.mvc.perform(post("/api/skill")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(skill)))
 				.andExpect(status().isCreated())
@@ -159,7 +158,7 @@ public class SkillControllerSaveTest {
 	public void saveSkillUpdateDetectionPattern() throws Exception {
 
 		Skill skill = new Skill(0, "empty Skill");
-		MvcResult result = this.mvc.perform(post("/api/skill/")
+		MvcResult result = this.mvc.perform(post("/api/skill")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(skill)))
 				.andExpect(status().isCreated())

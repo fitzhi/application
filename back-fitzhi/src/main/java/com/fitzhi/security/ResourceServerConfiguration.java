@@ -15,7 +15,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 	private static final String RESOURCE_ID = "my_rest_api";
 
 	/**
-	 * cache directory for intermediate files representing the repositories.
+	 * For development purpose, the security is disengaged for development purpose if this settinfs is equal to 1.
 	 */
 	@Value("${development.unplugged.security}")
 	private String developmentUnpluggedSecurity;
@@ -71,7 +71,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				"/api/project/all", 
 				"/api/skill/all", 
 				"/api/referential/**").permitAll()
-				.antMatchers("/**/**").access("hasRole('USER')")
+				.antMatchers("/**").access("hasRole('USER')")
 				.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
 		}
 	}

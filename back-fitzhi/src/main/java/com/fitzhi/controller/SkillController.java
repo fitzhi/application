@@ -1,11 +1,10 @@
 package com.fitzhi.controller;
 
+import static com.fitzhi.Error.CODE_SKILL_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_SKILL_NOFOUND;
 import static com.fitzhi.Error.getStackTrace;
 import static com.fitzhi.Global.BACKEND_RETURN_CODE;
 import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
-
-import static com.fitzhi.Error.CODE_SKILL_NOFOUND;
-import static com.fitzhi.Error.MESSAGE_SKILL_NOFOUND;
 
 import java.text.MessageFormat;
 import java.util.Collection;
@@ -13,10 +12,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import com.fitzhi.ApplicationRuntimeException;
+import com.fitzhi.bean.SkillHandler;
+import com.fitzhi.data.external.SkillDTO;
+import com.fitzhi.data.internal.Skill;
+import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,15 +32,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
-
-import io.netty.handler.codec.Headers;
-
-import com.fitzhi.ApplicationRuntimeException;
-import com.fitzhi.bean.SkillHandler;
-import com.fitzhi.data.external.SkillDTO;
-import com.fitzhi.data.internal.Skill;
-import com.fitzhi.exception.ApplicationException;
-import com.fitzhi.exception.NotFoundException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -56,10 +52,12 @@ public class SkillController extends BaseRestController {
 	 *         created skill
 	 */
 	@PostMapping("")
-	public ResponseEntity<Void> create(UriComponentsBuilder builder, @RequestBody Skill skill) {
+	public ResponseEntity<Object> create(UriComponentsBuilder builder, @RequestBody Skill skill) {
+
+		System.out.println("------------------------------> Here.....");
 
 		if (skillHandler.containsSkill(skill.getId())) {
-			return new ResponseEntity<Void>(null, headers(), HttpStatus.CONFLICT);
+			return new ResponseEntity<Object>(null, headers(), HttpStatus.CONFLICT);
 		}
 		
 		Skill newSkill = skillHandler.addNewSkill(skill);
