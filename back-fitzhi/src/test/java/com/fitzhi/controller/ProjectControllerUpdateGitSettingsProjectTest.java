@@ -66,12 +66,12 @@ public class ProjectControllerUpdateGitSettingsProjectTest {
 
 		Project project = projectHandler.get(1789);
 		project.setBranch("master");
-
 		
 		this.mvc.perform(put("/api/project/1789")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(project)))
 			.andExpect(status().isNoContent());
+
 		project = projectHandler.get(1789);
 		Assert.assertEquals("master", project.getBranch());
 		

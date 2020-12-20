@@ -117,27 +117,43 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	String getFullname (int idStaff);
 
 	 /**
-	  * @param staff the new staff member to add
-	  * @return the newly created staff member
-	  */
-	 Staff addNewStaffMember(Staff staff) ;
-	 
-	 /**
 	  * @param ifStaff the passed staff identifier
 	  * @return {@code true} if a project exists for this project identifier, {@code false} otherwise
 	  */
-	 boolean containsStaffMember(int idStaff);
+	  boolean containsStaffMember(int idStaff);
 
+	 /**
+	  * Validate the given staff member.
+	  * <p>
+	  * Validation rules migt be :
+	  * <ul>
+	  * <li>This given staff does not yet exist <em>for the update operation</em></li>
+	  * <li>The same {@code login} already exists in the workforce.</li>
+	  * </ul>
+	  * </p>
+	  * @param staff the member of workforce to control before creation, or modification
+	  * @throws ApplicationException thrown if the validation fails.
+	  */
+	  void controlWorkforceMember(Staff staff) throws ApplicationException;
+
+	  /**
+	  * <p>
+	  * Add the given staff member to the workforce.
+	  * </p>
+	  * @param staff the new staff member to be added
+	  * @return the newly created staff member
+	  * @throws ApplicationException thrown if any problems occurs during the validation of this staff
+	  * @see #controlWorkforceMember(Staff)
+	  */
+	 Staff createWorkforceMember(Staff staff) throws ApplicationException;
+	 
 	 /**
 	  * <p>Control and save the given staff.</p>
 	  * @param staff the staff member to be updated.
-	  * @throws ApplicationException thrown if an exception occurs such as for instance
-	  * <ul>
-	  * <li>This given staff does not yet exist (idStaff=0)</li>
-	  * <li>The same login already in the workforce.</li>
-	  * </ul>
+	  * @throws ApplicationException thrown if any problems occurs during the validation of this staff
+	  * @see #controlWorkforceMember(Staff)
 	  */
-	 void saveStaffMember(Staff staff) throws ApplicationException;
+	 void updateWorkforceMember(Staff staff) throws ApplicationException;
 
 	 /**
 	  * <p>Search a staff, if any, who has his login equal to the passed one.</p>

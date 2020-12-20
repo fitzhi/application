@@ -31,12 +31,16 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.bean.SkillHandler;
@@ -72,7 +76,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/api/staff")
-public class StaffController {
+public class StaffController extends BaseRestController {
 
 	@Autowired
 	ProjectHandler projectHandler;
@@ -98,6 +102,72 @@ public class StaffController {
 	 */
 	@Autowired
 	ShuffleService shuffleService;
+
+	/**
+	 * <p>
+	 * This method creates a new staff member.
+	 * </p>
+	 * @param builder the {@code Spring} URI builder
+	 * @param staff the staff to be created
+	 * @return a ResponseEntity with just the location containing the URI of the newly
+	 *         created staff
+	 */
+	@PostMapping("")
+	public ResponseEntity<Void> create(UriComponentsBuilder builder, @RequestBody Staff staff)
+			throws ApplicationException {
+
+		// This is not a creation.
+		if (staffHandler.containsStaffMember(staff.getIdStaff())) {
+			return new ResponseEntity<Void>(null, headers(), HttpStatus.CONFLICT);
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug (String.format("Adding the staff member %s %s", staff.getFirstName(), staff.getLastName()));
+			log.debug (String.format("staff.toString() : %s ", staff.toString()));
+		}
+
+		// We create an already inactive user. 
+		// That kind of user is supposed to be created from the ghosts table form
+		if ( !staff.isActive() && (staff.getDateInactive() == null)) {
+			staff.setDateInactive(LocalDate.now());
+		}
+
+		Staff newStaff = staffHandler.createWorkforceMember(staff);
+
+		UriComponents uriComponents = builder.path("/api/staff/{id}").buildAndExpand(newStaff.getIdStaff());
+
+		return ResponseEntity.created(uriComponents.toUri()).build();
+	}
+
+	/**
+	 * <p>
+	 * Update the staff member identified by the given {@link Staff#getIdStaff() idStaff}
+	 * </p>
+	 * @param idStaff the staff identifier. The staff identifier is hosted in the URL in accordance with the Rest naming conventions
+	 * @param staff the staff to update. This staff is hosted inside the body of the {@code PUT} Medhod.
+	 * @return an empty content for an update request
+	 */
+	@PutMapping("/{idStaff}")
+	public ResponseEntity<Void> updateStaff(@PathVariable("idStaff") int idStaff, @RequestBody Staff staff)
+			throws NotFoundException, ApplicationException {
+
+		if (idStaff != staff.getIdStaff()) {
+			throw new ApplicationRuntimeException("WTF : SHOULD NOT PASS HERE : idStaff in URL is distinct from idStaff in Staff object");
+		}
+
+		if (!staffHandler.containsStaffMember(idStaff)) {
+			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug (String.format("Updating the staff %d %s %s", staff.getIdStaff(), staff.getFirstName(), staff.getLastName()));
+			log.debug (String.format("staff.toString() : %s ", staff.toString()));
+		}
+
+		staffHandler.updateWorkforceMember(staff);
+
+		return ResponseEntity.noContent().build();
+	}
 
 	@GetMapping("/all")
 	public Collection<Staff> readAll() {
@@ -286,38 +356,6 @@ public class StaffController {
 	}
 
 	
-	@PostMapping("/save")
-	public ResponseEntity<Staff> save(@RequestBody Staff input) throws ApplicationException {
-
-		if (log.isDebugEnabled()) {
-			log.debug (String.format("Add or Update the staff.id %d", input.getIdStaff()));
-			log.debug (String.format("Content %s ", input));
-		}
-		
-		HttpHeaders headers = new HttpHeaders();
-		
-		if (input.getIdStaff() == -1) {
-			
-			// We create an already inactive user. 
-			// That kind of user is supposed to be created from the ghost table form
-			if ( !input.isActive() && (input.getDateInactive() == null)) {
-				input.setDateInactive(LocalDate.now());
-			}
-			staffHandler.addNewStaffMember(input);
-			headers.set("backend.return_code", "1");
-			return new ResponseEntity<>(input, headers, HttpStatus.OK);
-		} 
-		
-		if (!staffHandler.hasStaff(input.getIdStaff())) {
-			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, input.getIdStaff()));
-		} 
-			
-		staffHandler.saveStaffMember(input);
-		
-		headers.set(BACKEND_RETURN_CODE, "1");
-		return new ResponseEntity<>(input, headers, HttpStatus.OK);
-	}
-
 	/**
 	 * Delete the staff member corresponding to the identifier.
 	 * @param idStaff the Staff member identifier candidate for deletion

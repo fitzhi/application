@@ -121,6 +121,7 @@ public class ProjectController extends BaseRestController {
 	 * <p>
 	 * This method creates a new project.
 	 * </p>
+	 * @param builder the {@code Spring} URI builder
 	 * @param project the project to be created
 	 * @return a ResponseEntity with just the location containing the URI of the newly
 	 *         created project

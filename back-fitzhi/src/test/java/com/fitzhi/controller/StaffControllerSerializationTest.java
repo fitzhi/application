@@ -3,8 +3,10 @@
  */
 package com.fitzhi.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,7 +15,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -22,7 +23,9 @@ import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
 
 /**
- * @author frvidal
+ * We test the update the Staff entry after the creation of its associated login creation.
+ * 
+ * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
 @RunWith(SpringRunner.class)
@@ -41,17 +44,21 @@ public class StaffControllerSerializationTest {
 	@Before
 	public void before() {
 		staffHandler.getStaff().put(56, new Staff(56, "login", "password")); 
-		
 	}
 	
+	/**
+	 * Simple test of deserialization of the given JSON object.
+	 * @throws Exception
+	 */
 	@Test
 	@WithMockUser
 	public void test() throws Exception {
-		this.mvc.perform(post("/api/staff/save")
-				.header(HttpHeaders.CONTENT_TYPE, "application/json")
-				.content(STAFF))
-				.andExpect(status().isOk());
-		
+	
+		this.mvc.perform(put("/api/staff/56")
+			.contentType(APPLICATION_JSON_UTF8)
+			.content(STAFF))
+			.andExpect(status().isNoContent());
+					
 		Staff staff = staffHandler.getStaff(56); 
 		Assert.assertEquals(staff.getLastName(), "CHANAL");
 		Assert.assertEquals(staff.getFirstName(), "Eric");

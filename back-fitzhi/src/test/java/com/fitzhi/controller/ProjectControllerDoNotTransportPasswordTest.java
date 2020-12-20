@@ -1,6 +1,7 @@
 package com.fitzhi.controller;
 
 import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -30,7 +31,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 /**
- * Testing the URL /staff/save
+ * Testing the URL {@code /api/project} and the controller {@link ProjectController}
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)

@@ -39,7 +39,7 @@ public class StaffHandlerSaveStaffMemberTest {
 	@Test
 	public void testSaveStaffMemberOk() throws ApplicationException {
 		Staff st = new Staff(1001, OUAAMOU, AHMINE, MOUAAMOU , MOUAAMOU, MOUAAMOU_VOID_COM, "");
-		staffHandler.saveStaffMember(st);
+		staffHandler.updateWorkforceMember(st);
 		Staff s = staffHandler.getStaff().get(1001);
 		Assert.assertEquals (AHMINE, s.getLastName());
 	}
@@ -49,14 +49,14 @@ public class StaffHandlerSaveStaffMemberTest {
 	public void testSaveStaffMemberKoNonUniqueLogin() throws ApplicationException {
 		// 
 		Staff st = new Staff(1001, OUAAMOU, AHMINE, MOUAAMOU , "cact", MOUAAMOU_VOID_COM, "");
-		staffHandler.saveStaffMember(st);
+		staffHandler.updateWorkforceMember(st);
 	}
 
 	@Test (expected=ApplicationException.class)
 	public void testSaveStaffMemberKoUnregisteredStaff() throws ApplicationException {
 		// 
 		Staff st = new Staff(0, OUAAMOU, AHMINE, MOUAAMOU , "cact", MOUAAMOU_VOID_COM, "");
-		staffHandler.saveStaffMember(st);
+		staffHandler.updateWorkforceMember(st);
 	}
 
 	@After

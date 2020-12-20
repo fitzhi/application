@@ -116,7 +116,7 @@ public class AdministrationImpl implements Administration {
 				staffHandler.savePassword(staff, encryptedPassword);
 				return staff;
 			} else {
-				return staffHandler.addNewStaffMember(new Staff(-1, login, encryptedPassword));
+				return staffHandler.createWorkforceMember(new Staff(-1, login, encryptedPassword));
 			}
 		} 
 
@@ -125,7 +125,7 @@ public class AdministrationImpl implements Administration {
 				log.debug ("So we allow the self-registration for new users; and hackers... (brrr! Dangerous !)");
 			}			
 			if (staff == null) {
-				return staffHandler.addNewStaffMember(new Staff(-1, login, encryptedPassword));				
+				return staffHandler.createWorkforceMember(new Staff(-1, login, encryptedPassword));				
 			} else {
 				return updatePassword (staff, encryptedPassword);
 			}

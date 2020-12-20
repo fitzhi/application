@@ -41,7 +41,7 @@ public class StaffHandlerInferSkillsFromMissionsTest {
 	private StaffHandler staffHandler;
 	
 	@Before
-	public void before() {
+	public void before() throws ApplicationException {
 		Staff s1 = new Staff(ID_1, "firstName 1", "lastName 1", "nickName 1", "login 1", "email 1", "ICD 1");
 		s1.getExperiences().add(new Experience (3,  1));
 		Mission m = new Mission(ID_1, 1789, "Revolution");
@@ -56,7 +56,6 @@ public class StaffHandlerInferSkillsFromMissionsTest {
 		
 		Staff s2 = new Staff(ID_2, "firstName 2", "lastName 2", "nickName 2", "login 2", "email 2", "ICD 2");
 		s2.getExperiences().add(new Experience (ID_SKILL_JAVA, 5));
-		staffHandler.addNewStaffMember(s2);
 		m = new Mission(ID_2, 18789, "Revolution");
 		s2.addMission(m);
 		m.getStaffActivitySkill()

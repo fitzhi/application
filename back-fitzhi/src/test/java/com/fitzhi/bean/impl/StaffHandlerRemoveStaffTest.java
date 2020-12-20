@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
 
@@ -19,6 +21,7 @@ import com.fitzhi.data.internal.Staff;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Slf4j
 public class StaffHandlerRemoveStaffTest {
 
 	@Autowired
@@ -26,10 +29,11 @@ public class StaffHandlerRemoveStaffTest {
 	
 	@Test
 	public void testRemoveStaff() throws Exception {		
-		staffHandler.addNewStaffMember(new Staff(1789, "firstName", "lastName", "nickName", "login", "email", "ET"));
-		Assert.assertNotNull(staffHandler.getStaff(1789));
-		staffHandler.removeStaff(1789);
-		Assert.assertNull(staffHandler.getStaff(1789));
+		Staff staff = staffHandler.createWorkforceMember(new Staff(-1, "firstName", "lastName", "nickName", "login", "email", "ET"));
+		log.debug (String.format("Staff created %d", staff.getIdStaff()));
+		Assert.assertNotNull(staffHandler.getStaff(staff.getIdStaff()));
+		staffHandler.removeStaff(staff.getIdStaff());
+		Assert.assertNull(staffHandler.getStaff(staff.getIdStaff()));
 	}
 	
 }

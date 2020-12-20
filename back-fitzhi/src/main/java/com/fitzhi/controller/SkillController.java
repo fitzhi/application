@@ -47,6 +47,7 @@ public class SkillController extends BaseRestController {
 	 * <p>
 	 * This method <b>CREATES a NEW SKILL</b> and returns a valid location to load the skill.
 	 * </p>
+	 * @param builder the {@code Spring} URI builder
 	 * @param skill the skill sent by the front application in JSON format
 	 * @return a ResponseEntity with just the location containing the URI of the newly
 	 *         created skill

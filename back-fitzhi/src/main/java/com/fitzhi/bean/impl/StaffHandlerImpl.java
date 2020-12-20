@@ -39,6 +39,7 @@ import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.internal.StaffActivitySkill;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -511,7 +512,41 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public Staff addNewStaffMember(final Staff staff)  {
+	public boolean containsStaffMember(final int idStaff) {
+		return getStaff().containsKey(idStaff);
+	}
+
+	@Override
+	public void controlWorkforceMember(Staff input) throws ApplicationException {
+
+		// This control is redundant with the control processed under the PUT verb in the StaffController
+		// But we might create a staff member outside of the Rest controller
+		if ( (input.getIdStaff() > 0) && !containsStaffMember(input.getIdStaff())) {
+			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, input.getIdStaff()));
+		}
+
+		//
+		// The login is unique for each Fitxhì user.
+		// If we find a staff member with the same login and a different identifier, we throw an exception.
+		//
+		Optional<Staff> emp = findStaffWithLogin(input.getLogin());
+		if ( (emp.isPresent()) && (emp.get().getIdStaff() != input.getIdStaff()) && (emp.get().getLogin().equals(input.getLogin()))) {
+			if (log.isDebugEnabled()) {
+				log.debug(String.format(
+						"The staff member %d %s has the same login %s than %d %s" , 
+						input.getIdStaff(), input.fullName(),
+						input.getLogin(),
+						emp.get().getIdStaff(), emp.get().fullName()));
+			}
+			throw new ApplicationException(CODE_LOGIN_ALREADY_EXIST, MessageFormat.format(MESSAGE_LOGIN_ALREADY_EXIST, input.getLogin(), emp.get().getFirstName(), emp.get().getLastName()));			
+		}
+	}
+
+	@Override
+	public Staff createWorkforceMember(final Staff staff) throws ApplicationException {
+
+		controlWorkforceMember(staff);
+		
 		synchronized (lockDataUpdated) {
 			Map<Integer, Staff> company = getStaff();
 			if (staff.getIdStaff() <= 0) {				
@@ -524,33 +559,15 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public boolean containsStaffMember(final int idStaff) {
-		return getStaff().containsKey(idStaff);
-	}
+	public void updateWorkforceMember(Staff input) throws ApplicationException {
 
-	@Override
-	public void saveStaffMember(Staff input) throws ApplicationException {
+		controlWorkforceMember(input);
 
 		Staff updStaff = getStaff(input.getIdStaff());
-		if (input.getIdStaff() == 0) {
-			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, input.getIdStaff()));
+		if (updStaff == null) {
+			throw new ApplicationRuntimeException(String.format("WTF : A staff with id %d should exist.", input.getIdStaff()));
 		}
-		
-		//
-		// The login is unique for each Fitxhì user.
-		// If we find a staff member with the same login and a different identifier, we throw an exception.
-		//
-		Optional<Staff> emp = findStaffWithLogin(input.getLogin());
-		if ( (emp.isPresent()) && (emp.get().getIdStaff() != input.getIdStaff()) && (emp.get().getLogin().equals(input.getLogin()))) {
-			if (log.isDebugEnabled()) {
-				log.debug(String.format(
-						"the employee %d %s has the same login %s than %d %s" , 
-						input.getIdStaff(), input.fullName(),
-						input.getLogin(),
-						emp.get().getIdStaff(), emp.get().fullName()));
-			}
-			throw new ApplicationException(CODE_LOGIN_ALREADY_EXIST, MessageFormat.format(MESSAGE_LOGIN_ALREADY_EXIST, input.getLogin(), emp.get().getFirstName(), emp.get().getLastName()));			
-		}
+	
 		
 		updStaff.setFirstName(input.getFirstName());
 		updStaff.setLastName(input.getLastName());
