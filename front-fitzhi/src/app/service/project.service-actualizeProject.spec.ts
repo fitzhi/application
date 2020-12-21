@@ -116,7 +116,7 @@ describe('ProjectService', () => {
 		expect(333).toEqual(projectService.allProjects[2].mapSkills.get(1).numberOfFiles);
 		expect(333333).toEqual(projectService.allProjects[2].mapSkills.get(1).totalFilesSize);
 
-		req = httpMock.expectOne('http://localhost:8080/api/skill/all');
+		req = httpMock.expectOne('http://localhost:8080/api/skill');
 		expect(req.request.method).toBe('GET');
 		req.flush(mockSkills);
 

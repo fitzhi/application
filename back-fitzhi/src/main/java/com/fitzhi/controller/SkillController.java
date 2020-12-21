@@ -55,8 +55,6 @@ public class SkillController extends BaseRestController {
 	@PostMapping("")
 	public ResponseEntity<Object> create(UriComponentsBuilder builder, @RequestBody Skill skill) {
 
-		System.out.println("------------------------------> Here.....");
-
 		if (skillHandler.containsSkill(skill.getId())) {
 			return new ResponseEntity<Object>(null, headers(), HttpStatus.CONFLICT);
 		}
@@ -143,11 +141,11 @@ public class SkillController extends BaseRestController {
 		return responseEntity;
 	}
 
-	@GetMapping("/all")
+	@GetMapping("")
 	public Collection<Skill> readAll() {
 		Collection<Skill> skills = skillHandler.getSkills().values();
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("'/skill/all' is returning %d skills", skills.size()));
+			log.debug(String.format("'/skill' is returning %d skills", skills.size()));
 		}
 		return skills;
 	}

@@ -38,7 +38,7 @@ describe('ProjectRemoveComponent', () => {
 
 	it('should create', () => {
 		expect(component).toBeTruthy();
-		const reqSkill = httpTestingController.expectOne('URL_OF_SERVER/api/skill/all');
+		const reqSkill = httpTestingController.expectOne('URL_OF_SERVER/api/skill');
 		reqSkill.flush([]);
 	});
 
@@ -60,7 +60,7 @@ describe('ProjectRemoveComponent', () => {
 		fixture.detectChanges();
 		expect(component).toBeTruthy();
 
-		const reqSkill = httpTestingController.expectOne('URL_OF_SERVER/api/skill/all');
+		const reqSkill = httpTestingController.expectOne('URL_OF_SERVER/api/skill');
 		const reqDelete = httpTestingController.expectOne('URL_OF_SERVER/api/project/1789');
 		expect(reqDelete.request.method).toEqual('DELETE');
 		reqDelete.flush(null);

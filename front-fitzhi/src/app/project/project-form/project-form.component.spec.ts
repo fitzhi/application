@@ -68,7 +68,7 @@ describe('ProjectFormComponent', () => {
 		projectService.projectLoaded$ = new BehaviorSubject(true);
 
 		// We do not need the handle the skill retrieval.
-		const reqSkill = httpTestingController.expectOne('URL_OF_SERVER/api/skill/all');
+		const reqSkill = httpTestingController.expectOne('URL_OF_SERVER/api/skill');
 		reqSkill.flush([
 			{
 				id: 1,

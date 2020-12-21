@@ -121,7 +121,7 @@ describe('ProjectStaffComponent', () => {
 		expect(2).toEqual(component.projectStaffComponent.dataSource.data.length);
 		fixture.detectChanges();
 
-		req = httpMock.expectOne('http://localhost:8080/api/skill/all');
+		req = httpMock.expectOne('http://localhost:8080/api/skill');
 		expect(req.request.method).toBe('GET');
 		req.flush(mockSkills);
 

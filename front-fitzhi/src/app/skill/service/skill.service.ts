@@ -74,14 +74,12 @@ export class SkillService extends InternalService {
 			this.log('Fetching all skills on URL ' + this.backendSetupService.url() + '/skill' + '/all');
 		}
 		this.httpClient
-			.get<Skill[]>(this.backendSetupService.url() + '/skill' + '/all')
+			.get<Skill[]>(this.backendSetupService.url() + '/skill')
 			.pipe(
 				tap(skills => {
 					if (traceOn()) {
 						console.groupCollapsed('Skills registered : ');
-						skills.forEach(function (skill) {
-							console.log(skill.id + ' ' + skill.title);
-						});
+						console.table(skills);
 						console.groupEnd();
 					}
 				}),

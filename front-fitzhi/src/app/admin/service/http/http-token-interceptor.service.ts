@@ -45,7 +45,7 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 		}
 		if 	(req.url.includes('/api/referential/')
 
-			|| req.url.includes('/api/skill/all')
+			|| (req.url === '/api/skill')
 			|| req.url.includes('/api/admin/isVeryFirstConnection')
 			|| req.url.includes('/api/admin/veryFirstUser')
 			|| req.url.includes('/api/admin/register')
@@ -60,6 +60,7 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 
 			// GitHub URL
 			|| req.url.includes('api.github.com')) {
+
 			return next.handle(req);
 		}
 

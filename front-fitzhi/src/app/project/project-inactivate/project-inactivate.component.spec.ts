@@ -58,7 +58,7 @@ describe('ProjectInactivateComponent', () => {
 		expect(fixture.debugElement.query(By.css('.project-inactivate'))).toBeDefined();
 
 		// We do not need the handle the skill retrieval.
-		const reqSkill = httpTestingController.expectOne('URL_OF_SERVER/api/skill/all');
+		const reqSkill = httpTestingController.expectOne('URL_OF_SERVER/api/skill');
 		reqSkill.flush([]);
 	});
 
@@ -69,7 +69,7 @@ describe('ProjectInactivateComponent', () => {
 		expect(fixture.debugElement.query(By.css('.project-reactivate'))).toBeDefined();
 
 		// We do not need the handle the skill retrieval.
-		const reqSkill = httpTestingController.expectOne('URL_OF_SERVER/api/skill/all');
+		const reqSkill = httpTestingController.expectOne('URL_OF_SERVER/api/skill');
 		reqSkill.flush([]);
 	});
 
@@ -116,7 +116,7 @@ describe('ProjectInactivateComponent', () => {
 
 	function handleSkills() {
 		// We do not need the handle the skill retrieval.
-		const reqSkill = httpTestingController.expectOne('URL_OF_SERVER/api/skill/all');
+		const reqSkill = httpTestingController.expectOne('URL_OF_SERVER/api/skill');
 		reqSkill.flush([]);
 	}
 
