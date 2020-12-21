@@ -137,7 +137,7 @@ public class ProjectController extends BaseRestController {
 		project.setId(UNKNOWN_PROJECT);
 		project = projectHandler.addNewProject(project);
 
-		UriComponents uriComponents = builder.path("/api/project/id/{id}").buildAndExpand(project.getId());
+		UriComponents uriComponents = builder.path("/api/project/{id}").buildAndExpand(project.getId());
 
 		return ResponseEntity.created(uriComponents.toUri()).build();
 	}
@@ -286,7 +286,7 @@ public class ProjectController extends BaseRestController {
 	 * @return the HTTP Response with the retrieved project, or an empty one if the
 	 *         query failed.
 	 */
-	@GetMapping(value = "/id/{idProject}")
+	@GetMapping(value = "/{idProject}")
 	public ResponseEntity<Project> read(@PathVariable("idProject") int idProject) {
 
 		MyReference<ResponseEntity<Project>> refResponse = projectLoader.new MyReference<>();

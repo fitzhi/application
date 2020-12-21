@@ -68,7 +68,7 @@ public class ProjectControllerDoNotTransportPasswordTest {
 	@WithMockUser
 	public void doNotTransportPassword() throws Exception {
 
-		MvcResult result = this.mvc.perform(get("/api/project/id/"+ ID_PROJECT))
+		MvcResult result = this.mvc.perform(get("/api/project/"+ ID_PROJECT))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -109,7 +109,7 @@ public class ProjectControllerDoNotTransportPasswordTest {
 	@WithMockUser
 	public void doNotLoosePassword() throws Exception {
 
-		MvcResult result = this.mvc.perform(get("/api/project/id/" + ID_PROJECT))
+		MvcResult result = this.mvc.perform(get("/api/project/" + ID_PROJECT))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())

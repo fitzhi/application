@@ -91,7 +91,7 @@ describe('ProjectService', () => {
 		expect(2).toEqual(projectService.allProjects[1].id);
 
 
-		req1 = httpMock.expectOne('http://localhost:8080/api/project/id/2');
+		req1 = httpMock.expectOne('http://localhost:8080/api/project/2');
 		expect(req1.request.method).toBe('GET');
 		req1.flush(mockProject2);
 
@@ -104,7 +104,7 @@ describe('ProjectService', () => {
 		//
 		projectService.actualizeProject(3);
 
-		req2 = httpMock.expectOne('http://localhost:8080/api/project/id/3');
+		req2 = httpMock.expectOne('http://localhost:8080/api/project/3');
 		expect(req2.request.method).toBe('GET');
 		req2.flush(mockProject3);
 

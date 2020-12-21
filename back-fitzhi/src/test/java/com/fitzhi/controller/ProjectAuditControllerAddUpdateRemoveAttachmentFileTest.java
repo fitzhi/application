@@ -89,7 +89,7 @@ public class ProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
 	 */
 	Project getProject(int idProject) throws Exception {
 		
-		MvcResult result = this.mvc.perform(get("/api/project/id/"+ ID_PROJECT))
+		MvcResult result = this.mvc.perform(get("/api/project/"+ ID_PROJECT))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())

@@ -114,10 +114,10 @@ export class ProjectService extends InternalService {
 	 */
 	public actualizeProject(idProject: number) {
 		if (traceOn()) {
-			this.log('Actualizing the project with URL ' + this.backendSetupService.url() + '/project/id/' + idProject);
+			this.log('Actualizing the project with URL ' + this.backendSetupService.url() + '/project/' + idProject);
 		}
 		this.httpClient
-			.get<Project>(this.backendSetupService.url() + '/project/id/' + idProject)
+			.get<Project>(this.backendSetupService.url() + '/project/' + idProject)
 			.pipe(take(1))
 			.subscribe({
 				next: project => {
@@ -346,7 +346,7 @@ export class ProjectService extends InternalService {
 	 * GET the project associated to this id from the back-end od skiller. Will throw a 404 if this id is not found.
 	 */
 	get(id: number): Observable<Project> {
-		const url = this.backendSetupService.url() + '/project/id/' + id;
+		const url = this.backendSetupService.url() + '/project/' + id;
 		if (traceOn()) {
 			console.log('Fetching the project ' + id + ' on the address ' + url);
 		}

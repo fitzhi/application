@@ -96,7 +96,7 @@ public class ProjectSonarControllerSaveSonarEvaluationTest {
 		Boolean b = gson.fromJson(result.getResponse().getContentAsString(), Boolean.class);
 		Assert.assertTrue(b);
 
-		result = this.mvc.perform(get("/api/project/id/" + ID_PROJECT))
+		result = this.mvc.perform(get("/api/project/" + ID_PROJECT))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())

@@ -108,7 +108,7 @@ public class ProjectGhostControllerTest {
 			.andExpect(content().string("true"))
 			.andDo(print());
 
-		this.mvc.perform(get("/api/project/id/"+ ID_PROJECT))
+		this.mvc.perform(get("/api/project/"+ ID_PROJECT))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print());
