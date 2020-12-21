@@ -1,7 +1,7 @@
 import { Constants } from '../../constants';
 import { Collaborator } from '../../data/collaborator';
 import { MessageService } from '../../interaction/message/message.service';
-import { StaffService } from '../../service/staff.service';
+import { StaffService } from '../service/staff.service';
 import { CinematicService } from '../../service/cinematic.service';
 import { Profile } from '../../data/profile';
 import { ReferentialService } from '../../service/referential.service';

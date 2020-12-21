@@ -3,7 +3,7 @@ import { CinematicService } from './service/cinematic.service';
 import { Constants } from './constants';
 import { ListProjectsService } from './project/list-project/list-projects-service/list-projects.service';
 import { ReferentialService } from './service/referential.service';
-import { StaffService } from './service/staff.service';
+import { StaffService } from './tabs-staff/service/staff.service';
 import { Router } from '@angular/router';
 import { BaseComponent } from './base/base.component';
 import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.service';

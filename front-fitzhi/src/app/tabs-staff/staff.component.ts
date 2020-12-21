@@ -10,7 +10,7 @@ import { MessageService } from '../interaction/message/message.service';
 import { BaseComponent } from '../base/base.component';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { traceOn } from '../global';
-import { StaffService } from '../service/staff.service';
+import { StaffService } from './service/staff.service';
 
 @Component({
 	selector: 'app-staff',

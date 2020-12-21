@@ -11,7 +11,7 @@ import { Unknown } from '../../../../data/unknown';
 import { Collaborator } from 'src/app/data/collaborator';
 import { ProjectGhostsDataSource } from '../project-ghosts-data-source';
 import { Project } from 'src/app/data/project';
-import { StaffService } from 'src/app/service/staff.service';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { By } from '@angular/platform-browser';
 import { ProjectService } from 'src/app/service/project.service';
 

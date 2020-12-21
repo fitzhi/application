@@ -1,24 +1,24 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Collaborator } from '../data/collaborator';
-import { Project } from '../data/project';
-import { StaffDTO } from '../data/external/staffDTO';
+import { Collaborator } from '../../data/collaborator';
+import { Project } from '../../data/project';
+import { StaffDTO } from '../../data/external/staffDTO';
 
-import { DeclaredExperience } from '../data/declared-experience';
-import { Experience } from '../data/experience';
-import { Observable, Subject, of } from 'rxjs';
+import { DeclaredExperience } from '../../data/declared-experience';
+import { Experience } from '../../data/experience';
+import { Observable, Subject, of, EMPTY } from 'rxjs';
 
-import { BackendSetupService } from './backend-setup/backend-setup.service';
+import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
 import { take, switchMap } from 'rxjs/operators';
-import { BooleanDTO } from '../data/external/booleanDTO';
-import { FileService } from './file.service';
-import { traceOn } from '../global';
-import { StaffDataExchangeService } from '../tabs-staff/service/staff-data-exchange.service';
-import { MessageService } from '../interaction/message/message.service';
-import { StaffListService } from '../staff-list-service/staff-list.service';
-import { Constants } from '../constants';
-import { CinematicService } from './cinematic.service';
+import { BooleanDTO } from '../../data/external/booleanDTO';
+import { FileService } from '../../service/file.service';
+import { HttpCodes, traceOn } from '../../global';
+import { StaffDataExchangeService } from './staff-data-exchange.service';
+import { MessageService } from '../../interaction/message/message.service';
+import { StaffListService } from '../../staff-list-service/staff-list.service';
+import { Constants } from '../../constants';
+import { CinematicService } from '../../service/cinematic.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json', 'observe': 'response' })
@@ -68,14 +68,64 @@ export class StaffService {
 		 * Update, _or add_, a new collaborator as a staff member, with a **POST** Verb.
 	 *
 	 * This method is returning an observable emitting the freshly updated _(or created)_ staff member.
-	 * @param collaborator the given collaborator to be saved
+	 * @param staff the given collaborator to be saved
 		 */
-	save$(collaborator: Collaborator): Observable<Collaborator> {
+	save$(staff: Collaborator): Observable<Collaborator> {
 		if (traceOn()) {
-			console.log('Saving the collaborator with id ' + collaborator.idStaff);
+			console.log(((staff.idStaff) ? 'Saving staff %d %s %s' : 'Adding staff %d %s %s'), 
+				staff.idStaff, staff.firstName,  staff.lastName);
 		}
+		return ((staff.idStaff) && (staff.idStaff > 0)) ? this.update$(staff) : this.create$(staff);
+	}
 
-		return this.httpClient.post<Collaborator>(this.backendSetupService.url() + '/staff' + '/save', collaborator, httpOptions);
+	/**
+	 * Create a new staff member inside the workforce.
+	 * 
+	 * The Angular application will invoke the Rest server with a **POST** verb, 
+	 * and then after, invoke an HTTP Get with the returned location.
+	 * 
+	 * @param staff a staff member to be added in the company workforce
+	 * @returns the newly created collaborator with his/her personal ID.
+	 */
+	create$(staff: Collaborator): Observable<Collaborator> {
+		if (traceOn()) {
+			console.log( 'Creating the collaborator %s %s', staff.firstName, staff.lastName);
+		}
+		return this.httpClient
+			.post(this.backendSetupService.url() + '/staff', staff, {observe: 'response'})
+			.pipe(
+				take(1),
+				switchMap(response => {
+					const location = response.headers.get('Location');
+					if (traceOn()) {
+						console.log ('Staff member created successfully, location returned %s', location);
+					}
+					return (location) ? this.httpClient.get<Collaborator>(location) : EMPTY;
+		}));
+	}
+
+	/**
+	 * Execute an HTTP **PUT** to the Rest Server in order to update the given staff member.
+	 * 
+	 * @param staff the staff to be updated
+	 */
+	update$(staff: Collaborator): Observable<Collaborator> {
+		if (traceOn()) {
+			console.log( 'Updating the collaborator %d %s %s', staff.idStaff, staff.firstName, staff.lastName);
+		}
+		return this.httpClient
+			.put<Collaborator>(this.backendSetupService.url() + '/staff/' + staff.idStaff, staff, {observe: 'response'})
+			.pipe(
+				take(1),
+				switchMap(
+					response => {
+						if (response.status === HttpCodes.noContent) {
+							return of(staff);
+						} else {
+							throw 'The staff ' + staff.firstName + staff.lastName + ' has not been updated for an unknown reason.';
+						}
+					}
+			));
 	}
 
 	/**
@@ -83,32 +133,32 @@ export class StaffService {
 	 *
 	 * This method is returning an observable emitting **true** if the removal is successfull.
 	 */
-		removeStaff$(): Observable<boolean> {
-			const idStaffToDelete = this.staffDataExchangeService.collaborator.idStaff;
-			if (traceOn()) {
-				console.log('Removing the collaborator with id ' + idStaffToDelete);
-			}
-			return this.httpClient
-				.delete<object>(this.backendSetupService.url() + '/staff/' + idStaffToDelete)
-				.pipe(
-					take(1),
-					switchMap(
-						() => {
-							if (traceOn()) {
-								console.log ('Staff member %d has beeen successfully removed', idStaffToDelete);
-							}
-							return of(true);
-						}
-					));
+	removeStaff$(): Observable<boolean> {
+		const idStaffToDelete = this.staffDataExchangeService.collaborator.idStaff;
+		if (traceOn()) {
+			console.log('Removing the collaborator with id ' + idStaffToDelete);
 		}
+		return this.httpClient
+			.delete<object>(this.backendSetupService.url() + '/staff/' + idStaffToDelete)
+			.pipe(
+				take(1),
+				switchMap(
+					() => {
+						if (traceOn()) {
+							console.log ('Staff member %d has beeen successfully removed', idStaffToDelete);
+						}
+						return of(true);
+					}
+				));
+	}
 
 	/**
-		 * Activate or inactivate a staff member.
+	 * Activate or inactivate a staff member.
 	 *
 	 * This (de-)activation is based on an end-user choise, in opposition to the method **processActiveStatus**
 	 * which processes the state for the staf member, based on his Git activity.
 	 * @param idStaff the staff identifier to (de)activate
-		 */
+	*/
 	switchActiveStatus(collaborator: Collaborator) {
 		if (traceOn()) {
 			console.log (

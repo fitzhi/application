@@ -6,7 +6,7 @@ import { Constants } from '../../constants';
 import { ListCriteria } from '../../data/listCriteria';
 import { CinematicService } from '../../service/cinematic.service';
 import { SkillService } from '../service/skill.service';
-import { StaffService } from '../../service/staff.service';
+import { StaffService } from '../../tabs-staff/service/staff.service';
 import { TabsStaffListService } from '../../tabs-staff-list/service/tabs-staff-list.service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';

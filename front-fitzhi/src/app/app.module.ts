@@ -102,7 +102,7 @@ import { TableDependenciesComponent } from './project/project-sunburst/table-dep
 import { ProjectComponent } from './project/project.component';
 import { CinematicService } from './service/cinematic.service';
 import { ReferentialService } from './service/referential.service';
-import { StaffService } from './service/staff.service';
+import { StaffService } from './tabs-staff/service/staff.service';
 import { ListSkillComponent } from './skill/list-skill/list-skill.component';
 import { SkillComponent } from './skill/skill.component';
 import { StaffListComponent } from './tabs-staff-list/staff-list/staff-list.component';

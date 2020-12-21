@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Collaborator } from '../../data/collaborator';
-import { StaffService } from '../../service/staff.service';
+import { StaffService } from '../../tabs-staff/service/staff.service';
 import { Constants } from '../../constants';
 import { StaffListContext } from '../../data/staff-list-context';
 import { MessageService } from '../../interaction/message/message.service';

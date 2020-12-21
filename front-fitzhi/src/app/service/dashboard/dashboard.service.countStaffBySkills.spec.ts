@@ -6,7 +6,7 @@ import { Collaborator } from 'src/app/data/collaborator';
 import { Experience } from 'src/app/data/experience';
 import { ProjectService } from '../project.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { StaffService } from '../staff.service';
+import { StaffService } from '../../tabs-staff/service/staff.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReferentialService } from '../referential.service';
 import { StaffListService } from 'src/app/staff-list-service/staff-list.service';

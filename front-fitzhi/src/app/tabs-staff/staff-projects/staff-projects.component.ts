@@ -3,7 +3,7 @@ import { Collaborator } from '../../data/collaborator';
 import { StaffDTO } from '../../data/external/staffDTO';
 import { MessageService } from '../../interaction/message/message.service';
 import { ProjectService } from '../../service/project.service';
-import { StaffService } from '../../service/staff.service';
+import { StaffService } from '../service/staff.service';
 import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
 import { Component, OnInit, OnDestroy, Input, AfterViewInit, ViewChild } from '@angular/core';
 

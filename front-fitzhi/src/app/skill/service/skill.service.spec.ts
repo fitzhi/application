@@ -30,7 +30,7 @@ describe('skillService', () => {
 			.and.callThrough()
 			.and.returnValue(of(new Skill(1789, skill.title)));
 
-		// We mock the Skill creation 
+		// We mock the Skill update 
 		const spyUpdateSkill = spyOn(service, 'updateSkill$');
 
 		service.save$(skill).pipe(take(1)).subscribe({
@@ -51,7 +51,7 @@ describe('skillService', () => {
 		// We mock the Skill creation 
 		const spyCreateSkill = spyOn(service, 'createSkill$');
 
-		// We mock the Skill creation 
+		// We mock the Skill update 
 		const spyUpdateSkill = spyOn(service, 'updateSkill$')
 			.and.callThrough()
 			.and.returnValue(of(new Skill(1789, 'A revolutionaly skill')));

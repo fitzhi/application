@@ -30,7 +30,7 @@ import { traceOn, HttpCodes } from '../global';
 import { SunburstCinematicService } from '../project/project-sunburst/service/sunburst-cinematic.service';
 import { ProjectSkill } from '../data/project-skill';
 import { SkillService } from '../skill/service/skill.service';
-import { StaffService } from './staff.service';
+import { StaffService } from '../tabs-staff/service/staff.service';
 import { CinematicService } from './cinematic.service';
 import { GitService } from './git/git.service';
 

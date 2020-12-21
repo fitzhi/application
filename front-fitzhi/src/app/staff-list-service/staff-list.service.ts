@@ -1,6 +1,6 @@
 import { Constants } from '../constants';
 import { Collaborator } from '../data/collaborator';
-import { StaffService } from '../service/staff.service';
+import { StaffService } from '../tabs-staff/service/staff.service';
 import { Injectable } from '@angular/core';
 
 import { Observable, of, Subject, BehaviorSubject } from 'rxjs';

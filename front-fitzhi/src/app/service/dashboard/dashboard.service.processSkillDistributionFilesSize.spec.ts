@@ -4,7 +4,7 @@ import { DashboardService } from './dashboard.service';
 import { SkillService } from '../../skill/service/skill.service';
 import { ProjectService } from '../project.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { StaffService } from '../staff.service';
+import { StaffService } from '../../tabs-staff/service/staff.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReferentialService } from '../referential.service';
 import { SkillProjectsAggregation } from './skill-projects-aggregration';

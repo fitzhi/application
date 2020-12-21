@@ -6,7 +6,7 @@ import { BaseComponent } from 'src/app/base/base.component';
 import { ProjectGhostsDataSource } from '../project-ghosts-data-source';
 import { MatPaginator } from '@angular/material/paginator';
 import { Collaborator } from 'src/app/data/collaborator';
-import { StaffService } from 'src/app/service/staff.service';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { take, throwIfEmpty, switchMap } from 'rxjs/operators';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
