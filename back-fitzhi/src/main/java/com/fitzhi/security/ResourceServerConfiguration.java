@@ -60,7 +60,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				// Server side event streaming is allowed
 				"/api/project/tasks/stream/**",
 
-				/* DO NOT KNOW IF IT SHOULD STAY HERE */
+				// DO NOT KNOW IF IT SHOULD STAY HERE...
 				"/api/project/tasks/**",
 
 				"/api/admin/isVeryFirstConnection", 
@@ -68,8 +68,13 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				"/api/admin/veryFirstUser",
 				"/api/admin/register",
 				"/api/test/ping",
-				"/api/project/all", 
-				"/api/skill/all", 
+
+				// All projets are braodcasted ? (it's a question)
+				"/api/project", 
+
+				// All skills are braodcasted !
+				"/api/skill", 
+
 				"/api/referential/**").permitAll()
 				.antMatchers("/**").access("hasRole('USER')")
 				.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
