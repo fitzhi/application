@@ -607,7 +607,7 @@ public class ProjectController extends BaseRestController {
 	 * @param idProject the project identifier
 	 * @return the contributors who have been involved in the project
 	 */
-	@GetMapping(value = "/contributors/{idProject}")
+	@GetMapping(value = "/{idProject}/contributors")
 	public ResponseEntity<ProjectContributorDTO> projectContributors(final @PathVariable("idProject") int idProject) {
 
 		final List<Contributor> contributors = projectHandler.contributors(idProject);

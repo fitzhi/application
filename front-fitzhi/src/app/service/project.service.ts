@@ -453,7 +453,7 @@ export class ProjectService extends InternalService {
 			return EMPTY;
 		}
 
-		const url = this.backendSetupService.url() + '/project/contributors/' + idProject;
+		const url = this.backendSetupService.url() + '/project/' + idProject + '/contributors';
 		if (traceOn()) {
 			console.log('Retrieve the contributors for the project identifier %d @ url %s', idProject, url);
 		}

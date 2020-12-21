@@ -113,7 +113,7 @@ describe('ProjectStaffComponent', () => {
 		projectService.project = new Project(1789, 'the revolutionary project');
 		projectService.projectLoaded$.next(true);
 
-		let req = httpMock.expectOne('http://localhost:8080/api/project/contributors/1789');
+		let req = httpMock.expectOne('http://localhost:8080/api/project/1789/contributors');
 		expect(req.request.method).toBe('GET');
 		req.flush(mockContributorDTO);
 

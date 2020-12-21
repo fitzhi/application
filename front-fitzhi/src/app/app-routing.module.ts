@@ -36,7 +36,7 @@ const routes: Routes = [
 	{ path: 'project/:id', component: ProjectComponent, canActivate: [AuthGuardService] },
 	{ path: 'project/:id/staff', component: ProjectComponent, canActivate: [AuthGuardService] },
 	{ path: 'project/sunburst/:id', component: ProjectSunburstComponent, canActivate: [AuthGuardService] },
-	{ path: 'project/contributors/:id', component: ProjectStaffComponent, canActivate: [AuthGuardService] },
+	{ path: 'project/:id/contributors', component: ProjectStaffComponent, canActivate: [AuthGuardService] },
 ];
 
 @NgModule({
