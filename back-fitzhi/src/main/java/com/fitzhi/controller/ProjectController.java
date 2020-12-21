@@ -372,7 +372,7 @@ public class ProjectController extends BaseRestController {
 		return new ResponseEntity<>(branches, headers(), HttpStatus.OK);
 	}
 
-	@GetMapping("/all")
+	@GetMapping("")
 	public Collection<Project> readAll() {
 		try {
 			Collection<Project> projects = projectHandler.getProjects().values();
@@ -400,7 +400,7 @@ public class ProjectController extends BaseRestController {
 			}
 
 			if (log.isDebugEnabled()) {
-				log.debug(String.format("'/Project/all' is returning %d projects", responseProjects.size()));
+				log.debug(String.format("'/Project' is returning %d projects", responseProjects.size()));
 			}
 			return responseProjects;
 

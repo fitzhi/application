@@ -91,15 +91,15 @@ export class ProjectService extends InternalService {
    	*/
 	loadProjects() {
 		if (traceOn()) {
-			this.log('Fetching the projects on URL ' + this.backendSetupService.url() + '/project/all');
+			this.log('Fetching the projects on URL ' + this.backendSetupService.url() + '/project');
 		}
 		this.httpClient
-			.get<Project[]>(this.backendSetupService.url() + '/project/all')
+			.get<Project[]>(this.backendSetupService.url() + '/project')
 			.pipe(take(1))
 			.subscribe(projects => {
 				if (traceOn()) {
 					console.groupCollapsed('Projects retrieved');
-					projects.forEach (project => console.log (project.name));
+					console.table (projects);
 					console.groupEnd();
 				}
 				projects.forEach(project => this.loadMapSkills(project));

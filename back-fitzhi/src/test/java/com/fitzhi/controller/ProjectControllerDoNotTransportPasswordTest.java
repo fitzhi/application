@@ -86,7 +86,7 @@ public class ProjectControllerDoNotTransportPasswordTest {
 		project = gson.fromJson(result.getResponse().getContentAsString(), Project.class);
 		Assert.assertNull(project.getPassword());
 
-		result = this.mvc.perform(get("/api/project/all"))
+		result = this.mvc.perform(get("/api/project"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
