@@ -14,7 +14,7 @@
 						class="form-control required" 
 						id="projectName" 
 						name="projectName" 
-						[readonly]="!projectService.project.active"
+						[readonly]="(!projectService.project.active)"
 						placeholder="Project name (Required)" 
 						value="" 
 						required 
@@ -38,7 +38,8 @@
 					<div class="textarea-skills">
 						<div style="margin-left: 5px">
 							<label class="labelSkills" for="skills">Skills involved</label>
-							<textarea name="skills" placeholder="Type your skills" [readonly]="!projectService.project.active"></textarea>
+							<textarea name="skills" placeholder="Type your skills" [readonly]="!projectService.project.active">
+							</textarea>
 						</div>
 					</div>
 				</div>
@@ -101,7 +102,7 @@
 					</div>
 					<div class="codeFactorSolution">
 						<div class="field codeFactor">
-							<label class="labelCodeFactor" for="project">Code factor</label>
+							<label class="labelCodeFactor" for="urlCodeFactorIO">Code factor</label>
 							<input type="text" 
 							class="form-control" 
 							id="urlCodeFactorIO" 
@@ -112,9 +113,9 @@
 					</div>
 				</div>
 
-				<div class="codeFactorSolution" [hidden]="((code_quality_solution$|async) === 1)">
+				<div class="codeFactorSolution" *ngIf="!((code_quality_solution$|async) === 1)">
 					<div class="field codeFactor">
-						<label class="labelCodeFactor" for="project">Code factor</label>
+						<label class="labelCodeFactor" for="urlCodeFactorIO">Code factor</label>
 						<input type="text" 
 							class="form-control" 
 							id="urlCodeFactorIO" 

@@ -499,6 +499,14 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	addSkill(event: CustomEvent) {
 
+		if ((!this.projectService.project.id) || (this.projectService.project.id === -1)) {
+			if (traceOn()) {
+				console.log ('Adding a skill is impossible for an unregistered project.');
+			}
+			this.messageService.error('Adding a skill is impossible for an unregistered project!');
+			return;
+		}
+
 		const idSkill = this.skillService.id(event.detail.data.value);
 		if (idSkill === -1) {
 			console.log('SEVERE ERROR : Unregistered skill', event.detail.data.value);
@@ -516,7 +524,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		this.projectService.project.mapSkills.set(idSkill, new ProjectSkill(idSkill, 0, 0));
 
 		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
-		if (this.projectService.project.id) {
+		if (this.projectService.project.id)  {
 			this.updateSkill(this.projectService.project.id, idSkill, this.projectService.addSkill.bind(this.projectService));
 		}
 
