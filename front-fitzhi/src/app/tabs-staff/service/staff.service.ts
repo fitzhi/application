@@ -50,7 +50,7 @@ export class StaffService {
 		if (traceOn()) {
 			console.log('Fetching the collaborators');
 		}
-		return this.httpClient.get<Collaborator[]>(this.backendSetupService.url() + '/staff' + '/all');
+		return this.httpClient.get<Collaborator[]>(this.backendSetupService.url() + '/staff');
 	}
 
 	/**

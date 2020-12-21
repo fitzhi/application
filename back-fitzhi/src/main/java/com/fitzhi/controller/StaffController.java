@@ -169,7 +169,11 @@ public class StaffController extends BaseRestController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@GetMapping("/all")
+	/**
+	 * Read all staff members from the workforce.
+	 * @return the complete workforce of the company
+	 */
+	@GetMapping("")
 	public Collection<Staff> readAll() {
 		
 		final Collection<Staff> staffTeam = staffHandler.getStaff().values();
