@@ -24,6 +24,9 @@ import { ProjectSkill } from '../../data/project-skill';
 import { GitService } from 'src/app/service/git/git.service';
 import { Repository } from 'src/app/data/git/repository';
 
+/**
+ * ProjectFormComponent
+ */
 @Component({
 	selector: 'app-project-form',
 	templateUrl: './project-form.component.html',
