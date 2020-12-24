@@ -2,13 +2,12 @@ package com.fitzhi.controller;
 
 import static com.fitzhi.Error.CODE_SKILL_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_SKILL_NOFOUND;
-import static com.fitzhi.Error.getStackTrace;
 import static com.fitzhi.Global.BACKEND_RETURN_CODE;
 import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -152,22 +151,11 @@ public class SkillController extends BaseRestController {
 		
 	/**
 	 * @return the map of skills detection templates
+	 * @throws ApplicationException thrown if any problem occcurs, most probably an {@link IOException}
 	 */
 	@GetMapping("/detection-templates")
-	public ResponseEntity<Map<Integer, String>> detectionTemplate() {
-		final ResponseEntity<Map<Integer, String>> responseEntity;
-		final HttpHeaders headers = new HttpHeaders();
-		try {
-			Map<Integer, String> mapDetectionTemplates = this.skillHandler.detectorTypes();
-			responseEntity = new ResponseEntity<>(mapDetectionTemplates, headers, HttpStatus.OK);
-			headers.add("backend.return_code", "1");
-			return responseEntity;
-		} catch (final ApplicationException e) {
-			log.error(getStackTrace(e));
-			return new ResponseEntity<>(
-				new HashMap<Integer, String>(), 
-				headers, 
-				HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity<Map<Integer, String>> detectionTemplate() throws ApplicationException {
+		Map<Integer, String> mapDetectionTemplates = this.skillHandler.detectorTypes();
+		return new ResponseEntity<Map<Integer, String>>(mapDetectionTemplates, headers(), HttpStatus.OK);
 	}
 }
