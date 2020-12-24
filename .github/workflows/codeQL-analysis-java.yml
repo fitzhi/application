@@ -55,7 +55,6 @@ jobs:
       with:
         java-version: 1.8
     - name: Custombuild
-      uses: actions/checkout@v2
       run: |
         pwd
         cd back-fitzhi
