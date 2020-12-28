@@ -65,7 +65,7 @@ public class ProjectControllerResetDashboardTest {
 	@Test
 	@WithMockUser
 	public void testResetDashboardUnknownProject() throws Exception {
-		this.mvc.perform(get("/api/project/resetDashboard/" + UNKNOWN_ID_PROJECT)).andExpect(status().isNotFound());
+		this.mvc.perform(get(String.format("/api/project/%s?action=resetDashboard",  UNKNOWN_ID_PROJECT))).andExpect(status().isNotFound());
 	}
 	
 	@Test
@@ -73,7 +73,7 @@ public class ProjectControllerResetDashboardTest {
 	public void testResetDashboardKnownProject() throws Exception {
         when(cacheDataHandler.removeRepository(any())).thenReturn(true);
         when(repoScanner.generateAsync(any(), any())).thenReturn(null);
-		this.mvc.perform(get("/api/project/resetDashboard/1789")).andExpect(status().isOk());
+		this.mvc.perform(get("/api/project/1789?action=resetDashboard")).andExpect(status().isOk());
 		Assert.assertNull("The location repository should be reset", projectHandler.get(1789).getLocationRepository());
 	}
 

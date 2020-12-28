@@ -3,6 +3,8 @@
  */
 package com.fitzhi.bean.impl;
 
+import static com.fitzhi.Error.CODE_IO_EXCEPTION;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
@@ -20,6 +22,7 @@ import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.BasicCommitRepository;
 import com.fitzhi.data.source.CommitRepository;
+import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -116,17 +119,26 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	}
 	
 	@Override
-	public boolean removeRepository(final Project project) throws IOException {
+	public boolean removeRepository(final Project project) throws ApplicationException {
 		Path cacheFile = Paths.get(generateCacheFilename(project));
+
 		if (log.isInfoEnabled()) {
-			log.info(String.format("Removing the file %s", cacheFile.getFileName()));
+			log.info(String.format("Removing the file %s if this file exists", cacheFile.getFileName()));
 		}
+
+		if (!Files.exists(cacheFile)) {
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("File %s does not exist", cacheFile.getFileName()));
+			}	
+			return false;
+		}
+
 		try {
 			Files.delete(cacheFile);
 			return true;
-		} catch (final Exception e) {
-			log.error(e.getMessage());
-			return false;
+		} catch (final IOException ioe) {
+			log.error(ioe.getMessage());
+			throw new ApplicationException (CODE_IO_EXCEPTION, ioe.getMessage());
 		}
 	}
 

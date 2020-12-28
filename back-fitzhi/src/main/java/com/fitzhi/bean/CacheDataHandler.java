@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.CommitRepository;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * Interface in charge of saving the JSON data into the file system<br/>
@@ -46,8 +47,8 @@ public interface CacheDataHandler {
 	 * Remove the repository on the file system, for this project.<br/>
 	 * @param project the current project
 	 * @return {@code true} if the deletion is successful, {@code false} otherwise
-	 * @throws IOException if an IOException occurs
+	 * @throws ApplicationException if an exception occurs during the removal, most probably an {@link IOException}
 	 */
-	boolean removeRepository (Project project) throws IOException;
+	boolean removeRepository (Project project) throws ApplicationException;
 		
 }

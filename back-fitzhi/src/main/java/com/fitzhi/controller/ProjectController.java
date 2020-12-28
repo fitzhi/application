@@ -662,7 +662,7 @@ public class ProjectController extends BaseRestController {
 	 * @throws NotFoundException if the project does not exist. 
 	 * @throws ApplicationException if the any problem occurs, most probably an {@link IOException}
 	 */
-	@GetMapping(value = "/resetDashboard/{idProject}")
+	@GetMapping(value = "/{idProject}?action=resetDashboard")
 	public ResponseEntity<String> resetDashboard(final @PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
 		
 		if (log.isDebugEnabled()) {
@@ -674,16 +674,14 @@ public class ProjectController extends BaseRestController {
 			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 
-		try {
-			// We do renitialieze the local repository if the user asks for a RESET 
-			projectHandler.saveLocationRepository(idProject, null);
-			String response = cacheDataHandler.removeRepository(project) ? "1" : "0";
-			scanner.generateAsync(project, new SettingsGeneration(project.getId()));
-			return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch (Exception e) {
-			log.error(getStackTrace(e));
-			return new ResponseEntity<>(e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
-		}
+		// We renitialize the local repository if the user asks for a RESET, comparing to a REFRESH 
+		projectHandler.saveLocationRepository(idProject, null);
+		String response = cacheDataHandler.removeRepository(project) ? "1" : "0";
+
+		// Launching the asynchronous generation
+		scanner.generateAsync(project, new SettingsGeneration(project.getId()));
+		
+		return new ResponseEntity<>(response, headers(), HttpStatus.OK);
 	}
 
 	/**
