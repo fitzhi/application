@@ -651,19 +651,23 @@ public class ProjectController extends BaseRestController {
 
 	/**
 	 * <p>
-	 * Reset the current dashboard and start a new Sunburst generation.
+	 * Delete the current Sunburst dashboard <em>and start the generation of a new Sunburst chart in an asynchronous mode</em>.
+	 * </p>
+	 * <p>
+	 * This method requests for the deletion of the sunburst data, stored on the file system. 
+	 * This deletion triggers the generation of a new one.
+	 * </p>
+	 * <p>
+	 * <b>Therefore the reponse is EMPTY and has an {@link HttpStatus#ACCEPTED ACCEPTED 202} status.</b>
 	 * </p>
 	 * @param idProject the project identifier
-	 * @return a single String character containing the code 
-	 * <ul>
-	 * <li>"{@code 1}" if the removal of the repository succeeds,</li>  
-	 * <li>"{@code 0}" otherwise</li>.
-	 * </ul>
+	 * @return an empty reponse. 
 	 * @throws NotFoundException if the project does not exist. 
 	 * @throws ApplicationException if the any problem occurs, most probably an {@link IOException}
 	 */
-	@GetMapping(value = "/{idProject}?action=resetDashboard")
-	public ResponseEntity<String> resetDashboard(final @PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
+	@DeleteMapping(value = "/{idProject}/sunburst")
+	public ResponseEntity<Void> resetDashboard(
+		final @PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Removing project with %d", idProject));
@@ -676,12 +680,12 @@ public class ProjectController extends BaseRestController {
 
 		// We renitialize the local repository if the user asks for a RESET, comparing to a REFRESH 
 		projectHandler.saveLocationRepository(idProject, null);
-		String response = cacheDataHandler.removeRepository(project) ? "1" : "0";
+		cacheDataHandler.removeRepository(project);
 
 		// Launching the asynchronous generation
 		scanner.generateAsync(project, new SettingsGeneration(project.getId()));
 		
-		return new ResponseEntity<>(response, headers(), HttpStatus.OK);
+		return ResponseEntity.accepted().build();
 	}
 
 	/**
