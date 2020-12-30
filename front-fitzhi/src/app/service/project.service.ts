@@ -465,12 +465,12 @@ export class ProjectService extends InternalService {
 	 * @param id project identifier to **RESET**
 	 */
 	public resetDashboard(id: number): Observable<string> {
-		const url = this.backendSetupService.url() + '/project/resetDashboard/' + id;
+		const url = this.backendSetupService.url() + '/project/' + id + '/sunburst';
 		if (traceOn()) {
 			console.log('Reset the dashboard data on URL ' + url);
 		}
 		this.sunburstCinematicService.listenEventsFromServer$.next(true);
-		return this.httpClient.get<string>(url, httpOptions);
+		return this.httpClient.delete<string>(url, httpOptions);
 	}
 
 	/**
