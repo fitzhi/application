@@ -690,22 +690,30 @@ public class ProjectController extends BaseRestController {
 
 	/**
 	 * <p>
-	 * Reload the current dashboard and start a new Sunburst generation.
+	 * Generate the sunburst chart. 
+	 * </p>
+	 * <p>
+	 * <ul>
+	 * <li>This method can be invoked many times with the same result. This methdd is <b>idempotent</b></i>
+	 * <li>This method updates the level of risk for the given project and the missions of the developers involved in its.
+	 * </ul>
+	 * Therefore the REST verb is a <b>POST</b> with an empty BODY. Only the project ID is necessary.
+	 * </p>
+	 * <p>
+	 * This API entry returns immediatly with an empty response with a {@link HttpStatus#ACCEPTED ACCEPTED 202} status. 
+	 * </p>
+	 * <p>
+	 * The {@link  RepoScanner#generateAsync(Project, SettingsGeneration)  generation} is triggered.
 	 * </p>
 	 * @param idProject the project identifier
-	 * @return a single String character containing the code 
-	 * <ul>
-	 * <li>"{@code 1}" if the removal of the repository succeeds,</li>  
-	 * <li>"{@code 0}" otherwise</li>.
-	 * </ul>
 	 * @throws NotFoundException if the project does not exist. 
 	 * @throws ApplicationException if the any problem occurs, most probably an {@link IOException}
 	 */
-	@GetMapping(value = "/reloadDashboard/{idProject}")
+	@PostMapping(value = "/{idProject}/sunburst")
 	public ResponseEntity<String> reloadDashboard(final @PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Removing project with %d", idProject));
+			log.debug(String.format("Request for the generation of the Sunburst chart for project %d", idProject));
 		}
 
 		Project project = projectHandler.get(idProject);
@@ -713,16 +721,12 @@ public class ProjectController extends BaseRestController {
 			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 
-		try {
-			// We do not renitialieze the local repository if the user asks for a RESET 
-			// projectHandler.saveLocationRepository(idProject, null);
-			String response = cacheDataHandler.removeRepository(project) ? "1" : "0";
-			scanner.generateAsync(project, new SettingsGeneration(project.getId()));
-			return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch (Exception e) {
-			log.error(getStackTrace(e));
-			return new ResponseEntity<>(e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
-		}
+		cacheDataHandler.removeRepository(project);
+
+		// Launching the asynchronous generation
+		scanner.generateAsync(project, new SettingsGeneration(project.getId()));
+		
+		return ResponseEntity.accepted().build();
 	}
 
 	/**

@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fitzhi.bean.CacheDataHandler;
@@ -67,7 +68,7 @@ public class ProjectControllerReloadDashboardTest {
 	@Test
 	@WithMockUser
 	public void testResetDashboardUnknownProject() throws Exception {
-		this.mvc.perform(get("/api/project/reloadDashboard/" + UNKNOWN_ID_PROJECT)).andExpect(status().isNotFound());
+		this.mvc.perform(post("/api/project/" + UNKNOWN_ID_PROJECT + "/sunburst")).andExpect(status().isNotFound());
 	}
 	
 	@Test
@@ -75,7 +76,7 @@ public class ProjectControllerReloadDashboardTest {
 	public void testResetDashboardKnownProject() throws Exception {
         when(cacheDataHandler.removeRepository(any())).thenReturn(true);
         when(repoScanner.generateAsync(any(), any())).thenReturn(null);
-		this.mvc.perform(get("/api/project/reloadDashboard/1789")).andExpect(status().isOk());
+		this.mvc.perform(post("/api/project/1789/sunburst")).andExpect(status().isAccepted());
 		Mockito.verify(cacheDataHandler, times(1)).removeRepository(any());
 		Assert.assertNotNull("The location repository should NOT be reset", projectHandler.get(1789).getLocationRepository());
 		Assert.assertEquals("myLocationRepository", projectHandler.get(1789).getLocationRepository());
