@@ -74,7 +74,7 @@ describe('Testing the Reet button behavior in ProjectSunburstComponent with data
 		const spyQuestion = spyOn(messageBoxService, 'question').and.returnValue(new BehaviorSubject(true));
 		const spyResetDashboard = spyOn(projectService, 'resetDashboard').and.returnValue(of(""));
 		const spyClearResponse = spyOn(cacheService, 'clearReponse').and.returnValue();
-		const spyReloadDashboard = spyOn(projectService, 'reloadDashboard');
+		const spyReloadDashboard = spyOn(projectService, 'reloadSunburst$');
 
 		const button = fixture.debugElement.nativeElement.querySelector('#reset');
 		expect(button).toBeDefined();
@@ -92,7 +92,8 @@ describe('Testing the Reet button behavior in ProjectSunburstComponent with data
 		const spyQuestion = spyOn(messageBoxService, 'question').and.returnValue(new BehaviorSubject(false));
 		const spyResetDashboard = spyOn(projectService, 'resetDashboard');
 		const spyClearResponse = spyOn(cacheService, 'clearReponse');
-		const spyReloadDashboard = spyOn(projectService, 'reloadDashboard');
+		const spyReloadDashboard = spyOn(projectService, 'reloadSunburst$');
+
 
 		const button = fixture.debugElement.nativeElement.querySelector('#reset');
 		expect(button).toBeDefined();
