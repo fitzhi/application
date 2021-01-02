@@ -30,7 +30,6 @@ import { traceOn, HttpCodes } from '../global';
 import { SunburstCinematicService } from '../project/project-sunburst/service/sunburst-cinematic.service';
 import { ProjectSkill } from '../data/project-skill';
 import { SkillService } from '../skill/service/skill.service';
-import { StaffService } from '../tabs-staff/service/staff.service';
 import { CinematicService } from './cinematic.service';
 import { GitService } from './git/git.service';
 
@@ -478,8 +477,14 @@ export class ProjectService extends InternalService {
 	 * @param id project identifier to **RELOAD**
 	 */
 	public reloadDashboard(id: number): Observable<string> {
-		return of("");
+		const url = this.backendSetupService.url() + '/project/' + id + '/sunburst';
+		if (traceOn()) {
+			console.log('Reload the dashboard data on URL ' + url);
+		}
+		this.sunburstCinematicService.listenEventsFromServer$.next(true);
+		return this.httpClient.post<string>(url, httpOptions);
 	}
+
 	/**
 	 * Test a connection to GIT on server, in order to validate the connection settings.
 	 * @param idProject project whose connection settings has to be tested
