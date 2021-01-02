@@ -652,7 +652,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				if (answer) {
 					this.cacheService.clearReponse();
 					this.projectService
-						.reloadDashboard(this.settings.idProject)
+						.reloadSunburst$(this.settings.idProject)
 						.pipe(take(1))
 						.subscribe(response => {
 							if ((!response) && (traceOn())) {

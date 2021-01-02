@@ -476,7 +476,7 @@ export class ProjectService extends InternalService {
 	 * **RELOAD** the chart data.
 	 * @param id project identifier to **RELOAD**
 	 */
-	public reloadDashboard(id: number): Observable<string> {
+	public reloadSunburst$(id: number): Observable<string> {
 		const url = this.backendSetupService.url() + '/project/' + id + '/sunburst';
 		if (traceOn()) {
 			console.log('Reload the dashboard data on URL ' + url);
