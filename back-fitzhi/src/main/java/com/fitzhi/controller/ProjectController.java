@@ -710,7 +710,7 @@ public class ProjectController extends BaseRestController {
 	 * @throws ApplicationException if the any problem occurs, most probably an {@link IOException}
 	 */
 	@PostMapping(value = "/{idProject}/sunburst")
-	public ResponseEntity<String> reloadDashboard(final @PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
+	public ResponseEntity<String> reloadSunburstChart(final @PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Request for the generation of the Sunburst chart for project %d", idProject));

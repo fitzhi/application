@@ -29,7 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * <p>
- * Testing the method {@link ProjectController#reloadDashboard(int)}
+ * Testing the method {@link ProjectController#reloadSunburstChart(int)}
  * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
