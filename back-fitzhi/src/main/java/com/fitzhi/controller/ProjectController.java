@@ -666,7 +666,7 @@ public class ProjectController extends BaseRestController {
 	 * @throws ApplicationException if the any problem occurs, most probably an {@link IOException}
 	 */
 	@DeleteMapping(value = "/{idProject}/sunburst")
-	public ResponseEntity<Void> resetDashboard(
+	public ResponseEntity<Void> resetSunburstChart(
 		final @PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
 		
 		if (log.isDebugEnabled()) {
@@ -694,8 +694,8 @@ public class ProjectController extends BaseRestController {
 	 * </p>
 	 * <p>
 	 * <ul>
-	 * <li>This method can be invoked many times with the same result. This methdd is <b>idempotent</b></i>
-	 * <li>This method updates the level of risk for the given project and the missions of the developers involved in its.
+	 * <li>This method can be invoked many times with the same result. This method is <b>idempotent</b></i></li>
+	 * <li>This method updates the level of risk for the given project and the missions of the developers involved in its.</li>
 	 * </ul>
 	 * Therefore the REST verb is a <b>POST</b> with an empty BODY. Only the project ID is necessary.
 	 * </p>
