@@ -147,6 +147,17 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	  */
 	 Staff createWorkforceMember(Staff staff) throws ApplicationException;
 	 
+	  /**
+	  * <p>
+	  * Create an almost empty staff member based on the commit information 
+	  * </p>
+	  * @param author the author of the commit
+	  * @return the newly created staff member
+	  * @throws ApplicationException thrown if any problems occurs during the validation of this staff
+	  * @see #controlWorkforceMember(Staff)
+	  */
+	  Staff createEmptyStaff(String author) throws ApplicationException;
+
 	 /**
 	  * <p>Control and save the given staff.</p>
 	  * @param staff the staff member to be updated.

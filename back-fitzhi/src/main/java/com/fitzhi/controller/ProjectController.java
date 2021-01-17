@@ -8,8 +8,6 @@ import static com.fitzhi.Error.MESSAGE_PROJECT_IS_NOT_EMPTY;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.UNKNOWN_PROJECT;
 import static com.fitzhi.Error.getStackTrace;
-import static com.fitzhi.Global.BACKEND_RETURN_CODE;
-import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.PROJECT;
 import static com.fitzhi.Global.deepClone;
@@ -419,17 +417,13 @@ public class ProjectController extends BaseRestController {
 	 * @return {@code true} if the
 	 */
 	@GetMapping(value = "/test/{idProject}")
-	public ResponseEntity<Boolean> test(@PathVariable("idProject") int idProject) {
-		final HttpHeaders headers = headers();
-		try {
-			final Project project = projectHandler.get(idProject);
-			boolean connected = this.scanner.testConnection(project);
-			return new ResponseEntity<>(connected, headers, HttpStatus.OK);
-		} catch (ApplicationException e) {
-			headers.set(BACKEND_RETURN_CODE, String.valueOf(e.errorCode));
-			headers.set(BACKEND_RETURN_MESSAGE, e.getMessage());
-			return new ResponseEntity<>(false, headers, HttpStatus.NOT_FOUND);
+	public ResponseEntity<Boolean> test(@PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
+		Project project = projectHandler.get(idProject);
+		if (project == null) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
+		boolean connected = this.scanner.testConnection(project);
+		return new ResponseEntity<>(connected, headers(), HttpStatus.OK);
 	}
 
 	/**

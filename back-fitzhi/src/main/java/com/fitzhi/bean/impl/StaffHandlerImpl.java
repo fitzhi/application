@@ -544,9 +544,33 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 
 	@Override
 	public Staff createWorkforceMember(final Staff staff) throws ApplicationException {
-
 		controlWorkforceMember(staff);
-		
+		addNewStaff(staff);
+		return staff;
+	}
+
+	@Override
+	public Staff createEmptyStaff(String author) throws ApplicationException {
+		String[] w = author.split(" ");
+		Staff staff = new Staff();
+		if (w.length == 1) {
+			staff.setFirstName("firstname");
+			staff.setLastName(w[0]);
+			staff.setNickName(w[0]);
+		} else {
+			staff.setFirstName(w[0]);
+			staff.setLastName(author.substring(w[0].length()+1));
+			staff.setNickName(author);
+		}
+		addNewStaff(staff);
+		return staff;
+	}
+
+	/**
+	 * Add a new staff in the staff collection
+	 * @param staff the new Staff member
+	 */
+	private void addNewStaff(Staff staff) {
 		synchronized (lockDataUpdated) {
 			Map<Integer, Staff> company = getStaff();
 			if (staff.getIdStaff() <= 0) {				
@@ -555,7 +579,6 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			company.put(staff.getIdStaff(), staff);
 			this.dataUpdated = true;
 		}
-		return staff;
 	}
 
 	@Override

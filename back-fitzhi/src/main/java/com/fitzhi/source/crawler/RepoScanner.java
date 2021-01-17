@@ -181,15 +181,22 @@ public interface RepoScanner {
 	
 	/**
 	 * <p>
-	 * Update the collection changes by setting the staff identifier <b>found</b> for every entry.<br/>
-	 * This method lookup in the staff team with the author declared for each commit.<br/>
-	 * A set of unknown contributors is also generated.
+	 * Update the collection changes by setting the staff identifier <b>found</b> for each entry.
+	 * This method search for a staff member with the author declared on each commit.
+	 * </p>
+	 * <P>
+	 * If the staff auto creation setting is set to {@code true}, new staff members will be created if creation is possible.
+	 * <em>For example, if the author is declared as the string 'John Doo', the application will assume that the creator is John Doo</em> 
+	 * </p>
+	 * <p>
+	 * A set of ghosts is also created for all unknown contributors. 
 	 * </p>
 	 * @param project the current project
 	 * @param analysis the repository analysis.
-	 * @param unknownContributors the set of ghost, i.e. the unknown contributors
+	 * @param ghosts the set of ghost, i.e. the unknown contributors
+	 * @throws ApplicationException thrown if any exception occcurs
 	 */
-	void updateStaff(Project project, RepositoryAnalysis analysis, Set<String> unknownContributors);
+	void updateStaff(Project project, RepositoryAnalysis analysis, Set<String> ghosts) throws ApplicationException;
 
 	/**
 	 * <p>

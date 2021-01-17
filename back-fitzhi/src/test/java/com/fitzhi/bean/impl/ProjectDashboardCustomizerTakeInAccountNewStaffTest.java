@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.bean.impl;
 
 
@@ -55,7 +52,8 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 		public void initialize(
 				ConfigurableApplicationContext configurableApplicationContext) {
 			TestPropertyValues.of(
-					"cache.working.dir=" +  MessageFormat.format(".{0}src{0}test{0}resources{0}cacheDirRepository{0}", File.separator))
+					"cache.working.dir=" +  MessageFormat.format(".{0}src{0}test{0}resources{0}cacheDirRepository{0}", 
+					File.separator))
 					.applyTo(configurableApplicationContext.getEnvironment());
 		}
 	}

@@ -137,6 +137,14 @@ import lombok.extern.slf4j.Slf4j;
 public class GitCrawler extends AbstractScannerDataGenerator {
 
     /**
+     * <p>
+     * Do we create dynamicaly staff member from the ghosts list 
+     * </p>
+     */
+    @Value("${autoStaffCreation}")
+    private boolean autoStaffCreation;
+
+    /**
      * Patterns to take account, OR NOT, a file within the parsing process.<br/>
      * For example, a file with the suffix .java is involved.
      */
@@ -1581,54 +1589,81 @@ public class GitCrawler extends AbstractScannerDataGenerator {
     }
 
     @Override
-    public void updateStaff(Project project, RepositoryAnalysis analysis, Set<String> unknownContributors) {
+    public void updateStaff(Project project, RepositoryAnalysis analysis, Set<String> unknownContributors) throws ApplicationException {
 
         List<String> authors = analysis.authors();
 
-        authors.forEach(
+        for (String author : authors) {
+            final Staff staff = staffHandler.lookup(author);                    
 
-                author -> {
+            // Either this author is already registered as a ghost with the same pseudo
+            // or this author can be linked to a registered developer
+            // or this author is a new ghost
 
-                    final Staff staff = staffHandler.lookup(author);
-                    if ((staff == null) && (author.split(" ").length == 1)) {
-                        Optional<Ghost> oGhost = project.getGhosts().stream().filter(g -> !g.isTechnical())
-                                .filter(g -> g.getIdStaff() > 0).filter(g -> author.equalsIgnoreCase(g.getPseudo()))
-                                .findFirst();
-                        if (oGhost.isPresent()) {
-                            Ghost selectedGhost = oGhost.get();
-                            if (staffHandler.getStaff(selectedGhost.getIdStaff()) == null) {
-                                throw new ApplicationRuntimeException("Ghost " + selectedGhost.getPseudo()
-                                        + " has an invalid idStaff " + selectedGhost.getIdStaff());
-                            }
-                            int ghostIdentified = staffHandler.getStaff(selectedGhost.getIdStaff()).getIdStaff();
-                            //
-                            // We update the staff collection !
-                            //
-                            analysis.updateStaff(author, ghostIdentified);
-                            //
-                            // We find a staff entry, but we keep the pseudo in the unknowns list
-                            // in order to be able to change the relation between the ghost & the staff
-                            // member in the dedicated Angular component
-                            //
-                            unknownContributors.add(author);
-                        }
-                    }
-                    if (staff == null) {
-                        if (log.isDebugEnabled()) {
-                            log.debug(String.format("No staff found for the criteria %s", author));
-                        }
-                        unknownContributors.add(author);
-                    } else {
-                        //
-                        // We update the staff collection !
-                        //
-                        analysis.updateStaff(author, staff.getIdStaff());
-                    }
+            if (staff == null) {
 
-                });
+                // 
+                if (autoStaffCreation) {
+                    Staff st = staffHandler.createEmptyStaff(author);
+                    analysis.updateStaff(author, st.getIdStaff());
+                } else {
+                    //
+                    // There is no author related to this author 
+                    //
+                    manageAuthorWithGhostsList(project, analysis, unknownContributors, author);
+                }
+
+            } else {
+                //
+                // We found a staff member corresponding to this author
+                // We update the staff collection !
+                //
+                analysis.updateStaff(author, staff.getIdStaff());
+            }
+
+        }
 
         this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
                 String.format("All changes have been assigned to registered staff members"), NO_PROGRESSION);
+
+    }
+
+    private void manageAuthorWithGhostsList(Project project, RepositoryAnalysis analysis, Set<String> unknownContributors, String author) {
+
+        // The use case behind these lines :
+        // A ghost has been linked through the Angular ghost form with the pseudo of an existing staff member.
+        // This ghost corresponds to this pseudo.
+        // So we update for this author the analysis data
+        Optional<Ghost> oGhost = project.getGhosts().stream()
+            .filter(g -> !g.isTechnical())
+            .filter(g -> g.getIdStaff() > 0)
+            .filter(g -> author.equalsIgnoreCase(g.getPseudo()))
+            .findFirst();
+        if (oGhost.isPresent()) {
+            Ghost selectedGhost = oGhost.get();
+            if (staffHandler.getStaff(selectedGhost.getIdStaff()) == null) {
+                throw new ApplicationRuntimeException("Ghost " + selectedGhost.getPseudo()
+                        + " has an invalid idStaff " + selectedGhost.getIdStaff());
+            }
+            int ghostIdentified = selectedGhost.getIdStaff();
+
+            //
+            // We update the staff collection !
+            //
+            analysis.updateStaff(author, ghostIdentified);
+
+            //
+            // We find a staff entry, but we keep the pseudo in the unknowns list
+            // in order to be able to change the relation between the ghost & the staff member in the dedicated Angular component
+            //
+            unknownContributors.add(author);
+        } else {
+            // It's a new ghost
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Adding the ghost : %s", author));
+            }
+            unknownContributors.add(author);
+        }
 
     }
 

@@ -44,6 +44,7 @@ public class ProjectHandlerIntegrateGhostsTest {
 		project.getGhosts().add(new Ghost("pseudoLinked", 2, false));
 	}
 	
+	
 	@Test
 	public void test() throws ApplicationException {
 		Set<String> pseudos = new HashSet<String>();
