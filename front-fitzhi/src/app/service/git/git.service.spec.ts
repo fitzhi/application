@@ -69,8 +69,8 @@ describe('GitService', () => {
 					expect(branches[1]).toBe('master');
 					expect(branches[2]).toBe('release-1-1');
 					expect(branches[3]).toBe('release-1.2');
-					expect(branches[4]).toBe('release-1.3');
 					expect(branches[5]).toBe('Simple-starting-forms');
+					expect(branches[4]).toBe('release-1.3');
 				}
 			})
 	}));
