@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.source.crawler.git;
 
 import java.time.LocalDate;
@@ -8,6 +5,7 @@ import java.time.LocalDate;
 import com.fitzhi.data.internal.SourceCodeDiffChange;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * <p>
@@ -19,6 +17,7 @@ import lombok.Data;
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@ToString
 public @Data class SourceChange {
 
 	/**
@@ -130,12 +129,6 @@ public @Data class SourceChange {
 	public int lines() {
 		return (this.diff == null) ? 0 : this.diff.getLinesAdded() - this.diff.getLinesDeleted();
 
-	}
-
-	@Override
-	public String toString() {
-		return "SourceChange [authorEmail=" + authorEmail + ", authorName=" + authorName + ", commitId=" + commitId
-				+ ", dateCommit=" + dateCommit + ", diff=" + diff + ", idStaff=" + idStaff + "]";
 	}
 
 }

@@ -157,7 +157,10 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	}
 
 	private void takeInAccount(Skill skill, List<Contributor> contributors, SourceChange change) {
-		Optional<Contributor> oContributor = contributors.stream().filter(contributor -> contributor.getIdStaff() == change.getIdStaff()).findFirst();
+		Optional<Contributor> oContributor = contributors
+			.stream()
+			.filter(contributor -> contributor.getIdStaff() == change.getIdStaff())
+			.findFirst();
 		if (oContributor.isPresent()) {
 			StaffActivitySkill sas = oContributor.get().getStaffActivitySkill().get(skill.getId());
 			if (sas == null) {

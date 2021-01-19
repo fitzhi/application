@@ -1,11 +1,8 @@
-/**
- * 
- */
 package com.fitzhi.security;
 
-import javax.annotation.Generated;
-
 import org.springframework.security.core.GrantedAuthority;
+
+import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -14,6 +11,7 @@ import org.springframework.security.core.GrantedAuthority;
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@EqualsAndHashCode
 public class CustomGrantedAuthority implements GrantedAuthority {
 
 	/**
@@ -45,33 +43,6 @@ public class CustomGrantedAuthority implements GrantedAuthority {
 	@Override
 	public String getAuthority() {
 		return authority;
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((authority == null) ? 0 : authority.hashCode());
-		return result;
-	}
-
-
-	@Override
-	@Generated ("eclipse")
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		CustomGrantedAuthority other = (CustomGrantedAuthority) obj;
-		if (authority == null) {
-			if (other.authority != null)
-				return false;
-		} else if (!authority.equals(other.authority))
-			return false;
-		return true;
 	}
 
 }

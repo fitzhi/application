@@ -553,14 +553,17 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	public Staff createEmptyStaff(String author) throws ApplicationException {
 		String[] w = author.split(" ");
 		Staff staff = new Staff();
+		staff.setIdStaff(-1);
 		if (w.length == 1) {
 			staff.setFirstName("firstname");
 			staff.setLastName(w[0]);
 			staff.setNickName(w[0]);
+			staff.setLogin(w[0]);
 		} else {
 			staff.setFirstName(w[0]);
 			staff.setLastName(author.substring(w[0].length()+1));
 			staff.setNickName(author);
+			staff.setLogin(author);
 		}
 		addNewStaff(staff);
 		return staff;
@@ -577,6 +580,10 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				staff.setIdStaff(company.size() + 1);
 			}
 			company.put(staff.getIdStaff(), staff);
+			if (log.isInfoEnabled()) {
+				log.info(String.format("Creation of staff member %d %s %s", 
+					staff.getIdStaff(), staff.getFirstName(), staff.getLastName()));
+			}
 			this.dataUpdated = true;
 		}
 	}

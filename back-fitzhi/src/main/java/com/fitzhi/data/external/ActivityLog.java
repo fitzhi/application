@@ -1,14 +1,10 @@
-/**
- * 
- */
 package com.fitzhi.data.external;
-
-import javax.annotation.Generated;
 
 import com.fitzhi.data.internal.Task;
 import com.fitzhi.data.internal.TaskLog;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -23,6 +19,7 @@ import lombok.Data;
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@EqualsAndHashCode
 public @Data class ActivityLog  {
 
 	/**
@@ -111,48 +108,5 @@ public @Data class ActivityLog  {
 				+ ", complete=" + complete + ", completeOnError=" + completeOnError + "]";
 	}
 
-	@Override
-	@Generated ("eclipse")
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ActivityLog other = (ActivityLog) obj;
-		if (progressionPercentage != other.progressionPercentage)
-			return false;
-		if (code != other.code)
-			return false;
-		if (complete != other.complete)
-			return false;
-		if (completeOnError != other.completeOnError)
-			return false;
-		if (id != other.id)
-			return false;
-		if (message == null) {
-			if (other.message != null)
-				return false;
-		} else if (!message.equals(other.message))
-			return false;
-		return true;
-	}
-
-	@Override
-	@Generated ("eclipse")
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + code;
-		result = prime * result + progressionPercentage;
-		result = prime * result + (complete ? 1231 : 1237);
-		result = prime * result + (completeOnError ? 1231 : 1237);
-		result = prime * result + id;
-		result = prime * result + ((message == null) ? 0 : message.hashCode());
-		return result;
-	}
-	
-	
 }
 

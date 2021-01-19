@@ -539,9 +539,15 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         Set<String> allFiles;
 
         try (Stream<Path> stream = Files.walk(start, Integer.MAX_VALUE)) {
-            allFiles = stream.map(String::valueOf).map(Paths::get).filter(p -> !p.toFile().isDirectory())
-                    .map(start::relativize).map(Path::toString).filter(p -> !".git".equals(p.substring(0, 4)))
-                    .filter(p -> !".git".equals(p.substring(1, 5))).sorted().collect(Collectors.toSet());
+            allFiles = stream
+                    .map(String::valueOf)
+                    .map(Paths::get).filter(p -> !p.toFile().isDirectory())
+                    .map(start::relativize)
+                    .map(Path::toString)
+                    .filter(p -> ((p.length() <= 4) || !".git".equals(p.substring(0, 4))))
+                    .filter(p -> ((p.length() <= 5) || !".git".equals(p.substring(1, 5))))
+                    .sorted()
+                    .collect(Collectors.toSet());
         } catch (IOException ioe) {
             throw new ApplicationException(CODE_IO_ERROR,
                     MessageFormat.format(MESSAGE_IO_ERROR, project.getLocationRepository()), ioe);
@@ -1602,8 +1608,10 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
             if (staff == null) {
 
-                // 
-                if (autoStaffCreation) {
+                
+                // A setting in applications.properties is equal to TRUE
+                // We create staff member with the ghost data 
+                if (autoStaffCreation && (author.split(" ").length > 1)) {
                     Staff st = staffHandler.createEmptyStaff(author);
                     analysis.updateStaff(author, st.getIdStaff());
                 } else {
