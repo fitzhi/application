@@ -9,5 +9,7 @@
 	{ "id": 7, "title": "ReactJS", "awesomeTitle": "fab fa-react", "pattern": ".to-be-determined$" },
 	{ "id": 8, "title": "Android", "awesomeTitle": "fab fa-android", "pattern": ".also-to-be-determined$" },
 	{ "id": 9, "title": "HTML", "awesomeTitle": "fab fa-html5", "pattern": ".html$" },
-	{ "id": 10, "title": "CSS", "awesomeTitle": "fab fa-css3-alt", "pattern": ".css$" }
+	{ "id": 10, "title": "CSS", "awesomeTitle": "fab fa-css3-alt", "pattern": ".css$" },
+	{ "id": 11, "title": "SCSS", "awesomeTitle": "fab fa-sass", "pattern": ".scss$" }
+	{ "id": 12, "title": "SASS", "awesomeTitle": "fab fa-sass", "pattern": ".sass$" }
 ]
