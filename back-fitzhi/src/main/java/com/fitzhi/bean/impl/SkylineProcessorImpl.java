@@ -146,7 +146,7 @@ public class SkylineProcessorImpl implements SkylineProcessor {
         // This one retrieves the associated year.
         final TemporalField yowoy = WeekFields.of(Locale.getDefault()).weekBasedYear();
 
-        layers.getLayers().stream().forEach(layer -> {
+        for (ProjectLayer layer : layers.getLayers()) {
 
             if (log.isDebugEnabled()) {
                 log.debug (String.format("Project %d layer week/year %d/%d", project.getId(), layer.getWeek(), layer.getYear()));
@@ -157,18 +157,23 @@ public class SkylineProcessorImpl implements SkylineProcessor {
             } else {
                 Staff staff = staffHandler.getStaff(layer.getIdStaff());
                 if (staff == null) {
-                    throw new RuntimeException(
-                            String.format("Identifier %d is not found in the staff members, but present in Project %s", layer.getIdStaff(), project.getName()));
-                }
-                if (staff.isActive()) {
-                    building.addActiveOrInactiveLines(layer.getLines(), layer.getYear(), layer.getWeek(),
-                            Integer.MAX_VALUE, Integer.MAX_VALUE);
+                    building.addInactiveLines(layer.getLines(), layer.getYear(), layer.getWeek());
+                    if (log.isWarnEnabled()) {
+                        log.warn(
+                            String.format("Identifier %d is not found in the staff members, but present in Project %s. This staff member has probably been removed", layer.getIdStaff(), project.getName()));
+                    }
+                    building.addInactiveLines(layer.getLines(), layer.getYear(), layer.getWeek());
                 } else {
-                    building.addActiveOrInactiveLines(layer.getLines(), layer.getYear(), layer.getWeek(),
-                            staff.getDateInactive().get(yowoy), staff.getDateInactive().get(woy));
+                    if (staff.isActive()) {
+                        building.addActiveOrInactiveLines(layer.getLines(), layer.getYear(), layer.getWeek(),
+                                Integer.MAX_VALUE, Integer.MAX_VALUE);
+                    } else {
+                        building.addActiveOrInactiveLines(layer.getLines(), layer.getYear(), layer.getWeek(),
+                                staff.getDateInactive().get(yowoy), staff.getDateInactive().get(woy));
+                    }
                 }
             }
-        });
+        }
         return building;
     }
 
