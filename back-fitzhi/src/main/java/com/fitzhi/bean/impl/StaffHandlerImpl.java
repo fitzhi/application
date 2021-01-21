@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -576,8 +577,16 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	private void addNewStaff(Staff staff) {
 		synchronized (lockDataUpdated) {
 			Map<Integer, Staff> company = getStaff();
-			if (staff.getIdStaff() <= 0) {				
-				staff.setIdStaff(company.size() + 1);
+			if (staff.getIdStaff() <= 0) {	
+				try {
+					int max = company.keySet().stream()
+						.mapToInt(v->v)
+						.max()
+						.orElseThrow(NoSuchElementException::new);
+						staff.setIdStaff(max + 1);
+				} catch (final NoSuchElementException e) {
+					staff.setIdStaff(1);
+				}
 			}
 			company.put(staff.getIdStaff(), staff);
 			if (log.isInfoEnabled()) {
