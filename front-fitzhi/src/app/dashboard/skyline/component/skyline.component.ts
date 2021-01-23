@@ -12,20 +12,24 @@ import { SkylineService } from '../service/skyline.service';
 export class SkylineComponent implements OnInit {
 
 	/**
-	 * The width of the skyline component
+	 * The **width** of the skyline component.
 	 */
 	@Input() width;
 	
 	/**
-	 * The height of the skyline component
+	 * The **height** of the skyline component.
 	 */
 	@Input() height;
+
+	/**
+	 * The **margin** of the skyline component.
+	 */
+	@Input() margin;
 
 	public risingSkylineHistory$ = new BehaviorSubject<Building[]>([]);
 
 	constructor(
-		public skylineService: SkylineService,
-		private controlledRisingSkylineService:  ControlledRisingSkylineService) { }
+		public skylineService: SkylineService) { }
 
 	ngOnInit(): void {
 	}

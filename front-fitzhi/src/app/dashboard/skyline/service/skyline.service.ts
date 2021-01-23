@@ -20,7 +20,7 @@ export class SkylineService {
 	/**
 	 * Default width for each project building.
 	 */
-	private defaultWidth = 40.
+	private defaultWidth = 100;
 
 	/**
 	 * Ths skyline is loaded.
