@@ -128,11 +128,11 @@ export class ProjectService extends InternalService {
 					if (actualProject) {
 						actualProject.skills = project.skills;
 						this.loadMapSkills(actualProject);
-						this.dump(actualProject, '');
+						this.dump(actualProject, 'projectService after updated the project');
 					} else {
 						this.loadMapSkills(project);
 						this.allProjects.push(project);
-						this.dump(project, '');
+						this.dump(project, 'projectService when creating a project');
 					}
 				},
 				error: error => console.error ('FVI error', error)
@@ -1039,6 +1039,7 @@ export class ProjectService extends InternalService {
 			return;
 		}
 
+		console.log('Dump executed from', from);
 		console.groupCollapsed(from, 'Project ' + project.id + ' ' + project.name);
 		console.groupCollapsed('Global audit evaluation', project.auditEvaluation);
 		if (project.audit) {

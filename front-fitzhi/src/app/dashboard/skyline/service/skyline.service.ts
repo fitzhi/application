@@ -20,7 +20,7 @@ export class SkylineService {
 	/**
 	 * Default width for each project building.
 	 */
-	private defaultWidth = 100;
+	public static defaultWidth = 100;
 
 	/**
 	 * Ths skyline is loaded.
@@ -88,7 +88,7 @@ export class SkylineService {
 					element.idProject,
 					element.year,
 					element.week,
-					this.defaultWidth,
+					SkylineService.defaultWidth,
 					Math.floor (heightOneLine * (element.linesActiveDevelopers + element.linesInactiveDevelopers)),
 					100 - Math.floor(100 * element.linesActiveDevelopers / (element.linesActiveDevelopers + element.linesInactiveDevelopers)),
 					(project) ? project.name : 'undefined'

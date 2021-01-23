@@ -51,7 +51,7 @@ describe('SkylineService', () => {
 		expect(building.id).toBe(1);
 		expect(building.year).toBe(2020);
 		expect(building.week).toBe(10);
-		expect(building.width).toBe(40);
+		expect(building.width).toBe(SkylineService.defaultWidth);
 		expect(building.height).toBe(300);
 		expect(building.index).toBe(50);
 		expect(building.title).toBe('One');
