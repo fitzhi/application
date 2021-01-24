@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * Testing the method {@link StaffHandler#createEmptyStaff(String)}
  * 
@@ -26,6 +28,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Slf4j
 public class StaffHandlerCreateEmptyTest {
 
 	@Autowired
@@ -85,10 +88,12 @@ public class StaffHandlerCreateEmptyTest {
 		Staff st = staffHandler.createEmptyStaff("first One");
 		Assert.assertEquals(1, st.getIdStaff());
 
+		// 
 		Type type = new TypeToken<HashMap<Integer, Staff>>(){}.getType();
 		HashMap<Integer, Staff> clonedMap = gson.fromJson(jsonString, type); 
 		staffHandler.getStaff().clear();
 		staffHandler.getStaff().putAll(clonedMap);
+		staffHandler.getStaff().values().stream().map(Staff::fullName).forEach(log::debug);
 	}
 
 	@After
