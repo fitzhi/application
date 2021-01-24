@@ -1,10 +1,13 @@
 package com.fitzhi.bean.impl;
 
-import java.util.Map;
+import java.lang.reflect.Type;
+import java.util.HashMap;
 
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -74,9 +77,18 @@ public class StaffHandlerCreateEmptyTest {
 
 	@Test
 	public void createStaffInAnEmptyCompayny() throws ApplicationException {
+		//Deep clone
+		Gson gson = new Gson();
+		String jsonString = gson.toJson(staffHandler.getStaff());
+		
 		staffHandler.getStaff().clear();
 		Staff st = staffHandler.createEmptyStaff("first One");
 		Assert.assertEquals(1, st.getIdStaff());
+
+		Type type = new TypeToken<HashMap<Integer, Staff>>(){}.getType();
+		HashMap<Integer, Staff> clonedMap = gson.fromJson(jsonString, type); 
+		staffHandler.getStaff().clear();
+		staffHandler.getStaff().putAll(clonedMap);
 	}
 
 	@After
