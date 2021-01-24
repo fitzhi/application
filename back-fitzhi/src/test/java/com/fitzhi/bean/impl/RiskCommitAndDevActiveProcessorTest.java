@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.bean.impl;
 
 import java.sql.Timestamp;
@@ -29,12 +26,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import lombok.extern.slf4j.Slf4j;
 /**
  * Testing the class {@link RiskCommitAndDevActiveProcessorImpl}
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Slf4j
 public class RiskCommitAndDevActiveProcessorTest {
 		
 	private static final String FR_TWO_TWO_G_JAVA = "fr/two/two/G.java";
@@ -71,6 +71,8 @@ public class RiskCommitAndDevActiveProcessorTest {
 	public void before() throws ApplicationException {
 		comRep = new BasicCommitRepository();
 		
+		staffHandler.getStaff().values().stream().map(Staff::fullName).forEach(log::debug);
+
 		first = (Staff) staffHandler.getStaff().values().toArray()[0];
 		second = (Staff) staffHandler.getStaff().values().toArray()[1];
 		third = (Staff) staffHandler.getStaff().values().toArray()[2];
