@@ -1,58 +1,80 @@
 :host >>> th#staffEvaluation > .mat-sort-header-container  {
-    color: darkblue;
-    min-width: 50px;
+	color: darkblue;
+	min-width: 50px;
+	margin-top: 20px;
+	font-weight: 600;
+	font-size: larger;
 }
 
 :host >>> th#sonarEvaluation > .mat-sort-header-container  {
-    color: darkblue;
-    min-width: 50px;
+	color: darkblue;
+	min-width: 50px;
+	margin-top: 20px;
+	font-weight: 600;
+	font-size: larger;
 }
 
 :host >>> th#auditEvaluation > .mat-sort-header-container  {
-    color: darkblue;
-    min-width: 50px;
+	color: darkblue;
+	min-width: 50px;
+	margin-top: 20px;
+	font-weight: 600;
+	font-size: larger;
 }
 
 :host >>> th#name > .mat-sort-header-container  {
-    color: darkblue;
-    min-width: 300px;
-    padding-left: 10px;
+	color: darkblue;
+	min-width: 300px;
+	padding-left: 10px;
+	margin-top: 20px;
+	font-weight: 600;
+	font-size: larger;
 }
 
 :host >>> th#techno > .mat-sort-header-container  {
-    color: darkblue;
-    min-width: 300px;
-    padding-left: 10px;
+	color: darkblue;
+	min-width: 300px;
+	padding-left: 10px;
+	margin-top: 20px;
+	font-weight: 600;
+	font-size: larger;
 }
 
 :host >>> th#lastCommit > .mat-sort-header-container  {
-    color: darkblue;
-    min-width: 100px;
+	color: darkblue;
+	min-width: 100px;
+	margin-top: 20px;
+	font-weight: 600;
+	font-size: larger;
 }
 
 :host >>> th#lastCommitter > .mat-sort-header-container  {
-    color: darkblue;
-    min-width: 200px;
+	color: darkblue;
+	margin-top: 20px;
+	min-width: 200px;
+	font-weight: 600;
+	font-size: larger;
 }
 
 .row_any  {
-    height: 45px;
+	height: 45px;
 }
 
 #hostProjectsTable {
-    margin-left: 20px;
-    margin-right: 20px;
-    margin-top: 20px;
+	margin-left: 20px;
+	margin-right: 20px;
+	margin-top: 20px;
 }
 
 td.name {
-    padding-left: 10px;
+	padding-left: 10px;
 }
 
 div.awesomeTitle {
-    float: left;
-    padding: 3px;
+	float: left;
+	padding: 3px;
 }
+
 i.awesomeTitle {
-    font-size: 28px;
+	font-size: 28px;
 }

@@ -9,7 +9,6 @@ import { MatSort } from '@angular/material/sort';
 import { ProjectService } from '../../service/project.service';
 import { StaffListService } from '../../staff-list-service/staff-list.service';
 import { Commit } from '../../data/commit';
-import { of } from 'rxjs';
 import { traceOn } from '../../global';
 import { ReferentialService } from '../../service/referential.service';
 import { ProjectsDataSource } from './projects-data-source';
