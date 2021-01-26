@@ -48,7 +48,6 @@ export class TechxhiMedalComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	ngOnInit() {
-		console.log('ngOnInit()');
 		this.projectService.projectLoaded$
 			.pipe(take(1))
 			.subscribe({

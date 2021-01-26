@@ -1,10 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import {Constants} from '../../constants';
 import {Project} from '../../data/project';
 import { ListProjectsService } from './list-projects-service/list-projects.service';
 import { Router } from '@angular/router';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { ProjectService } from '../../service/project.service';
 import { StaffListService } from '../../staff-list-service/staff-list.service';
@@ -12,18 +12,20 @@ import { Commit } from '../../data/commit';
 import { of } from 'rxjs';
 import { traceOn } from '../../global';
 import { ReferentialService } from '../../service/referential.service';
+import { ProjectsDataSource } from './projects-data-source';
+import { BaseComponent } from 'src/app/base/base.component';
 
 @Component({
 	selector: 'app-list-project',
 	templateUrl: './list-project.component.html',
 	styleUrls: ['./list-project.component.css']
 })
-export class ListProjectComponent implements OnInit {
+export class ListProjectComponent extends BaseComponent implements OnInit, AfterViewInit {
 
 	/**
 	 * The datasource that contains the filtered projects;
 	 */
-	dataSource: MatTableDataSource<Project>;
+	dataSource: ProjectsDataSource;
 
 	/**
 	 * The projects list will be a sorted table.
@@ -34,6 +36,11 @@ export class ListProjectComponent implements OnInit {
 	 * The paginator of the ghosts data source.
 	 */
 	@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+
+	/**
+	 * The table
+	 */
+	@ViewChild('table', { static: true }) table: MatTable<Project>;
 
 	public editableColumns: string[] =
 			['staffEvaluation', 'sonarEvaluation', 'auditEvaluation', 'name', 'techno', 'lastCommit', 'lastCommitter'];
@@ -53,7 +60,7 @@ export class ListProjectComponent implements OnInit {
 		public referentialService: ReferentialService,
 		public projectService: ProjectService,
 		private listProjectsService: ListProjectsService,
-		private router: Router) {}
+		private router: Router) { super(); }
 
 	ngOnInit() {
 
@@ -61,27 +68,43 @@ export class ListProjectComponent implements OnInit {
 			this.staffListService.loadStaff();
 		}
 
-		this.listProjectsService.filteredProjects$.subscribe(projects => {
-			this.dataSource = new MatTableDataSource<Project>(projects);
-			this.dataSource.sortingDataAccessor = (item: Project, property: string) => {
-				switch (property) {
-					case 'name':
-						return item.name.toLocaleLowerCase();
-					case 'staffEvaluation':
-						return item.staffEvaluation;
-					case 'sonarEvaluation':
-						return this.projectService.calculateSonarEvaluation(this.projectService.project);
-					case 'auditEvaluation':
-						return item.auditEvaluation;
-					case 'lastCommitter':
-						return this.retrieveLastCommit(item.id).fullname();
-					case 'lastCommit':
-						return this.retrieveLastCommit(item.id).dateCommit;
+		this.subscriptions.add(
+			this.listProjectsService.filteredProjects$
+				.subscribe(projects => {
+					this.updateData (projects);
 				}
-			};
-			this.dataSource.sort = this.sort;
-			this.dataSource.paginator = this.paginator;
-		});
+			));
+	}
+
+	ngAfterViewInit(): void {
+		this.dataSource.paginator = this.paginator; 
+		this.dataSource.sort = this.sort;
+	}
+
+	/**
+	 * Update the datasource with the given array of projects
+	 * @param projects array of projects
+	 */
+	updateData (projects: Project[]) {
+		this.dataSource = new ProjectsDataSource(projects);
+		this.dataSource.sortingDataAccessor = (item: Project, property: string) => {
+			switch (property) {
+				case 'name':
+					return item.name.toLocaleLowerCase();
+				case 'staffEvaluation':
+					return item.staffEvaluation;
+				case 'sonarEvaluation':
+					return this.projectService.calculateSonarEvaluation(this.projectService.project);
+				case 'auditEvaluation':
+					return item.auditEvaluation;
+				case 'lastCommitter':
+					return this.retrieveLastCommit(item.id).fullname();
+				case 'lastCommit':
+					return this.retrieveLastCommit(item.id).dateCommit;
+			}
+		};
+		this.dataSource.paginator = this.paginator; 
+		this.dataSource.sort = this.sort;
 	}
 
 	/**
@@ -112,6 +135,13 @@ export class ListProjectComponent implements OnInit {
 		this.commitCached = this.staffListService.retrieveLastCommit(idProject);
 		this.idProjectCached = idProject;
 		return this.commitCached;
+	}
+
+	/**
+	* Calling the base class to unsubscribe all subscriptions.
+	*/
+	ngOnDestroy() {
+		super.ngOnDestroy();
 	}
 
 }

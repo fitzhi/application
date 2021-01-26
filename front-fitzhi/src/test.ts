@@ -16,7 +16,7 @@ getTestBed().initTestEnvironment(
 );
 // Then we find all the tests
 const context = require.context('./', true, /\.spec\.ts$/);
-// const context = require.context('./', true,  /ssewatcher\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /list-project\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /skill\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /skill\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /fitzhi-dashboard\.skyline\.treemap\.component\.spec\.ts$/);

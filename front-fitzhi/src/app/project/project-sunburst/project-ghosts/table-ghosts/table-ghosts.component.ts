@@ -36,7 +36,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	/**
 	 * The undeclared contributors in the repository.
 	 */
-	public dataSource: ProjectGhostsDataSource; // = new ProjectGhostsDataSource([]);
+	public dataSource: ProjectGhostsDataSource;
 
 	/**
 	 * The paginator of the ghosts data source.

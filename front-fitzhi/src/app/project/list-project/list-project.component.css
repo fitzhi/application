@@ -19,6 +19,12 @@
     padding-left: 10px;
 }
 
+:host >>> th#techno > .mat-sort-header-container  {
+    color: darkblue;
+    min-width: 300px;
+    padding-left: 10px;
+}
+
 :host >>> th#lastCommit > .mat-sort-header-container  {
     color: darkblue;
     min-width: 100px;
