@@ -26,6 +26,11 @@ export class SkylineComponent implements OnInit {
 	 */
 	@Input() margin;
 
+	/**
+	 * The **speed** of the animation.
+	 */
+	@Input() speed;
+
 	public risingSkylineHistory$ = new BehaviorSubject<Building[]>([]);
 
 	constructor(
