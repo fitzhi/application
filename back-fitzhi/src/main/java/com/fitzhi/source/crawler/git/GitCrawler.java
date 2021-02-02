@@ -401,7 +401,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         }
         if (execClone) {
             if (log.isInfoEnabled()) {
-                log.info(String.format("Git clone of project %s", project.getName()));
+                log.info(String.format("Git clone of project %s for branch %s", project.getName(), project.getBranch()));
             }
             if (settings.isPublicRepository()) {
                 Git git = Git.cloneRepository()
