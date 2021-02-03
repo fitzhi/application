@@ -121,12 +121,12 @@ public class SkylineProcessorImpl implements SkylineProcessor {
         final Map<String, Integer> cache = new HashMap<>();
         changes.getChanges().values().stream().flatMap((SourceFileHistory sfh) -> sfh.getChanges().stream())
                 .forEach((SourceChange sc) -> {
-                    final Staff staff = staffHandler.lookup(sc.getAuthorName());
-                    if (cache.containsKey(sc.getAuthorName())) {
-                        sc.setIdStaff(cache.get(sc.getAuthorName()).intValue());
+                    final Staff staff = staffHandler.lookup(sc.getAuthor().getName());
+                    if (cache.containsKey(sc.getAuthor().getName())) {
+                        sc.setIdStaff(cache.get(sc.getAuthor().getName()).intValue());
                     } else {
                         sc.setIdStaff((staff != null) ? staff.getIdStaff() : -1);
-                        cache.put(sc.getAuthorName(), sc.getIdStaff());
+                        cache.put(sc.getAuthor().getName(), sc.getIdStaff());
                     }
                 });
     }

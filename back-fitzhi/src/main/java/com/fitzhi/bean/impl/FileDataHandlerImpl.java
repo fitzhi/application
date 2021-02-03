@@ -340,8 +340,11 @@ public class FileDataHandlerImpl implements DataHandler {
 
 				for (String path : changes.keySet()) {
 					changes.getSourceFileHistory(path).getChanges().forEach(change -> csvWriter.writeNext(new String[] {
-							change.getCommitId(), path, change.getDateCommit().toString(), change.getAuthorName(),
-							change.getAuthorEmail(),
+							change.getCommitId(), 
+							path, 
+							change.getDateCommit().toString(), 
+							change.getAuthor().getName(),
+							change.getAuthor().getEmail(),
 							String.valueOf(change.getDiff().getLinesAdded() - change.getDiff().getLinesDeleted()) }));
 				}
 			}

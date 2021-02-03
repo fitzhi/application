@@ -17,6 +17,7 @@ import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.ProjectDashboardCustomizer;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.Contributor;
+import com.fitzhi.source.crawler.git.Author;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.fitzhi.source.crawler.git.SourceFileHistory;
 
@@ -252,7 +253,7 @@ AddingA	 * Add a change into the collection.
 				commitRepository.addCommit(
 						path,
 						change.isIdentified() ? change.getIdStaff() : com.fitzhi.Global.UNKNOWN, 
-						change.getAuthorName(),
+						change.getAuthor().getName(),
 						change.getDateCommit(),
 						changes.getChanges().get(path).getImportance());
 			});
@@ -279,12 +280,12 @@ AddingA	 * Add a change into the collection.
 	 * The returned list contains distinct contributor login (identified or not inside techxhì)
 	 * @return the list of contributors involved in the project
 	 */
-	public List<String> authors() {
+	public List<Author> authors() {
 		return changes.getChanges().values()
 			.stream()
 			.flatMap(history -> history.getChanges().stream())
 			.filter(SourceChange::isAuthorIdentified)
-			.map(SourceChange::getAuthorName)
+			.map(SourceChange::getAuthor)
 			.distinct()
 			.collect(Collectors.toList());
 	}
@@ -298,7 +299,7 @@ AddingA	 * Add a change into the collection.
 		changes.getChanges().values()
 			.stream()
 			.flatMap(history -> history.getChanges().stream())
-			.filter(sc -> authorName.equals(sc.getAuthorName()))
+			.filter(sc -> authorName.equals(sc.getAuthor().getName()))
 			.forEach(sc ->  sc.setIdStaff(idStaff));
 	}
 	

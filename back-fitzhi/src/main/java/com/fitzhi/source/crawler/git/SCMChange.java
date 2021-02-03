@@ -7,7 +7,9 @@ import java.time.LocalDate;
 
 /**
  * <p>
- * <b>Source Control Change : </b><br/><br/>
+ * <b>Source Control Change : </b>
+ * </p>
+ * <p>
  * Raw extraction of the Source Control repository. <br/>
  * <i>Possible candidate for the future global aggregation</i>
  * </p>
@@ -31,14 +33,9 @@ public class SCMChange {
 	private LocalDate dateCommit;
 
 	/**
-	 * Author name
+	 * Author 
 	 */
-	private String authorName;
-
-	/**
-	 * Date of commit.
-	 */
-	private String authorEmail;
+	private Author author;
 
 	/**
 	 * Staff identifier retrieved for this commit.
@@ -63,8 +60,7 @@ public class SCMChange {
 		this.commitId = commitId;
 		this.path = fullPath;
 		this.dateCommit = dateCommit;
-		this.authorName = authorName;
-		this.authorEmail = authorEmail;
+		this.author = new Author(authorName, authorEmail);
 	}
 
 	/**
@@ -99,21 +95,29 @@ public class SCMChange {
 	 * @return the authorName
 	 */
 	public String getAuthorName() {
-		return authorName;
+		return author.getName();
 	}
 
 	/**
 	 * @return <code>true</code> if the author of the change is not anonymous. Author name is not <code>null</code>.
 	 */
 	public boolean isAuthorIdentified() {
-		return (authorName != null);
+		return (author.getName() != null);
 	}
-		
+
+	/**
+	 * @return the author
+	 */
+	public Author getAuthor() {
+		return author;
+	}
+
+	
 	/**
 	 * @return the authorEmail
 	 */
 	public String getAuthorEmail() {
-		return authorEmail;
+		return author.getEmail();
 	}
 
 	/**
@@ -153,8 +157,8 @@ public class SCMChange {
 	
 	@Override
 	public String toString() {
-		return "SCMChange[path=" + path + ", dateCommit=" + dateCommit + ", authorName="
-				+ authorName + ", authorEmail=" + authorEmail + ", idStaff=" + idStaff + ", importance=" + importance
+		return "SCMChange[path=" + path + ", dateCommit=" + dateCommit + ", author="
+				+ author.toString()  + ", idStaff=" + idStaff + ", importance=" + importance
 				+ "commitId=" + commitId + "]";
 	}
 

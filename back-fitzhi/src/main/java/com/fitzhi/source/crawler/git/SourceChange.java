@@ -31,14 +31,9 @@ public @Data class SourceChange {
 	private LocalDate dateCommit;
 
 	/**
-	 * Author name
+	 * Author 
 	 */
-	private String authorName;
-
-	/**
-	 * Date of commit.
-	 */
-	private String authorEmail;
+	private Author author;
 
 	/**
 	 * Staff identifier retrieved for this commit.
@@ -65,8 +60,7 @@ public @Data class SourceChange {
 		super();
 		this.commitId = commitId;
 		this.dateCommit = dateCommit;
-		this.authorName = authorName;
-		this.authorEmail = authorEmail;
+		this.author = new Author(authorName, authorEmail);
 		this.idStaff = idStaff;
 		this.diff = diff;
 	}
@@ -120,7 +114,7 @@ public @Data class SourceChange {
 	 *         Author name is not <code>null</code>.
 	 */
 	public boolean isAuthorIdentified() {
-		return (authorName != null);
+		return (author.getName() != null);
 	}
 
 	/**

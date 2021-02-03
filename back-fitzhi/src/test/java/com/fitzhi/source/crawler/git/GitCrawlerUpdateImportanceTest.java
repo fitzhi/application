@@ -112,11 +112,11 @@ public class GitCrawlerUpdateImportanceTest {
 		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
 		scanner.fillRepositoryAnalysis(project, analysis, repository);
 		
-        scanner.updateImportance(project, analysis);
+		scanner.updateImportance(project, analysis);
 
-        Assert.assertEquals(true, analysis.getChanges().getChanges().containsKey("src/main/java/fr/test/main/Test.java"));
-        SourceFileHistory sourceFileHistory = analysis.getChanges().getChanges().get("src/main/java/fr/test/main/Test.java"); 
-        Assert.assertEquals(lengthOfFile, sourceFileHistory.getImportance());;
+		Assert.assertEquals(true, analysis.getChanges().getChanges().containsKey("src/main/java/fr/test/main/Test.java"));
+		SourceFileHistory sourceFileHistory = analysis.getChanges().getChanges().get("src/main/java/fr/test/main/Test.java"); 
+		Assert.assertEquals(lengthOfFile, sourceFileHistory.getImportance());;
  
 	}
 	
@@ -163,6 +163,6 @@ public class GitCrawlerUpdateImportanceTest {
 			repository.close();
 		}
 		projectHandler.removeProject(1643);
-    	asyncTask.removeTask(DASHBOARD_GENERATION, PROJECT, 1643);
+		asyncTask.removeTask(DASHBOARD_GENERATION, PROJECT, 1643);
  	}
 }

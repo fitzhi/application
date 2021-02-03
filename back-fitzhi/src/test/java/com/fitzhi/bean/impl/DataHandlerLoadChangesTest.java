@@ -48,8 +48,8 @@ public class DataHandlerLoadChangesTest {
         Assert.assertNotNull(sc);
         Assert.assertEquals("one", sc.getCommitId());
         Assert.assertEquals(LocalDate.of(2019,6,20), sc.getDateCommit());
-        Assert.assertEquals("frvidal", sc.getAuthorName());
-        Assert.assertEquals("frederic.vidal.perso@gmail.com", sc.getAuthorEmail());
+        Assert.assertEquals("frvidal", sc.getAuthor().getName());
+        Assert.assertEquals("frederic.vidal.perso@gmail.com", sc.getAuthor().getEmail());
         Assert.assertEquals(-1, sc.getIdStaff());
         Assert.assertEquals(1, sc.lines());
 
@@ -59,8 +59,8 @@ public class DataHandlerLoadChangesTest {
         Assert.assertNotNull(sc);
         Assert.assertEquals("three", sc.getCommitId());
         Assert.assertEquals(LocalDate.of(2019,6,22), sc.getDateCommit());
-        Assert.assertEquals("averell", sc.getAuthorName());
-        Assert.assertEquals("averell.dalton@gmail.com", sc.getAuthorEmail());
+        Assert.assertEquals("averell", sc.getAuthor().getName());
+        Assert.assertEquals("averell.dalton@gmail.com", sc.getAuthor().getEmail());
         Assert.assertEquals(-1, sc.getIdStaff());
         Assert.assertEquals(3, sc.lines());
        

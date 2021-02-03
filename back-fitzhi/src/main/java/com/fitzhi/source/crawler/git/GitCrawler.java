@@ -412,7 +412,8 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                 git.close();
             } else {
                 Git git = Git.cloneRepository()
-                    .setDirectory(path.toAbsolutePath().toFile()).setURI(settings.getUrl())
+                    .setDirectory(path.toAbsolutePath().toFile())
+                    .setURI(settings.getUrl())
                     .setCredentialsProvider(
                             new UsernamePasswordCredentialsProvider(settings.getLogin(), settings.getPassword()))
                     .setBranch(project.getBranch())
@@ -974,9 +975,11 @@ public class GitCrawler extends AbstractScannerDataGenerator {
         //
         SourceCodeDiffChange diff = this.diffFile(de, diffFormater);
         PersonIdent author = commit.getAuthorIdent();
+
         analysis.takeChangeInAccount(filePathname,
                 new SourceChange(commit.getId().toString(),
-                        author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), author.getName(),
+                        author.getWhen().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), 
+                        author.getName(),
                         author.getEmailAddress(), diff));
         parserVelocity.increment();
     }
@@ -1107,8 +1110,9 @@ public class GitCrawler extends AbstractScannerDataGenerator {
             //
             repository.setUnknownContributors(
                 // Pseudo does not match any staff member
-                repository.unknownContributors().stream().filter(pseudo -> (staffHandler.lookup(pseudo) == null)) 
-                        .collect(Collectors.toSet()));
+                repository.unknownContributors().stream()
+                    .filter(pseudo -> (staffHandler.lookup(pseudo) == null)) 
+                    .collect(Collectors.toSet()));
 
             //
             // We update the ghosts list, in the project with the up-to-date list of of
@@ -1597,10 +1601,11 @@ public class GitCrawler extends AbstractScannerDataGenerator {
     @Override
     public void updateStaff(Project project, RepositoryAnalysis analysis, Set<String> unknownContributors) throws ApplicationException {
 
-        List<String> authors = analysis.authors();
+        List<Author> authors = analysis.authors();
 
-        for (String author : authors) {
-            final Staff staff = staffHandler.lookup(author);                    
+        for (Author author : authors) {
+            String authorName = author.getName();
+            final Staff staff = staffHandler.lookup(authorName);                    
 
             // Either this author is already registered as a ghost with the same pseudo
             // or this author can be linked to a registered developer
@@ -1611,14 +1616,14 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                 
                 // A setting in applications.properties is equal to TRUE
                 // We create staff member with the ghost data 
-                if (autoStaffCreation && (author.split(" ").length > 1)) {
-                    Staff st = staffHandler.createEmptyStaff(author);
-                    analysis.updateStaff(author, st.getIdStaff());
+                if (autoStaffCreation && (authorName.split(" ").length > 1)) {
+                    Staff st = staffHandler.createEmptyStaff(authorName);
+                    analysis.updateStaff(authorName, st.getIdStaff());
                 } else {
                     //
                     // There is no author related to this author 
                     //
-                    manageAuthorWithGhostsList(project, analysis, unknownContributors, author);
+                    manageAuthorWithGhostsList(project, analysis, unknownContributors, authorName);
                 }
 
             } else {
@@ -1626,7 +1631,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                 // We found a staff member corresponding to this author
                 // We update the staff collection !
                 //
-                analysis.updateStaff(author, staff.getIdStaff());
+                analysis.updateStaff(authorName, staff.getIdStaff());
             }
 
         }
