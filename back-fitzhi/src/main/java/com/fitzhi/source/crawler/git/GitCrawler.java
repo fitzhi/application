@@ -1617,7 +1617,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                 // A setting in applications.properties is equal to TRUE
                 // We create staff member with the ghost data 
                 if (autoStaffCreation && (authorName.split(" ").length > 1)) {
-                    Staff st = staffHandler.createEmptyStaff(authorName);
+                    Staff st = staffHandler.createEmptyStaff(author);
                     analysis.updateStaff(authorName, st.getIdStaff());
                 } else {
                     //

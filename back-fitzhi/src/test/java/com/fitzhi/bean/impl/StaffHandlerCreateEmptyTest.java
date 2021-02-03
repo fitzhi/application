@@ -6,6 +6,7 @@ import java.util.HashMap;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.source.crawler.git.Author;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -42,11 +43,12 @@ public class StaffHandlerCreateEmptyTest {
 	@Test
 	public void testAuthorWith1Word() throws ApplicationException {
 		
-		Staff st = staffHandler.createEmptyStaff("one");
+		Staff st = staffHandler.createEmptyStaff(new Author("one", "one@void.com"));
 
 		Assert.assertEquals("one", st.getLastName());
 		Assert.assertEquals("one", st.getNickName());
 		Assert.assertEquals("one", st.getLogin());
+		Assert.assertEquals("one@void.com", st.getEmail());
 
 		Assert.assertEquals(1789, st.getIdStaff());
 		staffHandler.removeStaff(1789);
@@ -55,11 +57,12 @@ public class StaffHandlerCreateEmptyTest {
 	@Test
 	public void testAuthorWith2Words() throws ApplicationException {
 		
-		Staff st = staffHandler.createEmptyStaff("one two");
+		Staff st = staffHandler.createEmptyStaff(new Author("one two", "otwo@void.com"));
 
 		Assert.assertEquals("one", st.getFirstName());
 		Assert.assertEquals("two", st.getLastName());
 		Assert.assertEquals("one two", st.getNickName());
+		Assert.assertEquals("otwo@void.com", st.getEmail());
 
 		Assert.assertEquals(1789, st.getIdStaff());
 		staffHandler.removeStaff(1789);
@@ -68,11 +71,12 @@ public class StaffHandlerCreateEmptyTest {
 	@Test
 	public void testAuthorWith3Words() throws ApplicationException {
 		
-		Staff st = staffHandler.createEmptyStaff("one two three");
+		Staff st = staffHandler.createEmptyStaff(new Author("one two three", "otthree@void.com"));
 
 		Assert.assertEquals("one", st.getFirstName());
 		Assert.assertEquals("two three", st.getLastName());
 		Assert.assertEquals("one two three", st.getNickName());
+		Assert.assertEquals("otthree@void.com", st.getEmail());
 
 		Assert.assertEquals(1789, st.getIdStaff());
 		staffHandler.removeStaff(1789);
@@ -85,8 +89,9 @@ public class StaffHandlerCreateEmptyTest {
 		String jsonString = gson.toJson(staffHandler.getStaff());
 		
 		staffHandler.getStaff().clear();
-		Staff st = staffHandler.createEmptyStaff("first One");
+		Staff st = staffHandler.createEmptyStaff(new Author("first One", "firstone@void.com"));
 		Assert.assertEquals(1, st.getIdStaff());
+		Assert.assertEquals("firstone@void.com", st.getEmail());
 
 		// 
 		Type type = new TypeToken<HashMap<Integer, Staff>>(){}.getType();

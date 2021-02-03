@@ -13,6 +13,7 @@ import com.fitzhi.data.internal.ResumeSkill;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.source.crawler.git.Author;
 
 /**
  * Interface in charge of handling the staff collection.
@@ -156,7 +157,7 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	  * @throws ApplicationException thrown if any problems occurs during the validation of this staff
 	  * @see #controlWorkforceMember(Staff)
 	  */
-	  Staff createEmptyStaff(String author) throws ApplicationException;
+	  Staff createEmptyStaff(Author author) throws ApplicationException;
 
 	 /**
 	  * <p>Control and save the given staff.</p>

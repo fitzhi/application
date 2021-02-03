@@ -41,6 +41,7 @@ import com.fitzhi.data.internal.StaffActivitySkill;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
+import com.fitzhi.source.crawler.git.Author;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -553,8 +554,8 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public Staff createEmptyStaff(String author) throws ApplicationException {
-		String[] w = author.split(" ");
+	public Staff createEmptyStaff(Author author) throws ApplicationException {
+		String[] w = author.getName().split(" ");
 		Staff staff = new Staff();
 		staff.setIdStaff(-1);
 		if (w.length == 1) {
@@ -562,11 +563,13 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			staff.setLastName(w[0]);
 			staff.setNickName(w[0]);
 			staff.setLogin(w[0]);
+			staff.setEmail(author.getEmail());
 		} else {
 			staff.setFirstName(w[0]);
-			staff.setLastName(author.substring(w[0].length()+1));
-			staff.setNickName(author);
-			staff.setLogin(author);
+			staff.setLastName(author.getName().substring(w[0].length()+1));
+			staff.setNickName(author.getName());
+			staff.setLogin(author.getName());
+			staff.setEmail(author.getEmail());
 		}
 		addNewStaff(staff);
 		return staff;
