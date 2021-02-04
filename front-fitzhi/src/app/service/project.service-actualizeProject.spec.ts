@@ -7,7 +7,7 @@ import { ReferentialService } from './referential.service';
 import { SkillService } from '../skill/service/skill.service';
 import { FileService } from './file.service';
 import { MessageService } from '../interaction/message/message.service';
-import { SunburstCinematicService } from '../project/project-sunburst/service/sunburst-cinematic.service';
+import { SunburstCinematicService } from '../tabs-project/project-sunburst/service/sunburst-cinematic.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
 import { Skill } from '../data/skill';

@@ -3,13 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { SkillComponent } from './skill/skill.component';
 import { ListSkillComponent } from './skill/list-skill/list-skill.component';
-import { ProjectComponent } from './project/project.component';
-import { ProjectSunburstComponent } from './project/project-sunburst/project-sunburst.component';
-import { ListProjectComponent } from './project/list-project/list-project.component';
+import { ProjectComponent } from './tabs-project/project.component';
+import { ProjectSunburstComponent } from './tabs-project/project-sunburst/project-sunburst.component';
+import { ListProjectComponent } from './tabs-project/list-project/list-project.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { StaffComponent } from './tabs-staff/staff.component';
 import { ErrorComponent } from './interaction/error/error.component';
-import { ProjectStaffComponent } from './project/project-staff/project-staff.component';
+import { ProjectStaffComponent } from './tabs-project/project-staff/project-staff.component';
 import { TabsStaffListComponent } from './tabs-staff-list/tabs-staff-list.component';
 import { AuthGuardService } from './admin/security/auth-guard.service';
 import { StaffFormComponent } from './tabs-staff/staff-form/staff-form.component';

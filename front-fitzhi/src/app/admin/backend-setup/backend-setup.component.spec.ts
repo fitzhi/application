@@ -1,14 +1,14 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BackendSetupComponent } from './backend-setup.component';
-import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
+import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
 import { DebugElement } from '@angular/core';
 import { of, throwError } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ReferentialService } from 'src/app/service/referential.service';
-import { CinematicService } from 'src/app/service/cinematic.service';
+import { ReferentialService } from '../../service/referential.service';
+import { CinematicService } from '../../service/cinematic.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';

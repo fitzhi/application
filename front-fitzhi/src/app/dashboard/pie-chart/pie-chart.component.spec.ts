@@ -14,7 +14,7 @@ import { ListSkillService } from 'src/app/skill/list-skill-service/list-skill.se
 import { SkillService } from 'src/app/skill/service/skill.service';
 import { Skill } from 'src/app/data/skill';
 import { of, BehaviorSubject } from 'rxjs';
-import { AuditChosenDetail } from 'src/app/project/project-audit/project-audit-badges/audit-badge/audit-chosen-detail';
+import { AuditChosenDetail } from '../../tabs-project/project-audit/project-audit-badges/audit-badge/audit-chosen-detail';
 import { LevelStaffRisk } from '../level-staff-risk';
 
 describe('PieChartComponent', () => {

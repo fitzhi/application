@@ -27,7 +27,7 @@ import { AttachmentFile } from '../data/AttachmentFile';
 import { FileService } from './file.service';
 import { Ecosystem } from '../data/ecosystem';
 import { traceOn, HttpCodes } from '../global';
-import { SunburstCinematicService } from '../project/project-sunburst/service/sunburst-cinematic.service';
+import { SunburstCinematicService } from '../tabs-project/project-sunburst/service/sunburst-cinematic.service';
 import { ProjectSkill } from '../data/project-skill';
 import { SkillService } from '../skill/service/skill.service';
 import { CinematicService } from './cinematic.service';
