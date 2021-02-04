@@ -1395,7 +1395,9 @@ public class GitCrawler extends AbstractScannerDataGenerator {
     public RiskDashboard generate(final Project project, final SettingsGeneration cfgGeneration)
             throws IOException, ApplicationException, GitAPIException {
 
-        this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Starting the generation !", NO_PROGRESSION);
+        this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), 
+                String.format("Starting the generation for %s !", project.getName()), 
+                NO_PROGRESSION);
 
         final ConnectionSettings settings = connectionSettings(project);
 
@@ -1412,9 +1414,11 @@ public class GitCrawler extends AbstractScannerDataGenerator {
                 log.debug(String.format("The project %s is cloned into the temporay directory %s", project.getName(), project.getLocationRepository()));
             }
 
-            this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Git clone successfully done!", 10);
+            this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), 
+                String.format("Git clone of %s successfully done!", project.getName()), 10);
         } else {
-            this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), "Re-using the local repository!", 10);
+            this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(), 
+                String.format("Re-using the local repository of %s !", project.getName()), 10);
         }
 
 
