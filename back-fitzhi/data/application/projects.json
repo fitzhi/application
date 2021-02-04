@@ -1,7 +1,7 @@
 {
 	"1": {
 		"id": 1,
-		"name": "Empty project without repository",
+		"name": "Empty project",
 		"connectionSettings": 0,
 		"urlRepository": "",
 		"skills": {},
@@ -48,7 +48,7 @@
 	},
 	"5": {
 		"id": 5,
-		"name": "sl4j",
+		"name": "Sl4j",
 		"active": true,
 		"connectionSettings": 3,
 		"branch": "master",
@@ -132,7 +132,7 @@
 	},
 	"13": {
 		"id": 13,
-		"name": "Project Spring security- oauth",
+		"name": "Spring Security Oauth",
 		"active": true,
 		"connectionSettings": 3,
 		"branch": "master",
@@ -142,7 +142,7 @@
 	},
 	"14": {
 		"id": 14,
-		"name": "Opennlp",
+		"name": "OpenNlp",
 		"active": true,
 		"connectionSettings": 3,
 		"branch": "master",
@@ -152,7 +152,7 @@
 	},
 	"15": {
 		"id": 15,
-		"name": "Project workspace skyline",
+		"name": "Skyline",
 		"active": true,
 		"connectionSettings": 3,
 		"branch": "master",
