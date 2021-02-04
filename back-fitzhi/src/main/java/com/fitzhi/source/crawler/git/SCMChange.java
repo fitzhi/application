@@ -5,6 +5,8 @@ package com.fitzhi.source.crawler.git;
 
 import java.time.LocalDate;
 
+import com.fitzhi.data.internal.Author;
+
 /**
  * <p>
  * <b>Source Control Change : </b>

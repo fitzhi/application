@@ -4,9 +4,9 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
-import com.fitzhi.source.crawler.git.Author;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 

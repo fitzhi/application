@@ -66,6 +66,7 @@ import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity;
 import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.data.encryption.DataEncryption;
+import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.Ecosystem;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;

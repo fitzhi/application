@@ -2,6 +2,7 @@ package com.fitzhi.source.crawler.git;
 
 import java.time.LocalDate;
 
+import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.SourceCodeDiffChange;
 
 import lombok.Data;

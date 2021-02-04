@@ -31,6 +31,7 @@ import com.fitzhi.Error;
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.PeopleCountExperienceMap;
@@ -41,7 +42,6 @@ import com.fitzhi.data.internal.StaffActivitySkill;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
-import com.fitzhi.source.crawler.git.Author;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 

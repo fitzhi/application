@@ -17,7 +17,6 @@ import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.ProjectDashboardCustomizer;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.Contributor;
-import com.fitzhi.source.crawler.git.Author;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.fitzhi.source.crawler.git.SourceFileHistory;
 

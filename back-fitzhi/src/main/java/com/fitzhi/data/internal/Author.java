@@ -1,11 +1,11 @@
-package com.fitzhi.source.crawler.git;
+package com.fitzhi.data.internal;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Author of GIT.
+ * Author of a GIT commit.
  */
 @ToString()
 @EqualsAndHashCode()

@@ -13,7 +13,7 @@ import com.fitzhi.data.internal.ResumeSkill;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
-import com.fitzhi.source.crawler.git.Author;
+import com.fitzhi.data.internal.Author;
 
 /**
  * Interface in charge of handling the staff collection.
