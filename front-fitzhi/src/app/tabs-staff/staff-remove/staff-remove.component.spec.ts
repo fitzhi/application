@@ -8,7 +8,7 @@ import { ReferentialService } from 'src/app/service/referential.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
-import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
+import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { Collaborator } from 'src/app/data/collaborator';
 
 describe('StaffRemoveComponent', () => {

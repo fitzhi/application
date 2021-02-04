@@ -1,12 +1,12 @@
-import { Constants } from '../constants';
-import { Collaborator } from '../data/collaborator';
-import { StaffService } from '../tabs-staff/service/staff.service';
+import { Constants } from '../../constants';
+import { Collaborator } from '../../data/collaborator';
+import { StaffService } from '../../tabs-staff/service/staff.service';
 import { Injectable } from '@angular/core';
 
 import { Observable, of, Subject, BehaviorSubject } from 'rxjs';
 import { tap, take, delay } from 'rxjs/operators';
-import { Commit } from '../data/commit';
-import { traceOn } from '../global';
+import { Commit } from '../../data/commit';
+import { traceOn } from '../../global';
 
 @Injectable({
 	providedIn: 'root'

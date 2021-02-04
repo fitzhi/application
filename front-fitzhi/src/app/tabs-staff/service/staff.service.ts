@@ -16,7 +16,7 @@ import { FileService } from '../../service/file.service';
 import { HttpCodes, traceOn } from '../../global';
 import { StaffDataExchangeService } from './staff-data-exchange.service';
 import { MessageService } from '../../interaction/message/message.service';
-import { StaffListService } from '../../staff-list-service/staff-list.service';
+import { StaffListService } from '../../service/staff-list-service/staff-list.service';
 import { Constants } from '../../constants';
 import { CinematicService } from '../../service/cinematic.service';
 

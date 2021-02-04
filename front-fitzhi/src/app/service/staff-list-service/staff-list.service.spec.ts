@@ -1,8 +1,8 @@
 import { TestBed, inject, TestModuleMetadata, async } from '@angular/core/testing';
 
 import { StaffListService } from './staff-list.service';
-import { InitTest } from '../test/init-test';
-import { Collaborator } from '../data/collaborator';
+import { InitTest } from '../../test/init-test';
+import { Collaborator } from '../../data/collaborator';
 
 describe('ListStaffService', () => {
 

@@ -7,7 +7,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { ProjectService } from '../../service/project.service';
-import { StaffListService } from '../../staff-list-service/staff-list.service';
+import { StaffListService } from '../../service/staff-list-service/staff-list.service';
 import { Commit } from '../../data/commit';
 import { traceOn } from '../../global';
 import { ReferentialService } from '../../service/referential.service';
