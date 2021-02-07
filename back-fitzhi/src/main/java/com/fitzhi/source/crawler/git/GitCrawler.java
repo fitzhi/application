@@ -1364,6 +1364,28 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
     @Override
     @Async
+    public void generateAllAsync() throws ApplicationException {
+        if (log.isInfoEnabled()) {
+            log.info( "Starting the analysis of projects in batch mode.");
+        }
+        for (Project project : projectHandler.getProjects().values()) {
+            if (log.isInfoEnabled()) {
+                log.info( String.format("Analyzing project %s.",project.getName()));
+            }
+            
+            // We analyze each project if the project has a connection settings.
+            if (project.getConnectionSettings() > 0) {
+                generateAsync(project, new SettingsGeneration(project.getId()));
+            }
+
+            if (log.isInfoEnabled()) {
+                log.info( String.format("The project %s is analyzed.",project.getName()));
+            }
+        }
+    }
+
+    @Override
+    @Async
     public RiskDashboard generateAsync(final Project project, final SettingsGeneration settings) {
         boolean failed = false;
         try {

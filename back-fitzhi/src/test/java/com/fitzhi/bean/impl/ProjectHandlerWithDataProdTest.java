@@ -1,6 +1,5 @@
 package com.fitzhi.bean.impl;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import com.fitzhi.bean.DataHandler;

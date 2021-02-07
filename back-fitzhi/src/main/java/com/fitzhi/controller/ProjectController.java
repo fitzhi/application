@@ -504,7 +504,7 @@ public class ProjectController extends BaseRestController {
 	 * @return the Sunburst chart.
 	 */
 	@PostMapping("/sunburst")
-	public ResponseEntity<SunburstDTO> generateChartSunburst(@RequestBody SettingsGeneration settings) {
+	public ResponseEntity<SunburstDTO> generateChartSunburst(@RequestBody SettingsGeneration settings) throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
 			log.debug(MessageFormat.format(
@@ -514,11 +514,7 @@ public class ProjectController extends BaseRestController {
 					settings.getIdStaffSelected()));
 		}
 
-		MyReference<ResponseEntity<SunburstDTO>> refResponse = projectLoader.new MyReference<>();
-		Project project = projectLoader.getProject(settings.getIdProject(), new SunburstDTO(), refResponse);
-		if (refResponse.getResponse() != null) {
-			return refResponse.getResponse();
-		}
+		Project project = projectHandler.get(settings.getIdProject());
 
 		try {
 			if (scanner.hasAvailableGeneration(project)) {

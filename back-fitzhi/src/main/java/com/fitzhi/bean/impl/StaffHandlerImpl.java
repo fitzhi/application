@@ -382,14 +382,12 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		}
 		if (ids.size() > 1) {
 			if (log.isWarnEnabled()) {
-				if (log.isWarnEnabled()) {
-					log.warn(String.format("Multiple ids for this criteria %s", criteria));
-					log.warn("Ids listed below :");
-					ids.stream().forEach(staff -> log.warn(String.format("%d %s %s", staff.getIdStaff(), staff.getFirstName(), staff.getLastName())));
-					log.warn("By default, we assumed to return the first one...");
-				}
+				log.warn(String.format("Multiple ids for this criteria %s", criteria));
+				log.warn("Ids listed below :");
+				ids.stream().forEach(staff -> log.warn(String.format("%d %s %s", staff.getIdStaff(), staff.getFirstName(), staff.getLastName())));
+				log.warn("By default, we assumed not to decide, and to return NULL");
 			}
-			return ids.get(0);
+			return null;
 		}
 
 		// ids.size() == 0 at this point.

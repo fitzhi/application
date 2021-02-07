@@ -266,8 +266,24 @@ public interface RepoScanner {
 	RiskDashboard generate(Project project, SettingsGeneration settings) throws IOException, ApplicationException, GitAPIException;
 
 	/**
+	 * <p>
+	 * This method is a batch method in charge of the generation of all projects.
+	 * It will iterate on each project, and execute {@link #generateAsync}.
+	 * </p>
+	 * <p><b>
+	 * The underlying implementation {@link GitCrawler} is hosting the annotation {@code @async}.
+	 * </b></p>
+	 * @throws ApplicationException thrown if any problem occurs during the generation
+	 */
+	void generateAllAsync() throws ApplicationException;
+
+	/**
+	 * <p>
 	 * This method is an ASYNCHRONOUS wrapper from the method {@link #generate(Project)}
-	 * <br/>
+	 * </p>
+	 * <p><b>
+	 * The underlying implementation {@link GitCrawler} is hosting the annotation {@code @async}.
+	 * </b></p>
 	 * Generate and complete the dashboard generation figuring the activities of staff members for the passed project
 	 * @param project the project whose source code files should be parsed in the repository
 	 * @param settings the dashboard generation settings, such as :
@@ -379,7 +395,7 @@ public interface RepoScanner {
 	RevCommit initialCommit(Git git) throws ApplicationException;
 
 	/**
-	 * Retrrieve the DIFF entry for a specific file between 2 commit revisions
+	 * Retrieve the DIFF entry for a specific file between 2 commit revisions
 	 * @param pathname the pathname curently analyzed, which will be filtered for the comparaison 
 	 * @param repository the GIT repository
 	 * @param from the commit revision <b>FROM</b> where the diff delta has to be processed
