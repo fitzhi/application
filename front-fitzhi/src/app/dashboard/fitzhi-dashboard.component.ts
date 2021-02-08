@@ -125,4 +125,10 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 		return (clickedSelection === this.selected);
 	}
 
+	/**
+	 * Return **TRUE** if the user has selected a type of dashboard, **FALSE** otherwise.
+	 */
+	hasSelectedADashboard(): boolean {
+		return (this.selected !== this.selection.none);
+	}
 }
