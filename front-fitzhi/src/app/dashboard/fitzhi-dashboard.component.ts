@@ -53,8 +53,8 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	skylineDimension = {
 		width: 1195,
 		widthWithUnitOfMesure:'1195px',
-		height: 370,
-		heightWithUnitOfMesure: '370px',
+		height: 500,
+		heightWithUnitOfMesure: '500px',
 	};
 
 	/**
