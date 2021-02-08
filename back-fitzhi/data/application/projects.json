@@ -237,12 +237,24 @@
 		"audit": {}
 	},
 	"24": {
-		"id": 5,
+		"id": 24,
 		"name": "Log4J",
 		"active": true,
 		"connectionSettings": 3,
 		"branch": "trunk",
 		"urlRepository": "https://github.com/apache/log4j",
+		"username": "",
+		"password": "",
+		"sonarProjects": [],
+		"audit": {}
+	},
+	"25": {
+		"id": 25,
+		"name": "commons-validator",
+		"active": true,
+		"connectionSettings": 3,
+		"branch": "master",
+		"urlRepository": "https://github.com/apache/commons-validator.git",
 		"username": "",
 		"password": "",
 		"sonarProjects": [],
