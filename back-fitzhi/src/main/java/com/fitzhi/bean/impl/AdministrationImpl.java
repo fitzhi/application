@@ -97,7 +97,7 @@ public class AdministrationImpl implements Administration {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("createNewUser('%s','%s')", login, password));
 		}
-		Optional<Staff> oStaff = staffHandler.findStaffWithLogin(login);
+		Optional<Staff> oStaff = staffHandler.findStaffOnLogin(login);
 		final Staff staff = oStaff.isPresent() ? oStaff.get() : null;
 		if (log.isDebugEnabled()) {
 			log.debug (String.format("Staff found %s", ((staff != null) ? staff.fullName() : "(none)") ));
@@ -165,7 +165,7 @@ public class AdministrationImpl implements Administration {
 	@Override
 	public Staff connect(String login, String password) throws ApplicationException {
 		
-		Staff staff = staffHandler.findStaffWithLogin(login)
+		Staff staff = staffHandler.findStaffOnLogin(login)
 				.orElseThrow(() -> new ApplicationException(CODE_INVALID_LOGIN_PASSWORD, MESSAGE_INVALID_LOGIN_PASSWORD));
 		
 		if (log.isDebugEnabled()) {

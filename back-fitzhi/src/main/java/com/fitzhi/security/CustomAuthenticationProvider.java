@@ -32,7 +32,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         String name = authentication.getName();
         String password = authentication.getCredentials().toString();
          
-        Optional<Staff> oStaff = staffHandler.findStaffWithLogin(name);
+        Optional<Staff> oStaff = staffHandler.findStaffOnLogin(name);
         
         if (!oStaff.isPresent()) {
         	throw new BadCredentialsException(String.format("Invalid login %s", name));

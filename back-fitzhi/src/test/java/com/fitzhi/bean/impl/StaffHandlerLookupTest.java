@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.Staff;
 
 /**
@@ -49,43 +50,43 @@ public class StaffHandlerLookupTest {
 	
 	@Test
 	public void testLookupChristian()  {
-		assertThat(staffHandler.lookup("Christian Aligato Chavez Tugo")).isNotNull();
+		assertThat(staffHandler.lookup(new Author("Christian Aligato Chavez Tugo"))).isNotNull();
 	}
 
 	@Test
 	public void testLookupGuorinDeTourvilleGuillaume()  {
-		assertThat(staffHandler.lookup("Guorin De Tourville Guillaume")).isNotNull();
+		assertThat(staffHandler.lookup(new Author("Guorin De Tourville Guillaume"))).isNotNull();
 	}
 		
 
 	@Test
 	public void testLookupYassine() {
-		assertThat(staffHandler.lookup("Ouaamou Mohammed")).isNotNull();
+		assertThat(staffHandler.lookup(new Author("Ouaamou Mohammed"))).isNotNull();
 	}
 
 	@Test
 	public void testLookupJeromeWithAccent()  {
 		assertThat(Normalizer.normalize(JEROME_WITH_ACCENT, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", ""))
 		.isEqualTo(JEROME_SANS_ACCENT);
-		assertThat(staffHandler.lookup(JEROME_WITH_ACCENT)).isNotNull();
+		assertThat(staffHandler.lookup(new Author(JEROME_WITH_ACCENT))).isNotNull();
 	}
 	
 	@Test
 	public void testLookupJeromeWithoutAccent()  {
 		assertThat(Normalizer.normalize(JEROME_WITH_ACCENT, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", ""))
 		.isEqualTo(JEROME_SANS_ACCENT);
-		assertThat(staffHandler.lookup(JEROME_SANS_ACCENT)).isNotNull();
+		assertThat(staffHandler.lookup(new Author(JEROME_SANS_ACCENT))).isNotNull();
 	}
 	
 	@Test
 	public void testFredericNabillauSansAccent()  {
-		assertThat(staffHandler.lookup(FREDERIC_SANS_ACCENT)).isNotNull();
+		assertThat(staffHandler.lookup(new Author(FREDERIC_SANS_ACCENT))).isNotNull();
 	}
 	
 	@Test
 	public void testFredericNabillauWithSpaces()  {
-		assertThat(staffHandler.lookup("Frédéric  NABILLAU")).isNotNull();
-		assertThat(staffHandler.lookup("   Frédéric    NABILLAU   ")).isNotNull();
+		assertThat(staffHandler.lookup(new Author("Frédéric  NABILLAU"))).isNotNull();
+		assertThat(staffHandler.lookup(new Author("   Frédéric    NABILLAU   "))).isNotNull();
 	}
 		
 	

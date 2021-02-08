@@ -1115,7 +1115,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			repository.setUnknownContributors(
 				// Pseudo does not match any staff member
 				repository.unknownContributors().stream()
-					.filter(pseudo -> (staffHandler.lookup(pseudo) == null)) 
+					.filter(pseudo -> (staffHandler.lookup(new Author(pseudo)) == null)) 
 					.collect(Collectors.toSet()));
 
 			//
@@ -1371,7 +1371,9 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		if (log.isInfoEnabled()) {
 			log.info( "Starting the analysis of projects in batch mode.");
 		}
+		System.out.println("Yop");
 		for (Project project : projectHandler.getProjects().values()) {
+			System.out.println(project.toString());
 			if (log.isInfoEnabled()) {
 				log.info( String.format("Analyzing project %s.",project.getName()));
 			}
@@ -1635,7 +1637,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 		for (Author author : authors) {
 			String authorName = author.getName();
-			final Staff staff = staffHandler.lookup(authorName);                    
+			final Staff staff = staffHandler.lookup(author);                    
 
 			// Either this author is already registered as a ghost with the same pseudo
 			// or this author can be linked to a registered developer

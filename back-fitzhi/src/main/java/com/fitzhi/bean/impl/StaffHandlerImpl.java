@@ -108,7 +108,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		try {
 			this.theStaff = dataSaver.loadStaff();
 		} catch (final ApplicationException e) {
-			// Without staff, this application is not viable
+			// Without staff collection, this application is not viable
 			throw new ApplicationRuntimeException(e);
 		}
 		return theStaff;
@@ -182,23 +182,33 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		return staff;
 	}
-
 		
 	@Override
-	public Staff lookup(String criteria)  {
-		
+	public Staff lookup(Author author)  {
+
+		// We test if a user with the same email address exists in the team
+		Staff staff;
+		if (author.getEmail() != null) {
+			staff =  findStaffOnEmail(author.getEmail());
+			// If we find a corresponding developer, the search can stop immediatly.
+			if (staff != null) {
+				return staff;
+			}
+		}
+
 		// First, we're processing the search with the natural String IN LOWER CASE
-		Staff staff =  lookup(criteria, input -> (input != null) ? input.toLowerCase() : null);
+		staff =  lookup(author.getName(), input -> (input != null) ? input.toLowerCase() : null);
 		
 		// If no one's found, we re-process the search with NORMALIZED AND LOWER CASE String
 		if (staff == null) {
-			staff =  lookup(criteria, input ->
+			staff =  lookup(author.getName(), input ->
 					(input != null) ? Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "").toLowerCase() : null);
 		}
 		
 		return staff;
 	}
 	
+
 	@Override
 	public boolean isEligible(Staff staff, String criteria) {
 		if (!isEligible(staff, criteria, input -> (input != null) ? 
@@ -265,7 +275,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			// in order to test any combination of criteria ("John William Doe Senior" -> "William Doe Senior John" --> ...)
 			//
 			if (log.isDebugEnabled()) {
-				log.debug(String.format("Rotation of words within the criteria %s and trying a lookup", criteria));
+				log.debug(String.format("Rotation of words within the criteria %s and trying a lookup.", criteria));
 			}
 			for (int i=0; i<word.length; i++) {
 				
@@ -284,7 +294,17 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			return false;
 		}
 	}
-	
+
+	@Override
+	public Staff findStaffOnEmail(String email) {
+		// We assume the UNICITY of the email address in the Staff members collection
+		Optional<Staff> oStaff = getStaff().values().stream()
+			.filter(entry -> email.toLowerCase().equals(entry.getEmail()))
+			.findAny();
+		return (oStaff.isPresent()) ? oStaff.get() : null;
+	}
+
+
 	/**
 	 * Lookup across the staff collection for a given criteria
 	 * @param criteria the given criteria which might contain one or multiple words
@@ -531,7 +551,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		// The login is unique for each Fitxhì user.
 		// If we find a staff member with the same login and a different identifier, we throw an exception.
 		//
-		Optional<Staff> emp = findStaffWithLogin(input.getLogin());
+		Optional<Staff> emp = findStaffOnLogin(input.getLogin());
 		if ( (emp.isPresent()) && (emp.get().getIdStaff() != input.getIdStaff()) && (emp.get().getLogin().equals(input.getLogin()))) {
 			if (log.isDebugEnabled()) {
 				log.debug(String.format(
@@ -640,7 +660,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public Optional<Staff> findStaffWithLogin(String login) {
+	public Optional<Staff> findStaffOnLogin(String login) {
 		Objects.requireNonNull(login);
 		return getStaff()
 				.values()

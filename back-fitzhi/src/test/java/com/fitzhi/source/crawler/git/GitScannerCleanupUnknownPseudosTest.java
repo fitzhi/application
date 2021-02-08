@@ -5,6 +5,7 @@ package com.fitzhi.source.crawler.git;
 
 import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.BasicCommitRepository;
@@ -69,7 +70,7 @@ public class GitScannerCleanupUnknownPseudosTest {
 		if (log.isDebugEnabled()) {
 			staffHandler.getStaff().values().stream().forEach(staff -> log.debug (staff.getLastName()));
 		}
-		Assert.assertNotNull(staffHandler.lookup("Steve JOBS"));	
+		Assert.assertNotNull(staffHandler.lookup(new Author("Steve JOBS")));	
 	}
 	
 	/**

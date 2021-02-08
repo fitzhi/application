@@ -29,7 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("loadUserByUsername(%s)", username));
 		}
-		return staffHandler.findStaffWithLogin(username).orElseThrow(
+		return staffHandler.findStaffOnLogin(username).orElseThrow(
 				() -> new UsernameNotFoundException(String.format("'%s' not found in Staff", username)));
 		
 	}
