@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.SourceControlChanges;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.fitzhi.source.crawler.git.SourceFileHistory;
 
@@ -39,7 +39,7 @@ public class DataHandlerLoadChangesTest {
     }
 
 	@Test
-	public void loadChanges() throws SkillerException {
+	public void loadChanges() throws ApplicationException {
         SourceControlChanges scc = this.dataHandler.loadChanges(project);
         Assert.assertEquals(3, scc.getChanges().size());
         SourceFileHistory scf = scc.getChanges().get("package/one.java");
@@ -48,8 +48,8 @@ public class DataHandlerLoadChangesTest {
         Assert.assertNotNull(sc);
         Assert.assertEquals("one", sc.getCommitId());
         Assert.assertEquals(LocalDate.of(2019,6,20), sc.getDateCommit());
-        Assert.assertEquals("frvidal", sc.getAuthorName());
-        Assert.assertEquals("frederic.vidal.perso@gmail.com", sc.getAuthorEmail());
+        Assert.assertEquals("frvidal", sc.getAuthor().getName());
+        Assert.assertEquals("frederic.vidal.perso@gmail.com", sc.getAuthor().getEmail());
         Assert.assertEquals(-1, sc.getIdStaff());
         Assert.assertEquals(1, sc.lines());
 
@@ -59,11 +59,19 @@ public class DataHandlerLoadChangesTest {
         Assert.assertNotNull(sc);
         Assert.assertEquals("three", sc.getCommitId());
         Assert.assertEquals(LocalDate.of(2019,6,22), sc.getDateCommit());
-        Assert.assertEquals("averell", sc.getAuthorName());
-        Assert.assertEquals("averell.dalton@gmail.com", sc.getAuthorEmail());
+        Assert.assertEquals("averell", sc.getAuthor().getName());
+        Assert.assertEquals("averell.dalton@gmail.com", sc.getAuthor().getEmail());
         Assert.assertEquals(-1, sc.getIdStaff());
         Assert.assertEquals(3, sc.lines());
        
     }
 
+    /**
+     * loadChanges returns {@code NULL} if the changes file does exist.
+     */
+    @Test
+    public void LoadChangesReturnNull() throws ApplicationException {
+        final Project p = new Project(1939, "Bad year");
+        Assert.assertNull("loadChanges returns {@code NULL} if the changes file does exist", dataHandler.loadChanges(p));
+    }
 }

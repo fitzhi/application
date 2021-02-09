@@ -1,8 +1,8 @@
 import { Constants } from '../../constants';
 import { Collaborator } from '../../data/collaborator';
 import { MessageService } from '../../interaction/message/message.service';
-import { SkillService } from '../../service/skill.service';
-import { StaffService } from '../../service/staff.service';
+import { SkillService } from '../../skill/service/skill.service';
+import { StaffService } from '../service/staff.service';
 import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 

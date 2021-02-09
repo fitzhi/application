@@ -7,7 +7,7 @@ import com.fitzhi.Global;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.ConnectionSettings;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 import com.fitzhi.source.crawler.git.GitCrawler;
 
@@ -47,7 +47,7 @@ public class GitCrawlerCloneTest {
 	private final int ID_PROJECT = 1789;
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		Project project = new Project(ID_PROJECT, "Revolutionary_Project");
 		project.setConnectionSettings(Global.NO_USER_PASSWORD_ACCESS);
 		project.setUrlRepository("https://github.com/fitzhi/application");
@@ -56,7 +56,7 @@ public class GitCrawlerCloneTest {
 	}
 	
 	@Test
-	public void testClone() throws GitAPIException, SkillerException, IOException {
+	public void testClone() throws GitAPIException, ApplicationException, IOException {
 		
 		Project project = projectHandler.get(ID_PROJECT);
 		
@@ -72,7 +72,7 @@ public class GitCrawlerCloneTest {
 	}
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.removeProject(ID_PROJECT);
 
 	}

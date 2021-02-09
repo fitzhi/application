@@ -4,10 +4,10 @@ import { ProjectService } from './project.service';
 import { HttpTestingController, HttpClientTestingModule, TestRequest } from '@angular/common/http/testing';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { ReferentialService } from './referential.service';
-import { SkillService } from './skill.service';
+import { SkillService } from '../skill/service/skill.service';
 import { FileService } from './file.service';
 import { MessageService } from '../interaction/message/message.service';
-import { SunburstCinematicService } from '../project/project-sunburst/service/sunburst-cinematic.service';
+import { SunburstCinematicService } from '../tabs-project/project-sunburst/service/sunburst-cinematic.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
 import { Skill } from '../data/skill';
@@ -91,7 +91,7 @@ describe('ProjectService', () => {
 		expect(2).toEqual(projectService.allProjects[1].id);
 
 
-		req1 = httpMock.expectOne('http://localhost:8080/api/project/id/2');
+		req1 = httpMock.expectOne('http://localhost:8080/api/project/2');
 		expect(req1.request.method).toBe('GET');
 		req1.flush(mockProject2);
 
@@ -104,7 +104,7 @@ describe('ProjectService', () => {
 		//
 		projectService.actualizeProject(3);
 
-		req2 = httpMock.expectOne('http://localhost:8080/api/project/id/3');
+		req2 = httpMock.expectOne('http://localhost:8080/api/project/3');
 		expect(req2.request.method).toBe('GET');
 		req2.flush(mockProject3);
 
@@ -116,7 +116,7 @@ describe('ProjectService', () => {
 		expect(333).toEqual(projectService.allProjects[2].mapSkills.get(1).numberOfFiles);
 		expect(333333).toEqual(projectService.allProjects[2].mapSkills.get(1).totalFilesSize);
 
-		req = httpMock.expectOne('http://localhost:8080/api/skill/all');
+		req = httpMock.expectOne('http://localhost:8080/api/skill');
 		expect(req.request.method).toBe('GET');
 		req.flush(mockSkills);
 

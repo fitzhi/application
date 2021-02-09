@@ -10,7 +10,7 @@ import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -61,8 +61,8 @@ public class SavingBackendService {
 					dataSaver.saveProjects(projectHandler.getProjects());
 					projectHandler.dataAreSaved();
 				}
-			} catch (final SkillerException e) {
-				throw new SkillerRuntimeException(e);
+			} catch (final ApplicationException e) {
+				throw new ApplicationRuntimeException(e);
 			}
 		}
 		
@@ -72,8 +72,8 @@ public class SavingBackendService {
 					dataSaver.saveStaff(staffHandler.getStaff());
 					staffHandler.dataAreSaved();
 				}
-			} catch (final SkillerException e) {
-				throw new SkillerRuntimeException(e);
+			} catch (final ApplicationException e) {
+				throw new ApplicationRuntimeException(e);
 			}
 		}
 		
@@ -83,8 +83,8 @@ public class SavingBackendService {
 					dataSaver.saveSkills(skillHandler.getSkills());
 					skillHandler.dataAreSaved();
 				}
-			} catch (final SkillerException e) {
-				throw new SkillerRuntimeException(e);
+			} catch (final ApplicationException e) {
+				throw new ApplicationRuntimeException(e);
 			}
 		}
 

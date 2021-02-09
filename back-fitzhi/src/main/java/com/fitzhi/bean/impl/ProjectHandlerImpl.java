@@ -23,10 +23,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkillHandler;
@@ -45,7 +42,10 @@ import com.fitzhi.data.internal.SonarProject;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.Contributor;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -90,10 +90,10 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	
 	/**
 	 * @return the <strong>Project</strong> collection.
-	 * @throws SkillerException exception thrown most probably if an {@link IOException} occurs during the de-serialization process.
+	 * @throws ApplicationException exception thrown most probably if an {@link IOException} occurs during the de-serialization process.
 	 */
 	@Override
-	public Map<Integer, Project> getProjects() throws SkillerException {
+	public Map<Integer, Project> getProjects() throws ApplicationException {
 		if (this.projects != null) {
 			return this.projects;
 		}
@@ -102,12 +102,12 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public Project get(final int idProject) throws SkillerException {
+	public Project get(final int idProject) throws ApplicationException {
 		return getProjects().get(idProject);
 	}
 
 	@Override
-	public Optional<Project> lookup(final String projectName) throws SkillerException {
+	public Optional<Project> lookup(final String projectName) throws ApplicationException {
 		return getProjects().values().stream()
 				.filter( (Project project) -> project.getName().equals(projectName))
 				.findFirst();
@@ -144,7 +144,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public Project addNewProject(Project project) throws SkillerException {
+	public Project addNewProject(Project project) throws ApplicationException {
 		
 		// 
 		// We encrypt the password 
@@ -165,9 +165,9 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	/**
 	 * If a password has been given to the GIT connection, we encrypt it.
 	 * @param project the current project
-	 * @throws SkillerException thrown certainly if the encryption failed
+	 * @throws ApplicationException thrown certainly if the encryption failed
 	 */
-	private void encryptPasswordIfNecessary(Project project) throws SkillerException {
+	private void encryptPasswordIfNecessary(Project project) throws ApplicationException {
 		if (project.getConnectionSettings() == 1) {
 			String encryptedPassword = DataEncryption.encryptMessage(project.getPassword());
 			project.setPassword(encryptedPassword);
@@ -175,20 +175,20 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 	
 	@Override
-	public boolean containsProject(int idProject) throws SkillerException {
+	public boolean containsProject(int idProject) throws ApplicationException {
 		return getProjects().containsKey(idProject);
 	}
 
 	@Override
-	public void saveProject(Project project) throws SkillerException {
+	public void saveProject(Project project) throws ApplicationException {
 		if (project.getId() == 0) {
-			throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, project.getId()));
+			throw new ApplicationException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, project.getId()));
 		}
 		synchronized (lockDataUpdated) {
 
 			Project savedProject = get(project.getId());
 			if (savedProject == null) {
-				throw new SkillerRuntimeException(
+				throw new ApplicationRuntimeException(
 						"SHOULD NOT PASS HERE : The project " + project.getId() + " is supposed to exist !");
 			}
 			savedProject.setName(project.getName());
@@ -213,7 +213,12 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 					(!savedProject.getBranch().equals(project.getBranch()))) {
 				savedProject.setLocationRepository(null);
 			}
-			savedProject.setBranch(project.getBranch());
+			// Default branch name is "master" if none is given
+			if ((project.getUrlRepository() != null) && (project.getBranch() == null)) {
+				savedProject.setBranch("master");
+			} else {
+				savedProject.setBranch(project.getBranch());
+			}
 		
 			savedProject.setConnectionSettings(project.getConnectionSettings());
 			switch (project.getConnectionSettings()) {
@@ -255,7 +260,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	
 	
 	@Override
-	public void removeProject(int idProject) throws SkillerException {
+	public void removeProject(int idProject) throws ApplicationException {
 		synchronized (lockDataUpdated) {
 			getProjects().remove(idProject);
 			this.dataUpdated = true;
@@ -263,7 +268,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public List<Library> saveLibraries(int idProject, List<Library> libraries) throws SkillerException {
+	public List<Library> saveLibraries(int idProject, List<Library> libraries) throws ApplicationException {
 		Project prj = this.get(idProject);
 		List<Library> previousLibraries = prj.getLibraries();
 		synchronized (lockDataUpdated) {
@@ -282,7 +287,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public void saveLocationRepository(int idProject, String location) throws SkillerException {
+	public void saveLocationRepository(int idProject, String location) throws ApplicationException {
 		Project project = get(idProject);
 		synchronized (lockDataUpdated) {
 			project.setLocationRepository(location);
@@ -291,7 +296,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 	
 	@Override
-	public void initLocationRepository(int idProject) throws SkillerException {
+	public void initLocationRepository(int idProject) throws ApplicationException {
 		Project project = get(idProject);
 		this.initLocationRepository(project);
 	}
@@ -359,7 +364,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		
 		Staff staff = staffHandler.getStaff(idAssociatedStaff);
 		if (staff == null) {
-			throw new SkillerRuntimeException(
+			throw new ApplicationRuntimeException(
 					String.format("SHOULD NOT PASS HERE : id %d does not exist anymore!", idAssociatedStaff));
 		}
 		boolean projectAlreadyDeclared = staff.getMissions().stream().anyMatch(mission -> mission.getIdProject() == project.getId());
@@ -379,7 +384,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			}
 			this.dataUpdated = true;
 		}
-		throw new SkillerRuntimeException(
+		throw new ApplicationRuntimeException(
 				String.format("%s does not exist anymore in the project %s (id: %d)",
 						pseudo, project.getName(), project.getId()));
 	}
@@ -426,7 +431,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				return;
 			}		
 		}
-		throw new SkillerRuntimeException(
+		throw new ApplicationRuntimeException(
 				String.format("%s does not exist anymore in the project %s (id: %d)",
 						pseudo, project.getName(), project.getId()));
 		
@@ -454,14 +459,14 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				return;
 			}	
 		}
-		throw new SkillerRuntimeException(
+		throw new ApplicationRuntimeException(
 				String.format("%s does not exist anymore in the project %s (id: %d)",
 						pseudo, project.getName(), project.getId()));
 	}
 
 	
 	@Override
-	public void detachStaffMemberFromGhostsOfAllProjects(int idStaff) throws SkillerException {
+	public void detachStaffMemberFromGhostsOfAllProjects(int idStaff) throws ApplicationException {
 		
 		List<Ghost> ghosts = this.getProjects().values().stream()
 			.flatMap(p -> p.getGhosts().stream())
@@ -475,7 +480,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public void integrateGhosts(int idProject, Set<String> unknownPseudos) throws SkillerException {
+	public void integrateGhosts(int idProject, Set<String> unknownPseudos) throws ApplicationException {
 
 		Project project = get(idProject);
 		
@@ -497,9 +502,9 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		
 		// We list on INFO Level the ghosts contributing to the project
 		if (log.isInfoEnabled() && (!ghosts.isEmpty())) {
-			log.info(String.format("Ghost contributors for project %s", project.getName()));
-			StringBuilder sb = new StringBuilder();
-			unknownPseudos.stream().forEach(sb::append);
+			log.info(String.format("[%d] Ghost contributors for project %s", project.getId(), project.getName()));
+			StringBuilder sb = new StringBuilder(String.format("[%d]", project.getId()));
+			unknownPseudos.stream().forEach(s -> sb.append(s).append(" "));
 			log.info(sb.toString());
 		}
 	}
@@ -518,7 +523,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public void addSonarEntry(Project project, SonarProject sonarEntry) throws SkillerException {
+	public void addSonarEntry(Project project, SonarProject sonarEntry) throws ApplicationException {
 
 		Optional<SonarProject> oEntry = project.getSonarProjects()
 				.stream()
@@ -526,7 +531,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				.findFirst();
 		
 		if (oEntry.isPresent()) {
-			throw new SkillerRuntimeException(
+			throw new ApplicationRuntimeException(
 					String.format(
 							"The project %d:%s has already this Sonar key %s registered", 
 							project.getId(), 
@@ -583,15 +588,15 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	 * @param project the given project
 	 * @param sonarKey the given 
 	 * @return
-	 * @throws SkillerException
+	 * @throws ApplicationException
 	 */
-	private SonarProject getSonarProject(Project project, String sonarKey) throws SkillerException {
+	private SonarProject getSonarProject(Project project, String sonarKey) throws ApplicationException {
 		Optional<SonarProject> oSonarProject = project.getSonarProjects()
 				.stream()
 				.filter(sp -> sonarKey.equals(sp.getKey()))
 				.findFirst();
 		if (!oSonarProject.isPresent()) {
-			throw new SkillerException(CODE_SONAR_KEY_NOFOUND, MESSAGE_SONAR_KEY_NOFOUND, sonarKey, project.getName());
+			throw new ApplicationException(CODE_SONAR_KEY_NOFOUND, MESSAGE_SONAR_KEY_NOFOUND, sonarKey, project.getName());
 		}
 		return oSonarProject.get();
 	}
@@ -608,7 +613,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				this.dataUpdated = true;
 			}
 		} catch (Exception e) {
-			throw new SkillerRuntimeException(e);
+			throw new ApplicationRuntimeException(e);
 		}
 	}
 	
@@ -616,7 +621,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	public void saveSonarMetricValues(
 			Project project, 
 			String sonarProjectKey,
-			List<ProjectSonarMetricValue> metricValues) throws SkillerException {
+			List<ProjectSonarMetricValue> metricValues) throws ApplicationException {
 		
 		SonarProject sonarProject = getSonarProject(project, sonarProjectKey);
 		
@@ -628,7 +633,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 	@Override
 	public void saveSonarEvaluation(Project project, String sonarProjectKey, SonarEvaluation sonarEvaluation)
-			throws SkillerException {
+			throws ApplicationException {
 		
 		SonarProject sonarProject = getSonarProject(project, sonarProjectKey);
 		synchronized (lockDataUpdated) {
@@ -658,7 +663,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public void updateSkills(Project project, List<CommitHistory> entries) throws SkillerException {
+	public void updateSkills(Project project, List<CommitHistory> entries) throws ApplicationException {
 		
 		this.resetProjectSkillsMetrics(project);
 		

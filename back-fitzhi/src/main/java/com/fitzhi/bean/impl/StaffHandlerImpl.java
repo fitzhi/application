@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -27,9 +28,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.fitzhi.Error;
-import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.PeopleCountExperienceMap;
@@ -38,7 +40,8 @@ import com.fitzhi.data.internal.ResumeSkill;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.internal.StaffActivitySkill;
 import com.fitzhi.data.source.Contributor;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -104,9 +107,9 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		}
 		try {
 			this.theStaff = dataSaver.loadStaff();
-		} catch (final SkillerException e) {
-			// Without staff, this application is not viable
-			throw new SkillerRuntimeException(e);
+		} catch (final ApplicationException e) {
+			// Without staff collection, this application is not viable
+			throw new ApplicationRuntimeException(e);
 		}
 		return theStaff;
 
@@ -146,10 +149,10 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public Staff addExperiences(int idStaff, ResumeSkill[] skills) throws SkillerException {
+	public Staff addExperiences(int idStaff, ResumeSkill[] skills) throws ApplicationException {
 		Staff staff = getStaff().get(idStaff);
 		if (staff == null) {
-			throw new SkillerException(-1, "There is no staff for the ID " + idStaff);
+			throw new ApplicationException(-1, "There is no staff for the ID " + idStaff);
 		}
 		if (log.isDebugEnabled()) {
 			log.debug("Working with the staff member " 
@@ -169,7 +172,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			log.debug(String.format("Adding %d new skills", listOfNewSkills.size()));
 		}
 		if (listOfNewSkills.isEmpty()) {
-			throw new SkillerException(-1, 
+			throw new ApplicationException(-1, 
 					"There is no new skill to add for " + staff.getFirstName() + " " + staff.getLastName() +"!");
 		}
 		
@@ -179,23 +182,33 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		return staff;
 	}
-
 		
 	@Override
-	public Staff lookup(String criteria)  {
-		
+	public Staff lookup(Author author)  {
+
+		// We test if a user with the same email address exists in the team
+		Staff staff;
+		if (author.getEmail() != null) {
+			staff =  findStaffOnEmail(author.getEmail());
+			// If we find a corresponding developer, the search can stop immediatly.
+			if (staff != null) {
+				return staff;
+			}
+		}
+
 		// First, we're processing the search with the natural String IN LOWER CASE
-		Staff staff =  lookup(criteria, input -> (input != null) ? input.toLowerCase() : null);
+		staff =  lookup(author.getName(), input -> (input != null) ? input.toLowerCase() : null);
 		
 		// If no one's found, we re-process the search with NORMALIZED AND LOWER CASE String
 		if (staff == null) {
-			staff =  lookup(criteria, input ->
+			staff =  lookup(author.getName(), input ->
 					(input != null) ? Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "").toLowerCase() : null);
 		}
 		
 		return staff;
 	}
 	
+
 	@Override
 	public boolean isEligible(Staff staff, String criteria) {
 		if (!isEligible(staff, criteria, input -> (input != null) ? 
@@ -262,7 +275,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			// in order to test any combination of criteria ("John William Doe Senior" -> "William Doe Senior John" --> ...)
 			//
 			if (log.isDebugEnabled()) {
-				log.debug(String.format("Rotation of words within the criteria %s and trying a lookup", criteria));
+				log.debug(String.format("Rotation of words within the criteria %s and trying a lookup.", criteria));
 			}
 			for (int i=0; i<word.length; i++) {
 				
@@ -281,7 +294,17 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			return false;
 		}
 	}
-	
+
+	@Override
+	public Staff findStaffOnEmail(String email) {
+		// We assume the UNICITY of the email address in the Staff members collection
+		Optional<Staff> oStaff = getStaff().values().stream()
+			.filter(entry -> email.toLowerCase().equals(entry.getEmail()))
+			.findAny();
+		return (oStaff.isPresent()) ? oStaff.get() : null;
+	}
+
+
 	/**
 	 * Lookup across the staff collection for a given criteria
 	 * @param criteria the given criteria which might contain one or multiple words
@@ -382,9 +405,9 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				log.warn(String.format("Multiple ids for this criteria %s", criteria));
 				log.warn("Ids listed below :");
 				ids.stream().forEach(staff -> log.warn(String.format("%d %s %s", staff.getIdStaff(), staff.getFirstName(), staff.getLastName())));
-				log.warn("By default, we assumed to return the first one...");
+				log.warn("By default, we assumed not to decide, and to return NULL");
 			}
-			return ids.get(0);
+			return null;
 		}
 
 		// ids.size() == 0 at this point.
@@ -392,14 +415,14 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 	
 	@Override
-	public void involve(Project project, List<Contributor> contributors) throws SkillerException {
+	public void involve(Project project, List<Contributor> contributors) throws ApplicationException {
 		
 		
 		for (Contributor contributor : contributors) {
 			if (contributor.getIdStaff() != UNKNOWN) {
 				Staff staff = getStaff().get(contributor.getIdStaff());
 				if (staff == null) {
-					throw new SkillerRuntimeException("SEVERE ERROR : No staff member corresponding to the id " + contributor.getIdStaff());
+					throw new ApplicationRuntimeException("SEVERE ERROR : No staff member corresponding to the id " + contributor.getIdStaff());
 				}
 				if (staff.isInvolvedInProject(project.getId())) {
 					synchronized (lockDataUpdated) {
@@ -443,11 +466,11 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public void involve(Project project, Contributor contributor) throws SkillerException {
+	public void involve(Project project, Contributor contributor) throws ApplicationException {
 
 		Staff staff = getStaff().get(contributor.getIdStaff());
 		if (staff == null) {
-			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, contributor.getIdStaff()));
+			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, contributor.getIdStaff()));
 		}
 		
 		Optional<Mission> oMission = staff.getMissions().stream()
@@ -511,46 +534,102 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public Staff addNewStaffMember(final Staff staff)  {
-		synchronized (lockDataUpdated) {
-			Map<Integer, Staff> company = getStaff();
-			if (staff.getIdStaff() <= 0) {				
-				staff.setIdStaff(company.size() + 1);
-			}
-			company.put(staff.getIdStaff(), staff);
-			this.dataUpdated = true;
-		}
-		return staff;
-	}
-
-	@Override
 	public boolean containsStaffMember(final int idStaff) {
 		return getStaff().containsKey(idStaff);
 	}
 
 	@Override
-	public void saveStaffMember(Staff input) throws SkillerException {
+	public void controlWorkforceMember(Staff input) throws ApplicationException {
 
-		Staff updStaff = getStaff(input.getIdStaff());
-		if (input.getIdStaff() == 0) {
-			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, input.getIdStaff()));
+		// This control is redundant with the control processed under the PUT verb in the StaffController
+		// But we might create a staff member outside of the Rest controller
+		if ( (input.getIdStaff() > 0) && !containsStaffMember(input.getIdStaff())) {
+			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, input.getIdStaff()));
 		}
-		
+
 		//
 		// The login is unique for each Fitxhì user.
 		// If we find a staff member with the same login and a different identifier, we throw an exception.
 		//
-		Optional<Staff> emp = findStaffWithLogin(input.getLogin());
+		Optional<Staff> emp = findStaffOnLogin(input.getLogin());
 		if ( (emp.isPresent()) && (emp.get().getIdStaff() != input.getIdStaff()) && (emp.get().getLogin().equals(input.getLogin()))) {
 			if (log.isDebugEnabled()) {
 				log.debug(String.format(
-						"the employee %d %s has the same login %s than %d %s" , 
+						"The staff member %d %s has the same login %s than %d %s" , 
 						input.getIdStaff(), input.fullName(),
 						input.getLogin(),
 						emp.get().getIdStaff(), emp.get().fullName()));
 			}
-			throw new SkillerException(CODE_LOGIN_ALREADY_EXIST, MessageFormat.format(MESSAGE_LOGIN_ALREADY_EXIST, input.getLogin(), emp.get().getFirstName(), emp.get().getLastName()));			
+			throw new ApplicationException(CODE_LOGIN_ALREADY_EXIST, MessageFormat.format(MESSAGE_LOGIN_ALREADY_EXIST, input.getLogin(), emp.get().getFirstName(), emp.get().getLastName()));			
 		}
+	}
+
+	@Override
+	public Staff createWorkforceMember(final Staff staff) throws ApplicationException {
+		controlWorkforceMember(staff);
+		addNewStaff(staff);
+		return staff;
+	}
+
+	@Override
+	public Staff createEmptyStaff(Author author) throws ApplicationException {
+		String[] w = author.getName().split(" ");
+		Staff staff = new Staff();
+		staff.setIdStaff(-1);
+		if (w.length == 1) {
+			staff.setFirstName("firstname");
+			staff.setLastName(w[0]);
+			staff.setNickName(w[0]);
+			staff.setLogin(w[0]);
+			staff.setEmail(author.getEmail());
+		} else {
+			staff.setFirstName(w[0]);
+			staff.setLastName(author.getName().substring(w[0].length()+1));
+			staff.setNickName(author.getName());
+			staff.setLogin(author.getName());
+			staff.setEmail(author.getEmail());
+		}
+		addNewStaff(staff);
+		return staff;
+	}
+
+	/**
+	 * Add a new staff in the staff collection
+	 * @param staff the new Staff member
+	 */
+	private void addNewStaff(Staff staff) {
+		synchronized (lockDataUpdated) {
+			Map<Integer, Staff> company = getStaff();
+			if (staff.getIdStaff() <= 0) {	
+				try {
+					int max = company.keySet().stream()
+						.mapToInt(v->v)
+						.max()
+						.orElseThrow(NoSuchElementException::new);
+						staff.setIdStaff(max + 1);
+				} catch (final NoSuchElementException e) {
+					staff.setIdStaff(1);
+				}
+			}
+			company.put(staff.getIdStaff(), staff);
+			if (log.isInfoEnabled()) {
+				log.info(String.format("Creation of staff member %d %s %s", 
+					staff.getIdStaff(), staff.getFirstName(), staff.getLastName()));
+			}
+			this.dataUpdated = true;
+		}
+	}
+
+	@Override
+	public void updateWorkforceMember(Staff input) throws ApplicationException {
+
+		controlWorkforceMember(input);
+
+		Staff updStaff = getStaff(input.getIdStaff());
+		if (updStaff == null) {
+			throw new ApplicationRuntimeException(String.format("WTF : A staff with id %d should exist.", input.getIdStaff()));
+		}
+	
 		
 		updStaff.setFirstName(input.getFirstName());
 		updStaff.setLastName(input.getLastName());
@@ -581,7 +660,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public Optional<Staff> findStaffWithLogin(String login) {
+	public Optional<Staff> findStaffOnLogin(String login) {
 		Objects.requireNonNull(login);
 		return getStaff()
 				.values()
@@ -595,7 +674,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		Staff staff = getStaff().get(idStaff);
 		if (staff == null) {
-			throw new SkillerRuntimeException(
+			throw new ApplicationRuntimeException(
 					"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 		
@@ -616,7 +695,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		Staff staff = getStaff().get(idStaff);
 		if (staff == null) {
-			throw new SkillerRuntimeException(
+			throw new ApplicationRuntimeException(
 					"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 		
@@ -634,7 +713,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		Staff staff = getStaff().get(idStaff);
 		if (staff == null) {
-			throw new SkillerRuntimeException(
+			throw new ApplicationRuntimeException(
 				"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 		
@@ -652,7 +731,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		final Staff staff = getStaff().get(idStaff);
 		if (staff == null) {
-			throw new SkillerRuntimeException(
+			throw new ApplicationRuntimeException(
 				"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 		
@@ -667,7 +746,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 
 		final Staff staff = getStaff().get(idStaff);
 		if (staff == null) {
-			throw new SkillerRuntimeException(
+			throw new ApplicationRuntimeException(
 				"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 		
@@ -677,7 +756,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			.findFirst();
 			
 		if (!oMission.isPresent()) {
-			throw new SkillerRuntimeException(
+			throw new ApplicationRuntimeException(
 					"SEVERE DATA CONSISTENCY ERROR " + MessageFormat.format(Error.MESSAGE_MISSION_NOFOUND, idStaff, idProject));
 		}
 		synchronized (lockDataUpdated) {
@@ -714,11 +793,11 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 	
 	@Override
-	public void inferSkillsFromMissions(int idStaff) throws SkillerException {
+	public void inferSkillsFromMissions(int idStaff) throws ApplicationException {
 
 		Staff staff = getStaff().get(idStaff);
 		if (staff == null) {
-			throw new SkillerException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
+			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 
 		List<StaffActivitySkill> activity = activity(staff);
@@ -727,7 +806,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		// Internal check
 		//
 		if (activity.stream().anyMatch(sas -> sas.getIdStaff() != idStaff)) {
-			throw new SkillerRuntimeException(
+			throw new ApplicationRuntimeException(
 					String.format("INTERNAL ERROR : %d has to be the unique staff identifier in all his StaffActivitySkill", idStaff));
 		}
 		

@@ -8,7 +8,8 @@ on:
     branches: [ master, release-1.3 ]
   pull_request:
     branches: [ master ]
-
+env:
+  LANG: "fr_FR.UTF-8"
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -20,6 +21,17 @@ jobs:
         working-directory: ./back-fitzhi
     steps:
     - uses: actions/checkout@v2
+    - name: "Setup locale settings on the Ubuntu instance for fr_FR.UTF8"
+      run: |
+          sudo locale-gen fr_FR.UTF-8
+          sudo update-locale LANG=fr_FR.UTF-8
+      if: (matrix.os == 'ubuntu-latest')
+    - name: "Testing locale settings"
+      run: sudo locale
+      if: (matrix.os == 'ubuntu-latest') || (matrix.os == 'macOS-latest')
+    - name: "Simple Test for macOS"
+      run: sudo locale -a
+      if: (matrix.os == 'macOS-latest')
     - name: "create directories for the repositories"
       run: |
             mkdir ../git_repo_for_test
@@ -43,6 +55,8 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+    - name: Display Maven settings
+      run: mvn --version
     - name: Build with Maven
       run: mvn clean package -DskipTests
     - name: Test with maven

@@ -51,8 +51,10 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	 * Dimension of the Skyline
 	 */
 	skylineDimension = {
-		width: 1200,
-		height: 370,
+		width: 1195,
+		widthWithUnitOfMesure:'1195px',
+		height: 500,
+		heightWithUnitOfMesure: '500px',
 	};
 
 	/**
@@ -123,4 +125,10 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 		return (clickedSelection === this.selected);
 	}
 
+	/**
+	 * Return **TRUE** if the user has selected a type of dashboard, **FALSE** otherwise.
+	 */
+	hasSelectedADashboard(): boolean {
+		return (this.selected !== this.selection.none);
+	}
 }

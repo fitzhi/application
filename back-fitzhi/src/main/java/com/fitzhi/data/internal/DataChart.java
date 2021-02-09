@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import com.fitzhi.Global;
-import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.ApplicationRuntimeException;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -176,7 +176,7 @@ public class DataChart implements Serializable {
 		}
 		if (this.sources.stream().anyMatch(
 				item -> item.getFilename().equals(sourceFile.getFilename()))) {
-			throw new SkillerRuntimeException("@" + getLocation() + " " + sourceFile.getFilename() + " already exists.");
+			throw new ApplicationRuntimeException("@" + getLocation() + " " + sourceFile.getFilename() + " already exists.");
 		}
 		this.sources.add(sourceFile);
 		this.setNumberOfFiles(this.sources.size());
@@ -196,7 +196,7 @@ public class DataChart implements Serializable {
 			this.sources = new HashSet<>();
 		}
 		if (this.sources.stream().anyMatch(item -> item.getFilename().equals(filename))) {
-			throw new SkillerRuntimeException(filename + " already exists.");
+			throw new ApplicationRuntimeException(filename + " already exists.");
 		}
 		this.sources.add(new SourceFile(filename, lastCommit, committers));
 		this.setNumberOfFiles(this.sources.size());

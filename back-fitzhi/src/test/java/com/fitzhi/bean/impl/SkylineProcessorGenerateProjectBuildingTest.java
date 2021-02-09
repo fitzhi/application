@@ -12,7 +12,7 @@ import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectFloor;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -60,7 +60,7 @@ public class SkylineProcessorGenerateProjectBuildingTest {
     private final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
    
     @Test
-    public void testGenerateBuildingForAOneSingleLineProject() throws SkillerException {
+    public void testGenerateBuildingForAOneSingleLineProject() throws ApplicationException {
 
         Staff staff = staffHandler.getStaff(1);
         staff.setActive(false);
@@ -94,7 +94,7 @@ public class SkylineProcessorGenerateProjectBuildingTest {
     }
 
     @Test
-    public void testGenerateBuildingForAGivenProject() throws SkillerException {
+    public void testGenerateBuildingForAGivenProject() throws ApplicationException {
 
         staffHandler.getStaff(1).setActive(true);
         staffHandler.getStaff(2).setActive(false);
@@ -128,7 +128,7 @@ public class SkylineProcessorGenerateProjectBuildingTest {
     }
 
     @Test
-    public void anotherTestGenerateBuildingForAGivenProject() throws SkillerException {
+    public void anotherTestGenerateBuildingForAGivenProject() throws ApplicationException {
 
         staffHandler.getStaff(1).setActive(true);
         staffHandler.getStaff(2).setActive(true);
@@ -155,7 +155,7 @@ public class SkylineProcessorGenerateProjectBuildingTest {
     }
 
     @Test
-    public void oneAnotherTestGenerateBuildingForAGivenProject() throws SkillerException {
+    public void oneAnotherTestGenerateBuildingForAGivenProject() throws ApplicationException {
 
         staffHandler.getStaff(1).setActive(false);
         staffHandler.getStaff(1).setDateInactive(LocalDate.of(2020, 7, 14));

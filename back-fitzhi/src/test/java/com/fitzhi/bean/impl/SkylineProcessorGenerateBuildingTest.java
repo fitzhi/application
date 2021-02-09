@@ -2,7 +2,7 @@ package com.fitzhi.bean.impl;
 
 import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,7 +30,7 @@ public class SkylineProcessorGenerateBuildingTest {
      * we do throw an exception if the {@code N-project-layers.json} file
      */
     @Test
-    public void testDoNotThrowAnExceptionIfNoSkylineFileExists() throws SkillerException {
+    public void testDoNotThrowAnExceptionIfNoSkylineFileExists() throws ApplicationException {
         Project p = new Project(1789, "The Revolution project");
         skylineProcessor.generateProjectBuilding(p);
     }

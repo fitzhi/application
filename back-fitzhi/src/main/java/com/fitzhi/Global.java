@@ -53,7 +53,13 @@ public class Global {
 	 * Title possible for an operation.
 	 */
 	public static final String PROJECT = "project";
-	
+
+	/**
+	 * This progression value indicates that the task did not progess. 
+	 */
+	public static final int NO_PROGRESSION = Integer.MIN_VALUE;
+
+
 	private Global() {
 	}
 

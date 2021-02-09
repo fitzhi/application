@@ -25,7 +25,7 @@ import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.external.ActivityLog;
 import com.fitzhi.data.internal.Task;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.service.sse.ReactiveLogReport;
 
 import lombok.extern.slf4j.Slf4j;
@@ -75,7 +75,7 @@ public class ProjectTasksController {
 		}
 		try { 
 			if (!projectHandler.containsProject(idProject)) {
-				throw new SkillerException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+				throw new ApplicationException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 			}
 			
 			Task task = tasks.getTask(operation, PROJECT, idProject);
@@ -92,7 +92,7 @@ public class ProjectTasksController {
 								idProject, response.getBody()));
 			}
 			return response;
-		} catch (SkillerException se) {
+		} catch (ApplicationException se) {
 			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
 			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
 			return new ResponseEntity<>(null, headers, HttpStatus.INTERNAL_SERVER_ERROR);			

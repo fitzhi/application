@@ -1,8 +1,6 @@
-
-<div class="app-toolbar">
+<div id="toolbar" *ngIf="isConnected() && (installService.installComplete$|async)" class="app-toolbar">
     <app-toolbar  
         class="toolbar"
-        [hidden]="!isConnected()"
         (messengerFormActive)="onChangeForm($event)"
         (messengerCriteria)="onRequestQuery($event)"
         (messengerActiveOnly)="onChangeActiveOnly($event)">
@@ -17,5 +15,7 @@
 		</div>
 	</div>
 
-	<app-message></app-message>
+
+    <app-message></app-message>
+    
 </div>

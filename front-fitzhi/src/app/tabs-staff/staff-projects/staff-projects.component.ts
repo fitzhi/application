@@ -3,7 +3,7 @@ import { Collaborator } from '../../data/collaborator';
 import { StaffDTO } from '../../data/external/staffDTO';
 import { MessageService } from '../../interaction/message/message.service';
 import { ProjectService } from '../../service/project.service';
-import { StaffService } from '../../service/staff.service';
+import { StaffService } from '../service/staff.service';
 import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
 import { Component, OnInit, OnDestroy, Input, AfterViewInit, ViewChild } from '@angular/core';
 
@@ -12,7 +12,7 @@ import Tagify from '@yaireo/tagify';
 import { Mission } from 'src/app/data/mission';
 import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { Observable, Subject, BehaviorSubject } from 'rxjs';
-import { TableGhostsComponent } from 'src/app/project/project-sunburst/project-ghosts/table-ghosts/table-ghosts.component';
+import { TableGhostsComponent } from 'src/app/tabs-project/project-sunburst/project-ghosts/table-ghosts/table-ghosts.component';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { traceOn } from 'src/app/global';

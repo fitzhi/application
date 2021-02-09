@@ -27,7 +27,7 @@ import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Task;
 import com.fitzhi.data.internal.TaskLog;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -62,11 +62,11 @@ public class ProjectControllerMgtTasksTest {
 	final int ID_PROJECT = 1789;
 
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		Project p = new Project (ID_PROJECT, "Revolutionnary project");
 		projectHandler.addNewProject(p);
 		asyncTask.addTask("nopeOperation", "mockProject", ID_PROJECT);
-		asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my message");
+		asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my message", 0);
 		
 	}
 
@@ -87,7 +87,7 @@ public class ProjectControllerMgtTasksTest {
 	
 	/**
 	 * Nominal behavior.
-	 * @throws SkillerException
+	 * @throws ApplicationException
 	 */
 	@Test
 	@WithMockUser
@@ -105,7 +105,7 @@ public class ProjectControllerMgtTasksTest {
 	}
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.getProjects().remove(ID_PROJECT);
 		asyncTask.removeTask("nopeOperation", "mockProject", 1789);
 	}

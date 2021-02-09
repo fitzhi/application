@@ -1,18 +1,19 @@
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { CinematicService } from './service/cinematic.service';
 import { Constants } from './constants';
-import { ListProjectsService } from './project/list-project/list-projects-service/list-projects.service';
+import { ListProjectsService } from './tabs-project/list-project/list-projects-service/list-projects.service';
 import { ReferentialService } from './service/referential.service';
-import { StaffService } from './service/staff.service';
+import { StaffService } from './tabs-staff/service/staff.service';
 import { Router } from '@angular/router';
 import { BaseComponent } from './base/base.component';
 import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.service';
-import { SkillService } from './service/skill.service';
+import { SkillService } from './skill/service/skill.service';
 import { ListCriteria } from './data/listCriteria';
 import { AuthService } from './admin/service/auth/auth.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { SonarService } from './service/sonar.service';
 import { traceOn } from './global';
+import { InstallService } from './admin/service/install/install.service';
 
 declare var $: any;
 
@@ -22,11 +23,6 @@ declare var $: any;
 	styleUrls: ['./app.component.css']
 })
 export class AppComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
-
-	/**
-	 * Definitive name of the application, for today at least....
-	 */
-	public title = 'techxhicolor';
 
 	/**
     * Context identfifier : Entity currently active.
@@ -63,6 +59,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 		private referentialService: ReferentialService,
 		private staffService: StaffService,
 		private projectService: ProjectService,
+		public installService: InstallService,
 		private router: Router) {
 
 		super();

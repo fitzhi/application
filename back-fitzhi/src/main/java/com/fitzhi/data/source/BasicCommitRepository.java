@@ -26,6 +26,8 @@ import lombok.extern.slf4j.Slf4j;
  * <p>
  * Repository containing timestamped commits for the given project.
  * <br/>
+ * </p>
+ * <p>
  * <i>This is the first & basic implementation for the Commit repository</i>.
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL

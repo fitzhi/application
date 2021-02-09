@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.SonarHandler;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 
 /**
@@ -36,7 +36,7 @@ public class SonarHandlerTest {
 	 * Test of {@link com.fitzhi.bean.SonarHandler#getDefaultProjectSonarMetrics()}
 	 */
 	@Test
-	public void getDefaultProjectSonarMetrics() throws SkillerException {
+	public void getDefaultProjectSonarMetrics() throws ApplicationException {
 		
 		List<ProjectSonarMetricValue> defaultMetrics = sonarHandler.getDefaultProjectSonarMetrics();
 		assertNotNull(defaultMetrics);

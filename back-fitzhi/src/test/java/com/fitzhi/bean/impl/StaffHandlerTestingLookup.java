@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.Staff;
 
 /**
@@ -25,7 +26,7 @@ public class StaffHandlerTestingLookup {
 	
 	@Test
 	public void lookupSimpleWord() {
-		Staff staff = this.staffHandler.lookup("stlagrange");
+		Staff staff = this.staffHandler.lookup(new Author("stlagrange"));
 		assertThat(staff).isNotNull();
 		assertThat(staff.getFirstName().toLowerCase()).isEqualTo("stéphane");
 		assertThat(staff.getLastName().toLowerCase()).isEqualTo("lagrange");
@@ -33,7 +34,7 @@ public class StaffHandlerTestingLookup {
 
 	@Test
 	public void lookupWordsLastFistName() {
-		Staff staff = this.staffHandler.lookup("Lagrange Stéphane");
+		Staff staff = this.staffHandler.lookup(new Author("Lagrange Stéphane"));
 		assertThat(staff).isNotNull();
 		assertThat(staff.getFirstName().toLowerCase()).isEqualTo("stéphane");
 		assertThat(staff.getLastName().toLowerCase()).isEqualTo("lagrange");
@@ -42,7 +43,7 @@ public class StaffHandlerTestingLookup {
 
 	@Test
 	public void lookup2WordsFirstLastName() {
-		Staff staff = this.staffHandler.lookup("Nobilleau Frederic");
+		Staff staff = this.staffHandler.lookup(new Author("Nobilleau Frederic"));
 		assertThat(staff).isNotNull();
 		assertThat(staff.getFirstName().toLowerCase()).isEqualTo("frederic");
 		assertThat(staff.getLastName().toLowerCase()).isEqualTo("nobilleau");

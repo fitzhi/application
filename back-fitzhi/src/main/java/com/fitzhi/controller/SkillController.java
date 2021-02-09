@@ -1,40 +1,99 @@
 package com.fitzhi.controller;
 
-import static com.fitzhi.Error.getStackTrace;
+import static com.fitzhi.Error.CODE_SKILL_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_SKILL_NOFOUND;
 import static com.fitzhi.Global.BACKEND_RETURN_CODE;
 import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
 
+import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import com.fitzhi.ApplicationRuntimeException;
+import com.fitzhi.bean.SkillHandler;
+import com.fitzhi.data.external.SkillDTO;
+import com.fitzhi.data.internal.Skill;
+import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.fitzhi.bean.SkillHandler;
-import com.fitzhi.data.external.SkillDTO;
-import com.fitzhi.data.internal.Skill;
-import com.fitzhi.exception.SkillerException;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/skill")
-public class SkillController {
+public class SkillController extends BaseRestController {
 
 	@Autowired
 	SkillHandler skillHandler;
+
+	/**
+	 * <p>
+	 * This method <b>CREATES a NEW SKILL</b> and returns a valid location to load the skill.
+	 * </p>
+	 * @param builder the {@code Spring} URI builder
+	 * @param skill the skill sent by the front application in JSON format
+	 * @return a ResponseEntity with just the location containing the URI of the newly
+	 *         created skill
+	 */
+	@PostMapping("")
+	public ResponseEntity<Object> create(UriComponentsBuilder builder, @RequestBody Skill skill) {
+
+		if (skillHandler.containsSkill(skill.getId())) {
+			return new ResponseEntity<Object>(null, headers(), HttpStatus.CONFLICT);
+		}
+		
+		Skill newSkill = skillHandler.addNewSkill(skill);
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("The skill %s obtains the id %d", newSkill.getTitle(), newSkill.getId()));
+		}
+
+		UriComponents uriComponents = builder.path("/api/skill/{id}").buildAndExpand(newSkill.getId());
+
+		return ResponseEntity.created(uriComponents.toUri()).build();
+
+	}
+
+	/**
+	 * Update an existing skill, or create a new one.
+     *
+	 * @param idProject the skill identifier. The skill identifier is present in the REST URL in accordance with the Rest naming conventions
+	 * @param skill the skill sent by the Angular application in JSON format
+	 * @return an empty content response with a {@code code 200} or {@code code 404} error if the skill identifier does not exist.
+	 * @throws NotFoundException if there is no skill for the given identifier 
+	 */
+	@PutMapping("/{idSkill}")
+	public ResponseEntity<Void> update(@PathVariable("idSkill") int idSkill, @RequestBody Skill skill) throws NotFoundException, ApplicationException {
+
+		if (idSkill != skill.getId()) {
+			throw new ApplicationRuntimeException("WTF : SHOULD NOT PASS HERE!");
+		}
+
+		if (!skillHandler.containsSkill(idSkill)) {
+			throw new NotFoundException(CODE_SKILL_NOFOUND, MessageFormat.format(MESSAGE_SKILL_NOFOUND, idSkill));
+		}
+
+		skillHandler.saveSkill(skill);
+
+		return ResponseEntity.noContent().build();
+	}
+
+
 
 	@GetMapping(value = "/name/{projectName}")
 	public ResponseEntity<SkillDTO> read(@PathVariable("projectName") String skillTitle) {
@@ -81,72 +140,22 @@ public class SkillController {
 		return responseEntity;
 	}
 
-	@GetMapping("/all")
+	@GetMapping("")
 	public Collection<Skill> readAll() {
 		Collection<Skill> skills = skillHandler.getSkills().values();
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("'/skill/all' is returning %d skills", skills.size()));
+			log.debug(String.format("'/skill' is returning %d skills", skills.size()));
 		}
 		return skills;
 	}
-	
-	/**
-	 * Either save an existing skill, or create a new one.
-	 * @param skill the skill sent by the front application in JSON format
-	 * @return the (new) skill updated 
-	 */
-	@PostMapping("/save")
-	public ResponseEntity<Skill> save(@RequestBody Skill skill) {
-
-		final ResponseEntity<Skill> responseEntity;
-		final HttpHeaders headers = new HttpHeaders();
-
-		if (skill.getId() == 0) {
-			skillHandler.addNewSkill(skill);
-			headers.add(BACKEND_RETURN_CODE, "1");
-			responseEntity = new ResponseEntity<>(skill, headers, HttpStatus.OK);
-		} else {
-			if (!skillHandler.containsSkill(skill.getId())) {
-				responseEntity = new ResponseEntity<>(skill, headers, HttpStatus.NOT_FOUND);
-				headers.add(BACKEND_RETURN_CODE, "O");
-				headers.set(BACKEND_RETURN_MESSAGE,
-						"There is no skill associated to the id " + skill.getId());
-				headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-			} else {
-				try {
-					skillHandler.saveSkill(skill);
-				} catch (SkillerException e) {
-					log.error(getStackTrace(e));
-					return new ResponseEntity<>(new Skill(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
-				}
-				responseEntity = new ResponseEntity<>(skill, headers, HttpStatus.OK);
-				headers.add("backend.return_code", "1");
-			}
-		}
-		if (log.isDebugEnabled()) {
-			log.debug(String.format("POST command on /skill/save returns the body %s", responseEntity.getBody()));
-		}
-		return responseEntity;
-	}
-	
+		
 	/**
 	 * @return the map of skills detection templates
+	 * @throws ApplicationException thrown if any problem occcurs, most probably an {@link IOException}
 	 */
 	@GetMapping("/detection-templates")
-	public ResponseEntity<Map<Integer, String>> detectionTemplate() {
-		final ResponseEntity<Map<Integer, String>> responseEntity;
-		final HttpHeaders headers = new HttpHeaders();
-		try {
-			Map<Integer, String> mapDetectionTemplates = this.skillHandler.detectorTypes();
-			responseEntity = new ResponseEntity<>(mapDetectionTemplates, headers, HttpStatus.OK);
-			headers.add("backend.return_code", "1");
-			return responseEntity;
-		} catch (final SkillerException e) {
-			log.error(getStackTrace(e));
-			return new ResponseEntity<>(
-				new HashMap<Integer, String>(), 
-				headers, 
-				HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity<Map<Integer, String>> detectionTemplate() throws ApplicationException {
+		Map<Integer, String> mapDetectionTemplates = this.skillHandler.detectorTypes();
+		return new ResponseEntity<Map<Integer, String>>(mapDetectionTemplates, headers(), HttpStatus.OK);
 	}
 }

@@ -1,17 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration debug="true">
  
     <property name="LOGS" value="./logs" />
- 
-    <appender name="Console"
-        class="ch.qos.logback.core.ConsoleAppender">
+
+<!--
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <withJansi>true</withJansi>
+        <encoder>
+            <pattern>
+                %black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable
+            </pattern>
+        </encoder>
+    </appender>
+ -->
+
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
                 %black(%d{ISO8601}) %highlight(%-5level) [%blue(%t)] %yellow(%C{1.}): %msg%n%throwable
             </Pattern>
         </layout>
     </appender>
- 
+    
+<!--
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %-5level [%t] %C{1.}: %msg%n%throwable
+            </Pattern>
+        </layout>
+    </appender>
+-->
+
     <appender name="RollingFile"
         class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>${LOGS}/spring-boot-logger.log</file>
@@ -47,11 +67,6 @@
 		<appender-ref ref="Console" />
 	</root>
 
-	<logger name="com.fitzhi.service.sse.ReactiveLogReport" additivity="false">
-		<level value="INFO" />
-        <appender-ref ref="RollingFile" />
-	</logger>
-    
 <!--
 
 	<logger name="com.fitzhi.bean.impl.PropectDashboardCustomizerImpl" additivity="false">

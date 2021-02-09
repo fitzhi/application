@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Library;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -50,7 +50,7 @@ public class ProjectAnalysisControllerSaveLibDirTest {
 
 	Project project;
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		project = new Project(9999, "Project 9999");
 		projectHandler.addNewProject(project);
 	}
@@ -78,7 +78,7 @@ public class ProjectAnalysisControllerSaveLibDirTest {
 	}
 
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.getProjects().remove(9999);
 	}
 	

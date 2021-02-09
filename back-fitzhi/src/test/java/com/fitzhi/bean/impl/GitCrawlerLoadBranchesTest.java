@@ -1,5 +1,17 @@
 package com.fitzhi.bean.impl;
 
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.fitzhi.Global;
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.data.encryption.DataEncryption;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.source.crawler.RepoScanner;
+import com.fitzhi.source.crawler.git.GitCrawler;
+
 import org.eclipse.jgit.lib.Ref;
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,18 +22,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import com.fitzhi.Global;
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.data.encryption.DataEncryption;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
-import com.fitzhi.source.crawler.RepoScanner;
-import com.fitzhi.source.crawler.git.GitCrawler;
 
 /**
  * 
@@ -64,7 +64,7 @@ public class GitCrawlerLoadBranchesTest {
 	}
 	
 	@Test
-	public void testConnectionFailed() throws SkillerException {
+	public void testConnectionFailed() throws ApplicationException {
 		project = new Project(4, "UNREACHABLE PROJECT");
 		project.setUrlRepository("https://github.com/fvidal/wibkac");
 		project.setConnectionSettings(Global.USER_PASSWORD_ACCESS);

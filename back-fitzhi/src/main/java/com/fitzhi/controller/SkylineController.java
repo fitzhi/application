@@ -2,7 +2,7 @@ package com.fitzhi.controller;
 
 import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.data.internal.Skyline;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -35,7 +35,7 @@ public class SkylineController {
 
 
 	@GetMapping("/skyline")
-	public ResponseEntity<Skyline> skyline() throws SkillerException {
+	public ResponseEntity<Skyline> skyline() throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
 			log.debug("GET command /skykine");

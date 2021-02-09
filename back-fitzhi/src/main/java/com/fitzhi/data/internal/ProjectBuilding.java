@@ -64,6 +64,9 @@ public @Data class ProjectBuilding {
      */
     public void initWeek (int idProject, int year, int week) {
         this.idProject = idProject;
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("initWeek(%d, %d, %d)", idProject, year, week));
+        }
         building.put(new YearWeek(idProject, year, week), new ProjectFloor(idProject, year, week, 0, 0));
     }
 
@@ -92,7 +95,11 @@ public @Data class ProjectBuilding {
      * @return the floor for the given year and week
      */
     public ProjectFloor getFloor(int year, int week) {
-        
+
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("getFloor(%d; %d)", year, week));
+        }
+
         ProjectFloor floor = building.get(yearWeek(year, week));
         if (floor == null) {
             throw new RuntimeException(String.format("Cannot retrieve the floor (%d;%d) in project %d", year, week, idProject));
@@ -167,7 +174,7 @@ public @Data class ProjectBuilding {
      * <p>
      * if this method receives the two pairs of date : (2020; 20) -> (2020; 30) and a number of lines equal to 5.
      * The building will be enhanced of 5 <b>active</b> lines for each week from 2000/20 up to 2020/30, 5 <b>inactive</b> lines starting from week 2020/31.
-     * </P>
+     * </p>
      * @param lines the number of lines.
      * @param startingYear <i>starting year</i> for taking in account this number of lines
      * @param startingWeek <i>starting week</i> for taking in account this number of lines
@@ -193,8 +200,11 @@ public @Data class ProjectBuilding {
         // This temporalField is used to retrieve the week number of the date into the year
         final TemporalField woy = WeekFields.of(Locale.getDefault()).weekOfWeekBasedYear();
 
+        // The associated year.
+        final TemporalField yowoy = WeekFields.of(Locale.getDefault()).weekBasedYear();
+
         for (LocalDate date = startingDate; date.isBefore(LocalDate.now()); date = date.plusWeeks(1)) {
-            ProjectFloor floor = getFloor(date.getYear(), date.get(woy));
+            ProjectFloor floor = getFloor(date.get(yowoy), date.get(woy));
             if (date.isAfter(endingDate)) {
                 floor.addLinesInactiveDevelopers(lines);
             } else {

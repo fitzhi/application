@@ -78,7 +78,7 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(newProject)))
 				.andExpect(status().isCreated())
-				.andExpect(header().string("location", String.format("http://localhost/api/project/id/%d", numberOfProjects+1)))
+				.andExpect(header().string("location", String.format("http://localhost/api/project/%d", numberOfProjects+1)))
 				.andReturn();
 		String location = result.getResponse().getHeader("location");
 		

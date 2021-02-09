@@ -1,7 +1,7 @@
 <mat-tab-group [selectedIndex]="selected" (selectedIndexChange)="select($event)">
   <mat-tab *ngFor="let tab of tabs; let index = index">
     <ng-template mat-tab-label>
-        <div class="d-flex justify-content-start myTab" style="width:100%">
+        <div class="d-flex justify-content-start myTab">
                 <div style="min-width:20%"><em class="fas glyphicon fa-user-graduate" ></em></div>
                 <div style="min-width:65%">{{truncate(tabs[index],12)}}</div>
                 <button class="remove" (click)="remove(index)" style="min-width:15%">x</button>

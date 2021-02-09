@@ -23,7 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 
 /**
@@ -50,7 +50,7 @@ public class GitCrawlerNonRelevantDependenciesMgtTest {
 	Project p;
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		p = new Project(1000, "test");
     	asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 1000);
 	}

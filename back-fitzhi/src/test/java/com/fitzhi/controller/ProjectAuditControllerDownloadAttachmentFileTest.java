@@ -14,7 +14,7 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.AuditTopic;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.service.FileType;
 import com.fitzhi.service.impl.storageservice.AuditAttachmentStorageProperties;
 import com.google.gson.Gson;
@@ -41,6 +41,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * <p>
  * Test of the class {@link ProjectAuditController}
@@ -51,6 +54,7 @@ import org.springframework.util.MultiValueMap;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
+@Slf4j
 public class ProjectAuditControllerDownloadAttachmentFileTest {
 
 	/**
@@ -79,7 +83,7 @@ public class ProjectAuditControllerDownloadAttachmentFileTest {
 	private final int ID_TOPIC_2 = 2; 
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		Project project = projectHandler.get(ID_PROJECT);
 		Map<Integer, AuditTopic> mapAudit = new HashMap<>();
 		AuditTopic at = new AuditTopic(ID_TOPIC_1, 30, 100);
@@ -129,19 +133,23 @@ public class ProjectAuditControllerDownloadAttachmentFileTest {
 	
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		Project project = projectHandler.get(ID_PROJECT);
 		project.getAudit().clear();
 		
 		File attachment = new File (storageProperties.getLocation() + 
 				String.format("/%d-%d-audit.docx", ID_PROJECT, ID_TOPIC_1));
 		if (attachment.exists()) {
-			attachment.delete();
+			if (!attachment.delete()) {
+				log.error(String.format("Cannot delete %", attachment.getAbsolutePath()));
+			}
 		}
 		attachment = new File (storageProperties.getLocation() + 
 				String.format("/%d-%d-audit.pdf", ID_PROJECT, ID_TOPIC_1));
 		if (attachment.exists()) {
-			attachment.delete();		
+			if (!attachment.delete()) {
+				log.error(String.format("Cannot delete %", attachment.getAbsolutePath()));
+			}
 		}
 	}
 	

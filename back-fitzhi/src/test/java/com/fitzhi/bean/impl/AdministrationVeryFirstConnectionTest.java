@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import com.fitzhi.bean.Administration;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import org.assertj.core.util.Files;
 import org.junit.After;
@@ -45,7 +45,7 @@ public class AdministrationVeryFirstConnectionTest {
 	}
 
 	@Test
-	public void testSaveIsFirstConnection() throws SkillerException {
+	public void testSaveIsFirstConnection() throws ApplicationException {
 		Assert.assertTrue(
 				"No file firstConnection.txt created", 
 				administration.isVeryFirstConnection());

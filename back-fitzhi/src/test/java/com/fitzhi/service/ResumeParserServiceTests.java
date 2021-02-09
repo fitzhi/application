@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.data.internal.Resume;
 import com.fitzhi.data.internal.ResumeSkillIdentifier;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>Tests on the skills parser</p>
@@ -51,20 +51,20 @@ public class ResumeParserServiceTests {
 	Resource resourceFilePdf;
 	
 	@Before
-	public void init() throws SkillerException, IOException {
+	public void init() throws ApplicationException, IOException {
 		final String file_txt = resourceFileTxt.getFile().getAbsolutePath();
 		experienceTxt = parser.extract(file_txt, FileType.FILE_TYPE_TXT);
 		referenceTxtSkills = experienceTxt.data().stream()
 				.map(ResumeSkillIdentifier::getIdSkill).collect(Collectors.toList());
 	}
 	
-	@Test(expected = SkillerException.class)
-	public void testFileNotFound() throws SkillerException {
+	@Test(expected = ApplicationException.class)
+	public void testFileNotFound() throws ApplicationException {
 		parser.extract("unknown", FileType.FILE_TYPE_DOC);
 	}
 	
 	@Test
-	public void parsingDOC() throws SkillerException, IOException {
+	public void parsingDOC() throws ApplicationException, IOException {
 		final String file_doc = resourceFileDoc.getFile().getAbsolutePath();
 		Resume experienceDoc = parser.extract(file_doc, FileType.FILE_TYPE_DOC);
 		List<Integer> referenceDocSkills =experienceDoc.data().stream()
@@ -73,7 +73,7 @@ public class ResumeParserServiceTests {
 	}
 
 	@Test
-	public void parsingDOCX() throws SkillerException, IOException {
+	public void parsingDOCX() throws ApplicationException, IOException {
 		final String file_docx = resourceFileDocx.getFile().getAbsolutePath();
 		Resume experienceDocx = parser.extract(file_docx, FileType.FILE_TYPE_DOCX);
 		List<Integer> referenceDocxSkills =experienceDocx.data().stream()
@@ -82,7 +82,7 @@ public class ResumeParserServiceTests {
 	}
 
 	@Test
-	public void parsingPDF() throws SkillerException, IOException {
+	public void parsingPDF() throws ApplicationException, IOException {
 		final String file_pdf = resourceFilePdf.getFile().getAbsolutePath();
 		Resume experiencePdf = parser.extract(file_pdf, FileType.FILE_TYPE_PDF);
 		// We loosed certainly some few skills during the convert into PDF, but the main skills are still present.

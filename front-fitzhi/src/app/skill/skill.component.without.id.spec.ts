@@ -5,7 +5,7 @@ import { InitTest } from '../test/init-test';
 import { RouterModule, Router, ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Observable, of } from 'rxjs';
-import { SkillService } from '../service/skill.service';
+import { SkillService } from './service/skill.service';
 import { ListSkillService } from './list-skill-service/list-skill.service';
 import { Skill } from '../data/skill';
 import { HttpClientTestingModule } from '@angular/common/http/testing';

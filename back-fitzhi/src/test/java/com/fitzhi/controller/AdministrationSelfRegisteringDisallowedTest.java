@@ -82,14 +82,14 @@ public class AdministrationSelfRegisteringDisallowedTest {
 	        .andExpect(status().isOk())
 	        .andExpect(content().contentType("application/json;charset=UTF-8"));
 	    
-	    Optional<Staff> oStaff = staffHandler.findStaffWithLogin(TEST_USER);
+	    Optional<Staff> oStaff = staffHandler.findStaffOnLogin(TEST_USER);
 	    Assert.assertTrue("The 'test-user' user should not exist", !oStaff.isPresent());
 	    
 	}
 
 	@After
 	public void after() throws IOException {
-		Optional<Staff> oStaff = staffHandler.findStaffWithLogin(TEST_USER);
+		Optional<Staff> oStaff = staffHandler.findStaffOnLogin(TEST_USER);
 	    if (oStaff.isPresent()) {
 	    	staffHandler.getStaff().remove(oStaff.get().getIdStaff());
 	    }

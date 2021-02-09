@@ -7,7 +7,7 @@ package com.fitzhi.bean.impl;
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -43,19 +43,19 @@ public class AdministrationConnectTest {
 	int idStaff;
 
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		final Staff staff = administration.createNewUser(MY_LOGIN, MY_PSSWORD);
 		this.idStaff = staff.getIdStaff();
 	}
 
 	@Test 
-	public void testConnectOk() throws SkillerException {
+	public void testConnectOk() throws ApplicationException {
 		Staff staff = administration.connect(MY_LOGIN, MY_PSSWORD);
 		Assert.assertEquals (idStaff, staff.getIdStaff());
 	}
 
-	@Test (expected=SkillerException.class)
-	public void testConnectKo() throws SkillerException {
+	@Test (expected=ApplicationException.class)
+	public void testConnectKo() throws ApplicationException {
 		administration.connect(MY_LOGIN, "badPass");
 	}
 	

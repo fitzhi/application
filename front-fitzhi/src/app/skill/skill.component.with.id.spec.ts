@@ -3,7 +3,7 @@ import { async, ComponentFixture, TestBed, TestModuleMetadata, tick, fakeAsync }
 import { SkillComponent } from './skill.component';
 import { InitTest } from '../test/init-test';
 import { of } from 'rxjs';
-import { SkillService } from '../service/skill.service';
+import { SkillService } from './service/skill.service';
 import { ListSkillService } from './list-skill-service/list-skill.service';
 import { Skill } from '../data/skill';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -64,18 +64,7 @@ describe('SkillComponent', () => {
 
 
 	});
-/*
-	it('Testing the SkillForm loading with an id equals to 1', fakeAsync(() => {
-		fixture.detectChanges(); // trigger ngOninit()
-		expect(component).toBeTruthy();
 
-		expect(getSkill).toHaveBeenCalled();
-
-		expect(1).toEqual(component.skill.id);
-		expect('First skill').toEqual(component.skill.title);
-		expect('First skill').toEqual(component.profileSkill.get('title').value);
-	}));
-*/
 	it('Testing the SkillForm handling template & pattern', fakeAsync(() => {
 		fixture = TestBed.createComponent(SkillComponent);
 		component = fixture.componentInstance;
@@ -111,5 +100,13 @@ describe('SkillComponent', () => {
 		expect('my personal pattern').toEqual(component.profileSkill.get('pattern').value);
 
 	}));
+
+	it('should manage the input/output of the  ', () => {
+		fixture = TestBed.createComponent(SkillComponent);
+		component = fixture.componentInstance;
+		debugElement = fixture.debugElement;
+
+		
+	});
 
 });

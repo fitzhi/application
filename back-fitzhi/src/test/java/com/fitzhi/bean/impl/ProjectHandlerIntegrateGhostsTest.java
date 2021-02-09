@@ -16,7 +16,7 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
@@ -38,14 +38,15 @@ public class ProjectHandlerIntegrateGhostsTest {
 	Project project;
 
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		project = projectHandler.addNewProject(new Project(314116, "PI"));
 		project.getGhosts().add(new Ghost("pseudoUnlinked", false));
 		project.getGhosts().add(new Ghost("pseudoLinked", 2, false));
 	}
 	
+	
 	@Test
-	public void test() throws SkillerException {
+	public void test() throws ApplicationException {
 		Set<String> pseudos = new HashSet<String>();
 		pseudos.add("newpseudo");
 		projectHandler.integrateGhosts(314116, pseudos);

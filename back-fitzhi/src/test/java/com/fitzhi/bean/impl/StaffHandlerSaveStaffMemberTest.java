@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * Class in charge of testing the saveStaffMember method inside StaffHandler.
@@ -37,26 +37,26 @@ public class StaffHandlerSaveStaffMemberTest {
 	}
 
 	@Test
-	public void testSaveStaffMemberOk() throws SkillerException {
+	public void testSaveStaffMemberOk() throws ApplicationException {
 		Staff st = new Staff(1001, OUAAMOU, AHMINE, MOUAAMOU , MOUAAMOU, MOUAAMOU_VOID_COM, "");
-		staffHandler.saveStaffMember(st);
+		staffHandler.updateWorkforceMember(st);
 		Staff s = staffHandler.getStaff().get(1001);
 		Assert.assertEquals (AHMINE, s.getLastName());
 	}
 
 	
-	@Test (expected=SkillerException.class)
-	public void testSaveStaffMemberKoNonUniqueLogin() throws SkillerException {
+	@Test (expected=ApplicationException.class)
+	public void testSaveStaffMemberKoNonUniqueLogin() throws ApplicationException {
 		// 
 		Staff st = new Staff(1001, OUAAMOU, AHMINE, MOUAAMOU , "cact", MOUAAMOU_VOID_COM, "");
-		staffHandler.saveStaffMember(st);
+		staffHandler.updateWorkforceMember(st);
 	}
 
-	@Test (expected=SkillerException.class)
-	public void testSaveStaffMemberKoUnregisteredStaff() throws SkillerException {
+	@Test (expected=ApplicationException.class)
+	public void testSaveStaffMemberKoUnregisteredStaff() throws ApplicationException {
 		// 
 		Staff st = new Staff(0, OUAAMOU, AHMINE, MOUAAMOU , "cact", MOUAAMOU_VOID_COM, "");
-		staffHandler.saveStaffMember(st);
+		staffHandler.updateWorkforceMember(st);
 	}
 
 	@After

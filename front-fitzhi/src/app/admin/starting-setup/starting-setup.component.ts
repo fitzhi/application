@@ -7,11 +7,12 @@ import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup
 import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { HttpClient } from '@angular/common/http';
 import { ReferentialService } from 'src/app/service/referential.service';
-import { SkillService } from 'src/app/service/skill.service';
+import { SkillService } from 'src/app/skill/service/skill.service';
 import { Router } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { traceOn } from 'src/app/global';
+import { InstallService } from '../service/install/install.service';
 
 @Component({
 	selector: 'app-starting-setup',
@@ -54,6 +55,7 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 		private backendSetupService: BackendSetupService,
 		private referentialService: ReferentialService,
 		private skillService: SkillService,
+		private installService: InstallService,
 		private router: Router,
 		private httpClient: HttpClient) { super(); }
 
@@ -148,6 +150,9 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 							console.log('The very first connection is registered into fitzhì');
 						}
 						this.completed[3] = true;
+						
+						this.installService.installComplete();
+
 						this.staff = $event;
 						setTimeout(() => {
 							this.stepper.next();
@@ -164,7 +169,8 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 	/**
      * @param $event we move from one step in the installation.
      */
-	selectionChange() {
+	selectionChange($event) {
+		console.log ($event);
 		window.scroll(0, 0);
 	}
 

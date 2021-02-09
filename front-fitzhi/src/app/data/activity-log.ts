@@ -6,6 +6,7 @@ export class ActivityLog {
 	public timestamp: number;
 	public code: number;
 	public message: string;
+	public progressionPercentage: number;
 	public complete: boolean;
 	public completeOnError: boolean;
 

@@ -13,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import lombok.extern.slf4j.Slf4j;
+
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.Staff;
 
 /**
  * Testing the CommitHistory class
@@ -21,6 +24,7 @@ import com.fitzhi.bean.StaffHandler;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Slf4j
 public class CommitHistoryTest {
 
 	@Autowired
@@ -35,6 +39,8 @@ public class CommitHistoryTest {
 		ch.addOperation(new Operation(1, "one", LocalDate.of(2018, 10, 17)));
 		ch.addOperation(new Operation(2, "two", LocalDate.of(2018, 11, 25)));
 		ch.addOperation(new Operation(3, "three", LocalDate.of(2017, 11, 1)));
+
+		staffHandler.getStaff().values().stream().map(Staff::fullName).forEach(log::debug);
 
 		staffHandler.getStaff().get(1).setActive (false);
 		staffHandler.getStaff().get(2).setActive (true);

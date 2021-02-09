@@ -28,3 +28,8 @@ span.criteria {
 span.property {
     font-weight: 700;
 }
+
+/* We remove the horizontal scroll bar from the tab body content */ 
+div.mat-tab-body-content {
+    overflow-x: hidden;
+}

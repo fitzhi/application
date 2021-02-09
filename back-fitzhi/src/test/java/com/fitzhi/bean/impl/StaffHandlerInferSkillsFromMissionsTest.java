@@ -19,7 +19,7 @@ import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.internal.StaffActivitySkill;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
@@ -41,7 +41,7 @@ public class StaffHandlerInferSkillsFromMissionsTest {
 	private StaffHandler staffHandler;
 	
 	@Before
-	public void before() {
+	public void before() throws ApplicationException {
 		Staff s1 = new Staff(ID_1, "firstName 1", "lastName 1", "nickName 1", "login 1", "email 1", "ICD 1");
 		s1.getExperiences().add(new Experience (3,  1));
 		Mission m = new Mission(ID_1, 1789, "Revolution");
@@ -56,7 +56,6 @@ public class StaffHandlerInferSkillsFromMissionsTest {
 		
 		Staff s2 = new Staff(ID_2, "firstName 2", "lastName 2", "nickName 2", "login 2", "email 2", "ICD 2");
 		s2.getExperiences().add(new Experience (ID_SKILL_JAVA, 5));
-		staffHandler.addNewStaffMember(s2);
 		m = new Mission(ID_2, 18789, "Revolution");
 		s2.addMission(m);
 		m.getStaffActivitySkill()
@@ -67,7 +66,7 @@ public class StaffHandlerInferSkillsFromMissionsTest {
 	}
 	
 	@Test
-	public void testICD_1() throws SkillerException {
+	public void testICD_1() throws ApplicationException {
 		staffHandler.inferSkillsFromMissions(ID_1);
 		Staff staff = staffHandler.getStaff(ID_1);
 		Assert.assertEquals(3, staff.getExperiences().size());
@@ -78,7 +77,7 @@ public class StaffHandlerInferSkillsFromMissionsTest {
 	}
 
 	@Test
-	public void testICD_2() throws SkillerException {
+	public void testICD_2() throws ApplicationException {
 		staffHandler.inferSkillsFromMissions(ID_2);
 		Staff staff = staffHandler.getStaff(ID_2);
 		Assert.assertEquals(2, staff.getExperiences().size());

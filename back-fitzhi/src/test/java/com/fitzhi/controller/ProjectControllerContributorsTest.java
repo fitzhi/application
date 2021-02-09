@@ -75,7 +75,7 @@ public class ProjectControllerContributorsTest {
 		contributors.add(new Contributor(ID_STAFF, LocalDate.now(), LocalDate.now(), 100, 200));
 		given(this.projectHandler.contributors(666)).willReturn(contributors);
 
-		MvcResult result = this.mvc.perform(get("/api/project/contributors/666")).andExpect(status().isOk())
+		MvcResult result = this.mvc.perform(get("/api/project/666/contributors")).andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.idProject", is(666)))
 				.andExpect(jsonPath("$.contributors[0].idStaff", is(ID_STAFF)))

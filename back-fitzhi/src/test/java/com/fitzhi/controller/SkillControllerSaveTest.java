@@ -1,6 +1,11 @@
 package com.fitzhi.controller;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.After;
@@ -36,8 +41,6 @@ import com.google.gson.GsonBuilder;
 @AutoConfigureMockMvc
 public class SkillControllerSaveTest {
 
-	private static final String SKILL_SAVE = "/api/skill/save";
-
 	@Autowired
 	private MockMvc mvc;
 
@@ -61,9 +64,25 @@ public class SkillControllerSaveTest {
 	public void saveUnknownSkill() throws Exception {
 
 		Skill skill = new Skill(9999, "unknown skill");
-		this.mvc.perform(post(SKILL_SAVE).contentType(MediaType.APPLICATION_JSON_UTF8).content(gson.toJson(skill)))
-				.andExpect(status().isNotFound());
 
+		this.mvc.perform(put("/api/skill/9999")
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(gson.toJson(skill)))
+			.andExpect(status().isNotFound());
+	
+	}
+	@Test
+	@WithMockUser
+	public void saveConflictWhenCreatingAnExistingSkill() throws Exception {
+
+		Skill skill = new Skill(1, "Already registered skill");
+
+		this.mvc.perform(post("/api/skill/")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(gson.toJson(skill)))
+				.andExpect(status().isConflict())
+				.andReturn();
+	
 	}
 
 	@Test
@@ -72,9 +91,26 @@ public class SkillControllerSaveTest {
 
 		Skill skill = new Skill(0, "skill",
 				new SkillDetectionTemplate(SkillDetectorType.FILENAME_DETECTOR_TYPE, "*.skill$"));
-		MvcResult result = this.mvc
-				.perform(post(SKILL_SAVE).contentType(MediaType.APPLICATION_JSON_UTF8).content(gson.toJson(skill)))
-				.andExpect(status().isOk()).andReturn();
+
+		//
+		// WE CREATE A NEW SKILL.
+		// The controller should return the CREATED (201) status and the location of the new entry
+		//
+		MvcResult result = this.mvc.perform(post("/api/skill/")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(gson.toJson(skill)))
+				.andExpect(status().isCreated())
+				.andExpect(header().string("location", String.format("http://localhost/api/skill/%d", countSkills+1)))
+				.andReturn();
+		String location = result.getResponse().getHeader("location");
+
+		//
+		// WE RETRIEVE THE NEWLY CREATED SKILL
+		//
+		result = this.mvc.perform(get(location))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andDo(print())
+				.andReturn();
 
 		Skill retSkill = gson.fromJson(result.getResponse().getContentAsString(), Skill.class);
 
@@ -89,12 +125,30 @@ public class SkillControllerSaveTest {
 	@Test
 	@WithMockUser
 	public void saveNewSkillWithoutDetectionPattern() throws Exception {
-		Skill skill = new Skill(0, "empty Skill");
-		MvcResult result = this.mvc
-				.perform(post(SKILL_SAVE).contentType(MediaType.APPLICATION_JSON_UTF8).content(gson.toJson(skill)))
-				.andExpect(status().isOk()).andReturn();
 
+		Skill skill = new Skill(0, "empty Skill");
+		//
+		// WE CREATE A NEW SKILL.
+		// The controller should return the CREATED (201) status and the location of the new entry
+		//
+		MvcResult result = this.mvc.perform(post("/api/skill")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(gson.toJson(skill)))
+				.andExpect(status().isCreated())
+				.andExpect(header().string("location", String.format("http://localhost/api/skill/%d", countSkills+1)))
+				.andReturn();
+		String location = result.getResponse().getHeader("location");
+
+
+		//
+		// WE RETRIEVE THE NEWLY CREATED SKILL
+		//
+		result = this.mvc.perform(get(location))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andDo(print())
+				.andReturn();
 		Skill retSkill = gson.fromJson(result.getResponse().getContentAsString(), Skill.class);
+
 		Assert.assertEquals(countSkills + 1, retSkill.getId());
 		Assert.assertNull(retSkill.getDetectionTemplate());
 	}
@@ -104,17 +158,35 @@ public class SkillControllerSaveTest {
 	public void saveSkillUpdateDetectionPattern() throws Exception {
 
 		Skill skill = new Skill(0, "empty Skill");
-		MvcResult result = this.mvc
-				.perform(post(SKILL_SAVE).contentType(MediaType.APPLICATION_JSON_UTF8).content(gson.toJson(skill)))
-				.andExpect(status().isOk()).andReturn();
+		MvcResult result = this.mvc.perform(post("/api/skill")
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(gson.toJson(skill)))
+				.andExpect(status().isCreated())
+				.andExpect(header().string("location", String.format("http://localhost/api/skill/%d", countSkills+1)))
+				.andReturn();
+		String location = result.getResponse().getHeader("location");
+
+
+		// WE RETRIEVE THE NEWLY CREATED SKILL
+		result = this.mvc.perform(get(location))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andDo(print())
+				.andReturn();
 
 		Skill skill2 = gson.fromJson(result.getResponse().getContentAsString(), Skill.class);
 		skill2.setTitle("skill");
 		skill2.setDetectionTemplate(new SkillDetectionTemplate(SkillDetectorType.FILENAME_DETECTOR_TYPE, "*.skill$"));
 
-		result = this.mvc
-				.perform(post(SKILL_SAVE).contentType(MediaType.APPLICATION_JSON_UTF8).content(gson.toJson(skill2)))
-				.andExpect(status().isOk()).andReturn();
+		this.mvc.perform(put(location)
+				.contentType(MediaType.APPLICATION_JSON_UTF8)
+				.content(gson.toJson(skill2)))
+				.andExpect(status().isNoContent());
+
+		// WE RETRIEVE THE UPDATED SKILL
+		result = this.mvc.perform(get(location))
+				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andDo(print())
+				.andReturn();
 		Skill skill3 = gson.fromJson(result.getResponse().getContentAsString(), Skill.class);
 
 		Assert.assertEquals(countSkills + 1, skill3.getId());
@@ -127,6 +199,5 @@ public class SkillControllerSaveTest {
 
 	@After
 	public void after() {
-		skillHandler.getSkills().remove(777);
 	}
 }

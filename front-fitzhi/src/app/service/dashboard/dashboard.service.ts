@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { SkillService } from '../skill.service';
+import { SkillService } from '../../skill/service/skill.service';
 import { ProjectService } from '../project.service';
 import { SkillProjectsAggregation } from './skill-projects-aggregration';
 import { Project } from 'src/app/data/project';
-import {StaffListService} from '../../staff-list-service/staff-list.service';
+import {StaffListService} from '../staff-list-service/staff-list.service';
 import { Collaborator } from 'src/app/data/collaborator';
 import { Experience } from 'src/app/data/experience';
 import { StatTypes } from './stat-types';

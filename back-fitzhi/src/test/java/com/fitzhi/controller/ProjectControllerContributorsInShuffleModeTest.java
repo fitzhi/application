@@ -10,10 +10,15 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.Staff;
+import com.fitzhi.data.source.Contributor;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -26,12 +31,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.util.Assert;
 
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.data.internal.Staff;
-import com.fitzhi.data.source.Contributor;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -40,10 +40,9 @@ import com.google.gson.GsonBuilder;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(properties = { "shuffleData=1" }) 
+@Slf4j
 
 public class ProjectControllerContributorsInShuffleModeTest {
-
-	private final Logger logger = LoggerFactory.getLogger(ProjectControllerContributorsInShuffleModeTest.class.getCanonicalName());
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -71,7 +70,7 @@ public class ProjectControllerContributorsInShuffleModeTest {
 		contributors.add(new Contributor(ID_STAFF, LocalDate.now(), LocalDate.now(), 100, 200));
 		given(this.projectHandler.contributors(666)).willReturn(contributors);
 
-		MvcResult result = this.mvc.perform(get("/api/project/contributors/666"))
+		MvcResult result = this.mvc.perform(get("/api/project/666/contributors"))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.idProject").value(666))
@@ -79,8 +78,8 @@ public class ProjectControllerContributorsInShuffleModeTest {
 			.andExpect( jsonPath("$.code").value(0))
 			.andExpect(jsonPath("$.message").isEmpty()).andReturn();
 		
-		if (logger.isDebugEnabled()) {
-			logger.debug (result.getResponse().getContentAsString());
+		if (log.isDebugEnabled()) {
+			log.debug (result.getResponse().getContentAsString());
 		}
 		
 		Assert.doesNotContain(result.getResponse().getContentAsString(), staff.fullName(), "The fullname has to be shuffled");

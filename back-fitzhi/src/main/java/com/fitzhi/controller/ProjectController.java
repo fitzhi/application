@@ -8,12 +8,11 @@ import static com.fitzhi.Error.MESSAGE_PROJECT_IS_NOT_EMPTY;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.UNKNOWN_PROJECT;
 import static com.fitzhi.Error.getStackTrace;
-import static com.fitzhi.Global.BACKEND_RETURN_CODE;
-import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.PROJECT;
 import static com.fitzhi.Global.deepClone;
 
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,25 +25,7 @@ import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
 
-import org.eclipse.jgit.lib.Ref;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.bean.ProjectHandler;
@@ -65,16 +46,33 @@ import com.fitzhi.data.internal.RiskDashboard;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.Contributor;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
-import com.fitzhi.exception.SkillerException;
 import com.fitzhi.source.crawler.RepoScanner;
+
+import org.eclipse.jgit.lib.Ref;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/project")
-public class ProjectController {
+public class ProjectController extends BaseRestController {
 
 	@Autowired
 	ProjectHandler projectHandler;
@@ -117,6 +115,62 @@ public class ProjectController {
 		projectLoader = new ProjectLoader(projectHandler);
 	}
 
+	/**
+	 * <p>
+	 * This method creates a new project.
+	 * </p>
+	 * @param builder the {@code Spring} URI builder
+	 * @param project the project to be created
+	 * @return a ResponseEntity with just the location containing the URI of the newly
+	 *         created project
+	 */
+	@PostMapping("")
+	public ResponseEntity<Void> create(UriComponentsBuilder builder, @RequestBody Project project)
+			throws ApplicationException {
+
+		if (projectHandler.containsProject(project.getId())) {
+			return new ResponseEntity<Void>(null, headers(), HttpStatus.CONFLICT);
+		}
+		
+		project.setId(UNKNOWN_PROJECT);
+		project = projectHandler.addNewProject(project);
+
+		UriComponents uriComponents = builder.path("/api/project/{id}").buildAndExpand(project.getId());
+
+		return ResponseEntity.created(uriComponents.toUri()).build();
+	}
+
+	/**
+	 * <p>
+	 * Update the project identified by the given {@link Project#getId() idProject}
+	 * </p>
+	 * @param idProject the project identifier. The projet identifier is hosted in the URL in accordance with the Rest naming conventions
+	 * @param project the project to update. This project is hosted inside the body of the {@code PUT} Medhod.
+	 * @return an empty content for an update request
+	 */
+	@PutMapping("/{idProject}")
+	public ResponseEntity<Void> updateProject(@PathVariable("idProject") int idProject, @RequestBody Project project)
+			throws NotFoundException, ApplicationException {
+
+		if (idProject != project.getId()) {
+			throw new ApplicationRuntimeException("WTF : SHOULD NOT PASS HERE!");
+		}
+
+		if (!projectHandler.containsProject(idProject)) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+		}
+
+		// You cannot anymore update an INACTIVE project
+		if (!project.isActive()) {
+			return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
+		}
+
+		projectHandler.saveProject(project);
+
+		return ResponseEntity.noContent().build();
+
+	}
+
 	@GetMapping(path = "/name/{projectName}")
 	public ResponseEntity<ProjectDTO> read(@PathVariable("projectName") String projectName) {
 
@@ -137,7 +191,7 @@ public class ProjectController {
 				}
 			}
 			return responseEntity;
-		} catch (final SkillerException e) {
+		} catch (final ApplicationException e) {
 			log.error(getStackTrace(e));
 			return new ResponseEntity<>(new ProjectDTO(new Project(), e.errorCode, e.getMessage()), headers(),
 					HttpStatus.BAD_REQUEST);
@@ -153,19 +207,19 @@ public class ProjectController {
 	 */
 	@DeleteMapping(value = "/{idProject}")
 	public ResponseEntity<Object> removeProject(@PathVariable("idProject") int idProject)
-			throws NotFoundException, SkillerException {
+			throws NotFoundException, ApplicationException {
 		Project project = projectHandler.get(idProject);
 		if (project == null) {
 			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 
 		if (!project.isEmpty()) {
-			throw new SkillerException(CODE_PROJECT_IS_NOT_EMPTY,
+			throw new ApplicationException(CODE_PROJECT_IS_NOT_EMPTY,
 					MessageFormat.format(MESSAGE_PROJECT_IS_NOT_EMPTY, project.getName()));
 		}
 
 		if (staffHandler.isProjectReferenced(idProject)) {
-			throw new SkillerException(CODE_PROJECT_IS_NOT_EMPTY,
+			throw new ApplicationException(CODE_PROJECT_IS_NOT_EMPTY,
 					MessageFormat.format(MESSAGE_PROJECT_IS_NOT_EMPTY, project.getName()));
 		}
 
@@ -182,7 +236,7 @@ public class ProjectController {
 	 */
 	@PostMapping(value = "/rpc/inactivation/{idProject}")
 	public ResponseEntity<Object> inactivateProject(@PathVariable("idProject") int idProject)
-			throws NotFoundException, SkillerException {
+			throws NotFoundException, ApplicationException {
 		Project project = projectHandler.get(idProject);
 		if (project == null) {
 			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
@@ -201,7 +255,7 @@ public class ProjectController {
 	 */
 	@PostMapping(value = "/rpc/reactivation/{idProject}")
 	public ResponseEntity<Object> reactivateProject(@PathVariable("idProject") int idProject)
-			throws NotFoundException, SkillerException {
+			throws NotFoundException, ApplicationException {
 		Project project = projectHandler.get(idProject);
 		if (project == null) {
 			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
@@ -219,7 +273,7 @@ public class ProjectController {
 	 *         query failed.
 	 */
 	@DeleteMapping()
-	public ResponseEntity<Object> removeAllProjects() throws SkillerException {
+	public ResponseEntity<Object> removeAllProjects() throws ApplicationException {
 		return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
 	}
 
@@ -230,7 +284,7 @@ public class ProjectController {
 	 * @return the HTTP Response with the retrieved project, or an empty one if the
 	 *         query failed.
 	 */
-	@GetMapping(value = "/id/{idProject}")
+	@GetMapping(value = "/{idProject}")
 	public ResponseEntity<Project> read(@PathVariable("idProject") int idProject) {
 
 		MyReference<ResponseEntity<Project>> refResponse = projectLoader.new MyReference<>();
@@ -251,13 +305,13 @@ public class ProjectController {
 	/**
 	 * @param idProject the project identifier
 	 * @return the experience of a developer as list of skills.
-	 * @throws SkillerException exception thrown if any problem occurs, most
+	 * @throws ApplicationException exception thrown if any problem occurs, most
 	 *                          probably if the project does not exist for the given
 	 *                          identifier.
 	 */
 	@GetMapping(value = "/skills/{idProject}")
 	public ResponseEntity<Collection<ProjectSkill>> get(final @PathVariable("idProject") int idProject)
-			throws SkillerException {
+			throws ApplicationException {
 
 		Project project = projectHandler.get(idProject);
 		if (project == null) {
@@ -275,7 +329,7 @@ public class ProjectController {
 	 * @return the HTTP Response with an array of branches, or an empty one if the query failed.
 	 */
 	@GetMapping(value = "/branches/{idProject}")
-	public ResponseEntity<String[]> branches(@PathVariable("idProject") int idProject) throws SkillerException {
+	public ResponseEntity<String[]> branches(@PathVariable("idProject") int idProject) throws ApplicationException {
 
 		Project project = projectHandler.get(idProject);
 		if (project == null) {
@@ -295,7 +349,7 @@ public class ProjectController {
 		Collection<Ref> unfiltered_branches = this.scanner.loadBranches(project);
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("%d branches retrieved", unfiltered_branches.size()));
-			unfiltered_branches.stream().map(Ref::getName).forEach(log::debug);;
+			unfiltered_branches.stream().forEach(ref -> log.debug(ref.getName()));
 		}			
 		
 		String[] branches = unfiltered_branches
@@ -310,13 +364,13 @@ public class ProjectController {
 								
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("%d branches returned", branches.length));
-			Arrays.stream(branches).forEach(log::debug);
+			Arrays.stream(branches).forEach(branch -> log.debug(branch));
 		}			
 						
 		return new ResponseEntity<>(branches, headers(), HttpStatus.OK);
 	}
 
-	@GetMapping("/all")
+	@GetMapping("")
 	public Collection<Project> readAll() {
 		try {
 			Collection<Project> projects = projectHandler.getProjects().values();
@@ -344,68 +398,17 @@ public class ProjectController {
 			}
 
 			if (log.isDebugEnabled()) {
-				log.debug(String.format("'/Project/all' is returning %d projects", responseProjects.size()));
+				log.debug(String.format("'/Project' is returning %d projects", responseProjects.size()));
 			}
 			return responseProjects;
 
-		} catch (final SkillerException e) {
+		} catch (final ApplicationException e) {
 			log.error(getStackTrace(e));
 			return new ArrayList<Project>();
 		}
 
 	}
 
-	/**
-	 * This method creates a new project.
-	 * 
-	 * @param project the project to be created
-	 * @return a ResponseEntity with the location containing the URI of the newly
-	 *         created project
-	 */
-	@PostMapping("")
-	public ResponseEntity<Void> create(UriComponentsBuilder builder, @RequestBody Project project)
-			throws SkillerException {
-		final HttpHeaders headers = headers();
-		if (projectHandler.containsProject(project.getId())) {
-			return new ResponseEntity<Void>(null, headers, HttpStatus.CONFLICT);
-		}
-		project.setId(UNKNOWN_PROJECT);
-		project = projectHandler.addNewProject(project);
-
-		UriComponents uriComponents = builder.path("/api/project/id/{id}").buildAndExpand(project.getId());
-
-		return ResponseEntity.created(uriComponents.toUri()).build();
-
-	}
-
-	/**
-	 * Update the project identified by the given {@link Project#getId() idProject}
-	 * 
-	 * @param project the project object is passed in the body of the Put Medhod.
-	 * @return the updated or the just new project created
-	 */
-	@PutMapping("/{idProject}")
-	public ResponseEntity<Object> updateProject(@PathVariable("idProject") int idProject, @RequestBody Project project)
-			throws NotFoundException, SkillerException {
-
-		if (idProject != project.getId()) {
-			throw new SkillerRuntimeException("WTF : SHOULD NOT PASS HERE!");
-		}
-
-		if (!projectHandler.containsProject(idProject)) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
-
-		// You cannot anymore update an INACTIVE project
-		if (!project.isActive()) {
-			return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
-		}
-
-		projectHandler.saveProject(project);
-
-		return ResponseEntity.noContent().build();
-
-	}
 
 	/**
 	 * Test the connection settings for a given project.
@@ -414,17 +417,13 @@ public class ProjectController {
 	 * @return {@code true} if the
 	 */
 	@GetMapping(value = "/test/{idProject}")
-	public ResponseEntity<Boolean> test(@PathVariable("idProject") int idProject) {
-		final HttpHeaders headers = headers();
-		try {
-			final Project project = projectHandler.get(idProject);
-			boolean connected = this.scanner.testConnection(project);
-			return new ResponseEntity<>(connected, headers, HttpStatus.OK);
-		} catch (SkillerException e) {
-			headers.set(BACKEND_RETURN_CODE, String.valueOf(e.errorCode));
-			headers.set(BACKEND_RETURN_MESSAGE, e.getMessage());
-			return new ResponseEntity<>(false, headers, HttpStatus.NOT_FOUND);
+	public ResponseEntity<Boolean> test(@PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
+		Project project = projectHandler.get(idProject);
+		if (project == null) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
+		boolean connected = this.scanner.testConnection(project);
+		return new ResponseEntity<>(connected, headers(), HttpStatus.OK);
 	}
 
 	/**
@@ -455,7 +454,7 @@ public class ProjectController {
 			Skill skill = this.skillHandler.getSkill(projectSkill.getIdSkill());
 			this.projectHandler.addSkill(project, new ProjectSkill(skill.getId()));
 			return new ResponseEntity<BooleanDTO>(new BooleanDTO(), headers(), HttpStatus.OK);
-		} catch (final SkillerException ske) {
+		} catch (final ApplicationException ske) {
 			if (log.isDebugEnabled()) {
 				log.debug(String.format("Cannot save the skill %d inside the project %s", projectSkill.getIdSkill(),
 						project.getName()));
@@ -505,7 +504,7 @@ public class ProjectController {
 	 * @return the Sunburst chart.
 	 */
 	@PostMapping("/sunburst")
-	public ResponseEntity<SunburstDTO> generateChartSunburst(@RequestBody SettingsGeneration settings) {
+	public ResponseEntity<SunburstDTO> generateChartSunburst(@RequestBody SettingsGeneration settings) throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
 			log.debug(MessageFormat.format(
@@ -515,11 +514,7 @@ public class ProjectController {
 					settings.getIdStaffSelected()));
 		}
 
-		MyReference<ResponseEntity<SunburstDTO>> refResponse = projectLoader.new MyReference<>();
-		Project project = projectLoader.getProject(settings.getIdProject(), new SunburstDTO(), refResponse);
-		if (refResponse.getResponse() != null) {
-			return refResponse.getResponse();
-		}
+		Project project = projectHandler.get(settings.getIdProject());
 
 		try {
 			if (scanner.hasAvailableGeneration(project)) {
@@ -549,7 +544,8 @@ public class ProjectController {
 			return new ResponseEntity<>(new SunburstDTO(project.getId(), project.getStaffEvaluation(), null,
 					HttpStatus.CREATED.value(),
 					"The dashboard generation has been launched. Operation might last a while. Please try later !"),
-					headers(), HttpStatus.OK);
+					headers(),
+					HttpStatus.OK);
 		} catch (Exception e) {
 			log.error(getStackTrace(e));
 			return new ResponseEntity<>(
@@ -591,7 +587,7 @@ public class ProjectController {
 		} finally {
 			try {
 				tasks.completeTask(DASHBOARD_GENERATION, PROJECT, project.getId());
-			} catch (SkillerException e) {
+			} catch (ApplicationException e) {
 				log.error("Internal error", e);
 			}
 		}
@@ -601,7 +597,7 @@ public class ProjectController {
 	 * @param idProject the project identifier
 	 * @return the contributors who have been involved in the project
 	 */
-	@GetMapping(value = "/contributors/{idProject}")
+	@GetMapping(value = "/{idProject}/contributors")
 	public ResponseEntity<ProjectContributorDTO> projectContributors(final @PathVariable("idProject") int idProject) {
 
 		final List<Contributor> contributors = projectHandler.contributors(idProject);
@@ -615,7 +611,7 @@ public class ProjectController {
 		contributors.stream().forEach(contributor -> {
 			final Staff staff = staffHandler.getStaff().get(contributor.getIdStaff());
 			if (staff == null) {
-				throw new SkillerRuntimeException(
+				throw new ApplicationRuntimeException(
 						String.format("No staff member retrieved for the id %d", contributor.getIdStaff()));
 			}
 			projectContributorDTO.addContributor(contributor.getIdStaff(),
@@ -644,29 +640,83 @@ public class ProjectController {
 	}
 
 	/**
+	 * <p>
+	 * Delete the current Sunburst dashboard <em>and start the generation of a new Sunburst chart in an asynchronous mode</em>.
+	 * </p>
+	 * <p>
+	 * This method requests for the deletion of the sunburst data, stored on the file system. 
+	 * This deletion triggers the generation of a new one.
+	 * </p>
+	 * <p>
+	 * <b>Therefore the reponse is EMPTY and has an {@link HttpStatus#ACCEPTED ACCEPTED 202} status.</b>
+	 * </p>
 	 * @param idProject the project identifier
-	 * @return the contributors who have been involved in the project
+	 * @return an empty reponse. 
+	 * @throws NotFoundException if the project does not exist. 
+	 * @throws ApplicationException if the any problem occurs, most probably an {@link IOException}
 	 */
-	@GetMapping(value = "/resetDashboard/{idProject}")
-	public ResponseEntity<String> resetDashboard(final @PathVariable("idProject") int idProject) {
+	@DeleteMapping(value = "/{idProject}/sunburst")
+	public ResponseEntity<Void> resetSunburstChart(
+		final @PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
+		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Removing project with %d", idProject));
 		}
-		MyReference<ResponseEntity<String>> refResponse = projectLoader.new MyReference<>();
-		Project project = projectLoader.getProject(idProject, "", refResponse);
-		if (refResponse.getResponse() != null) {
-			return refResponse.getResponse();
+
+		Project project = projectHandler.get(idProject);
+		if (project == null) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 
-		try {
-			projectHandler.saveLocationRepository(idProject, null);
-			String response = cacheDataHandler.removeRepository(project) ? "1" : "0";
-			scanner.generateAsync(project, new SettingsGeneration(project.getId()));
-			return new ResponseEntity<>(response, new HttpHeaders(), HttpStatus.OK);
-		} catch (Exception e) {
-			log.error(getStackTrace(e));
-			return new ResponseEntity<>(e.getMessage(), new HttpHeaders(), HttpStatus.BAD_REQUEST);
+		// We renitialize the local repository if the user asks for a RESET, comparing to a REFRESH 
+		projectHandler.saveLocationRepository(idProject, null);
+		cacheDataHandler.removeRepository(project);
+
+		// Launching the asynchronous generation
+		scanner.generateAsync(project, new SettingsGeneration(project.getId()));
+		
+		return ResponseEntity.accepted().build();
+	}
+
+	/**
+	 * <p>
+	 * Generate the sunburst chart. 
+	 * </p>
+	 * <p>
+	 * <ul>
+	 * <li>This method can be invoked many times with the same result. This method is <b>idempotent</b></i></li>
+	 * <li>This method updates the level of risk for the given project and the missions of the developers involved in its.</li>
+	 * </ul>
+	 * Therefore the REST verb is a <b>POST</b> with an empty BODY. Only the project ID is necessary.
+	 * </p>
+	 * <p>
+	 * This API entry returns immediatly with an empty response with a {@link HttpStatus#ACCEPTED ACCEPTED 202} status. 
+	 * </p>
+	 * <p>
+	 * The {@link  RepoScanner#generateAsync(Project, SettingsGeneration)  generation} is triggered.
+	 * </p>
+	 * @param idProject the project identifier
+	 * @throws NotFoundException if the project does not exist. 
+	 * @throws ApplicationException if the any problem occurs, most probably an {@link IOException}
+	 */
+	@PostMapping(value = "/{idProject}/sunburst")
+	public ResponseEntity<String> reloadSunburstChart(final @PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
+		
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Request for the generation of the Sunburst chart for project %d", idProject));
 		}
+
+		Project project = projectHandler.get(idProject);
+		if (project == null) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+		}
+
+		cacheDataHandler.removeRepository(project);
+
+		// Launching the asynchronous generation
+		scanner.generateAsync(project, new SettingsGeneration(project.getId()));
+		
+		return ResponseEntity.accepted().build();
 	}
 
 	/**
@@ -680,12 +730,4 @@ public class ProjectController {
 		return new ResponseEntity<>(new ProjectDTO(project, code, message), headers(), HttpStatus.BAD_REQUEST);
 	}
 
-	/**
-	 * @return a generated HTTP Headers for the response
-	 */
-	private HttpHeaders headers() {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		return headers;
-	}
 }

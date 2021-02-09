@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.service.sse;
 
 import static com.fitzhi.Global.PROJECT;
@@ -25,7 +22,7 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.external.ActivityLog;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.TaskLog;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import reactor.test.StepVerifier;
 
@@ -66,20 +63,20 @@ public class ReactiveLogReportSunburstGenerationLogNextTest {
 	}
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		Project p = new Project (ID_PROJECT, "Revolutionnary project");
 		projectHandler.addNewProject(p);
 		asyncTask.addTask("nopeOperation", PROJECT, ID_PROJECT);
-		asyncTask.logMessage("nopeOperation", PROJECT, ID_PROJECT, "my first message");
+		asyncTask.logMessage("nopeOperation", PROJECT, ID_PROJECT, "my first message", 0);
 		this.eraseTime();
-		this.activityLog1 = new ActivityLog(ID_PROJECT, new TaskLog( 0, "my first message", 0), false);
-		this.activityLog2 = new ActivityLog(ID_PROJECT, new TaskLog(0, "my second message", 0), false);
-		this.activityLogEnd = new ActivityLog(ID_PROJECT, new TaskLog(0, "my second message", 0), true);
+		this.activityLog1 = new ActivityLog(ID_PROJECT, new TaskLog( 0, "my first message", 0, 0), false);
+		this.activityLog2 = new ActivityLog(ID_PROJECT, new TaskLog(0, "my second message", 0, 0), false);
+		this.activityLogEnd = new ActivityLog(ID_PROJECT, new TaskLog(0, "my second message", 0, 0), true);
 		
 	    executorService.schedule(new Runnable() {
 	        @Override
 	        public void run() {
-				asyncTask.logMessage("nopeOperation", PROJECT, ID_PROJECT, "my second message");
+				asyncTask.logMessage("nopeOperation", PROJECT, ID_PROJECT, "my second message", 0);
 				ReactiveLogReportSunburstGenerationLogNextTest.this.eraseTime();				
 	        }
 	    }, 2, TimeUnit.SECONDS);
@@ -91,7 +88,7 @@ public class ReactiveLogReportSunburstGenerationLogNextTest {
 	        	try {
 					asyncTask.completeTask("nopeOperation", MARK_END_OF_OPERATION, ID_PROJECT);
 					ReactiveLogReportSunburstGenerationLogNextTest.this.eraseTime();				
-				} catch (SkillerException e) {
+				} catch (ApplicationException e) {
 					log.error("Internal error", e);
 				}
 	        }
@@ -109,7 +106,7 @@ public class ReactiveLogReportSunburstGenerationLogNextTest {
 	}
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.getProjects().remove(ID_PROJECT);
 		asyncTask.removeTask("nopeOperation", "mockProject", 1789);		
 	}

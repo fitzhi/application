@@ -33,7 +33,7 @@ import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.RiskDashboard;
 import com.fitzhi.data.source.CommitRepository;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 
 import lombok.extern.slf4j.Slf4j;
@@ -81,8 +81,9 @@ public class GitCrawlerUpdateImportanceTest {
 	private long lengthOfFile = 0;
 
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		project = new Project(1643, TEST_PROJECT_ROCROI);
+		project.setBranch("master");
 		projectHandler.addNewProject(project);
 		project.setLocationRepository(String.format(DIR_GIT, TEST_PROJECT_ROCROI));
 		project.setGhosts(new ArrayList<Ghost>());
@@ -100,7 +101,7 @@ public class GitCrawlerUpdateImportanceTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testUpdateImportance() throws SkillerException, IOException {
+	public void testUpdateImportance() throws ApplicationException, IOException {
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Repository location %s", new File(String.format(FILE_GIT, TEST_PROJECT_ROCROI)).getAbsolutePath()));
@@ -108,18 +109,19 @@ public class GitCrawlerUpdateImportanceTest {
 	
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, TEST_PROJECT_ROCROI))).readEnvironment().findGitDir()
 				.build();
-        RepositoryAnalysis analysis = scanner.loadChanges(project, repository);		
+		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
+		scanner.fillRepositoryAnalysis(project, analysis, repository);
+		
+		scanner.updateImportance(project, analysis);
 
-        scanner.updateImportance(project, analysis);
-
-        Assert.assertEquals(true, analysis.getChanges().getChanges().containsKey("src/main/java/fr/test/main/Test.java"));
-        SourceFileHistory sourceFileHistory = analysis.getChanges().getChanges().get("src/main/java/fr/test/main/Test.java"); 
-        Assert.assertEquals(lengthOfFile, sourceFileHistory.getImportance());;
+		Assert.assertEquals(true, analysis.getChanges().getChanges().containsKey("src/main/java/fr/test/main/Test.java"));
+		SourceFileHistory sourceFileHistory = analysis.getChanges().getChanges().get("src/main/java/fr/test/main/Test.java"); 
+		Assert.assertEquals(lengthOfFile, sourceFileHistory.getImportance());;
  
 	}
 	
 	@Test
-	public void loadChangesForFirstTest() throws IOException, SkillerException {
+	public void loadChangesForFirstTest() throws IOException, ApplicationException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		repository = builder.setGitDir(new File(project.getLocationRepository() + "/.git")).readEnvironment().findGitDir()
@@ -156,11 +158,11 @@ public class GitCrawlerUpdateImportanceTest {
 	}
 
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		if (repository != null) {
 			repository.close();
 		}
 		projectHandler.removeProject(1643);
-    	asyncTask.removeTask(DASHBOARD_GENERATION, PROJECT, 1643);
+		asyncTask.removeTask(DASHBOARD_GENERATION, PROJECT, 1643);
  	}
 }

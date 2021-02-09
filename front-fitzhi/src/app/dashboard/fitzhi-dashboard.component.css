@@ -13,7 +13,6 @@ div {
     width: calc(100% - var(--sidebar-width));
     margin-left: var(--sidebar-width);
     line-height: 1;
-    transition: all 0.4s;
 }
 
 .dashboard-pie {
@@ -144,7 +143,6 @@ i.camera {
     top:  var(--toolbar-height);
     left: 0;
     box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
-    transition: all 0.4s;
 }
 
 #container-treemap {

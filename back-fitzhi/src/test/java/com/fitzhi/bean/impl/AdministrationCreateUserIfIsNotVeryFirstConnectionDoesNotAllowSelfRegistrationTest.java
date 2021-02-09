@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 /**
  * Test the administration bean for the user creation.<br/>
  * <span style="color:red;font-size:16">IF IT IS THE VERY FIRST CONNECTION !</span>
@@ -72,13 +72,13 @@ public class AdministrationCreateUserIfIsNotVeryFirstConnectionDoesNotAllowSelfR
 	}
 		
 	@Test
-	public void testCreateUnregisteredUser() throws SkillerException {
+	public void testCreateUnregisteredUser() throws ApplicationException {
 		
 		try {
 			final Staff staff = administration.createNewUser(MY_LOGIN, "myPassword");
 			idStaff = staff.getIdStaff();
 			Assert.fail ("Exception is missing because the login 'UNREGISTERED' does not exist, and we are in mode allowSelfRegistration=false");
-		} catch (final SkillerException e) {
+		} catch (final ApplicationException e) {
 			if (logger.isDebugEnabled()) {
 				logger.debug(
 						String.format("exception has been correctly thrown with message %s", e.getMessage()));

@@ -5,6 +5,7 @@ package com.fitzhi.source.crawler.git;
 
 import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.BasicCommitRepository;
@@ -56,12 +57,12 @@ public class GitScannerCleanupUnknownPseudosTest {
 	public void before() {
 		repo = new BasicCommitRepository();
 		repo.unknownContributors().add("no name");	
-		repo.unknownContributors().add("Frédéric VIDAL");
+		repo.unknownContributors().add("Steve JOBS");
 		repo.unknownContributors().add("desaparecido");
 		
 		project = new Project(1, "TEST");
 		
-		staffHandler.getStaff().put(1000, new Staff(1000, "Frédéric", "VIDAL", "frvidal", "Frédéric", "f@test.com", ""));
+		staffHandler.getStaff().put(1000, new Staff(1000, "Steve", "JOBS", "sjobs", "sjobs", "sjobs@nope.com", ""));
 	}
 	
 	@Test
@@ -69,9 +70,7 @@ public class GitScannerCleanupUnknownPseudosTest {
 		if (log.isDebugEnabled()) {
 			staffHandler.getStaff().values().stream().forEach(staff -> log.debug (staff.getLastName()));
 		}
-		Staff staff = staffHandler.lookup("Frédéric VIDAL");
-		logger.debug(staff.toString());
-		Assert.assertNotNull(staffHandler.lookup("Frédéric VIDAL"));	
+		Assert.assertNotNull(staffHandler.lookup(new Author("Steve JOBS")));	
 	}
 	
 	/**

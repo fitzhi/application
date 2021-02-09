@@ -1,7 +1,7 @@
 import { Constants } from '../../constants';
 import { Collaborator } from '../../data/collaborator';
 import { MessageService } from '../../interaction/message/message.service';
-import { StaffService } from '../../service/staff.service';
+import { StaffService } from '../service/staff.service';
 import { CinematicService } from '../../service/cinematic.service';
 import { Profile } from '../../data/profile';
 import { ReferentialService } from '../../service/referential.service';
@@ -16,7 +16,7 @@ import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff
 import { take } from 'rxjs/operators';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { Mission } from 'src/app/data/mission';
-import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
+import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { traceOn } from 'src/app/global';
 import { CustomErrorHandler } from 'src/app/custom-error-handler';
 

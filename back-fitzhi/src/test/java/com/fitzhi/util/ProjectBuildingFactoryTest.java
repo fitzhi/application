@@ -13,7 +13,7 @@ import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectFloor;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -62,7 +62,7 @@ public class ProjectBuildingFactoryTest {
      * This test has been added to fix a bug arout the new eve boundary with the week.
      */
     @Test
-    public void testGetInstanceFromFitzhi() throws SkillerException {
+    public void testGetInstanceFromFitzhi() throws ApplicationException {
         Project p = new Project(2, "Project number 2");
         ProjectLayers pl = dataHandler.loadSkylineLayers(p);
         ProjectBuilding pb = ProjectBuildingFactory.getInstance(p, pl);

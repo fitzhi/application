@@ -2,14 +2,14 @@ import { TestBed, TestModuleMetadata } from '@angular/core/testing';
 
 import { DashboardService } from './dashboard.service';
 import { Skill } from 'src/app/data/skill';
-import { SkillService } from '../skill.service';
+import { SkillService } from '../../skill/service/skill.service';
 import { Collaborator } from 'src/app/data/collaborator';
 import { Experience } from 'src/app/data/experience';
 import { Project } from 'src/app/data/project';
 import { ProjectSkill } from 'src/app/data/project-skill';
 import { ProjectService } from '../project.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { StaffService } from '../staff.service';
+import { StaffService } from '../../tabs-staff/service/staff.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ReferentialService } from '../referential.service';
 import { StatTypes } from './stat-types';

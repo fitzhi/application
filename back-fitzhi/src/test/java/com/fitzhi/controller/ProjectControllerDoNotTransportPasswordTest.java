@@ -1,6 +1,7 @@
 package com.fitzhi.controller;
 
 import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -25,12 +26,12 @@ import com.fitzhi.Global;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.encryption.DataEncryption;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 /**
- * Testing the URL /staff/save
+ * Testing the URL {@code /api/project} and the controller {@link ProjectController}
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
@@ -52,7 +53,7 @@ public class ProjectControllerDoNotTransportPasswordTest {
 	private int ID_PROJECT = 1789;
 	
 	@Before 
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		Project p = new Project(ID_PROJECT, "testingProject");
 		p.setPassword("password");
 		p.setConnectionSettings(USER_PASSWORD_ACCESS);
@@ -67,7 +68,7 @@ public class ProjectControllerDoNotTransportPasswordTest {
 	@WithMockUser
 	public void doNotTransportPassword() throws Exception {
 
-		MvcResult result = this.mvc.perform(get("/api/project/id/"+ ID_PROJECT))
+		MvcResult result = this.mvc.perform(get("/api/project/"+ ID_PROJECT))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -85,7 +86,7 @@ public class ProjectControllerDoNotTransportPasswordTest {
 		project = gson.fromJson(result.getResponse().getContentAsString(), Project.class);
 		Assert.assertNull(project.getPassword());
 
-		result = this.mvc.perform(get("/api/project/all"))
+		result = this.mvc.perform(get("/api/project"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -108,7 +109,7 @@ public class ProjectControllerDoNotTransportPasswordTest {
 	@WithMockUser
 	public void doNotLoosePassword() throws Exception {
 
-		MvcResult result = this.mvc.perform(get("/api/project/id/" + ID_PROJECT))
+		MvcResult result = this.mvc.perform(get("/api/project/" + ID_PROJECT))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -139,7 +140,7 @@ public class ProjectControllerDoNotTransportPasswordTest {
 	}
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.getProjects().remove(ID_PROJECT);
 	}
 }

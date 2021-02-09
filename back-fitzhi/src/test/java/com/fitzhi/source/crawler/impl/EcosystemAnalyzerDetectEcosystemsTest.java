@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.data.internal.Ecosystem;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
 
 /**
@@ -29,7 +29,7 @@ public class EcosystemAnalyzerDetectEcosystemsTest {
 	EcosystemAnalyzer ecosystemAnalyzer;
 	
 	@Test
-	public void test() throws SkillerException {
+	public void test() throws ApplicationException {
 		List<String> pathnames = new ArrayList<>();
 		pathnames.add("One.ts");
 		pathnames.add("Two.ts");
@@ -43,7 +43,7 @@ public class EcosystemAnalyzerDetectEcosystemsTest {
 	}
 
 	@Test
-	public void testPHP() throws SkillerException {
+	public void testPHP() throws ApplicationException {
 		List<String> pathnames = new ArrayList<>();
 		pathnames.add("/application/Classes/AbstractException.php");
 		pathnames.add("/application/Classes/GroupGile.php");

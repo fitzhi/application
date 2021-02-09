@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class GitCrawlerFilterEligibleTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testFilterEligible() throws IOException, SkillerException {
+	public void testFilterEligible() throws IOException, ApplicationException {
 
 		project = new Project(1000, "Fitzhi");
 

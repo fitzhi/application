@@ -13,12 +13,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.ProjectDashboardCustomizer;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.fitzhi.source.crawler.git.SourceFileHistory;
+
+import lombok.Data;
 
 /**
  * <p> 
@@ -33,6 +35,7 @@ import com.fitzhi.source.crawler.git.SourceFileHistory;
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
+@Data
 public class RepositoryAnalysis {
 
 	final Project project;
@@ -43,22 +46,24 @@ public class RepositoryAnalysis {
 	private SourceControlChanges changes = new SourceControlChanges();
 
 	/**
-	 * List of paths detected as having been modified in the history of the repository.<br/>
+	 * <p>
+	 * List of paths detected as having been modified in the history of the repository.
+	 * </p>
 	 * This list is used to retrieve, by subtraction, i.e. the files never modified, the list of files just <b>added</b>, maybe <u>external files include.</u> 
 	 * These files might be external dependencies, non relevant for audit.  
 	 */
-	private final Set<String> pathsModified = new HashSet<>();
+	private Set<String> pathsModified = new HashSet<>();
 	
 	/**
 	 * List of paths detected as having been ONLY ADDED in the history of the repository.<br/>
 	 * These files might be external dependencies files, i.e. non relevant for audit.  
 	 */
-	private final Set<String> pathsAdded = new HashSet<>();
+	private Set<String> pathsAdded = new HashSet<>();
 	
 	/**
 	 * Path candidates possibly non relevant for the analysis.
 	 */
-	private final Set<String> pathsCandidate = new HashSet<>();
+	private Set<String> pathsCandidate = new HashSet<>();
 	
 	/**
 	 * @param project current project analyzed
@@ -247,7 +252,7 @@ AddingA	 * Add a change into the collection.
 				commitRepository.addCommit(
 						path,
 						change.isIdentified() ? change.getIdStaff() : com.fitzhi.Global.UNKNOWN, 
-						change.getAuthorName(),
+						change.getAuthor().getName(),
 						change.getDateCommit(),
 						changes.getChanges().get(path).getImportance());
 			});
@@ -274,12 +279,12 @@ AddingA	 * Add a change into the collection.
 	 * The returned list contains distinct contributor login (identified or not inside techxhì)
 	 * @return the list of contributors involved in the project
 	 */
-	public List<String> authors() {
+	public List<Author> authors() {
 		return changes.getChanges().values()
 			.stream()
 			.flatMap(history -> history.getChanges().stream())
 			.filter(SourceChange::isAuthorIdentified)
-			.map(SourceChange::getAuthorName)
+			.map(SourceChange::getAuthor)
 			.distinct()
 			.collect(Collectors.toList());
 	}
@@ -293,7 +298,7 @@ AddingA	 * Add a change into the collection.
 		changes.getChanges().values()
 			.stream()
 			.flatMap(history -> history.getChanges().stream())
-			.filter(sc -> authorName.equals(sc.getAuthorName()))
+			.filter(sc -> authorName.equals(sc.getAuthor().getName()))
 			.forEach(sc ->  sc.setIdStaff(idStaff));
 	}
 	
@@ -319,7 +324,7 @@ AddingA	 * Add a change into the collection.
 		return changes.stream()
 				.map(SourceChange::getDateCommit)
 				.min(Comparator.comparing(LocalDate::toEpochDay))
-				.orElseThrow(() -> new SkillerRuntimeException(SHOULD_NOT_PASS_HERE));
+				.orElseThrow(() -> new ApplicationRuntimeException(SHOULD_NOT_PASS_HERE));
 		
 	}
 
@@ -332,7 +337,7 @@ AddingA	 * Add a change into the collection.
 		return changes.stream()
 				.map(SourceChange::getDateCommit)
 				.max(Comparator.comparing(LocalDate::toEpochDay))
-				.orElseThrow(() -> new SkillerRuntimeException(SHOULD_NOT_PASS_HERE));
+				.orElseThrow(() -> new ApplicationRuntimeException(SHOULD_NOT_PASS_HERE));
 	}
 
 
@@ -366,7 +371,7 @@ AddingA	 * Add a change into the collection.
 	 */
 	public void setFileImportance(String path, int importance) {
 		if (!this.changes.getChanges().containsKey(path)) {
-			throw new SkillerRuntimeException("SHOULD NOT PASS HERE : an entry should exist for key " + path);
+			throw new ApplicationRuntimeException("SHOULD NOT PASS HERE : an entry should exist for key " + path);
 		}
 		this.changes.getChanges().get(path).setImportance(importance);
 	}

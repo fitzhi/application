@@ -28,7 +28,7 @@ import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
 import com.fitzhi.data.internal.SonarProject;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -63,7 +63,7 @@ public class ProjectSonarControllerSaveUrlSonarServerTest {
 	private final String KEY_SONAR_1 = "key-sonar-1";
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		project = projectHandler.get(ID_PROJECT);
 		project.setUrlSonarServer("http://formerSonarServer");
 		SonarProject sp = new SonarProject();
@@ -121,7 +121,7 @@ public class ProjectSonarControllerSaveUrlSonarServerTest {
 		Boolean b = gson.fromJson(result.getResponse().getContentAsString(), Boolean.class);
 		Assert.assertTrue(b);
 		
-		result = this.mvc.perform(get("/api/project/id/"+ID_PROJECT))
+		result = this.mvc.perform(get("/api/project/"+ID_PROJECT))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -159,7 +159,7 @@ public class ProjectSonarControllerSaveUrlSonarServerTest {
 		Boolean b = gson.fromJson(result.getResponse().getContentAsString(), Boolean.class);
 		Assert.assertTrue(b);
 		
-		result = this.mvc.perform(get("/api/project/id/"+ID_PROJECT))
+		result = this.mvc.perform(get("/api/project/"+ID_PROJECT))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -176,7 +176,7 @@ public class ProjectSonarControllerSaveUrlSonarServerTest {
 	}
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		project = projectHandler.get(ID_PROJECT);
 		project.getSonarProjects().clear();
 				

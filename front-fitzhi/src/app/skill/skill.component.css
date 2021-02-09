@@ -14,3 +14,7 @@ div.skill-detection {
 div.field {
 	margin-bottom: 10px;
 }
+
+#buttonOk {
+	background-color: transparent;
+}

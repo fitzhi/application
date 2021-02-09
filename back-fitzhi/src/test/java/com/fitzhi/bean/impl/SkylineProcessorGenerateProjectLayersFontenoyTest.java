@@ -1,7 +1,5 @@
 package com.fitzhi.bean.impl;
 
-import java.util.Locale;
-
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.data.internal.Library;

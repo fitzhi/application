@@ -30,7 +30,7 @@ import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.BasicCommitRepository;
 import com.fitzhi.data.source.CommitRepository;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * 
@@ -62,7 +62,7 @@ public class RiskCommitAndDevProcessorMeanTheRiskTest {
 	
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 
 		comRep = new BasicCommitRepository();
 		
@@ -123,7 +123,7 @@ public class RiskCommitAndDevProcessorMeanTheRiskTest {
 	}
 
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.getProjects().remove(8021964);
 	}
 

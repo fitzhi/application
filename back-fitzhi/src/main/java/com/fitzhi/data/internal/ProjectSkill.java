@@ -1,13 +1,9 @@
-/**
- * 
- */
 package com.fitzhi.data.internal;
 
 import java.io.Serializable;
 
-import javax.annotation.Generated;
-
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -18,6 +14,7 @@ import lombok.Data;
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@EqualsAndHashCode
 public @Data class ProjectSkill implements Serializable {
 	
 	/**
@@ -82,29 +79,4 @@ public @Data class ProjectSkill implements Serializable {
 		this.totalFilesSize += fileSize;
 		return this.totalFilesSize;
 	}
-	
-	@Generated ("eclipse")	
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ProjectSkill other = (ProjectSkill) obj;
-		if (idSkill != other.idSkill)
-			return false;
-		return true;
-	}
-
-	@Generated ("eclipse")	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + idSkill;
-		return result;
-	}
-
 }

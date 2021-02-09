@@ -7,13 +7,14 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MessageService } from '../interaction/message/message.service';
 import { CinematicService } from '../service/cinematic.service';
 import { ListSkillService } from './list-skill-service/list-skill.service';
-import { SkillService } from '../service/skill.service';
+import { SkillService } from './service/skill.service';
 import { BaseComponent } from '../base/base.component';
 import { traceOn } from '../global';
 import { DetectionTemplate } from '../data/detection-template';
 import { isNumber } from 'util';
 import { isNumeric } from 'rxjs/util/isNumeric';
 import { Observable, of, BehaviorSubject } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-skill',
@@ -59,17 +60,17 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 		this.subscriptions.add(
 			this.route.params.subscribe(params => {
 				if (traceOn()) {
-					console.log('params[\'id\'] ' + params['id']);
+					console.log('params[\'id\'] = ' + params['id']);
 				}
 				if (params['id'] == null) {
 					this.id = null;
 				} else {
 					this.id = + params['id']; // (+) converts string 'id' to a number
 				}
-				// Either we are in creation mode, or we load the collaborator from the back-end...
-				// We create an empty collaborator until the subscription is complete
+				// Either we are in creation mode, and we create therefore an empty skill
+				// Or we load the skill from the back-end.
 				this.skill = new Skill();
-				if (this.id != null) {
+				if (this.id !== null) {
 					this.subscriptions.add(
 						this.listSkillService.getSkill$(this.id).subscribe(
 							(skill: Skill) => {
@@ -106,19 +107,23 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Submit the change. The SKILL will be created, or updated. succesfully.
+	 * Submit the change. 
+	 * The current SKILL will be created, or updated. 
 	 */
 	onSubmit() {
 		this.skillService.fillSkill(this.skill, this.profileSkill);
 		if (traceOn()) {
-			console.log('saving the skill ' + this.skill.title + ' with id ' + this.skill.id);
+			console.log('Saving the skill ' + this.skill.title + ' with id ' + this.skill.id);
 		}
-		this.skillService.save$(this.skill).subscribe({
+		this.skillService.save$(this.skill).pipe(take(1)).subscribe({
 			next: skill => {
 				this.messageService.info('The skill ' + skill.title + ' has been succesfully saved !');
 				this.skill = skill;
 			},
-			error: error => console.error(error),
+			error: error => {
+				console.error(error);
+				this.messageService.error(error.message);
+			},
 			complete: () => this.skillService.loadSkills()
 		});
 	}

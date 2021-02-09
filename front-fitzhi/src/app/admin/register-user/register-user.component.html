@@ -32,7 +32,7 @@
     </div>
 	<br/>
     <div class="col-md-12">
-      <form class="needs-validation" [formGroup]="connectionGroup">
+      <form class="needs-validation" [formGroup]="connectionGroup" (submit)="onSubmit()">
         
             <div class="row">
                 <div class="col-md-5 labelConnection">
@@ -43,12 +43,14 @@
                         type="text" 
                         class="form-control required" 
                         id="user" name="username" 
-                        placeholder="Username (Required)" formControlName="username"/>
+                        placeholder="Username (Required)" 
+                        formControlName="username"/>
                     <label *ngIf="username.touched && username.invalid" [ngClass]="'alert alert-warning'">
                         Username is required, and cannot exceed 16 characters max.
                     </label>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-md-5 labelConnection">
                     <label for="password" class="required labelConnection">Password</label>
@@ -72,7 +74,8 @@
                 <div class="col-md-7">
                     <input type="password" 
                         class="form-control required" 
-                        id="passwordConfirmation" name="passwordConfirmation" 
+                        id="passwordConfirmation" 
+                        name="passwordConfirmation" 
                         placeholder="Password (Required)" 
                         formControlName="passwordConfirmation"/>
                     <label *ngIf="passwordConfirmation.touched && passwordConfirmation.invalid" 
@@ -84,10 +87,10 @@
             <div class="row">
                 <div class="col-md-8"></div>
                 <div class="col-md-2">
-                    <button class="cancelButton" type="cancel" alt="cancel this operation" (click)="onCancel()"></button>
+                    <button id="cancelButton" class="cancelButton" type="button" alt="cancel this operation" (click)="onCancel()"></button>
                 </div>
                 <div class="col-md-2">
-                    <button id="okButton" [ngClass]="classOkButton()" type="submit" [disabled]="connectionGroup.invalid" (click)="onSubmit()"></button>
+                    <button id="okButton" [ngClass]="classOkButton()" type="submit" [disabled]="connectionGroup.invalid"></button>
                 </div>
             </div>
         </form>

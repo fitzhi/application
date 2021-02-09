@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
@@ -65,16 +65,16 @@ public class ProjectTaskControllerSSESendTest {
 	StringWriter writer = new StringWriter();
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		Project p = new Project (ID_PROJECT, "Revolutionnary project");
 		projectHandler.addNewProject(p);
 		asyncTask.addTask("nopeOperation", "mockProject", ID_PROJECT);
-		asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my first message");
+		asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my first message", 0);
 		
 	    executorService.schedule(new Runnable() {
 	        @Override
 	        public void run() {
-				asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my second message");
+				asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my second message", 0);
 	        }
 	    }, 500, TimeUnit.MILLISECONDS);
 
@@ -83,7 +83,7 @@ public class ProjectTaskControllerSSESendTest {
 	        public void run() {
 	        	try {
 					asyncTask.completeTask("nopeOperation", MARK_END_OF_OPERATION, ID_PROJECT);
-				} catch (SkillerException e) {
+				} catch (ApplicationException e) {
 					log.error("Internal error", e);
 				}
 	        }
@@ -113,7 +113,7 @@ public class ProjectTaskControllerSSESendTest {
 	
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.getProjects().remove(ID_PROJECT);
 		asyncTask.removeTask("nopeOperation", "mockProject", 1789);
 	}

@@ -3,6 +3,14 @@
  */
 package com.fitzhi;
 
+import java.util.Locale;
+
+import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.service.StorageService;
+import com.fitzhi.service.impl.storageservice.ApplicationStorageProperties;
+import com.fitzhi.service.impl.storageservice.AuditAttachmentStorageProperties;
+import com.fitzhi.source.crawler.git.GitCrawler;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,12 +21,6 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
-
-import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.service.StorageService;
-import com.fitzhi.service.impl.storageservice.ApplicationStorageProperties;
-import com.fitzhi.service.impl.storageservice.AuditAttachmentStorageProperties;
-import com.fitzhi.source.crawler.git.GitCrawler;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL Starting class for the application
@@ -62,6 +64,15 @@ public class Application {
 	@Value("${staffHandler.inactivity.delay}")
 	private int inactivityDelay;	
 	
+    /**
+     * <p>
+     * <i>Optional</i> repositories location.
+     * </p>
+     */
+    @Value("${gitcrawler.repositories.location:#{null}}")
+    private String reposDir;
+
+	
 	public static void main(String[] args) {
 		LoggerFactory.getLogger(Application.class.getCanonicalName()).info("Starting Backend 质 Fitzhì");
 		SpringApplication.run(Application.class, args);
@@ -86,7 +97,11 @@ public class Application {
 	        LoggerFactory.getLogger(Application.class.getCanonicalName()).info(String.format("\t %s", dependenciesMarker));
             LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((collapseEmptyDirectory) ? "\tDirectories should be collapsed" : "\tDirectories should NOT be collaped"));
             LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((prefilterEligibility) ? "\tFile eligibility is PREfiltered" : "\tFile eligibility id POSTfiltered"));
-        };
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(((reposDir == null) ? 
+				"\tLocal repositories are hosted in a temporary destination" : String.format("\tLocal repositories are hosted in %s", reposDir)));
+			LoggerFactory.getLogger(Application.class.getCanonicalName()).info(String.format("\tLocale : %s", Locale.getDefault().toString()));
+			
+		};
     }
 	
     @Bean

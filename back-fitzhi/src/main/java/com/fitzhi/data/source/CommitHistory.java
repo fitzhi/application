@@ -11,7 +11,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
-import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.StaffHandler;
 
 import lombok.Data;
@@ -174,7 +174,7 @@ public class CommitHistory {
 		.findFirst();
 
 		if (!lastOpe.isPresent()) {
-			throw new SkillerRuntimeException("SEVERE INTERNAL ERROR : Should not pass here!");
+			throw new ApplicationRuntimeException("SEVERE INTERNAL ERROR : Should not pass here!");
 		}
 		return lastOpe.get().getIdStaff();
 	}

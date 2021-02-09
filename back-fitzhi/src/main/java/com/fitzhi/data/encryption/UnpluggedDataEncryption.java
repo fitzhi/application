@@ -12,7 +12,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
@@ -70,16 +70,16 @@ public class UnpluggedDataEncryption {
      * Encrypt the given plain text.
      * @param plainText the plain text to be encrypted
      * @return the encrypted plain text
-     * @throws SkillerException thrown if the encryption fails
+     * @throws ApplicationException thrown if the encryption fails
      */
-    public static String encryptMessage(String plaintext) throws SkillerException {
+    public static String encryptMessage(String plaintext) throws ApplicationException {
         if (!initialized) {
             initializeEncrypter();
         }
         return encrypt(plaintext.getBytes(), secretKey, IV);
     }
 
-    private static String encrypt(byte[] plaintext, SecretKey key, byte[] IV) throws SkillerException {
+    private static String encrypt(byte[] plaintext, SecretKey key, byte[] IV) throws ApplicationException {
 
         try {
             // Get Cipher Instance
@@ -99,7 +99,7 @@ public class UnpluggedDataEncryption {
 
             return Base64.getEncoder().encodeToString(cipherText);
         } catch (final Exception e) {
-			throw new SkillerException(CODE_ENCRYPTION_FAILED, 
+			throw new ApplicationException(CODE_ENCRYPTION_FAILED, 
 					MessageFormat.format(MESSAGE_ENCRYPTION_FAILED, e.getLocalizedMessage()), e);
         } 
         
@@ -109,16 +109,16 @@ public class UnpluggedDataEncryption {
      * Decrypt an encrypted text.
      * @param encryptedText the given encrypted text
      * @return the decrypted original text.
-     * @throws SkillerException thrown if the decryption fails
+     * @throws ApplicationException thrown if the decryption fails
      */
-    public static String decryptMessage(String encryptedText) throws SkillerException {
+    public static String decryptMessage(String encryptedText) throws ApplicationException {
         if (!initialized) {
             initializeEncrypter();
         }
         return decrypt(Base64.getDecoder().decode(encryptedText), secretKey, IV);
     }
 
-    public static String decrypt(byte[] cipherText, SecretKey key, byte[] IV) throws SkillerException {
+    public static String decrypt(byte[] cipherText, SecretKey key, byte[] IV) throws ApplicationException {
 
         try {
             // Get Cipher Instance
@@ -139,7 +139,7 @@ public class UnpluggedDataEncryption {
             return new String(decryptedText);
 
         } catch (final Exception e) {
-			throw new SkillerException(CODE_ENCRYPTION_FAILED, 
+			throw new ApplicationException(CODE_ENCRYPTION_FAILED, 
 					MessageFormat.format(MESSAGE_ENCRYPTION_FAILED, e.getLocalizedMessage()), e);
         } 
    }

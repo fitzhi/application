@@ -4,7 +4,7 @@ import { AuthService } from '../service/auth/auth.service';
 import { Router } from '@angular/router';
 import { Constants } from 'src/app/constants';
 import { ProjectService } from 'src/app/service/project.service';
-import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
+import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { traceOn } from 'src/app/global';
 
 @Component({

@@ -43,10 +43,10 @@ public class GenerateSkillsInJSONTest extends TestCase {
 		br.close();
 
 		String s = gson.toJson(skills);
-		BufferedWriter bw = new BufferedWriter(
-				new FileWriter(new File(resourcesDirectory.getAbsolutePath() + "/opennlp/skills.json")));
-		bw.write(s);
-		bw.close();
+		try (BufferedWriter bw = new BufferedWriter(
+				new FileWriter(new File(resourcesDirectory.getAbsolutePath() + "/opennlp/skills.json")))) {
+			bw.write(s);
+		}
 
 		Assert.assertTrue(true);
 	}

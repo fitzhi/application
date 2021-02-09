@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 
 /**
@@ -37,7 +37,7 @@ public class StaffHandlerIsEligibleTest {
 	StaffHandler staffHandler;
 	
 	@Test
-	public void testisEligibleLowerCase() throws SkillerException {
+	public void testisEligibleLowerCase() throws ApplicationException {
 		Staff staff = new Staff(1, "Frédéric", "VIDAL", "frvidal", "frvidal","frvidal@nope.com", "Gaulo-roman");
 		StringTransform st = s -> s.toLowerCase();
 		Assert.assertTrue(staffHandler.isEligible(staff, "frvidal", st));
@@ -51,7 +51,7 @@ public class StaffHandlerIsEligibleTest {
 	}
 
 	@Test
-	public void testisEligibleNormalizedOne() throws SkillerException {
+	public void testisEligibleNormalizedOne() throws ApplicationException {
 		Staff staff = new Staff(1, "Frédéric", "VIDAL", "frvidal", "frvidal","frvidal@nope.com", "Gaulo-roman");
 		StringTransform st = s -> Normalizer.normalize(s, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "").toLowerCase();
 		Assert.assertTrue(staffHandler.isEligible(staff, "frvidal", st));
@@ -63,7 +63,7 @@ public class StaffHandlerIsEligibleTest {
 	}
 
 	@Test
-	public void testisEligibleNormalizedTwo() throws SkillerException {
+	public void testisEligibleNormalizedTwo() throws ApplicationException {
 		Staff staff = new Staff(1, "Frederic", "VIDAL", "frvidal", "frvidal","frvidal@nope.com", "Gaulo-roman");
 		StringTransform st = s -> Normalizer.normalize(s, Normalizer.Form.NFD).replaceAll("[\u0300-\u036F]", "").toLowerCase();
 		Assert.assertTrue(staffHandler.isEligible(staff, "frvidal", st));
@@ -75,7 +75,7 @@ public class StaffHandlerIsEligibleTest {
 	}
 
 	@Test
-	public void testisEligible() throws SkillerException {
+	public void testisEligible() throws ApplicationException {
 		Staff staff = new Staff(1, "Frederic", "VIDAL", "frvidal", "frvidal","frvidal@nope.com", "Gaulo-roman");
 		Assert.assertTrue(staffHandler.isEligible(staff, "frvidal"));
 		Assert.assertTrue(staffHandler.isEligible(staff, "FrVidal"));
@@ -89,7 +89,7 @@ public class StaffHandlerIsEligibleTest {
 	}
 
 	@Test
-	public void testIsEligibleForALoginWithTwoWords() throws SkillerException {
+	public void testIsEligibleForALoginWithTwoWords() throws ApplicationException {
 		Staff staff = new Staff(1, "Frederic", "VIDAL", "frvidal", "Diogènes VLAID","frvidal@nope.com", "Gaulo-roman");
 		Assert.assertTrue(staffHandler.isEligible(staff, "Diogenes VLAID"));
 		Assert.assertTrue(staffHandler.isEligible(staff, "diogènes vlaid"));
@@ -98,7 +98,7 @@ public class StaffHandlerIsEligibleTest {
 	}
 	
 	@Test
-	public void testIsEligibleComposedFirstname() throws SkillerException {
+	public void testIsEligibleComposedFirstname() throws ApplicationException {
 		Staff staff = new Staff(1, "Jean-Paul", "TWO", "jptwo", "jptwo","jptwo@nope.com", "Gaulo-roman");
 		staff.setActive(false);
 		Assert.assertTrue(staffHandler.isEligible(staff, "jptwo"));

@@ -19,7 +19,7 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
@@ -41,14 +41,14 @@ public class ProjectHandlerAssociateStaffToGhostTest {
 	Project project;
 
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		project = projectHandler.get(1);
 		project.getGhosts().add(new Ghost("pseudoUnlinked", false));
 		project.getGhosts().add(new Ghost("pseudoLinked", 2, false));
 	}
 	
 	@Test
-	public void testPseudoOne() throws SkillerException {
+	public void testPseudoOne() throws ApplicationException {
 		
 		projectHandler.associateStaffToGhost(project, "pseudoUnlinked", 1);	
 
@@ -57,14 +57,14 @@ public class ProjectHandlerAssociateStaffToGhostTest {
 				.filter(g -> g.getPseudo().equals("pseudoUnlinked"))
 				.findFirst();
 		if (!oGhost.isPresent()) {
-			throw new SkillerException(-1, "Skiller has disappeared");
+			throw new ApplicationException(-1, "Ghost has disappeared");
 		}
 		Assert.assertEquals(oGhost.get().getIdStaff(), 1);
 		
 	}
 
 	@Test
-	public void testPseudoTwo() throws SkillerException {
+	public void testPseudoTwo() throws ApplicationException {
 		
 		projectHandler.associateStaffToGhost(project, "pseudoLinked", 1);	
 
@@ -73,13 +73,13 @@ public class ProjectHandlerAssociateStaffToGhostTest {
 				.filter(g -> g.getPseudo().equals("pseudoLinked"))
 				.findFirst();
 		if (!oGhost.isPresent()) {
-			throw new SkillerException(-1, "Skiller has disappeared");
+			throw new ApplicationException(-1, "Ghost has disappeared");
 		}
 		Assert.assertEquals(oGhost.get().getIdStaff(), 1);
 	}
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		project = projectHandler.get(1);
 		project.getGhosts().clear();
 				

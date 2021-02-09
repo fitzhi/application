@@ -21,14 +21,14 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SkillDetectorType;
 import com.fitzhi.data.source.CommitHistory;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -68,9 +68,9 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			if (log.isDebugEnabled()) {
 				log.debug(String.format("%d %s", this.skills.size(), "skills loaded"));
 			}
-		} catch (final SkillerException e) {
+		} catch (final ApplicationException e) {
 			// Without skills, this application is absolutely not viable
-			throw new SkillerRuntimeException(e);
+			throw new ApplicationRuntimeException(e);
 		}
 		return this.skills;		
 	}
@@ -101,9 +101,9 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public void saveSkill(final Skill skill) throws SkillerException {
+	public void saveSkill(final Skill skill) throws ApplicationException {
 		if (skill.getId() == 0) {
-			throw new SkillerException(CODE_SKILL_NOFOUND, MessageFormat.format(MESSAGE_SKILL_NOFOUND, skill.getId()));
+			throw new ApplicationException(CODE_SKILL_NOFOUND, MessageFormat.format(MESSAGE_SKILL_NOFOUND, skill.getId()));
 		}
 		synchronized (lockDataUpdated) {
 			getSkills().put(skill.getId(), skill);
@@ -112,23 +112,23 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public Skill getSkill(int idSkill) throws SkillerException {
+	public Skill getSkill(int idSkill) throws ApplicationException {
 		
 		Skill skill = getSkills().get(idSkill);
 		if (skill == null) {
-			throw new SkillerException(CODE_SKILL_NOFOUND, MessageFormat.format(MESSAGE_SKILL_NOFOUND, idSkill));
+			throw new ApplicationException(CODE_SKILL_NOFOUND, MessageFormat.format(MESSAGE_SKILL_NOFOUND, idSkill));
 		}
 		
 		return skill;
 	}
 
 	@Override
-	public Map<Integer, String> detectorTypes() throws SkillerException {
+	public Map<Integer, String> detectorTypes() throws ApplicationException {
 		return SkillDetectorType.getDetectorTypes();
 	}
 
 	@Override
-	public Map<Integer, ProjectSkill> extractSkills(String rootPath, List<CommitHistory> entries) throws SkillerException {
+	public Map<Integer, ProjectSkill> extractSkills(String rootPath, List<CommitHistory> entries) throws ApplicationException {
 
 		Set<Skill> candidateSkills = getSkills().values().stream()
 			.filter(skill -> skill.getDetectionTemplate() != null)
@@ -178,9 +178,9 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	 * @param rootPath the rootPath where the repository has been cloned
 	 * @param sourcePath the path of a source file 
 	 * @return {@code true} if this skill is detected, {@code false} otherwise
-	 * @throws SkillerException exception thrown if any problem occurs (most probably an IOException)
+	 * @throws ApplicationException exception thrown if any problem occurs (most probably an IOException)
 	 */
-	private boolean isSkillDetected(Skill skill, String rootPath, String sourcePath) throws SkillerException {
+	private boolean isSkillDetected(Skill skill, String rootPath, String sourcePath) throws ApplicationException {
 		switch (skill.getDetectionTemplate().getDetectionType()) {
 		case FILENAME_DETECTOR_TYPE:
 			return checkFilenamePattern(sourcePath, skill.getDetectionTemplate().getPattern());
@@ -189,7 +189,7 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		case POM_XML_DETECTOR_TYPE:
 			return checkFilePattern("pom.xml", rootPath, sourcePath, skill.getDetectionTemplate().getPattern());
 		}
-		throw new SkillerRuntimeException("Should not pass here!");
+		throw new ApplicationRuntimeException("Should not pass here!");
 	}
 	
 	@Override
@@ -224,9 +224,9 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	 * @param sourcePath the source pathname
 	 * @param dependency the pattern to be verified
 	 * @return {@code true} if this skill is detected, {@code false} otherwise
-	 * @throws SkillerException exception thrown if any problem occurs (most probably an IOException)
+	 * @throws ApplicationException exception thrown if any problem occurs (most probably an IOException)
 	 */
-	private boolean checkFilePattern(String filenameDependencies, String rootPath, String sourcePath, String dependency) throws SkillerException {
+	private boolean checkFilePattern(String filenameDependencies, String rootPath, String sourcePath, String dependency) throws ApplicationException {
 	
 		try {
 			if (sourcePath.indexOf(filenameDependencies) == -1) {
@@ -237,9 +237,9 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				BufferedReader br = new BufferedReader(reader);
 				return br.lines().anyMatch(line -> (line.indexOf(dependency) != -1));
 			} catch (final Exception e) {
-				throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, file.getAbsoluteFile()), e);
+				throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, file.getAbsoluteFile()), e);
 			}
-		} catch (final SkillerException e) {
+		} catch (final ApplicationException e) {
 			log.error("Internal error", e);
 			throw e;
 		}

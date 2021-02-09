@@ -3,12 +3,12 @@ import { async, ComponentFixture, TestBed, ɵTestingCompiler } from '@angular/co
 import { StaffRemoveComponent } from './staff-remove.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { StaffService } from 'src/app/service/staff.service';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
-import { StaffListService } from 'src/app/staff-list-service/staff-list.service';
+import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { Collaborator } from 'src/app/data/collaborator';
 
 describe('StaffRemoveComponent', () => {

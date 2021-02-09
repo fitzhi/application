@@ -1,7 +1,49 @@
 #navMessage {
     padding:0;
     margin:1px;
-    height:40px
+    height: var(--bottom-bar-message-height);
+
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1515;
+    
+    -webkit-animation: fadein 1s; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: fadein 1s; /* Firefox < 16 */
+    -ms-animation: fadein 1s; /* Internet Explorer */
+    -o-animation: fadein 1s; /* Opera < 12.1 */
+    animation: fadein 1s;
+    
+}
+    
+@keyframes fadein {
+    from { opacity: 0; bottom: -40px;}
+    to   { opacity: 1; bottom: 0}
+}
+
+/* Firefox < 16 */
+@-moz-keyframes fadein {
+    from { opacity: 0; bottom: -40px;}
+    to   { opacity: 1; bottom: 0}
+}
+
+/* Safari, Chrome and Opera > 12.1 */
+@-webkit-keyframes fadein {
+    from { opacity: 0; bottom: -40px;}
+    to   { opacity: 1; bottom: 0}
+}
+
+/* Internet Explorer */
+@-ms-keyframes fadein {
+    from { opacity: 0; bottom: -40px;}
+    to   { opacity: 1; bottom: 0}
+}
+
+/* Opera < 12.1 */
+@-o-keyframes fadein {
+    from { opacity: 0; bottom: -40px;}
+    to   { opacity: 1; bottom: 0}
 }
 
 #containerMessage {
@@ -9,24 +51,30 @@
     width:100%;
     height:100%;
     padding-top:8px;
+    font-size: 20px;
 }
 
 .warning {
     background-color: orange;
+    color: black;
 }
 
 .error {
-    background-color: var(--color-error);
+    background-color: red;
+    color: white;
 }
 
 .success {
     background-color: var(--color-selected);
+    color: black;
 }
 
 .info {
     background-color: lightgray;
+    color: black;
 }
 
 .void {
     background-color: transparent;
+    color: black;
 }

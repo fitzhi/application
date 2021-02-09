@@ -3,6 +3,10 @@ package com.fitzhi.bean.impl;
 import static com.fitzhi.Error.CODE_IO_ERROR;
 import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
+import static com.fitzhi.Error.CODE_FILE_DOES_NOT_EXIST;
+import static com.fitzhi.Error.MESSAGE_FILE_DOES_NOT_EXIST;
+import static com.fitzhi.Error.CODE_BRANCH_IS_MISSING_IN_PROJECT;
+import static com.fitzhi.Error.MESSAGE_BRANCH_IS_MISSING_IN_PROJECT;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -22,6 +26,7 @@ import java.text.MessageFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,11 +43,12 @@ import com.fitzhi.data.internal.ProjectBuilding.YearWeek;
 import com.fitzhi.data.internal.ProjectFloor;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
+import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceCodeDiffChange;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -52,12 +58,14 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 import com.opencsv.CSVWriter;
+import static com.fitzhi.Error.getStackTrace;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
+
 
 /**
  * <p>
@@ -70,6 +78,26 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class FileDataHandlerImpl implements DataHandler {
 
+	/**
+	 * <p>Type of path</p>
+	 * <p>
+	 * Application stores different types of paths on filesystem in order to re-gerenerate a consistent {@link RepositoryAnalysis}
+	 * </p>
+	 */
+	public enum PathsType {    
+		PATHS_ALL("pathsAll"), PATHS_MODIFIED("pathsModified"), PATHS_CANDIDATE("pathsCandidate"), PATHS_ADDED("pathsAdded");
+
+		String typeOfPath;
+
+		private PathsType(String typeOfPath) {  
+			this.typeOfPath = typeOfPath ;  
+		}
+
+		public String getTypeOfPath() {
+			return this.typeOfPath;
+		}		
+	}
+	
 	/**
 	 * Logging constant
 	 */
@@ -94,7 +122,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	private final String savedChanges = "changes-data";
 
 	/**
-	 * Directory where the pathnames file is detected on GIT.
+	 * Directory where the different pathnames file are stored. 
 	 */
 	private final String pathNames = "pathnames-data";
 
@@ -117,7 +145,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	@Override
-	public void saveProjects(Map<Integer, Project> projects) throws SkillerException {
+	public void saveProjects(Map<Integer, Project> projects) throws ApplicationException {
 
 		/**
 		 * We do not save the projects in shuffle mode.
@@ -143,13 +171,13 @@ public class FileDataHandlerImpl implements DataHandler {
 				writer.write(gson.toJson(projects));
 			}
 		} catch (final Exception e) {
-			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		}
 
 	}
 
 	@Override
-	public Map<Integer, Project> loadProjects() throws SkillerException {
+	public Map<Integer, Project> loadProjects() throws ApplicationException {
 
 		final String filename = "projects.json";
 
@@ -160,7 +188,7 @@ public class FileDataHandlerImpl implements DataHandler {
 			}.getType();
 			projects = gson.fromJson(fr, listProjectsType);
 		} catch (final Exception e) {
-			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		}
 
 		if (log.isDebugEnabled()) {
@@ -175,7 +203,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	@Override
-	public void saveStaff(Map<Integer, Staff> company) throws SkillerException {
+	public void saveStaff(Map<Integer, Staff> company) throws ApplicationException {
 
 		/**
 		 * We do not save the staff set in shuffle mode.
@@ -197,12 +225,12 @@ public class FileDataHandlerImpl implements DataHandler {
 		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
 			fw.write(gson.toJson(company));
 		} catch (final Exception e) {
-			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		}
 	}
 
 	@Override
-	public Map<Integer, Staff> loadStaff() throws SkillerException {
+	public Map<Integer, Staff> loadStaff() throws ApplicationException {
 
 		final String filename = "staff.json";
 
@@ -214,7 +242,7 @@ public class FileDataHandlerImpl implements DataHandler {
 			}.getType();
 			theStaff = gson.fromJson(isr, listStaffType);
 		} catch (final Exception e) {
-			throw new SkillerException(CODE_IO_ERROR,
+			throw new ApplicationException(CODE_IO_ERROR,
 					MessageFormat.format(MESSAGE_IO_ERROR, rootLocation.resolve(filename).toFile().getAbsoluteFile()),
 					e);
 		}
@@ -230,7 +258,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	@Override
-	public void saveSkills(Map<Integer, Skill> skills) throws SkillerException {
+	public void saveSkills(Map<Integer, Skill> skills) throws ApplicationException {
 
 		/**
 		 * We do not save the skills in shuffle mode.
@@ -252,18 +280,18 @@ public class FileDataHandlerImpl implements DataHandler {
 		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
 			fw.write(gson.toJson(skills));
 		} catch (final Exception e) {
-			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		}
 	}
 
-	private void createIfNeededDirectory(String dir) throws SkillerException {
+	private void createIfNeededDirectory(String dir) throws ApplicationException {
 
 		Path path = rootLocation.resolve(dir);
 		if (Files.notExists(path)) {
 			try {
 				Files.createDirectories(path);
 			} catch (Exception e) {
-				throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, savedChanges), e);
+				throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, savedChanges), e);
 			}
 		}
 
@@ -292,7 +320,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	@Override
-	public void saveChanges(Project project, SourceControlChanges changes) throws SkillerException {
+	public void saveChanges(Project project, SourceControlChanges changes) throws ApplicationException {
 
 		//
 		// As the method-name explains, we create the directory.
@@ -312,28 +340,40 @@ public class FileDataHandlerImpl implements DataHandler {
 
 				for (String path : changes.keySet()) {
 					changes.getSourceFileHistory(path).getChanges().forEach(change -> csvWriter.writeNext(new String[] {
-							change.getCommitId(), path, change.getDateCommit().toString(), change.getAuthorName(),
-							change.getAuthorEmail(),
+							change.getCommitId(), 
+							path, 
+							change.getDateCommit().toString(), 
+							change.getAuthor().getName(),
+							change.getAuthor().getEmail(),
 							String.valueOf(change.getDiff().getLinesAdded() - change.getDiff().getLinesDeleted()) }));
 				}
 			}
 		} catch (IOException ioe) {
-			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
+			log.error(getStackTrace(ioe));
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
 		}
 	}
 
 	@Override
-	public SourceControlChanges loadChanges(Project project) throws SkillerException {
+	public SourceControlChanges loadChanges(Project project) throws ApplicationException {
 
 		SourceControlChanges result = new SourceControlChanges();
 
 		final String filename = generateChangesCsvFilename(project);
 
+		File file = rootLocation.resolve(filename).toFile();
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Loading file %s", rootLocation.resolve(filename)));
+			log.debug(String.format("Loading file %s", file.getAbsolutePath()));
 		}
 
-		try (Reader filereader = new FileReader(rootLocation.resolve(filename).toFile())) {
+		if (!file.exists()) {
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("But, the file %s does not exist", file.getAbsolutePath()));
+			}
+			return null;
+		}
+
+		try (Reader filereader = new FileReader(file)) {
 
 			CSVParser parser = new CSVParserBuilder().withSeparator(';').build();
 
@@ -356,7 +396,7 @@ public class FileDataHandlerImpl implements DataHandler {
 			}
 		} catch (IOException ioe) {
 			log.error("Internal error", ioe);
-			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
 		}
 
 		return result;
@@ -378,13 +418,15 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	/**
+	 * <p>
 	 * Reset or create a new file
+	 * </p>
 	 * 
 	 * @param filename the current filename
-	 * @return a new file
-	 * @throws SkillerException
+	 * @return a generateed filename to be used
+	 * @throws ApplicationException thrown if any problem occurs, most probably an {@link IOException}
 	 */
-	private File createResetOrCreateFile(String filename) throws SkillerException {
+	private File createResetOrCreateFile(String filename) throws ApplicationException {
 		Path path = rootLocation.resolve(filename);
 		try {
 			if (path.toFile().exists()) {
@@ -396,7 +438,7 @@ public class FileDataHandlerImpl implements DataHandler {
 			}
 			return newPath.toFile();
 		} catch (IOException ioe) {
-			throw new SkillerException(CODE_IO_ERROR,
+			throw new ApplicationException(CODE_IO_ERROR,
 					MessageFormat.format(MESSAGE_IO_ERROR, path.toFile().getAbsolutePath()), ioe);
 		}
 	}
@@ -411,13 +453,12 @@ public class FileDataHandlerImpl implements DataHandler {
 	 * effectively a directory.</font>
 	 * </p>
 	 * 
-	 * @param project  the current project whose repository is analyzed. <i>We use
-	 *                 this parameter to retrieve the location of the GIT local
-	 *                 repository.</i>
+	 * @param project  the current project whose repository is analyzed.
+	 * <em>We use this parameter to retrieve the location of the GIT local repository.</em>
 	 * @param pathname the given pathname
-	 * @return {@code true} if the pathname is a directory.
+	 * @return {@code true} if the pathname is a directory, {@code false} otherwise 
 	 */
-	private boolean isDirectory(final Project project, final String pathname) {
+	private boolean isDirectory(final Project project, final String pathname)  {
 
 		if (pathname.indexOf(INTERNAL_FILE_SEPARATORCHAR) != -1) {
 			return true;
@@ -426,12 +467,18 @@ public class FileDataHandlerImpl implements DataHandler {
 			log.debug(String.format("Examining if %s is a directory",
 					project.getLocationRepository() + INTERNAL_FILE_SEPARATORCHAR + pathname));
 		}
-		return Paths.get(project.getLocationRepository() + INTERNAL_FILE_SEPARATORCHAR + pathname).toFile()
-				.isDirectory();
+		try {
+			return Paths.get(project.getLocationRepository() + INTERNAL_FILE_SEPARATORCHAR + pathname)
+					.toFile()
+					.isDirectory();
+		} catch (final Exception e) {
+			log.error(getStackTrace(e));
+			return false;
+		}
 	}
 
 	@Override
-	public Map<Integer, Skill> loadSkills() throws SkillerException {
+	public Map<Integer, Skill> loadSkills() throws ApplicationException {
 
 		final String filename = "skills.json";
 
@@ -448,7 +495,7 @@ public class FileDataHandlerImpl implements DataHandler {
 				skills = new HashMap<>();
 			}
 		} catch (final Exception e) {
-			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		}
 
 		if (log.isDebugEnabled()) {
@@ -462,65 +509,130 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	@Override
-	public void saveRepositoryDirectories(Project project, SourceControlChanges changes) throws SkillerException {
+	public void saveRepositoryDirectories(Project project, SourceControlChanges changes) throws ApplicationException {
 
 		//
-		// As the method-name explains, we create the directory.
+		// As the method-name explains, we create the directory which will hoist the file.
 		//
 		createIfNeededDirectory(pathNames);
 
-		String filename = this.buildDirectoryPathnames(project);
+		List<String> directories = changes.keySet().stream()
+				.map(this::extractDirectory)
+				.distinct()
+				.filter(path -> isDirectory(project, path))
+				.sorted()
+				.collect(Collectors.toList());
 
-		List<String> directories = changes.keySet().stream().map(this::extractDirectory).distinct()
-				.filter(path -> isDirectory(project, path)).sorted().collect(Collectors.toList());
+		savePaths(project, directories, PathsType.PATHS_ALL);
+	}
+
+	@Override
+	public void savePaths(Project project, List<String> paths, PathsType pathsType) throws ApplicationException {
+
+		String filename = this.generatePathnamesFile(project, pathsType);
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Saving paths file %s", rootLocation.resolve(filename).toAbsolutePath()));
 		}
 
-		File file = createResetOrCreateFile(filename);
-
-		try (Writer writer = new FileWriter(file)) {
-			for (String dir : directories) {
-				writer.write(dir);
-				writer.write(Global.LN);
-			}
-		} catch (IOException ioe) {
-			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
-		}
+		saveTxtFile(filename, paths);
 	}
 
 	@Override
-	public List<String> loadRepositoryDirectories(Project project) throws SkillerException {
+	public List<String> loadPaths(Project project, PathsType pathsType) throws ApplicationException {
 
-		String filename = this.buildDirectoryPathnames(project);
+		String filename = this.generatePathnamesFile(project, pathsType);
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Saving paths file %s", rootLocation.resolve(filename).toAbsolutePath()));
+		}
+
+		return loadTxtFile(filename);
+	}
+
+
+	/**
+	 * Save a list of String into the given filename
+	 * @param filename the filename to save the TXT file.
+	 * @param lines the lines to be store on filesystem 
+	 * @throws ApplicationException
+	 */
+	private void saveTxtFile(String filename, List<String> lines) throws ApplicationException {
+
+		final File file = createResetOrCreateFile(filename);
+
+		try (Writer writer = new FileWriter(file)) {
+			for (String line : lines) {
+				writer.write(line);
+				writer.write(Global.LN);
+			}
+		} catch (IOException ioe) {
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
+		}
+	}
+
+	/**
+	 * Load the content of the given filename in a list of {@code String} format.
+	 * @param filename the filename which content has to be loaded.
+	 * @return the content of the file in {@code String} format, or {@code null} if none exists. 
+	 * @throws ApplicationException if any problems occurs, most probably an {@link IOException}
+	 */
+	private List<String> loadTxtFile(String filename) throws ApplicationException {
+
+		Path path = rootLocation.resolve(filename);
+		if (!path.toFile().exists()) {
+			return null;
+		}
+
+		try (Reader reader = new FileReader(path.toFile())) {
+			BufferedReader br = new BufferedReader(reader);
+			return br.lines().collect(Collectors.toList());
+		} catch (IOException ioe) {
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
+		}
+
+	}
+
+	@Override
+	public List<String> loadRepositoryDirectories(Project project) throws ApplicationException {
+
+		String filename = this.generatePathnamesFile(project, PathsType.PATHS_ALL);
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Loading the paths file %s", rootLocation.resolve(filename).toAbsolutePath()));
 		}
 
 		File file = rootLocation.resolve(filename).toFile();
+		if (!file.exists()) {
+			log.error(MessageFormat.format(MESSAGE_FILE_DOES_NOT_EXIST, filename));
+			throw new ApplicationException(CODE_FILE_DOES_NOT_EXIST, MessageFormat.format(MESSAGE_FILE_DOES_NOT_EXIST, filename));
+		}
 		try (Reader reader = new FileReader(file)) {
 			BufferedReader br = new BufferedReader(reader);
 			return br.lines().collect(Collectors.toList());
 		} catch (IOException ioe) {
-			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
+			log.error(getStackTrace(ioe));
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), ioe);
 		}
 	}
 
-	/**
-	 * Building the pathnames file path
-	 * 
-	 * @param project the current project
-	 * @return the expected path
-	 */
-	private String buildDirectoryPathnames(Project project) {
-		return String.format("%s/%d-%s-%s-pathnames.txt", pathNames, project.getId(), project.getName(),
-				project.getBranch());
+	@Override
+	public String generatePathnamesFile(Project project, PathsType pathsType) throws ApplicationException {
+
+		// To prevent a NullException in generatePathnamesFile
+		if (project.getBranch() == null) {
+			throw new ApplicationException(CODE_BRANCH_IS_MISSING_IN_PROJECT, MessageFormat.format(MESSAGE_BRANCH_IS_MISSING_IN_PROJECT, project.getId(), project.getName()));
+		}
+
+		return String.format(
+				"%s/%d-%s-%s.txt", pathNames, 
+				project.getId(), 
+				project.getBranch().replace(" ", "_"),
+				pathsType.getTypeOfPath());
 	}
 
 	@Override
-	public ProjectLayers loadSkylineLayers(Project project) throws SkillerException {
+	public ProjectLayers loadSkylineLayers(Project project) throws ApplicationException {
 
 		final ProjectLayers containerLayers = new ProjectLayers(project);
 
@@ -542,12 +654,12 @@ public class FileDataHandlerImpl implements DataHandler {
 			}
 			return containerLayers;
 		} catch (final Exception e) {
-			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		}
 	}
 
 	@Override
-	public void saveSkylineLayers(Project project, ProjectLayers layers) throws SkillerException {
+	public void saveSkylineLayers(Project project, ProjectLayers layers) throws ApplicationException {
 		//
 		// As the method-name explains, we create the directory.
 		//
@@ -562,7 +674,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
 			fw.write(gson.toJson(layers.getLayers()));
 		} catch (final Exception e) {
-			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		}
 	}
 
@@ -578,7 +690,7 @@ public class FileDataHandlerImpl implements DataHandler {
 	}
 
 	@Override
-	public ProjectBuilding loadProjectBuilding(Project project) throws SkillerException {
+	public ProjectBuilding loadProjectBuilding(Project project) throws ApplicationException {
 
 		final ProjectBuilding building = new ProjectBuilding();
 
@@ -594,25 +706,21 @@ public class FileDataHandlerImpl implements DataHandler {
 			}.getType();
 			List<ProjectFloor> floors = gson.fromJson(fr, typeListProjectFloor);
 			if (floors == null) {
-				// If this building list is still null, without IOException, it means that the file is empty.
+				// If this building list is still null, without IOException, it means that the
+				// file is empty.
 				building.setBuilding(new HashMap<YearWeek, ProjectFloor>());
 			} else {
-				floors.stream().forEach(floor ->
-					building.initWeek(
-					floor.getIdProject(), 
-					floor.getYear(), floor.getWeek(),
-					floor.getLinesActiveDevelopers(), 
-					floor.getLinesInactiveDevelopers())
-				);
-			}	
+				floors.stream().forEach(floor -> building.initWeek(floor.getIdProject(), floor.getYear(),
+						floor.getWeek(), floor.getLinesActiveDevelopers(), floor.getLinesInactiveDevelopers()));
+			}
 			return building;
 		} catch (final Exception e) {
-			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		}
 	}
 
 	@Override
-	public void saveProjectBuilding(Project project, ProjectBuilding building) throws SkillerException {
+	public void saveProjectBuilding(Project project, ProjectBuilding building) throws ApplicationException {
 		//
 		// As the method-name explains, we create the directory.
 		//
@@ -627,7 +735,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
 			fw.write(gson.toJson(building.getBuilding().values()));
 		} catch (final Exception e) {
-			throw new SkillerException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		}
 	}
 
@@ -637,4 +745,66 @@ public class FileDataHandlerImpl implements DataHandler {
 		Path path = rootLocation.resolve(filename);
 		return Files.exists(path);
 	}
+
+	@Override
+	public void saveRepositoryAnalysis(Project project, RepositoryAnalysis analysis) throws ApplicationException {
+		
+		//
+        // We save the directories of the repository. 
+        // These directories will be used to help the end-user when editing the directories to be excluded from the analysis
+        //
+		this.saveChanges(project, analysis.getChanges());
+
+        //
+        // We save the directories list extracted from the changes.
+        //
+		this.saveRepositoryDirectories(project, analysis.getChanges());
+
+		//
+		// Saving the set attached to the ADDED paths in the analysis
+		//
+		this.savePaths(project, new ArrayList<String>(analysis.getPathsAdded()), PathsType.PATHS_ADDED);
+
+		//
+		// Saving the set attached to the MODIFIED paths in the analysis
+		//
+		this.savePaths(project, new ArrayList<String>(analysis.getPathsModified()), PathsType.PATHS_MODIFIED);
+
+		//
+		// Saving the set attached to the MODIFIED CANDIDATE in the analysis
+		//
+		this.savePaths(project, new ArrayList<String>(analysis.getPathsCandidate()), PathsType.PATHS_CANDIDATE);
+	}
+
+	@Override
+	public RepositoryAnalysis loadRepositoryAnalysis(Project project) throws ApplicationException {
+
+		SourceControlChanges changes = loadChanges(project);
+		if (changes == null) {
+			return null;
+		}
+
+		List<String> pathsAdded = loadPaths(project, PathsType.PATHS_ADDED);
+		if (pathsAdded == null) {
+			return null;
+		}
+
+		List<String> pathsModified = loadPaths(project, PathsType.PATHS_MODIFIED);
+		if (pathsModified == null) {
+			return null;
+		}
+
+		List<String> pathsCandidate = loadPaths(project, PathsType.PATHS_CANDIDATE);
+		if (pathsCandidate == null) {
+			return null;
+		}
+
+		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
+		analysis.setChanges(changes);
+		analysis.setPathsAdded(new HashSet<String>(pathsAdded));
+		analysis.setPathsModified(new HashSet<String>(pathsModified));
+		analysis.setPathsCandidate(new HashSet<String>(pathsCandidate));
+		return analysis;
+	}
+	
 }

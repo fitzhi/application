@@ -1,0 +1,232 @@
+<mat-sidenav-container class="component-container">
+
+	<mat-sidenav *ngIf="!isActiveContext(PreviewContext.SUNBURST_IMPOSSIBLE)" mode="side" class="sidenav-toolbar"
+		opened>
+
+		<button id="sunburst" class="btn btn-outline-secondary rounded"
+			[ngClass]="{'btn-outline-success' : buttonActivated(SUNBURST), 'btn-outline-secondary': !buttonActivated(SUNBURST)}"
+			[disabled]="buttonActivated(SUNBURST)" (mouseenter)="mouseEnter(SUNBURST)" (mouseleave)="mouseLeave()"
+			(click)="show(SUNBURST)">
+			<em class="fas fa-chart-pie font-awesome-settings"></em>
+		</button>
+
+		<button id="legend" data-toggle="tooltip" data-placement="right"
+			title="Diagram legend. What does mean all these colors?" class="btn btn-outline-secondary rounded"
+			[ngClass]="{'btn-outline-success' : buttonActivated(LEGEND_SUNBURST), 'btn-outline-secondary': !buttonActivated(LEGEND_SUNBURST)}"
+			[disabled]="buttonActivated(LEGEND_SUNBURST)" (mouseenter)="mouseEnter(LEGEND_SUNBURST)"
+			(mouseleave)="mouseLeave()" (click)="show(LEGEND_SUNBURST)">
+			<em class="fas fa-question-circle font-awesome-settings"></em>
+		</button>
+
+		<button id="settings" data-toggle="tooltip" data-placement="right"
+			title="Filtering the diagram by date or developer" class="btn btn-outline-secondary rounded"
+			[ngClass]="{'btn-outline-success' : buttonActivated(SETTINGS), 'btn-outline-secondary': !buttonActivated(SETTINGS)}"
+			[disabled]="buttonActivated(SETTINGS)" (mouseenter)="mouseEnter(SETTINGS)" (mouseleave)="mouseLeave()"
+			(click)="show(SETTINGS)">
+			<em class="fas fa-sliders-h font-awesome-settings"></em>
+		</button>
+
+		<button id="unknown" data-toggle="tooltip" data-placement="right"
+			title="Ghosts list of the repository. unknown developers" class="btn btn-outline-secondary rounded"
+			[ngClass]="{'btn-outline-success' : buttonActivated(UNKNOWN), 'btn-outline-secondary': !buttonActivated(UNKNOWN)}"
+			[disabled]="buttonActivated(UNKNOWN)" (mouseenter)="mouseEnter(UNKNOWN)" (mouseleave)="mouseLeave()"
+			(click)="show(UNKNOWN)">
+			<em class="fas fa-ghost font-awesome-settings"></em>
+		</button>
+
+		<button id="dependencies" class="btn btn-outline-secondary rounded"
+			[ngClass]="{'btn-outline-success' : buttonActivated(DEPENDENCIES), 'btn-outline-secondary': !buttonActivated(DEPENDENCIES)}"
+			[disabled]="buttonActivated(DEPENDENCIES)" (mouseenter)="mouseEnter(DEPENDENCIES)"
+			(mouseleave)="mouseLeave()" (click)="show(DEPENDENCIES)">
+			<em class="fab fa-elementor font-awesome-settings"></em>
+		</button>
+
+		<button id="reload" class="btn btn-outline-secondary rounded"
+			[ngClass]="{'btn-outline-success' : buttonActivated(RELOAD), 'btn-outline-secondary': !buttonActivated(RELOAD)}"
+			[disabled]="buttonActivated(RELOAD)" (mouseenter)="mouseEnter(RELOAD)" (mouseleave)="mouseLeave()"
+			(click)="show(RELOAD)">
+			<em class="fas fa-redo-alt font-awesome-settings"></em>
+		</button>
+
+		<button id="reset" class="btn btn-outline-secondary rounded"
+			[ngClass]="{'btn-outline-success' : buttonActivated(RESET), 'btn-outline-secondary': !buttonActivated(RESET)}"
+			[disabled]="buttonActivated(RESET)" (mouseenter)="mouseEnter(RESET)" (mouseleave)="mouseLeave()"
+			(click)="show(RESET)">
+			<em class="fas fa-trash-alt font-awesome-settings"></em>
+		</button>
+
+	</mat-sidenav>
+
+
+	<mat-sidenav-content class="sidenav__content--height">
+
+		<div id="titleSunburst">
+			{{titleSunburst}}
+		</div>
+
+		<div id="warningSunburstImpossible" 
+			*ngIf="isActiveContext(PreviewContext.SUNBURST_IMPOSSIBLE) || ((projectService.project) && (projectService.project.id === -1))" >
+			<ul>
+				<li>Either your project does not exist yet. and you have to complete the project, first.</li>
+				<li>Or Fitzhì failed to connect with your source control system. Check your connection settings file on
+					your server.</li>
+			</ul>
+			<a href="javascript:;" (click)="jumpToTab (-1)">You need to complete the project form.</a>
+		</div>
+
+		<div id="warningProjectReadonly" *ngIf="isActiveContext(PreviewContext.SUNBURST_PROJECT_READONLY)">
+			<p>This project is readonly</p>
+		</div>
+
+		<!-- We do not use *ngIf because the dataSource needs to be created immediatly with their host component -->
+		<!-- If not, the tables are not synchronized with the selected package, and always empty. -->
+		<div [hidden]="!isActiveContext(PreviewContext.SUNBURST_READY)">
+			<app-node-detail id="node-details" [filenames]="filenames" [contributors]="contributors"
+				[location]="location$">
+			</app-node-detail>
+		</div>
+
+		<div id="chart" class="divPanelOnTop" *ngIf="isActiveContext(PreviewContext.SUNBURST_READY)"></div>
+
+		<div class="row" style="width: 100%" *ngIf="isActiveContext(PreviewContext.SUNBURST_WAITING)">
+			<div class="col-md-2"></div>
+			<div class="col-md-8">
+				<app-chart-in-progress></app-chart-in-progress>
+			</div>
+			<div class="col-md-2"></div>
+		</div>
+
+		<div id="panelGhosts" class="row" *ngIf="isActiveContext(PreviewContext.SUNBURST_GHOSTS)">
+			<app-project-ghosts [dataSourceGhosts$]="dataSourceGhosts$"></app-project-ghosts>
+		</div>
+
+		<div class="divPanelOnTop row" *ngIf="isActiveContext(PreviewContext.SUNBURST_DEPENDENCIES)">
+			<app-table-dependencies class="content-divPanel">
+			</app-table-dependencies>
+		</div>
+
+		<div class="divPanelOnTop row" *ngIf="isActiveContext(PreviewContext.SUNBURST_LEGEND)">
+			<app-legend-sunburst></app-legend-sunburst>
+		</div>
+
+		<angular-popper placement="left" target="#sunburst" [show]="sunburstCinematicService.isButtonActive(SUNBURST)">
+			<div content class="help">
+				<h4 class="help-title">Chart sunburst</h4>
+				<p>Generate (if necessary) and preview the chart</p>
+			</div>
+		</angular-popper>
+
+		<angular-popper placement="left" target="#legend"
+			[show]="sunburstCinematicService.isButtonActive(LEGEND_SUNBURST)">
+			<div content class="help">
+				<h4 class="help-title">Legend</h4>
+				<div class="help-content">
+					<p class="help">
+						Display the chart legend.<br/>
+					</p>
+				</div>
+			</div>
+		</angular-popper>
+
+		<angular-popper placement="left" target="#settings" [show]="sunburstCinematicService.isButtonActive(SETTINGS)">
+			<div content class="help">
+				<h4 class="help-title">Settings</h4>
+				<div class="help-content">
+					<p class="help">
+						Edit some settings to filter the chart.<br/>
+						You are able to :<br/>
+					</p>
+					<ul class="help">
+						<li>
+							Filter the chart for a specific staff member.
+						</li>
+						<li>
+							Filter the chart from a specific date.
+						</li>
+					</ul>
+					<em class="caution">Caution : The chart will be regenerated.</em>
+				</div>
+			</div>
+		</angular-popper>
+
+		<angular-popper placement="left" target="#dependencies" [show]="sunburstCinematicService.isButtonActive(DEPENDENCIES)">
+			<div content class="help">
+				<h4 class="help-title">Dependencies panel</h4>
+				<div class="help-content">
+					<p>
+						This panel allows you to edit the identified, or declared, dependencies in your project
+					</p>
+					<p class="help">
+						Dependencies are source files from third parties whose maintenance is not the responsibility of the project team <em>(libraries such as jquery or bootstrap for example).</em><br/>
+						These libraries should be excluded from the analysis.<br/>
+						They can be 
+					</p>
+					<ul class="help">
+						<li>detected by the system</li>
+						<li>declared manually inside the project through this panel.</li>
+					</ul> 
+				</div>
+			</div>
+		</angular-popper>
+
+		<angular-popper placement="left" target="#unknown"
+			[show]="sunburstCinematicService.isButtonActive(UNKNOWN)">
+			<div content class="help">
+				<h4 class="help-title">Ghosts panel</h4>
+				<div class="help-content">
+					<p>
+						This panel displays the ghosts of the project (unrecognized contributors)<BR/>
+						It allows:
+					</p>
+					<ul class="help">
+						<li>
+							to mark this ghost as a technical user
+						</li>
+						<li>
+							to associate an existing collaborator with each ghost
+						</li>
+						<li>
+							to create a new collaborator
+						</li>
+					</ul>
+				</div>
+			</div>
+		</angular-popper>
+
+		<angular-popper placement="left" target="#reload" [show]="sunburstCinematicService.isButtonActive(RELOAD)">
+			<div content class="help">
+				<h4 class="help-title">Reload the chart</h4>
+				<div class="help-content">
+					<p>
+						This button requests to reload the chart !<br/>
+						The current chart is stored in the session section of the local storage.<br/>
+						Reload will regenerate this chart.
+						It will process the current local repository, as it is, on server.
+						There will be no complete regeneration, no <code class="application-code">git.clone()</code>.<br/>
+					</p>
+					<p>
+						The operation will take in account the current ghosts list.
+						<em class="fas fa-ghost font-awesome-help"></em> : If your update your ghosts list, this chart might change.
+					</p> 
+				</div>
+			</div>
+		</angular-popper>
+
+		<angular-popper placement="left" target="#reset" [show]="sunburstCinematicService.isButtonActive(RESET)">
+			<div content class="help">
+				<h4 class="help-title">Reset the chart</h4>
+				<div class="help-content">
+					<p>
+						<span class="caution">Be aware that this operation will :</span>
+					</p>
+					<ul>
+						<li>Cleanup all intermediate data files stored on server</li>
+						<li>Launch a new asynchronous generation !</li>
+						<li>Might probably last a while...</li>
+					</ul>
+				</div>
+			</div>
+		</angular-popper>
+
+	</mat-sidenav-content>
+</mat-sidenav-container>

@@ -11,7 +11,7 @@
       </app-skyline-icon>
     </div>
 
-    <angular-popper placement="left" target="#skyline" *ngIf="popupHelper.isButtonActivated(selection.skyline)">
+    <angular-popper placement="left" target="#skyline" *ngIf="popupHelper.isButtonActivated(selection.skyline) && !hasSelectedADashboard()">
       <div content class="help">
         <h4 class="help-title">Display Skyline history</h4>
         <div class="help-content">
@@ -57,7 +57,7 @@
         </svg>
     </button>
 
-    <angular-popper placement="left" target="#treeMap" *ngIf="popupHelper.isButtonActivated(selection.treeMap)">
+    <angular-popper placement="left" target="#treeMap" *ngIf="popupHelper.isButtonActivated(selection.treeMap) && !hasSelectedADashboard()">
       <div content class="help">
         <h4 class="help-title">Display staff risk</h4>
         <div class="help-content">
@@ -89,7 +89,7 @@
         </div>
     </button>
 
-    <angular-popper placement="left" target="#currentSummary" *ngIf="popupHelper.isButtonActivated(selection.currentSummary)">
+    <angular-popper placement="left" target="#currentSummary" *ngIf="popupHelper.isButtonActivated(selection.currentSummary) && !hasSelectedADashboard()">
       <div content class="help">
         <h4 class="help-title">Display Pie dashboard</h4>
         <div class="help-content">
@@ -116,7 +116,7 @@
         <em class="fas fa-camera"></em>
     </button>
 
-    <angular-popper placement="left" target="#lastMonthSummary" *ngIf="popupHelper.isButtonActivated(selection.lastMonthSummary)">
+    <angular-popper placement="left" target="#lastMonthSummary" *ngIf="popupHelper.isButtonActivated(selection.lastMonthSummary) && !hasSelectedADashboard()">
       <div content class="help">
         <h4 class="help-title">Summary dashboard for last month</h4>
         <div class="help-content">
@@ -142,7 +142,7 @@
         <em class="fas fa-camera"></em>
     </button>
 
-    <angular-popper placement="left" target="#lastYearSummary" *ngIf="popupHelper.isButtonActivated(selection.lastYearSummary)">
+    <angular-popper placement="left" target="#lastYearSummary" *ngIf="popupHelper.isButtonActivated(selection.lastYearSummary) && !hasSelectedADashboard()">
       <div content class="help">
         <h4 class="help-title">Summary dashboard for last year</h4>
         <div class="help-content">
@@ -226,8 +226,10 @@
 
     <div id="container-skyline" *ngIf="isSelected(selection.skyline) && (skylineService.skylineLoaded$|async) ">
       <app-skyline 
-        [width]=skylineDimension.width 
-        [height]=skylineDimension.height>
+        [width]=skylineDimension.widthWithUnitOfMesure 
+        [height]=skylineDimension.heightWithUnitOfMesure
+        [margin]="'10px'"
+        [speed]="10">
       </app-skyline>
     </div>
 </div>

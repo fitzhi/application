@@ -4,6 +4,7 @@ import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.INTERNAL_FILE_SEPARATOR;
 import static com.fitzhi.Global.LN;
 import static com.fitzhi.Global.PROJECT;
+import static com.fitzhi.Global.NO_PROGRESSION;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import com.fitzhi.data.internal.StaffActivitySkill;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.Contributor;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 import com.fitzhi.source.crawler.git.SourceChange;
 import com.fitzhi.source.crawler.git.SourceFileHistory;
@@ -91,7 +92,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 			if (++ind == STEP) {
 				tot_ind += ind;
 				ind = 0;
-				this.tasks().logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), MessageFormat.format("{0} commits agregated", tot_ind));
+				this.tasks().logMessage(DASHBOARD_GENERATION, PROJECT,  project.getId(), MessageFormat.format("{0} commits agregated", tot_ind), NO_PROGRESSION);
 			}
 			root.injectFile(root, 
 					commit.getSourcePath().split(INTERNAL_FILE_SEPARATOR), 
@@ -136,7 +137,7 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	}
 
 	@Override
-	public void gatherContributorsActivitySkill(List<Contributor> contributors, SourceControlChanges changes, Set<String> pathSourceFileNames) throws SkillerException {
+	public void gatherContributorsActivitySkill(List<Contributor> contributors, SourceControlChanges changes, Set<String> pathSourceFileNames) throws ApplicationException {
 		for (Skill skill : skillHandler().getSkills().values()) {
 			for(String path : pathSourceFileNames) {
 				if (skillHandler().isSkillDetectedWithFilename(skill, path)) {
@@ -156,7 +157,10 @@ public abstract class AbstractScannerDataGenerator implements RepoScanner {
 	}
 
 	private void takeInAccount(Skill skill, List<Contributor> contributors, SourceChange change) {
-		Optional<Contributor> oContributor = contributors.stream().filter(contributor -> contributor.getIdStaff() == change.getIdStaff()).findFirst();
+		Optional<Contributor> oContributor = contributors
+			.stream()
+			.filter(contributor -> contributor.getIdStaff() == change.getIdStaff())
+			.findFirst();
 		if (oContributor.isPresent()) {
 			StaffActivitySkill sas = oContributor.get().getStaffActivitySkill().get(skill.getId());
 			if (sas == null) {

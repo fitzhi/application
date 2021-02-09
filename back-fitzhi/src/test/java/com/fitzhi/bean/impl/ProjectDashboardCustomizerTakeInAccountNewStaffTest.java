@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.bean.impl;
 
 
@@ -32,7 +29,7 @@ import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.CommitRepository;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 /**
  * Test the method {@link ProjectDashboardCustomizer#takeInAccountNewStaff(com.fitzhi.data.internal.Project, Staff)}.<br/>
  * 
@@ -55,7 +52,8 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 		public void initialize(
 				ConfigurableApplicationContext configurableApplicationContext) {
 			TestPropertyValues.of(
-					"cache.working.dir=" +  MessageFormat.format(".{0}src{0}test{0}resources{0}cacheDirRepository{0}", File.separator))
+					"cache.working.dir=" +  MessageFormat.format(".{0}src{0}test{0}resources{0}cacheDirRepository{0}", 
+					File.separator))
 					.applyTo(configurableApplicationContext.getEnvironment());
 		}
 	}
@@ -81,7 +79,7 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 	}
 	
 	@Test
-	public void testOnBoardingNominal() throws SkillerException, IOException {
+	public void testOnBoardingNominal() throws ApplicationException, IOException, Exception {
 		Project project = new Project(1917, "The Red Rev project");
 		
 		Staff staff = new Staff(1, "Frédéric", "VIDAL", "altF4", "fvidal", "frvidal@void.com", "OIM");
@@ -118,6 +116,9 @@ public class ProjectDashboardCustomizerTakeInAccountNewStaffTest {
 		Optional<Mission> oMission = 
 				staff.getMissions().stream().filter(mission -> mission.getIdProject() == 1917).findFirst();
 		
+		if (!oMission.isPresent()) {
+			throw new Exception("oMission should be not empty.");
+		}
 		Mission mission = oMission.get();
 		
 		Assert.assertEquals(2, mission.getNumberOfFiles());

@@ -5,7 +5,7 @@ import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -47,7 +47,7 @@ public class DataHandlerSaveAndLoadProjectBuildingTest {
     StaffHandler staffHandler;
 
     @Test
-    public void testSaveAndLoad() throws SkillerException {
+    public void testSaveAndLoad() throws ApplicationException {
 
         staffHandler.getStaff(1).setActive(true);
         staffHandler.getStaff(2).setActive(true);

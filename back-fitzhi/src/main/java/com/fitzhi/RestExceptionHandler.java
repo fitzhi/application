@@ -12,11 +12,12 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.fitzhi.exception.NotFoundException;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
- * This class is handling the SkillerException thrown by the application.
+ * This class intercepts all {@link ApplicationException} thrown by the backend server 
+ * and convert them to a valid HTTP response  .
  * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -25,8 +26,8 @@ import com.fitzhi.exception.SkillerException;
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@ExceptionHandler(SkillerException.class)
-	protected ResponseEntity<Object> handleSkillerException(SkillerException ex) {
+	@ExceptionHandler(ApplicationException.class)
+	protected ResponseEntity<Object> handleApplicationException(ApplicationException ex) {
 		return new ResponseEntity<>(new ApiError(HttpStatus.INTERNAL_SERVER_ERROR, ex.errorCode,  ex.errorMessage, ex),
 				HttpStatus.INTERNAL_SERVER_ERROR);
 	}

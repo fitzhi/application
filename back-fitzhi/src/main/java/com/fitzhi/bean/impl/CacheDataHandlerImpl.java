@@ -3,6 +3,8 @@
  */
 package com.fitzhi.bean.impl;
 
+import static com.fitzhi.Error.CODE_IO_EXCEPTION;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
@@ -15,11 +17,12 @@ import java.nio.file.attribute.FileTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.source.BasicCommitRepository;
 import com.fitzhi.data.source.CommitRepository;
+import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -57,7 +60,7 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	
 	@Override
 	public boolean hasCommitRepositoryAvailable(Project project) throws IOException {
-		Path savedProject = Paths.get(getCacheFilename(project));
+		Path savedProject = Paths.get(generateCacheFilename(project));
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Examining %s", savedProject.toFile().getAbsolutePath()));
 		}
@@ -81,25 +84,25 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 		try {
 		  Files.delete(path);
 		} catch (final Exception e) {
-			throw new SkillerRuntimeException(e);
+			throw new ApplicationRuntimeException(e);
 		}
 	}
 	
 	@Override
 	public CommitRepository getRepository(Project project) throws IOException {
 		
-		final FileReader fr = new FileReader(new File(getCacheFilename(project)));
+		final FileReader fr = new FileReader(new File(generateCacheFilename(project)));
 
 		CommitRepository repository = new BasicCommitRepository();
 		repository = gson.fromJson(fr, repository.getClass());
 		if (log.isDebugEnabled()) {
-			log.debug("repository of project " 
-					+ project.getName() 
-					+ " retrieved from cache. It contains " 
-					+ repository.size() 
-					+ " entries.");
+			log.debug(String.format(
+				"Repository of project %s  retrieved from the cache. It contains %d entries.", 
+				project.getName(), 
+				repository.size())); 
 		}
 		fr.close();
+
 		return repository;
 	}
 
@@ -107,7 +110,7 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	public void saveRepository(Project project, CommitRepository repository) throws IOException {
 
 		//Get the repository path
-		Path path = Paths.get(getCacheFilename(project));
+		Path path = Paths.get(generateCacheFilename(project));
 		
 		//Use try-with-resource to get auto-closeable buffered writer instance close
 		try (BufferedWriter writer = Files.newBufferedWriter(path)) {
@@ -116,21 +119,37 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 	}
 	
 	@Override
-	public boolean removeRepository(final Project project) throws IOException {
-		Path cacheFile = Paths.get(getCacheFilename(project));
+	public boolean removeRepository(final Project project) throws ApplicationException {
+		Path cacheFile = Paths.get(generateCacheFilename(project));
+
+		if (log.isInfoEnabled()) {
+			log.info(String.format("Removing the file %s if this file exists", cacheFile.getFileName()));
+		}
+
+		if (!Files.exists(cacheFile)) {
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("File %s does not exist", cacheFile.getFileName()));
+			}	
+			return false;
+		}
+
 		try {
 			Files.delete(cacheFile);
 			return true;
-		} catch (final Exception e) {
-			log.error(e.getMessage());
-			return false;
+		} catch (final IOException ioe) {
+			log.error(ioe.getMessage());
+			throw new ApplicationException (CODE_IO_EXCEPTION, ioe.getMessage());
 		}
 	}
 
 	/**
+	 * <p>
+	 * Generate the cache filename.
+	 * </p>
+	 * @param project the current project
 	 * @return the cache filename for the passed project
 	 */
-	private String getCacheFilename(final Project project) {
+	private String generateCacheFilename(final Project project) {
 		Path rootLocation = Paths.get(cacheDirRepository);
 		final File destination = rootLocation.resolve("").toFile();
 		// If the destination directory does not exist, we create it
@@ -138,10 +157,10 @@ public class CacheDataHandlerImpl implements CacheDataHandler {
 			try {
 				destination.mkdir();
 			} catch (final SecurityException se) {
-				throw new SkillerRuntimeException(se);
+				throw new ApplicationRuntimeException(se);
 			}
 		}
-		return rootLocation.resolve(project.getId()+"-"+project.getName()+".json").toFile().getAbsolutePath();
+		return rootLocation.resolve(String.format("%d.json", project.getId())).toFile().getAbsolutePath();
 	}
 	
 }

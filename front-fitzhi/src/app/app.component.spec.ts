@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing';
+import { TestBed, async, tick, fakeAsync } from '@angular/core/testing';
 import { AppComponent } from './app.component';
 import { ToolbarComponent } from './interaction/toolbar/toolbar.component';
 
@@ -18,26 +18,56 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MessageComponent } from './interaction/message/message.component';
+import { InstallService } from './admin/service/install/install.service';
+import { AuthService } from './admin/service/auth/auth.service';
 
 describe('AppComponent', () => {
+
+	let authService: AuthService;
+	let installService: InstallService;
+
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [AppComponent, ToolbarComponent, MessageComponent],
-			providers: [ReferentialService, CinematicService],
+			providers: [ReferentialService, CinematicService, InstallService, AuthService],
 			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,
 				HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule, MatFormFieldModule,
 				ReactiveFormsModule, MatSliderModule, MatInputModule, MatDialogModule,
 				RouterTestingModule.withRoutes([])]
 		}).compileComponents();
+
+		authService = TestBed.inject(AuthService);
+		installService = TestBed.inject(InstallService);
 	}));
-	it('should create the app', async(() => {
+	
+	it('The App component should be created without error', async(() => {
 		const fixture = TestBed.createComponent(AppComponent);
 		const app = fixture.debugElement.componentInstance;
 		expect(app).toBeTruthy();
 	}));
-	it(`should have as title 'app'`, async(() => {
+
+	it('The toolbar should NOT exist until user is connected', async(() => {
+		const spy = spyOn(authService, 'isConnected').and.returnValue(false);
 		const fixture = TestBed.createComponent(AppComponent);
-		const app = fixture.debugElement.componentInstance;
-		expect(app.title).toEqual('techxhicolor');
+		fixture.detectChanges();
+		expect(document.getElementById('toolbar')).toBeNull();
 	}));
+
+	it('The toolbar should NOT exist if user is connected BUT the installation is complete and successful.', fakeAsync(() => {
+		const spy = spyOn(authService, 'isConnected').and.returnValue(true);
+		installService.installComplete$.next(false);
+		const fixture = TestBed.createComponent(AppComponent);
+		fixture.detectChanges();
+		tick();
+		expect(document.getElementById('toolbar')).toBeNull();
+	}));
+
+	it('The toolbar should exist if user is connected AND the installation is complete and successful.', async(() => {
+		const spy = spyOn(authService, 'isConnected').and.returnValue(true);
+		installService.installComplete$.next(true);
+		const fixture = TestBed.createComponent(AppComponent);
+		fixture.detectChanges();
+		expect(document.getElementById('toolbar')).toBeDefined();
+	}));
+
 });

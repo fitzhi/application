@@ -1,0 +1,15 @@
+<div *ngIf="(ssewatcherService.event$ | async); let evt; else loading">
+    <div *ngIf="evt.isOk()" class="taskReport taskReportOk">{{evt.message}}</div>
+    <div *ngIf="evt.isCompleteOk()" class="reloadAfterCompletion">
+        <div class="inner-reloadAfterCompletion">
+            <button
+                class="btn btn-outline-secondary reloadAfterCompletion rounded"
+                (click)="refreshChart()">
+                <em class="fas fa-chart-pie font-awesome-settings"></em>
+            </button>
+            <span>&nbsp;&nbsp;&nbsp;&nbsp;Reload</span>
+        </div>
+    </div>
+    <div *ngIf="evt.isKo()" class="taskReport taskReportError">{{evt.message}}</div>
+</div>
+<ng-template #loading><div class="taskReport taskReportOk">Waiting...</div></ng-template>

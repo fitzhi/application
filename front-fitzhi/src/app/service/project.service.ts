@@ -27,10 +27,9 @@ import { AttachmentFile } from '../data/AttachmentFile';
 import { FileService } from './file.service';
 import { Ecosystem } from '../data/ecosystem';
 import { traceOn, HttpCodes } from '../global';
-import { SunburstCinematicService } from '../project/project-sunburst/service/sunburst-cinematic.service';
+import { SunburstCinematicService } from '../tabs-project/project-sunburst/service/sunburst-cinematic.service';
 import { ProjectSkill } from '../data/project-skill';
-import { SkillService } from './skill.service';
-import { StaffService } from './staff.service';
+import { SkillService } from '../skill/service/skill.service';
 import { CinematicService } from './cinematic.service';
 import { GitService } from './git/git.service';
 
@@ -91,15 +90,15 @@ export class ProjectService extends InternalService {
    	*/
 	loadProjects() {
 		if (traceOn()) {
-			this.log('Fetching the projects on URL ' + this.backendSetupService.url() + '/project/all');
+			this.log('Fetching the projects on URL ' + this.backendSetupService.url() + '/project');
 		}
 		this.httpClient
-			.get<Project[]>(this.backendSetupService.url() + '/project/all')
+			.get<Project[]>(this.backendSetupService.url() + '/project')
 			.pipe(take(1))
 			.subscribe(projects => {
 				if (traceOn()) {
 					console.groupCollapsed('Projects retrieved');
-					projects.forEach (project => console.log (project.name));
+					console.table (projects);
 					console.groupEnd();
 				}
 				projects.forEach(project => this.loadMapSkills(project));
@@ -114,10 +113,10 @@ export class ProjectService extends InternalService {
 	 */
 	public actualizeProject(idProject: number) {
 		if (traceOn()) {
-			this.log('Actualizing the project with URL ' + this.backendSetupService.url() + '/project/id/' + idProject);
+			this.log('Actualizing the project with URL ' + this.backendSetupService.url() + '/project/' + idProject);
 		}
 		this.httpClient
-			.get<Project>(this.backendSetupService.url() + '/project/id/' + idProject)
+			.get<Project>(this.backendSetupService.url() + '/project/' + idProject)
 			.pipe(take(1))
 			.subscribe({
 				next: project => {
@@ -129,11 +128,11 @@ export class ProjectService extends InternalService {
 					if (actualProject) {
 						actualProject.skills = project.skills;
 						this.loadMapSkills(actualProject);
-						this.dump(actualProject, '');
+						this.dump(actualProject, 'projectService after updated the project');
 					} else {
 						this.loadMapSkills(project);
 						this.allProjects.push(project);
-						this.dump(project, '');
+						this.dump(project, 'projectService when creating a project');
 					}
 				},
 				error: error => console.error ('FVI error', error)
@@ -173,7 +172,7 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	* Create a new project from the active one.
+	* Create a new project, read the saved one, and return the project in an observable. 
 	*/
 	createNewProject (): Observable<Project> {
 		if (traceOn()) {
@@ -205,7 +204,7 @@ export class ProjectService extends InternalService {
 					if (response.status === HttpCodes.noContent) {
 						this.messageService.success('Project successfully updated!');
 					} else {
-						console.log ('WTF : Should not pass here!');
+						console.error ('WTF : Should not pass here!');
 					}
 				},
 				error: responseInError => {
@@ -346,7 +345,7 @@ export class ProjectService extends InternalService {
 	 * GET the project associated to this id from the back-end od skiller. Will throw a 404 if this id is not found.
 	 */
 	get(id: number): Observable<Project> {
-		const url = this.backendSetupService.url() + '/project/id/' + id;
+		const url = this.backendSetupService.url() + '/project/' + id;
 		if (traceOn()) {
 			console.log('Fetching the project ' + id + ' on the address ' + url);
 		}
@@ -453,7 +452,7 @@ export class ProjectService extends InternalService {
 			return EMPTY;
 		}
 
-		const url = this.backendSetupService.url() + '/project/contributors/' + idProject;
+		const url = this.backendSetupService.url() + '/project/' + idProject + '/contributors';
 		if (traceOn()) {
 			console.log('Retrieve the contributors for the project identifier %d @ url %s', idProject, url);
 		}
@@ -461,15 +460,29 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	 * Reset the whole data connected to the dashboard generation.
+	 * **RESET** the whole chart data, connected to the dashboard generation.
+	 * @param id project identifier to **RESET**
 	 */
-	resetDashboard(id: number): Observable<string> {
-		const url = this.backendSetupService.url() + '/project/resetDashboard/' + id;
+	public resetDashboard(id: number): Observable<string> {
+		const url = this.backendSetupService.url() + '/project/' + id + '/sunburst';
 		if (traceOn()) {
 			console.log('Reset the dashboard data on URL ' + url);
 		}
 		this.sunburstCinematicService.listenEventsFromServer$.next(true);
-		return this.httpClient.get<string>(url, httpOptions);
+		return this.httpClient.delete<string>(url, httpOptions);
+	}
+
+	/**
+	 * **RELOAD** the chart data.
+	 * @param id project identifier to **RELOAD**
+	 */
+	public reloadSunburst$(id: number): Observable<string> {
+		const url = this.backendSetupService.url() + '/project/' + id + '/sunburst';
+		if (traceOn()) {
+			console.log('Reload the dashboard data on URL ' + url);
+		}
+		this.sunburstCinematicService.listenEventsFromServer$.next(true);
+		return this.httpClient.post<string>(url, httpOptions);
 	}
 
 	/**
@@ -511,7 +524,12 @@ export class ProjectService extends InternalService {
 		this.httpClient.get<any>(url, httpOptions)
 			.pipe(take(1))
 			.subscribe({
-				next: branches => {
+				next: (branches: string[]) => {
+					if (traceOn()) {
+						console.groupCollapsed("List of branches for project %s", this.project.name);
+						branches.forEach(branch => console.log (branch));
+						console.groupEnd();
+					}
 					this.branches$.next(branches);
 					this.gitService.assistanceMessageGitBranches$.next(false);
 				}
@@ -1021,6 +1039,7 @@ export class ProjectService extends InternalService {
 			return;
 		}
 
+		console.log('Dump executed from', from);
 		console.groupCollapsed(from, 'Project ' + project.id + ' ' + project.name);
 		console.groupCollapsed('Global audit evaluation', project.auditEvaluation);
 		if (project.audit) {

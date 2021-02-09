@@ -15,7 +15,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fitzhi.SkillerRuntimeException;
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.RiskProcessor;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.DataChart;
@@ -159,7 +159,7 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 						.filter(k -> isClassFile(k, source.getFilename()))
 						.findFirst();
 				if (!optKey.isPresent()) {
-					throw new SkillerRuntimeException(source.getFilename() + " not found!");
+					throw new ApplicationRuntimeException(source.getFilename() + " not found!");
 				}
 				
 				final CommitHistory activity = repository.getRepository().get(optKey.get());
@@ -332,12 +332,12 @@ public class MessOfCriteriaProcessorImpl implements RiskProcessor {
 	@Override
 	public void evaluateTheRisk(CommitRepository repository, DataChart data,
 			List<com.fitzhi.bean.impl.RiskCommitAndDevActiveProcessorImpl.StatActivity> statsCommit) {
-		throw new SkillerRuntimeException("Should not pass here!");
+		throw new ApplicationRuntimeException("Should not pass here!");
 	}
 
 	@Override
 	public void evaluateProjectRisk(Project project, DataChart dataTree) {
-		throw new SkillerRuntimeException("Should not pass here!");
+		throw new ApplicationRuntimeException("Should not pass here!");
 	}
 
 	

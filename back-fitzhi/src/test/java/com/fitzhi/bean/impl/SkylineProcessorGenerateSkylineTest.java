@@ -9,7 +9,7 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Skyline;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -43,7 +43,7 @@ public class SkylineProcessorGenerateSkylineTest {
     }
     
     @Test
-    public void testAProjectWithoutSkyline() throws SkillerException {
+    public void testAProjectWithoutSkyline() throws ApplicationException {
         projects.put(1, new Project(1, "One"));
         when(projectHandler.getProjects()).thenReturn(projects);
         Skyline skyline = skylineProcessor.generateSkyline();
@@ -51,7 +51,7 @@ public class SkylineProcessorGenerateSkylineTest {
     }
 
     @Test
-    public void testAProjectWithARegisteredSkyline() throws SkillerException {
+    public void testAProjectWithARegisteredSkyline() throws ApplicationException {
         projects.put(1, new Project(1796, "One"));
         when(projectHandler.getProjects()).thenReturn(projects);
         Skyline skyline = skylineProcessor.generateSkyline();

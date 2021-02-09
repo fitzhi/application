@@ -1,14 +1,10 @@
-/**
- * 
- */
 package com.fitzhi.data.external;
-
-import javax.annotation.Generated;
 
 import com.fitzhi.data.internal.Task;
 import com.fitzhi.data.internal.TaskLog;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * <p>
@@ -23,6 +19,7 @@ import lombok.Data;
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@EqualsAndHashCode
 public @Data class ActivityLog  {
 
 	/**
@@ -34,6 +31,11 @@ public @Data class ActivityLog  {
 	 * the time-stamp of the event.
 	 */
 	private long logTime;
+
+	/**
+	 * The progression of the treatment (in percentage).
+	 */
+	private int progressionPercentage;
 
 	/**
 	 * The error code thrown by the treatment, or 0 if there is no error.
@@ -66,15 +68,17 @@ public @Data class ActivityLog  {
 	 * @param id an entity identifier (in this first release, it's a project identifier)
 	 * @param code the code of error associated to this message
 	 * @param message the message
+     * @param progressionPercentage the percentage of progression of the treatment
 	 * @param logTime the data/time when this log has been recorded
 	 * @param complete {@code true} if the treatment is completed.
 	 * @param completeOnError{@code false} if the treatment is completed.
 	 */
-	public ActivityLog(int id, int code, String message, long logTime, boolean complete, boolean completeOnError) {
+	public ActivityLog(int id, int code, String message, int progressionPercentage, long logTime, boolean complete, boolean completeOnError) {
 		super();
 		this.id = id;
 		this.code = code;
 		this.message = message;
+		this.progressionPercentage = progressionPercentage;
 		this.logTime = logTime;
 		this.complete = complete;
 		this.completeOnError = completeOnError;
@@ -92,54 +96,17 @@ public @Data class ActivityLog  {
 		this.message = taskLog.getMessage();
 		this.logTime = taskLog.getLogTime();
 		this.complete = complete;
+		if (this.complete) {
+			this.progressionPercentage = 100;
+		}
 	}
 
 
 	@Override
 	public String toString() {
-		return "ActivityLog [id=" + id + ", code=" + code + ", message=" + message + ", logTime=" + logTime
+		return "ActivityLog [id=" + id + ", code=" + code + ", message=" + message+ ", progressionPercentage=" + progressionPercentage + ", logTime=" + logTime
 				+ ", complete=" + complete + ", completeOnError=" + completeOnError + "]";
 	}
 
-	@Override
-	@Generated ("eclipse")
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		ActivityLog other = (ActivityLog) obj;
-		if (code != other.code)
-			return false;
-		if (complete != other.complete)
-			return false;
-		if (completeOnError != other.completeOnError)
-			return false;
-		if (id != other.id)
-			return false;
-		if (message == null) {
-			if (other.message != null)
-				return false;
-		} else if (!message.equals(other.message))
-			return false;
-		return true;
-	}
-
-	@Override
-	@Generated ("eclipse")
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + code;
-		result = prime * result + (complete ? 1231 : 1237);
-		result = prime * result + (completeOnError ? 1231 : 1237);
-		result = prime * result + id;
-		result = prime * result + ((message == null) ? 0 : message.hashCode());
-		return result;
-	}
-	
-	
 }
 

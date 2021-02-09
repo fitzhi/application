@@ -30,7 +30,7 @@ import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -68,7 +68,7 @@ public class ProjectGhostControllerTest {
 	final int ID_PROJECT = 1;
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		project = projectHandler.get(ID_PROJECT);
 		project.getGhosts().add(new Ghost("pseudoUnlinked", false));
 		project.getGhosts().add(new Ghost("pseudoLinked", 2, false));
@@ -108,7 +108,7 @@ public class ProjectGhostControllerTest {
 			.andExpect(content().string("true"))
 			.andDo(print());
 
-		this.mvc.perform(get("/api/project/id/"+ ID_PROJECT))
+		this.mvc.perform(get("/api/project/"+ ID_PROJECT))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print());
@@ -128,7 +128,7 @@ public class ProjectGhostControllerTest {
 	
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		project = projectHandler.get(ID_PROJECT);
 		project.getGhosts().clear();
 				

@@ -42,16 +42,16 @@ public class ReactiveLogReport implements LogReport {
 	
 	/**
 	 * Return a log of activity for an asynchronous task.
-	 * @param operation type of operation recorded
-	 * @param title title related to the identifier
+	 * @param operation the type of operation recorded
+	 * @param title the title related to the identifier
 	 * @param id the given identifier <i>(might be a project, a staff or anything else)</i>
 	 * @return a task report or {@code null} if the task has completed
 	 */
 	private ActivityLog currentLog(String operation, String title, int id) {
 		final Task task = tasks.getTask(operation, PROJECT, id);
 		if (task == null) {
-			return new ActivityLog(id, 0, String.format("End for %s for %s : %d", operation, title, id), 
-					LocalDate.MIN.toEpochDay(), true, false);
+			log.info(String.format("End for %s for %s : %d", operation, title, id));
+			return new ActivityLog(id, 0, "Operation completed !", 100, LocalDate.MIN.toEpochDay(), true, false);
 		}
 		return (!task.isComplete()) ? task.buildLastestLog(id) : new ActivityLog(id, task.getLastBreath(), true);
 	}

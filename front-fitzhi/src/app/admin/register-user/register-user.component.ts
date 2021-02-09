@@ -7,8 +7,9 @@ import { Constants } from 'src/app/constants';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { StaffDataExchangeService } from 'src/app/tabs-staff/service/staff-data-exchange.service';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
-import { StaffService } from 'src/app/service/staff.service';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { traceOn } from 'src/app/global';
+import { InstallService } from '../service/install/install.service';
 
 @Component({
 	selector: 'app-register-user',
@@ -44,6 +45,7 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 		private backendSetupService: BackendSetupService,
 		private staffDataExchangeService: StaffDataExchangeService,
 		private messageBoxService: MessageBoxService,
+		private installService: InstallService,
 		private messageService: MessageService) {
 		super();
 	}
@@ -144,6 +146,7 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 	 */
 	public skip() {
 		// We do know at this point the staff identifier corresponding to this user.
+		this.installService.installComplete();
 		this.messengerSkipAndConnect.emit(true);
 	}
 }

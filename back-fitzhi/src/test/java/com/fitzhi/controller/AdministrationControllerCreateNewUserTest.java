@@ -102,7 +102,11 @@ public class AdministrationControllerCreateNewUserTest {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Crew size %d", crewSize));
 		}
-		this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "user").param(PASS_WORD, pass)
+		//
+		// We disable this line for Sonar to avoid the useless password security check. 
+		// This fake password is useless for any hacker.
+		//
+		this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "user").param(PASS_WORD, pass) //NOSONAR 
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + TokenLoader.obtainAccessMockToken(mvc)))
 				.andExpect(status().isOk()).andExpect(jsonPath(CST_STAFF_ID_STAFF, is(0)))
 				.andExpect(jsonPath(CST_CODE, is(CODE_CANNOT_SELF_CREATE_USER)));
@@ -110,14 +114,19 @@ public class AdministrationControllerCreateNewUserTest {
 
 	@Test
 	public void creationFailedForExistingUser() throws Exception {
-		Staff s = new Staff(777, "frvidal", "pass");
+		Staff s = new Staff(-1, "myUniqueLogin", "pass");
 		s.setLastName("VIDAL");
-		this.staffHandler.addNewStaffMember(s);
-		this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "frvidal").param(PASS_WORD, pass)
+		Staff st = this.staffHandler.createWorkforceMember(s);
+		//
+		// We disable this line for Sonar to avoid the useless password security check. 
+		// This fake password is useless for any hacker.
+		//
+		this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "myUniqueLogin").param(PASS_WORD, pass) //NOSONAR
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + TokenLoader.obtainAccessMockToken(mvc)))
 				.andExpect(status().isOk()).andExpect(jsonPath(CST_CODE, is(CODE_LOGIN_ALREADY_EXIST)))
 				.andExpect(jsonPath(CST_STAFF_ID_STAFF, is(0)));
 
+		staffHandler.removeStaff(st.getIdStaff());
 	}
 
 	@After

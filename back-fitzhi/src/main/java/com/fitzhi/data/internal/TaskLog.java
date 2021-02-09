@@ -28,31 +28,40 @@ public @Data class TaskLog {
 	String message;
 	
 	/**
-	 * Public build with a logTime set to <code> System.currentTimeMillis()</code> and an error code equal to -1.
-	 * @param message the log message to be stored.
+	 * The progression of the treatment in percentage.
 	 */
-	public TaskLog(String message) {
-		this(0, message);
+	int progressionPercentage;
+
+	/**
+	 * Public build with a logTime set to <code> System.currentTimeMillis()</code> and an error code equal to 0.
+	 * @param message the log message to be stored.
+	 * @param progressionPercentage The progression of the treatment in percentage
+	 */
+	public TaskLog(String message, int progressionPercentage) {
+		this(0, message, 0);
 	}
 	
 	/**
 	 * Public build with a logTime set to <code> System.currentTimeMillis()</code>
 	 * @param code optional code associated to this message. <i>This code will be mainly used to keep the error code.</i>
 	 * @param message the log message to be stored.
+	 * @param progressionPercentage The progression of the treatment in percentage
 	 */
-	public TaskLog(int code, String message) {
-		this(code, message, System.currentTimeMillis());
+	public TaskLog(int code, String message, int progressionPercentage) {
+		this(code, message, progressionPercentage, System.currentTimeMillis());
 	}
 	
 	/**
 	 * Public build with a logTime set to <code> System.currentTimeMillis()</code>
 	 * @param code optional code associated to this message. <i>This code will be mainly used to keep the error code.</i>
 	 * @param message the log message to be stored.
+	 * @param progressionPercentage The progression of the treatment in percentage
 	 * @param logTime the time when the event occurs
 	 */
-	public TaskLog(int code, String message, long logTime) {
+	public TaskLog(int code, String message, int progressionPercentage, long logTime) {
 		this.message = message;
 		this.code = code;
+		this.progressionPercentage = progressionPercentage;
 		this.logTime = logTime;
 	}
 

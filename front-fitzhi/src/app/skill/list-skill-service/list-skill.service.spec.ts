@@ -11,7 +11,7 @@ describe('ListSkillService', () => {
 		});
 	});
 
-	it('should be created', inject([ListSkillService], (service: ListSkillService) => {
+	it('should be simply created without error', inject([ListSkillService], (service: ListSkillService) => {
 		expect(service).toBeTruthy();
 	}));
 });

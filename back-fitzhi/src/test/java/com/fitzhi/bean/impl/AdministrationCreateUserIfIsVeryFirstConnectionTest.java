@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 /**
  * Test the administration bean for the user creation.<br/>
  * <span style="color:red;font-size:16">IF IT IS NOT THE VERY FIRST CONNECTION !</span>
@@ -44,7 +44,7 @@ public class AdministrationCreateUserIfIsVeryFirstConnectionTest {
 	int idStaff;
 
 	@Test
-	public void testCreateUser() throws SkillerException {
+	public void testCreateUser() throws ApplicationException {
 		final Staff staff = administration.createNewUser(MY_LOGIN, MY_PSSWORD);
 		idStaff = staff.getIdStaff();
 		Assert.assertNotNull(
@@ -63,7 +63,7 @@ public class AdministrationCreateUserIfIsVeryFirstConnectionTest {
 	}
 
 	@Test
-	public void testCreateSameUserDifferentPassword() throws SkillerException {
+	public void testCreateSameUserDifferentPassword() throws ApplicationException {
 		final Staff staff = administration.createNewUser(MY_LOGIN, MY_PSSWORD);
 		administration.createNewUser(MY_LOGIN, ANOTHER_PSSWORD);
 		

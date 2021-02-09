@@ -1,13 +1,12 @@
-/**
- * 
- */
 package com.fitzhi.source.crawler.git;
 
 import java.time.LocalDate;
 
+import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.SourceCodeDiffChange;
 
 import lombok.Data;
+import lombok.ToString;
 
 /**
  * <p>
@@ -19,6 +18,7 @@ import lombok.Data;
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@ToString
 public @Data class SourceChange {
 
 	/**
@@ -32,14 +32,9 @@ public @Data class SourceChange {
 	private LocalDate dateCommit;
 
 	/**
-	 * Author name
+	 * Author 
 	 */
-	private String authorName;
-
-	/**
-	 * Date of commit.
-	 */
-	private String authorEmail;
+	private Author author;
 
 	/**
 	 * Staff identifier retrieved for this commit.
@@ -66,8 +61,7 @@ public @Data class SourceChange {
 		super();
 		this.commitId = commitId;
 		this.dateCommit = dateCommit;
-		this.authorName = authorName;
-		this.authorEmail = authorEmail;
+		this.author = new Author(authorName, authorEmail);
 		this.idStaff = idStaff;
 		this.diff = diff;
 	}
@@ -121,7 +115,7 @@ public @Data class SourceChange {
 	 *         Author name is not <code>null</code>.
 	 */
 	public boolean isAuthorIdentified() {
-		return (authorName != null);
+		return (author.getName() != null);
 	}
 
 	/**
@@ -130,12 +124,6 @@ public @Data class SourceChange {
 	public int lines() {
 		return (this.diff == null) ? 0 : this.diff.getLinesAdded() - this.diff.getLinesDeleted();
 
-	}
-
-	@Override
-	public String toString() {
-		return "SourceChange [authorEmail=" + authorEmail + ", authorName=" + authorName + ", commitId=" + commitId
-				+ ", dateCommit=" + dateCommit + ", diff=" + diff + ", idStaff=" + idStaff + "]";
 	}
 
 }

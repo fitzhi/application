@@ -13,7 +13,7 @@ import com.fitzhi.bean.ProjectDashboardCustomizer;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 
 import org.eclipse.jgit.lib.Repository;
@@ -28,6 +28,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
@@ -35,8 +37,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @TestPropertySource(properties = { "prefilterEligibility=true" }) 
+@Slf4j
 public class CrawlerWibkacTest {
 
+	// private static final String FITZHI = "application";
 	private static final String FITZHI = "first-test";
 
 	private static final String DIR_GIT = ".." + File.separator + "git_repo_for_test" + File.separator + "%s" + File.separator;
@@ -67,7 +71,7 @@ public class CrawlerWibkacTest {
 	private Project project;
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		project = new Project(1000, FITZHI);
     	asyncTask.addTask(DASHBOARD_GENERATION, PROJECT, 1000);
 		project.setLocationRepository(new File(String.format(DIR_GIT, FITZHI)).getAbsolutePath());
@@ -79,16 +83,29 @@ public class CrawlerWibkacTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testSaveChanges() throws IOException, SkillerException {
+	public void testSaveChanges() throws IOException, ApplicationException {
 
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 		repository = builder.setGitDir(new File(String.format(FILE_GIT, FITZHI))).readEnvironment().findGitDir()
 				.build();
 
-		RepositoryAnalysis analysis = scanner.loadChanges(project, repository);
-		Project p = new Project(777, "test");
+		RepositoryAnalysis analysis = new RepositoryAnalysis(project);
+		scanner.fillRepositoryAnalysis(project, analysis, repository);
 		
-		dataSaver.saveChanges(p, analysis.getChanges());
+		log.debug(String.format("List of %d all paths", analysis.getPathsAll().size()));
+		analysis.getPathsAll().stream().forEach(path -> log.debug(path));
+
+		log.debug(String.format("List of %d added paths", analysis.getPathsAdded().size()));
+		analysis.getPathsAdded().stream().forEach(path -> log.debug(path));
+
+		log.debug(String.format("List of %d modified paths", analysis.getPathsModified().size()));
+		analysis.getPathsModified().stream().forEach(path -> log.debug(path));
+
+		log.debug(String.format("List of %d candidate paths", analysis.getPathsCandidate().size()));
+		analysis.getPathsCandidate().stream().forEach(path -> log.debug(path));
+
+//		Project p = new Project(777, "test");		
+//		dataSaver.saveChanges(p, analysis.getChanges());
 	}
 
 	@After

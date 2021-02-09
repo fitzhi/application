@@ -97,7 +97,6 @@ describe('FitzhiDashboardComponent initialization', () => {
 
 	it('The button for Skyline is clicked', fakeAsync(() => {
 		let skyline = fixture.debugElement.query(By.css('#iconSkyline'));
-		console.log (skyline);
 		skyline.triggerEventHandler('click', null);
 		tick(); // simulates the passage of time until all pending asynchronous activities finish
 		fixture.detectChanges();

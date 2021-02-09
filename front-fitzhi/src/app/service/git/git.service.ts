@@ -15,7 +15,7 @@ export class GitService {
 
 	/**
 	 * This **behaviorSubject** is handling an assistance message given to the end-user,
-  scann   * in which he's invited to save the project in order to get the git branches
+     * in which he's invited to save the project in order to get the git branches
 	 */
 	public assistanceMessageGitBranches$ = new BehaviorSubject<boolean>(false);
 

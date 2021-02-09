@@ -23,7 +23,7 @@ import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.encryption.DataEncryption;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -73,7 +73,7 @@ public class AdministrationImpl implements Administration {
 	}
 
 	@Override
-	public void saveVeryFirstConnection() throws SkillerException {
+	public void saveVeryFirstConnection() throws ApplicationException {
         final Path root = Paths.get(rootLocation);
 		final Path firstConnection = root.resolve(FIRST_CONNECTION_FILE);
 		if (log.isInfoEnabled()) {
@@ -84,20 +84,20 @@ public class AdministrationImpl implements Administration {
 		}
 		try {
 			if (!firstConnection.toFile().createNewFile()) {
-				throw new SkillerException(CODE_IO_ERROR, MESSAGE_IO_ERROR, FIRST_CONNECTION_FILE);			
+				throw new ApplicationException(CODE_IO_ERROR, MESSAGE_IO_ERROR, FIRST_CONNECTION_FILE);			
 			}
 		} catch (final IOException ioe) {
-			throw new SkillerException(CODE_IO_ERROR, MESSAGE_IO_ERROR, ioe, FIRST_CONNECTION_FILE);
+			throw new ApplicationException(CODE_IO_ERROR, MESSAGE_IO_ERROR, ioe, FIRST_CONNECTION_FILE);
 		}
 	}
 
 	@Override
-	public Staff createNewUser(String login, String password) throws SkillerException {
+	public Staff createNewUser(String login, String password) throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("createNewUser('%s','%s')", login, password));
 		}
-		Optional<Staff> oStaff = staffHandler.findStaffWithLogin(login);
+		Optional<Staff> oStaff = staffHandler.findStaffOnLogin(login);
 		final Staff staff = oStaff.isPresent() ? oStaff.get() : null;
 		if (log.isDebugEnabled()) {
 			log.debug (String.format("Staff found %s", ((staff != null) ? staff.fullName() : "(none)") ));
@@ -116,7 +116,7 @@ public class AdministrationImpl implements Administration {
 				staffHandler.savePassword(staff, encryptedPassword);
 				return staff;
 			} else {
-				return staffHandler.addNewStaffMember(new Staff(-1, login, encryptedPassword));
+				return staffHandler.createWorkforceMember(new Staff(-1, login, encryptedPassword));
 			}
 		} 
 
@@ -125,13 +125,13 @@ public class AdministrationImpl implements Administration {
 				log.debug ("So we allow the self-registration for new users; and hackers... (brrr! Dangerous !)");
 			}			
 			if (staff == null) {
-				return staffHandler.addNewStaffMember(new Staff(-1, login, encryptedPassword));				
+				return staffHandler.createWorkforceMember(new Staff(-1, login, encryptedPassword));				
 			} else {
 				return updatePassword (staff, encryptedPassword);
 			}
 		} else {
 			if (staff == null) {
-				throw new SkillerException(CODE_CANNOT_SELF_CREATE_USER, 
+				throw new ApplicationException(CODE_CANNOT_SELF_CREATE_USER, 
 						MESSAGE_CANNOT_SELF_CREATE_USER);
 			} else {
 				return updatePassword (staff, encryptedPassword);
@@ -144,15 +144,15 @@ public class AdministrationImpl implements Administration {
 	 * @param staff the staff 
 	 * @param password the chosen password.
 	 * @return the Staff updated with his encrypted password.
-	 * @throws SkillerException thrown if any problem occurs
+	 * @throws ApplicationException thrown if any problem occurs
 	 */
-	private Staff updatePassword (final Staff staff, String password) throws SkillerException {
+	private Staff updatePassword (final Staff staff, String password) throws ApplicationException {
 		//
 		// We cannot override the password of an existing user.
 		// This is supposed to be the CREATION of a staff member.
 		//
 		if (!staff.isEmpty()) {
-			throw new SkillerException(CODE_LOGIN_ALREADY_EXIST, 
+			throw new ApplicationException(CODE_LOGIN_ALREADY_EXIST, 
 				MessageFormat.format(MESSAGE_LOGIN_ALREADY_EXIST, 
 				staff.getLogin(), staff.getFirstName(), staff.getLastName()));					
 		} else {
@@ -163,17 +163,17 @@ public class AdministrationImpl implements Administration {
 	}
 	
 	@Override
-	public Staff connect(String login, String password) throws SkillerException {
+	public Staff connect(String login, String password) throws ApplicationException {
 		
-		Staff staff = staffHandler.findStaffWithLogin(login)
-				.orElseThrow(() -> new SkillerException(CODE_INVALID_LOGIN_PASSWORD, MESSAGE_INVALID_LOGIN_PASSWORD));
+		Staff staff = staffHandler.findStaffOnLogin(login)
+				.orElseThrow(() -> new ApplicationException(CODE_INVALID_LOGIN_PASSWORD, MESSAGE_INVALID_LOGIN_PASSWORD));
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("login found %s", staff.fullName()));
 		}
 		
 		if (!staff.isValidPassword(password)) {
-			throw new SkillerException(CODE_INVALID_LOGIN_PASSWORD, MESSAGE_INVALID_LOGIN_PASSWORD);
+			throw new ApplicationException(CODE_INVALID_LOGIN_PASSWORD, MESSAGE_INVALID_LOGIN_PASSWORD);
 		}
 		
 		return staff;

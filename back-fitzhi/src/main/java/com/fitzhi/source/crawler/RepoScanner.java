@@ -9,15 +9,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.DiffFormatter;
-import org.eclipse.jgit.errors.CorruptObjectException;
-import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.transport.FetchConnection;
-
 import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.RepositoryAnalysis;
@@ -27,9 +18,19 @@ import com.fitzhi.data.internal.StaffActivitySkill;
 import com.fitzhi.data.source.CommitRepository;
 import com.fitzhi.data.source.ConnectionSettings;
 import com.fitzhi.data.source.Contributor;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.git.GitCrawler;
 import com.fitzhi.source.crawler.git.ParserVelocity;
+
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.errors.CorruptObjectException;
+import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.transport.FetchConnection;
 
 /**
  * <p>
@@ -55,9 +56,9 @@ public interface RepoScanner {
 	 * @param project the current active project.
 	 * @return the repository commit entries if a previous parsing has been saved, or {@code null} if none exists.
 	 * @throws IOException thrown if an IO exception occurs when reading the cache file.
-	 * @throws SkillerException thrown most probably, if the project ghosts list update failed.
+	 * @throws ApplicationException thrown most probably, if the project ghosts list update failed.
 	 */
-	CommitRepository loadRepositoryFromCacheIfAny(Project project) throws IOException, SkillerException;
+	CommitRepository loadRepositoryFromCacheIfAny(Project project) throws IOException, ApplicationException;
 
 	/**
 	 * Test if the connection to the SCM will succeed with the actual settings
@@ -83,20 +84,24 @@ public interface RepoScanner {
 	
 	/**
 	 * <p>
-	 * Create a directory which will be the destination of the clone process.
-	 * <br/>
-	 * <font color="darkGreen" size="4">
-	 * The first implementation in {@link GitCrawler} will use the {@code temp directory}  of the filesystem.
-	 * </font>
+	 * Create the directory which will host the local repository.
+	 * </p>
+	 * 
+	 * <p>
+	 * The current implementation in {@link GitCrawler} will provide 2 solutions :
+	 * <ul>
+	 * <li> a temporary directory if the setting {@code gitcrawler.repositories.location} is empty</i>
+	 * <li>a permanent directory inside the given path given in {@code gitcrawler.repositories.location}</i>
+	 * </ul>
 	 * </p>
 	 * 
 	 * @param project  the actual project
 	 * @param settings the connection settings <i>(these settings are given for
 	 *                 trace only support)</i>
-	 * @throws IOException an IO oops ! occurs. Too bad!
+	 * @throws ApplicationException thrown if an IO exception occurs, most probably either {@link IOException}, or {@link SecurityException} 
 	 * @return the resulting path
 	 */
-	Path createDirectoryAsCloneDestination(Project project, ConnectionSettings settings) throws IOException;
+	Path createDirectoryAsCloneDestination(Project project, ConnectionSettings settings) throws ApplicationException;
 	
 	/**
 	 * <p>
@@ -106,22 +111,40 @@ public interface RepoScanner {
 	 * @param settings connection settings
 	 * @throws IOException thrown if any application or network error occurs.
 	 * @throws GitAPIException thrown if any application or network error occurs.
-	 * @throws GitAPIException thrown if any application or network error occurs.
-	 * @throws SkillerException will be thrown by only
+	 * @throws ApplicationException will be thrown by only
 	 * {@link com.fitzhi.bean.ProjectHandler#saveLocationRepository } 
 	 */
-	void clone(Project project, ConnectionSettings settings) throws IOException, GitAPIException, SkillerException;
+	void clone(Project project, ConnectionSettings settings) throws IOException, GitAPIException, ApplicationException;
 
 	/**
-	 * <p>Extract all changes from the repository and generate the commits collection.
+	 * <p>
+	 * Parse all changes from the repository history and generate (or update) the commits collection analysis.
 	 * <p>
 	 * <b><font color="red">BE CAUTIOUS : This method has an unsatisfying adherence with GIT</font></b>
 	 * </p>
+	 * @param project the given project 
+	 * @param analysis the analysis container to complete. This analysis hosts the  collection of all changes detected on the passed repository.
 	 * @param repository the <b><font color="red">GIT</font></b> repository.
-	 * @return the analysis extracted from the repository. This analysis contains the  collection with all changed detected on the passed repository.
-	 * @throws SkillerException thrown by the crawling operation.
+	 * @throws ApplicationException thrown by the crawling operation.
 	 */
-	RepositoryAnalysis loadChanges(Project project, Repository repository) throws SkillerException;
+	void fillRepositoryAnalysis(Project project, RepositoryAnalysis analysis,  Repository repository) throws ApplicationException;
+
+	/**
+	 * <p>
+	 * Retrieve the commits collection analysis processed for the local repository of the given project.
+	 * </p>
+	 * <ul>
+	 * <li>Either this method will load the generated data from the file system</li>
+	 * <li>Or this method will generate the analysis data</li>
+	 * </ul>
+	 * &nbsp;
+	 * @param project the given project 
+	 * @param repository the <b><font color="red">GIT</font></b> repository.
+	 * @return the {@link RepositoryAnalysis analysis} extracted from the repository. 
+	 * <p>This analysis contains the  collection of all changes detected on the passed repository.</p>
+	 * @throws ApplicationException thrown by the crawling operation.
+	 */
+	RepositoryAnalysis retrieveRepositoryAnalysis(Project project, Repository repository) throws ApplicationException;
 
 	/**
 	 * <p>
@@ -158,15 +181,22 @@ public interface RepoScanner {
 	
 	/**
 	 * <p>
-	 * Update the collection changes by setting the staff identifier <b>found</b> for every entry.<br/>
-	 * This method lookup in the staff team with the author declared for each commit.<br/>
-	 * A set of unknown contributors is also generated.
+	 * Update the collection changes by setting the staff identifier <b>found</b> for each entry.
+	 * This method search for a staff member with the author declared on each commit.
+	 * </p>
+	 * <P>
+	 * If the staff auto creation setting is set to {@code true}, new staff members will be created if creation is possible.
+	 * <em>For example, if the author is declared as the string 'John Doo', the application will assume that the creator is John Doo</em> 
+	 * </p>
+	 * <p>
+	 * A set of ghosts is also created for all unknown contributors. 
 	 * </p>
 	 * @param project the current project
 	 * @param analysis the repository analysis.
-	 * @param unknownContributors the set of ghost, i.e. the unknown contributors
+	 * @param ghosts the set of ghost, i.e. the unknown contributors
+	 * @throws ApplicationException thrown if any exception occcurs
 	 */
-	void updateStaff(Project project, RepositoryAnalysis analysis, Set<String> unknownContributors);
+	void updateStaff(Project project, RepositoryAnalysis analysis, Set<String> ghosts) throws ApplicationException;
 
 	/**
 	 * <p>
@@ -174,9 +204,9 @@ public interface RepoScanner {
 	 * </p>
 	 * @param project the current project
 	 * @param analysis the repository analysis.
-	 * @throws SkillerException thrown if any exceptions occurs.
+	 * @throws ApplicationException thrown if any exceptions occurs.
 	 */
-	void updateImportance(Project project, RepositoryAnalysis analysis) throws SkillerException;	
+	void updateImportance(Project project, RepositoryAnalysis analysis) throws ApplicationException;	
 	
 	/**
 	 * <p>
@@ -186,9 +216,9 @@ public interface RepoScanner {
 	 * @param project Project whose source code files should be scan in the repository
 	 * @return the parsed repository 
 	 * @throws IOException thrown if any application or network error occurs.
-	 * @throws SkillerException thrown if any application or network error occurs.
+	 * @throws ApplicationException thrown if any application or network error occurs.
 	 */
-	CommitRepository parseRepository(Project project) throws IOException, SkillerException;
+	CommitRepository parseRepository(Project project) throws IOException, ApplicationException;
 
 	/**
 	 * <p>
@@ -197,16 +227,15 @@ public interface RepoScanner {
 	 * 
 	 * @param analysis the analysis container. 
 	 * This container hosts the complete list of changes detected during the crawling repository
-	 * @param commit     the actual commit evaluated
-	 * @param diffs      the list of difference between this current commit and the
-	 *                   previous one
+	 * @param commit the actual commit revision evaluated
+	 * @param finalFilePathname the final file pathname as it appears now, on the local repository
+	 * @param de the Diff entry to be taken in account for the pathname
 	 * @param diffFormater Difference formatter which will be used to count the number of added, and deleted, lines
 	 * @param parserVelocity tracker which is following the velocity of the parser 
-	 * @throws IOException thrown if any IO exception occurs
-	 * @throws CorruptObjectException throws of if the Git object is corrupted, which is an internal severe error
+	 * @throws ApplicationException throw if any problem occurs, most probably an {@link IOException} or an {@link CorruptObjectException}
 	 */
-	void processDiffEntries(RepositoryAnalysis analysis, RevCommit commit, List<DiffEntry> diffs,
-			DiffFormatter diffFormatter, ParserVelocity parserVelocity) throws IOException, CorruptObjectException;
+	void processDiffEntries(RepositoryAnalysis analysis, RevCommit commit, String finalFilePathname,
+			DiffEntry de, DiffFormatter diffFormatter, ParserVelocity parserVelocity) throws ApplicationException;
 
 
 	/**
@@ -231,14 +260,30 @@ public interface RepoScanner {
 	 * </ul>
 	 * @return the project risk dashboard 
 	 * @throws IOException thrown if any application or network error occurs during the treatment.
-	 * @throws SkillerException thrown if any application or network error occurs during the treatment.
+	 * @throws ApplicationException thrown if any application or network error occurs during the treatment.
 	 * @throws GitAPIException thrown if any application or network error occurs during the treatment.
 	 */
-	RiskDashboard generate(Project project, SettingsGeneration settings) throws IOException, SkillerException, GitAPIException;
+	RiskDashboard generate(Project project, SettingsGeneration settings) throws IOException, ApplicationException, GitAPIException;
 
 	/**
+	 * <p>
+	 * This method is a batch method in charge of the generation of all projects.
+	 * It will iterate on each project, and execute {@link #generateAsync}.
+	 * </p>
+	 * <p><b>
+	 * The underlying implementation {@link GitCrawler} is hosting the annotation {@code @async}.
+	 * </b></p>
+	 * @throws ApplicationException thrown if any problem occurs during the generation
+	 */
+	void generateAllAsync() throws ApplicationException;
+
+	/**
+	 * <p>
 	 * This method is an ASYNCHRONOUS wrapper from the method {@link #generate(Project)}
-	 * <br/>
+	 * </p>
+	 * <p><b>
+	 * The underlying implementation {@link GitCrawler} is hosting the annotation {@code @async}.
+	 * </b></p>
 	 * Generate and complete the dashboard generation figuring the activities of staff members for the passed project
 	 * @param project the project whose source code files should be parsed in the repository
 	 * @param settings the dashboard generation settings, such as :
@@ -304,9 +349,9 @@ public interface RepoScanner {
 	 * @param contributors the list a valid contributors whose activities have to be updated.
 	 * @param changes the history of changes detected in the repository
 	 * @param pathSourceFileNames the set of source filename
-	 * @throws SkillerException thrown if any problem occurs
+	 * @throws ApplicationException thrown if any problem occurs
 	 */
-	void gatherContributorsActivitySkill(List<Contributor> contributors, SourceControlChanges changes, Set<String> pathSourceFileNames) throws SkillerException;
+	void gatherContributorsActivitySkill(List<Contributor> contributors, SourceControlChanges changes, Set<String> pathSourceFileNames) throws ApplicationException;
 	
 	/**
 	 * @return the list of markers of dependencies such as {@code jquery}, {@code bootstrap}...
@@ -328,9 +373,9 @@ public interface RepoScanner {
 	 * </p>
 	 * @param project the current project
 	 * @return the complete set of files, or an empty set if none exists. 
-	 * @throws SkillerException thrown if any problem occurs, most probably an IOException
+	 * @throws ApplicationException thrown if any problem occurs, most probably an IOException
 	 */
-	Set<String> allEligibleFiles(Project project) throws SkillerException;
+	Set<String> allEligibleFiles(Project project) throws ApplicationException;
 	
 	/**
 	 * <p>
@@ -340,6 +385,24 @@ public interface RepoScanner {
 	 * @param repository the project repository
 	 * @param filePath the file Path
 	 */
-	List<RevCommit> fileGitHistory(Project project, Repository repository, String filepath) throws SkillerException;
+	List<RevCommit> fileGitHistory(Project project, Repository repository, String filepath) throws ApplicationException;
+
+	/**
+	 * retrieve the first commit registered for the given repository.
+	 * @param the "porcelain" API to interact with the git repository
+	 * @return the first commit
+	 */
+	RevCommit initialCommit(Git git) throws ApplicationException;
+
+	/**
+	 * Retrieve the DIFF entry for a specific file between 2 commit revisions
+	 * @param pathname the pathname curently analyzed, which will be filtered for the comparaison 
+	 * @param repository the GIT repository
+	 * @param from the commit revision <b>FROM</b> where the diff delta has to be processed
+	 * @param to the commit revision <b>TO</b> where the diff delta has to be processed
+	 * @return the searched entry or {@code null} if none's found 
+	 * @throws ApplicationException thrown if any exeption occurs, most probably a GIT or IO exception
+	 */
+	DiffEntry retrieveDiffEntry(String pathname, Repository repository, RevCommit from, RevCommit to) throws ApplicationException;
 
 }

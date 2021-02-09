@@ -25,7 +25,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 /**
  * Test the administration bean for the user creation.<br/>
  * <span style="color:red;font-size:16">IF IT IS THE VERY FIRST CONNECTION !</span>
@@ -67,7 +67,7 @@ public class AdministrationCreateUserIfIsNotVeryFirstConnectionAllowSelfRegistra
 	}
 		
 	@Test
-	public void testCreateUnregisteredUser() throws SkillerException {
+	public void testCreateUnregisteredUser() throws ApplicationException {
 		
 		Staff staff = administration.createNewUser(MY_LOGIN, "myPassword");
 		idStaff = staff.getIdStaff();

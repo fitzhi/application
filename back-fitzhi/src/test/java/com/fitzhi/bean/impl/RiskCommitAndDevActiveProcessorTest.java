@@ -1,24 +1,9 @@
-/**
- * 
- */
 package com.fitzhi.bean.impl;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.RiskProcessor;
@@ -29,14 +14,27 @@ import com.fitzhi.data.internal.RiskDashboard;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.BasicCommitRepository;
 import com.fitzhi.data.source.CommitRepository;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
+
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import lombok.extern.slf4j.Slf4j;
 /**
  * Testing the class {@link RiskCommitAndDevActiveProcessorImpl}
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Slf4j
 public class RiskCommitAndDevActiveProcessorTest {
 		
 	private static final String FR_TWO_TWO_G_JAVA = "fr/two/two/G.java";
@@ -70,9 +68,11 @@ public class RiskCommitAndDevActiveProcessorTest {
 	Project prj;
 	
 	@Before
-	public void before() throws SkillerException {
+	public void before() throws ApplicationException {
 		comRep = new BasicCommitRepository();
 		
+		staffHandler.getStaff().values().stream().map(Staff::fullName).forEach(log::debug);
+
 		first = (Staff) staffHandler.getStaff().values().toArray()[0];
 		second = (Staff) staffHandler.getStaff().values().toArray()[1];
 		third = (Staff) staffHandler.getStaff().values().toArray()[2];
@@ -129,7 +129,7 @@ public class RiskCommitAndDevActiveProcessorTest {
 		
 		Collections.sort(stats, (StatActivity sa1, StatActivity sa2) -> sa1.getFilename().compareTo(sa2.getFilename()));
 		Collections.sort(expected, (StatActivity sa1, StatActivity sa2) -> sa1.getFilename().compareTo(sa2.getFilename()));
-		assertThat(stats, is(expected));
+		Assert.assertArrayEquals(expected.toArray(), stats.toArray());
 	}
 	
 	@Test
@@ -157,7 +157,7 @@ public class RiskCommitAndDevActiveProcessorTest {
 		
 		Collections.sort(stats, (StatActivity sa1, StatActivity sa2) -> sa1.getFilename().compareTo(sa2.getFilename()));
 		Collections.sort(expected, (StatActivity sa1, StatActivity sa2) -> sa1.getFilename().compareTo(sa2.getFilename()));
-		assertThat(stats, is(expected));
+		Assert.assertArrayEquals(expected.toArray(), stats.toArray());
 	}
 
 	@Test
@@ -178,7 +178,7 @@ public class RiskCommitAndDevActiveProcessorTest {
 	}
 	
 	@After
-	public void after() throws SkillerException {
+	public void after() throws ApplicationException {
 		projectHandler.getProjects().remove(8021964);
 	}
 	

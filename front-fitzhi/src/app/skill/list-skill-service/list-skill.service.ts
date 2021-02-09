@@ -1,6 +1,6 @@
 import {Constants} from '../../constants';
 import {Skill} from '../../data/skill';
-import {SkillService} from '../../service/skill.service';
+import {SkillService} from '../service/skill.service';
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
 import {tap} from 'rxjs/operators';
@@ -60,27 +60,26 @@ export class ListSkillService {
 		let foundSkill: Skill = null;
 		foundSkill = this.theSkills.find(skill => skill.id === id);
 
-		if (typeof foundSkill !== 'undefined') {
-			// TODO this.emitActualCollaboratorDisplay.next(id);
-			// We create an observable for an element of the cache in order to be consistent with the direct reading.
+		if (foundSkill) {
+			// We create an observable for an element of the cache in order to be consistent with the HTTP Get load.
 			return of(foundSkill);
-		} else {
-			// The collaborator's id is not, or no more, available in the cache
-			// We try a direct access
-			if (traceOn()) {
-				console.log('Direct access for : ' + id);
-			}
-			return this.skillService.get(id).pipe(tap(
-				(skill: Skill) => {
-					if (traceOn()) {
-						console.log('Direct access for : ' + id);
-						if (typeof skill !== 'undefined') {
-							console.log('Skill found : ' + skill.title);
-						} else {
-							console.log('No skill found for id ' + id);
-						}
-					}
-				}));
+		} 
+
+		// The skill's id is not, or no more, available in the cache
+		// We try a direct access
+		if (traceOn()) {
+			console.log('Direct access for : ' + id);
 		}
+		return this.skillService.get(id).pipe(tap(
+			(skill: Skill) => {
+				if (traceOn()) {
+					console.log('Direct access for : ' + id);
+					if (skill) {
+						console.log('Skill found : ' + skill.title);
+					} else {
+						console.log('No skill found for id ' + id);
+					}
+				}
+			}));
 	}
 }

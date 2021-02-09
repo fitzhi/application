@@ -3,14 +3,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Collaborator } from '../data/collaborator';
 import { Constants } from '../constants';
 
-import { StaffListService } from '../staff-list-service/staff-list.service';
+import { StaffListService } from '../service/staff-list-service/staff-list.service';
 import { StaffDataExchangeService } from './service/staff-data-exchange.service';
 import { CinematicService } from '../service/cinematic.service';
 import { MessageService } from '../interaction/message/message.service';
 import { BaseComponent } from '../base/base.component';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { traceOn } from '../global';
-import { StaffService } from '../service/staff.service';
+import { StaffService } from './service/staff.service';
 
 @Component({
 	selector: 'app-staff',

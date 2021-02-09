@@ -4,6 +4,7 @@ import static com.fitzhi.Error.CODE_MULTIPLE_TASK;
 import static com.fitzhi.Error.MESSAGE_MULTIPLE_TASK;
 import static com.fitzhi.Error.MESSAGE_TASK_NOT_FOUND;
 import static com.fitzhi.Global.LN;
+import static com.fitzhi.Global.NO_PROGRESSION;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.data.internal.Task;
 import com.fitzhi.data.internal.TaskLog;
-import com.fitzhi.exception.SkillerException;
+import com.fitzhi.exception.ApplicationException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,13 +34,13 @@ public class AsyncTaskImpl implements AsyncTask {
 	private final Map<String, Task> tasks = new HashMap<>();
 	
 	@Override
-	public void addTask(String operation, String title, int id) throws SkillerException {
+	public void addTask(String operation, String title, int id) throws ApplicationException {
 		
 		Task t = new Task(operation, title, id);
 		
 		Task record = tasks.get(genKey(t));
 		if ((record != null) && !record.isComplete() && !record.isCompleteOnError()) {
-			throw new SkillerException(CODE_MULTIPLE_TASK, MESSAGE_MULTIPLE_TASK);
+			throw new ApplicationException(CODE_MULTIPLE_TASK, MESSAGE_MULTIPLE_TASK);
 		}
 		
 		t.setComplete(false);
@@ -82,19 +83,22 @@ public class AsyncTaskImpl implements AsyncTask {
 	}
 	
 	@Override
-	public boolean logMessage(String operation, String title, int id, String message) {
-		return logMessage(operation, title, id, 0, message);
+	public boolean logMessage(String operation, String title, int id, String message, int progressionPercentage) {
+		return logMessage(operation, title, id, 0, message, progressionPercentage);
 	}
 	
 	@Override
-	public boolean logMessage(String operation, String title, int id, int errorCode, String message) {
+	public boolean logMessage(String operation, String title, int id, int errorCode, String message, int progressionPercentage) {
 		Task task = getTask(operation, title, id);
 		if (task != null) {
-			task.addActivity(new TaskLog(errorCode, message));
+			if (progressionPercentage != NO_PROGRESSION) {
+				task.setCurrentProgressionPercentage(progressionPercentage);
+			}
+			task.addActivity(new TaskLog(errorCode, message, task.getCurrentProgressionPercentage()));
 			return true;
 		} else {
 			if (log.isWarnEnabled()) {
-				log.warn("logMessage failed", new Exception(String.format("No more task '%s' for id %d", title, id)));
+				log.warn("logMessage failed", new Exception(String.format("Task '%s' is not found for %s %d", operation, title, id)));
 			}
 			return false;
 		}		
@@ -111,7 +115,7 @@ public class AsyncTaskImpl implements AsyncTask {
 	 * </li>
 	 * </ul>
 	 */
-	private void completeTask(String operation, String title, int id, boolean successful) throws SkillerException {
+	private void completeTask(String operation, String title, int id, boolean successful) throws ApplicationException {
 		Task task = getTask(operation, title, id);
 		if (task == null) {
 			if (log.isDebugEnabled()) {
@@ -123,12 +127,12 @@ public class AsyncTaskImpl implements AsyncTask {
 	}
 	
 	@Override
-	public void completeTask(String operation, String title, int id) throws SkillerException {
+	public void completeTask(String operation, String title, int id) throws ApplicationException {
 		this.completeTask(operation, title, id, true);
 	}
 
 	@Override
-	public void completeTaskOnError(String operation, String title, int id) throws SkillerException {
+	public void completeTaskOnError(String operation, String title, int id) throws ApplicationException {
 		this.completeTask(operation, title, id, false);
 	}
 
