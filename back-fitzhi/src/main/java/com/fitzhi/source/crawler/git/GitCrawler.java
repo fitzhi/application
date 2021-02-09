@@ -1,12 +1,12 @@
 package com.fitzhi.source.crawler.git;
 
+import static com.fitzhi.Error.CODE_CANNOT_CREATE_DIRECTORY;
 import static com.fitzhi.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
 import static com.fitzhi.Error.CODE_IO_ERROR;
 import static com.fitzhi.Error.CODE_IO_EXCEPTION;
 import static com.fitzhi.Error.CODE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.CODE_PROJECT_CANNOT_RETRIEVE_INITIAL_COMMIT;
 import static com.fitzhi.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
-import static com.fitzhi.Error.CODE_CANNOT_CREATE_DIRECTORY;
 import static com.fitzhi.Error.MESSAGE_CANNOT_CREATE_DIRECTORY;
 import static com.fitzhi.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_IO_ERROR;
@@ -17,9 +17,8 @@ import static com.fitzhi.Error.getStackTrace;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
 import static com.fitzhi.Global.LN;
-import static com.fitzhi.Global.PROJECT;
 import static com.fitzhi.Global.NO_PROGRESSION;
-
+import static com.fitzhi.Global.PROJECT;
 import static org.eclipse.jgit.diff.DiffEntry.DEV_NULL;
 
 import java.io.File;
@@ -49,10 +48,10 @@ import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.Error;
 import com.fitzhi.Global;
 import com.fitzhi.ShouldNotPassHereRuntimeException;
-import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.bean.DataChartHandler;
@@ -346,6 +345,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		if ((log.isDebugEnabled()) && (this.crawlerFilterDebug != null)) {
 			log.debug(String.format("Debugging filter %s", this.crawlerFilterDebug));
 		}
+
 	}
 
 	@Override
@@ -1363,30 +1363,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			}
 		}
 		return select;
-	}
-
-	@Override
-	@Async
-	public void generateAllAsync() throws ApplicationException {
-		if (log.isInfoEnabled()) {
-			log.info( "Starting the analysis of projects in batch mode.");
-		}
-		System.out.println("Yop");
-		for (Project project : projectHandler.getProjects().values()) {
-			System.out.println(project.toString());
-			if (log.isInfoEnabled()) {
-				log.info( String.format("Analyzing project %s.",project.getName()));
-			}
-			
-			// We analyze each project if the project has a connection settings.
-			if (project.getConnectionSettings() > 0) {
-				generateAsync(project, new SettingsGeneration(project.getId()));
-			}
-
-			if (log.isInfoEnabled()) {
-				log.info( String.format("The project %s is analyzed.",project.getName()));
-			}
-		}
 	}
 
 	@Override

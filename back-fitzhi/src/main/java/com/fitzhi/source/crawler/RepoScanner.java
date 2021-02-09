@@ -267,18 +267,6 @@ public interface RepoScanner {
 
 	/**
 	 * <p>
-	 * This method is a batch method in charge of the generation of all projects.
-	 * It will iterate on each project, and execute {@link #generateAsync}.
-	 * </p>
-	 * <p><b>
-	 * The underlying implementation {@link GitCrawler} is hosting the annotation {@code @async}.
-	 * </b></p>
-	 * @throws ApplicationException thrown if any problem occurs during the generation
-	 */
-	void generateAllAsync() throws ApplicationException;
-
-	/**
-	 * <p>
 	 * This method is an ASYNCHRONOUS wrapper from the method {@link #generate(Project)}
 	 * </p>
 	 * <p><b>
