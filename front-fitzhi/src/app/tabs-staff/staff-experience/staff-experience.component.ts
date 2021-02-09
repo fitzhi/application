@@ -208,9 +208,12 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 		const dialogReference = this.dialog.open(StaffUploadCvComponent, dialogConfig);
 		this.subscriptions.add(
 			dialogReference.afterClosed().subscribe(experiences => {
-				const newExperiences = experiences.filter(function(experience) {
-					return (this.staff.experiences.findIndex(exp => exp.id === experience.idSkill) === -1);
-				}.bind(this));
+				const newExperiences = (experiences !== "") 
+					? experiences.filter(
+						function(experience) {
+							return (this.staff.experiences.findIndex(exp => exp.id === experience.idSkill) === -1) 
+						}).bind(this)
+					: [];
 				if (traceOn()) {
 					console.groupCollapsed(newExperiences.length + ' NEW experiences detected : ');
 					newExperiences.forEach(element => console.log (element.title));
