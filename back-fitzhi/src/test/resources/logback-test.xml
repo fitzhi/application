@@ -18,12 +18,7 @@
 		<appender-ref ref="STDOUT" />
 	</logger>
 
-	<logger name="com.fitzhi.bean.impl.RiskCommitAndDevActiveProcessorTest" additivity="false">
-		<level value="DEBUG" />
-		<appender-ref ref="STDOUT" />
-	</logger>
-
-	<logger name="com.fitzhi.bean.impl.StaffHandlerCreateEmptyTest" additivity="false">
+	<logger name="com.fitzhi.bean.impl.StaffHandlerImpl" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
