@@ -5,7 +5,7 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
-import com.fitzhi.source.crawler.BatchRepoScanner;
+import com.fitzhi.source.crawler.BatchRepositoryCrawler;
 import com.fitzhi.source.crawler.RepoScanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @Service
-public class BatchGitCrawler implements BatchRepoScanner {
+public class BatchGitCrawler implements BatchRepositoryCrawler {
 
 	/**
 	 * Service in charge of handling the projects.
@@ -52,18 +52,18 @@ public class BatchGitCrawler implements BatchRepoScanner {
 			log.info( "Starting the analysis of projects in batch mode.");
 		}
 		for (Project project : projectHandler.getProjects().values()) {
-			if (log.isInfoEnabled()) {
-				log.info( String.format("Analyzing project %s.",project.getName()));
-			}
 			
-			// We analyze each project if the project has a connection settings.
-			if (project.getConnectionSettings() > 0) {
+			// We analyze each project if the project is active and has a connection settings
+			if (project.isActive() && (project.getConnectionSettings() > 0)) {
 				// We invoke RepoScanner.generateAsync from inside this method 
+				if (log.isInfoEnabled()) {
+					log.info( String.format("Analyzing project %s.",project.getName()));
+				}
 				crawler.generateAsync(project, new SettingsGeneration(project.getId()));
-			}
-
-			if (log.isInfoEnabled()) {
-				log.info( String.format("The project %s is analyzed.",project.getName()));
+			} else {
+				if (log.isInfoEnabled()) {
+					log.info( String.format("The project %s is skipped.",project.getName()));
+				}
 			}
 		}
 	}

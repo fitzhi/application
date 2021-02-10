@@ -37,7 +37,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ProjectControllerReloadDashboardTest {
-    
+	
 	private int UNKNOWN_ID_PROJECT = 999999;
 	
 	/**
@@ -51,11 +51,11 @@ public class ProjectControllerReloadDashboardTest {
 	@Autowired
 	private ProjectHandler projectHandler;
 
-    @MockBean
-    CacheDataHandler cacheDataHandler;
+	@MockBean
+	CacheDataHandler cacheDataHandler;
 
-    @MockBean
-    RepoScanner repoScanner;
+	@MockBean
+	RepoScanner repoScanner;
 
 	@Before
 	public void before() throws Exception {
@@ -73,8 +73,7 @@ public class ProjectControllerReloadDashboardTest {
 	@Test
 	@WithMockUser
 	public void testResetDashboardKnownProject() throws Exception {
-        when(cacheDataHandler.removeRepository(any())).thenReturn(true);
-        when(repoScanner.generateAsync(any(), any())).thenReturn(null);
+		when(repoScanner.generateAsync(any(), any())).thenReturn(null);
 		this.mvc.perform(post("/api/project/1789/sunburst")).andExpect(status().isAccepted());
 		Mockito.verify(cacheDataHandler, times(1)).removeRepository(any());
 		Assert.assertNotNull("The location repository should NOT be reset", projectHandler.get(1789).getLocationRepository());

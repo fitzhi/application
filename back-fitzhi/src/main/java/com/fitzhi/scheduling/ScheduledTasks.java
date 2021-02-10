@@ -1,6 +1,6 @@
 package com.fitzhi.scheduling;
 
-import com.fitzhi.source.crawler.BatchRepoScanner;
+import com.fitzhi.source.crawler.BatchRepositoryCrawler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ScheduledTasks {
 
 	@Autowired
-	BatchRepoScanner batchRepoScanner;
+	BatchRepositoryCrawler batchRepoScanner;
 
 	@Scheduled(cron = "${cron.code.analysis}")
 	public void codeAnalysis() {

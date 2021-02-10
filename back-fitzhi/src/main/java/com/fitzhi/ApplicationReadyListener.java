@@ -1,6 +1,6 @@
 package com.fitzhi;
 
-import com.fitzhi.source.crawler.BatchRepoScanner;
+import com.fitzhi.source.crawler.BatchRepositoryCrawler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ApplicationReadyListener implements ApplicationListener<ApplicationReadyEvent> {
 
 	@Autowired
-	BatchRepoScanner batchRepoScanner;
+	BatchRepositoryCrawler batchRepoScanner;
 
 	/**
 	 * Number of days of inactivity before inactivation of a staff member.

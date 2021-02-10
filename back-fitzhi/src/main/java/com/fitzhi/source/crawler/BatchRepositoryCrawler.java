@@ -18,7 +18,7 @@ import com.fitzhi.source.crawler.git.BatchGitCrawler;
  * @see ScheduledTasks
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public interface BatchRepoScanner {
+public interface BatchRepositoryCrawler {
 
 	/**
 	 * <p>
