@@ -3,6 +3,7 @@ package com.fitzhi.bean.impl;
 import java.time.LocalDate;
 import java.util.Optional;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,8 +45,6 @@ public class StaffHandlerProcessActiveStatusTest {
 		staff.addMission(m1);
 		Mission m2 = new Mission(ID_STAFF, 1805, "Austerlitz", LocalDate.of(2019, 1, 1), LocalDate.now().minusDays(5), 100, 100);
 		staff.addMission(m2);
-
-		
 	}
 	
 	@Test
@@ -97,4 +96,8 @@ public class StaffHandlerProcessActiveStatusTest {
 		Assert.assertNull("Starting date of inactivity", staff.getDateInactive());
 	}
 	
+	@After
+	public void after() {
+		staffHandler.removeStaff(1789);
+	}
 }
