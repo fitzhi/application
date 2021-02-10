@@ -58,11 +58,12 @@ public class BatchGitCrawlerTest {
 		// connectionSettings > 1, so we do not skip this project
 		Project p = projectHandler.get(1);
 		p.setConnectionSettings(1);
+
 		when(crawler.generateAsync(any(), any())).thenReturn(null);
 		log.debug ("The complete generation in an asynchronous mode has been launched.");
 		batchCrawler.completeGeneration();
-		verify(crawler, timeout(10).times(1)).generateAsync(any(), any());
-		verify(crawler, timeout(10).times(0)).generate(any(), any());
+		verify(crawler, timeout(100).times(1)).generateAsync(any(), any());
+		verify(crawler, timeout(100).times(0)).generate(any(), any());
 	}
 
 	@Test
@@ -74,8 +75,8 @@ public class BatchGitCrawlerTest {
 		
 		log.debug ("The complete generation in an asynchronous mode has been launched.");
 		batchCrawler.completeGeneration();
-		verify(crawler, timeout(10).times(0)).generateAsync(any(), any());
-		verify(crawler, timeout(10).times(0)).generate(any(), any());
+		verify(crawler, timeout(100).times(0)).generateAsync(any(), any());
+		verify(crawler, timeout(100).times(0)).generate(any(), any());
 	}
 
 	@After
