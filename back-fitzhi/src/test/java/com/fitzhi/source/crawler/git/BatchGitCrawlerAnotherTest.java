@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
-public class BatchGitCrawlerTest {
+public class BatchGitCrawlerAnotherTest {
 
 	@Autowired
 	BatchRepositoryCrawler batchCrawler;
@@ -45,24 +45,15 @@ public class BatchGitCrawlerTest {
 	}
 	
 	@Test
-	public void testLaunchNoProjectEligible() throws Exception {
-		// All projects do not have a connection string, and therefore are skipped
-		batchCrawler.completeGeneration();
-		log.debug ("The complete generation in an asynchronous mode has been launched.");
-		verify(crawler, timeout(100).times(0)).generateAsync(any(), any());
-		verify(crawler, timeout(100).times(0)).generate(any(), any());
-	}
-
-	@Test
-	public void testOneActiveProjectWithSettings() throws Exception {
+	public void testOneInactiveProjectWithSettings() throws Exception {
 		// connectionSettings > 1, so we do not skip this project
 		Project p = projectHandler.get(1);
 		p.setConnectionSettings(1);
-
-		when(crawler.generateAsync(any(), any())).thenReturn(null);
+		p.setActive(false);
+		
 		log.debug ("The complete generation in an asynchronous mode has been launched.");
 		batchCrawler.completeGeneration();
-		verify(crawler, timeout(100).times(1)).generateAsync(any(), any());
+		verify(crawler, timeout(100).times(0)).generateAsync(any(), any());
 		verify(crawler, timeout(100).times(0)).generate(any(), any());
 	}
 
