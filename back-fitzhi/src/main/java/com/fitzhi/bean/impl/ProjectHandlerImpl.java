@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.bean.impl;
 
 import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;

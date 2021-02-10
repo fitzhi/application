@@ -232,4 +232,10 @@ public interface DataHandler {
 	 */
 	String generatePathnamesFile(Project project, PathsType pathsType) throws ApplicationException;
 
+	/**
+	 * Remove all intermediate files generated during the analysis of the GIT repository for the given project
+	 * @param project the given project
+	 * @throws ApplicationException thrown if an exception occurs during the remove process, most probably an IOException.
+	 */
+	void removeCrawlerFiles(Project project) throws ApplicationException;
 }
