@@ -29,7 +29,7 @@ public class StaffHandlerRemoveStaffTest {
 	
 	@Test
 	public void testRemoveStaff() throws Exception {		
-		Staff staff = staffHandler.createWorkforceMember(new Staff(-1, "firstName", "lastName", "nickName", "login", "email", "ET"));
+		Staff staff = staffHandler.createWorkforceMember(new Staff(-1, "firstName", "lastName", "nickName", "flastname", "email", "ET"));
 		log.debug (String.format("Staff created %d", staff.getIdStaff()));
 		Assert.assertNotNull(staffHandler.getStaff(staff.getIdStaff()));
 		staffHandler.removeStaff(staff.getIdStaff());
