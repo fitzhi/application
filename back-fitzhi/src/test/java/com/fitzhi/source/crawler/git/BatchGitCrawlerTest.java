@@ -54,26 +54,18 @@ public class BatchGitCrawlerTest {
 	}
 
 	@Test
-	public void testOneInactiveProjectWithSettings() throws Exception {
-		// connectionSettings > 1, so we do not skip this project
-		Project p = projectHandler.get(1);
-		p.setConnectionSettings(1);
-		p.setActive(false);
-
-		when(crawler.generateAsync(any(), any())).thenReturn(null);
-		log.debug ("The complete generation in an asynchronous mode has been launched.");
-		batchCrawler.completeGeneration();
-		verify(crawler, timeout(100).times(0)).generateAsync(any(), any());
-	}
-
-	@Test
 	public void testOneActiveProjectWithSettings() throws Exception {
-		// connectionSettings > 1, so we do not skip this project
+		// connectionSettings > 1 and project active, so we do not skip this project
 		Project p = projectHandler.get(1);
 		p.setConnectionSettings(1);
 		p.setActive(true);
 		
+		p = projectHandler.get(2);
+		p.setConnectionSettings(1);
+		p.setActive(false);
+
 		log.debug ("The complete generation in an asynchronous mode has been launched.");
+		when(crawler.generateAsync(any(), any())).thenReturn(null);
 		batchCrawler.completeGeneration();
 		verify(crawler, timeout(100).times(1)).generateAsync(any(), any());
 	}
