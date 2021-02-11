@@ -38,7 +38,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ProjectControllerResetDashboardTest {
-    
+	
 	private int UNKNOWN_ID_PROJECT = 999999;
 	
 	/**
@@ -52,15 +52,15 @@ public class ProjectControllerResetDashboardTest {
 	@Autowired
 	private ProjectHandler projectHandler;
 
-    @MockBean
-    CacheDataHandler cacheDataHandler;
+	@MockBean
+	CacheDataHandler cacheDataHandler;
 
 
-    @MockBean
-    DataHandler dataHandler;
+	@MockBean
+	DataHandler dataHandler;
 
-    @MockBean
-    RepoScanner repoScanner;
+	@MockBean
+	RepoScanner repoScanner;
 
 	@Before
 	public void before() throws Exception {
@@ -78,8 +78,8 @@ public class ProjectControllerResetDashboardTest {
 	@Test
 	@WithMockUser
 	public void testResetDashboardKnownProject() throws Exception {
-        when(cacheDataHandler.removeRepository(any())).thenReturn(true);
-        when(repoScanner.generateAsync(any(), any())).thenReturn(null);
+		when(cacheDataHandler.removeRepository(any())).thenReturn(true);
+		when(repoScanner.generateAsync(any(), any())).thenReturn(null);
 		this.mvc.perform(delete("/api/project/1789/sunburst")).andExpect(status().isAccepted());
 		Mockito.verify(cacheDataHandler, times(1)).removeRepository(any());
 		Mockito.verify(dataHandler, times(1)).removeCrawlerFiles(any());

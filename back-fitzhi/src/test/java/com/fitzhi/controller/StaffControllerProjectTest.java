@@ -2,6 +2,7 @@ package com.fitzhi.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -77,8 +78,7 @@ public class StaffControllerProjectTest {
 				.isOk())
 				.andExpect(content().json(gson.toJson(missions)));
 		
-		body = "{ \"idStaff\": 2, \"idProject\": 1235 }";
-		this.mvc.perform(post("/api/staff/project/del")
+		this.mvc.perform(delete("/api/staff/2/project/1235")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(body))
 			.andExpect(status().isOk());

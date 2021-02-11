@@ -7,6 +7,7 @@ import java.util.Optional;
 import com.fitzhi.bean.impl.StringTransform;
 import com.fitzhi.controller.StaffController;
 import com.fitzhi.data.internal.Experience;
+import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.PeopleCountExperienceMap;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ResumeSkill;
@@ -393,4 +394,16 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 */
 	boolean isProjectReferenced(int idProject);
 
+	/**
+	 * @return the next staff identifier available
+	 */
+	int nextIdStaff();
+
+	/**
+	 * Remove a {@link Mission} from the staff contributions.
+	 * @param idStaff the Staff identifier
+	 * @param idProject the Project identifier
+	 * @throws ApplicationException thrown if any problem occurs
+	 */
+	void removeMission(int idStaff, int idProject) throws ApplicationException;
 }
