@@ -1,11 +1,13 @@
 package com.fitzhi.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fitzhi.bean.CacheDataHandler;
+import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.source.crawler.RepoScanner;
@@ -16,6 +18,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,6 +55,10 @@ public class ProjectControllerResetDashboardTest {
     @MockBean
     CacheDataHandler cacheDataHandler;
 
+
+    @MockBean
+    DataHandler dataHandler;
+
     @MockBean
     RepoScanner repoScanner;
 
@@ -74,6 +81,8 @@ public class ProjectControllerResetDashboardTest {
         when(cacheDataHandler.removeRepository(any())).thenReturn(true);
         when(repoScanner.generateAsync(any(), any())).thenReturn(null);
 		this.mvc.perform(delete("/api/project/1789/sunburst")).andExpect(status().isAccepted());
+		Mockito.verify(cacheDataHandler, times(1)).removeRepository(any());
+		Mockito.verify(dataHandler, times(1)).removeCrawlerFiles(any());
 		Assert.assertNull("The location repository should be reset", projectHandler.get(1789).getLocationRepository());
 	}
 

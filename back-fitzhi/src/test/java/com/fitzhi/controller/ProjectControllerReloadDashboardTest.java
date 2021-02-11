@@ -66,13 +66,13 @@ public class ProjectControllerReloadDashboardTest {
 	
 	@Test
 	@WithMockUser
-	public void testResetDashboardUnknownProject() throws Exception {
+	public void testReloadDashboardUnknownProject() throws Exception {
 		this.mvc.perform(post("/api/project/" + UNKNOWN_ID_PROJECT + "/sunburst")).andExpect(status().isNotFound());
 	}
 	
 	@Test
 	@WithMockUser
-	public void testResetDashboardKnownProject() throws Exception {
+	public void testReloadDashboardKnownProject() throws Exception {
 		when(repoScanner.generateAsync(any(), any())).thenReturn(null);
 		this.mvc.perform(post("/api/project/1789/sunburst")).andExpect(status().isAccepted());
 		Mockito.verify(cacheDataHandler, times(1)).removeRepository(any());
