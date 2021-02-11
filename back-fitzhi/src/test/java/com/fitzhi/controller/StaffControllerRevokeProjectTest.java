@@ -70,7 +70,7 @@ public class StaffControllerRevokeProjectTest {
 	@Test
 	@WithMockUser
 	public void doCannotRevokeUnknownStaffMember() throws Exception {
-		this.mvc.perform(delete("/api/staff/1789/project/1")).andExpect(status().isNotFound());
+		this.mvc.perform(delete("/api/staff/1794/project/1")).andExpect(status().isNotFound());
 	}
 
 	@Test
