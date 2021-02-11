@@ -7,5 +7,5 @@
   { "code": "PM", "title": "Project Manager" },
   { "code": "CTO", "title": "CTO" },
   { "code": "SM", "title": "Scrum Manager" },
-  { "code": "PO", "title": "Product Owener" }  
+  { "code": "PO", "title": "Product Owner" }  
 ]
