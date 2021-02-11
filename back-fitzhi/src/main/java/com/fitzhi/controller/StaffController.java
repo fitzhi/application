@@ -602,7 +602,7 @@ public class StaffController extends BaseRestController {
 	}	
 	
 	/**
-	 * Add a project assigned to a developer.
+	 * <p>Add a project assigned to a developer.</p>
 	 * 
 	 * @param param
 	 *            the body of the post containing an instance of
@@ -647,7 +647,14 @@ public class StaffController extends BaseRestController {
 	}
 
 	/**
+	 * <p>
 	 * Revoke the participation of staff member from a project.
+	 * </p>
+	 * <p>
+	 * <i>Associated HTTP verb is {@code 'delete'}
+	 * </p>
+	 * @param idProject the given Project identifier
+	 * @param idStaff the given Staff identifier
 	 */
 	@DeleteMapping("/{idStaff}/project/{idProject}")
 	public ResponseEntity<BooleanDTO> revokeProject(
@@ -668,7 +675,6 @@ public class StaffController extends BaseRestController {
 			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 
-		
 		Optional<Mission> oMission = staff.getMissions().stream().filter(pr -> (pr.getIdProject() == idProject)).findFirst();
 		if (oMission.isPresent()) {
 			Mission mission = oMission.get();

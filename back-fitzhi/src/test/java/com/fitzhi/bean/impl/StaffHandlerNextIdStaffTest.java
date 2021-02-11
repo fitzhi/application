@@ -26,15 +26,19 @@ public class StaffHandlerNextIdStaffTest {
 	@Autowired
 	private StaffHandler staffHandler;
 
+	int max = 1790;
+
 	@Before
 	public void before() {
 		staffHandler.getStaff().put(1789, new Staff(1789, "user", "password"));
+		// Due to a possible collision with an another test
+		max = staffHandler.getStaff().keySet().stream().mapToInt(v->v).max().getAsInt();
 	}
 
 	@Test
 	public void testNextIdStaff() throws ApplicationException {
 		final int idStaff = staffHandler.nextIdStaff();
-		Assert.assertEquals(1790, idStaff);
+		Assert.assertEquals(max+1, idStaff);
 	}
 
 	@After
