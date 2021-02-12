@@ -657,7 +657,7 @@ public class StaffController extends BaseRestController {
 	 * @param idStaff the given Staff identifier
 	 */
 	@DeleteMapping("/{idStaff}/project/{idProject}")
-	public ResponseEntity<BooleanDTO> revokeProject(
+	public ResponseEntity<Boolean> revokeProject(
 		@PathVariable("idProject") int idProject, 
 		@PathVariable("idStaff") int idStaff) throws ApplicationException, NotFoundException {
 
@@ -693,7 +693,7 @@ public class StaffController extends BaseRestController {
 			}
 		}
 
-		return new ResponseEntity<>(new BooleanDTO(), new HttpHeaders(), HttpStatus.OK);
+		return new ResponseEntity<>(Boolean.TRUE, new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	ResponseEntity<StaffDTO> postErrorReturnBodyMessage(int code, String message) {

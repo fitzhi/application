@@ -1,14 +1,15 @@
 package com.fitzhi.controller;
 
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.not;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Map;
+
+import com.fitzhi.bean.DataHandler;
+import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.Mission;
+import com.fitzhi.data.internal.Staff;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -23,11 +24,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import lombok.extern.slf4j.Slf4j;
-
-import com.fitzhi.bean.DataHandler;
-import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.data.internal.Mission;
-import com.fitzhi.data.internal.Staff;
 
 /**
  * The goal of this test is to test the {@link StaffController#revokeProject(int, int)}
@@ -96,7 +92,11 @@ public class StaffControllerRevokeProjectTest {
 		m.setNumberOfCommits(0);
 		staffHandler.getStaff(idStaff).addMission(m);
 
-		this.mvc.perform(delete(String.format("/api/staff/%d/project/1", idStaff))).andExpect(status().isOk());
+		this.mvc
+			.perform(delete(String.format("/api/staff/%d/project/1", idStaff)))
+			.andExpect(status().isOk())
+			.andExpect(content().string("true"));
+
 		Assert.assertTrue("The mission 1 has been deleted", staffHandler.getStaff(idStaff).getMissions().isEmpty());
 	}
 
