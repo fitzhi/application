@@ -72,8 +72,8 @@ export class StaffService {
 		 */
 	save$(staff: Collaborator): Observable<Collaborator> {
 		if (traceOn()) {
-			console.log(((staff.idStaff) ? 'Saving staff %d %s %s' : 'Adding staff %d %s %s'), 
-				staff.idStaff, staff.firstName,  staff.lastName);
+			console.log(((staff.idStaff) ? 'Saving staff %d %s %s' : 'Adding staff %d %s %s'),
+				staff.idStaff, staff.firstName, staff.lastName);
 		}
 		return ((staff.idStaff) && (staff.idStaff > 0)) ? this.update$(staff) : this.create$(staff);
 	}
@@ -89,19 +89,19 @@ export class StaffService {
 	 */
 	create$(staff: Collaborator): Observable<Collaborator> {
 		if (traceOn()) {
-			console.log( 'Creating the collaborator %s %s', staff.firstName, staff.lastName);
+			console.log('Creating the collaborator %s %s', staff.firstName, staff.lastName);
 		}
 		return this.httpClient
-			.post(this.backendSetupService.url() + '/staff', staff, {observe: 'response'})
+			.post(this.backendSetupService.url() + '/staff', staff, { observe: 'response' })
 			.pipe(
 				take(1),
 				switchMap(response => {
 					const location = response.headers.get('Location');
 					if (traceOn()) {
-						console.log ('Staff member created successfully, location returned %s', location);
+						console.log('Staff member created successfully, location returned %s', location);
 					}
 					return (location) ? this.httpClient.get<Collaborator>(location) : EMPTY;
-		}));
+				}));
 	}
 
 	/**
@@ -111,10 +111,10 @@ export class StaffService {
 	 */
 	update$(staff: Collaborator): Observable<Collaborator> {
 		if (traceOn()) {
-			console.log( 'Updating the collaborator %d %s %s', staff.idStaff, staff.firstName, staff.lastName);
+			console.log('Updating the collaborator %d %s %s', staff.idStaff, staff.firstName, staff.lastName);
 		}
 		return this.httpClient
-			.put<Collaborator>(this.backendSetupService.url() + '/staff/' + staff.idStaff, staff, {observe: 'response'})
+			.put<Collaborator>(this.backendSetupService.url() + '/staff/' + staff.idStaff, staff, { observe: 'response' })
 			.pipe(
 				take(1),
 				switchMap(
@@ -125,7 +125,7 @@ export class StaffService {
 							throw 'The staff ' + staff.firstName + staff.lastName + ' has not been updated for an unknown reason.';
 						}
 					}
-			));
+				));
 	}
 
 	/**
@@ -145,7 +145,7 @@ export class StaffService {
 				switchMap(
 					() => {
 						if (traceOn()) {
-							console.log ('Staff member %d has beeen successfully removed', idStaffToDelete);
+							console.log('Staff member %d has beeen successfully removed', idStaffToDelete);
 						}
 						return of(true);
 					}
@@ -161,7 +161,7 @@ export class StaffService {
 	*/
 	switchActiveStatus(collaborator: Collaborator) {
 		if (traceOn()) {
-			console.log (
+			console.log(
 				'Switching the active status for the collaborator with id %d to %s',
 				collaborator.idStaff,
 				(collaborator.active) ? 'active' : 'inactive');
@@ -200,7 +200,7 @@ export class StaffService {
 			subscribe({
 				next: staff => {
 					if (traceOn()) {
-						console.log ('%s is now %s', staff.lastName, staff.active ? 'active' : 'inactive');
+						console.log('%s is now %s', staff.lastName, staff.active ? 'active' : 'inactive');
 					}
 					this.staffDataExchangeService.collaborator.active = staff.active;
 					this.staffDataExchangeService.collaborator.dateInactive = staff.dateInactive;
@@ -235,18 +235,19 @@ export class StaffService {
 	}
 
 	/**
-		 * POST Verb :
+	 * Verb : 'DELETE'
+	 * 
 	 * Unregister the contribution of a staff member into a project.
 	 * @param idStaff the staff identifier.
 	 * @param idProject the project identifier to remove from the missions.
 	 * @returns an observable emetting the staff record updated or an empty staff if any error occurs.
-		 */
-	removeProject(idStaff: number, idProject: number): Observable<StaffDTO> {
+	 */
+	removeProject(idStaff: number, idProject: number): Observable<Boolean> {
 		if (traceOn()) {
 			console.log('Removing the collaborator with id : ' + idStaff + ' from project with id ' + idProject);
 		}
-		const body = { idStaff: idStaff, idProject: idProject };
-		return this.httpClient.post<StaffDTO>(this.backendSetupService.url() + '/staff' + '/project/del', body, httpOptions);
+		return this.httpClient.delete<Boolean>(
+			this.backendSetupService.url() + '/staff/' + idStaff + '/project/' + idProject, httpOptions);
 	}
 
 	/**
@@ -384,14 +385,14 @@ export class StaffService {
 							value = entry[1] as string;
 							peopleCountExperience.set(key, parseInt(value, 0));
 						});
-						if (traceOn()) {
-							console.groupCollapsed('peopleCountExperience');
-							peopleCountExperience.forEach((key, value) => {
-								console.log (key, value);
-							});
-							console.groupEnd();
-						}
-						this.peopleCountExperience$.next(peopleCountExperience);
+					if (traceOn()) {
+						console.groupCollapsed('peopleCountExperience');
+						peopleCountExperience.forEach((key, value) => {
+							console.log(key, value);
+						});
+						console.groupEnd();
+					}
+					this.peopleCountExperience$.next(peopleCountExperience);
 				},
 				error => console.log(error),
 				() => {
