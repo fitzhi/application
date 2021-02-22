@@ -89,21 +89,26 @@ public class AdminController {
 			@RequestParam("password") String password)  {
 		
 		if (logger.isDebugEnabled() && !this.staffHandler.getStaff().isEmpty()) {
-				logger.debug ("the staff collection is not empty, see below...");
+				logger.debug ("the staff collection is not empty and has 'may-be' already registered users, see below...");
 				logger.debug("------------------------------------------------");
-				this.staffHandler.getStaff().values().stream().forEach(
-					staff -> logger.debug(staff.toString()));
+				this.staffHandler.getStaff().values().stream()
+				.filter(staff -> staff.getPassword() != null)
+				.forEach(
+					staff -> logger.debug(String.format("%d %s", staff.getIdStaff(), staff.getLogin()));
 		}
 		
 		// We calculate the number of users declared with a non empty password.
 		// If at least one user exists, then the first ADMIN user has already been created,
 		// because this user is due to be the FIRST connected user.
 		// (Some users migth already exist if they are created by the automatic crawling process) 
-		long numberOfUsersAlreadyDeclared = this.staffHandler.getStaff().values().stream()
+		long numberOfUsersAlreadyRegistered = this.staffHandler.getStaff().values().stream()
 			.map(Staff::getPassword)
-			.filter(s -> (s != null)).count();
-
-		if (numberOfUsersAlreadyDeclared == 0) {
+			.filter(password -> (password != null))
+			.count();
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("%d users are registered with a password", numberOfUsersAlreadyDeclared);
+		}
+		if (numberOfUsersAlreadyRegistered == 0) {
 			return this.internalCreateNewUser(login, password);	
 		} else {
 			HttpHeaders headers = new HttpHeaders();
