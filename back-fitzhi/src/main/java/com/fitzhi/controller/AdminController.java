@@ -94,7 +94,7 @@ public class AdminController {
 				this.staffHandler.getStaff().values().stream()
 				.filter(staff -> staff.getPassword() != null)
 				.forEach(
-					staff -> logger.debug(String.format("%d %s", staff.getIdStaff(), staff.getLogin()));
+					staff -> logger.debug(String.format("%d %s", staff.getIdStaff(), staff.getLogin())));
 		}
 		
 		// We calculate the number of users declared with a non empty password.
