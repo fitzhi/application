@@ -103,10 +103,10 @@ public class AdminController {
 		// (Some users migth already exist if they are created by the automatic crawling process) 
 		long numberOfUsersAlreadyRegistered = this.staffHandler.getStaff().values().stream()
 			.map(Staff::getPassword)
-			.filter(password -> (password != null))
+			.filter(s -> (s != null))
 			.count();
 		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("%d users are registered with a password", numberOfUsersAlreadyDeclared);
+			logger.debug(String.format("%d users are registered with a password", numberOfUsersAlreadyRegistered));
 		}
 		if (numberOfUsersAlreadyRegistered == 0) {
 			return this.internalCreateNewUser(login, password);	
