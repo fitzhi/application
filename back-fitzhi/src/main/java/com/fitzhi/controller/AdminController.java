@@ -95,7 +95,15 @@ public class AdminController {
 					staff -> logger.debug(staff.toString()));
 		}
 		
-		if (this.staffHandler.getStaff().isEmpty()) {
+		// We calculate the number of users declared with a non empty password.
+		// If at least one user exists, then the first ADMIN user has already been created,
+		// because this user is due to be the FIRST connected user.
+		// (Some users migth already exist if they are created by the automatic crawling process) 
+		long numberOfUsersAlreadyDeclared = this.staffHandler.getStaff().values().stream()
+			.map(Staff::getPassword)
+			.filter(s -> (s != null)).count();
+
+		if (numberOfUsersAlreadyDeclared == 0) {
 			return this.internalCreateNewUser(login, password);	
 		} else {
 			HttpHeaders headers = new HttpHeaders();
