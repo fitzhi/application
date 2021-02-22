@@ -6,6 +6,7 @@ package com.fitzhi.controller;
 import static com.fitzhi.Error.CODE_CANNOT_SELF_CREATE_USER;
 import static com.fitzhi.Error.CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
 import static com.fitzhi.Error.CODE_LOGIN_ALREADY_EXIST;
+import static com.fitzhi.Error.MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -14,7 +15,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
+import com.fitzhi.ApiError;
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
@@ -22,6 +31,7 @@ import com.fitzhi.security.TokenLoader;
 
 import org.assertj.core.util.Files;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +43,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -72,6 +83,9 @@ public class AdministrationControllerCreateNewUserTest {
 	@Autowired
 	public Administration administration;
 
+	@Autowired
+	private ObjectMapper objectMapper;
+	
 	@Before
 	public void before() throws IOException {
 		final Path root = Paths.get(rootLocation);
@@ -89,10 +103,17 @@ public class AdministrationControllerCreateNewUserTest {
 			log.debug(String.format("Crew size %d", crewSize));
 			staffHandler.getStaff().values().stream().forEach(s -> log.debug(s.getIdStaff() + " " + s.getLogin() + " " + s.getPassword()));
 		}
-		this.mvc.perform(get("/api/admin/veryFirstUser") // NOSONAR
-				.param(LOGIN, "adminForTest").param(PASS_WORD, "passForTest")).andExpect(status().isOk())
-				.andExpect(jsonPath(CST_STAFF_ID_STAFF, is(0)))
-				.andExpect(jsonPath(CST_CODE, is(CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED)));
+		MvcResult result = this.mvc.perform(get("/api/admin/veryFirstUser") // NOSONAR
+				.param(LOGIN, "adminForTest").param(PASS_WORD, "passForTest"))
+				.andExpect(status().isInternalServerError())
+				.andReturn();
+
+		log.debug (result.getResponse().getContentAsString());
+		
+		ApiError error = objectMapper.readValue(result.getResponse().getContentAsString(), ApiError.class);
+		Assert.assertEquals(CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED, error.getCode());
+		Assert.assertEquals(MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED, error.getMessage());
+
 	}
 
 	@Test

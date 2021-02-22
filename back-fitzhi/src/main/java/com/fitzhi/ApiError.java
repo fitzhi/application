@@ -3,7 +3,9 @@
  */
 package com.fitzhi;
 
+import java.text.MessageFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import org.springframework.http.HttpStatus;
 
@@ -31,8 +33,7 @@ public @Data class ApiError {
 	/**
 	 * Timestamp of error.
 	 */
-	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
-	private LocalDateTime timestamp;
+	private String timestamp;
 
 	/*
 	 * End-user code message.
@@ -50,7 +51,7 @@ public @Data class ApiError {
 	private String debugMessage;
 
 	private ApiError() {
-		timestamp = LocalDateTime.now();
+		timestamp =  LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 	}
 
 	/**
@@ -58,7 +59,7 @@ public @Data class ApiError {
 	 * 
 	 * @param status HTTP status
 	 */
-	ApiError(HttpStatus status) {
+	public ApiError(HttpStatus status) {
 		this();
 		this.status = status;
 	}
@@ -70,7 +71,7 @@ public @Data class ApiError {
 	 * @param message error message
 	 * @param ex      exception thrown
 	 */
-	ApiError(HttpStatus status, Throwable ex) {
+	public ApiError(HttpStatus status, Throwable ex) {
 		this(status, "Unexpected error", ex);
 	}
 
@@ -81,7 +82,7 @@ public @Data class ApiError {
 	 * @param message error message
 	 * @param ex      exception thrown
 	 */
-	ApiError(HttpStatus status, String message, Throwable ex) {
+	public ApiError(HttpStatus status, String message, Throwable ex) {
 		this(status, 0, message, ex);
 	}
 
@@ -93,7 +94,7 @@ public @Data class ApiError {
 	 * @param message error message
 	 * @param ex      exception thrown
 	 */
-	ApiError(HttpStatus status, int code, String message, Throwable ex) {
+	public ApiError(HttpStatus status, int code, String message, Throwable ex) {
 		this();
 		this.code = code;
 		this.status = status;

@@ -81,12 +81,13 @@ public class AdminController {
 	 * This method is used to create the first admin user.
 	 * @param login the first admin user login
 	 * @param password this first admin user password
+	 * @throws ApplicationException thrown if any problem occurs.
 	 * @return the newly created staff entry
 	 */
 	@GetMapping("/veryFirstUser")
 	public ResponseEntity<StaffDTO> veryFirstUser(
 			@RequestParam("login") String login,
-			@RequestParam("password") String password)  {
+			@RequestParam("password") String password) throws ApplicationException {
 		
 		if (logger.isDebugEnabled() && !this.staffHandler.getStaff().isEmpty()) {
 				logger.debug ("the staff collection is not empty and has 'may-be' already registered users, see below...");
@@ -111,14 +112,9 @@ public class AdminController {
 		if (numberOfUsersAlreadyRegistered == 0) {
 			return this.internalCreateNewUser(login, password);	
 		} else {
-			HttpHeaders headers = new HttpHeaders();
-			headers.set(BACKEND_RETURN_CODE, String.valueOf(CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED));
-			headers.set(BACKEND_RETURN_MESSAGE, MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED);
-			return new ResponseEntity<>(new 
-						StaffDTO(new Staff(), 
-						CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED, 
-						MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED), 
-					headers, HttpStatus.OK);
+			throw new ApplicationException(
+				CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED, 
+				MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED);
 		}
 	}	
 
