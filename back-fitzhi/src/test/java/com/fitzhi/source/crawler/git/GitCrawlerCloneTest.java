@@ -78,5 +78,8 @@ public class GitCrawlerCloneTest {
 	public void after() throws Exception {
 		projectHandler.removeProject(1515);
 		projectHandler.removeProject(1214);
+		try {
+			GitCrawler.removeCloneDir(Paths.get("../repos_test/1214"));
+		} catch (final Exception e) {}
 	}
 }
