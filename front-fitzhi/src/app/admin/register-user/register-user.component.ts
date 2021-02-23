@@ -113,8 +113,6 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 						this.messengerUserRegistered.emit(staff.idStaff);
 					},
 					error => {
-						// We will restart the setup installation for the beginning
-						this.backendSetupService.removeUrl();
 						if (traceOn()) {
 							console.log('Connection error ', error);
 						}
