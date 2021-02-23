@@ -21,7 +21,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Testing the method {@link GitCrawler#clone(com.fitzhi.data.internal.Project, com.fitzhi.data.source.ConnectionSettings) Git.clone()}
+ * Testing the nominal behavior or the failed behavior
+ * for the method {@link GitCrawler#clone(com.fitzhi.data.internal.Project, com.fitzhi.data.source.ConnectionSettings) Git.clone()}
+ * 
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
