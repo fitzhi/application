@@ -85,7 +85,7 @@ public class AdminController {
 	 * @return the newly created staff entry
 	 */
 	@GetMapping("/veryFirstUser")
-	public ResponseEntity<StaffDTO> veryFirstUser(
+	public ResponseEntity<Staff> veryFirstUser(
 			@RequestParam("login") String login,
 			@RequestParam("password") String password) throws ApplicationException {
 		
@@ -126,36 +126,29 @@ public class AdminController {
 	 * @return the newly created staff entry
 	 */
 	@GetMapping("/register")
-	public ResponseEntity<StaffDTO> autoRegister(
+	public ResponseEntity<Staff> autoRegister(
 			@RequestParam("login") String login,
-			@RequestParam("password") String password)  {
+			@RequestParam("password") String password) throws ApplicationException {
 		return this.internalCreateNewUser(login, password);	
 	}	
 	
 	@GetMapping("/newUser")
-	public ResponseEntity<StaffDTO> createNewUser(
+	public ResponseEntity<Staff> createNewUser(
 			@RequestParam("login") String login,
-			@RequestParam("password") String password)  {
+			@RequestParam("password") String password)  throws ApplicationException {
 		return internalCreateNewUser(login, password);
 	}
 		
 	/**
 	 * Create a user and return the corresponding staff member.
 	 * @param login the user login
-	 * @param password his password
+	 * @param password the user password
 	 * @return The staff member created for this user/password
+	 * @throws ApplicationException thrown if any problem occurs such as, for example, 'login already registered'
 	 */
-	private ResponseEntity<StaffDTO> internalCreateNewUser (String login, String password) {
-		HttpHeaders headers = new HttpHeaders();
-		try {
-			Staff staff = administration.createNewUser(login, password);
-			headers.add("backend.return_code", "1");
-			return new ResponseEntity<>(new StaffDTO(staff), headers, HttpStatus.OK);
-		} catch (final ApplicationException ske) {
-			headers.set(BACKEND_RETURN_CODE, String.valueOf(ske.errorCode));
-			headers.set(BACKEND_RETURN_MESSAGE, ske.errorMessage);
-			return new ResponseEntity<>(new StaffDTO(new Staff(), ske.errorCode, ske.errorMessage), headers, HttpStatus.OK);
-		}
+	private ResponseEntity<Staff> internalCreateNewUser (String login, String password) throws ApplicationException {
+		Staff staff = administration.createNewUser(login, password);
+		return new ResponseEntity<>(staff, new HttpHeaders(), HttpStatus.OK);
 	}
 
 	@GetMapping("/connect")

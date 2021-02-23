@@ -105,16 +105,12 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 					username,
 					password)
 				.subscribe(
-					response => {
-						if (response.code === 0) {
-							if (traceOn()) {
-								console.log('Empty staff created with id ' + response.staff.idStaff);
-							}
-							this.staffDataExchangeService.changeCollaborator(response.staff);
-							this.messengerUserRegistered.emit(response.staff.idStaff);
-						} else {
-							this.messageService.error(response.message);
+					staff => {
+						if (traceOn()) {
+							console.log('Empty staff created with id ' + staff.idStaff);
 						}
+						this.staffDataExchangeService.changeCollaborator(staff);
+						this.messengerUserRegistered.emit(staff.idStaff);
 					},
 					error => {
 						// We will restart the setup installation for the beginning

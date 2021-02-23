@@ -379,7 +379,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	 * Returns **TRUE** if the collaborator has an active mission.
 	 */
 	hasBeenActive(): boolean {
-		return (this.collaborator.missions.length > 0);
+		return ((this.collaborator.missions) && (this.collaborator.missions.length > 0));
 	}
 
 	/**

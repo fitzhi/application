@@ -6,23 +6,16 @@ package com.fitzhi.controller;
 import static com.fitzhi.Error.CODE_CANNOT_SELF_CREATE_USER;
 import static com.fitzhi.Error.CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
 import static com.fitzhi.Error.CODE_LOGIN_ALREADY_EXIST;
+import static com.fitzhi.Error.MESSAGE_CANNOT_SELF_CREATE_USER;
 import static com.fitzhi.Error.MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
-import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import com.fitzhi.ApiError;
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
@@ -60,10 +53,6 @@ public class AdministrationControllerCreateNewUserTest {
 
 	private static final String LOGIN = "login";
 
-	private static final String CST_CODE = "$.code";
-
-	private static final String CST_STAFF_ID_STAFF = "$.staff.idStaff";
-
 	private static final String PASS_WORD = "password"; // NOSONAR
 
 	private static String pass = "passvoid";
@@ -93,11 +82,10 @@ public class AdministrationControllerCreateNewUserTest {
 		if ((!firstConnection.toFile().createNewFile()) && (log.isDebugEnabled())) {
 			log.debug("Creation of connection.tx failedt");
 		}
-
 	}
 
 	@Test
-	public void creationVeryFirstUserKO() throws Exception {
+	public void cannotCreate2timesTheFirstAdminUser() throws Exception {
 		int crewSize = staffHandler.getStaff().size();
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Crew size %d", crewSize));
@@ -113,11 +101,10 @@ public class AdministrationControllerCreateNewUserTest {
 		ApiError error = objectMapper.readValue(result.getResponse().getContentAsString(), ApiError.class);
 		Assert.assertEquals(CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED, error.getCode());
 		Assert.assertEquals(MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED, error.getMessage());
-
 	}
 
 	@Test
-	public void creationNewUser() throws Exception {
+	public void cannotCreateYourOwnUser() throws Exception {
 
 		int crewSize = staffHandler.getStaff().size();
 		if (log.isDebugEnabled()) {
@@ -127,10 +114,13 @@ public class AdministrationControllerCreateNewUserTest {
 		// We disable this line for Sonar to avoid the useless password security check. 
 		// This fake password is useless for any hacker.
 		//
-		this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "user").param(PASS_WORD, pass) //NOSONAR 
+		MvcResult result = this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "user").param(PASS_WORD, pass) //NOSONAR 
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + TokenLoader.obtainAccessMockToken(mvc)))
-				.andExpect(status().isOk()).andExpect(jsonPath(CST_STAFF_ID_STAFF, is(0)))
-				.andExpect(jsonPath(CST_CODE, is(CODE_CANNOT_SELF_CREATE_USER)));
+				.andExpect(status().isInternalServerError()).andReturn();
+				
+		ApiError error = objectMapper.readValue(result.getResponse().getContentAsString(), ApiError.class);
+		Assert.assertEquals(CODE_CANNOT_SELF_CREATE_USER, error.getCode());
+		Assert.assertEquals(MESSAGE_CANNOT_SELF_CREATE_USER, error.getMessage());
 	}
 
 	@Test
@@ -142,10 +132,12 @@ public class AdministrationControllerCreateNewUserTest {
 		// We disable this line for Sonar to avoid the useless password security check. 
 		// This fake password is useless for any hacker.
 		//
-		this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "myUniqueLogin").param(PASS_WORD, pass) //NOSONAR
+		MvcResult result = this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "myUniqueLogin").param(PASS_WORD, pass) //NOSONAR
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + TokenLoader.obtainAccessMockToken(mvc)))
-				.andExpect(status().isOk()).andExpect(jsonPath(CST_CODE, is(CODE_LOGIN_ALREADY_EXIST)))
-				.andExpect(jsonPath(CST_STAFF_ID_STAFF, is(0)));
+				.andExpect(status().isInternalServerError()).andReturn();
+				
+		ApiError error = objectMapper.readValue(result.getResponse().getContentAsString(), ApiError.class);
+		Assert.assertEquals(CODE_LOGIN_ALREADY_EXIST, error.getCode());
 
 		staffHandler.removeStaff(st.getIdStaff());
 	}
