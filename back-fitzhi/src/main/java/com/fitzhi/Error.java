@@ -105,7 +105,10 @@ public class Error {
 	public static final int CODE_BRANCH_IS_MISSING_IN_PROJECT = -1031;
 	public static final String MESSAGE_BRANCH_IS_MISSING_IN_PROJECT = "Branch name is missing in project {0} {1}";
 
-	public static final int CODE_CANNOT_DELETE_FILE = -1032;
+	public static final int CODE_BRANCH_DOES_NOT_EXIST = -1032;
+	public static final String MESSAGE_BRANCH_DOES_NOT_EXIST = "Branch name {0} does not exist (anymore?)";
+
+	public static final int CODE_CANNOT_DELETE_FILE = -1033;
 	public static final String MESSAGE_CANNOT_DELETE_FILE = "Cannot delete file {0}";
 
 	private Error() {

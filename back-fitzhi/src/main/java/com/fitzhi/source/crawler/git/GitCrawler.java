@@ -7,12 +7,14 @@ import static com.fitzhi.Error.CODE_IO_EXCEPTION;
 import static com.fitzhi.Error.CODE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.CODE_PROJECT_CANNOT_RETRIEVE_INITIAL_COMMIT;
 import static com.fitzhi.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
+import static com.fitzhi.Error.CODE_BRANCH_DOES_NOT_EXIST;
 import static com.fitzhi.Error.MESSAGE_CANNOT_CREATE_DIRECTORY;
 import static com.fitzhi.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import static com.fitzhi.Error.MESSAGE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.MESSAGE_PROJECT_CANNOT_RETRIEVE_INITIAL_COMMIT;
 import static com.fitzhi.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
+import static com.fitzhi.Error.MESSAGE_BRANCH_DOES_NOT_EXIST;
 import static com.fitzhi.Error.getStackTrace;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
@@ -89,6 +91,7 @@ import com.fitzhi.source.crawler.EcosystemAnalyzer;
 import com.fitzhi.source.crawler.impl.AbstractScannerDataGenerator;
 import com.google.gson.Gson;
 
+import org.eclipse.jgit.api.DescribeCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.diff.DiffConfig;
@@ -410,6 +413,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 					.setBranch(project.getBranch())
 					.setProgressMonitor(new CustomProgressMonitor())
 					.call();
+				checkBranchNameExist(git, project.getBranch());
 				git.close();
 			} else {
 				Git git = Git.cloneRepository()
@@ -420,6 +424,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 					.setBranch(project.getBranch())
 					.setProgressMonitor(new CustomProgressMonitor())
 					.call();
+				checkBranchNameExist(git, project.getBranch());
 				git.close();
 			}
 			if (log.isDebugEnabled()) {
@@ -452,6 +457,23 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		String locationRepository = path.toFile().getCanonicalPath();
 		projectHandler.saveLocationRepository(project.getId(), locationRepository);
 		project.setLocationRepository(locationRepository);
+	}
+
+	/**
+	 * The application clones the repository for a given branch.
+	 * This method tests if the given branch still exists in the repository (after the clone operation).
+	 * @param git the active current GIT repository
+	 * @param branchName the name of the GIT branch which is supposed to have been cloned
+	 * @throws GitAPIException thrown if the GIT operation failed for a bad reason.
+	 * @throws ApplicationException thrown if the application detects a problem
+	 */
+	private void checkBranchNameExist(Git git, String branchName) throws GitAPIException, ApplicationException {
+		java.util.List<Ref> branches = git.branchList().call();
+		if (branches.size() == 0) {
+			throw new ApplicationException(
+				CODE_BRANCH_DOES_NOT_EXIST, 
+				MessageFormat.format(MESSAGE_BRANCH_DOES_NOT_EXIST, branchName));
+		}
 	}
 
 	/**

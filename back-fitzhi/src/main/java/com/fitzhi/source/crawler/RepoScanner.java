@@ -110,9 +110,8 @@ public interface RepoScanner {
 	 * @param project Project whose source code files should be scan in the repository
 	 * @param settings connection settings
 	 * @throws IOException thrown if any application or network error occurs.
-	 * @throws GitAPIException thrown if any application or network error occurs.
-	 * @throws ApplicationException will be thrown by only
-	 * {@link com.fitzhi.bean.ProjectHandler#saveLocationRepository } 
+	 * @throws GitAPIException thrown if GIT or network fails to clone the repository
+	 * @throws ApplicationException thrown if an application error occurs
 	 */
 	void clone(Project project, ConnectionSettings settings) throws IOException, GitAPIException, ApplicationException;
 

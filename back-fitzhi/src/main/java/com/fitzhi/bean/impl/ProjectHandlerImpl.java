@@ -480,7 +480,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	public void integrateGhosts(int idProject, Set<String> unknownPseudos) throws ApplicationException {
 
 		Project project = get(idProject);
-		
+
 		List<Ghost> ghosts = project.getGhosts()
 			.stream()
 			.filter (ghost ->  (ghost.getIdStaff() > 0) || (ghost.isTechnical()) )
