@@ -111,7 +111,7 @@ public class ProjectAuditControllerDownloadAttachmentFileTest {
 				HttpMethod.POST, 
 				new HttpEntity<>(map, headers), 
 				Boolean.class);
-		Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+		Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
 	}
 	
 	@Test
