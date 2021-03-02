@@ -16,7 +16,7 @@ rm -rf docs
 rm *
 cd ../application/front-fitzhi
 sh ./gen-build-ts.sh
-ng build --prod --output-path ../../spoq/docs --base-href //
+npm run prod
 cp -i ../../spoq/docs/index.html ../../spoq/docs/404.html
 mv ../../spoq/docs/* ../../spoq/
 echo spoq.io >../../spoq/CNAME
