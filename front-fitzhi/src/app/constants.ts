@@ -126,4 +126,9 @@ export class Constants {
 	 */
 	public static TAB_TITLE = ['Project', 'Staff list', 'Staff coverage', 'Sonar', 'Audit', 'Remove'];
 
+	/**
+	 * Error messages.
+	 */
+	public static SERVER_DOWN  = 'Server is down or unreachable!';
+
 }

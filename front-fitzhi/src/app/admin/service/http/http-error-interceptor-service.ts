@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { traceOn, HttpCodes } from 'src/app/global';
 import { BrowserStack } from 'protractor/built/driverProviders';
 import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
+import { Constants } from 'src/app/constants';
 
 @Injectable({ providedIn: 'root' })
 export class HttpErrorInterceptorService implements HttpInterceptor {
@@ -64,8 +65,8 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 
 					switch (response.status) {
 						case 0:
-							setTimeout(() => messageService.warning('Server is down or unreachable!'), 0);
-							return throwError('Server is down or unreachable!');
+							setTimeout(() => messageService.warning(Constants.SERVER_DOWN), 0);
+							return throwError(Constants.SERVER_DOWN);
 							break;
 						case HttpCodes.notFound:
 							if (traceOn()) {
