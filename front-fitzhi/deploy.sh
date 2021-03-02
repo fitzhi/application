@@ -27,7 +27,6 @@ git config user.email "frederic.vidal@fitzhi.com"
 echo "setting user.name to frvidal"
 git config user.name "frvidal"
 git add -A && git commit -m 'new building Release'
-echo {{$GITHUB_ACTOR}}
 git push "https://$GITHUB_ACTOR:$GITHUB_TOKEN@github.com/fitzhi/spoq.git"
 cd ../application/front-fitzhi
 echo "...Deployment is done"

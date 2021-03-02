@@ -28,12 +28,12 @@ jobs:
     - run: npm ci
     - run: npm run build
     - run: npm run test
-    - name: Fitzhi front application deployment
-      if: ${{ (github.ref == 'refs/heads/release-1.4') && (matrix.node-version == '12.x') && ! failure() }}
-      run: |
-        echo "I only run for the branch "${{github.ref}} and node version ${{matrix.node-version}}
-        ./deploy.sh
-    #  run: ./deploy.sh
-    #  if: github.ref == 'refs/heads/release-1.4'
-    # !failure()
+    #
+    # These lines are commented because I (Frederic VIDAL) could not find a way to commit changes to another repository from this repository
+    #
+    # - name: Fitzhi front application deployment
+    #  if: ${{ (github.ref == 'refs/heads/release-1.4') && (matrix.node-version == '12.x') && ! failure() }}
+    #  run: |
+    #    echo "I only run for the branch "${{github.ref}} and node version ${{matrix.node-version}}
+    #    ./deploy.sh
 
