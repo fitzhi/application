@@ -64,6 +64,8 @@ export class FileService {
 	 */
 	getAssociatedIcon(typeOfApplication: number) {
 		switch (typeOfApplication) {
+			case null:
+				return 'none';
 			case Constants.FILE_TYPE_DOC:
 			case Constants.FILE_TYPE_DOCX:
 				return this.IMAGES_DIR + 'word.png';
