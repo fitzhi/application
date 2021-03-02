@@ -22,6 +22,8 @@ mv ../../spoq/docs/* ../../spoq/
 echo spoq.io >../../spoq/CNAME
 echo "We PUSH the new application."
 cd ../../spoq
+git config --global user.email "frederic.vidal@fitzhi.com"
+git config --global user.name "frvidal"
 git add -A && git commit -m 'new building Release'
 git push
 cd ../application/front-fitzhi
