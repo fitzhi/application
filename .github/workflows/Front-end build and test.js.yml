@@ -20,18 +20,19 @@ jobs:
         node-version: [10.x, 12.x, 14.x]
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js ${{matrix.node-version}}
       uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: ${{matrix.node-version}}
     - run: npm --version
     - run: npm ci
     - run: npm run build
     - run: npm run test
     - name: Fitzhi front application deployment
       if: ${{ (github.ref == 'refs/heads/release-1.4') && (matrix.node-version == '12.x') && ! failure() }}
-      run: echo "I only run for the branch "${{github.ref}}
-    #  shell: bash
+      run: |
+        echo "I only run for the branch "${{github.ref}} and node version ${{matrix.node-version}}
+        ./deploy.sh
     #  run: ./deploy.sh
     #  if: github.ref == 'refs/heads/release-1.4'
     # !failure()
