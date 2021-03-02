@@ -39,12 +39,15 @@ describe('BackendSetupService', () => {
 		
 		service.isVeryFirstConnection('TEST_URL').subscribe(firstConnection => {
 			expect(firstConnection.connected).toBeFalsy();
-			expect(firstConnection.validUrl).toBe('HTTS_TEST_URL');
+			expect(firstConnection.validUrl).toBe(null);
 		});
 
 		const response = httpMock.expectOne('TEST_URL/api/admin/isVeryFirstConnection');
 		expect(response.request.method).toBe("GET");
-		response.error(<any>{}, { status: 302, headers: new HttpHeaders({ 'location':  'HTTS_TEST_URL'}) });
+		response.error(<any>{}, { 
+			status: 302, 
+			statusText: 'Found',  
+			headers: new HttpHeaders({ 'Content-Type': 'text/html', 'Location':  'HTTS_TEST_URL'}) });
 	});
 
 

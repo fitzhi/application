@@ -61,7 +61,8 @@ export class BackendSetupService {
 					if (response === Constants.SERVER_DOWN) {
 						return of(new FirstConnection(false, null)); 
 					} else {
-						return of(new FirstConnection(true, urlCandidate)); 
+						// Throw other kinds of error
+						return of(new FirstConnection(false, null)); 
 					}
 				})
 			);
