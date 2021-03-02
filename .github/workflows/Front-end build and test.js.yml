@@ -29,7 +29,7 @@ jobs:
     - run: npm run build
     - run: npm run test
     - name: Fitzhi front application deployment
-      if: ${{ github.ref == 'refs/heads/release-1.4' }}
+      if: ${{ (github.ref == 'refs/heads/release-1.4') && (matrix.node-version == '12.x') && ! failure() }}
       run: echo "I only run for the branch "${{github.ref}}
     #  shell: bash
     #  run: ./deploy.sh
