@@ -1,4 +1,4 @@
-<mat-tab-group (selectedIndexChange)="selectedIndexChange($event)">
+<mat-tab-group [selectedIndex]="selectedTab$|async" (selectedIndexChange)="selectedIndexChange($event)">
   <mat-tab label="Info">
     <div>
       <app-staff-form [idStaff]="idStaff" [selectedTab$]="selectedTab$">
