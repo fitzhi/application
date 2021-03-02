@@ -128,11 +128,15 @@ export class ProjectService extends InternalService {
 					if (actualProject) {
 						actualProject.skills = project.skills;
 						this.loadMapSkills(actualProject);
-						this.dump(actualProject, 'projectService after updated the project');
+						if (traceOn()) {
+							this.dump(actualProject, 'projectService after updated the project');
+						}
 					} else {
 						this.loadMapSkills(project);
 						this.allProjects.push(project);
-						this.dump(project, 'projectService when creating a project');
+						if (traceOn()) {
+							this.dump(project, 'projectService when creating a project');
+						}
 					}
 				},
 				error: error => console.error ('FVI error', error)
