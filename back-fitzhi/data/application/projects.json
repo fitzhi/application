@@ -190,7 +190,7 @@
 		"name": "JQuery",
 		"active": true,
 		"connectionSettings": 3,
-		"branch": "master",
+		"branch": "main",
 		"urlRepository": "https://github.com/jquery/jquery",
 		"sonarProjects": [],
 		"audit": {}
