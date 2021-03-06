@@ -16,8 +16,6 @@ import { MessageBoxService } from 'src/app/interaction/message-box/service/messa
 import { SunburstCacheService } from '../../service/sunburst-cache.service';
 import { GhostsService } from '../service/ghosts.service';
 import { MatTable } from '@angular/material/table';
-import { Project } from 'src/app/data/project';
-import { trace } from 'console';
 
 @Component({
 	selector: 'app-table-ghosts',
