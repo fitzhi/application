@@ -94,7 +94,7 @@ public @Data class Staff implements UserDetails {
 
 	/**
 	* List of authorities for this user
-	**/
+	*/
 	private List<CustomGrantedAuthority> authorities = new ArrayList<>();
 	
 	/**
