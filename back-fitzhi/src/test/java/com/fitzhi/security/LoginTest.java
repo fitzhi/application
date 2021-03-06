@@ -16,6 +16,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -28,6 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@TestPropertySource(properties = { "development.unplugged.security=0" }) 
 public class LoginTest {
 	
 	@Autowired
@@ -35,7 +37,7 @@ public class LoginTest {
 	
 	@Test
 	public void accessUnauthorizedWithoutToken() throws Exception {
-	    mvc.perform(get("/api/test/ping"))
+	    mvc.perform(get("/api/project/1"))
 	      .andExpect(status().isUnauthorized());
 	}
 

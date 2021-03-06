@@ -41,7 +41,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         try {
 			if (oStaff.get().isValidPassword(password)) {
 				List<GrantedAuthority> authorities = new ArrayList<>();
-				authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+				authorities.add(new SimpleGrantedAuthority("ROLE_TRUSTED_USER"));
 			    return new UsernamePasswordAuthenticationToken(
 			      name, password, authorities);
 			} else {

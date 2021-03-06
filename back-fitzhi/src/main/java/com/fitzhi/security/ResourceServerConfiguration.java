@@ -15,7 +15,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 	private static final String RESOURCE_ID = "my_rest_api";
 
 	/**
-	 * For development purpose, the security is disengaged for development purpose if this settinfs is equal to 1.
+	 * For development purpose, the security is unplugged for development purpose if this settings is equal to 1.
 	 */
 	@Value("${development.unplugged.security}")
 	private String developmentUnpluggedSecurity;
@@ -29,28 +29,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 	public void configure(HttpSecurity http) throws Exception {
 
 		if ("1".equals(developmentUnpluggedSecurity)) {
-			http.authorizeRequests().antMatchers(
-				"/api/staff/**", 
-				"/api/skill/**", 
-				
-				// Server side event streaming is allowed
-				"/api/project/tasks/stream/**",
-				"/api/project/audit/**", 
-				"/api/project/sonar/**", 
-				"/api/project/**", 
-				
-				"/api/admin/settings",	
-
-				// We allow the the springfox-swagger url to be accessible
-				"/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**", 
-				
-
-				"/api/admin/isVeryFirstConnection", 
-				"/api/admin/saveVeryFirstConnection", 
-				"/api/admin/veryFirstUser",
-				"/api/admin/register",
-				"/api/referential/**").permitAll()
-				.antMatchers("/**").access("hasRole('USER')")
+			http.authorizeRequests().antMatchers("/**").permitAll()
 				.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
 		} else {
 			http.authorizeRequests().antMatchers(
@@ -76,7 +55,7 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				"/api/skill", 
 
 				"/api/referential/**").permitAll()
-				.antMatchers("/**").access("hasRole('USER')")
+				.antMatchers("/**").access("hasRole('ROLE_TRUSTED_USER')")
 				.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
 		}
 	}
