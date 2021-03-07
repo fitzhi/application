@@ -1,17 +1,17 @@
 echo off
 echo(
-if /i "%1" == "https" (
-    echo Starting backend Fitzhi in HTTPS mode
-    copy .\back-fitzhi\src\main\resources\application-https.properties .\deploy\backend-fitzhi\application-https.properties
+if "%1" == "HTTPS" (
+	echo Starting backend Fitzhi in HTTPS mode
+	copy .\back-fitzhi\src\main\resources\application-https.properties .\deploy\backend-fitzhi\application-https.properties
 )
-if /i "%1" == "http" (
-    echo Starting backend Fitzhi in HTTP mode
-    del .\deploy\backend-fitzhi\application-https.properties
+if "%1" == "HTTP" (
+	echo Starting backend Fitzhi in HTTP mode
+	del .\deploy\backend-fitzhi\application-https.properties
 )
-if NOT "%1" == "http" (
-    if NOT "%1" == "https" (
-        echo Invalid profile given. Expecting either HTTP, pr HTTPS
-    )
+if NOT "%1" == "HTTP" (
+	if NOT "%1" == "HTTPS" (
+		echo Invalid profile given. Expecting either HTTP, or HTTPS.
+	)
 )
 echo --------------------------------------
 echo(
