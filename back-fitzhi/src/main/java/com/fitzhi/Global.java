@@ -59,6 +59,11 @@ public class Global {
 	 */
 	public static final int NO_PROGRESSION = Integer.MIN_VALUE;
 
+	/**
+	 * Role given to all user who are allowed to connect to Fitzhi.
+	 */
+	public static final String ROLE_TRUSTED_USER = "ROLE_TRUSTED_USER";
+
 
 	private Global() {
 	}

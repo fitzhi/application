@@ -14,6 +14,7 @@
     </appender>
  -->
 
+<!--
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
@@ -21,8 +22,8 @@
             </Pattern>
         </layout>
     </appender>
+-->
     
-<!--
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
@@ -30,7 +31,7 @@
             </Pattern>
         </layout>
     </appender>
--->
+
 
     <appender name="RollingFile"
         class="ch.qos.logback.core.rolling.RollingFileAppender">

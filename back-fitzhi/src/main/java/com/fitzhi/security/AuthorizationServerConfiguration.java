@@ -14,6 +14,8 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
+import static com.fitzhi.Global.ROLE_TRUSTED_USER;
+
 @Configuration
 @EnableAuthorizationServer
 public class AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
@@ -52,12 +54,12 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 
 		clients.inMemory()
 	        .withClient(TRUSTED_CLIENT_USERNAME)
-            .authorizedGrantTypes("password", "authorization_code", "refresh_token", "implicit")
-            .authorities("ROLE_CLIENT", "ROLE_TRUSTED_CLIENT")
+            .authorizedGrantTypes("password", "refresh_token")
+            .authorities(ROLE_TRUSTED_USER)
             .scopes("read", "write", "trust")
             .secret("secret")
-            .accessTokenValiditySeconds(accessTokenDuration).//Access token is only valid for 2 minutes.
-            refreshTokenValiditySeconds(refreshTokenDuration);//Refresh token is only valid for 1 hour.
+            .accessTokenValiditySeconds(accessTokenDuration). //Access token is only valid for 2 minutes.
+            refreshTokenValiditySeconds(refreshTokenDuration); //Refresh token is only valid for 1 hour.
 	}
 
 	@Override

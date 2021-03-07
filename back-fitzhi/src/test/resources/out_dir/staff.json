@@ -37,7 +37,7 @@
         "experiences": [],
         "authorities": [
             {
-                "authority": "ROLE_USER"
+                "authority": "ROLE_TRUSTED_USER"
             }
         ]
     },
@@ -55,7 +55,7 @@
         "experiences": [],
         "authorities": [
             {
-                "authority": "ROLE_USER"
+                "authority": "ROLE_TRUSTED_USER"
             }
         ]
     },
@@ -73,7 +73,7 @@
         "experiences": [],
         "authorities": [
             {
-                "authority": "ROLE_USER"
+                "authority": "ROLE_TRUSTED_USER"
             }
         ]
     },
@@ -91,7 +91,7 @@
         "experiences": [],
         "authorities": [
             {
-                "authority": "ROLE_USER"
+                "authority": "ROLE_TRUSTED_USER"
             }
         ]
     },
@@ -109,7 +109,7 @@
         "experiences": [],
         "authorities": [
             {
-                "authority": "ROLE_USER"
+                "authority": "ROLE_TRUSTED_USER"
             }
         ]
     },
@@ -124,7 +124,7 @@
         "experiences": [],
         "authorities": [
             {
-                "authority": "ROLE_USER"
+                "authority": "ROLE_TRUSTED_USER"
             }
         ]
     }

@@ -1,45 +1,29 @@
 
-import { throwError as observableThrowError, Observable, BehaviorSubject, EMPTY } from 'rxjs';
-
-import { take, filter, catchError, switchMap, finalize } from 'rxjs/operators';
-import { Injectable, Injector } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpSentEvent, HttpHeaderResponse, HttpEvent } from '@angular/common/http';
-import { HttpProgressEvent, HttpResponse, HttpUserEvent, HttpErrorResponse } from '@angular/common/http';
-
-import { AuthService } from '../auth/auth.service';
-import { MessageService } from 'src/app/interaction/message/message.service';
-import { ReferentialService } from 'src/app/service/referential.service';
-import { Constants } from 'src/app/constants';
-import { traceOn } from 'src/app/global';
-import { Router } from '@angular/router';
+import { HttpErrorResponse, HttpHandler, HttpHeaderResponse, HttpInterceptor, HttpProgressEvent, HttpRequest, HttpResponse, HttpSentEvent, HttpUserEvent } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, EMPTY, Observable, throwError as observableThrowError, throwError } from 'rxjs';
+import { catchError, filter, finalize, switchMap, take } from 'rxjs/operators';
+import { Token } from '../token/token';
+import { TokenService } from '../token/token.service';
 
 @Injectable()
 export class HttpTokenInterceptorService implements HttpInterceptor {
 
+	authToken$: BehaviorSubject<Token> = new BehaviorSubject<Token>(null);
+
 	isRefreshingToken = false;
-	tokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
 	constructor(
-		private injector: Injector,
-		private router: Router,
-		private messageService: MessageService) { }
-
-	addToken(req: HttpRequest<any>, token: string): HttpRequest<any> {
-		if (typeof token !== 'undefined') {
-			return req.clone({ setHeaders: { Authorization: 'Bearer ' + token } });
-		} else {
-			return req;
-		}
-	}
+		private tokenService: TokenService) { }
 
 	intercept(req: HttpRequest<any>, next: HttpHandler):
 		Observable<HttpSentEvent | HttpHeaderResponse | HttpProgressEvent | HttpResponse<any> | HttpUserEvent<any>> {
 
-		const authService = this.injector.get(AuthService);
 
-		/**
-		 * FOR DEVELOPMENT PURPOSE ONLY we deactivate the security control.
-		 */
+
+		//
+		// FOR DEVELOPMENT PURPOSE ONLY, we unplugg the security control.
+		//
 		if (localStorage.getItem('dev') === '1') {
 			return next.handle(req);
 		}
@@ -65,90 +49,78 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 			return next.handle(req);
 		}
 
-		if (req.url.includes('/oauth/token')) {
-			return next.handle(req).pipe(catchError(error => {
-				if (error instanceof HttpErrorResponse) {
-					switch ((<HttpErrorResponse>error).status) {
-						case 401:
-							this.messageService.error('User/password invalid.');
-							return EMPTY;
-							break;
+		return next.handle(this.tokenService.addToken(req)).pipe(
+			catchError(response => {
+				if (response instanceof HttpErrorResponse) {
+					if (response.status === 401) {
+						if (!this.isConnectionRequest(req)) {
+							return this.retryAfterRefresh$(req, next);
+						} else {
+							console.log ('Invalid authentification credentials');
+							return EMPTY;				
 						}
-				}
-				if (traceOn()) {
-					console.log ('Connection error', error);
-				}
-				return observableThrowError(error);
-			}));
-		}
-
-		return next.handle(this.addToken(req, authService.getAccessToken())).pipe(
-			catchError(error => {
-				if (error instanceof HttpErrorResponse) {
-					switch ((<HttpErrorResponse>error).status) {
-						case 400:
-							return this.handle400Error(error);
-						case 401:
-							return this.handle401Error(req, next);
-						default:
-							return observableThrowError(error);
+					} else {
+						return throwError(response);
 					}
 				} else {
-					return observableThrowError(error);
+					return throwError(response);
 				}
 			}));
 	}
 
-	handle400Error(error) {
-		if (error && error.status === 400 && error.error && error.error.error === 'invalid_grant') {
-			// If we get a 400 and the error message is 'invalid_grant', the token is no longer valid so logout.
-			return this.logoutUser();
+	isConnectionRequest(req: HttpRequest<any>): boolean {
+		
+		if (!req.body) {
+			return false;
 		}
-
-		return observableThrowError(error);
+		
+		let isConnection = false;
+		req.body.params.updates.forEach(element => {
+			if ((element.param === 'grant_type') && (element.value === 'password')) {
+				isConnection = true;
+			}
+		});
+		return isConnection;
 	}
 
-	handle401Error(req: HttpRequest<any>, next: HttpHandler) {
+	retryAfterRefresh$(req: HttpRequest<any>, next: HttpHandler): 
+		Observable<HttpSentEvent | HttpHeaderResponse | HttpProgressEvent | HttpResponse<any> | HttpUserEvent<any>> {
+
 		if (!this.isRefreshingToken) {
 			this.isRefreshingToken = true;
+			
+			console.log ('retryAfterRefresh(...)');
+			this.authToken$.next(null);
 
-			// Reset here so that the following requests wait until the token
-			// comes back from the refreshToken call.
-			this.tokenSubject.next(null);
+			return this.tokenService.refreshToken$()
+				.pipe(
+					take(1),
+					switchMap(token => {
+						// store the new tokens
+						this.tokenService.saveToken(token);
+						if (token) {
+							console.log('access_token %s expires in %s', token.access_token, token.expires_in);
+						}
 
-			const authService = this.injector.get(AuthService);
-
-			return authService.refreshToken().pipe(
-				switchMap((newToken: string) => {
-					if (newToken) {
-						this.tokenSubject.next(newToken);
-						return next.handle(this.addToken(req, newToken));
-					}
-
-					// If we don't get a new token, we are in trouble so logout.
-					return this.logoutUser();
-				}),
-				catchError(() => {
-
-					// If there is an exception calling 'refreshToken', bad news so logout.
-					return this.logoutUser();
-				}),
-				finalize(() => {
-					this.isRefreshingToken = false;
-				}));
+						this.authToken$.next(token);
+                        return next.handle(this.tokenService.addToken(req));
+					})
+					,catchError(response => {
+						console.log ('Error', response);
+						return EMPTY;
+					}),	
+					finalize(() => this.isRefreshingToken = false)
+				);
 		} else {
-			return this.tokenSubject.pipe(
-				filter(token => token != null),
-				take(1),
-				switchMap(token => {
-					return next.handle(this.addToken(req, token));
-				}));
+			return this.authToken$
+			.pipe(
+				filter(token => token != null)
+				, take(1)
+				, switchMap(token => {
+					return next.handle(this.tokenService.addToken(req));
+				})
+			);
 		}
 	}
 
-	logoutUser() {
-		// Route to the login page (implementation up to you)
-		this.router.navigate(['/welcome'], {});
-		return observableThrowError('');
-	}
 }

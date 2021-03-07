@@ -48,14 +48,14 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				"/api/admin/register",
 				"/api/test/ping",
 
-				// All projets are braodcasted ? (it's a question)
+				// All projets are broadcasted ? (it's a question)
 				"/api/project", 
 
-				// All skills are braodcasted !
+				// All skills are broadcasted !
 				"/api/skill", 
 
 				"/api/referential/**").permitAll()
-				.antMatchers("/**").access("hasRole('ROLE_TRUSTED_USER')")
+				.antMatchers("/**").hasRole("TRUSTED_USER")
 				.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
 		}
 	}

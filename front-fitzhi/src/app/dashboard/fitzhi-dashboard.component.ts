@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ControlledRisingSkylineService } from 'controlled-rising-skyline';
 import { BehaviorSubject } from 'rxjs';
@@ -63,11 +64,24 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	public skylineSelected$ = new BehaviorSubject<boolean>(false);
 
 	constructor(
+		public httpClient: HttpClient,
+
 		public projectService: ProjectService,
 		public skylineService: SkylineService,
 		public controlledRisingSkylineService: ControlledRisingSkylineService,
 		public pieDashboardService: PieDashboardService) {
 			super();
+	}
+
+	nope() {
+		console.log('test');
+		this.httpClient.get('http://localhost:8080/api/staff/4', { responseType: 'text' as 'json' })
+			.subscribe({
+				next: (result: string) => console.log('staff', result),
+				error: response => {
+					console.log ('err', response);
+				}
+			});
 	}
 
 	/**

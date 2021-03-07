@@ -118,6 +118,8 @@ import { StaffComponent } from './tabs-staff/staff.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { SkylineIconComponent } from './dashboard/skyline/skyline-icon/skyline-icon.component';
 import { ChartInProgressComponent } from './tabs-project/project-sunburst/chart-in-progress/chart-in-progress.component';
+import { HttpRefreshTokenErrorInterceptorService } from './admin/service/http/http-refresh-token-error-interceptor.service';
+import { TokenService } from './admin/service/token/token.service';
 
 @NgModule({
 	declarations: [
@@ -244,6 +246,7 @@ import { ChartInProgressComponent } from './tabs-project/project-sunburst/chart-
 		ReferentialService,
 		PieDashboardService,
 		AuthGuardService,
+		TokenService,
 		{
 			provide: HTTP_INTERCEPTORS,
 			useClass: HttpErrorInterceptorService,
@@ -254,18 +257,17 @@ import { ChartInProgressComponent } from './tabs-project/project-sunburst/chart-
 			useClass: HttpTokenInterceptorService,
 			multi: true
 		},
+		{
+			provide: HTTP_INTERCEPTORS,
+			useClass: HttpRefreshTokenErrorInterceptorService,
+			multi: true
+		},
 		DatePipe,
-		/*   {provide: ErrorHandler, useClass: CustomErrorHandler}, */
 		// Remove this line or change the useValue property to your regional settings
 		{ provide: LOCALE_ID, useValue: 'fr' }
 	],
 	bootstrap: [AppComponent]
 })
-/*    {
-			provide: ErrorHandler,
-			useClass: ErrorsHandler,
-		}
- */
 export class AppModule {
 	constructor() {
 		// Remove this line to return back to the default us property,
