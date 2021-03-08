@@ -8,6 +8,8 @@ import static com.fitzhi.Error.CODE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.CODE_PROJECT_CANNOT_RETRIEVE_INITIAL_COMMIT;
 import static com.fitzhi.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
 import static com.fitzhi.Error.CODE_BRANCH_DOES_NOT_EXIST;
+import static com.fitzhi.Error.CODE_GIT_ERROR;
+
 import static com.fitzhi.Error.MESSAGE_CANNOT_CREATE_DIRECTORY;
 import static com.fitzhi.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_IO_ERROR;
@@ -15,6 +17,8 @@ import static com.fitzhi.Error.MESSAGE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.MESSAGE_PROJECT_CANNOT_RETRIEVE_INITIAL_COMMIT;
 import static com.fitzhi.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
 import static com.fitzhi.Error.MESSAGE_BRANCH_DOES_NOT_EXIST;
+import static com.fitzhi.Error.MESSAGE_GIT_ERROR;
+
 import static com.fitzhi.Error.getStackTrace;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
@@ -1388,20 +1392,23 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 	@Override
 	@Async
-	public RiskDashboard generateAsync(final Project project, final SettingsGeneration settings) {
+	public void generateAsync(final Project project, final SettingsGeneration settings) throws ApplicationException {
 		boolean failed = false;
 		try {
 			tasks.addTask(DASHBOARD_GENERATION, "project", project.getId());
-			return generate(project, settings);
-		} catch (ApplicationException se) {
-			tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), se.errorCode, se.errorMessage, NO_PROGRESSION);
+			generate(project, settings);
+		} catch (ApplicationException ae) {
+			tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), ae.errorCode, ae.errorMessage, NO_PROGRESSION);
 			failed = true;
-			return null;
+			throw ae;
 		} catch (GitAPIException | IOException e) {
 			log.error(e.getMessage());
 			tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), 666, e.getLocalizedMessage(), NO_PROGRESSION);
 			failed = true;
-			return null;
+			throw new ApplicationException(
+				CODE_GIT_ERROR, 
+				MessageFormat.format(MESSAGE_GIT_ERROR, project.getId(), project.getName()), 
+				e);
 		} finally {
 			try {
 				if (!failed) {

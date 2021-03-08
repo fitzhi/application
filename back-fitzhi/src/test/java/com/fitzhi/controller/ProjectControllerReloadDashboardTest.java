@@ -1,8 +1,8 @@
 package com.fitzhi.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -73,7 +73,7 @@ public class ProjectControllerReloadDashboardTest {
 	@Test
 	@WithMockUser
 	public void testReloadDashboardKnownProject() throws Exception {
-		when(repoScanner.generateAsync(any(), any())).thenReturn(null);
+		doNothing().when(repoScanner).generateAsync(any(), any());
 		this.mvc.perform(post("/api/project/1789/sunburst")).andExpect(status().isAccepted());
 		Mockito.verify(cacheDataHandler, times(1)).removeRepository(any());
 		Assert.assertNotNull("The location repository should NOT be reset", projectHandler.get(1789).getLocationRepository());

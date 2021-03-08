@@ -1,9 +1,9 @@
 package com.fitzhi.source.crawler.git;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.timeout;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
@@ -65,7 +65,7 @@ public class BatchGitCrawlerTest {
 		p.setActive(false);
 
 		log.debug ("The complete generation in an asynchronous mode has been launched.");
-		when(crawler.generateAsync(any(), any())).thenReturn(null);
+		doNothing().when(crawler).generateAsync(any(), any());
 		batchCrawler.completeGeneration();
 		verify(crawler, timeout(100).times(1)).generateAsync(any(), any());
 	}

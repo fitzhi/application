@@ -1,6 +1,7 @@
 package com.fitzhi.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -79,7 +80,7 @@ public class ProjectControllerResetDashboardTest {
 	@WithMockUser
 	public void testResetDashboardKnownProject() throws Exception {
 		when(cacheDataHandler.removeRepository(any())).thenReturn(true);
-		when(repoScanner.generateAsync(any(), any())).thenReturn(null);
+		doNothing().when(repoScanner).generateAsync(any(), any());
 		this.mvc.perform(delete("/api/project/1789/sunburst")).andExpect(status().isAccepted());
 		Mockito.verify(cacheDataHandler, times(1)).removeRepository(any());
 		Mockito.verify(dataHandler, times(1)).removeCrawlerFiles(any());

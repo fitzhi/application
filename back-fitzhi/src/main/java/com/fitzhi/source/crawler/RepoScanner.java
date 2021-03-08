@@ -268,19 +268,22 @@ public interface RepoScanner {
 	 * <p>
 	 * This method is an ASYNCHRONOUS wrapper from the method {@link #generate(Project)}
 	 * </p>
-	 * <p><b>
+	 * <p>
+	 * <b>
 	 * The underlying implementation {@link GitCrawler} is hosting the annotation {@code @async}.
-	 * </b></p>
+	 * </b>
+	 * </p>
 	 * Generate and complete the dashboard generation figuring the activities of staff members for the passed project
 	 * @param project the project whose source code files should be parsed in the repository
-	 * @param settings the dashboard generation settings, such as :
+	 * @param settings the dashboard generation settings. This object is containing filters such as :
 	 * <ul>
-	 * <li>filtered from a starting date,</li>
-	 * <li>or filtered for a staff member.</li>
+	 * <li>a filter for a starting date,</li>
+	 * <li>a filter for a specific staff member.</li>
 	 * </ul>
-	 * @return the project risk dashboard 
+	 * @throws ApplicationException if any problem occurs during the process.
+	 * @see #generate(Project, SettingsGeneration)
 	 */
-	RiskDashboard generateAsync(Project project, SettingsGeneration settings);
+	void generateAsync(Project project, SettingsGeneration settings) throws ApplicationException;
 	
 	/**
 	 * Personalize the commit repository on a particular staff member.

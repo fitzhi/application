@@ -111,6 +111,9 @@ public class Error {
 	public static final int CODE_CANNOT_DELETE_FILE = -1033;
 	public static final String MESSAGE_CANNOT_DELETE_FILE = "Cannot delete file {0}";
 
+	public static final int CODE_GIT_ERROR = -1034;
+	public static final String MESSAGE_GIT_ERROR = "GIT error for project {0} {1}";
+
 	private Error() {
 	}
 	
