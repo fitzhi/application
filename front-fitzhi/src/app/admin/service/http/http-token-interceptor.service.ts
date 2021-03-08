@@ -74,6 +74,10 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 			return false;
 		}
 		
+		if (!req.body.params) {
+			return false;
+		}
+		
 		let isConnection = false;
 		req.body.params.updates.forEach(element => {
 			if ((element.param === 'grant_type') && (element.value === 'password')) {
