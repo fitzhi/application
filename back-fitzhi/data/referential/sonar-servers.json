@@ -1,3 +1,4 @@
 [
+	{ "urlSonarServer": "http://sonar-demo.fitzhi.com:9000/" },
 	{ "urlSonarServer": "http://localhost:4200/sonarqube" }
 ]
