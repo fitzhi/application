@@ -3,6 +3,7 @@ import { HttpErrorResponse, HttpHandler, HttpHeaderResponse, HttpInterceptor, Ht
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, EMPTY, Observable, throwError as observableThrowError, throwError } from 'rxjs';
 import { catchError, filter, finalize, switchMap, take } from 'rxjs/operators';
+import { traceOn } from 'src/app/global';
 import { Token } from '../token/token';
 import { TokenService } from '../token/token.service';
 
@@ -56,7 +57,9 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 						if (!this.isConnectionRequest(req)) {
 							return this.retryAfterRefresh$(req, next);
 						} else {
-							console.log ('Invalid authentification credentials');
+							if (traceOn()) {
+								console.log ('Invalid authentification credentials');
+							}
 							return EMPTY;				
 						}
 					} else {
@@ -93,7 +96,6 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 		if (!this.isRefreshingToken) {
 			this.isRefreshingToken = true;
 			
-			console.log ('retryAfterRefresh(...)');
 			this.authToken$.next(null);
 
 			return this.tokenService.refreshToken$()
@@ -102,7 +104,7 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
 					switchMap(token => {
 						// store the new tokens
 						this.tokenService.saveToken(token);
-						if (token) {
+						if (traceOn() && token) {
 							console.log('access_token %s expires in %s', token.access_token, token.expires_in);
 						}
 
@@ -110,7 +112,9 @@ export class HttpTokenInterceptorService implements HttpInterceptor {
                         return next.handle(this.tokenService.addToken(req));
 					})
 					,catchError(response => {
-						console.log ('Error', response);
+						if (traceOn()) {
+							console.log ('Error', response);
+						}
 						return EMPTY;
 					}),	
 					finalize(() => this.isRefreshingToken = false)
