@@ -105,9 +105,24 @@ export class SonarService extends InternalService {
 			.pipe(switchMap( (declaredSonarServers: DeclaredSonarServer[]) => of(...declaredSonarServers)))
 			.subscribe({
 				next: declaredSonarServer => this.initSonarServer(declaredSonarServer.urlSonarServer),
-				complete: () => this.allSonarServersLoaded$.next(true)
+				complete: () => {
+					this.reportSituationSonars();
+					this.allSonarServersLoaded$.next(true);
+				}
 			});
+	}
 
+	/**
+	 * Report the situations for all Sonar servers declared in Fitzhi.
+	 */
+	private reportSituationSonars(): void {
+		this.sonarServers.forEach((sonarServer: SonarServer) => {
+			if (sonarServer.sonarOn) {
+				console.log ("%s of version %s is ON", sonarServer.urlSonar, sonarServer.sonarVersion)
+			} else {
+				console.log ("%s is OF", sonarServer.urlSonar, sonarServer.sonarVersion)
+			}
+		})
 	}
 
 	/**
@@ -119,9 +134,10 @@ export class SonarService extends InternalService {
 			console.log ('initSonarServer(\'%s\')', urlSonar);
 		}
 
-		const subscription = this.httpClient
+		this.httpClient
 			.get(urlSonar + '/api/server/version', { responseType: 'text' as 'json' })
 				.pipe(
+					take(1),
 					switchMap((version: string) => {
 						const sonarServer = new SonarServer(version, urlSonar, true);
 						this.sonarServers.push(sonarServer);
@@ -141,8 +157,7 @@ export class SonarService extends InternalService {
 						return of({sonarServer: sonarServer, accessible: false});
 					}))
 				.subscribe({
-					next: result => result.sonarServer.sonarIsAccessible$.next(result.accessible),
-					complete: () => setTimeout(() => { subscription.unsubscribe(); } , 0)
+					next: result => result.sonarServer.sonarIsAccessible$.next(result.accessible)
 				});
 	}
 

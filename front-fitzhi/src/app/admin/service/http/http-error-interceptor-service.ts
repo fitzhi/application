@@ -36,6 +36,11 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 						return throwError(errorMessage);
 					}
 
+					// This is not a network error.
+					if (response instanceof TypeError) {
+						return throwError(response);
+					}
+
 					if ((response.error) && response.error.hasOwnProperty('flagApiError')) {
 						// Server side error
 						const apiError = response.error;
@@ -70,12 +75,12 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 
 					switch (response.status) {
 						case 0:
-							setTimeout(() => messageService.warning(Constants.SERVER_DOWN), 0);
-							return throwError(Constants.SERVER_DOWN);
+							messageService.info(Constants.SERVER_DOWN + " " + request.url);
+							return throwError(Constants.SERVER_DOWN + " @ " + request.url);
 
 						case HttpCodes.notFound:
 							if (traceOn()) {
-								console.log ('Unreachable URL');
+								console.log ('Unreachable URL %s', request.urlWithParams);
 							}
 							return throwError(response);
 
@@ -98,9 +103,6 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 							return throwError (response);
 
 						default:
-							if (traceOn()) {
-								console.log(response);
-							}
 							if (response) {
 								if (traceOn()) {
 									console.log('Error ' + response.status + ' ' + response.message);

@@ -129,6 +129,6 @@ export class Constants {
 	/**
 	 * Error messages.
 	 */
-	public static SERVER_DOWN  = 'Server is down or unreachable!';
+	public static SERVER_DOWN  = 'Server is down or unreachable';
 
 }
