@@ -85,7 +85,10 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 						case 400:
 						case 500:
 							// The system with backend.return_code & backend.return_message has been unplugged
+							// We display the error messsage and code to fix the origin
 							if (response.headers.get('backend.return_code')) {
+								console.error (response.headers.get('backend.return_code'));
+								console.error (response.headers.get('backend.return_message'));
 								throw new Error('WTF : Should not pass here !');
 							}
 							return throwError(response);
