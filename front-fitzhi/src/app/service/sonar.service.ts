@@ -187,6 +187,26 @@ export class SonarService extends InternalService {
 	}
 
 	/**
+	 * This is the given Sonar server is registered as active or not.
+	 * @param url the Sonar URL
+	 * @returns **TRUE** if the Sonar server is identified _REACHABLE_, **FALSE** otherwise
+	 */
+	public isActive(url: string): boolean {
+		if (!url) {
+			return false;
+		}
+		const servers = this.sonarServers.filter(sonarServer => sonarServer.urlSonar === url);
+		if (servers && (servers.length != 1)) {
+			if (traceOn()) {
+				console.log ('WTF !!!', servers);
+			}
+			return false;
+		}
+		return servers[0].sonarOn;
+	}
+
+
+	/**
 	 * Load & validate the supported metrics by the Sonar server & Fitzhì.
 	 *
 	 * ___This operation will be executed when all referential data will be loaded.___

@@ -220,11 +220,17 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				if (doneAndOk) {
 					return this.ngInitContentSonarAndTagify$();
 				} else {
-					return of(EMPTY);
+					return EMPTY;
 				}
 			}))
 			.subscribe({
-				next: doneAndOk => {
+				next: (doneAndOk: boolean) => {
+					// The Sonar projects have been retrieved, if any...
+					// Asynchronous update to avoid ExpressionChangedAfterItHasBeenCheckedError
+					setTimeout(() => {
+						this.sonarProjectsLoaded = doneAndOk;
+					}, 0);
+
 					if ((doneAndOk) && (traceOn())) {
 						console.log('ngAfterViewInitForm completed without error');
 					}
@@ -310,7 +316,8 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				catchError((error) => {
 					console.error('Internal error : Skills are not retrieved from back-end', error);
 					return this.sonarProjectsLoaded$();
-				}))
+				}));
+				/*
 			.pipe(
 				take(1),
 				switchMap(doneAndOk => {
@@ -323,6 +330,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					}, 0);
 					return of(doneAndOk);
 				}));
+				*/
 	}
 
 	/**
@@ -434,6 +442,8 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				}),
 				map(sonarProjects => {
 
+					// the Sonar server is considered as non 'loaded' if it's an empty server.
+					// No project declared
 					if (sonarProjects.length === 0) {
 						return false;
 					}
@@ -461,7 +471,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	onUrlSonarServerChange($event) {
 
 		// The project has not already been saved. We cannot update an existing record.
-		if (this.projectService.project.id === 0) {
+		if (this.projectService.project.id === -1) {
 			return;
 		}
 
