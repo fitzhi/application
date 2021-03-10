@@ -6,7 +6,7 @@ import { InternalService } from '../internal-service';
 import { BackendSetupService } from './backend-setup/backend-setup.service';
 import { Constants } from '../constants';
 import { Metric } from '../data/sonar/metric';
-import { of, BehaviorSubject, Subject, Observable, EMPTY, pipe } from 'rxjs';
+import { of, BehaviorSubject, Subject, Observable, EMPTY, pipe, forkJoin } from 'rxjs';
 import { Metrics } from '../data/sonar/metrics';
 import { Components } from '../data/sonar/components';
 import { Component } from '../data/sonar/component';
@@ -97,53 +97,80 @@ export class SonarService extends InternalService {
 		super();
 	}
 
+
+
 	/**
-	 * Load the Sonar versions of ALL Sonar servers.
+	 * Test if each declared server is reachable and load their versions.
+	 * 
+	 * This method load the field **this.sonarServers** with an array of SonarServer
 	 */
 	loadSonarsVersion() {
-		this.referentialService.sonarServers$
-			.pipe(switchMap( (declaredSonarServers: DeclaredSonarServer[]) => of(...declaredSonarServers)))
-			.subscribe({
-				next: declaredSonarServer => this.initSonarServer(declaredSonarServer.urlSonarServer),
-				complete: () => {
-					this.reportSituationSonars();
-					this.allSonarServersLoaded$.next(true);
-				}
-			});
+		let c= 0;
+		this.referentialService.referentialLoaded$
+		.pipe(
+			switchMap(doneAndOk => doneAndOk ? this.referentialService.sonarServers$ : EMPTY))
+		.pipe(
+			switchMap( (declaredSonarServers: DeclaredSonarServer[]) => {
+				const checkSonarServers = [];
+				declaredSonarServers.forEach( server => 
+					checkSonarServers.push(this.initSonarServer$(server.urlSonarServer)));
+				return forkJoin(checkSonarServers);
+			})
+		)
+		.pipe(take(1))
+		.subscribe({
+			next: (sonarServers: SonarServer[]) => {
+				sonarServers.forEach(sonarServer => {
+					this.sonarServers.push(sonarServer);
+					sonarServer.sonarIsAccessible$.next(sonarServer.sonarOn);
+				});
+			},
+			complete: () => {
+				this.reportSituationSonars();
+				this.allSonarServersLoaded$.next(true);
+			}
+		})
+
 	}
 
 	/**
 	 * Report the situations for all Sonar servers declared in Fitzhi.
 	 */
 	private reportSituationSonars(): void {
+		console.groupCollapsed('Sonar servers report');
 		this.sonarServers.forEach((sonarServer: SonarServer) => {
 			if (sonarServer.sonarOn) {
 				console.log ("%s of version %s is ON", sonarServer.urlSonar, sonarServer.sonarVersion)
 			} else {
-				console.log ("%s is OF", sonarServer.urlSonar, sonarServer.sonarVersion)
+				console.log ("%s is OFF", sonarServer.urlSonar)
 			}
-		})
+		});
+		console.groupEnd();
 	}
 
 	/**
 	 * Initialize the `SonarServer` object for future usage, and tests its avaibility by retrieving its version.
+	 * 
+	 * This method returns an observable emetting a **SonarServer** Object. 
+	 * 
 	 * @param urlSonar the URL of the Sonar server
 	 */
-	private initSonarServer(urlSonar: string) {
+	private initSonarServer$(urlSonar: string): Observable<SonarServer> {
 		if (traceOn()) {
 			console.log ('initSonarServer(\'%s\')', urlSonar);
 		}
 
-		this.httpClient
+		return this.httpClient
 			.get(urlSonar + '/api/server/version', { responseType: 'text' as 'json' })
 				.pipe(
 					take(1),
 					switchMap((version: string) => {
 						const sonarServer = new SonarServer(version, urlSonar, true);
-						this.sonarServers.push(sonarServer);
-						console.log('Sonar version ' + sonarServer.sonarVersion + ' installed at the URL ' + sonarServer.urlSonar);
+						if (traceOn()) {
+							console.log('Sonar version ' + sonarServer.sonarVersion + ' installed at the URL ' + sonarServer.urlSonar);
+						}
 						sonarServer.loadProjects(this.httpClient);
-						return of({sonarServer: sonarServer, accessible: true});
+						return of(sonarServer);
 					}),
 					catchError((error) => {
 						if (traceOn()) {
@@ -151,14 +178,12 @@ export class SonarService extends InternalService {
 							console.log('Error catched', error);
 							console.groupEnd();
 						}
-						console.log('Sonar is OFFLINE  at the URL ' + urlSonar);
-						const sonarServer = new SonarServer('', urlSonar, false);
-						this.sonarServers.push(sonarServer);
-						return of({sonarServer: sonarServer, accessible: false});
-					}))
-				.subscribe({
-					next: result => result.sonarServer.sonarIsAccessible$.next(result.accessible)
-				});
+						if (traceOn()) {
+							console.log('Sonar is OFFLINE  at the URL ' + urlSonar);
+						}
+						const sonarServer = new SonarServer(undefined, urlSonar, false);
+						return of(sonarServer);
+					}));
 	}
 
 	/**
@@ -190,7 +215,7 @@ export class SonarService extends InternalService {
 						sonarServer.loadSonarSupportedMetrics(this.httpClient, supportedMetrics);
 						metricsLoaded$.next(true);
 					} else {
-						console.warn('Cannot validate supported metrics for %s', sonarServer.urlSonar);
+						console.log('Cannot validate supported metrics for %s', sonarServer.urlSonar);
 					}
 
 			});

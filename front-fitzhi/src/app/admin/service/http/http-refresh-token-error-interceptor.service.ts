@@ -44,7 +44,9 @@ export class HttpRefreshTokenErrorInterceptorService implements HttpInterceptor 
 
 					} else {
 						if (traceOn()) {
-							console.log ('Error catched', response);
+							console.groupCollapsed ('Catch %s for %s', response.status, req.urlWithParams);
+							console.log (response);
+							console.groupEnd();
 						}
 						return throwError(response);
 					}
