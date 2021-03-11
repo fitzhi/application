@@ -304,7 +304,7 @@ export class SonarService extends InternalService {
 	}
 
 	/**
-	 * This function emtis all **Sonar** projects declared on Sonar associated with the Fitzhì project.
+	 * This function emits all **Sonar** projects declared on Sonar associated with the Fitzhì project.
 	 */
 	public allSonarProjects$(project: Project):  Observable<Component[]> {
 		const sonarServer = this.getSonarServer(project);
@@ -362,4 +362,5 @@ export class SonarService extends InternalService {
 		const sonarServer = this.getSonarServer(project);
 		return (sonarServer) ? sonarServer.loadFiles(this.httpClient, key) : of(null);
 	}
+
 }
