@@ -1,31 +1,36 @@
-import { Component, OnInit, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, EventEmitter, Output, OnDestroy } from '@angular/core';
 import { ProjectService } from 'src/app/service/project.service';
 import { traceOn } from 'src/app/global';
+import { BaseComponent } from 'src/app/base/base.component';
 
 @Component({
 	selector: 'app-branch-selector',
 	templateUrl: './branch.component.html',
 	styleUrls: ['./branch.component.css']
 })
-export class BranchComponent implements OnInit {
+export class BranchComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	/**
 	 * We'll send to the parent component that the selected branch has been changed.
 	 */
 	@Output() messengerOnBranchChange = new EventEmitter<string>();
 
-	constructor(public projectService: ProjectService) { }
+	constructor(public projectService: ProjectService) { 
+		super();
+	}
 
 	ngOnInit(): void {
-		this.projectService.branches$.subscribe({
-			next: branches => {
-				if (traceOn()) {
-					console.groupCollapsed ("List of branches received by the BranchComponent");
-					branches.forEach(branch => console.log( branch));
-					console.groupEnd();
-				}		
-			}
-		});
+		this.subscriptions.add(
+			this.projectService.branches$.subscribe({
+				next: branches => {
+					if (traceOn()) {
+						console.groupCollapsed ("List of branches received by the BranchComponent");
+						branches.forEach(branch => console.log( branch));
+						console.groupEnd();
+					}		
+				}
+			})
+		);
 	}
 
 	/**
@@ -44,5 +49,12 @@ export class BranchComponent implements OnInit {
 			console.log ('Set the selectde branch to', this.projectService.project.branch);
 		}
 
+	}
+
+	/**
+	* Calling the base class to unsubscribe all subscriptions.
+	*/
+	ngOnDestroy() {
+		super.ngOnDestroy();
 	}
 }
