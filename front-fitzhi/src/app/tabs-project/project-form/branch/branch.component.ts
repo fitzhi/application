@@ -46,7 +46,7 @@ export class BranchComponent extends BaseComponent implements OnInit, OnDestroy 
 
 	selectBranch(branch: string) {
 		if (traceOn()) {
-			console.log ('Set the selectde branch to', this.projectService.project.branch);
+			console.log ('Set the selected branch to', this.projectService.project.branch);
 		}
 
 	}
