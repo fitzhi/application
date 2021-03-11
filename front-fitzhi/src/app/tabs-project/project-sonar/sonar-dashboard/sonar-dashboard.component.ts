@@ -112,7 +112,7 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 		}
 		this.subscriptions.add(
 			this.sonarService
-				.loadBadge(this.projectService.project, this.sonarKey, sonarServer.projectSonarMetrics[badgeNumero].key)
+				.loadProjectBadge(this.projectService.project, this.sonarKey, sonarServer.projectSonarMetrics[badgeNumero].key)
 				.subscribe(svg => {
 					if (svg) {
 						this.safeBadge.push(this.sanitize.bypassSecurityTrustHtml(svg));
