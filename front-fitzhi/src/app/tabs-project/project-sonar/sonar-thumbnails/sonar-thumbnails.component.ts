@@ -96,7 +96,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 			const quotation = this.sonarService.evaluateSonarProject(this.projectService.project, sonarProject.key);
 			const risk = (quotation === 100) ? 0 : (10 - Math.ceil(quotation / 10));
 			this.sonarService
-				.loadTotalNumberLinesOfCode$(this.projectService.project, sonarProject.key)
+				.loadProjectTotalNumberLinesOfCode$(this.projectService.project, sonarProject.key)
 				.subscribe (totalNumberLinesOfCode => {
 					sonarProject.sonarEvaluation = new SonarEvaluation(quotation, totalNumberLinesOfCode);
 					this.projectService.saveSonarEvaluation(
@@ -140,7 +140,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 	 * @param keyComponentSonar : the component key
 	 */
 	retrieveAndUpdateFilesSummary(componentSonar: SonarProject) {
-		this.sonarService.loadFiles(this.projectService.project, componentSonar.key).subscribe( filesCount => {
+		this.sonarService.loadProjectFiles(this.projectService.project, componentSonar.key).subscribe( filesCount => {
 			componentSonar.projectFilesStats = this.keepTop3TypesOfFile(filesCount);
 			if (traceOn()) {
 				console.groupCollapsed('Top 3 languages for Sonar project %s', componentSonar.key);

@@ -773,7 +773,8 @@ export class ProjectService extends InternalService {
 			metricValues: ProjectSonarMetricValue[],
 			messageErrorEmitter: EventEmitter<MessageGravity>) {
 
-		sonarService.loadSonarComponentMeasures$(
+		
+		sonarService.loadProjectSonarComponentMeasures$(
 				project,
 				sonarKey,
 				metricValues.map(psmv => psmv.key))
