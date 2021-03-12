@@ -213,27 +213,13 @@ export class SonarService extends InternalService {
 	 */
 	public loadSonarMetrics() {
 
-		/**
-		 * This observable will emirt `true` when the metrics will be loaded.
-		 */
-		const metricsLoaded$ = new Subject<boolean>();
-
 		this.referentialService.referentialLoaded$
-			.pipe(
-				takeUntil(metricsLoaded$),
-				switchMap(
-					(doneAndOk: boolean) => {
-						if (doneAndOk) {
-							return this.referentialService.supportedMetrics$;
-						} else {
-							return EMPTY;
-						}
-					}))
-			.subscribe((supportedMetrics) => {
+			.pipe(switchMap(doneAndOk => (doneAndOk) ? this.allSonarServersLoaded$ : EMPTY))
+			.pipe(switchMap(doneAndOk => (doneAndOk) ? this.referentialService.supportedMetrics$ : EMPTY))
+			.pipe(take(1)).subscribe((supportedMetrics) => {
 				this.sonarServers.forEach(sonarServer => {
 					if (sonarServer.sonarOn) {
 						this.loadSonarSupportedMetrics(this.httpClient, sonarServer, supportedMetrics);
-						metricsLoaded$.next(true);
 					} else {
 						console.log('Cannot validate supported metrics for %s', sonarServer.urlSonar);
 					}

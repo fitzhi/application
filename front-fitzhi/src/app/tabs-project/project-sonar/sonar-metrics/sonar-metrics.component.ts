@@ -137,6 +137,10 @@ export class SonarMetricsComponent extends BaseComponent implements OnInit, OnDe
 
 	private loadMetrics$(): Observable<ProjectSonarMetric[]> {
 
+		if (traceOn()) {
+			console.log ('loadMetrics$() for %s', this.projectService.project.name);
+		}
+		
 		const sonarServer = this.sonarService.getSonarServer(this.projectService.project);
 		if (!sonarServer) {
 			return of(null);
