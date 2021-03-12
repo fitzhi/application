@@ -11,27 +11,27 @@ button.okButton {
 }
 
 button.cancelButton {
-    background-image: url( "../assets/img/cancel.png" );
+    background-image: url( /assets/img/cancel.png );
 }
 
 button.cancelButton:hover  {
-    background-image: url( "../assets/img/cancel-activated.png" );
+    background-image: url( /assets/img/cancel-activated.png );
 }
 
 button.okButtonInvalid, .okButtonValid:hover {
-    background-image: url( "../assets/img/ok.png" );
+    background-image: url( /assets/img/ok.png );
 }
 
 button.okButtonValid:hover {
-    background-image: url( "../assets/img/ok-valid-hover.png" );
+    background-image: url( /assets/img/ok-valid-hover.png );
 }
 
 button.okButtonValid:active {
-    background-image: url( "../assets/img/ok-valid-active.png" );
+    background-image: url( /assets/img/ok-valid-active.png );
 }
 
 button.okButtonValid  {
-    background-image: url( "../assets/img/ok-valid.png" );
+    background-image: url( /assets/img/ok-valid.png );
 }
 
 button.btn-outline-secondary {
