@@ -1,21 +1,21 @@
-import { Injectable } from '@angular/core';
-import { switchMap, catchError, take, tap, retry, takeUntil } from 'rxjs/operators';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { InternalService } from '../internal-service';
-import { Metric } from '../data/sonar/metric';
-import { of, BehaviorSubject, Subject, Observable, EMPTY, pipe, forkJoin } from 'rxjs';
-import { Metrics } from '../data/sonar/metrics';
-import { Components } from '../data/sonar/components';
-import { Component } from '../data/sonar/component';
-import { ResponseComponentMeasures } from '../data/sonar/reponse-component-measures';
-import { ILanguageCount } from './ILanguageCount';
-import { ReferentialService } from './referential.service';
-import { Project } from '../data/project';
-import { ProjectService } from './project.service';
-import { SonarServer } from '../data/sonar-server';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, EMPTY, forkJoin, Observable, of, Subject } from 'rxjs';
+import { catchError, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { DeclaredSonarServer } from '../data/declared-sonar-server';
-import { traceOn } from '../global';
+import { Project } from '../data/project';
+import { SonarServer } from '../data/sonar-server';
+import { Component } from '../data/sonar/component';
 import { ComponentTree } from '../data/sonar/component-tree';
+import { Components } from '../data/sonar/components';
+import { Metric } from '../data/sonar/metric';
+import { Metrics } from '../data/sonar/metrics';
+import { ResponseComponentMeasures } from '../data/sonar/reponse-component-measures';
+import { traceOn } from '../global';
+import { InternalService } from '../internal-service';
+import { ILanguageCount } from './ILanguageCount';
+import { ProjectService } from './project.service';
+import { ReferentialService } from './referential.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -31,6 +31,16 @@ export class SonarService extends InternalService {
 	 * This `behaviorSubject` informs the system that the array of sonarServers is loaded.
 	 */
 	allSonarServersLoaded$ = new BehaviorSubject<boolean>(false);
+
+	/**
+	 * Active connected Sonar server.
+	 * 
+	 * _In this first current implementation we assume that there is only **ONE** active Sonar server.
+	 * Most often there will be only ONE declared Sonar server. 
+	 * Future releases, **'more ambitious'**, might need a collection of active connected Sonar server._
+	 *  
+	 */
+	public activeSonarServer: SonarServer = null;
 
 	public CALCULATION_RULES = {
 		'bugs':
@@ -103,7 +113,7 @@ export class SonarService extends InternalService {
 				switchMap( (declaredSonarServers: DeclaredSonarServer[]) => {
 					const checkSonarServers = [];
 					declaredSonarServers.forEach( server => 
-						checkSonarServers.push(this.initSonarServer$(server.urlSonarServer)));
+						checkSonarServers.push(this.initSonarServer$(server)));
 					return forkJoin(checkSonarServers);
 				})
 			)
@@ -145,17 +155,17 @@ export class SonarService extends InternalService {
 	 * 
 	 * @param urlSonar the URL of the Sonar server
 	 */
-	private initSonarServer$(urlSonar: string): Observable<SonarServer> {
+	private initSonarServer$(sonar: DeclaredSonarServer): Observable<SonarServer> {
 		if (traceOn()) {
-			console.log ('initSonarServer(\'%s\')', urlSonar);
+			console.log ('initSonarServer(\'%s\')', sonar.urlSonarServer);
 		}
 
 		return this.httpClient
-			.get(urlSonar + '/api/server/version', { responseType: 'text' as 'json' })
+			.get(sonar.urlSonarServer + '/api/server/version', { responseType: 'text' as 'json' })
 				.pipe(
 					take(1),
 					switchMap((version: string) => {
-						const sonarServer = new SonarServer(version, urlSonar, true);
+						const sonarServer = new SonarServer(version, sonar.urlSonarServer, true, sonar.user, sonar.password);
 						if (traceOn()) {
 							console.log('Sonar version ' + sonarServer.sonarVersion + ' installed at the URL ' + sonarServer.urlSonar);
 						}
@@ -164,14 +174,14 @@ export class SonarService extends InternalService {
 					}),
 					catchError((error) => {
 						if (traceOn()) {
-							console.groupCollapsed ('Connection failed with the Sonar server %s', urlSonar);
+							console.groupCollapsed ('Connection failed with the Sonar server %s', sonar.urlSonarServer);
 							console.log('Error catched', error);
 							console.groupEnd();
 						}
 						if (traceOn()) {
-							console.log('Sonar is OFFLINE  at the URL ' + urlSonar);
+							console.log('Sonar is OFFLINE  at the URL ' + sonar.urlSonarServer);
 						}
-						const sonarServer = new SonarServer(undefined, urlSonar, false);
+						const sonarServer = new SonarServer(undefined, sonar.urlSonarServer, false);
 						return of(sonarServer);
 					}));
 	}
@@ -422,8 +432,10 @@ export class SonarService extends InternalService {
 	public loadTotalNumberLinesOfCode$(httpClient: HttpClient, urlSonar: string, key: string): Observable<number> {
 		return this.loadSonarComponentMeasures$(httpClient, urlSonar, key, ['ncloc']).
 			pipe(
-				take(1),
 				switchMap( (response: ResponseComponentMeasures) => {
+					if ((!response.component) || (!response.component.measures) || (response.component.measures.length === 0)) {
+						return of(0);
+					}
 					return of(Number(response.component.measures[0].value));
 				})
 			);
@@ -448,7 +460,18 @@ export class SonarService extends InternalService {
 	 * @param sonarServer the Sonar server whose projects we are looking for
 	 */
 	 loadProjects(httpClient: HttpClient, sonarServer: SonarServer) {
-		this.loadComponents$(httpClient, sonarServer.urlSonar, 'TRK').subscribe({
+
+		this.connectSonar$(sonarServer).pipe(
+			switchMap(
+				(doneAndOk: boolean) => {
+					if (doneAndOk) {
+						return this.loadComponents$(httpClient, sonarServer.urlSonar, 'TRK');
+					} else {
+						return EMPTY;
+					}
+				}
+			)
+		).subscribe({
 			next: components => {
 				if (traceOn()) {
 					console.groupCollapsed(components.components.length + ' components retrieved.');
@@ -459,6 +482,56 @@ export class SonarService extends InternalService {
 				sonarServer.allSonarProjects$.next(components.components);
 			}
 		});
+	}
+
+	/**
+	 * Authenticate the current user to given Sonar if it's necessary or possible.
+	 * @param sonarServer the Sonar server whose projects we are looking for
+	 */
+	 connectSonar$(sonarServer: SonarServer): Observable<boolean> {
+
+		if (traceOn()) {
+			console.log ('connectSonar$ (%s)', sonarServer.urlSonar);
+		}
+		if (!sonarServer.sonarOn) {
+			return of(false);
+		}
+
+		if ((this.activeSonarServer) && (this.activeSonarServer.urlSonar === sonarServer.urlSonar)) {
+			return of(true);
+		}
+
+		if ( (!this.activeSonarServer) || (this.activeSonarServer.urlSonar !== sonarServer.urlSonar) ) {
+			// If not user provided for this sonar server,
+			// we assume that this Sonar server is a publinc unsecured server.
+			// We do not memorize this Sonar server because no authentification has been done.
+			if (!sonarServer.user) {
+				return of(true);
+			} else {
+				return this.authenticate$(sonarServer.urlSonar, sonarServer.user, sonarServer.password)
+					.pipe(tap(r => this.activeSonarServer = sonarServer));
+			}
+		}
+		return of(true);
+	}
+
+	private authenticate$(urlSonar:string, user: string, password: string) {
+
+		if (traceOn()) {
+			console.log ('Trying to Authenticate to %s', urlSonar);
+		}
+		let params = new HttpParams()
+			.set('login', user)
+			.set('password', password);
+
+		return this.httpClient
+			.post<any>(urlSonar + '/api/authentication/login', '', {responseType: 'text' as 'json',  params: params})
+			.pipe(
+				take(1),
+				switchMap(r => of(true)),
+				catchError( error => of(false))
+		);
+	
 	}
 
 	/**

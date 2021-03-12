@@ -13,6 +13,7 @@ import { ThumbnailQuotationBadge } from './thumbnail-quotation-badge';
 import { SonarEvaluation } from 'src/app/data/sonar-evaluation';
 import { BehaviorSubject } from 'rxjs';
 import { traceOn } from 'src/app/global';
+import { take } from 'rxjs/operators';
 
 @Component({
 	selector: 'app-sonar-thumbnails',
@@ -76,7 +77,8 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 
 		this.subscriptions.add(
 			this.panelSwitchTransmitter$.subscribe( (panelSwitchEvent: PanelSwitchEvent) => {
-				this.updateDisplayConsolidationBadge();
+				// I comment the line below because the method updateDisplayConsolidationBadge() is already invoked above	
+				// this.updateDisplayConsolidationBadge();
 				if (!panelSwitchEvent.keySonar) {
 					if (traceOn()) {
 						console.log ('No Sonar project declared!');
@@ -97,14 +99,22 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 			const risk = (quotation === 100) ? 0 : (10 - Math.ceil(quotation / 10));
 			this.sonarService
 				.loadProjectTotalNumberLinesOfCode$(this.projectService.project, sonarProject.key)
+				.pipe(take(1))
 				.subscribe (totalNumberLinesOfCode => {
 					sonarProject.sonarEvaluation = new SonarEvaluation(quotation, totalNumberLinesOfCode);
-					this.projectService.saveSonarEvaluation(
+					this.projectService.saveSonarEvaluation$(
 						this.projectService.project.id, sonarProject.key, quotation, totalNumberLinesOfCode)
+						.pipe(take(1))
 						.subscribe(doneAndOk => {
 							if (doneAndOk) {
+								if (traceOn()) {
+									console.log ('Saving the quotation for project ' + sonarProject.name);
+								}
 								this.messageService.info('Saving the quotation for project ' + sonarProject.name);
 							} else {
+								if (traceOn()) {
+									console.log('Error when saving the quotation for project ' + sonarProject.name);
+								}
 								this.messageService.error('Error when saving the quotation for project ' + sonarProject.name);
 							}
 						});

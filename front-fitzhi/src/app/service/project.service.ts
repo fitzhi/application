@@ -838,12 +838,15 @@ export class ProjectService extends InternalService {
 
 	/**
 	* Save the evaluation for a project.
+	*
+	* Return an observable emitting a boolean if the operation succeeds.
+	*
 	* @param idProject the given project identifier
 	* @param key the Sonar key from where the stats are coming from
 	* @param evaluation the evaluation processed for this Sonar project
 	* @param totalNumberLinesofCode the number of lines of code detected for this Sonar project
 	*/
-	saveSonarEvaluation(idProject: number, key: string, evaluation: number, totalNumberLinesOfCode: number): Observable<Boolean> {
+	saveSonarEvaluation$(idProject: number, key: string, evaluation: number, totalNumberLinesOfCode: number): Observable<Boolean> {
 		if (traceOn()) {
 			console.groupCollapsed('Saving the evaluation for Sonar entry %s project identifier %d', key, idProject);
 			console.log ('Evaluation obtained', evaluation);
