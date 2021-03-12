@@ -324,7 +324,7 @@ export class SonarService extends InternalService {
 	 * @param key the Sonar key project
 	 * @param metric the current metric
 	 */
-	public loadProjectBadge(project: Project, key: string, metric: string): Observable<string> {
+	public loadProjectBadge$(project: Project, key: string, metric: string): Observable<string> {
 		const sonarServer = this.getSonarServer(project);
 		return (sonarServer) ? this.loadBadge(this.httpClient, sonarServer.urlSonar, key, metric) : of(null);
 	}
