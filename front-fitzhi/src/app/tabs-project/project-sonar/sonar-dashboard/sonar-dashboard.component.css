@@ -20,7 +20,7 @@ div.badges {
 }
 
 button.class-sonar-activated {
-    background-image: url('../../../../assets/img/sonar-selected.png');
+    background-image: url(/assets/img/sonar-selected.png);
     background-size: contain;
     background-repeat: no-repeat;
     border: 1px solid back;
