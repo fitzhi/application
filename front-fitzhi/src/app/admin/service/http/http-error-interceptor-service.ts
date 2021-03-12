@@ -1,5 +1,5 @@
 import { retry, catchError, tap } from 'rxjs/operators';
-import { HttpHandler, HttpEvent, HttpErrorResponse, HttpRequest, HttpInterceptor } from '@angular/common/http';
+import { HttpHandler, HttpEvent, HttpErrorResponse, HttpRequest, HttpInterceptor, HttpResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { Injectable, Injector } from '@angular/core';
 import { MessageService } from '../../../interaction/message/message.service';
@@ -21,9 +21,18 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 				retry(0),
 				tap(response => {
 					if (traceOn()) {
-						console.groupCollapsed ('%s %s', request.method, request.url);
-						console.log (response);
-						console.groupEnd();
+						if (response instanceof HttpResponse) {
+							// We do not log message if the HTTP request is sucessful
+							if (response.status !== HttpCodes.success) {
+								console.groupCollapsed ('%s %s', request.method, request.url);
+								console.log (response);
+								console.groupEnd();
+							}
+						} else {
+							console.groupCollapsed ('WTF : Exotic response %s %s', request.method, request.url);
+							console.log (response);
+							console.groupEnd();
+						}
 					}
 				}),
 				catchError((response: HttpErrorResponse) => {
