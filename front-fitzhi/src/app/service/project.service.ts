@@ -613,7 +613,7 @@ export class ProjectService extends InternalService {
 	* @param idRelatedStaff a staff identifier if the ghost has to be related to him, or -1 if this pseudo is related to no one.
 	* @param technical: TRUE if the ghost is in fact a technical user used for administration operations
 	*/
-	updateGhost(idProject: number, pseudo: string, idRelatedStaff: number, technical: boolean): Observable<boolean> {
+	updateGhost$(idProject: number, pseudo: string, idRelatedStaff: number, technical: boolean): Observable<boolean> {
 		if (traceOn()) {
 			console.groupCollapsed('Updating a ghost');
 			console.log ('idProject', idProject);

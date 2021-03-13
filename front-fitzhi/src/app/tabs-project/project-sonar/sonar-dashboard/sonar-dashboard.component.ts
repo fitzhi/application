@@ -68,6 +68,7 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 					const sonarServer = this.sonarService.getSonarServer(this.projectService.project);
 					if (sonarServer) {
 						const version = parseFloat(sonarServer.sonarVersion.substring(0, 3));
+						// The releases of Sonar prior to version 7.1 do not support the API Rest with these metrics
 						this.isSonarVersion71x = (version > 7.1);
 						if (traceOn()) {
 							if (this.isSonarVersion71x) {

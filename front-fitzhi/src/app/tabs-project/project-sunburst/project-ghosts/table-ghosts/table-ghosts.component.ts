@@ -96,42 +96,42 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 	}
 
 	/**
-	 * The check Box for the id "technical" has been checked or unchecked.
+	 * The check Box for the id **"technical"** has been checked or unchecked.
+	 * 
+	 * @param ghost the ghost to be set as technical 
 	 */
-	checkTechnical(unknown: Unknown) {
-		if (unknown.technical) {
-			unknown.login = '';
-			unknown.idStaff = -1;
-			unknown.firstname = '';
-			unknown.lastname = '';
-			unknown.active = false;
-			unknown.external = false;
-
+	checkTechnical(ghost: Unknown): void {
+		if (ghost.technical) {
+			ghost.login = '';
+			ghost.idStaff = -1;
+			ghost.firstname = '';
+			ghost.lastname = '';
+			ghost.active = false;
+			ghost.external = false;
 		}
-		this.projectService.updateGhost (
-			this.projectService.project.id,
-			unknown.pseudo,
-			-1,
-			unknown.technical)
-		.pipe(take(1))
-		.subscribe(result => {
-			if (result) {
-				this.messageService.info('The pseudo ' + unknown.pseudo + ' is now '
-						+ (unknown.technical ? 'technical' : 'non technical'));
-			}
-		});
+
+		this.projectService.updateGhost$ (this.projectService.project.id, ghost.pseudo, -1, ghost.technical)
+			.pipe(take(1))
+			.subscribe({
+				next: result => {
+					if (result) {
+						this.messageService.info('The pseudo ' + ghost.pseudo + ' is now '
+								+ (ghost.technical ? 'technical' : 'non technical'));
+					}
+				}
+			});
 }
 
 	/**
 	 * The check Box for the id "active" has been checked or unchecked.
 	 */
-	checkActive(unknown: Unknown) {
+	checkActive(ghost: Unknown) {
 	}
 
 	/**
 	 * The check Box for the id "active" has been checked or unchecked.
 	 */
-	checkExternal(unknown: Unknown) {
+	checkExternal(ghost: Unknown) {
 	}
 
 	public checkValue(technical: boolean) {
@@ -274,7 +274,7 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 		const selectedStaff = this.allStaff.filter(s => (s.login.toLowerCase().indexOf(ghost.login.toLowerCase()) === 0) );
 		if (traceOn()) {
 			if (selectedStaff) {
-				console.groupCollapsed('selected staff correspoding to %s', ghost.login);
+				console.groupCollapsed('selected staff corresponding to %s', ghost.login);
 				selectedStaff.forEach(staff => console.log (staff.firstName + ' ' + staff.lastName + ' & login : ' + staff.login));
 				console.groupEnd();
 			} else {
@@ -286,33 +286,26 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 			ghost.staffRelated = selectedStaff[0];
 			ghost.login = selectedStaff[0].login;
 			ghost.idStaff = ghost.staffRelated.idStaff;
-			this.projectService.updateGhost (
-				this.projectService.project.id,
-				ghost.pseudo,
-				ghost.idStaff,
-				false)
-			.pipe(take(1))
-			.subscribe(result => {
-				if (result) {
-					this.messageService.info('The pseudo ' + ghost.pseudo + ' has been associated to '
-						+ ghost.staffRelated.firstName + ' ' + ghost.staffRelated.lastName);
-				}
-			});
+			this.projectService.updateGhost$ (this.projectService.project.id, ghost.pseudo, ghost.idStaff, false)
+				.pipe(take(1))
+				.subscribe(result => {
+					if (result) {
+						this.messageService.info('The pseudo ' + ghost.pseudo + ' has been associated to '
+							+ ghost.staffRelated.firstName + ' ' + ghost.staffRelated.lastName);
+					}
+				});
 			return true;
 		} else {
 			// If the ghost was already associated, we reset this association
 			if (ghost.idStaff  > 0) {
-				this.projectService.updateGhost (
-					this.projectService.project.id,
-					ghost.pseudo,
-					-1,
-					false)
-				.pipe(take(1))
-				.subscribe(result => {
-					if (result) {
-						this.messageService.info('The pseudo ' + ghost.pseudo + ' is no more associated to an existing staff member');
+				this.projectService.updateGhost$ (this.projectService.project.id, ghost.pseudo, -1, false)
+					.pipe(take(1))
+					.subscribe(result => {
+						if (result) {
+							this.messageService.info('The pseudo ' + ghost.pseudo + ' is no more associated to an existing staff member');
+						}
 					}
-				});
+				);
 			}
 			ghost.idStaff = -1;
 			ghost.firstname = '';

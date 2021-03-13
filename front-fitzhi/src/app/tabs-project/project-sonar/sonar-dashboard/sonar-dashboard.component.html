@@ -15,9 +15,15 @@
                 </app-sonar-quotation>
         </div>
 </div>
-<div *ngIf="(isSonarAccessible && !isSonarVersion71x)">
-        Sonar version below 7.1x dashboard
+<div class="sonar-too-old" *ngIf="(isSonarAccessible && !isSonarVersion71x)">
+        <p id="sonarTooOld">
+                Sonar version prior to the release 7.1.
+                <br/>
+                This version does not allow this feature.
+        </p>
 </div>
-<div *ngIf="!isSonarAccessible">
-        Sonar is not accessible !
+<div class="sonar-inaccessible" *ngIf="!isSonarAccessible">
+        <p id="sonarUnreachable">
+                Sonar is either not declared, nor unreachable.
+        </p>
 </div>
