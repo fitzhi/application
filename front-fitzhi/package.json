@@ -9,7 +9,8 @@
     "test:watch": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "prod": "ng build --prod --output-path ../../spoq/docs --base-href /"
+    "prod-spoq": "ng build --prod --output-path ../../spoq/docs --base-href /",
+    "prod-var-www-fitzhi": "ng build --prod --output-path /var/www/fitzhi --base-href /"
   },
   "private": true,
   "dependencies": {

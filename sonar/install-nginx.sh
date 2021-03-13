@@ -43,7 +43,7 @@ sudo nano /etc/nginx/snippets/self-signed.conf
 # Create a Strong encryption snippet
 sudo nano /etc/nginx/snippets/ssl-params.conf
 #
-# Copy the content of file ssl-params.cof
+# Copy the content of file ssl-params.conf
 #
 
 #

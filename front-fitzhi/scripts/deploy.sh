@@ -1,5 +1,6 @@
 echo "Starting the deployment to spoq.io"
 echo "----------------------------------"
+cd ..
 if [ ! -d "../../spoq/" ] 
 then
     echo "Directory '../../spoq/' DOES NOT exist. We clone the SPOQ repository."
@@ -16,7 +17,7 @@ rm -rf docs
 rm *
 cd ../application/front-fitzhi
 sh ./gen-build-ts.sh
-npm run prod
+npm run prod-spoq
 cp -i ../../spoq/docs/index.html ../../spoq/docs/404.html
 mv ../../spoq/docs/* ../../spoq/
 echo spoq.io >../../spoq/CNAME
