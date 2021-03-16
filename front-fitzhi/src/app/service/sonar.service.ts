@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { timeStamp } from 'node:console';
 import { BehaviorSubject, EMPTY, forkJoin, Observable, of, Subject } from 'rxjs';
 import { catchError, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { DeclaredSonarServer } from '../data/declared-sonar-server';
