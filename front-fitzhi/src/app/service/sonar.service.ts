@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, EMPTY, forkJoin, Observable, of, Subject } from 'rxjs';
 import { catchError, switchMap, take, takeUntil, tap } from 'rxjs/operators';
@@ -506,12 +506,14 @@ export class SonarService extends InternalService {
 		if (traceOn()) {
 			console.log ('Trying to Authenticate to %s', urlSonar);
 		}
-		let params = new HttpParams()
-			.set('login', user)
-			.set('password', password);
+
+		let headers: HttpHeaders = new HttpHeaders();
+
+		const authdata = 'Basic ' + btoa(user + ':' + password);
+		headers = headers.append('Authorization', authdata);
 
 		return this.httpClient
-			.post<any>(urlSonar + '/api/authentication/login', '', {responseType: 'text' as 'json',  params: params})
+			.post<any>(urlSonar + '/api/authentication/login', '', {headers: headers, responseType: 'text' as 'json'})
 			.pipe(
 				take(1),
 				switchMap(r => of(true)),
