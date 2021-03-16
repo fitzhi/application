@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { timeStamp } from 'node:console';
 import { BehaviorSubject, EMPTY, forkJoin, Observable, of, Subject } from 'rxjs';
 import { catchError, switchMap, take, takeUntil, tap } from 'rxjs/operators';
 import { DeclaredSonarServer } from '../data/declared-sonar-server';
@@ -31,16 +32,6 @@ export class SonarService extends InternalService {
 	 * This `behaviorSubject` informs the system that the array of sonarServers is loaded.
 	 */
 	allSonarServersLoaded$ = new BehaviorSubject<boolean>(false);
-
-	/**
-	 * Active connected Sonar server.
-	 * 
-	 * _In this first current implementation we assume that there is only **ONE** active Sonar server.
-	 * Most often there will be only ONE declared Sonar server. 
-	 * Future releases, **'more ambitious'**, might need a collection of active connected Sonar server._
-	 *  
-	 */
-	public activeSonarServer: SonarServer = null;
 
 	public CALCULATION_RULES = {
 		'bugs':
@@ -259,7 +250,7 @@ export class SonarService extends InternalService {
 		if (!sonarServer) {
 			return EMPTY;
 		}
-		return this.loadSonarComponentMeasures$(this.httpClient, sonarServer.urlSonar, key, metrics);
+		return this.loadSonarComponentMeasures$(this.httpClient, sonarServer, key, metrics);
 	}
 
 	/**
@@ -326,7 +317,7 @@ export class SonarService extends InternalService {
 	 */
 	public loadProjectBadge$(project: Project, key: string, metric: string): Observable<string> {
 		const sonarServer = this.getSonarServer(project);
-		return (sonarServer) ? this.loadBadge(this.httpClient, sonarServer.urlSonar, key, metric) : of(null);
+		return (sonarServer) ? this.loadBadge(this.httpClient, sonarServer, key, metric) : of(null);
 	}
 
 	/**
@@ -336,7 +327,7 @@ export class SonarService extends InternalService {
 	 */
 	public loadProjectTotalNumberLinesOfCode$(project: Project, key: string): Observable<number> {
 		const sonarServer = this.getSonarServer(project);
-		return (sonarServer) ? this.loadTotalNumberLinesOfCode$(this.httpClient, sonarServer.urlSonar, key) : of(null);
+		return (sonarServer) ? this.loadTotalNumberLinesOfCode$(this.httpClient, sonarServer, key) : of(null);
 	}
 
 	/**
@@ -346,7 +337,20 @@ export class SonarService extends InternalService {
 	 */
 	loadProjectFiles(project: Project, key: string): Observable<ILanguageCount> {
 		const sonarServer = this.getSonarServer(project);
-		return (sonarServer) ? this.loadFiles(this.httpClient, sonarServer.urlSonar, key) : of(null);
+		return (sonarServer) ? this.loadFiles(this.httpClient, sonarServer, key) : of(null);
+	}
+
+
+	sonarHeaders(httpClient: HttpClient, sonarServer: SonarServer): HttpHeaders {
+
+		let headers: HttpHeaders = new HttpHeaders();
+
+		if (sonarServer.user) {
+			const authdata = 'Basic ' + btoa(sonarServer.user + ':' + sonarServer.password);
+			headers = headers.append('Authorization', authdata);
+		}
+
+		return headers;
 	}
 
 	/**
@@ -357,14 +361,8 @@ export class SonarService extends InternalService {
 	 */
 	 loadSonarSupportedMetrics(httpClient: HttpClient, sonarServer: SonarServer, applicationSupportedMetrics: string[]) {
 
-		let headers: HttpHeaders = new HttpHeaders();
-
-		if (sonarServer.user) {
-			const authdata = 'Basic ' + btoa(sonarServer.user + ':' + sonarServer.password);
-			headers = headers.append('Authorization', authdata);
-		}
-
-		httpClient.get<Metrics>(sonarServer.urlSonar + '/api/metrics/search?ps=500', { headers: headers })
+		httpClient.get<Metrics>(sonarServer.urlSonar + '/api/metrics/search?ps=500', 
+			{ headers: this.sonarHeaders(httpClient, sonarServer) })
 			.pipe(
 				tap(
 					metrics => {
@@ -394,18 +392,19 @@ export class SonarService extends InternalService {
 	/**
 	 * Load the measures evaluated for a component.
 	 * @param httpClient HTTP client for retrieving data from the Sonar server.
-	 * @param urlSonar The Sonar URL to access
+	 * @param sonarServer The Sonar server object
 	 * @param key the key of the evaluated Sonar project
 	 * @param metrics list of metrics to be evaluated
 	 */
-	loadSonarComponentMeasures$(httpClient: HttpClient, urlSonar: string, key: string, metrics: string[]): Observable<ResponseComponentMeasures> {
+	loadSonarComponentMeasures$(httpClient: HttpClient, sonarServer: SonarServer, key: string, metrics: string[]): Observable<ResponseComponentMeasures> {
 		if (traceOn()) {
 			console.log('Loading mesures for Sonar project %s', key);
 		}
 		const params = new HttpParams().set('component', key).set('metricKeys', metrics.join(','));
 		const apiMesures = '/api/measures/component';
 		return httpClient
-			.get<ResponseComponentMeasures>(urlSonar + apiMesures, { params: params })
+			.get<ResponseComponentMeasures>(sonarServer.urlSonar + apiMesures, 
+					{ headers: this.sonarHeaders(httpClient, sonarServer), params: params })
 			.pipe(
 				tap(response => {
 					if (traceOn()) {
@@ -419,12 +418,12 @@ export class SonarService extends InternalService {
 	/**
 	 * Load the total number of code
 	 * @param httpClient HTTP client for gathering data from the Sonar server.
-	 * @param urlSonar The Sonar URL to access
+	 * @param sonarServer The Sonarserver from where we try to retrieve data
 	 * @param key the Sonar project key
 	 * @returns an observable emiting the total number of lines of code in this project
 	 */
-	public loadTotalNumberLinesOfCode$(httpClient: HttpClient, urlSonar: string, key: string): Observable<number> {
-		return this.loadSonarComponentMeasures$(httpClient, urlSonar, key, ['ncloc']).
+	public loadTotalNumberLinesOfCode$(httpClient: HttpClient, sonarServer: SonarServer, key: string): Observable<number> {
+		return this.loadSonarComponentMeasures$(httpClient, sonarServer, key, ['ncloc']).
 			pipe(
 				switchMap( (response: ResponseComponentMeasures) => {
 					if ((!response.component) || (!response.component.measures) || (response.component.measures.length === 0)) {
@@ -438,13 +437,14 @@ export class SonarService extends InternalService {
 	/**
 	 * Load the components filtered on a passed type.
 	 * @param httpClient HTTP client for gathering data from the Sonar server.
-	 * @param urlSonar The Sonar URL to access
+	 * @param sonarServer The Sonar server to access
 	 * @param type the given type.
 	 */
-	loadComponents$(httpClient: HttpClient, urlSonar: string, type: string): Observable<Components> {
+	loadComponents$(httpClient: HttpClient, sonarServer: SonarServer, type: string): Observable<Components> {
 		const params = new HttpParams().set('qualifiers', type).set('ps', '500');
 		return httpClient
-			.get<Components>(urlSonar + '/api/components/search', { params })
+			.get<Components>(sonarServer.urlSonar + '/api/components/search', 
+				{ params, headers: this.sonarHeaders(httpClient, sonarServer) })
 			.pipe(take(1));
 	}
 
@@ -455,105 +455,45 @@ export class SonarService extends InternalService {
 	 */
 	 loadProjects(httpClient: HttpClient, sonarServer: SonarServer) {
 
-		this.connectSonar$(sonarServer).pipe(
-			switchMap(
-				(doneAndOk: boolean) => {
-					if (doneAndOk) {
-						return this.loadComponents$(httpClient, sonarServer.urlSonar, 'TRK');
-					} else {
-						return EMPTY;
+		this.loadComponents$(httpClient, sonarServer, 'TRK')
+			.subscribe({
+				next: components => {
+					if (traceOn()) {
+						console.groupCollapsed(components.components.length + ' components retrieved.');
+						components.components.forEach(component => console.log(component.name, component.key));
+						console.groupEnd();
 					}
+					sonarServer.allSonarProjects = components.components;
+					sonarServer.allSonarProjects$.next(components.components);
 				}
-			)
-		).subscribe({
-			next: components => {
-				if (traceOn()) {
-					console.groupCollapsed(components.components.length + ' components retrieved.');
-					components.components.forEach(component => console.log(component.name, component.key));
-					console.groupEnd();
-				}
-				sonarServer.allSonarProjects = components.components;
-				sonarServer.allSonarProjects$.next(components.components);
-			}
-		});
-	}
-
-	/**
-	 * Authenticate the current user to given Sonar if it's necessary or possible.
-	 * @param sonarServer the Sonar server whose projects we are looking for
-	 */
-	 connectSonar$(sonarServer: SonarServer): Observable<boolean> {
-
-		if (traceOn()) {
-			console.log ('connectSonar$ (%s)', sonarServer.urlSonar);
-		}
-		if (!sonarServer.sonarOn) {
-			return of(false);
-		}
-
-		if ((this.activeSonarServer) && (this.activeSonarServer.urlSonar === sonarServer.urlSonar)) {
-			return of(true);
-		}
-
-		if ( (!this.activeSonarServer) || (this.activeSonarServer.urlSonar !== sonarServer.urlSonar) ) {
-			// If not user provided for this sonar server,
-			// we assume that this Sonar server is a publinc unsecured server.
-			// We do not memorize this Sonar server because no authentification has been done.
-			if (!sonarServer.user) {
-				return of(true);
-			} else {
-				return this.authenticate$(sonarServer.urlSonar, sonarServer.user, sonarServer.password)
-					.pipe(tap(r => this.activeSonarServer = sonarServer));
-			}
-		}
-		return of(true);
-	}
-
-	private authenticate$(urlSonar:string, user: string, password: string) {
-
-		if (traceOn()) {
-			console.log ('Trying to Authenticate to %s', urlSonar);
-		}
-
-		let headers: HttpHeaders = new HttpHeaders();
-
-		const authdata = 'Basic ' + btoa(user + ':' + password);
-		headers = headers.append('Authorization', authdata);
-
-		return this.httpClient
-			.post<any>(urlSonar + '/api/authentication/login', '', {headers: headers, responseType: 'text' as 'json'})
-			.pipe(
-				take(1),
-				switchMap(r => of(true)),
-				catchError( error => of(false))
-		);
-	
+			});
 	}
 
 	/**
 	 * Load the badge for the given metric.
 	 * @param httpClient HTTP client for gathering data from the Sonar server.
-	 * @param urlSonar The Sonar URL to access
+	 * @param sonarServer The Sonar server to access
 	 * @param key the Sonar key project
 	 * @param metric the current metric
 	 */
-	 loadBadge(httpClient: HttpClient, urlSonar: string, key: string, metric: string): Observable<string> {
+	 loadBadge(httpClient: HttpClient, sonarServer: SonarServer, key: string, metric: string): Observable<string> {
 		const params = new HttpParams().set('metric', metric).set('project', key);
 		return httpClient
-			.get<string>(urlSonar + '/api/project_badges/measure',
-				{ params: params, responseType: 'text' as 'json' });
+			.get<string>(sonarServer.urlSonar + '/api/project_badges/measure',
+				{ headers: this.sonarHeaders(httpClient, sonarServer), params: params, responseType: 'text' as 'json' });
 	}
 
 	/**
 	 * Load & count the number of files for the given key.
 	 * @param httpClient HTTP client for gathering data from the Sonar server.
-	 * @param urlSonar The Sonar URL to access
+	 * @param sonarServer The Sonar server to access
 	 * @param key the type of FILE from which we are agregating data
 	 */
-	loadFiles(httpClient: HttpClient, urlSonar: string, key: string): Observable<ILanguageCount> {
+	loadFiles(httpClient: HttpClient, sonarServer: SonarServer, key: string): Observable<ILanguageCount> {
 		const params = new HttpParams().set('component', key).set('qualifiers', 'FIL').set('ps', '500');
 		return httpClient
-			.get<ComponentTree>(urlSonar + '/api/components/tree', { params: params })
+			.get<ComponentTree>(sonarServer.urlSonar + '/api/components/tree', 
+				{ params: params, headers: this.sonarHeaders(httpClient, sonarServer) })
 			.pipe(
 				tap((response: ComponentTree) => {
 					if (traceOn()) {
