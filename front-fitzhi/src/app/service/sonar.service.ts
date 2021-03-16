@@ -356,7 +356,15 @@ export class SonarService extends InternalService {
 	 * @param applicationSupportedMetrics Array of Sonar metrics supported by Fitzhì.
 	 */
 	 loadSonarSupportedMetrics(httpClient: HttpClient, sonarServer: SonarServer, applicationSupportedMetrics: string[]) {
-		httpClient.get<Metrics>(sonarServer.urlSonar + '/api/metrics/search?ps=500')
+
+		let headers: HttpHeaders = new HttpHeaders();
+
+		if (sonarServer.user) {
+			const authdata = 'Basic ' + btoa(sonarServer.user + ':' + sonarServer.password);
+			headers = headers.append('Authorization', authdata);
+		}
+
+		httpClient.get<Metrics>(sonarServer.urlSonar + '/api/metrics/search?ps=500', { headers: headers })
 			.pipe(
 				tap(
 					metrics => {
