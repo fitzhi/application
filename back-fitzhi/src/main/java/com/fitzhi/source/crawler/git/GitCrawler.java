@@ -485,10 +485,11 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * @throws IOException thrown if any IO exception occurs
 	 */
 	static void removeCloneDir(Path path) throws IOException {
-		Files.walk(path)
-			.sorted(Comparator.reverseOrder())
-			.map(Path::toFile)
-			.forEach(File::delete);
+		try (Stream<Path> walk = Files.walk(path)) {
+			walk.sorted(Comparator.reverseOrder())
+				.map(Path::toFile)
+				.forEach(File::delete);
+		}
 	}
 
 	@Override
@@ -881,7 +882,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 */
 	static int progressionPercentage(int numberOfFiles, int totalNumberOfFiles) {
 		final int OFFSET = 30;
-		double d = OFFSET + numberOfFiles * (100 - OFFSET) / totalNumberOfFiles;
+		double d = OFFSET + (double) numberOfFiles * (100 - OFFSET) / totalNumberOfFiles;
 		int progression = (int) Math.floor( d );
 		if (log.isDebugEnabled()) {
 			log.debug (String.format("(%d * 0.7) / %d gives the progression %d", numberOfFiles, totalNumberOfFiles, progression));
