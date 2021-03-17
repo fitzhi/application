@@ -8,6 +8,7 @@ export const environment = {
 	production: false,
 	debug: true,
 	version: require('../../package.json').version,
+	apiUrl: 'http://localhost:8080',
 	buildTime: RunTimeFile.buildtime
 };
 
