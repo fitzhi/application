@@ -4,6 +4,6 @@ export const environment = {
 	production: true,
 	debug: false,
 	version: require('../../package.json').version,
-	apiUrl: 'http://localhost:8080',
+	apiUrl: 'https://spoq.fitzhi.com',
 	buildTime: RunTimeFile.buildtime
 };

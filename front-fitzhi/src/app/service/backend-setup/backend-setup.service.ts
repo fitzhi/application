@@ -4,16 +4,21 @@ import { HttpClient } from '@angular/common/http';
 import { FirstConnection } from 'src/app/data/first-connection';
 import { catchError, switchMap } from 'rxjs/operators';
 import { Constants } from 'src/app/constants';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class BackendSetupService {
 
+	public environment = environment;
+
 	/**
-     * Default URL for a local directory.
+     * Default URL of the API Rest server.
+	 * 
+	 * This URL is provided at build time.
      */
-	public defaultUrl = 'http://localhost:8080';
+	public defaultUrl = environment.apiUrl;
 
 	constructor(private  httpClient: HttpClient) {}
 

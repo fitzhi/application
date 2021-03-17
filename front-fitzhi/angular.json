@@ -64,7 +64,7 @@
                 }
               ]
             },
-            "production.fitzhi.com": {
+            "spoq": {
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
