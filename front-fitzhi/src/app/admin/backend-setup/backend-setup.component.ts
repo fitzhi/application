@@ -46,7 +46,6 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
 
 
 	constructor(
-		private httpClient: HttpClient,
 		private messageService: MessageService,
 		private backendSetupService: BackendSetupService) { super(); }
 
