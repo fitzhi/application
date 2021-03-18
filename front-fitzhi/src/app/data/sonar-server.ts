@@ -93,13 +93,20 @@ export class SonarServer {
 		return null;
 	}
 
-	/**
+	/**s
 	 * Process the Sonar evaluation for the selected metrics.
 	 * @param sonarProject the given Sonar project
 	 * @returns an evaluation of the Sonar project on a base of 100.
 	 */
 	evaluateSonarProject(sonarProject: SonarProject): number {
 		let result = 0;
+		if (!sonarProject.projectSonarMetricValues) {
+			if (traceOn()) {
+				console.log ('WTF Sonar project %s without metrics', sonarProject.name);
+			}
+			return 0;
+		}
+
 		sonarProject.projectSonarMetricValues.forEach(metricValues => {
 			if (metricValues.weight) {
 				switch (metricValues.key) {
