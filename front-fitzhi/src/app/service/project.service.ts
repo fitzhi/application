@@ -128,15 +128,11 @@ export class ProjectService extends InternalService {
 					if (actualProject) {
 						actualProject.skills = project.skills;
 						this.loadMapSkills(actualProject);
-						if (traceOn()) {
-							this.dump(actualProject, 'projectService after updated the project');
-						}
+						this.dump(actualProject, 'projectService after updated the project');
 					} else {
 						this.loadMapSkills(project);
 						this.allProjects.push(project);
-						if (traceOn()) {
-							this.dump(project, 'projectService when creating a project');
-						}
+						this.dump(project, 'projectService when creating a project');
 					}
 				},
 				error: error => console.error ('FVI error', error)
@@ -1041,6 +1037,11 @@ export class ProjectService extends InternalService {
 	 * @param from: Method which made that call
 	 */
 	dump(project: Project, from: string): void {
+		
+		// No dump if we are in 'trace OFF' mode
+		if (!traceOn()) {
+			return;
+		}
 
 		if ((!project) || !(project.id)) {
 			console.log (from, 'Project is null dude!');
