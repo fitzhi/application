@@ -340,7 +340,12 @@ export class SonarService extends InternalService {
 	}
 
 
-	sonarHeaders(httpClient: HttpClient, sonarServer: SonarServer): HttpHeaders {
+	/**
+	 * Build the headers with the authorization item
+	 * @param sonarServer the actual Sonar server
+	 * @returns the generated header
+	 */
+	sonarHeaders(sonarServer: SonarServer): HttpHeaders {
 
 		let headers: HttpHeaders = new HttpHeaders();
 
@@ -361,7 +366,7 @@ export class SonarService extends InternalService {
 	 loadSonarSupportedMetrics(httpClient: HttpClient, sonarServer: SonarServer, applicationSupportedMetrics: string[]) {
 
 		httpClient.get<Metrics>(sonarServer.urlSonar + '/api/metrics/search?ps=500', 
-			{ headers: this.sonarHeaders(httpClient, sonarServer) })
+			{ headers: this.sonarHeaders(sonarServer) })
 			.pipe(
 				tap(
 					metrics => {
@@ -403,7 +408,7 @@ export class SonarService extends InternalService {
 		const apiMesures = '/api/measures/component';
 		return httpClient
 			.get<ResponseComponentMeasures>(sonarServer.urlSonar + apiMesures, 
-					{ headers: this.sonarHeaders(httpClient, sonarServer), params: params })
+					{ headers: this.sonarHeaders(sonarServer), params: params })
 			.pipe(
 				tap(response => {
 					if (traceOn()) {
@@ -443,7 +448,7 @@ export class SonarService extends InternalService {
 		const params = new HttpParams().set('qualifiers', type).set('ps', '500');
 		return httpClient
 			.get<Components>(sonarServer.urlSonar + '/api/components/search', 
-				{ params, headers: this.sonarHeaders(httpClient, sonarServer) })
+				{ params, headers: this.sonarHeaders(sonarServer) })
 			.pipe(take(1));
 	}
 
@@ -479,7 +484,7 @@ export class SonarService extends InternalService {
 		const params = new HttpParams().set('metric', metric).set('project', key);
 		return httpClient
 			.get<string>(sonarServer.urlSonar + '/api/project_badges/measure',
-				{ headers: this.sonarHeaders(httpClient, sonarServer), params: params, responseType: 'text' as 'json' });
+				{ headers: this.sonarHeaders(sonarServer), params: params, responseType: 'text' as 'json' });
 	}
 
 	/**
@@ -492,7 +497,7 @@ export class SonarService extends InternalService {
 		const params = new HttpParams().set('component', key).set('qualifiers', 'FIL').set('ps', '500');
 		return httpClient
 			.get<ComponentTree>(sonarServer.urlSonar + '/api/components/tree', 
-				{ params: params, headers: this.sonarHeaders(httpClient, sonarServer) })
+				{ params: params, headers: this.sonarHeaders(sonarServer) })
 			.pipe(
 				tap((response: ComponentTree) => {
 					if (traceOn()) {
