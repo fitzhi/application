@@ -269,11 +269,28 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 		this.table.renderRows();
 	}
 
+	/**
+	 * Handle the relation of this ghost to existing staff members
+	 * @param ghost the given ghost
+	 */
 	handleRelatedLogin(ghost: Unknown) {
+		if (!ghost.login) {
+			this.detachGhost(ghost);
+		} else {
+			this.attachGhost(ghost);
+		}
+	}
+
+	/**
+	 * Attach a ghost to an existing staff member
+	 * @param ghost The given ghost
+	 * @returns **TRUE** if we attached the ghost, **FALSE** if we detached
+	 */
+	attachGhost(ghost: Unknown) {
 
 		const selectedStaff = this.allStaff.filter(s => (s.login.toLowerCase().indexOf(ghost.login.toLowerCase()) === 0) );
 		if (traceOn()) {
-			if (selectedStaff) {
+			if (selectedStaff.length > 0) {
 				console.groupCollapsed('selected staff corresponding to %s', ghost.login);
 				selectedStaff.forEach(staff => console.log (staff.firstName + ' ' + staff.lastName + ' & login : ' + staff.login));
 				console.groupEnd();
@@ -286,33 +303,56 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 			ghost.staffRelated = selectedStaff[0];
 			ghost.login = selectedStaff[0].login;
 			ghost.idStaff = ghost.staffRelated.idStaff;
-			this.projectService.updateGhost$ (this.projectService.project.id, ghost.pseudo, ghost.idStaff, false)
+			this.projectService
+				.updateGhost$ (this.projectService.project.id, ghost.pseudo, ghost.idStaff, false)
+				.pipe(take(1))
+				.subscribe({
+					next: result => {
+						if (result) {
+							this.table.renderRows();
+
+							// We reset the cache to force a re-generation of the chart
+							this.sunburstCacheService.clearReponse();
+
+							this.messageService.info('The pseudo ' + ghost.pseudo + ' has been associated to '
+								+ ghost.staffRelated.firstName + ' ' + ghost.staffRelated.lastName);
+						}
+					}
+				});
+			
+		}
+	}
+
+	/**
+	 * Detach a ghost from an existing staff member
+	 * @param ghost The given ghost
+	 * @returns **TRUE** if we attached the ghost, **FALSE** if we detached
+	 */
+	 detachGhost(ghost: Unknown) {
+		// If the ghost was already associated, we reset this association
+		if (ghost.idStaff  > 0) {
+			this.projectService
+				.updateGhost$ (this.projectService.project.id, ghost.pseudo, -1, false)
 				.pipe(take(1))
 				.subscribe(result => {
 					if (result) {
-						this.messageService.info('The pseudo ' + ghost.pseudo + ' has been associated to '
-							+ ghost.staffRelated.firstName + ' ' + ghost.staffRelated.lastName);
+						this.messageService.info('The pseudo ' + ghost.pseudo + ' is no more associated to an existing staff member');
 					}
-				});
-			return true;
-		} else {
-			// If the ghost was already associated, we reset this association
-			if (ghost.idStaff  > 0) {
-				this.projectService.updateGhost$ (this.projectService.project.id, ghost.pseudo, -1, false)
-					.pipe(take(1))
-					.subscribe(result => {
-						if (result) {
-							this.messageService.info('The pseudo ' + ghost.pseudo + ' is no more associated to an existing staff member');
-						}
-					}
-				);
-			}
-			ghost.idStaff = -1;
-			ghost.firstname = '';
-			ghost.lastname = '';
-			return false;
+				}
+			);
 		}
+		ghost.idStaff = -1;
+		ghost.firstname = '';
+		ghost.lastname = '';
+
+		this.dataSource.removePseudo(ghost.pseudo);
+		this.table.renderRows();
+		// We reser the cache to force a re-generation of the chart
+		this.sunburstCacheService.clearReponse();
+
+		return false;
 	}
+
 	/**
 	 * @param ghost the actual ghost line concerned.
 	 * @returns TRUE if the related login typed is matching an existing staff member.

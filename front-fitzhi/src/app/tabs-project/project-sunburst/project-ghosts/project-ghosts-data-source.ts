@@ -57,4 +57,22 @@ export class ProjectGhostsDataSource extends MatTableDataSource<Unknown> {
 		this.update(this.ghosts);
 	}
 
+	/**
+	 * Update a ghost with the given staff identifier
+	 * @param pseudo the ghost pseudo who has been linked to a current developer.
+	 * @param idStaff staff identifier
+	 */
+	 updateStaffMember (pseudo: string, idStaff: number) {
+		const indexPseudo = this.ghosts.findIndex(ghost => pseudo === ghost.pseudo);
+		if (indexPseudo === -1) {
+			console.error ('Pseudo ' + pseudo + ' has disappeared from the ghosts list');
+		} else {
+			if (traceOn()) {
+				console.log('the pseudo %s has been removed @ %d.', pseudo, indexPseudo);
+			}
+			this.ghosts[indexPseudo].idStaff = idStaff;
+		}
+		this.update(this.ghosts);
+	}
+
 }
