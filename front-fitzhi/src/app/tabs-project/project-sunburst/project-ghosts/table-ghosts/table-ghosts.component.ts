@@ -1,13 +1,12 @@
-import { Component, OnInit, Input, Output, ViewChild, OnDestroy, AfterViewInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
-import { Constants } from '../../../../constants';
 import { Unknown } from '../../../../data/unknown';
 import { BaseComponent } from 'src/app/base/base.component';
 import { ProjectGhostsDataSource } from '../project-ghosts-data-source';
 import { MatPaginator } from '@angular/material/paginator';
 import { Collaborator } from 'src/app/data/collaborator';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
-import { take, throwIfEmpty, switchMap } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { ProjectService } from 'src/app/service/project.service';
@@ -70,27 +69,31 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 		super();
 	}
 
-	ngOnInit() {
+	ngOnInit(): void {
+
 		this.subscriptions.add(
-			this.dataSourceGhosts$.subscribe((dataSource: ProjectGhostsDataSource) => {
-				if (traceOn()) {
-					console.log(
-						'Project %d %s reveived %s in the table of ghosts component',
-						this.projectService.project.id,
-						this.projectService.project.name,
-						dataSource.data.length);
+			this.staffListService.allStaff$.subscribe({
+				next: staff => this.allStaff = staff
+			})
+		);
+
+		this.subscriptions.add(
+			this.dataSourceGhosts$.subscribe({
+					next: (dataSource: ProjectGhostsDataSource) => {
+						if (traceOn()) {
+							console.log(
+								'Project %d %s reveived %s in the table of ghosts component',
+								this.projectService.project.id,
+								this.projectService.project.name,
+								dataSource.data.length);
+						}
+						this.dataSource = new ProjectGhostsDataSource(dataSource.data);
+					}
 				}
-				this.dataSource = new ProjectGhostsDataSource(dataSource.data);
-			}));
-
-		if (this.staffListService.allStaff$) {
-			this.subscriptions.add(
-				this.staffListService.allStaff$.subscribe(staff => {
-					this.allStaff = staff;
-			}));
-		}
+			)
+		);
 	}
-
+			
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
 	}

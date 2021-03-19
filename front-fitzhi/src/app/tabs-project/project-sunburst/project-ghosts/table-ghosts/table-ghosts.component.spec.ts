@@ -24,6 +24,24 @@ describe('TableGhostsComponent', () => {
 	let projectService: ProjectService;
 	let staffListService: StaffListService;
 
+	let allStaff = [
+		{
+			idStaff: 1964,
+			login: 'frvidal',
+			firstName: 'Frédéric',
+			lastName: 'VIDAL',
+			nickName: 'frvidal',
+			email: 'frederic.vidal@fitzhi.com',
+			level: 'Developper',
+			external: false,
+			forceActiveState: false,
+			active: true,
+			dateInactive: null,
+			experiences: [],
+			missions: []
+		}
+	];
+
 	@Component({
 		selector: 'app-host-component',
 		template:
@@ -78,7 +96,8 @@ describe('TableGhostsComponent', () => {
 						staffRelated: new Collaborator(),
 						staffRecorded: false,
 					},
-				]
+				],
+				allStaff
 			);
 			this.dataSourceGhosts$ = new BehaviorSubject(this.projectGhostsDataSource);
 		}
@@ -175,7 +194,7 @@ describe('TableGhostsComponent', () => {
 		let login: HTMLInputElement = fixture.debugElement.query(By.css('#login-1')).nativeElement;
 		expect(login).toBeDefined();
 		login.value = 'some Value';
-	    login.dispatchEvent(new Event('input'));
+		login.dispatchEvent(new Event('input'));
 
 		expect(spyClearCache).not.toHaveBeenCalled();
 		expect(spyUpdateGhost$).not.toHaveBeenCalled();
@@ -191,7 +210,6 @@ describe('TableGhostsComponent', () => {
 
 	it('Connect a ghost the existing developer frvidal for the given login', () => {
 
-
 		const buttonAddStaff: HTMLInputElement = fixture.debugElement.query(By.css('#addStaff-1')).nativeElement;
 		expect(buttonAddStaff.disabled).toBeFalsy();
 
@@ -204,28 +222,12 @@ describe('TableGhostsComponent', () => {
 		const spyClearCache = spyOn(sunburstCacheService, 'clearReponse');
 		const spyUpdateGhost$ = spyOn(projectService, 'updateGhost$').and.returnValue(of(true));
 
-		staffListService.allStaff$.next([
-			{
-				idStaff: 1964,
-				login: 'frvidal',
-				firstName: 'Frédéric',
-				lastName: 'VIDAL',
-				nickName: 'frvidal',
-				email: 'frederic.vidal@fitzhi.com',
-				level: 'Developper',
-				external: false,
-				forceActiveState: false,
-				active: true,
-				dateInactive: null,
-				experiences: [],
-				missions: []
-			}
-		]);
+		staffListService.allStaff$.next(allStaff);
 
 		let login: HTMLInputElement = fixture.debugElement.query(By.css('#login-1')).nativeElement;
 		expect(login).toBeDefined();
 		login.value = 'frvidal';
-	    login.dispatchEvent(new Event('input'));
+		login.dispatchEvent(new Event('input'));
 
 		expect(spyClearCache).toHaveBeenCalled();
 		expect(spyUpdateGhost$).toHaveBeenCalled();

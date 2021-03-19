@@ -5,6 +5,7 @@ import { Constants } from '../../../constants';
 import { Collaborator } from 'src/app/data/collaborator';
 import { traceOn } from 'src/app/global';
 import { BehaviorSubject } from 'rxjs';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 
 export class ProjectGhostsDataSource extends MatTableDataSource<Unknown> {
 
@@ -18,12 +19,18 @@ export class ProjectGhostsDataSource extends MatTableDataSource<Unknown> {
 	public ghosts: Unknown[];
 
 	/**
-     * @param project current project
-     * @param ghosts list of unregistered contributors.
+	 * @param ghosts list of unregistered contributors.
+     * @param allStaff _(optional)_ the complete list of staff members, if necessary
      */
-	constructor(ghosts: Unknown[]) {
+	constructor(ghosts: Unknown[], allStaff?: Collaborator[]) {
 		super();
 		this.ghosts = ghosts;
+		
+		// If the staff list is not given, it's because we do need to fill the related staff at this level
+		if (allStaff) {
+			this.updateRelatedStaff(ghosts, allStaff);
+		}
+
 		this.update(ghosts);
 		if (traceOn()) {
 			console.groupCollapsed	(this.ghosts.length + ' ghosts identified');
@@ -33,6 +40,25 @@ export class ProjectGhostsDataSource extends MatTableDataSource<Unknown> {
 			console.groupEnd();
 		}
 	}
+
+	private updateRelatedStaff(ghosts: Unknown[], staff?: Collaborator[]) {
+		this.ghosts
+			.filter(g => g.idStaff > 0)
+			.forEach(g => {
+				const related = staff.find(s => s.idStaff === g.idStaff);
+				if (!related) {
+					console.log ('WTF : Cannot retrieve the staff %d connected to the ghost %s', g.idStaff, g.pseudo);
+					g.staffRelated = new Collaborator();
+					g.staffRelated.idStaff = g.idStaff;
+					g.staffRelated.login = '?';
+					g.staffRelated.firstName = 'unknown';
+					g.staffRelated.lastName = 'unknown';
+				} else {
+					g.staffRelated = related;
+				}
+			});
+	}
+
 	/**
 	 * Update the datasource with new data.
 	 * @param ghosts the new ghosts to be displayed.

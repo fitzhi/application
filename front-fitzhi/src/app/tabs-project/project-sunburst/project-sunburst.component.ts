@@ -24,6 +24,9 @@ import { ContributorsDTO } from 'src/app/data/external/contributorsDTO';
 import { traceOn } from 'src/app/global';
 import { SunburstCinematicService } from './service/sunburst-cinematic.service';
 import { SunburstCacheService } from './service/sunburst-cache.service';
+import { Collaborator } from 'src/app/data/collaborator';
+import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 
 
 //
@@ -141,6 +144,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	public PreviewContext =  PreviewContext;
 
+	public allStaff: Collaborator[];
+
 	constructor(
 		private cinematicService: CinematicService,
 		public sunburstCinematicService: SunburstCinematicService,
@@ -150,6 +155,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		private messageBoxService: MessageBoxService,
 		private dialog: MatDialog,
 		private cacheService: SunburstCacheService,
+		private staffListService: StaffListService,
+		private staffService: StaffService,
 		public projectService: ProjectService) {
 			super();
 	}
@@ -177,6 +184,13 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				}
 			})
 		);
+
+		this.subscriptions.add(
+			this.staffListService.allStaff$.subscribe({
+				next: staff => this.allStaff = staff
+			})
+		);
+
 	}
 
 	/**
@@ -414,7 +428,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				.color('color')
 				(document.getElementById('chart'));
 	
-			const dataSourceGhosts = new ProjectGhostsDataSource(response.ghosts);
+			const dataSourceGhosts = new ProjectGhostsDataSource(response.ghosts, this.allStaff);
 			this.dataSourceGhosts$.next(dataSourceGhosts);
 	
 			//
@@ -707,7 +721,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		}
 		if (this.settings.startingDate > 0) {
 			const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-			this.titleSunburst += ' filtered from ' + new Date(this.settings.startingDate).toLocaleDateString('en-EN', options);
+			this.titleSunburst += ' filtered from ' + new Date(this.settings.startingDate).toLocaleDateString('en-EN');
 		}
 	}
 

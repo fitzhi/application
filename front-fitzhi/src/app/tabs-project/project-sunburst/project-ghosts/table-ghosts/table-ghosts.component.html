@@ -33,7 +33,7 @@
     <th id="firstname" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>Firstname</th>
     <td mat-cell class="td-ghost" *matCellDef="let row; let i = index;">
       <div *ngIf="relatedLoginMatch(row);else editFieldsVisible">
-        {{row.staffRelated.firstName}}
+        {{(row.staffRelated) ? row.staffRelated.firstName : 'staffRelated is null'}}
       </div>
       <ng-template #editFieldsVisible>
         <mat-form-field>
@@ -47,7 +47,7 @@
     <th id="lastname" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>Lastname</th>
     <td mat-cell class="td-ghost" *matCellDef="let row; let i = index;">
       <div *ngIf="relatedLoginMatch(row);else editFieldsVisible">
-        {{row.staffRelated.lastName}}
+        {{(row.staffRelated) ? row.staffRelated.lastName : 'staffRelated is null'}}
       </div>
       <ng-template #editFieldsVisible>
         <mat-form-field>
@@ -61,7 +61,9 @@
     <th id="active" mat-header-cell *matHeaderCellDef [disabled]="true" mat-sort-header>Active</th>
     <td mat-cell class="td-technical" *matCellDef="let row; let i = index;">
       <div *ngIf="relatedLoginMatch(row);else editFieldsVisible">
-        <mat-checkbox id="active-{{i}}" [checked]="row.staffRelated.active" [disabled]="true"></mat-checkbox>
+        <mat-checkbox id="active-{{i}}" 
+        [checked]="(row.staffRelated) ? row.staffRelated.active : false" 
+        [disabled]="true"></mat-checkbox>
       </div>
       <ng-template #editFieldsVisible>
         <mat-checkbox id="active-{{i}}" [(ngModel)]="row.active" (change)="checkActive(row)"

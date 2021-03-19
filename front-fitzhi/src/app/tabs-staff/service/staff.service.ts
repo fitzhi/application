@@ -183,9 +183,9 @@ export class StaffService {
 	}
 
 	/**
-		 * Activate or inactivate a staff member.
-	 * @param idStaff the staff identifier to (de)activate
-		 */
+	* Activate or inactivate a staff member.
+	* @param idStaff the staff identifier to (de)activate
+	*/
 	processActiveStatus(collaborator: Collaborator) {
 		if (traceOn()) {
 			console.log(
