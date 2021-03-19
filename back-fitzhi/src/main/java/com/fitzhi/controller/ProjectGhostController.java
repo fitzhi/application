@@ -1,9 +1,11 @@
 package com.fitzhi.controller;
 
-import static com.fitzhi.Global.BACKEND_RETURN_CODE;
-import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
-
-import java.text.MessageFormat;
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.controller.in.BodyRemoveGhost;
+import com.fitzhi.controller.in.BodyUpdateGhost;
+import com.fitzhi.data.internal.Ghost;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.exception.ApplicationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -13,14 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.fitzhi.Error;
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.controller.in.BodyRemoveGhost;
-import com.fitzhi.controller.in.BodyUpdateGhost;
-import com.fitzhi.data.internal.Ghost;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.ApplicationException;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,78 +38,61 @@ public class ProjectGhostController {
 	 * <p>
 	 * Manage a ghost in a project.
 	 * </p>
+	 * @param param the proposal of association for this ghost sent to the controller
+	 * @throws ApplicationException if any problem occurs during the treatment
 	 */
 	@PostMapping(path="/save")
-	public ResponseEntity<Boolean> saveGhost(@RequestBody BodyUpdateGhost param) {
+	public ResponseEntity<Boolean> saveGhost(@RequestBody BodyUpdateGhost param) throws ApplicationException {
 		
-		HttpHeaders headers = new HttpHeaders();
-
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("POST command on /api/project/ghost/save for project : %d", param.getIdProject()));
 		}
 		
-		try {
-			Project project = projectHandler.get(param.getIdProject());
-			
-			// We update the staff identifier associated to this ghost
-			if (param.getIdStaff() > 0) {
-				projectHandler.associateStaffToGhost(project, param.getPseudo(), param.getIdStaff());
-				return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);	
-			}
+		Project project = projectHandler.get(param.getIdProject());
+		
+		// We update the staff identifier associated to this ghost
+		if (param.getIdStaff() > 0) {
+			projectHandler.associateStaffToGhost(project, param.getPseudo(), param.getIdStaff());
+			return OK();	
+		}
 
-			// This ghost is technical
-			if (param.isTechnical()) {
-				projectHandler.setGhostTechnicalStatus(project, param.getPseudo(), true); 				
-				return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);			
-			}
-			
-			// Neither staff member, nor technical, we reset the ghost
-			projectHandler.resetGhost(project, param.getPseudo()); 				
-			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);			
-			
-			
-		} catch (ApplicationException se) {
-			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
-			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
-			return new ResponseEntity<>(
-					Boolean.FALSE, headers,
-					HttpStatus.INTERNAL_SERVER_ERROR);			
+		// This ghost is technical
+		if (param.isTechnical()) {
+			projectHandler.setGhostTechnicalStatus(project, param.getPseudo(), true); 				
+			return OK();			
 		}
 		
+		// Neither staff member, nor technical, we reset the ghost
+		projectHandler.resetGhost(project, param.getPseudo()); 				
+		return OK();			
+						
 	}
 	
 	
 	/**
 	 * <p>
-	 * Manage a ghost in a project.
+	 * Remove a pseudo from the ghosts list.
 	 * </p>
+	 * @param param the ghost to be remove from the project
+	 * @throws ApplicationException if any problem occurs during the treatment
 	 */
 	@PostMapping(path="/remove")
-	public ResponseEntity<Boolean> removeGhost(@RequestBody BodyRemoveGhost param) {
+	public ResponseEntity<Boolean> removeGhost(@RequestBody BodyRemoveGhost param) throws ApplicationException {
 		
-		HttpHeaders headers = new HttpHeaders();
-
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("POST command on /project/ghosts/remove for project : %d and pseudi %s", 
+			log.debug(String.format("POST command on /project/ghosts/remove for project : %d and pseudo %s", 
 					param.getIdProject(), param.getPseudo()));
 		}
 		
-		try {
-			Project project = projectHandler.get(param.getIdProject());
-			
-			// Neither staff member, nor technical, we reset the ghost
-			projectHandler.removeGhost(project, param.getPseudo()); 				
-			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);			
-			
-			
-		} catch (ApplicationException se) {
-			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
-			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
-			return new ResponseEntity<>(
-					Boolean.FALSE, headers,
-					HttpStatus.INTERNAL_SERVER_ERROR);			
-		}
+		Project project = projectHandler.get(param.getIdProject());
 		
+		// Neither staff member, nor technical, we reset the ghost
+		projectHandler.removeGhost(project, param.getPseudo()); 				
+		return OK();			
 	}
 	
+	private ResponseEntity<Boolean> OK() {
+		HttpHeaders headers = new HttpHeaders();
+		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
+	}
 }

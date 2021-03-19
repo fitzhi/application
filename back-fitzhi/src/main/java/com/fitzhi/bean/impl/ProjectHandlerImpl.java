@@ -373,13 +373,12 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			
 			if (oGhost.isPresent()) {
 				oGhost.get().setIdStaff(idAssociatedStaff);
-
+				this.dataUpdated = true;
 				if (!projectAlreadyDeclared) {
-					staff.addMission(new Mission(idAssociatedStaff, project.getId(), project.getName()));
+					staffHandler.addMission(idAssociatedStaff, project.getId(), project.getName());
 				}
 				return;
 			}
-			this.dataUpdated = true;
 		}
 		throw new ApplicationRuntimeException(
 				String.format("%s does not exist anymore in the project %s (id: %d)",
