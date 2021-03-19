@@ -340,17 +340,17 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 				.subscribe(result => {
 					if (result) {
 						this.messageService.info('The pseudo ' + ghost.pseudo + ' is no more associated to an existing staff member');
+						ghost.idStaff = -1;
+						ghost.firstname = '';
+						ghost.lastname = '';
+						ghost.login = '';						
 					}
 				}
 			);
 		}
-		ghost.idStaff = -1;
-		ghost.firstname = '';
-		ghost.lastname = '';
-
-		this.dataSource.removePseudo(ghost.pseudo);
+		
 		this.table.renderRows();
-		// We reser the cache to force a re-generation of the chart
+		// We reset the cache to force a re-generation of the chart
 		this.sunburstCacheService.clearReponse();
 
 		return false;
