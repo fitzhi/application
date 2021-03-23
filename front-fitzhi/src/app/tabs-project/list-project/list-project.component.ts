@@ -3,7 +3,7 @@ import {Constants} from '../../constants';
 import {Project} from '../../data/project';
 import { ListProjectsService } from './list-projects-service/list-projects.service';
 import { Router } from '@angular/router';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { ProjectService } from '../../service/project.service';
@@ -54,6 +54,16 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 	 */
 	commitCached: Commit;
 
+	/**
+	 * Key used to save the page size in the local storage.
+	 */
+	private  keyPageSize = 'list.project.pageSize';
+
+	/**
+	 * The page size of the list
+	 */
+	pageSize = 5;
+
 	constructor(
 		private staffListService: StaffListService,
 		public referentialService: ReferentialService,
@@ -65,6 +75,12 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 
 		if (localStorage.getItem('dev') === '1') {
 			this.staffListService.loadStaff();
+		}
+
+		if (localStorage.getItem(this.keyPageSize)) {
+			this.pageSize = Number(localStorage.getItem(this.keyPageSize));
+		} else {
+			this.pageSize = 5;
 		}
 
 		this.subscriptions.add(
@@ -135,6 +151,15 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 		this.idProjectCached = idProject;
 		return this.commitCached;
 	}
+
+	/**
+	 * This method is invoked if the user change the page size.
+	 * @param $pageEvent event 
+	 */
+	public page($pageEvent: PageEvent) {
+		localStorage.setItem(this.keyPageSize, ''+$pageEvent.pageSize);
+	}
+
 
 	/**
 	* Calling the base class to unsubscribe all subscriptions.

@@ -73,6 +73,8 @@
 	<mat-paginator #paginator 
 		[length]="dataSource?.data.length"
 		[pageSizeOptions]="[5, 10, 20]" 
+		[pageSize]=pageSize
+		(page)="page($event)"
 		showFirstLastButtons>
 	</mat-paginator>
 
