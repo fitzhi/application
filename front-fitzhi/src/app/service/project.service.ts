@@ -664,7 +664,9 @@ export class ProjectService extends InternalService {
 				if (riskLegend) {
 					return riskLegend.color;
 				} else {
-					console.error('Unknown risk level', risk);
+					if (traceOn()) {
+						console.log('Unknown risk level', risk);
+					}
 					return 'whiteSmoke';
 				}
 			}

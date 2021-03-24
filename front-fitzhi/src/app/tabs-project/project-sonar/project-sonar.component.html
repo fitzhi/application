@@ -16,8 +16,12 @@
                 (throwMessage)="catchMessage($event)">
             </app-sonar-metrics>
         </div>
-        <div id="panelNoSonarProject" [hidden]="!isPanelActive(NONE)">
-            NO SONAR PROJECT DECLARED FOR THIS PROJECT
+        <div class="panelNoSonarProject" [hidden]="!isPanelActive(NONE)">
+            <p>
+                <span class="logo align-middle">质</span>
+                <span class="align-middle" *ngIf="(projectService.project) && (projectService.project.id > 0)">NO SONAR PROJECT DECLARED FOR '{{projectService.project.name}}'</span>
+                <span class="align-middle" *ngIf="(projectService.project) && (projectService.project.id === -1)">YOU NEED TO CREATE A PROJECT FIRST</span>
+            </p>
         </div>
     </div>
     <div class="no-project" *ngIf="!(projectService.projectLoaded$|async)">
