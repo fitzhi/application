@@ -42,7 +42,8 @@
         [ngClass]="{
             'btn-outline-success' : isSelected(selection.treeMap), 
             'btn-outline-secondary': !isSelected(selection.treeMap)}" 
-            (mouseenter)="popupHelper.mouseEnter(selection.treeMap)" (mouseleave)="popupHelper.mouseLeave()"
+            (mouseenter)="popupHelper.mouseEnter(selection.treeMap)" 
+            (mouseleave)="popupHelper.mouseLeave()"
             (click)="switchTo(selection.treeMap)">
         <svg class="treeMapButton">
             <rect x="6" y="6" class="rectTreeMap" style="fill:#27A53F" />

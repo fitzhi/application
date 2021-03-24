@@ -39,7 +39,6 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	 */
 	public popupHelper = new FitzhiDashboardPopupHelper();
 
-	public viewTreeMap = [600, 400];
 
 	public colors = Constants.COLORS;
 
@@ -65,23 +64,11 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 
 	constructor(
 		public httpClient: HttpClient,
-
 		public projectService: ProjectService,
 		public skylineService: SkylineService,
 		public controlledRisingSkylineService: ControlledRisingSkylineService,
 		public pieDashboardService: PieDashboardService) {
 			super();
-	}
-
-	nope() {
-		console.log('test');
-		this.httpClient.get('http://localhost:8080/api/staff/4', { responseType: 'text' as 'json' })
-			.subscribe({
-				next: (result: string) => console.log('staff', result),
-				error: response => {
-					console.log ('err', response);
-				}
-			});
 	}
 
 	/**

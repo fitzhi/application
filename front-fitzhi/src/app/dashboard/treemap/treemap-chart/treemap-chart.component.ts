@@ -28,6 +28,8 @@ export class TreemapChartComponent extends BaseComponent implements OnInit, OnDe
 		domain: []
 	};
 
+	public viewTreeMap = [1000, 500];
+
 	constructor(
 		public dashboardService: DashboardService,
 		public treeMapService: TreemapService,
