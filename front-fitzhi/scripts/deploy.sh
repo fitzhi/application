@@ -1,3 +1,4 @@
+#!/bin/sh
 echo "Starting the deployment to spoq.io"
 echo "----------------------------------"
 cd ..
