@@ -1,67 +1,75 @@
 <div id="divDeveloppers">
 
-  <table mat-table 
-      [dataSource]="dataSource" 
-      class="mat-elevation-z8" matSort matTable 
-      style="width: 1000px"
-      summary="List of developers involved in the project">
+	<table mat-table 
+			[dataSource]="dataSource" 
+			class="mat-elevation-z8" matSort matTable 
+			style="width: 1000px"
+			summary="List of developers involved in the project">
 
-    <ng-container matColumnDef="fullname">
-      <th id="fullname" mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
-      <td mat-cell class="col_fullname {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor" 
-          (click)="routeStaff(contributor.idStaff)">
-          {{contributor.fullname}}
-      </td>
-    </ng-container>
+		<ng-container matColumnDef="fullname">
+			<th id="fullname" mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+			<td mat-cell class="col_fullname {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor" 
+					(click)="routeStaff(contributor.idStaff)">
+					{{contributor.fullname}}
+			</td>
+		</ng-container>
 
-    <ng-container matColumnDef="active">
-      <th id="active" mat-header-cell *matHeaderCellDef mat-sort-header>Active</th>
-      <td mat-cell class="col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
-          (click)="routeStaff(contributor.idStaff)">
-        <img alt="active status" with="15" height="15" src="/assets/img/check-{{contributor.active}}.png" />
-      </td>
-    </ng-container>
+		<ng-container matColumnDef="active">
+			<th id="active" mat-header-cell *matHeaderCellDef mat-sort-header>Active</th>
+			<td mat-cell class="col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
+					(click)="routeStaff(contributor.idStaff)">
+				<img alt="active status" with="15" height="15" src="/assets/img/check-{{contributor.active}}.png" />
+			</td>
+		</ng-container>
 
-    <ng-container matColumnDef="external">
-      <th id="external" mat-header-cell *matHeaderCellDef mat-sort-header>External</th>
-      <td mat-cell class="col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
-          (click)="routeStaff(contributor.idStaff)">
-        <img alt="external status" with="15" height="15" src="/assets/img/check-{{contributor.external}}.png" />
-      </td>
-    </ng-container>
+		<ng-container matColumnDef="external">
+			<th id="external" mat-header-cell *matHeaderCellDef mat-sort-header>External</th>
+			<td mat-cell class="col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
+					(click)="routeStaff(contributor.idStaff)">
+				<img alt="external status" with="15" height="15" src="/assets/img/check-{{contributor.external}}.png" />
+			</td>
+		</ng-container>
 
-    <ng-container id="firstCommit" matColumnDef="firstCommit">
-      <th mat-header-cell id="firstCommit" class="col_date" *matHeaderCellDef mat-sort-header> First commit </th>
-      <td mat-cell class="col_date {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
-          (click)="routeStaff(contributor.idStaff)">
-        {{contributor.firstCommit | date:'mediumDate'}}</td>
-    </ng-container>
+		<ng-container id="firstCommit" matColumnDef="firstCommit">
+			<th mat-header-cell id="firstCommit" class="col_date" *matHeaderCellDef mat-sort-header> First commit </th>
+			<td mat-cell class="col_date {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
+					(click)="routeStaff(contributor.idStaff)">
+				{{contributor.firstCommit | date:'mediumDate'}}</td>
+		</ng-container>
 
-    <ng-container matColumnDef="lastCommit">
-      <th mat-header-cell id="lastCommit" class="col_date" *matHeaderCellDef mat-sort-header> Last commit </th>
-      <td mat-cell class="col_date {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
-          (click)="routeStaff(contributor.idStaff)">
-        {{contributor.lastCommit | date:'mediumDate'}}</td>
-    </ng-container>
+		<ng-container matColumnDef="lastCommit">
+			<th mat-header-cell id="lastCommit" class="col_date" *matHeaderCellDef mat-sort-header> Last commit </th>
+			<td mat-cell class="col_date {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
+					(click)="routeStaff(contributor.idStaff)">
+				{{contributor.lastCommit | date:'mediumDate'}}</td>
+		</ng-container>
 
-    <ng-container matColumnDef="numberOfCommits">
-      <th mat-header-cell id="numberOfCommits" *matHeaderCellDef mat-sort-header>Number of commits</th>
-      <td mat-cell class="col_numeric {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
-          (click)="routeStaff(contributor.idStaff)">
-        {{contributor.numberOfCommits}}</td>
-    </ng-container>
+		<ng-container matColumnDef="numberOfCommits">
+			<th mat-header-cell id="numberOfCommits" *matHeaderCellDef mat-sort-header>Number of commits</th>
+			<td mat-cell class="col_numeric {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
+					(click)="routeStaff(contributor.idStaff)">
+				{{contributor.numberOfCommits}}</td>
+		</ng-container>
 
-    <ng-container matColumnDef="numberOfFiles">
-      <th mat-header-cell id="numberOfFiles" *matHeaderCellDef mat-sort-header>Number of files</th>
-      <td mat-cell class="col_numeric {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
-          (click)="routeStaff(contributor.idStaff)">
-        {{contributor.numberOfFiles}}&nbsp;&nbsp;</td>
-    </ng-container>
+		<ng-container matColumnDef="numberOfFiles">
+			<th mat-header-cell id="numberOfFiles" *matHeaderCellDef mat-sort-header>Number of files</th>
+			<td mat-cell class="col_numeric {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor"
+					(click)="routeStaff(contributor.idStaff)">
+				{{contributor.numberOfFiles}}&nbsp;&nbsp;</td>
+		</ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row_any"></tr>
+		<tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+		<tr mat-row *matRowDef="let row; columns: displayedColumns;" class="row_any"></tr>
 
-  </table>
+	</table>
+
+	<mat-paginator #paginator 
+		[length]="dataSource?.data.length"
+		[pageSizeOptions]="[5, 10, 20, 30]" 
+		[pageSize]=pageSize.value
+		(page)="page($event)"
+		showFirstLastButtons>
+	</mat-paginator>
 
 </div>
 

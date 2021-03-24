@@ -13,6 +13,7 @@ import { traceOn } from '../../global';
 import { ReferentialService } from '../../service/referential.service';
 import { ProjectsDataSource } from './projects-data-source';
 import { BaseComponent } from 'src/app/base/base.component';
+import { UserSetting } from 'src/app/base/user-setting';
 
 @Component({
 	selector: 'app-list-project',
@@ -57,12 +58,7 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 	/**
 	 * Key used to save the page size in the local storage.
 	 */
-	private  keyPageSize = 'list.project.pageSize';
-
-	/**
-	 * The page size of the list
-	 */
-	pageSize = 5;
+	public pageSize = new UserSetting('project-list.pageSize', 5);
 
 	constructor(
 		private staffListService: StaffListService,
@@ -77,18 +73,13 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 			this.staffListService.loadStaff();
 		}
 
-		if (localStorage.getItem(this.keyPageSize)) {
-			this.pageSize = Number(localStorage.getItem(this.keyPageSize));
-		} else {
-			this.pageSize = 5;
-		}
-
 		this.subscriptions.add(
 			this.listProjectsService.filteredProjects$
 				.subscribe(projects => {
 					this.updateData (projects);
 				}
-			));
+			))
+		;
 	}
 
 	ngAfterViewInit(): void {
@@ -157,9 +148,8 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 	 * @param $pageEvent event 
 	 */
 	public page($pageEvent: PageEvent) {
-		localStorage.setItem(this.keyPageSize, ''+$pageEvent.pageSize);
+		this.pageSize.saveSetting($pageEvent.pageSize);
 	}
-
 
 	/**
 	* Calling the base class to unsubscribe all subscriptions.
