@@ -23,7 +23,7 @@ import { UserSetting } from 'src/app/base/user-setting';
 export class ListProjectComponent extends BaseComponent implements OnInit, AfterViewInit {
 
 	/**
-	 * The datasource that contains the filtered projects;
+	 * The datasource that contains the filtered projects
 	 */
 	dataSource: ProjectsDataSource;
 
@@ -33,7 +33,7 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 	@ViewChild(MatSort, { static: true }) sort: MatSort;
 
 	/**
-	 * The paginator of the ghosts data source.
+	 * The paginator for the Project list.
 	 */
 	@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
