@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.fitzhi.bean.AsyncTask;
+import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.external.ActivityLog;
+import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Task;
+import com.fitzhi.exception.ApplicationException;
 
 import lombok.extern.slf4j.Slf4j;
 import reactor.core.publisher.Flux;
@@ -24,6 +27,9 @@ public class ReactiveLogReport implements LogReport {
 	 */
 	@Autowired
 	AsyncTask tasks;
+
+	@Autowired
+	ProjectHandler projectHandler;
 
 	/**
 	 * Type of operation recorded
@@ -51,16 +57,26 @@ public class ReactiveLogReport implements LogReport {
 		final Task task = tasks.getTask(operation, PROJECT, id);
 		if (task == null) {
 			log.info(String.format("End for %s for %s : %d", operation, title, id));
-			return new ActivityLog(id, 0, "Operation completed !", 100, LocalDate.MIN.toEpochDay(), true, false);
+			String projectName = projectName(id);
+			return new ActivityLog(id, 0, String.format("Operation completed for %s !", projectName), 100, LocalDate.MIN.toEpochDay(), true, false);
 		}
 		return (!task.isComplete()) ? task.buildLastestLog(id) : new ActivityLog(id, task.getLastBreath(), true);
+	}
+
+	private String projectName( int idProject) {
+		try {
+			Project project = projectHandler.get(idProject);
+			return project.getName();
+		} catch (final ApplicationException ae) {
+			return String.format("Project %d unknown", idProject);
+		}
 	}
 
 	@Override
 	public Flux<ActivityLog> sunburstGenerationLogNext(String operation, int idProject) {
 	    
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Activating logs listening for operation %s of project %d", operation, idProject));
+			log.debug(String.format("Logs are listening for operation %s of project %d", operation, idProject));
 		}
 		//
 		// Simulate data streaming every 1 second.
