@@ -4,7 +4,7 @@
         <div class="d-flex justify-content-start myTab">
                 <div style="min-width:20%"><em class="fas glyphicon fa-user-graduate" ></em></div>
                 <div style="min-width:65%">{{truncate(tabs[index],12)}}</div>
-                <button class="remove" (click)="remove(index)" style="min-width:15%">x</button>
+                <button class="remove" (click)="remove(index)">x</button>
         </div>
     </ng-template>
     <app-staff-list [criteria]="criteria(index)" [activeOnly]="activeOnly(index)"></app-staff-list>
