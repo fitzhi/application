@@ -69,7 +69,8 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 		this.profiles = this.referentialService.profiles;
 
 		this.subscriptions.add(
-			this.tabsStaffListComponent.search(this.criteria, this.activeOnly, this.tabsStaffListComponent)
+			this.tabsStaffListComponent
+				.search(this.criteria, this.activeOnly, this.tabsStaffListComponent)
 				.subscribe(collaborators => {
 					this.dataSource = new MatTableDataSource<Collaborator>(collaborators);
 					this.dataSource.sortingDataAccessor = (item: Collaborator, property: string) => {
@@ -77,13 +78,15 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 							case 'firstName lastName':
 								return item.firstName.toLocaleLowerCase() + ' ' + item.lastName.toLocaleLowerCase();
 							case 'active':
-								return item.active ? 1 : 0;
+								console.log (property, (item.active) ? '1' : '0');
+								return (item.active) ? '1' : '0';
 							case 'level':
 								return this.title(item.level);
 							case 'skills':
 								return this.skills(item.experiences);
 							case 'external':
-								return item.external ? 1 : 0;
+								console.log (property, (item.external) ? '1' : '0');
+								return (item.external) ? '1' : '0';
 						}
 					};
 					this.dataSource.sort = this.sort;

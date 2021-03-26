@@ -44,8 +44,8 @@ export class StaffService {
 	}
 
 	/**
-		 * Return the global list of ALL collaborators, working for the company.
-		 */
+	 * Return the global list of ALL collaborators, working for the company.
+	 */
 	getAll(): Observable<Collaborator[]> {
 		if (traceOn()) {
 			console.log('Fetching the collaborators');

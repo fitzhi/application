@@ -35,6 +35,7 @@ export class TabsStaffListComponent extends BaseComponent implements OnInit, OnD
 
 		this.subscriptions.add(
 			this.tabsStaffListService.search$.subscribe(envelope => {
+				console.log ('envelope', envelope);
 				setTimeout(() => {
 					this.tabKeys.push(this.tabsStaffListService.key(envelope));
 					this.add(envelope.criteria);

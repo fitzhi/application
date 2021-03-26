@@ -4,6 +4,7 @@ import { StaffListComponent } from './staff-list.component';
 import { InitTest } from 'src/app/test/init-test';
 import { RouterModule } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 describe('StaffListComponent', () => {
 	let component: StaffListComponent;
 	let fixture: ComponentFixture<StaffListComponent>;
@@ -25,7 +26,8 @@ describe('StaffListComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('should create', () => {
+	it('should be created without error', () => {
 		expect(component).toBeTruthy();
 	});
+
 });

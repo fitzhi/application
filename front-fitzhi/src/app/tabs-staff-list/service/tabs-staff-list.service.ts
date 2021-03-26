@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { EMPTY, Observable, of, Subject } from 'rxjs';
 import { Collaborator } from '../../data/collaborator';
 import { StaffService } from '../../tabs-staff/service/staff.service';
 import { Constants } from '../../constants';
@@ -8,6 +8,9 @@ import { MessageService } from '../../interaction/message/message.service';
 import { SkillService } from '../../skill/service/skill.service';
 import { ListCriteria } from '../../data/listCriteria';
 import { traceOn } from 'src/app/global';
+import { catchError, finalize, switchMap, take, tap } from 'rxjs/operators';
+import { rootCertificates } from 'tls';
+import { truncate } from 'fs';
 
 @Injectable({
 	providedIn: 'root'
@@ -82,12 +85,12 @@ export class TabsStaffListService {
 	/**
      * Searching staff members corresponding to the 2 passed criterias.
      * @param criteria the criteria
-     * @param activeOnly active only Yes/No
+     * @param activeOnly active only **true** / **false**
+	 * @param outerThis internal pointer to the service
      */
-	public search(criteria: string, activeOnly: boolean, outerThis: TabsStaffListService): Subject<Collaborator[]> {
-		const collaborator = [];
+	public search(criteria: string, activeOnly: boolean, outerThis: TabsStaffListService): Observable<Collaborator[]> {
 
-		const collaborator$ = new Subject<Collaborator[]>();
+		const collaborator = [];
 
 		/**
          * Cache of the skills filter.
@@ -131,11 +134,8 @@ export class TabsStaffListService {
 				if (traceOn()) {
 					console.log('Using cache for key ' + key + ' ' + context.staffSelected.length + ' records');
 				}
-				setTimeout(() => {
-					collaborator.push(...context.staffSelected);
-					collaborator$.next(collaborator);
-				}, 0);
-				return collaborator$;
+				collaborator.push(...context.staffSelected);
+				return of(collaborator);
 			}
 		}
 
@@ -181,7 +181,7 @@ export class TabsStaffListService {
          */
 		function getSkillsFilter(): Filter[] {
 
-			// We cache the array of skills id. We don need to parse the criteria for each entry.
+			// We cache the array of skills id. We don't need to parse the criteria for each entry.
 			if ((skillsFilter.length > 0) || (criteriasUnknown.length > 0)) {
 				return skillsFilter;
 			}
@@ -274,31 +274,32 @@ export class TabsStaffListService {
 			);
 		}
 
-
-		this.staffService.getAll().subscribe((staffs: Collaborator[]) => {
-			staffs.forEach(staff => {
-				if (testCriteria(staff)) {
-					collaborator.push(staff);
-				}
-			});
-		},
-			error => outerThis.messageService.error(error),
-			() => {
+		return this.staffService.getAll().pipe(
+			take(1),
+			switchMap((staffs: Collaborator[]) => {
+					collaborator.push(...staffs.filter(staff => testCriteria(staff)));
+					// We store the array of collaborators in the cache
+					if (this.staffListContexts.has(key)) {
+						if (traceOn()) {
+							console.log('Saving collaborators for key ' + key);
+						}
+						this.staffListContexts.get(key).store(collaborator);
+					}
+					return of(collaborator);
+				}),
+			catchError(error => { 
+				outerThis.messageService.error(error);
+				return EMPTY;
+			}),
+			finalize(() => {
 				if (traceOn()) {
 					console.log('The staff collection is containing now ' + collaborator.length + ' records');
 					console.groupCollapsed('Staff members found : ');
 					collaborator.forEach(collab => console.log(collab.firstName + ' ' + collab.lastName));
 					console.groupEnd();
 				}
-				if (this.staffListContexts.has(key)) {
-					if (traceOn()) {
-						console.log('Saving collaborators for key ' + key);
-					}
-					this.staffListContexts.get(key).store(collaborator);
-				}
-				collaborator$.next(collaborator);
-			});
-		return collaborator$;
+			})			
+		);
 	}
 
 	/**
