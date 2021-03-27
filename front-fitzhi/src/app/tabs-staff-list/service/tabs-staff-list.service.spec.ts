@@ -53,7 +53,7 @@ describe('TabsStaffListService', () => {
 			])
 		);
 
-		service.search('ViDa', true).pipe(take(1)).subscribe({
+		service.search$('ViDa', true).pipe(take(1)).subscribe({
 			next: c => {
 				expect(c.length).toBe(1);
 				expect(c[0].idStaff).toBe(1789);
@@ -79,7 +79,7 @@ describe('TabsStaffListService', () => {
 			])
 		);
 
-		service.search('ViDa', true).pipe(take(1)).subscribe({
+		service.search$('ViDa', true).pipe(take(1)).subscribe({
 			next: c => {
 				expect(c.length).toBe(0);
 				done();
@@ -101,7 +101,7 @@ describe('TabsStaffListService', () => {
 			])
 		);
 
-		service.search('ViDa', true).pipe(take(1)).subscribe({
+		service.search$('ViDa', true).pipe(take(1)).subscribe({
 			next: c => {
 				expect(c.length).toBe(0);
 				done();
@@ -124,7 +124,7 @@ describe('TabsStaffListService', () => {
 			])
 		);
 
-		service.search('FRéd', true).pipe(take(1)).subscribe({
+		service.search$('FRéd', true).pipe(take(1)).subscribe({
 			next: c => {
 				expect(c.length).toBe(1);
 				expect(c[0].idStaff).toBe(1789);
@@ -159,7 +159,7 @@ describe('TabsStaffListService', () => {
 			])
 		);
 
-		service.search('skill:one', true).pipe(take(1)).subscribe({
+		service.search$('skill:one', true).pipe(take(1)).subscribe({
 			next: c => {
 				expect(c.length).toBe(1);
 				expect(c[0].idStaff).toBe(1789);
@@ -194,7 +194,7 @@ describe('TabsStaffListService', () => {
 			])
 		);
 
-		service.search('skill:one:4', true).pipe(take(1)).subscribe({
+		service.search$('skill:one:4', true).pipe(take(1)).subscribe({
 			next: c => {
 				expect(c.length).toBe(0);
 				done();
@@ -226,7 +226,7 @@ describe('TabsStaffListService', () => {
 			])
 		);
 
-		service.search('skill:one:3', true).pipe(take(1)).subscribe({
+		service.search$('skill:one:3', true).pipe(take(1)).subscribe({
 			next: c => {
 				expect(c.length).toBe(1);
 				expect(c[0].idStaff).toBe(1789);
@@ -263,7 +263,7 @@ describe('TabsStaffListService', () => {
 			])
 		);
 
-		service.search('skill:dssds', true).pipe(take(1)).subscribe({
+		service.search$('skill:dssds', true).pipe(take(1)).subscribe({
 			next: c => {
 				expect(c.length).toBe(0);
 				expect(spyMsg).toHaveBeenCalled(); 

@@ -70,7 +70,7 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 
 		this.subscriptions.add(
 			this.tabsStaffListComponent
-				.search(this.criteria, this.activeOnly)
+				.search$(this.criteria, this.activeOnly)
 				.subscribe(collaborators => {
 					this.dataSource = new MatTableDataSource<Collaborator>(collaborators);
 					this.dataSource.sortingDataAccessor = (item: Collaborator, property: string) => {

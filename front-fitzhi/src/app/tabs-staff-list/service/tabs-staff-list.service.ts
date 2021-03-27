@@ -87,7 +87,7 @@ export class TabsStaffListService {
      * @param activeOnly active only **true** / **false**
 	 * @returns an observable emetting an array of collaborators
      */
-	public search(criteria: string, activeOnly: boolean): Observable<Collaborator[]> {
+	public search$(criteria: string, activeOnly: boolean): Observable<Collaborator[]> {
 
 		const collaborator = [];
 
