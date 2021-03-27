@@ -225,11 +225,13 @@ export class TabsStaffListService {
 				});
 				if (traceOn()) {
 					console.groupCollapsed('id of skills candidate');
-					skillsFilter.forEach(id => console.log(id));
+					console.table(skillsFilter);
 					console.groupEnd();
-					console.groupCollapsed('Unknown skills');
-					criteriasUnknown.forEach(s => console.log(s));
-					console.groupEnd();
+					if (criteriasUnknown.length > 0) {
+						console.groupCollapsed('Unknown skills');
+						console.table(criteriasUnknown);
+						console.groupEnd();
+					}
 				}
 
 				if (criteriasUnknown.length > 0) {
