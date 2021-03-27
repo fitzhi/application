@@ -34,7 +34,7 @@ export class TabsStaffListComponent extends BaseComponent implements OnInit, OnD
 		this.cinematicService.setForm(Constants.TABS_STAFF_LIST, this.router.url);
 
 		this.subscriptions.add(
-			this.tabsStaffListService.search$.subscribe(envelope => {
+			this.tabsStaffListService.criterias$.subscribe(envelope => {
 				console.log ('envelope', envelope);
 				setTimeout(() => {
 					this.tabKeys.push(this.tabsStaffListService.key(envelope));

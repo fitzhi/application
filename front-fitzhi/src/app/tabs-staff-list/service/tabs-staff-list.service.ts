@@ -40,15 +40,14 @@ export class TabsStaffListService {
 	/**
      * New search is made by the developer.
      */
-	public search$ = new Subject<ListCriteria>();
-
+	public criterias$ = new Subject<ListCriteria>();
 
 	constructor(
 		private staffService: StaffService,
 		private skillService: SkillService,
 		private messageService: MessageService) {
 
-		this.search$.subscribe(criterias => {
+		this.criterias$.subscribe(criterias => {
 			if (traceOn()) {
 				console.log('Adding criterias ' + criterias.criteria);
 			}
@@ -79,16 +78,16 @@ export class TabsStaffListService {
 			this.messageService.info('This criteria is already present!');
 			return;
 		}
-		this.search$.next(myCriteria);
+		this.criterias$.next(myCriteria);
 	}
 
 	/**
      * Searching staff members corresponding to the 2 passed criterias.
      * @param criteria the criteria
      * @param activeOnly active only **true** / **false**
-	 * @param outerThis internal pointer to the service
+	 * @returns an observable emetting an array of collaborators
      */
-	public search(criteria: string, activeOnly: boolean, outerThis: TabsStaffListService): Observable<Collaborator[]> {
+	public search(criteria: string, activeOnly: boolean): Observable<Collaborator[]> {
 
 		const collaborator = [];
 
@@ -115,6 +114,9 @@ export class TabsStaffListService {
          * Reminder parsed and saved in this property.
          */
 		let reminderExtracted: string;
+
+		// We bind the internal function _getSkillsFilter with the main class
+		const getSkillsFilter = _getSkillsFilter.bind(this);
 
 		class Filter {
 			id: number;
@@ -179,7 +181,7 @@ export class TabsStaffListService {
          * Parse the criterias and returns an array of skills filters.
          * @returns the skills filters
          */
-		function getSkillsFilter(): Filter[] {
+		function _getSkillsFilter(): Filter[] {
 
 			// We cache the array of skills id. We don't need to parse the criteria for each entry.
 			if ((skillsFilter.length > 0) || (criteriasUnknown.length > 0)) {
@@ -194,7 +196,7 @@ export class TabsStaffListService {
 					skills.forEach(skill => console.log(skill));
 					console.groupEnd();
 				}
-				const allSkills = outerThis.skillService.allSkills;
+				const allSkills = this.skillService.allSkills;
 				skills.forEach(skill => {
 					let found = false;
 					allSkills.forEach(sk => {
@@ -235,10 +237,10 @@ export class TabsStaffListService {
 
 				if (criteriasUnknown.length > 0) {
 					if (criteriasUnknown.length === 1) {
-						outerThis.messageService.warning('The skill ' + criteriasUnknown[0]
+						this.messageService.warning('The skill ' + criteriasUnknown[0]
 							+ ' is unknown. It will be ignored.');
 					} else {
-						outerThis.messageService.warning('The skills ' + criteriasUnknown.join(', ')
+						this.messageService.warning('The skills ' + criteriasUnknown.join(', ')
 							+ ' are unknown. They will be ignored.');
 					}
 				}
@@ -288,7 +290,7 @@ export class TabsStaffListService {
 					return of(collaborator);
 				}),
 			catchError(error => { 
-				outerThis.messageService.error(error);
+				this.messageService.error(error);
 				return EMPTY;
 			}),
 			finalize(() => {

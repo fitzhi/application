@@ -8,17 +8,19 @@ import { Collaborator } from 'src/app/data/collaborator';
 import { take } from 'rxjs/operators';
 import { SkillService } from 'src/app/skill/service/skill.service';
 import { Skill } from 'src/app/data/skill';
+import { MessageService } from 'src/app/interaction/message/message.service';
 
 describe('TabsStaffListService', () => {
 
 	let staffService: StaffService;
 	let skillService: SkillService;
+	let messageService: MessageService;
 	let service: TabsStaffListService;
 
 	beforeEach(() => {
 		const testConf: TestModuleMetadata =  {
 				declarations: [],
-				providers: [StaffService],
+				providers: [StaffService, SkillService, MessageService],
 				imports: []
 			};
 			InitTest.addImports(testConf.imports);
@@ -27,6 +29,7 @@ describe('TabsStaffListService', () => {
 
 			staffService = TestBed.inject(StaffService);
 			skillService = TestBed.inject(SkillService);
+			messageService = TestBed.inject(MessageService);
 			service = TestBed.inject(TabsStaffListService);
 
 	});
@@ -50,7 +53,7 @@ describe('TabsStaffListService', () => {
 			])
 		);
 
-		service.search('ViDa', true, service).pipe(take(1)).subscribe({
+		service.search('ViDa', true).pipe(take(1)).subscribe({
 			next: c => {
 				expect(c.length).toBe(1);
 				expect(c[0].idStaff).toBe(1789);
@@ -76,7 +79,7 @@ describe('TabsStaffListService', () => {
 			])
 		);
 
-		service.search('ViDa', true, service).pipe(take(1)).subscribe({
+		service.search('ViDa', true).pipe(take(1)).subscribe({
 			next: c => {
 				expect(c.length).toBe(0);
 				done();
@@ -98,7 +101,7 @@ describe('TabsStaffListService', () => {
 			])
 		);
 
-		service.search('ViDa', true, service).pipe(take(1)).subscribe({
+		service.search('ViDa', true).pipe(take(1)).subscribe({
 			next: c => {
 				expect(c.length).toBe(0);
 				done();
@@ -121,7 +124,7 @@ describe('TabsStaffListService', () => {
 			])
 		);
 
-		service.search('FRéd', true, service).pipe(take(1)).subscribe({
+		service.search('FRéd', true).pipe(take(1)).subscribe({
 			next: c => {
 				expect(c.length).toBe(1);
 				expect(c[0].idStaff).toBe(1789);
@@ -156,7 +159,7 @@ describe('TabsStaffListService', () => {
 			])
 		);
 
-		service.search('skill:one', true, service).pipe(take(1)).subscribe({
+		service.search('skill:one', true).pipe(take(1)).subscribe({
 			next: c => {
 				expect(c.length).toBe(1);
 				expect(c[0].idStaff).toBe(1789);
@@ -191,7 +194,7 @@ describe('TabsStaffListService', () => {
 			])
 		);
 
-		service.search('skill:one:4', true, service).pipe(take(1)).subscribe({
+		service.search('skill:one:4', true).pipe(take(1)).subscribe({
 			next: c => {
 				expect(c.length).toBe(0);
 				done();
@@ -223,7 +226,7 @@ describe('TabsStaffListService', () => {
 			])
 		);
 
-		service.search('skill:one:3', true, service).pipe(take(1)).subscribe({
+		service.search('skill:one:3', true).pipe(take(1)).subscribe({
 			next: c => {
 				expect(c.length).toBe(1);
 				expect(c[0].idStaff).toBe(1789);
@@ -232,6 +235,42 @@ describe('TabsStaffListService', () => {
 				done();
 			}
 		});
+	});
+
+	it('should send a warning if the skill does not exist', done => {
+		expect(service).toBeTruthy();
+
+		skillService.allSkills = [];
+		skillService.allSkills.push(new Skill(1, 'one'));
+		skillService.allSkills.push(new Skill(2, 'two'));
+		skillService.allSkills.push(new Skill(3, 'three'));
+
+		const spyMsg = spyOn(messageService, 'warning');
+
+		const spy = spyOn(staffService, 'getAll').and.returnValue(
+			of([
+				{
+					'idStaff': 1789,
+					'firstName': 'Frédéric',
+					'lastName': 'VIDAL',
+					'login': 'frvidal',
+					'active': true,
+					'experiences': [
+						{'id': 1, 'title': 'one', 'level': 3},
+						{'id': 2, 'title': 'two', 'level': 2}
+					]
+				}
+			])
+		);
+
+		service.search('skill:dssds', true).pipe(take(1)).subscribe({
+			next: c => {
+				expect(c.length).toBe(0);
+				expect(spyMsg).toHaveBeenCalled(); 
+				done();
+			}
+		});
+
 	});
 
 });
