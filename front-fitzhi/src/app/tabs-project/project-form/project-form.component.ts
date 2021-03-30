@@ -192,9 +192,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		this.subscriptions.add(this.projectService.projectLoaded$
 			.subscribe({
 				next: loaded => {
-					// If true the project is loaded, 
-					// If false, 
-					//  either we fail to retrieve the data from the server. 
+					// If true the project is loaded,
+					// If false,
+					//  either we fail to retrieve the data from the server.
 					//  or, most probably, we enter in this form in CREATION mode (project.id = -1))
 					if (loaded) {
 						this.ngAfterViewInitSonarProjectsDeclaredInProject();

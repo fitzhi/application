@@ -29,7 +29,8 @@ export class SSEWatcherComponent extends BaseComponent implements OnInit, OnDest
 					if (doneAndOk) {
 						this.ssewatcherService.initEventSource(this.url);
 					}
-			}}));
+				}
+			}));
 	}
 
 	/**

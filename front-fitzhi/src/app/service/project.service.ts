@@ -172,7 +172,7 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	* Create a new project, read the saved one, and return the project in an observable. 
+	* Create a new project, read the saved one, and return the project in an observable.
 	*/
 	createNewProject (): Observable<Project> {
 		if (traceOn()) {
@@ -526,7 +526,7 @@ export class ProjectService extends InternalService {
 			.subscribe({
 				next: (branches: string[]) => {
 					if (traceOn()) {
-						console.groupCollapsed("List of branches for project %s", this.project.name);
+						console.groupCollapsed('List of branches for project %s', this.project.name);
 						branches.forEach(branch => console.log (branch));
 						console.groupEnd();
 					}
