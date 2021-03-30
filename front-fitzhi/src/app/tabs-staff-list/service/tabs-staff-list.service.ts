@@ -100,6 +100,9 @@ export class TabsStaffListService {
 
 		const ALL_LEVELS = 0;
 
+		/**
+		 * Key to store the criteria which will be linked to a list of results.
+		 */
 		const key = this.key(new ListCriteria(criteria, activeOnly));
 
 		/**
