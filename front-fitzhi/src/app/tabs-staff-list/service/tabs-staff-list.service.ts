@@ -375,9 +375,7 @@ export class TabsStaffListService {
 					staff.external = collaborator.external;
 
 					staff.experiences.length = 0;
-					collaborator.experiences.forEach(experience => {
-						staff.experiences.push(experience);
-					});
+					staff.experiences.push(...collaborator.experiences);
 				}
 			});
 		});
@@ -387,6 +385,7 @@ export class TabsStaffListService {
 
 	/**
      * Retrieve the context associated to the key.
+	 * 
      * @param key searched key
      * @returns the context associated to this list or null if none exists (which is suspected to be an internal error)
      */
