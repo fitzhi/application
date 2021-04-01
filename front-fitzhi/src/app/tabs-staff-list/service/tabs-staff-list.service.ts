@@ -7,6 +7,7 @@ import { MessageService } from '../../interaction/message/message.service';
 import { ListCriteria } from '../../data/listCriteria';
 import { traceOn } from 'src/app/global';
 import { catchError, finalize, switchMap, take, tap } from 'rxjs/operators';
+import { SkillService } from 'src/app/skill/service/skill.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -40,6 +41,8 @@ export class TabsStaffListService {
 
 	constructor(
 		private staffService: StaffService,
+		// SkillService is declared here to pass some tests. Some déclaration are mad in the SkillService construction
+		private skillService: SkillService, 
 		private messageService: MessageService) {
 
 		this.criterias$.subscribe(criterias => {

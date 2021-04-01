@@ -4,7 +4,6 @@ import { TabsStaffListService } from './tabs-staff-list.service';
 import { InitTest } from 'src/app/test/init-test';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { of } from 'rxjs';
-import { Collaborator } from 'src/app/data/collaborator';
 import { take } from 'rxjs/operators';
 import { SkillService } from 'src/app/skill/service/skill.service';
 import { Skill } from 'src/app/data/skill';
