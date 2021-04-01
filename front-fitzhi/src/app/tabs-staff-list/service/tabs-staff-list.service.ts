@@ -4,7 +4,6 @@ import { Collaborator } from '../../data/collaborator';
 import { StaffService } from '../../tabs-staff/service/staff.service';
 import { StaffListContext } from '../../data/staff-list-context';
 import { MessageService } from '../../interaction/message/message.service';
-import { SkillService } from '../../skill/service/skill.service';
 import { ListCriteria } from '../../data/listCriteria';
 import { traceOn } from 'src/app/global';
 import { catchError, finalize, switchMap, take, tap } from 'rxjs/operators';
@@ -41,7 +40,6 @@ export class TabsStaffListService {
 
 	constructor(
 		private staffService: StaffService,
-		private skillService: SkillService,
 		private messageService: MessageService) {
 
 		this.criterias$.subscribe(criterias => {
@@ -308,6 +306,7 @@ export class TabsStaffListService {
 
 	/**
      * Remove from history the search entry corresponding to this key.
+	 * @param key the key of the history to be removed
      */
 	public removeHistory(key: string) {
 		this.staffListContexts.delete(key);
@@ -357,6 +356,8 @@ export class TabsStaffListService {
 	/**
      * Actualize the information of a collaborator.
      * This method is call (for instance) after any update on the staff form.
+	 * 
+	 * @param collaborator the collaborator to be actualized
      */
 	public actualizeCollaborator(collaborator: Collaborator) {
 
