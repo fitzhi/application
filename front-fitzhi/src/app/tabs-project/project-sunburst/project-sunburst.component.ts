@@ -417,7 +417,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 		// This test is a hack necessary for the tests suite.
 		if (!document.getElementById('chart')) {
-			console.error('Chart is not present in the HTML layout');
+			console.warn ('The application is in an unexpected state');
+			console.warn('Chart is not present in the HTML layout for the projet %s', this.projectService.project.name);
 		} else {
 			this.myChart.data(response.sunburstData)
 				.width(500)
