@@ -18,6 +18,8 @@ export class HttpRefreshTokenErrorInterceptorService implements HttpInterceptor 
 
 	private LENGTH_ACCESS_TOKEN_EXPIRED = this.ACCESS_TOKEN_EXPIRED.length;
 
+	private FULL_AUTHORIZATION_IS_REQUIRED = 'Full authentication is required to access this resource';
+
 	constructor(private router: Router, private messageService: MessageService) { }
 
 	intercept(req: HttpRequest<any>, next: HttpHandler):
@@ -30,9 +32,15 @@ export class HttpRefreshTokenErrorInterceptorService implements HttpInterceptor 
 						if	((response.error) && (response.error.error) && (response.error.error === 'invalid_token')) { 
 							// This is the scenario of the EXPIRED refresh token.
 							if	((response.error.error_description) 
-								&& (response.error.error_description.substring(0, this.LENGTH_REFRESH_TOKEN_EXPIRED) === this.REFRESH_TOKEN_EXPIRED)) {
+								&& 
+								(
+									(response.error.error_description.substring(0, this.LENGTH_REFRESH_TOKEN_EXPIRED) === this.REFRESH_TOKEN_EXPIRED)
+									||
+									(response.error.error_description === this.FULL_AUTHORIZATION_IS_REQUIRED)
+								)
+							) {
 								if (traceOn()) {
-									console.log('Refresh token has expired.')
+									console.log('Error 401 with message %s', response.error.error_description);
 								}
 								this.router.navigate(['/login']);
 								return throwError(response);
@@ -40,16 +48,16 @@ export class HttpRefreshTokenErrorInterceptorService implements HttpInterceptor 
 								// This is the scenario of the EXPIRED access token.
 								if	((response.error.error_description) 
 									&& (response.error.error_description.substring(0, this.LENGTH_ACCESS_TOKEN_EXPIRED) === this.ACCESS_TOKEN_EXPIRED)) {
-										if (traceOn()) {
-											console.log('Access token has expired.')
-										}		
-									} else {
-										if (traceOn()) {
-											console.log('Unexpected error.')
-										}		
-									}
+									if (traceOn()) {
+										console.log('Access token has expired.')
+									}		
+								} else {
+									if (traceOn()) {
+										console.log('Unexpected error.')
+									}		
 								}
-								return throwError(response);
+							}
+							return throwError(response);
 						} else {
 							// This is an Unauthorized error, most probably with the Sonar servers
 							if (traceOn()) {
