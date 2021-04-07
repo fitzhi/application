@@ -10,6 +10,8 @@ import { MessageService } from 'src/app/interaction/message/message.service';
 @Injectable()
 export class HttpRefreshTokenErrorInterceptorService implements HttpInterceptor {
 
+	private INVALID_TOKEN = 'invalid_token';
+
 	private REFRESH_TOKEN_EXPIRED = 'Invalid refresh token (expired)';
 
 	private LENGTH_REFRESH_TOKEN_EXPIRED = this.REFRESH_TOKEN_EXPIRED.length;
@@ -18,7 +20,10 @@ export class HttpRefreshTokenErrorInterceptorService implements HttpInterceptor 
 
 	private LENGTH_ACCESS_TOKEN_EXPIRED = this.ACCESS_TOKEN_EXPIRED.length;
 
-	private FULL_AUTHORIZATION_IS_REQUIRED = 'Full authentication is required to access this resource';
+	private UNAUTHORIZED = 'unauthorized';
+
+	// We currently don't test the error description.
+	//private FULL_AUTHORIZATION_IS_REQUIRED = 'Full authentication is required to access this resource';
 
 	constructor(private router: Router, private messageService: MessageService) { }
 
@@ -29,15 +34,10 @@ export class HttpRefreshTokenErrorInterceptorService implements HttpInterceptor 
 				catchError( (response: HttpErrorResponse) => {
 
 					if (response.status === 401) { 
-						if	((response.error) && (response.error.error) && (response.error.error === 'invalid_token')) { 
+						if	((response.error) && (response.error.error) && (response.error.error === this.INVALID_TOKEN)) { 
 							// This is the scenario of the EXPIRED refresh token.
-							if	((response.error.error_description) 
-								&& 
-								(
-									(response.error.error_description.substring(0, this.LENGTH_REFRESH_TOKEN_EXPIRED) === this.REFRESH_TOKEN_EXPIRED)
-									||
-									(response.error.error_description === this.FULL_AUTHORIZATION_IS_REQUIRED)
-								)
+							if	((response.error.error_description) && 
+								 (response.error.error_description.indexOf(this.LENGTH_REFRESH_TOKEN_EXPIRED) === 0)
 							) {
 								if (traceOn()) {
 									console.log('Error 401 with message %s', response.error.error_description);
@@ -64,7 +64,15 @@ export class HttpRefreshTokenErrorInterceptorService implements HttpInterceptor 
 								console.log('Response in error', response);
 								console.log('for request', req.urlWithParams);
 							}
-							// this.messageService.warning('Unauthorized access to ' + req.urlWithParams);
+							if (	(response.error) 
+								&& 	(response.error.error) 
+								&& 	(response.error.error === this.UNAUTHORIZED) 
+								&& 	req.url.includes(localStorage.getItem('backendUrl'))) {
+									this.router.navigate(['/login']);
+									return throwError(response);	
+							}
+							// This is an unexpected error.
+							this.messageService.warning('Unauthorized access to ' + req.urlWithParams);
 							return EMPTY;
 						}
 
