@@ -69,7 +69,7 @@ export class HttpRefreshTokenErrorInterceptorService implements HttpInterceptor 
 								&& 	(response.error.error === this.UNAUTHORIZED) 
 								&& 	req.url.includes(localStorage.getItem('backendUrl'))) {
 									this.router.navigate(['/login']);
-									return throwError(response);	
+									return EMPTY;	
 							}
 							// This is an unexpected error.
 							this.messageService.warning('Unauthorized access to ' + req.urlWithParams);
