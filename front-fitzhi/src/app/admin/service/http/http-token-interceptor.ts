@@ -14,7 +14,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 
 	isRefreshingToken = false;
 
-	private NO_SECURITY = "no-security";
+	private NO_SECURITY = 'no-security';
 
 	constructor(
 		private tokenService: TokenService) { }
