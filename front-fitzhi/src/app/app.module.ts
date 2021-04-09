@@ -44,7 +44,7 @@ import { DevOnOffComponent } from './admin/dev-on-off/dev-on-off.component';
 import { RegisterUserComponent } from './admin/register-user/register-user.component';
 import { AuthGuardService } from './admin/security/auth-guard.service';
 import { HttpErrorInterceptorService } from './admin/service/http/http-error-interceptor-service';
-import { HttpTokenInterceptorService } from './admin/service/http/http-token-interceptor.service';
+import { HttpTokenInterceptor } from './admin/service/http/http-token-interceptor';
 import { StartingSetupComponent } from './admin/starting-setup/starting-setup.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -254,7 +254,7 @@ import { TokenService } from './admin/service/token/token.service';
 		},
 		{
 			provide: HTTP_INTERCEPTORS,
-			useClass: HttpTokenInterceptorService,
+			useClass: HttpTokenInterceptor,
 			multi: true
 		},
 		{

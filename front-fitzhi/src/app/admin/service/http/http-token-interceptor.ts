@@ -8,24 +8,31 @@ import { Token } from '../token/token';
 import { TokenService } from '../token/token.service';
 
 @Injectable()
-export class HttpTokenInterceptorService implements HttpInterceptor {
+export class HttpTokenInterceptor implements HttpInterceptor {
 
 	authToken$: BehaviorSubject<Token> = new BehaviorSubject<Token>(null);
 
 	isRefreshingToken = false;
 
+	private NO_SECURITY = "no-security";
+
 	constructor(
 		private tokenService: TokenService) { }
+
+	/**
+	 * Intercept the HTTP request.
+	 * @param req the current request
+	 * @param next the next handler to be in charge of the given request
+	 * @returns 
+	 */
 
 	intercept(req: HttpRequest<any>, next: HttpHandler):
 		Observable<HttpSentEvent | HttpHeaderResponse | HttpProgressEvent | HttpResponse<any> | HttpUserEvent<any>> {
 
-
-
 		//
 		// FOR DEVELOPMENT PURPOSE ONLY, we unplugg the security control.
 		//
-		if (localStorage.getItem('dev') === '1') {
+		if (localStorage.getItem(this.NO_SECURITY) === '1') {
 			return next.handle(req);
 		}
 		
