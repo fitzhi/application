@@ -51,9 +51,42 @@ describe(`AuthHttpInterceptor`, () => {
 		expect(httpRequest.request.headers.get('authorization')).toEqual('Bearer access_token');
 	});
 
-	it('should avoid the security header if security is unplugged', () => {
+	it('should avoid to add the authorization header if security is unplugged', () => {
 
 		localStorage.setItem('no-security', '1');
+		dataService.getPosts().subscribe(response => {
+			expect(response).toBeTruthy();
+		});
+
+		const httpRequest = httpMock.expectOne(`${dataService.ROOT_URL}/posts`);
+		expect(httpRequest.request.headers.has('authorization')).toEqual(false);
+	});
+
+	it('should avoid to add the authorization header before user registration', () => {
+
+		dataService.ROOT_URL = 'https://localhost:8080/api/admin/isVeryFirstConnection';
+		dataService.getPosts().subscribe(response => {
+			expect(response).toBeTruthy();
+		});
+
+		const httpRequest = httpMock.expectOne(`${dataService.ROOT_URL}/posts`);
+		expect(httpRequest.request.headers.has('authorization')).toEqual(false);
+	});
+
+	it('should avoid to add the authorization header for Github', () => {
+
+		dataService.ROOT_URL = 'https://api.github.com/nope';
+		dataService.getPosts().subscribe(response => {
+			expect(response).toBeTruthy();
+		});
+
+		const httpRequest = httpMock.expectOne(`${dataService.ROOT_URL}/posts`);
+		expect(httpRequest.request.headers.has('authorization')).toEqual(false);
+	});
+
+	it('should avoid to add the authorization header for Sonar', () => {
+
+		dataService.ROOT_URL = 'https://sonarUrl:9000//api/components/search';
 		dataService.getPosts().subscribe(response => {
 			expect(response).toBeTruthy();
 		});
