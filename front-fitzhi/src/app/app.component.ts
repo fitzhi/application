@@ -18,6 +18,9 @@ import { environment } from '../environments/environment';
 
 declare var $: any;
 
+/**
+ * The **Main** application component.
+ */
 @Component({
 	selector: 'app-root',
 	templateUrl: './app.component.html',
@@ -31,28 +34,28 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 	public environment = environment;
 
 	/**
-    * Context identfifier : Entity currently active.
-    */
+	* Context identfifier : Entity currently active.
+	*/
 	public activeContext: number;
 
 	/**
-    * Searching request typed & displayed in the searching field.
-    */
+	* Searching request typed & displayed in the searching field.
+	*/
 	criteria: string;
 
 	/**
-    * Filter on active employees if true (by default), or include all the employees in the database
-    */
+	* Filter on active employees if true (by default), or include all the employees in the database
+	*/
 	activeOnly = true;
 
 	/**
-     * NEXT element ID, if any, from the underlying collection supplying the master/detail feature.
-     */
+	 * NEXT element ID, if any, from the underlying collection supplying the master/detail feature.
+	 */
 	nextId: number;
 
 	/**
-     * PREVIOUS element ID, if any, from the underlying collection supplying the master/detail feature.
-     */
+	 * PREVIOUS element ID, if any, from the underlying collection supplying the master/detail feature.
+	 */
 	previousId: number;
 
 	constructor(
@@ -73,20 +76,20 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 
 	ngOnInit() {
 		//
-        // Loading the referentials.
-        //
+		// Loading the referentials.
+		//
 		// TODO The Sonar servers array should be stored in the referential.
 		this.sonarService.loadSonarsVersion();
 		this.referentialService.loadAllReferentials();
 		this.sonarService.loadSonarMetrics();
 
 		// We display the current version
-		console.info ('version %s build-time %s', this.environment.version, this.environment.buildTime);
+		console.info('version %s build-time %s', this.environment.version, this.environment.buildTime);
 	}
 
 	/**
-      * Search button has been clicked.
-      */
+	  * Search button has been clicked.
+	  */
 	search(): void {
 		switch (this.activeContext) {
 			case Constants.TABS_STAFF_LIST:
@@ -112,7 +115,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 								this.staffService.countAll_groupBy_experience(this.activeOnly);
 							}
 						}
-				}));
+					}));
 				break;
 			}
 			case Constants.PROJECT_SEARCH: {
@@ -126,8 +129,8 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 	}
 
 	/**
-     * User has entered into the search INPUT.
-     */
+	 * User has entered into the search INPUT.
+	 */
 	focusSearch() {
 		switch (this.activeContext) {
 			case Constants.SKILLS_SEARCH:
@@ -163,8 +166,9 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 	}
 
 	/**
-     * The end-user has switched the context to another entity (staff/skill/project)
-     */
+	 * The end-user has switched the context to another entity (staff/skill/project)
+	 * @param $event the event emitted
+	 */
 	onChangeForm($event: number) {
 		this.activeContext = $event;
 		if (traceOn()) {
@@ -179,8 +183,8 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 	}
 
 	/**
-     * @returns TRUE if the active mode in a searching mode
-     */
+	 * @returns TRUE if the active mode in a searching mode
+	 */
 	isInSearchingMode() {
 		switch (this.activeContext) {
 			case Constants.TABS_STAFF_LIST:
@@ -194,22 +198,20 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 	}
 
 	/**
-     * The end-user has switched the activeOnly data state to ON or OFF.
-     */
+	 * The end-user has switched the activeOnly data state to ON or OFF.
+	 * @param $event the emitted boolean
+	 */
 	onChangeActiveOnly($event: boolean) {
 		this.activeOnly = $event;
 		if (traceOn()) {
-			if (this.activeOnly) {
-				console.log('Filter only active records');
-			} else {
-				console.log('Select all records');
-			}
+			console.log((this.activeOnly) ? 'Filter only active records' : 'Select all records');
 		}
 	}
 
 	/**
-     * The end-user has requested a query based on the passed criteria.
-     */
+	 * The end-user has requested a query based on the passed criteria.
+	 * @param $event the criteria typed by the end-user
+	 */
 	onRequestQuery($event: string) {
 		if (traceOn()) {
 			console.log('Request of a query on criteria', $event);
@@ -219,31 +221,27 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 	}
 
 	/**
-     * @returns TRUE if the user is connected.
-     */
+	 * @returns TRUE if the user is connected.
+	 */
 	isConnected() {
 		return this.authService.isConnected();
 	}
 
 	/**
-     * All subscriptions are closed in the BaseComponent
-     */
-	public ngOnDestroy() {
-		super.ngOnDestroy();
-	}
-
-	public ngAfterViewInit () {
-
+	 * After view initialization.
+	 */
+	public ngAfterViewInit() {
 		$(document).ready(
 			$(function () {
 				$('[data-toggle="tooltip"]').tooltip();
 			}
-		));
-
-		// For development convenience, we deactivate the security control.
-		if (localStorage.getItem('dev') === '1') {
-			this.projectService.loadProjects();
-		}
+			));
 	}
 
+	/**
+	 * All subscriptions are closed in the BaseComponent
+	 */
+	public ngOnDestroy() {
+		super.ngOnDestroy();
+	}
 }
