@@ -14,6 +14,7 @@ import { ProjectService } from 'src/app/service/project.service';
 import { SonarService } from './service/sonar.service';
 import { traceOn } from './global';
 import { InstallService } from './admin/service/install/install.service';
+import { environment } from '../environments/environment';
 
 declare var $: any;
 
@@ -23,6 +24,11 @@ declare var $: any;
 	styleUrls: ['./app.component.css']
 })
 export class AppComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
+
+	/**
+	 * The environment 
+	 */
+	public environment = environment;
 
 	/**
     * Context identfifier : Entity currently active.
@@ -66,13 +72,16 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 	}
 
 	ngOnInit() {
-		/**
-         * Loading the referentials.
-         */
+		//
+        // Loading the referentials.
+        //
 		// TODO The Sonar servers array should be stored in the referential.
 		this.sonarService.loadSonarsVersion();
 		this.referentialService.loadAllReferentials();
 		this.sonarService.loadSonarMetrics();
+
+		// We display the current version
+		console.info ('version %s build-time %s', this.environment.version, this.environment.buildTime);
 	}
 
 	/**
