@@ -11,6 +11,7 @@ export class DataService {
   constructor(private http: HttpClient) {}
 
   getPosts() {
-    return this.http.get<string[]>(`${this.ROOT_URL}/posts`);
+    console.log ('url', `${this.ROOT_URL}/posts`);
+    return this.http.get<any[]>(`${this.ROOT_URL}/posts`);
   }
 }

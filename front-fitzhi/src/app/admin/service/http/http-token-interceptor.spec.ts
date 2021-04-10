@@ -8,6 +8,7 @@ import { HttpTokenInterceptor } from './http-token-interceptor';
 import { DataService } from '../data.service';
 import { TokenService } from '../token/token.service';
 import { Token } from '../token/token';
+import { of } from 'rxjs';
 
 describe(`AuthHttpInterceptor`, () => {
 	let httpMock: HttpTestingController;
@@ -84,15 +85,27 @@ describe(`AuthHttpInterceptor`, () => {
 		expect(httpRequest.request.headers.has('authorization')).toEqual(false);
 	});
 
-	it('should avoid to add the authorization header for Sonar', () => {
+	it('should handle correctly a 401 error', () => {
 
-		dataService.ROOT_URL = 'https://sonarUrl:9000//api/components/search';
+		dataService.ROOT_URL = 'https://urlWith401Error';
+
+		const token = new Token();
+		token.access_token = 'updated_access_token';
+		const spy = spyOn(tokenService, 'refreshToken$').and.returnValue(of(token));
+
 		dataService.getPosts().subscribe(response => {
 			expect(response).toBeTruthy();
 		});
 
+		const req = httpMock.expectOne('https://urlWith401Error/posts');
+		req.error(new ErrorEvent('error'), { status: 401, statusText: 'Unauthorized resource' });
+
 		const httpRequest = httpMock.expectOne(`${dataService.ROOT_URL}/posts`);
-		expect(httpRequest.request.headers.has('authorization')).toEqual(false);
+		expect(httpRequest.request.headers.has('authorization')).toEqual(true);
+		expect(httpRequest.request.headers.get('authorization')).toEqual('Bearer updated_access_token');
 	});
 
+	afterEach(() => {
+		httpMock.verify();
+	});
 });
