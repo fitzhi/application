@@ -23,9 +23,11 @@ export class HttpRefreshTokenErrorInterceptor implements HttpInterceptor {
 	// https://developer.mozilla.org/fr/docs/Web/HTTP/Headers/WWW-Authenticate
 	private WWW_AUTHENTICATE = 'WWW-Authenticate';
 
-	private WWW_AUTHENTICATE_INVALID_REFRESH_TOCKEN = 'Bearer error="invalid_token", error_description="Invalid refresh token (expired):';
+	private WWW_AUTHENTICATE_INVALID_REFRESH_TOKEN = 'Bearer error="invalid_token", error_description="Invalid refresh token (expired):';
 
-	private WWW_AUTHENTICATE_INVALID_ACCESS_TOCKEN = 'Bearer realm="my_rest_api", error="invalid_token", error_description="Access token expired';
+	private WWW_AUTHENTICATE_INVALID_ACCESS_TOKEN = 'Bearer realm="my_rest_api", error="invalid_token", error_description="Access token expired';
+
+	private WWW_AUTHENTICATE_FULL_AUTHENTICATION = 'Bearer realm="my_rest_api", error="unauthorized", error_description="Full authentication is required to access this resource"';
 
 	// We currently don't test the error description.
 	//private FULL_AUTHORIZATION_IS_REQUIRED = 'Full authentication is required to access this resource';
@@ -61,13 +63,14 @@ export class HttpRefreshTokenErrorInterceptor implements HttpInterceptor {
 						const wwwAuthenticate = this.extractWwwAuthenticate(response);
 						if (wwwAuthenticate) {
 							// This is the scenario of the EXPIRED refresh token.
-							if (wwwAuthenticate.includes(this.WWW_AUTHENTICATE_INVALID_REFRESH_TOCKEN)) {
+							if (	wwwAuthenticate.includes(this.WWW_AUTHENTICATE_INVALID_REFRESH_TOKEN)
+								|| 	wwwAuthenticate.includes(this.WWW_AUTHENTICATE_FULL_AUTHENTICATION) ){
 								this.router.navigate(['/login']);
 								return throwError(response);
 							}
 
 							// This is the scenario of the ACCESSS refresh token.
-							if (wwwAuthenticate.includes(this.WWW_AUTHENTICATE_INVALID_ACCESS_TOCKEN)) {
+							if (wwwAuthenticate.includes(this.WWW_AUTHENTICATE_INVALID_ACCESS_TOKEN)) {
 								if (traceOn()) {
 									console.log('Access token has expired.')
 								}		

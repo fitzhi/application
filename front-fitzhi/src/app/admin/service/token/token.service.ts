@@ -25,7 +25,11 @@ export class TokenService {
         //    authorization token for the API calls.
         //
 		if (traceOn()) {
-			console.log('Refresh the active token with token %s', this.token.refresh_token);
+			if (this.token) {
+				console.log('Refresh the active token with token %s', this.token.refresh_token);
+			} else {
+				console.log('Token is undefined');
+			}
 		}
 
 
