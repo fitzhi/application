@@ -11,11 +11,13 @@ import { Token } from '../token/token';
 import { of } from 'rxjs';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
+import { callbackify } from 'util';
 
 describe(`HttpRefreshTokenErrorInterceptor`, () => {
 	let httpMock: HttpTestingController;
 	let dataService: DataService;
-	let tokenService: TokenService;
+	let router: Router;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
@@ -25,7 +27,6 @@ describe(`HttpRefreshTokenErrorInterceptor`, () => {
 			],
 			providers: [
 				DataService,
-				TokenService,
 				MessageService,
 				{
 					provide: HTTP_INTERCEPTORS,
@@ -37,36 +38,23 @@ describe(`HttpRefreshTokenErrorInterceptor`, () => {
 
 		httpMock = TestBed.inject(HttpTestingController);
 		dataService = TestBed.inject(DataService);
-		tokenService = TestBed.inject(TokenService);
+		router = TestBed.inject(Router);
 
 	});
 
+	it('should redirect the application to "/login" if an "Invalid refresh" error is emitted', () => {
 
-// NO TEST. IT DOES NOT WORK !!! WHY ?????
-
-/*
-	it('should handle correctly a 401 error', () => {
+		const navigateSpy = spyOn(router, 'navigate');
 
 		dataService.ROOT_URL = 'https://urlWith401Error';
 
-		const token = new Token();
-		token.access_token = 'updated_access_token';
-		const spy = spyOn(tokenService, 'refreshToken$').and.returnValue(of(token));
-
-		dataService.getPosts().subscribe(response => {
-			expect(response).toBeTruthy();
-		});
+		callDataService();
 
 		const req = httpMock.expectOne('https://urlWith401Error/posts');
-		const errorInitEvent: ErrorEventInit = {
-			error : 'invalid token',
-		};
-		const error = new ErrorEvent('error', errorInitEvent);
+		const error = new ErrorEvent('error');
 
-		// Why does the httpHeaders not contain www-authenticate value ? 
 		const httpHeaders = new HttpHeaders()
 			.append('www-authenticate', 'Bearer error="invalid_token", error_description="Invalid refresh token (expired):');
-		console.log ('nope...', httpHeaders);
 		req.error( 
 			error,
 			{	
@@ -74,24 +62,64 @@ describe(`HttpRefreshTokenErrorInterceptor`, () => {
 				status: 401, 
 				statusText: 'Unauthorized!', 
 			});
-		/*
-		req.flush(
-			{
-				type: 'ERROR',
-				status: 401,
-				statusText: 'Unauthorized',
-				body: 
-					{ 
-						error: 'invalid_token', 
-						error_description: 'Invalid refresh token (expired): 6be72b48-88e5-4442-83f7-46de290fb644'
-					},
-			}
-		);
-		*
-
-		const httpRequest = httpMock.expectOne(`${dataService.ROOT_URL}/posts`);
+		expect(navigateSpy).toHaveBeenCalledWith(['/login']);
 	});
-*/
+
+	it('should redirect the application to "/login" if a "Full authentication is required" error is emitted', () => {
+
+		const navigateSpy = spyOn(router, 'navigate');
+
+		dataService.ROOT_URL = 'https://urlWith401Error';
+
+		callDataService();
+
+		const req = httpMock.expectOne('https://urlWith401Error/posts');
+		const error = new ErrorEvent('error');
+
+		const httpHeaders = new HttpHeaders()
+			.append('WWW-Authenticate', 'Bearer realm="my_rest_api", error="unauthorized", error_description="Full authentication is required to access this resource"');
+		req.error( 
+			error,
+			{	
+				headers: httpHeaders,
+				status: 401, 
+				statusText: 'Unauthorized!', 
+			});
+		expect(navigateSpy).toHaveBeenCalledWith(['/login']);
+	});
+
+	it('should NOT redirect the application to "/login" if ONLY the access token has expired', () => {
+
+		const navigateSpy = spyOn(router, 'navigate');
+
+		callDataService();
+
+		const req = httpMock.expectOne('https://urlWith401Error/posts');
+		const error = new ErrorEvent('error');
+
+		const httpHeaders = new HttpHeaders()
+			.append('WWW-Authenticate', 'Bearer realm="my_rest_api", error="invalid_token", error_description="Access token expired');
+		req.error( 
+			error,
+			{	
+				headers: httpHeaders,
+				status: 401, 
+				statusText: 'Unauthorized!', 
+			});
+		expect(navigateSpy).not.toHaveBeenCalledWith(['/login']);
+	});
+
+	function callDataService() {
+		dataService.ROOT_URL = 'https://urlWith401Error';
+
+		dataService.getPosts().subscribe({
+			next: response => {
+				expect(response).toBeTruthy();
+			},
+			error: error => { console.log ('error catched', error)}
+		});
+	}
+
 	afterEach(() => {
 		httpMock.verify();
 	});
