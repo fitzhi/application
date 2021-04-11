@@ -118,7 +118,7 @@ import { StaffComponent } from './tabs-staff/staff.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { SkylineIconComponent } from './dashboard/skyline/skyline-icon/skyline-icon.component';
 import { ChartInProgressComponent } from './tabs-project/project-sunburst/chart-in-progress/chart-in-progress.component';
-import { HttpRefreshTokenErrorInterceptorService } from './admin/service/http/http-refresh-token-error-interceptor.service';
+import { HttpRefreshTokenErrorInterceptor } from './admin/service/http/http-refresh-token-error-interceptor';
 import { TokenService } from './admin/service/token/token.service';
 
 @NgModule({
@@ -259,7 +259,7 @@ import { TokenService } from './admin/service/token/token.service';
 		},
 		{
 			provide: HTTP_INTERCEPTORS,
-			useClass: HttpRefreshTokenErrorInterceptorService,
+			useClass: HttpRefreshTokenErrorInterceptor,
 			multi: true
 		},
 		DatePipe,

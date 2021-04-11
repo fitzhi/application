@@ -17,7 +17,7 @@ getTestBed().initTestEnvironment(
 // Then we find all the tests
 const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /backend-setup\.service\.spec\.ts$/);
-// const context = require.context('./', true,  /http-token-interceptor\.spec\.ts$/);
+// const context = require.context('./', true,  /http-refresh-token-error-interceptor\.spec\.ts$/);
 // const context = require.context('./', true,  /skill\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /fitzhi-dashboard\.skyline\.treemap\.component\.spec\.ts$/);
 // And load the modules.
