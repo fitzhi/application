@@ -28,7 +28,7 @@ export class HttpRefreshTokenErrorInterceptor implements HttpInterceptor {
 	private WWW_AUTHENTICATE_INVALID_ACCESS_TOKEN = 'Bearer realm="my_rest_api", error="invalid_token", error_description="Access token expired';
 
 	private WWW_AUTHENTICATE_FULL_AUTHENTICATION = 'Bearer realm="my_rest_api", error="unauthorized", error_description="Full authentication is required to access this resource"';
-
+	
 	// We currently don't test the error description.
 	//private FULL_AUTHORIZATION_IS_REQUIRED = 'Full authentication is required to access this resource';
 
