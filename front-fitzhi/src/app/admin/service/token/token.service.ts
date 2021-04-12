@@ -32,6 +32,10 @@ export class TokenService {
 			}
 		}
 
+		// Loading the token (if undefined) from the localStorage. 
+		if (!this.token) {
+			this.token = this.loadToken();
+		}
 
 		let headers: HttpHeaders = new HttpHeaders();
 		headers = headers.append('Content-Type', 'application/x-www-urlencoded');
@@ -69,6 +73,22 @@ export class TokenService {
 			req.clone({ setHeaders: { Authorization: 'Bearer ' + this.token.access_token } }) : req;
 	}
 
+	/**
+	 * Load the token from the localStorage
+	 */
+	loadToken(): Token {
+		const r_t = localStorage.getItem('refresh_token');
+		const a_t = localStorage.getItem('access_token');
+		const token = new Token();
+		token.access_token = a_t;
+		token.refresh_token = r_t;
+		return token;
+	}
+
+	/**
+	 * Save the token in the localStorage
+	 * @param token the given token
+	 */
 	public saveToken(token: Token) {
 		this.token = token;
 		// store the new token
