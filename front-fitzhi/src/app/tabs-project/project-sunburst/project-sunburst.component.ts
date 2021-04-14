@@ -368,20 +368,24 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				});
 				this.filenames.setClassnames(filenames);
 
-				const contributors = new Set<Contributor>();
+				const contributors = new Map<number, Contributor>();;
 				nodeClicked.classnames.forEach(file => {
 					if ( (file.idStaffs) && (file.idStaffs.length > 0) ) {
 						file.idStaffs.filter(idStaff => idStaff !== -1).forEach(idStaff => {
-							contributors.add(this.findContributor(idStaff));
+							if (!contributors.has(idStaff)) {
+								contributors.set(idStaff, this.findContributor(idStaff));
+							}
 						});
 					}
 				});
+
+
 				if (traceOn()) {
 					console.groupCollapsed('Contributors : ');
-					console.log (...contributors);
+					console.log (...contributors.values());
 					console.groupEnd();
 				}
-				this.contributors.sendContributors(Array.from(contributors));
+				this.contributors.sendContributors(Array.from(contributors.values()));
 			} else {
 				if (traceOn()) {
 					console.log('Content of filenames & contibutors have been reset.');
@@ -400,7 +404,11 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		const foundContributor = this.projectStaffService.contributors
 			.find(contributor => contributor.idStaff === idStaff);
 		if (!foundContributor) {
-			console.log (idStaff, 'id Staff not found as a contributor.' );
+			console.log ('Conmmiter\'s id %d is not retrieved in the staff team.', idStaff );
+			const unknown = new Contributor();
+			unknown.idStaff = idStaff;
+			unknown.fullname = 'Unknown ' + idStaff;
+			return unknown;
 		}
 		return foundContributor;
 	}

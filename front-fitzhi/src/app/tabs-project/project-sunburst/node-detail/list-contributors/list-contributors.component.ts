@@ -19,16 +19,14 @@ export class ListContributorsComponent extends BaseComponent implements OnInit, 
 
 	ngOnInit() {
 		if (traceOn()) {
-			if (this.contributors) {
-				this.subscriptions.add(
-					this.contributors.committersSubject.subscribe(elements => {
-						if (elements) {
-							console.groupCollapsed('Contributors');
-							elements.forEach(element => console.log  (element.fullname));
-							console.groupEnd();
-						}
-				}));
-			}
+			this.subscriptions.add(
+				this.contributors.committers$.subscribe(elements => {
+					if (elements) {
+						console.groupCollapsed('Contributors');
+						elements.forEach(element => console.log  (element.fullname));
+						console.groupEnd();
+					}
+			}));
 		}
 	}
 

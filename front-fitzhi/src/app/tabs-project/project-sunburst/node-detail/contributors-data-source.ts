@@ -5,24 +5,28 @@ import { Contributor } from '../../../data/contributor';
 
 export class ContributorsDataSource implements DataSource<Contributor> {
 
-	public committersSubject = new BehaviorSubject<Contributor[]>([]);
-	public loadingSubject = new BehaviorSubject<boolean>(false);
+	public committers$ = new BehaviorSubject<Contributor[]>([]);
 
-	public loading$ = this.loadingSubject.asObservable();
+	public loaded$ = new BehaviorSubject<boolean>(false);
+
+	/**
+	 * Public simple construction.
+	 */
+	public constructor() { }
 
 	/**
      * Connect this datasource to the list
      */
 	connect(collectionViewer: CollectionViewer): Observable<Contributor[]> {
-		return this.committersSubject.asObservable();
+		return this.committers$.asObservable();
 	}
 
 	/**
      * Disconnect this datasource to the list
      */
 	disconnect(collectionViewer: CollectionViewer): void {
-		this.committersSubject.complete();
-		this.loadingSubject.complete();
+		this.committers$.complete();
+		this.loaded$.complete();
 	}
 
 	/**
@@ -30,13 +34,11 @@ export class ContributorsDataSource implements DataSource<Contributor> {
      * @param committers list of contributors.
      */
 	sendContributors(committers: Contributor[]): void {
-		this.loadingSubject.next(true);
+		this.loaded$.next(true);
 		const contributors = [];
 		committers.forEach(function (entry) {
 			contributors.push(entry);
 		});
-		this.committersSubject.next(contributors);
+		this.committers$.next(contributors);
 	}
-
-	public constructor() { }
 }
