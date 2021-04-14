@@ -12,7 +12,7 @@ describe('NodeDetailComponent', () => {
 
 	beforeEach(async(() => {
 		const testConf: TestModuleMetadata =  {
-			declarations: [ NodeDetailComponent, ListFilenamesComponent, ListContributorsComponent],
+			declarations: [ NodeDetailComponent, ListFilenamesComponent],
 			imports: []
 		};
 		InitTest.addImports(testConf.imports);
