@@ -44,7 +44,7 @@
 		</ng-template>
 	</mat-tab>
 
-	<mat-tab label="Remove" *ngIf="(projectService.project.id > 0) && projectService.isProjectEmpty()">
+	<mat-tab label="Remove" *ngIf="(projectService.project) && (projectService.project.id > 0) && projectService.isProjectEmpty()">
 		<ng-template mat-tab-label>
 			<em class="fas fa-trash-alt logoTabLabel"></em>&nbsp;&nbsp;Remove
 		</ng-template>
@@ -54,7 +54,7 @@
 		</ng-template>
 	</mat-tab>
 
-	<mat-tab label="Inactivate" *ngIf="(projectService.project.id > 0) && !projectService.isProjectEmpty()">
+	<mat-tab label="Inactivate" *ngIf="(projectService.project) && (projectService.project.id > 0) && !projectService.isProjectEmpty()">
 		<ng-template mat-tab-label>
 			<em class="fas fa-trash-alt logoTabLabel"></em>&nbsp;&nbsp;&nbsp;{{projectService.tabTitleInactivate()}}
 		</ng-template>
