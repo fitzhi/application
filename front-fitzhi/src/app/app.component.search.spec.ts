@@ -34,6 +34,7 @@ import { ListProjectComponent } from './tabs-project/list-project/list-project.c
 import { ListSkillComponent } from './skill/list-skill/list-skill.component';
 import { ListCriteria } from './data/listCriteria';
 import { StaffService } from './tabs-staff/service/staff.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('AppComponent', () => {
 
@@ -46,8 +47,9 @@ describe('AppComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [AppComponent, ToolbarComponent, MessageComponent],
 			providers: [ReferentialService, CinematicService],
-			imports: [ 
-				HttpClientTestingModule, HttpClientModule,  ReactiveFormsModule, MatDialogModule,
+			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,
+				HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule, MatFormFieldModule,
+				ReactiveFormsModule, MatSliderModule, MatInputModule, MatDialogModule,
 				RouterTestingModule.withRoutes([		
 					{ path: 'user', component: StaffFormComponent },
 					{ path: 'searchUser', component: TabsStaffListComponent },
