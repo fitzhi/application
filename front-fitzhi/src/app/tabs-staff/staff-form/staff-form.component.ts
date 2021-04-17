@@ -18,7 +18,6 @@ import { MessageBoxService } from 'src/app/interaction/message-box/service/messa
 import { Mission } from 'src/app/data/mission';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { traceOn } from 'src/app/global';
-import { CustomErrorHandler } from 'src/app/custom-error-handler';
 
 
 @Component({

@@ -23,7 +23,7 @@ export class ListProjectsService  {
 	* @param myCriteria criteria typed by the end-user
 	* @param activeOnly filtering, or not, on **active** projects.
 	*/
-	reloadProjects(myCriteria: string, activeOnly: boolean) {
+	public reloadProjects(myCriteria: string, activeOnly: boolean): void {
 
 		const elligibleProjects = (activeOnly) ?
 			this.projectService.allProjects.filter(project => (project.active)) :

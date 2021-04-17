@@ -9,7 +9,6 @@ describe('SkylineComponent', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
 
-
 	@Component({
 		selector: 'app-host-component',
 		template: 	`

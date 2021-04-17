@@ -15,6 +15,8 @@ import { SonarService } from './service/sonar.service';
 import { traceOn } from './global';
 import { InstallService } from './admin/service/install/install.service';
 import { environment } from '../environments/environment';
+import { isNumeric } from 'rxjs/internal-compatibility';
+import { take } from 'rxjs/operators';
 
 declare var $: any;
 
@@ -41,7 +43,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 	/**
 	* Searching request typed & displayed in the searching field.
 	*/
-	criteria: string;
+	public criteria: string;
 
 	/**
 	* Filter on active employees if true (by default), or include all the employees in the database
@@ -87,35 +89,51 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 		console.info('version %s build-time %s', this.environment.version, this.environment.buildTime);
 	}
 
+	
 	/**
 	  * Search button has been clicked.
 	  */
 	search(): void {
+		function isNumber(value: string | number): boolean
+		{
+		   return ((value != null) &&
+				   (value !== '') &&
+				   !isNaN(Number(value.toString())) &&
+				   Number.isInteger(Number(value))); 
+		}
+		
 		switch (this.activeContext) {
 			case Constants.TABS_STAFF_LIST:
 			case Constants.DEVELOPERS_SEARCH:
 				if (traceOn()) {
 					console.log(
-						'Searching ' + (this.activeOnly ? 'only active ' : 'all ')
-						+ 'staff members for the search criteria ' + this.criteria + '');
+						'Searching %s staff members for the search criteria %s', 
+						(this.activeOnly ? 'only active' : 'all'), 
+						this.criteria);
 				}
-				if ((this.criteria !== null) && (this.criteria.length > 0)) {
-					this.tabsStaffListService.addTabResult(this.criteria, this.activeOnly);
+				if (this.criteria) {
+					if ( isNumber(this.criteria) ) {
+						console.log ('Looking a developer with id %s', this.criteria);
+						this.router.navigate(['/user/' + this.criteria]);
+					} else {
+						if (this.criteria.length > 0) {
+							this.tabsStaffListService.addTabResult(this.criteria, this.activeOnly);
+						}
+					}
 				}
 				break;
 			case Constants.SKILLS_SEARCH: {
 				if (traceOn()) {
 					console.log('Reloading skills for search criteria ' + this.criteria);
 				}
-				this.subscriptions.add(
-					this.skillService.allSkillsLoaded$.subscribe({
-						next: doneAndOk => {
-							if (doneAndOk) {
-								this.skillService.filterSkills(new ListCriteria(this.criteria, this.activeOnly));
-								this.staffService.countAll_groupBy_experience(this.activeOnly);
-							}
+				this.skillService.allSkillsLoaded$.pipe(take(1)).subscribe({
+					next: doneAndOk => {
+						if (doneAndOk) {
+							this.skillService.filterSkills(new ListCriteria(this.criteria, this.activeOnly));
+							this.staffService.countAll_groupBy_experience(this.activeOnly);
 						}
-					}));
+					}
+				})
 				break;
 			}
 			case Constants.PROJECT_SEARCH: {
@@ -145,6 +163,9 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 		}
 	}
 
+	/**
+	 * Jump back to the parent list.
+	 */
 	public list() {
 		switch (this.activeContext) {
 			case Constants.BACK_TO_LIST:
@@ -169,7 +190,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 	 * The end-user has switched the context to another entity (staff/skill/project)
 	 * @param $event the event emitted
 	 */
-	onChangeForm($event: number) {
+	public onChangeForm($event: number) {
 		this.activeContext = $event;
 		if (traceOn()) {
 			console.log('Changing to mode', Constants.CONTEXT[$event]);
@@ -185,7 +206,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 	/**
 	 * @returns TRUE if the active mode in a searching mode
 	 */
-	isInSearchingMode() {
+	isInSearchingMode(): boolean {
 		switch (this.activeContext) {
 			case Constants.TABS_STAFF_LIST:
 			case Constants.DEVELOPERS_SEARCH:
