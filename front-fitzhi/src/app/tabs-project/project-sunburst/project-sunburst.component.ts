@@ -372,7 +372,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					if ( (file.idStaffs) && (file.idStaffs.length > 0) ) {
 						file.idStaffs.filter(idStaff => idStaff !== -1).forEach(idStaff => {
 							if (!contributors.has(idStaff)) {
-								contributors.set(idStaff, this.findContributor(idStaff));
+								contributors.set(idStaff, this.projectStaffService.findContributor(idStaff));
 							}
 						});
 					}
@@ -393,24 +393,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				this.contributors.sendContributors([]);
 			}
 		}
-	}
-
-	/**
-	 * Search for a contributor with the same identifier as the given one
-	 * @param idStaff the searched staff identifier
-	 */
-	findContributor(idStaff: number): Contributor {
-		const foundContributor = this.projectStaffService.contributors
-			.find(contributor => contributor.idStaff === idStaff);
-		if (!foundContributor) {
-			console.log ('Conmmiter\'s id %d is not retrieved in the staff team.', idStaff );
-			const unknown = new Contributor();
-			unknown.idStaff = idStaff;
-			this.staffService.get(idStaff)
-			unknown.fullname = 'Unknown ' + idStaff;
-			return unknown;
-		}
-		return foundContributor;
 	}
 
 	handleSunburstData(response: any) {

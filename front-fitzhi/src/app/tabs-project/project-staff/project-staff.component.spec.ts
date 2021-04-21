@@ -12,6 +12,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
+import { ProjectStaffService } from '../project-staff-service/project-staff.service';
 
 describe('ProjectStaffComponent', () => {
 	let component: TestHostComponent;
@@ -62,7 +63,7 @@ describe('ProjectStaffComponent', () => {
 	beforeEach(async(() => {
 		const testConf: TestModuleMetadata  =  {
 			declarations: [TestHostComponent, ProjectStaffComponent ],
-			providers: [CinematicService, ProjectService, BackendSetupService],
+			providers: [CinematicService, ProjectService, BackendSetupService, ProjectStaffService],
 			imports: [MatTableModule, MatPaginatorModule, MatSortModule, HttpClientTestingModule]
 		};
 		InitTest.addImports(testConf.imports);

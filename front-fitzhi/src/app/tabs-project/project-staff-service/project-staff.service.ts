@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Contributor } from '../../data/contributor';
 import { Constants } from '../../constants';
 import { traceOn } from 'src/app/global';
+import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -15,7 +16,7 @@ export class ProjectStaffService {
 
 	public id = Constants.UNKNOWN;
 
-	constructor() { }
+	constructor(private staffListService: StaffListService) { }
 
 	public dumpContributors(): void {
 		console.groupCollapsed('Project contributors retrieved');
@@ -55,4 +56,27 @@ export class ProjectStaffService {
 	displayLine(idx) {
 		console.log(this.contributors[idx].idStaff + ' ' + this.contributors[idx].fullname);
 	}
+
+	/**
+	 * Search for a contributor with the same identifier as the given one
+	 * @param idStaff the searched staff identifier
+	 */
+	 findContributor(idStaff: number): Contributor {
+		const foundContributor = this.contributors
+			.find(contributor => contributor.idStaff === idStaff);
+		if (!foundContributor) {
+			console.log ('Conmmiter\'s id %d is not retrieved in the staff team.', idStaff );
+			const unknown = new Contributor();
+			unknown.idStaff = idStaff;
+			const staff = this.staffListService.getCollaborator(idStaff);
+			unknown.fullname = (staff) ? (staff.firstName + ' ' + staff.lastName) : ('Unknown ' + idStaff);
+			unknown.active = staff.active;
+			unknown.external = staff.external;
+			return unknown;
+		}
+		return foundContributor;
+	}
+
+
+
 }
