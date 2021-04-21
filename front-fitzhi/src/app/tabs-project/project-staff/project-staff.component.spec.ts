@@ -50,7 +50,6 @@ describe('ProjectStaffComponent', () => {
 		}
 	];
 
-
 	@Component({
 		selector: 'app-host-component',
 		template: 	'<app-project-staff></app-project-staff>'

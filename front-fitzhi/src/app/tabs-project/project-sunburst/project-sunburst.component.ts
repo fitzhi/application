@@ -367,7 +367,6 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					filenames.push(new Filename(element.filename, element.lastCommit));
 				});
 				this.filenames.setClassnames(filenames);
-
 				const contributors = new Map<number, Contributor>();;
 				nodeClicked.classnames.forEach(file => {
 					if ( (file.idStaffs) && (file.idStaffs.length > 0) ) {

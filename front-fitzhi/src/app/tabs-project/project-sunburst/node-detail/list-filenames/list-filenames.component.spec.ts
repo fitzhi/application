@@ -13,15 +13,39 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { InitTest } from 'src/app/test/init-test';
+import { Component } from '@angular/core';
+import { FilenamesDataSource } from '../filenames-data-source';
+import { Filename } from 'src/app/data/filename';
 
 
 describe('ListFilenamesComponent', () => {
-	let component: ListFilenamesComponent;
-	let fixture: ComponentFixture<ListFilenamesComponent>;
+	let component: TestHostComponent;
+	let fixture: ComponentFixture<TestHostComponent>;
+
+	@Component({
+		selector: 'app-host-component',
+		template: `<div style="width: 400px; height: 300px">
+						<app-list-filenames [filenames]="filenames" >
+						</app-list-filenames>
+					</div>`
+	})
+	class TestHostComponent {
+		public filenames = new FilenamesDataSource();
+
+		constructor() {
+			this.filenames.setClassnames([
+				new Filename('one', new Date()), 
+				new Filename('two', new Date()),
+				new Filename('three', new Date()),
+				new Filename('four', new Date()),
+				new Filename('five', new Date())
+			]);
+		}
+	}
 
 	beforeEach(async(() => {
 		const testConf: TestModuleMetadata =  {
-			declarations: [ListFilenamesComponent],
+			declarations: [TestHostComponent, ListFilenamesComponent],
 			imports: []
 		};
 		InitTest.addImports(testConf.imports);
@@ -29,7 +53,7 @@ describe('ListFilenamesComponent', () => {
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(ListFilenamesComponent);
+		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

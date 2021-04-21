@@ -19,6 +19,6 @@ const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /backend-setup\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /http-refresh-token-error-interceptor\.spec\.ts$/);
 // const context = require.context('./', true,  /node-detail\.component\.spec\.ts$/);
-// const context = require.context('./', true,  /fitzhi-dashboard\.skyline\.treemap\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /list-filenames\.component\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);
