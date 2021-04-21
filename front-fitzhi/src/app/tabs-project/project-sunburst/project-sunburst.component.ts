@@ -406,6 +406,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			console.log ('Conmmiter\'s id %d is not retrieved in the staff team.', idStaff );
 			const unknown = new Contributor();
 			unknown.idStaff = idStaff;
+			this.staffService.get(idStaff)
 			unknown.fullname = 'Unknown ' + idStaff;
 			return unknown;
 		}

@@ -30,15 +30,14 @@ const httpOptions = {
 export class StaffService {
 
 	/**
-		 * Observable to a map containig the count of staff members aggregated by skill & level (i.e. experience)
-		 */
+	 * Observable to a map containig the count of staff members aggregated by skill & level (i.e. experience)
+	 */
 	public peopleCountExperience$ = new Subject<Map<string, number>>();
 
 	constructor(
 		private fileService: FileService,
 		private messageService: MessageService,
 		private httpClient: HttpClient,
-		private cinematicService: CinematicService,
 		private staffDataExchangeService: StaffDataExchangeService,
 		private backendSetupService: BackendSetupService) {
 	}

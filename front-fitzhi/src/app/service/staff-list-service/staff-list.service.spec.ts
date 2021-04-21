@@ -3,6 +3,7 @@ import { TestBed, inject, TestModuleMetadata, async } from '@angular/core/testin
 import { StaffListService } from './staff-list.service';
 import { InitTest } from '../../test/init-test';
 import { Collaborator } from '../../data/collaborator';
+import { expressionType } from '@angular/compiler/src/output/output_ast';
 
 describe('ListStaffService', () => {
 
@@ -44,6 +45,15 @@ describe('ListStaffService', () => {
 
 	}));
 
+	it('should retrieve a collaborator with the identifier', () => {
+		const staffListService = TestBed.inject(StaffListService);
+		expect(staffListService.getCollaborator(1)).toBeDefined();
+	});
+
+	it('should return \'null\' if we cannot retrieve the collaborator with an unknown identifier.', () => {
+		const staffListService = TestBed.inject(StaffListService);
+		expect(staffListService.getCollaborator(1789)).toBeNull();
+	});
 
 	function createStaff (idStaff: number, firstName: string, lastName: string, nickName: string, login: string) {
 		const collab = new Collaborator();

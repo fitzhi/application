@@ -342,7 +342,7 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	 * GET the project associated to this id from the back-end od skiller. Will throw a 404 if this id is not found.
+	 * GET the project associated to this id from the back-end of Fitzhi. Will throw a 404 if this id is not found.
 	 */
 	get(id: number): Observable<Project> {
 		const url = this.backendSetupService.url() + '/project/' + id;
