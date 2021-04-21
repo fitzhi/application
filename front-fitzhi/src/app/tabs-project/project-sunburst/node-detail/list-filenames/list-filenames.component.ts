@@ -5,6 +5,11 @@ import { Filename } from 'src/app/data/filename';
 import { FilenamesDataSource } from '../filenames-data-source';
 import { traceOn } from 'src/app/global';
 
+/**
+ * This component hosts a table with the source filenames of a repository directory
+ * 
+ * It can be for example, the package in a Java project 
+ */
 @Component({
 	selector: 'app-list-filenames',
 	templateUrl: './list-filenames.component.html',
