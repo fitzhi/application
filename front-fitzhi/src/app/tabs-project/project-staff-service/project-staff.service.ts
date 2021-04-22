@@ -69,9 +69,14 @@ export class ProjectStaffService {
 			const unknown = new Contributor();
 			unknown.idStaff = idStaff;
 			const staff = this.staffListService.getCollaborator(idStaff);
-			unknown.fullname = (staff) ? (staff.firstName + ' ' + staff.lastName) : ('Unknown ' + idStaff);
-			unknown.active = staff.active;
-			unknown.external = staff.external;
+			if (staff) {
+				unknown.fullname = staff.firstName + ' ' + staff.lastName;
+				unknown.active = staff.active;
+				unknown.external = staff.external;
+			} else {
+				unknown.fullname = 'Unknown ' + idStaff;
+				unknown.active = false;
+			}
 			return unknown;
 		}
 		return foundContributor;
