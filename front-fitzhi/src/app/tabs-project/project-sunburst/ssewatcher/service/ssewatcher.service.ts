@@ -19,7 +19,7 @@ export class SsewatcherService {
 	/**
 	 * The sources of the log events sent by the server.
 	 */
-	private eventSource: EventSource;
+	public eventSource: EventSource;
 
 	constructor(
 		private backendSetupService: BackendSetupService,
@@ -97,7 +97,17 @@ export class SsewatcherService {
 		if (traceOn()) {
 			console.log('Error emitted', error);
 		}
-		this.closeEventSource();
+		if (error.target instanceof EventSource) {
+			// We close the eventSource given by the error event.
+			if (traceOn()) {
+				console.log ('Closing the eventSource associated with the error event');
+			}
+			const source = error.target;
+			source.close();
+			this.eventSource = null;
+		} else {
+			this.closeEventSource();
+		}
 	}
 
 	/**

@@ -16,7 +16,7 @@ getTestBed().initTestEnvironment(
 );
 // Then we find all the tests
 const context = require.context('./', true, /\.spec\.ts$/);
-// const context = require.context('./', true,  /staff-list\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /ssewatcher\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /http-refresh-token-error-interceptor\.spec\.ts$/);
 // const context = require.context('./', true,  /node-detail\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /project-staff\.service\.spec\.ts$/);
