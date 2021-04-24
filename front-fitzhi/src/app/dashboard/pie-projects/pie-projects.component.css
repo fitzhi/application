@@ -4,3 +4,6 @@
 .row-pie-projects {
     height: 40px;
 }
+.mat-paginator {
+    font-size: 10px !important;
+}

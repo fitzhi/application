@@ -30,10 +30,13 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 
 	@ViewChild(MatSort) sort: MatSort;
 
+	/**
+	 * The table 
+	 */
 	@ViewChild(MatTable) table: MatTable<any>;
 
 	/**
-	 * The paginator of the ghosts data source.
+	 * The paginator of the staff data source.
 	 */
 	 @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 

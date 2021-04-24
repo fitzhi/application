@@ -18,7 +18,7 @@ getTestBed().initTestEnvironment(
 const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /ssewatcher\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /http-refresh-token-error-interceptor\.spec\.ts$/);
-// const context = require.context('./', true,  /node-detail\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /pie-projects\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /project-staff\.service\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);
