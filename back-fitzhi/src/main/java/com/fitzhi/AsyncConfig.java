@@ -23,7 +23,7 @@ public class AsyncConfig implements AsyncConfigurer {
         executor.setCorePoolSize(7);
         executor.setMaxPoolSize(42);
         executor.setQueueCapacity(11);
-        executor.setThreadNamePrefix("Dashboard processing -");
+        executor.setThreadNamePrefix("Dashboard processing - ");
         executor.initialize();
         return executor;
     }
