@@ -10,6 +10,9 @@ import { Slice } from 'dynamic-pie-chart';
 import { of } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { UserSetting } from 'src/app/base/user-setting';
+import { TransitiveCompileNgModuleMetadata } from '@angular/compiler';
+import { traceOn } from 'src/app/global';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -57,10 +60,12 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 	/**
 	 * Key used to save the page size in the local storage.
 	 */
-	 public pageSize = new UserSetting('pie-projjects-staff.pageSize', 5);
+	 public pageSize = new UserSetting('pie-projects-staff.pageSize', 5);
 
 
-	constructor(public pieDashboardService: PieDashboardService) {
+	constructor(
+		public pieDashboardService: PieDashboardService,
+		private router: Router) {
 
 		super();
 		
@@ -96,4 +101,41 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 	ngOnDestroy() {
 		super.ngOnDestroy();
 	}
+
+	/**
+	 * Route the application to the corresponding Project form.
+	 * 
+	 * @param id the selected project identifier
+	 */
+	 routeProject(id: number): void {
+		if (traceOn()){
+			console.log ('Project %d is selected', id);
+		}
+		this.router.navigate(['/project/' + id], {});
+	}
+
+	/**
+	 * Highlight the line of an activated project.
+	 * 
+	 * @param id the highlighted project identifier
+	 */
+	 enterProject(id: number): void {
+		if (traceOn()){
+			console.log ('Project %d is activated', id);
+		}
+		document.getElementById('project-' + id).setAttribute('style', 'background-color: ' + this.colorHeader );
+	}
+
+	/**
+	 * Inactive the line of an unactivated project.
+	 * 
+	 * @param id the left project identifier
+	 */
+	 leaveProject(id: number): void {
+		if (traceOn()){
+			console.log ('Project %d is left', id);
+		}
+		document.getElementById('project-' + id).setAttribute('style', 'background-color: '  );
+	}
+
 }

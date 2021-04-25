@@ -21,7 +21,15 @@
           None
         </div>
     </th>
-    <td mat-cell *matCellDef="let project" class="row-pie-projects"> {{project.name}} </td>
+    <td mat-cell 
+        id="project-{{project.id}}" 
+        *matCellDef="let project" 
+        class="row-pie-projects"
+        (mouseenter)="enterProject(project.id)"
+        (mouseleave)="leaveProject(project.id)"
+        (click)="routeProject(project.id)"> 
+          {{project.name}} 
+    </td>
   </ng-container>
     
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

@@ -545,6 +545,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
     */
 	public show(idPanel: number) {
 		
+		if (traceOn()) {
+			console.log ('Showing panel %d', idPanel);
+		}
 		// If the project is inactive, these buttons are inactive.
 		if (!this.projectService.project.active) {
 			return;

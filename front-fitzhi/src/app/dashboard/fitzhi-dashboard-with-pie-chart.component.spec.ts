@@ -24,6 +24,7 @@ import { ProjectService } from 'src/app/service/project.service';
 import { Project } from 'src/app/data/project';
 import { PieLegendComponent } from './pie-legend/pie-legend.component';
 import { DatePipe } from '@angular/common';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('FitzhiDashboardComponent', () => {
 	let component: FitzhiDashboardComponent;
@@ -35,7 +36,7 @@ describe('FitzhiDashboardComponent', () => {
 			declarations: [ FitzhiDashboardComponent, PieChartComponent, PieProjectsComponent, TagifyStarsComponent,
 				TreemapChartComponent, TreemapHeaderComponent, TreemapChartComponent, TreemapComponent, PieLegendComponent ],
 			imports: [MatTableModule, MatSortModule, MatPaginatorModule, HttpClientTestingModule, MatDialogModule,
-				NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule],
+				NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule, RouterTestingModule],
 			providers: [ReferentialService, CinematicService, PieDashboardService, DatePipe]
 
 		})
