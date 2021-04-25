@@ -113,7 +113,7 @@
 	},
 	"11": {
 		"id": 11,
-		"name": "Material",
+		"name": "Angular Material",
 		"active": true,
 		"connectionSettings": 3,
 		"branch": "master",
