@@ -1,19 +1,16 @@
 import { Component, OnInit, OnDestroy, AfterViewInit, ViewChild } from '@angular/core';
 import { PieDashboardService } from '../service/pie-dashboard.service';
-import { DataSource } from '@angular/cdk/table';
 import { Project } from 'src/app/data/project';
 import { BaseComponent } from 'src/app/base/base.component';
 import { AnalysisTypeSlice } from '../analysis-type-slice';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { switchMap } from 'rxjs/operators';
-import { Slice } from 'dynamic-pie-chart';
-import { of } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';
 import { UserSetting } from 'src/app/base/user-setting';
-import { TransitiveCompileNgModuleMetadata } from '@angular/compiler';
 import { traceOn } from 'src/app/global';
 import { Router } from '@angular/router';
-
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { Constants } from 'src/app/constants';
+import { Form } from 'src/app/service/Form';
 
 @Component({
 	selector: 'app-pie-projects',
@@ -65,6 +62,7 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 
 	constructor(
 		public pieDashboardService: PieDashboardService,
+		private cinematicService: CinematicService,
 		private router: Router) {
 
 		super();
@@ -111,6 +109,7 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 		if (traceOn()){
 			console.log ('Project %d is selected', id);
 		}
+		this.cinematicService.currentActiveForm$.next(new Form(Constants.PROJECT_TAB_FORM, 'Project') );
 		this.router.navigate(['/project/' + id], {});
 	}
 
