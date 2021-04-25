@@ -1,38 +1,52 @@
 .mat-header-cell {
-    color: darkblue;
-    justify-content: left;
-    padding-left: 0;
+	color: darkblue;
+	justify-content: left;
+	padding-left: 0;
 }
 
 :host >>> th#fullname  > .mat-header-cell  {
-    display: flex;
-    padding-left: 0;
+	display: flex;
+	padding-left: 0;
 
 }
 
 td.mat-cell, th.mat-header-cell {
-    padding-left: 5px;
-    padding-right: 5px;
+	padding-left: 5px;
+	padding-right: 5px;
 }
 
 th.mat-header-cell {
-    background-color: whitesmoke;
+	background-color: whitesmoke;
 }
 
 tr.row_any  {
-    height: 2em;
+	height: 2em;
 }
 
+/*
 #contributors {
-    position: relative;
-    float:right;
-    width: 100%;
+	position: relative;
+	float:right;
+	width: 100%;
+}
+*/
+
+table.tableContributors {
+	width: 100%;
 }
 
-.contributor_active {
-    background-color: white;
+td.contributor_active {
+	background-color: white;
 }
 
-.contributor_inactive {
-    background-color: whitesmoke;
+td.contributor_inactive {
+	background-color: whitesmoke;
+}
+
+#external, #active {
+	width: 50px;
+}
+
+#lastCommit {
+	width: 100px;
 }

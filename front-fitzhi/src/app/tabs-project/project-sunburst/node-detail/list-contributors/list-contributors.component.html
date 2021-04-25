@@ -1,6 +1,6 @@
 <table mat-table #table 
   [dataSource]="contributors" 
-  class="mat-elevation-z8 tableLegends"
+  class="mat-elevation-z8 tableContributors"
   summary="List of contributors involved in this project">
 
   <ng-container matColumnDef="fullname">
@@ -11,21 +11,21 @@
 
   <ng-container matColumnDef="active">
     <th id="active" mat-header-cell *matHeaderCellDef>Active</th>
-    <td mat-cell class="col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">
+    <td mat-cell class="text-center col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">
       <img alt="active status" with="15" height="15" src="/assets/img/check-{{contributor.active}}.png" />
     </td>
   </ng-container>
 
   <ng-container matColumnDef="external">
     <th id="external" mat-header-cell *matHeaderCellDef>External</th>
-    <td mat-cell class="col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">
+    <td mat-cell class="text-center col_image {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">
       <img with="15" height="15" src="/assets/img/check-{{contributor.external}}.png" alt="external status" />
     </td>
   </ng-container>
 
   <ng-container matColumnDef="lastCommit">
     <th mat-header-cell id="lastCommit" class="col_date" *matHeaderCellDef> Last commit </th>
-    <td mat-cell class="col_date {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">
+    <td mat-cell class="text-center col_date {{class_active_inactive(contributor.active)}}" *matCellDef="let contributor">
       {{contributor.lastCommit | date:'mediumDate'}}</td>
   </ng-container>
 

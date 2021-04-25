@@ -24,7 +24,7 @@ describe('ListFilenamesComponent', () => {
 
 	@Component({
 		selector: 'app-host-component',
-		template: `<div style="width: 400px; height: 300px">
+		template: `<div style="width: 400px; height: 400px; background-color: lightGrey">
 						<app-list-filenames [filenames]="filenames" >
 						</app-list-filenames>
 					</div>`

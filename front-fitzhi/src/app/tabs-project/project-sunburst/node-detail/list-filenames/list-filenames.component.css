@@ -23,9 +23,10 @@ tr.row_any  {
     height: 2em;
 }
 
-#filenames {
-    position: relative;
-    float:right;
+table.tableFilenames {
     width: 100%;
 }
 
+#lastCommit {
+    width: 100px;
+}

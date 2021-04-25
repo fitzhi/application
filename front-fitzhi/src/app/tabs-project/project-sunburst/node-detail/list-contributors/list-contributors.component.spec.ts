@@ -12,7 +12,7 @@ describe('ListContributorsComponent', () => {
 	@Component({
 		selector: 'app-host-component',
     template: `
-		<div style="height: 200px">
+		<div style="height: 300px; width: 500px; background-color: lightGrey">
 			<app-list-contributors [contributors]="contributors">
 			</app-list-contributors>
 		</div>`
