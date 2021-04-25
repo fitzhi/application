@@ -66,6 +66,10 @@ public class ReactiveLogReport implements LogReport {
 	private String projectName( int idProject) {
 		try {
 			Project project = projectHandler.get(idProject);
+			if (project == null) {
+				log.warn(String.format("WTF : Project %d hasn't been found", idProject));
+				throw new ApplicationException();
+			}
 			return project.getName();
 		} catch (final ApplicationException ae) {
 			return String.format("Project %d unknown", idProject);
