@@ -4,7 +4,7 @@ import { Project } from 'src/app/data/project';
 import { BaseComponent } from 'src/app/base/base.component';
 import { AnalysisTypeSlice } from '../analysis-type-slice';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { UserSetting } from 'src/app/base/user-setting';
 import { traceOn } from 'src/app/global';
 import { Router } from '@angular/router';
@@ -122,6 +122,14 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 			console.log ('Project %d is activated', id);
 		}
 		document.getElementById('project-' + id).setAttribute('style', 'background-color: ' + this.colorHeader );
+	}
+	
+	/**
+	 * This method is invoked if the user change the page size.
+	 * @param $pageEvent event 
+	 */
+	 public page($pageEvent: PageEvent) {
+		this.pageSize.saveSetting($pageEvent.pageSize);
 	}
 
 	/**
