@@ -1,7 +1,13 @@
 import { Component } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSortModule } from '@angular/material/sort';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BehaviorSubject } from 'rxjs';
@@ -29,7 +35,7 @@ describe('NodeDetailComponent', () => {
 	})
 	class TestHostComponent {
 		public filenames = new FilenamesDataSource();
-		public contributors = new ContributorsDataSource();
+		public contributors = new MatTableDataSource<Contributor>()
 		public location$ = new BehaviorSubject<string[]>([]);
 
 		constructor() {
@@ -52,7 +58,7 @@ describe('NodeDetailComponent', () => {
 			e1.active = true;
 			e1.external = true;
 			
-			this.contributors.sendContributors([c1, c2, e1]);
+			this.contributors.data.push(...[c1, c2, e1]);
 			this.location$.next(["filename"]);
 		}
 
@@ -65,7 +71,14 @@ describe('NodeDetailComponent', () => {
 				BrowserAnimationsModule,
 				BrowserModule,
 				MatTableModule,
-				MatSortModule]
+				MatSortModule,
+				MatButtonToggleModule,
+				MatPaginatorModule,
+				MatFormFieldModule,
+				MatSidenavModule,
+				// At this level, should comment the line below to see all entries
+				MatExpansionModule,
+				MatSelectModule]
 		}).compileComponents();
 	}));
 

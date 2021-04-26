@@ -5,8 +5,12 @@
 
   <ng-container matColumnDef="fullname">
     <th id="fullname" mat-header-cell *matHeaderCellDef>Fullname</th>
-    <td class="col_date {{class_active_inactive(contributor.active)}}" mat-cell *matCellDef="let contributor">
-      {{contributor.fullname}}</td>
+    <td mat-cell
+        id="contributor-{{contributor.idStaff}}" 
+        class="col_date {{class_active_inactive(contributor.active)}}" 
+        *matCellDef="let contributor">
+          {{contributor.fullname}}
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="active">
@@ -32,3 +36,10 @@
   <tr mat-header-row *matHeaderRowDef="tblColumns; sticky: true"></tr>
   <tr mat-row *matRowDef="let row; columns: tblColumns;" class="row_any"></tr>
 </table>
+
+<mat-paginator #paginator 
+	[length]="contributors?.data.length"
+	[pageSizeOptions]="[5, 10, 20, 30]" 
+	[pageSize]=pageSize.value
+	showFirstLastButtons>
+</mat-paginator>

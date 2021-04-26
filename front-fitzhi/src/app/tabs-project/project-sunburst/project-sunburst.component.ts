@@ -112,16 +112,10 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	public filenames = new FilenamesDataSource();
 
 	/**
-	* `BehaviorSubject` which emits the filenames datasource.
- 	*/
-	// public filenames$ = new BehaviorSubject<FilenamesDataSource>(new FilenamesDataSource());
-
-	/**
      * List of contributors.
      * Theses contributors are shared with the NodeDetail component when the user click on a slice.
      */
-	public contributors = new ContributorsDataSource();
-
+	public contributors = new MatTableDataSource<Contributor>();
 
 	public location$ = new BehaviorSubject('');
 
@@ -384,13 +378,13 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					console.log (...contributors.values());
 					console.groupEnd();
 				}
-				this.contributors.sendContributors(Array.from(contributors.values()));
+				this.contributors.data = Array.from(contributors.values());
 			} else {
 				if (traceOn()) {
 					console.log('Content of filenames & contibutors have been reset.');
 				}
 				this.filenames.setClassnames([]);
-				this.contributors.sendContributors([]);
+				this.contributors.data = [];
 			}
 		}
 	}

@@ -1,45 +1,45 @@
 <table mat-table 
-    [dataSource]="dataSource" 
-    class="mat-elevation-z8 table-projects"
-    summary="List of projects corresponding to the hightlighted slice">
-  
-  <!-- Name Column -->
-  <ng-container matColumnDef="name">
-    <th mat-header-cell *matHeaderCellDef 
-      [ngStyle]= "{'background-color': colorHeader}" 
-      scope="col">
-        <div *ngIf="(pieDashboardService.sliceActivated$|async).id === typeSlice.Staff">
-          Staff
-        </div>
-        <div *ngIf="(pieDashboardService.sliceActivated$|async).id === typeSlice.Sonar">
-          Sonar
-        </div>
-        <div *ngIf="(pieDashboardService.sliceActivated$|async).id === typeSlice.Audit">
-          Audit
-        </div>
-        <div *ngIf="(pieDashboardService.sliceActivated$|async).id === typeSlice.None">
-          None
-        </div>
-    </th>
-    <td mat-cell 
-        id="project-{{project.id}}" 
-        *matCellDef="let project" 
-        class="row-pie-projects"
-        (mouseenter)="enterProject(project.id)"
-        (mouseleave)="leaveProject(project.id)"
-        (click)="routeProject(project.id)"> 
-          {{project.name}} 
-    </td>
-  </ng-container>
-    
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+		[dataSource]="dataSource" 
+		class="mat-elevation-z8 table-projects"
+		summary="List of projects corresponding to the hightlighted slice">
+	
+	<!-- Name Column -->
+	<ng-container matColumnDef="name">
+		<th mat-header-cell *matHeaderCellDef 
+			[ngStyle]= "{'background-color': colorHeader}" 
+			scope="col">
+				<div *ngIf="(pieDashboardService.sliceActivated$|async).id === typeSlice.Staff">
+					Staff
+				</div>
+				<div *ngIf="(pieDashboardService.sliceActivated$|async).id === typeSlice.Sonar">
+					Sonar
+				</div>
+				<div *ngIf="(pieDashboardService.sliceActivated$|async).id === typeSlice.Audit">
+					Audit
+				</div>
+				<div *ngIf="(pieDashboardService.sliceActivated$|async).id === typeSlice.None">
+					None
+				</div>
+		</th>
+		<td mat-cell 
+				id="project-{{project.id}}" 
+				*matCellDef="let project" 
+				class="row-pie-projects"
+				(mouseenter)="enterProject(project.id)"
+				(mouseleave)="leaveProject(project.id)"
+				(click)="routeProject(project.id)"> 
+					{{project.name}} 
+		</td>
+	</ng-container>
+		
+	<tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+	<tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 
 </table>
 
 <mat-paginator #paginator 
-  [length]="dataSource?.data.length"
-  [pageSizeOptions]="[5, 10, 20, 30]" 
-  [pageSize]=pageSize.value
-  showFirstLastButtons>
+	[length]="dataSource?.data.length"
+	[pageSizeOptions]="[5, 10, 20, 30]" 
+	[pageSize]=pageSize.value
+	showFirstLastButtons>
 </mat-paginator>
