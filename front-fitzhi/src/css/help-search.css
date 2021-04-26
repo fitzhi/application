@@ -1,0 +1,19 @@
+#help-search {
+	padding: 5px;
+	min-height: 100px;
+	position: absolute;
+	top: 0;
+	right: 5px;
+	left: 5px;
+	background-color: var(--color-help);
+	border: 1px solid black;
+}
+
+#help-search span.criteria {
+	color: var(--color-selected);
+	font-weight: 900;
+}
+
+#help-search span.property {
+	font-weight: 700;
+}

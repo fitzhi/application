@@ -79,3 +79,31 @@
 	</mat-paginator>
 
 </div>
+
+<div *ngIf="dataSource.data.length === 0" id="help-search"> 
+	<p>
+		You'll find below some available search criterias 
+	</p>
+	<ul>
+		<li>
+			This criteria : <span class="criteria">dummy</span>, will filter all projects whose <span class="property">name</span> contains the string <span class="criteria">dummy</span> case-unsensitive.
+		</li>
+		<li>
+			This criteria : <span class="criteria">skill:java;doo</span>, will filter all projects involving the <span class="property">skill</span> <span class="criteria">Java</span> and a <span class="property">name</span> containing the string <span class="criteria">dummy</span> case-unsensitive.
+		</li>
+		<!--
+		<li>
+			This criteria : <span class="criteria">skill:java:2,typescript;doo</span>, will filter all staff members with a <span class="property">skill</span> in <span class="criteria">Java</span> of level <span class="criteria">2</span> and the <span class="property">skill</span>&nbsp;<span class="criteria">Typescript</span> of any level and a <span class="property">first name</span> or a <span class="property">last name</span> containing the string <span class="criteria">doo</span> case-unsensitive
+		</li>
+		<li>
+			<div>
+				The button 
+				<button class="btn rounded btn-outline-success"><em class="far glyphicon fa-check-square"></em> Active </button>
+				indicates that we are filtering active developers,      
+				<button class="btn rounded btn-outline-secondary"><em class="far glyphicon fa-square"></em> All </button>
+				accepts all developers.
+			</div>
+		</li>
+		-->
+	</ul>
+</div>

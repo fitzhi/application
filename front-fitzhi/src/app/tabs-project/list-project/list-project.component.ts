@@ -14,6 +14,7 @@ import { ReferentialService } from '../../service/referential.service';
 import { ProjectsDataSource } from './projects-data-source';
 import { BaseComponent } from 'src/app/base/base.component';
 import { UserSetting } from 'src/app/base/user-setting';
+import { CinematicService } from 'src/app/service/cinematic.service';
 
 @Component({
 	selector: 'app-list-project',
@@ -65,6 +66,7 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 		public referentialService: ReferentialService,
 		public projectService: ProjectService,
 		private listProjectsService: ListProjectsService,
+		public cinematicService: CinematicService,
 		private router: Router) { super(); }
 
 	ngOnInit() {
@@ -75,11 +77,19 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 
 		this.subscriptions.add(
 			this.listProjectsService.filteredProjects$
-				.subscribe(projects => {
-					this.updateData (projects);
+				.subscribe({
+					next: projects => this.updateData (projects)
 				}
-			))
-		;
+			)
+		);
+
+		this.subscriptions.add(
+			this.cinematicService.currentActiveForm$
+				.subscribe({
+					next: form => console.log (form.formIdentifier + ' ' + form.url)
+				})
+		);
+
 	}
 
 	ngAfterViewInit(): void {
@@ -120,12 +130,6 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 	styleOfTheDot (risk: number) {
 		const color = this.projectService.getRiskColor(risk);
 		return { 'fill': color};
-	}
-
-	public search(source: string): void {
-		if (traceOn()) {
-			console.log('Searching a project');
-		}
 	}
 
 	/**

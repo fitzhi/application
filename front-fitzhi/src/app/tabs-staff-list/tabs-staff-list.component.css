@@ -1,35 +1,15 @@
 button.remove {
-    background-color: transparent;
-    border: none;
-    outline: 0;
+	background-color: transparent;
+	border: none;
+	outline: 0;
 }
 
 button.remove:hover {
-    background-color: whitesmoke;
-    border-radius: 50%;
-}
-
-#help-search {
-    padding: 5px;
-    min-height: 100px;
-    position: absolute;
-    top: 0;
-    right: 5px;
-    left: 5px;
-    background-color: var(--color-help);
-    border: 1px solid black;
-}
-
-span.criteria {
-    color: var(--color-selected);
-    font-weight: 900;
-}
-
-span.property {
-    font-weight: 700;
+	background-color: whitesmoke;
+	border-radius: 50%;
 }
 
 /* We remove the horizontal scroll bar from the tab body content */ 
 div.mat-tab-body-content {
-    overflow-x: hidden;
+	overflow-x: hidden;
 }
