@@ -34,12 +34,12 @@ describe('NodeDetailComponent', () => {
 					</div>`
 	})
 	class TestHostComponent {
-		public filenames = new FilenamesDataSource();
+		public filenames = new MatTableDataSource<Filename>()
 		public contributors = new MatTableDataSource<Contributor>()
 		public location$ = new BehaviorSubject<string[]>([]);
 
 		constructor() {
-			this.filenames.setClassnames([new Filename('one', new Date()), new Filename('two', new Date())]);
+			this.filenames.data = [new Filename('one', new Date()), new Filename('two', new Date())];
 			const c1 = new Contributor();
 			c1.fullname = 'Active 1';
 			c1.lastCommit = new Date();

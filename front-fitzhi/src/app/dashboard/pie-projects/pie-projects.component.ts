@@ -59,7 +59,6 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 	 */
 	 public pageSize = new UserSetting('pie-projects-staff.pageSize', 5);
 
-
 	constructor(
 		public pieDashboardService: PieDashboardService,
 		private cinematicService: CinematicService,

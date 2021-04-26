@@ -3,7 +3,7 @@ import { BaseComponent } from '../../../../base/base.component';
 import { traceOn } from 'src/app/global';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { Contributor } from 'src/app/data/contributor';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { UserSetting } from 'src/app/base/user-setting';
 
 @Component({
@@ -52,6 +52,14 @@ export class ListContributorsComponent extends BaseComponent implements OnInit, 
 	 */
 	public class_active_inactive(active: boolean) {
 		return active ? 'contributor_active' : 'contributor_inactive';
+	}
+
+	/**
+	 * This method is invoked if the user change the page size.
+	 * @param $pageEvent event 
+	 */
+	 public page($pageEvent: PageEvent) {
+		this.pageSize.saveSetting($pageEvent.pageSize);
 	}
 
 	/**

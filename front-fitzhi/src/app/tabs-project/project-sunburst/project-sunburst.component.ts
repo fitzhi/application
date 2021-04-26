@@ -109,7 +109,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
      * List of filenames located in a directory of the repository
      * Theses classnames are shared with the NodeDetail component when the user click on a slice.
      */
-	public filenames = new FilenamesDataSource();
+	public filenames = new MatTableDataSource<Filename>();
 
 	/**
      * List of contributors.
@@ -360,7 +360,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				nodeClicked.classnames.forEach(element => {
 					filenames.push(new Filename(element.filename, element.lastCommit));
 				});
-				this.filenames.setClassnames(filenames);
+				this.filenames.data = filenames;
 				const contributors = new Map<number, Contributor>();;
 				nodeClicked.classnames.forEach(file => {
 					if ( (file.idStaffs) && (file.idStaffs.length > 0) ) {
@@ -383,7 +383,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				if (traceOn()) {
 					console.log('Content of filenames & contibutors have been reset.');
 				}
-				this.filenames.setClassnames([]);
+				this.filenames.data = [];
 				this.contributors.data = [];
 			}
 		}

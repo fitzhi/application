@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
 import { ListFilenamesComponent } from './list-filenames.component';
-import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -30,16 +30,19 @@ describe('ListFilenamesComponent', () => {
 					</div>`
 	})
 	class TestHostComponent {
-		public filenames = new FilenamesDataSource();
+		public filenames = new MatTableDataSource<Filename>();
 
 		constructor() {
-			this.filenames.setClassnames([
+			this.filenames.data =
+			[
 				new Filename('one', new Date()), 
 				new Filename('two', new Date()),
 				new Filename('three', new Date()),
 				new Filename('four', new Date()),
-				new Filename('five', new Date())
-			]);
+				new Filename('five', new Date()),
+				new Filename('six', new Date()),
+				new Filename('seven', new Date())
+			];
 		}
 	}
 

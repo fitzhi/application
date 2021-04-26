@@ -19,6 +19,7 @@ const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /ssewatcher\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /http-refresh-token-error-interceptor\.spec\.ts$/);
 // const context = require.context('./', true,  /list-10-contributors\.component\.spec\.ts$/);
+//   const context = require.context('./', true,  /list-filenames\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /node-detail\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /project-staff\.service\.spec\.ts$/);
 // And load the modules.
