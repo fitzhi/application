@@ -87,41 +87,13 @@ describe('ProjectAuditComponent', () => {
 	});
 
 	it('should remove the help panel if the table is NOT empty', () => {
-		for (let i = 0; i < 20; i++) {
-			const p = new Project();
-			p.id = i;
-			p.name = 'Project number ' + i;
-			p.auditEvaluation = 70;
-			p.staffEvaluation = 0;
-			const sp = new SonarProject();
-			sp.key = 'key';
-			sp.name = 'my Sonar';
-			sp.sonarEvaluation = new SonarEvaluation(5, 1000);
-			p.sonarProjects.push(sp);
-			p.ecosystems = [];
-			projects.push(p);
-		}
-		listProjectsService.filteredProjects$.next(projects);
+		initProject();
 		fixture.detectChanges();
 		expect(fixture.debugElement.query(By.css('#help-search'))).toBeNull();
 	});
 
 	it('should display a page with a number of projects equal to the "project-list.pageSize" parameter in localStorage', () => {
-		for (let i = 0; i < 20; i++) {
-			const p = new Project();
-			p.id = i;
-			p.name = 'Project number ' + i;
-			p.auditEvaluation = 70;
-			p.staffEvaluation = 0;
-			const sp = new SonarProject();
-			sp.key = 'key';
-			sp.name = 'my Sonar';
-			sp.sonarEvaluation = new SonarEvaluation(5, 1000);
-			p.sonarProjects.push(sp);
-			p.ecosystems = [];
-			projects.push(p);
-		}
-		listProjectsService.filteredProjects$.next(projects);
+		initProject();
 		fixture.detectChanges();
 
 		expect(fixture.debugElement.query(By.css('#idProject-0'))).toBeDefined();
@@ -135,15 +107,22 @@ describe('ProjectAuditComponent', () => {
 		expect(fixture.debugElement.query(By.css('#idProject-7'))).toBeNull();
 	});
 
-/*
-	it('The creation of a tab hides the help container', () => {
-		component.tabKeys.push('title');
-		component.tabs.push('title');
-		const tabsStaffListService = TestBed.inject(TabsStaffListService);
-		tabsStaffListService.staffListContexts.set('title', new StaffListContext(new ListCriteria('criteria', false)));
-		fixture.detectChanges();
-		console.log (fixture.debugElement.query(By.css('#help-search')));
-		expect(fixture.debugElement.query(By.css('#help-search'))).toBeNull();
-	});
-*/
+	function initProject() {
+		for (let i = 0; i < 20; i++) {
+			const p = new Project();
+			p.id = i;
+			p.name = 'Project number ' + i;
+			p.auditEvaluation = 70;
+			p.staffEvaluation = 0;
+			const sp = new SonarProject();
+			sp.key = 'key';
+			sp.name = 'my Sonar';
+			sp.sonarEvaluation = new SonarEvaluation(5, 1000);
+			p.sonarProjects.push(sp);
+			p.ecosystems = [];
+			projects.push(p);
+		}
+		listProjectsService.filteredProjects$.next(projects);
+
+	}
 });
