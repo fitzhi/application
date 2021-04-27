@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { BaseComponent } from '../../base/base.component';
 import { Constants } from '../../constants';
-import { ListCriteria } from '../../data/listCriteria';
 import { CinematicService } from '../../service/cinematic.service';
 import { SkillService } from '../service/skill.service';
 import { StaffService } from '../../tabs-staff/service/staff.service';
@@ -12,6 +11,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { traceOn } from '../../global';
 import { SkillCountExperiences } from './skill.count.experiences';
+import { ListCriteria } from 'src/app/data/listCriteria';
 
 
 @Component({
@@ -116,9 +116,11 @@ export class ListSkillComponent extends BaseComponent implements OnInit, OnDestr
 	}
 
 	public listStaff(title: string, level: number) {
+
 		const criteria = 'skill:' + title + ':' + level;
 		this.tabsStaffListService.addTabResult(criteria, this.skillService.criteria.activeOnly);
 		const key = this.tabsStaffListService.key(new ListCriteria(criteria, this.skillService.criteria.activeOnly));
+
 		this.tabsStaffListService.activeKey = key;
 		if (traceOn()) {
 			console.log('Criteria used ' + criteria + ' for key ' + key);

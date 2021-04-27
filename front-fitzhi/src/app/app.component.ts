@@ -8,7 +8,6 @@ import { Router } from '@angular/router';
 import { BaseComponent } from './base/base.component';
 import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.service';
 import { SkillService } from './skill/service/skill.service';
-import { ListCriteria } from './data/listCriteria';
 import { AuthService } from './admin/service/auth/auth.service';
 import { ProjectService } from 'src/app/service/project.service';
 import { SonarService } from './service/sonar.service';
@@ -17,6 +16,7 @@ import { InstallService } from './admin/service/install/install.service';
 import { environment } from '../environments/environment';
 import { isNumeric } from 'rxjs/internal-compatibility';
 import { take } from 'rxjs/operators';
+import { ListCriteria } from './data/listCriteria';
 
 declare var $: any;
 

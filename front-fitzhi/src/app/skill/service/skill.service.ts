@@ -5,12 +5,12 @@ import { Observable, BehaviorSubject, Subject, of, EMPTY } from 'rxjs';
 import { InternalService } from '../../internal-service';
 
 import { Constants } from '../../constants';
-import { ListCriteria } from '../../data/listCriteria';
 import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
 import { take, tap, map, switchMap } from 'rxjs/operators';
 import { HttpCodes, traceOn } from '../../global';
 import { DetectionTemplate } from '../../data/detection-template';
 import { FormGroup } from '@angular/forms';
+import { ListCriteria } from 'src/app/data/listCriteria';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -209,29 +209,39 @@ export class SkillService extends InternalService {
 	}
 
 	/**
+	 * Loolup the skills on a criteria
+	 * @param criteria the searched criteria
+	 * @return array of skills
+	 */
+	public filter(criteria: string): Skill[] {
+		const filteredSkills: Skill[] = [];
+		this.allSkills.forEach (skill => {
+			if (skill.title.toLowerCase().indexOf(criteria.toLowerCase()) !== -1)  {
+				filteredSkills.push(skill);
+			}
+		});
+		return filteredSkills;
+	}
+
+	/**
 	 * Filter and emit a filtered list of skills corresponding to the current criteria.
 	 * @param criteria the criteria filled by the user.
 	 */
-	filterSkills(criteria: ListCriteria) {
+	public filterSkills(criteria: ListCriteria) {
 
 		if (traceOn()) {
 			console.log ('Filtering the skills for the criteria', criteria);
 		}
 		this.criteria = criteria;
 
-		const filteredSkills: Skill[] = [];
-		this.allSkills.forEach (skill => {
-			if (skill.title.indexOf(this.criteria.criteria) !== -1)  {
-				filteredSkills.push(skill);
-			}
-		});
+		const filteredSkills = this.filter(this.criteria.criteria);
+
 		if (traceOn()) {
 			console.groupCollapsed('Emitting the skills');
-			filteredSkills.forEach (skill => {
-				console.log (skill.id, skill.title);
-			});
+			console.table (filteredSkills);
 			console.groupEnd();
 		}
+
 		this.filteredSkills$.next(filteredSkills);
 	}
 
