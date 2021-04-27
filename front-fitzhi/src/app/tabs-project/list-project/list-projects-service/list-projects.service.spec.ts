@@ -130,6 +130,24 @@ describe('ListProjectsService', () => {
 		})
 	});
 
+	it('should filter projects for a specific "Staff risk" level.', done  => {
+		
+		// The project with ID 1 and 3 are desactivate
+		projectService.allProjects[0].staffEvaluation = 5;
+		projectService.allProjects[1].staffEvaluation = 2;
+		projectService.allProjects[2].staffEvaluation = 3;
+		projectService.allProjects[3].staffEvaluation = 8;
+		projectService.allProjects[4].staffEvaluation = 1;
+
+		theService.reloadProjects('sonar:4', true);
+		theService.filteredProjects$.subscribe({
+			next: projects => {
+				expect(projects.length).toBe(1)
+				done();
+			}
+		})
+	});
+
 	it('should accept all projets with the "*" filter.', done  => {
 
 		theService.reloadProjects('*', true);
