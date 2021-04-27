@@ -9,10 +9,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -80,4 +82,8 @@ public class ProjectControllerReloadDashboardTest {
 		Assert.assertEquals("myLocationRepository", projectHandler.get(1789).getLocationRepository());
 	}
 
+	@After
+	public void after() throws ApplicationException {
+		projectHandler.removeProject(1789);
+	}
 }

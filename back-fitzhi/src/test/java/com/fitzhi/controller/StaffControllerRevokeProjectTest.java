@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Map;
 
 import com.fitzhi.bean.DataHandler;
+import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Staff;
@@ -40,7 +41,7 @@ public class StaffControllerRevokeProjectTest {
 	 */
 	@Autowired
 	StaffHandler staffHandler;
-		
+	
 	/**
 	 * Class in charge of the staff collection.
 	 */
@@ -61,6 +62,8 @@ public class StaffControllerRevokeProjectTest {
 		log.debug(String.format("id of new Staff member : %d", idStaff));
 		Staff staff = new Staff(idStaff, "user", "password");
 		staffs.put(staff.getIdStaff(), staff);
+
+		
 	}
 
 	@Test
