@@ -75,7 +75,7 @@ public class StaffControllerRevokeProjectTest {
 	@Test
 	@WithMockUser
 	public void doCannotRevokeUnknownProject() throws Exception {
-		this.mvc.perform(delete("/api/staff/1/project/1789")).andExpect(status().isNotFound());
+		this.mvc.perform(delete("/api/staff/1/project/1791")).andExpect(status().isNotFound());
 	}
 
 	@Test
