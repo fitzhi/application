@@ -102,6 +102,32 @@ describe('ListProjectsService', () => {
 		expect (criteria.name).toBe('nope');
 	});
 
+	it('should parse correctly a given criteria containing "staff:7".', ()  => {
+		const criteria = theService.parse('staff:7');
+		expect (criteria.skill).toBeNull();
+
+		expect (criteria.risk).toBeDefined();
+		expect (criteria.risk).toBe('staff');
+		expect (criteria.riskLevel).toBeDefined();
+		expect (criteria.riskLevel).toBe(7);
+		
+		expect (criteria.name).toBeNull();
+	});
+
+	it('should parse correctly a given criteria containing "staff:3;nope".', ()  => {
+		const criteria = theService.parse('staff:3;nope');
+		expect (criteria.skill).toBeNull();
+
+		expect (criteria.risk).toBeDefined();
+		expect (criteria.risk).toBe('staff');
+		expect (criteria.riskLevel).toBeDefined();
+		expect (criteria.riskLevel).toBe(3);
+
+		expect (criteria.name).toBeDefined();
+		expect (criteria.name).toBe('nope');
+	});
+
+
 	it('should correctly filter for a specific skill.', done  => {
 		// The project with ID 1 and 3 are desactivate
 		projectService.allProjects[2].skills = { 1: new ProjectSkill(1, 100, 100) };
@@ -130,16 +156,34 @@ describe('ListProjectsService', () => {
 		})
 	});
 
-	it('should filter projects for a specific "Staff risk" level.', done  => {
+	it('should filter projects for a specific level of "staff risk".', done  => {
 		
 		// The project with ID 1 and 3 are desactivate
-		projectService.allProjects[0].staffEvaluation = 5;
+		projectService.allProjects[0].staffEvaluation = 4;
 		projectService.allProjects[1].staffEvaluation = 2;
 		projectService.allProjects[2].staffEvaluation = 3;
-		projectService.allProjects[3].staffEvaluation = 8;
+		projectService.allProjects[3].staffEvaluation = 4;
 		projectService.allProjects[4].staffEvaluation = 1;
 
-		theService.reloadProjects('sonar:4', true);
+		theService.reloadProjects('staff:4', true);
+		theService.filteredProjects$.subscribe({
+			next: projects => {
+				expect(projects.length).toBe(2)
+				done();
+			}
+		})
+	});
+
+	it('should filter projects for a specific level of "staff risk" and a specific name.', done  => {
+		
+		// The project with ID 1 and 3 are desactivate
+		projectService.allProjects[0].staffEvaluation = 4;
+		projectService.allProjects[1].staffEvaluation = 2;
+		projectService.allProjects[2].staffEvaluation = 3;
+		projectService.allProjects[3].staffEvaluation = 4;
+		projectService.allProjects[4].staffEvaluation = 1;
+
+		theService.reloadProjects('staff:4;dummy', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
 				expect(projects.length).toBe(1)

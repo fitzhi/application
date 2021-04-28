@@ -22,11 +22,19 @@ export class ListProjectsService  {
 		 */
 		public skillIds: Set<Number>; 
 
+		/**
+		 * Public simple construction.
+		 * 
+		 * @param skill Skill involved in the search.
+		 * @param name Part of the name involved in the search.
+		 * @param risk risk given given by the end-user; it might be __"staff"__, or __"sonar"__, or __"audit"__.
+		 * @param riskLevel Staff risk evaluation from 0 to 10.
+		 */
 		constructor(
-			// Skill involved in the search
 			public skill: string,
-			// Part of the name involved in the search
-			public name: string) {}
+			public name: string,
+			public risk: string = null,
+			public riskLevel: number = -1) {}
 
 		/**
 		 * @returns **TRUE** if a skill has been given by the end-user.
@@ -36,10 +44,17 @@ export class ListProjectsService  {
 		}
 
 		/**
+		 * @returns **TRUE** if a staff risk has been given by the end-user.
+		 */
+		 hasStaffLevel(): boolean {
+			return (this.risk === 'staff');
+		}
+
+		/**
 		 * @returns **TRUE** if the criteria is empty
 		 */
 		isEmpty(): boolean {
-			return ((!this.skill) && (!this.name));
+			return ((!this.skill) && (!this.name) && (this.riskLevel === -1));
 		}
 	}
 
@@ -71,13 +86,26 @@ export class ListProjectsService  {
 			lookup.skill = (index === -1) ? criteria.substring(6).toLocaleLowerCase() : criteria.substring(6, index).toLocaleLowerCase();
 		}
 
-		const remain = (criteria.indexOf('skill:') === 0) ? 
-			criteria.substring('skill:'.length + lookup.skill.length + 1) :
-			criteria;
+		if (criteria.indexOf('staff:') === 0) {				
+			// select the skill corresponding to the criteria
+			const index = criteria.indexOf(';');
+			const staffLevel = (index === -1) ? criteria.substring(6).toLocaleLowerCase() : criteria.substring(6, index).toLocaleLowerCase();
+			if (!isNaN(parseInt(staffLevel))) {
+				lookup.risk = 'staff';
+				lookup.riskLevel = parseInt(staffLevel);
+			}
+		}
+		
+		const headerCriteria = Math.max(criteria.indexOf('skill:'), criteria.indexOf('staff:'));
+
+		const remain = 
+			(headerCriteria === 0) ?
+				( (criteria.indexOf(';') === -1) ? '' : criteria.substring(criteria.indexOf(';') + 1) ) :
+				criteria.substring(criteria.indexOf(';') + 1);
 		lookup.name = (remain === '') ? null : remain.toLocaleLowerCase();;
 
 		if (traceOn()) {
-			console.log ('Lookup criterias %s %s', lookup.skill, lookup.name);
+			console.log ('Lookup criterias skill:"%s" staff:"%s" name:"%s"', lookup.skill, lookup.name);
 		}
 		return lookup;
 	}
@@ -111,7 +139,6 @@ export class ListProjectsService  {
 			lookup.skillIds = new Set<number>(filteredSkillIds);
 		}
 
-
 		function testCriteria(project, index, array) {
 
 			if (lookup.isEmpty()) {
@@ -127,6 +154,15 @@ export class ListProjectsService  {
 				});
 				return (found) ? ((!lookup.name) || (project.name.toLocaleLowerCase().indexOf(lookup.name) > -1)) : false;
 			}
+
+			if (lookup.hasStaffLevel()) {
+				let found = false;
+				if (project.staffEvaluation === lookup.riskLevel) {
+					found = true;
+				}
+				return (found) ? ((!lookup.name) || (project.name.toLocaleLowerCase().indexOf(lookup.name) > -1)) : false;
+			}
+	
 			return (project.name.toLowerCase().indexOf(lookup.name) > -1);
 		}
 		projects.push(...elligibleProjects.filter(testCriteria.bind(this)));
