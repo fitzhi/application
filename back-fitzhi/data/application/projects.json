@@ -30,7 +30,7 @@
 		"name": "Spring Framework",
 		"active": true,
 		"connectionSettings": 3,
-		"branch": "master",
+		"branch": "main",
 		"urlRepository": "https://github.com/spring-projects/spring-framework.git",
 		"sonarProjects": [],
 		"audit": {}
@@ -40,7 +40,7 @@
 		"name": "Spring Boot",
 		"active": true,
 		"connectionSettings": 3,
-		"branch": "master",
+		"branch": "main",
 		"urlRepository": "https://github.com/spring-projects/spring-boot.git",
 		"urlCodeFactorIO": "",
 		"urlSonarServer": "",
@@ -86,7 +86,7 @@
 		"name": "Spring Security",
 		"active": true,
 		"connectionSettings": 3,
-		"branch": "master",
+		"branch": "main",
 		"urlRepository": "https://github.com/spring-projects/spring-security.git",
 		"sonarProjects": [],
 		"audit": {}

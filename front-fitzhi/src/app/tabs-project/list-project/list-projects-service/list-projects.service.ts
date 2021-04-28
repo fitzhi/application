@@ -28,13 +28,15 @@ export class ListProjectsService  {
 		 * @param skill Skill involved in the search.
 		 * @param name Part of the name involved in the search.
 		 * @param risk risk given given by the end-user; it might be __"staff"__, or __"sonar"__, or __"audit"__.
-		 * @param riskLevel Staff risk evaluation from 0 to 10.
+		 * @param riskStartLevel Staff risk evaluation from 0 to 10.
 		 */
 		constructor(
 			public skill: string,
 			public name: string,
 			public risk: string = null,
-			public riskLevel: number = -1) {}
+			public riskLevel: number = -1,
+			public riskStartLevel: number = -1,
+			public riskEndLevel: number = -1) {}
 
 		/**
 		 * @returns **TRUE** if a skill has been given by the end-user.
@@ -46,15 +48,22 @@ export class ListProjectsService  {
 		/**
 		 * @returns **TRUE** if a staff risk has been given by the end-user.
 		 */
-		 hasStaffLevel(): boolean {
+		 hasStaffRisk(): boolean {
 			return (this.risk === 'staff');
+		}
+
+		/**
+		 * @returns **TRUE** if a audit risk has been given by the end-user.
+		 */
+		 hasAuditRisk(): boolean {
+			return (this.risk === 'audit');
 		}
 
 		/**
 		 * @returns **TRUE** if the criteria is empty
 		 */
 		isEmpty(): boolean {
-			return ((!this.skill) && (!this.name) && (this.riskLevel === -1));
+			return ((!this.skill) && (!this.name) && (!this.risk));
 		}
 	}
 
@@ -75,6 +84,31 @@ export class ListProjectsService  {
 
 		const lookup = new ListProjectsService.LookupCriteria(null, null);
 
+		function parseRiskCriteria(risk: string) {
+			const riskLength = risk.length + 1;
+			if (criteria.indexOf(risk + ':') === 0) {				
+				// select the skill corresponding to the criteria
+				const index = criteria.indexOf(';');
+				const level = (index === -1) ? criteria.substring(riskLength).toLocaleLowerCase() : criteria.substring(riskLength, index).toLocaleLowerCase();
+				// This is a scenario of staff:1-3. We are filtering projects with a risk level from 1 to 3.
+				const pos = level.indexOf('-');
+				if (pos !== -1) {
+					const startLevel = level.substring(0, pos);
+					const endLevel = level.substring(pos + 1);
+					if (!isNaN(parseInt(startLevel)) && !isNaN(parseInt(endLevel)))  {
+						lookup.risk = risk;
+						lookup.riskStartLevel = parseInt(startLevel);
+						lookup.riskEndLevel = parseInt(endLevel);
+					}
+				} else {
+					if (!isNaN(parseInt(level))) {
+						lookup.risk = risk;
+						lookup.riskLevel = parseInt(level);
+					}
+				}
+			}
+		}
+
 		// Empty criteria
 		if ((!criteria) || (criteria.length === 0)) {
 			return lookup;
@@ -86,17 +120,10 @@ export class ListProjectsService  {
 			lookup.skill = (index === -1) ? criteria.substring(6).toLocaleLowerCase() : criteria.substring(6, index).toLocaleLowerCase();
 		}
 
-		if (criteria.indexOf('staff:') === 0) {				
-			// select the skill corresponding to the criteria
-			const index = criteria.indexOf(';');
-			const staffLevel = (index === -1) ? criteria.substring(6).toLocaleLowerCase() : criteria.substring(6, index).toLocaleLowerCase();
-			if (!isNaN(parseInt(staffLevel))) {
-				lookup.risk = 'staff';
-				lookup.riskLevel = parseInt(staffLevel);
-			}
-		}
-		
-		const headerCriteria = Math.max(criteria.indexOf('skill:'), criteria.indexOf('staff:'));
+		parseRiskCriteria('staff');
+		parseRiskCriteria('audit');
+
+		const headerCriteria = Math.max(criteria.indexOf('skill:'), criteria.indexOf('staff:'), criteria.indexOf('audit:'));
 
 		const remain = 
 			(headerCriteria === 0) ?
@@ -105,7 +132,10 @@ export class ListProjectsService  {
 		lookup.name = (remain === '') ? null : remain.toLocaleLowerCase();;
 
 		if (traceOn()) {
-			console.log ('Lookup criterias skill:"%s" staff:"%s" name:"%s"', lookup.skill, lookup.name);
+			console.log ('Lookup criterias skill:"%s" name:"%s" risk:"%s" %d %d %d', 
+				lookup.skill, lookup.name, 
+				lookup.risk,
+				lookup.riskLevel, lookup.riskStartLevel, lookup.riskEndLevel);
 		}
 		return lookup;
 	}
@@ -155,14 +185,34 @@ export class ListProjectsService  {
 				return (found) ? ((!lookup.name) || (project.name.toLocaleLowerCase().indexOf(lookup.name) > -1)) : false;
 			}
 
-			if (lookup.hasStaffLevel()) {
+			if (lookup.hasStaffRisk()) {
 				let found = false;
-				if (project.staffEvaluation === lookup.riskLevel) {
-					found = true;
+				if (lookup.riskLevel > 0) {
+					if (project.staffEvaluation === lookup.riskLevel) {
+						found = true;
+					}
+				} else {
+					if ( (project.staffEvaluation >= lookup.riskStartLevel) && (project.staffEvaluation <= lookup.riskEndLevel)) {
+						found = true;
+					}
 				}
 				return (found) ? ((!lookup.name) || (project.name.toLocaleLowerCase().indexOf(lookup.name) > -1)) : false;
 			}
-	
+
+			if (lookup.hasAuditRisk()) {
+				let found = false;
+				if (lookup.riskLevel >= 0) {
+					if (project.auditEvaluation === lookup.riskLevel) {
+						found = true;
+					}
+				} else {
+					if ( (project.auditEvaluation >= lookup.riskStartLevel) && (project.auditEvaluation <= lookup.riskEndLevel)) {
+						found = true;
+					}
+				}
+				return (found) ? ((!lookup.name) || (project.name.toLocaleLowerCase().indexOf(lookup.name) > -1)) : false;
+			}
+			
 			return (project.name.toLowerCase().indexOf(lookup.name) > -1);
 		}
 		projects.push(...elligibleProjects.filter(testCriteria.bind(this)));

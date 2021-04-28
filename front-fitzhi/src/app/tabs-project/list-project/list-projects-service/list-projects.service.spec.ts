@@ -127,6 +127,39 @@ describe('ListProjectsService', () => {
 		expect (criteria.name).toBe('nope');
 	});
 
+	it('should parse correctly a given criteria containing "staff:6-10".', ()  => {
+		const criteria = theService.parse('staff:6-10');
+		expect (criteria.skill).toBeNull();
+
+		expect (criteria.risk).toBeDefined();
+		expect (criteria.risk).toBe('staff');
+		expect (criteria.riskLevel).toBeDefined();
+		expect (criteria.riskLevel).toBe(-1);
+		expect (criteria.riskStartLevel).toBeDefined();
+		expect (criteria.riskStartLevel).toBe(6);
+		expect (criteria.riskEndLevel).toBeDefined();
+		expect (criteria.riskEndLevel).toBe(10);
+
+		expect (criteria.name).toBeNull();
+	});
+
+	it('should parse correctly a given criteria containing "staff:6-10;nope".', ()  => {
+		const criteria = theService.parse('staff:6-10;nope');
+		expect (criteria.skill).toBeNull();
+
+		expect (criteria.risk).toBeDefined();
+		expect (criteria.risk).toBe('staff');
+		expect (criteria.riskLevel).toBeDefined();
+		expect (criteria.riskLevel).toBe(-1);
+		expect (criteria.riskStartLevel).toBeDefined();
+		expect (criteria.riskStartLevel).toBe(6);
+		expect (criteria.riskEndLevel).toBeDefined();
+		expect (criteria.riskEndLevel).toBe(10);
+
+		expect (criteria.name).toBeDefined();
+		expect (criteria.name).toBe('nope');
+	});
+
 
 	it('should correctly filter for a specific skill.', done  => {
 		// The project with ID 1 and 3 are desactivate
@@ -218,6 +251,96 @@ describe('ListProjectsService', () => {
 		theService.filteredProjects$.subscribe({
 			next: projects => {
 				expect(projects.length).toBe(5)
+				done();
+			}
+		})
+	});
+
+	it('should filter projects for a specific interval of level of staff risk ("staff:x-y")".', done  => {
+			
+		// The project with ID 1 and 3 are desactivate
+		projectService.allProjects[0].staffEvaluation = 4;
+		projectService.allProjects[1].staffEvaluation = 2;
+		projectService.allProjects[2].staffEvaluation = 3;
+		projectService.allProjects[3].staffEvaluation = 4;
+		projectService.allProjects[4].staffEvaluation = 1;
+
+		theService.reloadProjects('staff:1-3', true);
+		theService.filteredProjects$.subscribe({
+			next: projects => {
+				expect(projects.length).toBe(3)
+				done();
+			}
+		})
+	});
+
+	it('should filter projects for a specific interval of level of staff risk and a name ("staff:x-y;name")".', done  => {
+			
+		// The project with ID 1 and 3 are desactivate
+		projectService.allProjects[0].staffEvaluation = 4;
+		projectService.allProjects[1].staffEvaluation = 2;
+		projectService.allProjects[2].staffEvaluation = 3;
+		projectService.allProjects[3].staffEvaluation = 4;
+		projectService.allProjects[4].staffEvaluation = 1;
+
+		theService.reloadProjects('staff:1-3;dummy', true);
+		theService.filteredProjects$.subscribe({
+			next: projects => {
+				expect(projects.length).toBe(2)
+				done();
+			}
+		})
+	});
+
+	it('should filter projects for a specific level of audit risk ("audit:x")".', done  => {
+			
+		// The project with ID 1 and 3 are desactivate
+		projectService.allProjects[0].auditEvaluation = 4;
+		projectService.allProjects[1].auditEvaluation = 2;
+		projectService.allProjects[2].auditEvaluation = 3;
+		projectService.allProjects[3].auditEvaluation = 4;
+		projectService.allProjects[4].auditEvaluation = 1;
+
+		theService.reloadProjects('audit:1', true);
+		theService.filteredProjects$.subscribe({
+			next: projects => {
+				expect(projects.length).toBe(1)
+				done();
+			}
+		})
+	});
+
+	it('should filter projects for a specific interval of level of audit risk ("audit:x-y")".', done  => {
+			
+		// The project with ID 1 and 3 are desactivate
+		projectService.allProjects[0].auditEvaluation = 4;
+		projectService.allProjects[1].auditEvaluation = 2;
+		projectService.allProjects[2].auditEvaluation = 3;
+		projectService.allProjects[3].auditEvaluation = 4;
+		projectService.allProjects[4].auditEvaluation = 1;
+
+		theService.reloadProjects('audit:1-3', true);
+		theService.filteredProjects$.subscribe({
+			next: projects => {
+				expect(projects.length).toBe(3)
+				done();
+			}
+		})
+	});
+
+	it('should filter projects for a specific interval of level of audit risk and a name ("audit:x-y;name")".', done  => {
+			
+		// The project with ID 1 and 3 are desactivate
+		projectService.allProjects[0].auditEvaluation = 4;
+		projectService.allProjects[1].auditEvaluation = 2;
+		projectService.allProjects[2].auditEvaluation = 3;
+		projectService.allProjects[3].auditEvaluation = 4;
+		projectService.allProjects[4].auditEvaluation = 1;
+
+		theService.reloadProjects('audit:1-3;dummy', true);
+		theService.filteredProjects$.subscribe({
+			next: projects => {
+				expect(projects.length).toBe(2)
 				done();
 			}
 		})
