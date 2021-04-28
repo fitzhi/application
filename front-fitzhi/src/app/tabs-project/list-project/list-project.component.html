@@ -86,18 +86,34 @@
 	</p>
 	<ul>
 		<li>
-			<span class="criteria h4">*</span>, wildcard means ALL projects declared in Fitzhì.
+			The wildcard <span class="criteria h5">*</span> means ALL projects declared in Fitzhì.
 		</li>
 		<li>
-			This criteria : <span class="criteria">dummy</span>, will filter all projects whose <span class="property">name</span> contains the string <span class="criteria">dummy</span>, in a case-unsensitive way.
+			The criteria <span class="criteria">dummy</span>, is filtering all projects whose 
+			<span class="property">name</span> contains the string <span class="criteria">dummy</span>, 
+			in a case-unsensitive way.
 		</li>
 		<li>
-			This criteria : <span class="criteria">skill:java;doo</span>, will filter all projects involving the <span class="property">skill </span><span class="criteria">Java</span> and a <span class="property">name</span> containing the string <span class="criteria">dummy</span>, in a case-unsensitive way.
+			The criteria <span class="criteria">skill:java;doo</span>, is filtering all projects involving the 
+			<span class="property">skill </span><span class="criteria">Java</span> and a 
+			<span class="property">name</span> containing the string <span class="criteria">dummy</span>, 
+			in a case-unsensitive way.
+		</li>
+		<li>
+			The criteria
+			<span class="criteria">staff:5</span> will filter all projects where the <span class="property">staff risk</span> is rated <span class="criteria">5</span>,
+			<span class="criteria">staff:3-7</span> will filter projects between <span class="criteria">3</span> and <span class="criteria">7</span>.
+			<br/>
+			<em>Staff risk is rated from 0 to 10.</em>
+		</li>
+		<li>
+			The criteria
+			<span class="criteria">audit:30</span> will filter all projects where the <span class="property">audit risk</span> is rated 	<span class="criteria">30</span>,
+			<span class="criteria">staff:40-90</span> will filter projects between <span class="criteria">40</span> and <span class="criteria">90</span>.
+			<br/>
+			<em>Audit risk is rated from 0 to 100.</em>
 		</li>
 		<!--
-		<li>
-			This criteria : <span class="criteria">skill:java:2,typescript;doo</span>, will filter all staff members with a <span class="property">skill</span> in <span class="criteria">Java</span> of level <span class="criteria">2</span> and the <span class="property">skill</span>&nbsp;<span class="criteria">Typescript</span> of any level and a <span class="property">first name</span> or a <span class="property">last name</span> containing the string <span class="criteria">doo</span> case-unsensitive
-		</li>
 		<li>
 			<div>
 				The button 
