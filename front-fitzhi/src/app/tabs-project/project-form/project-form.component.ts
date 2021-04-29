@@ -960,8 +960,10 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				break;
 			case this.NO_USER_PASSWORD_ACCESS:
 				this.profileProject.get('filename').setValue('');
-				this.profileProject.get('username').setValue('');
-				this.profileProject.get('password').setValue('');
+				if (this.profileProject.get('username')) {
+					this.profileProject.get('username').setValue('');
+					this.profileProject.get('password').setValue('');
+				}
 				this.profileProject.get('urlRepository').setValue(this.profileProject.get('urlRepository').value);
 				break;
 		}
