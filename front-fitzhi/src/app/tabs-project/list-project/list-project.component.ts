@@ -83,13 +83,6 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 			)
 		);
 
-		this.subscriptions.add(
-			this.cinematicService.currentActiveForm$
-				.subscribe({
-					next: form => console.log (form.formIdentifier + ' ' + form.url)
-				})
-		);
-
 	}
 
 	ngAfterViewInit(): void {
