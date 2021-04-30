@@ -685,6 +685,8 @@ public class ProjectController extends BaseRestController {
 
 		// We renitialize the local repository if the user asks for a RESET, comparing to a REFRESH 
 		projectHandler.saveLocationRepository(idProject, null);
+		// We reinitialize the project reference in the staff collection
+		staffHandler.removeProject(idProject); 
 		// Remove the GIT repository
 		cacheDataHandler.removeRepository(project);
 		// Remove all crawling intermediate files

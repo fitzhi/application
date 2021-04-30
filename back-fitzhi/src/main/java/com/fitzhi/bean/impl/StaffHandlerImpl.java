@@ -652,6 +652,16 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
+	public void removeProject(int idProject) {
+		synchronized (lockDataUpdated) {
+			for (Staff staff : this.getStaff().values()) {
+				staff.getMissions().removeIf(elt -> (elt.getIdProject() == idProject));
+			}
+			this.dataUpdated = true;
+		}
+	}
+
+	@Override
 	public Optional<Staff> findStaffOnLogin(String login) {
 		Objects.requireNonNull(login);
 		return getStaff()
