@@ -77,7 +77,6 @@ export class ProjectSonarComponent extends BaseComponent implements OnInit, OnDe
 						}
 					}
 
-
 					// If there is no (more) SonarProject, we cleanup the child containers.
 					if (this.projectService.project && this.projectService.project.sonarProjects.length === 0) {
 						// We send a null as SonarKey to force the initialization of the children data (such as i.e. the metrics dataSource)

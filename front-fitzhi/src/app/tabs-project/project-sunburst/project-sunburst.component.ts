@@ -24,6 +24,9 @@ import { ContributorsDTO } from 'src/app/data/external/contributorsDTO';
 import { traceOn } from 'src/app/global';
 import { SunburstCinematicService } from './service/sunburst-cinematic.service';
 import { SunburstCacheService } from './service/sunburst-cache.service';
+import { Collaborator } from 'src/app/data/collaborator';
+import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 
 
 //
@@ -106,19 +109,13 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
      * List of filenames located in a directory of the repository
      * Theses classnames are shared with the NodeDetail component when the user click on a slice.
      */
-	public filenames = new FilenamesDataSource();
-
-	/**
-	* `BehaviorSubject` which emits the filenames datasource.
- 	*/
-	// public filenames$ = new BehaviorSubject<FilenamesDataSource>(new FilenamesDataSource());
+	public filenames = new MatTableDataSource<Filename>();
 
 	/**
      * List of contributors.
      * Theses contributors are shared with the NodeDetail component when the user click on a slice.
      */
-	public contributors = new ContributorsDataSource();
-
+	public contributors = new MatTableDataSource<Contributor>();
 
 	public location$ = new BehaviorSubject('');
 
@@ -141,6 +138,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 	public PreviewContext =  PreviewContext;
 
+	public allStaff: Collaborator[];
+
 	constructor(
 		private cinematicService: CinematicService,
 		public sunburstCinematicService: SunburstCinematicService,
@@ -150,6 +149,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		private messageBoxService: MessageBoxService,
 		private dialog: MatDialog,
 		private cacheService: SunburstCacheService,
+		private staffListService: StaffListService,
+		private staffService: StaffService,
 		public projectService: ProjectService) {
 			super();
 	}
@@ -177,6 +178,13 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				}
 			})
 		);
+
+		this.subscriptions.add(
+			this.staffListService.allStaff$.subscribe({
+				next: staff => this.allStaff = staff
+			})
+		);
+
 	}
 
 	/**
@@ -352,43 +360,33 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				nodeClicked.classnames.forEach(element => {
 					filenames.push(new Filename(element.filename, element.lastCommit));
 				});
-				this.filenames.setClassnames(filenames);
-
-				const contributors = new Set<Contributor>();
+				this.filenames.data = filenames;
+				const contributors = new Map<number, Contributor>();;
 				nodeClicked.classnames.forEach(file => {
 					if ( (file.idStaffs) && (file.idStaffs.length > 0) ) {
 						file.idStaffs.filter(idStaff => idStaff !== -1).forEach(idStaff => {
-							contributors.add(this.findContributor(idStaff));
+							if (!contributors.has(idStaff)) {
+								contributors.set(idStaff, this.projectStaffService.findContributor(idStaff));
+							}
 						});
 					}
 				});
+
+
 				if (traceOn()) {
 					console.groupCollapsed('Contributors : ');
-					console.log (...contributors);
+					console.log (...contributors.values());
 					console.groupEnd();
 				}
-				this.contributors.sendContributors(Array.from(contributors));
+				this.contributors.data = Array.from(contributors.values());
 			} else {
 				if (traceOn()) {
 					console.log('Content of filenames & contibutors have been reset.');
 				}
-				this.filenames.setClassnames([]);
-				this.contributors.sendContributors([]);
+				this.filenames.data = [];
+				this.contributors.data = [];
 			}
 		}
-	}
-
-	/**
-	 * Search for a contributor with the same identifier as the given one
-	 * @param idStaff the searched staff identifier
-	 */
-	findContributor(idStaff: number): Contributor {
-		const foundContributor = this.projectStaffService.contributors
-			.find(contributor => contributor.idStaff === idStaff);
-		if (!foundContributor) {
-			console.log (idStaff, 'id Staff not found as a contributor.' );
-		}
-		return foundContributor;
 	}
 
 	handleSunburstData(response: any) {
@@ -403,7 +401,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 
 		// This test is a hack necessary for the tests suite.
 		if (!document.getElementById('chart')) {
-			console.error('Chart is not present in the HTML layout');
+			console.warn ('The application is in an unexpected state');
+			console.warn('Chart is not present in the HTML layout for the projet %s', this.projectService.project.name);
 		} else {
 			this.myChart.data(response.sunburstData)
 				.width(500)
@@ -414,7 +413,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				.color('color')
 				(document.getElementById('chart'));
 	
-			const dataSourceGhosts = new ProjectGhostsDataSource(response.ghosts);
+			const dataSourceGhosts = new ProjectGhostsDataSource(response.ghosts, this.allStaff);
 			this.dataSourceGhosts$.next(dataSourceGhosts);
 	
 			//
@@ -540,6 +539,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
     */
 	public show(idPanel: number) {
 		
+		if (traceOn()) {
+			console.log ('Showing panel %d', idPanel);
+		}
 		// If the project is inactive, these buttons are inactive.
 		if (!this.projectService.project.active) {
 			return;
@@ -707,7 +709,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		}
 		if (this.settings.startingDate > 0) {
 			const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-			this.titleSunburst += ' filtered from ' + new Date(this.settings.startingDate).toLocaleDateString('en-EN', options);
+			this.titleSunburst += ' filtered from ' + new Date(this.settings.startingDate).toLocaleDateString('en-EN');
 		}
 	}
 

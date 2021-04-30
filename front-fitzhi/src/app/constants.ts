@@ -1,4 +1,3 @@
-import { isDevMode } from '@angular/core';
 import { environment } from '../environments/environment';
 
 /**
@@ -125,5 +124,10 @@ export class Constants {
 	 * Title of the tabs.
 	 */
 	public static TAB_TITLE = ['Project', 'Staff list', 'Staff coverage', 'Sonar', 'Audit', 'Remove'];
+
+	/**
+	 * Error messages.
+	 */
+	public static SERVER_DOWN  = 'Server is down or unreachable';
 
 }

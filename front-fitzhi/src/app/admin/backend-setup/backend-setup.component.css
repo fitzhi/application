@@ -28,19 +28,19 @@
 }
 
 .urlEdition {
-    background-image: url( "../../../assets/img/save.png" );
+    background-image: url( /assets/img/save.png);
 }
 
 .urlEdition:hover  {
-    background-image: url( "../../../assets/img/save-selected.png" );
+    background-image: url( /assets/img/save-selected.png);
 }
 
 .urlValid, .urlValid:hover {
-    background-image: url( "../../../assets/img/save-ok.png" );
+    background-image: url( /assets/img/save-ok.png );
 }
 
 .urlInvalid, .urlInvalid:hover {
-    background-image: url( "../../../assets/img/save-error.png" );
+    background-image: url( /assets/img/save-error.png );
 }
 
 .validMessage {
@@ -53,6 +53,9 @@
     font-size: 18px;
 }
 
-
-
+footer{
+    position:fixed;
+    bottom:0px;
+    width:100%;
+}
 

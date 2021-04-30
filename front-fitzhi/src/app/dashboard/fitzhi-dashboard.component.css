@@ -1,18 +1,18 @@
 div {
-    --pie-height: 400px;
-    --pie-width: var(--pie-height);
-    --pie-diameter: 400px;
+	--pie-height: 400px;
+	--pie-width: var(--pie-height);
+	--pie-diameter: 400px;
 
-    /* width of the sidebar */
-    --sidebar-width: 70px;
-    --sidebar-button-width: 60px;
-    --sidebar-button-height: 60px;
+	/* width of the sidebar */
+	--sidebar-width: 70px;
+	--sidebar-button-width: 60px;
+	--sidebar-button-height: 60px;
 }
 
 .mainDashboard {
-    width: calc(100% - var(--sidebar-width));
-    margin-left: var(--sidebar-width);
-    line-height: 1;
+	width: calc(100% - var(--sidebar-width));
+	margin-left: var(--sidebar-width);
+	line-height: 1;
 }
 
 .dashboard-pie {
@@ -22,12 +22,12 @@ div {
 }
 
 .camera {
-    color: lightgrey;
+	color: lightgrey;
 }
 
 p.camera {
-    font-size: 22px;
-    text-align: center;
+	font-size: 22px;
+	text-align: center;
 }
 
 div.pie-legend {
@@ -35,79 +35,79 @@ div.pie-legend {
 }
 
 div.pie {
-    margin: 10px auto;
-    width: 100%;
-    height: 100%;
-    max-height: 800px;
+	margin: 10px auto;
+	width: 100%;
+	height: 100%;
+	max-height: 800px;
 }
 
 div.pie-projects {
-    position: absolute;
-    top: 0;
-    right: 0;
-    min-width: 200px;
-    height: 100%;
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 300px;
+	height: 100%;
 }
 
 #logo {
-    font-size: 420px;
-    background: -webkit-linear-gradient(var(--color-selected), var(--color-error));
-    background-clip: text;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+	font-size: 420px;
+	background: -webkit-linear-gradient(var(--color-selected), var(--color-error));
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
 
-    margin: 40vh auto;
-    transform: translateY(-50%);
-    
-    width: 450px;
-    height: 450px;
+	margin: 40vh auto;
+	transform: translateY(-50%);
+	
+	width: 450px;
+	height: 450px;
 }
  
 div.styline-icon {
-    width: var(--sidebar-button-width);
-    height: var(--sidebar-button-height);
+	width: var(--sidebar-button-width);
+	height: var(--sidebar-button-height);
 }
 
 
 button.lastYearMinimized, button.lastMonthMinimized, button.currentMinimized, button.treeMap, div.styline-icon {
-    width: var(--sidebar-button-width);
-    height: var(--sidebar-button-height);
-    left: 5px;
-    position: absolute;
-    text-align: center;
-    padding: 0;
-    margin: 0;
+	width: var(--sidebar-button-width);
+	height: var(--sidebar-button-height);
+	left: 5px;
+	position: absolute;
+	text-align: center;
+	padding: 0;
+	margin: 0;
 }
 
 button.lastYearMinimized P, button.lastMonthMinimized P {
-    margin-bottom: 0;
-    font-size: 8px;
+	margin-bottom: 0;
+	font-size: 8px;
 }
 
 button.lastYearMinimized I, button.lastMonthMinimized I, button.currentMinimized I {
-    font-size: 34px;
+	font-size: 34px;
 }
 
 button.lastYearMinimized {
-    bottom: 5px;
+	bottom: 5px;
 }
 
 button.lastMonthMinimized {
-    bottom: 70px;
+	bottom: 70px;
 }
 
 button.currentMinimized {
-    bottom: 140px;
+	bottom: 140px;
 }
 
 div.skyline-icon {
-    bottom: 280px;
-    position: absolute;
-    margin-left: 5px;
+	bottom: 280px;
+	position: absolute;
+	margin-left: 5px;
 }
 
 button.treeMap {
-    bottom: 210px;
+	bottom: 210px;
 }
 
 button.currentMinimized  div.pie-minimized {
@@ -117,49 +117,42 @@ button.currentMinimized  div.pie-minimized {
 }
 
 div.camera {
-    width: 300px;
-    margin: 40vh auto;
-    transform: translateY(-50%);
-    text-align: center;
-    font-size: 22px;
-    border-radius: 5px;
-    border-style: solid;
-    border-width: 1px;
-    border-color: lightgrey;
-    padding: 20px;
+	width: 300px;
+	margin: 40vh auto;
+	transform: translateY(-50%);
+	text-align: center;
+	font-size: 22px;
+	border-radius: 5px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: lightgrey;
+	padding: 20px;
 
 }
 
 i.camera {
-    font-size: 60px;
+	font-size: 60px;
 }
 
 .vertical-nav {
-    min-width: var(--sidebar-width);
-    width: var(--sidebar-width);
-    min-height: calc(100% - var(--toolbar-height));
-    height: calc(100% - var(--toolbar-height));
-    position: fixed;
-    top:  var(--toolbar-height);
-    left: 0;
-    box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
-}
-
-#container-treemap {
-    margin: auto;
-    width: 600px;
-    height: 400px;
-    margin-top: 100px;
+	min-width: var(--sidebar-width);
+	width: var(--sidebar-width);
+	min-height: calc(100% - var(--toolbar-height));
+	height: calc(100% - var(--toolbar-height));
+	position: fixed;
+	top:  var(--toolbar-height);
+	left: 0;
+	box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.1);
 }
 
 svg.treeMapButton {
-    width: 60px;
-    height: 60px;
+	width: 60px;
+	height: 60px;
 }
 
 rect.rectTreeMap {
-    width: 15px;
-    height: 15px;
+	width: 15px;
+	height: 15px;
 }
 
 :host >>> div.angular-popper {

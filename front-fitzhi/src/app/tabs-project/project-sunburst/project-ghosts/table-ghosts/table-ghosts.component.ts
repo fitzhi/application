@@ -1,13 +1,12 @@
-import { Component, OnInit, Input, Output, ViewChild, OnDestroy, AfterViewInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
-import { Constants } from '../../../../constants';
 import { Unknown } from '../../../../data/unknown';
 import { BaseComponent } from 'src/app/base/base.component';
 import { ProjectGhostsDataSource } from '../project-ghosts-data-source';
 import { MatPaginator } from '@angular/material/paginator';
 import { Collaborator } from 'src/app/data/collaborator';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
-import { take, throwIfEmpty, switchMap } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { ProjectService } from 'src/app/service/project.service';
@@ -16,8 +15,6 @@ import { MessageBoxService } from 'src/app/interaction/message-box/service/messa
 import { SunburstCacheService } from '../../service/sunburst-cache.service';
 import { GhostsService } from '../service/ghosts.service';
 import { MatTable } from '@angular/material/table';
-import { Project } from 'src/app/data/project';
-import { trace } from 'console';
 
 @Component({
 	selector: 'app-table-ghosts',
@@ -72,68 +69,72 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 		super();
 	}
 
-	ngOnInit() {
+	ngOnInit(): void {
+
 		this.subscriptions.add(
-			this.dataSourceGhosts$.subscribe((dataSource: ProjectGhostsDataSource) => {
-				if (traceOn()) {
-					console.log(
-						'Project %d %s reveived %s in the table of ghosts component',
-						this.projectService.project.id,
-						this.projectService.project.name,
-						dataSource.data.length);
+			this.staffListService.allStaff$.subscribe({
+				next: staff => this.allStaff = staff
+			})
+		);
+
+		this.subscriptions.add(
+			this.dataSourceGhosts$.subscribe({
+					next: (dataSource: ProjectGhostsDataSource) => {
+						if (traceOn()) {
+							console.log(
+								'Project %d %s reveived %s in the table of ghosts component',
+								this.projectService.project.id,
+								this.projectService.project.name,
+								dataSource.data.length);
+						}
+						this.dataSource = new ProjectGhostsDataSource(dataSource.data);
+					}
 				}
-				this.dataSource = new ProjectGhostsDataSource(dataSource.data);
-			}));
-
-		if (this.staffListService.allStaff$) {
-			this.subscriptions.add(
-				this.staffListService.allStaff$.subscribe(staff => {
-					this.allStaff = staff;
-			}));
-		}
+			)
+		);
 	}
-
+			
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
 	}
 
 	/**
-	 * The check Box for the id "technical" has been checked or unchecked.
+	 * The check Box for the id **"technical"** has been checked or unchecked.
+	 * 
+	 * @param ghost the ghost to be set as technical 
 	 */
-	checkTechnical(unknown: Unknown) {
-		if (unknown.technical) {
-			unknown.login = '';
-			unknown.idStaff = -1;
-			unknown.firstname = '';
-			unknown.lastname = '';
-			unknown.active = false;
-			unknown.external = false;
-
+	checkTechnical(ghost: Unknown): void {
+		if (ghost.technical) {
+			ghost.login = '';
+			ghost.idStaff = -1;
+			ghost.firstname = '';
+			ghost.lastname = '';
+			ghost.active = false;
+			ghost.external = false;
 		}
-		this.projectService.updateGhost (
-			this.projectService.project.id,
-			unknown.pseudo,
-			-1,
-			unknown.technical)
-		.pipe(take(1))
-		.subscribe(result => {
-			if (result) {
-				this.messageService.info('The pseudo ' + unknown.pseudo + ' is now '
-						+ (unknown.technical ? 'technical' : 'non technical'));
-			}
-		});
+
+		this.projectService.updateGhost$ (this.projectService.project.id, ghost.pseudo, -1, ghost.technical)
+			.pipe(take(1))
+			.subscribe({
+				next: result => {
+					if (result) {
+						this.messageService.info('The pseudo ' + ghost.pseudo + ' is now '
+								+ (ghost.technical ? 'technical' : 'non technical'));
+					}
+				}
+			});
 }
 
 	/**
 	 * The check Box for the id "active" has been checked or unchecked.
 	 */
-	checkActive(unknown: Unknown) {
+	checkActive(ghost: Unknown) {
 	}
 
 	/**
 	 * The check Box for the id "active" has been checked or unchecked.
 	 */
-	checkExternal(unknown: Unknown) {
+	checkExternal(ghost: Unknown) {
 	}
 
 	public checkValue(technical: boolean) {
@@ -271,12 +272,29 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 		this.table.renderRows();
 	}
 
+	/**
+	 * Handle the relation of this ghost to existing staff members
+	 * @param ghost the given ghost
+	 */
 	handleRelatedLogin(ghost: Unknown) {
+		if (!ghost.login) {
+			this.detachGhost(ghost);
+		} else {
+			this.attachGhost(ghost);
+		}
+	}
+
+	/**
+	 * Attach a ghost to an existing staff member
+	 * @param ghost The given ghost
+	 * @returns **TRUE** if we attached the ghost, **FALSE** if we detached
+	 */
+	attachGhost(ghost: Unknown) {
 
 		const selectedStaff = this.allStaff.filter(s => (s.login.toLowerCase().indexOf(ghost.login.toLowerCase()) === 0) );
 		if (traceOn()) {
-			if (selectedStaff) {
-				console.groupCollapsed('selected staff correspoding to %s', ghost.login);
+			if (selectedStaff.length > 0) {
+				console.groupCollapsed('selected staff corresponding to %s', ghost.login);
 				selectedStaff.forEach(staff => console.log (staff.firstName + ' ' + staff.lastName + ' & login : ' + staff.login));
 				console.groupEnd();
 			} else {
@@ -288,40 +306,56 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 			ghost.staffRelated = selectedStaff[0];
 			ghost.login = selectedStaff[0].login;
 			ghost.idStaff = ghost.staffRelated.idStaff;
-			this.projectService.updateGhost (
-				this.projectService.project.id,
-				ghost.pseudo,
-				ghost.idStaff,
-				false)
-			.pipe(take(1))
-			.subscribe(result => {
-				if (result) {
-					this.messageService.info('The pseudo ' + ghost.pseudo + ' has been associated to '
-						+ ghost.staffRelated.firstName + ' ' + ghost.staffRelated.lastName);
-				}
-			});
-			return true;
-		} else {
-			// If the ghost was already associated, we reset this association
-			if (ghost.idStaff  > 0) {
-				this.projectService.updateGhost (
-					this.projectService.project.id,
-					ghost.pseudo,
-					-1,
-					false)
+			this.projectService
+				.updateGhost$ (this.projectService.project.id, ghost.pseudo, ghost.idStaff, false)
+				.pipe(take(1))
+				.subscribe({
+					next: result => {
+						if (result) {
+							this.table.renderRows();
+
+							// We reset the cache to force a re-generation of the chart
+							this.sunburstCacheService.clearReponse();
+
+							this.messageService.info('The pseudo ' + ghost.pseudo + ' has been associated to '
+								+ ghost.staffRelated.firstName + ' ' + ghost.staffRelated.lastName);
+						}
+					}
+				});
+			
+		}
+	}
+
+	/**
+	 * Detach a ghost from an existing staff member
+	 * @param ghost The given ghost
+	 * @returns **TRUE** if we attached the ghost, **FALSE** if we detached
+	 */
+	 detachGhost(ghost: Unknown) {
+		// If the ghost was already associated, we reset this association
+		if (ghost.idStaff  > 0) {
+			this.projectService
+				.updateGhost$ (this.projectService.project.id, ghost.pseudo, -1, false)
 				.pipe(take(1))
 				.subscribe(result => {
 					if (result) {
 						this.messageService.info('The pseudo ' + ghost.pseudo + ' is no more associated to an existing staff member');
+						ghost.idStaff = -1;
+						ghost.firstname = '';
+						ghost.lastname = '';
+						ghost.login = '';						
 					}
-				});
-			}
-			ghost.idStaff = -1;
-			ghost.firstname = '';
-			ghost.lastname = '';
-			return false;
+				}
+			);
 		}
+		
+		this.table.renderRows();
+		// We reset the cache to force a re-generation of the chart
+		this.sunburstCacheService.clearReponse();
+
+		return false;
 	}
+
 	/**
 	 * @param ghost the actual ghost line concerned.
 	 * @returns TRUE if the related login typed is matching an existing staff member.

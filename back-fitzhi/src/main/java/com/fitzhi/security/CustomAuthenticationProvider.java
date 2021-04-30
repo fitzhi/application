@@ -10,7 +10,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +17,8 @@ import lombok.extern.slf4j.Slf4j;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
+
+import static com.fitzhi.Global.ROLE_TRUSTED_USER;
 
 @Component
 @Slf4j
@@ -41,9 +42,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
         try {
 			if (oStaff.get().isValidPassword(password)) {
 				List<GrantedAuthority> authorities = new ArrayList<>();
-				authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-			    return new UsernamePasswordAuthenticationToken(
-			      name, password, authorities);
+				authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
+			    return new UsernamePasswordAuthenticationToken(name, password, authorities);
 			} else {
 				throw new BadCredentialsException(String.format("Invalid login/password for %s", name));
 			}

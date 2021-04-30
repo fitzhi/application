@@ -105,6 +105,15 @@ public class Error {
 	public static final int CODE_BRANCH_IS_MISSING_IN_PROJECT = -1031;
 	public static final String MESSAGE_BRANCH_IS_MISSING_IN_PROJECT = "Branch name is missing in project {0} {1}";
 
+	public static final int CODE_BRANCH_DOES_NOT_EXIST = -1032;
+	public static final String MESSAGE_BRANCH_DOES_NOT_EXIST = "Branch name {0} does not exist (anymore?)";
+
+	public static final int CODE_CANNOT_DELETE_FILE = -1033;
+	public static final String MESSAGE_CANNOT_DELETE_FILE = "Cannot delete file {0}";
+
+	public static final int CODE_GIT_ERROR = -1034;
+	public static final String MESSAGE_GIT_ERROR = "GIT error for project {0} {1}";
+
 	private Error() {
 	}
 	

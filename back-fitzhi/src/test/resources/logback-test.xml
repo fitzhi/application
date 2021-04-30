@@ -12,23 +12,17 @@
 		<appender-ref ref="STDOUT" />
 	</root>
 
-
-	<logger name="com.fitzhi.data.source" additivity="false">
-		<level value="DEBUG" />
-		<appender-ref ref="STDOUT" />
-	</logger>
-
-	<logger name="com.fitzhi.bean.impl.RiskCommitAndDevActiveProcessorTest" additivity="false">
-		<level value="DEBUG" />
-		<appender-ref ref="STDOUT" />
-	</logger>
-
-	<logger name="com.fitzhi.bean.impl.StaffHandlerCreateEmptyTest" additivity="false">
+	<logger name="com.fitzhi.controller" additivity="false">
 		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 	</logger>
 
 <!-- Parking for my logging. 
+
+	<logger name="com.fitzhi.source.crawler.git.BatchGitCrawlerTest" additivity="false">
+		<level value="DEBUG" />
+		<appender-ref ref="STDOUT" />
+	</logger>
 
 	<logger name="com.fitzhi.bean.impl" additivity="false">
 		<level value="DEBUG" />

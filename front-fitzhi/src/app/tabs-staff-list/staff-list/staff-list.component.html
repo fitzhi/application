@@ -50,6 +50,14 @@
 
   </table>
 
+	<mat-paginator #paginator 
+		[length]="dataSource?.data.length"
+		[pageSizeOptions]="[5, 10, 20, 30]" 
+		[pageSize]=pageSize.value
+		(page)="page($event)"
+		showFirstLastButtons>
+	</mat-paginator>
+
 </div>
 
 

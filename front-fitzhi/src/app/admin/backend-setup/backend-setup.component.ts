@@ -2,11 +2,11 @@ import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/cor
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { BaseComponent } from '../../base/base.component';
 import { HttpClient } from '@angular/common/http';
-import { Constants } from '../../constants';
 import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { take } from 'rxjs/operators';
 import { traceOn } from 'src/app/global';
+import { environment } from '../../../environments/environment';
 
 @Component({
 	selector: 'app-backend-setup',
@@ -38,17 +38,19 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
      */
 	veryFirstConnection = false;
 
+	public environment = environment;
+
 	public backendSetupForm = new FormGroup({
 		url: new FormControl('', [Validators.maxLength(16)])
 	});
 
 
 	constructor(
-		private httpClient: HttpClient,
 		private messageService: MessageService,
 		private backendSetupService: BackendSetupService) { super(); }
 
 	ngOnInit() {
+		console.log ('starting release %s',  environment.version);
 		this.backendSetupForm.get('url').setValue(
 			this.backendSetupService.hasSavedAnUrl() ?
 				this.backendSetupService.url() : this.backendSetupService.defaultUrl);
@@ -70,7 +72,7 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
 			.pipe(take(1))
 			.subscribe(
 				data => {
-					this.veryFirstConnection = (data === 'true');
+					this.veryFirstConnection = data.connected;
 					if (traceOn() && this.veryFirstConnection) {
 						console.log('This is the very first connection into fitzhì');
 					}

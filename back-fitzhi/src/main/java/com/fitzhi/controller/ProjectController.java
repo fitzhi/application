@@ -28,6 +28,7 @@ import javax.annotation.PostConstruct;
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.CacheDataHandler;
+import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.bean.SkillHandler;
@@ -83,11 +84,25 @@ public class ProjectController extends BaseRestController {
 	@Autowired
 	StaffHandler staffHandler;
 
+	/**
+	 * This service stores, and provides the last result.
+	 */
 	@Autowired
 	CacheDataHandler cacheDataHandler;
 
+	/**
+	 * This service saves, and removes the data associated to projects.
+	 */
+	@Autowired
+	DataHandler dataHandler;
+
+	/**
+	 * This service is in charge of shuffle the data for anonymous purpose.
+	 */
 	@Autowired
 	ShuffleService shuffleService;
+
+
 
 	/**
 	 * Source control parser.
@@ -670,7 +685,12 @@ public class ProjectController extends BaseRestController {
 
 		// We renitialize the local repository if the user asks for a RESET, comparing to a REFRESH 
 		projectHandler.saveLocationRepository(idProject, null);
+		// We reinitialize the project reference in the staff collection
+		staffHandler.removeProject(idProject); 
+		// Remove the GIT repository
 		cacheDataHandler.removeRepository(project);
+		// Remove all crawling intermediate files
+		dataHandler.removeCrawlerFiles(project);
 
 		// Launching the asynchronous generation
 		scanner.generateAsync(project, new SettingsGeneration(project.getId()));

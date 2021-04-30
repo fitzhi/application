@@ -1,10 +1,10 @@
 <table mat-table #table 
     [dataSource]="filenames" 
-    class="mat-elevation-z8 tableLegends"
+    class="mat-elevation-z8 tableFilenames"
     summary="List of filenames">
 
   <ng-container matColumnDef="filename">
-    <th id="filename" mat-header-cell *matHeaderCellDef>filename</th>
+    <th id="filename" mat-header-cell *matHeaderCellDef>Filename</th>
     <td class="td-filename" mat-cell  *matCellDef="let row">{{row.filename}}</td>
   </ng-container>
 
@@ -16,3 +16,11 @@
   <tr mat-header-row *matHeaderRowDef="tblColumns; sticky: true"></tr>
   <tr mat-row *matRowDef="let row; columns: tblColumns;" class="row_any"></tr>
 </table>
+
+<mat-paginator #paginator 
+	[length]="filenames?.data.length"
+	[pageSizeOptions]="[5, 10, 20, 30]" 
+	[pageSize]=pageSize.value
+  (page)="page($event)"
+  showFirstLastButtons>
+</mat-paginator>

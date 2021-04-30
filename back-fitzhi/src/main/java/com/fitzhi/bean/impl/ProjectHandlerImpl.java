@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.bean.impl;
 
 import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
@@ -376,13 +373,12 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			
 			if (oGhost.isPresent()) {
 				oGhost.get().setIdStaff(idAssociatedStaff);
-
+				this.dataUpdated = true;
 				if (!projectAlreadyDeclared) {
-					staff.addMission(new Mission(idAssociatedStaff, project.getId(), project.getName()));
+					staffHandler.addMission(idAssociatedStaff, project.getId(), project.getName());
 				}
 				return;
 			}
-			this.dataUpdated = true;
 		}
 		throw new ApplicationRuntimeException(
 				String.format("%s does not exist anymore in the project %s (id: %d)",
@@ -483,7 +479,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	public void integrateGhosts(int idProject, Set<String> unknownPseudos) throws ApplicationException {
 
 		Project project = get(idProject);
-		
+
 		List<Ghost> ghosts = project.getGhosts()
 			.stream()
 			.filter (ghost ->  (ghost.getIdStaff() > 0) || (ghost.isTechnical()) )

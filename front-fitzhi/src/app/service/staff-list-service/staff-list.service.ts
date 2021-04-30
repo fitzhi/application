@@ -53,9 +53,9 @@ export class StaffListService {
 
 
 	/**
-	 * Return the collaborator associated with this id.
+	 * Return the collaborator associated with this id in an observable.
 	 */
-	getCollaborator(id: number): Observable<Collaborator> {
+	getCollaborator$(id: number): Observable<Collaborator> {
 
 		let foundCollab: Collaborator = null;
 		foundCollab = this.allStaff.find(collab => collab.idStaff === id);
@@ -80,6 +80,21 @@ export class StaffListService {
 						}
 					}
 				}));
+		}
+	}
+
+	/**
+	 * Return the __collaborator__ associated with this id, or __null__ if none exists.
+	 */
+	public getCollaborator(id: number): Collaborator {
+		const staff = this.allStaff.find(collab => collab.idStaff === id);
+		if (!staff) {
+			if (traceOn()) {
+				console.log ('Cannot retrieve the staff member with the identifier %d', id);
+			}
+			return null;
+		} else {
+			return staff;
 		}
 	}
 

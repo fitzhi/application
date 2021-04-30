@@ -15,9 +15,9 @@ public class AsyncExceptionHandler implements AsyncUncaughtExceptionHandler {
     public void handleUncaughtException(Throwable throwable, Method method, Object... obj) {
 
         log.error(getStackTrace(throwable));
-        log.error("Method name - %s", method.getName());
+        log.error(String.format("Method name - %s", method.getName()));
         for (Object param : obj) {
-            log.error("Parameter value - %s", param);
+            log.error(String.format("Parameter value - %s", param));
         }
     }
 }

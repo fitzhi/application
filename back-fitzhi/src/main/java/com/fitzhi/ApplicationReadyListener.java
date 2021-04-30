@@ -1,6 +1,6 @@
 package com.fitzhi;
 
-import com.fitzhi.source.crawler.RepoScanner;
+import com.fitzhi.source.crawler.BatchRepositoryCrawler;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,12 +10,16 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * This is listening the startup of the application to launch a global code analysis in batch mode
+ * if the setting {@code "reboot.code.analysis"} in {@code application.properties} is set to {@code true}
+ */
 @Component
 @Slf4j
-public class ApplicationReadyListner implements ApplicationListener<ApplicationReadyEvent> {
+public class ApplicationReadyListener implements ApplicationListener<ApplicationReadyEvent> {
 
 	@Autowired
-	RepoScanner repoScanner;
+	BatchRepositoryCrawler batchRepoScanner;
 
 	/**
 	 * Number of days of inactivity before inactivation of a staff member.
@@ -28,7 +32,7 @@ public class ApplicationReadyListner implements ApplicationListener<ApplicationR
 	public void onApplicationEvent(ApplicationReadyEvent event) {
 		if (rebootCodeAnalysis) {
 			try {
-				repoScanner.generateAllAsync();
+				batchRepoScanner.completeGeneration();
 			} catch (Exception e) {
 				log.error(e.getMessage(), e);
 			}

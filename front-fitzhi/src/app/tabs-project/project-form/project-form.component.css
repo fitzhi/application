@@ -50,10 +50,6 @@ div.explanation_access {
 	margin-bottom: 2em;
 }
 
-.required {
-	font-weight: 600;
-}
-
 div.skills {
 	margin-top: 20px;
 }
@@ -129,7 +125,7 @@ div.buttons_toggle button, div.buttons_toggle button:hover {
 	background-color: transparent;
 	padding-left: 10px;
 	padding-right: 10px;
-	margin: 0px 10px 0px 5px;
+	margin: 0 10px 0 5px;
 	font-size: 27px;
 }
 
@@ -172,13 +168,13 @@ div.message-git {
 }
 div.message-git p {
 	color: var(--color-warning);
-	margin-bottom: 0px;
+	margin-bottom: 0;
 }
 
 label.alert {
-	width: 100%; 
+	width: 100%;
 	font-size: 10px;
-} 
+}
 
 #buttonOk {
 	background-color: transparent;

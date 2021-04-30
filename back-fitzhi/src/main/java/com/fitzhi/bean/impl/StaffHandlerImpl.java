@@ -601,15 +601,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		synchronized (lockDataUpdated) {
 			Map<Integer, Staff> company = getStaff();
 			if (staff.getIdStaff() <= 0) {	
-				try {
-					int max = company.keySet().stream()
-						.mapToInt(v->v)
-						.max()
-						.orElseThrow(NoSuchElementException::new);
-						staff.setIdStaff(max + 1);
-				} catch (final NoSuchElementException e) {
-					staff.setIdStaff(1);
-				}
+				staff.setIdStaff(nextIdStaff());
 			}
 			company.put(staff.getIdStaff(), staff);
 			if (log.isInfoEnabled()) {
@@ -656,6 +648,16 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			Staff staff = getStaff().remove(idStaff);
 			this.dataUpdated = true;
 			return staff;
+		}
+	}
+
+	@Override
+	public void removeProject(int idProject) {
+		synchronized (lockDataUpdated) {
+			for (Staff staff : this.getStaff().values()) {
+				staff.getMissions().removeIf(elt -> (elt.getIdProject() == idProject));
+			}
+			this.dataUpdated = true;
 		}
 	}
 
@@ -886,5 +888,29 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			.isPresent(); 
 	}
 
+	@Override
+	public int nextIdStaff() {
+		Map<Integer, Staff> company = getStaff();
+		try {
+			int max = company.keySet().stream()
+				.mapToInt(v->v)
+				.max()
+				.orElseThrow(NoSuchElementException::new);
+				return max+1;
+		} catch (final NoSuchElementException e) {
+			return 1;
+		}
+	}
+
+	@Override
+	public void removeMission(final int idStaff, final int idProject) throws ApplicationException {
+		synchronized (lockDataUpdated) {
+			Staff staff = getStaff(idStaff);
+			Optional<Mission> oMission = staff.getMissions().stream().filter(pr -> (pr.getIdProject() == idProject)).findFirst();
+			if (oMission.isPresent()) {
+				staff.getMissions().remove(oMission.get());
+			}
+		}
+	}
 	
 }

@@ -68,6 +68,7 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 					const sonarServer = this.sonarService.getSonarServer(this.projectService.project);
 					if (sonarServer) {
 						const version = parseFloat(sonarServer.sonarVersion.substring(0, 3));
+						// The releases of Sonar prior to version 7.1 do not support the API Rest with these metrics
 						this.isSonarVersion71x = (version > 7.1);
 						if (traceOn()) {
 							if (this.isSonarVersion71x) {
@@ -100,11 +101,13 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 	}
 
 	/**
-	 * This method is recurcive !!
+	 * _**This method is recurcive !!**_
+	 * 
 	 * Load the Sonar badge corresponding to the numero of badge.
 	 * @param badgeNumero the numero of badge
 	 */
 	loadBadge(badgeNumero: number) {
+
 		const sonarServer = this.sonarService.getSonarServer(this.projectService.project);
 		if ((sonarServer) && (badgeNumero === sonarServer.projectSonarMetrics.length)) {
 			this.safeBadge$.next(this.safeBadge);
@@ -112,14 +115,14 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 		}
 		this.subscriptions.add(
 			this.sonarService
-				.loadBadge(this.projectService.project, this.sonarKey, sonarServer.projectSonarMetrics[badgeNumero].key)
+				.loadProjectBadge$(this.projectService.project, this.sonarKey, sonarServer.projectSonarMetrics[badgeNumero].key)
 				.subscribe(svg => {
 					if (svg) {
 						this.safeBadge.push(this.sanitize.bypassSecurityTrustHtml(svg));
 						this.safeBadgeLength = this.safeBadge.length;
 						this.loadBadge(badgeNumero + 1);
 					} else {
-						throw new Error('INTERNAL ERROR : loadBadge did not generate a badge.');
+						throw new Error('INTERNAL ERROR : loadBadge(' + badgeNumero + ') did not generate a badge.');
 					}
 				}));
 	}

@@ -5,6 +5,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BehaviorSubject } from 'rxjs';
@@ -28,6 +29,7 @@ describe('ProjectAuditComponent', () => {
 	let referentialService: ReferentialService;
 	let listProjectsService: ListProjectsService;
 	let projectService: ProjectService;
+	const projects = [];
 
 	@Component({
 		selector: 'app-host-component',
@@ -38,6 +40,9 @@ describe('ProjectAuditComponent', () => {
 					`
 	})
 	class TestHostComponent {
+		constructor() {
+			localStorage.setItem('project-list.pageSize', '7');
+		}
 	}
 
 	beforeEach(async(() => {
@@ -66,8 +71,43 @@ describe('ProjectAuditComponent', () => {
 		projectService = TestBed.inject(ProjectService);
 
 		listProjectsService = TestBed.inject(ListProjectsService);
+		
+		listProjectsService.filteredProjects$.next(projects);
+		fixture.detectChanges();
 
-		const projects = [];
+
+	});
+
+	it('should be created without any error', () => {
+		expect(component).toBeTruthy();
+	});
+
+	it('should display the help panel if the table is empty', () => {
+		expect(fixture.debugElement.query(By.css('#help-search'))).toBeDefined();
+	});
+
+	it('should remove the help panel if the table is NOT empty', () => {
+		initProject();
+		fixture.detectChanges();
+		expect(fixture.debugElement.query(By.css('#help-search'))).toBeNull();
+	});
+
+	it('should display a page with a number of projects equal to the "project-list.pageSize" parameter in localStorage', () => {
+		initProject();
+		fixture.detectChanges();
+
+		expect(fixture.debugElement.query(By.css('#idProject-0'))).toBeDefined();
+		expect(fixture.debugElement.query(By.css('#idProject-6'))).toBeDefined();
+
+		expect(fixture.debugElement.query(By.css('#idProject-6')).nativeElement.textContent)
+			.toBe('Project number 6');
+
+		console.log(fixture.debugElement.query(By.css('#idProject-6')));
+
+		expect(fixture.debugElement.query(By.css('#idProject-7'))).toBeNull();
+	});
+
+	function initProject() {
 		for (let i = 0; i < 20; i++) {
 			const p = new Project();
 			p.id = i;
@@ -82,17 +122,7 @@ describe('ProjectAuditComponent', () => {
 			p.ecosystems = [];
 			projects.push(p);
 		}
-
-		fixture.detectChanges();
-		
 		listProjectsService.filteredProjects$.next(projects);
-		fixture.detectChanges();
 
-
-	});
-
-	it('should be created without any error', () => {
-		expect(component).toBeTruthy();
-	});
-
+	}
 });

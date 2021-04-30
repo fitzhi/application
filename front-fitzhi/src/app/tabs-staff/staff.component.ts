@@ -67,7 +67,7 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
 			 */
 			document.querySelector('body').style.cssText = '--actions-button-visible: hidden';
 			if (this.idStaff != null) {
-				this.staffListService.getCollaborator(this.idStaff).subscribe(
+				this.staffListService.getCollaborator$(this.idStaff).subscribe(
 					(collab: Collaborator) => {
 						this.staffDataExchangeService.changeCollaborator(collab);
 						this.collaborator = collab;

@@ -1,8 +1,7 @@
 
 <form [formGroup]="backendSetupForm" (ngSubmit)="onSubmit()">
     <div id="backendSetup" class="col-md-8">
-        <mat-grid-list cols="5"  rowHeight="40px">
-
+        <mat-grid-list cols="5" rowHeight="40px">
             <mat-grid-tile [colspan]="4" [rowspan]="6"  >
                 Welcome !<br/><br/>
                 We have detected that this is your first execution of fitzhì for this desktop.<br/>
@@ -29,7 +28,7 @@
                         (keyup)="urlInEdition()"
                         formControlName="url"/>
             </mat-grid-tile>
-
         </mat-grid-list>
     </div>
 </form>
+<footer class="bg-light text-center text-lg-start">Fitzhi&copy; {{environment.version}} {{environment.buildTime}}</footer>

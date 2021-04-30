@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { doesNotReject } from 'assert';
 
 import { InstallService } from './install.service';
 

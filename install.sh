@@ -2,23 +2,23 @@
 
 helpFunction()
 {
-   echo ""
-   echo "Usage: $0 [-f Y/N] [-d inst_dir] [-?]"
-   echo -e "\t-f (Y/N) force mode is ON. Script will erase all data in the installation directory"
-   echo -e "\t-d set the installation directory. Default is 'deploy'"
-   echo -e "\t-t (Y/N) activate or inactivate the test"
-   echo -e "\t-? display this Help message before the installation"
-   exit 1 # Exit script after printing help
+	echo ""
+	echo "Usage: $0 [-f Y/N] [-d inst_dir] [-?]"
+	echo -e "\t-f (Y/N) force mode is ON. Script will erase all data in the installation directory"
+	echo -e "\t-d set the installation directory. Default is 'deploy'"
+	echo -e "\t-t (Y/N) activate or inactivate the test"
+	echo -e "\t-? display this Help message before the installation"
+	exit 1 # Exit script after printing help
 }
 
 while getopts "f:d:t:?" opt
 do
-   case "$opt" in
-      f) force="$OPTARG";;
-      d) dir="$OPTARG";;
-      t) test="$OPTARG";;
-      ? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
-   esac
+	case "$opt" in
+		f) force="$OPTARG";;
+		d) dir="$OPTARG";;
+		t) test="$OPTARG";;
+		? ) helpFunction ;; # Print helpFunction in case parameter is non-existent
+	esac
 done
 
 echo "Initializing the Fitzhì backend"

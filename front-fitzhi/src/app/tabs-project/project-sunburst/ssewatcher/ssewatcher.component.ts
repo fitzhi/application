@@ -1,5 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { BaseComponent } from 'src/app/base/base.component';
+import { ActivityLog } from 'src/app/data/activity-log';
 import { SunburstCinematicService } from '../service/sunburst-cinematic.service';
 import { SsewatcherService } from './service/ssewatcher.service';
 
@@ -29,7 +30,10 @@ export class SSEWatcherComponent extends BaseComponent implements OnInit, OnDest
 					if (doneAndOk) {
 						this.ssewatcherService.initEventSource(this.url);
 					}
-			}}));
+				}
+			})
+		);
+
 	}
 
 	/**

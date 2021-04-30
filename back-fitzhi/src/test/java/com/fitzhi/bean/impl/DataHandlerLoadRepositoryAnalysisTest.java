@@ -22,7 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
- * Testing the mehods {@link DataHandler#loadRepositoryAnalysis(Project)}
+ * Testing the method {@link DataHandler#loadRepositoryAnalysis(Project)}
  * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL

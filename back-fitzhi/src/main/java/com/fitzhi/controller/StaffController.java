@@ -2,8 +2,10 @@ package com.fitzhi.controller;
 
 import static com.fitzhi.Error.CODE_STAFF_ACTIVE_ON_PROJECT;
 import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
+import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_STAFF_ACTIVE_ON_PROJECT;
 import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Global.BACKEND_RETURN_CODE;
 import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
 
@@ -600,7 +602,7 @@ public class StaffController extends BaseRestController {
 	}	
 	
 	/**
-	 * Add a project assigned to a developer.
+	 * <p>Add a project assigned to a developer.</p>
 	 * 
 	 * @param param
 	 *            the body of the post containing an instance of
@@ -645,42 +647,53 @@ public class StaffController extends BaseRestController {
 	}
 
 	/**
-	 * Revoke the participation of staff member into a project.
+	 * <p>
+	 * Revoke the participation of staff member from a project.
+	 * </p>
+	 * <p>
+	 * <i>Associated HTTP verb is {@code 'delete'}
+	 * </p>
+	 * @param idProject the given Project identifier
+	 * @param idStaff the given Staff identifier
 	 */
-	@PostMapping("/project/del")
-	public ResponseEntity<BooleanDTO> revokeProject(@RequestBody BodyParamStaffProject param) {
+	@DeleteMapping("/{idStaff}/project/{idProject}")
+	public ResponseEntity<Boolean> revokeProject(
+		@PathVariable("idProject") int idProject, 
+		@PathVariable("idStaff") int idStaff) throws ApplicationException, NotFoundException {
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format(
-				"POST command on /staff/project/del with params idStaff : %d,idProject : %d", 
-				param.getIdStaff(), param.getIdProject()));
+			log.debug(String.format("DELETE verb on /staff/%d/project/%d", idStaff, idProject));
 		}
 
-		final Staff staff = staffHandler.getStaff().get(param.getIdStaff());
+		final Staff staff = staffHandler.getStaff(idStaff);
 		if (staff == null) {
-			return new ResponseEntity<>(
-					new BooleanDTO(CODE_STAFF_NOFOUND, 
-					MessageFormat.format(MESSAGE_STAFF_NOFOUND, param.getIdStaff())), 
-					new HttpHeaders(), 
-					HttpStatus.NOT_FOUND);
+			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 
-		Optional<Mission> oProject = staff.getMissions().stream().filter(pr -> (pr.getIdProject() == param.getIdProject())).findFirst();
-		if (oProject.isPresent()) {
-			
-			Mission mission = oProject.get();
+		final Project project = projectHandler.get(idProject);
+		if (project == null) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+		}
+
+		Optional<Mission> oMission = staff.getMissions().stream().filter(pr -> (pr.getIdProject() == idProject)).findFirst();
+		if (oMission.isPresent()) {
+			Mission mission = oMission.get();
 			if (mission.getNumberOfCommits() > 0) {
-				return new ResponseEntity<>(
-						new BooleanDTO(CODE_STAFF_ACTIVE_ON_PROJECT, 
-						MessageFormat.format(MESSAGE_STAFF_ACTIVE_ON_PROJECT, 
-								mission.getNumberOfCommits())), 
-						new HttpHeaders(), 
-						HttpStatus.NOT_FOUND);
+				throw new ApplicationException(
+					CODE_STAFF_ACTIVE_ON_PROJECT, 
+					MessageFormat.format(MESSAGE_STAFF_ACTIVE_ON_PROJECT, mission.getNumberOfCommits()));
 			}
-			staff.getMissions().remove(oProject.get());
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Remove project %d from staff %d", idProject, idStaff));
+			}
+			staffHandler.removeMission(idStaff, idProject);
+		} else {
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Project %d is not registered for staff %d", idProject, idStaff));
+			}
 		}
 
-		return new ResponseEntity<>(new BooleanDTO(), new HttpHeaders(), HttpStatus.OK);
+		return new ResponseEntity<>(Boolean.TRUE, new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	ResponseEntity<StaffDTO> postErrorReturnBodyMessage(int code, String message) {

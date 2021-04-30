@@ -5,13 +5,12 @@ name: Node.js CI
 
 on:
   push:
-    branches: [ master, release-1.3 ]
+    branches: [ master, release-1.4 ]
   pull_request:
     branches: [ master ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -21,11 +20,20 @@ jobs:
         node-version: [10.x, 12.x, 14.x]
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
+    - name: Use Node.js ${{matrix.node-version}}
       uses: actions/setup-node@v1
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: ${{matrix.node-version}}
     - run: npm --version
     - run: npm ci
     - run: npm run build
     - run: npm run test
+    #
+    # These lines are commented because I (Frederic VIDAL) could not find a way to commit changes to another repository from this repository
+    #
+    # - name: Fitzhi front application deployment
+    #  if: ${{ (github.ref == 'refs/heads/release-1.4') && (matrix.node-version == '12.x') && ! failure() }}
+    #  run: |
+    #    echo "I only run for the branch "${{github.ref}} and node version ${{matrix.node-version}}
+    #    ./deploy.sh
+

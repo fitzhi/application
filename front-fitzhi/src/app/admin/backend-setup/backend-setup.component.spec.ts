@@ -19,6 +19,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatDialogModule } from '@angular/material/dialog';
+import { FirstConnection } from 'src/app/data/first-connection';
 
 describe('BackendSetupComponent', () => {
 	let component: BackendSetupComponent;
@@ -73,7 +74,7 @@ describe('BackendSetupComponent', () => {
 		expect('http://localhost:8080').toEqual(field('#url').value);
 
 		const backendSetupService = TestBed.inject(BackendSetupService);
-		const spy = spyOn(backendSetupService, 'isVeryFirstConnection').and.returnValue(of('true'));
+		const spy = spyOn(backendSetupService, 'isVeryFirstConnection').and.returnValue(of(new FirstConnection(true, null)));
 
 		expect(field('#submitButton').getAttribute('class')).toEqual('urlEdition');
 

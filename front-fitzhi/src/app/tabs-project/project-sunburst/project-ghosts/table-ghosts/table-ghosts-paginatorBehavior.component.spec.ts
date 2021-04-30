@@ -159,7 +159,7 @@ describe('TableGhostsComponent', () => {
 				},
 			];
 
-			this.projectGhostsDataSource = new ProjectGhostsDataSource(this.ghosts);
+			this.projectGhostsDataSource = new ProjectGhostsDataSource(this.ghosts, []);
 			this.dataSourceGhosts$ = new BehaviorSubject(this.projectGhostsDataSource);
 		}
 	}

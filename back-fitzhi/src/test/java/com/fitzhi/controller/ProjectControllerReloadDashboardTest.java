@@ -1,18 +1,20 @@
 package com.fitzhi.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +39,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ProjectControllerReloadDashboardTest {
-    
+	
 	private int UNKNOWN_ID_PROJECT = 999999;
 	
 	/**
@@ -51,11 +53,11 @@ public class ProjectControllerReloadDashboardTest {
 	@Autowired
 	private ProjectHandler projectHandler;
 
-    @MockBean
-    CacheDataHandler cacheDataHandler;
+	@MockBean
+	CacheDataHandler cacheDataHandler;
 
-    @MockBean
-    RepoScanner repoScanner;
+	@MockBean
+	RepoScanner repoScanner;
 
 	@Before
 	public void before() throws Exception {
@@ -66,19 +68,22 @@ public class ProjectControllerReloadDashboardTest {
 	
 	@Test
 	@WithMockUser
-	public void testResetDashboardUnknownProject() throws Exception {
+	public void testReloadDashboardUnknownProject() throws Exception {
 		this.mvc.perform(post("/api/project/" + UNKNOWN_ID_PROJECT + "/sunburst")).andExpect(status().isNotFound());
 	}
 	
 	@Test
 	@WithMockUser
-	public void testResetDashboardKnownProject() throws Exception {
-        when(cacheDataHandler.removeRepository(any())).thenReturn(true);
-        when(repoScanner.generateAsync(any(), any())).thenReturn(null);
+	public void testReloadDashboardKnownProject() throws Exception {
+		doNothing().when(repoScanner).generateAsync(any(), any());
 		this.mvc.perform(post("/api/project/1789/sunburst")).andExpect(status().isAccepted());
 		Mockito.verify(cacheDataHandler, times(1)).removeRepository(any());
 		Assert.assertNotNull("The location repository should NOT be reset", projectHandler.get(1789).getLocationRepository());
 		Assert.assertEquals("myLocationRepository", projectHandler.get(1789).getLocationRepository());
 	}
 
+	@After
+	public void after() throws ApplicationException {
+		projectHandler.removeProject(1789);
+	}
 }

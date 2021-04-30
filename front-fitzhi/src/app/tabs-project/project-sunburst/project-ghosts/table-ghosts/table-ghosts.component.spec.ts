@@ -14,16 +14,40 @@ import { Project } from 'src/app/data/project';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { By } from '@angular/platform-browser';
 import { ProjectService } from 'src/app/service/project.service';
+import { SunburstCacheService } from '../../service/sunburst-cache.service';
+import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 
 describe('TableGhostsComponent', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
+	let sunburstCacheService: SunburstCacheService;
+	let projectService: ProjectService;
+	let staffListService: StaffListService;
+
+	let allStaff = [
+		{
+			idStaff: 1964,
+			login: 'frvidal',
+			firstName: 'Frédéric',
+			lastName: 'VIDAL',
+			nickName: 'frvidal',
+			email: 'frederic.vidal@fitzhi.com',
+			level: 'Developper',
+			external: false,
+			forceActiveState: false,
+			active: true,
+			dateInactive: null,
+			experiences: [],
+			missions: []
+		}
+	];
 
 	@Component({
 		selector: 'app-host-component',
 		template:
 			`
-			<p>Ghosts list</p>
+			<h2 style="margin: 10px">The Ghosts...</h2>
+			
 			<div style="width:80%;height:50%">
 				<app-table-ghosts [dataSourceGhosts$]="dataSourceGhosts$">
 				</app-table-ghosts>
@@ -72,7 +96,8 @@ describe('TableGhostsComponent', () => {
 						staffRelated: new Collaborator(),
 						staffRecorded: false,
 					},
-				]
+				],
+				allStaff
 			);
 			this.dataSourceGhosts$ = new BehaviorSubject(this.projectGhostsDataSource);
 		}
@@ -81,7 +106,7 @@ describe('TableGhostsComponent', () => {
 	beforeEach(async(() => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [TestHostComponent, TableGhostsComponent],
-			providers: [StaffService, ProjectService],
+			providers: [StaffService, ProjectService, SunburstCacheService, ProjectService, StaffListService],
 			imports: []
 		};
 		InitTest.addImports(testConf.imports);
@@ -92,6 +117,9 @@ describe('TableGhostsComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
+		sunburstCacheService = TestBed.inject(SunburstCacheService);
+		projectService = TestBed.inject(ProjectService);
+		staffListService = TestBed.inject(StaffListService);
 		fixture.detectChanges();
 	});
 
@@ -124,6 +152,8 @@ describe('TableGhostsComponent', () => {
 	it('Create a simple collaborator', () => {
 		expect(component).toBeTruthy();
 
+		const spyClearCache = spyOn(sunburstCacheService, 'clearReponse');
+		
 		const staffService = TestBed.inject(StaffService);
 		const spy = spyOn(staffService, 'save$')
 			.and.returnValue(of(
@@ -152,6 +182,62 @@ describe('TableGhostsComponent', () => {
 
 		const buttonDeleted = fixture.debugElement.nativeElement.querySelector('#addStaff-1');
 		expect(buttonDeleted).toBeNull();
+
+		expect(spyClearCache).toHaveBeenCalled();
+	});
+
+	it('Connect a ghost to ...in fact... nobody, because there is no existing developer for the given pseudo', () => {
+
+		const spyClearCache = spyOn(sunburstCacheService, 'clearReponse');
+		const spyUpdateGhost$ = spyOn(projectService, 'updateGhost$');
+
+		let login: HTMLInputElement = fixture.debugElement.query(By.css('#login-1')).nativeElement;
+		expect(login).toBeDefined();
+		login.value = 'some Value';
+		login.dispatchEvent(new Event('input'));
+
+		expect(spyClearCache).not.toHaveBeenCalled();
+		expect(spyUpdateGhost$).not.toHaveBeenCalled();
+
+		component.tableGhostsComponent.renderRows();
+		fixture.detectChanges();
+
+		const buttonAddStaff = fixture.debugElement.nativeElement.querySelector('#addStaff-1');
+		expect(buttonAddStaff).toBeDefined();
+
+
+	});
+
+	it('Connect a ghost the existing developer frvidal for the given login', () => {
+
+		const buttonAddStaff: HTMLInputElement = fixture.debugElement.query(By.css('#addStaff-1')).nativeElement;
+		expect(buttonAddStaff.disabled).toBeFalsy();
+
+		let firstName = fixture.debugElement.query(By.css('#firstname-1')).nativeElement;
+		expect(firstName.value).toBe('');
+
+		const lastName = fixture.debugElement.query(By.css('#lastname-1')).nativeElement;
+		expect(lastName.value).toBe('');
+
+		const spyClearCache = spyOn(sunburstCacheService, 'clearReponse');
+		const spyUpdateGhost$ = spyOn(projectService, 'updateGhost$').and.returnValue(of(true));
+
+		staffListService.allStaff$.next(allStaff);
+
+		let login: HTMLInputElement = fixture.debugElement.query(By.css('#login-1')).nativeElement;
+		expect(login).toBeDefined();
+		login.value = 'frvidal';
+		login.dispatchEvent(new Event('input'));
+
+		expect(spyClearCache).toHaveBeenCalled();
+		expect(spyUpdateGhost$).toHaveBeenCalled();
+
+		component.tableGhostsComponent.renderRows();
+		fixture.detectChanges();
+
+		expect(buttonAddStaff.disabled).toBeTrue();
+		expect(fixture.debugElement.query(By.css('#firstname-1'))).toBeNull();
+		expect(fixture.debugElement.query(By.css('#lastname-1'))).toBeNull();
 
 	});
 

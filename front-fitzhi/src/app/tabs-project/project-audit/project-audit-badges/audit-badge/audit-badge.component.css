@@ -56,17 +56,13 @@ div.formfieldWeight {
 
 #weight {
     text-align: right;
-    width: 30px;
+    width: 100%;
+    padding-right: 5px;
 }
   
 #weight::-webkit-outer-spin-button,
 #weight::-webkit-inner-spin-button {
     display: none;
-}
-
-
-input.weight {
-    width: 20%;
 }
 
 div.sliderWeight {

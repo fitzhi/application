@@ -4,3 +4,12 @@
 .row-pie-projects {
     height: 40px;
 }
+.mat-paginator {
+    font-size: 10px !important;
+}
+
+.row-pie-projects:hover {
+    border: 1px solid gray;
+    font-weight: 600;
+    cursor: pointer;
+}

@@ -172,7 +172,7 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	* Create a new project, read the saved one, and return the project in an observable. 
+	* Create a new project, read the saved one, and return the project in an observable.
 	*/
 	createNewProject (): Observable<Project> {
 		if (traceOn()) {
@@ -342,7 +342,7 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	 * GET the project associated to this id from the back-end od skiller. Will throw a 404 if this id is not found.
+	 * GET the project associated to this id from the back-end of Fitzhi. Will throw a 404 if this id is not found.
 	 */
 	get(id: number): Observable<Project> {
 		const url = this.backendSetupService.url() + '/project/' + id;
@@ -526,7 +526,7 @@ export class ProjectService extends InternalService {
 			.subscribe({
 				next: (branches: string[]) => {
 					if (traceOn()) {
-						console.groupCollapsed("List of branches for project %s", this.project.name);
+						console.groupCollapsed('List of branches for project %s', this.project.name);
 						branches.forEach(branch => console.log (branch));
 						console.groupEnd();
 					}
@@ -609,7 +609,7 @@ export class ProjectService extends InternalService {
 	* @param idRelatedStaff a staff identifier if the ghost has to be related to him, or -1 if this pseudo is related to no one.
 	* @param technical: TRUE if the ghost is in fact a technical user used for administration operations
 	*/
-	updateGhost(idProject: number, pseudo: string, idRelatedStaff: number, technical: boolean): Observable<boolean> {
+	updateGhost$(idProject: number, pseudo: string, idRelatedStaff: number, technical: boolean): Observable<boolean> {
 		if (traceOn()) {
 			console.groupCollapsed('Updating a ghost');
 			console.log ('idProject', idProject);
@@ -664,7 +664,9 @@ export class ProjectService extends InternalService {
 				if (riskLegend) {
 					return riskLegend.color;
 				} else {
-					console.error('Unknown risk level', risk);
+					if (traceOn()) {
+						console.log('Unknown risk level', risk);
+					}
 					return 'whiteSmoke';
 				}
 			}
@@ -769,7 +771,8 @@ export class ProjectService extends InternalService {
 			metricValues: ProjectSonarMetricValue[],
 			messageErrorEmitter: EventEmitter<MessageGravity>) {
 
-		sonarService.loadSonarComponentMeasures$(
+		
+		sonarService.loadProjectSonarComponentMeasures$(
 				project,
 				sonarKey,
 				metricValues.map(psmv => psmv.key))
@@ -833,12 +836,15 @@ export class ProjectService extends InternalService {
 
 	/**
 	* Save the evaluation for a project.
+	*
+	* Return an observable emitting a boolean if the operation succeeds.
+	*
 	* @param idProject the given project identifier
 	* @param key the Sonar key from where the stats are coming from
 	* @param evaluation the evaluation processed for this Sonar project
 	* @param totalNumberLinesofCode the number of lines of code detected for this Sonar project
 	*/
-	saveSonarEvaluation(idProject: number, key: string, evaluation: number, totalNumberLinesOfCode: number): Observable<Boolean> {
+	saveSonarEvaluation$(idProject: number, key: string, evaluation: number, totalNumberLinesOfCode: number): Observable<Boolean> {
 		if (traceOn()) {
 			console.groupCollapsed('Saving the evaluation for Sonar entry %s project identifier %d', key, idProject);
 			console.log ('Evaluation obtained', evaluation);
@@ -1033,6 +1039,11 @@ export class ProjectService extends InternalService {
 	 * @param from: Method which made that call
 	 */
 	dump(project: Project, from: string): void {
+		
+		// No dump if we are in 'trace OFF' mode
+		if (!traceOn()) {
+			return;
+		}
 
 		if ((!project) || !(project.id)) {
 			console.log (from, 'Project is null dude!');

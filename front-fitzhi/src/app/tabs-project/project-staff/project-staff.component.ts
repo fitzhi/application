@@ -14,6 +14,8 @@ import { take, switchMap } from 'rxjs/operators';
 import { ContributorsDTO } from 'src/app/data/external/contributorsDTO';
 import { Contributor } from 'src/app/data/contributor';
 import { traceOn } from 'src/app/global';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { UserSetting } from 'src/app/base/user-setting';
 
 @Component({
 	selector: 'app-project-staff',
@@ -28,8 +30,21 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 
 	@ViewChild(MatSort) sort: MatSort;
 
+	/**
+	 * The table 
+	 */
 	@ViewChild(MatTable) table: MatTable<any>;
 
+	/**
+	 * The paginator of the staff data source.
+	 */
+	 @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+
+	/**
+	 * Key used to save the page size in the local storage.
+	 */
+	 public pageSize = new UserSetting('project-staff.pageSize', 5);
+	 
 	constructor(
 		private projectService: ProjectService,
 		private route: ActivatedRoute,
@@ -66,6 +81,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	ngAfterContentInit() {
+
 		this.subscriptions.add(
 			this.cinematicService.tabProjectActivated$.pipe(
 				//
@@ -120,6 +136,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 		if (!this.dataSource) {
 			this.dataSource = new MatTableDataSource(contributorsDTO.contributors);
 			this.dataSource.sort = this.sort;
+			this.dataSource.paginator = this.paginator; 
 			this.projectStaffService.contributors = this.dataSource.data;
 			this.subscriptions.add(
 				this.dataSource.connect().subscribe(data => this.projectStaffService.contributors = data));
@@ -154,6 +171,14 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 		this.cinematicService.emitActualCollaboratorDisplay.next(idStaff);
 	}
 
+	/**
+	 * This method is invoked if the user change the page size.
+	 * @param $pageEvent event 
+	 */
+	public page($pageEvent: PageEvent) {
+		this.pageSize.saveSetting($pageEvent.pageSize);
+	}
+	
 	/**
 	 * Calling the base class to unsubscribe all subscriptions.
 	 */

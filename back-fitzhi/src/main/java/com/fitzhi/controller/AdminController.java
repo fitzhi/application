@@ -81,31 +81,40 @@ public class AdminController {
 	 * This method is used to create the first admin user.
 	 * @param login the first admin user login
 	 * @param password this first admin user password
+	 * @throws ApplicationException thrown if any problem occurs.
 	 * @return the newly created staff entry
 	 */
 	@GetMapping("/veryFirstUser")
-	public ResponseEntity<StaffDTO> veryFirstUser(
+	public ResponseEntity<Staff> veryFirstUser(
 			@RequestParam("login") String login,
-			@RequestParam("password") String password)  {
+			@RequestParam("password") String password) throws ApplicationException {
 		
 		if (logger.isDebugEnabled() && !this.staffHandler.getStaff().isEmpty()) {
-				logger.debug ("the staff collection is not empty, see below...");
+				logger.debug ("the staff collection is not empty and has 'may-be' already registered users, see below...");
 				logger.debug("------------------------------------------------");
-				this.staffHandler.getStaff().values().stream().forEach(
-					staff -> logger.debug(staff.toString()));
+				this.staffHandler.getStaff().values().stream()
+				.filter(staff -> staff.getPassword() != null)
+				.forEach(
+					staff -> logger.debug(String.format("%d %s", staff.getIdStaff(), staff.getLogin())));
 		}
 		
-		if (this.staffHandler.getStaff().isEmpty()) {
+		// We calculate the number of users declared with a non empty password.
+		// If at least one user exists, then the first ADMIN user has already been created,
+		// because this user is due to be the FIRST connected user.
+		// (Some users migth already exist if they are created by the automatic crawling process) 
+		long numberOfUsersAlreadyRegistered = this.staffHandler.getStaff().values().stream()
+			.map(Staff::getPassword)
+			.filter(s -> (s != null))
+			.count();
+		if (logger.isDebugEnabled()) {
+			logger.debug(String.format("%d users are registered with a password", numberOfUsersAlreadyRegistered));
+		}
+		if (numberOfUsersAlreadyRegistered == 0) {
 			return this.internalCreateNewUser(login, password);	
 		} else {
-			HttpHeaders headers = new HttpHeaders();
-			headers.set(BACKEND_RETURN_CODE, String.valueOf(CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED));
-			headers.set(BACKEND_RETURN_MESSAGE, MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED);
-			return new ResponseEntity<>(new 
-						StaffDTO(new Staff(), 
-						CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED, 
-						MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED), 
-					headers, HttpStatus.OK);
+			throw new ApplicationException(
+				CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED, 
+				MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED);
 		}
 	}	
 
@@ -117,36 +126,29 @@ public class AdminController {
 	 * @return the newly created staff entry
 	 */
 	@GetMapping("/register")
-	public ResponseEntity<StaffDTO> autoRegister(
+	public ResponseEntity<Staff> autoRegister(
 			@RequestParam("login") String login,
-			@RequestParam("password") String password)  {
+			@RequestParam("password") String password) throws ApplicationException {
 		return this.internalCreateNewUser(login, password);	
 	}	
 	
 	@GetMapping("/newUser")
-	public ResponseEntity<StaffDTO> createNewUser(
+	public ResponseEntity<Staff> createNewUser(
 			@RequestParam("login") String login,
-			@RequestParam("password") String password)  {
+			@RequestParam("password") String password)  throws ApplicationException {
 		return internalCreateNewUser(login, password);
 	}
 		
 	/**
 	 * Create a user and return the corresponding staff member.
 	 * @param login the user login
-	 * @param password his password
+	 * @param password the user password
 	 * @return The staff member created for this user/password
+	 * @throws ApplicationException thrown if any problem occurs such as, for example, 'login already registered'
 	 */
-	private ResponseEntity<StaffDTO> internalCreateNewUser (String login, String password) {
-		HttpHeaders headers = new HttpHeaders();
-		try {
-			Staff staff = administration.createNewUser(login, password);
-			headers.add("backend.return_code", "1");
-			return new ResponseEntity<>(new StaffDTO(staff), headers, HttpStatus.OK);
-		} catch (final ApplicationException ske) {
-			headers.set(BACKEND_RETURN_CODE, String.valueOf(ske.errorCode));
-			headers.set(BACKEND_RETURN_MESSAGE, ske.errorMessage);
-			return new ResponseEntity<>(new StaffDTO(new Staff(), ske.errorCode, ske.errorMessage), headers, HttpStatus.OK);
-		}
+	private ResponseEntity<Staff> internalCreateNewUser (String login, String password) throws ApplicationException {
+		Staff staff = administration.createNewUser(login, password);
+		return new ResponseEntity<>(staff, new HttpHeaders(), HttpStatus.OK);
 	}
 
 	@GetMapping("/connect")

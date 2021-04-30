@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { EMPTY, Observable, of, Subject } from 'rxjs';
 import { Collaborator } from '../../data/collaborator';
 import { StaffService } from '../../tabs-staff/service/staff.service';
-import { Constants } from '../../constants';
 import { StaffListContext } from '../../data/staff-list-context';
 import { MessageService } from '../../interaction/message/message.service';
-import { SkillService } from '../../skill/service/skill.service';
 import { ListCriteria } from '../../data/listCriteria';
 import { traceOn } from 'src/app/global';
+import { catchError, finalize, switchMap, take, tap } from 'rxjs/operators';
+import { SkillService } from 'src/app/skill/service/skill.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -37,15 +37,15 @@ export class TabsStaffListService {
 	/**
      * New search is made by the developer.
      */
-	public search$ = new Subject<ListCriteria>();
-
+	public criterias$ = new Subject<ListCriteria>();
 
 	constructor(
 		private staffService: StaffService,
-		private skillService: SkillService,
+		// SkillService is declared here to pass some tests. Some déclaration are mad in the SkillService construction
+		private skillService: SkillService, 
 		private messageService: MessageService) {
 
-		this.search$.subscribe(criterias => {
+		this.criterias$.subscribe(criterias => {
 			if (traceOn()) {
 				console.log('Adding criterias ' + criterias.criteria);
 			}
@@ -76,18 +76,18 @@ export class TabsStaffListService {
 			this.messageService.info('This criteria is already present!');
 			return;
 		}
-		this.search$.next(myCriteria);
+		this.criterias$.next(myCriteria);
 	}
 
 	/**
      * Searching staff members corresponding to the 2 passed criterias.
      * @param criteria the criteria
-     * @param activeOnly active only Yes/No
+     * @param activeOnly active only **true** / **false**
+	 * @returns an observable emetting an array of collaborators
      */
-	public search(criteria: string, activeOnly: boolean, outerThis: TabsStaffListService): Subject<Collaborator[]> {
-		const collaborator = [];
+	public search$(criteria: string, activeOnly: boolean): Observable<Collaborator[]> {
 
-		const collaborator$ = new Subject<Collaborator[]>();
+		const collaborator = [];
 
 		/**
          * Cache of the skills filter.
@@ -101,6 +101,9 @@ export class TabsStaffListService {
 
 		const ALL_LEVELS = 0;
 
+		/**
+		 * Key to store the criteria which will be linked to a list of results.
+		 */
 		const key = this.key(new ListCriteria(criteria, activeOnly));
 
 		/**
@@ -112,6 +115,9 @@ export class TabsStaffListService {
          * Reminder parsed and saved in this property.
          */
 		let reminderExtracted: string;
+
+		// We bind the internal function _getSkillsFilter with the main class
+		const getSkillsFilter = _getSkillsFilter.bind(this);
 
 		class Filter {
 			id: number;
@@ -131,11 +137,8 @@ export class TabsStaffListService {
 				if (traceOn()) {
 					console.log('Using cache for key ' + key + ' ' + context.staffSelected.length + ' records');
 				}
-				setTimeout(() => {
-					collaborator.push(...context.staffSelected);
-					collaborator$.next(collaborator);
-				}, 0);
-				return collaborator$;
+				collaborator.push(...context.staffSelected);
+				return of(collaborator);
 			}
 		}
 
@@ -179,9 +182,9 @@ export class TabsStaffListService {
          * Parse the criterias and returns an array of skills filters.
          * @returns the skills filters
          */
-		function getSkillsFilter(): Filter[] {
+		function _getSkillsFilter(): Filter[] {
 
-			// We cache the array of skills id. We don need to parse the criteria for each entry.
+			// We cache the array of skills id. We don't need to parse the criteria for each entry.
 			if ((skillsFilter.length > 0) || (criteriasUnknown.length > 0)) {
 				return skillsFilter;
 			}
@@ -194,7 +197,7 @@ export class TabsStaffListService {
 					skills.forEach(skill => console.log(skill));
 					console.groupEnd();
 				}
-				const allSkills = outerThis.skillService.allSkills;
+				const allSkills = this.skillService.allSkills;
 				skills.forEach(skill => {
 					let found = false;
 					allSkills.forEach(sk => {
@@ -226,19 +229,21 @@ export class TabsStaffListService {
 				});
 				if (traceOn()) {
 					console.groupCollapsed('id of skills candidate');
-					skillsFilter.forEach(id => console.log(id));
+					console.table(skillsFilter);
 					console.groupEnd();
-					console.groupCollapsed('Unknown skills');
-					criteriasUnknown.forEach(s => console.log(s));
-					console.groupEnd();
+					if (criteriasUnknown.length > 0) {
+						console.groupCollapsed('Unknown skills');
+						console.table(criteriasUnknown);
+						console.groupEnd();
+					}
 				}
 
 				if (criteriasUnknown.length > 0) {
 					if (criteriasUnknown.length === 1) {
-						outerThis.messageService.warning('The skill ' + criteriasUnknown[0]
+						this.messageService.warning('The skill ' + criteriasUnknown[0]
 							+ ' is unknown. It will be ignored.');
 					} else {
-						outerThis.messageService.warning('The skills ' + criteriasUnknown.join(', ')
+						this.messageService.warning('The skills ' + criteriasUnknown.join(', ')
 							+ ' are unknown. They will be ignored.');
 					}
 				}
@@ -274,35 +279,37 @@ export class TabsStaffListService {
 			);
 		}
 
-
-		this.staffService.getAll().subscribe((staffs: Collaborator[]) => {
-			staffs.forEach(staff => {
-				if (testCriteria(staff)) {
-					collaborator.push(staff);
-				}
-			});
-		},
-			error => outerThis.messageService.error(error),
-			() => {
+		return this.staffService.getAll().pipe(
+			take(1),
+			switchMap((staffs: Collaborator[]) => {
+					collaborator.push(...staffs.filter(staff => testCriteria(staff)));
+					// We store the array of collaborators in the cache
+					if (this.staffListContexts.has(key)) {
+						if (traceOn()) {
+							console.log('Saving collaborators for key ' + key);
+						}
+						this.staffListContexts.get(key).store(collaborator);
+					}
+					return of(collaborator);
+				}),
+			catchError(error => { 
+				this.messageService.error(error);
+				return EMPTY;
+			}),
+			finalize(() => {
 				if (traceOn()) {
 					console.log('The staff collection is containing now ' + collaborator.length + ' records');
 					console.groupCollapsed('Staff members found : ');
 					collaborator.forEach(collab => console.log(collab.firstName + ' ' + collab.lastName));
 					console.groupEnd();
 				}
-				if (this.staffListContexts.has(key)) {
-					if (traceOn()) {
-						console.log('Saving collaborators for key ' + key);
-					}
-					this.staffListContexts.get(key).store(collaborator);
-				}
-				collaborator$.next(collaborator);
-			});
-		return collaborator$;
+			})			
+		);
 	}
 
 	/**
      * Remove from history the search entry corresponding to this key.
+	 * @param key the key of the history to be removed
      */
 	public removeHistory(key: string) {
 		this.staffListContexts.delete(key);
@@ -352,6 +359,8 @@ export class TabsStaffListService {
 	/**
      * Actualize the information of a collaborator.
      * This method is call (for instance) after any update on the staff form.
+	 * 
+	 * @param collaborator the collaborator to be actualized
      */
 	public actualizeCollaborator(collaborator: Collaborator) {
 
@@ -369,9 +378,7 @@ export class TabsStaffListService {
 					staff.external = collaborator.external;
 
 					staff.experiences.length = 0;
-					collaborator.experiences.forEach(experience => {
-						staff.experiences.push(experience);
-					});
+					staff.experiences.push(...collaborator.experiences);
 				}
 			});
 		});
@@ -381,6 +388,7 @@ export class TabsStaffListService {
 
 	/**
      * Retrieve the context associated to the key.
+	 * 
      * @param key searched key
      * @returns the context associated to this list or null if none exists (which is suspected to be an internal error)
      */

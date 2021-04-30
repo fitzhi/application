@@ -21,7 +21,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Testing the method {@link GitCrawler#clone(com.fitzhi.data.internal.Project, com.fitzhi.data.source.ConnectionSettings) Git.clone()}
+ * Testing the nominal behavior or the failed behavior
+ * for the method {@link GitCrawler#clone(com.fitzhi.data.internal.Project, com.fitzhi.data.source.ConnectionSettings) Git.clone()}
+ * 
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -29,38 +31,57 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GitCrawlerCloneTest {
 
-    Project project;
-
-    @Autowired
+	@Autowired
 	@Qualifier("GIT")
-    RepoScanner repoScanner;
+	RepoScanner repoScanner;
 
-    @Autowired
-    ProjectHandler projectHandler;
+	@Autowired
+	ProjectHandler projectHandler;
 
-    @Before
-    public void before() throws ApplicationException {
-        project = new Project(1515, "Marignan");
-        projectHandler.addNewProject(project);
-    }
+	@Before
+	public void before() throws Exception {
+		projectHandler.addNewProject(new Project(1515, "Marignan"));
+		projectHandler.addNewProject(new Project(1214, "Bouvines"));	
+	}
 
-    /**
-     * The application stores the local repositories into {@code gitcrawler.repositories.location}
-     * @throws Exception
-     */
-    @Test
-    public void testCloneSimpleProject() throws Exception {
-        ConnectionSettings settings = new ConnectionSettings();
-        settings.setPublicRepository(true);
-        settings.setUrl("https://github.com/frvidal/first-test.git");
-        repoScanner.clone(project, settings);
-        log.debug(project.getLocationRepository());
-        // The removal of the directory has to be successful.
-        GitCrawler.removeCloneDir(Paths.get("../repos_test/1515"));
-    }
+	/**
+	 * The application stores the local repositories into {@code gitcrawler.repositories.location}
+	 * @throws Exception
+	 */
+	@Test
+	public void testCloneSimpleProject() throws Exception {
+		Project project = projectHandler.get(1515);
 
-    @After
-    public void after() throws ApplicationException {
-        projectHandler.getProjects().remove(1515);
-    }
+		ConnectionSettings settings = new ConnectionSettings();
+		settings.setPublicRepository(true);
+		settings.setUrl("https://github.com/frvidal/first-test.git");
+		repoScanner.clone(project, settings);
+		log.debug(project.getLocationRepository());
+		// // The removal of the directory has to be successful, because the clone operation succeeds
+		GitCrawler.removeCloneDir(Paths.get("../repos_test/1515"));
+	}
+
+	/**
+	 * Handling the exception when the branch does not exist (anymore?)
+	 * @throws Exception
+	 */
+	@Test(expected = ApplicationException.class)
+	public void invalidBranchName() throws Exception {
+		Project project = projectHandler.get(1214);
+
+		project.setBranch("undefined");
+		ConnectionSettings settings = new ConnectionSettings();
+		settings.setPublicRepository(true);
+		settings.setUrl("https://github.com/frvidal/first-test.git");
+		repoScanner.clone(project, settings);
+	} 
+
+	@After
+	public void after() throws Exception {
+		projectHandler.removeProject(1515);
+		projectHandler.removeProject(1214);
+		try {
+			GitCrawler.removeCloneDir(Paths.get("../repos_test/1214"));
+		} catch (final Exception e) {}
+	}
 }

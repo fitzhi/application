@@ -11,7 +11,7 @@
 		"id": 2,
 		"name": "Fitzhi",
 		"connectionSettings": 3,
-		"branch": "release-1.3",
+		"branch": "release-1.4",
 		"urlCodeFactorIO": "https://www.codefactor.io/repository/github/fitzhi/application",
 		"urlRepository": "https://github.com/fitzhi/application",
 		"libraries": [
@@ -30,7 +30,7 @@
 		"name": "Spring Framework",
 		"active": true,
 		"connectionSettings": 3,
-		"branch": "master",
+		"branch": "main",
 		"urlRepository": "https://github.com/spring-projects/spring-framework.git",
 		"sonarProjects": [],
 		"audit": {}
@@ -40,7 +40,7 @@
 		"name": "Spring Boot",
 		"active": true,
 		"connectionSettings": 3,
-		"branch": "master",
+		"branch": "main",
 		"urlRepository": "https://github.com/spring-projects/spring-boot.git",
 		"urlCodeFactorIO": "",
 		"urlSonarServer": "",
@@ -86,7 +86,7 @@
 		"name": "Spring Security",
 		"active": true,
 		"connectionSettings": 3,
-		"branch": "master",
+		"branch": "main",
 		"urlRepository": "https://github.com/spring-projects/spring-security.git",
 		"sonarProjects": [],
 		"audit": {}
@@ -113,7 +113,7 @@
 	},
 	"11": {
 		"id": 11,
-		"name": "Material",
+		"name": "Angular Material",
 		"active": true,
 		"connectionSettings": 3,
 		"branch": "master",
@@ -190,7 +190,7 @@
 		"name": "JQuery",
 		"active": true,
 		"connectionSettings": 3,
-		"branch": "master",
+		"branch": "main",
 		"urlRepository": "https://github.com/jquery/jquery",
 		"sonarProjects": [],
 		"audit": {}

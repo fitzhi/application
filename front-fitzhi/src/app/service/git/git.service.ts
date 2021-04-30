@@ -5,7 +5,6 @@ import { tap, switchMap, catchError, map } from 'rxjs/operators';
 import { of, Observable, EMPTY, BehaviorSubject } from 'rxjs';
 import { Repository } from 'src/app/data/git/repository';
 import { Branch } from 'src/app/data/git/branch';
-import { trace } from 'console';
 import { MessageService } from 'src/app/interaction/message/message.service';
 
 @Injectable({

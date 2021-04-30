@@ -12,6 +12,8 @@ import { ListCriteria } from '../../data/listCriteria';
 import { SkillService } from '../../skill/service/skill.service';
 import { Collaborator } from 'src/app/data/collaborator';
 import { traceOn } from 'src/app/global';
+import { UserSetting } from 'src/app/base/user-setting';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 
 @Component({
 	selector: 'app-staff-list',
@@ -26,14 +28,30 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 
 	public dataSource: MatTableDataSource<Collaborator>;
 
-	@ViewChild(MatSort, { static: true }) sort: MatSort;
+	/**
+	 * The paginator for the Staff list.
+	 */
+	 @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
+	 /**
+	  * The sort component for the Staff list
+	  */
+	 @ViewChild(MatSort, { static: true }) sort: MatSort;
+
+	/**
+	 * The columns of the table
+	 */
 	public displayedColumns: string[] = ['firstName lastName', 'level', 'skills', 'active', 'external'];
 
 	/**
 	 * Profiles array retrieved from the referential.
 	 */
 	private profiles: Profile[];
+
+	/**
+	 * Key used to save the page size in the local storage.
+	 */
+	 public pageSize = new UserSetting('staff-list.pageSize', 10);
 
 	constructor(
 		private tabsStaffListComponent: TabsStaffListService,
@@ -51,7 +69,8 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 		this.profiles = this.referentialService.profiles;
 
 		this.subscriptions.add(
-			this.tabsStaffListComponent.search(this.criteria, this.activeOnly, this.tabsStaffListComponent)
+			this.tabsStaffListComponent
+				.search$(this.criteria, this.activeOnly)
 				.subscribe(collaborators => {
 					this.dataSource = new MatTableDataSource<Collaborator>(collaborators);
 					this.dataSource.sortingDataAccessor = (item: Collaborator, property: string) => {
@@ -59,16 +78,19 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 							case 'firstName lastName':
 								return item.firstName.toLocaleLowerCase() + ' ' + item.lastName.toLocaleLowerCase();
 							case 'active':
-								return item.active ? 1 : 0;
+								console.log (property, (item.active) ? '1' : '0');
+								return (item.active) ? '1' : '0';
 							case 'level':
 								return this.title(item.level);
 							case 'skills':
 								return this.skills(item.experiences);
 							case 'external':
-								return item.external ? 1 : 0;
+								console.log (property, (item.external) ? '1' : '0');
+								return (item.external) ? '1' : '0';
 						}
 					};
 					this.dataSource.sort = this.sort;
+					this.dataSource.paginator = this.paginator; 
 				}));
 		const key = this.tabsStaffListComponent.key(new ListCriteria(this.criteria, this.activeOnly));
 		const context = this.tabsStaffListComponent.getContext(key);
@@ -117,6 +139,15 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 		}
 		return mainSkills;
 	}
+
+	/**
+	 * This method is invoked if the user change the page size.
+	 * @param $pageEvent event 
+	 */
+	 public page($pageEvent: PageEvent) {
+		this.pageSize.saveSetting($pageEvent.pageSize);
+	}
+
 
 	/**
 	 * Calling the base class to unsubscribe all subscriptions.

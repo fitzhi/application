@@ -41,7 +41,6 @@ describe('skillService', () => {
 			}
 		});
 		
-
 	});
 
 	it('should UPDATE a skill if skill.id is NOT null', done => {
@@ -56,7 +55,6 @@ describe('skillService', () => {
 			.and.callThrough()
 			.and.returnValue(of(new Skill(1789, 'A revolutionaly skill')));
 
-
 		service.save$(skill).pipe(take(1)).subscribe({
 			next: skill => {
 				expect(skill.id).toBe(1789);
@@ -65,8 +63,6 @@ describe('skillService', () => {
 				done();
 			}
 		});
-		
-
 	});
 
 });

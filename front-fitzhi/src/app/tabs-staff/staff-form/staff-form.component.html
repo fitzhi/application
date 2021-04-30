@@ -4,30 +4,29 @@
 			(ngSubmit)="onSubmit()">
 			<div class="row">
 				<div class="col-md-6 mb-3">
-                    <label for="firstName">First name</label> 
-                    <input type="text"
+					<label for="firstName">First name</label> 
+					<input type="text"
 						class="form-control" id="firstName" name="firstName"
 						(change)="onChange(FIRST_NAME)"
 						[readonly]="isAlreadyDesactivated()" placeholder="" value=""
-                        formControlName="firstName"/> 
-                    <label
+						formControlName="firstName"/> 
+					<label
 						*ngIf="firstName.touched && firstName.invalid" [ngClass]="'alert alert-warning'"
 						style="width: 100%; font-size: 10px;">16 max characters for
 						the first name, without useless space.</label>
 				</div>
 				<div class="col-md-6 mb-3">
-                    <label for="lastName" class="required">Last name</label> 
-                    <input type="text"
+					<label for="lastName" class="required">Last name</label> 
+					<input type="text"
 						class="form-control required" id="lastName" name="lastName"
 						(change)="onChange(LAST_NAME)"
 						[readonly]="isAlreadyDesactivated()" 
 						placeholder="Enter the last name"
-                        value="" formControlName="lastName"/> 
-                    <label
+						value="" formControlName="lastName"/> 
+					<label
 						*ngIf="lastName.touched && lastName.invalid" [ngClass]="'alert alert-warning'"
 						style="width: 100%; font-size: 10px;"> Last name is required
 						with 16 max characters, without useless space.</label>
-
 				</div>
 			</div>
 
@@ -41,8 +40,8 @@
 						<input type="text" class="form-control" id="nickName"
 							name="nickName" [readonly]="isAlreadyDesactivated()"
 							placeholder="Enter the nickname (if any) for this staff member"
-                            value="" formControlName="nickName"/> 
-                        <label
+							value="" formControlName="nickName"/> 
+						<label
 							*ngIf="nickName.touched && nickName.invalid" [ngClass]="'alert alert-warning'"
 							style="width: 100%; font-size: 10px;">12 max character for
 							the Pseudo,  without useless space.</label>
@@ -64,25 +63,25 @@
 			</div>
 			<div class="mb-3">
 				<label for="email" class="required">Email</label>
-                <input type="email" 
-                    class="form-control" 
-                    id="email" name="email"
-                    [readonly]="isAlreadyDesactivated()" 
-                    placeholder="you@example.com"
-                    formControlName="email"/> 
-                <label *ngIf="email.touched && email.invalid"
-                    [ngClass]="'alert alert-warning'"
-                    style="width: 100%; font-size: 10px;">
-                    You must specify an email address for this new staff member.
-                </label>
+				<input type="email" 
+					class="form-control" 
+					id="email" name="email"
+					[readonly]="isAlreadyDesactivated()" 
+					placeholder="you@example.com"
+					formControlName="email"/> 
+				<label *ngIf="email.touched && email.invalid"
+					[ngClass]="'alert alert-warning'"
+					style="width: 100%; font-size: 10px;">
+					You must specify an email address for this new staff member.
+				</label>
 			</div>
 			<div class="mb-3">
 				<label for="profile" class="required">Profile</label> 
 				<select name="label" id="profile"
 					formControlName="profile" class="custom-select d-block w-100">
 					<option *ngFor="let level of profiles" [value]="level.code">{{level.title}}</option>
-                </select> 
-                <label *ngIf="profile.touched && profile.invalid" [ngClass]="'alert alert-warning'"
+				</select> 
+				<label *ngIf="profile.touched && profile.invalid" [ngClass]="'alert alert-warning'"
 					style="width: 100%; font-size: 10px;"> Please, select a
 					profile for this staff member.</label>
 			</div>
@@ -112,18 +111,18 @@
 				</label>
 			</div>
 
-            <div class="row">
-                <div class="col-md-9"></div>               
-                <div class="col-md-3">              
-                    <hr/>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-10"></div>
-                <div class="col-md-2">
-                    <button id="ok" [ngClass]="classOkButton()" [disabled]="(!profileStaff.valid) || isAlreadyDesactivated()" type="submit"></button>
-                </div>
-            </div>
+			<div class="row">
+				<div class="col-md-9"></div>               
+				<div class="col-md-3">              
+					<hr/>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-10"></div>
+				<div class="col-md-2">
+					<button id="ok" [ngClass]="classOkButton()" [disabled]="(!profileStaff.valid) || isAlreadyDesactivated()" type="submit"></button>
+				</div>
+			</div>
 		</form>
 	</div>
 </div>

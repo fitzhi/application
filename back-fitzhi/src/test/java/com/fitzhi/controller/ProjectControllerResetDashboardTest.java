@@ -1,12 +1,16 @@
 package com.fitzhi.controller;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fitzhi.bean.CacheDataHandler;
+import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.source.crawler.RepoScanner;
 import com.google.gson.Gson;
@@ -16,6 +20,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,13 +40,13 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ProjectControllerResetDashboardTest {
-    
+	
 	private int UNKNOWN_ID_PROJECT = 999999;
 	
 	/**
 	 * Initialization of the Google JSON parser.
 	 */
-	Gson gson = new GsonBuilder().create();
+	// Gson gson = new GsonBuilder().create();
 
 	@Autowired
 	private MockMvc mvc;
@@ -49,11 +54,18 @@ public class ProjectControllerResetDashboardTest {
 	@Autowired
 	private ProjectHandler projectHandler;
 
-    @MockBean
-    CacheDataHandler cacheDataHandler;
+	@MockBean
+	CacheDataHandler cacheDataHandler;
 
-    @MockBean
-    RepoScanner repoScanner;
+
+	@MockBean
+	DataHandler dataHandler;
+
+	@MockBean
+	RepoScanner repoScanner;
+
+	@MockBean
+	StaffHandler staffHandler;
 
 	@Before
 	public void before() throws Exception {
@@ -71,9 +83,14 @@ public class ProjectControllerResetDashboardTest {
 	@Test
 	@WithMockUser
 	public void testResetDashboardKnownProject() throws Exception {
-        when(cacheDataHandler.removeRepository(any())).thenReturn(true);
-        when(repoScanner.generateAsync(any(), any())).thenReturn(null);
+		when(cacheDataHandler.removeRepository(any())).thenReturn(true);
+		when(staffHandler.getLocker()).thenReturn(new Object());
+		doNothing().when(staffHandler).removeProject(1789);
+		doNothing().when(repoScanner).generateAsync(any(), any());
 		this.mvc.perform(delete("/api/project/1789/sunburst")).andExpect(status().isAccepted());
+		Mockito.verify(cacheDataHandler, times(1)).removeRepository(any());
+		Mockito.verify(dataHandler, times(1)).removeCrawlerFiles(any());
+		Mockito.verify(staffHandler, times(1)).removeProject(1789);
 		Assert.assertNull("The location repository should be reset", projectHandler.get(1789).getLocationRepository());
 	}
 

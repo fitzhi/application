@@ -4,6 +4,8 @@ import { ContributorsDataSource } from './contributors-data-source';
 import { BaseComponent } from '../../../base/base.component';
 import { BehaviorSubject } from 'rxjs';
 import { Filename } from 'src/app/data/filename';
+import { MatTableDataSource } from '@angular/material/table';
+import { Contributor } from 'src/app/data/contributor';
 
 @Component({
 	selector: 'app-node-detail',
@@ -12,9 +14,9 @@ import { Filename } from 'src/app/data/filename';
 })
 export class NodeDetailComponent extends BaseComponent implements OnInit, OnDestroy {
 
-	@Input() filenames: FilenamesDataSource;
+	@Input() filenames: MatTableDataSource<Filename>;
 
-	@Input() contributors: ContributorsDataSource;
+	@Input() contributors: MatTableDataSource<Contributor>;
 
 	@Input() location: BehaviorSubject<Filename[]>;
 
@@ -25,10 +27,10 @@ export class NodeDetailComponent extends BaseComponent implements OnInit, OnDest
 	}
 
 	ngOnInit() {
-		if (this.location) {
-			this.subscriptions.add(
-				this.location.subscribe(element => this.node = element));
-		}
+		this.subscriptions.add(
+			this.location.subscribe({
+				next: element => this.node = element	
+			}));
 	}
 
 	/**

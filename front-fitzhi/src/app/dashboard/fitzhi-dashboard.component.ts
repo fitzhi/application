@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ControlledRisingSkylineService } from 'controlled-rising-skyline';
 import { BehaviorSubject } from 'rxjs';
@@ -38,7 +39,6 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	 */
 	public popupHelper = new FitzhiDashboardPopupHelper();
 
-	public viewTreeMap = [600, 400];
 
 	public colors = Constants.COLORS;
 
@@ -63,6 +63,7 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	public skylineSelected$ = new BehaviorSubject<boolean>(false);
 
 	constructor(
+		public httpClient: HttpClient,
 		public projectService: ProjectService,
 		public skylineService: SkylineService,
 		public controlledRisingSkylineService: ControlledRisingSkylineService,

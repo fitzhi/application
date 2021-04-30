@@ -3,6 +3,7 @@ package com.fitzhi.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -22,6 +23,7 @@ import org.springframework.security.oauth2.provider.token.store.InMemoryTokenSto
 
 @Configuration
 @EnableWebSecurity
+@Order(101)
 public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Autowired
@@ -39,8 +41,11 @@ public class OAuth2SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().anonymous().disable().authorizeRequests().antMatchers("/oauth/token").permitAll()
-				.anyRequest().authenticated();
+		http
+			// User authentification security configuration
+			.anonymous().disable()
+			.authorizeRequests().antMatchers("/oauth/token").permitAll()
+			.anyRequest().authenticated();
 	}
 
 	@Override

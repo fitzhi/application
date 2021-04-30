@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.security;
 
 import org.springframework.beans.factory.annotation.Autowired;

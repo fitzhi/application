@@ -37,6 +37,11 @@ public class StaffHandlerCreateEmptyTest {
 
 	@Before
 	public void before() {
+
+		// We cleanup all staff entries with an id lower than 1788 
+		// it looks like some tests keep data in the staff collection when execeting the tests on some IC
+		staffHandler.getStaff().entrySet().removeIf(e -> e.getKey() > 1788);
+
 		staffHandler.getStaff().put(1788, new Staff(1788, "login", "password"));
 	}
 

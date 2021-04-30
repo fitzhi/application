@@ -1,25 +1,27 @@
 <div id="connection" class="container">
 
-    <div class="col-md-12 text-left" [hidden]="!veryFirstConnection">
-        <p class="important">This is the very first connection in fitzhì.</p>
-        <p>You need first to setup the admin user.</p>
-        This user has a complete access to the application features and is allowed to setup user rights.<br/>
-        Other admin users are possible.<br/><br/>
-    </div>
-
-    <div class="row text-left" style="padding-bottom:0px" [hidden]="veryFirstConnection">
-			It seams like this is your&nbsp;<span class="bold">FIRST</span> connection into fitzhì.<br/>
+	<div class="col-md-12 text-left" [hidden]="!veryFirstConnection">
+		<p class="important">This is the very first connection in fitzhì.</p>
+		<p>You need first to setup the admin user.</p>
+		This user has a complete access to the application features and is allowed to setup user rights.<br/>
+		Other admin users are possible.<br/><br/>
 	</div>
-    <div class="row text-left" [hidden]="veryFirstConnection">
+
+	<div class="row text-left" style="padding-bottom:0px" [hidden]="veryFirstConnection">
+		<p>
+			It seams like this is your <strong>FIRST</strong> connection into fitzhì.
+		</p>
+	</div>
+	<div class="row text-left" [hidden]="veryFirstConnection">
 		<div class="col-md-1"></div>
 		<div class="col-md-11 text-left">
 			<em>					
 				- Either the system allows you to create your own user,<br/>
 				- or a login already exists, and you just have to type your password.<br/>
-            </em>
+			</em>
 		</div>
 	</div>
-    <div id="div-connect" class="row text-left" [hidden]="veryFirstConnection">
+	<div id="div-connect" class="row text-left" [hidden]="veryFirstConnection">
 		<div class="col-md-2"></div>
 		<div class="col-md-8 skip text-right">
 			<span class="bold">BUT</span>, if you have already been registered for this aplication,<br/>AND you already know your user/password,<br/>just skip this operation and connect into fitzhì.
@@ -29,70 +31,70 @@
 				connect
 			</button>			
 		</div>
-    </div>
+	</div>
 	<br/>
-    <div class="col-md-12">
-      <form class="needs-validation" [formGroup]="connectionGroup" (submit)="onSubmit()">
-        
-            <div class="row">
-                <div class="col-md-5 labelConnection">
-                    <label for="username" class="required labelConnection">Username</label>
-                </div>
-                <div class="col-md-7">
-                    <input 
-                        type="text" 
-                        class="form-control required" 
-                        id="user" name="username" 
-                        placeholder="Username (Required)" 
-                        formControlName="username"/>
-                    <label *ngIf="username.touched && username.invalid" [ngClass]="'alert alert-warning'">
-                        Username is required, and cannot exceed 16 characters max.
-                    </label>
-                </div>
-            </div>
+	<div class="col-md-12">
+	  <form class="needs-validation" [formGroup]="connectionGroup" (submit)="onSubmit()">
+		
+			<div class="row">
+				<div class="col-md-5 labelConnection">
+					<label for="username" class="required labelConnection">Username</label>
+				</div>
+				<div class="col-md-7">
+					<input 
+						type="text" 
+						class="form-control required" 
+						id="user" name="username" 
+						placeholder="Username (Required)" 
+						formControlName="username"/>
+					<label *ngIf="username.touched && username.invalid" [ngClass]="'alert alert-warning'">
+						Username is required, and cannot exceed 16 characters max.
+					</label>
+				</div>
+			</div>
 
-            <div class="row">
-                <div class="col-md-5 labelConnection">
-                    <label for="password" class="required labelConnection">Password</label>
-                </div>
-                <div class="col-md-7">
-                    <input type="password" 
-                        class="form-control required" 
-                        id="password" name="password" 
-                        placeholder="Password (Required)" 
-                        formControlName="password"/>
-                    <label *ngIf="password.touched && password.invalid" 
-                        [ngClass]="'alert alert-warning'">
-                        Password is required, with 8 chars min, and 16 chars max
-                    </label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-5 labelConnection">
-                    <label for="confirmPassword" class="required labelConnection">Confirm the password</label>
-                </div>
-                <div class="col-md-7">
-                    <input type="password" 
-                        class="form-control required" 
-                        id="passwordConfirmation" 
-                        name="passwordConfirmation" 
-                        placeholder="Password (Required)" 
-                        formControlName="passwordConfirmation"/>
-                    <label *ngIf="passwordConfirmation.touched && passwordConfirmation.invalid" 
-                        [ngClass]="'alert alert-warning'">
-                        Confirmation password must be identical to the one above.
-                    </label>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-8"></div>
-                <div class="col-md-2">
-                    <button id="cancelButton" class="cancelButton" type="button" alt="cancel this operation" (click)="onCancel()"></button>
-                </div>
-                <div class="col-md-2">
-                    <button id="okButton" [ngClass]="classOkButton()" type="submit" [disabled]="connectionGroup.invalid"></button>
-                </div>
-            </div>
-        </form>
-    </div>
+			<div class="row">
+				<div class="col-md-5 labelConnection">
+					<label for="password" class="required labelConnection">Password</label>
+				</div>
+				<div class="col-md-7">
+					<input type="password" 
+						class="form-control required" 
+						id="password" name="password" 
+						placeholder="Password (Required)" 
+						formControlName="password"/>
+					<label *ngIf="password.touched && password.invalid" 
+						[ngClass]="'alert alert-warning'">
+						Password is required, with 8 chars min, and 16 chars max
+					</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-5 labelConnection">
+					<label for="confirmPassword" class="required labelConnection">Confirm the password</label>
+				</div>
+				<div class="col-md-7">
+					<input type="password" 
+						class="form-control required" 
+						id="passwordConfirmation" 
+						name="passwordConfirmation" 
+						placeholder="Password (Required)" 
+						formControlName="passwordConfirmation"/>
+					<label *ngIf="passwordConfirmation.touched && passwordConfirmation.invalid" 
+						[ngClass]="'alert alert-warning'">
+						Confirmation password must be identical to the one above.
+					</label>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-8"></div>
+				<div class="col-md-2">
+					<button id="cancelButton" class="cancelButton" type="button" alt="cancel this operation" (click)="onCancel()"></button>
+				</div>
+				<div class="col-md-2">
+					<button id="okButton" [ngClass]="classOkButton()" type="submit" [disabled]="connectionGroup.invalid"></button>
+				</div>
+			</div>
+		</form>
+	</div>
 </div>

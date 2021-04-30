@@ -69,7 +69,8 @@ describe('ProjectGhostsComponent', () => {
 						staffRelated: new Collaborator(),
 						staffRecorded: false,
 					},
-				]
+				],
+				[]
 			);
 			this.dataSourceGhosts$ = new BehaviorSubject(this.projectGhostsDataSource);
 		}

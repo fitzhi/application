@@ -22,6 +22,8 @@ import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.security.CustomGrantedAuthority;
 import com.fitzhi.service.FileType;
 
+import static com.fitzhi.Global.ROLE_TRUSTED_USER;
+
 import lombok.Data;
 
 /**
@@ -35,8 +37,6 @@ import lombok.Data;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public @Data class Staff implements UserDetails {
-
-	private static final String ROLE_USER = "ROLE_USER";
 
 	/**
 	 * serialVersionUID
@@ -94,14 +94,14 @@ public @Data class Staff implements UserDetails {
 
 	/**
 	* List of authorities for this user
-	**/
+	*/
 	private List<CustomGrantedAuthority> authorities = new ArrayList<>();
 	
 	/**
 	 * Empty construction.
 	 */
 	public Staff() {
-    	authorities.add(new CustomGrantedAuthority(ROLE_USER));
+    	authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
 	}
@@ -120,7 +120,7 @@ public @Data class Staff implements UserDetails {
 		this.password = password;
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
-    	authorities.add(new CustomGrantedAuthority(ROLE_USER));
+    	authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
 	}
 
 	/**
@@ -145,7 +145,7 @@ public @Data class Staff implements UserDetails {
 		this.level = level;
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
-    	authorities.add(new CustomGrantedAuthority(ROLE_USER));
+    	authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
 	}
 
 	/**
@@ -177,7 +177,7 @@ public @Data class Staff implements UserDetails {
 		this.external = external;
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
-    	authorities.add(new CustomGrantedAuthority(ROLE_USER));
+    	authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
 	}
 
 	/**

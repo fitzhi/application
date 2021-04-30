@@ -10,12 +10,6 @@
     width: 100%;
 }
 
-#panelNoSonarProject {
-    width: 100%;
-    text-align: center;
-    color: brown;
-}
-
 .contentProjectSonar {
     background-color: transparent;
     width: 100%;
@@ -37,4 +31,26 @@ div.no-project {
     margin: 20px;
     padding: 10px;
     border: 1px solid black;
+}
+
+div.panelNoSonarProject {
+    margin: 50px;
+    width: 100%;
+    text-align: center;
+    color: var(--color-error)
+}
+
+div.panelNoSonarProject p {
+    font-size: 24px;
+    line-height: 80px; 
+}
+
+div.panelNoSonarProject p span.logo{
+    font-size: 72px;
+	background: -webkit-linear-gradient(var(--color-selected), var(--color-error));
+	background-clip: text;
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+
+    margin-right: 30px;
 }

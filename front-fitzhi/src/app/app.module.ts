@@ -44,7 +44,7 @@ import { DevOnOffComponent } from './admin/dev-on-off/dev-on-off.component';
 import { RegisterUserComponent } from './admin/register-user/register-user.component';
 import { AuthGuardService } from './admin/security/auth-guard.service';
 import { HttpErrorInterceptorService } from './admin/service/http/http-error-interceptor-service';
-import { HttpTokenInterceptorService } from './admin/service/http/http-token-interceptor.service';
+import { HttpTokenInterceptor } from './admin/service/http/http-token-interceptor';
 import { StartingSetupComponent } from './admin/starting-setup/starting-setup.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -118,6 +118,8 @@ import { StaffComponent } from './tabs-staff/staff.component';
 import { WelcomeComponent } from './welcome/welcome.component';
 import { SkylineIconComponent } from './dashboard/skyline/skyline-icon/skyline-icon.component';
 import { ChartInProgressComponent } from './tabs-project/project-sunburst/chart-in-progress/chart-in-progress.component';
+import { HttpRefreshTokenErrorInterceptor } from './admin/service/http/http-refresh-token-error-interceptor';
+import { TokenService } from './admin/service/token/token.service';
 
 @NgModule({
 	declarations: [
@@ -244,6 +246,7 @@ import { ChartInProgressComponent } from './tabs-project/project-sunburst/chart-
 		ReferentialService,
 		PieDashboardService,
 		AuthGuardService,
+		TokenService,
 		{
 			provide: HTTP_INTERCEPTORS,
 			useClass: HttpErrorInterceptorService,
@@ -251,21 +254,20 @@ import { ChartInProgressComponent } from './tabs-project/project-sunburst/chart-
 		},
 		{
 			provide: HTTP_INTERCEPTORS,
-			useClass: HttpTokenInterceptorService,
+			useClass: HttpTokenInterceptor,
+			multi: true
+		},
+		{
+			provide: HTTP_INTERCEPTORS,
+			useClass: HttpRefreshTokenErrorInterceptor,
 			multi: true
 		},
 		DatePipe,
-		/*   {provide: ErrorHandler, useClass: CustomErrorHandler}, */
 		// Remove this line or change the useValue property to your regional settings
 		{ provide: LOCALE_ID, useValue: 'fr' }
 	],
 	bootstrap: [AppComponent]
 })
-/*    {
-			provide: ErrorHandler,
-			useClass: ErrorsHandler,
-		}
- */
 export class AppModule {
 	constructor() {
 		// Remove this line to return back to the default us property,

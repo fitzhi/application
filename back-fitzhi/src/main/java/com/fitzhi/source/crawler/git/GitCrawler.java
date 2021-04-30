@@ -1,25 +1,30 @@
 package com.fitzhi.source.crawler.git;
 
+import static com.fitzhi.Error.CODE_CANNOT_CREATE_DIRECTORY;
 import static com.fitzhi.Error.CODE_FILE_CONNECTION_SETTINGS_NOFOUND;
 import static com.fitzhi.Error.CODE_IO_ERROR;
 import static com.fitzhi.Error.CODE_IO_EXCEPTION;
 import static com.fitzhi.Error.CODE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.CODE_PROJECT_CANNOT_RETRIEVE_INITIAL_COMMIT;
 import static com.fitzhi.Error.CODE_UNEXPECTED_VALUE_PARAMETER;
-import static com.fitzhi.Error.CODE_CANNOT_CREATE_DIRECTORY;
+import static com.fitzhi.Error.CODE_BRANCH_DOES_NOT_EXIST;
+import static com.fitzhi.Error.CODE_GIT_ERROR;
+
 import static com.fitzhi.Error.MESSAGE_CANNOT_CREATE_DIRECTORY;
 import static com.fitzhi.Error.MESSAGE_FILE_CONNECTION_SETTINGS_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import static com.fitzhi.Error.MESSAGE_PARSING_SOURCE_CODE;
 import static com.fitzhi.Error.MESSAGE_PROJECT_CANNOT_RETRIEVE_INITIAL_COMMIT;
 import static com.fitzhi.Error.MESSAGE_UNEXPECTED_VALUE_PARAMETER;
+import static com.fitzhi.Error.MESSAGE_BRANCH_DOES_NOT_EXIST;
+import static com.fitzhi.Error.MESSAGE_GIT_ERROR;
+
 import static com.fitzhi.Error.getStackTrace;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.INTERNAL_FILE_SEPARATORCHAR;
 import static com.fitzhi.Global.LN;
-import static com.fitzhi.Global.PROJECT;
 import static com.fitzhi.Global.NO_PROGRESSION;
-
+import static com.fitzhi.Global.PROJECT;
 import static org.eclipse.jgit.diff.DiffEntry.DEV_NULL;
 
 import java.io.File;
@@ -49,10 +54,10 @@ import java.util.stream.Stream;
 
 import javax.annotation.PostConstruct;
 
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.Error;
 import com.fitzhi.Global;
 import com.fitzhi.ShouldNotPassHereRuntimeException;
-import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.bean.DataChartHandler;
@@ -346,6 +351,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		if ((log.isDebugEnabled()) && (this.crawlerFilterDebug != null)) {
 			log.debug(String.format("Debugging filter %s", this.crawlerFilterDebug));
 		}
+
 	}
 
 	@Override
@@ -410,6 +416,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 					.setBranch(project.getBranch())
 					.setProgressMonitor(new CustomProgressMonitor())
 					.call();
+				checkBranchNameExist(git, project.getBranch());
 				git.close();
 			} else {
 				Git git = Git.cloneRepository()
@@ -420,6 +427,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 					.setBranch(project.getBranch())
 					.setProgressMonitor(new CustomProgressMonitor())
 					.call();
+				checkBranchNameExist(git, project.getBranch());
 				git.close();
 			}
 			if (log.isDebugEnabled()) {
@@ -455,15 +463,33 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	}
 
 	/**
+	 * The application clones the repository for a given branch.
+	 * This method tests if the given branch still exists in the repository (after the clone operation).
+	 * @param git the active current GIT repository
+	 * @param branchName the name of the GIT branch which is supposed to have been cloned
+	 * @throws GitAPIException thrown if the GIT operation failed for a bad reason.
+	 * @throws ApplicationException thrown if the application detects a problem
+	 */
+	private void checkBranchNameExist(Git git, String branchName) throws GitAPIException, ApplicationException {
+		java.util.List<Ref> branches = git.branchList().call();
+		if (branches.size() == 0) {
+			throw new ApplicationException(
+				CODE_BRANCH_DOES_NOT_EXIST, 
+				MessageFormat.format(MESSAGE_BRANCH_DOES_NOT_EXIST, branchName));
+		}
+	}
+
+	/**
 	 * This method will remove recurcively the content of a non empty directory.
 	 * @param path the path of the directory to be removed
 	 * @throws IOException thrown if any IO exception occurs
 	 */
 	static void removeCloneDir(Path path) throws IOException {
-		Files.walk(path)
-			.sorted(Comparator.reverseOrder())
-			.map(Path::toFile)
-			.forEach(File::delete);
+		try (Stream<Path> walk = Files.walk(path)) {
+			walk.sorted(Comparator.reverseOrder())
+				.map(Path::toFile)
+				.forEach(File::delete);
+		}
 	}
 
 	@Override
@@ -856,7 +882,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 */
 	static int progressionPercentage(int numberOfFiles, int totalNumberOfFiles) {
 		final int OFFSET = 30;
-		double d = OFFSET + numberOfFiles * (100 - OFFSET) / totalNumberOfFiles;
+		double d = OFFSET + (double) numberOfFiles * (100 - OFFSET) / totalNumberOfFiles;
 		int progression = (int) Math.floor( d );
 		if (log.isDebugEnabled()) {
 			log.debug (String.format("(%d * 0.7) / %d gives the progression %d", numberOfFiles, totalNumberOfFiles, progression));
@@ -1367,44 +1393,23 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 	@Override
 	@Async
-	public void generateAllAsync() throws ApplicationException {
-		if (log.isInfoEnabled()) {
-			log.info( "Starting the analysis of projects in batch mode.");
-		}
-		System.out.println("Yop");
-		for (Project project : projectHandler.getProjects().values()) {
-			System.out.println(project.toString());
-			if (log.isInfoEnabled()) {
-				log.info( String.format("Analyzing project %s.",project.getName()));
-			}
-			
-			// We analyze each project if the project has a connection settings.
-			if (project.getConnectionSettings() > 0) {
-				generateAsync(project, new SettingsGeneration(project.getId()));
-			}
-
-			if (log.isInfoEnabled()) {
-				log.info( String.format("The project %s is analyzed.",project.getName()));
-			}
-		}
-	}
-
-	@Override
-	@Async
-	public RiskDashboard generateAsync(final Project project, final SettingsGeneration settings) {
+	public void generateAsync(final Project project, final SettingsGeneration settings) throws ApplicationException {
 		boolean failed = false;
 		try {
 			tasks.addTask(DASHBOARD_GENERATION, "project", project.getId());
-			return generate(project, settings);
-		} catch (ApplicationException se) {
-			tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), se.errorCode, se.errorMessage, NO_PROGRESSION);
+			generate(project, settings);
+		} catch (ApplicationException ae) {
+			tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), ae.errorCode, ae.errorMessage, NO_PROGRESSION);
 			failed = true;
-			return null;
+			throw ae;
 		} catch (GitAPIException | IOException e) {
 			log.error(e.getMessage());
 			tasks.logMessage(DASHBOARD_GENERATION, "project", project.getId(), 666, e.getLocalizedMessage(), NO_PROGRESSION);
 			failed = true;
-			return null;
+			throw new ApplicationException(
+				CODE_GIT_ERROR, 
+				MessageFormat.format(MESSAGE_GIT_ERROR, project.getId(), project.getName()), 
+				e);
 		} finally {
 			try {
 				if (!failed) {

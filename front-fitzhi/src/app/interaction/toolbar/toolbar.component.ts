@@ -6,6 +6,9 @@ import { CinematicService } from '../../service/cinematic.service';
 import { TabsStaffListService } from '../../tabs-staff-list/service/tabs-staff-list.service';
 import { traceOn } from '../../global';
 
+/**
+ * The toolbar for the AppComponent.
+ */
 @Component({
 	selector: 'app-toolbar',
 	templateUrl: './toolbar.component.html',

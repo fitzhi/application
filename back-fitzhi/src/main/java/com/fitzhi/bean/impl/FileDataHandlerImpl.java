@@ -7,6 +7,8 @@ import static com.fitzhi.Error.CODE_FILE_DOES_NOT_EXIST;
 import static com.fitzhi.Error.MESSAGE_FILE_DOES_NOT_EXIST;
 import static com.fitzhi.Error.CODE_BRANCH_IS_MISSING_IN_PROJECT;
 import static com.fitzhi.Error.MESSAGE_BRANCH_IS_MISSING_IN_PROJECT;
+import static com.fitzhi.Error.CODE_CANNOT_DELETE_FILE;
+import static com.fitzhi.Error.MESSAGE_CANNOT_DELETE_FILE;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -806,5 +808,45 @@ public class FileDataHandlerImpl implements DataHandler {
 		analysis.setPathsCandidate(new HashSet<String>(pathsCandidate));
 		return analysis;
 	}
-	
+
+	@Override
+	public void removeCrawlerFiles(Project project) throws ApplicationException {
+
+		String filename = generateChangesCsvFilename(project);
+		File file = rootLocation.resolve(filename).toFile();
+		removeFile(file);
+
+		filename = generateProjectLayersJsonFilename(project);
+		file = rootLocation.resolve(filename).toFile();
+		removeFile(file);
+
+		removePathnamesFile(project, PathsType.PATHS_ALL);
+		removePathnamesFile(project, PathsType.PATHS_MODIFIED);
+		removePathnamesFile(project, PathsType.PATHS_CANDIDATE);
+		removePathnamesFile(project, PathsType.PATHS_ADDED);
+
+	}	
+
+	private void removePathnamesFile (Project project, PathsType pathsType ) throws ApplicationException {
+		String filename = this.generatePathnamesFile(project, pathsType);
+		File f = rootLocation.resolve(filename).toFile();
+		removeFile(f);
+	}
+
+	private void removeFile (File f) throws ApplicationException {
+		if (f.exists()) {
+			if (log.isDebugEnabled()) {
+				log.debug (String.format("Removing file %s", f.getAbsolutePath()));
+			}
+			if (!f.delete()) {
+				throw new ApplicationException(CODE_CANNOT_DELETE_FILE, MessageFormat.format(MESSAGE_CANNOT_DELETE_FILE, f.getAbsolutePath()));
+			}
+		} else {
+			if (log.isDebugEnabled()) {
+				log.debug (String.format("File %s is skipped. It does not exist.", f.getAbsolutePath()));
+			}
+		}
+	}
+
+
 }

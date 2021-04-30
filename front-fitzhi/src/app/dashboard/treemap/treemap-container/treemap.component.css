@@ -1,16 +1,17 @@
+/*
 div.container {
-    width: 700px;
+    width: 100%;
 }
-
+*/
 div.host {
     display: inline-flex;
 }
-
 div.legend {
     width: 50px;
     background: transparent;
     margin-bottom: 10px;
     display: inline-flex;
+    height: 100%;
 }
 
 div.gradient {
@@ -18,7 +19,7 @@ div.gradient {
     margin-top: 78px;
     margin-left: 5px;
     width: 10px;
-    height: 375px;
+    height: 470px;
 }
 
 p.sign {
@@ -33,16 +34,17 @@ p.high {
 }
 
 p.low {
-    margin-top: 325px;
+    margin-top: 420px;
     color: var(--color-error);
 }
 
 div.help {
     background-color: var(--color-help);
     border: 1px solid black;
-    min-height: 100px;
-    width:100%;
+    height: 80px;
+    width: 1000px;
     border-radius: 5px;
+    margin-top: -10px;
 }
 
 i.info {

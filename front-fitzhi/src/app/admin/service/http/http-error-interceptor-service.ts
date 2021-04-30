@@ -1,12 +1,11 @@
-import { retry, catchError } from 'rxjs/operators';
-import { HttpHandler, HttpEvent, HttpErrorResponse, HttpRequest, HttpInterceptor } from '@angular/common/http';
+import { retry, catchError, tap } from 'rxjs/operators';
+import { HttpHandler, HttpEvent, HttpErrorResponse, HttpRequest, HttpInterceptor, HttpResponse, HttpEventType } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { Injectable, Injector } from '@angular/core';
 import { MessageService } from '../../../interaction/message/message.service';
 import { Router } from '@angular/router';
 import { traceOn, HttpCodes } from 'src/app/global';
-import { BrowserStack } from 'protractor/built/driverProviders';
-import { connectableObservableDescriptor } from 'rxjs/internal/observable/ConnectableObservable';
+import { Constants } from 'src/app/constants';
 
 @Injectable({ providedIn: 'root' })
 export class HttpErrorInterceptorService implements HttpInterceptor {
@@ -20,6 +19,18 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 		return next.handle(request)
 			.pipe(
 				retry(0),
+				tap(response => {
+					if (traceOn()) {
+						if (response instanceof HttpResponse) {
+							// We do not log message if the HTTP request is sucessful
+							if (response.status !== HttpCodes.success) {
+								console.groupCollapsed ('%s %s', request.method, request.url);
+								console.log (response);
+								console.groupEnd();
+							}
+						} 
+					}
+				}),
 				catchError((response: HttpErrorResponse) => {
 					const messageService = this.injector.get(MessageService);
 					let errorMessage: string;
@@ -28,6 +39,11 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 						errorMessage = 'No Internet Connection available !';
 						setTimeout(() => messageService.warning(errorMessage), 0);
 						return throwError(errorMessage);
+					}
+
+					// This is not a network error.
+					if (response instanceof TypeError) {
+						return throwError(response);
 					}
 
 					if ((response.error) && response.error.hasOwnProperty('flagApiError')) {
@@ -43,7 +59,8 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 						return throwError(errorMessage);
 					}
 
-					if ( (response.error.hasOwnProperty('error')) && (response.error.hasOwnProperty('error_description'))) {
+				
+					if ( (response.error) && (response.error.hasOwnProperty('error')) && (response.error.hasOwnProperty('error_description'))) {
 						if (traceOn()) {
 							console.groupCollapsed('Catching error');
 							console.log ('Error', response.error.error);
@@ -61,64 +78,36 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 						return throwError(errorMessage);
 					}
 
-
 					switch (response.status) {
 						case 0:
-							setTimeout(() => messageService.warning('Server is down or unreachable!'), 0);
-							return throwError('Server is down or unreachable!');
-							break;
+							messageService.info(Constants.SERVER_DOWN + " " + request.url);
+							return throwError(Constants.SERVER_DOWN + " @ " + request.url);
+
 						case HttpCodes.notFound:
 							if (traceOn()) {
-								console.log ('Unreachable URL');
+								console.log ('Unreachable URL %s', request.urlWithParams);
 							}
 							return throwError(response);
-							break;
+
 						case HttpCodes.methodNotAllowed:
 							return throwError(response);
-							break;
+
 						case 400:
 						case 500:
-							const return_code = response.headers.get('backend.return_code');
-							if (return_code) {
-								const return_message = response.headers.get('backend.return_message');
-								if (traceOn()) {
-									console.log('Error ' + response.status
-										+ ' with back-end error code/message '
-										+ return_code + '/' + return_message);
-								}
-								errorMessage = return_message;
-							} else {
-								if (traceOn()) {
-									console.log('Error ' + response.status + ' ' + response.message);
-								}
-								if ( (response.error !== null) &&  (response.error !== undefined) ) {
-									errorMessage = response.error.message + ' (' + response.error.code + ')';
-								} else {
-									errorMessage = response.message + ' (' + response.status + ')';
-								}
+							// The system with backend.return_code & backend.return_message has been unplugged
+							// We display the error messsage and code to fix the origin
+							if (response.headers.get('backend.return_code')) {
+								console.log (response.headers.get('backend.return_code'));
+								console.log (response.headers.get('backend.return_message'));
+								throw new Error('WTF : Should not pass here !');
 							}
-							setTimeout(() => messageService.warning(errorMessage), 0);
 							return throwError(response);
+						
 						case 401:
-							if (traceOn()) {
-								console.log(response.error.error, response.error.error_description);
-							}
-							if (response.error.error === 'unauthorized') {
-								setTimeout(() => messageService.error('User/password invalid !'), 0);
-							} else {
-								if (response.error.error === 'invalid_token') {
-									setTimeout(() => messageService.error('Your session has expired. Please connect again'), 0);
-									setTimeout(() => this.router.navigate(['/welcome']), 0);
-								} else {
-									setTimeout(() => messageService.error(response.error.error_description), 0);
-									return throwError(errorMessage);
-								}
-							}
-							break;
+							// The code 401 is handled by the 2 other interceptors
+							return throwError (response);
+
 						default:
-							if (traceOn()) {
-								console.log(response);
-							}
 							if (response) {
 								if (traceOn()) {
 									console.log('Error ' + response.status + ' ' + response.message);
@@ -127,9 +116,8 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 								setTimeout(() => messageService.error(errorMessage), 0);
 							}
 							return throwError(errorMessage);
-
 					}
 				})
 			);
+		}
 	}
-}

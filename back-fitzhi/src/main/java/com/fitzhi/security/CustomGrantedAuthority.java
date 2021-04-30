@@ -3,6 +3,7 @@ package com.fitzhi.security;
 import org.springframework.security.core.GrantedAuthority;
 
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * <p>
@@ -12,6 +13,7 @@ import lombok.EqualsAndHashCode;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @EqualsAndHashCode
+@ToString
 public class CustomGrantedAuthority implements GrantedAuthority {
 
 	/**

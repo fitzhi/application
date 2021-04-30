@@ -3,7 +3,7 @@ import {Constants} from '../../constants';
 import {Project} from '../../data/project';
 import { ListProjectsService } from './list-projects-service/list-projects.service';
 import { Router } from '@angular/router';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { ProjectService } from '../../service/project.service';
@@ -13,6 +13,8 @@ import { traceOn } from '../../global';
 import { ReferentialService } from '../../service/referential.service';
 import { ProjectsDataSource } from './projects-data-source';
 import { BaseComponent } from 'src/app/base/base.component';
+import { UserSetting } from 'src/app/base/user-setting';
+import { CinematicService } from 'src/app/service/cinematic.service';
 
 @Component({
 	selector: 'app-list-project',
@@ -22,7 +24,7 @@ import { BaseComponent } from 'src/app/base/base.component';
 export class ListProjectComponent extends BaseComponent implements OnInit, AfterViewInit {
 
 	/**
-	 * The datasource that contains the filtered projects;
+	 * The datasource that contains the filtered projects
 	 */
 	dataSource: ProjectsDataSource;
 
@@ -32,7 +34,7 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 	@ViewChild(MatSort, { static: true }) sort: MatSort;
 
 	/**
-	 * The paginator of the ghosts data source.
+	 * The paginator for the Project list.
 	 */
 	@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
@@ -54,11 +56,17 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 	 */
 	commitCached: Commit;
 
+	/**
+	 * Key used to save the page size in the local storage.
+	 */
+	public pageSize = new UserSetting('project-list.pageSize', 5);
+
 	constructor(
 		private staffListService: StaffListService,
 		public referentialService: ReferentialService,
 		public projectService: ProjectService,
 		private listProjectsService: ListProjectsService,
+		public cinematicService: CinematicService,
 		private router: Router) { super(); }
 
 	ngOnInit() {
@@ -69,10 +77,12 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 
 		this.subscriptions.add(
 			this.listProjectsService.filteredProjects$
-				.subscribe(projects => {
-					this.updateData (projects);
+				.subscribe({
+					next: projects => this.updateData (projects)
 				}
-			));
+			)
+		);
+
 	}
 
 	ngAfterViewInit(): void {
@@ -115,12 +125,6 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 		return { 'fill': color};
 	}
 
-	public search(source: string): void {
-		if (traceOn()) {
-			console.log('Searching a project');
-		}
-	}
-
 	/**
 	 * Retrieved the last commit for given project
 	 * @param idProject the project identifier
@@ -134,6 +138,14 @@ export class ListProjectComponent extends BaseComponent implements OnInit, After
 		this.commitCached = this.staffListService.retrieveLastCommit(idProject);
 		this.idProjectCached = idProject;
 		return this.commitCached;
+	}
+
+	/**
+	 * This method is invoked if the user change the page size.
+	 * @param $pageEvent event 
+	 */
+	public page($pageEvent: PageEvent) {
+		this.pageSize.saveSetting($pageEvent.pageSize);
 	}
 
 	/**

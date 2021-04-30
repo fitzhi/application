@@ -110,9 +110,8 @@ public interface RepoScanner {
 	 * @param project Project whose source code files should be scan in the repository
 	 * @param settings connection settings
 	 * @throws IOException thrown if any application or network error occurs.
-	 * @throws GitAPIException thrown if any application or network error occurs.
-	 * @throws ApplicationException will be thrown by only
-	 * {@link com.fitzhi.bean.ProjectHandler#saveLocationRepository } 
+	 * @throws GitAPIException thrown if GIT or network fails to clone the repository
+	 * @throws ApplicationException thrown if an application error occurs
 	 */
 	void clone(Project project, ConnectionSettings settings) throws IOException, GitAPIException, ApplicationException;
 
@@ -267,33 +266,24 @@ public interface RepoScanner {
 
 	/**
 	 * <p>
-	 * This method is a batch method in charge of the generation of all projects.
-	 * It will iterate on each project, and execute {@link #generateAsync}.
-	 * </p>
-	 * <p><b>
-	 * The underlying implementation {@link GitCrawler} is hosting the annotation {@code @async}.
-	 * </b></p>
-	 * @throws ApplicationException thrown if any problem occurs during the generation
-	 */
-	void generateAllAsync() throws ApplicationException;
-
-	/**
-	 * <p>
 	 * This method is an ASYNCHRONOUS wrapper from the method {@link #generate(Project)}
 	 * </p>
-	 * <p><b>
+	 * <p>
+	 * <b>
 	 * The underlying implementation {@link GitCrawler} is hosting the annotation {@code @async}.
-	 * </b></p>
+	 * </b>
+	 * </p>
 	 * Generate and complete the dashboard generation figuring the activities of staff members for the passed project
 	 * @param project the project whose source code files should be parsed in the repository
-	 * @param settings the dashboard generation settings, such as :
+	 * @param settings the dashboard generation settings. This object is containing filters such as :
 	 * <ul>
-	 * <li>filtered from a starting date,</li>
-	 * <li>or filtered for a staff member.</li>
+	 * <li>a filter for a starting date,</li>
+	 * <li>a filter for a specific staff member.</li>
 	 * </ul>
-	 * @return the project risk dashboard 
+	 * @throws ApplicationException if any problem occurs during the process.
+	 * @see #generate(Project, SettingsGeneration)
 	 */
-	RiskDashboard generateAsync(Project project, SettingsGeneration settings);
+	void generateAsync(Project project, SettingsGeneration settings) throws ApplicationException;
 	
 	/**
 	 * Personalize the commit repository on a particular staff member.
