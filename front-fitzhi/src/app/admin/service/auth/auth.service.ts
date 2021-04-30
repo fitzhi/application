@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { InternalService } from 'src/app/internal-service';
-import { Constants } from 'src/app/constants';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { take, switchMap, catchError } from 'rxjs/operators';
