@@ -48,15 +48,16 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				"/api/admin/register",
 				"/api/test/ping",
 
-				// All projets are broadcasted ? (it's a question)
+				// All projets are broadcasted ? (it's a question. I do not know why the complete list of projects has to to be broadcast)
 				"/api/project", 
 
 				// All skills are broadcasted !
 				"/api/skill", 
 
-				"/api/referential/**").permitAll()
-				.antMatchers("/**").hasRole("TRUSTED_USER")
-				.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
+				"/api/referential/**")
+			.permitAll()
+			.antMatchers("/**").hasRole("TRUSTED_USER")
+			.and().exceptionHandling().accessDeniedHandler(new OAuth2AccessDeniedHandler());
 		}
 	}
 	
