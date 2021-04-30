@@ -64,14 +64,15 @@ describe('GitService', () => {
 		service.branches$('https://api.github.com/repos/fitzhi/application/branches', 'master')
 			.subscribe({
 				next: branches => {
-					expect(branches.length).toBe(7);
+					expect(branches.length).toBe(8);
 					expect(branches[0]).toBe('initialization');
 					expect(branches[1]).toBe('master');
 					expect(branches[2]).toBe('release-1-1');
 					expect(branches[3]).toBe('release-1.2');
 					expect(branches[4]).toBe('release-1.3');
 					expect(branches[5]).toBe('release-1.4');
-					expect(branches[6]).toBe('Simple-starting-forms');
+					expect(branches[6]).toBe('release-1.5');
+					expect(branches[7]).toBe('Simple-starting-forms');
 				}
 			})
 	}));

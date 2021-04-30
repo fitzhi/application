@@ -1,1 +1,10 @@
-=== Merging a branch to master
+=== Install a new branch 
+
+- Merging the actual branch release-1.m to master
+- Create the new branch release-1.n (where n = m+1)
+- Update the building script to this new branch. Files concerned
+-- Back-end build and test.java.yml	
+-- codeQL-analysis-java.yml
+-- Front-end build and test.js.yml		
+-- codeQL-analysis-typescript.yml 
+- Update the Typescript test "git.service.spec.ts" to take in account the branch release-1.n

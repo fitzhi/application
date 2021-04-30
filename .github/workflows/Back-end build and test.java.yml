@@ -4,7 +4,7 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ master, release-1.4 ]
+    branches: [ master, release-1.5 ]
   pull_request:
     branches: [ master ]
 env:
