@@ -207,8 +207,9 @@ public class ProjectController extends BaseRestController {
 
 		// We deep clone the project because we will change the password and we do not want to save this modification.
 		return new ResponseEntity<>(
-				new Project(buildProjectWithoutPassword(result.get())),
-					headers(), HttpStatus.OK);
+			new Project(buildProjectWithoutPassword(result.get())),
+			headers(), 
+			HttpStatus.OK);
 
 	}
 

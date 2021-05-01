@@ -3,6 +3,7 @@ package com.fitzhi.controller;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 import org.hamcrest.CoreMatchers;
 import org.junit.After;
@@ -55,8 +56,19 @@ public class ProjectControllerReadTest {
 	public void found() throws Exception {
 		this.mvc.perform(get("/api/project/name/project.to.find"))
 			.andExpect(status().isOk())
-	        .andExpect(content().contentType("application/json;charset=UTF-8"))
-			.andExpect(content().string(CoreMatchers.containsString("17")));;
+			.andExpect(content().contentType("application/json;charset=UTF-8"))
+			.andExpect(content().string(CoreMatchers.containsString("1789")));;
+	}
+
+	@Test
+	@WithMockUser
+	public void doNotTransportPassword() throws Exception {
+		projectHandler.get(1789).setPassword("my.password");
+		this.mvc.perform(get("/api/project/name/project.to.find"))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType("application/json;charset=UTF-8"))
+			.andExpect(jsonPath("$.id").value("1789"))
+			.andExpect(jsonPath("$.password").isEmpty());
 	}
 	
 	@After
