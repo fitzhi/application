@@ -24,7 +24,7 @@ codeQL-analysis-typescript.yml
 
 - Update the Typescript test "git.service.spec.ts" to take in account the branch release-1.n
 
-=== Marging Master into the branch release-1.n
+=== Merging Master into the branch release-1.n
 
 [source, shell]
 ----
@@ -34,3 +34,22 @@ git merge master
 ----
 
 - Update the version of the release in the POM.xml to 1.n-SNAPSHOT
+
+=== Special configuration for the MacOS Siline
+
+A fix has to be added to allow the execution of tests
+
+.webpack-dev-middleware/lib/util.js line 131
+[source, shell]
+----
+//
+// 30/04/2021
+// On MacOS Silicon, to avoid the error
+/*
+ TypeError: Cannot read property 'range' of undefined
+   at handleRangeHeaders (/Users/frvidal/work/projects/application/front-fitzhi/node_modules/webpack-dev-middleware/lib/util.js:131:21)
+   at processRequest (/Users/frvidal/work/projects/application/front-fitzhi/node_modules/webpack-dev-middleware/lib/middleware.js:98:19)
+*/
+if ((req.headers) && (req.headers.range)) {
+ const ranges = parseRange(content.length, req.headers.range);
+----
