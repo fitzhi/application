@@ -88,4 +88,16 @@ public interface SkillHandler extends DataSaverLifeCycle {
 	 */
 	boolean isSkillDetectedWithFilename(Skill skill, String sourcePath);
 
+
+	/**
+	 * Check if the given source pathname verifies the given pattern.
+	 * @param filenameDependencies Marker filename for dependencies (it might be {@code package.json}, or {@code pom.xml})
+	 * @param rootPath the rootPath where the repository has been cloned
+	 * @param sourcePath the source pathname
+	 * @param dependency the pattern to be verified
+	 * @return {@code true} if this skill is detected, {@code false} otherwise
+	 * @throws ApplicationException exception thrown if any problem occurs (most probably an IOException)
+	 */
+	boolean checkFilePattern(String filenameDependencies, String rootPath, String sourcePath, String dependency) throws ApplicationException;
+
 }

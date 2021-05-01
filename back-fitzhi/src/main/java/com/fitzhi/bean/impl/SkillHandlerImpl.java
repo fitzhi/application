@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.bean.impl;
 
 import static com.fitzhi.Error.CODE_IO_ERROR;
@@ -217,22 +214,20 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		return (matcher.find());		
 	}	
 
-	/**
-	 * Check if the given source pathname verifies the given pattern.
-	 * @param filenameDependencies Marker filename for dependencies (it might be {@code package.json}, or {@code pom.xml})
-	 * @param rootPath the rootPath where the repository has been cloned
-	 * @param sourcePath the source pathname
-	 * @param dependency the pattern to be verified
-	 * @return {@code true} if this skill is detected, {@code false} otherwise
-	 * @throws ApplicationException exception thrown if any problem occurs (most probably an IOException)
-	 */
-	private boolean checkFilePattern(String filenameDependencies, String rootPath, String sourcePath, String dependency) throws ApplicationException {
+	@Override
+	public boolean checkFilePattern(String filenameDependencies, String rootPath, String sourcePath, String dependency) throws ApplicationException {
 	
 		try {
 			if (sourcePath.indexOf(filenameDependencies) == -1) {
 				return false;
 			}
 			File file = new File(rootPath + File.separatorChar + sourcePath);
+			if (!file.exists()) {
+				if (log.isDebugEnabled()) {
+					log.debug(String.format("File %s does not exist", file.getAbsolutePath()));
+				}
+				return false;
+			}
 			try (FileReader reader = new FileReader(file)) {
 				BufferedReader br = new BufferedReader(reader);
 				return br.lines().anyMatch(line -> (line.indexOf(dependency) != -1));
@@ -240,7 +235,9 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, file.getAbsoluteFile()), e);
 			}
 		} catch (final ApplicationException e) {
-			log.error("Internal error", e);
+			if (log.isDebugEnabled()) {
+				log.debug("Application exception", e);
+			}
 			throw e;
 		}
 	}	
