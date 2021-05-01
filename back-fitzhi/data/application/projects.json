@@ -136,8 +136,8 @@
 		"name": "Spring Security Oauth",
 		"active": true,
 		"connectionSettings": 3,
-		"branch": "master",
-		"urlRepository": "https://github.com/spring-projects/spring-security-oauth.git",
+		"branch": "main",
+		"urlRepository": "https://github.com/spring-projects/spring-security-oauth",
 		"sonarProjects": [],
 		"audit": {}
 	},
