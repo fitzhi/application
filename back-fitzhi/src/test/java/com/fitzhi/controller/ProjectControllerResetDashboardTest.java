@@ -13,8 +13,6 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.source.crawler.RepoScanner;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.junit.Assert;
 import org.junit.Before;

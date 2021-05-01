@@ -186,31 +186,30 @@ public class ProjectController extends BaseRestController {
 
 	}
 
+	/**
+	 * <p>
+	 * This entry-point search a project on its name.
+	 * </p>
+	 * @param projectName the given name
+	 * @return the retrieved project
+	 * @throws ApplicationException thrown if an error occurs during the treatment
+	 * @throws NotFoundException thrown if the search failed to find a project
+	 */
 	@GetMapping(path = "/name/{projectName}")
-	public ResponseEntity<ProjectDTO> read(@PathVariable("projectName") String projectName) {
+	public ResponseEntity<Project> read(@PathVariable("projectName") String projectName) throws ApplicationException, NotFoundException {
 
-		final ResponseEntity<ProjectDTO> responseEntity;
-		try {
-			Optional<Project> result = projectHandler.lookup(projectName);
-			if (result.isPresent()) {
-				Project project = (Project) deepClone(result.get());
-				project.setPassword(null);
-				responseEntity = new ResponseEntity<>(new ProjectDTO(buildProjectWithoutPassword(result.get())),
-						headers(), HttpStatus.OK);
-			} else {
-				responseEntity = new ResponseEntity<>(
-						new ProjectDTO(new Project(), 404, "There is no project with the name " + projectName),
-						headers(), HttpStatus.NOT_FOUND);
-				if (log.isDebugEnabled()) {
-					log.debug(String.format("Cannot find a Project with the name %s", projectName));
-				}
-			}
-			return responseEntity;
-		} catch (final ApplicationException e) {
-			log.error(getStackTrace(e));
-			return new ResponseEntity<>(new ProjectDTO(new Project(), e.errorCode, e.getMessage()), headers(),
-					HttpStatus.BAD_REQUEST);
+		Optional<Project> result = projectHandler.lookup(projectName);
+		if (!result.isPresent()) {
+				throw new NotFoundException(
+					CODE_PROJECT_NOFOUND, 
+					String.format("Cannot find a Project with the name %s", projectName));
 		}
+
+		// We deep clone the project because we will change the password and we do not want to save this modification.
+		return new ResponseEntity<>(
+				new Project(buildProjectWithoutPassword(result.get())),
+					headers(), HttpStatus.OK);
+
 	}
 
 	/**
@@ -256,7 +255,6 @@ public class ProjectController extends BaseRestController {
 		if (project == null) {
 			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
-
 		projectHandler.inactivateProject(project);
 
 		return new ResponseEntity<>(null, headers(), HttpStatus.OK);
@@ -642,9 +640,12 @@ public class ProjectController extends BaseRestController {
 	}
 
 	/**
-	 * Remove the password of the project.<br/>
-	 * <i>The project has to be clone to avoid the deletion</i>
+	 * <p>
+	 * Initialize the password of the project.
+	 * </p>
 	 * 
+	 * <i>The project has to be clone to avoid to be saved with a {@code null} value</i>
+	 * z
 	 * @param project the given project
 	 * @return a cloned project without password
 	 */
