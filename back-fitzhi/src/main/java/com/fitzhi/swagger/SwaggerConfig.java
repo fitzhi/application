@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.swagger;
 
 import java.util.Arrays;
@@ -21,7 +18,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * <p>
  * Springfox-swagger configuration.
  * </p>
- * @see http://localhost:8080/swagger-ui.html
+ * @see http://localhost:8080/swagger-ui/index.html
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
