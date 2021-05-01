@@ -219,6 +219,9 @@ public class ProjectController extends BaseRestController {
 	 * @param idProject the searched project identifier
 	 * @return the HTTP Response with the retrieved project, or an empty one if the
 	 *         query failed.
+	 * 
+	 * @throws ApplicationException thrown if an error occurs during the treatment, (most probably due to an {@link IOException})
+	 * @throws NotFoundException thrown if the project to delete does not exist (any more)
 	 */
 	@DeleteMapping(value = "/{idProject}")
 	public ResponseEntity<Object> removeProject(@PathVariable("idProject") int idProject)
@@ -248,6 +251,9 @@ public class ProjectController extends BaseRestController {
 	 * 
 	 * @param idProject the given project identifier
 	 * @return an <strong>empty</strong> {@code HTTP} response.
+	 * 
+	 * @throws ApplicationException thrown if an error occurs during the treatment, (most probably due to an {@link IOException})
+	 * @throws NotFoundException thrown if the project to inactivate does not exist (any more?)
 	 */
 	@PostMapping(value = "/rpc/inactivation/{idProject}")
 	public ResponseEntity<Object> inactivateProject(@PathVariable("idProject") int idProject)
@@ -266,6 +272,9 @@ public class ProjectController extends BaseRestController {
 	 * 
 	 * @param idProject the given project identifier
 	 * @return an <strong>empty</strong> {@code HTTP} response.
+	 * 
+	 * @throws ApplicationException thrown if an error occurs during the treatment, (most probably due to an {@link IOException})
+	 * @throws NotFoundException thrown if the project to reactivate does not exist (any more?)
 	 */
 	@PostMapping(value = "/rpc/reactivation/{idProject}")
 	public ResponseEntity<Object> reactivateProject(@PathVariable("idProject") int idProject)
@@ -285,9 +294,10 @@ public class ProjectController extends BaseRestController {
 	 * 
 	 * @return the HTTP Response with the retrieved project, or an empty one if the
 	 *         query failed.
+	 * 
 	 */
 	@DeleteMapping()
-	public ResponseEntity<Object> removeAllProjects() throws ApplicationException {
+	public ResponseEntity<Object> removeAllProjects() {
 		return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
 	}
 
@@ -297,23 +307,24 @@ public class ProjectController extends BaseRestController {
 	 * @param idProject the searched project identifier
 	 * @return the HTTP Response with the retrieved project, or an empty one if the
 	 *         query failed.
+	 * 
+	 * @throws ApplicationException thrown if an error occurs during the treatment, (most probably due to an {@link IOException})
+	 * @throws NotFoundException thrown if the project does not exist (any more?)
 	 */
 	@GetMapping(value = "/{idProject}")
-	public ResponseEntity<Project> read(@PathVariable("idProject") int idProject) {
+	public ResponseEntity<Project> read(@PathVariable("idProject") int idProject) throws ApplicationException, NotFoundException {
 
-		MyReference<ResponseEntity<Project>> refResponse = projectLoader.new MyReference<>();
-		final Project searchProject = projectLoader.getProject(idProject, new Project(), refResponse);
-		if (refResponse.getResponse() != null) {
-			return refResponse.getResponse();
+		Project project = projectHandler.get(idProject);
+		if (project == null) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}
 
-		ResponseEntity<Project> response = new ResponseEntity<>(buildProjectWithoutPassword(searchProject), headers(),
+		// We hide the password because we do not want to transport the GIT password on the network.
+		return new ResponseEntity<>(
+				buildProjectWithoutPassword(project), 
+				headers(),
 				HttpStatus.OK);
-		if (log.isDebugEnabled()) {
-			log.debug(
-					String.format("Project corresponding to the id %d has returned %s", idProject, response.getBody()));
-		}
-		return response;
+				
 	}
 
 	/**

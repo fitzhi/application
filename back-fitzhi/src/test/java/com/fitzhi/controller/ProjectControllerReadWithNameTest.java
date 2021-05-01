@@ -30,7 +30,7 @@ import com.fitzhi.data.internal.Project;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectControllerReadTest {
+public class ProjectControllerReadWithNameTest {
 
 	@Autowired
 	private MockMvc mvc;
