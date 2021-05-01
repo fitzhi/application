@@ -12,7 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * This is listening the startup of the application to launch a global code analysis in batch mode
- * if the setting {@code "reboot.code.analysis"} in {@code application.properties} is set to {@code true}
+ * if the setting {@code "startup.code.analysis"} in {@code application.properties} is set to {@code true}
  */
 @Component
 @Slf4j
@@ -22,11 +22,13 @@ public class ApplicationReadyListener implements ApplicationListener<Application
 	BatchRepositoryCrawler batchRepoScanner;
 
 	/**
-	 * Number of days of inactivity before inactivation of a staff member.
+	 * <p>
+	 * Start the analyse after spring boot completion.
+	 * </p>
+	 * {@code true} we start the global generation
 	 */
-	@Value("${reboot.code.analysis}")
+	@Value("${startup.code.analysis}")
 	private boolean rebootCodeAnalysis;	
-	
 
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
