@@ -52,6 +52,7 @@ export class BackendSetupService {
 
 	/**
 	 * Test the passed URL and check if it is the very first connection.
+	 * 
 	 * @param urlCandidate the url candidate for hosting the backend.
 	 */
 	public isVeryFirstConnection(urlCandidate: string): Observable<FirstConnection> {

@@ -28,7 +28,9 @@ export class HttpRefreshTokenErrorInterceptor implements HttpInterceptor {
 	private WWW_AUTHENTICATE_INVALID_ACCESS_TOKEN = 'Bearer realm="my_rest_api", error="invalid_token", error_description="Access token expired';
 
 	private WWW_AUTHENTICATE_FULL_AUTHENTICATION = 'Bearer realm="my_rest_api", error="unauthorized", error_description="Full authentication is required to access this resource"';
-	
+		
+	private WWW_AUTHENTICATE_FULL_INVALID_ACCESS_TOKEN = 'Bearer realm="my_rest_api", error="invalid_token", error_description="Invalid access token:"'
+
 	// We currently don't test the error description.
 	//private FULL_AUTHORIZATION_IS_REQUIRED = 'Full authentication is required to access this resource';
 
@@ -64,6 +66,7 @@ export class HttpRefreshTokenErrorInterceptor implements HttpInterceptor {
 						if (wwwAuthenticate) {
 							// This is the scenario of the EXPIRED refresh token.
 							if (	wwwAuthenticate.includes(this.WWW_AUTHENTICATE_INVALID_REFRESH_TOKEN)
+								|| 	wwwAuthenticate.includes(this.WWW_AUTHENTICATE_FULL_INVALID_ACCESS_TOKEN) 
 								|| 	wwwAuthenticate.includes(this.WWW_AUTHENTICATE_FULL_AUTHENTICATION) ){
 								this.router.navigate(['/login']);
 								return throwError(response);
