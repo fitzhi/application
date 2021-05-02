@@ -1,5 +1,5 @@
 import {Project} from '../../../data/project';
-import { ProjectService } from '../../../service/project.service';
+import { ProjectService } from '../../../service/project/project.service';
 import {Injectable} from '@angular/core';
 import {Observable, of, BehaviorSubject, throwError, empty, EMPTY} from 'rxjs';
 import {tap} from 'rxjs/operators';

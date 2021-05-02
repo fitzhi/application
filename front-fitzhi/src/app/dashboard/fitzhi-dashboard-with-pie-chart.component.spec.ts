@@ -20,7 +20,7 @@ import { CinematicService } from 'src/app/service/cinematic.service';
 import { selection } from './selection';
 import { AnalysisTypeSlice } from './analysis-type-slice';
 import { PieDashboardService } from './service/pie-dashboard.service';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { Project } from 'src/app/data/project';
 import { PieLegendComponent } from './pie-legend/pie-legend.component';
 import { DatePipe } from '@angular/common';

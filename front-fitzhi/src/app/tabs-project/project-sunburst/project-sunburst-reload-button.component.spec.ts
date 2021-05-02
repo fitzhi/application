@@ -13,7 +13,7 @@ import { ListContributorsComponent } from './node-detail/list-contributors/list-
 import { TableGhostsComponent } from './project-ghosts/table-ghosts/table-ghosts.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SSEWatcherComponent } from './ssewatcher/ssewatcher.component';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { Project } from 'src/app/data/project';
 import { MessageBoxComponent } from 'src/app/interaction/message-box/dialog/message-box.component';
 import { SunburstCinematicService } from './service/sunburst-cinematic.service';

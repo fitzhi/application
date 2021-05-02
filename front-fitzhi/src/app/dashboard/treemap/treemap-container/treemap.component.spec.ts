@@ -8,7 +8,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TagifyStarsComponent } from 'src/app/tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatDialogModule } from '@angular/material/dialog';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { TreemapService } from '../service/treemap.service';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { ReferentialService } from 'src/app/service/referential.service';

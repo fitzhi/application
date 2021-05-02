@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { BranchComponent } from './branch.component';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { CinematicService } from 'src/app/service/cinematic.service';

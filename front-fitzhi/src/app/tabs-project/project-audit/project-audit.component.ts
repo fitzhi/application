@@ -9,7 +9,7 @@ import { TopicProject } from './topic-project';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { TopicEvaluation } from './project-audit-badges/topic-evaluation';
 import { TopicWeight } from './project-audit-badges/topic-weight';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { AuditChosenDetail } from './project-audit-badges/audit-badge/audit-chosen-detail';
 import { AuditDetailsHistory } from 'src/app/service/cinematic/audit-details-history';

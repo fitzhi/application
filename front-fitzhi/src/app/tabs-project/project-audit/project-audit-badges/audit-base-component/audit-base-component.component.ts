@@ -2,7 +2,7 @@ import { OnDestroy, AfterViewInit } from '@angular/core';
 import { BaseComponent } from 'src/app/base/base.component';
 import { BehaviorSubject } from 'rxjs';
 import { Project } from 'src/app/data/project';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 
 export class AuditBaseComponent extends BaseComponent implements OnDestroy, AfterViewInit {
 

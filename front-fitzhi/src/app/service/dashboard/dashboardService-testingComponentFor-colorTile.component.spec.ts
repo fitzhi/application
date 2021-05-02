@@ -7,7 +7,7 @@ import { ReferentialService } from '../referential.service';
 import { SkillService } from '../../skill/service/skill.service';
 import { StaffListComponent } from 'src/app/tabs-staff-list/staff-list/staff-list.component';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
-import { ProjectService } from '../project.service';
+import { ProjectService } from '../project/project.service';
 import {dataRiskLegends} from './data-riskLegends';
 import { RiskLegend } from 'src/app/data/riskLegend';
 import { CinematicService } from '../cinematic.service';

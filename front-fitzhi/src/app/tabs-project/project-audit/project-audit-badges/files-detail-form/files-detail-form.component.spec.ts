@@ -6,7 +6,7 @@ import { Project } from 'src/app/data/project';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { Component } from '@angular/core';
 import { AuditTopic } from 'src/app/data/AuditTopic';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { AuditAttachmentComponent } from './audit-attachment-upload/audit-attachment.component';
 import { FormsModule } from '@angular/forms';
 import { ReferentialService } from 'src/app/service/referential.service';

@@ -1,5 +1,5 @@
 import { Component, OnInit, EventEmitter, Output, OnDestroy } from '@angular/core';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { traceOn } from 'src/app/global';
 import { BaseComponent } from 'src/app/base/base.component';
 

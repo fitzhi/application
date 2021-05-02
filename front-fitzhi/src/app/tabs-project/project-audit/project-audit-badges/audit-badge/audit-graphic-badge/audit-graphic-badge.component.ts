@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, AfterViewInit, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { TopicEvaluation } from '../../topic-evaluation';
 import { Project } from 'src/app/data/project';
 import { BaseComponent } from 'src/app/base/base.component';

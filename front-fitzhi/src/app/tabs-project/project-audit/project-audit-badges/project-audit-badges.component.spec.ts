@@ -20,7 +20,7 @@ import { AuditDetailsHistory } from 'src/app/service/cinematic/audit-details-his
 import { RiskLegend } from 'src/app/data/riskLegend';
 import { AuditChosenDetail } from './audit-badge/audit-chosen-detail';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { AuditAttachmentComponent } from './files-detail-form/audit-attachment-upload/audit-attachment.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

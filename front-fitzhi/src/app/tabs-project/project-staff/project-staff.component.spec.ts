@@ -5,7 +5,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Project } from 'src/app/data/project';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { InitTest } from 'src/app/test/init-test';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { Constants } from 'src/app/constants';
 import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
 import { MatTableModule } from '@angular/material/table';

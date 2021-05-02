@@ -9,7 +9,7 @@ import { BaseComponent } from './base/base.component';
 import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.service';
 import { SkillService } from './skill/service/skill.service';
 import { AuthService } from './admin/service/auth/auth.service';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { SonarService } from './service/sonar.service';
 import { traceOn } from './global';
 import { InstallService } from './admin/service/install/install.service';

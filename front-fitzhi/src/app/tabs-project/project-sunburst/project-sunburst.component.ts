@@ -2,7 +2,7 @@ import { Component, OnInit, AfterViewInit, Input, OnDestroy, Output, EventEmitte
 import Sunburst from 'sunburst-chart';
 import { Constants } from '../../constants';
 import { MessageService } from '../../interaction/message/message.service';
-import { ProjectService } from '../../service/project.service';
+import { ProjectService } from '../../service/project/project.service';
 import { ActivatedRoute } from '@angular/router';
 import { CinematicService } from '../../service/cinematic.service';
 import { Project } from '../../data/project';

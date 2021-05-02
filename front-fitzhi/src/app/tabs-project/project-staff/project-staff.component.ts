@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy, Input, AfterContentInit } from '@angular/core';
-import { ProjectService } from '../../service/project.service';
+import { ProjectService } from '../../service/project/project.service';
 import { Constants } from '../../constants';
 import { MessageService } from '../../interaction/message/message.service';
 import { CinematicService } from '../../service/cinematic.service';

@@ -5,7 +5,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { BehaviorSubject, of } from 'rxjs';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { Project } from 'src/app/data/project';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { ProjectFormComponent } from './project-form.component';
 import { TechxhiMedalComponent } from './techxhi-medal/techxhi-medal.component';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';

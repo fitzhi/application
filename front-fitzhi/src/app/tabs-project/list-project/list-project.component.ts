@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { MatTable, MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { ProjectService } from '../../service/project.service';
+import { ProjectService } from '../../service/project/project.service';
 import { StaffListService } from '../../service/staff-list-service/staff-list.service';
 import { Commit } from '../../data/commit';
 import { traceOn } from '../../global';

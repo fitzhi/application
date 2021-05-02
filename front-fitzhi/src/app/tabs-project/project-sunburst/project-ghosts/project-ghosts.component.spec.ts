@@ -7,7 +7,7 @@ import { InitTest } from 'src/app/test/init-test';
 import { BehaviorSubject } from 'rxjs';
 import { ProjectGhostsDataSource } from './project-ghosts-data-source';
 import { ViewChild, Component } from '@angular/core';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { Project } from 'src/app/data/project';
 import { Collaborator } from 'src/app/data/collaborator';
 import { GhostsService } from './service/ghosts.service';

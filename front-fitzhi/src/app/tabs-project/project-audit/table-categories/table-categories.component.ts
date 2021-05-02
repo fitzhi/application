@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
 import { Constants } from 'src/app/constants';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Project } from 'src/app/data/project';
 import { take } from 'rxjs/operators';

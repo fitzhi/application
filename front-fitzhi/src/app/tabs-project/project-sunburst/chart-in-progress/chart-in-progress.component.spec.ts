@@ -9,7 +9,7 @@ import { Project } from 'src/app/data/project';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { FileService } from 'src/app/service/file.service';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { SunburstCinematicService } from '../service/sunburst-cinematic.service';
 import { SsewatcherService } from '../ssewatcher/service/ssewatcher.service';

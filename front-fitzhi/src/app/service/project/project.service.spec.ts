@@ -1,8 +1,8 @@
 import { TestBed, TestModuleMetadata } from '@angular/core/testing';
-import { Project } from '../data/project';
+import { Project } from '../../data/project';
 import { ProjectService } from './project.service';
 import { HttpTestingController, HttpClientTestingModule } from '@angular/common/http/testing';
-import { InitTest } from '../test/init-test';
+import { InitTest } from '../../test/init-test';
 
 
 describe('ProjectService', () => {

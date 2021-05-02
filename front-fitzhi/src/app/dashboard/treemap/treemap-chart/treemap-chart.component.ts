@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { StatTypes } from 'src/app/service/dashboard/stat-types';
 import { traceOn } from 'src/app/global';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { BaseComponent } from 'src/app/base/base.component';
 import { TreemapService } from '../service/treemap.service';
 import { switchMap } from 'rxjs/operators';

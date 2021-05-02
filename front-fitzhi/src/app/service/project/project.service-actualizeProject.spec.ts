@@ -1,17 +1,17 @@
 import { TestBed, TestModuleMetadata } from '@angular/core/testing';
-import { Project } from '../data/project';
+import { Project } from '../../data/project';
 import { ProjectService } from './project.service';
 import { HttpTestingController, HttpClientTestingModule, TestRequest } from '@angular/common/http/testing';
-import { BackendSetupService } from './backend-setup/backend-setup.service';
-import { ReferentialService } from './referential.service';
-import { SkillService } from '../skill/service/skill.service';
-import { FileService } from './file.service';
-import { MessageService } from '../interaction/message/message.service';
-import { SunburstCinematicService } from '../tabs-project/project-sunburst/service/sunburst-cinematic.service';
+import { BackendSetupService } from '../backend-setup/backend-setup.service';
+import { ReferentialService } from '../referential.service';
+import { SkillService } from '../../skill/service/skill.service';
+import { FileService } from '../file.service';
+import { MessageService } from '../../interaction/message/message.service';
+import { SunburstCinematicService } from '../../tabs-project/project-sunburst/service/sunburst-cinematic.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
-import { Skill } from '../data/skill';
-import { CinematicService } from './cinematic.service';
+import { Skill } from '../../data/skill';
+import { CinematicService } from '../cinematic.service';
 
 
 describe('ProjectService', () => {

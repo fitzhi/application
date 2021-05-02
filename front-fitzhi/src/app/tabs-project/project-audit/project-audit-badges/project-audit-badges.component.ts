@@ -8,7 +8,7 @@ import { AuditChosenDetail } from './audit-badge/audit-chosen-detail';
 import { AuditDetail } from 'src/app/data/audit-detail';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { AttachmentFile } from 'src/app/data/AttachmentFile';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 
 @Component({

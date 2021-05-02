@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { FitzhiDashboardPopupHelper } from './fitzhi-dashboard-popup-helper';
 import { selection } from './selection';
 import { PieDashboardService } from './service/pie-dashboard.service';

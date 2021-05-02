@@ -3,7 +3,7 @@ import { ReferentialService } from 'src/app/service/referential.service';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
 import { take } from 'rxjs/operators';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 
 @Component({

@@ -4,7 +4,7 @@ import { ActivityLog } from 'src/app/data/activity-log';
 import { traceOn } from 'src/app/global';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 
 @Injectable({
 	providedIn: 'root'

@@ -9,7 +9,7 @@ import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { take } from 'rxjs/operators';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { traceOn } from 'src/app/global';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
 import { SunburstCacheService } from '../../service/sunburst-cache.service';

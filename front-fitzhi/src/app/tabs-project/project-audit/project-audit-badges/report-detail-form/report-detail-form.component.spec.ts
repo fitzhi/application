@@ -10,7 +10,7 @@ import { ReferentialService } from 'src/app/service/referential.service';
 import { BehaviorSubject } from 'rxjs';
 import { Project } from 'src/app/data/project';
 import { Component } from '@angular/core';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AuditTopic } from 'src/app/data/AuditTopic';
 import { RiskLegend } from 'src/app/data/riskLegend';

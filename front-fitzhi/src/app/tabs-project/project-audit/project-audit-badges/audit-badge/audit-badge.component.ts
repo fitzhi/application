@@ -2,7 +2,7 @@ import { Component, OnInit, Input, OnDestroy, EventEmitter, Output, AfterViewIni
 import { Constants } from 'src/app/constants';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { BaseComponent } from 'src/app/base/base.component';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { MatSliderChange } from '@angular/material/slider';
 import { TopicEvaluation } from '../topic-evaluation';
 import { TopicWeight } from '../topic-weight';

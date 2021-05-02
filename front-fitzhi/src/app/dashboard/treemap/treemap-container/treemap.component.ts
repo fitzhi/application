@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TreemapChartComponent } from '../treemap-chart/treemap-chart.component';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { TreemapHeaderComponent } from '../treemap-header/treemap-header.component';
 
 @Component({

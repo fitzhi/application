@@ -13,7 +13,7 @@ import { ProjectGhostsDataSource } from '../project-ghosts-data-source';
 import { Project } from 'src/app/data/project';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { By } from '@angular/platform-browser';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 
 describe('TableGhostsComponent', () => {
 	let component: TestHostComponent;

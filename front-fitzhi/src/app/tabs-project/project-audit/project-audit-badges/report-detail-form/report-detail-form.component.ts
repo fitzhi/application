@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, OnDestroy, AfterViewInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { Project } from 'src/app/data/project';
 import { AuditBaseComponent } from '../audit-base-component/audit-base-component.component';
 import { MessageService } from 'src/app/interaction/message/message.service';

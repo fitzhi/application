@@ -14,7 +14,7 @@ import { ResponseComponentMeasures } from '../data/sonar/reponse-component-measu
 import { traceOn } from '../global';
 import { InternalService } from '../internal-service';
 import { ILanguageCount } from './ILanguageCount';
-import { ProjectService } from './project.service';
+import { ProjectService } from './project/project.service';
 import { ReferentialService } from './referential.service';
 
 @Injectable({

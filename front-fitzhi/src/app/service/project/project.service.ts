@@ -1,37 +1,37 @@
 import { Injectable, EventEmitter } from '@angular/core';
-import { Project } from '../data/project';
+import { Project } from '../../data/project';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 import { Observable, BehaviorSubject, EMPTY, of} from 'rxjs';
-import { InternalService } from '../internal-service';
+import { InternalService } from '../../internal-service';
 
-import { Constants } from '../constants';
-import { Skill } from '../data/skill';
-import { ContributorsDTO } from '../data/external/contributorsDTO';
-import { SettingsGeneration } from '../data/settingsGeneration';
-import { BackendSetupService } from './backend-setup/backend-setup.service';
+import { Constants } from '../../constants';
+import { Skill } from '../../data/skill';
+import { ContributorsDTO } from '../../data/external/contributorsDTO';
+import { SettingsGeneration } from '../../data/settingsGeneration';
+import { BackendSetupService } from '../backend-setup/backend-setup.service';
 import { take, tap, retryWhen, retry, flatMap, switchMap, catchError } from 'rxjs/operators';
-import { Library } from '../data/library';
-import { BooleanDTO } from '../data/external/booleanDTO';
-import { ReferentialService } from './referential.service';
-import { SonarProject } from '../data/SonarProject';
-import { FilesStats } from '../data/sonar/FilesStats';
-import { ProjectSonarMetricValue } from '../data/project-sonar-metric-value';
-import { MessageService } from '../interaction/message/message.service';
-import { ResponseComponentMeasures } from '../data/sonar/reponse-component-measures';
-import { SonarService } from './sonar.service';
-import { MessageGravity } from '../interaction/message/message-gravity';
-import { AuditTopic } from '../data/AuditTopic';
-import { Task } from '../data/task';
-import { AttachmentFile } from '../data/AttachmentFile';
-import { FileService } from './file.service';
-import { Ecosystem } from '../data/ecosystem';
-import { traceOn, HttpCodes } from '../global';
-import { SunburstCinematicService } from '../tabs-project/project-sunburst/service/sunburst-cinematic.service';
-import { ProjectSkill } from '../data/project-skill';
-import { SkillService } from '../skill/service/skill.service';
-import { CinematicService } from './cinematic.service';
-import { GitService } from './git/git.service';
+import { Library } from '../../data/library';
+import { BooleanDTO } from '../../data/external/booleanDTO';
+import { ReferentialService } from '../referential.service';
+import { SonarProject } from '../../data/SonarProject';
+import { FilesStats } from '../../data/sonar/FilesStats';
+import { ProjectSonarMetricValue } from '../../data/project-sonar-metric-value';
+import { MessageService } from '../../interaction/message/message.service';
+import { ResponseComponentMeasures } from '../../data/sonar/reponse-component-measures';
+import { SonarService } from '../sonar.service';
+import { MessageGravity } from '../../interaction/message/message-gravity';
+import { AuditTopic } from '../../data/AuditTopic';
+import { Task } from '../../data/task';
+import { AttachmentFile } from '../../data/AttachmentFile';
+import { FileService } from '../file.service';
+import { Ecosystem } from '../../data/ecosystem';
+import { traceOn, HttpCodes } from '../../global';
+import { SunburstCinematicService } from '../../tabs-project/project-sunburst/service/sunburst-cinematic.service';
+import { ProjectSkill } from '../../data/project-skill';
+import { SkillService } from '../../skill/service/skill.service';
+import { CinematicService } from '../cinematic.service';
+import { GitService } from '../git/git.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })

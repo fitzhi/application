@@ -10,7 +10,7 @@ import { Project } from 'src/app/data/project';
 import { MessageGravity } from 'src/app/interaction/message/message-gravity';
 import { Message } from 'src/app/interaction/message/message';
 import { MessageService } from 'src/app/interaction/message/message.service';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { traceOn } from 'src/app/global';
 
 @Component({

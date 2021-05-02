@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, AfterViewInit, OnDestroy } from '@angular/core';
 import { Project } from 'src/app/data/project';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { AuditBaseComponent } from '../audit-base-component/audit-base-component.component';
 import { AttachmentFile } from 'src/app/data/AttachmentFile';
 import { ReferentialService } from 'src/app/service/referential.service';

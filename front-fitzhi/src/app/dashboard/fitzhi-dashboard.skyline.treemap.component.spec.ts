@@ -20,7 +20,7 @@ import { CinematicService } from 'src/app/service/cinematic.service';
 import { selection } from './selection';
 import { By } from '@angular/platform-browser';
 import { SkylineService } from './skyline/service/skyline.service';
-import { ProjectService } from '../service/project.service';
+import { ProjectService } from '../service/project/project.service';
 import { PieDashboardService } from './service/pie-dashboard.service';
 import { TreemapService } from './treemap/service/treemap.service';
 import { DashboardService } from '../service/dashboard/dashboard.service';

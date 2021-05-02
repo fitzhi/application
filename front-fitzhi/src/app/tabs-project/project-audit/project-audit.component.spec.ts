@@ -22,7 +22,7 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatInputModule } from '@angular/material/input';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { Project } from 'src/app/data/project';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { AuditAttachmentComponent } from './project-audit-badges/files-detail-form/audit-attachment-upload/audit-attachment.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 

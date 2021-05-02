@@ -6,7 +6,7 @@ import { switchMap, take } from 'rxjs/operators';
 import { ProjectFloor } from 'src/app/data/project-floor';
 import { SkylineAnimation } from 'src/app/data/skyline-animation';
 import { traceOn } from 'src/app/global';
-import { ProjectService } from 'src/app/service/project.service';
+import { ProjectService } from 'src/app/service/project/project.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
