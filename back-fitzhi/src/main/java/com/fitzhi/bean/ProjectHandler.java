@@ -69,8 +69,17 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * If project is not identified (e.g. the {@link Project#getId()} is less than 1), we will generate an ID.
 	 * @param project the passed project
 	 * @return the newly created project
+	 * 
 	 */
 	Project addNewProject(Project project) throws ApplicationException;
+
+	/**
+	 * Generate the next project identifier.
+	 * 
+	 * @return the next available {@code idProject}
+	 * @throws ApplicationException thrown if an error occurs during the treatment, (most probably due to an {@link IOException})
+	 */
+	int nextIdProject() throws ApplicationException;
 
 	/**
 	 * @param idProject

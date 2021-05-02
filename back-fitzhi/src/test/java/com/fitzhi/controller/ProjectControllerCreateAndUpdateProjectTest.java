@@ -7,6 +7,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.NoSuchElementException;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,28 +70,33 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 		newProject.getSkills().put(1, new ProjectSkill(1));
 		newProject.getSonarProjects().add(new SonarProject("idProjectSonar", "name of project"));
 		
-		int numberOfProjects = projectHandler.getProjects().size();
+		int numberOfProjects = projectHandler
+				.getProjects()
+				.keySet()
+				.stream()
+				.mapToInt(v -> v)
+				.max()
+				.orElseThrow(NoSuchElementException::new);
 		
 		//
 		// WE CREATE A NEW PROJECT.
 		// The controller should return the CREATED (201) status and the location of the new entry
 		//
 		MvcResult result = this.mvc.perform(post("/api/project/")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(newProject)))
-				.andExpect(status().isCreated())
-				.andExpect(header().string("location", String.format("http://localhost/api/project/%d", numberOfProjects+1)))
-				.andReturn();
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(gson.toJson(newProject)))
+			.andExpect(status().isCreated())
+			.andExpect(header().string("location", String.format("http://localhost/api/project/%d", numberOfProjects+1)))
+			.andReturn();
 		String location = result.getResponse().getHeader("location");
-		
 		
 		//
 		// WE RETRIEVE THE NEWLY CREATED PROJECT
 		//
 		result = this.mvc.perform(get(location))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andDo(print())
-				.andReturn();
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andDo(print())
+			.andReturn();
 
 		Project project = gson.fromJson(result.getResponse().getContentAsString(), Project.class);
 		Assert.assertEquals(numberOfProjects+1, project.getId());
@@ -105,10 +112,10 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 		SonarProject entry = new SonarProject("otherId", "other name");
 		BodyParamSonarEntry bpse = new BodyParamSonarEntry(project.getId(), entry);
 		this.mvc.perform(post("/api/project/sonar/saveEntry")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpse)))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(gson.toJson(bpse)))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
 		
 		Project p = projectHandler.get(project.getId());
 		Assert.assertTrue(p != null);

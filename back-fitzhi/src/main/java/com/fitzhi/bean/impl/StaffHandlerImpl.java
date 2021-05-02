@@ -896,7 +896,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				.mapToInt(v->v)
 				.max()
 				.orElseThrow(NoSuchElementException::new);
-				return max+1;
+			return max+1;
 		} catch (final NoSuchElementException e) {
 			return 1;
 		}

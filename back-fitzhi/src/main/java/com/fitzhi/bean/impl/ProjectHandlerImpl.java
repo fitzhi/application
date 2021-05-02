@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -150,13 +151,28 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		
 		synchronized (lockDataUpdated) {
 			Map<Integer, Project> theProjects = getProjects();
-			if (project.getId() < 1) {
-				project.setId(theProjects.size() + 1);
-			}
-			theProjects.put(project.getId(), project);
+			final int nextId = (project.getId() < 0) ? nextIdProject() : project.getId();
+			project.setId(nextId);
+			theProjects.put(nextId, project);
 			this.dataUpdated = true;
 		}
 		return project;
+	}
+
+	@Override
+	public int nextIdProject() throws ApplicationException {
+		Map<Integer, Project> portfolio = getProjects();
+		try {
+			int max = portfolio
+				.keySet()
+				.stream()
+				.mapToInt(v->v)
+				.max()
+				.orElseThrow(NoSuchElementException::new);
+			return max + 1;
+		} catch (final NoSuchElementException e) {
+			return 1;
+		}
 	}
 
 	/**
