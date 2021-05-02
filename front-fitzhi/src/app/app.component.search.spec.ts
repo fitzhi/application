@@ -18,13 +18,9 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MessageComponent } from './interaction/message/message.component';
-import { InstallService } from './admin/service/install/install.service';
-import { AuthService } from './admin/service/auth/auth.service';
-import { Component } from '@angular/core';
 import { Constants } from './constants';
 import { TabsStaffListComponent } from './tabs-staff-list/tabs-staff-list.component';
 import { StaffFormComponent } from './tabs-staff/staff-form/staff-form.component';
-import { DatePipe } from '@angular/common';
 import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.service';
 import { Router } from '@angular/router';
 import { ListProjectsService } from './tabs-project/list-project/list-projects-service/list-projects.service';
@@ -34,7 +30,6 @@ import { ListProjectComponent } from './tabs-project/list-project/list-project.c
 import { ListSkillComponent } from './skill/list-skill/list-skill.component';
 import { ListCriteria } from './data/listCriteria';
 import { StaffService } from './tabs-staff/service/staff.service';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 describe('AppComponent', () => {
 
@@ -110,7 +105,7 @@ describe('AppComponent', () => {
 
 	it('Searching the projects corresponding to a criteria', async(() => {
 		const listProjectsService = TestBed.inject(ListProjectsService);
-		const spyReloadProjects = spyOn(listProjectsService, 'reloadProjects').and.returnValue();
+		const spyReloadProjects = spyOn(listProjectsService, 'search').and.returnValue();
 
 		component.onChangeForm(Constants.PROJECT_SEARCH);
 		component.onRequestQuery('*');

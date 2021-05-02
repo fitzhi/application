@@ -94,8 +94,8 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 	  * Search button has been clicked.
 	  */
 	search(): void {
-		function isNumber(value: string | number): boolean
-		{
+
+		function isNumber(value: string | number): boolean {
 		   return ((value != null) &&
 				   (value !== '') &&
 				   !isNaN(Number(value.toString())) &&
@@ -140,7 +140,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 				if (traceOn()) {
 					console.log('Reloading %s projects for search criteria %s', (this.activeOnly ? 'active' : ''), this.criteria);
 				}
-				this.listProjectsService.reloadProjects(this.criteria, this.activeOnly);
+				this.listProjectsService.search(this.criteria, this.activeOnly);
 				break;
 			}
 		}

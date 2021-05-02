@@ -45,8 +45,26 @@ describe('ListProjectsService', () => {
 		expect(theService).toBeTruthy();
 	});
 
+	it('should save the criterias when a search is done.', done  => {
+
+		const spy = spyOn(theService, 'saveCurrentSearch').and.callThrough();
+		theService.search('dummy', true);
+
+		expect(spy).toHaveBeenCalled();
+		expect(theService.currentSearch.criteria).toBe('dummy');
+		expect(theService.currentSearch.activeOnly).toBeTruthy();
+		expect(theService.currentSearch.done).toBeTruthy();
+
+		theService.filteredProjects$.subscribe({
+			next: projects => {
+				done();
+			}
+		})
+	});
+
 	it('should correctly filter projects on their name.', done  => {
-		theService.reloadProjects('dummy', true);
+		theService.search('dummy', true);
+
 		theService.filteredProjects$.subscribe({
 			next: projects => {
 				expect(projects.length).toBe(3)
@@ -61,7 +79,7 @@ describe('ListProjectsService', () => {
 		projectService.allProjects[1].active = false;
 		projectService.allProjects[3].active = false;
 
-		theService.reloadProjects('dummy', true);
+		theService.search('dummy', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
 				expect(projects.length).toBe(1)
@@ -71,7 +89,7 @@ describe('ListProjectsService', () => {
 	});
 
 	it('should correctly handle an empty result.', done  => {
-		theService.reloadProjects('unknown', true);
+		theService.search('unknown', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
 				expect(projects.length).toBe(0)
@@ -166,7 +184,7 @@ describe('ListProjectsService', () => {
 		projectService.allProjects[2].skills = { 1: new ProjectSkill(1, 100, 100) };
 		projectService.allProjects[4].skills = { 1: new ProjectSkill(1, 200, 200) };
 
-		theService.reloadProjects('skill:one', true);
+		theService.search('skill:one', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
 				expect(projects.length).toBe(2)
@@ -180,7 +198,7 @@ describe('ListProjectsService', () => {
 		projectService.allProjects[2].skills = { 1: new ProjectSkill(1, 100, 100) };
 		projectService.allProjects[4].skills = { 1: new ProjectSkill(1, 200, 200) };
 
-		theService.reloadProjects('skill:one;dummy', true);
+		theService.search('skill:one;dummy', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
 				expect(projects.length).toBe(1)
@@ -198,7 +216,7 @@ describe('ListProjectsService', () => {
 		projectService.allProjects[3].staffEvaluation = 4;
 		projectService.allProjects[4].staffEvaluation = 1;
 
-		theService.reloadProjects('staff:4', true);
+		theService.search('staff:4', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
 				expect(projects.length).toBe(2)
@@ -216,7 +234,7 @@ describe('ListProjectsService', () => {
 		projectService.allProjects[3].staffEvaluation = 4;
 		projectService.allProjects[4].staffEvaluation = 1;
 
-		theService.reloadProjects('staff:4;dummy', true);
+		theService.search('staff:4;dummy', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
 				expect(projects.length).toBe(1)
@@ -227,7 +245,7 @@ describe('ListProjectsService', () => {
 
 	it('should accept all projets with the "*" filter.', done  => {
 
-		theService.reloadProjects('*', true);
+		theService.search('*', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
 				expect(projects.length).toBe(5)
@@ -237,7 +255,7 @@ describe('ListProjectsService', () => {
 	});
 
 	it('should accept all projets with an empty filter.', done  => {
-		theService.reloadProjects(null, true);
+		theService.search(null, true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
 				expect(projects.length).toBe(5)
@@ -247,7 +265,7 @@ describe('ListProjectsService', () => {
 	});
 
 	it('should accept all projets with an empty filter.', done  => {
-		theService.reloadProjects('', true);
+		theService.search('', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
 				expect(projects.length).toBe(5)
@@ -265,7 +283,7 @@ describe('ListProjectsService', () => {
 		projectService.allProjects[3].staffEvaluation = 4;
 		projectService.allProjects[4].staffEvaluation = 1;
 
-		theService.reloadProjects('staff:1-3', true);
+		theService.search('staff:1-3', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
 				expect(projects.length).toBe(3)
@@ -283,7 +301,7 @@ describe('ListProjectsService', () => {
 		projectService.allProjects[3].staffEvaluation = 4;
 		projectService.allProjects[4].staffEvaluation = 1;
 
-		theService.reloadProjects('staff:1-3;dummy', true);
+		theService.search('staff:1-3;dummy', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
 				expect(projects.length).toBe(2)
@@ -301,7 +319,7 @@ describe('ListProjectsService', () => {
 		projectService.allProjects[3].auditEvaluation = 4;
 		projectService.allProjects[4].auditEvaluation = 1;
 
-		theService.reloadProjects('audit:1', true);
+		theService.search('audit:1', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
 				expect(projects.length).toBe(1)
@@ -319,7 +337,7 @@ describe('ListProjectsService', () => {
 		projectService.allProjects[3].auditEvaluation = 4;
 		projectService.allProjects[4].auditEvaluation = 1;
 
-		theService.reloadProjects('audit:1-3', true);
+		theService.search('audit:1-3', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
 				expect(projects.length).toBe(3)
@@ -337,7 +355,7 @@ describe('ListProjectsService', () => {
 		projectService.allProjects[3].auditEvaluation = 4;
 		projectService.allProjects[4].auditEvaluation = 1;
 
-		theService.reloadProjects('audit:1-3;dummy', true);
+		theService.search('audit:1-3;dummy', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
 				expect(projects.length).toBe(2)

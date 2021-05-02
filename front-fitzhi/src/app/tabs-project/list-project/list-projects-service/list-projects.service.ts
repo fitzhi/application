@@ -1,12 +1,11 @@
-import {Project} from '../../../data/project';
-import { ProjectService } from '../../../service/project/project.service';
-import {Injectable} from '@angular/core';
-import {Observable, of, BehaviorSubject, throwError, empty, EMPTY} from 'rxjs';
-import {tap} from 'rxjs/operators';
-import { MessageService } from '../../../interaction/message/message.service';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, EMPTY, Observable, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { traceOn } from 'src/app/global';
 import { SkillService } from 'src/app/skill/service/skill.service';
-import { stringify } from '@angular/compiler/src/util';
+import { Project } from '../../../data/project';
+import { MessageService } from '../../../interaction/message/message.service';
+import { ProjectService } from '../../../service/project/project.service';
 
 @Injectable({
 	providedIn: 'root'
@@ -14,6 +13,16 @@ import { stringify } from '@angular/compiler/src/util';
 export class ListProjectsService  {
 
 	public filteredProjects$ = new BehaviorSubject<Project[]>([]);
+
+	/**
+	 * Current active search.
+	 * This object is updated after each  reloadProjects(...)
+	*/
+	currentSearch  = {
+		done: false,
+		criteria: null,
+		activeOnly: false
+	}
 
 	static LookupCriteria = class {
 		
@@ -140,12 +149,22 @@ export class ListProjectsService  {
 		return lookup;
 	}
 
+	saveCurrentSearch(myCriteria: string, activeOnly: boolean): void {
+		this.currentSearch.criteria = myCriteria;
+		this.currentSearch.activeOnly = activeOnly;
+		this.currentSearch.done = true;
+	}
+
+
 	/**
 	* Filter the projects for the passed criteria.
 	* @param myCriteria criteria typed by the end-user
 	* @param activeOnly filtering, or not, on **active** projects.
 	*/
-	public reloadProjects(myCriteria: string, activeOnly: boolean): void {
+	public search(myCriteria: string, activeOnly: boolean): void {
+
+		// We save the current search of criterias.
+		this.saveCurrentSearch(myCriteria, activeOnly);
 
 		const elligibleProjects = (activeOnly) ?
 			this.projectService.allProjects.filter(project => (project.active)) :
@@ -221,6 +240,15 @@ export class ListProjectsService  {
 		 * We throw the resulting collection.
 		 */
 		this.filteredProjects$.next(projects);
+	}
+
+	/**
+	* Reload the data set with the former 
+	*/
+	public reloadProjects(): void {
+		if (this.currentSearch.done) {
+			this.search(this.currentSearch.criteria, this.currentSearch.activeOnly);
+		}
 	}
 
 	/**
