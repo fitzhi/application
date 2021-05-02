@@ -48,7 +48,7 @@ describe('ProjectRemoveComponent', () => {
 		projectService.allProjects = [];
 		expect(projectService.allProjects.length).toEqual(0);
 
-		const spy = spyOn(projectService, 'removeProject').and.callThrough();
+		const spy = spyOn(projectService, 'removeApiProject').and.callThrough();
 
 		projectService.allProjects.push(new Project(1515, 'Marignan'));
 		projectService.project = new Project(1789, 'Revolutionary project');

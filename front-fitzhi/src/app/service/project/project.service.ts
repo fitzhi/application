@@ -1184,9 +1184,10 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	 * This function will remove the actual project loaded in **this.project**
+	 * This function will execute a Rest call to remove the actual project loaded in **this.project**
 	 */
-	public removeProject(): void {
+	public removeApiProject(): void {
+
 		if (!this.project) {
 			throw new Error ('WTF : Should not pass here !');
 		}
@@ -1200,20 +1201,36 @@ export class ProjectService extends InternalService {
 			.subscribe({
 				next: () => {
 					if (traceOn()) {
-						console.log ('Project %s has beeen successfully removed');
+						console.log ('Project %s has beeen successfully removed', this.project.name);
 					}
-					// We remove the selected Project from the projects set
-					const indexToDelete = this.allProjects.findIndex(prj => (this.project.id === prj.id));
-					if (indexToDelete === -1) {
-						throw new Error ('WTF : Should not pass here !');
-					}
-					this.allProjects.splice(indexToDelete, 1);
+					this.removeLocalProject(this.project.id);
 					// We reinitialize the forms.
 					this.project = new Project();
 					this.projectLoaded$.next(true);
 					this.cinematicService.projectTabIndex = Constants.PROJECT_IDX_TAB_FORM;
+				},
+				error: error => {
+					if (traceOn()) {
+						console.log(error.message);
+					}
+					this.messageService.error(
+						'Cannot remove project ' + this.project.name + ', error :' + error.message);
 				}
 			});
+	}
+
+	/**
+	 * Remove a project from the local collection of projects.
+	 * 
+	 * @param idProject the given project identifier.
+	 */
+	public removeLocalProject(idProject: number): void {
+		// We remove the selected Project from the projects set
+		const indexToDelete = this.allProjects.findIndex(prj => (idProject === prj.id));
+		if (indexToDelete === -1) {
+			throw Error('WTF : Should not pass here !');
+		}
+		this.allProjects.splice(indexToDelete, 1);
 	}
 
 	/**
