@@ -809,21 +809,13 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		if ((this.projectService.project.id) && (this.projectService.project.id !== Constants.UNKNOWN)) {
 			this.projectService.updateCurrentProject();
 		}
-		
+
 		if ((!this.projectService.project.id) || (this.projectService.project.id === Constants.UNKNOWN)) {
-			this.projectService.createNewProject()
+			this.projectService.createNewProject$()
 				.pipe(take(1))
 				.subscribe(project => {
-					this.projectService.project = project;
-					if (!project.mapSkills) {
-						project.mapSkills = new Map<number, ProjectSkill>();
-					}
-
 					// If we were in creation (i.e. url = ".../project/"), we leave this mode.
 					this.creation = false;
-
-					// We add the project into the global set.
-					this.projectService.addProject(project);
 
 					// We reload the list of projects filtered by the search criteria, if necessary.
 					this.listProjectService.reload();

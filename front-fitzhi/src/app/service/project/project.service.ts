@@ -188,7 +188,7 @@ export class ProjectService extends InternalService {
 	/**
 	* Create a new project, read the saved one, and return the project in an observable.
 	*/
-	createNewProject (): Observable<Project> {
+	createNewProject$ (): Observable<Project> {
 		if (traceOn()) {
 			console.log( 'Creating the project %s', this.project.name);
 		}
@@ -200,8 +200,34 @@ export class ProjectService extends InternalService {
 					if (traceOn()) {
 						console.log ('Project created successfully, location returned %s', location);
 					}
-					return (location) ? this.httpClient.get<Project>(location) : EMPTY;
-		}));
+					return (location) ? this.loadProject$(location) : EMPTY;
+				}
+			)
+		);
+	}
+
+	/**
+	 * Load the project behind an URI location.
+	 * 
+	 * @param location the location to be accessed
+	 */
+	loadProject$(location: string): Observable<Project> {
+
+		return this.httpClient.get<Project>(location)
+			.pipe(switchMap(
+				project => {
+					this.project = project;
+					if (!project.mapSkills) {
+						project.mapSkills = new Map<number, ProjectSkill>();
+					}
+
+					// We add the project into the set 'allProjects'.
+					this.addProject(project);
+
+					return of(project);
+				}
+			)
+		);
 	}
 
 	/**

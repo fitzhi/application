@@ -89,7 +89,7 @@ describe('ProjectFormComponent', () => {
 
 	it('Creation of a new project', () => {
 
-		const spy = spyOn(projectService, 'createNewProject').and.callThrough();
+		const spy = spyOn(projectService, 'createNewProject$').and.callThrough();
 
 		// We force to a new project.
 		projectService.project.id = -1;
