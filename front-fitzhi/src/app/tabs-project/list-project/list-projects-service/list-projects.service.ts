@@ -245,7 +245,7 @@ export class ListProjectsService  {
 	/**
 	* Reload the data set with the former 
 	*/
-	public reloadProjects(): void {
+	public reload(): void {
 		if (this.currentSearch.done) {
 			this.search(this.currentSearch.criteria, this.currentSearch.activeOnly);
 		}

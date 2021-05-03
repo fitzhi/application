@@ -52,7 +52,7 @@ describe('ListProjectsService', () => {
 		theService.currentSearch.done = true;
 
 		const spy = spyOn(theService, 'search').withArgs('dummy', true).and.returnValue();
-		theService.reloadProjects();
+		theService.reload();
 
 		expect(spy).toHaveBeenCalled();
 	});
@@ -62,7 +62,7 @@ describe('ListProjectsService', () => {
 		theService.currentSearch.done = false;
 
 		const spy = spyOn(theService, 'search');
-		theService.reloadProjects();
+		theService.reload();
 
 		expect(spy).not.toHaveBeenCalled();
 	});

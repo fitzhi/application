@@ -15,12 +15,12 @@ getTestBed().initTestEnvironment(
 	platformBrowserDynamicTesting()
 );
 // Then we find all the tests
- const context = require.context('./', true, /\.spec\.ts$/);
+const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /ssewatcher\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /http-refresh-token-error-interceptor\.spec\.ts$/);
 // const context = require.context('./', true,  /list-10-contributors\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /list-filenames\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /app\.component\.search\.spec\.ts$/);
-// const context = require.context('./', true,  /list-projects\.reload\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /project\.service-remove\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);

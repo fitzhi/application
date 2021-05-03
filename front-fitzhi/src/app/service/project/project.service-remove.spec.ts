@@ -11,8 +11,8 @@ import { SunburstCinematicService } from '../../tabs-project/project-sunburst/se
 import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
 import { CinematicService } from '../cinematic.service';
-import { Skill } from 'src/app/data/skill';
-import { Message } from '@angular/compiler/src/i18n/i18n_ast';
+import { ListProjectsService } from 'src/app/tabs-project/list-project/list-projects-service/list-projects.service';
+import { doesNotReject } from 'assert';
 
 
 describe('ProjectService', () => {
@@ -34,7 +34,7 @@ describe('ProjectService', () => {
 	beforeEach(async () => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [],
-			providers: [ProjectService,
+			providers: [ProjectService, 
 				ReferentialService, SkillService, FileService, MessageService, SunburstCinematicService, BackendSetupService, CinematicService],
 			imports: [HttpClientTestingModule, HttpClientModule, MatDialogModule]
 		};
@@ -81,7 +81,7 @@ describe('ProjectService', () => {
 		}
 	});
 
-	it('should remove correctly a project after a successful call to the Rest API.', () => {
+	it('should remove correctly a project after a successful call to the Rest API.', done => {
 		
 		const reqApi1 = httpTestingController.expectOne('URL_OF_SERVER/api/skill');
 		expect(reqApi1.request.method).toEqual('GET');
@@ -93,18 +93,25 @@ describe('ProjectService', () => {
 		]);
 		
 		projectService.project = new Project(3, 'The third');
-		projectService.removeApiProject();
+		projectService.removeApiProject$().subscribe({
+			next: b => {
+
+				expect(projectService.allProjects.length).toEqual(4);
+				expect(projectService.allProjects.findIndex(p => (p.id === 3))).toEqual(-1);
+				
+				done();
+			}
+
+		})
 		
 		const reqApi2 = httpTestingController.expectOne('URL_OF_SERVER/api/project/3');
 		expect(reqApi2.request.method).toEqual('DELETE');
 		reqApi2.flush('true');
 
-		expect(projectService.allProjects.length).toEqual(4);
-		expect(projectService.allProjects.findIndex(p => (p.id === 3))).toEqual(-1);
 		
 	});
 
-	it('should correctly handle a 400 Bad Request Error when calling the Rest API.', () => {
+	it('should correctly handle a 400 Bad Request Error when calling the Rest API.', done => {
 		
 		const spyMessageService = spyOn(messageService, 'error').and.returnValue();
 
@@ -116,14 +123,23 @@ describe('ProjectService', () => {
 			}
 		]);
 
+
 		projectService.project = new Project(3, 'The third');
-		projectService.removeApiProject();
+		projectService.removeApiProject$().subscribe({
+			next: b => {
+			
+				expect(b).toBeFalse();
+				expect(projectService.allProjects.length).toEqual(5);
+				expect(spyMessageService).toHaveBeenCalled();
+
+				done();
+			}
+			
+		});
 		
 		const reqApi2 = httpTestingController.expectOne('URL_OF_SERVER/api/project/3');
+		expect(reqApi2.request.method).toEqual('DELETE');
 		reqApi2.error(new ErrorEvent('400'), {});
-
-		expect(projectService.allProjects.length).toEqual(5);
-		expect(spyMessageService).toHaveBeenCalled();
 
 	});
 

@@ -32,6 +32,7 @@ import { ProjectSkill } from '../../data/project-skill';
 import { SkillService } from '../../skill/service/skill.service';
 import { CinematicService } from '../cinematic.service';
 import { GitService } from '../git/git.service';
+import { ListProjectsService } from 'src/app/tabs-project/list-project/list-projects-service/list-projects.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -1186,7 +1187,7 @@ export class ProjectService extends InternalService {
 	/**
 	 * This function will execute a Rest call to remove the actual project loaded in **this.project**
 	 */
-	public removeApiProject(): void {
+	public removeApiProject$(): Observable<boolean> {
 
 		if (!this.project) {
 			throw new Error ('WTF : Should not pass here !');
@@ -1195,28 +1196,33 @@ export class ProjectService extends InternalService {
 			console.log ('Removing the project %d %s', this.project.id, this.project.name);
 		}
 
-		this.httpClient
+		return this.httpClient
 			.delete<object>(this.backendSetupService.url() + '/project/' + this.project.id)
-			.pipe(take(1))
-			.subscribe({
-				next: () => {
+			.pipe(
+				take(1),
+				switchMap( () => {
 					if (traceOn()) {
 						console.log ('Project %s has beeen successfully removed', this.project.name);
 					}
+					
+					// We remove the project from the local collection
 					this.removeLocalProject(this.project.id);
+
 					// We reinitialize the forms.
 					this.project = new Project();
 					this.projectLoaded$.next(true);
 					this.cinematicService.projectTabIndex = Constants.PROJECT_IDX_TAB_FORM;
-				},
-				error: error => {
+					return of(true)
+				}),
+				catchError((error) => {
 					if (traceOn()) {
 						console.log(error.message);
 					}
 					this.messageService.error(
 						'Cannot remove project ' + this.project.name + ', error :' + error.message);
-				}
-			});
+					return of(false);
+				})
+			);
 	}
 
 	/**
