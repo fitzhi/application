@@ -109,7 +109,20 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	 * Actualize a single project in the projects array.
+	 * Add the project to the global set of projects.
+	 * 
+	 * @param project the given project 
+	 */
+	public addProject(project: Project) {
+		if  (this.allProjects.find(prj => prj.id === project.id)) {
+			console.log ('WTF : project %d %s is already present in the allProjects collection.', project.id, project.name);
+		}
+		this.allProjects.push(project);
+	}
+
+	/**
+	 * Actualize a single project in the projects array from the Rest API
+	 * .
 	 * @param idProject the project identifier to actualize
 	 */
 	public actualizeProject(idProject: number) {
@@ -136,7 +149,7 @@ export class ProjectService extends InternalService {
 						this.dump(project, 'projectService when creating a project');
 					}
 				},
-				error: error => console.error ('FVI error', error)
+				error: error => console.error ('WTF : ', error)
 			});
 	}
 

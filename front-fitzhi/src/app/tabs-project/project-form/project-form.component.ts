@@ -23,6 +23,7 @@ import { traceOn } from 'src/app/global';
 import { ProjectSkill } from '../../data/project-skill';
 import { GitService } from 'src/app/service/git/git.service';
 import { Repository } from 'src/app/data/git/repository';
+import { ListProjectsService } from '../list-project/list-projects-service/list-projects.service';
 
 /**
  * ProjectFormComponent
@@ -133,6 +134,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		public referentialService: ReferentialService,
 		public skillService: SkillService,
 		public projectService: ProjectService,
+		public listProjectService: ListProjectsService, 
 		public gitService: GitService,
 		public sonarService: SonarService,
 		private router: Router) {
@@ -815,26 +817,31 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					if (!project.mapSkills) {
 						project.mapSkills = new Map<number, ProjectSkill>();
 					}
-					//
+
 					// If we were in creation (i.e. url = ".../project/"), we leave this mode.
-					//
 					this.creation = false;
 
-					//
-					// We update the array containing the collection of all projects.
-					//
+					// We add the project into the global set.
+					this.projectService.addProject(project);
+
+					// We reload the list of projects filtered by the search criteria, if necessary.
+					this.listProjectService.reload();
+					
+					// We update the project from a server call.
 					this.projectService.actualizeProject(project.id);
 
-					//
 					// We broadcast the fact that a project has been found.
-					//
 					this.projectService.projectLoaded$.next(true);
 
-					this.messageService.success('Project ' + this.projectService.project.name + '  saved !');
-
+					// We check the GIT connection settings
 					this.testConnectionSettings();
 
+					// We load the GIT branches from the backend.
 					this.loadBranchesOnBackend();
+
+					// We inform the end-user.
+					this.messageService.success('Project ' + this.projectService.project.name + '  saved !');
+
 				});
 		}
 
