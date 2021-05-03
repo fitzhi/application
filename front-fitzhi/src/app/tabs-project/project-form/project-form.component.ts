@@ -809,6 +809,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		if ((this.projectService.project.id) && (this.projectService.project.id !== Constants.UNKNOWN)) {
 			this.projectService.updateCurrentProject();
 		}
+		
 		if ((!this.projectService.project.id) || (this.projectService.project.id === Constants.UNKNOWN)) {
 			this.projectService.createNewProject()
 				.pipe(take(1))

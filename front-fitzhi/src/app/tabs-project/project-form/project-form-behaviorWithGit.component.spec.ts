@@ -21,6 +21,7 @@ import { GitService } from 'src/app/service/git/git.service';
 import { Repository } from 'src/app/data/git/repository';
 import { BranchComponent } from './branch/branch.component';
 import { By } from '@angular/platform-browser';
+import { ListProjectsService } from '../list-project/list-projects-service/list-projects.service';
 
 describe('ProjectFormComponent', () => {
 	let component: TestHostComponent;
@@ -46,7 +47,7 @@ describe('ProjectFormComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [ProjectFormComponent, TechxhiMedalComponent, QuotationBadgeComponent, AuditGraphicBadgeComponent,
 				TestHostComponent, BranchComponent],
-			providers: [ReferentialService, CinematicService, GitService, ProjectService],
+			providers: [ReferentialService, CinematicService, GitService, ProjectService, ListProjectsService],
 			imports: [
 					MatButtonToggleModule, MatCheckboxModule, HttpClientTestingModule, FormsModule, ReactiveFormsModule,
 					MatDialogModule, RouterTestingModule

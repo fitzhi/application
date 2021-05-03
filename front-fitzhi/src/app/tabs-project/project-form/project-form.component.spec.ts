@@ -18,11 +18,13 @@ import { Component } from '@angular/core';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BranchComponent } from './branch/branch.component';
+import { ListProjectsService } from '../list-project/list-projects-service/list-projects.service';
 
 describe('ProjectFormComponent', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
 	let projectService: ProjectService;
+	let listProjectsService: ListProjectsService;
 	let backendSetupService: BackendSetupService;
 	let httpTestingController: HttpTestingController;
 
@@ -41,7 +43,7 @@ describe('ProjectFormComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [ ProjectFormComponent, TechxhiMedalComponent, QuotationBadgeComponent, AuditGraphicBadgeComponent,
 				TestHostComponent, BranchComponent],
-			providers: [ReferentialService, CinematicService, ProjectService],
+			providers: [ReferentialService, CinematicService, ProjectService, ListProjectsService],
 			imports: [
 					MatButtonToggleModule, MatCheckboxModule, HttpClientTestingModule, FormsModule, ReactiveFormsModule,
 					MatDialogModule, RouterTestingModule
@@ -56,6 +58,8 @@ describe('ProjectFormComponent', () => {
 		backendSetupService.saveUrl('URL_OF_SERVER');
 
 		httpTestingController = TestBed.inject(HttpTestingController);
+
+		listProjectsService = TestBed.inject(ListProjectsService);
 
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
@@ -76,7 +80,6 @@ describe('ProjectFormComponent', () => {
 			}
 		]);
 
-
 		fixture.detectChanges();
 	});
 
@@ -85,6 +88,7 @@ describe('ProjectFormComponent', () => {
 	});
 
 	it('Creation of a new project', () => {
+
 		const spy = spyOn(projectService, 'createNewProject').and.callThrough();
 
 		// We force to a new project.
@@ -99,9 +103,11 @@ describe('ProjectFormComponent', () => {
 
 		fixture.detectChanges();
 		expect(component).toBeTruthy();
+
 	});
 
 	it('Update of an existing project', () => {
+
 		const spy = spyOn(projectService, 'updateCurrentProject').and.callThrough();
 
 		fixture.detectChanges();
