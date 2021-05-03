@@ -201,6 +201,12 @@ export class ProjectService extends InternalService {
 						console.log ('Project created successfully, location returned %s', location);
 					}
 					return (location) ? this.loadProject$(location) : EMPTY;
+				}),
+				catchError(error => {
+					if (traceOn()) {
+						console.log ('Error thrown', error);
+					}
+					return EMPTY;
 				}
 			)
 		);

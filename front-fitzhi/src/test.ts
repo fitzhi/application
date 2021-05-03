@@ -21,7 +21,7 @@ const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /list-10-contributors\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /list-filenames\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /app\.component\.search\.spec\.ts$/);
-// const context = require.context('./', true,  /project\.service-loadProject\.spec\.ts$/);
+// const context = require.context('./', true,  /project\.service-createNewProject\.spec\.ts$/);
 // const context = require.context('./', true,  /project-form\.component\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);
