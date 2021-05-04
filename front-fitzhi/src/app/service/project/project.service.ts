@@ -239,21 +239,24 @@ export class ProjectService extends InternalService {
 	/**
 	* Updating the current project
 	*/
-	updateCurrentProject () {
+	public updateCurrentProject$(): Observable<boolean> {
 		if (traceOn()) {
 			console.log( 'Updating the project %s', this.project.name);
 		}
-		this.httpClient
+		return this.httpClient
 			.put<Project>(this.backendSetupService.url() + '/project/' + this.project.id, this.project,  {observe: 'response'})
-			.subscribe({
-				next: response => {
+			.pipe(
+				take(1),
+				switchMap( response => {
 					if (response.status === HttpCodes.noContent) {
 						this.messageService.success('Project successfully updated!');
+						return of(true);
 					} else {
 						console.error ('WTF : Should not pass here!');
+						return of(false);
 					}
-				},
-				error: responseInError => {
+				}),
+				catchError( responseInError => {
 					switch (responseInError.status) {
 						case HttpCodes.methodNotAllowed:
 							this.messageService.error('You are not allowed to modify this project');
@@ -264,8 +267,9 @@ export class ProjectService extends InternalService {
 						default:
 							console.error ('WTF : Should not pass here!');
 					}
-				}
-			});
+					return of(false);
+				})
+			);
 	}
 
 	/**

@@ -83,11 +83,11 @@ describe('ProjectFormComponent', () => {
 		fixture.detectChanges();
 	});
 
-	it('Should be created without error', () => {
+	it('Should be created without error.', () => {
 		expect(component).toBeTruthy();
 	});
 
-	it('Creation of a new project', () => {
+	it('Clicking the button "buttonOk" execute a CREATE rest API call.', () => {
 
 		const spy = spyOn(projectService, 'createNewProject$').and.callThrough();
 
@@ -99,6 +99,7 @@ describe('ProjectFormComponent', () => {
 		button.click();
 
 		const creationUrl = httpTestingController.expectOne('URL_OF_SERVER/api/project');
+		expect(creationUrl.request.method).toEqual('POST');
 		creationUrl.flush(null);
 
 		fixture.detectChanges();
@@ -106,19 +107,34 @@ describe('ProjectFormComponent', () => {
 
 	});
 
-	it('Update of an existing project', () => {
+	it('Should be created without error.', () => {
+		expect(component).toBeTruthy();
+	});
 
-		const spy = spyOn(projectService, 'updateCurrentProject').and.callThrough();
+	it('Clicking the button "buttonOk" execute an UPDATE rest API call.', () => {
+
+		const spyUpdate = spyOn(projectService, 'updateCurrentProject$').and.callThrough();
 
 		fixture.detectChanges();
 		const button = fixture.debugElement.nativeElement.querySelector('#buttonOk');
 		button.click();
 
 		const creationUrl = httpTestingController.expectOne('URL_OF_SERVER/api/project/1789');
+		expect(creationUrl.request.method).toEqual('PUT');
 		creationUrl.flush(null);
 
+	});
+
+	it('Updating the project invokes a reload of the filtered projects list.', () => {
+
+		const spyUpdate = spyOn(projectService, 'updateCurrentProject$').and.returnValue(of(true));
+		const spyReload = spyOn(listProjectsService, 'reload').and.returnValue();
+
 		fixture.detectChanges();
-		expect(component).toBeTruthy();
+		const button = fixture.debugElement.nativeElement.querySelector('#buttonOk');
+		button.click();
+
+		expect(spyReload).toHaveBeenCalled();
 	});
 
 	afterEach(() => {
