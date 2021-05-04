@@ -395,42 +395,42 @@ public class ProjectController extends BaseRestController {
 		return new ResponseEntity<>(branches, headers(), HttpStatus.OK);
 	}
 
+	/**
+	 * <p>
+	 * This procedure reads and returns all projects declared in Fitzhi.
+	 * </p>
+	 * @return a collection of projects
+	 * @throws ApplicationException throw if any problem occurs
+	 */
 	@GetMapping("")
-	public Collection<Project> readAll() {
-		try {
-			Collection<Project> projects = projectHandler.getProjects().values();
+	public Collection<Project> readAll() throws ApplicationException {
 
-			// Returning project
-			final Collection<Project> responseProjects;
+		Collection<Project> projects = projectHandler.getProjects().values();
 
-			if (shuffleService.isShuffleMode()) {
-				responseProjects = new ArrayList<>();
-				if (log.isInfoEnabled()) {
-					log.info("The projects collection is beeing shuffled for confidentiality purpose");
-				}
-				projects.stream().forEach(project -> {
-					final Project clone = buildProjectWithoutPassword(project);
-					clone.setName(shuffleService.shuffle(clone.getName()));
-					clone.setUsername(shuffleService.shuffle(clone.getUsername()));
-					clone.setUrlRepository(shuffleService.shuffle(clone.getName()));
-					responseProjects.add(clone);
-				});
-			} else {
-				responseProjects = new ArrayList<>();
-				for (Project project : projects) {
-					responseProjects.add(buildProjectWithoutPassword(project));
-				}
+		// Returning project
+		final Collection<Project> responseProjects = new ArrayList<>();
+		
+		if (shuffleService.isShuffleMode()) {
+			if (log.isInfoEnabled()) {
+				log.info("The projects collection is beeing shuffled for confidentiality purpose");
 			}
-
-			if (log.isDebugEnabled()) {
-				log.debug(String.format("'/Project' is returning %d projects", responseProjects.size()));
+			projects.stream().forEach(project -> {
+				final Project clone = buildProjectWithoutPassword(project);
+				clone.setName(shuffleService.shuffle(clone.getName()));
+				clone.setUsername(shuffleService.shuffle(clone.getUsername()));
+				clone.setUrlRepository(shuffleService.shuffle(clone.getName()));
+				responseProjects.add(clone);
+			});
+		} else {
+			for (Project project : projects) {
+				responseProjects.add(buildProjectWithoutPassword(project));
 			}
-			return responseProjects;
-
-		} catch (final ApplicationException e) {
-			log.error(getStackTrace(e));
-			return new ArrayList<Project>();
 		}
+
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("'/Project' is returning %d projects", responseProjects.size()));
+		}
+		return responseProjects;
 
 	}
 
