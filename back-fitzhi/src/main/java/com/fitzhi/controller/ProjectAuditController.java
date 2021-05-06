@@ -2,14 +2,24 @@ package com.fitzhi.controller;
 
 import static com.fitzhi.Error.CODE_CANNOT_RETRIEVE_ATTACHMENTFILE;
 import static com.fitzhi.Error.LIB_CANNOT_RETRIEVE_ATTACHMENTFILE;
-import static com.fitzhi.Global.BACKEND_RETURN_CODE;
-import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+
+import com.fitzhi.bean.ProjectAuditHandler;
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.controller.in.BodyParamAuditEntries;
+import com.fitzhi.controller.in.BodyParamAuditEntry;
+import com.fitzhi.controller.in.BodyParamProjectAttachmentFile;
+import com.fitzhi.data.internal.AttachmentFile;
+import com.fitzhi.data.internal.AuditTopic;
+import com.fitzhi.data.internal.TopicWeight;
+import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.service.FileType;
+import com.fitzhi.service.StorageService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -29,19 +39,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.Api;
-
-import com.fitzhi.bean.ProjectAuditHandler;
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.controller.in.BodyParamAuditEntries;
-import com.fitzhi.controller.in.BodyParamAuditEntry;
-import com.fitzhi.controller.in.BodyParamProjectAttachmentFile;
-import com.fitzhi.data.internal.AttachmentFile;
-import com.fitzhi.data.internal.AuditTopic;
-import com.fitzhi.data.internal.TopicWeight;
-import com.fitzhi.exception.ApplicationException;
-import com.fitzhi.service.FileType;
-import com.fitzhi.service.StorageService;
-
 import lombok.extern.slf4j.Slf4j;
 
 /**

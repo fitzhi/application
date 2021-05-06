@@ -13,7 +13,6 @@ import com.fitzhi.controller.in.BodyParamProjectSonarServer;
 import com.fitzhi.controller.in.BodyParamSonarEntry;
 import com.fitzhi.controller.in.BodyParamSonarFilesStats;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.SonarEvaluation;
 import com.fitzhi.data.internal.SonarProject;
 import com.fitzhi.exception.ApplicationException;
 

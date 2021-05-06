@@ -107,8 +107,6 @@ public class ProjectController extends BaseRestController {
 	@Autowired
 	ShuffleService shuffleService;
 
-
-
 	/**
 	 * Source control parser.
 	 */
@@ -231,10 +229,8 @@ public class ProjectController extends BaseRestController {
 	@DeleteMapping(value = "/{idProject}")
 	public ResponseEntity<Object> removeProject(@PathVariable("idProject") int idProject)
 			throws NotFoundException, ApplicationException {
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
+
+		Project project = projectHandler.find(idProject);
 
 		if (!project.isEmpty()) {
 			throw new ApplicationException(CODE_PROJECT_IS_NOT_EMPTY,
@@ -263,10 +259,9 @@ public class ProjectController extends BaseRestController {
 	@PostMapping(value = "/rpc/inactivation/{idProject}")
 	public ResponseEntity<Object> inactivateProject(@PathVariable("idProject") int idProject)
 			throws NotFoundException, ApplicationException {
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
+
+		Project project = projectHandler.find(idProject);
+		
 		projectHandler.inactivateProject(project);
 
 		return new ResponseEntity<>(null, headers(), HttpStatus.OK);
@@ -284,10 +279,8 @@ public class ProjectController extends BaseRestController {
 	@PostMapping(value = "/rpc/reactivation/{idProject}")
 	public ResponseEntity<Object> reactivateProject(@PathVariable("idProject") int idProject)
 			throws NotFoundException, ApplicationException {
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
+		
+		Project project = projectHandler.find(idProject);
 
 		projectHandler.reactivateProject(project);
 
@@ -319,10 +312,7 @@ public class ProjectController extends BaseRestController {
 	@GetMapping(value = "/{idProject}")
 	public ResponseEntity<Project> read(@PathVariable("idProject") int idProject) throws ApplicationException, NotFoundException {
 
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
+		Project project = projectHandler.find(idProject);
 
 		// We hide the password because we do not want to transport the GIT password on the network.
 		return new ResponseEntity<>(
@@ -343,10 +333,7 @@ public class ProjectController extends BaseRestController {
 	public ResponseEntity<Collection<ProjectSkill>> get(final @PathVariable("idProject") int idProject)
 			throws ApplicationException {
 
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
+		Project project = projectHandler.find(idProject);
 
 		return new ResponseEntity<>(project.getSkills().values(), headers(), HttpStatus.OK);
 	}
@@ -361,10 +348,7 @@ public class ProjectController extends BaseRestController {
 	@GetMapping(value = "/branches/{idProject}")
 	public ResponseEntity<String[]> branches(@PathVariable("idProject") int idProject) throws ApplicationException {
 
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
+		Project project = projectHandler.find(idProject);
 
 		final String REF_HEADS = "refs/heads/";
 
@@ -448,11 +432,11 @@ public class ProjectController extends BaseRestController {
 	 */
 	@GetMapping(value = "/test/{idProject}")
 	public ResponseEntity<Boolean> test(@PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
+		
+		Project project = projectHandler.find(idProject);
+		
 		boolean connected = this.scanner.testConnection(project);
+		
 		return new ResponseEntity<>(connected, headers(), HttpStatus.OK);
 	}
 

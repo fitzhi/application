@@ -17,6 +17,7 @@ import com.fitzhi.data.internal.SonarProject;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
 
 import lombok.NonNull;
 
@@ -40,7 +41,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	Optional<Project> lookup(String projectName) throws ApplicationException;
 
 	/**
-	 * Retrieve a project.
+	 * Retrieve a project from the portfolio.
 	 * 
 	 * @param idProject
 	 *            project identifier
@@ -52,13 +53,14 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	Project get(int idProject) throws ApplicationException;
 
 	/**
-	 * Find <b>ABSOLUTELY</b> a project on an identifier ID.
+	 * Find a <b>NON NULLABLE</b> project on a given ID. A result is mandatory for this method.
 	 * 
-	 * @param idProject project identifier.
+	 * @param idProject the given project identifier.
 	 * @return a non-nullable project retrieved in the projects repository.
-	 * @throws ApplicationException thrown if the project identifier is not retrieved
+	 * @throws ApplicationException thrown if an error occurs during the search, most probably an {@link IOException}
+	 * @throws NotFoundException thrown if the project identifier is not retrieved in the application portfolio
 	 */
-	Project find(int idProject) throws ApplicationException;
+	Project find(int idProject) throws ApplicationException, NotFoundException;
 
 	/**
 	 * <p>
