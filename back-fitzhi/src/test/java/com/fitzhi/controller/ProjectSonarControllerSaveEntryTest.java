@@ -2,7 +2,6 @@ package com.fitzhi.controller;
 
 import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;

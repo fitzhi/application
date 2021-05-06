@@ -7,8 +7,6 @@ import static com.fitzhi.Error.MESSAGE_SONAR_KEY_NOFOUND;
 import static com.fitzhi.Global.NO_USER_PASSWORD_ACCESS;
 import static com.fitzhi.Global.REMOTE_FILE_ACCESS;
 import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
-import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
-import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 
 import java.io.IOException;
 import java.nio.file.Path;

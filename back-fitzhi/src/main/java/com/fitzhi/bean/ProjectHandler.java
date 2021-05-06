@@ -19,8 +19,6 @@ import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
 
-import lombok.NonNull;
-
 public interface ProjectHandler extends DataSaverLifeCycle {
 
 	/**
