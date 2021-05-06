@@ -80,7 +80,7 @@ public class ProjectSonarController {
 			.filter(sp -> sp.getKey().equals(sonarKey))
 			.findFirst();
 		
-		if (oSonarProject.isEmpty()) {
+		if (!oSonarProject.isPresent()) {
 			throw new ApplicationException(
 				CODE_SONAR_KEY_NOFOUND, 
 				MessageFormat.format(MESSAGE_SONAR_KEY_NOFOUND, sonarKey, idProject));
