@@ -11,12 +11,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.controller.in.BodyParamProjectSonarEvaluation;
+import com.fitzhi.controller.in.BodyParamSonarFilesStats;
 import com.fitzhi.controller.util.LocalDateAdapter;
+import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.SonarEvaluation;
 import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,7 +36,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * <p>
- * Test of the method {@link ProjectSonarController#saveEvaluation(com.fitzhi.controller.in.BodyParamProjectSonarEvaluation)}
+ * Test of the method {@link ProjectSonarController#saveFilesStats(com.fitzhi.controller.in.BodyParamSonarFilesStats)}
  * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -43,7 +44,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectSonarControllerSaveEvaluationTest {
+public class ProjectSonarControllerSaveFileMetricsTest {
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -59,47 +60,43 @@ public class ProjectSonarControllerSaveEvaluationTest {
 
 	@Test
 	@WithMockUser
-	public void saveEvaluation() throws Exception {
+	public void saveFilesStats() throws Exception {
 		
 		when(projectHandler.find(1805)).thenReturn(new Project(1805, "Testing project"));
 	
-		this.mvc.perform(post("/api/project/sonar/saveEvaluation")
+		this.mvc.perform(post("/api/project/sonar/files-stats")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpse())))
+				.content(gson.toJson(bpsfs())))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().string("true"));
 
-		Mockito.verify(projectHandler, times(1)).saveSonarEvaluation(
-				new Project(1805, "Testing project"), 
-				"key-sonar", 
-				new SonarEvaluation());
-		Mockito.verify(projectHandler, times(1)).find(1805);
+		Mockito.verify(projectHandler, times(1)).saveFilesStats(
+			new Project(1805, "Testing project"), "key-sonar", new ArrayList<FilesStats>());
+		
 	}
 
 	@Test
 	@WithMockUser
-	public void saveEvaluationKO() throws Exception {
+	public void saveFilesStatsKO() throws Exception {
 		
 		doThrow(new ApplicationException(CODE_PROJECT_NOFOUND, "Project 1805 not found"))
 			.when(projectHandler)
 			.find(1805);
 
-		this.mvc.perform(post("/api/project/sonar/saveEvaluation")
+		this.mvc.perform(post("/api/project/sonar/files-stats")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpse())))
+				.content(gson.toJson(bpsfs())))
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.message", is("Project 1805 not found")))
 				.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)));
-
 	}
 
-	private BodyParamProjectSonarEvaluation bpse() {
-		BodyParamProjectSonarEvaluation bpse = new BodyParamProjectSonarEvaluation();
-		bpse.setIdProject(1805);
-		bpse.setSonarKey("key-sonar");
-		bpse.setSonarEvaluation(new SonarEvaluation());
-		return bpse;
+	private BodyParamSonarFilesStats bpsfs() {
+		BodyParamSonarFilesStats bpsfs = new BodyParamSonarFilesStats();
+		bpsfs.setIdProject(1805);
+		bpsfs.setSonarProjectKey("key-sonar");
+		return bpsfs;
 	}
 }

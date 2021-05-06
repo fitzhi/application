@@ -7,6 +7,8 @@ import static com.fitzhi.Error.MESSAGE_SONAR_KEY_NOFOUND;
 import static com.fitzhi.Global.NO_USER_PASSWORD_ACCESS;
 import static com.fitzhi.Global.REMOTE_FILE_ACCESS;
 import static com.fitzhi.Global.USER_PASSWORD_ACCESS;
+import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -41,6 +43,7 @@ import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -102,6 +105,16 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Override
 	public Project get(final int idProject) throws ApplicationException {
 		return getProjects().get(idProject);
+	}
+
+	@Override
+	public Project find(final int idProject) throws ApplicationException {
+		Project project = getProjects().get(idProject);
+		if (project == null) {
+			throw new NotFoundException(CODE_PROJECT_NOFOUND, 
+				MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
+		}
+		return project;
 	}
 
 	@Override

@@ -62,7 +62,7 @@ public class ProjectSonarControllerRemoveEntryTest {
 	@WithMockUser
 	public void removeEntry() throws Exception {
 		
-		when(projectHandler.get(1805)).thenReturn(new Project(1805, "Testing project"));
+		when(projectHandler.find(1805)).thenReturn(new Project(1805, "Testing project"));
 	
 		this.mvc.perform(post("/api/project/sonar/removeEntry")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -75,7 +75,7 @@ public class ProjectSonarControllerRemoveEntryTest {
 			.removeSonarEntry(
 				new Project(1805, "Testing project"), 
 				new SonarProject("key-sonar", "name-sonar"));
-		Mockito.verify(projectHandler, times(1)).get(1805);
+		Mockito.verify(projectHandler, times(1)).find(1805);
 		
 	}
 
@@ -85,7 +85,7 @@ public class ProjectSonarControllerRemoveEntryTest {
 		
 		doThrow(new ApplicationException(CODE_PROJECT_NOFOUND, "Project 1805 not found"))
 			.when(projectHandler)
-			.get(anyInt());
+			.find(1805);
 
 		this.mvc.perform(post("/api/project/sonar/removeEntry")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)

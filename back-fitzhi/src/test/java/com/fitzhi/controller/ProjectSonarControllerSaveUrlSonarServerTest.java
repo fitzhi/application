@@ -5,6 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.hamcrest.Matchers.is;
 
 import java.time.LocalDate;
 
@@ -22,6 +24,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import com.fitzhi.Error;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.in.BodyParamProjectSonarServer;
 import com.fitzhi.controller.util.LocalDateAdapter;
@@ -85,16 +88,14 @@ public class ProjectSonarControllerSaveUrlSonarServerTest {
 		bppss.setIdProject((int) System.currentTimeMillis()%314116);
 		bppss.setUrlSonarServer("Who cares...");
 		
-		MvcResult result = this.mvc.perform(post("/api/project/sonar/saveUrl")
+		this.mvc.perform(post("/api/project/sonar/saveUrl")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(bppss)))
-				.andExpect(status().isInternalServerError())
+				.andExpect(status().isNotFound())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+				.andExpect(jsonPath("$.code", is(Error.CODE_PROJECT_NOFOUND)))
 				.andDo(print())
 				.andReturn();
-		
-		Boolean b = gson.fromJson(result.getResponse().getContentAsString(), Boolean.class);
-		Assert.assertFalse(b);
 		
 	}
 	

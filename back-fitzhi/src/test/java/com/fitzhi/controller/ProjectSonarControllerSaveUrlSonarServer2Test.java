@@ -2,7 +2,6 @@ package com.fitzhi.controller;
 
 import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -12,15 +11,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.controller.in.BodyParamSonarEntry;
-import com.fitzhi.controller.in.BodyParamSonarFilesStats;
+import com.fitzhi.controller.in.BodyParamProjectSonarServer;
 import com.fitzhi.controller.util.LocalDateAdapter;
-import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.SonarProject;
 import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -39,7 +34,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * <p>
- * Test of the method {@link ProjectSonarController#saveFilesStats(com.fitzhi.controller.in.BodyParamSonarFilesStats)}
+ * Test of the method {@link ProjectSonarController#saveUrlSonarServer(com.fitzhi.controller.in.BodyParamProjectSonarServer)}
  * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -47,7 +42,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectSonarControllerSaveFileStatsTest {
+public class ProjectSonarControllerSaveUrlSonarServer2Test {
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -63,43 +58,45 @@ public class ProjectSonarControllerSaveFileStatsTest {
 
 	@Test
 	@WithMockUser
-	public void saveFilesStats() throws Exception {
+	public void saveUrlSonarServer() throws Exception {
 		
-		when(projectHandler.get(1805)).thenReturn(new Project(1805, "Testing project"));
+		when(projectHandler.find(1805)).thenReturn(new Project(1805, "Testing project"));
 	
-		this.mvc.perform(post("/api/project/sonar/files-stats")
+		this.mvc.perform(post("/api/project/sonar/saveUrl")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpsfs())))
+				.content(gson.toJson(bpse())))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().string("true"));
 
-		Mockito.verify(projectHandler, times(1)).saveFilesStats(
-			new Project(1805, "Testing project"), "key-sonar", new ArrayList<FilesStats>());
-		
+		Mockito.verify(projectHandler, times(1)).saveUrlSonarServer(
+				new Project(1805, "Testing project"), 
+				"URL_OF_SONAR");
+		Mockito.verify(projectHandler, times(1)).find(1805);
 	}
 
 	@Test
 	@WithMockUser
-	public void saveFilesStatsKO() throws Exception {
+	public void saveUrlSonarServerKO() throws Exception {
 		
 		doThrow(new ApplicationException(CODE_PROJECT_NOFOUND, "Project 1805 not found"))
 			.when(projectHandler)
-			.get(anyInt());
+			.find(1805);
 
-		this.mvc.perform(post("/api/project/sonar/files-stats")
+		this.mvc.perform(post("/api/project/sonar/saveUrl")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpsfs())))
+				.content(gson.toJson(bpse())))
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.message", is("Project 1805 not found")))
 				.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)));
+
 	}
 
-	private BodyParamSonarFilesStats bpsfs() {
-		BodyParamSonarFilesStats bpsfs = new BodyParamSonarFilesStats();
-		bpsfs.setIdProject(1805);
-		bpsfs.setSonarProjectKey("key-sonar");
-		return bpsfs;
+	private BodyParamProjectSonarServer bpse() {
+		BodyParamProjectSonarServer bppsse = new BodyParamProjectSonarServer();
+		bppsse.setIdProject(1805);
+		bppsse.setUrlSonarServer("URL_OF_SONAR");
+		return bppsse;
 	}
 }

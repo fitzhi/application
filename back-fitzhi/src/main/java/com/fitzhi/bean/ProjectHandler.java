@@ -18,6 +18,8 @@ import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
 
+import lombok.NonNull;
+
 public interface ProjectHandler extends DataSaverLifeCycle {
 
 	/**
@@ -48,6 +50,15 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 *             thrown most probably if an IO exception occurs
 	 */
 	Project get(int idProject) throws ApplicationException;
+
+	/**
+	 * Find <b>ABSOLUTELY</b> a project on an identifier ID.
+	 * 
+	 * @param idProject project identifier.
+	 * @return a non-nullable project retrieved in the projects repository.
+	 * @throws ApplicationException thrown if the project identifier is not retrieved
+	 */
+	Project find(int idProject) throws ApplicationException;
 
 	/**
 	 * <p>

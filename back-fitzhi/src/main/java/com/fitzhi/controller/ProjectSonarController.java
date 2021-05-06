@@ -1,14 +1,11 @@
 package com.fitzhi.controller;
 
-import static com.fitzhi.Global.BACKEND_RETURN_CODE;
-import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
 import static com.fitzhi.Error.CODE_SONAR_KEY_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_SONAR_KEY_NOFOUND;
 
 import java.text.MessageFormat;
 import java.util.Optional;
 
-import com.fitzhi.Error;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.in.BodyParamProjectSonarEvaluation;
 import com.fitzhi.controller.in.BodyParamProjectSonarMetricValues;
@@ -16,6 +13,7 @@ import com.fitzhi.controller.in.BodyParamProjectSonarServer;
 import com.fitzhi.controller.in.BodyParamSonarEntry;
 import com.fitzhi.controller.in.BodyParamSonarFilesStats;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.SonarEvaluation;
 import com.fitzhi.data.internal.SonarProject;
 import com.fitzhi.exception.ApplicationException;
 
@@ -58,7 +56,7 @@ public class ProjectSonarController {
 					"POST command on /api/project/sonar/addEntry for project : %d", param.getIdProject()));
 		}
 		
-		Project project = projectHandler.get(param.getIdProject());
+		Project project = projectHandler.find(param.getIdProject());
 		
 		projectHandler.addSonarEntry(project, param.getSonarProject()); 
 		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
@@ -76,7 +74,7 @@ public class ProjectSonarController {
 			@PathVariable("idProject") int idProject,
 			@PathVariable("sonarKey") String sonarKey) throws ApplicationException {
 
-		Project project = projectHandler.get(idProject);
+		Project project = projectHandler.find(idProject);
 		
 		Optional<SonarProject> oSonarProject = project.getSonarProjects()
 			.stream()
@@ -102,7 +100,7 @@ public class ProjectSonarController {
 				param.getSonarProject().getName()));
 		}
 		
-		Project project = projectHandler.get(param.getIdProject());
+		Project project = projectHandler.find(param.getIdProject());
 		
 		projectHandler.removeSonarEntry(project, param.getSonarProject()); 
 		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
@@ -118,7 +116,7 @@ public class ProjectSonarController {
 				param.getIdProject(), param.getSonarProjectKey()));
 		}
 		
-		Project project = projectHandler.get(param.getIdProject());
+		Project project = projectHandler.find(param.getIdProject());
 		
 		projectHandler.saveFilesStats(project, param.getSonarProjectKey(), param.getFilesStats()); 
 		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
@@ -140,70 +138,42 @@ public class ProjectSonarController {
 				param.getIdProject(), param.getSonarKey()));
 		}
 		
-		Project project = projectHandler.get(param.getIdProject());
+		Project project = projectHandler.find(param.getIdProject());
 		
 		projectHandler.saveSonarEvaluation(project, param.getSonarKey(), param.getSonarEvaluation()); 
 		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
 	}
 	
 	@PostMapping(path="/saveMetricValues")
-	public ResponseEntity<Boolean> updateMetricValues(@RequestBody BodyParamProjectSonarMetricValues param) {
+	public ResponseEntity<Boolean> updateMetricValues(@RequestBody BodyParamProjectSonarMetricValues param) 
+		throws ApplicationException {
 		
-		HttpHeaders headers = new HttpHeaders();
-
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 				"POST command on /api/project/sonar/saveMetricValues for project : %s %s", 
 				param.getIdProject(), param.getSonarKey()));
 		}
 		
-		Project project = null;
-		try {
-			project = projectHandler.get(param.getIdProject());
-			if (project == null) {
-				throw new ApplicationException(Error.CODE_PROJECT_NOFOUND, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
-			}
-		} catch (ApplicationException se) {
-			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
-			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
-			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
-		}
+		Project project = projectHandler.find(param.getIdProject());
+		projectHandler.saveSonarMetricValues(project, param.getSonarKey(), param.getMetricValues()); 
 		
-		try {
-			projectHandler.saveSonarMetricValues(project, param.getSonarKey(), param.getMetricValues()); 
-			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
-		} catch (ApplicationException se) {
-			headers.set(BACKEND_RETURN_CODE, String.valueOf(se.errorCode));
-			headers.set(BACKEND_RETURN_MESSAGE, se.errorMessage);
-			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
-		}
+		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
+
 	}
 	
 	@PostMapping(path="/saveUrl")
-	public ResponseEntity<Boolean> saveUrlSonarServer(@RequestBody BodyParamProjectSonarServer param) {
+	public ResponseEntity<Boolean> saveUrlSonarServer(@RequestBody BodyParamProjectSonarServer param) 
+		throws ApplicationException {
 		
-		HttpHeaders headers = new HttpHeaders();
-
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 				"POST command on /api/project/sonar/saveUrl for ID Project %d & url %s", 
 				param.getIdProject(), param.getUrlSonarServer()));
 		}
 		
-		try {
-			Project project = projectHandler.get(param.getIdProject());
-			if (project == null) {
-				throw new ApplicationException(Error.CODE_PROJECT_NOFOUND, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
-			}
-			projectHandler.saveUrlSonarServer(project, param.getUrlSonarServer()); 
-			return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
-			
-		} catch (ApplicationException se) {
-			headers.set(BACKEND_RETURN_CODE, String.valueOf(Error.CODE_PROJECT_NOFOUND));
-			headers.set(BACKEND_RETURN_MESSAGE, MessageFormat.format(Error.MESSAGE_PROJECT_NOFOUND, param.getIdProject()));
-			return new ResponseEntity<>(Boolean.FALSE, headers, HttpStatus.INTERNAL_SERVER_ERROR);			
-		}
-		
+		Project project = projectHandler.find(param.getIdProject());
+		projectHandler.saveUrlSonarServer(project, param.getUrlSonarServer()); 
+		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
 	}
 
 	private HttpHeaders headers() {
