@@ -3,23 +3,22 @@
  */
 package com.fitzhi.controller;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import com.fitzhi.bean.Administration;
 
-import org.assertj.core.util.Files;
-import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -30,25 +29,18 @@ import org.springframework.test.web.servlet.MockMvc;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AdministrationControllerCinematicInstallationTest {
+public class AdministrationControllerKeepVeryFirstConnectionTest {
 
 	@Autowired
 	private MockMvc mvc;
 
-	/**
-	 * Directory where the footprint of the very first solution is made.
-	 */
-	@Value("${applicationOutDirectory}")
-	private String rootLocation;
+	@MockBean
+	Administration administration;
 	
 	@Test
 	public void saveVeryFirstConnection() throws Exception {
 
-		// This is the very first connection
-		this.mvc.perform(get("/api/admin/isVeryFirstConnection"))
-			.andExpect(status().isOk())
-			.andExpect(content().string("true"))
-			.andDo(print());
+		doNothing().when(administration).saveVeryFirstConnection();
 
 		// We save the very first connection
 		this.mvc.perform(post("/api/admin/saveVeryFirstConnection"))
@@ -56,18 +48,8 @@ public class AdministrationControllerCinematicInstallationTest {
 			.andExpect(content().string("true"))
 			.andDo(print());
 
-		// This is NOT ANYMORE the very first connection
-		this.mvc.perform(get("/api/admin/isVeryFirstConnection"))
-			.andExpect(status().isOk())
-			.andExpect(content().string("false"))
-			.andDo(print());
-	}
-	
-	@After
-	public void after()  {
-        final Path root = Paths.get(rootLocation);
-		final Path firstConnection = root.resolve("connection.txt");
-		Files.delete(firstConnection.toFile());
+		Mockito.verify(administration, times(1)).saveVeryFirstConnection();
+
 	}
 	
 }
