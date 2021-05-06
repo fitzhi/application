@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fitzhi.controller;
+package com.fitzhi.controller.administrationController;
 
 import static com.fitzhi.security.AuthorizationServerConfiguration.TRUSTED_CLIENT_USERNAME;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;

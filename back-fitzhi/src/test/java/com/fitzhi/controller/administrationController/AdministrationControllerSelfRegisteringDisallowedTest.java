@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fitzhi.controller;
+package com.fitzhi.controller.administrationController;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -54,7 +54,7 @@ import static com.fitzhi.Error.MESSAGE_CANNOT_SELF_CREATE_USER;
 @AutoConfigureMockMvc
 @SpringBootTest(properties="allowSelfRegistration=false")
 @Slf4j
-public class AdministrationSelfRegisteringDisallowedTest {
+public class AdministrationControllerSelfRegisteringDisallowedTest {
 
 	@Value("${applicationOutDirectory}")
 	private String rootLocation;

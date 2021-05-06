@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fitzhi.controller;
+package com.fitzhi.controller.administrationController;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

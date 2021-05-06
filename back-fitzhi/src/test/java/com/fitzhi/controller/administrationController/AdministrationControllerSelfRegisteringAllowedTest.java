@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fitzhi.controller;
+package com.fitzhi.controller.administrationController;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -34,7 +34,7 @@ import com.fitzhi.data.internal.Staff;
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest(properties="allowSelfRegistration=true")
-public class AdministrationSelfRegisteringAllowedTest {
+public class AdministrationControllerSelfRegisteringAllowedTest {
 
 
 	private static final String TEST_USER = "test-user";
@@ -45,7 +45,7 @@ public class AdministrationSelfRegisteringAllowedTest {
 	@Autowired
 	Administration administration;
 
-	Logger logger = LoggerFactory.getLogger(AdministrationSelfRegisteringAllowedTest.class.getCanonicalName());
+	Logger logger = LoggerFactory.getLogger(AdministrationControllerSelfRegisteringAllowedTest.class.getCanonicalName());
 
 	@Autowired
 	StaffHandler staffHandler;
