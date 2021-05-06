@@ -51,13 +51,8 @@ public class AdminController {
 	
 	@GetMapping("/isVeryFirstConnection")
 	public ResponseEntity<Boolean> isVeryFirstConnection()  {
-		
 		boolean isVeryFirstConnection = administration.isVeryFirstConnection();
-		
-		return new ResponseEntity<>(
-				isVeryFirstConnection, 
-				new HttpHeaders(), 
-				HttpStatus.OK);
+		return new ResponseEntity<>(isVeryFirstConnection, headers(), HttpStatus.OK);
 	}
 	
 	@PostMapping("/saveVeryFirstConnection")
@@ -91,13 +86,15 @@ public class AdminController {
 		// If at least one user exists, then the first ADMIN user has already been created,
 		// because this user is due to be the FIRST connected user.
 		// (Some users migth already exist if they are created by the automatic crawling process) 
-		long numberOfUsersAlreadyRegistered = this.staffHandler.getStaff().values().stream()
+		long numberOfUsersAlreadyRegistered = this.staffHandler.getStaff().values()
+			.stream()
 			.map(Staff::getPassword)
 			.filter(s -> (s != null))
 			.count();
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("%d users are registered with a password", numberOfUsersAlreadyRegistered));
 		}
+		
 		if (numberOfUsersAlreadyRegistered == 0) {
 			return this.internalCreateNewUser(login, password);	
 		} else {

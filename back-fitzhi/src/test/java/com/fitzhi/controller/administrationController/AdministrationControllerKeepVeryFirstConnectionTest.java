@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.controller.administrationController;
 
 import static org.mockito.Mockito.doNothing;
