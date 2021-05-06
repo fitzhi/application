@@ -1,15 +1,27 @@
 package com.fitzhi.controller;
 
 import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.controller.in.BodyParamAuditEntries;
+import com.fitzhi.controller.in.BodyParamAuditEntry;
+import com.fitzhi.controller.util.LocalDateAdapter;
+import com.fitzhi.data.internal.AuditTopic;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.exception.ApplicationException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -24,17 +36,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import com.fitzhi.Global;
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.controller.in.BodyParamAuditEntries;
-import com.fitzhi.controller.in.BodyParamAuditEntry;
-import com.fitzhi.controller.util.LocalDateAdapter;
-import com.fitzhi.data.internal.AuditTopic;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.ApplicationException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 /**
  * <p>
  * Test of the class {@link ProjectAuditController}
@@ -108,14 +109,13 @@ public class ProjectAuditControllerUpdatingGlobalEvaluationTest {
 		bpae.setIdProject(666);
 		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2, 60, 0));
 	
-		MvcResult result = this.mvc.perform(post("/api/project/audit/saveEvaluation")
+		this.mvc.perform(post("/api/project/audit/saveEvaluation")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(bpae)))
 			.andExpect(status().isInternalServerError())
+			.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)))
 			.andDo(print())
 			.andReturn();
-
-		Assert.assertTrue(String.valueOf(CODE_PROJECT_NOFOUND).equals(result.getResponse().getHeader(Global.BACKEND_RETURN_CODE)));
 	}
 	
 	@Test

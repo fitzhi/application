@@ -1,10 +1,11 @@
 package com.fitzhi.controller;
 
-import static com.fitzhi.Error.CODE_PROJECT_TOPIC_UNKNOWN;
+import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -12,12 +13,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 
-import com.fitzhi.bean.ProjectAuditHandler;
-import com.fitzhi.controller.in.BodyParamProjectAttachmentFile;
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.controller.in.BodyParamSonarEntry;
 import com.fitzhi.controller.util.LocalDateAdapter;
-import com.fitzhi.data.internal.AttachmentFile;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.SonarProject;
 import com.fitzhi.exception.ApplicationException;
-import com.fitzhi.service.FileType;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -32,9 +33,10 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
 /**
  * <p>
- * Test of the method {@link ProjectAuditController#removeAttachmentFile(BodyParamProjectAttachmentFile)}
+ * Test of the method {@link ProjectSonarController#removeEntry(BodyParamSonarEntry)}
  * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -42,7 +44,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectAuditControllerRemoveAttachmentFileTest {
+public class ProjectSonarControllerRemoveEntryTest {
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -54,47 +56,51 @@ public class ProjectAuditControllerRemoveAttachmentFileTest {
 	private MockMvc mvc;
 
 	@MockBean
-	private ProjectAuditHandler projectAuditHandler;
+	private ProjectHandler projectHandler;
 
 	@Test
 	@WithMockUser
-	public void removeAttachmentFile() throws Exception {
+	public void removeEntry() throws Exception {
 		
-		BodyParamProjectAttachmentFile bpae = new BodyParamProjectAttachmentFile();
-		bpae.setIdProject(1805);
-		bpae.setIdTopic(1815);
-		bpae.setAttachmentFile(new AttachmentFile(1789, "1789", FileType.FILE_TYPE_DOC, "label 1789"));
+		when(projectHandler.get(1805)).thenReturn(new Project(1805, "Testing project"));
 	
-		this.mvc.perform(post("/api/project/audit/removeAttachmentFile")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpae)))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().string("true"));
+		this.mvc.perform(post("/api/project/sonar/removeEntry")
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(gson.toJson(bpse())))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(content().string("true"));
 
-		Mockito.verify(projectAuditHandler, times(1)).removeAttachmentFile(1805, 1815, 1789);
+		Mockito.verify(projectHandler, times(1))
+			.removeSonarEntry(
+				new Project(1805, "Testing project"), 
+				new SonarProject("key-sonar", "name-sonar"));
+		Mockito.verify(projectHandler, times(1)).get(1805);
 		
 	}
-	
+
 	@Test
 	@WithMockUser
-	public void removeAttachmentFileKO() throws Exception {
+	public void removeEntryKO() throws Exception {
 		
-		doThrow(new ApplicationException(CODE_PROJECT_TOPIC_UNKNOWN, ""))
-			.when(projectAuditHandler)
-			.removeAttachmentFile(anyInt(), anyInt(), anyInt());
+		doThrow(new ApplicationException(CODE_PROJECT_NOFOUND, "Project 1805 not found"))
+			.when(projectHandler)
+			.get(anyInt());
 
-		BodyParamProjectAttachmentFile bpae = new BodyParamProjectAttachmentFile();
-		bpae.setIdProject(1805);
-		bpae.setIdTopic(1815);
-		bpae.setAttachmentFile(new AttachmentFile());
-		
-		this.mvc.perform(post("/api/project/audit/removeAttachmentFile")
+		this.mvc.perform(post("/api/project/sonar/removeEntry")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpae)))
+				.content(gson.toJson(bpse())))
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(jsonPath("$.code", is(CODE_PROJECT_TOPIC_UNKNOWN)));
+				.andExpect(jsonPath("$.message", is("Project 1805 not found")))
+				.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)));
+
 	}
 
+	private BodyParamSonarEntry bpse() {
+		BodyParamSonarEntry bpse = new BodyParamSonarEntry();
+		bpse.setIdProject(1805);
+		bpse.setSonarProject(new SonarProject("key-sonar", "name-sonar"));
+		return bpse;
+	}
 }

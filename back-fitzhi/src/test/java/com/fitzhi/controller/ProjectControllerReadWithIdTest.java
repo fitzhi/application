@@ -2,12 +2,14 @@ package com.fitzhi.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.hamcrest.CoreMatchers;
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.exception.ApplicationException;
+
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,10 +21,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.ApplicationException;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL

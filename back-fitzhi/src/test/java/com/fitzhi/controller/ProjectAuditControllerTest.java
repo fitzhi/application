@@ -31,7 +31,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import com.fitzhi.Global;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.in.BodyParamAuditEntries;
 import com.fitzhi.controller.in.BodyParamAuditEntry;
@@ -172,14 +171,13 @@ public class ProjectAuditControllerTest {
 		bpae.setIdProject(666);
 		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2));
 	
-		MvcResult result = this.mvc.perform(post("/api/project/audit/saveTopic")
+		this.mvc.perform(post("/api/project/audit/saveTopic")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(bpae)))
 				.andExpect(status().isInternalServerError())
+				.andExpect(jsonPath("$.code",is(CODE_PROJECT_NOFOUND)))
 				.andDo(print())
 				.andReturn();
-		
-		Assert.assertTrue(String.valueOf(CODE_PROJECT_NOFOUND).equals(result.getResponse().getHeader(Global.BACKEND_RETURN_CODE)));
 	}
 	
 	@Test
@@ -280,17 +278,13 @@ public class ProjectAuditControllerTest {
 		//
 		// Cannot save a project with a sum of audit topics weights different to 100.
 		//
-		MvcResult result = this.mvc.perform(post("/api/project/audit/saveWeights")
+		this.mvc.perform(post("/api/project/audit/saveWeights")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(bpae)))
 				.andExpect(status().isInternalServerError())
+				.andExpect(jsonPath("$.code", is(CODE_PROJECT_INVALID_WEIGHTS)))
 				.andDo(print())
 				.andReturn();
-		
-		Assert.assertTrue(String.valueOf(CODE_PROJECT_INVALID_WEIGHTS)
-				.equals(result.getResponse().getHeader(Global.BACKEND_RETURN_CODE)));
-			
-		
 	}
 
 	@Test

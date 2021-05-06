@@ -1,27 +1,22 @@
 package com.fitzhi.controller;
 
+import static com.fitzhi.Error.CODE_PROJECT_TOPIC_UNKNOWN;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyObject;
-import static org.mockito.ArgumentMatchers.anySetOf;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.doThrow;
-
+import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
 
 import com.fitzhi.bean.ProjectAuditHandler;
-import com.fitzhi.controller.in.BodyParamAuditEntry;
 import com.fitzhi.controller.in.BodyParamProjectAttachmentFile;
 import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.AttachmentFile;
-import com.fitzhi.data.internal.AuditTopic;
 import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -37,8 +32,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static com.fitzhi.Error.CODE_PROJECT_TOPIC_UNKNOWN;
 /**
  * <p>
  * Test of the method {@link ProjectAuditController#saveAttachmentFile(BodyParamProjectAttachmentFile)}
