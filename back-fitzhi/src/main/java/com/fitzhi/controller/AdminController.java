@@ -7,26 +7,28 @@ import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
 
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.data.external.BooleanDTO;
 import com.fitzhi.data.external.StaffDTO;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL Controller for Ping purpose
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/admin")
 public class AdminController {
@@ -36,8 +38,6 @@ public class AdminController {
 
 	@Autowired
 	private StaffHandler staffHandler;
-
-	Logger logger = LoggerFactory.getLogger(AdminController.class.getCanonicalName());
 
 	/**
 	 * Does Tixhì allow self registration ?
@@ -60,21 +60,10 @@ public class AdminController {
 				HttpStatus.OK);
 	}
 	
-	@GetMapping("/saveVeryFirstConnection")
-	public ResponseEntity<BooleanDTO> keepVeryFirstConnecion()  {
-		HttpHeaders headers = new HttpHeaders();
-		try {
-			administration.saveVeryFirstConnection();
-			return new ResponseEntity<>(
-					new BooleanDTO(), 
-					headers, 
-					HttpStatus.OK);
-		} catch (final ApplicationException ske) {
-			headers.set(BACKEND_RETURN_CODE, String.valueOf(ske.errorCode));
-			headers.set(BACKEND_RETURN_MESSAGE, ske.errorMessage);
-			return new ResponseEntity<>(new BooleanDTO(ske.errorCode, ske.errorMessage), headers, HttpStatus.OK);
-			
-		}
+	@PostMapping("/saveVeryFirstConnection")
+	public ResponseEntity<Boolean> keepVeryFirstConnecion() throws ApplicationException {
+		administration.saveVeryFirstConnection();
+		return new ResponseEntity<>(true, headers(), HttpStatus.OK);
 	}
 	
 	/**
@@ -89,13 +78,13 @@ public class AdminController {
 			@RequestParam("login") String login,
 			@RequestParam("password") String password) throws ApplicationException {
 		
-		if (logger.isDebugEnabled() && !this.staffHandler.getStaff().isEmpty()) {
-				logger.debug ("the staff collection is not empty and has 'may-be' already registered users, see below...");
-				logger.debug("------------------------------------------------");
+		if (log.isDebugEnabled() && !this.staffHandler.getStaff().isEmpty()) {
+				log.debug ("the staff collection is not empty and has 'may-be' already registered users, see below...");
+				log.debug("------------------------------------------------");
 				this.staffHandler.getStaff().values().stream()
 				.filter(staff -> staff.getPassword() != null)
 				.forEach(
-					staff -> logger.debug(String.format("%d %s", staff.getIdStaff(), staff.getLogin())));
+					staff -> log.debug(String.format("%d %s", staff.getIdStaff(), staff.getLogin())));
 		}
 		
 		// We calculate the number of users declared with a non empty password.
@@ -106,8 +95,8 @@ public class AdminController {
 			.map(Staff::getPassword)
 			.filter(s -> (s != null))
 			.count();
-		if (logger.isDebugEnabled()) {
-			logger.debug(String.format("%d users are registered with a password", numberOfUsersAlreadyRegistered));
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("%d users are registered with a password", numberOfUsersAlreadyRegistered));
 		}
 		if (numberOfUsersAlreadyRegistered == 0) {
 			return this.internalCreateNewUser(login, password);	
@@ -166,6 +155,12 @@ public class AdminController {
 			headers.set(BACKEND_RETURN_MESSAGE, ske.errorMessage);
 			return new ResponseEntity<>(new StaffDTO(new Staff(), ske.errorCode, ske.errorMessage), headers, HttpStatus.OK);
 		}
-		
 	}	
+
+	private HttpHeaders headers() {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+		return headers;
+	}
+
 }

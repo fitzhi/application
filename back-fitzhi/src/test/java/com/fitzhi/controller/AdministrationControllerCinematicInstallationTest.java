@@ -4,8 +4,10 @@
 package com.fitzhi.controller;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -23,13 +25,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
+ * Testing the complete installation cinematic
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AdministrationControllerSaveVeryFisrtConnectionTest {
+public class AdministrationControllerCinematicInstallationTest {
 
 	@Autowired
 	private MockMvc mvc;
@@ -43,17 +45,23 @@ public class AdministrationControllerSaveVeryFisrtConnectionTest {
 	@Test
 	public void saveVeryFirstConnection() throws Exception {
 
+		// This is the very first connection
 		this.mvc.perform(get("/api/admin/isVeryFirstConnection"))
-		.andExpect(status().isOk())
-		.andExpect(content().string(CoreMatchers.containsString("true")));
+			.andExpect(status().isOk())
+			.andExpect(content().string("true"))
+			.andDo(print());
 
-		this.mvc.perform(get("/api/admin/saveVeryFirstConnection"))
-		.andExpect(status().isOk())
-		.andExpect(content().string(CoreMatchers.containsString("true")));
+		// We save the very first connection
+		this.mvc.perform(post("/api/admin/saveVeryFirstConnection"))
+			.andExpect(status().isOk())
+			.andExpect(content().string("true"))
+			.andDo(print());
 
+		// This is NOT ANYMORE the very first connection
 		this.mvc.perform(get("/api/admin/isVeryFirstConnection"))
-		.andExpect(status().isOk())
-		.andExpect(content().string(CoreMatchers.containsString("false")));
+			.andExpect(status().isOk())
+			.andExpect(content().string("false"))
+			.andDo(print());
 	}
 	
 	@After

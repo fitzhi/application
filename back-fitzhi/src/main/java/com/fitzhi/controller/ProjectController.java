@@ -39,7 +39,6 @@ import com.fitzhi.controller.util.ProjectLoader;
 import com.fitzhi.controller.util.ProjectLoader.MyReference;
 import com.fitzhi.data.external.BooleanDTO;
 import com.fitzhi.data.external.ProjectContributorDTO;
-import com.fitzhi.data.external.ProjectDTO;
 import com.fitzhi.data.external.SunburstDTO;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSkill;
@@ -739,17 +738,6 @@ public class ProjectController extends BaseRestController {
 		scanner.generateAsync(project, new SettingsGeneration(project.getId()));
 		
 		return ResponseEntity.accepted().build();
-	}
-
-	/**
-	 * @param code    the error code
-	 * @param message the error message
-	 * @param project the project, if any, concerned by the error, or an empty
-	 *                project if none exist
-	 * @return a response entity
-	 */
-	public ResponseEntity<ProjectDTO> postErrorReturnBodyMessage(int code, String message, Project project) {
-		return new ResponseEntity<>(new ProjectDTO(project, code, message), headers(), HttpStatus.BAD_REQUEST);
 	}
 
 }
