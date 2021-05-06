@@ -9,11 +9,17 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+
 import com.fitzhi.controller.sample.LocalDateContainer;
 import com.fitzhi.exception.ApplicationException;
 
-@RestController
+@RestController()
 @RequestMapping("/api/test")
+@Api(
+	tags="sample API test.",
+	description = "This controller API purpose is to provide some entry-points in the Fitzhì backend."
+)
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL Controller for Ping purpose
  */

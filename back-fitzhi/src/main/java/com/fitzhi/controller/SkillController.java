@@ -32,11 +32,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/skill")
+@Api(
+	tags="Skills API.",
+	description = "API endpoints to manage the skills declared inside the application."
+)
 public class SkillController extends BaseRestController {
 
 	@Autowired
@@ -71,7 +76,7 @@ public class SkillController extends BaseRestController {
 
 	/**
 	 * Update an existing skill, or create a new one.
-     *
+	 *
 	 * @param idProject the skill identifier. The skill identifier is present in the REST URL in accordance with the Rest naming conventions
 	 * @param skill the skill sent by the Angular application in JSON format
 	 * @return an empty content response with a {@code code 200} or {@code code 404} error if the skill identifier does not exist.

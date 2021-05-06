@@ -42,6 +42,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import io.swagger.annotations.Api;
+
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.ShuffleService;
@@ -78,6 +80,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/api/staff")
+@Api(
+	tags="Staff API.",
+	description = "API endpoints to manage the projects declared in the application."
+)
 public class StaffController extends BaseRestController {
 
 	@Autowired

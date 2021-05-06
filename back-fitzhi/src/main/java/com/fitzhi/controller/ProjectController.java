@@ -68,11 +68,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/project")
+@Api(
+	tags="Projects API.",
+	description = "API endpoints to manage the projects declared inside the application."
+)
 public class ProjectController extends BaseRestController {
 
 	@Autowired

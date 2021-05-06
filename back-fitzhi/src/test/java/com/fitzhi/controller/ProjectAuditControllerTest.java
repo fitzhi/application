@@ -10,6 +10,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.hamcrest.Matchers.is;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -193,7 +195,6 @@ public class ProjectAuditControllerTest {
 		AuditTopic auditProject = gson.fromJson(result.getResponse().getContentAsString(), AuditTopic.class);
 		// The topic has been successfully added
 		Assert.assertTrue(auditProject.getIdTopic() == ID_TOPIC_2);
-		
 
 		//
 		// Removing the topic
@@ -209,16 +210,15 @@ public class ProjectAuditControllerTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(content().string("true"))
 			.andDo(print());
-			
+				
 		//
 		// Testing the fact that the topic has been effectively removed
 		//
 		result = this.mvc.perform(get("/api/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_2))
 				.andExpect(status().isInternalServerError())
 				.andDo(print())
+				.andExpect(jsonPath("$.code", is(CODE_PROJECT_TOPIC_UNKNOWN)))
 				.andReturn();
-		
-		Assert.assertTrue(String.valueOf(CODE_PROJECT_TOPIC_UNKNOWN).equals(result.getResponse().getHeader(Global.BACKEND_RETURN_CODE)));
 		
 	}
 	
