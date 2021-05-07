@@ -137,21 +137,19 @@ public class AdminController {
 		return new ResponseEntity<>(staff, new HttpHeaders(), HttpStatus.OK);
 	}
 
+	/**
+	 * Connect a user
+	 * @param login the given login 
+	 * @param password the given password
+	 * @return the staff retrieved if the server is sends back a 200 code,
+	 * @throws ApplicationException
+	 */
 	@GetMapping("/connect")
-	public ResponseEntity<StaffDTO> connect(
+	public ResponseEntity<Staff> connect(
 			@RequestParam("login") String login,
-			@RequestParam("password") String password)  {
-		
-		HttpHeaders headers = new HttpHeaders();
-		try {
-			Staff staff = administration.connect(login, password);
-			headers.add("backend.return_code", "1");
-			return new ResponseEntity<>(new StaffDTO(staff), headers, HttpStatus.OK);
-		} catch (final ApplicationException ske) {
-			headers.set(BACKEND_RETURN_CODE, String.valueOf(ske.errorCode));
-			headers.set(BACKEND_RETURN_MESSAGE, ske.errorMessage);
-			return new ResponseEntity<>(new StaffDTO(new Staff(), ske.errorCode, ske.errorMessage), headers, HttpStatus.OK);
-		}
+			@RequestParam("password") String password) throws ApplicationException {
+		Staff staff = administration.connect(login, password);
+		return new ResponseEntity<>(staff, headers(), HttpStatus.OK);
 	}	
 
 	private HttpHeaders headers() {
