@@ -16,6 +16,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
 import { InstallService } from '../service/install/install.service';
+import { StaffDataExchangeService } from 'src/app/tabs-staff/service/staff-data-exchange.service';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { Collaborator } from 'src/app/data/collaborator';
+import { of } from 'rxjs';
 
 
 describe('RegisterUserComponent', () => {
@@ -81,7 +85,7 @@ describe('RegisterUserComponent', () => {
 		expect(localStorage.getItem('installation')).toBe('1');
 	});
 
-	it('Should activate the button Ok, if the user & password fields are correctly .', () => {
+	it('Should activate the button Ok, if the user & password fields are correctly entered.', () => {
 
 		const spy = spyOn(installService, 'installComplete').and.callThrough();
 
@@ -106,4 +110,25 @@ describe('RegisterUserComponent', () => {
 
 	});
 
+	it('Should handle correctly the registration of a new user.', () => {
+
+		const staffDataExchangeService = TestBed.inject(StaffDataExchangeService);
+		const spyChangeCollaborator = spyOn(staffDataExchangeService, 'changeCollaborator').and.returnValue();
+
+		const staffService = TestBed.inject(StaffService);
+		const spyRegisterUsers = spyOn(staffService, 'registerUser$').and.returnValue(of(new Collaborator()))
+
+		component.connectionGroup.get('username').setValue('myPersonalUser');
+		component.connectionGroup.get('password').setValue('myPersonalPass');
+		component.connectionGroup.get('passwordConfirmation').setValue('myPersonalPass');
+		fixture.detectChanges();
+
+		const btnOk = fixture.debugElement.nativeElement.querySelector('#okButton');
+		expect(btnOk).toBeDefined();
+		btnOk.click();
+		fixture.detectChanges();
+
+		expect(spyRegisterUsers).toHaveBeenCalled();
+		expect(spyChangeCollaborator).toHaveBeenCalled();
+	});
 });

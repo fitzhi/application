@@ -408,8 +408,8 @@ export class StaffService {
 	 * @param username the given username
 	 * @param password  the given password
 	 */
-	registerUser(veryFirstConnection: boolean, username: string, password: string): Observable<Collaborator> {
-		return this.httpClient.get<Collaborator>(
+	registerUser$(veryFirstConnection: boolean, username: string, password: string): Observable<Collaborator> {
+		return this.httpClient.post<Collaborator>(
 			this.backendSetupService.url() + '/admin/' +
 			(veryFirstConnection ? 'veryFirstUser' : 'register'),
 			{ params: { login: username, password: password } });

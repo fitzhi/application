@@ -10,6 +10,7 @@ import { MessageBoxService } from 'src/app/interaction/message-box/service/messa
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { traceOn } from 'src/app/global';
 import { InstallService } from '../service/install/install.service';
+import { Collaborator } from 'src/app/data/collaborator';
 
 @Component({
 	selector: 'app-register-user',
@@ -100,23 +101,25 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 		}
 
 		this.subscriptions
-			.add(this.staffService.registerUser(
+			.add(this.staffService.registerUser$(
 					this.veryFirstConnection,
 					username,
 					password)
-				.subscribe(
-					staff => {
+				.subscribe({
+					next: (staff: Collaborator) => {
 						if (traceOn()) {
 							console.log('Empty staff created with id ' + staff.idStaff);
 						}
 						this.staffDataExchangeService.changeCollaborator(staff);
 						this.messengerUserRegistered.emit(staff.idStaff);
 					},
-					error => {
+					error: error => {
 						if (traceOn()) {
 							console.log('Connection error ', error);
 						}
-					}));
+					}					
+				})
+			);
 	}
 
 	/**
