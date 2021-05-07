@@ -19,7 +19,7 @@ import com.fitzhi.exception.ApplicationException;
 @RequestMapping("/api/test")
 @ApiIgnore
 @Api(
-	tags="sample API test.",
+	tags="sample API test",
 	description = "This controller API purpose is to provide some entry-points in the Fitzhì backend."
 )
 /**

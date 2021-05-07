@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/referential")
 @Api(
-	tags="Application referential API.",
+	tags="Referential controller API",
 	description = "API endpoints in charge of the interaction with the referential of data used by the application."
 )
 public class ReferentialController {

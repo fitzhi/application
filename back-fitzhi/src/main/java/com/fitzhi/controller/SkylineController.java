@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api")
 @Api(
-	tags="Skyline API.",
+	tags="Skyline Controller API",
 	description = "API endpoints in charge of the generation of the rising skyline data."
 )
 public class SkylineController {

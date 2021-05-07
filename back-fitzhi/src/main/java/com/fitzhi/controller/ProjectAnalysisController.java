@@ -53,7 +53,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/project/analysis")
 @Api(
-	tags="Projects Analysis API.",
+	tags="Projects Analysis API",
 	description = "API endpoints in charge of the interaction between the front-end and the analysis processed by the back-end."
 )
 public class ProjectAnalysisController extends BaseRestController  {

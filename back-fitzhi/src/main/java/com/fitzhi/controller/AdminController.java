@@ -29,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/admin")
 @Api(
-	tags="Administration controller.",
+	tags="Administration controller API",
 	description = "This API provides endpoints to initialize the application as well as create and connect user into it."
 )
 public class AdminController extends BaseRestController {

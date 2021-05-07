@@ -81,7 +81,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/staff")
 @Api(
-	tags="Staff API.",
+	tags="Staff controller API",
 	description = "API endpoints to manage the projects declared in the application."
 )
 public class StaffController extends BaseRestController {

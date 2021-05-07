@@ -2,10 +2,6 @@ package com.fitzhi.controller;
 
 import static com.fitzhi.Error.CODE_SKILL_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_SKILL_NOFOUND;
-import static com.fitzhi.Global.BACKEND_RETURN_CODE;
-import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
-import static com.fitzhi.Error.CODE_SKILL_NOFOUND;
-import static com.fitzhi.Error.MESSAGE_SKILL_NOFOUND;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -15,13 +11,11 @@ import java.util.Optional;
 
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.SkillHandler;
-import com.fitzhi.data.external.SkillDTO;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +35,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/skill")
 @Api(
-	tags="Skills API.",
+	tags="Skill controller API",
 	description = "API endpoints to manage the skills declared inside the application."
 )
 public class SkillController extends BaseRestController {
