@@ -1,26 +1,23 @@
 package com.fitzhi.controller.skill;
 
+import static com.fitzhi.Error.CODE_SKILL_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_SKILL_NOFOUND;
+import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.text.MessageFormat;
 import java.util.Optional;
 
-import static org.hamcrest.Matchers.is;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.fitzhi.bean.SkillHandler;
+import com.fitzhi.controller.SkillController;
+import com.fitzhi.data.internal.Skill;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
-import org.junit.After;
-import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,20 +28,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-
-import com.fitzhi.bean.SkillHandler;
-import com.fitzhi.controller.SkillController;
-import com.fitzhi.data.internal.Skill;
-import com.fitzhi.data.internal.SkillDetectionTemplate;
-import com.fitzhi.data.internal.SkillDetectorType;
-import com.fitzhi.exception.ApplicationException;
-import com.fitzhi.exception.NotFoundException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
-import static com.fitzhi.Error.CODE_SKILL_NOFOUND;
-import static com.fitzhi.Error.MESSAGE_SKILL_NOFOUND;
 
 /**
  * Testing the method
