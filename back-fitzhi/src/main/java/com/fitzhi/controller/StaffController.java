@@ -701,13 +701,4 @@ public class StaffController extends BaseRestController {
 
 		return new ResponseEntity<>(Boolean.TRUE, new HttpHeaders(), HttpStatus.OK);
 	}
-	
-	ResponseEntity<StaffDTO> postErrorReturnBodyMessage(int code, String message) {
-		return postErrorReturnBodyMessage(code, message, new Staff());
-	}
-
-	ResponseEntity<StaffDTO> postErrorReturnBodyMessage(int code, String message, Staff staffMember) {
-		return new ResponseEntity<>(new StaffDTO(staffMember, code, message), new HttpHeaders(),
-				HttpStatus.BAD_REQUEST);
-	}
 }

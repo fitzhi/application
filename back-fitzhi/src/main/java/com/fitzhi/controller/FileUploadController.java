@@ -30,8 +30,8 @@ import com.fitzhi.service.impl.storageservice.StorageFileNotFoundException;
 @Controller("/api/upload")
 @RequestMapping("/api/upload")
 @Api(
-	tags="Upload controller",
-	description = "This API provides endpoints to upload/download file in Fitzhi."
+	tags="File Upload controller API",
+	description = "This API provides endpoints to upload/download files in Fitzhi."
 )
 public class FileUploadController {
 
