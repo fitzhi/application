@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 	tags="Projects Ghosts API.",
 	description = "API endpoints to manage the ghosts discovered in a project."
 )
-public class ProjectGhostController {
+public class ProjectGhostController extends BaseRestController {
 
 
 	@Autowired
@@ -70,9 +70,7 @@ public class ProjectGhostController {
 		// Neither staff member, nor technical, we reset the ghost
 		projectHandler.resetGhost(project, param.getPseudo()); 				
 		return OK();			
-						
 	}
-	
 	
 	/**
 	 * <p>
@@ -97,7 +95,6 @@ public class ProjectGhostController {
 	}
 	
 	private ResponseEntity<Boolean> OK() {
-		HttpHeaders headers = new HttpHeaders();
-		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
+		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
 	}
 }

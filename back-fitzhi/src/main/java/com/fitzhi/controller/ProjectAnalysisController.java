@@ -56,7 +56,7 @@ import lombok.extern.slf4j.Slf4j;
 	tags="Projects Analysis API.",
 	description = "API endpoints in charge of the interaction between the front-end and the analysis processed by the back-end."
 )
-public class ProjectAnalysisController {
+public class ProjectAnalysisController extends BaseRestController  {
 
 	@Autowired
 	ProjectDashboardCustomizer dashboardCustomizer;

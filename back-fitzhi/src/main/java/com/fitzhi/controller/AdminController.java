@@ -2,12 +2,9 @@ package com.fitzhi.controller;
 
 import static com.fitzhi.Error.CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
 import static com.fitzhi.Error.MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
-import static com.fitzhi.Global.BACKEND_RETURN_CODE;
-import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
 
 import com.fitzhi.bean.Administration;
 import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.data.external.StaffDTO;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
 
@@ -15,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -31,7 +28,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/api/admin")
-public class AdminController {
+@Api(
+	tags="Administration controller.",
+	description = "This API provides endpoints to initialize the application as well as create and connect user into it."
+)
+public class AdminController extends BaseRestController {
 
 	@Autowired
 	private Administration administration;
@@ -151,11 +152,5 @@ public class AdminController {
 		Staff staff = administration.connect(login, password);
 		return new ResponseEntity<>(staff, headers(), HttpStatus.OK);
 	}	
-
-	private HttpHeaders headers() {
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
-		return headers;
-	}
 
 }
