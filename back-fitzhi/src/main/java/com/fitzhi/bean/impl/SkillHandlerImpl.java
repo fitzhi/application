@@ -26,6 +26,7 @@ import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SkillDetectorType;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -113,7 +114,7 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		Skill skill = getSkills().get(idSkill);
 		if (skill == null) {
-			throw new ApplicationException(CODE_SKILL_NOFOUND, MessageFormat.format(MESSAGE_SKILL_NOFOUND, idSkill));
+			throw new NotFoundException(CODE_SKILL_NOFOUND, MessageFormat.format(MESSAGE_SKILL_NOFOUND, idSkill));
 		}
 		
 		return skill;

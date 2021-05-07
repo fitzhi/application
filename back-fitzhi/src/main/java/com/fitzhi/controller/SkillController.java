@@ -115,27 +115,10 @@ public class SkillController extends BaseRestController {
 	
 
 	@GetMapping(value = "/{idParam}")
-	public ResponseEntity<Skill> read(@PathVariable("idParam") int idParam) {
-
-		final ResponseEntity<Skill> responseEntity;
-		final HttpHeaders headers = new HttpHeaders();
-
-		final Skill searchSkill = skillHandler.getSkills().get(idParam);
-		if (searchSkill != null) {
-			responseEntity = new ResponseEntity<>(searchSkill, headers, HttpStatus.OK);
-			if (log.isDebugEnabled()) {
-				log.debug(String.format(
-					"Skill read for id %d returns %s", idParam, responseEntity.getBody()));
-			}
-		} else {
-			headers.set(BACKEND_RETURN_CODE, "O");
-			headers.set(BACKEND_RETURN_MESSAGE, "There is no collaborator associated to the id " + idParam);
-			responseEntity = new ResponseEntity<>(new Skill(), headers, HttpStatus.NOT_FOUND);
-			if (log.isDebugEnabled()) {
-				log.debug(String.format("Cannot find a skill for id %d", idParam));
-			}
-		}
-		return responseEntity;
+	public ResponseEntity<Skill> read(@PathVariable("idParam") int idParam) throws ApplicationException {
+		final Skill skill = skillHandler.getSkill(idParam);
+		System.out.println(skill);
+		return new ResponseEntity<>(skill, headers(), HttpStatus.OK);
 	}
 
 	@GetMapping("")

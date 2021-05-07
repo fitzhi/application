@@ -49,10 +49,12 @@ public interface SkillHandler extends DataSaverLifeCycle {
 	 void saveSkill(Skill skill) throws ApplicationException;
 	
 	 /**
-	  * <p>Retrieve the skill corresponding to the passed identifier</p>
-	  * @param idSkill the search skill identifier.
-	  * @return the skill found.
-	  * @throws ApplicationException thrown if the passed id does not exist.
+	  * <p>
+	  * Retrieve the skill corresponding to the passed identifier.
+	  * </p>
+	  * @param idSkill the SKILL identifier.
+	  * @return the skill retrieved in the internal collection.
+	  * @throws ApplicationException thrown if the given SKILL identifier does not exist.
 	  */
 	 Skill getSkill(int idSkill) throws ApplicationException;
 
