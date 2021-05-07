@@ -22,11 +22,17 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import io.swagger.annotations.Api;
+
 import com.fitzhi.service.StorageService;
 import com.fitzhi.service.impl.storageservice.StorageFileNotFoundException;
 
 @Controller("/api/upload")
 @RequestMapping("/api/upload")
+@Api(
+	tags="Upload controller.",
+	description = "This API provides endpoints to upload/download file in Fitzhi."
+)
 public class FileUploadController {
 
     @Autowired

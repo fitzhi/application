@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -28,6 +29,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/api/project/ghost")
+@Api(
+	tags="Projects Ghosts API.",
+	description = "API endpoints to manage the ghosts discovered in a project."
+)
 public class ProjectGhostController {
 
 

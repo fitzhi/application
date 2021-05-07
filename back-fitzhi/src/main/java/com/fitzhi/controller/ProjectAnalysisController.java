@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -51,6 +52,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/api/project/analysis")
+@Api(
+	tags="Projects Analysis API.",
+	description = "API endpoints in charge of the interaction between the front-end and the analysis processed by the back-end."
+)
 public class ProjectAnalysisController {
 
 	@Autowired

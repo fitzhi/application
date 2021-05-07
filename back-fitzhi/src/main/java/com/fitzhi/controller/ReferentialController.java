@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+
 import com.fitzhi.bean.RiskProcessor;
 import com.fitzhi.data.internal.RiskLegend;
 
@@ -26,6 +28,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/api/referential")
+@Api(
+	tags="Application referential API.",
+	description = "API endpoints in charge of the interaction with the referential of data used by the application."
+)
 public class ReferentialController {
 
 	/**

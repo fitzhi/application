@@ -28,7 +28,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
 import lombok.extern.slf4j.Slf4j;
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * 
@@ -42,6 +44,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 @RequestMapping("/api/project/sonar")
+@Api(
+	tags="Projects Sonnar API.",
+	description = "API endpoints to retrieve the Sonar metrics linked to their Fitzhi projects counterparts."
+)
 public class ProjectSonarController {
 
 	@Autowired

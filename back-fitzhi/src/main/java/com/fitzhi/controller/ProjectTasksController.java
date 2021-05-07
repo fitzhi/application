@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.Api;
+
 import com.fitzhi.Global;
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.ProjectHandler;
@@ -44,6 +46,10 @@ import reactor.core.publisher.Flux;
 @Slf4j
 @RestController
 @RequestMapping("/api/project/tasks")
+@Api(
+	tags="Projects Tasks API.",
+	description = "API endpoints of the asynchronous stream report."
+)
 public class ProjectTasksController {
 
 	@Autowired
