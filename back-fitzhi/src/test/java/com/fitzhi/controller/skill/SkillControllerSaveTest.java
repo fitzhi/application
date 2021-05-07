@@ -1,4 +1,4 @@
-package com.fitzhi.controller;
+package com.fitzhi.controller.skill;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -23,6 +23,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import com.fitzhi.bean.SkillHandler;
+import com.fitzhi.controller.SkillController;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SkillDetectionTemplate;
 import com.fitzhi.data.internal.SkillDetectorType;

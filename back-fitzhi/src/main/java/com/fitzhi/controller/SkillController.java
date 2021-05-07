@@ -4,6 +4,8 @@ import static com.fitzhi.Error.CODE_SKILL_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_SKILL_NOFOUND;
 import static com.fitzhi.Global.BACKEND_RETURN_CODE;
 import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
+import static com.fitzhi.Error.CODE_SKILL_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_SKILL_NOFOUND;
 
 import java.io.IOException;
 import java.text.MessageFormat;
@@ -98,29 +100,20 @@ public class SkillController extends BaseRestController {
 		return ResponseEntity.noContent().build();
 	}
 
-
-
 	@GetMapping(value = "/name/{projectName}")
-	public ResponseEntity<SkillDTO> read(@PathVariable("projectName") String skillTitle) {
-		
-		final ResponseEntity<SkillDTO> responseEntity;
-		final HttpHeaders headers = new HttpHeaders();
-		
+	public ResponseEntity<Skill> lookup(@PathVariable("projectName") String skillTitle) throws ApplicationException {	
 		Optional<Skill> result = skillHandler.lookup(skillTitle);
-		if (result.isPresent()) {
-			responseEntity = new ResponseEntity<>(new SkillDTO(result.get()), new HttpHeaders(), HttpStatus.OK);
-		} else {
-			responseEntity = new ResponseEntity<>(
-					new SkillDTO(new Skill(), 404, "There is no skill for the name " + skillTitle), 
-					headers, 
-					HttpStatus.NOT_FOUND);
+		if (!result.isPresent()) {
 			if (log.isDebugEnabled()) {
 				log.debug(String.format("Cannot find a skill with the name %s", skillTitle));
 			}			
+			throw new NotFoundException(CODE_SKILL_NOFOUND, 
+						MessageFormat.format(MESSAGE_SKILL_NOFOUND, skillTitle));
 		}
-		return responseEntity;
+		return new ResponseEntity<>(result.get(), headers(), HttpStatus.OK);
 	}
 	
+
 	@GetMapping(value = "/{idParam}")
 	public ResponseEntity<Skill> read(@PathVariable("idParam") int idParam) {
 

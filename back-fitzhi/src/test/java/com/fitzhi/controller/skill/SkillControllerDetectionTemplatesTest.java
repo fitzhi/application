@@ -1,4 +1,4 @@
-package com.fitzhi.controller;
+package com.fitzhi.controller.skill;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import lombok.extern.slf4j.Slf4j;
 
+import com.fitzhi.controller.SkillController;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
