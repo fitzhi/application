@@ -30,7 +30,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class AdministrationControllerIsVeryFisrtConnectionTest {
+public class AdministrationControllerIsVeryFirstConnectionTest {
 
 	@Autowired
 	private MockMvc mvc;
