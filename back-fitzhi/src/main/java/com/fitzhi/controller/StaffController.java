@@ -402,32 +402,30 @@ public class StaffController extends BaseRestController {
 	 *            in JSON format
 	 * @return
 	 */
-	@PostMapping("/experiences/add")
-	public ResponseEntity<Boolean> addExperience(@RequestBody BodyParamStaffSkill param) throws ApplicationException {
+	@PostMapping("{idStaff}/experience")
+	public ResponseEntity<Boolean> updateExperience(
+		@PathVariable("idStaff") int idStaff,
+		@RequestBody Experience experience) throws ApplicationException {
 
-		HttpHeaders headers = new HttpHeaders();
-		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
 					"POST command on /staff/experiences/add with params id:%d, idSkill:%d, level:%d", 
-					param.getIdStaff(), param.getIdSkill(), param.getLevel()));
+					idStaff, experience.getId(), experience.getLevel()));
 		}
 
-		final Staff staff = staffHandler.getStaff(param.getIdStaff());
+		final Staff staff = staffHandler.getStaff(idStaff);
 		if (staff == null) {
-			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, param.getIdStaff()));
+			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 		
-		
-		Experience experience = staff.getExperience(param.getIdSkill());
-		if (experience == null) {
-			this.staffHandler.addExperience(param.getIdStaff(), new Experience(param.getIdSkill(), param.getLevel()));
+		Experience formerExperience = staff.getExperience(experience.getId());
+		if (formerExperience == null) {
+			this.staffHandler.addExperience(idStaff, new Experience(experience.getId(), experience.getLevel()));
 		} else {
-			this.staffHandler.removeExperience(param.getIdStaff(), experience);
-			this.staffHandler.addExperience(param.getIdStaff(), new Experience(param.getIdSkill(), param.getLevel()));
+			this.staffHandler.removeExperience(idStaff, formerExperience);
+			this.staffHandler.addExperience(idStaff, new Experience(experience.getId(), experience.getLevel()));
 		}
-		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
-		
+		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
 	}
 	
 	/**
@@ -437,61 +435,27 @@ public class StaffController extends BaseRestController {
 	 *            in JSON format
 	 * @return
 	 */
-	@PostMapping("/experiences/remove")
-	public ResponseEntity<Boolean> removeExperience(@RequestBody BodyParamStaffSkill param) throws ApplicationException {
+	@DeleteMapping(value = "{idStaff}/experience/{idSkill}")
+	public ResponseEntity<Boolean> removeExperience(
+		@PathVariable("idStaff") int idStaff,
+		@PathVariable("idSkill") int idSkill) throws ApplicationException {
 
-		HttpHeaders headers = new HttpHeaders();
-		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
-					"POST command on /staff/experiences/remove with params id:%d, idSkill:%d, level:%d", 
-					param.getIdStaff(), param.getIdSkill(), param.getLevel()));
+					"POST command on /staff/experiences/remove with params idStaff:%d, idSkill:%d", 
+					idStaff, idSkill));
 		}
 
-		final Staff staff = staffHandler.getStaff(param.getIdStaff());
+		final Staff staff = staffHandler.getStaff(idStaff);
 		if (staff == null) {
-			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, param.getIdStaff()));
+			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
 		} 
 		
-		Experience experience = staff.getExperience(param.getIdSkill());
+		Experience experience = staff.getExperience(idSkill);
 		if (experience != null) {
-			this.staffHandler.removeExperience(param.getIdStaff(), experience);
+			this.staffHandler.removeExperience(idStaff, experience);
 		}
-		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
-		
-	}
-	
-	/**
-	 * Adding or changing the level of an experience assign to a developer.
-	 * 
-	 * @param param
-	 *            the body of the post containing an instance of ParamStaffSkill
-	 *            in JSON format
-	 * @see StaffController.ParamStaffSkill
-	 * @throws ApplicationException thrown if any problem occurs
-	 * @return
-	 */
-	@PostMapping("/experiences/update")
-	public ResponseEntity<Boolean> saveExperience(@RequestBody BodyParamStaffSkill param) throws ApplicationException {
-		
-		HttpHeaders headers = new HttpHeaders();		
-		if (log.isDebugEnabled()) {
-			log.debug(String.format(
-					"POST command on /staff/experiences/update with params id:%d, idSkill:%d, level:%d", 
-					param.getIdStaff(), param.getIdSkill(), param.getLevel()));
-		}
-
-		final Staff staff = staffHandler.getStaff().get(param.getIdStaff());
-		if (staff == null) {
-			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, param.getIdStaff()));
-		} 
-		
-		
-		Experience experience = staff.getExperience(param.getIdSkill());
-		if (experience != null) {
-			this.staffHandler.updateExperience(param.getIdStaff(), new Experience(param.getIdSkill(), param.getLevel()));
-		}
-		return new ResponseEntity<>(Boolean.TRUE, headers, HttpStatus.OK);
+		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);		
 	}
 	
 	/**
@@ -593,7 +557,8 @@ public class StaffController extends BaseRestController {
 		throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Adding %d skills for the staff ID %d", param.getSkills().length, param.getIdStaff()));
+			log.debug(String.format("Adding %d skills for the staff ID %d", 
+				param.getSkills().length, param.getIdStaff()));
 		}
 		if (log.isTraceEnabled()) {
 			log.trace(String.format("Adding the skills below for the staff identifier %d", param.getIdStaff()));
