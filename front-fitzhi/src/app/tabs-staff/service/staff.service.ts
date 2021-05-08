@@ -297,45 +297,44 @@ export class StaffService {
 	}
 
 	/**
-		 * POST: Revoke an experience from a staff member.
-		 */
-	removeExperience(idStaff: number, idSkill: number): Observable<boolean> {
+	* DELETE: Revoke an experience from a staff member.
+	*/
+	removeExperience$(idStaff: number, idSkill: number): Observable<boolean> {
 		if (traceOn()) {
-			console.log('Revoking the experence ' + idSkill + ' from the collaborator ' + idStaff);
+			console.log('Revoking the experience ' + idSkill + ' from the collaborator ' + idStaff);
 		}
-		const body = { idStaff: idStaff, idSkill: idSkill };
-		return this.httpClient.post<boolean>
-			(this.backendSetupService.url() + '/staff' + '/experiences/remove', body, httpOptions)
+		return this.httpClient.delete<boolean>
+			(this.backendSetupService.url() + '/staff/' + idStaff + '/experience/' + idSkill, httpOptions)
 			.pipe(take(1));
 	}
 
 	/**
 		 * POST Method: Add an experience to a staff member.
 		 */
-	addExperience({ idStaff, idSkill, level }: { idStaff: number; idSkill: number; level: number; }): Observable<boolean> {
+	addExperience$({ idStaff, idSkill, level }: { idStaff: number; idSkill: number; level: number; }): Observable<boolean> {
 		if (traceOn()) {
-			console.log('Adding the skill  ' + idSkill + ' to the staff member whom id is ' + idStaff);
+			console.log('Adding the experience  ' + idSkill + ' to the staff member whom id is ' + idStaff);
 		}
-		const body = { idStaff: idStaff, idSkill: idSkill, level: level };
-		return this.httpClient.post<boolean>(this.backendSetupService.url() + '/staff' + '/experiences/add', body, httpOptions)
+		const body = { id: idSkill, level: level };
+		return this.httpClient.post<boolean>(this.backendSetupService.url() + '/staff/' + idStaff + '/experience', body, httpOptions)
 			.pipe(take(1));
 	}
 
 	/**
-		 * POST Method: Add an experience to a staff member.
-		 */
-	updateExperienceLevel({ idStaff, idSkill, level }: { idStaff: number; idSkill: number; level: number; }): Observable<boolean> {
+	* POST Method: Add an experience to a staff member.
+	*/
+	updateExperience$({ idStaff, idSkill, level }: { idStaff: number; idSkill: number; level: number; }): Observable<boolean> {
 		if (traceOn()) {
 			console.log('Adding the skill  ' + idSkill + ' to the staff member whom id is ' + idStaff);
 		}
-		const body = { idStaff: idStaff, idSkill: idSkill, level: level };
-		return this.httpClient.post<boolean>(this.backendSetupService.url() + '/staff' + '/experiences/update', body, httpOptions)
+		const body = { id: idSkill, level: level };
+		return this.httpClient.post<boolean>(this.backendSetupService.url() + '/staff/' + idStaff + '/experience', body, httpOptions)
 			.pipe(take(1));
 	}
 
 	/**
-		 * POST: Change the experience defined by its title, or its level for a developer.
-		 */
+	* POST: Change the experience defined by its title, or its level for a developer.
+	*/
 	changeExperience(idStaff: number, formerSkillTitle: string, newSkillTitle: string, level: number): Observable<StaffDTO> {
 		if (traceOn()) {
 			console.log('Change the skill for the collaborator with id : '
@@ -364,9 +363,9 @@ export class StaffService {
 	}
 
 	/**
-		 * Retrieving the sum of staff members aggregated by skill & level (i.e. experience)
-		 * @param activeOnly : Only active employees count into the aggregation.
-		 */
+	 * Retrieving the sum of staff members aggregated by skill & level (i.e. experience)
+	 * @param activeOnly : Only active employees count into the aggregation.
+	 */
 	countAll_groupBy_experience(activeOnly: boolean) {
 		if (traceOn()) {
 			console.log('countAll_groupBy_experience loading aggegations count from the server');

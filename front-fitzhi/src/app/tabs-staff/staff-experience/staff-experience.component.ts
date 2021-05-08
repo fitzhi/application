@@ -284,7 +284,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 	}
 
 	updateExperienceLevel(staff: Collaborator, idSkill: number, level: number) {
-		this.staffService.updateExperienceLevel({
+		this.staffService.updateExperience$({
 			idStaff: this.staff.idStaff,
 			idSkill: idSkill,
 			level: level})
@@ -313,7 +313,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 	}
 
 	addNewSkill(staff: Collaborator, idSkill: number, titleSkill: string, levelSkill: number) {
-		this.staffService.addExperience({
+		this.staffService.addExperience$({
 			idStaff: this.staff.idStaff,
 			idSkill: idSkill,
 			level: levelSkill})
@@ -373,7 +373,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 			console.log ('Remove event for ' + tag);
 		}
 		const idSkill = this.skillService.id(tag);
-		this.staffService.removeExperience(this.staff.idStaff, idSkill).subscribe(
+		this.staffService.removeExperience$(this.staff.idStaff, idSkill).subscribe(
 			(ret: boolean) => {
 				if (ret) {
 					this.messageService.info(this.staff.firstName + ' ' +
