@@ -54,7 +54,6 @@ import com.fitzhi.controller.in.BodyParamStaffProject;
 import com.fitzhi.controller.in.BodyParamStaffSkill;
 import com.fitzhi.data.external.BooleanDTO;
 import com.fitzhi.data.external.ResumeDTO;
-import com.fitzhi.data.external.StaffDTO;
 import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.PeopleCountExperienceMap;
@@ -590,7 +589,8 @@ public class StaffController extends BaseRestController {
 	}
 		
 	@PostMapping("/api/experiences/resume/save")
-	public ResponseEntity<StaffDTO> saveExperiences(@RequestBody BodyParamResumeSkills param) throws ApplicationException {
+	public ResponseEntity<Staff> saveExperiences(@RequestBody BodyParamResumeSkills param) 
+		throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Adding %d skills for the staff ID %d", param.getSkills().length, param.getIdStaff()));
@@ -601,9 +601,7 @@ public class StaffController extends BaseRestController {
 		}
 
 		Staff staff = staffHandler.addExperiences(param.getIdStaff(), param.getSkills());
-		return new ResponseEntity<>(new StaffDTO(staff, 1, 
-				staff.getFirstName() + " " + staff.getLastName() + " has " + staff.getExperiences().size() + " skills now!"), 
-				HttpStatus.OK);
+		return new ResponseEntity<>(staff, headers(), HttpStatus.OK);
 
 	}	
 	
