@@ -52,7 +52,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 			|| req.url.includes('/api/server/version')
 
 			// GitHub URL
-			|| req.url.includes('api.github.com')) {
+			|| req.url.includes('https://api.github.com')) {
 
 			return next.handle(req);
 		}
