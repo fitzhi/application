@@ -10,6 +10,8 @@ import com.fitzhi.exception.ApplicationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/project/ghost")
+@RequestMapping("/api/project")
 @Api(
 	tags="Projects Ghosts API",
 	description = "API endpoints to manage the ghosts discovered in a project."
@@ -45,7 +47,7 @@ public class ProjectGhostController extends BaseRestController {
 	 * @param param the proposal of association for this ghost sent to the controller
 	 * @throws ApplicationException if any problem occurs during the treatment
 	 */
-	@PostMapping(path="/save")
+	@PostMapping(path="/ghost/save")
 	public ResponseEntity<Boolean> saveGhost(@RequestBody BodyUpdateGhost param) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
@@ -78,18 +80,23 @@ public class ProjectGhostController extends BaseRestController {
 	 * @param param the ghost to be remove from the project
 	 * @throws ApplicationException if any problem occurs during the treatment
 	 */
-	@PostMapping(path="/remove")
-	public ResponseEntity<Boolean> removeGhost(@RequestBody BodyRemoveGhost param) throws ApplicationException {
+	@DeleteMapping(path="{idProject}/ghost/{pseudo}")
+	public ResponseEntity<Boolean> removeGhost(
+			@PathVariable("idProject") int idProject,
+			@PathVariable("pseudo") String pseudo
+			) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("POST command on /project/ghosts/remove for project : %d and pseudo %s", 
-					param.getIdProject(), param.getPseudo()));
+			log.debug(String.format(
+					"POST command on /project/ghosts/remove for project : %d and pseudo %s", 
+					idProject, pseudo));
 		}
 		
-		Project project = projectHandler.get(param.getIdProject());
+		Project project = projectHandler.get(idProject);
 		
 		// Neither staff member, nor technical, we reset the ghost
-		projectHandler.removeGhost(project, param.getPseudo()); 				
+		projectHandler.removeGhost(project, pseudo); 
+
 		return OK();			
 	}
 	
