@@ -118,7 +118,8 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 			this.staff.experiences.forEach(experience => {
 				values.push(new TagStar(experience.title, experience.level - 1));
 			});
-			// The test is there to avoid an empty-warning from the tagoify component
+
+			// The test is there, only to avoid an empty-warning from the tagify component
 			if (values.length > 0) {
 				this.values$.next(values);
 			}
@@ -283,7 +284,13 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 		return (staff.experiences.findIndex(ex => ex.id === idSkill) !== -1);
 	}
 
-	updateExperienceLevel(staff: Collaborator, idSkill: number, level: number) {
+	/**
+	 * Update the experience of a staff member.
+	 * 
+	 * @param idSkill the skill identifier to update
+	 * @param level the level obtained on this skill
+	 */
+	public updateExperience(idSkill: number, level: number) {
 		this.staffService.updateExperience$({
 			idStaff: this.staff.idStaff,
 			idSkill: idSkill,
@@ -312,16 +319,23 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 		);
 	}
 
-	addNewSkill(staff: Collaborator, idSkill: number, titleSkill: string, levelSkill: number) {
+	/**
+	 * Add a new skill to a collaborator.
+	 * 
+	 * @param idSkill the skill identifier to update
+	 * @param titleSkill the skill title
+	 * @param level the level obtained on this skill
+	 */
+	public addExperience(idSkill: number, titleSkill: string, levelSkill: number) {
 		this.staffService.addExperience$({
 			idStaff: this.staff.idStaff,
 			idSkill: idSkill,
 			level: levelSkill})
 			.subscribe( (ret: boolean) => {
 				if (ret) {
-					/**
-					 * If this staff member exists in pre-existing list of collaborators. We actualize the content.
-					 */
+					//
+					// We update the experiences of the current staff member.
+					// 
 					this.staff.experiences.push({
 						'id': idSkill,
 						'title': titleSkill,
@@ -329,7 +343,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 					});
 
 					this.logExperiences(this.staff);
-					this.messageService.info(this.staff.firstName + ' ' + this.staff.lastName +
+					this.messageService.success(this.staff.firstName + ' ' + this.staff.lastName +
 					' has gained the skill ' + titleSkill);
 
 					/**
@@ -338,12 +352,39 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 					this.tabsStaffListService.actualizeCollaborator(this.staff);
 				}
 			},
-			response_error => {
+			error => {
 				if (traceOn()) {
-					console.log('Error', response_error);
+					console.log('Error', error);
 				}
 				this.reloadExperiences(this.staff.idStaff);
-				this.messageService.error(response_error.error.message);
+				this.messageService.error(error.message);
+			}
+		);
+	}
+
+	/**
+	 * Add a new skill to a collaborator.
+	 * 
+	 * @param idSkill the skill identifier to update
+	 * @param titleSkill the skill title
+	 * @param level the level obtained on this skill
+	 */
+	public removeExperience(idSkill: number, title: string) {
+		this.staffService.removeExperience$(this.staff.idStaff, idSkill).subscribe(
+			(ret: boolean) => {
+				if (ret) {
+					this.messageService.success(this.staff.firstName + ' ' +
+						this.staff.lastName + ' has no more the skill ' + title);
+
+					const idx = this.staff.experiences.findIndex(exp => exp.title === title);
+					this.staff.experiences.splice(idx, 1);
+					this.logExperiences(this.staff);
+
+					/**
+				     * If this staff member exists in pre-existing list of collaborators. We actualize the content.
+					 */
+					this.tabsStaffListService.actualizeCollaborator(this.staff);
+				}
 			}
 		);
 	}
@@ -354,7 +395,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 		}
 		if (this.checkStaffMemberExist()) {
 			const idSkill = this.skillService.id(tagStar.tag);
-			this.addNewSkill (this.staff, idSkill, tagStar.tag, tagStar.star + 1);
+			this.addExperience (idSkill, tagStar.tag, tagStar.star + 1);
 		}
 	}
 
@@ -364,7 +405,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 		}
 		if (this.checkStaffMemberExist()) {
 			const idSkill = this.skillService.id(tagStar.tag);
-			this.updateExperienceLevel (this.staff, idSkill, tagStar.star + 1);
+			this.updateExperience (idSkill, tagStar.star + 1);
 		}
 	}
 
@@ -373,22 +414,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 			console.log ('Remove event for ' + tag);
 		}
 		const idSkill = this.skillService.id(tag);
-		this.staffService.removeExperience$(this.staff.idStaff, idSkill).subscribe(
-			(ret: boolean) => {
-				if (ret) {
-					this.messageService.info(this.staff.firstName + ' ' +
-						this.staff.lastName + ' has no more the skill ' + tag);
-
-					const idx = this.staff.experiences.findIndex(exp => exp.title === tag);
-					this.staff.experiences.splice(idx, 1);
-					this.logExperiences(this.staff);
-
-					/**
-				     * If this staff member exists in pre-existing list of collaborators. We actualize the content.
-					 */
-					this.tabsStaffListService.actualizeCollaborator(this.staff);
-				}
-			});
+		this.removeExperience(idSkill, tag);
 	}
 
 	/**
