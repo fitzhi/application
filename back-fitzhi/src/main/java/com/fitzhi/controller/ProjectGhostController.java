@@ -1,7 +1,7 @@
 package com.fitzhi.controller;
 
 import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.controller.in.BodyUpdateGhost;
+import com.fitzhi.controller.in.GhostAssociation;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
@@ -46,29 +46,31 @@ public class ProjectGhostController extends BaseRestController {
 	 * @param param the proposal of association for this ghost sent to the controller
 	 * @throws ApplicationException if any problem occurs during the treatment
 	 */
-	@PostMapping(path="/ghost/save")
-	public ResponseEntity<Boolean> saveGhost(@RequestBody BodyUpdateGhost param) throws ApplicationException {
+	@PostMapping(path="{idProject}/ghost")
+	public ResponseEntity<Boolean> saveGhost(
+		@PathVariable("idProject") int idProject,
+		@RequestBody GhostAssociation association) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("POST command on /api/project/ghost/save for project : %d", param.getIdProject()));
+			log.debug(String.format("POST command on /api/project/ghost/save for project : %d", idProject));
 		}
 		
-		Project project = projectHandler.get(param.getIdProject());
+		Project project = projectHandler.get(idProject);
 		
 		// We update the staff identifier associated to this ghost
-		if (param.getIdStaff() > 0) {
-			projectHandler.associateStaffToGhost(project, param.getPseudo(), param.getIdStaff());
+		if (association.getIdStaff() > 0) {
+			projectHandler.associateStaffToGhost(project, association.getPseudo(), association.getIdStaff());
 			return OK();	
 		}
 
 		// This ghost is technical
-		if (param.isTechnical()) {
-			projectHandler.setGhostTechnicalStatus(project, param.getPseudo(), true); 				
+		if (association.isTechnical()) {
+			projectHandler.setGhostTechnicalStatus(project, association.getPseudo(), true); 				
 			return OK();			
 		}
 		
 		// Neither staff member, nor technical, we reset the ghost
-		projectHandler.resetGhost(project, param.getPseudo()); 				
+		projectHandler.resetGhost(project, association.getPseudo()); 				
 		return OK();			
 	}
 	

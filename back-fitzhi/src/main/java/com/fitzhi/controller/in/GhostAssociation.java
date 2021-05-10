@@ -4,15 +4,14 @@ import lombok.Data;
 
 /**
  * <p>
- * Internal container hosting all possible parameters required to manage a ghost
- * of a project.
+ * Internal container hosting all possible caracteristics of a ghost in a project.
  * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public @Data class BodyUpdateGhost {
+public @Data class GhostAssociation {
 	
-	public BodyUpdateGhost() {
+	public GhostAssociation() {
 		// Empty constructor declared for serialization / deserialization purpose 
 	}
 

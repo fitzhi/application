@@ -7,6 +7,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -24,8 +25,7 @@ import org.springframework.test.web.servlet.MvcResult;
 
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.controller.ProjectGhostController;
-import com.fitzhi.controller.in.BodyUpdateGhost;
+import com.fitzhi.controller.in.GhostAssociation;
 import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Mission;
@@ -37,17 +37,19 @@ import com.google.gson.GsonBuilder;
 
 /**
  * <p>
- * Test of the class {@link ProjectGhostController}
+ * Test of the class {@link ProjectGhostController} in a plugged way.
  * </p>
+ * 
+ * <p>
+ * "PLUGGED" means that the handlers behind each end-point are not mocked.
+ * </p>
+ * 
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectGhostControllerTest {
-
-//	private final Logger logger = LoggerFactory.getLogger(ProjectGhostControllerTest.class.getCanonicalName());
+public class PluggedProjectGhostControllerSaveGhostTest {
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -73,35 +75,38 @@ public class ProjectGhostControllerTest {
 		project = projectHandler.get(ID_PROJECT);
 		project.getGhosts().add(new Ghost("pseudoUnlinked", false));
 		project.getGhosts().add(new Ghost("pseudoLinked", 2, false));
-		
-		Staff staff = staffHandler.getStaff(2);
-		staff.addMission(new Mission(2, ID_PROJECT, project.getName()));
+
+		// We remove this entry because one un-identified test adds this project to this Staff missions
+		Staff staff = staffHandler.getStaff(1);
+		Optional<Mission> oToBeRemoved = staff.getMissions().stream().filter(mission -> (mission.getIdProject() == ID_PROJECT)).findFirst();
+		if (oToBeRemoved.isPresent()) {
+			staff.getMissions().remove(oToBeRemoved.get());
+		}
+ 		
 	}
 	
-
 	@Test
 	@WithMockUser
 	public void test() throws Exception {
-		MvcResult result = this.mvc.perform(get("/api/staff/2"))
+		GhostAssociation bug = new GhostAssociation();
+		bug.setIdProject(ID_PROJECT);
+		bug.setPseudo("pseudoUnlinked");
+		bug.setIdStaff(1);
+	
+		MvcResult result = this.mvc.perform(get("/api/staff/1"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
 				.andReturn();
+
 		Staff staff = gson.fromJson(result.getResponse().getContentAsString(), Staff.class);
 		//
-		// THIS PROJECT IS ALREADY DECLARED FOR THIS STAFF MEMBER 2. 
-		// IT HAS BEEN ADDED IN THE @BEFORE METHOD 
+		// THIS PROJECT IS NOT ALREADY DECLARED FOR THIS STAFF MEMBER
 		//
-		Assert.assertTrue(
+		Assert.assertFalse(
 				staff.getMissions().stream().anyMatch(mission -> mission.getIdProject() == ID_PROJECT));
 		
-		BodyUpdateGhost bug = new BodyUpdateGhost();
-		bug.setIdProject(ID_PROJECT);
-		bug.setPseudo("pseudoLinked");
-		bug.setIdStaff(-1);
-		bug.setTechnical(true);
-	
-		this.mvc.perform(post("/api/project/ghost/save")
+		this.mvc.perform(post(String.format("/api/project/%d/ghost", ID_PROJECT))
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(bug)))
 			.andExpect(status().isOk())
@@ -109,24 +114,18 @@ public class ProjectGhostControllerTest {
 			.andExpect(content().string("true"))
 			.andDo(print());
 
-		this.mvc.perform(get("/api/project/"+ ID_PROJECT))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andDo(print());
-
-		result = this.mvc.perform(get("/api/staff/2"))
+		result = this.mvc.perform(get("/api/staff/1"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
 				.andReturn();
 		staff = gson.fromJson(result.getResponse().getContentAsString(), Staff.class);
 		//
-		// THIS PROJECT HAS BEEN REVOKED FOR THIS STAFF MEMBER.
+		// THIS PROJECT HAS BEEN ADDED TO THIS STAFF MEMBER.
 		//
-		Assert.assertFalse(
+		Assert.assertTrue(
 				staff.getMissions().stream().anyMatch(mission -> mission.getIdProject() == ID_PROJECT));
 	}
-	
 	
 	@After
 	public void after() throws ApplicationException {
