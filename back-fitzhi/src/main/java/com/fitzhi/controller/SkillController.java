@@ -108,10 +108,9 @@ public class SkillController extends BaseRestController {
 	}
 	
 
-	@GetMapping(value = "/{idParam}")
-	public ResponseEntity<Skill> read(@PathVariable("idParam") int idParam) throws ApplicationException {
-		final Skill skill = skillHandler.getSkill(idParam);
-		System.out.println(skill);
+	@GetMapping(value = "/{idSkill}")
+	public ResponseEntity<Skill> read(@PathVariable("idSkill") int idSkill) throws ApplicationException {
+		final Skill skill = skillHandler.getSkill(idSkill);
 		return new ResponseEntity<>(skill, headers(), HttpStatus.OK);
 	}
 
