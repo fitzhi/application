@@ -669,7 +669,7 @@ export class ProjectService extends InternalService {
 			console.groupEnd();
 		}
 		const body = { idProject: idProject, pseudo: pseudo, idStaff: idRelatedStaff, technical: technical };
-		return this.httpClient.post<boolean>(this.backendSetupService.url() + '/project/ghost/save', body, httpOptions);
+		return this.httpClient.post<boolean>(this.backendSetupService.url() + '/project/' + idProject + '/ghost', body, httpOptions);
 	}
 
 	/**
@@ -684,8 +684,8 @@ export class ProjectService extends InternalService {
 			console.log ('pseudo', pseudo);
 			console.groupEnd();
 		}
-		const body = { idProject: idProject, pseudo: pseudo };
-		return this.httpClient.post<boolean>(this.backendSetupService.url() + '/project/ghost/remove', body, httpOptions);
+		return this.httpClient.delete<boolean>(
+			this.backendSetupService.url() + '/project/' + idProject + '/ghost/' + pseudo, httpOptions);
 	}
 
 	/**
