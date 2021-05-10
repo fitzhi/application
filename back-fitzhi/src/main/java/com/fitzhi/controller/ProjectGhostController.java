@@ -1,7 +1,6 @@
 package com.fitzhi.controller;
 
 import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.controller.in.BodyRemoveGhost;
 import com.fitzhi.controller.in.BodyUpdateGhost;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Project;

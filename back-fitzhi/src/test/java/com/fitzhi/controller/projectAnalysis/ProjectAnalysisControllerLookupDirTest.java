@@ -7,6 +7,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.exception.ApplicationException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,13 +25,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.controller.ProjectAnalysisController;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.ApplicationException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * <p>Class in charge of the test of {@link com.fitzhi.controller.ProjectAnalysisController#lookupDir(int, String)}</p>

@@ -1,11 +1,11 @@
 package com.fitzhi.controller;
 
+import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.CODE_STAFF_ACTIVE_ON_PROJECT;
 import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
-import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_STAFF_ACTIVE_ON_PROJECT;
 import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
-import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Global.BACKEND_RETURN_CODE;
 import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
 
@@ -20,6 +20,28 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 import javax.servlet.http.HttpServletRequest;
+
+import com.fitzhi.ApplicationRuntimeException;
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.bean.ShuffleService;
+import com.fitzhi.bean.SkillHandler;
+import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.controller.in.BodyParamResumeSkills;
+import com.fitzhi.controller.in.BodyParamStaffProject;
+import com.fitzhi.data.external.BooleanDTO;
+import com.fitzhi.data.external.ResumeDTO;
+import com.fitzhi.data.internal.Experience;
+import com.fitzhi.data.internal.Mission;
+import com.fitzhi.data.internal.PeopleCountExperienceMap;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.Resume;
+import com.fitzhi.data.internal.ResumeSkill;
+import com.fitzhi.data.internal.Staff;
+import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
+import com.fitzhi.service.FileType;
+import com.fitzhi.service.ResumeParserService;
+import com.fitzhi.service.StorageService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -43,30 +65,6 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import io.swagger.annotations.Api;
-
-import com.fitzhi.ApplicationRuntimeException;
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.bean.ShuffleService;
-import com.fitzhi.bean.SkillHandler;
-import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.controller.in.BodyParamResumeSkills;
-import com.fitzhi.controller.in.BodyParamStaffProject;
-import com.fitzhi.controller.in.BodyParamStaffSkill;
-import com.fitzhi.data.external.BooleanDTO;
-import com.fitzhi.data.external.ResumeDTO;
-import com.fitzhi.data.internal.Experience;
-import com.fitzhi.data.internal.Mission;
-import com.fitzhi.data.internal.PeopleCountExperienceMap;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.Resume;
-import com.fitzhi.data.internal.ResumeSkill;
-import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.NotFoundException;
-import com.fitzhi.exception.ApplicationException;
-import com.fitzhi.service.FileType;
-import com.fitzhi.service.ResumeParserService;
-import com.fitzhi.service.StorageService;
-
 import lombok.extern.slf4j.Slf4j;
 
 
