@@ -42,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/project/sonar")
 @Api(
-	tags="Projects Sonar controller API",
+	tags="Project Sonar controller API",
 	description = "API endpoints to retrieve the Sonar metrics linked to their Fitzhi projects counterparts."
 )
 public class ProjectSonarController extends BaseRestController {

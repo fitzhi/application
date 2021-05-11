@@ -30,7 +30,7 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/project")
 @Api(
-	tags="Projects Ghosts controller API",
+	tags="Project Ghosts controller API",
 	description = "API endpoints to manage the ghosts discovered in a project."
 )
 public class ProjectGhostController extends BaseRestController {
