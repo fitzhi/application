@@ -4,7 +4,6 @@ import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
-import static com.fitzhi.Error.getStackTrace;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkylineProcessor;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.controller.util.ProjectLoader;
-import com.fitzhi.controller.util.ProjectLoader.MyReference;
 import com.fitzhi.data.internal.Library;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Staff;
@@ -96,6 +94,8 @@ public class ProjectAnalysisController extends BaseRestController  {
 	 * 
 	 * @param idProject the project identifier
 	 * @param criteria the given searched criteria
+	 * 
+	 * @return {@code true} if the operation success, {@code false} otherwise
 	 */
 	@GetMapping(value = "/{idProject}/analysis/lib-dir/{criteria}")
 	public ResponseEntity<List<String>> lookup(
@@ -118,13 +118,15 @@ public class ProjectAnalysisController extends BaseRestController  {
 	}
 
 	/**
-	 * Add or change the name of skill required for a project.
-	 * @param param the body of the post containing an instance of ParamProjectSkill in JSON format
-	 * @see ProjectController.BodyParamProjectSkill
+	 * <p>
+	 * Save a library dependency for a project project.
+	 * </p>
+	 * @param idProject the project identifier
+	 * @see Library
 	 * @return
 	 */
-	@PostMapping("/analysis/lib-dir/save/{idProject}")
-	public ResponseEntity<Boolean> saveLibDir(@PathVariable int idProject, @RequestBody Library[] tabLib) {
+	@PostMapping("{idProject}/analysis/lib-dir")
+	public ResponseEntity<Boolean> saveLibDir(@PathVariable int idProject, @RequestBody Library[] tabLib) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
@@ -134,27 +136,16 @@ public class ProjectAnalysisController extends BaseRestController  {
 		
 		List<Library> libraries = new ArrayList<>(Arrays.asList(tabLib));
 		
-		MyReference<ResponseEntity<Boolean>> refResponse = projectLoader.new MyReference<>();
-		Project project = projectLoader.getProject(idProject, Boolean.FALSE, refResponse);
-		if (refResponse.getResponse() != null) {
-			return refResponse.getResponse();
-		}
+		Project project = projectHandler.get(idProject);
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Saving the librairies of project %s", project.getName()));
 			libraries.stream().map(Library::getExclusionDirectory).forEach(log::debug);
 		}
 		
-		try {
 		 this.projectHandler.saveLibraries(idProject, libraries);
-		} catch (Exception e) {
-			log.error(getStackTrace(e));
-			return new ResponseEntity<> (
-					Boolean.FALSE, 
-					new HttpHeaders(), 
-					HttpStatus.BAD_REQUEST);
-		}
-		return new ResponseEntity<>(Boolean.TRUE, new HttpHeaders(), HttpStatus.OK);
+
+		 return new ResponseEntity<>(Boolean.TRUE, new HttpHeaders(), HttpStatus.OK);
 	}
 
 	

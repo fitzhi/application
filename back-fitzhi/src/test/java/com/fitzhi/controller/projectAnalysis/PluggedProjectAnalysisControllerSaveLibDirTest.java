@@ -1,6 +1,6 @@
 package com.fitzhi.controller.projectAnalysis;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -8,23 +8,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.data.internal.Library;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 /**
  * <p>Class in charge of the test of {@link com.fitzhi.controller.ProjectAnalysisController#lookupDir(int, String)}</p>
@@ -34,7 +35,7 @@ import org.springframework.util.MultiValueMap;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectAnalysisControllerLookupDirTest {
+public class PluggedProjectAnalysisControllerSaveLibDirTest {
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -51,29 +52,34 @@ public class ProjectAnalysisControllerLookupDirTest {
 	@Before
 	public void before() throws ApplicationException {
 		project = new Project(9999, "Project 9999");
-		project.setBranch("master");
 		projectHandler.addNewProject(project);
 	}
 	
 	@Test
 	@WithMockUser	
-	public void testA() throws Exception {
+	public void loadLibDir() throws Exception {
 	
-		List<String> continents  = new ArrayList<>();
-		continents.add("africa");
-		continents.add("america");
-		continents.add("antartic");
-		continents.add("asia");
+		List<Library> continents  = new ArrayList<>();
+		continents.add(new Library("/africa", 1));
+		continents.add(new Library("/america", 1));
+		continents.add(new Library("/antartic", 1));
+		continents.add(new Library("/asia", 1));
 		
-		mvc.perform(get("/api/project/9999/analysis/lib-dir/a"))
-		    .andExpect(status().isOk())
-		    .andExpect(content().contentType("application/json;charset=UTF-8"))
-			.andExpect(content().json(gson.toJson(continents)));
+		String jsonInput = gson.toJson(continents);
+		
+		this.mvc.perform(post("/api/project/9999/analysis/lib-dir")
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(jsonInput))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
+		
+		List<Library> libs = project.getLibraries();
+		Assert.assertEquals("4 records in the libraries list", 4, libs.size());
 	}
 
 	@After
 	public void after() throws ApplicationException {
-		projectHandler.getProjects().remove(9999);
+		projectHandler.removeProject(9999);
 	}
 	
 }
