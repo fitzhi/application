@@ -617,20 +617,19 @@ export class ProjectService extends InternalService {
 
 	/**
 	 * Retrieve the directories starting with 'criteria'.
+	 * 
 	 * @param idProject the identifier of the project
 	 * @param criteria the searched criteria
-	 * @return an observable to the list of directories found
+	 * @return an observable emitting the list of directories.
 	 */
-	libDirLookup(idProject: number, criteria: string): Observable<string[]> {
-		const url = this.backendSetupService.url()
-			+ '/project/analysis/lib-dir/lookup?idProject=' + idProject
-			+ '&criteria=' + criteria;
-		return this.httpClient.get<string[]>(url)
-			.pipe(take(1));
+	libDirLookup$(idProject: number, criteria: string): Observable<string[]> {
+		const url = this.backendSetupService.url() + '/project/' + idProject + '/analysis/lib-dir/' + criteria;
+		return this.httpClient.get<string[]>(url).pipe(take(1));
 	}
 
 	/**
 	 * Save the libraries detected or declared.
+	 * 
 	 * @param idProject the identifier of the project
 	 * @param libraries the libraries directories
 	 */

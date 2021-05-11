@@ -36,7 +36,7 @@ export class InLineEditDialogComponent implements OnInit {
 		this.paths = this.paths.filter(s => s.toLowerCase().startsWith($event));
 		this.pathSearched = $event;
 		this.searchPath$.next($event);
-		return this.projectService.libDirLookup(this.idProject, $event)
+		return this.projectService.libDirLookup$(this.idProject, $event)
 			.subscribe(res => this.paths = res);
 	}
 
