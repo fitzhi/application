@@ -1,18 +1,15 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatStepper } from '@angular/material/stepper';
-import { Constants } from 'src/app/constants';
 import { Collaborator } from 'src/app/data/collaborator';
 import { BaseComponent } from 'src/app/base/base.component';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
-import { BooleanDTO } from 'src/app/data/external/booleanDTO';
 import { HttpClient } from '@angular/common/http';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { SkillService } from 'src/app/skill/service/skill.service';
 import { Router } from '@angular/router';
-import { Observable, Subject } from 'rxjs';
-import { take } from 'rxjs/operators';
 import { traceOn } from 'src/app/global';
 import { InstallService } from '../service/install/install.service';
+import { Subject } from 'rxjs';
 
 @Component({
 	selector: 'app-starting-setup',
@@ -141,13 +138,12 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 			console.log('staff updated for :', $event.lastName);
 		}
 
-		this.subscriptions
-			.add(this.httpClient.get<BooleanDTO>(this.backendSetupService.url() + '/admin/saveVeryFirstConnection')
-				.subscribe(
-					(data: BooleanDTO) => {
-						const veryFirstConnectionIsRegistered = data.result;
+		this.subscriptions.add(
+			this.httpClient.post<Boolean>(this.backendSetupService.url() + '/admin/saveVeryFirstConnection', '')
+				.subscribe({
+					next:  veryFirstConnectionIsRegistered => {
 						if (traceOn() && veryFirstConnectionIsRegistered) {
-							console.log('The very first connection is registered into fitzhì');
+							console.log('The very first connection is registered into Fitzhi.');
 						}
 						this.completed[3] = true;
 						
@@ -157,12 +153,10 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 						setTimeout(() => {
 							this.stepper.next();
 						}, 0);
-					},
-					(error: BooleanDTO) => {
-						if (traceOn()) {
-							console.log('Connection error ', error);
-						}
-					}));
+					}
+				}
+			)
+		);
 	}
 
 
@@ -170,7 +164,6 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
      * @param $event we move from one step in the installation.
      */
 	selectionChange($event) {
-		console.log ($event);
 		window.scroll(0, 0);
 	}
 
