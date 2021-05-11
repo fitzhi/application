@@ -149,11 +149,13 @@ public class ProjectAnalysisController extends BaseRestController  {
 	}
 
 	
-	@GetMapping("/analysis/onboard/{idProject}/{idStaff}")
-	public ResponseEntity<Boolean> onBoardStaff(@PathVariable int idProject, @PathVariable int idStaff) throws ApplicationException {
+	@PostMapping("{idProject}/analysis/onboard/{idStaff}")
+	public ResponseEntity<Boolean> onBoardStaff(
+		@PathVariable int idProject, 
+		@PathVariable int idStaff) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("GET command on /onboard/%d/%d ", idProject, idStaff));
+			log.debug(String.format("POST verb on %d/analysis/onboard/%d", idProject, idStaff));
 		}
 		
 		Staff staff = staffHandler.getStaff(idStaff);		

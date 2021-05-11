@@ -1,6 +1,6 @@
 package com.fitzhi.controller.projectAnalysis;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -104,7 +104,7 @@ public class ProjectAnalysisControllerOnboardStaffTest {
 		Staff staff = new Staff(1, "Frédéric", "VIDAL", "altF4", "fvidal", "frvidal@void.com", "OIM");
 		staffHandler.getStaff().put(1, staff);
 		
-		MvcResult result = this.mvc.perform(get("/api/project/analysis/onboard/1917/1"))
+		MvcResult result = this.mvc.perform(post("/api/project/1917/analysis/onboard/1"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
