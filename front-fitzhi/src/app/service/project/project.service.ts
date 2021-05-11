@@ -639,14 +639,15 @@ export class ProjectService extends InternalService {
 			libraries.forEach(lib => console.log (lib.exclusionDirectory));
 			console.groupEnd();
 		}
-		const url = this.backendSetupService.url()
-			+ '/project/analysis/lib-dir/save/' + idProject;
-		return this.httpClient
+		const url = this.backendSetupService.url() + '/project/' + idProject + '/analysis/lib-dir/';
+		this.httpClient
 			.post<boolean>(url, libraries, httpOptions)
 			.pipe(take(1))
-			.subscribe(doneAndOk => {
-				if (doneAndOk) {
-					this.messageService.info('Libraries detected have been saved');
+			.subscribe({
+				next: doneAndOk => {
+					if (doneAndOk) {
+						this.messageService.info('Libraries detected have been saved');
+					}
 				}
 			});
 	}
