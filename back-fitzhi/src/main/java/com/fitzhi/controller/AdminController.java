@@ -112,7 +112,7 @@ public class AdminController extends BaseRestController {
 	 * @param password this user password
 	 * @return the newly created staff entry
 	 */
-	@GetMapping("/register")
+	@PostMapping("/register")
 	public ResponseEntity<Staff> autoRegister(
 			@RequestParam("login") String login,
 			@RequestParam("password") String password) throws ApplicationException {
@@ -133,7 +133,8 @@ public class AdminController extends BaseRestController {
 	 * @return The staff member created for this user/password
 	 * @throws ApplicationException thrown if any problem occurs such as, for example, 'login already registered'
 	 */
-	private ResponseEntity<Staff> internalCreateNewUser (String login, String password) throws ApplicationException {
+	private ResponseEntity<Staff> internalCreateNewUser (String login, String password) 
+			throws ApplicationException {
 		Staff staff = administration.createNewUser(login, password);
 		return new ResponseEntity<>(staff, new HttpHeaders(), HttpStatus.OK);
 	}

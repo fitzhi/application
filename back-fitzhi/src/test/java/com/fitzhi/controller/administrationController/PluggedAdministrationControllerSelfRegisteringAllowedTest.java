@@ -3,18 +3,20 @@
  */
 package com.fitzhi.controller.administrationController;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.Optional;
 
+import com.fitzhi.bean.Administration;
+import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.Staff;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,17 +26,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
-import com.fitzhi.bean.Administration;
-import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.data.internal.Staff;
-
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 @SpringBootTest(properties="allowSelfRegistration=true")
-public class AdministrationControllerSelfRegisteringAllowedTest {
+public class PluggedAdministrationControllerSelfRegisteringAllowedTest {
 
 
 	private static final String TEST_USER = "test-user";
@@ -44,8 +42,6 @@ public class AdministrationControllerSelfRegisteringAllowedTest {
 
 	@Autowired
 	Administration administration;
-
-	Logger logger = LoggerFactory.getLogger(AdministrationControllerSelfRegisteringAllowedTest.class.getCanonicalName());
 
 	@Autowired
 	StaffHandler staffHandler;
@@ -58,7 +54,7 @@ public class AdministrationControllerSelfRegisteringAllowedTest {
 	    params.add("login", TEST_USER);
 	    params.add("password", "test-pass"); // NOSONAR
 
-	    mvc.perform(get("/api/admin/register")
+	    mvc.perform(post("/api/admin/register")
 	        .params(params)
 	        .accept("application/json;charset=UTF-8"))
 	        .andExpect(status().isOk())
@@ -72,7 +68,7 @@ public class AdministrationControllerSelfRegisteringAllowedTest {
 	public void after() {
 		Optional<Staff> oStaff = staffHandler.findStaffOnLogin(TEST_USER);
 	    if (oStaff.isPresent()) {
-	    	staffHandler.getStaff().remove(oStaff.get().getIdStaff());
+	    	staffHandler.removeStaff(oStaff.get().getIdStaff());
 	    }
 	}
 }

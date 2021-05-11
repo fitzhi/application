@@ -1,9 +1,7 @@
-/**
- * 
- */
 package com.fitzhi.controller.administrationController;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -91,7 +89,7 @@ public class AdministrationControllerSelfRegisteringDisallowedTest {
 	    params.add("login", TEST_USER);
 	    params.add("password", "test-pass"); // NOSONAR
 
-	    MvcResult result = mvc.perform(get("/api/admin/register")
+	    MvcResult result = mvc.perform(post("/api/admin/register")
 	        .params(params)
 	        .accept("application/json;charset=UTF-8"))
 	        .andExpect(status().isInternalServerError())
