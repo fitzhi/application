@@ -65,13 +65,7 @@ public class ProjectAnalysisControllerLookupDirTest {
 		continents.add("antartic");
 		continents.add("asia");
 		
-		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-	    params.add("idProject", "9999");
-	    params.add("criteria", "a"); 
-	    
-		mvc.perform(get("/api/project/analysis/lib-dir/lookup")
-		    .params(params)
-		    .accept("application/json;charset=UTF-8"))
+		mvc.perform(get("/api/project/9999/analysis/lib-dir/a"))
 		    .andExpect(status().isOk())
 		    .andExpect(content().contentType("application/json;charset=UTF-8"))
 			.andExpect(content().json(gson.toJson(continents)));

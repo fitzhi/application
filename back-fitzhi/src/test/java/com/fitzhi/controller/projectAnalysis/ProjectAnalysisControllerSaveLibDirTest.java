@@ -57,7 +57,7 @@ public class ProjectAnalysisControllerSaveLibDirTest {
 	
 	@Test
 	@WithMockUser	
-	public void testA() throws Exception {
+	public void loadLibDir() throws Exception {
 	
 		List<Library> continents  = new ArrayList<>();
 		continents.add(new Library("/africa", 1));

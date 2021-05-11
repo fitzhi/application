@@ -5,8 +5,6 @@ import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
 import static com.fitzhi.Error.getStackTrace;
-import static com.fitzhi.Global.BACKEND_RETURN_CODE;
-import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -35,7 +33,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
@@ -51,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/project/analysis")
+@RequestMapping("/api/project")
 @Api(
 	tags="Projects Analysis API",
 	description = "API endpoints in charge of the interaction between the front-end and the analysis processed by the back-end."
@@ -93,48 +90,31 @@ public class ProjectAnalysisController extends BaseRestController  {
 	}
 
 	/**
+	 * <p>
 	 * Lookup all directories from the repository starting with a given criteria.
+	 * </p>
+	 * 
 	 * @param idProject the project identifier
 	 * @param criteria the given searched criteria
 	 */
-	@GetMapping(value = "/lib-dir/lookup")
-	public ResponseEntity<List<String>> libDir(
-			final @RequestParam("idProject") int idProject,
-			final @RequestParam("criteria") String criteria) throws ApplicationException {
+	@GetMapping(value = "/{idProject}/analysis/lib-dir/{criteria}")
+	public ResponseEntity<List<String>> lookup(
+			final @PathVariable("idProject") int idProject,
+			final @PathVariable("criteria") String criteria) throws ApplicationException {
 
-		MyReference<ResponseEntity<List<String>>> refResponse = projectLoader.new MyReference<>();
+		final Project project = projectHandler.get(idProject);
 
-		final Project project = projectLoader.getProject(idProject, new ArrayList<String>(), refResponse);
-		if (refResponse.getResponse() != null) {
-			if (log.isDebugEnabled()) {
-				log.debug (String.format("Project not found for id %d" , idProject));
-			} 
-			return refResponse.getResponse();
-		}
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("scanning the directories from %s", project.getLocationRepository()));
+			log.debug(String.format("Scanning the directories from %s", project.getLocationRepository()));
 		}
 		
-		try {
-
-			List<String> paths = this.dashboardCustomizer.lookupPathRepository(project, criteria);
-			if (log.isDebugEnabled()) {
-				log.debug(String.format("Resulting paths starting with %s", criteria));
-				paths.stream().forEach(log::debug);
-			}
-
-			return new ResponseEntity<>(paths, new HttpHeaders(), HttpStatus.OK);
-
-		} catch (final ApplicationException e) {
-
-			log.error(getStackTrace(e));
-
-			final HttpHeaders headers = new HttpHeaders();
-			headers.set(BACKEND_RETURN_CODE, "O");
-			headers.set(BACKEND_RETURN_MESSAGE, e.getMessage());
-			return new ResponseEntity<>(new ArrayList<String>(), headers, HttpStatus.BAD_REQUEST);
-
+		List<String> paths = this.dashboardCustomizer.lookupPathRepository(project, criteria);
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Resulting paths starting with %s", criteria));
+			paths.stream().forEach(log::debug);
 		}
+
+		return new ResponseEntity<>(paths, new HttpHeaders(), HttpStatus.OK);
 	}
 
 	/**
@@ -143,7 +123,7 @@ public class ProjectAnalysisController extends BaseRestController  {
 	 * @see ProjectController.BodyParamProjectSkill
 	 * @return
 	 */
-	@PostMapping("/lib-dir/save/{idProject}")
+	@PostMapping("/analysis/lib-dir/save/{idProject}")
 	public ResponseEntity<Boolean> saveLibDir(@PathVariable int idProject, @RequestBody Library[] tabLib) {
 		
 		if (log.isDebugEnabled()) {
@@ -178,7 +158,7 @@ public class ProjectAnalysisController extends BaseRestController  {
 	}
 
 	
-	@GetMapping("/onboard/{idProject}/{idStaff}")
+	@GetMapping("/analysis/onboard/{idProject}/{idStaff}")
 	public ResponseEntity<Boolean> onBoardStaff(@PathVariable int idProject, @PathVariable int idStaff) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
