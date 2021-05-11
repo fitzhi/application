@@ -441,42 +441,33 @@ public class ProjectController extends BaseRestController {
 
 	/**
 	 * <p>
-	 * Add a new skill required for a project.
+	 * Add a new skill detected in a project.
 	 * </p>
 	 * 
-	 * @param projectSkill the body of the post containing an instance of
-	 *                     ParamProjectSkill in JSON format
-	 * @see ProjectController.BodyParamProjectSkill
-	 * @return
+	 * @param idProject the project identifier
+	 * @param idSkill the skill identifier
+	 * 
+	 * @return {@code true} if the operation was successful, {@code false} otherwise.
+	 * @throws ApplicationException thrown if any problem occurs.
 	 */
-	@PostMapping("/skill/add")
-	public ResponseEntity<BooleanDTO> saveSkill(@RequestBody BodyParamProjectSkill projectSkill) {
+	@PostMapping("{idProject}/skill/{idSkill}")
+	public ResponseEntity<Boolean> saveSkill(
+		@PathVariable("idProject") int idProject,
+		@PathVariable("idSkill") int idSkill) throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("POST command on /project/skill/add with params idProject: %d, idSkill: %d",
-					projectSkill.getIdProject(), projectSkill.getIdSkill()));
+			log.debug(String.format(
+				"POST command on %d/project/skill/%d", idProject, idSkill));
 		}
 
-		MyReference<ResponseEntity<BooleanDTO>> refResponse = projectLoader.new MyReference<>();
-		Project project = projectLoader.getProject(projectSkill.getIdProject(), new BooleanDTO(), refResponse);
-		if (refResponse.getResponse() != null) {
-			return refResponse.getResponse();
-		}
+		Project project = projectHandler.get(idProject);
 
-		try {
-			Skill skill = this.skillHandler.getSkill(projectSkill.getIdSkill());
-			this.projectHandler.addSkill(project, new ProjectSkill(skill.getId()));
-			return new ResponseEntity<BooleanDTO>(new BooleanDTO(), headers(), HttpStatus.OK);
-		} catch (final ApplicationException ske) {
-			if (log.isDebugEnabled()) {
-				log.debug(String.format("Cannot save the skill %d inside the project %s", projectSkill.getIdSkill(),
-						project.getName()));
-				log.debug(ske.errorMessage);
-			}
-			return new ResponseEntity<BooleanDTO>(
-					new BooleanDTO(-1, String.format("There is no skill with id " + projectSkill.getIdSkill())),
-					headers(), HttpStatus.BAD_REQUEST);
-		}
+		// Just to test if this skill exists.
+		Skill skill = this.skillHandler.getSkill(idSkill);
+		
+		this.projectHandler.addSkill(project, new ProjectSkill(skill.getId()));
+
+		return new ResponseEntity<Boolean>(true, headers(), HttpStatus.OK);
 	}
 
 	/**
@@ -484,26 +475,25 @@ public class ProjectController extends BaseRestController {
 	 * Unregister a skill within a project.
 	 * </p>
 	 * 
-	 * @param param an instance of {@link BodyParamProjectSkill} containing the
-	 *              project identifier and the skill identifier
+	 * @param idProject the project identifier
+	 * @param idSkill the skill identifier
+	 * 
+	 * @throws ApplicationException thrown if any problem occurs.
 	 */
-	@PostMapping("/skill/del")
-	public ResponseEntity<BooleanDTO> revokeSkill(@RequestBody BodyParamProjectSkill projectSkill) {
+	@DeleteMapping("{idProject}/skill/{idSkill}")
+	public ResponseEntity<Boolean> revokeSkill(
+		@PathVariable("idProject") int idProject,
+		@PathVariable("idSkill") int idSkill) throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("POST command on /staff/skills/del with params (idProject: %d, idSkill: %d)",
-					projectSkill.getIdProject(), projectSkill.getIdSkill()));
+			log.debug(String.format("DELETE verb on %d/staff/%d", idProject, idSkill));
 		}
 
-		MyReference<ResponseEntity<BooleanDTO>> refResponse = projectLoader.new MyReference<>();
-		Project project = projectLoader.getProject(projectSkill.getIdProject(), new BooleanDTO(), refResponse);
-		if (refResponse.getResponse() != null) {
-			return refResponse.getResponse();
-		}
+		Project project = projectHandler.get(idProject);
 
-		projectHandler.removeSkill(project, projectSkill.getIdSkill());
+		projectHandler.removeSkill(project, idSkill);
 
-		return new ResponseEntity<>(new BooleanDTO(), headers(), HttpStatus.OK);
+		return new ResponseEntity<>(true, headers(), HttpStatus.OK);
 	}
 
 	/**
