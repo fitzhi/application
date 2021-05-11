@@ -57,20 +57,21 @@ public class ProjectGhostController extends BaseRestController {
 		
 		Project project = projectHandler.get(idProject);
 		
-		// We update the staff identifier associated to this ghost
+		// We update the staff identifier associated to this ghost.
 		if (association.getIdStaff() > 0) {
 			projectHandler.associateStaffToGhost(project, association.getPseudo(), association.getIdStaff());
 			return OK();	
 		}
 
-		// This ghost is technical
+		// This ghost is technical.
 		if (association.isTechnical()) {
 			projectHandler.setGhostTechnicalStatus(project, association.getPseudo(), true); 				
 			return OK();			
 		}
 		
-		// Neither staff member, nor technical, we reset the ghost
-		projectHandler.resetGhost(project, association.getPseudo()); 				
+		// Neither staff member, nor technical, we reset the ghost.
+		projectHandler.resetGhost(project, association.getPseudo());
+				
 		return OK();			
 	}
 	
