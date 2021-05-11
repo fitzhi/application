@@ -119,7 +119,7 @@ public class AdminController extends BaseRestController {
 		return this.internalCreateNewUser(login, password);	
 	}	
 	
-	@GetMapping("/newUser")
+	@PostMapping("/newUser")
 	public ResponseEntity<Staff> createNewUser(
 			@RequestParam("login") String login,
 			@RequestParam("password") String password)  throws ApplicationException {

@@ -9,6 +9,7 @@ import static com.fitzhi.Error.CODE_LOGIN_ALREADY_EXIST;
 import static com.fitzhi.Error.MESSAGE_CANNOT_SELF_CREATE_USER;
 import static com.fitzhi.Error.MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.IOException;
@@ -114,7 +115,7 @@ public class AdministrationControllerCreateNewUserTest {
 		// We disable this line for Sonar to avoid the useless password security check. 
 		// This fake password is useless for any hacker.
 		//
-		MvcResult result = this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "user").param(PASS_WORD, pass) //NOSONAR 
+		MvcResult result = this.mvc.perform(post("/api/admin/newUser").param(LOGIN, "user").param(PASS_WORD, pass) //NOSONAR 
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + TokenLoader.obtainAccessMockToken(mvc)))
 				.andExpect(status().isInternalServerError()).andReturn();
 				
@@ -132,7 +133,7 @@ public class AdministrationControllerCreateNewUserTest {
 		// We disable this line for Sonar to avoid the useless password security check. 
 		// This fake password is useless for any hacker.
 		//
-		MvcResult result = this.mvc.perform(get("/api/admin/newUser").param(LOGIN, "myUniqueLogin").param(PASS_WORD, pass) //NOSONAR
+		MvcResult result = this.mvc.perform(post("/api/admin/newUser").param(LOGIN, "myUniqueLogin").param(PASS_WORD, pass) //NOSONAR
 				.header(HttpHeaders.AUTHORIZATION, "Bearer " + TokenLoader.obtainAccessMockToken(mvc)))
 				.andExpect(status().isInternalServerError()).andReturn();
 				
