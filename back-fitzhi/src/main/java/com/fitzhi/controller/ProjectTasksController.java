@@ -47,7 +47,7 @@ import reactor.core.publisher.Flux;
 @RestController
 @RequestMapping("/api/project/tasks")
 @Api(
-	tags="Projects Tasks API",
+	tags="Projects Tasks controller API",
 	description = "API endpoints of the asynchronous stream report."
 )
 public class ProjectTasksController {
