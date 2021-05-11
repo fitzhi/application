@@ -9,6 +9,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -75,7 +76,7 @@ public class AdministrationControllerVeryFirstUserTest {
 		// We disable this line for the Sonar analysis to avoid a useless password security check. 
 		// This fake password is useless for any hacker
 		//
-		this.mvc.perform(get("/api/admin/veryFirstUser") //NOSONAR
+		this.mvc.perform(post("/api/admin/veryFirstUser") //NOSONAR
 					.param(LOGIN, "adminForTest") 
 					.param(PASS_WORD, "passForTest"))  
 				.andExpect(status().isOk())
@@ -95,13 +96,13 @@ public class AdministrationControllerVeryFirstUserTest {
 		// We disable this line for the Sonar analysis to avoid a useless password security check. 
 		// This fake password is useless for any hacker
 		//
-		this.mvc.perform(get("/api/admin/veryFirstUser") //NOSONAR
-					.param(LOGIN, "adminForTest") 
-					.param(PASS_WORD, "passForTest"))  
-				.andExpect(status().isInternalServerError())
-				.andExpect(jsonPath("$.code", is(CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED)))
-				.andExpect(jsonPath("$.message", is(MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED)))
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
+		this.mvc.perform(post("/api/admin/veryFirstUser") //NOSONAR
+				.param(LOGIN, "adminForTest") 
+				.param(PASS_WORD, "passForTest"))  
+			.andExpect(status().isInternalServerError())
+			.andExpect(jsonPath("$.code", is(CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED)))
+			.andExpect(jsonPath("$.message", is(MESSAGE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED)))
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8_VALUE));
 	}
 
 }

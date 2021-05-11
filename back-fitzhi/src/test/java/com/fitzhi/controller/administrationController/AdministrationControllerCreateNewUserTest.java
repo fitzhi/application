@@ -92,7 +92,7 @@ public class AdministrationControllerCreateNewUserTest {
 			log.debug(String.format("Crew size %d", crewSize));
 			staffHandler.getStaff().values().stream().forEach(s -> log.debug(s.getIdStaff() + " " + s.getLogin() + " " + s.getPassword()));
 		}
-		MvcResult result = this.mvc.perform(get("/api/admin/veryFirstUser") // NOSONAR
+		MvcResult result = this.mvc.perform(post("/api/admin/veryFirstUser") // NOSONAR
 				.param(LOGIN, "adminForTest").param(PASS_WORD, "passForTest"))
 				.andExpect(status().isInternalServerError())
 				.andReturn();

@@ -69,18 +69,18 @@ public class AdminController extends BaseRestController {
 	 * @throws ApplicationException thrown if any problem occurs.
 	 * @return the newly created staff entry
 	 */
-	@GetMapping("/veryFirstUser")
+	@PostMapping("/veryFirstUser")
 	public ResponseEntity<Staff> veryFirstUser(
 			@RequestParam("login") String login,
 			@RequestParam("password") String password) throws ApplicationException {
 		
 		if (log.isDebugEnabled() && !this.staffHandler.getStaff().isEmpty()) {
-				log.debug ("the staff collection is not empty and has 'may-be' already registered users, see below...");
-				log.debug("------------------------------------------------");
-				this.staffHandler.getStaff().values().stream()
-				.filter(staff -> staff.getPassword() != null)
-				.forEach(
-					staff -> log.debug(String.format("%d %s", staff.getIdStaff(), staff.getLogin())));
+			log.debug ("the staff collection is not empty and has 'may-be' already registered users, see below...");
+			log.debug("------------------------------------------------");
+			this.staffHandler.getStaff().values().stream()
+			.filter(staff -> staff.getPassword() != null)
+			.forEach(
+				staff -> log.debug(String.format("%d %s", staff.getIdStaff(), staff.getLogin())));
 		}
 		
 		// We calculate the number of users declared with a non empty password.
