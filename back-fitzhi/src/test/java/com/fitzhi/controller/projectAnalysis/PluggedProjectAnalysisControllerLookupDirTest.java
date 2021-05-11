@@ -55,7 +55,7 @@ public class PluggedProjectAnalysisControllerLookupDirTest {
 	
 	@Test
 	@WithMockUser	
-	public void load() throws Exception {
+	public void lookup() throws Exception {
 	
 		List<String> continents  = new ArrayList<>();
 		continents.add("africa");
@@ -71,7 +71,7 @@ public class PluggedProjectAnalysisControllerLookupDirTest {
 
 	@After
 	public void after() throws ApplicationException {
-		projectHandler.getProjects().remove(9999);
+		projectHandler.removeProject(9999);
 	}
 	
 }
