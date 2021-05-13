@@ -209,31 +209,43 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 		const dialogReference = this.dialog.open(StaffUploadCvComponent, dialogConfig);
 		this.subscriptions.add(
 			dialogReference.afterClosed().subscribe(experiences => {
+				
+				// Taking in account in the front-end application
 				const newExperiences = this.isolateNewExperiences(experiences);
-				if (traceOn()) {
-					console.groupCollapsed(newExperiences.length + ' NEW experiences detected : ');
-					newExperiences.forEach(element => console.log (element.title));
-					console.groupEnd();
-				}
 
-				// We update the tagify-stars component.
-				const tagStars = [];
-				newExperiences.forEach(element => {
-					tagStars.push(new TagStar(element.title, 0));
-				});
-				this.additionalValues$.next(tagStars);
-
+				// Taking in account in the back-end application. Updating the developer if needed.
 				this.updateStaffWithNewExperiences(this.staff.idStaff, newExperiences);
 			}));
 	}
 
+	/**
+	 * Isolabe and take in account the new skills detected for a developer.
+	 * @param experiences  the experiences retrieved from the application file
+	 * @returns ann array containg all new experiences for the current developer
+	 */
 	isolateNewExperiences(experiences: DeclaredExperience[]): DeclaredExperience[] {
+
+		// Isolation
 		const newExperiences = [];
 		experiences.forEach(exp => {
 			if (!this.isAlreadyPresent(exp.idSkill)){
 				newExperiences.push(exp);
 			}
 		});
+
+		if (traceOn() && (newExperiences.length > 0)) {
+			console.groupCollapsed(newExperiences.length + ' NEW experiences detected : ');
+			newExperiences.forEach(element => console.log (element.title));
+			console.groupEnd();
+		}
+
+		// We update the tagify-stars component.
+		const tagStars = [];
+		newExperiences.forEach(element => {
+			tagStars.push(new TagStar(element.title, 0));
+		});
+		this.additionalValues$.next(tagStars);
+		
 		return newExperiences;
 	}
 
@@ -253,7 +265,8 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 			.subscribe(
 				staff => {
 					if (traceOn()) {
-						console.groupCollapsed('Registred skills for the staff member '						+ staff.firstName + ' ' + staff.lastName);
+						console.groupCollapsed('Registred skills for the staff member '	 
+							+ staff.firstName + ' ' + staff.lastName);
 							staff.experiences.forEach(
 								element => console.log (this.skillService.title(element.id)));
 						console.groupEnd();
