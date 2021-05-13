@@ -41,7 +41,7 @@ import com.google.gson.GsonBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectControllerCreateAndUpdateProjectTest {
+public class PluggedProjectControllerCreateAndUpdateProjectTest {
 	
 	/**
 	 * Initialization of the Google JSON parser.
