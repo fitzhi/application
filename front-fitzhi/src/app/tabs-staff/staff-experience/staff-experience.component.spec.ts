@@ -16,6 +16,7 @@ import { table } from 'console';
 import { Experience } from 'src/app/data/experience';
 import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
 import { MessageService } from 'src/app/interaction/message/message.service';
+import { DeclaredExperience } from 'src/app/data/declared-experience';
 
 describe('StaffExperienceComponent', () => {
 	let component: TestHostComponent;
@@ -94,8 +95,7 @@ describe('StaffExperienceComponent', () => {
 		const spyActualizeCollaborator = spyOn(tabsStaffListService, 'actualizeCollaborator').and.returnValue(null);
 		const spyMessageService = spyOn(messageService, 'success').and.returnValue(null);
 
-		component.staffExperienceComponent.updateExperience(
-1, 1);
+		component.staffExperienceComponent.updateExperience(1, 1);
 		fixture.detectChanges();
 
 		expect(spyUpdateExperience$).toHaveBeenCalled();
@@ -170,5 +170,73 @@ describe('StaffExperienceComponent', () => {
 		expect(staffDataExchangeService.collaborator.experiences.length).toBe(0);
 	});
 
+	it('should UPDATE the server with the new skills retrieved by the application file.', () => {
+		expect(component).toBeTruthy();
 
+		const newExperiences: DeclaredExperience[] = [
+			{
+				idSkill: 1000,
+				title: "One thousand",
+				times: 1000
+				
+			},
+			{
+				idSkill: 100,
+				title: "One hundred",
+				times: 100
+				
+			}
+		];
+		const spyAddDeclaredExperience$ = spyOn(staffService, 'addDeclaredExperience$')
+			.and.returnValue(of(staff()));
+
+		component.staffExperienceComponent.updateStaffWithNewExperiences(1789, newExperiences);
+
+		expect(spyAddDeclaredExperience$).toHaveBeenCalled();
+
+	});
+
+	it('should NOT CALL the server with no new skill has been retrieved in the application file.', () => {
+		const spyAddDeclaredExperience$ = spyOn(staffService, 'addDeclaredExperience$');
+		component.staffExperienceComponent.updateStaffWithNewExperiences(1789, []);
+		expect(spyAddDeclaredExperience$).not.toHaveBeenCalled();
+	});
+
+	it('should ISOLATE the new skills detected from the actual declared.', () => {
+
+		const experiences: DeclaredExperience[] = [
+			{
+				idSkill: 1000,
+				title: "Brand new",
+				times: 1000
+				
+			},
+			{
+				idSkill: 1001,
+				title: "One another new",
+				times: 100
+				
+			},
+			{
+				idSkill: 1002,
+				title: "Old one",
+				times: 100
+				
+			}
+		];
+
+		component.staffExperienceComponent.staff = staff();
+		component.staffExperienceComponent.staff.experiences.push(new Experience(1002, 'Old one', 10));
+		const result = component.staffExperienceComponent.isolateNewExperiences(experiences);
+		expect(result.length).toBe(2);
+		expect(result[0].idSkill).toBe(1000);
+		expect(result[1].idSkill).toBe(1001);
+	});
+
+	function staff(): Collaborator {
+		const staff = new Collaborator();
+		staff.idStaff = 1789;
+		staff.experiences = [];
+		return staff;
+	}
 });

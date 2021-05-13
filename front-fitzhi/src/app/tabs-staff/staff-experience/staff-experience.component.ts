@@ -207,15 +207,14 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 		dialogConfig.panelClass = 'default-dialog-container-class';
 		dialogConfig.data = this.staff;
 		const dialogReference = this.dialog.open(StaffUploadCvComponent, dialogConfig);
-		this.subscriptions.add(
-			dialogReference.afterClosed().subscribe(experiences => {
-				
+		dialogReference.afterClosed().pipe(take(1)).subscribe({
+			next: experiences => {
 				// Taking in account in the front-end application
 				const newExperiences = this.isolateNewExperiences(experiences);
-
 				// Taking in account in the back-end application. Updating the developer if needed.
 				this.updateStaffWithNewExperiences(this.staff.idStaff, newExperiences);
-			}));
+			}
+		});
 	}
 
 	/**
