@@ -88,14 +88,13 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 
 		// create a new multipart-form for the file to upload.
 		const formData: FormData = new FormData();
-		formData.append('idStaff', '' + this.staff.idStaff);
 		formData.append('file', file, file.name);
 		formData.append('type', <string><any>Constants.APPLICATION_FILE_TYPE_ALLOWED.get(this.applicationFile.type));
 
 		// create a HTTP-post request and pass the form
 		// tell it to report the upload progress
 		const req = new HttpRequest('POST',
-		this.backendSetupService.url() + '/staff/uploadCV', formData, {
+		this.backendSetupService.url() + '/staff/' + this.staff.idStaff + '/uploadCV', formData, {
 			reportProgress: true
 		});
 

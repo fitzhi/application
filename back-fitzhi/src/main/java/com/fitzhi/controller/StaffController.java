@@ -468,9 +468,9 @@ public class StaffController extends BaseRestController {
 	 * 
 	 * @return the resume parsed from the uploaded file.
 	 */
-	@PostMapping("/uploadCV")
+	@PostMapping("/{idStaff}/uploadCV")
 	public ResponseEntity<StaffResume> uploadApplicationFile(
-			@RequestParam("idStaff") int idStaff, 
+			@PathVariable("idStaff") int idStaff, 
 			@RequestParam("file") MultipartFile file, 
 			@RequestParam("type") int type) throws ApplicationException {
 		

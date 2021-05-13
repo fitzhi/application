@@ -91,12 +91,11 @@ public class StaffControllerUploadResumeTest {
 				"Bearer " + TokenLoader.obtainAccessMockToken(mvc));
 		
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
-		map.add("idStaff", 1);
 		map.add("file", resource);
 		map.add("type", FileType.FILE_TYPE_DOC.getValue());
 		
 		ResponseEntity<StaffResume> response = this.restTemplate
-				.exchange("/api/staff/uploadCV", HttpMethod.POST, new HttpEntity<>(map, headers),
+				.exchange("/api/staff/1/uploadCV", HttpMethod.POST, new HttpEntity<>(map, headers),
 				StaffResume.class);
 
 		List<ResumeSkillIdentifier> resultList = new ArrayList<>();
@@ -108,8 +107,8 @@ public class StaffControllerUploadResumeTest {
 		
 		resultList.clear();
 		response.getBody().getExperiences().stream()
-		.filter(item -> getIdSkill("Java") == item.getIdSkill())
-		.forEach(resultList::add);
+			.filter(item -> getIdSkill("Java") == item.getIdSkill())
+			.forEach(resultList::add);
 		assertThat(!resultList.isEmpty()).as("Java is present in the CV").isTrue();
 
 		resultList.clear();
