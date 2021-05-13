@@ -5,6 +5,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +35,7 @@ import com.google.gson.GsonBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class StaffControllerProjectTest {
-
-	private static final String STAFF_PROJECT_ADD = "/api/staff/project/add";
+public class PluggedStaffControllerAddProjectTest {
 
 	private static final String STAFF_PROJECTS_2 = "/api/staff/projects/2";
 
@@ -65,26 +64,26 @@ public class StaffControllerProjectTest {
 		
 		this.mvc.perform(get(STAFF_PROJECTS_2)).andExpect(status().isOk()).andExpect(content().string("[]"));	
 		
-		String body = "{ \"idStaff\": \"2\", \"idProject\": \"1235\"}";
-		this.mvc.perform(post(STAFF_PROJECT_ADD)
-			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(body))
-			.andExpect(status().isOk());		
+		this.mvc.perform(post("/api/staff/2/project/1235")
+			.contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(content().string("true"))
+			.andDo(print())
+			.andExpect(status().isOk());
 		
 		List<Mission> missions = new ArrayList<>();
 		missions.add(new Mission (2, ID_PROJECT_1235, PROJECT_1235));
 		this.mvc.perform(get(STAFF_PROJECTS_2))
-				.andExpect(status()
-				.isOk())
+				.andExpect(status().isOk())
 				.andExpect(content().json(gson.toJson(missions)));
 		
 		this.mvc.perform(delete("/api/staff/2/project/1235")
-			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(body))
+			.contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(status().isOk());
 		
 		missions.clear();
-		this.mvc.perform(get(STAFF_PROJECTS_2)).andExpect(status().isOk()).andExpect(content().json(gson.toJson(missions)));
+		this.mvc.perform(get(STAFF_PROJECTS_2))
+			.andExpect(status().isOk())
+			.andExpect(content().json(gson.toJson(missions)));
 		
 	}	
 

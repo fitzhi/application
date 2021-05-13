@@ -585,49 +585,45 @@ public class StaffController extends BaseRestController {
 		return staffHandler.addExperiences(idStaff, skills);
 	}	
 	
+
 	/**
-	 * <p>Add a project assigned to a developer.</p>
+	 * <p>
+	 * Involve a devloper in a project.
+	 * </p>
 	 * 
-	 * @param param
-	 *            the body of the post containing an instance of
-	 *            ParamStaffProject in JSON format
-	 * @return
+	 * @param idStaff the staff identifier
+	 * @param idProject the project identifier
+	 * @return {@code true} if the operation is successful, {@code false} otherwiose
 	 */
-	@PostMapping("/project/add")
-	public ResponseEntity<BooleanDTO> addProject(@RequestBody BodyParamStaffProject param) throws ApplicationException {
+	@ResponseBody
+	@PostMapping("/{idStaff}/project/{idProject}")
+	public boolean addProject(
+		@PathVariable("idStaff") int idStaff, 
+		@PathVariable("idProject") int idProject) throws ApplicationException {
 
-		HttpHeaders headers = new HttpHeaders();
-		
 		if (log.isDebugEnabled()) {
-			log.debug(
-					String.format("POST command on /staff/project/add with params idStaff: %d, idProject: %d", 
-							param.getIdStaff(), param.getIdProject()));
+			log.debug(String.format("POST command on /api/staff/%d/project/%d", idStaff, idProject));
 		}
-		final ResponseEntity<BooleanDTO> responseEntity;
 
-		final Staff staff = staffHandler.getStaff().get(param.getIdStaff());
-		assert (staff != null);
+		final Staff staff = staffHandler.getStaff(idStaff);
+		if (staff == null) {
+			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
+		}
 		
-		final Project project = projectHandler.get(param.getIdProject());
-		assert (project != null);
+		final Project project = projectHandler.find(idProject);
 
-		/*
-		 * If the passed project is already present in the staff member's
-		 * project list, we send back a BAD_REQUEST to avoid duplicate
-		 * entries
-		 */
-		Predicate<Mission> predicate = pr -> (pr.getIdProject() == param.getIdProject());
+		//
+		// If the passed project is already present in the staff member's
+		// project list, we send back a FALSE, to avoid duplicate entries
+		//
+		Predicate<Mission> predicate = pr -> (pr.getIdProject() == idProject);
 		if (staff.getMissions().stream().anyMatch(predicate)) {
-			responseEntity = new ResponseEntity<>(
-					new BooleanDTO(-1, "The collaborator " + staff.fullName() + " is already involved in " + project.getName()),
-					headers, HttpStatus.INTERNAL_SERVER_ERROR);
-			return responseEntity;
+			return false;
 		}
 
-		staffHandler.addMission(param.getIdStaff(), param.getIdProject(), project.getName());
-		responseEntity = new ResponseEntity<>(new BooleanDTO(), headers, HttpStatus.OK);
+		staffHandler.addMission(idStaff, idProject, project.getName());
 		
-		return responseEntity;
+		return true;
 	}
 
 	/**
