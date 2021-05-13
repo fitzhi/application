@@ -268,7 +268,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 		if (newExperiences.length === 0) {
 			return;
 		}
-		this.staffService.addDeclaredExperience$ (idStaff, newExperiences)
+		this.staffService.setDeclaredExperience$(idStaff, newExperiences)
 			.pipe(take(1))
 			.subscribe({
 				next: staff => {

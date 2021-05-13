@@ -275,19 +275,21 @@ export class StaffService {
 	}
 
 	/**
-		 * POST: Add the relevant declared experiences (certainly retrieved from the resume)
-		 */
-	addDeclaredExperience$(idStaff: number, skills: DeclaredExperience[]): Observable<Collaborator> {
+	* PUT: set the relevant declared experiences (certainly retrieved from the resume)
+	*/
+	setDeclaredExperience$(idStaff: number, skills: DeclaredExperience[]): Observable<Collaborator> {
 		if (traceOn()) {
-			console.log('Adding ' + skills.length + ' experiences to the staff Id  ' + idStaff);
+			console.log('Setting ' + skills.length + ' experiences to the staff Id  ' + idStaff);
 		}
 		const body = { idStaff: idStaff, skills: skills };
-		return this.httpClient.post<Collaborator>(this.backendSetupService.url() + '/staff' + '/api/experiences/resume/save',
+		return this.httpClient.put<Collaborator>(
+			this.backendSetupService.url() + '/staff' + idStaff + '/resume',
 			body, httpOptions);
 	}
+
 	/**
-		 * POST: Revoke an experience from a staff member.
-		 */
+	* POST: Revoke an experience from a staff member.
+	*/
 	revokeExperience(idStaff: number, idSkill: number): Observable<StaffDTO> {
 		if (traceOn()) {
 			console.log('Revoking the experence ' + idSkill + ' from the collaborator application');

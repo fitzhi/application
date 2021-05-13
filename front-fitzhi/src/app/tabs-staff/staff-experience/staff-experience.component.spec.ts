@@ -187,7 +187,7 @@ describe('StaffExperienceComponent', () => {
 				
 			}
 		];
-		const spyAddDeclaredExperience$ = spyOn(staffService, 'addDeclaredExperience$')
+		const spyAddDeclaredExperience$ = spyOn(staffService, 'setDeclaredExperience$')
 			.and.returnValue(of(staff()));
 
 		component.staffExperienceComponent.updateStaffWithNewExperiences(1789, newExperiences);
@@ -197,7 +197,7 @@ describe('StaffExperienceComponent', () => {
 	});
 
 	it('should NOT CALL the server with no new skill has been retrieved in the application file.', () => {
-		const spyAddDeclaredExperience$ = spyOn(staffService, 'addDeclaredExperience$');
+		const spyAddDeclaredExperience$ = spyOn(staffService, 'setDeclaredExperience$');
 		component.staffExperienceComponent.updateStaffWithNewExperiences(1789, []);
 		expect(spyAddDeclaredExperience$).not.toHaveBeenCalled();
 	});
