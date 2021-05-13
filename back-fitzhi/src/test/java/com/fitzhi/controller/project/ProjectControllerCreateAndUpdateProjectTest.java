@@ -2,6 +2,7 @@ package com.fitzhi.controller.project;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
@@ -65,7 +66,7 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 	
 	@Test
 	@WithMockUser
-	public void test() throws Exception {
+	public void workflow() throws Exception {
 
 		Project newProject = new Project(-1, "name of the project");
 		newProject.getSkills().put(1, new ProjectSkill(1));
@@ -111,10 +112,9 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 		// WE ADD A NEW SONAR ENTRY.
 		//
 		SonarProject entry = new SonarProject("otherId", "other name");
-		BodyParamSonarEntry bpse = new BodyParamSonarEntry(project.getId(), entry);
-		this.mvc.perform(post("/api/project/sonar/saveEntry")
+		this.mvc.perform(put("/api/project/" + project.getId() + "/sonar/otherId")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(bpse)))
+			.content(gson.toJson(entry)))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
 		
@@ -133,7 +133,7 @@ public class ProjectControllerCreateAndUpdateProjectTest {
 		// WE REMOVE THE SONAR ENTRY
 		//
 		entry = new SonarProject("otherId", "new other name");
-		bpse = new BodyParamSonarEntry(project.getId(), entry);
+		BodyParamSonarEntry bpse = new BodyParamSonarEntry(project.getId(), entry);
 		this.mvc.perform(post("/api/project/sonar/removeEntry")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(bpse)))

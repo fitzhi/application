@@ -6,6 +6,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -14,7 +15,6 @@ import java.time.LocalDate;
 
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.ProjectSonarController;
-import com.fitzhi.controller.in.BodyParamSonarEntry;
 import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.SonarProject;
@@ -64,9 +64,9 @@ public class ProjectSonarControllerSaveEntryTest {
 		
 		when(projectHandler.find(1805)).thenReturn(new Project(1805, "Testing project"));
 	
-		this.mvc.perform(post("/api/project/sonar/saveEntry")
+		this.mvc.perform(put("/api/project/1805/sonar/entry")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpse())))
+				.content(gson.toJson(sp())))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().string("true"));
@@ -87,20 +87,16 @@ public class ProjectSonarControllerSaveEntryTest {
 			.when(projectHandler)
 			.find(1805);
 
-		this.mvc.perform(post("/api/project/sonar/saveEntry")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpse())))
-				.andExpect(status().isInternalServerError())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(jsonPath("$.message", is("Project 1805 not found")))
-				.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)));
-
+		this.mvc.perform(put("/api/project/1805/sonar/entry")
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(gson.toJson(sp())))
+			.andExpect(status().isInternalServerError())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(jsonPath("$.message", is("Project 1805 not found")))
+			.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)));
 	}
 
-	private BodyParamSonarEntry bpse() {
-		BodyParamSonarEntry bpse = new BodyParamSonarEntry();
-		bpse.setIdProject(1805);
-		bpse.setSonarProject(new SonarProject("key-sonar", "name-sonar"));
-		return bpse;
+	private SonarProject sp() {
+		return new SonarProject("key-sonar", "name-sonar");
 	}
 }

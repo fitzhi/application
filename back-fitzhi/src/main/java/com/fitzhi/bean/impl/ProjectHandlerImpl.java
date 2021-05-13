@@ -546,20 +546,20 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public void addSonarEntry(Project project, SonarProject sonarEntry) throws ApplicationException {
+	public void addSonarEntry(Project project, SonarProject sonarProject) throws ApplicationException {
 
 		Optional<SonarProject> oEntry = project.getSonarProjects()
 				.stream()
-				.filter(entry -> entry.getKey().equals(sonarEntry.getKey()))
+				.filter(entry -> entry.getKey().equals(sonarProject.getKey()))
 				.findFirst();
 		
 		if (oEntry.isPresent()) {
-			throw new ApplicationRuntimeException(
-					String.format(
-							"The project %d:%s has already this Sonar key %s registered", 
-							project.getId(), 
-							project.getName(), 
-							sonarEntry.getKey()));
+			log.warn(String.format(
+				"The project %d %s has already registered the Sonar key %s", 
+				project.getId(), 
+				project.getName(), 
+				sonarProject.getKey()));
+			return;
 		}
 
 		/**
@@ -568,14 +568,14 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		synchronized (lockDataUpdated) {
 			if (log.isDebugEnabled()) {
 				log.debug(String.format
-					("Adding Sonar entry (%s, %s)", sonarEntry.getKey(), sonarEntry.getName()));
+					("Adding Sonar entry (%s, %s)", sonarProject.getKey(), sonarProject.getName()));
 			}
-			project.getSonarProjects().add(sonarEntry);
+			project.getSonarProjects().add(sonarProject);
 			
 			/**
 			 * We add the default metrics for this new Sonar project
 			 */
-			sonarEntry.setProjectSonarMetricValues(sonarHandler.getDefaultProjectSonarMetrics());
+			sonarProject.setProjectSonarMetricValues(sonarHandler.getDefaultProjectSonarMetrics());
 			this.dataUpdated = true;
 		}
 	}

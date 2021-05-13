@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,7 +42,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/project/sonar")
+@RequestMapping("/api/project")
 @Api(
 	tags="Project Sonar controller API",
 	description = "API endpoints to retrieve the Sonar metrics linked to their Fitzhi projects counterparts."
@@ -51,19 +52,22 @@ public class ProjectSonarController extends BaseRestController {
 	@Autowired
 	ProjectHandler projectHandler;
 	
-	@PostMapping(path="/saveEntry")
-	public ResponseEntity<Boolean> saveEntry(@RequestBody BodyParamSonarEntry param) throws ApplicationException {
+	@ResponseBody
+	@PutMapping(path="/{idProject}/sonar/{sonarKey}")
+	public boolean saveEntry(
+		@PathVariable("idProject") int idProject,
+		@PathVariable("sonarKey") String sonarKey,
+		@RequestBody SonarProject sonarProject) throws ApplicationException  {
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format(
-					"POST command on /api/project/sonar/addEntry for project : %d", param.getIdProject()));
+			log.debug(String.format("PUT verb on /api/project/%d/sonar/%s", idProject, sonarKey));
 		}
 		
-		Project project = projectHandler.find(param.getIdProject());
+		Project project = projectHandler.find(idProject);
 		
-		projectHandler.addSonarEntry(project, param.getSonarProject()); 
-		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
-		
+		projectHandler.addSonarEntry(project, sonarProject); 
+
+		return true;
 	}
 	
 	/**
@@ -75,7 +79,7 @@ public class ProjectSonarController extends BaseRestController {
 	 * @return a Sonar project corresponding to tge given key
 	 */
 	@ResponseBody
-	@GetMapping(path="/load/{idProject}/{sonarKey}")
+	@GetMapping(path="/sonar/load/{idProject}/{sonarKey}")
 	public SonarProject getSonarProject(
 			@PathVariable("idProject") int idProject,
 			@PathVariable("sonarKey") String sonarKey) throws ApplicationException {
@@ -95,7 +99,7 @@ public class ProjectSonarController extends BaseRestController {
 		return oSonarProject.get();
 	}
 	
-	@PostMapping(path="/removeEntry")
+	@PostMapping(path="/sonar/removeEntry")
 	public ResponseEntity<Boolean> removeEntry(@RequestBody BodyParamSonarEntry param) 
 		throws ApplicationException {
 		
@@ -112,7 +116,7 @@ public class ProjectSonarController extends BaseRestController {
 		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
 	}
 	
-	@PostMapping(path="/files-stats")
+	@PostMapping(path="/sonar/files-stats")
 	public ResponseEntity<Boolean> saveFilesStats(@RequestBody BodyParamSonarFilesStats param) 
 		throws ApplicationException {
 
@@ -134,7 +138,7 @@ public class ProjectSonarController extends BaseRestController {
 	 * @param param
 	 * @return {@code TRUE} if the operation succeeded, {@code FALSE} otherwise.
 	 */
-	@PostMapping(path="/saveEvaluation")
+	@PostMapping(path="/sonar/saveEvaluation")
 	public ResponseEntity<Boolean> saveEvaluation(@RequestBody BodyParamProjectSonarEvaluation param) 
 		throws ApplicationException {
 
@@ -150,7 +154,7 @@ public class ProjectSonarController extends BaseRestController {
 		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
 	}
 	
-	@PostMapping(path="/saveMetricValues")
+	@PostMapping(path="/sonar/saveMetricValues")
 	public ResponseEntity<Boolean> updateMetricValues(@RequestBody BodyParamProjectSonarMetricValues param) 
 		throws ApplicationException {
 		
@@ -167,7 +171,7 @@ public class ProjectSonarController extends BaseRestController {
 
 	}
 	
-	@PostMapping(path="/saveUrl")
+	@PostMapping(path="/sonar/saveUrl")
 	public ResponseEntity<Boolean> saveUrlSonarServer(@RequestBody BodyParamProjectSonarServer param) 
 		throws ApplicationException {
 		
