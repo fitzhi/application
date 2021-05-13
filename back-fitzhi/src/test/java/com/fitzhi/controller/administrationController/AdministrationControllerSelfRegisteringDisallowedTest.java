@@ -1,6 +1,7 @@
 package com.fitzhi.controller.administrationController;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static com.fitzhi.Error.CODE_CANNOT_SELF_CREATE_USER;
+import static com.fitzhi.Error.MESSAGE_CANNOT_SELF_CREATE_USER;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -10,6 +11,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fitzhi.ApiError;
+import com.fitzhi.bean.Administration;
+import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.Staff;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -28,15 +35,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import lombok.extern.slf4j.Slf4j;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fitzhi.ApiError;
-import com.fitzhi.bean.Administration;
-import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.data.internal.Staff;
-
-import static com.fitzhi.Error.CODE_CANNOT_SELF_CREATE_USER;
-import static com.fitzhi.Error.MESSAGE_CANNOT_SELF_CREATE_USER;
 
 /**
  * <p>

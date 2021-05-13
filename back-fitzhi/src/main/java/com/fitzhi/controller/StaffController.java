@@ -461,6 +461,13 @@ public class StaffController extends BaseRestController {
 	/**
 	 * Upload the application of a staff member on a server.
 	 * 
+	 * <p>
+	 * The verb is {@code PUT} because we upload a file on the file system and we consider that an upload is a modification.
+	 * </p>
+	 * <p>
+	 * It's a {@code PUT} and not a {@code POST} because this endpoint is idempotent.
+	 * </p>
+	 *
 	 * @param idStaff the staff identifier whose application will be uploaded
 	 * @param file the application
 	 * @param type the type of file (WORD, PDF...)
