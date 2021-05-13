@@ -259,7 +259,16 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 		return (index !== -1)
 	}
 
+	/**
+	 * Update the staff record if needed with the new skills extracted from the application file;
+	 * @param idStaff the staff identifier
+	 * @param newExperiences  an array of (skill;level) to be added
+	 */
 	updateStaffWithNewExperiences(idStaff: number, newExperiences: DeclaredExperience[]) {
+		// Nothing to add
+		if (newExperiences.length === 0) {
+			return;
+		}
 		this.staffService.addDeclaredExperience$ (idStaff, newExperiences)
 			.pipe(take(1))
 			.subscribe(
