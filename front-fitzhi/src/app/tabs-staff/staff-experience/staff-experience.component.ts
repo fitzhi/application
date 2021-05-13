@@ -271,8 +271,8 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 		}
 		this.staffService.addDeclaredExperience$ (idStaff, newExperiences)
 			.pipe(take(1))
-			.subscribe(
-				staff => {
+			.subscribe({
+				next: staff => {
 					if (traceOn()) {
 						console.groupCollapsed('Registred skills for the staff member '	 
 							+ staff.firstName + ' ' + staff.lastName);
@@ -283,18 +283,8 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 					newExperiences.forEach(element => {
 						this.staff.experiences.push({id: element.idSkill, title: element.title, level: 1});
 					});
-				},
-				response => {
-						if (response.status === INTERNAL_SERVER_ERROR) {
-							if (traceOn()) {
-								console.log('500 : Error returned ' + response.error.message);
-							}
-							this.messageService.error(response.error.code + ' : ' + response.error.message);
-						} else {
-							console.error(response.error);
-							this.messageService.error('-1 : WTF Enormous !!' );
-						}
-				});
+				}
+			});
 	}
 
 	/***
