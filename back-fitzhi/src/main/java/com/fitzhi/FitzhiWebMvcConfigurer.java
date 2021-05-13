@@ -49,7 +49,10 @@ public class FitzhiWebMvcConfigurer implements WebMvcConfigurer {
 	    return new PropertySourcesPlaceholderConfigurer();
 	}
 
-
+	//
+	// This bean has been added for tge download process.
+	// https://github.com/spring-projects/spring-boot/issues/16025
+	//
 	@Bean
 	public CommonsMultipartResolver multipartResolver() {
 		CommonsMultipartResolver commonsMultipartResolver = new CommonsMultipartResolver();
