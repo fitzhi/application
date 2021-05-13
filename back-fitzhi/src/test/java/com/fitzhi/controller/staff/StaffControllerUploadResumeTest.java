@@ -34,7 +34,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.SkillHandler;
-import com.fitzhi.data.external.ResumeDTO;
+import com.fitzhi.data.external.StaffResume;
+import com.fitzhi.data.internal.Resume;
 import com.fitzhi.data.internal.ResumeSkillIdentifier;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.security.TokenLoader;
@@ -90,35 +91,35 @@ public class StaffControllerUploadResumeTest {
 				"Bearer " + TokenLoader.obtainAccessMockToken(mvc));
 		
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+		map.add("idStaff", 1);
 		map.add("file", resource);
-		map.add("id", 1);
 		map.add("type", FileType.FILE_TYPE_DOC.getValue());
 		
-		ResponseEntity<ResumeDTO> response = this.restTemplate
-				.exchange("/api/staff/api/uploadCV", HttpMethod.POST, new HttpEntity<>(map, headers),
-				ResumeDTO.class);
+		ResponseEntity<StaffResume> response = this.restTemplate
+				.exchange("/api/staff/uploadCV", HttpMethod.POST, new HttpEntity<>(map, headers),
+				StaffResume.class);
 
 		List<ResumeSkillIdentifier> resultList = new ArrayList<>();
 		
-		response.getBody().experience.stream()
+		response.getBody().getExperiences().stream()
 			.filter(item -> getIdSkill("C#") == item.getIdSkill() )
 			.forEach(resultList::add);
 		assertThat(!resultList.isEmpty()).as("C# is present in the CV").isTrue();
 		
 		resultList.clear();
-		response.getBody().experience.stream()
+		response.getBody().getExperiences().stream()
 		.filter(item -> getIdSkill("Java") == item.getIdSkill())
 		.forEach(resultList::add);
 		assertThat(!resultList.isEmpty()).as("Java is present in the CV").isTrue();
 
 		resultList.clear();
-		response.getBody().experience.stream()
+		response.getBody().getExperiences().stream()
 		.filter(item -> getIdSkill("Spring") == item.getIdSkill())
 		.forEach(resultList::add);
 		assertThat(!resultList.isEmpty()).as("Spring is present in the CV").isTrue();
 
 		resultList.clear();
-		response.getBody().experience.stream()
+		response.getBody().getExperiences().stream()
 		.filter(item -> getIdSkill("Python") == item.getIdSkill())
 		.forEach(resultList::add);
 		assertThat(resultList.isEmpty()).as("Python is NOT present in the CV").isTrue();

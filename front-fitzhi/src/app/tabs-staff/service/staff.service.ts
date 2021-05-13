@@ -277,12 +277,12 @@ export class StaffService {
 	/**
 		 * POST: Add the relevant declared experiences (certainly retrieved from the resume)
 		 */
-	addDeclaredExperience(idStaff: number, skills: DeclaredExperience[]): Observable<StaffDTO> {
+	addDeclaredExperience$(idStaff: number, skills: DeclaredExperience[]): Observable<Collaborator> {
 		if (traceOn()) {
 			console.log('Adding ' + skills.length + ' experiences to the staff Id  ' + idStaff);
 		}
 		const body = { idStaff: idStaff, skills: skills };
-		return this.httpClient.post<StaffDTO>(this.backendSetupService.url() + '/staff' + '/api/experiences/resume/save',
+		return this.httpClient.post<Collaborator>(this.backendSetupService.url() + '/staff' + '/api/experiences/resume/save',
 			body, httpOptions);
 	}
 	/**

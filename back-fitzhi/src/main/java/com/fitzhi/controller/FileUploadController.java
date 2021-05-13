@@ -66,11 +66,11 @@ public class FileUploadController {
 
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
         storageService.store(file, filename);
-        
+
         redirectAttributes.addFlashAttribute("message",
                 "You successfully uploaded " + file.getOriginalFilename() + "!");
-
-        return "redirect:/";
+        
+                return "redirect:/";
     }
 
     @ExceptionHandler(StorageFileNotFoundException.class)

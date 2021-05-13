@@ -327,6 +327,11 @@ export class TabsStaffListService {
 	nextCollaboratorId(id: number): number {
 
 		const context = this.staffListContexts.get(this.activeKey);
+		
+		// No context defined. Most probably, the end-user type directly a staff identifier in the search zone
+		if (!context) {
+			return undefined;
+		}
 
 		const index = context.staffSelected.findIndex(collab => collab.idStaff === id);
 		if (traceOn()) {
@@ -347,6 +352,11 @@ export class TabsStaffListService {
 	previousCollaboratorId(id: number): number {
 
 		const context = this.staffListContexts.get(this.activeKey);
+
+		// No context defined. Most probably, the end-user type directly a staff identifier in the search zone
+		if (!context) {
+			return undefined;
+		}
 
 		const index = context.staffSelected.findIndex(collab => collab.idStaff === id);
 		if (index > 0) {

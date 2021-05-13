@@ -54,7 +54,7 @@ public class ResumeParserServiceTests {
 	public void init() throws ApplicationException, IOException {
 		final String file_txt = resourceFileTxt.getFile().getAbsolutePath();
 		experienceTxt = parser.extract(file_txt, FileType.FILE_TYPE_TXT);
-		referenceTxtSkills = experienceTxt.data().stream()
+		referenceTxtSkills = experienceTxt.getExperiences().stream()
 				.map(ResumeSkillIdentifier::getIdSkill).collect(Collectors.toList());
 	}
 	
@@ -67,7 +67,7 @@ public class ResumeParserServiceTests {
 	public void parsingDOC() throws ApplicationException, IOException {
 		final String file_doc = resourceFileDoc.getFile().getAbsolutePath();
 		Resume experienceDoc = parser.extract(file_doc, FileType.FILE_TYPE_DOC);
-		List<Integer> referenceDocSkills =experienceDoc.data().stream()
+		List<Integer> referenceDocSkills =experienceDoc.getExperiences().stream()
 				.map(ResumeSkillIdentifier::getIdSkill).collect(Collectors.toList());
 		Assert.assertTrue(referenceDocSkills.containsAll(referenceTxtSkills));			
 	}
@@ -76,7 +76,7 @@ public class ResumeParserServiceTests {
 	public void parsingDOCX() throws ApplicationException, IOException {
 		final String file_docx = resourceFileDocx.getFile().getAbsolutePath();
 		Resume experienceDocx = parser.extract(file_docx, FileType.FILE_TYPE_DOCX);
-		List<Integer> referenceDocxSkills =experienceDocx.data().stream()
+		List<Integer> referenceDocxSkills =experienceDocx.getExperiences().stream()
 				.map(ResumeSkillIdentifier::getIdSkill).collect(Collectors.toList());
 		Assert.assertTrue(referenceDocxSkills.containsAll(referenceTxtSkills));			
 	}
@@ -86,6 +86,6 @@ public class ResumeParserServiceTests {
 		final String file_pdf = resourceFilePdf.getFile().getAbsolutePath();
 		Resume experiencePdf = parser.extract(file_pdf, FileType.FILE_TYPE_PDF);
 		// We loosed certainly some few skills during the convert into PDF, but the main skills are still present.
-		Assert.assertTrue(experiencePdf.data().toArray().length +  " != 2", experiencePdf.data().toArray().length == 2);
+		Assert.assertTrue(experiencePdf.getExperiences().toArray().length +  " != 2", experiencePdf.getExperiences().toArray().length == 2);
 	}
 }

@@ -11,6 +11,7 @@ import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
@@ -29,13 +30,14 @@ import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.controller.in.BodyParamResumeSkills;
 import com.fitzhi.controller.in.BodyParamStaffProject;
 import com.fitzhi.data.external.BooleanDTO;
-import com.fitzhi.data.external.ResumeDTO;
+import com.fitzhi.data.external.StaffResume;
 import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.PeopleCountExperienceMap;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Resume;
 import com.fitzhi.data.internal.ResumeSkill;
+import com.fitzhi.data.internal.ResumeSkillIdentifier;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
@@ -336,7 +338,7 @@ public class StaffController extends BaseRestController {
 
 	/**
 	 * <p>
-	 * Update the active status of a developer.
+	 * Update the active status for a developer.
 	 * </p>
 	 * <p>
 	 * This URL is invoked when the end-user decides that the 'active' state should be automatically processed.<br/>
@@ -458,47 +460,58 @@ public class StaffController extends BaseRestController {
 	
 	/**
 	 * Upload the application of a staff member on a server.
+	 * 
+	 * @param idStaff the staff identifier whose application will be uploaded
 	 * @param file the application
-	 * @param id the staff identifier
 	 * @param type the type of file (WORD, PDF...)
 	 * @throws ApplicationException thrown if any problem occurs
+	 * 
 	 * @return the resume parsed from the uploaded file.
 	 */
-	@PostMapping("/api/uploadCV")
-	public ResponseEntity<ResumeDTO> uploadApplicationFile(
+	@PostMapping("/uploadCV")
+	public ResponseEntity<StaffResume> uploadApplicationFile(
+			@RequestParam("idStaff") int idStaff, 
 			@RequestParam("file") MultipartFile file, 
-			@RequestParam("id") int id, 
 			@RequestParam("type") int type) throws ApplicationException {
-
-		
-		HttpHeaders headers = new HttpHeaders();
 		
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Uploading %s for staff identifer %d of type %s", filename, id, type));
+			log.debug(String.format("Uploading %s for staff identifer %d of type %s", 
+				filename, idStaff, type));
 		}
 
 		FileType typeOfApplication = FileType.valueOf(type);
 		
-		final Staff staff = staffHandler.getStaff().get(id);
-		assert (staff != null);
+		final Staff staff = staffHandler.getStaff(idStaff);
+		if (staff == null) {
+			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
+		}
 
 		storageService.store(file, buildFileName(staff, filename));
 
 		staff.updateApplication(filename, typeOfApplication);
 		
-		final Resume exp = resumeParserService.extract(buildFileName(staff, filename), typeOfApplication);
-		ResumeDTO resumeDTO = new ResumeDTO();
-		exp.data().forEach(item -> resumeDTO.experience.add(
-				new ResumeSkill(item.getIdSkill(), 
-								skillHandler.getSkills().get(item.getIdSkill()).getTitle(), 
-								item.getCount())));
-		/**
-		 * We put the most often repeated keywords at the beginning of the list.
-		 */
-		Collections.sort(resumeDTO.experience);
-		return new ResponseEntity<>(resumeDTO, headers, HttpStatus.OK);
+		final Resume resume = resumeParserService.extract(buildFileName(staff, filename), typeOfApplication);
+		
+		final List<ResumeSkill> experiences = genResume(resume);
+
+		return new ResponseEntity<>(new StaffResume(experiences), headers(), HttpStatus.OK);
+	}
+
+	private List<ResumeSkill> genResume(Resume resume) throws ApplicationException {
+		List<ResumeSkill> experiences = new ArrayList<ResumeSkill>();
+		for (ResumeSkillIdentifier rsi : resume.getExperiences()) {
+			experiences.add(new ResumeSkill(
+				rsi.getIdSkill(), 
+				skillHandler.getSkill(rsi.getIdSkill()).getTitle(),
+				rsi.getCount()));
+		}
+		//
+		// We put the most often repeated keywords at the beginning of the list.
+		//
+		Collections.sort(experiences);
+		return experiences;
 	}
 
 	/**

@@ -1,10 +1,13 @@
 package com.fitzhi.data.internal;
 
+import lombok.Data;
+
 /**
  * A Resume
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
+@Data
 public class ResumeSkill extends ResumeSkillIdentifier implements Comparable<ResumeSkill> {
 
 	static final int LIMIT_LANGUAGE = 8;
@@ -39,20 +42,6 @@ public class ResumeSkill extends ResumeSkillIdentifier implements Comparable<Res
 		} else {
 			return (int) (o.getCount() - this.getCount());
 		}
-	}
-
-	/**
-	 * @return the title
-	 */
-	public String getTitle() {
-		return title;
-	}
-
-	/**
-	 * @param title the title to set
-	 */
-	public void setTitle(String title) {
-		this.title = title;
 	}
 
 }

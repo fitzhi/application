@@ -209,12 +209,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 		const dialogReference = this.dialog.open(StaffUploadCvComponent, dialogConfig);
 		this.subscriptions.add(
 			dialogReference.afterClosed().subscribe(experiences => {
-				const newExperiences = (experiences !== "") 
-					? experiences.filter(
-						function(experience) {
-							return (this.staff.experiences.findIndex(exp => exp.id === experience.idSkill) === -1) 
-						}).bind(this)
-					: [];
+				const newExperiences = this.isolateNewExperiences(experiences);
 				if (traceOn()) {
 					console.groupCollapsed(newExperiences.length + ' NEW experiences detected : ');
 					newExperiences.forEach(element => console.log (element.title));
@@ -232,14 +227,34 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 			}));
 	}
 
+	isolateNewExperiences(experiences: DeclaredExperience[]): DeclaredExperience[] {
+		const newExperiences = [];
+		experiences.forEach(exp => {
+			if (!this.isAlreadyPresent(exp.idSkill)){
+				newExperiences.push(exp);
+			}
+		});
+		return newExperiences;
+	}
+
+	/**
+	 * Test if the skill is already registered for this staff member.
+	 * @param idSkill the Skill identifier
+	 * @returns **true** if this skill has been retrieved, **false** otherwise
+	 */
+	isAlreadyPresent (idSkill: number): boolean {
+		const index = this.staff.experiences.findIndex(exp => exp.id === idSkill);
+		return (index !== -1)
+	}
+
 	updateStaffWithNewExperiences(idStaff: number, newExperiences: DeclaredExperience[]) {
-		this.staffService.addDeclaredExperience (idStaff, newExperiences)
+		this.staffService.addDeclaredExperience$ (idStaff, newExperiences)
 			.pipe(take(1))
 			.subscribe(
-				staffDTO => {
+				staff => {
 					if (traceOn()) {
-						console.groupCollapsed('Registred skills for the staff member '						+ staffDTO.staff.firstName + ' ' + staffDTO.staff.lastName);
-							staffDTO.staff.experiences.forEach(
+						console.groupCollapsed('Registred skills for the staff member '						+ staff.firstName + ' ' + staff.lastName);
+							staff.experiences.forEach(
 								element => console.log (this.skillService.title(element.id)));
 						console.groupEnd();
 					}
