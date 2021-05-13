@@ -13,7 +13,6 @@ import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.external.StaffResume;
 import com.fitzhi.data.internal.Resume;
 import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.service.FileType;
 import com.fitzhi.service.ResumeParserService;
 import com.fitzhi.service.StorageService;

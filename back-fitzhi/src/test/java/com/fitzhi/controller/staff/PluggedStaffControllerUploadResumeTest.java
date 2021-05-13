@@ -4,7 +4,6 @@
 package com.fitzhi.controller.staff;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.util.ArrayList;
