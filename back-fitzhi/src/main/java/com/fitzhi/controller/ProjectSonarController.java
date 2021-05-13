@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
@@ -66,13 +67,16 @@ public class ProjectSonarController extends BaseRestController {
 	}
 	
 	/**
-	 * load and return a SonarProject
+	 * <p>
+	 * load and return a SonarProject.
+	 * </p>
 	 * @param idProject the project identifier
 	 * @param sonarKey the key of the Sonar project
-	 * @return an HTTP response with the found Sonar project, or {@code null} if none is found
+	 * @return a Sonar project corresponding to tge given key
 	 */
+	@ResponseBody
 	@GetMapping(path="/load/{idProject}/{sonarKey}")
-	public ResponseEntity<SonarProject> getSonarProject(
+	public SonarProject getSonarProject(
 			@PathVariable("idProject") int idProject,
 			@PathVariable("sonarKey") String sonarKey) throws ApplicationException {
 
@@ -88,7 +92,7 @@ public class ProjectSonarController extends BaseRestController {
 				CODE_SONAR_KEY_NOFOUND, 
 				MessageFormat.format(MESSAGE_SONAR_KEY_NOFOUND, sonarKey, idProject));
 		}
-		return new ResponseEntity<>(oSonarProject.get(), headers(), HttpStatus.OK);
+		return oSonarProject.get();
 	}
 	
 	@PostMapping(path="/removeEntry")
