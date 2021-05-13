@@ -225,12 +225,12 @@ export class StaffService {
 	 * @param idProject the project identifier to add.
 	 * @returns an observable emetting the staff record updated or an empty staff if any error occurs.
 		 */
-	addProject(idStaff: number, idProject: number): Observable<BooleanDTO> {
+	addProject$(idStaff: number, idProject: number): Observable<Boolean> {
 		if (traceOn()) {
 			console.log('Adding the collaborator with the id : ' + idStaff + ' into the project id ' + idProject);
 		}
-		const body = { idStaff: idStaff, idProject: idProject };
-		return this.httpClient.post<BooleanDTO>(this.backendSetupService.url() + '/staff' + '/project/add', body, httpOptions);
+		return this.httpClient.put<Boolean>(
+			this.backendSetupService.url() + '/staff' + idStaff + '/project/' + idProject, '', httpOptions);
 	}
 
 	/**

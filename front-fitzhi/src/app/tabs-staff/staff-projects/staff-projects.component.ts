@@ -210,7 +210,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 		if (this.collaborator.idStaff) {
 			this.updateProject(this.collaborator.idStaff,
 			new Mission(project.id, project.name),
-			this.staffService.addProject.bind(this.staffService));
+			this.staffService.addProject$.bind(this.staffService));
 		}
 	}
 
