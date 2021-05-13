@@ -267,9 +267,9 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * Remove a sonar entry from the entries collection.
 	 * </p>
 	 * @param project the given project
-	 * @param sonarEntry the given sonar entry
+	 * @param sonarKey the given sonar key
 	 */
-	void removeSonarEntry(Project project, SonarProject sonarEntry);
+	void removeSonarEntry(Project project, String sonarKey);
 
 	/**
 	 * <p>

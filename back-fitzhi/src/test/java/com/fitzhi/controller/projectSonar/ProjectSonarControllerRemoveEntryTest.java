@@ -74,7 +74,7 @@ public class ProjectSonarControllerRemoveEntryTest {
 		Mockito.verify(projectHandler, times(1))
 			.removeSonarEntry(
 				new Project(1805, "Testing project"), 
-				new SonarProject("key-sonar", "name-sonar"));
+				"key-sonar");
 		Mockito.verify(projectHandler, times(1)).find(1805);
 		
 	}

@@ -112,7 +112,7 @@ public class ProjectSonarController extends BaseRestController {
 		
 		Project project = projectHandler.find(param.getIdProject());
 		
-		projectHandler.removeSonarEntry(project, param.getSonarProject()); 
+		projectHandler.removeSonarEntry(project, param.getSonarProject().getKey()); 
 		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
 	}
 	

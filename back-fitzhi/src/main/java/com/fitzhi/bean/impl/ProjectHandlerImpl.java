@@ -21,6 +21,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.validation.constraints.NotNull;
+
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
@@ -581,21 +583,19 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public void removeSonarEntry(Project project, SonarProject sonarEntry) {
+	public void removeSonarEntry(@NotNull Project project, @NotNull String sonarKey) {
 
 		boolean isDeleted;
 		
 		synchronized (lockDataUpdated) {
 			isDeleted = project
 				.getSonarProjects()
-				.removeIf(entry -> sonarEntry.getKey().equals(entry.getKey()));
+				.removeIf(entry -> sonarKey.equals(entry.getKey()));
 			this.dataUpdated = true;
 		}
 		
 		if ((isDeleted) && (log.isDebugEnabled())) {
-			log.debug(
-				String.format("The Sonar project %s has been deleted for id %s",
-				sonarEntry.getName(), sonarEntry.getKey()));
+			log.debug( String.format("The Sonar project %s has been removed", sonarKey));
 		}
 	}
 
