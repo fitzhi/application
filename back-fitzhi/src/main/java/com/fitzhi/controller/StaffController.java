@@ -27,8 +27,6 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.controller.in.BodyParamStaffProject;
-import com.fitzhi.data.external.BooleanDTO;
 import com.fitzhi.data.external.StaffResume;
 import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.Mission;
@@ -596,7 +594,7 @@ public class StaffController extends BaseRestController {
 	 * @return {@code true} if the operation is successful, {@code false} otherwiose
 	 */
 	@ResponseBody
-	@PostMapping("/{idStaff}/project/{idProject}")
+	@PutMapping("/{idStaff}/project/{idProject}")
 	public boolean addProject(
 		@PathVariable("idStaff") int idStaff, 
 		@PathVariable("idProject") int idProject) throws ApplicationException {

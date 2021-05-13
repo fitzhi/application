@@ -1,7 +1,7 @@
 package com.fitzhi.controller.staff;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -64,7 +64,7 @@ public class PluggedStaffControllerAddProjectTest {
 		
 		this.mvc.perform(get(STAFF_PROJECTS_2)).andExpect(status().isOk()).andExpect(content().string("[]"));	
 		
-		this.mvc.perform(post("/api/staff/2/project/1235")
+		this.mvc.perform(put("/api/staff/2/project/1235")
 			.contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(content().string("true"))
 			.andDo(print())
