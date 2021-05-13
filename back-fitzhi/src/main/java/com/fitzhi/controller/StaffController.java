@@ -27,7 +27,6 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.controller.in.BodyParamResumeSkills;
 import com.fitzhi.controller.in.BodyParamStaffProject;
 import com.fitzhi.data.external.BooleanDTO;
 import com.fitzhi.data.external.StaffResume;
@@ -61,6 +60,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponents;
@@ -462,10 +462,7 @@ public class StaffController extends BaseRestController {
 	 * Upload the application of a staff member on a server.
 	 * 
 	 * <p>
-	 * The verb is {@code PUT} because we upload a file on the file system and we consider that an upload is a modification.
-	 * </p>
-	 * <p>
-	 * It's a {@code PUT} and not a {@code POST} because this endpoint is idempotent.
+	 * The verb is {@code POST} because we upload a file on the file system and we consider that an upload is a modification.
 	 * </p>
 	 *
 	 * @param idStaff the staff identifier whose application will be uploaded
@@ -570,22 +567,22 @@ public class StaffController extends BaseRestController {
                 .body(resource);
 	}
 		
-	@PostMapping("/api/experiences/resume/save")
-	public ResponseEntity<Staff> saveExperiences(@RequestBody BodyParamResumeSkills param) 
+	@ResponseBody
+	@PutMapping("/{idStaff}/resume")
+	public Staff saveResume(
+		@PathVariable("idStaff") int idStaff, 
+		@RequestBody ResumeSkill[] skills) 
 		throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("Adding %d skills for the staff ID %d", 
-				param.getSkills().length, param.getIdStaff()));
+			log.debug(String.format("Adding %d skills for the staff ID %d", skills.length, idStaff));
 		}
 		if (log.isTraceEnabled()) {
-			log.trace(String.format("Adding the skills below for the staff identifier %d", param.getIdStaff()));
-			Arrays.asList(param.getSkills()).stream().forEach(skill -> log.trace(String.format("%s %s", skill.getIdSkill(), skill.getTitle())));
+			log.trace(String.format("Adding the skills below for the staff identifier %d", idStaff));
+			Arrays.asList(skills).stream().forEach(skill -> log.trace(String.format("%s %s", skill.getIdSkill(), skill.getTitle())));
 		}
 
-		Staff staff = staffHandler.addExperiences(param.getIdStaff(), param.getSkills());
-		return new ResponseEntity<>(staff, headers(), HttpStatus.OK);
-
+		return staffHandler.addExperiences(idStaff, skills);
 	}	
 	
 	/**
