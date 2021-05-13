@@ -4,11 +4,23 @@
 package com.fitzhi.controller.staff;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import com.fitzhi.ApplicationRuntimeException;
+import com.fitzhi.bean.SkillHandler;
+import com.fitzhi.data.external.StaffResume;
+import com.fitzhi.data.internal.ResumeSkillIdentifier;
+import com.fitzhi.data.internal.Skill;
+import com.fitzhi.security.TokenLoader;
+import com.fitzhi.service.FileType;
+import com.fitzhi.service.impl.storageservice.ApplicationStorageProperties;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.junit.After;
 import org.junit.Before;
@@ -32,18 +44,6 @@ import org.springframework.util.MultiValueMap;
 
 import lombok.extern.slf4j.Slf4j;
 
-import com.fitzhi.ApplicationRuntimeException;
-import com.fitzhi.bean.SkillHandler;
-import com.fitzhi.data.external.StaffResume;
-import com.fitzhi.data.internal.Resume;
-import com.fitzhi.data.internal.ResumeSkillIdentifier;
-import com.fitzhi.data.internal.Skill;
-import com.fitzhi.security.TokenLoader;
-import com.fitzhi.service.FileType;
-import com.fitzhi.service.impl.storageservice.ApplicationStorageProperties;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
@@ -52,7 +52,7 @@ import com.google.gson.GsonBuilder;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @Slf4j
-public class StaffControllerUploadResumeTest {
+public class PluggedStaffControllerUploadResumeTest {
 
 	/**
 	 * Initialization of the Google JSON parser.
