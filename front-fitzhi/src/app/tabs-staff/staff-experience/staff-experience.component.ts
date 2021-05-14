@@ -150,7 +150,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 			console.log('Refreshing experiences for the staff\'s id ' + idStaff);
 		}
 		this.subscriptions.add(
-			this.staffService.loadExperiences(idStaff).subscribe({
+			this.staffService.loadExperiences$(idStaff).subscribe({
 				next: experiences => {
 						// The title of the skill is not propagated by the server. We filled this property "live" on the desktop
 						experiences.forEach(exp => exp.title = this.skillService.title(exp.id));

@@ -250,17 +250,26 @@ export class StaffService {
 	}
 
 	/**
-		 * Load the projects associated with the staff member identified by this id.
-		 */
-	loadProjects(idStaff: number): Observable<Project[]> {
-		return this.httpClient.get<Project[]>(this.backendSetupService.url() + '/staff' + '/projects/' + idStaff);
+	* Load the projects associated with the staff member identified by this id.
+	*/
+
+	/**
+	 * Load the projects where the given collaborator is involved.
+	 * @param idStaff the Staff identifier
+	 * @returns an observable emitting an array of projects.
+	 */
+	loadProjects$(idStaff: number): Observable<Project[]> {
+		return this.httpClient.get<Project[]>(this.backendSetupService.url() + '/staff/' + idStaff + '/project');
 	}
 
 	/**
-		* Load the experience of the staff member identified by this id.
-		*/
-	loadExperiences(idStaff: number): Observable<Experience[]> {
-		return this.httpClient.get<Experience[]>(this.backendSetupService.url() + '/staff' + '/experiences/' + idStaff);
+	 * Load the skills of a given collaborator.
+	 * @param idStaff the Staff identifier
+	 * @returns an observable emitting an array of experiences.
+	 */
+
+	loadExperiences$(idStaff: number): Observable<Experience[]> {
+		return this.httpClient.get<Experience[]>(this.backendSetupService.url() + '/staff/' + idStaff + '/experience');
 	}
 
 	/**
