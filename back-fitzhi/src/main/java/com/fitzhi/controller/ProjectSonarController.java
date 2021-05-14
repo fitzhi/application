@@ -15,10 +15,12 @@ import com.fitzhi.controller.in.BodyParamSonarFilesStats;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.SonarProject;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -99,21 +101,19 @@ public class ProjectSonarController extends BaseRestController {
 		return oSonarProject.get();
 	}
 	
-	@PostMapping(path="/sonar/removeEntry")
-	public ResponseEntity<Boolean> removeEntry(@RequestBody BodyParamSonarEntry param) 
-		throws ApplicationException {
+	@ResponseBody
+	@DeleteMapping(path="/{idProject}/sonar/{sonarKey}")
+	public boolean removeEntry(
+		@PathVariable("idProject") int idProject,
+		@PathVariable("sonarKey") String sonarKey) throws ApplicationException, NotFoundException {
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format(
-				"POST command on /api/project/sonar/removeEntry for project : %s %s", 
-				param.getIdProject(), 
-				param.getSonarProject().getName()));
+			log.debug(String.format("DELETE verb on /api/project/%d/sonar/%s", idProject, sonarKey));
 		}
 		
-		Project project = projectHandler.find(param.getIdProject());
-		
-		projectHandler.removeSonarEntry(project, param.getSonarProject().getKey()); 
-		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
+		Project project = projectHandler.find(idProject);
+		projectHandler.removeSonarEntry(project, sonarKey); 
+		return true;
 	}
 	
 	@PostMapping(path="/sonar/files-stats")

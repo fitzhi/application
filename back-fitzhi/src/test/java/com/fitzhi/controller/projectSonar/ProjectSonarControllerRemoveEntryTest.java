@@ -6,6 +6,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -17,7 +18,6 @@ import com.fitzhi.controller.ProjectSonarController;
 import com.fitzhi.controller.in.BodyParamSonarEntry;
 import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.SonarProject;
 import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -36,7 +36,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * <p>
- * Test of the method {@link ProjectSonarController#removeEntry(BodyParamSonarEntry)}
+ * Test of the method {@link ProjectSonarController#removeEntry(int, String)}
  * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -45,12 +45,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ProjectSonarControllerRemoveEntryTest {
-
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	Gson gson = new GsonBuilder()
-		      .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe()).create();
 
 	@Autowired
 	private MockMvc mvc;
@@ -64,9 +58,8 @@ public class ProjectSonarControllerRemoveEntryTest {
 		
 		when(projectHandler.find(1805)).thenReturn(new Project(1805, "Testing project"));
 	
-		this.mvc.perform(post("/api/project/sonar/removeEntry")
-			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(bpse())))
+		this.mvc.perform(delete("/api/project/1805/sonar/key-sonar")
+			.contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(content().string("true"));
@@ -87,9 +80,8 @@ public class ProjectSonarControllerRemoveEntryTest {
 			.when(projectHandler)
 			.find(1805);
 
-		this.mvc.perform(post("/api/project/sonar/removeEntry")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpse())))
+		this.mvc.perform(delete("/api/project/1805/sonar/key-sonar")
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.message", is("Project 1805 not found")))
@@ -97,10 +89,4 @@ public class ProjectSonarControllerRemoveEntryTest {
 
 	}
 
-	private BodyParamSonarEntry bpse() {
-		BodyParamSonarEntry bpse = new BodyParamSonarEntry();
-		bpse.setIdProject(1805);
-		bpse.setSonarProject(new SonarProject("key-sonar", "name-sonar"));
-		return bpse;
-	}
 }
