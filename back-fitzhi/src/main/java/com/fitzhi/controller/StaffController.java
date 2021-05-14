@@ -258,19 +258,17 @@ public class StaffController extends BaseRestController {
 	}
 
 	/**
-	 * @param idStaff
-	 *            staff member's identifier
+	 * @param idStaff staff member's identifier
 	 * @return the list of projects where the staff member is involved
 	 */
-	@GetMapping(value = "/projects/{idStaff}")
-	public ResponseEntity<List<Mission>> readProjects(@PathVariable("idStaff") int idStaff) throws ApplicationException {
+	@ResponseBody
+	@GetMapping(value = "/{idStaff}/project")
+	public List<Mission> readProjects(@PathVariable("idStaff") int idStaff) 
+		throws ApplicationException {
 
-		ResponseEntity<Staff> responseEntityStaffMember = read(idStaff);
-		final Staff staff = responseEntityStaffMember.getBody();
+		final Staff staff = staffHandler.getStaff(idStaff);
 		if (staff == null) {
-			throw new ApplicationException(
-				CODE_STAFF_NOFOUND, 
-				MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
+			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 
 		// Adding the name of project.
@@ -278,32 +276,24 @@ public class StaffController extends BaseRestController {
 				mission.setName(projectHandler.get(mission.getIdProject()).getName());
 		}
 		
-		ResponseEntity<List<Mission>> re = new ResponseEntity<>(
-				staff.getMissions(), 
-				responseEntityStaffMember.getHeaders(),
-				responseEntityStaffMember.getStatusCode());
-		return re;
-			
+		return staff.getMissions();
 	}
 
 	/**
-	 * @param idStaff
-	 *            staff member's identifier
+	 * @param idStaff The Staff member's identifier
 	 * @return the given developer's experience as list of skills.
+	 * @throws ApplicationException thrown if any problem occurs, such as the staff identifier does not exist.
 	 */
-	@GetMapping(value = "/experiences/{idStaff}")
-	public ResponseEntity<List<Experience>> readExperiences(@PathVariable("idStaff") int idStaff) {
+	@ResponseBody
+	@GetMapping(value = "/{idStaff}/experience")
+	public List<Experience> readExperiences(@PathVariable("idStaff") int idStaff) throws ApplicationException {
 
-		ResponseEntity<Staff> responseEntityStaffMember = read(idStaff);
-		final Staff staff = responseEntityStaffMember.getBody();
+		Staff staff = staffHandler.getStaff(idStaff);
 		if (staff == null) {
-			throw new RuntimeException("getBody() Should not be null");
+			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 
-		return new ResponseEntity<>(
-				staff.getExperiences(), 
-				responseEntityStaffMember.getHeaders(),
-				responseEntityStaffMember.getStatusCode());
+		return staff.getExperiences();
 	}
 
 	/**

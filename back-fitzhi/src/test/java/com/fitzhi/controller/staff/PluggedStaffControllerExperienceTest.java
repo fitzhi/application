@@ -48,7 +48,7 @@ public class PluggedStaffControllerExperienceTest {
 	
 	private static final String STAFF_EXPERIENCE_REMOVE = "/api/staff/%s/experience/%s";
 
-	private static final String STAFF_EXPERIENCES_1 = "/api/staff/experiences/1";
+	private static final String STAFF_EXPERIENCES_1 = "/api/staff/1/experience";
 
 	/**
 	 * Initialization of the Google JSON parser.

@@ -37,7 +37,7 @@ import com.google.gson.GsonBuilder;
 @AutoConfigureMockMvc
 public class PluggedStaffControllerAddProjectTest {
 
-	private static final String STAFF_PROJECTS_2 = "/api/staff/projects/2";
+	private static final String STAFF_PROJECTS_2 = "/api/staff/2/project";
 
 	private static final int ID_PROJECT_1235 = 1235;
 	private static final String PROJECT_1235 = "TEST_1235";
@@ -55,7 +55,7 @@ public class PluggedStaffControllerAddProjectTest {
 	
 	@Before 
 	public void before() throws ApplicationException {
-		projectHandler. getProjects().put(ID_PROJECT_1235, new Project(ID_PROJECT_1235, PROJECT_1235));
+		projectHandler.addNewProject(new Project(ID_PROJECT_1235, PROJECT_1235));
 	}
 	
 	@Test
@@ -89,7 +89,7 @@ public class PluggedStaffControllerAddProjectTest {
 
 	@Before 
 	public void after() throws ApplicationException {
-		projectHandler.getProjects().remove(ID_PROJECT_1235);
+		projectHandler.removeProject(ID_PROJECT_1235);
 	}
 
 }
