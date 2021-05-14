@@ -10,7 +10,6 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.in.BodyParamProjectSonarEvaluation;
 import com.fitzhi.controller.in.BodyParamProjectSonarMetricValues;
 import com.fitzhi.controller.in.BodyParamProjectSonarServer;
-import com.fitzhi.controller.in.BodyParamSonarEntry;
 import com.fitzhi.controller.in.BodyParamSonarFilesStats;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.SonarProject;
@@ -18,8 +17,6 @@ import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
 	tags="Project Sonar controller API",
 	description = "API endpoints to retrieve the Sonar metrics linked to their Fitzhi projects counterparts."
 )
-public class ProjectSonarController extends BaseRestController {
+public class ProjectSonarController {
 
 	@Autowired
 	ProjectHandler projectHandler;
@@ -66,9 +63,7 @@ public class ProjectSonarController extends BaseRestController {
 		}
 		
 		Project project = projectHandler.find(idProject);
-		
 		projectHandler.addSonarEntry(project, sonarProject); 
-
 		return true;
 	}
 	
@@ -116,8 +111,9 @@ public class ProjectSonarController extends BaseRestController {
 		return true;
 	}
 	
+	@ResponseBody
 	@PostMapping(path="/sonar/files-stats")
-	public ResponseEntity<Boolean> saveFilesStats(@RequestBody BodyParamSonarFilesStats param) 
+	public boolean saveFilesStats(@RequestBody BodyParamSonarFilesStats param) 
 		throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
@@ -127,9 +123,8 @@ public class ProjectSonarController extends BaseRestController {
 		}
 		
 		Project project = projectHandler.find(param.getIdProject());
-		
 		projectHandler.saveFilesStats(project, param.getSonarProjectKey(), param.getFilesStats()); 
-		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
+		return true;
 			
 	}
 
@@ -138,8 +133,9 @@ public class ProjectSonarController extends BaseRestController {
 	 * @param param
 	 * @return {@code TRUE} if the operation succeeded, {@code FALSE} otherwise.
 	 */
+	@ResponseBody
 	@PostMapping(path="/sonar/saveEvaluation")
-	public ResponseEntity<Boolean> saveEvaluation(@RequestBody BodyParamProjectSonarEvaluation param) 
+	public boolean saveEvaluation(@RequestBody BodyParamProjectSonarEvaluation param) 
 		throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
@@ -149,13 +145,13 @@ public class ProjectSonarController extends BaseRestController {
 		}
 		
 		Project project = projectHandler.find(param.getIdProject());
-		
 		projectHandler.saveSonarEvaluation(project, param.getSonarKey(), param.getSonarEvaluation()); 
-		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
+		return true;
 	}
 	
+	@ResponseBody
 	@PostMapping(path="/sonar/saveMetricValues")
-	public ResponseEntity<Boolean> updateMetricValues(@RequestBody BodyParamProjectSonarMetricValues param) 
+	public boolean updateMetricValues(@RequestBody BodyParamProjectSonarMetricValues param) 
 		throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
@@ -166,13 +162,12 @@ public class ProjectSonarController extends BaseRestController {
 		
 		Project project = projectHandler.find(param.getIdProject());
 		projectHandler.saveSonarMetricValues(project, param.getSonarKey(), param.getMetricValues()); 
-		
-		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
-
+		return true;
 	}
 	
+	@ResponseBody
 	@PostMapping(path="/sonar/saveUrl")
-	public ResponseEntity<Boolean> saveUrlSonarServer(@RequestBody BodyParamProjectSonarServer param) 
+	public boolean saveUrlSonarServer(@RequestBody BodyParamProjectSonarServer param) 
 		throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
@@ -183,7 +178,7 @@ public class ProjectSonarController extends BaseRestController {
 		
 		Project project = projectHandler.find(param.getIdProject());
 		projectHandler.saveUrlSonarServer(project, param.getUrlSonarServer()); 
-		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
+		return true;
 	}
 
 }
