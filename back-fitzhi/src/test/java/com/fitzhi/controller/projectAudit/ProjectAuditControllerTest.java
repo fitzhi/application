@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -91,7 +92,7 @@ public class ProjectAuditControllerTest {
 	 */
 	void testGlobalAuditEvaluation(int idProject, int expectedValue) throws Exception {
 		
-		MvcResult result = this.mvc.perform(get("/api/project/"+ ID_PROJECT))
+		MvcResult result = this.mvc.perform(get("/api/project/1"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -106,19 +107,14 @@ public class ProjectAuditControllerTest {
 	@WithMockUser
 	public void addTopic() throws Exception {
 		
-		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
-		bpae.setIdProject(ID_PROJECT);
-		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_1));
-	
-		this.mvc.perform(post("/api/project/audit/saveTopic")
-			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(bpae)))
+		this.mvc.perform(put("/api/project/1/audit/topic/1")
+			.contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(content().string("true"))
 			.andDo(print());
 
-		MvcResult result = this.mvc.perform(get("/api/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_1))
+		MvcResult result = this.mvc.perform(get("/api/project/audit/loadTopic/1/1"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -139,13 +135,9 @@ public class ProjectAuditControllerTest {
 	@WithMockUser
 	public void addExistingTopic() throws Exception {
 		
-		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
-		bpae.setIdProject(ID_PROJECT);
-		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2));
-	
-		this.mvc.perform(post("/api/project/audit/saveTopic")
-			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(bpae)))
+		this.mvc.perform(put("/api/project/1/audit/topic/2")
+			.contentType(MediaType.APPLICATION_JSON_UTF8))
+
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(content().string("true"))
@@ -168,13 +160,10 @@ public class ProjectAuditControllerTest {
 	@Test
 	@WithMockUser
 	public void addTopicUnknownProject() throws Exception {
-		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
-		bpae.setIdProject(666);
-		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2));
 	
-		this.mvc.perform(post("/api/project/audit/saveTopic")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpae)))
+		this.mvc.perform(put("/api/project/666/audit/topic/2")
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
+
 				.andExpect(status().isInternalServerError())
 				.andExpect(jsonPath("$.code",is(CODE_PROJECT_NOFOUND)))
 				.andDo(print())
@@ -185,7 +174,7 @@ public class ProjectAuditControllerTest {
 	@WithMockUser
 	public void removeTopic() throws Exception {
 		
-		MvcResult result = this.mvc.perform(get("/api/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_2))
+		MvcResult result = this.mvc.perform(get("/api/project/audit/loadTopic/1/2"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())

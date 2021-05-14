@@ -32,9 +32,11 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -73,17 +75,19 @@ public class ProjectAuditController extends BaseRestController {
 	@Qualifier("Attachment")
 	StorageService storageService;
 	
-	@PostMapping(path="/audit/saveTopic")
-	public ResponseEntity<Boolean> saveTopic(@RequestBody BodyParamAuditEntry param) throws ApplicationException {
+	@ResponseBody
+	@PutMapping(path="/{idProject}/audit/topic/{idTopic}")
+	public boolean addTopic(
+		final @PathVariable("idProject") int idProject,
+		final @PathVariable("idTopic") int idTopic) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
-				"POST command on /project/audit/addTopic for project.id %d and topic.id %d", 
-						param.getIdProject(), param.getAuditTopic().getIdTopic()));
+				"POST verb on /api/project/%d/audit/topic/%d", idProject, idTopic));
 		}
 		
-		projectAuditHandler.addTopic(param.getIdProject(), param.getAuditTopic().getIdTopic());
-		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
+		projectAuditHandler.addTopic(idProject, idTopic);
+		return true;
 	}
 	
 	/**

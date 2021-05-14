@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,7 +34,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 /**
  * <p>
- * Test of the method {@link ProjectAuditController#saveTopic(BodyParamAuditEntry)}
+ * Test of the method {@link ProjectAuditController#addTopic(int, int)}
  * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -57,38 +58,28 @@ public class ProjectAuditControllerSaveAuditTest {
 
 	@Test
 	@WithMockUser
-	public void saveTopic() throws Exception {
+	public void addTopic() throws Exception {
 		
-		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
-		bpae.setIdProject(1805);
-		bpae.setAuditTopic(new AuditTopic(1815, 0, 0, "Audit report given to the topic 1805"));
-	
-		this.mvc.perform(post("/api/project/audit/saveTopic")
-			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(bpae)))
+		this.mvc.perform(put("/api/project/1789/audit/topic/1805")
+			.contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(content().string("true"));
 
-		Mockito.verify(projectAuditHandler, times(1)).addTopic(1805, 1815);
+		Mockito.verify(projectAuditHandler, times(1)).addTopic(1789, 1805);
 		
 	}
 	
 	@Test
 	@WithMockUser
-	public void saveTopicKO() throws Exception {
+	public void addTopicKO() throws Exception {
 		
 		doThrow(new ApplicationException(CODE_PROJECT_TOPIC_UNKNOWN, ""))
 			.when(projectAuditHandler)
-			.addTopic(1805, 1815);
+			.addTopic(1789, 1805);
 
-		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
-		bpae.setIdProject(1805);
-		bpae.setAuditTopic(new AuditTopic(1815, 0, 0, "Audit report given to the topic 1805"));
-		
-		this.mvc.perform(post("/api/project/audit/saveTopic")
-			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(bpae)))
+		this.mvc.perform(put("/api/project/1789/audit/topic/1805")
+			.contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(status().isInternalServerError())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.code", is(CODE_PROJECT_TOPIC_UNKNOWN)));
