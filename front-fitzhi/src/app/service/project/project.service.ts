@@ -308,37 +308,31 @@ export class ProjectService extends InternalService {
 	 * @param sonarProject the sonar project
 	 */
 	addSonarProject(idProject: number, sonarProject: SonarProject): Observable<boolean> {
-		return this.handleActionSonarProject$(idProject, sonarProject, 'saveEntry');
+
+		if (traceOn()) {
+			console.log ('Adding the Sonar project ' + sonarProject.name + ' to the project ID ' + idProject);
+		}
+
+		return this.httpClient
+			.put<boolean>(this.backendSetupService.url() + '/project/' + idProject + '/sonar/' + sonarProject.key, '', httpOptions)
+			.pipe(take(1));
+
 	}
 
 	/**
-	 * Unlink a Sonar project to 'our project'
+	 * Unlink a Sonar project to a Fitzhi project.
+	 * 
 	 * @param idProject the project identifier
 	 * @param sonarProject the sonar project
 	 */
 	delSonarProject(idProject: number, sonarProject: SonarProject) {
-		return this.handleActionSonarProject$(idProject, sonarProject, 'removeEntry');
-	}
-
-	/**
-	 * Execute an operation on the Sonar projects of a Fitzhì project
-	 * @param idProject the project identifier
-	 * @param sonarProject the sonar project
-	 * @param action the action to be executed on the Sonar projects collection
-	 */
-	handleActionSonarProject$(idProject: number, sonarProject: SonarProject, action: string): Observable<boolean> {
 
 		if (traceOn()) {
-			console.log ('Action ' + action + ' for a Sonar project ' + sonarProject.name + ' for project ID ' + idProject);
+			console.log ('Removing the Sonar project ' + sonarProject.name + ' to the project ID ' + idProject);
 		}
 
-		const body = {
-			'idProject': idProject,
-			'sonarProject': {'key': sonarProject.key, 'name': sonarProject.name}
-		};
-
 		return this.httpClient
-			.post<boolean>(this.backendSetupService.url() + '/project/sonar/' + action, body, httpOptions)
+			.delete<boolean>(this.backendSetupService.url() + '/project/' + idProject + '/sonar/' + sonarProject.key, httpOptions)
 			.pipe(take(1));
 	}
 
