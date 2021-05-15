@@ -46,12 +46,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 public class ProjectAuditControllerSaveReportTest {
 
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	Gson gson = new GsonBuilder()
-		      .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe()).create();
-
 	@Autowired
 	private MockMvc mvc;
 
@@ -92,10 +86,4 @@ public class ProjectAuditControllerSaveReportTest {
 
 	}
 
-	private BodyParamAuditEntry bpae() {
-		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
-		bpae.setIdProject(1805);
-		bpae.setAuditTopic(new AuditTopic(1815, 0, 0, "Audit report given to the topic 1805"));
-		return bpae;
-	}
 }

@@ -3,21 +3,30 @@ package com.fitzhi.controller.projectAudit;
 import static com.fitzhi.Error.CODE_PROJECT_INVALID_WEIGHTS;
 import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.CODE_PROJECT_TOPIC_UNKNOWN;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.controller.ProjectAuditController;
+import com.fitzhi.controller.util.LocalDateAdapter;
+import com.fitzhi.data.internal.AuditTopic;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.TopicWeight;
+import com.fitzhi.exception.ApplicationException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -32,17 +41,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.controller.ProjectAuditController;
-import com.fitzhi.controller.in.BodyParamAuditEntries;
-import com.fitzhi.controller.util.LocalDateAdapter;
-import com.fitzhi.data.internal.AuditTopic;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.TopicWeight;
-import com.fitzhi.exception.ApplicationException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 /**
  * <p>
  * Test of the class {@link ProjectAuditController}
