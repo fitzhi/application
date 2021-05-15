@@ -159,7 +159,7 @@ public class ProjectAuditController extends BaseRestController {
 	}
 
 	@PutMapping(path="/{idProject}/audit/weights")
-	@ApiOperation(value="Save the weights attributed for all topics in the audit. The sum of weights gives 100. For each topic, its relative evaluation is equal to (evaluation*weight).")
+	@ApiOperation(value="Save the weights attributed for all topics in the audit. For each topic, its relative evaluation is equal to (evaluation*weight).")
 	public ResponseEntity<Boolean> saveWeight(
 		@PathVariable("idProject") int idProject,
 		@RequestBody TopicWeight[] weights) throws ApplicationException {
@@ -173,17 +173,19 @@ public class ProjectAuditController extends BaseRestController {
 		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
 	}
 	
-	@PostMapping(path="/audit/saveAttachmentFile")
-	public ResponseEntity<Boolean> saveAttachmentFile(@RequestBody BodyParamProjectAttachmentFile param) 
-		throws ApplicationException {
+	@ResponseBody
+	@ApiOperation(value="Save the reference of a file attached to an audit topic.")
+	@PutMapping(path="{idProject}/audit/{idTopic}/attachmentFile")
+	public boolean saveAttachmentFile(
+		@PathVariable("idProject") int idProject,
+		@PathVariable("idTopic") int idTopic,		
+		@RequestBody AttachmentFile attachmentFile) throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format(
-				"POST command on /project/audit/saveAttachmentFile for project.id %d, topic.id %d", param.getIdProject(), param.getIdTopic()));
+			log.debug(String.format("PUT verb on /api/project/%d/audit/%d/attachmentFile", idProject, idTopic));
 		}
-		
-		projectAuditHandler.updateAttachmentFile (param.getIdProject(), param.getIdTopic(), param.getAttachmentFile());
-		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
+		projectAuditHandler.updateAttachmentFile (idProject, idTopic, attachmentFile);
+		return true;
 	}
 	
 	@ResponseBody

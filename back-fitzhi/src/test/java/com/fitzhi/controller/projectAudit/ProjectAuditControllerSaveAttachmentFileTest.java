@@ -4,9 +4,11 @@ import static com.fitzhi.Error.CODE_PROJECT_TOPIC_UNKNOWN;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -61,20 +63,16 @@ public class ProjectAuditControllerSaveAttachmentFileTest {
 	@WithMockUser
 	public void saveAttachmentFile() throws Exception {
 		
-		BodyParamProjectAttachmentFile bpae = new BodyParamProjectAttachmentFile();
-		bpae.setIdProject(1805);
-		bpae.setIdTopic(1815);
-		bpae.setAttachmentFile(new AttachmentFile());
-	
-		this.mvc.perform(post("/api/project/audit/saveAttachmentFile")
+		doNothing().when(projectAuditHandler).updateAttachmentFile(1805, 1815, new AttachmentFile());
+
+		this.mvc.perform(put("/api/project/1805/audit/1815/attachmentFile")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpae)))
+				.content(gson.toJson(new AttachmentFile())))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().string("true"));
 
 		Mockito.verify(projectAuditHandler, times(1)).updateAttachmentFile(1805, 1815, new AttachmentFile());
-		
 	}
 	
 	@Test
@@ -84,15 +82,10 @@ public class ProjectAuditControllerSaveAttachmentFileTest {
 		doThrow(new ApplicationException(CODE_PROJECT_TOPIC_UNKNOWN, ""))
 			.when(projectAuditHandler)
 			.updateAttachmentFile(anyInt(), anyInt(), any(AttachmentFile.class));
-
-		BodyParamProjectAttachmentFile bpae = new BodyParamProjectAttachmentFile();
-		bpae.setIdProject(1805);
-		bpae.setIdTopic(1815);
-		bpae.setAttachmentFile(new AttachmentFile());
 		
-		this.mvc.perform(post("/api/project/audit/saveAttachmentFile")
+		this.mvc.perform(put("/api/project/1805/audit/1815/attachmentFile")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpae)))
+				.content(gson.toJson(new AttachmentFile())))
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.code", is(CODE_PROJECT_TOPIC_UNKNOWN)));

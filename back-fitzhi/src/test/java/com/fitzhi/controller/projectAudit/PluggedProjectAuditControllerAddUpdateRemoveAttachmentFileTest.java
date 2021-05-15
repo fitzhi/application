@@ -2,6 +2,7 @@ package com.fitzhi.controller.projectAudit;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -108,14 +109,11 @@ public class PluggedProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
 		//
 		// Add a new attachment file.
 		//
-		BodyParamProjectAttachmentFile bppaf = new BodyParamProjectAttachmentFile();
-		bppaf.setIdProject(ID_PROJECT);
-		bppaf.setIdTopic(ID_TOPIC_1);
-		bppaf.setAttachmentFile(new AttachmentFile(0, "given fileName", FileType.valueOf(3), "given fileLabel"));
+		AttachmentFile af = new AttachmentFile(0, "given fileName", FileType.valueOf(3), "given fileLabel");
 	
-		this.mvc.perform(post("/api/project/audit/saveAttachmentFile")
+		this.mvc.perform(put("/api/project/1789/audit/1/attachmentFile")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(bppaf)))
+			.content(gson.toJson(af)))
 			.andExpect(status().isOk())
 			.andExpect(content().string("true"))
 			.andDo(print())
@@ -139,14 +137,11 @@ public class PluggedProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
 		//
 		// Update an attachment in the middle of the list
 		//
-		BodyParamProjectAttachmentFile bppaf = new BodyParamProjectAttachmentFile();
-		bppaf.setIdProject(ID_PROJECT);
-		bppaf.setIdTopic(ID_TOPIC_1);
-		bppaf.setAttachmentFile(new AttachmentFile(1, "testingFileName", FileType.valueOf(3), "testingFileLabel"));
+		AttachmentFile af = new AttachmentFile(1, "testingFileName", FileType.valueOf(3), "testingFileLabel");
 	
-		this.mvc.perform(post("/api/project/audit/saveAttachmentFile")
+		this.mvc.perform(put("/api/project/1789/audit/1/attachmentFile")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(bppaf)))
+			.content(gson.toJson(af)))
 			.andExpect(status().isOk())
 			.andExpect(content().string("true"))
 			.andDo(print())
