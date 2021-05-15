@@ -1,7 +1,7 @@
 package com.fitzhi.controller.projectAudit;
 
 import static org.mockito.Mockito.times;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -11,7 +11,6 @@ import com.fitzhi.bean.ProjectAuditHandler;
 import com.fitzhi.controller.ProjectAuditController;
 import com.fitzhi.controller.in.BodyParamAuditEntry;
 import com.fitzhi.controller.util.LocalDateAdapter;
-import com.fitzhi.data.internal.AuditTopic;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -55,16 +54,9 @@ public class ProjectAuditControllerRemoveTopicTest {
 	@WithMockUser
 	public void removeTopic() throws Exception {
 		
-		//
-		// Removing the topic
-		//
-		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
-		bpae.setIdProject(1805);
-		bpae.setAuditTopic(new AuditTopic(1815));
-	
-		this.mvc.perform(post("/api/project/audit/removeTopic")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpae)))
+		this.mvc.perform(delete("/api/project/1805/audit/topic/1815")
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
+
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().string("true"));

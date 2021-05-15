@@ -1,15 +1,16 @@
 package com.fitzhi.controller.projectAudit;
 
+import static com.fitzhi.Error.CODE_PROJECT_TOPIC_UNKNOWN;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.times;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
 
@@ -33,8 +34,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static com.fitzhi.Error.CODE_PROJECT_TOPIC_UNKNOWN;
 /**
  * <p>
  * Test of the method {@link ProjectAuditController#saveReport(BodyParamAuditEntry)}
@@ -63,9 +62,11 @@ public class ProjectAuditControllerSaveReportTest {
 	@WithMockUser
 	public void saveReport() throws Exception {
 		
-		this.mvc.perform(post("/api/project/audit/saveReport")
+		doNothing().when(projectAuditHandler).saveReport(1805, 1815, "Audit report given to the topic 1805");
+		
+		this.mvc.perform(put("/api/project/1805/audit/1815/report")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpae())))
+				.content("Audit report given to the topic 1805"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().string("true"));
@@ -82,9 +83,9 @@ public class ProjectAuditControllerSaveReportTest {
 			.when(projectAuditHandler)
 			.saveReport(anyInt(), anyInt(), anyString());
 
-		this.mvc.perform(post("/api/project/audit/saveReport")
+		this.mvc.perform(put("/api/project/666/audit/1/report")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpae())))
+				.content("nope"))
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.code", is(CODE_PROJECT_TOPIC_UNKNOWN)));

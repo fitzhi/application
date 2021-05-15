@@ -3,9 +3,10 @@ package com.fitzhi.controller.projectAudit;
 import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -14,9 +15,7 @@ import java.time.LocalDate;
 
 import com.fitzhi.bean.ProjectAuditHandler;
 import com.fitzhi.controller.ProjectAuditController;
-import com.fitzhi.controller.in.BodyParamAuditEntry;
 import com.fitzhi.controller.util.LocalDateAdapter;
-import com.fitzhi.data.internal.AuditTopic;
 import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -35,7 +34,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * <p>
- * Test of the method {@link ProjectAuditController#saveEvaluation(BodyParamAuditEntry)}
+ * Test of the method {@link ProjectAuditController#saveEvaluation(int, int, int)}
  * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -62,16 +61,12 @@ public class ProjectAuditControllerSaveEvaluationTest {
 	@WithMockUser
 	public void saveEvaluation() throws Exception {
 		
-		//
-		// Removing the topic
-		//
-		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
-		bpae.setIdProject(1805);
-		bpae.setAuditTopic(new AuditTopic(1815, 8, 5));
-	
-		this.mvc.perform(post("/api/project/audit/saveEvaluation")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpae)))
+		doNothing().when(projectAuditHandler).saveEvaluation(1805, 1815, 8);
+		doNothing().when(projectAuditHandler).processAndSaveGlobalAuditEvaluation(1805);
+
+		this.mvc.perform(put("/api/project/1805/audit/1815/evaluation/8")
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
+
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().string("true"));
@@ -89,16 +84,9 @@ public class ProjectAuditControllerSaveEvaluationTest {
 			.when(projectAuditHandler)
 			.saveEvaluation(anyInt(), anyInt(), anyInt());
 		
-		//
-		// Saving the evaluation
-		//
-		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
-		bpae.setIdProject(1805);
-		bpae.setAuditTopic(new AuditTopic(1815, 8, 5));
-	
-		this.mvc.perform(post("/api/project/audit/saveEvaluation")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpae)))
+		this.mvc.perform(put("/api/project/1805/audit/1815/evaluation/5")
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
+
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)));

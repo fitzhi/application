@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -35,7 +36,6 @@ import org.springframework.test.web.servlet.MvcResult;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.ProjectAuditController;
 import com.fitzhi.controller.in.BodyParamAuditEntries;
-import com.fitzhi.controller.in.BodyParamAuditEntry;
 import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.AuditTopic;
 import com.fitzhi.data.internal.Project;
@@ -52,7 +52,7 @@ import com.google.gson.GsonBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectAuditControllerTest {
+public class PluggedProjectAuditControllerTest {
 
 
 	/**
@@ -114,7 +114,7 @@ public class ProjectAuditControllerTest {
 			.andExpect(content().string("true"))
 			.andDo(print());
 
-		MvcResult result = this.mvc.perform(get("/api/project/audit/loadTopic/1/1"))
+		MvcResult result = this.mvc.perform(get("/api/project/1/audit/topic/1"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -174,7 +174,7 @@ public class ProjectAuditControllerTest {
 	@WithMockUser
 	public void removeTopic() throws Exception {
 		
-		MvcResult result = this.mvc.perform(get("/api/project/audit/loadTopic/1/2"))
+		MvcResult result = this.mvc.perform(get("/api/project/1/audit/topic/2"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -183,17 +183,10 @@ public class ProjectAuditControllerTest {
 		AuditTopic auditProject = gson.fromJson(result.getResponse().getContentAsString(), AuditTopic.class);
 		// The topic has been successfully added
 		Assert.assertTrue(auditProject.getIdTopic() == ID_TOPIC_2);
-
-		//
-		// Removing the topic
-		//
-		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
-		bpae.setIdProject(ID_PROJECT);
-		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2));
 	
-		this.mvc.perform(post("/api/project/audit/removeTopic")
-			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(bpae)))
+		this.mvc.perform(delete("/api/project/1/audit/topic/2")
+			.contentType(MediaType.APPLICATION_JSON_UTF8))
+
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(content().string("true"))
@@ -202,7 +195,7 @@ public class ProjectAuditControllerTest {
 		//
 		// Testing the fact that the topic has been effectively removed
 		//
-		result = this.mvc.perform(get("/api/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_2))
+		result = this.mvc.perform(get("/api/project/1/audit/topic/2"))
 				.andExpect(status().isInternalServerError())
 				.andDo(print())
 				.andExpect(jsonPath("$.code", is(CODE_PROJECT_TOPIC_UNKNOWN)))
@@ -214,16 +207,9 @@ public class ProjectAuditControllerTest {
 	@WithMockUser
 	public void updateEvaluation() throws Exception {
 		
-		//
-		// Update the evaluation of a topic
-		//
-		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
-		bpae.setIdProject(ID_PROJECT);
-		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2, 60, 0));
-	
-		this.mvc.perform(post("/api/project/audit/saveEvaluation")
-			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(bpae)))
+		this.mvc.perform(put("/api/project/1/audit/2/evaluation/60")
+			.contentType(MediaType.APPLICATION_JSON_UTF8))
+
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(content().string("true"))
@@ -232,7 +218,7 @@ public class ProjectAuditControllerTest {
 		//
 		// Testing the fact that the topic has been effectively removed
 		//
-		MvcResult result = this.mvc.perform(get("/api/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_2))
+		MvcResult result = this.mvc.perform(get("/api/project/1/audit/topic/2"))
 				.andExpect(status().isOk())
 				.andDo(print())
 				.andReturn();
@@ -302,14 +288,14 @@ public class ProjectAuditControllerTest {
 				.andExpect(content().string("true"))
 				.andDo(print());
 		
-		MvcResult result = this.mvc.perform(get("/api/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_1))
+		MvcResult result = this.mvc.perform(get("/api/project/1/audit/topic/1"))
 				.andExpect(status().isOk())
 				.andDo(print())
 				.andReturn();
 		AuditTopic auditProject = gson.fromJson(result.getResponse().getContentAsString(), AuditTopic.class);
 		Assert.assertEquals("Weight has been saved", 40, auditProject.getWeight());
 		
-		result = this.mvc.perform(get("/api/project/audit/loadTopic/"+ ID_PROJECT + "/" + ID_TOPIC_2))
+		result = this.mvc.perform(get("/api/project/1/audit/topic/2"))
 				.andExpect(status().isOk())
 				.andDo(print())
 				.andReturn();

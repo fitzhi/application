@@ -4,6 +4,7 @@ import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -47,7 +48,7 @@ import org.springframework.test.web.servlet.MvcResult;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectAuditControllerUpdatingGlobalEvaluationTest {
+public class PluggedProjectAuditControllerUpdatingGlobalEvaluationTest {
 
 
 	/**
@@ -103,16 +104,9 @@ public class ProjectAuditControllerUpdatingGlobalEvaluationTest {
 	@WithMockUser
 	public void processAuditEvalutionForUnknownProject() throws Exception {
 		
-		//
-		// Update the evaluation for the project 666
-		//
-		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
-		bpae.setIdProject(666);
-		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2, 60, 0));
-	
-		this.mvc.perform(post("/api/project/audit/saveEvaluation")
-			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(bpae)))
+		this.mvc.perform(put("/api/project/666/audit/2/evaluation/60")
+			.contentType(MediaType.APPLICATION_JSON_UTF8))
+
 			.andExpect(status().isInternalServerError())
 			.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)))
 			.andDo(print())
@@ -123,16 +117,9 @@ public class ProjectAuditControllerUpdatingGlobalEvaluationTest {
 	@WithMockUser
 	public void updateEvaluation() throws Exception {
 		
-		//
-		// Update the evaluation of a topic
-		//
-		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
-		bpae.setIdProject(ID_PROJECT);
-		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_2, 60, 0));
-	
-		this.mvc.perform(post("/api/project/audit/saveEvaluation")
-			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(bpae)))
+		this.mvc.perform(put("/api/project/1/audit/2/evaluation/60")
+			.contentType(MediaType.APPLICATION_JSON_UTF8))
+
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(content().string("true"))
@@ -145,16 +132,9 @@ public class ProjectAuditControllerUpdatingGlobalEvaluationTest {
 	@WithMockUser
 	public void updateReport() throws Exception {
 		
-		//
-		// Update the evaluation of a topic
-		//
-		BodyParamAuditEntry bpae = new BodyParamAuditEntry();
-		bpae.setIdProject(ID_PROJECT);
-		bpae.setAuditTopic(new AuditTopic(ID_TOPIC_1, 0, 0, "Test report"));
-	
-		this.mvc.perform(post("/api/project/audit/saveReport")
+		this.mvc.perform(put("/api/project/1/audit/1/report")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(bpae)))
+			.content("Test report"))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(content().string("true"))
