@@ -5,6 +5,7 @@ import static com.fitzhi.Error.LIB_CANNOT_RETRIEVE_ATTACHMENTFILE;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -142,7 +143,7 @@ public class ProjectAuditController extends BaseRestController {
 	}
 	
 	@ResponseBody
-	@ApiOperation(value="Save the report given to an evaluated topic. This is the free text expanation of a numerical rate")
+	@ApiOperation(value="Save the report given to an evaluated topic. This is the free text explanation of a numerical rate")
 	@PutMapping(path="/{idProject}/audit/{idTopic}/report")
 	public boolean saveReport(
 		@PathVariable("idProject") int idProject,
@@ -157,25 +158,18 @@ public class ProjectAuditController extends BaseRestController {
 		return true;
 	}
 
-	@PostMapping(path="/audit/saveWeights")
-	public ResponseEntity<Boolean> saveWeights(@RequestBody BodyParamAuditEntries param) throws ApplicationException {
+	@PutMapping(path="/{idProject}/audit/weights")
+	@ApiOperation(value="Save the weights attributed for all topics in the audit. The sum of weights gives 100. For each topic, its relative evaluation is equal to (evaluation*weight).")
+	public ResponseEntity<Boolean> saveWeight(
+		@PathVariable("idProject") int idProject,
+		@RequestBody TopicWeight[] weights) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format(
-				"POST command on /project/audit/saveWeights for project.id %d", param.getIdProject()));
+			log.debug(String.format("PUT verb on /api/project/%d/audit/weights", idProject));
 		}
-		
-		List<TopicWeight> weights = new ArrayList<>();
-		for (AuditTopic auditTopic : param.getDataEnvelope()) {
-			if (log.isDebugEnabled()) {
-				log.debug(String.format(
-					"Saving weight %d for %d", auditTopic.getWeight(), auditTopic.getIdTopic()));
-			}
-			weights.add(new TopicWeight(auditTopic.getIdTopic(), auditTopic.getWeight()));
-		}
-		
-		projectAuditHandler.saveWeights(param.getIdProject(), weights);
-		projectAuditHandler.processAndSaveGlobalAuditEvaluation(param.getIdProject());
+
+		projectAuditHandler.saveWeights(idProject, Arrays.asList(weights));
+		projectAuditHandler.processAndSaveGlobalAuditEvaluation(idProject);
 		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
 	}
 	

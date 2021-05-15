@@ -21,6 +21,7 @@ import com.fitzhi.controller.in.BodyParamAuditEntry;
 import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.AuditTopic;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.TopicWeight;
 import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -153,17 +154,17 @@ public class PluggedProjectAuditControllerUpdatingGlobalEvaluationTest {
 	public void updateWeightsNominal() throws Exception {
 
 		//
-		// Update the evaluation of a topic
+		// Update the weights of ALL topics
 		//
-		BodyParamAuditEntries bpae = new BodyParamAuditEntries();
-		bpae.setIdProject(ID_PROJECT);
-		bpae.setDataEnvelope(new AuditTopic[2]);
-		bpae.getDataEnvelope()[0] = new AuditTopic(ID_TOPIC_1, 0, 10);
-		bpae.getDataEnvelope()[1] = new AuditTopic(ID_TOPIC_2, 0, 90);
-	
-		this.mvc.perform(post("/api/project/audit/saveWeights")
+		TopicWeight[] tw = new TopicWeight[2];
+		tw[0] = new TopicWeight(ID_TOPIC_1, 10);
+		tw[1] = new TopicWeight(ID_TOPIC_2, 90);
+
+
+		this.mvc.perform(put("/api/project/1/audit/weights")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpae)))
+				.content(gson.toJson(tw)))
+
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().string("true"))

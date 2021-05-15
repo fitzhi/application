@@ -4,9 +4,11 @@ import static com.fitzhi.Error.CODE_PROJECT_TOPIC_UNKNOWN;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,10 +22,12 @@ import com.fitzhi.controller.ProjectAuditController;
 import com.fitzhi.controller.in.BodyParamAuditEntries;
 import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.AuditTopic;
+import com.fitzhi.data.internal.TopicWeight;
 import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.assertj.core.util.Arrays;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -63,16 +67,17 @@ public class ProjectAuditControllerSaveWeightsTest {
 	@WithMockUser
 	public void saveWeights() throws Exception {
 		
-		BodyParamAuditEntries bpae = new BodyParamAuditEntries();
-		bpae.setIdProject(1805);
-		List<AuditTopic> auditTopics = new ArrayList<AuditTopic>();
-		auditTopics.add(new AuditTopic(1815));
-		AuditTopic[] ref = new AuditTopic[0];
-		bpae.setDataEnvelope(auditTopics.toArray(ref));
-	
-		this.mvc.perform(post("/api/project/audit/saveWeights")
+		
+		TopicWeight[] tw = new TopicWeight[1];
+		tw[0] = new TopicWeight(1, 10);
+
+		doNothing().when(projectAuditHandler).saveWeights(anyInt(), anyList());
+		doNothing().when(projectAuditHandler).processAndSaveGlobalAuditEvaluation(1805);
+
+		this.mvc.perform(put("/api/project/1805/audit/weights")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(bpae)))
+			.content(gson.toJson(tw)))
+
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(content().string("true"));
@@ -89,16 +94,13 @@ public class ProjectAuditControllerSaveWeightsTest {
 			.when(projectAuditHandler)
 			.saveWeights(anyInt(), anyList());
 
-		BodyParamAuditEntries bpae = new BodyParamAuditEntries();
-		bpae.setIdProject(1805);
-		List<AuditTopic> auditTopics = new ArrayList<AuditTopic>();
-		auditTopics.add(new AuditTopic(1815));
-		AuditTopic[] ref = new AuditTopic[0];
-		bpae.setDataEnvelope(auditTopics.toArray(ref));
-		
-		this.mvc.perform(post("/api/project/audit/saveWeights")
+		TopicWeight[] tw = new TopicWeight[1];
+		tw[0] = new TopicWeight(1, 10);	
+
+		this.mvc.perform(put("/api/project/1/audit/weights")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(bpae)))
+			.content(gson.toJson(tw)))
+
 			.andExpect(status().isInternalServerError())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(jsonPath("$.code", is(CODE_PROJECT_TOPIC_UNKNOWN)));

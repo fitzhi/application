@@ -39,6 +39,7 @@ import com.fitzhi.controller.in.BodyParamAuditEntries;
 import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.AuditTopic;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.TopicWeight;
 import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -237,26 +238,25 @@ public class PluggedProjectAuditControllerTest {
 	 */
 	@Test
 	@WithMockUser
-	public void updateWeightsHasToBeEqualTo100() throws Exception {
+	public void sumOfWeightsHasToBeEqualTo100() throws Exception {
 
 		project.getAudit().put(ID_TOPIC_1, new AuditTopic(ID_TOPIC_1));
 		// From that point, the project will have 2 topics declared
 		
 		//
-		// Update the evaluation of a topic
+		// Update the weights of ALL topics
 		//
-		BodyParamAuditEntries bpae = new BodyParamAuditEntries();
-		bpae.setIdProject(ID_PROJECT);
-		bpae.setDataEnvelope(new AuditTopic[2]);
-		bpae.getDataEnvelope()[0] = new AuditTopic(ID_TOPIC_1, 60, 10);
-		bpae.getDataEnvelope()[1] = new AuditTopic(ID_TOPIC_2, 60, 50);
+		TopicWeight[] tw = new TopicWeight[2];
+		tw[0] = new TopicWeight(ID_TOPIC_1, 60);
+		tw[1] = new TopicWeight(ID_TOPIC_2, 60);
 	
 		//
 		// Cannot save a project with a sum of audit topics weights different to 100.
 		//
-		this.mvc.perform(post("/api/project/audit/saveWeights")
+		this.mvc.perform(put("/api/project/1/audit/weights")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpae)))
+				.content(gson.toJson(tw)))
+
 				.andExpect(status().isInternalServerError())
 				.andExpect(jsonPath("$.code", is(CODE_PROJECT_INVALID_WEIGHTS)))
 				.andDo(print())
@@ -267,31 +267,29 @@ public class PluggedProjectAuditControllerTest {
 	@WithMockUser
 	public void updateWeightsNominal() throws Exception {
 
-		
 		project.getAudit().put(ID_TOPIC_1, new AuditTopic(ID_TOPIC_1, 80, 0));
 		// From that point, the project will have 2 topics declared
 		
 		//
-		// Update the evaluation of a topic
+		// Update the weights of ALL topics
 		//
-		BodyParamAuditEntries bpae = new BodyParamAuditEntries();
-		bpae.setIdProject(ID_PROJECT);
-		bpae.setDataEnvelope(new AuditTopic[2]);
-		bpae.getDataEnvelope()[0] = new AuditTopic(ID_TOPIC_1, 0, 40);
-		bpae.getDataEnvelope()[1] = new AuditTopic(ID_TOPIC_2, 0, 60);
+		TopicWeight[] tw = new TopicWeight[2];
+		tw[0] = new TopicWeight(ID_TOPIC_1, 40);
+		tw[1] = new TopicWeight(ID_TOPIC_2, 60);
 	
-		this.mvc.perform(post("/api/project/audit/saveWeights")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpae)))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().string("true"))
-				.andDo(print());
+		this.mvc.perform(put("/api/project/1/audit/weights")
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(gson.toJson(tw)))
+
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(content().string("true"))
+			.andDo(print());
 		
 		MvcResult result = this.mvc.perform(get("/api/project/1/audit/topic/1"))
-				.andExpect(status().isOk())
-				.andDo(print())
-				.andReturn();
+			.andExpect(status().isOk())
+			.andDo(print())
+			.andReturn();
 		AuditTopic auditProject = gson.fromJson(result.getResponse().getContentAsString(), AuditTopic.class);
 		Assert.assertEquals("Weight has been saved", 40, auditProject.getWeight());
 		
@@ -312,7 +310,6 @@ public class PluggedProjectAuditControllerTest {
 		this.testGlobalAuditEvaluation(ID_PROJECT, 50);
 		
 	}
-	
 	
 	@After
 	public void after() throws ApplicationException {
