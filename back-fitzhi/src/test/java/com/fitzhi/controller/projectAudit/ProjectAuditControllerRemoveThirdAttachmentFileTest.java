@@ -1,14 +1,21 @@
 package com.fitzhi.controller.projectAudit;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.io.File;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
+
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.controller.ProjectAuditController;
+import com.fitzhi.data.internal.AuditTopic;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.service.FileType;
+import com.fitzhi.service.impl.storageservice.AuditAttachmentStorageProperties;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -33,19 +40,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import lombok.extern.slf4j.Slf4j;
-
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.controller.ProjectAuditController;
-import com.fitzhi.controller.in.BodyParamProjectAttachmentFile;
-import com.fitzhi.controller.util.LocalDateAdapter;
-import com.fitzhi.data.internal.AttachmentFile;
-import com.fitzhi.data.internal.AuditTopic;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.ApplicationException;
-import com.fitzhi.service.FileType;
-import com.fitzhi.service.impl.storageservice.AuditAttachmentStorageProperties;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 /**
  * <p>
  * Test of the class {@link ProjectAuditController}
@@ -58,12 +52,6 @@ import com.google.gson.GsonBuilder;
 @AutoConfigureMockMvc
 @Slf4j
 public class ProjectAuditControllerRemoveThirdAttachmentFileTest {
-
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	Gson gson = new GsonBuilder()
-		      .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe()).create();
 
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -127,14 +115,8 @@ public class ProjectAuditControllerRemoveThirdAttachmentFileTest {
 
 	private void removeFirstAttachmentFile(int idFile) throws Exception {
 
-		BodyParamProjectAttachmentFile bppaf = new BodyParamProjectAttachmentFile();
-		bppaf.setIdProject(ID_PROJECT);
-		bppaf.setIdTopic(ID_TOPIC_1);
-		bppaf.setAttachmentFile(new AttachmentFile(idFile, "", null, ""));
-	
-		this.mvc.perform(post("/api/project/audit/removeAttachmentFile")
-			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(bppaf)))
+		this.mvc.perform(delete("/api/project/1/audit/1/attachmentFile/" + idFile)
+			.contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(status().isOk())
 			.andExpect(content().string("true"))
 			.andDo(print())

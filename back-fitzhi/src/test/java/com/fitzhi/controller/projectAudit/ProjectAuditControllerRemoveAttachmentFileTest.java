@@ -3,9 +3,11 @@ package com.fitzhi.controller.projectAudit;
 import static com.fitzhi.Error.CODE_PROJECT_TOPIC_UNKNOWN;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -18,7 +20,6 @@ import com.fitzhi.controller.in.BodyParamProjectAttachmentFile;
 import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.AttachmentFile;
 import com.fitzhi.exception.ApplicationException;
-import com.fitzhi.service.FileType;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -60,15 +61,11 @@ public class ProjectAuditControllerRemoveAttachmentFileTest {
 	@Test
 	@WithMockUser
 	public void removeAttachmentFile() throws Exception {
-		
-		BodyParamProjectAttachmentFile bpae = new BodyParamProjectAttachmentFile();
-		bpae.setIdProject(1805);
-		bpae.setIdTopic(1815);
-		bpae.setAttachmentFile(new AttachmentFile(1789, "1789", FileType.FILE_TYPE_DOC, "label 1789"));
+
+		doNothing().when(projectAuditHandler).removeAttachmentFile(1805, 1815, 1789);
 	
-		this.mvc.perform(post("/api/project/audit/removeAttachmentFile")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpae)))
+		this.mvc.perform(delete("/api/project/1805/audit/1815/attachmentFile/1789")
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().string("true"));
@@ -90,9 +87,8 @@ public class ProjectAuditControllerRemoveAttachmentFileTest {
 		bpae.setIdTopic(1815);
 		bpae.setAttachmentFile(new AttachmentFile());
 		
-		this.mvc.perform(post("/api/project/audit/removeAttachmentFile")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpae)))
+		this.mvc.perform(delete("/api/project/1805/audit/1815/attachmentFile/1")
+				.contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.code", is(CODE_PROJECT_TOPIC_UNKNOWN)));

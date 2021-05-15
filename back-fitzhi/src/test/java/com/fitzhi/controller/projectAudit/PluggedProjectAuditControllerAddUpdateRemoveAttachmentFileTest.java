@@ -2,6 +2,7 @@ package com.fitzhi.controller.projectAudit;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,8 +47,7 @@ import com.google.gson.GsonBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
-
+public class PluggedProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -132,7 +132,6 @@ public class ProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
 	@WithMockUser
 	public void processAuditProjectSaveMiddleAttachmentFile() throws Exception {
 		
-		
 		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, new AttachmentFile(0, "theFileName", FileType.valueOf(0), "theLabel"));		
 		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, new AttachmentFile(1, "stupidFileName.doc", FileType.valueOf(0), "stupid label"));		
 		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, new AttachmentFile(2, "lastFileName.doc", FileType.valueOf(0), "last label"));		
@@ -163,21 +162,16 @@ public class ProjectAuditControllerAddUpdateRemoveAttachmentFileTest {
 	@Test
 	@WithMockUser
 	public void processAuditProjectRemoveAttachmentFile() throws Exception {
-		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, new AttachmentFile(0, "theFileName", FileType.valueOf(0), "theLabel"));		
-		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, new AttachmentFile(1, "stupidFileName.doc", FileType.valueOf(0), "stupid label"));		
-		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, new AttachmentFile(2, "lastFileName.doc", FileType.valueOf(0), "last label"));		
+		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, 
+			new AttachmentFile(0, "theFileName", FileType.valueOf(0), "theLabel"));		
+		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, 
+			new AttachmentFile(1, "stupidFileName.doc", FileType.valueOf(0), "stupid label"));		
+		projectAuditHandler.updateAttachmentFile(ID_PROJECT, ID_TOPIC_1, 
+			new AttachmentFile(2, "lastFileName.doc", FileType.valueOf(0), "last label"));		
 
-		//
-		// remove an attachment in the middle of the list
-		//
-		BodyParamProjectAttachmentFile bppaf = new BodyParamProjectAttachmentFile();
-		bppaf.setIdProject(ID_PROJECT);
-		bppaf.setIdTopic(ID_TOPIC_1);
-		bppaf.setAttachmentFile(new AttachmentFile(1, "tobeRemoved", FileType.valueOf(1), "toBeRemoved"));
-	
-		this.mvc.perform(post("/api/project/audit/removeAttachmentFile")
-			.contentType(MediaType.APPLICATION_JSON_UTF8)
-			.content(gson.toJson(bppaf)))
+		this.mvc.perform(delete("/api/project/1789/audit/1/attachmentFile/1")
+			.contentType(MediaType.APPLICATION_JSON_UTF8))
+
 			.andExpect(status().isOk())
 			.andExpect(content().string("true"))
 			.andDo(print())

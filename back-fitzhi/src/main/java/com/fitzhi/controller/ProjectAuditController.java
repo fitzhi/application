@@ -186,18 +186,20 @@ public class ProjectAuditController extends BaseRestController {
 		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
 	}
 	
-	@PostMapping(path="/audit/removeAttachmentFile")
-	public ResponseEntity<Boolean> removeAttachmentFile(@RequestBody BodyParamProjectAttachmentFile param) 
-		throws ApplicationException {
+	@ResponseBody
+	@DeleteMapping(path="{idProject}/audit/{idTopic}/attachmentFile/{idFile}")
+	@ApiOperation(value="Remove the reference of a file attached to an audit topic.")
+	public boolean removeAttachmentFile(
+		@PathVariable("idProject") int idProject,
+		@PathVariable("idTopic") int idTopic,
+		@PathVariable("idFile") int idFile) throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
-			log.debug(String.format(
-				"POST command on /project/audit/removeAttachmentFile for project.id %d, topic.id %d, attachmentFile %d", 
-					param.getIdProject(), param.getIdTopic(), param.getAttachmentFile().getIdFile()));
+			log.debug(String.format("DELETE verb on /api/project/%d/audit/%d/attachmentFile/%d", idProject, idTopic, idFile));
 		}
 		
-		projectAuditHandler.removeAttachmentFile (param.getIdProject(), param.getIdTopic(), param.getAttachmentFile().getIdFile());			
-		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
+		projectAuditHandler.removeAttachmentFile (idProject, idTopic, idFile);			
+		return true;
 	}
 	
 	/**
