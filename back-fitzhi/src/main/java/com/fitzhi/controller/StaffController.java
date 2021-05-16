@@ -6,8 +6,6 @@ import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_STAFF_ACTIVE_ON_PROJECT;
 import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
-import static com.fitzhi.Global.BACKEND_RETURN_CODE;
-import static com.fitzhi.Global.BACKEND_RETURN_MESSAGE;
 
 import java.text.MessageFormat;
 import java.time.LocalDate;
@@ -355,22 +353,23 @@ public class StaffController extends BaseRestController {
 	 * @param idStaff the Staff member identifier candidate for deletion
 	 * @return an empty HTTP response after the deletion.
 	 */
+	@ResponseBody
+	@ApiOperation(value = "Remove a developer from the company staff.")
 	@DeleteMapping(value = "/{idStaff}")
-	public ResponseEntity<Object> removeStaff(@PathVariable("idStaff") int idStaff) throws NotFoundException, ApplicationException {
+	public void removeStaff(@PathVariable("idStaff") int idStaff) throws NotFoundException, ApplicationException {
 		Staff staff = staffHandler.getStaff(idStaff);
 		if (staff == null) {
 			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 		
 		staffHandler.removeStaff(idStaff);
-
-		return new ResponseEntity<>(null, new HttpHeaders(), HttpStatus.OK);
 	}
 	
 	/**
 	 * We do not allow to remove all staff members
 	 * @return an empty HTTP Response because this method is not allowed.
 	 */
+	@ApiOperation(value = "This method is not allowed.")
 	@DeleteMapping()
 	public ResponseEntity<Object> removeAllStaff() throws ApplicationException {		
 		return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
@@ -385,8 +384,10 @@ public class StaffController extends BaseRestController {
 	 *            in JSON format
 	 * @return
 	 */
+	@ResponseBody
+	@ApiOperation(value = "Add an experience to a developer.", notes = "An experience is a skill and a level.")
 	@PostMapping("{idStaff}/experience")
-	public ResponseEntity<Boolean> updateExperience(
+	public boolean updateExperience(
 		@PathVariable("idStaff") int idStaff,
 		@RequestBody Experience experience) throws ApplicationException {
 
@@ -408,7 +409,7 @@ public class StaffController extends BaseRestController {
 			this.staffHandler.removeExperience(idStaff, formerExperience);
 			this.staffHandler.addExperience(idStaff, new Experience(experience.getId(), experience.getLevel()));
 		}
-		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
+		return true;
 	}
 	
 	/**
@@ -418,8 +419,10 @@ public class StaffController extends BaseRestController {
 	 *            in JSON format
 	 * @return
 	 */
+	@ResponseBody
+	@ApiOperation(value = "Remove a skill from a developer.")
 	@DeleteMapping(value = "{idStaff}/experience/{idSkill}")
-	public ResponseEntity<Boolean> removeExperience(
+	public boolean removeExperience(
 		@PathVariable("idStaff") int idStaff,
 		@PathVariable("idSkill") int idSkill) throws ApplicationException {
 
@@ -438,7 +441,7 @@ public class StaffController extends BaseRestController {
 		if (experience != null) {
 			this.staffHandler.removeExperience(idStaff, experience);
 		}
-		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);		
+		return true;		
 	}
 	
 	/**
@@ -455,8 +458,10 @@ public class StaffController extends BaseRestController {
 	 * 
 	 * @return the resume parsed from the uploaded file.
 	 */
+	@ResponseBody
+	@ApiOperation(value = "Upload an application file and return an array of experiences detected in this file.")
 	@PostMapping("/{idStaff}/uploadCV")
-	public ResponseEntity<StaffResume> uploadApplicationFile(
+	public StaffResume uploadApplicationFile(
 			@PathVariable("idStaff") int idStaff, 
 			@RequestParam("file") MultipartFile file, 
 			@RequestParam("type") int type) throws ApplicationException {
@@ -483,7 +488,7 @@ public class StaffController extends BaseRestController {
 		
 		final List<ResumeSkill> experiences = genResume(resume);
 
-		return new ResponseEntity<>(new StaffResume(experiences), headers(), HttpStatus.OK);
+		return new StaffResume(experiences);
 	}
 
 	private List<ResumeSkill> genResume(Resume resume) throws ApplicationException {
@@ -521,6 +526,7 @@ public class StaffController extends BaseRestController {
 	 * @param request type type of request
 	 * @return the file resource
 	 */
+	@ApiOperation(value = "Download the application for the given staff memnber, if any.")
 	@GetMapping(value = "{id}/application")
 	public ResponseEntity<Resource> downloadApplicationFile(
 		    @PathVariable("id") int id, 
@@ -551,6 +557,7 @@ public class StaffController extends BaseRestController {
 	}
 		
 	@ResponseBody
+	@ApiOperation("Save the given resume for the staff member.")
 	@PutMapping("/{idStaff}/resume")
 	public Staff saveResume(
 		@PathVariable("idStaff") int idStaff, 
@@ -571,7 +578,7 @@ public class StaffController extends BaseRestController {
 
 	/**
 	 * <p>
-	 * Involve a devloper in a project.
+	 * Involve a developer in a project.
 	 * </p>
 	 * 
 	 * @param idStaff the staff identifier
@@ -579,6 +586,7 @@ public class StaffController extends BaseRestController {
 	 * @return {@code true} if the operation is successful, {@code false} otherwiose
 	 */
 	@ResponseBody
+	@ApiOperation(value = "Involve a developer in a project.")
 	@PutMapping("/{idStaff}/project/{idProject}")
 	public boolean addProject(
 		@PathVariable("idStaff") int idStaff, 
@@ -619,8 +627,10 @@ public class StaffController extends BaseRestController {
 	 * @param idProject the given Project identifier
 	 * @param idStaff the given Staff identifier
 	 */
+	@ResponseBody
+	@ApiOperation(value = "Revoke the participation of a developer from a project.")
 	@DeleteMapping("/{idStaff}/project/{idProject}")
-	public ResponseEntity<Boolean> revokeProject(
+	public boolean revokeProject(
 		@PathVariable("idProject") int idProject, 
 		@PathVariable("idStaff") int idStaff) throws ApplicationException, NotFoundException {
 
@@ -656,6 +666,6 @@ public class StaffController extends BaseRestController {
 			}
 		}
 
-		return new ResponseEntity<>(Boolean.TRUE, new HttpHeaders(), HttpStatus.OK);
+		return true;
 	}
 }
