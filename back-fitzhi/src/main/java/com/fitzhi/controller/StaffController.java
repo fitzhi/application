@@ -79,7 +79,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/staff")
 @Api(
 	tags="Staff controller API",
-	description = "API endpoints to manage the projects declared in the application."
+	description = "API endpoints to manage the developers declared in the application. For convenience, we consider all employees to be developers."	
 )
 public class StaffController extends BaseRestController {
 
@@ -118,12 +118,12 @@ public class StaffController extends BaseRestController {
 	 *         created staff
 	 */
 	@ApiOperation(
-		value="Create a new staff member.", 
+		value="Create a new developer in th staff.", 
 		notes = "If the ID is filled and registered, a CONFLICT response error will be returned."
 	)
 	@PostMapping("")
 	public ResponseEntity<Void> create(UriComponentsBuilder builder, 
-			@ApiParam(value="An unregistered staff member. The ID should be equal to -1")
+			@ApiParam(value="An unregistered developer. The ID should be equal to -1")
 			@RequestBody Staff staff)
 			throws ApplicationException {
 
@@ -158,7 +158,7 @@ public class StaffController extends BaseRestController {
 	 * @param staff the staff to update. This staff is hosted inside the body of the {@code PUT} Medhod.
 	 * @return an empty content for an update request
 	 */
-	@ApiOperation(value = "Update an existing staff member.")
+	@ApiOperation(value = "Update an existing developer.")
 	@PutMapping("/{idStaff}")
 	public ResponseEntity<Void> updateStaff(@PathVariable("idStaff") int idStaff, @RequestBody Staff staff)
 			throws NotFoundException, ApplicationException {
@@ -186,7 +186,7 @@ public class StaffController extends BaseRestController {
 	 * @return the complete workforce of the company
 	 */
 	@ResponseBody
-	@ApiOperation(value = "Read and retun all staff members declared in the workforce.")
+	@ApiOperation(value = "Read and return all developers declared in the staff.")
 	@GetMapping("")
 	public Collection<Staff> readAll() {
 		
@@ -238,7 +238,7 @@ public class StaffController extends BaseRestController {
 	 *            staff member's identifier
 	 * @return the staff member identified by its id
 	 */
-	@ApiOperation(value = "Retrieve a staff member with his identifier")
+	@ApiOperation(value = "Retrieve a developer by his identifier")
 	@ResponseBody
 	@GetMapping(value = "/{idStaff}")
 	public Staff read(@PathVariable("idStaff") int idStaff) throws ApplicationException {
@@ -255,7 +255,7 @@ public class StaffController extends BaseRestController {
 	 * @return the list of projects where the staff member is involved
 	 */
 	@ResponseBody
-	@ApiOperation(value = "Retrieve the projects where a staff member has been involved.")
+	@ApiOperation(value = "Retrieve the projects where a developer has been involved.")
 	@GetMapping(value = "/{idStaff}/project")
 	public List<Mission> readProjects(@PathVariable("idStaff") int idStaff) 
 		throws ApplicationException {
@@ -526,7 +526,7 @@ public class StaffController extends BaseRestController {
 	 * @param request type type of request
 	 * @return the file resource
 	 */
-	@ApiOperation(value = "Download the application for the given staff memnber, if any.")
+	@ApiOperation(value = "Download the application for the given developer, if any.")
 	@GetMapping(value = "{id}/application")
 	public ResponseEntity<Resource> downloadApplicationFile(
 		    @PathVariable("id") int id, 
