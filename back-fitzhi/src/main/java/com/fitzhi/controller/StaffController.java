@@ -65,6 +65,8 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 
 
@@ -117,8 +119,14 @@ public class StaffController extends BaseRestController {
 	 * @return a ResponseEntity with just the location containing the URI of the newly
 	 *         created staff
 	 */
+	@ApiOperation(
+		value="Create a new staff member.", 
+		notes = "If the ID is filled and registered, a CONFLICT response error will be returned."
+	)
 	@PostMapping("")
-	public ResponseEntity<Void> create(UriComponentsBuilder builder, @RequestBody Staff staff)
+	public ResponseEntity<Void> create(UriComponentsBuilder builder, 
+			@ApiParam(value="An unregistered staff member. The ID should be equal to -1")
+			@RequestBody Staff staff)
 			throws ApplicationException {
 
 		// This is not a creation.
@@ -152,6 +160,7 @@ public class StaffController extends BaseRestController {
 	 * @param staff the staff to update. This staff is hosted inside the body of the {@code PUT} Medhod.
 	 * @return an empty content for an update request
 	 */
+	@ApiOperation(value = "Update an existing staff member.")
 	@PutMapping("/{idStaff}")
 	public ResponseEntity<Void> updateStaff(@PathVariable("idStaff") int idStaff, @RequestBody Staff staff)
 			throws NotFoundException, ApplicationException {
@@ -178,6 +187,8 @@ public class StaffController extends BaseRestController {
 	 * Read all staff members from the workforce.
 	 * @return the complete workforce of the company
 	 */
+	@ResponseBody
+	@ApiOperation(value = "Read and retun all staff members declared in the workforce.")
 	@GetMapping("")
 	public Collection<Staff> readAll() {
 		
@@ -196,6 +207,8 @@ public class StaffController extends BaseRestController {
 		return staffTeam;
 	}
 
+	@ResponseBody
+	@ApiOperation(value = "Aggregate and count by skills all ACTIVE developers")
 	@GetMapping("/countGroupByExperiences/active")
 	public Map<String, Long> countActive() {
 		
@@ -208,7 +221,9 @@ public class StaffController extends BaseRestController {
 		return peopleCountExperienceMap.getData();
 	}
 
+	@ResponseBody
 	@GetMapping("/countGroupByExperiences/all")
+	@ApiOperation(value = "Aggregate and count by skills ALL developers")
 	public Map<String, Long> countAll() {
 		
 		final PeopleCountExperienceMap peopleCountExperienceMap = staffHandler.countAllStaffGroupBySkillLevel(false);
@@ -225,36 +240,16 @@ public class StaffController extends BaseRestController {
 	 *            staff member's identifier
 	 * @return the staff member identified by its id
 	 */
+	@ApiOperation(value = "Retrieve a staff member with his identifier")
+	@ResponseBody
 	@GetMapping(value = "/{idStaff}")
-	public ResponseEntity<Staff> read(@PathVariable("idStaff") int idStaff) {
+	public Staff read(@PathVariable("idStaff") int idStaff) throws ApplicationException {
 
-		final ResponseEntity<Staff> responseEntity;
-
-		
-		HttpHeaders headers = new HttpHeaders();
-		
-		Staff searchCollab = staffHandler.getStaff().get(idStaff);
-		if (searchCollab != null) {
-			responseEntity = new ResponseEntity<>(searchCollab, headers, HttpStatus.OK);
-			if (log.isDebugEnabled()) {
-				Staff staff = responseEntity.getBody();
-				log.debug(String.format(
-						"looking for id %d in the Staff collection returns %s %s",
-						idStaff, 
-						(staff != null) ? staff.getFirstName() : "null", 
-						(staff != null) ? staff.getLastName()  : "null"));
-			}
-		} else {
-			headers.set(BACKEND_RETURN_CODE, "O");
-			headers.set(BACKEND_RETURN_MESSAGE, "There is no collaborator associated to the id " + idStaff);
-			responseEntity = new ResponseEntity<>(new Staff(), headers, HttpStatus.NOT_FOUND);
-			if (log.isDebugEnabled()) {
-				log.debug(String.format(
-						"Cannot find a staff member for id %d in the Staff collection",
-						idStaff));
-			}
+		Staff staff = staffHandler.getStaff(idStaff);
+		if (staff == null) {
+			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
 		}
-		return responseEntity;
+		return staff;
 	}
 
 	/**
@@ -262,6 +257,7 @@ public class StaffController extends BaseRestController {
 	 * @return the list of projects where the staff member is involved
 	 */
 	@ResponseBody
+	@ApiOperation(value = "Retrieve the projects where a staff member has been involved.")
 	@GetMapping(value = "/{idStaff}/project")
 	public List<Mission> readProjects(@PathVariable("idStaff") int idStaff) 
 		throws ApplicationException {
@@ -285,6 +281,10 @@ public class StaffController extends BaseRestController {
 	 * @throws ApplicationException thrown if any problem occurs, such as the staff identifier does not exist.
 	 */
 	@ResponseBody
+	@ApiOperation(
+		value = "Retrieve the list of experiences for a given developer.", 
+		notes = "An experience is a skill with a level. An experence belongs to an application."
+	)
 	@GetMapping(value = "/{idStaff}/experience")
 	public List<Experience> readExperiences(@PathVariable("idStaff") int idStaff) throws ApplicationException {
 
@@ -296,23 +296,12 @@ public class StaffController extends BaseRestController {
 		return staff.getExperiences();
 	}
 
-	/**
-	 * Switch the 'active' status of a developer<br/>
-	 * <ul>
-	 * <li>
-	 * If the given developer is active, it will become inactive.
-	 * </li>
-	 * <li>
-	 * If inactive, it will be switched to active.
-	 * </li>
-	 * </ul>
-	 * @param idStaff the identifier of the staff member to activate, or deactivate.
-	 * @return {@code true} ALWAYS. Either the application return {@code true}, or an exception is thrown.
-	 * @throws ApplicationException thrown if any exception occurs during the treatment, most probably if there is no staff member for the given id.
-	 * @see #processActiveStatus(int)
-	 */
-	@GetMapping("/forceActiveStatus/{idStaff}")
-	public ResponseEntity<Boolean> switchActiveState(@PathVariable("idStaff") int idStaff) throws ApplicationException {
+	@ResponseBody
+	@ApiOperation(
+		value = "Switch the 'active' status of a developer",
+		notes = "If the given developer is active, it will become inactive. If inactive, it will be switched to active.")
+	@PostMapping("/{idStaff}/switchActiveStatus")
+	public boolean switchActiveState(@PathVariable("idStaff") int idStaff) throws ApplicationException {
 		
 		final Staff staff = staffHandler.getStaff(idStaff);
 		if (staff == null) {
@@ -321,7 +310,7 @@ public class StaffController extends BaseRestController {
 	
 		this.staffHandler.forceActiveStatus(staff);
 		
-		return new ResponseEntity<>(true, new HttpHeaders(), HttpStatus.OK);
+		return true;
 	}
 
 	/**
@@ -337,8 +326,15 @@ public class StaffController extends BaseRestController {
 	 * @throws ApplicationException thrown if any exception occurs during the treatment, most probably if there is no staff member for the given id.
 	 * @see #switchActiveState(int)
 	 */
-	@GetMapping("/processActiveStatus/{idStaff}")
-	public ResponseEntity<Staff> processActiveStatus(@PathVariable("idStaff") int idStaff) throws ApplicationException {
+	@ApiOperation(
+		value = "Update the active status for a developer.",
+		notes = 
+			"This endpoint is invoked to set that the 'active' state should be forced by the application."
+		 + 	"When forced, the application will scan the activity of this developer in order to compare his/her latest commit with the global parameter 'inactivity.delay'."
+	)
+	@ResponseBody
+	@PostMapping("/{idStaff}/processActiveStatus")
+	public Staff processActiveStatus(@PathVariable("idStaff") int idStaff) throws ApplicationException {
 		
 		final Staff staff = staffHandler.getStaff(idStaff);
 		if (staff == null) {
@@ -350,8 +346,7 @@ public class StaffController extends BaseRestController {
 		
 		this.staffHandler.processActiveStatus(staff);
 		
-		HttpHeaders headers = new HttpHeaders();
-		return new ResponseEntity<>(staff, headers, HttpStatus.OK);
+		return staff;
 	}
 
 	

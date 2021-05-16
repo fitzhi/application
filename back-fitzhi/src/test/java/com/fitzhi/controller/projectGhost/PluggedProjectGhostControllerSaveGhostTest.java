@@ -82,7 +82,6 @@ public class PluggedProjectGhostControllerSaveGhostTest {
 		if (oToBeRemoved.isPresent()) {
 			staff.getMissions().remove(oToBeRemoved.get());
 		}
- 		
 	}
 	
 	@Test

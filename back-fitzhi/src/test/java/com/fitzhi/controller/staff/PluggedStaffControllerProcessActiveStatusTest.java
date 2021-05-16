@@ -1,6 +1,6 @@
 package com.fitzhi.controller.staff;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -41,9 +41,9 @@ import com.google.gson.GsonBuilder;
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(properties = { "staffHandler.inactivity.delay=10" })
-public class StaffControllerProcessActiveStatusTest {
+public class PluggedStaffControllerProcessActiveStatusTest {
 
-	private final String STAFF_PROCESS_ACTIVE_STATUS = "/api/staff/processActiveStatus/%d";
+	private final String STAFF_PROCESS_ACTIVE_STATUS = "/api/staff/%d/processActiveStatus";
 
 	private final int ID_STAFF = 777;
 	
@@ -77,7 +77,7 @@ public class StaffControllerProcessActiveStatusTest {
 	@WithMockUser
 	public void processActiveStatus() throws Exception {
 		MvcResult result = this.mvc
-			.perform(get(String.format(STAFF_PROCESS_ACTIVE_STATUS, ID_STAFF)))
+			.perform(post(String.format(STAFF_PROCESS_ACTIVE_STATUS, ID_STAFF)))
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(status().isOk())
 			.andReturn();

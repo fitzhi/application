@@ -1,6 +1,7 @@
 package com.fitzhi.controller.staff;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -32,15 +33,9 @@ import com.google.gson.GsonBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class StaffControllerSwitchActivationTest {
+public class PluggedStaffControllerSwitchActivationTest {
 
-	private static final String STAFF_SWITCH_ACTIVATION = "/api/staff/forceActiveStatus/";
-
-
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	Gson gson = new GsonBuilder().create();
+	private static final String STAFF_SWITCH_ACTIVATION = "/api/staff/%d/switchActiveStatus";
 
 	@Autowired
 	private MockMvc mvc;
@@ -50,49 +45,49 @@ public class StaffControllerSwitchActivationTest {
 	
 	@Before 
 	public void before() throws ApplicationException {
+		// We force the Staff identifier to 1789.
 		staffHandler.getStaff().put(1789, 
 				new Staff(1789,"Prenom", "Nom", "Surnom" , "UNIQUE_LOGIN", "adresse@mail.com", "DIEU"));
 		Assert.assertTrue ("staff is registered", staffHandler.hasStaff(1789));
 	}
-	
 
 	@Test
 	@WithMockUser
 	public void activateUnknownDeveloper() throws Exception {
 
-		this.mvc.perform(
-				get(STAFF_SWITCH_ACTIVATION + 1805)
-				.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(status().isInternalServerError())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andExpect(content().json("{code: -1001}"));
+		this.mvc.perform(post(String.format(STAFF_SWITCH_ACTIVATION,1805))
+			.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(status().isInternalServerError())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andExpect(content().json("{code: -1001}"));
 	}
 	
 	@Test
 	@WithMockUser
 	public void activateDeveloper() throws Exception {
+
 		Staff staff = staffHandler.getStaff().get(1789);
 		staff.setActive(true);
 		staff.setDateInactive(null);
-		this.mvc.perform(
-				get(STAFF_SWITCH_ACTIVATION + 1789))
-				.andExpect(status().isOk());
+
+		this.mvc.perform(post(String.format(STAFF_SWITCH_ACTIVATION, 1789)))
+			.andExpect(status().isOk());
 		
 		staff = staffHandler.getStaff().get(1789);
 		Assert.assertFalse(staff.isActive());
 		Assert.assertNotNull(staff.getDateInactive());
-				
 	}	
 
 	@Test
 	@WithMockUser
 	public void deactivateDeveloper() throws Exception {
+
 		Staff staff = staffHandler.getStaff().get(1789);
 		staff.setActive(false);
 		staff.setDateInactive(LocalDate.now());
-		this.mvc.perform(
-				get(STAFF_SWITCH_ACTIVATION + 1789))
-				.andExpect(status().isOk());
+
+		this.mvc.perform(post(String.format(STAFF_SWITCH_ACTIVATION, 1789)))
+			.andExpect(status().isOk());
 		
 		staff = staffHandler.getStaff().get(1789);
 		Assert.assertTrue(staff.isActive());
@@ -102,7 +97,7 @@ public class StaffControllerSwitchActivationTest {
 	
 	@Before 
 	public void after() {
-		staffHandler.getStaff().remove(1789);
+		staffHandler.removeStaff(1789);
 	}
 
 }
