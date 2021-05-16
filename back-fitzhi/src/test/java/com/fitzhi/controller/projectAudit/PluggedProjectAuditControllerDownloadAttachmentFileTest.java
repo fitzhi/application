@@ -56,7 +56,7 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 @Slf4j
-public class ProjectAuditControllerDownloadAttachmentFileTest {
+public class PluggedProjectAuditControllerDownloadAttachmentFileTest {
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -122,7 +122,7 @@ public class ProjectAuditControllerDownloadAttachmentFileTest {
 		uploadFile(UPLOAD_PATHNAME_PDF, FileType.FILE_TYPE_PDF.getValue());
 	
 		MvcResult result = this.mvc.perform(get(
-			String.format("/api/project/audit/attachmentFile/%d/%d/%d", ID_PROJECT, ID_TOPIC_1, 0)))
+			String.format("/api/project/1/audit/1/attachmentFile/0")))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("application/pdf"))
 				.andDo(print())

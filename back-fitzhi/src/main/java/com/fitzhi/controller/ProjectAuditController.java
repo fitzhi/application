@@ -243,14 +243,9 @@ public class ProjectAuditController extends BaseRestController {
 	
 		return new ResponseEntity<>(true, headers(), HttpStatus.OK);
 	}
-	
-	/**
-	 * Download an attachment file from the audit. 
-	 * @param id the staff identifier
-	 * @param request type type of request
-	 * @return the file resource
-	 */
-	@GetMapping(value = "/audit/attachmentFile/{idProject}/{idTopic}/{idFile}")
+
+	@ApiOperation(value="Download the file associated to an audit topic.")
+	@GetMapping(value = "/{idProject}/audit/{idTopic}/attachmentFile/{idFile}")
 	public ResponseEntity<Resource> downloadAttachmentFile(
 			@PathVariable("idProject") int idProject, 
 			@PathVariable("idTopic") int idTopic, 
@@ -265,6 +260,7 @@ public class ProjectAuditController extends BaseRestController {
 					CODE_CANNOT_RETRIEVE_ATTACHMENTFILE,
 					MessageFormat.format(LIB_CANNOT_RETRIEVE_ATTACHMENTFILE, idProject, idTopic, idFile));
 		}
+
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Downloading file %s for the project/topic %d/%d", attachment.getFileName(), idProject, idTopic));
 		}
@@ -280,7 +276,6 @@ public class ProjectAuditController extends BaseRestController {
 			.contentType(MediaType.parseMediaType(contentType))
 			.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
 			.body(resource);
-			
 	}
 	
 }
