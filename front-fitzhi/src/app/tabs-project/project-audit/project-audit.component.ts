@@ -5,7 +5,6 @@ import { Constants } from 'src/app/constants';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Project } from 'src/app/data/project';
 import { ReferentialService } from 'src/app/service/referential.service';
-import { TopicProject } from './topic-project';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { TopicEvaluation } from './project-audit-badges/topic-evaluation';
 import { TopicWeight } from './project-audit-badges/topic-weight';
@@ -13,10 +12,9 @@ import { ProjectService } from 'src/app/service/project/project.service';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { AuditChosenDetail } from './project-audit-badges/audit-badge/audit-chosen-detail';
 import { AuditDetailsHistory } from 'src/app/service/cinematic/audit-details-history';
-import { ConnectUserComponent } from 'src/app/admin/connect-user/connect-user.component';
-import { TRANSITION_DURATIONS } from 'ngx-bootstrap/modal/modal-options.class';
 import { switchMap } from 'rxjs/operators';
 import { traceOn } from 'src/app/global';
+import { AuditTopic } from 'src/app/data/AuditTopic';
 
 @Component({
 	selector: 'app-project-audit',
@@ -73,7 +71,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	/**
 	 * This subject is used to notify the `audit-task-form` of the current active topic.
 	 */
-	public topic$ = new Subject<TopicProject>();
+	public topic$ = new Subject<AuditTopic>();
 
 	constructor(
 		public referentialService: ReferentialService,
@@ -120,7 +118,8 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 		this.auditTopics = [];
 		Object.keys(this.projectService.project.audit).forEach(key => {
 			this.auditTopics.push(
-				{	idTopic: Number(key),
+				{	idProject: this.projectService.project.id,
+					idTopic: Number(key),
 					weight: (this.projectService.project.audit[key].weight) ? this.projectService.project.audit[key].weight : 5,
 					evaluation: (this.projectService.project.audit[key].evaluation) ? this.projectService.project.audit[key].evaluation : 0,
 					title: this.topics[key]} );
@@ -165,7 +164,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	private impactWeightsInProject(): void {
 		this.auditTopics.forEach(auditTopic => {
 			if (!this.projectService.project.audit[auditTopic.idTopic]) {
-				console.error('Internal error : ' + auditTopic.idTopic + ' is not retrieved in the project');
+				console.error(`Internal error : {auditTopic.idTopic} is not retrieved in the project`);
 			} else {
 				this.projectService.project.audit[auditTopic.idTopic].weight = auditTopic.weight;
 			}

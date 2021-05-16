@@ -69,7 +69,7 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 		}
 		if (topic.select) {
 			this.projectService
-				.addAuditTopic(topic.id)
+				.addAuditTopic$(topic.id)
 				.pipe(take(1))
 				.subscribe(doneAndOk => {
 					if (doneAndOk) {
@@ -79,7 +79,7 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 					}});
 		} else {
 			this.projectService
-				.removeAuditTopic(topic.id)
+				.removeAuditTopic$(topic.id)
 				.pipe(take(1))
 				.subscribe(doneAndOk => {
 					if (doneAndOk) {

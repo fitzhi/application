@@ -314,7 +314,7 @@ export class ProjectService extends InternalService {
 		}
 
 		return this.httpClient
-			.put<boolean>(this.backendSetupService.url() + '/project/' + idProject + '/sonar/' + sonarProject.key, '', httpOptions)
+			.put<boolean>(`${this.backendSetupService.url()}/project/${idProject}/sonar/${sonarProject.key}`, '', httpOptions)
 			.pipe(take(1));
 
 	}
@@ -332,64 +332,47 @@ export class ProjectService extends InternalService {
 		}
 
 		return this.httpClient
-			.delete<boolean>(this.backendSetupService.url() + '/project/' + idProject + '/sonar/' + sonarProject.key, httpOptions)
+			.delete<boolean>(`${this.backendSetupService.url()}/project/${idProject}/sonar/${sonarProject.key}`, 
+				httpOptions)
 			.pipe(take(1));
 	}
 
 	/**
 	 * Add a topic to the audit in the current project.
 	 * @param idTopic the topic identifier
+	 * @return an observable emitting **true** if the creation succeeds, **false** otherwise
 	 */
-	addAuditTopic(idTopic: number): Observable<boolean> {
-		return this.handleActionAudit$(this.project.id, new AuditTopic(idTopic, 0, 5), 'saveTopic');
-	}
-
-	/**
-	 * Remove a topic from the audit in the current project.
-	 * @param idTopic the topic identifier
-	 */
-	removeAuditTopic(idTopic: number): Observable<boolean> {
-		return this.handleActionAudit$(this.project.id, new AuditTopic(idTopic, 0, 5), 'removeTopic');
-	}
-
-	/**
-	 * Execute an operation on the audit of a Fitzhì project
-	 * @param idProject the project identifier
-	 * @param auditTopic the given auditTopic to be taken in account
-	 * @param action the action to be executed on the audit collection
-	 */
-	private handleActionAudit$(idProject: number, auditTopic: AuditTopic, action: string): Observable<boolean> {
-
-		if (traceOn()) {
-			console.log ('Action ' + action + ' on topic id ' + auditTopic.idTopic + ' for project ID ' + idProject);
-		}
-
-		const body = {
-			'idProject': idProject,
-			'auditTopic': {
-				'idTopic': auditTopic.idTopic,
-				'evaluation': auditTopic.evaluation,
-				'weight': auditTopic.weight,
-				'report': auditTopic.report}
-		};
-
+	addAuditTopic$(idTopic: number): Observable<boolean> {
 		return this.httpClient
-			.post<boolean>(this.backendSetupService.url() + '/project/audit/' + action, body, httpOptions)
+			.put<boolean>(`${this.backendSetupService.url()}/project/${this.project.id}/audit/topic/${idTopic}`, httpOptions)
 			.pipe(take(1));
 	}
 
 	/**
-	 * Load the projects associated with the staff member identified by this id.
+	 * Remove a topic from the scope of audit in the current project.
+	 * @param idTopic the topic identifier
+	 * @return an observable emitting **true** if the removal succeeds, **false** otherwise
 	 */
-	loadSkills(idProject: number): Observable<Skill[]> {
-		return this.httpClient.get<Skill[]>(this.backendSetupService.url() + '/project/skills/' + idProject);
+	removeAuditTopic$(idTopic: number): Observable<boolean> {
+		return this.httpClient
+			.delete<boolean>(`${this.backendSetupService.url()}/project/${this.project.id}/audit/topic/${idTopic}`, httpOptions)
+			.pipe(take(1));
+	}
+
+	/**
+	 * Load the skills associated with the given project.
+	 * @param idProject the project identifier
+	 * @returns an obsbervable emetting the array of skills declared or detected for the given project 
+	 */
+	loadSkills$(idProject: number): Observable<Skill[]> {
+		return this.httpClient.get<Skill[]>(`${this.backendSetupService.url()}/project/skills/${idProject}`);
 	}
 
 	/**
 	 * GET the project associated to this id from the back-end of Fitzhi. Will throw a 404 if this id is not found.
 	 */
 	get(id: number): Observable<Project> {
-		const url = this.backendSetupService.url() + '/project/' + id;
+		const url =  `${this.backendSetupService.url()}/project/${id}`;
 		if (traceOn()) {
 			console.log('Fetching the project ' + id + ' on the address ' + url);
 		}
@@ -431,7 +414,7 @@ export class ProjectService extends InternalService {
 
 		// If we do not find the project in the global collection of projects,
 		// we try our chance in the backend.
-		const url = this.backendSetupService.url() + '/project/name/' + projectName;
+		const url = `${this.backendSetupService.url()}/project/name/${projectName}`;
 		if (traceOn()) {
 			console.log('Fetching the project name ' + projectName + ' on the address ' + url);
 		}
@@ -915,7 +898,12 @@ export class ProjectService extends InternalService {
 			console.groupEnd();
 		}
 		const auditTopic = new AuditTopic(idTopic, evaluation, null);
-		return this.handleActionAudit$(idProject, auditTopic, 'saveEvaluation');
+
+		return this.httpClient
+			.put<boolean>( 
+				`${this.backendSetupService.url()}/project/${idProject}/audit/${idTopic}/evaluation/${evaluation}`, 
+				httpOptions)
+			.pipe(take(1));
 	}
 
 	/**
@@ -931,8 +919,12 @@ export class ProjectService extends InternalService {
 			console.log ('Report given', report);
 			console.groupEnd();
 		}
-		const auditTopic = new AuditTopic(idTopic, 0, 0, report);
-		return this.handleActionAudit$(this.project.id, auditTopic, 'saveReport');
+
+		return this.httpClient
+			.put<boolean>(
+				`${this.backendSetupService.url()}/project/${this.project.id}/audit/${idTopic}/report`, 
+				report, httpOptions)
+			.pipe(take(1));
 	}
 
 	/**
@@ -946,9 +938,10 @@ export class ProjectService extends InternalService {
 			auditTopics.forEach(element => console.log (element.idTopic, element.weight));
 			console.groupEnd();
 		}
-		const body = { idProject: idProject, dataEnvelope: auditTopics};
+		
 		return this.httpClient
-			.post<boolean>(this.backendSetupService.url() + '/project/audit/saveWeights', body, httpOptions)
+			.put<boolean>(`${this.backendSetupService.url()}/project/${this.project.id}/audit/weights`, 
+					auditTopics, httpOptions)
 			.pipe(take(1));
 	}
 
@@ -1009,7 +1002,7 @@ export class ProjectService extends InternalService {
 		this.fileService.downloadFile(
 			attachmentFile.fileName,
 			this.backendSetupService.url() +
-			'/project/audit/attachmentFile/' + idProject + '/' + idTopic + '/' + attachmentFile.idFile );
+			'/project/' + idProject + '/audit/' + idTopic + '/attachment/' + attachmentFile.idFile);
 	}
 
 	/**

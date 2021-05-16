@@ -88,15 +88,15 @@ export class AuditUploadAttachmentComponent extends BaseComponent implements OnI
 		// create a new multipart-form for the file to upload.
 		const formData: FormData = new FormData();
 		formData.append('file', file, file.name);
-		formData.append('idProject', <string><any>this.attachment.idProject);
-		formData.append('idTopic', <string><any>this.attachment.idTopic);
 		formData.append('label', <string><any>this.attachment.label);
 		formData.append('type', <string><any>Constants.APPLICATION_FILE_TYPE_ALLOWED.get(this.attachmentFile.type));
 
 		// create a HTTP-post request and pass the form
 		// tell it to report the upload progress
 		const req = new HttpRequest('POST',
-		this.backendSetupService.url() + '/project/audit/uploadAttachement', formData, {
+		this.backendSetupService.url() 
+			+ '/project/' + this.attachment.idProject 
+			+ '/audit/' +  this.attachment.idTopic + '/attachment', formData, {
 			reportProgress: true
 		});
 

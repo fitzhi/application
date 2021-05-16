@@ -25,11 +25,11 @@ export class AuditAttachmentService {
 	 * Inform the system of the active attachment files array.
 	 * @param attachmentFiles the array of attachment files
 	 */
-	public emitAttachmentFiles(attachmentFiles: AttachmentFile[]): void {
+	public emitAttachmentFiles(attachments: AttachmentFile[]): void {
 		if (traceOn()) {
-			console.log ('settings current %d files', attachmentFiles.length);
+			console.log ('settings current %d files', attachments.length);
 		}
-		this._attachmentFiles = attachmentFiles;
+		this._attachmentFiles = attachments;
 		this.addUploadtrailer();
 		this.attachmentFile$.next(this._attachmentFiles);
 	}
