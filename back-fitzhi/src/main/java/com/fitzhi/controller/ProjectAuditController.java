@@ -78,6 +78,7 @@ public class ProjectAuditController extends BaseRestController {
 	StorageService storageService;
 	
 	@ResponseBody
+	@ApiOperation("Add a topic to the audit scope.")
 	@PutMapping(path="/{idProject}/audit/topic/{idTopic}")
 	public boolean addTopic(
 		final @PathVariable("idProject") int idProject,
@@ -87,7 +88,7 @@ public class ProjectAuditController extends BaseRestController {
 			log.debug(String.format(
 				"POST verb on /api/project/%d/audit/topic/%d", idProject, idTopic));
 		}
-		
+
 		projectAuditHandler.addTopic(idProject, idTopic);
 		return true;
 	}
@@ -99,6 +100,10 @@ public class ProjectAuditController extends BaseRestController {
 	 * @return the auditTopic found.
 	 */
 	@ResponseBody
+	@ApiOperation(
+		value="Get a topic from the audit scope.", 
+		notes="The topic might be the architecture, the design, the performance, the test coverage...)"
+		)
 	@GetMapping(path="/{idProject}/audit/topic/{idTopic}")
 	public AuditTopic getTopicAudit(
 			@PathVariable("idProject") int idProject,
@@ -109,6 +114,7 @@ public class ProjectAuditController extends BaseRestController {
 	}
 
 	@ResponseBody
+	@ApiOperation(value="Remove a topic from the audit scope.")
 	@DeleteMapping(path="/{idProject}/audit/topic/{idTopic}")
 	public boolean removeTopic(
 		@PathVariable("idProject") int idProject,
@@ -122,7 +128,6 @@ public class ProjectAuditController extends BaseRestController {
 		projectAuditHandler.removeTopic(idProject, idTopic, false);
 		projectAuditHandler.processAndSaveGlobalAuditEvaluation(idProject);			
 		return true;
-			
 	}
 
 	@ResponseBody
@@ -151,16 +156,18 @@ public class ProjectAuditController extends BaseRestController {
 		@RequestBody String report) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("PUB verb command on /api/project/%d/audit/%d/reporti", idProject, idTopic));
+			log.debug(String.format("PUT verb command on /api/project/%d/audit/%d/reporti", idProject, idTopic));
 		}
 		
 		projectAuditHandler.saveReport(idProject, idTopic, report);
 		return true;
 	}
 
+	@ResponseBody
 	@PutMapping(path="/{idProject}/audit/weights")
-	@ApiOperation(value="Save the weights attributed for all topics in the audit. For each topic, its relative evaluation is equal to (evaluation*weight).")
-	public ResponseEntity<Boolean> saveWeight(
+	@ApiOperation(value="Save the weights attributed for all topics in the audit.",
+		notes="The sum of weights has to be equal to 100. For each topic, its relative evaluation is equal to (evaluation*weight)")
+	public boolean saveWeight(
 		@PathVariable("idProject") int idProject,
 		@RequestBody TopicWeight[] weights) throws ApplicationException {
 		
@@ -170,7 +177,7 @@ public class ProjectAuditController extends BaseRestController {
 
 		projectAuditHandler.saveWeights(idProject, Arrays.asList(weights));
 		projectAuditHandler.processAndSaveGlobalAuditEvaluation(idProject);
-		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
+		return true;
 	}
 	
 	@ResponseBody
@@ -212,14 +219,15 @@ public class ProjectAuditController extends BaseRestController {
 	 * @param type the type of file (WORD, PDF...)
 	 * @return {@code true} if the upload succeeds, {@code false} otherwise
 	 */
+	@ResponseBody
+	@ApiOperation("Upload a report file related to a topic.")
 	@PostMapping("/audit/uploadAttachement")
-	public ResponseEntity<Boolean> uploadAttachmentFile(
+	public boolean uploadAttachmentFile(
 			@RequestParam("file") MultipartFile file, 
 			@RequestParam("idProject") int idProject, 
 			@RequestParam("idTopic") int idTopic, 
 			@RequestParam("type") int type,
 			@RequestParam("label") String label) throws ApplicationException {
-
 		
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
 
@@ -241,7 +249,7 @@ public class ProjectAuditController extends BaseRestController {
 			idTopic, 
 			new AttachmentFile(auditProject.getAttachmentList().size(), filename, typeOfApplication, label));
 	
-		return new ResponseEntity<>(true, headers(), HttpStatus.OK);
+		return true;
 	}
 
 	@ApiOperation(value="Download the file associated to an audit topic.")
