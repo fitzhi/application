@@ -48,7 +48,7 @@ describe('ReportDetailFormComponent', () => {
 		component = fixture.componentInstance;
 		projectService = TestBed.inject(ProjectService);
 		projectService.project = new Project(1, 'Testing project');
-		projectService.project.audit['1'] = new AuditTopic(1, 100, 100, 'This is a perfect topic', []);
+		projectService.project.audit['1'] = new AuditTopic(1, 1, 100, 100, 'This is a perfect topic', []);
 		projectService.projectLoaded$.next(true);
 
 		referentialService = TestBed.inject(ReferentialService);
