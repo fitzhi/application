@@ -122,14 +122,12 @@ public class ProjectAuditControllerUploadAttachmentFileTest {
 
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
 		map.add("file", resource);
-		map.add("idProject", ID_PROJECT);
-		map.add("idTopic", ID_TOPIC_1);
 		map.add("label", String.format("testing label for %s", filename));
 		map.add("type", fileType);
 		
 		ResponseEntity<Boolean> response = this.restTemplate
 			.exchange(
-				"/api/project/audit/uploadAttachement", 
+				"/api/project/1/audit/1/attachment", 
 				HttpMethod.POST, 
 				new HttpEntity<>(map, headers), 
 				Boolean.class);

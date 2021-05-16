@@ -4,16 +4,12 @@ import static com.fitzhi.Error.CODE_CANNOT_RETRIEVE_ATTACHMENTFILE;
 import static com.fitzhi.Error.LIB_CANNOT_RETRIEVE_ATTACHMENTFILE;
 
 import java.text.MessageFormat;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
 import com.fitzhi.bean.ProjectAuditHandler;
 import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.controller.in.BodyParamAuditEntries;
-import com.fitzhi.controller.in.BodyParamProjectAttachmentFile;
 import com.fitzhi.data.internal.AttachmentFile;
 import com.fitzhi.data.internal.AuditTopic;
 import com.fitzhi.data.internal.TopicWeight;
@@ -25,7 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
@@ -43,6 +38,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -82,6 +78,7 @@ public class ProjectAuditController extends BaseRestController {
 	@PutMapping(path="/{idProject}/audit/topic/{idTopic}")
 	public boolean addTopic(
 		final @PathVariable("idProject") int idProject,
+		@ApiParam(name = "idTopic", value = "The topic identifier in the audit scope (design, performance...)")
 		final @PathVariable("idTopic") int idTopic) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
@@ -107,6 +104,7 @@ public class ProjectAuditController extends BaseRestController {
 	@GetMapping(path="/{idProject}/audit/topic/{idTopic}")
 	public AuditTopic getTopicAudit(
 			@PathVariable("idProject") int idProject,
+			@ApiParam(name = "idTopic", value = "The topic identifier in the audit scope (design, performance...)")
 			@PathVariable("idTopic") int idTopic) throws ApplicationException {
 
 		AuditTopic auditProject = projectAuditHandler.getTopic(idProject, idTopic);
@@ -118,6 +116,7 @@ public class ProjectAuditController extends BaseRestController {
 	@DeleteMapping(path="/{idProject}/audit/topic/{idTopic}")
 	public boolean removeTopic(
 		@PathVariable("idProject") int idProject,
+		@ApiParam(name = "idTopic", value = "The topic identifier in the audit scope (design, performance...)")
 		@PathVariable("idTopic") int idTopic) throws ApplicationException {
 	
 		if (log.isDebugEnabled()) {
@@ -135,6 +134,7 @@ public class ProjectAuditController extends BaseRestController {
 	@PutMapping(path="/{idProject}/audit/{idTopic}/evaluation/{evaluation}")
 	public boolean saveEvaluation(
 			@PathVariable("idProject") int idProject,
+			@ApiParam(name = "idTopic", value = "The topic identifier in the audit scope (design, performance...)")
 			@PathVariable("idTopic") int idTopic,
 			@PathVariable("evaluation") int evaluation) throws ApplicationException {
 	
@@ -152,6 +152,7 @@ public class ProjectAuditController extends BaseRestController {
 	@PutMapping(path="/{idProject}/audit/{idTopic}/report")
 	public boolean saveReport(
 		@PathVariable("idProject") int idProject,
+		@ApiParam(name = "idTopic", value = "The topic identifier in the audit scope (design, performance...)")
 		@PathVariable("idTopic") int idTopic,
 		@RequestBody String report) throws ApplicationException {
 		
@@ -185,6 +186,7 @@ public class ProjectAuditController extends BaseRestController {
 	@PutMapping(path="{idProject}/audit/{idTopic}/attachmentFile")
 	public boolean saveAttachmentFile(
 		@PathVariable("idProject") int idProject,
+		@ApiParam(name = "idTopic", value = "The topic identifier in the audit scope (design, performance...)")
 		@PathVariable("idTopic") int idTopic,		
 		@RequestBody AttachmentFile attachmentFile) throws ApplicationException {
 
@@ -200,6 +202,7 @@ public class ProjectAuditController extends BaseRestController {
 	@ApiOperation(value="Remove the reference of a file attached to an audit topic.")
 	public boolean removeAttachmentFile(
 		@PathVariable("idProject") int idProject,
+		@ApiParam(name="idTopic", value = "The topic identifier in the audit scope (design, performance...)")
 		@PathVariable("idTopic") int idTopic,
 		@PathVariable("idFile") int idFile) throws ApplicationException {
 
@@ -216,17 +219,20 @@ public class ProjectAuditController extends BaseRestController {
 	 * @param file the attachment file
 	 * @param idProject the project identifier
 	 * @param idTopic the topic identifier
-	 * @param type the type of file (WORD, PDF...)
+	 * @param type t
 	 * @return {@code true} if the upload succeeds, {@code false} otherwise
 	 */
 	@ResponseBody
 	@ApiOperation("Upload a report file related to a topic.")
-	@PostMapping("/audit/uploadAttachement")
+	@PostMapping("/{idProject}/audit/{idTopic}/attachment")
 	public boolean uploadAttachmentFile(
+			@PathVariable("idProject") int idProject, 
+			@ApiParam(name="idTopic", value = "The topic identifier in the audit scope (design, performance...)")
+			@PathVariable("idTopic") int idTopic, 
 			@RequestParam("file") MultipartFile file, 
-			@RequestParam("idProject") int idProject, 
-			@RequestParam("idTopic") int idTopic, 
+			@ApiParam(name="type", value = "The type of file (WORD, PDF...)")
 			@RequestParam("type") int type,
+			@ApiParam(name="label", value = "The label representation of this file on the application UI")
 			@RequestParam("label") String label) throws ApplicationException {
 		
 		String filename = StringUtils.cleanPath(file.getOriginalFilename());
@@ -256,6 +262,7 @@ public class ProjectAuditController extends BaseRestController {
 	@GetMapping(value = "/{idProject}/audit/{idTopic}/attachmentFile/{idFile}")
 	public ResponseEntity<Resource> downloadAttachmentFile(
 			@PathVariable("idProject") int idProject, 
+			@ApiParam(name = "idTopic", value = "The topic identifier in the audit scope (design, performance...)")
 			@PathVariable("idTopic") int idTopic, 
 			@PathVariable("idFile") int idFile, 
 			HttpServletRequest request) throws ApplicationException {

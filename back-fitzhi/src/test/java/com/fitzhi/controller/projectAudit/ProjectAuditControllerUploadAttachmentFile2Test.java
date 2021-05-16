@@ -62,10 +62,8 @@ public class ProjectAuditControllerUploadAttachmentFile2Test {
 		when(projectAuditHandler.getTopic(1805, 1815)).thenReturn(new AuditTopic(1815));
 		doNothing().when(projectAuditHandler).updateAttachmentFile(anyInt(), anyInt(), any(AttachmentFile.class));
 
-		this.mvc.perform(MockMvcRequestBuilders.multipart("/api/project/audit/uploadAttachement")
+		this.mvc.perform(MockMvcRequestBuilders.multipart("/api/project/1805/audit/1815/attachment")
 			.file("file", null)
-			.param("idProject", "1805")
-			.param("idTopic", "1815")
 			.param("label", "Testing label for 1805-1815")
 			.param("type", FileType.FILE_TYPE_DOC.toString()))
 			.andExpect(status().isOk())
@@ -85,10 +83,8 @@ public class ProjectAuditControllerUploadAttachmentFile2Test {
 			.getTopic(1805, 1815);
 		doNothing().when(projectAuditHandler).updateAttachmentFile(anyInt(), anyInt(), any(AttachmentFile.class));
 
-		this.mvc.perform(MockMvcRequestBuilders.multipart("/api/project/audit/uploadAttachement")
+		this.mvc.perform(MockMvcRequestBuilders.multipart("/api/project/1805/audit/1815/attachment")
 			.file("file", null)
-			.param("idProject", "1805")
-			.param("idTopic", "1815")
 			.param("label", "Testing label for 1805-1815")
 			.param("type", FileType.FILE_TYPE_DOC.toString()))
 			.andExpect(status().isInternalServerError())
