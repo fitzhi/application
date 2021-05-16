@@ -14,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fitzhi.bean.ProjectAuditHandler;
 import com.fitzhi.controller.ProjectAuditController;
-import com.fitzhi.controller.in.BodyParamAuditEntry;
 import com.fitzhi.exception.ApplicationException;
 
 import org.junit.Test;

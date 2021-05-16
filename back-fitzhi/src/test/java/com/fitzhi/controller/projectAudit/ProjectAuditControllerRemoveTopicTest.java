@@ -5,14 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.time.LocalDate;
-
 import com.fitzhi.bean.ProjectAuditHandler;
 import com.fitzhi.controller.ProjectAuditController;
-import com.fitzhi.controller.in.BodyParamAuditEntry;
-import com.fitzhi.controller.util.LocalDateAdapter;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,13 +31,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @AutoConfigureMockMvc
 public class ProjectAuditControllerRemoveTopicTest {
 
-
-	/**
-	 * Initialization of the Google JSON parser.
-	 */
-	Gson gson = new GsonBuilder()
-		      .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe()).create();
-
 	@Autowired
 	private MockMvc mvc;
 
@@ -56,7 +43,6 @@ public class ProjectAuditControllerRemoveTopicTest {
 		
 		this.mvc.perform(delete("/api/project/1805/audit/topic/1815")
 				.contentType(MediaType.APPLICATION_JSON_UTF8))
-
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().string("true"));

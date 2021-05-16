@@ -15,9 +15,7 @@ import java.time.LocalDate;
 
 import com.fitzhi.bean.ProjectAuditHandler;
 import com.fitzhi.controller.ProjectAuditController;
-import com.fitzhi.controller.in.BodyParamProjectAttachmentFile;
 import com.fitzhi.controller.util.LocalDateAdapter;
-import com.fitzhi.data.internal.AttachmentFile;
 import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -81,11 +79,6 @@ public class ProjectAuditControllerRemoveAttachmentFileTest {
 			.when(projectAuditHandler)
 			.removeAttachmentFile(anyInt(), anyInt(), anyInt());
 
-		BodyParamProjectAttachmentFile bpae = new BodyParamProjectAttachmentFile();
-		bpae.setIdProject(1805);
-		bpae.setIdTopic(1815);
-		bpae.setAttachmentFile(new AttachmentFile());
-		
 		this.mvc.perform(delete("/api/project/1805/audit/1815/attachmentFile/1")
 				.contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().isInternalServerError())
