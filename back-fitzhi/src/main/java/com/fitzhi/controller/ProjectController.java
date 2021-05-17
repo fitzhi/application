@@ -1,13 +1,17 @@
 package com.fitzhi.controller;
 
+import static com.fitzhi.Error.CODE_DASHBOARD_START;
+import static com.fitzhi.Error.CODE_GIT_ERROR;
+import static com.fitzhi.Error.CODE_IO_EXCEPTION;
 import static com.fitzhi.Error.CODE_MULTIPLE_TASK;
 import static com.fitzhi.Error.CODE_PROJECT_IS_NOT_EMPTY;
 import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
-import static com.fitzhi.Error.CODE_UNDEFINED;
+import static com.fitzhi.Error.MESSAGE_DASHBOARD_START;
+import static com.fitzhi.Error.MESSAGE_GIT_ERROR;
+import static com.fitzhi.Error.MESSAGE_MULTIPLE_TASK_WITH_PARAM;
 import static com.fitzhi.Error.MESSAGE_PROJECT_IS_NOT_EMPTY;
 import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.UNKNOWN_PROJECT;
-import static com.fitzhi.Error.getStackTrace;
 import static com.fitzhi.Global.DASHBOARD_GENERATION;
 import static com.fitzhi.Global.PROJECT;
 import static com.fitzhi.Global.deepClone;
@@ -36,7 +40,7 @@ import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.controller.util.ProjectLoader;
 import com.fitzhi.data.external.ProjectContributorDTO;
-import com.fitzhi.data.external.SunburstDTO;
+import com.fitzhi.data.external.Sunburst;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.RiskDashboard;
@@ -44,9 +48,11 @@ import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.InformationException;
 import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.source.crawler.RepoScanner;
 
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -55,6 +61,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -462,8 +469,10 @@ public class ProjectController extends BaseRestController {
 	 * @return {@code true} if the operation was successful, {@code false} otherwise.
 	 * @throws ApplicationException thrown if any problem occurs.
 	 */
+	@ResponseBody
+	@ApiOperation(value = "Add a new skill to a project.")
 	@PostMapping("{idProject}/skill/{idSkill}")
-	public ResponseEntity<Boolean> saveSkill(
+	public boolean saveSkill(
 		@PathVariable("idProject") int idProject,
 		@PathVariable("idSkill") int idSkill) throws ApplicationException {
 
@@ -479,7 +488,7 @@ public class ProjectController extends BaseRestController {
 		
 		this.projectHandler.addSkill(project, new ProjectSkill(skill.getId()));
 
-		return new ResponseEntity<Boolean>(true, headers(), HttpStatus.OK);
+		return true;
 	}
 
 	/**
@@ -492,8 +501,10 @@ public class ProjectController extends BaseRestController {
 	 * 
 	 * @throws ApplicationException thrown if any problem occurs.
 	 */
+	@ResponseBody
+	@ApiOperation (value = "Remove a skill from a project.")
 	@DeleteMapping("{idProject}/skill/{idSkill}")
-	public ResponseEntity<Boolean> revokeSkill(
+	public boolean revokeSkill(
 		@PathVariable("idProject") int idProject,
 		@PathVariable("idSkill") int idSkill) throws ApplicationException {
 
@@ -502,10 +513,8 @@ public class ProjectController extends BaseRestController {
 		}
 
 		Project project = projectHandler.get(idProject);
-
 		projectHandler.removeSkill(project, idSkill);
-
-		return new ResponseEntity<>(true, headers(), HttpStatus.OK);
+		return true;
 	}
 
 	/**
@@ -518,55 +527,48 @@ public class ProjectController extends BaseRestController {
 	 *                 date, or a staff member)
 	 * @return the Sunburst chart.
 	 */
-	@PostMapping("/sunburst")
-	public ResponseEntity<SunburstDTO> generateChartSunburst(@RequestBody SettingsGeneration settings) throws ApplicationException {
+	@ResponseBody
+	@ApiOperation(
+		value = "Collect the activities of a project into a data container ready made to be injected in the Sunburst chart component.",
+		notes = "This API is very coupled with an Angular component."
+	)
+	@PutMapping("/{idProject}/sunburst")
+	public Sunburst generateChartSunburst(
+		@PathVariable("idProject") int idProject,
+		@RequestBody SettingsGeneration settings) throws ApplicationException, InformationException  {
 
 		if (log.isDebugEnabled()) {
 			log.debug(MessageFormat.format(
-					"POST command on /sunburst with params idProject : {0}, starting from {1}, for the staff member {2}",
-					settings.getIdProject(),
-					(settings.getStartingDate() == 0) ? "EPOC" : new Date(settings.getStartingDate()),
-					settings.getIdStaffSelected()));
+				"PUT verb on /api/project/{0}/sunburst,  starting from {1}, for the staff member {2}",
+				idProject,
+				(settings.getStartingDate() == 0) ? "EPOC" : new Date(settings.getStartingDate()),
+				settings.getIdStaffSelected()));
 		}
 
-		Project project = projectHandler.get(settings.getIdProject());
+		Project project = projectHandler.find(idProject);
 
-		try {
-			if (scanner.hasAvailableGeneration(project)) {
-				return generate(project, settings);
-			}
-
-			if (log.isDebugEnabled()) {
-				log.debug("Tasks present in the tasks collection");
-				log.debug(tasks.trace());
-			}
-
-			if (tasks.hasActiveTask(DASHBOARD_GENERATION, PROJECT, project.getId())) {
-				if (log.isDebugEnabled()) {
-					log.debug("The generation has already been called for the project " + project.getName()
-							+ ". Please wait !");
-				}
-				return new ResponseEntity<>(
-						new SunburstDTO(project.getId(), project.getStaffEvaluation(), CODE_MULTIPLE_TASK,
-								"A dashboard generation has already been launched for " + project.getName()),
-						headers(), HttpStatus.OK);
-			}
-
-			if (log.isDebugEnabled()) {
-				log.debug("The generation will be processed asynchronously !");
-			}
-			scanner.generateAsync(project, settings);
-			return new ResponseEntity<>(new SunburstDTO(project.getId(), project.getStaffEvaluation(), null,
-					HttpStatus.CREATED.value(),
-					"The dashboard generation has been launched. Operation might last a while. Please try later !"),
-					headers(),
-					HttpStatus.OK);
-		} catch (Exception e) {
-			log.error(getStackTrace(e));
-			return new ResponseEntity<>(
-					new SunburstDTO(project.getId(), project.getStaffEvaluation(), null, -1, e.getMessage()), headers(),
-					HttpStatus.BAD_REQUEST);
+		if (scanner.hasAvailableGeneration(project)) {
+			return generate(project, settings);
 		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("Tasks already present in the tasks collection");
+			log.debug(tasks.trace());
+		}
+
+		if (tasks.hasActiveTask(DASHBOARD_GENERATION, PROJECT, idProject)) {
+			if (log.isDebugEnabled()) {
+				log.debug(MessageFormat.format(MESSAGE_MULTIPLE_TASK_WITH_PARAM, project.getName()));
+			}
+			throw new InformationException (CODE_MULTIPLE_TASK, MESSAGE_MULTIPLE_TASK_WITH_PARAM, project.getName());
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("The generation will be processed asynchronously !");
+		}
+		scanner.generateAsync(project, settings);
+
+		throw new InformationException (CODE_DASHBOARD_START, MESSAGE_DASHBOARD_START);
 	}
 
 	/**
@@ -577,32 +579,28 @@ public class ProjectController extends BaseRestController {
 	 *                 starting date, or the filtered staff member.
 	 * @return the generated risks dashboard.
 	 */
-	private ResponseEntity<SunburstDTO> generate(final Project project, final SettingsGeneration settings) {
+	private Sunburst generate(final Project project, final SettingsGeneration settings) 
+		throws ApplicationException, InformationException {
+		
 		try {
 			tasks.addTask(DASHBOARD_GENERATION, PROJECT, project.getId());
-		} catch (final Exception e) {
-			return new ResponseEntity<>(
-					new SunburstDTO(project.getId(), project.getStaffEvaluation(), CODE_MULTIPLE_TASK,
-							"A dashboard generation has already been launched for " + project.getName()),
-					headers(), HttpStatus.OK);
+		} catch (final ApplicationException e) {
+			throw new InformationException(CODE_MULTIPLE_TASK,
+				String.format(MESSAGE_MULTIPLE_TASK_WITH_PARAM, project.getName()), e);
 		}
+
 		try {
 			RiskDashboard data = scanner.generate(project, settings);
-			if (shuffleService.isShuffleMode()) {
-				if (log.isInfoEnabled()) {
-					log.info("Shuffling the sunburst data");
-				}
-			}
-			return new ResponseEntity<>(new SunburstDTO(project.getId(), project.getStaffEvaluation(), data),
-					new HttpHeaders(), HttpStatus.OK);
-		} catch (final Exception e) {
-			log.error(getStackTrace(e));
-			return new ResponseEntity<>(new SunburstDTO(UNKNOWN_PROJECT, -1, null, CODE_UNDEFINED, e.getMessage()),
-					new HttpHeaders(), HttpStatus.BAD_REQUEST);
+			return new Sunburst(project.getId(), project.getStaffEvaluation(), data);
+		} catch (GitAPIException gae) {
+			throw new ApplicationException(CODE_GIT_ERROR, MESSAGE_GIT_ERROR, project.getId(), project.getName());
+		} catch (IOException ioe) {
+			throw new ApplicationException(CODE_IO_EXCEPTION, ioe.getMessage());
 		} finally {
 			try {
 				tasks.completeTask(DASHBOARD_GENERATION, PROJECT, project.getId());
 			} catch (ApplicationException e) {
+				// We choke this exception. There is no alternative to a failure in completion.
 				log.error("Internal error", e);
 			}
 		}
@@ -681,10 +679,7 @@ public class ProjectController extends BaseRestController {
 			log.debug(String.format("Removing project with %d", idProject));
 		}
 
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
+		Project project = projectHandler.find(idProject);
 
 		// We renitialize the local repository if the user asks for a RESET, comparing to a REFRESH 
 		projectHandler.saveLocationRepository(idProject, null);
@@ -722,7 +717,7 @@ public class ProjectController extends BaseRestController {
 	 * @throws NotFoundException if the project does not exist. 
 	 * @throws ApplicationException if the any problem occurs, most probably an {@link IOException}
 	 */
-	@PostMapping(value = "/{idProject}/sunburst")
+	@PatchMapping(value = "/{idProject}/sunburst")
 	public ResponseEntity<String> reloadSunburstChart(final @PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
 		
 		if (log.isDebugEnabled()) {

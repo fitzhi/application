@@ -13,10 +13,11 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.InformationException;
 
 /**
  * <p>
- * This class intercepts all {@link ApplicationException} thrown by the backend server 
+ * This class intercepts all {@link ApplicationException} or {@link InformationException}  thrown by the backend server 
  * and convert them to a valid HTTP response  .
  * </p>
  * 
@@ -37,4 +38,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>(new ApiError(HttpStatus.NOT_FOUND, ex.errorCode,  ex.errorMessage, ex),
 				HttpStatus.NOT_FOUND);
 	}
+
+	@ExceptionHandler(InformationException.class)
+	protected ResponseEntity<Object> handleNotFoundException(InformationException ie) {
+		return new ResponseEntity<>(new ApiError(HttpStatus.PROCESSING, ie.informationCode, ie.informationMessage, ie),
+				HttpStatus.PROCESSING);
+	}
+
 }

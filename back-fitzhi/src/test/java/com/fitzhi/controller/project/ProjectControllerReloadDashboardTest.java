@@ -2,13 +2,15 @@ package com.fitzhi.controller.project;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fitzhi.bean.CacheDataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.ProjectController;
+import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.RepoScanner;
@@ -25,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -40,8 +43,6 @@ import org.springframework.test.web.servlet.MockMvc;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class ProjectControllerReloadDashboardTest {
-	
-	private int UNKNOWN_ID_PROJECT = 999999;
 	
 	/**
 	 * Initialization of the Google JSON parser.
@@ -70,17 +71,39 @@ public class ProjectControllerReloadDashboardTest {
 	@Test
 	@WithMockUser
 	public void testReloadDashboardUnknownProject() throws Exception {
-		this.mvc.perform(post("/api/project/" + UNKNOWN_ID_PROJECT + "/sunburst")).andExpect(status().isNotFound());
+
+		doNothing().when(repoScanner).generateAsync(any(), any());
+
+		SettingsGeneration sg = new SettingsGeneration(99999, -1);
+
+		this.mvc.perform(patch("/api/project/99999/sunburst")
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(gson.toJson(sg)))
+			.andExpect(status().isNotFound());
+
+		Mockito.verify(repoScanner, never()).generateAsync(any(), any());
+		Mockito.verify(repoScanner, never()).hasAvailableGeneration(any());
 	}
 	
 	@Test
 	@WithMockUser
 	public void testReloadDashboardKnownProject() throws Exception {
+		
 		doNothing().when(repoScanner).generateAsync(any(), any());
-		this.mvc.perform(post("/api/project/1789/sunburst")).andExpect(status().isAccepted());
+
+		SettingsGeneration sg = new SettingsGeneration(1789, -1);
+
+		this.mvc.perform(patch("/api/project/1789/sunburst")
+			.contentType(MediaType.APPLICATION_JSON_UTF8)
+			.content(gson.toJson(sg)))
+			.andExpect(status().isAccepted());
+
 		Mockito.verify(cacheDataHandler, times(1)).removeRepository(any());
-		Assert.assertNotNull("The location repository should NOT be reset", projectHandler.get(1789).getLocationRepository());
-		Assert.assertEquals("myLocationRepository", projectHandler.get(1789).getLocationRepository());
+
+		Project project = projectHandler.get(1789);
+		Assert.assertNotNull(project);
+		Assert.assertNotNull("The location repository should NOT be reset", project.getLocationRepository());
+		Assert.assertEquals("myLocationRepository", project.getLocationRepository());
 	}
 
 	@After
