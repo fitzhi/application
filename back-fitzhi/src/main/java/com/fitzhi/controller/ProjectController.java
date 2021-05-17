@@ -648,7 +648,7 @@ public class ProjectController extends BaseRestController {
 		dataHandler.removeCrawlerFiles(project);
 
 		// Launching the asynchronous generation
-		scanner.generateAsync(project, new SettingsGeneration(project.getId()));
+		scanner.generateAsync(project, new SettingsGeneration(idProject));
 		
 		return ResponseEntity.accepted().build();
 	}
