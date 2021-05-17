@@ -215,15 +215,18 @@ public class ProjectController extends BaseRestController {
 	 * @throws ApplicationException thrown if an error occurs during the treatment
 	 * @throws NotFoundException thrown if the search failed to find a project
 	 */
-	@ApiOperation(value = "Update the given project.", notes = "Nota bene : The returned project does not transport the password.")
+	@ResponseBody
+	@ApiOperation(
+		value = "Search a project by its name."
+	)
 	@GetMapping(path = "/name/{projectName}")
 	public Project read(@PathVariable("projectName") String projectName) throws ApplicationException, NotFoundException {
 
 		Optional<Project> result = projectHandler.lookup(projectName);
 		if (!result.isPresent()) {
-				throw new NotFoundException(
-					CODE_PROJECT_NOFOUND, 
-					String.format("Cannot find a Project with the name %s", projectName));
+			throw new NotFoundException(
+				CODE_PROJECT_NOFOUND, 
+				String.format("Cannot find a Project with the name %s", projectName));
 		}
 
 		// We deep clone the project because we will change the password and we do not want to save this modification.
@@ -627,7 +630,7 @@ public class ProjectController extends BaseRestController {
 	)
 	@DeleteMapping(value = "/{idProject}/sunburst")
 	public ResponseEntity<Void> resetSunburstChart(
-		final @PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
+		final @PathVariable("idProject") int idProject) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Removing project with %d", idProject));
