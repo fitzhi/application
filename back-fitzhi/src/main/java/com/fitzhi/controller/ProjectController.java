@@ -572,41 +572,6 @@ public class ProjectController extends BaseRestController {
 	}
 
 	/**
-	 * Generate the dashboard.
-	 * 
-	 * @param project  the passed project
-	 * @param settings parameters sent to the dashboard generation such as the
-	 *                 starting date, or the filtered staff member.
-	 * @return the generated risks dashboard.
-	 */
-	private Sunburst generate(final Project project, final SettingsGeneration settings) 
-		throws ApplicationException, InformationException {
-		
-		try {
-			tasks.addTask(DASHBOARD_GENERATION, PROJECT, project.getId());
-		} catch (final ApplicationException e) {
-			throw new InformationException(CODE_MULTIPLE_TASK,
-				String.format(MESSAGE_MULTIPLE_TASK_WITH_PARAM, project.getName()), e);
-		}
-
-		try {
-			RiskDashboard data = scanner.generate(project, settings);
-			return new Sunburst(project.getId(), project.getStaffEvaluation(), data);
-		} catch (GitAPIException gae) {
-			throw new ApplicationException(CODE_GIT_ERROR, MESSAGE_GIT_ERROR, project.getId(), project.getName());
-		} catch (IOException ioe) {
-			throw new ApplicationException(CODE_IO_EXCEPTION, ioe.getMessage());
-		} finally {
-			try {
-				tasks.completeTask(DASHBOARD_GENERATION, PROJECT, project.getId());
-			} catch (ApplicationException e) {
-				// We choke this exception. There is no alternative to a failure in completion.
-				log.error("Internal error", e);
-			}
-		}
-	}
-
-	/**
 	 * @param idProject the project identifier
 	 * @return the contributors who have been involved in the project
 	 */
@@ -641,22 +606,6 @@ public class ProjectController extends BaseRestController {
 
 	/**
 	 * <p>
-	 * Initialize the password of the project.
-	 * </p>
-	 * 
-	 * <i>The project has to be clone to avoid to be saved with a {@code null} value</i>
-	 * z
-	 * @param project the given project
-	 * @return a cloned project without password
-	 */
-	private Project buildProjectWithoutPassword(Project project) {
-		Project clone = (Project) deepClone(project);
-		clone.setPassword(null);
-		return clone;
-	}
-
-	/**
-	 * <p>
 	 * Delete the current Sunburst dashboard <em>and start the generation of a new Sunburst chart in an asynchronous mode</em>.
 	 * </p>
 	 * <p>
@@ -671,6 +620,11 @@ public class ProjectController extends BaseRestController {
 	 * @throws NotFoundException if the project does not exist. 
 	 * @throws ApplicationException if the any problem occurs, most probably an {@link IOException}
 	 */
+	@ApiOperation(
+		value = "Delete the current Sunburst data container, and start the generation of a new chart in an asynchronous mode",
+		code = 202,
+		notes = "This endpoint requests for the deletion of the sunburst data, and triggers the generation of a new one."
+	)
 	@DeleteMapping(value = "/{idProject}/sunburst")
 	public ResponseEntity<Void> resetSunburstChart(
 		final @PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
@@ -701,11 +655,13 @@ public class ProjectController extends BaseRestController {
 	 * Generate the sunburst chart. 
 	 * </p>
 	 * <p>
+	 * 
 	 * <ul>
 	 * <li>This method can be invoked many times with the same result. This method is <b>idempotent</b></i></li>
 	 * <li>This method updates the level of risk for the given project and the missions of the developers involved in its.</li>
 	 * </ul>
-	 * Therefore the REST verb is a <b>POST</b> with an empty BODY. Only the project ID is necessary.
+	 * 
+	 * The chosen REST verb is a <b>PATCH</b> with an empty BODY. Only the project ID is necessary.
 	 * </p>
 	 * <p>
 	 * This API entry returns immediatly with an empty response with a {@link HttpStatus#ACCEPTED ACCEPTED 202} status. 
@@ -718,16 +674,18 @@ public class ProjectController extends BaseRestController {
 	 * @throws ApplicationException if the any problem occurs, most probably an {@link IOException}
 	 */
 	@PatchMapping(value = "/{idProject}/sunburst")
+	@ApiOperation(
+		value = "Request to re-generate the project-staff risks data.",
+		code = 202,
+		notes = "The verb is 'PATCH' to isolate this request from the initial request with a 'PUT' method."
+	)
 	public ResponseEntity<String> reloadSunburstChart(final @PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Request for the generation of the Sunburst chart for project %d", idProject));
 		}
 
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
+		Project project = projectHandler.find(idProject);
 
 		cacheDataHandler.removeRepository(project);
 
@@ -735,6 +693,57 @@ public class ProjectController extends BaseRestController {
 		scanner.generateAsync(project, new SettingsGeneration(project.getId()));
 		
 		return ResponseEntity.accepted().build();
+	}
+
+	/**
+	 * <p>
+	 * Initialize the password of the project.
+	 * </p>
+	 * 
+	 * <i>The project has to be clone to avoid to be saved with a {@code null} value</i>
+	 * z
+	 * @param project the given project
+	 * @return a cloned project without password
+	 */
+	private Project buildProjectWithoutPassword(Project project) {
+		Project clone = (Project) deepClone(project);
+		clone.setPassword(null);
+		return clone;
+	}
+
+	/**
+	 * Generate the dashboard.
+	 * 
+	 * @param project  the passed project
+	 * @param settings parameters sent to the dashboard generation such as the
+	 *                 starting date, or the filtered staff member.
+	 * @return the generated risks dashboard.
+	 */
+	private Sunburst generate(final Project project, final SettingsGeneration settings) 
+		throws ApplicationException, InformationException {
+		
+		try {
+			tasks.addTask(DASHBOARD_GENERATION, PROJECT, project.getId());
+		} catch (final ApplicationException e) {
+			throw new InformationException(CODE_MULTIPLE_TASK,
+				String.format(MESSAGE_MULTIPLE_TASK_WITH_PARAM, project.getName()), e);
+		}
+
+		try {
+			RiskDashboard data = scanner.generate(project, settings);
+			return new Sunburst(project.getId(), project.getStaffEvaluation(), data);
+		} catch (GitAPIException gae) {
+			throw new ApplicationException(CODE_GIT_ERROR, MESSAGE_GIT_ERROR, project.getId(), project.getName());
+		} catch (IOException ioe) {
+			throw new ApplicationException(CODE_IO_EXCEPTION, ioe.getMessage());
+		} finally {
+			try {
+				tasks.completeTask(DASHBOARD_GENERATION, PROJECT, project.getId());
+			} catch (ApplicationException e) {
+				// We choke this exception. There is no alternative to a failure in completion.
+				log.error("Internal error", e);
+			}
+		}
 	}
 
 }
