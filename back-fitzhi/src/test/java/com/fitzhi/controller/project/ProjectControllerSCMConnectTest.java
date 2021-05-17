@@ -8,12 +8,14 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.ProjectController;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.exception.NotFoundException;
+import com.fitzhi.source.crawler.RepoScanner;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -29,14 +31,14 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 /**
- * Test of the method {@link ProjectController#loadSkills(int)}
+ * Test of the method {@link ProjectController#scmConnect(int)}
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectControllerLoadSkillsTest {
+public class ProjectControllerSCMConnectTest {
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -49,25 +51,42 @@ public class ProjectControllerLoadSkillsTest {
 	@MockBean
 	private ProjectHandler projectHandler;
 
+	@MockBean
+	private RepoScanner crawler;
+
 	@Test
 	@WithMockUser
-	public void loadSkillsOK() throws Exception {
+	public void connectionSucceeds() throws Exception {
 
-		Project p = new Project(1789, "1789");
-		p.getSkills().put(1, new ProjectSkill(1));
-		p.getSkills().put(2, new ProjectSkill(2));
+		Project p = new Project(1789, "1789");		
 		when(projectHandler.find(1789)).thenReturn (p);
+		when(crawler.testConnection(p)).thenReturn(true);
 
-		this.mvc.perform(get("/api/project/1789/skills"))
+		this.mvc.perform(get("/api/project/1789/test"))
 			.andExpect(status().isOk())
-			.andExpect(jsonPath("$[0].idSkill", is(1)))
-			.andExpect(jsonPath("$[1].idSkill", is(2)))
+			.andExpect(content().string("true"))
 			.andDo(print());
 
 		Mockito.verify(projectHandler, times(1)).find(1789);
-
+		Mockito.verify(crawler, times(1)).testConnection(p);
 	}
 
+	@Test
+	@WithMockUser
+	public void connectionFails() throws Exception {
+
+		Project p = new Project(1789, "1789");		
+		when(projectHandler.find(1789)).thenReturn (p);
+		when(crawler.testConnection(p)).thenReturn(false);
+
+		this.mvc.perform(get("/api/project/1789/test"))
+			.andExpect(status().isOk())
+			.andExpect(content().string("false"))
+			.andDo(print());
+
+		Mockito.verify(projectHandler, times(1)).find(1789);
+		Mockito.verify(crawler, times(1)).testConnection(p);
+	}
 
 	@Test
 	@WithMockUser
@@ -75,7 +94,7 @@ public class ProjectControllerLoadSkillsTest {
 
 		when(projectHandler.find(666)).thenThrow(new NotFoundException(CODE_PROJECT_NOFOUND, "Error message"));
 
-		this.mvc.perform(get("/api/project/666/skills"))
+		this.mvc.perform(get("/api/project/666/test"))
 			.andExpect(status().isNotFound())
 			.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)))
 			.andExpect(jsonPath("$.message", is("Error message")));

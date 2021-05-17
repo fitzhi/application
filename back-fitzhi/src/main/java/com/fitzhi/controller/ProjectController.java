@@ -402,6 +402,8 @@ public class ProjectController extends BaseRestController {
 	 * @return a collection of projects
 	 * @throws ApplicationException throw if any problem occurs
 	 */
+	@ResponseBody
+	@ApiOperation(value = "Loads and returns all projects declared in the application")
 	@GetMapping("")
 	public Collection<Project> readAll() throws ApplicationException {
 
@@ -439,16 +441,15 @@ public class ProjectController extends BaseRestController {
 	 * Test the connection settings for a given project.
 	 * 
 	 * @param idProject the project identifier
-	 * @return {@code true} if the
+	 * @return {@code true} if the connection did success, {@code false} otherwise
 	 */
-	@GetMapping(value = "/test/{idProject}")
-	public ResponseEntity<Boolean> test(@PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
-		
+	@ResponseBody
+	@ApiOperation(value = "Test the connection settings for a given project.")
+	@GetMapping(value = "/{idProject}/test")
+	public boolean scmConnect(@PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
 		Project project = projectHandler.find(idProject);
-		
 		boolean connected = this.scanner.testConnection(project);
-		
-		return new ResponseEntity<>(connected, headers(), HttpStatus.OK);
+		return connected;
 	}
 
 	/**
