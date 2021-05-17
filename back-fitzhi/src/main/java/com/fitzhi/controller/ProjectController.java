@@ -474,14 +474,14 @@ public class ProjectController extends BaseRestController {
 	 */
 	@ResponseBody
 	@ApiOperation(value = "Add a new skill to a project.")
-	@PostMapping("{idProject}/skill/{idSkill}")
+	@PutMapping("{idProject}/skill/{idSkill}")
 	public boolean saveSkill(
 		@PathVariable("idProject") int idProject,
 		@PathVariable("idSkill") int idSkill) throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
-				"POST command on %d/project/skill/%d", idProject, idSkill));
+				"POST command on /api/project/%d/skill/%d", idProject, idSkill));
 		}
 
 		Project project = projectHandler.get(idProject);

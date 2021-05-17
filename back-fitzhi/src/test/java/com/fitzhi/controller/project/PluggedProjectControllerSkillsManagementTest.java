@@ -1,7 +1,7 @@
 package com.fitzhi.controller.project;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -58,7 +58,7 @@ public class PluggedProjectControllerSkillsManagementTest {
 			log.debug("Skill found " + skill.getTitle());
 		}
 				
-		this.mvc.perform(post("/api/project/1/skill/2"))
+		this.mvc.perform(put("/api/project/1/skill/2"))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(content().string("true"));
