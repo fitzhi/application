@@ -55,20 +55,20 @@ public class ProjectControllerReactivateProjectTest {
 	@Test
 	@WithMockUser
 	public void testInactivateUnknownProject() throws Exception {
-		this.mvc.perform(post("/api/project/rpc/reactivation/" + UNKNOWN_ID_PROJECT)).andExpect(status().isNotFound());
+		this.mvc.perform(post(String.format("/api/project/%d/rpc/reactivation", UNKNOWN_ID_PROJECT))).andExpect(status().isNotFound());
 	}
 	
 	@Test
 	@WithMockUser
 	public void testReactivateProjectOk() throws Exception {
-		this.mvc.perform(post("/api/project/rpc/reactivation/" + 1789)).andExpect(status().isOk());
+		this.mvc.perform(post(String.format("/api/project/%d/rpc/reactivation", 1789))).andExpect(status().isOk());
 		Project p = projectHandler.get(1789);
 		Assert.assertTrue(p.isActive());
 	}
 	
 	@After
 	public void after() throws Exception {
-		projectHandler.getProjects().remove(1789);
+		projectHandler.removeProject(1789);
 	}
 	
 }

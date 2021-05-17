@@ -60,28 +60,40 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Slf4j
 @RestController
 @RequestMapping("/api/project")
 @Api(
 	tags="Project controller API",
-	description = "API endpoints to manage the projects declared inside the application."
+	description = "API endpoints to manage the projects declared in the application."
 )
 public class ProjectController extends BaseRestController {
 
+	/**
+	 * The Project management service
+	 */
 	@Autowired
 	ProjectHandler projectHandler;
 
+	/**
+	 * The Skill management service
+	 */
 	@Autowired
 	SkillHandler skillHandler;
 
+	/**
+	 * The Staff management service
+	 */
 	@Autowired
 	StaffHandler staffHandler;
 
@@ -138,6 +150,7 @@ public class ProjectController extends BaseRestController {
 	 * @return a ResponseEntity with just the location containing the URI of the newly
 	 *         created project
 	 */
+	@ApiOperation("Create a new project.")
 	@PostMapping("")
 	public ResponseEntity<Void> create(UriComponentsBuilder builder, @RequestBody Project project)
 			throws ApplicationException {
@@ -158,10 +171,12 @@ public class ProjectController extends BaseRestController {
 	 * <p>
 	 * Update the project identified by the given {@link Project#getId() idProject}
 	 * </p>
+	 * 
 	 * @param idProject the project identifier. The projet identifier is hosted in the URL in accordance with the Rest naming conventions
 	 * @param project the project to update. This project is hosted inside the body of the {@code PUT} Medhod.
 	 * @return an empty content for an update request
 	 */
+	@ApiOperation(value = "Update the given project.")
 	@PutMapping("/{idProject}")
 	public ResponseEntity<Void> updateProject(@PathVariable("idProject") int idProject, @RequestBody Project project)
 			throws NotFoundException, ApplicationException {
@@ -194,8 +209,9 @@ public class ProjectController extends BaseRestController {
 	 * @throws ApplicationException thrown if an error occurs during the treatment
 	 * @throws NotFoundException thrown if the search failed to find a project
 	 */
+	@ApiOperation(value = "Update the given project.", notes = "Nota bene : The returned project does not transport the password.")
 	@GetMapping(path = "/name/{projectName}")
-	public ResponseEntity<Project> read(@PathVariable("projectName") String projectName) throws ApplicationException, NotFoundException {
+	public Project read(@PathVariable("projectName") String projectName) throws ApplicationException, NotFoundException {
 
 		Optional<Project> result = projectHandler.lookup(projectName);
 		if (!result.isPresent()) {
@@ -205,10 +221,7 @@ public class ProjectController extends BaseRestController {
 		}
 
 		// We deep clone the project because we will change the password and we do not want to save this modification.
-		return new ResponseEntity<>(
-			new Project(buildProjectWithoutPassword(result.get())),
-			headers(), 
-			HttpStatus.OK);
+		return new Project(buildProjectWithoutPassword(result.get()));
 
 	}
 
@@ -222,8 +235,10 @@ public class ProjectController extends BaseRestController {
 	 * @throws ApplicationException thrown if an error occurs during the treatment, (most probably due to an {@link IOException})
 	 * @throws NotFoundException thrown if the project to delete does not exist (any more)
 	 */
+	@ResponseBody
+	@ApiOperation("Remove the given project.")
 	@DeleteMapping(value = "/{idProject}")
-	public ResponseEntity<Object> removeProject(@PathVariable("idProject") int idProject)
+	public void removeProject(@PathVariable("idProject") int idProject)
 			throws NotFoundException, ApplicationException {
 
 		Project project = projectHandler.find(idProject);
@@ -239,12 +254,10 @@ public class ProjectController extends BaseRestController {
 		}
 
 		projectHandler.removeProject(project.getId());
-
-		return new ResponseEntity<>(null, headers(), HttpStatus.OK);
 	}
 
 	/**
-	 * <strong>Inactivation</strong> the project corresponding to the identifier id
+	 * <strong>Inactivate</strong> the project corresponding to the identifier id
 	 * 
 	 * @param idProject the given project identifier
 	 * @return an <strong>empty</strong> {@code HTTP} response.
@@ -252,15 +265,15 @@ public class ProjectController extends BaseRestController {
 	 * @throws ApplicationException thrown if an error occurs during the treatment, (most probably due to an {@link IOException})
 	 * @throws NotFoundException thrown if the project to inactivate does not exist (any more?)
 	 */
-	@PostMapping(value = "/rpc/inactivation/{idProject}")
-	public ResponseEntity<Object> inactivateProject(@PathVariable("idProject") int idProject)
+	@ResponseBody
+	@ApiOperation(value = "Inactivate the project corresponding to the given identifier.")
+	@PostMapping(value = "/{idProject}/rpc/inactivation")
+	public void inactivateProject(@PathVariable("idProject") int idProject)
 			throws NotFoundException, ApplicationException {
 
 		Project project = projectHandler.find(idProject);
 		
 		projectHandler.inactivateProject(project);
-
-		return new ResponseEntity<>(null, headers(), HttpStatus.OK);
 	}
 
 	/**
@@ -272,15 +285,14 @@ public class ProjectController extends BaseRestController {
 	 * @throws ApplicationException thrown if an error occurs during the treatment, (most probably due to an {@link IOException})
 	 * @throws NotFoundException thrown if the project to reactivate does not exist (any more?)
 	 */
-	@PostMapping(value = "/rpc/reactivation/{idProject}")
-	public ResponseEntity<Object> reactivateProject(@PathVariable("idProject") int idProject)
+	@ApiOperation(value = "Reactivate the project corresponding to the given identifier.")
+	@PostMapping(value = "/{idProject}/rpc/reactivation")
+	public void reactivateProject(@PathVariable("idProject") int idProject)
 			throws NotFoundException, ApplicationException {
 		
 		Project project = projectHandler.find(idProject);
 
 		projectHandler.reactivateProject(project);
-
-		return new ResponseEntity<>(null, headers(), HttpStatus.OK);
 	}
 
 	/**
@@ -290,13 +302,14 @@ public class ProjectController extends BaseRestController {
 	 *         query failed.
 	 * 
 	 */
+	@ApiOperation("This method is not allowed.")
 	@DeleteMapping()
 	public ResponseEntity<Object> removeAllProjects() {
 		return new ResponseEntity<>(HttpStatus.METHOD_NOT_ALLOWED);
 	}
 
 	/**
-	 * Read and return a project corresponding to the passed identifier
+	 * Read and return a project corresponding to the passed identifier.
 	 * 
 	 * @param idProject the searched project identifier
 	 * @return the HTTP Response with the retrieved project, or an empty one if the
@@ -305,17 +318,15 @@ public class ProjectController extends BaseRestController {
 	 * @throws ApplicationException thrown if an error occurs during the treatment, (most probably due to an {@link IOException})
 	 * @throws NotFoundException thrown if the project does not exist (any more?)
 	 */
+	@ResponseBody
+	@ApiOperation(value = "Read and return a project corresponding to the passed identifier.")
 	@GetMapping(value = "/{idProject}")
-	public ResponseEntity<Project> read(@PathVariable("idProject") int idProject) throws ApplicationException, NotFoundException {
+	public Project read(@PathVariable("idProject") int idProject) throws ApplicationException, NotFoundException {
 
 		Project project = projectHandler.find(idProject);
 
 		// We hide the password because we do not want to transport the GIT password on the network.
-		return new ResponseEntity<>(
-				buildProjectWithoutPassword(project), 
-				headers(),
-				HttpStatus.OK);
-				
+		return buildProjectWithoutPassword(project);
 	}
 
 	/**
@@ -325,13 +336,15 @@ public class ProjectController extends BaseRestController {
 	 *                          probably if the project does not exist for the given
 	 *                          identifier.
 	 */
-	@GetMapping(value = "/skills/{idProject}")
-	public ResponseEntity<Collection<ProjectSkill>> get(final @PathVariable("idProject") int idProject)
+	@ResponseBody
+	@ApiOperation("Read and return the skills registered for the given project.")
+	@GetMapping(value = "/{idProject}/skills")
+	public Collection<ProjectSkill> loadSkills(final @PathVariable("idProject") int idProject)
 			throws ApplicationException {
 
 		Project project = projectHandler.find(idProject);
 
-		return new ResponseEntity<>(project.getSkills().values(), headers(), HttpStatus.OK);
+		return project.getSkills().values();
 	}
 
 	/**
