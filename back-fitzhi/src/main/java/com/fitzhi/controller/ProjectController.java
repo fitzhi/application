@@ -319,7 +319,7 @@ public class ProjectController extends BaseRestController {
 	 * @throws NotFoundException thrown if the project does not exist (any more?)
 	 */
 	@ResponseBody
-	@ApiOperation(value = "Read and return a project corresponding to the passed identifier.")
+	@ApiOperation(value = "Load and return the project corresponding to the passed identifier.")
 	@GetMapping(value = "/{idProject}")
 	public Project read(@PathVariable("idProject") int idProject) throws ApplicationException, NotFoundException {
 
@@ -337,7 +337,7 @@ public class ProjectController extends BaseRestController {
 	 *                          identifier.
 	 */
 	@ResponseBody
-	@ApiOperation("Read and return the skills registered for the given project.")
+	@ApiOperation("Load and return the skills registered for the given project.")
 	@GetMapping(value = "/{idProject}/skills")
 	public Collection<ProjectSkill> loadSkills(final @PathVariable("idProject") int idProject)
 			throws ApplicationException {
@@ -354,8 +354,10 @@ public class ProjectController extends BaseRestController {
 	 * @param idProject the project identifier
 	 * @return the HTTP Response with an array of branches, or an empty one if the query failed.
 	 */
-	@GetMapping(value = "/branches/{idProject}")
-	public ResponseEntity<String[]> branches(@PathVariable("idProject") int idProject) throws ApplicationException {
+	@ResponseBody
+	@ApiOperation(value = "Retrieve and return the branches detected on the GIT repository of the given project (identified by its ID).")
+	@GetMapping(value = "/{idProject}/branches")
+	public String[] branches(@PathVariable("idProject") int idProject) throws ApplicationException {
 
 		Project project = projectHandler.find(idProject);
 
@@ -390,7 +392,7 @@ public class ProjectController extends BaseRestController {
 			Arrays.stream(branches).forEach(branch -> log.debug(branch));
 		}			
 						
-		return new ResponseEntity<>(branches, headers(), HttpStatus.OK);
+		return branches;
 	}
 
 	/**

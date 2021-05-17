@@ -37,7 +37,7 @@ import com.google.gson.GsonBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectControllerBranchesTest {
+public class PluggedProjectControllerBranchesTest {
 
 	private int UNKNOWN_ID_PROJECT = 999999;
 	/**
@@ -63,14 +63,14 @@ public class ProjectControllerBranchesTest {
 	@Test
 	@WithMockUser
 	public void testBranchesUnknownProject() throws Exception {
-		this.mvc.perform(get("/api/project/branches/" + UNKNOWN_ID_PROJECT)).andExpect(status().isNotFound());
+		this.mvc.perform(get(String.format("/api/project/%d/branches", UNKNOWN_ID_PROJECT))).andExpect(status().isNotFound());
 	}
 	
 	@Test
 	@WithMockUser
 	public void testBranchesProjectOk() throws Exception {
 
-		MvcResult result = this.mvc.perform(get("/api/project/branches/" + 1789))
+		MvcResult result = this.mvc.perform(get(String.format("/api/project/%d/branches", 1789)))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))				
 			.andDo(print())
