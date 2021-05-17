@@ -277,13 +277,12 @@ export class ProjectService extends InternalService {
 	* @param idProject the project identifier
 	* @param idSkill the skill identifier
 	*/
-	addSkill(idProject: number, idSkill: number): Observable<BooleanDTO> {
+	addSkill$(idProject: number, idSkill: number): Observable<Boolean> {
 		if (traceOn()) {
-			console.log('Adding the skill  ' + idSkill + ' for the project whom id is ' + idProject);
+			console.log(`Adding the skill ${idSkill} for the project with id ${idProject}`);
 		}
-		const body = { idProject: idProject, idSkill: idSkill };
 		return this.httpClient
-			.post<BooleanDTO>(this.backendSetupService.url() + '/project/skill/add', body, httpOptions)
+			.put<Boolean>(`${this.backendSetupService.url()}/project/${idProject}/skill/${idSkill}`, httpOptions)
 			.pipe(take(1));
 	}
 
@@ -292,13 +291,12 @@ export class ProjectService extends InternalService {
 	 * @param idProject the project identifier
 	 * @param idSkill the skill identifier
 	 */
-	delSkill(idProject: number, idSkill: number): Observable<BooleanDTO> {
+	delSkill$(idProject: number, idSkill: number): Observable<Boolean> {
 		if (traceOn()) {
-			console.log('Remove a the skill with ID ' + idSkill + ' from the project with ID ' + idProject);
+			console.log(`Remove the skill with ID ${idSkill} from the project with ID ${idProject}`);
 		}
-		const body = { idProject: idProject, idSkill: idSkill };
 		return this.httpClient
-			.post<BooleanDTO>(this.backendSetupService.url() + '/project/skill/del', body, httpOptions)
+			.delete<Boolean>(`${this.backendSetupService.url()}/project/${idProject}/skill/${idSkill}`, httpOptions)
 			.pipe(take(1));
 	}
 

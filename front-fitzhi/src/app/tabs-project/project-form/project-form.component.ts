@@ -540,7 +540,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
 		if (this.projectService.project.id)  {
-			this.updateSkill(this.projectService.project.id, idSkill, this.projectService.addSkill.bind(this.projectService));
+			this.updateSkill(this.projectService.project.id, idSkill, this.projectService.addSkill$.bind(this.projectService));
 		}
 
 		// Log the resulting collection.
@@ -574,7 +574,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 		// We have already loaded or saved the project, so we can remove each new skill one by one.
 		if (this.projectService.project.id) {
-			this.updateSkill(this.projectService.project.id, idSkill, this.projectService.delSkill.bind(this.projectService));
+			this.updateSkill(this.projectService.project.id, idSkill, this.projectService.delSkill$.bind(this.projectService));
 		}
 
 		// Log the resulting collection.
@@ -588,23 +588,23 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * @param callback the callback function, which might be **projectService.addSkill** or **projectService.delSkill**
 	 */
 	updateSkill(idProject: number, idSkill: number,
-		callback: (idProject: number, idSkill: number) => Observable<BooleanDTO>) {
+		callback: (idProject: number, idSkill: number) => Observable<Boolean>) {
 		callback(idProject, idSkill)
 			.subscribe({
 				next: result => {
-					if (!result) {
-						this.messageService.error(result.message);
-					} else {
+					if (result) {
 						this.projectService.actualizeProject(idProject);
 					}
 				},
-				error: responseInError => {
+				error: error => {
 					if (traceOn()) {
-						console.log('Error ' + responseInError.error.code + ' ' + responseInError.error.message);
+						console.log(`Error ${error.code} ${error.message}`);
 					}
-					this.messageService.error(responseInError.error.message);
+					this.messageService.error(error.message);
 				}
-			});
+			}
+		);
+		
 	}
 
 	/**
