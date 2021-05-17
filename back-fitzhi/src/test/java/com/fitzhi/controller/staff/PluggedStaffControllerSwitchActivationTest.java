@@ -1,11 +1,14 @@
 package com.fitzhi.controller.staff;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDate;
+
+import com.fitzhi.bean.StaffHandler;
+import com.fitzhi.data.internal.Staff;
+import com.fitzhi.exception.ApplicationException;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -19,12 +22,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-import com.fitzhi.bean.StaffHandler;
-import com.fitzhi.data.internal.Staff;
-import com.fitzhi.exception.ApplicationException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
