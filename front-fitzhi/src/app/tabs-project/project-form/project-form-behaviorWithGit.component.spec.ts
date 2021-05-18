@@ -130,7 +130,7 @@ describe('ProjectFormComponent', () => {
 		urlRepositoryInput.triggerEventHandler('blur', {target: {value: 'https://github.com/fitzhi/application'}});
 		fixture.detectChanges();
 
-		const reqBackend = httpTestingController.expectOne('URL_OF_SERVER/api/project/branches/1789');
+		const reqBackend = httpTestingController.expectOne('URL_OF_SERVER/api/project/1789/branches');
 		reqBackend.flush(['backend/master']);
 
 		expect(component).toBeTruthy();

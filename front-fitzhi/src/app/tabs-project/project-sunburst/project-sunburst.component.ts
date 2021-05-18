@@ -242,6 +242,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				if (doneAndOk) {
 					return this.projectService.loadDashboardData$(this.settings);
 				} else {
+					if (traceOn()) {
+						console.log(`Sunburst generation for ${this.projectService.project.id} has returned false`);
+					}
 					return of(EMPTY);
 				}
 			}));
@@ -294,35 +297,23 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 		this.shouldReload = false;
 		this.loadData$()
 			.pipe(take(1))
-			.subscribe(
-				response => {
-					switch (response.code) {
-						case 0:
-							this.setActiveContext (PreviewContext.SUNBURST_READY);
-							setTimeout(() => {
-								this.cacheService.saveResponse(response);
-								this.generateChart(response);
-							}, 0);
-							break;
-						case 201:
-						case -1008:
-							//
-							// The generation has started in asynchronous mode.
-							// We will receive notification, so we do not set taskReportManagement as complete.
-							//
-							this.messageService.warning(response.message);
-							this.shouldReload = true;
-							break;
-						default:
-							console.error('Unknown code message %d for message %s',
-								response.code, response.message);
-							this.messageService.error(response.message);
-							break;
-					}
+			.subscribe({
+				next: data => {
+					this.setActiveContext (PreviewContext.SUNBURST_READY);
+					setTimeout(() => {
+						this.cacheService.saveResponse(data);
+						this.generateChart(data);
+					}, 0);
 				},
-				responseInError => {
-					this.handleErrorData(responseInError);
-				});
+				error: error => {
+					if (error instanceof String) {
+						this.messageService.error(<string>error);
+					}
+					if (traceOn()) {
+						console.log (error);
+					}
+				}
+			});
 	}
 
 	/**
@@ -691,8 +682,8 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			this.generateTitleSunburst();
 			this.projectService.loadDashboardData$(this.settings)
 				.subscribe(
-					response => this.myChart.data(response.sunburstData),
-					response => this.handleErrorData(response),
+					response => this.myChart.data(response),
+					error => this.handleErrorData(error),
 					() => {
 						this.hackSunburstStyle();
 						this.tooltipChart();

@@ -57,7 +57,7 @@ export class BackendSetupService {
 	 */
 	public isVeryFirstConnection(urlCandidate: string): Observable<FirstConnection> {
 		return this.httpClient.get<string>(
-			urlCandidate + '/api/admin/isVeryFirstConnection', { responseType: 'text' as 'json' }).
+			 `${urlCandidate}/api/admin/isVeryFirstConnection`, { responseType: 'text' as 'json' }).
 			pipe(
 				switchMap(result => {
 					return of(new FirstConnection(((result === 'true') ? true : false), null)); 

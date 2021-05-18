@@ -432,14 +432,15 @@ export class ProjectService extends InternalService {
 				+ settings.idProject + ', idStaff '
 				+ settings.idStaffSelected
 				+ ' and starting date ' + settings.startingDate
-				+ ' on URL ' + this.backendSetupService.url() + '/project/sunburst');
+				+ ' on URL ' + this.backendSetupService.url() + '/api/project/sunburst');
 		}
 		const body = {
-			idProject: settings.idProject, idStaffSelected: settings.idStaffSelected,
+			idProject: settings.idProject, 
+			idStaffSelected: settings.idStaffSelected,
 			startingDate: settings.startingDate
 		};
 		return this.httpClient
-			.post<any>(this.backendSetupService.url() + '/project/sunburst', body, httpOptions)
+			.put<any>(`${this.backendSetupService.url()}/project/${settings.idProject}/sunburst`, body, httpOptions)
 			.pipe(take(1));
 	}
 
@@ -489,9 +490,9 @@ export class ProjectService extends InternalService {
 	 * @param id project identifier to **RESET**
 	 */
 	public resetDashboard(id: number): Observable<string> {
-		const url = this.backendSetupService.url() + '/project/' + id + '/sunburst';
+		const url = `${this.backendSetupService.url()}/project/${id}/sunburst`;
 		if (traceOn()) {
-			console.log('Reset the dashboard data on URL ' + url);
+			console.log(`Reset the dashboard data on URL ${url}`);
 		}
 		this.sunburstCinematicService.listenEventsFromServer$.next(true);
 		return this.httpClient.delete<string>(url, httpOptions);
@@ -502,12 +503,12 @@ export class ProjectService extends InternalService {
 	 * @param id project identifier to **RELOAD**
 	 */
 	public reloadSunburst$(id: number): Observable<string> {
-		const url = this.backendSetupService.url() + '/project/' + id + '/sunburst';
+		const url = `${this.backendSetupService.url()}/project/${id}/sunburst`;
 		if (traceOn()) {
-			console.log('Reload the dashboard data on URL ' + url);
+			console.log(`Reload the dashboard data on URL ${url}`);
 		}
 		this.sunburstCinematicService.listenEventsFromServer$.next(true);
-		return this.httpClient.post<string>(url, httpOptions);
+		return this.httpClient.put<string>(url, httpOptions);
 	}
 
 	/**
@@ -541,7 +542,7 @@ export class ProjectService extends InternalService {
 			this.branches$.next([]);
 		}
 
-		const url = this.backendSetupService.url() + '/project/branches/' + this.project.id;
+		const url = `${this.backendSetupService.url()}/project/${this.project.id}/branches`;
 		if (traceOn()) {
 			console.log('Loading the branches for the URL ' + url);
 		}
