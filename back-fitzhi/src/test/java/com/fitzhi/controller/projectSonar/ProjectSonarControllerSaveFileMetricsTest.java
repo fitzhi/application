@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.ProjectSonarController;
-import com.fitzhi.controller.in.BodyParamSonarFilesStats;
 import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Project;
@@ -65,9 +64,9 @@ public class ProjectSonarControllerSaveFileMetricsTest {
 		
 		when(projectHandler.find(1805)).thenReturn(new Project(1805, "Testing project"));
 	
-		this.mvc.perform(post("/api/project/sonar/files-stats")
+		this.mvc.perform(put("/api/project/1805/sonar/key-sonar/filesStats")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpsfs())))
+				.content(gson.toJson(new ArrayList<FilesStats>())))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().string("true"));
@@ -85,19 +84,13 @@ public class ProjectSonarControllerSaveFileMetricsTest {
 			.when(projectHandler)
 			.find(1805);
 
-		this.mvc.perform(post("/api/project/sonar/files-stats")
+		this.mvc.perform(put("/api/project/1805/sonar/key-sonar/filesStats")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpsfs())))
+				.content(gson.toJson(new ArrayList<FilesStats>())))
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.message", is("Project 1805 not found")))
 				.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)));
 	}
 
-	private BodyParamSonarFilesStats bpsfs() {
-		BodyParamSonarFilesStats bpsfs = new BodyParamSonarFilesStats();
-		bpsfs.setIdProject(1805);
-		bpsfs.setSonarProjectKey("key-sonar");
-		return bpsfs;
-	}
 }

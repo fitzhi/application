@@ -4,16 +4,16 @@ import static com.fitzhi.Error.CODE_SONAR_KEY_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_SONAR_KEY_NOFOUND;
 
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Optional;
 
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.in.BodyParamProjectSonarEvaluation;
-import com.fitzhi.controller.in.BodyParamProjectSonarMetricValues;
-import com.fitzhi.controller.in.BodyParamSonarFilesStats;
+import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectSonarMetricValue;
 import com.fitzhi.data.internal.SonarProject;
 import com.fitzhi.exception.ApplicationException;
-import com.fitzhi.exception.NotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -52,6 +52,9 @@ public class ProjectSonarController {
 	ProjectHandler projectHandler;
 	
 	@ResponseBody
+	@ApiOperation(
+		value="Associate a Sonar project to a Fitzhi projet."
+	)
 	@PutMapping(path="/{idProject}/sonar/{sonarKey}")
 	public boolean saveEntry(
 		@PathVariable("idProject") int idProject,
@@ -76,6 +79,9 @@ public class ProjectSonarController {
 	 * @return a Sonar project corresponding to tge given key
 	 */
 	@ResponseBody
+	@ApiOperation(
+		value="Load the Sonar metrics of a Sonar project for a given Fitzhi projet."
+	)
 	@GetMapping(path="/sonar/load/{idProject}/{sonarKey}")
 	public SonarProject getSonarProject(
 			@PathVariable("idProject") int idProject,
@@ -97,10 +103,13 @@ public class ProjectSonarController {
 	}
 	
 	@ResponseBody
+	@ApiOperation(
+		value="Remove a Sonar project from a Fitzhi projet."
+	)
 	@DeleteMapping(path="/{idProject}/sonar/{sonarKey}")
 	public boolean removeEntry(
 		@PathVariable("idProject") int idProject,
-		@PathVariable("sonarKey") String sonarKey) throws ApplicationException, NotFoundException {
+		@PathVariable("sonarKey") String sonarKey) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("DELETE verb on /api/project/%d/sonar/%s", idProject, sonarKey));
@@ -112,18 +121,22 @@ public class ProjectSonarController {
 	}
 	
 	@ResponseBody
-	@PostMapping(path="/sonar/files-stats")
-	public boolean saveFilesStats(@RequestBody BodyParamSonarFilesStats param) 
-		throws ApplicationException {
+	@ApiOperation(
+		value="Save the statistics related to all langage files detected in the Sonar server."
+	)
+	@PutMapping(path="{idProject}/sonar/{sonarKey}/filesStats")
+	public boolean saveFilesStats(
+		@PathVariable("idProject") int idProject,
+		@PathVariable("sonarKey") String sonarKey,
+		@RequestBody List<FilesStats> filesStats) throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
-				"POST command on /api/project/sonar/file-stats for project : %s %s", 
-				param.getIdProject(), param.getSonarProjectKey()));
+				"POST verb on /api/project/%d/sonar/%s/filestats for project", idProject, sonarKey));
 		}
 		
-		Project project = projectHandler.find(param.getIdProject());
-		projectHandler.saveFilesStats(project, param.getSonarProjectKey(), param.getFilesStats()); 
+		Project project = projectHandler.find(idProject);
+		projectHandler.saveFilesStats(project, sonarKey, filesStats); 
 		return true;
 			
 	}
@@ -150,18 +163,21 @@ public class ProjectSonarController {
 	}
 	
 	@ResponseBody
-	@PostMapping(path="/sonar/saveMetricValues")
-	public boolean updateMetricValues(@RequestBody BodyParamProjectSonarMetricValues param) 
-		throws ApplicationException {
+	@ApiOperation(
+		value = "Save the metrics retrieved from a Sonar project."
+	)
+	@PutMapping(path="{idProject}/sonar/{sonarKey}/metricValues")
+	public boolean updateMetricValues(
+		@PathVariable("idProject") int idProject,
+		@PathVariable("sonarKey") String sonarKey,
+		@RequestBody List<ProjectSonarMetricValue> metricValues) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format(
-				"POST command on /api/project/sonar/saveMetricValues for project : %s %s", 
-				param.getIdProject(), param.getSonarKey()));
+			log.debug(String.format("PUT verb on /api/project/%d/sonar/%s/metricValues", idProject, sonarKey));
 		}
 		
-		Project project = projectHandler.find(param.getIdProject());
-		projectHandler.saveSonarMetricValues(project, param.getSonarKey(), param.getMetricValues()); 
+		Project project = projectHandler.find(idProject);
+		projectHandler.saveSonarMetricValues(project, sonarKey, metricValues); 
 		return true;
 	}
 	

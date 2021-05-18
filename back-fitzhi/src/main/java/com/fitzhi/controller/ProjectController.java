@@ -412,7 +412,7 @@ public class ProjectController extends BaseRestController {
 	 * @throws ApplicationException throw if any problem occurs
 	 */
 	@ResponseBody
-	@ApiOperation(value = "Loads and returns all projects declared in the application")
+	@ApiOperation(value = "Load and return all projects declared in the application")
 	@GetMapping("")
 	public Collection<Project> readAll() throws ApplicationException {
 

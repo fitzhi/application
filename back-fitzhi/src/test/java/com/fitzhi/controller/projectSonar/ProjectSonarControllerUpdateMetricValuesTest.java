@@ -6,6 +6,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,7 +38,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * <p>
- * Test of the method {@link ProjectSonarController#saveFilesStats(com.fitzhi.controller.in.BodyParamSonarFilesStats)}
+ * Test of the method {@link ProjectSonarController#saveFilesStats(int, String, java.util.List)}
  * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -65,9 +66,9 @@ public class ProjectSonarControllerUpdateMetricValuesTest {
 		
 		when(projectHandler.find(1805)).thenReturn(new Project(1805, "Testing project"));
 	
-		this.mvc.perform(post("/api/project/sonar/saveMetricValues")
+		this.mvc.perform(put("/api/project/1805/sonar/key-sonar/metricValues")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bppsmv())))
+				.content(gson.toJson(new ArrayList<ProjectSonarMetricValue>())))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().string("true"));
@@ -85,20 +86,13 @@ public class ProjectSonarControllerUpdateMetricValuesTest {
 			.when(projectHandler)
 			.find(1805);
 
-		this.mvc.perform(post("/api/project/sonar/saveMetricValues")
+		this.mvc.perform(put("/api/project/1805/sonar/key-sonar/metricValues")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bppsmv())))
+				.content(gson.toJson(new ArrayList<ProjectSonarMetricValue>())))
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.message", is("Project 1805 not found")))
 				.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)));
 	}
 
-	private BodyParamProjectSonarMetricValues bppsmv() {
-		BodyParamProjectSonarMetricValues bppsmv = new BodyParamProjectSonarMetricValues();
-		bppsmv.setIdProject(1805);
-		bppsmv.setSonarKey("key-sonar");
-		bppsmv.setMetricValues(new ArrayList<ProjectSonarMetricValue>());
-		return bppsmv;
-	}
 }

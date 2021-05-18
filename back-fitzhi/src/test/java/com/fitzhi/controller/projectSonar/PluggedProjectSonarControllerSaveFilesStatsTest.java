@@ -1,7 +1,7 @@
 package com.fitzhi.controller.projectSonar;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -9,6 +9,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.controller.ProjectGhostController;
+import com.fitzhi.controller.util.LocalDateAdapter;
+import com.fitzhi.data.internal.FilesStats;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.SonarProject;
+import com.fitzhi.exception.ApplicationException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -24,17 +34,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.controller.ProjectGhostController;
-import com.fitzhi.controller.in.BodyParamSonarFilesStats;
-import com.fitzhi.controller.util.LocalDateAdapter;
-import com.fitzhi.data.internal.FilesStats;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.SonarProject;
-import com.fitzhi.exception.ApplicationException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 /**
  * <p>
  * Test of the class {@link ProjectGhostController}
@@ -45,9 +44,7 @@ import com.google.gson.GsonBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectSonarControllerSaveFilesStatsTest {
-
-//	private final Logger logger = LoggerFactory.getLogger(ProjectGhostControllerTest.class.getCanonicalName());
+public class PluggedProjectSonarControllerSaveFilesStatsTest {
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -63,37 +60,29 @@ public class ProjectSonarControllerSaveFilesStatsTest {
 
 	Project project;
 	
-	final int ID_PROJECT = 1;
-	
-	private final String KEY_SONAR_1 = "key-sonar-1";
-	private final String KEY_SONAR_2 = "key-sonar-2";
-	
 	@Before
 	public void before() throws ApplicationException {
-		project = projectHandler.get(ID_PROJECT);
+		project = projectHandler.get(1);
 		SonarProject sp = new SonarProject();
-		sp.setKey(KEY_SONAR_1);
+		sp.setKey("key-sonar-1");
 		project.getSonarProjects().add(sp);
 		sp = new SonarProject();
-		sp.setKey(KEY_SONAR_2);
+		sp.setKey("key-sonar-2");
 		project.getSonarProjects().add(sp);
 	}
 	
 	@Test
 	@WithMockUser
 	public void test() throws Exception {
-		BodyParamSonarFilesStats bpsfs = new BodyParamSonarFilesStats();
-		bpsfs.setIdProject(ID_PROJECT);
-		bpsfs.setSonarProjectKey(KEY_SONAR_1);
+
 		List<FilesStats> l = new ArrayList<>();
 		l.add(new FilesStats("css", 7));
 		l.add(new FilesStats("java", 67));
 		l.add(new FilesStats("ts", 35));
-		bpsfs.setFilesStats(l);
 	
-		MvcResult result = this.mvc.perform(post("/api/project/sonar/files-stats")
+		MvcResult result = this.mvc.perform(put("/api/project/1/sonar/key-sonar-1/filesStats")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpsfs)))
+				.content(gson.toJson(l)))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -102,17 +91,13 @@ public class ProjectSonarControllerSaveFilesStatsTest {
 		Boolean b = gson.fromJson(result.getResponse().getContentAsString(), Boolean.class);
 		Assert.assertTrue(b);
 
-		bpsfs = new BodyParamSonarFilesStats();
-		bpsfs.setIdProject(ID_PROJECT);
-		bpsfs.setSonarProjectKey(KEY_SONAR_2);
 		l = new ArrayList<>();
 		l.add(new FilesStats("java", 28));
 		l.add(new FilesStats("xml", 12));
-		bpsfs.setFilesStats(l);
 		
-		result = this.mvc.perform(post("/api/project/sonar/files-stats")
+		result = this.mvc.perform(put("/api/project/1/sonar/key-sonar-2/filesStats")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpsfs)))
+				.content(gson.toJson(l)))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -121,7 +106,7 @@ public class ProjectSonarControllerSaveFilesStatsTest {
 		b = gson.fromJson(result.getResponse().getContentAsString(), Boolean.class);
 		Assert.assertTrue(b);
 
-		result = this.mvc.perform(get("/api/project/" + ID_PROJECT))
+		result = this.mvc.perform(get("/api/project/1"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -146,9 +131,8 @@ public class ProjectSonarControllerSaveFilesStatsTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		project = projectHandler.get(ID_PROJECT);
+		project = projectHandler.get(1);
 		project.getSonarProjects().clear();
-				
 	}
 	
 }
