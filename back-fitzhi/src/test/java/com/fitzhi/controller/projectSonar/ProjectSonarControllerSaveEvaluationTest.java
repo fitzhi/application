@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -14,7 +14,6 @@ import java.time.LocalDate;
 
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.ProjectSonarController;
-import com.fitzhi.controller.in.BodyParamProjectSonarEvaluation;
 import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.SonarEvaluation;
@@ -36,7 +35,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * <p>
- * Test of the method {@link ProjectSonarController#saveEvaluation(com.fitzhi.controller.in.BodyParamProjectSonarEvaluation)}
+ * Test of the method {@link ProjectSonarController#saveEvaluation(int, String, SonarEvaluation)}
  * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -64,9 +63,9 @@ public class ProjectSonarControllerSaveEvaluationTest {
 		
 		when(projectHandler.find(1805)).thenReturn(new Project(1805, "Testing project"));
 	
-		this.mvc.perform(post("/api/project/sonar/saveEvaluation")
+		this.mvc.perform(put("/api/project/1805/sonar/key-sonar/evaluation")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpse())))
+				.content(gson.toJson(new SonarEvaluation())))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(content().string("true"));
@@ -86,21 +85,13 @@ public class ProjectSonarControllerSaveEvaluationTest {
 			.when(projectHandler)
 			.find(1805);
 
-		this.mvc.perform(post("/api/project/sonar/saveEvaluation")
+		this.mvc.perform(put("/api/project/1805/sonar/key-sonar/evaluation")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bpse())))
+				.content(gson.toJson(new SonarEvaluation())))
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.message", is("Project 1805 not found")))
 				.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)));
 
-	}
-
-	private BodyParamProjectSonarEvaluation bpse() {
-		BodyParamProjectSonarEvaluation bpse = new BodyParamProjectSonarEvaluation();
-		bpse.setIdProject(1805);
-		bpse.setSonarKey("key-sonar");
-		bpse.setSonarEvaluation(new SonarEvaluation());
-		return bpse;
 	}
 }

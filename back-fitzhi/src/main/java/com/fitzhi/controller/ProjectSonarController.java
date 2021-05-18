@@ -12,6 +12,7 @@ import com.fitzhi.controller.in.BodyParamProjectSonarEvaluation;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
+import com.fitzhi.data.internal.SonarEvaluation;
 import com.fitzhi.data.internal.SonarProject;
 import com.fitzhi.exception.ApplicationException;
 
@@ -147,18 +148,22 @@ public class ProjectSonarController {
 	 * @return {@code TRUE} if the operation succeeded, {@code FALSE} otherwise.
 	 */
 	@ResponseBody
-	@PostMapping(path="/sonar/saveEvaluation")
-	public boolean saveEvaluation(@RequestBody BodyParamProjectSonarEvaluation param) 
-		throws ApplicationException {
+	@ApiOperation(
+		value = "Add or update the Sonar evaluation of a Sonar project."
+	)
+	@PutMapping(path="{idProject}/sonar/{sonarKey}/evaluation")
+	public boolean saveEvaluation(
+		@PathVariable("idProject") int idProject,
+		@PathVariable("sonarKey") String sonarKey,
+		@RequestBody SonarEvaluation sonarEvaluation) throws ApplicationException {
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
-				"POST command on /api/project/sonar/saveEvaluation for project : %s %s", 
-				param.getIdProject(), param.getSonarKey()));
+				"PUT verb on /api/project/%d/sonar/%s/evaluation", idProject, sonarKey));
 		}
 		
-		Project project = projectHandler.find(param.getIdProject());
-		projectHandler.saveSonarEvaluation(project, param.getSonarKey(), param.getSonarEvaluation()); 
+		Project project = projectHandler.find(idProject);
+		projectHandler.saveSonarEvaluation(project, sonarKey, sonarEvaluation); 
 		return true;
 	}
 	
