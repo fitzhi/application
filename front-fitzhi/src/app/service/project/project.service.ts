@@ -1232,7 +1232,7 @@ export class ProjectService extends InternalService {
 		}
 
 		return this.httpClient
-			.delete<object>(this.backendSetupService.url() + '/project/' + this.project.id)
+			.delete<object>(`${this.backendSetupService.url()}/project/${this.project.id}`)
 			.pipe(
 				take(1),
 				switchMap( () => {

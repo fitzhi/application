@@ -23,8 +23,8 @@ export class ProjectRemoveComponent implements OnInit {
 	public removeProject() {
 
 		this.projectService.removeApiProject$().subscribe({
-			next: b => {
-				if (b) {
+			next: doneAndOk => {
+				if (doneAndOk) {
 					if (traceOn()) {
 						console.log ('The project has been sucessfully removed');
 					}
