@@ -693,7 +693,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 	reloadSonarProjectMetrics(idProject: number, sonarProject: SonarProject) {
 		this.projectService
-			.loadSonarProject(this.projectService.project, sonarProject.key)
+			.loadSonarProject$(this.projectService.project, sonarProject.key)
 			.pipe(take(1))
 			.subscribe((sp: SonarProject) => {
 				sonarProject.projectSonarMetricValues = sp.projectSonarMetricValues;
@@ -944,7 +944,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	private testConnectionSettings() {
 		this.projectService
-			.testConnection(this.projectService.project.id)
+			.testConnection$(this.projectService.project.id)
 			.pipe(take(1))
 			.subscribe((doneAndOk: boolean) => {
 				if (!doneAndOk) {

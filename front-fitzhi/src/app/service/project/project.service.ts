@@ -91,10 +91,10 @@ export class ProjectService extends InternalService {
    	*/
 	loadProjects() {
 		if (traceOn()) {
-			this.log('Fetching the projects on URL ' + this.backendSetupService.url() + '/project');
+			this.log(`Fetching the projects on URL ${this.backendSetupService.url()}/api/project`);
 		}
 		this.httpClient
-			.get<Project[]>(this.backendSetupService.url() + '/project')
+			.get<Project[]>(`${this.backendSetupService.url()}/project`)
 			.pipe(take(1))
 			.subscribe(projects => {
 				if (traceOn()) {
@@ -130,7 +130,7 @@ export class ProjectService extends InternalService {
 			this.log('Actualizing the project with URL ' + this.backendSetupService.url() + '/project/' + idProject);
 		}
 		this.httpClient
-			.get<Project>(this.backendSetupService.url() + '/project/' + idProject)
+			.get<Project>(`${this.backendSetupService.url()}/project/${idProject}`)
 			.pipe(take(1))
 			.subscribe({
 				next: project => {
@@ -198,7 +198,7 @@ export class ProjectService extends InternalService {
 				switchMap(response => {
 					const location = response.headers.get('Location');
 					if (traceOn()) {
-						console.log ('Project created successfully, location returned %s', location);
+						console.log (`Project created successfully, location returned ${location}`);
 					}
 					return (location) ? this.loadProject$(location) : EMPTY;
 				}),
@@ -244,7 +244,7 @@ export class ProjectService extends InternalService {
 			console.log( 'Updating the project %s', this.project.name);
 		}
 		return this.httpClient
-			.put<Project>(this.backendSetupService.url() + '/project/' + this.project.id, this.project,  {observe: 'response'})
+			.put<Project>(`${this.backendSetupService.url()}/project/${this.project.id}`, this.project,  {observe: 'response'})
 			.pipe(
 				take(1),
 				switchMap( response => {
@@ -308,7 +308,7 @@ export class ProjectService extends InternalService {
 	addSonarProject(idProject: number, sonarProject: SonarProject): Observable<boolean> {
 
 		if (traceOn()) {
-			console.log ('Adding the Sonar project ' + sonarProject.name + ' to the project ID ' + idProject);
+			console.log (`Adding the Sonar project ${sonarProject.name} to the project ID ${idProject}`);
 		}
 
 		return this.httpClient
@@ -478,7 +478,7 @@ export class ProjectService extends InternalService {
 			return EMPTY;
 		}
 
-		const url = this.backendSetupService.url() + '/project/' + idProject + '/contributors';
+		const url =  `${this.backendSetupService.url()}/project/${idProject}/contributors`;
 		if (traceOn()) {
 			console.log('Retrieve the contributors for the project identifier %d @ url %s', idProject, url);
 		}
@@ -515,8 +515,8 @@ export class ProjectService extends InternalService {
 	 * Test a connection to GIT on server, in order to validate the connection settings.
 	 * @param idProject project whose connection settings has to be tested
 	 */
-	testConnection(idProject: number): Observable<boolean> {
-		const url = this.backendSetupService.url() + '/project/test/' + idProject;
+	testConnection$(idProject: number): Observable<boolean> {
+		const url =  `${this.backendSetupService.url()}/project/${idProject}/test`;
 		if (traceOn()) {
 			console.log('Testing the connection settings on URL ' + url);
 		}
@@ -588,7 +588,7 @@ export class ProjectService extends InternalService {
 	 * Return the url pointing out to the codeFactor.io badge.
 	 */
 	urlCodeFactorIO() {
-		return this.project.urlCodeFactorIO + '/badge/master?style=plastic';
+		return  `${this.project.urlCodeFactorIO}/badge/master?style=plastic`;
 	}
 
 	/**
@@ -599,7 +599,7 @@ export class ProjectService extends InternalService {
 	 * @return an observable emitting the list of directories.
 	 */
 	libDirLookup$(idProject: number, criteria: string): Observable<string[]> {
-		const url = this.backendSetupService.url() + '/project/' + idProject + '/analysis/lib-dir/' + criteria;
+		const url =  `${this.backendSetupService.url()}/project/${idProject}/analysis/lib-dir/${criteria}`;
 		return this.httpClient.get<string[]>(url).pipe(take(1));
 	}
 
@@ -615,7 +615,7 @@ export class ProjectService extends InternalService {
 			libraries.forEach(lib => console.log (lib.exclusionDirectory));
 			console.groupEnd();
 		}
-		const url = this.backendSetupService.url() + '/project/' + idProject + '/analysis/lib-dir/';
+		const url =  `${this.backendSetupService.url()}/project/${idProject}/analysis/lib-dir/`;
 		this.httpClient
 			.post<boolean>(url, libraries, httpOptions)
 			.pipe(take(1))
@@ -645,7 +645,7 @@ export class ProjectService extends InternalService {
 			console.groupEnd();
 		}
 		const body = { idProject: idProject, pseudo: pseudo, idStaff: idRelatedStaff, technical: technical };
-		return this.httpClient.post<boolean>(this.backendSetupService.url() + '/project/' + idProject + '/ghost', body, httpOptions);
+		return this.httpClient.post<boolean>(`${this.backendSetupService.url()}/project/${idProject}/ghost`, body, httpOptions);
 	}
 
 	/**
@@ -749,9 +749,9 @@ export class ProjectService extends InternalService {
 	 * @param project the current project
 	 * @param sonarKey the key of the Sonar project
 	 */
-	loadSonarProject (project: Project, sonarKey: string): Observable<SonarProject> {
+	loadSonarProject$ (project: Project, sonarKey: string): Observable<SonarProject> {
 		return this.httpClient.get<SonarProject>(
-			this.backendSetupService.url() + '/project/sonar/load/' + project.id + '/' + sonarKey, httpOptions)
+			`${this.backendSetupService.url()}/project/${project.id}/sonar/${sonarKey}`, httpOptions)
 			.pipe(tap(
 				(sonarProject: SonarProject) => {
 					if (traceOn()) {
