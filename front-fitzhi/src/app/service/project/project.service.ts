@@ -704,7 +704,7 @@ export class ProjectService extends InternalService {
 	* @param key the Sonar key from where the stats are coming from
 	* @param filesStats the language file statistics retrieved from the Sonar instance.
 	*/
-	saveFilesStats(idProject: number, key: string, filesStats: FilesStats[]): Observable<boolean> {
+	saveFilesStats$(idProject: number, key: string, filesStats: FilesStats[]): Observable<boolean> {
 		if (traceOn()) {
 			console.groupCollapsed('Save the files stats');
 			console.log ('idProject', idProject);
@@ -712,8 +712,9 @@ export class ProjectService extends InternalService {
 			filesStats.forEach(fs => console.log (fs.language, fs.numberOfFiles));
 			console.groupEnd();
 		}
-		const body = { idProject: idProject, sonarProjectKey: key, filesStats: filesStats };
-		return this.httpClient.post<boolean>(this.backendSetupService.url() + '/project/sonar/files-stats', body, httpOptions);
+
+		return this.httpClient.put<boolean>(
+			 `${this.backendSetupService.url()}/project/${idProject}/sonar/${key}/filesStats`, filesStats, httpOptions);
 	}
 
 	/**
@@ -722,14 +723,15 @@ export class ProjectService extends InternalService {
 	* @param key the Sonar key from where the stats are coming from
 	* @param filesStats the language file statistics retrieved from the Sonar instance.
 	*/
-	saveMetricValues(idProject: number, key: string, metricValues: ProjectSonarMetricValue[]): Observable<Boolean> {
+	saveMetricValues$(idProject: number, key: string, metricValues: ProjectSonarMetricValue[]): Observable<Boolean> {
 		if (traceOn()) {
 			console.groupCollapsed('Save the metric values for Sonar entry %s project identifier %d', key, idProject);
 			metricValues.forEach(mv => console.log ('Saving %s %d %d', mv.key, mv.weight, mv.value));
 			console.groupEnd();
 		}
-		const body = { idProject: idProject, sonarKey: key, metricValues: metricValues };
-		return this.httpClient.post<boolean>(this.backendSetupService.url() + '/project/sonar/saveMetricValues', body, httpOptions);
+
+		return this.httpClient.put<boolean>(
+			 `${this.backendSetupService.url()}/project/${idProject}/sonar/${key}/metricValues`, metricValues, httpOptions);
 	}
 
 	/**
@@ -845,7 +847,7 @@ export class ProjectService extends InternalService {
 		//
 		// the metricValues is updated with the evaluation returned by Sonar.
 		//
-		this.saveMetricValues(project.id, sonarKey, metricValues)
+		this.saveMetricValues$(project.id, sonarKey, metricValues)
 			.pipe(take(1))
 			.subscribe (ok => {
 				if (ok) {

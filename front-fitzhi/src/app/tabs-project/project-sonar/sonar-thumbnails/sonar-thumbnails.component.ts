@@ -162,7 +162,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 			this.languageFilesNumber.set(componentSonar.key, componentSonar.projectFilesStats);
 			this.subscriptions.add(
 				this.projectService
-					.saveFilesStats(this.projectService.project.id, componentSonar.key, componentSonar.projectFilesStats)
+					.saveFilesStats$(this.projectService.project.id, componentSonar.key, componentSonar.projectFilesStats)
 					.subscribe(doneAndOk => {
 						if (doneAndOk) {
 							this.messageService.info('Saving Files source statistics for the key ' + componentSonar.key);
