@@ -1152,7 +1152,7 @@ export class ProjectService extends InternalService {
 	public saveSonarUrl$(idProject: number, urlSonarServer: string): Observable<boolean> {
 		const body = { idProject: idProject, urlSonarServer: urlSonarServer};
 		return this.httpClient
-			.post<boolean>(this.backendSetupService.url() + '/project/sonar/saveUrl', body, httpOptions)
+			.post<boolean>(`${this.backendSetupService.url()}/project/sonar/saveUrl`, body, httpOptions)
 			.pipe(take(1));
 	}
 
@@ -1282,16 +1282,16 @@ export class ProjectService extends InternalService {
 			throw new Error ('WTF : Should not pass here !');
 		}
 		if (traceOn()) {
-			console.log ('Inactivating the project %d %s', this.project.id, this.project.name);
+			console.log (`Inactivating the project ${this.project.id} ${this.project.name}`);
 		}
 
 		this.httpClient
-			.post<object>(this.backendSetupService.url() + '/project/rpc/inactivation/' + this.project.id, {})
+			.post<object>(`${this.backendSetupService.url()}/project/${this.project.id}/rpc/inactivation/`, {})
 			.pipe(take(1))
 			.subscribe({
 				next: () => {
 					if (traceOn()) {
-						console.log ('Project %s has been successfully inactivated.', this.project.name);
+						console.log (`Project ${this.project.name} has been successfully inactivated.`);
 					}
 					// We inactivate the project
 					this.project = this.retrieveProject(this.project.id);
@@ -1310,16 +1310,16 @@ export class ProjectService extends InternalService {
 			throw new Error ('WTF : Should not pass here !');
 		}
 		if (traceOn()) {
-			console.log ('Reactivating the project %d %s', this.project.id, this.project.name);
+			console.log (`Reactivating the project ${this.project.id} ${this.project.name}`);
 		}
 
 		this.httpClient
-			.post<object>(this.backendSetupService.url() + '/project/rpc/reactivation/' + this.project.id, {})
+			.post<object>(`${this.backendSetupService.url()}/project/${this.project.id}/rpc/reactivation/`, {})
 			.pipe(take(1))
 			.subscribe({
 				next: () => {
 					if (traceOn()) {
-						console.log ('Project %s has been successfully reactivated.', this.project.name);
+						console.log (`Project ${this.project.name} has been successfully reactivated.`);
 					}
 					// We re-activate the project
 					this.project = this.retrieveProject(this.project.id);
