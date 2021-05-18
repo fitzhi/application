@@ -15,7 +15,6 @@ import java.util.ArrayList;
 
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.ProjectSonarController;
-import com.fitzhi.controller.in.BodyParamSonarFilesStats;
 import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Project;
@@ -92,12 +91,5 @@ public class ProjectSonarControllerSaveFilesStats2Test {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.message", is("Project 1805 not found")))
 				.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)));
-	}
-
-	private BodyParamSonarFilesStats bpsfs() {
-		BodyParamSonarFilesStats bpsfs = new BodyParamSonarFilesStats();
-		bpsfs.setIdProject(1805);
-		bpsfs.setSonarProjectKey("key-sonar");
-		return bpsfs;
 	}
 }

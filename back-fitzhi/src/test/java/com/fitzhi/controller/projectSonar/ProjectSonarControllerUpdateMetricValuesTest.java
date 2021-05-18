@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -16,7 +15,6 @@ import java.util.ArrayList;
 
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.ProjectSonarController;
-import com.fitzhi.controller.in.BodyParamProjectSonarMetricValues;
 import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
