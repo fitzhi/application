@@ -1152,9 +1152,9 @@ export class ProjectService extends InternalService {
 	 * @param urlSonarServer the URL of the Sonar server
 	 */
 	public saveSonarUrl$(idProject: number, urlSonarServer: string): Observable<boolean> {
-		const body = { idProject: idProject, urlSonarServer: urlSonarServer};
+
 		return this.httpClient
-			.post<boolean>(`${this.backendSetupService.url()}/project/sonar/saveUrl`, body, httpOptions)
+			.put<boolean>(`${this.backendSetupService.url()}/project/${idProject}/sonar/url`, urlSonarServer, httpOptions)
 			.pipe(take(1));
 	}
 
