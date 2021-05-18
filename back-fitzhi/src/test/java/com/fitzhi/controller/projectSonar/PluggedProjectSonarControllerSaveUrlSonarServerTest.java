@@ -2,7 +2,7 @@ package com.fitzhi.controller.projectSonar;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import com.fitzhi.Error;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.ProjectGhostController;
-import com.fitzhi.controller.in.BodyParamProjectSonarServer;
 import com.fitzhi.controller.util.LocalDateAdapter;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
@@ -46,7 +45,7 @@ import org.springframework.test.web.servlet.MvcResult;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectSonarControllerSaveUrlSonarServerTest {
+public class PluggedProjectSonarControllerSaveUrlSonarServerTest {
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -62,13 +61,11 @@ public class ProjectSonarControllerSaveUrlSonarServerTest {
 
 	Project project;
 	
-	final int ID_PROJECT = 1;
-	
 	private final String KEY_SONAR_1 = "key-sonar-1";
 	
 	@Before
 	public void before() throws ApplicationException {
-		project = projectHandler.get(ID_PROJECT);
+		project = projectHandler.get(1);
 		project.setUrlSonarServer("http://formerSonarServer");
 		SonarProject sp = new SonarProject();
 		sp.setKey(KEY_SONAR_1);
@@ -85,13 +82,9 @@ public class ProjectSonarControllerSaveUrlSonarServerTest {
 	@WithMockUser
 	public void testThrowIfProjectUnknown() throws Exception {
 		
-		BodyParamProjectSonarServer bppss = new BodyParamProjectSonarServer();
-		bppss.setIdProject((int) System.currentTimeMillis()%314116);
-		bppss.setUrlSonarServer("Who cares...");
-		
-		this.mvc.perform(post("/api/project/sonar/saveUrl")
+		this.mvc.perform(put("/api/project/666/sonar/url")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bppss)))
+				.content("url"))
 				.andExpect(status().isNotFound())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.code", is(Error.CODE_PROJECT_NOFOUND)))
@@ -108,13 +101,9 @@ public class ProjectSonarControllerSaveUrlSonarServerTest {
 	@WithMockUser
 	public void testChangeTheURLSonarServer() throws Exception {
 	
-		BodyParamProjectSonarServer bppss = new BodyParamProjectSonarServer();
-		bppss.setIdProject(ID_PROJECT);
-		bppss.setUrlSonarServer("https://theNewUrlSonarServer");
-		
-		MvcResult result = this.mvc.perform(post("/api/project/sonar/saveUrl")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bppss)))
+		MvcResult result = this.mvc.perform(put("/api/project/1/sonar/url")
+				.contentType(MediaType.TEXT_PLAIN)
+				.content("https://theNewUrlSonarServer"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -123,7 +112,7 @@ public class ProjectSonarControllerSaveUrlSonarServerTest {
 		Boolean b = gson.fromJson(result.getResponse().getContentAsString(), Boolean.class);
 		Assert.assertTrue(b);
 		
-		result = this.mvc.perform(get("/api/project/"+ID_PROJECT))
+		result = this.mvc.perform(get("/api/project/1"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -146,13 +135,10 @@ public class ProjectSonarControllerSaveUrlSonarServerTest {
 	@Test
 	@WithMockUser
 	public void testNoChangeNoImpact() throws Exception {
-		BodyParamProjectSonarServer bppss = new BodyParamProjectSonarServer();
-		bppss.setIdProject(ID_PROJECT);
-		bppss.setUrlSonarServer("http://formerSonarServer");
 		
-		MvcResult result = this.mvc.perform(post("/api/project/sonar/saveUrl")
-				.contentType(MediaType.APPLICATION_JSON_UTF8)
-				.content(gson.toJson(bppss)))
+		MvcResult result = this.mvc.perform(put("/api/project/1/sonar/url")
+				.contentType(MediaType.TEXT_PLAIN)
+				.content("http://formerSonarServer"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -161,7 +147,7 @@ public class ProjectSonarControllerSaveUrlSonarServerTest {
 		Boolean b = gson.fromJson(result.getResponse().getContentAsString(), Boolean.class);
 		Assert.assertTrue(b);
 		
-		result = this.mvc.perform(get("/api/project/"+ID_PROJECT))
+		result = this.mvc.perform(get("/api/project/1"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -179,7 +165,7 @@ public class ProjectSonarControllerSaveUrlSonarServerTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		project = projectHandler.get(ID_PROJECT);
+		project = projectHandler.get(1);
 		project.getSonarProjects().clear();
 				
 	}

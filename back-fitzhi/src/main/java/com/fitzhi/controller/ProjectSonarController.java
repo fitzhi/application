@@ -9,7 +9,6 @@ import java.util.Optional;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.controller.in.BodyParamProjectSonarEvaluation;
 import com.fitzhi.controller.in.BodyParamProjectSonarMetricValues;
-import com.fitzhi.controller.in.BodyParamProjectSonarServer;
 import com.fitzhi.controller.in.BodyParamSonarFilesStats;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.SonarProject;
@@ -28,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -166,18 +166,22 @@ public class ProjectSonarController {
 	}
 	
 	@ResponseBody
-	@PostMapping(path="/sonar/saveUrl")
-	public boolean saveUrlSonarServer(@RequestBody BodyParamProjectSonarServer param) 
-		throws ApplicationException {
+	@ApiOperation(
+		value = "Save the Sonar URL where a project is registered."
+	)
+	@PutMapping(path="{idProject}/sonar/url")
+	public boolean saveUrl(
+		@PathVariable("idProject") int idProject,		
+		@RequestBody String urlSonarServer) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format(
-				"POST command on /api/project/sonar/saveUrl for ID Project %d & url %s", 
-				param.getIdProject(), param.getUrlSonarServer()));
+				"PUT verb on /api/project/%d/sonar/url with url %s", 
+				idProject, urlSonarServer));
 		}
 		
-		Project project = projectHandler.find(param.getIdProject());
-		projectHandler.saveUrlSonarServer(project, param.getUrlSonarServer()); 
+		Project project = projectHandler.find(idProject);
+		projectHandler.saveUrlSonarServer(project, urlSonarServer); 
 		return true;
 	}
 

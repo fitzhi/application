@@ -1,7 +1,8 @@
 package com.fitzhi.controller.project;
 
+import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static org.hamcrest.Matchers.is;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -11,8 +12,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.CacheDataHandler;
@@ -21,7 +22,6 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.source.crawler.RepoScanner;
 import com.google.gson.Gson;
@@ -37,9 +37,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
-import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 
 /**
  * @author Fr&eacute;d&eacute;ric VIDAL
