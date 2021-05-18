@@ -879,9 +879,10 @@ export class ProjectService extends InternalService {
 			console.log ('Total number of lines of code', totalNumberLinesOfCode);
 			console.groupEnd();
 		}
-		const body = { idProject: idProject, sonarKey: key,
-			sonarEvaluation: {evaluation: evaluation, totalNumberLinesOfCode: totalNumberLinesOfCode}};
-		return this.httpClient.post<Boolean>(this.backendSetupService.url() + '/project/sonar/saveEvaluation', body, httpOptions);
+
+		return this.httpClient.put<boolean>(
+			 '${this.backendSetupService.url()}/project/${idProject}/sonar/${key}/evaluation', 
+			{evaluation: evaluation, totalNumberLinesOfCode: totalNumberLinesOfCode}, httpOptions);
 	}
 
 	/**
