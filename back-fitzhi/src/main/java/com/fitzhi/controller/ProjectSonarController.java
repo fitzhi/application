@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.controller.in.BodyParamProjectSonarEvaluation;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
@@ -20,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -75,15 +73,17 @@ public class ProjectSonarController {
 	 * <p>
 	 * load and return a SonarProject.
 	 * </p>
+	 * 
 	 * @param idProject the project identifier
 	 * @param sonarKey the key of the Sonar project
-	 * @return a Sonar project corresponding to tge given key
+	 * 
+	 * @return a Sonar project corresponding to the given key
 	 */
 	@ResponseBody
 	@ApiOperation(
-		value="Load the Sonar metrics of a Sonar project for a given Fitzhi projet."
+		value="Load the Sonar project for a given Fitzhi project."
 	)
-	@GetMapping(path="/sonar/load/{idProject}/{sonarKey}")
+	@GetMapping(path="/{idProject}/sonar/{sonarKey}")
 	public SonarProject getSonarProject(
 			@PathVariable("idProject") int idProject,
 			@PathVariable("sonarKey") String sonarKey) throws ApplicationException {

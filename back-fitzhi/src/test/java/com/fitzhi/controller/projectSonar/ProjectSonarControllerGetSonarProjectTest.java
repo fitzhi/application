@@ -7,6 +7,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDate;
 
+import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.controller.ProjectSonarController;
+import com.fitzhi.controller.util.LocalDateAdapter;
+import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectSonarMetricValue;
+import com.fitzhi.data.internal.SonarProject;
+import com.fitzhi.exception.ApplicationException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -21,22 +31,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.controller.ProjectGhostController;
-import com.fitzhi.controller.util.LocalDateAdapter;
-import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.ProjectSonarMetricValue;
-import com.fitzhi.data.internal.SonarProject;
-import com.fitzhi.exception.ApplicationException;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 /**
  * <p>
- * Test of the class {@link ProjectGhostController}
+ * Test of the class {@link ProjectSonarController#getSonarProject(int, String)}.
  * </p>
+ * 
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -57,15 +57,11 @@ public class ProjectSonarControllerGetSonarProjectTest {
 
 	Project project;
 	
-	final int ID_PROJECT = 1;
-	
-	private final String KEY_SONAR_1 = "key-sonar-1";
-	
 	@Before
 	public void before() throws ApplicationException {
-		project = projectHandler.get(ID_PROJECT);
+		project = projectHandler.get(1);
 		SonarProject sp = new SonarProject();
-		sp.setKey(KEY_SONAR_1);
+		sp.setKey("key-sonar-1");
 		sp.getProjectSonarMetricValues().add(new ProjectSonarMetricValue("bugs", 10, 1));
 		project.getSonarProjects().add(sp);
 		
@@ -75,11 +71,11 @@ public class ProjectSonarControllerGetSonarProjectTest {
 	@WithMockUser
 	public void test() throws Exception {
 	
-		MvcResult result = this.mvc.perform(get("/api/project/sonar/load/1/key-sonar-1"))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-				.andDo(print())
-				.andReturn();
+		MvcResult result = this.mvc.perform(get("/api/project/1/sonar/key-sonar-1"))
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+			.andDo(print())
+			.andReturn();
 		
 		SonarProject sp = gson.fromJson(result.getResponse().getContentAsString(), SonarProject.class);
 		Assert.assertNotNull(sp);
@@ -96,7 +92,7 @@ public class ProjectSonarControllerGetSonarProjectTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		project = projectHandler.get(ID_PROJECT);
+		project = projectHandler.get(1);
 		project.getSonarProjects().clear();
 				
 	}

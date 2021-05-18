@@ -3,7 +3,9 @@ package com.fitzhi.controller.projectSonar;
 import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -56,11 +58,13 @@ public class ProjectSonarControllerLoadTest {
 
 		when(projectHandler.find(1805)).thenReturn(p);
 	
-		this.mvc.perform(get("/api/project/sonar/load/1805/key-sonar")
+		this.mvc.perform(get("/api/project/1805/sonar/key-sonar")
 				.contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.name", is("name-sonar")));
+
+		verify(projectHandler, times(1)).find(1805);
 
 	}
 
@@ -72,13 +76,14 @@ public class ProjectSonarControllerLoadTest {
 			.when(projectHandler)
 			.find(1805);
 
-		this.mvc.perform(get("/api/project/sonar/load/1805/key-sonar")
+		this.mvc.perform(get("/api/project/1805/sonar/key-sonar")
 				.contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(status().isInternalServerError())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.message", is("Project 1805 not found")))
 				.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)));
 
+		verify(projectHandler, times(1)).find(1805);
 	}
 
 }
