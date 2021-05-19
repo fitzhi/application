@@ -272,7 +272,7 @@ export class ListProjectsService  {
 			if (traceOn()) {
 				console.log('Direct access for : ' + id);
 			}
-			return this.projectService.get(id).pipe(tap(
+			return this.projectService.get$(id).pipe(tap(
 				(project: Project) => {
 					if (traceOn()) {
 						console.log('Direct access for : ' + id);
@@ -290,7 +290,7 @@ export class ListProjectsService  {
 	 * Return a project, if any, for this name
 	 */
 	lookupProject(projectName: string): Observable<Project> {
-		return this.projectService.lookup(projectName);
+		return this.projectService.lookup$(projectName);
 	}
 
 

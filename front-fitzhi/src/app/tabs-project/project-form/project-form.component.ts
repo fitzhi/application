@@ -683,7 +683,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		// so we can add each new Sonar project as they appear, one by one.
 		if (this.projectService.project.id) {
 			this.updateSonarProject(this.projectService.project.id, sonarProject,
-				this.projectService.addSonarProject.bind(this.projectService),
+				this.projectService.addSonarProject$.bind(this.projectService),
 				this.reloadSonarProjectMetrics.bind(this));
 		}
 
@@ -751,7 +751,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 		// We have already loaded or saved the project, so we can add each new Sonar project as they appear, one by one.
 		if (this.projectService.project.id) {
-			this.updateSonarProject(this.projectService.project.id, sonarProject, this.projectService.delSonarProject.bind(this.projectService));
+			this.updateSonarProject(this.projectService.project.id, sonarProject, this.projectService.removeSonarProject$.bind(this.projectService));
 		}
 
 		// Log the resulting collection.

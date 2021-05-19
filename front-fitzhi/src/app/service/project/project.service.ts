@@ -301,11 +301,12 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	 * Link a Sonar project to 'our project'
+	 * Link a Sonar project to a Fitzhi project
+	 * 
 	 * @param idProject the project identifier
 	 * @param sonarProject the sonar project
 	 */
-	addSonarProject(idProject: number, sonarProject: SonarProject): Observable<boolean> {
+	addSonarProject$(idProject: number, sonarProject: SonarProject): Observable<boolean> {
 
 		if (traceOn()) {
 			console.log (`Adding the Sonar project ${sonarProject.name} to the project ID ${idProject}`);
@@ -318,15 +319,15 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	 * Unlink a Sonar project to a Fitzhi project.
+	 * Unlink a Sonar project from a Fitzhi project.
 	 * 
 	 * @param idProject the project identifier
 	 * @param sonarProject the sonar project
 	 */
-	delSonarProject(idProject: number, sonarProject: SonarProject) {
+	removeSonarProject$(idProject: number, sonarProject: SonarProject) {
 
 		if (traceOn()) {
-			console.log ('Removing the Sonar project ' + sonarProject.name + ' to the project ID ' + idProject);
+			console.log (`Removing the Sonar project ${sonarProject.name} to the project ID ${idProject}`);
 		}
 
 		return this.httpClient
@@ -367,18 +368,23 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-	 * GET the project associated to this id from the back-end of Fitzhi. Will throw a 404 if this id is not found.
+	 * GET the project associated to this id **from the back-end of Fitzhi**. 
+	 * This method will throw a 404 if this id is not found.
+	 * 
+	 * @param idProject the given project identifier
+	 * @returns an observable emitting the retrieved project
 	 */
-	get(id: number): Observable<Project> {
-		const url =  `${this.backendSetupService.url()}/project/${id}`;
+	get$(idProject: number): Observable<Project> {
+		const url =  `${this.backendSetupService.url()}/project/${idProject}`;
 		if (traceOn()) {
-			console.log('Fetching the project ' + id + ' on the address ' + url);
+			console.log(`Fetching the project ${idProject} on the address ${url}`);
 		}
 		return this.httpClient.get<Project>(url);
 	}
 
 	/**
 	 * Search the project associated to the passed name within the collection of all projects
+	 * 
 	 * @param projectName the project name to search for inside the collection
 	 * @returns the found project or undefined if none's found
 	 */
@@ -393,7 +399,6 @@ export class ProjectService extends InternalService {
 	 * @param idProject the project identifier to search for inside the collection
 	 */
 	getProjectById(idProject: number): Project {
-
 		const project = this.allProjects.find(prj => prj.id === idProject);
 		return project;
 	}
@@ -403,7 +408,7 @@ export class ProjectService extends InternalService {
 	 * Will throw a 404 if this name is not retrieved.
 	 * @param projectName the project name to loook for on the backend.
 	 */
-	lookup(projectName: string): Observable<Project> {
+	lookup$(projectName: string): Observable<Project> {
 
 		const project = this.getProject(projectName);
 		if (!project) {
@@ -463,7 +468,7 @@ export class ProjectService extends InternalService {
 	loadTaskActivities$(idProject: number): Observable<Task> {
 		return this.httpClient
 			.get<Task>(
-				this.backendSetupService.url() + '/project/tasks/dashboardGeneration/' + idProject,
+				 `${this.backendSetupService.url()}/project/tasks/dashboardGeneration/${idProject}`,
 				httpOptions);
 	}
 
@@ -588,7 +593,7 @@ export class ProjectService extends InternalService {
 	 * Return the url pointing out to the codeFactor.io badge.
 	 */
 	urlCodeFactorIO() {
-		return  `${this.project.urlCodeFactorIO}/badge/master?style=plastic`;
+		return `${this.project.urlCodeFactorIO}/badge/master?style=plastic`;
 	}
 
 	/**
