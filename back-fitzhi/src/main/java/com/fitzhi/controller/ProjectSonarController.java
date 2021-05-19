@@ -54,14 +54,13 @@ public class ProjectSonarController {
 	@ApiOperation(
 		value="Associate a Sonar project to a Fitzhi projet."
 	)
-	@PutMapping(path="/{idProject}/sonar/{sonarKey}")
+	@PutMapping(path="/{idProject}/sonar")
 	public boolean saveEntry(
 		@PathVariable("idProject") int idProject,
-		@PathVariable("sonarKey") String sonarKey,
 		@RequestBody SonarProject sonarProject) throws ApplicationException  {
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("PUT verb on /api/project/%d/sonar/%s", idProject, sonarKey));
+			log.debug(String.format("PUT verb on /api/project/%d/sonar", idProject));
 		}
 		
 		Project project = projectHandler.find(idProject);

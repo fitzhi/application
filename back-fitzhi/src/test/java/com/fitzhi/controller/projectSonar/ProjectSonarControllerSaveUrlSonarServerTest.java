@@ -34,7 +34,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 /**
  * <p>
- * Test of the method {@link ProjectSonarController#saveUrlSonarServer(com.fitzhi.controller.in.BodyParamProjectSonarServer)}
+ * Test of the method {@link ProjectSonarController#s
  * </p>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -42,7 +42,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectSonarControllerSaveUrlSonarServer2Test {
+public class ProjectSonarControllerSaveUrlSonarServerTest {
 
 	/**
 	 * Initialization of the Google JSON parser.

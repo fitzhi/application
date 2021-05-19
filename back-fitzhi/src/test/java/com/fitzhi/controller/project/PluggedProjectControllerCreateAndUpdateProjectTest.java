@@ -112,7 +112,7 @@ public class PluggedProjectControllerCreateAndUpdateProjectTest {
 		// WE ADD A NEW SONAR ENTRY.
 		//
 		SonarProject entry = new SonarProject("otherId", "other name");
-		this.mvc.perform(put("/api/project/" + project.getId() + "/sonar/otherId")
+		this.mvc.perform(put("/api/project/" + project.getId() + "/sonar")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(entry)))
 			.andExpect(status().isOk())
