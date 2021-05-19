@@ -57,7 +57,7 @@ import lombok.extern.slf4j.Slf4j;
 	tags="Project Audit controller API",
 	description = "API endpoints to manage the audits realized for the application."
 )
-public class ProjectAuditController extends BaseRestController {
+public class ProjectAuditController {
 
 	@Autowired
 	ProjectAuditHandler projectAuditHandler;

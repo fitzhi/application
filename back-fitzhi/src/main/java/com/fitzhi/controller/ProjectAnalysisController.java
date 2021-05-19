@@ -1,8 +1,6 @@
 package com.fitzhi.controller;
 
-import static com.fitzhi.Error.CODE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
-import static com.fitzhi.Error.MESSAGE_PROJECT_NOFOUND;
 import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
 
 import java.text.MessageFormat;
@@ -36,7 +34,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -54,7 +51,7 @@ import lombok.extern.slf4j.Slf4j;
 	tags="Project Analysis controller API",
 	description = "API endpoints in charge of the interaction between the front-end and the analysis processed by the back-end."
 )
-public class ProjectAnalysisController extends BaseRestController  {
+public class ProjectAnalysisController  {
 
 	@Autowired
 	ProjectDashboardCustomizer dashboardCustomizer;

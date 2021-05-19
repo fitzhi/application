@@ -7,16 +7,16 @@ import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
 	tags="Project Ghosts controller API",
 	description = "API endpoints to manage the ghosts discovered in a project."
 )
-public class ProjectGhostController extends BaseRestController {
+public class ProjectGhostController {
 
 
 	@Autowired
@@ -46,13 +46,17 @@ public class ProjectGhostController extends BaseRestController {
 	 * @param param the proposal of association for this ghost sent to the controller
 	 * @throws ApplicationException if any problem occurs during the treatment
 	 */
+	@ResponseBody
+	@ApiOperation(
+		value = "Save a ghost in the project."
+	)
 	@PostMapping(path="{idProject}/ghost")
-	public ResponseEntity<Boolean> saveGhost(
+	public boolean saveGhost(
 		@PathVariable("idProject") int idProject,
 		@RequestBody GhostAssociation association) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("POST command on /api/project/ghost/save for project : %d", idProject));
+			log.debug(String.format("POST verb on /api/project/%d/ghost for project", idProject));
 		}
 		
 		Project project = projectHandler.get(idProject);
@@ -60,38 +64,42 @@ public class ProjectGhostController extends BaseRestController {
 		// We update the staff identifier associated to this ghost.
 		if (association.getIdStaff() > 0) {
 			projectHandler.associateStaffToGhost(project, association.getPseudo(), association.getIdStaff());
-			return OK();	
+			return true;	
 		}
 
 		// This ghost is technical.
 		if (association.isTechnical()) {
 			projectHandler.setGhostTechnicalStatus(project, association.getPseudo(), true); 				
-			return OK();			
+			return true;			
 		}
 		
 		// Neither staff member, nor technical, we reset the ghost.
 		projectHandler.resetGhost(project, association.getPseudo());
 				
-		return OK();			
+		return true;			
 	}
 	
 	/**
 	 * <p>
 	 * Remove a pseudo from the ghosts list.
 	 * </p>
-	 * @param param the ghost to be remove from the project
+	 * @param idProject the Project identifier
+	 * @param pseudo the pseudo to remove
+	 * 
 	 * @throws ApplicationException if any problem occurs during the treatment
 	 */
+	@ResponseBody
+	@ApiOperation(
+		value = "Remove a ghost from the project."
+	)
 	@DeleteMapping(path="{idProject}/ghost/{pseudo}")
-	public ResponseEntity<Boolean> removeGhost(
+	public boolean removeGhost(
 			@PathVariable("idProject") int idProject,
 			@PathVariable("pseudo") String pseudo
 			) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format(
-					"POST command on /project/ghosts/remove for project : %d and pseudo %s", 
-					idProject, pseudo));
+			log.debug(String.format("DELETE verb on /api/project/%d/ghosts/%s", idProject, pseudo));
 		}
 		
 		Project project = projectHandler.get(idProject);
@@ -99,10 +107,6 @@ public class ProjectGhostController extends BaseRestController {
 		// Neither staff member, nor technical, we reset the ghost
 		projectHandler.removeGhost(project, pseudo); 
 
-		return OK();			
-	}
-	
-	private ResponseEntity<Boolean> OK() {
-		return new ResponseEntity<>(Boolean.TRUE, headers(), HttpStatus.OK);
+		return true;			
 	}
 }
