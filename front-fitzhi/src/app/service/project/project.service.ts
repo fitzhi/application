@@ -312,7 +312,7 @@ export class ProjectService extends InternalService {
 		}
 
 		return this.httpClient
-			.put<boolean>(`${this.backendSetupService.url()}/project/${idProject}/sonar/${sonarProject.key}`, '', httpOptions)
+			.put<boolean>(`${this.backendSetupService.url()}/project/${idProject}/sonar`, sonarProject, httpOptions)
 			.pipe(take(1));
 
 	}
@@ -857,8 +857,8 @@ export class ProjectService extends InternalService {
 					messageErrorEmitter.next(
 						new MessageGravity(Constants.MESSAGE_ERROR,
 						'Error when saving weights and values for the Sonar project ' + sonarKey));
-				}});
-
+				}
+			});
 	}
 
 	/**
@@ -880,7 +880,7 @@ export class ProjectService extends InternalService {
 		}
 
 		return this.httpClient.put<boolean>(
-			 '${this.backendSetupService.url()}/project/${idProject}/sonar/${key}/evaluation', 
+			 `${this.backendSetupService.url()}/project/${idProject}/sonar/${key}/evaluation`, 
 			{evaluation: evaluation, totalNumberLinesOfCode: totalNumberLinesOfCode}, httpOptions);
 	}
 

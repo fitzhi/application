@@ -1,3 +1,4 @@
 [
-	{ "urlSonarServer": "https://sonar.fitzhi.com/sonarqube" }
+	{ "urlSonarServer": "https://sonar.fitzhi.com/sonarqube" },
+	{ "urlSonarServer": "http://localhost:9000", "user": "admin", "password": "parissg75" }
 ]
