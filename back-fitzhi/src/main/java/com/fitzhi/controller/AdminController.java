@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -41,7 +43,7 @@ public class AdminController extends BaseRestController {
 	private StaffHandler staffHandler;
 
 	/**
-	 * Does Tixhì allow self registration ?
+	 * Does Fitzhi allow self registration ?
 	 * <ul>
 	 * <li>Either, everyone can create his own user, by simply connecting to the Tixhì URL</li>
 	 * <li>Or a login must be already registered for the new user in the staff collection.</li>
@@ -50,16 +52,23 @@ public class AdminController extends BaseRestController {
 	@Value("${allowSelfRegistration}")
 	private boolean allowSelfRegistration;
 	
+	@ResponseBody
+	@ApiOperation(
+		value = "Test if the user is running the installation process of Fitzhi. This is the VERY FIRST connection."
+	)
 	@GetMapping("/isVeryFirstConnection")
-	public ResponseEntity<Boolean> isVeryFirstConnection()  {
-		boolean isVeryFirstConnection = administration.isVeryFirstConnection();
-		return new ResponseEntity<>(isVeryFirstConnection, headers(), HttpStatus.OK);
+	public boolean isVeryFirstConnection()  {
+		return administration.isVeryFirstConnection();
 	}
 	
+	@ResponseBody
+	@ApiOperation(
+		value = "Save a flag to register the very first connection. The installation is complete."
+	)
 	@PostMapping("/saveVeryFirstConnection")
-	public ResponseEntity<Boolean> keepVeryFirstConnecion() throws ApplicationException {
+	public boolean keepVeryFirstConnecion() throws ApplicationException {
 		administration.saveVeryFirstConnection();
-		return new ResponseEntity<>(true, headers(), HttpStatus.OK);
+		return true;
 	}
 	
 	/**
@@ -69,8 +78,12 @@ public class AdminController extends BaseRestController {
 	 * @throws ApplicationException thrown if any problem occurs.
 	 * @return the newly created staff entry
 	 */
+	@ResponseBody
+	@ApiOperation(
+		value="Create the FIRST admin user for Fitzhi. This creation is executed during the installation."
+	)
 	@PostMapping("/veryFirstUser")
-	public ResponseEntity<Staff> veryFirstUser(
+	public Staff veryFirstUser(
 			@RequestParam("login") String login,
 			@RequestParam("password") String password) throws ApplicationException {
 		
@@ -112,33 +125,29 @@ public class AdminController extends BaseRestController {
 	 * @param password this user password
 	 * @return the newly created staff entry
 	 */
+	@ResponseBody
+	@ApiOperation(
+		value="Creates a new user.",
+		notes = " This creation is allowed if the global setting 'allowSelfRegistration' is set to 'True'."
+	)
 	@PostMapping("/register")
-	public ResponseEntity<Staff> autoRegister(
+	public Staff autoRegister(
 			@RequestParam("login") String login,
 			@RequestParam("password") String password) throws ApplicationException {
 		return this.internalCreateNewUser(login, password);	
 	}	
 	
+	@ResponseBody
+	@ApiOperation(
+		value="Creates a new user inside the application."
+	)
 	@PostMapping("/newUser")
-	public ResponseEntity<Staff> createNewUser(
+	public Staff createNewUser(
 			@RequestParam("login") String login,
 			@RequestParam("password") String password)  throws ApplicationException {
 		return internalCreateNewUser(login, password);
 	}
 		
-	/**
-	 * Create a user and return the corresponding staff member.
-	 * @param login the user login
-	 * @param password the user password
-	 * @return The staff member created for this user/password
-	 * @throws ApplicationException thrown if any problem occurs such as, for example, 'login already registered'
-	 */
-	private ResponseEntity<Staff> internalCreateNewUser (String login, String password) 
-			throws ApplicationException {
-		Staff staff = administration.createNewUser(login, password);
-		return new ResponseEntity<>(staff, new HttpHeaders(), HttpStatus.OK);
-	}
-
 	/**
 	 * Connect a user
 	 * @param login the given login 
@@ -146,12 +155,29 @@ public class AdminController extends BaseRestController {
 	 * @return the staff retrieved if the server is sends back a 200 code,
 	 * @throws ApplicationException
 	 */
+	@ResponseBody
+	@ApiOperation(
+		value="Connect a user and return the corresponding staff."
+	)
 	@GetMapping("/connect")
-	public ResponseEntity<Staff> connect(
+	public Staff connect(
 			@RequestParam("login") String login,
 			@RequestParam("password") String password) throws ApplicationException {
 		Staff staff = administration.connect(login, password);
-		return new ResponseEntity<>(staff, headers(), HttpStatus.OK);
+		return staff;
 	}	
+
+	/**
+	 * Create a user and return the corresponding staff member.
+	 * @param login the user login
+	 * @param password the user password
+	 * @return The staff member created for this user/password
+	 * @throws ApplicationException thrown if any problem occurs such as, for example, 'login already registered'
+	 */
+	private Staff internalCreateNewUser (String login, String password) throws ApplicationException {
+		Staff staff = administration.createNewUser(login, password);
+		return staff;
+	}
+
 
 }

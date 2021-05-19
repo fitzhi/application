@@ -31,9 +31,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -97,8 +100,12 @@ public class ProjectAnalysisController extends BaseRestController  {
 	 * 
 	 * @return {@code true} if the operation success, {@code false} otherwise
 	 */
+	@ResponseBody
+	@ApiOperation(
+		value = "Lookup all directories from the repository starting with a given criteria."
+	)
 	@GetMapping(value = "/{idProject}/analysis/lib-dir/{criteria}")
-	public ResponseEntity<List<String>> lookup(
+	public List<String> lookup(
 			final @PathVariable("idProject") int idProject,
 			final @PathVariable("criteria") String criteria) throws ApplicationException {
 
@@ -114,7 +121,7 @@ public class ProjectAnalysisController extends BaseRestController  {
 			paths.stream().forEach(log::debug);
 		}
 
-		return new ResponseEntity<>(paths, new HttpHeaders(), HttpStatus.OK);
+		return paths;
 	}
 
 	/**
@@ -125,37 +132,40 @@ public class ProjectAnalysisController extends BaseRestController  {
 	 * @see Library
 	 * @return
 	 */
+	@ResponseBody
+	@ApiOperation(
+		value = "Save the dependency libraries of the project."
+	)
 	@PostMapping("{idProject}/analysis/lib-dir")
 	public ResponseEntity<Boolean> saveLibDir(@PathVariable int idProject, @RequestBody Library[] tabLib) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format(
-					"POST command on /project/analysis/save/libDir/save/%d ", 
-					idProject));
+			log.debug(String.format("POST command on /project/analysis/save/libDir/save/%d ", idProject));
 		}
 		
 		List<Library> libraries = new ArrayList<>(Arrays.asList(tabLib));
-		
 		Project project = projectHandler.get(idProject);
-		
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Saving the librairies of project %s", project.getName()));
 			libraries.stream().map(Library::getExclusionDirectory).forEach(log::debug);
 		}
 		
 		 this.projectHandler.saveLibraries(idProject, libraries);
-
 		 return new ResponseEntity<>(Boolean.TRUE, new HttpHeaders(), HttpStatus.OK);
 	}
 
 	
+	@ResponseBody
+	@ApiOperation(
+		value = "Onboard a staff member in the project."
+	)
 	@PostMapping("{idProject}/analysis/onboard/{idStaff}")
-	public ResponseEntity<Boolean> onBoardStaff(
+	public boolean onBoardStaff(
 		@PathVariable int idProject, 
 		@PathVariable int idStaff) throws ApplicationException {
 		
 		if (log.isDebugEnabled()) {
-			log.debug(String.format("POST verb on %d/analysis/onboard/%d", idProject, idStaff));
+			log.debug(String.format("POST verb on /api/project/%d/analysis/onboard/%d", idProject, idStaff));
 		}
 		
 		Staff staff = staffHandler.getStaff(idStaff);		
@@ -163,14 +173,10 @@ public class ProjectAnalysisController extends BaseRestController  {
 			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
 		}
 
-		Project project = projectHandler.get(idProject);
-		if (project == null) {
-			throw new ApplicationException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
-		}
-		
+		Project project = projectHandler.find(idProject);		
 		this.projectDashboardCustomizer.takeInAccountNewStaff(project, staff);
 			 
-		return new ResponseEntity<>(Boolean.TRUE, new HttpHeaders(), HttpStatus.OK);
+		return true;
 	}
 
 }
