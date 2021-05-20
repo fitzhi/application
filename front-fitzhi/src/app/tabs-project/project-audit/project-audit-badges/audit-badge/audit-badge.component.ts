@@ -119,14 +119,14 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 */
 	switchTopic(id: number) {
 		if (traceOn()) {
-			console.log ('switching to ' + id + ' ' + this.title);
+			console.log (`switching to ${id} ${this.title}`);
 		}
 		this.cinematicService.auditTopicSelected$.next(id);
 		this.cinematicService.idTopicSelected = id;
 	}
 
 	/**
-	 * This function emits asignal broadcasting that audit-task form should be visible, or hidden.
+	 * This function broadcasts a signal that audit-task form should be visible, or hidden.
 	 */
 	public showHideAuditTasks() {
 		this.cinematicService.auditHistory[this.id].tasksVisible = !this.cinematicService.auditHistory[this.id].tasksVisible;
@@ -134,7 +134,7 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	}
 
 	/**
-	 * This function emits asignal broadcasting that audit-task form should be visible, or hidden.
+	 * This function broadcasts a signal that audit-report form should be visible, or hidden.
 	 */
 	public showHideAuditReport() {
 		this.cinematicService.auditHistory[this.id].reportVisible = !this.cinematicService.auditHistory[this.id].reportVisible;
@@ -142,8 +142,7 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	}
 
 	/**
-	 * This function is receiving a signal from `app-audit-graphic-badge` when the end-user has given
-	 * a new evaluation of an audit topic.
+	 * This function is receiving a signal from `app-audit-graphic-badge` when the end-user has given a new evaluation of an audit topic.
 	 * @param evalution the evaluation.
 	 */
 	onEvaluationChange(topicEvaluation: TopicEvaluation): void {
