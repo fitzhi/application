@@ -40,11 +40,9 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 
 	ngOnInit() {
 
-		this.subscriptions.add(
-			this.referentialRervice.topics$.subscribe(topics =>
-			this.auditTopics = topics
-		));
-
+		this.referentialRervice.topics$.pipe(take(1)).subscribe({
+			next: topics => this.auditTopics = topics
+		});
 
 		this.subscriptions.add(
 			this.projectService.projectLoaded$.subscribe({
@@ -74,7 +72,7 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 				.subscribe(doneAndOk => {
 					if (doneAndOk) {
 						this.projectService.project.audit[topic.id] = new AuditTopic(topic.id, 0, 5);
-						this.messageService.info('The topic \'' + topic.title + '\' is added to the audit');
+						this.messageService.info(`The topic "${topic.title}" is added to the scope of audit`);
 						this.messengerCategoryUpdated.emit(topic);
 					}});
 		} else {
