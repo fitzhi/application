@@ -55,7 +55,7 @@ export class BackendSetupService {
 	 * Test the passed URL and check if it is the very first connection.
 	 * 
 	 * @param urlCandidate the url candidate for hosting the backend.
-	 * @return an "boolean" observable which returns TRUE if this first connection succeees, FALSE otherwise 
+	 * @return an "boolean" observable which returns TRUE if this first connection, FALSE otherwise 
 	 */
 	public isVeryFirstConnection$(urlCandidate: string): Observable<FirstConnection> {
 		return this.httpClient.get<string>(
@@ -64,13 +64,9 @@ export class BackendSetupService {
 				switchMap(result => {
 					return of(new FirstConnection(((result === 'true') ? true : false), null)); 
 				}),
-				catchError(response => {
-					// Server is offline. No response
-					if (response === Constants.SERVER_DOWN) {
-						return of(new FirstConnection(false, null)); 
-					} else {
-						throw new Error(response);
-					}
+				catchError(error => {
+					// Either the Server is offline, or the given URL is wrong. No response
+					return of(new FirstConnection(false, null)); 
 				})
 			);
 	}
