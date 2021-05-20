@@ -8,6 +8,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fitzhi.bean.SkillHandler;
+import com.fitzhi.controller.SkillController;
+import com.fitzhi.data.internal.Skill;
+import com.fitzhi.data.internal.SkillDetectionTemplate;
+import com.fitzhi.data.internal.SkillDetectorType;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -22,14 +30,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import com.fitzhi.bean.SkillHandler;
-import com.fitzhi.controller.SkillController;
-import com.fitzhi.data.internal.Skill;
-import com.fitzhi.data.internal.SkillDetectionTemplate;
-import com.fitzhi.data.internal.SkillDetectorType;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-
 /**
  * Testing the method
  * {@link SkillController#save(com.fitzhi.data.internal.Skill)}
@@ -40,7 +40,7 @@ import com.google.gson.GsonBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class SkillControllerSaveTest {
+public class PluggedSkillControllerSaveTest {
 
 	@Autowired
 	private MockMvc mvc;
@@ -70,8 +70,8 @@ public class SkillControllerSaveTest {
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
 			.content(gson.toJson(skill)))
 			.andExpect(status().isNotFound());
-	
 	}
+	
 	@Test
 	@WithMockUser
 	public void saveConflictWhenCreatingAnExistingSkill() throws Exception {
@@ -83,7 +83,6 @@ public class SkillControllerSaveTest {
 				.content(gson.toJson(skill)))
 				.andExpect(status().isConflict())
 				.andReturn();
-	
 	}
 
 	@Test
@@ -139,7 +138,6 @@ public class SkillControllerSaveTest {
 				.andExpect(header().string("location", String.format("http://localhost/api/skill/%d", countSkills+1)))
 				.andReturn();
 		String location = result.getResponse().getHeader("location");
-
 
 		//
 		// WE RETRIEVE THE NEWLY CREATED SKILL

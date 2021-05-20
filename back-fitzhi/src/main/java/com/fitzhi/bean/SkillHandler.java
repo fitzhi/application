@@ -59,6 +59,14 @@ public interface SkillHandler extends DataSaverLifeCycle {
 	 Skill getSkill(int idSkill) throws ApplicationException;
 
 	 /**
+	  * Load and return all types of detectors.
+	  * A skill can be detected in the repository by multiple ways. E.g. it might be a :
+	  * <ul>
+	  * <li>a 'Filename filter pattern',</li>
+	  * <li>a 'Dependency detection in the package.json file',</li>
+	  * <li>or a 'Dependency detection in the pom.xml file',</li>
+	  * <li>...</li>
+	  * </ul>
 	  * @return the map containing the detector types.
 	  * @throws ApplicationException thrown if any exception occurs. Most probably an IOException.
 	  */
