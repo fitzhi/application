@@ -52,14 +52,16 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 
+		// There is is NOSONAR comment on this line, 
+		// because the Security check from Sonar falsely detects a credential with the couple password/refresh_token.
 		clients.inMemory()
-	        .withClient(TRUSTED_CLIENT_USERNAME)
-            .authorizedGrantTypes("password", "refresh_token")
-            .authorities(ROLE_TRUSTED_USER)
-            .scopes("read", "write", "trust")
-            .secret("secret")
-            .accessTokenValiditySeconds(accessTokenDuration). //Access token is only valid for 2 minutes.
-            refreshTokenValiditySeconds(refreshTokenDuration); //Refresh token is only valid for 1 hour.
+			.withClient(TRUSTED_CLIENT_USERNAME)
+			.authorizedGrantTypes("password", "refresh_token")
+			.authorities(ROLE_TRUSTED_USER)
+			.scopes("read", "write", "trust")
+			.secret("secret")
+			.accessTokenValiditySeconds(accessTokenDuration). //Access token is only valid for 2 minutes.
+			refreshTokenValiditySeconds(refreshTokenDuration); //Refresh token is only valid for 1 hour. //NOSONAR
 	}
 
 	@Override
