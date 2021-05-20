@@ -41,7 +41,7 @@ public @Data class Task implements Serializable {
 	final String title;
 	
 	/**
-	 * Progression percenrtage.
+	 * Progression percentage.
 	 */
 	private int currentProgressionPercentage = 0;
 

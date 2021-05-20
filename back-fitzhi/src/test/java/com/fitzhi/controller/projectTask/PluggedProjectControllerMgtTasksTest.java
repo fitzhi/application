@@ -1,9 +1,11 @@
-package com.fitzhi.controller.project;
+package com.fitzhi.controller.projectTask;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.Matchers.is;
 
 import java.time.LocalDate;
 
@@ -32,6 +34,8 @@ import com.fitzhi.exception.ApplicationException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import static com.fitzhi.Error.CODE_TASK_NOT_FOUND;
+
 /**
  * <p>
  * Testing the methods {@link ProjectController#readTask(String, int)} and {@link AsyncTask#getTask(String, String, int)}
@@ -43,7 +47,7 @@ import com.google.gson.GsonBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectControllerMgtTasksTest {
+public class PluggedProjectControllerMgtTasksTest {
 
 	/**
 	 * Initialization of the Google JSON parser.
@@ -60,14 +64,12 @@ public class ProjectControllerMgtTasksTest {
 	@Autowired
 	AsyncTask asyncTask;
 	
-	final int ID_PROJECT = 1789;
-
 	@Before
 	public void before() throws ApplicationException {
-		Project p = new Project (ID_PROJECT, "Revolutionnary project");
+		Project p = new Project (1789, "Revolutionnary project");
 		projectHandler.addNewProject(p);
-		asyncTask.addTask("nopeOperation", "mockProject", ID_PROJECT);
-		asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my message", 0);
+		asyncTask.addTask("nopeOperation", "mockProject", 1789);
+		asyncTask.logMessage("nopeOperation", "mockProject", 1789, "my message", 0);
 		
 	}
 
@@ -79,9 +81,10 @@ public class ProjectControllerMgtTasksTest {
 	@WithMockUser
 	public void testReadTaskNotFound() throws Exception {
 		
-		MvcResult result = this.mvc.perform(get("/api/project/tasks/fakeOperation/1789"))
+		MvcResult result = this.mvc.perform(get("/api/project/1789/tasks/fakeOperation"))
 				.andExpect(status().isNotFound())
 				.andDo(print())
+				.andExpect(jsonPath("$.code", is(CODE_TASK_NOT_FOUND)))
 				.andReturn();
 		Assert.assertNotNull(result);
 	}
@@ -94,7 +97,7 @@ public class ProjectControllerMgtTasksTest {
 	@WithMockUser
 	public void testReadTaskNominal() throws Exception {
 		
-		MvcResult result = this.mvc.perform(get("/api/project/tasks/nopeOperation/1789"))
+		MvcResult result = this.mvc.perform(get("/api/project/1789/tasks/nopeOperation"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andDo(print())
@@ -107,7 +110,7 @@ public class ProjectControllerMgtTasksTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		projectHandler.getProjects().remove(ID_PROJECT);
+		projectHandler.getProjects().remove(1789);
 		asyncTask.removeTask("nopeOperation", "mockProject", 1789);
 	}
 

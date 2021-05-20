@@ -1,4 +1,4 @@
-package com.fitzhi.controller;
+package com.fitzhi.controller.projectTask;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.fitzhi.bean.AsyncTask;
 import com.fitzhi.bean.ProjectHandler;
+import com.fitzhi.controller.ProjectTasksController;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 
@@ -42,7 +43,7 @@ import com.fitzhi.exception.ApplicationException;
 @SpringBootTest
 @AutoConfigureMockMvc
 @Slf4j
-public class ProjectTaskControllerSSESendTest {
+public class PluggedProjectTaskControllerSSESendTest {
 
 	@Autowired
 	private MockMvc mvc;
@@ -53,10 +54,6 @@ public class ProjectTaskControllerSSESendTest {
 	@Autowired
 	AsyncTask asyncTask;
 	
-	/**
-	 * PROJECT IDENTIFIER
-	 */
-	final int ID_PROJECT = 1789;
 
 	private String MARK_END_OF_OPERATION = "end of operation";
 			
@@ -66,15 +63,15 @@ public class ProjectTaskControllerSSESendTest {
 	
 	@Before
 	public void before() throws ApplicationException {
-		Project p = new Project (ID_PROJECT, "Revolutionnary project");
+		Project p = new Project (1789, "Revolutionnary project");
 		projectHandler.addNewProject(p);
-		asyncTask.addTask("nopeOperation", "mockProject", ID_PROJECT);
-		asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my first message", 0);
+		asyncTask.addTask("nopeOperation", "mockProject", 1789);
+		asyncTask.logMessage("nopeOperation", "mockProject", 1789, "my first message", 0);
 		
 	    executorService.schedule(new Runnable() {
 	        @Override
 	        public void run() {
-				asyncTask.logMessage("nopeOperation", "mockProject", ID_PROJECT, "my second message", 0);
+				asyncTask.logMessage("nopeOperation", "mockProject", 1789, "my second message", 0);
 	        }
 	    }, 500, TimeUnit.MILLISECONDS);
 
@@ -82,7 +79,7 @@ public class ProjectTaskControllerSSESendTest {
 	        @Override
 	        public void run() {
 	        	try {
-					asyncTask.completeTask("nopeOperation", MARK_END_OF_OPERATION, ID_PROJECT);
+					asyncTask.completeTask("nopeOperation", MARK_END_OF_OPERATION, 1789);
 				} catch (ApplicationException e) {
 					log.error("Internal error", e);
 				}
@@ -101,7 +98,7 @@ public class ProjectTaskControllerSSESendTest {
 	@WithMockUser
 	public void tesStreamTasksLog() throws Exception {
 		
-		mvc.perform(get("/api/project/tasks/stream/nopeOperation/1789")
+		mvc.perform(get("/api/project/1789/tasks/stream/nopeOperation")
 			.contentType(MediaType.TEXT_EVENT_STREAM_VALUE)
 			.accept(MediaType.TEXT_EVENT_STREAM_VALUE))
 			.andDo(print())
@@ -114,7 +111,7 @@ public class ProjectTaskControllerSSESendTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		projectHandler.getProjects().remove(ID_PROJECT);
+		projectHandler.removeProject(1789);
 		asyncTask.removeTask("nopeOperation", "mockProject", 1789);
 	}
 
