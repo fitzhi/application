@@ -80,7 +80,7 @@ public class ProjectControllerContributorsTest {
 				.andExpect(jsonPath("$.idProject", is(666)))
 				.andExpect(jsonPath("$.contributors[0].idStaff", is(ID_STAFF)))
 				.andExpect(jsonPath("$.contributors[0].fullname", is(staff.fullName())))
-				.andExpect(jsonPath("$.code", is(0))).andExpect(jsonPath("$.message", is(""))).andReturn();
+				.andReturn();
 
 		if (logger.isDebugEnabled()) {
 			logger.debug(result.getResponse().getContentAsString());

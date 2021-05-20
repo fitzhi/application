@@ -39,7 +39,7 @@ import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.controller.in.SettingsGeneration;
 import com.fitzhi.controller.util.ProjectLoader;
-import com.fitzhi.data.external.ProjectContributorDTO;
+import com.fitzhi.data.external.ProjectContributors;
 import com.fitzhi.data.external.Sunburst;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSkill;
@@ -56,7 +56,6 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -578,8 +577,12 @@ public class ProjectController extends BaseRestController {
 	 * @param idProject the project identifier
 	 * @return the contributors who have been involved in the project
 	 */
+	@ResponseBody
+	@ApiOperation(
+		value = "Retrieve the contributors of a project."
+	)
 	@GetMapping(value = "/{idProject}/contributors")
-	public ResponseEntity<ProjectContributorDTO> projectContributors(final @PathVariable("idProject") int idProject) {
+	public ProjectContributors projectContributors(final @PathVariable("idProject") int idProject) {
 
 		final List<Contributor> contributors = projectHandler.contributors(idProject);
 		if (log.isDebugEnabled()) {
@@ -587,24 +590,27 @@ public class ProjectController extends BaseRestController {
 					.toString());
 		}
 
-		ProjectContributorDTO projectContributorDTO = new ProjectContributorDTO(idProject);
-
+		ProjectContributors projectContributors = new ProjectContributors(idProject);
 		contributors.stream().forEach(contributor -> {
 			final Staff staff = staffHandler.getStaff().get(contributor.getIdStaff());
 			if (staff == null) {
 				throw new ApplicationRuntimeException(
 						String.format("No staff member retrieved for the id %d", contributor.getIdStaff()));
 			}
-			projectContributorDTO.addContributor(contributor.getIdStaff(),
+			projectContributors.addContributor(
+					contributor.getIdStaff(),
 					shuffleService.isShuffleMode()
-							? shuffleService.shuffle(staff.getFirstName() + " " + staff.getLastName())
-							: (staff.getFirstName() + " " + staff.getLastName()),
-					staff.isActive(), staff.isExternal(), contributor.getFirstCommit(), contributor.getLastCommit(),
-					contributor.getNumberOfCommitsSubmitted(), contributor.getNumberOfFiles());
-
+						? shuffleService.shuffle(staff.getFirstName() + " " + staff.getLastName())
+						: (staff.getFirstName() + " " + staff.getLastName()),
+					staff.isActive(), 
+					staff.isExternal(), 
+					contributor.getFirstCommit(), 
+					contributor.getLastCommit(),
+					contributor.getNumberOfCommitsSubmitted(), 
+					contributor.getNumberOfFiles());
 		});
 
-		return new ResponseEntity<>(projectContributorDTO, new HttpHeaders(), HttpStatus.OK);
+		return projectContributors;
 	}
 
 	/**

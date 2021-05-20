@@ -127,10 +127,11 @@ class ContributorView {
 }
 
 /**
- * Class in charge of transferring the developers involved in a project 
+ * Class in charge of transferring the developers involved in a project. 
+ * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class ProjectContributorDTO extends BaseDTO {
+public class ProjectContributors {
 
 	/**
 	 * Project identifier.
@@ -143,15 +144,10 @@ public class ProjectContributorDTO extends BaseDTO {
 	private List<ContributorView> contributors;
 	
 	/**
-	 * @param code code error thrown by the back end.
-	 * @param message message associated to the code.
 	 * @param idProject the project identifier.
 	 * @param contributors list of contributors.
 	 */
-	public ProjectContributorDTO(final int code, final String message, final int idProject, final List<ContributorView> contributors) {
-		super();
-		this.code = code;
-		this.message = message;
+	public ProjectContributors(final int idProject, final List<ContributorView> contributors) {
 		this.idProject = idProject;
 		this.contributors = contributors;
 	}
@@ -159,7 +155,7 @@ public class ProjectContributorDTO extends BaseDTO {
 	/**
 	 * @param idProject the project identifier.
 	 */
-	public ProjectContributorDTO(final int idProject) {
+	public ProjectContributors(final int idProject) {
 		this.idProject = idProject;
 		contributors = new ArrayList<>();
 	}
@@ -192,6 +188,5 @@ public class ProjectContributorDTO extends BaseDTO {
 	public List<ContributorView> getContributors() {
 		return contributors;
 	}
-
 	
 }
