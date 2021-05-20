@@ -79,7 +79,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/api/staff")
 @Api(
 	tags="Staff controller API",
-	description = "API endpoints to manage the developers declared in the application. For convenience, we consider all employees to be developers."	
+	description = "API endpoints to manage the developers declared in the application. By convention we consider all employees as developers."	
 )
 public class StaffController extends BaseRestController {
 
@@ -280,8 +280,8 @@ public class StaffController extends BaseRestController {
 	 */
 	@ResponseBody
 	@ApiOperation(
-		value = "Retrieve the list of experiences for a given developer.", 
-		notes = "An experience is a skill with a level. An experence belongs to an application."
+		value = "Retrieve the experiences collection of a developer.", 
+		notes = "An experience is a skill with a level. An experience belongs to an application."
 	)
 	@GetMapping(value = "/{idStaff}/experience")
 	public List<Experience> readExperiences(@PathVariable("idStaff") int idStaff) throws ApplicationException {
@@ -307,7 +307,6 @@ public class StaffController extends BaseRestController {
 		}
 	
 		this.staffHandler.forceActiveStatus(staff);
-		
 		return true;
 	}
 
