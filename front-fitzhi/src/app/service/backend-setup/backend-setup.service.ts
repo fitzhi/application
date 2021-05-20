@@ -5,6 +5,7 @@ import { FirstConnection } from 'src/app/data/first-connection';
 import { catchError, switchMap } from 'rxjs/operators';
 import { Constants } from 'src/app/constants';
 import { environment } from '../../../environments/environment';
+import { traceOn } from 'src/app/global';
 
 @Injectable({
 	providedIn: 'root'
@@ -54,8 +55,9 @@ export class BackendSetupService {
 	 * Test the passed URL and check if it is the very first connection.
 	 * 
 	 * @param urlCandidate the url candidate for hosting the backend.
+	 * @return an "boolean" observable which returns TRUE if this first connection succeees, FALSE otherwise 
 	 */
-	public isVeryFirstConnection(urlCandidate: string): Observable<FirstConnection> {
+	public isVeryFirstConnection$(urlCandidate: string): Observable<FirstConnection> {
 		return this.httpClient.get<string>(
 			 `${urlCandidate}/api/admin/isVeryFirstConnection`, { responseType: 'text' as 'json' }).
 			pipe(
@@ -67,8 +69,7 @@ export class BackendSetupService {
 					if (response === Constants.SERVER_DOWN) {
 						return of(new FirstConnection(false, null)); 
 					} else {
-						// Throw other kinds of error
-						return of(new FirstConnection(false, null)); 
+						throw new Error(response);
 					}
 				})
 			);

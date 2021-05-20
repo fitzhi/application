@@ -50,7 +50,7 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
 		private backendSetupService: BackendSetupService) { super(); }
 
 	ngOnInit() {
-		console.log ('starting release %s',  environment.version);
+		console.log (`starting release ${environment.version}`);
 		this.backendSetupForm.get('url').setValue(
 			this.backendSetupService.hasSavedAnUrl() ?
 				this.backendSetupService.url() : this.backendSetupService.defaultUrl);
@@ -68,27 +68,30 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
 		if (traceOn()) {
 			console.log('Testing the URL', urlCandidate);
 		}
-		this.backendSetupService.isVeryFirstConnection(urlCandidate)
+		this.backendSetupService.isVeryFirstConnection$(urlCandidate)
 			.pipe(take(1))
-			.subscribe(
-				data => {
-					this.veryFirstConnection = data.connected;
-					if (traceOn() && this.veryFirstConnection) {
-						console.log('This is the very first connection into fitzhì');
-					}
-					this.currentState = this.BUTTON_VALID_URL;
-					this.messageService.info('This URL is valid. Let\'s go ahead !');
-					this.backendSetupService.saveUrl(urlCandidate);
-					this.messengerVeryFirstConnection.emit(this.veryFirstConnection);
-				},
-				error => {
+			.subscribe({
+				next: 
+					data => {
+						if (traceOn() && this.veryFirstConnection) {
+							console.log('This is the very first connection into fitzhì');
+						}
+
+						this.veryFirstConnection = data.connected;
+						this.backendSetupService.saveUrl(urlCandidate);
+						this.currentState = this.BUTTON_VALID_URL;
+						this.messengerVeryFirstConnection.emit(this.veryFirstConnection);
+
+						this.messageService.info('This URL is valid. Let\'s go ahead !');
+					},
+				error: error => {
 					if (traceOn()) {
 						console.log('Connection error', error);
 					}
 					this.currentState = this.BUTTON_INVALID_URL;
-					setTimeout(() => this.messageService.error(
-						'Error ! Either this URL is invalid, or your server is offline'), 0);
-				});
+					this.messageService.error('Error ! Either this URL is invalid, or your server is offline');
+				}
+			});
 	}
 
 	/**

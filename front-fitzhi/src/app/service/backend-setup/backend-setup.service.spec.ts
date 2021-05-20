@@ -25,7 +25,7 @@ describe('BackendSetupService', () => {
 
 	it ('should handle a successfull connection', () => {
 		
-		service.isVeryFirstConnection('TEST_URL').subscribe(firstConnection => {
+		service.isVeryFirstConnection$('TEST_URL').subscribe(firstConnection => {
 			expect(firstConnection.connected).toBeTruthy();
 			expect(firstConnection.validUrl).toBeNull();
 		});
@@ -37,7 +37,7 @@ describe('BackendSetupService', () => {
 
 	it ('should handle a "302 FOUND" response', () => {
 		
-		service.isVeryFirstConnection('TEST_URL').subscribe(firstConnection => {
+		service.isVeryFirstConnection$('TEST_URL').subscribe(firstConnection => {
 			expect(firstConnection.connected).toBeFalsy();
 			expect(firstConnection.validUrl).toBe(null);
 		});
