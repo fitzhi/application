@@ -41,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
 	tags="Skill controller API",
 	description = "API endpoints to manage the skills declared inside the application."
 )
-public class SkillController extends BaseRestController {
+public class SkillController {
 
 	@Autowired
 	SkillHandler skillHandler;
@@ -63,7 +63,7 @@ public class SkillController extends BaseRestController {
 	public ResponseEntity<Void> create(UriComponentsBuilder builder, @RequestBody Skill skill) {
 
 		if (skillHandler.containsSkill(skill.getId())) {
-			return new ResponseEntity<Void>(null, headers(), HttpStatus.CONFLICT);
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 		
 		Skill newSkill = skillHandler.addNewSkill(skill);

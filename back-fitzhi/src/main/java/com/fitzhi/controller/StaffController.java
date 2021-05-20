@@ -81,7 +81,7 @@ import lombok.extern.slf4j.Slf4j;
 	tags="Staff controller API",
 	description = "API endpoints to manage the developers declared in the application. By convention we consider all employees as developers."	
 )
-public class StaffController extends BaseRestController {
+public class StaffController {
 
 	@Autowired
 	ProjectHandler projectHandler;
@@ -129,7 +129,7 @@ public class StaffController extends BaseRestController {
 
 		// This is not a creation.
 		if (staffHandler.containsStaffMember(staff.getIdStaff())) {
-			return new ResponseEntity<Void>(null, headers(), HttpStatus.CONFLICT);
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 
 		if (log.isDebugEnabled()) {

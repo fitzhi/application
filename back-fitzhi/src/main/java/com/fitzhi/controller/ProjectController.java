@@ -82,7 +82,7 @@ import lombok.extern.slf4j.Slf4j;
 	tags="Project controller API",
 	description = "API endpoints to manage the projects declared in the application."
 )
-public class ProjectController extends BaseRestController {
+public class ProjectController  {
 
 	/**
 	 * The Project management service
@@ -161,7 +161,7 @@ public class ProjectController extends BaseRestController {
 			throws ApplicationException {
 
 		if (projectHandler.containsProject(project.getId())) {
-			return new ResponseEntity<Void>(null, headers(), HttpStatus.CONFLICT);
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 		
 		project.setId(UNKNOWN_PROJECT);
