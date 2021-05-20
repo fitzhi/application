@@ -95,12 +95,12 @@ describe('RegisterUserComponent', () => {
 		fixture.detectChanges();
 		
 		const password = fixture.debugElement.query(By.css('#password'));
-		password.nativeElement.value = 'pass123word';
+		password.nativeElement.value = 'pass123word'; //NOSONAR // This is not a credential.
 		password.nativeElement.dispatchEvent(new Event('input'));
 		fixture.detectChanges();
 
 		const passwordConfirmation = fixture.debugElement.query(By.css('#passwordConfirmation'));
-		passwordConfirmation.nativeElement.value = 'pass123word';
+		passwordConfirmation.nativeElement.value = 'pass123word'; //NOSONAR // This is not a credential.
 		passwordConfirmation.nativeElement.dispatchEvent(new Event('input'));
 		fixture.detectChanges();
 
