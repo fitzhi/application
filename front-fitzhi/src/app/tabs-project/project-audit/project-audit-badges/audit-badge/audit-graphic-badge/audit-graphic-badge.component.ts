@@ -83,8 +83,11 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 				.subscribe ({
 					next: doneAndOk => {
 						if (doneAndOk) {
-							this.drawAuditArc();
-							this.drawAuditText();
+							// We colorize the Arc and Text after the UI event loop to avoid a transparent arc ('for an unknwon reason' (shame on me)).
+							setTimeout(() => {								
+								this.drawAuditArc();
+								this.drawAuditText();
+							}, 0);
 						}
 					}
 				});
@@ -161,7 +164,7 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 		}
 		const htmlElement = document.getElementById('topic-arc-' + this.id);
 		if (!htmlElement) {
-			console.error('Cannot reach %s', 'topic-arc-' + this.id);
+			console.error(`Cannot reach topic-arc-${this.id}`);
 		}
 		if (htmlElement) {
 			htmlElement.setAttribute('d', arc(60, 60, 50, -180, endAngleEvaluation));
@@ -173,7 +176,8 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	drawAuditText() {
 		const htmlElement = document.getElementById('topic-note-' + this.id);
 		if (!htmlElement) {
-			console.error('Cannot reach %s', 'topic-note-' + this.id);
+			console.error(`Cannot reach topic-note-${this.id}`);
+			return;
 		}
 
 		if (!this.editable) {

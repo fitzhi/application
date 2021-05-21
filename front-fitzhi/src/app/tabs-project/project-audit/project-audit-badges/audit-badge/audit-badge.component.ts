@@ -160,7 +160,7 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 */
 	drawHeaderColor(evaluation: number): void {
 		const colorEvaluation = this.projectService.getEvaluationColor (evaluation);
-		// We colorize the header after the UI completion to avoid a transparent header, 'for an unknwon reason' (shame on me)
+		// We colorize the header after the UI event loop to avoid a transparent header, 'for an unknwon reason' (shame on me)
 		setTimeout(() => {
 			document.getElementById('headerRisk-' + this.id)
 				.setAttribute('style', 'background-color: ' + colorEvaluation);
