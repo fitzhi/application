@@ -229,6 +229,7 @@ export class SkillService extends InternalService {
 	 */
 	public filterSkills(criteria: ListCriteria) {
 
+		
 		if (traceOn()) {
 			console.log ('Filtering the skills for the criteria', criteria);
 		}

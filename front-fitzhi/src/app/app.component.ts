@@ -227,6 +227,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 		if (traceOn()) {
 			console.log((this.activeOnly) ? 'Filter only active records' : 'Select all records');
 		}
+		this.search();
 	}
 
 	/**
