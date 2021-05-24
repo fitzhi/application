@@ -3,6 +3,8 @@
  */
 package com.fitzhi.controller.staff;
 
+import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
+import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doNothing;
@@ -13,6 +15,7 @@ import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.external.StaffResume;
 import com.fitzhi.data.internal.Resume;
 import com.fitzhi.data.internal.Staff;
+import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.service.FileType;
 import com.fitzhi.service.ResumeParserService;
 import com.fitzhi.service.StorageService;
@@ -86,7 +89,7 @@ public class StaffControllerUploadApplicationFileTest {
 
 		ClassPathResource resource = new ClassPathResource( "/applications_files/ET_201709.doc");
 
-		when(staffHandler.lookup(1)).thenReturn(new Staff(1, "login", "pass"));
+		when(staffHandler.getStaff(1)).thenReturn(new Staff(1, "login", "pass"));
 		doNothing().when(storageService).store(any(MultipartFile.class), anyString());
 		when(resumeParserService.extract(anyString(), any(FileType.class))).thenReturn(new Resume());
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
@@ -98,7 +101,7 @@ public class StaffControllerUploadApplicationFileTest {
 				StaffResume.class);
 		Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
 
-		Mockito.verify(staffHandler, times(1)).lookup(1);
+		Mockito.verify(staffHandler, times(1)).getStaff(1);
 		Mockito.verify(storageService, times(1)).store(any(MultipartFile.class), anyString());
 		Mockito.verify(resumeParserService, times(1)).extract(anyString(), any(FileType.class));
 	}
@@ -109,7 +112,8 @@ public class StaffControllerUploadApplicationFileTest {
 
 		ClassPathResource resource = new ClassPathResource( "/applications_files/ET_201709.doc");
 
-		when(staffHandler.lookup(1)).thenReturn(null);
+		when(staffHandler.getStaff(1)).thenThrow(
+			new NotFoundException(CODE_STAFF_NOFOUND, MESSAGE_STAFF_NOFOUND, 1));
 
 		MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
 		map.add("file", resource);
@@ -120,7 +124,7 @@ public class StaffControllerUploadApplicationFileTest {
 				StaffResume.class);
 		Assert.assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
 
-		Mockito.verify(staffHandler, times(1)).lookup(1);
+		Mockito.verify(staffHandler, times(1)).getStaff(1);
 	}
 
 }

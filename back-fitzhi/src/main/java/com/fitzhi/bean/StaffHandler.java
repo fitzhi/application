@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Null;
 
 import com.fitzhi.bean.impl.StringTransform;
 import com.fitzhi.controller.StaffController;
@@ -53,7 +52,7 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	/**
 	 * Remove a staff member from the personal.
 	 * 
-	 * @param isStaff : identifier of the employee to be deleted.
+	 * @param ifStaff : identifier of the employee to be deleted.
 	 * @return the staff member just deleted, or {@code null} if none exists.
 	 */
 	Staff removeStaff(final int idStaff);

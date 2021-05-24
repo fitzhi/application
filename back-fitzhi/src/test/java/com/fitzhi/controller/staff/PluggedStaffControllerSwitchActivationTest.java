@@ -54,7 +54,7 @@ public class PluggedStaffControllerSwitchActivationTest {
 
 		this.mvc.perform(post(String.format(STAFF_SWITCH_ACTIVATION,1805))
 			.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8))
-			.andExpect(status().isInternalServerError())
+			.andExpect(status().isNotFound())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(content().json("{code: -1001}"));
 	}

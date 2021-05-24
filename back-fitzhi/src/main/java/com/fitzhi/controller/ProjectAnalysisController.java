@@ -1,9 +1,5 @@
 package com.fitzhi.controller;
 
-import static com.fitzhi.Error.CODE_STAFF_NOFOUND;
-import static com.fitzhi.Error.MESSAGE_STAFF_NOFOUND;
-
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -165,10 +161,7 @@ public class ProjectAnalysisController  {
 			log.debug(String.format("POST verb on /api/project/%d/analysis/onboard/%d", idProject, idStaff));
 		}
 		
-		Staff staff = staffHandler.lookup(idStaff);		
-		if (staff == null) {
-			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
-		}
+		Staff staff = staffHandler.getStaff(idStaff);	
 
 		Project project = projectHandler.find(idProject);		
 		this.projectDashboardCustomizer.takeInAccountNewStaff(project, staff);

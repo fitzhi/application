@@ -242,12 +242,7 @@ public class StaffController {
 	@ResponseBody
 	@GetMapping(value = "/{idStaff}")
 	public Staff read(@PathVariable("idStaff") int idStaff) throws ApplicationException {
-
-		Staff staff = staffHandler.lookup(idStaff);
-		if (staff == null) {
-			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
-		}
-		return staff;
+		return staffHandler.getStaff(idStaff);
 	}
 
 	/**
@@ -260,10 +255,7 @@ public class StaffController {
 	public List<Mission> readProjects(@PathVariable("idStaff") int idStaff) 
 		throws ApplicationException {
 
-		final Staff staff = staffHandler.lookup(idStaff);
-		if (staff == null) {
-			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
-		}
+		final Staff staff = staffHandler.getStaff(idStaff);
 
 		// Adding the name of project.
 		for (Mission mission : staff.getMissions()) {
@@ -285,12 +277,7 @@ public class StaffController {
 	)
 	@GetMapping(value = "/{idStaff}/experience")
 	public List<Experience> readExperiences(@PathVariable("idStaff") int idStaff) throws ApplicationException {
-
-		Staff staff = staffHandler.lookup(idStaff);
-		if (staff == null) {
-			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
-		}
-
+		Staff staff = staffHandler.getStaff(idStaff);
 		return staff.getExperiences();
 	}
 
@@ -300,12 +287,7 @@ public class StaffController {
 		notes = "If the given developer is active, it will become inactive. If inactive, it will be switched to active.")
 	@PostMapping("/{idStaff}/switchActiveStatus")
 	public boolean switchActiveState(@PathVariable("idStaff") int idStaff) throws ApplicationException {
-		
-		final Staff staff = staffHandler.lookup(idStaff);
-		if (staff == null) {
-			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
-		}
-	
+		final Staff staff = staffHandler.getStaff(idStaff);
 		this.staffHandler.forceActiveStatus(staff);
 		return true;
 	}
@@ -333,10 +315,7 @@ public class StaffController {
 	@PostMapping("/{idStaff}/processActiveStatus")
 	public Staff processActiveStatus(@PathVariable("idStaff") int idStaff) throws ApplicationException {
 		
-		final Staff staff = staffHandler.lookup(idStaff);
-		if (staff == null) {
-			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
-		}
+		final Staff staff = staffHandler.getStaff(idStaff);
 		
 		// We process the active status, therefore we property forceActiveStatus should be set to False.
 		staff.setForceActiveState(false);
@@ -356,11 +335,9 @@ public class StaffController {
 	@ApiOperation(value = "Remove a developer from the company staff.")
 	@DeleteMapping(value = "/{idStaff}")
 	public void removeStaff(@PathVariable("idStaff") int idStaff) throws NotFoundException, ApplicationException {
-		Staff staff = staffHandler.lookup(idStaff);
-		if (staff == null) {
-			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
-		}
-		
+		// We test first the existence of a Staff member for this Staff identifier
+		staffHandler.getStaff(idStaff);
+		// Then We remove
 		staffHandler.removeStaff(idStaff);
 	}
 	
@@ -396,10 +373,7 @@ public class StaffController {
 					idStaff, experience.getId(), experience.getLevel()));
 		}
 
-		final Staff staff = staffHandler.lookup(idStaff);
-		if (staff == null) {
-			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
-		}
+		final Staff staff = staffHandler.getStaff(idStaff);
 		
 		Experience formerExperience = staff.getExperience(experience.getId());
 		if (formerExperience == null) {
@@ -431,10 +405,7 @@ public class StaffController {
 					idStaff, idSkill));
 		}
 
-		final Staff staff = staffHandler.lookup(idStaff);
-		if (staff == null) {
-			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
-		} 
+		final Staff staff = staffHandler.getStaff(idStaff);
 		
 		Experience experience = staff.getExperience(idSkill);
 		if (experience != null) {
@@ -474,10 +445,7 @@ public class StaffController {
 
 		FileType typeOfApplication = FileType.valueOf(type);
 		
-		final Staff staff = staffHandler.lookup(idStaff);
-		if (staff == null) {
-			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
-		}
+		final Staff staff = staffHandler.getStaff(idStaff);
 
 		storageService.store(file, buildFileName(staff, filename));
 
@@ -595,10 +563,7 @@ public class StaffController {
 			log.debug(String.format("POST command on /api/staff/%d/project/%d", idStaff, idProject));
 		}
 
-		final Staff staff = staffHandler.lookup(idStaff);
-		if (staff == null) {
-			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
-		}
+		final Staff staff = staffHandler.getStaff(idStaff);
 		
 		final Project project = projectHandler.find(idProject);
 
@@ -637,10 +602,7 @@ public class StaffController {
 			log.debug(String.format("DELETE verb on /staff/%d/project/%d", idStaff, idProject));
 		}
 
-		final Staff staff = staffHandler.lookup(idStaff);
-		if (staff == null) {
-			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
-		}
+		final Staff staff = staffHandler.getStaff(idStaff);
 
 		final Project project = projectHandler.get(idProject);
 		if (project == null) {
