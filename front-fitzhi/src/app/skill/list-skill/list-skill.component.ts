@@ -62,68 +62,78 @@ export class ListSkillComponent extends BaseComponent implements OnInit, OnDestr
 				skills.forEach(skill => {
 					this.experiences.push(new SkillCountExperiences(skill.id, skill.title));
 				});
-
-		this.subscriptions.add(
-			this.staffService.peopleCountExperience$.subscribe( peopleCountExperience =>  {
-				this.experiences.forEach(sce => {
-					sce.count_1_star = this.count_n_star (peopleCountExperience, sce.id, 1);
-					sce.count_2_star = this.count_n_star (peopleCountExperience, sce.id, 2);
-					sce.count_3_star = this.count_n_star (peopleCountExperience, sce.id, 3);
-					sce.count_4_star = this.count_n_star (peopleCountExperience, sce.id, 4);
-					sce.count_5_star = this.count_n_star (peopleCountExperience, sce.id, 5);
-				});
-				this.dataSource = new MatTableDataSource(this.experiences);
-				// this.dataSource.data = this.experiences;
-				this.dataSource.sortingDataAccessor = (item: SkillCountExperiences, property: string) => {
-					switch (property) {
-						case 'skill':
-							return item.title.toLocaleLowerCase();
-						case 'level-1':
-							return item.count_1_star;
-						case 'level-2':
-							return item.count_2_star;
-						case 'level-3':
-							return item.count_3_star;
-						case 'level-4':
-							return item.count_4_star;
-						case 'level-5':
-							return item.count_5_star;
-					}
-				};
-				this.dataSource.sort = this.sort;
-				this.subscriptions.add(
-					this.dataSource.connect().subscribe(data => this.experiences = data));
-				if (traceOn()) {
-					console.groupCollapsed ('Skills counting');
-					this.experiences.forEach(element => {
-						console.log (element.title,
-							element.count_1_star
-							+ ' ' + element.count_2_star
-							+ ' ' + element.count_3_star
-							+ ' ' + element.count_4_star
-							+ ' ' + element.count_5_star);
-					});
-					console.groupEnd();
-				}
 			})
 		);
-	}));
-}
+
+		this.subscriptions.add(
+			this.staffService.peopleCountExperience$.subscribe( {
+				next: peopleCountExperience => this.generateDataSource(peopleCountExperience)
+			})
+		);
+	}
+
+	private generateDataSource(peopleCountExperience: Map<string, number>) {
+		// Set the aggregation of the number of developers by skill.
+		this.experiences.forEach(sce => {
+			sce.count_1_star = this.count_n_star (peopleCountExperience, sce.id, 1);
+			sce.count_2_star = this.count_n_star (peopleCountExperience, sce.id, 2);
+			sce.count_3_star = this.count_n_star (peopleCountExperience, sce.id, 3);
+			sce.count_4_star = this.count_n_star (peopleCountExperience, sce.id, 4);
+			sce.count_5_star = this.count_n_star (peopleCountExperience, sce.id, 5);
+		});
+
+		this.dataSource = new MatTableDataSource(this.experiences);
+		this.dataSource.sortingDataAccessor = (item: SkillCountExperiences, property: string) => {
+			switch (property) {
+				case 'skill':
+					return item.title.toLocaleLowerCase();
+				case 'level-1':
+					return item.count_1_star;
+				case 'level-2':
+					return item.count_2_star;
+				case 'level-3':
+					return item.count_3_star;
+				case 'level-4':
+					return item.count_4_star;
+				case 'level-5':
+					return item.count_5_star;
+			}
+		};
+		this.dataSource.sort = this.sort;
+		this.subscriptions.add(
+			this.dataSource.connect().subscribe({
+				next: data => this.experiences = data
+			})
+		);
+		if (traceOn()) {
+			console.groupCollapsed ('Skills counting');
+			this.experiences.forEach(element => {
+				console.log (element.title,
+				`${element.count_1_star} ${element.count_2_star} ${element.count_3_star} ${element.count_4_star} ${element.count_5_star}`);
+			});
+			console.groupEnd();
+		}
+	}
 
 	private count_n_star (peopleCountExperience: Map<string, number>, idSkill: number, level: number): number | string {
 		const count_n_star = peopleCountExperience.get(idSkill + '-' + level);
 		return (!count_n_star) ? '' : count_n_star;
 	}
 
+	/**
+	 *  Save the criteria and load the form list
+	 * @param title the skill criteria
+	 * @param level the level (if any)
+	 */
 	public listStaff(title: string, level: number) {
 
-		const criteria = 'skill:' + title + ':' + level;
+		const criteria = `skill:${title}:${level}`;
 		this.tabsStaffListService.addTabResult(criteria, this.skillService.criteria.activeOnly);
 		const key = this.tabsStaffListService.key(new ListCriteria(criteria, this.skillService.criteria.activeOnly));
 
 		this.tabsStaffListService.activeKey = key;
 		if (traceOn()) {
-			console.log('Criteria used ' + criteria + ' for key ' + key);
+			console.log(`Criteria used ${criteria} for key ${key}`);
 		}
 		this.router.navigate(['/searchUser/'], {});
 	}
