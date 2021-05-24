@@ -4,11 +4,11 @@
 export class SkillCountExperiences {
 	public id: number;
 	public title: string;
-	count_1_star: string;
-	count_2_star: string;
-	count_3_star: string;
-	count_4_star: string;
-	count_5_star: string;
+	count_1_star: number | string;
+	count_2_star: number | string;
+	count_3_star: number | string;
+	count_4_star: number | string;
+	count_5_star: number | string;
 
 	/**
 	 * @param id skill identifier.

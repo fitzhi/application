@@ -110,9 +110,9 @@ export class ListSkillComponent extends BaseComponent implements OnInit, OnDestr
 	}));
 }
 
-	private count_n_star (peopleCountExperience: Map<string, number>, idSkill: number, level: number): string {
+	private count_n_star (peopleCountExperience: Map<string, number>, idSkill: number, level: number): number | string {
 		const count_n_star = peopleCountExperience.get(idSkill + '-' + level);
-		return (!count_n_star) ? '' : count_n_star.toString();
+		return (!count_n_star) ? '' : count_n_star;
 	}
 
 	public listStaff(title: string, level: number) {
