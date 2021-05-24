@@ -62,7 +62,7 @@ public class SkylineProcessorGenerateProjectBuildingTest {
     @Test
     public void testGenerateBuildingForAOneSingleLineProject() throws ApplicationException {
 
-        Staff staff = staffHandler.getStaff(1);
+        Staff staff = staffHandler.lookup(1);
         staff.setActive(false);
         // Starting from week 35, this developer is inactive.
         staff.setDateInactive(LocalDate.of(2020, 8, 30));
@@ -96,13 +96,13 @@ public class SkylineProcessorGenerateProjectBuildingTest {
     @Test
     public void testGenerateBuildingForAGivenProject() throws ApplicationException {
 
-        staffHandler.getStaff(1).setActive(true);
-        staffHandler.getStaff(2).setActive(false);
+        staffHandler.lookup(1).setActive(true);
+        staffHandler.lookup(2).setActive(false);
         // Week 5
-        staffHandler.getStaff(2).setDateInactive(LocalDate.of(2020, 8, 30));
+        staffHandler.lookup(2).setDateInactive(LocalDate.of(2020, 8, 30));
 
         if (log.isDebugEnabled()) {
-            Staff staff = staffHandler.getStaff(2);
+            Staff staff = staffHandler.lookup(2);
             log.debug(String.format("Staff %s %s is inactive since week %d", staff.getFirstName(), staff.getLastName(), staff.getDateInactive().get(woy)));
         }
 
@@ -130,8 +130,8 @@ public class SkylineProcessorGenerateProjectBuildingTest {
     @Test
     public void anotherTestGenerateBuildingForAGivenProject() throws ApplicationException {
 
-        staffHandler.getStaff(1).setActive(true);
-        staffHandler.getStaff(2).setActive(true);
+        staffHandler.lookup(1).setActive(true);
+        staffHandler.lookup(2).setActive(true);
 
         Project project = new Project(1515, "Marignan !");
         ProjectBuilding building = this.skylineProcessor.generateProjectBuilding(project);        
@@ -157,15 +157,15 @@ public class SkylineProcessorGenerateProjectBuildingTest {
     @Test
     public void oneAnotherTestGenerateBuildingForAGivenProject() throws ApplicationException {
 
-        staffHandler.getStaff(1).setActive(false);
-        staffHandler.getStaff(1).setDateInactive(LocalDate.of(2020, 7, 14));
-        staffHandler.getStaff(2).setActive(false);
-        staffHandler.getStaff(2).setDateInactive(LocalDate.of(2020, 8, 14));
+        staffHandler.lookup(1).setActive(false);
+        staffHandler.lookup(1).setDateInactive(LocalDate.of(2020, 7, 14));
+        staffHandler.lookup(2).setActive(false);
+        staffHandler.lookup(2).setDateInactive(LocalDate.of(2020, 8, 14));
 
         if (log.isDebugEnabled()) {
-            Staff staff = staffHandler.getStaff(1);
+            Staff staff = staffHandler.lookup(1);
             log.debug(String.format("Staff %s %s is inactive since week %d", staff.getFirstName(), staff.getLastName(), staff.getDateInactive().get(woy)));
-            staff = staffHandler.getStaff(2);
+            staff = staffHandler.lookup(2);
             log.debug(String.format("Staff %s %s is inactive since week %d", staff.getFirstName(), staff.getLastName(), staff.getDateInactive().get(woy)));
         }
        

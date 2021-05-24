@@ -59,7 +59,7 @@ public class StaffControllerSerializationTest {
 			.content(STAFF))
 			.andExpect(status().isNoContent());
 					
-		Staff staff = staffHandler.getStaff(56); 
+		Staff staff = staffHandler.lookup(56); 
 		Assert.assertEquals(staff.getLastName(), "CHANAL");
 		Assert.assertEquals(staff.getFirstName(), "Eric");
 		Assert.assertEquals(staff.getLogin(), "echanal");

@@ -46,17 +46,17 @@ public class StaffControllerIsProjectReferencedTest {
 	@Test
 	@WithMockUser
 	public void testNotPresent() throws Exception {
-		staffHandler.getStaff(10000).addMission(new Mission(10000, 1, "Project test"));
-		staffHandler.getStaff(10002).addMission(new Mission(10002, 1805, "Austerlitz"));
+		staffHandler.lookup(10000).addMission(new Mission(10000, 1, "Project test"));
+		staffHandler.lookup(10002).addMission(new Mission(10002, 1805, "Austerlitz"));
 		Assert.assertFalse(staffHandler.isProjectReferenced(1789));
 	}	
 
 	@Test
 	@WithMockUser
 	public void testPresent() throws Exception {
-		staffHandler.getStaff(10000).addMission(new Mission(10000, 1, "Project test"));
-		staffHandler.getStaff(10002).addMission(new Mission(10002, 1805, "Austerlitz"));
-		staffHandler.getStaff(10002).addMission(new Mission(10002, 1789, "Revolution"));
+		staffHandler.lookup(10000).addMission(new Mission(10000, 1, "Project test"));
+		staffHandler.lookup(10002).addMission(new Mission(10002, 1805, "Austerlitz"));
+		staffHandler.lookup(10002).addMission(new Mission(10002, 1789, "Revolution"));
 		Assert.assertTrue(staffHandler.isProjectReferenced(1789));
 	}	
 	

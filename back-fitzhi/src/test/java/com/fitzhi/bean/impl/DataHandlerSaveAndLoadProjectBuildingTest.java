@@ -49,8 +49,8 @@ public class DataHandlerSaveAndLoadProjectBuildingTest {
     @Test
     public void testSaveAndLoad() throws ApplicationException {
 
-        staffHandler.getStaff(1).setActive(true);
-        staffHandler.getStaff(2).setActive(true);
+        staffHandler.lookup(1).setActive(true);
+        staffHandler.lookup(2).setActive(true);
 
         Project project = new Project(1796, "Castiglione !");
         ProjectBuilding building = this.skylineProcessor.generateProjectBuilding(project);        

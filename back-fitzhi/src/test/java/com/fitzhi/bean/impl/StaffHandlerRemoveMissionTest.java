@@ -31,13 +31,13 @@ public class StaffHandlerRemoveMissionTest {
 	public void before() {
 		staffHandler.getStaff().put(1789, new Staff(1789, "user", "password"));
 		Mission m = new Mission(1879, 1, "Nope");
-		staffHandler.getStaff(1789).getMissions().add(m);
+		staffHandler.lookup(1789).getMissions().add(m);
 	}
 
 	@Test
 	public void testRemoveMission() throws ApplicationException {
 		staffHandler.removeMission(1789, 1);
-		Assert.assertTrue("Collection of missions ", staffHandler.getStaff(1789).isEmpty());
+		Assert.assertTrue("Collection of missions ", staffHandler.lookup(1789).isEmpty());
 	}
 
 	@After

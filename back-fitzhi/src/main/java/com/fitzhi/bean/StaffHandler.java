@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+
 import com.fitzhi.bean.impl.StringTransform;
 import com.fitzhi.controller.StaffController;
 import com.fitzhi.data.internal.Experience;
@@ -14,6 +17,7 @@ import com.fitzhi.data.internal.ResumeSkill;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.data.internal.Author;
 
 /**
@@ -97,6 +101,30 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 *         none's found
 	 */
 	Staff lookup(Author author);
+
+ 	/**
+	 * <p>
+	 * Retrieve the staff member corresponding to the given identifier, if any.
+	 * </p>
+	 * 
+	 * @param idStaff the staff identifier.
+	 * @return the selected staff or {@code null} if none exists.
+	 */
+	Staff lookup(int idStaff);
+
+ 	/**
+	 * <p>
+	 * Retrieve the staff member corresponding to the given identifier, if any.
+	 * </p>
+	 * <p>
+	 * if this staff member does not exist (any more), then the exception {@ling NotFoundException} is thrown.
+	 * </p>
+	 * 
+	 * @param idStaff the staff identifier.
+	 * @return the selected staff
+	 * @throws NotFoundException thrown if the ID does not exist
+	 */
+	@NotNull Staff getStaff(int idStaff) throws NotFoundException;
 
 	/**
 	 * Search for a Staff member with the same email address, as the given one
@@ -288,16 +316,6 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * @param idProject the project identifier
 	 */
 	void delMission(int idStaff, int idProject);
-
-	/**
-	 * <p>
-	 * Get and return a staff member given his identifier.
-	 * </p>
-	 * 
-	 * @param idStaff the staff identifier.
-	 * @return the selected staff or {@code null} if none exists.
-	 */
-	Staff getStaff(int idStaff);
 
 	/**
 	 * <p>

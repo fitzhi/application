@@ -77,7 +77,7 @@ public class PluggedProjectGhostControllerTest {
 		project.getGhosts().add(new Ghost("pseudoUnlinked", false));
 		project.getGhosts().add(new Ghost("pseudoLinked", 2, false));
 		
-		Staff staff = staffHandler.getStaff(2);
+		Staff staff = staffHandler.lookup(2);
 		staff.addMission(new Mission(2, ID_PROJECT, project.getName()));
 	}
 

@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.PostConstruct;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -208,6 +209,19 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		return staff;
 	}
 	
+	@Override
+	public Staff lookup(int idStaff) {
+		return getStaff().get(idStaff);
+	}
+
+	@Override
+	public @NotNull Staff getStaff(int idStaff) throws NotFoundException {
+		Staff staff = getStaff().get(idStaff);
+		if (staff == null) {
+			throw new NotFoundException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
+		}
+		return staff;
+	}
 
 	@Override
 	public boolean isEligible(Staff staff, String criteria) {
@@ -470,7 +484,6 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 
 		Staff staff = getStaff().get(contributor.getIdStaff());
 		if (staff == null) {
-			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, contributor.getIdStaff()));
 		}
 		
 		Optional<Mission> oMission = staff.getMissions().stream()
@@ -617,7 +630,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 
 		controlWorkforceMember(input);
 
-		Staff updStaff = getStaff(input.getIdStaff());
+		Staff updStaff = lookup(input.getIdStaff());
 		if (updStaff == null) {
 			throw new ApplicationRuntimeException(String.format("WTF : A staff with id %d should exist.", input.getIdStaff()));
 		}
@@ -766,12 +779,6 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			this.dataUpdated = true;
 		}
 	}
-
-	@Override
-	public Staff getStaff(int idStaff) {
-		return getStaff().get(idStaff);
-	}
-
 	
 	@Override
 	public boolean hasStaff(int idStaff) {
@@ -905,7 +912,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	@Override
 	public void removeMission(final int idStaff, final int idProject) throws ApplicationException {
 		synchronized (lockDataUpdated) {
-			Staff staff = getStaff(idStaff);
+			Staff staff = lookup(idStaff);
 			Optional<Mission> oMission = staff.getMissions().stream().filter(pr -> (pr.getIdProject() == idProject)).findFirst();
 			if (oMission.isPresent()) {
 				staff.getMissions().remove(oMission.get());

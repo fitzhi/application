@@ -32,11 +32,11 @@ public class StaffHandlerRemoveProjectTest {
 
 		staffHandler.getStaff().put(1789, new Staff(1789, "user", "password"));
 		Mission m = new Mission(1879, 1, "Nope");
-		staffHandler.getStaff(1789).getMissions().add(m);
+		staffHandler.lookup(1789).getMissions().add(m);
 
 		staffHandler.getStaff().put(1964, new Staff(1964, "Frédéric", "V"));
 		m = new Mission(1964, 1, "Nope");
-		staffHandler.getStaff(1964).getMissions().add(m);
+		staffHandler.lookup(1964).getMissions().add(m);
 	}
 
 	@Test

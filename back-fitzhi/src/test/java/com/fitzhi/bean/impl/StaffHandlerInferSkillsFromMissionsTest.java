@@ -68,7 +68,7 @@ public class StaffHandlerInferSkillsFromMissionsTest {
 	@Test
 	public void testICD_1() throws ApplicationException {
 		staffHandler.inferSkillsFromMissions(ID_1);
-		Staff staff = staffHandler.getStaff(ID_1);
+		Staff staff = staffHandler.lookup(ID_1);
 		Assert.assertEquals(3, staff.getExperiences().size());
 		Assert.assertNotNull(staff.getExperience(ID_SKILL_JAVA));
 		Assert.assertEquals(1, staff.getExperience(ID_SKILL_JAVA).getLevel());
@@ -79,7 +79,7 @@ public class StaffHandlerInferSkillsFromMissionsTest {
 	@Test
 	public void testICD_2() throws ApplicationException {
 		staffHandler.inferSkillsFromMissions(ID_2);
-		Staff staff = staffHandler.getStaff(ID_2);
+		Staff staff = staffHandler.lookup(ID_2);
 		Assert.assertEquals(2, staff.getExperiences().size());
 		Assert.assertNotNull(staff.getExperience(ID_SKILL_JAVA));
 		Assert.assertEquals(5, staff.getExperience(ID_SKILL_JAVA).getLevel());

@@ -83,7 +83,7 @@ public class StaffControllerRevokeProjectTest {
 	public void doCannotRevokeActiveProject() throws Exception {
 		Mission m = new Mission(idStaff, 1, "test");
 		m.setNumberOfCommits(1);
-		staffHandler.getStaff(idStaff).addMission(m);
+		staffHandler.lookup(idStaff).addMission(m);
 		this.mvc.perform(delete(String.format("/api/staff/%d/project/1", idStaff))).andExpect(status().isInternalServerError());
 	}
 
@@ -93,14 +93,14 @@ public class StaffControllerRevokeProjectTest {
 		
 		Mission m = new Mission(idStaff, 1, "test");
 		m.setNumberOfCommits(0);
-		staffHandler.getStaff(idStaff).addMission(m);
+		staffHandler.lookup(idStaff).addMission(m);
 
 		this.mvc
 			.perform(delete(String.format("/api/staff/%d/project/1", idStaff)))
 			.andExpect(status().isOk())
 			.andExpect(content().string("true"));
 
-		Assert.assertTrue("The mission 1 has been deleted", staffHandler.getStaff(idStaff).getMissions().isEmpty());
+		Assert.assertTrue("The mission 1 has been deleted", staffHandler.lookup(idStaff).getMissions().isEmpty());
 	}
 
 	@After

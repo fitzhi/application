@@ -68,7 +68,7 @@ public class ProjectControllerAddProjectTest {
 	@WithMockUser
 	public void addProjectOk() throws Exception {
 
-		when(staffHandler.getStaff(1789)).thenReturn(new Staff(1789, "login", ""));
+		when(staffHandler.lookup(1789)).thenReturn(new Staff(1789, "login", ""));
 		when(projectHandler.find(1805)).thenReturn(new Project(1805, "Austerlitz"));
 		doNothing().when(staffHandler).addMission(1789, 1805, "Austerlitz");
 
@@ -79,7 +79,7 @@ public class ProjectControllerAddProjectTest {
 			.andDo(print())
 			.andReturn();
 		
-		Mockito.verify(staffHandler, times(1)).getStaff(1789);
+		Mockito.verify(staffHandler, times(1)).lookup(1789);
 		Mockito.verify(projectHandler, times(1)).find(1805);
 		Mockito.verify(staffHandler, times(1)).addMission(1789, 1805, "Austerlitz");
 	}
@@ -88,7 +88,7 @@ public class ProjectControllerAddProjectTest {
 	@WithMockUser
 	public void addProjectKO() throws Exception {
 
-		when(staffHandler.getStaff(1789)).thenReturn(null);
+		when(staffHandler.lookup(1789)).thenReturn(null);
 
 		this.mvc.perform(put("/api/staff/1789/project/1805"))
 			.andExpect(status().isNotFound())
@@ -98,7 +98,7 @@ public class ProjectControllerAddProjectTest {
 			.andDo(print())
 			.andReturn();
 		
-		Mockito.verify(staffHandler, times(1)).getStaff(1789);
+		Mockito.verify(staffHandler, times(1)).lookup(1789);
 	}
 
 }

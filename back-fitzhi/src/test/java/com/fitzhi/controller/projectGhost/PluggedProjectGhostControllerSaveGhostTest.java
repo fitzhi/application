@@ -77,7 +77,7 @@ public class PluggedProjectGhostControllerSaveGhostTest {
 		project.getGhosts().add(new Ghost("pseudoLinked", 2, false));
 
 		// We remove this entry because one un-identified test adds this project to this Staff missions
-		Staff staff = staffHandler.getStaff(1);
+		Staff staff = staffHandler.lookup(1);
 		Optional<Mission> oToBeRemoved = staff.getMissions().stream().filter(mission -> (mission.getIdProject() == ID_PROJECT)).findFirst();
 		if (oToBeRemoved.isPresent()) {
 			staff.getMissions().remove(oToBeRemoved.get());

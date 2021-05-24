@@ -165,7 +165,7 @@ public class ProjectAnalysisController  {
 			log.debug(String.format("POST verb on /api/project/%d/analysis/onboard/%d", idProject, idStaff));
 		}
 		
-		Staff staff = staffHandler.getStaff(idStaff);		
+		Staff staff = staffHandler.lookup(idStaff);		
 		if (staff == null) {
 			throw new ApplicationException(CODE_STAFF_NOFOUND, MessageFormat.format(MESSAGE_STAFF_NOFOUND, idStaff));
 		}

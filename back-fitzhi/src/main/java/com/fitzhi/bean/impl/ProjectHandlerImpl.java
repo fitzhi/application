@@ -388,7 +388,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 					idAssociatedStaff));
 		}
 		
-		Staff staff = staffHandler.getStaff(idAssociatedStaff);
+		Staff staff = staffHandler.lookup(idAssociatedStaff);
 		if (staff == null) {
 			throw new ApplicationRuntimeException(
 					String.format("SHOULD NOT PASS HERE : id %d does not exist anymore!", idAssociatedStaff));
@@ -434,7 +434,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				
 				oGhost.get().setTechnical(technical);
 				
-				Staff staff = staffHandler.getStaff(oGhost.get().getIdStaff());
+				Staff staff = staffHandler.lookup(oGhost.get().getIdStaff());
 				if ((staff != null) && (technical)) {
 					staff.getMissions().stream()
 						.filter(mission -> mission.getIdProject() == project.getId())

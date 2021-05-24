@@ -1695,7 +1695,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			.findFirst();
 		if (oGhost.isPresent()) {
 			Ghost selectedGhost = oGhost.get();
-			if (staffHandler.getStaff(selectedGhost.getIdStaff()) == null) {
+			if (staffHandler.lookup(selectedGhost.getIdStaff()) == null) {
 				throw new ApplicationRuntimeException("Ghost " + selectedGhost.getPseudo()
 						+ " has an invalid idStaff " + selectedGhost.getIdStaff());
 			}

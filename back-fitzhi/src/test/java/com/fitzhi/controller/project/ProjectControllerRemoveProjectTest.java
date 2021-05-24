@@ -85,7 +85,7 @@ public class ProjectControllerRemoveProjectTest {
 	@Test
 	@WithMockUser
 	public void testRemoveProjectReferencedInStaff() throws Exception {	
-		staffHandler.getStaff(1).addMission(new Mission(1, 1789, "revolutionary project"));
+		staffHandler.lookup(1).addMission(new Mission(1, 1789, "revolutionary project"));
 		this.mvc.perform(delete("/api/project/" + 1789)).andExpect(status().isInternalServerError());		
 	}
 	
@@ -98,7 +98,7 @@ public class ProjectControllerRemoveProjectTest {
 	@After
 	public void after() throws Exception {
 		projectHandler.getProjects().remove(1789);
-		staffHandler.getStaff(1).getMissions().clear();
+		staffHandler.lookup(1).getMissions().clear();
 	}
 	
 }
