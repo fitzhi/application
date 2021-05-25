@@ -60,7 +60,7 @@ public class ProjectSonarControllerSaveUrlSonarServerTest {
 	@WithMockUser
 	public void saveUrlSonarServer() throws Exception {
 		
-		when(projectHandler.find(1805)).thenReturn(new Project(1805, "Testing project"));
+		when(projectHandler.getProject(1805)).thenReturn(new Project(1805, "Testing project"));
 	
 		this.mvc.perform(put("/api/project/1805/sonar/url")
 				.contentType(MediaType.TEXT_PLAIN)
@@ -72,7 +72,7 @@ public class ProjectSonarControllerSaveUrlSonarServerTest {
 		Mockito.verify(projectHandler, times(1)).saveUrlSonarServer(
 				new Project(1805, "Testing project"), 
 				"URL_OF_SONAR");
-		Mockito.verify(projectHandler, times(1)).find(1805);
+		Mockito.verify(projectHandler, times(1)).getProject(1805);
 	}
 
 	@Test
@@ -81,7 +81,7 @@ public class ProjectSonarControllerSaveUrlSonarServerTest {
 		
 		doThrow(new ApplicationException(CODE_PROJECT_NOFOUND, "Project 1805 not found"))
 			.when(projectHandler)
-			.find(1805);
+			.getProject(1805);
 
 		this.mvc.perform(put("/api/project/1805/sonar/url")
 				.contentType(MediaType.TEXT_PLAIN)
@@ -91,7 +91,7 @@ public class ProjectSonarControllerSaveUrlSonarServerTest {
 				.andExpect(jsonPath("$.message", is("Project 1805 not found")))
 				.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)));
 		
-		Mockito.verify(projectHandler, times(1)).find(1805);
+		Mockito.verify(projectHandler, times(1)).getProject(1805);
 	}
 
 }

@@ -78,7 +78,7 @@ public class ProjectControllerRetrieveDashboardTest {
 
 		Project p = new Project(1789, "The revolutionary project");
 		
-		when(projectHandler.find(1789)).thenReturn(p);
+		when(projectHandler.getProject(1789)).thenReturn(p);
 		when(scanner.hasAvailableGeneration(p)).thenReturn(false);
 		// A generation has already been launched.
 		when(tasks.hasActiveTask(Global.DASHBOARD_GENERATION, "project", 1789)).thenReturn(true);
@@ -91,7 +91,7 @@ public class ProjectControllerRetrieveDashboardTest {
 			.andExpect(jsonPath("$.code", is(CODE_MULTIPLE_TASK)))
 			.andExpect(jsonPath("$.message", is("A dashboard generation has already been launched for The revolutionary project")));
 
-		verify(projectHandler, times(1)).find(1789);
+		verify(projectHandler, times(1)).getProject(1789);
 		verify(scanner, times(1)).hasAvailableGeneration(p);
 		verify(tasks, times(1)).hasActiveTask(Global.DASHBOARD_GENERATION, "project", 1789);
 		verify(scanner, never()).generateAsync(p, new SettingsGeneration());
@@ -108,7 +108,7 @@ public class ProjectControllerRetrieveDashboardTest {
 
 		Project p = new Project(1789, "The revolutionary project");
 		
-		when(projectHandler.find(1789)).thenReturn(p);
+		when(projectHandler.getProject(1789)).thenReturn(p);
 		when(scanner.hasAvailableGeneration(p)).thenReturn(false);
 		doNothing().when(scanner).generateAsync(p, new SettingsGeneration());
 		// A generation has already been launched.
@@ -122,7 +122,7 @@ public class ProjectControllerRetrieveDashboardTest {
 			.andExpect(jsonPath("$.code", is(CODE_DASHBOARD_START)))
 			.andExpect(jsonPath("$.message", is(MESSAGE_DASHBOARD_START)));
 
-		verify(projectHandler, times(1)).find(1789);
+		verify(projectHandler, times(1)).getProject(1789);
 		verify(scanner, times(1)).hasAvailableGeneration(p);
 		verify(tasks, times(1)).hasActiveTask(Global.DASHBOARD_GENERATION, "project", 1789);
 		verify(scanner).generateAsync(p, new SettingsGeneration());
@@ -139,7 +139,7 @@ public class ProjectControllerRetrieveDashboardTest {
 
 		Project p = new Project(1789, "The revolutionary project");
 		
-		when(projectHandler.find(1789)).thenReturn(p);
+		when(projectHandler.getProject(1789)).thenReturn(p);
 		when(scanner.hasAvailableGeneration(p)).thenReturn(true);
 		when(scanner.generate(p, new SettingsGeneration())).thenReturn(new RiskDashboard(null, null));
 		doNothing().when(scanner).generateAsync(p, new SettingsGeneration());
@@ -152,7 +152,7 @@ public class ProjectControllerRetrieveDashboardTest {
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
 
-		verify(projectHandler, times(1)).find(1789);
+		verify(projectHandler, times(1)).getProject(1789);
 		verify(scanner, times(1)).hasAvailableGeneration(p);
 		verify(tasks, never()).hasActiveTask(Global.DASHBOARD_GENERATION, "project", 1789);
 		verify(scanner, never()).generateAsync(p, new SettingsGeneration());

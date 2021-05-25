@@ -56,7 +56,7 @@ public class ProjectSonarControllerLoadTest {
 		p.setSonarProjects(new ArrayList<SonarProject>());
 		p.getSonarProjects().add(new SonarProject("key-sonar", "name-sonar"));
 
-		when(projectHandler.find(1805)).thenReturn(p);
+		when(projectHandler.getProject(1805)).thenReturn(p);
 	
 		this.mvc.perform(get("/api/project/1805/sonar/key-sonar")
 				.contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -64,7 +64,7 @@ public class ProjectSonarControllerLoadTest {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 				.andExpect(jsonPath("$.name", is("name-sonar")));
 
-		verify(projectHandler, times(1)).find(1805);
+		verify(projectHandler, times(1)).getProject(1805);
 
 	}
 
@@ -74,7 +74,7 @@ public class ProjectSonarControllerLoadTest {
 		
 		doThrow(new ApplicationException(CODE_PROJECT_NOFOUND, "Project 1805 not found"))
 			.when(projectHandler)
-			.find(1805);
+			.getProject(1805);
 
 		this.mvc.perform(get("/api/project/1805/sonar/key-sonar")
 				.contentType(MediaType.APPLICATION_JSON_UTF8))
@@ -83,7 +83,7 @@ public class ProjectSonarControllerLoadTest {
 				.andExpect(jsonPath("$.message", is("Project 1805 not found")))
 				.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)));
 
-		verify(projectHandler, times(1)).find(1805);
+		verify(projectHandler, times(1)).getProject(1805);
 	}
 
 }

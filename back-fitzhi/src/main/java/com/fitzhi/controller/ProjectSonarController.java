@@ -63,7 +63,7 @@ public class ProjectSonarController {
 			log.debug(String.format("PUT verb on /api/project/%d/sonar", idProject));
 		}
 		
-		Project project = projectHandler.find(idProject);
+		Project project = projectHandler.getProject(idProject);
 		projectHandler.addSonarEntry(project, sonarProject); 
 		return true;
 	}
@@ -87,7 +87,7 @@ public class ProjectSonarController {
 			@PathVariable("idProject") int idProject,
 			@PathVariable("sonarKey") String sonarKey) throws ApplicationException {
 
-		Project project = projectHandler.find(idProject);
+		Project project = projectHandler.getProject(idProject);
 		
 		Optional<SonarProject> oSonarProject = project.getSonarProjects()
 			.stream()
@@ -115,7 +115,7 @@ public class ProjectSonarController {
 			log.debug(String.format("DELETE verb on /api/project/%d/sonar/%s", idProject, sonarKey));
 		}
 		
-		Project project = projectHandler.find(idProject);
+		Project project = projectHandler.getProject(idProject);
 		projectHandler.removeSonarEntry(project, sonarKey); 
 		return true;
 	}
@@ -135,7 +135,7 @@ public class ProjectSonarController {
 				"POST verb on /api/project/%d/sonar/%s/filestats for project", idProject, sonarKey));
 		}
 		
-		Project project = projectHandler.find(idProject);
+		Project project = projectHandler.getProject(idProject);
 		projectHandler.saveFilesStats(project, sonarKey, filesStats); 
 		return true;
 			
@@ -161,7 +161,7 @@ public class ProjectSonarController {
 				"PUT verb on /api/project/%d/sonar/%s/evaluation", idProject, sonarKey));
 		}
 		
-		Project project = projectHandler.find(idProject);
+		Project project = projectHandler.getProject(idProject);
 		projectHandler.saveSonarEvaluation(project, sonarKey, sonarEvaluation); 
 		return true;
 	}
@@ -180,7 +180,7 @@ public class ProjectSonarController {
 			log.debug(String.format("PUT verb on /api/project/%d/sonar/%s/metricValues", idProject, sonarKey));
 		}
 		
-		Project project = projectHandler.find(idProject);
+		Project project = projectHandler.getProject(idProject);
 		projectHandler.saveSonarMetricValues(project, sonarKey, metricValues); 
 		return true;
 	}
@@ -200,7 +200,7 @@ public class ProjectSonarController {
 				idProject, urlSonarServer));
 		}
 		
-		Project project = projectHandler.find(idProject);
+		Project project = projectHandler.getProject(idProject);
 		projectHandler.saveUrlSonarServer(project, urlSonarServer); 
 		return true;
 	}

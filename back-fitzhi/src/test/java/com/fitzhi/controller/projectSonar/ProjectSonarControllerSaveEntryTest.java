@@ -61,7 +61,7 @@ public class ProjectSonarControllerSaveEntryTest {
 	@WithMockUser
 	public void saveEntry() throws Exception {
 		
-		when(projectHandler.find(1805)).thenReturn(new Project(1805, "Testing project"));
+		when(projectHandler.getProject(1805)).thenReturn(new Project(1805, "Testing project"));
 	
 		this.mvc.perform(put("/api/project/1805/sonar")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -74,7 +74,7 @@ public class ProjectSonarControllerSaveEntryTest {
 			.addSonarEntry(
 				new Project(1805, "Testing project"), 
 				new SonarProject("com.fitzhi:fitzhi", "name-sonar"));
-		Mockito.verify(projectHandler, times(1)).find(1805);
+		Mockito.verify(projectHandler, times(1)).getProject(1805);
 		
 	}
 
@@ -84,7 +84,7 @@ public class ProjectSonarControllerSaveEntryTest {
 		
 		doThrow(new ApplicationException(CODE_PROJECT_NOFOUND, "Project 1805 not found"))
 			.when(projectHandler)
-			.find(1805);
+			.getProject(1805);
 
 		this.mvc.perform(put("/api/project/1805/sonar")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)

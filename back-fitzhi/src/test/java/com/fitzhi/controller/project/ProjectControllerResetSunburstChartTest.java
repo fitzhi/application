@@ -83,7 +83,7 @@ public class ProjectControllerResetSunburstChartTest {
 
 		Project p = new Project(1789, "The revolutionary project");
 		
-		when(projectHandler.find(1789)).thenReturn(p);
+		when(projectHandler.getProject(1789)).thenReturn(p);
 		doNothing().when(projectHandler).saveLocationRepository(1789, null);
 		doNothing().when(staffHandler).removeProject(1789);
 		when(cacheDataHandler.removeRepository(p)).thenReturn(true);
@@ -95,7 +95,7 @@ public class ProjectControllerResetSunburstChartTest {
 			.content(gson.toJson(new SettingsGeneration())))
 			.andExpect(status().isAccepted());
 
-		verify(projectHandler, times(1)).find(1789);
+		verify(projectHandler, times(1)).getProject(1789);
 		verify(projectHandler, times(1)).saveLocationRepository(1789, null);
 		verify(staffHandler, times(1)).removeProject(1789);
 		verify(cacheDataHandler, times(1)).removeRepository(p);
@@ -111,7 +111,7 @@ public class ProjectControllerResetSunburstChartTest {
 	@WithMockUser
 	public void resetSunburstDataKO() throws Exception {
 
-		when(projectHandler.find(666)).thenThrow(
+		when(projectHandler.getProject(666)).thenThrow(
 			new NotFoundException(CODE_PROJECT_NOFOUND, MESSAGE_PROJECT_NOFOUND));
 
 		this.mvc.perform(delete("/api/project/666/sunburst")
@@ -121,7 +121,7 @@ public class ProjectControllerResetSunburstChartTest {
 			.andExpect(jsonPath("$.message", is(MESSAGE_PROJECT_NOFOUND)))
 			.andExpect(status().isNotFound());
 
-		verify(projectHandler, times(1)).find(666);
+		verify(projectHandler, times(1)).getProject(666);
 		verify(projectHandler, never()).saveLocationRepository(anyInt(), anyString());
 		verify(staffHandler, never()).removeProject(anyInt());
 		verify(cacheDataHandler, never()).removeRepository(any(Project.class));

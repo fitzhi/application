@@ -39,7 +39,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	Optional<Project> lookup(String projectName) throws ApplicationException;
 
 	/**
-	 * Retrieve a project from the portfolio.
+	 * Retrieve a project from the portfolio on the given ID.
 	 * 
 	 * @param idProject
 	 *            project identifier
@@ -58,7 +58,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @throws ApplicationException thrown if an error occurs during the search, most probably an {@link IOException}
 	 * @throws NotFoundException thrown if the project identifier is not retrieved in the application portfolio
 	 */
-	Project find(int idProject) throws ApplicationException, NotFoundException;
+	Project getProject(int idProject) throws ApplicationException, NotFoundException;
 
 	/**
 	 * <p>

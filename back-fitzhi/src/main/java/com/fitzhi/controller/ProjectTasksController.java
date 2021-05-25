@@ -83,7 +83,7 @@ public class ProjectTasksController {
 			log.debug(String.format("GET command on /api/project/%d/task/%s", idProject, operation)); 
 		}
 
-		Project project = projectHandler.find(idProject);
+		Project project = projectHandler.getProject(idProject);
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Project %s", project.getName())); 
 		}

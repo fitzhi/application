@@ -70,7 +70,7 @@ public class ProjectControllerAddProjectTest {
 	public void addProjectOk() throws Exception {
 
 		when(staffHandler.getStaff(1789)).thenReturn(new Staff(1789, "login", ""));
-		when(projectHandler.find(1805)).thenReturn(new Project(1805, "Austerlitz"));
+		when(projectHandler.getProject(1805)).thenReturn(new Project(1805, "Austerlitz"));
 		doNothing().when(staffHandler).addMission(1789, 1805, "Austerlitz");
 
 		this.mvc.perform(put("/api/staff/1789/project/1805"))
@@ -81,7 +81,7 @@ public class ProjectControllerAddProjectTest {
 			.andReturn();
 		
 		Mockito.verify(staffHandler, times(1)).getStaff(1789);
-		Mockito.verify(projectHandler, times(1)).find(1805);
+		Mockito.verify(projectHandler, times(1)).getProject(1805);
 		Mockito.verify(staffHandler, times(1)).addMission(1789, 1805, "Austerlitz");
 	}
 

@@ -565,7 +565,7 @@ public class StaffController {
 
 		final Staff staff = staffHandler.getStaff(idStaff);
 		
-		final Project project = projectHandler.find(idProject);
+		final Project project = projectHandler.getProject(idProject);
 
 		//
 		// If the passed project is already present in the staff member's

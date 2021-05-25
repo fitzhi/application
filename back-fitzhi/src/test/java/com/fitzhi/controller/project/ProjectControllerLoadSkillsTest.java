@@ -56,7 +56,7 @@ public class ProjectControllerLoadSkillsTest {
 		Project p = new Project(1789, "1789");
 		p.getSkills().put(1, new ProjectSkill(1));
 		p.getSkills().put(2, new ProjectSkill(2));
-		when(projectHandler.find(1789)).thenReturn (p);
+		when(projectHandler.getProject(1789)).thenReturn (p);
 
 		this.mvc.perform(get("/api/project/1789/skills"))
 			.andExpect(status().isOk())
@@ -64,7 +64,7 @@ public class ProjectControllerLoadSkillsTest {
 			.andExpect(jsonPath("$[1].idSkill", is(2)))
 			.andDo(print());
 
-		Mockito.verify(projectHandler, times(1)).find(1789);
+		Mockito.verify(projectHandler, times(1)).getProject(1789);
 
 	}
 
@@ -73,14 +73,14 @@ public class ProjectControllerLoadSkillsTest {
 	@WithMockUser
 	public void loadSkillsKO() throws Exception {
 
-		when(projectHandler.find(666)).thenThrow(new NotFoundException(CODE_PROJECT_NOFOUND, "Error message"));
+		when(projectHandler.getProject(666)).thenThrow(new NotFoundException(CODE_PROJECT_NOFOUND, "Error message"));
 
 		this.mvc.perform(get("/api/project/666/skills"))
 			.andExpect(status().isNotFound())
 			.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)))
 			.andExpect(jsonPath("$.message", is("Error message")));
 
-		Mockito.verify(projectHandler, times(1)).find(666);
+		Mockito.verify(projectHandler, times(1)).getProject(666);
 
 	}
 }

@@ -249,7 +249,7 @@ public class ProjectController  {
 	public void removeProject(@PathVariable("idProject") int idProject)
 			throws NotFoundException, ApplicationException {
 
-		Project project = projectHandler.find(idProject);
+		Project project = projectHandler.getProject(idProject);
 
 		if (!project.isEmpty()) {
 			throw new ApplicationException(CODE_PROJECT_IS_NOT_EMPTY,
@@ -279,7 +279,7 @@ public class ProjectController  {
 	public void inactivateProject(@PathVariable("idProject") int idProject)
 			throws NotFoundException, ApplicationException {
 
-		Project project = projectHandler.find(idProject);
+		Project project = projectHandler.getProject(idProject);
 		
 		projectHandler.inactivateProject(project);
 	}
@@ -298,7 +298,7 @@ public class ProjectController  {
 	public void reactivateProject(@PathVariable("idProject") int idProject)
 			throws NotFoundException, ApplicationException {
 		
-		Project project = projectHandler.find(idProject);
+		Project project = projectHandler.getProject(idProject);
 
 		projectHandler.reactivateProject(project);
 	}
@@ -331,7 +331,7 @@ public class ProjectController  {
 	@GetMapping(value = "/{idProject}")
 	public Project read(@PathVariable("idProject") int idProject) throws ApplicationException, NotFoundException {
 
-		Project project = projectHandler.find(idProject);
+		Project project = projectHandler.getProject(idProject);
 
 		// We hide the password because we do not want to transport the GIT password on the network.
 		return buildProjectWithoutPassword(project);
@@ -350,7 +350,7 @@ public class ProjectController  {
 	public Collection<ProjectSkill> loadSkills(final @PathVariable("idProject") int idProject)
 			throws ApplicationException {
 
-		Project project = projectHandler.find(idProject);
+		Project project = projectHandler.getProject(idProject);
 
 		return project.getSkills().values();
 	}
@@ -367,7 +367,7 @@ public class ProjectController  {
 	@GetMapping(value = "/{idProject}/branches")
 	public String[] branches(@PathVariable("idProject") int idProject) throws ApplicationException {
 
-		Project project = projectHandler.find(idProject);
+		Project project = projectHandler.getProject(idProject);
 
 		final String REF_HEADS = "refs/heads/";
 
@@ -455,7 +455,7 @@ public class ProjectController  {
 	@ApiOperation(value = "Test the connection settings for a given project.")
 	@GetMapping(value = "/{idProject}/test")
 	public boolean scmConnect(@PathVariable("idProject") int idProject) throws NotFoundException, ApplicationException {
-		Project project = projectHandler.find(idProject);
+		Project project = projectHandler.getProject(idProject);
 		boolean connected = this.scanner.testConnection(project);
 		return connected;
 	}
@@ -547,7 +547,7 @@ public class ProjectController  {
 				settings.getIdStaffSelected()));
 		}
 
-		Project project = projectHandler.find(idProject);
+		Project project = projectHandler.getProject(idProject);
 
 		if (scanner.hasAvailableGeneration(project)) {
 			return generate(project, settings);
@@ -642,7 +642,7 @@ public class ProjectController  {
 			log.debug(String.format("Removing project with %d", idProject));
 		}
 
-		Project project = projectHandler.find(idProject);
+		Project project = projectHandler.getProject(idProject);
 
 		// We renitialize the local repository if the user asks for a RESET, comparing to a REFRESH 
 		projectHandler.saveLocationRepository(idProject, null);
@@ -694,7 +694,7 @@ public class ProjectController  {
 			log.debug(String.format("Request for the generation of the Sunburst chart for project %d", idProject));
 		}
 
-		Project project = projectHandler.find(idProject);
+		Project project = projectHandler.getProject(idProject);
 
 		cacheDataHandler.removeRepository(project);
 

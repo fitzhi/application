@@ -61,7 +61,7 @@ public class ProjectSonarControllerSaveEvaluationTest {
 	@WithMockUser
 	public void saveEvaluation() throws Exception {
 		
-		when(projectHandler.find(1805)).thenReturn(new Project(1805, "Testing project"));
+		when(projectHandler.getProject(1805)).thenReturn(new Project(1805, "Testing project"));
 	
 		this.mvc.perform(put("/api/project/1805/sonar/key-sonar/evaluation")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -74,7 +74,7 @@ public class ProjectSonarControllerSaveEvaluationTest {
 				new Project(1805, "Testing project"), 
 				"key-sonar", 
 				new SonarEvaluation());
-		Mockito.verify(projectHandler, times(1)).find(1805);
+		Mockito.verify(projectHandler, times(1)).getProject(1805);
 	}
 
 	@Test
@@ -83,7 +83,7 @@ public class ProjectSonarControllerSaveEvaluationTest {
 		
 		doThrow(new ApplicationException(CODE_PROJECT_NOFOUND, "Project 1805 not found"))
 			.when(projectHandler)
-			.find(1805);
+			.getProject(1805);
 
 		this.mvc.perform(put("/api/project/1805/sonar/key-sonar/evaluation")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)

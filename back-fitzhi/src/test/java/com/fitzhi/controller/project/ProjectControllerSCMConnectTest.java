@@ -58,7 +58,7 @@ public class ProjectControllerSCMConnectTest {
 	public void connectionSucceeds() throws Exception {
 
 		Project p = new Project(1789, "1789");		
-		when(projectHandler.find(1789)).thenReturn (p);
+		when(projectHandler.getProject(1789)).thenReturn (p);
 		when(crawler.testConnection(p)).thenReturn(true);
 
 		this.mvc.perform(get("/api/project/1789/test"))
@@ -66,7 +66,7 @@ public class ProjectControllerSCMConnectTest {
 			.andExpect(content().string("true"))
 			.andDo(print());
 
-		Mockito.verify(projectHandler, times(1)).find(1789);
+		Mockito.verify(projectHandler, times(1)).getProject(1789);
 		Mockito.verify(crawler, times(1)).testConnection(p);
 	}
 
@@ -75,7 +75,7 @@ public class ProjectControllerSCMConnectTest {
 	public void connectionFails() throws Exception {
 
 		Project p = new Project(1789, "1789");		
-		when(projectHandler.find(1789)).thenReturn (p);
+		when(projectHandler.getProject(1789)).thenReturn (p);
 		when(crawler.testConnection(p)).thenReturn(false);
 
 		this.mvc.perform(get("/api/project/1789/test"))
@@ -83,7 +83,7 @@ public class ProjectControllerSCMConnectTest {
 			.andExpect(content().string("false"))
 			.andDo(print());
 
-		Mockito.verify(projectHandler, times(1)).find(1789);
+		Mockito.verify(projectHandler, times(1)).getProject(1789);
 		Mockito.verify(crawler, times(1)).testConnection(p);
 	}
 
@@ -91,14 +91,14 @@ public class ProjectControllerSCMConnectTest {
 	@WithMockUser
 	public void loadSkillsKO() throws Exception {
 
-		when(projectHandler.find(666)).thenThrow(new NotFoundException(CODE_PROJECT_NOFOUND, "Error message"));
+		when(projectHandler.getProject(666)).thenThrow(new NotFoundException(CODE_PROJECT_NOFOUND, "Error message"));
 
 		this.mvc.perform(get("/api/project/666/test"))
 			.andExpect(status().isNotFound())
 			.andExpect(jsonPath("$.code", is(CODE_PROJECT_NOFOUND)))
 			.andExpect(jsonPath("$.message", is("Error message")));
 
-		Mockito.verify(projectHandler, times(1)).find(666);
+		Mockito.verify(projectHandler, times(1)).getProject(666);
 
 	}
 }

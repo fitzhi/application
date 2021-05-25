@@ -108,7 +108,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public Project find(final int idProject) throws ApplicationException {
+	public Project getProject(final int idProject) throws ApplicationException {
 		Project project = getProjects().get(idProject);
 		if (project == null) {
 			throw new NotFoundException(CODE_PROJECT_NOFOUND, 

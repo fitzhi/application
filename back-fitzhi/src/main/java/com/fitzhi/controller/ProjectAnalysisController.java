@@ -163,7 +163,7 @@ public class ProjectAnalysisController  {
 		
 		Staff staff = staffHandler.getStaff(idStaff);	
 
-		Project project = projectHandler.find(idProject);		
+		Project project = projectHandler.getProject(idProject);		
 		this.projectDashboardCustomizer.takeInAccountNewStaff(project, staff);
 			 
 		return true;
