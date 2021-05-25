@@ -14,12 +14,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 
 import com.fitzhi.data.internal.Ecosystem;
 import com.fitzhi.exception.ApplicationException;
@@ -27,6 +25,9 @@ import com.fitzhi.source.crawler.EcosystemAnalyzer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -89,12 +90,12 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 	}
 	
 	@Override
-	public List<Ecosystem> detectEcosystems(List<String> pathnames) throws ApplicationException {
+	public List<Ecosystem> detectEcosystems(Set<String> pathnames) throws ApplicationException {
 		
 		Map<Integer, Ecosystem> ecosystems = loadEcosystems();
 
 		final Map<Integer, Integer> statOnEcosystems = new HashMap<>();
-		for (int i=-1; i<ecosystems.size(); i++) {
+		for (int i = -1; i <= ecosystems.size(); i++) {
 			statOnEcosystems.put(i, 0);
 		}
 		
@@ -146,10 +147,11 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 	}
 	
 	/**
+	 * @param pathname the source pathname to be evaluated
+	 * @param  patternsEcosystem the patterns of ecosystem to be used
 	 * @return the ecosystem identifier detected in the given pathname or -1 if none's found
 	 */
 	private int getIdEcosystem(String pathname, List<Pattern> patternsEcosystem) {
-
 		for (int i=0; i<patternsEcosystem.size(); i++) {
 			Matcher matcher = patternsEcosystem.get(i).matcher(pathname);
 			if (matcher.find()) {

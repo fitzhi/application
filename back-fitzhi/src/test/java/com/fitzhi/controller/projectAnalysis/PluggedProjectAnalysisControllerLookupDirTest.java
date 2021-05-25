@@ -63,7 +63,7 @@ public class PluggedProjectAnalysisControllerLookupDirTest {
 		continents.add("antartic");
 		continents.add("asia");
 		
-		mvc.perform(get("/api/project/9999/analysis/lib-dir/a"))
+		mvc.perform(get("/api/project/9999/analysis/lib-dir?path=a"))
 		    .andExpect(status().isOk())
 		    .andExpect(content().contentType("application/json;charset=UTF-8"))
 			.andExpect(content().json(gson.toJson(continents)));

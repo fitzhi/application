@@ -223,7 +223,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * This {@code boolean} is setting the fact that the eligibility validation is
 	 * made <u>prior</u> to the creation of the repository-chart data file, or
 	 * <u>after</u>.<br/>
-	 * Techxhì is storing intermediate data on a file named
+	 * Fitzhì is storing intermediate data on a file named
 	 * "{@link Project#getId()}-{@link Project#getName()}.json".
 	 * </p>
 	 * <p>
@@ -1337,13 +1337,11 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * @throws ApplicationException thrown if any exception occurs
 	 */
 	private void updateProjectEcosystem(Project project, RepositoryAnalysis analysis) throws ApplicationException {
+
 		//
 		// To identify the eco-system, all files are taken in account.
 		//
-		Set<String> allPaths = new HashSet<>();
-		allPaths.addAll(analysis.getPathsModified());
-		allPaths.addAll(analysis.getPathsAdded());
-		List<Ecosystem> ecosystems = ecosystemAnalyzer.detectEcosystems(new ArrayList<String>(allPaths));
+		List<Ecosystem> ecosystems = ecosystemAnalyzer.detectEcosystems(analysis.getPathsAll());
 
 		if (log.isDebugEnabled()) {
 			log.debug("List of ecosystems detected");

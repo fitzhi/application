@@ -604,8 +604,8 @@ export class ProjectService extends InternalService {
 	 * @return an observable emitting the list of directories.
 	 */
 	libDirLookup$(idProject: number, criteria: string): Observable<string[]> {
-		const url =  `${this.backendSetupService.url()}/project/${idProject}/analysis/lib-dir/${criteria}`;
-		return this.httpClient.get<string[]>(url).pipe(take(1));
+		const url = `${this.backendSetupService.url()}/project/${idProject}/analysis/lib-dir`;
+		return this.httpClient.get<string[]>(url, { params: {'path': criteria} }).pipe(take(1));
 	}
 
 	/**
@@ -617,7 +617,7 @@ export class ProjectService extends InternalService {
 	libDirSave(idProject: number, libraries: Library[]) {
 		if (traceOn()) {
 			console.groupCollapsed('Saving libraries', libraries);
-			libraries.forEach(lib => console.log (lib.exclusionDirectory));
+			console.table(libraries);
 			console.groupEnd();
 		}
 		const url =  `${this.backendSetupService.url()}/project/${idProject}/analysis/lib-dir/`;

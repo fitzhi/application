@@ -2,6 +2,7 @@ package com.fitzhi.source.crawler;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.fitzhi.data.internal.Ecosystem;
 import com.fitzhi.exception.ApplicationException;
@@ -25,10 +26,10 @@ public interface EcosystemAnalyzer {
 	
 	/**
 	 * Scan the repository and detect the ecosystems .
-	 * @param pathnames the list of pathnames retrieved in the repository
+	 * @param pathnames the set of pathnames retrieved in the repository
 	 * @return the list of detected ecosystem in the repository
 	 * @throws ApplicationException thrown if any problem occurs
 	 */
-	List<Ecosystem> detectEcosystems(List<String> pathnames) throws ApplicationException;
+	List<Ecosystem> detectEcosystems(Set<String> pathnames) throws ApplicationException;
 	
 }

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -97,12 +98,12 @@ public class ProjectAnalysisController  {
 	@ApiOperation(
 		value = "Lookup all directories from the repository starting with a given criteria."
 	)
-	@GetMapping(value = "/{idProject}/analysis/lib-dir/{criteria}")
+	@GetMapping(value = "/{idProject}/analysis/lib-dir")
 	public List<String> lookup(
 			final @PathVariable("idProject") int idProject,
-			final @PathVariable("criteria") String criteria) throws ApplicationException {
+			final @RequestParam(name = "path") String criteria) throws ApplicationException {
 
-		final Project project = projectHandler.lookup(idProject);
+		final Project project = projectHandler.getProject(idProject);
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Scanning the directories from %s", project.getLocationRepository()));

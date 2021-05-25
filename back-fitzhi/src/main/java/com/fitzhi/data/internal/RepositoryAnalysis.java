@@ -155,7 +155,7 @@ public class RepositoryAnalysis {
 	}
 	
 	/**
-AddingA	 * Add a change into the collection.
+	 * Add a change into the collection.
 	 * @param fullPath the complete path of the source file
 	 * @param change the activity change .
 	 * @return <code>boolean</code> if this collection changed as a result of the call
