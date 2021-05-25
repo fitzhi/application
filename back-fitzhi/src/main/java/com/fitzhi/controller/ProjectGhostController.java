@@ -59,7 +59,7 @@ public class ProjectGhostController {
 			log.debug(String.format("POST verb on /api/project/%d/ghost for project", idProject));
 		}
 		
-		Project project = projectHandler.get(idProject);
+		Project project = projectHandler.lookup(idProject);
 		
 		// We update the staff identifier associated to this ghost.
 		if (association.getIdStaff() > 0) {
@@ -102,7 +102,7 @@ public class ProjectGhostController {
 			log.debug(String.format("DELETE verb on /api/project/%d/ghosts/%s", idProject, pseudo));
 		}
 		
-		Project project = projectHandler.get(idProject);
+		Project project = projectHandler.lookup(idProject);
 		
 		// Neither staff member, nor technical, we reset the ghost
 		projectHandler.removeGhost(project, pseudo); 

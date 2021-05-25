@@ -49,7 +49,7 @@ public class ProjectGhostControllerRemoveGhostTest {
 	@WithMockUser
 	public void removeOk() throws Exception {
 
-		when(projectHandler.get(1789)).thenReturn(new Project(1789, "The revolution"));
+		when(projectHandler.lookup(1789)).thenReturn(new Project(1789, "The revolution"));
 		doNothing().when(projectHandler).removeGhost(new Project(1789, "The revolution"), "myLogin");
 
 		this.mvc.perform(delete("/api/project/1789/ghost/myLogin"))
@@ -59,7 +59,7 @@ public class ProjectGhostControllerRemoveGhostTest {
 			.andDo(print())
 			.andReturn();
 		
-		Mockito.verify(projectHandler, times(1)).get(1789);
+		Mockito.verify(projectHandler, times(1)).lookup(1789);
 		Mockito.verify(projectHandler, times(1)).removeGhost(new Project(1789, "The revolution"), "myLogin");
 	}
 
@@ -67,7 +67,7 @@ public class ProjectGhostControllerRemoveGhostTest {
 	@WithMockUser
 	public void removeKo() throws Exception {
 
-		when(projectHandler.get(1789)).thenThrow(new ApplicationException(7777, "error 7777"));
+		when(projectHandler.lookup(1789)).thenThrow(new ApplicationException(7777, "error 7777"));
 
 		this.mvc.perform(delete("/api/project/1789/ghost/myLogin"))
 			.andExpect(status().isInternalServerError())
@@ -77,7 +77,7 @@ public class ProjectGhostControllerRemoveGhostTest {
 			.andDo(print())
 			.andReturn();
 		
-		Mockito.verify(projectHandler, times(1)).get(1789);
+		Mockito.verify(projectHandler, times(1)).lookup(1789);
 	}
 	
 }

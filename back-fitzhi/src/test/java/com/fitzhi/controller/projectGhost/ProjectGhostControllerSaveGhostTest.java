@@ -73,7 +73,7 @@ public class ProjectGhostControllerSaveGhostTest {
 		final GhostAssociation ga = ga();
 		ga.setIdStaff(1802);
 
-		when(projectHandler.get(1789)).thenReturn(new Project(1789, "The revolution"));
+		when(projectHandler.lookup(1789)).thenReturn(new Project(1789, "The revolution"));
 		doNothing().when(projectHandler).associateStaffToGhost(
 			new Project(1789, "The revolution"), "myLogin", 1802);
 
@@ -87,7 +87,7 @@ public class ProjectGhostControllerSaveGhostTest {
 			.andDo(print())
 			.andReturn();
 		
-		Mockito.verify(projectHandler, times(1)).get(1789);
+		Mockito.verify(projectHandler, times(1)).lookup(1789);
 		Mockito.verify(projectHandler, times(1)).associateStaffToGhost(
 			new Project(1789, "The revolution"), "myLogin", 1802);
 	}
@@ -99,7 +99,7 @@ public class ProjectGhostControllerSaveGhostTest {
 		final GhostAssociation ga = ga();
 		ga.setTechnical(true);
 
-		when(projectHandler.get(1789)).thenReturn(new Project(1789, "The revolution"));
+		when(projectHandler.lookup(1789)).thenReturn(new Project(1789, "The revolution"));
 		doNothing().when(projectHandler).setGhostTechnicalStatus(
 			new Project(1789, "The revolution"), "myLogin", true);
 
@@ -113,7 +113,7 @@ public class ProjectGhostControllerSaveGhostTest {
 			.andDo(print())
 			.andReturn();
 		
-		Mockito.verify(projectHandler, times(1)).get(1789);
+		Mockito.verify(projectHandler, times(1)).lookup(1789);
 		Mockito.verify(projectHandler, times(1)).setGhostTechnicalStatus(
 			new Project(1789, "The revolution"), "myLogin", true);
 	}
@@ -124,7 +124,7 @@ public class ProjectGhostControllerSaveGhostTest {
 
 		final GhostAssociation ga = ga();
 
-		when(projectHandler.get(1789)).thenReturn(new Project(1789, "The revolution"));
+		when(projectHandler.lookup(1789)).thenReturn(new Project(1789, "The revolution"));
 		doNothing().when(projectHandler).resetGhost(new Project(1789, "The revolution"), "myLogin");
 
 		this.mvc.perform(post("/api/project/1789/ghost")
@@ -137,7 +137,7 @@ public class ProjectGhostControllerSaveGhostTest {
 			.andDo(print())
 			.andReturn();
 		
-		Mockito.verify(projectHandler, times(1)).get(1789);
+		Mockito.verify(projectHandler, times(1)).lookup(1789);
 		Mockito.verify(projectHandler, times(1)).resetGhost(new Project(1789, "The revolution"), "myLogin");
 	}
 
@@ -150,7 +150,7 @@ public class ProjectGhostControllerSaveGhostTest {
 		ga.setIdStaff(1789);
 		ga.setTechnical(false);
 
-		when(projectHandler.get(1789)).thenThrow(new ApplicationException(7777, "error 7777"));
+		when(projectHandler.lookup(1789)).thenThrow(new ApplicationException(7777, "error 7777"));
 
 		this.mvc.perform(delete("/api/project/1789/ghost/myLogin")
 			.contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -163,7 +163,7 @@ public class ProjectGhostControllerSaveGhostTest {
 			.andDo(print())
 			.andReturn();
 		
-		Mockito.verify(projectHandler, times(1)).get(1789);
+		Mockito.verify(projectHandler, times(1)).lookup(1789);
 	}
 	
 }

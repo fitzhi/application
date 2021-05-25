@@ -73,7 +73,7 @@ public class PluggedProjectGhostControllerTest {
 	
 	@Before
 	public void before() throws ApplicationException {
-		project = projectHandler.get(ID_PROJECT);
+		project = projectHandler.lookup(ID_PROJECT);
 		project.getGhosts().add(new Ghost("pseudoUnlinked", false));
 		project.getGhosts().add(new Ghost("pseudoLinked", 2, false));
 		
@@ -132,7 +132,7 @@ public class PluggedProjectGhostControllerTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		project = projectHandler.get(ID_PROJECT);
+		project = projectHandler.lookup(ID_PROJECT);
 		project.getGhosts().clear();
 				
 	}

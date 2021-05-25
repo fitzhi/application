@@ -61,7 +61,7 @@ public class ProjectSonarControllerSaveMetricValuesTest {
 	
 	@Before
 	public void before() throws ApplicationException {
-		project = projectHandler.get(1);
+		project = projectHandler.lookup(1);
 		SonarProject sp = new SonarProject();
 		sp.setKey("key-sonar-1");
 		project.getSonarProjects().add(sp);
@@ -118,7 +118,7 @@ public class ProjectSonarControllerSaveMetricValuesTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		project = projectHandler.get(1);
+		project = projectHandler.lookup(1);
 		project.getSonarProjects().clear();
 	}
 	

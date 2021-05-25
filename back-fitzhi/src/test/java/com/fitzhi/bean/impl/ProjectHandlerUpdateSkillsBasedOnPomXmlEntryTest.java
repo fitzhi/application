@@ -70,11 +70,11 @@ public class ProjectHandlerUpdateSkillsBasedOnPomXmlEntryTest {
 	public void addANonExistentSkill() throws ApplicationException {
 
 		projectHandler.updateSkills(project, repo);
-		Assert.assertFalse(projectHandler.get(1789).getSkills().isEmpty());
-		Assert.assertEquals(2, projectHandler.get(1789).getSkills().size());
+		Assert.assertFalse(projectHandler.lookup(1789).getSkills().isEmpty());
+		Assert.assertEquals(2, projectHandler.lookup(1789).getSkills().size());
 		
-		Assert.assertTrue("Java should be detected", projectHandler.get(1789).getSkills().containsKey(JAVA));
-		Assert.assertTrue("Spring core should be detected", projectHandler.get(1789).getSkills().containsKey(SPRING_CORE));
+		Assert.assertTrue("Java should be detected", projectHandler.lookup(1789).getSkills().containsKey(JAVA));
+		Assert.assertTrue("Spring core should be detected", projectHandler.lookup(1789).getSkills().containsKey(SPRING_CORE));
 		
 	}
 	

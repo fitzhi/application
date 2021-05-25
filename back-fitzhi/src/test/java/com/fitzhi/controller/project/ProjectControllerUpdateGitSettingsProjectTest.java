@@ -64,7 +64,7 @@ public class ProjectControllerUpdateGitSettingsProjectTest {
 	@WithMockUser
 	public void test() throws Exception {
 
-		Project project = projectHandler.get(1789);
+		Project project = projectHandler.lookup(1789);
 		project.setBranch("master");
 		
 		this.mvc.perform(put("/api/project/1789")
@@ -72,7 +72,7 @@ public class ProjectControllerUpdateGitSettingsProjectTest {
 			.content(gson.toJson(project)))
 			.andExpect(status().isNoContent());
 
-		project = projectHandler.get(1789);
+		project = projectHandler.lookup(1789);
 		Assert.assertEquals("master", project.getBranch());
 		
 	}

@@ -259,7 +259,7 @@ public class StaffController {
 
 		// Adding the name of project.
 		for (Mission mission : staff.getMissions()) {
-				mission.setName(projectHandler.get(mission.getIdProject()).getName());
+				mission.setName(projectHandler.lookup(mission.getIdProject()).getName());
 		}
 		
 		return staff.getMissions();
@@ -604,7 +604,7 @@ public class StaffController {
 
 		final Staff staff = staffHandler.getStaff(idStaff);
 
-		final Project project = projectHandler.get(idProject);
+		final Project project = projectHandler.lookup(idProject);
 		if (project == null) {
 			throw new NotFoundException(CODE_PROJECT_NOFOUND, MessageFormat.format(MESSAGE_PROJECT_NOFOUND, idProject));
 		}

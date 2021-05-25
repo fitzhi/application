@@ -64,7 +64,7 @@ public class ProjectControllerReadWithNameTest {
 	@Test
 	@WithMockUser
 	public void doNotTransportPassword() throws Exception {
-		projectHandler.get(1789).setPassword("my.password");
+		projectHandler.lookup(1789).setPassword("my.password");
 		this.mvc.perform(get("/api/project/name/project.to.find"))
 			.andExpect(status().isOk())
 			.andExpect(content().contentType("application/json;charset=UTF-8"))

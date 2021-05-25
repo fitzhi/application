@@ -56,7 +56,7 @@ public class ProjectControllerInactivateProjectTest {
 	@WithMockUser
 	public void testInactivateProjectOk() throws Exception {
 		this.mvc.perform(post(String.format("/api/project/%d/rpc/inactivation", 1789))).andExpect(status().isOk());
-		Project p = projectHandler.get(1789);
+		Project p = projectHandler.lookup(1789);
 		Assert.assertFalse(p.isActive());
 	}
 	

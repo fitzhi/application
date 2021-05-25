@@ -70,11 +70,11 @@ public class ProjectHandlerUpdateSkillsBasedOnPackageJsonEntryTest {
 	public void addANonExistentSkill() throws ApplicationException {
 
 		projectHandler.updateSkills(project, repo);
-		Assert.assertFalse(projectHandler.get(1789).getSkills().isEmpty());
-		Assert.assertEquals(2, projectHandler.get(1789).getSkills().size());
+		Assert.assertFalse(projectHandler.lookup(1789).getSkills().isEmpty());
+		Assert.assertEquals(2, projectHandler.lookup(1789).getSkills().size());
 		
-		Assert.assertTrue("Java is detected", projectHandler.get(1789).getSkills().containsKey(JAVA));
-		Assert.assertTrue("Angular is detected", projectHandler.get(1789).getSkills().containsKey(ANGULAR));
+		Assert.assertTrue("Java is detected", projectHandler.lookup(1789).getSkills().containsKey(JAVA));
+		Assert.assertTrue("Angular is detected", projectHandler.lookup(1789).getSkills().containsKey(ANGULAR));
 		
 	}
 	

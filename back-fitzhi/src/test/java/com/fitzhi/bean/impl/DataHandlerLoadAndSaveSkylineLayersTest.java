@@ -64,13 +64,13 @@ public class DataHandlerLoadAndSaveSkylineLayersTest {
         layers.add(p);
         layers.add(new ProjectLayer(1214, 2020, 20, 30, 2));
         layers.add(new ProjectLayer(1214, 2020, 21, 44, 1));        
-        dataHandler.saveSkylineLayers(projectHandler.get(1214), new ProjectLayers(projectHandler.get(1214), layers));
+        dataHandler.saveSkylineLayers(projectHandler.lookup(1214), new ProjectLayers(projectHandler.lookup(1214), layers));
 
         Assert.assertTrue(
                 "dataHandler.hasSavedSkylineLayers returns TRUE for saved project", 
-                dataHandler.hasSavedSkylineLayers(projectHandler.get(1214)));
+                dataHandler.hasSavedSkylineLayers(projectHandler.lookup(1214)));
 
-        ProjectLayers pl = dataHandler.loadSkylineLayers(projectHandler.get(1214));
+        ProjectLayers pl = dataHandler.loadSkylineLayers(projectHandler.lookup(1214));
         Assert.assertEquals(3, pl.getLayers().size());
         Assert.assertEquals(1214, pl.getLayers().get(0).getIdProject());
         Assert.assertEquals(2020, pl.getLayers().get(0).getYear());

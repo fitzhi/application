@@ -71,14 +71,14 @@ public class ProjectControllerRemoveProjectTest {
 	@Test
 	@WithMockUser
 	public void testRemoveProjectWithSkills() throws Exception {	
-		projectHandler.get(1789).getSkills().put(1, new ProjectSkill(1));
+		projectHandler.lookup(1789).getSkills().put(1, new ProjectSkill(1));
 		this.mvc.perform(delete("/api/project/" + 1789)).andExpect(status().isInternalServerError());		
 	}
 	
 	@Test
 	@WithMockUser
 	public void testRemoveProjectWithLocation() throws Exception {	
-		projectHandler.get(1789).setLocationRepository("locationRepository");
+		projectHandler.lookup(1789).setLocationRepository("locationRepository");
 		this.mvc.perform(delete("/api/project/" + 1789)).andExpect(status().isInternalServerError());		
 	}
 	

@@ -78,14 +78,14 @@ public class ProjectHandlerUpdateSkillsTest {
 	@Test
 	public void addANonExistentSkill() throws ApplicationException {
 		projectHandler.updateSkills(project, repo);
-		Assert.assertFalse(projectHandler.get(1789).getSkills().isEmpty());
-		Assert.assertEquals(2, projectHandler.get(1789).getSkills().size());
+		Assert.assertFalse(projectHandler.lookup(1789).getSkills().isEmpty());
+		Assert.assertEquals(2, projectHandler.lookup(1789).getSkills().size());
 	
-		Assert.assertTrue(projectHandler.get(1789).getSkills().containsKey(ID_JAVA));
-		Assert.assertEquals(2, projectHandler.get(1789).getSkills().get(ID_JAVA).getNumberOfFiles());
-		Assert.assertEquals(sizeJavaProject + sizeJavaPing, projectHandler.get(1789).getSkills().get(ID_JAVA).getTotalFilesSize());
+		Assert.assertTrue(projectHandler.lookup(1789).getSkills().containsKey(ID_JAVA));
+		Assert.assertEquals(2, projectHandler.lookup(1789).getSkills().get(ID_JAVA).getNumberOfFiles());
+		Assert.assertEquals(sizeJavaProject + sizeJavaPing, projectHandler.lookup(1789).getSkills().get(ID_JAVA).getTotalFilesSize());
 		
-		Assert.assertTrue(projectHandler.get(1789).getSkills().containsKey(ID_TS));
+		Assert.assertTrue(projectHandler.lookup(1789).getSkills().containsKey(ID_TS));
 	}
 	
 	@After

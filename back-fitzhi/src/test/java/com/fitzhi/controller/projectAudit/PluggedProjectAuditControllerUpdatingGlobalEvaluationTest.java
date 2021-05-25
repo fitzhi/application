@@ -89,7 +89,7 @@ public class PluggedProjectAuditControllerUpdatingGlobalEvaluationTest {
 
 	@Before
 	public void before() throws ApplicationException {
-		project = projectHandler.get(ID_PROJECT);
+		project = projectHandler.lookup(ID_PROJECT);
 
 		Map<Integer, AuditTopic> mapAudit = new HashMap<>();
 		mapAudit.put(ID_TOPIC_1, new AuditTopic(ID_TOPIC_1, 80, 40));
@@ -139,7 +139,7 @@ public class PluggedProjectAuditControllerUpdatingGlobalEvaluationTest {
 			.andDo(print())
 			.andReturn();
 		
-		Project project = projectHandler.get(ID_PROJECT);
+		Project project = projectHandler.lookup(ID_PROJECT);
 
 		Assert.assertEquals("The report has to be saved.", "Test report", project.getAudit().get(ID_TOPIC_1).getReport());
 
@@ -173,7 +173,7 @@ public class PluggedProjectAuditControllerUpdatingGlobalEvaluationTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		project = projectHandler.get(ID_PROJECT);
+		project = projectHandler.lookup(ID_PROJECT);
 		project.getAudit().clear();
 				
 	}

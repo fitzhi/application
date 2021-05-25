@@ -59,7 +59,7 @@ public class ProjectSonarControllerGetSonarProjectTest {
 	
 	@Before
 	public void before() throws ApplicationException {
-		project = projectHandler.get(1);
+		project = projectHandler.lookup(1);
 		SonarProject sp = new SonarProject();
 		sp.setKey("key-sonar-1");
 		sp.getProjectSonarMetricValues().add(new ProjectSonarMetricValue("bugs", 10, 1));
@@ -92,7 +92,7 @@ public class ProjectSonarControllerGetSonarProjectTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		project = projectHandler.get(1);
+		project = projectHandler.lookup(1);
 		project.getSonarProjects().clear();
 				
 	}

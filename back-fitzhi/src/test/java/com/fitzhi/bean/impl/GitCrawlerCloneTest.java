@@ -58,7 +58,7 @@ public class GitCrawlerCloneTest {
 	@Test
 	public void testClone() throws GitAPIException, ApplicationException, IOException {
 		
-		Project project = projectHandler.get(ID_PROJECT);
+		Project project = projectHandler.lookup(ID_PROJECT);
 		
 		ConnectionSettings settings = new ConnectionSettings();
 		settings.setPublicRepository(true);

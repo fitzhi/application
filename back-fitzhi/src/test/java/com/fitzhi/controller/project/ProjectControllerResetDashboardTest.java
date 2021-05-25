@@ -90,7 +90,7 @@ public class ProjectControllerResetDashboardTest {
 		Mockito.verify(cacheDataHandler, times(1)).removeRepository(any());
 		Mockito.verify(dataHandler, times(1)).removeCrawlerFiles(any());
 		Mockito.verify(staffHandler, times(1)).removeProject(1789);
-		Assert.assertNull("The location repository should be reset", projectHandler.get(1789).getLocationRepository());
+		Assert.assertNull("The location repository should be reset", projectHandler.lookup(1789).getLocationRepository());
 	}
 
 }

@@ -50,7 +50,7 @@ public class GitCrawlerCloneTest {
 	 */
 	@Test
 	public void testCloneSimpleProject() throws Exception {
-		Project project = projectHandler.get(1515);
+		Project project = projectHandler.lookup(1515);
 
 		ConnectionSettings settings = new ConnectionSettings();
 		settings.setPublicRepository(true);
@@ -67,7 +67,7 @@ public class GitCrawlerCloneTest {
 	 */
 	@Test(expected = ApplicationException.class)
 	public void invalidBranchName() throws Exception {
-		Project project = projectHandler.get(1214);
+		Project project = projectHandler.lookup(1214);
 
 		project.setBranch("undefined");
 		ConnectionSettings settings = new ConnectionSettings();

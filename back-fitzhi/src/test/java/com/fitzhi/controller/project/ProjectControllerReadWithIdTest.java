@@ -57,7 +57,7 @@ public class ProjectControllerReadWithIdTest {
 	@WithMockUser
 	public void doNotTransportPassword() throws Exception {
 
-		projectHandler.get(1789).setPassword("my-pass-word");
+		projectHandler.lookup(1789).setPassword("my-pass-word");
 		
 		this.mvc.perform(get("/api/project/1789"))
 			.andExpect(content().contentType("application/json;charset=UTF-8"))

@@ -103,7 +103,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public Project get(final int idProject) throws ApplicationException {
+	public Project lookup(final int idProject) throws ApplicationException {
 		return getProjects().get(idProject);
 	}
 
@@ -212,7 +212,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		}
 		synchronized (lockDataUpdated) {
 
-			Project savedProject = get(project.getId());
+			Project savedProject = lookup(project.getId());
 			if (savedProject == null) {
 				throw new ApplicationRuntimeException(
 						"SHOULD NOT PASS HERE : The project " + project.getId() + " is supposed to exist !");
@@ -295,7 +295,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 	@Override
 	public List<Library> saveLibraries(int idProject, List<Library> libraries) throws ApplicationException {
-		Project prj = this.get(idProject);
+		Project prj = this.lookup(idProject);
 		List<Library> previousLibraries = prj.getLibraries();
 		synchronized (lockDataUpdated) {
 			prj.setLibraries(libraries);
@@ -314,7 +314,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 	@Override
 	public void saveLocationRepository(int idProject, String location) throws ApplicationException {
-		Project project = get(idProject);
+		Project project = lookup(idProject);
 		synchronized (lockDataUpdated) {
 			project.setLocationRepository(location);
 			this.dataUpdated = true;
@@ -323,7 +323,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	
 	@Override
 	public void initLocationRepository(int idProject) throws ApplicationException {
-		Project project = get(idProject);
+		Project project = lookup(idProject);
 		this.initLocationRepository(project);
 	}
 
@@ -507,7 +507,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Override
 	public void integrateGhosts(int idProject, Set<String> unknownPseudos) throws ApplicationException {
 
-		Project project = get(idProject);
+		Project project = lookup(idProject);
 
 		List<Ghost> ghosts = project.getGhosts()
 			.stream()

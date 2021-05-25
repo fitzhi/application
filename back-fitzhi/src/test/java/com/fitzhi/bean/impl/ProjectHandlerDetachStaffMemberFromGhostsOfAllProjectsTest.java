@@ -40,12 +40,12 @@ public class ProjectHandlerDetachStaffMemberFromGhostsOfAllProjectsTest {
 	
 	@Test
 	public void test() throws ApplicationException {
-		Project project1789 = projectHandler.get(1789);
+		Project project1789 = projectHandler.lookup(1789);
 		project1789.getGhosts().add(new Ghost("pseudo-1789 666", 666, false));
 		project1789.getGhosts().add(new Ghost("pseudo-1789 777", 777, false));
 		project1789.getGhosts().add(new Ghost("pseudo-1789 -1", -1, false));
 		
-		Project project1805 = projectHandler.get(1805);
+		Project project1805 = projectHandler.lookup(1805);
 		project1805.getGhosts().add(new Ghost("pseudo-1805 666", 666, false));
 		project1805.getGhosts().add(new Ghost("pseudo-1805 777", 888, false));
 		project1805.getGhosts().add(new Ghost("pseudo-1805 -1", -1, false));

@@ -83,7 +83,7 @@ public class ProjectAuditControllerRemoveThirdAttachmentFileTest {
 	
 	@Before
 	public void before() throws ApplicationException {
-		Project project = projectHandler.get(ID_PROJECT);
+		Project project = projectHandler.lookup(ID_PROJECT);
 		Map<Integer, AuditTopic> mapAudit = new HashMap<>();
 		AuditTopic at = new AuditTopic(ID_TOPIC_1, 30, 100);
 		mapAudit.put(ID_TOPIC_1, at);
@@ -130,7 +130,7 @@ public class ProjectAuditControllerRemoveThirdAttachmentFileTest {
 		uploadFile(UPLOAD_PATHNAME_PDF_2, FileType.FILE_TYPE_PDF.getValue());
 		uploadFile(UPLOAD_PATHNAME_PDF_3, FileType.FILE_TYPE_PDF.getValue());
 		
-		Project project = projectHandler.get(ID_PROJECT);
+		Project project = projectHandler.lookup(ID_PROJECT);
 		Assert.assertEquals(
 				UPLOAD_FILENAME_PDF_0,
 				project.getAudit().get(ID_TOPIC_1).getAttachmentList().get(0).getFileName());
@@ -158,7 +158,7 @@ public class ProjectAuditControllerRemoveThirdAttachmentFileTest {
 		
 		
 		removeFirstAttachmentFile(2);
-		project = projectHandler.get(ID_PROJECT);
+		project = projectHandler.lookup(ID_PROJECT);
 		Assert.assertEquals(
 				UPLOAD_FILENAME_PDF_0,
 				project.getAudit().get(ID_TOPIC_1).getAttachmentList().get(0).getFileName());

@@ -83,7 +83,7 @@ public class ProjectAuditControllerUploadAttachmentFileTest {
 	
 	@Before
 	public void before() throws ApplicationException {
-		Project project = projectHandler.get(ID_PROJECT);
+		Project project = projectHandler.lookup(ID_PROJECT);
 		Map<Integer, AuditTopic> mapAudit = new HashMap<>();
 		AuditTopic at = new AuditTopic(ID_TOPIC_1, 30, 100);
 		mapAudit.put(ID_TOPIC_1, at);
@@ -109,7 +109,7 @@ public class ProjectAuditControllerUploadAttachmentFileTest {
 		//
 		// The attachment is well recorded in the project audit
 		//
-		Project project = projectHandler.get(ID_PROJECT);
+		Project project = projectHandler.lookup(ID_PROJECT);
 		List<AttachmentFile> attachments = project.getAudit().get(ID_TOPIC_1).getAttachmentList();
 		Assert.assertEquals(1, attachments.size());
 		Assert.assertEquals("audit.docx", attachments.get(0).getFileName());
@@ -152,7 +152,7 @@ public class ProjectAuditControllerUploadAttachmentFileTest {
 		//
 		// The attachment is well recorded in the project audit
 		//
-		Project project = projectHandler.get(ID_PROJECT);
+		Project project = projectHandler.lookup(ID_PROJECT);
 		List<AttachmentFile> attachments = project.getAudit().get(ID_TOPIC_1).getAttachmentList();
 		Assert.assertEquals(2, attachments.size());
 		Assert.assertEquals("audit.docx", attachments.get(0).getFileName());
@@ -163,7 +163,7 @@ public class ProjectAuditControllerUploadAttachmentFileTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		Project project = projectHandler.get(ID_PROJECT);
+		Project project = projectHandler.lookup(ID_PROJECT);
 		project.getAudit().clear();
 
 		

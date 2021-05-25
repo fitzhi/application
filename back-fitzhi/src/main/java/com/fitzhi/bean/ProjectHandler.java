@@ -48,7 +48,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @throws ApplicationException
 	 *             thrown most probably if an IO exception occurs
 	 */
-	Project get(int idProject) throws ApplicationException;
+	Project lookup(int idProject) throws ApplicationException;
 
 	/**
 	 * Find a <b>NON NULLABLE</b> project on a given ID. A result is mandatory for this method.

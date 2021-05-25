@@ -118,7 +118,7 @@ public class PluggedProjectControllerCreateAndUpdateProjectTest {
 			.andExpect(status().isOk())
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
 		
-		Project p = projectHandler.get(project.getId());
+		Project p = projectHandler.lookup(project.getId());
 		Assert.assertTrue(p != null);
 		Assert.assertTrue(p.getSonarProjects().size() == 2);
 		Assert.assertTrue("otherId".contentEquals(p.getSonarProjects().get(1).getKey()));
@@ -137,7 +137,7 @@ public class PluggedProjectControllerCreateAndUpdateProjectTest {
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8));
 		
-		p = projectHandler.get(project.getId());
+		p = projectHandler.lookup(project.getId());
 		Assert.assertTrue(p != null);
 		Assert.assertTrue(p.getSonarProjects().size() == 1);
 	

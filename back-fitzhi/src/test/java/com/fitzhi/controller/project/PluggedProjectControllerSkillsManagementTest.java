@@ -63,7 +63,7 @@ public class PluggedProjectControllerSkillsManagementTest {
 			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
 			.andExpect(content().string("true"));
 		
-		Project p = projectHandler.get(1);
+		Project p = projectHandler.lookup(1);
 		Assert.assertEquals("Project 1 has one skill", 1, p.getSkills().size());
 		Assert.assertTrue("Project 1 has one skill with id 2", p.getSkills().containsKey(2));
 		

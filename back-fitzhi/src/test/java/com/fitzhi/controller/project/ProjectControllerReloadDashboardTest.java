@@ -100,7 +100,7 @@ public class ProjectControllerReloadDashboardTest {
 
 		Mockito.verify(cacheDataHandler, times(1)).removeRepository(any());
 
-		Project project = projectHandler.get(1789);
+		Project project = projectHandler.lookup(1789);
 		Assert.assertNotNull(project);
 		Assert.assertNotNull("The location repository should NOT be reset", project.getLocationRepository());
 		Assert.assertEquals("myLocationRepository", project.getLocationRepository());

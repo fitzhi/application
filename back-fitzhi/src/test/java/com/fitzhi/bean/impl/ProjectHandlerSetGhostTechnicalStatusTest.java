@@ -42,7 +42,7 @@ public class ProjectHandlerSetGhostTechnicalStatusTest {
 	
 	@Before
 	public void before() throws ApplicationException {
-		project = projectHandler.get(1);
+		project = projectHandler.lookup(1);
 		project.getGhosts().add(new Ghost("pseudoUnlinked", false));
 		project.getGhosts().add(new Ghost("pseudoLinked", 2, false));
 	}
@@ -52,7 +52,7 @@ public class ProjectHandlerSetGhostTechnicalStatusTest {
 		
 		projectHandler.setGhostTechnicalStatus(project, "pseudoUnlinked", true);	
 
-		Project p = projectHandler.get(1);
+		Project p = projectHandler.lookup(1);
 		Optional<Ghost> oGhost = p.getGhosts().stream()
 				.filter(g -> g.getPseudo().equals("pseudoUnlinked"))
 				.findFirst();
@@ -68,7 +68,7 @@ public class ProjectHandlerSetGhostTechnicalStatusTest {
 		
 		projectHandler.setGhostTechnicalStatus(project, "pseudoLinked", true);	
 
-		Project p = projectHandler.get(1);
+		Project p = projectHandler.lookup(1);
 		Optional<Ghost> oGhost = p.getGhosts().stream()
 				.filter(g -> g.getPseudo().equals("pseudoLinked"))
 				.findFirst();
@@ -81,7 +81,7 @@ public class ProjectHandlerSetGhostTechnicalStatusTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		project = projectHandler.get(1);
+		project = projectHandler.lookup(1);
 		project.getGhosts().clear();
 				
 	}

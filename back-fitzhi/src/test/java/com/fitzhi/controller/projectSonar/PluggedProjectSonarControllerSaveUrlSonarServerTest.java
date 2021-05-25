@@ -65,7 +65,7 @@ public class PluggedProjectSonarControllerSaveUrlSonarServerTest {
 	
 	@Before
 	public void before() throws ApplicationException {
-		project = projectHandler.get(1);
+		project = projectHandler.lookup(1);
 		project.setUrlSonarServer("http://formerSonarServer");
 		SonarProject sp = new SonarProject();
 		sp.setKey(KEY_SONAR_1);
@@ -165,7 +165,7 @@ public class PluggedProjectSonarControllerSaveUrlSonarServerTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		project = projectHandler.get(1);
+		project = projectHandler.lookup(1);
 		project.getSonarProjects().clear();
 				
 	}

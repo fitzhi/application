@@ -483,7 +483,7 @@ public class ProjectController  {
 				"POST command on /api/project/%d/skill/%d", idProject, idSkill));
 		}
 
-		Project project = projectHandler.get(idProject);
+		Project project = projectHandler.lookup(idProject);
 
 		// Just to test if this skill exists.
 		Skill skill = this.skillHandler.getSkill(idSkill);
@@ -514,7 +514,7 @@ public class ProjectController  {
 			log.debug(String.format("DELETE verb on %d/staff/%d", idProject, idSkill));
 		}
 
-		Project project = projectHandler.get(idProject);
+		Project project = projectHandler.lookup(idProject);
 		projectHandler.removeSkill(project, idSkill);
 		return true;
 	}

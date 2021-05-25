@@ -85,7 +85,7 @@ public class PluggedProjectAuditControllerDownloadAttachmentFileTest {
 	
 	@Before
 	public void before() throws ApplicationException {
-		Project project = projectHandler.get(ID_PROJECT);
+		Project project = projectHandler.lookup(ID_PROJECT);
 		Map<Integer, AuditTopic> mapAudit = new HashMap<>();
 		AuditTopic at = new AuditTopic(ID_TOPIC_1, 30, 100);
 		mapAudit.put(ID_TOPIC_1, at);
@@ -135,7 +135,7 @@ public class PluggedProjectAuditControllerDownloadAttachmentFileTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		Project project = projectHandler.get(ID_PROJECT);
+		Project project = projectHandler.lookup(ID_PROJECT);
 		project.getAudit().clear();
 		
 		File attachment = new File (storageProperties.getLocation() + 

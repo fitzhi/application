@@ -70,7 +70,7 @@ public class ProjectLoader {
 		headers.set(BACKEND_RETURN_MESSAGE, "No project found for the identifier " + idProject);
 
 		try {
-			project = projectHandler.get(idProject);
+			project = projectHandler.lookup(idProject);
 			if (project == null) {
 				refResponse.response = new ResponseEntity<T>(t, headers, HttpStatus.NOT_FOUND);			
 			} 

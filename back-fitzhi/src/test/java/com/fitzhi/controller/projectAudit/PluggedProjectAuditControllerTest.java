@@ -75,7 +75,7 @@ public class PluggedProjectAuditControllerTest {
 	
 	@Before
 	public void before() throws ApplicationException {
-		project = projectHandler.get(ID_PROJECT);
+		project = projectHandler.lookup(ID_PROJECT);
 		project.setAuditEvaluation(30);
 		Map<Integer, AuditTopic> mapAudit = new HashMap<>();
 		AuditTopic at = new AuditTopic(ID_TOPIC_2, 30, 100);
@@ -143,7 +143,7 @@ public class PluggedProjectAuditControllerTest {
 			.andDo(print())
 			.andReturn();
 
-		Project project = projectHandler.get(ID_PROJECT);
+		Project project = projectHandler.lookup(ID_PROJECT);
 		assertEquals("Only one topic", project.getAudit().size(), 1);
 		assertNotNull(project.getAudit().get(ID_TOPIC_2));
 		// We do not change the original data
@@ -311,7 +311,7 @@ public class PluggedProjectAuditControllerTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		project = projectHandler.get(ID_PROJECT);
+		project = projectHandler.lookup(ID_PROJECT);
 		project.getAudit().clear();
 				
 	}

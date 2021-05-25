@@ -66,20 +66,20 @@ public class ProjectControllerUpdateProjectTest {
 	@Test
 	@WithMockUser
 	public void testUpdateProjectOk() throws Exception {
-		Project project = projectHandler.get(1789);
+		Project project = projectHandler.lookup(1789);
 		project.setName("The revolutionary project");
 		this.mvc.perform(put("/api/project/1789")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)
 				.content(gson.toJson(project)))
 				.andExpect(status().isNoContent());
-		project = projectHandler.get(1789);
+		project = projectHandler.lookup(1789);
 		Assert.assertEquals("The revolutionary project", project.getName());
 	}
 	
 	@Test
 	@WithMockUser
 	public void testUpdateInactiveProjectForbidden() throws Exception {
-		Project project = projectHandler.get(1789);
+		Project project = projectHandler.lookup(1789);
 		project.setActive(false);
 		this.mvc.perform(put("/api/project/1789")
 				.contentType(MediaType.APPLICATION_JSON_UTF8)

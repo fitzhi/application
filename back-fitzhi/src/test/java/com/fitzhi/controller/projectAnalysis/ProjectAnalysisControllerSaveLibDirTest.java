@@ -57,7 +57,7 @@ public class ProjectAnalysisControllerSaveLibDirTest {
 	@WithMockUser	
 	public void saveOk() throws Exception {
 	
-		when(projectHandler.get(1789)).thenReturn(new Project(1789, "The revolution"));
+		when(projectHandler.lookup(1789)).thenReturn(new Project(1789, "The revolution"));
 		when(projectHandler.saveLibraries(1789, new ArrayList<>()))
 			.thenReturn(new ArrayList<Library>());
 
@@ -72,7 +72,7 @@ public class ProjectAnalysisControllerSaveLibDirTest {
 			.andDo(print())
 			.andReturn();
 		
-		Mockito.verify(projectHandler, times(1)).get(1789);
+		Mockito.verify(projectHandler, times(1)).lookup(1789);
 		Mockito.verify(projectHandler, times(1)).saveLibraries(1789, new ArrayList<>());
 			
 	}
@@ -82,7 +82,7 @@ public class ProjectAnalysisControllerSaveLibDirTest {
 	@WithMockUser	
 	public void saveKO() throws Exception {
 	
-		when(projectHandler.get(1789)).thenThrow(new ApplicationException(7777, "error 7777"));
+		when(projectHandler.lookup(1789)).thenThrow(new ApplicationException(7777, "error 7777"));
 		
 		List<Library> continents  = new ArrayList<>();	
 		String jsonInput = gson.toJson(continents);
@@ -97,7 +97,7 @@ public class ProjectAnalysisControllerSaveLibDirTest {
 			.andDo(print())
 			.andReturn();
 		
-		Mockito.verify(projectHandler, times(1)).get(1789);
+		Mockito.verify(projectHandler, times(1)).lookup(1789);
 			
 	}
 	

@@ -97,7 +97,7 @@ public class ProjectControllerDoNotTransportPasswordTest {
 			Assert.assertNull(p.getPassword());
 		}
 		
-		project = projectHandler.get(ID_PROJECT);
+		project = projectHandler.lookup(ID_PROJECT);
 		Assert.assertNotNull(project.getPassword());
 		
 	}
@@ -124,7 +124,7 @@ public class ProjectControllerDoNotTransportPasswordTest {
 				.content(gson.toJson(project)))
 				.andExpect(status().isNoContent());
 		
-		project = projectHandler.get(ID_PROJECT);
+		project = projectHandler.lookup(ID_PROJECT);
 		String password = DataEncryption.decryptMessage(project.getPassword());
 		Assert.assertEquals("password", password);
 		
@@ -135,7 +135,7 @@ public class ProjectControllerDoNotTransportPasswordTest {
 				.content(gson.toJson(project)))
 				.andExpect(status().isNoContent());
 		
-		project = projectHandler.get(ID_PROJECT);
+		project = projectHandler.lookup(ID_PROJECT);
 		password = DataEncryption.decryptMessage(project.getPassword());
 		Assert.assertEquals("newPassword", password);
 	}

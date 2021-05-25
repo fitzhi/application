@@ -102,7 +102,7 @@ public class ProjectAnalysisController  {
 			final @PathVariable("idProject") int idProject,
 			final @PathVariable("criteria") String criteria) throws ApplicationException {
 
-		final Project project = projectHandler.get(idProject);
+		final Project project = projectHandler.lookup(idProject);
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Scanning the directories from %s", project.getLocationRepository()));
@@ -137,7 +137,7 @@ public class ProjectAnalysisController  {
 		}
 		
 		List<Library> libraries = new ArrayList<>(Arrays.asList(tabLib));
-		Project project = projectHandler.get(idProject);
+		Project project = projectHandler.lookup(idProject);
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Saving the librairies of project %s", project.getName()));
 			libraries.stream().map(Library::getExclusionDirectory).forEach(log::debug);
