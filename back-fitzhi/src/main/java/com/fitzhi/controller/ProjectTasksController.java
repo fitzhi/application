@@ -98,7 +98,7 @@ public class ProjectTasksController {
 
 	/**
 	 * Emit distinct {@link ActivityLog} every second.
-	 * 
+	 *  
 	 * @param idProject the project identifier
 	 * @param operation the current underlying operation
 	 * @return a flux of {@link ActivityLog}

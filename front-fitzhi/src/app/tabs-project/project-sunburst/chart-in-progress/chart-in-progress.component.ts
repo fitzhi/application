@@ -26,6 +26,9 @@ export class ChartInProgressComponent extends BaseComponent implements OnInit, O
 			}));
 	}
 
+	public url() {
+		return `/project/{}/tasks/stream/dashboardGeneration/`;
+	}
 	/**
 	* Calling the base class to unsubscribe all subscriptions.
 	*/

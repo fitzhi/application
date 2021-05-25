@@ -39,12 +39,14 @@ public class ResourceServerConfiguration extends ResourceServerConfigurerAdapter
 				"/v2/api-docs", "/configuration/**", "/swagger*/**", "/webjars/**",
 
 				// Server side event streaming is allowed
-				"/api/project/tasks/stream/**",
+				// We open this door to avoid to add an authorization header on the Front application
+				// Credible solution is behind this link https://github.com/Yaffle/EventSource
+				"/api/project/{\\d+}/tasks/stream/dashboardGeneration",
 
 				// DO NOT KNOW IF IT SHOULD STAY HERE...
-				"/api/project/tasks/**",
+				// "/api/project/tasks/**",
 
-				"/api/upload/*", 
+				// "/api/upload/*", 
 
 				"/api/admin/isVeryFirstConnection", 
 				"/api/admin/saveVeryFirstConnection", 
