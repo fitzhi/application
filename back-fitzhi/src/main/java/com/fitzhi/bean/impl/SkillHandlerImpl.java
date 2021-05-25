@@ -110,7 +110,7 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public Skill getSkill(int idSkill) throws ApplicationException {
+	public Skill getSkill(int idSkill) throws NotFoundException {
 		
 		Skill skill = getSkills().get(idSkill);
 		if (skill == null) {
@@ -216,7 +216,8 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}	
 
 	@Override
-	public boolean checkFilePattern(String filenameDependencies, String rootPath, String sourcePath, String dependency) throws ApplicationException {
+	public boolean checkFilePattern(String filenameDependencies, String rootPath, String sourcePath, String dependency) 
+		throws ApplicationException {
 	
 		try {
 			if (sourcePath.indexOf(filenameDependencies) == -1) {

@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
@@ -58,7 +60,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @throws ApplicationException thrown if an error occurs during the search, most probably an {@link IOException}
 	 * @throws NotFoundException thrown if the project identifier is not retrieved in the application portfolio
 	 */
-	Project getProject(int idProject) throws ApplicationException, NotFoundException;
+	@NotNull Project getProject(int idProject) throws ApplicationException, NotFoundException;
 
 	/**
 	 * <p>

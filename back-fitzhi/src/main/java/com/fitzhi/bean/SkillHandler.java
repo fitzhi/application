@@ -4,29 +4,36 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.validation.constraints.NotNull;
+
 import com.fitzhi.bean.impl.SkillHandlerImpl;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SkillDetectorType;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.exception.ApplicationException;
+import com.fitzhi.exception.NotFoundException;
 
 /**
  * <p>
  * This interface is a bean interface. Its role is to handle the skills registered in Fitzhì.
- * <br/>
- * The main Bean is {@link SkillHandlerImpl}
+ * </p>
+ * <p>
+ * The default bean implementation is {@link SkillHandlerImpl}
  * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public interface SkillHandler extends DataSaverLifeCycle {
 
+	/**
+	 * @return the complete collection of skills declared in the application.
+	 */
 	Map<Integer, Skill> getSkills();
 
 	/**
 	 * Search for a skill associated to the passed name. 
 	 * @param skillName 
-	 * @return
+	 * @return an optional object containing the corresponding skill if any.
 	 */
 	Optional<Skill> lookup(final String skillName);
 
@@ -54,9 +61,9 @@ public interface SkillHandler extends DataSaverLifeCycle {
 	  * </p>
 	  * @param idSkill the SKILL identifier.
 	  * @return the skill retrieved in the internal collection.
-	  * @throws ApplicationException thrown if the given SKILL identifier does not exist.
+	  * @throws NotFoundException thrown if the given SKILL identifier does not exist.
 	  */
-	 Skill getSkill(int idSkill) throws ApplicationException;
+	 @NotNull Skill getSkill(int idSkill) throws NotFoundException;
 
 	 /**
 	  * Load and return all types of detectors.
