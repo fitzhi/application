@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -52,6 +53,9 @@ import lombok.extern.slf4j.Slf4j;
 @AutoConfigureMockMvc
 @Slf4j
 public class PluggedProjectAuditControllerUploadRemoveAttachmentFileTest {
+
+	@LocalServerPort
+	int localPort;
 
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -90,7 +94,7 @@ public class PluggedProjectAuditControllerUploadRemoveAttachmentFileTest {
 		
 	}
 	
-	private void uploadFile(String filename, int fileType) {
+	private String uploadFile(String filename, int fileType) {
 		ClassPathResource resource = new ClassPathResource(filename);
 		HttpHeaders headers = new HttpHeaders();
 
@@ -99,13 +103,14 @@ public class PluggedProjectAuditControllerUploadRemoveAttachmentFileTest {
 		map.add("label", String.format("testing label for %s", filename));
 		map.add("type", fileType);
 		
-		ResponseEntity<Boolean> response = this.restTemplate
+		ResponseEntity<Void> response = this.restTemplate
 			.exchange(
-				"/api/project/1/audit/1/attachment", 
+				"/api/project/1/audit/1/attachmentFile", 
 				HttpMethod.POST, 
 				new HttpEntity<>(map, headers), 
-				Boolean.class);
-		Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+				Void.class);
+		Assert.assertEquals(response.getStatusCode(), HttpStatus.CREATED);
+		return response.getHeaders().getLocation().toString();
 	}
 	
 	private void removeFirstAttachmentFile(String filename) throws Exception {
@@ -123,7 +128,10 @@ public class PluggedProjectAuditControllerUploadRemoveAttachmentFileTest {
 	@WithMockUser
 	public void testAddFirstAttachment() throws Exception {
 		
-		uploadFile(UPLOAD_PATHNAME_DOCX, FileType.FILE_TYPE_DOCX.getValue());
+		String location = uploadFile(UPLOAD_PATHNAME_DOCX, FileType.FILE_TYPE_DOCX.getValue());
+		Assert.assertEquals(
+			String.format("http://localhost:%d/api/project/1/audit/1/attachmentFile/0", localPort), 
+			location);
 		
 		//
 		// The file is correctly uploaded
@@ -140,8 +148,14 @@ public class PluggedProjectAuditControllerUploadRemoveAttachmentFileTest {
 	@WithMockUser
 	public void testAddSecondAttachment() throws Exception {
 		
-		uploadFile(UPLOAD_PATHNAME_DOCX, FileType.FILE_TYPE_DOCX.getValue());
-		uploadFile(UPLOAD_PATHNAME_PDF, FileType.FILE_TYPE_PDF.getValue());
+		String location = uploadFile(UPLOAD_PATHNAME_DOCX, FileType.FILE_TYPE_DOCX.getValue());
+		Assert.assertEquals(
+			String.format("http://localhost:%d/api/project/1/audit/1/attachmentFile/0", localPort), 
+			location);
+		location = uploadFile(UPLOAD_PATHNAME_PDF, FileType.FILE_TYPE_PDF.getValue());
+		Assert.assertEquals(
+			String.format("http://localhost:%d/api/project/1/audit/1/attachmentFile/1", localPort), 
+			location);
 
 		//
 		// The file is correctly uploaded

@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 
 import com.fitzhi.bean.ProjectAuditHandler;
 import com.fitzhi.controller.ProjectAuditController;
@@ -28,6 +29,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -41,9 +43,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class ProjectAuditControllerUploadAttachmentFile2Test {
+
+	@LocalServerPort
+	int localPort;
 
 	@Autowired
 	private MockMvc mvc;
@@ -62,13 +67,12 @@ public class ProjectAuditControllerUploadAttachmentFile2Test {
 		when(projectAuditHandler.getTopic(1805, 1815)).thenReturn(new AuditTopic(1815));
 		doNothing().when(projectAuditHandler).updateAttachmentFile(anyInt(), anyInt(), any(AttachmentFile.class));
 
-		this.mvc.perform(MockMvcRequestBuilders.multipart("/api/project/1805/audit/1815/attachment")
+		this.mvc.perform(MockMvcRequestBuilders.multipart("/api/project/1805/audit/1815/attachmentFile")
 			.file("file", null)
 			.param("label", "Testing label for 1805-1815")
 			.param("type", FileType.FILE_TYPE_DOC.toString()))
-			.andExpect(status().isOk())
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-			.andExpect(content().string("true"));
+			.andExpect(status().isCreated())
+			.andExpect(header().string("location", "http://localhost/api/project/1805/audit/1815/attachmentFile/0"));
 
 		Mockito.verify(storageService, times(1)).store(any(), any());
 		Mockito.verify(projectAuditHandler, times(1)).updateAttachmentFile(anyInt(), anyInt(), any(AttachmentFile.class));
@@ -83,7 +87,7 @@ public class ProjectAuditControllerUploadAttachmentFile2Test {
 			.getTopic(1805, 1815);
 		doNothing().when(projectAuditHandler).updateAttachmentFile(anyInt(), anyInt(), any(AttachmentFile.class));
 
-		this.mvc.perform(MockMvcRequestBuilders.multipart("/api/project/1805/audit/1815/attachment")
+		this.mvc.perform(MockMvcRequestBuilders.multipart("/api/project/1805/audit/1815/attachmentFile")
 			.file("file", null)
 			.param("label", "Testing label for 1805-1815")
 			.param("type", FileType.FILE_TYPE_DOC.toString()))

@@ -102,13 +102,13 @@ public class ProjectAuditControllerRemoveThirdAttachmentFileTest {
 		map.add("label", String.format("testing label for %s", filename));
 		map.add("type", fileType);
 		
-		ResponseEntity<Boolean> response = this.restTemplate
+		ResponseEntity<Void> response = this.restTemplate
 			.exchange(
-				"/api/project/1/audit/1/attachment", 
+				"/api/project/1/audit/1/attachmentFile", 
 				HttpMethod.POST, 
 				new HttpEntity<>(map, headers), 
-				Boolean.class);
-		Assert.assertEquals(response.getStatusCode(), HttpStatus.OK);
+				Void.class);
+		Assert.assertEquals(response.getStatusCode(), HttpStatus.CREATED);
 	}
 
 	private void removeFirstAttachmentFile(int idFile) throws Exception {

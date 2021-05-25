@@ -35,6 +35,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -222,10 +224,10 @@ public class ProjectAuditController {
 	 * @param type t
 	 * @return {@code true} if the upload succeeds, {@code false} otherwise
 	 */
-	@ResponseBody
 	@ApiOperation("Upload a report file related to a topic.")
-	@PostMapping("/{idProject}/audit/{idTopic}/attachment")
-	public boolean uploadAttachmentFile(
+	@PostMapping("/{idProject}/audit/{idTopic}/attachmentFile")
+	public ResponseEntity<Void> uploadAttachmentFile(
+			UriComponentsBuilder builder,
 			@PathVariable("idProject") int idProject, 
 			@ApiParam(name="idTopic", value = "The topic identifier in the audit scope (design, performance...)")
 			@PathVariable("idTopic") int idTopic, 
@@ -250,12 +252,16 @@ public class ProjectAuditController {
 		if ((label == null) || (label.length() == 0)) {
 			label = filename;
 		}
+		int idFile = auditProject.getAttachmentList().size();
 		projectAuditHandler.updateAttachmentFile(
 			idProject, 
 			idTopic, 
-			new AttachmentFile(auditProject.getAttachmentList().size(), filename, typeOfApplication, label));
+			new AttachmentFile(idFile, filename, typeOfApplication, label));
 	
-		return true;
+		UriComponents uriComponents = builder.path("/api/project/{idProject}/audit/{idTopic}/attachmentFile/{idFile}")
+			.buildAndExpand(idProject, idTopic, idFile);
+
+		return ResponseEntity.created(uriComponents.toUri()).build();
 	}
 
 	@ApiOperation(value="Download the file associated to an audit topic.")

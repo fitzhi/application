@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -58,11 +59,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class PluggedProjectAuditControllerDownloadAttachmentFileTest {
 
+	@LocalServerPort
+	int localPort;
+
 	/**
 	 * Initialization of the Google JSON parser.
 	 */
 	Gson gson = new GsonBuilder()
-		      .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe()).create();
+			  .registerTypeAdapter(LocalDate.class, new LocalDateAdapter().nullSafe()).create();
 
 	@Autowired
 	private TestRestTemplate restTemplate;
@@ -95,7 +99,7 @@ public class PluggedProjectAuditControllerDownloadAttachmentFileTest {
 		
 	}
 	
-	private void uploadFile(String filename, int fileType) {
+	private String uploadFile(String filename, int fileType) {
 		ClassPathResource resource = new ClassPathResource(filename);
 		HttpHeaders headers = new HttpHeaders();
 
@@ -106,13 +110,18 @@ public class PluggedProjectAuditControllerDownloadAttachmentFileTest {
 		map.add("label", String.format("testing label for %s", filename));
 		map.add("type", fileType);
 		
-		ResponseEntity<Boolean> response = this.restTemplate
+		ResponseEntity<Void> response = this.restTemplate
 			.exchange(
-				"/api/project/1/audit/1/attachment", 
+				"/api/project/1/audit/1/attachmentFile", 
 				HttpMethod.POST, 
 				new HttpEntity<>(map, headers), 
-				Boolean.class);
-		Assert.assertEquals(HttpStatus.OK, response.getStatusCode());
+				Void.class);
+		Assert.assertEquals(HttpStatus.CREATED, response.getStatusCode());
+		Assert.assertEquals(
+			String.format("http://localhost:%d/api/project/1/audit/1/attachmentFile/0", localPort), 
+			response.getHeaders().getLocation().toString());
+
+		return response.getHeaders().getLocation().toString();
 	}
 	
 	@Test
