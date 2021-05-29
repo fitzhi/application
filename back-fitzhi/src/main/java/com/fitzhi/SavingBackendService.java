@@ -3,14 +3,15 @@
  */
 package com.fitzhi;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
-
 import com.fitzhi.bean.DataHandler;
+import com.fitzhi.bean.ProjectAuditHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.exception.ApplicationException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +27,12 @@ public class SavingBackendService {
 	 */
 	@Autowired
 	ProjectHandler projectHandler;
+	
+	/*
+	 * Project audit handler 
+	 */
+	@Autowired
+	ProjectAuditHandler projectAuditHandler;
 	
 	/*
 	 * Staff handler 
@@ -57,7 +64,7 @@ public class SavingBackendService {
 		}
 		synchronized (projectHandler.getLocker()) {
 			try {
-				if (projectHandler.isDataUpdated()) {
+				if (projectHandler.isDataUpdated() | projectAuditHandler.isDataUpdated() ) {
 					dataSaver.saveProjects(projectHandler.getProjects());
 					projectHandler.dataAreSaved();
 				}

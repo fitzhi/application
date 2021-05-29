@@ -4,7 +4,7 @@
         <div class="title">{{title}}</div>
     </div>
     <div class="attachmentFiles">
-        <div *ngFor="let attachmentFile of (auditAttachmentService.attachmentFile$ | async);index as idFile">
+        <div *ngFor="let attachmentFile of ((auditAttachmentService.attachmentFiles$ | async).get(idTopic));index as idFile">
             <app-audit-attachment 
                 [idTopic]="idTopic"
                 [attachmentFile]="attachmentFile"

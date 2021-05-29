@@ -1007,8 +1007,7 @@ export class ProjectService extends InternalService {
 
 		this.fileService.downloadFile(
 			attachmentFile.fileName,
-			this.backendSetupService.url() +
-			'/project/' + idProject + '/audit/' + idTopic + '/attachment/' + attachmentFile.idFile);
+			`${this.backendSetupService.url()}/project/${idProject}/audit/${idTopic}/attachmentFile/${attachmentFile.idFile}`);
 	}
 
 	/**
@@ -1023,14 +1022,12 @@ export class ProjectService extends InternalService {
 			return;
 		}
 		if (traceOn()) {
-			console.log('Delete the audit attachment file : ' + attachmentFile.fileName);
+			console.log(`Delete the audit attachment file : ${attachmentFile.fileName}`);
 		}
 
-		const body = { idProject: idProject, idTopic: idTopic, attachmentFile: {idFile: attachmentFile.idFile}};
-		return this.httpClient
-			.post<boolean>(this.backendSetupService.url() + '/project/audit/removeAttachmentFile', body, httpOptions)
-			.pipe(take(1));
-
+		return this.httpClient.delete<boolean>( 
+			`${this.backendSetupService.url()}/project/${idProject}/audit/${idTopic}/attachmentFile/${attachmentFile.idFile}`, 
+			httpOptions).pipe(take(1));
 	}
 
 	/**
@@ -1098,7 +1095,7 @@ export class ProjectService extends InternalService {
 		console.groupCollapsed('Global audit evaluation', project.auditEvaluation);
 		if (project.audit) {
 			Object.keys(project.audit).forEach(key => {
-				console.log ('key: %s evaluation: %d weight: %d', key, project.audit[key].evaluation, project.audit[key].weight);
+				console.log (`key: ${key} evaluation: ${project.audit[key].evaluation} weight: ${project.audit[key].weight}`);
 			});
 		} else {
 			console.log ('project.audit is null');
@@ -1106,7 +1103,7 @@ export class ProjectService extends InternalService {
 		console.groupEnd();
 
 		if (project.mapSkills) {
-			console.groupCollapsed(project.mapSkills.size + ' skills declared.');
+			console.groupCollapsed(`${project.mapSkills.size} skills declared.`);
 			for (const [k, v] of project.mapSkills) {
 				console.log (k, this.skillService.title(k));
 			}

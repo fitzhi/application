@@ -275,8 +275,10 @@ public class ProjectAuditController {
 
 		final AuditTopic auditTopic = projectAuditHandler.getTopic(idProject, idTopic);
 
-		AttachmentFile attachment = auditTopic.getAttachmentList().get(idFile);
-		if (attachment == null) {
+		AttachmentFile attachment = null;
+		try {
+			attachment = auditTopic.getAttachmentList().get(idFile);
+		} catch (IndexOutOfBoundsException ioobe ) {
 			throw new ApplicationException (
 					CODE_CANNOT_RETRIEVE_ATTACHMENTFILE,
 					MessageFormat.format(LIB_CANNOT_RETRIEVE_ATTACHMENTFILE, idProject, idTopic, idFile));

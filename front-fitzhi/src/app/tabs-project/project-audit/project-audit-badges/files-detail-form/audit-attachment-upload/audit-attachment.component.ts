@@ -1,8 +1,6 @@
 import { Component, OnInit, Input, OnDestroy } from '@angular/core';
 import { BaseComponent } from 'src/app/base/base.component';
 import { AttachmentFile } from 'src/app/data/AttachmentFile';
-import { Constants } from 'src/app/constants';
-import { Project } from 'src/app/data/project';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { AuditUploadAttachmentComponent } from './audit-upload-attachment/audit-upload-attachment.component';
 import { ProjectService } from 'src/app/service/project/project.service';
@@ -98,10 +96,8 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 			dialogReference.afterClosed().subscribe((auditAttachment: AuditAttachment)  => {
 				if (auditAttachment) {
 					if (traceOn()) {
-						console.log('Adding the file %s labelled with %s', auditAttachment.filename, this.label);
+						console.log(`Adding the file ${auditAttachment.filename} labelled with ${this.label}`);
 					}
-					this.auditAttachmentService.emitAddUpdAttachmentFile(
-						new AttachmentFile(id, auditAttachment.filename, auditAttachment.type, this.label));
 					this.projectService.loadMapSkills(this.projectService.project);
 					if (traceOn()) {
 						this.projectService.dump(this.projectService.project, 'uploadFile');

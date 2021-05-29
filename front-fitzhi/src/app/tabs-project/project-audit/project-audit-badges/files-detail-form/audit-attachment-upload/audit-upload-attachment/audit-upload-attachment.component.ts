@@ -9,6 +9,9 @@ import { MessageBoxService } from 'src/app/interaction/message-box/service/messa
 import { HttpRequest, HttpClient, HttpEventType, HttpResponse } from '@angular/common/http';
 import { Subject } from 'rxjs';
 import { traceOn } from 'src/app/global';
+import { CREATED } from 'http-status-codes';
+import { AuditAttachmentService } from '../../service/audit-attachment.service';
+import { AttachmentFile } from 'src/app/data/AttachmentFile';
 
 @Component({
 	selector: 'app-audit-upload-attachment',
@@ -44,6 +47,7 @@ export class AuditUploadAttachmentComponent extends BaseComponent implements OnI
 		private backendSetupService: BackendSetupService,
 		private httpClient: HttpClient,
 		private messageBoxService: MessageBoxService,
+		private auditAttachmentService :AuditAttachmentService,
 		@Inject(MAT_DIALOG_DATA) public data: any) {
 			super();
 		}
@@ -65,7 +69,6 @@ export class AuditUploadAttachmentComponent extends BaseComponent implements OnI
 			console.log('Testing checkAttachmentFormat for ' + this.attachmentFile.type);
 		}
 		this.validFile = this.fileService.checkApplicationFormat(this.attachmentFile);
-		console.log (this.classFilename());
 	}
 
 	/**
@@ -94,11 +97,10 @@ export class AuditUploadAttachmentComponent extends BaseComponent implements OnI
 		// create a HTTP-post request and pass the form
 		// tell it to report the upload progress
 		const req = new HttpRequest('POST',
-		this.backendSetupService.url() 
-			+ '/project/' + this.attachment.idProject 
-			+ '/audit/' +  this.attachment.idTopic + '/attachment', formData, {
-			reportProgress: true
-		});
+			`${this.backendSetupService.url()}/project/${this.attachment.idProject}/audit/${this.attachment.idTopic}/attachmentFile`, 
+			formData, 
+			{ reportProgress: true}
+		);
 
 		// send the HTTP-request and subscribe for progress-updates
 		this.subscriptions.add(
@@ -109,13 +111,16 @@ export class AuditUploadAttachmentComponent extends BaseComponent implements OnI
 					// pass the percentage into the progress-stream
 					this.progression.next(percentDone);
 				} else if (event instanceof HttpResponse) {
-					const doneAndOk = <boolean>event.body;
-					if (doneAndOk) {
+					if (event.status == CREATED) {
+						const idFile = this.auditAttachmentService.nextAttachmentFile(this.attachment.idTopic);
 						if (traceOn()) {
-							console.log ('Upload done for file ' + this.attachmentFile.name + ' of type ' + this.attachmentFile.type);
+							console.log (`Upload done for file ${idFile} ${this.attachmentFile.name} of type ${this.attachmentFile.type}`);
 						}
 						this.attachment.filename = this.fileService.extractFilename(file.name);
 						this.attachment.type = Constants.APPLICATION_FILE_TYPE_ALLOWED.get(this.attachmentFile.type);
+						
+						const af = new AttachmentFile(idFile, this.attachment.filename, this.attachment.type)
+						this.auditAttachmentService.updateAttachmentFile(this.attachment.idTopic, af);
 					}
 					// Close the progress-stream if we get an answer form the API
 					// The upload is complete

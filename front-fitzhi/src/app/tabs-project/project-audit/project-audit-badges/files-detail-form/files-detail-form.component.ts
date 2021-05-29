@@ -33,12 +33,6 @@ export class FilesDetailFormComponent extends AuditBaseComponent implements OnIn
 
 	ngOnInit() {
 		this.setIdTopic(this.idTopic);
-		if (this.projectService.project.audit[this.idTopic]) {
-			this.auditAttachmentService.emitAttachmentFiles(
-				this.projectService.project.audit[this.idTopic].attachmentList);
-		} else {
-			this.auditAttachmentService.emitAttachmentFiles([]);
-		}
 	}
 
 	/**
