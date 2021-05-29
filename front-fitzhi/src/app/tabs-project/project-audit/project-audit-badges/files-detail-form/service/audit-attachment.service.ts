@@ -84,7 +84,16 @@ export class AuditAttachmentService {
 	 * Inform the system that an attachment file has been removed.
 	 * @param idFile the file attachment identifier to be removed
 	 */
-	public emitRemoveAttachmentFile(idFile: number): void {
+	public removeAttachmentFile(idTopic: number, idFile: number): void {
+		// We remove a file from an array of 4 elements : ths array is complete.
+		// So, after the deletion, we can once again add an upload trailer.
+		if (this.attachmentFiles.get(idTopic).length == 4) {
+			this.attachmentFiles.get(idTopic).splice(idFile, 1);
+			this.addUploadtrailer(idTopic);
+		} else {
+			this.attachmentFiles.get(idTopic).splice(idFile, 1);
+		}
+		this.attachmentFiles$.next(this.attachmentFiles);
 	}
 
 	/**

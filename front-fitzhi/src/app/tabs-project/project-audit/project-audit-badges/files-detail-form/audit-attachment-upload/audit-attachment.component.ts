@@ -115,17 +115,16 @@ export class AuditAttachmentComponent extends BaseComponent implements OnInit, O
 	}
 
 	/**
-	 * Download the audit file from the backend.
-	 * @param idFile the file identifier inside this topic
+	 * Delete the attachment file from the system for a topic inside a project.
 	 */
 	deleteFile() {
 		this.projectService.deleteAuditAttachment(this.projectService.project.id, this.idTopic, this.attachmentFile)
 			.subscribe(doneAndOk => {
 				if (doneAndOk) {
-					this.messageService.success('The file \'' + this.attachmentFile.fileName + '\' has been removed from system.');
-					this.auditAttachmentService.emitRemoveAttachmentFile(this.id);
+					this.messageService.success(`The file '${this.attachmentFile.fileName}' has been removed from the system.`);
+					this.auditAttachmentService.removeAttachmentFile(this.idTopic, this.id);
 					if (traceOn()) {
-						this.projectService.dump(this.projectService.project, 'uploadFile');
+						this.projectService.dump(this.projectService.project, 'deleteFile');
 					}
 				}
 			});
