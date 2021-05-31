@@ -320,14 +320,14 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	void saveUrlSonarServer(Project project, String newUrlSonarServer);
 	
 	/**
-	 * Save the ecosystems detected inside the project
+	 * Save the ecosystems detected inside the project.
 	 * @param project the given project
 	 * @param ecosystems the list of ecosystem-identifiers
 	 */
 	void saveEcosystems(Project project, List<Integer> ecosystems);
 	
 	/**
-	 * Update the skills of the project based on the commit detected on the repository 
+	 * Update the skills of the project based on the commit detected on the repository.
 	 * @param project the given project the given project
 	 * @param entries the list of entries of {@link CommitHistory commits}
 	 * @throws ApplicationException thrown if any exception occurs during the treatment
@@ -336,7 +336,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	
 	/**
 	 * <p>
-	 * Reset the metrics attached to the skills of a given project
+	 * Reset the metrics attached to the skills of a given project.
 	 * </p>
 	 * <p><i>
 	 * This method is most probably used  at the beginning of {@link #updateSkills(Project, List)}.
@@ -349,6 +349,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * <p>
 	 * Test if the path location declared in the project is still valid.
 	 * </p>
+	 * @param project the given project
 	 * @return {@code true} if the path location declared inside the project is valid.
 	 */
 	boolean hasValidRepository(Project project);
