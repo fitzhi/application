@@ -699,7 +699,7 @@ public class ProjectController  {
 		cacheDataHandler.removeRepository(project);
 
 		// Launching the asynchronous generation
-		scanner.generateAsync(project, new SettingsGeneration(project.getId()));
+		scanner.generateAsync(project, new SettingsGeneration(idProject));
 		
 		return ResponseEntity.accepted().build();
 	}

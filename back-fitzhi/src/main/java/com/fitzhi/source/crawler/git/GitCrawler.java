@@ -1549,10 +1549,10 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		CommitRepository personalizedRepo = new BasicCommitRepository();
 		for (CommitHistory commits : globalRepo.getRepository().values()) {
 			commits.operations.stream().filter(
-					it -> ((it.getIdStaff() == settings.getIdStaffSelected()) || (settings.getIdStaffSelected() == 0)))
-					.filter(it -> (it.getDateCommit()).isAfter(startingDate))
-					.forEach(item -> personalizedRepo.addCommit(commits.getSourcePath(), item.getIdStaff(),
-							item.getAuthorName(), item.getDateCommit(), commits.getImportance()));
+				it -> ((it.getIdStaff() == settings.getIdStaffSelected()) || (settings.getIdStaffSelected() == 0)))
+				.filter(it -> (it.getDateCommit()).isAfter(startingDate))
+				.forEach(item -> personalizedRepo.addCommit(commits.getSourcePath(), item.getIdStaff(),
+						item.getAuthorName(), item.getDateCommit(), commits.getImportance()));
 		}
 		return personalizedRepo;
 	}
@@ -1652,7 +1652,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 			if (staff == null) {
 
-				
 				// A setting in applications.properties is equal to TRUE
 				// We create staff member with the ghost data 
 				if (autoStaffCreation && (authorName.split(" ").length > 1)) {

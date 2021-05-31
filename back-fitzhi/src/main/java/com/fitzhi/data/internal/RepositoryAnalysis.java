@@ -260,8 +260,12 @@ public class RepositoryAnalysis {
 	}
 	
 	/**
-	 * Gather a distinct list of <u>identified</u> contributors.<br/>
+	 * <p>
+	 * Gather a distinct list of <em>identified</em> contributors.
+	 * </p>
+	 * <p>
 	 * The returned list contains <b>staff identifier</b>.
+	 * </p>
 	 * @return the list of registered contributors involved in the project
 	 */
 	public Set<Integer> contributors() {
@@ -275,8 +279,12 @@ public class RepositoryAnalysis {
 	}
 	
 	/**
-	 * Gather a distinct list of authors.<br/>
-	 * The returned list contains distinct contributor login (identified or not inside techxhì)
+	 * <p>
+	 * Gather a distinct list of authors.
+	 * </p>
+	 * <p>
+	 * The returned list contains distinct contributor login (identified or not inside Fitzhì)
+	 * </p>
 	 * @return the list of contributors involved in the project
 	 */
 	public List<Author> authors() {
