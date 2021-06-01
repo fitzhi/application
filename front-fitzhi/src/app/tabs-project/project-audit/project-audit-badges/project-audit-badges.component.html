@@ -2,7 +2,6 @@
     <div *ngFor="let topic of (auditTopics$ | async)" class="containerOneThumbnail">
         <app-audit-badge 
             (messengerWeightChange)="onWeightChange($event)"
-            (messengerEvaluationChange)="onEvaluationChange($event)"
             (messengerShowHideAuditDetail)="onShowHideAuditDetail($event)"
             [id]="topic.idTopic"
             [weight]="topic.weight"

@@ -46,12 +46,6 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 
 	/**
 	 * This messenger emits a signal to inform the parent component
-	 * that an evaluation has been made on this topic.
-	 */
-	@Output() messengerEvaluationChange = new EventEmitter<TopicEvaluation>();
-
-	/**
-	 * This messenger emits a signal to inform the parent component
 	 * that a weight in the global note has been given to this topic.
 	 */
 	@Output() messengerWeightChange = new EventEmitter<TopicWeight>();
@@ -151,7 +145,8 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 	 */
 	onEvaluationChange(topicEvaluation: TopicEvaluation): void {
 		this.drawHeaderColor(topicEvaluation.value);
-		this.messengerEvaluationChange.emit(topicEvaluation);
+		topicEvaluation.typeOfOperation = 2;
+		this.projectService.topicEvaluation$.next(topicEvaluation);
 	}
 
 	/**

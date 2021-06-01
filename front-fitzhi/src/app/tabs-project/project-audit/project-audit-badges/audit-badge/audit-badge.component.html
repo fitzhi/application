@@ -32,9 +32,11 @@
             <mat-form-field style="width: 100%">
                 <mat-label>Weight</mat-label>
                 <input 
-                    id="weight" class="weight"
+                    id="weight" 
+                    class="weight"
                     [(ngModel)]="weight"
-                    (change)="onChange('weight')" (input)="onInput('weight')"
+                    (change)="onChange('weight')" 
+                    (input)="onInput('weight')"
                     type="number" matInput />
                 <span matSuffix> %</span>
             </mat-form-field>

@@ -269,7 +269,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 					this.projectService.project.id, topicEvaluation.idTopic, topicEvaluation.value)
 				.subscribe(doneAndOk => {
 					if (doneAndOk) {
-						this.messageService.success('Evaluation given to ' + this.topics[topicEvaluation.idTopic] + ' has been saved');
+						this.messageService.success(`Evaluation given to ${this.topics[topicEvaluation.idTopic]} has been saved.`);
 
 						// Affect the new evaluation given for this topic to the associated item in the Project object.
 						this.updateEvaluationOnTopicProject(topicEvaluation);

@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ProjectAuditBadgesComponent } from './project-audit-badges.component';
-import { Component } from '@angular/core';
+import { Component, DebugElement } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { AuditBadgeComponent } from './audit-badge/audit-badge.component';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -24,6 +24,7 @@ import { ProjectService } from 'src/app/service/project/project.service';
 import { AuditAttachmentComponent } from './files-detail-form/audit-attachment-upload/audit-attachment.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { By } from '@angular/platform-browser';
 
 describe('ProjectAuditBadgesComponent', () => {
 	let component: TestHostComponent;
@@ -94,6 +95,10 @@ describe('ProjectAuditBadgesComponent', () => {
 		return (fixture.nativeElement.querySelector(id) as HTMLInputElement);
 	}
 
+	function debug(id: string): DebugElement {
+		return (fixture.debugElement.query(By.css(id)) as DebugElement);
+	}
+
 	it('should be created with 2 thumbnails', () => {
 		expect(component).toBeTruthy();
 		// 2 children expected.
@@ -107,7 +112,7 @@ describe('ProjectAuditBadgesComponent', () => {
 
 	});
 
-	it('should remove the first thumbnail if the corresponding entry in topics is removed ', () => {
+	it('should remove the first thumbnail if the corresponding entry in topics is removed.', () => {
 		topics.splice(0, 1);
 		expect(topics.length).toBe(1);
 

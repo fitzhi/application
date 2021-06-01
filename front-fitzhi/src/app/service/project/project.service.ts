@@ -2,7 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Project } from '../../data/project';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable, BehaviorSubject, EMPTY, of} from 'rxjs';
+import { Observable, BehaviorSubject, EMPTY, of, Subject} from 'rxjs';
 import { InternalService } from '../../internal-service';
 
 import { Constants } from '../../constants';
@@ -33,6 +33,7 @@ import { SkillService } from '../../skill/service/skill.service';
 import { CinematicService } from '../cinematic.service';
 import { GitService } from '../git/git.service';
 import { ListProjectsService } from 'src/app/tabs-project/list-project/list-projects-service/list-projects.service';
+import { TopicEvaluation } from 'src/app/tabs-project/project-audit/project-audit-badges/topic-evaluation';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -72,6 +73,12 @@ export class ProjectService extends InternalService {
 	 * List of branches detected on the GIT repository.
 	 */
 	public branches$ = new BehaviorSubject<string[]>([]);
+
+	/**
+	 * This EventEmitter propagates the signal than an evaluation has been given to an audit topic.
+	 */
+	 public topicEvaluation$ = new Subject();
+
 
 	constructor(
 		private httpClient: HttpClient,
@@ -665,8 +672,7 @@ export class ProjectService extends InternalService {
 			console.log ('pseudo', pseudo);
 			console.groupEnd();
 		}
-		return this.httpClient.delete<boolean>(
-			this.backendSetupService.url() + '/project/' + idProject + '/ghost/' + pseudo, httpOptions);
+		return this.httpClient.delete<boolean>(`${this.backendSetupService.url()}/project/${idProject}/ghost/${pseudo}`, httpOptions);
 	}
 
 	/**

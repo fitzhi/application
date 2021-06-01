@@ -40,11 +40,6 @@ export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit
 	@Output() messengerShowHideAuditDetail = new EventEmitter<AuditChosenDetail>();
 
 	/**
-	 * This messenger propagates the signal than an evaluation has been given to an audit topic.
-	 */
-	@Output() messengerTopicEvaluation = new EventEmitter<TopicEvaluation>();
-
-	/**
 	 * This messenger propagates the signal than a weight has been given to an audit topic.
 	 */
 	@Output() messengerTopicWeight = new EventEmitter<TopicWeight>();
@@ -80,7 +75,7 @@ export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit
 	 * @param topicEvaluation the topic evaluation emitted
 	 */
 	onEvaluationChange(topicEvaluation: TopicEvaluation) {
-		this.messengerTopicEvaluation.next(topicEvaluation);
+		this.projectService.topicEvaluation$.next(topicEvaluation);
 	}
 
 	/**
