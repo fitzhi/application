@@ -1,16 +1,12 @@
-import { Component, OnInit, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
-import { Constants } from 'src/app/constants';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { BaseComponent } from 'src/app/base/base.component';
-import { Project } from 'src/app/data/project';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { take } from 'rxjs/operators';
-import { MessageService } from 'src/app/interaction/message/message.service';
-import { Topic } from './topic';
+import { BaseComponent } from 'src/app/base/base.component';
 import { AuditTopic } from 'src/app/data/AuditTopic';
-import { BehaviorSubject } from 'rxjs';
-import { CinematicService } from 'src/app/service/cinematic.service';
-import { ReferentialService } from 'src/app/service/referential.service';
 import { traceOn } from 'src/app/global';
+import { MessageService } from 'src/app/interaction/message/message.service';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { ReferentialService } from 'src/app/service/referential.service';
+import { Topic } from './topic';
 
 @Component({
 	selector: 'app-table-categories',

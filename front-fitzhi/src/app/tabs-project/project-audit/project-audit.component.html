@@ -1,10 +1,10 @@
 <div id="audit" *ngIf="(projectService.projectLoaded$|async)">
 	<div>
 		<app-project-audit-badges
-			(messengerTopicWeight)="onWeightChange($event)"
+			(messengerTopicWeight)="projectAuditService.onWeightChange($event)"
 			(messengerShowHideAuditDetail)="onShowHideAuditDetail($event)"
-			[auditDetails$]="auditDetails$"
-			[auditTopics$]="auditTopics$">
+			[auditDetails$]="projectAuditService.auditDetails$"
+			[auditTopics$]="projectAuditService.auditTopics$">
 		</app-project-audit-badges>
 	</div>
 	<button id="auditSetup"
@@ -13,7 +13,7 @@
 	</button>
 	<div id="setupCategories" [hidden]="topicsHidden">
 		<app-table-categories
-			(messengerCategoryUpdated)="onCategoryUpdated($event)">
+			(messengerCategoryUpdated)="projectAuditService.onCategoryUpdated($event)">
 		</app-table-categories>
 	</div>
 </div>
