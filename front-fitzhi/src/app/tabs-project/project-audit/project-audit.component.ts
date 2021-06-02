@@ -1,20 +1,19 @@
-import { Component, OnInit, AfterViewInit, Output, EventEmitter, Input, OnDestroy } from '@angular/core';
-import { Topic } from './table-categories/topic';
-import { BehaviorSubject, Subject, EMPTY } from 'rxjs';
-import { Constants } from 'src/app/constants';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { BehaviorSubject, EMPTY, Subject } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { BaseComponent } from 'src/app/base/base.component';
-import { Project } from 'src/app/data/project';
-import { ReferentialService } from 'src/app/service/referential.service';
+import { Constants } from 'src/app/constants';
+import { AuditTopic } from 'src/app/data/AuditTopic';
+import { traceOn } from 'src/app/global';
+import { MessageService } from 'src/app/interaction/message/message.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
+import { AuditDetailsHistory } from 'src/app/service/cinematic/audit-details-history';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { ReferentialService } from 'src/app/service/referential.service';
+import { AuditChosenDetail } from './project-audit-badges/audit-badge/audit-chosen-detail';
 import { TopicEvaluation } from './project-audit-badges/topic-evaluation';
 import { TopicWeight } from './project-audit-badges/topic-weight';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { MessageService } from 'src/app/interaction/message/message.service';
-import { AuditChosenDetail } from './project-audit-badges/audit-badge/audit-chosen-detail';
-import { AuditDetailsHistory } from 'src/app/service/cinematic/audit-details-history';
-import { switchMap } from 'rxjs/operators';
-import { traceOn } from 'src/app/global';
-import { AuditTopic } from 'src/app/data/AuditTopic';
+import { Topic } from './table-categories/topic';
 
 @Component({
 	selector: 'app-project-audit',

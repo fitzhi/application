@@ -1,16 +1,15 @@
-import { Component, OnInit, Input, OnDestroy, EventEmitter, Output, AfterViewInit } from '@angular/core';
-import { Constants } from 'src/app/constants';
-import { CinematicService } from 'src/app/service/cinematic.service';
-import { BaseComponent } from 'src/app/base/base.component';
-import { ProjectService } from 'src/app/service/project/project.service';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatSliderChange } from '@angular/material/slider';
+import { take } from 'rxjs/operators';
+import { BaseComponent } from 'src/app/base/base.component';
+import { AuditDetail } from 'src/app/data/audit-detail';
+import { traceOn } from 'src/app/global';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { ReferentialService } from 'src/app/service/referential.service';
 import { TopicEvaluation } from '../topic-evaluation';
 import { TopicWeight } from '../topic-weight';
 import { AuditChosenDetail } from './audit-chosen-detail';
-import { AuditDetail } from 'src/app/data/audit-detail';
-import { ReferentialService } from 'src/app/service/referential.service';
-import { take } from 'rxjs/operators';
-import { traceOn } from 'src/app/global';
 
 @Component({
 	selector: 'app-audit-badge',

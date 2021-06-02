@@ -1,15 +1,14 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { BaseComponent } from 'src/app/base/base.component';
+import { AttachmentFile } from 'src/app/data/AttachmentFile';
+import { AuditDetail } from 'src/app/data/audit-detail';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { ReferentialService } from 'src/app/service/referential.service';
+import { AuditChosenDetail } from './audit-badge/audit-chosen-detail';
 import { TopicEvaluation } from './topic-evaluation';
 import { TopicWeight } from './topic-weight';
-import { Project } from 'src/app/data/project';
-import { BaseComponent } from 'src/app/base/base.component';
-import { AuditChosenDetail } from './audit-badge/audit-chosen-detail';
-import { AuditDetail } from 'src/app/data/audit-detail';
-import { ReferentialService } from 'src/app/service/referential.service';
-import { AttachmentFile } from 'src/app/data/AttachmentFile';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { CinematicService } from 'src/app/service/cinematic.service';
 
 @Component({
 	selector: 'app-project-audit-badges',
