@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Constants } from 'src/app/constants';
+import { AuditTopic } from 'src/app/data/AuditTopic';
 import { traceOn } from 'src/app/global';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
@@ -214,6 +215,42 @@ export class ProjectAuditService {
 						}
 					}
 				});
+		}
+	}
+
+	/**
+	 * __Selection__ or __Deselection__ of a topic in the audit scope.
+	 * 
+	 * @param topic the given topic
+	 */
+	 updateTopic(topic: Topic) {
+		if (traceOn()) {
+			console.log (topic.title, (topic.select) ? 'is selected' : 'is deselected');
+		}
+		if (topic.select) {
+			this.projectService
+				.addAuditTopic$(topic.id)
+				.pipe(take(1))
+				.subscribe(doneAndOk => {
+					if (doneAndOk) {
+						this.projectService.project.audit[topic.id] = new AuditTopic(topic.id, 0, 5);
+						this.messageService.info(`The topic "${topic.title}" is added to the scope of audit`);
+						// We inform that a category has been selectect or deselected.
+						this.onCategoryUpdated(topic);
+					}}
+				);
+		} else {
+			this.projectService
+				.removeAuditTopic$(topic.id)
+				.pipe(take(1))
+				.subscribe(doneAndOk => {
+					if (doneAndOk) {
+						delete this.projectService.project.audit[topic.id];
+						this.messageService.info(`The topic "${topic.title} is removed from audit`);
+						// We inform that a category has been selectect or deselected.
+						this.onCategoryUpdated(topic);
+					}}
+				);
 		}
 	}
 

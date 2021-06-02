@@ -9,7 +9,7 @@
             *matCellDef="let row; let i = index;">
             <mat-checkbox id="select-{{i}}" 
                 [(ngModel)]="row.select" 
-                (change)="updateTopic(row)">
+                (change)="projectAuditService.updateTopic(row)">
             </mat-checkbox>
         </td>
     </ng-container>
