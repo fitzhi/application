@@ -161,4 +161,34 @@ describe('ProjectAuditService', () => {
 		expect (spySuccessMessage).toHaveBeenCalled();
 	});
 
+	it('should ADD correctly a new topic in the audit.', () => {
+		
+		const spyAddAuditTopic= spyOn(projectService, 'addAuditTopic$').and.returnValue(of(true));
+		const spyMessageInfoService= spyOn(messageService, 'info').and.returnValue(null);
+		const spyCategoryUpdated = spyOn(service, 'onCategoryUpdated').and.returnValue(null);
+
+		expect(projectService.project.audit[10]).toBeUndefined();
+		service.updateTopic(new Topic(true, 10, 'Ten'));
+		expect(projectService.project.audit[10]).toBeDefined();
+
+		expect (spyCategoryUpdated).toHaveBeenCalled();
+		expect (spyMessageInfoService).toHaveBeenCalled();
+		expect (spyAddAuditTopic).toHaveBeenCalled();
+	});
+
+
+	it('should REMOVE correctly a topic from the audit.', () => {
+		
+		const spyAddAuditTopic= spyOn(projectService, 'removeAuditTopic$').and.returnValue(of(true));
+		const spyMessageInfoService= spyOn(messageService, 'info').and.returnValue(null);
+		const spyCategoryUpdated = spyOn(service, 'onCategoryUpdated').and.returnValue(null);
+
+		service.updateTopic(new Topic(false, 3, 'Ten'));
+		expect(projectService.project.audit[3]).toBeUndefined();
+
+		expect (spyCategoryUpdated).toHaveBeenCalled();
+		expect (spyMessageInfoService).toHaveBeenCalled();
+		expect (spyAddAuditTopic).toHaveBeenCalled();
+	});
+
 });
