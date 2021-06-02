@@ -10,5 +10,5 @@ export class TopicEvaluation {
 	constructor (
 		public idTopic: number,
 		public value: number,
-		public typeOfOperation:  1 | 2) {}
+		public typeOfOperation: 1 | 2) {}
 }

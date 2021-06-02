@@ -1,12 +1,3 @@
-<!-- 
-<div *ngIf="(!editable && (projectService.projectLoaded$|async))">
-    <svg viewBox="0 0 120 120" [ngStyle]="styleSize" >
-        <path id="topic-arc-{{id}}" fill="transparent" stroke-width="8" />
-        <text id="topic-note-{{id}}" class="evaluation"></text>
-    </svg>
-</div>
--->
-
 <div *ngIf="(!editable)" [hidden]="(evaluation === 0)">
     <svg viewBox="0 0 120 120" [ngStyle]="styleSize">
         <path id="topic-arc-{{id}}" fill="transparent" stroke-width="8" />

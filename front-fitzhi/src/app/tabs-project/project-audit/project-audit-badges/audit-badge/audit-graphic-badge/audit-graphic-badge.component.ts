@@ -118,7 +118,7 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	 */
 	drawBadge(project: Project) {
 		//
-		// We postpone the update to avoir an ExpressionChangedAfterItHasBeenCheckedError Warning
+		// We postpone the update to avoid an ExpressionChangedAfterItHasBeenCheckedError Warning
 		//
 		setTimeout(() => {
 			this.evaluation = project.auditEvaluation;
@@ -190,6 +190,9 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 		}
 	}
 
+	/**
+	 * Each key stroke in the **"evaluation input field"** invokes this method  
+	 */
 	onInput() {
 		if (!isNaN(this.evaluation)) {
 			if (this.evaluation > 100) {
@@ -200,7 +203,10 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 		}
 	}
 
-	onChange() {
+	/**
+	 * Each time the content of the **"evaluation input field"** changes, this method is invoked.  
+	 */
+	 onChange() {
 		if (!isNaN(this.evaluation)) {
 			this.messengerEvaluationChange.emit(new TopicEvaluation(this.id, this.evaluation, 2));
 		} else {

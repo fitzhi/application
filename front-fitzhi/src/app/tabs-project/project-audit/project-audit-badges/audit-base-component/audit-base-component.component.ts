@@ -3,6 +3,8 @@ import { BaseComponent } from 'src/app/base/base.component';
 import { BehaviorSubject } from 'rxjs';
 import { Project } from 'src/app/data/project';
 import { ProjectService } from 'src/app/service/project/project.service';
+import { TopicEvaluation } from '../topic-evaluation';
+import { ConnectUserComponent } from 'src/app/admin/connect-user/connect-user.component';
 
 export class AuditBaseComponent extends BaseComponent implements OnDestroy, AfterViewInit {
 
@@ -36,6 +38,15 @@ export class AuditBaseComponent extends BaseComponent implements OnDestroy, Afte
 
 	ngAfterViewInit(): void {
 		this.drawHeaderColor(this.projectService.project.audit[this.idTopic].evaluation);
+		this.subscriptions.add(
+			this.projectService.topicEvaluation$.subscribe({
+				next: (te: TopicEvaluation) => {
+					if (te.idTopic === this.idTopic) {
+						this.drawHeaderColor(te.value);
+					}
+				}
+			})
+		);
 	}
 
 	/**
