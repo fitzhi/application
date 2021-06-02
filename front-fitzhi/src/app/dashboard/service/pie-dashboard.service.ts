@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Project } from 'src/app/data/project';
 import { Slice } from 'dynamic-pie-chart';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { traceOn } from 'src/app/global';
 import { BehaviorSubject } from 'rxjs';
-import {EMPTY_SLICE} from '../empty-slice';
-import { LevelStaffRisk } from '../level-staff-risk';
+import { Project } from 'src/app/data/project';
+import { traceOn } from 'src/app/global';
+import { ProjectService } from 'src/app/service/project/project.service';
 import { AnalysisTypeSlice } from '../analysis-type-slice';
+import { EMPTY_SLICE } from '../empty-slice';
+import { LevelStaffRisk } from '../level-staff-risk';
 /**
  * This service is in charge of the generation of the slices.
  */

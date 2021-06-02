@@ -1,11 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
-import { TagStar } from 'src/app/tabs-staff/staff-form/tag-star';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-import { thresholdSturges } from 'd3';
 import { traceOn } from 'src/app/global';
 import { TagifyEditableState } from 'src/app/tabs-staff/staff-experience/tagify-stars/tagify-editable-state';
-import { TagifyStarsComponent } from 'src/app/tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
+import { TagStar } from 'src/app/tabs-staff/staff-form/tag-star';
 import { TreemapService } from '../service/treemap.service';
 
 @Component({

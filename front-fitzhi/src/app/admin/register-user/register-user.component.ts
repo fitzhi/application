@@ -1,16 +1,15 @@
-import { Component, OnInit, OnDestroy, Input, EventEmitter, Output } from '@angular/core';
-import { FormControl, Validators, FormGroup, FormBuilder } from '@angular/forms';
-import { BaseComponent } from '../../base/base.component';
-import { MustMatch } from 'src/app/service/mustmatch';
-import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
-import { Constants } from 'src/app/constants';
-import { MessageService } from 'src/app/interaction/message/message.service';
-import { StaffDataExchangeService } from 'src/app/tabs-staff/service/staff-data-exchange.service';
-import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
-import { StaffService } from 'src/app/tabs-staff/service/staff.service';
-import { traceOn } from 'src/app/global';
-import { InstallService } from '../service/install/install.service';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Collaborator } from 'src/app/data/collaborator';
+import { traceOn } from 'src/app/global';
+import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
+import { MessageService } from 'src/app/interaction/message/message.service';
+import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
+import { MustMatch } from 'src/app/service/mustmatch';
+import { StaffDataExchangeService } from 'src/app/tabs-staff/service/staff-data-exchange.service';
+import { StaffService } from 'src/app/tabs-staff/service/staff.service';
+import { BaseComponent } from '../../base/base.component';
+import { InstallService } from '../service/install/install.service';
 
 @Component({
 	selector: 'app-register-user',

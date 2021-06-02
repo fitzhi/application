@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { traceOn } from 'src/app/global';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { ListProjectsService } from '../list-project/list-projects-service/list-projects.service';

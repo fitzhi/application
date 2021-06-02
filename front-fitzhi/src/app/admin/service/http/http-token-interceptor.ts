@@ -1,7 +1,7 @@
 
 import { HttpErrorResponse, HttpHandler, HttpHeaderResponse, HttpInterceptor, HttpProgressEvent, HttpRequest, HttpResponse, HttpSentEvent, HttpUserEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, EMPTY, Observable, throwError as observableThrowError, throwError } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, throwError } from 'rxjs';
 import { catchError, filter, finalize, switchMap, take } from 'rxjs/operators';
 import { traceOn } from 'src/app/global';
 import { Token } from '../token/token';

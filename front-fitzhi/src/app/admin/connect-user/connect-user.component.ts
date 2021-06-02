@@ -1,11 +1,10 @@
-import { Component, OnInit, EventEmitter, Output, Input } from '@angular/core';
-import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
-import { AuthService } from '../service/auth/auth.service';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Constants } from 'src/app/constants';
+import { traceOn } from 'src/app/global';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
-import { traceOn } from 'src/app/global';
+import { AuthService } from '../service/auth/auth.service';
 
 @Component({
 	selector: 'app-connect-user',

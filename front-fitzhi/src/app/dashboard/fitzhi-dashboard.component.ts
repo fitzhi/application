@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ControlledRisingSkylineService } from 'controlled-rising-skyline';
 import { BehaviorSubject } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import { take } from 'rxjs/operators';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
 import { ProjectService } from 'src/app/service/project/project.service';

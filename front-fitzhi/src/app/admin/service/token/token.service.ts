@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 import { traceOn } from 'src/app/global';
 import { Token } from './token';
 

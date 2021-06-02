@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Building } from 'rising-skyline';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { ProjectFloor } from 'src/app/data/project-floor';
 import { SkylineAnimation } from 'src/app/data/skyline-animation';

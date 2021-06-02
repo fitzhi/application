@@ -1,6 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ControlledRisingSkylineService } from 'controlled-rising-skyline';
 import { Building, BuildingSelected } from 'rising-skyline';
 import { BehaviorSubject } from 'rxjs';
 import { traceOn } from 'src/app/global';

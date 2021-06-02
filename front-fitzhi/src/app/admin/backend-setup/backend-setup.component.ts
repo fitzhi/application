@@ -1,12 +1,11 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { FormControl, Validators, FormGroup } from '@angular/forms';
-import { BaseComponent } from '../../base/base.component';
-import { HttpClient } from '@angular/common/http';
-import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
-import { MessageService } from 'src/app/interaction/message/message.service';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { traceOn } from 'src/app/global';
+import { MessageService } from 'src/app/interaction/message/message.service';
 import { environment } from '../../../environments/environment';
+import { BaseComponent } from '../../base/base.component';
+import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
 
 @Component({
 	selector: 'app-backend-setup',
