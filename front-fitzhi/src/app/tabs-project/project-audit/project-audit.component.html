@@ -12,9 +12,7 @@
 		(click)="setupCategories()">+
 	</button>
 	<div id="setupCategories" [hidden]="topicsHidden">
-		<app-table-categories
-			(messengerCategoryUpdated)="projectAuditService.onCategoryUpdated($event)">
-		</app-table-categories>
+		<app-table-categories></app-table-categories>
 	</div>
 </div>
 <div class="no-project" *ngIf="!(projectService.projectLoaded$|async)">

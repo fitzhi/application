@@ -6,6 +6,7 @@ import { traceOn } from 'src/app/global';
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { ReferentialService } from 'src/app/service/referential.service';
+import { ProjectAuditService } from '../service/project-audit.service';
 import { Topic } from './topic';
 
 @Component({
@@ -14,11 +15,6 @@ import { Topic } from './topic';
 	styleUrls: ['./table-categories.component.css']
 })
 export class TableCategoriesComponent extends BaseComponent implements OnInit, OnDestroy {
-
-	/**
-	 * We inform the parent component that a category has been selectect or deselected.
-	 */
-	@Output() messengerCategoryUpdated = new EventEmitter<Topic>();
 
 	public categoryColumns: string[] = ['select', 'title'];
 
@@ -31,6 +27,7 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 
 	constructor(
 		private projectService: ProjectService,
+		private projectAuditService: ProjectAuditService,
 		private referentialRervice: ReferentialService,
 		private messageService: MessageService) { super(); }
 
@@ -54,7 +51,8 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 	}
 
 	/**
-	 * __Selection__ or __Deselection__ of a topic.
+	 * __Selection__ or __Deselection__ of a topic in the audit scope.
+	 * 
 	 * @param topic the given topic
 	 */
 	updateTopic(topic: Topic) {
@@ -69,7 +67,8 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 					if (doneAndOk) {
 						this.projectService.project.audit[topic.id] = new AuditTopic(topic.id, 0, 5);
 						this.messageService.info(`The topic "${topic.title}" is added to the scope of audit`);
-						this.messengerCategoryUpdated.emit(topic);
+						// We inform that a category has been selectect or deselected.
+						this.projectAuditService.onCategoryUpdated(topic);
 					}});
 		} else {
 			this.projectService
@@ -78,8 +77,9 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 				.subscribe(doneAndOk => {
 					if (doneAndOk) {
 						delete this.projectService.project.audit[topic.id];
-						this.messageService.info('The topic \'' + topic.title + '\' is removed from audit');
-						this.messengerCategoryUpdated.emit(topic);
+						this.messageService.info(`The topic "${topic.title} is removed from audit`);
+						// We inform that a category has been selectect or deselected.
+						this.projectAuditService.onCategoryUpdated(topic);
 					}});
 		}
 	}
