@@ -1,26 +1,25 @@
 <div id="audit" *ngIf="(projectService.projectLoaded$|async)">
-        <div>
-                <app-project-audit-badges
-                        (messengerTopicWeight)="onWeightChange($event)"
-                        (messengerTopicEvaluation)="onEvaluationChange($event)"
-                        (messengerShowHideAuditDetail)="onShowHideAuditDetail($event)"
-                        [auditDetails$]="auditDetails$"
-                        [auditTopics$]="auditTopics$">
-                </app-project-audit-badges>
-        </div>
-        <button id="auditSetup"
-                class="btn btn-outline btn-outline-secondary rounded"
-                (click)="setupCategories()">+
-        </button>
-        <div id="setupCategories" [hidden]="topicsHidden">
-                <app-table-categories
-                        (messengerCategoryUpdated)="onCategoryUpdated($event)">
-                </app-table-categories>
-        </div>
+	<div>
+		<app-project-audit-badges
+			(messengerTopicWeight)="onWeightChange($event)"
+			(messengerShowHideAuditDetail)="onShowHideAuditDetail($event)"
+			[auditDetails$]="auditDetails$"
+			[auditTopics$]="auditTopics$">
+		</app-project-audit-badges>
+	</div>
+	<button id="auditSetup"
+		class="btn btn-outline btn-outline-secondary rounded"
+		(click)="setupCategories()">+
+	</button>
+	<div id="setupCategories" [hidden]="topicsHidden">
+		<app-table-categories
+			(messengerCategoryUpdated)="onCategoryUpdated($event)">
+		</app-table-categories>
+	</div>
 </div>
 <div class="no-project" *ngIf="!(projectService.projectLoaded$|async)">
-        <p>
-                Your project does not exist yet. You need to save it, first.
-        </p>
-        <a href="javascript:;" (click)="jumpToTab (-1)">First, complete the project form.</a>
+	<p>
+		Your project does not exist yet. You need to save it, first.
+	</p>
+	<a href="javascript:;" (click)="jumpToTab (-1)">First, complete the project form.</a>
 </div>

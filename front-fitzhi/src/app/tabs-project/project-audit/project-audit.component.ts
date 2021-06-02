@@ -96,7 +96,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 		this.subscriptions.add(
 			this.projectService.topicEvaluation$.subscribe({
 				// Update the backend with the new evaluation given to an audit topic.
-				next: (te: TopicEvaluation) => this.onEvaluationChange(te)
+				next: (te: TopicEvaluation) => this.broadcastEvaluationChange(te)
 			})
 		);
 	}
@@ -120,7 +120,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	/**
 	 * Initializing the array of topics to be displayed on the webpage.
 	 */
-	initializeAuditTopic() {
+	public initializeAuditTopic() {
 		this.auditTopics = [];
 		Object.keys(this.projectService.project.audit).forEach(key => {
 			this.auditTopics.push(
@@ -262,10 +262,14 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	}
 
 	/**
-	 * The function is informed that an evaluation has been given to a topic of the audit.
+	 * The function is informed that an evaluation has changed on a topic in the audit.
+	 * 
+	 * Its main goal is to notify this change to the backend. 
+	 * 
 	 * @param topicEvaluation the topic evaluation emitted
 	 */
-	onEvaluationChange(topicEvaluation: TopicEvaluation) {
+	public broadcastEvaluationChange(topicEvaluation: TopicEvaluation) {
+
 		if ((traceOn()) && (topicEvaluation.typeOfOperation === Constants.CHANGE_BROADCAST)) {
 			console.log (this.topics[topicEvaluation.idTopic], topicEvaluation.value);
 		}
@@ -282,7 +286,9 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 
 						// Update the underlining GLOBAL project evaluation
 						this.projectService.processGlobalAuditEvaluation();
-					}});
+					}
+				}
+			);
 		}
 	}
 
