@@ -91,7 +91,14 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 					this.topics = topics;
 					this.initializeAuditTopic();
 				}
-			}));
+			})
+		);
+		this.subscriptions.add(
+			this.projectService.topicEvaluation$.subscribe({
+				// Update the backend with the new evaluation given to an audit topic.
+				next: (te: TopicEvaluation) => this.onEvaluationChange(te)
+			})
+		);
 	}
 
 	ngAfterViewInit() {
