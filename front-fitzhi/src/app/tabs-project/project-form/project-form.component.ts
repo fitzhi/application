@@ -2,10 +2,8 @@ import { Component, OnInit, Input, OnDestroy, AfterViewInit, EventEmitter, Outpu
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { take, map, catchError, switchMap, tap } from 'rxjs/operators';
-
 import { ProjectService } from '../../service/project/project.service';
 import { CinematicService } from '../../service/cinematic.service';
-
 import { Project } from '../../data/project';
 import { SonarProject } from '../../data/SonarProject';
 import { Constants } from '../../constants';
@@ -24,6 +22,7 @@ import { ProjectSkill } from '../../data/project-skill';
 import { GitService } from 'src/app/service/git/git.service';
 import { Repository } from 'src/app/data/git/repository';
 import { ListProjectsService } from '../list-project/list-projects-service/list-projects.service';
+import { ProjectFormSkillHandler } from './skill/project-form-skill-handler';
 
 /**
  * ProjectFormComponent
@@ -128,6 +127,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 */
 	urlCodeFactorIOUnreachable$ = new BehaviorSubject<Boolean>(false);
 
+	/**
+	 * This handler is in charge of the skills management inside this form.
+	 * This is not an Angular Global Service because its scope is limited to this component
+	 */
+	projectSkillHandler: ProjectFormSkillHandler;
+
 	constructor(
 		private cinematicService: CinematicService,
 		private messageService: MessageService,
@@ -140,8 +145,11 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		private router: Router) {
 		super();
 
-		this.boundAddSkill = this.addSkill.bind(this);
-		this.boundRemoveSkill = this.removeSkill.bind(this);
+		this.projectSkillHandler = new ProjectFormSkillHandler(
+			projectService, skillService, messageService);
+	
+		this.boundAddSkill = this.projectSkillHandler.addSkill.bind(this);
+		this.boundRemoveSkill = this.projectSkillHandler.removeSkill.bind(this);
 
 		this.boundAddSonarProject = this.addSonarProject.bind(this);
 		this.boundRemoveSonarProject = this.removeSonarProject.bind(this);
@@ -205,8 +213,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				}
 			}));
 	}
-
-
 
 	/**
 	 * This function create 2 JavasScript objects inside the form
@@ -318,21 +324,8 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				catchError((error) => {
 					console.error('Internal error : Skills are not retrieved from back-end', error);
 					return this.sonarProjectsLoaded$();
-				}));
-				/*
-			.pipe(
-				take(1),
-				switchMap(doneAndOk => {
-					if (!doneAndOk && !this.creation) {
-						this.messageService.warning('Cannot retrieve the declared applications in Sonar');
-					}
-					// Asynchronous update to avoid ExpressionChangedAfterItHasBeenCheckedError
-					setTimeout(() => {
-						this.sonarProjectsLoaded = doneAndOk;
-					}, 0);
-					return of(doneAndOk);
-				}));
-				*/
+				})
+			);
 	}
 
 	/**
@@ -349,9 +342,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		this.projectService
 			.testConnectionCodeFactorIO$()
 			.subscribe({
-				next: doneAndOk => {
-					this.urlCodeFactorIOUnreachable$.next(!doneAndOk);
-				}
+				next: doneAndOk => this.urlCodeFactorIOUnreachable$.next(!doneAndOk)
 			});
 	}
 
@@ -390,10 +381,9 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * Return an observable emitting an array containing all skills declared inside the applicaton.
 	 */
 	private allSkills$(): Observable<Skill[]> {
-		return this.skillService.allSkillsLoaded$
-			.pipe(switchMap(doneAndOk => {
-				return doneAndOk ? of(this.skillService.allSkills) : EMPTY;
-			}));
+		return this.skillService.allSkillsLoaded$.pipe(
+			switchMap(doneAndOk => doneAndOk ? of(this.skillService.allSkills) : EMPTY)
+		);
 	}
 
 	/**
@@ -439,7 +429,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			.pipe(
 				tap(sonarProjects => {
 					if (traceOn()) {
-						console.log('Receiving ' + sonarProjects.length + ' Sonar projects');
+						console.log(`Receiving ${sonarProjects.length} Sonar projects`);
 					}
 				}),
 				map(sonarProjects => {
@@ -487,12 +477,12 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			this.projectService.saveSonarUrl$(this.projectService.project.id, urlSonarServer)
 				.subscribe(doneAndOk => {
 					if (doneAndOk) {
-						this.messageService.success('Saved the URL ' + urlSonarServer + ' for the project ' + this.projectService.project.name);
+						this.messageService.success(`Saved the URL ${urlSonarServer} for the project ${this.projectService.project.name}`);
 						this.projectService.project.urlSonarServer = urlSonarServer;
 						this.projectService.project.sonarProjects = [];
 						this.projectService.projectLoaded$.next(true);
 					} else {
-						this.messageService.error('Failed to save the URL ' + urlSonarServer + ' for the project ' + this.projectService.project.name);
+						this.messageService.error(`Failed to save the URL ${urlSonarServer} for the project ${this.projectService.project.name}`);
 					}
 				});
 		}
@@ -506,105 +496,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 			console.log('onQualitySolutionChange', $event);
 		}
 		this.code_quality_solution$.next(Number($event));
-	}
-
-	/**
-	 * Add a skill inside the project.
-	 * @param event ADD event fired by the tagify component.
-	 */
-	addSkill(event: CustomEvent) {
-
-		if ((!this.projectService.project.id) || (this.projectService.project.id === -1)) {
-			if (traceOn()) {
-				console.log ('Adding a skill is impossible for an unregistered project.');
-			}
-			this.messageService.error('Adding a skill is impossible for an unregistered project!');
-			return;
-		}
-
-		const idSkill = this.skillService.id(event.detail.data.value);
-		if (idSkill === -1) {
-			console.log('SEVERE ERROR : Unregistered skill', event.detail.data.value);
-		}
-
-		// This skills is already registered for this project.
-		if (this.projectService.project.mapSkills.has(idSkill)) {
-			return;
-		}
-
-		if (traceOn()) {
-			console.log('Adding the skill', event.detail.data.value);
-		}
-
-		this.projectService.project.mapSkills.set(idSkill, new ProjectSkill(idSkill, 0, 0));
-
-		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
-		if (this.projectService.project.id)  {
-			this.updateSkill(this.projectService.project.id, idSkill, this.projectService.addSkill$.bind(this.projectService));
-		}
-
-		// Log the resulting collection.
-		this.logProjectSkills();
-	}
-
-	/**
-	 * Remove a skill from the project.
-	 * @param event ADD event fired by the tagify component.
-	 */
-	removeSkill(event: CustomEvent) {
-
-		const idSkill = this.skillService.id(event.detail.data.value);
-		if (idSkill === -1) {
-			console.log('SEVERE ERROR : Unknown skill %s', event.detail.data.value);
-		}
-
-		// This skills is NOT already registered for this project.
-		if (!this.projectService.project.mapSkills.has(idSkill)) {
-			console.log('SEVERE ERROR : Unregistered skill %s for the project %s',
-				event.detail.data.value,
-				this.projectService.project.name);
-			return;
-		}
-
-		if (traceOn()) {
-			console.log('Removing the skill', event.detail.data.value);
-		}
-
-		this.projectService.project.mapSkills.delete(idSkill);
-
-		// We have already loaded or saved the project, so we can remove each new skill one by one.
-		if (this.projectService.project.id) {
-			this.updateSkill(this.projectService.project.id, idSkill, this.projectService.delSkill$.bind(this.projectService));
-		}
-
-		// Log the resulting collection.
-		this.logProjectSkills();
-	}
-
-	/**
-	 * Update a skill inside a project. This might be an addition or a removal.
-	 * @param idProject the project identifier
-	 * @param idSkill the skill identifier
-	 * @param callback the callback function, which might be **projectService.addSkill** or **projectService.delSkill**
-	 */
-	updateSkill(idProject: number, idSkill: number,
-		callback: (idProject: number, idSkill: number) => Observable<Boolean>) {
-		callback(idProject, idSkill)
-			.subscribe({
-				next: result => {
-					if (result) {
-						this.projectService.actualizeProject(idProject);
-					}
-				},
-				error: error => {
-					if (traceOn()) {
-						console.log(`Error ${error.code} ${error.message}`);
-					}
-					this.messageService.error(error.message);
-				}
-			}
-		);
-		
 	}
 
 	/**
@@ -632,19 +523,6 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 						console.log('Error ' + response_in_error);
 					}
 				});
-	}
-
-	/**
-	 * Log the skills of the current project in DEBUG mode.
-	 */
-	logProjectSkills() {
-		if (traceOn()) {
-			console.groupCollapsed('list of skills for project ' + this.projectService.project.name);
-			for (const [idSkill, profilSkill] of this.projectService.project.mapSkills) {
-				console.log(idSkill, this.skillService.title(idSkill));
-			}
-			console.groupEnd();
-		}
 	}
 
 	/**
