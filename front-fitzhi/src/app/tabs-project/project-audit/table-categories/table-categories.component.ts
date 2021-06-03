@@ -25,7 +25,7 @@ export class TableCategoriesComponent extends BaseComponent implements OnInit, O
 
 	constructor(
 		private projectService: ProjectService,
-		private projectAuditService: ProjectAuditService,
+		public projectAuditService: ProjectAuditService,
 		private referentialService: ReferentialService,
 		private messageService: MessageService) { super(); }
 
