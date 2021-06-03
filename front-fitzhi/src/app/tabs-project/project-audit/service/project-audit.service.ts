@@ -223,7 +223,7 @@ export class ProjectAuditService {
 	 * 
 	 * @param topic the given topic
 	 */
-	 updateTopic(topic: Topic) {
+	public updateTopic(topic: Topic) {
 		if (traceOn()) {
 			console.log (topic.title, (topic.select) ? 'is selected' : 'is deselected');
 		}
