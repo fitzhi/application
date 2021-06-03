@@ -21,6 +21,7 @@ export class ProjectFormSkillHandler {
 
 	/**
 	 * Add a skill inside the project.
+	 * 
 	 * @param event ADD event fired by the tagify component.
 	 */
 	public addSkill(event: CustomEvent) {
@@ -51,7 +52,10 @@ export class ProjectFormSkillHandler {
 
 		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
 		if (this.projectService.project.id)  {
-			this.updateSkill(this.projectService.project.id, idSkill, this.projectService.addSkill$.bind(this.projectService));
+			this.updateSkill(
+				this.projectService.project.id, 
+				idSkill, 
+				this.projectService.addSkill$.bind(this.projectService));
 		}
 
 		// Log the resulting collection.
@@ -85,7 +89,10 @@ export class ProjectFormSkillHandler {
 
 		// We have already loaded or saved the project, so we can remove each new skill one by one.
 		if (this.projectService.project.id) {
-			this.updateSkill(this.projectService.project.id, idSkill, this.projectService.delSkill$.bind(this.projectService));
+			this.updateSkill(
+				this.projectService.project.id, 
+				idSkill,
+				this.projectService.delSkill$.bind(this.projectService));
 		}
 
 		// Log the resulting collection.
@@ -98,7 +105,7 @@ export class ProjectFormSkillHandler {
 	 * @param idSkill the skill identifier
 	 * @param callback the callback function, which might be **projectService.addSkill** or **projectService.delSkill**
 	 */
-	updateSkill(idProject: number, idSkill: number,
+	public updateSkill(idProject: number, idSkill: number,
 		callback: (idProject: number, idSkill: number) => Observable<Boolean>) {
 		callback(idProject, idSkill)
 			.subscribe({

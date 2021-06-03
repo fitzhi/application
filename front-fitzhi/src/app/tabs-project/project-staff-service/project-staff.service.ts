@@ -65,7 +65,9 @@ export class ProjectStaffService {
 		const foundContributor = this.contributors
 			.find(contributor => contributor.idStaff === idStaff);
 		if (!foundContributor) {
-			console.log ('Conmmiter\'s id %d is not retrieved in the staff team.', idStaff );
+			if (traceOn()) {
+				console.log (`Conmmiter\'s id ${idStaff} is not retrieved in the staff team.`);
+			}
 			const unknown = new Contributor();
 			unknown.idStaff = idStaff;
 			const staff = this.staffListService.getCollaborator(idStaff);

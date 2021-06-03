@@ -148,15 +148,31 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		this.projectSkillHandler = new ProjectFormSkillHandler(
 			projectService, skillService, messageService);
 	
-		this.boundAddSkill = this.projectSkillHandler.addSkill.bind(this);
-		this.boundRemoveSkill = this.projectSkillHandler.removeSkill.bind(this);
+		this.boundAddSkill = this.addSkill.bind(this);
+		this.boundRemoveSkill = this.removeSkill.bind(this);
 
 		this.boundAddSonarProject = this.addSonarProject.bind(this);
 		this.boundRemoveSonarProject = this.removeSonarProject.bind(this);
 
 	}
 
-	ngOnInit() {
+	/**
+	 * Wrapper bound with this component.
+	 * @param event ADD event fired by the tagify component.
+	 */
+	addSkill(event: CustomEvent): void {
+		this.projectSkillHandler.addSkill(event);
+	}
+
+	/**
+	 * Wrapper bound with this component.
+	 * @param event REMOVE event fired by the tagify component.
+	 */
+	 removeSkill(event: CustomEvent): void {
+		this.projectSkillHandler.removeSkill(event);
+	}
+
+ 	ngOnInit() {
 
 		this.subscriptions.add(this.projectService.projectLoaded$
 			.subscribe({
