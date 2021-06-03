@@ -35,7 +35,7 @@ export class ProjectFormSkillHandler {
 
 		const idSkill = this.skillService.id(event.detail.data.value);
 		if (idSkill === -1) {
-			console.error('SEVERE ERROR : Unregistered skill', event.detail.data.value);
+			throw new Error(`SEVERE ERROR : Unregistered skill ${event.detail.data.value}`);
 		}
 
 		// This skills is already registered for this project.
@@ -66,7 +66,7 @@ export class ProjectFormSkillHandler {
 
 		const idSkill = this.skillService.id(event.detail.data.value);
 		if (idSkill === -1) {
-			console.log('SEVERE ERROR : Unknown skill %s', event.detail.data.value);
+			throw new Error(`SEVERE ERROR : Unregistered skill ${event.detail.data.value}`);
 		}
 
 		// This skills is NOT already registered for this project.
