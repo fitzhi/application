@@ -132,7 +132,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		this.profileStaff.get('email').setValue(this.staff.email);
 		this.profileStaff.get('profile').setValue(this.staff.level);
 		this.profileStaff.get('forceActiveState').setValue(this.staff.forceActiveState);
-		this.enableActiveCheckbox();
+		this.handleCheckbox();
 		this.profileStaff.get('active').setValue(this.staff.active);
 		this.displayActiveOrInactiveLabels();
 		this.enableDisableWidgets();
@@ -289,6 +289,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 					((this.profileStaff.get('active').value) ? 'activate' : ' inactivate'),
 					oldFirstName, oldLastName);
 			}
+			console.log (this.profileStaff.get('active').value);
 			if (this.profileStaff.get('active').value) {
 				this.staff.active = true;
 				this.staff.dateInactive = null;
@@ -296,6 +297,9 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 				this.staff.active = false;
 				this.staff.dateInactive = new Date();
 			}
+			//
+			// Either disable or enable the widgets.
+			//
 			this.displayActiveOrInactiveLabels();
 			this.enableDisableWidgets();
 			//
@@ -315,7 +319,8 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 			if (traceOn()) {
 				console.log ('Manuel force to ' + this.staff.forceActiveState);
 			}
-			this.enableActiveCheckbox();
+			// Enable or disable the Active checkbox.
+			this.handleCheckbox();
 			return;
 		}
 
@@ -329,8 +334,8 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 
 		//
 		// Some staff might have been created only with their login.
-		// The first user in the application is a godd example
-		// So we last test is not necessary if the first & the last name are empty.
+		// The first user in the application is a good example
+		// So the next test is not necessary if the first & the last name are empty.
 		//
 		if ((!oldFirstName) && (!oldLastName)) {
 			return;
@@ -344,21 +349,24 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 				+ '<br/>Click \'Yes\' if you want to create a new staff member'
 				+ '<br/>\'No\' to continue updating this one.')
 				.pipe(take(1))
-				.subscribe(answer => {
-					if (answer) {
-						this.initStaff();
-						this.staff.firstName = newFirstName;
-						this.staff.lastName = newLastName;
-						this.staffService.changeCollaborator(this.staff);
+				.subscribe({
+					next: answer => {
+						if (answer) {
+							this.initStaff();
+							this.staff.firstName = newFirstName;
+							this.staff.lastName = newLastName;
+							this.staffService.changeCollaborator(this.staff);
+						}
 					}
-				});
+				}
+			);
 		}
 	}
 
 	/**
 	 * Enable or disabke the Active checkbox.
 	 */
-	enableActiveCheckbox() {
+	handleCheckbox() {
 		if (this.staff.forceActiveState) {
 			this.profileStaff.get('active').enable();
 		} else {
