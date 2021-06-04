@@ -12,7 +12,7 @@
 	</table>
 </mat-dialog-content>
 <mat-dialog-actions align="center">
-	<button mat-button class="actions" [hidden]="!ok" [mat-dialog-close]="true">Ok</button>
-	<button mat-button class="actions" [hidden]="!yes_no" [mat-dialog-close]="1">Yes</button>
-	<button mat-button class="actions" [hidden]="!yes_no" [mat-dialog-close]="0">No</button>
+	<button mat-button id="ok" class="actions" [hidden]="!ok" [mat-dialog-close]="true">Ok</button>
+	<button mat-button id="yes" class="actions" [hidden]="!yes_no" [mat-dialog-close]="1">Yes</button>
+	<button mat-button id="no" class="actions" [hidden]="!yes_no" [mat-dialog-close]="0">No</button>
 </mat-dialog-actions>
