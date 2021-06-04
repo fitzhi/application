@@ -44,7 +44,9 @@ import { DevOnOffComponent } from './admin/dev-on-off/dev-on-off.component';
 import { RegisterUserComponent } from './admin/register-user/register-user.component';
 import { AuthGuardService } from './admin/security/auth-guard.service';
 import { HttpErrorInterceptorService } from './admin/service/http/http-error-interceptor-service';
+import { HttpRefreshTokenErrorInterceptor } from './admin/service/http/http-refresh-token-error-interceptor';
 import { HttpTokenInterceptor } from './admin/service/http/http-token-interceptor';
+import { TokenService } from './admin/service/token/token.service';
 import { StartingSetupComponent } from './admin/starting-setup/starting-setup.component';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -54,6 +56,7 @@ import { PieLegendComponent } from './dashboard/pie-legend/pie-legend.component'
 import { PieProjectsComponent } from './dashboard/pie-projects/pie-projects.component';
 import { PieDashboardService } from './dashboard/service/pie-dashboard.service';
 import { SkylineComponent } from './dashboard/skyline/component/skyline.component';
+import { SkylineIconComponent } from './dashboard/skyline/skyline-icon/skyline-icon.component';
 import { TreemapChartComponent } from './dashboard/treemap/treemap-chart/treemap-chart.component';
 import { TreemapComponent } from './dashboard/treemap/treemap-container/treemap.component';
 import { TreemapHeaderComponent } from './dashboard/treemap/treemap-header/treemap-header.component';
@@ -61,6 +64,10 @@ import { ErrorComponent } from './interaction/error/error.component';
 import { MessageBoxComponent } from './interaction/message-box/dialog/message-box.component';
 import { MessageComponent } from './interaction/message/message.component';
 import { ToolbarComponent } from './interaction/toolbar/toolbar.component';
+import { CinematicService } from './service/cinematic.service';
+import { ReferentialService } from './service/referential.service';
+import { ListSkillComponent } from './skill/list-skill/list-skill.component';
+import { SkillComponent } from './skill/skill.component';
 import { ListProjectComponent } from './tabs-project/list-project/list-project.component';
 import { AuditBadgeComponent } from './tabs-project/project-audit/project-audit-badges/audit-badge/audit-badge.component';
 // tslint:disable-next-line:max-line-length
@@ -87,6 +94,7 @@ import { SonarQuotationComponent } from './tabs-project/project-sonar/sonar-dash
 import { SonarMetricsComponent } from './tabs-project/project-sonar/sonar-metrics/sonar-metrics.component';
 import { SonarThumbnailsComponent } from './tabs-project/project-sonar/sonar-thumbnails/sonar-thumbnails.component';
 import { ProjectStaffComponent } from './tabs-project/project-staff/project-staff.component';
+import { ChartInProgressComponent } from './tabs-project/project-sunburst/chart-in-progress/chart-in-progress.component';
 import { DialogFilterComponent } from './tabs-project/project-sunburst/dialog-filter/dialog-filter.component';
 // tslint:disable-next-line:max-line-length
 import { DialogLegendSunburstComponent } from './tabs-project/project-sunburst/legend-sunburst/legend-sunburst.component';
@@ -100,14 +108,9 @@ import { SSEWatcherComponent } from './tabs-project/project-sunburst/ssewatcher/
 import { InLineEditDialogComponent } from './tabs-project/project-sunburst/table-dependencies/in-line-edit-dialog/in-line-edit-dialog.component';
 import { TableDependenciesComponent } from './tabs-project/project-sunburst/table-dependencies/table-dependencies.component';
 import { ProjectComponent } from './tabs-project/project.component';
-import { CinematicService } from './service/cinematic.service';
-import { ReferentialService } from './service/referential.service';
-import { StaffService } from './tabs-staff/service/staff.service';
-import { ListSkillComponent } from './skill/list-skill/list-skill.component';
-import { SkillComponent } from './skill/skill.component';
 import { StaffListComponent } from './tabs-staff-list/staff-list/staff-list.component';
 import { TabsStaffListComponent } from './tabs-staff-list/tabs-staff-list.component';
-import { StaffDataExchangeService } from './tabs-staff/service/staff-data-exchange.service';
+import { StaffService } from './tabs-staff/service/staff.service';
 import { StaffExperienceComponent } from './tabs-staff/staff-experience/staff-experience.component';
 import { StaffUploadCvComponent } from './tabs-staff/staff-experience/staff-upload-cv/staff-upload-cv.component';
 import { TagifyStarsComponent } from './tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
@@ -116,10 +119,6 @@ import { StaffProjectsComponent } from './tabs-staff/staff-projects/staff-projec
 import { StaffRemoveComponent } from './tabs-staff/staff-remove/staff-remove.component';
 import { StaffComponent } from './tabs-staff/staff.component';
 import { WelcomeComponent } from './welcome/welcome.component';
-import { SkylineIconComponent } from './dashboard/skyline/skyline-icon/skyline-icon.component';
-import { ChartInProgressComponent } from './tabs-project/project-sunburst/chart-in-progress/chart-in-progress.component';
-import { HttpRefreshTokenErrorInterceptor } from './admin/service/http/http-refresh-token-error-interceptor';
-import { TokenService } from './admin/service/token/token.service';
 
 @NgModule({
 	declarations: [
@@ -242,7 +241,6 @@ import { TokenService } from './admin/service/token/token.service';
 	providers: [
 		CinematicService,
 		StaffService,
-		StaffDataExchangeService,
 		ReferentialService,
 		PieDashboardService,
 		AuthGuardService,

@@ -6,7 +6,6 @@ import { MessageBoxService } from 'src/app/interaction/message-box/service/messa
 import { MessageService } from 'src/app/interaction/message/message.service';
 import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { MustMatch } from 'src/app/service/mustmatch';
-import { StaffDataExchangeService } from 'src/app/tabs-staff/service/staff-data-exchange.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
 import { BaseComponent } from '../../base/base.component';
 import { InstallService } from '../service/install/install.service';
@@ -43,7 +42,6 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 		private formBuilder: FormBuilder,
 		private staffService: StaffService,
 		private backendSetupService: BackendSetupService,
-		private staffDataExchangeService: StaffDataExchangeService,
 		private messageBoxService: MessageBoxService,
 		private installService: InstallService,
 		private messageService: MessageService) {
@@ -109,7 +107,7 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 						if (traceOn()) {
 							console.log('Empty staff created with id ' + staff.idStaff);
 						}
-						this.staffDataExchangeService.changeCollaborator(staff);
+						this.staffService.changeCollaborator(staff);
 						this.messengerUserRegistered.emit(staff.idStaff);
 					},
 					error: error => {

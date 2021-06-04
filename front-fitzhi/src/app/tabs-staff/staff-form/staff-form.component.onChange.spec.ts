@@ -1,12 +1,14 @@
-import { async, ComponentFixture, TestBed, tick, TestModuleMetadata } from '@angular/core/testing';
-
-import { StaffFormComponent } from './staff-form.component';
-import { ReferentialService } from 'src/app/service/referential.service';
-import { Profile } from '../../data/profile';
-import { InitTest } from 'src/app/test/init-test';
+import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { ReferentialService } from 'src/app/service/referential.service';
+import { InitTest } from 'src/app/test/init-test';
+import { Profile } from '../../data/profile';
 import { StaffService } from '../service/staff.service';
+import { StaffFormComponent } from './staff-form.component';
 
+/**
+ * Testing the method StaffFormComponent.onChange(...)
+ */
 describe('StaffFormComponent', () => {
 	let component: StaffFormComponent;
 	let fixture: ComponentFixture<StaffFormComponent>;
@@ -32,10 +34,10 @@ describe('StaffFormComponent', () => {
 		referentialService.profiles.push (new Profile('one Code', 'labelOfCode for One'));
 		referentialService.profiles.push (new Profile('code nope', 'another labelOfCode'));
 
-		const staffService = TestBed.inject(StaffService);
+		const staffDataExchangeService = TestBed.inject(StaffService);
 		component.idStaff = 2019;
 
-		staffService.changeCollaborator(
+		staffDataExchangeService.changeCollaborator(
 			{
 				idStaff: 2019, firstName: 'Joe', lastName: 'DALTON',
 				nickName: 'joe', login: 'jdalton',
@@ -50,10 +52,6 @@ describe('StaffFormComponent', () => {
 
 	});
 
-	function okDisabled(): boolean {
-		return fixture.nativeElement.querySelector('#ok').disabled;
-	}
-
 	function setField(id: string, content: string) {
 		component.profileStaff.get(id).setValue(content);
 	}
@@ -62,34 +60,11 @@ describe('StaffFormComponent', () => {
 		return (fixture.nativeElement.querySelector(id) as HTMLInputElement);
 	}
 
-	it('set all fields available an existing active staff member.', () => {
-		expect(component).toBeTruthy();
-		expect(field('#firstName').value).toEqual('Joe');
-		expect(field('#firstName').readOnly).toBeFalsy();
+	it('handle correctly the de-activation of a developer.', () => {
+		console.log (field('#active'));
+		component.onChange(component.IS_ACTIVE);
+		expect(component.staff.active).toBeTruthy();
 
-		expect(field('#lastName').value).toEqual('DALTON');
-		expect(field('#lastName').readOnly).toBeFalsy();
-
-		expect(field('#nickName').value).toEqual('joe');
-		expect(field('#nickName').readOnly).toBeFalsy();
-
-		expect(field('#login').value).toEqual('jdalton');
-		expect(field('#login').readOnly).toBeFalsy();
-
-		expect(field('#email').value).toEqual('jdalton@gmail.com');
-		expect(field('#email').readOnly).toBeFalsy();
-
-		expect(field('#profile').value).toEqual('one Code');
-		expect(field('#profile').readOnly).toBeFalsy();
-
-		expect(field('#forceActiveState-input').checked).toBeTruthy();
-		expect(field('#forceActiveState-input').readOnly).toBeFalsy();
-
-		expect(field('#active-input').checked).toBeTruthy();
-		expect(field('#active-input').readOnly).toBeFalsy();
-
-		expect(field('#external').checked).toBeFalsy();
-		expect(field('#external').readOnly).toBeFalsy();
 	});
 
 });

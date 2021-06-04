@@ -3,7 +3,6 @@ import { Collaborator } from '../../data/collaborator';
 import { MessageService } from '../../interaction/message/message.service';
 import { SkillService } from '../../skill/service/skill.service';
 import { StaffService } from '../service/staff.service';
-import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
 import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 
 import { StaffUploadCvComponent } from './staff-upload-cv/staff-upload-cv.component';
@@ -75,7 +74,6 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 	public editableState$ = new Subject<TagifyEditableState>();
 
 	constructor(
-		private staffDataExchangeService: StaffDataExchangeService,
 		private tabsStaffListService: TabsStaffListService,
 		private staffService: StaffService,
 		private fileService: FileService,
@@ -94,7 +92,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
          * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
          */
 		this.subscriptions.add(
-			this.staffDataExchangeService.collaboratorLoaded$.subscribe({
+			this.staffService.collaboratorLoaded$.subscribe({
 				next: doneAndOk => {
 					if (doneAndOk) {
 						this.takeInAccountCollaborator();
@@ -104,7 +102,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 	}
 
 	private takeInAccountCollaborator() {
-		this.staff = this.staffDataExchangeService.collaborator;
+		this.staff = this.staffService.collaborator;
 		if (traceOn()) {
 			console.log ('staff member loaded', this.staff.firstName + ' ' + this.staff.lastName);
 		}

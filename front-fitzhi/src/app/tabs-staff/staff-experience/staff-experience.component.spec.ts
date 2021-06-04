@@ -1,28 +1,22 @@
-import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
-
-import { InitTest } from 'src/app/test/init-test';
-import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
-import { Collaborator } from 'src/app/data/collaborator';
-import { StaffExperienceComponent } from './staff-experience.component';
 import { Component, ViewChild } from '@angular/core';
-import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { StaffService } from '../service/staff.service';
-import { SkillService } from 'src/app/skill/service/skill.service';
-import { Skill } from 'src/app/data/skill';
-import { TagifyStarsComponent } from './tagify-stars/tagify-stars.component';
-import { By } from '@angular/platform-browser';
-import { table } from 'console';
-import { Experience } from 'src/app/data/experience';
-import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
-import { MessageService } from 'src/app/interaction/message/message.service';
+import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/core/testing';
+import { BehaviorSubject, of, throwError } from 'rxjs';
+import { Collaborator } from 'src/app/data/collaborator';
 import { DeclaredExperience } from 'src/app/data/declared-experience';
+import { Experience } from 'src/app/data/experience';
+import { MessageService } from 'src/app/interaction/message/message.service';
+import { SkillService } from 'src/app/skill/service/skill.service';
+import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
+import { InitTest } from 'src/app/test/init-test';
+import { StaffService } from '../service/staff.service';
+import { StaffExperienceComponent } from './staff-experience.component';
+import { TagifyStarsComponent } from './tagify-stars/tagify-stars.component';
+
 
 describe('StaffExperienceComponent', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
 	let skillService: SkillService;
-	let staffDataExchangeService: StaffDataExchangeService;
 	let staffService: StaffService;
 	let tabsStaffListService: TabsStaffListService;
 	let messageService: MessageService;
@@ -42,7 +36,7 @@ describe('StaffExperienceComponent', () => {
 	beforeEach(async(() => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [TestHostComponent, StaffExperienceComponent, TagifyStarsComponent],
-			providers: [SkillService, StaffService, StaffDataExchangeService],
+			providers: [SkillService, StaffService],
 			imports: []
 		};
 		InitTest.addImports(testConf.imports);
@@ -51,21 +45,20 @@ describe('StaffExperienceComponent', () => {
 }));
 
 	beforeEach(() => {
-		staffDataExchangeService = TestBed.inject(StaffDataExchangeService);
 		skillService = TestBed.inject(SkillService);
 		staffService = TestBed.inject(StaffService);
 		tabsStaffListService = TestBed.inject(TabsStaffListService);
 		messageService = TestBed.inject(MessageService);
 
-		staffDataExchangeService.collaborator = new Collaborator();
-		staffDataExchangeService.collaborator.idStaff = 1789;
-		staffDataExchangeService.collaborator.firstName = 'Zinedine';
-		staffDataExchangeService.collaborator.lastName = 'Zidane';
-		staffDataExchangeService.collaborator.active = true;
-		staffDataExchangeService.collaborator.typeOfApplication = null;
-		staffDataExchangeService.collaborator.experiences = [];
-		staffDataExchangeService.collaborator.experiences.push(new Experience(1, 'Java', 3));
-		staffDataExchangeService.collaboratorLoaded$.next(true);
+		staffService.collaborator = new Collaborator();
+		staffService.collaborator.idStaff = 1789;
+		staffService.collaborator.firstName = 'Zinedine';
+		staffService.collaborator.lastName = 'Zidane';
+		staffService.collaborator.active = true;
+		staffService.collaborator.typeOfApplication = null;
+		staffService.collaborator.experiences = [];
+		staffService.collaborator.experiences.push(new Experience(1, 'Java', 3));
+		staffService.collaboratorLoaded$.next(true);
 		
 		skillService.allSkills= [
 				{
@@ -122,7 +115,7 @@ describe('StaffExperienceComponent', () => {
 		expect(spyActualizeCollaborator).toHaveBeenCalled();
 
 		// We have added the javascript skill to Zidane.
-		expect(staffDataExchangeService.collaborator.experiences.length).toBe(2);
+		expect(staffService.collaborator.experiences.length).toBe(2);
 	});
 
 	it('should handle correctly a failure when ADDING an experience to a collaborator.', () => {
@@ -148,7 +141,7 @@ describe('StaffExperienceComponent', () => {
 		expect(spyActualizeCollaborator).not.toHaveBeenCalled();
 
 		// We have added the javascript skill to Zidane.
-		expect(staffDataExchangeService.collaborator.experiences.length).toBe(1);
+		expect(staffService.collaborator.experiences.length).toBe(1);
 	});
 
 	it('should REMOVE correctly the experience of a collaborator.', () => {
@@ -167,7 +160,7 @@ describe('StaffExperienceComponent', () => {
 		expect(spyActualizeCollaborator).toHaveBeenCalled();
 
 		// We have removed "Java" from the collaborator experiences.
-		expect(staffDataExchangeService.collaborator.experiences.length).toBe(0);
+		expect(staffService.collaborator.experiences.length).toBe(0);
 	});
 
 	it('should UPDATE the server with the new skills retrieved by the application file.', () => {

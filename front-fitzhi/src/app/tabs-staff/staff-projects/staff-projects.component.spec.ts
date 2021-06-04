@@ -2,8 +2,8 @@ import { async, ComponentFixture, TestBed, TestModuleMetadata } from '@angular/c
 
 import { StaffProjectsComponent } from './staff-projects.component';
 import { InitTest } from 'src/app/test/init-test';
-import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
 import { Collaborator } from 'src/app/data/collaborator';
+import { StaffService } from '../service/staff.service';
 
 describe('StaffProjectsComponent', () => {
 	let component: StaffProjectsComponent;
@@ -24,14 +24,14 @@ describe('StaffProjectsComponent', () => {
 		fixture = TestBed.createComponent(StaffProjectsComponent);
 		component = fixture.componentInstance;
 
-		const staffDataExchangeService = TestBed.inject(StaffDataExchangeService);
-		staffDataExchangeService.collaborator = new Collaborator();
-		staffDataExchangeService.collaborator.idStaff = 10;
-		staffDataExchangeService.collaborator.firstName = 'Kylian';
-		staffDataExchangeService.collaborator.lastName = 'Mbappe';
-		staffDataExchangeService.collaborator.missions = [];
+		const staffService = TestBed.inject(StaffService);
+		staffService.collaborator = new Collaborator();
+		staffService.collaborator.idStaff = 10;
+		staffService.collaborator.firstName = 'Kylian';
+		staffService.collaborator.lastName = 'Mbappe';
+		staffService.collaborator.missions = [];
 
-		staffDataExchangeService.collaboratorLoaded$.next(true);
+		staffService.collaboratorLoaded$.next(true);
 
 		fixture.detectChanges();
 	});

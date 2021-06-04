@@ -1,24 +1,19 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
 import { Collaborator } from '../../data/collaborator';
-import { Project } from '../../data/project';
-import { StaffDTO } from '../../data/external/staffDTO';
-
 import { DeclaredExperience } from '../../data/declared-experience';
 import { Experience } from '../../data/experience';
-import { Observable, Subject, of, EMPTY } from 'rxjs';
-
-import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
-import { take, switchMap } from 'rxjs/operators';
-import { BooleanDTO } from '../../data/external/booleanDTO';
-import { FileService } from '../../service/file.service';
+import { StaffDTO } from '../../data/external/staffDTO';
+import { Project } from '../../data/project';
 import { HttpCodes, traceOn } from '../../global';
-import { StaffDataExchangeService } from './staff-data-exchange.service';
 import { MessageService } from '../../interaction/message/message.service';
-import { StaffListService } from '../../service/staff-list-service/staff-list.service';
-import { Constants } from '../../constants';
-import { CinematicService } from '../../service/cinematic.service';
+import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
+import { FileService } from '../../service/file.service';
+
+
+
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json', 'observe': 'response' })
@@ -30,6 +25,16 @@ const httpOptions = {
 export class StaffService {
 
 	/**
+	 * This observable emits a boolan **TRUE** if a new staff member has been loaded.
+	 */
+	public collaboratorLoaded$ = new BehaviorSubject<boolean>(false);
+
+	/**
+	 * Current Staff member.
+	 */
+	public collaborator: Collaborator;
+
+	/**
 	 * Observable to a map containig the count of staff members aggregated by skill & level (i.e. experience)
 	 */
 	public peopleCountExperience$ = new Subject<Map<string, number>>();
@@ -38,7 +43,6 @@ export class StaffService {
 		private fileService: FileService,
 		private messageService: MessageService,
 		private httpClient: HttpClient,
-		private staffDataExchangeService: StaffDataExchangeService,
 		private backendSetupService: BackendSetupService) {
 	}
 
@@ -53,8 +57,9 @@ export class StaffService {
 	}
 
 	/**
-		 * GET staff member associated to this id. Will throw a 404 if id not found.
-		 */
+	* GET staff member associated to this id. Will throw a 404 if id not found.
+	* @param id Staff identifier
+	*/
 	get(id: number): Observable<Collaborator> {
 		const url = this.backendSetupService.url() + '/staff' + '/' + id;
 		if (traceOn()) {
@@ -133,7 +138,7 @@ export class StaffService {
 	 * This method is returning an observable emitting **true** if the removal is successfull.
 	 */
 	removeStaff$(): Observable<boolean> {
-		const idStaffToDelete = this.staffDataExchangeService.collaborator.idStaff;
+		const idStaffToDelete = this.collaborator.idStaff;
 		if (traceOn()) {
 			console.log('Removing the collaborator with id ' + idStaffToDelete);
 		}
@@ -201,9 +206,9 @@ export class StaffService {
 					if (traceOn()) {
 						console.log('%s is now %s', staff.lastName, staff.active ? 'active' : 'inactive');
 					}
-					this.staffDataExchangeService.collaborator.active = staff.active;
-					this.staffDataExchangeService.collaborator.dateInactive = staff.dateInactive;
-					this.staffDataExchangeService.collaboratorLoaded$.next(true);
+					this.collaborator.active = staff.active;
+					this.collaborator.dateInactive = staff.dateInactive;
+					this.collaboratorLoaded$.next(true);
 				}
 			});
 	}
@@ -356,10 +361,10 @@ export class StaffService {
 	}
 
 	/**
-		 * GET : Download the application file of a staff member.
-	 * @param the given staff member whose application has to be retrieved
-		 */
-	downloadApplication(staff: Collaborator) {
+	 * Download the application file of a staff member.
+	 * @param staff the given staff member whose application has to be retrieved
+	 */
+	downloadApplication(staff: Collaborator): void {
 		if ((staff.application === null) || (staff.application.length === 0)) {
 			return;
 		}
@@ -423,6 +428,25 @@ export class StaffService {
 			this.backendSetupService.url() + '/admin/' +
 			(veryFirstConnection ? 'veryFirstUser' : 'register'),
 			{ params: { login: username, password: password } });
+	}
+
+	/**
+	 * A new collaborator has been loaded and data has to be shared.
+	 * @param collaborator the new collaborator loaded
+	 */
+	changeCollaborator(collaborator: Collaborator) {
+		if (traceOn()) {
+			console.log('collaborator switch from ' + ((this.collaborator) ? this.collaborator.lastName : 'empty') + ' to ' + collaborator.lastName);
+		}
+		this.collaborator = collaborator;
+		this.collaboratorLoaded$.next(true);
+	}
+
+	/**
+	 * Return **true** if an existing collaborator has been loaded, and is not an empty one.
+	 */
+	isStaffMemberLoaded(): boolean {
+		return ((this.collaborator) && (this.collaborator.idStaff > 0));
 	}
 
 	/**

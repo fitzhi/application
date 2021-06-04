@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 import { SkillComponent } from './skill/skill.component';
 import { ListSkillComponent } from './skill/list-skill/list-skill.component';
 import { ProjectComponent } from './tabs-project/project.component';

@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { EMPTY, Observable, of, Subject } from 'rxjs';
+import { catchError, finalize, switchMap, take } from 'rxjs/operators';
+import { traceOn } from 'src/app/global';
+import { SkillService } from 'src/app/skill/service/skill.service';
 import { Collaborator } from '../../data/collaborator';
-import { StaffService } from '../../tabs-staff/service/staff.service';
+import { ListCriteria } from '../../data/listCriteria';
 import { StaffListContext } from '../../data/staff-list-context';
 import { MessageService } from '../../interaction/message/message.service';
-import { ListCriteria } from '../../data/listCriteria';
-import { traceOn } from 'src/app/global';
-import { catchError, finalize, switchMap, take, tap } from 'rxjs/operators';
-import { SkillService } from 'src/app/skill/service/skill.service';
+import { StaffService } from '../../tabs-staff/service/staff.service';
 
 @Injectable({
 	providedIn: 'root'

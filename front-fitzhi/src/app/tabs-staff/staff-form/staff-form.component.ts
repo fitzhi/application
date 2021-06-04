@@ -1,24 +1,20 @@
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { take } from 'rxjs/operators';
+import { Mission } from 'src/app/data/mission';
+import { traceOn } from 'src/app/global';
+import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
+import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
+import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
+import { BaseComponent } from '../../base/base.component';
 import { Constants } from '../../constants';
 import { Collaborator } from '../../data/collaborator';
-import { MessageService } from '../../interaction/message/message.service';
-import { StaffService } from '../service/staff.service';
-import { CinematicService } from '../../service/cinematic.service';
 import { Profile } from '../../data/profile';
+import { MessageService } from '../../interaction/message/message.service';
+import { CinematicService } from '../../service/cinematic.service';
 import { ReferentialService } from '../../service/referential.service';
-import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
-
-import { Component, OnInit, Input, OnDestroy, Output, EventEmitter } from '@angular/core';
-
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { BaseComponent } from '../../base/base.component';
-import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
-import { take } from 'rxjs/operators';
-import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
-import { Mission } from 'src/app/data/mission';
-import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
-import { traceOn } from 'src/app/global';
-
+import { StaffService } from '../service/staff.service';
 
 @Component({
 	selector: 'app-staff-form',
@@ -53,7 +49,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	@Output() messengerInit = new EventEmitter<boolean>();
 
 
-	private collaborator: Collaborator;
+	staff: Collaborator;
 
 	/**
      * Label on side of the active check box.
@@ -92,7 +88,6 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		private messageBoxService: MessageBoxService,
 		private cinematicService: CinematicService,
 		private referentialService: ReferentialService,
-		private staffDataExchangeService: StaffDataExchangeService,
 		private tabsStaffListService: TabsStaffListService,
 		private staffListService: StaffListService,
 		private router: Router) {
@@ -108,10 +103,10 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		 * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
 		 */
 		this.subscriptions.add(
-			this.staffDataExchangeService.collaboratorLoaded$.subscribe({
+			this.staffService.collaboratorLoaded$.subscribe({
 				next: doneAndOk => {
 					if (doneAndOk) {
-						this.takeInAccountCollaborator(this.staffDataExchangeService.collaborator);
+						this.takeInAccountCollaborator(this.staffService.collaborator);
 					} else {
 						this.initStaff();
 					}
@@ -129,19 +124,19 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 		if (traceOn()) {
 			console.log('Employee loaded ' + collaborator.idStaff);
 		}
-		this.collaborator = collaborator;
-		this.profileStaff.get('firstName').setValue(this.collaborator.firstName);
-		this.profileStaff.get('lastName').setValue(this.collaborator.lastName);
-		this.profileStaff.get('nickName').setValue(this.collaborator.nickName);
-		this.profileStaff.get('login').setValue(this.collaborator.login);
-		this.profileStaff.get('email').setValue(this.collaborator.email);
-		this.profileStaff.get('profile').setValue(this.collaborator.level);
-		this.profileStaff.get('forceActiveState').setValue(this.collaborator.forceActiveState);
+		this.staff = collaborator;
+		this.profileStaff.get('firstName').setValue(this.staff.firstName);
+		this.profileStaff.get('lastName').setValue(this.staff.lastName);
+		this.profileStaff.get('nickName').setValue(this.staff.nickName);
+		this.profileStaff.get('login').setValue(this.staff.login);
+		this.profileStaff.get('email').setValue(this.staff.email);
+		this.profileStaff.get('profile').setValue(this.staff.level);
+		this.profileStaff.get('forceActiveState').setValue(this.staff.forceActiveState);
 		this.enableActiveCheckbox();
-		this.profileStaff.get('active').setValue(this.collaborator.active);
+		this.profileStaff.get('active').setValue(this.staff.active);
 		this.displayActiveOrInactiveLabels();
 		this.enableDisableWidgets();
-		this.profileStaff.get('external').setValue(this.collaborator.external);
+		this.profileStaff.get('external').setValue(this.staff.external);
 		this.cinematicService.setForm(Constants.DEVELOPERS_CRUD, this.router.url);
 	}
 
@@ -149,25 +144,25 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	 * This method fills the label explaining the active/inactive status.
 	 */
 	displayActiveOrInactiveLabels() {
-		if (this.collaborator.active) {
-			if (this.collaborator.idStaff === null) {
+		if (this.staff.active) {
+			if (this.staff.idStaff === null) {
 				this.label_isActive = 'will be considered in activity as long as this box is checked ';
 			} else {
-				if (this.collaborator.lastName === null) {
+				if (this.staff.lastName === null) {
 					this.label_isActive =
 						'This collaborator is still in activity. Uncheck this box to inform of his leave.';
 				} else {
 					this.label_isActive =
-						((this.collaborator.firstName === null) ? '' : this.collaborator.firstName)
-						+ ' ' + this.collaborator.lastName
+						((this.staff.firstName === null) ? '' : this.staff.firstName)
+						+ ' ' + this.staff.lastName
 						+ ' is still in activity. Uncheck this box to inform of his leave.';
 				}
 			}
 			this.label_dateInactive = null;
 		} else {
-			this.label_isActive = this.collaborator.firstName + ' ' +
-				this.collaborator.lastName + ' in no more in activity since ';
-			this.label_dateInactive = this.collaborator.dateInactive;
+			this.label_isActive = this.staff.firstName + ' ' +
+				this.staff.lastName + ' in no more in activity since ';
+			this.label_dateInactive = this.staff.dateInactive;
 		}
 	}
 
@@ -178,7 +173,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	 * We need to enable this field within the code and not in HTML like the rest of the form.
 	 */
 	enableDisableWidgets() {
-		if (this.collaborator.active) {
+		if (this.staff.active) {
 			this.profileStaff.get('profile').enable();
 			this.profileStaff.get('external').enable();
 		} else {
@@ -191,7 +186,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	 * Initialization of the collaborator inside this form.
 	 */
 	initStaff() {
-		this.collaborator = {
+		this.staff = {
 			idStaff: -1, firstName: '', lastName: '', nickName: '', login: '', email: '', level: '',
 			dateInactive: null, application: null, typeOfApplication: null, forceActiveState: false, active: true, external: true,
 			experiences: [], missions: []
@@ -214,19 +209,19 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	onSubmit(): void {
 		if (traceOn()) {
 			console.log('Saving data for the collaborator below');
-			console.log(this.collaborator);
+			console.log(this.staff);
 		}
-		this.collaborator.firstName = this.profileStaff.get('firstName').value;
-		this.collaborator.lastName = this.profileStaff.get('lastName').value;
-		this.collaborator.nickName = this.profileStaff.get('nickName').value;
-		this.collaborator.login = this.profileStaff.get('login').value;
-		this.collaborator.email = this.profileStaff.get('email').value;
-		this.collaborator.level = this.profileStaff.get('profile').value;
-		this.collaborator.active = this.profileStaff.get('active').value;
-		this.collaborator.forceActiveState = this.profileStaff.get('forceActiveState').value;
-		this.collaborator.external = this.profileStaff.get('external').value;
+		this.staff.firstName = this.profileStaff.get('firstName').value;
+		this.staff.lastName = this.profileStaff.get('lastName').value;
+		this.staff.nickName = this.profileStaff.get('nickName').value;
+		this.staff.login = this.profileStaff.get('login').value;
+		this.staff.email = this.profileStaff.get('email').value;
+		this.staff.level = this.profileStaff.get('profile').value;
+		this.staff.active = this.profileStaff.get('active').value;
+		this.staff.forceActiveState = this.profileStaff.get('forceActiveState').value;
+		this.staff.external = this.profileStaff.get('external').value;
 
-		this.staffService.save$(this.collaborator)
+		this.staffService.save$(this.staff)
 			.pipe(take(1))
 			.subscribe({
 				next: staff => this.afterSavingStaffDone(staff)
@@ -238,18 +233,18 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	 * @param staff the staff member
 	 */
 	afterSavingStaffDone(staff: Collaborator) {
-		this.collaborator = staff;
+		this.staff = staff;
 		this.messengerStaffUpdated.emit(staff);
 
 		//
 		// If this staff member exists in pre-existing list of collaborators. We actualize the content.
 		//
 		this.tabsStaffListService.actualizeCollaborator(staff);
-		this.staffDataExchangeService.changeCollaborator(staff);
+		this.staffService.changeCollaborator(staff);
 
 		this.staffListService.setFormStaff(staff);
 
-		this.messageService.success('Staff member ' + this.collaborator.firstName + ' ' + this.collaborator.lastName + ' saved');
+		this.messageService.success('Staff member ' + this.staff.firstName + ' ' + this.staff.lastName + ' saved');
 	}
 
 	/**
@@ -257,7 +252,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
      * You can test this state by testing the dateInactive, filled by the back-end during the deactivation process.
      */
 	public isAlreadyDesactivated(): boolean {
-		return (!this.collaborator.active);
+		return (!this.staff.active);
 	}
 
 	/**
@@ -265,7 +260,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
      */
 	classOkButton() {
 		if (this.isAlreadyDesactivated()) {
-			return (this.collaborator.active) ?
+			return (this.staff.active) ?
 				'okButton okButtonValid' : 'okButton okButtonInvalid';
 		}
 		return (this.profileStaff.invalid) ?
@@ -274,21 +269,18 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 
 	/**
 	 * Content of a field has been updated.
-	 * @param field field identified throwing this event.
+	 * @param field field identifier emetting this event.
 	 */
 	public onChange(field: number) {
 
-		//
-		// We remove uselss blank, which might disturb the lookup feature.
-		//
-		if (this.collaborator.idStaff === -1) {
+		if (this.staff.idStaff === -1) {
 			return;
 		}
 
 		const newFirstName = this.profileStaff.get('firstName').value;
-		const oldFirstName = this.collaborator.firstName;
+		const oldFirstName = this.staff.firstName;
 		const newLastName = this.profileStaff.get('lastName').value;
-		const oldLastName = this.collaborator.lastName;
+		const oldLastName = this.staff.lastName;
 
 		// The staff member was desactivated. And the user wants to reactivate him.
 		if (field === this.IS_ACTIVE) {
@@ -298,30 +290,30 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 					oldFirstName, oldLastName);
 			}
 			if (this.profileStaff.get('active').value) {
-				this.collaborator.active = true;
-				this.collaborator.dateInactive = null;
+				this.staff.active = true;
+				this.staff.dateInactive = null;
 			} else {
-				this.collaborator.active = false;
-				this.collaborator.dateInactive = new Date();
+				this.staff.active = false;
+				this.staff.dateInactive = new Date();
 			}
 			this.displayActiveOrInactiveLabels();
 			this.enableDisableWidgets();
 			//
 			// Updating the collaborator.
 			//
-			this.staffService.switchActiveStatus(this.collaborator);
+			this.staffService.switchActiveStatus(this.staff);
 			return;
 		}
 
 		// User has selected a manuel update for the field 'active'.
 		if (field === this.FORCEACTIVESTATE) {
-			this.collaborator.forceActiveState = !this.collaborator.forceActiveState;
+			this.staff.forceActiveState = !this.staff.forceActiveState;
 			// If we do not force any more the 'active' state of staff member, then we have to compute it.
-			if (!this.collaborator.forceActiveState) {
-				this.staffService.processActiveStatus(this.collaborator);
+			if (!this.staff.forceActiveState) {
+				this.staffService.processActiveStatus(this.staff);
 			}
 			if (traceOn()) {
-				console.log ('Manuel force to ' + this.collaborator.forceActiveState);
+				console.log ('Manuel force to ' + this.staff.forceActiveState);
 			}
 			this.enableActiveCheckbox();
 			return;
@@ -355,9 +347,9 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 				.subscribe(answer => {
 					if (answer) {
 						this.initStaff();
-						this.collaborator.firstName = newFirstName;
-						this.collaborator.lastName = newLastName;
-						this.staffDataExchangeService.changeCollaborator(this.collaborator);
+						this.staff.firstName = newFirstName;
+						this.staff.lastName = newLastName;
+						this.staffService.changeCollaborator(this.staff);
 					}
 				});
 		}
@@ -367,7 +359,7 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	 * Enable or disabke the Active checkbox.
 	 */
 	enableActiveCheckbox() {
-		if (this.collaborator.forceActiveState) {
+		if (this.staff.forceActiveState) {
 			this.profileStaff.get('active').enable();
 		} else {
 			this.profileStaff.get('active').disable();
@@ -378,14 +370,14 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 	 * Returns **TRUE** if the collaborator has an active mission.
 	 */
 	hasBeenActive(): boolean {
-		return ((this.collaborator.missions) && (this.collaborator.missions.length > 0));
+		return ((this.staff.missions) && (this.staff.missions.length > 0));
 	}
 
 	/**
 	 * Returns the last mission executed by this collaborator, as declared in his mission list.
 	 */
 	lastMission(): Mission {
-		const missions = this.collaborator.missions
+		const missions = this.staff.missions
 			.filter(mission => (mission.lastCommit))
 			.sort( (mission1, mission2) => {
 				return (new Date(mission2.lastCommit).getTime() - new Date(mission1.lastCommit).getTime());

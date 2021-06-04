@@ -3,10 +3,10 @@ import { async, ComponentFixture, TestBed, tick, TestModuleMetadata } from '@ang
 import { StaffFormComponent } from './staff-form.component';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { Profile } from '../../data/profile';
-import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
 import { InitTest } from 'src/app/test/init-test';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Collaborator } from 'src/app/data/collaborator';
+import { StaffService } from '../service/staff.service';
 
 describe('StaffFormComponent', () => {
 	let component: StaffFormComponent;
@@ -33,10 +33,10 @@ describe('StaffFormComponent', () => {
 		referentialService.profiles.push (new Profile('one Code', 'labelOfCode for One'));
 		referentialService.profiles.push (new Profile('code nope', 'another labelOfCode'));
 
-		const staffDataExchangeService = TestBed.inject(StaffDataExchangeService);
+		const staffService = TestBed.inject(StaffService);
 		component.idStaff = 2019;
 
-		staffDataExchangeService.changeCollaborator(
+		staffService.changeCollaborator(
 			{
 				idStaff: 2019, firstName: 'Joe', lastName: 'DALTON',
 				nickName: 'joe', login: 'jdalton',
@@ -46,9 +46,7 @@ describe('StaffFormComponent', () => {
 				missions: [], experiences: []
 			}
 		);
-
 		fixture.detectChanges();
-
 	});
 
 	function okDisabled(): boolean {
@@ -63,7 +61,7 @@ describe('StaffFormComponent', () => {
 		return (fixture.nativeElement.querySelector(id) as HTMLInputElement);
 	}
 
-	it('load an existing INACTIVE staff member', () => {
+	it('set all fields readonly for an existing INACTIVE staff member.', () => {
 		expect(component).toBeTruthy();
 
 		expect(field('#firstName').value).toEqual('Joe');

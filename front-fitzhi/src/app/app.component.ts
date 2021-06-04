@@ -1,22 +1,21 @@
-import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
-import { CinematicService } from './service/cinematic.service';
-import { Constants } from './constants';
-import { ListProjectsService } from './tabs-project/list-project/list-projects-service/list-projects.service';
-import { ReferentialService } from './service/referential.service';
-import { StaffService } from './tabs-staff/service/staff.service';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { BaseComponent } from './base/base.component';
-import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.service';
-import { SkillService } from './skill/service/skill.service';
-import { AuthService } from './admin/service/auth/auth.service';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { SonarService } from './service/sonar.service';
-import { traceOn } from './global';
-import { InstallService } from './admin/service/install/install.service';
-import { environment } from '../environments/environment';
-import { isNumeric } from 'rxjs/internal-compatibility';
 import { take } from 'rxjs/operators';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { environment } from '../environments/environment';
+import { AuthService } from './admin/service/auth/auth.service';
+import { InstallService } from './admin/service/install/install.service';
+import { BaseComponent } from './base/base.component';
+import { Constants } from './constants';
 import { ListCriteria } from './data/listCriteria';
+import { traceOn } from './global';
+import { CinematicService } from './service/cinematic.service';
+import { ReferentialService } from './service/referential.service';
+import { SonarService } from './service/sonar.service';
+import { SkillService } from './skill/service/skill.service';
+import { ListProjectsService } from './tabs-project/list-project/list-projects-service/list-projects.service';
+import { TabsStaffListService } from './tabs-staff-list/service/tabs-staff-list.service';
+import { StaffService } from './tabs-staff/service/staff.service';
 
 declare var $: any;
 

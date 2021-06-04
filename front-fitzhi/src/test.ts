@@ -16,12 +16,12 @@ getTestBed().initTestEnvironment(
 );
 // Then we find all the tests
 const context = require.context('./', true, /\.spec\.ts$/);
-// const context = require.context('./', true,  /project-form-skill-handler\.spec\.ts$/);
+// const context = require.context('./', true,  /staff-form\.component\.onChange\.spec\.ts$/);
 // const context = require.context('./', true,  /http-refresh-token-error-interceptor\.spec\.ts$/);
 // const context = require.context('./', true,  /project-audit\.service\.spec\.ts$/);
 // const context = require.context('./', true,  /table-categories\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /app\.component\.search\.spec\.ts$/);
 // const context = require.context('./', true,  /auth\.service\.spec\.ts$/);
-// const context = require.context('./', true,  /audit-attachment\.service\.spec\.ts$/);
+// const context = require.context('./', true,  /staff-remove\.component\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);

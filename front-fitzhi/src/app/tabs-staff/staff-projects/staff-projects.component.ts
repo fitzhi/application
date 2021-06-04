@@ -4,7 +4,6 @@ import { StaffDTO } from '../../data/external/staffDTO';
 import { MessageService } from '../../interaction/message/message.service';
 import { ProjectService } from '../../service/project/project.service';
 import { StaffService } from '../service/staff.service';
-import { StaffDataExchangeService } from '../service/staff-data-exchange.service';
 import { Component, OnInit, OnDestroy, Input, AfterViewInit, ViewChild } from '@angular/core';
 
 import { BaseComponent } from '../../base/base.component';
@@ -82,8 +81,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	constructor(
 		private messageService: MessageService,
 		private staffService: StaffService,
-		private projectService: ProjectService,
-		private staffDataExchangeService: StaffDataExchangeService) {
+		private projectService: ProjectService) {
 		super();
 
 		this.boundAddProject = this.addProject.bind(this);
@@ -96,10 +94,10 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 		// We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
 		//
 		this.subscriptions.add(
-			this.staffDataExchangeService.collaboratorLoaded$.subscribe({
+			this.staffService.collaboratorLoaded$.subscribe({
 				next: doneAndOk => {
 					if (doneAndOk) {
-						this.collaborator = this.staffDataExchangeService.collaborator;
+						this.collaborator = this.staffService.collaborator;
 						this.loadMissions(this.collaborator.missions);
 					}
 				}
@@ -147,7 +145,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 
 		// We add the already attached project into the tagify-textarea component.
 		this.subscriptions.add(
-			this.staffDataExchangeService.collaboratorLoaded$.subscribe({
+			this.staffService.collaboratorLoaded$.subscribe({
 				next: doneAndOk => {
 					if (doneAndOk) {
 						this.takeInAccountCollaborator();
@@ -162,7 +160,7 @@ export class StaffProjectsComponent extends BaseComponent implements OnInit, OnD
 	}
 
 	takeInAccountCollaborator() {
-		this.collaborator = this.staffDataExchangeService.collaborator;
+		this.collaborator = this.staffService.collaborator;
 		this.removeValues();
 		// We add this test to avoid an empty-warning inside the component
 		if (this.collaborator.missions.length > 0) {
