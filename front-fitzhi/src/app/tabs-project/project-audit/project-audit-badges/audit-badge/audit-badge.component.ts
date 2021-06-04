@@ -118,7 +118,7 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 		if (traceOn()) {
 			console.log (`switching to ${id} ${this.title}`);
 		}
-		this.cinematicService.auditTopicSelected$.next(id);
+		this.cinematicService.auditTopicSelectedSubject$.next(id);
 		this.cinematicService.idTopicSelected = id;
 	}
 

@@ -108,7 +108,7 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 		if (traceOn()){
 			console.log ('Project %d is selected', id);
 		}
-		this.cinematicService.currentActiveForm$.next(new Form(Constants.PROJECT_TAB_FORM, 'Project') );
+		this.cinematicService.currentActiveFormSubject$.next(new Form(Constants.PROJECT_TAB_FORM, 'Project') );
 		this.router.navigate(['/project/' + id], {});
 	}
 

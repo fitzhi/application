@@ -13,9 +13,14 @@ export class CinematicService {
 	/**
 	 * Identifier of the select form on stage on the SPA.
 	 */
-	public currentActiveForm$ = new BehaviorSubject<Form>(new Form(Constants.WELCOME, 'Welcome'));
+	public currentActiveFormSubject$ = new BehaviorSubject<Form>(new Form(Constants.WELCOME, 'Welcome'));
 
 	/**
+	 * Observable associated with the selected form on stage on the SPA.
+	 */
+	 public currentActiveForm$ = this.currentActiveFormSubject$.asObservable()
+
+	 /**
 	  * Current collaborator's identifier previewed on the form.
 	  */
 	public currentCollaboratorSubject$ = new Subject<number>();
@@ -28,7 +33,12 @@ export class CinematicService {
 	/**
 	 * This `BehaviorSubject` broadcasts the selection of an audit thumbnail by the end-user.
 	 */
-	public auditTopicSelected$ = new BehaviorSubject<number>(-1);
+	public auditTopicSelectedSubject$ = new BehaviorSubject<number>(-1);
+
+	/**
+	 * Observable associated to the selection of an audit thumbnail by the end-user.
+	 */
+	 public auditTopicSelected$ = new BehaviorSubject<number>(-1);
 
 	/**
 	 * `idTopic` of the selected Topic thumbnail.
@@ -98,11 +108,11 @@ export class CinematicService {
 		/**
 		 * We do not change the active form.
 		 */
-		if (formIdentifier === this.currentActiveForm$.getValue().formIdentifier) {
+		if (formIdentifier === this.currentActiveFormSubject$.getValue().formIdentifier) {
 			return;
 		}
 
-		this.previousForm = this.currentActiveForm$.getValue();
+		this.previousForm = this.currentActiveFormSubject$.getValue();
 
 		if (traceOn()) {
 			this.previousForm.trace();
@@ -111,7 +121,7 @@ export class CinematicService {
 		/**
 		* Fire the event. Has to be at the end of the method.
 		*/
-		this.currentActiveForm$.next(new Form(formIdentifier, url));
+		this.currentActiveFormSubject$.next(new Form(formIdentifier, url));
 	}
 
 	/**
