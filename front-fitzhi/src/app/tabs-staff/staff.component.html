@@ -19,7 +19,7 @@
       </div>
     </ng-template>
   </mat-tab>
-  <mat-tab label="Remove" *ngIf="staffDataExchangeService.hostExistingCollaborator()">
+  <mat-tab label="Remove" *ngIf="staffService.isStaffMemberLoaded()">
     <ng-template matTabContent>
       <div>
         <app-staff-remove [selectedTab$]="selectedTab$"></app-staff-remove>
