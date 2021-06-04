@@ -18,12 +18,12 @@ export class CinematicService {
 	/**
 	  * Current collaborator's identifier previewed on the form.
 	  */
-	public emitActualCollaboratorDisplay = new Subject<number>();
+	public currentCollaboratorSubject$ = new Subject<number>();
 
 	/**
 	 * Observable associated with the current collaborator previewed.
 	 */
-	newCollaboratorDisplayEmitted$ = this.emitActualCollaboratorDisplay.asObservable();
+	currentCollaborator$ = this.currentCollaboratorSubject$.asObservable();
 
 	/**
 	 * This `BehaviorSubject` broadcasts the selection of an audit thumbnail by the end-user.

@@ -169,7 +169,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 		this.tabsStaffListComponent.inMasterDetail = true;
 		this.router.navigate(['/user/' + idStaff], {});
 		this.cinematicService.setForm(Constants.DEVELOPERS_CRUD, '/staff/' + idStaff);
-		this.cinematicService.emitActualCollaboratorDisplay.next(idStaff);
+		this.cinematicService.currentCollaboratorSubject$.next(idStaff);
 	}
 
 	/**

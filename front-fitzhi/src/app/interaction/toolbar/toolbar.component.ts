@@ -107,7 +107,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	 */
 	listenOnCollaboratorDisplayed() {
 		this.subscriptions.add(
-			this.cinematicService.newCollaboratorDisplayEmitted$.subscribe(id => {
+			this.cinematicService.currentCollaborator$.subscribe(id => {
 				if (traceOn()) {
 					console.log ('Former form identifier (Where do we come from?)',
 					this.cinematicService.getFormerFormIdentifier());

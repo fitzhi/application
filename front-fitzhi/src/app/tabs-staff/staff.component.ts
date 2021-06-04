@@ -74,7 +74,7 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
 						} else {
 							document.querySelector('body').style.cssText = '--actions-button-visible: hidden';
 						}
-						this.cinematicService.emitActualCollaboratorDisplay.next(this.collaborator.idStaff);
+						this.cinematicService.currentCollaboratorSubject$.next(this.collaborator.idStaff);
 						this.cinematicService.setForm(Constants.DEVELOPERS_CRUD, this.router.url);
 					},
 					error => {
