@@ -12,9 +12,6 @@ import { MessageService } from '../../interaction/message/message.service';
 import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
 import { FileService } from '../../service/file.service';
 
-
-
-
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json', 'observe': 'response' })
 };
@@ -34,7 +31,10 @@ export class StaffService {
 	 */
 	public collaborator: Collaborator;
 
-	/**
+	/**	 * @param idStaff the staff identifier.
+	 * @param idProject the project identifier to add.
+	 * @returns an observable emetting the staff record updated or an empty staff if any error occurs.
+
 	 * Observable to a map containig the count of staff members aggregated by skill & level (i.e. experience)
 	 */
 	public peopleCountExperience$ = new Subject<Map<string, number>>();
@@ -47,9 +47,11 @@ export class StaffService {
 	}
 
 	/**
-	 * Return the global list of ALL collaborators, working for the company.
+	 * Load the global list of IT staff working for this company.
+	 * 
+	 * @returns an observable emitting all staff members.
 	 */
-	getAll(): Observable<Collaborator[]> {
+	getAll$(): Observable<Collaborator[]> {
 		if (traceOn()) {
 			console.log('Fetching the collaborators');
 		}
@@ -60,10 +62,10 @@ export class StaffService {
 	* GET staff member associated to this id. Will throw a 404 if id not found.
 	* @param id Staff identifier
 	*/
-	get(id: number): Observable<Collaborator> {
+	get$(id: number): Observable<Collaborator> {
 		const url = this.backendSetupService.url() + '/staff' + '/' + id;
 		if (traceOn()) {
-			console.log('Fetching the collaborator ' + id + ' on the address ' + url);
+			console.log(`Fetching the collaborator ${id} on the address ${url}`);
 		}
 		return this.httpClient.get<Collaborator>(url);
 	}
@@ -126,10 +128,11 @@ export class StaffService {
 						if (response.status === HttpCodes.noContent) {
 							return of(staff);
 						} else {
-							throw 'The staff ' + staff.firstName + staff.lastName + ' has not been updated for an unknown reason.';
+							throw `The staff ${staff.firstName} ${staff.lastName} has not been updated for an unknown reason.`;
 						}
 					}
-				));
+				)
+			);
 	}
 
 	/**
@@ -214,22 +217,23 @@ export class StaffService {
 	}
 
 	/**
-		 * DELETE delete a staff member from the server
-		 */
-	delete(collaborater: Collaborator | number): Observable<Collaborator> {
-		const id = typeof collaborater === 'number' ? collaborater : collaborater.idStaff;
-		const url = `${this.backendSetupService.url() + '/staff'}/${id}`;
-
-		return this.httpClient.delete<Collaborator>(url, httpOptions);
+	 * Remove a staff member from the staff collection.
+	 * 
+	 * @param staff the collaborator to delete
+	 * @returns an observable emitting a Void return if the deletion (SC_200) succees, an error code if not.
+	 */
+	delete$(staff: Collaborator | number) {
+		const id = typeof staff === 'number' ? staff : staff.idStaff;
+		const url = `${this.backendSetupService.url()}/staff/${id}`;
+		return this.httpClient.delete<any>(url, httpOptions);
 	}
 
 	/**
-		 * POST Verb :
 	 * Add the contribution of a staff member into a project.
 	 * @param idStaff the staff identifier.
 	 * @param idProject the project identifier to add.
 	 * @returns an observable emetting the staff record updated or an empty staff if any error occurs.
-		 */
+	 */
 	addProject$(idStaff: number, idProject: number): Observable<Boolean> {
 		if (traceOn()) {
 			console.log('Adding the collaborator with the id : ' + idStaff + ' into the project id ' + idProject);
@@ -246,7 +250,7 @@ export class StaffService {
 	 * @param idProject the project identifier to remove from the missions.
 	 * @returns an observable emetting the staff record updated or an empty staff if any error occurs.
 	 */
-	removeProject(idStaff: number, idProject: number): Observable<Boolean> {
+	removeProject$(idStaff: number, idProject: number): Observable<Boolean> {
 		if (traceOn()) {
 			console.log('Removing the collaborator with id : ' + idStaff + ' from project with id ' + idProject);
 		}

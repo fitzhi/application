@@ -40,7 +40,7 @@ describe('TabsStaffListService', () => {
 	it('should handle a simple search just on the lastname', done => {
 		expect(service).toBeTruthy();
 		
-		const spy = spyOn(staffService, 'getAll').and.returnValue(
+		const spy = spyOn(staffService, 'getAll$').and.returnValue(
 			of([
 				{
 					'idStaff': 1789,
@@ -66,7 +66,7 @@ describe('TabsStaffListService', () => {
 	it('should exclude inactive staff from the result list', done => {
 		expect(service).toBeTruthy();
 		
-		const spy = spyOn(staffService, 'getAll').and.returnValue(
+		const spy = spyOn(staffService, 'getAll$').and.returnValue(
 			of([
 				{
 					'idStaff': 1789,
@@ -89,7 +89,7 @@ describe('TabsStaffListService', () => {
 	it('should treat a staff member with an undefined active/inactive state as inactive', done => {
 		expect(service).toBeTruthy();
 		
-		const spy = spyOn(staffService, 'getAll').and.returnValue(
+		const spy = spyOn(staffService, 'getAll$').and.returnValue(
 			of([
 				{
 					'idStaff': 1789,
@@ -111,7 +111,7 @@ describe('TabsStaffListService', () => {
 	it('should handle a simple search just on the firstname', done => {
 		expect(service).toBeTruthy();
 		
-		const spy = spyOn(staffService, 'getAll').and.returnValue(
+		const spy = spyOn(staffService, 'getAll$').and.returnValue(
 			of([
 				{
 					'idStaff': 1789,
@@ -142,7 +142,7 @@ describe('TabsStaffListService', () => {
 		skillService.allSkills.push(new Skill(2, 'two'));
 		skillService.allSkills.push(new Skill(3, 'three'));
 
-		const spy = spyOn(staffService, 'getAll').and.returnValue(
+		const spy = spyOn(staffService, 'getAll$').and.returnValue(
 			of([
 				{
 					'idStaff': 1789,
@@ -177,7 +177,7 @@ describe('TabsStaffListService', () => {
 		skillService.allSkills.push(new Skill(2, 'two'));
 		skillService.allSkills.push(new Skill(3, 'three'));
 
-		const spy = spyOn(staffService, 'getAll').and.returnValue(
+		const spy = spyOn(staffService, 'getAll$').and.returnValue(
 			of([
 				{
 					'idStaff': 1789,
@@ -209,7 +209,7 @@ describe('TabsStaffListService', () => {
 		skillService.allSkills.push(new Skill(2, 'two'));
 		skillService.allSkills.push(new Skill(3, 'three'));
 
-		const spy = spyOn(staffService, 'getAll').and.returnValue(
+		const spy = spyOn(staffService, 'getAll$').and.returnValue(
 			of([
 				{
 					'idStaff': 1789,
@@ -246,7 +246,7 @@ describe('TabsStaffListService', () => {
 
 		const spyMsg = spyOn(messageService, 'warning');
 
-		const spy = spyOn(staffService, 'getAll').and.returnValue(
+		const spy = spyOn(staffService, 'getAll$').and.returnValue(
 			of([
 				{
 					'idStaff': 1789,

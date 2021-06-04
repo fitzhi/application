@@ -279,7 +279,7 @@ export class TabsStaffListService {
 			);
 		}
 
-		return this.staffService.getAll().pipe(
+		return this.staffService.getAll$().pipe(
 			take(1),
 			switchMap((staffs: Collaborator[]) => {
 					collaborator.push(...staffs.filter(staff => testCriteria(staff)));

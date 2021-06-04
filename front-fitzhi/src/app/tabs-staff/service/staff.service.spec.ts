@@ -1,15 +1,13 @@
-import { TestBed, inject } from '@angular/core/testing';
-
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { StaffService } from './staff.service';
+import { TestBed } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
 import { of } from 'rxjs';
-import { Skill } from 'src/app/data/skill';
 import { take } from 'rxjs/operators';
 import { Collaborator } from 'src/app/data/collaborator';
-import { FileService } from 'src/app/service/file.service';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
-import { MatDialogModule } from '@angular/material/dialog';
 import { CinematicService } from 'src/app/service/cinematic.service';
+import { FileService } from 'src/app/service/file.service';
+import { StaffService } from './staff.service';
 
 describe('staffService', () => {
 	let service: StaffService;
