@@ -6,6 +6,7 @@ import { AuditDetail } from '../data/audit-detail';
 import { traceOn } from '../global';
 import { Injectable } from '@angular/core';
 import { Form } from './Form';
+import { formatCurrency } from '@angular/common';
 
 @Injectable()
 export class CinematicService {
@@ -78,6 +79,18 @@ export class CinematicService {
 	 */
 	public auditHistory: { [idTopic: number]: AuditDetailsHistory } = {};
 
+	constructor() {
+		// This observable has to stay active all along the life of the application.
+		this.currentActiveForm$.subscribe({
+			next: (form: Form) => {
+				if (traceOn()) {
+					form.trace();
+				}
+				this.previousForm = form;
+			}
+		})
+	}
+
 	/**
 	 * Returns `true` if the detail panel is visible, `false` otherwise.
 	 * @param idTopic the Topic identifier
@@ -108,14 +121,8 @@ export class CinematicService {
 		/**
 		 * We do not change the active form.
 		 */
-		if (formIdentifier === this.currentActiveFormSubject$.getValue().formIdentifier) {
+		if (formIdentifier === this.previousForm.formIdentifier) {
 			return;
-		}
-
-		this.previousForm = this.currentActiveFormSubject$.getValue();
-
-		if (traceOn()) {
-			this.previousForm.trace();
 		}
 
 		/**
