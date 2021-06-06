@@ -2,16 +2,16 @@ import { AttachmentFile } from './AttachmentFile';
 
 /**
  * A topic is a category of analysis.
- * 
+ *
  * It might be
  * - the architecture
  * - the design
  * - the performance
  * - _any other subject_
- * 
+ *
  * _This list is customized on the server, and downloaded by the application._
  */
-	export class AuditTopic {
+export class AuditTopic {
 
 	/**
 	 * Public constuction of a topic in the audit.

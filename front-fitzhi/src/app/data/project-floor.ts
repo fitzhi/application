@@ -14,7 +14,7 @@ export class ProjectFloor {
 	 * The week of this floor.
 	 */
 	public week: number;
-	
+
 	/**
 	 * Number of lines developed by ACTIVE developers.
 	 */

@@ -93,7 +93,7 @@ export class SkylineService {
 					100 - Math.floor(100 * element.linesActiveDevelopers / (element.linesActiveDevelopers + element.linesInactiveDevelopers)),
 					(project) ? project.name : 'undefined'
 				)
-			)
+			);
 		});
 		return skylineToDraw;
 	}
@@ -115,6 +115,6 @@ export class SkylineService {
 	}
 
 	public evaluateHeightOfLine() {
-		const maxLine = this
+		const maxLine = this;
 	}
 }

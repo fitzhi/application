@@ -16,7 +16,7 @@ export class BackendSetupService {
 
 	/**
      * Default URL of the API Rest server.
-	 * 
+	 *
 	 * This URL is provided at build time.
      */
 	public defaultUrl = environment.apiUrl;
@@ -53,9 +53,9 @@ export class BackendSetupService {
 
 	/**
 	 * Test the passed URL and check if it is the very first connection.
-	 * 
+	 *
 	 * @param urlCandidate the url candidate for hosting the backend.
-	 * @return an "boolean" observable which returns TRUE if this first connection, FALSE otherwise 
+	 * @return an "boolean" observable which returns TRUE if this first connection, FALSE otherwise
 	 */
 	public isVeryFirstConnection$(urlCandidate: string): Observable<FirstConnection> {
 		return this.httpClient.get<string>(

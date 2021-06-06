@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostBinding, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, HostBinding, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { BaseComponent } from 'src/app/base/base.component';
 import { traceOn } from 'src/app/global';
@@ -8,7 +8,7 @@ import { traceOn } from 'src/app/global';
 	templateUrl: './skyline-icon.component.html',
 	styleUrls: ['./skyline-icon.component.css']
 })
-export class SkylineIconComponent extends BaseComponent implements OnInit {
+export class SkylineIconComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	/**
 	 * Width of the skyline icon
@@ -28,15 +28,14 @@ export class SkylineIconComponent extends BaseComponent implements OnInit {
 	@Output() onClick = new EventEmitter<number>();
 
 	/**
-	 * An observable which informs this component that the user has clicked on it 
+	 * An observable which informs this component that the user has clicked on it
 	 */
 	@Input() selected$ = new BehaviorSubject<boolean>(false);
 
 	/**
-	 * This class name whil marks the fact that the icon has selected, not not.  
+	 * This class name whil marks the fact that the icon has selected, not not.
 	 */
-	public classSelected = "";
-	
+	public classSelected = '';
 
 	constructor() { super(); }
 
