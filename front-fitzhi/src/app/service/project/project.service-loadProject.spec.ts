@@ -34,7 +34,7 @@ describe('ProjectService.loadProject$(...) behavior', () => {
 	beforeEach(async () => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [],
-			providers: [ProjectService, 
+			providers: [ProjectService,
 				ReferentialService, SkillService, FileService, MessageService, SunburstCinematicService, BackendSetupService, CinematicService],
 			imports: [HttpClientTestingModule, HttpClientModule, MatDialogModule]
 		};
@@ -42,10 +42,10 @@ describe('ProjectService.loadProject$(...) behavior', () => {
 	});
 
 	beforeEach(() => {
-		
+
 		backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('URL_OF_SERVER');
-		
+
 		skillService = TestBed.inject(SkillService);
 
 		projectService = TestBed.inject(ProjectService);
@@ -69,7 +69,7 @@ describe('ProjectService.loadProject$(...) behavior', () => {
 
 
 	it('should update the complete set of projects "allProjects" with the newly created project.', done => {
-		
+
 		const spyLoadProject = spyOn(projectService, 'addProject').and.callThrough();
 
 		projectService.loadProject$('URL_OF_SERVER_LOCATION_PROJECT_CREATED').subscribe({
@@ -81,7 +81,7 @@ describe('ProjectService.loadProject$(...) behavior', () => {
 				expect(prj).not.toBeNull();
 				done();
 			}
-		})
+		});
 
 		const reqApi1 = httpTestingController.expectOne('URL_OF_SERVER_LOCATION_PROJECT_CREATED');
 		expect(reqApi1.request.method).toEqual('GET');
@@ -96,7 +96,7 @@ describe('ProjectService.loadProject$(...) behavior', () => {
 	});
 
 	it('should fill the current "projectService.project" object with the newly created project.', done => {
-		
+
 		const spyLoadProject = spyOn(projectService, 'addProject').and.callThrough();
 
 		projectService.loadProject$('URL_OF_SERVER_LOCATION_PROJECT_CREATED').subscribe({
@@ -105,7 +105,7 @@ describe('ProjectService.loadProject$(...) behavior', () => {
 				expect(projectService.project.name).toEqual('The sixth project');
 				done();
 			}
-		})
+		});
 
 		const reqApi1 = httpTestingController.expectOne('URL_OF_SERVER_LOCATION_PROJECT_CREATED');
 		expect(reqApi1.request.method).toEqual('GET');

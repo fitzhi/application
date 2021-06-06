@@ -63,7 +63,7 @@ export class ListSkillService {
 		if (foundSkill) {
 			// We create an observable for an element of the cache in order to be consistent with the HTTP Get load.
 			return of(foundSkill);
-		} 
+		}
 
 		// The skill's id is not, or no more, available in the cache
 		// We try a direct access

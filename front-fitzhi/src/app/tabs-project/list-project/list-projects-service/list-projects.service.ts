@@ -12,28 +12,16 @@ import { ProjectService } from '../../../service/project/project.service';
 })
 export class ListProjectsService  {
 
-	public filteredProjects$ = new BehaviorSubject<Project[]>([]);
-
-	/**
-	 * Current active search.
-	 * This object is updated after each  reloadProjects(...)
-	*/
-	currentSearch  = {
-		done: false,
-		criteria: null,
-		activeOnly: false
-	}
-
 	static LookupCriteria = class {
-		
+
 		/**
 		 * This set contains the skill identifiers corresponding to the skill label typed by the end-user.
 		 */
-		public skillIds: Set<Number>; 
+		public skillIds: Set<Number>;
 
 		/**
 		 * Public simple construction.
-		 * 
+		 *
 		 * @param skill Skill involved in the search.
 		 * @param name Part of the name involved in the search.
 		 * @param risk risk given given by the end-user; it might be __"staff"__, or __"sonar"__, or __"audit"__.
@@ -57,24 +45,36 @@ export class ListProjectsService  {
 		/**
 		 * @returns **TRUE** if a staff risk has been given by the end-user.
 		 */
-		 hasStaffRisk(): boolean {
+		hasStaffRisk(): boolean {
 			return (this.risk === 'staff');
 		}
 
 		/**
 		 * @returns **TRUE** if a audit risk has been given by the end-user.
 		 */
-		 hasAuditRisk(): boolean {
+		hasAuditRisk(): boolean {
 			return (this.risk === 'audit');
 		}
 
 		/**
-		 * @returns **TRUE** if the criteria is empty
+		 * @returns  **TRUE** if the criteria is empty.
 		 */
 		isEmpty(): boolean {
 			return ((!this.skill) && (!this.name) && (!this.risk));
 		}
-	}
+	};
+
+	public filteredProjects$ = new BehaviorSubject<Project[]>([]);
+
+	/**
+	 * Current active search.
+	 * This object is updated after each  reloadProjects(...)
+	*/
+	currentSearch  = {
+		done: false,
+		criteria: null,
+		activeOnly: false
+	};
 
 	constructor(
 		private messageService: MessageService,
@@ -83,9 +83,9 @@ export class ListProjectsService  {
 
 	/**
 	 * Parse the lookup criteria and return an instance of **LookupCriteria**
-	 * 
+	 *
 	 * LookupCriteria contains all necessaries information used to filter the projects
-	 * 
+	 *
 	 * @param criteria the criteria given by the end-user in a string forma
 	 * @return the resulting LookupCriteria
 	 */
@@ -95,24 +95,25 @@ export class ListProjectsService  {
 
 		function parseRiskCriteria(risk: string) {
 			const riskLength = risk.length + 1;
-			if (criteria.indexOf(risk + ':') === 0) {				
+			if (criteria.indexOf(risk + ':') === 0) {
 				// select the skill corresponding to the criteria
 				const index = criteria.indexOf(';');
-				const level = (index === -1) ? criteria.substring(riskLength).toLocaleLowerCase() : criteria.substring(riskLength, index).toLocaleLowerCase();
+				const level = (index === -1) ? criteria.substring(riskLength).toLocaleLowerCase()
+							: criteria.substring(riskLength, index).toLocaleLowerCase();
 				// This is a scenario of staff:1-3. We are filtering projects with a risk level from 1 to 3.
 				const pos = level.indexOf('-');
 				if (pos !== -1) {
 					const startLevel = level.substring(0, pos);
 					const endLevel = level.substring(pos + 1);
-					if (!isNaN(parseInt(startLevel)) && !isNaN(parseInt(endLevel)))  {
+					if (!isNaN(parseInt(startLevel, 10)) && !isNaN(parseInt(endLevel, 10)))  {
 						lookup.risk = risk;
-						lookup.riskStartLevel = parseInt(startLevel);
-						lookup.riskEndLevel = parseInt(endLevel);
+						lookup.riskStartLevel = parseInt(startLevel, 10);
+						lookup.riskEndLevel = parseInt(endLevel, 10);
 					}
 				} else {
-					if (!isNaN(parseInt(level))) {
+					if (!isNaN(parseInt(level, 10))) {
 						lookup.risk = risk;
-						lookup.riskLevel = parseInt(level);
+						lookup.riskLevel = parseInt(level, 10);
 					}
 				}
 			}

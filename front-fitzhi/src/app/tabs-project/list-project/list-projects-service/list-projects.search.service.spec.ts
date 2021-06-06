@@ -59,7 +59,7 @@ describe('ListProjectsService', () => {
 			next: projects => {
 				done();
 			}
-		})
+		});
 	});
 
 	it('should correctly filter projects on their name.', done  => {
@@ -67,10 +67,10 @@ describe('ListProjectsService', () => {
 
 		theService.filteredProjects$.subscribe({
 			next: projects => {
-				expect(projects.length).toBe(3)
+				expect(projects.length).toBe(3);
 				done();
 			}
-		})
+		});
 	});
 
 	it('should correctly filter "ACTIVE" projects on their name and their active status.', done  => {
@@ -82,20 +82,20 @@ describe('ListProjectsService', () => {
 		theService.search('dummy', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
-				expect(projects.length).toBe(1)
+				expect(projects.length).toBe(1);
 				done();
 			}
-		})
+		});
 	});
 
 	it('should correctly handle an empty result.', done  => {
 		theService.search('unknown', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
-				expect(projects.length).toBe(0)
+				expect(projects.length).toBe(0);
 				done();
 			}
-		})
+		});
 	});
 	it('should parse correctly a given criteria containing "skill:java".', ()  => {
 		const criteria = theService.parse('skill:java');
@@ -110,7 +110,6 @@ describe('ListProjectsService', () => {
 		expect (criteria.name).toBeDefined();
 		expect (criteria.name).toBe('nope');
 	});
-	
 
 	it('should parse correctly a given criteria containing "skill:java;nope".', ()  => {
 		const criteria = theService.parse('skill:java;nope');
@@ -128,7 +127,7 @@ describe('ListProjectsService', () => {
 		expect (criteria.risk).toBe('staff');
 		expect (criteria.riskLevel).toBeDefined();
 		expect (criteria.riskLevel).toBe(7);
-		
+
 		expect (criteria.name).toBeNull();
 	});
 
@@ -190,7 +189,7 @@ describe('ListProjectsService', () => {
 				expect(projects.length).toBe(2);
 				done();
 			}
-		})
+		});
 	});
 
 	it('should correctly filter for a specific skill and a specific name.', done  => {
@@ -204,11 +203,11 @@ describe('ListProjectsService', () => {
 				expect(projects.length).toBe(1);
 				done();
 			}
-		})
+		});
 	});
 
 	it('should filter projects for a specific level of "staff risk".', done  => {
-		
+
 		// The project with ID 1 and 3 are desactivate
 		projectService.allProjects[0].staffEvaluation = 4;
 		projectService.allProjects[1].staffEvaluation = 2;
@@ -222,11 +221,11 @@ describe('ListProjectsService', () => {
 				expect(projects.length).toBe(2);
 				done();
 			}
-		})
+		});
 	});
 
 	it('should filter projects for a specific level of "staff risk" and a specific name.', done  => {
-		
+
 		// The project with ID 1 and 3 are desactivate
 		projectService.allProjects[0].staffEvaluation = 4;
 		projectService.allProjects[1].staffEvaluation = 2;
@@ -240,7 +239,7 @@ describe('ListProjectsService', () => {
 				expect(projects.length).toBe(1);
 				done();
 			}
-		})
+		});
 	});
 
 	it('should accept all projets with the "*" filter.', done  => {
@@ -251,7 +250,7 @@ describe('ListProjectsService', () => {
 				expect(projects.length).toBe(5);
 				done();
 			}
-		})
+		});
 	});
 
 	it('should accept all projets with an empty filter.', done  => {
@@ -261,7 +260,7 @@ describe('ListProjectsService', () => {
 				expect(projects.length).toBe(5);
 				done();
 			}
-		})
+		});
 	});
 
 	it('should accept all projets with an empty filter.', done  => {
@@ -271,11 +270,11 @@ describe('ListProjectsService', () => {
 				expect(projects.length).toBe(5);
 				done();
 			}
-		})
+		});
 	});
 
 	it('should filter projects for a specific interval of level of staff risk ("staff:x-y")".', done  => {
-			
+
 		// The project with ID 1 and 3 are desactivate
 		projectService.allProjects[0].staffEvaluation = 4;
 		projectService.allProjects[1].staffEvaluation = 2;
@@ -289,11 +288,11 @@ describe('ListProjectsService', () => {
 				expect(projects.length).toBe(3);
 				done();
 			}
-		})
+		});
 	});
 
 	it('should filter projects for a specific interval of level of staff risk and a name ("staff:x-y;name")".', done  => {
-			
+
 		// The project with ID 1 and 3 are desactivate
 		projectService.allProjects[0].staffEvaluation = 4;
 		projectService.allProjects[1].staffEvaluation = 2;
@@ -307,11 +306,11 @@ describe('ListProjectsService', () => {
 				expect(projects.length).toBe(2);
 				done();
 			}
-		})
+		});
 	});
 
 	it('should filter projects for a specific level of audit risk ("audit:x")".', done  => {
-			
+
 		// The project with ID 1 and 3 are desactivate
 		projectService.allProjects[0].auditEvaluation = 4;
 		projectService.allProjects[1].auditEvaluation = 2;
@@ -325,11 +324,11 @@ describe('ListProjectsService', () => {
 				expect(projects.length).toBe(1);
 				done();
 			}
-		})
+		});
 	});
 
 	it('should filter projects for a specific interval of level of audit risk ("audit:x-y")".', done  => {
-			
+
 		// The project with ID 1 and 3 are desactivate
 		projectService.allProjects[0].auditEvaluation = 4;
 		projectService.allProjects[1].auditEvaluation = 2;
@@ -347,7 +346,7 @@ describe('ListProjectsService', () => {
 	});
 
 	it('should filter projects for a specific interval of level of audit risk and a name ("audit:x-y;name")".', done  => {
-			
+
 		// The project with ID 1 and 3 are desactivate
 		projectService.allProjects[0].auditEvaluation = 4;
 		projectService.allProjects[1].auditEvaluation = 2;
@@ -361,7 +360,7 @@ describe('ListProjectsService', () => {
 				expect(projects.length).toBe(2);
 				done();
 			}
-		})
+		});
 	});
 
 });

@@ -107,8 +107,8 @@ export class SkillComponent extends BaseComponent implements OnInit, OnDestroy {
 	}
 
 	/**
-	 * Submit the change. 
-	 * The current SKILL will be created, or updated. 
+	 * Submit the change.
+	 * The current SKILL will be created, or updated.
 	 */
 	onSubmit() {
 		this.skillService.fillSkill(this.skill, this.profileSkill);

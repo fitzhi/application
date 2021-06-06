@@ -77,7 +77,7 @@ export class ProjectService extends InternalService {
 	/**
 	 * This EventEmitter propagates the signal than an evaluation has been given to an audit topic.
 	 */
-	 public topicEvaluation$ = new Subject();
+	public topicEvaluation$ = new Subject();
 
 
 	constructor(
@@ -117,8 +117,8 @@ export class ProjectService extends InternalService {
 
 	/**
 	 * Add the project to the global set of projects.
-	 * 
-	 * @param project the given project 
+	 *
+	 * @param project the given project
 	 */
 	public addProject(project: Project) {
 		if  (this.allProjects.find(prj => prj.id === project.id)) {
@@ -221,7 +221,7 @@ export class ProjectService extends InternalService {
 
 	/**
 	 * Load the project behind an URI location.
-	 * 
+	 *
 	 * @param location the location to be accessed
 	 */
 	loadProject$(location: string): Observable<Project> {
@@ -309,7 +309,7 @@ export class ProjectService extends InternalService {
 
 	/**
 	 * Link a Sonar project to a Fitzhi project
-	 * 
+	 *
 	 * @param idProject the project identifier
 	 * @param sonarProject the sonar project
 	 */
@@ -327,7 +327,7 @@ export class ProjectService extends InternalService {
 
 	/**
 	 * Unlink a Sonar project from a Fitzhi project.
-	 * 
+	 *
 	 * @param idProject the project identifier
 	 * @param sonarProject the sonar project
 	 */
@@ -338,7 +338,7 @@ export class ProjectService extends InternalService {
 		}
 
 		return this.httpClient
-			.delete<boolean>(`${this.backendSetupService.url()}/project/${idProject}/sonar/${sonarProject.key}`, 
+			.delete<boolean>(`${this.backendSetupService.url()}/project/${idProject}/sonar/${sonarProject.key}`,
 				httpOptions)
 			.pipe(take(1));
 	}
@@ -368,16 +368,16 @@ export class ProjectService extends InternalService {
 	/**
 	 * Load the skills associated with the given project.
 	 * @param idProject the project identifier
-	 * @returns an obsbervable emetting the array of skills declared or detected for the given project 
+	 * @returns an obsbervable emetting the array of skills declared or detected for the given project
 	 */
 	loadSkills$(idProject: number): Observable<Skill[]> {
 		return this.httpClient.get<Skill[]>(`${this.backendSetupService.url()}/project/skills/${idProject}`);
 	}
 
 	/**
-	 * GET the project associated to this id **from the back-end of Fitzhi**. 
+	 * GET the project associated to this id **from the back-end of Fitzhi**.
 	 * This method will throw a 404 if this id is not found.
-	 * 
+	 *
 	 * @param idProject the given project identifier
 	 * @returns an observable emitting the retrieved project
 	 */
@@ -391,7 +391,7 @@ export class ProjectService extends InternalService {
 
 	/**
 	 * Search the project associated to the passed name within the collection of all projects
-	 * 
+	 *
 	 * @param projectName the project name to search for inside the collection
 	 * @returns the found project or undefined if none's found
 	 */
@@ -447,7 +447,7 @@ export class ProjectService extends InternalService {
 				+ ' on URL ' + this.backendSetupService.url() + '/api/project/sunburst');
 		}
 		const body = {
-			idProject: settings.idProject, 
+			idProject: settings.idProject,
 			idStaffSelected: settings.idStaffSelected,
 			startingDate: settings.startingDate
 		};
@@ -475,7 +475,7 @@ export class ProjectService extends InternalService {
 	loadTaskActivities$(idProject: number): Observable<Task> {
 		return this.httpClient
 			.get<Task>(
-				 `${this.backendSetupService.url()}/project/tasks/dashboardGeneration/${idProject}`,
+				`${this.backendSetupService.url()}/project/tasks/dashboardGeneration/${idProject}`,
 				httpOptions);
 	}
 
@@ -605,7 +605,7 @@ export class ProjectService extends InternalService {
 
 	/**
 	 * Retrieve the directories starting with 'criteria'.
-	 * 
+	 *
 	 * @param idProject the identifier of the project
 	 * @param criteria the searched criteria
 	 * @return an observable emitting the list of directories.
@@ -617,7 +617,7 @@ export class ProjectService extends InternalService {
 
 	/**
 	 * Save the libraries detected or declared.
-	 * 
+	 *
 	 * @param idProject the identifier of the project
 	 * @param libraries the libraries directories
 	 */
@@ -725,7 +725,7 @@ export class ProjectService extends InternalService {
 		}
 
 		return this.httpClient.put<boolean>(
-			 `${this.backendSetupService.url()}/project/${idProject}/sonar/${key}/filesStats`, filesStats, httpOptions);
+			`${this.backendSetupService.url()}/project/${idProject}/sonar/${key}/filesStats`, filesStats, httpOptions);
 	}
 
 	/**
@@ -742,7 +742,7 @@ export class ProjectService extends InternalService {
 		}
 
 		return this.httpClient.put<boolean>(
-			 `${this.backendSetupService.url()}/project/${idProject}/sonar/${key}/metricValues`, metricValues, httpOptions);
+			`${this.backendSetupService.url()}/project/${idProject}/sonar/${key}/metricValues`, metricValues, httpOptions);
 	}
 
 	/**
@@ -891,7 +891,7 @@ export class ProjectService extends InternalService {
 		}
 
 		return this.httpClient.put<boolean>(
-			 `${this.backendSetupService.url()}/project/${idProject}/sonar/${key}/evaluation`, 
+			`${this.backendSetupService.url()}/project/${idProject}/sonar/${key}/evaluation`,
 			{evaluation: evaluation, totalNumberLinesOfCode: totalNumberLinesOfCode}, httpOptions);
 	}
 
@@ -912,8 +912,8 @@ export class ProjectService extends InternalService {
 		const auditTopic = new AuditTopic(idTopic, evaluation, null);
 
 		return this.httpClient
-			.put<boolean>( 
-				`${this.backendSetupService.url()}/project/${idProject}/audit/${idTopic}/evaluation/${evaluation}`, 
+			.put<boolean>(
+				`${this.backendSetupService.url()}/project/${idProject}/audit/${idTopic}/evaluation/${evaluation}`,
 				httpOptions)
 			.pipe(take(1));
 	}
@@ -934,7 +934,7 @@ export class ProjectService extends InternalService {
 
 		return this.httpClient
 			.put<boolean>(
-				`${this.backendSetupService.url()}/project/${this.project.id}/audit/${idTopic}/report`, 
+				`${this.backendSetupService.url()}/project/${this.project.id}/audit/${idTopic}/report`,
 				report, httpOptions)
 			.pipe(take(1));
 	}
@@ -950,9 +950,9 @@ export class ProjectService extends InternalService {
 			auditTopics.forEach(element => console.log (element.idTopic, element.weight));
 			console.groupEnd();
 		}
-		
+
 		return this.httpClient
-			.put<boolean>(`${this.backendSetupService.url()}/project/${this.project.id}/audit/weights`, 
+			.put<boolean>(`${this.backendSetupService.url()}/project/${this.project.id}/audit/weights`,
 					auditTopics, httpOptions)
 			.pipe(take(1));
 	}
@@ -1031,8 +1031,8 @@ export class ProjectService extends InternalService {
 			console.log(`Delete the audit attachment file : ${attachmentFile.fileName}`);
 		}
 
-		return this.httpClient.delete<boolean>( 
-			`${this.backendSetupService.url()}/project/${idProject}/audit/${idTopic}/attachmentFile/${attachmentFile.idFile}`, 
+		return this.httpClient.delete<boolean>(
+			`${this.backendSetupService.url()}/project/${idProject}/audit/${idTopic}/attachmentFile/${attachmentFile.idFile}`,
 			httpOptions).pipe(take(1));
 	}
 
@@ -1085,7 +1085,7 @@ export class ProjectService extends InternalService {
 	 * @param from: Method which made that call
 	 */
 	dump(project: Project, from: string): void {
-		
+
 		// No dump if we are in 'trace OFF' mode
 		if (!traceOn()) {
 			return;
@@ -1249,7 +1249,7 @@ export class ProjectService extends InternalService {
 					if (traceOn()) {
 						console.log ('Project %s has beeen successfully removed', this.project.name);
 					}
-					
+
 					// We remove the project from the local collection
 					this.removeLocalProject(this.project.id);
 
@@ -1257,7 +1257,7 @@ export class ProjectService extends InternalService {
 					this.project = new Project();
 					this.projectLoaded$.next(true);
 					this.cinematicService.projectTabIndex = Constants.PROJECT_IDX_TAB_FORM;
-					return of(true)
+					return of(true);
 				}),
 				catchError((error) => {
 					if (traceOn()) {
@@ -1272,7 +1272,7 @@ export class ProjectService extends InternalService {
 
 	/**
 	 * Remove a project from the local collection of projects.
-	 * 
+	 *
 	 * @param idProject the given project identifier.
 	 */
 	public removeLocalProject(idProject: number): void {

@@ -101,7 +101,7 @@ export class SkillService extends InternalService {
 
 	/**
 	* Update or create the given skill depending on the **skill.id** value.
-	* This function emits an observable with the skill value 
+	* This function emits an observable with the skill value
 	* @param skill the skill to be saved
 	*/
 	public save$(skill: Skill): Observable<Skill> {
@@ -146,7 +146,7 @@ export class SkillService extends InternalService {
 						if (response.status === HttpCodes.noContent) {
 							return of(skill);
 						} else {
-							throw 'The Skill ' + skill.title + ' has not been updated for an unknown reason.';
+							throw new Error(`The Skill ${skill.title} has not been updated for an unknown reason.`);
 						}
 					}
 			));
@@ -229,7 +229,6 @@ export class SkillService extends InternalService {
 	 */
 	public filterSkills(criteria: ListCriteria) {
 
-		
 		if (traceOn()) {
 			console.log ('Filtering the skills for the criteria', criteria);
 		}
@@ -269,7 +268,7 @@ export class SkillService extends InternalService {
 	 * @param formGroupSkill the SKILL formGroup
 	 */
 	fillSkill(skill: Skill, formGroupSkill: FormGroup) {
-		
+
 		skill.title = formGroupSkill.get('title').value;
 
 		let detectionTemplate: DetectionTemplate;

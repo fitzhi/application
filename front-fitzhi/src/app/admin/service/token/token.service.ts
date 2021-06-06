@@ -20,10 +20,10 @@ export class TokenService {
 	refreshToken$(): Observable<Token> {
 
 		//
-        //    The call that goes in here will use the existing refresh token to call
-        //    a method on the oAuth server (usually called refreshToken) to get a new
-        //    authorization token for the API calls.
-        //
+		//    The call that goes in here will use the existing refresh token to call
+		//    a method on the oAuth server (usually called refreshToken) to get a new
+		//    authorization token for the API calls.
+		//
 		if (traceOn()) {
 			if (this.token) {
 				console.log('Refresh the active token with token %s', this.token.refresh_token);

@@ -47,9 +47,9 @@ describe('SkillComponent', () => {
 		sendInput('#title', 'Incredible kill');
 		expect(nativeButtonOk.disabled).toBeFalsy();
 		expect(component.profileSkill.valid).toBeTruthy();
-		
+
 	}));
-	
+
 	function sendInput(id: string, text: string) {
 		const input = debugElement.query(By.css(id)).nativeElement;
 		input.value = text;
@@ -57,5 +57,5 @@ describe('SkillComponent', () => {
 		tick();
 		fixture.detectChanges();
 		return fixture.whenStable();
-	  }
+	}
 });

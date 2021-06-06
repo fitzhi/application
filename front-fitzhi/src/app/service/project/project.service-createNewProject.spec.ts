@@ -34,7 +34,7 @@ describe('ProjectService.createNewProject$(...) behavior', () => {
 	beforeEach(async () => {
 		const testConf: TestModuleMetadata =  {
 			declarations: [],
-			providers: [ProjectService, 
+			providers: [ProjectService,
 				ReferentialService, SkillService, FileService, MessageService, SunburstCinematicService, BackendSetupService, CinematicService],
 			imports: [HttpClientTestingModule, HttpClientModule, MatDialogModule]
 		};
@@ -42,10 +42,10 @@ describe('ProjectService.createNewProject$(...) behavior', () => {
 	});
 
 	beforeEach(() => {
-		
+
 		backendSetupService = TestBed.inject(BackendSetupService);
 		backendSetupService.saveUrl('URL_OF_SERVER');
-		
+
 		projectService = TestBed.inject(ProjectService);
 
 		projectService.allProjects = [];
@@ -59,7 +59,7 @@ describe('ProjectService.createNewProject$(...) behavior', () => {
 
 
 	it('should loadProject$ with the returned location.', done => {
-		
+
 		projectService.project = new Project (-1, 'The sixth project');
 
 		const spyLoadProject = spyOn(projectService, 'loadProject$')
@@ -72,7 +72,7 @@ describe('ProjectService.createNewProject$(...) behavior', () => {
 
 				done();
 			}
-		})
+		});
 
 		const reqApi1 = httpTestingController.expectOne('URL_OF_SERVER/api/project');
 		expect(reqApi1.request.method).toEqual('POST');
@@ -91,7 +91,7 @@ describe('ProjectService.createNewProject$(...) behavior', () => {
 	});
 
 	it('should return en EMPTY observable, if the backend does not return a location.', done => {
-		
+
 		projectService.project = new Project (-1, 'The sixth project');
 
 		const spyLoadProject = spyOn(projectService, 'loadProject$');
@@ -101,7 +101,7 @@ describe('ProjectService.createNewProject$(...) behavior', () => {
 				expect(b).toBeTrue();
 				done();
 			}
-		})
+		});
 
 		const reqApi1 = httpTestingController.expectOne('URL_OF_SERVER/api/project');
 		expect(reqApi1.request.method).toEqual('POST');
@@ -119,7 +119,7 @@ describe('ProjectService.createNewProject$(...) behavior', () => {
 	});
 
 	it('should return en EMPTY observable, if the backend returns an error.', done => {
-		
+
 		projectService.project = new Project (-1, 'The sixth project');
 
 		const spyLoadProject = spyOn(projectService, 'loadProject$');
@@ -129,7 +129,7 @@ describe('ProjectService.createNewProject$(...) behavior', () => {
 				expect(b).toBeTrue();
 				done();
 			}
-		})
+		});
 
 		const reqApi1 = httpTestingController.expectOne('URL_OF_SERVER/api/project');
 		expect(reqApi1.request.method).toEqual('POST');
@@ -145,5 +145,5 @@ describe('ProjectService.createNewProject$(...) behavior', () => {
 
 		expect(spyLoadProject).not.toHaveBeenCalled();
 	});
-	
+
 });

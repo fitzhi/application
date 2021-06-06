@@ -47,11 +47,11 @@ describe('ProjectAuditComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ListProjectComponent, AuditGraphicBadgeComponent, 
+			declarations: [ListProjectComponent, AuditGraphicBadgeComponent,
 				TestHostComponent, QuotationBadgeComponent ],
-			providers: [ReferentialService, StaffListService, ProjectService, 
+			providers: [ReferentialService, StaffListService, ProjectService,
 				ListProjectsService, CinematicService],
-			imports: [HttpClientTestingModule, 
+			imports: [HttpClientTestingModule,
 				MatTableModule,  MatPaginatorModule, MatSortModule,
 				MatDialogModule, RouterTestingModule, BrowserAnimationsModule]
 		})
@@ -71,10 +71,9 @@ describe('ProjectAuditComponent', () => {
 		projectService = TestBed.inject(ProjectService);
 
 		listProjectsService = TestBed.inject(ListProjectsService);
-		
+
 		listProjectsService.filteredProjects$.next(projects);
 		fixture.detectChanges();
-
 
 	});
 

@@ -65,7 +65,7 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 		private router: Router) {
 
 		super();
-		
+
 		// Set the color of the colum header depending on the activated slice.
 		this.subscriptions.add(
 			this.pieDashboardService.sliceActivated$
@@ -74,14 +74,14 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 						this.colorHeader = slice.backgroundColor;
 						this.dataSource.data = slice.children; 
 					}
-				})
+				});
 		);
 	}
-	
+
 	ngOnInit(): void {
 		this.manageDataSource();
 	}
-	
+
 	/**
 	 * Manage the datasource associated to the table
 	 */
@@ -101,10 +101,10 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 
 	/**
 	 * Route the application to the corresponding Project form.
-	 * 
+	 *
 	 * @param id the selected project identifier
 	 */
-	 routeProject(id: number): void {
+	routeProject(id: number): void {
 		if (traceOn()){
 			console.log ('Project %d is selected', id);
 		}
@@ -114,10 +114,10 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 
 	/**
 	 * Highlight the line of an activated project.
-	 * 
+	 *
 	 * @param id the highlighted project identifier
 	 */
-	 enterProject(id: number): void {
+	enterProject(id: number): void {
 		if (traceOn()){
 			console.log ('Project %d is activated', id);
 		}
@@ -134,7 +134,7 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 
 	/**
 	 * Inactive the line of an unactivated project.
-	 * 
+	 *
 	 * @param id the left project identifier
 	 */
 	 leaveProject(id: number): void {

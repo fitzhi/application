@@ -19,9 +19,9 @@ export class CinematicService {
 	/**
 	 * Observable associated with the selected form on stage on the SPA.
 	 */
-	 public currentActiveForm$ = this.currentActiveFormSubject$.asObservable()
+	public currentActiveForm$ = this.currentActiveFormSubject$.asObservable();
 
-	 /**
+	/**
 	  * Current collaborator's identifier previewed on the form.
 	  */
 	public currentCollaboratorSubject$ = new Subject<number>();
@@ -39,7 +39,7 @@ export class CinematicService {
 	/**
 	 * Observable associated to the selection of an audit thumbnail by the end-user.
 	 */
-	 public auditTopicSelected$ = new BehaviorSubject<number>(-1);
+	public auditTopicSelected$ = new BehaviorSubject<number>(-1);
 
 	/**
 	 * `idTopic` of the selected Topic thumbnail.
@@ -88,7 +88,7 @@ export class CinematicService {
 				}
 				this.previousForm = form;
 			}
-		})
+		});
 	}
 
 	/**

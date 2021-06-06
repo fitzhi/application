@@ -80,8 +80,8 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 
 					switch (response.status) {
 						case 0:
-							messageService.info(Constants.SERVER_DOWN + " " + request.url);
-							return throwError(Constants.SERVER_DOWN + " @ " + request.url);
+							messageService.info(Constants.SERVER_DOWN + ' ' + request.url);
+							return throwError(Constants.SERVER_DOWN + ' @ ' + request.url);
 
 						case HttpCodes.notFound:
 							if (traceOn()) {

@@ -6,12 +6,12 @@ import { HttpClient } from '@angular/common/http';
  */
 @Injectable()
 export class DataService {
-  public ROOT_URL = `http://jsonplaceholder.typicode.com`;
+	public ROOT_URL = `http://jsonplaceholder.typicode.com`;
 
-  constructor(private http: HttpClient) {}
+	constructor(private http: HttpClient) {}
 
-  getPosts() {
-    console.log ('url', `${this.ROOT_URL}/posts`);
-    return this.http.get<any[]>(`${this.ROOT_URL}/posts`);
-  }
+	getPosts() {
+		console.log ('url', `${this.ROOT_URL}/posts`);
+		return this.http.get<any[]>(`${this.ROOT_URL}/posts`);
+	}
 }
