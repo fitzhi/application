@@ -49,15 +49,15 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 	 */
 	 @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
-	 /**
-	  * The array listed in the Table
-	  */
+	/**
+	 * The array listed in the Table
+	 */
 	public projects: Project[] = [];
 
 	/**
 	 * Key used to save the page size in the local storage.
 	 */
-	 public pageSize = new UserSetting('pie-projects-staff.pageSize', 5);
+	public pageSize = new UserSetting('pie-projects-staff.pageSize', 5);
 
 	constructor(
 		public pieDashboardService: PieDashboardService,
@@ -74,7 +74,7 @@ export class PieProjectsComponent extends BaseComponent implements OnDestroy, On
 						this.colorHeader = slice.backgroundColor;
 						this.dataSource.data = slice.children; 
 					}
-				});
+				})
 		);
 	}
 
