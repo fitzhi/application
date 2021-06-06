@@ -102,7 +102,7 @@ export class SonarDashboardComponent extends BaseComponent implements OnInit, On
 
 	/**
 	 * _**This method is recurcive !!**_
-	 * 
+	 *
 	 * Load the Sonar badge corresponding to the numero of badge.
 	 * @param badgeNumero the numero of badge
 	 */

@@ -33,7 +33,7 @@ describe('SonarDashboardComponent', () => {
 			`
 	})
 	class TestHostComponent {
-		panelSwitchTransmitter$=  new BehaviorSubject<PanelSwitchEvent>(new PanelSwitchEvent(1, 'Sonar project'));
+		panelSwitchTransmitter$ =  new BehaviorSubject<PanelSwitchEvent>(new PanelSwitchEvent(1, 'Sonar project'));
 	}
 
 	beforeEach(async(() => {
@@ -48,7 +48,7 @@ describe('SonarDashboardComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
-		sonarService = TestBed.inject(SonarService)
+		sonarService = TestBed.inject(SonarService);
 	});
 
 	it('should create, even if no Sonar server is declared, or reachable', () => {
@@ -64,7 +64,7 @@ describe('SonarDashboardComponent', () => {
 		const sonarServer = new SonarServer('6.5', 'url', true);
 		const spySonarServiceOne = spyOn(sonarService, 'sonarIsAccessible$').and.returnValue(of(true));
 		const spySonarServiceTwo = spyOn(sonarService, 'getSonarServer').and.returnValue(sonarServer);
-		
+
 		fixture.detectChanges();
 
 		expect(component).toBeTruthy();
@@ -81,7 +81,7 @@ describe('SonarDashboardComponent', () => {
 		const sonarServer = new SonarServer('8.3.1', 'url', true);
 		const spySonarServiceOne = spyOn(sonarService, 'sonarIsAccessible$').and.returnValue(of(true));
 		const spySonarServiceTwo = spyOn(sonarService, 'getSonarServer').and.returnValue(sonarServer);
-		
+
 		fixture.detectChanges();
 
 		expect(component).toBeTruthy();

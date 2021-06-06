@@ -31,6 +31,6 @@ export class ProjectRemoveComponent implements OnInit {
 					this.listProjectsService.reload();
 				}
 			}
-		})
+		});
 	}
 }

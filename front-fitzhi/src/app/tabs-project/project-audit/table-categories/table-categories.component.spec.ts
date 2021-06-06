@@ -35,7 +35,7 @@ describe('TableCategoriesComponent', () => {
 	beforeEach(() => {
 		fixture = TestBed.createComponent(TableCategoriesComponent);
 		component = fixture.componentInstance;
-		
+
 		referentialService = TestBed.inject(ReferentialService);
 		referentialService.topics$.next({'1': 'One', '2': 'Two'});
 

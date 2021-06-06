@@ -57,10 +57,10 @@ export class ProjectAuditService {
 
 	/**
 	 * Initializing the array of topics to be displayed on the webpage.
-	 * 
+	 *
 	 * @param topics container of topics available in our referential. These topics are loaded from the referential
 	 */
-	 public initializeAuditTopic(topics: {[id: number]: string}) {
+	public initializeAuditTopic(topics: {[id: number]: string}) {
 
 		// We keep the referential.
 		this.topics = topics;
@@ -80,7 +80,7 @@ export class ProjectAuditService {
 	/**
 	 * Divide the weights between all topics.
 	 */
-	 assignWeights(): void {
+	assignWeights(): void {
 		// We mitigate the weight on all topics chosen.
 		let intermediateSum = 0;
 		for (let i = 0; i < this.auditTopics.length - 1; i++) {
@@ -107,7 +107,7 @@ export class ProjectAuditService {
 	 * The user has involved, or removed, a topic from his audit.
 	 * @param category the given category.
 	 */
-	 onCategoryUpdated(category: Topic) {
+	onCategoryUpdated(category: Topic) {
 
 		if (traceOn()) {
 			console.log (
@@ -128,7 +128,7 @@ export class ProjectAuditService {
 			this.removeSecondaryDetailsPanel(category.id, this.auditDetails);
 		}
 
-		// We take in account the operation in the loaded project and in the backend. 
+		// We take in account the operation in the loaded project and in the backend.
 		if (this.auditTopics && this.auditTopics.length > 0) {
 			this.assignWeights();
 			this.impactWeightsInProject();
@@ -172,7 +172,7 @@ export class ProjectAuditService {
 			return;
 		}
 		auditChosenDetail.splice(index, 1);
-		// The secondary panels to upload file / edit a summary, has to be removed 
+		// The secondary panels to upload file / edit a summary, has to be removed
 		// if they were activite and visible on the screen.
 		this.removeSecondaryDetailsPanel(idTopic, auditChosenDetail);
 	}
@@ -180,10 +180,10 @@ export class ProjectAuditService {
 
 	/**
 	 * The function is informed that a weight has been attributed to a topic of the audit.
-	 * 
+	 *
 	 * @param topicWeight the topic weight emitted by the UI
 	 */
-	 onWeightChange(topicWeight: TopicWeight) {
+	onWeightChange(topicWeight: TopicWeight) {
 
 		if ((traceOn()) && (topicWeight.typeOfOperation === Constants.CHANGE_BROADCAST)) {
 			console.log (this.topics[topicWeight.idTopic], topicWeight.value);
@@ -220,7 +220,7 @@ export class ProjectAuditService {
 
 	/**
 	 * __Selection__ or __Deselection__ of a topic in the audit scope.
-	 * 
+	 *
 	 * @param topic the given topic
 	 */
 	updateTopic(topic: Topic) {

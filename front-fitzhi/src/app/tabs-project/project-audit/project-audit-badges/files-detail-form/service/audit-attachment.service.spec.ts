@@ -51,7 +51,7 @@ describe('AuditAttachmentService', () => {
 				expect(auditAttachmentService.attachmentFiles.get(3).length).toBe(4);
 				done();
 			}
-		})
+		});
 	});
 
 	it('should correctly handle a new attachmentFile.', done => {
@@ -66,9 +66,9 @@ describe('AuditAttachmentService', () => {
 					expect(auditAttachmentService.attachmentFiles.get(0).length).toBe(3);
 					expect(auditAttachmentService.attachmentFiles.get(0)[1].fileName).toBe('other_file.doc');
 					expect(auditAttachmentService.attachmentFiles.get(0)[2].fileName).toBeNull();
-					done()
+					done();
 				}
-			});	
+			});
 		});
 	});
 
@@ -78,20 +78,20 @@ describe('AuditAttachmentService', () => {
 				expect(auditAttachmentService.attachmentFiles.get(0)).toBeDefined();
 				expect(auditAttachmentService.attachmentFiles.get(0).length).toBe(2);
 				auditAttachmentService.attachmentFiles.get(0)[1].fileName = 'one';
-				auditAttachmentService.addUploadtrailer(0)
+				auditAttachmentService.addUploadtrailer(0);
 				expect(auditAttachmentService.attachmentFiles.get(0).length).toBe(3);
 				auditAttachmentService.attachmentFiles.get(0)[2].fileName = 'two';
-				auditAttachmentService.addUploadtrailer(0)
+				auditAttachmentService.addUploadtrailer(0);
 				expect(auditAttachmentService.attachmentFiles.get(0).length).toBe(4);
 
 				// We do not exceed 4 records by topic
 				auditAttachmentService.attachmentFiles.get(0)[3].fileName = 'three';
-				auditAttachmentService.addUploadtrailer(0)
+				auditAttachmentService.addUploadtrailer(0);
 				expect(auditAttachmentService.attachmentFiles.get(0).length).toBe(4);
 
-				done()
-			}	
-		});	
+				done();
+			}
+		});
 	});
 
 	it('should remove correctly an attachment.', done => {
@@ -112,6 +112,7 @@ describe('AuditAttachmentService', () => {
 				expect(auditAttachmentService.attachmentFiles.get(3).length).toBe(2);
 				done();
 			}
-		})
+		});
 	});
-})
+});
+

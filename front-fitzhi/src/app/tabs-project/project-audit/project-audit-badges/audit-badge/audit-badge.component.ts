@@ -69,9 +69,6 @@ export class AuditBadgeComponent extends BaseComponent implements OnInit, AfterV
 				}
 			}
 		);
-
-	
-
 	}
 
 	/* tslint:disable: no-trailing-whitespace */

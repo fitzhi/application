@@ -123,7 +123,7 @@ export class ListProjectsService  {
 			return lookup;
 		}
 
-		if (criteria.indexOf('skill:') === 0) {				
+		if (criteria.indexOf('skill:') === 0) {
 			// select the skill corresponding to the criteria
 			const index = criteria.indexOf(';');
 			lookup.skill = (index === -1) ? criteria.substring(6).toLocaleLowerCase() : criteria.substring(6, index).toLocaleLowerCase();
@@ -134,15 +134,15 @@ export class ListProjectsService  {
 
 		const headerCriteria = Math.max(criteria.indexOf('skill:'), criteria.indexOf('staff:'), criteria.indexOf('audit:'));
 
-		const remain = 
+		const remain =
 			(headerCriteria === 0) ?
 				( (criteria.indexOf(';') === -1) ? '' : criteria.substring(criteria.indexOf(';') + 1) ) :
 				criteria.substring(criteria.indexOf(';') + 1);
-		lookup.name = (remain === '') ? null : remain.toLocaleLowerCase();;
+		lookup.name = (remain === '') ? null : remain.toLocaleLowerCase();
 
 		if (traceOn()) {
-			console.log ('Lookup criterias skill:"%s" name:"%s" risk:"%s" %d %d %d', 
-				lookup.skill, lookup.name, 
+			console.log ('Lookup criterias skill:"%s" name:"%s" risk:"%s" %d %d %d',
+				lookup.skill, lookup.name,
 				lookup.risk,
 				lookup.riskLevel, lookup.riskStartLevel, lookup.riskEndLevel);
 		}
@@ -231,7 +231,7 @@ export class ListProjectsService  {
 				}
 				return (found) ? ((!lookup.name) || (project.name.toLocaleLowerCase().indexOf(lookup.name) > -1)) : false;
 			}
-			
+
 			return (project.name.toLowerCase().indexOf(lookup.name) > -1);
 		}
 		projects.push(...elligibleProjects.filter(testCriteria.bind(this)));
@@ -243,7 +243,7 @@ export class ListProjectsService  {
 	}
 
 	/**
-	* Reload the data set with the former 
+	* Reload the data set with the former.
 	*/
 	public reload(): void {
 		if (this.currentSearch.done) {

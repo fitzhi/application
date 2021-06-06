@@ -139,7 +139,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 		public referentialService: ReferentialService,
 		public skillService: SkillService,
 		public projectService: ProjectService,
-		public listProjectService: ListProjectsService, 
+		public listProjectService: ListProjectsService,
 		public gitService: GitService,
 		public sonarService: SonarService,
 		private router: Router) {
@@ -147,7 +147,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 		this.projectSkillHandler = new ProjectFormSkillHandler(
 			projectService, skillService, messageService);
-	
+
 		this.boundAddSkill = this.addSkill.bind(this);
 		this.boundRemoveSkill = this.removeSkill.bind(this);
 
@@ -168,11 +168,11 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 	 * Wrapper bound with this component.
 	 * @param event REMOVE event fired by the tagify component.
 	 */
-	 removeSkill(event: CustomEvent): void {
+	removeSkill(event: CustomEvent): void {
 		this.projectSkillHandler.removeSkill(event);
 	}
 
- 	ngOnInit() {
+	ngOnInit() {
 
 		this.subscriptions.add(this.projectService.projectLoaded$
 			.subscribe({
@@ -225,7 +225,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 					if (loaded) {
 						this.ngAfterViewInitSonarProjectsDeclaredInProject();
 						this.ngAfterViewInitSkillsDeclaredInProject();
-					} 
+					}
 				}
 			}));
 	}
@@ -708,7 +708,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 						this.listProjectService.reload();
 					}
 				}
-			})
+			});
 		}
 
 		if ((!this.projectService.project.id) || (this.projectService.project.id === Constants.UNKNOWN)) {
@@ -720,7 +720,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 
 					// We reload the list of projects filtered by the search criteria, if necessary.
 					this.listProjectService.reload();
-					
+
 					// We update the project from a server call.
 					this.projectService.actualizeProject(project.id);
 

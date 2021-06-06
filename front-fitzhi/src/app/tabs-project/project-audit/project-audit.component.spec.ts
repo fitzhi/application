@@ -65,7 +65,7 @@ describe('ProjectAuditComponent', () => {
 		referentialService.topics$.next({3: 'Test'});
 		referentialService.legends.push(new RiskLegend(0, 'green', 'yes!'));
 		referentialService.referentialLoaded$.next(true);
-		
+
 		fixture.detectChanges();
 	});
 
@@ -80,17 +80,17 @@ describe('ProjectAuditComponent', () => {
 				expect(spySaveAuditTopicEvaluation).toHaveBeenCalled();
 				done();
 			}
-		})
-		projectService.topicEvaluation$.next(new TopicEvaluation(3, 50, 2))
+		});
+		projectService.topicEvaluation$.next(new TopicEvaluation(3, 50, 2));
 		fixture.detectChanges();
 	});
 
 	it('should update the global project evaluation which has been affected by a new evaluation.', done => {
 
 		const spySaveAuditTopicEvaluation = spyOn(projectService, 'saveAuditTopicEvaluation$').and.returnValue(of(true));
-		
+
 		// Update the underlining GLOBAL project evaluation
-		const spyProcessGlobalAuditEvaluation= spyOn(projectService, 'processGlobalAuditEvaluation').and.returnValue(null);
+		const spyProcessGlobalAuditEvaluation = spyOn(projectService, 'processGlobalAuditEvaluation').and.returnValue(null);
 
 		projectService.topicEvaluation$.subscribe({
 			next: te => {
@@ -98,8 +98,8 @@ describe('ProjectAuditComponent', () => {
 				expect(spyProcessGlobalAuditEvaluation).toHaveBeenCalled();
 				done();
 			}
-		})
-		projectService.topicEvaluation$.next(new TopicEvaluation(3, 50, 2))
+		});
+		projectService.topicEvaluation$.next(new TopicEvaluation(3, 50, 2));
 		fixture.detectChanges();
 	});
 

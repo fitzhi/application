@@ -31,7 +31,6 @@ describe('ProjectAuditComponent', () => {
 	let component: ProjectAuditComponent;
 	let fixture: ComponentFixture<ProjectAuditComponent>;
 	let projectService: ProjectService;
-	let referentialService: ReferentialService;
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({

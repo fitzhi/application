@@ -61,7 +61,7 @@ export class ProjectStaffService {
 	 * Search for a contributor with the same identifier as the given one
 	 * @param idStaff the searched staff identifier
 	 */
-	 findContributor(idStaff: number): Contributor {
+	findContributor(idStaff: number): Contributor {
 		const foundContributor = this.contributors
 			.find(contributor => contributor.idStaff === idStaff);
 		if (!foundContributor) {

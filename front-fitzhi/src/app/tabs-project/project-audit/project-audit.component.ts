@@ -130,9 +130,9 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 
 	/**
 	 * The function is informed that an evaluation has changed on a topic in the audit.
-	 * 
-	 * Its main goal is to notify this change to the backend. 
-	 * 
+	 *
+	 * Its main goal is to notify this change to the backend.
+	 *
 	 * @param topicEvaluation the topic evaluation emitted
 	 */
 	public broadcastEvaluationChange(topicEvaluation: TopicEvaluation) {

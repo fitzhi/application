@@ -31,7 +31,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	@ViewChild(MatSort) sort: MatSort;
 
 	/**
-	 * The table 
+	 * The table
 	 */
 	@ViewChild(MatTable) table: MatTable<any>;
 
@@ -44,7 +44,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	 * Key used to save the page size in the local storage.
 	 */
 	public pageSize = new UserSetting('project-staff.pageSize', 5);
-	 
+
 	constructor(
 		private projectService: ProjectService,
 		private route: ActivatedRoute,
@@ -137,7 +137,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 		if (!this.dataSource) {
 			this.dataSource = new MatTableDataSource(contributorsDTO.contributors);
 			this.dataSource.sort = this.sort;
-			this.dataSource.paginator = this.paginator; 
+			this.dataSource.paginator = this.paginator;
 			this.projectStaffService.contributors = this.dataSource.data;
 			this.subscriptions.add(
 				this.dataSource.connect().subscribe(data => this.projectStaffService.contributors = data));
@@ -174,7 +174,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 
 	/**
 	 * This method is invoked if the user change the page size.
-	 * @param $pageEvent event 
+	 * @param $pageEvent event
 	 */
 	public page($pageEvent: PageEvent) {
 		this.pageSize.saveSetting($pageEvent.pageSize);

@@ -84,7 +84,7 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 					next: doneAndOk => {
 						if (doneAndOk) {
 							// We colorize the Arc and Text after the UI event loop to avoid a transparent arc ('for an unknwon reason' (shame on me)).
-							setTimeout(() => {								
+							setTimeout(() => {
 								this.drawAuditArc();
 								this.drawAuditText();
 							}, 0);
@@ -191,7 +191,7 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	}
 
 	/**
-	 * Each key stroke in the **"evaluation input field"** invokes this method  
+	 * Each key stroke in the **"evaluation input field"** invokes this method.
 	 */
 	onInput() {
 		if (!isNaN(this.evaluation)) {
@@ -204,9 +204,9 @@ export class AuditGraphicBadgeComponent extends BaseComponent implements OnInit,
 	}
 
 	/**
-	 * Each time the content of the **"evaluation input field"** changes, this method is invoked.  
+	 * Each time the content of the **"evaluation input field"** changes, this method is invoked.
 	 */
-	 onChange() {
+	onChange() {
 		if (!isNaN(this.evaluation)) {
 			this.messengerEvaluationChange.emit(new TopicEvaluation(this.id, this.evaluation, 2));
 		} else {

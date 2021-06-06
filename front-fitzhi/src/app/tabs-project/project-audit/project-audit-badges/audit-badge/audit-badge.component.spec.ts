@@ -29,8 +29,8 @@ describe('AuditBadgeComponent', () => {
 		selector: 'app-host-component',
 		template: `<div style="width: 400px; height: 400px; margin: 20px">
 						<app-audit-badge
-							[id]="id"				
-							[evaluation]="evaluation"	
+							[id]="id"
+							[evaluation]="evaluation"
 							[weight]="weight"
 							[title]="title">
 						</app-audit-badge>
@@ -64,7 +64,7 @@ describe('AuditBadgeComponent', () => {
 		risk.color = 'blue';
 		referentialService.legends.push (risk);
 		referentialService.referentialLoaded$.next(true);
-		
+
 		projectService = TestBed.inject(ProjectService);
 		projectService.project = new Project(1789, 'The revolutionary project');
 		projectService.projectLoaded$.next(true);
@@ -88,7 +88,7 @@ describe('AuditBadgeComponent', () => {
 				done();
 			}
 		});
-		
+
 		fixture.detectChanges();
 		const spyProjectService = spyOn(projectService, 'getEvaluationColor').and.returnValue('green');
 

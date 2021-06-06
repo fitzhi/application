@@ -77,7 +77,7 @@ export class SonarThumbnailsComponent extends BaseComponent implements OnInit, O
 
 		this.subscriptions.add(
 			this.panelSwitchTransmitter$.subscribe( (panelSwitchEvent: PanelSwitchEvent) => {
-				// I comment the line below because the method updateDisplayConsolidationBadge() is already invoked above	
+				// I comment the line below because the method updateDisplayConsolidationBadge() is already invoked above
 				// this.updateDisplayConsolidationBadge();
 				if (!panelSwitchEvent.keySonar) {
 					if (traceOn()) {

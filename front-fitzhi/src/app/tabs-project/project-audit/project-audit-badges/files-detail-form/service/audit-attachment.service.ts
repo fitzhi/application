@@ -19,9 +19,9 @@ export class AuditAttachmentService {
 	/**
 	 * Attachment files array for
 	 */
-	 public attachmentFiles$ = new BehaviorSubject<Map<number, AttachmentFile[]>>(new Map());
+	public attachmentFiles$ = new BehaviorSubject<Map<number, AttachmentFile[]>>(new Map());
 
-	 constructor(private projectService: ProjectService) { 
+	constructor(private projectService: ProjectService) {
 
 		// We keep active this subscription all along the life of the application.
 		this.projectService.projectLoaded$
@@ -31,7 +31,7 @@ export class AuditAttachmentService {
 				next: project => this.loadAttachmentFiles()
 			});
 	}
-	
+
 	/**
 	 * Load the map of Attachment files used to be displayed in the component files-detail-form.
 	 */
@@ -53,7 +53,7 @@ export class AuditAttachmentService {
 	 * Inform the system of :
 	 * - the creation of a new attachment file
 	 * - the update of an existing one
-	 * 
+	 *
 	 * @param idTopic the topic in the audit scope
 	 * @param attachmentFile the attachment file
 	 */
@@ -87,7 +87,7 @@ export class AuditAttachmentService {
 	public removeAttachmentFile(idTopic: number, idFile: number): void {
 		// We remove a file from an array of 4 elements : ths array is complete.
 		// So, after the deletion, we can once again add an upload trailer.
-		if (this.attachmentFiles.get(idTopic).length == 4) {
+		if (this.attachmentFiles.get(idTopic).length === 4) {
 			this.attachmentFiles.get(idTopic).splice(idFile, 1);
 			this.addUploadtrailer(idTopic);
 		} else {

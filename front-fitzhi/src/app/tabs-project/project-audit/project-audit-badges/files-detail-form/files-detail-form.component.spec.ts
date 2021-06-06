@@ -73,7 +73,7 @@ describe('FilesDetailFormComponent', () => {
 				expect(spy2).toHaveBeenCalled();
 				done();
 			}
-		})
+		});
 		projectService.topicEvaluation$.next(new TopicEvaluation(3, 50, 2));
 
 	});

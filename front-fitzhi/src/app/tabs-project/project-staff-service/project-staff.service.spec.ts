@@ -24,7 +24,7 @@ describe('ProjectStaffService', () => {
 	});
 
 	it('findContributor should return an existing contributor', () => {
-		
+
 		const c1 = new Contributor();
 		c1.idStaff = 1515;
 		c1.fullname = 'Francois the 1st';
@@ -42,7 +42,7 @@ describe('ProjectStaffService', () => {
 	});
 
 	it('findContributor should create a NEW contributor for an existing STAFF member', () => {
-		
+
 		const c1 = new Contributor();
 		c1.idStaff = 1515;
 		c1.fullname = 'Francois the 1st';
@@ -59,7 +59,7 @@ describe('ProjectStaffService', () => {
 		staff.lastName = 'of Austria';
 		staff.external = true;
 		staff.active = true;
-		staffListService.allStaff.push(staff)
+		staffListService.allStaff.push(staff);
 
 		const c = projectStaffService.findContributor(1571);
 		expect(c).toBeDefined();
@@ -72,7 +72,7 @@ describe('ProjectStaffService', () => {
 	});
 
 	it('findContributor should create a NEW contributor AS WELL for an UNKNOWN STAFF member', () => {
-		
+
 		const c1 = new Contributor();
 		c1.idStaff = 1515;
 		c1.fullname = 'Francois the 1st';

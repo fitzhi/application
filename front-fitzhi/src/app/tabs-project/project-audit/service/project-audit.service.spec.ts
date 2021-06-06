@@ -29,10 +29,10 @@ describe('ProjectAuditService', () => {
 		service = TestBed.inject(ProjectAuditService);
 		projectService = TestBed.inject(ProjectService);
 		projectService.project = new Project(1789, 'The revolutionary project');
-		projectService.project.audit = { 
-			"3": new AuditTopic(1789, 3, 80, 30),
-			"5": new AuditTopic(1789, 5, 50, 70) 
-		}
+		projectService.project.audit = {
+			'3': new AuditTopic(1789, 3, 80, 30),
+			'5': new AuditTopic(1789, 5, 50, 70)
+		};
 		messageService = TestBed.inject(MessageService);
 	});
 
@@ -49,7 +49,7 @@ describe('ProjectAuditService', () => {
 	});
 
 	it('should share correctly the weights between the topics.', () => {
-		projectService.project.audit[7] = new AuditTopic(1789, 7, 0, 70) 
+		projectService.project.audit[7] = new AuditTopic(1789, 7, 0, 70);
 		service.initializeAuditTopic({'0': 'Unused', '3': 'The third', '5': '5 of Chanel', '7': 'The magnificent seven'});
 		expect(service.auditTopics.length).toBe(3);
 
@@ -60,16 +60,16 @@ describe('ProjectAuditService', () => {
 		expect(service.auditTopics[1].weight).toBe(33);
 		expect(service.auditTopics[2].idTopic).toBe(7);
 		expect(service.auditTopics[2].weight).toBe(34);
-
 	});
 
 	it('should transfert the updated weights to the project.', () => {
-		projectService.project.audit[7] = new AuditTopic(1789, 7, 0, 70) 
+		projectService.project.audit[7] = new AuditTopic(1789, 7, 0, 70);
 		service.initializeAuditTopic({'0': 'Unused', '3': 'The third', '5': '5 of Chanel', '7': 'The magnificent seven'});
 		expect(service.auditTopics.length).toBe(3);
 		service.assignWeights();
 
 		service.impactWeightsInProject();
+
 
 		expect(projectService.project.audit[3].weight).toBe(33);
 		expect(projectService.project.audit[5].weight).toBe(33);
@@ -162,9 +162,9 @@ describe('ProjectAuditService', () => {
 	});
 
 	it('should ADD correctly a new topic in the audit.', () => {
-		
-		const spyAddAuditTopic= spyOn(projectService, 'addAuditTopic$').and.returnValue(of(true));
-		const spyMessageInfoService= spyOn(messageService, 'info').and.returnValue(null);
+
+		const spyAddAuditTopic = spyOn(projectService, 'addAuditTopic$').and.returnValue(of(true));
+		const spyMessageInfoService = spyOn(messageService, 'info').and.returnValue(null);
 		const spyCategoryUpdated = spyOn(service, 'onCategoryUpdated').and.returnValue(null);
 
 		expect(projectService.project.audit[10]).toBeUndefined();
@@ -178,9 +178,9 @@ describe('ProjectAuditService', () => {
 
 
 	it('should REMOVE correctly a topic from the audit.', () => {
-		
-		const spyAddAuditTopic= spyOn(projectService, 'removeAuditTopic$').and.returnValue(of(true));
-		const spyMessageInfoService= spyOn(messageService, 'info').and.returnValue(null);
+
+		const spyAddAuditTopic = spyOn(projectService, 'removeAuditTopic$').and.returnValue(of(true));
+		const spyMessageInfoService = spyOn(messageService, 'info').and.returnValue(null);
 		const spyCategoryUpdated = spyOn(service, 'onCategoryUpdated').and.returnValue(null);
 
 		service.updateTopic(new Topic(false, 3, 'Ten'));

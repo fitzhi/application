@@ -1,15 +1,15 @@
-import { Observable } from "rxjs";
-import { ProjectSkill } from "src/app/data/project-skill";
-import { traceOn } from "src/app/global";
-import { MessageService } from "src/app/interaction/message/message.service";
-import { ProjectService } from "src/app/service/project/project.service";
-import { SkillService } from "src/app/skill/service/skill.service";
+import { Observable } from 'rxjs';
+import { ProjectSkill } from 'src/app/data/project-skill';
+import { traceOn } from 'src/app/global';
+import { MessageService } from 'src/app/interaction/message/message.service';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { SkillService } from 'src/app/skill/service/skill.service';
 
 /**
  * This class contains some features & controls regarding the skills and used by the Project form component.
- * 
+ *
  * This is not an Angular Global Service because its scope is limited to this component.
- * 
+ *
  * @author Frédéric VIDAL
  */
 export class ProjectFormSkillHandler {
@@ -21,7 +21,7 @@ export class ProjectFormSkillHandler {
 
 	/**
 	 * Add a skill inside the project.
-	 * 
+	 *
 	 * @param event ADD event fired by the tagify component.
 	 */
 	public addSkill(event: CustomEvent) {
@@ -53,8 +53,8 @@ export class ProjectFormSkillHandler {
 		// We have already loaded or saved the project, so we can add each new skill as they appear, one by one.
 		if (this.projectService.project.id)  {
 			this.updateSkill(
-				this.projectService.project.id, 
-				idSkill, 
+				this.projectService.project.id,
+				idSkill,
 				this.projectService.addSkill$.bind(this.projectService));
 		}
 
@@ -90,7 +90,7 @@ export class ProjectFormSkillHandler {
 		// We have already loaded or saved the project, so we can remove each new skill one by one.
 		if (this.projectService.project.id) {
 			this.updateSkill(
-				this.projectService.project.id, 
+				this.projectService.project.id,
 				idSkill,
 				this.projectService.delSkill$.bind(this.projectService));
 		}
@@ -127,7 +127,7 @@ export class ProjectFormSkillHandler {
 	/**
 	 * Log the skills of the current project in DEBUG mode.
 	 */
-	 logProjectSkills() {
+	logProjectSkills() {
 		if (traceOn()) {
 			console.groupCollapsed('list of skills for project ' + this.projectService.project.name);
 			for (const [idSkill, profilSkill] of this.projectService.project.mapSkills) {

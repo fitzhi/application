@@ -43,11 +43,11 @@ describe('ProjectFormSkillHandler', () => {
 
 	it('ADD a skill correctly.', () => {
 		const spy = spyOn(service, 'updateSkill').and.returnValue(null);
-		const event:CustomEvent = new CustomEvent("myEvent", {
+		const event: CustomEvent = new CustomEvent('myEvent', {
 			bubbles: true,
 			composed: true,
 			detail: { data: { value: 'One'} },
-		 });
+		});
 		service.addSkill(event);
 		expect(projectService.project.skills).toBeTruthy();
 		expect(projectService.project.mapSkills.size).toBe(1);
@@ -56,42 +56,42 @@ describe('ProjectFormSkillHandler', () => {
 	});
 
 	it('throw an error if the skill is unknown, when ADDING a skill.', () => {
-		const event:CustomEvent = new CustomEvent("myEvent", {
+		const event: CustomEvent = new CustomEvent('myEvent', {
 			bubbles: true,
 			composed: true,
 			detail: { data: { value: 'WTF'} },
-		 });
-		 expect(function() { service.addSkill(event)}).toThrowError('SEVERE ERROR : Unregistered skill WTF');
+		});
+		expect(function() { service.addSkill(event); }).toThrowError('SEVERE ERROR : Unregistered skill WTF');
 	});
 
 	it('is idempotent if we try to add twice the same skill.', () => {
-		const event:CustomEvent = new CustomEvent("myEvent", {
+		const event: CustomEvent = new CustomEvent('myEvent', {
 			bubbles: true,
 			composed: true,
 			detail: { data: { value: 'One'} },
-		 });
-		 service.addSkill(event);
-		 service.addSkill(event);
-		 expect(projectService.project.mapSkills.size).toBe(1);
+		});
+		service.addSkill(event);
+		service.addSkill(event);
+		expect(projectService.project.mapSkills.size).toBe(1);
 	});
 
 	it('throw an error if the skill is unknown when REMOVING a skill.', () => {
-		const event:CustomEvent = new CustomEvent("myEvent", {
+		const event: CustomEvent = new CustomEvent('myEvent', {
 			bubbles: true,
 			composed: true,
 			detail: { data: { value: 'WTF'} },
-		 });
-		 expect(function() { service.removeSkill(event)}).toThrowError('SEVERE ERROR : Unregistered skill WTF');
+		});
+		expect(function() { service.removeSkill(event); }).toThrowError('SEVERE ERROR : Unregistered skill WTF');
 	});
 
 	it('REMOVE a skill correctly.', () => {
 		projectService.project.mapSkills.set(1, new ProjectSkill(1, 100, 100));
 		const spy = spyOn(service, 'updateSkill').and.returnValue(null);
-		const event:CustomEvent = new CustomEvent("myEvent", {
+		const event: CustomEvent = new CustomEvent('myEvent', {
 			bubbles: true,
 			composed: true,
 			detail: { data: { value: 'One'} },
-		 });
+		});
 		service.removeSkill(event);
 		expect(projectService.project.skills).toBeTruthy();
 		expect(projectService.project.mapSkills.size).toBe(0);
@@ -101,11 +101,11 @@ describe('ProjectFormSkillHandler', () => {
 	it('does not throw an error when removing a skill that does not exist anymore.', () => {
 		projectService.project.mapSkills.set(1, new ProjectSkill(1, 100, 100));
 		const spy = spyOn(service, 'updateSkill').and.returnValue(null);
-		const event:CustomEvent = new CustomEvent("myEvent", {
+		const event: CustomEvent = new CustomEvent('myEvent', {
 			bubbles: true,
 			composed: true,
 			detail: { data: { value: 'One'} },
-		 });
+		});
 		service.removeSkill(event);
 		expect(projectService.project.skills).toBeTruthy();
 		expect(projectService.project.mapSkills.size).toBe(0);
@@ -115,18 +115,18 @@ describe('ProjectFormSkillHandler', () => {
 	it('actualizes the local project, if the update on server is successfull.', () => {
 		const spy = spyOn(projectService, 'actualizeProject').and.returnValue(null);
 		service.updateSkill(
-			1789, 
+			1789,
 			1,
-			function (idProject: number, idSkill: number) { return of(true); })
+			function (idProject: number, idSkill: number) { return of(true); });
 		expect(spy).toHaveBeenCalled();
 	});
 
 	it('does not actualize the local project, if the update on server failed.', () => {
 		const spy = spyOn(projectService, 'actualizeProject').and.returnValue(null);
 		service.updateSkill(
-			1789, 
+			1789,
 			1,
-			function (idProject: number, idSkill: number) { return of(false); })
+			function (idProject: number, idSkill: number) { return of(false); });
 		expect(spy).not.toHaveBeenCalled();
 	});
 

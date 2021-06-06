@@ -105,7 +105,7 @@ describe('ProjectInactivateComponent', () => {
 		expect(component).toBeTruthy();
 
 		handleSkills();
-		
+
 		const postInactivate = httpTestingController.expectOne('URL_OF_SERVER/api/project/1066/rpc/reactivation');
 		expect(postInactivate.request.method).toEqual('POST');
 		postInactivate.flush(null);
