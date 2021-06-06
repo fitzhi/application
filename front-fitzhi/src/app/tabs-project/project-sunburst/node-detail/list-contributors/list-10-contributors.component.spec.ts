@@ -14,7 +14,7 @@ describe('ListContributorsComponent (10 elements)', () => {
 
 	@Component({
 		selector: 'app-host-component',
-    template: `
+	template: `
 		<div style="height: 600px; width: 500px; background-color: lightGrey">
 			<app-list-contributors [contributors]="contributors">
 			</app-list-contributors>
@@ -51,8 +51,8 @@ describe('ListContributorsComponent (10 elements)', () => {
 
 	it('should display 10 contributors', () => {
 		for (let i = 0; i < 10; i++) {
-			const contributor = fixture.debugElement.query(By.css('#contributor-' + i));
-			expect(contributor).not.toBeNull();
+			const contrib = fixture.debugElement.query(By.css('#contributor-' + i));
+			expect(contrib).not.toBeNull();
 		}
 
 		// The project 10 is not present

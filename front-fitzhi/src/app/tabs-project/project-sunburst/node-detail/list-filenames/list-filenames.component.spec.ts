@@ -35,7 +35,7 @@ describe('ListFilenamesComponent', () => {
 		constructor() {
 			this.filenames.data =
 			[
-				new Filename('one', new Date()), 
+				new Filename('one', new Date()),
 				new Filename('two', new Date()),
 				new Filename('three', new Date()),
 				new Filename('four', new Date()),

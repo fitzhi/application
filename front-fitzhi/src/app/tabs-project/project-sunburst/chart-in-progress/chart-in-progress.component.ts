@@ -12,7 +12,7 @@ export class ChartInProgressComponent extends BaseComponent implements OnInit, O
 
 	public progressionPercentage = 0;
 
-	constructor(public ssewatcherService: SsewatcherService) { super() }
+	constructor(public ssewatcherService: SsewatcherService) { super(); }
 
 	ngOnInit(): void {
 		this.subscriptions.add(
@@ -22,7 +22,7 @@ export class ChartInProgressComponent extends BaseComponent implements OnInit, O
 							console.log ('Update the progress bar value to %d', activityLog.progressionPercentage);
 						}
 						this.progressionPercentage = activityLog.progressionPercentage;
-					},  
+					},
 			}));
 	}
 

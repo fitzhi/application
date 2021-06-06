@@ -36,23 +36,21 @@ describe('staffService', () => {
 		savedStaff.firstName = 'Frederic';
 		savedStaff.lastName = 'VIDAL';
 
-		// We mock the Staff creation 
+		// We mock the Staff creation
 		const spyCreateStaff = spyOn(service, 'create$')
 			.and.callThrough()
 			.and.returnValue(of(savedStaff));
 
-		// We mock the Staff update 
+		// We mock the Staff update
 		const spyUpdateStaff = spyOn(service, 'update$');
 
 		service.save$(staff).pipe(take(1)).subscribe({
-			next: staff => {
-				expect(staff.idStaff).toBe(1789);
+			next: st => {
+				expect(st.idStaff).toBe(1789);
 				expect(spyUpdateStaff).not.toHaveBeenCalled();
 				done();
 			}
 		});
-		
-
 	});
 
 	it('should UPDATE a staff member if staff.idStaff IS NOT NULL', done => {
@@ -67,24 +65,22 @@ describe('staffService', () => {
 		savedStaff.firstName = 'Frederic';
 		savedStaff.lastName = 'VIDAL';
 
-		// We mock the Staff creation 
+		// We mock the Staff creation.
 		const spyCreateStaff = spyOn(service, 'create$');
 
-		// We mock the Staff update 
+		// We mock the Staff update.
 		const spyUpdateStaff = spyOn(service, 'update$')
 			.and.callThrough()
 			.and.returnValue(of(savedStaff));
 
 		service.save$(staff).pipe(take(1)).subscribe({
-			next: staff => {
-				expect(staff.idStaff).toBe(1789);
-				expect(staff.firstName).toBe('Frederic');
+			next: st => {
+				expect(st.idStaff).toBe(1789);
+				expect(st.firstName).toBe('Frederic');
 				expect(spyCreateStaff).not.toHaveBeenCalled();
 				done();
 			}
 		});
-		
-
 	});
 
 });

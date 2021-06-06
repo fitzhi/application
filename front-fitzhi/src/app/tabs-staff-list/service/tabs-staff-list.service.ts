@@ -42,7 +42,7 @@ export class TabsStaffListService {
 	constructor(
 		private staffService: StaffService,
 		// SkillService is declared here to pass some tests. Some déclaration are mad in the SkillService construction
-		private skillService: SkillService, 
+		private skillService: SkillService,
 		private messageService: MessageService) {
 
 		this.criterias$.subscribe(criterias => {
@@ -292,7 +292,7 @@ export class TabsStaffListService {
 					}
 					return of(collaborator);
 				}),
-			catchError(error => { 
+			catchError(error => {
 				this.messageService.error(error);
 				return EMPTY;
 			}),
@@ -303,7 +303,7 @@ export class TabsStaffListService {
 					collaborator.forEach(collab => console.log(collab.firstName + ' ' + collab.lastName));
 					console.groupEnd();
 				}
-			})			
+			})
 		);
 	}
 
@@ -327,7 +327,7 @@ export class TabsStaffListService {
 	nextCollaboratorId(id: number): number {
 
 		const context = this.staffListContexts.get(this.activeKey);
-		
+
 		// No context defined. Most probably, the end-user type directly a staff identifier in the search zone
 		if (!context) {
 			return undefined;
@@ -369,7 +369,7 @@ export class TabsStaffListService {
 	/**
      * Actualize the information of a collaborator.
      * This method is call (for instance) after any update on the staff form.
-	 * 
+	 *
 	 * @param collaborator the collaborator to be actualized
      */
 	public actualizeCollaborator(collaborator: Collaborator) {
@@ -398,7 +398,7 @@ export class TabsStaffListService {
 
 	/**
      * Retrieve the context associated to the key.
-	 * 
+	 *
      * @param key searched key
      * @returns the context associated to this list or null if none exists (which is suspected to be an internal error)
      */

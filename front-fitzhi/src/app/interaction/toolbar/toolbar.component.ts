@@ -88,17 +88,20 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	 */
 	listenOnContext() {
 		this.subscriptions.add(
-			this.cinematicService.currentActiveForm$.subscribe(context => {
-				if (traceOn()) {
-					console.log('Active context', Constants.CONTEXT[context.formIdentifier]);
+			this.cinematicService.currentActiveForm$.subscribe({
+				next: context => {
+					if (traceOn()) {
+						console.log('Active context', Constants.CONTEXT[context.formIdentifier]);
+					}
+					if (context.formIdentifier === Constants.DEVELOPERS_CRUD) {
+						this.masterDetail = this.tabsStaffListService.inMasterDetail;
+					} else {
+						this.masterDetail = false;
+					}
+					this.mode(context.formIdentifier);
 				}
-				if (context.formIdentifier === Constants.DEVELOPERS_CRUD) {
-					this.masterDetail = this.tabsStaffListService.inMasterDetail;
-				} else {
-					this.masterDetail = false;
-				}
-				this.mode(context.formIdentifier);
-			}));
+			})
+		);
 	}
 
 	/**

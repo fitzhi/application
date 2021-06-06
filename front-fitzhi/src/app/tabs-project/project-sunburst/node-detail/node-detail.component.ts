@@ -29,7 +29,7 @@ export class NodeDetailComponent extends BaseComponent implements OnInit, OnDest
 	ngOnInit() {
 		this.subscriptions.add(
 			this.location.subscribe({
-				next: element => this.node = element	
+				next: element => this.node = element
 			}));
 	}
 

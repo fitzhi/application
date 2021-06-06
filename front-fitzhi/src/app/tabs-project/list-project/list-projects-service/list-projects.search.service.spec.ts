@@ -187,7 +187,7 @@ describe('ListProjectsService', () => {
 		theService.search('skill:one', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
-				expect(projects.length).toBe(2)
+				expect(projects.length).toBe(2);
 				done();
 			}
 		})
@@ -201,7 +201,7 @@ describe('ListProjectsService', () => {
 		theService.search('skill:one;dummy', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
-				expect(projects.length).toBe(1)
+				expect(projects.length).toBe(1);
 				done();
 			}
 		})
@@ -219,7 +219,7 @@ describe('ListProjectsService', () => {
 		theService.search('staff:4', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
-				expect(projects.length).toBe(2)
+				expect(projects.length).toBe(2);
 				done();
 			}
 		})
@@ -237,7 +237,7 @@ describe('ListProjectsService', () => {
 		theService.search('staff:4;dummy', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
-				expect(projects.length).toBe(1)
+				expect(projects.length).toBe(1);
 				done();
 			}
 		})
@@ -248,7 +248,7 @@ describe('ListProjectsService', () => {
 		theService.search('*', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
-				expect(projects.length).toBe(5)
+				expect(projects.length).toBe(5);
 				done();
 			}
 		})
@@ -258,7 +258,7 @@ describe('ListProjectsService', () => {
 		theService.search(null, true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
-				expect(projects.length).toBe(5)
+				expect(projects.length).toBe(5);
 				done();
 			}
 		})
@@ -268,7 +268,7 @@ describe('ListProjectsService', () => {
 		theService.search('', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
-				expect(projects.length).toBe(5)
+				expect(projects.length).toBe(5);
 				done();
 			}
 		})
@@ -286,7 +286,7 @@ describe('ListProjectsService', () => {
 		theService.search('staff:1-3', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
-				expect(projects.length).toBe(3)
+				expect(projects.length).toBe(3);
 				done();
 			}
 		})
@@ -304,7 +304,7 @@ describe('ListProjectsService', () => {
 		theService.search('staff:1-3;dummy', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
-				expect(projects.length).toBe(2)
+				expect(projects.length).toBe(2);
 				done();
 			}
 		})
@@ -322,7 +322,7 @@ describe('ListProjectsService', () => {
 		theService.search('audit:1', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
-				expect(projects.length).toBe(1)
+				expect(projects.length).toBe(1);
 				done();
 			}
 		})
@@ -340,10 +340,10 @@ describe('ListProjectsService', () => {
 		theService.search('audit:1-3', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
-				expect(projects.length).toBe(3)
+				expect(projects.length).toBe(3);
 				done();
 			}
-		})
+		});
 	});
 
 	it('should filter projects for a specific interval of level of audit risk and a name ("audit:x-y;name")".', done  => {
@@ -358,7 +358,7 @@ describe('ListProjectsService', () => {
 		theService.search('audit:1-3;dummy', true);
 		theService.filteredProjects$.subscribe({
 			next: projects => {
-				expect(projects.length).toBe(2)
+				expect(projects.length).toBe(2);
 				done();
 			}
 		})

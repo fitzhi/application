@@ -121,7 +121,7 @@ export class StaffUploadCvComponent extends BaseComponent implements OnInit, OnD
 					// Close the progress-stream if we get an answer form the API
 					// The upload is complete
 					this.progression.complete();
-					
+
 					// We close this dialog and returns the skills detected on the application.
 					this.dialogRef.close(response.experiences);
 				}

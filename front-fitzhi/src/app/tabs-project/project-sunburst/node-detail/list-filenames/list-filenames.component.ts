@@ -10,8 +10,8 @@ import { UserSetting } from 'src/app/base/user-setting';
 
 /**
  * This component hosts a table with the source filenames of a repository directory
- * 
- * It can be for example, the package in a Java project 
+ *
+ * It can be for example, the package in a Java project
  */
 @Component({
 	selector: 'app-list-filenames',
@@ -19,7 +19,7 @@ import { UserSetting } from 'src/app/base/user-setting';
 	styleUrls: ['./list-filenames.component.css']
 })
 export class ListFilenamesComponent extends BaseComponent implements OnInit, OnDestroy, AfterViewInit {
-	
+
 	@Input() filenames: MatTableDataSource<Filename>;
 
 	public tblColumns: string[] = ['filename', 'lastCommit'];
@@ -27,17 +27,17 @@ export class ListFilenamesComponent extends BaseComponent implements OnInit, OnD
 	/**
 	 * The table in the component
 	 */
-	 @ViewChild(MatTable) table: MatTable<any>;
+	@ViewChild(MatTable) table: MatTable<any>;
 
-	 /**
-	  * The paginator of the displayed datasource.
-	  */
-	 @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
- 
+	/**
+	 * The paginator of the displayed datasource.
+	 */
+	@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
+
 	/**
 	 * Key used to save the page size in the local storage.
 	 */
-	 public pageSize = new UserSetting('list-filenames.pageSize', 5);
+	public pageSize = new UserSetting('list-filenames.pageSize', 5);
 
 	constructor() { super(); }
 
@@ -55,9 +55,9 @@ export class ListFilenamesComponent extends BaseComponent implements OnInit, OnD
 
 	/**
 	 * This method is invoked if the user change the page size.
-	 * @param $pageEvent event 
+	 * @param $pageEvent event
 	 */
-	 public page($pageEvent: PageEvent) {
+	public page($pageEvent: PageEvent) {
 		this.pageSize.saveSetting($pageEvent.pageSize);
 	}
 

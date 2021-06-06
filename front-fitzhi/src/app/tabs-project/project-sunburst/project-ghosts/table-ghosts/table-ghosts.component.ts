@@ -93,15 +93,15 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 			)
 		);
 	}
-			
+
 	ngAfterViewInit() {
 		this.dataSource.paginator = this.paginator;
 	}
 
 	/**
 	 * The check Box for the id **"technical"** has been checked or unchecked.
-	 * 
-	 * @param ghost the ghost to be set as technical 
+	 *
+	 * @param ghost the ghost to be set as technical
 	 */
 	checkTechnical(ghost: Unknown): void {
 		if (ghost.technical) {
@@ -322,16 +322,15 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 						}
 					}
 				});
-			
 		}
 	}
 
 	/**
-	 * Detach a ghost from an existing staff member
-	 * @param ghost The given ghost
-	 * @returns **TRUE** if we attached the ghost, **FALSE** if we detached
-	 */
-	 detachGhost(ghost: Unknown) {
+	* Detach a ghost from an existing staff member
+	* @param ghost The given ghost
+	* @returns **TRUE** if we attached the ghost, **FALSE** if we detached
+	*/
+	detachGhost(ghost: Unknown) {
 		// If the ghost was already associated, we reset this association
 		if (ghost.idStaff  > 0) {
 			this.projectService
@@ -343,12 +342,12 @@ export class TableGhostsComponent extends BaseComponent implements OnInit, OnDes
 						ghost.idStaff = -1;
 						ghost.firstname = '';
 						ghost.lastname = '';
-						ghost.login = '';						
+						ghost.login = '';
 					}
 				}
 			);
 		}
-		
+
 		this.table.renderRows();
 		// We reset the cache to force a re-generation of the chart
 		this.sunburstCacheService.clearReponse();

@@ -48,7 +48,7 @@ export class StaffService {
 
 	/**
 	 * Load the global list of IT staff working for this company.
-	 * 
+	 *
 	 * @returns an observable emitting all staff members.
 	 */
 	getAll$(): Observable<Collaborator[]> {
@@ -86,10 +86,10 @@ export class StaffService {
 
 	/**
 	 * Create a new staff member inside the workforce.
-	 * 
-	 * The Angular application will invoke the Rest server with a **POST** verb, 
+	 *
+	 * The Angular application will invoke the Rest server with a **POST** verb,
 	 * and then after, invoke an HTTP Get with the returned location.
-	 * 
+	 *
 	 * @param staff a staff member to be added in the company workforce
 	 * @returns the newly created collaborator with his/her personal ID.
 	 */
@@ -112,7 +112,7 @@ export class StaffService {
 
 	/**
 	 * Execute an HTTP **PUT** to the Rest Server in order to update the given staff member.
-	 * 
+	 *
 	 * @param staff the staff to be updated
 	 */
 	update$(staff: Collaborator): Observable<Collaborator> {
@@ -128,7 +128,7 @@ export class StaffService {
 						if (response.status === HttpCodes.noContent) {
 							return of(staff);
 						} else {
-							throw `The staff ${staff.firstName} ${staff.lastName} has not been updated for an unknown reason.`;
+							throw new Error(`The staff ${staff.firstName} ${staff.lastName} has not been updated for an unknown reason.`);
 						}
 					}
 				)
@@ -218,7 +218,7 @@ export class StaffService {
 
 	/**
 	 * Remove a staff member from the staff collection.
-	 * 
+	 *
 	 * @param staff the collaborator to delete
 	 * @returns an observable emitting a Void return if the deletion (SC_200) succees, an error code if not.
 	 */
@@ -244,7 +244,7 @@ export class StaffService {
 
 	/**
 	 * Verb : 'DELETE'
-	 * 
+	 *
 	 * Unregister the contribution of a staff member into a project.
 	 * @param idStaff the staff identifier.
 	 * @param idProject the project identifier to remove from the missions.

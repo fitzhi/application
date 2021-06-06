@@ -38,12 +38,12 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	/**
 	 * The paginator of the staff data source.
 	 */
-	 @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+	@ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
 
 	/**
 	 * Key used to save the page size in the local storage.
 	 */
-	 public pageSize = new UserSetting('project-staff.pageSize', 5);
+	public pageSize = new UserSetting('project-staff.pageSize', 5);
 	 
 	constructor(
 		private projectService: ProjectService,
@@ -179,7 +179,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	public page($pageEvent: PageEvent) {
 		this.pageSize.saveSetting($pageEvent.pageSize);
 	}
-	
+
 	/**
 	 * Calling the base class to unsubscribe all subscriptions.
 	 */

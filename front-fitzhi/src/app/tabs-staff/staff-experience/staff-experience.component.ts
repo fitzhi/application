@@ -225,7 +225,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 		// Isolation
 		const newExperiences = [];
 		experiences.forEach(exp => {
-			if (!this.isAlreadyPresent(exp.idSkill)){
+			if (!this.isAlreadyPresent(exp.idSkill)) {
 				newExperiences.push(exp);
 			}
 		});
@@ -242,7 +242,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 			tagStars.push(new TagStar(element.title, 0));
 		});
 		this.additionalValues$.next(tagStars);
-		
+
 		return newExperiences;
 	}
 
@@ -253,7 +253,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 	 */
 	isAlreadyPresent (idSkill: number): boolean {
 		const index = this.staff.experiences.findIndex(exp => exp.id === idSkill);
-		return (index !== -1)
+		return (index !== -1);
 	}
 
 	/**
@@ -271,7 +271,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 			.subscribe({
 				next: staff => {
 					if (traceOn()) {
-						console.groupCollapsed('Registred skills for the staff member '	 
+						console.groupCollapsed('Registred skills for the staff member '
 							+ staff.firstName + ' ' + staff.lastName);
 							staff.experiences.forEach(
 								element => console.log (this.skillService.title(element.id)));
@@ -310,7 +310,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 
 	/**
 	 * Update the experience of a staff member.
-	 * 
+	 *
 	 * @param idSkill the skill identifier to update
 	 * @param level the level obtained on this skill
 	 */
@@ -345,7 +345,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 
 	/**
 	 * Add a new skill to a collaborator.
-	 * 
+	 *
 	 * @param idSkill the skill identifier to update
 	 * @param titleSkill the skill title
 	 * @param level the level obtained on this skill
@@ -359,7 +359,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 				if (ret) {
 					//
 					// We update the experiences of the current staff member.
-					// 
+					//
 					this.staff.experiences.push({
 						'id': idSkill,
 						'title': titleSkill,
@@ -388,7 +388,7 @@ export class StaffExperienceComponent extends BaseComponent implements OnInit, O
 
 	/**
 	 * Add a new skill to a collaborator.
-	 * 
+	 *
 	 * @param idSkill the skill identifier to update
 	 * @param titleSkill the skill title
 	 * @param level the level obtained on this skill

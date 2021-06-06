@@ -59,8 +59,8 @@ describe('StaffExperienceComponent', () => {
 		staffService.collaborator.experiences = [];
 		staffService.collaborator.experiences.push(new Experience(1, 'Java', 3));
 		staffService.collaboratorLoaded$.next(true);
-		
-		skillService.allSkills= [
+
+		skillService.allSkills = [
 				{
 					id: 1,
 					title: 'Java'
@@ -69,7 +69,7 @@ describe('StaffExperienceComponent', () => {
 					id: 2,
 					title: 'Javascript'
 				}
-		]
+		];
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
 
@@ -169,15 +169,13 @@ describe('StaffExperienceComponent', () => {
 		const newExperiences: DeclaredExperience[] = [
 			{
 				idSkill: 1000,
-				title: "One thousand",
+				title: 'One thousand',
 				times: 1000
-				
 			},
 			{
 				idSkill: 100,
-				title: "One hundred",
+				title: 'One hundred',
 				times: 100
-				
 			}
 		];
 		const spyAddDeclaredExperience$ = spyOn(staffService, 'setDeclaredExperience$')
@@ -200,21 +198,18 @@ describe('StaffExperienceComponent', () => {
 		const experiences: DeclaredExperience[] = [
 			{
 				idSkill: 1000,
-				title: "Brand new",
+				title: 'Brand new',
 				times: 1000
-				
 			},
 			{
 				idSkill: 1001,
-				title: "One another new",
+				title: 'One another new',
 				times: 100
-				
 			},
 			{
 				idSkill: 1002,
-				title: "Old one",
+				title: 'Old one',
 				times: 100
-				
 			}
 		];
 
@@ -227,9 +222,9 @@ describe('StaffExperienceComponent', () => {
 	});
 
 	function staff(): Collaborator {
-		const staff = new Collaborator();
-		staff.idStaff = 1789;
-		staff.experiences = [];
-		return staff;
+		const st = new Collaborator();
+		st.idStaff = 1789;
+		st.experiences = [];
+		return st;
 	}
 });

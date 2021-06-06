@@ -70,16 +70,16 @@ describe('Testing the Reload button behavior in ProjectSunburstComponent with da
 	it('Click on reload : The end-user accepts the Re-load', async () => {
 
 		expect(component).toBeTruthy();
-		
+
 		const spyQuestion = spyOn(messageBoxService, 'question').and.returnValue(new BehaviorSubject(true));
-		const spyReloadDashboard = spyOn(projectService, 'reloadSunburst$').and.returnValue(of(""));
+		const spyReloadDashboard = spyOn(projectService, 'reloadSunburst$').and.returnValue(of(''));
 		const spyClearResponse = spyOn(cacheService, 'clearReponse').and.returnValue();
 		const spyResetDashboard = spyOn(projectService, 'resetDashboard');
 
 		const button = fixture.debugElement.nativeElement.querySelector('#reload');
 		expect(button).toBeDefined();
 		button.click();
-		fixture.detectChanges();			
+		fixture.detectChanges();
 
 		expect(spyResetDashboard).not.toHaveBeenCalled();
 
@@ -88,7 +88,7 @@ describe('Testing the Reload button behavior in ProjectSunburstComponent with da
 	it('Click reload : The end-user refuses the Re-load', async () => {
 
 		expect(component).toBeTruthy();
-		
+
 		const spyQuestion = spyOn(messageBoxService, 'question').and.returnValue(new BehaviorSubject(false));
 		const spyReloadDashboard = spyOn(projectService, 'reloadSunburst$');
 		const spyClearResponse = spyOn(cacheService, 'clearReponse');
@@ -97,7 +97,7 @@ describe('Testing the Reload button behavior in ProjectSunburstComponent with da
 		const button = fixture.debugElement.nativeElement.querySelector('#reload');
 		expect(button).toBeDefined();
 		button.click();
-		fixture.detectChanges();			
+		fixture.detectChanges();
 
 		expect(spyReloadDashboard).not.toHaveBeenCalled();
 		expect(spyClearResponse).not.toHaveBeenCalled();

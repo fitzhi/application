@@ -350,7 +350,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					filenames.push(new Filename(element.filename, element.lastCommit));
 				});
 				this.filenames.data = filenames;
-				const contributors = new Map<number, Contributor>();;
+				const contributors = new Map<number, Contributor>();
 				nodeClicked.classnames.forEach(file => {
 					if ( (file.idStaffs) && (file.idStaffs.length > 0) ) {
 						file.idStaffs.filter(idStaff => idStaff !== -1).forEach(idStaff => {
@@ -401,10 +401,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 				.size('importance')
 				.color('color')
 				(document.getElementById('chart'));
-	
+
 			const dataSourceGhosts = new ProjectGhostsDataSource(response.ghosts, this.allStaff);
 			this.dataSourceGhosts$.next(dataSourceGhosts);
-	
 			//
 			// We update the underlying project in the projects array
 			// because the Sunburst generation has probably updated the skills involved in the project.
@@ -527,7 +526,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
     * @param idPanel Panel identifier
     */
 	public show(idPanel: number) {
-		
+
 		if (traceOn()) {
 			console.log ('Showing panel %d', idPanel);
 		}
@@ -536,7 +535,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 			return;
 		}
 		this.sunburstCinematicService.initActivatedButton();
-		
+
 		switch (idPanel) {
 			case this.SUNBURST:
 				this.idPanelSelected = idPanel;
@@ -655,7 +654,7 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 					}
 				this.idPanelSelected = this.SUNBURST;
 			});
-	
+
 	}
 
 	dialogFilter() {
