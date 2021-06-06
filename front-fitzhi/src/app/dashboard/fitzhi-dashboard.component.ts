@@ -52,7 +52,7 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	 */
 	skylineDimension = {
 		width: 1195,
-		widthWithUnitOfMesure:'1195px',
+		widthWithUnitOfMesure: '1195px',
 		height: 500,
 		heightWithUnitOfMesure: '500px',
 	};
@@ -91,7 +91,7 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 				.subscribe({
 					next: skyline => {
 						// this.controlledRisingSkylineService.randomSkylineHistory(this.skylineService.skyline$);
-						this.skylineService.loadSkyline$(this.skylineDimension.width, this.skylineDimension.height - this.heightControlPanel)						
+						this.skylineService.loadSkyline$(this.skylineDimension.width, this.skylineDimension.height - this.heightControlPanel);
 						this.skylineService.skylineLoaded$.next(true);
 				}
 		}));
@@ -115,7 +115,7 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 	 */
 	switchTo(clickedselection: number) {
 		this.selected = clickedselection;
-		this.skylineSelected$.next((this.selected === selection.skyline))
+		this.skylineSelected$.next((this.selected === selection.skyline));
 	}
 
 	/**

@@ -34,16 +34,16 @@ describe('SkylineService', () => {
 	it('Testing the method function evaluateMaxNumberOfLines(...)', () => {
 		expect(service).toBeTruthy();
 		const floors: ProjectFloor[] = [];
-		floors.push( {idProject: 1, year:2020, week: 10, linesActiveDevelopers: 10, linesInactiveDevelopers: 30})
-		floors.push( {idProject: 1, year:2020, week: 11, linesActiveDevelopers: 20, linesInactiveDevelopers: 300})
-		floors.push( {idProject: 1, year:2020, week: 12, linesActiveDevelopers: 30, linesInactiveDevelopers: 300})
+		floors.push( {idProject: 1, year: 2020, week: 10, linesActiveDevelopers: 10, linesInactiveDevelopers: 30});
+		floors.push( {idProject: 1, year: 2020, week: 11, linesActiveDevelopers: 20, linesInactiveDevelopers: 300});
+		floors.push( {idProject: 1, year: 2020, week: 12, linesActiveDevelopers: 30, linesInactiveDevelopers: 300});
 		expect(service.evaluateMaxNumberOfLines(floors)).toBe(330);
 	});
 
 	it('Testing the method function generateSkylineToDraw(...)', () => {
 		const skylineAnimation = new SkylineAnimation();
 		skylineAnimation.floors = [];
-		skylineAnimation.floors.push ( {idProject: 1, year:2020, week: 10, linesActiveDevelopers: 50, linesInactiveDevelopers: 50});
+		skylineAnimation.floors.push ( {idProject: 1, year: 2020, week: 10, linesActiveDevelopers: 50, linesInactiveDevelopers: 50});
 		const skylineToBeDrawn = service.generateSkylineToDraw(skylineAnimation, 1000, 300);
 		console.table (skylineToBeDrawn);
 		expect(skylineToBeDrawn.length).toBe(1);
@@ -58,5 +58,4 @@ describe('SkylineService', () => {
 
 	});
 
-	
 });

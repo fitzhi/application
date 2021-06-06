@@ -9,7 +9,7 @@ export class UserSetting {
 	public value = 0;
 
 	constructor(
-		public key: string, 
+		public key: string,
 		public defaultValue: number) {
 			this.loadSetting();
 	}
@@ -29,7 +29,7 @@ export class UserSetting {
 	 * Save the setting from the local storage
 	 * @param new setting to be saved on the local storage
 	 */
-	 public saveSetting(value: number) {
-		localStorage.setItem(this.key, ''+value);
+	public saveSetting(value: number) {
+		localStorage.setItem(this.key, '' + value);
 	}
 }

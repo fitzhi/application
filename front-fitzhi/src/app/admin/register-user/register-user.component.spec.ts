@@ -92,14 +92,14 @@ describe('RegisterUserComponent', () => {
 		user.nativeElement.value = 'frvidal';
 		user.nativeElement.dispatchEvent(new Event('input'));
 		fixture.detectChanges();
-		
+
 		const password = fixture.debugElement.query(By.css('#password'));
-		password.nativeElement.value = 'pass123word'; //NOSONAR // This is not a credential.
+		password.nativeElement.value = 'pass123word'; // This is not a credential. //NOSONAR
 		password.nativeElement.dispatchEvent(new Event('input'));
 		fixture.detectChanges();
 
 		const passwordConfirmation = fixture.debugElement.query(By.css('#passwordConfirmation'));
-		passwordConfirmation.nativeElement.value = 'pass123word'; //NOSONAR // This is not a credential.
+		passwordConfirmation.nativeElement.value = 'pass123word'; // This is not a credential. //NOSONAR
 		passwordConfirmation.nativeElement.dispatchEvent(new Event('input'));
 		fixture.detectChanges();
 
@@ -113,7 +113,7 @@ describe('RegisterUserComponent', () => {
 
 		const staffService = TestBed.inject(StaffService);
 		const spyChangeCollaborator = spyOn(staffService, 'changeCollaborator').and.returnValue();
-		const spyRegisterUsers = spyOn(staffService, 'registerUser$').and.returnValue(of(new Collaborator()))
+		const spyRegisterUsers = spyOn(staffService, 'registerUser$').and.returnValue(of(new Collaborator()));
 
 		component.connectionGroup.get('username').setValue('myPersonalUser');
 		component.connectionGroup.get('password').setValue('myPersonalPass');

@@ -45,7 +45,7 @@ describe('AppComponent', () => {
 			imports: [MatCheckboxModule, MatTableModule, FormsModule, MatPaginatorModule, MatGridListModule,
 				HttpClientTestingModule, HttpClientModule, BrowserAnimationsModule, MatFormFieldModule,
 				ReactiveFormsModule, MatSliderModule, MatInputModule, MatDialogModule,
-				RouterTestingModule.withRoutes([		
+				RouterTestingModule.withRoutes([
 					{ path: 'user', component: StaffFormComponent },
 					{ path: 'searchUser', component: TabsStaffListComponent },
 					{ path: 'searchSkill', component: ListSkillComponent },
@@ -61,16 +61,16 @@ describe('AppComponent', () => {
 		router = TestBed.inject(Router);
 
 	}));
-	
+
 	it('Searching staff members on a \'string\' criteria', async(() => {
 		const tabsStaffListService = TestBed.inject(TabsStaffListService);
 		const spyTabsStaffListService = spyOn(tabsStaffListService, 'addTabResult');
-		
+
 		const navigateSpy = spyOn(router, 'navigate');
 
 		component.onChangeForm(Constants.TABS_STAFF_LIST);
 		component.onRequestQuery('nope');
-		
+
 		expect(spyTabsStaffListService).toHaveBeenCalledWith('nope', true);
 		expect(navigateSpy).not.toHaveBeenCalled();
 
@@ -81,10 +81,10 @@ describe('AppComponent', () => {
 		const spyTabsStaffListService = spyOn(tabsStaffListService, 'addTabResult');
 
 		const navigateSpy = spyOn(router, 'navigate');
-		
+
 		component.onChangeForm(Constants.TABS_STAFF_LIST);
 		component.onRequestQuery('1789');
-		
+
 		expect(spyTabsStaffListService).not.toHaveBeenCalled();
 		expect(navigateSpy).toHaveBeenCalledWith(['/user/1789']);
 	}));
@@ -95,10 +95,10 @@ describe('AppComponent', () => {
 		const spyTabsStaffListService = spyOn(tabsStaffListService, 'addTabResult');
 
 		const navigateSpy = spyOn(router, 'navigate');
-		
+
 		component.onChangeForm(Constants.TABS_STAFF_LIST);
 		component.onRequestQuery('17.89');
-		
+
 		expect(spyTabsStaffListService).toHaveBeenCalled();
 		expect(navigateSpy).not.toHaveBeenCalledWith(['/user/17.89']);
 	}));
@@ -109,7 +109,7 @@ describe('AppComponent', () => {
 
 		component.onChangeForm(Constants.PROJECT_SEARCH);
 		component.onRequestQuery('*');
-		
+
 		expect(spyReloadProjects).toHaveBeenCalled();
 	}));
 
@@ -124,7 +124,7 @@ describe('AppComponent', () => {
 
 		component.onChangeForm(Constants.SKILLS_SEARCH);
 		component.onRequestQuery('test');
-		
+
 		expect(spyFilterSkills).toHaveBeenCalledWith(new ListCriteria('test', true));
 		expect(spyStaffService).toHaveBeenCalledWith(true);
 	}));

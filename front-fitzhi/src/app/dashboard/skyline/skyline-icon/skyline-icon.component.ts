@@ -25,7 +25,7 @@ export class SkylineIconComponent extends BaseComponent implements OnInit, OnDes
 	/**
 	 * We inform the parent form that the Skykline Dashboard has been selected.
 	 */
-	@Output() onDashboardSelectedPanel$ = new EventEmitter<number>();
+	@Output() dashboardSelected$ = new EventEmitter<number>();
 
 	/**
 	 * An observable which informs this component that the user has clicked on it
@@ -55,7 +55,7 @@ export class SkylineIconComponent extends BaseComponent implements OnInit, OnDes
 		if (traceOn()) {
 			console.log ('Clicking on the Skyline icon');
 		}
-		this.onDashboardSelectedPanel$.emit(1);
+		this.dashboardSelected$.emit(1);
 	}
 
 	/**

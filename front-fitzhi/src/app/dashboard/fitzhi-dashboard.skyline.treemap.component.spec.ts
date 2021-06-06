@@ -73,7 +73,7 @@ describe('FitzhiDashboardComponent initialization', () => {
 		expect(component).toBeTruthy();
 		expect(document.getElementById('container-skyline')).toBeNull();
 		expect(document.getElementById('host-treemap')).toBeNull();
-		expect(document.getElementById('logo')).toBeDefined();		
+		expect(document.getElementById('logo')).toBeDefined();
 	});
 
 	it('Skyline is set to be the selected pane', () => {
@@ -81,11 +81,11 @@ describe('FitzhiDashboardComponent initialization', () => {
 		fixture.detectChanges();
 		expect(document.getElementById('container-skyline')).toBeDefined();
 		expect(document.getElementById('host-treemap')).toBeNull();
-		expect(document.getElementById('logo')).toBeNull();		
+		expect(document.getElementById('logo')).toBeNull();
 	});
 
 	it('The button for Skyline is clicked', fakeAsync(() => {
-		let skyline = fixture.debugElement.query(By.css('#iconSkyline'));
+		const skyline = fixture.debugElement.query(By.css('#iconSkyline'));
 		skyline.triggerEventHandler('click', null);
 		tick(); // simulates the passage of time until all pending asynchronous activities finish
 		fixture.detectChanges();
@@ -103,13 +103,13 @@ describe('FitzhiDashboardComponent initialization', () => {
 
 	it('The button for Skyline is clicked, BUT THE SKYLINE IS NOT YET LOADED', fakeAsync(() => {
 		skylineService.skylineLoaded$.next(false);
-		let btn = fixture.debugElement.query(By.css('#iconSkyline'));
+		const btn = fixture.debugElement.query(By.css('#iconSkyline'));
 		btn.triggerEventHandler('click', null);
-		tick(); 
+		tick();
 		fixture.detectChanges();
 		expect(document.getElementById('container-skyline')).toBeNull();
 		expect(document.getElementById('host-treemap')).toBeNull();
-		expect(document.getElementById('logo')).toBeDefined();		
+		expect(document.getElementById('logo')).toBeDefined();
 	}));
 
 	it('The method switchTo is invoked when the button for TreeMap is clicked', fakeAsync(() => {
@@ -123,7 +123,7 @@ describe('FitzhiDashboardComponent initialization', () => {
 		fixture.detectChanges();
 		expect(document.getElementById('container-skyline')).toBeNull();
 		expect(document.getElementById('container-treemap')).toBeNull();
-		expect(document.getElementById('logo')).toBeDefined();		
+		expect(document.getElementById('logo')).toBeDefined();
 	}));
 
 /*
@@ -135,11 +135,11 @@ describe('FitzhiDashboardComponent initialization', () => {
 
 		component.selected = selection.treeMap;
 		fixture.detectChanges();
-		
+
 		setTimeout(() => {
 			expect(document.getElementById('container-skyline')).toBeNull();
 			expect(document.getElementById('container-treemap')).toBeTruthy();
-			expect(document.getElementById('logo')).toBeNull();				
+			expect(document.getElementById('logo')).toBeNull();
 		}, 0);
 	}));
 */

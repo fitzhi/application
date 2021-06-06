@@ -1,5 +1,6 @@
 
-import { HttpErrorResponse, HttpHandler, HttpHeaderResponse, HttpInterceptor, HttpProgressEvent, HttpRequest, HttpResponse, HttpSentEvent, HttpUserEvent } from '@angular/common/http';
+import { HttpErrorResponse, HttpHandler, HttpHeaderResponse, HttpInterceptor, HttpProgressEvent,
+	HttpRequest, HttpResponse, HttpSentEvent, HttpUserEvent } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, EMPTY, Observable, throwError } from 'rxjs';
 import { catchError, filter, finalize, switchMap, take } from 'rxjs/operators';
@@ -23,7 +24,6 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 	 * Intercept the HTTP request.
 	 * @param req the current request
 	 * @param next the next handler to be in charge of the given request
-	 * @returns 
 	 */
 
 	intercept(req: HttpRequest<any>, next: HttpHandler):
@@ -35,7 +35,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 		if (localStorage.getItem(this.NO_SECURITY) === '1') {
 			return next.handle(req);
 		}
-		
+
 		if 	(req.url.includes('/api/referential/')
 
 			|| (req.url.substring(req.url.length - '/api/skill'.length) === '/api/skill')
@@ -67,7 +67,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 							if (traceOn()) {
 								console.log ('Invalid authentification credentials');
 							}
-							return EMPTY;				
+							return EMPTY;
 						}
 					} else {
 						return throwError(response);
@@ -79,15 +79,15 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 	}
 
 	isConnectionRequest(req: HttpRequest<any>): boolean {
-		
+
 		if (!req.body) {
 			return false;
 		}
-		
+
 		if (!req.body.params) {
 			return false;
 		}
-		
+
 		let isConnection = false;
 		req.body.params.updates.forEach(element => {
 			if ((element.param === 'grant_type') && (element.value === 'password')) {
@@ -97,12 +97,12 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 		return isConnection;
 	}
 
-	retryAfterRefresh$(req: HttpRequest<any>, next: HttpHandler): 
+	retryAfterRefresh$(req: HttpRequest<any>, next: HttpHandler):
 		Observable<HttpSentEvent | HttpHeaderResponse | HttpProgressEvent | HttpResponse<any> | HttpUserEvent<any>> {
 
 		if (!this.isRefreshingToken) {
 			this.isRefreshingToken = true;
-			
+
 			this.authToken$.next(null);
 
 			return this.tokenService.refreshToken$()
@@ -116,14 +116,14 @@ export class HttpTokenInterceptor implements HttpInterceptor {
 						}
 
 						this.authToken$.next(token);
-                        return next.handle(this.tokenService.addToken(req));
-					})
-					,catchError(response => {
+						return next.handle(this.tokenService.addToken(req));
+					}),
+					catchError(response => {
 						if (traceOn()) {
 							console.log ('Error', response);
 						}
 						return EMPTY;
-					}),	
+					}),
 					finalize(() => this.isRefreshingToken = false)
 				);
 		} else {

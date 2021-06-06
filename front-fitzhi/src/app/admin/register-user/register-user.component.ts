@@ -114,7 +114,7 @@ export class RegisterUserComponent extends BaseComponent implements OnInit, OnDe
 						if (traceOn()) {
 							console.log('Connection error ', error);
 						}
-					}					
+					}
 				})
 			);
 	}

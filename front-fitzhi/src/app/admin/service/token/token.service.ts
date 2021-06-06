@@ -32,7 +32,7 @@ export class TokenService {
 			}
 		}
 
-		// Loading the token (if undefined) from the localStorage. 
+		// Loading the token (if undefined) from the localStorage.
 		if (!this.token) {
 			this.token = this.loadToken();
 		}
@@ -49,7 +49,7 @@ export class TokenService {
 	}
 
 	/**
-	 * @returns the URL to request the server for a new _temporary_ access token. 
+	 * @returns the URL to request the server for a new _temporary_ access token.
 	 */
 	urlRefreshToken() {
 		return localStorage.getItem('backendUrl') + '/oauth/token';
@@ -64,7 +64,7 @@ export class TokenService {
 		// We do not add an header if the request is an authentication request.
 		if (req.params.get('grant_type')) {
 			switch (req.params.get('grant_type')) {
-				case 'refresh_token': 
+				case 'refresh_token':
 				case 'password':
 					return req;
 			}

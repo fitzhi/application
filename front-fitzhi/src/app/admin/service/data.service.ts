@@ -15,3 +15,4 @@ export class DataService {
 		return this.http.get<any[]>(`${this.ROOT_URL}/posts`);
 	}
 }
+

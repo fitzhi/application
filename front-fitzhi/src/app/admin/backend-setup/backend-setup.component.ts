@@ -70,7 +70,7 @@ export class BackendSetupComponent extends BaseComponent implements OnInit, OnDe
 		this.backendSetupService.isVeryFirstConnection$(urlCandidate)
 			.pipe(take(1))
 			.subscribe({
-				next: 
+				next:
 					data => {
 						if (traceOn() && this.veryFirstConnection) {
 							console.log('This is the very first connection into fitzhì');

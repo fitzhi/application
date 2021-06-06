@@ -15,10 +15,10 @@ describe('AuthService', () => {
 			imports: [
 				HttpClientTestingModule
 			]
-		}).compileComponents()
+		}).compileComponents();
 		httpTestingController = TestBed.inject(HttpTestingController);
 		tokenService = TestBed.inject(TokenService);
-		localStorage.setItem('backendUrl', 'URL_OF_SERVER'); 
+		localStorage.setItem('backendUrl', 'URL_OF_SERVER');
 	});
 
 	it('should be created.', () => {
@@ -40,16 +40,16 @@ describe('AuthService', () => {
 		});
 
 		const req = httpTestingController.expectOne(
-			'URL_OF_SERVER/oauth/token?username=my-user&password=my-password&grant_type=password'); //NOSONAR // This is not a credential.
+			'URL_OF_SERVER/oauth/token?username=my-user&password=my-password&grant_type=password'); // This is not a credential. //NOSONAR
 		expect(req.request.method).toBe('POST');
-		const t = new Token()
+		const t = new Token();
 		t.access_token = '1234';
 		t.refresh_token = '5678';
 		req.flush(t);
 
 		expect(spy).toHaveBeenCalled();
 	});
-	
+
 	it('should handle correctly a connection failure.', done => {
 		const service: AuthService = TestBed.inject(AuthService);
 		expect(service).toBeTruthy();
@@ -64,7 +64,7 @@ describe('AuthService', () => {
 		});
 
 		const req = httpTestingController.expectOne(
-			'URL_OF_SERVER/oauth/token?username=my-user&password=my-password&grant_type=password'); //NOSONAR // This is not a credential.
+			'URL_OF_SERVER/oauth/token?username=my-user&password=my-password&grant_type=password'); // This is not a credential. //NOSONAR
 		expect(req.request.method).toBe('POST');
 		req.error(new ErrorEvent('error'), { status: 500, statusText: 'Invalid login/password!' });
 

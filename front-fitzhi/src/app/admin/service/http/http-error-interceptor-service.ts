@@ -28,7 +28,7 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 								console.log (response);
 								console.groupEnd();
 							}
-						} 
+						}
 					}
 				}),
 				catchError((response: HttpErrorResponse) => {
@@ -59,7 +59,6 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 						return throwError(errorMessage);
 					}
 
-				
 					if ( (response.error) && (response.error.hasOwnProperty('error')) && (response.error.hasOwnProperty('error_description'))) {
 						if (traceOn()) {
 							console.groupCollapsed('Catching error');
@@ -102,7 +101,6 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 								throw new Error('WTF : Should not pass here !');
 							}
 							return throwError(response);
-						
 						case 401:
 							// The code 401 is handled by the 2 other interceptors
 							return throwError (response);

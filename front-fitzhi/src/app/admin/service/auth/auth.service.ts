@@ -40,7 +40,7 @@ export class AuthService extends InternalService {
 			.set('grant_type', 'password');
 
 		return this.httpClient.post<Token>(
-			localStorage.getItem('backendUrl') + '/oauth/token', '', 
+			localStorage.getItem('backendUrl') + '/oauth/token', '',
 				{ headers: headers, params: params })
 			.pipe(
 				take(1),

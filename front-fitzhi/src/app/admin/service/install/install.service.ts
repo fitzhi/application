@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
  * This service is handling the fact that the installation on this desktop has been completed.
  */
 @Injectable({
-  providedIn: 'root'
+	providedIn: 'root'
 })
 export class InstallService {
 
@@ -14,16 +14,16 @@ export class InstallService {
 	 */
 	public installComplete$ = new BehaviorSubject<boolean>(false);
 
-  	constructor() { 
-		this.installComplete$.next(("1" === localStorage.getItem("installation"))); 
-  	}
+	constructor() {
+		this.installComplete$.next(('1' === localStorage.getItem('installation')));
+	}
 
 	/**
 	 * Save the fact that the install is complete.
 	 */
-  	public installComplete() {
-		localStorage.setItem("installation", "1");
+	public installComplete() {
+		localStorage.setItem('installation', '1');
 		this.installComplete$.next(true);
-	  }
+	}
 
 }

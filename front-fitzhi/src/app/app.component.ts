@@ -30,7 +30,7 @@ declare var $: any;
 export class AppComponent extends BaseComponent implements OnInit, AfterViewInit, OnDestroy {
 
 	/**
-	 * The environment 
+	 * The environment
 	 */
 	public environment = environment;
 
@@ -85,29 +85,28 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 		this.sonarService.loadSonarMetrics();
 
 		// We display the current version
-		console.info('version %s build-time %s', this.environment.version, this.environment.buildTime);
+		console.log('version %s build-time %s', this.environment.version, this.environment.buildTime);
 	}
 
-	
 	/**
 	  * Search button has been clicked.
 	  */
 	search(): void {
 
 		function isNumber(value: string | number): boolean {
-		   return ((value != null) &&
-				   (value !== '') &&
-				   !isNaN(Number(value.toString())) &&
-				   Number.isInteger(Number(value))); 
+			return ((value != null) &&
+				(value !== '') &&
+				!isNaN(Number(value.toString())) &&
+				Number.isInteger(Number(value)));
 		}
-		
+
 		switch (this.activeContext) {
 			case Constants.TABS_STAFF_LIST:
 			case Constants.DEVELOPERS_SEARCH:
 				if (traceOn()) {
 					console.log(
-						'Searching %s staff members for the search criteria %s', 
-						(this.activeOnly ? 'only active' : 'all'), 
+						'Searching %s staff members for the search criteria %s',
+						(this.activeOnly ? 'only active' : 'all'),
 						this.criteria);
 				}
 				if (this.criteria) {
@@ -132,7 +131,7 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 							this.staffService.countAll_groupBy_experience(this.activeOnly);
 						}
 					}
-				})
+				});
 				break;
 			}
 			case Constants.PROJECT_SEARCH: {

@@ -38,7 +38,7 @@ export class SkylineService {
 
 	/**
 	 * Load the skyline from the Fitzhì backend.
-	 * @param width the width of the skyline. _this parameter is not actually used_ 
+	 * @param width the width of the skyline. _this parameter is not actually used_
 	 * @param height the height of the skyline
 	 * @returns an observable of buildings
 	 */
@@ -78,7 +78,6 @@ export class SkylineService {
 			console.log ('The height of the skykine container is', height);
 			console.log ('The height of one line is', heightOneLine);
 		}
-		let i = 0;
 		const skylineToDraw = [];
 
 		skyline.floors.forEach(element => {

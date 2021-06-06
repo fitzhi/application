@@ -146,7 +146,6 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 							console.log('The very first connection is registered into Fitzhi.');
 						}
 						this.completed[3] = true;
-						
 						this.installService.installComplete();
 
 						this.staff = $event;
