@@ -16,7 +16,7 @@ export class SkylineComponent implements OnInit {
 	 * The **width** of the skyline component.
 	 */
 	@Input() width;
-	
+
 	/**
 	 * The **height** of the skyline component.
 	 */

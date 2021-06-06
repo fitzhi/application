@@ -23,9 +23,9 @@ export class SkylineIconComponent extends BaseComponent implements OnInit, OnDes
 	@Input() height = '100px';
 
 	/**
-	 * We'll send to the parent component (startingSetup) the new user has been created.
+	 * We inform the parent form that the Skykline Dashboard has been selected.
 	 */
-	@Output() onClick = new EventEmitter<number>();
+	@Output() onDashboardSelectedPanel$ = new EventEmitter<number>();
 
 	/**
 	 * An observable which informs this component that the user has clicked on it
@@ -55,7 +55,7 @@ export class SkylineIconComponent extends BaseComponent implements OnInit, OnDes
 		if (traceOn()) {
 			console.log ('Clicking on the Skyline icon');
 		}
-		this.onClick.emit(1);
+		this.onDashboardSelectedPanel$.emit(1);
 	}
 
 	/**
