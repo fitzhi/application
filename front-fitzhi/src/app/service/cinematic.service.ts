@@ -62,7 +62,24 @@ export class CinematicService {
 	 *  - `PROJECT_IDX_TAB_AUDIT` for the Audit dashboard
 	 *
 	 */
-	public tabProjectActivated$ = new BehaviorSubject<number>(Constants.PROJECT_IDX_TAB_FORM);
+	public tabProjectActivatedSubject$ = new BehaviorSubject<number>(Constants.PROJECT_IDX_TAB_FORM);
+
+	/**
+	 * This Observable represents the underlying subject **tabProjectActivatedSubject$**
+	 * 
+	 * This observable broadcasts the selected tab in the projects Tab Group container.
+	 * Each-time the end-user clicks on a tab, this observable emits an identifier corresponding to the selected tab.
+	 *
+	 * This identifier can be :
+	 *
+	 *  - `PROJECT_IDX_TAB_FORM` for the project tab form
+	 *  - `PROJECT_IDX_TAB_STAFF` for the project staff list
+	 *  - `PROJECT_IDX_TAB_SUNBURST` for the Staff coverage graph
+	 *  - `PROJECT_IDX_TAB_SONAR` for the Sonar dashboard
+	 *  - `PROJECT_IDX_TAB_AUDIT` for the Audit dashboard
+	 * 
+	 */
+	public tabProjectActivated$ = this.tabProjectActivatedSubject$.asObservable();
 
 	/**
 	 * Index of the current selected tab in the Project forms set.
@@ -142,7 +159,7 @@ export class CinematicService {
 	 * Fire the event that the tab index has changed.
 	 */
 	setProjectTab(tab: number) {
-		this.tabProjectActivated$.next(tab);
+		this.tabProjectActivatedSubject$.next(tab);
 	}
 
 }

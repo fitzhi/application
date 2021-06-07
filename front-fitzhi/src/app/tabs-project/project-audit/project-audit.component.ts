@@ -71,6 +71,13 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 	}
 
 	ngAfterViewInit() {
+		this.subscriptions.add(
+			this.cinematicService.currentActiveForm$.subscribe({
+				next: form => {
+					console.log (form);
+				}
+			})
+		);
 	}
 
 	/**
@@ -115,9 +122,11 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 		}
 
 		if (this.cinematicService.isPanelDetailSelected(auditChosenDetail.idTopic, auditChosenDetail.detail)) {
+			console.log ('show');
 			this.projectAuditService.auditDetails.push(auditChosenDetail);
 			this.projectAuditService.auditDetails$.next(this.projectAuditService.auditDetails);
 		} else {
+			console.log ('hide');
 			const indexForDeletion = this.projectAuditService.auditDetails.findIndex(auditDetail => {
 				return auditDetail.deepEqual(auditChosenDetail);
 			});
