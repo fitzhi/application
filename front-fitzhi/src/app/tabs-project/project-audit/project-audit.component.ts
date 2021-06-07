@@ -68,16 +68,27 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 				next: (te: TopicEvaluation) => this.broadcastEvaluationChange(te)
 			})
 		);
-	}
-
-	ngAfterViewInit() {
 		this.subscriptions.add(
-			this.cinematicService.currentActiveForm$.subscribe({
-				next: form => {
-					console.log (form);
+			this.cinematicService.tabProjectActivated$.subscribe({
+				next: tabSelected => {
+					if (tabSelected === Constants.PROJECT_IDX_TAB_AUDIT) {
+						if (traceOn()) {
+							console.log ('This tab has been selected');
+						}
+					} else {
+						// If this tab exists, we will receive this notification.
+						// So, most probably, we're entering in this 'else' when the end-user leéaved the audit tab.
+						if (traceOn()) {
+							console.log ('Another tab has been selected');
+						}
+						this.projectAuditService.cleanupAuditDetails();
+					}
 				}
 			})
 		);
+	}
+
+	ngAfterViewInit() {
 	}
 
 	/**
@@ -124,7 +135,7 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 		if (this.cinematicService.isPanelDetailSelected(auditChosenDetail.idTopic, auditChosenDetail.detail)) {
 			console.log ('show');
 			this.projectAuditService.auditDetails.push(auditChosenDetail);
-			this.projectAuditService.auditDetails$.next(this.projectAuditService.auditDetails);
+			this.projectAuditService.auditDetailsSubject$.next(this.projectAuditService.auditDetails);
 		} else {
 			console.log ('hide');
 			const indexForDeletion = this.projectAuditService.auditDetails.findIndex(auditDetail => {

@@ -41,14 +41,21 @@ export class ProjectAuditService {
 	 */
 	auditDetails: AuditChosenDetail[] = [];
 
-	/* tslint:disable: no-trailing-whitespace */
 	/**
-	 * This subject emits the details called by the end-user from the audit thumbnail.  
-	 * There are 2 kinds of details : __Report__ & __Tasks__ .  
+	 * This subject emits the details called by the end-user from the audit thumbnail.
+	 * There are 2 kinds of details : __Report__ & __Tasks__ .
 	 * It is sent to the component `app-project-audit-badges` to generate the corresponding details panel.
 	 */
-	/* tslint:enable: no-trailing-whitespace */
-	auditDetails$ = new BehaviorSubject<AuditChosenDetail[]>([]);
+	auditDetailsSubject$ = new BehaviorSubject<AuditChosenDetail[]>([]);
+
+	/**
+	 * This subject emits the details called by the end-user from the audit thumbnail.
+	 *
+	 * There are 2 kinds of details : __Report__ & __Tasks__.
+	 *
+	 * It is sent to the component `app-project-audit-badges` to generate the corresponding details panel.
+	 */
+	auditDetails$ = this.auditDetailsSubject$.asObservable();
 
 	constructor(
 		private projectService: ProjectService,
@@ -254,4 +261,11 @@ export class ProjectAuditService {
 		}
 	}
 
+	/**
+	 * Clear all detail panels from the audit control form.
+	 */
+	public cleanupAuditDetails() {
+		this.auditDetails = [];
+		this.auditDetailsSubject$.next(this.auditDetails);
+	}
 }

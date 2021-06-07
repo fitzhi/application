@@ -66,7 +66,7 @@ export class CinematicService {
 
 	/**
 	 * This Observable represents the underlying subject **tabProjectActivatedSubject$**
-	 * 
+	 *
 	 * This observable broadcasts the selected tab in the projects Tab Group container.
 	 * Each-time the end-user clicks on a tab, this observable emits an identifier corresponding to the selected tab.
 	 *
@@ -77,7 +77,7 @@ export class CinematicService {
 	 *  - `PROJECT_IDX_TAB_SUNBURST` for the Staff coverage graph
 	 *  - `PROJECT_IDX_TAB_SONAR` for the Sonar dashboard
 	 *  - `PROJECT_IDX_TAB_AUDIT` for the Audit dashboard
-	 * 
+	 *
 	 */
 	public tabProjectActivated$ = this.tabProjectActivatedSubject$.asObservable();
 
