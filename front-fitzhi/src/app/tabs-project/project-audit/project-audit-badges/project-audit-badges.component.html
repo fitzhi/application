@@ -1,5 +1,5 @@
 <div id="containerAuditThumbnails">
-    <div *ngFor="let topic of (auditTopics$ | async)" class="containerOneThumbnail">
+    <div *ngFor="let topic of (projectAuditService.auditTopics$ | async)" class="containerOneThumbnail">
         <app-audit-badge 
             (messengerWeightChange)="onWeightChange($event)"
             (messengerShowHideAuditDetail)="onShowHideAuditDetail($event)"
@@ -9,14 +9,16 @@
             [title]="topic.title" >
         </app-audit-badge>
     </div>
-    <div *ngFor="let auditDetail of (auditDetails$ | async)" class="containerOneThumbnail">
+    <div *ngFor="let auditDetail of (projectAuditService.auditDetails$ | async)" class="containerOneThumbnail">
         <div *ngIf="reportDetailChosen(auditDetail)">
+            nipe
             <app-report-detail-form
                 [title]="legendTopics[auditDetail.idTopic]"
                 [idTopic]="auditDetail.idTopic">
             </app-report-detail-form>
         </div>
         <div *ngIf="tasksDetailChosen(auditDetail)">
+            nope
             <app-files-detail-form
                 [title]="legendTopics[auditDetail.idTopic]"
                 [idTopic]="auditDetail.idTopic">

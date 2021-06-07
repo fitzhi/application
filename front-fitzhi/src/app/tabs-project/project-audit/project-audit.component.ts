@@ -133,18 +133,9 @@ export class ProjectAuditComponent extends BaseComponent implements OnInit, Afte
 		}
 
 		if (this.cinematicService.isPanelDetailSelected(auditChosenDetail.idTopic, auditChosenDetail.detail)) {
-			console.log ('show');
-			this.projectAuditService.auditDetails.push(auditChosenDetail);
-			this.projectAuditService.auditDetailsSubject$.next(this.projectAuditService.auditDetails);
+			this.projectAuditService.displayDetail(auditChosenDetail);
 		} else {
-			console.log ('hide');
-			const indexForDeletion = this.projectAuditService.auditDetails.findIndex(auditDetail => {
-				return auditDetail.deepEqual(auditChosenDetail);
-			});
-			if (indexForDeletion === -1) {
-				throw new Error ('WTF : Should not pass here !');
-			}
-			this.projectAuditService.auditDetails.splice(indexForDeletion, 1);
+			this.projectAuditService.removeDetail(auditChosenDetail);
 		}
 	}
 

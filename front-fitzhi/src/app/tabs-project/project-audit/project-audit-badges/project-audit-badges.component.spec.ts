@@ -25,30 +25,26 @@ import { AuditAttachmentComponent } from './files-detail-form/audit-attachment-u
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { By } from '@angular/platform-browser';
+import { ProjectAuditService } from '../service/project-audit.service';
 
 describe('ProjectAuditBadgesComponent', () => {
 	let component: TestHostComponent;
 	let fixture: ComponentFixture<TestHostComponent>;
-	let topics = [];
 	let projectService: ProjectService;
+	let projectAuditService: ProjectAuditService;
 
 	@Component({
 		selector: 'app-host-component',
-		template: 	'<app-project-audit-badges ' +
-						'[auditTopics$]="auditTopics$"' +
-						'[auditDetails$]="auditDetails$">' +
-					'</app-project-audit-badges>'
+		template: 	'<app-project-audit-badges></app-project-audit-badges>'
 	})
 	class TestHostComponent {
-		public auditTopics$ = new BehaviorSubject<any>([]);
-		public auditDetails$ = new BehaviorSubject<AuditChosenDetail[]>([]);
 	}
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ ProjectAuditBadgesComponent, TestHostComponent, AuditBadgeComponent,
 				ReportDetailFormComponent, AuditGraphicBadgeComponent, FilesDetailFormComponent, AuditAttachmentComponent],
-			providers: [ReferentialService, CinematicService],
+			providers: [ReferentialService, CinematicService, ProjectAuditService],
 			imports: [MatGridListModule, MatFormFieldModule,
 				HttpClientTestingModule,
 				FormsModule, MatSliderModule, MatInputModule, ReactiveFormsModule,
@@ -76,10 +72,12 @@ describe('ProjectAuditBadgesComponent', () => {
 
 		fixture = TestBed.createComponent(TestHostComponent);
 		component = fixture.componentInstance;
-		topics = [];
-		topics.push({ idTopic: 1, weight: 50, evaluation: 50, title: 'test title One'});
-		topics.push({ idTopic: 2, weight: 80, evaluation: 80, title: 'second test title'});
-		component.auditTopics$.next(topics);
+
+		projectAuditService = TestBed.inject(ProjectAuditService);
+		projectAuditService.auditTopics = [];
+		projectAuditService.auditTopics.push({ idTopic: 1, weight: 50, evaluation: 50, title: 'test title One'});
+		projectAuditService.auditTopics.push({ idTopic: 2, weight: 80, evaluation: 80, title: 'second test title'});
+		projectAuditService.auditTopics$.next(projectAuditService.auditTopics);
 
 		const project = new Project();
 		project.id = 1889;
@@ -113,10 +111,10 @@ describe('ProjectAuditBadgesComponent', () => {
 	});
 
 	it('should remove the first thumbnail if the corresponding entry in topics is removed.', () => {
-		topics.splice(0, 1);
-		expect(topics.length).toBe(1);
+		projectAuditService.auditTopics.splice(0, 1);
+		expect(projectAuditService.auditTopics.length).toBe(1);
+		projectAuditService.auditTopics$.next(projectAuditService.auditTopics);
 
-		component.auditTopics$.next(topics);
 		fixture.detectChanges();
 		// 1 child expected.
 		expect(field('#containerAuditThumbnails').children.length).toBe(1);

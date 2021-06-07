@@ -34,7 +34,7 @@ export class ProjectAuditService {
 	 * This subject emits the topics selected by the end-user in the component `tableCategories`.
 	 * It is sent to the component `app-project-audit-badges` to generate the corresponding audit thumbnail.
 	 */
-	auditTopics$ = new BehaviorSubject<any[]>([]);
+	public auditTopics$ = new BehaviorSubject<any[]>([]);
 
 	/**
 	 * Array of `AuditChosenDetail` involved in the audit.
@@ -42,20 +42,21 @@ export class ProjectAuditService {
 	auditDetails: AuditChosenDetail[] = [];
 
 	/**
-	 * This subject emits the details called by the end-user from the audit thumbnail.
-	 * There are 2 kinds of details : __Report__ & __Tasks__ .
-	 * It is sent to the component `app-project-audit-badges` to generate the corresponding details panel.
+	 * This subject emits the details panels requested by the end-user from the audit thumbnail.
 	 */
-	auditDetailsSubject$ = new BehaviorSubject<AuditChosenDetail[]>([]);
+	private auditDetailsSubject$ = new BehaviorSubject<AuditChosenDetail[]>([]);
 
 	/**
-	 * This subject emits the details called by the end-user from the audit thumbnail.
+	 * This observable emits the array of detail panels on stage in the audit container.
 	 *
-	 * There are 2 kinds of details : __Report__ & __Tasks__.
+	 * actually, there are 2 kinds of available details : __Report__ & __Tasks__.
 	 *
-	 * It is sent to the component `app-project-audit-badges` to generate the corresponding details panel.
+	 * It is used but the component `app-project-audit-badges` to generate the corresponding details panel.
+	 * 
+	 * The HTML `project-audit-badges` file iterates on the Audit details array emitted by this observable,
+	 * and inserts an `app-report-detail-form` component for each record.
 	 */
-	auditDetails$ = this.auditDetailsSubject$.asObservable();
+	public auditDetails$ = this.auditDetailsSubject$.asObservable();
 
 	constructor(
 		private projectService: ProjectService,
@@ -259,6 +260,29 @@ export class ProjectAuditService {
 					}}
 				);
 		}
+	}
+
+	/**
+	 * Add the given detail panel to the audit container.
+	 * @param auditChosenDetail the given detail panel to be added
+	 */
+	public displayDetail(auditChosenDetail: AuditChosenDetail) {
+		this.auditDetails.push(auditChosenDetail);
+		this.auditDetailsSubject$.next(this.auditDetails);
+	}
+
+	/**
+	 * Remove the given detail panel from the audit container.
+	 * @param auditChosenDetail the given detail panel to be removed
+	 */
+	public removeDetail(auditChosenDetail: AuditChosenDetail) {
+		const indexForDeletion = this.auditDetails.findIndex(auditDetail => {
+			return auditDetail.deepEqual(auditChosenDetail);
+		});
+		if (indexForDeletion === -1) {
+			throw new Error ('WTF : Should not pass here !');
+		}
+		this.auditDetails.splice(indexForDeletion, 1);
 	}
 
 	/**

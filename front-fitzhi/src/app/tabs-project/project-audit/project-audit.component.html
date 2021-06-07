@@ -2,9 +2,7 @@
 	<div>
 		<app-project-audit-badges
 			(messengerTopicWeight)="projectAuditService.onWeightChange($event)"
-			(messengerShowHideAuditDetail)="onShowHideAuditDetail($event)"
-			[auditDetails$]="projectAuditService.auditDetails$"
-			[auditTopics$]="projectAuditService.auditTopics$">
+			(messengerShowHideAuditDetail)="onShowHideAuditDetail($event)">
 		</app-project-audit-badges>
 	</div>
 	<button id="auditSetup"

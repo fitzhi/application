@@ -6,6 +6,7 @@ import { AuditDetail } from 'src/app/data/audit-detail';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { ReferentialService } from 'src/app/service/referential.service';
+import { ProjectAuditService } from '../service/project-audit.service';
 import { AuditChosenDetail } from './audit-badge/audit-chosen-detail';
 import { TopicEvaluation } from './topic-evaluation';
 import { TopicWeight } from './topic-weight';
@@ -16,22 +17,6 @@ import { TopicWeight } from './topic-weight';
 	styleUrls: ['./project-audit-badges.component.css']
 })
 export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit, OnDestroy {
-
-	/**
-	 * The Topics involved for this audit.
-	 *
-	 * The HTML `project-audit-badges` file iterates on the topics array emitted by this observable,
-	 * and inserts an `app-audit-badge` component for each record.
-	 */
-	@Input() auditTopics$: BehaviorSubject<any[]>;
-
-	/**
-	 * The audit details panel displayed on the Audit container.
-	 *
-	 * The HTML `project-audit-badges` file iterates on the Audit details array emitted by this observable,
-	 * and inserts an `app-report-detail-form` component for each record.
-	 */
-	@Input() auditDetails$: BehaviorSubject<AuditChosenDetail[]>;
 
 	/**
 	 * This messenger propagates the signal to show/hide the audit form panel
@@ -52,6 +37,7 @@ export class ProjectAuditBadgesComponent extends BaseComponent implements OnInit
 
 	constructor(
 		public projectService: ProjectService,
+		public projectAuditService: ProjectAuditService,
 		private cinematicService: CinematicService,
 		private referentialService: ReferentialService) { super(); }
 
