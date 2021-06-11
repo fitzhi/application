@@ -737,6 +737,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		synchronized (lockDataUpdated) {
 			exp.setLevel(experience.getLevel());
+			exp.setForced(true);
 			this.dataUpdated = true;
 		}
 	}

@@ -20,8 +20,24 @@ public @Data class Experience implements Serializable {
 
 	private int id;
 	
+	/**
+	 * Level given and forced by a user, on this experience.
+	 * This is the evaluation given by a pair.
+	 */
 	private int level;
-	
+
+	/**
+	 * The level in this experience has been given by a pair.
+	 * 
+	 * The level can be given, or processed.
+	 */
+	private boolean forced = false;
+
+	/**
+	 * Level evaluated by the system.
+	 */
+	private int systemLevel = -1;
+
 	/**
 	 * Empty constructor.
 	 */
