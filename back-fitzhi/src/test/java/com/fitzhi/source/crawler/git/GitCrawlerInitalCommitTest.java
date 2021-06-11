@@ -35,40 +35,40 @@ import org.springframework.test.context.junit4.SpringRunner;
 @TestPropertySource(properties = { "patternsInclusion=.*." , "prefilterEligibility=true" }) 
 public class GitCrawlerInitalCommitTest {
 
-    private static final String FIRST_TEST = "first-test/";
+	private static final String FIRST_TEST = "first-test/";
 
-    private static final String DIR_GIT = "../git_repo_for_test/%s";
+	private static final String DIR_GIT = "../git_repo_for_test/%s";
 
-    @Autowired
-    @Qualifier("GIT")
-    RepoScanner scanner;
+	@Autowired
+	@Qualifier("GIT")
+	RepoScanner scanner;
 
-    @Autowired
-    AsyncTask asyncTask;
+	@Autowired
+	AsyncTask asyncTask;
 
-    private Repository repository;
+	private Repository repository;
 
-    @Before
-    public void before() throws Exception {
-        FileRepositoryBuilder builder = new FileRepositoryBuilder();
-        repository = builder.setGitDir(new File(String.format(DIR_GIT, FIRST_TEST+"/.git"))).readEnvironment().findGitDir()
-                .build();
-    }
-    
-    @Test
-    public void test() throws Exception {
-        
-        try (Git git = new Git(repository)) {
-            RevCommit commit = scanner.initialCommit(git);
-            Assert.assertEquals("66bd3dadc9ddc42472229dc870c65a40977c1a4e", commit.getName());
-        }
+	@Before
+	public void before() throws Exception {
+		FileRepositoryBuilder builder = new FileRepositoryBuilder();
+		repository = builder.setGitDir(new File(String.format(DIR_GIT, FIRST_TEST+"/.git"))).readEnvironment().findGitDir()
+				.build();
+	}
+	
+	@Test
+	public void test() throws Exception {
+		
+		try (Git git = new Git(repository)) {
+			RevCommit commit = scanner.initialCommit(git);
+			Assert.assertEquals("66bd3dadc9ddc42472229dc870c65a40977c1a4e", commit.getName());
+		}
 
-    }
+	}
 
-    @After
-    public void after() {
-        if (repository != null) {
-            repository.close();
-        }
-    }
+	@After
+	public void after() {
+		if (repository != null) {
+			repository.close();
+		}
+	}
 }
