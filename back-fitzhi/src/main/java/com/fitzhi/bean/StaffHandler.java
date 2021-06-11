@@ -82,6 +82,7 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	Staff addExperiences(int idStaff, ResumeSkill[] skills) throws ApplicationException;
 
 	/**
+	 * <p>
 	 * Lookup for staff members responding to a polymorphous criteria.<br/>
 	 * For this release, 2 scenarios are implemented regarding the content of this
 	 * criteria : <br/>
@@ -94,10 +95,9 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * <li>The author name contains MULTIPLE words and therefore, it's corresponding
 	 * to user full name (first + last) or (last + first).</li>
 	 * </ul>
-	 * 
-	 * @param criteria polymorphous author used to lookup for a staff member
-	 * @return the <i>first</i> staff corresponding to the criteria, or NULL is
-	 *         none's found
+	 * </p>
+	 * @param author polymorphous author used to lookup for a staff member
+	 * @return the <i>first</i> staff corresponding to the criteria, or {@code NULL} is none's found
 	 */
 	Staff lookup(Author author);
 
