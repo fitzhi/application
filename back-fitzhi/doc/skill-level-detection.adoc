@@ -1,0 +1,36 @@
+[plantuml, Skill Level Detection diagram"]
+....
+@startuml
+
+skinparam titleBorderRoundCorner 15
+skinparam titleBorderThickness 1
+skinparam titleBorderColor grey
+skinparam titleBackgroundColor lightYellow
+
+title the Skill level detection settings
+
+class SkillLevelCodePattern {
++ {field} number : idSkillLevelCodePattern
+..
++ {field} number : level
++ {field} String : codeDetectionPattern
+}
+
+
+class Skill {
++ {field} number : idSkill
+..
++ {field} string : title
+}
+
+class TypeCodePattern {
++ {field} number : idTypeCodePattern
+..
++ {field} string : type of code pattern
+}
+
+SkillLevelCodePattern "1" *-- "1" Skill : involves <
+SkillLevelCodePattern "1" *-- "1" TypeCodePattern : involves <
+
+@enduml
+....

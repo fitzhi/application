@@ -1,0 +1,1 @@
+asciidoctor -r asciidoctor-diagram skill-level-detection.adoc -e
