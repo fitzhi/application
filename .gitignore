@@ -101,5 +101,14 @@ back-fitzhi/src/main/java/.scannerwork
 front-fitzhi/src/.scannerwork/
 
 .scannerwork
+
 front-fitzhi/debug.log
+
 .DS_Store
+
+back-fitzhi/doc/*.html
+
+back-fitzhi/doc/*.png
+
+back-fitzhi/doc/.asciidoctor
+

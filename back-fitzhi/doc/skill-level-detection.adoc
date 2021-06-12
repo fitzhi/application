@@ -1,4 +1,4 @@
-[plantuml, Skill Level Detection diagram"]
+[plantuml, Skill Level Detection diagram]
 ....
 @startuml
 
@@ -8,6 +8,12 @@ skinparam titleBorderColor grey
 skinparam titleBackgroundColor lightYellow
 
 title the Skill level detection settings
+
+class DetectedExperience {
++ {field} Author : author
+..
++ {field} number : count
+}
 
 class SkillLevelCodePattern {
 + {field} number : idSkillLevelCodePattern
@@ -29,6 +35,7 @@ class TypeCodePattern {
 + {field} string : type of code pattern
 }
 
+DetectedExperience "many" *-- "1" SkillLevelCodePattern : references <
 SkillLevelCodePattern "1" *-- "1" Skill : involves <
 SkillLevelCodePattern "1" *-- "1" TypeCodePattern : involves <
 
