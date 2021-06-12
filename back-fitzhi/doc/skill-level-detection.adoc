@@ -15,11 +15,13 @@ class DetectedExperience {
 + {field} number : count
 }
 
-class SkillLevelCodePattern {
-+ {field} number : idSkillLevelCodePattern
+class ExperienceDetectionTemplate {
++ {field} number : id
 ..
 + {field} number : level
-+ {field} String : codeDetectionPattern
++ {field} String : filePattern
++ {field} String : codePattern
++ {field} String : count
 }
 
 
@@ -29,15 +31,24 @@ class Skill {
 + {field} string : title
 }
 
-class TypeCodePattern {
-+ {field} number : idTypeCodePattern
+class TypeCode {
++ {field} number : id
 ..
 + {field} string : type of code pattern
 }
 
-DetectedExperience "many" *-- "1" SkillLevelCodePattern : references <
-SkillLevelCodePattern "1" *-- "1" Skill : involves <
-SkillLevelCodePattern "1" *-- "1" TypeCodePattern : involves <
+class Staff {
++ {field} number : idStaff
+..
++ {field} string : firstName
++ {field} string : lastName
++ {field} any : ...
+}
+
+DetectedExperience "many" *-- "1" ExperienceDetectionTemplate : references <
+ExperienceDetectionTemplate "1" *-- "1" Skill : involves <
+ExperienceDetectionTemplate "1" *-- "1" TypeCode : involves <
+DetectedExperience "1" *-- "0" Staff : identifies <
 
 @enduml
 ....

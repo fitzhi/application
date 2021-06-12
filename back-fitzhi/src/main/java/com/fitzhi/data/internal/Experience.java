@@ -18,6 +18,9 @@ public @Data class Experience implements Serializable {
 	 */
 	private static final long serialVersionUID = -8716755186690093914L;
 
+	/**
+	 * identifier of the experience.
+	 */
 	private int id;
 	
 	/**

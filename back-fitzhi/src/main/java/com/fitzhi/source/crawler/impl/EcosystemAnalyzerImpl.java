@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import com.fitzhi.data.internal.Ecosystem;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
 import com.fitzhi.source.crawler.git.GitUtil;
@@ -66,6 +67,11 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 	 */
 	private static Gson gson = new GsonBuilder().create();
 	
+	/**
+	 * Name of the file containing the settings required to detect a skill and its level in 
+	 */
+	private final String nameOfFileCodeLevelDetectionSettings = "experience-detection-template.json";
+
 	/**
 	 * Ecosystems.
 	 */
@@ -171,6 +177,25 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 			}
 		}
 		return -1;
+	}
+
+	@Override
+	public Map<Integer, ExperienceDetectionTemplate> loadExperienceDetectionTemplates() throws ApplicationException {
+
+		final File fileEcosystem = new File (referentialDir + nameOfFileCodeLevelDetectionSettings); 
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Loading the file %s", fileEcosystem.getAbsolutePath()));
+		}
+		
+		try (FileReader fr = new FileReader(fileEcosystem)) {
+			Type listEcosystemsType = new TypeToken<List<ExperienceDetectionTemplate>>(){}.getType();
+			List<ExperienceDetectionTemplate> listExperiencesDetectionTemplate = gson.fromJson(fr, listEcosystemsType);
+			Map<Integer, ExperienceDetectionTemplate> mapExperienceDetectionTemplatess = new HashMap<Integer, ExperienceDetectionTemplate>();
+			listExperiencesDetectionTemplate.forEach(edt -> mapExperienceDetectionTemplatess.put(edt.getId(), edt));
+			return mapExperienceDetectionTemplatess;
+		} catch (final Exception e) {
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, fileEcosystem.getAbsolutePath()), e);
+		}
 	}
 
 	@Override

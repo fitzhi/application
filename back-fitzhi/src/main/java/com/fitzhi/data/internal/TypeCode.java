@@ -1,6 +1,6 @@
 package com.fitzhi.data.internal;
 
-public enum TypeCodePattern {
+public enum TypeCode {
     SpringAnnotation ("Spring annotation");
   
     private String name = "";
@@ -8,7 +8,7 @@ public enum TypeCodePattern {
     /**
      * @param name
      */
-    TypeCodePattern(String name){
+    TypeCode(String name){
       this.name = name;
     }
 

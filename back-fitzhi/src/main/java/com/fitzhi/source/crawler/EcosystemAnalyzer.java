@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.fitzhi.data.internal.Ecosystem;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.javaparser.ExperienceParser;
 
@@ -24,12 +25,12 @@ import com.fitzhi.source.crawler.javaparser.ExperienceParser;
 public interface EcosystemAnalyzer {
 
 	/**
-	 * Load the ecosystems declared inside the application.
+	 * Load the ecosystems declared in the application.
 	 * @return the list of ecosystems
 	 * @throws ApplicationException thrown if any problem occurs
 	 */
 	Map<Integer, Ecosystem> loadEcosystems() throws ApplicationException;
-	
+		
 	/**
 	 * Scan the repository and detect the ecosystems .
 	 * @param pathnames the set of pathnames retrieved in the repository
@@ -37,6 +38,13 @@ public interface EcosystemAnalyzer {
 	 * @throws ApplicationException thrown if any problem occurs
 	 */
 	List<Ecosystem> detectEcosystems(Set<String> pathnames) throws ApplicationException;
+
+	/**
+	 * Load the experience (skill/level) detection templates declared in the application.
+	 * @return the list of detection templates
+	 * @throws ApplicationException thrown if any problem occurs
+	 */
+	Map<Integer, ExperienceDetectionTemplate> loadExperienceDetectionTemplates() throws ApplicationException;
 
 	/**
 	 * Update the experience of the developers who are involved in a project.
