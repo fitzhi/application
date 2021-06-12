@@ -11,7 +11,9 @@ import com.fitzhi.data.source.Operation;
 import com.fitzhi.exception.ApplicationException;
 
 /**
- * <p>Interface in charge of customizing the project dashboard.</p>
+ * <p>
+ * Interface in charge of customizing the project dashboard.
+ * </p>
  *   
  * @author Fr&eacute;d&eacute;ric VIDAL
  */

@@ -435,7 +435,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			}
 		} else {
 
-			try (Git git = Git.open(Paths.get(getLocalDotGitFile(project)).toFile())) {
+			try (Git git = GitUtil.git(project)) {
 
 				if (log.isInfoEnabled()) {
 					log.info(String.format("Git pull of project %s", project.getName()));
@@ -1184,7 +1184,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 		FileRepositoryBuilder builder = new FileRepositoryBuilder();
 
 		try (Repository repo = builder.setGitDir(
-			new File(getLocalDotGitFile(project))).readEnvironment().findGitDir().build()) {
+			new File(GitUtil.getLocalDotGitFile(project))).readEnvironment().findGitDir().build()) {
 
 			//
 			// load or generate all raw changes declared in the given repository.
@@ -1894,17 +1894,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 			}
 		}
 		return true;
-	}
-
-	/**
-	 * @return the location repository entry point <br/>
-	 *         <i>i.e. the absolute path to the .git file.</i>
-	 */
-	private String getLocalDotGitFile(Project project) {
-		return (project.getLocationRepository()
-				.charAt(project.getLocationRepository().length() - 1) == File.pathSeparatorChar)
-						? project.getLocationRepository() + ".git"
-						: project.getLocationRepository() + "/.git";
 	}
 
 	@Override

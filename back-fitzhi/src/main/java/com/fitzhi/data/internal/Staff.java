@@ -32,7 +32,7 @@ import lombok.Data;
  * This object represents also the login/pass associated to each collaborator
  * inside the company.
  * </p>
- * <img style="width:400px" SRC="https://fitzhi.com/class-diagram-staff.png"></img>
+ * <img style="width:400px" src="https://fitzhi.com/class-diagram-staff.png"></img>
  * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  */

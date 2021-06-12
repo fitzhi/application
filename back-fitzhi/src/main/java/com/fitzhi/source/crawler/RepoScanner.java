@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.source.crawler;
 
 import java.io.IOException;
@@ -236,7 +233,6 @@ public interface RepoScanner {
 	 */
 	void processDiffEntries(RepositoryAnalysis analysis, RevCommit commit, String finalFilePathname,
 			DiffEntry de, DiffFormatter diffFormatter, ParserVelocity parserVelocity) throws ApplicationException;
-
 
 	/**
 	 * <p>Aggregate the history of the repository into the risks dashboard.</p>

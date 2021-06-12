@@ -2,10 +2,13 @@ package com.fitzhi.source.crawler.impl;
 
 import static com.fitzhi.Error.CODE_IO_ERROR;
 import static com.fitzhi.Error.MESSAGE_IO_ERROR;
+import static com.fitzhi.Error.CODE_IO_EXCEPTION;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,12 +23,21 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.fitzhi.data.internal.Ecosystem;
+import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
+import com.fitzhi.source.crawler.git.GitUtil;
+import com.fitzhi.source.crawler.javaparser.ExperienceParser;
+import com.github.javaparser.ParseResult;
+import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.utils.ParserCollectionStrategy;
+import com.github.javaparser.utils.ProjectRoot;
+import com.github.javaparser.utils.SourceRoot;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import org.eclipse.jgit.api.Git;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -160,4 +172,30 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 		}
 		return -1;
 	}
+
+	@Override
+	public void updateStaffExperience(Project project, ExperienceParser ...parsers) throws ApplicationException {
+
+		try (Git git  = GitUtil.git(project)) {
+
+			// We parse the repository.
+			final ProjectRoot projectRoot = new ParserCollectionStrategy().collect(Paths.get(project.getLocationRepository()));
+			for (SourceRoot sourceRoot : projectRoot.getSourceRoots()) {
+				List<ParseResult<CompilationUnit>> res = sourceRoot.tryToParse();
+				for (ParseResult<CompilationUnit> pr : res) {
+					if (pr.isSuccessful()) {
+						if (!pr.getResult().isEmpty()) {
+							CompilationUnit cu =  pr.getResult().get();
+							for (ExperienceParser parser : parsers) {
+								parser.analyze(cu, git);
+							}
+						}
+					}
+				}
+			}
+		} catch (final IOException ioe) {
+			throw new ApplicationException (CODE_IO_EXCEPTION, ioe.getMessage());
+		}
+	}
+
 }

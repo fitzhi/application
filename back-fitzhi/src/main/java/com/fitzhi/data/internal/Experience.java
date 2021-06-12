@@ -61,6 +61,7 @@ public @Data class Experience implements Serializable {
 	 * @return key : constructed key
 	 */
 	public String key() {
-		return getId()+"-"+getLevel();	}
+		return getId() + "-" + getLevel();
+	}
 
 }

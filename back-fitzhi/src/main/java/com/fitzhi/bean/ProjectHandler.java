@@ -353,4 +353,5 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @return {@code true} if the path location declared inside the project is valid.
 	 */
 	boolean hasValidRepository(Project project);
+
 }
