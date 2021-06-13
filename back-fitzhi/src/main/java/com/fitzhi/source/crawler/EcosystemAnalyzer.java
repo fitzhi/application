@@ -47,10 +47,21 @@ public interface EcosystemAnalyzer {
 	Map<Integer, ExperienceDetectionTemplate> loadExperienceDetectionTemplates() throws ApplicationException;
 
 	/**
+	 * <p>
+	 * Initialize the array of parsers for this file pattern (such as {@code .java$}).
+	 * </p>
+	 * @param project the given working project
+	 * @param filePattern the file pattern from which we retrieve the available parsers
+	 * @return the resulting array of {@link ExperienceParser parsers}
+	 * @throws ApplicationException thrown if any problem occurs
+	 */
+	ExperienceParser[] loadExperienceParsers(Project project, String filePattern) throws ApplicationException;
+
+	/**
 	 * Update the experience of the developers who are involved in a project.
 	 *
 	 * @param project the given project to be evaluated
-	 * @param 
+	 * @param detectors List of detectors to be processed on this project
 	 * @throws ApplicationException thrown if any problem occurs.
 	 */
 	void updateStaffExperience(Project project, ExperienceParser ...detectors) throws ApplicationException;

@@ -1,7 +1,7 @@
 package com.fitzhi.data.internal;
 
 public enum TypeCode {
-    SpringAnnotation ("Spring annotation");
+    Annotation ("Annotation");
   
     private String name = "";
 

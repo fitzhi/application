@@ -1,3 +1,3 @@
 [
-	{ "idExpDetectTplt": 0, "idSkill": "3", "typeCode": "SpringAnnotation", "codePattern": "/@Service$", "filePattern": ".java$" }
+	{ "idExpDetectTplt": 0, "idSkill": "3", "typeCode": "Annotation", "codePattern": "/@Service$", "filePattern": ".java$" }
 ]

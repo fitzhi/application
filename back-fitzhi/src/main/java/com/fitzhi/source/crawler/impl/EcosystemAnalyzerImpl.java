@@ -22,6 +22,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.validation.constraints.NotNull;
+
 import com.fitzhi.data.internal.Ecosystem;
 import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.Project;
@@ -29,6 +31,7 @@ import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
 import com.fitzhi.source.crawler.git.GitUtil;
 import com.fitzhi.source.crawler.javaparser.ExperienceParser;
+import com.fitzhi.source.crawler.javaparser.MarkAnnotationExpParser;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.utils.ParserCollectionStrategy;
@@ -197,6 +200,34 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, fileEcosystem.getAbsolutePath()), e);
 		}
 	}
+
+	@Override
+	public ExperienceParser[] loadExperienceParsers(@NotNull Project project, @NotNull String filePattern) throws ApplicationException {
+
+		// We filter the detection templates available for this kind of file
+		// such as e.g. "java$" for Java source file.
+		List<ExperienceDetectionTemplate> relevantDetectionTemplates = loadExperienceDetectionTemplates().values()
+			.stream()
+			.filter(edt -> filePattern.equals(edt.getFilePattern()))
+			.collect(Collectors.toList());
+
+		// No detection template for this type of file.
+		if (relevantDetectionTemplates.size() == 0) {
+			return new ExperienceParser[0];
+		}
+
+		List<ExperienceParser> parsers = new ArrayList<>();
+		for (ExperienceDetectionTemplate edt : relevantDetectionTemplates) {
+			switch (edt.getTypeCode()) {
+				case Annotation:
+					final ExperienceParser parser = MarkAnnotationExpParser.of(project, edt.getCodePattern());
+					parsers.add(parser);
+					break;
+			}
+		}
+		return parsers.toArray(new ExperienceParser[0]);
+	}
+
 
 	@Override
 	public void updateStaffExperience(Project project, ExperienceParser ...parsers) throws ApplicationException {
