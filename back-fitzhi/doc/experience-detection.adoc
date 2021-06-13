@@ -18,7 +18,7 @@ class DetectedExperience {
 }
 
 class ExperienceDetectionTemplate {
-+ {field} number : idEDF
++ {field} number : idEDT
 ..
 + {field} number : level
 + {field} String : filePattern
