@@ -1,8 +1,8 @@
 package com.fitzhi.source.crawler.impl;
 
 import static com.fitzhi.Error.CODE_IO_ERROR;
-import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 import static com.fitzhi.Error.CODE_IO_EXCEPTION;
+import static com.fitzhi.Error.MESSAGE_IO_ERROR;
 
 import java.io.File;
 import java.io.FileReader;
@@ -23,8 +23,8 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import com.fitzhi.data.internal.Ecosystem;
-import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ExperienceDetectionTemplate;
+import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
 import com.fitzhi.source.crawler.git.GitUtil;
@@ -209,7 +209,7 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 				List<ParseResult<CompilationUnit>> res = sourceRoot.tryToParse();
 				for (ParseResult<CompilationUnit> pr : res) {
 					if (pr.isSuccessful()) {
-						if (!pr.getResult().isEmpty()) {
+						if (pr.getResult().isPresent()) {
 							CompilationUnit cu =  pr.getResult().get();
 							for (ExperienceParser parser : parsers) {
 								parser.analyze(cu, git);
