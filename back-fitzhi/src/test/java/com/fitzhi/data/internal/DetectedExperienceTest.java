@@ -1,6 +1,5 @@
 package com.fitzhi.data.internal;
 
-import org.apache.commons.digester.plugins.Declaration;
 import org.junit.Assert;
 import org.junit.Test;
 
