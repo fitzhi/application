@@ -1,1 +1,1 @@
-asciidoctor -r asciidoctor-diagram skill-level-detection.adoc -e
+asciidoctor -r asciidoctor-diagram experience-detection.adoc -e
