@@ -191,7 +191,7 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 			Type listEcosystemsType = new TypeToken<List<ExperienceDetectionTemplate>>(){}.getType();
 			List<ExperienceDetectionTemplate> listExperiencesDetectionTemplate = gson.fromJson(fr, listEcosystemsType);
 			Map<Integer, ExperienceDetectionTemplate> mapExperienceDetectionTemplatess = new HashMap<Integer, ExperienceDetectionTemplate>();
-			listExperiencesDetectionTemplate.forEach(edt -> mapExperienceDetectionTemplatess.put(edt.getId(), edt));
+			listExperiencesDetectionTemplate.forEach(edt -> mapExperienceDetectionTemplatess.put(edt.getIdEDT(), edt));
 			return mapExperienceDetectionTemplatess;
 		} catch (final Exception e) {
 			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, fileEcosystem.getAbsolutePath()), e);

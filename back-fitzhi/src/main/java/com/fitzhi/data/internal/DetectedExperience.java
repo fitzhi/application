@@ -22,6 +22,12 @@ public @Data class DetectedExperience {
 	 */
 	private final int idExperienceDetectionTemplate;
 
+
+	/**
+	 * The Projecty where this experience has been decteted for the author.
+	 */
+	private final int idProject;
+
 	/**
 	 * Author of a GIT commit as retrieved from the repository.
 	 */

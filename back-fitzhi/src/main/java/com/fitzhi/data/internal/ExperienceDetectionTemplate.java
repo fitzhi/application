@@ -12,34 +12,34 @@ import lombok.Data;
  */
 public @Data class ExperienceDetectionTemplate {
 
-    /**
-     * This object identifier.
-     */
-    private int id;
+	/**
+	 * This object identifier.
+	 */
+	private int idEDT;
 
-    /**
-     * The Skill identifier.
-     */
-    private int idSkill;
+	/**
+	 * The Skill identifier.
+	 */
+	private int idSkill;
 
-    /**
-     * The level in the skill corresponding to this codePattern.
-     */
-    private int level;
+	/**
+	 * The level in the skill corresponding to this codePattern.
+	 */
+	private int level;
 
-    /**
-     * Patten to be used to detect the file associated to the skill
-     */
-    private String filePattern;
+	/**
+	 * Patten to be used to detect the file associated to the skill
+	 */
+	private String filePattern;
 
-    /**
-     * Patten to be used to detect a particular level in a skill.
-     */
-    private String codePattern;
+	/**
+	 * Patten to be used to detect a particular level in a skill.
+	 */
+	private String codePattern;
 
-    /**
-     * Type of code pattern.
-     */
-    private TypeCode typeCode;
-    
+	/**
+	 * Type of code pattern.
+	 */
+	private TypeCode typeCode;
+	
 }

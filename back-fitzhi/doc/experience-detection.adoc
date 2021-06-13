@@ -9,6 +9,8 @@ skinparam titleBackgroundColor lightYellow
 
 title the Experience detection settings
 
+note right of DetectedExperience : An experience detected for an author\nwith the number of occurences\nper project
+
 class DetectedExperience {
 + {field} Author : author
 ..
@@ -16,7 +18,7 @@ class DetectedExperience {
 }
 
 class ExperienceDetectionTemplate {
-+ {field} number : id
++ {field} number : idEDF
 ..
 + {field} number : level
 + {field} String : filePattern
@@ -24,14 +26,13 @@ class ExperienceDetectionTemplate {
 + {field} String : count
 }
 
-
 class Skill {
 + {field} number : idSkill
 ..
 + {field} string : title
 }
 
-class TypeCode {
+enum TypeCode {
 + {field} number : typeCode
 ..
 + {field} string : name
@@ -42,13 +43,21 @@ class Staff {
 ..
 + {field} string : firstName
 + {field} string : lastName
-+ {field} any : ...
++ {field} any : ... (all staff properties)
 }
 
-DetectedExperience "1" <|-- "many" ExperienceDetectionTemplate : references <
+class Project {
++ {field} number : idProject
+..
++ {field} string : name
++ {field} any : ... (all project properties)
+}
+
+DetectedExperience "1" <|-- "many" ExperienceDetectionTemplate : concerns <
 ExperienceDetectionTemplate "1" <|-- "1" Skill : involves <
 ExperienceDetectionTemplate "1" <|-- "1" TypeCode : involves <
-DetectedExperience "0" <|-- "many" Staff : identifies <
+DetectedExperience "0" <|-- "many" Staff : is recognized as <
+DetectedExperience "1" <|-- "many" Project : is detected in <
 
 @enduml
 ....

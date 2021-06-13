@@ -33,7 +33,7 @@ public class EcosystemAnalyzerLoadExperienceDetectionTemplatesTest {
 		Map<Integer, ExperienceDetectionTemplate> result = ecosystemAnalyzer.loadExperienceDetectionTemplates();
 		Assert.assertEquals(1, result.size());
 		Assert.assertTrue(result.containsKey(0));
-		Assert.assertEquals(0, result.get(0).getId());
+		Assert.assertEquals(0, result.get(0).getIdEDT());
 		Assert.assertEquals(3, result.get(0).getIdSkill());
 		Assert.assertEquals(TypeCode.SpringAnnotation, result.get(0).getTypeCode());
 		Assert.assertEquals("/@Service$", result.get(0).getCodePattern());
