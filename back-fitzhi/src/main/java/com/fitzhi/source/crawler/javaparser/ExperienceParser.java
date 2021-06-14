@@ -1,5 +1,6 @@
 package com.fitzhi.source.crawler.javaparser;
 
+import com.fitzhi.data.internal.MapDetectedExperiences;
 import com.fitzhi.exception.ApplicationException;
 import com.github.javaparser.ast.CompilationUnit;
 
@@ -15,11 +16,12 @@ import org.eclipse.jgit.api.Git;
 public interface ExperienceParser {
 
 	/**
-	 * Analyze the given compilation unit and detect all identifiable experiences {@code (skill; level)}.
+	 * Analyze the given compilation unit and detect all identifiable experiences {@code (skill;level)}.
 	 * 
 	 * @param compilationUnit the given compilation unit.
 	 * @param git the current Git repository
+	 * @param mapDetectedExperiences the map of detected experiences to be loaded
 	 * @throws ApplicationException thrown if any problem occurs
 	 */
-	void analyze(CompilationUnit compilationUnit, Git git) throws ApplicationException;
+	void analyze(CompilationUnit compilationUnit, Git git, MapDetectedExperiences mapDetectedExperiences) throws ApplicationException;
 }

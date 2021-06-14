@@ -26,6 +26,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fitzhi.data.internal.Ecosystem;
 import com.fitzhi.data.internal.ExperienceDetectionTemplate;
+import com.fitzhi.data.internal.MapDetectedExperiences;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
@@ -190,8 +191,8 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 		}
 		
 		try (FileReader fr = new FileReader(fileEcosystem)) {
-			Type listEcosystemsType = new TypeToken<List<ExperienceDetectionTemplate>>(){}.getType();
-			List<ExperienceDetectionTemplate> listExperiencesDetectionTemplate = gson.fromJson(fr, listEcosystemsType);
+			Type listDetectionTemplates = new TypeToken<List<ExperienceDetectionTemplate>>(){}.getType();
+			List<ExperienceDetectionTemplate> listExperiencesDetectionTemplate = gson.fromJson(fr, listDetectionTemplates);
 			Map<Integer, ExperienceDetectionTemplate> mapExperienceDetectionTemplatess = new HashMap<Integer, ExperienceDetectionTemplate>();
 			listExperiencesDetectionTemplate.forEach(edt -> mapExperienceDetectionTemplatess.put(edt.getIdEDT(), edt));
 			return mapExperienceDetectionTemplatess;
@@ -219,7 +220,7 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 		for (ExperienceDetectionTemplate edt : relevantDetectionTemplates) {
 			switch (edt.getTypeCode()) {
 				case Annotation:
-					final ExperienceParser parser = MarkAnnotationExpParser.of(project, edt.getImportPattern(), edt.getCodePattern());
+					final ExperienceParser parser = MarkAnnotationExpParser.of(project, edt);
 					parsers.add(parser);
 					break;
 			}
@@ -229,9 +230,10 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 
 
 	@Override
-	public void updateStaffDetectedExperiences(Project project, ExperienceParser ...parsers) throws ApplicationException {
+	public MapDetectedExperiences loadDetectedExperiences(Project project, ExperienceParser ...parsers) throws ApplicationException {
 
 		try (Git git  = GitUtil.git(project)) {
+			final MapDetectedExperiences mapDetectedExperiences = MapDetectedExperiences.of();
 			// We parse the repository.
 			final ProjectRoot projectRoot = new ParserCollectionStrategy().collect(Paths.get(project.getLocationRepository()));
 			for (SourceRoot sourceRoot : projectRoot.getSourceRoots()) {
@@ -241,12 +243,13 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 						if (pr.getResult().isPresent()) {
 							CompilationUnit cu =  pr.getResult().get();
 							for (ExperienceParser parser : parsers) {
-								parser.analyze(cu, git);
+								parser.analyze(cu, git, mapDetectedExperiences);
 							}
 						}
 					}
 				}
 			}
+			return mapDetectedExperiences;
 		} catch (final IOException ioe) {
 			throw new ApplicationException (CODE_IO_EXCEPTION, ioe.getMessage());
 		}

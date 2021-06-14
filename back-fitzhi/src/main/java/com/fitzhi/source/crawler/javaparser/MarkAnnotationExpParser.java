@@ -12,6 +12,10 @@ import java.util.regex.Pattern;
 
 import javax.validation.constraints.NotNull;
 
+import com.fitzhi.data.internal.Author;
+import com.fitzhi.data.internal.DetectedExperience;
+import com.fitzhi.data.internal.ExperienceDetectionTemplate;
+import com.fitzhi.data.internal.MapDetectedExperiences;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 import com.github.javaparser.ast.CompilationUnit;
@@ -45,6 +49,11 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 	private final Predicate<MarkerAnnotationExpr> predicate;
 
 	/**
+	 * Detection template settings
+	 */
+	private final ExperienceDetectionTemplate detectionTemplate;
+
+	/**
 	 * Pattern to identify the eligible patterns.
 	 */
 	private final Pattern patternImport;
@@ -52,23 +61,23 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 	/**
 	 * Creation of a MarkAnnotationExpParser for the given codePattern
 	 * @param project the current given project
-	 * @param importPattern the import pattern to identify the eligible imports for the remarkable piece of code
-	 * @param codePattern the code pattern to identify a remarkable piece of code
+	 * @param detectionTemplate the Detection template settings
 	 */
-	public static MarkAnnotationExpParser of(@NotNull Project project, @NotNull String importPattern, @NotNull String codePattern) {
-		return new MarkAnnotationExpParser (project, importPattern, codePattern);
+	public static MarkAnnotationExpParser of(@NotNull Project project, @NotNull ExperienceDetectionTemplate detectionTemplate) {
+		return new MarkAnnotationExpParser (project, detectionTemplate);
 	}
 
 	/**
 	 * Construction.
 	 * @param project the current given project
-	 * @param importPattern the import pattern to identify the eligible imports for the remarkable piece of code
-	 * @param codePattern the code pattern
+	 * @param detectionTemplate the Detection template settings
 	 */
-	private MarkAnnotationExpParser (@NotNull Project project, @NotNull String importPattern, @NotNull String codePattern) {
+	private MarkAnnotationExpParser (@NotNull Project project, @NotNull ExperienceDetectionTemplate detectionTemplate) {
 		this.project = project;
+		this.detectionTemplate = detectionTemplate;
 		this.pathGitDir = Paths.get(project.getLocationRepository());
-		final Pattern pattern = Pattern.compile(codePattern);
+
+		final Pattern pattern = Pattern.compile(detectionTemplate.getCodePattern());
 		this.predicate = new Predicate<MarkerAnnotationExpr>() {
 			@Override
 			public boolean test(MarkerAnnotationExpr mae) {
@@ -76,7 +85,7 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 			}
 		};
 
-		this.patternImport = Pattern.compile(importPattern);
+		this.patternImport = Pattern.compile(detectionTemplate.getImportPattern());
 	}
 
 	/**
@@ -86,7 +95,7 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 	 * @param filePath the filePath
 	 * @param lineNumber the line number
 	 */
-	public PersonIdent getAuthor(Git git, String filePath, int lineNumber) throws ApplicationException {
+	public PersonIdent getPersonIdent(Git git, String filePath, int lineNumber) throws ApplicationException {
 		try {
 			final BlameResult blameResult = git.blame().setFilePath(filePath).setFollowFileRenames(true).call();
 			if (blameResult == null) {
@@ -102,7 +111,7 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 	} 
 
 	@Override
-	public void analyze(CompilationUnit compilationUnit, Git git) throws ApplicationException {
+	public void analyze(CompilationUnit compilationUnit, Git git, MapDetectedExperiences mapDetectedExperiences) throws ApplicationException {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Analyzing file %s", compilationUnit.getStorage().get().getFileName()));
 		}
@@ -114,11 +123,17 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 		for (MarkerAnnotationExpr mae : list) {
 			if (mae.getBegin().isPresent()) {
 				Path pathRelative = pathGitDir.relativize(compilationUnit.getStorage().get().getPath());
-				if (log.isInfoEnabled()) {
-					log.info (String.format("%s %s %s", compilationUnit.getStorage().get().getFileName(),
+				if (log.isDebugEnabled()) {
+					log.debug (String.format("%s %s %s", compilationUnit.getStorage().get().getFileName(),
 						mae,
-						getAuthor(git, pathRelative.toString(), mae.getBegin().get().line)));
+						getPersonIdent(git, pathRelative.toString(), mae.getBegin().get().line)));
+					// PersonIdent pi = getPersonIdent(git, pathRelative.toString(), mae.getBegin().get().line);
+					// System.out.println(mae + ";" + pi.getName() + ";" + pi.getEmailAddress());
 				}
+				PersonIdent pi = getPersonIdent(git, pathRelative.toString(), mae.getBegin().get().line);
+				Author author = new Author(pi.getName(), pi.getEmailAddress());
+				DetectedExperience de = DetectedExperience.of(detectionTemplate.getIdEDT(), project.getId(), author);
+				mapDetectedExperiences.add(de);
 			}
 		}
 	}

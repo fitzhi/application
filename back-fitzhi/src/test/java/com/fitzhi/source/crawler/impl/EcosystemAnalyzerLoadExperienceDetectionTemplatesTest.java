@@ -31,13 +31,13 @@ public class EcosystemAnalyzerLoadExperienceDetectionTemplatesTest {
 	@Test
 	public void loadNominal() throws ApplicationException {
 		Map<Integer, ExperienceDetectionTemplate> result = ecosystemAnalyzer.loadExperienceDetectionTemplates();
-		Assert.assertEquals(1, result.size());
+		Assert.assertEquals(2, result.size());
 		Assert.assertTrue(result.containsKey(0));
 		Assert.assertEquals(0, result.get(0).getIdEDT());
 		Assert.assertEquals(3, result.get(0).getIdSkill());
 		Assert.assertEquals(TypeCode.Annotation, result.get(0).getTypeCode());
-		Assert.assertEquals("^Service$", result.get(0).getCodePattern());
-		Assert.assertEquals("^org.springframework.stereotype.Service$", result.get(0).getImportPattern());
+		Assert.assertEquals("^Service$|^Component$", result.get(0).getCodePattern());
+		Assert.assertEquals("^org.springframework.stereotype.Service$|^org.springframework.stereotype.Component$", result.get(0).getImportPattern());
 		Assert.assertEquals(".java$", result.get(0).getFilePattern());
 	}
 }

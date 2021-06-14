@@ -7,6 +7,7 @@ import java.util.Set;
 import com.fitzhi.data.internal.Ecosystem;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ExperienceDetectionTemplate;
+import com.fitzhi.data.internal.MapDetectedExperiences;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.javaparser.ExperienceParser;
 
@@ -58,12 +59,13 @@ public interface EcosystemAnalyzer {
 	ExperienceParser[] loadExperienceParsers(Project project, String filePattern) throws ApplicationException;
 
 	/**
-	 * Update the experience of the developers who are involved in a project.
+	 * Detect the experiences available in the Git repository.
 	 *
 	 * @param project the given project to be evaluated
 	 * @param parsers List of detectors to be processed on this project
+	 * @return The initialized {@Link MapDetectedExperiences map of detectedExperiences} loaded from the project
 	 * @throws ApplicationException thrown if any problem occurs.
 	 */
-	void updateStaffDetectedExperiences(Project project, ExperienceParser ...parsers) throws ApplicationException;
+	MapDetectedExperiences loadDetectedExperiences(Project project, ExperienceParser ...parsers) throws ApplicationException;
 
 }
