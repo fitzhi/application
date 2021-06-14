@@ -15,6 +15,8 @@ import javax.validation.constraints.NotNull;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.ImportDeclaration;
+import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
 
 import org.eclipse.jgit.api.Git;
@@ -43,20 +45,27 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 	private final Predicate<MarkerAnnotationExpr> predicate;
 
 	/**
+	 * Pattern to identify the eligible patterns.
+	 */
+	private final Pattern patternImport;
+
+	/**
 	 * Creation of a MarkAnnotationExpParser for the given codePattern
 	 * @param project the current given project
+	 * @param importPattern the import pattern to identify the eligible imports for the remarkable piece of code
 	 * @param codePattern the code pattern to identify a remarkable piece of code
 	 */
-	public static MarkAnnotationExpParser of(@NotNull Project project, @NotNull String codePattern) {
-		return new MarkAnnotationExpParser (project, codePattern);
+	public static MarkAnnotationExpParser of(@NotNull Project project, @NotNull String importPattern, @NotNull String codePattern) {
+		return new MarkAnnotationExpParser (project, importPattern, codePattern);
 	}
 
 	/**
 	 * Construction.
 	 * @param project the current given project
+	 * @param importPattern the import pattern to identify the eligible imports for the remarkable piece of code
 	 * @param codePattern the code pattern
 	 */
-	private MarkAnnotationExpParser (Project project, String codePattern) {
+	private MarkAnnotationExpParser (@NotNull Project project, @NotNull String importPattern, @NotNull String codePattern) {
 		this.project = project;
 		this.pathGitDir = Paths.get(project.getLocationRepository());
 		final Pattern pattern = Pattern.compile(codePattern);
@@ -66,6 +75,8 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 				return pattern.matcher(mae.getNameAsString()).find();
 			}
 		};
+
+		this.patternImport = Pattern.compile(importPattern);
 	}
 
 	/**
@@ -95,8 +106,12 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Analyzing file %s", compilationUnit.getStorage().get().getFileName()));
 		}
-		List<MarkerAnnotationExpr> l = compilationUnit.findAll(MarkerAnnotationExpr.class, this.predicate /* Predicate.isEqual(new MarkerAnnotationExpr("Service")) */ );
-		for (MarkerAnnotationExpr mae : l) {
+		if (!contains(compilationUnit.getImports(), this.patternImport)) {
+			// Nothing to process.
+			return;
+		}
+		List<MarkerAnnotationExpr> list = compilationUnit.findAll(MarkerAnnotationExpr.class, this.predicate);
+		for (MarkerAnnotationExpr mae : list) {
 			if (mae.getBegin().isPresent()) {
 				Path pathRelative = pathGitDir.relativize(compilationUnit.getStorage().get().getPath());
 				if (log.isInfoEnabled()) {
@@ -107,4 +122,17 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 			}
 		}
 	}
+
+	private static boolean contains(@NotNull NodeList<ImportDeclaration> list, @NotNull Pattern pattern) {
+
+		Predicate<ImportDeclaration> predicateImportDeclaration = (importDeclaration) -> {
+			return pattern.matcher(importDeclaration.getNameAsString()).find();
+		};
+
+		return list.stream()
+			.filter(predicateImportDeclaration)
+			.findAny()
+			.isPresent();
+	}
+
 }

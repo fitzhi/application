@@ -1,3 +1,10 @@
 [
-	{ "idExpDetectTplt": 0, "idSkill": "3", "typeCode": "Annotation", "importPattern": "^org.springframework.stereotype.Service$", "codePattern": "^Service$", "filePattern": ".java$" }
+	{
+		"idExpDetectTplt": 0,
+		"idSkill": "3",
+		"typeCode": "Annotation",
+		"importPattern": "^org.springframework.stereotype",
+		"codePattern": "(^Service$|^Bean$|^Component$)",
+		"filePattern": ".java$"
+	}
 ]

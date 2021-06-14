@@ -16,7 +16,6 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -35,12 +34,9 @@ import com.fitzhi.source.crawler.javaparser.ExperienceParser;
 import com.fitzhi.source.crawler.javaparser.MarkAnnotationExpParser;
 import com.github.javaparser.ParseResult;
 import com.github.javaparser.ast.CompilationUnit;
-import com.github.javaparser.ast.ImportDeclaration;
-import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.utils.ParserCollectionStrategy;
 import com.github.javaparser.utils.ProjectRoot;
 import com.github.javaparser.utils.SourceRoot;
-import com.google.common.base.Predicate;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -53,11 +49,10 @@ import lombok.extern.slf4j.Slf4j;
 
 /**
  * <p>
- * Implementation of the bean in charge of handling the ecosystem
+ * Implementation of the bean in charge of handling the ecosystem.
  * </p>
  *
  * @author Fr&eacute;d&eacute;ric VIDAL
- *
  */
 @Service
 @Slf4j
@@ -224,7 +219,7 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 		for (ExperienceDetectionTemplate edt : relevantDetectionTemplates) {
 			switch (edt.getTypeCode()) {
 				case Annotation:
-					final ExperienceParser parser = MarkAnnotationExpParser.of(project, edt.getCodePattern());
+					final ExperienceParser parser = MarkAnnotationExpParser.of(project, edt.getImportPattern(), edt.getCodePattern());
 					parsers.add(parser);
 					break;
 			}
@@ -246,9 +241,7 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 						if (pr.getResult().isPresent()) {
 							CompilationUnit cu =  pr.getResult().get();
 							for (ExperienceParser parser : parsers) {
-								if (contains(cu.getImports(), "org.springframework.stereotype.Service")) {
-									parser.analyze(cu, git);
-								}
+								parser.analyze(cu, git);
 							}
 						}
 					}
@@ -259,17 +252,4 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 		}
 	}
 
-	private static boolean contains(NodeList<ImportDeclaration> list, @NotNull() String importPattern) {
-
-		final Pattern pattern = Pattern.compile(importPattern);
-
-		Predicate<ImportDeclaration> predicateImportDeclaration = (importDeclaration) -> {
-			return pattern.matcher(importDeclaration.getNameAsString()).find();
-		};
-
-		return list.stream()
-			.filter(predicateImportDeclaration)
-			.findAny()
-			.isPresent();
-	}
 }

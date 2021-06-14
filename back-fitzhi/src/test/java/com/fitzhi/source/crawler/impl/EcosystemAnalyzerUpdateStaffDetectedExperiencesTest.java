@@ -43,5 +43,4 @@ public class EcosystemAnalyzerUpdateStaffDetectedExperiencesTest {
 		final ExperienceParser[] parsers = this.ecosystemAnalyzer.loadExperienceParsers(this.project, ".java$");
 		ecosystemAnalyzer.updateStaffDetectedExperiences(this.project, parsers);
 	}
-
 }
