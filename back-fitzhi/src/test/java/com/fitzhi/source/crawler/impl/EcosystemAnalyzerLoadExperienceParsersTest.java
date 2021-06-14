@@ -38,7 +38,7 @@ public class EcosystemAnalyzerLoadExperienceParsersTest {
 	@Test
 	public void loadNominal() throws ApplicationException {
 		final ExperienceParser[] ep = ecosystemAnalyzer.loadExperienceParsers(this.project, ".java$");
-		Assert.assertEquals(1, ep.length);
+		Assert.assertEquals(2, ep.length);
 	}
 
 	@Test
