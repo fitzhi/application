@@ -63,7 +63,7 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 		this.predicate = new Predicate<MarkerAnnotationExpr>() {
 			@Override
 			public boolean test(MarkerAnnotationExpr mae) {
-				return pattern. matcher(mae.getNameAsString()).find();
+				return pattern.matcher(mae.getNameAsString()).find();
 			}
 		};
 	}
@@ -78,6 +78,10 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 	public PersonIdent getAuthor(Git git, String filePath, int lineNumber) throws ApplicationException {
 		try {
 			final BlameResult blameResult = git.blame().setFilePath(filePath).setFollowFileRenames(true).call();
+			if (blameResult == null) {
+				throw new ApplicationException(CODE_GIT_ERROR,
+					String.format("Cannot blame file %s @ %d", filePath, lineNumber));
+			}
 			return blameResult.getSourceCommitter(lineNumber);
 		} catch (final GitAPIException gitException) {
 			throw new ApplicationException(
@@ -91,13 +95,12 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Analyzing file %s", compilationUnit.getStorage().get().getFileName()));
 		}
-
-		List<MarkerAnnotationExpr> l = compilationUnit.findAll(MarkerAnnotationExpr.class, this.predicate);
+		List<MarkerAnnotationExpr> l = compilationUnit.findAll(MarkerAnnotationExpr.class, this.predicate /* Predicate.isEqual(new MarkerAnnotationExpr("Service")) */ );
 		for (MarkerAnnotationExpr mae : l) {
 			if (mae.getBegin().isPresent()) {
 				Path pathRelative = pathGitDir.relativize(compilationUnit.getStorage().get().getPath());
-				if (log.isDebugEnabled()) {
-					log.debug (String.format("%s %s %s", compilationUnit.getStorage().get().getFileName(),
+				if (log.isInfoEnabled()) {
+					log.info (String.format("%s %s %s", compilationUnit.getStorage().get().getFileName(),
 						mae,
 						getAuthor(git, pathRelative.toString(), mae.getBegin().get().line)));
 				}

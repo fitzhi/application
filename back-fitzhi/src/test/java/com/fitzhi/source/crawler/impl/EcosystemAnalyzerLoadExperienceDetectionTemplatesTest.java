@@ -36,7 +36,8 @@ public class EcosystemAnalyzerLoadExperienceDetectionTemplatesTest {
 		Assert.assertEquals(0, result.get(0).getIdEDT());
 		Assert.assertEquals(3, result.get(0).getIdSkill());
 		Assert.assertEquals(TypeCode.Annotation, result.get(0).getTypeCode());
-		Assert.assertEquals("/@Service$", result.get(0).getCodePattern());
+		Assert.assertEquals("^Service$", result.get(0).getCodePattern());
+		Assert.assertEquals("^org.springframework.stereotype.Service$", result.get(0).getImportPattern());
 		Assert.assertEquals(".java$", result.get(0).getFilePattern());
 	}
 }

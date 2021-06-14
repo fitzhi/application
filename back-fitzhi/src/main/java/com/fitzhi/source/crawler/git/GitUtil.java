@@ -16,7 +16,7 @@ import org.eclipse.jgit.api.Git;
  *
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public class GitUtil {
+public final class GitUtil {
     
     /**
 	 * @return the location repository entry point <br/>

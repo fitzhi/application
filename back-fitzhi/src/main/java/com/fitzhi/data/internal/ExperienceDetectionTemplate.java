@@ -33,6 +33,11 @@ public @Data class ExperienceDetectionTemplate {
 	private String filePattern;
 
 	/**
+	 * Import filtering the code source file before analysing more deeply the content.
+	 */
+	private String importPattern;
+
+	/**
 	 * Patten to be used to detect a particular level in a skill.
 	 */
 	private String codePattern;

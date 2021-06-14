@@ -61,9 +61,9 @@ public interface EcosystemAnalyzer {
 	 * Update the experience of the developers who are involved in a project.
 	 *
 	 * @param project the given project to be evaluated
-	 * @param detectors List of detectors to be processed on this project
+	 * @param parsers List of detectors to be processed on this project
 	 * @throws ApplicationException thrown if any problem occurs.
 	 */
-	void updateStaffExperience(Project project, ExperienceParser ...detectors) throws ApplicationException;
+	void updateStaffDetectedExperiences(Project project, ExperienceParser ...parsers) throws ApplicationException;
 
 }
