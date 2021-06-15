@@ -1,3 +1,7 @@
+package com.fitzhi;
+
+import java.util.Locale;
+
 public enum OSType {
     Windows, MacOS, Linux, Other;
     public static final  OSType DETECTED;
