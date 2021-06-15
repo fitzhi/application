@@ -48,7 +48,7 @@ public class EcosystemAnalyzerLoadDetectedExperiencesTest {
 	public void load() throws ApplicationException {
 
 		// We disable this test on Windows platform.
-		//FIXME soon.
+		// FIXME as soon as possible !!!
 		if (OSType.DETECTED == OSType.Windows) {
 			return;
 		}
