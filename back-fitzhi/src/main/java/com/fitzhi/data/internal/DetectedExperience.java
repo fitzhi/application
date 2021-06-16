@@ -22,7 +22,6 @@ public @Data class DetectedExperience {
 	 */
 	private final int idExperienceDetectionTemplate;
 
-
 	/**
 	 * The Projecty where this experience has been decteted for the author.
 	 */

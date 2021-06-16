@@ -49,13 +49,29 @@ public class DataHandlerLoadSaveDetectedExperiencesTest {
 	}
 
 	/**
-	 * Testing the successfull save.
+	 * Testing the successfull load.
 	 * @throws ApplicationException
 	 */
 	@Test
 	public void loadOk() throws ApplicationException {
 		Project project = new Project(1788, "One year before the revolution");
-		// ProjectDetectedExperiences experiences = dataHandler.loadDetectedExperiences(project);
+		ProjectDetectedExperiences experiences = dataHandler.loadDetectedExperiences(project);
+		Assert.assertEquals(1, experiences.getValues().size());
+		Assert.assertEquals(1788, experiences.getValues().get(0).getIdProject());
+		Assert.assertEquals(10, experiences.getValues().get(0).getCount());
+		Assert.assertEquals(-1, experiences.getValues().get(0).getIdStaff());
+		Assert.assertEquals("frvidal", experiences.getValues().get(0).getAuthor().getName());
+		Assert.assertEquals("frederic.vidal@fitzhi.com", experiences.getValues().get(0).getAuthor().getEmail());
+	}
+
+	/**
+	 * Testing the failed load.
+	 * @throws ApplicationException
+	 */
+	@Test(expected = ApplicationException.class)
+	public void loadKO() throws ApplicationException {
+		Project project = new Project(666, "Unknown project");
+		dataHandler.loadDetectedExperiences(project);
 	}
 
 }

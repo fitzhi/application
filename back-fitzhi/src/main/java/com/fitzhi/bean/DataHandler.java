@@ -115,6 +115,16 @@ public interface DataHandler {
 
 	/**
 	 * <p>
+	 * Load the detected experiences.
+	 * </p>
+	 * @param project project whose {@link DetectedExperience experiences} have to be loaded.
+	 * @return a container of {@link DetectedExperience detected experiences}
+	 * @throws ApplicationException thrown if an exception occurs during the saving process, most probably an {@link IOException}
+	 */
+	ProjectDetectedExperiences loadDetectedExperiences(Project project) throws ApplicationException;
+
+	/**
+	 * <p>
 	 * Save a collection of paths on File System. The main goal for this method, is to store the states of the {@link RepositoryAnalysis analysis container}  on file system.
 	 * </p>
 	 * @param project the current projet for which these paths should be saved. 
