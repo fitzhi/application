@@ -28,24 +28,34 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class DataHandlerLoadSaveDetectedExperiencesTest {
   
-    @Autowired
-    DataHandler dataHandler;
+	@Autowired
+	DataHandler dataHandler;
 
-    /**
-     * Testing the successfull save.
-     * @throws ApplicationException
-     */
-    @Test
-    public void nominalSave() throws ApplicationException {
-        Project project = new Project(1790, "One year after the revolution");
-        ProjectDetectedExperiences experiences = new ProjectDetectedExperiences();
-        experiences.getValues().add(DetectedExperience.of(1, 1790, new Author("gbale", "gareth.bale@failed-penalty.com")));
-        dataHandler.saveDetectedExperiences(project, experiences);
-        File f = new File("./src/test/resources/out_dir/changes-data/1790-project-detected-experiences.json");
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("dataHandler.saveDetectedExperiences into %s ", f.getAbsolutePath()));
-        }
-        Assert.assertTrue("Test that we correctly save the detected experiences into their dedicated file", f.exists());
-    }
+	/**
+	 * Testing the successfull save.
+	 * @throws ApplicationException
+	 */
+	@Test
+	public void saveOK() throws ApplicationException {
+		Project project = new Project(1790, "One year after the revolution");
+		ProjectDetectedExperiences experiences = new ProjectDetectedExperiences();
+		experiences.getValues().add(DetectedExperience.of(1, 1790, new Author("gbale", "gareth.bale@failed-penalty.com")));
+		dataHandler.saveDetectedExperiences(project, experiences);
+		File f = new File("./src/test/resources/out_dir/changes-data/1790-project-detected-experiences.json");
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("dataHandler.saveDetectedExperiences into %s ", f.getAbsolutePath()));
+		}
+		Assert.assertTrue("Test that we correctly save the detected experiences into their dedicated file", f.exists());
+	}
+
+	/**
+	 * Testing the successfull save.
+	 * @throws ApplicationException
+	 */
+	@Test
+	public void loadOk() throws ApplicationException {
+		Project project = new Project(1788, "One year before the revolution");
+		// ProjectDetectedExperiences experiences = dataHandler.loadDetectedExperiences(project);
+	}
 
 }
