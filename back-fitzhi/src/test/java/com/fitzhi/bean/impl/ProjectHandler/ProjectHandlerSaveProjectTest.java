@@ -1,4 +1,4 @@
-package com.fitzhi.bean.impl;
+package com.fitzhi.bean.impl.ProjectHandler;
 
 import static com.fitzhi.Global.NO_USER_PASSWORD_ACCESS;
 import static com.fitzhi.Global.REMOTE_FILE_ACCESS;

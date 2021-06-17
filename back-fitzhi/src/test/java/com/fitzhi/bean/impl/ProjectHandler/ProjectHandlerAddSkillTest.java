@@ -1,7 +1,4 @@
-/**
- * 
- */
-package com.fitzhi.bean.impl;
+package com.fitzhi.bean.impl.ProjectHandler;
 
 import org.junit.After;
 import org.junit.Assert;

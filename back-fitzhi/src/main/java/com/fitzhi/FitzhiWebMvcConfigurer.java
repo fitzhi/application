@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi;
 
 import org.springframework.beans.factory.annotation.Value;

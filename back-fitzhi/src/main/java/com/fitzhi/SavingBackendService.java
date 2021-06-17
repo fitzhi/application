@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi;
 
 import com.fitzhi.bean.DataHandler;
@@ -56,12 +53,16 @@ public class SavingBackendService {
     public void work() {
 		
 		// We do not launch asynchronous tasks if the class has not been fully filled by the Spring container.
-		if (projectHandler.getLocker() == null) {
+		if ((projectHandler.getLocker() == null) || (staffHandler.getLocker() == null) || (skillHandler.getLocker() == null)) {
 			if (log.isDebugEnabled()) {
-				log.debug("In development mode, to avoid a useless 'NullPointerException' because ProjectHandlerImpl might not been have been completly created");
+				log.debug(
+					"In development mode, to avoid a useless 'NullPointerException', " +
+					"because either ProjectHandlerImpl, or StaffHandlerImpl, or SkillHandlerImpl " +
+					"might not been have been completly created");
 			}
 			return;
 		}
+
 		synchronized (projectHandler.getLocker()) {
 			try {
 				if (projectHandler.isDataUpdated() | projectAuditHandler.isDataUpdated() ) {

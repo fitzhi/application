@@ -1,9 +1,8 @@
 /**
  * 
  */
-package com.fitzhi.bean.impl;
+package com.fitzhi.bean.impl.ProjectHandler;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +27,12 @@ import com.fitzhi.exception.ApplicationException;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ProjectHandlerUpdateSkillsTest {
+public class ProjectHandlerUpdateSkillsBasedOnPomXmlEntryTest {
 
+	
+	private final int JAVA = 1;
+	private final int SPRING_CORE = 5;
+	
 	List<CommitHistory> repo;
 	
 	Project project;
@@ -40,13 +43,6 @@ public class ProjectHandlerUpdateSkillsTest {
 	@Autowired
 	SkillHandler skillHandler;
 	
-	final int ID_JAVA = 1;
-	
-	final int ID_TS = 2;
-
-	long sizeJavaProject = 0;
-	long sizeJavaPing = 0;
-	
 	@Before
 	public void before() throws ApplicationException {
 		
@@ -54,38 +50,32 @@ public class ProjectHandlerUpdateSkillsTest {
 		// We are adding code files with a Java file within it.
 		// We expect to retrieve the Java skill
 		//
-		CommitHistory javaPing = new CommitHistory("src/main/java/com/fitzhi/controller/PingController.java", 0); 
-		sizeJavaProject = new File(javaPing.getSourcePath()).length();
-		
-		CommitHistory javaProject = new CommitHistory("src/main/java/com/fitzhi/controller/ProjectController.java", 0); 
-		sizeJavaPing = new File(javaProject.getSourcePath()).length();
-		
+		CommitHistory java = new CommitHistory("src/main/java/com/fitzhi/controller/PingController.java", 0); 
 		CommitHistory php = new CommitHistory("src/test/resources/other-sources-for-testing-purpose/sample.php", 0); 
-		CommitHistory ts = new CommitHistory("../front-fitzhi/src/app/app.module.ts", 0); 
+		CommitHistory pomXml = new CommitHistory("pom.xml", 0); 
 		
 		repo = new ArrayList<CommitHistory>();
-		repo.add(javaPing);
-		repo.add(javaProject);
+		repo.add(java);
 		repo.add(php);
-		repo.add(ts);
+		repo.add(pomXml);
 		
 		project = new Project(1789, "my testing project");
 		project.setLocationRepository(".");
+
 		projectHandler.addNewProject(project);
 		
 	}
 	
 	@Test
 	public void addANonExistentSkill() throws ApplicationException {
+
 		projectHandler.updateSkills(project, repo);
 		Assert.assertFalse(projectHandler.lookup(1789).getSkills().isEmpty());
 		Assert.assertEquals(2, projectHandler.lookup(1789).getSkills().size());
-	
-		Assert.assertTrue(projectHandler.lookup(1789).getSkills().containsKey(ID_JAVA));
-		Assert.assertEquals(2, projectHandler.lookup(1789).getSkills().get(ID_JAVA).getNumberOfFiles());
-		Assert.assertEquals(sizeJavaProject + sizeJavaPing, projectHandler.lookup(1789).getSkills().get(ID_JAVA).getTotalFilesSize());
 		
-		Assert.assertTrue(projectHandler.lookup(1789).getSkills().containsKey(ID_TS));
+		Assert.assertTrue("Java should be detected", projectHandler.lookup(1789).getSkills().containsKey(JAVA));
+		Assert.assertTrue("Spring core should be detected", projectHandler.lookup(1789).getSkills().containsKey(SPRING_CORE));
+		
 	}
 	
 	@After

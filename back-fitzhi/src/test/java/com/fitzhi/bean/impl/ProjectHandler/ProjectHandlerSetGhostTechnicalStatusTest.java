@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fitzhi.bean.impl;
+package com.fitzhi.bean.impl.ProjectHandler;
 
 import java.util.Optional;
 
@@ -23,14 +23,14 @@ import com.fitzhi.exception.ApplicationException;
 
 /**
  * <p>
- * Test the method {@link ProjectHandler#setGhostTechnicalStatus(Project, String, boolean) ProjectHandler.setGhostTechnicalStatus}
- * </p>setGhostTechnicalStatus
+ * Test the method {@link ProjectHandler#associateStaffToGhost(com.fitzhi.data.internal.Project, String, int) ProjectHandler.associateStaffToGhost}
+ * </p>
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class ProjectHandlerAssociateStaffToGhostTest {
+public class ProjectHandlerSetGhostTechnicalStatusTest {
 	
 	@Autowired
 	ProjectHandler projectHandler;
@@ -39,7 +39,7 @@ public class ProjectHandlerAssociateStaffToGhostTest {
 	StaffHandler staffHandler;
 	
 	Project project;
-
+	
 	@Before
 	public void before() throws ApplicationException {
 		project = projectHandler.lookup(1);
@@ -50,7 +50,7 @@ public class ProjectHandlerAssociateStaffToGhostTest {
 	@Test
 	public void testPseudoOne() throws ApplicationException {
 		
-		projectHandler.associateStaffToGhost(project, "pseudoUnlinked", 1);	
+		projectHandler.setGhostTechnicalStatus(project, "pseudoUnlinked", true);	
 
 		Project p = projectHandler.lookup(1);
 		Optional<Ghost> oGhost = p.getGhosts().stream()
@@ -59,14 +59,14 @@ public class ProjectHandlerAssociateStaffToGhostTest {
 		if (!oGhost.isPresent()) {
 			throw new ApplicationException(-1, "Ghost has disappeared");
 		}
-		Assert.assertEquals(oGhost.get().getIdStaff(), 1);
-		
+		Assert.assertTrue(oGhost.get().isTechnical());
+		Assert.assertEquals(oGhost.get().getIdStaff(), Ghost.NULL);		
 	}
 
 	@Test
 	public void testPseudoTwo() throws ApplicationException {
 		
-		projectHandler.associateStaffToGhost(project, "pseudoLinked", 1);	
+		projectHandler.setGhostTechnicalStatus(project, "pseudoLinked", true);	
 
 		Project p = projectHandler.lookup(1);
 		Optional<Ghost> oGhost = p.getGhosts().stream()
@@ -75,7 +75,8 @@ public class ProjectHandlerAssociateStaffToGhostTest {
 		if (!oGhost.isPresent()) {
 			throw new ApplicationException(-1, "Ghost has disappeared");
 		}
-		Assert.assertEquals(oGhost.get().getIdStaff(), 1);
+		Assert.assertTrue(oGhost.get().isTechnical());
+		Assert.assertEquals(oGhost.get().getIdStaff(), Ghost.NULL);
 	}
 	
 	@After

@@ -1,4 +1,4 @@
-package com.fitzhi.bean.impl;
+package com.fitzhi.bean.impl.ProjectHandler;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
