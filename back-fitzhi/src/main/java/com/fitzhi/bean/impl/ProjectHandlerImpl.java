@@ -89,10 +89,6 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Autowired 
 	SkillHandler skillHandler;
 	
-	/**
-	 * @return the <strong>Project</strong> collection.
-	 * @throws ApplicationException exception thrown most probably if an {@link IOException} occurs during the de-serialization process.
-	 */
 	@Override
 	public Map<Integer, Project> getProjects() throws ApplicationException {
 		if (this.projects != null) {
@@ -100,6 +96,11 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		}
 		this.projects = dataSaver.loadProjects();
 		return projects;
+	}
+
+	@Override
+	public List<Project> activeProjects() throws ApplicationException {
+		return getProjects().values().stream().filter(Project::isActive).collect(Collectors.toList());
 	}
 
 	@Override
@@ -752,5 +753,16 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 		}
 		return (repo.toFile().exists());
 	}
+
+	@Override
+	public void updateStaffExperiences() throws ApplicationException {
+
+		for (Project project : this.activeProjects()) {
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Processing %s", project.getName()));
+			}
+		}
+	}
+
 
 }

@@ -24,11 +24,20 @@ import com.fitzhi.exception.NotFoundException;
 public interface ProjectHandler extends DataSaverLifeCycle {
 
 	/**
-	 * @return the complete collection of projects.
+	 * <em>The key of the Map id the {@link Project#id Project identifier}</em>
+	 * 
+	 * @return the complete map of projects.
 	 * @throws ApplicationException
 	 *             thrown most probably if an IO exception occurs
 	 */
 	Map<Integer, Project> getProjects() throws ApplicationException;
+
+	/**
+	 * Filter and return the active projects.
+	 * @return a list of active projects
+	 * @throws ApplicationException thrown if any problem occurs, most probably if an {@link IOException IO exception}.
+	 */
+	List<Project> activeProjects() throws ApplicationException;
 
 	/**
 	 * Search for a project associated to the passed name.
@@ -353,5 +362,12 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @return {@code true} if the path location declared inside the project is valid.
 	 */
 	boolean hasValidRepository(Project project);
+
+	/**
+	 * <p>Process and save the staff experiences from the project history.</p>
+	 * 
+	 * @throws ApplicationException thrown if any problem occurs.
+	 */
+	void updateStaffExperiences() throws ApplicationException;
 
 }
