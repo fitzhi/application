@@ -32,6 +32,8 @@ public class ProjectHandlerActiveProjectsTest {
 	@Test
 	public void activeProjects() throws ApplicationException {
 
+		projectHandler.getProjects().values().stream().forEach(p -> System.out.println(p.getId() +  "  " +p.getName())));
+
 		// There are 3 active projects declared in the file Projects.json.
 		Assert.assertEquals(3, projectHandler.activeProjects().size());
 
