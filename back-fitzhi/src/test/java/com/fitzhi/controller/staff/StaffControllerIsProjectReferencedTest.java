@@ -62,11 +62,11 @@ public class StaffControllerIsProjectReferencedTest {
 	
 	@Before 
 	public void after() throws ApplicationException {
-		projectHandler.getProjects().remove(1789);
-		projectHandler.getProjects().remove(1805);
-		staffHandler.getStaff().remove(10000);
-		staffHandler.getStaff().remove(10001);
-		staffHandler.getStaff().remove(10002);
+		projectHandler.removeProject(1789);
+		projectHandler.removeProject(1805);
+		staffHandler.removeStaff(10000);
+		staffHandler.removeStaff(10001);
+		staffHandler.removeStaff(10002);
 	}
 
 }

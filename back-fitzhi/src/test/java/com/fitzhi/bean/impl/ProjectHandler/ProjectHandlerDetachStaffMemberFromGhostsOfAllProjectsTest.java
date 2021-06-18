@@ -70,7 +70,7 @@ public class ProjectHandlerDetachStaffMemberFromGhostsOfAllProjectsTest {
 	
 	@After
 	public void after() throws Exception {
-		projectHandler.getProjects().remove(1789);
-		projectHandler.getProjects().remove(1805);
+		projectHandler.removeProject(1789);
+		projectHandler.removeProject(1805);
 	}
 }
