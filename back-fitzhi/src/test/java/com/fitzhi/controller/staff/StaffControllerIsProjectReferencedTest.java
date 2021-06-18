@@ -1,5 +1,6 @@
 package com.fitzhi.controller.staff;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -60,7 +61,7 @@ public class StaffControllerIsProjectReferencedTest {
 		Assert.assertTrue(staffHandler.isProjectReferenced(1789));
 	}	
 	
-	@Before 
+	@After 
 	public void after() throws ApplicationException {
 		projectHandler.removeProject(1789);
 		projectHandler.removeProject(1805);
