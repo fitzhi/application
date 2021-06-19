@@ -50,4 +50,15 @@ public @Data class DetectedExperience {
 		this.count++;
 		return this.count;
 	}
+
+	/**
+	 * Add a value to the {@code count} field and return the new value.
+	 * @param value the value to be added to the current count.
+	 * @return the new value of {@code count}
+	 */
+	public int add(final int value) {
+		this.count =+ value;
+		return this.count;
+	}
+
 }

@@ -1,7 +1,8 @@
 package com.fitzhi.data.internal;
 
 public enum TypeCode {
-    Annotation ("Annotation");
+    Annotation ("Annotation"),
+    NumberOfLines ("NumberOfLines");
   
     private String name = "";
 

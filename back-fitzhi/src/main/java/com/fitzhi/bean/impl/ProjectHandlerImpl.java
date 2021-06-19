@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -29,20 +30,28 @@ import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.bean.SonarHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.encryption.DataEncryption;
+import com.fitzhi.data.internal.DetectedExperience;
+import com.fitzhi.data.internal.Ecosystem;
+import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
+import com.fitzhi.data.internal.MapDetectedExperiences;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
+import com.fitzhi.data.internal.Skill;
+import com.fitzhi.data.internal.SkillDetectorType;
 import com.fitzhi.data.internal.SonarEvaluation;
 import com.fitzhi.data.internal.SonarProject;
+import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
+import com.fitzhi.source.crawler.EcosystemAnalyzer;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -65,35 +74,41 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	private Map<Integer, Project> projects;
 
 	/**
-	 * The staff Handler.
+	 * Component in charge of handling the staff members.
 	 */
 	@Autowired
 	public StaffHandler staffHandler;
 	
 	/**
-	 * For retrieving data from the persistent repository.
+	 * Service For retrieving data from the persistent repository.
 	 */
 	@Autowired
-	public DataHandler dataSaver;
+	public DataHandler dataHandler;
 			
 	/**
-	 * Bean in charge of handling connected Sonar server.
+	 * Component in charge of handling connected Sonar server.
 	 */
 	@Autowired
 	public SonarHandler sonarHandler;
 	
 	/**
-	 * Bean in charge of handling the skills server.
+	 * Component in charge of handling the skills server.
 	 */
 	@Autowired 
 	SkillHandler skillHandler;
 	
+	/**
+	 * This service is in charge of the detection of ecosystems and experiences.
+	 */
+	@Autowired
+	EcosystemAnalyzer ecosystemAnalyzer;
+
 	@Override
 	public Map<Integer, Project> getProjects() throws ApplicationException {
 		if (this.projects != null) {
 			return this.projects;
 		}
-		this.projects = dataSaver.loadProjects();
+		this.projects = dataHandler.loadProjects();
 		return projects;
 	}
 
@@ -756,12 +771,30 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	@Override
 	public void updateStaffExperiences() throws ApplicationException {
 
+		
+		MapDetectedExperiences experiences = new MapDetectedExperiences();
+
+		if (log.isInfoEnabled()) {
+			log.info("Evaluation of the skills levels based on the number of lines per type");
+		}
 		for (Project project : this.activeProjects()) {
 			if (log.isDebugEnabled()) {
 				log.debug(String.format("Processing %s", project.getName()));
 			}
+			
+			final SourceControlChanges changes = this.dataHandler.loadChanges(project);
+
+			List<Skill> skills = project.getSkills().values()
+				.stream()
+				.map(ProjectSkill::getIdSkill)
+				.map(id -> skillHandler.lookup(id))
+				.filter(Objects::nonNull)
+				.filter(skill -> skill.getDetectionTemplate().getDetectionType() == SkillDetectorType.FILENAME_DETECTOR_TYPE)
+				.collect(Collectors.toList());
+
+			// calculateExperiences(experiences, experiences);
+			// experiences.get(DetectedExperience.of())
 		}
 	}
-
 
 }

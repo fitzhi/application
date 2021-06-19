@@ -31,7 +31,7 @@ public class EcosystemAnalyzerLoadExperienceDetectionTemplatesTest {
 	@Test
 	public void loadNominal() throws ApplicationException {
 		Map<Integer, ExperienceDetectionTemplate> result = ecosystemAnalyzer.loadExperienceDetectionTemplates();
-		Assert.assertEquals(2, result.size());
+		Assert.assertEquals(4, result.size());
 		Assert.assertTrue(result.containsKey(0));
 		Assert.assertEquals(0, result.get(0).getIdEDT());
 		Assert.assertEquals(3, result.get(0).getIdSkill());

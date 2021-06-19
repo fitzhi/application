@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotNull;
 
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.data.internal.Ecosystem;
 import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.MapDetectedExperiences;
@@ -208,6 +209,9 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 		// such as e.g. "java$" for Java source file.
 		List<ExperienceDetectionTemplate> relevantDetectionTemplates = loadExperienceDetectionTemplates().values()
 			.stream()
+			// If the codePattern is null, we do not introspect the file content.
+			// This detection template corresponds to a "number of lines" detection template.
+			.filter(edt -> edt.getCodePattern() != null)
 			.filter(edt -> filePattern.equals(edt.getFilePattern()))
 			.collect(Collectors.toList());
 
@@ -223,6 +227,10 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 					final ExperienceParser parser = MarkAnnotationExpParser.of(project, edt);
 					parsers.add(parser);
 					break;
+				case NumberOfLines:
+					// The filter on codePattern as non null, should have evicted this kind of type of code.
+					// We're supposed to parse here the CONTENT of the source file.
+					throw new ApplicationRuntimeException("Should not pass here !");
 			}
 		}
 		return parsers.toArray(new ExperienceParser[0]);

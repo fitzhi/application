@@ -14,5 +14,17 @@
 		"importPattern": "^org.springframework.context.annotation.Bean$",
 		"codePattern": "^Bean$",
 		"filePattern": ".java$"
+	},
+	{
+		"idEDT": 2,
+		"idSkill": "1",
+		"typeCode": "NumberOfLines",
+		"filePattern": ".java$"
+	},
+	{
+		"idEDT": 3,
+		"idSkill": "11",
+		"typeCode": "NumberOfLines",
+		"filePattern": ".js$"
 	}
 ]
