@@ -73,7 +73,7 @@ describe('ProjectAuditBadgesComponent', () => {
 		project.audit[3] = new AuditTopic(3, 50, 100);
 		projectService = TestBed.inject(ProjectService);
 		projectService.project = project;
-		
+
 		projectService.projectLoaded$ = new BehaviorSubject(true);
 
 		cinematicService = TestBed.inject(CinematicService);

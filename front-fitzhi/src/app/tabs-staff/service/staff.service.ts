@@ -431,7 +431,7 @@ export class StaffService {
 		return this.httpClient.post<Collaborator>(
 			this.backendSetupService.url() + '/admin/' +
 			(veryFirstConnection ? 'veryFirstUser' : 'register'),
-			{ params: { login: username, password: password } });
+			{ login: username, password: password });
 	}
 
 	/**

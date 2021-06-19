@@ -1,23 +1,28 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { of } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { Collaborator } from 'src/app/data/collaborator';
 import { MessageBoxService } from 'src/app/interaction/message-box/service/message-box.service';
+import { BackendSetupService } from 'src/app/service/backend-setup/backend-setup.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { FileService } from 'src/app/service/file.service';
 import { StaffService } from './staff.service';
 
 describe('staffService', () => {
 	let service: StaffService;
+	let httpMock: HttpTestingController;
 
 	beforeEach(() => {
 		TestBed.configureTestingModule({
-			providers: [StaffService, FileService, MessageBoxService, CinematicService],
+			providers: [StaffService, FileService, MessageBoxService, CinematicService, BackendSetupService],
 			imports: [HttpClientTestingModule, MatDialogModule]
 		});
 		service = TestBed.inject(StaffService);
+		httpMock = TestBed.inject(HttpTestingController);
+		const backendSetupService = TestBed.inject(BackendSetupService);
+		localStorage.setItem('backendUrl', 'http://myServerUrl:8080');
 	});
 
 	it('should be simply created without error', () => {
@@ -81,6 +86,42 @@ describe('staffService', () => {
 				done();
 			}
 		});
+	});
+
+	it('registerUser$() for the first connection', done => {
+		service.registerUser$(true, 'myUser', 'myPass').subscribe({
+			next: createdStaff => {
+				expect(createdStaff.idStaff).toBe(1789);
+				done();
+			}
+		});
+		const req = httpMock.expectOne('http://myServerUrl:8080/api/admin/veryFirstUser');
+		expect(req.request.method).toBe('POST');
+		expect(req.request.body.login).toBe('myUser');
+		expect(req.request.body.password).toBe('myPass');
+		const staff = new Collaborator();
+		staff.idStaff = 1789;
+		req.flush(staff);
+	});
+
+	it('registerUser$() during lifetime of the application', done => {
+		service.registerUser$(false, 'myUser', 'myPass').subscribe({
+			next: createdStaff => {
+				expect(createdStaff.idStaff).toBe(1789);
+				done();
+			}
+		});
+		const req = httpMock.expectOne('http://myServerUrl:8080/api/admin/register');
+		expect(req.request.method).toBe('POST');
+		expect(req.request.body.login).toBe('myUser');
+		expect(req.request.body.password).toBe('myPass');
+		const staff = new Collaborator();
+		staff.idStaff = 1789;
+		req.flush(staff);
+	});
+
+	afterEach(() => {
+		httpMock.verify();
 	});
 
 });

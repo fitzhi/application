@@ -52,7 +52,7 @@ export class ProjectAuditService {
 	 * actually, there are 2 kinds of available details : __Report__ & __Tasks__.
 	 *
 	 * It is used but the component `app-project-audit-badges` to generate the corresponding details panel.
-	 * 
+	 *
 	 * The HTML `project-audit-badges` file iterates on the Audit details array emitted by this observable,
 	 * and inserts an `app-report-detail-form` component for each record.
 	 */
