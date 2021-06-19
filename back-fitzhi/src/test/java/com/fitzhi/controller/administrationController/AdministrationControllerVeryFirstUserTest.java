@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.controller.administrationController;
 
 import static com.fitzhi.Error.CODE_INVALID_FIRST_USER_ADMIN_ALREADY_CREATED;
