@@ -65,6 +65,16 @@ public interface SkillHandler extends DataSaverLifeCycle {
 	  */
 	 @NotNull Skill getSkill(int idSkill) throws NotFoundException;
 
+ 	/**
+	 * <p>
+	 * Retrieve the skill corresponding to the passed identifier.
+	 * </p>
+	 * 
+	 * @param idSkill the SKILL identifier.
+	 * @return the skill retrieved in the internal collection, or {@code null} if none exists.
+	 */
+	Skill lookup(int idSkill);
+
 	 /**
 	  * Load and return all types of detectors.
 	  * A skill can be detected in the repository by multiple ways. E.g. it might be a :

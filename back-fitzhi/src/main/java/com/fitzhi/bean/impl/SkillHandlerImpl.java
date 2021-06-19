@@ -18,6 +18,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import javax.validation.constraints.NotNull;
+
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.SkillHandler;
@@ -110,7 +112,7 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	}
 
 	@Override
-	public Skill getSkill(int idSkill) throws NotFoundException {
+	public @NotNull Skill getSkill(int idSkill) throws NotFoundException {
 		
 		Skill skill = getSkills().get(idSkill);
 		if (skill == null) {
@@ -118,6 +120,11 @@ public class SkillHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		}
 		
 		return skill;
+	}
+
+	@Override
+	public Skill lookup(int idSkill)  {
+		return getSkills().get(idSkill);
 	}
 
 	@Override
