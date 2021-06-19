@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
@@ -428,10 +428,15 @@ export class StaffService {
 	 * @param password  the given password
 	 */
 	registerUser$(veryFirstConnection: boolean, username: string, password: string): Observable<Collaborator> {
+		let params: HttpParams = new HttpParams();
+		params = params.set('login', username);
+		params = params.set('password', password);
+
 		return this.httpClient.post<Collaborator>(
 			this.backendSetupService.url() + '/admin/' +
 			(veryFirstConnection ? 'veryFirstUser' : 'register'),
-			{ login: username, password: password });
+			null,
+			{params});
 	}
 
 	/**

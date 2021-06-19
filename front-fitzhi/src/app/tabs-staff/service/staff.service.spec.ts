@@ -95,10 +95,10 @@ describe('staffService', () => {
 				done();
 			}
 		});
-		const req = httpMock.expectOne('http://myServerUrl:8080/api/admin/veryFirstUser');
+		const req = httpMock.expectOne('http://myServerUrl:8080/api/admin/veryFirstUser?login=myUser&password=myPass');
 		expect(req.request.method).toBe('POST');
-		expect(req.request.body.login).toBe('myUser');
-		expect(req.request.body.password).toBe('myPass');
+		expect(req.request.params.get('login')).toBe('myUser');
+		expect(req.request.params.get('password')).toBe('myPass');
 		const staff = new Collaborator();
 		staff.idStaff = 1789;
 		req.flush(staff);
@@ -111,10 +111,10 @@ describe('staffService', () => {
 				done();
 			}
 		});
-		const req = httpMock.expectOne('http://myServerUrl:8080/api/admin/register');
+		const req = httpMock.expectOne('http://myServerUrl:8080/api/admin/register?login=myUser&password=myPass');
 		expect(req.request.method).toBe('POST');
-		expect(req.request.body.login).toBe('myUser');
-		expect(req.request.body.password).toBe('myPass');
+		expect(req.request.params.get('login')).toBe('myUser');
+		expect(req.request.params.get('password')).toBe('myPass');
 		const staff = new Collaborator();
 		staff.idStaff = 1789;
 		req.flush(staff);
