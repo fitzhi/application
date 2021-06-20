@@ -791,6 +791,10 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			}
 
 			final SourceControlChanges changes = this.dataHandler.loadChanges(project);
+			// If the changes file does not exist, we skiip this project
+			if (changes == null) {
+				continue;
+			}
 
 			ecosystemAnalyzer.calculateExperiences(project, skills, changes, experiences);
 

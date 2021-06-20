@@ -111,6 +111,23 @@ public class ProjectHandlerUpdateStaffExperiencesTest {
 			new MapDetectedExperiences());	
 	}
 
+	@Test
+	public void calculateExperiencesNoChangesFile() throws ApplicationException {
+		
+		when(dataHandler.loadChanges(any(Project.class))).thenReturn(null);
+		when(dataHandler.loadProjects()).thenReturn(allProjects());
+		when(dataHandler.loadSkills()).thenReturn(allSkills());
+		
+		projectHandler.updateStaffExperiences();
+		
+		Skill[] skills = { skillFileDetection };
+		verify(ecosystemAnalyzer, never()).calculateExperiences(
+			projectActive, 
+			Arrays.asList(skills), 
+			new SourceControlChanges(),
+			new MapDetectedExperiences());	
+	}
+
 	@Test(expected = ApplicationException.class)
 	public void calculateExperiencesKO() throws ApplicationException {
 		
