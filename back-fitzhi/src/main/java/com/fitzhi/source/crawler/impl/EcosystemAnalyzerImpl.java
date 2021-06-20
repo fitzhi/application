@@ -31,6 +31,7 @@ import com.fitzhi.data.internal.MapDetectedExperiences;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
+import com.fitzhi.data.internal.TypeCode;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
 import com.fitzhi.source.crawler.git.GitUtil;
@@ -196,12 +197,36 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 		try (FileReader fr = new FileReader(fileEcosystem)) {
 			Type listDetectionTemplates = new TypeToken<List<ExperienceDetectionTemplate>>(){}.getType();
 			List<ExperienceDetectionTemplate> listExperiencesDetectionTemplate = gson.fromJson(fr, listDetectionTemplates);
-			Map<Integer, ExperienceDetectionTemplate> mapExperienceDetectionTemplatess = new HashMap<Integer, ExperienceDetectionTemplate>();
-			listExperiencesDetectionTemplate.forEach(edt -> mapExperienceDetectionTemplatess.put(edt.getIdEDT(), edt));
-			return mapExperienceDetectionTemplatess;
+			Map<Integer, ExperienceDetectionTemplate> mapExperienceDetectionTemplates = new HashMap<Integer, ExperienceDetectionTemplate>();
+			listExperiencesDetectionTemplate.forEach(edt -> mapExperienceDetectionTemplates.put(edt.getIdEDT(), edt));
+			return mapExperienceDetectionTemplates;
 		} catch (final Exception e) {
 			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, fileEcosystem.getAbsolutePath()), e);
 		}
+	}
+
+	@Override
+	public Map<Integer, ExperienceDetectionTemplate> loadExperienceDetectionTemplates(@NotNull TypeCode typeCode, 
+			List<Skill> skills) throws ApplicationException {
+		
+		Map<Integer, ExperienceDetectionTemplate> mapExperienceDetectionTemplates = loadExperienceDetectionTemplates();
+		
+		// We filter on the of code
+		List<ExperienceDetectionTemplate> result = mapExperienceDetectionTemplates.values()
+			.stream()
+			.filter(edt -> edt.getTypeCode().equals(typeCode))
+			.collect(Collectors.toList());
+
+		// We filter on the given list
+		if (skills != null) {
+			Set<Integer> setIds = skills.stream().map(Skill::getId).collect(Collectors.toSet());
+			result = result.stream().filter(edt -> setIds.contains(edt.getIdSkill())).collect(Collectors.toList());
+		}
+
+		// We build the resulting map
+		Map<Integer, ExperienceDetectionTemplate> mapResult = new HashMap<>();
+		result.stream().forEach(edt -> mapResult.put(edt.getIdEDT(), edt));
+		return mapResult;
 	}
 
 	@Override

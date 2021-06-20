@@ -1,8 +1,11 @@
 package com.fitzhi.source.crawler.impl;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import com.fitzhi.data.internal.ExperienceDetectionTemplate;
+import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.TypeCode;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
@@ -29,7 +32,7 @@ public class EcosystemAnalyzerLoadExperienceDetectionTemplatesTest {
 	EcosystemAnalyzer ecosystemAnalyzer;
 	
 	@Test
-	public void loadNominal() throws ApplicationException {
+	public void loadOk() throws ApplicationException {
 		Map<Integer, ExperienceDetectionTemplate> result = ecosystemAnalyzer.loadExperienceDetectionTemplates();
 		Assert.assertEquals(4, result.size());
 		Assert.assertTrue(result.containsKey(0));
@@ -40,4 +43,22 @@ public class EcosystemAnalyzerLoadExperienceDetectionTemplatesTest {
 		Assert.assertEquals("^org.springframework.stereotype.Service$|^org.springframework.stereotype.Component$", result.get(0).getImportPattern());
 		Assert.assertEquals(".java$", result.get(0).getFilePattern());
 	}
+
+	@Test
+	public void TypeCodeFilteredLoad() throws ApplicationException {
+		Map<Integer, ExperienceDetectionTemplate> result = ecosystemAnalyzer.loadExperienceDetectionTemplates(TypeCode.NumberOfLines, null);
+		Assert.assertEquals(2, result.size());
+		Assert.assertTrue(result.containsKey(2));
+		Assert.assertTrue(result.containsKey(3));
+	}
+
+	@Test
+	public void SkillAndTypeCodeFilteredLoad() throws ApplicationException {
+		Skill[] skills = { new Skill(1, "one") };
+		List<Skill> list = Arrays.asList(skills);
+		Map<Integer, ExperienceDetectionTemplate> result = ecosystemAnalyzer.loadExperienceDetectionTemplates(TypeCode.NumberOfLines, list);
+		Assert.assertEquals(1, result.size());
+		Assert.assertTrue(result.containsKey(2));
+	}
+
 }

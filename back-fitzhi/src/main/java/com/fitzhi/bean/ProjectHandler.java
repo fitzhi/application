@@ -119,7 +119,7 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 
 	/**
 	 * Remove the given project from the collection.
-	 * @param project the project identifier
+	 * @param idProject the project identifier
 	 * @throws ApplicationException exception thrown if any problem occurs, most probably an {@link IOException}. 
 	 */
 	void removeProject(int idProject) throws ApplicationException;

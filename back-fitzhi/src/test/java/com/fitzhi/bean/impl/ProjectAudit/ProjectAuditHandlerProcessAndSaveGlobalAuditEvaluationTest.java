@@ -2,6 +2,7 @@ package com.fitzhi.bean.impl.ProjectAudit;
 
 import java.util.HashMap;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,4 +67,8 @@ public class ProjectAuditHandlerProcessAndSaveGlobalAuditEvaluationTest {
 		Assert.assertEquals("Audit evaluation has to be equal to 52", 52, project.getAuditEvaluation());
 	}
 		
+	@After
+	public void after() throws ApplicationException {
+		projectHandler.removeProject(1789); 
+	}
 }

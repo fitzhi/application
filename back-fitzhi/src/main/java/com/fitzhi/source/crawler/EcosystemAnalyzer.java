@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import javax.validation.constraints.NotNull;
+
 import com.fitzhi.data.internal.Ecosystem;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
+import com.fitzhi.data.internal.TypeCode;
 import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.MapDetectedExperiences;
 import com.fitzhi.exception.ApplicationException;
@@ -50,6 +53,18 @@ public interface EcosystemAnalyzer {
 	Map<Integer, ExperienceDetectionTemplate> loadExperienceDetectionTemplates() throws ApplicationException;
 
 	/**
+	 * Load the experience (skill/level) detection templates declared in the application
+	 * filtered by a {@link TypeCode type of code} and (facultative) a list of skills.
+	 * @param typeCode the given type of code to filter the detection templates.
+	 * @param skills the list of skills to filter the result.
+	 * If this list is{@code null}all records will be returned.
+	 * @return the resulting list of detection templates
+	 * @throws ApplicationException thrown if any problem occurs
+	 */
+	Map<Integer, ExperienceDetectionTemplate> loadExperienceDetectionTemplates(
+		@NotNull TypeCode typeCode, List<Skill> skills) throws ApplicationException;
+
+	/**
 	 * <p>
 	 * Initialize the array of parsers for this file pattern (such as {@code .java$}).
 	 * </p>
@@ -70,5 +85,13 @@ public interface EcosystemAnalyzer {
 	 */
 	MapDetectedExperiences loadDetectedExperiences(Project project, ExperienceParser ...parsers) throws ApplicationException;
 
+	/**
+	 * Update a collection of detected experiences of detected authors 
+	 * @param project the given project
+	 * @param skills the skills detectable with their filename patterns <em>(such as '.java$')</em>
+	 * @param changes the changes loaded for this project
+	 * @param experiences the experiences collection to be loaded with this project.
+	 * @throws ApplicationException throw if any proiblem occurs
+	 */
 	void calculateExperiences(Project project, List<Skill> skills, SourceControlChanges changes, MapDetectedExperiences experiences) throws ApplicationException;
 }

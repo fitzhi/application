@@ -1,7 +1,5 @@
 package com.fitzhi.scheduling;
 
-import javax.annotation.PostConstruct;
-
 import com.fitzhi.source.crawler.BatchRepositoryCrawler;
 
 import org.springframework.beans.factory.annotation.Autowired;

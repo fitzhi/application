@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * This class tests the method {@link ProjectHandler#activeProjects()}
  * 
@@ -17,6 +19,7 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Slf4j
 public class ProjectHandlerActiveProjectsTest {
 
 	@Autowired
@@ -24,6 +27,12 @@ public class ProjectHandlerActiveProjectsTest {
 		
 	@Test
 	public void activeProjects() throws ApplicationException {
+
+		if (log.isInfoEnabled()) {
+			if (projectHandler.activeProjects().size() != 3) {
+				projectHandler.activeProjects().stream().forEach(p -> log.info(p.getId() + " " + p.getName()));
+			}
+		}
 
 		// There are 3 active projects declared in the file Projects.json.
 		Assert.assertEquals(3, projectHandler.activeProjects().size());
