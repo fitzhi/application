@@ -1,7 +1,6 @@
 package com.fitzhi.bean.impl.DataHandler;
 
 import com.fitzhi.bean.DataHandler;
-import com.fitzhi.bean.impl.FileDataHandlerImpl;
 import com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;

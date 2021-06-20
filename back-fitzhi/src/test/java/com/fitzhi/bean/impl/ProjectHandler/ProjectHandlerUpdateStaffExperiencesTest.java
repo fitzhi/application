@@ -2,14 +2,13 @@ package com.fitzhi.bean.impl.ProjectHandler;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import com.fitzhi.bean.DataHandler;
@@ -24,17 +23,13 @@ import com.fitzhi.data.internal.SkillDetectorType;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
-import com.google.gson.JsonObject;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java_cup.runtime.lr_parser;
 
 /**
  * This class tests the method {@link ProjectHandler#updateStaffExperiences()}
@@ -60,49 +55,77 @@ public class ProjectHandlerUpdateStaffExperiencesTest {
 	@MockBean
 	DataHandler dataHandler;
 
-	@Test
-	public void updateNominal() throws ApplicationException {
-		
-		when(dataHandler.loadChanges(any(Project.class))).thenReturn(new SourceControlChanges());
+	private Project projectActive;
 
+	private Skill skillFileDetection;
+
+	private Map<Integer, Project> allProjects() {
 		Map<Integer, Project> allProjects = new HashMap<>();
-		final Project pOne = new Project(1, "one");
-		pOne.setActive(true);
+		projectActive = new Project(1, "one");
+		projectActive.setActive(true);
 		ProjectSkill psOne = new ProjectSkill(ID_SKILL_FILE_DETECTION);
 		ProjectSkill psTwo = new ProjectSkill(ID_SKILL_NOT_FILE_DETECTION);
 		Map<Integer, ProjectSkill> pOneSkills = new HashMap<>();
 		pOneSkills.put(ID_SKILL_FILE_DETECTION, psOne);
 		pOneSkills.put(ID_SKILL_NOT_FILE_DETECTION, psTwo);
-		pOne.setSkills(pOneSkills);		
-		allProjects.put(1, pOne);
+		projectActive.setSkills(pOneSkills);		
+		allProjects.put(1, projectActive);
 		final Project pTwo = new Project(1, "one");
 		pTwo.setActive(false);
 		allProjects.put(2, pTwo);
-		when(dataHandler.loadProjects()).thenReturn(allProjects);
+		return allProjects;
+	}
 
+	private Map<Integer, Skill> allSkills() {
 		Map<Integer, Skill> allSkills = new HashMap<>();
-		Skill skOne = new Skill(ID_SKILL_FILE_DETECTION, "Skill one", 
+		skillFileDetection = new Skill(ID_SKILL_FILE_DETECTION, "Skill one", 
 			new SkillDetectionTemplate(SkillDetectorType.FILENAME_DETECTOR_TYPE, "whocares$"));
-		allSkills.put(ID_SKILL_FILE_DETECTION, skOne);
+		allSkills.put(ID_SKILL_FILE_DETECTION, skillFileDetection);
 		Skill skTwo = new Skill(ID_SKILL_NOT_FILE_DETECTION, "Skill two", 
 			new SkillDetectionTemplate(SkillDetectorType.PACKAGE_JSON_DETECTOR_TYPE, "whocares$"));
 		allSkills.put(ID_SKILL_NOT_FILE_DETECTION, skTwo);
-		when(dataHandler.loadSkills()).thenReturn(allSkills);
+		return allSkills;
+	}
 
-		Skill[] skills = { skOne };
+	@Test
+	public void calculateExperiencesOK() throws ApplicationException {
+		
+		when(dataHandler.loadChanges(any(Project.class))).thenReturn(new SourceControlChanges());
+		when(dataHandler.loadProjects()).thenReturn(allProjects());
+		when(dataHandler.loadSkills()).thenReturn(allSkills());
+
+		Skill[] skills = { skillFileDetection };
 
 		doNothing().when(ecosystemAnalyzer).calculateExperiences(
-			pOne, 
+			projectActive, 
 			Arrays.asList(skills), 
 			new SourceControlChanges(),
 			new MapDetectedExperiences());	
 
 		projectHandler.updateStaffExperiences();
 
-		Mockito.verify(ecosystemAnalyzer, times(1)).calculateExperiences(
-			pOne, 
+		verify(ecosystemAnalyzer, times(1)).calculateExperiences(
+			projectActive, 
 			Arrays.asList(skills), 
 			new SourceControlChanges(),
 			new MapDetectedExperiences());	
 	}
+
+	@Test(expected = ApplicationException.class)
+	public void calculateExperiencesKO() throws ApplicationException {
+		
+		when(dataHandler.loadChanges(any(Project.class))).thenThrow(ApplicationException.class);
+		when(dataHandler.loadProjects()).thenReturn(allProjects());
+		when(dataHandler.loadSkills()).thenReturn(allSkills());
+		
+		projectHandler.updateStaffExperiences();
+		
+		Skill[] skills = { skillFileDetection };
+		verify(ecosystemAnalyzer, never()).calculateExperiences(
+			projectActive, 
+			Arrays.asList(skills), 
+			new SourceControlChanges(),
+			new MapDetectedExperiences());	
+	}
+
 }
