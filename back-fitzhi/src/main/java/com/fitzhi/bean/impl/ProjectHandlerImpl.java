@@ -770,7 +770,6 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 	@Override
 	public void updateStaffExperiences() throws ApplicationException {
-
 		
 		MapDetectedExperiences experiences = new MapDetectedExperiences();
 
@@ -782,17 +781,22 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				log.debug(String.format("Processing %s", project.getName()));
 			}
 			
-			final SourceControlChanges changes = this.dataHandler.loadChanges(project);
-
-			List<Skill> skills = project.getSkills().values()
+			final List<Skill> skills = project.getSkills().values()
 				.stream()
 				.map(ProjectSkill::getIdSkill)
 				.map(id -> skillHandler.lookup(id))
 				.filter(Objects::nonNull)
 				.filter(skill -> skill.getDetectionTemplate().getDetectionType() == SkillDetectorType.FILENAME_DETECTOR_TYPE)
 				.collect(Collectors.toList());
+			// No skill elligible for the experiences detection.
+			if (skills.isEmpty()) {
+				continue;
+			}
 
-			// calculateExperiences(experiences, experiences);
+			final SourceControlChanges changes = this.dataHandler.loadChanges(project);
+
+			ecosystemAnalyzer.calculateExperiences(project, skills, changes, experiences);
+
 			// experiences.get(DetectedExperience.of())
 		}
 	}

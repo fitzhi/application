@@ -3,11 +3,14 @@ package com.fitzhi.data.internal;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.EqualsAndHashCode;
+
 /**
  * <p>Map of detected experiences.</p>
  *
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
+@EqualsAndHashCode
 public class MapDetectedExperiences {
 
 	final Map<String, DetectedExperience> map = new HashMap<>();

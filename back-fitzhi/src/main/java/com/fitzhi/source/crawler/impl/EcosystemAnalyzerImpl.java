@@ -29,6 +29,8 @@ import com.fitzhi.data.internal.Ecosystem;
 import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.MapDetectedExperiences;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.Skill;
+import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
 import com.fitzhi.source.crawler.git.GitUtil;
@@ -261,6 +263,12 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 		} catch (final IOException ioe) {
 			throw new ApplicationException (CODE_IO_EXCEPTION, ioe.getMessage());
 		}
+	}
+
+	@Override
+	public void calculateExperiences(Project project, List<Skill> skills, SourceControlChanges changes, MapDetectedExperiences experiences)
+		throws ApplicationException {
+
 	}
 
 }

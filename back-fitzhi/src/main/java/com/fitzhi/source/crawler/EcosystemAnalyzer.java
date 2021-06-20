@@ -6,6 +6,8 @@ import java.util.Set;
 
 import com.fitzhi.data.internal.Ecosystem;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.Skill;
+import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.MapDetectedExperiences;
 import com.fitzhi.exception.ApplicationException;
@@ -68,4 +70,5 @@ public interface EcosystemAnalyzer {
 	 */
 	MapDetectedExperiences loadDetectedExperiences(Project project, ExperienceParser ...parsers) throws ApplicationException;
 
+	void calculateExperiences(Project project, List<Skill> skills, SourceControlChanges changes, MapDetectedExperiences experiences) throws ApplicationException;
 }
