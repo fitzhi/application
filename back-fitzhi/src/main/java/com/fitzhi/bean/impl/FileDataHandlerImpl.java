@@ -469,7 +469,7 @@ public class FileDataHandlerImpl implements DataHandler {
 			}.getType();
 			List<ClazzDetectedExperiences> list = gson.fromJson(fr, typeListDetectedExperience);
 			list.stream().forEach(entry -> result.getValues().add(
-				new DetectedExperience(
+				DetectedExperience.of(
 					entry.idExperienceDetectionTemplate, 
 					entry.idProject, 
 					entry.author, 

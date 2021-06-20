@@ -49,14 +49,11 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
-import org.apache.commons.collections.keyvalue.TiedMapEntry;
 import org.eclipse.jgit.api.Git;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
-
-import static com.fitzhi.data.internal.MapDetectedExperiences.key;
 
 /**
  * <p>
