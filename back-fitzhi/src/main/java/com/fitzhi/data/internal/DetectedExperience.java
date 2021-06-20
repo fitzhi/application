@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 @RequiredArgsConstructor(staticName = "of")
-@AllArgsConstructor
+@AllArgsConstructor(staticName = "of")
 public @Data class DetectedExperience {
 
 	/**
@@ -52,12 +52,12 @@ public @Data class DetectedExperience {
 	}
 
 	/**
-	 * Add a value to the {@code count} field and return the new value.
+	 * Add a value to the {@code count} field and return the new count value.
 	 * @param value the value to be added to the current count.
-	 * @return the new value of {@code count}
+	 * @return the current value
 	 */
 	public int add(final int value) {
-		this.count =+ value;
+		this.count += value;
 		return this.count;
 	}
 

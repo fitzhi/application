@@ -47,7 +47,7 @@ public interface EcosystemAnalyzer {
 
 	/**
 	 * Load the experience (skill/level) detection templates declared in the application.
-	 * @return the list of detection templates
+	 * @return the map of detection templates
 	 * @throws ApplicationException thrown if any problem occurs
 	 */
 	Map<Integer, ExperienceDetectionTemplate> loadExperienceDetectionTemplates() throws ApplicationException;
@@ -58,7 +58,7 @@ public interface EcosystemAnalyzer {
 	 * @param typeCode the given type of code to filter the detection templates.
 	 * @param skills the list of skills to filter the result.
 	 * If this list is{@code null}all records will be returned.
-	 * @return the resulting list of detection templates
+	 * @return the filtered map of detection templates. This map is empty if all templates are evicted.
 	 * @throws ApplicationException thrown if any problem occurs
 	 */
 	Map<Integer, ExperienceDetectionTemplate> loadExperienceDetectionTemplates(

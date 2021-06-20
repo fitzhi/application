@@ -133,7 +133,7 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 				PersonIdent pi = getPersonIdent(git, pathRelative.toString(), mae.getBegin().get().line);
 				Author author = new Author(pi.getName(), pi.getEmailAddress());
 				DetectedExperience de = DetectedExperience.of(detectionTemplate.getIdEDT(), project.getId(), author);
-				mapDetectedExperiences.add(de);
+				mapDetectedExperiences.inc(de);
 			}
 		}
 	}

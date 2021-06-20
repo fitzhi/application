@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 
 import com.fitzhi.ApplicationRuntimeException;
+import com.fitzhi.data.internal.DetectedExperience;
 import com.fitzhi.data.internal.Ecosystem;
 import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.MapDetectedExperiences;
@@ -35,6 +36,8 @@ import com.fitzhi.data.internal.TypeCode;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
 import com.fitzhi.source.crawler.git.GitUtil;
+import com.fitzhi.source.crawler.git.SourceChange;
+import com.fitzhi.source.crawler.git.SourceFileHistory;
 import com.fitzhi.source.crawler.javaparser.ExperienceParser;
 import com.fitzhi.source.crawler.javaparser.MarkAnnotationExpParser;
 import com.github.javaparser.ParseResult;
@@ -46,11 +49,14 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
+import org.apache.commons.collections.keyvalue.TiedMapEntry;
 import org.eclipse.jgit.api.Git;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
+
+import static com.fitzhi.data.internal.MapDetectedExperiences.key;
 
 /**
  * <p>
@@ -294,6 +300,24 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 	public void calculateExperiences(Project project, List<Skill> skills, SourceControlChanges changes, MapDetectedExperiences experiences)
 		throws ApplicationException {
 
+			Map<Integer, ExperienceDetectionTemplate>  templates = loadExperienceDetectionTemplates(TypeCode.NumberOfLines ,skills);
+			if (templates.isEmpty()) {
+				return;
+			}
+
+			for (ExperienceDetectionTemplate template : templates.values()) {
+				Pattern pattern = Pattern.compile(template.getFilePattern());
+				for (String filePath : changes.keySet()) {
+					Matcher matcher = pattern.matcher(filePath);
+					if (matcher.find()) {
+						SourceFileHistory history = changes.getSourceFileHistory(filePath);
+						for (SourceChange change : history.getChanges()) {
+							DetectedExperience de = DetectedExperience.of(template.getIdEDT(), project.getId(), change.getAuthor(), change.lines(), -1);
+							experiences.add(de);
+						}
+					}
+				}
+			}
 	}
 
 }
