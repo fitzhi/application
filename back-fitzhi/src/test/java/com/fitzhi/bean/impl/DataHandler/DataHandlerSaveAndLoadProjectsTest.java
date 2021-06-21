@@ -1,7 +1,7 @@
 /**
  * 
  */
-package com.fitzhi.bean.impl;
+package com.fitzhi.bean.impl.DataHandler;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,12 +19,14 @@ import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.exception.ApplicationException;
 
 /**
+ * Testing the method {@link DataHandler#saveProjects(Map) saveProjects} and  {@link DataHandler#loadProjects() loadProjects}
+ * 
  * @author Fr&eacute;d&eacute;ric VIDAL
  *
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class FileDataSaverImplTest {
+public class DataHandlerSaveAndLoadProjectsTest {
 
 	@Autowired
 	DataHandler dataSaver;
