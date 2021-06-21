@@ -12,7 +12,7 @@ import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.TypeCode;
 import com.fitzhi.data.internal.ExperienceDetectionTemplate;
-import com.fitzhi.data.internal.MapDetectedExperiences;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.javaparser.ExperienceParser;
 
@@ -83,7 +83,7 @@ public interface EcosystemAnalyzer {
 	 * @return The initialized {@Link MapDetectedExperiences map of detectedExperiences} loaded from the project
 	 * @throws ApplicationException thrown if any problem occurs.
 	 */
-	MapDetectedExperiences loadDetectedExperiences(Project project, ExperienceParser ...parsers) throws ApplicationException;
+	ProjectDetectedExperiences loadDetectedExperiences(Project project, ExperienceParser ...parsers) throws ApplicationException;
 
 	/**
 	 * Update a collection of detected experiences of detected authors 
@@ -93,5 +93,5 @@ public interface EcosystemAnalyzer {
 	 * @param experiences the experiences collection to be loaded with this project.
 	 * @throws ApplicationException throw if any proiblem occurs
 	 */
-	void calculateExperiences(Project project, List<Skill> skills, SourceControlChanges changes, MapDetectedExperiences experiences) throws ApplicationException;
+	void calculateExperiences(Project project, List<Skill> skills, SourceControlChanges changes, ProjectDetectedExperiences experiences) throws ApplicationException;
 }

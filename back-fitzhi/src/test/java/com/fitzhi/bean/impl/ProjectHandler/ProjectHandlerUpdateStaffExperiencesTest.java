@@ -14,7 +14,7 @@ import java.util.Map;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkillHandler;
-import com.fitzhi.data.internal.MapDetectedExperiences;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.Skill;
@@ -100,7 +100,7 @@ public class ProjectHandlerUpdateStaffExperiencesTest {
 			projectActive, 
 			Arrays.asList(skills), 
 			new SourceControlChanges(),
-			new MapDetectedExperiences());	
+			new ProjectDetectedExperiences());	
 
 		projectHandler.updateStaffExperiences();
 
@@ -108,7 +108,7 @@ public class ProjectHandlerUpdateStaffExperiencesTest {
 			projectActive, 
 			Arrays.asList(skills), 
 			new SourceControlChanges(),
-			new MapDetectedExperiences());	
+			new ProjectDetectedExperiences());	
 	}
 
 	@Test
@@ -125,7 +125,7 @@ public class ProjectHandlerUpdateStaffExperiencesTest {
 			projectActive, 
 			Arrays.asList(skills), 
 			new SourceControlChanges(),
-			new MapDetectedExperiences());	
+			new ProjectDetectedExperiences());	
 	}
 
 	@Test(expected = ApplicationException.class)
@@ -142,7 +142,7 @@ public class ProjectHandlerUpdateStaffExperiencesTest {
 			projectActive, 
 			Arrays.asList(skills), 
 			new SourceControlChanges(),
-			new MapDetectedExperiences());	
+			new ProjectDetectedExperiences());	
 	}
 
 }

@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.DetectedExperience;
 import com.fitzhi.data.internal.ExperienceDetectionTemplate;
-import com.fitzhi.data.internal.MapDetectedExperiences;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 import com.github.javaparser.ast.CompilationUnit;
@@ -111,7 +111,7 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 	} 
 
 	@Override
-	public void analyze(CompilationUnit compilationUnit, Git git, MapDetectedExperiences mapDetectedExperiences) throws ApplicationException {
+	public void analyze(CompilationUnit compilationUnit, Git git, ProjectDetectedExperiences mapDetectedExperiences) throws ApplicationException {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Analyzing file %s", compilationUnit.getStorage().get().getFileName()));
 		}

@@ -28,7 +28,7 @@ import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.data.internal.DetectedExperience;
 import com.fitzhi.data.internal.Ecosystem;
 import com.fitzhi.data.internal.ExperienceDetectionTemplate;
-import com.fitzhi.data.internal.MapDetectedExperiences;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
@@ -268,10 +268,10 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 
 
 	@Override
-	public MapDetectedExperiences loadDetectedExperiences(Project project, ExperienceParser ...parsers) throws ApplicationException {
+	public ProjectDetectedExperiences loadDetectedExperiences(Project project, ExperienceParser ...parsers) throws ApplicationException {
 
 		try (Git git  = GitUtil.git(project)) {
-			final MapDetectedExperiences mapDetectedExperiences = MapDetectedExperiences.of();
+			final ProjectDetectedExperiences mapDetectedExperiences = ProjectDetectedExperiences.of();
 			// We parse the repository.
 			final ProjectRoot projectRoot = new ParserCollectionStrategy().collect(Paths.get(project.getLocationRepository()));
 			for (SourceRoot sourceRoot : projectRoot.getSourceRoots()) {
@@ -294,7 +294,7 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 	}
 
 	@Override
-	public void calculateExperiences(Project project, List<Skill> skills, SourceControlChanges changes, MapDetectedExperiences experiences)
+	public void calculateExperiences(Project project, List<Skill> skills, SourceControlChanges changes, ProjectDetectedExperiences experiences)
 		throws ApplicationException {
 
 			Map<Integer, ExperienceDetectionTemplate>  templates = loadExperienceDetectionTemplates(TypeCode.NumberOfLines ,skills);

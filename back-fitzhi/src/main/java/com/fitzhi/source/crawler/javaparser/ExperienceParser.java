@@ -1,6 +1,6 @@
 package com.fitzhi.source.crawler.javaparser;
 
-import com.fitzhi.data.internal.MapDetectedExperiences;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.exception.ApplicationException;
 import com.github.javaparser.ast.CompilationUnit;
 
@@ -23,5 +23,5 @@ public interface ExperienceParser {
 	 * @param mapDetectedExperiences the map of detected experiences to be loaded
 	 * @throws ApplicationException thrown if any problem occurs
 	 */
-	void analyze(CompilationUnit compilationUnit, Git git, MapDetectedExperiences mapDetectedExperiences) throws ApplicationException;
+	void analyze(CompilationUnit compilationUnit, Git git, ProjectDetectedExperiences mapDetectedExperiences) throws ApplicationException;
 }

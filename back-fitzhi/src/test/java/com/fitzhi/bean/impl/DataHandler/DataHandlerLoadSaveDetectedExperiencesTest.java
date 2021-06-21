@@ -5,8 +5,8 @@ import java.io.File;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.DetectedExperience;
-import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectDetectedExperiences;
+import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 
 import org.junit.Assert;
@@ -39,7 +39,7 @@ public class DataHandlerLoadSaveDetectedExperiencesTest {
 	public void saveOK() throws ApplicationException {
 		Project project = new Project(1790, "One year after the revolution");
 		ProjectDetectedExperiences experiences = new ProjectDetectedExperiences();
-		experiences.getValues().add(DetectedExperience.of(1, 1790, new Author("gbale", "gareth.bale@failed-penalty.com")));
+		experiences.add(DetectedExperience.of(1, 1790, new Author("gbale", "gareth.bale@failed-penalty.com")));
 		dataHandler.saveDetectedExperiences(project, experiences);
 		File f = new File("./src/test/resources/out_dir/changes-data/1790-project-detected-experiences.json");
 		if (log.isDebugEnabled()) {
@@ -56,12 +56,12 @@ public class DataHandlerLoadSaveDetectedExperiencesTest {
 	public void loadOk() throws ApplicationException {
 		Project project = new Project(1788, "One year before the revolution");
 		ProjectDetectedExperiences experiences = dataHandler.loadDetectedExperiences(project);
-		Assert.assertEquals(1, experiences.getValues().size());
-		Assert.assertEquals(1788, experiences.getValues().get(0).getIdProject());
-		Assert.assertEquals(10, experiences.getValues().get(0).getCount());
-		Assert.assertEquals(-1, experiences.getValues().get(0).getIdStaff());
-		Assert.assertEquals("frvidal", experiences.getValues().get(0).getAuthor().getName());
-		Assert.assertEquals("frederic.vidal@fitzhi.com", experiences.getValues().get(0).getAuthor().getEmail());
+		Assert.assertEquals(1, experiences.content().size());
+		Assert.assertEquals(1788, experiences.content().get(0).getIdProject());
+		Assert.assertEquals(10, experiences.content().get(0).getCount());
+		Assert.assertEquals(-1, experiences.content().get(0).getIdStaff());
+		Assert.assertEquals("frvidal", experiences.content().get(0).getAuthor().getName());
+		Assert.assertEquals("frederic.vidal@fitzhi.com", experiences.content().get(0).getAuthor().getEmail());
 	}
 
 	/**

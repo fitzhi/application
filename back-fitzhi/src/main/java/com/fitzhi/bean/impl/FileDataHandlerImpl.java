@@ -42,10 +42,10 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.ShuffleService;
 import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.DetectedExperience;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
 import com.fitzhi.data.internal.ProjectBuilding.YearWeek;
-import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.ProjectFloor;
 import com.fitzhi.data.internal.ProjectLayer;
 import com.fitzhi.data.internal.ProjectLayers;
@@ -446,7 +446,7 @@ public class FileDataHandlerImpl implements DataHandler {
 		}
 
 		try (FileWriter fw = new FileWriter(rootLocation.resolve(filename).toFile())) {
-			fw.write(gson.toJson(experiences.getValues()));
+			fw.write(gson.toJson(experiences.content()));
 		} catch (final Exception e) {
 			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		}
@@ -468,7 +468,7 @@ public class FileDataHandlerImpl implements DataHandler {
 			Type typeListDetectedExperience = new TypeToken<List<ClazzDetectedExperiences>>() {
 			}.getType();
 			List<ClazzDetectedExperiences> list = gson.fromJson(fr, typeListDetectedExperience);
-			list.stream().forEach(entry -> result.getValues().add(
+			list.stream().forEach(entry -> result.add(
 				DetectedExperience.of(
 					entry.idExperienceDetectionTemplate, 
 					entry.idProject, 
@@ -480,7 +480,6 @@ public class FileDataHandlerImpl implements DataHandler {
 		} catch (final Exception e) {
 			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, filename), e);
 		}
-
 		
 	}
 	

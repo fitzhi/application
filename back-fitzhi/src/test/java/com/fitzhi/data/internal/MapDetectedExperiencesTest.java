@@ -4,27 +4,27 @@ import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Testing the class {@link MapDetectedExperiences}.
+ * Testing the class {@link ProjectDetectedExperiences}.
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
 public class MapDetectedExperiencesTest {
 
 	@Test
 	public void key() {
-		String key = MapDetectedExperiences.key(DetectedExperience.of(1, 1789, new Author("name", "email@nope.com")));
+		String key = ProjectDetectedExperiences.key(DetectedExperience.of(1, 1789, new Author("name", "email@nope.com")));
 		Assert.assertEquals("name-email@nope.com-1", key);
 	}
 
 	@Test
 	public void addNewRecord() {
-		MapDetectedExperiences map = MapDetectedExperiences.of();
+		ProjectDetectedExperiences map = ProjectDetectedExperiences.of();
 		DetectedExperience de = map.inc(DetectedExperience.of(1, 1789, new Author("name", "email@nope.com")));
 		Assert.assertEquals(1, de.getCount());
 	}
 
 	@Test
 	public void add2TimesSameRecord() {
-		MapDetectedExperiences map = MapDetectedExperiences.of();
+		ProjectDetectedExperiences map = ProjectDetectedExperiences.of();
 		DetectedExperience de = map.inc(DetectedExperience.of(1, 1789, new Author("name", "email@nope.com")));
 		Assert.assertEquals(1, de.getCount());
 		de = map.inc(DetectedExperience.of(1, 1789, new Author("name", "email@nope.com")));
@@ -33,7 +33,7 @@ public class MapDetectedExperiencesTest {
 
 	@Test
 	public void getNominal() {
-		MapDetectedExperiences map = MapDetectedExperiences.of();
+		ProjectDetectedExperiences map = ProjectDetectedExperiences.of();
 		map.inc(DetectedExperience.of(1, 1789, new Author("name", "email@nope.com")));
 		DetectedExperience de = map.get(DetectedExperience.of(1, 1914, new Author("name", "email@nope.com")));
 		Assert.assertNotNull(de);

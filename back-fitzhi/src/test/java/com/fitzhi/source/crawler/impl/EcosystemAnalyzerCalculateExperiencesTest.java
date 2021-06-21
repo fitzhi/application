@@ -8,7 +8,7 @@ import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.DetectedExperience;
-import com.fitzhi.data.internal.MapDetectedExperiences;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceCodeDiffChange;
@@ -24,11 +24,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static com.fitzhi.data.internal.MapDetectedExperiences.key;
+import static com.fitzhi.data.internal.ProjectDetectedExperiences.key;
 
 /**
  * <p>
- * Test of the method {@link EcosystemAnalyzer#calculateExperiences(com.fitzhi.data.internal.Project, java.util.List, com.fitzhi.data.internal.SourceControlChanges, com.fitzhi.data.internal.MapDetectedExperiences) calculateExperiences(...)}
+ * Test of the method {@link EcosystemAnalyzer#calculateExperiences(com.fitzhi.data.internal.Project, java.util.List, com.fitzhi.data.internal.SourceControlChanges, com.fitzhi.data.internal.ProjectDetectedExperiences) calculateExperiences(...)}
  * </p>
  *
  * @author Fr&eacute;d&eacute;ric VIDAL
@@ -53,7 +53,7 @@ public class EcosystemAnalyzerCalculateExperiencesTest {
 	public void calculateExperiencesOneFileOk() throws ApplicationException {
 		Project project = new Project(570, "The prophet birth");
 		project.setActive(true);
-		MapDetectedExperiences experiences = new MapDetectedExperiences();
+		ProjectDetectedExperiences experiences = new ProjectDetectedExperiences();
 		Skill[] aSkills =  { skillHandler.getSkill(1) };
 		List<Skill> skills = Arrays.asList( aSkills ); 
 		SourceControlChanges scc = new SourceControlChanges();
@@ -76,7 +76,7 @@ public class EcosystemAnalyzerCalculateExperiencesTest {
 	public void calculateExperiencesMultipleFilesOk() throws ApplicationException {
 		Project project = new Project(570, "The prophet birth");
 		project.setActive(true);
-		MapDetectedExperiences experiences = new MapDetectedExperiences();
+		ProjectDetectedExperiences experiences = new ProjectDetectedExperiences();
 		Skill[] aSkills =  { skillHandler.getSkill(1) };
 		List<Skill> skills = Arrays.asList( aSkills ); 
 		SourceControlChanges scc = new SourceControlChanges();

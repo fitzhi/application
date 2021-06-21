@@ -9,9 +9,9 @@ import java.util.Map;
 
 import com.fitzhi.bean.impl.FileDataHandlerImpl.PathsType;
 import com.fitzhi.data.internal.DetectedExperience;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.ProjectBuilding;
-import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.ProjectLayers;
 import com.fitzhi.data.internal.RepositoryAnalysis;
 import com.fitzhi.data.internal.Skill;

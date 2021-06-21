@@ -8,7 +8,7 @@ import com.fitzhi.OSType;
 
 import com.fitzhi.data.internal.Author;
 import com.fitzhi.data.internal.DetectedExperience;
-import com.fitzhi.data.internal.MapDetectedExperiences;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
@@ -54,7 +54,7 @@ public class EcosystemAnalyzerLoadDetectedExperiencesTest {
 		}
 
 		final ExperienceParser[] parsers = this.ecosystemAnalyzer.loadExperienceParsers(this.project, ".java$");
-		MapDetectedExperiences map = ecosystemAnalyzer.loadDetectedExperiences(this.project, parsers);
+		ProjectDetectedExperiences map = ecosystemAnalyzer.loadDetectedExperiences(this.project, parsers);
 
 		DetectedExperience de = map.get(DetectedExperience.of(0, 0, new Author("frvidal", "frederic.vidal.perso@gmail.com")));
 		Assert.assertEquals(11, de.getCount());
