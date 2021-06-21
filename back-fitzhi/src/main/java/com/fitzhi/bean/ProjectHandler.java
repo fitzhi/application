@@ -368,6 +368,6 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * 
 	 * @throws ApplicationException thrown if any problem occurs.
 	 */
-	void updateStaffExperiences() throws ApplicationException;
+	void processProjectExperiences() throws ApplicationException;
 
 }

@@ -766,7 +766,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public void updateStaffExperiences() throws ApplicationException {
+	public void processProjectExperiences() throws ApplicationException {
 		
 		ProjectDetectedExperiences experiences = new ProjectDetectedExperiences();
 
