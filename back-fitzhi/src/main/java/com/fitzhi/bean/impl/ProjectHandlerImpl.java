@@ -798,7 +798,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 			ecosystemAnalyzer.calculateExperiences(project, skills, changes, experiences);
 
-			// experiences.get(DetectedExperience.of())
+			dataHandler.saveDetectedExperiences(project, experiences);
 		}
 	}
 

@@ -14,8 +14,8 @@ import java.util.Map;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.SkillHandler;
-import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SkillDetectionTemplate;
@@ -93,7 +93,8 @@ public class ProjectHandlerUpdateStaffExperiencesTest {
 		when(dataHandler.loadChanges(any(Project.class))).thenReturn(new SourceControlChanges());
 		when(dataHandler.loadProjects()).thenReturn(allProjects());
 		when(dataHandler.loadSkills()).thenReturn(allSkills());
-
+		doNothing().when(dataHandler).saveDetectedExperiences(any(Project.class), any(ProjectDetectedExperiences.class));
+		
 		Skill[] skills = { skillFileDetection };
 
 		doNothing().when(ecosystemAnalyzer).calculateExperiences(
@@ -109,6 +110,8 @@ public class ProjectHandlerUpdateStaffExperiencesTest {
 			Arrays.asList(skills), 
 			new SourceControlChanges(),
 			new ProjectDetectedExperiences());	
+
+		verify(dataHandler, times(1)).saveDetectedExperiences(any(Project.class), any(ProjectDetectedExperiences.class));
 	}
 
 	@Test
@@ -125,7 +128,9 @@ public class ProjectHandlerUpdateStaffExperiencesTest {
 			projectActive, 
 			Arrays.asList(skills), 
 			new SourceControlChanges(),
-			new ProjectDetectedExperiences());	
+			new ProjectDetectedExperiences());
+
+		verify(dataHandler, never()).saveDetectedExperiences(any(Project.class), any(ProjectDetectedExperiences.class));
 	}
 
 	@Test(expected = ApplicationException.class)
@@ -142,7 +147,9 @@ public class ProjectHandlerUpdateStaffExperiencesTest {
 			projectActive, 
 			Arrays.asList(skills), 
 			new SourceControlChanges(),
-			new ProjectDetectedExperiences());	
+			new ProjectDetectedExperiences());
+
+		verify(dataHandler, never()).saveDetectedExperiences(any(Project.class), any(ProjectDetectedExperiences.class));
 	}
 
 }
