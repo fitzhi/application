@@ -134,7 +134,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		
 		
 		Map<String, Long> result = completeExperiences.stream()
-			      .collect(Collectors.groupingBy(Experience::key, Collectors.counting()));
+				  .collect(Collectors.groupingBy(Experience::key, Collectors.counting()));
 
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("'/countGroupBySkills' number of agregators %d",result.keySet().size()));
@@ -821,7 +821,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		}
 		
 		Map<Integer, Integer> skills = activity.stream().collect(
-                Collectors.groupingBy(StaffActivitySkill::getIdSkill, Collectors.summingInt(StaffActivitySkill::getNumberOfChanges)));
+				Collectors.groupingBy(StaffActivitySkill::getIdSkill, Collectors.summingInt(StaffActivitySkill::getNumberOfChanges)));
 
 		for (int idSkill : skills.keySet()) {
 			if (staff.getExperience(idSkill) == null) {

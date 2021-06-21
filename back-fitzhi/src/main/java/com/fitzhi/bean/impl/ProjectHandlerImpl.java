@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -30,12 +31,14 @@ import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.bean.SonarHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.encryption.DataEncryption;
+import com.fitzhi.data.internal.DetectedExperience;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
+import com.fitzhi.data.internal.AuthorExperienceTemplate;
 import com.fitzhi.data.internal.Library;
-import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
 import com.fitzhi.data.internal.Skill;
@@ -44,6 +47,7 @@ import com.fitzhi.data.internal.SonarEvaluation;
 import com.fitzhi.data.internal.SonarProject;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.data.internal.Staff;
+import com.fitzhi.data.internal.StaffExperienceTemplate;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
@@ -64,7 +68,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implements ProjectHandler {
-	
+
 	/**
 	 * The Project collection.
 	 */
@@ -766,7 +770,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	}
 
 	@Override
-	public void processProjectExperiences() throws ApplicationException {
+	public void processProjectsExperiences() throws ApplicationException {
 		
 		ProjectDetectedExperiences experiences = new ProjectDetectedExperiences();
 
@@ -800,6 +804,49 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 			dataHandler.saveDetectedExperiences(project, experiences);
 		}
+	}
+
+	@Override
+	public Map<StaffExperienceTemplate, Integer> processGlobalExperiences() throws ApplicationException {
+
+		List<DetectedExperience> globalExperiences = new ArrayList<>();
+
+		for (Project project : this.activeProjects()) {
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Taking in account %s", project.getName()));
+			}
+
+			ProjectDetectedExperiences detectedExperiences = dataHandler.loadDetectedExperiences(project);
+			// No intermediate file saved for goof or bad reason : we skip this project
+			if (detectedExperiences == null) {
+				continue;
+			}
+
+			globalExperiences.addAll(detectedExperiences.content());
+
+		}
+
+		Map<AuthorExperienceTemplate, Integer> authorAggregations = globalExperiences.stream().collect(
+			Collectors.groupingBy(
+				DetectedExperience::getKeyAggregateExperience,
+				Collectors.summingInt(DetectedExperience::getCount)));
+		
+		Map<StaffExperienceTemplate, Integer> staffAggregations = new HashMap<>();
+		for (AuthorExperienceTemplate authorExperienceTemplate : authorAggregations.keySet()) {
+			Staff staff = staffHandler.lookup(authorExperienceTemplate.getAuthor());
+			if (staff != null) {
+				StaffExperienceTemplate key = StaffExperienceTemplate.of(authorExperienceTemplate.getIdExperienceDetectionTemplate(), staff.getIdStaff());
+				Integer count = staffAggregations.get(key);
+				if (count == null) {
+					// We create a new record 
+					staffAggregations.put(key, authorAggregations.get(authorExperienceTemplate));
+				} else { 
+					// We update an existing one
+					staffAggregations.put(key, authorAggregations.get(authorExperienceTemplate) + count);
+				}
+			}
+		}
+		return staffAggregations;
 	}
 
 }

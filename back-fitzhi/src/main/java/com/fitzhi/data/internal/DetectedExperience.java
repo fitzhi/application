@@ -61,4 +61,11 @@ public @Data class DetectedExperience {
 		return this.count;
 	}
 
+	/**
+	 * Generate and return a key usefukl to aggregate the global experiences
+	 * @return
+	 */
+	public AuthorExperienceTemplate getKeyAggregateExperience() {
+		return AuthorExperienceTemplate.of(idExperienceDetectionTemplate, author);
+	}
 }

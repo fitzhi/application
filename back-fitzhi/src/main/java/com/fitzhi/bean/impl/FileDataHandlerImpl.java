@@ -462,6 +462,18 @@ public class FileDataHandlerImpl implements DataHandler {
 			log.debug(String.format(LOADING_FILE_S, rootLocation.resolve(filename)));
 		}
 
+		File file = rootLocation.resolve(filename).toFile();
+		if (log.isDebugEnabled()) {
+			log.debug(String.format(LOADING_FILE_S, file.getAbsolutePath()));
+		}
+
+		if (!file.exists()) {
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("But, the file %s does not exist", file.getAbsolutePath()));
+			}
+			return null;
+		}
+
 		try (FileReader fr = new FileReader(rootLocation.resolve(filename).toFile())) {
 
 			ProjectDetectedExperiences result = new ProjectDetectedExperiences();

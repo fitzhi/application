@@ -118,7 +118,7 @@ public interface DataHandler {
 	 * Load the detected experiences.
 	 * </p>
 	 * @param project project whose {@link DetectedExperience experiences} have to be loaded.
-	 * @return a container of {@link DetectedExperience detected experiences}
+	 * @return a container of {@link DetectedExperience detected experiences}, or {@code null} if the backup file does not exist.
 	 * @throws ApplicationException thrown if an exception occurs during the saving process, most probably an {@link IOException}
 	 */
 	ProjectDetectedExperiences loadDetectedExperiences(Project project) throws ApplicationException;

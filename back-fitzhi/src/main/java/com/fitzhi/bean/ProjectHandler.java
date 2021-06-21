@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
 import com.fitzhi.data.internal.Library;
@@ -16,6 +17,8 @@ import com.fitzhi.data.internal.ProjectSkill;
 import com.fitzhi.data.internal.ProjectSonarMetricValue;
 import com.fitzhi.data.internal.SonarEvaluation;
 import com.fitzhi.data.internal.SonarProject;
+import com.fitzhi.data.internal.Staff;
+import com.fitzhi.data.internal.StaffExperienceTemplate;
 import com.fitzhi.data.source.CommitHistory;
 import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
@@ -364,10 +367,23 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	boolean hasValidRepository(Project project);
 
 	/**
-	 * <p>Process and save the staff experiences from the project history.</p>
+	 * <p>
+	 * Process <b>AND SAVE</b> the staff experiences for all active projects history.
+	 * </p>
 	 * 
 	 * @throws ApplicationException thrown if any problem occurs.
 	 */
-	void processProjectExperiences() throws ApplicationException;
+	void processProjectsExperiences() throws ApplicationException;
+
+	/**
+	 * <p>
+	 * Aggregate the experiences of all <b>active</b> projects.
+	 * </p>
+	 * 
+	 * @return a Map indexed by the couple ({@link Staff#getIdStaff() idStaff}; {@link ExperienceDetectionTemplate#getIdEDT() idExperienceTemplate}) 
+	 * associated with an aggregation of field value
+	 * @throws ApplicationException thrown if any problem occurs.
+	 */
+	Map<StaffExperienceTemplate, Integer> processGlobalExperiences() throws ApplicationException;
 
 }

@@ -68,10 +68,10 @@ public class DataHandlerLoadSaveDetectedExperiencesTest {
 	 * Testing the failed load.
 	 * @throws ApplicationException
 	 */
-	@Test(expected = ApplicationException.class)
+	@Test
 	public void loadKO() throws ApplicationException {
 		Project project = new Project(666, "Unknown project");
-		dataHandler.loadDetectedExperiences(project);
+		Assert.assertNull(dataHandler.loadDetectedExperiences(project));
 	}
 
 }

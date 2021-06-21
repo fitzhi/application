@@ -32,13 +32,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * This class tests the method {@link ProjectHandler#processProjectExperiences()}
+ * This class tests the method {@link ProjectHandler#processProjectsExperiences()}
  *
  * @author Frederic VIDAL
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ProjectHandlerProcessProjectExperiencesTest {
+public class ProjectHandlerProcessProjectsExperiencesTest {
 	
 	final int ID_SKILL_FILE_DETECTION = 1;
 	final int ID_SKILL_NOT_FILE_DETECTION = 2;
@@ -103,7 +103,7 @@ public class ProjectHandlerProcessProjectExperiencesTest {
 			new SourceControlChanges(),
 			new ProjectDetectedExperiences());	
 
-		projectHandler.processProjectExperiences();
+		projectHandler.processProjectsExperiences();
 
 		verify(ecosystemAnalyzer, times(1)).calculateExperiences(
 			projectActive, 
@@ -121,7 +121,7 @@ public class ProjectHandlerProcessProjectExperiencesTest {
 		when(dataHandler.loadProjects()).thenReturn(allProjects());
 		when(dataHandler.loadSkills()).thenReturn(allSkills());
 		
-		projectHandler.processProjectExperiences();
+		projectHandler.processProjectsExperiences();
 		
 		Skill[] skills = { skillFileDetection };
 		verify(ecosystemAnalyzer, never()).calculateExperiences(
@@ -140,7 +140,7 @@ public class ProjectHandlerProcessProjectExperiencesTest {
 		when(dataHandler.loadProjects()).thenReturn(allProjects());
 		when(dataHandler.loadSkills()).thenReturn(allSkills());
 		
-		projectHandler.processProjectExperiences();
+		projectHandler.processProjectsExperiences();
 		
 		Skill[] skills = { skillFileDetection };
 		verify(ecosystemAnalyzer, never()).calculateExperiences(

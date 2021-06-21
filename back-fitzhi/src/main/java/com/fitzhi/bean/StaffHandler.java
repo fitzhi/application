@@ -92,12 +92,15 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * <li>The author name contains ONE word and therefore this name is
 	 * corresponding either to the connection login, or the last name, or the first
 	 * name <i>(in that order)</i>.</li>
-	 * <li>The author name contains MULTIPLE words and therefore, it's corresponding
-	 * to user full name (first + last) or (last + first).</li>
+	 * <li>
+	 * The author name has MULTIPLE words and therefore his name is assumed to be 
+	 * to user fullname (first + last), or (last + first).
+	 * </li>
 	 * </ul>
 	 * </p>
-	 * @param author polymorphous author used to lookup for a staff member
-	 * @return the <i>first</i> staff corresponding to the criteria, or {@code NULL} is none's found
+	 * <br/>
+	 * @param author polymorphous author used to search for a staff member
+	 * @return the <i>first</i> staff corresponding to the criteria, or {@code NULL} if none's found
 	 */
 	Staff lookup(Author author);
 
