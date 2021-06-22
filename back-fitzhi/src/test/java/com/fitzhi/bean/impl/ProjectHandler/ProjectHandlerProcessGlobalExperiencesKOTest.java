@@ -2,27 +2,17 @@ package com.fitzhi.bean.impl.ProjectHandler;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Author;
-import com.fitzhi.data.internal.DetectedExperience;
 import com.fitzhi.data.internal.Project;
-import com.fitzhi.data.internal.ProjectDetectedExperiences;
-import com.fitzhi.data.internal.ProjectSkill;
-import com.fitzhi.data.internal.Staff;
-import com.fitzhi.data.internal.StaffExperienceTemplate;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
