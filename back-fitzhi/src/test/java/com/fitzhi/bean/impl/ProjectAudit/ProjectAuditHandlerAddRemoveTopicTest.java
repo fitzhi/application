@@ -112,5 +112,5 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 	@After
 	public void after() throws ApplicationException {
 		projectHandler.removeProject(ID_PROJECT);
-
+	}
 }
