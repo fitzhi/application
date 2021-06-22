@@ -1,5 +1,6 @@
 package com.fitzhi.source.crawler;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -7,6 +8,7 @@ import java.util.Set;
 import javax.validation.constraints.NotNull;
 
 import com.fitzhi.data.internal.Ecosystem;
+import com.fitzhi.data.internal.ExperienceAbacus;
 import com.fitzhi.data.internal.Project;
 import com.fitzhi.data.internal.Skill;
 import com.fitzhi.data.internal.SourceControlChanges;
@@ -33,10 +35,17 @@ public interface EcosystemAnalyzer {
 	/**
 	 * Load the ecosystems declared in the application.
 	 * @return the list of ecosystems
-	 * @throws ApplicationException thrown if any problem occurs
+	 * @throws ApplicationException thrown if any problem occurs, most probably an {@link IOException}
 	 */
 	Map<Integer, Ecosystem> loadEcosystems() throws ApplicationException;
 		
+	/**
+	 * Load the experiences abacus declared in the application.
+	 * @return the abacus of experiences
+	 * @throws ApplicationException thrown if any problem occurs, most probably an {@link IOException}
+	 */
+	List<ExperienceAbacus> loadExperienceAbacus() throws ApplicationException;
+
 	/**
 	 * Scan the repository and detect the ecosystems .
 	 * @param pathnames the set of pathnames retrieved in the repository

@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.source.crawler.impl;
 
 import java.time.LocalDate;

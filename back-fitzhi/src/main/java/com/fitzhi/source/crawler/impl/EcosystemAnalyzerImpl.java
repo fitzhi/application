@@ -27,6 +27,7 @@ import javax.validation.constraints.NotNull;
 import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.data.internal.DetectedExperience;
 import com.fitzhi.data.internal.Ecosystem;
+import com.fitzhi.data.internal.ExperienceAbacus;
 import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.ProjectDetectedExperiences;
 import com.fitzhi.data.internal.Project;
@@ -117,6 +118,23 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 		}
 	}
 	
+	@Override
+	public List<ExperienceAbacus> loadExperienceAbacus() throws ApplicationException {
+
+		final File fileAbacus = new File (referentialDir + "experience-abacus.json"); 
+		if (log.isDebugEnabled()) {
+			log.debug(String.format("Loading the file %s", fileAbacus.getAbsolutePath()));
+		}
+		
+		try (FileReader fr = new FileReader(fileAbacus)) {
+			Type listExperienceAbacusType = new TypeToken<List<ExperienceAbacus>>(){}.getType();
+			List<ExperienceAbacus> listExperienceAbacus = gson.fromJson(fr, listExperienceAbacusType);
+			return listExperienceAbacus;
+		} catch (final Exception e) {
+			throw new ApplicationException(CODE_IO_ERROR, MessageFormat.format(MESSAGE_IO_ERROR, fileAbacus.getAbsolutePath()), e);
+		}
+	}
+
 	@Override
 	public List<Ecosystem> detectEcosystems(Set<String> pathnames) throws ApplicationException {
 		

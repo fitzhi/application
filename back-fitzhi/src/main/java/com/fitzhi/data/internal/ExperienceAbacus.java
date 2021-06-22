@@ -9,22 +9,17 @@ import lombok.Data;
  *
  * @author Fr&eacute;d&eacute;ric VIDAL
  */
-public @Data class ExperienceLevelAbacus {
+public @Data class ExperienceAbacus {
 
 	/**
 	 * This object identifier.
 	 */
-	private final int idELA;
+	private final int idAbacus;
 
 	/**
 	 * The experience detection template
 	 */
 	private final int idExperienceDetectionTemplate;
-
-	/**
-	 * The Skill identifier.
-	 */
-	private int idSkill;
 
 	/**
 	 * The level in the skill corresponding to this codePattern.
