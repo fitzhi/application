@@ -12,7 +12,6 @@ public class DetectedExperienceTest {
 	@Test
 	public void testInstanciation() {
 		final DetectedExperience de = DetectedExperience.of(1, 1789, new Author("name", "email"));
-		Assert.assertEquals(-1, de.getIdStaff());
 		Assert.assertEquals(0, de.getCount());
 		Assert.assertEquals(1789, de.getIdProject());
 	}

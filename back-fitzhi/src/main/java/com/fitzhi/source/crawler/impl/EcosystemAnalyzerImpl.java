@@ -309,7 +309,7 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 					if (matcher.find()) {
 						SourceFileHistory history = changes.getSourceFileHistory(filePath);
 						for (SourceChange change : history.getChanges()) {
-							DetectedExperience de = DetectedExperience.of(template.getIdEDT(), project.getId(), change.getAuthor(), change.lines(), -1);
+							DetectedExperience de = DetectedExperience.of(template.getIdEDT(), project.getId(), change.getAuthor(), change.lines());
 							experiences.add(de);
 						}
 					}

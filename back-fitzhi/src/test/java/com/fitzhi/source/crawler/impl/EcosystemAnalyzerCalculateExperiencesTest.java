@@ -109,7 +109,6 @@ public class EcosystemAnalyzerCalculateExperiencesTest {
 		Assert.assertEquals(2, de.getIdExperienceDetectionTemplate());
 		Assert.assertEquals(570, de.getIdProject());
 		Assert.assertEquals(15, de.getCount());
-		Assert.assertEquals(-1, de.getIdStaff());
 		Assert.assertEquals("frvidal", de.getAuthor().getName());
 		Assert.assertEquals("frederic.vidal@fitzhi.com", de.getAuthor().getEmail());
 
@@ -117,7 +116,6 @@ public class EcosystemAnalyzerCalculateExperiencesTest {
 		Assert.assertEquals(2, de.getIdExperienceDetectionTemplate());
 		Assert.assertEquals(570, de.getIdProject());
 		Assert.assertEquals(9, de.getCount());
-		Assert.assertEquals(-1, de.getIdStaff());
 		Assert.assertEquals("myUser", de.getAuthor().getName());
 		Assert.assertEquals("myuser@gmail.com", de.getAuthor().getEmail());
 

@@ -77,7 +77,7 @@ public class ProjectHandlerProcessGlobalExperiencesTest {
 	@Test
 	public void processGlobalExperiencesSingleProject() throws ApplicationException {
 		ProjectDetectedExperiences pde = new ProjectDetectedExperiences();
-		pde.add(DetectedExperience.of(1, 1, new Author("frvidal", "frederic.vidal@fitzhi.com"), 10, -1));
+		pde.add(DetectedExperience.of(1, 1, new Author("frvidal", "frederic.vidal@fitzhi.com"), 10));
 		when(dataHandler.loadDetectedExperiences(any(Project.class))).thenReturn(pde);
 
 		Staff staff = new Staff(1, "frvidal", "thepass");
@@ -100,7 +100,7 @@ public class ProjectHandlerProcessGlobalExperiencesTest {
 	@Test
 	public void processGlobalExperiencesUnknownAuthor() throws ApplicationException {
 		ProjectDetectedExperiences pde = new ProjectDetectedExperiences();
-		pde.add(DetectedExperience.of(1, 1, new Author("unknown", "ghost@fitzhi.com"), 10, -1));
+		pde.add(DetectedExperience.of(1, 1, new Author("unknown", "ghost@fitzhi.com"), 10));
 		when(dataHandler.loadDetectedExperiences(any(Project.class))).thenReturn(pde);
 
 		when(staffHandler.lookup(new Author("frvidal", "frederic.vidal@fitzhi.com"))).thenReturn(null);
@@ -124,8 +124,8 @@ public class ProjectHandlerProcessGlobalExperiencesTest {
 		allProjects().put(3, pThree);
 
 		ProjectDetectedExperiences pde = new ProjectDetectedExperiences();
-		pde.add(DetectedExperience.of(1, 1, new Author("frvidal", "frederic.vidal@fitzhi.com"), 10, -1));
-		pde.add(DetectedExperience.of(1, 3, new Author("frvidal", "frederic.vidal@fitzhi.com"), 30, -1));
+		pde.add(DetectedExperience.of(1, 1, new Author("frvidal", "frederic.vidal@fitzhi.com"), 10));
+		pde.add(DetectedExperience.of(1, 3, new Author("frvidal", "frederic.vidal@fitzhi.com"), 30));
 		when(dataHandler.loadDetectedExperiences(any(Project.class))).thenReturn(pde);
 
 		Staff staff = new Staff(1, "frvidal", "thepass");
@@ -145,8 +145,8 @@ public class ProjectHandlerProcessGlobalExperiencesTest {
 	@Test
 	public void processGlobalExperiencesMultipleStaff() throws ApplicationException {
 		ProjectDetectedExperiences pde = new ProjectDetectedExperiences();
-		pde.add(DetectedExperience.of(1, 1, new Author("frvidal", "frederic.vidal@fitzhi.com"), 10, -1));
-		pde.add(DetectedExperience.of(1, 1, new Author("jdalton", "jdalton@gmail.com"), 30, -1));
+		pde.add(DetectedExperience.of(1, 1, new Author("frvidal", "frederic.vidal@fitzhi.com"), 10));
+		pde.add(DetectedExperience.of(1, 1, new Author("jdalton", "jdalton@gmail.com"), 30));
 		when(dataHandler.loadDetectedExperiences(any(Project.class))).thenReturn(pde);
 
 		Staff staffOne = new Staff(1, "frvidal", "thepass");

@@ -59,7 +59,6 @@ public class DataHandlerLoadSaveDetectedExperiencesTest {
 		Assert.assertEquals(1, experiences.content().size());
 		Assert.assertEquals(1788, experiences.content().get(0).getIdProject());
 		Assert.assertEquals(10, experiences.content().get(0).getCount());
-		Assert.assertEquals(-1, experiences.content().get(0).getIdStaff());
 		Assert.assertEquals("frvidal", experiences.content().get(0).getAuthor().getName());
 		Assert.assertEquals("frederic.vidal@fitzhi.com", experiences.content().get(0).getAuthor().getEmail());
 	}

@@ -1,7 +1,5 @@
 package com.fitzhi.data.internal;
 
-import static com.fitzhi.Global.UNKNOWN;
-
 import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
@@ -36,11 +34,6 @@ public @Data class DetectedExperience {
 	 * Number of references detected in project.
 	 */
 	private int count = 0;
-
-	/**
-	 * Staff identifier associated with this author.
-	 */
-	public int idStaff = UNKNOWN;
 
 	/**
 	 * Increment the {@code count} field and return the new value.

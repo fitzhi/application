@@ -485,8 +485,7 @@ public class FileDataHandlerImpl implements DataHandler {
 					entry.idExperienceDetectionTemplate, 
 					entry.idProject, 
 					entry.author, 
-					entry.count, 
-					entry.idStaff)
+					entry.count)
 			));
 			return result;
 		} catch (final Exception e) {
