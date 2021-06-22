@@ -2,6 +2,7 @@ package com.fitzhi.bean.impl.ProjectAudit;
 
 import java.util.HashMap;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +41,7 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 	private Project project;
 	
 	private int ID_PROJECT = 314116;
+
 	@Before
 	public void before() throws ApplicationException {
 		project = projectHandler.addNewProject(new Project(ID_PROJECT, "PI"));
@@ -107,4 +109,8 @@ public class ProjectAuditHandlerAddRemoveTopicTest {
 		projectAuditHandler.getTopic(ID_PROJECT, 666);		
 	}
 	
+	@After
+	public void after() throws ApplicationException {
+		projectHandler.removeProject(ID_PROJECT);
+
 }

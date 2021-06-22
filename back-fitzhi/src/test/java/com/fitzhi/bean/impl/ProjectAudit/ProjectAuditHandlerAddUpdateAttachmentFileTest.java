@@ -103,7 +103,7 @@ public class ProjectAuditHandlerAddUpdateAttachmentFileTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		projectHandler.getProjects().remove(ID_PROJECT);	
+		projectHandler.removeProject(ID_PROJECT);	
 	}
 	
 }

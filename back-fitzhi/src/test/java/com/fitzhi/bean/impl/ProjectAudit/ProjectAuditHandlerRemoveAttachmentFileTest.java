@@ -43,6 +43,7 @@ public class ProjectAuditHandlerRemoveAttachmentFileTest {
 	private Project project;
 	
 	private int ID_PROJECT = 314116;
+
 	@Before
 	public void before() throws ApplicationException {
 		project = projectHandler.addNewProject(new Project(ID_PROJECT, "PI"));
@@ -106,7 +107,7 @@ public class ProjectAuditHandlerRemoveAttachmentFileTest {
 	
 	@After
 	public void after() throws ApplicationException {
-		projectHandler.getProjects().remove(ID_PROJECT);	
+		projectHandler.removeProject(ID_PROJECT);	
 	}
 	
 }
