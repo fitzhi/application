@@ -70,7 +70,7 @@ public class ProjectHandlerProcessProjectsExperiencesTest {
 		pOneSkills.put(ID_SKILL_NOT_FILE_DETECTION, psTwo);
 		projectActive.setSkills(pOneSkills);		
 		allProjects.put(1, projectActive);
-		final Project pTwo = new Project(1, "one");
+		final Project pTwo = new Project(2, "Second project");
 		pTwo.setActive(false);
 		allProjects.put(2, pTwo);
 		return allProjects;
