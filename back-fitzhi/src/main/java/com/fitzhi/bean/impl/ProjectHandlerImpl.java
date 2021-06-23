@@ -867,6 +867,15 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			final int idEDT = staffExperienceTemplate.getIdExperienceDetectionTemplate();
 			final int value = experiences.get(staffExperienceTemplate);
 
+			// If the staff member does not exist anymore, we skip him
+			Staff staff = staffHandler.lookup(idStaff);
+			if (staff == null) {
+				if (log.isWarnEnabled()) {
+					log.warn(String.format("Staff id %d does not exist anymore", idStaff));
+				}
+				continue;
+			}
+
 			ExperienceDetectionTemplate edt = templates.get(idEDT);
 			if (edt == null) {
 				throw new ApplicationRuntimeException("WTF : edt should not be null at this stage!");
@@ -891,9 +900,10 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			}
 
 			ExperienceAbacus ea = oExperienceAbacus.get();
-
+			staffHandler.updateSkillSystemLevel(idStaff, idSkill, ea.getLevel());
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("updateSkillSystemLevel(%d, d,%d)", idStaff, idSkill, ea.getLevel()));
+			}
 		}
-
 	}
-
 }
