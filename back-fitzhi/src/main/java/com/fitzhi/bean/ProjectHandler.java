@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.validation.constraints.NotNull;
 
+import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
@@ -385,5 +386,16 @@ public interface ProjectHandler extends DataSaverLifeCycle {
 	 * @throws ApplicationException thrown if any problem occurs.
 	 */
 	Map<StaffExperienceTemplate, Integer> processGlobalExperiences() throws ApplicationException;
+
+	/**
+	 * <p>
+	 * Update for all staff members declared in the application, 
+	 * the <b>"system"</b> {@link Experience level for all skills} detected in the projects.
+	 * </p>
+	 * 
+	 * @param experiences the map containing the experiences retrieved from the activities 
+	 * @throws ApplicationException thrown if any problem occurs.
+	 */
+	void updateStaffSkillLevel(Map<StaffExperienceTemplate, Integer> experiences) throws ApplicationException;
 
 }

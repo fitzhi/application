@@ -12,7 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 /**
  * <p>
- * Test of the failure of method {@link EcosystemAnalyzer#loadExperienceAbacus()}
+ * Test the failure of the method {@link EcosystemAnalyzer#loadExperienceAbacus()}
  * </p>
  *
  * @author Fr&eacute;d&eacute;ric VIDAL

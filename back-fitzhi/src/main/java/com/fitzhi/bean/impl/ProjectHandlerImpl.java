@@ -31,10 +31,12 @@ import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.bean.SonarHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.encryption.DataEncryption;
+import com.fitzhi.data.internal.AuthorExperienceTemplate;
 import com.fitzhi.data.internal.DetectedExperience;
+import com.fitzhi.data.internal.ExperienceAbacus;
+import com.fitzhi.data.internal.ExperienceDetectionTemplate;
 import com.fitzhi.data.internal.FilesStats;
 import com.fitzhi.data.internal.Ghost;
-import com.fitzhi.data.internal.AuthorExperienceTemplate;
 import com.fitzhi.data.internal.Library;
 import com.fitzhi.data.internal.Mission;
 import com.fitzhi.data.internal.Project;
@@ -847,6 +849,51 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			}
 		}
 		return staffAggregations;
+	}
+
+	@Override
+	public void updateStaffSkillLevel(Map<StaffExperienceTemplate, Integer> experiences) throws ApplicationException {
+
+		// Nothing to do.
+		if (experiences.isEmpty()) {
+			return;
+		}
+
+		Map<Integer, ExperienceDetectionTemplate> templates = ecosystemAnalyzer.loadExperienceDetectionTemplates();
+
+		List<ExperienceAbacus> abacus = ecosystemAnalyzer.loadExperienceAbacus();
+		for (StaffExperienceTemplate staffExperienceTemplate : experiences.keySet()) {
+			final int idStaff = staffExperienceTemplate.getIdStaff();
+			final int idEDT = staffExperienceTemplate.getIdExperienceDetectionTemplate();
+			final int value = experiences.get(staffExperienceTemplate);
+
+			ExperienceDetectionTemplate edt = templates.get(idEDT);
+			if (edt == null) {
+				throw new ApplicationRuntimeException("WTF : edt should not be null at this stage!");
+			}
+
+			final int idSkill = edt.getIdSkill();
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Setting the level of skill/id %d for staff/id %d", idSkill, idStaff));
+			}
+
+			Optional<ExperienceAbacus> oExperienceAbacus = abacus.stream()
+				.filter (ea -> (ea.getIdExperienceDetectionTemplate() == idEDT))
+				.filter (ea -> (ea.getValue() < value))
+				.sorted((ea1, ea2) -> (ea2.getValue() - ea1.getValue()))
+				.findFirst();
+			if (oExperienceAbacus.isEmpty()) {
+				if (log.isWarnEnabled()) {
+					log.warn(String.format(
+						"Cannot retrieve an entry in the abacus for the value %d of %d", value, idEDT));
+				}
+				continue;
+			}
+
+			ExperienceAbacus ea = oExperienceAbacus.get();
+
+		}
+
 	}
 
 }
