@@ -882,7 +882,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				.filter (ea -> (ea.getValue() < value))
 				.sorted((ea1, ea2) -> (ea2.getValue() - ea1.getValue()))
 				.findFirst();
-			if (oExperienceAbacus.isEmpty()) {
+			if (!oExperienceAbacus.isPresent()) {
 				if (log.isWarnEnabled()) {
 					log.warn(String.format(
 						"Cannot retrieve an entry in the abacus for the value %d of %d", value, idEDT));
