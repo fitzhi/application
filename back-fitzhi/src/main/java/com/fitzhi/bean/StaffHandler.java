@@ -433,4 +433,14 @@ public interface StaffHandler extends DataSaverLifeCycle {
 	 * @throws ApplicationException thrown if any problem occurs
 	 */
 	void removeMission(int idStaff, int idProject) throws ApplicationException;
+
+	/**
+	 * Update the  <b>SYSTEM</b> level of a skill for a staff member
+	 * @param idStaff the Staff identifier
+	 * @param idSkill the Skill identifier
+	 * @param level the System level calculated by Hal
+	 * @throws ApplicationException thrown if any problem occurs.
+	 */
+	void updateSkillSystemLevel(int idStaff, int idSkill, int level) throws ApplicationException;
+
 }

@@ -24,12 +24,8 @@ import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
-
-import com.fitzhi.Error;
 import com.fitzhi.ApplicationRuntimeException;
+import com.fitzhi.Error;
 import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Author;
@@ -45,6 +41,10 @@ import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -921,4 +921,17 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		}
 	}
 	
+	@Override
+	public void updateSkillSystemLevel(int idStaff, int idSkill, int level) throws ApplicationException {
+		synchronized (lockDataUpdated) {
+			Staff staff = getStaff(idStaff);
+			Experience experience = staff.getExperience(idSkill);
+			if (experience != null) {
+				experience.setSystemLevel(level);
+			} else {
+				staff.getExperiences().add(new Experience(idSkill, -1, level));
+			}
+		}
+	}
+
 }
