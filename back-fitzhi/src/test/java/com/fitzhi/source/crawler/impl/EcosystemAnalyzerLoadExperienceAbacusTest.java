@@ -32,7 +32,7 @@ public class EcosystemAnalyzerLoadExperienceAbacusTest {
 		List<ExperienceAbacus> abacus = ecosystemAnalyzer.loadExperienceAbacus();
 		Assert.assertEquals(2, abacus.size());
 		Assert.assertEquals(0, abacus.get(0).getIdAbacus());
-		Assert.assertEquals(1, abacus.get(0).getIdExperienceDetectionTemplate());
+		Assert.assertEquals(2, abacus.get(0).getIdExperienceDetectionTemplate());
 		Assert.assertEquals(2000, abacus.get(0).getValue());
 		Assert.assertEquals(1, abacus.get(0).getLevel());
 	}
