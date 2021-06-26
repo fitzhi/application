@@ -23,8 +23,6 @@ import { StaffService } from '../service/staff.service';
 })
 export class StaffFormComponent extends BaseComponent implements OnInit, OnDestroy {
 
-	@Input() idStaff: number;
-
 	/**
 	 * Selected TAB.
 	 * This observable is fired by the StaffComponent class when the user changes the tab selected.
@@ -96,9 +94,6 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 
 	ngOnInit() {
 
-		if (traceOn()) {
-			console.log('Current staff member id ' + this.idStaff);
-		}
 		/**
 		 * We listen the parent component (StaffComponent) in charge of retrieving data from the back-end.
 		 */

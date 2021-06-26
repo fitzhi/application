@@ -57,7 +57,6 @@ export class StaffComponent extends BaseComponent implements OnInit, OnDestroy {
 			// Either we are in creation mode, or we load the collaborator from the back-end...
 			// We create an empty collaborator until the subscription is complete
 			this.collaborator = this.staffService.emptyStaff();
-
 			this.staffService.changeCollaborator(this.collaborator);
 
 			/*
