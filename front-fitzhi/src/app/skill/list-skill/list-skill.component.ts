@@ -121,9 +121,10 @@ export class ListSkillComponent extends BaseComponent implements OnInit, OnDestr
 	}
 
 	/**
-	 *  Save the criteria and load the form list
-	 * @param title the skill criteria
-	 * @param level the level (if any)
+	 *  Save the criteria and load the list of skills corresponding to the criteria.
+	 * 
+	 * @param title the title of the skill as the primary criteria
+	 * @param level the facultative level in the skill (if any), for a more precise filter
 	 */
 	public listStaff(title: string, level: number) {
 
