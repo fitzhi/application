@@ -931,8 +931,13 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			Experience experience = staff.getExperience(idSkill);
 			if (experience != null) {
 				experience.setSystemLevel(level);
+				// If the level in the skill has been explicitely assigned by the user, we do not change the level. 
+				if (!experience.isForced()) {
+					experience.setLevel(level);
+				}
 			} else {
-				staff.getExperiences().add(new Experience(idSkill, -1, level));
+				// The level cannot be forced for an experience created by the system. 
+				staff.getExperiences().add(new Experience(idSkill, level, level));
 			}
 			this.dataUpdated = true;
 		}

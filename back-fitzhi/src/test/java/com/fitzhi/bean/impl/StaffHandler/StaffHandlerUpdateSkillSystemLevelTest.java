@@ -39,14 +39,33 @@ public class StaffHandlerUpdateSkillSystemLevelTest {
 		Assert.assertEquals(0, staffHandler.getStaff(1789).getExperience(1).getSystemLevel());
 		staffHandler.updateSkillSystemLevel(1789, 1, 3);
 		Assert.assertEquals(3, staffHandler.getStaff(1789).getExperience(1).getSystemLevel());
+		Assert.assertEquals(3, staffHandler.getStaff(1789).getExperience(1).getLevel());
+		Assert.assertFalse(staffHandler.getStaff(1789).getExperience(1).isForced());		
 	}
 
+	@Test
+	public void nominalUpdateForced() throws ApplicationException {
+		// The level of this developer has been forced by the system
+		staffHandler.getStaff(1789).getExperience(1).setForced(true);
+		Assert.assertEquals(0, staffHandler.getStaff(1789).getExperience(1).getSystemLevel());
+		Assert.assertEquals(0, staffHandler.getStaff(1789).getExperience(1).getLevel());
+
+
+		staffHandler.updateSkillSystemLevel(1789, 1, 3);
+
+		Assert.assertEquals(3, staffHandler.getStaff(1789).getExperience(1).getSystemLevel());
+		Assert.assertEquals(0, staffHandler.getStaff(1789).getExperience(1).getLevel());
+		Assert.assertTrue(staffHandler.getStaff(1789).getExperience(1).isForced());		
+	}
+	
 	@Test
 	public void whenExperienceNotFoundAddNewOne() throws ApplicationException {
 		Assert.assertNull(staffHandler.getStaff(1789).getExperience(2));
 		staffHandler.updateSkillSystemLevel(1789, 2, 1);
 		Assert.assertNotNull(staffHandler.getStaff(1789).getExperience(2));
 		Assert.assertEquals(1, staffHandler.getStaff(1789).getExperience(2).getSystemLevel());
+		Assert.assertEquals(1, staffHandler.getStaff(1789).getExperience(2).getLevel());
+		Assert.assertFalse(staffHandler.getStaff(1789).getExperience(1).isForced());		
 	}
 
 	@Test (expected = ApplicationException.class)
