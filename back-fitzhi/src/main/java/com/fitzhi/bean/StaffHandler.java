@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import javax.validation.constraints.NotNull;
 
+import com.fitzhi.ApplicationRuntimeException;
 import com.fitzhi.bean.impl.StringTransform;
 import com.fitzhi.controller.StaffController;
 import com.fitzhi.data.internal.Experience;
@@ -290,10 +291,16 @@ public interface StaffHandler extends DataSaverLifeCycle {
 
 	/**
 	 * <p>
-	 * Update THE LEVEL ONLY of an experience.
+	 * Update ONLY THE LEVEL of an existing experience.
 	 * </p>
-	 * 
-	 * @param idStaff    the staff identifier
+	 * <p>
+	 * If there is no staff member for the given {@code idStaff}, this method will throw a {@link ApplicationRuntimeException}.
+	 * <b>The {@code idStaff} must be valid.</b>
+	 * </p>
+	 * <p>
+	 * If no corresponding experience has been found, this method will ignore this request.
+	 * </p>
+	 * @param idStaff the staff identifier
 	 * @param experience the experience whose level has to be updated.
 	 */
 	void updateExperience(int idStaff, Experience experience);
