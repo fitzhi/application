@@ -803,8 +803,16 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			}
 
 			ecosystemAnalyzer.calculateExperiences(project, skills, changes, experiences);
-
+			if (log.isDebugEnabled()) {
+				experiences.content()
+					.stream()
+					.forEach(exp -> log.debug(String.format("%s %d %d", exp.getAuthor().getName(), exp.getIdExperienceDetectionTemplate(), exp.getCount())));
+			}
 			dataHandler.saveDetectedExperiences(project, experiences);
+
+			if (log.isInfoEnabled()) {
+				log.info(String.format("Detection process terminated for %s", project.getName()));
+			}
 		}
 	}
 
@@ -901,8 +909,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 			ExperienceAbacus ea = oExperienceAbacus.get();
 			staffHandler.updateSkillSystemLevel(idStaff, idSkill, ea.getLevel());
-			if (log.isDebugEnabled()) {
-				log.debug(String.format("updateSkillSystemLevel(%d, d,%d)", idStaff, idSkill, ea.getLevel()));
+			if (log.isInfoEnabled()) {
+				log.info(String.format("updateSkillSystemLevel(%d, %d, %d)", idStaff, idSkill, ea.getLevel()));
 			}
 		}
 	}

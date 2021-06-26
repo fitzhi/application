@@ -1,13 +1,13 @@
 [
 	{
 		"idAbacus": 0,
-		"idExperienceDetectionTemplate": 1,
+		"idExperienceDetectionTemplate": 2,
 		"level": 1,
 		"value": 2000
 	},
 	{
 		"idAbacus": 1,
-		"idExperienceDetectionTemplate": 1,
+		"idExperienceDetectionTemplate": 2,
 		"level": 2,
 		"value": 10000
 	}

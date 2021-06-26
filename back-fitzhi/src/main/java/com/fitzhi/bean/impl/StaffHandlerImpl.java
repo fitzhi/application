@@ -871,6 +871,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				staff.setActive(true);
 				staff.setDateInactive(null);				
 			}
+			this.dataUpdated = true;
 		}
 	}
 
@@ -884,6 +885,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 				staff.setActive(true);
 				staff.setDateInactive(null);
 			}
+			this.dataUpdated = true;
 		}
 	}
 
@@ -918,6 +920,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			if (oMission.isPresent()) {
 				staff.getMissions().remove(oMission.get());
 			}
+			this.dataUpdated = true;
 		}
 	}
 	
@@ -931,6 +934,7 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 			} else {
 				staff.getExperiences().add(new Experience(idSkill, -1, level));
 			}
+			this.dataUpdated = true;
 		}
 	}
 

@@ -1,5 +1,6 @@
 package com.fitzhi.scheduling;
 
+import com.fitzhi.bean.ProjectHandler;
 import com.fitzhi.source.crawler.BatchRepositoryCrawler;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class ScheduledTasks {
 	@Value("${cron.experiences.detection}")
 	private String cronExperiencesDetection;
 	
+	@Autowired
+	ProjectHandler projectHandler;
+
 	@Scheduled(cron = "${cron.code.analysis}")
 	public void codeAnalysis() {
 		try {
@@ -45,6 +49,11 @@ public class ScheduledTasks {
 		try {
 			if (log.isInfoEnabled()) {
 				log.info("Starting the experiences detection.");
+			}
+			projectHandler.processProjectsExperiences();
+			projectHandler.updateStaffSkillLevel(projectHandler.processGlobalExperiences());
+			if (log.isInfoEnabled()) {
+				log.info("Peacefully terminate the experiences detection.");
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);

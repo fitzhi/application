@@ -115,6 +115,13 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Analyzing file %s", compilationUnit.getStorage().get().getFileName()));
 		}
+
+		// Recherche des librairies importées
+		compilationUnit.getImports();
+		// Pour exemple recherche des annotations du bloc de code, filtrées par un prédicat
+		compilationUnit.findAll(MarkerAnnotationExpr.class, this.predicate);
+
+
 		if (!contains(compilationUnit.getImports(), this.patternImport)) {
 			// Nothing to process.
 			return;
