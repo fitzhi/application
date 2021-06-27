@@ -42,7 +42,6 @@ describe('StaffFormComponent', () => {
 		messageBoxService = TestBed.inject(MessageBoxService);
 
 		staffService = TestBed.inject(StaffService);
-		component.idStaff = 2019;
 
 		const staff = new Collaborator();
 		staff.idStaff = 1789;

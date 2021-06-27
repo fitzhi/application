@@ -33,7 +33,6 @@ describe('StaffFormComponent', () => {
 		referentialService.profiles.push (new Profile('code nope', 'another labelOfCode'));
 
 		const staffService = TestBed.inject(StaffService);
-		component.idStaff = 2019;
 
 		staffService.changeCollaborator(
 			{
