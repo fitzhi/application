@@ -49,13 +49,7 @@ public class ProjectHandlerProcessGlobalExperiencesKOTest {
 	@Test(expected = ApplicationException.class)
 	public void processGlobalExperiencesKO() throws ApplicationException {
 		when(dataHandler.loadProjects()).thenThrow(ApplicationException.class);
-		verify(dataHandler, never()).loadDetectedExperiences(any(Project.class));
-		verify(staffHandler, never()).lookup(any(Author.class));
 		projectHandler.processGlobalExperiences();
 	}
 	
-	@After
-	public void after() throws ApplicationException {
-	}
-
 }
