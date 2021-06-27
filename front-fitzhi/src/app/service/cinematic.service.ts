@@ -113,9 +113,29 @@ export class CinematicService {
 				if (traceOn()) {
 					form.trace();
 				}
-				this.previousForm = form;
+				
+				// If we leave the master/detail cinematic, we change the context
+				if (!this.isInMasterDetail(this.previousForm, form)) {
+					this.previousForm = form;
+				}
+				
 			}
 		});
+	}
+	
+	/**
+	 * 
+	 * @param previousForm 
+	 * @param form 
+	 * @returns 
+	 */
+	isInMasterDetail(previousForm: Form, form: Form): boolean {
+		switch(form.formIdentifier) {
+			case Constants.DEVELOPERS_CRUD:
+				return (previousForm.formIdentifier === Constants.TABS_STAFF_LIST) 
+					|| (previousForm.formIdentifier === Constants.PROJECT_TAB_STAFF);
+		}
+		return false;
 	}
 
 	/**
