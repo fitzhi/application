@@ -13,6 +13,7 @@ import com.fitzhi.data.internal.Project;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
 
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +49,13 @@ public class ProjectHandlerProcessGlobalExperiencesKOTest {
 	@Test(expected = ApplicationException.class)
 	public void processGlobalExperiencesKO() throws ApplicationException {
 		when(dataHandler.loadProjects()).thenThrow(ApplicationException.class);
-		projectHandler.processGlobalExperiences();
 		verify(dataHandler, never()).loadDetectedExperiences(any(Project.class));
 		verify(staffHandler, never()).lookup(any(Author.class));
+		projectHandler.processGlobalExperiences();
+	}
+	
+	@After
+	public void after() throws ApplicationException {
 	}
 
 }
