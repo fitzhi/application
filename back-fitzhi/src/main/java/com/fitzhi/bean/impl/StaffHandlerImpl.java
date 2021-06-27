@@ -431,10 +431,9 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 	@Override
 	public void involve(Project project, List<Contributor> contributors) throws ApplicationException {
 		
-		
 		for (Contributor contributor : contributors) {
 			if (contributor.getIdStaff() != UNKNOWN) {
-				Staff staff = getStaff().get(contributor.getIdStaff());
+				Staff staff = lookup(contributor.getIdStaff());
 				if (staff == null) {
 					throw new ApplicationRuntimeException("SEVERE ERROR : No staff member corresponding to the id " + contributor.getIdStaff());
 				}

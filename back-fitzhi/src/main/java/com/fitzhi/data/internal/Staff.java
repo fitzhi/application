@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.data.internal;
 
 import java.time.LocalDate;
@@ -235,9 +232,10 @@ public @Data class Staff implements UserDetails {
 	 * @param contributor source contributor updated
 	 */
 	public void updateMission(final int idProject, final Contributor contributor) {
-		Optional<Mission> optMission = missions.stream()
-				.filter(mission -> mission.getIdProject() == idProject)
-				.findFirst();
+		Optional<Mission> optMission = missions
+			.stream()
+			.filter(mission -> mission.getIdProject() == idProject)
+			.findFirst();
 		if (optMission.isPresent()) {
 			Mission missionSelected = optMission.get();
 			missionSelected.setFirstCommit(contributor.getFirstCommit());

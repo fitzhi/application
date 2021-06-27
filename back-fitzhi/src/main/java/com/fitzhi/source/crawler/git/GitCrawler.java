@@ -177,7 +177,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 	 * <em>Optional</em> repositories location.
 	 * </p>
 	 * <ul>
-	 * <Li>
+	 * <li>
 	 * If this member variable is {@code null}, GitCrawler will create a temporary directory.
 	 * </li>
 	 * <li>
@@ -1671,7 +1671,6 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 				//
 				analysis.updateStaff(authorName, staff.getIdStaff());
 			}
-
 		}
 
 		this.tasks.logMessage(DASHBOARD_GENERATION, PROJECT, project.getId(),
