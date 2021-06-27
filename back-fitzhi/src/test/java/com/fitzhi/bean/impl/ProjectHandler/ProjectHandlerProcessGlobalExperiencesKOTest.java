@@ -34,12 +34,6 @@ public class ProjectHandlerProcessGlobalExperiencesKOTest {
 	ProjectHandler projectHandler;
 
 	@MockBean
-	EcosystemAnalyzer ecosystemAnalyzer;
-
-	@MockBean
-	StaffHandler staffHandler;
-
-	@MockBean
 	DataHandler dataHandler;
 
 	/**
