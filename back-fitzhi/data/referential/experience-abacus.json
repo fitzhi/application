@@ -16,5 +16,42 @@
 		"idExperienceDetectionTemplate": 2,
 		"level": 3,
 		"value": 20000
+	},
+	{
+		"idAbacus": 3,
+		"idExperienceDetectionTemplate": 3,
+		"level": 1,
+		"value": 0
+	},
+	{
+		"idAbacus": 4,
+		"idExperienceDetectionTemplate": 3,
+		"level": 2,
+		"value": 10000
+	},
+	{
+		"idAbacus": 5,
+		"idExperienceDetectionTemplate": 3,
+		"level": 3,
+		"value": 20000
+	},
+	{
+		"idAbacus": 6,
+		"idExperienceDetectionTemplate": 4,
+		"level": 1,
+		"value": 0
+	},
+	{
+		"idAbacus": 7,
+		"idExperienceDetectionTemplate": 4,
+		"level": 2,
+		"value": 10000
+	},
+	{
+		"idAbacus": 8,
+		"idExperienceDetectionTemplate": 4,
+		"level": 3,
+		"value": 20000
 	}
+
 ]

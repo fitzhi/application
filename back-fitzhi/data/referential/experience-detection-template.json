@@ -23,8 +23,14 @@
 	},
 	{
 		"idEDT": 3,
-		"idSkill": "11",
+		"idSkill": "12",
 		"typeCode": "NumberOfLines",
 		"filePattern": ".js$"
+	},
+	{
+		"idEDT": 4,
+		"idSkill": "8",
+		"typeCode": "NumberOfLines",
+		"filePattern": ".ts$"
 	}
 ]
