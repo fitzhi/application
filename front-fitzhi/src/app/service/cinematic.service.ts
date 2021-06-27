@@ -96,6 +96,16 @@ export class CinematicService {
 	 */
 	public auditHistory: { [idTopic: number]: AuditDetailsHistory } = {};
 
+	/**
+	* Master/Detail mode ON. The goBack() and goFoward() buttons are visible
+	*/
+	public masterDetailSubject$ = new BehaviorSubject<boolean>(false);
+
+	/**
+	* Master/Detail mode ON. The goBack() and goFoward() buttons are visible
+	*/
+	public masterDetail$ = this.masterDetailSubject$.asObservable();
+
 	constructor() {
 		// This observable has to stay active all along the life of the application.
 		this.currentActiveForm$.subscribe({
@@ -103,33 +113,9 @@ export class CinematicService {
 				if (traceOn()) {
 					form.trace();
 				}
-				// If we leave the master/cinematic, we change the context
-				// if (!this.isInMasterDetail(this.previousForm, form)) {
-					this.previousForm = form;
-				// }
+				this.previousForm = form;
 			}
 		});
-	}
-	/*
-	public static WELCOME = 0;
-	public static SKILLS_SEARCH = 1;
-	public static SKILLS_CRUD = 2;
-	public static DEVELOPERS_SEARCH = 3;
-	public static DEVELOPERS_CRUD = 4;
-	public static PROJECT_SEARCH = 5;
-	public static PROJECT_TABS_HOST = 6;
-	public static PROJECT_TAB_FORM = 7;
-	public static PROJECT_TAB_STAFF = 8;
-	public static TABS_STAFF_LIST = 9;
-	public static BACK_TO_LIST = 10;
-	*/
-	isInMasterDetail(previousForm: Form, form: Form): boolean {
-		switch(form.formIdentifier) {
-			case Constants.DEVELOPERS_CRUD:
-				return (previousForm.formIdentifier === Constants.TABS_STAFF_LIST) 
-					|| (previousForm.formIdentifier === Constants.PROJECT_TAB_STAFF);
-		}
-		return false;
 	}
 
 	/**

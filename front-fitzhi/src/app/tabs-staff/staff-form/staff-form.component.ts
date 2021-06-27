@@ -106,7 +106,8 @@ export class StaffFormComponent extends BaseComponent implements OnInit, OnDestr
 						this.initStaff();
 					}
 				}
-			}));
+			})
+		);
 
 		this.profiles = this.referentialService.profiles;
 	}

@@ -20,7 +20,7 @@
 
   <mat-step [completed]="completed[3]">
     <ng-template matStepLabel>Update this new user</ng-template>
-    <app-staff-form *ngIf="completed[1]" [idStaff]="idStaff" (messengerStaffUpdated)="setStaffUpdatedForUser($event)"></app-staff-form>
+    <app-staff-form *ngIf="completed[1]" (messengerStaffUpdated)="setStaffUpdatedForUser($event)"></app-staff-form>
   </mat-step>
 
   <mat-step >

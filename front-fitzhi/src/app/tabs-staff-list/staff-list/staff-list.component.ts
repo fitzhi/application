@@ -14,6 +14,7 @@ import { Collaborator } from 'src/app/data/collaborator';
 import { traceOn } from 'src/app/global';
 import { UserSetting } from 'src/app/base/user-setting';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
+import { CinematicService } from 'src/app/service/cinematic.service';
 
 @Component({
 	selector: 'app-staff-list',
@@ -55,6 +56,7 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 
 	constructor(
 		private tabsStaffListComponent: TabsStaffListService,
+		private cinematicService: CinematicService,
 		private referentialService: ReferentialService,
 		private skillService: SkillService,
 		private router: Router) {
@@ -113,8 +115,10 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 	}
 
 	public routeStaff(idStaff: number) {
-		this.tabsStaffListComponent.inMasterDetail = true;
 		this.router.navigate(['/user/' + idStaff], {});
+		setTimeout(() => {			
+			this.cinematicService.masterDetailSubject$.next(true);
+		}, 0);
 	}
 
 	/**

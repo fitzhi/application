@@ -30,11 +30,6 @@ export class TabsStaffListService {
 	public activeKey: string;
 
 	/**
-     * The tab content is used in master/detail way. The prev and the next button are visible.
-     */
-	public inMasterDetail = false;
-
-	/**
      * New search is made by the developer.
      */
 	public criterias$ = new Subject<ListCriteria>();

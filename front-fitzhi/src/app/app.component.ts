@@ -111,7 +111,9 @@ export class AppComponent extends BaseComponent implements OnInit, AfterViewInit
 				}
 				if (this.criteria) {
 					if ( isNumber(this.criteria) ) {
-						console.log ('Looking a developer with id %s', this.criteria);
+						if (traceOn()) {
+							console.log ('Looking a developer with id %s', this.criteria);
+						}
 						this.router.navigate(['/user/' + this.criteria]);
 					} else {
 						if (this.criteria.length > 0) {

@@ -1,7 +1,7 @@
 <div class="toolbar bg-light">
     <nav class="navbar navbar-light form-inline toolbar">
         <div>
-            <div class="btn-group form-inline buttons header_navigation_master_detail" [hidden]="!isInMasterDetail()">
+            <div class="btn-group form-inline buttons header_navigation_master_detail" *ngIf="(cinematicService.masterDetail$|async)">
 
                 <button 
                     class="btn btn-outline-secondary rounded" 

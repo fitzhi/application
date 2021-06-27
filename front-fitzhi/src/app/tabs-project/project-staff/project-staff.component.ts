@@ -166,10 +166,13 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	 * @param idStaff the Staff identifier selected
 	 */
 	public routeStaff(idStaff: number) {
-		this.tabsStaffListComponent.inMasterDetail = true;
 		this.router.navigate(['/user/' + idStaff], {});
 		this.cinematicService.setForm(Constants.DEVELOPERS_CRUD, '/staff/' + idStaff);
 		this.cinematicService.currentCollaboratorSubject$.next(idStaff);
+		setTimeout(() => {			
+			this.cinematicService.masterDetailSubject$.next(true);
+		}, 0);
+
 	}
 
 	/**

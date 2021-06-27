@@ -57,11 +57,6 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	criteria: string;
 
 	/**
-	* Master/Detail mode ON. The goBack() and goFoward() buttons are visible
-	*/
-	masterDetail: boolean;
-
-	/**
 	 * Previous identifier to be displayed if the user clicked on the PREV button
 	 */
 	previousId: number;
@@ -72,7 +67,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	nextId: number;
 
 	constructor(
-		private cinematicService: CinematicService,
+		public cinematicService: CinematicService,
 		private projectStaffService: ProjectStaffService,
 		private tabsStaffListService: TabsStaffListService) { super(); }
 
@@ -87,16 +82,11 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	 * to properly handle the state of the master/detail boolean.
 	 */
 	listenOnContext() {
-		this.subscriptions.add(
+			this.subscriptions.add(
 			this.cinematicService.currentActiveForm$.subscribe({
 				next: context => {
 					if (traceOn()) {
-						console.log('Active context', Constants.CONTEXT[context.formIdentifier]);
-					}
-					if (context.formIdentifier === Constants.DEVELOPERS_CRUD) {
-						this.masterDetail = this.tabsStaffListService.inMasterDetail;
-					} else {
-						this.masterDetail = false;
+						console.log('Active context : ', Constants.CONTEXT[context.formIdentifier]);
 					}
 					this.mode(context.formIdentifier);
 				}
@@ -174,12 +164,6 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	nothingActive() {
 		return (this.editedEntity === 0);
 	}
-	/**
-	 * Master/Detail mode ON. The goBack() and goFoward() buttons are visible
-	 */
-	isInMasterDetail() {
-		return this.masterDetail;
-	}
 
 	/**
 	 * Inform the toolbar that the user has choosed an entity to be edited (Staff, Skill, Project)
@@ -192,8 +176,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 			this.criteria = null;
 
 			// We have clicked on an 'Entity' button. We disabled the master detail behavior for the staff.
-			this.tabsStaffListService.inMasterDetail = false;
-
+			this.cinematicService.masterDetailSubject$.next(false);
 			this.messengerFormActive.emit(this.editedEntity);
 
 			if (traceOn()) {
@@ -262,7 +245,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	 * The user has clicked on the "Staff" member
 	 */
 	switchToStaff() {
-		this.masterDetail = false;
+		this.cinematicService.masterDetailSubject$.next(false);
 		this.mode(Constants.DEVELOPERS_CRUD);
 	}
 
@@ -270,7 +253,7 @@ export class ToolbarComponent extends BaseComponent implements OnInit, OnDestroy
 	 * End-user returns back to the main introducing dashboard.
 	 */
 	switchToDashboard() {
-		this.masterDetail = false;
+		this.cinematicService.masterDetailSubject$.next(false);
 		this.mode(Constants.WELCOME);
 	}
 
