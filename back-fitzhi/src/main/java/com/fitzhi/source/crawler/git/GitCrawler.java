@@ -144,7 +144,7 @@ public class GitCrawler extends AbstractScannerDataGenerator {
 
 	/**
 	 * <p>
-	 * Do we create dynamicaly staff member from the ghosts list 
+	 * Do we create dynamicaly staff member from the ghosts list.
 	 * </p>
 	 */
 	@Value("${autoStaffCreation}")

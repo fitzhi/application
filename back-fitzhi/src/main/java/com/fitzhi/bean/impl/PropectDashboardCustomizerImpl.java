@@ -143,7 +143,6 @@ public class PropectDashboardCustomizerImpl implements ProjectDashboardCustomize
 
 				CommitRepository repository = cacheDataHandler.getRepository(project);
 			
-				// 
 				if (repository != null) {
 					List<String> candidates = repository.extractMatchingUnknownContributors(staffHandler, staff);
 					

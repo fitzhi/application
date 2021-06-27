@@ -486,9 +486,10 @@ public class StaffHandlerImpl extends AbstractDataSaverLifeCycleImpl implements 
 		if (staff == null) {
 		}
 		
-		Optional<Mission> oMission = staff.getMissions().stream()
-				.filter(mission -> mission.getIdProject() == project.getId())
-				.findFirst();
+		Optional<Mission> oMission = staff.getMissions()
+			.stream()
+			.filter(mission -> mission.getIdProject() == project.getId())
+			.findFirst();
 		
 		Mission mission = (oMission.isPresent()) ? oMission.get() : new Mission();
 		mission.setIdProject(project.getId());
