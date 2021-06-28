@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -31,28 +32,17 @@ import org.springframework.test.context.junit4.SpringRunner;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@ContextConfiguration
 @TestPropertySource(properties = { 
 	"applicationOutDirectory=src/test/resources/file-content-parser/application",
 	"referential.dir=src/test/resources/file-content-parser/referential/"}) 
 public class ProjectHandlerProcessProjectsExperiencesContentParserTest {
 	
-	final int ID_SKILL_FILE_DETECTION = 1;
-	final int ID_SKILL_NOT_FILE_DETECTION = 2;
-
 	@Autowired
 	ProjectHandler projectHandler;
 
 	@Autowired
 	StaffHandler staffHandler;
-
-	@Autowired
-	SkillHandler skillHandler;
-
-	@Autowired
-	EcosystemAnalyzer ecosystemAnalyzer;
-
-	@Autowired
-	DataHandler dataHandler;
 
 	@Before
 	public void before() throws IOException, ApplicationException {
@@ -63,6 +53,7 @@ public class ProjectHandlerProcessProjectsExperiencesContentParserTest {
 	@Test
 	public void completeOperation() throws ApplicationException {
 		
+		Assert.assertTrue(staffHandler.lookup(1789).getExperiences().isEmpty());
 		projectHandler.processProjectsExperiences();
 		Map<StaffExperienceTemplate, Integer> experiences = projectHandler.processGlobalExperiences();
 		Assert.assertTrue(experiences.containsKey(StaffExperienceTemplate.of(0, 1789)));
