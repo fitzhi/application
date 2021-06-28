@@ -53,8 +53,9 @@ public class EcosystemAnalyzerLoadDetectedExperiencesTest {
 			return;
 		}
 
+		ProjectDetectedExperiences map = ProjectDetectedExperiences.of();
 		final ExperienceParser[] parsers = this.ecosystemAnalyzer.loadExperienceParsers(this.project, ".java$");
-		ProjectDetectedExperiences map = ecosystemAnalyzer.loadDetectedExperiences(this.project, parsers);
+		ecosystemAnalyzer.loadDetectedExperiences(this.project, map, parsers);
 
 		DetectedExperience de = map.get(DetectedExperience.of(0, 0, new Author("frvidal", "frederic.vidal.perso@gmail.com")));
 		Assert.assertEquals(11, de.getCount());

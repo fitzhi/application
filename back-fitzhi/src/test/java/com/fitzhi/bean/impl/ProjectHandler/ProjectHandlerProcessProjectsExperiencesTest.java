@@ -1,6 +1,8 @@
 package com.fitzhi.bean.impl.ProjectHandler;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -23,6 +25,7 @@ import com.fitzhi.data.internal.SkillDetectorType;
 import com.fitzhi.data.internal.SourceControlChanges;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
+import com.fitzhi.source.crawler.javaparser.ExperienceParser;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -61,8 +64,11 @@ public class ProjectHandlerProcessProjectsExperiencesTest {
 
 	private Map<Integer, Project> allProjects() {
 		Map<Integer, Project> allProjects = new HashMap<>();
+
+		// An active project with a local repository should be included.
 		projectActive = new Project(1, "one");
 		projectActive.setActive(true);
+		projectActive.setLocationRepository("locationRepository");
 		ProjectSkill psOne = new ProjectSkill(ID_SKILL_FILE_DETECTION);
 		ProjectSkill psTwo = new ProjectSkill(ID_SKILL_NOT_FILE_DETECTION);
 		Map<Integer, ProjectSkill> pOneSkills = new HashMap<>();
@@ -70,9 +76,17 @@ public class ProjectHandlerProcessProjectsExperiencesTest {
 		pOneSkills.put(ID_SKILL_NOT_FILE_DETECTION, psTwo);
 		projectActive.setSkills(pOneSkills);		
 		allProjects.put(1, projectActive);
+		
+		// An INACTIVE project should be repository should be ignored.
 		final Project pTwo = new Project(2, "Second project");
 		pTwo.setActive(false);
 		allProjects.put(2, pTwo);
+
+		// An active project WITHOUT LOCAL REPOSITORY should be ignored.
+		final Project pThree = new Project(3, "Third project");
+		pThree.setActive(true);
+		allProjects.put(3, pThree);
+
 		return allProjects;
 	}
 
@@ -87,9 +101,13 @@ public class ProjectHandlerProcessProjectsExperiencesTest {
 		return allSkills;
 	}
 
+
 	@Test
-	public void calculateExperiencesOK() throws ApplicationException {
+	public void calculateExperiences() throws ApplicationException {
 		
+		when(ecosystemAnalyzer.loadExperienceParsers(any(Project.class), anyString())).thenReturn(new ExperienceParser[0]);
+		doNothing().when(ecosystemAnalyzer).loadDetectedExperiences(projectActive, ProjectDetectedExperiences.of(), new ExperienceParser[0]);
+
 		when(dataHandler.loadChanges(any(Project.class))).thenReturn(new SourceControlChanges());
 		when(dataHandler.loadProjects()).thenReturn(allProjects());
 		when(dataHandler.loadSkills()).thenReturn(allSkills());
@@ -111,12 +129,17 @@ public class ProjectHandlerProcessProjectsExperiencesTest {
 			new SourceControlChanges(),
 			new ProjectDetectedExperiences());	
 
-		verify(dataHandler, times(1)).saveDetectedExperiences(any(Project.class), any(ProjectDetectedExperiences.class));
+		verify(dataHandler, atLeastOnce()).saveDetectedExperiences(any(Project.class), any(ProjectDetectedExperiences.class));
+		verify(ecosystemAnalyzer, times(1)).loadExperienceParsers(any(Project.class), anyString());
+		verify(ecosystemAnalyzer, times(1)).loadDetectedExperiences(projectActive, ProjectDetectedExperiences.of(), new ExperienceParser[0]);
 	}
 
 	@Test
 	public void calculateExperiencesNoChangesFile() throws ApplicationException {
 		
+		when(ecosystemAnalyzer.loadExperienceParsers(any(Project.class), anyString())).thenReturn(new ExperienceParser[0]);
+		doNothing().when(ecosystemAnalyzer).loadDetectedExperiences(projectActive, ProjectDetectedExperiences.of(), new ExperienceParser[0]);
+
 		when(dataHandler.loadChanges(any(Project.class))).thenReturn(null);
 		when(dataHandler.loadProjects()).thenReturn(allProjects());
 		when(dataHandler.loadSkills()).thenReturn(allSkills());
@@ -130,12 +153,16 @@ public class ProjectHandlerProcessProjectsExperiencesTest {
 			new SourceControlChanges(),
 			new ProjectDetectedExperiences());
 
-		verify(dataHandler, never()).saveDetectedExperiences(any(Project.class), any(ProjectDetectedExperiences.class));
+		verify(ecosystemAnalyzer, times(1)).loadExperienceParsers(any(Project.class), anyString());
+		verify(ecosystemAnalyzer, times(1)).loadDetectedExperiences(projectActive, ProjectDetectedExperiences.of(), new ExperienceParser[0]);
 	}
 
 	@Test(expected = ApplicationException.class)
 	public void calculateExperiencesKO() throws ApplicationException {
 		
+		when(ecosystemAnalyzer.loadExperienceParsers(any(Project.class), anyString())).thenReturn(new ExperienceParser[0]);
+		doNothing().when(ecosystemAnalyzer).loadDetectedExperiences(projectActive, ProjectDetectedExperiences.of(), new ExperienceParser[0]);
+
 		when(dataHandler.loadChanges(any(Project.class))).thenThrow(ApplicationException.class);
 		when(dataHandler.loadProjects()).thenReturn(allProjects());
 		when(dataHandler.loadSkills()).thenReturn(allSkills());
@@ -150,6 +177,8 @@ public class ProjectHandlerProcessProjectsExperiencesTest {
 			new ProjectDetectedExperiences());
 
 		verify(dataHandler, never()).saveDetectedExperiences(any(Project.class), any(ProjectDetectedExperiences.class));
+		verify(ecosystemAnalyzer, times(1)).loadExperienceParsers(any(Project.class), anyString());
+		verify(ecosystemAnalyzer, times(1)).loadDetectedExperiences(projectActive, ProjectDetectedExperiences.of(), new ExperienceParser[0]);
 	}
 
 }

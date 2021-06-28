@@ -55,6 +55,7 @@ import com.fitzhi.data.source.Contributor;
 import com.fitzhi.exception.ApplicationException;
 import com.fitzhi.exception.NotFoundException;
 import com.fitzhi.source.crawler.EcosystemAnalyzer;
+import com.fitzhi.source.crawler.javaparser.ExperienceParser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -773,15 +774,79 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 	@Override
 	public void processProjectsExperiences() throws ApplicationException {
-		
-		ProjectDetectedExperiences experiences = new ProjectDetectedExperiences();
+		clearlProjectsExperiences();	
+		fillProjectsExperiencesWithLinesNumbers();
+		fillProjectsExperiencesWithCodeParsers();
+	}
+
+	/**
+	 * Load or create a new {@link ProjectDetectedExperiences container of Project experiences}.
+	 * @param project the given project
+	 * @return {@link ProjectDetectedExperiences container of experiences}
+	 * @throws ApplicationException thrown if any problem occurs
+	 */
+	private ProjectDetectedExperiences getProjectDetectedExperiences(final Project project) throws ApplicationException {
+		final ProjectDetectedExperiences experiences = dataHandler.loadDetectedExperiences(project);
+		if (experiences == null) {
+			return ProjectDetectedExperiences.of();
+		} else {
+			return experiences;
+		}
+	}
+
+	/**
+	 * Clean all experiences intermediate collections.
+	 * @throws ApplicationException thrown if any problem occurs
+	 */
+	private void clearlProjectsExperiences() throws ApplicationException {
+		for (Project project : this.activeProjects()) {
+			dataHandler.saveDetectedExperiences(project, ProjectDetectedExperiences.of());
+		}
+	}
+
+	/**
+	 * Evaluate the experience based on the content of a source file.
+	 * @param experiences the experiences detected on this project
+	 * @throws ApplicationException thrown if any problem occurs
+	 */
+	private void fillProjectsExperiencesWithCodeParsers() throws ApplicationException {
+		if (log.isInfoEnabled()) {
+			log.info("Evaluation of the skills levels based on content of the source files.");
+		}
+		for (Project project : this.activeProjects()) {
+			// We skip all projects without local repository. There is nothing to parse.
+			if (!project.hasLocalRepository()) {
+				continue;
+			}
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("Processing %s.", project.getName()));
+			}
+			final ExperienceParser[] parsers = this.ecosystemAnalyzer.loadExperienceParsers(project, ".java$");
+			if (log.isDebugEnabled()) {
+				for (ExperienceParser parser : parsers) {
+					log.debug(String.format("Parsers used %s.", parser.getClass().getName()));
+				}
+			}
+			ProjectDetectedExperiences experiences = getProjectDetectedExperiences(project);
+			ecosystemAnalyzer.loadDetectedExperiences(project, experiences, parsers);
+			dataHandler.saveDetectedExperiences(project, experiences);
+			if (log.isInfoEnabled()) {
+				log.info(String.format("Content detection process terminated for %s.", project.getName()));
+			}
+		}
+	}
+	/**
+	 * Evaluate the experience based on the number of lines implemented by developers.
+	 * @throws ApplicationException thrown if any problem occurs
+	 */
+	private void fillProjectsExperiencesWithLinesNumbers() throws ApplicationException {
 
 		if (log.isInfoEnabled()) {
-			log.info("Evaluation of the skills levels based on the number of lines per type");
+			log.info("Evaluation of the skills levels based on the number of lines per type.");
 		}
 		for (Project project : this.activeProjects()) {
 			if (log.isDebugEnabled()) {
-				log.debug(String.format("Processing %s", project.getName()));
+				log.debug(String.format("Processing %s.", project.getName()));
 			}
 			
 			final List<Skill> skills = project.getSkills().values()
@@ -802,16 +867,17 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 				continue;
 			}
 
+			ProjectDetectedExperiences experiences = getProjectDetectedExperiences(project);
 			ecosystemAnalyzer.calculateExperiences(project, skills, changes, experiences);
 			if (log.isDebugEnabled()) {
 				experiences.content()
 					.stream()
-					.forEach(exp -> log.debug(String.format("%s %d %d", exp.getAuthor().getName(), exp.getIdExperienceDetectionTemplate(), exp.getCount())));
+					.forEach(exp -> log.debug(String.format("%s %d %d.", exp.getAuthor().getName(), exp.getIdExperienceDetectionTemplate(), exp.getCount())));
 			}
 			dataHandler.saveDetectedExperiences(project, experiences);
 
 			if (log.isInfoEnabled()) {
-				log.info(String.format("Detection process terminated for %s", project.getName()));
+				log.info(String.format("Line number detection process terminated for %s.", project.getName()));
 			}
 		}
 	}

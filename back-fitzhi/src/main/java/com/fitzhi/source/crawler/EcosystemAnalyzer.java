@@ -88,11 +88,11 @@ public interface EcosystemAnalyzer {
 	 * Detect the experiences available in the Git repository.
 	 *
 	 * @param project the given project to be evaluated
+	 * @param projectDetectedExperiences the {@link ProjectDetectedExperiences container} of all the experiences detected in the portfolio
 	 * @param parsers List of detectors to be processed on this project
-	 * @return The initialized {@Link MapDetectedExperiences map of detectedExperiences} loaded from the project
 	 * @throws ApplicationException thrown if any problem occurs.
 	 */
-	ProjectDetectedExperiences loadDetectedExperiences(Project project, ExperienceParser ...parsers) throws ApplicationException;
+	void loadDetectedExperiences(Project project, ProjectDetectedExperiences projectDetectedExperiences, ExperienceParser ...parsers) throws ApplicationException;
 
 	/**
 	 * Update a collection of detected experiences of detected authors 

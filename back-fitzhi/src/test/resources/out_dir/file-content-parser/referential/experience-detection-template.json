@@ -1,0 +1,18 @@
+[
+	{
+		"idEDT": 0,
+		"idSkill": "3",
+		"typeCode": "Annotation",
+		"importPattern": "^org.springframework.stereotype.Service$|^org.springframework.stereotype.Component$",
+		"codePattern": "^Service$|^Component$",
+		"filePattern": ".java$"
+	},
+	{
+		"idEDT": 1,
+		"idSkill": "3",
+		"typeCode": "Annotation",
+		"importPattern": "^org.springframework.context.annotation.Bean$",
+		"codePattern": "^Bean$",
+		"filePattern": ".java$"
+	}
+]

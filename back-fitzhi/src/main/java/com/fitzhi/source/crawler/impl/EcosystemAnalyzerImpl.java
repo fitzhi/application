@@ -262,6 +262,10 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 			.filter(edt -> edt.getCodePattern() != null)
 			.filter(edt -> filePattern.equals(edt.getFilePattern()))
 			.collect(Collectors.toList());
+		if (log.isDebugEnabled()) {
+			relevantDetectionTemplates.stream()
+				.forEach(edt -> log.debug(String.format("%d %s", edt.getIdEDT(), edt.getCodePattern())));
+		}
 
 		// No detection template for this type of file.
 		if (relevantDetectionTemplates.size() == 0) {
@@ -286,10 +290,9 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 
 
 	@Override
-	public ProjectDetectedExperiences loadDetectedExperiences(Project project, ExperienceParser ...parsers) throws ApplicationException {
+	public void loadDetectedExperiences(Project project, ProjectDetectedExperiences mapDetectedExperiences, ExperienceParser ...parsers) throws ApplicationException {
 
 		try (Git git  = GitUtil.git(project)) {
-			final ProjectDetectedExperiences mapDetectedExperiences = ProjectDetectedExperiences.of();
 			// We parse the repository.
 			final ProjectRoot projectRoot = new ParserCollectionStrategy().collect(Paths.get(project.getLocationRepository()));
 			for (SourceRoot sourceRoot : projectRoot.getSourceRoots()) {
@@ -305,7 +308,6 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 					}
 				}
 			}
-			return mapDetectedExperiences;
 		} catch (final IOException ioe) {
 			throw new ApplicationException (CODE_IO_EXCEPTION, ioe.getMessage());
 		}
