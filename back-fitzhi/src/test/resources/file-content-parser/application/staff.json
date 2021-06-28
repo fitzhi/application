@@ -1,0 +1,17 @@
+{
+	"1789": {
+		"idStaff": 1789,
+		"firstName": "Frédéric",
+		"lastName": "VIDAL",
+		"nickName": "fvidal",
+		"login": "frvidal",
+		"email": "frederic.vidal@fitzhi.com",
+		"password": "",
+		"active": true,
+		"typeOfApplication": 0,
+		"external": false,
+		"missions": [],
+		"experiences": [],
+		"authorities": []
+	}
+}

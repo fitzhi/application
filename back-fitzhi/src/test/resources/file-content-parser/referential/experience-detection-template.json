@@ -1,7 +1,7 @@
 [
 	{
 		"idEDT": 0,
-		"idSkill": "3",
+		"idSkill": "5",
 		"typeCode": "Annotation",
 		"importPattern": "^org.springframework.stereotype.Service$|^org.springframework.stereotype.Component$",
 		"codePattern": "^Service$|^Component$",
@@ -9,7 +9,7 @@
 	},
 	{
 		"idEDT": 1,
-		"idSkill": "3",
+		"idSkill": "5",
 		"typeCode": "Annotation",
 		"importPattern": "^org.springframework.context.annotation.Bean$",
 		"codePattern": "^Bean$",

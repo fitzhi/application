@@ -112,6 +112,7 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 
 	@Override
 	public void analyze(CompilationUnit compilationUnit, Git git, ProjectDetectedExperiences mapDetectedExperiences) throws ApplicationException {
+
 		if (log.isDebugEnabled()) {
 			log.debug(String.format("Analyzing file %s", compilationUnit.getStorage().get().getFileName()));
 		}
@@ -131,7 +132,8 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 			if (mae.getBegin().isPresent()) {
 				Path pathRelative = pathGitDir.relativize(compilationUnit.getStorage().get().getPath());
 				if (log.isDebugEnabled()) {
-					log.debug (String.format("%s %s %s", compilationUnit.getStorage().get().getFileName(),
+					log.debug (String.format("%s %s %s", 
+						compilationUnit.getStorage().get().getFileName(),
 						mae,
 						getPersonIdent(git, pathRelative.toString(), mae.getBegin().get().line)));
 					// PersonIdent pi = getPersonIdent(git, pathRelative.toString(), mae.getBegin().get().line);

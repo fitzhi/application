@@ -111,4 +111,4 @@ back-fitzhi/doc/*.html
 back-fitzhi/doc/*.png
 
 back-fitzhi/doc/.asciidoctor
-
+back-fitzhi/src/test/resources/file-content-parser/application/changes-data/1789-project-detected-experiences.json

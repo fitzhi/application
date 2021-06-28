@@ -975,8 +975,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 			ExperienceAbacus ea = oExperienceAbacus.get();
 			staffHandler.updateSkillSystemLevel(idStaff, idSkill, ea.getLevel());
-			if (log.isInfoEnabled()) {
-				log.info(String.format("updateSkillSystemLevel(%d, %d, %d)", idStaff, idSkill, ea.getLevel()));
+			if (log.isDebugEnabled()) {
+				log.debug(String.format("updateSkillSystemLevel(%d, %d, %d)", idStaff, idSkill, ea.getLevel()));
 			}
 		}
 	}

@@ -98,7 +98,7 @@ public @Data class Staff implements UserDetails {
 	 * Empty construction.
 	 */
 	public Staff() {
-    	authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
+		authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
 	}
@@ -117,19 +117,19 @@ public @Data class Staff implements UserDetails {
 		this.password = password;
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
-    	authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
+		authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
 	}
 
 	/**
 	 * Construction of an <b>ACTIVE</b> staff member.
 	 * 
-	 * @param idStaff   staff identifier
+	 * @param idStaff staff identifier
 	 * @param firstName first name of this staff member
-	 * @param lastName  last name of this staff member
-	 * @param nickName  nickName of this staff member
-	 * @param login     login of this staff member
-	 * @param email     email of this staff member
-	 * @param level     the level of this staff member
+	 * @param lastName last name of this staff member
+	 * @param nickName nickName of this staff member
+	 * @param login login of this staff member
+	 * @param email email of this staff member
+	 * @param level the level of this staff member
 	 */
 	public Staff(final int idStaff, String firstName, String lastName, String nickName, String login, String email,
 			String level) {
@@ -142,7 +142,7 @@ public @Data class Staff implements UserDetails {
 		this.level = level;
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
-    	authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
+		authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
 	}
 
 	/**
@@ -174,7 +174,7 @@ public @Data class Staff implements UserDetails {
 		this.external = external;
 		missions = new ArrayList<>();
 		experiences = new ArrayList<>();
-    	authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
+		authorities.add(new CustomGrantedAuthority(ROLE_TRUSTED_USER));
 	}
 
 	/**
