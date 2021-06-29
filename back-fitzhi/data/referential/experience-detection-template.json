@@ -17,18 +17,26 @@
 	},
 	{
 		"idEDT": 2,
+		"idSkill": "22",
+		"typeCode": "Annotation",
+		"importPattern": "^org.springframework.boot.autoconfigure.SpringBootApplication$",
+		"codePattern": "^SpringBootApplication$",
+		"filePattern": ".java$"
+	},
+	{
+		"idEDT": 3,
 		"idSkill": "1",
 		"typeCode": "NumberOfLines",
 		"filePattern": ".java$"
 	},
 	{
-		"idEDT": 3,
+		"idEDT": 4,
 		"idSkill": "12",
 		"typeCode": "NumberOfLines",
 		"filePattern": ".js$"
 	},
 	{
-		"idEDT": 4,
+		"idEDT": 5,
 		"idSkill": "8",
 		"typeCode": "NumberOfLines",
 		"filePattern": ".ts$"

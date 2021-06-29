@@ -1,59 +1,58 @@
 [
 	{
 		"idAbacus": 0,
-		"idExperienceDetectionTemplate": 2,
+		"idExperienceDetectionTemplate": 3,
 		"level": 1,
 		"value": 0
 	},
 	{
 		"idAbacus": 1,
-		"idExperienceDetectionTemplate": 2,
+		"idExperienceDetectionTemplate": 3,
 		"level": 2,
 		"value": 10000
 	},
 	{
 		"idAbacus": 2,
-		"idExperienceDetectionTemplate": 2,
+		"idExperienceDetectionTemplate": 3,
 		"level": 3,
 		"value": 20000
 	},
 	{
 		"idAbacus": 3,
-		"idExperienceDetectionTemplate": 3,
+		"idExperienceDetectionTemplate": 4,
 		"level": 1,
 		"value": 0
 	},
 	{
 		"idAbacus": 4,
-		"idExperienceDetectionTemplate": 3,
+		"idExperienceDetectionTemplate": 4,
 		"level": 2,
 		"value": 10000
 	},
 	{
 		"idAbacus": 5,
-		"idExperienceDetectionTemplate": 3,
+		"idExperienceDetectionTemplate": 4,
 		"level": 3,
 		"value": 20000
 	},
 	{
 		"idAbacus": 6,
-		"idExperienceDetectionTemplate": 4,
+		"idExperienceDetectionTemplate": 5,
 		"level": 1,
 		"value": 0
 	},
 	{
 		"idAbacus": 7,
-		"idExperienceDetectionTemplate": 4,
+		"idExperienceDetectionTemplate": 5,
 		"level": 2,
 		"value": 10000
 	},
 	{
 		"idAbacus": 8,
-		"idExperienceDetectionTemplate": 4,
+		"idExperienceDetectionTemplate": 5,
 		"level": 3,
 		"value": 20000
 	},
-
 	{
 		"idAbacus": 9,
 		"idExperienceDetectionTemplate": 0,
@@ -71,6 +70,24 @@
 		"idExperienceDetectionTemplate": 0,
 		"level": 3,
 		"value": 6
+	},
+	{
+		"idAbacus": 12,
+		"idExperienceDetectionTemplate": 2,
+		"level": 1,
+		"value": 0
+	},
+	{
+		"idAbacus": 12,
+		"idExperienceDetectionTemplate": 2,
+		"level": 2,
+		"value": 1
+	},
+	{
+		"idAbacus": 12,
+		"idExperienceDetectionTemplate": 2,
+		"level": 3,
+		"value": 3
 	}
 
 ]

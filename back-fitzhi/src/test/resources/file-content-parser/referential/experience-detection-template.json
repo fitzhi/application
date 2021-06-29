@@ -14,5 +14,13 @@
 		"importPattern": "^org.springframework.context.annotation.Bean$",
 		"codePattern": "^Bean$",
 		"filePattern": ".java$"
+	},
+	{
+		"idEDT": 2,
+		"idSkill": "6",
+		"typeCode": "Annotation",
+		"importPattern": "^org.springframework.boot.autoconfigure.SpringBootApplication$",
+		"codePattern": "^SpringBootApplication$",
+		"filePattern": ".java$"
 	}
 ]

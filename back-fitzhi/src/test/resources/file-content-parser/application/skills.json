@@ -34,5 +34,13 @@
             "detectionType": "2",
             "pattern": "<artifactId>spring-core</artifactId>"
         }
+	},
+	"6": {
+		"id": 6,
+		"title": "Spring boot",
+        "detectionTemplate": {
+            "detectionType": "2",
+            "pattern": "<artifactId>spring-boot</artifactId>"
+        }
 	}
 }

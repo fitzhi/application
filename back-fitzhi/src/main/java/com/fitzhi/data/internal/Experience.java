@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.fitzhi.data.internal;
 
 import java.io.Serializable;
@@ -30,7 +27,7 @@ public @Data class Experience implements Serializable {
 	private static final long serialVersionUID = -8716755186690093914L;
 
 	/**
-	 * identifier of the experience.
+	 * Identifier of the experience identical with the identifier of the skill
 	 */
 	private int id;
 	

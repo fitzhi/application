@@ -5,15 +5,13 @@ import java.nio.file.LinkOption;
 import java.nio.file.Paths;
 import java.util.Map;
 
-import com.fitzhi.bean.DataHandler;
 import com.fitzhi.bean.ProjectHandler;
-import com.fitzhi.bean.SkillHandler;
 import com.fitzhi.bean.StaffHandler;
 import com.fitzhi.data.internal.Experience;
 import com.fitzhi.data.internal.Project;
+import com.fitzhi.data.internal.Staff;
 import com.fitzhi.data.internal.StaffExperienceTemplate;
 import com.fitzhi.exception.ApplicationException;
-import com.fitzhi.source.crawler.EcosystemAnalyzer;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -61,10 +59,19 @@ public class ProjectHandlerProcessProjectsExperiencesContentParserTest {
 		projectHandler.updateStaffSkillLevel(experiences);
 		Assert.assertNotNull(staffHandler.lookup(1789));
 
+		final Staff staff = staffHandler.lookup(1789);
+		Assert.assertEquals(2, staff.getExperiences().size());
 		Experience exp = staffHandler.lookup(1789).getExperiences().get(0);
 		Assert.assertNotNull(exp);
+		Assert.assertEquals(5, exp.getId());
 		Assert.assertEquals(3, exp.getSystemLevel());
 		Assert.assertEquals(3, exp.getLevel());
+
+		exp = staffHandler.lookup(1789).getExperiences().get(1);
+		Assert.assertNotNull(exp);
+		Assert.assertEquals(6, exp.getId());
+		Assert.assertEquals(2, exp.getSystemLevel());
+		Assert.assertEquals(2, exp.getLevel());
 	}
 
 }

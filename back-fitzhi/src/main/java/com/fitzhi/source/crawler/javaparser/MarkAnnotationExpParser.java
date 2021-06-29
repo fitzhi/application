@@ -136,8 +136,6 @@ public class MarkAnnotationExpParser implements ExperienceParser {
 						compilationUnit.getStorage().get().getFileName(),
 						mae,
 						getPersonIdent(git, pathRelative.toString(), mae.getBegin().get().line)));
-					// PersonIdent pi = getPersonIdent(git, pathRelative.toString(), mae.getBegin().get().line);
-					// System.out.println(mae + ";" + pi.getName() + ";" + pi.getEmailAddress());
 				}
 				PersonIdent pi = getPersonIdent(git, pathRelative.toString(), mae.getBegin().get().line);
 				Author author = new Author(pi.getName(), pi.getEmailAddress());

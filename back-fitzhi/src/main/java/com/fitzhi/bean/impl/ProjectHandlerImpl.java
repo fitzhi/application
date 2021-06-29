@@ -941,6 +941,11 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			final int idEDT = staffExperienceTemplate.getIdExperienceDetectionTemplate();
 			final int value = experiences.get(staffExperienceTemplate);
 
+			// We do not take in account developers with a negative value
+			if (value < 0) {
+				continue;
+			}
+
 			// If the staff member does not exist anymore, we skip him
 			Staff staff = staffHandler.lookup(idStaff);
 			if (staff == null) {
@@ -962,7 +967,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 			Optional<ExperienceAbacus> oExperienceAbacus = abacus.stream()
 				.filter (ea -> (ea.getIdExperienceDetectionTemplate() == idEDT))
-				.filter (ea -> (ea.getValue() < value))
+				.filter (ea -> (ea.getValue() <= value))
 				.sorted((ea1, ea2) -> (ea2.getValue() - ea1.getValue()))
 				.findFirst();
 			if (!oExperienceAbacus.isPresent()) {

@@ -28,5 +28,11 @@
 		"idExperienceDetectionTemplate": 1,
 		"level": 2,
 		"value": 3
+	},
+	{
+		"idAbacus": 5,
+		"idExperienceDetectionTemplate": 2,
+		"level": 2,
+		"value": 1
 	}
 ]
