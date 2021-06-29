@@ -47,7 +47,8 @@ public class EcosystemAnalyzerLoadDetectedExperiencesTest {
 	@Test
 	public void load() throws ApplicationException {
 
-		// We disable this test on Windows platform.
+		// We disable this test.
+		// Javaparser does not worl correctly on Windows platform.
 		// FIXME as soon as possible !!!
 		if (OSType.DETECTED == OSType.Windows) {
 			return;
