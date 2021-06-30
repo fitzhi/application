@@ -2,7 +2,7 @@ import { Injectable, EventEmitter } from '@angular/core';
 import { Project } from '../../data/project';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-import { Observable, BehaviorSubject, EMPTY, of, Subject} from 'rxjs';
+import { Observable, BehaviorSubject, EMPTY, of, Subject, interval} from 'rxjs';
 import { InternalService } from '../../internal-service';
 
 import { Constants } from '../../constants';
@@ -34,6 +34,8 @@ import { CinematicService } from '../cinematic.service';
 import { GitService } from '../git/git.service';
 import { ListProjectsService } from 'src/app/tabs-project/list-project/list-projects-service/list-projects.service';
 import { TopicEvaluation } from 'src/app/tabs-project/project-audit/project-audit-badges/topic-evaluation';
+import { isInteropObservable } from 'rxjs/internal/util/isInteropObservable';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -67,7 +69,7 @@ export class ProjectService extends InternalService {
 	/**
 	 * Array containing all projects retrieved from Fitzhì backend.
 	 */
-	allProjects: Project[];
+	allProjects: Project[] = [];
 
 	/**
 	 * List of branches detected on the GIT repository.
@@ -78,7 +80,6 @@ export class ProjectService extends InternalService {
 	 * This EventEmitter propagates the signal than an evaluation has been given to an audit topic.
 	 */
 	public topicEvaluation$ = new Subject();
-
 
 	constructor(
 		private httpClient: HttpClient,
@@ -94,25 +95,50 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-   	* Load the global list of ALL projects, started in the organisation.
-   	*/
-	loadProjects() {
+	 * Interval to reload the projects from the backend.
+	 */
+	private intervalLoadProjects$ = interval(60000);
+
+	/**
+	 * Start the projects loading process.
+	 */
+	startLoadingProjects(): void {
+		this.reloadProjects();
+		this.intervalLoadProjects$.subscribe({
+			next: val => {
+				this.reloadProjects();
+			}
+		});
+	}
+
+	/**
+   	 * Load the global list of ALL projects, started in the organisation.
+   	 */
+	reloadProjects() {
 		if (traceOn()) {
 			this.log(`Fetching the projects on URL ${this.backendSetupService.url()}/api/project`);
 		}
 		this.httpClient
 			.get<Project[]>(`${this.backendSetupService.url()}/project`)
 			.pipe(take(1))
-			.subscribe(projects => {
-				if (traceOn()) {
-					console.groupCollapsed('Projects retrieved');
-					console.table (projects);
-					console.groupEnd();
-				}
-				projects.forEach(project => this.loadMapSkills(project));
-				this.allProjects = projects;
-				this.allProjectsIsLoaded$.next(true);
+			.subscribe({
+				next: projects => this.takeInAccountProjects(projects)
 			});
+	}
+
+	/**
+	 * Take in account new loaded projects in the application.
+	 * @param projects the loaded projects
+	 */
+	takeInAccountProjects (projects: Project[]) {
+		if (traceOn()) {
+			console.groupCollapsed('Projects retrieved');
+			console.table (projects);
+			console.groupEnd();
+		}
+		projects.forEach(project => this.loadMapSkills(project));
+		this.allProjects = projects;
+		this.allProjectsIsLoaded$.next(true);
 	}
 
 	/**

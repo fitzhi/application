@@ -72,10 +72,11 @@ export class ConnectUserComponent implements OnInit {
 			next: connectionStatus => {
 				this.messengerUserConnected.emit(connectionStatus);
 				/**
-				 * If the connection has succeeded, we load the projects.
+				 * If the connection has succeeded, we load the projects and the staff members.
 				 */
 				if (connectionStatus) {
-					this.projectService.loadProjects();
+					// We load the projects and start the refresh process.
+					this.projectService.startLoadingProjects();
 					this.staffListService.loadStaff();
 				}
 

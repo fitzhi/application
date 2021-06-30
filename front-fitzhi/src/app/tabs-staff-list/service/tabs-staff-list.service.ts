@@ -293,7 +293,7 @@ export class TabsStaffListService {
 			}),
 			finalize(() => {
 				if (traceOn()) {
-					console.log('The staff collection is containing now ' + collaborator.length + ' records');
+					console.log(`The staff collection is containing now ${collaborator.length} records`);
 					console.groupCollapsed('Staff members found : ');
 					collaborator.forEach(collab => console.log(collab.firstName + ' ' + collab.lastName));
 					console.groupEnd();
