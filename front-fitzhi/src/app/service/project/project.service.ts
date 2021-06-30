@@ -1,41 +1,34 @@
-import { Injectable, EventEmitter } from '@angular/core';
-import { Project } from '../../data/project';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-
-import { Observable, BehaviorSubject, EMPTY, of, Subject, interval} from 'rxjs';
-import { InternalService } from '../../internal-service';
-
+import { EventEmitter, Injectable } from '@angular/core';
+import { BehaviorSubject, EMPTY, interval, Observable, of, Subject } from 'rxjs';
+import { catchError, switchMap, take, tap } from 'rxjs/operators';
 import { Constants } from '../../constants';
-import { Skill } from '../../data/skill';
-import { ContributorsDTO } from '../../data/external/contributorsDTO';
-import { SettingsGeneration } from '../../data/settingsGeneration';
-import { BackendSetupService } from '../backend-setup/backend-setup.service';
-import { take, tap, retryWhen, retry, flatMap, switchMap, catchError } from 'rxjs/operators';
-import { Library } from '../../data/library';
-import { BooleanDTO } from '../../data/external/booleanDTO';
-import { ReferentialService } from '../referential.service';
-import { SonarProject } from '../../data/SonarProject';
-import { FilesStats } from '../../data/sonar/FilesStats';
-import { ProjectSonarMetricValue } from '../../data/project-sonar-metric-value';
-import { MessageService } from '../../interaction/message/message.service';
-import { ResponseComponentMeasures } from '../../data/sonar/reponse-component-measures';
-import { SonarService } from '../sonar.service';
-import { MessageGravity } from '../../interaction/message/message-gravity';
-import { AuditTopic } from '../../data/AuditTopic';
-import { Task } from '../../data/task';
 import { AttachmentFile } from '../../data/AttachmentFile';
-import { FileService } from '../file.service';
+import { AuditTopic } from '../../data/AuditTopic';
 import { Ecosystem } from '../../data/ecosystem';
-import { traceOn, HttpCodes } from '../../global';
-import { SunburstCinematicService } from '../../tabs-project/project-sunburst/service/sunburst-cinematic.service';
+import { ContributorsDTO } from '../../data/external/contributorsDTO';
+import { Library } from '../../data/library';
+import { Project } from '../../data/project';
 import { ProjectSkill } from '../../data/project-skill';
+import { ProjectSonarMetricValue } from '../../data/project-sonar-metric-value';
+import { SettingsGeneration } from '../../data/settingsGeneration';
+import { Skill } from '../../data/skill';
+import { FilesStats } from '../../data/sonar/FilesStats';
+import { ResponseComponentMeasures } from '../../data/sonar/reponse-component-measures';
+import { SonarProject } from '../../data/SonarProject';
+import { Task } from '../../data/task';
+import { HttpCodes, traceOn } from '../../global';
+import { MessageGravity } from '../../interaction/message/message-gravity';
+import { MessageService } from '../../interaction/message/message.service';
+import { InternalService } from '../../internal-service';
 import { SkillService } from '../../skill/service/skill.service';
+import { SunburstCinematicService } from '../../tabs-project/project-sunburst/service/sunburst-cinematic.service';
+import { BackendSetupService } from '../backend-setup/backend-setup.service';
 import { CinematicService } from '../cinematic.service';
+import { FileService } from '../file.service';
 import { GitService } from '../git/git.service';
-import { ListProjectsService } from 'src/app/tabs-project/list-project/list-projects-service/list-projects.service';
-import { TopicEvaluation } from 'src/app/tabs-project/project-audit/project-audit-badges/topic-evaluation';
-import { isInteropObservable } from 'rxjs/internal/util/isInteropObservable';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { ReferentialService } from '../referential.service';
+import { SonarService } from '../sonar.service';
 
 const httpOptions = {
 	headers: new HttpHeaders({ 'Content-Type': 'application/json' })
@@ -91,7 +84,7 @@ export class ProjectService extends InternalService {
 		private gitService: GitService,
 		private sunburstCinematicService: SunburstCinematicService,
 		private backendSetupService: BackendSetupService) {
-			super();
+		super();
 	}
 
 	/**
@@ -112,8 +105,8 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-   	 * Load the global list of ALL projects, started in the organisation.
-   	 */
+		   * Load the global list of ALL projects, started in the organisation.
+		   */
 	reloadProjects() {
 		if (traceOn()) {
 			this.log(`Fetching the projects on URL ${this.backendSetupService.url()}/api/project`);
@@ -130,10 +123,10 @@ export class ProjectService extends InternalService {
 	 * Take in account new loaded projects in the application.
 	 * @param projects the loaded projects
 	 */
-	takeInAccountProjects (projects: Project[]) {
+	takeInAccountProjects(projects: Project[]) {
 		if (traceOn()) {
 			console.groupCollapsed('Projects retrieved');
-			console.table (projects);
+			console.table(projects);
 			console.groupEnd();
 		}
 		projects.forEach(project => this.loadMapSkills(project));
@@ -147,8 +140,8 @@ export class ProjectService extends InternalService {
 	 * @param project the given project
 	 */
 	public addProject(project: Project) {
-		if  (this.allProjects.find(prj => prj.id === project.id)) {
-			console.log ('WTF : project %d %s is already present in the allProjects collection.', project.id, project.name);
+		if (this.allProjects.find(prj => prj.id === project.id)) {
+			console.log('WTF : project %d %s is already present in the allProjects collection.', project.id, project.name);
 		}
 		this.allProjects.push(project);
 	}
@@ -182,7 +175,7 @@ export class ProjectService extends InternalService {
 						this.dump(project, 'projectService when creating a project');
 					}
 				},
-				error: error => console.error ('WTF : ', error)
+				error: error => console.error('WTF : ', error)
 			});
 	}
 
@@ -221,28 +214,28 @@ export class ProjectService extends InternalService {
 	/**
 	* Create a new project, read the saved one, and return the project in an observable.
 	*/
-	createNewProject$ (): Observable<Project> {
+	createNewProject$(): Observable<Project> {
 		if (traceOn()) {
-			console.log( 'Creating the project %s', this.project.name);
+			console.log('Creating the project %s', this.project.name);
 		}
-		return this.httpClient.post(this.backendSetupService.url() + '/project', this.project, {observe: 'response'})
+		return this.httpClient.post(this.backendSetupService.url() + '/project', this.project, { observe: 'response' })
 			.pipe(
 				take(1),
 				switchMap(response => {
 					const location = response.headers.get('Location');
 					if (traceOn()) {
-						console.log (`Project created successfully, location returned ${location}`);
+						console.log(`Project created successfully, location returned ${location}`);
 					}
 					return (location) ? this.loadProject$(location) : EMPTY;
 				}),
 				catchError(error => {
 					if (traceOn()) {
-						console.log ('Error thrown', error);
+						console.log('Error thrown', error);
 					}
 					return EMPTY;
 				}
-			)
-		);
+				)
+			);
 	}
 
 	/**
@@ -266,7 +259,7 @@ export class ProjectService extends InternalService {
 					return of(project);
 				}
 			)
-		);
+			);
 	}
 
 	/**
@@ -274,31 +267,31 @@ export class ProjectService extends InternalService {
 	*/
 	public updateCurrentProject$(): Observable<boolean> {
 		if (traceOn()) {
-			console.log( 'Updating the project %s', this.project.name);
+			console.log('Updating the project %s', this.project.name);
 		}
 		return this.httpClient
-			.put<Project>(`${this.backendSetupService.url()}/project/${this.project.id}`, this.project,  {observe: 'response'})
+			.put<Project>(`${this.backendSetupService.url()}/project/${this.project.id}`, this.project, { observe: 'response' })
 			.pipe(
 				take(1),
-				switchMap( response => {
+				switchMap(response => {
 					if (response.status === HttpCodes.noContent) {
 						this.messageService.success('Project successfully updated!');
 						return of(true);
 					} else {
-						console.error ('WTF : Should not pass here!');
+						console.error('WTF : Should not pass here!');
 						return of(false);
 					}
 				}),
-				catchError( responseInError => {
+				catchError(responseInError => {
 					switch (responseInError.status) {
 						case HttpCodes.methodNotAllowed:
 							this.messageService.error('You are not allowed to modify this project');
 							break;
-						case  HttpCodes.notFound:
+						case HttpCodes.notFound:
 							this.messageService.error('This project has most probably been removed by another user');
 							break;
 						default:
-							console.error ('WTF : Should not pass here!');
+							console.error('WTF : Should not pass here!');
 					}
 					return of(false);
 				})
@@ -342,7 +335,7 @@ export class ProjectService extends InternalService {
 	addSonarProject$(idProject: number, sonarProject: SonarProject): Observable<boolean> {
 
 		if (traceOn()) {
-			console.log (`Adding the Sonar project ${sonarProject.name} to the project ID ${idProject}`);
+			console.log(`Adding the Sonar project ${sonarProject.name} to the project ID ${idProject}`);
 		}
 
 		return this.httpClient
@@ -360,7 +353,7 @@ export class ProjectService extends InternalService {
 	removeSonarProject$(idProject: number, sonarProject: SonarProject) {
 
 		if (traceOn()) {
-			console.log (`Removing the Sonar project ${sonarProject.name} to the project ID ${idProject}`);
+			console.log(`Removing the Sonar project ${sonarProject.name} to the project ID ${idProject}`);
 		}
 
 		return this.httpClient
@@ -408,7 +401,7 @@ export class ProjectService extends InternalService {
 	 * @returns an observable emitting the retrieved project
 	 */
 	get$(idProject: number): Observable<Project> {
-		const url =  `${this.backendSetupService.url()}/project/${idProject}`;
+		const url = `${this.backendSetupService.url()}/project/${idProject}`;
 		if (traceOn()) {
 			console.log(`Fetching the project ${idProject} on the address ${url}`);
 		}
@@ -516,7 +509,7 @@ export class ProjectService extends InternalService {
 			return EMPTY;
 		}
 
-		const url =  `${this.backendSetupService.url()}/project/${idProject}/contributors`;
+		const url = `${this.backendSetupService.url()}/project/${idProject}/contributors`;
 		if (traceOn()) {
 			console.log('Retrieve the contributors for the project identifier %d @ url %s', idProject, url);
 		}
@@ -554,7 +547,7 @@ export class ProjectService extends InternalService {
 	 * @param idProject project whose connection settings has to be tested
 	 */
 	testConnection$(idProject: number): Observable<boolean> {
-		const url =  `${this.backendSetupService.url()}/project/${idProject}/test`;
+		const url = `${this.backendSetupService.url()}/project/${idProject}/test`;
 		if (traceOn()) {
 			console.log('Testing the connection settings on URL ' + url);
 		}
@@ -567,7 +560,7 @@ export class ProjectService extends InternalService {
 	public loadBranches() {
 
 		if (traceOn()) {
-			console.log ('Loading the branches...');
+			console.log('Loading the branches...');
 		}
 
 		// The project is not already created.
@@ -591,7 +584,7 @@ export class ProjectService extends InternalService {
 				next: (branches: string[]) => {
 					if (traceOn()) {
 						console.groupCollapsed('List of branches for project %s', this.project.name);
-						branches.forEach(branch => console.log (branch));
+						branches.forEach(branch => console.log(branch));
 						console.groupEnd();
 					}
 					this.branches$.next(branches);
@@ -612,14 +605,14 @@ export class ProjectService extends InternalService {
 				take(1),
 				switchMap(
 					response => {
-						console.log (response);
+						console.log(response);
 						return of(true);
 					}),
 				catchError((e) => {
-					console.error (e);
+					console.error(e);
 					return of(false);
 				}
-			));
+				));
 	}
 
 	/**
@@ -638,7 +631,7 @@ export class ProjectService extends InternalService {
 	 */
 	libDirLookup$(idProject: number, criteria: string): Observable<string[]> {
 		const url = `${this.backendSetupService.url()}/project/${idProject}/analysis/lib-dir`;
-		return this.httpClient.get<string[]>(url, { params: {'path': criteria} }).pipe(take(1));
+		return this.httpClient.get<string[]>(url, { params: { 'path': criteria } }).pipe(take(1));
 	}
 
 	/**
@@ -653,7 +646,7 @@ export class ProjectService extends InternalService {
 			console.table(libraries);
 			console.groupEnd();
 		}
-		const url =  `${this.backendSetupService.url()}/project/${idProject}/analysis/lib-dir/`;
+		const url = `${this.backendSetupService.url()}/project/${idProject}/analysis/lib-dir/`;
 		this.httpClient
 			.post<boolean>(url, libraries, httpOptions)
 			.pipe(take(1))
@@ -676,10 +669,10 @@ export class ProjectService extends InternalService {
 	updateGhost$(idProject: number, pseudo: string, idRelatedStaff: number, technical: boolean): Observable<boolean> {
 		if (traceOn()) {
 			console.groupCollapsed('Updating a ghost');
-			console.log ('idProject', idProject);
-			console.log ('pseudo', pseudo);
-			console.log ('idStaff', idRelatedStaff);
-			console.log ('techinical?', technical);
+			console.log('idProject', idProject);
+			console.log('pseudo', pseudo);
+			console.log('idStaff', idRelatedStaff);
+			console.log('techinical?', technical);
 			console.groupEnd();
 		}
 		const body = { idProject: idProject, pseudo: pseudo, idStaff: idRelatedStaff, technical: technical };
@@ -694,8 +687,8 @@ export class ProjectService extends InternalService {
 	removeGhost$(idProject: number, pseudo: string): Observable<boolean> {
 		if (traceOn()) {
 			console.groupCollapsed('Removing a ghost');
-			console.log ('idProject', idProject);
-			console.log ('pseudo', pseudo);
+			console.log('idProject', idProject);
+			console.log('pseudo', pseudo);
 			console.groupEnd();
 		}
 		return this.httpClient.delete<boolean>(`${this.backendSetupService.url()}/project/${idProject}/ghost/${pseudo}`, httpOptions);
@@ -723,7 +716,7 @@ export class ProjectService extends InternalService {
 				return 'whiteSmoke';
 			default:
 				const riskLegend = this.referentialService.legends
-					.find (legend => legend.level === risk);
+					.find(legend => legend.level === risk);
 				if (riskLegend) {
 					return riskLegend.color;
 				} else {
@@ -732,7 +725,7 @@ export class ProjectService extends InternalService {
 					}
 					return 'whiteSmoke';
 				}
-			}
+		}
 	}
 
 	/**
@@ -744,9 +737,9 @@ export class ProjectService extends InternalService {
 	saveFilesStats$(idProject: number, key: string, filesStats: FilesStats[]): Observable<boolean> {
 		if (traceOn()) {
 			console.groupCollapsed('Save the files stats');
-			console.log ('idProject', idProject);
-			console.log ('key', key);
-			filesStats.forEach(fs => console.log (fs.language, fs.numberOfFiles));
+			console.log('idProject', idProject);
+			console.log('key', key);
+			filesStats.forEach(fs => console.log(fs.language, fs.numberOfFiles));
 			console.groupEnd();
 		}
 
@@ -763,7 +756,7 @@ export class ProjectService extends InternalService {
 	saveMetricValues$(idProject: number, key: string, metricValues: ProjectSonarMetricValue[]): Observable<Boolean> {
 		if (traceOn()) {
 			console.groupCollapsed('Save the metric values for Sonar entry %s project identifier %d', key, idProject);
-			metricValues.forEach(mv => console.log ('Saving %s %d %d', mv.key, mv.weight, mv.value));
+			metricValues.forEach(mv => console.log('Saving %s %d %d', mv.key, mv.weight, mv.value));
 			console.groupEnd();
 		}
 
@@ -786,15 +779,15 @@ export class ProjectService extends InternalService {
 	 * @param project the current project
 	 * @param sonarKey the key of the Sonar project
 	 */
-	loadSonarProject$ (project: Project, sonarKey: string): Observable<SonarProject> {
+	loadSonarProject$(project: Project, sonarKey: string): Observable<SonarProject> {
 		return this.httpClient.get<SonarProject>(
 			`${this.backendSetupService.url()}/project/${project.id}/sonar/${sonarKey}`, httpOptions)
 			.pipe(tap(
 				(sonarProject: SonarProject) => {
 					if (traceOn()) {
-						console.groupCollapsed ('Sonar project', sonarProject.key);
+						console.groupCollapsed('Sonar project', sonarProject.key);
 						sonarProject.projectSonarMetricValues.forEach(metricValues => {
-							console.log (metricValues.key, metricValues.weight);
+							console.log(metricValues.key, metricValues.weight);
 						});
 						console.groupEnd();
 					}
@@ -830,16 +823,16 @@ export class ProjectService extends InternalService {
 	 * @param messageErrorEmitter an eventEmitter to throw the success, or error message, if any.
 	 */
 	loadAndSaveEvaluations(
-			sonarService: SonarService,
-			project: Project,
-			sonarKey: string,
-			metricValues: ProjectSonarMetricValue[],
-			messageErrorEmitter: EventEmitter<MessageGravity>) {
+		sonarService: SonarService,
+		project: Project,
+		sonarKey: string,
+		metricValues: ProjectSonarMetricValue[],
+		messageErrorEmitter: EventEmitter<MessageGravity>) {
 
 		sonarService.loadProjectSonarComponentMeasures$(
-				project,
-				sonarKey,
-				metricValues.map(psmv => psmv.key))
+			project,
+			sonarKey,
+			metricValues.map(psmv => psmv.key))
 			.subscribe({
 				next: (measures: ResponseComponentMeasures) => this.loadMesures(project, sonarKey, metricValues, measures, messageErrorEmitter),
 				error: error => console.log(error)
@@ -872,7 +865,7 @@ export class ProjectService extends InternalService {
 					if (measure.value === 'ERROR') {
 						psmv.value = 0;
 					} else {
-						console.error ('Unexpected value of measure', measure.value);
+						console.error('Unexpected value of measure', measure.value);
 					}
 				}
 			}
@@ -885,15 +878,15 @@ export class ProjectService extends InternalService {
 		//
 		this.saveMetricValues$(project.id, sonarKey, metricValues)
 			.pipe(take(1))
-			.subscribe (ok => {
+			.subscribe(ok => {
 				if (ok) {
 					messageErrorEmitter.next(
 						new MessageGravity(Constants.MESSAGE_INFO,
-						'Metrics weights and values have been saved for the Sonar project ' + sonarKey));
+							'Metrics weights and values have been saved for the Sonar project ' + sonarKey));
 				} else {
 					messageErrorEmitter.next(
 						new MessageGravity(Constants.MESSAGE_ERROR,
-						'Error when saving weights and values for the Sonar project ' + sonarKey));
+							'Error when saving weights and values for the Sonar project ' + sonarKey));
 				}
 			});
 	}
@@ -911,14 +904,14 @@ export class ProjectService extends InternalService {
 	saveSonarEvaluation$(idProject: number, key: string, evaluation: number, totalNumberLinesOfCode: number): Observable<Boolean> {
 		if (traceOn()) {
 			console.groupCollapsed('Saving the evaluation for Sonar entry %s project identifier %d', key, idProject);
-			console.log ('Evaluation obtained', evaluation);
-			console.log ('Total number of lines of code', totalNumberLinesOfCode);
+			console.log('Evaluation obtained', evaluation);
+			console.log('Total number of lines of code', totalNumberLinesOfCode);
 			console.groupEnd();
 		}
 
 		return this.httpClient.put<boolean>(
 			`${this.backendSetupService.url()}/project/${idProject}/sonar/${key}/evaluation`,
-			{evaluation: evaluation, totalNumberLinesOfCode: totalNumberLinesOfCode}, httpOptions);
+			{ evaluation: evaluation, totalNumberLinesOfCode: totalNumberLinesOfCode }, httpOptions);
 	}
 
 	/**
@@ -932,7 +925,7 @@ export class ProjectService extends InternalService {
 			console.groupCollapsed(
 				'Saving the evaluation for the topic identified by %d, within the project identified by %d',
 				idTopic, idProject);
-			console.log ('Evaluation given', evaluation);
+			console.log('Evaluation given', evaluation);
 			console.groupEnd();
 		}
 		const auditTopic = new AuditTopic(idTopic, evaluation, null);
@@ -954,7 +947,7 @@ export class ProjectService extends InternalService {
 			console.groupCollapsed(
 				'Saving the audit report for the topic identified by %d, within the project identified by %d',
 				idTopic, this.project.id);
-			console.log ('Report given', report);
+			console.log('Report given', report);
 			console.groupEnd();
 		}
 
@@ -973,13 +966,13 @@ export class ProjectService extends InternalService {
 	saveAuditTopicWeights$(idProject: number, auditTopics: AuditTopic[]): Observable<boolean> {
 		if (traceOn()) {
 			console.groupCollapsed('Saving the weights for the topic identified by %d', idProject);
-			auditTopics.forEach(element => console.log (element.idTopic, element.weight));
+			auditTopics.forEach(element => console.log(element.idTopic, element.weight));
 			console.groupEnd();
 		}
 
 		return this.httpClient
 			.put<boolean>(`${this.backendSetupService.url()}/project/${this.project.id}/audit/weights`,
-					auditTopics, httpOptions)
+				auditTopics, httpOptions)
 			.pipe(take(1));
 	}
 
@@ -1015,19 +1008,19 @@ export class ProjectService extends InternalService {
 				next: doneAndOk => {
 					if (doneAndOk) {
 						if (traceOn()) {
-							console.log ('onBoard staff %d in project %d', idStaff, idProject);
+							console.log('onBoard staff %d in project %d', idStaff, idProject);
 						}
 					}
 				}
-		});
+			});
 	}
 
 	/**
-     * GET : Download an attachment file previously uploaded.
+	 * GET : Download an attachment file previously uploaded.
 	 * @param idProject the current project identifier
 	 * @param idTopic the current topic identifier
 	 * @param attachmentFile the given attachmentFile
-     */
+	 */
 	downloadAuditAttachment(idProject: number, idTopic: number, attachmentFile: AttachmentFile) {
 
 		if (!attachmentFile.fileName) {
@@ -1043,11 +1036,11 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-     * Delete an attachment file
+	 * Delete an attachment file
 	 * @param idProject the current project identifier
 	 * @param idTopic the current topic identifier
 	 * @param attachmentFile the attachmentFile to be deleted
-     */
+	 */
 	deleteAuditAttachment(idProject: number, idTopic: number, attachmentFile: AttachmentFile) {
 
 		if (!attachmentFile.fileName) {
@@ -1118,7 +1111,7 @@ export class ProjectService extends InternalService {
 		}
 
 		if ((!project) || !(project.id)) {
-			console.log (from, 'Project is null dude!');
+			console.log(from, 'Project is null dude!');
 			return;
 		}
 
@@ -1127,21 +1120,21 @@ export class ProjectService extends InternalService {
 		console.groupCollapsed('Global audit evaluation', project.auditEvaluation);
 		if (project.audit) {
 			Object.keys(project.audit).forEach(key => {
-				console.log (`key: ${key} evaluation: ${project.audit[key].evaluation} weight: ${project.audit[key].weight}`);
+				console.log(`key: ${key} evaluation: ${project.audit[key].evaluation} weight: ${project.audit[key].weight}`);
 			});
 		} else {
-			console.log ('project.audit is null');
+			console.log('project.audit is null');
 		}
 		console.groupEnd();
 
 		if (project.mapSkills) {
 			console.groupCollapsed(`${project.mapSkills.size} skills declared.`);
 			for (const [k, v] of project.mapSkills) {
-				console.log (k, this.skillService.title(k));
+				console.log(k, this.skillService.title(k));
 			}
 			console.groupEnd();
 		} else {
-			console.log ('project.mapSkills is null');
+			console.log('project.mapSkills is null');
 		}
 
 		if (project.sonarProjects) {
@@ -1150,14 +1143,14 @@ export class ProjectService extends InternalService {
 				if (sonarProject.projectSonarMetricValues) {
 					console.groupCollapsed('Soner project %s', sonarProject.key);
 					sonarProject.projectSonarMetricValues.forEach(metricValue =>
-						console.log (metricValue.key, 'w' + metricValue.weight + ' v:' + metricValue.value)
+						console.log(metricValue.key, 'w' + metricValue.weight + ' v:' + metricValue.value)
 					);
 					console.groupEnd();
 				}
 			});
 			console.groupEnd();
 		} else {
-			console.log ('project.sonarProjects is null');
+			console.log('project.sonarProjects is null');
 		}
 
 		if (project.audit) {
@@ -1171,7 +1164,7 @@ export class ProjectService extends InternalService {
 			});
 			console.groupEnd();
 		} else {
-			console.log ('project.audit is null');
+			console.log('project.audit is null');
 		}
 
 		console.groupEnd();
@@ -1261,19 +1254,19 @@ export class ProjectService extends InternalService {
 	public removeApiProject$(): Observable<boolean> {
 
 		if (!this.project) {
-			throw new Error ('WTF : Should not pass here !');
+			throw new Error('WTF : Should not pass here !');
 		}
 		if (traceOn()) {
-			console.log ('Removing the project %d %s', this.project.id, this.project.name);
+			console.log('Removing the project %d %s', this.project.id, this.project.name);
 		}
 
 		return this.httpClient
 			.delete<object>(`${this.backendSetupService.url()}/project/${this.project.id}`)
 			.pipe(
 				take(1),
-				switchMap( () => {
+				switchMap(() => {
 					if (traceOn()) {
-						console.log ('Project %s has beeen successfully removed', this.project.name);
+						console.log('Project %s has beeen successfully removed', this.project.name);
 					}
 
 					// We remove the project from the local collection
@@ -1315,10 +1308,10 @@ export class ProjectService extends InternalService {
 	 */
 	public inactivateProject(): void {
 		if (!this.project) {
-			throw new Error ('WTF : Should not pass here !');
+			throw new Error('WTF : Should not pass here !');
 		}
 		if (traceOn()) {
-			console.log (`Inactivating the project ${this.project.id} ${this.project.name}`);
+			console.log(`Inactivating the project ${this.project.id} ${this.project.name}`);
 		}
 
 		this.httpClient
@@ -1327,7 +1320,7 @@ export class ProjectService extends InternalService {
 			.subscribe({
 				next: () => {
 					if (traceOn()) {
-						console.log (`Project ${this.project.name} has been successfully inactivated.`);
+						console.log(`Project ${this.project.name} has been successfully inactivated.`);
 					}
 					// We inactivate the project
 					this.project = this.retrieveProject(this.project.id);
@@ -1343,10 +1336,10 @@ export class ProjectService extends InternalService {
 	 */
 	public reactivateProject(): void {
 		if (!this.project) {
-			throw new Error ('WTF : Should not pass here !');
+			throw new Error('WTF : Should not pass here !');
 		}
 		if (traceOn()) {
-			console.log (`Reactivating the project ${this.project.id} ${this.project.name}`);
+			console.log(`Reactivating the project ${this.project.id} ${this.project.name}`);
 		}
 
 		this.httpClient
@@ -1355,7 +1348,7 @@ export class ProjectService extends InternalService {
 			.subscribe({
 				next: () => {
 					if (traceOn()) {
-						console.log (`Project ${this.project.name} has been successfully reactivated.`);
+						console.log(`Project ${this.project.name} has been successfully reactivated.`);
 					}
 					// We re-activate the project
 					this.project = this.retrieveProject(this.project.id);
@@ -1373,7 +1366,7 @@ export class ProjectService extends InternalService {
 	retrieveProject(idProject: number): Project {
 		const index = this.allProjects.findIndex(prj => (this.project.id === prj.id));
 		if (index === -1) {
-			throw new Error ('WTF : Should not pass here !');
+			throw new Error('WTF : Should not pass here !');
 		}
 		return this.allProjects[index];
 	}

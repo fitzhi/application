@@ -798,7 +798,7 @@ export class ProjectFormComponent extends BaseComponent implements OnInit, After
 				})
 			).subscribe({
 				next: (branches: string[]) => {
-					if (branches) {
+					if ((branches) && (branches.length > 0)) {
 						this.projectService.branches$.next(branches);
 					} else {
 						// If we cannot retrieve the array of branches,
