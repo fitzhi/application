@@ -40,6 +40,7 @@ public class AsyncTaskImpl implements AsyncTask {
 		
 		Task record = tasks.get(genKey(t));
 		if ((record != null) && !record.isComplete() && !record.isCompleteOnError()) {
+			log.error(String.format("addTask(\"%s\", \"%s\", %d) : a record already exists.", operation, title, id));
 			throw new ApplicationException(CODE_MULTIPLE_TASK, MESSAGE_MULTIPLE_TASK);
 		}
 		
