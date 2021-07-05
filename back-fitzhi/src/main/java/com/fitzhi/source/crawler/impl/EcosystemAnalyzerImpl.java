@@ -296,16 +296,22 @@ public class EcosystemAnalyzerImpl implements EcosystemAnalyzer {
 			// We parse the repository.
 			final ProjectRoot projectRoot = new ParserCollectionStrategy().collect(Paths.get(project.getLocationRepository()));
 			for (SourceRoot sourceRoot : projectRoot.getSourceRoots()) {
-				List<ParseResult<CompilationUnit>> res = sourceRoot.tryToParse();
-				for (ParseResult<CompilationUnit> pr : res) {
-					if (pr.isSuccessful()) {
-						if (pr.getResult().isPresent()) {
-							CompilationUnit cu =  pr.getResult().get();
-							for (ExperienceParser parser : parsers) {
-								parser.analyze(cu, git, mapDetectedExperiences);
+				List<ParseResult<CompilationUnit>> res;
+				try {
+					res = sourceRoot.tryToParse();
+					for (ParseResult<CompilationUnit> pr : res) {
+						if (pr.isSuccessful()) {
+							if (pr.getResult().isPresent()) {
+								CompilationUnit cu =  pr.getResult().get();
+								for (ExperienceParser parser : parsers) {
+									parser.analyze(cu, git, mapDetectedExperiences);
+								}
 							}
 						}
 					}
+				} catch (OutOfMemoryError oome) {
+					// We skip a source root if we do not have enough memory left.
+					log.error("OutOfMemoryError", oome);
 				}
 			}
 		} catch (final IOException ioe) {
