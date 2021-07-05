@@ -7,7 +7,7 @@ import { EMPTY } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { UserSetting } from 'src/app/base/user-setting';
 import { Contributor } from 'src/app/data/contributor';
-import { ContributorsDTO } from 'src/app/data/external/contributorsDTO';
+import { ProjectContributors } from 'src/app/data/external/ProjectContributors';
 import { traceOn } from 'src/app/global';
 import { TabsStaffListService } from 'src/app/tabs-staff-list/service/tabs-staff-list.service';
 import { BaseComponent } from '../../base/base.component';
@@ -130,12 +130,12 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 	}
 
 	/**
-	 * Manage the datasource associated to the table
+	 * Manage the datasource associated with the table
 	 * @param contributorsDTO container of contributors retrieved from the back-end.
 	 */
-	manageDataSource(contributorsDTO: ContributorsDTO) {
+	manageDataSource(projectContributors: ProjectContributors) {
 		if (!this.dataSource) {
-			this.dataSource = new MatTableDataSource(contributorsDTO.contributors);
+			this.dataSource = new MatTableDataSource(projectContributors.contributors);
 			this.dataSource.sort = this.sort;
 			this.dataSource.paginator = this.paginator;
 			this.projectStaffService.contributors = this.dataSource.data;
@@ -148,7 +148,7 @@ export class ProjectStaffComponent extends BaseComponent implements OnInit, OnDe
 				return data[sortHeaderId];
 			};
 		} else {
-			this.dataSource.data = contributorsDTO.contributors;
+			this.dataSource.data = projectContributors.contributors;
 			this.table.renderRows();
 		}
 	}

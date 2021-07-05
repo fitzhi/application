@@ -4,8 +4,9 @@ import { Observable, throwError } from 'rxjs';
 import { Injectable, Injector } from '@angular/core';
 import { MessageService } from '../../../interaction/message/message.service';
 import { Router } from '@angular/router';
-import { traceOn, HttpCodes } from 'src/app/global';
+import { traceOn } from 'src/app/global';
 import { Constants } from 'src/app/constants';
+import { BAD_REQUEST, INTERNAL_SERVER_ERROR, METHOD_NOT_ALLOWED, NOT_FOUND, OK, UNAUTHORIZED } from 'http-status-codes';
 
 @Injectable({ providedIn: 'root' })
 export class HttpErrorInterceptorService implements HttpInterceptor {
@@ -23,7 +24,7 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 					if (traceOn()) {
 						if (response instanceof HttpResponse) {
 							// We do not log message if the HTTP request is sucessful
-							if (response.status !== HttpCodes.success) {
+							if (response.status !== OK) {
 								console.groupCollapsed ('%s %s', request.method, request.url);
 								console.log (response);
 								console.groupEnd();
@@ -81,30 +82,19 @@ export class HttpErrorInterceptorService implements HttpInterceptor {
 						case 0:
 							messageService.info(Constants.SERVER_DOWN + ' ' + request.url);
 							return throwError(Constants.SERVER_DOWN + ' @ ' + request.url);
-
-						case HttpCodes.notFound:
+						case NOT_FOUND:
 							if (traceOn()) {
 								console.log ('Unreachable URL %s', request.urlWithParams);
 							}
 							return throwError(response);
-
-						case HttpCodes.methodNotAllowed:
+						case METHOD_NOT_ALLOWED:
 							return throwError(response);
-
-						case 400:
-						case 500:
-							// The system with backend.return_code & backend.return_message has been unplugged
-							// We display the error messsage and code to fix the origin
-							if (response.headers.get('backend.return_code')) {
-								console.log (response.headers.get('backend.return_code'));
-								console.log (response.headers.get('backend.return_message'));
-								throw new Error('WTF : Should not pass here !');
-							}
+						case BAD_REQUEST:
+						case INTERNAL_SERVER_ERROR:
 							return throwError(response);
-						case 401:
+						case UNAUTHORIZED:
 							// The code 401 is handled by the 2 other interceptors
 							return throwError (response);
-
 						default:
 							if (response) {
 								if (traceOn()) {

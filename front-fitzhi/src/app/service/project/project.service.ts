@@ -1,12 +1,13 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
+import { METHOD_NOT_ALLOWED, NOT_FOUND, NO_CONTENT } from 'http-status-codes';
 import { BehaviorSubject, EMPTY, interval, Observable, of, Subject } from 'rxjs';
 import { catchError, switchMap, take, tap } from 'rxjs/operators';
 import { Constants } from '../../constants';
 import { AttachmentFile } from '../../data/AttachmentFile';
 import { AuditTopic } from '../../data/AuditTopic';
 import { Ecosystem } from '../../data/ecosystem';
-import { ContributorsDTO } from '../../data/external/contributorsDTO';
+import { ProjectContributors } from '../../data/external/ProjectContributors';
 import { Library } from '../../data/library';
 import { Project } from '../../data/project';
 import { ProjectSkill } from '../../data/project-skill';
@@ -17,7 +18,7 @@ import { FilesStats } from '../../data/sonar/FilesStats';
 import { ResponseComponentMeasures } from '../../data/sonar/reponse-component-measures';
 import { SonarProject } from '../../data/SonarProject';
 import { Task } from '../../data/task';
-import { HttpCodes, traceOn } from '../../global';
+import { traceOn } from '../../global';
 import { MessageGravity } from '../../interaction/message/message-gravity';
 import { MessageService } from '../../interaction/message/message.service';
 import { InternalService } from '../../internal-service';
@@ -274,7 +275,7 @@ export class ProjectService extends InternalService {
 			.pipe(
 				take(1),
 				switchMap(response => {
-					if (response.status === HttpCodes.noContent) {
+					if (response.status === NO_CONTENT) {
 						this.messageService.success('Project successfully updated!');
 						return of(true);
 					} else {
@@ -284,10 +285,10 @@ export class ProjectService extends InternalService {
 				}),
 				catchError(responseInError => {
 					switch (responseInError.status) {
-						case HttpCodes.methodNotAllowed:
+						case METHOD_NOT_ALLOWED:
 							this.messageService.error('You are not allowed to modify this project');
 							break;
-						case HttpCodes.notFound:
+						case NOT_FOUND:
 							this.messageService.error('This project has most probably been removed by another user');
 							break;
 						default:
@@ -503,17 +504,18 @@ export class ProjectService extends InternalService {
 	 * If the given project identifier is equal to -1, this function will return an empty observable.
 	 * @param idProject project identifier
 	 */
-	contributors$(idProject: number): Observable<ContributorsDTO> {
+	contributors$(idProject: number): Observable<ProjectContributors> {
 
 		if (idProject === -1) {
 			return EMPTY;
 		}
 
 		const url = `${this.backendSetupService.url()}/project/${idProject}/contributors`;
+		console.log ('nope', url);
 		if (traceOn()) {
 			console.log('Retrieve the contributors for the project identifier %d @ url %s', idProject, url);
 		}
-		return this.httpClient.get<ContributorsDTO>(url);
+		return this.httpClient.get<ProjectContributors>(url);
 	}
 
 	/**

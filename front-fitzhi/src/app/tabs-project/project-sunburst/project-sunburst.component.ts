@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { BehaviorSubject, EMPTY, Observable, of, Subscription } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { Collaborator } from 'src/app/data/collaborator';
-import { ContributorsDTO } from 'src/app/data/external/contributorsDTO';
+import { ProjectContributors } from 'src/app/data/external/ProjectContributors';
 import { traceOn } from 'src/app/global';
 import { StaffListService } from 'src/app/service/staff-list-service/staff-list.service';
 import { StaffService } from 'src/app/tabs-staff/service/staff.service';
@@ -255,9 +255,9 @@ export class ProjectSunburstComponent extends BaseComponent implements OnInit, A
 	loadContributors$(): Observable<boolean> {
 		return this.projectService.contributors$(this.projectService.project.id).pipe(
 			take(1),
-			switchMap((contributorsDTO: ContributorsDTO) => {
+			switchMap((projectContributors: ProjectContributors) => {
 				this.projectStaffService.contributors = [];
-				this.projectStaffService.contributors.push(...contributorsDTO.contributors);
+				this.projectStaffService.contributors.push(...projectContributors.contributors);
 				if (traceOn()) {
 					this.projectStaffService.dumpContributors();
 				}

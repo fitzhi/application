@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { NO_CONTENT } from 'http-status-codes';
 import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
 import { Collaborator } from '../../data/collaborator';
@@ -7,7 +8,7 @@ import { DeclaredExperience } from '../../data/declared-experience';
 import { Experience } from '../../data/experience';
 import { StaffDTO } from '../../data/external/staffDTO';
 import { Project } from '../../data/project';
-import { HttpCodes, traceOn } from '../../global';
+import { traceOn } from '../../global';
 import { MessageService } from '../../interaction/message/message.service';
 import { BackendSetupService } from '../../service/backend-setup/backend-setup.service';
 import { FileService } from '../../service/file.service';
@@ -125,7 +126,7 @@ export class StaffService {
 				take(1),
 				switchMap(
 					response => {
-						if (response.status === HttpCodes.noContent) {
+						if (response.status === NO_CONTENT) {
 							return of(staff);
 						} else {
 							throw new Error(`The staff ${staff.firstName} ${staff.lastName} has not been updated for an unknown reason.`);
