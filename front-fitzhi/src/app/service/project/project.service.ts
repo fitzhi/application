@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { METHOD_NOT_ALLOWED, NOT_FOUND, NO_CONTENT } from 'http-status-codes';
-import { BehaviorSubject, EMPTY, interval, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, EMPTY, interval, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, switchMap, take, tap } from 'rxjs/operators';
 import { Constants } from '../../constants';
 import { AttachmentFile } from '../../data/AttachmentFile';
@@ -94,11 +94,16 @@ export class ProjectService extends InternalService {
 	private intervalLoadProjects$ = interval(60000);
 
 	/**
+	 * The subscription reading the interval.
+	 */
+	private sub: Subscription = null;
+
+	/**
 	 * Start the projects loading process.
 	 */
 	startLoadingProjects(): void {
 		this.reloadProjects();
-		this.intervalLoadProjects$.subscribe({
+		this.sub = this.intervalLoadProjects$.subscribe({
 			next: val => {
 				this.reloadProjects();
 			}
@@ -106,15 +111,24 @@ export class ProjectService extends InternalService {
 	}
 
 	/**
-		   * Load the global list of ALL projects, started in the organisation.
-		   */
+	 * Load the global list of ALL projects, started in the organisation.
+	 */
 	reloadProjects() {
 		if (traceOn()) {
 			this.log(`Fetching the projects on URL ${this.backendSetupService.url()}/api/project`);
 		}
 		this.httpClient
 			.get<Project[]>(`${this.backendSetupService.url()}/project`)
-			.pipe(take(1))
+			.pipe(
+				take(1),
+				catchError(error => {
+					// We might fall in error, before the subscription on 'intervalLoadProjects$' has been started.
+					if (this.sub) {
+						this.sub.unsubscribe();
+					} 
+					return EMPTY;
+				 })
+			)
 			.subscribe({
 				next: projects => this.takeInAccountProjects(projects)
 			});

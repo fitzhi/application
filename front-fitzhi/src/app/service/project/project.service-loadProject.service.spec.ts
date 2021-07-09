@@ -1,21 +1,19 @@
-import { TestBed, TestModuleMetadata } from '@angular/core/testing';
-import { Project } from '../../data/project';
-import { ProjectService } from './project.service';
-import { HttpTestingController, HttpClientTestingModule, TestRequest } from '@angular/common/http/testing';
-import { BackendSetupService } from '../backend-setup/backend-setup.service';
-import { ReferentialService } from '../referential.service';
-import { SkillService } from '../../skill/service/skill.service';
-import { FileService } from '../file.service';
-import { MessageService } from '../../interaction/message/message.service';
-import { SunburstCinematicService } from '../../tabs-project/project-sunburst/service/sunburst-cinematic.service';
-import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { TestBed, TestModuleMetadata } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
+import { Project } from '../../data/project';
+import { MessageService } from '../../interaction/message/message.service';
+import { SkillService } from '../../skill/service/skill.service';
+import { SunburstCinematicService } from '../../tabs-project/project-sunburst/service/sunburst-cinematic.service';
+import { BackendSetupService } from '../backend-setup/backend-setup.service';
 import { CinematicService } from '../cinematic.service';
-import { ListProjectsService } from 'src/app/tabs-project/list-project/list-projects-service/list-projects.service';
-import { doesNotReject } from 'assert';
+import { FileService } from '../file.service';
+import { ReferentialService } from '../referential.service';
+import { ProjectService } from './project.service';
 
 
-describe('ProjectService.loadProject$(...) behavior', () => {
+describe('ProjectService.loadProject$(...)', () => {
 	let httpTestingController: HttpTestingController;
 	let backendSetupService: BackendSetupService;
 	let projectService: ProjectService;
