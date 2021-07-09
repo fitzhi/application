@@ -54,6 +54,11 @@ div.skills {
 	margin-top: 20px;
 }
 
+div.skills img {
+	width: 35px;
+	height: 35px;
+}
+
 div.fields_host {
 	margin-left: 0;
 	padding: 0;
