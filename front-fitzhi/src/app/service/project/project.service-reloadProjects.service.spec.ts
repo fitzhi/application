@@ -68,7 +68,7 @@ describe('ProjectService.reloadProjects()', () => {
 		const spyTakeInAccountProjects = spyOn(projectService, 'takeInAccountProjects').and.returnValue(null);
 
 		projectService.reloadProjects();
-		
+
 		const reqGetProjects = httpTestingController.expectOne('URL_OF_SERVER/api/project');
 		expect(reqGetProjects.request.method).toEqual('GET');
 		reqGetProjects.error(new ErrorEvent('error'), { status: 401, statusText: 'Unauthorized resource' });

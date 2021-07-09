@@ -125,9 +125,9 @@ export class ProjectService extends InternalService {
 					// We might fall in error, before the subscription on 'intervalLoadProjects$' has been started.
 					if (this.sub) {
 						this.sub.unsubscribe();
-					} 
+					}
 					return EMPTY;
-				 })
+				})
 			)
 			.subscribe({
 				next: projects => this.takeInAccountProjects(projects)

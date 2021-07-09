@@ -113,26 +113,24 @@ export class CinematicService {
 				if (traceOn()) {
 					form.trace();
 				}
-				
 				// If we leave the master/detail cinematic, we change the context
 				if (!this.isInMasterDetail(this.previousForm, form)) {
 					this.previousForm = form;
 				}
-				
 			}
 		});
 	}
-	
+
 	/**
-	 * 
-	 * @param previousForm 
-	 * @param form 
-	 * @returns 
+	 * Test if the end-user has switched the cinematic into the master/detail mode.
+	 * @param previousForm the previous form identifier
+	 * @param form the new form identifier
+	 * @returns **TRUE** if the application's in master/detail mode
 	 */
 	isInMasterDetail(previousForm: Form, form: Form): boolean {
-		switch(form.formIdentifier) {
+		switch (form.formIdentifier) {
 			case Constants.DEVELOPERS_CRUD:
-				return (previousForm.formIdentifier === Constants.TABS_STAFF_LIST) 
+				return (previousForm.formIdentifier === Constants.TABS_STAFF_LIST)
 					|| (previousForm.formIdentifier === Constants.PROJECT_TAB_STAFF);
 		}
 		return false;

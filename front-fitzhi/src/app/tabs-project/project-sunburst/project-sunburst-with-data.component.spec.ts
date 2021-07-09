@@ -98,14 +98,14 @@ describe('ProjectSunburstComponent with data', () => {
 			const httpMock = TestBed.inject(HttpTestingController);
 
 			const reqSkills = httpMock.expectOne(`HOST_URL/api/skill`);
-			reqSkills.flush([]);		
+			reqSkills.flush([]);
 
 			setTimeout(() => {
 
 				cinematicService.tabProjectActivatedSubject$.next(Constants.PROJECT_IDX_TAB_SUNBURST);
 
 				const reqContributors = httpMock.expectOne(`HOST_URL/api/project/1789/contributors`);
-				reqContributors.flush( { "idProject": 1789, "contributors": [] });		
+				reqContributors.flush( { "idProject": 1789, "contributors": [] });
 
 				const reqSunburst = httpMock.expectOne(`HOST_URL/api/project/1789/sunburst`);
 				expect(reqSunburst.request.method).toBe('PUT');

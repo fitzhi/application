@@ -116,7 +116,7 @@ export class StaffListComponent extends BaseComponent implements OnInit, OnDestr
 
 	public routeStaff(idStaff: number) {
 		this.router.navigate(['/user/' + idStaff], {});
-		setTimeout(() => {			
+		setTimeout(() => {
 			this.cinematicService.masterDetailSubject$.next(true);
 		}, 0);
 	}
