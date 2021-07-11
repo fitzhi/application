@@ -179,3 +179,8 @@ em.fas {
 em.large-fas {
   font-size: 80px;
 }
+
+#container-treemap-projects {
+	width: 100%;
+	text-align: center;
+}
