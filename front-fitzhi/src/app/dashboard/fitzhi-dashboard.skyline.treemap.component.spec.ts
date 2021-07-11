@@ -122,7 +122,7 @@ describe('FitzhiDashboardComponent initialization', () => {
 		component.selected = selection.treeMapSkills;
 		fixture.detectChanges();
 		expect(document.getElementById('container-skyline')).toBeNull();
-		expect(document.getElementById('container-treemap')).toBeNull();
+		expect(document.getElementById('container-treemap-skills')).toBeNull();
 		expect(document.getElementById('logo')).toBeDefined();
 	}));
 
@@ -138,7 +138,7 @@ describe('FitzhiDashboardComponent initialization', () => {
 
 		setTimeout(() => {
 			expect(document.getElementById('container-skyline')).toBeNull();
-			expect(document.getElementById('container-treemap')).toBeTruthy();
+			expect(document.getElementById('container-treemap-skills')).toBeTruthy();
 			expect(document.getElementById('logo')).toBeNull();
 		}, 0);
 	}));

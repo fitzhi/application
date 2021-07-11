@@ -17,6 +17,7 @@ getTestBed().initTestEnvironment(
 // Then we find all the tests
 
 const context = require.context('./', true, /\.spec\.ts$/);
+// const context = require.context('./', true,  /treemap-projects-container\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /project-sunburst-with-data\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /project-audit-badges\.component\.detailPanel\.spec\.ts$/);
 // const context = require.context('./', true,  /http-refresh-token-error-interceptor\.spec\.ts$/);

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'fitzhi-treemap-projects-container',
+  selector: 'app-treemap-projects',
   templateUrl: './treemap-projects-container.component.html',
   styleUrls: ['./treemap-projects-container.component.css']
 })

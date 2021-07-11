@@ -7,5 +7,6 @@ export const selection  = {
 	lastYearSummary: 2,
 	currentSummary: 3,
 	treeMapSkills: 4,
-	skyline: 5
+	skyline: 5,
+	treeMapProjects: 6,
 };
