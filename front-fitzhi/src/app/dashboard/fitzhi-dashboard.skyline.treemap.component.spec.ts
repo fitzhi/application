@@ -20,9 +20,9 @@ import { PieProjectsComponent } from './pie-projects/pie-projects.component';
 import { selection } from './selection';
 import { SkylineService } from './skyline/service/skyline.service';
 import { SkylineIconComponent } from './skyline/skyline-icon/skyline-icon.component';
-import { TreemapChartComponent } from './treemap/treemap-chart/treemap-chart.component';
-import { TreemapComponent } from './treemap/treemap-container/treemap.component';
-import { TreemapHeaderComponent } from './treemap/treemap-header/treemap-header.component';
+import { TreemapChartComponent } from './treemap-skills/treemap-chart/treemap-chart.component';
+import { TreemapComponent } from './treemap-skills/treemap-container/treemap.component';
+import { TreemapHeaderComponent } from './treemap-skills/treemap-header/treemap-header.component';
 
 
 describe('FitzhiDashboardComponent initialization', () => {

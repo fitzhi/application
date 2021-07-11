@@ -57,9 +57,9 @@ import { PieProjectsComponent } from './dashboard/pie-projects/pie-projects.comp
 import { PieDashboardService } from './dashboard/service/pie-dashboard.service';
 import { SkylineComponent } from './dashboard/skyline/component/skyline.component';
 import { SkylineIconComponent } from './dashboard/skyline/skyline-icon/skyline-icon.component';
-import { TreemapChartComponent } from './dashboard/treemap/treemap-chart/treemap-chart.component';
-import { TreemapComponent } from './dashboard/treemap/treemap-container/treemap.component';
-import { TreemapHeaderComponent } from './dashboard/treemap/treemap-header/treemap-header.component';
+import { TreemapChartComponent } from './dashboard/treemap-skills/treemap-chart/treemap-chart.component';
+import { TreemapComponent } from './dashboard/treemap-skills/treemap-container/treemap.component';
+import { TreemapHeaderComponent } from './dashboard/treemap-skills/treemap-header/treemap-header.component';
 import { ErrorComponent } from './interaction/error/error.component';
 import { MessageBoxComponent } from './interaction/message-box/dialog/message-box.component';
 import { MessageComponent } from './interaction/message/message.component';
