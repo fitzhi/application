@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { TreemapFilter as filter } from './treemapFilter';
 import { TagStar } from 'src/app/tabs-staff/staff-form/tag-star';
+
 /**
  * Service in charge the cinematic exchange between the tremap-chart & the treemap-header.
  */

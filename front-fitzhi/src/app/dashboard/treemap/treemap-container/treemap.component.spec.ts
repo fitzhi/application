@@ -1,19 +1,19 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { TreemapComponent } from './treemap.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { CinematicService } from 'src/app/service/cinematic.service';
+import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
+import { ProjectService } from 'src/app/service/project/project.service';
+import { ReferentialService } from 'src/app/service/referential.service';
+import { TagifyStarsComponent } from 'src/app/tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
+import { TreemapService } from '../service/treemap.service';
 import { TreemapChartComponent } from '../treemap-chart/treemap-chart.component';
 import { TreemapHeaderComponent } from '../treemap-header/treemap-header.component';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { TagifyStarsComponent } from 'src/app/tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MatDialogModule } from '@angular/material/dialog';
-import { ProjectService } from 'src/app/service/project/project.service';
-import { TreemapService } from '../service/treemap.service';
-import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
-import { ReferentialService } from 'src/app/service/referential.service';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CinematicService } from 'src/app/service/cinematic.service';
+import { TreemapComponent } from './treemap.component';
+
 
 describe('TreemapComponent container', () => {
 	let component: TreemapComponent;

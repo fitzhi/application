@@ -105,6 +105,10 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 		super.ngOnDestroy();
 	}
 
+	/**
+	 * In progress method...
+	 * @returns ALWAYS **true**
+	 */
 	lastYearMinimized(): boolean {
 		return true;
 	}
