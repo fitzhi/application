@@ -38,12 +38,6 @@ describe('ProjectService.reloadProjects()', () => {
 
 	});
 
-	it('should be created sucessfully.', () => {
-		expect(projectService).toBeTruthy();
-	});
-
-
-
 	it('should invoke takeInAccountProjects() if the projects collection is correctly loaded.', done => {
 
 		const spyTakeInAccountProjects = spyOn(projectService, 'takeInAccountProjects').and.returnValue(null);

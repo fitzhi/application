@@ -3,6 +3,8 @@ import { EventEmitter, Injectable } from '@angular/core';
 import { METHOD_NOT_ALLOWED, NOT_FOUND, NO_CONTENT } from 'http-status-codes';
 import { BehaviorSubject, EMPTY, interval, Observable, of, Subject, Subscription } from 'rxjs';
 import { catchError, switchMap, take, tap } from 'rxjs/operators';
+import { EvaluationDistribution } from 'src/app/data/EvalutionDistribution';
+import { FitzhiSettings } from 'src/app/data/FitzhiSettings';
 import { Constants } from '../../constants';
 import { AttachmentFile } from '../../data/AttachmentFile';
 import { AuditTopic } from '../../data/AuditTopic';
@@ -74,6 +76,11 @@ export class ProjectService extends InternalService {
 	 * This EventEmitter propagates the signal than an evaluation has been given to an audit topic.
 	 */
 	public topicEvaluation$ = new Subject();
+
+	/**
+	 * The Fitzhi settings
+	 */
+	private settings = new FitzhiSettings()
 
 	constructor(
 		private httpClient: HttpClient,
@@ -1387,4 +1394,47 @@ export class ProjectService extends InternalService {
 		return this.allProjects[index];
 	}
 
+	/**
+	 * Retrieve the appropriate evaluations distribution associated to the project.
+	 * @param project the given project
+	 * @returns the corresponding distribution
+	 */
+	appropriateDistribution(project: Project): EvaluationDistribution {
+
+		let evaluations =  
+			(project.staffEvaluation) ?
+			this.settings.evaluationDistributions.filter(distribution => (distribution.staffEvaluationPercentage)) :
+			this.settings.evaluationDistributions.filter(distribution => (!distribution.staffEvaluationPercentage))
+
+		evaluations =  
+			((project.sonarProjects) && (project.sonarProjects.length > 0) && (project.sonarProjects[0].sonarEvaluation)) ?
+			evaluations.filter(distribution => (distribution.sonarEvaluationPercentage)) :
+			evaluations.filter(distribution => (!distribution.sonarEvaluationPercentage))
+
+		evaluations =  
+			(project.auditEvaluation) ?
+			evaluations.filter(distribution => (distribution.auditEvaluationPercentage)) :
+			evaluations.filter(distribution => (!distribution.auditEvaluationPercentage))
+			
+		if (evaluations.length > 1) {
+			throw new Error('Cannot retrieve multiple evaluations for a single project.');
+		}
+ 		return (evaluations.length === 0) ? undefined : <EvaluationDistribution> evaluations[0];
+	}
+
+	/**
+	 * Calculate the Fitzhi global evaluation for the given project
+	 * @param project the given project
+	 * @returns a number between 0 and 10 representing the technical risk of the project
+	 */
+	globalEvaluation(project: Project): number {
+		const distribution = this.appropriateDistribution(project);
+
+		const evaluation = 
+			((distribution.staffEvaluationPercentage) ? distribution.staffEvaluationPercentage * project.staffEvaluation : 0)
+		+	((distribution.sonarEvaluationPercentage) ? distribution.sonarEvaluationPercentage * this.calculateSonarEvaluation(project) : 0)
+		+	((distribution.auditEvaluationPercentage) ? distribution.auditEvaluationPercentage * project.auditEvaluation : 0);
+
+		return Math.floor(evaluation / 100);
+	}
 }
