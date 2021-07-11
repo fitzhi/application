@@ -11,8 +11,8 @@ import { ReferentialService } from 'src/app/service/referential.service';
 import { TagifyStarsComponent } from 'src/app/tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 import { TreemapService } from '../service/treemap.service';
 import { TreemapChartComponent } from '../treemap-skills-chart/treemap-skills-chart.component';
-import { TreemapHeaderComponent } from '../treemap-header/treemap-header.component';
-import { TreemapComponent } from './treemap.component';
+import { TreemapHeaderComponent } from '../treemap-skills-header/treemap-skills-header.component';
+import { TreemapComponent } from './treemap-skills.component';
 
 
 describe('TreemapComponent container', () => {

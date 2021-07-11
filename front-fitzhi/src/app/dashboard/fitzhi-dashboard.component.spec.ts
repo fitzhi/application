@@ -12,10 +12,10 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { TreemapChartComponent } from './treemap-skills/treemap-skills-chart/treemap-skills-chart.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { TreemapHeaderComponent } from './treemap-skills/treemap-header/treemap-header.component';
+import { TreemapHeaderComponent } from './treemap-skills/treemap-skills-header/treemap-skills-header.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TagifyStarsComponent } from '../tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
-import { TreemapComponent } from './treemap-skills/treemap-container/treemap.component';
+import { TreemapComponent } from './treemap-skills/treemap-skills-container/treemap-skills.component';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { DatePipe } from '@angular/common';
 

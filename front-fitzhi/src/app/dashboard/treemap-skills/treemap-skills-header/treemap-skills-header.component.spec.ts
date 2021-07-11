@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TreemapHeaderComponent } from './treemap-header.component';
+import { TreemapHeaderComponent } from './treemap-skills-header.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TagifyStarsComponent } from 'src/app/tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 

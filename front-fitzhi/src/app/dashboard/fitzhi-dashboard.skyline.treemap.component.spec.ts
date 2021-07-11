@@ -21,8 +21,8 @@ import { selection } from './selection';
 import { SkylineService } from './skyline/service/skyline.service';
 import { SkylineIconComponent } from './skyline/skyline-icon/skyline-icon.component';
 import { TreemapChartComponent } from './treemap-skills/treemap-skills-chart/treemap-skills-chart.component';
-import { TreemapComponent } from './treemap-skills/treemap-container/treemap.component';
-import { TreemapHeaderComponent } from './treemap-skills/treemap-header/treemap-header.component';
+import { TreemapComponent } from './treemap-skills/treemap-skills-container/treemap-skills.component';
+import { TreemapHeaderComponent } from './treemap-skills/treemap-skills-header/treemap-skills-header.component';
 
 
 describe('FitzhiDashboardComponent initialization', () => {

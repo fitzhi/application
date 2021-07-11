@@ -6,9 +6,9 @@ import { TagStar } from 'src/app/tabs-staff/staff-form/tag-star';
 import { TreemapService } from '../service/treemap.service';
 
 @Component({
-	selector: 'app-treemap-header',
-	templateUrl: './treemap-header.component.html',
-	styleUrls: ['./treemap-header.component.css']
+	selector: 'app-treemap-skills-header',
+	templateUrl: './treemap-skills-header.component.html',
+	styleUrls: ['./treemap-skills-header.component.css']
 })
 export class TreemapHeaderComponent implements OnInit {
 
