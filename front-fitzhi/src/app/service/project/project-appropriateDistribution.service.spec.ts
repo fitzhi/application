@@ -30,8 +30,6 @@ describe('ProjectService', () => {
 	it('should retrieve the appropriate distribution on the staff coverage solely.', () => {
 		project.staffEvaluation = 5;
 		expect(projectService.appropriateDistribution(project)).toBeDefined();
-		console.log ('nope', projectService.appropriateDistribution(project));
-		console.log ('nope', new EvaluationDistribution(100, undefined, undefined));
 		expect(projectService.appropriateDistribution(project)).toEqual(new EvaluationDistribution(100, undefined, undefined));
 	});
 

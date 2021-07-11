@@ -1417,6 +1417,9 @@ export class ProjectService extends InternalService {
 			evaluations.filter(distribution => (!distribution.auditEvaluationPercentage))
 			
 		if (evaluations.length > 1) {
+			if (traceOn()) {
+				console.log (evaluations);
+			}
 			throw new Error('Cannot retrieve multiple evaluations for a single project.');
 		}
  		return (evaluations.length === 0) ? undefined : <EvaluationDistribution> evaluations[0];

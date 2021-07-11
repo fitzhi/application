@@ -1,19 +1,11 @@
-import { TestBed, TestModuleMetadata } from '@angular/core/testing';
-import { Project } from '../../data/project';
-import { ProjectService } from './project.service';
-import { HttpTestingController, HttpClientTestingModule, TestRequest } from '@angular/common/http/testing';
-import { BackendSetupService } from '../backend-setup/backend-setup.service';
-import { ReferentialService } from '../referential.service';
-import { SkillService } from '../../skill/service/skill.service';
-import { FileService } from '../file.service';
-import { MessageService } from '../../interaction/message/message.service';
-import { SunburstCinematicService } from '../../tabs-project/project-sunburst/service/sunburst-cinematic.service';
-import { MatDialogModule } from '@angular/material/dialog';
 import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { TestBed, TestModuleMetadata } from '@angular/core/testing';
+import { MatDialogModule } from '@angular/material/dialog';
+import { Project } from '../../data/project';
 import { CinematicService } from '../cinematic.service';
-import { ListProjectsService } from 'src/app/tabs-project/list-project/list-projects-service/list-projects.service';
-import { doesNotReject } from 'assert';
-import { SonarProject } from 'src/app/data/SonarProject';
+import { ReferentialService } from '../referential.service';
+import { ProjectService } from './project.service';
 
 
 describe('ProjectService', () => {
@@ -56,6 +48,19 @@ describe('ProjectService', () => {
 		project.sonarProjects.push({key: 'key', name: 'name', sonarEvaluation: { 'evaluation': 2, 'totalNumberLinesOfCode': 1000 }});
 		project.auditEvaluation = 8;
 		expect(projectService.globalEvaluation(project)).toBe(6);
+	});
+
+	it('should calculate an evaluation based on the 2 evaluations (staff, sonar).', () => {
+		project.staffEvaluation = 9;
+		project.sonarProjects = [];
+		project.sonarProjects.push({key: 'key', name: 'name', sonarEvaluation: { 'evaluation': 4, 'totalNumberLinesOfCode': 1000 }});
+		expect(projectService.globalEvaluation(project)).toBe(7);
+	});
+
+	it('should calculate an evaluation based on the 2 evaluations (staff, audit).', () => {
+		project.staffEvaluation = 3;
+		project.auditEvaluation = 8;
+		expect(projectService.globalEvaluation(project)).toBe(7);
 	});
 
 });
