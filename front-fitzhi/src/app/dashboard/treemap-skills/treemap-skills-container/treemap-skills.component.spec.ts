@@ -9,13 +9,13 @@ import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { TagifyStarsComponent } from 'src/app/tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
-import { TreemapService } from '../service/treemap.service';
-import { TreemapChartComponent } from '../treemap-skills-chart/treemap-skills-chart.component';
+import { TreemapSkillsService } from '../service-skills-service/treemap-skills.service';
+import { TreemapSkillsChartComponent } from '../treemap-skills-chart/treemap-skills-chart.component';
 import { TreemapHeaderComponent } from '../treemap-skills-header/treemap-skills-header.component';
 import { TreemapComponent } from './treemap-skills.component';
 
 
-describe('TreemapComponent container', () => {
+describe('TreemapSkillsComponent container', () => {
 	let component: TreemapComponent;
 	let fixture: ComponentFixture<TreemapComponent>;
 
@@ -39,9 +39,9 @@ describe('TreemapComponent container', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ TreemapComponent, TreemapChartComponent, TreemapHeaderComponent,
+			declarations: [ TreemapComponent, TreemapSkillsChartComponent, TreemapHeaderComponent,
 				TagifyStarsComponent ],
-			providers: [ReferentialService, DashboardService, TreemapService, ProjectService, CinematicService],
+			providers: [ReferentialService, DashboardService, TreemapSkillsService, ProjectService, CinematicService],
 			imports: [NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule, MatDialogModule, HttpClientTestingModule]
 		})
 		.compileComponents();

@@ -1,4 +1,4 @@
-export class TreemapFilter {
+export class TreemapSkillsFilter {
 
 	/**
 	 * This boolean indicates that the user wants to filter the treemap chart with external staff members, or not.

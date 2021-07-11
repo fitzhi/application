@@ -9,7 +9,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { MatDialogModule } from '@angular/material/dialog';
-import { TreemapChartComponent } from './treemap-skills/treemap-skills-chart/treemap-skills-chart.component';
+import { TreemapSkillsChartComponent } from './treemap-skills/treemap-skills-chart/treemap-skills-chart.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TreemapHeaderComponent } from './treemap-skills/treemap-skills-header/treemap-skills-header.component';
@@ -34,7 +34,7 @@ describe('FitzhiDashboardComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ FitzhiDashboardComponent, PieChartComponent, PieProjectsComponent, TagifyStarsComponent,
-				TreemapChartComponent, TreemapHeaderComponent, TreemapChartComponent, TreemapComponent, PieLegendComponent ],
+				TreemapSkillsChartComponent, TreemapHeaderComponent, TreemapSkillsChartComponent, TreemapComponent, PieLegendComponent ],
 			imports: [MatTableModule, MatSortModule, MatPaginatorModule, HttpClientTestingModule, MatDialogModule,
 				NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule, RouterTestingModule],
 			providers: [ReferentialService, CinematicService, PieDashboardService, DatePipe]

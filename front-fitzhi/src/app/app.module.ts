@@ -57,7 +57,7 @@ import { PieProjectsComponent } from './dashboard/pie-projects/pie-projects.comp
 import { PieDashboardService } from './dashboard/service/pie-dashboard.service';
 import { SkylineComponent } from './dashboard/skyline/component/skyline.component';
 import { SkylineIconComponent } from './dashboard/skyline/skyline-icon/skyline-icon.component';
-import { TreemapChartComponent } from './dashboard/treemap-skills/treemap-skills-chart/treemap-skills-chart.component';
+import { TreemapSkillsChartComponent } from './dashboard/treemap-skills/treemap-skills-chart/treemap-skills-chart.component';
 import { TreemapComponent } from './dashboard/treemap-skills/treemap-skills-container/treemap-skills.component';
 import { TreemapHeaderComponent } from './dashboard/treemap-skills/treemap-skills-header/treemap-skills-header.component';
 import { ErrorComponent } from './interaction/error/error.component';
@@ -180,7 +180,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
 		PieChartComponent,
 		PieProjectsComponent,
 		SSEWatcherComponent,
-		TreemapChartComponent,
+		TreemapSkillsChartComponent,
 		TreemapHeaderComponent,
 		TreemapComponent,
 		ProjectRemoveComponent,

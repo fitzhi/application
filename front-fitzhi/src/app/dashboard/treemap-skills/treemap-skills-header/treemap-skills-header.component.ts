@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { traceOn } from 'src/app/global';
 import { TagifyEditableState } from 'src/app/tabs-staff/staff-experience/tagify-stars/tagify-editable-state';
 import { TagStar } from 'src/app/tabs-staff/staff-form/tag-star';
-import { TreemapService } from '../service/treemap.service';
+import { TreemapSkillsService } from '../service-skills-service/treemap-skills.service';
 
 @Component({
 	selector: 'app-treemap-skills-header',
@@ -42,7 +42,7 @@ export class TreemapHeaderComponent implements OnInit {
 	 */
 	public editableState$ = new Subject<TagifyEditableState>();
 
-	constructor(public treeMapService: TreemapService) {
+	constructor(public treeMapService: TreemapSkillsService) {
 		this.treeMapService.treemapFilter.external = (localStorage.getItem('external') === '1');
 		if (traceOn()) {
 			console.log (this.treeMapService.treemapFilter.external ? 'with externals' : 'only internals');
@@ -50,7 +50,7 @@ export class TreemapHeaderComponent implements OnInit {
 	}
 
 	ngOnInit(): void {
-		const label = TreemapService.TAG_LABEL;
+		const label = TreemapSkillsService.TAG_LABEL;
 		this.whitelist.push(label);
 		this.originalValues.push(this.treeMapService.buildTag());
 

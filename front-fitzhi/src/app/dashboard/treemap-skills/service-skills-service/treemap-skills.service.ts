@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { TreemapFilter as filter } from './treemapFilter';
+import { TreemapSkillsFilter as filter } from './treemap-skills-filter';
 import { TagStar } from 'src/app/tabs-staff/staff-form/tag-star';
 
 /**
@@ -9,7 +9,7 @@ import { TagStar } from 'src/app/tabs-staff/staff-form/tag-star';
 @Injectable({
 	providedIn: 'root'
 })
-export class TreemapService {
+export class TreemapSkillsService {
 
 	public static TAG_LABEL = 'Minimal level :';
 
@@ -29,6 +29,6 @@ export class TreemapService {
 	 * Build and return the filter tag of the component.
 	 */
 	public buildTag(): TagStar {
-		return new TagStar(TreemapService.TAG_LABEL, this.treemapFilter.level);
+		return new TagStar(TreemapSkillsService.TAG_LABEL, this.treemapFilter.level);
 	}
 }

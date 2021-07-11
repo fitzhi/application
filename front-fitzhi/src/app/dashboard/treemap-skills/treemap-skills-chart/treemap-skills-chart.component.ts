@@ -6,15 +6,15 @@ import { traceOn } from 'src/app/global';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { StatTypes } from 'src/app/service/dashboard/stat-types';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { TreemapService } from '../service/treemap.service';
-import { TreemapFilter } from '../service/treemapFilter';
+import { TreemapSkillsService } from '../service-skills-service/treemap-skills.service';
+import { TreemapSkillsFilter } from '../service-skills-service/treemap-skills-filter';
 
 @Component({
 	selector: 'app-treemap-skills-chart',
 	templateUrl: './treemap-skills-chart.component.html',
 	styleUrls: ['./treemap-skills-chart.component.css']
 })
-export class TreemapChartComponent extends BaseComponent implements OnInit, OnDestroy {
+export class TreemapSkillsChartComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	distribution: any[];
 
@@ -32,7 +32,7 @@ export class TreemapChartComponent extends BaseComponent implements OnInit, OnDe
 
 	constructor(
 		public dashboardService: DashboardService,
-		public treeMapService: TreemapService,
+		public treeMapService: TreemapSkillsService,
 		public projectService: ProjectService) {
 		super();
 	}
@@ -54,7 +54,7 @@ export class TreemapChartComponent extends BaseComponent implements OnInit, OnDe
 
 	}
 
-	loadDistribution (filter: TreemapFilter) {
+	loadDistribution (filter: TreemapSkillsFilter) {
 		// Within the tag-star component the evaluation extends from 0 to 4.
 		// For a staff member, the level in a skill extends from 1 to 5.
 		// We add 1 to the filter
