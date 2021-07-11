@@ -114,7 +114,7 @@ describe('FitzhiDashboardComponent initialization', () => {
 
 	it('The method switchTo is invoked when the button for TreeMap is clicked', fakeAsync(() => {
 		const onClickMock = spyOn(component, 'switchTo');
-		fixture.debugElement.query(By.css('#treeMap')).triggerEventHandler('click', null);
+		fixture.debugElement.query(By.css('#treeMap-skills')).triggerEventHandler('click', null);
 		expect(onClickMock).toHaveBeenCalled();
 	}));
 
