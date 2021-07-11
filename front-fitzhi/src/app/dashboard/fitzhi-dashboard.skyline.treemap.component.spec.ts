@@ -119,7 +119,7 @@ describe('FitzhiDashboardComponent initialization', () => {
 	}));
 
 	it('The button for Treemap is clicked, BUT ALL PROJECTS ARE NOT loaded', fakeAsync(() => {
-		component.selected = selection.treeMap;
+		component.selected = selection.treeMapSkills;
 		fixture.detectChanges();
 		expect(document.getElementById('container-skyline')).toBeNull();
 		expect(document.getElementById('container-treemap')).toBeNull();
@@ -133,7 +133,7 @@ describe('FitzhiDashboardComponent initialization', () => {
 		const spy1 = spyOn(pieDashboardService, 'generatePieSlices').and.returnValue();
 		const spy2 = spyOn(dashboardService, 'processSkillDistribution').and.returnValue(distribution);
 
-		component.selected = selection.treeMap;
+		component.selected = selection.treeMapSkills;
 		fixture.detectChanges();
 
 		setTimeout(() => {

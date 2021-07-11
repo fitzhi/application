@@ -69,7 +69,7 @@ div.styline-icon {
 }
 
 
-button.lastYearMinimized, button.lastMonthMinimized, button.currentMinimized, button.treeMap, div.styline-icon {
+button.lastYearMinimized, button.lastMonthMinimized, button.currentMinimized, button.treeMap-skills, div.styline-icon {
 	width: var(--sidebar-button-width);
 	height: var(--sidebar-button-height);
 	left: 5px;
@@ -106,7 +106,7 @@ div.skyline-icon {
 	margin-left: 5px;
 }
 
-button.treeMap {
+button.treeMap-skills {
 	bottom: 210px;
 }
 

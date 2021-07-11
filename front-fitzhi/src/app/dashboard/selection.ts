@@ -6,6 +6,6 @@ export const selection  = {
 	lastMonthSummary: 1,
 	lastYearSummary: 2,
 	currentSummary: 3,
-	treeMap: 4,
+	treeMapSkills: 4,
 	skyline: 5
 };

@@ -38,13 +38,13 @@
       </div>
     </angular-popper>        
 
-    <button id="treeMap" class="btn rounded treeMap"
+    <button id="treeMap-skills" class="btn rounded treeMap-skills"
         [ngClass]="{
-            'btn-outline-success' : isSelected(selection.treeMap), 
-            'btn-outline-secondary': !isSelected(selection.treeMap)}" 
-            (mouseenter)="popupHelper.mouseEnter(selection.treeMap)" 
+            'btn-outline-success' : isSelected(selection.treeMapSkills), 
+            'btn-outline-secondary': !isSelected(selection.treeMapSkills)}" 
+            (mouseenter)="popupHelper.mouseEnter(selection.treeMapSkills)" 
             (mouseleave)="popupHelper.mouseLeave()"
-            (click)="switchTo(selection.treeMap)">
+            (click)="switchTo(selection.treeMapSkills)">
         <svg class="treeMapButton">
             <rect x="6" y="6" class="rectTreeMap" style="fill:#27A53F" />
             <rect x="21" y="6" class="rectTreeMap" style="fill:#329338" />
@@ -58,7 +58,7 @@
         </svg>
     </button>
 
-    <angular-popper placement="left" target="#treeMap" *ngIf="popupHelper.isButtonActivated(selection.treeMap) && !hasSelectedADashboard()">
+    <angular-popper placement="left" target="#treeMap-skills" *ngIf="popupHelper.isButtonActivated(selection.treeMapSkills) && !hasSelectedADashboard()">
       <div content class="help">
         <h4 class="help-title">Display staff risk</h4>
         <div class="help-content">
@@ -162,7 +162,7 @@
 
 <div class="mainDashboard page-content"> 
 
-    <div id="container-treemap" *ngIf="(projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMap))">
+    <div id="container-treemap" *ngIf="(projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapSkills))">
         <app-treemap-skills></app-treemap-skills>
     </div>
     

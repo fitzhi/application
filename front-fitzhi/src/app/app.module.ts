@@ -119,6 +119,7 @@ import { StaffProjectsComponent } from './tabs-staff/staff-projects/staff-projec
 import { StaffRemoveComponent } from './tabs-staff/staff-remove/staff-remove.component';
 import { StaffComponent } from './tabs-staff/staff.component';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { TreemapProjectsContainerComponent } from './dashboard/treemap-projects/treemap-projects-container/treemap-projects-container.component';
 
 @NgModule({
 	declarations: [
@@ -190,7 +191,8 @@ import { WelcomeComponent } from './welcome/welcome.component';
 		BranchComponent,
 		SkylineComponent,
 		SkylineIconComponent,
-		ChartInProgressComponent
+		ChartInProgressComponent,
+		TreemapProjectsContainerComponent
 	],
 	entryComponents: [
 		StaffUploadCvComponent,
