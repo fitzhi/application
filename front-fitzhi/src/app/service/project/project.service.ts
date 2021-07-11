@@ -80,7 +80,7 @@ export class ProjectService extends InternalService {
 	/**
 	 * The Fitzhi settings
 	 */
-	private settings = new FitzhiSettings()
+	private settings = new FitzhiSettings();
 
 	constructor(
 		private httpClient: HttpClient,
@@ -1401,28 +1401,28 @@ export class ProjectService extends InternalService {
 	 */
 	appropriateDistribution(project: Project): EvaluationDistribution {
 
-		let evaluations =  
+		let evaluations =
 			(project.staffEvaluation) ?
 			this.settings.evaluationDistributions.filter(distribution => (distribution.staffEvaluationPercentage)) :
-			this.settings.evaluationDistributions.filter(distribution => (!distribution.staffEvaluationPercentage))
+			this.settings.evaluationDistributions.filter(distribution => (!distribution.staffEvaluationPercentage));
 
-		evaluations =  
+		evaluations =
 			((project.sonarProjects) && (project.sonarProjects.length > 0) && (project.sonarProjects[0].sonarEvaluation)) ?
 			evaluations.filter(distribution => (distribution.sonarEvaluationPercentage)) :
-			evaluations.filter(distribution => (!distribution.sonarEvaluationPercentage))
+			evaluations.filter(distribution => (!distribution.sonarEvaluationPercentage));
 
-		evaluations =  
+		evaluations =
 			(project.auditEvaluation) ?
 			evaluations.filter(distribution => (distribution.auditEvaluationPercentage)) :
-			evaluations.filter(distribution => (!distribution.auditEvaluationPercentage))
-			
+			evaluations.filter(distribution => (!distribution.auditEvaluationPercentage));
+
 		if (evaluations.length > 1) {
 			if (traceOn()) {
 				console.log (evaluations);
 			}
 			throw new Error('Cannot retrieve multiple evaluations for a single project.');
 		}
- 		return (evaluations.length === 0) ? undefined : <EvaluationDistribution> evaluations[0];
+		return (evaluations.length === 0) ? undefined : <EvaluationDistribution> evaluations[0];
 	}
 
 	/**
@@ -1433,7 +1433,7 @@ export class ProjectService extends InternalService {
 	globalEvaluation(project: Project): number {
 		const distribution = this.appropriateDistribution(project);
 
-		const evaluation = 
+		const evaluation =
 			((distribution.staffEvaluationPercentage) ? distribution.staffEvaluationPercentage * project.staffEvaluation : 0)
 		+	((distribution.sonarEvaluationPercentage) ? distribution.sonarEvaluationPercentage * this.calculateSonarEvaluation(project) : 0)
 		+	((distribution.auditEvaluationPercentage) ? distribution.auditEvaluationPercentage * project.auditEvaluation : 0);
