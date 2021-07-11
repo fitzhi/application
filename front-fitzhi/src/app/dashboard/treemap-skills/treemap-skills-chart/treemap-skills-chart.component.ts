@@ -10,9 +10,9 @@ import { TreemapService } from '../service/treemap.service';
 import { TreemapFilter } from '../service/treemapFilter';
 
 @Component({
-	selector: 'app-treemap-chart',
-	templateUrl: './treemap-chart.component.html',
-	styleUrls: ['./treemap-chart.component.css']
+	selector: 'app-treemap-skills-chart',
+	templateUrl: './treemap-skills-chart.component.html',
+	styleUrls: ['./treemap-skills-chart.component.css']
 })
 export class TreemapChartComponent extends BaseComponent implements OnInit, OnDestroy {
 

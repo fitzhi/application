@@ -10,7 +10,7 @@ import { ProjectService } from 'src/app/service/project/project.service';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { TagifyStarsComponent } from 'src/app/tabs-staff/staff-experience/tagify-stars/tagify-stars.component';
 import { TreemapService } from '../service/treemap.service';
-import { TreemapChartComponent } from '../treemap-chart/treemap-chart.component';
+import { TreemapChartComponent } from '../treemap-skills-chart/treemap-skills-chart.component';
 import { TreemapHeaderComponent } from '../treemap-header/treemap-header.component';
 import { TreemapComponent } from './treemap.component';
 
