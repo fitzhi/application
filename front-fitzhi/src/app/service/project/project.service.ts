@@ -532,7 +532,6 @@ export class ProjectService extends InternalService {
 		}
 
 		const url = `${this.backendSetupService.url()}/project/${idProject}/contributors`;
-		console.log ('nope', url);
 		if (traceOn()) {
 			console.log('Retrieve the contributors for the project identifier %d @ url %s', idProject, url);
 		}
@@ -1401,8 +1400,9 @@ export class ProjectService extends InternalService {
 	 */
 	appropriateDistribution(project: Project): EvaluationDistribution {
 
+		// staffEvaluation is equal to -1 when initialized.
 		let evaluations =
-			(project.staffEvaluation) ?
+			((project.staffEvaluation >= 0)) ?
 			this.settings.evaluationDistributions.filter(distribution => (distribution.staffEvaluationPercentage)) :
 			this.settings.evaluationDistributions.filter(distribution => (!distribution.staffEvaluationPercentage));
 
@@ -1432,11 +1432,14 @@ export class ProjectService extends InternalService {
 	 */
 	globalEvaluation(project: Project): number {
 		const distribution = this.appropriateDistribution(project);
-
+		// If we do find any distribution for this project, we return UNDEFINED
+		if (!distribution) {
+			return undefined;
+		}
 		const evaluation =
-			((distribution.staffEvaluationPercentage) ? distribution.staffEvaluationPercentage * project.staffEvaluation : 0)
-		+	((distribution.sonarEvaluationPercentage) ? distribution.sonarEvaluationPercentage * this.calculateSonarEvaluation(project) : 0)
-		+	((distribution.auditEvaluationPercentage) ? distribution.auditEvaluationPercentage * project.auditEvaluation : 0);
+			((distribution.staffEvaluationPercentage) ? (distribution.staffEvaluationPercentage * (10 - project.staffEvaluation)) : 0)
+		+	((distribution.sonarEvaluationPercentage) ? (distribution.sonarEvaluationPercentage * this.calculateSonarEvaluation(project) / 10) : 0)
+		+	((distribution.auditEvaluationPercentage) ? (distribution.auditEvaluationPercentage * project.auditEvaluation / 10) : 0);
 
 		return Math.floor(evaluation / 100);
 	}

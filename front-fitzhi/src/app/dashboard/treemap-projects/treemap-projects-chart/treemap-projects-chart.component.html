@@ -1,1 +1,10 @@
-<p>team-projects-chart works!</p>
+<div class="treemap-projects-chart">
+	<ngx-charts-tree-map
+		[scheme]="colorScheme"
+		[results]="distribution"
+		[gradient]="gradient"
+		[animations]="animations"
+		[labelFormatting]="labelFormatting"
+		(select)="onSelect($event)">
+	</ngx-charts-tree-map>
+</div>

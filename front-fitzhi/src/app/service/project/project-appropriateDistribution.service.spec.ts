@@ -54,4 +54,11 @@ describe('ProjectService', () => {
 		expect(projectService.appropriateDistribution(project)).toEqual(new EvaluationDistribution(20, 20, 60));
 	});
 
+	it('should NULL if no risk evaluation is available for an empty project.', () => {
+		project.staffEvaluation = -1;
+		project.sonarProjects = null;
+		project.auditEvaluation = 0;
+		expect(projectService.appropriateDistribution(project)).toBeUndefined();
+	});
+
 });

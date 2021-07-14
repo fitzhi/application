@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { traceOn } from 'src/app/global';
 import { TagifyEditableState } from 'src/app/tabs-staff/staff-experience/tagify-stars/tagify-editable-state';
 import { TagStar } from 'src/app/tabs-staff/staff-form/tag-star';
-import { TreemapSkillsService } from '../service-skills-service/treemap-skills.service';
+import { TreemapSkillsService } from '../treemap-skills-service/treemap-skills.service';
 
 @Component({
 	selector: 'app-treemap-skills-header',

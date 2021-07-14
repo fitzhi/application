@@ -204,7 +204,7 @@
 
 		<div id="container-treemap-projects" 
 			*ngIf="(projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects))">
-			<app-treemap-projects></app-treemap-projects>
+			<app-treemap-projects width="1200px" height="500px"></app-treemap-projects>
 		</div>
 	
 		<div class="dashboard" *ngIf="isSelected(selection.lastYearSummary)">

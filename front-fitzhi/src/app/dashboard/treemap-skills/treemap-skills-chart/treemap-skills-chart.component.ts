@@ -6,8 +6,8 @@ import { traceOn } from 'src/app/global';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { StatTypes } from 'src/app/service/dashboard/stat-types';
 import { ProjectService } from 'src/app/service/project/project.service';
-import { TreemapSkillsService } from '../service-skills-service/treemap-skills.service';
-import { TreemapSkillsFilter } from '../service-skills-service/treemap-skills-filter';
+import { TreemapSkillsService } from '../treemap-skills-service/treemap-skills.service';
+import { TreemapSkillsFilter } from '../treemap-skills-service/treemap-skills-filter';
 
 @Component({
 	selector: 'app-treemap-skills-chart',

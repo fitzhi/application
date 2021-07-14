@@ -26,41 +26,52 @@ describe('ProjectService', () => {
 		project = new Project(1789, 'The revolutionary project');
 	});
 
+	it('should calculate an evaluation based on a perfect staff.', () => {
+		project.staffEvaluation = 0;
+		expect(projectService.globalEvaluation(project)).toBe(10);
+	});
+
 	it('should calculate an evaluation based on staff coverage solely.', () => {
 		project.staffEvaluation = 5;
 		expect(projectService.globalEvaluation(project)).toBe(5);
 	});
 
 	it('should calculate an evaluation based on the audit solely.', () => {
-		project.auditEvaluation = 8;
+		project.auditEvaluation = 80;
 		expect(projectService.globalEvaluation(project)).toBe(8);
 	});
 
 	it('should calculate an evaluation based on Sonar solely.', () => {
 		project.sonarProjects = [];
-		project.sonarProjects.push({key: 'key', name: 'name', sonarEvaluation: { 'evaluation': 2, 'totalNumberLinesOfCode': 1000 }});
+		project.sonarProjects.push({key: 'key', name: 'name', sonarEvaluation: { 'evaluation': 20, 'totalNumberLinesOfCode': 1000 }});
 		expect(projectService.globalEvaluation(project)).toBe(2);
 	});
 
 	it('should calculate an evaluation based on the 3 evaluations (staff, sonar, audit).', () => {
 		project.staffEvaluation = 5;
 		project.sonarProjects = [];
-		project.sonarProjects.push({key: 'key', name: 'name', sonarEvaluation: { 'evaluation': 2, 'totalNumberLinesOfCode': 1000 }});
-		project.auditEvaluation = 8;
+		project.sonarProjects.push({key: 'key', name: 'name', sonarEvaluation: { 'evaluation': 20, 'totalNumberLinesOfCode': 1000 }});
+		project.auditEvaluation = 80;
 		expect(projectService.globalEvaluation(project)).toBe(6);
 	});
 
 	it('should calculate an evaluation based on the 2 evaluations (staff, sonar).', () => {
-		project.staffEvaluation = 9;
+		project.staffEvaluation = 1;
 		project.sonarProjects = [];
-		project.sonarProjects.push({key: 'key', name: 'name', sonarEvaluation: { 'evaluation': 4, 'totalNumberLinesOfCode': 1000 }});
+		project.sonarProjects.push({key: 'key', name: 'name', sonarEvaluation: { 'evaluation': 40, 'totalNumberLinesOfCode': 1000 }});
 		expect(projectService.globalEvaluation(project)).toBe(7);
 	});
 
 	it('should calculate an evaluation based on the 2 evaluations (staff, audit).', () => {
 		project.staffEvaluation = 3;
-		project.auditEvaluation = 8;
+		project.auditEvaluation = 80;
 		expect(projectService.globalEvaluation(project)).toBe(7);
+	});
+
+	it('should return "undefined" for an empty project.', () => {
+		project.staffEvaluation = -1;
+		project.auditEvaluation = 0;
+		expect(projectService.globalEvaluation(project)).toBeUndefined();
 	});
 
 });

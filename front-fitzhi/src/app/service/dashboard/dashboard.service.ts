@@ -226,5 +226,50 @@ export class DashboardService {
 		return color;
 	}
 
+	/**
+	 * Calculate the distribution of projects with their level of risk.
+	 * 
+	 * @returns the distribution array
+	 */
+	public processProjectsDistribution(): any[] {
+
+		const distribution = [];
+
+		function sizeOfProject(project: Project) {
+			if (project.mapSkills.size === 0) {
+				return 0;
+			}
+
+			return Array.from(project.mapSkills.values())
+				.map(pj => pj.totalFilesSize)
+				.reduce(function(a, b) {
+			  	return a + b;
+				});
+		}
+
+		if (traceOn()) {
+			console.groupCollapsed('Global evaluation for each project.');
+			this.projectService.allProjects
+				.filter( (project: Project) => project.active )
+				.forEach(project => {
+					console.log (project.name, this.projectService.globalEvaluation(project));
+				});
+			console.groupEnd();
+		}
+		this.projectService.allProjects
+			.filter( (project: Project) => project.active )
+			.forEach(project => {
+				console.log (project.name, this.projectService.globalEvaluation(project));
+				distribution.push ({
+						name: project.name,
+						value: sizeOfProject(project),
+						color: this.projectService.getRiskColor(this.projectService.globalEvaluation(project))
+				});
+				
+			});
+
+		return distribution;
+	}
+
 }
 

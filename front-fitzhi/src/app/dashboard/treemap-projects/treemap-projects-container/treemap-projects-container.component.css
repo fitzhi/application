@@ -1,8 +1,7 @@
 div.treemap-projects {
-    width: 800px;
-    height: 600px;
-    background-color: lightgray;
-    margin-top: 20px;
-    margin-left: auto;
-    margin-right: auto;
-}
+	margin-top: 20px;
+	margin-left: auto;
+	margin-right: auto;
+	width: var(--treemap-projects-width);
+	height: var(--treemap-projects-height);
+} 
