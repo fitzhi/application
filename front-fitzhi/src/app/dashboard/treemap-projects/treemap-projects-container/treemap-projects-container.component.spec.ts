@@ -46,7 +46,7 @@ describe('TreemapProjectsContainerComponent', () => {
 	})
 	class TestHostComponent {
 		@HostBinding('style.--sidebar-width')
-		@Input() sidebarWidth = '200px';	
+		@Input() sidebarWidth = '200px';
 	}
 
 	beforeEach(async(() => {
@@ -66,7 +66,7 @@ describe('TreemapProjectsContainerComponent', () => {
 		spyDistributionGeneration = spyOn(dashboardService, 'processProjectsDistribution').and.returnValue(MOCK_DISTRIBUTIONS);
 
 		projectService = TestBed.inject(ProjectService);
-		projectService.allProjectsIsLoaded$.next(true)
+		projectService.allProjectsIsLoaded$.next(true);
 		fixture.detectChanges();
 	});
 

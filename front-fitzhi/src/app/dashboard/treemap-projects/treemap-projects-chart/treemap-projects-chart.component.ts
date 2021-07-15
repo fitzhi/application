@@ -6,9 +6,9 @@ import { ProjectService } from 'src/app/service/project/project.service';
 import { TreemapProjectsService } from '../treemap-projects-service/treemap-projects.service';
 
 @Component({
-  selector: 'app-treemap-projects-chart',
-  templateUrl: './treemap-projects-chart.component.html',
-  styleUrls: ['./treemap-projects-chart.component.css']
+	selector: 'app-treemap-projects-chart',
+	templateUrl: './treemap-projects-chart.component.html',
+	styleUrls: ['./treemap-projects-chart.component.css']
 })
 export class TreemapProjectsChartComponent extends BaseComponent implements OnInit, OnDestroy {
 
@@ -16,9 +16,9 @@ export class TreemapProjectsChartComponent extends BaseComponent implements OnIn
 
 	view: any[];
 
-	gradient: boolean = false;
+	gradient = false;
 
-	animations: boolean = true;
+	animations = true;
 
 	colorScheme = {
 		domain: []
@@ -37,14 +37,14 @@ export class TreemapProjectsChartComponent extends BaseComponent implements OnIn
 		this.loadDistribution();
 	}
 
-	loadDistribution () {
+	loadDistribution() {
 		this.distribution = this.dashboardService.processProjectsDistribution();
 		this.colorScheme.domain = [];
 		this.distribution.forEach(data => this.colorScheme.domain.push(data.color));
 		if (traceOn()) {
 			console.groupCollapsed('Projects distribution');
 			this.distribution.forEach(skillData =>
-				console.log (skillData.name, skillData.value)
+				console.log(skillData.name, skillData.value)
 			);
 			console.groupEnd();
 		}
@@ -63,6 +63,4 @@ export class TreemapProjectsChartComponent extends BaseComponent implements OnIn
 	ngOnDestroy() {
 		super.ngOnDestroy();
 	}
-
-
 }
