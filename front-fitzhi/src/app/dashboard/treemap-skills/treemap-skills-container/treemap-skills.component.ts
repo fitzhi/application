@@ -6,7 +6,7 @@ import { ProjectService } from 'src/app/service/project/project.service';
 	templateUrl: './treemap-skills.component.html',
 	styleUrls: ['./treemap-skills.component.css']
 })
-export class TreemapComponent implements OnInit {
+export class TreemapSkillsComponent implements OnInit {
 
 	constructor(public projectService: ProjectService) { }
 

@@ -248,7 +248,7 @@ export class DashboardService {
 		}
 
 		if (traceOn()) {
-			console.groupCollapsed('Global evaluation for each project.');
+			console.groupCollapsed('Global evaluation for each project :');
 			this.projectService.allProjects
 				.filter((project: Project) => project.active)
 				.forEach(project => {
@@ -259,7 +259,6 @@ export class DashboardService {
 		this.projectService.allProjects
 			.filter((project: Project) => project.active)
 			.forEach(project => {
-				console.log(project.name, this.projectService.globalEvaluation(project));
 				distribution.push({
 					name: project.name,
 					value: sizeOfProject(project),

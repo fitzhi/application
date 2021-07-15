@@ -38,24 +38,20 @@
 			</div>
 		</angular-popper>        
 
-		<button id="treeMap-projects" class="btn rounded treeMap-projects"
+		<button id="treeMap-projects" 
+				class="btn rounded treeMap-projects"
+				*ngIf="projectService.allProjectsIsLoaded$|async"
 				[ngClass]="{
 						'btn-outline-success' : isSelected(selection.treeMapProjects), 
 						'btn-outline-secondary': !isSelected(selection.treeMapProjects)}" 
 						(mouseenter)="popupHelper.mouseEnter(selection.treeMapProjects)" 
 						(mouseleave)="popupHelper.mouseLeave()"
 						(click)="switchTo(selection.treeMapProjects)">
-				<svg class="treeMapButton">
-						<rect x="6" y="6" class="rectTreeMap" style="fill:#27A53F" />
-						<rect x="21" y="6" class="rectTreeMap" style="fill:#329338" />
-						<rect x="36" y="6" class="rectTreeMap" style="fill:#3D8131"  />
-						<rect x="6" y="21" class="rectTreeMap" style="fill:#486E2A" />
-						<rect x="21" y="21" class="rectTreeMap" style="fill:#535C23" />
-						<rect x="36" y="21" class="rectTreeMap" style="fill:#5E4A1C"  />
-						<rect x="6" y="36" class="rectTreeMap" style="fill:#74250E" />
-						<rect x="21" y="36" class="rectTreeMap" style="fill:#7F1307" />
-						<rect x="36" y="36" class="rectTreeMap" style="fill:#8B0000"  />
-				</svg>
+			<!-- 	The ngx-charts-tree-map make a translate(10, 10),
+					therefore, the class 'host-treemap-projects' operates a translate -->
+			<div class="host-treemap-projects">
+				<app-treemap-projects width="72px" height="72px" [active]="false"></app-treemap-projects>
+			</div>
 		</button>
 
 		<angular-popper placement="left" target="#treeMap-projects" 

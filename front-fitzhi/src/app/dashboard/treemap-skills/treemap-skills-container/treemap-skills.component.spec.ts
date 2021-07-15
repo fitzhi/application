@@ -12,12 +12,12 @@ import { TagifyStarsComponent } from 'src/app/tabs-staff/staff-experience/tagify
 import { TreemapSkillsService } from '../treemap-skills-service/treemap-skills.service';
 import { TreemapSkillsChartComponent } from '../treemap-skills-chart/treemap-skills-chart.component';
 import { TreemapHeaderComponent } from '../treemap-skills-header/treemap-skills-header.component';
-import { TreemapComponent } from './treemap-skills.component';
+import { TreemapSkillsComponent } from './treemap-skills.component';
 import { TreemapProjectsService } from '../../treemap-projects/treemap-projects-service/treemap-projects.service';
 
 describe('TreemapSkillsComponent container', () => {
-	let component: TreemapComponent;
-	let fixture: ComponentFixture<TreemapComponent>;
+	let component: TreemapSkillsComponent;
+	let fixture: ComponentFixture<TreemapSkillsComponent>;
 
 	const MOCK_DISTRIBUTIONS = [
 		{
@@ -39,7 +39,7 @@ describe('TreemapSkillsComponent container', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ TreemapComponent, TreemapSkillsChartComponent, TreemapHeaderComponent, TagifyStarsComponent ],
+			declarations: [ TreemapSkillsComponent, TreemapSkillsChartComponent, TreemapHeaderComponent, TagifyStarsComponent ],
 			providers: [ReferentialService, DashboardService, TreemapProjectsService, ProjectService, CinematicService],
 			imports: [NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule, MatDialogModule, HttpClientTestingModule]
 		})
@@ -47,7 +47,7 @@ describe('TreemapSkillsComponent container', () => {
 	}));
 
 	beforeEach(() => {
-		fixture = TestBed.createComponent(TreemapComponent);
+		fixture = TestBed.createComponent(TreemapSkillsComponent);
 		component = fixture.componentInstance;
 		fixture.detectChanges();
 	});

@@ -12,7 +12,12 @@ import { TreemapProjectsService } from '../treemap-projects-service/treemap-proj
 })
 export class TreemapProjectsChartComponent extends BaseComponent implements OnInit, OnDestroy {
 
-	distribution: any[];
+	/**
+	 * The treemap chart is clickable, or not...
+	 */
+	 @Input() active = true;
+
+	 distribution: any[];
 
 	view: any[];
 
@@ -48,9 +53,15 @@ export class TreemapProjectsChartComponent extends BaseComponent implements OnIn
 		}
 	}
 
+	/**
+	 * This method is invoked when the end-user clicks inside the chart.
+	 * @param event the event emitted by the component.
+	 */
 	onSelect(event) {
-		if (traceOn()) {
-			console.log(event);
+		if (this.active) {
+			if (traceOn()) {
+				console.log(event);
+			}
 		}
 	}
 

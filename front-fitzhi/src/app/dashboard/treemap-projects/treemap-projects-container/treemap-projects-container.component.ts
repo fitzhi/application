@@ -18,6 +18,11 @@ export class TreemapProjectsContainerComponent implements OnInit {
 	@HostBinding('style.--treemap-projects-height')
 	@Input() height = '200px';
 
+	/**
+	 * The treemap chart is clickable, or not...
+	 */
+	@Input() active = true;
+
 	constructor() { }
 
 	ngOnInit(): void {

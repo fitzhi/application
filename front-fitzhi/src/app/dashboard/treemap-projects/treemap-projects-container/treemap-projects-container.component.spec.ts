@@ -24,16 +24,18 @@ describe('TreemapProjectsContainerComponent', () => {
 
 	const MOCK_DISTRIBUTIONS = [
 		{
+			id: 1,
 			name: 'java',
 			value: '50',
 			color: '#28a745'
 		},
 		{
-			name: '.Net',
+			id: 2,
 			value: '30',
 			color: '#486E2A'
 		},
 		{
+			id: 3,
 			name: 'Typescript',
 			value: '20',
 			color: 'darkred'
