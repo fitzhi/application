@@ -16,20 +16,24 @@ describe('TeamProjectsChartComponent', () => {
 	let component: TreemapProjectsChartComponent;
 	let fixture: ComponentFixture<TreemapProjectsChartComponent>;
 	let dashboardService: DashboardService;
+	let projectService: ProjectService;
 	let spyProcessProjectsDistribution: any;
 
 	const MOCK_DISTRIBUTIONS = [
 		{
+			id: 1,
 			name: 'Spring',
 			value: '76000',
 			color: '#28a745'
 		},
 		{
+			id: 2,
 			name: 'Fitzhi',
 			value: '32300',
 			color: '#486E2A'
 		},
 		{
+			id: 3,
 			name: 'Small',
 			value: '1000',
 			color: 'darkred'
@@ -51,6 +55,8 @@ describe('TeamProjectsChartComponent', () => {
 		component = fixture.componentInstance;
 		dashboardService = TestBed.inject(DashboardService);
 		spyProcessProjectsDistribution = spyOn(dashboardService, 'processProjectsDistribution').and.returnValue(MOCK_DISTRIBUTIONS);
+		projectService = TestBed.inject(ProjectService);
+		projectService.allProjectsIsLoaded$.next(true);
 		fixture.detectChanges();
 	});
 

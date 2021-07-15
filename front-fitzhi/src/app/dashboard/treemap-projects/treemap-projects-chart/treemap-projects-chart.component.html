@@ -1,4 +1,4 @@
-<div class="treemap-projects-chart">
+<div class="treemap-projects-chart" *ngIf="projectService.allProjectsIsLoaded$|async">
 	<ngx-charts-tree-map
 		[scheme]="colorScheme"
 		[results]="distribution"

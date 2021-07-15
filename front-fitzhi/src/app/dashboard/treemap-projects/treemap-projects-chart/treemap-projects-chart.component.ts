@@ -1,4 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { BaseComponent } from 'src/app/base/base.component';
 import { traceOn } from 'src/app/global';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
@@ -58,7 +59,8 @@ export class TreemapProjectsChartComponent extends BaseComponent implements OnIn
 	 * @param event the event emitted by the component.
 	 */
 	onSelect(event) {
-		if (this.active) {
+		// We pass the onSelect as a callback to the treemap component. We receive the callback before this is initialized...
+		if ((this) && (this.active)) {
 			if (traceOn()) {
 				console.log(event);
 			}
@@ -66,7 +68,7 @@ export class TreemapProjectsChartComponent extends BaseComponent implements OnIn
 	}
 
 	labelFormatting(tile) {
-		return `${(tile.label)}`;
+		return ((this) && (this.active)) ? `${(tile.label)}` : '';
 	}
 
 	ngOnDestroy() {
