@@ -28,7 +28,7 @@ describe('ProjectService', () => {
 
 	it('should calculate an evaluation based on a perfect staff.', () => {
 		project.staffEvaluation = 0;
-		expect(projectService.globalEvaluation(project)).toBe(10);
+		expect(projectService.globalEvaluation(project)).toBe(0);
 	});
 
 	it('should calculate an evaluation based on staff coverage solely.', () => {
@@ -38,13 +38,13 @@ describe('ProjectService', () => {
 
 	it('should calculate an evaluation based on the audit solely.', () => {
 		project.auditEvaluation = 80;
-		expect(projectService.globalEvaluation(project)).toBe(8);
+		expect(projectService.globalEvaluation(project)).toBe(2);
 	});
 
 	it('should calculate an evaluation based on Sonar solely.', () => {
 		project.sonarProjects = [];
 		project.sonarProjects.push({key: 'key', name: 'name', sonarEvaluation: { 'evaluation': 20, 'totalNumberLinesOfCode': 1000 }});
-		expect(projectService.globalEvaluation(project)).toBe(2);
+		expect(projectService.globalEvaluation(project)).toBe(8);
 	});
 
 	it('should calculate an evaluation based on the 3 evaluations (staff, sonar, audit).', () => {
@@ -52,20 +52,20 @@ describe('ProjectService', () => {
 		project.sonarProjects = [];
 		project.sonarProjects.push({key: 'key', name: 'name', sonarEvaluation: { 'evaluation': 20, 'totalNumberLinesOfCode': 1000 }});
 		project.auditEvaluation = 80;
-		expect(projectService.globalEvaluation(project)).toBe(6);
+		expect(projectService.globalEvaluation(project)).toBe(3);
 	});
 
 	it('should calculate an evaluation based on the 2 evaluations (staff, sonar).', () => {
 		project.staffEvaluation = 1;
 		project.sonarProjects = [];
 		project.sonarProjects.push({key: 'key', name: 'name', sonarEvaluation: { 'evaluation': 40, 'totalNumberLinesOfCode': 1000 }});
-		expect(projectService.globalEvaluation(project)).toBe(7);
+		expect(projectService.globalEvaluation(project)).toBe(2);
 	});
 
 	it('should calculate an evaluation based on the 2 evaluations (staff, audit).', () => {
 		project.staffEvaluation = 3;
 		project.auditEvaluation = 80;
-		expect(projectService.globalEvaluation(project)).toBe(7);
+		expect(projectService.globalEvaluation(project)).toBe(2);
 	});
 
 	it('should return "undefined" for an empty project.', () => {

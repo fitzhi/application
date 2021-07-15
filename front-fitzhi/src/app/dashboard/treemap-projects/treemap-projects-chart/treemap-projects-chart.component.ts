@@ -24,8 +24,6 @@ export class TreemapProjectsChartComponent extends BaseComponent implements OnIn
 		domain: []
 	};
 
-	public viewTreeMap;
-
 	constructor(
 		public dashboardService: DashboardService,
 		public treeMapService: TreemapProjectsService,
