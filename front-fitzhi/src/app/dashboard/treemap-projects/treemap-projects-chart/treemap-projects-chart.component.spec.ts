@@ -2,6 +2,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
@@ -43,7 +44,7 @@ describe('TeamProjectsChartComponent', () => {
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
 			declarations: [ TreemapProjectsChartComponent ],
-			imports: [ HttpClientTestingModule, NgxChartsModule, BrowserAnimationsModule, MatDialogModule ],
+			imports: [ HttpClientTestingModule, NgxChartsModule, BrowserAnimationsModule, MatDialogModule, RouterTestingModule ],
 			providers: [ SkillService, DashboardService, StaffListService, ReferentialService, ProjectService, CinematicService ]
 
 		})

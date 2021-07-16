@@ -189,3 +189,23 @@ div.host-treemap-projects {
 	padding: 0;
 	transform: translate(-6px, -6px); 
 }
+
+img.logoSonar {
+	width: 28px;
+}
+
+table.evaluationDistributions {
+	margin-left: 100px;
+}
+tr.evaluationDistributions, tr.evaluationDistributions td {
+	text-align: center;
+}
+
+tr.evaluationDistributions td {
+	width: 70px;
+	font-weight: bold;
+}
+
+tr.evaluationDistributions td em {
+	color: var(--color-selected);
+}

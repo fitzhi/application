@@ -6,6 +6,7 @@ import { take } from 'rxjs/operators';
 import { BaseComponent } from 'src/app/base/base.component';
 import { Constants } from 'src/app/constants';
 import { ProjectService } from 'src/app/service/project/project.service';
+import { FitzhiSettings } from '../data/FitzhiSettings';
 import { FitzhiDashboardPopupHelper } from './fitzhi-dashboard-popup-helper';
 import { selection } from './selection';
 import { PieDashboardService } from './service/pie-dashboard.service';
@@ -19,6 +20,8 @@ import { SkylineService } from './skyline/service/skyline.service';
 export class FitzhiDashboardComponent extends BaseComponent implements OnInit, OnDestroy {
 
 	public selection = selection;
+
+	public settings = new FitzhiSettings();
 
 	/**
 	 * Selected button. End-user has clicked on it.
@@ -69,6 +72,7 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 		public controlledRisingSkylineService: ControlledRisingSkylineService,
 		public pieDashboardService: PieDashboardService) {
 			super();
+			console.log (this.settings.evaluationDistributions);
 	}
 
 	/**

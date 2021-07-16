@@ -1,27 +1,27 @@
 :host >>> .component-container {
-  height: inherit;
+	height: inherit;
 }
 
 :host >>> .mat-tab-body-wrapper {
-  height: inherit;
+	height: inherit;
 }
 
 :host >>> .mat-tab-group {
-    height: inherit;
+	height: inherit;
 }
 
 :host >>> .mat-header-cell {
-    height: 3em;
+	height: 3em;
 }
 
 .panel-container {
-    height: 100%;
+	height: 100%;
 }
 
 img.logoTabLabel {
-  width: 28px;
+	width: 28px;
 }
 
 i.logoTabLabel {
-  font-size: 26px;
+	font-size: 26px;
 }

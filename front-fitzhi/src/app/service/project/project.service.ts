@@ -1439,8 +1439,10 @@ export class ProjectService extends InternalService {
 		}
 		const evaluation =
 			((distribution.staffEvaluationPercentage) ? (distribution.staffEvaluationPercentage * (project.staffEvaluation)) : 0)
-		+	((distribution.sonarEvaluationPercentage) ? (distribution.sonarEvaluationPercentage * (10 - this.calculateSonarEvaluation(project) / 10)) : 0)
-		+	((distribution.auditEvaluationPercentage) ? (distribution.auditEvaluationPercentage * (10 - project.auditEvaluation / 10)) : 0);
+		+	((distribution.sonarEvaluationPercentage) ?
+				(distribution.sonarEvaluationPercentage * (10 - this.calculateSonarEvaluation(project) / 10)) : 0)
+		+	((distribution.auditEvaluationPercentage) ?
+				(distribution.auditEvaluationPercentage * (10 - project.auditEvaluation / 10)) : 0);
 
 		return Math.floor(evaluation / 100);
 	}

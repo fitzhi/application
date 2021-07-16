@@ -3,6 +3,7 @@ import { Component, HostBinding, Input } from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { CinematicService } from 'src/app/service/cinematic.service';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
@@ -52,8 +53,9 @@ describe('TreemapProjectsContainerComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			declarations: [ TreemapProjectsContainerComponent, TreemapProjectsChartComponent, TestHostComponent, FitzhiDashboardComponent ],
-			imports: [ HttpClientTestingModule, MatDialogModule, NgxChartsModule, BrowserAnimationsModule ],
+			declarations: [ TreemapProjectsContainerComponent, TreemapProjectsChartComponent, TestHostComponent,
+				FitzhiDashboardComponent],
+			imports: [ HttpClientTestingModule, MatDialogModule, NgxChartsModule, BrowserAnimationsModule, , RouterTestingModule ],
 			providers: [ ReferentialService, ProjectService, CinematicService, DashboardService ]
 		})
 		.compileComponents();

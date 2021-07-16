@@ -5,6 +5,8 @@ import { EvaluationDistribution } from './EvalutionDistribution';
  */
 export class FitzhiSettings {
 
+	constructor() { }
+
 	public evaluationDistributions: EvaluationDistribution[] = [
 		new EvaluationDistribution(100, undefined, undefined),
 		new EvaluationDistribution(undefined, undefined, 100),

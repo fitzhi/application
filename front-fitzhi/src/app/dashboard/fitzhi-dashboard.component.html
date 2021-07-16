@@ -60,11 +60,39 @@
 				<h4 class="help-title">Display Projects ...</h4>
 				<div class="help-content">
 					<p> 
-						blabla
+						This graphic represents the patchwork of projects. 
+						Each tile represents a project. The size of which is proportional to the number of lines.
+						The color is representative of the Quality assessment of the project. 
 					</p>
+					<p> 
+						3 criteria are possible:
+					</p>
+					<ul>
+						<li>The Staff coverage</li>
+						<li>The Sonar evaluation</li>
+						<li>The Audit report</li>
+					</ul>
 					<p>
-						blabla
+						The geometric mean of these 3 scores is calculated as follows :
 					</p>
+					<table class="evaluationDistributions">
+						<tr class="evaluationDistributions">
+							<td><em class="fas glyphicon fa-user-graduate"></em></td>
+							<td><img src="./assets/img/sonar-selected.png" alt="Sonar" class="logoSonar"/></td>
+							<td><em class="fas fa-brain logoTabLabel"></em></td>
+						</tr>
+						<tr *ngFor="let element of settings.evaluationDistributions; let index = index" class="evaluationDistributions">
+							<td>
+								{{(element.staffEvaluationPercentage) ? element.staffEvaluationPercentage.toString() + '%' : '&empty;'}}
+							</td>
+							<td>
+								{{(element.sonarEvaluationPercentage) ? element.sonarEvaluationPercentage.toString() + '%' : '&empty;'}}
+							</td>
+							<td>
+								{{(element.auditEvaluationPercentage) ? element.auditEvaluationPercentage.toString() + '%' : '&empty;'}}
+							</td>
+						</tr>
+					</table>
 				</div>
 			</div>
 		</angular-popper>        

@@ -19,9 +19,9 @@ export class TreemapProjectsChartComponent extends BaseComponent implements OnIn
 	/**
 	 * The treemap chart is clickable, or not...
 	 */
-	 @Input() active = true;
+	@Input() active = true;
 
-	 distribution: any[];
+	distribution: any[];
 
 	view: any[];
 
@@ -66,12 +66,12 @@ export class TreemapProjectsChartComponent extends BaseComponent implements OnIn
 	onSelect(event) {
 		// We pass the onSelect as a callback to the treemap component. We receive the callback before this is initialized...
 		if ((this) && (this.active)) {
-			const idProject = this.distribution.filter(element => (element.name == event.name))[0].id;
+			const idProject = this.distribution.filter(element => (element.name === event.name))[0].id;
 			if (traceOn()) {
 				console.log('idProject selected', idProject);
 			}
 			this.cinematicService.currentActiveFormSubject$.next(new Form(Constants.PROJECT_TAB_FORM, 'Project') );
-			this.router.navigate(['/project/'+ idProject], {});
+			this.router.navigate(['/project/' + idProject], {});
 		}
 	}
 
