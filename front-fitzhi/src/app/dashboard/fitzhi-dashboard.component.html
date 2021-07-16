@@ -50,14 +50,14 @@
 			<!-- 	The ngx-charts-tree-map make a translate(10, 10),
 					therefore, the class 'host-treemap-projects' operates a translate -->
 			<div class="host-treemap-projects">
-				<app-treemap-projects width="72px" height="72px" [active]="false"></app-treemap-projects>
+				<app-treemap-projects width="71px" height="71px" [active]="false"></app-treemap-projects>
 			</div>
 		</button>
 
 		<angular-popper placement="left" target="#treeMap-projects" 
 			*ngIf="popupHelper.isButtonActivated(selection.treeMapProjects) && !hasSelectedADashboard()">
 			<div content class="help">
-				<h4 class="help-title">Display Projects ...</h4>
+				<h4 class="help-title">Display projects patchwork</h4>
 				<div class="help-content">
 					<p> 
 						This graphic represents the patchwork of projects. 
@@ -119,7 +119,7 @@
 
 		<angular-popper placement="left" target="#treeMap-skills" *ngIf="popupHelper.isButtonActivated(selection.treeMapSkills) && !hasSelectedADashboard()">
 			<div content class="help">
-				<h4 class="help-title">Display staff risk</h4>
+				<h4 class="help-title">Display ecosystem staff coverage</h4>
 				<div class="help-content">
 					<p>
 						This Treemap chart represents the skills coverage of your portfolio.
@@ -228,7 +228,7 @@
 
 		<div id="container-treemap-projects" 
 			*ngIf="(projectService.allProjectsIsLoaded$|async) && (isSelected(selection.treeMapProjects))">
-			<app-treemap-projects width="1200px" height="500px" active="true"></app-treemap-projects>
+			<app-treemap-projects width="100%" height="650px" active="true"></app-treemap-projects>
 		</div>
 	
 		<div class="dashboard" *ngIf="isSelected(selection.lastYearSummary)">

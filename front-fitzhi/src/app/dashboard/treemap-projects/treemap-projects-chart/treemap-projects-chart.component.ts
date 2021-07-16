@@ -76,7 +76,7 @@ export class TreemapProjectsChartComponent extends BaseComponent implements OnIn
 	}
 
 	labelFormatting(tile) {
-		return `${(tile.label)}`;
+		return `<p>${(tile.label)}</p>`;
 	}
 
 	ngOnDestroy() {
