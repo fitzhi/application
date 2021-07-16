@@ -55,7 +55,8 @@ describe('TreemapProjectsContainerComponent', () => {
 		TestBed.configureTestingModule({
 			declarations: [ TreemapProjectsContainerComponent, TreemapProjectsChartComponent, TestHostComponent,
 				FitzhiDashboardComponent],
-			imports: [ HttpClientTestingModule, MatDialogModule, NgxChartsModule, BrowserAnimationsModule, , RouterTestingModule ],
+			imports: [ HttpClientTestingModule, MatDialogModule, NgxChartsModule, BrowserAnimationsModule,
+				RouterTestingModule ],
 			providers: [ ReferentialService, ProjectService, CinematicService, DashboardService ]
 		})
 		.compileComponents();
