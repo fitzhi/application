@@ -735,6 +735,7 @@ export class ProjectService extends InternalService {
 
 		switch (risk) {
 			case -1:
+			case undefined:
 				return 'whiteSmoke';
 			default:
 				const riskLegend = this.referentialService.legends

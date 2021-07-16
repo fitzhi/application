@@ -260,6 +260,7 @@ export class DashboardService {
 			.filter((project: Project) => project.active)
 			.forEach(project => {
 				distribution.push({
+					id: project.id,
 					name: project.name,
 					value: sizeOfProject(project),
 					color: this.projectService.getRiskColor(this.projectService.globalEvaluation(project))

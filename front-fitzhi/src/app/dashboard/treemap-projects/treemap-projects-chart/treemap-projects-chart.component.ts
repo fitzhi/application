@@ -1,8 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 import { BaseComponent } from 'src/app/base/base.component';
+import { Constants } from 'src/app/constants';
 import { traceOn } from 'src/app/global';
+import { CinematicService } from 'src/app/service/cinematic.service';
 import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
+import { Form } from 'src/app/service/Form';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { TreemapProjectsService } from '../treemap-projects-service/treemap-projects.service';
 
@@ -31,9 +34,11 @@ export class TreemapProjectsChartComponent extends BaseComponent implements OnIn
 	};
 
 	constructor(
-		public dashboardService: DashboardService,
+		private dashboardService: DashboardService,
 		public treeMapService: TreemapProjectsService,
-		public projectService: ProjectService) {
+		public projectService: ProjectService,
+		private cinematicService: CinematicService,
+		private router: Router) {
 		super();
 	}
 
@@ -61,14 +66,17 @@ export class TreemapProjectsChartComponent extends BaseComponent implements OnIn
 	onSelect(event) {
 		// We pass the onSelect as a callback to the treemap component. We receive the callback before this is initialized...
 		if ((this) && (this.active)) {
+			const idProject = this.distribution.filter(element => (element.name == event.name))[0].id;
 			if (traceOn()) {
-				console.log(event);
+				console.log('idProject selected', idProject);
 			}
+			this.cinematicService.currentActiveFormSubject$.next(new Form(Constants.PROJECT_TAB_FORM, 'Project') );
+			this.router.navigate(['/project/'+ idProject], {});
 		}
 	}
 
 	labelFormatting(tile) {
-		return ((this) && (this.active)) ? `${(tile.label)}` : '';
+		return `${(tile.label)}`;
 	}
 
 	ngOnDestroy() {
