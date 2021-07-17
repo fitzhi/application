@@ -58,6 +58,7 @@ import com.fitzhi.source.crawler.EcosystemAnalyzer;
 import com.fitzhi.source.crawler.javaparser.ExperienceParser;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -71,6 +72,16 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Component
 public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implements ProjectHandler {
+
+	/**
+	 * <p>his setting activates or not the code parser execution.</p>
+	 * <i>
+	 * This setting has been setup to avoid memory problems on some platforms.
+	 * The nominal behavior of the application is to run the code parser.
+	 * </i> 
+	 */
+	@Value("${code.parser}")
+	private int codeParser;
 
 	/**
 	 * The Project collection.
@@ -774,9 +785,11 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 
 	@Override
 	public void processProjectsExperiences() throws ApplicationException {
-		clearlProjectsExperiences();	
+		clearProjectsExperiences();	
 		fillProjectsExperiencesWithLinesNumbers();
-		fillProjectsExperiencesWithCodeParsers();
+		if (codeParser == 1) {
+			fillProjectsExperiencesWithCodeParsers();
+		}
 	}
 
 	/**
@@ -798,7 +811,7 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 	 * Clean all experiences intermediate collections.
 	 * @throws ApplicationException thrown if any problem occurs
 	 */
-	private void clearlProjectsExperiences() throws ApplicationException {
+	private void clearProjectsExperiences() throws ApplicationException {
 		for (Project project : this.activeProjects()) {
 			dataHandler.saveDetectedExperiences(project, ProjectDetectedExperiences.of());
 		}
@@ -865,8 +878,8 @@ public class ProjectHandlerImpl extends AbstractDataSaverLifeCycleImpl implement
 			// If the changes file does not exist, we skiip this project
 			if (changes == null) {
 				continue;
-			}
 
+			}
 			ProjectDetectedExperiences experiences = getProjectDetectedExperiences(project);
 			ecosystemAnalyzer.calculateExperiences(project, skills, changes, experiences);
 			if (log.isDebugEnabled()) {

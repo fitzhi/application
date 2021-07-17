@@ -25,10 +25,10 @@ public class ScheduledTasks {
 
 	@Value("${cron.code.analysis}")
 	private String cronCodeAnalysis;
-
+	
 	@Value("${cron.experiences.detection}")
 	private String cronExperiencesDetection;
-	
+
 	@Autowired
 	ProjectHandler projectHandler;
 
