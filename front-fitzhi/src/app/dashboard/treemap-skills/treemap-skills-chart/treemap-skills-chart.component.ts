@@ -28,8 +28,6 @@ export class TreemapSkillsChartComponent extends BaseComponent implements OnInit
 		domain: []
 	};
 
-	public viewTreeMap = [1000, 500];
-
 	constructor(
 		public dashboardService: DashboardService,
 		public treeMapService: TreemapSkillsService,
@@ -80,6 +78,9 @@ export class TreemapSkillsChartComponent extends BaseComponent implements OnInit
 		return `${(tile.label)}`;
 	}
 
+	valueFormatting(tile) {
+		return `${(tile.value)}%`;
+	}
 	ngOnDestroy() {
 		super.ngOnDestroy();
 	}
