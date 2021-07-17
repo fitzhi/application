@@ -49,7 +49,7 @@ public class EcosystemAnalyzerLoadDetectedExperiencesTest {
 
 		// We disable this test.
 		// Javaparser does not worl correctly on Windows platform.
-		// FIXME as soon as possible !!!
+		// FIXME on a Windows based system !!!
 		if (OSType.DETECTED == OSType.Windows) {
 			return;
 		}
