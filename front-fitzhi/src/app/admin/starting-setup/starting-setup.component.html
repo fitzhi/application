@@ -10,7 +10,7 @@
     <app-register-user 
         (messengerUserRegistered)="setRegisteredUser($event)" 
         (messengerSkipAndConnect)="skipAndConnect($event)" 
-        [veryFirstConnection]="veryFirstConnection | async"></app-register-user>
+        [veryFirstConnection]="veryFirstConnection$|async"></app-register-user>
   </mat-step>
 
   <mat-step [completed]="completed[2]">
