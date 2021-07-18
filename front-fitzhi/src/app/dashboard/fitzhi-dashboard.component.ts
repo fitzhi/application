@@ -72,7 +72,6 @@ export class FitzhiDashboardComponent extends BaseComponent implements OnInit, O
 		public controlledRisingSkylineService: ControlledRisingSkylineService,
 		public pieDashboardService: PieDashboardService) {
 			super();
-			console.log (this.settings.evaluationDistributions);
 	}
 
 	/**
