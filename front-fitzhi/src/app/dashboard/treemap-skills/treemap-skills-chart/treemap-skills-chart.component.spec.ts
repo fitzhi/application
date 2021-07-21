@@ -9,6 +9,7 @@ import { DashboardService } from 'src/app/service/dashboard/dashboard.service';
 import { ProjectService } from 'src/app/service/project/project.service';
 import { ReferentialService } from 'src/app/service/referential.service';
 import { CinematicService } from 'src/app/service/cinematic.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('TreemapSkillsChartComponent', () => {
 	let component: TreemapSkillsChartComponent;
@@ -16,7 +17,7 @@ describe('TreemapSkillsChartComponent', () => {
 
 	beforeEach(async(() => {
 		TestBed.configureTestingModule({
-			imports: [NgxChartsModule, BrowserAnimationsModule, HttpClientTestingModule, MatDialogModule],
+			imports: [NgxChartsModule, BrowserAnimationsModule, HttpClientTestingModule, MatDialogModule, RouterTestingModule],
 			declarations: [ TreemapSkillsChartComponent ],
 			providers: [DashboardService, ProjectService, ReferentialService, CinematicService]
 		})

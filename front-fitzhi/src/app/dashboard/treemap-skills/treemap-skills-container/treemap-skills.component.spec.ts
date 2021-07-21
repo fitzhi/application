@@ -14,6 +14,7 @@ import { TreemapSkillsChartComponent } from '../treemap-skills-chart/treemap-ski
 import { TreemapHeaderComponent } from '../treemap-skills-header/treemap-skills-header.component';
 import { TreemapSkillsComponent } from './treemap-skills.component';
 import { TreemapProjectsService } from '../../treemap-projects/treemap-projects-service/treemap-projects.service';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('TreemapSkillsComponent container', () => {
 	let component: TreemapSkillsComponent;
@@ -41,7 +42,8 @@ describe('TreemapSkillsComponent container', () => {
 		TestBed.configureTestingModule({
 			declarations: [ TreemapSkillsComponent, TreemapSkillsChartComponent, TreemapHeaderComponent, TagifyStarsComponent ],
 			providers: [ReferentialService, DashboardService, TreemapProjectsService, ProjectService, CinematicService],
-			imports: [NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule, MatDialogModule, HttpClientTestingModule]
+			imports: [NgxChartsModule, BrowserAnimationsModule, MatCheckboxModule, MatDialogModule, HttpClientTestingModule,
+				RouterTestingModule]
 		})
 		.compileComponents();
 	}));

@@ -26,14 +26,14 @@ export class StartingSetupComponent extends BaseComponent implements OnDestroy {
 	/**
 	 * This status will be setup to TRUE, FALSE otherwise.
 	 */
-	 public veryFirstConnection = true;
+	public veryFirstConnection = true;
 
-	 /**
+	/**
 	 * Are we in the very first connection ?
 	 */
 	private _veryFirstConnection$ = new Subject<boolean>();
 
-	 /**
+	/**
 	 * Are we in the very first connection ?
 	 */
 	public veryFirstConnection$ = this._veryFirstConnection$.asObservable();
