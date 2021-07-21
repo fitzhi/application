@@ -18,7 +18,7 @@ getTestBed().initTestEnvironment(
 
 const context = require.context('./', true, /\.spec\.ts$/);
 // const context = require.context('./', true,  /treemap-projects-container\.component\.spec\.ts$/);
-// const context = require.context('./', true,  /treemap-projects-chart\.component\.spec\.ts$/);
+// const context = require.context('./', true,  /treemap-skills-chart\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /treemap-skills.component\.spec\.ts$/);
 // const context = require.context('./', true,  /project-sunburst-with-data\.component\.spec\.ts$/);
 // const context = require.context('./', true,  /project-audit-badges\.component\.detailPanel\.spec\.ts$/);
